@@ -1,0 +1,341 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2BF04B0B0BF51924006C0831 /* bldsexil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACB0BF51923006C0831 /* bldsexil.c */; };
+		2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACD0BF51923006C0831 /* blx.g.utils.c */; };
+		2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* blxactions.c */; };
+		2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD10BF51923006C0831 /* blxfileio.c */; };
+		2BF04B0F0BF51924006C0831 /* blxgraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* blxgraphics.c */; };
+		2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* blxtown_spec.c */; };
+		2BF04B1C0BF51924006C0831 /* combat.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* combat.c */; };
+		2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* dialogutils.c */; };
+		2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEA0BF51924006C0831 /* dlogtool.c */; };
+		2BF04B1F0BF51924006C0831 /* Exile.sound.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEC0BF51924006C0831 /* Exile.sound.c */; };
+		2BF04B200BF51924006C0831 /* fields.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEE0BF51924006C0831 /* fields.c */; };
+		2BF04B220BF51924006C0831 /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF20BF51924006C0831 /* global.c */; };
+		2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* info.dialogs.c */; };
+		2BF04B240BF51924006C0831 /* item_data.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* item_data.c */; };
+		2BF04B250BF51924006C0831 /* items.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* items.c */; };
+		2BF04B260BF51924006C0831 /* loc_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFA0BF51924006C0831 /* loc_utils.c */; };
+		2BF04B270BF51924006C0831 /* monster.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFC0BF51924006C0831 /* monster.c */; };
+		2BF04B280BF51924006C0831 /* newgraph.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFE0BF51924006C0831 /* newgraph.c */; };
+		2BF04B290BF51924006C0831 /* party.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B000BF51924006C0831 /* party.c */; };
+		2BF04B2B0BF51924006C0831 /* specials.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B030BF51924006C0831 /* specials.c */; };
+		2BF04B2C0BF51924006C0831 /* startup.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B050BF51924006C0831 /* startup.c */; };
+		2BF04B2D0BF51924006C0831 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* text.c */; };
+		2BF04B2E0BF51924006C0831 /* town.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* town.c */; };
+		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoE.icns; sourceTree = "<group>"; };
+		2BF04AC10BF518D4006C0831 /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Blades of Exile-Info.plist"; sourceTree = "<group>"; };
+		2BF04ACB0BF51923006C0831 /* bldsexil.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = bldsexil.c; sourceTree = "<group>"; };
+		2BF04ACC0BF51923006C0831 /* bldsexil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = bldsexil.h; sourceTree = "<group>"; };
+		2BF04ACD0BF51923006C0831 /* blx.g.utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = blx.g.utils.c; sourceTree = "<group>"; };
+		2BF04ACE0BF51923006C0831 /* blx.g.utils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blx.g.utils.h; sourceTree = "<group>"; };
+		2BF04ACF0BF51923006C0831 /* blxactions.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxactions.c; sourceTree = "<group>"; };
+		2BF04AD00BF51923006C0831 /* blxactions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxactions.h; sourceTree = "<group>"; };
+		2BF04AD10BF51923006C0831 /* blxfileio.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxfileio.c; sourceTree = "<group>"; };
+		2BF04AD20BF51923006C0831 /* blxfileio.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxfileio.h; sourceTree = "<group>"; };
+		2BF04AD30BF51923006C0831 /* blxgraphics.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxgraphics.c; sourceTree = "<group>"; };
+		2BF04AD40BF51923006C0831 /* blxgraphics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxgraphics.h; sourceTree = "<group>"; };
+		2BF04AD50BF51923006C0831 /* blxtown_spec.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxtown_spec.c; sourceTree = "<group>"; };
+		2BF04AD60BF51923006C0831 /* blxtown_spec.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxtown_spec.h; sourceTree = "<group>"; };
+		2BF04AE60BF51924006C0831 /* combat.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = combat.c; sourceTree = "<group>"; };
+		2BF04AE70BF51924006C0831 /* combat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = combat.h; sourceTree = "<group>"; };
+		2BF04AE80BF51924006C0831 /* dialogutils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dialogutils.c; sourceTree = "<group>"; };
+		2BF04AE90BF51924006C0831 /* dialogutils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dialogutils.h; sourceTree = "<group>"; };
+		2BF04AEA0BF51924006C0831 /* dlogtool.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dlogtool.c; sourceTree = "<group>"; };
+		2BF04AEB0BF51924006C0831 /* dlogtool.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dlogtool.h; sourceTree = "<group>"; };
+		2BF04AEC0BF51924006C0831 /* Exile.sound.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = Exile.sound.c; sourceTree = "<group>"; };
+		2BF04AED0BF51924006C0831 /* Exile.sound.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Exile.sound.h; sourceTree = "<group>"; };
+		2BF04AEE0BF51924006C0831 /* fields.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fields.c; sourceTree = "<group>"; };
+		2BF04AEF0BF51924006C0831 /* fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fields.h; sourceTree = "<group>"; };
+		2BF04AF00BF51924006C0831 /* gamma.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gamma.c; sourceTree = "<group>"; };
+		2BF04AF10BF51924006C0831 /* gamma.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = gamma.h; sourceTree = "<group>"; };
+		2BF04AF20BF51924006C0831 /* global.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = global.c; sourceTree = "<group>"; };
+		2BF04AF30BF51924006C0831 /* global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
+		2BF04AF40BF51924006C0831 /* info.dialogs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = info.dialogs.c; sourceTree = "<group>"; };
+		2BF04AF50BF51924006C0831 /* info.dialogs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = info.dialogs.h; sourceTree = "<group>"; };
+		2BF04AF60BF51924006C0831 /* item_data.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = item_data.c; sourceTree = "<group>"; };
+		2BF04AF70BF51924006C0831 /* item_data.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = item_data.h; sourceTree = "<group>"; };
+		2BF04AF80BF51924006C0831 /* items.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = items.c; sourceTree = "<group>"; };
+		2BF04AF90BF51924006C0831 /* items.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = items.h; sourceTree = "<group>"; };
+		2BF04AFA0BF51924006C0831 /* loc_utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = loc_utils.c; sourceTree = "<group>"; };
+		2BF04AFB0BF51924006C0831 /* loc_utils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = loc_utils.h; sourceTree = "<group>"; };
+		2BF04AFC0BF51924006C0831 /* monster.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = monster.c; sourceTree = "<group>"; };
+		2BF04AFD0BF51924006C0831 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monster.h; sourceTree = "<group>"; };
+		2BF04AFE0BF51924006C0831 /* newgraph.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = newgraph.c; sourceTree = "<group>"; };
+		2BF04AFF0BF51924006C0831 /* newgraph.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = newgraph.h; sourceTree = "<group>"; };
+		2BF04B000BF51924006C0831 /* party.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = party.c; sourceTree = "<group>"; };
+		2BF04B010BF51924006C0831 /* party.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
+		2BF04B020BF51924006C0831 /* powerpc.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = powerpc.c; sourceTree = "<group>"; };
+		2BF04B030BF51924006C0831 /* specials.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = specials.c; sourceTree = "<group>"; };
+		2BF04B040BF51924006C0831 /* specials.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = specials.h; sourceTree = "<group>"; };
+		2BF04B050BF51924006C0831 /* startup.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = startup.c; sourceTree = "<group>"; };
+		2BF04B060BF51924006C0831 /* startup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = startup.h; sourceTree = "<group>"; };
+		2BF04B070BF51924006C0831 /* text.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = text.c; sourceTree = "<group>"; };
+		2BF04B080BF51924006C0831 /* text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
+		2BF04B090BF51924006C0831 /* town.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = town.c; sourceTree = "<group>"; };
+		2BF04B0A0BF51924006C0831 /* town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = town.h; sourceTree = "<group>"; };
+		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BF04ABF0BF518D4006C0831 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2BF04A9F0BF51845006C0831 = {
+			isa = PBXGroup;
+			children = (
+				2B8F435C0C0973680012E4A8 /* BoE.icns */,
+				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
+				2BF04ACB0BF51923006C0831 /* bldsexil.c */,
+				2BF04ACC0BF51923006C0831 /* bldsexil.h */,
+				2BF04ACD0BF51923006C0831 /* blx.g.utils.c */,
+				2BF04ACE0BF51923006C0831 /* blx.g.utils.h */,
+				2BF04ACF0BF51923006C0831 /* blxactions.c */,
+				2BF04AD00BF51923006C0831 /* blxactions.h */,
+				2BF04AD10BF51923006C0831 /* blxfileio.c */,
+				2BF04AD20BF51923006C0831 /* blxfileio.h */,
+				2BF04AD30BF51923006C0831 /* blxgraphics.c */,
+				2BF04AD40BF51923006C0831 /* blxgraphics.h */,
+				2BF04AD50BF51923006C0831 /* blxtown_spec.c */,
+				2BF04AD60BF51923006C0831 /* blxtown_spec.h */,
+				2BF04AE60BF51924006C0831 /* combat.c */,
+				2BF04AE70BF51924006C0831 /* combat.h */,
+				2BF04AE80BF51924006C0831 /* dialogutils.c */,
+				2BF04AE90BF51924006C0831 /* dialogutils.h */,
+				2BF04AEA0BF51924006C0831 /* dlogtool.c */,
+				2BF04AEB0BF51924006C0831 /* dlogtool.h */,
+				2BF04AEC0BF51924006C0831 /* Exile.sound.c */,
+				2BF04AED0BF51924006C0831 /* Exile.sound.h */,
+				2BF04AEE0BF51924006C0831 /* fields.c */,
+				2BF04AEF0BF51924006C0831 /* fields.h */,
+				2BF04AF00BF51924006C0831 /* gamma.c */,
+				2BF04AF10BF51924006C0831 /* gamma.h */,
+				2BF04AF20BF51924006C0831 /* global.c */,
+				2BF04AF30BF51924006C0831 /* global.h */,
+				2BF04AF40BF51924006C0831 /* info.dialogs.c */,
+				2BF04AF50BF51924006C0831 /* info.dialogs.h */,
+				2BF04AF60BF51924006C0831 /* item_data.c */,
+				2BF04AF70BF51924006C0831 /* item_data.h */,
+				2BF04AF80BF51924006C0831 /* items.c */,
+				2BF04AF90BF51924006C0831 /* items.h */,
+				2BF04AFA0BF51924006C0831 /* loc_utils.c */,
+				2BF04AFB0BF51924006C0831 /* loc_utils.h */,
+				2BF04AFC0BF51924006C0831 /* monster.c */,
+				2BF04AFD0BF51924006C0831 /* monster.h */,
+				2BF04AFE0BF51924006C0831 /* newgraph.c */,
+				2BF04AFF0BF51924006C0831 /* newgraph.h */,
+				2BF04B000BF51924006C0831 /* party.c */,
+				2BF04B010BF51924006C0831 /* party.h */,
+				2BF04B020BF51924006C0831 /* powerpc.c */,
+				2BF04B030BF51924006C0831 /* specials.c */,
+				2BF04B040BF51924006C0831 /* specials.h */,
+				2BF04B050BF51924006C0831 /* startup.c */,
+				2BF04B060BF51924006C0831 /* startup.h */,
+				2BF04B070BF51924006C0831 /* text.c */,
+				2BF04B080BF51924006C0831 /* text.h */,
+				2BF04B090BF51924006C0831 /* town.c */,
+				2BF04B0A0BF51924006C0831 /* town.h */,
+				2BF04AB30BF5187A006C0831 /* Products */,
+				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
+			);
+			sourceTree = "<group>";
+		};
+		2BF04AB30BF5187A006C0831 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2BF04AC10BF518D4006C0831 /* Blades of Exile.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2BF04AC00BF518D4006C0831 /* Blades of Exile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile" */;
+			buildPhases = (
+				2BF04ABD0BF518D4006C0831 /* Resources */,
+				2BF04ABE0BF518D4006C0831 /* Sources */,
+				2BF04ABF0BF518D4006C0831 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Blades of Exile";
+			productName = "Blades of Exile";
+			productReference = 2BF04AC10BF518D4006C0831 /* Blades of Exile.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2BF04AA10BF51845006C0831 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
+			hasScannedForEncodings = 0;
+			mainGroup = 2BF04A9F0BF51845006C0831;
+			productRefGroup = 2BF04AB30BF5187A006C0831 /* Products */;
+			projectDirPath = "";
+			targets = (
+				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BF04ABD0BF518D4006C0831 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BF04ABE0BF518D4006C0831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF04B0B0BF51924006C0831 /* bldsexil.c in Sources */,
+				2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */,
+				2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */,
+				2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */,
+				2BF04B0F0BF51924006C0831 /* blxgraphics.c in Sources */,
+				2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */,
+				2BF04B1C0BF51924006C0831 /* combat.c in Sources */,
+				2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */,
+				2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */,
+				2BF04B1F0BF51924006C0831 /* Exile.sound.c in Sources */,
+				2BF04B200BF51924006C0831 /* fields.c in Sources */,
+				2BF04B220BF51924006C0831 /* global.c in Sources */,
+				2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */,
+				2BF04B240BF51924006C0831 /* item_data.c in Sources */,
+				2BF04B250BF51924006C0831 /* items.c in Sources */,
+				2BF04B260BF51924006C0831 /* loc_utils.c in Sources */,
+				2BF04B270BF51924006C0831 /* monster.c in Sources */,
+				2BF04B280BF51924006C0831 /* newgraph.c in Sources */,
+				2BF04B290BF51924006C0831 /* party.c in Sources */,
+				2BF04B2B0BF51924006C0831 /* specials.c in Sources */,
+				2BF04B2C0BF51924006C0831 /* startup.c in Sources */,
+				2BF04B2D0BF51924006C0831 /* text.c in Sources */,
+				2BF04B2E0BF51924006C0831 /* town.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2BF04AA30BF51845006C0831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		2BF04AA40BF51845006C0831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+		2BF04AC50BF518D4006C0831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		2BF04AC60BF518D4006C0831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF04AA30BF51845006C0831 /* Debug */,
+				2BF04AA40BF51845006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF04AC50BF518D4006C0831 /* Debug */,
+				2BF04AC60BF518D4006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2BF04AA10BF51845006C0831 /* Project object */;
+}
