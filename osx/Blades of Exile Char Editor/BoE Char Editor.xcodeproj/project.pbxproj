@@ -1,0 +1,345 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEA0BF51924006C0831 /* dlogtool.c */; };
+		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91B3E9930F93A7EA00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3E9920F93A7EA00BF5B67 /* BoECharEd.icns */; };
+		91B3EA110F93AD4D00BF5B67 /* Blades of Exile Base in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3E9D70F93AC1900BF5B67 /* Blades of Exile Base */; };
+		91B3EA120F93AD4D00BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3E9D80F93AC1900BF5B67 /* Blades of Exile Graphics */; };
+		91B3EA130F93AD4D00BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3E9D90F93AC1900BF5B67 /* Blades of Exile Sounds */; };
+		9D05E34E0DD1380400FCD60F /* char.ed.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E3410DD1380400FCD60F /* char.ed.c */; };
+		9D05E34F0DD1380400FCD60F /* ed.action.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E3420DD1380400FCD60F /* ed.action.c */; };
+		9D05E3500DD1380400FCD60F /* ed.editors.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E3440DD1380400FCD60F /* ed.editors.c */; };
+		9D05E3510DD1380400FCD60F /* ed.fileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E3460DD1380400FCD60F /* ed.fileio.c */; };
+		9D05E3520DD1380400FCD60F /* ed.global.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E3480DD1380400FCD60F /* ed.global.c */; };
+		9D05E3530DD1380400FCD60F /* ed.graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E34A0DD1380400FCD60F /* ed.graphics.c */; };
+		9D05E3540DD1380400FCD60F /* ed.sound.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D05E34C0DD1380400FCD60F /* ed.sound.c */; };
+		9D86FBE10DD50BF900EDC359 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 9D86FBE00DD50BF900EDC359 /* bladespced.rsrc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91B3EA1F0F93AD8900BF5B67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor";
+			dstSubfolderSpec = 16;
+			files = (
+				91B3EA110F93AD4D00BF5B67 /* Blades of Exile Base in CopyFiles */,
+				91B3EA120F93AD4D00BF5B67 /* Blades of Exile Graphics in CopyFiles */,
+				91B3EA130F93AD4D00BF5B67 /* Blades of Exile Sounds in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2BF04AC10BF518D4006C0831 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BF04AC30BF518D4006C0831 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
+		2BF04AEA0BF51924006C0831 /* dlogtool.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dlogtool.c; sourceTree = "<group>"; };
+		2BF04AEB0BF51924006C0831 /* dlogtool.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dlogtool.h; sourceTree = "<group>"; };
+		2BF04AF70BF51924006C0831 /* item_data.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = item_data.h; sourceTree = "<group>"; };
+		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		91B3E9920F93A7EA00BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoECharEd.icns; sourceTree = "<group>"; };
+		91B3E9D70F93AC1900BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "../Scenario Editor/Blades of Exile Base"; sourceTree = SOURCE_ROOT; };
+		91B3E9D80F93AC1900BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "../Scenario Editor/Blades of Exile Graphics"; sourceTree = SOURCE_ROOT; };
+		91B3E9D90F93AC1900BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "../Scenario Editor/Blades of Exile Sounds"; sourceTree = SOURCE_ROOT; };
+		9D05E3410DD1380400FCD60F /* char.ed.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = char.ed.c; sourceTree = "<group>"; };
+		9D05E3420DD1380400FCD60F /* ed.action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.action.c; sourceTree = "<group>"; };
+		9D05E3430DD1380400FCD60F /* ed.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.action.h; sourceTree = "<group>"; };
+		9D05E3440DD1380400FCD60F /* ed.editors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.editors.c; sourceTree = "<group>"; };
+		9D05E3450DD1380400FCD60F /* ed.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.editors.h; sourceTree = "<group>"; };
+		9D05E3460DD1380400FCD60F /* ed.fileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.fileio.c; sourceTree = "<group>"; };
+		9D05E3470DD1380400FCD60F /* ed.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.fileio.h; sourceTree = "<group>"; };
+		9D05E3480DD1380400FCD60F /* ed.global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.global.c; sourceTree = "<group>"; };
+		9D05E3490DD1380400FCD60F /* ed.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.global.h; sourceTree = "<group>"; };
+		9D05E34A0DD1380400FCD60F /* ed.graphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.graphics.c; sourceTree = "<group>"; };
+		9D05E34B0DD1380400FCD60F /* ed.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.graphics.h; sourceTree = "<group>"; };
+		9D05E34C0DD1380400FCD60F /* ed.sound.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed.sound.c; sourceTree = "<group>"; };
+		9D05E34D0DD1380400FCD60F /* ed.sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed.sound.h; sourceTree = "<group>"; };
+		9D86FBE00DD50BF900EDC359 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladespced.rsrc; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BF04ABF0BF518D4006C0831 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2BF04A9F0BF51845006C0831 = {
+			isa = PBXGroup;
+			children = (
+				91B3E9750F93A7A300BF5B67 /* headers */,
+				91B3E9740F93A79F00BF5B67 /* src */,
+				9D86FBD90DD50BA900EDC359 /* Resources */,
+				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
+				2BF04AB30BF5187A006C0831 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2BF04AB30BF5187A006C0831 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2BF04AC10BF518D4006C0831 /* Blades of Exile Character Editor.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		91B3E9740F93A79F00BF5B67 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9D05E3410DD1380400FCD60F /* char.ed.c */,
+				9D05E3420DD1380400FCD60F /* ed.action.c */,
+				9D05E3440DD1380400FCD60F /* ed.editors.c */,
+				9D05E3460DD1380400FCD60F /* ed.fileio.c */,
+				9D05E3480DD1380400FCD60F /* ed.global.c */,
+				9D05E34A0DD1380400FCD60F /* ed.graphics.c */,
+				9D05E34C0DD1380400FCD60F /* ed.sound.c */,
+				2BF04AEA0BF51924006C0831 /* dlogtool.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		91B3E9750F93A7A300BF5B67 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				9D05E3430DD1380400FCD60F /* ed.action.h */,
+				9D05E3450DD1380400FCD60F /* ed.editors.h */,
+				9D05E3470DD1380400FCD60F /* ed.fileio.h */,
+				9D05E3490DD1380400FCD60F /* ed.global.h */,
+				9D05E34B0DD1380400FCD60F /* ed.graphics.h */,
+				9D05E34D0DD1380400FCD60F /* ed.sound.h */,
+				2BF04AEB0BF51924006C0831 /* dlogtool.h */,
+				2BF04AF70BF51924006C0831 /* item_data.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		9D86FBD90DD50BA900EDC359 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				91B3E9D70F93AC1900BF5B67 /* Blades of Exile Base */,
+				91B3E9D80F93AC1900BF5B67 /* Blades of Exile Graphics */,
+				91B3E9D90F93AC1900BF5B67 /* Blades of Exile Sounds */,
+				91B3E9920F93A7EA00BF5B67 /* BoECharEd.icns */,
+				9D86FBE00DD50BF900EDC359 /* bladespced.rsrc */,
+				2BF04AC30BF518D4006C0831 /* Blades of Exile Character Editor-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2BF04AC00BF518D4006C0831 /* Blades of Exile Character Editor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */;
+			buildPhases = (
+				2BF04ABD0BF518D4006C0831 /* Resources */,
+				91B3EA1F0F93AD8900BF5B67 /* CopyFiles */,
+				2BF04ABE0BF518D4006C0831 /* Sources */,
+				2BF04ABF0BF518D4006C0831 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Blades of Exile Character Editor";
+			productName = "Blades of Exile Character Editor";
+			productReference = 2BF04AC10BF518D4006C0831 /* Blades of Exile Character Editor.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2BF04AA10BF51845006C0831 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE Char Editor" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = 2BF04A9F0BF51845006C0831;
+			productRefGroup = 2BF04AB30BF5187A006C0831 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2BF04AC00BF518D4006C0831 /* Blades of Exile Character Editor */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BF04ABD0BF518D4006C0831 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D86FBE10DD50BF900EDC359 /* bladespced.rsrc in Resources */,
+				91B3E9930F93A7EA00BF5B67 /* BoECharEd.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BF04ABE0BF518D4006C0831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */,
+				9D05E34E0DD1380400FCD60F /* char.ed.c in Sources */,
+				9D05E34F0DD1380400FCD60F /* ed.action.c in Sources */,
+				9D05E3500DD1380400FCD60F /* ed.editors.c in Sources */,
+				9D05E3510DD1380400FCD60F /* ed.fileio.c in Sources */,
+				9D05E3520DD1380400FCD60F /* ed.global.c in Sources */,
+				9D05E3530DD1380400FCD60F /* ed.graphics.c in Sources */,
+				9D05E3540DD1380400FCD60F /* ed.sound.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2BF04AA30BF51845006C0831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/include/c++/4.0.0/";
+				LINK_WITH_STANDARD_LIBRARIES = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = ../build;
+			};
+			name = Debug;
+		};
+		2BF04AA40BF51845006C0831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				COPY_PHASE_STRIP = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/include/c++/4.0.0/";
+				LINK_WITH_STANDARD_LIBRARIES = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				SYMROOT = ../build;
+			};
+			name = Release;
+		};
+		2BF04AC50BF518D4006C0831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile Character Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile Character Editor";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		2BF04AC60BF518D4006C0831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile Character Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile Character Editor";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE Char Editor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF04AA30BF51845006C0831 /* Debug */,
+				2BF04AA40BF51845006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BF04AC50BF518D4006C0831 /* Debug */,
+				2BF04AC60BF518D4006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2BF04AA10BF51845006C0831 /* Project object */;
+}
