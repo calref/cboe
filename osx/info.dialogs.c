@@ -352,10 +352,10 @@ void put_item_info(short pc,short item)////
 
 	if (s_i.ability > 0) {////
 		if (s_i.item_properties & 32) { // Concealed ability
+			cd_set_item_text(998,12,"???");
+		} else {
 			get_str(desc_str,23,s_i.ability + 1);
 			cd_set_item_text(998,12,(char *) desc_str);
-		} else {
-			cd_set_item_text(998,12,"???");
 		}
 	}	
 	if (s_i.charges > 0)
