@@ -148,33 +148,33 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	
 	num_hits += trap_level;
 		
-	if (trap_type == 0)
+	if (trap_type == TRAP_RANDOM)
 		trap_type = get_ran(1,1,4);
-	if ((trap_type ==  5) || (trap_type == 6))
+	if (trap_type == TRAP_FALSE_ALARM)
 		return TRUE;
 		
 	if (pc_num < 6) {
 			i = stat_adj(pc_num,1);
 			if ((i_level = get_prot_level(pc_num,42)) > 0)
 				i = i + i_level / 2;
-			skill = minmax(0,20,adven[pc_num].skills[14] + 
-				+ adven[pc_num].skills[18] / 2 + 1 - c_town.difficulty + 2 * i);
+			skill = minmax(0,20,adven[pc_num].skills[SKILL_DISARM_TRAPS] + 
+				+ adven[pc_num].skills[SKILL_LUCK] / 2 + 1 - c_town.difficulty + 2 * i);
 	
 			r1 = get_ran(1,0,100) + diff;
 			// Nimble?
-			if (adven[pc_num].traits[3] == FALSE)
-				r1 -= 6;
+			if (adven[pc_num].traits[TRAIT_NIMBLE] == FALSE)
+				r1 += 6; // Changed -= to += so that nimble characters are _better_ at disarming traps
 
 
 			if (r1 < trap_odds[skill]) {
 				add_string_to_buf("  Trap disarmed.            ");
 				return TRUE;
-				}
-				else add_string_to_buf("  Disarm failed.          ");
+			}
+			else add_string_to_buf("  Disarm failed.          ");
 		}
 	
 	switch (trap_type) {
-		case 1:
+		case TRAP_BLADE:
 			for (i = 0; i < num_hits; i++) {
 					add_string_to_buf("  A knife flies out!              ");
 					r1 = get_ran(2 + c_town.difficulty / 14,1,10);
@@ -182,14 +182,14 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 				}
 			break;
 			
-		case 2:
+		case TRAP_DART:
 			add_string_to_buf("  A dart flies out.              ");
 			r1 = 3 + c_town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			poison_pc(pc_num,r1);
 			break;
 			
-		case 3:
+		case TRAP_GAS:
 			add_string_to_buf("  Poison gas pours out.          ");
 			r1 = 2 + c_town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
@@ -197,7 +197,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 				poison_pc(i,r1);
 			break;
 	
-		case 4: 
+		case TRAP_EXPLOSION: 
 			for (i = 0; i < num_hits; i++) {
 					add_string_to_buf("  There is an explosion.        ");
 					r1 = get_ran(3 + c_town.difficulty / 13,1,8);
@@ -205,43 +205,43 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 				}
 			break;
 			
-		case 5:
+		case TRAP_SLEEP_RAY:
 			add_string_to_buf("  A purple ray flies out.          ");
 			r1 = 200 + c_town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
 			sleep_pc(pc_num,r1,12,50);
 			break;
-		case 7:
+		case TRAP_DRAIN_XP:
 			add_string_to_buf("  You feel weak.            ");
 			r1 = 40;
 			r1 = r1 + trap_level * 30;
 			adven[pc_num].experience = max (0,adven[pc_num].experience - r1);
 			break;
 		
-		case 8:
+		case TRAP_ALERT:
 			add_string_to_buf("  An alarm goes off!!!            ");
 			make_town_hostile();
 			break;
 
-		case 9: 
+		case TRAP_FLAMES: 
 			add_string_to_buf("  Flames shoot from the walls.        ");
 			r1 = get_ran(10 + trap_level * 5,1,8);
 			hit_party(r1,1);
 			break;
-		case 10: 
+		case TRAP_DUMBFOUND: 
 			add_string_to_buf("  You feel disoriented.        ");
 			for(i = 0; i < 6; i++)
 				dumbfound_pc(i,2 + trap_level * 2);
 			break;
 			
-		case 11:
+		case TRAP_DISEASE:
 			add_string_to_buf("  You prick your finger. ");
 			r1 = 3 + c_town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			disease_pc(pc_num,r1);
 			break;
 			
-		case 12:
+		case TRAP_DISEASE_ALL:
 			add_string_to_buf("  A foul substance sprays out.");
 			r1 = 2 + c_town.difficulty / 14;
 			r1 = r1 + trap_level * 2;

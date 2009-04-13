@@ -828,10 +828,10 @@ short do_look(location space)
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if (((overall_mode == 35) && (same_point(space,party.p_loc) == TRUE)) ||
-		((overall_mode == 36) && (same_point(space,c_town.p_loc))))
+	if (((overall_mode == MODE_LOOK_OUTDOORS) && (same_point(space,party.p_loc) == TRUE)) ||
+		((overall_mode == MODE_LOOK_TOWN) && (same_point(space,c_town.p_loc))))
 			add_string_to_buf("    Your party");
-	if (overall_mode == 37)
+	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
 			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
@@ -839,11 +839,11 @@ short do_look(location space)
 				add_string_to_buf((char *) store_string);					
 				}
 		
-	if ((overall_mode == 36) || (overall_mode == 37)) {
+	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for (i = 0; i < T_M; i++)
 			if ((c_town.monst.dudes[i].active != 0) && (is_lit == TRUE)
 				&& (monst_on_space(space,i) == TRUE) &&
-				((overall_mode == 36) || (can_see(pc_pos[current_pc],space,0) < 5))
+				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
 				
 				
@@ -863,7 +863,7 @@ short do_look(location space)
 
 				}
 		}
-	if (overall_mode == 35) {
+	if (overall_mode == MODE_LOOK_OUTDOORS) {
 		for (i = 0; i < 10; i++) {
 			if ((party.out_c[i].exists == TRUE) 
 				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
@@ -885,7 +885,7 @@ short do_look(location space)
 			add_string_to_buf("    Horse                ");
 		}
 		
-	if ((overall_mode == 36) || (overall_mode == 37)) {
+	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		if (town_boat_there(space) < 30)
 			add_string_to_buf("    Boat               ");
 		if (town_horse_there(space) < 30)
@@ -1246,13 +1246,13 @@ short print_terrain(location space)
 {
 	unsigned char which_terrain;
 
-	if (overall_mode == 35) {
+	if (overall_mode == MODE_LOOK_OUTDOORS) {
 		which_terrain = out[space.x][space.y];
 		}
-	if (overall_mode == 36) {
+	if (overall_mode == MODE_LOOK_TOWN) {
 		which_terrain = t_d.terrain[space.x][space.y];
 		}
-	if (overall_mode == 37) {
+	if (overall_mode == MODE_LOOK_COMBAT) {
 		which_terrain = combat_terrain[space.x][space.y];
 		}
 	get_ter_name(store_string2,which_terrain);
@@ -1372,7 +1372,7 @@ void Display_String(Str255 str)
 
 void drawstring(char * str)
 {
-	char pstr[256];
+	unsigned char pstr[256];
 	c2pstrcpy(pstr,str);
 	DrawString(pstr);
 }
@@ -1734,7 +1734,6 @@ Boolean day_reached(unsigned char which_day, unsigned char which_event)
 	if (calc_day() >= which_day)
 		return TRUE;
 		else return FALSE;
-		
 }
 
 ////

@@ -74,7 +74,7 @@ short ex_abs(short x)
 		else return x;
 }
 
-void pause(short length)
+void BoEpause(short length)
 {
 	unsigned long dummy,len;
 	

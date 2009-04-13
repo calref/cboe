@@ -175,7 +175,7 @@ void start_town_mode(short which_town, short entry_dir)
 		return;
 		}
 					
-	overall_mode = 1;
+	overall_mode = MODE_TOWN;
 		
 
 	load_town(town_number,0,0,NULL);
@@ -219,7 +219,7 @@ void start_town_mode(short which_town, short entry_dir)
 		if (town_number == party.creature_save[i].which_town) {
 			c_town.monst = party.creature_save[i];
 			monsters_loaded = TRUE;
-						
+			
 			for (j = 0; j < T_M; j++) {
 				if (loc_off_act_area(c_town.monst.dudes[j].m_loc) == TRUE)
 					c_town.monst.dudes[j].active = 0;
@@ -227,43 +227,71 @@ void start_town_mode(short which_town, short entry_dir)
 					c_town.monst.dudes[j].active = 1;
 				c_town.monst.dudes[j].m_loc = t_d.creatures[j].start_loc;
 				c_town.monst.dudes[j].m_d.health = c_town.monst.dudes[j].m_d.m_health;
-				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp; 			
+				c_town.monst.dudes[j].m_d.mp = c_town.monst.dudes[j].m_d.max_mp;
 				c_town.monst.dudes[j].m_d.morale = c_town.monst.dudes[j].m_d.m_morale;
 				for (k = 0; k < 15; k++)
 					c_town.monst.dudes[j].m_d.status[k] = 0;
 				if (c_town.monst.dudes[j].summoned > 0)
 					c_town.monst.dudes[j].active = 0;
 				monst_target[j] = 6;
-				}
+			}
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
-			// These should have protected status (i.e. spec_enc_code set tto 50)
-			for (j = 0; j < T_M; j++) 
-				if ((c_town.monst.dudes[j].monst_start.time_flag >= 4) &&
-					(c_town.monst.dudes[j].monst_start.time_flag <= 6)) {
+			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
+			for (j = 0; j < T_M; j++) {
+				switch (c_town.monst.dudes[j].monst_start.time_flag){
+					case 4: case 5 : //case 6:
 						if ((((short) (party.age / 1000) % 3) + 4) != c_town.monst.dudes[j].monst_start.time_flag)
 							c_town.monst.dudes[j].active = 0;
-							else {
-								c_town.monst.dudes[j].active = 1;
-								c_town.monst.dudes[j].monst_start.spec_enc_code = 0;
-								// Now remove time flag so it doesn't geet reappearing
-								c_town.monst.dudes[j].monst_start.time_flag = 0;
-								c_town.monst.dudes[j].m_loc = t_d.creatures[j].start_loc;
-								c_town.monst.dudes[j].m_d.health = c_town.monst.dudes[j].m_d.m_health;
-								}
+						else {
+							c_town.monst.dudes[j].active = 1;
+							c_town.monst.dudes[j].monst_start.spec_enc_code = 0;
+							// Now remove time flag so it doesn't get reappearing
+							c_town.monst.dudes[j].monst_start.time_flag = 0;
+							c_town.monst.dudes[j].m_loc = t_d.creatures[j].start_loc;
+							c_town.monst.dudes[j].m_d.health = c_town.monst.dudes[j].m_d.m_health;
 						}
-					
-			
+						break ;
+						
+						// Now, appearing/disappearing monsters might have arrived/disappeared.
+					case 1:
+						if (day_reached(c_town.monst.dudes[j].monst_start.monster_time, c_town.monst.dudes[j].monst_start.time_code) == TRUE)
+						{
+							c_town.monst.dudes[j].active = 1;
+							c_town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get reappearing
+						}
+						break;
+					case 2:
+						if (day_reached(c_town.monst.dudes[j].monst_start.monster_time, c_town.monst.dudes[j].monst_start.time_code) == TRUE)
+						{
+							c_town.monst.dudes[j].active = 0;
+							c_town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get disappearing again
+						}
+						break;
+					case 7:
+						if (calc_day() >= party.key_times[c_town.monst.dudes[j].monst_start.time_code]){ //calc_day is used because of the "definition" of party.key_times
+							c_town.monst.dudes[j].active = 1;
+							c_town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get reappearing
+						}
+						break;
+						
+					case 8:
+						if (calc_day() >= party.key_times[c_town.monst.dudes[j].monst_start.time_code]){
+							c_town.monst.dudes[j].active = 0;
+							c_town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get disappearing again
+						}
+						break;
+				}
+			}
 			
 			for (j = 0; j < town_size[town_type]; j++)
-				for (k = 0; k < town_size[town_type]; k++) { // now load in saved setup, 
-						// except that barrels and crates resotre to orig locs
+				for (k = 0; k < town_size[town_type]; k++) { // now load in saved setup,
+					// except that barrels and crates restore to orig locs
 					temp = setup_save.setup[i][j][k] & 231;
 					
-					misc_i[j][k] = (misc_i[j][k] & 24) | temp;//setup_save.setup[i][j][k];					
-					}
-			}
-
+					misc_i[j][k] = (misc_i[j][k] & 24) | temp;//setup_save.setup[i][j][k];
+				}
+		}
 							
 	if (monsters_loaded == FALSE) {
 				for (i = 0; i < T_M; i++)
@@ -560,7 +588,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 	GetPort(&old_port);	
 	SetPort(GetWindowPort(mainPtr));
-	if (overall_mode == 1) {
+	if (overall_mode == MODE_TOWN) {
 			for (i = 0; i < 4; i++)
 				if (party.creature_save[i].which_town == c_town.town_num) {
 					party.creature_save[i] = c_town.monst;
@@ -656,7 +684,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 	if (switching_level == 0) {
 			fix_boats();
-			overall_mode = 0;
+			overall_mode = MODE_OUTDOORS;
 
 			erase_out_specials();
 
@@ -732,7 +760,7 @@ void start_town_combat(short direction)
 	center = pc_pos[current_pc];
 
 	which_combat_type = 1;	
-	overall_mode = 10;
+	overall_mode = MODE_COMBAT;
 
 	combat_active_pc = 6;
 	for (i = 0; i < T_M; i++)
@@ -767,7 +795,7 @@ short end_town_combat()
 	while ((adven[r1].main_status != 1) && (num_tries++ < 1000))
 			r1 = get_ran(1,0,5);
 	c_town.p_loc = pc_pos[r1];
-	overall_mode = 1;
+	overall_mode = MODE_TOWN;
 	current_pc = store_current_pc;
 	if (adven[current_pc].main_status != 1)
 		current_pc = first_active_pc();
@@ -1352,8 +1380,8 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0))) {
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0))) {
 		view_rect.left = minmax(0,8,party.loc_in_sec.x - 20);
 		view_rect.right = view_rect.left + 40;
 		view_rect.top = minmax(0,8,party.loc_in_sec.y - 20);
@@ -1388,8 +1416,8 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				}
 			}
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0)) ||
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)) ||
 		(((is_town()) || (is_combat())) && (town_type != 2))) {
 			area_to_draw_from = view_rect;	
 			area_to_draw_from.left *= 6;
@@ -1467,8 +1495,8 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 	// Now, if doing just partial restore, crop redraw_rect to save time.
 	if (the_item == 5) {
 		if ((is_out())  || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0)))
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))
 			kludge = global_to_local(party.p_loc);
 		else if (is_combat())
 			kludge = pc_pos[current_pc];
@@ -1480,13 +1508,13 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		} 
 
 	// Now, if shopping or talking, just don't touch anything.
-	if ((overall_mode == 21) || (overall_mode == 20))
+	if ((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
 		redraw_rect.right = -1;
 	
 	if ((is_out()) ||
 		((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == 20) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == 21) && (store_pre_shop_mode == 0)))	
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))	
 		out_mode = TRUE;
 		else out_mode = FALSE;
 
@@ -1627,7 +1655,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 						FrameOval(&draw_rect);
 						}
 				}
-		if ((overall_mode != 21) && (overall_mode != 20)) {
+		if ((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
 			where = (is_town()) ? c_town.p_loc : global_to_local(party.p_loc);
 
 					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);

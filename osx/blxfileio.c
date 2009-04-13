@@ -17,6 +17,11 @@
 
 #include "Exile.sound.h"
 
+#include <vector>
+#include <string>
+using std::vector;
+using std::string;
+
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
 #define	NIL		0L
@@ -55,7 +60,7 @@ extern scenario_data_type scenario;
 extern piles_of_stuff_dumping_type *data_store;
 extern talking_record_type talking;
 extern outdoor_strs_type outdoor_text[2][2];
-extern scen_header_type scen_headers[25];
+extern vector<scen_header_type> scen_headers;
 extern unsigned char combat_terrain[64][64];
 
 typedef struct {
@@ -77,7 +82,8 @@ void add_outdoor_maps();
 short specials_res_id,data_dump_file_id;
 Str255 start_name;
 short start_volume,data_volume;
-long start_dir,data_dir,scen_dir;
+long start_dir,data_dir/*,scen_dir*/;
+string progPath;
 
 outdoor_record_type dummy_out;////
 town_record_type dummy_town;
@@ -89,37 +95,68 @@ town_record_type dummy_town;
 template_town_type town_template;
 	CInfoPBRec myCPB;
 GWorldPtr spec_scen_g = NULL;
+ResFileRefNum mainRef, graphicsRef, soundRef;
 
 void init_directories()
 {
 	short error;
-	Str255 data_name = "\pExile III data";
 	Str255 folder_name = "\p::::Blades of Exile Scenarios";
 	
-	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
-	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
-	HOpenResFile(start_volume,start_dir,"\p::::bladesofexile.rsrc",1);
-	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Sounds",1);
-	if (ResError() != 0) {
-		Alert(984,NIL);
+//	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
+//	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
+//	HOpenResFile(start_volume,start_dir,"\p::::bladesofexile.rsrc",1);
+//	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Sounds",1);
+//	if (ResError() != 0) {
+//		Alert(984,NIL);
+//		ExitToShell();
+//		}
+//	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Graphics",1);
+//	if (ResError() != 0) {
+//		Alert(984,NIL);
+//		ExitToShell();
+//	}
+	char cPath[768];
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladesofexile.rsrc"),CFSTR(""),NULL);
+	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
+	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
+	FSRef gRef, sRef;
+	FSPathMakeRef((UInt8*)cPath, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
+	if (error != noErr) {
+		printf("Error! Main resource file not found.\n");
 		ExitToShell();
-		}
-	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Graphics",1);
-	if (ResError() != 0) {
-		Alert(984,NIL);
+	}
+	char *path = "Scenario Editor/Blades of Exile Graphics";
+	error = FSPathMakeRef((UInt8*) path, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Graphics not found.\n");
 		ExitToShell();
-		}
+	}
+	path = "Scenario Editor/Blades of Exile Sounds";
+	FSPathMakeRef((UInt8*) path, &sRef, false);
+	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Sounds not found.\n");
+		ExitToShell();
+	}
 
 	// now I generate the directory ID of the folder which contains the scenarios
 	// code copied from Mac Prog FAQ book
-	myCPB.dirInfo.ioNamePtr = folder_name;
-	myCPB.dirInfo.ioVRefNum = start_volume;
-	myCPB.dirInfo.ioFDirIndex = 0;
-	myCPB.dirInfo.ioDrDirID = start_dir;
-	error = PBGetCatInfo(&myCPB,FALSE); // false means not async
+//	myCPB.dirInfo.ioNamePtr = folder_name;
+//	myCPB.dirInfo.ioVRefNum = start_volume;
+//	myCPB.dirInfo.ioFDirIndex = 0;
+//	myCPB.dirInfo.ioDrDirID = start_dir;
+//	error = PBGetCatalogInfoSync(&myCPB); // false means not async
+//	
+//	scen_dir = myCPB.dirInfo.ioDrDirID;
 	
-	scen_dir = myCPB.dirInfo.ioDrDirID;
-	
+	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
+	CFStringGetCString(progURL, cPath, 768, kCFStringEncodingUTF8);
+	progPath = cPath;
 }
 
 
@@ -1466,51 +1503,97 @@ void build_scen_headers()
 	short cur_entry = 0;
 	Str255 scen_name;
 	OSErr err;
+	string scenDir = progPath;
+	scenDir.erase(scenDir.find_last_of("/"));
+	scenDir += "/Blades of Exile Scenarios";
+	printf("%s\n%s\n",progPath.c_str(),scenDir.c_str());
+	scen_headers.clear();
+//	for (i = 0; i < 25; i++)
+//		scen_headers[i].flag1 = 0;
+	FSRef ref;
+	FSIterator iter;
+	err = FSPathMakeRef((UInt8*)scenDir.c_str(),&ref,NULL);
+	if(err != noErr){
+		printf("Directory not found!\n");
+		return;
+	}
+	/**TESTING**/
+	UniChar x[] = {0x0024, 0x0041, 0x0020, 0x0075, 0x0073, 0x0065, 0x006c, 0x0065, 0x0073, 0x0073, 0x0020, 0x0066, 0x0069, 0x006c, 0x0065};
+	err = FSCreateFileUnicode (&ref, 15, x, NULL, NULL, NULL, NULL);
+	if(err != noErr)printf("Error creating file.");
+	/**END TESTING**/
+	err = FSOpenIterator(&ref, kFSIterateFlat, &iter);
+	if(err != noErr){
+		printf("Error opening iterator!\n");
+		return;
+	}
+	ItemCount numScens = 0;
+	FSRef fileRefs[50];
+	FSSpec files[50];
 	
-	for (i = 0; i < 25; i++)
-		scen_headers[i].flag1 = 0;
-	
-	myCPB.dirInfo.ioCompletion = NULL;
-	myCPB.dirInfo.ioNamePtr = scen_name;
-	myCPB.dirInfo.ioVRefNum = start_volume;
+	//myCPB.dirInfo.ioCompletion = NULL;
+	//myCPB.dirInfo.ioNamePtr = scen_name;
+	//myCPB.dirInfo.ioVRefNum = start_volume;
 	
 	do {
-		myCPB.hFileInfo.ioFDirIndex = index;
-		myCPB.hFileInfo.ioDirID = scen_dir;
-		err = PBGetCatInfo(&myCPB,FALSE);
-		if (err == noErr) {
-			if ( (myCPB.hFileInfo.ioFlAttrib & ioDirMask) != 0) {
-			
-				} // folder, so do nothing
-				else {
-					if (load_scenario_header(scen_name,cur_entry) == TRUE) {
-						// now we need to store the file name, first stripping any path that occurs
-						// before it
-						last_colon = -1;
-						p2c(scen_name);
-						for (i = 0; i < strlen((char *) scen_name); i++)
-							if (scen_name[i] == ':')
-								last_colon = i;
-						for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
-							data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
-						data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
-						cur_entry++;
-						}
-					}
+		//myCPB.hFileInfo.ioFDirIndex = index;
+		//myCPB.hFileInfo.ioDirID = scen_dir;
+		//err = PBGetCatalogInfoSync(&myCPB);
+		if(cur_entry == numScens){
+			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
+			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
+			if(err == errFSNoMoreItems && cur_entry == 0){
+				printf("No scenarios were found!");
+				printf("\nnumScens = %d");
+			}else if(err != noErr){
+				printf("Error getting catalog list!");
 			}
+			cur_entry = 0;
+		}
+		if (err == noErr) {
+			if ( /*(myCPB.hFileInfo.ioFlAttrib & ioDirMask) != 0*/ false) {
+			
+			} // folder, so do nothing
+			else {
+				if (load_scenario_header(fileRefs[cur_entry]) == TRUE) {
+					// now we need to store the file name, first stripping any path that occurs
+					// before it
+					last_colon = -1;
+					//p2c(scen_name);
+//					for (i = 0; i < strlen((char *) scen_name); i++)
+//						if (scen_name[i] == ':')
+//							last_colon = i;
+//					for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
+//						data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
+//					data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
+//					cur_entry++;
+					std::string curScenarioName((char*) files[cur_entry].name);
+					for(i = 0; i < curScenarioName.length(); i++)
+						if(curScenarioName[i] == ':')
+							last_colon = i;
+					curScenarioName.erase(0,last_colon + 1);
+					//if(curScenario != "valleydy.exs" &&
+					//   curScenario != "stealth.exs" &&
+					//   curScenario != "zakhazi.exs")
+						data_store->scen_names.push_back(curScenarioName);
+				}
+				cur_entry++;
+				//entries_so_far++;
+			}
+		}
 		index++;
-		}
-		while ((err == noErr) && (cur_entry < 20));
-	if (cur_entry == 0) { // no scens present
-		}
+	}while (err == noErr);
+	if (data_store->scen_names.size() == 0) { // no scens present
+	}
+	FSCloseIterator(iter);
 }
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-Boolean load_scenario_header(Str255 filename,short header_entry)
+bool load_scenario_header(FSRef file/*,short header_entry*/)
 {
 
-	short i,file_id;
+	short i, file_id;
 	short store;
 	Boolean file_ok = FALSE;
 	OSErr error;
@@ -1518,48 +1601,58 @@ Boolean load_scenario_header(Str255 filename,short header_entry)
 	Str255 load_str;
 	Boolean mac_header = TRUE;
 		
-	error = HOpen(start_volume,scen_dir,filename,3,&file_id);	
+	//error = HOpen(start_volume,scen_dir,filename,3,&file_id);
+	error = FSOpenFork(&file, 0, NULL, fsRdPerm, &file_id);
 	if (error != 0) {
 		return FALSE;
-		}	
-		
+	}
+	scen_header_type curScen;
 	len = (long) sizeof(scen_header_type);
-	if ((error = FSRead(file_id, &len, (char *) &(scen_headers[header_entry]))) != 0){
+	if ((error = FSRead(file_id, &len, (char *) &curScen)) != 0){
 		FSClose(file_id); return FALSE;
-		}
-	if ((scen_headers[header_entry].flag1 == 10) && (scen_headers[header_entry].flag2 == 20)
-	 && (scen_headers[header_entry].flag3 == 30)
-	  && (scen_headers[header_entry].flag4 == 40)) {
+	}
+	if ((curScen.flag1 == 10) && (curScen.flag2 == 20)
+	 && (curScen.flag3 == 30)
+	  && (curScen.flag4 == 40)) {
 	  	file_ok = TRUE;
 	  	mac_header = TRUE;
-	  	}
-	if ((scen_headers[header_entry].flag1 == 20) && (scen_headers[header_entry].flag2 == 40)
-	 && (scen_headers[header_entry].flag3 == 60)
-	  && (scen_headers[header_entry].flag4 == 80)) {
+	}
+	if ((curScen.flag1 == 20) && (curScen.flag2 == 40)
+	 && (curScen.flag3 == 60)
+	  && (curScen.flag4 == 80)) {
 	  	file_ok = TRUE;
 	  	mac_header = FALSE;
-	  	}
-	 if (file_ok == FALSE) {
-		scen_headers[header_entry].flag1 = 0;
+	}
+	if (file_ok == FALSE) {
+		//scen_headers[header_entry].flag1 = 0;
+		//scen_headers.pop_back();
 		FSClose(file_id); 
-		return FALSE;	 
-	 	}
+		return FALSE;
+	}
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
 	len = (long) sizeof(scenario_data_type);
-	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
-		FSClose(file_id); oops_error(29); return FALSE;
-		}
+	error = FSRead(file_id, &len, (char *) &scenario);
+	if (error != 0){
+		FSClose(file_id);
+		oops_error(29);
+		return FALSE;
+	}
 	store = scenario.rating;
 	if (mac_header == FALSE)
 		flip_short(&store);
-	scen_headers[header_entry].default_ground = store;
+	curScen.default_ground = store;
 	
 	len = sizeof(scen_item_data_type);
-	if (SetFPos(file_id,3,len) != 0)
+	if (SetFPos(file_id,3,len) != 0){
+		FSClose(file_id);
 		return FALSE;
-		
+	}
+	
+	scen_headers.push_back(curScen);
+	string* scen_strs = new string[3];
+	data_store->scen_header_strs.push_back(scen_strs);
 	for (i = 0; i < 3; i++) {
 		store = (short) scenario.scen_str_len[i];
 		len = (long) (store);
@@ -1567,9 +1660,9 @@ Boolean load_scenario_header(Str255 filename,short header_entry)
 		load_str[len] = 0;
 		if (i == 0)
 			load_str[29] = 0;
-			else load_str[59] = 0;
-		strcpy(data_store->scen_header_strs[header_entry][i],(char *) load_str);
-		}
+		else load_str[59] = 0;
+		scen_strs[i] = (char*)load_str;
+	}
 	
 	FSClose(file_id);
 
@@ -1586,11 +1679,11 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 		FSClose(file_id);
 		return NULL;
 	}
-	unsigned char * data = malloc(length);
+	unsigned char * data = new unsigned char[length];
 	FSRead(file_id,&length,data);
 	FSClose(file_id);
 	GWorldPtr ret = load_bmp(data,length);
-	free(data);
+	delete data;
 	return ret;
 }
 

@@ -21,6 +21,7 @@
 #include "fields.h"
 #include "text.h"
 #include "Exile.sound.h"
+#include "bldsexil.h"
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -486,7 +487,7 @@ void put_party_in_scen()
 	start_town_mode(scenario.which_town_start,9);
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
-	overall_mode = 1;
+	overall_mode = MODE_TOWN;
 	load_area_graphics();
 	create_clip_region();
 	redraw_screen(0);
@@ -1494,9 +1495,9 @@ Boolean repeat_cast_ok(short type)
 {
 	short store_select,who_would_cast,what_spell;
 
-	if (overall_mode == 10)
+	if (overall_mode == MODE_COMBAT)
 		who_would_cast = current_pc;
-		else if (overall_mode < 2)
+		else if (overall_mode < MODE_TALK_TOWN)
 			who_would_cast = pc_casting;
 			else return FALSE;
 
@@ -1646,7 +1647,7 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 18: // dispel field
 			add_string_to_buf("  Target spell.               ");
 			current_pat = square;
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			set_town_spell(spell_num,pc_num);		
 			break;
 			
@@ -1683,20 +1684,20 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 7: case 20: case 34: case 41:  //  Scry monster, Unlock, disp. barrier, Capture SOul
 			add_string_to_buf("  Target spell.               ");
 			current_pat = single;
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			set_town_spell(spell_num,pc_num);
 			break;		
 
 		case 42: case 59: case 60: // fire and force barriers, quickfire
 			add_string_to_buf("  Target spell.               ");
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			current_pat = single;
 			set_town_spell(spell_num,pc_num);
 			break;
 					
 		case 51: // antimagic
 			add_string_to_buf("  Target spell.               ");
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			current_pat = rad2;
 			set_town_spell(spell_num,pc_num);
 			break;		
@@ -1758,12 +1759,12 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 
 					if (is_town()) {
-					loc = (overall_mode == 0) ? party.p_loc : c_town.p_loc;
+					loc = (overall_mode == MODE_OUTDOORS) ? party.p_loc : c_town.p_loc;
 						sprintf ((char *) c_line, "  You're at: x %d  y %d.",
 						(short) loc.x, (short) loc.y);
 						}
 					if (is_out()) {
-						loc = (overall_mode == 0) ? party.p_loc : c_town.p_loc;
+						loc = (overall_mode == MODE_OUTDOORS) ? party.p_loc : c_town.p_loc;
 						x = loc.x; y = loc.y;
 							x += 48 * party.outdoor_corner.x; y += 48 * party.outdoor_corner.y;
 							sprintf ((char *) c_line, "  You're outside at: x %d  y %d.",x,y);
@@ -1786,7 +1787,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 		case 8: // Ritual - Sanctify
 			add_string_to_buf("  Sanctify which space?               ");
 			current_pat = single;
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			set_town_spell(100 + spell_num,pc_num);		
 			break;
 			
@@ -1832,14 +1833,14 @@ void do_priest_spell(short pc_num,short spell_num) ////
 		case 16:
 			add_string_to_buf("  Destroy what?               ");
 			current_pat = (spell_num == 16) ? single : square;
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			set_town_spell(100 + spell_num,pc_num);		
 			break;
 
 		case 45: // dispelling fields
 			add_string_to_buf("  Target spell.               ");
 			current_pat = (spell_num == 19) ? single : rad2;
-			overall_mode = 3;
+			overall_mode = MODE_TOWN_TARGET;
 			set_town_spell(100 + spell_num,pc_num);		
 			break;
 
@@ -1865,7 +1866,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 			
 		case 60:
-			if (overall_mode > 0) {
+			if (overall_mode > MODE_OUTDOORS) {
 				add_string_to_buf("  Can only cast outdoors. ");
 				return;
 				}
@@ -1884,7 +1885,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
 				scenario.out_start.x,scenario.out_start.y);
 			center = c_town.p_loc = scenario.where_start;
-//			overall_mode = 0;
+//			overall_mode = MODE_OUTDOORS;
 //			center = party.p_loc;
 //			update_explored(party.p_loc);
 			redraw_screen(0);
@@ -3518,7 +3519,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 						boom_space(c_town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
 						else boom_space(c_town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
 				}
-				if (overall_mode != 0)
+				if (overall_mode != MODE_OUTDOORS)
 					FlushEvents(mDownMask,0);				
 				FlushEvents(keyDownMask,0);				
 		}
@@ -3572,14 +3573,14 @@ void kill_pc(short which_pc,short type)
 			for (i = 0; i < 24; i++)
 				adven[which_pc].equip[i] = FALSE;
 
-			item_loc = (overall_mode >= 10) ? pc_pos[which_pc] : c_town.p_loc;
+			item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : c_town.p_loc;
 	
 			if (type == 2)
 				make_sfx(item_loc.x,item_loc.y,3);
 				else if (type == 3)
 					make_sfx(item_loc.x,item_loc.y,6);
 		
-			if (overall_mode != 0)	
+			if (overall_mode != MODE_OUTDOORS)	
 				for (i = 0; i < 24; i++)
 					if (adven[which_pc].items[i].variety != 0) {
 						dummy = place_item(adven[which_pc].items[i],item_loc,TRUE);

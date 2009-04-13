@@ -1,6 +1,6 @@
 //#define EXILE_BIG_GUNS 1
 
-#define	SLEEP_TICKS		0L
+#define	SLEEP_TICKS		60L
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
@@ -10,7 +10,6 @@
 
 #define NUM_TOWN_ITEMS	115
 
-#define	SLEEP_TICKS		0L
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
@@ -48,6 +47,8 @@
 #define CHEST_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,0); break;
 #define CHEST_HEAVY can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,20); break;
 #define CHEST_ALARM can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,11); break;
+
+#define printFlag() printf("%s %i\n",__FILE__,__LINE__)
 
 typedef struct {
 	char x,y;
@@ -439,7 +440,7 @@ short a_v(short x);
 short ex_abs(short x);
 short get_ran (short times,short  min,short  max);
 Boolean same_point(location p1,location p2);
-void pause(short length);
+void BoEpause(short length);
 short minmax(short min,short max,short k);
 short min(short a,short b);
 short max(short a,short b);

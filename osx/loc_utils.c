@@ -306,9 +306,9 @@ unsigned char coord_to_ter(short x,short y)
 {
 	char what_terrain;
 
-	if ((overall_mode == 0) || (overall_mode == 35))
+	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		what_terrain = out[x][y];
-	else if (((overall_mode > 0) && (overall_mode < 10))|| (overall_mode == 36))
+	else if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT))|| (overall_mode == MODE_LOOK_TOWN))
 		what_terrain = t_d.terrain[x][y];
 	else {
 		what_terrain = combat_terrain[x][y];
@@ -341,7 +341,7 @@ void update_explored(location dest)
 	which_party_sec.x = party.outdoor_corner.x + party.i_w_c.x;
 	which_party_sec.y = party.outdoor_corner.y + party.i_w_c.y;
 	
-	if (overall_mode == 0) {
+	if (overall_mode == MODE_OUTDOORS) {
 		out_e[dest.x][dest.y] = 2;
 		for (look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
@@ -354,7 +354,7 @@ void update_explored(location dest)
 
 		}
 		
-	if (overall_mode > 0) {
+	if (overall_mode > MODE_OUTDOORS) {
 		make_explored(dest.x,dest.y);
 		for (look2.x = max(0,dest.x - 4); look2.x < min(town_size[town_type],dest.x + 5); look2.x++)
 			for (look2.y = max(0,dest.y - 4); look2.y < min(town_size[town_type],dest.y + 5); look2.y++)
@@ -529,7 +529,7 @@ Boolean outd_is_blocked(location to_check)
 {
 	short i;
 
-	if (overall_mode == 0) {
+	if (overall_mode == MODE_OUTDOORS) {
 		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
 			return TRUE;
 			}
@@ -564,7 +564,7 @@ Boolean is_special(location to_check)
 
 Boolean outd_is_special(location to_check)
 {
-	if (overall_mode == 0) {
+	if (overall_mode == MODE_OUTDOORS) {
 		if (terrain_blocked[out[to_check.x][to_check.y]] == 2) {
 			return TRUE;
 			}
@@ -675,7 +675,7 @@ short party_can_see(location where)
 			else return 6;
 			}
 	if (is_town()) {
-		if ( ((point_onscreen(c_town.p_loc,where) == TRUE) || (overall_mode == 36)) && (pt_in_light(c_town.p_loc,where)  == TRUE)
+		if ( ((point_onscreen(c_town.p_loc,where) == TRUE) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(c_town.p_loc,where)  == TRUE)
 			&& (can_see(c_town.p_loc,where,0) < 5))
 				return 1;
 				else return 6;

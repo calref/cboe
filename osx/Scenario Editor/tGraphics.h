@@ -64,3 +64,4 @@ void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
 short string_length(char *str);
 Rect get_custom_rect (short which_rect);
+GWorldPtr load_bmp(unsigned char *data, long length);

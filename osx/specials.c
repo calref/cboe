@@ -229,7 +229,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	if (can_enter == FALSE)
 		return FALSE;
 	
-	if ((!is_out()) && (overall_mode < 20)) {
+	if ((!is_out()) && (overall_mode < MODE_TALKING)) {
 	check_fields(where_check,mode,which_pc);
 
 	if (is_web(where_check.x,where_check.y)) {
@@ -310,7 +310,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			fast_bang = 1;
 			if (mode == 2)
 				damage_pc(which_pc,r1,dam_type,-1);
-			if (overall_mode < 10)
+			if (overall_mode < MODE_COMBAT)
 				boom_space(party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
@@ -402,7 +402,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //				hit_party(r1,1);
 			if (mode == 2)
 				damage_pc(which_pc,r1,1,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,0,r1,5);	
 		}
 	if (is_force_wall(where_check.x,where_check.y)) {
@@ -412,7 +412,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //				hit_party(r1,3);
 			if (mode == 2)
 				damage_pc(which_pc,r1,3,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,1,r1,12);	
 		}
 	if (is_ice_wall(where_check.x,where_check.y)) {
@@ -422,7 +422,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //				hit_party(r1,5);
 			if (mode == 2)
 				damage_pc(which_pc,r1,5,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,4,r1,7);	
 		}
 	if (is_blade_wall(where_check.x,where_check.y)) {
@@ -432,7 +432,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //				hit_party(r1,0);
 			if (mode == 2)
 				damage_pc(which_pc,r1,0,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,3,r1,2);	
 		}
 	if (is_quickfire(where_check.x,where_check.y)) {
@@ -442,7 +442,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //				hit_party(r1,1);
 			if (mode == 2)
 				damage_pc(which_pc,r1,1,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,0,r1,5);	
 		}
 	if (is_scloud(where_check.x,where_check.y)) {
@@ -477,7 +477,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				hit_party(r1,3);
 			if (mode == 2)
 				damage_pc(which_pc,r1,3,-1);
-				if (overall_mode < 10)
+				if (overall_mode < MODE_COMBAT)
 					boom_space(party.p_loc,overall_mode,1,r1,12);		
 		}
 	fast_bang = 0;
@@ -535,15 +535,15 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	
 	if (take_charge == TRUE) {
-			if ((overall_mode == 0) && (item_use_code > 0) && (item_use_code != 5)) {
+			if ((overall_mode == MODE_OUTDOORS) && (item_use_code > 0) && (item_use_code != 5)) {
 				add_string_to_buf("Use: Not while outdoors.         ");
 				take_charge = FALSE;
 				}
-			if ((overall_mode == 1) && (item_use_code == 1)) {
+			if ((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
 				add_string_to_buf("Use: Not while in town.         ");
 				take_charge = FALSE;
 				}
-			if ((overall_mode == 10) && (item_use_code == 2)) {
+			if ((overall_mode == MODE_COMBAT) && (item_use_code == 2)) {
 				add_string_to_buf("Use: Not in combat.         ");
 				take_charge = FALSE;
 				}
@@ -570,7 +570,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 70: // poison weapon
 				take_charge = poison_weapon(pc,str,0);
 				break;				
-			case 71: case 73:  case 74: case 75: case 76: 
+			case 71: case 73:  case 74: case 75: case 76: case 78: case 80:
 				switch (abil) {
 					case 71: 
 						play_sound(4);
@@ -864,7 +864,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 132:
 				add_string_to_buf("  It fires a blinding ray.");
 				add_string_to_buf("  Target spell.    ");
-				overall_mode = 3;
+				overall_mode = MODE_TOWN_TARGET;
 				current_pat = s;
 				set_town_spell(1041,current_pc);
 			break;
@@ -1789,7 +1789,7 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			check_mess = TRUE;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
 				give_error("Town out of range.","",0);
-				else party.can_find_town[spec.ex1a] = (spec.ex2a == 0) ? 0 : 1;
+				else party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
 			*redraw = TRUE;
 			break;
 		case 18:
@@ -2470,6 +2470,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 		case 171:
 			set_terrain(l,spec.ex2a);
 			*redraw = TRUE;
+			draw_map(modeless_dialogs[5],10);
 			break;
 		case 172:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a)
@@ -2477,11 +2478,13 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b)
 				set_terrain(l,spec.ex2a);
 			*redraw = 1;
+			draw_map(modeless_dialogs[5],10);
 			break;
 		case 173:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
 			*redraw = 1;
+			draw_map(modeless_dialogs[5],10);
 			break;
 		case 174:
 			if (is_combat()) {
@@ -2770,7 +2773,7 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
-	short i,j;
+	short i,j,k;
 	special_node_type spec;
 	location l;
 	unsigned char ter;
@@ -2804,17 +2807,17 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 					if (spec.sd2 == 2) make_crate(i,j);
 					} break;
 		case 212:
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
-					t_i.items[i].item_loc.x = spec.sd1;
-					t_i.items[i].item_loc.y = spec.sd2;
-					}					
+			for (k = 0; k < NUM_TOWN_ITEMS; k++)
+				if ((t_i.items[k].variety > 0) && (same_point(t_i.items[k].item_loc,l) == TRUE)) {
+					t_i.items[k].item_loc.x = spec.sd1;
+					t_i.items[k].item_loc.y = spec.sd2;
+				}
 			break;
 		case 213:
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,l) == TRUE)) {
-					t_i.items[i].variety = 0;
-					}					
+			for (k = 0; k < NUM_TOWN_ITEMS; k++)
+				if ((t_i.items[k].variety > 0) && (same_point(t_i.items[k].item_loc,l) == TRUE)) {
+					t_i.items[k].variety = 0;
+				}
 			break;
 		case 214:
 			if (get_ran(1,0,100) <= spec.sd2) set_terrain(l,spec.sd1);

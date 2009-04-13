@@ -67,7 +67,7 @@ pascal void right_sbar_action(ControlHandle bar, short part);
 void Mouse_Pressed();
 void close_program();
  void ding();
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void restore_depth();
 void find_quickdraw() ;
@@ -387,7 +387,7 @@ void handle_scenario_menu(int item_hit)
 	short i;
 	
 	switch (item_hit) {
-		case 1:
+		case 1: // Create new town
 			if (change_made == TRUE) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
@@ -401,23 +401,27 @@ void handle_scenario_menu(int item_hit)
 			if (new_town(scenario.num_towns) == TRUE)
 				set_up_main_screen();
 			break;
-		case 3:
+		case 3: // Scenario Details
 			edit_scen_details();
 			break;
-		case 4:
+		case 4: // Scenario Intro Text
 			edit_scen_intro();
 			break;
-		case 5:
+		case 5: // Set Starting Location
 			set_starting_loc();
 			break;
-		case 6:
-			if (check_p(user_given_password) == TRUE) 
-				given_password = get_password(); break;
-		case 9:  SetControlValue(right_sbar,0); start_special_editing(0,0); break;
-		case 10:
-			 SetControlValue(right_sbar,0); start_string_editing(0,0);
+		case 6: // Change Password
+			//if (check_p(user_given_password) == TRUE) 
+			//	given_password = get_password();
+			give_error("Passwords have been disabled; they are no longer necessary.","",0);
 			break;
-		case 11:
+		case 9: // Edit Special Nodes
+			SetControlValue(right_sbar,0); start_special_editing(0,0);
+			break;
+		case 10: // Edit Scenario Text
+			SetControlValue(right_sbar,0); start_string_editing(0,0);
+			break;
+		case 11: // Import Town
 			if (change_made == TRUE) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
@@ -430,25 +434,25 @@ void handle_scenario_menu(int item_hit)
 				redraw_screen();
 				}
 			break;
-		case 12:
+		case 12: // Edit Saved Item Rectangles
 			edit_save_rects();
 			break;
-		case 13:
+		case 13: // Edit Horses
 			edit_horses();
 			break;
-		case 14:
+		case 14: // Edit Boats
 			edit_boats();
 			break;
-		case 15:
+		case 15: // Set Variable Town Entry
 			edit_add_town();
 			break;
-		case 16:
+		case 16: // Set Scenario Event Timers
 			edit_scenario_events();
 			break;
-		case 17:
+		case 17: // Edit Item Placement Shortcuts
 			edit_item_placement();
 			break;
-		case 18:
+		case 18: // Delete Last Town
 			if (change_made == TRUE) {
 				give_error("You need to save the changes made to your scenario before you can delete a town.",
 					"",0);
@@ -472,15 +476,11 @@ void handle_scenario_menu(int item_hit)
 			if (fancy_choice_dialog(865,0) == 1)
 				delete_last_town();
 			break;
-		case 19:
+		case 19: // Write Data to Text File
 			if (fancy_choice_dialog(866,0) == 1)
 				start_data_dump();
-		case 20:
-			if (change_made == TRUE) {
-				give_error("You need to save the changes made to your scenario before you can delete a town.",
-					"",0);
-				return;
-				}
+			break;
+		case 20: // Do Full Text Dump
 			if (fancy_choice_dialog(871,0) == 1)
 				scen_text_dump();
 			redraw_screen();

@@ -18,6 +18,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "monster.h"
+#include "bldsexil.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
@@ -508,7 +509,7 @@ void equip_item(short pc_num,short item_num)
 	short i;
 	short equip_item_type = 0;
 	
-if ((overall_mode == 10) && (adven[pc_num].items[item_num].variety == 11))
+if ((overall_mode == MODE_COMBAT) && (adven[pc_num].items[item_num].variety == 11))
 		add_string_to_buf("Equip: Not in combat");
 	else {
 
@@ -691,7 +692,7 @@ void give_thing(short pc_num, short item_num)
 			else {
 				item_store = adven[pc_num].items[item_num];
 				who_to = char_select_pc(1,1,"Give item to who?");
-				if ((overall_mode == 10) && (adjacent(pc_pos[pc_num],pc_pos[who_to]) == FALSE)) {
+				if ((overall_mode == MODE_COMBAT) && (adjacent(pc_pos[pc_num],pc_pos[who_to]) == FALSE)) {
 					add_string_to_buf("Give: Must be adjacent.");
 					who_to = 6;
 					}
@@ -757,7 +758,7 @@ short dist_from_party(location where)
 {
 	short store = 1000, i;
 	
-	if ((overall_mode >= 10) && (overall_mode < 20)) {
+	if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
 				store = min(store,dist(pc_pos[i],where));

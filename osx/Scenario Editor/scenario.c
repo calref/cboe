@@ -25,7 +25,7 @@ extern scenario_data_type scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
-extern pascal Boolean cd_event_filter();
+extern pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 extern location cur_out;
 
 short store_which_ter;
@@ -39,7 +39,7 @@ short spec_item_spec,store_horse_page,store_boat_page ;
 item_storage_shortcut_type store_storage;
 short cur_shortcut;
 
-	char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
+char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","Food","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Non-Use Object","Pants","Crossbow","Bolts","Missile (no ammo)","Unused","Unused"};
@@ -550,7 +550,7 @@ unsigned char m_pic_index[200] = {
 120,122,123,125,127, 128,129,130,131,135,
 
 136,137,139,140,141,142,143,144,145,146,
-147,148,149,150,151,152,152,154,155,159,
+147,148,149,150,151,152,153,154,155,159,
 
 160,164,166,168,170,171,172,173,174,175,
 176,177,178,179,180,181,182,183,184,185,
@@ -2084,13 +2084,13 @@ void edit_horses_event_filter (short item_hit)
 		case 21:
 			if (save_horses() == FALSE) break;
 			store_horse_page--;
-			if (store_horse_page < 0) store_horse_page = 3;
+			if (store_horse_page < 0) store_horse_page = 4;
 			put_horses_in_dlog();
 			break;
 		case 22:
 			if (save_horses() == FALSE) break;
 			store_horse_page++;
-			if (store_horse_page > 3) store_horse_page = 0;
+			if (store_horse_page > 4) store_horse_page = 0;
 			put_horses_in_dlog();
 			break;
 		default:
@@ -2166,13 +2166,13 @@ void edit_boats_event_filter (short item_hit)
 		case 22:
 			if (save_boats() == FALSE) break;
 			store_boat_page--;
-			if (store_boat_page < 0) store_boat_page = 3;
+			if (store_boat_page < 0) store_boat_page = 4;
 			put_boats_in_dlog();
 			break;
 		case 23:
 			if (save_boats() == FALSE) break;
 			store_boat_page++;
-			if (store_boat_page > 3) store_boat_page = 0;
+			if (store_boat_page > 4) store_boat_page = 0;
 			put_boats_in_dlog();
 			break;
 		default:
@@ -2460,8 +2460,8 @@ void edit_make_scen_1_event_filter (short item_hit)
 				give_error("You've left the file name empty.","",800);
 				break;
 				}
-			if (j > 8) {
-				give_error("The file name can be at most 8 characters long.","",800);
+			if (j > 50) {
+				give_error("The file name can be at most 50 characters long.","",800);
 				break;
 				}
 			for (i = 0; i < j; i++)

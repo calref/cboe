@@ -10,6 +10,8 @@
 
 #define	NUM_SOUNDS	99
 
+extern void FlushAndPause(unsigned long ticks);
+
 Handle sound_handles[NUM_SOUNDS];
 
 extern Boolean play_sounds,in_startup_mode;
@@ -91,12 +93,12 @@ Boolean sound_going(short which_s) {
 	return FALSE;
 	}
 
-pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand theCommand) {
+pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand) {
 	long theA5;
 	short channel = -1,i,which_sound;
 	
 #ifndef EXILE_BIG_GUNS
-	theA5 = SetA5(theCommand.param2);
+	theA5 = SetA5(theCommand->param2);
 #endif
 	
 	for (i = 0; i < 4; i++)

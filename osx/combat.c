@@ -295,7 +295,7 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 	SetPort(GetWindowPort(mainPtr));
 	which_combat_type = 0;	
 	town_type = 1;
-	overall_mode = 10;
+	overall_mode = MODE_COMBAT;
 
 	// Basically, in outdoor combat, we create kind of a 48x48 town for 
 	// the combat to take place in
@@ -854,7 +854,7 @@ void place_target(location target)
 
 	if (num_targets_left == 0) {
 		do_combat_cast(spell_targets[0]);
-		overall_mode = 10;
+		overall_mode = MODE_COMBAT;
 		}
 }
 
@@ -898,7 +898,7 @@ void do_combat_cast(location target)////
 	s_num = spell_being_cast % 100;
 	
 	void_sanctuary(current_pc);
-	if (overall_mode == 11) {
+	if (overall_mode == MODE_SPELL_TARGET) {
 		spell_targets[0] = target;
 		}
 		else {
@@ -1396,7 +1396,7 @@ void load_missile() ////
 		ammo_inv_slot = thrown;
 		add_string_to_buf("Throw: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
-		overall_mode = 13;
+		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
 		current_pat = single;
 		}
@@ -1409,7 +1409,7 @@ void load_missile() ////
 	else if ((arrow < 24) && (bow < 24)) {
 			missile_inv_slot = bow;
 			ammo_inv_slot = arrow;
-			overall_mode = 12;
+			overall_mode = MODE_FIRING;
 			add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 			current_spell_range = 12;
@@ -1418,7 +1418,7 @@ void load_missile() ////
 	else if ((bolts < 24) && (crossbow < 24)) {
 			missile_inv_slot = crossbow;
 			ammo_inv_slot = bolts;
-			overall_mode = 12;
+			overall_mode = MODE_FIRING;
 			add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 			current_spell_range = 12;
@@ -1427,7 +1427,7 @@ void load_missile() ////
 	else if (no_ammo < 24) {
 			missile_inv_slot = no_ammo;
 			ammo_inv_slot = no_ammo;
-			overall_mode = 12;
+			overall_mode = MODE_FIRING;
 			add_string_to_buf("Fire: Select a target.        ");
 			add_string_to_buf("  (Hit 's' to cancel.)");
 			current_spell_range = 12;
@@ -1443,11 +1443,11 @@ void fire_missile(location target) ////
 	creature_data_type *cur_monst;
 	Boolean exploding = FALSE;
 	
-	skill = (overall_mode == 12) ? adven[current_pc].skills[7] : adven[current_pc].skills[8];
-	range = (overall_mode == 12) ? 12 : 8;
+	skill = (overall_mode == MODE_FIRING) ? adven[current_pc].skills[7] : adven[current_pc].skills[6];
+	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
 	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + minmax(-8,8,adven[current_pc].status[1]);
-	hit_bonus = (overall_mode == 12) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
+	hit_bonus = (overall_mode == MODE_FIRING) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(current_pc,1) - can_see(pc_pos[current_pc],target,0) 
 		+ minmax(-8,8,adven[current_pc].status[1]);
 	if ((skill_item = pc_has_abil_equip(current_pc,41)) < 24) {
@@ -1473,7 +1473,7 @@ void fire_missile(location target) ////
 
 	// First, some missiles do special things
 	if (exploding == TRUE) {
-		take_ap((overall_mode == 12) ? 3 : 2);
+		take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 		add_string_to_buf("  The arrow explodes!             ");
 		run_a_missile(pc_pos[current_pc],target,2,1,5,
 			0,0,100);
@@ -1496,8 +1496,8 @@ void fire_missile(location target) ////
 				combat_posing_monster = current_working_monster = current_pc;
 				draw_terrain(2);
 				void_sanctuary(current_pc);
-				//play_sound((overall_mode == 12) ? 12 : 14);
-				take_ap((overall_mode == 12) ? 3 : 2);
+				//play_sound((overall_mode == MODE_FIRING) ? 12 : 14);
+				take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 				missile_firer = current_pc;			
 				r1 = get_ran(1,0,100) - 5 * hit_bonus - 10;
 				r1 += 5 * (adven[current_pc].status[6] / 3);
@@ -1519,7 +1519,7 @@ void fire_missile(location target) ////
 						m_type = (is_magic(adven[current_pc].items[ammo_inv_slot]) == TRUE) ? 4 : 3;
 						break; 
 					}
-				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == 12) ? 12 : 14,
+				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
 					0,0,100);
 
 				if (r1 > hit_chance[skill])
@@ -1739,7 +1739,7 @@ void do_monster_turn()
 	monsters_going = TRUE; // This affects how graphics are drawn.
 
 	num_monst = T_M;
-	if (overall_mode < 10) 
+	if (overall_mode < MODE_COMBAT) 
 		which_combat_type = 1;
 				
 	for (i = 0; i < num_monst; i++) {  // Give monsters ap's, check activity
@@ -1747,7 +1747,7 @@ void do_monster_turn()
 		cur_monst = &c_town.monst.dudes[i];
 	
 		// See if hostile monster notices party, during combat
-		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == 10)) {
+		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			r1 += (party.stuff_done[305][0] > 0) ? 45 : 0;
 			r1 += can_see(cur_monst->m_loc,closest_pc_loc(cur_monst->m_loc),0) * 10;
@@ -2020,7 +2020,7 @@ void do_monster_turn()
 							FlushEvents(keyDownMask,0);							
 						}
 					
-					if (overall_mode == 10) {
+					if (overall_mode == MODE_COMBAT) {
 						if ((acted_yet == FALSE) && (cur_monst->mobile == TRUE)) {  // move monst
 							move_target = (monst_target[i] != 6) ? monst_target[i] : closest_pc(cur_monst->m_loc);
 							if (monst_hate_spot(i,&move_targ) == TRUE) // First, maybe move out of dangerous space
@@ -2066,7 +2066,7 @@ void do_monster_turn()
 							}
 
 					// pcs attack any fleeing monsters
-					if ((overall_mode >= 10) && (overall_mode < 20))
+					if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING))
 						for (k = 0; k < 6; k++)
 							if ((adven[k].main_status == 1) && (monst_adjacent(pc_pos[k],i) == FALSE)
 								&& (pc_adj[k] == TRUE) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
@@ -2196,7 +2196,7 @@ void do_monster_turn()
 		}
 		
 	// If in town, need to restore center
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		center = c_town.p_loc;
 	if (had_monst == TRUE)
 		put_pc_screen();
@@ -2301,13 +2301,23 @@ void monster_attack_pc(short who_att,short target)
 							}
 							
 						// Disease
-						if (((attacker->m_d.spec_skill == 25) || (attacker->m_d.spec_skill == 30))
+						if (((attacker->m_d.spec_skill == 25))
 						 && (get_ran(1,0,2) < 2)) {
 							add_string_to_buf("  Causes disease!                 ");
 							print_buf();
 							disease_pc(target,(attacker->m_d.spec_skill == 25) ? 6 : 2);
 							}
-							
+						
+						// Petrification touch
+						if ((attacker->m_d.spec_skill == 30)
+							&& (pc_has_abil_equip(target,49) == 24)
+							&& (get_ran(1,0,20) + adven[target].level / 4 + adven[target].status[1]) <= 14)
+						{
+							add_string_to_buf("  Petrifying touch!");
+							print_buf();
+							kill_pc(target,4); // 4 being the stoned (petrified, duh!) status
+						}
+						
 						// Undead xp drain							
 						if (((attacker->m_d.spec_skill == 16) || (attacker->m_d.spec_skill == 17))
 						  && (pc_has_abil_equip(target,48) == 24)) {
@@ -2535,7 +2545,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 		
 	if (target >= 100)
 		m_target = &c_town.monst.dudes[target - 100];
-	if (((overall_mode >= 10) && (overall_mode <= 20)) && (center_on_monst == TRUE)) {
+	if (((overall_mode >= MODE_COMBAT) && (overall_mode <= MODE_TALKING)) && (center_on_monst == TRUE)) {
 		frame_space(source,0,c_town.monst.dudes[m_num].m_d.x_width,c_town.monst.dudes[m_num].m_d.y_width);
 		if (target >= 100)
 			frame_space(targ_space,1,m_target->m_d.x_width,m_target->m_d.y_width);
@@ -2800,7 +2810,7 @@ Boolean monst_breathe(creature_data_type *caster,location targ_space,short dam_t
 
 	monst_breathe_note(caster->number);
 	level = get_ran(caster->m_d.breath,1,8);
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		level = level / 3;
 	start_missile_anim();
 	hit_space(targ_space,level,type[dam_type],1,1);
@@ -3492,7 +3502,7 @@ short count_levels(location where,short radius)
 Boolean pc_near(short pc_num,location where,short radius)
 {
 	// Assuming not looking
-	if (overall_mode >= 10) {
+	if (overall_mode >= MODE_COMBAT) {
 		if ((adven[pc_num].main_status == 1) && (vdist(pc_pos[pc_num],where) <= radius))
 			return TRUE;
 			else return FALSE;
@@ -3826,14 +3836,14 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 				stop_hitting = (hit_all == 1) ? FALSE : TRUE;	
 				}
 	
-	if (overall_mode >= 10)
+	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == 1) && (stop_hitting == FALSE))
 				if (same_point(pc_pos[i],target) == TRUE) {
 						damage_pc(i,dam,type,-1);					
 						stop_hitting = (hit_all == 1) ? FALSE : TRUE;				
 					}
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			fast_bang = 1;
 			hit_party(dam,type);
@@ -3944,7 +3954,7 @@ void handle_acid()
 					damage_pc(i,r1,3,-1);
 					adven[i].status[13] = move_to_zero(adven[i].status[13]);
 				}
-		if (overall_mode < 10)
+		if (overall_mode < MODE_COMBAT)
 			boom_space(party.p_loc,overall_mode,3,r1,8);
 		}
 }
@@ -4002,7 +4012,7 @@ void end_combat()
 		adven[i].status[3] = 0;		
 		}
 	if (which_combat_type == 0) {
-		overall_mode = 0;
+		overall_mode = MODE_OUTDOORS;
 		load_area_graphics();
 		}
 	combat_active_pc = 6;
@@ -4381,7 +4391,7 @@ void start_spell_targeting(short num)
 	if (num < 100)		
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 		else add_string_to_buf("  (Hit 'p' to cancel.)");
-	overall_mode = 11;
+	overall_mode = MODE_SPELL_TARGET;
 	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];
 	current_pat = single;
 
@@ -4425,7 +4435,7 @@ void start_fancy_spell_targeting(short num)
 		else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
 	add_string_to_buf((char *) create_line);			
-	overall_mode = 14;
+	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
 	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];
 	
@@ -4640,7 +4650,7 @@ void process_fields()
 void scloud_space(short m,short n)
 {
 	location target;
-	creature_data_type;
+	//creature_data_type;
 	short i;
 	
 	target.x = (char) m;
@@ -4648,13 +4658,13 @@ void scloud_space(short m,short n)
 
 	make_scloud(m,n);
 	
-	if (overall_mode >= 10)
+	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
 				if (same_point(pc_pos[i],target) == TRUE) {
 						curse_pc(i,get_ran(1,1,2));					
 					}
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == 1)
@@ -4672,13 +4682,13 @@ void web_space(short m,short n)
 
 	make_web(m,n);
 
-	if (overall_mode >= 10)
+	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
 				if (same_point(pc_pos[i],target) == TRUE) {
 						web_pc(i,3);					
 					}
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			for (i = 0; i < 6; i++)
 					web_pc(i,3);					
@@ -4694,13 +4704,13 @@ void sleep_cloud_space(short m,short n)
 
 	make_sleep_cloud(m,n);
 
-	if (overall_mode >= 10)
+	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
 				if (same_point(pc_pos[i],target) == TRUE) {
 					sleep_pc(i,3,11,0);
 					}
-	if (overall_mode < 10)
+	if (overall_mode < MODE_COMBAT)
 		if (same_point(target,c_town.p_loc) == TRUE) {
 			for (i = 0; i < 6; i++)
 				sleep_pc(i,3,11,0);

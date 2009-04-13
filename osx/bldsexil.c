@@ -86,7 +86,7 @@ outdoor_strs_type outdoor_text[2][2];
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
 Boolean fast_bang = FALSE;
 short spec_item_array[60];
-short overall_mode = 45,current_spell_range;
+short overall_mode = MODE_STARTUP,current_spell_range;
 Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,sys_7_avail,suppress_stat_screen = FALSE;
 short stat_window = 0,store_modifier;
 Boolean monsters_going = FALSE,boom_anim_active = FALSE,cartoon_happening = FALSE;
@@ -166,10 +166,6 @@ int main(void)
 
 	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	start_time = TickCount();
-
-	check_sys_7();
-
-
 	Initialize();
 #ifdef EXILE_BIG_GUNS
 	main_dialog_UPP = NewModalFilterProc(cd_event_filter);
@@ -178,9 +174,8 @@ item_sbar_UPP = NewControlActionProc(item_sbar_action);
 shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 
 #endif
-
+	
 	load_cursors();
-
 
 
 	Set_Window_Drag_Bdry();
@@ -237,8 +232,8 @@ shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 
 	init_spell_menus();
 
-	if (overall_mode == 45)
-		overall_mode = 0;
+	if (overall_mode == MODE_STARTUP)
+		overall_mode = MODE_OUTDOORS;
 
 	//if (fry_startup == FALSE) {
 		if (game_run_before == FALSE)
@@ -333,39 +328,31 @@ void Handle_One_Event()
 	Boolean event_in_dialog = FALSE;
 	GrafPtr old_port;
 	
-	if (/*Multifinder_Present ==*/ TRUE) {
-		through_sending();
-		WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
-		cur_time = TickCount();
-		if ((event.what != 23) && (!gInBackground) && 
-			((FrontWindow() == mainPtr) || (FrontWindow() == GetDialogWindow(modeless_dialogs[5])))) {
-			change_cursor(event.where);
-			if ((cur_time - start_time) % 5 == 0)
-				draw_targeting_line(event.where);
-			}
+	through_sending();
+	WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
+	cur_time = TickCount();
+	if ((event.what != 23) && (!gInBackground) && 
+		((FrontWindow() == mainPtr) || (FrontWindow() == GetDialogWindow(modeless_dialogs[5])))) {
+		change_cursor(event.where);
+		if ((cur_time - start_time) % 5 == 0)
+			draw_targeting_line(event.where);
+	}
 
-//(cur_time - last_anim_time > 42)
-		if ((cur_time % 40 == 0) && (in_startup_mode == FALSE) && (anim_onscreen == TRUE) && (PSD[306][9] == 0)
-			&& ((FrontWindow() == mainPtr) || (FrontWindow() ==GetDialogWindow(modeless_dialogs[5]))) && (!gInBackground)) {
-			last_anim_time = cur_time;
-			initiate_redraw();
-			}
-		if ((cur_time - last_anim_time > 20) && (in_startup_mode == TRUE) 
-			&& (app_started_normally == TRUE) && (FrontWindow() == mainPtr)) {
-			last_anim_time = cur_time;
-			draw_startup_anim();
-			}
-			
-		GetPort(&old_port);				
-//		if (FrontWindow() != old_port)
-//			SysBeep(2);
-		}
-		else
-		{
-			through_sending();
-			SystemTask();
-			GetNextEvent( everyEvent, &event);
-		}
+	//(cur_time - last_anim_time > 42)
+	if ((cur_time % 40 == 0) && (in_startup_mode == FALSE) && (anim_onscreen == TRUE) && (PSD[306][9] == 0)
+		&& ((FrontWindow() == mainPtr) || (FrontWindow() ==GetDialogWindow(modeless_dialogs[5]))) && (!gInBackground)) {
+		last_anim_time = cur_time;
+		initiate_redraw();
+	}
+	if ((cur_time - last_anim_time > 20) && (in_startup_mode == TRUE) 
+		&& (app_started_normally == TRUE) && (FrontWindow() == mainPtr)) {
+		last_anim_time = cur_time;
+		draw_startup_anim();
+	}
+		
+	GetPort(&old_port);		
+//	if (FrontWindow() != old_port)
+//		SysBeep(2);
 
 	clear_sound_memory();
 	
@@ -492,9 +479,9 @@ void Handle_Update()
 		else {
 			if (first_update == TRUE) {
 				first_update = FALSE;
-				if (overall_mode == 0) 
+				if (overall_mode == MODE_OUTDOORS) 
 					redraw_screen(0);
-				if ((overall_mode > 0) & (overall_mode < 10))
+				if ((overall_mode > MODE_OUTDOORS) & (overall_mode < MODE_COMBAT))
 					redraw_screen(0);
 			// 1st update never combat
 				}
@@ -614,31 +601,31 @@ void Mouse_Pressed()
 				if (in_startup_mode == TRUE) {
 					All_Done = TRUE;
 					break;
-					}
-				if (overall_mode > 1){
+				}
+				if (overall_mode > MODE_TOWN){
 					choice = FCD(1067,0);
 					if (choice == 1)
 						return;
-					}
-					else {
-						choice = FCD(1066,0);
-						if (choice == 3)
-							break;
-						if (choice == 1)
-							save_file(0);
-						}
-				All_Done = TRUE;
 				}
 				else {
-					for (i = 0; i < 18; i++)
-						if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i] == TRUE)) {
-							//CloseDialog(modeless_dialogs[i]);
-							HideWindow(GetDialogWindow(modeless_dialogs[i])); 
-							modeless_exists[i] = FALSE;
-							SelectWindow(mainPtr);
-							SetPortWindowPort(mainPtr);		
-							}
+					choice = FCD(1066,0);
+					if (choice == 3)
+						break;
+					if (choice == 1)
+						save_file(0);
+				}
+				All_Done = TRUE;
+			}
+			else {
+				for (i = 0; i < 18; i++)
+					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i] == TRUE)) {
+						//CloseDialog(modeless_dialogs[i]);
+						HideWindow(GetDialogWindow(modeless_dialogs[i])); 
+						modeless_exists[i] = FALSE;
+						SelectWindow(mainPtr);
+						SetPortWindowPort(mainPtr);		
 					}
+			}
 			break;
 		
 		case inContent:
@@ -700,7 +687,7 @@ void Mouse_Pressed()
 					 		else { // ordinary click
 								if (in_startup_mode == FALSE)
 									All_Done = handle_action(event);
-									else All_Done = handle_startup_press(event.where);
+								else All_Done = handle_startup_press(event.where);
 							}
 					}
 			break;
@@ -821,7 +808,7 @@ void handle_file_menu(int item_hit)
 				All_Done = TRUE;
 				break;
 				}
-			if (overall_mode > 1) {
+			if (overall_mode > MODE_TOWN) {
 				choice = FCD(1067,0);
 				if (choice == 1)
 					return;
@@ -908,7 +895,7 @@ void handle_options_menu(int item_hit)
 		//	journal();
 		//	break;////
 		case 6:	
-			if (overall_mode == 20) {
+			if (overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
 				return;
@@ -1037,7 +1024,6 @@ void handle_music_menu(int item_hit)
 void load_cursors()
 {
 	short i,j;
-	
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < 3; j++)
 			arrow_curs[i][j] = GetCursor(100 + (i - 1) + 10 * (j - 1));
@@ -1052,7 +1038,7 @@ void load_cursors()
 	target_curs = GetCursor(124);
 	talk_curs = GetCursor(126);
 	look_curs = GetCursor(129);
-
+	
 	set_cursor(sword_curs);
 	current_cursor = 124;
 	
@@ -1239,12 +1225,12 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 {
 	short choice;
 	
-	if ((overall_mode > 40) || (in_startup_mode == TRUE)) {
+	if ((overall_mode > MODE_STARTUP/*40*/) || (in_startup_mode == TRUE)) {
 		All_Done = TRUE;
 		return noErr;
 		}
 
-	if (overall_mode < 2) {
+	if (overall_mode < MODE_TALK_TOWN) {
 		choice = FCD(1066,0);
 		if (choice == 3)
 			return userCanceledErr;

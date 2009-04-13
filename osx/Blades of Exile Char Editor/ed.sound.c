@@ -1,6 +1,6 @@
 #include "math.h"
 
-#include <Sound.h>
+#include <ed.Sound.h>
 #include <Memory.h>
 //#include <OSUtils.h>
 #include <Carbon/Carbon.h>
@@ -120,39 +120,38 @@ void force_play_sound(short which)
 	Handle sndhandle;
 	unsigned long dummy;
 	OSErr err;
-
-//	if (play_sounds == TRUE)
-//		SndPlay(NIL, sound_handles[which], TRUE);
-
-//	if (play_sounds == TRUE) {
-		 channel++;
 	
- 		if (channel > numchannel) channel = 0;
+	//	if (play_sounds == TRUE)
+	//		SndPlay(NIL, sound_handles[which], TRUE);
+	
+	//	if (play_sounds == TRUE) {
+	channel++;
+	
+	if (channel > numchannel) channel = 0;
+	
+	if (load_when_play[((which < 0) ? -1 * which : which)] == TRUE) 
+		sndhandle = GetResource('snd ',20000 + ((which < 0) ? -1 * which : which));
+	else sndhandle = sound_handles[((which < 0) ? -1 * which : which)];
+	
+	if (which > 0)
+		if (always_asynch[which] == TRUE)
+			which = which * -1;
+	
+	if (sndhandle != NIL){
+		HLock(sndhandle);
 		
-		if (load_when_play[((which < 0) ? -1 * which : which)] == TRUE) 
-			sndhandle = GetResource('snd ',20000 + ((which < 0) ? -1 * which : which));
-			else sndhandle = sound_handles[((which < 0) ? -1 * which : which)];
- 
- 		if (which > 0)
-	 		if (always_asynch[which] == TRUE)
- 				which = which * -1;
- 
-	 	if (sndhandle != NIL)
- 			{
-  			HLock(sndhandle);
-
-  			if (which < 0) err = SndPlay(chan[channel],(SndListHandle) sndhandle,TRUE);/****** Normal SndPlay *****/
-  			 	else {
-  			 		err = SndPlay(chan[channel],(SndListHandle) sndhandle,FALSE);
-  			 		}
-  			 if (err != 0) {
-  			 	}
-  			 HUnlock(sndhandle);
-   			}
-   			else SysBeep(2);
-  		if (which < 0)
-  			Delay(sound_delay[-1 * which],&dummy);
-//   		}
+		if (which < 0) err = SndPlay(chan[channel],(SndListHandle) sndhandle,TRUE);/****** Normal SndPlay *****/
+		else {
+			err = SndPlay(chan[channel],(SndListHandle) sndhandle,FALSE);
+		}
+		if (err != 0) {
+		}
+		HUnlock(sndhandle);
+	}
+	else SysBeep(2);
+	if (which < 0)
+		Delay(sound_delay[-1 * which],&dummy);
+	//   		}
 }
 
 void one_sound(short which)

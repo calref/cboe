@@ -14,6 +14,7 @@
 #include "blxfileio.h"
 #include "blxgraphics.h"
 #include "blxtown_spec.h"
+#include "bldsexil.h"
 #include "items.h"
 #include "Exile.sound.h"
 #include "stdio.h"
@@ -21,6 +22,9 @@
 #include "newgraph.h"
 #include "info.dialogs.h"
 #define	NUM_HINTS	30
+
+#include <vector>
+using std::vector;
 
 extern big_tr_type t_d;
 extern short stat_window,overall_mode,dialog_answer;
@@ -54,7 +58,7 @@ extern talking_record_type talking;
 					
 short terrain_pic[256]; 
 
-scen_header_type scen_headers[25];
+vector<scen_header_type> scen_headers;
 					
 GWorldPtr pcs_gworld = NULL;
 
@@ -143,7 +147,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 		NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NIL, NIL, 0);
 	
 	store_pre_shop_mode = overall_mode;
-	overall_mode = 21;
+	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = 1;
 	create_clip_region();
 	
@@ -177,9 +181,9 @@ void end_shop_mode()
 			
 	overall_mode = store_pre_shop_mode;
 	create_clip_region();
-	if (overall_mode == 2)
-		overall_mode = 1;
-	if (overall_mode == 1) {
+	if (overall_mode == MODE_TALK_TOWN)
+		overall_mode = MODE_TOWN;
+	if (overall_mode == MODE_TOWN) {
 		center = c_town.p_loc;
 		update_explored(center);
 		}
@@ -341,7 +345,7 @@ void handle_sale(short what_chosen,short cost)
 		}
 	set_up_shop_array();
 	
-	if (overall_mode != 21) {
+	if (overall_mode != MODE_SHOPPING) {
 		SysBeep(50);
 		ASB("Shop error 1. Report This!");
 		}	
@@ -534,7 +538,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	sprintf((char *) title_string,"%s:",data_store->talk_strs[personality % 10]);
 	
 	store_pre_talk_mode = overall_mode;
-	overall_mode = 20;
+	overall_mode = MODE_TALKING;
 	create_clip_region();
 	talk_end_forced = FALSE;
 	stat_screen_mode = 1;
@@ -562,9 +566,9 @@ void end_talk_mode()
 	
 	overall_mode = store_pre_talk_mode;
 	create_clip_region();
-	if (overall_mode == 2)
-		overall_mode = 1;
-	if (overall_mode == 1) {
+	if (overall_mode == MODE_TALK_TOWN)
+		overall_mode = MODE_TOWN;
+	if (overall_mode == MODE_TOWN) {
 		center = c_town.p_loc;
 		update_explored(center);
 		}
@@ -1829,18 +1833,18 @@ short pick_a_scen()
 	
 	build_scen_headers();
 	
-	store_num_scen = 0;
-	for (i = 0; i < 25; i++)
-		if (scen_headers[i].flag1 != 0)
-			store_num_scen++;
+	store_num_scen = scen_headers.size();
+//	for (i = 0; i < 25; i++)
+//		if (scen_headers[i].flag1 != 0)
+//			store_num_scen++;
 	store_scen_page_on = 0;
 	
 	if (store_num_scen == 0) {
 		FCD(868,0);
 		return -1;
-		}
+	}
 	make_cursor_sword();
-
+	
 	cd_create_dialog_parent_num(947,0);
 
 	put_scen_info();

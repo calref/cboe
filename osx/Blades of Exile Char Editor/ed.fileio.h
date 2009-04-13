@@ -1,4 +1,5 @@
-void save_file(short mode);
+bool select_save_location(FSSpec* to_save_ptr);
+void save_file(FSSpec to_save);
 void load_file();
 void leave_town();
 long do_waterfall(long flag);

@@ -21,7 +21,6 @@
 
 #include <Carbon/Carbon.h>
 
-
 #include "string.h"
 #include "ed.global.h"
 #include "ed.graphics.h" 
@@ -46,8 +45,6 @@ Rect pc_traits_rect[16]; //Holds pc traits
 Rect pc_race_rect; //Holds current pc's race
 Rect edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
-
-
 short current_active_pc = 0;
 short dialog_answer;
 
@@ -60,14 +57,15 @@ Handle menu_bar_handle;
 MenuHandle apple_menu,file_menu,reg_menu,extra_menu,edit_menu,items_menu[4];
 Boolean gInBackground = FALSE,play_sounds = TRUE,file_in_mem = FALSE,save_blocked = FALSE;
 long start_time;
-Boolean dialog_not_toast = TRUE,party_in_scen = FALSE;
+Boolean dialog_not_toast = TRUE, party_in_scen = FALSE;
+Boolean scen_items_loaded = FALSE;
 
 // Cursors 
 short current_cursor = 120;
 CursHandle sword_curs, boot_curs, key_curs, target_curs;
 
 // Shareware globals
-Boolean registered = FALSE,ed_reg = TRUE;
+Boolean registered = TRUE,ed_reg = TRUE;
 long register_flag = 0;
 long ed_flag = 0,ed_key = 0,stored_key = 0;
 
@@ -82,8 +80,6 @@ unsigned char out[96][96],out_e[96][96];
 setup_save_type setup_save;
 unsigned char misc_i[64][64],sfx[64][64];
 unsigned char template_terrain[64][64];
-stored_town_maps_type town_maps;
-stored_outdoor_maps_type o_maps;
 
 short store_flags[3];
 
@@ -92,8 +88,11 @@ tiny_tr_type anim_t_d;
 
 stored_items_list_type stored_items[3];
 stored_town_maps_type maps;
+stored_town_maps_type town_maps;
 stored_outdoor_maps_type o_maps;
 
+short old_depth = 16;
+extern FSSpec file_to_load;
 
 /* Display globals */
 Boolean sys_7_avail;
@@ -126,14 +125,14 @@ Boolean verify_restore_quit(short mode);
 void set_up_apple_events();
 pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
+void restore_depth();
 void handle_item_menu(int item_hit);
 item_record_type convert_item (short_item_record_type s_item);
 
 // File io
 short specials_res_id;
 Str255 start_name;
-short start_volume,data_volume;
-long start_dir,data_dir;
+ResFileRefNum graphicsRef, soundRef, mainRef;
 
 #include "item_data.h" 
 
@@ -145,54 +144,20 @@ long start_dir,data_dir;
 int main(void)
 {
 	short error;
-      OSErr err;
+	OSErr err;
 	MenuHandle cur_menu;
-      FSSpec spec;
-      short refNum, localizedRefNum;
-      CFBundleRef bundle;
-
+	FSSpec spec;
+	short refNum, localizedRefNum;
+	CFBundleRef bundle;
 	start_time = TickCount();
-
-	check_sys_7();
-
+	
 	Initialize();
-
-	HGetVol((StringPtr) start_name,&start_volume,&start_dir);
-      bundle = CFBundleGetMainBundle();
-      
-      //err = FSMakeFSSpec(start_volume, start_dir, "\p:Scenario Editor:Blades of Exile Graphics", &spec);
-      err = CFBundleOpenBundleResourceFiles(bundle, &refNum, &localizedRefNum);
-      if (err != noErr) {
-            Alert(984,NIL);
-		ExitToShell();
-      }
-	//error = FSpOpenResFile(&spec,fsRdPerm);
-	//if (error == -1) {
-	//	Alert(984,NIL);
-	//	ExitToShell();
-	//	}
-      
-      //err = FSMakeFSSpec(start_volume, start_dir, "\p:Scenario Editor:Blades of Exile Sounds", &spec);
-      //if (err != noErr) {
-      //      Alert(984,NIL);
-	//	ExitToShell();
-      //}
-	//error = FSpOpenResFile(&spec,fsRdPerm);
-	//if (error == -1) {
-	//	Alert(984,NIL);
-	//	ExitToShell();
-	//	}
 	init_main_buttons();
-	
 	Set_up_win();
-	
 	load_cursors();
-
 	find_quickdraw();
 	set_pixel_depth();
-
 	Set_Window_Drag_Bdry();
-
 	
 //	init_buf();
 
@@ -223,7 +188,6 @@ int main(void)
 	//init_fonts();
 
 	DrawMenuBar();
-	update_item_menu();
 		
 	cd_init_dialogs();
 	
@@ -234,7 +198,7 @@ int main(void)
 	
 	while (All_Done == FALSE) 
 		Handle_One_Event();
-      
+	restore_depth();
       return 0;
 }
 
@@ -252,7 +216,38 @@ void Initialize(void)
 	//SysEnvRec	theWorld;
       unsigned long randSeed;
       BitMap screenBits;
-		
+	
+	
+	//Open the resource files we'll be needing
+	char cPath[768];
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladespced.rsrc"),CFSTR(""),NULL);
+	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
+	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
+	FSRef gRef, sRef;
+	FSPathMakeRef((UInt8*)cPath, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
+	if (error != noErr) {
+		printf("Error! Main resource file not found.\n");
+		ExitToShell();
+	}
+	char *path = "Scenario Editor/Blades of Exile Graphics";
+	error = FSPathMakeRef((UInt8*) path, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Graphics not found.\n");
+		ExitToShell();
+	}
+	path = "Scenario Editor/Blades of Exile Sounds";
+	FSPathMakeRef((UInt8*) path, &sRef, false);
+	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Sounds not found.\n");
+		ExitToShell();
+	}
+	
 	//
 	//	Test the computer to be sure we can do color.  
 	//	If not we would crash, which would be bad.  
@@ -297,7 +292,11 @@ void Initialize(void)
 		
 //	mainPtr = NewCWindow(nil, &windRect, "\pExile", true, zoomDocProc, 
 //						(WindowPtr) -1, false, 0);
-	CreateWindowFromResource(128, &mainPtr);
+	//error = CreateWindowFromResource(128, &mainPtr);
+	//Rect winBounds={38,53,478,643};
+	//error = CreateNewWindow(kDocumentWindowClass, kWindowCloseBoxAttribute, &windRect, &mainPtr);
+	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
+	ActivateWindow(mainPtr,true);
 //	DrawGrowIcon(mainPtr);	
 	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
 	/*stored_key = open_pref_file();
@@ -334,34 +333,32 @@ void Handle_One_Event()
 		WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
 		cur_time = TickCount();
 
-		GetPort(&old_port);				
-		}
-		else
-		{
+		GetPort(&old_port);		
+	}
+	else{
                   //not reached with Carbon
 //			through_sending();
 			//SystemTask();
 			//GetNextEvent( everyEvent, &event);
-		}
+	}
 	
-init_main_buttons();
+	init_main_buttons();
 
-	switch (event.what)
-	{
+	switch (event.what){
 		case keyDown: case autoKey:
-				chr = event.message & charCodeMask;
-				chr2 = (char) ((event.message & keyCodeMask) >> 8);
-				if ((event.modifiers & cmdKey) != 0) {
-					if (event.what != autoKey) {
-						BringToFront(mainPtr);
-						SetPort(GetWindowPort(mainPtr));
-						menu_choice = MenuKey(chr);
-						handle_menu_choice(menu_choice);
-						}
-					}
-//					else 
-//						handle_keystroke(chr,chr2,event);
-						
+			chr = event.message & charCodeMask;
+			chr2 = (char) ((event.message & keyCodeMask) >> 8);
+			if ((event.modifiers & cmdKey) != 0) {
+				if (event.what != autoKey) {
+					BringToFront(mainPtr);
+					SetPort(GetWindowPort(mainPtr));
+					menu_choice = MenuKey(chr);
+					//kludge to prevent stupid system from messing up the shortcut for 'Save As'
+					if(HiWord(menu_choice)==550 && LoWord(menu_choice)==1 && (event.modifiers & shiftKey)!=0)
+						menu_choice = (550<<16) + 2;
+					handle_menu_choice(menu_choice);
+				}
+			}		
 			break;
 		
 		case mouseDown:
@@ -456,16 +453,16 @@ void Mouse_Pressed()
 			if (the_window == mainPtr) {
 
 				All_Done = verify_restore_quit(0);
-				}
-				else {
-				/*	for (i = 0; i < 12; i++)
-						if ((the_window == modeless_dialogs[i]) && (modeless_exists[i] == TRUE)) {
-							CloseDialog(modeless_dialogs[i]);
-							modeless_exists[i] = FALSE;
-							SelectWindow(mainPtr);
-							SetPort(mainPtr);		
-							}*/
-					}
+			}
+			else {
+			/*	for (i = 0; i < 12; i++)
+					if ((the_window == modeless_dialogs[i]) && (modeless_exists[i] == TRUE)) {
+						CloseDialog(modeless_dialogs[i]);
+						modeless_exists[i] = FALSE;
+						SelectWindow(mainPtr);
+						SetPort(mainPtr);		
+						}*/
+			}
 			break;
 		
 		case inContent:
@@ -473,13 +470,14 @@ void Mouse_Pressed()
 				SetPort(GetWindowPort(the_window));
 				SelectWindow(the_window);
 				SetPort(GetWindowPort(the_window));
+			}
+			else{ 
+				if (the_window == mainPtr) {
+					try_to_end = handle_action(event,0);
+					if (try_to_end == TRUE)
+						All_Done = verify_restore_quit(0);
 				}
-				else 
-					if (the_window == mainPtr) {
-						try_to_end = handle_action(event,0);
-						if (try_to_end == TRUE)
-							All_Done = verify_restore_quit(0);
-						}
+			}
 			break;
 	}
 }
@@ -507,7 +505,7 @@ void handle_menu_choice(long choice)
 				handle_edit_menu(menu_item);
 				break;			
 			case 750: case 751:case 752:case 753:
-				handle_item_menu(menu_item + 94 * (menu - 750) - 1);
+				handle_item_menu(menu_item + 100 * (menu - 750) - 1);
 				break;			
 			}
 		}
@@ -534,45 +532,44 @@ void handle_apple_menu(int item_hit)
 void handle_file_menu(int item_hit)
 {
 	short choice;
-
+	FSSpec file;
+	
 	switch (item_hit) {
-		case 1:
-			save_file(0);
+		case 1://save
+			save_file(file_to_load);
 			break;
-		case 2:
+		case 2://save as
+			if(select_save_location(&file))
+				save_file(file);
+			break;
+		case 3://open
 			if (verify_restore_quit(1) == TRUE)
 				load_file();
 			break;
-		case 4:
-					give_reg_info();
+		case 5://how to order
+			give_reg_info();
 			break;
-		case 6:
+		case 7://quit
 			All_Done = verify_restore_quit(0);
 			break;
 		}
 }
 
-
-
 void handle_extra_menu(int item_hit)
 {
 	short i,j,choice;
 	boat_record_type v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
-
+	
 	if (file_in_mem == FALSE) {
 		display_strings(20,5,0,0,"Editing party",57,707,0);
 		return;
-		}
+	}
 	switch(item_hit) {
 		case 1:
 				edit_gold_or_food(0);
-				redraw_screen();
-
 		break;
 		case 2:
 				edit_gold_or_food(1);
-				redraw_screen();
-
 		break;
 		
 		case 4:
@@ -595,8 +592,7 @@ void handle_extra_menu(int item_hit)
 			party.stuff_done[304][0] = 0;
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status >= 10)
-					adven[i].main_status -= 10;				
-			redraw_screen();
+					adven[i].main_status -= 10;
 			break;
 			
 
@@ -634,22 +630,21 @@ void handle_extra_menu(int item_hit)
 				adven[i].status[11] = 0;
 				adven[i].status[12] = 0;
 				adven[i].status[13] = 0;
-				}
+			}
 			break;
 			
 		case 13:
 			if (party_in_scen == FALSE) {
 				display_strings(20,25,0,0,"Editing party",57,715,0);
 				break;
-				}
+			}
 			if (FCD(912,0) != 1)
 				break;
 			remove_party_from_scen();
 			party.stuff_done[304][0] = 0;
-			redraw_screen();
 			break;
-		}
-	display_party(6,0);
+	}
+	redraw_screen();
 }
 
 void handle_edit_menu(int item_hit)
@@ -783,7 +778,7 @@ void handle_item_menu(int item_hit)
 		if ((choice = FCD(904,0)) == 1)
 			return;
 			else save_blocked = TRUE;
-	store_i = convert_item(item_list[item_hit]);
+	store_i = item_list[item_hit];
 	store_i.item_properties = store_i.item_properties | 1;
 	give_to_pc(current_active_pc,store_i,FALSE);
 	draw_items(1);
@@ -797,13 +792,14 @@ void update_item_menu()
 	
 	for (i = 0; i < 4; i++)
 		item_menu[i] = GetMenuHandle(750 + i);
-	for (j = 0; j < 4; j++)
-	for (i = 0; i < 94; i++) {
-			sprintf((char *) item_name, " %s",item_list[i + j * 94].full_name);
+	for (j = 0; j < 4; j++){
+		DeleteMenuItems(item_menu[j],1,100);
+		for (i = 0; i < 100; i++) {
+			sprintf((char *) item_name, " %s",item_list[i + j * 100].full_name);
 			c2pstr((char *) item_name);
 			AppendMenu(item_menu[j],item_name);
-			} 
-
+		} 
+	}
 }
 
 void load_cursors()
@@ -828,68 +824,80 @@ void set_cursor(CursHandle which_curs)
 
 void find_quickdraw() {
 	OSErr err;
-	long response;
+	SInt32 response;
 	short choice;
-	
 	err = Gestalt(gestaltQuickdrawVersion, &response);
 	if (err == noErr) {
-		if (response == 0x000) {
+		if (response == 0x0000) {
 			choice = choice_dialog(0,1070);
 			if (choice == 2)
 				ExitToShell();
-				else diff_depth_ok = TRUE;
-			}
+			else
+				diff_depth_ok = TRUE;
 		}
-		else  {
-			SysBeep(2);
-			ExitToShell();
-			}
+	}
+	else  {
+		SysBeep(2);
+		ExitToShell();
+	}
 }
 
 void set_pixel_depth() {
 	GDHandle cur_device;
 	PixMapHandle screen_pixmap_handle;
-	short pixel_depth;
 	OSErr err;
 	short choice;
+	static Boolean diff_depth_ok = FALSE;
+	short pixel_depth;
 	
 	cur_device = GetGDevice();	
-	
-	if ((HasDepth(cur_device,8,1,1)) == 0) {
-		choice_dialog(0,1070);
-		ExitToShell();
-		}
 	
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
 	
-	if ((pixel_depth <= 8) && (diff_depth_ok == TRUE))
+	if ((diff_depth_ok == FALSE) && ((pixel_depth <= 16) && (HasDepth(cur_device,16,1,1)) == 0)) {
+		choice = choice_dialog(0,1070);
+		if (choice == 1)
+			ExitToShell();
+		if (choice == 2)
+			diff_depth_ok = TRUE;
+	}
+	
+	if ((pixel_depth != 16) && (diff_depth_ok == TRUE))
 		return;
 	
-	if (pixel_depth != 8) {
+	if (pixel_depth < 16) {
 		choice = choice_dialog(0,1071);
 		if (choice == 3)
 			diff_depth_ok = TRUE;
 		if (choice == 2)
 			ExitToShell();
 		if (choice == 1) {
-			err = SetDepth(cur_device,8,1,1);
-			if (err != noErr)
-				ExitToShell();
-			}
+			err = SetDepth(cur_device,16,1,1);
+			old_depth = pixel_depth;
 		}
+	}
 }
 
+void restore_depth(){
+	GDHandle cur_device;
+	PixMapHandle screen_pixmap_handle;
+	OSErr err;
+	cur_device = GetGDevice();	
+	screen_pixmap_handle = (**(cur_device)).gdPMap;
+	if(old_depth!=16)
+		err=SetDepth(cur_device,old_depth,1,1);
+}
 
 void check_sys_7()
 {
 	OSErr err;
 	long response;
-	
 	err = Gestalt(gestaltSystemVersion, &response);
 	if ((err == noErr) && (response >= 0x0700))
 		sys_7_avail = TRUE;
-		else sys_7_avail = FALSE;
+	else 
+		sys_7_avail = FALSE;
 }
 
 pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
@@ -949,7 +957,7 @@ Boolean verify_restore_quit(short mode)
 		return FALSE;
 	if (choice == 2)
 		return TRUE;
-	save_file(0);
+	save_file(file_to_load);
 	return TRUE;
 }
 
@@ -975,7 +983,6 @@ void set_up_apple_events()
 	if (myErr != noErr)
 		SysBeep(2);
 }
-
  
 pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 {	
@@ -985,52 +992,51 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 	Rect the_rect,button_rect;
 	Point the_point;
 	CWindowPtr w;
-      RgnHandle updateRgn;
+	RgnHandle updateRgn;
 	
 	dummy_item_hit = 0;
 	
-	
 	switch (event->what) {
 		case updateEvt:
-                  w = GetDialogWindow(hDlg);
-                  updateRgn = NewRgn();
-                  GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-                  if (EmptyRgn(updateRgn) == TRUE) {
-                        return TRUE;
+			w = GetDialogWindow(hDlg);
+			updateRgn = NewRgn();
+			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
+			if (EmptyRgn(updateRgn) == TRUE) {
+				return TRUE;
 			}
-            BeginUpdate(GetDialogWindow(hDlg));
-		cd_redraw(hDlg);
-		EndUpdate(GetDialogWindow(hDlg));
-		DrawDialog(hDlg);
-		return TRUE;
-		break;
+			BeginUpdate(GetDialogWindow(hDlg));
+			cd_redraw(hDlg);
+			EndUpdate(GetDialogWindow(hDlg));
+			DrawDialog(hDlg);
+			return TRUE;
+			break;
 		
 		case keyDown:
-		chr = event->message & charCodeMask;
-		chr2 = (char) ((event->message & keyCodeMask) >> 8);
-		switch (chr2) {
-			case 126: chr = 22; break;
-			case 124: chr = 21; break;
-			case 123: chr = 20; break;
-			case 125: chr = 23; break;
-			case 53: chr = 24; break;
-			case 36: chr = 31; break;
-			case 76: chr = 31; break;
+			chr = event->message & charCodeMask;
+			chr2 = (char) ((event->message & keyCodeMask) >> 8);
+			switch (chr2) {
+				case 126: chr = 22; break;
+				case 124: chr = 21; break;
+				case 123: chr = 20; break;
+				case 125: chr = 23; break;
+				case 53: chr = 24; break;
+				case 36: chr = 31; break;
+				case 76: chr = 31; break;
 			}
-					// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-					// 25-30  ctrl 1-6  31 - return
+			// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
+			// 25-30  ctrl 1-6  31 - return
 
-		wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
-		break;
+			wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
+			break;
 	
 		case mouseDown:
-		the_point = event->where;
-		GlobalToLocal(&the_point);	
-		wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
-		break;
+			the_point = event->where;
+			GlobalToLocal(&the_point);	
+			wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
+			break;
 
 		default: wind_hit = -1; break;
-		}
+	}
 	switch (wind_hit) {
 		case -1: break;
 
@@ -1045,10 +1051,6 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 		case 1024: edit_xp_event_filter (item_hit); break;
 		case 1073: give_reg_info_event_filter (item_hit); break;
 		default: fancy_choice_dialog_event_filter (item_hit); break;
-		}
-
-	if (wind_hit == -1)
-		return FALSE;
-		else return TRUE;
+	}
+	return(wind_hit != -1);
 }
-

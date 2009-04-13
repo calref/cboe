@@ -180,7 +180,7 @@ void adjust_window_mode()
 			}
 	create_clip_region();
 	undo_clip();
-	if (overall_mode != 45) {
+	if (overall_mode != MODE_STARTUP) {
 		if (in_startup_mode == TRUE)
 			draw_startup(0);
 		if (in_startup_mode == FALSE)
@@ -779,7 +779,7 @@ void create_clip_region()
 			(i == 2) || (i == 3) || (i == 5))
 				FrameRect(&store_rect);
 		}
-	if ((overall_mode == 20) || (overall_mode == 21) ){
+	if ((overall_mode == MODE_TALKING) || (overall_mode == MODE_SHOPPING) ){
 		store_rect = talk_area_rect;
 		OffsetRect(&store_rect,ul.h,ul.v);
 		FrameRect(&store_rect);
@@ -834,9 +834,9 @@ void redraw_screen(short mode)
 			draw_main_screen();
 			draw_terrain(0);
 			draw_text_bar(1);
-			if (overall_mode == 10)
+			if (overall_mode == MODE_COMBAT)
 				draw_pcs(pc_pos[current_pc],1);
-			if (overall_mode == 14)
+			if (overall_mode == MODE_FANCY_TARGET)
 			draw_targets(center);
 			break;
 		}
@@ -847,7 +847,7 @@ void redraw_screen(short mode)
 	Draw1Control(text_sbar);
 	ShowControl(item_sbar);
 	Draw1Control(item_sbar);
-	if (overall_mode == 21) {
+	if (overall_mode == MODE_SHOPPING) {
 		ShowControl(shop_sbar);
 		Draw1Control(shop_sbar);
 		}
@@ -856,16 +856,16 @@ void redraw_screen(short mode)
 
 void draw_main_screen()
 {
-	if (overall_mode == 20) {
+	if (overall_mode == MODE_TALKING) {
 		put_background();
 		}
 		else {
 			rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], terrain_screen_gworld, win_to_rects[0], 0, 1);
  
 			draw_buttons(0);
-			if (overall_mode == 10)
+			if (overall_mode == MODE_COMBAT)
 				draw_pcs(pc_pos[current_pc],1);
-			if (overall_mode == 14)
+			if (overall_mode == MODE_FANCY_TARGET)
 				draw_targets(center);	
 			}	
 	draw_text_area(0);
@@ -873,7 +873,7 @@ void draw_main_screen()
 	Draw1Control(text_sbar);
 	ShowControl(item_sbar);
 	Draw1Control(item_sbar);
-	if (overall_mode == 21) {
+	if (overall_mode == MODE_SHOPPING) {
 		ShowControl(shop_sbar);
 		Draw1Control(shop_sbar);
 		}
@@ -883,20 +883,20 @@ void draw_main_screen()
 
 void refresh_screen(short mode)
 {
-	if (overall_mode == 20) {
+	if (overall_mode == MODE_TALKING) {
 		put_background();
 		refresh_talking();
 		}
-	else if (overall_mode == 21) { 
+	else if (overall_mode == MODE_SHOPPING) { 
 		put_background();
 		refresh_shopping();
 		}
 		else {
 		draw_buttons(0);
 		redraw_terrain();
-		if (overall_mode == 10)
+		if (overall_mode == MODE_COMBAT)
 			draw_pcs(pc_pos[current_pc],1);
-		if (overall_mode == 14)
+		if (overall_mode == MODE_FANCY_TARGET)
 			draw_targets(center);
 		draw_text_bar(1);
 		}
@@ -906,7 +906,7 @@ void refresh_screen(short mode)
 	Draw1Control(text_sbar);
 	ShowControl(item_sbar);
 	Draw1Control(item_sbar);
-	if (overall_mode == 21) {
+	if (overall_mode == MODE_SHOPPING) {
 		ShowControl(shop_sbar);
 		Draw1Control(shop_sbar);
 		}
@@ -1638,7 +1638,7 @@ GWorldPtr load_bmp(unsigned char *data, long length)
 
 	PixMapHandle pixMap = GetGWorldPixMap(newGWorld);
 	LockPixels(pixMap);
-	unsigned int * picBuf = GetPixBaseAddr(pixMap);
+	unsigned int * picBuf = (unsigned int*) GetPixBaseAddr(pixMap);
 	int pixrow = ((*pixMap)->rowBytes & 0x3FFF) / 4;
 
 	int j;
@@ -1870,7 +1870,7 @@ void draw_terrain(short	mode)
 							if (pt_in_light(c_town.p_loc,where_draw) == FALSE)
 								can_draw = 0;	
 							}	
-						if ((overall_mode == 36) && (can_draw == 0))
+						if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
 							can_draw = (party_can_see(where_draw) < 6) ? 1 : 0;
 						}
 				spot_seen[q][r] = can_draw;
@@ -1976,21 +1976,21 @@ void draw_terrain(short	mode)
 			}
 		}
 		
-	if ((overall_mode != 50) && (!is_out())) 
+	if ((overall_mode != MODE_REDRAW) && (!is_out())) 
 		draw_sfx();
 		
 	// Now place items
-	if ((overall_mode > 0) && (overall_mode != 35) && (overall_mode != 50))
+	if ((overall_mode > MODE_OUTDOORS) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_REDRAW))
 		draw_items();		
 		
 	// Now place fields
-	if ((overall_mode != 50) && (!is_out())) {
+	if ((overall_mode != MODE_REDRAW) && (!is_out())) {
 		draw_fields();
 		draw_spec_items();
 		}
 
 	// Not camping. Place misc. shit.
-	if (overall_mode != 50) {
+	if (overall_mode != MODE_REDRAW) {
 		if (is_out())
 			draw_outd_boats(party.p_loc);
 			else if ((is_town()) || (which_combat_type == 1))
@@ -1998,10 +1998,10 @@ void draw_terrain(short	mode)
 		draw_monsters();
 		}
 
-	if ((overall_mode < 10) || (overall_mode == 35) || ((overall_mode == 36) && (point_onscreen(c_town.p_loc,center) == TRUE))
-		|| (overall_mode == 50))
+	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(c_town.p_loc,center) == TRUE))
+		|| (overall_mode == MODE_REDRAW))
 		draw_party_symbol(mode,center);
-		else if (overall_mode != 36)
+		else if (overall_mode != MODE_LOOK_TOWN)
 			draw_pcs(center,0);
 
 
@@ -2013,9 +2013,9 @@ void draw_terrain(short	mode)
 		redraw_terrain();
 		if (cartoon_happening == FALSE) {
 			draw_text_bar(0);
-			if ((overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
+			if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_REDRAW))
 				draw_pcs(center,1);
-			if (overall_mode == 14)
+			if (overall_mode == MODE_FANCY_TARGET)
 				draw_targets(center);
 			}
 		}
@@ -2052,7 +2052,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		at_left = TRUE;
 	if (where.y == 0)
 		at_top = TRUE;
-	if ((overall_mode == 0) || (overall_mode == 35)) {
+	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS)) {
 		if (where.x == 95)
 			at_right = TRUE;
 		if (where.y == 95)
@@ -2284,7 +2284,7 @@ void draw_rest_screen()
 	short store_mode;
 
 	store_mode = overall_mode;
-	overall_mode = 50;
+	overall_mode = MODE_REDRAW;
 	draw_terrain(0);
 	overall_mode = store_mode ;
 }
@@ -2321,7 +2321,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		return;
 			
 	// Redraw terrain in proper position
-	if ((((point_onscreen(center,where) == FALSE) && (overall_mode >= 10)) || (overall_mode == 0))
+	if ((((point_onscreen(center,where) == FALSE) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
 		) {
 		play_sound(sound_to_play[sound]);
 
@@ -2390,7 +2390,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 			FlushAndPause(del_len);
 		}
 	redraw_terrain();
-	if ((cartoon_happening == FALSE) && (overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
+	if ((cartoon_happening == FALSE) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_REDRAW))
 		draw_pcs(center,1);	
 }
 	
@@ -2402,8 +2402,8 @@ void draw_pointing_arrows()
 		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}};
 	short i;
 	
-	if ((monsters_going == TRUE) || (overall_mode <= 1) || (overall_mode <= 10)
-		|| (overall_mode == 35)) 
+	if ((monsters_going == TRUE) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
+		|| (overall_mode == MODE_LOOK_OUTDOORS)) 
 			return;
 	for (i = 0; i < 4; i++) {
 		rect_draw_some_item (mixed_gworld,sources[i],mixed_gworld,dests[i * 2],1,1);
@@ -2505,11 +2505,11 @@ void draw_targeting_line(Point where_curs)
 	location from_loc;
 	Rect on_screen_terrain_area = {23, 23, 346, 274};
 	
-	if (overall_mode >= 10)
+	if (overall_mode >= MODE_COMBAT)
 		from_loc = pc_pos[current_pc];
 		else from_loc = c_town.p_loc;
-	if ((overall_mode == 11) || (overall_mode == 12) || (overall_mode == 13) || (overall_mode == 14)
-	  || ((overall_mode == 3) && (current_pat.pattern[4][4] != 0))) {
+	if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
+	  || ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
 		GlobalToLocal(&where_curs);	
 		
 		OffsetRect(&on_screen_terrain_area,ul.h,ul.v);
@@ -2558,7 +2558,7 @@ void draw_targeting_line(Point where_curs)
 								UnionRect(&target_rect,&redraw_rect2,&redraw_rect2);
 								
 								// Now place number of shots left, if drawing center of target
-								if ((overall_mode == 14) && (store_loc.x - which_space.x + 4 == 4)
+								if ((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
 								 && (store_loc.y - which_space.y + 4 == 4)) {
 									ForeColor(whiteColor);
 									MoveTo(((target_rect.left + target_rect.right) / 2) - 3,
@@ -2579,7 +2579,7 @@ void draw_targeting_line(Point where_curs)
 				if (is_combat())
 					draw_pcs(center,1);
 					else draw_party_symbol(0,center);
-				if (overall_mode == 14)
+				if (overall_mode == MODE_FANCY_TARGET)
 					draw_targets(center);	
 				}
 			}

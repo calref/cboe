@@ -21,7 +21,7 @@ extern unsigned char out[96][96],out_e[96][96];
 extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 
-extern pascal Boolean cd_event_filter();
+pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 extern short dialog_answer;
 
 extern short store_flags[3];

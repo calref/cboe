@@ -154,13 +154,13 @@ short cd_create_dialog(short dlog_num, DialogPtr parent)
 	for (i = 0; i < ND; i++) {
 		if ((dlg_keys[i] >= 0) && (dlg_types[i] == dlog_num))
 			return -1;
-		}
+	}
 	for (i = 0; i < ND; i++) {
 		if (dlg_keys[i] < 0) {
 			free_slot = i;
 			i = 500;
-			}
 		}
+	}
 	if (free_slot < 0)
 		return -2;
 	current_key++;
@@ -178,7 +178,7 @@ short cd_create_dialog(short dlog_num, DialogPtr parent)
 	if (dlgs[free_slot] == NULL) {
 		play_sound(3);
 		return -3;
-		}
+	}
 //	center_window(dlgs[free_slot]);
 
 	dlg_parent[free_slot] = parent;
@@ -245,10 +245,10 @@ void process_new_window (DialogPtr hDlg) {
 	short item_hit,what_talk_field,num_items;
 	short str_offset = 1;
 	long typel,flagl;
-
+	
 	free_slot = store_free_slot;
 	num_items = CountDITL(hDlg);
-
+	
 	dlg_highest_item[free_slot] = 0;
 	
 	// Now, give the window its items
@@ -270,136 +270,138 @@ void process_new_window (DialogPtr hDlg) {
 				type = 3;
 				flag = 1;
 	            str_stored = TRUE;
-				}
+			}
 			else if (item_str[0] == '*') {
 				type = 3;
 				flag = 0;
 				str_stored = TRUE;
-				}
+			}
 			else if (item_str[0] == '~') {
 				type = 7;
 				flag = 0;
 				str_stored = TRUE;
-				}
+			}
 			else if (item_str[0] == '!') {
 				type = 4;
 				flag = 0;
 				str_stored = TRUE;
-				}
+			}
 			else if (item_str[0] == '=') {
 				type = 9;
 				flag = 1;
 				str_stored = TRUE;
-				}
+			}
 			else if (((item_str[0] >= 65) && (item_str[0] <= 122)) || (item_str[0] == '"')) {
 				type = 9;
 				flag = 0;
 				str_offset = 0;
 				str_stored = TRUE;
-				}
+			}
 			else if ((item_str[0] == '^') || (item_str[0] == '&')) {
 				type = (item_str[0] == '^') ? 10 : 11;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
 				str_stored = TRUE;
-				}
+			}
 			else {
-#ifndef EXILE_BIG_GUNS
-				sscanf((char *) item_str,"%d_%d",&type,&flag);
-#endif		
-#ifdef EXILE_BIG_GUNS
+//#ifndef EXILE_BIG_GUNS
+//				sscanf((char *) item_str,"%d_%d",&type,&flag);
+//#endif		
+//#ifdef EXILE_BIG_GUNS
 				sscanf((char *) item_str,"%hd_%hd",&type,&flag);
-				//type = typel; flag = flagl;
-#endif		
-				}
-
+//#endif
+			}
+			
 			free_item = -1;
 			// find free item
 			switch (type) {
 				case 0: case 1: case 2: case 5: case 6:
-					for (j = 150; j < NI; j++)
+					for (j = 150; j < NI; j++){
 						if (item_dlg[j] < 0) {
 							free_item = j;
 							j = NI + 1;
-							}
+						}
+					}
 					break;
-				default:
+					default:
 					if ((type == 9) || 
-					 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
-						for (j = 0; j < 10; j++)
+						((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+						for (j = 0; j < 10; j++){
 							if (item_dlg[j] < 0) {
 								free_item = j;
 								j = NI + 1;
-								}
-						}
-						else {
-							for (j = 10; j < 140; j++)
-								if (item_dlg[j] < 0) {
-									free_item = j;
-									j = NI + 1;
-									}
 							}
+						}
+					}
+					else {
+						for (j = 10; j < 140; j++){
+							if (item_dlg[j] < 0) {
+								free_item = j;
+								j = NI + 1;
+							}
+						}
+					}
 					break;
-				}
-
+			}
+			
 			if (free_item >= 0) {
-					item_dlg[free_item] = store_dlog_num;
-					item_type[free_item] = type;
-					item_number[free_item] = i + 1;
-
-					item_rect[free_item] = get_item_rect(hDlg,i + 1);
-
-					item_flag[free_item] = flag;
-					item_active[free_item] = 1;
-					item_label[free_item] = 0;
-               		item_label_loc[free_item] = -1;
-               		item_key[free_item] = 0;
-					switch (type) {
-						case 0: case 1:
-                                          GetPortBounds(dlg_buttons_gworld[button_type[flag]][0], &store_rect);
+				item_dlg[free_item] = store_dlog_num;
+				item_type[free_item] = type;
+				item_number[free_item] = i + 1;
+				
+				item_rect[free_item] = get_item_rect(hDlg,i + 1);
+				
+				item_flag[free_item] = flag;
+				item_active[free_item] = 1;
+				item_label[free_item] = 0;
+				item_label_loc[free_item] = -1;
+				item_key[free_item] = 0;
+				switch (type) {
+					case 0: case 1:
+						GetPortBounds(dlg_buttons_gworld[button_type[flag]][0], &store_rect);
+						item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
+						item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
+						item_key[free_item] = button_def_key[flag];
+						if (type == 1)
+							item_key[free_item] = 31;
+						break;
+						case 2:
+						item_rect[free_item].right = item_rect[free_item].left + 14;
+						item_rect[free_item].bottom = item_rect[free_item].top + 10;
+						item_key[free_item] = 255;
+						break;
+						case 3: case 4: case 7: case 8: case 9: case 10: case 11: 
+						sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+						if (str_stored == TRUE) {
+							if (free_item < 10)
+								sprintf(text_long_str[free_item],"%s",
+										(char *) (item_str + str_offset));
+							else
+								sprintf(text_short_str[free_item - 10],"%-34s",
+										(char *) (item_str + str_offset));
+						}
+						item_key[free_item] = 255; 
+						if (type >= 10) {
+							GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
 							item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
 							item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
-							item_key[free_item] = button_def_key[flag];
-							if (type == 1)
+							if (type == 11)
 								item_key[free_item] = 31;
-							break;
-						case 2:
-							item_rect[free_item].right = item_rect[free_item].left + 14;
-							item_rect[free_item].bottom = item_rect[free_item].top + 10;
-                    		item_key[free_item] = 255;
-							break;
-						case 3: case 4: case 7: case 8: case 9: case 10: case 11: 
-							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
-							if (str_stored == TRUE) {
-								if (free_item < 10)
-								sprintf(text_long_str[free_item],"%s",
-								  (char *) (item_str + str_offset));
-								else
-								sprintf(text_short_str[free_item - 10],"%-34s",
-								  (char *) (item_str + str_offset));
-								}
-							item_key[free_item] = 255; 
-							if (type >= 10) {
-								GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
-								item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
-								item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
-								if (type == 11)
-									item_key[free_item] = 31;
-								}
-							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 5);
-					win_width = max(win_width, item_rect[free_item].right + 6);
-
+						break;
 				}
-
+				win_height = max(win_height, item_rect[free_item].bottom + 5);
+				win_width = max(win_width, item_rect[free_item].right + 6);
+				
 			}
+			
 		}
+	}
 	ShortenDITL(hDlg,dlg_highest_item[free_slot]);
 	SizeWindow(GetDialogWindow(hDlg),win_width,win_height,FALSE);
 	dlg_highest_item[free_slot] = num_items;
-	}
+}
 
 
 short cd_kill_dialog(short dlog_num,short parent_message)

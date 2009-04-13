@@ -127,7 +127,7 @@ void create_wand_monst()
 	location p_loc;
 
 	r1 = get_ran(1,0,3);
-	if (overall_mode == 0)
+	if (overall_mode == MODE_OUTDOORS)
 		if (is_null_out_wand_entry(outdoors[party.i_w_c.x][party.i_w_c.y].wandering[r1]) == 0) {
 			r2 = get_ran(1,0,3);
 			while ((point_onscreen(outdoors[party.i_w_c.x][party.i_w_c.y].wandering_locs[r2],global_to_local(party.p_loc)) == TRUE)
@@ -140,7 +140,7 @@ void create_wand_monst()
 	
 ////
 	
-	if (overall_mode != 0) // won't place wandering is more than 50 monsters
+	if (overall_mode != MODE_OUTDOORS) // won't place wandering is more than 50 monsters
 		if ((is_null_wand_entry(c_town.town.wandering[r1]) == 0) && (count_monst() <= 50)
 			&& (party.m_killed[c_town.town_num] < c_town.town.max_num_monst)) {
 			r2 = get_ran(1,0,3);
@@ -278,7 +278,7 @@ void do_monsters()
 	location l1,l2;
 	Boolean acted_yet = FALSE;
 	
-	if (overall_mode == 1) 
+	if (overall_mode == MODE_TOWN) 
 		for (i = 0; i < T_M; i++) 
 		if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].m_d.status[11] <= 0)
 			&& (c_town.monst.dudes[i].m_d.status[12] <= 0)) {
@@ -356,7 +356,7 @@ void do_monsters()
 				}
 		
 		}
-		if (overall_mode == 0) {
+		if (overall_mode == MODE_OUTDOORS) {
 			for (i = 0; i < 10; i++)
 				if (party.out_c[i].exists == TRUE) {
 						acted_yet = FALSE;
@@ -761,11 +761,11 @@ Boolean try_move(short i,location start,short x,short y)
 	dest.y = dest.y + y;
 	
 	
-	if (overall_mode == 1)
+	if (overall_mode == MODE_TOWN)
 		return town_move_monster(i,dest);
-	if (overall_mode == 0)
+	if (overall_mode == MODE_OUTDOORS)
 		return outdoor_move_monster(i,dest);
-	if (overall_mode == 10)
+	if (overall_mode == MODE_COMBAT)
 		return combat_move_monster((short) i,dest);
 	return 0;
 }

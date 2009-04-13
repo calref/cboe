@@ -16,6 +16,7 @@
 #include "Exile.sound.h"
 #include "info.dialogs.h"
 #include "blxfileio.h"
+#include "bldsexil.h"
 
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
@@ -350,9 +351,13 @@ void put_item_info(short pc,short item)////
 	cd_set_item_num(998,5,(s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
 
 	if (s_i.ability > 0) {////
-		get_str(desc_str,23,s_i.ability + 1);
-		cd_set_item_text(998,12,(char *) desc_str);
-		}	
+		if (s_i.item_properties & 32) { // Concealed ability
+			get_str(desc_str,23,s_i.ability + 1);
+			cd_set_item_text(998,12,(char *) desc_str);
+		} else {
+			cd_set_item_text(998,12,"???");
+		}
+	}	
 	if (s_i.charges > 0)
 		cd_set_item_num(998,10,s_i.charges);
 	if (s_i.protection > 0)	
@@ -1140,7 +1145,7 @@ void put_talk()
 				csit(960,5,data_store->scen_strs[party.talk_save[store_page_on].str2 - 3000 + 160]);
 				else {
 					load_town(party.talk_save[store_page_on].town_num,2,
-						party.talk_save[store_page_on].str2 - 2000 + 20,(char *) place_str);
+						party.talk_save[store_page_on].str2 - 2000/* + 20*/,(char *) place_str);
 					csit(960,5,(char *) place_str);
 					}
 			}

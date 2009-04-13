@@ -678,7 +678,7 @@ void draw_party_symbol(short mode,location center)
 		return;
 	if ((is_town()) && (c_town.p_loc.x > 70))
 		return;
-	if (overall_mode == 36) {
+	if (overall_mode == MODE_LOOK_TOWN) {
 		target.x += c_town.p_loc.x - center.x;
 		target.y += c_town.p_loc.y - center.y;
 		}
@@ -908,7 +908,7 @@ void make_out_trim()
 	short store_mode;
 	
 	store_mode = overall_mode;
-	overall_mode = 0;
+	overall_mode = MODE_OUTDOORS;
 
 	for (where.x = 0; where.x < 96; where.x++)
 		for (where.y = 0; where.y < 96; where.y++)
@@ -938,7 +938,7 @@ char add_trim_to_array(location where,unsigned char ter_type)
 		at_left = TRUE;
 	if (where.y == 0)
 		at_top = TRUE;
-	if ((overall_mode == 0) || (overall_mode == 35)) {
+	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS)) {
 		if (where.x == 95)
 			at_right = TRUE;
 		if (where.y == 95)

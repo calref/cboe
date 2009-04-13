@@ -15,6 +15,9 @@
 #include "party.h"
 #include "Exile.sound.h"
 
+#include <vector>
+using std::vector;
+
 extern party_record_type party;
 extern pc_record_type adven[6];
 extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
@@ -22,7 +25,7 @@ extern long register_flag;
 extern WindowPtr	mainPtr;	
 extern Point ul;
 extern piles_of_stuff_dumping_type *data_store;
-extern scen_header_type scen_headers[25];
+extern vector<scen_header_type> scen_headers;
 extern Boolean unreg_party_in_scen_not_check;
 
 //void start_game();
@@ -39,82 +42,81 @@ Boolean handle_startup_press(Point the_point)
 	
 	for (i = 0; i < 5; i++) 
 		if (PtInRect(the_point,&startup_button[i]) == TRUE) {
-		draw_start_button(i,5);
-		if (play_sounds == TRUE)
-			play_sound(37);
+			draw_start_button(i,5);
+			if (play_sounds == TRUE)
+				play_sound(37);
 			else FlushAndPause(5);
-		draw_start_button(i,0);			
+			draw_start_button(i,0);			
 			switch (i) {
-				case 0:
-					startup_load();
-					break;
-					
-				case 1:
-					draw_startup(0);
-					start_new_game();
-					update_pc_graphics();
-					draw_startup(0);
-					break;
+			case STARTBTN_LOAD:
+				startup_load();
+				break;
 			
-				case 2:
-					give_reg_info();
-					draw_startup(0);
-					break;
+			case STARTBTN_NEW:
+				draw_startup(0);
+				start_new_game();
+				update_pc_graphics();
+				make_cursor_sword();
+				draw_startup(0);
+				break;
+		
+			case STARTBTN_ORDER:
+				give_reg_info();
+				draw_startup(0);
+				break;
 
-				case 3: // regular scen
-					if (party_in_memory == FALSE) {
-						FCD(867,0);
-						break;
-						}
-					scen = pick_prefab_scen();
-					if (scen < 0)
-						break;
-					if ((registered == FALSE) && (scen > 0)) {
-						FCD(913,0);
-						break;
-						}
-					
-					switch (scen) {
-						case 0: sprintf(party.scen_name,"valleydy.exs"); break;
-						// if not reg, rub out
-						case 1: sprintf(party.scen_name,"stealth.exs"); break;
-						case 2: sprintf(party.scen_name,"zakhazi.exs"); break;
-						}
-					put_party_in_scen();
+			case STARTBTN_JOIN: // regular scen
+				if (party_in_memory == FALSE) {
+					FCD(867,0);
 					break;
-			
-				case 4: // custom
-					if (party_in_memory == FALSE) {
-						FCD(867,0);
-						break;
-						}
-					if (registered == FALSE) {
-						FCD(913,0);
-						break;
-						}
-					// if not reg, rub out
-					
-					scen = pick_a_scen();
-					if (scen_headers[scen].prog_make_ver[0] >= 2) {
-						FCD(912,0);
-						break;
-						}
-					if (scen >= 0) {
-						if (registered == FALSE) 
-							unreg_party_in_scen_not_check = TRUE;
-						sprintf(party.scen_name,"%s",data_store->scen_names[scen]);
-						put_party_in_scen();
-						}
-
-					break;
-			
-				case 5:
-					FlushAndPause(50);
-					return TRUE;
-					break;
-			
 				}
+				scen = pick_prefab_scen();
+				if (scen < 0)
+					break;
+				if ((registered == FALSE) && (scen > 0)) {
+					FCD(913,0);
+					break;
+				}
+				
+				switch (scen) {
+				case 0: sprintf(party.scen_name,"valleydy.exs"); break;
+					// if not reg, rub out
+				case 1: sprintf(party.scen_name,"stealth.exs"); break;
+				case 2: sprintf(party.scen_name,"zakhazi.exs"); break;
+				}
+				put_party_in_scen();
+				break;
+		
+			case STARTBTN_CUSTOM: // custom
+				if (party_in_memory == FALSE) {
+					FCD(867,0);
+					break;
+				}
+				if (registered == FALSE) {
+					FCD(913,0);
+					break;
+				}
+				// if not reg, rub out
+				
+				scen = pick_a_scen();
+				if(scen < 0) break;
+				if (scen_headers[scen].prog_make_ver[0] >= 2) {
+					FCD(912,0);
+					break;
+				}
+				if (registered == FALSE) 
+					unreg_party_in_scen_not_check = TRUE;
+				sprintf(party.scen_name,"%s",data_store->scen_names[scen].c_str());
+				put_party_in_scen();
+				break;
+		
+			case 5:
+				FlushAndPause(50);
+				return TRUE;
+				break;
+		
 			}
+		}
 	return FALSE;
 }
 

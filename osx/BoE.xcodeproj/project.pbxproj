@@ -31,7 +31,34 @@
 		2BF04B2D0BF51924006C0831 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* text.c */; };
 		2BF04B2E0BF51924006C0831 /* town.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* town.c */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
+		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
+		91D634570F8FD78D00674AB3 /* Blades of Exile-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */; };
+		91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
+		91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
+		91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
+		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
+		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
+		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91D635A30F90E77C00674AB3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Blades of Exile Scenarios";
+			dstSubfolderSpec = 16;
+			files = (
+				91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */,
+				91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */,
+				91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */,
+				91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */,
+				91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */,
+				91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoE.icns; sourceTree = "<group>"; };
@@ -86,7 +113,15 @@
 		2BF04B080BF51924006C0831 /* text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		2BF04B090BF51924006C0831 /* town.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = town.c; sourceTree = "<group>"; };
 		2BF04B0A0BF51924006C0831 /* town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = town.h; sourceTree = "<group>"; };
-		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		91B3E8A50F938FFE00BF5B67 /* consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = consts.h; sourceTree = "<group>"; };
+		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
+		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
+		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
+		91D635AC0F90E7B500674AB3 /* valleydy.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.exs; sourceTree = "<group>"; };
+		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
+		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
+		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,59 +139,11 @@
 		2BF04A9F0BF51845006C0831 = {
 			isa = PBXGroup;
 			children = (
-				2B8F435C0C0973680012E4A8 /* BoE.icns */,
+				91D62F2E0F8EB80200674AB3 /* rsrc */,
+				91D62F2D0F8EB7BA00674AB3 /* headers */,
+				91D62F2C0F8EB7AB00674AB3 /* src */,
 				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
-				2BF04ACB0BF51923006C0831 /* bldsexil.c */,
-				2BF04ACC0BF51923006C0831 /* bldsexil.h */,
-				2BF04ACD0BF51923006C0831 /* blx.g.utils.c */,
-				2BF04ACE0BF51923006C0831 /* blx.g.utils.h */,
-				2BF04ACF0BF51923006C0831 /* blxactions.c */,
-				2BF04AD00BF51923006C0831 /* blxactions.h */,
-				2BF04AD10BF51923006C0831 /* blxfileio.c */,
-				2BF04AD20BF51923006C0831 /* blxfileio.h */,
-				2BF04AD30BF51923006C0831 /* blxgraphics.c */,
-				2BF04AD40BF51923006C0831 /* blxgraphics.h */,
-				2BF04AD50BF51923006C0831 /* blxtown_spec.c */,
-				2BF04AD60BF51923006C0831 /* blxtown_spec.h */,
-				2BF04AE60BF51924006C0831 /* combat.c */,
-				2BF04AE70BF51924006C0831 /* combat.h */,
-				2BF04AE80BF51924006C0831 /* dialogutils.c */,
-				2BF04AE90BF51924006C0831 /* dialogutils.h */,
-				2BF04AEA0BF51924006C0831 /* dlogtool.c */,
-				2BF04AEB0BF51924006C0831 /* dlogtool.h */,
-				2BF04AEC0BF51924006C0831 /* Exile.sound.c */,
-				2BF04AED0BF51924006C0831 /* Exile.sound.h */,
-				2BF04AEE0BF51924006C0831 /* fields.c */,
-				2BF04AEF0BF51924006C0831 /* fields.h */,
-				2BF04AF00BF51924006C0831 /* gamma.c */,
-				2BF04AF10BF51924006C0831 /* gamma.h */,
-				2BF04AF20BF51924006C0831 /* global.c */,
-				2BF04AF30BF51924006C0831 /* global.h */,
-				2BF04AF40BF51924006C0831 /* info.dialogs.c */,
-				2BF04AF50BF51924006C0831 /* info.dialogs.h */,
-				2BF04AF60BF51924006C0831 /* item_data.c */,
-				2BF04AF70BF51924006C0831 /* item_data.h */,
-				2BF04AF80BF51924006C0831 /* items.c */,
-				2BF04AF90BF51924006C0831 /* items.h */,
-				2BF04AFA0BF51924006C0831 /* loc_utils.c */,
-				2BF04AFB0BF51924006C0831 /* loc_utils.h */,
-				2BF04AFC0BF51924006C0831 /* monster.c */,
-				2BF04AFD0BF51924006C0831 /* monster.h */,
-				2BF04AFE0BF51924006C0831 /* newgraph.c */,
-				2BF04AFF0BF51924006C0831 /* newgraph.h */,
-				2BF04B000BF51924006C0831 /* party.c */,
-				2BF04B010BF51924006C0831 /* party.h */,
-				2BF04B020BF51924006C0831 /* powerpc.c */,
-				2BF04B030BF51924006C0831 /* specials.c */,
-				2BF04B040BF51924006C0831 /* specials.h */,
-				2BF04B050BF51924006C0831 /* startup.c */,
-				2BF04B060BF51924006C0831 /* startup.h */,
-				2BF04B070BF51924006C0831 /* text.c */,
-				2BF04B080BF51924006C0831 /* text.h */,
-				2BF04B090BF51924006C0831 /* town.c */,
-				2BF04B0A0BF51924006C0831 /* town.h */,
 				2BF04AB30BF5187A006C0831 /* Products */,
-				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +155,94 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		91D62F2C0F8EB7AB00674AB3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2BF04ACB0BF51923006C0831 /* bldsexil.c */,
+				2BF04ACD0BF51923006C0831 /* blx.g.utils.c */,
+				2BF04ACF0BF51923006C0831 /* blxactions.c */,
+				2BF04AD10BF51923006C0831 /* blxfileio.c */,
+				2BF04AD30BF51923006C0831 /* blxgraphics.c */,
+				2BF04AD50BF51923006C0831 /* blxtown_spec.c */,
+				2BF04AE60BF51924006C0831 /* combat.c */,
+				2BF04AE80BF51924006C0831 /* dialogutils.c */,
+				2BF04AEA0BF51924006C0831 /* dlogtool.c */,
+				2BF04AEC0BF51924006C0831 /* Exile.sound.c */,
+				2BF04AEE0BF51924006C0831 /* fields.c */,
+				2BF04AF00BF51924006C0831 /* gamma.c */,
+				2BF04AF20BF51924006C0831 /* global.c */,
+				2BF04AF40BF51924006C0831 /* info.dialogs.c */,
+				2BF04AF60BF51924006C0831 /* item_data.c */,
+				2BF04AF80BF51924006C0831 /* items.c */,
+				2BF04AFA0BF51924006C0831 /* loc_utils.c */,
+				2BF04AFC0BF51924006C0831 /* monster.c */,
+				2BF04AFE0BF51924006C0831 /* newgraph.c */,
+				2BF04B000BF51924006C0831 /* party.c */,
+				2BF04B020BF51924006C0831 /* powerpc.c */,
+				2BF04B030BF51924006C0831 /* specials.c */,
+				2BF04B050BF51924006C0831 /* startup.c */,
+				2BF04B070BF51924006C0831 /* text.c */,
+				2BF04B090BF51924006C0831 /* town.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		91D62F2D0F8EB7BA00674AB3 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				2BF04ACE0BF51923006C0831 /* blx.g.utils.h */,
+				2BF04AD00BF51923006C0831 /* blxactions.h */,
+				2BF04AD20BF51923006C0831 /* blxfileio.h */,
+				2BF04AD40BF51923006C0831 /* blxgraphics.h */,
+				2BF04AD60BF51923006C0831 /* blxtown_spec.h */,
+				2BF04AE70BF51924006C0831 /* combat.h */,
+				2BF04AE90BF51924006C0831 /* dialogutils.h */,
+				2BF04AEB0BF51924006C0831 /* dlogtool.h */,
+				2BF04AED0BF51924006C0831 /* Exile.sound.h */,
+				2BF04AEF0BF51924006C0831 /* fields.h */,
+				2BF04AF10BF51924006C0831 /* gamma.h */,
+				2BF04AF30BF51924006C0831 /* global.h */,
+				2BF04AF50BF51924006C0831 /* info.dialogs.h */,
+				2BF04AF70BF51924006C0831 /* item_data.h */,
+				2BF04AF90BF51924006C0831 /* items.h */,
+				2BF04AFB0BF51924006C0831 /* loc_utils.h */,
+				2BF04AFD0BF51924006C0831 /* monster.h */,
+				2BF04AFF0BF51924006C0831 /* newgraph.h */,
+				2BF04B010BF51924006C0831 /* party.h */,
+				2BF04B040BF51924006C0831 /* specials.h */,
+				2BF04B060BF51924006C0831 /* startup.h */,
+				2BF04B080BF51924006C0831 /* text.h */,
+				2BF04B0A0BF51924006C0831 /* town.h */,
+				2BF04ACC0BF51923006C0831 /* bldsexil.h */,
+				91B3E8A50F938FFE00BF5B67 /* consts.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
+			isa = PBXGroup;
+			children = (
+				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
+				2B8F435C0C0973680012E4A8 /* BoE.icns */,
+				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
+				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
+			);
+			name = rsrc;
+			sourceTree = "<group>";
+		};
+		91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */ = {
+			isa = PBXGroup;
+			children = (
+				91D635AA0F90E7B500674AB3 /* stealth.exs */,
+				91D635AB0F90E7B500674AB3 /* stealth.meg */,
+				91D635AC0F90E7B500674AB3 /* valleydy.exs */,
+				91D635AD0F90E7B500674AB3 /* valleydy.meg */,
+				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
+				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
+			);
+			path = "Blades of Exile Scenarios";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -176,6 +251,7 @@
 			buildConfigurationList = 2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile" */;
 			buildPhases = (
 				2BF04ABD0BF518D4006C0831 /* Resources */,
+				91D635A30F90E77C00674AB3 /* CopyFiles */,
 				2BF04ABE0BF518D4006C0831 /* Sources */,
 				2BF04ABF0BF518D4006C0831 /* Frameworks */,
 			);
@@ -194,10 +270,12 @@
 		2BF04AA10BF51845006C0831 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 0;
 			mainGroup = 2BF04A9F0BF51845006C0831;
 			productRefGroup = 2BF04AB30BF5187A006C0831 /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
 			);
@@ -209,6 +287,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */,
+				91D634560F8FD77800674AB3 /* BoE.icns in Resources */,
+				91D634570F8FD78D00674AB3 /* Blades of Exile-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,16 +332,59 @@
 		2BF04AA30BF51845006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				COPY_PHASE_STRIP = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_MODEL_TUNING = G4;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/include/c++/4.0.0/";
+				LIBRARY_SEARCH_PATHS = "";
+				LINK_WITH_STANDARD_LIBRARIES = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Debug;
 		};
 		2BF04AA40BF51845006C0831 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				COPY_PHASE_STRIP = YES;
+				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/include/c++/4.0.0/";
+				LIBRARY_SEARCH_PATHS = "";
+				LINK_WITH_STANDARD_LIBRARIES = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
 			};
 			name = Release;
 		};

@@ -40,19 +40,19 @@ void take_explored(short i,short j)
 
 Boolean is_out()
 {
-	if ((overall_mode == 0) || (overall_mode == 35))
+	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		return TRUE;
 		else return FALSE;
 }
 Boolean is_town()
 {
-	if (((overall_mode > 0) && (overall_mode < 10)) || (overall_mode == 36))
+	if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
 		return TRUE;
 		else return FALSE;
 }
 Boolean is_combat()
 {
-	if (((overall_mode >= 10) && (overall_mode < 20)) || (overall_mode == 37))
+	if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT))
 		return TRUE;
 		else return FALSE;
 }

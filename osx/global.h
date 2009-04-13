@@ -1,3 +1,8 @@
+
+#include <vector>
+#include <string>
+#include "consts.h"
+
 //#define EXILE_BIG_GUNS 1
 
 #define	SLEEP_TICKS		2L
@@ -392,8 +397,8 @@ typedef struct {
 	//char out_strs[120][256];
 	char scen_strs[270][256];
 	char talk_strs[170][256];
-	char scen_header_strs[25][3][80];
-	Str255 scen_names[25];
+	std::vector<std::string*> scen_header_strs;
+	std::vector<std::string> scen_names;
 	scen_item_data_type scen_item_list;
 	stored_town_maps_type town_maps;
 	} piles_of_stuff_dumping_type;

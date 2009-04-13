@@ -28,7 +28,7 @@ extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type town_maps;
 extern stored_outdoor_maps_type o_maps;
-extern pascal Boolean cd_event_filter();
+pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 
 extern Boolean dialog_not_toast,ed_reg;
 extern long ed_flag,ed_key;
@@ -93,7 +93,7 @@ Boolean handle_action(EventRecord event,short mode)
 	GlobalToLocal(&the_point);	
 
 	if (file_in_mem == FALSE) 
-		return;
+		return FALSE;
 		
 	for (i = 0; i < 6; i++)
 		if ((PtInRect(the_point,&pc_area_buttons[i][0]) == TRUE) &&
@@ -188,12 +188,9 @@ void edit_gold_or_food(short which_to_edit)
 	store_which_to_edit = which_to_edit;
 
 	make_cursor_sword();
-	
 	cd_create_dialog((which_to_edit == 0) ? 1012 : 947, (DialogPtr)mainPtr);
-		
 	sprintf((char *) sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
 	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
-	
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
@@ -202,14 +199,12 @@ void edit_gold_or_food(short which_to_edit)
 	while (dialog_not_toast)
 		ModalDialog(main_dialog_UPP, &item_hit);
 #endif		
-	
 	cd_kill_dialog((which_to_edit == 0) ? 1012 : 947,0);
-	
 	dialog_answer = minmax(0,25000,dialog_answer);
-	
 	if (which_to_edit == 0)
 		party.gold = dialog_answer;
-		else party.food = dialog_answer;
+	else
+		party.food = dialog_answer;
 }
 
 void edit_day_event_filter (short item_hit)

@@ -32,7 +32,7 @@ void set_up_ter_pics();
 Boolean load_scenario();
 short onm(char x_sector,char y_sector);
 void build_scen_headers();
-Boolean load_scenario_header(Str255 filename,short header_entry);
+bool load_scenario_header(FSRef filename/*,short header_entry*/);
 void load_spec_graphics();
 Boolean check_p (short pword);
 void build_scen_file_name (Str255 file_n);

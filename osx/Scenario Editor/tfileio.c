@@ -8,6 +8,8 @@
 #include "scenario.h"
 #include "sound.h"
 
+#import <fstream>
+using std::endl;
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
@@ -45,32 +47,63 @@ Boolean cur_scen_is_mac = TRUE;
 talking_record_type *dummy_talk_ptr;			
 town_record_type *dummy_town_ptr;
 
+ResFileRefNum mainRef, graphicsRef, soundRef;
+
 void print_write_position ();
 
 void init_directories()
 {
 	short error;
 	char thing[60];
-	Str255 data_name = "\pExile III data";
-
-	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
-	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
-
-	error = HOpenResFile(start_volume,start_dir,"\p::::boescen.rsrc",1);
-	OSErr re = ResError();
-	if (re != 0) {
-		return;
+//	Str255 data_name = "\pExile III data";
+//
+//	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
+//	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
+//
+//	error = HOpenResFile(start_volume,start_dir,"\p::::boescen.rsrc",1);
+//	OSErr re = ResError();
+//	if (re != 0) {
+//		return;
+//	}
+//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Graphics",1);
+//	if (ResError() != 0) {
+//		Alert(984,NIL);
+//		ExitToShell();
+//		}
+//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Sounds",1);
+//	if (ResError() != 0) {
+//		Alert(984,NIL);
+//		ExitToShell();
+//		}
+	
+	char cPath[768];
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("BOEScen.rsrc"),CFSTR(""),NULL);
+	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
+	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
+	FSRef gRef, sRef;
+	FSPathMakeRef((UInt8*)cPath, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
+	if (error != noErr) {
+		printf("Error! Main resource file not found.\n");
+		ExitToShell();
 	}
-	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Graphics",1);
-	if (ResError() != 0) {
-		Alert(984,NIL);
+	char *path = "Blades of Exile Graphics";
+	error = FSPathMakeRef((UInt8*) path, &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Graphics not found.\n");
 		ExitToShell();
-		}
-	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Sounds",1);
-	if (ResError() != 0) {
-		Alert(984,NIL);
+	}
+	path = "Blades of Exile Sounds";
+	FSPathMakeRef((UInt8*) path, &sRef, false);
+	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		printf("Error! File Blades of Exile Sounds not found.\n");
 		ExitToShell();
-		}
+	}
 
 }
 
@@ -93,11 +126,11 @@ void save_scenario()
 	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
 	outdoor_record_type *dummy_out_ptr;
 	
-	if (check_p(user_given_password) == FALSE) {
+	/*if (check_p(user_given_password) == FALSE) {
 		fancy_choice_dialog(868,0);
 		return;
 		}
-	user_given_password = given_password;
+	user_given_password = given_password; */
 
 	//OK. FIrst find out what file name we're working with, and make the dummy file 
 	// which we'll build the new scenario in
@@ -440,7 +473,7 @@ void load_scenario()
 		}
 		*/
 		
-	// Now check password
+	/* Now check password
 	
 	if (check_p(0) == FALSE) {
 		user_given_password = enter_password();
@@ -454,7 +487,7 @@ void load_scenario()
 				else return;
 			}
 		}
-		else user_given_password = 0;
+		else user_given_password = 0; /**/
 	
 	
 	//given_password = user_given_password;
@@ -482,7 +515,7 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 		FSClose(file_id);
 		return NULL;
 	}
-	unsigned char * data = malloc(length);
+	unsigned char * data = new unsigned char[length];
 	FSRead(file_id,&length,data);
 	FSClose(file_id);
 	GWorldPtr ret = load_bmp(data,length);
@@ -1150,7 +1183,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	FSClose(file_id);
 
 	Str255 newname = "::::";
-	strcat(newname,file_name);
+	strcat((char*)newname,(char*)file_name);
 		
 	// now wrtie scenario
 	c2p(newname);
@@ -1602,236 +1635,297 @@ void reset_pwd()
 	scenario.flag_d = init_data(user_given_password);
 }
 
-void start_data_dump()
-{
+void start_data_dump(){
 	short i;
-	short j,k;
-	long val_store,to_return = 0;
-	short the_type,data_dump_file_id;
-	Handle the_handle = NULL;
-	Rect the_rect;
-	Str255 the_string,store_name;
-	char get_text[280];
-	FSSpec dump_file;
-	OSErr error;
-	long len,empty_len;
+	char* scen_name = data_store->scen_strs[0];
+	std::ofstream fout("Scenario Data.txt");
+	fout << "Scenario data for " << scen_name << ':' << endl << endl;
+	fout << "Terrain types for " << scen_name << ':' << endl;
+	for(i = 0; i < 256; i++)
+		fout << "  Terrain type " << i << ": " << data_store->scen_item_list.ter_names[i] << endl;
+	fout << endl << "Monster types for " << scen_name << ':' << endl;
+	for(i = 0; i < 256; i++)
+		fout << "  Monster type " << i << ": " << data_store->scen_item_list.monst_names[i] << endl;
+	fout << endl << "Item types for " << scen_name << ':' << endl;
+	for(i = 0; i < 400; i++)
+		fout << "  Item type " << i << ": " << data_store->scen_item_list.scen_items[i].full_name << endl;
+	fout.close();
+}
 
-	FSMakeFSSpec(start_volume,start_dir,"\pScenario data",&dump_file);
-	FSpDelete(&dump_file);
-	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
-	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {
-		SysBeep(50);
-		return;
-		}			
-
-
-//	sprintf((char *)empty_line,"\r");
-//	empty_len = (long) (strlen((char *)empty_line));
-
-	SetFPos (data_dump_file_id, 2, 0);
-
-	sprintf((char *)get_text,"Scenario data for %s:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Terrain types for %s:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-
-	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Terrain type %d: %s\r",i,data_store->scen_item_list.ter_names[i]);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	
-		}	
-
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Monster types for %s:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Monster type %d: %s\r",i,data_store->scen_item_list.monst_names[i]);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	
-		}	
-
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Item types for %s:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	for (i = 0; i < 400; i++) {
-		sprintf((char *)get_text,"  Item type %d: %s\r",i,data_store->scen_item_list.scen_items[i].full_name);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	
-		}	
-	FSClose(data_dump_file_id);
-	
-}	
-
-void scen_text_dump()
-{
+void scen_text_dump(){
 	short i;
-	short j,k;
-	long val_store,to_return = 0;
-	short the_type,data_dump_file_id;
-	Handle the_handle = NULL;
-	Rect the_rect;
-	Str255 the_string,store_name;
-	char get_text[300];
-	FSSpec dump_file;
-	OSErr error;
-	long len,empty_len;
 	location out_sec;
-	
-	FSMakeFSSpec(start_volume,start_dir,"\pScenario text",&dump_file);
-	FSpDelete(&dump_file);
-	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
-	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {
-		SysBeep(50);
-		return;
-		}			
-
-
-//	sprintf((char *)empty_line,"\r");
-//	empty_len = (long) (strlen((char *)empty_line));
-
-	SetFPos (data_dump_file_id, 2, 0);
-
-	sprintf((char *)get_text,"Scenario text for %s:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Scenario Text:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (i = 0; i < 260; i++)
-		if (data_store->scen_strs[i][0] != '*') {
-			sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->scen_strs[i]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-
-		sprintf((char *)get_text,"\r");
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"Outdoor Sections Text:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) 
+	std::ofstream fout("Scenario Text.txt");
+	fout << "Scenario text for " << data_store->scen_strs[0] << ':' << endl << endl;
+	fout << "Scenario Text:" << endl;
+	for(i = 1; i < 260; i++)
+		if(data_store->scen_strs[i][0] != '*')
+			fout << "  Message " << i << ": " << data_store->scen_strs[i] << endl;
+	fout << endl << "Outdoor Sections Text:" << endl << endl;
+	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
-			sprintf((char *)get_text,"  Section X = %d, Y = %d:\r",(short) out_sec.x,(short) out_sec.y);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			sprintf((char *)get_text,"\r");
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-		
+			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
 			load_outdoors(out_sec,0);
 			for (i = 0; i < 108; i++)
-				if (data_store->out_strs[i][0] != '*') {
-					sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->out_strs[i]);
-					len = (long) (strlen((char *)get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
-			sprintf((char *)get_text,"\r");
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
+				if (data_store->out_strs[i][0] != '*')
+					fout << "    Message " << i << ": " << data_store->out_strs[i] << endl;
+			fout << endl;
 		}
+	}
 	augment_terrain(out_sec);
-
-	sprintf((char *)get_text,"Town Text:\r",data_store->scen_strs[0]);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (j = 0; j < scenario.num_towns; j++) {
+	fout << "Town Text:" << endl << endl;
+	for (short j = 0; j < scenario.num_towns; j++) {
+		fout << "  Town " << j << ':' << endl;
 		load_town(j);
-
-		sprintf((char *)get_text,"  Town: %s\r",data_store->town_strs[0]);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\r");
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Town Messages:",data_store->town_strs[j]);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\r");
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-			for (i = 0; i < 135; i++)
-				if (data_store->town_strs[i][0] != '*') {
-					sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->town_strs[i]);
-					len = (long) (strlen((char *)get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
-
-		sprintf((char *)get_text,"  Town Dialogue:",data_store->town_strs[j]);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\r");
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-
+		for (i = 0; i < 135; i++)
+			if (data_store->town_strs[i][0] != '*')
+				fout << "    Message " << i << ": " << data_store->town_strs[i] << endl;
+		fout << endl;
 		for (i = 0; i < 10; i++) {
-			sprintf((char *)get_text,"  Personality %d name: %s\r",j * 10 + i,data_store->talk_strs[i]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);		
-			sprintf((char *)get_text,"  Personality %d look: %s\r",j * 10 + i,data_store->talk_strs[i + 10]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);		
-			sprintf((char *)get_text,"  Personality %d ask name: %s\r",j * 10 + i,data_store->talk_strs[i + 20]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);		
-			sprintf((char *)get_text,"  Personality %d ask job: %s\r",j * 10 + i,data_store->talk_strs[i + 30]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);		
-			sprintf((char *)get_text,"  Personality %d confused: %s\r",j * 10 + i,data_store->talk_strs[i + 160]);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);		
-			}
-				
-			for (i = 40; i < 160; i++)
-				if (strlen((char *) (data_store->talk_strs[i])) > 0) {
-					sprintf((char *)get_text,"  Node %d: %s\r",(i - 40) / 2,data_store->talk_strs[i]);
-					len = (long) (strlen((char *)get_text));
-					FSWrite(data_dump_file_id, &len, (char *) get_text);
-					}
-
-			sprintf((char *)get_text,"\r");
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);	
-		
+			fout << "    Personality " << i << " (" << data_store->talk_strs[i] << "): " << endl;
+			fout << "    look: " << data_store->talk_strs[i + 10] << endl;
+			fout << "    name: " << data_store->talk_strs[i + 20] << endl;
+			fout << "    job: " << data_store->talk_strs[i + 30] << endl;
+			fout << "    confused: " << data_store->talk_strs[i + 160] << endl;
 		}
-		
-	FSClose(data_dump_file_id);
-	
-}	
+		for (i = 40; i < 160; i++)
+			if (strlen((char *) (data_store->talk_strs[i])) > 0)
+				fout << "    Node " << i << ": " << data_store->talk_strs[i] << endl;
+		fout << endl;
+	}
+	fout.close();
+}
+
+//void start_data_dump()
+//{
+//	short i;
+//	short j,k;
+//	long val_store,to_return = 0;
+//	short the_type,data_dump_file_id;
+//	Handle the_handle = NULL;
+//	Rect the_rect;
+//	Str255 the_string,store_name;
+//	char get_text[280];
+//	FSSpec dump_file;
+//	OSErr error;
+//	long len,empty_len;
+//
+//	FSMakeFSSpec(start_volume,start_dir,"\pScenario data",&dump_file);
+//	FSpDelete(&dump_file);
+//	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
+//	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {
+//		SysBeep(50);
+//		return;
+//		}			
+//
+//
+////	sprintf((char *)empty_line,"\r");
+////	empty_len = (long) (strlen((char *)empty_line));
+//
+//	SetFPos (data_dump_file_id, 2, 0);
+//
+//	sprintf((char *)get_text,"Scenario data for %s:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	sprintf((char *)get_text,"Terrain types for %s:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//
+//	for (i = 0; i < 256; i++) {
+//		sprintf((char *)get_text,"  Terrain type %d: %s\r",i,data_store->scen_item_list.ter_names[i]);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	
+//		}	
+//
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	sprintf((char *)get_text,"Monster types for %s:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	for (i = 0; i < 256; i++) {
+//		sprintf((char *)get_text,"  Monster type %d: %s\r",i,data_store->scen_item_list.monst_names[i]);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	
+//		}	
+//
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	sprintf((char *)get_text,"Item types for %s:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	for (i = 0; i < 400; i++) {
+//		sprintf((char *)get_text,"  Item type %d: %s\r",i,data_store->scen_item_list.scen_items[i].full_name);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	
+//		}	
+//	FSClose(data_dump_file_id);
+//	
+//}	
+//
+//void scen_text_dump()
+//{
+//	short i;
+//	short j,k;
+//	long val_store,to_return = 0;
+//	short the_type,data_dump_file_id;
+//	Handle the_handle = NULL;
+//	Rect the_rect;
+//	Str255 the_string,store_name;
+//	char get_text[300];
+//	FSSpec dump_file;
+//	OSErr error;
+//	long len,empty_len;
+//	location out_sec;
+//	
+//	FSMakeFSSpec(start_volume,start_dir,"\pScenario text",&dump_file);
+//	FSpDelete(&dump_file);
+//	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
+//	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {
+//		SysBeep(50);
+//		return;
+//		}			
+//
+//
+////	sprintf((char *)empty_line,"\r");
+////	empty_len = (long) (strlen((char *)empty_line));
+//
+//	SetFPos (data_dump_file_id, 2, 0);
+//
+//	sprintf((char *)get_text,"Scenario text for %s:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//	sprintf((char *)get_text,"Scenario Text:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	for (i = 0; i < 260; i++)
+//		if (data_store->scen_strs[i][0] != '*') {
+//			sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->scen_strs[i]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);
+//			}
+//
+//		sprintf((char *)get_text,"\r");
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"Outdoor Sections Text:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) 
+//		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+//			sprintf((char *)get_text,"  Section X = %d, Y = %d:\r",(short) out_sec.x,(short) out_sec.y);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);
+//			sprintf((char *)get_text,"\r");
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		
+//			load_outdoors(out_sec,0);
+//			for (i = 0; i < 108; i++)
+//				if (data_store->out_strs[i][0] != '*') {
+//					sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->out_strs[i]);
+//					len = (long) (strlen((char *)get_text));
+//					FSWrite(data_dump_file_id, &len, (char *) get_text);
+//					}
+//			sprintf((char *)get_text,"\r");
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		}
+//	augment_terrain(out_sec);
+//
+//	sprintf((char *)get_text,"Town Text:\r",data_store->scen_strs[0]);
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	sprintf((char *)get_text,"\r");
+//	len = (long) (strlen((char *)get_text));
+//	FSWrite(data_dump_file_id, &len, (char *) get_text);
+//	for (j = 0; j < scenario.num_towns; j++) {
+//		load_town(j);
+//
+//		sprintf((char *)get_text,"  Town: %s\r",data_store->town_strs[0]);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		sprintf((char *)get_text,"\r");
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		sprintf((char *)get_text,"  Town Messages:",data_store->town_strs[j]);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		sprintf((char *)get_text,"\r");
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//			for (i = 0; i < 135; i++)
+//				if (data_store->town_strs[i][0] != '*') {
+//					sprintf((char *)get_text,"  Message %d: %s\r",i,data_store->town_strs[i]);
+//					len = (long) (strlen((char *)get_text));
+//					FSWrite(data_dump_file_id, &len, (char *) get_text);
+//					}
+//
+//		sprintf((char *)get_text,"  Town Dialogue:",data_store->town_strs[j]);
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//		sprintf((char *)get_text,"\r");
+//		len = (long) (strlen((char *)get_text));
+//		FSWrite(data_dump_file_id, &len, (char *) get_text);
+//
+//		for (i = 0; i < 10; i++) {
+//			sprintf((char *)get_text,"  Personality %d name: %s\r",j * 10 + i,data_store->talk_strs[i]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);		
+//			sprintf((char *)get_text,"  Personality %d look: %s\r",j * 10 + i,data_store->talk_strs[i + 10]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);		
+//			sprintf((char *)get_text,"  Personality %d ask name: %s\r",j * 10 + i,data_store->talk_strs[i + 20]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);		
+//			sprintf((char *)get_text,"  Personality %d ask job: %s\r",j * 10 + i,data_store->talk_strs[i + 30]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);		
+//			sprintf((char *)get_text,"  Personality %d confused: %s\r",j * 10 + i,data_store->talk_strs[i + 160]);
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);		
+//			}
+//				
+//			for (i = 40; i < 160; i++)
+//				if (strlen((char *) (data_store->talk_strs[i])) > 0) {
+//					sprintf((char *)get_text,"  Node %d: %s\r",(i - 40) / 2,data_store->talk_strs[i]);
+//					len = (long) (strlen((char *)get_text));
+//					FSWrite(data_dump_file_id, &len, (char *) get_text);
+//					}
+//
+//			sprintf((char *)get_text,"\r");
+//			len = (long) (strlen((char *)get_text));
+//			FSWrite(data_dump_file_id, &len, (char *) get_text);	
+//		
+//		}
+//		
+//	FSClose(data_dump_file_id);
+//	
+//}
 void port_talk_nodes()
 {
 	short i,j,k,l;

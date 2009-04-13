@@ -24,7 +24,7 @@ extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
 extern outdoor_record_type current_terrain;
 extern unsigned char borders[4][50];
-extern pascal Boolean cd_event_filter();
+extern pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 extern location cur_out;
 extern talking_record_type talking;
 
@@ -1020,7 +1020,7 @@ Boolean save_town_details()
 	if (cre(town.town_chop_time,-1,10000,"The day the town becomes abandoned must be from 0 to 10000 (or -1 if it doesn't)."
 		,"",832) == TRUE) return FALSE;
 	town.town_chop_key = CDGN(832,4);
-	if (cre(town.town_chop_key,-1,9,"The event which prevents the town from becoming abandoned must be from 0 to 9 (or -1 for none)."
+	if (cre(town.town_chop_key,-1,10,"The event which prevents the town from becoming abandoned must be from 1 to 10 (-1 or 0 for none)."
 		,"",832) == TRUE) return FALSE;
 	town.lighting = cd_get_led_range(832,19,22);
 	town.max_num_monst = CDGN(832,5);

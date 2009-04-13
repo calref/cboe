@@ -495,7 +495,7 @@ GWorldPtr load_bmp(unsigned char *data, long length)
 	
 	PixMapHandle pixMap = GetGWorldPixMap(newGWorld);
 	LockPixels(pixMap);
-	unsigned int * picBuf = GetPixBaseAddr(pixMap);
+	unsigned int * picBuf = (unsigned int*) GetPixBaseAddr(pixMap);
 	int pixrow = ((*pixMap)->rowBytes & 0x3FFF) / 4;
 	
 	int j;
