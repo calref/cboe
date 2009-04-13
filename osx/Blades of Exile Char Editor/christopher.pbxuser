@@ -1,0 +1,549 @@
+// !$*UTF8*$!
+{
+	2BF04AA10BF51845006C0831 /* Project object */ = {
+		activeArchitecture = ppc;
+		activeBuildConfigurationName = Release;
+		activeExecutable = 9D0ECCF30D18D50400DF7AD2 /* Blades of Exile */;
+		activeTarget = 2BF04AC00BF518D4006C0831 /* Blades of Exile Character Editor */;
+		addToTargets = (
+			2BF04AC00BF518D4006C0831 /* Blades of Exile Character Editor */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = 9D0ECCFD0D18D50A00DF7AD2 /* Code sense */;
+		executables = (
+			9D0ECCF30D18D50400DF7AD2 /* Blades of Exile */,
+		);
+		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					210,
+					20,
+					110,
+					109,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					635,
+					548,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					881,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					993,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFindDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFindDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					120,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFindDataSource_MessageID,
+					PBXFindDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					953,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 238792664;
+			PBXWorkspaceStateSaveDate = 238792664;
+		};
+		perUserProjectItems = {
+			9D1400B60E3BA2240003F13C = 9D1400B60E3BA2240003F13C /* PBXTextBookmark */;
+			9D1400C60E3BA2E20003F13C = 9D1400C60E3BA2E20003F13C /* PBXTextBookmark */;
+			9D1400C70E3BA2E20003F13C = 9D1400C70E3BA2E20003F13C /* PBXTextBookmark */;
+			9D1400C80E3BA2E20003F13C = 9D1400C80E3BA2E20003F13C /* PBXTextBookmark */;
+			9D1400D20E3BA3E30003F13C = 9D1400D20E3BA3E30003F13C /* PBXTextBookmark */;
+			9D1400D30E3BA3E30003F13C = 9D1400D30E3BA3E30003F13C /* PBXTextBookmark */;
+			9D1400EE0E3BA4B40003F13C = 9D1400EE0E3BA4B40003F13C /* PBXTextBookmark */;
+			9D1400F20E3BA4D70003F13C = 9D1400F20E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F30E3BA4D70003F13C = 9D1400F30E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F40E3BA4D70003F13C = 9D1400F40E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F50E3BA4D70003F13C = 9D1400F50E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F60E3BA4D70003F13C = 9D1400F60E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F70E3BA4D70003F13C = 9D1400F70E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F80E3BA4D70003F13C = 9D1400F80E3BA4D70003F13C /* PBXTextBookmark */;
+			9D1400F90E3BA4D70003F13C = 9D1400F90E3BA4D70003F13C /* PBXTextBookmark */;
+			9D14012F0E3BAD8E0003F13C = 9D14012F0E3BAD8E0003F13C /* PBXTextBookmark */;
+			9D1401300E3BAD8E0003F13C = 9D1401300E3BAD8E0003F13C /* PBXTextBookmark */;
+			9DC04F290E3BAFDF00CD6787 /* PBXTextBookmark */ = 9DC04F290E3BAFDF00CD6787 /* PBXTextBookmark */;
+			9DC04F2A0E3BAFDF00CD6787 /* PBXTextBookmark */ = 9DC04F2A0E3BAFDF00CD6787 /* PBXTextBookmark */;
+			9DC04F2D0E3BB7C900CD6787 /* PBXTextBookmark */ = 9DC04F2D0E3BB7C900CD6787 /* PBXTextBookmark */;
+			9DC04F2E0E3BB7C900CD6787 /* PBXTextBookmark */ = 9DC04F2E0E3BB7C900CD6787 /* PBXTextBookmark */;
+			9DC04F3B0E3BB7F500CD6787 /* PBXTextBookmark */ = 9DC04F3B0E3BB7F500CD6787 /* PBXTextBookmark */;
+			9DC04F3C0E3BB7F500CD6787 /* PBXTextBookmark */ = 9DC04F3C0E3BB7F500CD6787 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 9D0ECCFC0D18D50A00DF7AD2 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	2BF04AC00BF518D4006C0831 /* Blades of Exile Character Editor */ = {
+		activeExec = 0;
+		executables = (
+			9D0ECCF30D18D50400DF7AD2 /* Blades of Exile */,
+		);
+	};
+	2BF04AEA0BF51924006C0831 /* dlogtool.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1391, 19768}}";
+			sepNavSelRange = "{32478, 9}";
+			sepNavVisRange = "{31663, 869}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	2BF04AEB0BF51924006C0831 /* dlogtool.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 746}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 2589}";
+		};
+	};
+	2BF04AF70BF51924006C0831 /* item_data.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 746}}";
+			sepNavSelRange = "{0, 16}";
+			sepNavVisRange = "{0, 32}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3410DD1380400FCD60F /* char.ed.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 15442}}";
+			sepNavSelRange = "{23534, 0}";
+			sepNavVisRange = "{23089, 1090}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3420DD1380400FCD60F /* ed.action.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 9786}}";
+			sepNavSelRange = "{5352, 0}";
+			sepNavVisRange = "{4517, 1412}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3440DD1380400FCD60F /* ed.editors.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1391, 6034}}";
+			sepNavSelRange = "{431, 9}";
+			sepNavVisRange = "{0, 943}";
+			sepNavWindowFrame = "{{15, -1}, {1440, 874}}";
+		};
+	};
+	9D05E3460DD1380400FCD60F /* ed.fileio.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 13272}}";
+			sepNavSelRange = "{10865, 19}";
+			sepNavVisRange = "{9966, 2094}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3470DD1380400FCD60F /* ed.fileio.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 746}}";
+			sepNavSelRange = "{67, 0}";
+			sepNavVisRange = "{0, 305}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3480DD1380400FCD60F /* ed.global.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 1190}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 830}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E3490DD1380400FCD60F /* ed.global.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 6384}}";
+			sepNavSelRange = "{11624, 0}";
+			sepNavVisRange = "{10374, 1250}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E34A0DD1380400FCD60F /* ed.graphics.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1670, 16884}}";
+			sepNavSelRange = "{36495, 0}";
+			sepNavVisRange = "{34956, 2108}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D05E34C0DD1380400FCD60F /* ed.sound.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 2450}}";
+			sepNavSelRange = "{3852, 0}";
+			sepNavVisRange = "{3019, 1077}";
+			sepNavWindowFrame = "{{0, 4}, {1440, 874}}";
+		};
+	};
+	9D0ECCF30D18D50400DF7AD2 /* Blades of Exile */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = "Blades of Exile";
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	9D0ECCFC0D18D50A00DF7AD2 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryName = BoE;
+		};
+		scmType = "";
+	};
+	9D0ECCFD0D18D50A00DF7AD2 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	9D1400AD0E3BA0410003F13C /* ed.fileio.c */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
+		name = ed.fileio.c;
+		path = "/Users/christopher/Projects/Blades of Exile/Blades of Exile Char Editor/ed.fileio.c";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 13524}}";
+			sepNavSelRange = "{9178, 0}";
+			sepNavVisRange = "{8884, 1554}";
+		};
+	};
+	9D1400B60E3BA2240003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 60";
+		rLen = 0;
+		rLoc = 1452;
+		rType = 0;
+		vrLen = 1304;
+		vrLoc = 736;
+	};
+	9D1400C60E3BA2E20003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 1";
+		rLen = 0;
+		rLoc = 20;
+		rType = 0;
+		vrLen = 288;
+		vrLoc = 0;
+	};
+	9D1400C70E3BA2E20003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 60";
+		rLen = 0;
+		rLoc = 1452;
+		rType = 0;
+		vrLen = 1251;
+		vrLoc = 5120;
+	};
+	9D1400C80E3BA2E20003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 1";
+		rLen = 12;
+		rLoc = 7;
+		rType = 0;
+		vrLen = 288;
+		vrLoc = 0;
+	};
+	9D1400D20E3BA3E30003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 380";
+		rLen = 46;
+		rLoc = 9091;
+		rType = 0;
+		vrLen = 1958;
+		vrLoc = 9044;
+	};
+	9D1400D30E3BA3E30003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 3";
+		rLen = 0;
+		rLoc = 68;
+		rType = 0;
+		vrLen = 301;
+		vrLoc = 0;
+	};
+	9D1400ED0E3BA4B40003F13C /* char.ed.c */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
+		name = char.ed.c;
+		path = "/Users/christopher/Projects/Blades of Exile/Blades of Exile Char Editor/char.ed.c";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1393, 14980}}";
+			sepNavSelRange = "{23534, 0}";
+			sepNavVisRange = "{23089, 997}";
+		};
+	};
+	9D1400EE0E3BA4B40003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400ED0E3BA4B40003F13C /* char.ed.c */;
+		rLen = 1;
+		rLoc = 547;
+		rType = 1;
+	};
+	9D1400F20E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 3";
+		rLen = 0;
+		rLoc = 67;
+		rType = 0;
+		vrLen = 305;
+		vrLoc = 0;
+	};
+	9D1400F30E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1341;
+		vrLoc = 0;
+	};
+	9D1400F40E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 380";
+		rLen = 0;
+		rLoc = 9124;
+		rType = 0;
+		vrLen = 1613;
+		vrLoc = 8819;
+	};
+	9D1400F50E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 3";
+		rLen = 0;
+		rLoc = 55;
+		rType = 0;
+		vrLen = 301;
+		vrLoc = 0;
+	};
+	9D1400F60E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 380";
+		rLen = 11;
+		rLoc = 9125;
+		rType = 0;
+		vrLen = 1581;
+		vrLoc = 8819;
+	};
+	9D1400F70E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 3";
+		rLen = 0;
+		rLoc = 67;
+		rType = 0;
+		vrLen = 305;
+		vrLoc = 0;
+	};
+	9D1400F80E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1341;
+		vrLoc = 0;
+	};
+	9D1400F90E3BA4D70003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3470DD1380400FCD60F /* ed.fileio.h */;
+		name = "ed.fileio.h: 3";
+		rLen = 0;
+		rLoc = 67;
+		rType = 0;
+		vrLen = 305;
+		vrLoc = 0;
+	};
+	9D14012F0E3BAD8E0003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3460DD1380400FCD60F /* ed.fileio.c */;
+		name = "ed.fileio.c: 429";
+		rLen = 19;
+		rLoc = 10835;
+		rType = 0;
+		vrLen = 2094;
+		vrLoc = 9966;
+	};
+	9D1401300E3BAD8E0003F13C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D05E3410DD1380400FCD60F /* char.ed.c */;
+		name = "char.ed.c: 966";
+		rLen = 0;
+		rLoc = 23534;
+		rType = 0;
+		vrLen = 1090;
+		vrLoc = 23089;
+	};
+	9DC04F290E3BAFDF00CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 429";
+		rLen = 19;
+		rLoc = 10835;
+		rType = 0;
+		vrLen = 2090;
+		vrLoc = 9966;
+	};
+	9DC04F2A0E3BAFDF00CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400ED0E3BA4B40003F13C /* char.ed.c */;
+		name = "char.ed.c: 966";
+		rLen = 0;
+		rLoc = 23534;
+		rType = 0;
+		vrLen = 999;
+		vrLoc = 23089;
+	};
+	9DC04F2D0E3BB7C900CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 463";
+		rLen = 0;
+		rLoc = 12155;
+		rType = 0;
+		vrLen = 1385;
+		vrLoc = 11334;
+	};
+	9DC04F2E0E3BB7C900CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400ED0E3BA4B40003F13C /* char.ed.c */;
+		name = "char.ed.c: 966";
+		rLen = 0;
+		rLoc = 23534;
+		rType = 0;
+		vrLen = 997;
+		vrLoc = 23089;
+	};
+	9DC04F3B0E3BB7F500CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400AD0E3BA0410003F13C /* ed.fileio.c */;
+		name = "ed.fileio.c: 382";
+		rLen = 0;
+		rLoc = 9178;
+		rType = 0;
+		vrLen = 1554;
+		vrLoc = 8884;
+	};
+	9DC04F3C0E3BB7F500CD6787 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9D1400ED0E3BA4B40003F13C /* char.ed.c */;
+		name = "char.ed.c: 966";
+		rLen = 0;
+		rLoc = 23534;
+		rType = 0;
+		vrLen = 997;
+		vrLoc = 23089;
+	};
+}
