@@ -25,7 +25,7 @@
 #define	RIGHT_AREA_HEIGHT	400
 
 #define	TER_RECT_UL_X	6
-#define	TER_RECT_UL_Y	25
+#define	TER_RECT_UL_Y	19 // Formerly 25
 
 #define	CDGT	cd_retrieve_text_edit_str
 #define	CDGN	cd_retrieve_text_edit_num

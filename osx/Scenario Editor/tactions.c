@@ -3209,12 +3209,14 @@ void set_up_main_screen()
 void start_town_edit()
 {
 	short i,j;
-
+	char message[50];
 	small_any_drawn = FALSE;
 	cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
 	reset_lb();
-	set_lb(0,2,"Editing town",0);
-	set_lb(NLS - 2,1,"Click border to scroll view.",0);
+	sprintf(message,"Editing Town %d",cur_town);
+	set_lb(0,2,message,0);
+	set_lb(NLS - 3,1,data_store->town_strs[0],0);
+	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
 	set_lb(NLS - 1,11,"Back to Main Menu",0);
 	overall_mode = 0;
 	editing_town = TRUE;
@@ -3238,12 +3240,14 @@ void start_town_edit()
 void start_out_edit()
 {
 	short i,j;
-	
+	char message[50];
 	small_any_drawn = FALSE;
 	cen_x = 24; cen_y = 24;
 	reset_lb();
-	set_lb(0,2,"Editing outdoors",0);
-	set_lb(NLS - 2,1,"Click border to scroll view.",0);
+	sprintf(message,"Editing outdoors (%d,%d)",cur_out.x,cur_out.y);
+	set_lb(0,2,message,0);
+	set_lb(NLS - 3,1,data_store->out_strs[0],0);
+	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
 	set_lb(NLS - 1,11,"Back to Main Menu",0);
 	overall_mode = 0;
 	editing_town = FALSE;
@@ -3256,12 +3260,12 @@ void start_out_edit()
 	set_string("Drawing mode","");
 	place_location();
 	copied_spec = -1;
-		for (i = 0; i < 48; i++)
-			for (j = 0; j < 48; j++)
-				if (current_terrain.terrain[i][j] == 0)
-					current_ground = 0;
-					else if (current_terrain.terrain[i][j] == 2)
-						current_ground = 2;
+	for (i = 0; i < 48; i++)
+		for (j = 0; j < 48; j++)
+			if (current_terrain.terrain[i][j] == 0)
+				current_ground = 0;
+			else if (current_terrain.terrain[i][j] == 2)
+				current_ground = 2;
 }
 
 // mode 0 - initial shut down, 1 - no town, 2 - no out, 3 - no town or out 4 - all menus on

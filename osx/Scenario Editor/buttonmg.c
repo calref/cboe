@@ -74,7 +74,7 @@ void set_lb(short slot, short mode, char *label, short do_draw)
 		}
 	left_button_status[slot] = mode;
 	//sprintf((char *)data_store->strings_ls[slot], "%-39.39s", label);
-	sprintf((char *)data_store->strings_ls[slot], "%-39.39s", label);
+	sprintf((char *)data_store->strings_ls[slot], "%-50.50s", label);
 	data_store->strings_ls[slot][39] = 0;
 	if (do_draw > 0)
 		draw_lb_slot(slot,0);
