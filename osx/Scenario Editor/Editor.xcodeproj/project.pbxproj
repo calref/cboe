@@ -71,6 +71,7 @@
 		2BDBD34F0C0A232300A0A01D /* tGraphics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tGraphics.h; sourceTree = "<group>"; };
 		2BDBD3500C0A232300A0A01D /* townout.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = townout.c; sourceTree = "<group>"; };
 		2BDBD3510C0A232300A0A01D /* townout.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = townout.h; sourceTree = "<group>"; };
+		91B3EDA10F9666BC00BF5B67 /* ViewDlog-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ViewDlog-Info.plist"; sourceTree = "<group>"; };
 		91D636080F90E9AB00674AB3 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = BOEScen.rsrc; sourceTree = "<group>"; };
 		91D6360A0F90EA5000674AB3 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "BoE Scenario Editor.icns"; sourceTree = "<group>"; };
 		91D6360C0F90EA7500674AB3 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Blades of Exile Sounds"; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 				91D636030F90E95F00674AB3 /* headers */,
 				91D636000F90E94100674AB3 /* src */,
 				2BDBD32D0C0A22DE00A0A01D /* Products */,
+				91B3EDA10F9666BC00BF5B67 /* ViewDlog-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

@@ -32,28 +32,47 @@
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
+// These constants are for draw_dialog_graphic() to know where to find the graphic.
 #define PICT_OLD_TYPE			-1
 #define PICT_BLANK_TYPE			0
-#define PICT_TER_TYPE			1
+#define PICT_TER_TYPE			1 // 28x36 terrain graphic
 #define PICT_TER_ANIM_TYPE		2
 #define PICT_MONST_TYPE			3
-#define PICT_DLG_TYPE			4
-#define PICT_TALK_TYPE			5
-#define PICT_SCEN_TYPE			6
-#define PICT_ITEM_TYPE			7
-#define DLG_NEW_PICTURE			20   // This is added to various of the above constants
-#define PICT_CUSTOM_TYPE		100  // This is added to various of the above constants
-#define PICT_N_TER				336
-#define PICT_N_TER_ANIM			18
+#define PICT_DLG_TYPE			4 // 36x36 dialog graphic
+#define PICT_TALK_TYPE			5 // 32x32 facial graphic
+#define PICT_SCEN_TYPE			6 // 32x32 scenario icon
+#define PICT_ITEM_TYPE			7 // Item graphic (two sizes available)
+/* The following four are modifiers to be added to the above seven constants
+ * Usage for PICT_CUSTOM_TYPE:
+ * PICT_CUSTOM_TYPE + PICT_XXX_TYPE, where XXX is anything valid other than OLD or BLANK.
+ * PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_WIDE_MONST, for a 2x1 monster
+ * PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_TALL_MONST, for a 1x2 monster
+ * PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_TALL_MONST + PICT_WIDE_MONST, for a 2x2 monster
+ * Notes:
+ *  - PICT_TALL_MONST and PICT_WIDE_MONST only apply to custom monsters - the preset
+ * monster graphics have these settings hardcoded.
+ *  - Also note that custom scenario graphics are not currently supported. This doesn't really
+ * matter, though, since if they were they'd be handled like talk (facial) graphics.
+ *  - Custom animated terrain graphics should use PICT_TER_TYPE rather than PICT_TER_ANIM_TYPE.
+ */
+#define PICT_CUSTOM_TYPE		100
+#define PICT_WIDE_MONSTER		10
+#define PICT_TALL_MONSTER		20
+#define DLG_NEW_PICTURE			20 // Adding this one makes it a DLG_ constant rather than a PICT_ constant
+// These constants are the total number of preset graphics of each type.
+#define PICT_N_TER				252 // 336
+#define PICT_N_TER_ANIM			13 // 18
 #define PICT_N_MONST			172
-#define PICT_N_DLG				36
+#define PICT_N_DLG				35 // 36
 #define PICT_N_TALK				83
 #define PICT_N_SCEN				29
 #define PICT_N_ITEM				122
 
+// These constants are used to create the definition of the dialogs, and
+// to parse a dialog resource when displaying it to the screen.
 #define DLG_BUTTON_TYPE				0
 #define DLG_DEFAULT_BTN_TYPE		1
-// Not sure what 10 and 11 do, but they're similar to above two
+// Not sure what 10 and 11 do, but they may be similar to above two
 #define DLG_LED_BUTTON				2
 // 3, 4, 7, 8, 9 are various text objects; not completely sure which is which
 #define DLG_TEXT_BOLD				3
