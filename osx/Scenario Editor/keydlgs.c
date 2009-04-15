@@ -204,7 +204,7 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 
 void give_error(char *text1, char *text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!",57,/*7*/16,DLG_DLG_TYPE,parent_num);
+	display_strings(text1,text2,"Error!",57,/*7*/16,PICT_DLG_TYPE,parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
@@ -299,7 +299,7 @@ void put_choice_pics(short g_type)
 	
 	for (i = 0; i < 36; i++) {
 		if (store_first_g + which_page * 36 + i > store_last_g) {
-			csp(819,41 + i,0,DLG_BLANK_TYPE);
+			csp(819,41 + i,0,PICT_BLANK_TYPE);
 			cd_activate_item(819,5 + i,0);
 		}
 		else {
@@ -806,9 +806,9 @@ void edit_spec_enc_event_filter (short item_hit)
 				 dialog_not_toast = FALSE; 
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
-				case 1: i = choose_graphic(/*700,731*/0,DLG_N_DLG,store_spec_node.pic,DLG_DLG_TYPE,822); break;
-				case 2: i = choose_graphic(0,DLG_N_TER,store_spec_node.pic,DLG_TER_TYPE,822); break;
-				case 3: i = choose_graphic(/*400,572*/0,DLG_N_MONST,store_spec_node.pic,DLG_MONST_TYPE,822); break;
+				case 1: i = choose_graphic(/*700,731*/0,PICT_N_DLG,store_spec_node.pic,PICT_DLG_TYPE,822); break;
+				case 2: i = choose_graphic(0,PICT_N_TER,store_spec_node.pic,PICT_TER_TYPE,822); break;
+				case 3: i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_spec_node.pic,PICT_MONST_TYPE,822); break;
 				}
 			if (i >= 0) {
 				store_spec_node.pic = i;
@@ -1276,10 +1276,10 @@ void edit_scen_intro_event_filter (short item_hit)
 
 		case 16:
 			i = CDGN(804,8);
-			i = choose_graphic(/*1600,1629,1600 + i,804*/0,DLG_N_SCEN,i,DLG_SCEN_TYPE,804);
+			i = choose_graphic(/*1600,1629,1600 + i,804*/0,PICT_N_SCEN,i,PICT_SCEN_TYPE,804);
 			if (i >= 0) {
 				CDSN(804,8,i/* - 1600*/);
-				csp(804,11,i,DLG_SCEN_TYPE );
+				csp(804,11,i,PICT_SCEN_TYPE );
 				}
 			break;
 		}
@@ -1297,7 +1297,7 @@ void edit_scen_intro()
 	CDSN(804,8,scenario.intro_pic);
 	for (i = 0; i < 6; i++)
 		CDST(804, 2 + i,data_store->scen_strs[4 + i]);
-	csp(804,11,scenario.intro_pic/* + 1600*/,DLG_SCEN_TYPE);
+	csp(804,11,scenario.intro_pic/* + 1600*/,PICT_SCEN_TYPE);
 	
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);

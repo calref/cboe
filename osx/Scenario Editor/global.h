@@ -32,22 +32,35 @@
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
-#define DLG_BLANK_TYPE			0
-#define DLG_TER_TYPE			1
-#define DLG_TER_ANIM_TYPE		2
-#define DLG_MONST_TYPE			3
-#define DLG_DLG_TYPE			4
-#define DLG_TALK_TYPE			5
-#define DLG_SCEN_TYPE			6
-#define DLG_ITEM_TYPE			7
-#define DLG_CUSTOM_TYPE			100  // This is added to various of the above constants
-#define DLG_N_TER				336
-#define DLG_N_TER_ANIM			13
-#define DLG_N_MONST				172
-#define DLG_N_DLG				31
-#define DLG_N_TALK				83
-#define DLG_N_SCEN				29
-#define DLG_N_ITEM				122
+#define PICT_OLD_TYPE			-1
+#define PICT_BLANK_TYPE			0
+#define PICT_TER_TYPE			1
+#define PICT_TER_ANIM_TYPE		2
+#define PICT_MONST_TYPE			3
+#define PICT_DLG_TYPE			4
+#define PICT_TALK_TYPE			5
+#define PICT_SCEN_TYPE			6
+#define PICT_ITEM_TYPE			7
+#define DLG_NEW_PICTURE			20   // This is added to various of the above constants
+#define PICT_CUSTOM_TYPE		100  // This is added to various of the above constants
+#define PICT_N_TER				336
+#define PICT_N_TER_ANIM			18
+#define PICT_N_MONST			172
+#define PICT_N_DLG				36
+#define PICT_N_TALK				83
+#define PICT_N_SCEN				29
+#define PICT_N_ITEM				122
+
+#define DLG_BUTTON_TYPE				0
+#define DLG_DEFAULT_BTN_TYPE		1
+// Not sure what 10 and 11 do, but they're similar to above two
+#define DLG_LED_BUTTON				2
+// 3, 4, 7, 8, 9 are various text objects; not completely sure which is which
+#define DLG_TEXT_BOLD				3
+#define DLG_TEXT_PLAIN				4
+#define DLG_TEXT_LARGE				7
+#define DLG_OLD_PICTURE				5
+// And I don't know what 6 is for either
 
 typedef struct {
 	char x,y;

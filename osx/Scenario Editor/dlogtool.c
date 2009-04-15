@@ -136,13 +136,13 @@ void cd_init_dialogs()
 		dlg_types[i] = 0;
 		dlgs[i] = NULL;
 		dlg_highest_item[i] = 0;
-		}
+	}
 	for (i = 0; i < NI; i++) {
 		item_dlg[i] = -1;
-		}
+	}
 	for (i = 0; i < NL; i++) {
 		label_taken[i] = FALSE;
-		}
+	}
 }
 
 
@@ -172,13 +172,13 @@ short cd_create_dialog(short dlog_num,WindowPtr parent)
 	for (i = 0; i < ND; i++) {
 		if ((dlg_keys[i] >= 0) && (dlg_types[i] == dlog_num))
 			return -1;
-		}
+	}
 	for (i = 0; i < ND; i++) {
 		if (dlg_keys[i] < 0) {
 			free_slot = i;
 			i = 500;
-			}
 		}
+	}
 	if (free_slot < 0)
 		return -2;
 	current_key++;
@@ -196,7 +196,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent)
 	if (dlgs[free_slot] == NULL) {
 		play_sound(3);
 		return -3;
-		}
+	}
 //	center_window(dlgs[free_slot]);
 
 	dlg_parent[free_slot] = parent;
@@ -331,18 +331,26 @@ void process_new_window (WindowPtr hDlg) {
 #ifdef EXILE_BIG_GUNS
 				sscanf((char *) item_str,"%hd_%hd",&type,&flag);
 				//type = typel; flag = flagl;
-#endif		
-				}
+#endif
+			}
 
 			free_item = -1;
 			// find free item
 			switch (type) {
-				case 0: case 1: case 2: case 5: case 6:
+				case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE: case DLG_LED_BUTTON:
+				case DLG_OLD_PICTURE: case 6:
+				case DLG_NEW_PICTURE + PICT_TER_TYPE:
+				case DLG_NEW_PICTURE + PICT_TER_ANIM_TYPE:
+				case DLG_NEW_PICTURE + PICT_MONST_TYPE:
+				case DLG_NEW_PICTURE + PICT_DLG_TYPE:
+				case DLG_NEW_PICTURE + PICT_TALK_TYPE:
+				case DLG_NEW_PICTURE + PICT_SCEN_TYPE:
+				case DLG_NEW_PICTURE + PICT_ITEM_TYPE:
 					for (j = 150; j < NI; j++)
 						if (item_dlg[j] < 0) {
 							free_item = j;
 							j = NI + 1;
-							}
+						}
 					break;
 				default:
 					if ((type == 9) || 
@@ -351,75 +359,98 @@ void process_new_window (WindowPtr hDlg) {
 							if (item_dlg[j] < 0) {
 								free_item = j;
 								j = NI + 1;
-								}
+							}
 						}
 						else {
 							for (j = 10; j < 140; j++)
 								if (item_dlg[j] < 0) {
 									free_item = j;
 									j = NI + 1;
-									}
+								}
 							}
 					break;
 				}
 
 			if (free_item >= 0) {
-					item_dlg[free_item] = store_dlog_num;
-					item_type[free_item] = type;
-					item_number[free_item] = i + 1;
+				item_dlg[free_item] = store_dlog_num;
+				item_type[free_item] = type;
+				item_number[free_item] = i + 1;
 
-					item_rect[free_item] = get_item_rect(hDlg,i + 1);
+				item_rect[free_item] = get_item_rect(hDlg,i + 1);
 
-					item_flag[free_item] = flag;
-					item_active[free_item] = 1;
-					item_label[free_item] = 0;
-               		item_label_loc[free_item] = -1;
-               		item_key[free_item] = 0;
-					switch (type) {
-						case 0: case 1:
-							GetPortBounds(dlg_buttons_gworld[button_type[flag]][0], &store_rect);
+				item_flag[free_item] = flag;
+				
+				item_active[free_item] = 1;
+				item_label[free_item] = 0;
+         		item_label_loc[free_item] = -1;
+           		item_key[free_item] = 0;
+				switch (type) {
+				case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE:
+					GetPortBounds(dlg_buttons_gworld[button_type[flag]][0], &store_rect);
+					item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
+					item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
+					item_key[free_item] = button_def_key[flag];
+					if (type == 1)
+						item_key[free_item] = 31;
+					break;
+				case DLG_LED_BUTTON:
+					item_rect[free_item].right = item_rect[free_item].left + 14;
+					item_rect[free_item].bottom = item_rect[free_item].top + 10;
+                  		item_key[free_item] = 255;
+					break;
+				case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE:
+				case 8: case 9: case 10: case 11: 
+					sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+					if (str_stored == TRUE) {
+						if (free_item < 10)
+						sprintf(text_long_str[free_item],"%s",(char *) (item_str + str_offset));
+						else
+						sprintf(text_short_str[free_item - 10],"%-39.39s",
+						  (char *) (item_str + str_offset));
+					}
+					item_key[free_item] = 255; 
+					if (type >= 10) {
+						GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
 							item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
 							item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
-							item_key[free_item] = button_def_key[flag];
-							if (type == 1)
+							if (type == 11)
 								item_key[free_item] = 31;
-							break;
-						case 2:
-							item_rect[free_item].right = item_rect[free_item].left + 14;
-							item_rect[free_item].bottom = item_rect[free_item].top + 10;
-                    		item_key[free_item] = 255;
-							break;
-						case 3: case 4: case 7: case 8: case 9: case 10: case 11: 
-							sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
-							if (str_stored == TRUE) {
-								if (free_item < 10)
-								sprintf(text_long_str[free_item],"%s",
-								  (char *) (item_str + str_offset));
-								else
-								sprintf(text_short_str[free_item - 10],"%-39.39s",
-								  (char *) (item_str + str_offset));
-								}
-							item_key[free_item] = 255; 
-							if (type >= 10) {
-								GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
-								item_rect[free_item].right = item_rect[free_item].left + store_rect.right;
-								item_rect[free_item].bottom = item_rect[free_item].top + store_rect.bottom;
-								if (type == 11)
-									item_key[free_item] = 31;
-								}
-							break;
-						}
-					win_height = max(win_height, item_rect[free_item].bottom + 5);
-					win_width = max(win_width, item_rect[free_item].right + 6);
-
+					}
+					break;
+				case DLG_OLD_PICTURE:
+					item_flag2[free_item] = PICT_OLD_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_TER_TYPE:
+					item_flag2[free_item] = PICT_TER_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_TER_ANIM_TYPE:
+					item_flag2[free_item] = PICT_TER_ANIM_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_MONST_TYPE:
+					item_flag2[free_item] = PICT_MONST_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_DLG_TYPE:
+					item_flag2[free_item] = PICT_DLG_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_TALK_TYPE:
+					item_flag2[free_item] = PICT_TALK_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_SCEN_TYPE:
+					item_flag2[free_item] = PICT_SCEN_TYPE;
+					break;
+				case DLG_NEW_PICTURE + PICT_ITEM_TYPE:
+					item_flag2[free_item] = PICT_ITEM_TYPE;
+					break;
 				}
-
+				win_height = max(win_height, item_rect[free_item].bottom + 5);
+				win_width = max(win_width, item_rect[free_item].right + 6);
 			}
 		}
+	}
 	ShortenDITL(GetDialogFromWindow(hDlg),dlg_highest_item[free_slot]);
 	SizeWindow(hDlg,win_width,win_height,FALSE);
 	dlg_highest_item[free_slot] = num_items;
-	}
+}
 
 
 short cd_kill_dialog(short dlog_num,short parent_message)
@@ -911,7 +942,7 @@ void cd_draw_item(short dlog_num,short item_num)
 		}
 		else {
 			switch (item_type[item_index]) {
-				case 0: case 1: case 10: case 11:
+				case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE: case 10: case 11:
 					GetPortBounds(dlg_buttons_gworld[button_type[item_flag[item_index]]][0], &from_rect);
 					rect_draw_some_item(dlg_buttons_gworld[button_type[item_flag[item_index]]][0],from_rect,
 					 dlg_buttons_gworld[button_type[item_flag[item_index]]][0],item_rect[item_index],0,2);
@@ -922,19 +953,19 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_type[item_index] < 2) {
 						char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
 						 (char *) (button_strs[item_flag[item_index]]),1,8);
-						}
-						else {
-							char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-							  text_short_str[item_index - 10]),1,8);
-							}
+					}
+					else {
+						char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
+						 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+						  text_short_str[item_index - 10]),1,8);
+					}
 					if (item_type[item_index] < 2)
 						OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 					TextSize(10);
 					ForeColor(blackColor);
 					break;
 
-				case 2:
+				case DLG_LED_BUTTON:
 					GetPortBounds(dlg_buttons_gworld[9][0], &from_rect);
 					switch (item_flag[item_index]) {
 						case 0: rect_draw_some_item( dlg_buttons_gworld[10][0],from_rect, dlg_buttons_gworld[10][0],item_rect[item_index],0,2); break;
@@ -943,9 +974,14 @@ void cd_draw_item(short dlog_num,short item_num)
 						}
 					break;
 
-				case 3: case 4: case 7: case 8: case 9: 
+				case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE: case 8: case 9: 
 					cd_erase_item(dlog_num,item_num);
-					if (item_type[item_index] == 4)
+					TextFont(geneva_font_num);
+					TextFace(0);
+					TextFace(bold);
+					TextSize(10); 
+					ForeColor(blackColor);
+					if (item_type[item_index] == DLG_TEXT_PLAIN)
 						TextFace(0);
 					if (item_type[item_index] == 7)
 						TextSize(12); 
@@ -955,37 +991,39 @@ void cd_draw_item(short dlog_num,short item_num)
 
 					if (item_flag[item_index] >= 10) {
 						RGBForeColor(&c[1]);
-						}
+					}
 					if (item_rect[item_index].bottom - item_rect[item_index].top < 20) {
 						item_rect[item_index].left += 3;
 							char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
 							  text_short_str[item_index - 10]),3,12);
 						item_rect[item_index].left -= 3;
-						}
-						else {
-							InsetRect(&item_rect[item_index],4,4);
-							char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
-							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-							  text_short_str[item_index - 10]),0,(item_type[item_index] == 7) ? 14 : 12);
-							InsetRect(&item_rect[item_index],-4,-4);
-							}
+					}
+					else {
+						InsetRect(&item_rect[item_index],4,4);
+						char_win_draw_string(dlgs[dlg_index],item_rect[item_index],
+						 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+						  text_short_str[item_index - 10]),0,(item_type[item_index] == 7) ? 14 : 12);
+						InsetRect(&item_rect[item_index],-4,-4);
+					}
 					if ((item_type[item_index] == 8) && (dlog_num == 989)) {
 						item_rect[item_index].bottom -= 12;
 						undo_clip();
-						}
-					TextFont(geneva_font_num);
-					TextFace(0);
-					TextFace(bold);
-					TextSize(10); 
-					ForeColor(blackColor);
+					}
 					break;
 
-				case 5:
+				case DLG_OLD_PICTURE:
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
-						else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index]), item_rect[item_index], item_flag[item_index],
-						  item_flag2[item_index], (item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+					else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index]), item_rect[item_index], item_flag[item_index],
+						item_flag2[item_index], (item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+					break;
+				default: // DLG_NEW_PICTURE
+					if(item_type[item_index] < 20) break;
+					if (item_flag[item_index] == -1)
+						cd_erase_item(dlog_num,item_num);
+					else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index]), item_rect[item_index], item_flag[item_index],
+											 item_type[item_index] - DLG_NEW_PICTURE, (item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
 					break;
 				}
 			}
@@ -1281,7 +1319,7 @@ short cd_find_dlog(WindowPtr window, short *dlg_num, short *dlg_key)
 			*dlg_num = dlg_types[i];
 			*dlg_key = dlg_keys[i];
 			return i;
-			}
+		}
 	return -1;
 }
 
@@ -1343,22 +1381,23 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val)
 
 void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, Boolean do_frame,short win_or_gworld)
 // win_or_gworld: 0 - window  1 - gworld
-// 0 - 300   number of terrain graphic -> DLG_TER_TYPE (1), DLG_TER_ANIM_TYPE (2)
-// 400 + x - monster graphic num (uses index from scenario) -> DLG_MONST_TYPE
+// 0 - 300   number of terrain graphic -> PICT_TER_TYPE (1), PICT_TER_ANIM_TYPE (2)
+// 400 + x - monster graphic num (uses index from scenario) -> PICT_MONST_TYPE
 //   400 is 1st monster from monster index, 401 is 2nd from m. index, and so on
-// 700 + x  dlog graphic -> DLG_DLG_TYPE
-// 800 + x  pc graphic -> DLG_PC_TYPE
-// 900 + x  B&W graphic -> DLG_BW_TYPE
-// 950 null item -> 0, DLG_BLANK_TYPE (0)
-// 1000 + x  Talking face -> DLG_TALK_TYPE
-// 1100 - item info help -> DLG_INFO_TYPE
-// 1200 - pc screen help -> DLG_PC_HELP_TYPE
-// 1300 - combat ap -> DLG_COMBAT_AP_TYPE
-// 1400-1402 - button help -> DLG_HELP_TYPE
-// 1500 - stat symbols help -> DLG_STAT_TYPE
-// 1600 + x - scen graphics -> DLG_SCEN_TYPE
-// 1700 + x - anim graphic -> DLG_ANIM_TYPE
-// 1800 + x  item graphic -> DLG_ITEM_TYPE
+// 700 + x  dlog graphic -> PICT_DLG_TYPE
+// 800 + x  pc graphic -> PICT_PC_TYPE
+// 900 + x  B&W graphic -> PICT_BW_TYPE
+// 950 null item -> 0, PICT_BLANK_TYPE (0)
+// 1000 + x  Talking face -> PICT_TALK_TYPE
+// 1100 - item info help -> PICT_INFO_TYPE
+// 1200 - pc screen help -> PICT_PC_HELP_TYPE
+// 1300 - combat ap -> PICT_COMBAT_AP_TYPE
+// 1400-1402 - button help -> PICT_HELP_TYPE
+// 1500 - stat symbols help -> PICT_STAT_TYPE
+// 1600 + x - scen graphics -> PICT_SCEN_TYPE
+// 1700 + x - anim graphic -> PICT_ANIM_TYPE
+// 1800 + x  item graphic -> PICT_ITEM_TYPE
+// PICT_OLD_TYPE (-1) to revert to the old behaviour
 {
 	short picnum;
 	Rect from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
@@ -1391,7 +1430,36 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 		do_frame = FALSE;
 	which_g = which_g % 2000;
 	
-	if (type_g == DLG_BLANK_TYPE) { // Empty. Maybe clear space.
+	if (type_g == PICT_OLD_TYPE) {
+		unsigned short r = which_g / 100;
+		//printf("Parsing old-style graphic %i.",which_g);
+		if (r < 3){
+			type_g = PICT_TER_TYPE;
+		}else if(r == 4){
+			type_g = PICT_TER_ANIM_TYPE;
+			which_g -= 400;
+		}else if(r < 7){
+			type_g = PICT_MONST_TYPE;
+			which_g -= 700;
+		}else if(r == 7){
+			type_g = PICT_DLG_TYPE;
+			which_g -= 700;
+		}else if(r == 10){
+			type_g = PICT_TALK_TYPE;
+			which_g -= 1000;
+		}else if(r == 16){
+			type_g = PICT_SCEN_TYPE;
+			which_g -= 1600;
+		}else if(r == 18 || r == 19){
+			type_g = PICT_ITEM_TYPE;
+			which_g -= 1800;
+		}else if(which_g == 950){
+			type_g = PICT_BLANK_TYPE;
+		}
+		//printf(" Result: type = %i, reduced graphic = %u.\n",type_g,which_g);
+	}
+	
+	if (type_g == PICT_BLANK_TYPE) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
 			rect.top -= 3;
 			rect.left -= 3;
@@ -1400,13 +1468,13 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 			FillCRect(&rect,bg[5]);
 			}	
 		return;
-		}
+	}
 	GetBackColor(&store_color);
 	
 	BackColor(whiteColor);	
 
 	switch (type_g) {
-		case DLG_TER_TYPE: // terrain
+		case PICT_TER_TYPE: // terrain
 			from_gworld = terrain_gworld[which_g / 50];
 			which_g = which_g % 50;
 			from_rect = calc_rect(which_g % 10, which_g / 10);
@@ -1416,19 +1484,22 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 			  ,rect,0,draw_dest);
 			//DisposeGWorld(from_gworld);
 			break;
-		case DLG_TER_ANIM_TYPE: // animated terrain
+		case PICT_TER_ANIM_TYPE: // animated terrain
 			//which_g -= 300;
 			//from_gworld = load_pict(820);
-			from_rect = calc_rect(4 * (which_g / 5), which_g % 5);
+			Rect from_rect = calc_rect(4 * (which_g / 5), which_g % 5);
+			//printf("Getting animated terrain graphic %i from sheet 20", which_g);
+			//printf(" at {%i,%i,%i,%i}",from_rect.top,from_rect.left,from_rect.bottom,from_rect.right);
+			//printf(" – column %i, row %i.\n",from_rect.left/28,from_rect.top/36);
 			if (rect.right - rect.left > 28) {
 				InsetRect(&rect,4,0);
 				rect.right = rect.left + 28;
-				}
+			}
 			rect_draw_some_item(anim_gworld,from_rect,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr)hDlg: anim_gworld)
 			  ,rect,0,draw_dest);
 			//DisposeGWorld(from_gworld);
 			break;
-		case DLG_MONST_TYPE: // monster ... needs use index   small_monst_rect
+		case PICT_MONST_TYPE: // monster ... needs use index   small_monst_rect
 			// There are 4 different ways to draw, depending on size of monster
 			//which_g -= 400;
 			m_start_pic = m_pic_index[which_g];
@@ -1545,7 +1616,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 			//DisposeGWorld(from_gworld);
 			break;
 
-		case DLG_ITEM_TYPE: // item
+		case PICT_ITEM_TYPE: // item
 			//which_g -= 1800;
 			rect.right = rect.left + 28; rect.bottom = rect.top + 36;
 			to_rect = rect;
@@ -1565,7 +1636,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 			rect_draw_some_item(from_gworld,from_rect,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr)hDlg: from_gworld)
 			  ,to_rect,1,draw_dest);
 			break;
-		case DLG_DLG_TYPE: // dialog
+		case PICT_DLG_TYPE: // dialog
 			//which_g -= 700;
 			from_gworld = dlogpics_gworld;
 			OffsetRect(&from2,36 * (which_g % 4),36 * (which_g / 4));
@@ -1573,7 +1644,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 			  ,rect,0,draw_dest);
 			break;
 
-		case DLG_TALK_TYPE: // talk face
+		case PICT_TALK_TYPE: // talk face
 			rect.right = rect.left + 32; rect.bottom = rect.top + 32;
 			//which_g -= 1000;
 			from_gworld = talkfaces_gworld;
@@ -1583,7 +1654,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, B
 				 rect_draw_some_item(from_gworld,from_rect,(GWorldPtr) hDlg,rect,0,0);
 				else rect_draw_some_item(from_gworld,from_rect,from_gworld,rect,0,draw_dest);
 			break;
-		case DLG_SCEN_TYPE:
+		case PICT_SCEN_TYPE:
 			//which_g -= 1600;
 			from_gworld = load_pict(851);
 			from_rect.right = 32;
