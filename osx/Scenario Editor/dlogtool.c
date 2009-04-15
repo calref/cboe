@@ -21,7 +21,7 @@ extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
 
 extern GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2],anim_gworld,talkfaces_gworld,items_gworld,tiny_obj_gworld;
-extern GWorldPtr pc_gworld,dlogpics_gworld,monst_gworld[10],terrain_gworld[6];
+extern GWorldPtr pc_gworld,dlogpics_gworld,monst_gworld[10],terrain_gworld[7];
 extern PixPatHandle	bg[14];
 extern short geneva_font_num;
 
@@ -38,6 +38,7 @@ short item_number[NI];
 char item_type[NI];
 Rect item_rect[NI];
 short item_flag[NI];
+short item_flag2[NI];
 char item_active[NI];
 char item_key[NI];
 short item_label[NI];
@@ -561,12 +562,12 @@ void cd_attach_key(short dlog_num,short item_num,char key)
 	item_key[item_index] = key;
 }
 
-void csp(short dlog_num, short item_num, short pict_num)
+void csp(short dlog_num, short item_num, short pict_num, short pict_type)
 {
-	cd_set_pict( dlog_num,  item_num,  pict_num);
+	cd_set_pict( dlog_num,  item_num,  pict_num,  pict_type);
 }
 
-void cd_set_pict(short dlog_num, short item_num, short pict_num)
+void cd_set_pict(short dlog_num, short item_num, short pict_num, short pict_type)
 {
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -574,11 +575,12 @@ void cd_set_pict(short dlog_num, short item_num, short pict_num)
 	if (item_type[item_index] != 5) {
 		beep();
 		return;
-		}
+	}
 	item_flag[item_index] = pict_num;
+	item_flag2[item_index] = pict_type;
 	if (pict_num == -1)
 		cd_erase_item(dlog_num,item_num);
-		else cd_draw_item(dlog_num,item_num);
+	else cd_draw_item(dlog_num,item_num);
 }
 
 void cd_activate_item(short dlog_num, short item_num, short status)
@@ -983,7 +985,7 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
 						else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index]), item_rect[item_index], item_flag[item_index],
-						  (item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+						  item_flag2[item_index], (item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
 					break;
 				}
 			}
@@ -1339,24 +1341,24 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val)
 	SetPort(old_port);
 }
 
-void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_frame,short win_or_gworld)
+void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, Boolean do_frame,short win_or_gworld)
 // win_or_gworld: 0 - window  1 - gworld
-// 0 - 300   number of terrain graphic
-// 400 + x - monster graphic num (uses index from scenario)
+// 0 - 300   number of terrain graphic -> DLG_TER_TYPE (1), DLG_TER_ANIM_TYPE (2)
+// 400 + x - monster graphic num (uses index from scenario) -> DLG_MONST_TYPE
 //   400 is 1st monster from monster index, 401 is 2nd from m. index, and so on
-// 700 + x  dlog graphic
-// 800 + x  pc graphic
-// 900 + x  B&W graphic
-// 950 null item
-// 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
-// 1300 - combat ap
-// 1400-1402 - button help
-// 1500 - stat symbols help
-// 1600 + x - scen graphics
-// 1700 + x - anim graphic
-// 1800 + x  item graphic
+// 700 + x  dlog graphic -> DLG_DLG_TYPE
+// 800 + x  pc graphic -> DLG_PC_TYPE
+// 900 + x  B&W graphic -> DLG_BW_TYPE
+// 950 null item -> 0, DLG_BLANK_TYPE (0)
+// 1000 + x  Talking face -> DLG_TALK_TYPE
+// 1100 - item info help -> DLG_INFO_TYPE
+// 1200 - pc screen help -> DLG_PC_HELP_TYPE
+// 1300 - combat ap -> DLG_COMBAT_AP_TYPE
+// 1400-1402 - button help -> DLG_HELP_TYPE
+// 1500 - stat symbols help -> DLG_STAT_TYPE
+// 1600 + x - scen graphics -> DLG_SCEN_TYPE
+// 1700 + x - anim graphic -> DLG_ANIM_TYPE
+// 1800 + x  item graphic -> DLG_ITEM_TYPE
 {
 	short picnum;
 	Rect from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
@@ -1389,7 +1391,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 		do_frame = FALSE;
 	which_g = which_g % 2000;
 	
-	if (which_g == 950) { // Empty. Maybe clear space.
+	if (type_g == DLG_BLANK_TYPE) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
 			rect.top -= 3;
 			rect.left -= 3;
@@ -1403,8 +1405,8 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 	
 	BackColor(whiteColor);	
 
-	switch (which_g / 100) {
-		case 0: case 1: case 2: // terrain
+	switch (type_g) {
+		case DLG_TER_TYPE: // terrain
 			from_gworld = terrain_gworld[which_g / 50];
 			which_g = which_g % 50;
 			from_rect = calc_rect(which_g % 10, which_g / 10);
@@ -1414,8 +1416,8 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			  ,rect,0,draw_dest);
 			//DisposeGWorld(from_gworld);
 			break;
-		case 3: // animated terrain
-			which_g -= 300;
+		case DLG_TER_ANIM_TYPE: // animated terrain
+			//which_g -= 300;
 			//from_gworld = load_pict(820);
 			from_rect = calc_rect(4 * (which_g / 5), which_g % 5);
 			if (rect.right - rect.left > 28) {
@@ -1426,9 +1428,9 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			  ,rect,0,draw_dest);
 			//DisposeGWorld(from_gworld);
 			break;
-		case 4: case 5: // monster ... needs use index   small_monst_rect
+		case DLG_MONST_TYPE: // monster ... needs use index   small_monst_rect
 			// There are 4 different ways to draw, depending on size of monster
-			which_g -= 400;
+			//which_g -= 400;
 			m_start_pic = m_pic_index[which_g];
 			
 			if ((m_pic_index_x[which_g] == 1) && (m_pic_index_y[which_g] == 1)) {
@@ -1543,8 +1545,8 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			//DisposeGWorld(from_gworld);
 			break;
 
-		case 18: case 19: // item
-			which_g -= 1800;
+		case DLG_ITEM_TYPE: // item
+			//which_g -= 1800;
 			rect.right = rect.left + 28; rect.bottom = rect.top + 36;
 			to_rect = rect;
 			if (win_or_gworld == 0)
@@ -1563,17 +1565,17 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 			rect_draw_some_item(from_gworld,from_rect,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr)hDlg: from_gworld)
 			  ,to_rect,1,draw_dest);
 			break;
-		case 7: // dialog
-			which_g -= 700;
+		case DLG_DLG_TYPE: // dialog
+			//which_g -= 700;
 			from_gworld = dlogpics_gworld;
 			OffsetRect(&from2,36 * (which_g % 4),36 * (which_g / 4));
 			rect_draw_some_item(from_gworld,from2,(GWorldPtr) ((win_or_gworld == 1) ? (GWorldPtr)hDlg: from_gworld)
 			  ,rect,0,draw_dest);
 			break;
 
-		case 10: // talk face
+		case DLG_TALK_TYPE: // talk face
 			rect.right = rect.left + 32; rect.bottom = rect.top + 32;
-			which_g -= 1000;
+			//which_g -= 1000;
 			from_gworld = talkfaces_gworld;
 			from_rect = face_from;
 			OffsetRect(&from_rect,32 * ((which_g - 1) % 10),32 * ((which_g - 1) / 10));
@@ -1581,8 +1583,8 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, Boolean do_fram
 				 rect_draw_some_item(from_gworld,from_rect,(GWorldPtr) hDlg,rect,0,0);
 				else rect_draw_some_item(from_gworld,from_rect,from_gworld,rect,0,draw_dest);
 			break;
-		case 16:
-			which_g -= 1600;
+		case DLG_SCEN_TYPE:
+			//which_g -= 1600;
 			from_gworld = load_pict(851);
 			from_rect.right = 32;
 			from_rect.bottom = 32;

@@ -56,7 +56,7 @@ extern location cur_out;
 
 short num_ir[3] = {12,10,4};
 
-GWorldPtr monst_gworld[10],terrain_gworld[6],small_terrain_gworld,editor_mixed,terrain_buttons_gworld;
+GWorldPtr monst_gworld[10],terrain_gworld[7],small_terrain_gworld,editor_mixed,terrain_buttons_gworld;
 GWorldPtr anim_gworld,field_gworld,dialog_gworld,items_gworld,tiny_obj_gworld,small_ter_gworld;
 GWorldPtr spec_scen_g = NULL,dlg_buttons_gworld[NUM_BUTTONS][2],ter_draw_gworld,dlogpics_gworld,talkfaces_gworld,mixed_gworld;
 PixPatHandle	bg[14];
@@ -201,7 +201,7 @@ void load_main_screen()
 	    
 	for (i = 0; i < 10; i++)
 		monst_gworld[i] = load_pict(1100 + i);	
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 7; i++)
 		terrain_gworld[i] = load_pict(800 + i);	
 	small_terrain_gworld = load_pict(904);
 	editor_mixed = load_pict(906);

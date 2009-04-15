@@ -32,6 +32,23 @@
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
+#define DLG_BLANK_TYPE			0
+#define DLG_TER_TYPE			1
+#define DLG_TER_ANIM_TYPE		2
+#define DLG_MONST_TYPE			3
+#define DLG_DLG_TYPE			4
+#define DLG_TALK_TYPE			5
+#define DLG_SCEN_TYPE			6
+#define DLG_ITEM_TYPE			7
+#define DLG_CUSTOM_TYPE			100  // This is added to various of the above constants
+#define DLG_N_TER				336
+#define DLG_N_TER_ANIM			13
+#define DLG_N_MONST				172
+#define DLG_N_DLG				31
+#define DLG_N_TALK				83
+#define DLG_N_SCEN				29
+#define DLG_N_ITEM				122
+
 typedef struct {
 	char x,y;
 	} location;

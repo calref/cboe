@@ -213,8 +213,8 @@ void put_placed_monst_in_dlog()
  	CDSN(837,2,store_placed_monst.personality);
  	CDSN(837,3,store_placed_monst.facial_pic);
  	if ((store_placed_monst.facial_pic < 1) || (store_placed_monst.facial_pic >= 1000))
-	 	csp(837,11,950);
-	 	else csp(837,11,store_placed_monst.facial_pic + 1000);
+	 	csp(837,11,0,DLG_BLANK_TYPE);
+	else csp(837,11,store_placed_monst.facial_pic/* + 1000*/,DLG_TALK_TYPE);
 }
 Boolean get_placed_monst_in_dlog()
 {
@@ -257,7 +257,7 @@ void edit_placed_monst_event_filter (short item_hit)
 		case 12: // facial pic
 			if (get_placed_monst_in_dlog() == FALSE)
 				break;
-			i = choose_graphic(1001,1084,store_placed_monst.facial_pic + 1000,837);
+			i = choose_graphic(/*1001,1084*/1,1+DLG_N_TALK,store_placed_monst.facial_pic/* + 1000*/,DLG_TALK_TYPE,837);
 			if (i >= 0) {
 				store_placed_monst.facial_pic = i - 1000;
 				}
@@ -426,8 +426,8 @@ void put_placed_item_in_dlog()
 	
 	i = data_store->scen_item_list.scen_items[store_placed_item.item_code].graphic_num;
 	if (i >= 1000)
-	 	csp(836,4,950);
-	 	else csp(836,4,1800 + i);
+	 	csp(836,4,0,DLG_BLANK_TYPE);
+	else csp(836,4,/*1800 + */i,DLG_ITEM_TYPE);
 }
 Boolean get_placed_item_in_dlog()
 {
@@ -549,10 +549,10 @@ void edit_sign(short which_sign,short picture)
 	cd_create_dialog_parent_num(831,0);
 	
 	if (picture >= 1000)
-		csp(831,6,950);
+		csp(831,6,0,DLG_BLANK_TYPE);
 	else if (picture >= 400)
-		csp(831,6,picture - 100);
-	else csp(831,6,picture);
+		csp(831,6,picture/* - 100*/,DLG_TER_ANIM_TYPE);
+	else csp(831,6,picture,DLG_TER_TYPE);
 
 	cdsin(831,5,store_which_sign);
 	if (editing_town == FALSE)

@@ -5,10 +5,10 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 void give_error(char *text1, char *text2,short parent_num);
 void display_strings_event_filter (short item_hit);
 void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short parent_num);
+	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num);
 void choose_graphic_event_filter (short item_hit);
-void put_choice_pics();
-short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num);
+void put_choice_pics(short g_type);
+short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,short parent_num);
 void put_text_res();
 short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title);
 void choose_text_res_event_filter (short item_hit);

@@ -26,6 +26,7 @@ extern short dialog_answer;
 short store_which_string_dlog;
 short store_first_g ;
 short store_last_g ;
+short store_g_type ;
 short store_cur_pic ;
 short which_page ;
 short store_res_list;
@@ -203,7 +204,7 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 
 void give_error(char *text1, char *text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!",57,716,parent_num);
+	display_strings(text1,text2,"Error!",57,/*7*/16,DLG_DLG_TYPE,parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
@@ -220,7 +221,7 @@ void display_strings_event_filter (short item_hit)
 }
 
 void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
 {
 
 	short item_hit;
@@ -239,7 +240,7 @@ void display_strings(char *text1, char *text2,
 		store_which_string_dlog++;
 	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
 	
-	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
+	csp(store_which_string_dlog,store_which_string_dlog,graphic_num,graphic_type);
 	
 	csit(store_which_string_dlog,4,(char *) text1);
 	if (text2 != NULL) {
@@ -247,7 +248,7 @@ void display_strings(char *text1, char *text2,
 		}
 	if (strlen(title) > 0)
 		csit(store_which_string_dlog,6,title);
-	csp(store_which_string_dlog,3,graphic_num);
+	csp(store_which_string_dlog,3,graphic_num,graphic_type);
 	//if (sound_num >= 0)
 	//	play_sound(sound_num);
 	while (dialog_not_toast)
@@ -274,13 +275,13 @@ void choose_graphic_event_filter (short item_hit)
 			if (which_page == 0)
 				which_page = (store_last_g - store_first_g) / 36;
 				else which_page--;
-			put_choice_pics();
+			put_choice_pics(store_g_type);
 			break;
 		case 79:
 			if (which_page == (store_last_g - store_first_g) / 36)
 				which_page = 0;
 				else which_page++;
-			put_choice_pics();		
+			put_choice_pics(store_g_type);		
 			break;
 		default:
 			if ((item_hit >= 5) && (item_hit <= 40)) {
@@ -292,27 +293,27 @@ void choose_graphic_event_filter (short item_hit)
 		}
 }
 
-void put_choice_pics()
+void put_choice_pics(short g_type)
 {
 	short item_hit,i;
 	
 	for (i = 0; i < 36; i++) {
 		if (store_first_g + which_page * 36 + i > store_last_g) {
-			csp(819,41 + i,950);
+			csp(819,41 + i,0,DLG_BLANK_TYPE);
 			cd_activate_item(819,5 + i,0);
-			}
-			else {
-				csp(819,41 + i,store_first_g + 36 * which_page + i);
-				cd_activate_item(819,5 + i,1);				
-				}
+		}
+		else {
+			csp(819,41 + i,store_first_g + 36 * which_page + i,g_type);
+			cd_activate_item(819,5 + i,1);				
+		}
 		if (which_page * 36 + i == store_cur_pic - store_first_g)
 			cd_set_led(819,5 + i,1);
-			else cd_set_led(819,5 + i,0);
-		}
+		else cd_set_led(819,5 + i,0);
+	}
 
 }
 
-short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num)
+short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,short parent_num)
 {
 
 	short item_hit;
@@ -326,7 +327,8 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short parent_nu
 	store_last_g = last_g;
 	if ((cur_choice >= first_g) && (cur_choice <= last_g))
 		store_cur_pic = cur_choice;
-		else store_cur_pic = first_g;
+	else store_cur_pic = first_g;
+	store_g_type = g_type;
 	which_page = (store_cur_pic - store_first_g) / 36;
 
 	cd_create_dialog_parent_num(819,parent_num);
@@ -335,7 +337,7 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short parent_nu
 		cd_activate_item(819,79,0);
 		cd_activate_item(819,78,0);
 		}
-	put_choice_pics();
+	put_choice_pics(g_type);
 		
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
@@ -804,9 +806,9 @@ void edit_spec_enc_event_filter (short item_hit)
 				 dialog_not_toast = FALSE; 
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
-				case 1: i = choose_graphic(700,731,store_spec_node.pic,822); break;
-				case 2: i = choose_graphic(0,252,store_spec_node.pic,822); break;
-				case 3: i = choose_graphic(400,572,store_spec_node.pic,822); break;
+				case 1: i = choose_graphic(/*700,731*/0,DLG_N_DLG,store_spec_node.pic,DLG_DLG_TYPE,822); break;
+				case 2: i = choose_graphic(0,DLG_N_TER,store_spec_node.pic,DLG_TER_TYPE,822); break;
+				case 3: i = choose_graphic(/*400,572*/0,DLG_N_MONST,store_spec_node.pic,DLG_MONST_TYPE,822); break;
 				}
 			if (i >= 0) {
 				store_spec_node.pic = i;
@@ -1274,10 +1276,10 @@ void edit_scen_intro_event_filter (short item_hit)
 
 		case 16:
 			i = CDGN(804,8);
-			i = choose_graphic(1600,1629,1600 + i,804);
+			i = choose_graphic(/*1600,1629,1600 + i,804*/0,DLG_N_SCEN,i,DLG_SCEN_TYPE,804);
 			if (i >= 0) {
-				CDSN(804,8,i - 1600);
-				csp(804,11,i );
+				CDSN(804,8,i/* - 1600*/);
+				csp(804,11,i,DLG_SCEN_TYPE );
 				}
 			break;
 		}
@@ -1295,7 +1297,7 @@ void edit_scen_intro()
 	CDSN(804,8,scenario.intro_pic);
 	for (i = 0; i < 6; i++)
 		CDST(804, 2 + i,data_store->scen_strs[4 + i]);
-	csp(804,11,scenario.intro_pic + 1600);
+	csp(804,11,scenario.intro_pic/* + 1600*/,DLG_SCEN_TYPE);
 	
 	while (dialog_not_toast)
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);

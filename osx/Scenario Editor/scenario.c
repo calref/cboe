@@ -972,10 +972,10 @@ void put_ter_info_in_dlog()
 	get_str(str,21,80 + store_ter.special);
 	csit(813,68,(char *) str);
 	if (store_ter.picture >= 1000)
-		csp(813,14,950);
+		csp(813,14,0,DLG_BLANK_TYPE);
 	else if (store_ter.picture >= 400)
-		csp(813,14,store_ter.picture - 100);
-	else csp(813,14,store_ter.picture);
+		csp(813,14,store_ter.picture/* - 100*/,DLG_TER_ANIM_TYPE);
+	else csp(813,14,store_ter.picture,DLG_TER_TYPE);
 }
 
 Boolean save_ter_info()
@@ -1065,8 +1065,8 @@ void edit_ter_type_event_filter (short item_hit)
 		
 		case 13: case 70:
 			if (item_hit == 13)
-				i = choose_graphic(0,252,store_ter.picture,813);
-				else i = choose_graphic(300,313,store_ter.picture,813);
+				i = choose_graphic(0,DLG_N_TER,store_ter.picture,DLG_TER_TYPE,813);
+			else i = choose_graphic(/*300,313*/0,DLG_N_TER_ANIM,store_ter.picture,DLG_TER_ANIM_TYPE,813);
 			if (i >= 0) {
 				if (i >= 300) i += 100;
 				store_ter.picture = i;
@@ -1074,10 +1074,10 @@ void edit_ter_type_event_filter (short item_hit)
 				else break;
 			CDSN(813,5,store_ter.picture);
 			if (store_ter.picture >= 1000)
-				csp(813,14,950);
+				csp(813,14,0,DLG_BLANK_TYPE);
 			else if (store_ter.picture >= 400)
-				csp(813,14,store_ter.picture - 100);
-			else csp(813,14,store_ter.picture);
+				csp(813,14,store_ter.picture/* - 100*/,DLG_TER_ANIM_TYPE);
+			else csp(813,14,store_ter.picture,DLG_TER_TYPE);
 			break;
 		default:
 			cd_hit_led_range(813,32,55,item_hit);
@@ -1135,8 +1135,8 @@ void put_monst_info_in_dlog()
 	Str255 str;
 
 	if (store_monst.picture_num < 1000)
-		csp(814,34,400 + store_monst.picture_num);
-		else csp(814,34,950);
+		csp(814,34,/*400 + */store_monst.picture_num,DLG_MONST_TYPE);
+	else csp(814,34,0,DLG_BLANK_TYPE);
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
@@ -1279,7 +1279,7 @@ void edit_monst_type_event_filter (short item_hit)
 			break;
 		case 24: // picture
 			if (save_monst_info() == FALSE) break;
-			i = choose_graphic(400,572,store_monst.picture_num + 400,814);
+			i = choose_graphic(/*400,572*/0,DLG_N_MONST,store_monst.picture_num/* + 400*/,DLG_MONST_TYPE,814);
 			if (i >= 0) {
 				store_monst.picture_num = i - 400;
 				}
@@ -1314,7 +1314,7 @@ void edit_monst_type_event_filter (short item_hit)
 			break;
 		case 28: // talk pic
 			if (save_monst_info() == FALSE) break;
-			i = choose_graphic(1001,1084,store_monst.default_facial_pic + 1000,814);
+			i = choose_graphic(/*1001,1084*/1,1+DLG_N_TALK,store_monst.default_facial_pic/* + 1000*/,DLG_TALK_TYPE,814);
 			if (i >= 0) {
 				store_monst.default_facial_pic = i - 1000;
 				}
@@ -1507,8 +1507,8 @@ void put_item_info_in_dlog()
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
 	if (store_item.graphic_num >= 150)
-		csp(818,49,950);
-		else csp(818,49,1800 + store_item.graphic_num);
+		csp(818,49,0,DLG_BLANK_TYPE);
+	else csp(818,49,/*1800 + */store_item.graphic_num,DLG_ITEM_TYPE);
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
 	CDSN(818,5,store_item.item_level);
@@ -1609,7 +1609,7 @@ void edit_item_type_event_filter (short item_hit)
 			break;
 		case 56:
 			if (save_item_info() == FALSE) break;
-			i = choose_graphic(1800,1922,store_item.graphic_num + 1800,818);
+			i = choose_graphic(/*1800,1922*/0,DLG_N_ITEM,store_item.graphic_num/* + 1800*/,DLG_ITEM_TYPE,818);
 			if (i >= 0) {
 				store_item.graphic_num = i - 1800;
 				}
