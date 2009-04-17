@@ -1,0 +1,20 @@
+Boolean handle_action(POINT the_point, UINT wparam, LONG lparam );
+void flash_rect(RECT to_flash);
+void edit_gold_or_food_event_filter (short item_hit);
+void edit_gold_or_food(short which_to_edit);
+void put_pc_graphics();
+Boolean display_pc_event_filter (short item_hit);
+void display_pc(short pc_num,short mode,short parent);
+Boolean display_alchemy_event_filter (short item_hit);
+void display_alchemy();
+void do_xp_keep(short pc_num,short mode);
+void draw_xp_skills();
+void do_xp_draw();
+Boolean spend_xp_event_filter (short item_hit);
+void update_gold_skills();
+Boolean spend_xp(short pc_num, short mode, short parent);
+void edit_day();
+void edit_day_event_filter (short item_hit);
+void edit_xp_event_filter (short item_hit);
+void edit_xp(pc_record_type *pc);
+

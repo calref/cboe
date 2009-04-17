@@ -1,0 +1,14 @@
+void file_initialize();
+void save_file(short mode);
+void load_file();
+void leave_town();
+long do_waterfall(long flag);
+long init_data(long flag);
+void build_data_file(short mode);
+short FSWrite(HFILE file,long *len,char *buffer);
+short FSRead(HFILE file,long *len,char *buffer);
+short FSClose(HFILE file);
+short SetFPos(HFILE file, short mode, long len);
+void remove_party_from_scen();
+void Get_Path(char* path);
+void load_items_list();
