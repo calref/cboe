@@ -61,7 +61,7 @@ void town_entry(location spot_hit);
 void start_dialogue_editing(short restoring);
 Boolean is_erasable_water(short i,short j);
 
-Boolean monst_on_space(location loc,short m_num);
+bool monst_on_space(location loc,short m_num);
 void place_edit_special(location loc);
 void set_special(location spot_hit);
 Boolean save_check(short which_dlog);

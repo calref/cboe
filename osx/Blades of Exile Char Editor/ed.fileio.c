@@ -15,8 +15,10 @@
 #include "ed.global.h"
 #include "ed.fileio.h"
 #include "ed.graphics.h"
-#include "ed.sound.h"
+#include "graphtool.h"
+#include "soundtool.h"
 #include "ed.editors.h"
+#include "mathutil.h"
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L

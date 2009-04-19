@@ -2,26 +2,28 @@
 #include <Carbon/Carbon.h>
 #include <stdio.h>
 
-#include "Global.h"
+#include "global.h"
+#include "graphtool.h"
 #include "tGraphics.h"
 #include "tactions.h"
 #include "tfileio.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
 #include "buttonmg.h"
-#include "sound.h"
+#include "soundtool.h"
 #include "townout.h"
 #include "scenario.h"
 #include "keydlgs.h"
+#include "mathutil.h"
 
 
 /* Globals */
 Rect	windRect, Drag_Rect;
-Boolean  All_Done = FALSE,dialog_not_toast = FALSE,play_sounds = TRUE;
+Boolean  All_Done = FALSE; // delete play_sounds
 EventRecord	event;
 WindowPtr	mainPtr;	
 town_record_type town;
 big_tr_type t_d;
-Boolean diff_depth_ok = FALSE,mouse_button_held = FALSE,editing_town = FALSE;
+bool diff_depth_ok = FALSE,mouse_button_held = FALSE,editing_town = FALSE;
 short cur_viewing_mode = 0;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short max_dim[3] = {64,48,32};
@@ -66,12 +68,10 @@ void handle_help_menu(int item_hit);
 pascal void right_sbar_action(ControlHandle bar, short part);
 void Mouse_Pressed();
 void close_program();
- void ding();
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+void ding();
 void set_pixel_depth();
 void restore_depth();
 void find_quickdraw() ;
-
 
 scenario_data_type scenario;
 piles_of_stuff_dumping_type *data_store;
@@ -95,13 +95,18 @@ int main(void)
 	init_current_terrain();
 	//create_file();
 	//ExitToShell();
-	cd_init_dialogs();
-
-	cen_x = 18; cen_y = 18;
-
+	
 	init_directories();
 	Initialize();
 	load_sounds();
+	load_graphics();
+	
+	init_dialogs();
+	Point p = {0,0};
+	init_graph_tool(redraw_screen,p);
+	init_snd_tool();
+
+	cen_x = 18; cen_y = 18;
 
 	run_startup_g();
 	init_lb();
@@ -120,7 +125,7 @@ int main(void)
 	//create_basic_scenario();
 
 	menu_bar_handle = GetNewMBar(128);
-	if (menu_bar_handle == NIL) {
+	if (menu_bar_handle == NULL) {
 		SysBeep(50); SysBeep(50); SysBeep(50);
 		ExitToShell();
 		}
@@ -176,7 +181,7 @@ void Initialize(void)
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  DonÕt for each call of Random, or the sequence
+	//	will always be different.  Donâ€™t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
 	unsigned long time;
@@ -637,7 +642,7 @@ void Mouse_Pressed()
 						if (content_part != 0) {
 							switch (content_part) {
 								case kControlIndicatorPart:
-									content_part = TrackControl(control_hit,event.where,NIL);
+									content_part = TrackControl(control_hit,event.where,NULL);
 									if (control_hit == right_sbar)
 										if (content_part == kControlIndicatorPart) {
 											draw_rb();
@@ -663,124 +668,130 @@ void close_program()
 	restore_depth();
 }
 
- void ding()
- {
- 	SysBeep(1);
- }
- 
- pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-{	
-	char chr,chr2;
-	short the_type,wind_hit,item_hit;
-	Handle the_handle = NULL;
-	Rect the_rect,button_rect;
-	Point the_point;
-	WindowRef w;
-	RgnHandle rgn;
-	
-	dummy_item_hit = 0;
-	
-	switch (event->what) {
-		case updateEvt:
-		w = GetDialogWindow(hDlg);
-		rgn = NewRgn();
-		GetWindowRegion(w,kWindowUpdateRgn,rgn);
-		if (EmptyRgn(rgn) == TRUE) {
-			DisposeRgn(rgn);
-			return TRUE;
-			}
-		DisposeRgn(rgn);
-		BeginUpdate(w);
-		cd_redraw(w);
-		EndUpdate(w);
-		DrawDialog(hDlg);
-		return FALSE;
-		break;
-		
-		case keyDown:
-		chr = event->message & charCodeMask;
-		chr2 = (char) ((event->message & keyCodeMask) >> 8);
-		switch (chr2) {
-			case 126: chr = 22; break;
-			case 124: chr = 21; break;
-			case 123: chr = 20; break;
-			case 125: chr = 23; break;
-			case 53: chr = 24; break;
-			case 36: chr = 31; break;
-			case 76: chr = 31; break;
-			}
-					// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-					// 25-30  ctrl 1-6  31 - return
-
-		wind_hit = cd_process_keystroke(GetDialogWindow(hDlg),chr,&item_hit);
-		break;
-	
-		case mouseDown:
-		the_point = event->where;
-		GlobalToLocal(&the_point);	
-		wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
-		break;
-
-		default: wind_hit = -1; break;
-		}
-	switch (wind_hit) {
-		case -1: break;
-		//case 958: _event_filter(item_hit); break;
-		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-		case 800: edit_make_scen_1_event_filter(item_hit); break;
-		case 801: edit_make_scen_2_event_filter(item_hit); break;
-		case 802: user_password_filter(item_hit); break;
-		case 803: edit_scen_details_event_filter(item_hit); break;
-		case 804: edit_scen_intro_event_filter(item_hit); break;
-		case 805: set_starting_loc_filter(item_hit); break;
-		case 806: edit_spec_item_event_filter(item_hit); break;
-		case 807: edit_save_rects_event_filter(item_hit); break;
-		case 808: edit_horses_event_filter(item_hit); break;
-		case 809: edit_boats_event_filter(item_hit); break;
-		case 810: edit_add_town_event_filter(item_hit); break;
-		case 811: edit_scenario_events_event_filter(item_hit); break;
-		case 812: edit_item_placement_event_filter(item_hit); break;
-		case 813: edit_ter_type_event_filter(item_hit); break;
-		case 814: edit_monst_type_event_filter(item_hit); break;
-		case 815: edit_monst_abil_event_filter(item_hit); break;
-		case 816: edit_text_event_filter(item_hit); break;
-		case 817: edit_talk_node_event_filter(item_hit); break;
-		case 818: edit_item_type_event_filter(item_hit); break;
-		case 819: choose_graphic_event_filter(item_hit); break;
-		case 820: choose_text_res_event_filter(item_hit); break;
-		case 821: edit_basic_dlog_event_filter(item_hit); break;
-		case 822: edit_spec_enc_event_filter(item_hit); break;
-		case 823: give_password_filter(item_hit); break;
-		case 824: edit_item_abil_event_filter(item_hit); break;
-		case 825: edit_special_num_event_filter(item_hit); break;
-		case 826: edit_spec_text_event_filter(item_hit); break;
-		case 830: new_town_event_filter(item_hit); break;
-		case 831: edit_sign_event_filter(item_hit); break;
-		case 832: edit_town_details_event_filter(item_hit); break;
-		case 833: edit_town_events_event_filter(item_hit); break;
-		case 834: edit_advanced_town_event_filter(item_hit); break;
-		case 835: edit_town_wand_event_filter(item_hit); break;
-		case 836: edit_placed_item_event_filter(item_hit); break;
-		case 837: edit_placed_monst_event_filter(item_hit); break;
-		case 838: edit_placed_monst_adv_event_filter(item_hit); break;
-		case 839: edit_town_strs_event_filter(item_hit); break;
-		case 840: edit_area_rect_event_filter(item_hit); break;
-		case 841: pick_import_town_event_filter(item_hit); break;
-		case 842: edit_dialog_text_event_filter(item_hit); break;
-		case 850: edit_out_strs_event_filter(item_hit); break;
-		case 851: outdoor_details_event_filter(item_hit); break;
-		case 852: edit_out_wand_event_filter(item_hit); break;
-		case 854: pick_out_event_filter(item_hit); break;
-		case 855: case 856: pick_town_num_event_filter(item_hit); break;
-		case 857: change_ter_event_filter(item_hit); break;
-		default: fancy_choice_dialog_event_filter (item_hit); break;
-
-		}
-
-	if (wind_hit == -1)
-		return FALSE;
-		else return TRUE;
+void ding()
+{
+	SysBeep(1);
 }
+ 
+//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+//{
+//	char chr,chr2;
+//	short the_type,wind_hit,item_hit;
+//	Handle the_handle = NULL;
+//	Rect the_rect,button_rect;
+//	Point the_point;
+//	WindowRef w;
+//	RgnHandle rgn;
+//	
+//	dummy_item_hit = 0;
+//	
+//	switch (event->what) {
+//		case updateEvt:
+//		w = GetDialogWindow(hDlg);
+//		rgn = NewRgn();
+//		GetWindowRegion(w,kWindowUpdateRgn,rgn);
+//		if (EmptyRgn(rgn) == TRUE) {
+//			DisposeRgn(rgn);
+//			return TRUE;
+//		}
+//		DisposeRgn(rgn);
+//		BeginUpdate(w);
+//		cd_redraw(w);
+//		EndUpdate(w);
+//		DrawDialog(hDlg);
+//		return FALSE;
+//		break;
+//		
+//		case keyDown:
+//		chr = event->message & charCodeMask;
+//		chr2 = (char) ((event->message & keyCodeMask) >> 8);
+//		switch (chr2) {
+//			case 126: chr = 22; break;
+//			case 124: chr = 21; break;
+//			case 123: chr = 20; break;
+//			case 125: chr = 23; break;
+//			case 53: chr = 24; break;
+//			case 36: chr = 31; break;
+//			case 76: chr = 31; break;
+//		}
+//					// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
+//					// 25-30  ctrl 1-6  31 - return
+//
+//		wind_hit = cd_process_keystroke(GetDialogWindow(hDlg),chr,&item_hit);
+//			break;
+//			
+//		case mouseDown:
+//			the_point = event->where;
+//			GlobalToLocal(&the_point);	
+//			cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
+//			wind_hit = -1;
+//			break;
+//			
+//		case mouseUp:
+//			the_point = event->where;
+//			GlobalToLocal(&the_point);	
+//			wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
+//			break;
+//
+//		default: wind_hit = -1; break;
+//	}
+////	switch (wind_hit) {
+////		case -1: break;
+////		//case 958: _event_filter(item_hit); break;
+////		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
+////		case 800: edit_make_scen_1_event_filter(item_hit); break;
+////		case 801: edit_make_scen_2_event_filter(item_hit); break;
+////		case 802: user_password_filter(item_hit); break;
+////		case 803: edit_scen_details_event_filter(item_hit); break;
+////		case 804: edit_scen_intro_event_filter(item_hit); break;
+////		case 805: set_starting_loc_filter(item_hit); break;
+////		case 806: edit_spec_item_event_filter(item_hit); break;
+////		case 807: edit_save_rects_event_filter(item_hit); break;
+////		case 808: edit_horses_event_filter(item_hit); break;
+////		case 809: edit_boats_event_filter(item_hit); break;
+////		case 810: edit_add_town_event_filter(item_hit); break;
+////		case 811: edit_scenario_events_event_filter(item_hit); break;
+////		case 812: edit_item_placement_event_filter(item_hit); break;
+////		case 813: edit_ter_type_event_filter(item_hit); break;
+////		case 814: edit_monst_type_event_filter(item_hit); break;
+////		case 815: edit_monst_abil_event_filter(item_hit); break;
+////		case 816: edit_text_event_filter(item_hit); break;
+////		case 817: edit_talk_node_event_filter(item_hit); break;
+////		case 818: edit_item_type_event_filter(item_hit); break;
+////		case 819: choose_graphic_event_filter(item_hit); break;
+////		case 820: choose_text_res_event_filter(item_hit); break;
+////		case 821: edit_basic_dlog_event_filter(item_hit); break;
+////		case 822: edit_spec_enc_event_filter(item_hit); break;
+////		case 823: give_password_filter(item_hit); break;
+////		case 824: edit_item_abil_event_filter(item_hit); break;
+////		case 825: edit_special_num_event_filter(item_hit); break;
+////		case 826: edit_spec_text_event_filter(item_hit); break;
+////		case 830: new_town_event_filter(item_hit); break;
+////		case 831: edit_sign_event_filter(item_hit); break;
+////		case 832: edit_town_details_event_filter(item_hit); break;
+////		case 833: edit_town_events_event_filter(item_hit); break;
+////		case 834: edit_advanced_town_event_filter(item_hit); break;
+////		case 835: edit_town_wand_event_filter(item_hit); break;
+////		case 836: edit_placed_item_event_filter(item_hit); break;
+////		case 837: edit_placed_monst_event_filter(item_hit); break;
+////		case 838: edit_placed_monst_adv_event_filter(item_hit); break;
+////		case 839: edit_town_strs_event_filter(item_hit); break;
+////		case 840: edit_area_rect_event_filter(item_hit); break;
+////		case 841: pick_import_town_event_filter(item_hit); break;
+////		case 842: edit_dialog_text_event_filter(item_hit); break;
+////		case 850: edit_out_strs_event_filter(item_hit); break;
+////		case 851: outdoor_details_event_filter(item_hit); break;
+////		case 852: edit_out_wand_event_filter(item_hit); break;
+////		case 854: pick_out_event_filter(item_hit); break;
+////		case 855: case 856: pick_town_num_event_filter(item_hit); break;
+////		case 857: change_ter_event_filter(item_hit); break;
+////		default: fancy_choice_dialog_event_filter (item_hit); break;
+////	}
+//
+//	if (wind_hit == -1)
+//		return FALSE;
+//	else return TRUE;
+//}
 
 void set_pixel_depth() {
 	GDHandle cur_device;

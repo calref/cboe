@@ -16,11 +16,14 @@
 #include "blxtown_spec.h"
 #include "bldsexil.h"
 #include "items.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "stdio.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
+#include "dlgconsts.h"
 #include "newgraph.h"
 #include "info.dialogs.h"
+#include "graphtool.h"
+#include "mathutil.h"
 #define	NUM_HINTS	30
 
 #include <vector>
@@ -44,10 +47,6 @@ extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];
 extern DialogPtr modeless_dialogs[18] ;
 extern town_item_list	t_i;
-
-extern pascal Boolean cd_event_filter();
-extern Boolean dialog_not_toast;
-
 extern Boolean game_run_before;
 extern ModalFilterUPP main_dialog_UPP;
 extern scenario_data_type scenario;
@@ -144,7 +143,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 
 	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
 	if (talk_gworld == NULL)
-		NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NIL, NIL, 0);
+		NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NULL, NULL, kNativeEndianPixMap);
 	
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
@@ -525,7 +524,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
 	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
-	NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NIL, NIL, 0);
+	NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NULL, NULL, kNativeEndianPixMap);
 	
 	// first make sure relevant talk strs are loaded in
 	if (personality / 10 != cur_town_talk_loaded)
@@ -576,7 +575,7 @@ void end_talk_mode()
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	//refresh_screen(0);
-	redraw_screen(0);
+	redraw_screen();
 }
 
 void handle_talk_event(Point p)
@@ -1114,7 +1113,7 @@ long get_text_item_num(short item_num,DialogPtr the_dialog)
 
 void sign_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 void do_sign(short town_num, short which_sign, short sign_type,location sign_loc)
@@ -1133,8 +1132,8 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	
 	store_sign_mode = sign_type;
 	if (terrain_pic[sign_type] < 1000)
-		csp(1014,3,terrain_pic[sign_type]);
-		else csp(1014,3,94);
+		csp(1014,3,terrain_pic[sign_type],PICT_TER_TYPE);
+	else csp(1014,3,94,PICT_TER_TYPE);
 	
 	if (town_num >= 200) {
 		town_num -= 200;
@@ -1146,14 +1145,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 			}
 	csit(1014,2,(char *) sign_text);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1014,0);
 }
 
@@ -1163,7 +1155,7 @@ void give_reg_info_event_filter (short item_hit)
 {
 			switch (item_hit) {
 				case 1: 
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				}
 }
@@ -1177,15 +1169,8 @@ void give_reg_info()
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1073,0);
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1073,0);
 
 }
@@ -1197,7 +1182,7 @@ void do_registration_event_filter (short item_hit)
 {
 	Str255 get_text;
 	
-	cd_retrieve_text_edit_str(1075,(char *) get_text);
+	//cd_retrieve_text_edit_str(1075,(char *) get_text);
 	dialog_answer = 0;
 #ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%hd",&dialog_answer);
@@ -1206,7 +1191,7 @@ void do_registration_event_filter (short item_hit)
 	sscanf((char *) get_text,"%d",&dummy);
 	dialog_answer = dummy;
 #endif		
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 void do_registration()
@@ -1220,14 +1205,7 @@ void do_registration()
 		
 	cdsin(1075,7,(short) register_flag);	
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(1075,0);
 	
@@ -1454,7 +1432,7 @@ void save_prefs()
 	UseResFile(app_res_num);
 }
 
-Boolean prefs_event_filter (short item_hit)
+void prefs_event_filter (short item_hit)
 {
 	Boolean done_yet = FALSE,did_cancel = FALSE;
 	short i;
@@ -1462,12 +1440,12 @@ Boolean prefs_event_filter (short item_hit)
 		switch (item_hit) {
 			case 1:
 				done_yet = TRUE;
-				dialog_not_toast = FALSE;
+				toast_dialog();
 				break;
 
 			case 2:
 				done_yet = TRUE;
-				dialog_not_toast = FALSE;
+				toast_dialog();
 				did_cancel = TRUE;
 				break;
 
@@ -1505,7 +1483,7 @@ Boolean prefs_event_filter (short item_hit)
 			party.stuff_done[306][7] = cd_get_led(1099,38);
 			party.stuff_done[306][8] = cd_get_led(1099,40);
 			party.stuff_done[306][9] = cd_get_led(1099,43);
-			party.stuff_done[296][0] = cd_get_led(1099,45);
+			party.stuff_done[306][5] = cd_get_led(1099,45);
 			if (cd_get_led(1099,32) == 1)
 				PSD[306][6] = 0;
 			if (cd_get_led(1099,34) == 1)
@@ -1531,8 +1509,6 @@ Boolean prefs_event_filter (short item_hit)
 		give_delays = party.stuff_done[306][2];
 		save_prefs();
 		}
-
-	return FALSE;
 }
 
 void pick_preferences()
@@ -1555,7 +1531,7 @@ void pick_preferences()
 	cd_set_led(1099,38,(party.stuff_done[306][7] != 0) ? 1 : 0);
 	cd_set_led(1099,40,(party.stuff_done[306][8] != 0) ? 1 : 0);
 	cd_set_led(1099,43,(party.stuff_done[306][9] != 0) ? 1 : 0);
-	cd_set_led(1099,45,(party.stuff_done[296][0] != 0) ? 1 : 0);
+	cd_set_led(1099,45,(party.stuff_done[306][5] != 0) ? 1 : 0);
 	if (PSD[306][6] == 3) 
 		cd_set_led(1099,47,1);
 		else cd_set_led(1099,32 + PSD[306][6] * 2,1);
@@ -1563,16 +1539,9 @@ void pick_preferences()
 	if (party.help_received[55] == 0) {
 		cd_initial_draw(1099);
 		give_help(55,0,1099);
-		}
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(1099,0);
 	adjust_window_mode();
@@ -1591,16 +1560,16 @@ void put_party_stats()
 			cd_set_flag(989,6 + 5 * i,96);
 			cd_activate_item(989,35 + i,1);
 			cd_activate_item(989,42 + i,1);
-			csp(989,42 + i,800 + adven[i].which_graphic);
-			}
-			else {
-				cd_set_item_text(989,5 + 5 * i,"Empty.");
-				cd_activate_item(989,7 + 5 * i,0);
-				cd_activate_item(989,8 + 5 * i,0);
-				cd_set_flag(989,6 + 5 * i,98);
-				cd_activate_item(989,35 + i,0);
-				cd_activate_item(989,42 + i,0);
-				}
+			csp(989,42 + i,adven[i].which_graphic,PICT_PC_TYPE);
+		}
+		else {
+			cd_set_item_text(989,5 + 5 * i,"Empty.");
+			cd_activate_item(989,7 + 5 * i,0);
+			cd_activate_item(989,8 + 5 * i,0);
+			cd_set_flag(989,6 + 5 * i,98);
+			cd_activate_item(989,35 + i,0);
+			cd_activate_item(989,42 + i,0);
+		}
 
 	}
 	draw_startup(0);
@@ -1612,7 +1581,7 @@ void edit_party_event_filter (short item_hit)
 
 		switch (item_hit) {
 			case 1:
-				dialog_not_toast = FALSE;
+				toast_dialog();
 				break;
 
 			case 41:
@@ -1687,15 +1656,9 @@ void edit_party(short can_create,short can_cancel)
 	if (party.help_received[22] == 0) {
 		cd_initial_draw(989);
 		give_help(22,23,989);
-		}
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(989,0);
 
@@ -1716,7 +1679,7 @@ void tip_of_day_event_filter (short item_hit)
 	
 			switch (item_hit) {
 				case 1: 
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				
 				case 5:
@@ -1751,15 +1714,8 @@ void tip_of_day()
 	csit(958,3,(char *) place_str);
 
 	cd_set_led(958,7,give_intro_hint);
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();	
 	cd_kill_dialog(958,0);
 	save_prefs();
 
@@ -1774,22 +1730,22 @@ void put_scen_info()
 
 	for (i = 0; i < 3; i++)
 		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
-			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
+			cd_set_pict(947, 6 + i * 3,scen_headers[store_scen_page_on * 3 + i].intro_pic,PICT_SCEN_TYPE);
 			sprintf((char *) place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][0],
+				data_store->scen_header_strs[store_scen_page_on * 3 + i][0].c_str(),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][1],
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][2]); 
+				data_store->scen_header_strs[store_scen_page_on * 3 + i][1].c_str(),
+				data_store->scen_header_strs[store_scen_page_on * 3 + i][2].c_str()); 
 			csit(947,7 + i * 3,(char *) place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}
 			else {
-				cd_set_pict(947, 6 + i * 3,950);
+				cd_set_pict(947, 6 + i * 3,0,PICT_BLANK_TYPE);
 				csit(947,7 + i * 3,"");
 				cd_activate_item(947,8 + i * 3,0);
 				}
@@ -1801,7 +1757,7 @@ void pick_a_scen_event_filter (short item_hit)
 			switch (item_hit) {
 				case 1: 
 					dialog_answer = -1;
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				
 				case 3: case 4:
@@ -1820,7 +1776,7 @@ void pick_a_scen_event_filter (short item_hit)
 				
 				case 8: case 11: case 14:
 					dialog_answer = ((item_hit - 8) / 3) + store_scen_page_on * 3;
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				}
 
@@ -1852,15 +1808,9 @@ short pick_a_scen()
 	if (store_num_scen <= 3) {
 		cd_activate_item(947,3,0);
 		cd_activate_item(947,4,0);
-		}
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(947,0);
 	return dialog_answer;
 }
@@ -1872,12 +1822,12 @@ void pick_prefab_scen_event_filter (short item_hit)
 			switch (item_hit) {
 				case 1: 
 					dialog_answer = -1;
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				
 				case 6: case 9: case 12:
 					dialog_answer = ((item_hit - 6) / 3);
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				}
 
@@ -1892,15 +1842,8 @@ short pick_prefab_scen()
 
 	cd_create_dialog_parent_num(869,0);
 	cd_activate_item(869,2,0);
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(869,0);
 	return dialog_answer;
 }
@@ -1911,7 +1854,7 @@ void give_password_filter (short item_hit)
 	switch (item_hit) {
 		default:
 
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		}
@@ -1927,16 +1870,9 @@ Boolean enter_password()
 	
 	CDSN(823,2,0);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &town_strs_hit);
-#endif	
+	town_strs_hit = cd_run_dialog();
 
-	CDGT(823,(char *) temp_str);
+	CDGT(823,2,(char *) temp_str);
 	i = wd_to_pwd(temp_str);
 	
 	cd_kill_dialog(823,0);

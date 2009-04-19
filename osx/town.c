@@ -14,12 +14,17 @@
 #include "combat.h"
 #include "party.h"
 #include "text.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "fields.h"
 #include "loc_utils.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
 #include "specials.h"
 #include "info.dialogs.h"
+#include "dlglowlevel.h"
+#include "dlgconsts.h"
+#include "mathutil.h"
+#include "bldsexil.h"
+#include "graphtool.h"
 
 extern current_town_type c_town;
 extern party_record_type	party;
@@ -34,7 +39,6 @@ extern outdoor_record_type outdoors[2][2];
 extern unsigned char misc_i[64][64];
 extern short store_current_pc,current_ground;
 extern pascal Boolean cd_event_filter();
-extern Boolean dialog_not_toast;
 extern short dungeon_font_num,geneva_font_num;
 extern short store_pre_shop_mode,store_pre_talk_mode;
 extern location monster_targs[T_M];
@@ -65,7 +69,7 @@ extern scenario_data_type scenario;
 extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr spec_scen_g;
 Boolean need_map_full_refresh = TRUE,forcing_map_button_redraw = FALSE;
-GWorldPtr map_gworld,tiny_map_graphics = NULL;
+extern GWorldPtr map_gworld,tiny_map_graphics;
 RGBColor parchment = {65535,65535,52428};
 PixPatHandle map_pat[25];
 PixPatHandle	bg[14];
@@ -293,8 +297,8 @@ void start_town_mode(short which_town, short entry_dir)
 				}
 		}
 							
-	if (monsters_loaded == FALSE) {
-				for (i = 0; i < T_M; i++)
+	if (!monsters_loaded) {
+				for (i = 0; i < T_M; i++){
 					if (t_d.creatures[i].number == 0) {
 						c_town.monst.dudes[i].active = 0;
 						c_town.monst.dudes[i].number = 0;
@@ -320,13 +324,13 @@ void start_town_mode(short which_town, short entry_dir)
 						// Now, if necessary, fry the monster.
 						switch (c_town.monst.dudes[i].monst_start.time_flag) {
 							case 1:
-								if (day_reached(c_town.monst.dudes[i].monst_start.monster_time,
-								  c_town.monst.dudes[i].monst_start.time_code) == FALSE)
+								if (!day_reached(c_town.monst.dudes[i].monst_start.monster_time,
+								  c_town.monst.dudes[i].monst_start.time_code))
 									c_town.monst.dudes[i].active = 0;
 								break;
 							case 2:
 								if (day_reached(c_town.monst.dudes[i].monst_start.monster_time,
-								  c_town.monst.dudes[i].monst_start.time_code) == TRUE)
+								  c_town.monst.dudes[i].monst_start.time_code))
 									c_town.monst.dudes[i].active = 0;
 								break;
 							case 3:
@@ -349,15 +353,15 @@ void start_town_mode(short which_town, short entry_dir)
 								break;
 
 							case 8:
-								if (calc_day() > party.key_times[c_town.monst.dudes[i].monst_start.time_code])
+								if (calc_day() >= party.key_times[c_town.monst.dudes[i].monst_start.time_code])
 									c_town.monst.dudes[i].active = 0;
 								break;
 							case 9:
 								if (c_town.town.town_chop_time > 0) 
-									if (day_reached(c_town.town.town_chop_time,c_town.town.town_chop_key) == TRUE) {
+									if (day_reached(c_town.town.town_chop_time,c_town.town.town_chop_key)) {
 										c_town.monst.dudes[i].active += 10;	
 										break;	
-										}						
+									}						
 								c_town.monst.dudes[i].active = 0;	
 								break;
 							case 0:
@@ -368,6 +372,7 @@ void start_town_mode(short which_town, short entry_dir)
 								break;
 							}
 					}
+				}
 		}
 
 	// Now munch all large monsters that are misplaced
@@ -425,8 +430,6 @@ void start_town_mode(short which_town, short entry_dir)
 					loc.x = j; loc.y = k;
 					if (is_door(loc) == TRUE) 
 						misc_i[j][k] = misc_i[j][k] & 3;
-
-					// Set up field booleans
 					if (is_web(j,k) == TRUE)
 						web = TRUE;
 					if (is_crate(j,k) == TRUE)
@@ -565,7 +568,7 @@ void start_town_mode(short which_town, short entry_dir)
 		}
 		
 	// Place correct graphics
-	redraw_screen(0);
+	redraw_screen();
 							
 
 	clear_map();
@@ -698,7 +701,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 	
 
 		update_explored(to_return);
-			redraw_screen(0);
+			redraw_screen();
 
 		}
 
@@ -1130,7 +1133,7 @@ void pick_lock(location where,short pc_num)
 	 - 5 * adven[pc_num].skills[15] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
-	if (adven[pc_num].traits[3] == FALSE)
+	if (adven[pc_num].traits[TRAIT_NIMBLE])
 		r1 -= 8;
 
 	if (pc_has_abil_equip(pc_num,42) < 24)
@@ -1470,7 +1473,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				SetPort(GetDialogPort(the_dialog));
 				FillCRect(&map_bar_rect,bg[4]);
 				char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-					map_bar_rect,"No map here.",0,12);
+					map_bar_rect,"No map here.",0,12,false);
 				draw_pcs = FALSE;
 				SetPort( map_gworld);
 				}
@@ -1610,10 +1613,10 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			GetPortBounds(GetDialogPort(the_dialog),&the_rect);
 			FillCRect(&the_rect,bg[4]);
 			draw_dialog_graphic( GetDialogPort(the_dialog), dlogpicrect, 
- 				721, FALSE,0);
+ 				21, PICT_DLG_TYPE, FALSE,0);
  			ForeColor(whiteColor);
 			char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-				map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
+				map_title_rect,"Your map:      (Hit Escape to close.)",0,12,false);
  			ForeColor(blackColor);
 	
 			/*SetPort( the_dialog);

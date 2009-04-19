@@ -13,13 +13,16 @@
 #include "monster.h"
 #include "loc_utils.h"
 #include "fields.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "blxtown_spec.h"
 #include "blxgraphics.h"
 #include "blxfileio.h"
 #include "specials.h"
 #include "newgraph.h"
 #include "dialogutils.h"
+#include "dlgconsts.h"
+#include "mathutil.h"
+#include "bldsexil.h"
 
 extern WindowPtr mainPtr;
 extern short overall_mode;
@@ -319,7 +322,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				break;
 			if (party.in_boat >= 0)
 				return TRUE;
-			one_sound(17);
+			//one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
 					if (adven[i].main_status == 1) 
@@ -2194,7 +2197,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (((pc < 0) || (pc == i)) && (get_ran(1,0,100) < spec.pic))
+				if (((pc < 0) || (pc == i)) && (get_ran(1,1,100) < spec.pic))
 					adven[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
 						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
@@ -2469,20 +2472,30 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			break;
 		case 171:
 			set_terrain(l,spec.ex2a);
+			if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+				belt_present = TRUE;
 			*redraw = TRUE;
 			draw_map(modeless_dialogs[5],10);
 			break;
 		case 172:
-			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a)
+			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
 				set_terrain(l,spec.ex2b);
-				else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b)
+				if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+					belt_present = TRUE;
+			}
+			else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
 				set_terrain(l,spec.ex2a);
+				if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+					belt_present = TRUE;
+			}
 			*redraw = 1;
 			draw_map(modeless_dialogs[5],10);
 			break;
 		case 173:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
+			if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+				belt_present = TRUE;
 			*redraw = 1;
 			draw_map(modeless_dialogs[5],10);
 			break;
@@ -2498,8 +2511,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					*a = 1;
 					if ((which_mode == 7) || (spec.ex2a == 0))
 						teleport_party(spec.ex1a,spec.ex1b,1);
-						else teleport_party(spec.ex1a,spec.ex1b,0);
-					}
+					else teleport_party(spec.ex1a,spec.ex1b,0);
+				}
 			*redraw = 1;
 			break;
 		case 175:
@@ -2737,7 +2750,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			if (which_mode < 3)
 				*a = 1;
 			if (r1 != 6) {
-				party.stuff_done[304][3] = r1;
+				party.stuff_done[SDF_PARTY_SPLIT_PC] = r1;
 				*next_spec = -1;
 				start_split(spec.ex1a,spec.ex1b,spec.ex2a);
 				}
@@ -2770,8 +2783,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 }
 
 void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
-{
+	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
 	Boolean check_mess = TRUE;
 	short i,j,k;
 	special_node_type spec;
@@ -2790,22 +2802,61 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 	
 	l.x = i; l.y = j;
 	switch (cur_node.type) {
-		case 200: if (get_ran(1,0,100) <= spec.sd1 ) make_fire_wall(i,j); break;
-		case 201: if (get_ran(1,0,100) <= spec.sd1 ) make_force_wall(i,j); break;
-		case 202: if (get_ran(1,0,100) <= spec.sd1 ) make_ice_wall(i,j); break;
-		case 203: if (get_ran(1,0,100) <= spec.sd1 ) make_blade_wall(i,j); break;
-		case 204: if (get_ran(1,0,100) <= spec.sd1 ) make_scloud(i,j); break;
-		case 205: if (get_ran(1,0,100) <= spec.sd1 ) make_sleep_cloud(i,j); break;
-		case 206: if (get_ran(1,0,100) <= spec.sd1 ) make_quickfire(i,j); break;
-		case 207: if (get_ran(1,0,100) <= spec.sd1 ) make_fire_barrier(i,j); break;
-		case 208: if (get_ran(1,0,100) <= spec.sd1 ) make_force_barrier(i,j); break;
-		case 209: if (spec.sd1 == 0) dispel_fields(i,j,1); else dispel_fields(i,j,2);break;
-		case 210: if (get_ran(1,0,100) <= spec.sd1 ) make_sfx(i,j,spec.sd2 + 1); break;
-		case 211: if (get_ran(1,0,100) <= spec.sd1 ) {
-					if (spec.sd2 == 0) make_web(i,j);
-					if (spec.sd2 == 1) make_barrel(i,j);
-					if (spec.sd2 == 2) make_crate(i,j);
-					} break;
+		case 200:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_fire_wall(i,j);
+			break;
+		case 201:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_force_wall(i,j);
+			break;
+		case 202:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_ice_wall(i,j);
+			break;
+		case 203:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_blade_wall(i,j);
+			break;
+		case 204:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_scloud(i,j);
+			break;
+		case 205:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_sleep_cloud(i,j);
+			break;
+		case 206:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_quickfire(i,j);
+			break;
+		case 207:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_fire_barrier(i,j);
+			break;
+		case 208:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_force_barrier(i,j);
+			break;
+		case 209:
+			if (spec.sd1 == 0)
+				dispel_fields(i,j,1);
+			else dispel_fields(i,j,2);
+			break;
+		case 210:
+			if (get_ran(1,1,100) <= spec.sd1 )
+				make_sfx(i,j,spec.sd2 + 1);
+			break;
+		case 211:
+			if (get_ran(1,1,100) <= spec.sd1 ) {
+				if (spec.sd2 == 0)
+					make_web(i,j);
+				if (spec.sd2 == 1)
+					make_barrel(i,j);
+				if (spec.sd2 == 2)
+					make_crate(i,j);
+			}
+			break;
 		case 212:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
 				if ((t_i.items[k].variety > 0) && (same_point(t_i.items[k].item_loc,l) == TRUE)) {
@@ -2820,37 +2871,67 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 				}
 			break;
 		case 214:
-			if (get_ran(1,0,100) <= spec.sd2) set_terrain(l,spec.sd1);
+			if (get_ran(1,1,100) <= spec.sd2){
+				set_terrain(l,spec.sd1);
+				if(scenario.ter_types[spec.sd1].special >= 16 && scenario.ter_types[spec.sd1].special <=19)
+					belt_present = TRUE;
+				*redraw = TRUE;
+				draw_map(modeless_dialogs[5],10);
+			}
 			break;
 		case 215:
-			if (coord_to_ter(i,j) == spec.sd1) set_terrain(l,spec.sd2);
-			else if (coord_to_ter(i,j) == spec.sd2) set_terrain(l,spec.sd1);
+			if (coord_to_ter(i,j) == spec.sd1){
+				set_terrain(l,spec.sd2);
+				if(scenario.ter_types[spec.sd2].special >= 16 && scenario.ter_types[spec.sd2].special <=19)
+					belt_present = TRUE;
+				*redraw = TRUE;
+				draw_map(modeless_dialogs[5],10);
+			}
+			else if (coord_to_ter(i,j) == spec.sd2){
+				set_terrain(l,spec.sd1);
+				if(scenario.ter_types[spec.sd1].special >= 16 && scenario.ter_types[spec.sd1].special <=19)
+					belt_present = TRUE;
+				*redraw = TRUE;
+				draw_map(modeless_dialogs[5],10);
+			}
 			break;
 		case 216:
 			ter = coord_to_ter(i,j);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
+			if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+				belt_present = TRUE;
+			*redraw = TRUE;
+			draw_map(modeless_dialogs[5],10);
 			break;
 		case 217:
 			ter = coord_to_ter(i,j);
-			if (scenario.ter_types[ter].special == 8)
+			if (scenario.ter_types[ter].special == 8){
 				set_terrain(l,scenario.ter_types[ter].flag1);
+				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+					belt_present = TRUE;
+				*redraw = TRUE;
+				draw_map(modeless_dialogs[5],10);
+			}
 			break;
 		case 218:
 			ter = coord_to_ter(i,j);
-			if ((scenario.ter_types[ter].special == 9) || (scenario.ter_types[ter].special == 10))
+			if ((scenario.ter_types[ter].special == 9) || (scenario.ter_types[ter].special == 10)){
 				set_terrain(l,scenario.ter_types[ter].flag1);
+				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+					belt_present = TRUE;
+				*redraw = TRUE;
+				draw_map(modeless_dialogs[5],10);
 			break;
-			
+			}
 		}
 	}
 	if (check_mess == TRUE) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
-		}
+	}
 }
 
 void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
-{
+	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
 	Boolean check_mess = FALSE;
 	Str255 str1 = "",str2 = "";
 	special_node_type spec;
@@ -2950,7 +3031,7 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 			scenario.out_width * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
-		"",57,1600 + scenario.intro_pic,0);
+		"",57,scenario.intro_pic,PICT_SCEN_TYPE,0);
 }
  
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 

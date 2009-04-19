@@ -10,21 +10,25 @@
 #include "blxactions.h"
 #include "text.h"
 #include "party.h"
-//#include "sound.h"
 #include "items.h"
 #include "fields.h"
 #include "town.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
 #include "startup.h"
 #include "dialogutils.h"
-#include "Exile.sound.h"
 #include "info.dialogs.h"
 #include "bldsexil.h"
+#include "soundtool.h"
+#include "graphtool.h"
+#include "mathutil.h"
 
+extern short arrow_curs[3][3];
+extern short sword_curs, boot_curs, drop_curs, target_curs;
+extern short talk_curs, key_curs, look_curs, current_cursor;
 
 /* Mac stuff globals */
 Rect	windRect, Drag_Rect;
-Boolean  All_Done = FALSE,dialog_not_toast = FALSE;
+Boolean  All_Done = FALSE;
 EventRecord	event;
 WindowPtr	mainPtr;	
 Handle menu_bar_handle;
@@ -32,7 +36,7 @@ MenuHandle apple_menu,file_menu,extra_menu,help_menu,monster_info_menu,library_m
 MenuHandle actions_menu,music_menu,mage_spells_menu,priest_spells_menu;
 short had_text_freeze = 0,num_fonts;
 Boolean in_startup_mode = TRUE,app_started_normally = FALSE;
-Boolean play_sounds = TRUE,first_startup_update = TRUE;
+Boolean first_startup_update = TRUE;
 Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE,startup_loaded = FALSE;
 Boolean save_maps = TRUE,party_in_memory = FALSE;
 CGrafPtr color_graf_port;
@@ -55,8 +59,7 @@ short on_spell_menu[2][62];
 short on_monst_menu[256];
 
 // Cursors 
-short current_cursor = 120;
-CursHandle arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
+//short current_cursor = 120;
 
 
 // Shareware globals
@@ -151,7 +154,7 @@ Boolean fry_startup = FALSE;
 //	Main body of program Exile
 //
 #ifdef EXILE_BIG_GUNS
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 ControlActionUPP text_sbar_UPP;
 ControlActionUPP item_sbar_UPP;
 ControlActionUPP shop_sbar_UPP;
@@ -162,21 +165,16 @@ ControlActionUPP shop_sbar_UPP;
 
 int main(void)
 {
-
-
 	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	start_time = TickCount();
 	Initialize();
 #ifdef EXILE_BIG_GUNS
-	main_dialog_UPP = NewModalFilterProc(cd_event_filter);
-text_sbar_UPP = NewControlActionProc(sbar_action);
-item_sbar_UPP = NewControlActionProc(item_sbar_action);
-shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
-
+	//main_dialog_UPP = NewModalFilterProc(cd_event_filter);
+	text_sbar_UPP = NewControlActionProc(sbar_action);
+	item_sbar_UPP = NewControlActionProc(item_sbar_action);
+	shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 #endif
-	
-	load_cursors();
-
+	init_graph_tool(redraw_screen,ul);
 
 	Set_Window_Drag_Bdry();
 
@@ -184,21 +182,21 @@ shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 
 	load_sounds();
 
-	if (sys_7_avail == TRUE) {
-		set_up_apple_events();
-		}
+	set_up_apple_events();
 	//import_template_terrain();
 	//import_anim_terrain(0);
 	plop_fancy_startup();
 
-	party.stuff_done[306][2] = 0;
-	party.stuff_done[306][1] = 0;
+	party.stuff_done[SDF_NO_FRILLS] = 0;
+	party.stuff_done[SDF_NO_SOUNDS] = 0;
 
 	init_screen_locs();
-	cd_init_dialogs();
+	
+	init_snd_tool();
+	init_dialogs();
 	
 	//init_party(0);
-	PSD[306][6] = 1;
+	PSD[SDF_GAME_SPEED] = 1;
 	//init_anim(0);
 
 		
@@ -225,10 +223,7 @@ shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 
 	menu_activate(0);
 
-
-
 	fancy_startup_delay();
-
 
 	init_spell_menus();
 
@@ -274,7 +269,7 @@ void Initialize(void)
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  DonÕt for each call of Random, or the sequence
+	//	will always be different.  Donâ€™t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
 	unsigned long time;
@@ -298,8 +293,8 @@ void Initialize(void)
 		if (stored_key == -100) {
 			Alert(983,NIL);
 			ExitToShell();	
-			}
 		}
+	}
 	set_pixel_depth();
 	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
 	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
@@ -480,9 +475,9 @@ void Handle_Update()
 			if (first_update == TRUE) {
 				first_update = FALSE;
 				if (overall_mode == MODE_OUTDOORS) 
-					redraw_screen(0);
+					redraw_screen();
 				if ((overall_mode > MODE_OUTDOORS) & (overall_mode < MODE_COMBAT))
-					redraw_screen(0);
+					redraw_screen();
 			// 1st update never combat
 				}
 				else refresh_screen(0);
@@ -1021,35 +1016,35 @@ void handle_music_menu(int item_hit)
 		}
 }
 
-void load_cursors()
-{
-	short i,j;
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
-			arrow_curs[i][j] = GetCursor(100 + (i - 1) + 10 * (j - 1));
-	sword_curs = GetCursor(120);
+//void load_cursors()
+//{
+//	short i,j;
+//	for (i = 0; i < 3; i++)
+//		for (j = 0; j < 3; j++)
+//			arrow_curs[i][j] = GetCursor(100 + (i - 1) + 10 * (j - 1));
+//	sword_curs = GetCursor(120);
+//
+////	HLock ((Handle) sword_curs);
+////	SetCursor (*sword_curs);
+////	HUnlock((Handle) sword_curs);
+//
+//	boot_curs = GetCursor(121);
+//	key_curs = GetCursor(122);
+//	target_curs = GetCursor(124);
+//	talk_curs = GetCursor(126);
+//	look_curs = GetCursor(129);
+//	
+//	set_cursor(sword_curs);
+//	current_cursor = 124;
+//	
+//}
 
-//	HLock ((Handle) sword_curs);
-//	SetCursor (*sword_curs);
-//	HUnlock((Handle) sword_curs);
-
-	boot_curs = GetCursor(121);
-	key_curs = GetCursor(122);
-	target_curs = GetCursor(124);
-	talk_curs = GetCursor(126);
-	look_curs = GetCursor(129);
-	
-	set_cursor(sword_curs);
-	current_cursor = 124;
-	
-}
-
-void set_cursor(CursHandle which_curs)
-{
-	HLock ((Handle) which_curs);
-	SetCursor (*which_curs);
-	HUnlock((Handle) which_curs);
-}
+//void set_cursor(CursHandle which_curs)
+//{
+//	HLock ((Handle) which_curs);
+//	SetCursor (*which_curs);
+//	HUnlock((Handle) which_curs);
+//}
 
 void change_cursor(Point where_curs)
 {
@@ -1295,100 +1290,99 @@ void set_up_apple_events()
 
 }
 
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-{	
-	char chr,chr2;
-	short wind_hit,item_hit;
-	Point the_point;
-	WindowRef w;
-	RgnHandle rgn;
+void move_sound(unsigned char ter,short step){
+	static bool on_swamp = false;
+	short pic,spec,snd;
 	
-	dummy_item_hit = 0;
+	pic = scenario.ter_types[ter].picture;
+	spec = scenario.ter_types[ter].special;
+	snd = scenario.ter_types[ter].step_sound;
 	
-	switch (event->what) {
-		case updateEvt:
-		w = GetDialogWindow(hDlg);
-		rgn = NewRgn();
-		GetWindowRegion(w,kWindowUpdateRgn,rgn);
-		if (EmptyRgn(rgn) == TRUE) {
-			DisposeRgn(rgn);
-			return TRUE;
-			}
-		DisposeRgn(rgn);
-		BeginUpdate(w);
-		cd_redraw(w);
-		EndUpdate(w);
-		DrawDialog(hDlg);
-		return FALSE;
-		break;
-		
-		case keyDown:
-		chr = event->message & charCodeMask;
-		chr2 = (char) ((event->message & keyCodeMask) >> 8);
-		switch (chr2) {
-			case 126: chr = 22; break;
-			case 124: chr = 21; break;
-			case 123: chr = 20; break;
-			case 125: chr = 23; break;
-			case 53: chr = 24; break;
-			case 36: chr = 31; break;
-			case 76: chr = 31; break;
-			}
-					// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-					// 25-30  ctrl 1-6  31 - return
-
-		wind_hit = cd_process_keystroke(GetDialogWindow(hDlg),chr,&item_hit);
-		break;
+	//if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
+	if(snd == 4 && !flying() && party.in_boat == 0){
+		if(on_swamp && get_ran(1,1,100) >= 10)return;
+		on_swamp = true;
+	}else on_swamp = false;
 	
-		case mouseDown:
-		the_point = event->where;
-		GlobalToLocal(&the_point);	
-		wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
-		break;
-
-		default: wind_hit = -1; break;
-		}
-	switch (wind_hit) {
-		case -1: break;
-		case 823: give_password_filter(item_hit); break;
-		case 869: pick_prefab_scen_event_filter(item_hit); break;
-		case 947: pick_a_scen_event_filter(item_hit); break;
-		case 958: tip_of_day_event_filter(item_hit); break;
-		case 960: talk_notes_event_filter(item_hit); break;
-		case 961: adventure_notes_event_filter(item_hit); break;
-		case 962: journal_event_filter(item_hit); break;
-		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-		case 987: display_item_event_filter(item_hit); break;
-		case 988: pick_trapped_monst_event_filter(item_hit); break;
-		case 989: edit_party_event_filter(item_hit); break;
-		case 991: display_pc_event_filter(item_hit); break;
-		case 996: display_alchemy_event_filter(item_hit); break;
-		case 997: display_help_event_filter(item_hit); break;
-		case 998: display_pc_item_event_filter(item_hit); break;
-		case 999: display_monst_event_filter(item_hit); break;
-		case 1010: spend_xp_event_filter (item_hit); break;
-		case 1012: get_num_of_items_event_filter (item_hit); break;
-		case 1013: pick_race_abil_event_filter (item_hit); break;
-		case 1014: sign_event_filter (item_hit); break;
-		case 1017: case 873: get_text_response_event_filter (item_hit); break;
-		case 1018: select_pc_event_filter (item_hit); break;
-		case 1019: give_pc_info_event_filter(item_hit); break;
-		case 1047: alch_choice_event_filter(item_hit); break;
-		case 1050: pc_graphic_event_filter(item_hit); break;
-		case 1051: pc_name_event_filter(item_hit); break;
-		case 1073: give_reg_info_event_filter (item_hit); break;
-		case 1075: do_registration_event_filter (item_hit); break;
-		case 1096: display_spells_event_filter (item_hit); break;
-		case 1097: display_skills_event_filter (item_hit); break;
-		case 1098: pick_spell_event_filter (item_hit); break;
-		case 1099: prefs_event_filter (item_hit); break;
-		default: fancy_choice_dialog_event_filter (item_hit); break;
-		}
-
-	if (wind_hit == -1)
-		return FALSE;
-		else return TRUE;
+	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {// is on boat ?
+		if (spec == 21) //town entrance ?
+			return;
+		play_sound(48); //play boat sound
+	}
+	else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {//// is on horse ?
+		play_sound(85); //so play horse sound
+	}
+	else switch(scenario.ter_types[ter].step_sound){
+		case 1:
+			play_sound(55); //squish
+			break;
+		case 2:
+			play_sound(47); //crunch
+			break;
+		case 3:
+			break; //silence : do nothing
+		case 4:
+			play_sound(17); // big splash
+			break;
+		default: //safety footsteps valve
+			if (step % 2 == 0) //footsteps alternate sound
+				play_sound(49);
+			else play_sound(50);
+	}
 }
 
+void incidental_noises(bool on_surface){
+	short sound_to_play;
+	if(on_surface){
+		if(get_ran(1,1,100) < 40){
+			sound_to_play = get_ran(1,1,3);
+			switch(sound_to_play){
+				case 1:
+					play_sound(76);
+					break;
+				case 2:
+					play_sound(77);
+					break;
+				case 3:
+					play_sound(91);
+					break;
+			}
+		}
+	}else{
+		if(get_ran(1,1,100) < 40){
+			sound_to_play = get_ran(1,1,2);
+			switch(sound_to_play){
+				case 1:
+					play_sound(78);
+					break;
+				case 2:
+					play_sound(79);
+					break;
+			}
+		}
+	}
+	// Dog: 80
+	// Cat: 81
+	// Sheep: 82
+	// Cow: 83
+	// Chicken: 92
+}
 
+void pause(short length)
+{
+	long len;
+	unsigned long dummy;
+	
+	len = (long) length;
+	
+	if (give_delays == 0)
+		Delay(len, &dummy);
+}
 
+// stuff done legit, i.e. flags are within proper ranges for stuff done flag
+bool sd_legit(short a, short b)
+{
+	if ((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
+		return TRUE;
+	return FALSE;
+}

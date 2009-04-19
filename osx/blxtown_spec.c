@@ -12,7 +12,8 @@
 #include "text.h"
 #include "item_data.h"
 #include "blxtown_spec.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
+#include "mathutil.h"
 
 extern short overall_mode;
 extern party_record_type party;
@@ -162,8 +163,8 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	
 			r1 = get_ran(1,0,100) + diff;
 			// Nimble?
-			if (adven[pc_num].traits[TRAIT_NIMBLE] == FALSE)
-				r1 += 6; // Changed -= to += so that nimble characters are _better_ at disarming traps
+			if (adven[pc_num].traits[TRAIT_NIMBLE])
+				r1 -= 6;
 
 
 			if (r1 < trap_odds[skill]) {
@@ -270,15 +271,16 @@ void start_split(short a,short b,short noise)
 {
 	short i;
 
-	party.stuff_done[304][0] = 1;
-	party.stuff_done[304][1] = c_town.p_loc.x;
-	party.stuff_done[304][2] = c_town.p_loc.y;
+	party.stuff_done[SDF_IS_PARTY_SPLIT] = 1;
+	party.stuff_done[SDF_PARTY_SPLIT_X] = c_town.p_loc.x;
+	party.stuff_done[SDF_PARTY_SPLIT_Y] = c_town.p_loc.y;
+	party.stuff_done[SDF_PARTY_SPLIT_TOWN] = c_town.town_num;
 	c_town.p_loc.x = a;
 	c_town.p_loc.y = b;
 	for (i = 0; i < 6; i++)
-		if (i != party.stuff_done[304][3])
+		if (i != party.stuff_done[SDF_PARTY_SPLIT_PC])
 			adven[i].main_status += 10;
-	current_pc = party.stuff_done[304][3];
+	current_pc = party.stuff_done[SDF_PARTY_SPLIT_PC];
 	update_explored(c_town.p_loc);
 	center = c_town.p_loc;
 	if (noise > 0)

@@ -4,9 +4,10 @@
 #include "stdio.h"
 #include "tfileio.h"
 #include "keydlgs.h"
-#include "tGraphics.h"
+#include "graphtool.h"
 #include "scenario.h"
-#include "sound.h"
+#include "soundtool.h"
+#include "mathutil.h"
 
 #import <fstream>
 using std::endl;
@@ -75,6 +76,8 @@ void init_directories()
 //		Alert(984,NIL);
 //		ExitToShell();
 //		}
+	
+	//error = CoreEndianInstallFlipper ('rsrc', 'PICT', flip_pict, NULL);
 	
 	char cPath[768];
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
@@ -428,14 +431,16 @@ void load_scenario()
 	
 	len = (long) sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
-		FSClose(file_id); oops_error(29); return;
-		}
+		FSClose(file_id);
+		oops_error(29);
+		return;
+	}
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 	 && (scenario.flag3 == 30)
 	  && (scenario.flag4 == 40)) {
 	  	cur_scen_is_mac = TRUE;
 	  	file_ok = TRUE;
-	  	}
+	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
@@ -443,22 +448,22 @@ void load_scenario()
 	  	cur_scen_is_mac = FALSE;
 	  	file_ok = TRUE;
 	  	port_scenario();
-	  	}
+	}
 	 if (file_ok == FALSE) {
 		FSClose(file_id); 
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
 		return;	 
-	 	}
+	}
 	len = sizeof(scen_item_data_type); // item data
 	if ((error = FSRead(file_id, &len, (char *) &(data_store->scen_item_list))) != 0){
 		FSClose(file_id); oops_error(30); return;
-		}
+	}
 	port_item_list();
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		FSRead(file_id, &len, (char *) &(data_store->scen_strs[i]));
 		data_store->scen_strs[i][len] = 0;
-		}
+	}
 	
 	FSClose(file_id);
 	
@@ -519,7 +524,7 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 	FSRead(file_id,&length,data);
 	FSClose(file_id);
 	GWorldPtr ret = load_bmp(data,length);
-	free(data);
+	delete [] data;
 	return ret;
 }
 
@@ -528,13 +533,13 @@ void load_spec_graphics()
 	short i,file_num;
 	Str255 file_name;
 	char *whatever;
-
 	if (spec_scen_g != NULL) {
 		DisposeGWorld(spec_scen_g);
 		spec_scen_g = NULL;
-		}
+	}
 	//build_scen_file_name(file_name);
 	whatever = (char *) file_to_load.name;
+	printf("Loading scenario graphics... (%s)\n",whatever);
 	for (i = 0; i < 63; i++) 
 		file_name[i] = whatever[i];
 	for (i = 0; i < 250; i++) {
@@ -542,21 +547,24 @@ void load_spec_graphics()
 			file_name[i + 1] = 'm';
 			file_name[i + 2] = 'e';
 			file_name[i + 3] = 'g';
-			i = 250;
-			}
+			//file_name[i + 4] = 0;
+			break;
 		}
+	}
 	file_num = HOpenResFile(file_to_load.vRefNum,file_to_load.parID,file_name,1);
-	if (file_num < 0)
-	{
+	if (file_num < 0){
+		printf("First attempt failed... (%s)\n",file_name);
 		for (i = 0; i < 250; i++) {
 			if (file_name[i] == '.') {
 				file_name[i + 1] = 'b';
 				file_name[i + 2] = 'm';
 				file_name[i + 3] = 'p';
-				i = 250;
+				//file_name[i + 4] = 0;
+				break;
 			}
 		}
 		spec_scen_g = load_bmp_from_file(file_name);
+		if(spec_scen_g == NULL)printf("Scenario graphics not found (%s).\n",file_name);
 		return;
 	}
 
@@ -699,7 +707,10 @@ void load_town(short which_town)
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {FSClose(file_id);oops_error(35);}
+	if (error != 0) {
+		FSClose(file_id);
+		oops_error(35);
+	}
 	
 	len = sizeof(town_record_type);
 	
@@ -1185,8 +1196,8 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	Str255 newname = "::::";
 	strcat((char*)newname,(char*)file_name);
 		
-	// now wrtie scenario
-	c2p(newname);
+	// now write scenario
+	c2pstr((char*) newname);
 	
 	//OK. FIrst find out what file name we're working with, and make the dummy file 
 	// which we'll build the new scenario in   Blades of Exile Base

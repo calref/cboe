@@ -433,15 +433,3 @@ typedef struct {
 typedef struct {
 long l[10];
 } PrefRecord,*PrefPtr,**PrefHandle;
-
-
-short s_pow(short x,short y);
-short a_v(short x);
-short ex_abs(short x);
-short get_ran (short times,short  min,short  max);
-Boolean same_point(location p1,location p2);
-void BoEpause(short length);
-short minmax(short min,short max,short k);
-short min(short a,short b);
-short max(short a,short b);
-short move_to_zero(short val);

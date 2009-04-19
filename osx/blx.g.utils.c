@@ -9,8 +9,10 @@
 #include "blxgraphics.h"
 #include "info.dialogs.h"
 #include "monster.h"
-#include "dlogtool.h"
-#include "Exile.sound.h"
+#include "dlgtool.h"
+//#include "soundtool.h"
+#include "graphtool.h"
+#include "mathutil.h"
 
 extern WindowPtr	mainPtr;
 extern Rect	windRect;
@@ -1045,7 +1047,7 @@ void adjust_monst_menu()
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
 			sprintf((char *) monst_name,"%s",data_store->scen_item_list.monst_names[on_monst_menu[i]]);
-			c2p(monst_name);
+			c2pstr((char*)monst_name);
 			AppendMenu(monst_menu,monst_name);
 			}
 }	

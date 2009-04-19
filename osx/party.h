@@ -23,7 +23,7 @@ void award_party_xp(short amt);
 void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);
 void do_xp_keep(short pc_num,short mode);
-Boolean spend_xp_event_filter (short item_hit);
+void spend_xp_event_filter (short item_hit);
 void do_xp_draw();
 void draw_xp_skills();
 Boolean spend_xp(short pc_num, short mode, short parent);

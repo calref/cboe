@@ -13,7 +13,7 @@
 //#include "sound.h"
 #include "startup.h"
 #include "party.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 
 #include <vector>
 using std::vector;

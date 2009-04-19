@@ -5,20 +5,22 @@
 
 #include "blxgraphics.h"
 #include "text.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
+#include "dlgconsts.h"
 #include "items.h"
 #include "party.h"
 #include "fields.h"
 #include "loc_utils.h"
 #include "newgraph.h"
-#include "dlogtool.h"
 #include "item_data.h"
 #include "info.dialogs.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "stdio.h"
 #include "string.h"
 #include "monster.h"
 #include "bldsexil.h"
+#include "graphtool.h"
+#include "mathutil.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 extern party_record_type party;
@@ -40,8 +42,6 @@ extern short town_size[3];
 extern short town_type;
 
 extern short dialog_answer;
-extern pascal Boolean cd_event_filter();
-extern Boolean dialog_not_toast;
 extern GWorldPtr pcs_gworld;
 extern ModalFilterUPP main_dialog_UPP;
 extern scenario_data_type scenario;
@@ -904,24 +904,22 @@ void put_item_graphics()
 
 	for (i = 0; i < 8; i++) {
 		// first, clear whatever item graphic is there
-		csp(987,20 + i * 4,950);
+		csp(987,20 + i * 4,0,PICT_BLANK_TYPE);
 
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
-
 					sprintf ((char *) message, "%s",
 					 (is_ident(item) == TRUE) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
-						csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
-						else csp(987,20 + i * 4,4800 + item.graphic_num);////
+						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
+					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM_TYPE);
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);			
 					storage = item_weight(item);		
 					sprintf ((char *) message, "Weight: %d",storage);
 					csit(987,53 + i,(char *) message);			
-					
-					
+
 			}
 			else { // erase the spot
 			 	sprintf ((char *) message, "");
@@ -940,7 +938,7 @@ void put_item_graphics()
 		
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
-			csp(987,11 + i,800 + adven[i].which_graphic);
+			csp(987,11 + i,adven[i].which_graphic,PICT_PC_TYPE);
 			}
 }
 
@@ -952,7 +950,7 @@ void display_item_event_filter (short item_hit)
 	
 		switch (item_hit) {
 			case 1:
-				dialog_not_toast = FALSE;
+				toast_dialog();
 				break;
 			case 9:
 				if (first_item_shown > 0)
@@ -992,13 +990,13 @@ void display_item_event_filter (short item_hit)
 						t_i.items[item_array[item_hit]].item_level = 3000;
 				set_item_flag(&item);
 					give_gold(t_i.items[item_array[item_hit]].item_level,FALSE);
-					force_play_sound(39);
+					play_sound(39); // formerly force_play_sound
 					}
 				else if (t_i.items[item_array[item_hit]].variety == 11) {
 					give_food(t_i.items[item_array[item_hit]].item_level,FALSE);
 				set_item_flag(&item);
 					set_item_flag(&t_i.items[item_array[item_hit]]);
-					force_play_sound(62);
+					play_sound(62); // formerly force_play_sound
 					}
 				else {
 					if (item_weight(item) > 
@@ -1010,7 +1008,7 @@ void display_item_event_filter (short item_hit)
 					  	}
 				
 				set_item_flag(&item);
-					force_play_sound(0);
+					play_sound(0); // formerly force_play_sound
 					 give_to_pc(current_getting_pc, item, 0);////
 					}
 				t_i.items[item_array[item_hit]] = return_dummy_item();
@@ -1076,16 +1074,9 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 	if (party.help_received[36] == 0) {
 		cd_initial_draw(987);
 		give_help(36,37,987);
-		}
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(987,0);
 
 	DisposeGWorld(pcs_gworld);
@@ -1102,7 +1093,7 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 
 void fancy_choice_dialog_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	dialog_answer = item_hit;
 }
 
@@ -1116,14 +1107,8 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 	
 	cd_create_custom_dialog(mainPtr,strs,pic_num, buttons);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(900,0);
 
 	//if (parent < 2) {
@@ -1144,26 +1129,22 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 short fancy_choice_dialog(short which_dlog,short parent)
 // ignore parent in Mac version
 {
-	short item_hit,i,store_dialog_answer;
+	short item_hit,i,store_dialog_answer,err;
 	
 	store_dialog_answer = dialog_answer;
 	make_cursor_sword();
 	
-	cd_create_dialog_parent_num(which_dlog,parent);
+	err = cd_create_dialog_parent_num(which_dlog,parent);
+	if(err != 0)
+		printf("Error %i while creating dialog %i.\n",err,which_dlog);
 	
 	if (which_dlog == 1062) {
 		//i = get_ran(1,0,12);
 		//get_str(temp_str,11,10 + i);
 		//csit(1062,10,(char *) temp_str);
-		}
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(which_dlog,0);
 
 	if (parent < 2) {
@@ -1182,7 +1163,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 
 void select_pc_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	if (item_hit == 16)
 		dialog_answer = 6;
 		else dialog_answer = item_hit - 3;
@@ -1211,16 +1192,9 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
-		}
+	}
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1018,0);
 
 	BeginUpdate(mainPtr);
@@ -1244,7 +1218,7 @@ void get_num_of_items_event_filter (short item_hit)
 {
 	Str255 get_text;
 	
-	cd_retrieve_text_edit_str(1012,(char *) get_text);
+	cd_retrieve_text_edit_str(1012,2,(char *) get_text);
 	dialog_answer = 0;
 #ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%hd",&dialog_answer);
@@ -1253,7 +1227,7 @@ void get_num_of_items_event_filter (short item_hit)
 	sscanf((char *) get_text,"%d",&dummy);
 	dialog_answer = dummy;
 #endif		
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 short get_num_of_items(short max_num)
@@ -1271,16 +1245,9 @@ short get_num_of_items(short max_num)
 	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
 	csit(1012,4,(char *)sign_text);	
 	sprintf((char *) sign_text,"%d",max_num);
-	cd_set_text_edit_str(1012,(char *) sign_text);
+	cd_set_text_edit_str(1012,2,(char *) sign_text);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();		
 	
 	cd_kill_dialog(1012,0);
 	
@@ -1353,7 +1320,6 @@ void create_modeless_dialog(short which_dlog)
 	short i,which_d;
 	GDHandle cur_device;
 
-	
 	cur_device = GetGDevice();			
 	for (i = 0; i < 18; i++)
 		if (which_dlog == modeless_key[i]) {
@@ -1402,7 +1368,7 @@ void place_glands(location where,unsigned char m_type)
 	
 	monst = return_monster_template(m_type);
 	
-	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,0,100) < monst.corpse_item_chance)) {
+	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);
 		place_item(store_i,where,FALSE);
 		}
@@ -1626,8 +1592,8 @@ void refresh_store_items()
 void get_text_response_event_filter (short item_hit)
 {
 	
-	cd_retrieve_text_edit_str(store_dnum,(char *) store_str);
-	dialog_not_toast = FALSE;
+	cd_retrieve_text_edit_str(store_dnum,2,(char *) store_str);
+	toast_dialog();
 }
 
 void get_text_response(short dlg,Str255 str,short parent_num)
@@ -1641,15 +1607,8 @@ void get_text_response(short dlg,Str255 str,short parent_num)
 	store_dnum = dlg;
 	
 	cd_create_dialog_parent_num(dlg,parent_num);
-			
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();
 	for (i = 0; i < 15; i++)
 		if ((str[i] > 64) && (str[i] < 91))
 			str[i] = str[i] + 32;

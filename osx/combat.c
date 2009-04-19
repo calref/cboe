@@ -11,10 +11,12 @@
 #include "items.h"
 #include "party.h"
 #include "combat.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "town.h"
 #include "specials.h"
 #include "blx.g.utils.h"
+#include "bldsexil.h"
+#include "mathutil.h"
 
 extern party_record_type party;
 extern pc_record_type adven[6];
@@ -1310,8 +1312,8 @@ void do_combat_cast(location target)////
 										add_string_to_buf("  Demon resisted.                  ");
 										else {
 										r1 = get_ran(8 + bonus * 2, 1, 11);	
-										if (PSD[4][0] == 3) // anama
-											r1 += 25;
+										//if (PSD[4][0] == 3) // anama
+										//	r1 += 25;
 										//play_sound(53);
 										hit_space(cur_monst->m_loc,r1,4,0,current_pc);
 										}

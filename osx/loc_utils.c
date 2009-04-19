@@ -1,11 +1,12 @@
 #include <Carbon/Carbon.h>
 
-#include "math.h"
+#include "mathutil.h"
 #include "global.h"
 #include "loc_utils.h"
 #include "text.h"
 #include "monster.h"
 #include "fields.h"
+#include "mathutil.h"
 
 
 char terrain_blocked[256];
@@ -45,31 +46,31 @@ void set_terrain_blocked()
 
 short dist(location p1,location p2)
 {
-	return (short) ex_sqrt((double)((p1.x - p2.x) * (p1.x - p2.x) +
-							(p1.y - p2.y) * (p1.y - p2.y)));
+	return s_sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
-short ex_sqrt(short val)
-{
-	return (short) sqrt((double)(val));
+bool same_point(location p1,location p2){
+	if ((p1.x == p2.x) & (p1.y == p2.y))
+		return TRUE;
+	else return FALSE;
 }
 
 short vdist(location p1,location p2) {
 	short i,j;
-	i = a_v((short) (p1.x - p2.x)); j = a_v((short) (p1.y - p2.y));
+	i = abs((short) (p1.x - p2.x)); j = abs((short) (p1.y - p2.y));
 	return max(i,j);
 }
 
 Boolean adjacent(location p1,location p2)
 {
-	if ((a_v((short) (p1.x - p2.x)) <= 1) && (a_v((short) (p1.y - p2.y)) <= 1))
+	if ((abs((short) (p1.x - p2.x)) <= 1) && (abs((short) (p1.y - p2.y)) <= 1))
 		return TRUE;
 		else return FALSE;
 }
 
 Boolean point_onscreen(location center,location check)
 {
-	if ((a_v((short) (center.x - check.x)) <=4) && (a_v((short) (center.y - check.y)) <= 4))
+	if ((abs((short) (center.x - check.x)) <=4) && (abs((short) (center.y - check.y)) <= 4))
 		return TRUE;
 		else return FALSE;
 }
@@ -226,7 +227,7 @@ short can_see(location p1,location p2,short mode)
 	dx = p2.x - p1.x;
 	dy = p2.y - p1.y;
 	
-	if (ex_abs(dy) > ex_abs(dx)) {
+	if (abs(dy) > abs(dx)) {
 		if (p2.y > p1.y) {
 			for (count = 1; count < dy; count++) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
@@ -247,7 +248,7 @@ short can_see(location p1,location p2,short mode)
 			}
 		return storage;
 		} 
-	if (ex_abs(dy) <= ex_abs(dx)) {
+	if (abs(dy) <= abs(dx)) {
 		if (p2.x > p1.x) {
 			for (count = 1; count < dx; count++) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);

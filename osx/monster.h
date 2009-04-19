@@ -8,6 +8,7 @@ short is_null_wand_entry(wandering_type wand_entry);
 short is_null_out_wand_entry(out_wandering_type wand_entry);
 location get_monst_head(short m_num);
 short get_monst_picnum(unsigned char monst);
+short get_monst_pictype(unsigned char monst);
 void get_monst_dims(unsigned char monst,short *width, short *height);
 void set_up_monst(short mode,unsigned char m_num);
 void do_monsters();

@@ -14,14 +14,17 @@
 #include "string.h"
 #include "party.h"
 #include "monster.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
+#include "dlgconsts.h"
 #include "town.h"
 #include "combat.h"
 #include "loc_utils.h"
 #include "fields.h"
 #include "text.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "bldsexil.h"
+#include "graphtool.h"
+#include "mathutil.h"
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -127,8 +130,6 @@ extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;
 extern short on_spell_menu[2][62];
-extern pascal Boolean cd_event_filter();
-extern Boolean dialog_not_toast;
 extern short mage_need_select[62];
 extern short priest_need_select[62];
 extern short pc_marked_damage[6];
@@ -490,7 +491,7 @@ void put_party_in_scen()
 	overall_mode = MODE_TOWN;
 	load_area_graphics();
 	create_clip_region();
-	redraw_screen(0);
+	redraw_screen();
 	set_stat_window(0);
 	adjust_spell_menus();
 	adjust_monst_menu();
@@ -1166,7 +1167,7 @@ void do_xp_draw()
 	update_gold_skills();
 }
 
-Boolean spend_xp_event_filter (short item_hit)
+void spend_xp_event_filter (short item_hit)
 {
 	short mode,pc_num;
 	Boolean talk_done = FALSE;
@@ -1293,16 +1294,16 @@ Boolean spend_xp_event_filter (short item_hit)
 				if (item_hit >= 100) {
 					item_hit -= 100;
 					if ((item_hit == 3) || (item_hit == 4)) {
-						display_strings_with_nums(10,63,0,0,"About Health",57,724,1010);
-						}
-						else if ((item_hit == 5) || (item_hit == 6)){
-						display_strings_with_nums(10,64,0,0,"About Spell Points",57,724,1010);
-						}
-						else {
-							which_skill = (item_hit - 7) / 2;
-							display_skills(which_skill,1010);
-							}
+						display_strings_with_nums(10,63,0,0,"About Health",57,24,PICT_DLG_TYPE,1010);
 					}
+					else if ((item_hit == 5) || (item_hit == 6)){
+						display_strings_with_nums(10,64,0,0,"About Spell Points",57,24,PICT_DLG_TYPE,1010);
+					}
+					else {
+						which_skill = (item_hit - 7) / 2;
+						display_skills(which_skill,1010);
+						}
+				}
 				else {
 				which_skill = (item_hit - 7) / 2;
 				
@@ -1341,9 +1342,8 @@ Boolean spend_xp_event_filter (short item_hit)
 			
 	store_train_pc = pc_num;
 	if (talk_done == TRUE) {
-		dialog_not_toast = FALSE;
+		toast_dialog();
 		}
-	return FALSE;
 }
 void update_gold_skills()
 {
@@ -1380,16 +1380,9 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	if (party.help_received[10] == 0) {
 		cd_initial_draw(1010);
 		give_help(10,11,1010);
-		}
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(1010,0);
 
@@ -1430,7 +1423,7 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 				add_string_to_buf("  You poison your weapon.       ");
 				r1 = get_ran(1,0,100);
 				// Nimble?
-				if (adven[pc_num].traits[3] == FALSE)
+				if (adven[pc_num].traits[TRAIT_NIMBLE])
 					r1 -= 6;
 				if ((r1 > p_chance[adven[pc_num].skills[17]]) && (safe == 0)) {
 					add_string_to_buf("  Poison put on badly.         ");
@@ -1888,7 +1881,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 //			overall_mode = MODE_OUTDOORS;
 //			center = party.p_loc;
 //			update_explored(party.p_loc);
-			redraw_screen(0);
+			redraw_screen();
 			break;
 			
 		case 1: case 20: case 39:  case 2: case 11: case 27: case 28: case 36: case 19: case 24:
@@ -2207,7 +2200,7 @@ void cast_town_spell(location where) ////
 				for (loc.x = 0; loc.x < town_size[town_type]; loc.x++)
 					for (loc.y = 0; loc.y < town_size[town_type]; loc.y++) 
 						if ((dist(where,loc) <= 2) && (can_see(where,loc,2) < 5) &&
-						((a_v(loc.x - where.x) < 2) || (a_v(loc.y - where.y) < 2)))
+						((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 							make_antimagic(loc.x,loc.y);
 				break;
 
@@ -2733,7 +2726,7 @@ void pick_spell_event_filter (short item_hit)
 						if ((store_spell_target == 6) && (cd_get_active(1098,10 + pc_casting) == 1)) {
 							cd_set_item_text(1098,36,choose_target);				
 							draw_spell_info();
-							force_play_sound(45);
+							play_sound(45); // formerly force_play_sound
 							}
 							else if (cd_get_active(1098,10 + pc_casting) == 0) {
 								store_spell_target = 6;
@@ -2751,7 +2744,7 @@ void pick_spell_event_filter (short item_hit)
 			if (store_situation == 0)
 				store_last_cast_mage = pc_casting;
 				else store_last_cast_priest = pc_casting;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			dialog_answer = 70;
 			return;
 		}
@@ -2762,21 +2755,21 @@ void pick_spell_event_filter (short item_hit)
 			store_mage = store_mage_store;
 			store_priest = store_priest_store;
 			store_spell_target = store_store_target ;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			dialog_answer = 70;
 			return;
 			}
 	if ((store_situation == 0) && (mage_need_select[store_mage] == 0)) {
 			store_last_cast_mage = pc_casting;
 			pc_last_cast[store_situation][pc_casting] = store_mage;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			dialog_answer = store_mage;
 			return;
 		}
 	if ((store_situation == 1) && (priest_need_select[store_priest] == 0)) {
 			store_last_cast_priest = pc_casting;
 			pc_last_cast[store_situation][pc_casting] = store_priest;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			dialog_answer = store_priest;
 			return;
 		}
@@ -2785,7 +2778,7 @@ void pick_spell_event_filter (short item_hit)
 		store_mage = store_mage_store;
 		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
-		dialog_not_toast = FALSE;
+		toast_dialog();
 		give_help(39,0,1098);
 		dialog_answer = 70;
 			return;
@@ -2795,7 +2788,7 @@ void pick_spell_event_filter (short item_hit)
 		store_last_cast_mage = pc_casting;
 		else store_last_cast_priest = pc_casting;
 	pc_last_cast[store_situation][pc_casting] = ((store_situation == 0) ? store_mage : store_priest);
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	dialog_answer = item_hit;
    }
 	
@@ -2890,7 +2883,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	make_cursor_sword();
 
 	cd_create_dialog(1098,mainPtr);
-	cd_set_pict(1098,2,714 + type);
+	cd_set_pict(1098,2,14 + type,PICT_DLG_TYPE);
 	for (i = 37; i < 75; i++) {
 		cd_add_label(1098,i,"",55);
 		if (i > 62)
@@ -2920,16 +2913,9 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	if (party.help_received[7] == 0) {
 		cd_initial_draw(1098);
 		give_help(7,8,1098);
-		}
-   
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();	
 
 	final_process_dialog(1098);
 
@@ -3061,7 +3047,7 @@ void alch_choice_event_filter (short item_hit)
 		item_hit = (item_hit - 9) / 2;
 		dialog_answer = item_hit;
 		}
-	dialog_not_toast = FALSE;
+	toast_dialog();
 
 }
 
@@ -3087,15 +3073,9 @@ short alch_choice(short pc_num)
 	if (party.help_received[20] == 0) {
 		cd_initial_draw(1047);
 		give_help(20,21,1047);
-		}
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();	
 
 	final_process_dialog(1047);
 	return dialog_answer;
@@ -3108,9 +3088,9 @@ void pc_graphic_event_filter (short item_hit)
 			adven[store_graphic_pc_num].which_graphic = store_pc_graphic;
 			update_pc_graphics();
 			if (store_graphic_mode == 0)
-					dialog_not_toast = FALSE;
+					toast_dialog();
 				else {
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					dialog_answer = TRUE;
 					}
 			break;
@@ -3120,10 +3100,10 @@ void pc_graphic_event_filter (short item_hit)
 			if (store_graphic_mode == 0) {
 				if (adven[store_graphic_pc_num].main_status < 0)
 				   adven[store_graphic_pc_num].main_status = 0;
-					dialog_not_toast = FALSE;
+					toast_dialog();
 				}
 				else {
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					dialog_answer =  TRUE;
 					}
 			break;
@@ -3157,20 +3137,14 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 	cd_create_dialog_parent_num(1050,parent_num);
 
 	for (i = 41; i < 77; i++) 
-		csp(1050,i,800 + i - 41);
+		csp(1050,i, i - 41, PICT_PC_TYPE);
 	for (i = 5; i < 41; i++) {
 		if (store_pc_graphic + 5 == i)
 			cd_set_led(1050,i,1);
 			else cd_set_led(1050,i,0);
-		}
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();	
 	cd_kill_dialog(1050,0);
 
 	if (munch_pc_graphic == TRUE) {
@@ -3184,13 +3158,13 @@ void pc_name_event_filter (short item_hit)
 {
 	Str255 get_text;
 	
-	cd_retrieve_text_edit_str(1051,(char *) get_text);
+	cd_retrieve_text_edit_str(1051,2,(char *) get_text);
 	if ((get_text[0] < 33) || (get_text[0] > 126)) {
 		csit(1051,6,"Must begin with a letter.");
 		}
 		else {
 			sprintf((char *) adven[store_train_pc].name,"%.18s",(char *) get_text);
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			}
 
 }
@@ -3207,15 +3181,9 @@ Boolean pick_pc_name(short pc_num,short parent_num)
 	make_cursor_sword();
 	
 	cd_create_dialog_parent_num(1051,parent_num);
-		
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(1051,0);
 	
@@ -3224,7 +3192,7 @@ Boolean pick_pc_name(short pc_num,short parent_num)
 
 void pick_trapped_monst_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	dialog_answer = item_hit;
 }
 
@@ -3249,15 +3217,9 @@ unsigned char pick_trapped_monst()
 				get_monst = return_monster_template((unsigned char)(party.imprisoned_monst[i]));
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}
-				
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(988,0);
 
 	if (dialog_answer == 1)

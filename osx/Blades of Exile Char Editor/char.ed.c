@@ -27,8 +27,10 @@
 #include "ed.editors.h" 
 #include "ed.action.h" 
 #include "ed.fileio.h" 
-#include "ed.sound.h" 
-#include "dlogtool.h" 
+#include "soundtool.h" 
+#include "dlgtool.h"
+#include "dlgconsts.h"
+#include "graphtool.h"
 
 Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
@@ -55,14 +57,10 @@ EventRecord	event;
 WindowPtr	mainPtr;	
 Handle menu_bar_handle;
 MenuHandle apple_menu,file_menu,reg_menu,extra_menu,edit_menu,items_menu[4];
-Boolean gInBackground = FALSE,play_sounds = TRUE,file_in_mem = FALSE,save_blocked = FALSE;
+Boolean gInBackground = FALSE,file_in_mem = FALSE,save_blocked = FALSE;
 long start_time;
-Boolean dialog_not_toast = TRUE, party_in_scen = FALSE;
+Boolean party_in_scen = FALSE;
 Boolean scen_items_loaded = FALSE;
-
-// Cursors 
-short current_cursor = 120;
-CursHandle sword_curs, boot_curs, key_curs, target_curs;
 
 // Shareware globals
 Boolean registered = TRUE,ed_reg = TRUE;
@@ -82,10 +80,12 @@ unsigned char misc_i[64][64],sfx[64][64];
 unsigned char template_terrain[64][64];
 
 short store_flags[3];
+extern short sword_curs;
 
 town_record_type anim_town;
 tiny_tr_type anim_t_d;
 
+m_pic_index_t m_pic_index[200]; // not used, but the lack of it causes a link error
 stored_items_list_type stored_items[3];
 stored_town_maps_type maps;
 stored_town_maps_type town_maps;
@@ -114,7 +114,6 @@ void handle_reg_menu(int item_hit);
 void handle_extra_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void update_item_menu();
-void load_cursors();
 void set_cursor(CursHandle which_curs);
 void find_quickdraw();
 void check_sys_7();
@@ -123,7 +122,6 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 Boolean verify_restore_quit(short mode);
 void set_up_apple_events();
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 void set_pixel_depth();
 void restore_depth();
 void handle_item_menu(int item_hit);
@@ -154,7 +152,9 @@ int main(void)
 	Initialize();
 	init_main_buttons();
 	Set_up_win();
-	load_cursors();
+	Point p = {0,0};
+	init_graph_tool(redraw_screen,p);
+	init_snd_tool();
 	find_quickdraw();
 	set_pixel_depth();
 	Set_Window_Drag_Bdry();
@@ -189,7 +189,7 @@ int main(void)
 
 	DrawMenuBar();
 		
-	cd_init_dialogs();
+	init_dialogs();
 	
 	/* Multifinder_Present = (NGetTrapAddress(_WaitNextEvent, ToolTrap) != 
 		NGetTrapAddress(_Unimplemented, ToolTrap)); */
@@ -561,7 +561,7 @@ void handle_extra_menu(int item_hit)
 	boat_record_type v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
 	
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,707,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
 		return;
 	}
 	switch(item_hit) {
@@ -597,29 +597,29 @@ void handle_extra_menu(int item_hit)
 			
 
 		case 6:
-			display_strings(20,20,0,0,"Editing party",57,707,0);
+			display_strings(20,20,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
 			for (i = 0; i < 4; i++)
 				party.creature_save[i].which_town = 200;
 			break;
 		case 8: // damage
-			display_strings(20,1,0,0,"Editing party",57,715,0);
+			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 6; i++)
 				adven[i].cur_health = adven[i].max_health;
 			break;
 		case 9: // spell pts
-			display_strings(20,2,0,0,"Editing party",57,715,0);
+			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 6; i++)
 				adven[i].cur_sp = adven[i].max_sp;
 			break;
 		case 10: // raise dead
-			display_strings(20,3,0,0,"Editing party",57,715,0);
+			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 2) || (adven[i].main_status == 3) ||
 					(adven[i].main_status == 4))
 						adven[i].main_status = 1;
 			break;
 		case 11: // conditions
-			display_strings(20,4,0,0,"Editing party",57,715,0);
+			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 6; i++) {
 				adven[i].status[2] = 0;
 				if (adven[i].status[3] < 0)
@@ -635,7 +635,7 @@ void handle_extra_menu(int item_hit)
 			
 		case 13:
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,715,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 				break;
 			}
 			if (FCD(912,0) != 1)
@@ -652,7 +652,7 @@ void handle_edit_menu(int item_hit)
 	short choice,i,j,k;
 
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,707,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
 		return;
 		}
 	if ((ed_reg == FALSE) && (save_blocked == FALSE))
@@ -664,7 +664,7 @@ void handle_edit_menu(int item_hit)
 			 display_alchemy();
 			break;
 		case 2: // all property
-			display_strings(20,6,0,0,"Editing party",57,707,0);
+			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
 			for (i = 0; i < 30; i++) {
 				party.boats[i].property = FALSE;
 				party.horses[i].property = FALSE;
@@ -675,10 +675,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 6: // ouit maps
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,715,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 				break;
 				}
-			display_strings(20,13,0,0,"Editing party",57,715,0);
+			display_strings(20,13,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
 					for (k = 0; k < 48; k++)
@@ -686,10 +686,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 7: // town maps
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,715,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 				break;
 				}
-			display_strings(20,14,0,0,"Editing party",57,715,0);
+			display_strings(20,14,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
@@ -771,7 +771,7 @@ void handle_item_menu(int item_hit)
 	item_record_type store_i;
 	
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,707,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
 		return;
 		}
 	if ((ed_reg == FALSE) && (save_blocked == FALSE))
@@ -800,19 +800,6 @@ void update_item_menu()
 			AppendMenu(item_menu[j],item_name);
 		} 
 	}
-}
-
-void load_cursors()
-{
-	short i,j;
-	
-	sword_curs = GetCursor(120);
-
-	boot_curs = GetCursor(121);
-	key_curs = GetCursor(122);
-	target_curs = GetCursor(124);
-
-	set_cursor(sword_curs);	
 }
 
 void set_cursor(CursHandle which_curs)
@@ -984,73 +971,73 @@ void set_up_apple_events()
 		SysBeep(2);
 }
  
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-{	
-	char chr,chr2;
-	short the_type,wind_hit,item_hit;
-	Handle the_handle = NULL;
-	Rect the_rect,button_rect;
-	Point the_point;
-	CWindowPtr w;
-	RgnHandle updateRgn;
-	
-	dummy_item_hit = 0;
-	
-	switch (event->what) {
-		case updateEvt:
-			w = GetDialogWindow(hDlg);
-			updateRgn = NewRgn();
-			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-			if (EmptyRgn(updateRgn) == TRUE) {
-				return TRUE;
-			}
-			BeginUpdate(GetDialogWindow(hDlg));
-			cd_redraw(hDlg);
-			EndUpdate(GetDialogWindow(hDlg));
-			DrawDialog(hDlg);
-			return TRUE;
-			break;
-		
-		case keyDown:
-			chr = event->message & charCodeMask;
-			chr2 = (char) ((event->message & keyCodeMask) >> 8);
-			switch (chr2) {
-				case 126: chr = 22; break;
-				case 124: chr = 21; break;
-				case 123: chr = 20; break;
-				case 125: chr = 23; break;
-				case 53: chr = 24; break;
-				case 36: chr = 31; break;
-				case 76: chr = 31; break;
-			}
-			// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-			// 25-30  ctrl 1-6  31 - return
-
-			wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
-			break;
-	
-		case mouseDown:
-			the_point = event->where;
-			GlobalToLocal(&the_point);	
-			wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
-			break;
-
-		default: wind_hit = -1; break;
-	}
-	switch (wind_hit) {
-		case -1: break;
-
-		case 917: edit_day_event_filter(item_hit); break;
-		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-		case 991: display_pc_event_filter(item_hit); break;
-		case 996: display_alchemy_event_filter(item_hit); break;
-		case 1010: spend_xp_event_filter (item_hit); break;
-		case 1012: case 947: edit_gold_or_food_event_filter (item_hit); break;
-		case 1013: pick_race_abil_event_filter (item_hit); break;
-		case 1018: select_pc_event_filter (item_hit); break;
-		case 1024: edit_xp_event_filter (item_hit); break;
-		case 1073: give_reg_info_event_filter (item_hit); break;
-		default: fancy_choice_dialog_event_filter (item_hit); break;
-	}
-	return(wind_hit != -1);
-}
+//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+//{	
+//	char chr,chr2;
+//	short the_type,wind_hit,item_hit;
+//	Handle the_handle = NULL;
+//	Rect the_rect,button_rect;
+//	Point the_point;
+//	CWindowPtr w;
+//	RgnHandle updateRgn;
+//	
+//	dummy_item_hit = 0;
+//	
+//	switch (event->what) {
+//		case updateEvt:
+//			w = GetDialogWindow(hDlg);
+//			updateRgn = NewRgn();
+//			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
+//			if (EmptyRgn(updateRgn) == TRUE) {
+//				return TRUE;
+//			}
+//			BeginUpdate(GetDialogWindow(hDlg));
+//			cd_redraw(hDlg);
+//			EndUpdate(GetDialogWindow(hDlg));
+//			DrawDialog(hDlg);
+//			return TRUE;
+//			break;
+//		
+//		case keyDown:
+//			chr = event->message & charCodeMask;
+//			chr2 = (char) ((event->message & keyCodeMask) >> 8);
+//			switch (chr2) {
+//				case 126: chr = 22; break;
+//				case 124: chr = 21; break;
+//				case 123: chr = 20; break;
+//				case 125: chr = 23; break;
+//				case 53: chr = 24; break;
+//				case 36: chr = 31; break;
+//				case 76: chr = 31; break;
+//			}
+//			// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
+//			// 25-30  ctrl 1-6  31 - return
+//
+//			wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
+//			break;
+//	
+//		case mouseDown:
+//			the_point = event->where;
+//			GlobalToLocal(&the_point);	
+//			wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
+//			break;
+//
+//		default: wind_hit = -1; break;
+//	}
+//	switch (wind_hit) {
+//		case -1: break;
+//
+//		case 917: edit_day_event_filter(item_hit); break;
+//		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
+//		case 991: display_pc_event_filter(item_hit); break;
+//		case 996: display_alchemy_event_filter(item_hit); break;
+//		case 1010: spend_xp_event_filter (item_hit); break;
+//		case 1012: case 947: edit_gold_or_food_event_filter (item_hit); break;
+//		case 1013: pick_race_abil_event_filter (item_hit); break;
+//		case 1018: select_pc_event_filter (item_hit); break;
+//		case 1024: edit_xp_event_filter (item_hit); break;
+//		case 1073: give_reg_info_event_filter (item_hit); break;
+//		default: fancy_choice_dialog_event_filter (item_hit); break;
+//	}
+//	return(wind_hit != -1);
+//}

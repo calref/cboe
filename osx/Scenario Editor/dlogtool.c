@@ -237,7 +237,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent)
 	//TextSize(10);
 	ForeColor(blackColor);
 	BackColor(whiteColor);
-	dialog_not_toast = TRUE;
+	untoast_dialog();
 	//DestroyWindow(dlg); //Necesary? Dunno.
 
 /*	if (dlg_parent[free_slot] != NULL) {
@@ -277,7 +277,7 @@ void process_new_window (WindowPtr hDlg) {
 		GetDialogItem( GetDialogFromWindow(hDlg), i + 1, &the_type, &the_handle, &small_rect);
 		if (the_type % 128 == 8) {
 			GetDialogItemText(the_handle,item_str);
-			p2c(item_str);
+			p2cstr(item_str);
 			dlg_highest_item[free_slot]++;
 			str_stored = FALSE;
 			if (strlen((char *)item_str) == 0) {
@@ -490,7 +490,7 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetPortWindowPort( dlg_parent[which_dlg]);
 	if (FrontWindow() != mainPtr)
 		redraw_screen();
-	dialog_not_toast = TRUE;
+	untoast_dialog();
 	return 0;
 }
 
@@ -667,7 +667,7 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 		}
 	GetDialogItem(GetDialogFromWindow(dlgs[dlg_index]), item_num, &the_type, &the_handle, &the_rect);
 	GetDialogItemText(the_handle,store_ptr);
-	p2c(store_ptr);
+	p2cstr(store_ptr);
 	strcpy(str,(char *) store_ptr);
 }
 	
@@ -703,7 +703,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 		SysBeep(50); return ;
 		}
 	strcpy((char *) store_ptr,str);
-	c2p(store_ptr);
+	c2pstr(store_ptr);
 	GetDialogItem(GetDialogFromWindow( dlgs[dlg_index]), item_num, &the_type, &the_handle, &the_rect );
 	SetDialogItemText ( the_handle, store_ptr);	
 }
@@ -721,7 +721,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 		}
 		
 	sprintf((char *) store_ptr,"%d",num);
-	c2p(store_ptr);
+	c2pstr(store_ptr);
 	GetDialogItem( GetDialogFromWindow(dlgs[dlg_index]), item_num, &the_type, &the_handle, &the_rect );
 	SetDialogItemText ( the_handle, store_ptr);	
 }

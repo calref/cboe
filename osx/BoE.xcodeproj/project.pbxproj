@@ -3,22 +3,34 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 44;
 	objects = {
+
+/* Begin PBXAggregateTarget section */
+		91EBE9DA0F9A33A1002356F2 /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 91EBE9F70F9A33D1002356F2 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */,
+				91EBE9E00F9A33A8002356F2 /* PBXTargetDependency */,
+				91EBE9E20F9A33AC002356F2 /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+/* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		2BF04B0B0BF51924006C0831 /* bldsexil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACB0BF51923006C0831 /* bldsexil.c */; };
 		2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACD0BF51923006C0831 /* blx.g.utils.c */; };
 		2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* blxactions.c */; };
 		2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD10BF51923006C0831 /* blxfileio.c */; };
-		2BF04B0F0BF51924006C0831 /* blxgraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* blxgraphics.c */; };
 		2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* blxtown_spec.c */; };
 		2BF04B1C0BF51924006C0831 /* combat.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* combat.c */; };
 		2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* dialogutils.c */; };
-		2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEA0BF51924006C0831 /* dlogtool.c */; };
-		2BF04B1F0BF51924006C0831 /* Exile.sound.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEC0BF51924006C0831 /* Exile.sound.c */; };
 		2BF04B200BF51924006C0831 /* fields.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEE0BF51924006C0831 /* fields.c */; };
-		2BF04B220BF51924006C0831 /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF20BF51924006C0831 /* global.c */; };
 		2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* info.dialogs.c */; };
 		2BF04B240BF51924006C0831 /* item_data.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* item_data.c */; };
 		2BF04B250BF51924006C0831 /* items.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* items.c */; };
@@ -31,18 +43,132 @@
 		2BF04B2D0BF51924006C0831 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* text.c */; };
 		2BF04B2E0BF51924006C0831 /* town.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* town.c */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F09A0F97672700BF5B67 /* dlglowlevel.h */; };
+		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
+		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
+		91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
+		91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
+		91B3EF300F969D7B00BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
+		91B3EF310F969D7B00BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
+		91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */; };
+		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
+		91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */; };
+		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
+		91B3EF480F969F2300BF5B67 /* char.ed.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* char.ed.c */; };
+		91B3EF490F969F2300BF5B67 /* ed.action.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* ed.action.c */; };
+		91B3EF4A0F969F2300BF5B67 /* ed.editors.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* ed.editors.c */; };
+		91B3EF4B0F969F2300BF5B67 /* ed.fileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF080F969BD300BF5B67 /* ed.fileio.c */; };
+		91B3EF4D0F969F2300BF5B67 /* ed.graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */; };
+		91B3EF500F969F3000BF5B67 /* Exiletedit.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */; };
+		91B3EF530F969F3000BF5B67 /* keydlgs.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEE0F969BA700BF5B67 /* keydlgs.c */; };
+		91B3EF540F969F3000BF5B67 /* scenario.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEF0F969BA700BF5B67 /* scenario.c */; };
+		91B3EF560F969F3000BF5B67 /* tactions.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF10F969BA700BF5B67 /* tactions.c */; };
+		91B3EF570F969F3000BF5B67 /* tfileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* tfileio.c */; };
+		91B3EF590F969F3000BF5B67 /* townout.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* townout.c */; };
+		91B3EF5A0F969F3000BF5B67 /* buttonmg.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* buttonmg.c */; };
+		91B3EF5B0F969F3000BF5B67 /* dialogutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* dialogutils.c */; };
+		91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
+		91B3F0810F975CC400BF5B67 /* dlgtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F0610F96D25200BF5B67 /* dlgtool.h */; };
+		91B3F0820F975CC900BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91B3F0850F975D0E00BF5B67 /* dlgconsts.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F0840F975D0E00BF5B67 /* dlgconsts.h */; };
+		91B3F09D0F97672700BF5B67 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
+		91B3F10B0F9779C300BF5B67 /* graphtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F1090F9779C300BF5B67 /* graphtool.h */; };
+		91B3F10C0F9779C300BF5B67 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
+		91B3F1100F9779D000BF5B67 /* soundtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F10E0F9779D000BF5B67 /* soundtool.h */; };
+		91B3F1110F9779D000BF5B67 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
+		91B3F1120F9779E100BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		91B3F11F0F97801F00BF5B67 /* mathutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F11D0F97801F00BF5B67 /* mathutil.h */; };
+		91B3F1200F97801F00BF5B67 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
+		91B3F1850F97894A00BF5B67 /* tGraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* tGraphics.c */; };
 		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
-		91D634570F8FD78D00674AB3 /* Blades of Exile-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */; };
 		91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
 		91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
 		91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
 		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
 		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
 		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
+		91EBE6D90F9A15BD002356F2 /* blxgraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* blxgraphics.c */; };
+		91EBE8AB0F9A2BE1002356F2 /* loc_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			remoteInfo = DlogTool;
+		};
+		91B3F0F60F97786F00BF5B67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3F0790F975C7100BF5B67;
+			remoteInfo = DlogTool;
+		};
+		91B3F1070F9779A800BF5B67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3F1030F97799300BF5B67;
+			remoteInfo = GrpSndTool;
+		};
+		91E830520F99261F00810708 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3F0790F975C7100BF5B67;
+			remoteInfo = DlogTool;
+		};
+		91EBE9DD0F9A33A6002356F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2BF04AC00BF518D4006C0831;
+			remoteInfo = "Blades of Exile";
+		};
+		91EBE9DF0F9A33A8002356F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3EF170F969C2200BF5B67;
+			remoteInfo = "Blades of Exile Character Editor";
+		};
+		91EBE9E10F9A33AC002356F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3EF3E0F969F0000BF5B67;
+			remoteInfo = "BoE Scenario Editor";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		91B3EF2C0F969D4700BF5B67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor";
+			dstSubfolderSpec = 16;
+			files = (
+				91B3EF300F969D7B00BF5B67 /* Blades of Exile Graphics in CopyFiles */,
+				91B3EF310F969D7B00BF5B67 /* Blades of Exile Sounds in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF320F969D9900BF5B67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor";
+			dstSubfolderSpec = 16;
+			files = (
+				91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */,
+				91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91D635A30F90E77C00674AB3 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -80,15 +206,10 @@
 		2BF04AE70BF51924006C0831 /* combat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = combat.h; sourceTree = "<group>"; };
 		2BF04AE80BF51924006C0831 /* dialogutils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dialogutils.c; sourceTree = "<group>"; };
 		2BF04AE90BF51924006C0831 /* dialogutils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dialogutils.h; sourceTree = "<group>"; };
-		2BF04AEA0BF51924006C0831 /* dlogtool.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dlogtool.c; sourceTree = "<group>"; };
-		2BF04AEB0BF51924006C0831 /* dlogtool.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dlogtool.h; sourceTree = "<group>"; };
-		2BF04AEC0BF51924006C0831 /* Exile.sound.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = Exile.sound.c; sourceTree = "<group>"; };
-		2BF04AED0BF51924006C0831 /* Exile.sound.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Exile.sound.h; sourceTree = "<group>"; };
 		2BF04AEE0BF51924006C0831 /* fields.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fields.c; sourceTree = "<group>"; };
 		2BF04AEF0BF51924006C0831 /* fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fields.h; sourceTree = "<group>"; };
 		2BF04AF00BF51924006C0831 /* gamma.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gamma.c; sourceTree = "<group>"; };
 		2BF04AF10BF51924006C0831 /* gamma.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = gamma.h; sourceTree = "<group>"; };
-		2BF04AF20BF51924006C0831 /* global.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = global.c; sourceTree = "<group>"; };
 		2BF04AF30BF51924006C0831 /* global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
 		2BF04AF40BF51924006C0831 /* info.dialogs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = info.dialogs.c; sourceTree = "<group>"; };
 		2BF04AF50BF51924006C0831 /* info.dialogs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = info.dialogs.h; sourceTree = "<group>"; };
@@ -105,16 +226,74 @@
 		2BF04B000BF51924006C0831 /* party.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = party.c; sourceTree = "<group>"; };
 		2BF04B010BF51924006C0831 /* party.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
 		2BF04B020BF51924006C0831 /* powerpc.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = powerpc.c; sourceTree = "<group>"; };
-		2BF04B030BF51924006C0831 /* specials.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = specials.c; sourceTree = "<group>"; };
+		2BF04B030BF51924006C0831 /* specials.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = specials.c; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B040BF51924006C0831 /* specials.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = specials.h; sourceTree = "<group>"; };
 		2BF04B050BF51924006C0831 /* startup.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = startup.c; sourceTree = "<group>"; };
 		2BF04B060BF51924006C0831 /* startup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = startup.h; sourceTree = "<group>"; };
 		2BF04B070BF51924006C0831 /* text.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = text.c; sourceTree = "<group>"; };
 		2BF04B080BF51924006C0831 /* text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
-		2BF04B090BF51924006C0831 /* town.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = town.c; sourceTree = "<group>"; };
+		2BF04B090BF51924006C0831 /* town.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = town.c; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = town.h; sourceTree = "<group>"; };
 		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		91B3E8A50F938FFE00BF5B67 /* consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = consts.h; sourceTree = "<group>"; };
+		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
+		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
+		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "BoE Scenario Editor.icns"; path = "Scenario Editor/BoE Scenario Editor.icns"; sourceTree = "<group>"; };
+		91B3EEDD0F969BA700BF5B67 /* fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileio.h; path = "Scenario Editor/fileio.h"; sourceTree = "<group>"; };
+		91B3EEDE0F969BA700BF5B67 /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = global.h; path = "Scenario Editor/global.h"; sourceTree = "<group>"; };
+		91B3EEDF0F969BA700BF5B67 /* itemlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = itemlist.h; path = "Scenario Editor/itemlist.h"; sourceTree = "<group>"; };
+		91B3EEE00F969BA700BF5B67 /* keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keydlgs.h; path = "Scenario Editor/keydlgs.h"; sourceTree = "<group>"; };
+		91B3EEE10F969BA700BF5B67 /* scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scenario.h; path = "Scenario Editor/scenario.h"; sourceTree = "<group>"; };
+		91B3EEE30F969BA700BF5B67 /* tactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tactions.h; path = "Scenario Editor/tactions.h"; sourceTree = "<group>"; };
+		91B3EEE40F969BA700BF5B67 /* tfileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tfileio.h; path = "Scenario Editor/tfileio.h"; sourceTree = "<group>"; };
+		91B3EEE50F969BA700BF5B67 /* tGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tGraphics.h; path = "Scenario Editor/tGraphics.h"; sourceTree = "<group>"; };
+		91B3EEE60F969BA700BF5B67 /* townout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = townout.h; path = "Scenario Editor/townout.h"; sourceTree = "<group>"; };
+		91B3EEE70F969BA700BF5B67 /* buttonmg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buttonmg.h; path = "Scenario Editor/buttonmg.h"; sourceTree = "<group>"; };
+		91B3EEE80F969BA700BF5B67 /* dialogutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialogutils.h; path = "Scenario Editor/dialogutils.h"; sourceTree = "<group>"; };
+		91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Exiletedit.c; path = "Scenario Editor/Exiletedit.c"; sourceTree = "<group>"; };
+		91B3EEEC0F969BA700BF5B67 /* fileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fileio.c; path = "Scenario Editor/fileio.c"; sourceTree = "<group>"; };
+		91B3EEEE0F969BA700BF5B67 /* keydlgs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keydlgs.c; path = "Scenario Editor/keydlgs.c"; sourceTree = "<group>"; };
+		91B3EEEF0F969BA700BF5B67 /* scenario.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scenario.c; path = "Scenario Editor/scenario.c"; sourceTree = "<group>"; };
+		91B3EEF10F969BA700BF5B67 /* tactions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tactions.c; path = "Scenario Editor/tactions.c"; sourceTree = "<group>"; };
+		91B3EEF20F969BA700BF5B67 /* tfileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tfileio.c; path = "Scenario Editor/tfileio.c"; sourceTree = "<group>"; };
+		91B3EEF30F969BA700BF5B67 /* tGraphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tGraphics.c; path = "Scenario Editor/tGraphics.c"; sourceTree = "<group>"; };
+		91B3EEF40F969BA700BF5B67 /* townout.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = townout.c; path = "Scenario Editor/townout.c"; sourceTree = "<group>"; };
+		91B3EEF50F969BA700BF5B67 /* buttonmg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buttonmg.c; path = "Scenario Editor/buttonmg.c"; sourceTree = "<group>"; };
+		91B3EEF60F969BA700BF5B67 /* dialogutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dialogutils.c; path = "Scenario Editor/dialogutils.c"; sourceTree = "<group>"; };
+		91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = viewdlog.cpp; path = misc/viewdlog.cpp; sourceTree = "<group>"; };
+		91B3EEFC0F969BD300BF5B67 /* ed.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.action.h; path = "Blades of Exile Char Editor/ed.action.h"; sourceTree = "<group>"; };
+		91B3EEFD0F969BD300BF5B67 /* ed.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.editors.h; path = "Blades of Exile Char Editor/ed.editors.h"; sourceTree = "<group>"; };
+		91B3EEFE0F969BD300BF5B67 /* ed.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.fileio.h; path = "Blades of Exile Char Editor/ed.fileio.h"; sourceTree = "<group>"; };
+		91B3EEFF0F969BD300BF5B67 /* ed.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.global.h; path = "Blades of Exile Char Editor/ed.global.h"; sourceTree = "<group>"; };
+		91B3EF000F969BD300BF5B67 /* ed.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.graphics.h; path = "Blades of Exile Char Editor/ed.graphics.h"; sourceTree = "<group>"; };
+		91B3EF030F969BD300BF5B67 /* item_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = item_data.h; path = "Blades of Exile Char Editor/item_data.h"; sourceTree = "<group>"; };
+		91B3EF050F969BD300BF5B67 /* char.ed.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = char.ed.c; path = "Blades of Exile Char Editor/char.ed.c"; sourceTree = "<group>"; };
+		91B3EF060F969BD300BF5B67 /* ed.action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.action.c; path = "Blades of Exile Char Editor/ed.action.c"; sourceTree = "<group>"; };
+		91B3EF070F969BD300BF5B67 /* ed.editors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.editors.c; path = "Blades of Exile Char Editor/ed.editors.c"; sourceTree = "<group>"; };
+		91B3EF080F969BD300BF5B67 /* ed.fileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.fileio.c; path = "Blades of Exile Char Editor/ed.fileio.c"; sourceTree = "<group>"; };
+		91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.graphics.c; path = "Blades of Exile Char Editor/ed.graphics.c"; sourceTree = "<group>"; };
+		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = "Blades of Exile Char Editor/BoECharEd.icns"; sourceTree = "<group>"; };
+		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = bladespced.rsrc; path = "Blades of Exile Char Editor/bladespced.rsrc"; sourceTree = "<group>"; };
+		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Blades of Exile Character Editor-Info.plist"; path = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
+		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "Scenario Editor/Blades of Exile Base"; sourceTree = "<group>"; };
+		91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "Scenario Editor/Blades of Exile Graphics"; sourceTree = "<group>"; };
+		91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "Scenario Editor/Blades of Exile Sounds"; sourceTree = "<group>"; };
+		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		91B3F0610F96D25200BF5B67 /* dlgtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgtool.h; path = misc/dlgtool.h; sourceTree = "<group>"; };
+		91B3F0620F96D25200BF5B67 /* dlgtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgtool.cpp; path = misc/dlgtool.cpp; sourceTree = "<group>"; };
+		91B3F0670F96D29600BF5B67 /* ViewDlog-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ViewDlog-Info.plist"; path = "misc/ViewDlog-Info.plist"; sourceTree = "<group>"; };
+		91B3F07A0F975C7100BF5B67 /* libDlogTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDlogTool.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		91B3F0840F975D0E00BF5B67 /* dlgconsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgconsts.h; path = misc/dlgconsts.h; sourceTree = "<group>"; };
+		91B3F09A0F97672700BF5B67 /* dlglowlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlglowlevel.h; path = misc/dlglowlevel.h; sourceTree = "<group>"; };
+		91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlglowlevel.cpp; path = misc/dlglowlevel.cpp; sourceTree = "<group>"; wrapsLines = 0; };
+		91B3F1040F97799300BF5B67 /* libGrpSndTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGrpSndTool.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = graphtool.h; path = misc/graphtool.h; sourceTree = "<group>"; };
+		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graphtool.cpp; path = misc/graphtool.cpp; sourceTree = "<group>"; };
+		91B3F10E0F9779D000BF5B67 /* soundtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soundtool.h; path = misc/soundtool.h; sourceTree = "<group>"; };
+		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soundtool.cpp; path = misc/soundtool.cpp; sourceTree = "<group>"; };
+		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mathutil.h; path = misc/mathutil.h; sourceTree = "<group>"; };
+		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathutil.cpp; path = misc/mathutil.cpp; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -122,6 +301,8 @@
 		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
 		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
 		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
+		91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loc_utils.c; path = "Scenario Editor/loc_utils.c"; sourceTree = "<group>"; };
+		91EBE8AC0F9A2BF2002356F2 /* loc_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loc_utils.h; path = "Scenario Editor/loc_utils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,15 +314,51 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91B3EF160F969C2200BF5B67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF3D0F969F0000BF5B67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3F0780F975C7100BF5B67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F0820F975CC900BF5B67 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3F1020F97799300BF5B67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F1120F9779E100BF5B67 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2BF04A9F0BF51845006C0831 = {
 			isa = PBXGroup;
 			children = (
-				91D62F2E0F8EB80200674AB3 /* rsrc */,
-				91D62F2D0F8EB7BA00674AB3 /* headers */,
-				91D62F2C0F8EB7AB00674AB3 /* src */,
+				91B3F0FF0F97797200BF5B67 /* GrpSndTool */,
+				91B3EF5F0F969F4900BF5B67 /* DlgTool */,
+				91B3EF5E0F969F3D00BF5B67 /* ViewDlog */,
+				91B3EF380F969E4A00BF5B67 /* Game */,
+				91B3EEF90F969BBD00BF5B67 /* CharEd */,
+				91B3EECD0F969B7000BF5B67 /* ScenEd */,
+				91B3EF220F969CA300BF5B67 /* Files */,
 				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
 				2BF04AB30BF5187A006C0831 /* Products */,
 			);
@@ -151,8 +368,168 @@
 			isa = PBXGroup;
 			children = (
 				2BF04AC10BF518D4006C0831 /* Blades of Exile.app */,
+				91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */,
+				91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */,
+				91B3F07A0F975C7100BF5B67 /* libDlogTool.a */,
+				91B3F1040F97799300BF5B67 /* libGrpSndTool.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EEEA0F969BA700BF5B67 /* src */,
+				91B3EEDC0F969BA700BF5B67 /* headers */,
+				91B3EED50F969BA700BF5B67 /* rsrc */,
+			);
+			name = ScenEd;
+			sourceTree = "<group>";
+		};
+		91B3EED50F969BA700BF5B67 /* rsrc */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */,
+				91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */,
+				91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */,
+			);
+			name = rsrc;
+			sourceTree = "<group>";
+		};
+		91B3EEDC0F969BA700BF5B67 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				91EBE8AC0F9A2BF2002356F2 /* loc_utils.h */,
+				91B3EEDD0F969BA700BF5B67 /* fileio.h */,
+				91B3EEDE0F969BA700BF5B67 /* global.h */,
+				91B3EEDF0F969BA700BF5B67 /* itemlist.h */,
+				91B3EEE00F969BA700BF5B67 /* keydlgs.h */,
+				91B3EEE10F969BA700BF5B67 /* scenario.h */,
+				91B3EEE30F969BA700BF5B67 /* tactions.h */,
+				91B3EEE40F969BA700BF5B67 /* tfileio.h */,
+				91B3EEE50F969BA700BF5B67 /* tGraphics.h */,
+				91B3EEE60F969BA700BF5B67 /* townout.h */,
+				91B3EEE70F969BA700BF5B67 /* buttonmg.h */,
+				91B3EEE80F969BA700BF5B67 /* dialogutils.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		91B3EEEA0F969BA700BF5B67 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */,
+				91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */,
+				91B3EEEC0F969BA700BF5B67 /* fileio.c */,
+				91B3EEEE0F969BA700BF5B67 /* keydlgs.c */,
+				91B3EEEF0F969BA700BF5B67 /* scenario.c */,
+				91B3EEF10F969BA700BF5B67 /* tactions.c */,
+				91B3EEF20F969BA700BF5B67 /* tfileio.c */,
+				91B3EEF30F969BA700BF5B67 /* tGraphics.c */,
+				91B3EEF40F969BA700BF5B67 /* townout.c */,
+				91B3EEF50F969BA700BF5B67 /* buttonmg.c */,
+				91B3EEF60F969BA700BF5B67 /* dialogutils.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		91B3EEF90F969BBD00BF5B67 /* CharEd */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EF0D0F969BD300BF5B67 /* rsrc */,
+				91B3EF040F969BD300BF5B67 /* src */,
+				91B3EEFB0F969BD300BF5B67 /* headers */,
+			);
+			name = CharEd;
+			sourceTree = "<group>";
+		};
+		91B3EEFB0F969BD300BF5B67 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EEFC0F969BD300BF5B67 /* ed.action.h */,
+				91B3EEFD0F969BD300BF5B67 /* ed.editors.h */,
+				91B3EEFE0F969BD300BF5B67 /* ed.fileio.h */,
+				91B3EEFF0F969BD300BF5B67 /* ed.global.h */,
+				91B3EF000F969BD300BF5B67 /* ed.graphics.h */,
+				91B3EF030F969BD300BF5B67 /* item_data.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		91B3EF040F969BD300BF5B67 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EF050F969BD300BF5B67 /* char.ed.c */,
+				91B3EF060F969BD300BF5B67 /* ed.action.c */,
+				91B3EF070F969BD300BF5B67 /* ed.editors.c */,
+				91B3EF080F969BD300BF5B67 /* ed.fileio.c */,
+				91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		91B3EF0D0F969BD300BF5B67 /* rsrc */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
+				91B3EF120F969BD300BF5B67 /* bladespced.rsrc */,
+				91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */,
+			);
+			name = rsrc;
+			sourceTree = "<group>";
+		};
+		91B3EF220F969CA300BF5B67 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
+				91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */,
+				91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
+		91B3EF380F969E4A00BF5B67 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				91D62F2C0F8EB7AB00674AB3 /* src */,
+				91D62F2D0F8EB7BA00674AB3 /* headers */,
+				91D62F2E0F8EB80200674AB3 /* rsrc */,
+			);
+			name = Game;
+			sourceTree = "<group>";
+		};
+		91B3EF5E0F969F3D00BF5B67 /* ViewDlog */ = {
+			isa = PBXGroup;
+			children = (
+				91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */,
+				91B3F0670F96D29600BF5B67 /* ViewDlog-Info.plist */,
+			);
+			name = ViewDlog;
+			sourceTree = "<group>";
+		};
+		91B3EF5F0F969F4900BF5B67 /* DlgTool */ = {
+			isa = PBXGroup;
+			children = (
+				91B3F0610F96D25200BF5B67 /* dlgtool.h */,
+				91B3F0620F96D25200BF5B67 /* dlgtool.cpp */,
+				91B3F0840F975D0E00BF5B67 /* dlgconsts.h */,
+				91B3F09A0F97672700BF5B67 /* dlglowlevel.h */,
+				91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */,
+			);
+			name = DlgTool;
+			sourceTree = "<group>";
+		};
+		91B3F0FF0F97797200BF5B67 /* GrpSndTool */ = {
+			isa = PBXGroup;
+			children = (
+				91B3F1090F9779C300BF5B67 /* graphtool.h */,
+				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
+				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
+				91B3F10F0F9779D000BF5B67 /* soundtool.cpp */,
+				91B3F11D0F97801F00BF5B67 /* mathutil.h */,
+				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
+			);
+			name = GrpSndTool;
 			sourceTree = "<group>";
 		};
 		91D62F2C0F8EB7AB00674AB3 /* src */ = {
@@ -166,11 +543,8 @@
 				2BF04AD50BF51923006C0831 /* blxtown_spec.c */,
 				2BF04AE60BF51924006C0831 /* combat.c */,
 				2BF04AE80BF51924006C0831 /* dialogutils.c */,
-				2BF04AEA0BF51924006C0831 /* dlogtool.c */,
-				2BF04AEC0BF51924006C0831 /* Exile.sound.c */,
 				2BF04AEE0BF51924006C0831 /* fields.c */,
 				2BF04AF00BF51924006C0831 /* gamma.c */,
-				2BF04AF20BF51924006C0831 /* global.c */,
 				2BF04AF40BF51924006C0831 /* info.dialogs.c */,
 				2BF04AF60BF51924006C0831 /* item_data.c */,
 				2BF04AF80BF51924006C0831 /* items.c */,
@@ -197,8 +571,6 @@
 				2BF04AD60BF51923006C0831 /* blxtown_spec.h */,
 				2BF04AE70BF51924006C0831 /* combat.h */,
 				2BF04AE90BF51924006C0831 /* dialogutils.h */,
-				2BF04AEB0BF51924006C0831 /* dlogtool.h */,
-				2BF04AED0BF51924006C0831 /* Exile.sound.h */,
 				2BF04AEF0BF51924006C0831 /* fields.h */,
 				2BF04AF10BF51924006C0831 /* gamma.h */,
 				2BF04AF30BF51924006C0831 /* global.h */,
@@ -245,6 +617,29 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		91B3F0760F975C7100BF5B67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F0810F975CC400BF5B67 /* dlgtool.h in Headers */,
+				91B3F0850F975D0E00BF5B67 /* dlgconsts.h in Headers */,
+				91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3F1000F97799300BF5B67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F10B0F9779C300BF5B67 /* graphtool.h in Headers */,
+				91B3F1100F9779D000BF5B67 /* soundtool.h in Headers */,
+				91B3F11F0F97801F00BF5B67 /* mathutil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		2BF04AC00BF518D4006C0831 /* Blades of Exile */ = {
 			isa = PBXNativeTarget;
@@ -252,23 +647,100 @@
 			buildPhases = (
 				2BF04ABD0BF518D4006C0831 /* Resources */,
 				91D635A30F90E77C00674AB3 /* CopyFiles */,
+				91B3EF2C0F969D4700BF5B67 /* CopyFiles */,
 				2BF04ABE0BF518D4006C0831 /* Sources */,
 				2BF04ABF0BF518D4006C0831 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				91E830530F99261F00810708 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile";
 			productName = "Blades of Exile";
 			productReference = 2BF04AC10BF518D4006C0831 /* Blades of Exile.app */;
 			productType = "com.apple.product-type.application";
 		};
+		91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91B3EF1D0F969C2400BF5B67 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */;
+			buildPhases = (
+				91B3EF140F969C2200BF5B67 /* Resources */,
+				91B3EF320F969D9900BF5B67 /* CopyFiles */,
+				91B3EF150F969C2200BF5B67 /* Sources */,
+				91B3EF160F969C2200BF5B67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				91278CAE0F9A525D007B0D52 /* PBXTargetDependency */,
+			);
+			name = "Blades of Exile Character Editor";
+			productName = "Blades of Exile Character Editor";
+			productReference = 91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91B3EF440F969F0100BF5B67 /* Build configuration list for PBXNativeTarget "BoE Scenario Editor" */;
+			buildPhases = (
+				91B3EF3B0F969F0000BF5B67 /* Resources */,
+				91B3EF3C0F969F0000BF5B67 /* Sources */,
+				91B3EF3D0F969F0000BF5B67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				91B3F0F70F97786F00BF5B67 /* PBXTargetDependency */,
+			);
+			name = "BoE Scenario Editor";
+			productName = "BoE Scenario Editor";
+			productReference = 91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		91B3F0790F975C7100BF5B67 /* DlogTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91B3F07E0F975CA500BF5B67 /* Build configuration list for PBXNativeTarget "DlogTool" */;
+			buildPhases = (
+				91B3F0760F975C7100BF5B67 /* Headers */,
+				91B3F0770F975C7100BF5B67 /* Sources */,
+				91B3F0780F975C7100BF5B67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				91B3F1080F9779A800BF5B67 /* PBXTargetDependency */,
+			);
+			name = DlogTool;
+			productName = DlogTool;
+			productReference = 91B3F07A0F975C7100BF5B67 /* libDlogTool.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		91B3F1030F97799300BF5B67 /* GrpSndTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91B3F10D0F9779C300BF5B67 /* Build configuration list for PBXNativeTarget "GrpSndTool" */;
+			buildPhases = (
+				91B3F1000F97799300BF5B67 /* Headers */,
+				91B3F1010F97799300BF5B67 /* Sources */,
+				91B3F1020F97799300BF5B67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GrpSndTool;
+			productName = GrpSndTool;
+			productReference = 91B3F1040F97799300BF5B67 /* libGrpSndTool.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		2BF04AA10BF51845006C0831 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
 			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 0;
@@ -277,7 +749,12 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				91B3F1030F97799300BF5B67 /* GrpSndTool */,
+				91B3F0790F975C7100BF5B67 /* DlogTool */,
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
+				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
+				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
+				91EBE9DA0F9A33A1002356F2 /* All */,
 			);
 		};
 /* End PBXProject section */
@@ -289,7 +766,26 @@
 			files = (
 				91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */,
 				91D634560F8FD77800674AB3 /* BoE.icns in Resources */,
-				91D634570F8FD78D00674AB3 /* Blades of Exile-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF140F969C2200BF5B67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */,
+				91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */,
+				91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF3B0F969F0000BF5B67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */,
+				91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */,
+				91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,14 +800,10 @@
 				2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */,
 				2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */,
 				2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */,
-				2BF04B0F0BF51924006C0831 /* blxgraphics.c in Sources */,
 				2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */,
 				2BF04B1C0BF51924006C0831 /* combat.c in Sources */,
 				2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */,
-				2BF04B1E0BF51924006C0831 /* dlogtool.c in Sources */,
-				2BF04B1F0BF51924006C0831 /* Exile.sound.c in Sources */,
 				2BF04B200BF51924006C0831 /* fields.c in Sources */,
-				2BF04B220BF51924006C0831 /* global.c in Sources */,
 				2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */,
 				2BF04B240BF51924006C0831 /* item_data.c in Sources */,
 				2BF04B250BF51924006C0831 /* items.c in Sources */,
@@ -323,10 +815,97 @@
 				2BF04B2C0BF51924006C0831 /* startup.c in Sources */,
 				2BF04B2D0BF51924006C0831 /* text.c in Sources */,
 				2BF04B2E0BF51924006C0831 /* town.c in Sources */,
+				91EBE6D90F9A15BD002356F2 /* blxgraphics.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF150F969C2200BF5B67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF480F969F2300BF5B67 /* char.ed.c in Sources */,
+				91B3EF490F969F2300BF5B67 /* ed.action.c in Sources */,
+				91B3EF4A0F969F2300BF5B67 /* ed.editors.c in Sources */,
+				91B3EF4B0F969F2300BF5B67 /* ed.fileio.c in Sources */,
+				91B3EF4D0F969F2300BF5B67 /* ed.graphics.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3EF3C0F969F0000BF5B67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3EF500F969F3000BF5B67 /* Exiletedit.c in Sources */,
+				91B3EF530F969F3000BF5B67 /* keydlgs.c in Sources */,
+				91B3EF540F969F3000BF5B67 /* scenario.c in Sources */,
+				91B3EF560F969F3000BF5B67 /* tactions.c in Sources */,
+				91B3EF570F969F3000BF5B67 /* tfileio.c in Sources */,
+				91B3EF590F969F3000BF5B67 /* townout.c in Sources */,
+				91B3EF5A0F969F3000BF5B67 /* buttonmg.c in Sources */,
+				91B3EF5B0F969F3000BF5B67 /* dialogutils.c in Sources */,
+				91B3F1850F97894A00BF5B67 /* tGraphics.c in Sources */,
+				91EBE8AB0F9A2BE1002356F2 /* loc_utils.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3F0770F975C7100BF5B67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */,
+				91B3F09D0F97672700BF5B67 /* dlglowlevel.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91B3F1010F97799300BF5B67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91B3F10C0F9779C300BF5B67 /* graphtool.cpp in Sources */,
+				91B3F1110F9779D000BF5B67 /* soundtool.cpp in Sources */,
+				91B3F1200F97801F00BF5B67 /* mathutil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		91278CAE0F9A525D007B0D52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			targetProxy = 91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */;
+		};
+		91B3F0F70F97786F00BF5B67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			targetProxy = 91B3F0F60F97786F00BF5B67 /* PBXContainerItemProxy */;
+		};
+		91B3F1080F9779A800BF5B67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3F1030F97799300BF5B67 /* GrpSndTool */;
+			targetProxy = 91B3F1070F9779A800BF5B67 /* PBXContainerItemProxy */;
+		};
+		91E830530F99261F00810708 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			targetProxy = 91E830520F99261F00810708 /* PBXContainerItemProxy */;
+		};
+		91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2BF04AC00BF518D4006C0831 /* Blades of Exile */;
+			targetProxy = 91EBE9DD0F9A33A6002356F2 /* PBXContainerItemProxy */;
+		};
+		91EBE9E00F9A33A8002356F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */;
+			targetProxy = 91EBE9DF0F9A33A8002356F2 /* PBXContainerItemProxy */;
+		};
+		91EBE9E20F9A33AC002356F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */;
+			targetProxy = 91EBE9E10F9A33AC002356F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2BF04AA30BF51845006C0831 /* Debug */ = {
@@ -351,7 +930,8 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
@@ -369,8 +949,11 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_ONE_BYTE_BOOL = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
@@ -381,10 +964,12 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT = "$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/";
+				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				WARNING_CFLAGS = "float-equal";
 			};
 			name = Release;
 		};
@@ -404,9 +989,12 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
+				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile";
 				WRAPPER_EXTENSION = app;
@@ -428,12 +1016,290 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		91B3EF1B0F969C2300BF5B67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile Character Editor";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		91B3EF1C0F969C2300BF5B67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Blades of Exile Character Editor";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		91B3EF420F969F0100BF5B67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "Blades of Exile";
+				PRODUCT_NAME = "BoE Scenario Editor";
+				SDKROOT = "";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		91B3EF430F969F0100BF5B67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				OTHER_CFLAGS = "-fpack-struct=2";
+				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "BoE Scenario Editor";
+				SDKROOT = "";
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		91B3F07B0F975C7300BF5B67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = misc;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				PRODUCT_NAME = DlogTool;
+				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		91B3F07C0F975C7300BF5B67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = misc;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				PRODUCT_NAME = DlogTool;
+				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		91B3F1050F97799300BF5B67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = misc;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				PRODUCT_NAME = GrpSndTool;
+				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		91B3F1060F97799300BF5B67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = ppc;
+				CONFIGURATION_BUILD_DIR = misc;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				PRODUCT_NAME = GrpSndTool;
+				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		91EBE9DB0F9A33A1002356F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = All;
+			};
+			name = Debug;
+		};
+		91EBE9DC0F9A33A1002356F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = All;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -455,6 +1321,51 @@
 			buildConfigurations = (
 				2BF04AC50BF518D4006C0831 /* Debug */,
 				2BF04AC60BF518D4006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91B3EF1D0F969C2400BF5B67 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B3EF1B0F969C2300BF5B67 /* Debug */,
+				91B3EF1C0F969C2300BF5B67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91B3EF440F969F0100BF5B67 /* Build configuration list for PBXNativeTarget "BoE Scenario Editor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B3EF420F969F0100BF5B67 /* Debug */,
+				91B3EF430F969F0100BF5B67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91B3F07E0F975CA500BF5B67 /* Build configuration list for PBXNativeTarget "DlogTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B3F07B0F975C7300BF5B67 /* Debug */,
+				91B3F07C0F975C7300BF5B67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91B3F10D0F9779C300BF5B67 /* Build configuration list for PBXNativeTarget "GrpSndTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B3F1050F97799300BF5B67 /* Debug */,
+				91B3F1060F97799300BF5B67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91EBE9F70F9A33D1002356F2 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91EBE9DB0F9A33A1002356F2 /* Debug */,
+				91EBE9DC0F9A33A1002356F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

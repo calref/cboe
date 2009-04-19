@@ -2,18 +2,20 @@
 #include <stdio.h>
 #include "string.h"
 #include "Global.h"
+#include "graphtool.h"
 #include "tGraphics.h"
 #include "dialogutils.h"
 #include "itemlist.h"
 #include "scenario.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
+#include "dlgconsts.h"
 #include "keydlgs.h"
 #include "townout.h"
 #include "tfileio.h"
 #include "tactions.h"
 
 extern short cen_x, cen_y, overall_mode,cur_town;
-extern Boolean mouse_button_held,dialog_not_toast;
+extern Boolean mouse_button_held;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
 extern town_record_type town;
 extern big_tr_type t_d;
@@ -25,7 +27,6 @@ extern scenario_data_type scenario;
 extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
-extern pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 extern location cur_out;
 
 short store_which_ter;
@@ -972,7 +973,7 @@ void put_ter_info_in_dlog()
 	get_str(str,21,80 + store_ter.special);
 	csit(813,68,(char *) str);
 	if (store_ter.picture >= 1000)
-		csp(813,14,0,PICT_BLANK_TYPE);
+		csp(813,14,store_ter.picture % 1000,PICT_CUSTOM_TYPE + PICT_TER_TYPE);
 	else if (store_ter.picture >= 400)
 		csp(813,14,store_ter.picture - 400,PICT_TER_ANIM_TYPE);
 	else csp(813,14,store_ter.picture,PICT_TER_TYPE);
@@ -985,11 +986,12 @@ Boolean save_ter_info()
 	
 	
 	store_ter.picture = CDGN(813,5);
-	if ((store_ter.picture < 0) ||
-		((store_ter.picture > 413) && (store_ter.picture < 1000))) {
+	if  ((store_ter.picture < 0) ||
+		((store_ter.picture > PICT_N_TER) && (store_ter.picture < 400)) ||
+		((store_ter.picture > 400 + PICT_N_TER_ANIM) && (store_ter.picture < 1000))) {
 			give_error("Picture number isn't in the proper range.","",813);
 			return FALSE;
-			}
+	}
 	
 	if (store_which_ter > 90) {
 	store_ter.blockage = cd_get_led_range(813,19,24);
@@ -1044,10 +1046,10 @@ void edit_ter_type_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 9:
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 62:
 			if (save_ter_info() == TRUE)
-				 dialog_not_toast = FALSE; break;
+				 toast_dialog(); break;
 		case 10:
 			if (save_ter_info() == FALSE) break;
 			store_which_ter--;
@@ -1074,7 +1076,7 @@ void edit_ter_type_event_filter (short item_hit)
 			else break;
 			CDSN(813,5,store_ter.picture);
 			if (store_ter.picture >= 1000)
-				csp(813,14,0,PICT_BLANK_TYPE);
+				csp(813,14,store_ter.picture % 1000,PICT_CUSTOM_TYPE + PICT_TER_TYPE);
 			else if (store_ter.picture >= 400)
 				csp(813,14,store_ter.picture - 400,PICT_TER_ANIM_TYPE);
 			else csp(813,14,store_ter.picture,PICT_TER_TYPE);
@@ -1123,9 +1125,8 @@ short edit_ter_type(short which_ter)
 		cd_add_label(813,19 + i,blocked_strs[i],57);
 	cd_attach_key(813,10,0);
 	cd_attach_key(813,11,0);
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(813,0);
 	return 0;
 }
@@ -1136,7 +1137,7 @@ void put_monst_info_in_dlog()
 
 	if (store_monst.picture_num < 1000)
 		csp(814,34,/*400 + */store_monst.picture_num,PICT_MONST_TYPE);
-	else csp(814,34,0,PICT_BLANK_TYPE);
+	else csp(814,34,store_monst.picture_num % 1000,PICT_CUSTOM_TYPE + PICT_MONST_TYPE);
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
@@ -1247,11 +1248,11 @@ void edit_monst_type_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 20:
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 19:
 			if (save_monst_info() == TRUE) {
 				scenario.scen_monsters[store_which_monst] = store_monst;
-				dialog_not_toast = FALSE; 
+				toast_dialog(); 
 				}
 			break;
 		case 23: // abils
@@ -1347,9 +1348,8 @@ short edit_monst_type(short which_monst)
 		cd_add_label(814,29 + i,attitude[i],57);
 	cd_attach_key(814,21,0);
 	cd_attach_key(814,22,0);
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(814,0);
 
 	return 0;
@@ -1429,10 +1429,10 @@ void edit_monst_abil_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 8: store_monst2.level = -1;
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 7:
 			if (save_monst_abils() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 31: // abils
 			if (save_monst_abils() == FALSE) break;
@@ -1492,9 +1492,7 @@ monster_record_type edit_monst_abil(monster_record_type starting_record,short pa
 	cd_add_label(815,18,"Immune To Cold",55);
 	cd_add_label(815,20,"Immune To Poison",55);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(815,0);
 	return store_monst2;
 }
@@ -1507,7 +1505,7 @@ void put_item_info_in_dlog()
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
 	if (store_item.graphic_num >= 150)
-		csp(818,49,0,PICT_BLANK_TYPE);
+		csp(818,49,store_item.graphic_num % 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
 	else csp(818,49,/*1800 + */store_item.graphic_num,PICT_ITEM_TYPE);
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
@@ -1587,10 +1585,10 @@ void edit_item_type_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 15:
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 14:
 			if (save_item_info() == TRUE)
-				 dialog_not_toast = FALSE; break;
+				 toast_dialog(); break;
 			break;
 
 		case 16:
@@ -1661,8 +1659,8 @@ short edit_item_type(short which_item)
 	cd_add_label(818,48,"Pole",23);
 	cd_attach_key(818,16,0);
 	cd_attach_key(818,17,0);
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(818,0);
 	return 0;
@@ -1723,10 +1721,10 @@ void edit_item_abil_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 4: store_item2.ability = 0;
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 3:
 			if (save_item_abils() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 17:
 			if (save_item_abils() == FALSE) break;
@@ -1835,11 +1833,8 @@ item_record_type edit_item_abil(item_record_type starting_record,short parent_nu
 	cd_add_label(824,10,"Magical",50);
 	cd_add_label(824,11,"Cursed",50);
 	cd_add_label(824,12,"Conceal ability",50);
-
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(824,0);
 	return store_item2;
 }
@@ -1887,10 +1882,10 @@ void edit_spec_item_event_filter (short spec_item_hit)
 	
 	switch (spec_item_hit) {
 		case 11: 
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 5:
 			if (save_spec_item() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 
 		case 20:
@@ -1951,8 +1946,7 @@ void edit_spec_item(short which_item)
 	cd_attach_key(806,21,0);
 	cd_activate_item(806,12,0);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &spec_item_hit);
+	spec_item_hit = cd_run_dialog();
 
 	cd_kill_dialog(806,0);
 }
@@ -2011,10 +2005,10 @@ void edit_save_rects_event_filter (short save_rects_hit)
 	
 	switch (save_rects_hit) {
 		case 18: 
-			dialog_not_toast = FALSE; break;	
+			toast_dialog(); break;	
 		case 17:
 			if (save_save_rects() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 				
 		}
@@ -2030,9 +2024,7 @@ void edit_save_rects()
 	
 	put_save_rects_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &save_rects_hit);
-
+	save_rects_hit = cd_run_dialog();
 	cd_kill_dialog(807,0);
 }
 
@@ -2079,7 +2071,7 @@ void edit_horses_event_filter (short item_hit)
 	switch (item_hit) {
 		case 20:
 			if (save_horses() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 21:
 			if (save_horses() == FALSE) break;
@@ -2112,9 +2104,7 @@ void edit_horses()
 	
 	put_horses_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &horses_hit);
-
+	horses_hit = cd_run_dialog();
 	cd_kill_dialog(808,0);
 }
 
@@ -2161,7 +2151,7 @@ void edit_boats_event_filter (short item_hit)
 	switch (item_hit) {
 		case 20:
 			if (save_boats() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 22:
 			if (save_boats() == FALSE) break;
@@ -2194,9 +2184,7 @@ void edit_boats()
 	
 	put_boats_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &boats_hit);
-
+	boats_hit = cd_run_dialog();
 	cd_kill_dialog(809,0);
 }
 
@@ -2240,7 +2228,7 @@ void edit_add_town_event_filter (short item_hit)
 	switch (item_hit) {
 		case 32:
 			if (save_add_town() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 
 		}
@@ -2256,9 +2244,7 @@ void edit_add_town()
 	
 	put_add_town_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &add_town_hit);
-
+	add_town_hit = cd_run_dialog();
 	cd_kill_dialog(810,0);
 }
 
@@ -2307,10 +2293,10 @@ void edit_item_placement_event_filter (short item_hit)
 	switch (item_hit) {
 		case 23:
 			if (save_item_placement() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 24:
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 26:
 			if (save_item_placement() == FALSE) break;
@@ -2358,9 +2344,7 @@ void edit_item_placement()
 	
 	put_item_placement_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_placement_hit);
-
+	item_placement_hit = cd_run_dialog();
 	cd_kill_dialog(812,0);
 }
 
@@ -2411,7 +2395,7 @@ void edit_scen_details_event_filter (short item_hit)
 	switch (item_hit) {
 		case 8:
 			if (save_scen_details() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		default:
 			cd_hit_led_range(803,21,24,item_hit);
@@ -2430,9 +2414,7 @@ void edit_scen_details()
 	
 	put_scen_details_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &scen_details_hit);
-
+	scen_details_hit = cd_run_dialog();
 	cd_kill_dialog(803,0);
 }
 
@@ -2470,11 +2452,11 @@ void edit_make_scen_1_event_filter (short item_hit)
 					return;
 					}
 			dialog_answer = 1;
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		case 9:
 			dialog_answer = 0;
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		default:
 			cd_flip_led(800,11,item_hit);
@@ -2492,9 +2474,7 @@ short edit_make_scen_1(char *filename,char *title,short *grass)
 	
 	put_make_scen_1_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &make_scen_1_hit);
-
+	make_scen_1_hit = cd_run_dialog();
 	CDGT(800,2,title);
 	title[30] = 0;
 	CDGT(800,3,filename);
@@ -2542,11 +2522,11 @@ void edit_make_scen_2_event_filter (short item_hit)
 			if (cre(i + j + k,
 				1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",801) == TRUE) return ;
 	
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		case 10:
 			dialog_answer = 0;
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		default:
 			cd_flip_led(801,26,item_hit);
@@ -2565,8 +2545,7 @@ short edit_make_scen_2(short *val_array)
 	
 	put_make_scen_2_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &make_scen_2_hit);
+	make_scen_2_hit = cd_run_dialog();
 
 	for (i = 0; i < 5; i++)
 		val_array[i] = CDGN(801,2 + i);
@@ -2670,7 +2649,7 @@ void user_password_filter (short item_hit)
 				give_error("The password must be from 0 to 30000.","",802);
 				break;
 				}
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		}
@@ -2686,8 +2665,7 @@ short get_password()
 	
 	CDSN(802,2,0);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
+	town_strs_hit = cd_run_dialog();
 
 	CDGT(802,2,(char *) temp_str);
 	i = wd_to_pwd(temp_str);
@@ -2720,10 +2698,10 @@ void set_starting_loc_filter (short item_hit)
 			scenario.which_town_start = i;
 			scenario.where_start.x = j;
 			scenario.where_start.y = k;
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		case 12:
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		}
 }
@@ -2740,8 +2718,7 @@ void set_starting_loc()
 	CDSN(805,3,scenario.where_start.x);
 	CDSN(805,4,scenario.where_start.y);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
+	town_strs_hit = cd_run_dialog();
 
 	
 	cd_kill_dialog(805,0);
@@ -2787,7 +2764,7 @@ void edit_scenario_events_event_filter (short item_hit)
 	switch (item_hit) {
 		case 22:
 			if (save_scenario_events() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		default:
 			if ((item_hit >= 30) && (item_hit <= 39)) {
@@ -2822,8 +2799,7 @@ void edit_scenario_events()
 	
 	put_scenario_events_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &advanced_town_hit);
+	advanced_town_hit = cd_run_dialog();
 
 	cd_kill_dialog(811,0);
 }
@@ -2836,7 +2812,7 @@ void give_password_filter (short item_hit)
 	switch (item_hit) {
 		default:
 
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		}
@@ -2852,8 +2828,7 @@ short enter_password()
 	
 	CDSN(823,2,0);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &town_strs_hit);
+	town_strs_hit = cd_run_dialog();
 
 	CDGT(823,2,(char *) temp_str);
 	i = wd_to_pwd(temp_str);

@@ -2,7 +2,7 @@
 
 #include <string.h>
 #include "global.h"
-#include "stdio.h"
+#include <stdio.h>
 #include "blxfileio.h"
 #include "text.h"
 #include "town.h"
@@ -14,8 +14,9 @@
 #include "dialogutils.h"
 #include "info.dialogs.h"
 #include "blx.g.utils.h"
-
-#include "Exile.sound.h"
+#include "graphtool.h"
+#include "soundtool.h"
+#include "mathutil.h"
 
 #include <vector>
 #include <string>
@@ -62,6 +63,7 @@ extern talking_record_type talking;
 extern outdoor_strs_type outdoor_text[2][2];
 extern vector<scen_header_type> scen_headers;
 extern unsigned char combat_terrain[64][64];
+extern Boolean belt_present;
 
 typedef struct {
 	char expl[96][96];
@@ -172,7 +174,7 @@ void do_apple_event_open(FSSpec file_info)
 
 void load_file()
 {
-
+	
 	NavReplyRecord reply;
 	long file_size;
 	OSErr error;
@@ -183,19 +185,19 @@ void load_file()
 	Boolean in_scen = FALSE;
 	
 	char flag_data[8];
-
+	
 	long len,store_len,count;
 	char *party_ptr;
 	char *pc_ptr;
 	flag_type flag;
 	flag_type *flag_ptr;
-
-
+	
+	
 	short flags[3][2] = {{5790,1342}, // slot 0 ... 5790 - out  1342 - town
-					{100,200}, // slot 1 100  in scenario, 200 not in
-					{3422,5567}}; // slot 2 ... 3422 - no maps  5567 - maps
-
-
+		{100,200}, // slot 1 100  in scenario, 200 not in
+		{3422,5567}}; // slot 2 ... 3422 - no maps  5567 - maps
+	
+	
 	type_list.componentSignature = kNavGenericSignature;
 	type_list.osTypeCount = 1;
 	type_list.osType[0] = 'beSV';
@@ -213,43 +215,43 @@ void load_file()
 	
 	AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
 	
-
+	
 	if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
 		FCD(1064,0);
 		SysBeep(2);
 		return;
 	}		
-		
-		
+	
+	
 	file_size = sizeof(party_record_type);
-
+	
 	len = sizeof(flag_type);
-
-//	sprintf((char *) debug, "  Len %d               ", (short) len);
-//	add_string_to_buf((char *) debug);
-
+	
+	//	sprintf((char *) debug, "  Len %d               ", (short) len);
+	//	add_string_to_buf((char *) debug);
+	
 	for (i = 0; i < 3; i++) {
 		if ((error = FSRead(file_id, &len, (char *) flag_data)) != 0) {
 			FSClose(file_id);
 			FCD(1064,0);
 			return;
-			}
+		}
 		flag_ptr = (flag_type *) flag_data;
 		flag = *flag_ptr;
 		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1])) { // OK Exile II save file?
 			FSClose(file_id);
 			FCD(1063,0);
 			return;
-			} 
-
+		} 
+		
 		if ((i == 0) && (flag.i == flags[i][1]))
 			town_restore = TRUE;
 		if ((i == 1) && (flag.i == flags[i][0])) {
 			in_scen = TRUE;
-			}
+		}
 		if ((i == 2) && (flag.i == flags[i][1]))
 			maps_there = TRUE;
-		}
+	}
 	
 	// LOAD PARTY	
 	len = (long) sizeof(party_record_type);
@@ -260,10 +262,10 @@ void load_file()
 		SysBeep(2);
 		FCD(1064,0);
 		return;
-		}
+	}
 	for (count = 0; count < store_len; count++)
 		party_ptr[count] ^= 0x5C;	
-
+	
 	// LOAD SETUP
 	len = (long) sizeof(setup_save_type);
 	if ((error = FSRead(file_id, &len, (char *) &setup_save)) != 0){
@@ -271,8 +273,8 @@ void load_file()
 		SysBeep(2);
 		FCD(1064,0);
 		return;
-		}
-
+	}
+	
 	// LOAD PCS
 	store_len = (long) sizeof(pc_record_type);
 	for (i = 0; i < 6; i++) {
@@ -281,203 +283,212 @@ void load_file()
 		if ((error = FSRead(file_id, &len, (char *) pc_ptr))  != 0){
 			FSClose(file_id);
 			SysBeep(2);
-		FCD(1064,0);
+			FCD(1064,0);
 			return;
-			}
+		}
 		for (count = 0; count < store_len; count++)
 			pc_ptr[count] ^= 0x6B;	
-		}
-
+	}
+	
 	if (in_scen == TRUE) {
-	
-	// LOAD OUTDOOR MAP
-	len = (long) sizeof(out_info_type);
-	if ((error = FSRead(file_id, &len, (char *) out_e)) != 0){
-		FSClose(file_id);
-		SysBeep(2);
-		FCD(1064,0);
-		return;
-		}
-
-	// LOAD TOWN 
-	if (town_restore == TRUE) {
-		len = (long) sizeof(current_town_type);
-		if ((error = FSRead(file_id, &len, (char *) &c_town)) != 0){
-				FSClose(file_id);
-				SysBeep(2);
-		FCD(1064,0);
-				return;
-				}
-	
-		len = (long) sizeof(big_tr_type);
-		if ((error = FSRead(file_id, &len, (char *) &t_d)) != 0){
-				FSClose(file_id);
-				SysBeep(2);
-		FCD(1064,0);
-				return;
-				}
-
-		len = (long) sizeof(town_item_list);
-		if ((error = FSRead(file_id, &len, (char *) &t_i))  != 0){
+		
+		// LOAD OUTDOOR MAP
+		len = (long) sizeof(out_info_type);
+		if ((error = FSRead(file_id, &len, (char *) out_e)) != 0){
 			FSClose(file_id);
 			SysBeep(2);
-		FCD(1064,0);
+			FCD(1064,0);
 			return;
+		}
+		
+		// LOAD TOWN 
+		if (town_restore == TRUE) {
+			len = (long) sizeof(current_town_type);
+			if ((error = FSRead(file_id, &len, (char *) &c_town)) != 0){
+				FSClose(file_id);
+				SysBeep(2);
+				FCD(1064,0);
+				return;
 			}
-	
-		}
-
-	// LOAD STORED ITEMS
-	for (i = 0; i < 3; i++) {
-		len = (long) sizeof(stored_items_list_type);
-		if ((error = FSRead(file_id, &len, (char *) &stored_items[i]))  != 0){
+			
+			len = (long) sizeof(big_tr_type);
+			if ((error = FSRead(file_id, &len, (char *) &t_d)) != 0){
 				FSClose(file_id);
 				SysBeep(2);
-		FCD(1064,0);
+				FCD(1064,0);
 				return;
-				}		
-		}
-
-	// LOAD SAVED MAPS
-	if (maps_there == TRUE) {
-		len = (long) sizeof(stored_town_maps_type);
-		if ((error = FSRead(file_id, &len, (char *) &(data_store->town_maps)))  != 0){
+			}
+			
+			len = (long) sizeof(town_item_list);
+			if ((error = FSRead(file_id, &len, (char *) &t_i))  != 0){
 				FSClose(file_id);
 				SysBeep(2);
-		FCD(1064,0);
+				FCD(1064,0);
 				return;
-				}
-	
-		len = (long) sizeof(stored_outdoor_maps_type);
-		if ((error = FSRead(file_id, &len, (char *) &o_maps)) != 0) {
+			}
+			
+		}
+		
+		// LOAD STORED ITEMS
+		for (i = 0; i < 3; i++) {
+			len = (long) sizeof(stored_items_list_type);
+			if ((error = FSRead(file_id, &len, (char *) &stored_items[i]))  != 0){
 				FSClose(file_id);
 				SysBeep(2);
-		FCD(1064,0);
+				FCD(1064,0);
 				return;
-				}	
+			}		
 		}
-
-	// LOAD SFX & MISC_I
+		
+		// LOAD SAVED MAPS
+		if (maps_there == TRUE) {
+			len = (long) sizeof(stored_town_maps_type);
+			if ((error = FSRead(file_id, &len, (char *) &(data_store->town_maps)))  != 0){
+				FSClose(file_id);
+				SysBeep(2);
+				FCD(1064,0);
+				return;
+			}
+			
+			len = (long) sizeof(stored_outdoor_maps_type);
+			if ((error = FSRead(file_id, &len, (char *) &o_maps)) != 0) {
+				FSClose(file_id);
+				SysBeep(2);
+				FCD(1064,0);
+				return;
+			}	
+		}
+		
+		// LOAD SFX & MISC_I
 		len = (long) (64 * 64);
 		if ((error = FSRead(file_id, &len, (char *) sfx))  != 0){
-				FSClose(file_id);
-				SysBeep(2);
-		FCD(1064,0);
-				return;
-				}	
+			FSClose(file_id);
+			SysBeep(2);
+			FCD(1064,0);
+			return;
+		}	
 		if ((error = FSRead(file_id, &len, (char *) misc_i))  != 0){
-				FSClose(file_id);
-				SysBeep(2);
-		FCD(1064,0);
-				return;
-				}	
-
+			FSClose(file_id);
+			SysBeep(2);
+			FCD(1064,0);
+			return;
+		}	
+		
 	} // end if_scen
-
+	
 	if ((error = FSClose(file_id))  != 0){
 		add_string_to_buf("Load: Can't close file.          ");
 		SysBeep(2);
 		return;
-		} 
-
+	} 
+	
 	party_in_memory = TRUE;
-
+	
 	// now if not in scen, this is it.
 	if (in_scen == FALSE) {
 		if (in_startup_mode == FALSE) {
 			reload_startup();
 			in_startup_mode = TRUE;
 			draw_startup(0);		
-			}
-		return;
 		}
-		
+		return;
+	}
+	
 	if (load_scenario() == FALSE)
 		return;
-
+	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();
-
+	
 	set_up_ter_pics();
 	
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1,1,1,0,0,NULL);
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y + 1,0,1,0,0,NULL);
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y,1,0,0,0,NULL);
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y,0,0,0,0,NULL);
-
+	
 	//end_anim();
 	overall_mode = (town_restore == TRUE) ? 1 : 0;
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
 	update_pc_graphics();
-
-		
+	
+	
 	if (town_restore == FALSE) {
 		center = party.p_loc;
 		load_area_graphics();
+	}
+	else {	
+		load_town(c_town.town_num,2,-1,NULL);
+		load_town(c_town.town_num,1,-1,NULL);
+		
+		for (i = 0; i < T_M; i++){
+			monster_targs[i].x = 0;
+			monster_targs[i].y = 0;
 		}
-		else {	
-			load_town(c_town.town_num,2,-1,NULL);
-			load_town(c_town.town_num,1,-1,NULL);
-
-			for (i = 0; i < T_M; i++)
-				{monster_targs[i].x = 0;  monster_targs[i].y = 0;}
-
-			town_type = scenario.town_size[c_town.town_num];
-
-			// Set up field booleans
-			for (j = 0; j < town_size[town_type]; j++)
-				for (k = 0; k < town_size[town_type]; k++) {
-					// Set up field booleans
-					if (is_web(j,k) == TRUE)
-						web = TRUE;
-					if (is_crate(j,k) == TRUE)
-						crate = TRUE;
-					if (is_barrel(j,k) == TRUE)
-						barrel = TRUE;
-					if (is_fire_barrier(j,k) == TRUE)
-						fire_barrier = TRUE;
-					if (is_force_barrier(j,k) == TRUE)
-						force_barrier = TRUE;
-					if (is_quickfire(j,k) == TRUE)
-						quickfire = TRUE;
-					}		
-force_wall = TRUE;fire_wall = TRUE;antimagic = TRUE;scloud = TRUE;ice_wall = TRUE;blade_wall = TRUE;
-sleep_field = TRUE;
-			center = c_town.p_loc;
-			load_area_graphics();
+		
+		town_type = scenario.town_size[c_town.town_num];
+		
+		// Set up field booleans
+		for (j = 0; j < town_size[town_type]; j++)
+			for (k = 0; k < town_size[town_type]; k++) {
+				if (is_web(j,k) == TRUE)
+					web = TRUE;
+				if (is_crate(j,k) == TRUE)
+					crate = TRUE;
+				if (is_barrel(j,k) == TRUE)
+					barrel = TRUE;
+				if (is_fire_barrier(j,k) == TRUE)
+					fire_barrier = TRUE;
+				if (is_force_barrier(j,k) == TRUE)
+					force_barrier = TRUE;
+				if (is_quickfire(j,k) == TRUE)
+					quickfire = TRUE;
+				if ((scenario.ter_types[t_d.terrain[j][k]].special >= 16) &&
+					(scenario.ter_types[t_d.terrain[j][k]].special <= 19))
+					belt_present = TRUE;
 			}
-			
+		force_wall = TRUE;
+		fire_wall = TRUE;
+		antimagic = TRUE;
+		scloud = TRUE;
+		ice_wall = TRUE;
+		blade_wall = TRUE;
+		sleep_field = TRUE;
+		center = c_town.p_loc;
+		load_area_graphics();
+	}
+	
 	create_clip_region();
-	redraw_screen(0);
+	redraw_screen();
 	current_pc = first_active_pc();
 	loaded_yet = TRUE;
 	
 	
 	strcpy ((char *) last_load_file, (char *) file_to_load.name);
 	store_file_reply = file_to_load;
-
+	
 	add_string_to_buf("Load: Game loaded.            ");
-		
+	
 	// Set sounds, map saving, and speed
 	if (((play_sounds == TRUE) && (party.stuff_done[306][1] == 1)) ||
-	 ((play_sounds == FALSE) && (party.stuff_done[306][1] == 0))) {
+		((play_sounds == FALSE) && (party.stuff_done[306][1] == 0))) {
 		flip_sound();
-		}
+	}
 	give_delays = party.stuff_done[306][2]; 
 	if (party.stuff_done[306][0] == 0)
 		save_maps = TRUE;
-		else save_maps = FALSE;	
-
+	else save_maps = FALSE;	
+	
 	//if (party.stuff_done[306][5] == 0)
 	//	end_music();
 	//	else init_bg_music();
-
+	
 	in_startup_mode = FALSE;
 	in_scen_debug = FALSE;
-
+	
 }
 
 void save_file(short mode)
@@ -753,7 +764,7 @@ void change_val (unsigned char *val,short a,short b)
 void build_scen_file_name (Str255 file_n)
 {
 	sprintf((char *) file_n,"::::Blades of Exile Scenarios:%s",party.scen_name);
-	c2p(file_n);
+	c2pstr((char*)file_n);
 }
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
@@ -1409,7 +1420,7 @@ void start_data_dump()
 void end_data_dump()
 {
 	FSClose(data_dump_file_id);
-	force_play_sound(1);
+	play_sound(1); // formerly force_play_sound
 }
 
 // expecting party record to contain name of proper scenario to load
@@ -1559,7 +1570,7 @@ void build_scen_headers()
 					// now we need to store the file name, first stripping any path that occurs
 					// before it
 					last_colon = -1;
-					//p2c(scen_name);
+					//p2cstr(scen_name);
 //					for (i = 0; i < strlen((char *) scen_name); i++)
 //						if (scen_name[i] == ':')
 //							last_colon = i;

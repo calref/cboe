@@ -12,9 +12,12 @@
 #include "ed.global.h"
 #include "ed.editors.h"
 #include "ed.fileio.h" 
-#include "ed.action.h" 
-#include "ed.sound.h" 
-#include "dlogtool.h" 
+#include "ed.action.h"
+#include "graphtool.h"
+#include "soundtool.h" 
+#include "dlgtool.h"
+#include "mathutil.h"
+#include "dlgconsts.h"
 
 /* Adventure globals */
 extern party_record_type party;
@@ -28,9 +31,8 @@ extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type town_maps;
 extern stored_outdoor_maps_type o_maps;
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 
-extern Boolean dialog_not_toast,ed_reg;
+extern Boolean ed_reg;
 extern long ed_flag,ed_key;
 
 extern WindowPtr mainPtr;
@@ -165,7 +167,7 @@ void edit_gold_or_food_event_filter (short item_hit)
 	Str255 get_text;
 	long dummy;
 	
-	cd_retrieve_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
+	cd_retrieve_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,2,(char *) get_text);
 	dialog_answer = 0;
 #ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
@@ -174,7 +176,7 @@ void edit_gold_or_food_event_filter (short item_hit)
 	sscanf((char *) get_text,"%d",&dummy);
 	dialog_answer = dummy;
 #endif		
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 void edit_gold_or_food(short which_to_edit)
@@ -188,17 +190,11 @@ void edit_gold_or_food(short which_to_edit)
 	store_which_to_edit = which_to_edit;
 
 	make_cursor_sword();
-	cd_create_dialog((which_to_edit == 0) ? 1012 : 947, (DialogPtr)mainPtr);
+	cd_create_dialog((which_to_edit == 0) ? 1012 : 947, mainPtr);
 	sprintf((char *) sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
-	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,2,(char *) sign_text);
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog((which_to_edit == 0) ? 1012 : 947,0);
 	dialog_answer = minmax(0,25000,dialog_answer);
 	if (which_to_edit == 0)
@@ -212,7 +208,7 @@ void edit_day_event_filter (short item_hit)
 	Str255 get_text;
 	long dummy;
 	
-	cd_retrieve_text_edit_str(917,(char *) get_text);
+	cd_retrieve_text_edit_str(917,2,(char *) get_text);
 	dialog_answer = 0;
 #ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
@@ -221,7 +217,7 @@ void edit_day_event_filter (short item_hit)
 	sscanf((char *) get_text,"%d",&dummy);
 	dialog_answer = dummy;
 #endif		
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 void edit_day()
@@ -234,19 +230,12 @@ void edit_day()
 
 	make_cursor_sword();
 	
-	cd_create_dialog(917,(DialogPtr)mainPtr);
+	cd_create_dialog(917,mainPtr);
 		
 	sprintf((char *) sign_text,"%d",(short) ( ((party.age) / 3700) + 1));
-	cd_set_text_edit_str(917,(char *) sign_text);
+	cd_set_text_edit_str(917,2,(char *) sign_text);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(917,0);
 	
@@ -269,14 +258,14 @@ void put_pc_graphics()
 
 	cd_set_item_text(991,69,adven[which_pc_displayed].name);
 }
-Boolean display_pc_event_filter (short item_hit)
+void display_pc_event_filter (short item_hit)
 {
 	short pc_num;
 
 	pc_num = which_pc_displayed;
 			switch (item_hit) {
 				case 1: case 65:
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 
 				case 66:
@@ -303,8 +292,7 @@ Boolean display_pc_event_filter (short item_hit)
 							1 - adven[which_pc_displayed].priest_spells[item_hit - 3];
 					put_pc_graphics();							
 					break;
-				}	
-	return FALSE;
+				}
 }
 
 void display_pc(short pc_num,short mode,short parent)
@@ -330,26 +318,20 @@ void display_pc(short pc_num,short mode,short parent)
 		}
 	put_pc_graphics();
 
-	cd_set_pict(991,2,714 + mode);
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	cd_set_pict(991,2,14 + mode,PICT_DLG_TYPE);
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(991,0);
 }
 
 
-Boolean display_alchemy_event_filter (short item_hit)
+void display_alchemy_event_filter (short item_hit)
 {
 	short i;
 
 			switch (item_hit) {
 				case 1: case 3:
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				default:
 					party.alchemy[item_hit - 4] = 1 - party.alchemy[item_hit - 4];
@@ -361,7 +343,6 @@ Boolean display_alchemy_event_filter (short item_hit)
 			cd_set_led(996,i + 4,1);
 			else cd_set_led(996,i + 4,0);
 		}
-					return FALSE;
 }
 
 void display_alchemy()
@@ -386,18 +367,11 @@ void display_alchemy()
 		if (party.alchemy[i] > 0)
 			cd_set_led(996,i + 4,1);
 			else cd_set_led(996,i + 4,0);
-		}
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	}
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(996,0);
-	dialog_not_toast = TRUE;
+	untoast_dialog();
 
 }
 
@@ -460,7 +434,7 @@ void do_xp_draw()
 	update_gold_skills();
 }
 
-Boolean spend_xp_event_filter (short item_hit)
+void spend_xp_event_filter (short item_hit)
 {
 	short what_talk_field,i,j,pc_num,mode = 1;
 	char get_text[256];
@@ -598,16 +572,15 @@ Boolean spend_xp_event_filter (short item_hit)
 			
 	store_train_pc = pc_num;
 	if (talk_done == TRUE) {
-		dialog_not_toast = FALSE;
+		toast_dialog();
 		}
-	return FALSE;
 }
 void update_gold_skills()
 {
 	csit(1010,47,"Lots!");
 	csit(1010,46,"Lots!");
 }
-Boolean spend_xp(short pc_num, short mode, short parent)
+bool spend_xp(short pc_num, short mode, short parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
@@ -632,15 +605,8 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 	do_xp_draw();
 	
 	dialog_answer = 0;
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();	
 
 	cd_kill_dialog(1010,0);
 
@@ -654,7 +620,7 @@ void give_reg_info_event_filter (short item_hit)
 	
 			switch (item_hit) {
 				case 1: 
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				}
 }
@@ -670,15 +636,8 @@ void give_reg_info()
 	make_cursor_sword();
 
 	cd_create_dialog_parent_num(1073,0);
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1073,0);
 
 }
@@ -688,7 +647,7 @@ void edit_xp_event_filter (short item_hit)
 	Str255 get_text;
 	long dummy;
 	
-	cd_retrieve_text_edit_str(1024,(char *) get_text);
+	cd_retrieve_text_edit_str(1024,2,(char *) get_text);
 	dialog_answer = 0;
 #ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
@@ -697,7 +656,7 @@ void edit_xp_event_filter (short item_hit)
 	sscanf((char *) get_text,"%d",&dummy);
 	dialog_answer = dummy;
 #endif		
-	dialog_not_toast = FALSE;
+	toast_dialog();
 }
 
 void edit_xp(pc_record_type *pc)
@@ -711,21 +670,14 @@ void edit_xp(pc_record_type *pc)
 
 	make_cursor_sword();
 	
-	cd_create_dialog(1024,(DialogPtr)mainPtr);
+	cd_create_dialog(1024,mainPtr);
 		
 	sprintf((char *) sign_text,"%d",(short)pc->experience);
-	cd_set_text_edit_str(1024,(char *) sign_text);
+	cd_set_text_edit_str(1024,2,(char *) sign_text);
 	item_hit = get_tnl(store_xp_pc);
 	cdsin(1024,8,item_hit);
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(1024,0);
 	

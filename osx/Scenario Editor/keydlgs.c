@@ -1,13 +1,15 @@
 #include <Carbon/Carbon.h>
 #include "Global.h"
+#include "graphtool.h"
 #include "tGraphics.h"
 #include "dialogutils.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
+#include "dlgconsts.h"
 #include "keydlgs.h"
 #include "scenario.h"
 
 extern short cen_x, cen_y, overall_mode;
-extern Boolean mouse_button_held,dialog_not_toast;
+extern Boolean mouse_button_held;
 extern short cur_viewing_mode;
 extern town_record_type town;
 extern big_tr_type t_d;
@@ -20,7 +22,6 @@ extern special_node_type null_spec_node;
 extern talking_node_type null_talk_node;
 extern piles_of_stuff_dumping_type *data_store;
 extern outdoor_record_type current_terrain;
-extern pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 
 extern short dialog_answer;
 short store_which_string_dlog;
@@ -40,8 +41,6 @@ short store_which_node,store_spec_str_mode,store_spec_mode;
 short last_node[256];
 special_node_type store_spec_node;
 short num_specs[3] = {256,60,100};
-CursHandle cursors[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-short current_cursor = 0;
 
 	short ex1a_choose[12] = {19,50,55,56,57,58,59,60,182,229,-1,-1};
 	short ex2a_choose[18] = {55,56,57,-1,-1, -1,135,136,171,172, 181,192,226,-1,-1, -1,-1,-1};
@@ -162,7 +161,7 @@ char edit_jumpto_mess[256] = {
 	
 void fancy_choice_dialog_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	dialog_answer = item_hit;
 }
 
@@ -177,9 +176,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	
 	cd_create_dialog_parent_num(which_dlog,parent);
 	
-
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(which_dlog,0);
 
@@ -214,7 +211,7 @@ void display_strings_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 1:
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 
 		}
@@ -251,8 +248,8 @@ void display_strings(char *text1, char *text2,
 	csp(store_which_string_dlog,3,graphic_num,graphic_type);
 	//if (sound_num >= 0)
 	//	play_sound(sound_num);
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(store_which_string_dlog,0);
 }
@@ -265,11 +262,11 @@ void choose_graphic_event_filter (short item_hit)
 	switch (item_hit) {
 		case 1:
 			dialog_answer = store_cur_pic;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		case 4:
 			dialog_answer = -1;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		case 78:
 			if (which_page == 0)
@@ -338,9 +335,8 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,sh
 		cd_activate_item(819,78,0);
 		}
 	put_choice_pics(g_type);
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(819,0);
 	
@@ -355,11 +351,11 @@ void choose_text_res_event_filter (short item_hit)
 	switch (item_hit) {
 		case 2:
 			dialog_answer = store_cur_t;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		case 7:
 			dialog_answer = -1;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		case 5:
 			if (which_page == 0)
@@ -430,9 +426,8 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 		cd_activate_item(820,6,0);
 		}
 	put_text_res();
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 	
 	cd_kill_dialog(820,0);
 	
@@ -453,7 +448,7 @@ void edit_text_event_filter (short item_hit)
 				CDGT(816,2,data_store->town_strs[store_which_str]);
 	switch (item_hit) {
 		case 9:
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		case 4:
@@ -495,8 +490,8 @@ void edit_text_str(short which_str,short mode)
 		CDST(816,2,data_store->town_strs[which_str]);
 	cd_attach_key(816,3,0);
 	cd_attach_key(816,4,0);
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(816,0);
 }
@@ -509,7 +504,7 @@ void edit_area_rect_event_filter (short item_hit)
 	switch (item_hit) {
 		case 6:
 			dialog_answer = TRUE;
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			CDGT(840,2,(char *) str);
 			if (store_str_mode == 0)
 				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s",(char *) str);
@@ -518,7 +513,7 @@ void edit_area_rect_event_filter (short item_hit)
 
 		case 3:
 			dialog_answer = FALSE;
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		}
 }
@@ -537,10 +532,9 @@ Boolean edit_area_rect_str(short which_str,short mode)
 	
 	if (store_str_mode == 0)
 		CDST(840,2,data_store->out_strs[store_which_str + 1]);
-		else CDST(840,2,data_store->town_strs[store_which_str + 1]);
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	else CDST(840,2,data_store->town_strs[store_which_str + 1]);
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(840,0);
 	
@@ -687,7 +681,7 @@ void edit_spec_enc_event_filter (short item_hit)
 	switch (item_hit) {
 		case 12:
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			break;
 		case 14:  //go_back
 			if (save_spec_enc() == FALSE)
@@ -706,7 +700,7 @@ void edit_spec_enc_event_filter (short item_hit)
 					"Press the Go Back button until it disappears.",822);
 				break;
 				}
-			dialog_not_toast = FALSE; break;
+			toast_dialog(); break;
 		case 43: case 44: case 45: // 1b, 2b, jump to spec
 			if (save_spec_enc() == FALSE)
 				 break; 
@@ -787,7 +781,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		case 49: // message
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			if ((edit_spec_mess_mess[store_spec_node.type] == 2) ||
 				(edit_spec_mess_mess[store_spec_node.type] == 4) ||
 				(edit_spec_mess_mess[store_spec_node.type] == 5)) {
@@ -803,7 +797,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		case 46: // pict
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
 				case 1: i = choose_graphic(/*700,731*/0,PICT_N_DLG,store_spec_node.pic,PICT_DLG_TYPE,822); break;
@@ -818,7 +812,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		
 		case 37: // 1st spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,1,28,store_spec_node.type + 1,822,"Choose General Use Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -827,7 +821,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		case 38: // 2 spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,51,64,store_spec_node.type + 1,822,"Choose One-Shot Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -839,14 +833,14 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		case 39: // 3 spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,81,107,store_spec_node.type + 1,822,"Choose Affect Party Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog();	
 			break;
 		case 40: // 4 spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,131,156,store_spec_node.type + 1,822,"Choose If-Then Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -855,14 +849,14 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		case 41: // 5 spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,171,219,store_spec_node.type + 1,822,"Choose Town Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog();	
 			break;
 		case 42: // 6 spec type
 			if (save_spec_enc() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 toast_dialog(); 
 			i = choose_text_res(22,226,230,store_spec_node.type + 1,822,"Choose Outdoor Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog();	
@@ -915,8 +909,7 @@ void edit_spec_enc(short which_node,short mode,short parent_num)
 	cd_activate_item(822,14,0);
 	put_spec_enc_in_dlog();
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &spec_enc_hit);
+	spec_enc_hit = cd_run_dialog();
 
 	cd_kill_dialog(822,0);
 }
@@ -947,7 +940,7 @@ void edit_spec_text_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 7:
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		case 6:
@@ -1045,7 +1038,7 @@ void edit_spec_text_event_filter (short item_hit)
 						}
 					}
 				}
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		}
 }
@@ -1082,22 +1075,19 @@ void edit_spec_text(short mode,short *str1,short *str2,short parent)
 			CDST(826,3,data_store->out_strs[*str2 + 10]);
 		if (mode == 2)
 			CDST(826,3,data_store->town_strs[*str2 + 20]);
-		}
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	}
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(826,0);
 }
 
-void edit_dialog_text_event_filter (short item_hit)
-{
+void edit_dialog_text_event_filter (short item_hit){
 	Str255 str;
 	short i;
 	
 	switch (item_hit) {
 		case 9:
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		case 8:
@@ -1115,7 +1105,7 @@ void edit_dialog_text_event_filter (short item_hit)
 						break;				
 					}
 				}
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		}
 }
@@ -1204,10 +1194,9 @@ void edit_dialog_text(short mode,short *str1,short parent)
 			if (mode == 2)
 				CDST(842,2 + i,data_store->town_strs[*str1 + 20 + i]);
 			}
-		}
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	}
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(842,0);
 }
@@ -1220,7 +1209,7 @@ void edit_special_num_event_filter (short item_hit)
 	switch (item_hit) {
 		case 8:
 			dialog_answer = -1;
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		case 4:
@@ -1230,7 +1219,7 @@ void edit_special_num_event_filter (short item_hit)
 				break;
 				}
 			dialog_answer = i;
-			dialog_not_toast = FALSE;
+			toast_dialog();
 			break;
 		}
 }
@@ -1245,9 +1234,8 @@ short edit_special_num(short mode,short what_start)
 	cd_create_dialog_parent_num(825,0);
 	
 	CDSN(825,2,what_start);
-		
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(825,0);
 	
@@ -1268,10 +1256,10 @@ void edit_scen_intro_event_filter (short item_hit)
 				}
 			for (i = 0; i < 6; i++)
 				CDGT(804, 2 + i,data_store->scen_strs[4 + i]);
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 		case 10: 
-			dialog_not_toast = FALSE; 
+			toast_dialog(); 
 			break;
 
 		case 16:
@@ -1299,34 +1287,14 @@ void edit_scen_intro()
 		CDST(804, 2 + i,data_store->scen_strs[4 + i]);
 	csp(804,11,scenario.intro_pic/* + 1600*/,PICT_SCEN_TYPE);
 	
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
+	item_hit = cd_run_dialog();
 
 	cd_kill_dialog(804,0);
 }
 
-
 void make_cursor_sword() 
 {
 	set_cursor(0);
-}
-
-void set_cursor(short which_c) 
-{
-	short i;
-	
-	if (cursors[0] == NULL) {
-		for (i = 0; i < 8; i++)
-			cursors[i] = GetCursor(130 + i);
-		}
-	current_cursor = which_c;
-	HLock ((Handle) cursors[current_cursor]);
-	SetCursor (*cursors[current_cursor]);
-	HUnlock((Handle) cursors[current_cursor]);
-}
-void restore_cursor()
-{
-	set_cursor(current_cursor);
 }
 
 // only used at beginning of program
@@ -1352,7 +1320,7 @@ short choice_dialog(short pic,short num)
 
 	ShowWindow(GetDialogWindow(select_dialog));
 
-	ModalDialog(NIL, &item_hit);
+	ModalDialog(NULL, &item_hit);
 		
 	DisposeDialog(select_dialog);
 

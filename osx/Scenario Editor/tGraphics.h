@@ -1,8 +1,9 @@
-void	Set_up_win ();
+void Set_up_win ();
 void run_startup_g();
-void 	load_main_screen();
-void 	draw_main_screen();
-void 	redraw_screen();
+void load_graphics();
+void load_main_screen();
+void draw_main_screen();
+void redraw_screen();
 void draw_lb();
 void draw_lb_slot (short which,short mode) ;
 void draw_rb();
@@ -19,8 +20,7 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw);
 void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw);
 void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,location target,
 char masked,short main_win);
-void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,
-char masked,short main_win);
+//void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char masked,short main_win);
 Rect get_template_rect (unsigned char type_wanted);
 void draw_frames();
 void place_location();
@@ -56,12 +56,8 @@ Boolean is_quickfire(short i,short j);
 void make_quickfire(short i,short j);
 void take_quickfire(short i,short j);
 Boolean container_there(location l);
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height);
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height);
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height);
-void c2p(Str255 str) ;
-void p2c(Str255 str);
 void get_str(Str255 str,short i, short j);
 short string_length(char *str);
 Rect get_custom_rect (short which_rect);
 GWorldPtr load_bmp(unsigned char *data, long length);
+void init_dialogs();

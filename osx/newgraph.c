@@ -7,14 +7,18 @@
 #include "blxgraphics.h"
 #include "blx.g.utils.h"
 #include "monster.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
 #include "newgraph.h"
 #include "blxfileio.h"
 #include "item_data.h"
 #include "loc_utils.h"
 #include "fields.h"
 #include "text.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
+#include "dlglowlevel.h"
+#include "dlgconsts.h"
+#include "mathutil.h"
+#include "graphtool.h"
 
 short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
@@ -449,7 +453,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				
 	// create and clip temporary anim template 
 	GetPortBounds(terrain_screen_gworld,&temp_rect);
-	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NIL, NIL, 0);
+	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NULL, NULL, kNativeEndianPixMap);
 	SetPort(temp_gworld);
 	active_area_rect = temp_rect;
 	InsetRect(&active_area_rect,13,13);
@@ -638,7 +642,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 				
 	// create and clip temporary anim template 
 	GetPortBounds(terrain_screen_gworld,&temp_rect);
-	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NIL, NIL, 0);
+	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NULL, NULL, kNativeEndianPixMap);
 	SetPort(temp_gworld);
 	TextFont(geneva_font_num);
 	TextFace(bold);
@@ -705,7 +709,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						sprintf(str,"%d",store_booms[i].val_to_place);
 						SetPort(temp_gworld);
 						ForeColor(whiteColor);
-						char_port_draw_string(temp_gworld,text_rect,str,1,12);
+						char_port_draw_string(temp_gworld,text_rect,str,1,12,false);
 						ForeColor(blackColor);
 						SetPort(GetWindowPort(mainPtr));
 						}
@@ -808,19 +812,19 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	if (draw_mode == 0) { 
 		SetPort(GetWindowPort(mainPtr));
 		i = faces[store_shop_type];
-		draw_dialog_graphic( talk_gworld, face_rect, 1000 + i, FALSE,1);
+		draw_dialog_graphic( talk_gworld, face_rect, i, PICT_TALK_TYPE, FALSE,1);
 		SetPort( talk_gworld);
-		}
+	}
 
 
 	// Place name of store and shopper name
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string(talk_gworld,dest_rect,store_store_name,2,18);
+	char_port_draw_string(talk_gworld,dest_rect,store_store_name,2,18,false);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,store_store_name,2,18);	
+	char_port_draw_string( talk_gworld,dest_rect,store_store_name,2,18,false);	
 
 	TextFont(geneva_font_num);
 	TextSize(12);
@@ -835,7 +839,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		case 4: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",adven[current_pc].name); break;
 		}
-	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18);	
+	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18,false);	
 
 	// Place help and done buttons
 	ForeColor(blackColor);
@@ -863,13 +867,13 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 			case 0: case 1: case 2: case 3: case 4: 
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM_TYPE, FALSE,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1853, FALSE,1);//// all graphic nums
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM_TYPE, FALSE,1);//// all graphic nums
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -881,20 +885,20 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				break;
 			case 7:
 				what_chosen -= 700;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1899, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],99,PICT_ITEM_TYPE, FALSE,1);
 				strcpy(cur_name,heal_types[what_chosen]);
 				sprintf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM_TYPE, FALSE,1);
 
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");		
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM_TYPE, FALSE,1);
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -903,7 +907,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM_TYPE, FALSE,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
@@ -913,11 +917,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		TextSize(12);
-		char_port_draw_string( talk_gworld,shopping_rects[i][3],cur_name,0,12);
+		char_port_draw_string( talk_gworld,shopping_rects[i][3],cur_name,0,12,false);
 		sprintf(cur_name,"Cost: %d",cur_cost);
-		char_port_draw_string( talk_gworld,shopping_rects[i][4],cur_name,0,12);
+		char_port_draw_string( talk_gworld,shopping_rects[i][4],cur_name,0,12,false);
 		TextSize(10);
-		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
+		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12,false);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
 			rect_draw_some_item(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1 - draw_mode,0);
 
@@ -927,11 +931,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	TextSize(12);
 	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
 	TextSize(10);
-	char_port_draw_string( talk_gworld,bottom_help_rects[0],cur_name,0,12);
-	char_port_draw_string( talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
-	char_port_draw_string( talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
+	char_port_draw_string( talk_gworld,bottom_help_rects[0],cur_name,0,12,false);
+	char_port_draw_string( talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12,false);
+	char_port_draw_string( talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12,false);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_port_draw_string( talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
+		char_port_draw_string( talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12,false);
 	
 	
 	ForeColor(blackColor);
@@ -1130,24 +1134,24 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic(  talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, FALSE,1);
+			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PICT_CUSTOM_TYPE + PICT_TALK_TYPE, FALSE,1);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 				if (face_to_draw <= 0)
-					draw_dialog_graphic(  talk_gworld, face_rect, 400 + i, FALSE,1);
-					else draw_dialog_graphic(  talk_gworld, face_rect, 1000 + face_to_draw, FALSE,1);
-				}
+					draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), FALSE,1);
+				else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PICT_MONST_TYPE, FALSE,1);
+			}
 		SetPort( talk_gworld);
 		}
 	// Place name oftalkee
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
+	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18,false);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
+	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18,false);
 		
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1156,7 +1160,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	for (i = 0; i < 9; i++) 
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,8);
-			char_port_draw_string( talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
+			char_port_draw_string( talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18,false);
 			OffsetRect(&preset_words[i].word_rect,0,-8);
 			}
 	// Place bulk of what said. Save words.
@@ -1171,7 +1175,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		}	
 	strcpy((char *) str,str_to_place);
 	strcpy((char *) p_str,str_to_place);
-	c2p(p_str);	
+	c2pstr((char*)p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);
@@ -1269,7 +1273,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		
 	strcpy((char *) str,str_to_place2);
 	strcpy((char *) p_str,str_to_place2);
-	c2p(p_str);	
+	c2pstr((char*)p_str);	
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
 	MeasureText(256,p_str,text_len);

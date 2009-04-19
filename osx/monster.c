@@ -8,9 +8,12 @@
 #include "text.h"
 #include "specials.h"
 #include "items.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "blxgraphics.h"
 #include "newgraph.h"
+#include "dlgconsts.h"
+#include "bldsexil.h"
+#include "mathutil.h"
 
 extern current_town_type c_town;
 extern party_record_type party;
@@ -244,6 +247,25 @@ location get_monst_head(short m_num)
 short get_monst_picnum(unsigned char monst)
 {
 	return scenario.scen_monsters[monst].picture_num;
+}
+
+short get_monst_pictype(unsigned char monst)
+{
+	short type = PICT_MONST_TYPE;
+	short n = scenario.scen_monsters[monst].picture_num;
+	if (n >= 1000) type += PICT_CUSTOM_TYPE;
+	switch(n / 1000){
+		case 2:
+			type += PICT_WIDE_MONSTER;
+			break;
+		case 3:
+			type += PICT_TALL_MONSTER;
+			break;
+		case 4:
+			type += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
+			break;
+	}
+	return type;
 }
 
 void get_monst_dims(unsigned char monst,short *width, short *height)

@@ -18,9 +18,11 @@
 #include "newgraph.h"
 #include "combat.h"
 #include "items.h"
-#include "Exile.sound.h"
+#include "soundtool.h"
 #include "info.dialogs.h"
 #include "item_data.h"
+#include "bldsexil.h"
+#include "mathutil.h"
 
 
 Rect bottom_buttons[7];
@@ -640,7 +642,7 @@ Boolean handle_action(EventRecord event)
 							center = c_town.p_loc;
 							//put_pc_screen();
 							set_stat_window(current_pc);
-							redraw_screen(0);
+							redraw_screen();
 							play_sound(93);
 							need_reprint = TRUE;
 							need_redraw = TRUE;

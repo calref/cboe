@@ -1,6 +1,7 @@
 #include "global.h"
 #include "loc_utils.h"
 #include "fields.h"
+#include "mathutil.h"
 
 extern current_town_type c_town;
 extern short overall_mode,which_combat_type,current_pc,town_type;

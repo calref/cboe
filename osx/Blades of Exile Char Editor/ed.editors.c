@@ -8,7 +8,8 @@
 #include "ed.graphics.h"
 #include "ed.global.h"
 #include "ed.editors.h"
-#include "dlogtool.h"
+#include "graphtool.h"
+#include "dlgtool.h"
 
 /* Adventure globals */
 extern party_record_type party;
@@ -21,11 +22,9 @@ extern unsigned char out[96][96],out_e[96][96];
 extern setup_save_type setup_save;
 extern stored_items_list_type stored_items[3];
 
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 extern short dialog_answer;
 
 extern short store_flags[3];
-extern Boolean dialog_not_toast;
 
 extern short current_active_pc;
 
@@ -165,7 +164,7 @@ void take_item(short pc_num,short which_item)
 
 void fancy_choice_dialog_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	dialog_answer = item_hit;
 }
 
@@ -180,15 +179,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	
 	cd_create_dialog_parent_num(which_dlog,parent);
 	
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(which_dlog,0);
 
 	i = dialog_answer;
@@ -199,7 +190,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 
 void select_pc_event_filter (short item_hit)
 {
-	dialog_not_toast = FALSE;
+	toast_dialog();
 	if (item_hit == 16)
 		dialog_answer = 6;
 		else dialog_answer = item_hit - 3;
@@ -212,7 +203,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 
 	make_cursor_sword();
 	
-	cd_create_dialog(1018,(DialogPtr)mainPtr);
+	cd_create_dialog(1018,mainPtr);
 	
 	if (active_only == 2)
 		csit(1018,15,"Select PC to disarm trap:");
@@ -228,16 +219,9 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 				csit(1018,9 + i,adven[i].name);		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
-		}
+	}
 	
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1018,0);
 
 	return dialog_answer;
@@ -352,7 +336,7 @@ void pick_race_abil_event_filter(short item_hit)
 	pc = store_pc;
 			switch (item_hit) {
 				case 3:
-					dialog_not_toast = FALSE;
+					toast_dialog();
 					break;
 				case 4: case 5: case 6:
 					if (store_trait_mode == 0)
@@ -398,18 +382,11 @@ void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 	display_traits_graphics();
 	if (mode == 1)
 		csit(1013,19,start_str1);
-		else csit(1013,19,start_str2);
-
-#ifndef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	while (dialog_not_toast)
-		ModalDialog(main_dialog_UPP, &item_hit);
-#endif		
+	else csit(1013,19,start_str2);
+	
+	item_hit = cd_run_dialog();
 	cd_kill_dialog(1013,0);
-	dialog_not_toast = TRUE;
+	untoast_dialog();
 }
 
 

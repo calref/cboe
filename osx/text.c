@@ -9,7 +9,9 @@
 #include "string.h"
 #include "loc_utils.h"
 #include "fields.h"
-#include "Exile.sound.h"
+#include "mathutil.h"
+#include "graphtool.h"
+//#include "soundtool.h"
 				
 
 char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
@@ -137,14 +139,14 @@ void put_pc_screen()
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) party.gold);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[1],
- 	  to_draw,0,10);
+ 	  to_draw,0,10,false);
 	sprintf((char *) to_draw, "%d", (short) party.food);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[0],
- 	  to_draw,0,10);
+ 	  to_draw,0,10,false);
 	i = calc_day();
 	sprintf((char *) to_draw, "%d", i);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[2],
- 	  to_draw,0,10);
+ 	  to_draw,0,10,false);
 	ForeColor(blackColor);
 	
 	for (i = 0; i < 6; i++) {
@@ -158,7 +160,7 @@ void put_pc_screen()
 
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) adven[i].name);		
 			win_draw_string( pc_stats_gworld,pc_buttons[i][0],
- 			 to_draw,0,10);
+ 			 to_draw,0,10,false);
 			TextFace(0);
  			TextFace(bold);
 			ForeColor(blackColor);
@@ -172,13 +174,13 @@ void put_pc_screen()
 						else ForeColor(redColor);
 					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_health);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][1],
- 			 		  to_draw,0,10);
+ 			 		  to_draw,0,10,false);
 					if (adven[i].cur_sp == adven[i].max_sp) 
 						ForeColor(blueColor);
 						else ForeColor(magentaColor);
 					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_sp);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][2],
- 			 		  to_draw,0,10);
+ 			 		  to_draw,0,10,false);
 					ForeColor(blackColor);
 					draw_pc_effects(i);
 					break;
@@ -206,7 +208,7 @@ void put_pc_screen()
 				}
 			if (adven[i].main_status != 1)
 				win_draw_string( pc_stats_gworld,to_draw_rect,
- 			 	 to_draw,0,10);
+ 			 	 to_draw,0,10,false);
 			
 			// Now put trade and info buttons
 			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
@@ -296,14 +298,14 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				ForeColor(whiteColor);
 			sprintf((char *) to_draw, "Special items:");
 			win_draw_string( item_stats_gworld,upper_frame_rect,
- 			   to_draw,0,10);
+ 			   to_draw,0,10,false);
 				ForeColor(blackColor);
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) { 
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
 					strcpy((char *) to_draw,data_store->scen_strs[60 + spec_item_array[i_num] * 2]);
-					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10);
+					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10,false);
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
@@ -322,14 +324,14 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			sprintf((char *) to_draw, "%s inventory:",
 				(char *) adven[pc].name);
 			win_draw_string( item_stats_gworld,upper_frame_rect,
- 			  to_draw,0,10);
+ 			  to_draw,0,10,false);
 				ForeColor(blackColor);
 				
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				sprintf((char *) to_draw, "%d.",i_num + 1);
 				win_draw_string( item_stats_gworld,item_buttons[i][0],
- 				  to_draw,0,10);
+ 				  to_draw,0,10,false);
  				  
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -358,7 +360,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 										else sprintf((char *) to_draw, "%s",adven[pc].items[i_num].full_name);
 									}
 						dest_rect.left -= 2;
-						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10);
+						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10,false);
 						TextFace(0);
 						TextFace(bold);
 						ForeColor(blackColor);	
@@ -484,7 +486,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		if (val_to_place >= 10000)
 			TextFace(0);
 		char_port_draw_string( item_stats_gworld,item_buttons[position][5],
- 		  store_str,2,10);	
+ 		  store_str,2,10,false);	
 		TextFace(bold);
 		}
 }
@@ -541,13 +543,13 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		  item_stats_gworld, to_rect, 1, 0);
 		}
 }
-Rect get_custom_rect (short which_rect) ////
-{
-	Rect store_rect = {0,0,36,28};
-
-	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
-	return store_rect;
-}
+//Rect get_custom_rect (short which_rect) ////
+//{
+//	Rect store_rect = {0,0,36,28};
+//
+//	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
+//	return store_rect;
+//}
 void place_item_bottom_buttons()
 {
 	Rect pc_from_rect = {0,0,36,28},but_from_rect = {85,36,101,54},to_rect;
@@ -1451,69 +1453,69 @@ const BitMap * store_dest;
 }
 
 
-void rect_draw_some_item (GWorldPtr src_gworld, Rect src_rect,  GWorldPtr targ_gworld, 
-Rect targ_rect,  char masked, short main_win)
-//	 masked; // if 10 - make AddOver
-//   main_win; // if 2, drawing onto dialog
-{
-	PixMapHandle	test1, test2;
-	const BitMap * store_dest;
-	GrafPtr cur_port;
-	RGBColor	store_color;
-
-	GetPort(&cur_port);	
-	if (src_gworld == NULL) {
-		if (main_win == 0) {
-			SetPort ( targ_gworld);
-			PaintRect(&targ_rect);
-			SetPort (cur_port);
-			}
-			else PaintRect(&targ_rect);
-		return;
-		}
-	if (main_win == 2) {
-		GetBackColor(&store_color);
-		BackColor(whiteColor);
-		}
-		
-	store_dest = GetPortBitMapForCopyBits(cur_port);	
-	
-	test1 =  GetPortPixMap(src_gworld);
-
-	if (main_win == 1) 	
-		OffsetRect(&targ_rect,ul.h,ul.v);
-
-	LockPixels(test1);
-	if (main_win == 0) {
-		test2 =  GetPortPixMap(targ_gworld); 
-		LockPixels(test2);
-		if (masked == 1) 
-			CopyBits ( (BitMap *) *test1 ,
-					(BitMap *) *test2 ,
-					&src_rect, &targ_rect, 
-					 transparent , NULL);	
-			else CopyBits ( (BitMap *) *test1 ,
-					(BitMap *) *test2 ,
-					&src_rect, &targ_rect, 
-				  (masked == 10) ? addOver : 0, NULL);
-		UnlockPixels(test2);
-		}  
-		else {
-		if (masked == 1) 
-			CopyBits ( (BitMap *) *test1 ,
-					store_dest ,
-					&src_rect, &targ_rect, 
-					 transparent , NULL);
-			else CopyBits ( (BitMap *) *test1 ,
-					store_dest ,
-					&src_rect, &targ_rect, 
-					  (masked == 10) ? addOver : 0, NULL);
-			}
-	UnlockPixels(test1);
-	if (main_win == 2) 
-		RGBBackColor(&store_color);
-	SetPort(cur_port);
-}
+//void rect_draw_some_item (GWorldPtr src_gworld, Rect src_rect,  GWorldPtr targ_gworld, 
+//Rect targ_rect,  char masked, short main_win)
+////	 masked; // if 10 - make AddOver
+////   main_win; // if 2, drawing onto dialog
+//{
+//	PixMapHandle	test1, test2;
+//	const BitMap * store_dest;
+//	GrafPtr cur_port;
+//	RGBColor	store_color;
+//
+//	GetPort(&cur_port);	
+//	if (src_gworld == NULL) {
+//		if (main_win == 0) {
+//			SetPort ( targ_gworld);
+//			PaintRect(&targ_rect);
+//			SetPort (cur_port);
+//			}
+//			else PaintRect(&targ_rect);
+//		return;
+//		}
+//	if (main_win == 2) {
+//		GetBackColor(&store_color);
+//		BackColor(whiteColor);
+//		}
+//		
+//	store_dest = GetPortBitMapForCopyBits(cur_port);	
+//	
+//	test1 =  GetPortPixMap(src_gworld);
+//
+//	if (main_win == 1) 	
+//		OffsetRect(&targ_rect,ul.h,ul.v);
+//
+//	LockPixels(test1);
+//	if (main_win == 0) {
+//		test2 =  GetPortPixMap(targ_gworld); 
+//		LockPixels(test2);
+//		if (masked == 1) 
+//			CopyBits ( (BitMap *) *test1 ,
+//					(BitMap *) *test2 ,
+//					&src_rect, &targ_rect, 
+//					 transparent , NULL);	
+//			else CopyBits ( (BitMap *) *test1 ,
+//					(BitMap *) *test2 ,
+//					&src_rect, &targ_rect, 
+//				  (masked == 10) ? addOver : 0, NULL);
+//		UnlockPixels(test2);
+//		}  
+//		else {
+//		if (masked == 1) 
+//			CopyBits ( (BitMap *) *test1 ,
+//					store_dest ,
+//					&src_rect, &targ_rect, 
+//					 transparent , NULL);
+//			else CopyBits ( (BitMap *) *test1 ,
+//					store_dest ,
+//					&src_rect, &targ_rect, 
+//					  (masked == 10) ? addOver : 0, NULL);
+//			}
+//	UnlockPixels(test1);
+//	if (main_win == 2) 
+//		RGBBackColor(&store_color);
+//	SetPort(cur_port);
+//}
 
 Rect coord_to_rect(short i,short j)
 {
@@ -1535,186 +1537,164 @@ void make_cursor_sword()
 	HUnlock((Handle) sword_curs);
 }
 
-void c2p(Str255 str) 
-{
-	Str255 str2;
-	short len;
-	
-	len = strlen((char *) str);
-	strcpy((char *) str2,(char *) str);
-	str[0] = (unsigned char) len;
-	strncpy((char *) (str + 1), (char *) str2,len);
-}
-
-void p2c(Str255 str)
-{
-	Str255 str2;
-	short len;
-
-	len = (short) str[0];
-	strncpy((char *) str2,(char *) (str + 1), len);
-	str2[len] = 0;
-	strcpy((char *) str,(char *) str2);
-}
-
 void get_str(Str255 str,short i, short j)
 {
 	GetIndString(str, i, j);
-	p2c(str);
+	p2cstr(str);
 }
 
-short string_length(char *str)
-{
-	short text_len[257];
-	short total_width = 0,i,len;
-	Str255 p_str;
-	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy((char *) p_str,str);
-	c2p(p_str);
-	MeasureText(256,p_str,text_len);
-	len = strlen((char *)str);
-	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
-	return total_width;
-}
+//short string_length(char *str)
+//{
+//	short text_len[257];
+//	short total_width = 0,i,len;
+//	Str255 p_str;
+//	
+//	for (i = 0; i < 257; i++)
+//		text_len[i]= 0;
+//	
+//	strcpy((char *) p_str,str);
+//	c2pstr(p_str);
+//	MeasureText(256,p_str,text_len);
+//	len = strlen((char *)str);
+//	
+//	for (i = 0; i < 257; i++)
+//		if ((text_len[i] > total_width) && (i <= len))
+//			total_width = text_len[i];
+//	return total_width;
+//}
 
 
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
-{
-	char_port_draw_string(GetWindowPort(dest_window), dest_rect, str, mode, line_height); 
-}
-
-
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
-{
-	Str255 store_s;
-	
-	strcpy((char *) store_s,str);
-	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
-
-}
+//void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//{
+//	char_port_draw_string(GetWindowPort(dest_window), dest_rect, str, mode, line_height); 
+//}
+//
+//
+//void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//{
+//	Str255 store_s;
+//	
+//	strcpy((char *) store_s,str);
+//	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
+//
+//}
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height)
-{
-	GrafPtr old_port;
-	Str255 p_str,str_to_draw,str_to_draw2,c_str;
-	Str255 null_s = "                                                                                                                                                                                                                                                              ";
-	short str_len,i;
-	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
-	short text_len[257];
-	short total_width = 0;
-	Boolean force_skip = FALSE;
-	RgnHandle current_clip;
-	short adjust_x = 0,adjust_y = 0;
-	
-	if (dest_window ==  GetWindowPort(mainPtr)) {
-		adjust_x = ul.h; adjust_y = ul.v;
-		}
-	strcpy((char *) p_str,(char *) str);
-	strcpy((char *) c_str,(char *) str);
-	c2p(p_str);	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	MeasureText(256,p_str,text_len);
-	str_len = (short) strlen((char *)str);
-	if (str_len == 0) {
-		return;
-		}
-
-	GetPort(&old_port);	
-	SetPort(dest_window);
-	
-	//FrameRect(&dest_rect);
-	
-	current_clip = NewRgn();
-	GetClip(current_clip);
-	
-	dest_rect.bottom += 5;
-	//ClipRect(&dest_rect);
-	dest_rect.bottom -= 5;
-	
-	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= str_len))
-			total_width = text_len[i];
-	if ((mode == 0) && (total_width < dest_rect.right - dest_rect.left))
-		mode = 2;
-	for (i = 0; i < 257; i++)
-		if ((i <= str_len) && (c_str[i] == '|') && (mode == 2))
-			mode = 0;
-		
-
-	switch (mode) {
-		case 0: 
-			MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
-			for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
-				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
-				  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
-				  	if (c_str[i] == '|') {
-				  		c_str[i] = ' ';
-				  		force_skip = TRUE;
-				  		last_word_break = i + 1;
-				  		}
-					sprintf((char *)str_to_draw,"%s",(char *)null_s);
-					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-					sprintf((char *)str_to_draw2," %s",str_to_draw);
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-					DrawString(str_to_draw2);
-					on_what_line++;
-					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
-					last_line_break = last_word_break;
-					if (force_skip == TRUE) {
-						force_skip = FALSE;
-						i++;
-						//last_line_break++;
-						//last_word_break++;
-						}
-					}
-				if (c_str[i] == ' ')
-					last_word_break = i + 1;
-				if (on_what_line == LINES_IN_TEXT_WIN - 1)
-					i = 10000;
-				}
-	
-			if (i - last_line_break > 1) {
-				strcpy((char *)str_to_draw,(char *)null_s);
-				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf((char *)str_to_draw2," %s",str_to_draw);
-				if (strlen((char *) str_to_draw2) > 3) {
-					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-					DrawString(str_to_draw2);
-					}
-				}	
-			break;
-		case 1:
-			MoveTo((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x, 
-			  (dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);	
-			DrawText(p_str,1,p_str[0]);
-			//DrawString(p_str);
-			break;
-		case 2:
-			MoveTo(dest_rect.left + 1 + adjust_x, 
-			  dest_rect.top + 1 + adjust_y + 9);
-			DrawString(p_str);					
-			break;
-		case 3:
-			MoveTo(dest_rect.left + 1 + adjust_x, 
-			  dest_rect.top + 1 + adjust_y + 9 + (dest_rect.bottom - dest_rect.top) / 6);
-			DrawString(p_str);					
-			break;
-		}
-	SetClip(current_clip);
-	DisposeRgn(current_clip);
-	SetPort(old_port);
-}
+//void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height)
+//{
+//	GrafPtr old_port;
+//	Str255 p_str,str_to_draw,str_to_draw2,c_str;
+//	Str255 null_s = "                                                                                                                                                                                                                                                              ";
+//	short str_len,i;
+//	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
+//	short text_len[257];
+//	short total_width = 0;
+//	Boolean force_skip = FALSE;
+//	RgnHandle current_clip;
+//	short adjust_x = 0,adjust_y = 0;
+//	
+//	if (dest_window ==  GetWindowPort(mainPtr)) {
+//		adjust_x = ul.h; adjust_y = ul.v;
+//		}
+//	strcpy((char *) p_str,(char *) str);
+//	strcpy((char *) c_str,(char *) str);
+//	c2pstr(p_str);	
+//	for (i = 0; i < 257; i++)
+//		text_len[i]= 0;
+//	MeasureText(256,p_str,text_len);
+//	str_len = (short) strlen((char *)str);
+//	if (str_len == 0) {
+//		return;
+//		}
+//
+//	GetPort(&old_port);	
+//	SetPort(dest_window);
+//	
+//	//FrameRect(&dest_rect);
+//	
+//	current_clip = NewRgn();
+//	GetClip(current_clip);
+//	
+//	dest_rect.bottom += 5;
+//	//ClipRect(&dest_rect);
+//	dest_rect.bottom -= 5;
+//	
+//	
+//	for (i = 0; i < 257; i++)
+//		if ((text_len[i] > total_width) && (i <= str_len))
+//			total_width = text_len[i];
+//	if ((mode == 0) && (total_width < dest_rect.right - dest_rect.left))
+//		mode = 2;
+//	for (i = 0; i < 257; i++)
+//		if ((i <= str_len) && (c_str[i] == '|') && (mode == 2))
+//			mode = 0;
+//		
+//
+//	switch (mode) {
+//		case 0: 
+//			MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
+//			for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
+//				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+//				  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
+//				  	if (c_str[i] == '|') {
+//				  		c_str[i] = ' ';
+//				  		force_skip = TRUE;
+//				  		last_word_break = i + 1;
+//				  		}
+//					sprintf((char *)str_to_draw,"%s",(char *)null_s);
+//					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
+//					sprintf((char *)str_to_draw2," %s",str_to_draw);
+//					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+//					DrawString(str_to_draw2);
+//					on_what_line++;
+//					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
+//					last_line_break = last_word_break;
+//					if (force_skip == TRUE) {
+//						force_skip = FALSE;
+//						i++;
+//						//last_line_break++;
+//						//last_word_break++;
+//						}
+//					}
+//				if (c_str[i] == ' ')
+//					last_word_break = i + 1;
+//				if (on_what_line == LINES_IN_TEXT_WIN - 1)
+//					i = 10000;
+//				}
+//	
+//			if (i - last_line_break > 1) {
+//				strcpy((char *)str_to_draw,(char *)null_s);
+//				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
+//				sprintf((char *)str_to_draw2," %s",str_to_draw);
+//				if (strlen((char *) str_to_draw2) > 3) {
+//					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
+//					DrawString(str_to_draw2);
+//					}
+//				}	
+//			break;
+//		case 1:
+//			MoveTo((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x, 
+//			  (dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);	
+//			DrawText(p_str,1,p_str[0]);
+//			//DrawString(p_str);
+//			break;
+//		case 2:
+//			MoveTo(dest_rect.left + 1 + adjust_x, 
+//			  dest_rect.top + 1 + adjust_y + 9);
+//			DrawString(p_str);					
+//			break;
+//		case 3:
+//			MoveTo(dest_rect.left + 1 + adjust_x, 
+//			  dest_rect.top + 1 + adjust_y + 9 + (dest_rect.bottom - dest_rect.top) / 6);
+//			DrawString(p_str);					
+//			break;
+//		}
+//	SetClip(current_clip);
+//	DisposeRgn(current_clip);
+//	SetPort(old_port);
+//}
 
 short calc_day()
 {

@@ -7,12 +7,20 @@
 #include "newgraph.h"
 #include "blx.g.utils.h"
 #include "monster.h"
-#include "dlogtool.h"
+#include "dlgtool.h"
 #include "loc_utils.h"
 #include "fields.h"
 #include "text.h"
-#include "Exile.sound.h"
+#include "graphtool.h"
+#include "soundtool.h"
 #include "gamma.h"
+#include "mathutil.h"
+
+#include "party.h"
+#include "town.h"
+#include "items.h"
+#include "dialogutils.h"
+#include "info.dialogs.h"
 
 extern WindowPtr	mainPtr;
 extern Rect	windRect;
@@ -61,6 +69,17 @@ extern outdoor_strs_type outdoor_text[2][2];
 extern GWorldPtr spec_scen_g;
 extern DialogPtr modeless_dialogs[18];
 extern Boolean modeless_exists[18];
+//extern dlg_filter_t give_password_filter,pick_prefab_scen_event_filter,pick_a_scen_event_filter,tip_of_day_event_filter;
+//extern dlg_filter_t talk_notes_event_filter,adventure_notes_event_filter,journal_event_filter,display_strings_event_filter;
+//extern dlg_filter_t display_strings_event_filter,display_strings_event_filter,display_strings_event_filter;
+//extern dlg_filter_t display_item_event_filter,pick_trapped_monst_event_filter,edit_party_event_filter,display_pc_event_filter;
+//extern dlg_filter_t display_alchemy_event_filter,display_help_event_filter,display_pc_item_event_filter,display_monst_event_filter;
+//extern dlg_filter_t spend_xp_event_filter,get_num_of_items_event_filter,pick_race_abil_event_filter,sign_event_filter;
+//extern dlg_filter_t get_text_response_event_filter,get_text_response_event_filter,select_pc_event_filter;
+//extern dlg_filter_t give_pc_info_event_filter,alch_choice_event_filter,pc_graphic_event_filter,pc_name_event_filter;
+//extern dlg_filter_t give_reg_info_event_filter,do_registration_event_filter,display_spells_event_filter;
+//extern dlg_filter_t display_skills_event_filter,pick_spell_event_filter,prefs_event_filter,fancy_choice_dialog_event_filter;
+
 RgnHandle clip_region;
 
 PaletteHandle new_palette,old_palette,wank_palette;
@@ -103,15 +122,34 @@ char light_area[13][13];
 char unexplored_area[13][13];
 
 // Declare the graphics
-GWorldPtr mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld;
-GWorldPtr storage_gworld,terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
-GWorldPtr party_template_gworld,items_gworld,tiny_obj_gworld,fields_gworld;
-extern GWorldPtr map_gworld,tiny_map_graphics ;
-GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2],missiles_gworld,dlogpics_gworld;
+GWorldPtr mixed_gworld;
+GWorldPtr pc_stats_gworld;
+GWorldPtr item_stats_gworld;
+GWorldPtr text_area_gworld;
+GWorldPtr storage_gworld;
+GWorldPtr terrain_screen_gworld;
+GWorldPtr text_bar_gworld;
+GWorldPtr orig_text_bar_gworld;
+GWorldPtr buttons_gworld;
+GWorldPtr party_template_gworld;
+GWorldPtr items_gworld;
+GWorldPtr tiny_obj_gworld;
+GWorldPtr fields_gworld;
+GWorldPtr map_gworld;
+GWorldPtr tiny_map_graphics;
+GWorldPtr missiles_gworld;
+GWorldPtr dlogpics_gworld;
+GWorldPtr anim_gworld;
+GWorldPtr talkfaces_gworld;
+GWorldPtr pc_gworld;
+GWorldPtr monst_gworld[10];
+GWorldPtr terrain_gworld[7];
 
 // Startup graphics, will die when play starts
 GWorldPtr startup_gworld;
-GWorldPtr startup_button_orig,startup_button_g,anim_mess;
+GWorldPtr startup_button_orig;
+GWorldPtr startup_button_g;
+GWorldPtr anim_mess;
 
 // Graphics storage vals
 short which_g_stored[STORED_GRAPHICS];
@@ -156,17 +194,78 @@ location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
 	PictInfo p,p2;
 
 
+
+void init_dialogs(){
+	cd_init_dialogs(
+		&anim_gworld,
+		&talkfaces_gworld,
+		&items_gworld,
+		&tiny_obj_gworld,
+		&pc_gworld,
+		&dlogpics_gworld,
+		monst_gworld,
+		terrain_gworld,
+		&tiny_map_graphics,
+		&fields_gworld,
+		&pc_stats_gworld,
+		&item_stats_gworld,
+		&text_area_gworld,
+		&storage_gworld,
+		&terrain_screen_gworld,
+		&text_bar_gworld,
+		&orig_text_bar_gworld,
+		&buttons_gworld,
+		&party_template_gworld,
+		&mixed_gworld,
+		&spec_scen_g
+	);
+	cd_register_event_filter(823,give_password_filter);
+	cd_register_event_filter(869,pick_prefab_scen_event_filter);
+	cd_register_event_filter(947,pick_a_scen_event_filter);
+	cd_register_event_filter(958,tip_of_day_event_filter);
+	cd_register_event_filter(960,talk_notes_event_filter);
+	cd_register_event_filter(961,adventure_notes_event_filter);
+	cd_register_event_filter(962,journal_event_filter);
+	cd_register_event_filter(987,display_item_event_filter);
+	cd_register_event_filter(988,pick_trapped_monst_event_filter);
+	cd_register_event_filter(989,edit_party_event_filter);
+	cd_register_event_filter(991,display_pc_event_filter);
+	cd_register_event_filter(996,display_alchemy_event_filter);
+	cd_register_event_filter(997,display_help_event_filter);
+	cd_register_event_filter(998,display_pc_item_event_filter);
+	cd_register_event_filter(999,display_monst_event_filter);
+	cd_register_event_filter(1010,spend_xp_event_filter );
+	cd_register_event_filter(1012,get_num_of_items_event_filter );
+	cd_register_event_filter(1013,pick_race_abil_event_filter );
+	cd_register_event_filter(1014,sign_event_filter );
+	cd_register_event_filter(873,get_text_response_event_filter );
+	cd_register_event_filter(1017,get_text_response_event_filter );
+	cd_register_event_filter(1018,select_pc_event_filter );
+	cd_register_event_filter(1019,give_pc_info_event_filter);
+	cd_register_event_filter(1047,alch_choice_event_filter);
+	cd_register_event_filter(1050,pc_graphic_event_filter);
+	cd_register_event_filter(1051,pc_name_event_filter);
+	cd_register_event_filter(1073,give_reg_info_event_filter );
+	cd_register_event_filter(1075,do_registration_event_filter );
+	cd_register_event_filter(1096,display_spells_event_filter );
+	cd_register_event_filter(1097,display_skills_event_filter );
+	cd_register_event_filter(1098,pick_spell_event_filter );
+	cd_register_event_filter(1099,prefs_event_filter );
+	cd_register_default_event_filter(fancy_choice_dialog_event_filter);
+	//return &tmp;
+}
+
 void adjust_window_mode()
 {
 	Rect r;
 
 	if (display_mode == 5) {
 		ul.h = 0; ul.v = 0;
-		SizeWindow(mainPtr,588,430, TRUE);
+		SizeWindow(mainPtr,594,430, TRUE);
 		MoveWindow(mainPtr,(windRect.right - 573) / 2,(windRect.bottom - 430) / 2 + 20,TRUE);
 		GetWindowPortBounds(mainPtr, &r);
-		}
-		else {
+	}
+	else {
 			MoveWindow(mainPtr,-6,-6,TRUE);	
 			SizeWindow(mainPtr,windRect.right + 12, windRect.bottom + 12, TRUE);
 			switch (display_mode) {
@@ -301,19 +400,20 @@ void plop_fancy_startup()
 	Set_up_win();
 
 	init_startup();
+	
+	if(!PSD[SDF_SKIP_STARTUP]){
+		//init_anim(0);
+		pict_to_draw = GetPicture(3000);
 
-	//init_anim(0);
-	pict_to_draw = GetPicture(3000);
-
-	if (fry_startup == FALSE) {
-		//for(i=100; i >= 0; i-=2) DoOneGammaFade(md, i);
+		if (fry_startup == FALSE) {
+			//for(i=100; i >= 0; i-=2) DoOneGammaFade(md, i);
 		
-	PaintRect(&whole_window);
-		// load and switch to new palette
-		GetPictInfo(pict_to_draw,&p,2,256,0,0);
-		new_palette = p.thePalette;
-		SetPalette(mainPtr,new_palette,FALSE);
-		ActivatePalette(mainPtr);
+			PaintRect(&whole_window);
+			// load and switch to new palette
+			GetPictInfo(pict_to_draw,&p,2,256,0,0);
+			new_palette = p.thePalette;
+			SetPalette(mainPtr,new_palette,FALSE);
+			ActivatePalette(mainPtr);
 // reerase menu
 /*	GetPort(&oldPort);
 	GetDeskTopGrafPort(&wMgrPort);
@@ -333,24 +433,23 @@ void plop_fancy_startup()
 		}
 // menu erased
 	
-	PaintRect(&whole_window);
-	OffsetRect(&intro_from,(whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-	DrawPicture(pict_to_draw, &intro_from);
-	ReleaseResource((Handle) pict_to_draw);	
+		PaintRect(&whole_window);
+		OffsetRect(&intro_from,(whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
+		DrawPicture(pict_to_draw, &intro_from);
+		ReleaseResource((Handle) pict_to_draw);	
 
 //	NSetPalette(mainPtr,old_palette,pmAllUpdates);
 //	ActivatePalette(mainPtr);
-	QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
-	if (fry_startup == FALSE) {
+		QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
+		if (fry_startup == FALSE) {
 
-		play_sound(-22);
-		EventRecord event;
-		WaitNextEvent(mDownMask + keyDownMask + mUpMask,&event,220,NULL);
+			play_sound(-22);
+			EventRecord event;
+			WaitNextEvent(mDownMask + keyDownMask + mUpMask,&event,220,NULL);
 		}
 	
-	DisposeRgn(wholeRegion);
-
-	
+		DisposeRgn(wholeRegion);
+	}
 }
 
 void fancy_startup_delay()
@@ -481,7 +580,7 @@ void draw_startup_stats()
 		TextSize(20);
 		OffsetRect(&to_rect,175,40);
 		char_win_draw_string(mainPtr,to_rect,
-			"No Party in Memory",0,18);
+			"No Party in Memory",0,18,true);
 		}
 	if (party_in_memory == TRUE) {
 		frame_rect = startup_top;
@@ -493,7 +592,7 @@ void draw_startup_stats()
 
 		OffsetRect(&to_rect,203,37);
 		char_win_draw_string(mainPtr,to_rect,
-			"Your party:",0,18);
+			"Your party:",0,18,true);
 		TextSize(12);	
 		TextFace(bold);
 		TextFont(geneva_font_num);
@@ -513,7 +612,7 @@ void draw_startup_stats()
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
 				char_win_draw_string(mainPtr,pc_rect,
-					adven[i].name,0,18);
+					adven[i].name,0,18,true);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
 				}
@@ -526,20 +625,20 @@ void draw_startup_stats()
 						case 1: sprintf((char *) str,"Level %d Nephilim",adven[i].level); break;
 						case 2: sprintf((char *) str,"Level %d Slithzerikai",adven[i].level); break;
 						}
-					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18);
+					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					OffsetRect(&pc_rect,0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
 						adven[i].max_health,adven[i].max_sp);
-					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18);
+					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					break;
 				case 2:
-					char_win_draw_string(mainPtr,pc_rect,"Dead",0,18);
+					char_win_draw_string(mainPtr,pc_rect,"Dead",0,18,true);
 					break;
 				case 3:
-					char_win_draw_string(mainPtr,pc_rect,"Dust",0,18);
+					char_win_draw_string(mainPtr,pc_rect,"Dust",0,18,true);
 					break;
 				case 4:
-					char_win_draw_string(mainPtr,pc_rect,"Stone",0,18);
+					char_win_draw_string(mainPtr,pc_rect,"Stone",0,18,true);
 					break;
 				}
 			}
@@ -552,10 +651,10 @@ void draw_startup_stats()
 	OffsetRect(&pc_rect,5,5);
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
-	char_win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18);
+	char_win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18,true);
 	if (registered == FALSE) {
 		pc_rect.left = startup_from[0].left + 6;
-		char_win_draw_string(mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18);
+		char_win_draw_string(mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18,true);
 		}
 		
 	ForeColor(blackColor);
@@ -592,7 +691,7 @@ void draw_start_button(short which_position,short which_button)
 	if (which_position == 3)
 		OffsetRect(&to_rect,-7,0);
 	char_win_draw_string(mainPtr,to_rect,
-		(char *) button_labels[which_position],1,18);
+		(char *) button_labels[which_position],1,18,true);
 	ForeColor(blackColor);
 	TextFont(geneva_font_num);
 	TextFace(bold);
@@ -688,7 +787,7 @@ void Set_up_win ()
 		GetFNum(fn3,&dungeon_font_num);
 
 	temp_rect.bottom = (STORED_GRAPHICS / 10) * 36;
-	err = NewGWorld(&storage_gworld, 0 /*8*/,&temp_rect, NIL, NIL, 0);
+	err = NewGWorld(&storage_gworld, 0 /*8*/,&temp_rect, NULL, NULL, kNativeEndianPixMap);
 	if (err != 0) {
 		SysBeep(2);
 		ExitToShell();
@@ -700,7 +799,7 @@ void Set_up_win ()
 	DisposeGWorld(temp_gworld);
 	
 	terrain_screen_gworld = load_pict(705);
-	err = NewGWorld(&party_template_gworld,  0 /*8*/,&pc_rect, NIL, NIL, 0);
+	err = NewGWorld(&party_template_gworld,  0 /*8*/,&pc_rect, NULL, NULL, kNativeEndianPixMap);
 	if (err != 0)
 		SysBeep(2);
 
@@ -710,18 +809,22 @@ void Set_up_win ()
 	missiles_gworld = load_pict(880);
 	dlogpics_gworld = load_pict(850);
 	
-	for (i = 0; i < NUM_BUTTONS; i++)
-		for (j = 0; j < 2; j++)
-			dlg_buttons_gworld[i][j] = load_pict(2000 + (2 * i) + j);
+	// possibly not ideal place for this, but...
+	for (i = 0; i < 10; i++)
+		monst_gworld[i] = load_pict(1100 + i);	
+	for (i = 0; i < 7; i++)
+		terrain_gworld[i] = load_pict(800 + i);
+	anim_gworld = load_pict(820);
+	talkfaces_gworld = load_pict(860);
 
 	for (i = 0; i < 7; i++)
 		bw_pats[i] = GetPattern(128 + i * 2);
 
 
 	// Create and initialize map gworld
-	err = NewGWorld(&map_gworld,  0 /*8*/,&map_rect, NIL, NIL, 0);
+	err = NewGWorld(&map_gworld,  0 /*8*/,&map_rect, NULL, NULL, kNativeEndianPixMap);
 	if (err != 0) {
-		play_sound(2);play_sound(2);play_sound(2);
+		play_sound(2,3);
 		ExitToShell();		
 		}
 		else {		
@@ -824,8 +927,7 @@ void set_gworld_fonts(short font_num)
 }
 
 // redraw_screen does the very first redraw, and any full redraw
-void redraw_screen(short mode)
-{
+void redraw_screen(){
 	switch (overall_mode) {
 		case 20:
 		put_background();
@@ -1567,102 +1669,6 @@ void put_graphics_in_template()
 		}
 }
 
-unsigned short readUShort(unsigned char ** ptr)
-{
-	unsigned short ret = CFSwapInt16LittleToHost(*(unsigned short*)*ptr);
-	*ptr += 2;
-	return ret;
-}
-unsigned int readUInt(unsigned char **ptr)
-{
-	unsigned int ret = CFSwapInt32LittleToHost(*(unsigned int*)*ptr);
-	*ptr += 4;
-	return ret;
-}
-
-
-GWorldPtr load_bmp(unsigned char *data, long length)
-{
-
-	if (length < 54) {
-		return NULL; // Too short for headers
-	}
-	unsigned char * cur = data + 10;
-	unsigned int offset = readUInt(&cur);
-	cur+=4;
-	unsigned int width = readUInt(&cur);
-	unsigned int height = readUInt(&cur);
-	cur += 2;
-	unsigned short bitCount = readUShort(&cur);
-	cur+=24;
-	int indexed;
-	unsigned int colourTable[256];
-	int i;
-	if (bitCount == 8) {
-		if (length < 54 + 256 * 4) {
-			return NULL;
-		}
-		for (i = 0; i<256; ++i) {
-			unsigned char blue = *cur++;
-			unsigned char green = *cur++;
-			unsigned char red = *cur++;
-			cur++;
-			colourTable[i] = (red << 16) + (green << 8) + blue;
-		}
-		indexed = TRUE;
-	}
-	else if (bitCount == 24) {
-		indexed = FALSE;
-	}
-	else {
-		return NULL;
-	}
-	
-	int bmppadding = (width * bitCount / 8) % 4;
-	if (bmppadding != 0) {
-		bmppadding = 4 - bmppadding;
-	}
-
-	if (length < offset + height * (bmppadding + width * bitCount / 8)) {
-		return NULL;
-	}
-	
-	cur = data + offset;
-
-	GWorldPtr newGWorld;
-	Rect picRext = {0, 0, height, width};
-	NewGWorld(&newGWorld,32,&picRext,NULL,NULL,0);
-	if (newGWorld == NULL) {
-		return NULL;
-	}
-
-	PixMapHandle pixMap = GetGWorldPixMap(newGWorld);
-	LockPixels(pixMap);
-	unsigned int * picBuf = (unsigned int*) GetPixBaseAddr(pixMap);
-	int pixrow = ((*pixMap)->rowBytes & 0x3FFF) / 4;
-
-	int j;
-	for (i = height - 1; i>= 0 ; --i) {
-		for (j=0; j<width; ++j) {
-			if (indexed) {
-				picBuf[i * pixrow + j] = colourTable[*cur++];
-			}
-			else {
-				unsigned char red = *cur++;
-				unsigned char green = *cur++;
-				unsigned char blue = *cur++;
-				picBuf[i * pixrow + j]  = (red << 16) + (green << 8) + blue;
-			}
-
-		}
-		cur+= bmppadding;
-	}
-	UnlockPixels(pixMap);
-	return newGWorld;
-}
-
-
-
 GWorldPtr load_pict(short picture_to_get)
 {
 	PicHandle	current_pic_handle;
@@ -1689,14 +1695,14 @@ GWorldPtr load_pict(short picture_to_get)
 		add_string_to_buf((char *)d_s);
 		Alert(1076,NIL);
 		return NULL;
-		}
-	pic_rect = ( **( current_pic_handle) ).picFrame;
+	}
+	QDGetPictureBounds(current_pic_handle, &pic_rect);
 	pic_wd = pic_rect.right - pic_rect.left;
 	pic_hgt = pic_rect.bottom - pic_rect.top;  
 	GetGWorld (&origPort, &origDev);
 	check_error = NewGWorld (&myGWorld,  0 /*8*/,
 				&pic_rect,
-				NIL, NIL, 0);
+				NULL, NULL, kNativeEndianPixMap);
 	if (check_error != noErr)  {
     	if (picture_to_get == 1) { // custom graphic
  			ReleaseResource ((Handle) current_pic_handle);
@@ -2035,7 +2041,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
 	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 86))
 		return;
-	if (PSD[296][0] > 0)
+	if (PSD[306][5] > 0)
 		return;
 		
 	targ.x = q;
@@ -2375,7 +2381,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		OffsetRect(&text_rect,-4,-5);
-		char_win_draw_string(mainPtr,text_rect,(char *) dam_str,1,10);
+		char_win_draw_string(mainPtr,text_rect,(char *) dam_str,1,10,true);
 		TextSize(0);
 		TextFace(0);
 		}
@@ -2546,8 +2552,8 @@ void draw_targeting_line(Point where_curs)
 					for (j = 0; j < 9; j++) {
 						store_loc.x = center.x + i - 4;
 						store_loc.y = center.y + j - 4;
-						if ((a_v(store_loc.x - which_space.x) <= 4) && 
-							(a_v(store_loc.y - which_space.y) <= 4) && 
+						if ((abs(store_loc.x - which_space.x) <= 4) && 
+							(abs(store_loc.y - which_space.y) <= 4) && 
 							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
 								target_rect.left = 13 + BITMAP_WIDTH * i + 5 + ul.h;
 								target_rect.right = target_rect.left + BITMAP_WIDTH;

@@ -3,14 +3,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "Global.h"
+#include "graphtool.h"
 #include "tGraphics.h"
 #include "dialogutils.h"
 #include "tactions.h"
-#include "sound.h"
+#include "soundtool.h"
 #include "scenario.h"
 #include "tfileio.h"
 #include "keydlgs.h"
 #include "townout.h"
+#include "mathutil.h"
+#include "loc_utils.h"
 
 #include "buttonmg.h"
 
@@ -2807,132 +2810,6 @@ void adjust_space(location l)
 
 }
 
-Boolean is_lava(short x,short y)
-{
-	if ((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
-		return TRUE;
-		else return FALSE;
-}
-
-unsigned char coord_to_ter(short x,short y)
-{
-	unsigned char what_terrain;
-
-	if (editing_town == TRUE)
-		what_terrain = t_d.terrain[x][y];
-		else what_terrain = current_terrain.terrain[x][y];
-
-	return what_terrain;
-}
-
-short get_obscurity(short x,short y)
-{
-	unsigned char what_terrain;
-	short store;
-	
-	what_terrain = coord_to_ter(x,y);
-		
-	store = scenario.ter_types[what_terrain].blockage;
-	if ((store == 1) || (store == 5))
-		return 5;
-	if (store == 4)
-		return 1;	
-	return 0;
-}
-
-
-short can_see(location p1,location p2,short mode)
-//mode; // 0 - normal  1 - counts 1 for blocked spaces or lava (used for party placement in
-			//				   town combat)
-			// 2 - no light check
-{
-	short dx,dy,count,storage = 0;
-
-	if (p1.y == p2.y) {
-		if (p1.x > p2.x) {
-			for (count = p2.x + 1; count < p1.x; count++) {
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
-					return 5;
-				}
-			}
-			else {
-				for (count = p1.x + 1; count < p2.x; count++) {
-
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == TRUE)) && (mode == 1))
-					return 5;
-				}
-			}
-			return storage;
-		}
-	if (p1.x == p2.x) {
-		if (p1.y > p2.y) {
-			for (count = p1.y - 1; count > p2.y; count--) {
-				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == TRUE)) && (mode == 1))
-					return 5;
-				}
-			}
-			else {
-				for (count = p1.y + 1; count < p2.y; count++) {
-					storage = storage + get_obscurity(p1.x, count);
-					if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == TRUE))  && (mode == 1))
-						return 5;
-					}
-			}
-		return storage;	
-		}
-	dx = p2.x - p1.x;
-	dy = p2.y - p1.y;
-	
-	if (abs(dy) > abs(dx)) {
-		if (p2.y > p1.y) {
-			for (count = 1; count < dy; count++) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)].blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy,p1.y + count) == TRUE))
-					 && (mode == 1))
-					return 5;
-				}			
-			}
-		else {
-			for (count = -1; count > dy; count--) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)].blockage > 2) ||
-					(is_lava(p1.x + (count * dx) / dy, p1.y + count) == TRUE))
-					&& (mode == 1))
-					return 5;				
-				}
-			}
-		return storage;
-		} 
-	if (abs(dy) <= abs(dx)) {
-		if (p2.x > p1.x) {
-			for (count = 1; count < dx; count++) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if (((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
-					&& (mode == 1))
-					return 5;
-				}
-			}
-		else {
-			for (count = -1; count > dx; count--) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == TRUE))
-					&& (mode == 1))
-					return 5;
-				}
-			}
-		return storage;
-		} 
-	if (storage > 5)
-		return 5;
-		else return storage;
-}
-
 Boolean place_item(location spot_hit,short which_item,short property,short always,short odds) 
 // odds 0 - 100, with 100 always
 {
@@ -3369,23 +3246,6 @@ void start_monster_editing(short just_redo_text)
 	set_lb(NLS - 3,0,"",1);
 }
 
-Boolean monst_on_space(location loc,short m_num)
-{
-	short i,j;
-	
-	if (editing_town == FALSE)
-		return FALSE;
-	if (t_d.creatures[m_num].number == 0)
-		return FALSE;
-	if ((loc.x - t_d.creatures[m_num].start_loc.x >= 0) && 
-	(loc.x - t_d.creatures[m_num].start_loc.x <= scenario.scen_monsters[t_d.creatures[m_num].number].x_width - 1) &&
-	(loc.y - t_d.creatures[m_num].start_loc.y >= 0) && 
-	(loc.y - t_d.creatures[m_num].start_loc.y <= scenario.scen_monsters[t_d.creatures[m_num].number].y_width - 1))
-		return TRUE;
-	return FALSE;	
-	
-}
-
 void start_item_editing(short just_redo_text)
 {
 	short i;
@@ -3608,7 +3468,7 @@ void update_item_menu()
 			}
 		for (i = 0; i < 80; i++) {
 				sprintf((char *) item_name, "%s",data_store->scen_item_list.scen_items[i + j * 80].full_name);
-				c2p(item_name);
+				c2pstr((char*) item_name);
 				AppendMenu(item_menu[j],item_name);
 				} 
 		}
@@ -3620,7 +3480,7 @@ void update_item_menu()
 			}
 		for (i = 0; i < 64; i++) {
 			sprintf((char *) item_name, "%s",data_store->scen_item_list.monst_names[i + j * 64]);
-			c2p( item_name);
+			c2pstr((char*) item_name);
 			AppendMenu(mon_menu[j],item_name);
 			} 
 		}

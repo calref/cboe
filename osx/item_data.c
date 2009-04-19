@@ -1,7 +1,8 @@
 #include "global.h"
 #include "item_data.h"
-#include "stdio.h"
-#include "string.h"
+#include <stdio.h>
+#include <string.h>
+#include "mathutil.h"
 extern piles_of_stuff_dumping_type *data_store;
 
 
