@@ -110,7 +110,7 @@ extern location pc_pos[6],center;
 extern WindowPtr mainPtr;
 extern Boolean in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 extern stored_items_list_type stored_items[3];
-extern CursHandle sword_curs;
+//extern CursHandle sword_curs;
 extern setup_save_type setup_save;
 extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;

@@ -25,7 +25,6 @@
 /* Begin PBXBuildFile section */
 		2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACB0BF51923006C0831 /* boe.main.cpp */; };
 		2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */; };
-		2BF04B0D0BF51924006C0831 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD10BF51923006C0831 /* boe.fileio.cpp */; };
 		2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* boe.townspec.cpp */; };
 		2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* boe.combat.cpp */; };
@@ -44,6 +43,8 @@
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F09A0F97672700BF5B67 /* dlglowlevel.h */; };
+		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
+		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
@@ -90,7 +91,6 @@
 		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
 		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
 		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
-		91EBE6D90F9A15BD002356F2 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		91EBE8AB0F9A2BE1002356F2 /* scen.locutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */; };
 /* End PBXBuildFile section */
 
@@ -790,7 +790,6 @@
 			files = (
 				2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */,
 				2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */,
-				2BF04B0D0BF51924006C0831 /* boe.actions.cpp in Sources */,
 				2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */,
 				2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */,
 				2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */,
@@ -807,7 +806,8 @@
 				2BF04B2C0BF51924006C0831 /* boe.startup.cpp in Sources */,
 				2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */,
 				2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */,
-				91EBE6D90F9A15BD002356F2 /* boe.graphics.cpp in Sources */,
+				9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */,
+				9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,7 +968,10 @@
 		2BF04AC50BF518D4006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -997,7 +1000,10 @@
 		2BF04AC60BF518D4006C0831 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1160,7 +1166,10 @@
 		91B3F07B0F975C7300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = misc;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1190,7 +1199,10 @@
 		91B3F07C0F975C7300BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = misc;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1219,7 +1231,10 @@
 		91B3F1050F97799300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = misc;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1249,7 +1264,10 @@
 		91B3F1060F97799300BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = misc;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

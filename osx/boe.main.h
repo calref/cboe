@@ -21,7 +21,6 @@ void handle_mage_spells_menu(int item_hit);
 void handle_priest_spells_menu(int item_hit);
 void handle_monster_info_menu(int item_hit);
 void handle_music_menu(int item_hit);
-void set_cursor(CursHandle which_curs);
 void change_cursor(Point where_curs);
 void find_quickdraw();
 void set_pixel_depth();

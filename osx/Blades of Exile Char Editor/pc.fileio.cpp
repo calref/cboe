@@ -112,69 +112,50 @@ void load_file()
 		BlockMoveData(&typeList, (*type_list)->osType, 2 * sizeof(OSType));
 	}
 	
-	if (sys_7_avail == FALSE) {
-		/* not reached when using Carbon */
+	if (ae_loading == FALSE) {
+		//StandardGetFile(NULL,1,type_list,&s_reply);
+		// StandardGetFile is not available in Carbon -jmr
+		/* XXX FIXME general lack of error checking in these nav services calls */
+		NavGetDefaultDialogCreationOptions(&dialogOptions);
+		NavCreateChooseFileDialog(&dialogOptions, type_list, NULL,
+								  NULL, NULL, NULL, &theDialog);
+		NavDialogRun(theDialog);
+		theAction = NavDialogGetUserAction(theDialog);
+		if (theAction == kNavUserActionCancel || theAction == kNavUserActionNone) {
+			NavDialogDispose(theDialog);
+			return;
+		}
+		NavDialogGetReply(theDialog, &dialogReply);
 		
-		/* SFPGetFile(where,message, NULL, 1, type_list, NULL, &reply,-2000,NULL);
-		 
-		 if (reply.good == 0) {	
-		 return;
-		 }
-		 
-		 
-		 if ((error = FSOpen(reply.fName,reply.vRefNum,&file_id)) > 0){
-		 FCD(1064,0);
-		 SysBeep(2);
-		 return;
-		 } */
-	}
-	else {
-		if (ae_loading == FALSE) {
-			//StandardGetFile(NULL,1,type_list,&s_reply);
-			// StandardGetFile is not available in Carbon -jmr
-			/* XXX FIXME general lack of error checking in these nav services calls */
-			NavGetDefaultDialogCreationOptions(&dialogOptions);
-			NavCreateChooseFileDialog(&dialogOptions, type_list, NULL,
-									  NULL, NULL, NULL, &theDialog);
-			NavDialogRun(theDialog);
-			theAction = NavDialogGetUserAction(theDialog);
-			if (theAction == kNavUserActionCancel || theAction == kNavUserActionNone) {
-				NavDialogDispose(theDialog);
-				return;
-			}
-			NavDialogGetReply(theDialog, &dialogReply);
-			
-			AECountItems(&(dialogReply.selection), &descCount);
-			for (descNum = 1 ; descNum <= descCount ; descNum++) {
-				DescType returnedType;
-				Size actualSize;
-				AEGetNthPtr(&(dialogReply.selection), descNum, typeWildCard,
-							&dummyKeyword, &returnedType, (Ptr)(&fileRef),
-							sizeof(fileRef), &actualSize);
-				/* we'd get typeFSS on classic Mac OS, but I have omitted that check due to laziness -jmr */
-				if (returnedType == typeFSRef)
-					break;
-			}
-			if (descNum > descCount) {
-				/* no valid file reference came back from the dialog - shouldn't happen... */
-				NavDisposeReply(&dialogReply);
-				NavDialogDispose(theDialog);
-				return;
-			}
-			
-			FSGetCatalogInfo(&fileRef, kFSCatInfoNone, NULL,
-							 NULL, &file_to_load, NULL);
-			
+		AECountItems(&(dialogReply.selection), &descCount);
+		for (descNum = 1 ; descNum <= descCount ; descNum++) {
+			DescType returnedType;
+			Size actualSize;
+			AEGetNthPtr(&(dialogReply.selection), descNum, typeWildCard,
+						&dummyKeyword, &returnedType, (Ptr)(&fileRef),
+						sizeof(fileRef), &actualSize);
+			/* we'd get typeFSS on classic Mac OS, but I have omitted that check due to laziness -jmr */
+			if (returnedType == typeFSRef)
+				break;
+		}
+		if (descNum > descCount) {
+			/* no valid file reference came back from the dialog - shouldn't happen... */
 			NavDisposeReply(&dialogReply);
 			NavDialogDispose(theDialog);
+			return;
 		}
 		
-		if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
-			FCD(1064,0);
-			SysBeep(2);
-			return;
-		}		
+		FSGetCatalogInfo(&fileRef, kFSCatInfoNone, NULL,
+						 NULL, &file_to_load, NULL);
 		
+		NavDisposeReply(&dialogReply);
+		NavDialogDispose(theDialog);
+	}
+	
+	if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
+		FCD(1064,0);
+		SysBeep(2);
+		return;
 	}
 	
 	file_size = sizeof(party_record_type);

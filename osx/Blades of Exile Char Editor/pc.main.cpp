@@ -145,15 +145,13 @@ int main(void)
 
 //	register_flag = get_reg_data();
 	load_sounds();
-	if (sys_7_avail == TRUE) {
-		set_up_apple_events();
-		}
+	set_up_apple_events();
 
 	menu_bar_handle = GetNewMBar(128);
 	if (menu_bar_handle == NIL) {
 		SysBeep(2); 
 		ExitToShell();
-		}
+	}
 	SetMenuBar(menu_bar_handle);
 	DisposeHandle(menu_bar_handle);
 
@@ -784,12 +782,12 @@ void update_item_menu()
 	}
 }
 
-void set_cursor(CursHandle which_curs)
-{
-	HLock ((Handle) which_curs);
-	SetCursor (*which_curs);
-	HUnlock((Handle) which_curs);
-}
+//void set_cursor(CursHandle which_curs)
+//{
+//	HLock ((Handle) which_curs);
+//	SetCursor (*which_curs);
+//	HUnlock((Handle) which_curs);
+//}
 
 void find_quickdraw() {
 	OSErr err;

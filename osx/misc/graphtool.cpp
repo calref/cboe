@@ -6,6 +6,7 @@
  *
  */
 
+#define _GRAPHTOOL_CPP
 #include "graphtool.h"
 
 //CursHandle arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;

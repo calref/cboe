@@ -54,7 +54,7 @@ extern short overall_mode,which_combat_type,stat_window;
 extern WindowPtr mainPtr;
 extern Rect more_info_button;
 extern short which_item_page[6],current_cursor;
-extern CursHandle sword_curs;
+//extern CursHandle sword_curs;
 extern ControlHandle text_sbar,item_sbar;
 extern Point store_anim_ul;
 extern PixPatHandle	bg[14];
@@ -1530,9 +1530,7 @@ Rect coord_to_rect(short i,short j)
 
 void make_cursor_sword() 
 {
-	HLock ((Handle) sword_curs);
-	SetCursor (*sword_curs);
-	HUnlock((Handle) sword_curs);
+	set_cursor(sword_curs);
 }
 
 void get_str(Str255 str,short i, short j)

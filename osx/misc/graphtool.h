@@ -22,3 +22,8 @@ short string_length(char *str);
 //void draw_terrain();
 Rect calc_rect(short i, short j);
 Rect get_custom_rect (short which_rect);
+#ifndef _GRAPHTOOL_CPP
+extern short arrow_curs[3][3];
+extern short sword_curs, boot_curs, drop_curs, target_curs;
+extern short talk_curs, key_curs, look_curs, current_cursor;
+#endif

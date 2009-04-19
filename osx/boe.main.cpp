@@ -20,9 +20,9 @@
 #include "graphtool.h"
 #include "mathutil.h"
 
-extern short arrow_curs[3][3];
-extern short sword_curs, boot_curs, drop_curs, target_curs;
-extern short talk_curs, key_curs, look_curs, current_cursor;
+//extern short arrow_curs[3][3];
+//extern short sword_curs, boot_curs, drop_curs, target_curs;
+//extern short talk_curs, key_curs, look_curs, current_cursor;
 
 /* Mac stuff globals */
 Rect	windRect, Drag_Rect;
@@ -57,7 +57,7 @@ short on_spell_menu[2][62];
 short on_monst_menu[256];
 
 // Cursors 
-//short current_cursor = 120;
+extern short current_cursor;
 
 
 // Shareware globals
@@ -332,7 +332,7 @@ void Handle_One_Event()
 	}
 
 	//(cur_time - last_anim_time > 42)
-	if ((cur_time % 40 == 0) && (in_startup_mode == FALSE) && (anim_onscreen == TRUE) && (PSD[306][9] == 0)
+	if ((cur_time % 40 == 0) && (in_startup_mode == FALSE) && (anim_onscreen == TRUE) && (PSD[SDF_NO_TER_ANIM] == 0)
 		&& ((FrontWindow() == mainPtr) || (FrontWindow() ==GetDialogWindow(modeless_dialogs[5]))) && (!gInBackground)) {
 		last_anim_time = cur_time;
 		initiate_redraw();
@@ -1008,8 +1008,8 @@ void handle_music_menu(int item_hit)
 				}
 				//else end_music(1);
 			if (bgm_on == TRUE)
-				party.stuff_done[306][5] = 1;
-				else party.stuff_done[306][5] = 0;
+				party.stuff_done[SDF_NO_SHORE_FRILLS] = 1;
+				else party.stuff_done[SDF_NO_SHORE_FRILLS] = 0;
 			break;
 		}
 }

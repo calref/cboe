@@ -745,13 +745,13 @@ void cd_key_label(short dlog_num, short item_num,short loc){
 
 void cd_draw_item(short dlog_num,short item_num){
 	short dlg_index,item_index,store_label;
-	RGBColor c[3] = {{0,0,0},{65535,0,0},{0,0,8192}};
+	RGBColor c[3] = {{65535,65535,65535},{65535,0,0},{0,0,8192}};
 	Rect from_rect,to_rect;
 	GrafPtr old_port;
 	//printf("In cd_draw_item(%i,%i)\n",dlog_num,item_num);
-	if (dlgs[dlg_index].draw_ready == FALSE)
-		return;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
+		return;
+	if (dlgs[dlg_index].draw_ready == FALSE)
 		return;
 	printf("Drawing item %i of type %i\n",item_num,items[item_index].type);
 	GetPort(&old_port);
@@ -816,8 +816,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			TextFont(geneva_font_num);
 			TextFace(0);
 			TextFace(bold);
-			TextSize(10); 
-			ForeColor(blackColor);
+			TextSize(10);
 			if (items[item_index].type == DLG_TEXT_PLAIN)
 				TextFace(0);
 			if (items[item_index].type == DLG_TEXT_LARGE)
@@ -825,10 +824,10 @@ void cd_draw_item(short dlog_num,short item_num){
 			ForeColor(blackColor);
 			if (items[item_index].flag % 10 == 1)
 				cd_frame_item(dlog_num,item_num,2);
-			
-				if (items[item_index].flag >= 10) {
+			if (items[item_index].flag >= 10) {
 				RGBForeColor(&c[1]);
-			}printf("Testing 1...\n");
+			}else RGBForeColor(&c[0]);
+			printf("Testing 1...\n");
 			printf("Rect is top = %i, left = %i, bottom = %i, right = %i\n",items[item_index].rect.top,items[item_index].rect.left,items[item_index].rect.bottom,items[item_index].rect.right);
 			if (items[item_index].rect.bottom - items[item_index].rect.top < 20) {
 				items[item_index].rect.left += 3;

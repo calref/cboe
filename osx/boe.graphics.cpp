@@ -929,7 +929,7 @@ void set_gworld_fonts(short font_num)
 void redraw_screen(){
 	switch (overall_mode) {
 		case 20:
-		put_background();
+			put_background();
 			break;
 		default:
 			draw_main_screen();
@@ -938,7 +938,7 @@ void redraw_screen(){
 			if (overall_mode == MODE_COMBAT)
 				draw_pcs(pc_pos[current_pc],1);
 			if (overall_mode == MODE_FANCY_TARGET)
-			draw_targets(center);
+				draw_targets(center);
 			break;
 		}
 	put_pc_screen();
@@ -1121,8 +1121,8 @@ void draw_text_bar(short mode)
 
 	if (mode == 1)
 		remember_tiny_text = 500;	   
-	if ((PSD[SDF_PARTY_STEALTHY] > 0)     || (PSD[SDF_PARTY_FLIGHT] > 0) ||
-		(PSD[SDF_PARTY_DETECT_MONST] > 0) || (PSD[SDF_PARTY_FIREWALK] > 0) )
+	if ((PSD[SDF_PARTY_STEALTHY] > 0)    || (PSD[SDF_PARTY_FLIGHT] > 0) ||
+		(PSD[SDF_PARTY_DETECT_LIFE] > 0) || (PSD[SDF_PARTY_FIREWALK] > 0) )
 		remember_tiny_text = 500;
 	if (is_out()) {
 		for (i = 0; i < 8; i++)

@@ -2092,9 +2092,9 @@ void increase_age()////
 	if (party.stuff_done[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
 		add_string_to_buf("Your footsteps grow louder.      "); }
 	party.stuff_done[SDF_PARTY_STEALTHY] = move_to_zero(party.stuff_done[SDF_PARTY_STEALTHY]);
-	if (party.stuff_done[SDF_PARTY_DETECT_MONST] == 1) {reset_text_bar();
+	if (party.stuff_done[SDF_PARTY_DETECT_LIFE] == 1) {reset_text_bar();
 		add_string_to_buf("You stop detecting monsters.      ");}
-	party.stuff_done[SDF_PARTY_DETECT_MONST] = move_to_zero(party.stuff_done[SDF_PARTY_DETECT_MONST]);
+	party.stuff_done[SDF_PARTY_DETECT_LIFE] = move_to_zero(party.stuff_done[SDF_PARTY_DETECT_LIFE]);
 	if (party.stuff_done[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
 		add_string_to_buf("Your feet stop glowing.      ");}
 	party.stuff_done[SDF_PARTY_FIREWALK] = move_to_zero(party.stuff_done[SDF_PARTY_FIREWALK]);

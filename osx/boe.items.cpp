@@ -32,7 +32,7 @@ extern pc_record_type adven[6];
 extern big_tr_type t_d;
 extern location pc_pos[6];
 
-extern CursHandle sword_curs;
+//extern CursHandle sword_curs;
 extern Boolean modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern DialogPtr modeless_dialogs[18];
