@@ -305,7 +305,7 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val, short med_or_lt){
 	RGBForeColor(&dk_gray);
 	MoveTo(rect.left,rect.top);
 	LineTo(rect.right,rect.top);
-	if (med_or_lt == 'pc') // hDlg == GetWindowPort(mainPtr) // ie for the pc editor only
+	if (med_or_lt) // hDlg == GetWindowPort(mainPtr) // ie for the pc editor only
 		RGBForeColor(&med_gray);
 	else RGBForeColor(&lt_gray);
 	LineTo(rect.right,rect.bottom);

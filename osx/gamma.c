@@ -155,7 +155,6 @@ void BlackoutDevice(void)
 //
 // * ****************************************************************************** *
 
-#include <Carbon/Carbon.h>
 #include "gamma.h"
 
 long			gammaUtilsInstalled;

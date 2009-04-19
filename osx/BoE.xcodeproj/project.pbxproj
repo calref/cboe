@@ -23,25 +23,25 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		2BF04B0B0BF51924006C0831 /* bldsexil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACB0BF51923006C0831 /* bldsexil.c */; };
-		2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACD0BF51923006C0831 /* blx.g.utils.c */; };
-		2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* blxactions.c */; };
-		2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD10BF51923006C0831 /* blxfileio.c */; };
-		2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* blxtown_spec.c */; };
-		2BF04B1C0BF51924006C0831 /* combat.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* combat.c */; };
-		2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* dialogutils.c */; };
-		2BF04B200BF51924006C0831 /* fields.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEE0BF51924006C0831 /* fields.c */; };
-		2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* info.dialogs.c */; };
-		2BF04B240BF51924006C0831 /* item_data.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* item_data.c */; };
-		2BF04B250BF51924006C0831 /* items.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* items.c */; };
-		2BF04B260BF51924006C0831 /* loc_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFA0BF51924006C0831 /* loc_utils.c */; };
-		2BF04B270BF51924006C0831 /* monster.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFC0BF51924006C0831 /* monster.c */; };
-		2BF04B280BF51924006C0831 /* newgraph.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFE0BF51924006C0831 /* newgraph.c */; };
-		2BF04B290BF51924006C0831 /* party.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B000BF51924006C0831 /* party.c */; };
-		2BF04B2B0BF51924006C0831 /* specials.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B030BF51924006C0831 /* specials.c */; };
-		2BF04B2C0BF51924006C0831 /* startup.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B050BF51924006C0831 /* startup.c */; };
-		2BF04B2D0BF51924006C0831 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* text.c */; };
-		2BF04B2E0BF51924006C0831 /* town.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* town.c */; };
+		2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACB0BF51923006C0831 /* boe.main.cpp */; };
+		2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */; };
+		2BF04B0D0BF51924006C0831 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
+		2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD10BF51923006C0831 /* boe.fileio.cpp */; };
+		2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* boe.townspec.cpp */; };
+		2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* boe.combat.cpp */; };
+		2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */; };
+		2BF04B200BF51924006C0831 /* boe.fields.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEE0BF51924006C0831 /* boe.fields.cpp */; };
+		2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */; };
+		2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */; };
+		2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* boe.items.cpp */; };
+		2BF04B260BF51924006C0831 /* boe.locutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */; };
+		2BF04B270BF51924006C0831 /* boe.monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFC0BF51924006C0831 /* boe.monster.cpp */; };
+		2BF04B280BF51924006C0831 /* boe.newgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFE0BF51924006C0831 /* boe.newgraph.cpp */; };
+		2BF04B290BF51924006C0831 /* boe.party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B000BF51924006C0831 /* boe.party.cpp */; };
+		2BF04B2B0BF51924006C0831 /* boe.specials.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B030BF51924006C0831 /* boe.specials.cpp */; };
+		2BF04B2C0BF51924006C0831 /* boe.startup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B050BF51924006C0831 /* boe.startup.cpp */; };
+		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
+		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F09A0F97672700BF5B67 /* dlglowlevel.h */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
@@ -55,19 +55,19 @@
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */; };
 		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
-		91B3EF480F969F2300BF5B67 /* char.ed.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* char.ed.c */; };
-		91B3EF490F969F2300BF5B67 /* ed.action.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* ed.action.c */; };
-		91B3EF4A0F969F2300BF5B67 /* ed.editors.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* ed.editors.c */; };
-		91B3EF4B0F969F2300BF5B67 /* ed.fileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF080F969BD300BF5B67 /* ed.fileio.c */; };
-		91B3EF4D0F969F2300BF5B67 /* ed.graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */; };
-		91B3EF500F969F3000BF5B67 /* Exiletedit.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */; };
-		91B3EF530F969F3000BF5B67 /* keydlgs.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEE0F969BA700BF5B67 /* keydlgs.c */; };
-		91B3EF540F969F3000BF5B67 /* scenario.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEF0F969BA700BF5B67 /* scenario.c */; };
-		91B3EF560F969F3000BF5B67 /* tactions.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF10F969BA700BF5B67 /* tactions.c */; };
-		91B3EF570F969F3000BF5B67 /* tfileio.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* tfileio.c */; };
-		91B3EF590F969F3000BF5B67 /* townout.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* townout.c */; };
-		91B3EF5A0F969F3000BF5B67 /* buttonmg.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* buttonmg.c */; };
-		91B3EF5B0F969F3000BF5B67 /* dialogutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* dialogutils.c */; };
+		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
+		91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* pc.action.cpp */; };
+		91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
+		91B3EF4B0F969F2300BF5B67 /* pc.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */; };
+		91B3EF4D0F969F2300BF5B67 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
+		91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */; };
+		91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */; };
+		91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */; };
+		91B3EF560F969F3000BF5B67 /* scen.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF10F969BA700BF5B67 /* scen.actions.cpp */; };
+		91B3EF570F969F3000BF5B67 /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
+		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
+		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
+		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
 		91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
 		91B3F0810F975CC400BF5B67 /* dlgtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F0610F96D25200BF5B67 /* dlgtool.h */; };
@@ -81,7 +81,7 @@
 		91B3F1120F9779E100BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3F11F0F97801F00BF5B67 /* mathutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F11D0F97801F00BF5B67 /* mathutil.h */; };
 		91B3F1200F97801F00BF5B67 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
-		91B3F1850F97894A00BF5B67 /* tGraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* tGraphics.c */; };
+		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
 		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
@@ -90,8 +90,8 @@
 		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
 		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
 		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
-		91EBE6D90F9A15BD002356F2 /* blxgraphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* blxgraphics.c */; };
-		91EBE8AB0F9A2BE1002356F2 /* loc_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */; };
+		91EBE6D90F9A15BD002356F2 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
+		91EBE8AB0F9A2BE1002356F2 /* scen.locutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -190,88 +190,84 @@
 		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoE.icns; sourceTree = "<group>"; };
 		2BF04AC10BF518D4006C0831 /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Blades of Exile-Info.plist"; sourceTree = "<group>"; };
-		2BF04ACB0BF51923006C0831 /* bldsexil.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = bldsexil.c; sourceTree = "<group>"; };
-		2BF04ACC0BF51923006C0831 /* bldsexil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = bldsexil.h; sourceTree = "<group>"; };
-		2BF04ACD0BF51923006C0831 /* blx.g.utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = blx.g.utils.c; sourceTree = "<group>"; };
-		2BF04ACE0BF51923006C0831 /* blx.g.utils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blx.g.utils.h; sourceTree = "<group>"; };
-		2BF04ACF0BF51923006C0831 /* blxactions.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxactions.c; sourceTree = "<group>"; };
-		2BF04AD00BF51923006C0831 /* blxactions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxactions.h; sourceTree = "<group>"; };
-		2BF04AD10BF51923006C0831 /* blxfileio.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxfileio.c; sourceTree = "<group>"; };
-		2BF04AD20BF51923006C0831 /* blxfileio.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxfileio.h; sourceTree = "<group>"; };
-		2BF04AD30BF51923006C0831 /* blxgraphics.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxgraphics.c; sourceTree = "<group>"; };
-		2BF04AD40BF51923006C0831 /* blxgraphics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxgraphics.h; sourceTree = "<group>"; };
-		2BF04AD50BF51923006C0831 /* blxtown_spec.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = blxtown_spec.c; sourceTree = "<group>"; };
-		2BF04AD60BF51923006C0831 /* blxtown_spec.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = blxtown_spec.h; sourceTree = "<group>"; };
-		2BF04AE60BF51924006C0831 /* combat.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = combat.c; sourceTree = "<group>"; };
-		2BF04AE70BF51924006C0831 /* combat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = combat.h; sourceTree = "<group>"; };
-		2BF04AE80BF51924006C0831 /* dialogutils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = dialogutils.c; sourceTree = "<group>"; };
-		2BF04AE90BF51924006C0831 /* dialogutils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dialogutils.h; sourceTree = "<group>"; };
-		2BF04AEE0BF51924006C0831 /* fields.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fields.c; sourceTree = "<group>"; };
-		2BF04AEF0BF51924006C0831 /* fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fields.h; sourceTree = "<group>"; };
+		2BF04ACB0BF51923006C0831 /* boe.main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.main.cpp; sourceTree = "<group>"; };
+		2BF04ACC0BF51923006C0831 /* boe.main.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = boe.main.h; sourceTree = "<group>"; };
+		2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.graphutil.cpp; sourceTree = "<group>"; };
+		2BF04ACE0BF51923006C0831 /* boe.graphutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.graphutil.h; sourceTree = "<group>"; };
+		2BF04ACF0BF51923006C0831 /* boe.actions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.actions.cpp; sourceTree = "<group>"; };
+		2BF04AD00BF51923006C0831 /* boe.actions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.actions.h; sourceTree = "<group>"; };
+		2BF04AD10BF51923006C0831 /* boe.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.fileio.cpp; sourceTree = "<group>"; };
+		2BF04AD20BF51923006C0831 /* boe.fileio.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.fileio.h; sourceTree = "<group>"; };
+		2BF04AD30BF51923006C0831 /* boe.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.graphics.cpp; sourceTree = "<group>"; };
+		2BF04AD40BF51923006C0831 /* boe.graphics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.graphics.h; sourceTree = "<group>"; };
+		2BF04AD50BF51923006C0831 /* boe.townspec.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.townspec.cpp; sourceTree = "<group>"; };
+		2BF04AD60BF51923006C0831 /* boe.townspec.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.townspec.h; sourceTree = "<group>"; };
+		2BF04AE60BF51924006C0831 /* boe.combat.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.combat.cpp; sourceTree = "<group>"; };
+		2BF04AE70BF51924006C0831 /* boe.combat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.combat.h; sourceTree = "<group>"; };
+		2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.dlgutil.cpp; sourceTree = "<group>"; };
+		2BF04AE90BF51924006C0831 /* boe.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.dlgutil.h; sourceTree = "<group>"; };
+		2BF04AEE0BF51924006C0831 /* boe.fields.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.fields.cpp; sourceTree = "<group>"; };
+		2BF04AEF0BF51924006C0831 /* boe.fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.fields.h; sourceTree = "<group>"; };
 		2BF04AF00BF51924006C0831 /* gamma.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gamma.c; sourceTree = "<group>"; };
 		2BF04AF10BF51924006C0831 /* gamma.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = gamma.h; sourceTree = "<group>"; };
-		2BF04AF30BF51924006C0831 /* global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
-		2BF04AF40BF51924006C0831 /* info.dialogs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = info.dialogs.c; sourceTree = "<group>"; };
-		2BF04AF50BF51924006C0831 /* info.dialogs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = info.dialogs.h; sourceTree = "<group>"; };
-		2BF04AF60BF51924006C0831 /* item_data.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = item_data.c; sourceTree = "<group>"; };
-		2BF04AF70BF51924006C0831 /* item_data.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = item_data.h; sourceTree = "<group>"; };
-		2BF04AF80BF51924006C0831 /* items.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = items.c; sourceTree = "<group>"; };
-		2BF04AF90BF51924006C0831 /* items.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = items.h; sourceTree = "<group>"; };
-		2BF04AFA0BF51924006C0831 /* loc_utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = loc_utils.c; sourceTree = "<group>"; };
-		2BF04AFB0BF51924006C0831 /* loc_utils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = loc_utils.h; sourceTree = "<group>"; };
-		2BF04AFC0BF51924006C0831 /* monster.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = monster.c; sourceTree = "<group>"; };
-		2BF04AFD0BF51924006C0831 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monster.h; sourceTree = "<group>"; };
-		2BF04AFE0BF51924006C0831 /* newgraph.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = newgraph.c; sourceTree = "<group>"; };
-		2BF04AFF0BF51924006C0831 /* newgraph.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = newgraph.h; sourceTree = "<group>"; };
-		2BF04B000BF51924006C0831 /* party.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = party.c; sourceTree = "<group>"; };
-		2BF04B010BF51924006C0831 /* party.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
+		2BF04AF30BF51924006C0831 /* boe.global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.global.h; sourceTree = "<group>"; };
+		2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.infodlg.cpp; sourceTree = "<group>"; };
+		2BF04AF50BF51924006C0831 /* boe.infodlg.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.infodlg.h; sourceTree = "<group>"; };
+		2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.itemdata.cpp; sourceTree = "<group>"; };
+		2BF04AF70BF51924006C0831 /* boe.itemdata.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.itemdata.h; sourceTree = "<group>"; };
+		2BF04AF80BF51924006C0831 /* boe.items.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.items.cpp; sourceTree = "<group>"; };
+		2BF04AF90BF51924006C0831 /* boe.items.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.items.h; sourceTree = "<group>"; };
+		2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.locutils.cpp; sourceTree = "<group>"; };
+		2BF04AFB0BF51924006C0831 /* boe.locutils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.locutils.h; sourceTree = "<group>"; };
+		2BF04AFC0BF51924006C0831 /* boe.monster.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.monster.cpp; sourceTree = "<group>"; };
+		2BF04AFD0BF51924006C0831 /* boe.monster.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.monster.h; sourceTree = "<group>"; };
+		2BF04AFE0BF51924006C0831 /* boe.newgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.newgraph.cpp; sourceTree = "<group>"; };
+		2BF04AFF0BF51924006C0831 /* boe.newgraph.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.newgraph.h; sourceTree = "<group>"; };
+		2BF04B000BF51924006C0831 /* boe.party.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.party.cpp; sourceTree = "<group>"; };
+		2BF04B010BF51924006C0831 /* boe.party.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.party.h; sourceTree = "<group>"; };
 		2BF04B020BF51924006C0831 /* powerpc.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = powerpc.c; sourceTree = "<group>"; };
-		2BF04B030BF51924006C0831 /* specials.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = specials.c; sourceTree = "<group>"; wrapsLines = 1; };
-		2BF04B040BF51924006C0831 /* specials.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = specials.h; sourceTree = "<group>"; };
-		2BF04B050BF51924006C0831 /* startup.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = startup.c; sourceTree = "<group>"; };
-		2BF04B060BF51924006C0831 /* startup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = startup.h; sourceTree = "<group>"; };
-		2BF04B070BF51924006C0831 /* text.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = text.c; sourceTree = "<group>"; };
-		2BF04B080BF51924006C0831 /* text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
-		2BF04B090BF51924006C0831 /* town.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = town.c; sourceTree = "<group>"; wrapsLines = 1; };
-		2BF04B0A0BF51924006C0831 /* town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = town.h; sourceTree = "<group>"; };
+		2BF04B030BF51924006C0831 /* boe.specials.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.specials.cpp; sourceTree = "<group>"; wrapsLines = 1; };
+		2BF04B040BF51924006C0831 /* boe.specials.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.specials.h; sourceTree = "<group>"; };
+		2BF04B050BF51924006C0831 /* boe.startup.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.startup.cpp; sourceTree = "<group>"; };
+		2BF04B060BF51924006C0831 /* boe.startup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.startup.h; sourceTree = "<group>"; };
+		2BF04B070BF51924006C0831 /* boe.text.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.text.cpp; sourceTree = "<group>"; };
+		2BF04B080BF51924006C0831 /* boe.text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.text.h; sourceTree = "<group>"; };
+		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
+		2BF04B0A0BF51924006C0831 /* boe.town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.town.h; sourceTree = "<group>"; };
 		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		91B3E8A50F938FFE00BF5B67 /* consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = consts.h; sourceTree = "<group>"; };
+		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
 		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "BoE Scenario Editor.icns"; path = "Scenario Editor/BoE Scenario Editor.icns"; sourceTree = "<group>"; };
-		91B3EEDD0F969BA700BF5B67 /* fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileio.h; path = "Scenario Editor/fileio.h"; sourceTree = "<group>"; };
-		91B3EEDE0F969BA700BF5B67 /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = global.h; path = "Scenario Editor/global.h"; sourceTree = "<group>"; };
-		91B3EEDF0F969BA700BF5B67 /* itemlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = itemlist.h; path = "Scenario Editor/itemlist.h"; sourceTree = "<group>"; };
-		91B3EEE00F969BA700BF5B67 /* keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keydlgs.h; path = "Scenario Editor/keydlgs.h"; sourceTree = "<group>"; };
-		91B3EEE10F969BA700BF5B67 /* scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scenario.h; path = "Scenario Editor/scenario.h"; sourceTree = "<group>"; };
-		91B3EEE30F969BA700BF5B67 /* tactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tactions.h; path = "Scenario Editor/tactions.h"; sourceTree = "<group>"; };
-		91B3EEE40F969BA700BF5B67 /* tfileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tfileio.h; path = "Scenario Editor/tfileio.h"; sourceTree = "<group>"; };
-		91B3EEE50F969BA700BF5B67 /* tGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tGraphics.h; path = "Scenario Editor/tGraphics.h"; sourceTree = "<group>"; };
-		91B3EEE60F969BA700BF5B67 /* townout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = townout.h; path = "Scenario Editor/townout.h"; sourceTree = "<group>"; };
-		91B3EEE70F969BA700BF5B67 /* buttonmg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buttonmg.h; path = "Scenario Editor/buttonmg.h"; sourceTree = "<group>"; };
-		91B3EEE80F969BA700BF5B67 /* dialogutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialogutils.h; path = "Scenario Editor/dialogutils.h"; sourceTree = "<group>"; };
-		91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Exiletedit.c; path = "Scenario Editor/Exiletedit.c"; sourceTree = "<group>"; };
-		91B3EEEC0F969BA700BF5B67 /* fileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fileio.c; path = "Scenario Editor/fileio.c"; sourceTree = "<group>"; };
-		91B3EEEE0F969BA700BF5B67 /* keydlgs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keydlgs.c; path = "Scenario Editor/keydlgs.c"; sourceTree = "<group>"; };
-		91B3EEEF0F969BA700BF5B67 /* scenario.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scenario.c; path = "Scenario Editor/scenario.c"; sourceTree = "<group>"; };
-		91B3EEF10F969BA700BF5B67 /* tactions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tactions.c; path = "Scenario Editor/tactions.c"; sourceTree = "<group>"; };
-		91B3EEF20F969BA700BF5B67 /* tfileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tfileio.c; path = "Scenario Editor/tfileio.c"; sourceTree = "<group>"; };
-		91B3EEF30F969BA700BF5B67 /* tGraphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tGraphics.c; path = "Scenario Editor/tGraphics.c"; sourceTree = "<group>"; };
-		91B3EEF40F969BA700BF5B67 /* townout.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = townout.c; path = "Scenario Editor/townout.c"; sourceTree = "<group>"; };
-		91B3EEF50F969BA700BF5B67 /* buttonmg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buttonmg.c; path = "Scenario Editor/buttonmg.c"; sourceTree = "<group>"; };
-		91B3EEF60F969BA700BF5B67 /* dialogutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dialogutils.c; path = "Scenario Editor/dialogutils.c"; sourceTree = "<group>"; };
+		91B3EEDE0F969BA700BF5B67 /* scen.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.global.h; path = "Scenario Editor/scen.global.h"; sourceTree = "<group>"; };
+		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.keydlgs.h; path = "Scenario Editor/scen.keydlgs.h"; sourceTree = "<group>"; };
+		91B3EEE10F969BA700BF5B67 /* scen.core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.core.h; path = "Scenario Editor/scen.core.h"; sourceTree = "<group>"; };
+		91B3EEE30F969BA700BF5B67 /* scen.actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.actions.h; path = "Scenario Editor/scen.actions.h"; sourceTree = "<group>"; };
+		91B3EEE40F969BA700BF5B67 /* scen.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.fileio.h; path = "Scenario Editor/scen.fileio.h"; sourceTree = "<group>"; };
+		91B3EEE50F969BA700BF5B67 /* scen.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.graphics.h; path = "Scenario Editor/scen.graphics.h"; sourceTree = "<group>"; };
+		91B3EEE60F969BA700BF5B67 /* scen.townout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.townout.h; path = "Scenario Editor/scen.townout.h"; sourceTree = "<group>"; };
+		91B3EEE70F969BA700BF5B67 /* scen.btnmg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.btnmg.h; path = "Scenario Editor/scen.btnmg.h"; sourceTree = "<group>"; };
+		91B3EEE80F969BA700BF5B67 /* scen.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.dlgutil.h; path = "Scenario Editor/scen.dlgutil.h"; sourceTree = "<group>"; };
+		91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.main.cpp; path = "Scenario Editor/scen.main.cpp"; sourceTree = "<group>"; };
+		91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.keydlgs.cpp; path = "Scenario Editor/scen.keydlgs.cpp"; sourceTree = "<group>"; };
+		91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.core.cpp; path = "Scenario Editor/scen.core.cpp"; sourceTree = "<group>"; };
+		91B3EEF10F969BA700BF5B67 /* scen.actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.actions.cpp; path = "Scenario Editor/scen.actions.cpp"; sourceTree = "<group>"; };
+		91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.fileio.cpp; path = "Scenario Editor/scen.fileio.cpp"; sourceTree = "<group>"; };
+		91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.graphics.cpp; path = "Scenario Editor/scen.graphics.cpp"; sourceTree = "<group>"; };
+		91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.townout.cpp; path = "Scenario Editor/scen.townout.cpp"; sourceTree = "<group>"; };
+		91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.btnmg.cpp; path = "Scenario Editor/scen.btnmg.cpp"; sourceTree = "<group>"; };
+		91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.dlgutil.cpp; path = "Scenario Editor/scen.dlgutil.cpp"; sourceTree = "<group>"; };
 		91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = viewdlog.cpp; path = misc/viewdlog.cpp; sourceTree = "<group>"; };
-		91B3EEFC0F969BD300BF5B67 /* ed.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.action.h; path = "Blades of Exile Char Editor/ed.action.h"; sourceTree = "<group>"; };
-		91B3EEFD0F969BD300BF5B67 /* ed.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.editors.h; path = "Blades of Exile Char Editor/ed.editors.h"; sourceTree = "<group>"; };
-		91B3EEFE0F969BD300BF5B67 /* ed.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.fileio.h; path = "Blades of Exile Char Editor/ed.fileio.h"; sourceTree = "<group>"; };
-		91B3EEFF0F969BD300BF5B67 /* ed.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.global.h; path = "Blades of Exile Char Editor/ed.global.h"; sourceTree = "<group>"; };
-		91B3EF000F969BD300BF5B67 /* ed.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed.graphics.h; path = "Blades of Exile Char Editor/ed.graphics.h"; sourceTree = "<group>"; };
-		91B3EF030F969BD300BF5B67 /* item_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = item_data.h; path = "Blades of Exile Char Editor/item_data.h"; sourceTree = "<group>"; };
-		91B3EF050F969BD300BF5B67 /* char.ed.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = char.ed.c; path = "Blades of Exile Char Editor/char.ed.c"; sourceTree = "<group>"; };
-		91B3EF060F969BD300BF5B67 /* ed.action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.action.c; path = "Blades of Exile Char Editor/ed.action.c"; sourceTree = "<group>"; };
-		91B3EF070F969BD300BF5B67 /* ed.editors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.editors.c; path = "Blades of Exile Char Editor/ed.editors.c"; sourceTree = "<group>"; };
-		91B3EF080F969BD300BF5B67 /* ed.fileio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.fileio.c; path = "Blades of Exile Char Editor/ed.fileio.c"; sourceTree = "<group>"; };
-		91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed.graphics.c; path = "Blades of Exile Char Editor/ed.graphics.c"; sourceTree = "<group>"; };
+		91B3EEFC0F969BD300BF5B67 /* pc.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.action.h; path = "Blades of Exile Char Editor/pc.action.h"; sourceTree = "<group>"; };
+		91B3EEFD0F969BD300BF5B67 /* pc.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.editors.h; path = "Blades of Exile Char Editor/pc.editors.h"; sourceTree = "<group>"; };
+		91B3EEFE0F969BD300BF5B67 /* pc.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.fileio.h; path = "Blades of Exile Char Editor/pc.fileio.h"; sourceTree = "<group>"; };
+		91B3EEFF0F969BD300BF5B67 /* pc.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.global.h; path = "Blades of Exile Char Editor/pc.global.h"; sourceTree = "<group>"; };
+		91B3EF000F969BD300BF5B67 /* pc.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.graphics.h; path = "Blades of Exile Char Editor/pc.graphics.h"; sourceTree = "<group>"; };
+		91B3EF050F969BD300BF5B67 /* pc.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.main.cpp; path = "Blades of Exile Char Editor/pc.main.cpp"; sourceTree = "<group>"; };
+		91B3EF060F969BD300BF5B67 /* pc.action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.action.cpp; path = "Blades of Exile Char Editor/pc.action.cpp"; sourceTree = "<group>"; };
+		91B3EF070F969BD300BF5B67 /* pc.editors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.editors.cpp; path = "Blades of Exile Char Editor/pc.editors.cpp"; sourceTree = "<group>"; };
+		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.fileio.cpp; path = "Blades of Exile Char Editor/pc.fileio.cpp"; sourceTree = "<group>"; };
+		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.graphics.cpp; path = "Blades of Exile Char Editor/pc.graphics.cpp"; sourceTree = "<group>"; };
 		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = "Blades of Exile Char Editor/BoECharEd.icns"; sourceTree = "<group>"; };
 		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = bladespced.rsrc; path = "Blades of Exile Char Editor/bladespced.rsrc"; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Blades of Exile Character Editor-Info.plist"; path = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
@@ -301,8 +297,8 @@
 		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
 		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
 		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
-		91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loc_utils.c; path = "Scenario Editor/loc_utils.c"; sourceTree = "<group>"; };
-		91EBE8AC0F9A2BF2002356F2 /* loc_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loc_utils.h; path = "Scenario Editor/loc_utils.h"; sourceTree = "<group>"; };
+		91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.locutils.cpp; path = "Scenario Editor/scen.locutils.cpp"; sourceTree = "<group>"; };
+		91EBE8AC0F9A2BF2002356F2 /* scen.locutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.locutils.h; path = "Scenario Editor/scen.locutils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -399,18 +395,16 @@
 		91B3EEDC0F969BA700BF5B67 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				91EBE8AC0F9A2BF2002356F2 /* loc_utils.h */,
-				91B3EEDD0F969BA700BF5B67 /* fileio.h */,
-				91B3EEDE0F969BA700BF5B67 /* global.h */,
-				91B3EEDF0F969BA700BF5B67 /* itemlist.h */,
-				91B3EEE00F969BA700BF5B67 /* keydlgs.h */,
-				91B3EEE10F969BA700BF5B67 /* scenario.h */,
-				91B3EEE30F969BA700BF5B67 /* tactions.h */,
-				91B3EEE40F969BA700BF5B67 /* tfileio.h */,
-				91B3EEE50F969BA700BF5B67 /* tGraphics.h */,
-				91B3EEE60F969BA700BF5B67 /* townout.h */,
-				91B3EEE70F969BA700BF5B67 /* buttonmg.h */,
-				91B3EEE80F969BA700BF5B67 /* dialogutils.h */,
+				91EBE8AC0F9A2BF2002356F2 /* scen.locutils.h */,
+				91B3EEDE0F969BA700BF5B67 /* scen.global.h */,
+				91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */,
+				91B3EEE10F969BA700BF5B67 /* scen.core.h */,
+				91B3EEE30F969BA700BF5B67 /* scen.actions.h */,
+				91B3EEE40F969BA700BF5B67 /* scen.fileio.h */,
+				91B3EEE50F969BA700BF5B67 /* scen.graphics.h */,
+				91B3EEE60F969BA700BF5B67 /* scen.townout.h */,
+				91B3EEE70F969BA700BF5B67 /* scen.btnmg.h */,
+				91B3EEE80F969BA700BF5B67 /* scen.dlgutil.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -418,17 +412,16 @@
 		91B3EEEA0F969BA700BF5B67 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				91EBE8AA0F9A2BE1002356F2 /* loc_utils.c */,
-				91B3EEEB0F969BA700BF5B67 /* Exiletedit.c */,
-				91B3EEEC0F969BA700BF5B67 /* fileio.c */,
-				91B3EEEE0F969BA700BF5B67 /* keydlgs.c */,
-				91B3EEEF0F969BA700BF5B67 /* scenario.c */,
-				91B3EEF10F969BA700BF5B67 /* tactions.c */,
-				91B3EEF20F969BA700BF5B67 /* tfileio.c */,
-				91B3EEF30F969BA700BF5B67 /* tGraphics.c */,
-				91B3EEF40F969BA700BF5B67 /* townout.c */,
-				91B3EEF50F969BA700BF5B67 /* buttonmg.c */,
-				91B3EEF60F969BA700BF5B67 /* dialogutils.c */,
+				91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */,
+				91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */,
+				91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */,
+				91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */,
+				91B3EEF10F969BA700BF5B67 /* scen.actions.cpp */,
+				91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */,
+				91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */,
+				91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */,
+				91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */,
+				91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -436,9 +429,9 @@
 		91B3EEF90F969BBD00BF5B67 /* CharEd */ = {
 			isa = PBXGroup;
 			children = (
-				91B3EF0D0F969BD300BF5B67 /* rsrc */,
 				91B3EF040F969BD300BF5B67 /* src */,
 				91B3EEFB0F969BD300BF5B67 /* headers */,
+				91B3EF0D0F969BD300BF5B67 /* rsrc */,
 			);
 			name = CharEd;
 			sourceTree = "<group>";
@@ -446,12 +439,11 @@
 		91B3EEFB0F969BD300BF5B67 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				91B3EEFC0F969BD300BF5B67 /* ed.action.h */,
-				91B3EEFD0F969BD300BF5B67 /* ed.editors.h */,
-				91B3EEFE0F969BD300BF5B67 /* ed.fileio.h */,
-				91B3EEFF0F969BD300BF5B67 /* ed.global.h */,
-				91B3EF000F969BD300BF5B67 /* ed.graphics.h */,
-				91B3EF030F969BD300BF5B67 /* item_data.h */,
+				91B3EEFC0F969BD300BF5B67 /* pc.action.h */,
+				91B3EEFD0F969BD300BF5B67 /* pc.editors.h */,
+				91B3EEFE0F969BD300BF5B67 /* pc.fileio.h */,
+				91B3EEFF0F969BD300BF5B67 /* pc.global.h */,
+				91B3EF000F969BD300BF5B67 /* pc.graphics.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -459,11 +451,11 @@
 		91B3EF040F969BD300BF5B67 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				91B3EF050F969BD300BF5B67 /* char.ed.c */,
-				91B3EF060F969BD300BF5B67 /* ed.action.c */,
-				91B3EF070F969BD300BF5B67 /* ed.editors.c */,
-				91B3EF080F969BD300BF5B67 /* ed.fileio.c */,
-				91B3EF0A0F969BD300BF5B67 /* ed.graphics.c */,
+				91B3EF050F969BD300BF5B67 /* pc.main.cpp */,
+				91B3EF060F969BD300BF5B67 /* pc.action.cpp */,
+				91B3EF070F969BD300BF5B67 /* pc.editors.cpp */,
+				91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */,
+				91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -535,28 +527,28 @@
 		91D62F2C0F8EB7AB00674AB3 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2BF04ACB0BF51923006C0831 /* bldsexil.c */,
-				2BF04ACD0BF51923006C0831 /* blx.g.utils.c */,
-				2BF04ACF0BF51923006C0831 /* blxactions.c */,
-				2BF04AD10BF51923006C0831 /* blxfileio.c */,
-				2BF04AD30BF51923006C0831 /* blxgraphics.c */,
-				2BF04AD50BF51923006C0831 /* blxtown_spec.c */,
-				2BF04AE60BF51924006C0831 /* combat.c */,
-				2BF04AE80BF51924006C0831 /* dialogutils.c */,
-				2BF04AEE0BF51924006C0831 /* fields.c */,
+				2BF04ACB0BF51923006C0831 /* boe.main.cpp */,
+				2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */,
+				2BF04ACF0BF51923006C0831 /* boe.actions.cpp */,
+				2BF04AD10BF51923006C0831 /* boe.fileio.cpp */,
+				2BF04AD30BF51923006C0831 /* boe.graphics.cpp */,
+				2BF04AD50BF51923006C0831 /* boe.townspec.cpp */,
+				2BF04AE60BF51924006C0831 /* boe.combat.cpp */,
+				2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */,
+				2BF04AEE0BF51924006C0831 /* boe.fields.cpp */,
 				2BF04AF00BF51924006C0831 /* gamma.c */,
-				2BF04AF40BF51924006C0831 /* info.dialogs.c */,
-				2BF04AF60BF51924006C0831 /* item_data.c */,
-				2BF04AF80BF51924006C0831 /* items.c */,
-				2BF04AFA0BF51924006C0831 /* loc_utils.c */,
-				2BF04AFC0BF51924006C0831 /* monster.c */,
-				2BF04AFE0BF51924006C0831 /* newgraph.c */,
-				2BF04B000BF51924006C0831 /* party.c */,
+				2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */,
+				2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */,
+				2BF04AF80BF51924006C0831 /* boe.items.cpp */,
+				2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */,
+				2BF04AFC0BF51924006C0831 /* boe.monster.cpp */,
+				2BF04AFE0BF51924006C0831 /* boe.newgraph.cpp */,
+				2BF04B000BF51924006C0831 /* boe.party.cpp */,
 				2BF04B020BF51924006C0831 /* powerpc.c */,
-				2BF04B030BF51924006C0831 /* specials.c */,
-				2BF04B050BF51924006C0831 /* startup.c */,
-				2BF04B070BF51924006C0831 /* text.c */,
-				2BF04B090BF51924006C0831 /* town.c */,
+				2BF04B030BF51924006C0831 /* boe.specials.cpp */,
+				2BF04B050BF51924006C0831 /* boe.startup.cpp */,
+				2BF04B070BF51924006C0831 /* boe.text.cpp */,
+				2BF04B090BF51924006C0831 /* boe.town.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -564,29 +556,29 @@
 		91D62F2D0F8EB7BA00674AB3 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				2BF04ACE0BF51923006C0831 /* blx.g.utils.h */,
-				2BF04AD00BF51923006C0831 /* blxactions.h */,
-				2BF04AD20BF51923006C0831 /* blxfileio.h */,
-				2BF04AD40BF51923006C0831 /* blxgraphics.h */,
-				2BF04AD60BF51923006C0831 /* blxtown_spec.h */,
-				2BF04AE70BF51924006C0831 /* combat.h */,
-				2BF04AE90BF51924006C0831 /* dialogutils.h */,
-				2BF04AEF0BF51924006C0831 /* fields.h */,
+				2BF04ACE0BF51923006C0831 /* boe.graphutil.h */,
+				2BF04AD00BF51923006C0831 /* boe.actions.h */,
+				2BF04AD20BF51923006C0831 /* boe.fileio.h */,
+				2BF04AD40BF51923006C0831 /* boe.graphics.h */,
+				2BF04AD60BF51923006C0831 /* boe.townspec.h */,
+				2BF04AE70BF51924006C0831 /* boe.combat.h */,
+				2BF04AE90BF51924006C0831 /* boe.dlgutil.h */,
+				2BF04AEF0BF51924006C0831 /* boe.fields.h */,
 				2BF04AF10BF51924006C0831 /* gamma.h */,
-				2BF04AF30BF51924006C0831 /* global.h */,
-				2BF04AF50BF51924006C0831 /* info.dialogs.h */,
-				2BF04AF70BF51924006C0831 /* item_data.h */,
-				2BF04AF90BF51924006C0831 /* items.h */,
-				2BF04AFB0BF51924006C0831 /* loc_utils.h */,
-				2BF04AFD0BF51924006C0831 /* monster.h */,
-				2BF04AFF0BF51924006C0831 /* newgraph.h */,
-				2BF04B010BF51924006C0831 /* party.h */,
-				2BF04B040BF51924006C0831 /* specials.h */,
-				2BF04B060BF51924006C0831 /* startup.h */,
-				2BF04B080BF51924006C0831 /* text.h */,
-				2BF04B0A0BF51924006C0831 /* town.h */,
-				2BF04ACC0BF51923006C0831 /* bldsexil.h */,
-				91B3E8A50F938FFE00BF5B67 /* consts.h */,
+				2BF04AF30BF51924006C0831 /* boe.global.h */,
+				2BF04AF50BF51924006C0831 /* boe.infodlg.h */,
+				2BF04AF70BF51924006C0831 /* boe.itemdata.h */,
+				2BF04AF90BF51924006C0831 /* boe.items.h */,
+				2BF04AFB0BF51924006C0831 /* boe.locutils.h */,
+				2BF04AFD0BF51924006C0831 /* boe.monster.h */,
+				2BF04AFF0BF51924006C0831 /* boe.newgraph.h */,
+				2BF04B010BF51924006C0831 /* boe.party.h */,
+				2BF04B040BF51924006C0831 /* boe.specials.h */,
+				2BF04B060BF51924006C0831 /* boe.startup.h */,
+				2BF04B080BF51924006C0831 /* boe.text.h */,
+				2BF04B0A0BF51924006C0831 /* boe.town.h */,
+				2BF04ACC0BF51923006C0831 /* boe.main.h */,
+				91B3E8A50F938FFE00BF5B67 /* boe.consts.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -796,26 +788,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BF04B0B0BF51924006C0831 /* bldsexil.c in Sources */,
-				2BF04B0C0BF51924006C0831 /* blx.g.utils.c in Sources */,
-				2BF04B0D0BF51924006C0831 /* blxactions.c in Sources */,
-				2BF04B0E0BF51924006C0831 /* blxfileio.c in Sources */,
-				2BF04B100BF51924006C0831 /* blxtown_spec.c in Sources */,
-				2BF04B1C0BF51924006C0831 /* combat.c in Sources */,
-				2BF04B1D0BF51924006C0831 /* dialogutils.c in Sources */,
-				2BF04B200BF51924006C0831 /* fields.c in Sources */,
-				2BF04B230BF51924006C0831 /* info.dialogs.c in Sources */,
-				2BF04B240BF51924006C0831 /* item_data.c in Sources */,
-				2BF04B250BF51924006C0831 /* items.c in Sources */,
-				2BF04B260BF51924006C0831 /* loc_utils.c in Sources */,
-				2BF04B270BF51924006C0831 /* monster.c in Sources */,
-				2BF04B280BF51924006C0831 /* newgraph.c in Sources */,
-				2BF04B290BF51924006C0831 /* party.c in Sources */,
-				2BF04B2B0BF51924006C0831 /* specials.c in Sources */,
-				2BF04B2C0BF51924006C0831 /* startup.c in Sources */,
-				2BF04B2D0BF51924006C0831 /* text.c in Sources */,
-				2BF04B2E0BF51924006C0831 /* town.c in Sources */,
-				91EBE6D90F9A15BD002356F2 /* blxgraphics.c in Sources */,
+				2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */,
+				2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */,
+				2BF04B0D0BF51924006C0831 /* boe.actions.cpp in Sources */,
+				2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */,
+				2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */,
+				2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */,
+				2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */,
+				2BF04B200BF51924006C0831 /* boe.fields.cpp in Sources */,
+				2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */,
+				2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */,
+				2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */,
+				2BF04B260BF51924006C0831 /* boe.locutils.cpp in Sources */,
+				2BF04B270BF51924006C0831 /* boe.monster.cpp in Sources */,
+				2BF04B280BF51924006C0831 /* boe.newgraph.cpp in Sources */,
+				2BF04B290BF51924006C0831 /* boe.party.cpp in Sources */,
+				2BF04B2B0BF51924006C0831 /* boe.specials.cpp in Sources */,
+				2BF04B2C0BF51924006C0831 /* boe.startup.cpp in Sources */,
+				2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */,
+				2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */,
+				91EBE6D90F9A15BD002356F2 /* boe.graphics.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,11 +815,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B3EF480F969F2300BF5B67 /* char.ed.c in Sources */,
-				91B3EF490F969F2300BF5B67 /* ed.action.c in Sources */,
-				91B3EF4A0F969F2300BF5B67 /* ed.editors.c in Sources */,
-				91B3EF4B0F969F2300BF5B67 /* ed.fileio.c in Sources */,
-				91B3EF4D0F969F2300BF5B67 /* ed.graphics.c in Sources */,
+				91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */,
+				91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */,
+				91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */,
+				91B3EF4B0F969F2300BF5B67 /* pc.fileio.cpp in Sources */,
+				91B3EF4D0F969F2300BF5B67 /* pc.graphics.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -835,16 +827,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B3EF500F969F3000BF5B67 /* Exiletedit.c in Sources */,
-				91B3EF530F969F3000BF5B67 /* keydlgs.c in Sources */,
-				91B3EF540F969F3000BF5B67 /* scenario.c in Sources */,
-				91B3EF560F969F3000BF5B67 /* tactions.c in Sources */,
-				91B3EF570F969F3000BF5B67 /* tfileio.c in Sources */,
-				91B3EF590F969F3000BF5B67 /* townout.c in Sources */,
-				91B3EF5A0F969F3000BF5B67 /* buttonmg.c in Sources */,
-				91B3EF5B0F969F3000BF5B67 /* dialogutils.c in Sources */,
-				91B3F1850F97894A00BF5B67 /* tGraphics.c in Sources */,
-				91EBE8AB0F9A2BE1002356F2 /* loc_utils.c in Sources */,
+				91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */,
+				91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */,
+				91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */,
+				91B3EF560F969F3000BF5B67 /* scen.actions.cpp in Sources */,
+				91B3EF570F969F3000BF5B67 /* scen.fileio.cpp in Sources */,
+				91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */,
+				91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */,
+				91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */,
+				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
+				91EBE8AB0F9A2BE1002356F2 /* scen.locutils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
