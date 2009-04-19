@@ -290,13 +290,13 @@ void end_split(short noise)
 {
 	short i;
 
-	if (party.stuff_done[304][0] == 0) {
+	if (party.stuff_done[SDF_IS_PARTY_SPLIT] == 0) {
 		ASB("Party already together!");
 		return;
 		}
-	c_town.p_loc.x = party.stuff_done[304][1];
-	c_town.p_loc.y = party.stuff_done[304][2];
-	party.stuff_done[304][0] = 0;
+	c_town.p_loc.x = party.stuff_done[SDF_PARTY_SPLIT_X];
+	c_town.p_loc.y = party.stuff_done[SDF_PARTY_SPLIT_Y];
+	party.stuff_done[SDF_IS_PARTY_SPLIT] = 0;
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status >= 10)
 			adven[i].main_status -= 10;

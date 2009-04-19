@@ -293,7 +293,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			if (ter_special == 2) {
 				add_string_to_buf("  It's hot!");
 				dam_type = 1; pic_type = 0;
-				if (party.stuff_done[305][3] > 0) {
+				if (party.stuff_done[SDF_PARTY_FIREWALK] > 0) {
 					add_string_to_buf("  It doesn't affect you.");			
 					break;
 					}
@@ -731,13 +731,13 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				ASB("  You have more light."); increase_light(50 * str);
 				break;
 			case 91:
-				ASB("  Your footsteps become quieter."); party.stuff_done[305][0] += 5 * str;
+				ASB("  Your footsteps become quieter."); party.stuff_done[SDF_PARTY_STEALTHY] += 5 * str;
 				break;
 			case 92:
-				ASB("  You feel chilly."); party.stuff_done[305][3] += 2 * str;
+				ASB("  You feel chilly."); party.stuff_done[SDF_PARTY_FIREWALK] += 2 * str;
 				break;
 			case 93:
-				if (party.stuff_done[305][1] > 0) {
+				if (party.stuff_done[SDF_PARTY_FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
 					break;
 					}
@@ -746,7 +746,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				else if (party.in_horse >= 0)////
 					add_string_to_buf("  Leave horse first.             "); 
 				else {
-					ASB("  You rise into the air!"); party.stuff_done[305][1] += str;
+					ASB("  You rise into the air!"); party.stuff_done[SDF_PARTY_FLIGHT] += str;
 					}
 				break;
 			case 94:
@@ -1326,7 +1326,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		make_town_hostile();
 		}
 	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
-	 ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0))) {
+	 ((processing_fields == TRUE) && (party.stuff_done[SDF_HOSTILES_PRESENT] == 0))) {
 		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
 		make_town_hostile();
@@ -2240,14 +2240,14 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			party.alchemy[spec.ex1a] = TRUE;
 			break;
 		case 104:
-			r1 = (short) party.stuff_done[305][0];
+			r1 = (short) party.stuff_done[SDF_PARTY_STEALTHY];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			party.stuff_done[305][0] = r1;
+			party.stuff_done[SDF_PARTY_STEALTHY] = r1;
 			break;
 		case 105:
-			r1 = (short) party.stuff_done[305][3];
+			r1 = (short) party.stuff_done[SDF_PARTY_FIREWALK];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			party.stuff_done[305][3] = r1;
+			party.stuff_done[SDF_PARTY_FIREWALK] = r1;
 			break;
 		case 106:
 			if (party.in_boat >= 0)
@@ -2255,9 +2255,9 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			else if (party.in_horse >= 0)////
 				add_string_to_buf("  Can't fly when on a horse.  "); 
 			else {
-				r1 = (short) party.stuff_done[305][1];
+				r1 = (short) party.stuff_done[SDF_PARTY_FLIGHT];
 				r1 = minmax(0,250,r1 + spec.ex1a);
-				party.stuff_done[305][1] = r1;
+				party.stuff_done[SDF_PARTY_FLIGHT] = r1;
 				}
 			break;
 		}
@@ -2738,7 +2738,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				*next_spec = -1;
 				check_mess = FALSE;
 				}
-			if (party.stuff_done[304][0] > 0) {
+			if (party.stuff_done[SDF_IS_PARTY_SPLIT] > 0) {
 				ASB("Party is already split.");
 				if (which_mode < 3)
 					*a = 1;

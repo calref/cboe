@@ -1121,7 +1121,8 @@ void draw_text_bar(short mode)
 
 	if (mode == 1)
 		remember_tiny_text = 500;	   
-	if ((PSD[305][0] > 0) ||  (PSD[305][1] > 0) ||(PSD[305][2] > 0) ||(PSD[305][3] > 0) )
+	if ((PSD[SDF_PARTY_STEALTHY] > 0)     || (PSD[SDF_PARTY_FLIGHT] > 0) ||
+		(PSD[SDF_PARTY_DETECT_MONST] > 0) || (PSD[SDF_PARTY_FIREWALK] > 0) )
 		remember_tiny_text = 500;
 	if (is_out()) {
 		for (i = 0; i < 8; i++)
@@ -1186,25 +1187,25 @@ void put_text_bar(char *str)
 	drawstring(str);
 
 	if (monsters_going == FALSE) {
-		if (PSD[305][0] > 0) {
+		if (PSD[SDF_PARTY_STEALTHY] > 0) {
 			MoveTo(xpos,14);
 			sprintf((char *) status_str,"Stealth");
 			drawstring(status_str);
 			xpos -= 60;
 			}
-		if (PSD[305][1] > 0) {
+		if (PSD[SDF_PARTY_FLIGHT] > 0) {
 			MoveTo(xpos,14);
 			sprintf((char *) status_str,"Flying");
 			drawstring(status_str);
 			xpos -= 60;
 			}
-		if (PSD[305][2] > 0) {
+		if (PSD[SDF_PARTY_DETECT_LIFE] > 0) {
 			MoveTo(xpos,14);
 			sprintf((char *) status_str,"Detect Life");
 			drawstring(status_str);
 			xpos -= 60;
 			}
-		if (PSD[305][3] > 0) {
+		if (PSD[SDF_PARTY_FIREWALK] > 0) {
 			MoveTo(xpos,14);
 			sprintf((char *) status_str,"Firewalk");
 			drawstring(status_str);
@@ -2040,7 +2041,7 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
 	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 86))
 		return;
-	if (PSD[306][5] > 0)
+	if (PSD[SDF_NO_SHORE_FRILLS] > 0)
 		return;
 		
 	targ.x = q;
@@ -2320,7 +2321,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		return;
 	if ((boom_anim_active == TRUE) && (type != 3))
 		return;
-	if ((cartoon_happening == FALSE) && (PSD[306][2] > 0) && (fast_bang == TRUE))
+	if ((cartoon_happening == FALSE) && (PSD[SDF_NO_FRILLS] > 0) && (fast_bang == TRUE))
 		return;
 	if (is_out())
 		return;
@@ -2390,7 +2391,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 
 	
 	if (fast_bang == 0) {
-		del_len = PSD[306][6] * 3 + 4;
+		del_len = PSD[SDF_GAME_SPEED] * 3 + 4;
 		if (play_sounds == FALSE)
 			FlushAndPause(del_len);
 		}

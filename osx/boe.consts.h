@@ -2,7 +2,7 @@
  *  consts.h
  *  BoE
  *
- *  Created by Seanachi Clappison Dillon on 13/04/09.
+ *  Created by Celtic Minstrel on 13/04/09.
  *
  */
 
@@ -37,9 +37,15 @@
 #define SDF_PARTY_SPLIT_Y		304][2
 #define SDF_PARTY_SPLIT_PC		304][3
 #define SDF_PARTY_SPLIT_TOWN	304][4 // for future use, hopefully
+//#define SDF_	304][9
+#define SDF_PARTY_STEALTHY		305][0
+#define SDF_PARTY_FLIGHT		305][1
+#define SDF_PARTY_DETECT_LIFE	305][2
+#define SDF_PARTY_FIREWALK		305][3
 #define SDF_SKIP_STARTUP		305][4
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6
+#define SDF_HOSTILES_PRESENT	305][9
 #define SFD_NO_MAPS				306][0
 #define SDF_NO_SOUNDS			306][1
 #define SDF_NO_FRILLS			306][2

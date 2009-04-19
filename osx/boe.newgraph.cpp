@@ -142,7 +142,7 @@ void apply_unseen_mask()
 	ConstPatternParam c;
 	Boolean need_bother = FALSE;
 	
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 
 	if ((is_combat()) && (which_combat_type == 0))
@@ -196,7 +196,7 @@ void apply_light_mask()
 	Rect big_to = {13,13,337,265};
 	short i,j;
 	Boolean is_dark = FALSE,same_mask = TRUE;
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	if (is_out())
 		return;
@@ -320,7 +320,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 	
 	if (boom_anim_active == FALSE)
 		return;
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	// lose redundant missiles
 	for (i = 0; i < 30; i++)
@@ -377,7 +377,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 {
 	short i;
 	
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	if (boom_anim_active == FALSE)
 		return;
@@ -535,7 +535,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				rect_draw_some_item(temp_gworld,missile_place_rect[i],
 					temp_gworld,to_rect,0,1);
 				}
-		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
+		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
+			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
 			FlushAndPause(1);
 		}
 		
@@ -721,8 +722,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 				rect_draw_some_item(temp_gworld,explode_place_rect[i],
 					temp_gworld,to_rect,0,1);
 				}
-		//if (((PSD[306][6] == 1) && (t % 3 == 0)) || ((PSD[306][6] == 2) && (t % 2 == 0)))
-			FlushAndPause(2 * (1 + PSD[306][6]));
+		//if (((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
+			FlushAndPause(2 * (1 + PSD[SDF_GAME_SPEED]));
 		}
 		
 	// Exit gracefully, and clean up screen

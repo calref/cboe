@@ -11,6 +11,7 @@
 #include "dlgtool.h"
 #include "dlgconsts.h"
 #include "graphtool.h"
+#include "boe.consts.h"
 
 Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
@@ -554,7 +555,7 @@ void handle_extra_menu(int item_hit)
 		break;
 		
 		case 4:
-			if (party.stuff_done[304][0] > 0) {
+			if (party.stuff_done[SDF_IS_PARTY_SPLIT] > 0) {
 				FCD(909,0);
 				break;
 				}
@@ -563,14 +564,14 @@ void handle_extra_menu(int item_hit)
 			break;
 	
 		case 5:
-			if (party.stuff_done[304][0] == 0) {
+			if (party.stuff_done[SDF_IS_PARTY_SPLIT] == 0) {
 				FCD(911,0);
 				break;
 				}
 			FCD(910,0);
-			c_town.p_loc.x = party.stuff_done[304][1];
-			c_town.p_loc.y = party.stuff_done[304][2];
-			party.stuff_done[304][0] = 0;
+			c_town.p_loc.x = party.stuff_done[SDF_PARTY_SPLIT_X];
+			c_town.p_loc.y = party.stuff_done[SDF_PARTY_SPLIT_Y];
+			party.stuff_done[SDF_IS_PARTY_SPLIT] = 0;
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status >= 10)
 					adven[i].main_status -= 10;
@@ -622,7 +623,7 @@ void handle_extra_menu(int item_hit)
 			if (FCD(912,0) != 1)
 				break;
 			remove_party_from_scen();
-			party.stuff_done[304][0] = 0;
+			party.stuff_done[SDF_IS_PARTY_SPLIT] = 0;
 			break;
 	}
 	redraw_screen();

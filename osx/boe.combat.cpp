@@ -1657,11 +1657,11 @@ void combat_run_monst()
 		if (c_town.town.lighting == 3)
 			party.light_level = 0;
 
-		party.stuff_done[305][2] = move_to_zero(party.stuff_done[305][2]);
-		party.stuff_done[305][3] = move_to_zero(party.stuff_done[305][3]);
+		party.stuff_done[SDF_PARTY_DETECT_LIFE] = move_to_zero(party.stuff_done[SDF_PARTY_DETECT_LIFE]);
+		party.stuff_done[SDF_PARTY_FIREWALK] = move_to_zero(party.stuff_done[SDF_PARTY_FIREWALK]);
 
 		// decrease monster present counter
-		party.stuff_done[305][9] = move_to_zero(party.stuff_done[305][9]);
+		party.stuff_done[SDF_HOSTILES_PRESENT] = move_to_zero(party.stuff_done[SDF_HOSTILES_PRESENT]);
 
 		dump_gold(1);
 
@@ -1672,7 +1672,7 @@ void combat_run_monst()
 				update_stat = TRUE;
 				adven[i].status[1] = move_to_zero(adven[i].status[1]);
 				adven[i].status[3] = move_to_zero(adven[i].status[3]);	
-				party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
+				party.stuff_done[SDF_PARTY_STEALTHY] = move_to_zero(party.stuff_done[SDF_PARTY_STEALTHY]);
 				if ((item = pc_has_abil_equip(i,50)) < 24) {
 					update_stat = TRUE;
 					heal_pc(i,get_ran(1,0,adven[i].items[item].item_level + 1));	
@@ -1750,7 +1750,7 @@ void do_monster_turn()
 		// See if hostile monster notices party, during combat
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
-			r1 += (party.stuff_done[305][0] > 0) ? 45 : 0;
+			r1 += (party.stuff_done[SDF_PARTY_STEALTHY] > 0) ? 45 : 0;
 			r1 += can_see(cur_monst->m_loc,closest_pc_loc(cur_monst->m_loc),0) * 10;
 			if (r1 < 50)
 				cur_monst->active = 2;
@@ -1788,7 +1788,7 @@ void do_monster_turn()
 		if (cur_monst->active == 2) { // Begin action loop for angry, active monsters
 			// First note that hostile monsters are around.
 			if (cur_monst->attitude % 2 == 1)
-				party.stuff_done[305][9] = 30;
+				party.stuff_done[SDF_HOSTILES_PRESENT] = 30;
 			
 			// Give monster its action points
 			cur_monst->m_d.ap = cur_monst->m_d.speed;
@@ -1883,7 +1883,7 @@ void do_monster_turn()
 					center_on_monst = TRUE;
 					center = cur_monst->m_loc;
 					draw_terrain(0);
-					pause((PSD[306][6] == 3) ? 9 : PSD[306][6]);
+					pause((PSD[SDF_GAME_SPEED] == 3) ? 9 : PSD[SDF_GAME_SPEED]);
 					}
 					
 					combat_posing_monster = current_working_monster = 100 + i;

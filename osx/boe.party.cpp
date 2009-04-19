@@ -289,7 +289,7 @@ void init_party(short mode)
 					o_maps.outdoor_maps[i][k][l] = 0;
 					
 	// Default is save maps
-	party.stuff_done[306][0] = 0;
+	party.stuff_done[SFD_NO_MAPS] = 0;
 	save_maps = TRUE;	
 			
 
@@ -310,11 +310,11 @@ void init_party_scen_data()
 	short store_help;
 	
 	party.age = 0;
-	store_help = PSD[306][4];
+	store_help = PSD[SDF_NO_INSTANT_HELP];
 	for (i = 0; i < 310; i++)
 		for (j = 0; j < 10; j++)
 			party.stuff_done[i][j] = 0;
-	PSD[306][4] = store_help;
+	PSD[SDF_NO_INSTANT_HELP] = store_help;
 	party.light_level = 0;
 	party.outdoor_corner.x = scenario.out_sec_start.x;
 	party.outdoor_corner.y = scenario.out_sec_start.y;
@@ -1669,7 +1669,7 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 		case 38:  // Stealth
 			adven[pc_num].cur_sp -= spell_cost[0][spell_num];
-			party.stuff_done[305][0] += max(6,adven[pc_num].level * 2);
+			party.stuff_done[SFD_NO_MAPS] += max(6,adven[pc_num].level * 2);
 			break;	
 
 			
@@ -1695,7 +1695,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;		
 
 		case 53: // fly
-			if (party.stuff_done[305][1] > 0) {
+			if (party.stuff_done[SDF_PARTY_FLIGHT] > 0) {
 				add_string_to_buf("  Not while already flying.          ");
 				return;
 				}
@@ -1706,7 +1706,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			else {
 				adven[pc_num].cur_sp -= spell_cost[0][spell_num];
 				add_string_to_buf("  You start flying!               ");
-				party.stuff_done[305][1] = 3;
+				party.stuff_done[SDF_PARTY_FLIGHT] = 3;
 				}
 			break;		
 
@@ -1838,13 +1838,13 @@ void do_priest_spell(short pc_num,short spell_num) ////
 
 		case 23: // Detect life
 			add_string_to_buf("  Monsters now on map.                ");
-			party.stuff_done[305][2] += 6 + get_ran(1,0,6);
+			party.stuff_done[SDF_PARTY_DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 		case 37: // firewalk
 			add_string_to_buf("  You are now firewalking.                ");
-			party.stuff_done[305][3] += adven[pc_num].level / 12 + 2;
+			party.stuff_done[SDF_PARTY_FIREWALK] += adven[pc_num].level / 12 + 2;
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 			
@@ -3229,7 +3229,7 @@ unsigned char pick_trapped_monst()
 
 Boolean flying() 
 {
-	if (party.stuff_done[305][1] == 0)
+	if (party.stuff_done[SDF_PARTY_FLIGHT] == 0)
 		return FALSE;
 		else return TRUE;
 }
@@ -3394,7 +3394,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 
 
 	if (damage_type != 10) {
-		if (PSD[306][7] > 0)
+		if (PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
 		if (adven[which_pc].traits[0] == TRUE)

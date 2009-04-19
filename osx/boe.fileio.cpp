@@ -472,18 +472,14 @@ void load_file()
 	add_string_to_buf("Load: Game loaded.            ");
 	
 	// Set sounds, map saving, and speed
-	if (((play_sounds == TRUE) && (party.stuff_done[306][1] == 1)) ||
-		((play_sounds == FALSE) && (party.stuff_done[306][1] == 0))) {
+	if (((play_sounds == TRUE) && (party.stuff_done[SDF_NO_SOUNDS] == 1)) ||
+		((play_sounds == FALSE) && (party.stuff_done[SDF_NO_SOUNDS] == 0))) {
 		flip_sound();
 	}
-	give_delays = party.stuff_done[306][2]; 
-	if (party.stuff_done[306][0] == 0)
+	give_delays = party.stuff_done[SDF_NO_FRILLS]; 
+	if (party.stuff_done[SFD_NO_MAPS] == 0)
 		save_maps = TRUE;
-	else save_maps = FALSE;	
-	
-	//if (party.stuff_done[306][5] == 0)
-	//	end_music();
-	//	else init_bg_music();
+	else save_maps = FALSE;
 	
 	in_startup_mode = FALSE;
 	in_scen_debug = FALSE;

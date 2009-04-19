@@ -52,7 +52,7 @@ monster_record_type return_monster_template(unsigned char store)
 		monst.picture_num = 0;
 		
 	monst.m_num = m_num;
-	monst.health = (PSD[306][7] == 0) ? monst.health : monst.health / 2;
+	monst.health = (PSD[SDF_EASY_MODE] == 0) ? monst.health : monst.health / 2;
 	
 	// now adjust for difficulty
 	monst.health = monst.health * difficulty_adjust();
@@ -358,7 +358,7 @@ void do_monsters()
 			if ((c_town.monst.dudes[i].active == 1) && (c_town.monst.dudes[i].attitude % 2 == 1)
 				&& (dist(c_town.monst.dudes[i].m_loc,c_town.p_loc) <= 8)) {
 				r1 = get_ran(1,1,100);
-				r1 += (party.stuff_done[305][0] > 0) ? 46 : 0;
+				r1 += (party.stuff_done[SDF_PARTY_STEALTHY] > 0) ? 46 : 0;
 				r1 += can_see(c_town.monst.dudes[i].m_loc,c_town.p_loc,0) * 10;
 				if (r1 < 50) {
 					c_town.monst.dudes[i].active = 2;
@@ -901,7 +901,7 @@ Boolean town_move_monster(short num,location dest)
 Boolean monster_placid(short m_num)
 {
 	if ((c_town.monst.dudes[m_num].attitude == 0) || 
-		((c_town.monst.dudes[m_num].attitude == 2) && (party.stuff_done[305][9] == 0)))
+		((c_town.monst.dudes[m_num].attitude == 2) && (party.stuff_done[SDF_HOSTILES_PRESENT] == 0)))
 		{ return TRUE;}
 		else { return FALSE;}
 }

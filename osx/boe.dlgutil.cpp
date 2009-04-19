@@ -1473,24 +1473,25 @@ void prefs_event_filter (short item_hit)
 	if (done_yet== TRUE) {
 		if (did_cancel == FALSE) {
 			display_mode = cur_display_mode;
-			party.stuff_done[306][0] = cd_get_led(1099,18);
-			party.stuff_done[306][1] = cd_get_led(1099,20);
-			play_sounds = 1 - party.stuff_done[306][1];
-			party.stuff_done[306][2] = cd_get_led(1099,22);
-			party.stuff_done[306][3] = cd_get_led(1099,24);
-			party.stuff_done[306][4] = cd_get_led(1099,27);
-			party.stuff_done[306][7] = cd_get_led(1099,38);
-			party.stuff_done[306][8] = cd_get_led(1099,40);
-			party.stuff_done[306][9] = cd_get_led(1099,43);
-			party.stuff_done[306][5] = cd_get_led(1099,45);
+			party.stuff_done[SFD_NO_MAPS] = cd_get_led(1099,18);
+			party.stuff_done[SDF_NO_SOUNDS] = cd_get_led(1099,20);
+			play_sounds = 1 - party.stuff_done[SDF_NO_SOUNDS];
+			party.stuff_done[SDF_NO_FRILLS] = cd_get_led(1099,22);
+			party.stuff_done[SDF_ROOM_DESCS_AGAIN] = cd_get_led(1099,24);
+			party.stuff_done[SDF_NO_INSTANT_HELP] = cd_get_led(1099,27);
+			party.stuff_done[SDF_EASY_MODE] = cd_get_led(1099,38);
+			party.stuff_done[SDF_LESS_WANDER_ENC] = cd_get_led(1099,40);
+			party.stuff_done[SDF_NO_TER_ANIM] = cd_get_led(1099,43);
+			party.stuff_done[SDF_NO_SHORE_FRILLS] = cd_get_led(1099,45);
+			//party.stuff_done[SDF_SKIP_STARTUP] = cd_get_led(1099,46);
 			if (cd_get_led(1099,32) == 1)
-				PSD[306][6] = 0;
-			if (cd_get_led(1099,34) == 1)
-				PSD[306][6] = 1;
-			if (cd_get_led(1099,36) == 1)
-				PSD[306][6] = 2;
-			if (cd_get_led(1099,47) == 1)
-				PSD[306][6] = 3;
+				PSD[SDF_GAME_SPEED] = 0;
+			else if (cd_get_led(1099,34) == 1)
+				PSD[SDF_GAME_SPEED] = 1;
+			else if (cd_get_led(1099,36) == 1)
+				PSD[SDF_GAME_SPEED] = 2;
+			else if (cd_get_led(1099,47) == 1)
+				PSD[SDF_GAME_SPEED] = 3;
 			if (cd_get_led(1099,29) == 1)
 				for (i = 0; i < 120; i++)
 					party.help_received[i] = 0;
@@ -1503,9 +1504,9 @@ void prefs_event_filter (short item_hit)
 					563 + 10,425 + 40,TRUE);
 					}*/
 			}
-		//play_sounds = 1 - party.stuff_done[306][1];
-		save_maps = 1 - party.stuff_done[306][0];
-		give_delays = party.stuff_done[306][2];
+		//play_sounds = 1 - party.stuff_done[SDF_NO_SOUNDS];
+		save_maps = 1 - party.stuff_done[SFD_NO_MAPS];
+		give_delays = party.stuff_done[SDF_NO_FRILLS];
 		save_prefs();
 		}
 }
@@ -1522,18 +1523,19 @@ void pick_preferences()
 
 	cd_set_led(1099,4 + cur_display_mode,1);
 
-	cd_set_led(1099,18,(party.stuff_done[306][0] != 0) ? 1 : 0);
+	cd_set_led(1099,18,(party.stuff_done[SFD_NO_MAPS] != 0) ? 1 : 0);
 	cd_set_led(1099,20,(play_sounds == FALSE) ? 1 : 0);
-	cd_set_led(1099,22,(party.stuff_done[306][2] != 0) ? 1 : 0);
-	cd_set_led(1099,24,(party.stuff_done[306][3] != 0) ? 1 : 0);
-	cd_set_led(1099,27,(party.stuff_done[306][4] != 0) ? 1 : 0);
-	cd_set_led(1099,38,(party.stuff_done[306][7] != 0) ? 1 : 0);
-	cd_set_led(1099,40,(party.stuff_done[306][8] != 0) ? 1 : 0);
-	cd_set_led(1099,43,(party.stuff_done[306][9] != 0) ? 1 : 0);
-	cd_set_led(1099,45,(party.stuff_done[306][5] != 0) ? 1 : 0);
-	if (PSD[306][6] == 3) 
+	cd_set_led(1099,22,(party.stuff_done[SDF_NO_FRILLS] != 0) ? 1 : 0);
+	cd_set_led(1099,24,(party.stuff_done[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
+	cd_set_led(1099,27,(party.stuff_done[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
+	cd_set_led(1099,38,(party.stuff_done[SDF_EASY_MODE] != 0) ? 1 : 0);
+	cd_set_led(1099,40,(party.stuff_done[SDF_LESS_WANDER_ENC] != 0) ? 1 : 0);
+	cd_set_led(1099,43,(party.stuff_done[SDF_NO_TER_ANIM] != 0) ? 1 : 0);
+	cd_set_led(1099,45,(party.stuff_done[SDF_NO_SHORE_FRILLS] != 0) ? 1 : 0);
+	//cd_set_led(1099,46,(party.stuff_done[SDF_SKIP_STARTUP] != 0) ? 1 : 0);
+	if (PSD[SDF_GAME_SPEED] == 3) 
 		cd_set_led(1099,47,1);
-		else cd_set_led(1099,32 + PSD[306][6] * 2,1);
+	else cd_set_led(1099,32 + PSD[SDF_GAME_SPEED] * 2,1);
 
 	if (party.help_received[55] == 0) {
 		cd_initial_draw(1099);

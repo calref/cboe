@@ -141,10 +141,9 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	if (town_force < 200)
 		which_town = town_force;
-		else if (PSD[304][9] == 0) {
-			play_town_sound = TRUE;
-			
-			}
+	else if (PSD[304][9] == 0) {
+		play_town_sound = TRUE;
+	}
 	
 	former_town = town_number = which_town;
 	
@@ -522,13 +521,13 @@ void start_town_mode(short which_town, short entry_dir)
 		
 	
 	// End flying
-	if (party.stuff_done[305][1] > 0) {
-		party.stuff_done[305][1] = 0;	
+	if (party.stuff_done[SDF_PARTY_FLIGHT] > 0) {
+		party.stuff_done[SDF_PARTY_FLIGHT] = 0;	
 		add_string_to_buf("You land, and enter.             ");
 		}
 
 	// No hostile monsters present.
-	party.stuff_done[305][9] = 0;
+	party.stuff_done[SDF_HOSTILES_PRESENT] = 0;
 		
 	add_string_to_buf("Now entering:");
 	sprintf ((char *) message, "   %-30.30s ",data_store->town_strs[0]);
@@ -692,7 +691,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 			load_area_graphics();
 
-		party.stuff_done[305][0] = 0;
+		party.stuff_done[SDF_PARTY_STEALTHY] = 0;
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 15; j++)
 					if ((j != 2) && (j != 7) && (j != 9))
@@ -1632,7 +1631,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 							
 	// Now place PCs and monsters
 	if ((draw_pcs == TRUE) && (modeless_exists[5] == TRUE)) {
-		if ((is_town()) && (party.stuff_done[305][2] > 0))
+		if ((is_town()) && (party.stuff_done[SDF_PARTY_DETECT_LIFE] > 0))
 			for (i = 0; i < T_M; i++) 
 				if (c_town.monst.dudes[i].active > 0) {
 					where = c_town.monst.dudes[i].m_loc;

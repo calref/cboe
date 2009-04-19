@@ -1259,7 +1259,7 @@ void give_help(short help1,short help2,short parent_num)
 		help_forced = TRUE;
 		help1 -= 200;
 		}
-	if ((PSD[306][4] > 0) && (help_forced == FALSE))
+	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && (help_forced == FALSE))
 		return;
 	if (party.help_received[help1] > 0)
 		return;

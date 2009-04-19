@@ -579,7 +579,7 @@ void draw_sfx()
 	location where_draw,loc;
 	Rect orig_rect = {0,0,36,28},source_rect;
 	
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	
 		for (q = 0; q < 9; q++) 

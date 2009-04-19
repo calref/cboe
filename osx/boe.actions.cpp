@@ -1350,7 +1350,7 @@ Boolean handle_action(EventRecord event)
 			// Wand monsts				
 			if ((overall_mode == MODE_OUTDOORS) && (party_toast() == FALSE) && (party.age % 10 == 0)) {
 
-				i = get_ran(1,1,70 + PSD[306][8] * 200);
+				i = get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200);
 				if (i == 10)
 					create_wand_monst();			
 				for (i = 0; i < 10; i++)
@@ -1372,7 +1372,7 @@ Boolean handle_action(EventRecord event)
 							} 
 				} 
 			if (overall_mode == MODE_TOWN) {
-				i = get_ran(1,1,160 - c_town.difficulty + PSD[306][8] * 200);
+				i = get_ran(1,1,160 - c_town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200);
 				if (i == 2)
 					create_wand_monst();
 				}
@@ -1410,7 +1410,7 @@ Boolean handle_action(EventRecord event)
 
 					}	
 				}
-		if (party.stuff_done[304][0] > 0) {
+		if (party.stuff_done[SDF_IS_PARTY_SPLIT] > 0) {
 			end_split(0);
 			if (is_combat()) {
 				overall_mode = MODE_TOWN;
@@ -2086,33 +2086,33 @@ void increase_age()////
 //		clear_map();
 
 	// decrease monster present counter
-	party.stuff_done[305][9] = move_to_zero(party.stuff_done[305][9]);
+	party.stuff_done[SDF_HOSTILES_PRESENT] = move_to_zero(party.stuff_done[SDF_HOSTILES_PRESENT]);
 
 	// Party spell effects
-	if (party.stuff_done[305][0] == 1) {reset_text_bar();
+	if (party.stuff_done[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
 		add_string_to_buf("Your footsteps grow louder.      "); }
-	party.stuff_done[305][0] = move_to_zero(party.stuff_done[305][0]);
-	if (party.stuff_done[305][2] == 1) {reset_text_bar();
+	party.stuff_done[SDF_PARTY_STEALTHY] = move_to_zero(party.stuff_done[SDF_PARTY_STEALTHY]);
+	if (party.stuff_done[SDF_PARTY_DETECT_MONST] == 1) {reset_text_bar();
 		add_string_to_buf("You stop detecting monsters.      ");}
-	party.stuff_done[305][2] = move_to_zero(party.stuff_done[305][2]);
-	if (party.stuff_done[305][3] == 1) {reset_text_bar();
+	party.stuff_done[SDF_PARTY_DETECT_MONST] = move_to_zero(party.stuff_done[SDF_PARTY_DETECT_MONST]);
+	if (party.stuff_done[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
 		add_string_to_buf("Your feet stop glowing.      ");}
-	party.stuff_done[305][3] = move_to_zero(party.stuff_done[305][3]);
+	party.stuff_done[SDF_PARTY_FIREWALK] = move_to_zero(party.stuff_done[SDF_PARTY_FIREWALK]);
 
-	if (party.stuff_done[305][1] == 2) 
+	if (party.stuff_done[SDF_PARTY_FLIGHT] == 2) 
 		add_string_to_buf("You are starting to descend.");
-	if (party.stuff_done[305][1] == 1) {
+	if (party.stuff_done[SDF_PARTY_FLIGHT] == 1) {
 		if (scenario.ter_types[out[party.p_loc.x][party.p_loc.y]].blockage > 2) { 
 				add_string_to_buf("  You plummet to your deaths.                  ");
 				slay_party(2);
 				print_buf();
 				pause(150);
-				}
-				else add_string_to_buf("  You land safely.                  ");
+			}
+			else add_string_to_buf("  You land safely.                  ");
 		reset_text_bar();
-		}
+	}
 				
-	party.stuff_done[305][1] = move_to_zero(party.stuff_done[305][1]);
+	party.stuff_done[SDF_PARTY_FLIGHT] = move_to_zero(party.stuff_done[SDF_PARTY_FLIGHT]);
 
 	if ((overall_mode > MODE_OUTDOORS) && (c_town.town.lighting == 2))
 		party.light_level = max (0,party.light_level - 9);
@@ -2591,7 +2591,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 	if (((boat_num = out_boat_there(real_dest)) < 30) && (party.in_boat < 0) && (party.in_horse < 0)) {
 		if (flying() == TRUE) {
 			add_string_to_buf("You land first.                 ");
-			party.stuff_done[305][1] = 0;
+			party.stuff_done[SDF_PARTY_FLIGHT] = 0;
 			}
 			give_help(61,0,0);
 			add_string_to_buf("Move: You board the boat.           ");
