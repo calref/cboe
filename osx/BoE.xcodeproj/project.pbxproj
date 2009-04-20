@@ -45,6 +45,9 @@
 		91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F09A0F97672700BF5B67 /* dlglowlevel.h */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
+		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
+		912793660F9C108D007B0D52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		912798AF0F9CA636007B0D52 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
@@ -96,6 +99,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			remoteInfo = DlogTool;
+		};
+		912793590F9C1043007B0D52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
 			proxyType = 1;
@@ -235,6 +245,8 @@
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.town.h; sourceTree = "<group>"; };
 		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = misc/dlgbtns.cpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
@@ -310,6 +322,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		912793460F9C0FE5007B0D52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				912793660F9C108D007B0D52 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91B3EF160F969C2200BF5B67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -368,6 +388,7 @@
 				91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */,
 				91B3F07A0F975C7100BF5B67 /* libDlogTool.a */,
 				91B3F1040F97799300BF5B67 /* libGrpSndTool.a */,
+				912793480F9C0FE6007B0D52 /* ViewDlog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -507,6 +528,7 @@
 				91B3F0840F975D0E00BF5B67 /* dlgconsts.h */,
 				91B3F09A0F97672700BF5B67 /* dlglowlevel.h */,
 				91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */,
+				912798AE0F9CA636007B0D52 /* dlgbtns.cpp */,
 			);
 			name = DlgTool;
 			sourceTree = "<group>";
@@ -653,6 +675,24 @@
 			productReference = 2BF04AC10BF518D4006C0831 /* Blades of Exile.app */;
 			productType = "com.apple.product-type.application";
 		};
+		912793470F9C0FE5007B0D52 /* ViewDlog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9127934D0F9C0FEA007B0D52 /* Build configuration list for PBXNativeTarget "ViewDlog" */;
+			buildPhases = (
+				912793440F9C0FE5007B0D52 /* Resources */,
+				912793450F9C0FE5007B0D52 /* Sources */,
+				912793460F9C0FE5007B0D52 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9127935A0F9C1043007B0D52 /* PBXTargetDependency */,
+			);
+			name = ViewDlog;
+			productName = ViewDlog;
+			productReference = 912793480F9C0FE6007B0D52 /* ViewDlog.app */;
+			productType = "com.apple.product-type.application";
+		};
 		91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91B3EF1D0F969C2400BF5B67 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */;
@@ -746,6 +786,7 @@
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
 				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
+				912793470F9C0FE5007B0D52 /* ViewDlog */,
 				91EBE9DA0F9A33A1002356F2 /* All */,
 			);
 		};
@@ -758,6 +799,13 @@
 			files = (
 				91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */,
 				91D634560F8FD77800674AB3 /* BoE.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912793440F9C0FE5007B0D52 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,6 +859,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		912793450F9C0FE5007B0D52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91B3EF150F969C2200BF5B67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -846,6 +902,7 @@
 			files = (
 				91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */,
 				91B3F09D0F97672700BF5B67 /* dlglowlevel.cpp in Sources */,
+				912798AF0F9CA636007B0D52 /* dlgbtns.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,6 +923,11 @@
 			isa = PBXTargetDependency;
 			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
 			targetProxy = 91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */;
+		};
+		9127935A0F9C1043007B0D52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
+			targetProxy = 912793590F9C1043007B0D52 /* PBXContainerItemProxy */;
 		};
 		91B3F0F70F97786F00BF5B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1022,6 +1084,71 @@
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		9127934B0F9C0FEA007B0D52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "misc/ViewDlog-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ViewDlog;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		9127934C0F9C0FEA007B0D52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				INFOPLIST_FILE = "misc/ViewDlog-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					misc/libDlogTool.a,
+					misc/libGrpSndTool.a,
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ViewDlog;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -1331,6 +1458,15 @@
 			buildConfigurations = (
 				2BF04AC50BF518D4006C0831 /* Debug */,
 				2BF04AC60BF518D4006C0831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9127934D0F9C0FEA007B0D52 /* Build configuration list for PBXNativeTarget "ViewDlog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9127934B0F9C0FEA007B0D52 /* Debug */,
+				9127934C0F9C0FEA007B0D52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

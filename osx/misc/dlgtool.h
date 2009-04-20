@@ -6,10 +6,6 @@
  *
  */
 
-struct m_pic_index_t {
-	unsigned char i, x, y;
-};
-
 struct dlg_t {
 	short key;
 	short type;
@@ -35,6 +31,13 @@ struct dlg_item_t {
 struct dlg_label_t {
 	char str[25];
 	bool taken;
+};
+
+struct btn_t {
+	short type;
+	char* str;
+	short left_adj;
+	char def_key;
 };
 
 /*struct dlg_gw_store_t{
@@ -70,42 +73,6 @@ struct dlg_filters{
 	dlg_filter_t callback;
 };
 
-#define DLG_KEY_LEFT	20
-#define DLG_KEY_RIGHT	21
-#define DLG_KEY_UP		22
-#define DLG_KEY_DOWN	23
-#define DLG_KEY_ESC		24
-#define DLG_KEY_CTRL1	25
-#define DLG_KEY_CTRL2	26
-#define DLG_KEY_CTRL3	27
-#define DLG_KEY_CTRL4	28
-#define DLG_KEY_CTRL5	29
-#define DLG_KEY_CTRL6	30
-#define DLG_KEY_RETURN	31
-
-#define DLG_BTN_SM		0 // 23x23 (PICT id 2000 / 2001)
-#define DLG_BTN_REG		1 // 63x23 (PICT id 2002 / 2003)
-#define DLG_BTN_LG		2 // 102x23 (PICT id 2004 / 2005)
-#define DLG_BTN_HELP	3 // 16x13 (PICT id 2006 / 2007) white bubble w/ ? mark
-#define DLG_BTN_LEFT	4 // 63x23 (PICT id 2008 / 2009) with left arrow
-#define DLG_BTN_RIGHT	5 // 63x23 (PICT id 2010 / 2011) with right arrow
-#define DLG_BTN_UP		6 // 63x23 (PICT id 2012 / 2013) with up arrow
-#define DLG_BTN_DOWN	7 // 63x23 (PICT id 2014 / 2015) with down arrow
-#define DLG_BTN_LED1	8 // 6x6 (PICT id 2016 / 2017)
-#define DLG_BTN_LED2	9 // 14x10 (PICT id 2018 / 2019)
-#define DLG_BTN_LED3	10 // 14x10 (PICT id 2020 / 2021)
-#define DLG_BTN_DONE	11 // 63x23 (PICT id 2022 / 2023) says "Done"
-#define DLG_BTN_TALL	12 // 63x40 (PICT id 2024 / 2025)
-#define DLG_BTN_TRAIT	13 // 63x40 (PICT id 2026 / 2027) says "Race Good/Bad Traits"
-#define DLG_BTN_PUSH	14 // 30x30 (PICT id 2028 / 2029) red round button
-
-struct btn_t {
-	short type;
-	char* str;
-	short left_adj;
-	char def_key;
-};
-
 #include <map>
 #include <string>
 using std::map;
@@ -113,7 +80,7 @@ using std::string;
 
 typedef GWorldPtr* gw;
 #define INIT_PARAMS gw g1,  gw g2,  gw g3,  gw g4,  gw g5,  gw g6,  gw g7,  gw g8,  gw g9,  gw g10, \
-					gw g11, gw g12, gw g13, gw g14, gw g15, gw g16, gw g17, gw g18, gw g19, gw g20, gw g21
+					gw g11, gw g12, /*gw g13, gw g14, gw g15, gw g16, gw g17, gw g18, gw g19,*/ gw g20, gw g21
 
 void cd_init_dialogs(INIT_PARAMS);
 short cd_create_dialog_parent_num(short dlog_num,short parent);
@@ -161,3 +128,5 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 short cd_run_dialog();
 void cd_register_event_filter(short id, dlg_filter_t filter);
 void cd_register_default_event_filter(dlg_filter_t filter);
+void cd_set_bg_pat_num(short n);
+void cd_set_text_clr(RGBColor clr);

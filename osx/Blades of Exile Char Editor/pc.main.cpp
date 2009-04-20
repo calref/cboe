@@ -66,7 +66,6 @@ extern short sword_curs;
 town_record_type anim_town;
 tiny_tr_type anim_t_d;
 
-m_pic_index_t m_pic_index[200]; // not used, but the lack of it causes a link error
 stored_items_list_type stored_items[3];
 stored_town_maps_type maps;
 stored_town_maps_type town_maps;
@@ -144,7 +143,6 @@ int main(void)
 //	init_buf();
 
 //	register_flag = get_reg_data();
-	load_sounds();
 	set_up_apple_events();
 
 	menu_bar_handle = GetNewMBar(128);

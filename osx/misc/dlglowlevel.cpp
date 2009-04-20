@@ -17,8 +17,7 @@
 #include "graphtool.h"
 #include "mathutil.h"
 
-extern m_pic_index_t m_pic_index[200];
-extern PixPatHandle bg[14];
+extern PixPatHandle bg[];
 
 extern GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2];
 extern map<char*,GWorldPtr*> dlg_gworlds;
@@ -31,6 +30,7 @@ extern char text_short_str[140][40];
 extern dlg_label_t labels[NL];
 extern short store_free_slot;
 extern short store_dlog_num;
+extern short dlg_bg;
 
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern btn_t buttons[];
@@ -363,7 +363,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 	if (type_g == PICT_BLANK_TYPE) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
 			InsetRect(&rect, -3, -3);
-			FillCRect(&rect,bg[5]);
+			FillCRect(&rect,bg[dlg_bg]);
 		}	
 		return;
 	}

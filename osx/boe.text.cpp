@@ -57,7 +57,7 @@ extern short which_item_page[6],current_cursor;
 //extern CursHandle sword_curs;
 extern ControlHandle text_sbar,item_sbar;
 extern Point store_anim_ul;
-extern PixPatHandle	bg[14];
+extern PixPatHandle	bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;

@@ -25,9 +25,8 @@ extern bool play_sounds, cursor_shown;
 extern WindowPtr mainPtr;
 extern bool modeless_exists[18];
 extern DialogPtr modeless_dialogs[18];
-extern m_pic_index_t m_pic_index[200];
 
-extern PixPatHandle bg[14];
+extern PixPatHandle bg[];
 extern short geneva_font_num, sword_curs;
 
 GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2];
@@ -43,191 +42,16 @@ dlg_label_t labels[NL];
 short store_free_slot;
 short store_dlog_num;
 bool dlg_not_toast;
+RGBColor clr[] = {{65535,65535,65535},{65535,0,0},{0,0,8192},{0,0,4096}};
+short dlg_bg = 5;
 
 #ifdef EXILE_BIG_GUNS
 main_dialog_UPP = NewModalFilterProc(cd_event_filter);
 #endif
-vector<dlg_filters> event_filters;
-
-short available_dlog_buttons[NUM_DLOG_B] = { // This array is a list of indices into the following array.
-	0,  63, 64, 65, 1,  4,  5,  8,  128,9,
-	10, 11, 12, 13,	14, 15, 16, 17, 29, 51,
-	60, 61, 62,	66, 69, 70, 71, 72, 73, 74,
-	79, 80, 83, 86, 87, 88, 91, 92, 93, 99,
-	100,101,102,104,129,130,131,132,133,134,
-	135,136,137
-};
-btn_t buttons[] = {
-	 {DLG_BTN_DONE, " ", 2, 0}, // Formerly DLG_BTN_REG with "Done " as the string
-	 {DLG_BTN_REG, "Ask", 0, 0},
-	 {DLG_BTN_LEFT, " ", 0, DLG_KEY_LEFT},
-	 {DLG_BTN_RIGHT, " ", 0, DLG_KEY_RIGHT},
-	 {DLG_BTN_REG, "Keep", 6, 'k'},
-	 {DLG_BTN_REG, "Cancel", 0, DLG_KEY_ESC},
-	 {DLG_BTN_SM, "+", 0, 0},
-	 {DLG_BTN_SM, "-", 0, 0},
-	 {DLG_BTN_REG, "Buy", 4, 0},
-	 {DLG_BTN_REG, "Leave", 5, 0},
-	 //10
-	 {DLG_BTN_REG, "Get", 0, 'g'},
-	 {DLG_BTN_REG, "1", 0, '1'},
-	 {DLG_BTN_REG, "2", 0, '2'},
-	 {DLG_BTN_REG, "3", 0, '3'},
-	 {DLG_BTN_REG, "4", 0, '4'},
-	 {DLG_BTN_REG, "5", 0, '5'},
-	 {DLG_BTN_REG, "6", 0, '6'},
-	 {DLG_BTN_REG, "Cast", 4, 0},
-	 {DLG_BTN_LED1, " ", 0, 0},
-	 {DLG_BTN_LED1, " ", 0, 0},
-	 //20
-	 {DLG_BTN_LED2, " ", 0, 0},
-	 {DLG_BTN_LED2, " ", 0, 0},
-	 {DLG_BTN_LED2, " ", 0, 0},
-	 {DLG_BTN_REG, "Buy", 4, 0},
-	 {DLG_BTN_REG, "Sell", 0, 0},
-	 {DLG_BTN_LG, "Other Spells", 5, ' '},
-	 {DLG_BTN_REG, "Buy x10", 0, 0},
-	 {DLG_BTN_UP, " ", 0, DLG_KEY_UP},
-	 {DLG_BTN_DOWN, " ", 0, DLG_KEY_DOWN},
-	 {DLG_BTN_REG, "Save", 6, 0},
-	 //30
-	 {DLG_BTN_REG, "Race", 6, 0},
-	 {DLG_BTN_TALL, "Train", 6, 0},
-	 {DLG_BTN_REG, "Items", 0, 0},
-	 {DLG_BTN_REG, "Spells", 0, 0},
-	 {DLG_BTN_LG, "Heal Party", 0, 0},
-	 {DLG_BTN_SM, "1", 0, '1'},
-	 {DLG_BTN_SM, "2", 0, '2'},
-	 {DLG_BTN_SM, "3", 0, '3'},
-	 {DLG_BTN_SM, "4", 0, '4'},
-	 {DLG_BTN_SM, "5", 0, '5'},
-	 //40
-	 {DLG_BTN_SM, "6", 0, '6'},
-	 {DLG_BTN_SM, "7", 0, '7'},
-	 {DLG_BTN_SM, "8", 0, '8'},
-	 {DLG_BTN_SM, "9", 0, '9'},
-	 {DLG_BTN_SM, "10", 6, 'a'},
-	 {DLG_BTN_SM, "11", 6, 'b'},
-	 {DLG_BTN_SM, "12", 6, 'c'},
-	 {DLG_BTN_SM, "13", 6, 'd'},
-	 {DLG_BTN_SM, "14", 6, 'e'},
-	 {DLG_BTN_SM, "15", 6, 'f'},
-	 //50
-	 {DLG_BTN_SM, "16", 6, 'g'},
-	 {DLG_BTN_REG, "Take", 6, 0},
-	 {DLG_BTN_REG, "Create", 0, 0},
-	 {DLG_BTN_REG, "Delete", 2, 0},
-	 {DLG_BTN_LG, "Race/Special", 0, 0},
-	 {DLG_BTN_REG, "Skill", 0, 0},
-	 {DLG_BTN_REG, "Name", 0, 0},
-	 {DLG_BTN_REG, "Graphic", 2, 0},
-	 {DLG_BTN_LG, "Bash Door", 3, 0},
-	 {DLG_BTN_LG, "Pick Lock", 3, 0},
-	 //60
-	 {DLG_BTN_REG, "Leave", 6, 0},
-	 {DLG_BTN_REG, "Steal", 6, 0},
-	 {DLG_BTN_REG, "Attack", 0, 0},
-	 {DLG_BTN_REG, "OK", 7, 0},
-	 {DLG_BTN_REG, "Yes", 5, 'y'},
-	 {DLG_BTN_REG, "No", 5, 'n'},
-	 {DLG_BTN_LG, "Step In", 0, 0},
-	 {DLG_BTN_HELP, " ", 0, '?'},
-	 {DLG_BTN_REG, "Record", 2, 'r'},
-	 {DLG_BTN_REG, "Climb", 6, 0},
-	 //70
-	 {DLG_BTN_REG, "Flee", 4, 0},
-	 {DLG_BTN_REG, "Onward", 2, 0},
-	 {DLG_BTN_REG, "Answer", 0, 0},
-	 {DLG_BTN_REG, "Drink", 5, 0},
-	 {DLG_BTN_LG, "Approach", 0, 0},
-	 {DLG_BTN_LG, "Mage Spells", 4, 0},
-	 {DLG_BTN_LG, "Priest Spells", 10, 0},
-	 {DLG_BTN_LG, "Advantages", 4, 0},
-	 {DLG_BTN_LG, "New Game", 0, 0},
-	 {DLG_BTN_REG, "Land", 6, 0},
-	 //80
-	 {DLG_BTN_REG, "Under", 6, 0},
-	 {DLG_BTN_REG, "Restore", 2, 0},
-	 {DLG_BTN_REG, "Restart", 1, 0},
-	 {DLG_BTN_REG, "Quit", 6, 0},
-	 {DLG_BTN_LG, "Save First", 4, 0},
-	 {DLG_BTN_LG, "Just Quit", 3, 0},
-	 {DLG_BTN_REG, "Rest", 6, 0},
-	 {DLG_BTN_REG, "Read", 4, 0},
-	 {DLG_BTN_REG, "Pull", 6, 0},
-	 {DLG_BTN_LG, "Alchemy", 4, 0},
-	 //90
-	 {DLG_BTN_SM, "17", 6, 'g'},
-	 {DLG_BTN_REG, "Push", 6, 0},
-	 {DLG_BTN_REG, "Pray", 6, 0},
-	 {DLG_BTN_REG, "Wait", 6, 0},
-	 {DLG_BTN_PUSH, "", 0, 0},
-	 {DLG_BTN_TRAIT, "", 0, 0},
-	 {DLG_BTN_TALL, "Delete", 0, 0},
-	 {DLG_BTN_TALL, "Graphic", 2, 0},
-	 {DLG_BTN_TALL, "Create", 0, 0},
-	 {DLG_BTN_REG, "Give", 4, 0},
-	 //100
-	 {DLG_BTN_REG, "Destroy", 2, 0},
-	 {DLG_BTN_REG, "Pay", 6, 0},
-	 {DLG_BTN_REG, "Free", 6, 0},
-	 {DLG_BTN_LG, "Next Tip", 3, 0},
-	 {DLG_BTN_REG, "Touch", 6, 0},
-	 {DLG_BTN_LG, "Select Icon", 7, 0},
-	 {DLG_BTN_LG, "Create/Edit", 3, 0},
-	 {DLG_BTN_LG, "Clear Special", 0, 0},
-	 {DLG_BTN_LG, "Edit Abilities", 0, 0},
-	 {DLG_BTN_REG, "Choose", 0, 0},
-	 //110
-	 {DLG_BTN_LG, "Go Back", 0, 0},
-	 {DLG_BTN_LG, "Create New", 5, 0},
-	 {DLG_BTN_LG, "General", 3, 0},
-	 {DLG_BTN_LG, "One Shots", 3, 0},
-	 {DLG_BTN_LG, "Affect PCs", 3, 0},
-	 {DLG_BTN_LG, "If-Thens", 3, 0},
-	 {DLG_BTN_LG, "Town Specs", 3, 0},
-	 {DLG_BTN_LG, "Out Specs", 4, 0},
-	 {DLG_BTN_LG, "Advanced", 4, 0},
-	 {DLG_BTN_LG, "Weapon Abil", 4, 0},
-	 //120
-	 {DLG_BTN_LG, "General Abil.", 6, 0},
-	 {DLG_BTN_LG, "NonSpell Use", 4, 0},
-	 {DLG_BTN_LG, "Spell Usable", 4, 0},
-	 {DLG_BTN_LG, "Reagents", 2, 0},
-	 {DLG_BTN_LG, "Missiles", 2, 0},
-	 {DLG_BTN_LG, "Abilities", 3, 0},
-	 {DLG_BTN_LG, "Pick Picture", 6, 0},
-	 {DLG_BTN_LG, "Animated", 5, 0},
-	 {DLG_BTN_REG, "Enter", 6, 0},
-	 {DLG_BTN_REG, "Burn", 6, 0},
-	 //130
-	 {DLG_BTN_REG, "Insert", 0, 0},
-	 {DLG_BTN_REG, "Remove", 4, 0},
-	 {DLG_BTN_REG, "Accept", 2, 0},
-	 {DLG_BTN_REG, "Refuse", 2, 0},
-	 {DLG_BTN_REG, "Open", 6, 0},
-	 {DLG_BTN_REG, "Close", 4, 0},
-	 {DLG_BTN_REG, "Sit", 6, 0},
-	 {DLG_BTN_REG, "Stand", 3, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 //140
-	 {DLG_BTN_SM, "18", 0, 0},
-	 {DLG_BTN_SM, "19", 0, 0},
-	 {DLG_BTN_SM, "20", 0, 0},
-	 {DLG_BTN_SM, "Invisible!", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 {DLG_BTN_SM, "", 0, 0},
-	 //150
-	 {DLG_BTN_LG, "Open File", 7, 0},
-	 {DLG_BTN_SM, " ", 0, 0},
- };
-// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-// 25-30  ctrl 1-6  31 - return\
+//vector<dlg_filters> event_filters;
+map<short, dlg_filter_t> event_filters;
+extern short available_dlog_buttons[NUM_DLOG_B];
+extern btn_t buttons[];
 
 void cd_init_dialogs(INIT_PARAMS){
 	short i,j;
@@ -267,16 +91,16 @@ void cd_init_dialogs(INIT_PARAMS){
 	dlg_gworlds["fields"] = g10;
 	dlg_gworlds["pc-stats"] = g11;
 	dlg_gworlds["item-stats"] = g12;
-	dlg_gworlds["text-area"] = g13;
-	dlg_gworlds["storage"] = g14;
-	dlg_gworlds["ter-scr"] = g15;
-	dlg_gworlds["text_bar"] = g16;
-	dlg_gworlds["orig-text-bar"] = g17;
-	dlg_gworlds["buttons"] = g18;
-	dlg_gworlds["party-tmpl"] = g19;
+//	dlg_gworlds["text-area"] = g13;
+//	dlg_gworlds["storage"] = g14;
+//	dlg_gworlds["ter-scr"] = g15;
+//	dlg_gworlds["text_bar"] = g16;
+//	dlg_gworlds["orig-text-bar"] = g17;
+//	dlg_gworlds["buttons"] = g18;
+//	dlg_gworlds["party-tmpl"] = g19;
 	dlg_gworlds["mixed"] = g20;
 	dlg_gworlds["custom"] = g21;
-	event_filters.push_back(dlg_filters(0,NULL)); // default event filter placeholder
+	//event_filters.push_back(dlg_filters(0,NULL)); // default event filter placeholder
 }
 
 
@@ -323,7 +147,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	store_free_slot = free_slot;
 	dlgs[free_slot].win = GetDialogWindow(GetNewDialog (dlog_num, NULL, IN_FRONT));
 	if (dlgs[free_slot].win == NULL) {
-		play_sound(3);
+		play_sound(57);
 		return -3;
 	}
 	
@@ -360,7 +184,7 @@ short cd_kill_dialog(short dlog_num,short parent_message){
 	dlgs[which_dlg].key = -1;
 	if (dlgs[which_dlg].parent != NULL)
 		SetPortWindowPort( dlgs[which_dlg].parent);
-	if (FrontWindow() != mainPtr)
+	if (FrontWindow() != mainPtr && redraw_screen != NULL)
 		redraw_screen();
 	untoast_dialog();
 	return 0;
@@ -372,14 +196,14 @@ short cd_process_click(WindowPtr window,Point the_point, short mods,short *item)
 	
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlog_key)) < 0)
 		return -1;
-	
-	for (i = 0; i < dlgs[which_dlg].highest_item + 1; i++)
+	printf("Processing click at {%i,%i}\n",the_point.h,the_point.v);
+	for (i = 0; i <= dlgs[which_dlg].highest_item; i++)
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
 			if ((PtInRect(the_point,&items[item_id].rect)) && (items[item_id].active > 0)
 				&& ((items[item_id].type < 3) || (items[item_id].type == 8)
 					|| (items[item_id].type == 10)|| (items[item_id].type == 11))) {
 				*item = i;
-				if ((mods & 2048) != 0) 
+				if (mods & controlKey) 
 					*item += 100;
 				if (items[item_id].type != 8)
 					cd_press_button(dlg_num,i);
@@ -394,9 +218,6 @@ short cd_process_keystroke(WindowPtr window,char char_hit,short *item){
 	
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlg_key)) < 0)
 		return -1;
-	// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-	// 25-30  ctrl 1-6
-	
 	
 	for (i = 0; i < dlgs[which_dlg].highest_item + 1; i++){
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
@@ -411,7 +232,7 @@ short cd_process_keystroke(WindowPtr window,char char_hit,short *item){
 		}
 	}
 	
-	// kludgy. If you get an escape and is isn't processed, make it an enter
+	// kludgy. If you get an escape and it isn't processed, make it an enter
 	if (char_hit == 24) {
 		char_hit = 31;
 		for (i = 0; i < dlgs[which_dlg].highest_item + 1; i++){
@@ -745,7 +566,6 @@ void cd_key_label(short dlog_num, short item_num,short loc){
 
 void cd_draw_item(short dlog_num,short item_num){
 	short dlg_index,item_index,store_label;
-	RGBColor c[3] = {{65535,65535,65535},{65535,0,0},{0,0,8192}};
 	Rect from_rect,to_rect;
 	GrafPtr old_port;
 	//printf("In cd_draw_item(%i,%i)\n",dlog_num,item_num);
@@ -770,7 +590,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
 								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
-			RGBForeColor(&c[2]);
+			RGBForeColor(&clr[2]);
 			TextSize(12);
 			if (items[item_index].type < 2)
 				OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
@@ -825,10 +645,10 @@ void cd_draw_item(short dlog_num,short item_num){
 			if (items[item_index].flag % 10 == 1)
 				cd_frame_item(dlog_num,item_num,2);
 			if (items[item_index].flag >= 10) {
-				RGBForeColor(&c[1]);
-			}else RGBForeColor(&c[0]);
-			printf("Testing 1...\n");
-			printf("Rect is top = %i, left = %i, bottom = %i, right = %i\n",items[item_index].rect.top,items[item_index].rect.left,items[item_index].rect.bottom,items[item_index].rect.right);
+				RGBForeColor(&clr[1]);
+			}else RGBForeColor(&clr[0]);
+			//printf("Testing 1...\n");
+			//printf("Rect is top = %i, left = %i, bottom = %i, right = %i\n",items[item_index].rect.top,items[item_index].rect.left,items[item_index].rect.bottom,items[item_index].rect.right);
 			if (items[item_index].rect.bottom - items[item_index].rect.top < 20) {
 				items[item_index].rect.left += 3;
 				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
@@ -1024,7 +844,7 @@ void cd_erase_item(short dlog_num, short item_num, Boolean just_label){
 	}
 	GetPort(&old_port);
 	SetPortWindowPort(dlgs[dlg_index].win);
-	FillCRect(&to_fry,bg[5]);
+	FillCRect(&to_fry,bg[dlg_bg]);
 	SetPort(old_port);
 }
 
@@ -1039,7 +859,7 @@ void cd_erase_rect(short dlog_num,Rect to_fry){
 	
 	GetPort(&old_port);
 	SetPortWindowPort(dlgs[dlg_index].win);
-	FillCRect(&to_fry,bg[5]);
+	FillCRect(&to_fry,bg[dlg_bg]);
 	SetPort(old_port);
 }
 
@@ -1048,7 +868,7 @@ void cd_press_button(short dlog_num, short item_num){
 	unsigned long dummy;
 	Rect from_rect,to_rect,x = {0,0,55,55};
 	GrafPtr old_port;
-	RGBColor c[2] = {{0,0,4096},{0,0,8192}};
+	//RGBColor clr[2] = {{0,0,4096},{0,0,8192}};
 	
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
@@ -1070,7 +890,7 @@ void cd_press_button(short dlog_num, short item_num){
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][1],from_rect,
 						dlg_buttons_gworld[buttons[items[item_index].flag].type][1],items[item_index].rect,0,2);
 	TextFace(bold);
-	RGBForeColor(&c[0]);
+	RGBForeColor(&clr[3]);
 	if (items[item_index].type < 2) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
@@ -1092,7 +912,7 @@ void cd_press_button(short dlog_num, short item_num){
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
 						dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
 	
-	RGBForeColor(&c[1]);
+	RGBForeColor(&clr[2]);
 	if (items[item_index].type < 2) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
@@ -1128,6 +948,7 @@ void untoast_dialog(){
 
 short cd_run_dialog(){
 	short item_hit;
+	untoast_dialog();
 #ifndef EXILE_BIG_GUNS
 	while (dialog_not_toast())
 		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
@@ -1140,11 +961,13 @@ short cd_run_dialog(){
 }
 
 void cd_register_event_filter(short dlg_id, dlg_filter_t filter){
-	event_filters.push_back(dlg_filters(dlg_id,filter));
+	//event_filters.push_back(dlg_filters(dlg_id,filter));
+	event_filters[dlg_id] = filter;
 }
 
 void cd_register_default_event_filter(dlg_filter_t filter){
-	event_filters[0] = dlg_filters(0,filter);
+	//event_filters[0] = dlg_filters(0,filter);
+	event_filters[0] = filter;
 }
 
 pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit){	
@@ -1163,27 +986,61 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 			GetWindowRegion(w,kWindowUpdateRgn,rgn);
 			if (EmptyRgn(rgn) == TRUE) {
 				DisposeRgn(rgn);
-				return TRUE;
+				return FALSE;
 			}
 			DisposeRgn(rgn);
 			BeginUpdate(w);
 			cd_redraw(w);
 			EndUpdate(w);
 			DrawDialog(hDlg);
-			return FALSE;
+			return TRUE;
 			break;
 			
-			case keyDown:
+		case keyDown:
 			chr = event->message & charCodeMask;
 			chr2 = (char) ((event->message & keyCodeMask) >> 8);
 			switch (chr2) {
-				case 126: chr = 22; break;
-				case 124: chr = 21; break;
-				case 123: chr = 20; break;
-				case 125: chr = 23; break;
-				case 53: chr = 24; break;
-				case 36: chr = 31; break;
-				case 76: chr = 31; break;
+				case 126:
+					chr = DLG_KEY_UP;
+					break;
+				case 124:
+					chr = DLG_KEY_RIGHT;
+					break;
+				case 123:
+					chr = DLG_KEY_LEFT;
+					break;
+				case 125:
+					chr = DLG_KEY_DOWN;
+					break;
+				case 53:
+					chr = DLG_KEY_ESC;
+					break;
+				case 36:
+					chr = DLG_KEY_RETURN;
+					break;
+				case 76:
+					chr = DLG_KEY_RETURN;
+					break;
+			}
+			if(event->modifiers & controlKey) switch(chr){ // these aren't currently used
+				case '1':
+					chr = DLG_KEY_CTRL1;
+					break;
+				case '2':
+					chr = DLG_KEY_CTRL2;
+					break;
+				case '3':
+					chr = DLG_KEY_CTRL3;
+					break;
+				case '4':
+					chr = DLG_KEY_CTRL4;
+					break;
+				case '5':
+					chr = DLG_KEY_CTRL5;
+					break;
+				case '6':
+					chr = DLG_KEY_CTRL6;
+					break;
 			}
 			// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
 			// 25-30  ctrl 1-6  31 - return
@@ -1191,23 +1048,32 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 			wind_hit = cd_process_keystroke(GetDialogWindow(hDlg),chr,&item_hit);
 			break;
 			
-			case mouseDown:
+		case mouseDown:
 			the_point = event->where;
 			GlobalToLocal(&the_point);	
 			wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
+			printf("Conclusion: %i hit.\n",item_hit);
 			break;
 			
-			default: wind_hit = -1; break;
+		default:
+			wind_hit = -1;
+			break;
 	}
-	bool handled = false;
-	for(int i = 1; i < event_filters.size(); i++){
-		if(event_filters[i].id == wind_hit){
-			event_filters[i].callback(item_hit);
-			handled = true;
-		}
+//	bool handled = false;
+//	for(int i = 1; i < event_filters.size(); i++){
+//		if(event_filters[i].id == wind_hit){
+//			event_filters[i].callback(item_hit);
+//			handled = true;
+//		}
+//	}
+//	if(!handled)
+//		event_filters[0].callback(item_hit);
+	if(wind_hit >= 0){
+		if(event_filters.find(wind_hit) == event_filters.end())
+			event_filters[0](item_hit);
+		else
+			event_filters[wind_hit](item_hit);
 	}
-	if(!handled)
-		event_filters[0].callback(item_hit);
 //	switch (wind_hit) {
 //		case -1: break;
 //		case 823: give_password_filter(item_hit); break;
@@ -1245,7 +1111,7 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 //		default: fancy_choice_dialog_event_filter (item_hit); break;
 //	}
 	
-	if (wind_hit == -1)
+	if (wind_hit < 0)
 		return FALSE;
 	else return TRUE;
 }
@@ -1420,4 +1286,12 @@ short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,sho
 	untoast_dialog();
 	
 	return 0;
+}
+
+void cd_set_bg_pat_num(short n){
+	dlg_bg = n;
+}
+
+void cd_set_text_clr(RGBColor c){
+	clr[0] = c;
 }

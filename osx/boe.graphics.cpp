@@ -53,13 +53,12 @@ extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
 extern Rect talk_area_rect, word_place_rect;
 extern PixPatHandle map_pat[25];
 extern Point store_anim_ul;
-extern short dungeon_font_num,geneva_font_num;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern Boolean registered,ed_reg;
 extern Boolean fast_bang;
-extern unsigned char m_pic_index[200];
-extern PixPatHandle	bg[14];
+//extern unsigned char m_pic_index[200];
+extern PixPatHandle	bg[];
 extern KeyMap key_state;
 extern Boolean fry_startup;
 extern piles_of_stuff_dumping_type *data_store;
@@ -207,14 +206,14 @@ void init_dialogs(){
 		&tiny_map_graphics,
 		&fields_gworld,
 		&pc_stats_gworld,
-		&item_stats_gworld,
+		&item_stats_gworld,/*
 		&text_area_gworld,
 		&storage_gworld,
 		&terrain_screen_gworld,
 		&text_bar_gworld,
 		&orig_text_bar_gworld,
 		&buttons_gworld,
-		&party_template_gworld,
+		&party_template_gworld,*/
 		&mixed_gworld,
 		&spec_scen_g
 	);
@@ -927,32 +926,35 @@ void set_gworld_fonts(short font_num)
 
 // redraw_screen does the very first redraw, and any full redraw
 void redraw_screen(){
-	switch (overall_mode) {
-		case 20:
-			put_background();
-			break;
-		default:
-			draw_main_screen();
-			draw_terrain(0);
-			draw_text_bar(1);
-			if (overall_mode == MODE_COMBAT)
-				draw_pcs(pc_pos[current_pc],1);
-			if (overall_mode == MODE_FANCY_TARGET)
-				draw_targets(center);
-			break;
-		}
-	put_pc_screen();
-	put_item_screen(stat_window,0);
-	print_buf();
-	ShowControl(text_sbar);
-	Draw1Control(text_sbar);
-	ShowControl(item_sbar);
-	Draw1Control(item_sbar);
-	if (overall_mode == MODE_SHOPPING) {
-		ShowControl(shop_sbar);
-		Draw1Control(shop_sbar);
-		}
+	if(in_startup_mode)draw_startup(0);
+	else{
+		switch (overall_mode) {
+			case 20:
+				put_background();
+				break;
+			default:
+				draw_main_screen();
+				draw_terrain(0);
+				draw_text_bar(1);
+				if (overall_mode == MODE_COMBAT)
+					draw_pcs(pc_pos[current_pc],1);
+				if (overall_mode == MODE_FANCY_TARGET)
+					draw_targets(center);
+				break;
+			}
+		put_pc_screen();
+		put_item_screen(stat_window,0);
+		print_buf();
+		ShowControl(text_sbar);
+		Draw1Control(text_sbar);
+		ShowControl(item_sbar);
+		Draw1Control(item_sbar);
+		if (overall_mode == MODE_SHOPPING) {
+			ShowControl(shop_sbar);
+			Draw1Control(shop_sbar);
+			}
 		else HideControl(shop_sbar);
+	}
 }
 
 void draw_main_screen()
@@ -1437,7 +1439,7 @@ void add_monst_graphic(unsigned char m,short mode)////
 		pict = get_monst_picnum(m);
 		if (pict >= NUM_MONST_G)
 			return;
-		pict = m_pic_index[pict];
+		pict = m_pic_index[pict].i;
 		if (mode == 0) {
 			add_to_wish_list(300 + pict + i);
 			add_to_wish_list(600 + pict + i);

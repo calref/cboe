@@ -54,7 +54,7 @@ extern ControlHandle right_sbar;
 extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS]; 
-extern unsigned char m_pic_index[200];
+//extern unsigned char m_pic_index[200];
 extern btn_t buttons[];
 extern location cur_out;
 
@@ -76,7 +76,6 @@ GWorldPtr ter_draw_gworld;
 GWorldPtr dlogpics_gworld;
 GWorldPtr talkfaces_gworld;
 GWorldPtr mixed_gworld;
-PixPatHandle	bg[14];
 PixPatHandle map_pat[25];
 	short small_icons[24] = {0,23,37,38,39,35,33,34,30,0,
 							30,26,0,0,36,0,27,28,29,20,
@@ -139,14 +138,14 @@ void init_dialogs(){
 		&small_ter_gworld,
 		NULL,
 		NULL,
+		NULL,/*
 		NULL,
 		NULL,
 		NULL,
 		NULL,
 		NULL,
 		NULL,
-		NULL,
-		NULL,
+		NULL,*/
 		NULL,
 		&spec_scen_g
 	);
@@ -205,6 +204,9 @@ void init_dialogs(){
 	cd_register_event_filter(856,pick_town_num_event_filter);
 	cd_register_event_filter(857,change_ter_event_filter);
 	cd_register_default_event_filter(fancy_choice_dialog_event_filter);
+	cd_set_bg_pat_num(16);
+	RGBColor c = {0,0,0};
+	cd_set_text_clr(c);
 	//return tmp;
 }
 
@@ -326,7 +328,7 @@ void redraw_screen()
 	
 	GetPort (&old_port);
 	SetPortWindowPort (mainPtr);
-	FillCRect(&windRect,bg[12]);
+	FillCRect(&windRect,bg[20]);
 	draw_main_screen();
 	if (overall_mode < 60);
 		draw_terrain();
@@ -354,7 +356,7 @@ void draw_main_screen()
 		
 		FrameRect(&draw_rect);
 		InsetRect(&draw_rect,1,1);
-		FillCRect(&draw_rect,bg[6]);
+		FillCRect(&draw_rect,bg[17]);
 		
 		draw_rb();
 		Draw1Control(right_sbar);
@@ -379,7 +381,7 @@ void draw_lb()
 	
 	temp_rect = windRect;
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
-	FillCRect(&temp_rect,bg[12]);
+	FillCRect(&temp_rect,bg[20]);
 	for (i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
@@ -389,7 +391,7 @@ void draw_lb_slot (short which,short mode)
 {
 	Rect text_rect,from_rect;
  
- 	FillCRect(&left_buttons[which][0],bg[12]);
+ 	FillCRect(&left_buttons[which][0],bg[20]);
 	if (left_button_status[which] == 0)
 		return;
 	text_rect = left_buttons[which][0];
@@ -436,7 +438,7 @@ void draw_rb_slot (short which,short mode)
 	if ((which < pos) || (which >= pos + NRSONPAGE))
 		return;
 		
- 	FillCRect(&right_buttons[which - pos],bg[6]);
+ 	FillCRect(&right_buttons[which - pos],bg[17]);
 	if (right_button_status[which] == 0)
 		return;
 	text_rect = right_buttons[which - pos];
@@ -458,7 +460,7 @@ void set_up_terrain_buttons()
 	Rect palette_from = {0,0,0,0},palette_to;
 					
  	SetPort( terrain_buttons_gworld);
-	FillCRect(&terrain_buttons_rect,bg[6]);
+	FillCRect(&terrain_buttons_rect,bg[17]);
 	FrameRect(&terrain_buttons_rect);
  	
  	// first make terrain buttons
@@ -542,7 +544,7 @@ void draw_terrain(){
 	
 	if (cur_viewing_mode == 0) {
 		SetPort( ter_draw_gworld);
-		FillCRect(&terrain_rect,bg[6]);
+		FillCRect(&terrain_rect,bg[17]);
 		FrameRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		for (q = 0; q < 9; q++) 
@@ -758,7 +760,7 @@ void draw_terrain(){
 	if (cur_viewing_mode == 1) {
 		SetPort( ter_draw_gworld);
 		if (small_any_drawn == FALSE) {
-		 	FillCRect(&terrain_rect,bg[6]);
+		 	FillCRect(&terrain_rect,bg[17]);
 			FrameRect(&terrain_rect);
 		}
 		for (q = 0; q < ((editing_town == TRUE) ? max_dim[town_type] : 48); q++) 
@@ -808,7 +810,7 @@ void draw_monsts()
 						Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, 1, 0); 
 						}
 						else if (scenario.scen_monsters[t_d.creatures[i].number].picture_num < 1000) {
-							m_start_pic = m_pic_index[scenario.scen_monsters[t_d.creatures[i].number].picture_num] + k;
+							m_start_pic = m_pic_index[scenario.scen_monsters[t_d.creatures[i].number].picture_num].i + k;
 							from_gworld = monst_gworld[m_start_pic / 20];
 							m_start_pic = m_start_pic % 20;
 							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);				
@@ -1097,7 +1099,7 @@ void place_location()
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	FillCRect(&erase_rect,bg[6]);
+	FillCRect(&erase_rect,bg[17]);
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)
@@ -1114,7 +1116,7 @@ void place_location()
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].bottom + 117;
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
-	FillCRect(&erase_rect,bg[6]);
+	FillCRect(&erase_rect,bg[17]);
 	
 	if (overall_mode < 60) {
 		MoveTo(5,terrain_rects[255].bottom + 129);
@@ -1173,7 +1175,7 @@ void place_just_location()
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	FillCRect(&erase_rect,bg[6]);
+	FillCRect(&erase_rect,bg[17]);
 	
 	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	if (overall_mode < 60)

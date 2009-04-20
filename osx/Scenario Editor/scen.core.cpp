@@ -530,86 +530,6 @@ unsigned char m_poison_r[200] = {
 0,0,2,2,0,0,0,2,0,0,
 0,0,0,0,0,0,0,0,0,0};  // 190
 
-unsigned char m_pic_index[200] = {
-1,2,3,4,5,6,7,8,9,10,
-11,12,13,14,15,16,17,18,19,20,
-
-21,22,23,24,25, 26,27,28,29,30,
-31,32,33,34,35, 36,37,38,39,40,
-
-41,42,43,44,46,47,48,49,50,51,
-53,55,57,59,60,61,62,63,64,65,
-
-66,67,68,69,70, 71,72,73,74,75,
-76,77,78,79,81, 82,83,85,86,87,
-
-88,89,90,91,92, 93,94,95,96,97,
-98,99,100,101,102, 103,104,105,106,107,
-
-108,109,111,112,113,  114,116,117,118,119, //100
-120,122,123,125,127, 128,129,130,131,135,
-
-136,137,139,140,141,142,143,144,145,146,
-147,148,149,150,151,152,153,154,155,159,
-
-160,164,166,168,170,171,172,173,174,175,
-176,177,178,179,180,181,182,183,184,185,
-
-186,187,188,189,190,191,192,193,194,195,
-196,197,198,0,0,0,0,0,0,0,
-
-0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0};
- 
-unsigned char m_pic_index_x[200] = {
-
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,2,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-
-1,2,1,1,1,2,1,1,1,1, // 100
-2,1,1,1,1,1,1,1,2,1,
-1,2,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,2,1,
-
-2,2,2,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1};
-
-unsigned char m_pic_index_y[200] = {
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,2,
-2,2,2,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,2,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-
-1,1,1,1,1,1,1,1,1,1,
-1,1,2,2,1,1,1,1,2,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,2,1,
-2,1,1,2,1,1,1,1,1,1,
-
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1};
-
 short ter_pics[256] = {0,1,2,3,4,5,6,6,7,8,
 8,9,10,10,11,12,12,13,14,15,
 16,17,18,19,20,21,22,23,24,25,
@@ -753,10 +673,10 @@ monster_record_type return_monster_template(unsigned char store)
 		monst.status[i] = 0;
 	monst.x_width = monst.y_width = 1;
 	for (i = 0; i < 200; i++)
-		if (m_pict[m_num] == m_pic_index[i]) {
+		if (m_pict[m_num] == m_pic_index[i].i) {
 			monst.picture_num = i;
-			monst.x_width = m_pic_index_x[i];
-			monst.y_width = m_pic_index_y[i];
+			monst.x_width = m_pic_index[i].x;
+			monst.y_width = m_pic_index[i].y;
 			i = 200;
 			}
 //	monst.x_width = xdim[m_num];
@@ -1111,7 +1031,7 @@ short edit_ter_type(short which_ter)
 	//make_cursor_sword();
 	
 	cd_create_dialog_parent_num(813,0);
-	
+	printf("Created dialog.");
 	put_ter_info_in_dlog();
 	for (i = 0; i < 24; i++) {
 		get_str(temp_str,21,i + 1);
@@ -1193,8 +1113,8 @@ Boolean save_monst_info()
 		}
 		else {
 			if (cre(store_monst.picture_num,0,174,"Non-customized monster pic must be from 0 to 173.","",814) > 0) return FALSE;
-			store_monst.x_width = m_pic_index_x[store_monst.picture_num];
-			store_monst.y_width = m_pic_index_y[store_monst.picture_num];
+			store_monst.x_width = m_pic_index[store_monst.picture_num].x;
+			store_monst.y_width = m_pic_index[store_monst.picture_num].y;
 
 			}
 	store_monst.level = CDGN(814,4);
@@ -1283,8 +1203,8 @@ void edit_monst_type_event_filter (short item_hit)
 				store_monst.picture_num = i - 400;
 				}
 				else break;
-			store_monst.x_width = m_pic_index_x[i];
-			store_monst.y_width = m_pic_index_y[i];
+			store_monst.x_width = m_pic_index[i].x;
+			store_monst.y_width = m_pic_index[i].y;
 			put_monst_info_in_dlog();
 			break;
 		case 25: // m type

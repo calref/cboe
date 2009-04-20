@@ -31,7 +31,6 @@ short overall_mode = 61;
 Handle menu_bar_handle;
 ControlHandle right_sbar;
 short mode_count = 0;
-short dungeon_font_num,geneva_font_num;
 MenuHandle apple_menu;
 outdoor_record_type current_terrain;
 talking_record_type talking;
@@ -97,13 +96,12 @@ int main(void)
 	
 	init_directories();
 	Initialize();
-	load_sounds();
+	init_snd_tool();
 	load_graphics();
 	
 	init_dialogs();
 	Point p = {0,0};
 	init_graph_tool(redraw_screen,p);
-	init_snd_tool();
 
 	cen_x = 18; cen_y = 18;
 

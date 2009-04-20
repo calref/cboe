@@ -7,6 +7,10 @@
  */
 #define  LINES_IN_TEXT_WIN	11
 
+struct m_pic_index_t {
+	unsigned char i, x, y;
+};
+
 void init_graph_tool(void (*redraw_callback)(),Point p);
 GWorldPtr load_pict(int picture_to_get);
 GWorldPtr load_bmp(unsigned char *data, long length);
@@ -26,4 +30,7 @@ Rect get_custom_rect (short which_rect);
 extern short arrow_curs[3][3];
 extern short sword_curs, boot_curs, drop_curs, target_curs;
 extern short talk_curs, key_curs, look_curs, current_cursor;
+extern m_pic_index_t m_pic_index[200];
+extern PixPatHandle bg[14];
+extern short geneva_font_num,dungeon_font_num;
 #endif

@@ -26,7 +26,6 @@ extern WindowPtr mainPtr;
 extern Rect d_rects[80];
 extern short d_rect_index[80],current_cursor;
 
-extern CursHandle sword_curs;
 extern Boolean modeless_exists[12],diff_depth_ok,current_file_has_maps;
 extern short modeless_key[12];
 extern DialogPtr modeless_dialogs[12];

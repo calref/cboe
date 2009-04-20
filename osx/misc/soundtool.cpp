@@ -69,9 +69,6 @@ char numchannel = 3;
 char channel;
 short snd_played[4] = {-1,-1,-1,-1};
 
-void init_snd_tool(){
-}
-
 Boolean sound_going(short which_s) {
 	short i;
 	
@@ -107,7 +104,7 @@ pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand
 #endif
 }
 
-void load_sounds(){
+void init_snd_tool(){
 	short i,t;
 	SndCallBackUPP callback;
 	

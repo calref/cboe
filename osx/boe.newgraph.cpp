@@ -40,7 +40,7 @@ short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 extern Point ul;
 extern Rect	windRect;
 extern long anim_ticks;
-extern PixPatHandle	bg[14];
+extern PixPatHandle	bg[];
 extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;

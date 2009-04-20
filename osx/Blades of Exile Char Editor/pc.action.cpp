@@ -33,7 +33,6 @@ extern short current_cursor,dialog_answer;
 extern long register_flag;
 
 extern GWorldPtr pc_gworld;
-extern CursHandle sword_curs;
 extern Boolean diff_depth_ok,registered,save_blocked;
 
 

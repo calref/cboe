@@ -9,7 +9,6 @@
 #include "graphtool.h"
 #include "dlgtool.h"
 #include "dlglowlevel.h"
-#include "graphtool.h"
 
 /* Adventure globals */
 extern party_record_type party;
@@ -31,7 +30,6 @@ extern short store_flags[3];
 extern GWorldPtr button_num_gworld;
 extern short current_active_pc;
 extern Boolean ed_reg;
-extern CursHandle sword_curs, boot_curs, key_curs, target_curs;
 
 extern long register_flag,stored_key;
 extern long ed_flag,ed_key;
@@ -57,10 +55,6 @@ extern Rect traits_rect;
 extern Rect pc_traits_rect[16]; 
 extern Rect edit_rect[5][2]; 
 
- PixPatHandle	bg[14];
- 	short geneva_font_num;
-
-
 short store_str1a;
 short store_str1b;
 short store_str2a;
@@ -72,7 +66,7 @@ short current_pressed_button = -1;
 Boolean init_once = FALSE;
 
 void init_dialogs(){
-	cd_init_dialogs(NULL,NULL,NULL,NULL,NULL,&dlogpics_gworld,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+	cd_init_dialogs(NULL,NULL,NULL,NULL,NULL,&dlogpics_gworld,NULL,NULL,NULL,NULL,NULL,NULL/*,NULL,NULL,NULL,NULL,NULL,NULL,NULL*/,NULL,NULL);
 	cd_register_event_filter(917,edit_day_event_filter);
 	cd_register_event_filter(970,display_strings_event_filter);
 	cd_register_event_filter(971,display_strings_event_filter);
@@ -1167,8 +1161,6 @@ void get_str(Str255 str,short i, short j)
 
 void make_cursor_sword() 
 {
-	HLock ((Handle) sword_curs);
-	SetCursor (*sword_curs);
-	HUnlock((Handle) sword_curs);
+	set_cursor(sword_curs);
 }
 

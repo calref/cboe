@@ -43,7 +43,6 @@ Rect sbar_rect = {283,546,421,562};
 Rect shop_sbar_rect = {67,258,357,274};
 Rect item_sbar_rect = {146,546,253,562};
 Boolean bgm_on = FALSE,bgm_init = FALSE;
-short dungeon_font_num,geneva_font_num;
 short dialog_answer;
 Point store_anim_ul;
 scenario_data_type scenario;
@@ -178,15 +177,13 @@ int main(void)
 
 	init_buf();
 
-	load_sounds();
-
 	set_up_apple_events();
 	//import_template_terrain();
 	//import_anim_terrain(0);
 	plop_fancy_startup();
 
-	party.stuff_done[SDF_NO_FRILLS] = 0;
-	party.stuff_done[SDF_NO_SOUNDS] = 0;
+	//party.stuff_done[SDF_NO_FRILLS] = 0;
+	//party.stuff_done[SDF_NO_SOUNDS] = 0;
 
 	init_screen_locs();
 	
@@ -194,7 +191,7 @@ int main(void)
 	init_dialogs();
 	
 	//init_party(0);
-	PSD[SDF_GAME_SPEED] = 1;
+	//PSD[SDF_GAME_SPEED] = 1;
 	//init_anim(0);
 
 		
@@ -267,7 +264,7 @@ void Initialize(void)
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don’t for each call of Random, or the sequence
+	//	will always be different.  Don‚Äôt for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
 	unsigned long time;

@@ -1270,8 +1270,7 @@ void give_help(short help1,short help2,short parent_num)
 		get_str(str2,10,help2);
 	if (help2 == 0)
 		display_strings((char *)str1, "",-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG_TYPE, parent_num);
-		else display_strings((char *)str1,(char *)str2,-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG_TYPE, parent_num);
-
+	else display_strings((char *)str1,(char *)str2,-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG_TYPE, parent_num);
 }
 
 void put_spec_item_info (short which_i)

@@ -70,3 +70,32 @@
 #define DLG_TEXT_LARGE				7
 #define DLG_OLD_PICTURE				5
 // And I don't know what 6 is for either
+
+#define DLG_KEY_LEFT	20
+#define DLG_KEY_RIGHT	21
+#define DLG_KEY_UP		22
+#define DLG_KEY_DOWN	23
+#define DLG_KEY_ESC		24
+#define DLG_KEY_CTRL1	25
+#define DLG_KEY_CTRL2	26
+#define DLG_KEY_CTRL3	27
+#define DLG_KEY_CTRL4	28
+#define DLG_KEY_CTRL5	29
+#define DLG_KEY_CTRL6	30
+#define DLG_KEY_RETURN	31
+
+#define DLG_BTN_SM		0 // 23x23 (PICT id 2000 / 2001)
+#define DLG_BTN_REG		1 // 63x23 (PICT id 2002 / 2003)
+#define DLG_BTN_LG		2 // 102x23 (PICT id 2004 / 2005)
+#define DLG_BTN_HELP	3 // 16x13 (PICT id 2006 / 2007) white bubble w/ ? mark
+#define DLG_BTN_LEFT	4 // 63x23 (PICT id 2008 / 2009) with left arrow
+#define DLG_BTN_RIGHT	5 // 63x23 (PICT id 2010 / 2011) with right arrow
+#define DLG_BTN_UP		6 // 63x23 (PICT id 2012 / 2013) with up arrow
+#define DLG_BTN_DOWN	7 // 63x23 (PICT id 2014 / 2015) with down arrow
+#define DLG_BTN_LED1	8 // 6x6 (PICT id 2016 / 2017)
+#define DLG_BTN_LED2	9 // 14x10 (PICT id 2018 / 2019)
+#define DLG_BTN_LED3	10 // 14x10 (PICT id 2020 / 2021)
+#define DLG_BTN_DONE	11 // 63x23 (PICT id 2022 / 2023) says "Done"
+#define DLG_BTN_TALL	12 // 63x40 (PICT id 2024 / 2025)
+#define DLG_BTN_TRAIT	13 // 63x40 (PICT id 2026 / 2027) says "Race Good/Bad Traits"
+#define DLG_BTN_PUSH	14 // 30x30 (PICT id 2028 / 2029) red round button

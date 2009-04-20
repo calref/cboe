@@ -71,7 +71,6 @@ Boolean need_map_full_refresh = TRUE,forcing_map_button_redraw = FALSE;
 extern GWorldPtr map_gworld,tiny_map_graphics;
 RGBColor parchment = {65535,65535,52428};
 PixPatHandle map_pat[25];
-PixPatHandle	bg[14];
 
 
 unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
