@@ -42,12 +42,35 @@
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F09A0F97672700BF5B67 /* dlglowlevel.h */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
 		912793660F9C108D007B0D52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		912798AF0F9CA636007B0D52 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
+		91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BAD0F9CFCBA007B0D52 /* boescenario.icns */; };
+		91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB30F9D03B6007B0D52 /* boesave.icns */; };
+		91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB40F9D03B7007B0D52 /* boesounds.icns */; };
+		91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB50F9D03B7007B0D52 /* boegraphics.icns */; };
+		91279BE20F9D0F73007B0D52 /* location.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279BE10F9D0F73007B0D52 /* location.cpp */; };
+		91279BE30F9D0F73007B0D52 /* location.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279BE10F9D0F73007B0D52 /* location.cpp */; };
+		91279BE40F9D0F73007B0D52 /* location.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279BE10F9D0F73007B0D52 /* location.cpp */; };
+		91279C590F9D1253007B0D52 /* scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C580F9D1253007B0D52 /* scenario.cpp */; };
+		91279C5A0F9D1253007B0D52 /* scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C580F9D1253007B0D52 /* scenario.cpp */; };
+		91279C5B0F9D1253007B0D52 /* scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C580F9D1253007B0D52 /* scenario.cpp */; };
+		91279C670F9D12D6007B0D52 /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C660F9D12D6007B0D52 /* terrain.cpp */; };
+		91279C680F9D12D6007B0D52 /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C660F9D12D6007B0D52 /* terrain.cpp */; };
+		91279C690F9D12D6007B0D52 /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C660F9D12D6007B0D52 /* terrain.cpp */; };
+		91279C760F9D15E5007B0D52 /* vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C750F9D15E5007B0D52 /* vehicle.cpp */; };
+		91279C770F9D15E5007B0D52 /* vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C750F9D15E5007B0D52 /* vehicle.cpp */; };
+		91279C780F9D15E5007B0D52 /* vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C750F9D15E5007B0D52 /* vehicle.cpp */; };
+		91279CC20F9D19DA007B0D52 /* monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC10F9D19DA007B0D52 /* monster.cpp */; };
+		91279CC30F9D19DA007B0D52 /* monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC10F9D19DA007B0D52 /* monster.cpp */; };
+		91279CC40F9D19DA007B0D52 /* monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC10F9D19DA007B0D52 /* monster.cpp */; };
+		91279CC70F9D1A02007B0D52 /* special.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC60F9D1A02007B0D52 /* special.cpp */; };
+		91279CC80F9D1A02007B0D52 /* special.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC60F9D1A02007B0D52 /* special.cpp */; };
+		91279CC90F9D1A02007B0D52 /* special.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC60F9D1A02007B0D52 /* special.cpp */; };
+		91279D3E0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
+		91279D3F0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
+		91279D400F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
@@ -73,18 +96,6 @@
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
 		91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
-		91B3F0810F975CC400BF5B67 /* dlgtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F0610F96D25200BF5B67 /* dlgtool.h */; };
-		91B3F0820F975CC900BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		91B3F0850F975D0E00BF5B67 /* dlgconsts.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F0840F975D0E00BF5B67 /* dlgconsts.h */; };
-		91B3F09D0F97672700BF5B67 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
-		91B3F10B0F9779C300BF5B67 /* graphtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F1090F9779C300BF5B67 /* graphtool.h */; };
-		91B3F10C0F9779C300BF5B67 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
-		91B3F1100F9779D000BF5B67 /* soundtool.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F10E0F9779D000BF5B67 /* soundtool.h */; };
-		91B3F1110F9779D000BF5B67 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
-		91B3F1120F9779E100BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		91B3F11F0F97801F00BF5B67 /* mathutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 91B3F11D0F97801F00BF5B67 /* mathutil.h */; };
-		91B3F1200F97801F00BF5B67 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
 		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
@@ -94,45 +105,34 @@
 		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
 		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
 		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
+		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
+		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
+		91E5C1F50F9E489B00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
+		91E5C1F60F9E489B00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
+		91E5C1F70F9E489B00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
+		91E5C1F80F9E489B00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
+		91E5C1F90F9E48AF00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
+		91E5C1FA0F9E48AF00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
+		91E5C1FB0F9E48AF00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
+		91E5C1FC0F9E48AF00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
+		91E5C1FD0F9E48AF00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
+		91E5C1FE0F9E48AF00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
+		91E5C1FF0F9E48CB00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
+		91E5C2000F9E48CB00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
+		91E5C2010F9E48CB00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
+		91E5C2020F9E48CB00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
+		91E5C2030F9E48CB00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
+		91E5C2040F9E48CB00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
+		91E5C2050F9E48D900C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
+		91E5C2060F9E48D900C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
+		91E5C2070F9E48D900C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
+		91E5C2080F9E48D900C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
+		91E5C2090F9E48D900C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
+		91E5C20A0F9E48D900C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91EBE8AB0F9A2BE1002356F2 /* scen.locutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			remoteInfo = DlogTool;
-		};
-		912793590F9C1043007B0D52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			remoteInfo = DlogTool;
-		};
-		91B3F0F60F97786F00BF5B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91B3F0790F975C7100BF5B67;
-			remoteInfo = DlogTool;
-		};
-		91B3F1070F9779A800BF5B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91B3F1030F97799300BF5B67;
-			remoteInfo = GrpSndTool;
-		};
-		91E830520F99261F00810708 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91B3F0790F975C7100BF5B67;
-			remoteInfo = DlogTool;
-		};
 		91EBE9DD0F9A33A6002356F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
@@ -247,6 +247,24 @@
 		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = misc/dlgbtns.cpp; sourceTree = "<group>"; };
+		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = "<group>"; };
+		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesave.icns; sourceTree = "<group>"; };
+		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesounds.icns; sourceTree = "<group>"; };
+		91279BB50F9D03B7007B0D52 /* boegraphics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boegraphics.icns; sourceTree = "<group>"; };
+		91279BE00F9D0F73007B0D52 /* location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = location.h; sourceTree = "<group>"; };
+		91279BE10F9D0F73007B0D52 /* location.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = location.cpp; sourceTree = "<group>"; };
+		91279C570F9D1253007B0D52 /* scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenario.h; sourceTree = "<group>"; };
+		91279C580F9D1253007B0D52 /* scenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenario.cpp; sourceTree = "<group>"; };
+		91279C650F9D12D6007B0D52 /* terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = terrain.h; sourceTree = "<group>"; };
+		91279C660F9D12D6007B0D52 /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = terrain.cpp; sourceTree = "<group>"; };
+		91279C740F9D15E4007B0D52 /* vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vehicle.h; sourceTree = "<group>"; };
+		91279C750F9D15E5007B0D52 /* vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vehicle.cpp; sourceTree = "<group>"; };
+		91279CC00F9D19DA007B0D52 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monster.h; sourceTree = "<group>"; };
+		91279CC10F9D19DA007B0D52 /* monster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monster.cpp; sourceTree = "<group>"; };
+		91279CC50F9D1A02007B0D52 /* special.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = special.h; sourceTree = "<group>"; };
+		91279CC60F9D1A02007B0D52 /* special.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = special.cpp; sourceTree = "<group>"; };
+		91279D3C0F9D1D6A007B0D52 /* item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item.h; sourceTree = "<group>"; };
+		91279D3D0F9D1D6A007B0D52 /* item.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item.cpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
@@ -291,11 +309,9 @@
 		91B3F0610F96D25200BF5B67 /* dlgtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgtool.h; path = misc/dlgtool.h; sourceTree = "<group>"; };
 		91B3F0620F96D25200BF5B67 /* dlgtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgtool.cpp; path = misc/dlgtool.cpp; sourceTree = "<group>"; };
 		91B3F0670F96D29600BF5B67 /* ViewDlog-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ViewDlog-Info.plist"; path = "misc/ViewDlog-Info.plist"; sourceTree = "<group>"; };
-		91B3F07A0F975C7100BF5B67 /* libDlogTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDlogTool.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3F0840F975D0E00BF5B67 /* dlgconsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgconsts.h; path = misc/dlgconsts.h; sourceTree = "<group>"; };
 		91B3F09A0F97672700BF5B67 /* dlglowlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlglowlevel.h; path = misc/dlglowlevel.h; sourceTree = "<group>"; };
 		91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlglowlevel.cpp; path = misc/dlglowlevel.cpp; sourceTree = "<group>"; wrapsLines = 0; };
-		91B3F1040F97799300BF5B67 /* libGrpSndTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGrpSndTool.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = graphtool.h; path = misc/graphtool.h; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graphtool.cpp; path = misc/graphtool.cpp; sourceTree = "<group>"; };
 		91B3F10E0F9779D000BF5B67 /* soundtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soundtool.h; path = misc/soundtool.h; sourceTree = "<group>"; };
@@ -346,28 +362,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		91B3F0780F975C7100BF5B67 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F0820F975CC900BF5B67 /* Carbon.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91B3F1020F97799300BF5B67 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F1120F9779E100BF5B67 /* Carbon.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2BF04A9F0BF51845006C0831 = {
 			isa = PBXGroup;
 			children = (
+				91279BAB0F9CFB18007B0D52 /* classes */,
 				91B3F0FF0F97797200BF5B67 /* GrpSndTool */,
 				91B3EF5F0F969F4900BF5B67 /* DlgTool */,
 				91B3EF5E0F969F3D00BF5B67 /* ViewDlog */,
@@ -386,11 +387,30 @@
 				2BF04AC10BF518D4006C0831 /* Blades of Exile.app */,
 				91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */,
 				91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */,
-				91B3F07A0F975C7100BF5B67 /* libDlogTool.a */,
-				91B3F1040F97799300BF5B67 /* libGrpSndTool.a */,
 				912793480F9C0FE6007B0D52 /* ViewDlog.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		91279BAB0F9CFB18007B0D52 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				91279BE00F9D0F73007B0D52 /* location.h */,
+				91279BE10F9D0F73007B0D52 /* location.cpp */,
+				91279C570F9D1253007B0D52 /* scenario.h */,
+				91279C580F9D1253007B0D52 /* scenario.cpp */,
+				91279C650F9D12D6007B0D52 /* terrain.h */,
+				91279C660F9D12D6007B0D52 /* terrain.cpp */,
+				91279C740F9D15E4007B0D52 /* vehicle.h */,
+				91279C750F9D15E5007B0D52 /* vehicle.cpp */,
+				91279CC00F9D19DA007B0D52 /* monster.h */,
+				91279CC10F9D19DA007B0D52 /* monster.cpp */,
+				91279CC50F9D1A02007B0D52 /* special.h */,
+				91279CC60F9D1A02007B0D52 /* special.cpp */,
+				91279D3C0F9D1D6A007B0D52 /* item.h */,
+				91279D3D0F9D1D6A007B0D52 /* item.cpp */,
+			);
+			name = classes;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -406,6 +426,7 @@
 		91B3EED50F969BA700BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91279BAD0F9CFCBA007B0D52 /* boescenario.icns */,
 				91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */,
 				91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */,
 				91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */,
@@ -608,6 +629,9 @@
 		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91279BB30F9D03B6007B0D52 /* boesave.icns */,
+				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
+				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
 				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
 				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
@@ -631,29 +655,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		91B3F0760F975C7100BF5B67 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F0810F975CC400BF5B67 /* dlgtool.h in Headers */,
-				91B3F0850F975D0E00BF5B67 /* dlgconsts.h in Headers */,
-				91278C340F9A4AC8007B0D52 /* dlglowlevel.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91B3F1000F97799300BF5B67 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F10B0F9779C300BF5B67 /* graphtool.h in Headers */,
-				91B3F1100F9779D000BF5B67 /* soundtool.h in Headers */,
-				91B3F11F0F97801F00BF5B67 /* mathutil.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		2BF04AC00BF518D4006C0831 /* Blades of Exile */ = {
 			isa = PBXNativeTarget;
@@ -668,7 +669,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				91E830530F99261F00810708 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile";
 			productName = "Blades of Exile";
@@ -686,7 +686,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9127935A0F9C1043007B0D52 /* PBXTargetDependency */,
 			);
 			name = ViewDlog;
 			productName = ViewDlog;
@@ -705,7 +704,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				91278CAE0F9A525D007B0D52 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile Character Editor";
 			productName = "Blades of Exile Character Editor";
@@ -723,47 +721,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				91B3F0F70F97786F00BF5B67 /* PBXTargetDependency */,
 			);
 			name = "BoE Scenario Editor";
 			productName = "BoE Scenario Editor";
 			productReference = 91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */;
 			productType = "com.apple.product-type.application";
-		};
-		91B3F0790F975C7100BF5B67 /* DlogTool */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 91B3F07E0F975CA500BF5B67 /* Build configuration list for PBXNativeTarget "DlogTool" */;
-			buildPhases = (
-				91B3F0760F975C7100BF5B67 /* Headers */,
-				91B3F0770F975C7100BF5B67 /* Sources */,
-				91B3F0780F975C7100BF5B67 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				91B3F1080F9779A800BF5B67 /* PBXTargetDependency */,
-			);
-			name = DlogTool;
-			productName = DlogTool;
-			productReference = 91B3F07A0F975C7100BF5B67 /* libDlogTool.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		91B3F1030F97799300BF5B67 /* GrpSndTool */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 91B3F10D0F9779C300BF5B67 /* Build configuration list for PBXNativeTarget "GrpSndTool" */;
-			buildPhases = (
-				91B3F1000F97799300BF5B67 /* Headers */,
-				91B3F1010F97799300BF5B67 /* Sources */,
-				91B3F1020F97799300BF5B67 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GrpSndTool;
-			productName = GrpSndTool;
-			productReference = 91B3F1040F97799300BF5B67 /* libGrpSndTool.a */;
-			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -781,8 +743,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				91B3F1030F97799300BF5B67 /* GrpSndTool */,
-				91B3F0790F975C7100BF5B67 /* DlogTool */,
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
 				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
@@ -799,6 +759,9 @@
 			files = (
 				91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */,
 				91D634560F8FD77800674AB3 /* BoE.icns in Resources */,
+				91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */,
+				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
+				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -826,6 +789,7 @@
 				91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */,
 				91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */,
 				91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */,
+				91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -836,6 +800,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */,
+				91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */,
+				91E5C1F50F9E489B00C21460 /* mathutil.cpp in Sources */,
+				91E5C1F60F9E489B00C21460 /* dlgtool.cpp in Sources */,
+				91E5C1F70F9E489B00C21460 /* dlglowlevel.cpp in Sources */,
+				91E5C1F80F9E489B00C21460 /* dlgbtns.cpp in Sources */,
 				2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */,
 				2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */,
 				2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */,
@@ -856,6 +826,13 @@
 				2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */,
 				9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */,
 				9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */,
+				91279BE20F9D0F73007B0D52 /* location.cpp in Sources */,
+				91279C590F9D1253007B0D52 /* scenario.cpp in Sources */,
+				91279C670F9D12D6007B0D52 /* terrain.cpp in Sources */,
+				91279C760F9D15E5007B0D52 /* vehicle.cpp in Sources */,
+				91279CC20F9D19DA007B0D52 /* monster.cpp in Sources */,
+				91279CC70F9D1A02007B0D52 /* special.cpp in Sources */,
+				91279D3E0F9D1D6A007B0D52 /* item.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,6 +840,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91E5C1FF0F9E48CB00C21460 /* graphtool.cpp in Sources */,
+				91E5C2000F9E48CB00C21460 /* soundtool.cpp in Sources */,
+				91E5C2010F9E48CB00C21460 /* mathutil.cpp in Sources */,
+				91E5C2020F9E48CB00C21460 /* dlgtool.cpp in Sources */,
+				91E5C2030F9E48CB00C21460 /* dlglowlevel.cpp in Sources */,
+				91E5C2040F9E48CB00C21460 /* dlgbtns.cpp in Sources */,
 				912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,11 +854,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91E5C1F90F9E48AF00C21460 /* graphtool.cpp in Sources */,
+				91E5C1FA0F9E48AF00C21460 /* soundtool.cpp in Sources */,
+				91E5C1FB0F9E48AF00C21460 /* mathutil.cpp in Sources */,
+				91E5C1FC0F9E48AF00C21460 /* dlgtool.cpp in Sources */,
+				91E5C1FD0F9E48AF00C21460 /* dlglowlevel.cpp in Sources */,
+				91E5C1FE0F9E48AF00C21460 /* dlgbtns.cpp in Sources */,
 				91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */,
 				91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */,
 				91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */,
 				91B3EF4B0F969F2300BF5B67 /* pc.fileio.cpp in Sources */,
 				91B3EF4D0F969F2300BF5B67 /* pc.graphics.cpp in Sources */,
+				91279BE30F9D0F73007B0D52 /* location.cpp in Sources */,
+				91279C5A0F9D1253007B0D52 /* scenario.cpp in Sources */,
+				91279C680F9D12D6007B0D52 /* terrain.cpp in Sources */,
+				91279C770F9D15E5007B0D52 /* vehicle.cpp in Sources */,
+				91279CC30F9D19DA007B0D52 /* monster.cpp in Sources */,
+				91279CC80F9D1A02007B0D52 /* special.cpp in Sources */,
+				91279D3F0F9D1D6A007B0D52 /* item.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,6 +879,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91E5C2050F9E48D900C21460 /* graphtool.cpp in Sources */,
+				91E5C2060F9E48D900C21460 /* soundtool.cpp in Sources */,
+				91E5C2070F9E48D900C21460 /* mathutil.cpp in Sources */,
+				91E5C2080F9E48D900C21460 /* dlgtool.cpp in Sources */,
+				91E5C2090F9E48D900C21460 /* dlglowlevel.cpp in Sources */,
+				91E5C20A0F9E48D900C21460 /* dlgbtns.cpp in Sources */,
 				91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */,
 				91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */,
 				91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */,
@@ -893,57 +895,19 @@
 				91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */,
 				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
 				91EBE8AB0F9A2BE1002356F2 /* scen.locutils.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91B3F0770F975C7100BF5B67 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F0800F975CBD00BF5B67 /* dlgtool.cpp in Sources */,
-				91B3F09D0F97672700BF5B67 /* dlglowlevel.cpp in Sources */,
-				912798AF0F9CA636007B0D52 /* dlgbtns.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91B3F1010F97799300BF5B67 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91B3F10C0F9779C300BF5B67 /* graphtool.cpp in Sources */,
-				91B3F1110F9779D000BF5B67 /* soundtool.cpp in Sources */,
-				91B3F1200F97801F00BF5B67 /* mathutil.cpp in Sources */,
+				91279BE40F9D0F73007B0D52 /* location.cpp in Sources */,
+				91279C5B0F9D1253007B0D52 /* scenario.cpp in Sources */,
+				91279C690F9D12D6007B0D52 /* terrain.cpp in Sources */,
+				91279C780F9D15E5007B0D52 /* vehicle.cpp in Sources */,
+				91279CC40F9D19DA007B0D52 /* monster.cpp in Sources */,
+				91279CC90F9D1A02007B0D52 /* special.cpp in Sources */,
+				91279D400F9D1D6A007B0D52 /* item.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		91278CAE0F9A525D007B0D52 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			targetProxy = 91278CAD0F9A525D007B0D52 /* PBXContainerItemProxy */;
-		};
-		9127935A0F9C1043007B0D52 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			targetProxy = 912793590F9C1043007B0D52 /* PBXContainerItemProxy */;
-		};
-		91B3F0F70F97786F00BF5B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			targetProxy = 91B3F0F60F97786F00BF5B67 /* PBXContainerItemProxy */;
-		};
-		91B3F1080F9779A800BF5B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91B3F1030F97799300BF5B67 /* GrpSndTool */;
-			targetProxy = 91B3F1070F9779A800BF5B67 /* PBXContainerItemProxy */;
-		};
-		91E830530F99261F00810708 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91B3F0790F975C7100BF5B67 /* DlogTool */;
-			targetProxy = 91E830520F99261F00810708 /* PBXContainerItemProxy */;
-		};
 		91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2BF04AC00BF518D4006C0831 /* Blades of Exile */;
@@ -1030,10 +994,7 @@
 		2BF04AC50BF518D4006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = ppc;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1046,8 +1007,6 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1062,10 +1021,7 @@
 		2BF04AC60BF518D4006C0831 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = ppc;
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1076,8 +1032,6 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1092,10 +1046,7 @@
 		9127934B0F9C0FEA007B0D52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = ppc;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1110,8 +1061,6 @@
 				INFOPLIST_FILE = "misc/ViewDlog-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1125,10 +1074,7 @@
 		9127934C0F9C0FEA007B0D52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = ppc;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1142,8 +1088,6 @@
 				INFOPLIST_FILE = "misc/ViewDlog-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1173,8 +1117,6 @@
 				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1204,8 +1146,6 @@
 				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1220,7 +1160,10 @@
 		91B3EF420F969F0100BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1240,8 +1183,6 @@
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1257,7 +1198,10 @@
 		91B3EF430F969F0100BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1276,8 +1220,6 @@
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
 				OTHER_LDFLAGS = (
-					misc/libDlogTool.a,
-					misc/libGrpSndTool.a,
 					"-framework",
 					Carbon,
 				);
@@ -1286,136 +1228,6 @@
 				SDKROOT = "";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		91B3F07B0F975C7300BF5B67 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				CONFIGURATION_BUILD_DIR = misc;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				PRODUCT_NAME = DlogTool;
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		91B3F07C0F975C7300BF5B67 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				CONFIGURATION_BUILD_DIR = misc;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				PRODUCT_NAME = DlogTool;
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		91B3F1050F97799300BF5B67 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				CONFIGURATION_BUILD_DIR = misc;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				PRODUCT_NAME = GrpSndTool;
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		91B3F1060F97799300BF5B67 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				CONFIGURATION_BUILD_DIR = misc;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INSTALL_PATH = "$(PROJECT_DIR)/misc/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRIVATE_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
-				PRODUCT_NAME = GrpSndTool;
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_DIR)/misc/";
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1485,24 +1297,6 @@
 			buildConfigurations = (
 				91B3EF420F969F0100BF5B67 /* Debug */,
 				91B3EF430F969F0100BF5B67 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		91B3F07E0F975CA500BF5B67 /* Build configuration list for PBXNativeTarget "DlogTool" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				91B3F07B0F975C7300BF5B67 /* Debug */,
-				91B3F07C0F975C7300BF5B67 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		91B3F10D0F9779C300BF5B67 /* Build configuration list for PBXNativeTarget "GrpSndTool" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				91B3F1050F97799300BF5B67 /* Debug */,
-				91B3F1060F97799300BF5B67 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

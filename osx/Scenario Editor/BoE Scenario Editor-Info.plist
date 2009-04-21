@@ -11,6 +11,8 @@
 			<array>
 				<string>exs</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boescenario</string>
 			<key>CFBundleTypeName</key>
 			<string>Scenario</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -22,7 +24,7 @@
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
+			<string>Binary</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>

@@ -157,15 +157,15 @@ void Initialize(void)
 	//	Make a new window for drawing in, and it must be a color window.  
 	//	The window is full screen size, made smaller to make it more visible.
 	//
-	GetQDGlobalsScreenBits(&screenBits);
-	Rect windRect = screenBits.bounds;
-	InsetRect(&windRect, 63, 34);
-	windRect.top = windRect.top + 15;
-	windRect.bottom = windRect.bottom + 15;
+//	GetQDGlobalsScreenBits(&screenBits);
+//	Rect windRect = screenBits.bounds;
+//	InsetRect(&windRect, 63, 34);
+//	windRect.top = windRect.top + 15;
+//	windRect.bottom = windRect.bottom + 15;
 	
-	mainPtr = GetNewCWindow(128,NULL,mainPtr);
-	ActivateWindow(mainPtr,true);
-	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
+//	mainPtr = GetNewCWindow(128,NULL,mainPtr);
+//	ActivateWindow(mainPtr,true);
+//	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
 }
 
 void display_strings_event_filter (short item_hit)////
@@ -212,6 +212,7 @@ void display_strings(char *text1, char *text2, char *title,short graphic_num,sho
 }
 
 void choose_dialog_event_filter(short item_hit){
+	static RGBColor black = {0,0,0}, white = {65535,65535,65535};
 	switch(item_hit){
 		case 3:
 			short n = cd_retrieve_text_edit_num(8000, 2);
@@ -227,6 +228,24 @@ void choose_dialog_event_filter(short item_hit){
 		case 4:
 			toast_dialog();
 			All_Done = true;
+			break;
+		case 6:
+			cd_set_led_range(8000,6,8,6);
+			UseResFile(boeRef);
+			cd_set_bg_pat_num(5);
+			cd_set_text_clr(white);
+			break;
+		case 7:
+			cd_set_led_range(8000,6,8,7);
+			UseResFile(pcRef);
+			cd_set_bg_pat_num(5);
+			cd_set_text_clr(white);
+			break;
+		case 8:
+			cd_set_led_range(8000,6,8,8);
+			UseResFile(scenRef);
+			cd_set_bg_pat_num(16);
+			cd_set_text_clr(black);
 			break;
 	}
 }

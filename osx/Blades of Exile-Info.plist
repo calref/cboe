@@ -7,22 +7,80 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>boesounds</string>
+			<key>CFBundleTypeName</key>
+			<string>Sounds</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>beSN</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.boe</string>
+				<string>.meg</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boegraphics</string>
+			<key>CFBundleTypeName</key>
+			<string>Graphics</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>beGR</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>.exg</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boesave</string>
 			<key>CFBundleTypeName</key>
 			<string>SavedGame</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>bsSV</string>
+				<string>beSV</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>.exs</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boescenario</string>
+			<key>CFBundleTypeName</key>
+			<string>Scenario</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>BETM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>

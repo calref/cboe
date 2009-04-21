@@ -18,14 +18,13 @@ struct dlg_t {
 struct dlg_item_t {
 	short dlg;
 	short number;
-	char type;
+	short type;
 	Rect rect;
 	short flag;
 	char active;
 	char key;
 	short label;
 	short label_loc;
-	short flag2;
 };
 
 struct dlg_label_t {

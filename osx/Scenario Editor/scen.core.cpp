@@ -1055,7 +1055,22 @@ void put_monst_info_in_dlog()
 
 	if (store_monst.picture_num < 1000)
 		csp(814,34,/*400 + */store_monst.picture_num,PICT_MONST_TYPE);
-	else csp(814,34,store_monst.picture_num % 1000,PICT_CUSTOM_TYPE + PICT_MONST_TYPE);
+	else {
+		short type_g = PICT_CUSTOM_TYPE + PICT_MONST_TYPE;
+		short size_g = store_monst.picture_num / 1000;
+		switch(size_g){
+			case 2:
+				type_g += PICT_WIDE_MONSTER;
+				break;
+			case 3:
+				type_g += PICT_TALL_MONSTER;
+				break;
+			case 4:
+				type_g += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
+				break;
+		}
+		csp(814,34,store_monst.picture_num % 1000,type_g);
+	}
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);

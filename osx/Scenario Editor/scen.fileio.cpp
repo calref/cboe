@@ -13,7 +13,6 @@ using std::endl;
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
-#define	NIL		0L
 
 extern scenario_data_type scenario;
 
@@ -33,6 +32,7 @@ extern outdoor_record_type current_terrain;
 extern unsigned char borders[4][50];
 extern Boolean change_made;
 extern GWorldPtr spec_scen_g;
+extern bool mac_is_intel;
 
 short specials_res_id,data_dump_file_id;
 Str255 start_name;
@@ -50,6 +50,7 @@ town_record_type *dummy_town_ptr;
 ResFileRefNum mainRef, graphicsRef, soundRef;
 
 void print_write_position ();
+void flip_long(long *s);
 
 void init_directories()
 {
@@ -122,7 +123,7 @@ void save_scenario()
 	NavReplyRecord reply;
 	short dummy_f,scen_f;
 	char *buffer = NULL;
-	Size buf_len = 100000;
+	//Size buf_len = 100000;
 	OSErr error;
 	short out_num;
 	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
@@ -154,7 +155,8 @@ void save_scenario()
 		}			
 
 	// Now we need to set up a buffer for moving the data over to the dummy
-	buffer = (char *) NewPtr(buf_len);	
+	//buffer = (char *) NewPtr(buf_len);
+	buffer = new char[100000];
 	if (buffer == NULL) {
 		FSClose(scen_f); FSClose(dummy_f); oops_error(14);
 		return;
@@ -171,8 +173,8 @@ void save_scenario()
 	save_town_size = (long) (scenario.town_data_size[cur_town][0]) + (long) (scenario.town_data_size[cur_town][1])
 					+ (long) (scenario.town_data_size[cur_town][2]) + (long) (scenario.town_data_size[cur_town][3])
 					+ (long) (scenario.town_data_size[cur_town][4]);
-	scen_ptr_move = sizeof(scenario_data_type);
-	scen_ptr_move += sizeof(scen_item_data_type);
+	scen_ptr_move = sizeof(scenario_data_type); // 41942
+	scen_ptr_move += sizeof(scen_item_data_type); // 39200
 	for (i = 0; i < 270; i++)  // scenario strings
 		scen_ptr_move += scenario.scen_str_len[i];
 
@@ -180,12 +182,12 @@ void save_scenario()
 
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
-	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
+	scenario.town_data_size[cur_town][0] = sizeof(town_record_type); // 3506
 	if (scenario.town_size[cur_town] == 0) 
-		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
+		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type); // 6056
 		else if (scenario.town_size[cur_town] == 1) 
-			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
-			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
+			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type); // 3600
+			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type); // 1940
 	scenario.town_data_size[cur_town][1] = 0;
 	for (i = 0; i < 60; i++)
 		scenario.town_data_size[cur_town][1] += strlen(data_store->town_strs[i]);
@@ -199,7 +201,7 @@ void save_scenario()
 	for (i = 80; i < 170; i++)
 		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 
-	scenario.out_data_size[out_num][0] = sizeof(outdoor_record_type);
+	scenario.out_data_size[out_num][0] = sizeof(outdoor_record_type); // 4146
 	scenario.out_data_size[out_num][1] = 0;
 	for (i = 0; i < 120; i++)
 		scenario.out_data_size[out_num][1] += strlen(data_store->out_strs[i]);
@@ -228,12 +230,12 @@ void save_scenario()
 	scenario.flag_d = init_data(user_given_password);
 	
 
-	len = sizeof(scenario_data_type); // scenario data
+	len = sizeof(scenario_data_type); // scenario data; 41942
 	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
 		SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(15);
 		return;
 		}	
-	len = sizeof(scen_item_data_type); // item data
+	len = sizeof(scen_item_data_type); // item data; 39200
 	if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
 		SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(16);
 		return;
@@ -257,7 +259,7 @@ void save_scenario()
 				current_terrain.strlens[j] = 0;
 			for (j = 0; j < 120; j++)
 				current_terrain.strlens[j] = strlen(data_store->out_strs[j]);
-			len = sizeof(outdoor_record_type);
+			len = sizeof(outdoor_record_type); // 4146
 			error = FSWrite(dummy_f, &len, (char *) &current_terrain); 
 			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(18);}
 			
@@ -289,13 +291,13 @@ void save_scenario()
 				town.strlens[i] = strlen(data_store->town_strs[i]);
 			
 			// write towns
-			len = sizeof(town_record_type);
+			len = sizeof(town_record_type); // 3506
 			error = FSWrite(dummy_f, &len, (char *) &town); 
 			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(21);}
 
 			switch (scenario.town_size[cur_town]) {
 				case 0:
-					len = sizeof(big_tr_type);
+					len = sizeof(big_tr_type); // 6056
 					FSWrite(dummy_f, &len, (char *) &t_d);
 					break;
 			
@@ -311,7 +313,7 @@ void save_scenario()
 					for (i = 0; i < 40; i++) {
 						ave_t.creatures[i] = t_d.creatures[i];
 						}
-					len = sizeof(ave_tr_type);
+					len = sizeof(ave_tr_type); // 3600
 					FSWrite(dummy_f, &len, (char *) &ave_t);
 				break;
 			
@@ -328,7 +330,7 @@ void save_scenario()
 					for (i = 0; i < 30; i++) {
 						tiny_t.creatures[i] = t_d.creatures[i];
 						}
-					len = sizeof(tiny_tr_type);
+					len = sizeof(tiny_tr_type); // 1940
 					FSWrite(dummy_f, &len, (char *) &tiny_t);
 					break;
 				}
@@ -341,7 +343,7 @@ void save_scenario()
 				talking.strlens[i] = 0;
 			for (i = 0; i < 170; i++)
 				talking.strlens[i] = strlen(data_store->talk_strs[i]);
-			len = sizeof(talking_record_type);
+			len = sizeof(talking_record_type); // 1400
 			error = FSWrite(dummy_f, &len, (char *) &talking); 
 			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(22);}
 			for (j = 0; j < 170; j++) {
@@ -353,7 +355,7 @@ void save_scenario()
 			}
 			else { /// load unedited town into buffer and save, doing translataions when necessary
 
-				len = (long) (sizeof(town_record_type));
+				len = (long) (sizeof(town_record_type)); // 3506
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
 				dummy_town_ptr = (town_record_type *) buffer;
@@ -361,10 +363,10 @@ void save_scenario()
 				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}						
 		
 				if (scenario.town_size[k] == 0) 
-					len = (long) ( sizeof(big_tr_type));
+					len = (long) ( sizeof(big_tr_type)); // 6056
 					else if (scenario.town_size[k] == 1) 
-						len = (long) ( sizeof(ave_tr_type));
-						else len = (long) ( sizeof(tiny_tr_type));
+						len = (long) ( sizeof(ave_tr_type)); // 3600
+						else len = (long) ( sizeof(tiny_tr_type)); // 1940
 				error = FSRead(scen_f, &len, buffer);
 				if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
 				port_dummy_t_d(scenario.town_size[k],buffer);
@@ -413,7 +415,6 @@ void load_scenario()
 	
 	NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
 
-			
 	if (s_reply.validRecord == FALSE)
 		return;
 					
@@ -422,31 +423,29 @@ void load_scenario()
 	Size actualSize;
 	
 	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
-
+	
 	if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
 		oops_error(28);
 		SysBeep(2);	return;
 		}	
 	
 	len = (long) sizeof(scenario_data_type);
+	
 	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 		FSClose(file_id);
 		oops_error(29);
 		return;
 	}
-	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
-	 && (scenario.flag3 == 30)
-	  && (scenario.flag4 == 40)) {
-	  	cur_scen_is_mac = TRUE;
+	if ((scenario.flag1 == 10) && (scenario.flag2 == 20) && (scenario.flag3 == 30) && (scenario.flag4 == 40)) {
+	  	cur_scen_is_mac = true;
 	  	file_ok = TRUE;
+		if(mac_is_intel) port_scenario();
 	}
-	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
-	 && (scenario.flag3 == 60)
-	  && (scenario.flag4 == 80)) {
+	if ((scenario.flag1 == 20) && (scenario.flag2 == 40) && (scenario.flag3 == 60) && (scenario.flag4 == 80)) {
 	  	SysBeep(20);
 	  	cur_scen_is_mac = FALSE;
 	  	file_ok = TRUE;
-	  	port_scenario();
+	  	if(!mac_is_intel) port_scenario();
 	}
 	 if (file_ok == FALSE) {
 		FSClose(file_id); 
@@ -531,28 +530,37 @@ void load_spec_graphics()
 {
 	short i,file_num;
 	Str255 file_name;
+	UInt8 path[256];
+	FSRef file;
+	ResFileRefNum custRef;
+	OSErr err;
 	char *whatever;
 	if (spec_scen_g != NULL) {
 		DisposeGWorld(spec_scen_g);
 		spec_scen_g = NULL;
 	}
 	//build_scen_file_name(file_name);
-	whatever = (char *) file_to_load.name;
-	printf("Loading scenario graphics... (%s)\n",whatever);
-	for (i = 0; i < 63; i++) 
-		file_name[i] = whatever[i];
+	err = FSpMakeFSRef(&file_to_load, &file);
+	err = FSRefMakePath(&file, path, 255);
+	printf("Loading scenario graphics... (%s)\n",(char*)path);
+//	for (i = 0; i < 63; i++) 
+//		file_name[i] = whatever[i];
 	for (i = 0; i < 250; i++) {
-		if (file_name[i] == '.') {
-			file_name[i + 1] = 'm';
-			file_name[i + 2] = 'e';
-			file_name[i + 3] = 'g';
+		if (path[i] == '.') {
+			path[i + 1] = 'm';
+			path[i + 2] = 'e';
+			path[i + 3] = 'g';
 			//file_name[i + 4] = 0;
 			break;
 		}
 	}
-	file_num = HOpenResFile(file_to_load.vRefNum,file_to_load.parID,file_name,1);
-	if (file_num < 0){
-		printf("First attempt failed... (%s)\n",file_name);
+	err = FSPathMakeRef(path, &file, NULL);
+	err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm /*fsRdWrPerm*/, &custRef);
+	//file_num = HOpen(file_to_load.vRefNum,file_to_load.parID,file_name,1);
+	//if (file_num < 0){
+	if(err != noErr){
+		whatever = (char *) file_to_load.name;
+		printf("First attempt failed... (%s)\n",(char*)path);
 		for (i = 0; i < 250; i++) {
 			if (file_name[i] == '.') {
 				file_name[i + 1] = 'b';
@@ -568,7 +576,8 @@ void load_spec_graphics()
 	}
 
 	spec_scen_g = load_pict(1);
-	CloseResFile(file_num);
+	//CloseResFile(file_num);
+	CloseResFile(custRef);
 }
 
 
@@ -1940,7 +1949,7 @@ void port_talk_nodes()
 {
 	short i,j,k,l;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	for (i = 0; i < 60; i++) {
 		flip_short(&talking.talk_nodes[i].personality);
@@ -1956,7 +1965,7 @@ void port_town()
 {
 	short i,j,k,l;
 
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	flip_short(&town.town_chop_time);
 	flip_short(&town.town_chop_key);
@@ -1988,7 +1997,7 @@ void port_dummy_town()
 {
 	short i,j,k,l;
 
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
 	flip_short(&dummy_town_ptr->town_chop_key);
@@ -2023,7 +2032,7 @@ void port_dummy_t_d(short size,char *buffer)
 	ave_tr_type *d2;
 	tiny_tr_type *d3;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 
 	switch (size) {
@@ -2073,7 +2082,7 @@ void port_dummy_talk_nodes()
 {
 	short i,j,k,l;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	for (i = 0; i < 60; i++) {
 		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
@@ -2088,7 +2097,7 @@ void port_dummy_talk_nodes()
 void port_t_d()
 {
 	short i,j,k,l;
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 
 	for (i =0 ; i < 16; i++) 
@@ -2108,7 +2117,7 @@ void port_scenario()
 {
 	short i,j,k,l;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	flip_short(&scenario.flag_a);
 	flip_short(&scenario.flag_b);
@@ -2190,7 +2199,7 @@ void port_item_list()
 {
 	short i,j,k,l;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 	
 	for (i = 0; i < 400; i++) {
@@ -2204,7 +2213,7 @@ void port_out(outdoor_record_type *out)
 {
 	short i,j,k,l;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac && !mac_is_intel)
 		return;
 		
 	for (i = 0; i < 4; i++) {
@@ -2252,6 +2261,23 @@ void flip_short(short *s)
 	*s1 = *s2;
 	*s2 = store;
 
+}
+
+void flip_long(long *s)
+{
+	char store,*s1, *s2, *s3, *s4;
+	
+	s1 = (char *) s;
+	s2 = s1 + 1;
+	s3 = s1 + 2;
+	s4 = s1 + 3;
+	store = *s1;
+	*s1 = *s4;
+	*s4 = store;
+	store = *s2;
+	*s2 = *s3;
+	*s3 = store;
+	
 }
 void alter_rect(Rect *r)
 {

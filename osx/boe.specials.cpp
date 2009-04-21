@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.party.h"
 #include "boe.town.h"
@@ -44,7 +46,7 @@ extern DialogPtr modeless_dialogs[18];
 extern Boolean fast_bang,end_scenario;
 extern short town_size[3];
 extern short town_type;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 
 Boolean can_draw_pcs = TRUE;
@@ -183,7 +185,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				out_where = global_to_local(where_check);
 
 				for (i = 0; i < 18; i++) 
-					if (same_point(out_where,outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i]) == TRUE) {
+					if (out_where == outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i]) {
 						*spec_num = outdoors[party.i_w_c.x][party.i_w_c.y].special_id[i];
 						if ((*spec_num >= 0) &&
 							(outdoors[party.i_w_c.x][party.i_w_c.y].specials[*spec_num].type == 4))
@@ -210,7 +212,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				return FALSE;
 				}
 			for (i = 0; i < 50; i++)
-				if ((same_point(where_check,c_town.town.special_locs[i]) == TRUE) &&
+				if ((where_check == c_town.town.special_locs[i]) &&
 					(c_town.town.spec_id[i] >= 0)) {
 					if (c_town.town.specials[c_town.town.spec_id[i]].type == 4) {
 						*forced = TRUE;
@@ -259,8 +261,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
+			 && (t_i.items[i].is_contained() == TRUE))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where_check.x,where_check.y)) {
@@ -270,8 +272,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
+			 && (t_i.items[i].is_contained()))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		}
@@ -555,7 +557,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				}
 		}
 	if (take_charge == TRUE) {
-		if (is_ident(adven[pc].items[item]) == FALSE)
+		if (!adven[pc].items[item].is_ident())
 			sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].name);
 			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf((char *) to_draw);
@@ -924,7 +926,7 @@ Boolean use_space(location where)
 		}
 	if (is_crate(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (same_point(from_loc,to_loc) == TRUE) {
+		if (from_loc == to_loc) {
 			add_string_to_buf("  Can't push crate.");
 			return FALSE;
 			}
@@ -932,13 +934,13 @@ Boolean use_space(location where)
 		take_crate((short) where.x,(short) where.y);
 		make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where)
+			 && (t_i.items[i].is_contained()))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (same_point(from_loc,to_loc) == TRUE) {
+		if (from_loc == to_loc) {
 			add_string_to_buf("  Can't push barrel.");
 			return FALSE;
 			}
@@ -946,14 +948,14 @@ Boolean use_space(location where)
 		take_barrel((short) where.x,(short) where.y);
 		make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where))
-			 && (is_contained(t_i.items[i]) == TRUE))
+			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where)
+			 && (t_i.items[i].is_contained()))
 			 	t_i.items[i].item_loc = to_loc;
 		}
 		
 	switch (scenario.ter_types[ter].special) {
 		case 22:
-			if (same_point(where,from_loc) == TRUE) {
+			if (where == from_loc) {
 				add_string_to_buf("  Not while on space.");
 				return FALSE;
 				}
@@ -981,8 +983,8 @@ Boolean adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((t_i.items[i].variety > 0) && (is_contained(t_i.items[i]) == TRUE) &&
-			(same_point(where,t_i.items[i].item_loc) == TRUE))
+		if ((t_i.items[i].variety > 0) && (t_i.items[i].is_contained()) &&
+			(where == t_i.items[i].item_loc))
 				item_there = TRUE;
 
 	terrain = t_d.terrain[where.x][where.y];
@@ -991,7 +993,7 @@ Boolean adj_town_look(location where)
 			add_string_to_buf("  Not close enough to search.");
 			else {
 				for (i = 0; i < 50; i++)
-					if (same_point(where,c_town.town.special_locs[i]) == TRUE) {
+					if (where == c_town.town.special_locs[i]) {
 						if (get_blockage(t_d.terrain[where.x][where.y]) > 0) { 
 						// tell party you find something, if looking at a space they can't step in
 							//if (c_town.town.special_id[i] >= 10) 
@@ -1428,7 +1430,7 @@ void push_things()////
 				case 18: l.y++; break;
 				case 19: l.x--; break;
 				}
-			if (same_point(l,c_town.monst.dudes[i].m_loc) == FALSE) {
+			if (l != c_town.monst.dudes[i].m_loc) {
 				c_town.monst.dudes[i].m_loc = l;
 				if ((point_onscreen(center,c_town.monst.dudes[i].m_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
@@ -1445,7 +1447,7 @@ void push_things()////
 				case 18: l.y++; break;
 				case 19: l.x--; break;
 				}
-			if (same_point(l,t_i.items[i].item_loc) == FALSE) {
+			if (l != t_i.items[i].item_loc) {
 				t_i.items[i].item_loc = l;
 				if ((point_onscreen(center,t_i.items[i].item_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
@@ -1462,7 +1464,7 @@ void push_things()////
 			case 18: l.y++; break;
 			case 19: l.x--; break;
 			}
-		if (same_point(l,c_town.p_loc) == FALSE) {
+		if (l != c_town.p_loc) {
 			ASB("You get pushed.");
 			if (scenario.ter_types[ter].special >= 16)	
 				draw_terrain(0);
@@ -1480,8 +1482,8 @@ void push_things()////
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
-				&& (same_point(t_i.items[k].item_loc,c_town.p_loc) == TRUE))
+				if ((t_i.items[k].variety > 0) && (t_i.items[k].is_contained() == TRUE)
+				&& (t_i.items[k].item_loc == c_town.p_loc))
 					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
 			redraw = TRUE;
 			}	
@@ -1497,7 +1499,7 @@ void push_things()////
 					case 18: l.y++; break;
 					case 19: l.x--; break;
 					}
-				if (same_point(l, pc_pos[i]) == FALSE) {
+				if (l != pc_pos[i]) {
 					ASB("Someone gets pushed.");	
 					ter = t_d.terrain[l.x][l.y];
 					if (scenario.ter_types[ter].special >= 16)	
@@ -1514,8 +1516,8 @@ void push_things()////
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
-						&& (same_point(t_i.items[k].item_loc,pc_pos[i]) == TRUE))
+						if ((t_i.items[k].variety > 0) && (t_i.items[k].is_contained() == TRUE)
+						&& (t_i.items[k].item_loc == pc_pos[i]))
 							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
 					redraw = TRUE;
 					}				
@@ -1597,7 +1599,7 @@ void special_increase_age()
 void run_special(short which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw)
 {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
-	special_node_type cur_node;
+	cSpecial cur_node;
 	short num_nodes = 0;
 	
 	if (special_in_progress == TRUE) {
@@ -1661,9 +1663,9 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 	special_in_progress = FALSE;
 }
 
-special_node_type get_node(short cur_spec,short cur_spec_type)
+cSpecial get_node(short cur_spec,short cur_spec_type)
 {
-	special_node_type dummy_node;
+	cSpecial dummy_node;
 	
 	dummy_node = scenario.scen_specials[0];
 	dummy_node.type = -1;
@@ -1691,13 +1693,13 @@ special_node_type get_node(short cur_spec,short cur_spec_type)
 	return dummy_node;
 }
 
-void general_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = FALSE;
 	Str255 str1 = "",str2 = "";
 	short store_val = 0,i;
-	special_node_type spec;
+	cSpecial spec;
 	short mess_adj[3] = {160,10,20};
 	
 	spec = cur_node;
@@ -1877,14 +1879,14 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 }
 */
 
-void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE,set_sd = TRUE;
 	Str255 strs[6] = {"","","","","",""};
 	short i,j,buttons[3] = {-1,-1,-1};
-	special_node_type spec;
-	item_record_type store_i;
+	cSpecial spec;
+	cItemRec store_i;
 	location l;
 	
 	spec = cur_node;
@@ -1981,7 +1983,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			if (i == 1) {set_sd = FALSE; *next_spec = -1;}
 				else {
 					store_i = get_stored_item(spec.ex1a);
-					if ((spec.ex1a >= 0) && (give_to_party(store_i,TRUE) == FALSE)) {
+					if ((spec.ex1a >= 0) && (!give_to_party(store_i,TRUE))) {
 						set_sd = FALSE; *next_spec = -1;
 						}
 						else {
@@ -2043,12 +2045,12 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 
 }
 
-void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
 	short i,pc,r1;
-	special_node_type spec;
+	cSpecial spec;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -2263,13 +2265,13 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		}
 }
 
-void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = FALSE;
 	Str255 str1 = "",str2 = "",str3 = "";
 	short i,j,k;
-	special_node_type spec;
+	cSpecial spec;
 	location l;
 	
 	spec = cur_node;
@@ -2330,7 +2332,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
-					&& (same_point(l,t_i.items[i].item_loc) == TRUE))
+					&& (l == t_i.items[i].item_loc))
 						*next_spec = spec.ex2b;
 			break;
 		case 140:
@@ -2363,7 +2365,7 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
-					&& (same_point(l,t_i.items[i].item_loc) == TRUE)) {
+					&& (l == t_i.items[i].item_loc)) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
 						t_i.items[i].variety = 0;
@@ -2447,16 +2449,16 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 		}
 }
 
-void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	Boolean check_mess = TRUE;
 	Str255 strs[6] = {"","","","","",""};
 	short i,buttons[3] = {-1,-1,-1},r1;
-	special_node_type spec;
+	cSpecial spec;
 	location l;
 	unsigned char ter;
-	item_record_type store_i;
+	cItemRec store_i;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -2781,11 +2783,11 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 		}
 }
 
-void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
 	Boolean check_mess = TRUE;
 	short i,j,k;
-	special_node_type spec;
+	cSpecial spec;
 	location l;
 	unsigned char ter;
 	
@@ -2858,14 +2860,14 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 			break;
 		case 212:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (same_point(t_i.items[k].item_loc,l) == TRUE)) {
+				if ((t_i.items[k].variety > 0) && (t_i.items[k].item_loc == l)) {
 					t_i.items[k].item_loc.x = spec.sd1;
 					t_i.items[k].item_loc.y = spec.sd2;
 				}
 			break;
 		case 213:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (same_point(t_i.items[k].item_loc,l) == TRUE)) {
+				if ((t_i.items[k].variety > 0) && (t_i.items[k].item_loc == l)) {
 					t_i.items[k].variety = 0;
 				}
 			break;
@@ -2929,11 +2931,11 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
 	}
 }
 
-void outdoor_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
+void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
 	Boolean check_mess = FALSE;
 	Str255 str1 = "",str2 = "";
-	special_node_type spec;
+	cSpecial spec;
 	location l;
 	
 	spec = cur_node;

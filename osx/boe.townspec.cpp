@@ -1,4 +1,7 @@
 
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.party.h"
 #include "boe.town.h"
@@ -27,7 +30,7 @@ extern pc_record_type adven[6];
 extern big_tr_type t_d;
 extern Boolean registered;
 extern WindowPtr mainPtr;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 Str255 answer;
 
@@ -91,7 +94,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 {
 	short choice;
 	Boolean did_give;
-	item_record_type item;
+	cItemRec item;
 
 	item = get_stored_item(item_num);	
 	if (item_num == 0)
@@ -103,7 +106,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 			
 			if (item.variety == 0)
 				did_give = TRUE;
-				else did_give = give_to_party(item,0);
+			else did_give = give_to_party(item,0);
 			if (did_give == TRUE) {
 				party.food += amt_food;
 				party.gold += amt_gold;

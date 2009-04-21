@@ -1,10 +1,13 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
-#include "boe.global.h"
 #include <stdio.h>
-#include "boe.text.h"
 #include <string.h>
+
+//#include "item.h"
+
+#include "boe.global.h"
+#include "boe.text.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "mathutil.h"
@@ -62,7 +65,7 @@ extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
 extern piles_of_stuff_dumping_type *data_store;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 extern GWorldPtr spec_scen_g,mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld;
 extern short terrain_there[9][9];
@@ -349,7 +352,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							else ForeColor(blackColor);
 
 							//// 
-							if (is_ident(adven[pc].items[i_num]) == 0)
+							if (!adven[pc].items[i_num].is_ident())
 								sprintf((char *) to_draw, "%s  ",adven[pc].items[i_num].name);
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
@@ -430,7 +433,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (is_ident(adven[pc_num].items[item_num]) == FALSE) { 
+			if (!adven[pc_num].items[item_num].is_ident()) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
@@ -438,43 +441,43 @@ void place_buy_button(short position,short pc_num,short item_num)
 			break;
 		case 3: // sell weapons 
 			if (((adven[pc_num].items[item_num].variety < 7) || (adven[pc_num].items[item_num].variety == 23) ||
-				(adven[pc_num].equip[item_num] == FALSE) &&
+				(!adven[pc_num].equip[item_num]) &&
 				(adven[pc_num].items[item_num].variety == 24)) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				(adven[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
+				 (!adven[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 4: // sell armor
 			if ((adven[pc_num].items[item_num].variety >= 12) && (adven[pc_num].items[item_num].variety <= 17) &&
-				(adven[pc_num].equip[item_num] == FALSE) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) && (val_to_place > 0) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+				(!adven[pc_num].equip[item_num]) &&
+				(adven[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
+				 (!adven[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (is_ident(adven[pc_num].items[item_num]) == TRUE) && 
-				(adven[pc_num].equip[item_num] == FALSE) &&
-				 (is_cursed(adven[pc_num].items[item_num]) == FALSE)) { 
+			if ((val_to_place > 0) && (adven[pc_num].items[item_num].is_ident()) && 
+				(!adven[pc_num].equip[item_num]) &&
+				 (!adven[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 6: // augment weapons 
 			if ((adven[pc_num].items[item_num].variety < 3) &&
-				(is_ident(adven[pc_num].items[item_num]) == TRUE) &&
+				(adven[pc_num].items[item_num].is_ident()) &&
 				(adven[pc_num].items[item_num].ability == 0) &&
-				(is_magic(adven[pc_num].items[item_num]) == FALSE)) { 
+				(!adven[pc_num].items[item_num].is_magic())) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
 				}
 			break;
 		}
-	if (item_area_button_active[position][5] == TRUE) {
+	if (item_area_button_active[position][5]) {
 		store_selling_values[position] = val_to_place;	
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
@@ -828,12 +831,12 @@ short do_look(location space)
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if (((overall_mode == MODE_LOOK_OUTDOORS) && (same_point(space,party.p_loc) == TRUE)) ||
-		((overall_mode == MODE_LOOK_TOWN) && (same_point(space,c_town.p_loc))))
+	if (((overall_mode == MODE_LOOK_OUTDOORS) && (space == party.p_loc)) ||
+		((overall_mode == MODE_LOOK_TOWN) && (space == c_town.p_loc)))
 			add_string_to_buf("    Your party");
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
-			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].main_status == 1)
+			if ((space == pc_pos[i]) && (adven[i].main_status == 1)
 				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				sprintf((char *) store_string, "    %s", (char *) adven[i].name);
 				add_string_to_buf((char *) store_string);					
@@ -865,8 +868,8 @@ short do_look(location space)
 		}
 	if (overall_mode == MODE_LOOK_OUTDOORS) {
 		for (i = 0; i < 10; i++) {
-			if ((party.out_c[i].exists == TRUE) 
-				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
+			if ((party.out_c[i].exists) 
+				&& (space == party.out_c[i].m_loc)) {
 					for (j = 0; j < 7; j++) 
 						if (party.out_c[i].what_monst.monst[j] != 0) {
 							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
@@ -934,7 +937,7 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc) == TRUE)
+			if ((t_i.items[i].variety != 0) && (space == t_i.items[i].item_loc)
 				&& (is_lit == TRUE)) {
 				if (t_i.items[i].variety == 3)
 					gold_here = TRUE;
@@ -951,8 +954,8 @@ short do_look(location space)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
-				    (same_point(space,t_i.items[i].item_loc) == TRUE) && (is_contained(t_i.items[i]) == FALSE)) {		
-					if (is_ident(t_i.items[i]) == TRUE)
+				    (space == t_i.items[i].item_loc) && (!t_i.items[i].is_contained())) {		
+					if (t_i.items[i].is_ident())
 						sprintf((char *) store_string, "    %s",t_i.items[i].full_name); 
 						else sprintf((char *) store_string, "    %s",t_i.items[i].name);				
 					add_string_to_buf((char *) store_string);
@@ -974,8 +977,8 @@ short town_boat_there(location where)
 	
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
-		if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == c_town.town_num) 
-		 && (same_point(where,party.boats[i].boat_loc) == TRUE))
+		if ((party.boats[i].exists) && (party.boats[i].which_town == c_town.town_num) 
+		 && (where == party.boats[i].loc))
 			return i;
 	return 30;
 }
@@ -984,7 +987,7 @@ short out_boat_there(location where)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((party.boats[i].exists == TRUE) && (same_point(where,party.boats[i].boat_loc) == TRUE)
+		if ((party.boats[i].exists) && (where == party.boats[i].loc)
 			&& (party.boats[i].which_town == 200))
 			return i;
 	return 30;
@@ -996,8 +999,8 @@ short town_horse_there(location where)
 	
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
-		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == c_town.town_num) 
-		 && (same_point(where,party.horses[i].horse_loc) == TRUE))
+		if ((party.horses[i].exists) && (party.horses[i].which_town == c_town.town_num) 
+		 && (where == party.horses[i].loc))
 			return i;
 	return 30;
 }
@@ -1006,7 +1009,7 @@ short out_horse_there(location where)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((party.horses[i].exists == TRUE) && (same_point(where,party.horses[i].horse_loc) == TRUE)
+		if ((party.horses[i].exists) && (where == party.horses[i].loc)
 			&& (party.horses[i].which_town == 200))
 			return i;
 	return 30;
@@ -1397,11 +1400,8 @@ const BitMap * store_dest;
 		return;
 	if (src_gworld == NULL)
 		return;
-	if ((supressing_some_spaces == TRUE) && 
-		(same_point(target,ok_space[0]) == FALSE) &&
-		(same_point(target,ok_space[1]) == FALSE) &&
-		(same_point(target,ok_space[2]) == FALSE) &&
-		(same_point(target,ok_space[3]) == FALSE))
+	if ((supressing_some_spaces == TRUE) && (target != ok_space[0]) &&
+		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 			return;
 	terrain_there[target.x][target.y] = -1;
 	
@@ -1708,38 +1708,6 @@ Boolean day_reached(unsigned char which_day, unsigned char which_event)
 	if ((which_event > 0) && (party.key_times[which_event] < which_day))
 		return FALSE;
 	if (calc_day() >= which_day)
-		return TRUE;
-		else return FALSE;
-}
-
-////
-Boolean is_ident(item_record_type item)
-{
-	if (item.item_properties & 1)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_magic(item_record_type item)
-{
-	if (item.item_properties & 4)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_contained(item_record_type item)
-{
-	if (item.item_properties & 8)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_cursed(item_record_type item)
-{
-	if (item.item_properties & 16)
-		return TRUE;
-		else return FALSE;
-}
-Boolean is_property(item_record_type item)
-{
-	if (item.item_properties & 2)
 		return TRUE;
 		else return FALSE;
 }

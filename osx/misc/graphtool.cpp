@@ -83,7 +83,7 @@ GWorldPtr load_pict(int picture_to_get)
 	QDErr		check_error;
 	PixMapHandle	offPMHandle;
 	char good;
-	printf("Loading PICT id %i...\n",picture_to_get);
+	//printf("Loading PICT id %i...\n",picture_to_get);
     current_pic_handle = GetPicture (picture_to_get);
 	if(ResError() != noErr){
 		SysBeep(50);
@@ -313,7 +313,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	long dummy3;
 	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
-	printf("Drawing string \"%s\"\n",str);
+	
 	if (main_win) {
 		adjust_x = offset.h; adjust_y = offset.v;
 	}
@@ -328,8 +328,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 		return;
 	}
 	
-	GetPort(&old_port);	
-	SetPort( dest_window);
+	//GetPort(&old_port);	
+	//SetPort( dest_window);
 	
 	//current_clip = NewRgn();
 	//GetClip(current_clip);
@@ -375,14 +375,14 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 				}
 				if (c_str[i] == ' ')
 					last_word_break = i + 1;
-				if (on_what_line == LINES_IN_TEXT_WIN - 1)
-					i = 10000;
+//				if (on_what_line == LINES_IN_TEXT_WIN - 1)
+//					i = 10000;
 			}
 			
 			if (i - last_line_break > 1) {
 				strcpy((char *)str_to_draw,(char *)null_s);
 				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
-				sprintf((char *)str_to_draw2," %s",str_to_draw);
+				//sprintf((char *)str_to_draw2," %s",str_to_draw);
 				//if (strlen((char *) str_to_draw2) > 3) {
 				//	str_to_draw2[0] = (char) strlen((char *)str_to_draw);
 				//	DrawString(str_to_draw2);
@@ -411,7 +411,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	}
 	//SetClip(current_clip);
 	//DisposeRgn(current_clip);
-	SetPort(old_port);
+	//SetPort(old_port);printf("String drawn.\n");
 }
 
 short string_length(char *str){ // Why not just use strlen?

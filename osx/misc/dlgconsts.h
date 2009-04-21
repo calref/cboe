@@ -32,7 +32,7 @@
 #define PICT_FIELD_TYPE			14 // A field or an explosion
 #define PICT_DLG_LARGE_TYPE		15
 #define PICT_SCEN_LARGE_TYPE	16
-/* The following four are modifiers to be added to the above seven constants
+/* The following three are modifiers to be added to the above seven constants
  * Usage for PICT_CUSTOM_TYPE:
  * PICT_CUSTOM_TYPE + PICT_XXX_TYPE, where XXX is anything valid other than OLD or BLANK.
  * PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_WIDE_MONST, for a 2x1 monster
@@ -46,9 +46,8 @@
  *  - Custom animated terrain graphics should use PICT_TER_TYPE rather than PICT_TER_ANIM_TYPE.
  */
 #define PICT_CUSTOM_TYPE		100
-#define PICT_WIDE_MONSTER		10
-#define PICT_TALL_MONSTER		20
-#define DLG_NEW_PICTURE			20 // Adding this one makes it a DLG_ constant rather than a PICT_ constant
+#define PICT_WIDE_MONSTER		20
+#define PICT_TALL_MONSTER		40
 // These constants are the total number of preset graphics of each type.
 #define PICT_N_TER				252 // 336
 #define PICT_N_TER_ANIM			13 // 18
@@ -64,12 +63,19 @@
 #define DLG_DEFAULT_BTN_TYPE		1
 // Not sure what 10 and 11 do, but they may be similar to above two
 #define DLG_LED_BUTTON				2
-// 3, 4, 7, 8, 9 are various text objects; not completely sure which is which
+// 8 and 9 are other text objects; not completely sure which is which
 #define DLG_TEXT_BOLD				3
 #define DLG_TEXT_PLAIN				4
-#define DLG_TEXT_LARGE				7
 #define DLG_OLD_PICTURE				5
-// And I don't know what 6 is for either
+#define DLG_TEXT_LARGE				7
+#define DLG_TEXT_CLICKABLE			8
+#define DLG_TEXT_DEFAULT			9  // Appears to be equivalent to DLG_TEXT_BOLD.
+#define DLG_CUSTOM_BTN_TYPE			10 // These appear to be buttons whose label is stored
+#define DLG_CUSTOM_DEF_BTN_TYPE		11 // in the same place as the text of text items.
+#define DLG_PUSH_BTN_TYPE			12 // for potential future use; a button like above whose label is below it
+// And I don't know what 6 is for either; could it be a relic from the red push buttons of E3?
+#define DLG_NEW_PICTURE				1000
+// Add DLG_NEW_PICTURE to any PICT_ constant (other than PICT_OLD_TYPE) to form a valid constant
 
 #define DLG_KEY_LEFT	20
 #define DLG_KEY_RIGHT	21

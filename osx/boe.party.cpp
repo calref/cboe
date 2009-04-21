@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "boe.fileio.h"
@@ -95,7 +97,7 @@ short combat_percent[20] = {150,120,100,90,80,80,80,70,70,70,
 
 short town_spell,who_cast,which_pc_displayed;
 Boolean spell_button_active[90];
-extern item_record_type start_items[6];
+extern cItemRec start_items[6];
 
 Str255 empty_string = "                                           ";
 
@@ -135,7 +137,7 @@ extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
 extern location golem_m_locs[16];
 extern town_item_list t_i;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 
 char c_line[60];
@@ -187,8 +189,8 @@ void init_party(short mode)
 {
 	short i,j,k,l;
 		
-	boat_record_type null_boat = {{0,0},{0,0},{0,0},200,FALSE};
-	horse_record_type null_horse = {{0,0},{0,0},{0,0},200,FALSE};
+	cVehicle null_boat;// = {{0,0},{0,0},{0,0},200,FALSE};
+	cVehicle null_horse;// = {{0,0},{0,0},{0,0},200,FALSE};
 	
 	party.age = 0;
 	party.gold = 200;
@@ -275,7 +277,7 @@ void init_party(short mode)
 
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
-			stored_items[i].items[j] = return_dummy_item();  
+			stored_items[i].items[j] = cItemRec();  
 			}
 
 	for (i = 0; i < 200; i++)
@@ -325,19 +327,19 @@ void init_party_scen_data()
 	party.p_loc.x = scenario.out_start.x;
 	party.p_loc.y = scenario.out_start.y;
 	for (i = 0; i < 30; i++)
-		party.boats[i] = scenario.scen_boats[i];
+		party.boats[i] = scenario.boats[i];
 	for (i = 0; i < 30; i++)
-		party.horses[i] = scenario.scen_horses[i];
+		party.horses[i] = scenario.horses[i];
 	for (i = 0; i < 30; i++) {
-		if ((scenario.scen_boats[i].which_town >= 0) && (scenario.scen_boats[i].boat_loc.x >= 0)) {
+		if ((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario.scen_boats[i];
+				party.boats[i] = scenario.boats[i];
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario.scen_horses[i].which_town >= 0) && (scenario.scen_horses[i].horse_loc.x >= 0)) {
+		if ((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario.scen_horses[i];
+				party.horses[i] = scenario.horses[i];
 				party.horses[i].exists = TRUE;
 				}
 			}
@@ -397,13 +399,13 @@ void init_party_scen_data()
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 					if (stored_items[i].items[j].variety != 0)
-						if (give_to_party(stored_items[i].items[j],FALSE) == FALSE) {
+						if (!give_to_party(stored_items[i].items[j],FALSE)) {
 							i = 20; j = NUM_TOWN_ITEMS + 1;
 							}
 			}
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
-			stored_items[i].items[j] = return_dummy_item();  
+			stored_items[i].items[j] = cItemRec();  
 			}
 
 	for (i = 0; i < 200; i++)
@@ -532,7 +534,7 @@ pc_record_type return_dummy_pc()
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = cItemRec();
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
 
@@ -588,7 +590,7 @@ pc_record_type create_debug_pc(short num)
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = cItemRec();
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
 
@@ -663,7 +665,7 @@ pc_record_type create_prefab_pc(short num)
  	for (i = 0; i < 15; i++)
  		dummy_pc.status[i] = 0;
 	for (i = 0; i < 24; i++)
-		dummy_pc.items[i] = return_dummy_item();
+		dummy_pc.items[i] = cItemRec();
 	for (i = 0; i < 24; i++)
 		dummy_pc.equip[i] = FALSE;
  	dummy_pc.cur_sp = pc_sp[num]; 
@@ -2011,7 +2013,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (is_cursed(adven[target].items[i]) == TRUE){
+							if (adven[target].items[i].is_cursed()){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
 									if (r1 < 60) {
 										adven[target].items[i].item_properties = 
@@ -2263,7 +2265,7 @@ void sanctify_space(location where)
 	short i,s1,s2,s3;
 
 		for (i = 0; i < 50; i++)
-			if ((same_point(where,c_town.town.special_locs[i]) == TRUE) &&
+			if ((where == c_town.town.special_locs[i]) &&
 				(c_town.town.spec_id[i] >= 0)) {
 				if (c_town.town.specials[c_town.town.spec_id[i]].type == 24) 
 					run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
@@ -2962,25 +2964,53 @@ void set_town_spell(short s_num,short who_c)
 
 void do_alchemy() ////
 {
-	short abil1_needed[20] = {150,151,150,151,153, 152,152,153,156,153,
-								156,154,156,157,155, 157,157,152,156,157};
-	short abil2_needed[20] = {0,0,0,153,0, 0,0,152,0,154,
-							150,0,151,0,0, 154,155,155,154,155};
-	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short fail_chance[20] = {50,40,30,20,10,8,6,4,2,0,0,0,0,0,0,0,0,0,0,0};
+	static const short ingred1_needed[20] = {
+		150,151,150,151,153,
+		152,152,153,156,153,
+		156,154,156,157,155,
+		157,157,152,156,157
+	};
+	static const short ingred2_needed[20] = {
+		0,0,0,153,0,
+		0,0,152,0,154,
+		150,0,151,0,0,
+		154,155,155,154,155
+	};
+	static const short difficulty[20] = {
+		1,1,1,3,3,
+		4,5,5,7,9,
+		9,10,12,12,9,
+		14,19,10,16,20
+	};
+	static const short fail_chance[20] = {
+		50,40,30,20,10,
+		8,6,4,2,0,
+		0,0,0,0,0,
+		0,0,0,0,0
+	};
 	short which_p,which_item,which_item2,r1;
 	short pc_num;
-	item_record_type store_i = {7,0, 0,0,0,1,0,0, 50,0,0,0,0, 0, 8,0, {0,0},"Potion","Potion",0,5,0,0};
+	cItemRec store_i('alch');// = {7,0, 0,0,0,1,0,0, 50,0,0,0,0, 0, 8,0, {0,0},"Potion","Potion",0,5,0,0};
 
 	//	{7,0,0,0,0,1,1,30,59,0,0,250,1,0,1,{0,0},"Graymold Salve","Potion"},
 	//	{7,0,0,0,0,1,1,30,13,0,0,250,1,0,1,{0,0},"Resurrection Balm","Potion"},
 
-	short potion_abils[20] = {72,87,70,73,70, 87,72,73,77,88,
-							79,70,87,70,160, 88,86,71,84,88};
-	short potion_strs[20] = {2,2,2,2,4, 5,8,5,4,2,
-							8,6,8,8,0, 5,2,8,5,8};
-	short potion_val[20] = {40,60,15,50,50, 180,200,100,150,100,
-						200,150,300,400,100, 300,500,175,250,500};
+	static const short potion_abils[20] = {
+		72,87,70,73,70,
+		87,72,73,77,88,
+		79,70,87,70,160,
+		88,86,71,84,88
+	};
+	static const short potion_strs[20] = {
+		2,2,2,2,4, 5,8,5,4,2,
+		8,6,8,8,0, 5,2,8,5,8
+	};
+	static const short potion_val[20] = {
+		40,60,15,50,50,
+		180,200,100,150,100,
+		200,150,300,400,100,
+		300,500,175,250,500
+	};
 	
 	pc_num = select_pc(1,0);
 	if (pc_num == 6)
@@ -2992,14 +3022,14 @@ void do_alchemy() ////
 				add_string_to_buf("Alchemy: Can't carry another item.");
 				return;
 				}
-			if (((which_item = pc_has_abil(pc_num,abil1_needed[which_p])) == 24) ||
-				((abil2_needed[which_p] > 0) && ((which_item2 = pc_has_abil(pc_num,abil2_needed[which_p])) == 24))) {
+			if (((which_item = pc_has_abil(pc_num,ingred1_needed[which_p])) == 24) ||
+				((ingred2_needed[which_p] > 0) && ((which_item2 = pc_has_abil(pc_num,ingred2_needed[which_p])) == 24))) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
 				}
 			play_sound(8);
 			remove_charge(pc_num,which_item);
-			if (abil2_needed[which_p] > 0)
+			if (ingred2_needed[which_p] > 0)
 				remove_charge(pc_num,which_item2);
 
 			r1 = get_ran(1,0,100);
@@ -3200,7 +3230,7 @@ unsigned char pick_trapped_monst()
 {
 	short item_hit,i;
 	Str255 sp;
-	monster_record_type get_monst;
+	cMonster get_monst;
 	
 	make_cursor_sword();
 	

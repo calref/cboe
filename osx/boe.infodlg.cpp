@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "boe.graphics.h"
@@ -24,7 +26,7 @@ short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 pc_record_type *store_pc;
 creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
-item_record_type store_i;
+cItemRec store_i;
 
 extern short spell_w_cast[2][62];
 extern short spell_level[62];
@@ -53,7 +55,7 @@ extern short dest_personalities[40];
 location source_locs[6] = {{2,9},{0,6},{3,6},{3,4},{6,2},{0,0}};
 extern location dest_locs[40] ;
 extern char *alch_names[];
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 // Displaying string vars
 short store_str1a;
@@ -288,7 +290,7 @@ void put_item_info(short pc,short item)////
 	char store_text[256];
 	Str255 desc_str;
 	short i;	
-	item_record_type s_i;
+	cItemRec s_i;
 	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
@@ -303,10 +305,10 @@ void put_item_info(short pc,short item)////
 		else csp(998,1,s_i.graphic_num,PICT_ITEM_TYPE);
 		
 	// id? magic?
-	if ((is_magic(store_i) == TRUE) && (is_ident(store_i) == TRUE))
+	if (store_i.is_magic() && store_i.is_ident())
 		cd_set_led(998,17,1);
 		else cd_set_led(998,17,0);
-	if (is_ident(store_i) == TRUE)
+	if (store_i.is_ident())
 		cd_set_led(998,16,1);
 		else cd_set_led(998,16,0);
 	cd_set_item_text(998,4,	item_types[s_i.variety]);
@@ -317,13 +319,13 @@ void put_item_info(short pc,short item)////
 		}
 			
 
-	if (is_ident(s_i) == FALSE) {
+	if (!s_i.is_ident()) {
 			cd_set_item_text(998,3,	s_i.name);
 			return;
 		}	
 			
 	cd_set_item_text(998,3,	s_i.full_name);
-	i = item_weight(s_i);
+	i = s_i.item_weight();
 	cd_set_item_num(998,20,i);
 	
 	cd_set_item_num(998,5,(s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
@@ -415,7 +417,7 @@ void display_pc_item_event_filter (short item_hit)
 				}	
 }
 
-void display_pc_item(short pc_num,short item,item_record_type si,short parent)
+void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 {
 	short item_hit;
 
@@ -849,7 +851,7 @@ void display_pc_info()
 	csit(1019,59,"No weapon.");	
 	csit(1019,60,"");	
 	if (weap1 < 24) {
-		if (is_ident(adven[pc].items[weap1]) == FALSE)
+		if (!adven[pc].items[weap1].is_ident())
 			csit(1019,56,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap1].bonus < 0)
@@ -863,7 +865,7 @@ void display_pc_info()
 				}
 			}
 	if (weap2 < 24) {
-		if (is_ident(adven[pc].items[weap2]) == FALSE)
+		if (!adven[pc].items[weap2].is_ident())
 			csit(1019,59,"Not identified.");
 			else {
 				if (hit_adj + 5 * adven[pc].items[weap2].bonus < 0)

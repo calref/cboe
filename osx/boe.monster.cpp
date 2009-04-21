@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
@@ -32,7 +34,7 @@ extern location pc_pos[6],center;
 extern short boom_gr[8],futzing;
 extern Boolean processing_fields,monsters_going;
 extern town_item_list	t_i;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 
 
@@ -41,9 +43,9 @@ short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 creature_start_type null_start_type = {0,0,{80,80},1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 	
 ////				
-monster_record_type return_monster_template(unsigned char store)
+cMonster return_monster_template(unsigned char store)
 {
-	monster_record_type monst;
+	cMonster monst;
 	short m_num,i;
 	
 	m_num = store;
@@ -99,7 +101,7 @@ short difficulty_adjust()
 short out_enc_lev_tot(short which)
 {
 	short count = 0,i;
-	monster_record_type store_m;
+	cMonster store_m;
 	short num[7] = {22,8,4,4,3,2,1};
 	
 	if (party.out_c[which].what_monst.cant_flee == TRUE)
@@ -673,7 +675,7 @@ Boolean rand_move(char i)
 		return outdoor_move_monster(i,store_loc);
 		}
 		
-	if (same_point(monster_targs[i],c_town.monst.dudes[i].m_loc) == TRUE)
+	if (monster_targs[i] == c_town.monst.dudes[i].m_loc)
 		monster_targs[i].x = 0;
 			
 	// FIrst, try to move to monst_targs. If it don't work, then we'll shift.
@@ -837,7 +839,7 @@ location find_clear_spot(location from_where,short mode)
 		if ((loc_off_act_area(loc) == FALSE) && (is_blocked(loc) == FALSE)
 			&& (can_see(from_where,loc,1) == 0)
 			&& (!(is_combat()) || (pc_there(loc) == 6))
-			&& (!(is_town()) || (same_point(loc,c_town.p_loc) == FALSE))
+			&& (!(is_town()) || (loc != c_town.p_loc))
 			 && (!(misc_i[loc.x][loc.y] & 248)) &&
 			(!(c_town.explored[loc.x][loc.y] & 254))) {
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == TRUE)))
@@ -853,7 +855,7 @@ short pc_there(location where)
 	short i;
 
 	for (i = 0; i < 6; i++)
-			if ((same_point(where,pc_pos[i]) == TRUE) && (adven[i].main_status == 1))
+			if ((where == pc_pos[i]) && (adven[i].main_status == 1))
 				return i;
 	return 6;	
 }
@@ -873,7 +875,7 @@ Boolean outdoor_move_monster(short num,location dest)
 {
 
 	if ((outd_is_blocked(dest) == FALSE) && (outd_is_special(dest) == FALSE) && 
-		(same_point(dest, party.p_loc) != TRUE) && 
+		(dest != party.p_loc) && 
 		((out[dest.x][dest.y] > 21) || (out[dest.x][dest.y] < 5))) {
 		party.out_c[num].direction = 
 				set_direction(party.out_c[num].m_loc, dest);
@@ -975,8 +977,8 @@ void monst_inflict_fields(short which_monst)
 			if ((is_crate(where_check.x,where_check.y)) ||
 				(is_barrel(where_check.x,where_check.y)) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
-					if ((t_i.items[k].variety > 0) && (is_contained(t_i.items[k]) == TRUE)
-					&& (same_point(t_i.items[k].item_loc,where_check) == TRUE))
+					if ((t_i.items[k].variety > 0) && (t_i.items[k].is_contained())
+					&& (t_i.items[k].item_loc == where_check))
 						t_i.items[k].item_properties = t_i.items[k].item_properties & 247;
 			take_crate(where_check.x,where_check.y);
 			take_barrel(where_check.x,where_check.y);
@@ -1095,8 +1097,8 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				if (to_loc.x > 0)
 					make_crate((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
-					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
+					 && (t_i.items[i].is_contained()))
 			 			t_i.items[i].item_loc = to_loc;
 						}
 		}
@@ -1109,8 +1111,8 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				if (to_loc.x > 0)
 				    	make_barrel((short) to_loc.x,(short) to_loc.y);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
-					if ((t_i.items[i].variety > 0) && (same_point(t_i.items[i].item_loc,where_check))
-					 && (is_contained(t_i.items[i]) == TRUE))
+					if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
+					 && (t_i.items[i].is_contained()))
 			 			t_i.items[i].item_loc = to_loc;
 				
 				}

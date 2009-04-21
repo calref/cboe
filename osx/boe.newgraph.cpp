@@ -1,6 +1,9 @@
 
 #include <string.h>
 #include <stdio.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.graphics.h"
 #include "boe.graphutil.h"
@@ -65,7 +68,7 @@ extern char unexplored_area[13][13];
 extern PatHandle bw_pats[15];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern talking_record_type talking;
 
 RgnHandle oval_region = NULL,dark_mask_region,temp_rect_rgn;
@@ -324,7 +327,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 		return;
 	// lose redundant missiles
 	for (i = 0; i < 30; i++)
-		if ((store_missiles[i].missile_type >= 0) && (same_point(dest,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (dest == store_missiles[i].dest))
 			return;
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type < 0) {
@@ -383,7 +386,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 		return;
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
-		if ((store_booms[i].boom_type >= 0) && (same_point(dest,store_booms[i].dest) == TRUE)
+		if ((store_booms[i].boom_type >= 0) && (dest == store_booms[i].dest)
 		 && (place_type == 0)) {
 			if (val_to_place > 0)
 				store_booms[i].val_to_place = val_to_place;
@@ -462,7 +465,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	// init missile paths
 	for (i = 0; i < 30; i++) {
 		SetRect(&store_erase_rect[i],0,0,0,0);
-		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 		}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -783,7 +786,7 @@ void draw_shop_graphics(short draw_mode,Rect clip_area_rect)
 char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
 	"Expensive","Exorbitant","Utterly Ridiculous"};
 	GrafPtr old_port;
-	item_record_type base_item;
+	cItemRec base_item;
 	
 	if (overall_mode != 21) {
 		return;
@@ -971,14 +974,15 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,Rect c_rect)
 
 ////
 // which_s = 0 means that it returns first 4th level spell
-item_record_type store_mage_spells(short which_s) 
+cItemRec store_mage_spells(short which_s) 
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
- short cost[32] = {150,200,150,1000,1200,400,300,200,
- 200,250,500,1500,300,  250,125,150, 
-  400,450, 800,600,700,600,7500, 500,
- 5000,3000,3500,4000,4000,4500,7000,5000};
+	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	static const short cost[32] = {
+		150,200,150,1000,1200,400,300,200,
+		200,250,500,1500,300,  250,125,150, 
+		400,450, 800,600,700,600,7500, 500,
+		5000,3000,3500,4000,4000,4500,7000,5000
+	};
 
 	Str255 str;
 	
@@ -992,16 +996,15 @@ item_record_type store_mage_spells(short which_s)
 }
 
 // which_s = 0 means that it returns first 4th level spell
-item_record_type store_priest_spells(short which_s)
+cItemRec store_priest_spells(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
-short cost[32] = {100,150,75,400,200, 100,80,250,
-
-400,400,1200,600,300, 600,350,250,
-
-500,500,600,800, 1000,900,400,600,
-2500,2000,4500,4500,3000,3000,2000,2000};
+	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	static const short cost[32] = {
+		100,150,75,400,200, 100,80,250,
+		400,400,1200,600,300, 600,350,250,
+		500,500,600,800, 1000,900,400,600,
+		2500,2000,4500,4500,3000,3000,2000,2000
+	};
 	Str255 str;
 
 	if (which_s != minmax(0,31,which_s))
@@ -1012,10 +1015,15 @@ short cost[32] = {100,150,75,400,200, 100,80,250,
 	strcpy((char *)spell.full_name,(char *)str);
 	return spell;
 }
-item_record_type store_alchemy(short which_s)
+cItemRec store_alchemy(short which_s)
 {
-	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
+	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+	static const short val[20] = {
+		50,75,30,130,100,
+		150, 200,200,300,250,
+		300, 500,600,750,700,
+		1000,10000,5000,7000,12000
+	};
 	Str255 str;
 	
 	if (which_s != minmax(0,19,which_s))
@@ -1027,17 +1035,17 @@ short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000
 	return spell; 
 }
 
-void get_item_interesting_string(item_record_type item,char *message)
+void get_item_interesting_string(cItemRec item,char *message)
 {
-	if (is_property(item) == TRUE) {
+	if (item.is_property() == TRUE) {
 		sprintf(message,"Not yours.");
 		return;
 		}
-	if (is_ident(item) == FALSE) {
+	if (item.is_ident() == FALSE) {
 		sprintf(message,"");
 		return;
 		}
-	if (is_cursed(item) == TRUE) {
+	if (item.is_cursed() == TRUE) {
 		sprintf(message,"Cursed item.");
 		return;
 		}

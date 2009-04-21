@@ -90,23 +90,37 @@ void process_new_window (WindowPtr hDlg) {
 				str_stored = TRUE;
 			}
 			else if (item_str[0] == '=') {
-				type = 9;
+				type = DLG_TEXT_DEFAULT;
 				flag = 1;
 				str_stored = TRUE;
 			}
-			else if (((item_str[0] >= 65) && (item_str[0] <= 122)) || (item_str[0] == '"')) {
-				type = 9;
-				flag = 0;
-				str_offset = 0;
-				str_stored = TRUE;
-			}
-			else if ((item_str[0] == '^') || (item_str[0] == '&')) {
-				type = (item_str[0] == '^') ? 10 : 11;
+			else if (item_str[0] == '^') {
+				type = DLG_CUSTOM_BTN_TYPE;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
 				str_stored = TRUE;
 			}
+			else if (((item_str[0] >= 65) && (item_str[0] <= 122)) || (item_str[0] == '"')) {
+				type = DLG_TEXT_DEFAULT;
+				flag = 0;
+				str_offset = 0;
+				str_stored = TRUE;
+			}
+			else if (item_str[0] == '&') {
+				type = DLG_CUSTOM_DEF_BTN_TYPE;
+				flag = 1;
+				if (string_length((char *) item_str) > 55)
+					flag = 2;
+				str_stored = TRUE;
+			}
+//			else if (item_str[0] == '@') { // For potential future use
+//				type = DLG_PUSH_BTN_TYPE;
+//				flag = 1;
+//				if (string_length((char *) item_str) > 55)
+//					flag = 2;
+//				str_stored = TRUE;
+//			}
 			else {
 #ifndef EXILE_BIG_GUNS
 				sscanf((char *) item_str,"%hd_%hd",&type,&flag);
@@ -118,47 +132,25 @@ void process_new_window (WindowPtr hDlg) {
 			
 			free_item = -1;
 			// find free item
-			switch (type) {
-				case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE: case DLG_LED_BUTTON:
-				case DLG_OLD_PICTURE: case 6:
-				case DLG_NEW_PICTURE + PICT_TER_TYPE:
-				case DLG_NEW_PICTURE + PICT_TER_ANIM_TYPE:
-				case DLG_NEW_PICTURE + PICT_MONST_TYPE:
-				case DLG_NEW_PICTURE + PICT_DLG_TYPE:
-				case DLG_NEW_PICTURE + PICT_TALK_TYPE:
-				case DLG_NEW_PICTURE + PICT_SCEN_TYPE:
-				case DLG_NEW_PICTURE + PICT_ITEM_TYPE:
-				case DLG_NEW_PICTURE + PICT_PC_TYPE:
-				case DLG_NEW_PICTURE + PICT_INFO_HELP_TYPE:
-				case DLG_NEW_PICTURE + PICT_PC_HELP_TYPE:
-				case DLG_NEW_PICTURE + PICT_HELP_TYPE:
-				case DLG_NEW_PICTURE + PICT_COMBAT_AP_TYPE:
-				case DLG_NEW_PICTURE + PICT_STAT_TYPE:
-				case DLG_NEW_PICTURE + PICT_FIELD_TYPE:
-				case DLG_NEW_PICTURE + PICT_DLG_LARGE_TYPE:
-				case DLG_NEW_PICTURE + PICT_SCEN_LARGE_TYPE:
-					for (j = 150; j < NI; j++)
-						if (items[j].dlg < 0) {
-							free_item = j;
-							break;
-						}
-					break;
-					default:
-					if ((type == 9) || ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
-						for (j = 0; j < 10; j++)
-							if (items[j].dlg < 0) {
-								free_item = j;
-								break;
-							}
+			if(type == DLG_BUTTON_TYPE || type == DLG_DEFAULT_BTN_TYPE || type == DLG_LED_BUTTON ||
+			   type == DLG_OLD_PICTURE || type == 6 || type >= DLG_NEW_PICTURE){
+				for (j = 150; j < NI; j++)
+					if (items[j].dlg < 0) {
+						free_item = j;
+						break;
 					}
-					else {
-						for (j = 10; j < 140; j++)
-							if (items[j].dlg < 0) {
-								free_item = j;
-								break;
-							}
+			}else if ((type == 9) || (str_stored && (strlen((char *) item_str) > 35))) {
+				for (j = 0; j < 10; j++)
+					if (items[j].dlg < 0) {
+						free_item = j;
+						break;
 					}
-					break;
+			}else {
+				for (j = 10; j < 140; j++)
+					if (items[j].dlg < 0) {
+						free_item = j;
+						break;
+					}
 			}
 			
 			if (free_item >= 0) {
@@ -181,7 +173,7 @@ void process_new_window (WindowPtr hDlg) {
 						items[free_item].rect.bottom = items[free_item].rect.top + store_rect.bottom;
 						items[free_item].key = buttons[flag].def_key;
 						if (type == 1)
-							items[free_item].key = 31;
+							items[free_item].key = DLG_KEY_RETURN;
 						break;
 					case DLG_LED_BUTTON:
 						items[free_item].rect.right = items[free_item].rect.left + 14;
@@ -189,7 +181,8 @@ void process_new_window (WindowPtr hDlg) {
 						items[free_item].key = 255;
 						break;
 					case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE:
-					case 8: case 9: case 10: case 11: 
+					case DLG_TEXT_CLICKABLE: case DLG_TEXT_DEFAULT:
+					case DLG_CUSTOM_BTN_TYPE: case DLG_CUSTOM_DEF_BTN_TYPE: 
 						sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 						if (str_stored == TRUE) {
 							if (free_item < 10)
@@ -198,37 +191,13 @@ void process_new_window (WindowPtr hDlg) {
 								sprintf(text_short_str[free_item - 10],"%-39.39s", (char *) (item_str + str_offset));
 						}
 						items[free_item].key = 255; 
-						if (type >= 10) {
+						if (type >= DLG_CUSTOM_BTN_TYPE) {
 							GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
 							items[free_item].rect.right = items[free_item].rect.left + store_rect.right;
 							items[free_item].rect.bottom = items[free_item].rect.top + store_rect.bottom;
-							if (type == 11)
-								items[free_item].key = 31;
+							if (type == DLG_CUSTOM_DEF_BTN_TYPE)
+								items[free_item].key = DLG_KEY_RETURN;
 						}
-						break;
-					case DLG_OLD_PICTURE:
-						items[free_item].flag2 = PICT_OLD_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_TER_TYPE:
-						items[free_item].flag2 = PICT_TER_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_TER_ANIM_TYPE:
-						items[free_item].flag2 = PICT_TER_ANIM_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_MONST_TYPE:
-						items[free_item].flag2 = PICT_MONST_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_DLG_TYPE:
-						items[free_item].flag2 = PICT_DLG_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_TALK_TYPE:
-						items[free_item].flag2 = PICT_TALK_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_SCEN_TYPE:
-						items[free_item].flag2 = PICT_SCEN_TYPE;
-						break;
-					case DLG_NEW_PICTURE + PICT_ITEM_TYPE:
-						items[free_item].flag2 = PICT_ITEM_TYPE;
 						break;
 				}
 				win_height = max(win_height, items[free_item].rect.bottom + 5);
@@ -358,7 +327,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 	
 	if (type_g == PICT_OLD_TYPE)
 		convert_pict(which_g,type_g,rect); // pass by reference
-	//printf("Drawing graphic %i of type %i.\n",which_g,type_g);
+	printf("Drawing graphic %i of type %i.\n",which_g,type_g);
 	
 	if (type_g == PICT_BLANK_TYPE) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
@@ -830,61 +799,59 @@ void draw_custom_space_pic(short which_g,Rect& rect){
 
 void draw_custom_monst_wide_pic(short which_g,Rect& rect){
 	short draw_dest = (w__gw == 1) ? 0 : 2;
+	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
-	rect.bottom = rect.top + 32;
+	rect.bottom = rect.top + 36;
 	if ((w__gw == 0) && (fr == TRUE))
 		PaintRect(&rect);
-	rect.right = rect.left + 14;
-	rect.bottom = rect.top + 16;
-	OffsetRect(&rect,0,7);
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr)hDialog: from_gworld);
 	Rect from_rect = get_custom_rect(which_g);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
-	OffsetRect(&rect,14,0);
+	OffsetRect(&small_monst_rect,rect.left,rect.top + 7);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
 	from_rect = get_custom_rect(which_g+1);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	OffsetRect(&small_monst_rect,14,0);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
 }
 
 void draw_custom_monst_tall_pic(short which_g,Rect& rect){
 	short draw_dest = (w__gw == 1) ? 0 : 2;
+	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
-	rect.bottom = rect.top + 32;
+	rect.bottom = rect.top + 36;
 	if ((w__gw == 0) && (fr == TRUE))
 		PaintRect(&rect);
-	rect.right = rect.left + 14;
-	rect.bottom = rect.top + 16;
-	OffsetRect(&rect,8,0);
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr)hDialog: from_gworld);
 	Rect from_rect = get_custom_rect(which_g);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
-	OffsetRect(&rect,0,16);
+	OffsetRect(&small_monst_rect,rect.left + 7,rect.top);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	OffsetRect(&small_monst_rect,0,18);
 	from_rect = get_custom_rect(which_g+1);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
 }
 
 void draw_custom_monst_large_pic(short which_g,Rect& rect){
 	short draw_dest = (w__gw == 1) ? 0 : 2;
+	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
-	rect.bottom = rect.top + 32;
+	rect.bottom = rect.top + 36;
 	if ((w__gw == 0) && (fr == TRUE))
 		PaintRect(&rect);
-	rect.right = rect.left + 14;
-	rect.bottom = rect.top + 16;
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr)hDialog: from_gworld);
 	Rect from_rect = get_custom_rect(which_g);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
-	OffsetRect(&rect,14,0);
+	OffsetRect(&small_monst_rect,rect.left,rect.top);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(which_g+1);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
-	OffsetRect(&rect,-14,16);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	OffsetRect(&small_monst_rect,-14,18);
 	from_rect = get_custom_rect(which_g+2);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
-	OffsetRect(&rect,14,0);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(which_g+3);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
 }
 
 void draw_custom_dlg_pic_split(short which_g,Rect& rect){ // dialog, split

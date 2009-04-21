@@ -1,4 +1,7 @@
 #include <stdio.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.monster.h"
 #include "boe.graphics.h"
@@ -835,7 +838,7 @@ void place_target(location target)
 				 return;
 				 }
 		for (i = 0; i < 8; i++) {
-			if (same_point(spell_targets[i],target) == TRUE) {
+			if (spell_targets[i] == target) {
 				add_string_to_buf("  Target removed.");
 				num_targets_left++;
 				spell_targets[i].x = 120;
@@ -1517,7 +1520,7 @@ void fire_missile(location target) ////
 							}
 						break;
 					case 12: case 14:
-						m_type = (is_magic(adven[current_pc].items[ammo_inv_slot]) == TRUE) ? 4 : 3;
+						m_type = (adven[current_pc].items[ammo_inv_slot].is_magic() == TRUE) ? 4 : 3;
 						break; 
 					}
 				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
@@ -3608,8 +3611,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (adven[k].main_status == 1)
-					&& (((is_combat()) &&(same_point(pc_pos[k],spot_hit) == TRUE)) ||
-					((is_town()) && (same_point(c_town.p_loc,spot_hit) == TRUE)))) {
+					&& (((is_combat()) && (pc_pos[k] == spot_hit)) ||
+					((is_town()) && (c_town.p_loc == spot_hit)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 					switch (effect) {
 						case 4: 
@@ -3840,12 +3843,12 @@ void hit_space(location target,short dam,short type,short report,short hit_all)
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if ((adven[i].main_status == 1) && (stop_hitting == FALSE))
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (pc_pos[i] == target) {
 						damage_pc(i,dam,type,-1);					
 						stop_hitting = (hit_all == 1) ? FALSE : TRUE;				
 					}
 	if (overall_mode < MODE_COMBAT)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (target == c_town.p_loc) {
 			fast_bang = 1;
 			hit_party(dam,type);
 			fast_bang = 0;
@@ -4030,7 +4033,7 @@ Boolean combat_cast_mage_spell()
 	short spell_num,target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
 	char c_line[60];
 	creature_data_type *which_m;
-	monster_record_type get_monst;
+	cMonster get_monst;
 	
 	if (is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
 		add_string_to_buf("  Not in antimagic field.");
@@ -4662,11 +4665,11 @@ void scloud_space(short m,short n)
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (pc_pos[i] == target) {
 						curse_pc(i,get_ran(1,1,2));					
 					}
 	if (overall_mode < MODE_COMBAT)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (target == c_town.p_loc) {
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status == 1)
 					curse_pc(i,get_ran(1,1,2));					
@@ -4686,11 +4689,11 @@ void web_space(short m,short n)
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (pc_pos[i] == target) {
 						web_pc(i,3);					
 					}
 	if (overall_mode < MODE_COMBAT)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (target == c_town.p_loc) {
 			for (i = 0; i < 6; i++)
 					web_pc(i,3);					
 			}
@@ -4708,11 +4711,11 @@ void sleep_cloud_space(short m,short n)
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
 			if (adven[i].main_status == 1)
-				if (same_point(pc_pos[i],target) == TRUE) {
+				if (pc_pos[i] == target) {
 					sleep_pc(i,3,11,0);
 					}
 	if (overall_mode < MODE_COMBAT)
-		if (same_point(target,c_town.p_loc) == TRUE) {
+		if (target == c_town.p_loc) {
 			for (i = 0; i < 6; i++)
 				sleep_pc(i,3,11,0);
 			}

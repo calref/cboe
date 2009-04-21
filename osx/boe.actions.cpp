@@ -1,4 +1,8 @@
 
+#include <math.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.actions.h"
 #include "boe.graphutil.h"
@@ -9,7 +13,6 @@
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "boe.town.h"
-#include <math.h>
 #include "boe.text.h"
 #include "boe.party.h"
 #include "boe.monster.h"
@@ -63,15 +66,7 @@ word_rect_type preset_words[9] = {{"Look",{366,4,386,54}},{"Name",{366,70,386,13
 								{"Buy",{389,4,409,54}},{"Sell",{389,70,409,120}},{"Record",{389,121,409,186}},
 								{"Done",{389,210,409,270}},{"Go Back",{366,190,386,270}},
 								{"Ask About...",{343,4,363,134}}};
-item_record_type start_items[6] =
-{
-{1,4, 0,1,0,0,1,0, 45,0,0,0,0, 2, 7,0, {0,0},"Bronze Knife","Knife",0,1,0,0},
-{12,1,1,0,0,0,0,0, 65,0,0,0,0, 2, 20,0, {0,0},"Crude Buckler","Buckler",0,1,0,0},
-{4,0,0,0,0,0,0,0, 10,0,0,0,0, 15, 20,0, {0,0},"Cavewood Bow","Bow",0,1,0,0},
-{5,12,0,0,0,12,0,0, 47,0,0,0,0, 1, 1,0, {0,0},"Arrows","Arrows",0,1,0,0},
-{2,9,0,0,0,0,3,0, 4,0,0,0,0, 10, 30,0, {0,0},"Stone Spear","Spear",0,1,0,0},
-{14,1,0,0,0,0,0,0, 66,0,0,0,0, 6, 15,0, {0,0},"Leather Helm","Helm",0,1,0,0}
-};
+cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
 Boolean item_area_button_active[8][6];
 Boolean pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
@@ -108,7 +103,7 @@ extern short town_size[3],store_spell_target,pc_last_cast[2][6],pc_casting,store
 extern town_item_list	t_i; // shouldn't be here
 extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 
 // combat globals
@@ -707,14 +702,14 @@ Boolean handle_action(EventRecord event)
 					if (party.in_horse >= 0) {
 						if (overall_mode == MODE_OUTDOORS) {
 							party.horses[party.in_horse].which_town = 200;
-							party.horses[party.in_horse].horse_loc_in_sec = global_to_local(party.p_loc);
-							party.horses[party.in_horse].horse_loc = party.p_loc;
-							party.horses[party.in_horse].horse_sector.x = party.outdoor_corner.x + party.i_w_c.x;
-							party.horses[party.in_horse].horse_sector.y = party.outdoor_corner.y + party.i_w_c.y;
+							party.horses[party.in_horse].loc_in_sec = global_to_local(party.p_loc);
+							party.horses[party.in_horse].loc = party.p_loc;
+							party.horses[party.in_horse].sector.x = party.outdoor_corner.x + party.i_w_c.x;
+							party.horses[party.in_horse].sector.y = party.outdoor_corner.y + party.i_w_c.y;
 							party.in_horse = -1;
 							}
 							else if (overall_mode == MODE_TOWN){
-								party.horses[party.in_horse].horse_loc = c_town.p_loc;
+								party.horses[party.in_horse].loc = c_town.p_loc;
 								party.horses[party.in_horse].which_town = c_town.town_num;
 								party.in_horse = -1;
 								}
@@ -793,7 +788,7 @@ Boolean handle_action(EventRecord event)
 						else find_direction_from = 1;
 					
 						for (i = 0; i < 8; i++) 
-							if (same_point(party.loc_in_sec,outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i]) == TRUE) {	
+							if (party.loc_in_sec == outdoors[party.i_w_c.x][party.i_w_c.y].exit_locs[i]) {	
 								which_t = outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i];
 								if (which_t >= 0)
 									start_town_mode(outdoors[party.i_w_c.x][party.i_w_c.y].exit_dests[i], find_direction_from);
@@ -837,7 +832,7 @@ Boolean handle_action(EventRecord event)
 						k = 0;
 						if (overall_mode == MODE_LOOK_TOWN) {
 							while (k < 15) {
-								if (same_point (destination, c_town.town.sign_locs[k]) == TRUE) {
+								if (destination == c_town.town.sign_locs[k]) {
 									need_reprint = TRUE;
 									if (adjacent(c_town.town.sign_locs[k],c_town.p_loc)==TRUE)
 										do_sign(c_town.town_num,k,(short) ter_looked_at,destination);
@@ -851,8 +846,7 @@ Boolean handle_action(EventRecord event)
 							loc_in_sec.x += i - 4;
 							loc_in_sec.y += j - 4;
 							while (k < 8) {
-								if (same_point (loc_in_sec, 
-									outdoors[party.i_w_c.x][party.i_w_c.y].sign_locs[k]) == TRUE) {
+								if (loc_in_sec == outdoors[party.i_w_c.x][party.i_w_c.y].sign_locs[k]) {
 										need_reprint = TRUE;
 										if (adjacent(outdoors[party.i_w_c.x][party.i_w_c.y].sign_locs[k],party.loc_in_sec)==TRUE)
 											do_sign((short) (200 + get_outdoor_num()),k,(short) ter_looked_at,destination);
@@ -2683,17 +2677,17 @@ Boolean outd_move_party(location destination,Boolean forced)
 				pause(8);
 			}			
 			party.boats[party.in_boat].which_town = 200;
-			party.boats[party.in_boat].boat_loc_in_sec = party.loc_in_sec;
-			party.boats[party.in_boat].boat_loc = party.p_loc;
-			party.boats[party.in_boat].boat_sector.x = party.outdoor_corner.x + party.i_w_c.x;
-			party.boats[party.in_boat].boat_sector.y = party.outdoor_corner.y + party.i_w_c.y;
+			party.boats[party.in_boat].loc_in_sec = party.loc_in_sec;
+			party.boats[party.in_boat].loc = party.p_loc;
+			party.boats[party.in_boat].sector.x = party.outdoor_corner.x + party.i_w_c.x;
+			party.boats[party.in_boat].sector.y = party.outdoor_corner.y + party.i_w_c.y;
 		}
 		if (party.in_horse >= 0) {
 				party.horses[party.in_horse].which_town = 200;
-				party.horses[party.in_horse].horse_loc_in_sec = party.loc_in_sec;
-				party.horses[party.in_horse].horse_loc = party.p_loc;
-				party.horses[party.in_horse].horse_sector.x = party.outdoor_corner.x + party.i_w_c.x;
-				party.horses[party.in_horse].horse_sector.y = party.outdoor_corner.y + party.i_w_c.y;
+				party.horses[party.in_horse].loc_in_sec = party.loc_in_sec;
+				party.horses[party.in_horse].loc = party.p_loc;
+				party.horses[party.in_horse].sector.x = party.outdoor_corner.x + party.i_w_c.x;
+				party.horses[party.in_horse].sector.y = party.outdoor_corner.y + party.i_w_c.y;
 
 			}
 
@@ -2854,11 +2848,11 @@ Boolean town_move_party(location destination,short forced)////
 					play_sound(28);
 					pause(8);
 				}
-				party.boats[party.in_boat].boat_loc = c_town.p_loc;
+				party.boats[party.in_boat].loc = c_town.p_loc;
 				party.boats[party.in_boat].which_town = c_town.town_num;
 			}
 			if (party.in_horse >= 0) {
-					party.horses[party.in_horse].horse_loc = c_town.p_loc;
+					party.horses[party.in_horse].loc = c_town.p_loc;
 					party.horses[party.in_horse].which_town = c_town.town_num;
 				}
 			center = c_town.p_loc;

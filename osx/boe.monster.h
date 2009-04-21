@@ -1,4 +1,4 @@
-monster_record_type return_monster_template(unsigned char store);
+cMonster return_monster_template(unsigned char store);
 short difficulty_adjust();
 short out_enc_lev_tot(short which);
 short count_monst();

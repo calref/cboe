@@ -1,32 +1,36 @@
-#include "boe.global.h"
-#include "boe.itemdata.h"
+
 #include <stdio.h>
 #include <string.h>
+
+//#include "item.h"
+
+#include "boe.global.h"
+#include "boe.itemdata.h"
 #include "mathutil.h"
 extern piles_of_stuff_dumping_type *data_store;
 
 
-item_record_type convert_item (short_item_record_type s_item);
+//item_record_type convert_item (short_item_record_type s_item);
 
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
 
 //// whole file
-item_record_type	return_dummy_item()
+//item_record_type	return_dummy_item()
+//{
+//	item_record_type	dummy_item = {0,0, 0,0,0,0,0,0, 0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
+//
+//	return dummy_item;
+//}
+
+
+
+cItemRec get_stored_item(short which)
 {
-	item_record_type	dummy_item = {0,0, 0,0,0,0,0,0, 0,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-
-	return dummy_item;
-}
-
-
-
-item_record_type get_stored_item(short which)
-{
-	item_record_type s_item;
+	cItemRec s_item;
 
 	if ((which >= 400) || (which < 0)) {
-		s_item = return_dummy_item();
+		s_item = cItemRec();
 		return s_item;
 		}
 	
@@ -34,10 +38,10 @@ item_record_type get_stored_item(short which)
 	return s_item;
 }
 
-item_record_type get_food()
+cItemRec get_food()
 {
-	item_record_type food = 
-		{11,0, 0,0,0,0,0,0, 62,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
+	cItemRec food('food');
+//		{11,0, 0,0,0,0,0,0, 62,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
 	food.graphic_num += get_ran(1,0,2);
 	food.item_level = get_ran(1,5,10);
 	if (get_ran(1,0,9) == 5)
@@ -52,10 +56,10 @@ item_record_type get_food()
 }
 
 
-item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,short t1, short t2, short t3)
+cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, short t2, short t3)
 {
 	short i,j,val;
-	item_record_type temp_i;
+	cItemRec temp_i;
 	
 	// occasionally get nice item
 	if (get_ran(1,0,160) == 80) {
@@ -72,29 +76,29 @@ item_record_type pull_item_of_type(short loot_max,short min_val,short max_val,sh
 				return temp_i;
 			}
 		}
-	temp_i = return_dummy_item();
+	temp_i = cItemRec();
 	return temp_i;
 }
 
-item_record_type	get_weapon(short loot,short level)
+cItemRec	get_weapon(short loot,short level)
 {
-	item_record_type weapon;
+	cItemRec weapon;
 
 	if (loot == 0)
-		return return_dummy_item();
+		return cItemRec();
 	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1); 
 
 	return weapon;
 
 }
 
-item_record_type	get_armor(short loot,short level)
+cItemRec get_armor(short loot,short level)
 {
 	short r1;
-	item_record_type armor;
+	cItemRec armor;
 
 	if (loot == 0)
-		return return_dummy_item();
+		return cItemRec();
 	r1 = get_ran(1,(loot - 1) * 5 + 124,142);
 	
 	armor = pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
@@ -102,32 +106,32 @@ item_record_type	get_armor(short loot,short level)
 	return armor;
 }
 
-item_record_type get_helm(short loot)
+cItemRec get_helm(short loot)
 {
 
 	return  pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
 }
 
-item_record_type get_gloves(short loot)
+cItemRec get_gloves(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],15,-1,-1); 
 }
 
 
 
-item_record_type get_boots(short loot)
+cItemRec get_boots(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],17,-1,-1); 
 }
 
-item_record_type	get_shield(short loot)
+cItemRec	get_shield(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],12,-1,-1); 
 }
 
-item_record_type	get_potion(short loot)
+cItemRec get_potion(short loot)
 {
-	item_record_type p;
+	cItemRec p;
 	
 	if (get_ran(1,0,80) < 20 * (4 - loot))
 		p = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1); 
@@ -136,12 +140,12 @@ item_record_type	get_potion(short loot)
 	return p;
 }
 
-item_record_type	get_scroll(short loot)
+cItemRec get_scroll(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],8,-1,-1); 
 }
 
-item_record_type	get_missile(short loot)
+cItemRec get_missile(short loot)
 {
 	if (get_ran(1,0,2) < 2)
 		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],5,6,4); 
@@ -149,22 +153,22 @@ item_record_type	get_missile(short loot)
 
 }
 
-item_record_type	get_poison(short loot,short level)
+cItemRec get_poison(short loot,short level)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],20,-1,-1); 
 }
 
-item_record_type get_wand(short loot)
+cItemRec get_wand(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],9,-1,-1); 
 }
 
-item_record_type get_ring(short loot)
+cItemRec get_ring(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],18,-1,-1); 
 }
 
-item_record_type get_necklace(short loot)
+cItemRec get_necklace(short loot)
 {
 
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],19,-1,-1); 

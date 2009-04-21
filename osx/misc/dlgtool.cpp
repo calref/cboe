@@ -196,7 +196,7 @@ short cd_process_click(WindowPtr window,Point the_point, short mods,short *item)
 	
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlog_key)) < 0)
 		return -1;
-	printf("Processing click at {%i,%i}\n",the_point.h,the_point.v);
+	
 	for (i = 0; i <= dlgs[which_dlg].highest_item; i++)
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
 			if ((PtInRect(the_point,&items[item_id].rect)) && (items[item_id].active > 0)
@@ -256,7 +256,7 @@ void cd_attach_key(short dlog_num,short item_num,char key){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
 	
-	if ((items[item_index].type > 2) && (items[item_index].type != 8)) {
+	if ((items[item_index].type > DLG_LED_BUTTON) && (items[item_index].type != DLG_TEXT_CLICKABLE)) {
 		SysBeep(20);
 		return;
 	}
@@ -271,12 +271,12 @@ void cd_set_pict(short dlog_num, short item_num, short pict_num, short pict_type
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	if (items[item_index].type < DLG_NEW_PICTURE && items[item_index].type != 5) {
+	if (items[item_index].type < DLG_NEW_PICTURE && items[item_index].type != DLG_OLD_PICTURE) {
 		SysBeep(20);
 		return;
 	}
 	items[item_index].flag = pict_num;
-	items[item_index].flag2 = pict_type;
+	items[item_index].type = DLG_NEW_PICTURE + pict_type;
 	if (pict_num == -1)
 		cd_erase_item(dlog_num,item_num);
 	else cd_draw_item(dlog_num,item_num);
@@ -428,7 +428,7 @@ void cd_set_led(short dlog_num,short item_num,short state){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
 	
-	if (items[item_index].type != 2) {
+	if (items[item_index].type != DLG_LED_BUTTON) {
 		SysBeep(20);
 		return;
 	}
@@ -496,7 +496,7 @@ short cd_get_led(short dlog_num,short item_num){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return 0;
 	
-	if (items[item_index].type != 2) {
+	if (items[item_index].type != DLG_LED_BUTTON) {
 		SysBeep(20);
 		return 0;
 	}
@@ -573,7 +573,7 @@ void cd_draw_item(short dlog_num,short item_num){
 		return;
 	if (dlgs[dlg_index].draw_ready == FALSE)
 		return;
-	printf("Drawing item %i of type %i\n",item_num,items[item_index].type);
+	//printf("Drawing item %i of type %i\n",item_num,items[item_index].type);
 	GetPort(&old_port);
 	SetPortWindowPort(dlgs[dlg_index].win);
 	TextFont(geneva_font_num);
@@ -586,25 +586,28 @@ void cd_draw_item(short dlog_num,short item_num){
 	}
 	else {
 		switch (items[item_index].type) {
-		case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE: case 10: case 11:
+		case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
 								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
 			RGBForeColor(&clr[2]);
 			TextSize(12);
-			if (items[item_index].type < 2)
-				OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
-			if (items[item_index].type < 2) {
-				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
-									 (char *) (buttons[items[item_index].flag].str),1,8,false);
-			}
-			else {
-				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
-									 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-											   text_short_str[item_index - 10]),1,8,false);
-			}
-			if (items[item_index].type < 2)
-				OffsetRect(&items[item_index].rect,buttons[items[item_index].flag].left_adj,0);
+			OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
+			char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
+								 (char *) (buttons[items[item_index].flag].str),1,8,false);
+			OffsetRect(&items[item_index].rect,buttons[items[item_index].flag].left_adj,0);
+			TextSize(10);
+			ForeColor(blackColor);
+			break;
+		case DLG_CUSTOM_BTN_TYPE: case DLG_CUSTOM_DEF_BTN_TYPE:
+			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
+			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
+								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
+			RGBForeColor(&clr[2]);
+			TextSize(12);
+			char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
+								 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+										   text_short_str[item_index - 10]),1,8,false);
 			TextSize(10);
 			ForeColor(blackColor);
 			break;
@@ -630,8 +633,8 @@ void cd_draw_item(short dlog_num,short item_num){
 			}
 			break;
 				
-		case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE: case 8: case 9:
-			printf("Drawing text.\n");
+		case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE:
+		case DLG_TEXT_CLICKABLE: case DLG_TEXT_DEFAULT:
 			cd_erase_item(dlog_num,item_num);
 			TextFont(geneva_font_num);
 			TextFace(0);
@@ -647,8 +650,6 @@ void cd_draw_item(short dlog_num,short item_num){
 			if (items[item_index].flag >= 10) {
 				RGBForeColor(&clr[1]);
 			}else RGBForeColor(&clr[0]);
-			//printf("Testing 1...\n");
-			//printf("Rect is top = %i, left = %i, bottom = %i, right = %i\n",items[item_index].rect.top,items[item_index].rect.left,items[item_index].rect.bottom,items[item_index].rect.right);
 			if (items[item_index].rect.bottom - items[item_index].rect.top < 20) {
 				items[item_index].rect.left += 3;
 				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
@@ -660,33 +661,32 @@ void cd_draw_item(short dlog_num,short item_num){
 				InsetRect(&items[item_index].rect,4,4);
 				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 									 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-											   text_short_str[item_index - 10]),0,(items[item_index].type == 7) ? 14 : 12,false);
+											   text_short_str[item_index - 10]),0,(items[item_index].type == DLG_TEXT_LARGE) ? 14 : 12,false);
 				InsetRect(&items[item_index].rect,-4,-4);
-			}printf("Texting 2...\n");
-			if ((items[item_index].type == 8) && (dlog_num == 989)) {
-				items[item_index].rect.bottom -= 12;
-				//undo_clip(); // This function does absolutely nothing!
 			}
+//			if ((items[item_index].type == DLG_TEXT_CLICKABLE) && (dlog_num == 989)) {
+//				items[item_index].rect.bottom -= 12;
+//				undo_clip();
+//			} // Why the special case?
 			break;
 				
 		case DLG_OLD_PICTURE:
 			if (items[item_index].flag == -1)
 				cd_erase_item(dlog_num,item_num);
-			else if (items[item_index].flag == 0)
-				draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, 0,
-									PICT_BLANK_TYPE, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
 			else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, items[item_index].flag,
-									 items[item_index].flag2, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
+									 PICT_OLD_TYPE, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
 			break;
 		default: // DLG_NEW_PICTURE
-			if(items[item_index].type < 20) break;
+			printf("Type = %i\t",items[item_index].type);
+			printf("Flag = %i\n",items[item_index].flag);
+			if(items[item_index].type < DLG_NEW_PICTURE) break;
 			if (items[item_index].flag == -1)
 				cd_erase_item(dlog_num,item_num);
 			else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, items[item_index].flag,
 									 items[item_index].type - DLG_NEW_PICTURE, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
 			break;
 		}
-	}printf("Item %i drawn.\n",item_num);
+	}//printf("Item %i drawn.\n",item_num);
 	
 	if (items[item_index].label != 0) {
 		store_label = items[item_index].label;
@@ -732,7 +732,7 @@ void cd_draw_item(short dlog_num,short item_num){
 	TextFont(0);
 	TextFace(0);
 	TextSize(12);
-	SetPort(old_port);printf("Hello World\n");
+	SetPort(old_port);
 }
 
 void cd_initial_draw(short dlog_num){
@@ -873,7 +873,7 @@ void cd_press_button(short dlog_num, short item_num){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
 	// no press action for redio buttons
-	if (items[item_index].type == 2) {
+	if (items[item_index].type == DLG_LED_BUTTON) {
 		play_sound(34);
 		return;
 	}	
@@ -891,7 +891,7 @@ void cd_press_button(short dlog_num, short item_num){
 						dlg_buttons_gworld[buttons[items[item_index].flag].type][1],items[item_index].rect,0,2);
 	TextFace(bold);
 	RGBForeColor(&clr[3]);
-	if (items[item_index].type < 2) {
+	if (items[item_index].type < DLG_LED_BUTTON) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 							 (char *) (buttons[items[item_index].flag].str),1,8,false);
@@ -913,7 +913,7 @@ void cd_press_button(short dlog_num, short item_num){
 						dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
 	
 	RGBForeColor(&clr[2]);
-	if (items[item_index].type < 2) {
+	if (items[item_index].type < DLG_LED_BUTTON) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 							 (char *) (buttons[items[item_index].flag].str),1,8,false);
@@ -1052,7 +1052,6 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 			the_point = event->where;
 			GlobalToLocal(&the_point);	
 			wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
-			printf("Conclusion: %i hit.\n",item_hit);
 			break;
 			
 		default:

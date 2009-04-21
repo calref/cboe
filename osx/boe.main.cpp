@@ -1,4 +1,6 @@
 
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "gamma.h"
@@ -45,7 +47,7 @@ Rect item_sbar_rect = {146,546,253,562};
 Boolean bgm_on = FALSE,bgm_init = FALSE;
 short dialog_answer;
 Point store_anim_ul;
-scenario_data_type scenario;
+cScenario scenario;
 piles_of_stuff_dumping_type *data_store;
 talking_record_type talking;
 
@@ -156,7 +158,8 @@ ControlActionUPP text_sbar_UPP;
 ControlActionUPP item_sbar_UPP;
 ControlActionUPP shop_sbar_UPP;
 #endif
-
+void check_for_intel();
+bool mac_is_intel;
 
 
 
@@ -231,6 +234,7 @@ int main(void)
 			else if (give_intro_hint == TRUE)
 				tip_of_day();
 	//	}
+	check_for_intel();
 
 	menu_activate(0);
 	DrawMenuBar();
@@ -243,7 +247,17 @@ int main(void)
       return 0;
 }
 
-
+void check_for_intel(){
+	SInt32 response;
+	OSErr err;
+	err = Gestalt(gestaltSysArchitecture,&response);
+	if(err != noErr){
+		printf("Gestalt error %i\n");
+		exit(1);
+	}
+	if(response == gestaltIntel) mac_is_intel = true;
+	else mac_is_intel = false;
+}
 
 // 
 //	Initialize everything for the program, make sure we can run

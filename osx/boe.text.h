@@ -47,11 +47,5 @@ short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);
 void display_string(char *str);
 void Draw_Some_Item (GWorldPtr src_gworld, Rect src_rect, GWorldPtr targ_gworld, location target, char masked, short main_win);
-//void rect_draw_some_item (GWorldPtr src_gworld, Rect src_rect,  GWorldPtr targ_gworld, Rect targ_rect,  char masked, short main_win);
-Boolean is_ident(item_record_type item);
-Boolean is_magic(item_record_type item);
-Boolean is_contained(item_record_type item);
-Boolean is_cursed(item_record_type item);
-Boolean is_property(item_record_type item);
-Rect get_custom_rect (short which_rect);
+//Rect get_custom_rect (short which_rect);
 

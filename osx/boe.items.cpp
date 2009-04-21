@@ -1,4 +1,9 @@
 
+#include <stdio.h>
+#include <string.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "boe.graphics.h"
@@ -13,8 +18,6 @@
 #include "boe.itemdata.h"
 #include "boe.infodlg.h"
 #include "soundtool.h"
-#include <stdio.h>
-#include <string.h>
 #include "boe.monster.h"
 #include "boe.main.h"
 #include "graphtool.h"
@@ -42,7 +45,7 @@ extern short town_type;
 extern short dialog_answer;
 extern GWorldPtr pcs_gworld;
 extern ModalFilterUPP main_dialog_UPP;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 ////
 Boolean equippable[26] = {FALSE,TRUE,TRUE,FALSE,TRUE, TRUE,TRUE,FALSE,FALSE,FALSE,
@@ -65,7 +68,7 @@ short store_dnum;
 
 void sort_pc_items(short pc_num)
 {
-	item_record_type store_item;
+	cItemRec store_item;
 	////
 	short item_priority[26] = {20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9};
 	Boolean no_swaps = FALSE,store_equip;
@@ -91,8 +94,19 @@ void sort_pc_items(short pc_num)
 		}
 }
 
+bool give_to_party(cItemRec item, short print_result) {
+	short i = 0;
+	
+	while (i < 6) {
+		if (give_to_pc(i,item,print_result))
+			return true;
+		i++;
+	}
+	return false;
+}
+
 ////  
-Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
+bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 {
 	short free_space;
 	char announce_string[60];
@@ -109,7 +123,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 		ASB("You get some food.");
 		return TRUE;
 		}
-	if (item_weight(item) > 
+	if (item.item_weight() > 
 	  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  	if (print_result == TRUE) {
 		  	SysBeep(20);
@@ -129,7 +143,7 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 					put_item_screen(stat_window,0);
 			}
 			if (in_startup_mode == FALSE) {
-				if (is_ident(item) == 0)
+				if (item.is_ident() == 0)
 					sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.name);
 					else sprintf((char *) announce_string,"  %s gets %s.",adven[pc_num].name,item.full_name);
 				if (print_result == TRUE)
@@ -143,23 +157,11 @@ Boolean give_to_pc(short pc_num,item_record_type  item,short  print_result)
 	return FALSE;
 }
 
-Boolean give_to_party(item_record_type item,short print_result)
-{
-	short i = 0;
-	
-	while (i < 6) {
-		if (give_to_pc(i,item,print_result) == TRUE)
-			return TRUE;
-		i++;
-	}
-	return FALSE;
-}
-
 Boolean forced_give(short item_num,short abil) ////
 // if abil > 0, force abil, else ignore
 {
 	short i,j;
-	item_record_type item;
+	cItemRec item;
 	char announce_string[60];
 
 	if ((item_num < 0) || (item_num > 399))
@@ -172,7 +174,7 @@ Boolean forced_give(short item_num,short abil) ////
 			if ((adven[i].main_status == 1) && (adven[i].items[j].variety == 0)) {
 				adven[i].items[j] = item;
 			
-				if (is_ident(item) == 0)
+				if (item.is_ident() == 0)
 					sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.name);
 					else sprintf((char *) announce_string,"  %s gets %s.",adven[i].name,item.full_name);
 				add_string_to_buf((char *)announce_string);
@@ -185,17 +187,17 @@ Boolean forced_give(short item_num,short abil) ////
 
 Boolean GTP(short item_num)
 {
-	item_record_type item;
+	cItemRec item;
 	
 	item = get_stored_item(item_num);
-	return give_to_party(item,TRUE);
+	return give_to_party(item,true);
 }
 Boolean silent_GTP(short item_num)
 {
-	item_record_type item;
+	cItemRec item;
 	
 	item = get_stored_item(item_num);
-	return give_to_party(item,FALSE);
+	return give_to_party(item,false);
 }
 void give_gold(short amount,Boolean print_result)////
 {
@@ -308,7 +310,7 @@ short pc_carry_weight(short pc_num)
 	
 	for (i = 0; i < 24; i++) 
 		if (adven[pc_num].items[i].variety > 0) {
-		storage += item_weight(adven[pc_num].items[i]);
+		storage += adven[pc_num].items[i].item_weight();
 		if (adven[pc_num].items[i].ability == 44)
 			airy = TRUE;
 		if (adven[pc_num].items[i].ability == 45)
@@ -321,15 +323,6 @@ short pc_carry_weight(short pc_num)
 	if (storage < 0)
 		storage = 0;
 	return storage;
-}
-short item_weight(item_record_type item)
-{
-	if (item.variety == 0)
-		return 0;
-	if ((item.variety == 5) || (item.variety == 6) || (item.variety == 24) || (item.variety == 7)
-		|| ((item.variety == 21) && (item.charges > 0)))
-		return (short) (item.charges) * (short) (item.weight);
-	return (short) (item.weight);
 }
 
 void give_food(short amount,Boolean print_result)////
@@ -372,7 +365,7 @@ short pc_has_space(short pc_num)
 
 // returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
 // Made specials cases for if item is gold or food
-short pc_ok_to_buy(short pc_num,short cost,item_record_type item) ////
+short pc_ok_to_buy(short pc_num,short cost,cItemRec item) ////
 {
 	short i;
 	
@@ -384,7 +377,7 @@ short pc_ok_to_buy(short pc_num,short cost,item_record_type item) ////
 
 		if (pc_has_space(pc_num) == 24)
 			return 2;
-		if (item_weight(item) > 
+		if (item.item_weight() > 
 		  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  		return 4;
 	  		}	
@@ -418,7 +411,7 @@ void take_item(short pc_num,short which_item)
 		adven[pc_num].items[i] = adven[pc_num].items[i + 1];
 		adven[pc_num].equip[i] = adven[pc_num].equip[i + 1];
 		}
-	adven[pc_num].items[23] = return_dummy_item();
+	adven[pc_num].items[23] = cItemRec();
 	adven[pc_num].equip[23] = FALSE;
 	
 	if ((stat_window == pc_num) && (do_print == TRUE))
@@ -444,7 +437,7 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	char store_name[60];
 
 	////
-	if ((is_magic(adven[pc_num].items[item_hit]) == TRUE) ||
+	if (adven[pc_num].items[item_hit].is_magic() ||
 		(adven[pc_num].items[item_hit].ability != 0))
 			return;
 	adven[pc_num].items[item_hit].item_properties |= 4;
@@ -513,8 +506,7 @@ if ((overall_mode == MODE_COMBAT) && (adven[pc_num].items[item_num].variety == 1
 
 		// unequip
 	if (adven[pc_num].equip[item_num] == TRUE) {
-		if ((adven[pc_num].equip[item_num] == TRUE) &&
-			(is_cursed(adven[pc_num].items[item_num]) == TRUE))
+		if (adven[pc_num].equip[item_num] && adven[pc_num].items[item_num].is_cursed())
 			add_string_to_buf("Equip: Item is cursed.           ");
 			else {
 				adven[pc_num].equip[item_num] = FALSE;
@@ -571,14 +563,13 @@ if ((overall_mode == MODE_COMBAT) && (adven[pc_num].items[item_num].variety == 1
 void drop_item(short pc_num,short item_num,location where_drop)
 {
 	short choice,how_many = 0;
-	item_record_type item_store;
+	cItemRec item_store;
 	Boolean take_given_item = TRUE;
 	location loc;
 	
 	item_store = adven[pc_num].items[item_num];
 
-	if ((adven[pc_num].equip[item_num] == TRUE) &&
-		(is_cursed(adven[pc_num].items[item_num]) == TRUE)) 
+	if (adven[pc_num].equip[item_num] && adven[pc_num].items[item_num].is_cursed()) 
 			add_string_to_buf("Drop: Item is cursed.           ");	
 	else switch (overall_mode) {
 		case 0:
@@ -607,12 +598,12 @@ void drop_item(short pc_num,short item_num,location where_drop)
 				}
 			if (is_container(loc) == TRUE)
 				item_store.item_properties = item_store.item_properties | 8;
-			if (place_item(item_store,loc,FALSE) == FALSE) {
+			if (!place_item(item_store,loc,FALSE)) {
 				add_string_to_buf("Drop: Too many items on ground");
 				item_store.item_properties = item_store.item_properties & 247; // not contained
 				}
 				else {
-					if (is_contained(item_store) == TRUE)
+					if (item_store.is_contained())
 						add_string_to_buf("Drop: Item put away");
 						else add_string_to_buf("Drop: OK");
 					adven[pc_num].items[item_num].charges -= how_many;
@@ -623,7 +614,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 		}
 }
 
-Boolean place_item(item_record_type item,location where,Boolean forced)
+bool place_item(cItemRec item,location where,bool forced)
 {
 	short i;
 	
@@ -650,7 +641,6 @@ Boolean place_item(item_record_type item,location where,Boolean forced)
 
 void destroy_an_item()
 {
-////
 	short i;
 	ASB("Too many items. Some item destroyed.");
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -669,7 +659,7 @@ void destroy_an_item()
 			return;
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (is_magic(t_i.items[i]) == FALSE) {
+		if (!t_i.items[i].is_magic()) {
 			t_i.items[i].variety = 0;
 			return;
 			}
@@ -681,11 +671,10 @@ void destroy_an_item()
 void give_thing(short pc_num, short item_num)
 {
 	short who_to,how_many = 0;
-	item_record_type item_store;
+	cItemRec item_store;
 	Boolean take_given_item = TRUE;
 	
-	if ((adven[pc_num].equip[item_num] == TRUE) &&
-			(is_cursed(adven[pc_num].items[item_num]) == TRUE))
+	if (adven[pc_num].equip[item_num] && adven[pc_num].items[item_num].is_cursed())
 			add_string_to_buf("Give: Item is cursed.           ");
 			else {
 				item_store = adven[pc_num].items[item_num];
@@ -727,11 +716,11 @@ void combine_things(short pc_num)
 	
 	for (i = 0; i < 24; i++) {
 		if ((adven[pc_num].items[i].variety > 0) &&
-			(adven[pc_num].items[i].type_flag > 0) && (is_ident(adven[pc_num].items[i]))) {
+			(adven[pc_num].items[i].type_flag > 0) && (adven[pc_num].items[i].is_ident())) {
 			for (j = i + 1; j < 24; j++)
 				if ((adven[pc_num].items[j].variety > 0) &&
 				(adven[pc_num].items[j].type_flag == adven[pc_num].items[i].type_flag) 
-				 && (is_ident(adven[pc_num].items[j]))) {
+				 && (adven[pc_num].items[j].is_ident())) {
 					add_string_to_buf("(items combined)");
 					test = (short) (adven[pc_num].items[i].charges) + (short) (adven[pc_num].items[j].charges);
 					if (test > 125) {
@@ -766,7 +755,7 @@ short dist_from_party(location where)
 	return store;
 }
 
-void set_item_flag(item_record_type *item)
+void set_item_flag(cItemRec *item)
 {
 	if ((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
@@ -794,7 +783,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 			 ((mass_get == 1) && (check_container == FALSE) &&
 			 ((dist(place,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 			  && (can_see(place,t_i.items[i].item_loc,0) < 5))) 
-			  && ((is_contained(t_i.items[i]) == FALSE) || (check_container == TRUE))) {
+			  && ((!t_i.items[i].is_contained()) || (check_container == TRUE))) {
 				taken = 1;
 
 					if (t_i.items[i].value < 2)
@@ -865,7 +854,7 @@ void make_town_hostile()
 void put_item_graphics()
 {
 	short i,storage;
-	item_record_type item;
+	cItemRec item;
 	Str255 message;
 
 	// First make sure all arrays for who can get stuff are in order.
@@ -907,14 +896,14 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
 					sprintf ((char *) message, "%s",
-					 (is_ident(item) == TRUE) ? (char *) item.full_name : (char *) item.name);
+					 (item.is_ident()) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
 						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
 					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM_TYPE);
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);			
-					storage = item_weight(item);		
+					storage = item.item_weight();		
 					sprintf ((char *) message, "Weight: %d",storage);
 					csit(987,53 + i,(char *) message);			
 
@@ -943,7 +932,7 @@ void put_item_graphics()
 
 void display_item_event_filter (short item_hit)
 {
-	item_record_type item;
+	cItemRec item;
 	short i;
 	
 		switch (item_hit) {
@@ -973,7 +962,7 @@ void display_item_event_filter (short item_hit)
 				if (item_array[item_hit] >= NUM_TOWN_ITEMS) 
 					break;
 				item = t_i.items[item_array[item_hit]];
-				if (is_property(item) == TRUE) {
+				if (item.is_property()) {
 					i = (dialog_answer == 0) ? fancy_choice_dialog(1011,987) : 2;
 					if (i == 1) 
 						break;
@@ -997,7 +986,7 @@ void display_item_event_filter (short item_hit)
 					play_sound(62); // formerly force_play_sound
 					}
 				else {
-					if (item_weight(item) > 
+					if (item.item_weight() > 
 					  amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
 					  	SysBeep(20);
 						csit(987,52,"It's too heavy to carry.");
@@ -1009,7 +998,7 @@ void display_item_event_filter (short item_hit)
 					play_sound(0); // formerly force_play_sound
 					 give_to_pc(current_getting_pc, item, 0);////
 					}
-				t_i.items[item_array[item_hit]] = return_dummy_item();
+				t_i.items[item_array[item_hit]] = cItemRec();
 				for (i = item_hit; i < 125; i++)
 					item_array[i] = item_array[i + 1];
 				total_items_gettable--;
@@ -1045,8 +1034,8 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 				 ((mode == 1) && (check_container == FALSE) &&
 				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
-				  (is_contained(t_i.items[i]) == check_container) &&
-				  ((check_container == FALSE) || (same_point(t_i.items[i].item_loc,from_loc) == TRUE))) {
+				  (t_i.items[i].is_contained() == check_container) &&
+				  ((check_container == FALSE) || (t_i.items[i].item_loc == from_loc))) {
 				  	item_array[array_position] = i;
 			  		array_position++;
 			  		total_items_gettable++;
@@ -1361,8 +1350,8 @@ DialogPtr other_make_dialog(short which)
 ////
 void place_glands(location where,unsigned char m_type)
 {
-	item_record_type store_i;
-	monster_record_type monst;
+	cItemRec store_i;
+	cMonster monst;
 	
 	monst = return_monster_template(m_type);
 	
@@ -1391,7 +1380,7 @@ void reset_item_max()
 			item_max = i + 1;
 }
 
-short item_val(item_record_type item)
+short item_val(cItemRec item)
 {
 	if (item.charges == 0)
 		return item.value;
@@ -1403,30 +1392,43 @@ void place_treasure(location where,short level,short loot,short mode)
 //short mode;  // 0 - normal, 1 - force
 {
 
-	item_record_type new_item;
+	cItemRec new_item;
 	short amt,r1,i,j;
-	short treas_chart[5][6] = {{0,-1,-1,-1,-1,-1},
-								{1,-1,-1,-1,-1,-1},
-								{2,1,1,-1,-1,-1},
-								{3,2,1,1,-1,-1},
-								{4,3,2,2,1,1}};
-	short treas_odds[5][6] = {{10,0,0,0,0,0},
-								{50,0,0,0,0,0},
-								{60,50,40,0,0,0},
-								{100,90,80,70,0,0},
-								{100,80,80,75,75,75}};
-	short id_odds[21] = {0,10,15,20,25,30,35,39,43,47,
-							51,55,59,63,67,71,73,75,77,79,81};
-	short max_mult[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-							{0,0,1,1,1,1,2,3,5,20},
-							{0,0,1,1,2,2,4,6,10,25},
-							{5,10,10,10,15,20,40,80,100,100},
-							{25,25,50,50,50,100,100,100,100,100}};
-	short min_chart[5][10] = {{0,0,0,0,0,0,0,0,0,1},
-						{0,0,0,0,0,0,0,0,5,20},
-						{0,0,0,0,1,1,5,10,15,40},
-						{10,10,15,20,20,30,40,50,75,100},
-						{50,100,100,100,100,200,200,200,200,200}};
+	// Make these static const because they are never changed.
+	// Saves them being initialized every time the function is called.
+	static const short treas_chart[5][6] = {
+		{0,-1,-1,-1,-1,-1},
+		{1,-1,-1,-1,-1,-1},
+		{2,1,1,-1,-1,-1},
+		{3,2,1,1,-1,-1},
+		{4,3,2,2,1,1}
+	};
+	static const short treas_odds[5][6] = {
+		{10,0,0,0,0,0},
+		{50,0,0,0,0,0},
+		{60,50,40,0,0,0},
+		{100,90,80,70,0,0},
+		{100,80,80,75,75,75}
+	};
+	static const short id_odds[21] = {
+		0,10,15,20,25,30,35,
+		39,43,47,51,55,59,63,
+		67,71,73,75,77,79,81
+	};
+	static const short max_mult[5][10] = {
+		{0,0,0,0,0,0,0,0,0,1},
+		{0,0,1,1,1,1,2,3,5,20},
+		{0,0,1,1,2,2,4,6,10,25},
+		{5,10,10,10,15,20,40,80,100,100},
+		{25,25,50,50,50,100,100,100,100,100}
+	};
+	static const short min_chart[5][10] = {
+		{0,0,0,0,0,0,0,0,0,1},
+		{0,0,0,0,0,0,0,0,5,20},
+		{0,0,0,0,1,1,5,10,15,40},
+		{10,10,15,20,20,30,40,50,75,100},
+		{50,100,100,100,100,200,200,200,200,200}
+	};
 	short max,min;
 	
 	if (loot == 1)
@@ -1477,23 +1479,22 @@ void place_treasure(location where,short level,short loot,short mode)
 
 			// not many magic items
 			if (mode == 0) {
-				if ((is_magic(new_item) == TRUE) && (level < 2) && (get_ran(1,0,5) < 3))
+				if (new_item.is_magic() && (level < 2) && (get_ran(1,0,5) < 3))
 					new_item.variety = 0;
-				if ((is_magic(new_item) == TRUE) && (level == 2) && (get_ran(1,0,5) < 2))
+				if (new_item.is_magic() && (level == 2) && (get_ran(1,0,5) < 2))
 					new_item.variety = 0;
-				if ((is_cursed(new_item) == TRUE) && (get_ran(1,0,5) < 3))
+				if (new_item.is_cursed() && (get_ran(1,0,5) < 3))
 					new_item.variety = 0;
 				}
 				
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
-				do
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
-					while ((new_item.variety == 0) || (item_val(new_item) > max));
-				}
+				do new_item = return_treasure(treas_chart[loot][j],level,mode);
+				while ((new_item.variety == 0) || (item_val(new_item) > max));
+			}
 
 			// Not many cursed items
-			if ((is_cursed(new_item) == TRUE) && (get_ran(1,0,2) == 1))
+			if (new_item.is_cursed() && (get_ran(1,0,2) == 1))
 				new_item.variety = 0;
 							
 			if (new_item.variety != 0) {
@@ -1505,7 +1506,6 @@ void place_treasure(location where,short level,short loot,short mode)
 				}			
 			}
 		}
-
 }
 
 short luck_total()
@@ -1518,15 +1518,17 @@ short luck_total()
 	return i;
 }
 
-item_record_type return_treasure(short loot,short level,short mode)
+cItemRec return_treasure(short loot,short level,short mode)
 //short mode; // 0 - normal  1 - force
 {
-	item_record_type treas;
-	short which_treas_chart[48] = {1,1,1,1,1,2,2,2,2,2,
-								3,3,3,3,3,2,2,2,4,4,
-								4,4,5,5,5,6,6,6,7,7,
-								7,8,8,9,9,10,11,12,12,13,
-								13,14, 9,10,11,9,10,11};
+	cItemRec treas;
+	static const short which_treas_chart[48] = {
+		1,1,1,1,1,2,2,2,2,2,
+		3,3,3,3,3,2,2,2,4,4,
+		4,4,5,5,5,6,6,6,7,7,
+		7,8,8,9,9,10,11,12,12,13,
+		13,14, 9,10,11,9,10,11
+	};
 	short r1;
 	
 	treas.variety = 0;
@@ -1579,7 +1581,7 @@ void refresh_store_items()
 			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
 			if ((party.magic_store_items[i][j].variety == 3) ||
 				(party.magic_store_items[i][j].variety == 11))
-				party.magic_store_items[i][j] = return_dummy_item();
+				party.magic_store_items[i][j] = cItemRec();
 			party.magic_store_items[i][j].item_properties =
 				party.magic_store_items[i][j].item_properties | 1;
 			}

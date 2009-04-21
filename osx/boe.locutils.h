@@ -40,4 +40,3 @@ location push_loc(location from_where,location to_where);
 Boolean spot_impassable(short i,short  j);
 void swap_ter(short i,short j,unsigned char ter1,unsigned char ter2);
 void alter_space(short i,short j,unsigned char ter);
-bool same_point(location p1,location p2);

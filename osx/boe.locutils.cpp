@@ -1,4 +1,6 @@
 
+//#include "item.h"
+
 #include "mathutil.h"
 #include "boe.global.h"
 #include "boe.locutils.h"
@@ -27,7 +29,7 @@ extern location pc_pos[6],center;
 extern pc_record_type adven[6];
 extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 location light_locs[40];
 short num_lights = 0;
@@ -45,12 +47,6 @@ void set_terrain_blocked()
 short dist(location p1,location p2)
 {
 	return s_sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
-
-bool same_point(location p1,location p2){
-	if ((p1.x == p2.x) & (p1.y == p2.y))
-		return TRUE;
-	else return FALSE;
 }
 
 short vdist(location p1,location p2) {
@@ -374,11 +370,11 @@ Boolean is_blocked(location to_check)
 		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
 			return TRUE;
 			}
-		if (same_point (to_check,party.p_loc) == TRUE)
+		if (to_check == party.p_loc)
 			return TRUE;
 		for (i = 0; i < 20; i++)
 			if ((party.out_c[i].exists) == TRUE)  
-				if (same_point(party.out_c[i].m_loc, to_check) == TRUE)
+				if (party.out_c[i].m_loc == to_check)
 					return TRUE;
 		return FALSE;
 		}
@@ -401,11 +397,11 @@ Boolean is_blocked(location to_check)
 			
 		// Party there?
 		if (is_town())
-			if (same_point (to_check,c_town.p_loc) == TRUE)
+			if (to_check == c_town.p_loc)
 				return TRUE;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (same_point (to_check,pc_pos[i]) == TRUE))
+				if ((adven[i].main_status == 1) && (to_check == pc_pos[i]))
 					return TRUE;
 		
 		// Monster there?
@@ -534,7 +530,7 @@ Boolean outd_is_blocked(location to_check)
 			}
 		for (i = 0; i < 10; i++)
 			if ((party.out_c[i].exists) == TRUE)  				
-				if (same_point(party.out_c[i].m_loc, to_check) == TRUE)
+				if (party.out_c[i].m_loc == to_check)
 					return TRUE;
 		return FALSE;
 		}

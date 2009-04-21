@@ -1,7 +1,10 @@
 
 #include <string.h>
-#include "boe.global.h"
 #include <stdio.h>
+
+//#include "item.h"
+
+#include "boe.global.h"
 #include "boe.fileio.h"
 #include "boe.text.h"
 #include "boe.town.h"
@@ -56,13 +59,14 @@ extern DialogPtr modeless_dialogs[18] ;
 extern short which_combat_type;
 extern char terrain_blocked[256];
 extern short terrain_pic[256],cur_town_talk_loaded;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 extern talking_record_type talking;
 extern outdoor_strs_type outdoor_text[2][2];
 extern vector<scen_header_type> scen_headers;
 extern unsigned char combat_terrain[64][64];
 extern Boolean belt_present;
+extern bool mac_is_intel;
 
 typedef struct {
 	char expl[96][96];
@@ -222,9 +226,9 @@ void load_file()
 	}		
 	
 	
-	file_size = sizeof(party_record_type);
+	file_size = sizeof(party_record_type); // 45368
 	
-	len = sizeof(flag_type);
+	len = sizeof(flag_type); // 2
 	
 	//	sprintf((char *) debug, "  Len %d               ", (short) len);
 	//	add_string_to_buf((char *) debug);
@@ -253,7 +257,7 @@ void load_file()
 	}
 	
 	// LOAD PARTY	
-	len = (long) sizeof(party_record_type);
+	len = (long) sizeof(party_record_type); // 45368
 	store_len = len;
 	party_ptr = (char *) &party;
 	if ((error = FSRead(file_id, &len, (char *) party_ptr)) != 0){
@@ -791,8 +795,8 @@ void load_town(short town_num,short mode,short extra,char *str)
 		SysBeep(50);
 		return;
 		}
-	len_to_jump = sizeof(scenario_data_type);
-	len_to_jump += sizeof(scen_item_data_type);
+	len_to_jump = 41942; // sizeof(scenario_data_type);
+	len_to_jump += 39200; // sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
@@ -1251,29 +1255,29 @@ void fix_boats()
 
 	for (i = 0; i < 30; i++)
 		if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == 200)) {
-			if (party.boats[i].boat_sector.x == party.outdoor_corner.x)
-				party.boats[i].boat_loc.x = party.boats[i].boat_loc_in_sec.x;
-				else if (party.boats[i].boat_sector.x == party.outdoor_corner.x + 1)
-				party.boats[i].boat_loc.x = party.boats[i].boat_loc_in_sec.x + 48;
-					else party.boats[i].boat_loc.x = 500;
-			if (party.boats[i].boat_sector.y == party.outdoor_corner.y) 
-				party.boats[i].boat_loc.y = party.boats[i].boat_loc_in_sec.y;
-				else if (party.boats[i].boat_sector.y == party.outdoor_corner.y + 1)
-				party.boats[i].boat_loc.y = party.boats[i].boat_loc_in_sec.y + 48;
-					else party.boats[i].boat_loc.y = 500;
+			if (party.boats[i].sector.x == party.outdoor_corner.x)
+				party.boats[i].loc.x = party.boats[i].loc_in_sec.x;
+				else if (party.boats[i].sector.x == party.outdoor_corner.x + 1)
+				party.boats[i].loc.x = party.boats[i].loc_in_sec.x + 48;
+					else party.boats[i].loc.x = 500;
+			if (party.boats[i].sector.y == party.outdoor_corner.y) 
+				party.boats[i].loc.y = party.boats[i].loc_in_sec.y;
+				else if (party.boats[i].sector.y == party.outdoor_corner.y + 1)
+				party.boats[i].loc.y = party.boats[i].loc_in_sec.y + 48;
+					else party.boats[i].loc.y = 500;
 			}
 	for (i = 0; i < 30; i++)
 		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == 200)) {
-			if (party.horses[i].horse_sector.x == party.outdoor_corner.x)
-				party.horses[i].horse_loc.x = party.horses[i].horse_loc_in_sec.x;
-				else if (party.horses[i].horse_sector.x == party.outdoor_corner.x + 1)
-				party.horses[i].horse_loc.x = party.horses[i].horse_loc_in_sec.x + 48;
-					else party.horses[i].horse_loc.x = 500;
-			if (party.horses[i].horse_sector.y == party.outdoor_corner.y) 
-				party.horses[i].horse_loc.y = party.horses[i].horse_loc_in_sec.y;
-				else if (party.horses[i].horse_sector.y == party.outdoor_corner.y + 1)
-				party.horses[i].horse_loc.y = party.horses[i].horse_loc_in_sec.y + 48;
-					else party.horses[i].horse_loc.y = 500;
+			if (party.horses[i].sector.x == party.outdoor_corner.x)
+				party.horses[i].loc.x = party.horses[i].loc_in_sec.x;
+				else if (party.horses[i].sector.x == party.outdoor_corner.x + 1)
+				party.horses[i].loc.x = party.horses[i].loc_in_sec.x + 48;
+					else party.horses[i].loc.x = 500;
+			if (party.horses[i].sector.y == party.outdoor_corner.y) 
+				party.horses[i].loc.y = party.horses[i].loc_in_sec.y;
+				else if (party.horses[i].sector.y == party.outdoor_corner.y + 1)
+				party.horses[i].loc.y = party.horses[i].loc_in_sec.y + 48;
+					else party.horses[i].loc.y = 500;
 			}
 }
 
@@ -1310,8 +1314,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	
 	out_sec_num = scenario.out_width * to_create_y + to_create_x;
 	
-	len_to_jump = sizeof(scenario_data_type);
-	len_to_jump += sizeof(scen_item_data_type);
+	len_to_jump = 41942; // sizeof(scenario_data_type);
+	len_to_jump += 39200; // sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
@@ -1436,7 +1440,7 @@ Boolean load_scenario()
 		SysBeep(2);	return FALSE;
 		}	
 		
-	len = (long) sizeof(scenario_data_type);
+	len = 41942; // (long) sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
@@ -1445,13 +1449,14 @@ Boolean load_scenario()
 	  && (scenario.flag4 == 40)) {
 	  	file_ok = TRUE;
 	  	cur_scen_is_mac = TRUE;
+		if(mac_is_intel) port_scenario();
 	  	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
 	  	file_ok = TRUE;
 	  	cur_scen_is_mac = FALSE;
-	  	port_scenario();
+	  	if(!mac_is_intel) port_scenario();
 	  	}
 	 if (file_ok == FALSE) {
 		FSClose(file_id); 
@@ -1638,7 +1643,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/)
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
-	len = (long) sizeof(scenario_data_type);
+	len = 41942; // (long) sizeof(scenario_data_type);
 	error = FSRead(file_id, &len, (char *) &scenario);
 	if (error != 0){
 		FSClose(file_id);
@@ -2009,10 +2014,10 @@ void port_scenario()
 		flip_short(&scenario.ter_types[i].picture);
 		}
 	for (i = 0; i < 30; i++) {
-		flip_short(&scenario.scen_boats[i].which_town);
+		flip_short(&scenario.boats[i].which_town);
 		}
 	for (i = 0; i < 30; i++) {
-		flip_short(&scenario.scen_horses[i].which_town);
+		flip_short(&scenario.horses[i].which_town);
 		}
 	for (i = 0; i < 20; i++) 
 		flip_short(&scenario.scenario_timer_times[i]);
@@ -2074,7 +2079,7 @@ void port_out(outdoor_record_type *out)
 		flip_spec_node(&(out->specials[i]));
 }
 
-void flip_spec_node(special_node_type *spec)
+void flip_spec_node(cSpecial *spec)
 {
 	flip_short(&(spec->type));
 	flip_short(&(spec->sd1));
@@ -2092,13 +2097,30 @@ void flip_spec_node(special_node_type *spec)
 void flip_short(short *s)
 {
 	char store,*s1, *s2;
-
+	
 	s1 = (char *) s;
 	s2 = s1 + 1;
 	store = *s1;
 	*s1 = *s2;
 	*s2 = store;
+	
+}
 
+void flip_long(long *s)
+{
+	char store,*s1, *s2, *s3, *s4;
+	
+	s1 = (char *) s;
+	s2 = s1 + 1;
+	s3 = s1 + 2;
+	s4 = s1 + 3;
+	store = *s1;
+	*s1 = *s4;
+	*s4 = store;
+	store = *s2;
+	*s2 = *s3;
+	*s3 = store;
+	
 }
 void alter_rect(Rect *r)
 {

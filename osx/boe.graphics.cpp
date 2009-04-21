@@ -1,6 +1,9 @@
 
 #include <string.h>
 #include <stdio.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
@@ -62,7 +65,7 @@ extern PixPatHandle	bg[];
 extern KeyMap key_state;
 extern Boolean fry_startup;
 extern piles_of_stuff_dumping_type *data_store;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern outdoor_strs_type outdoor_text[2][2];
 extern GWorldPtr spec_scen_g;
 extern DialogPtr modeless_dialogs[18];
@@ -2048,11 +2051,8 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		
 	targ.x = q;
 	targ.y = r;
-	if ((supressing_some_spaces == TRUE) && 
-		(same_point(targ,ok_space[0]) == FALSE) &&
-		(same_point(targ,ok_space[1]) == FALSE) &&
-		(same_point(targ,ok_space[2]) == FALSE) &&
-		(same_point(targ,ok_space[3]) == FALSE))
+	if (supressing_some_spaces && (targ != ok_space[0]) && (targ != ok_space[1]) &&
+		(targ != ok_space[2]) && (targ != ok_space[3]))
 			return;
 	
 					

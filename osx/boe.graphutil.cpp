@@ -1,5 +1,8 @@
 
 #include <stdio.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.graphutil.h"
 #include "boe.text.h"
@@ -63,7 +66,7 @@ extern short monster_index[21];
 extern Boolean supressing_some_spaces;
 extern location ok_space[4];
 extern Boolean can_draw_pcs;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern GWorldPtr spec_scen_g;
 
 Rect boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
@@ -164,12 +167,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
 	source_gworld = storage_gworld;
 	
 	l.x = i; l.y = j;
-	if ((supressing_some_spaces == TRUE) && 
-		(same_point(l,ok_space[0]) == FALSE) &&
-		(same_point(l,ok_space[1]) == FALSE) &&
-		(same_point(l,ok_space[2]) == FALSE) &&
-		(same_point(l,ok_space[3]) == FALSE))
-			return;
+	if (supressing_some_spaces && (l != ok_space[0]) && (l != ok_space[1]) && (l != ok_space[2]) && (l != ok_space[3]))
+		return;
 
 	where_draw = calc_rect(i,j);
  	OffsetRect(&where_draw,13,13);
@@ -434,15 +433,10 @@ void draw_items()
 			where_draw.x = t_i.items[i].item_loc.x - center.x + 4;
 			where_draw.y = t_i.items[i].item_loc.y - center.y + 4;
 
-			if ((supressing_some_spaces == TRUE) && 
-				(same_point(where_draw,ok_space[0]) == FALSE) &&
-				(same_point(where_draw,ok_space[1]) == FALSE) &&
-				(same_point(where_draw,ok_space[2]) == FALSE) &&
-				(same_point(where_draw,ok_space[3]) == FALSE))
-				;
-			else if ((point_onscreen(center, t_i.items[i].item_loc) == TRUE) &&
-				(is_contained(t_i.items[i]) == FALSE) &&
-			   ((cartoon_happening == TRUE) || (party_can_see(t_i.items[i].item_loc) < 6))) {
+			if (supressing_some_spaces && (where_draw != ok_space[0]) && (where_draw != ok_space[1])
+				&& (where_draw != ok_space[2]) && (where_draw != ok_space[3]));
+			else if (point_onscreen(center, t_i.items[i].item_loc) && !t_i.items[i].is_contained() &&
+			   (cartoon_happening || (party_can_see(t_i.items[i].item_loc) < 6))) {
 					// safety valve
 					//if ((t_i.items[i].graphic_num < 0) || 
 					//	((t_i.items[i].graphic_num >= NUM_ITEM_G) && (t_i.items[i].graphic_num < 1000))) {
@@ -482,21 +476,21 @@ void draw_outd_boats(location center)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-			if ((point_onscreen(center, party.boats[i].boat_loc) == TRUE) && (party.boats[i].exists == TRUE) &&
+			if ((point_onscreen(center, party.boats[i].loc) == TRUE) && (party.boats[i].exists == TRUE) &&
 				(party.boats[i].which_town == 200) &&
-				(can_see(center, party.boats[i].boat_loc,0) < 5) && (party.in_boat != i)) {
-				where_draw.x = party.boats[i].boat_loc.x - center.x + 4;
-				where_draw.y = party.boats[i].boat_loc.y - center.y + 4;
+				(can_see(center, party.boats[i].loc,0) < 5) && (party.in_boat != i)) {
+				where_draw.x = party.boats[i].loc.x - center.x + 4;
+				where_draw.y = party.boats[i].loc.y - center.y + 4;
 				source_rect = boat_rects[0];
 				OffsetRect(&source_rect,61,0);
 				Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
 				}		
 	for (i = 0; i < 30; i++)
-			if ((point_onscreen(center, party.horses[i].horse_loc) == TRUE) && (party.horses[i].exists == TRUE) &&
+			if ((point_onscreen(center, party.horses[i].loc) == TRUE) && (party.horses[i].exists == TRUE) &&
 				(party.horses[i].which_town == 200) &&
-				(can_see(center, party.horses[i].horse_loc,0) < 5) && (party.in_horse != i)) {
-				where_draw.x = party.horses[i].horse_loc.x - center.x + 4;
-				where_draw.y = party.horses[i].horse_loc.y - center.y + 4;
+				(can_see(center, party.horses[i].loc,0) < 5) && (party.in_horse != i)) {
+				where_draw.x = party.horses[i].loc.x - center.x + 4;
+				where_draw.y = party.horses[i].loc.y - center.y + 4;
 				source_rect = boat_rects[0];
 				OffsetRect(&source_rect,61,0);
 				OffsetRect(&source_rect,0,74);
@@ -513,22 +507,22 @@ void draw_town_boat(location center)
 	
 	for (i = 0; i < 30; i++)
 		if ((party.boats[i].which_town == c_town.town_num) &&
-		((point_onscreen(center, party.boats[i].boat_loc) == TRUE) && 
-		(can_see(center, party.boats[i].boat_loc,0) < 5) && (party.in_boat != i)
-		 && (pt_in_light(center,party.boats[i].boat_loc) == TRUE))) {
-		where_draw.x = party.boats[i].boat_loc.x - center.x + 4;
-		where_draw.y = party.boats[i].boat_loc.y - center.y + 4;
+		((point_onscreen(center, party.boats[i].loc) == TRUE) && 
+		(can_see(center, party.boats[i].loc,0) < 5) && (party.in_boat != i)
+		 && (pt_in_light(center,party.boats[i].loc) == TRUE))) {
+		where_draw.x = party.boats[i].loc.x - center.x + 4;
+		where_draw.y = party.boats[i].loc.y - center.y + 4;
 		source_rect = boat_rects[0];
 		OffsetRect(&source_rect,61,0);
 		Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
 		}		
 	for (i = 0; i < 30; i++)
 		if ((party.horses[i].which_town == c_town.town_num) &&
-		((point_onscreen(center, party.horses[i].horse_loc) == TRUE) && 
-		(can_see(center, party.horses[i].horse_loc,0) < 5) && (party.in_horse != i)
-		 && (pt_in_light(center,party.horses[i].horse_loc) == TRUE))) {
-		where_draw.x = party.horses[i].horse_loc.x - center.x + 4;
-		where_draw.y = party.horses[i].horse_loc.y - center.y + 4;
+		((point_onscreen(center, party.horses[i].loc) == TRUE) && 
+		(can_see(center, party.horses[i].loc,0) < 5) && (party.in_horse != i)
+		 && (pt_in_light(center,party.horses[i].loc) == TRUE))) {
+		where_draw.x = party.horses[i].loc.x - center.x + 4;
+		where_draw.y = party.horses[i].loc.y - center.y + 4;
 
 		source_rect = boat_rects[0];
 				OffsetRect(&source_rect,61,0);

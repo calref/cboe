@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include "boe.consts.h"
+#include "scenario.h"
+#include "item.h"
 
 //#define EXILE_BIG_GUNS 1
 
@@ -62,16 +64,6 @@
 #define	CDSN	cd_set_text_edit_num
 
 typedef struct {
-	char x,y;
-	} location;
-typedef struct {
-	short x,y;} shortloc;
-
-typedef struct {
-	short type,sd1,sd2,pic,m1,m2,ex1a,ex1b,ex2a,ex2b,jumpto;
-	} special_node_type;
-
-typedef struct {
 	short personality,type;
 	char link1[4],link2[4];
 	short extras[4];
@@ -81,12 +73,6 @@ typedef struct {
 	unsigned char strlens[200];
 	talking_node_type talk_nodes[60];
 	} talking_record_type;
-
-typedef struct {
-	short picture;
-	unsigned char blockage,flag1,flag2,special,trans_to_what,fly_over,boat_over;
-	unsigned char block_horse,light_radius,step_sound,shortcut_key,res1,res2,res3;
-	} terrain_type_type;
 	
 typedef	struct {
 	unsigned char monst[4];
@@ -110,7 +96,7 @@ typedef struct {
 	location	wandering_locs[4];
 	Rect info_rect[8];
 	unsigned char strlens[180];
-	special_node_type specials[60];
+	cSpecial specials[60];
 	} outdoor_record_type;
 
 typedef struct {
@@ -126,31 +112,6 @@ typedef struct {
 	short special_on_kill,facial_pic;
 	
 	} creature_start_type;
-
-
-typedef struct {
-	short variety, item_level;
-	char awkward, bonus, protection, charges, type;
-	unsigned char graphic_num,ability, type_flag, is_special;
-	short value;
-	Boolean identified, magic;
-	unsigned char weight, description_flag;
-	char full_name[25], name[15];
-	unsigned char reserved1,reserved2;
-	unsigned char magic_use_type, ability_strength, treas_class, real_abil;
-} short_item_record_type;
-
-
-typedef struct {
-	short variety, item_level;
-	char awkward, bonus, protection, charges, type, magic_use_type;
-	unsigned char graphic_num,ability, ability_strength,type_flag, is_special;
-	short value;
-	unsigned char weight, special_class;
-	location item_loc;
-	char full_name[25], name[15];
-	unsigned char treas_class,item_properties,reserved1,reserved2;
-} item_record_type;
 
 typedef struct {
 	location item_loc;
@@ -182,7 +143,7 @@ typedef struct {
 	short timer_spec_times[8];
 	short timer_specs[8];
 	unsigned char strlens[180];
-	special_node_type specials[100];
+	cSpecial specials[100];
 	unsigned char specials1,specials2,res1,res2;
 	short difficulty;
 	} town_record_type;
@@ -231,98 +192,26 @@ typedef struct {
 	} template_town_type;
 
 typedef struct {
-	item_record_type scen_items[400];
+	cItemRec scen_items[400];
 	char monst_names[256][20];
 	char ter_names[256][30];
 	} scen_item_data_type;
-
-typedef struct {
-	short ter_type,item_num[10],item_odds[10],property;
-	} item_storage_shortcut_type;
-
-typedef struct {
-	unsigned char m_num,level,m_name[26];
-	short health,m_health,mp,max_mp;
-	unsigned char armor,skill;
-	short a[3];
-	unsigned char a1_type,a23_type,m_type,speed,ap,mu,cl,breath,breath_type,treasure,spec_skill,poison;
-	short morale,m_morale;
-	short corpse_item,corpse_item_chance;
-	short status[15];
-	unsigned char direction,immunities,x_width,y_width,radiate_1,radiate_2;
-	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
-	short picture_num;
-	
-	} monster_record_type;
 	
 typedef struct {
 	short active,attitude;
 	unsigned char number;
 	location m_loc;
-	monster_record_type m_d;
+	cMonster m_d;
 	Boolean mobile;
 	short summoned;
 	creature_start_type monst_start;
 	} creature_data_type;
-	
-	
-typedef struct {
-	location horse_loc,horse_loc_in_sec,horse_sector;
-	short which_town;
-	Boolean exists,property;
-	} horse_record_type;
-typedef struct {
-	location boat_loc,boat_loc_in_sec,boat_sector;
-	short which_town;
-	Boolean exists,property;
-} boat_record_type;
 
 typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	} scen_header_type;
-	
-	typedef struct {
-	unsigned char flag1, flag2, flag3, flag4;
-	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
-	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
-	unsigned char town_size[200];
-	unsigned char town_hidden[200];
-	short flag_a;
-	short intro_mess_pic,intro_mess_len;
-	location where_start,out_sec_start,out_start;
-	short which_town_start;
-	short flag_b;
-	short town_data_size[200][5];
-	short town_to_add_to[10];
-	short flag_to_add_to_town[10][2];
-	short flag_c;
-	short out_data_size[100][2];
-	Rect store_item_rects[3];
-	short store_item_towns[3];
-	short flag_e;
-	short special_items[50];
-	short special_item_special[50];
-	short rating,uses_custom_graphics;
-	short flag_f;
-	monster_record_type scen_monsters[256];
-	boat_record_type scen_boats[30];
-	horse_record_type scen_horses[30];
-	short flag_g;
-	terrain_type_type ter_types[256];
-	short scenario_timer_times[20];
-	short scenario_timer_specs[20];
-	short flag_h;
-	special_node_type scen_specials[256];
-	item_storage_shortcut_type storage_shortcuts[10];
-	short flag_d;
-	unsigned char scen_str_len[300];
-	short flag_i;
-	location last_out_edited;
-	short last_town_edited;
-
-	} scenario_data_type;
 
 // for game
 typedef struct {
@@ -364,12 +253,12 @@ typedef struct {
 	unsigned char stuff_done[310][10],item_taken[200][8];
 	short light_level;
 	location outdoor_corner,i_w_c,p_loc,loc_in_sec;
-	boat_record_type boats[30];
-	horse_record_type horses[30];
+	cVehicle boats[30];
+	cVehicle horses[30];
 	creature_list_type creature_save[4];
 	short in_boat,in_horse;
 	outdoor_creature_type out_c[10];
-	item_record_type magic_store_items[5][10];
+	cItemRec magic_store_items[5][10];
 	short imprisoned_monst[4];
 	char m_seen[256];
 	char journal_str[50];
@@ -411,7 +300,7 @@ typedef struct {
 	short skills[30];
 	short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
 	short status[15];
-	item_record_type items[24];
+	cItemRec items[24];
 	Boolean equip[24];
 	Boolean priest_spells[62],mage_spells[62];
 	short which_graphic,weap_poisoned;
@@ -425,7 +314,7 @@ typedef struct {
 	
 
 typedef struct {
-	item_record_type items[NUM_TOWN_ITEMS];
+	cItemRec items[NUM_TOWN_ITEMS];
 	} town_item_list;
 
 typedef struct {short i;} flag_type;
@@ -433,7 +322,7 @@ typedef struct {short i;} flag_type;
 typedef struct {unsigned char pattern[9][9];} effect_pat_type;
 
 typedef struct {
-	item_record_type items[NUM_TOWN_ITEMS];
+	cItemRec items[NUM_TOWN_ITEMS];
 	} stored_items_list_type;
 
 typedef struct {

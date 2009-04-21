@@ -1,3 +1,6 @@
+
+//#include "item.h"
+
 #include "boe.global.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
@@ -14,7 +17,7 @@ extern unsigned char out[96][96], out_e[96][96];
 extern unsigned char misc_i[64][64],sfx[64][64];
 extern char terrain_blocked[256];
 extern short town_size[3];
-extern scenario_data_type scenario;
+extern cScenario scenario;
 
 Boolean is_explored(short i,short j)
 {

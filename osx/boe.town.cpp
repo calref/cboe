@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "boe.graphutil.h"
@@ -64,7 +66,7 @@ extern short terrain_pic[256];
 extern char terrain_blocked[256];
 extern location golem_m_locs[16];
 extern ModalFilterUPP main_dialog_UPP;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr spec_scen_g;
 Boolean need_map_full_refresh = TRUE,forcing_map_button_redraw = FALSE;
@@ -443,7 +445,7 @@ void start_town_mode(short which_town, short entry_dir)
 		
 	// Set up items, maybe place items already there
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		t_i.items[i] = return_dummy_item();
+		t_i.items[i] = cItemRec();
 	
 	for (j = 0; j < 3; j++)
 		if (scenario.store_item_towns[j] == town_number) {
@@ -511,11 +513,11 @@ void start_town_mode(short which_town, short entry_dir)
 	center = c_town.p_loc;
 	if (party.in_boat >= 0) {
 		party.boats[party.in_boat].which_town = which_town;
-		party.boats[party.in_boat].boat_loc = c_town.p_loc;
+		party.boats[party.in_boat].loc = c_town.p_loc;
 		}
 	if (party.in_horse >= 0) {
 		party.horses[party.in_horse].which_town = which_town;
-		party.horses[party.in_horse].horse_loc = c_town.p_loc;
+		party.horses[party.in_horse].loc = c_town.p_loc;
 		}
 		
 	
@@ -550,15 +552,15 @@ void start_town_mode(short which_town, short entry_dir)
 
 	//// check horses
 	for (i = 0; i < 30; i++) {
-		if ((scenario.scen_boats[i].which_town >= 0) && (scenario.scen_boats[i].boat_loc.x >= 0)) {
+		if ((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
 			if (party.boats[i].exists == FALSE) {
-				party.boats[i] = scenario.scen_boats[i];
+				party.boats[i] = scenario.boats[i];
 				party.boats[i].exists = TRUE;
 				}
 			}
-		if ((scenario.scen_horses[i].which_town >= 0) && (scenario.scen_horses[i].horse_loc.x >= 0)) {
+		if ((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
 			if (party.horses[i].exists == FALSE) {
-				party.horses[i] = scenario.scen_horses[i];
+				party.horses[i] = scenario.horses[i];
 				party.horses[i].exists = TRUE;
 				}
 			}
@@ -1186,7 +1188,7 @@ void erase_specials()////
 {
 	location where;
 	short k,sd1,sd2;
-	special_node_type sn;
+	cSpecial sn;
 	
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
@@ -1228,7 +1230,7 @@ void erase_out_specials()
 {
 
 	short i,j,k,l,m,out_num;
-	special_node_type sn;
+	cSpecial sn;
 	short sd1,sd2;
 	location where;
 	
@@ -1292,7 +1294,7 @@ short get_town_spec_id(location where)
 {
 	short i = 0;
 
-	while ((same_point(c_town.town.special_locs[i],where) == FALSE)	&& (i < 50))
+	while ((c_town.town.special_locs[i] != where)	&& (i < 50))
 		i++;
 	return i;
 }

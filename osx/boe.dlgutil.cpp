@@ -1,5 +1,8 @@
 
 #include <string.h>
+
+//#include "item.h"
+
 #include "boe.global.h"
 
 #include "boe.dlgutil.h"
@@ -48,7 +51,7 @@ extern DialogPtr modeless_dialogs[18] ;
 extern town_item_list	t_i;
 extern Boolean game_run_before;
 extern ModalFilterUPP main_dialog_UPP;
-extern scenario_data_type scenario;
+extern cScenario scenario;
 extern piles_of_stuff_dumping_type *data_store;
 extern talking_record_type talking;
 
@@ -226,7 +229,7 @@ void handle_shop_event(Point p)
 
 void handle_sale(short what_chosen,short cost)
 {
-	item_record_type base_item;
+	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item,i;
 	Rect dummy_rect = {0,0,0,0};
 
@@ -285,7 +288,7 @@ void handle_sale(short what_chosen,short cost)
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((adven[current_pc].equip[i] == TRUE) && 
-									(is_cursed(adven[current_pc].items[i])))
+									(adven[current_pc].items[i].is_cursed()))
 										adven[current_pc].items[i].item_properties =
 											adven[current_pc].items[i].item_properties & 239;
 							break;
@@ -356,7 +359,7 @@ void handle_sale(short what_chosen,short cost)
 
 void handle_info_request(short what_chosen)
 {
-	item_record_type base_item;
+	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item;
 	
 	switch (what_chosen / 100) {
@@ -390,7 +393,7 @@ void set_up_shop_array()
 {
 	short i,shop_pos = 0;
 	Boolean cursed_item = FALSE;
-	item_record_type store_i;
+	cItemRec store_i;
 	long store_l;
 	
 	for (i = 0; i < 30; i++)
@@ -432,7 +435,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (is_cursed(adven[current_pc].items[i]) == TRUE))
+				if ((adven[current_pc].equip[i] == TRUE) && (adven[current_pc].items[i].is_cursed() == TRUE))
 					cursed_item = TRUE;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;

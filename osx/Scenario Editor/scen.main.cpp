@@ -74,6 +74,8 @@ void find_quickdraw() ;
 scenario_data_type scenario;
 piles_of_stuff_dumping_type *data_store;
 Rect right_sbar_rect;
+void check_for_intel();
+bool mac_is_intel;
 
 // 
 //	Main body of program Exileedit
@@ -149,7 +151,7 @@ int main(void)
 	set_up_start_screen();
 
 	TextFace(bold);
-	
+	check_for_intel();
 	redraw_screen();
 	
 	while (All_Done == FALSE) 
@@ -209,6 +211,18 @@ void Initialize(void)
 	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
 	right_sbar = NewControl(mainPtr,&right_sbar_rect,tit,TRUE,0,0,0,scrollBarProc,1);
 	 
+}
+
+void check_for_intel(){
+	long response;
+	OSErr err;
+	err = Gestalt(gestaltSysArchitecture,&response);
+	if(err != noErr){
+		printf("Gestalt error %i\n");
+		exit(1);
+	}
+	if(response == gestaltIntel) mac_is_intel = true;
+	else mac_is_intel = false;
 }
 
 void Set_Window_Drag_Bdry()
