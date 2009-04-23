@@ -33,7 +33,7 @@ extern short current_cursor,dialog_answer;
 extern long register_flag;
 
 extern GWorldPtr pc_gworld;
-extern Boolean diff_depth_ok,registered,save_blocked;
+extern Boolean diff_depth_ok,save_blocked;
 
 
 
@@ -309,7 +309,7 @@ void display_pc(short pc_num,short mode,short parent)
 		}
 	put_pc_graphics();
 
-	cd_set_pict(991,2,14 + mode,PICT_DLG_TYPE);
+	cd_set_pict(991,2,14 + mode,PICT_DLG);
 	
 	item_hit = cd_run_dialog();
 	cd_kill_dialog(991,0);

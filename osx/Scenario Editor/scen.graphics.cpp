@@ -26,22 +26,22 @@ short find_index_spot();
 Boolean is_s_d();
 void sort_specials();
 
-extern outdoor_record_type current_terrain;
+extern cOutdoors current_terrain;
 extern WindowPtr	mainPtr;
-extern town_record_type current_town;
+extern cTown* current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
-extern town_record_type town;
-extern big_tr_type t_d;
-extern template_town_type town_template;
-extern short town_type;  // 0 - big 1 - ave 2 - small
+extern cTown* town;
+//extern big_tr_type t_d;
+//extern template_town_type town_template;
+//extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short cur_viewing_mode,overall_mode;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern Boolean editing_town;
 extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern Rect windRect;
-extern piles_of_stuff_dumping_type *data_store;
-extern scenario_data_type scenario;
+//extern piles_of_stuff_dumping_type *data_store;
+extern cScenario scenario;
 extern Rect world_screen;
 
 extern Rect left_button[NLS];
@@ -96,6 +96,8 @@ Rect terrain_rect = {0,0,340,272};
 Str255 current_string = "\p";
 Str255 current_string2 = "\p";
 extern Rect terrain_rects[256];
+extern char strings_ls[NLS][40];
+extern char strings_rs[NRS][40];
 
 short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 				6,6,6,6,6,6,6,6,2,2,
@@ -411,7 +413,7 @@ void draw_lb_slot (short which,short mode)
 		else OffsetRect(&text_rect,0,2);
 	if (mode > 0)
 		ForeColor(blueColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)data_store->strings_ls[which],0,12,true);
+	char_win_draw_string(mainPtr,text_rect,(char *)strings_ls[which],0,12,true);
 	ForeColor(blackColor);
 	
 	//char_win_draw_string(mainPtr,text_rect,"FIsh.",1,12);
@@ -445,7 +447,7 @@ void draw_rb_slot (short which,short mode)
 	
 	if (mode > 0)
 		ForeColor(redColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)data_store->strings_rs[which],0,12,true);
+	char_win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],0,12,true);
 	ForeColor(blackColor);
 	TextSize(10);
 	TextFace(bold);
@@ -552,7 +554,7 @@ void draw_terrain(){
 			{
 				where_draw.x = q; where_draw.y = r;
 				if (editing_town == TRUE) {
-					t_to_draw = t_d.terrain[cen_x + q - 4][cen_y + r - 4];		
+					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);		
 				}
 				else {
 					if (cen_x + q - 4 == -1) 
@@ -634,9 +636,9 @@ void draw_terrain(){
 				
 				if (editing_town == TRUE) {
 					for (i = 0; i < 30; i++) {
-						if ((scenario.scen_boats[i].which_town == cur_town) &&
-							(scenario.scen_boats[i].boat_loc.x == cen_x + q - 4) &&
-							(scenario.scen_boats[i].boat_loc.y == cen_y + r - 4))
+						if ((scenario.boats[i].which_town == cur_town) &&
+							(scenario.boats[i].loc.x == cen_x + q - 4) &&
+							(scenario.boats[i].loc.y == cen_y + r - 4))
 							Draw_Some_Item(mixed_gworld,boat_rect[0],ter_draw_gworld,where_draw,1,0);
 						
 					}	
@@ -644,23 +646,23 @@ void draw_terrain(){
 						source_rect = boat_rect[0];
 						OffsetRect(&source_rect,0,74);
 						OffsetRect(&source_rect,56,36);
-						if ((scenario.scen_horses[i].which_town == cur_town) &&
-							(scenario.scen_horses[i].horse_loc.x == cen_x + q - 4) &&
-							(scenario.scen_horses[i].horse_loc.y == cen_y + r - 4))
+						if ((scenario.horses[i].which_town == cur_town) &&
+							(scenario.horses[i].loc.x == cen_x + q - 4) &&
+							(scenario.horses[i].loc.y == cen_y + r - 4))
 							Draw_Some_Item(mixed_gworld,source_rect,ter_draw_gworld,where_draw,1,0);
 						
 					}	
 					for (i = 0; i < 4; i++)		
-						if ((cen_x + q - 4 == town.start_locs[i].x) &&
-							(cen_y + r - 4 == town.start_locs[i].y)) {
+						if ((cen_x + q - 4 == town->start_locs[i].x) &&
+							(cen_y + r - 4 == town->start_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							OffsetRect(&tiny_from,7 * (6 + i),7 * (1));
 							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
 							OffsetRect(&tiny_to,0,-7);
 						}			
 					for (i = 0; i < 4; i++)		
-						if ((cen_x + q - 4 == town.wandering_locs[i].x) &&
-							(cen_y + r - 4 == town.wandering_locs[i].y)) {
+						if ((cen_x + q - 4 == town->wandering_locs[i].x) &&
+							(cen_y + r - 4 == town->wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							OffsetRect(&tiny_from,7 * (2),7 * (1));
 							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
@@ -697,12 +699,12 @@ void draw_terrain(){
 							Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);					
 						}
 					for (x = 0; x < 64; x++)
-						if ((cen_x + q - 4 == town.preset_items[x].item_loc.x) &&
-							(cen_y + r - 4 == town.preset_items[x].item_loc.y) && (town.preset_items[x].item_code >= 0)) {
+						if ((cen_x + q - 4 == town->preset_items[x].loc.x) &&
+							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						}
 					for (x = 0; x < 60; x++)
-						if ((cen_x + q - 4 == t_d.creatures[x].start_loc.x) &&
-							(cen_y + r - 4 == t_d.creatures[x].start_loc.y) && (t_d.creatures[x].number != 0)) {
+						if ((cen_x + q - 4 == town->creatures(x).start_loc.x) &&
+							(cen_y + r - 4 == town->creatures(x).start_loc.y) && (town->creatures(x).number != 0)) {
 						}
 					
 				}
@@ -718,20 +720,20 @@ void draw_terrain(){
 		if (editing_town == TRUE) {
 			// draw info rects
 			for (i = 0; i < 16; i++)
-				if (t_d.room_rect[i].left > 0) {
-					draw_rect.left = 22 + 28 * (t_d.room_rect[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (t_d.room_rect[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (t_d.room_rect[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (t_d.room_rect[i].bottom - cen_y + 4);	
+				if (town->room_rect(i).left > 0) {
+					draw_rect.left = 22 + 28 * (town->room_rect(i).left - cen_x + 4);
+					draw_rect.right = 22 + 28 * (town->room_rect(i).right - cen_x + 4);
+					draw_rect.top = 24 + 36 * (town->room_rect(i).top - cen_y + 4);
+					draw_rect.bottom = 24 + 36 * (town->room_rect(i).bottom - cen_y + 4);	
 					ForeColor(redColor);
 					FrameRect(&draw_rect);
 					ForeColor(blackColor);
 				}
 			// draw border rect
-			draw_rect.left = 21 + 28 * (town.in_town_rect.left - cen_x + 4);
-			draw_rect.right = 21 + 28 * (town.in_town_rect.right - cen_x + 4);
-			draw_rect.top = 25 + 36 * (town.in_town_rect.top - cen_y + 4);
-			draw_rect.bottom = 25 + 36 * (town.in_town_rect.bottom - cen_y + 4);	
+			draw_rect.left = 21 + 28 * (town->in_town_rect.left - cen_x + 4);
+			draw_rect.right = 21 + 28 * (town->in_town_rect.right - cen_x + 4);
+			draw_rect.top = 25 + 36 * (town->in_town_rect.top - cen_y + 4);
+			draw_rect.bottom = 25 + 36 * (town->in_town_rect.bottom - cen_y + 4);	
 			ForeColor(whiteColor);
 			FrameRect(&draw_rect);
 			ForeColor(blackColor);
@@ -763,10 +765,9 @@ void draw_terrain(){
 		 	FillCRect(&terrain_rect,bg[17]);
 			FrameRect(&terrain_rect);
 		}
-		for (q = 0; q < ((editing_town == TRUE) ? max_dim[town_type] : 48); q++) 
-			for (r = 0; r < ((editing_town == TRUE) ? max_dim[town_type] : 48); r++) {
-				t_to_draw = (editing_town == TRUE) ? t_d.terrain[q][r] :
-				current_terrain.terrain[q][r];
+		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++) 
+			for (r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
+				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
 				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == FALSE)) {
 					draw_one_tiny_terrain_spot(q,r,t_to_draw);
 					small_what_drawn[q][r] = t_to_draw;
@@ -793,24 +794,24 @@ void draw_monsts()
 	GrafPtr cur_port;
 	
 		for (i = 0; i < 60; i++)
-		if (t_d.creatures[i].number != 0) {
-				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
-				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
-				width = scenario.scen_monsters[t_d.creatures[i].number].x_width;
-				height = scenario.scen_monsters[t_d.creatures[i].number].y_width;
+		if (town->creatures(i).number != 0) {
+				where_draw.x = town->creatures(i).start_loc.x - cen_x + 4;
+				where_draw.y = town->creatures(i).start_loc.y - cen_y + 4;
+				width = scenario.scen_monsters[town->creatures(i).number].x_width;
+				height = scenario.scen_monsters[town->creatures(i).number].y_width;
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
 					if ((where_draw.x == minmax(0,8,where_draw.x)) && 
 					(where_draw.y == minmax(0,8,where_draw.y)) && 
-						(scenario.scen_monsters[t_d.creatures[i].number].picture_num >= 1000)) {
-						source_rect = get_custom_rect((scenario.scen_monsters[t_d.creatures[i].number].picture_num + k) % 1000);
+						(scenario.scen_monsters[town->creatures(i).number].picture_num >= 1000)) {
+						source_rect = get_custom_rect((scenario.scen_monsters[town->creatures(i).number].picture_num + k) % 1000);
 						store_loc.x += k % width;
 						store_loc.y += k / width;
 						Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, 1, 0); 
 						}
-						else if (scenario.scen_monsters[t_d.creatures[i].number].picture_num < 1000) {
-							m_start_pic = m_pic_index[scenario.scen_monsters[t_d.creatures[i].number].picture_num].i + k;
+						else if (scenario.scen_monsters[town->creatures(i).number].picture_num < 1000) {
+							m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures(i).number].picture_num].i + k;
 							from_gworld = monst_gworld[m_start_pic / 20];
 							m_start_pic = m_start_pic % 20;
 							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);				
@@ -853,10 +854,10 @@ void draw_items()
 	GrafPtr cur_port;
 	
 	for (i = 0; i < 64; i++) {
-		if (town.preset_items[i].item_code >= 0) {
-			where_draw.x = town.preset_items[i].item_loc.x - cen_x + 4;
-			where_draw.y = town.preset_items[i].item_loc.y - cen_y + 4;
-			pic_num = data_store->scen_item_list.scen_items[town.preset_items[i].item_code].graphic_num;
+		if (town->preset_items[i].code >= 0) {
+			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
+			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
+			pic_num = scenario.scen_items[town->preset_items[i].code].graphic_num;
 			if ((where_draw.x >= 0) && (where_draw.x <= 8) &&
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
 					
@@ -1054,16 +1055,16 @@ void draw_frames()
 						draw_rect.left = 23 + q * 28;
 						draw_rect.right = 50 + q * 28;
 				for (i = 0; i < 4; i++)
-					if ((which_pt.x == town.wandering_locs[i].x) &&
-					(which_pt.y == town.wandering_locs[i].y)) {
+					if ((which_pt.x == town->wandering_locs[i].x) &&
+					(which_pt.y == town->wandering_locs[i].y)) {
 						
 						ForeColor(redColor);
 						FrameRect(&draw_rect);
 						ForeColor(blackColor);
 					}
 				for (i = 0; i < 4; i++)
-					if ((which_pt.x == town.start_locs[i].x) &&
-					(which_pt.y == town.start_locs[i].y)) {
+					if ((which_pt.x == town->start_locs[i].x) &&
+					(which_pt.y == town->start_locs[i].y)) {
 						ForeColor(magentaColor);
 						FrameRect(&draw_rect);
 						ForeColor(blackColor);					
@@ -1244,7 +1245,7 @@ Boolean is_special(short i,short j)
 	
 	if (editing_town == TRUE)
 		for (k = 0; k < 50; k++)
-			if ((town.special_locs[k].x == i) && (town.special_locs[k].y == j))
+			if ((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
 				return TRUE;
 	if (editing_town == FALSE)
 		for (k = 0; k < 18; k++)
@@ -1269,9 +1270,9 @@ Boolean is_field_type(short i,short j,short field_type)
 	short k;
 	
 	for (k = 0; k < 50; k++)
-		if ((town.preset_fields[k].field_type == field_type) &&
-			(town.preset_fields[k].field_loc.x == i) &&
-			(town.preset_fields[k].field_loc.y == j))
+		if ((town->preset_fields[k].type == field_type) &&
+			(town->preset_fields[k].loc.x == i) &&
+			(town->preset_fields[k].loc.y == j))
 				return TRUE;
 	return FALSE;
 }
@@ -1283,10 +1284,10 @@ void make_field_type(short i,short j,short field_type)
 	if (is_field_type(i,j,field_type) == TRUE)
 		return;
 	for (k = 0; k < 50; k++)
-		if (town.preset_fields[k].field_type == 0) {
-			town.preset_fields[k].field_loc.x = i;
-			town.preset_fields[k].field_loc.y = j;
-			town.preset_fields[k].field_type = field_type;
+		if (town->preset_fields[k].type == 0) {
+			town->preset_fields[k].loc.x = i;
+			town->preset_fields[k].loc.y = j;
+			town->preset_fields[k].type = field_type;
 			return;
 			}
 	give_error("Each town can have at most 50 fields and special effects (webs, barrels, blood stains, etc.). To place more, use the eraser first.","",0);
@@ -1298,10 +1299,10 @@ void take_field_type(short i,short j,short field_type)
 	short k;
 	
 	for (k = 0; k < 50; k++)
-		if ((town.preset_fields[k].field_type == field_type) &&
-			(town.preset_fields[k].field_loc.x == i) &&
-			(town.preset_fields[k].field_loc.y == j)) {
-				town.preset_fields[k].field_type = 0;
+		if ((town->preset_fields[k].type == field_type) &&
+			(town->preset_fields[k].loc.x == i) &&
+			(town->preset_fields[k].loc.y == j)) {
+				town->preset_fields[k].type = 0;
 				return;
 				}
 }
@@ -1408,7 +1409,7 @@ Boolean container_there(location l)
 	
 	if (editing_town == FALSE)
 		return FALSE;
-	if (scenario.ter_types[t_d.terrain[l.x][l.y]].special == 14)
+	if (scenario.ter_types[town->terrain(l.x,l.y)].special == 14)
 		return TRUE;
 	if (is_barrel(l.x,l.y) == TRUE)
 		return TRUE;
@@ -1417,28 +1418,29 @@ Boolean container_there(location l)
 	return 0;		
 }
 
-void get_str(Str255 str,short i, short j)
-{
-	if (i == -1) {
-		strcpy((char *) str,data_store->scen_item_list.monst_names[j]);
-		return;
-	}
-	if (i == -2) {
-		strcpy((char *) str,data_store->scen_item_list.scen_items[j].full_name);
-		return;
-	}
-	if (i == -3) {
-		strcpy((char *) str,buttons[available_dlog_buttons[j]].str);
-		return;
-	}
-	if (i == -4) {
-		strcpy((char *) str,data_store->scen_item_list.ter_names[j]);
-		return;
-	}
-	if (i == -5) {
-		get_str(str,40,j * 7 + 1);
-		return;
-	}
-	GetIndString(str, i, j);
-	p2cstr(str);
-}
+//void get_str(Str255 str,short i, short j)
+//{
+//	if (i == -1) {
+//		strcpy((char *) str,data_store->scen_item_list.monst_names[j]);
+//		return;
+//	}
+//	if (i == -2) {
+//		strcpy((char *) str,data_store->scen_item_list.scen_items[j].full_name);
+//		return;
+//	}
+//	if (i == -3) {
+//		strcpy((char *) str,buttons[available_dlog_buttons[j]].str);
+//		return;
+//	}
+//	if (i == -4) {
+//		strcpy((char *) str,data_store->scen_item_list.ter_names[j]);
+//		return;
+//	}
+//	if (i == -5) {
+//		get_str(str,40,j * 7 + 1);
+//		return;
+//	}
+//	GetIndString(str, i, j);
+//	p2cstr(str);
+//}
+void record_display_strings(){}

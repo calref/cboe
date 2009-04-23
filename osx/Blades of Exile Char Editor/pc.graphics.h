@@ -15,3 +15,4 @@ void get_str(Str255 str,short i, short j);
 short string_length(char *str);
 void make_cursor_sword();
 void init_dialogs();
+void record_display_strings();

@@ -10,20 +10,19 @@
 extern short cen_x, cen_y, overall_mode;
 extern Boolean mouse_button_held;
 extern short cur_viewing_mode;
-extern town_record_type town;
-extern big_tr_type t_d;
+extern cTown* town;
+//extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3],mode_count,to_create;
 extern unsigned char template_terrain[64][64];
-extern item_record_type item_list[400];
-extern scenario_data_type scenario;
-extern special_node_type null_spec_node;
-extern talking_node_type null_talk_node;
-extern piles_of_stuff_dumping_type *data_store;
-extern outdoor_record_type current_terrain;
+extern cItemRec item_list[400];
+extern cScenario scenario;
+extern cSpecial null_spec_node;
+extern cSpeech null_talk_node;
+//extern piles_of_stuff_dumping_type *data_store;
+extern cOutdoors current_terrain;
 
 extern short dialog_answer;
-short store_which_string_dlog;
 short store_first_g ;
 short store_last_g ;
 short store_g_type ;
@@ -38,7 +37,7 @@ short store_str_mode ;
 short store_which_mode,*store_str1,*store_str2;
 short store_which_node,store_spec_str_mode,store_spec_mode;
 short last_node[256];
-special_node_type store_spec_node;
+cSpecial store_spec_node;
 short num_specs[3] = {256,60,100};
 
 	short ex1a_choose[12] = {19,50,55,56,57,58,59,60,182,229,-1,-1};
@@ -156,37 +155,6 @@ char edit_jumpto_mess[256] = {
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0};
-			
-	
-void fancy_choice_dialog_event_filter (short item_hit)
-{
-	toast_dialog();
-	dialog_answer = item_hit;
-}
-
-short fancy_choice_dialog(short which_dlog,short parent)
-// ignore parent in Mac version
-{
-	short item_hit,i,store_dialog_answer;
-	Str255 temp_str;
-	
-	store_dialog_answer = dialog_answer;
-	//make_cursor_sword();
-	
-	cd_create_dialog_parent_num(which_dlog,parent);
-	
-	item_hit = cd_run_dialog();
-
-	cd_kill_dialog(which_dlog,0);
-
-
-	i = dialog_answer;
-	dialog_answer = store_dialog_answer;
-	
-	return i;
-}
-
-
 
 //cre = check range error
 Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) 
@@ -196,61 +164,6 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 		return TRUE;
 		}		
 	return FALSE;
-}
-
-void give_error(char *text1, char *text2,short parent_num)
-{
-	display_strings(text1,text2,"Error!",57,/*7*/16,PICT_DLG_TYPE,parent_num);
-}
-
-void display_strings_event_filter (short item_hit)
-{
-	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
-	
-	switch (item_hit) {
-		case 1:
-			toast_dialog();
-			break;
-
-		}
-}
-
-void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
-{
-
-	short item_hit;
-	Str255 sign_text;
-	location view_loc;
-	Boolean sound_done = FALSE;
-
-	//make_cursor_sword();
-		
-	if ((text1 == NULL) && (text2 == NULL))
-		return;
-	store_which_string_dlog = 970;
-	if (strlen(title) > 0)
-		store_which_string_dlog += 2;
-	if ((text2 != NULL) && (text2[0] != 0))
-		store_which_string_dlog++;
-	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
-	
-	csp(store_which_string_dlog,store_which_string_dlog,graphic_num,graphic_type);
-	
-	csit(store_which_string_dlog,4,(char *) text1);
-	if (text2 != NULL) {
-		csit(store_which_string_dlog,5,(char *) text2);
-		}
-	if (strlen(title) > 0)
-		csit(store_which_string_dlog,6,title);
-	csp(store_which_string_dlog,3,graphic_num,graphic_type);
-	//if (sound_num >= 0)
-	//	play_sound(sound_num);
-	
-	item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(store_which_string_dlog,0);
 }
 
 void choose_graphic_event_filter (short item_hit)
@@ -295,7 +208,7 @@ void put_choice_pics(short g_type)
 	
 	for (i = 0; i < 36; i++) {
 		if (store_first_g + which_page * 36 + i > store_last_g) {
-			csp(819,41 + i,0,PICT_BLANK_TYPE);
+			csp(819,41 + i,0,PICT_BLANK);
 			cd_activate_item(819,5 + i,0);
 		}
 		else {
@@ -440,11 +353,11 @@ void edit_text_event_filter (short item_hit)
 	short num_strs[3] = {260,108,140};
 	
 			if (store_str_mode == 0)
-				CDGT(816,2,data_store->scen_strs[store_which_str]);
+				CDGT(816,2,scenario.scen_strs(store_which_str));
 			if (store_str_mode == 1)
-				CDGT(816,2,data_store->out_strs[store_which_str]);
+				CDGT(816,2,current_terrain.out_strs(store_which_str));
 			if (store_str_mode == 2)
-				CDGT(816,2,data_store->town_strs[store_which_str]);
+				CDGT(816,2,town->town_strs(store_which_str));
 	switch (item_hit) {
 		case 9:
 			toast_dialog(); 
@@ -461,11 +374,11 @@ void edit_text_event_filter (short item_hit)
 		}
 	cdsin(816,5,store_which_str);
 	if (store_str_mode == 0)
-		CDST(816,2,data_store->scen_strs[store_which_str]);
+		CDST(816,2,scenario.scen_strs(store_which_str));
 	if (store_str_mode)
-		CDST(816,2,data_store->out_strs[store_which_str]);
+		CDST(816,2,current_terrain.out_strs(store_which_str));
 	if (store_str_mode == 2)
-		CDST(816,2,data_store->town_strs[store_which_str]);
+		CDST(816,2,town->town_strs(store_which_str));
 }
 
 // mode 0 - scen 1 - out 2 - town
@@ -482,11 +395,11 @@ void edit_text_str(short which_str,short mode)
 	
 	cdsin(816,5,store_which_str);
 	if (mode == 0)
-		CDST(816,2,data_store->scen_strs[which_str]);
+		CDST(816,2,scenario.scen_strs(which_str));
 	if (mode == 1)
-		CDST(816,2,data_store->out_strs[which_str]);
+		CDST(816,2,current_terrain.out_strs(which_str));
 	if (mode == 2)
-		CDST(816,2,data_store->town_strs[which_str]);
+		CDST(816,2,town->town_strs(which_str));
 	cd_attach_key(816,3,0);
 	cd_attach_key(816,4,0);
 	
@@ -506,8 +419,8 @@ void edit_area_rect_event_filter (short item_hit)
 			toast_dialog(); 
 			CDGT(840,2,(char *) str);
 			if (store_str_mode == 0)
-				sprintf(data_store->out_strs[store_which_str + 1],"%-29.29s",(char *) str);
-				else sprintf(data_store->town_strs[store_which_str + 1],"%-29.29s",(char *) str);
+				sprintf(current_terrain.out_strs(store_which_str + 1),"%-29.29s",(char *) str);
+				else sprintf(town->town_strs(store_which_str + 1),"%-29.29s",(char *) str);
 			break;
 
 		case 3:
@@ -530,8 +443,8 @@ Boolean edit_area_rect_str(short which_str,short mode)
 	cd_create_dialog_parent_num(840,0);
 	
 	if (store_str_mode == 0)
-		CDST(840,2,data_store->out_strs[store_which_str + 1]);
-	else CDST(840,2,data_store->town_strs[store_which_str + 1]);
+		CDST(840,2,current_terrain.out_strs(store_which_str + 1));
+	else CDST(840,2,town->town_strs(store_which_str + 1));
 	
 	item_hit = cd_run_dialog();
 
@@ -570,7 +483,7 @@ Boolean save_spec_enc()
 	if (store_which_mode == 1)
 		current_terrain.specials[store_which_node] = store_spec_node;
 	if (store_which_mode == 2)
-		town.specials[store_which_node] = store_spec_node;
+		town->specials[store_which_node] = store_spec_node;
 	return TRUE;
 }
 
@@ -799,9 +712,9 @@ void edit_spec_enc_event_filter (short item_hit)
 				 toast_dialog(); 
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
-				case 1: i = choose_graphic(/*700,731*/0,PICT_N_DLG,store_spec_node.pic,PICT_DLG_TYPE,822); break;
-				case 2: i = choose_graphic(0,PICT_N_TER,store_spec_node.pic,PICT_TER_TYPE,822); break;
-				case 3: i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_spec_node.pic,PICT_MONST_TYPE,822); break;
+				case 1: i = choose_graphic(/*700,731*/0,PICT_N_DLG,store_spec_node.pic,PICT_DLG,822); break;
+				case 2: i = choose_graphic(0,PICT_N_TER,store_spec_node.pic,PICT_TER,822); break;
+				case 3: i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_spec_node.pic,PICT_MONST,822); break;
 				}
 			if (i >= 0) {
 				store_spec_node.pic = i;
@@ -875,7 +788,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		if (store_which_mode == 1)
 			store_spec_node = current_terrain.specials[store_which_node];
 		if (store_which_mode == 2)
-			store_spec_node = town.specials[store_which_node];
+			store_spec_node = town->specials[store_which_node];
 		if (store_spec_node.pic < 0)
 			store_spec_node.pic = 0;
 		put_spec_enc_in_dlog();
@@ -899,7 +812,7 @@ void edit_spec_enc(short which_node,short mode,short parent_num)
 	if (mode == 1)
 		store_spec_node = current_terrain.specials[store_which_node];
 	if (mode == 2)
-		store_spec_node = town.specials[store_which_node];
+		store_spec_node = town->specials[store_which_node];
 	if (store_spec_node.pic < 0)
 		store_spec_node.pic = 0;
 		
@@ -916,7 +829,7 @@ void edit_spec_enc(short which_node,short mode,short parent_num)
 short get_fresh_spec(short which_mode)
 {
 	short i;
-	special_node_type store_node;
+	cSpecial store_node;
 	
 	for (i = 0; i < num_specs[which_mode]; i++) {
 		if (which_mode == 0)
@@ -924,7 +837,7 @@ short get_fresh_spec(short which_mode)
 		if (which_mode == 1)
 			store_node = current_terrain.specials[i];
 		if (which_mode == 2)
-			store_node = town.specials[i];
+			store_node = town->specials[i];
 		if ((store_node.type == 0) && (store_node.jumpto == -1) && (store_node.pic == -1))
 			return i;
 		}
@@ -949,21 +862,21 @@ void edit_spec_text_event_filter (short item_hit)
 					switch (store_spec_str_mode) {
 						case 0:
 							for (i = 160; i < 260; i++)
-								if (data_store->scen_strs[i][0] == '*') {
+								if (scenario.scen_strs(i)[0] == '*') {
 									*store_str1 = i - 160;
 									i = 500;
 									}
 							break;
 						case 1:
 							for (i = 10; i < 100; i++)
-								if (data_store->out_strs[i][0] == '*') {
+								if (current_terrain.out_strs(i)[0] == '*') {
 									*store_str1 = i - 10;
 									i = 500;
 									}
 							break;
 						case 2:
 							for (i = 20; i < 120; i++)
-								if (data_store->town_strs[i][0] == '*') {
+								if (town->town_strs(i)[0] == '*') {
 									*store_str1 = i - 20;
 									i = 500;
 									}
@@ -979,13 +892,13 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str1 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(data_store->scen_strs[*store_str1 + 160],(char *) str);
+							strcpy(scenario.scen_strs(*store_str1 + 160),(char *) str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str1 + 10],(char *) str);
+							strcpy(current_terrain.out_strs(*store_str1 + 10),(char *) str);
 							break;				
 						case 2:
-							strcpy(data_store->town_strs[*store_str1 + 20],(char *) str);
+							strcpy(town->town_strs(*store_str1 + 20),(char *) str);
 							break;				
 						}
 					}
@@ -996,21 +909,21 @@ void edit_spec_text_event_filter (short item_hit)
 					switch (store_spec_str_mode) {
 						case 0:
 							for (i = 160; i < 260; i++)
-								if (data_store->scen_strs[i][0] == '*') {
+								if (scenario.scen_strs(i)[0] == '*') {
 									*store_str2 = i - 160;
 									i = 500;
 									}
 							break;
 						case 1:
 							for (i = 10; i < 100; i++)
-								if (data_store->out_strs[i][0] == '*') {
+								if (current_terrain.out_strs(i)[0] == '*') {
 									*store_str2 = i - 10;
 									i = 500;
 									}
 							break;
 						case 2:
 							for (i = 20; i < 120; i++)
-								if (data_store->town_strs[i][0] == '*') {
+								if (town->town_strs(i)[0] == '*') {
 									*store_str2 = i - 20;
 									i = 500;
 									}
@@ -1026,13 +939,13 @@ void edit_spec_text_event_filter (short item_hit)
 				if (*store_str2 >= 0) {
 					switch (store_spec_str_mode) {
 						case 0:
-							strcpy(data_store->scen_strs[*store_str2 + 160],(char *) str);
+							strcpy(scenario.scen_strs(*store_str2 + 160),(char *) str);
 							break;				
 						case 1:
-							strcpy(data_store->out_strs[*store_str2 + 10],(char *) str);
+							strcpy(current_terrain.out_strs(*store_str2 + 10),(char *) str);
 							break;				
 						case 2:
-							strcpy(data_store->town_strs[*store_str2 + 20],(char *) str);
+							strcpy(town->town_strs(*store_str2 + 20),(char *) str);
 							break;				
 						}
 					}
@@ -1059,21 +972,21 @@ void edit_spec_text(short mode,short *str1,short *str2,short parent)
 		*str1 = -1;
 	if (*str1 >= 0){
 		if (mode == 0)
-			CDST(826,2,data_store->scen_strs[*str1 + 160]);
+			CDST(826,2,scenario.scen_strs(*str1 + 160));
 		if (mode == 1)
-			CDST(826,2,data_store->out_strs[*str1 + 10]);
+			CDST(826,2,current_terrain.out_strs(*str1 + 10));
 		if (mode == 2)
-			CDST(826,2,data_store->town_strs[*str1 + 20]);
+			CDST(826,2,town->town_strs(*str1 + 20));
 		}
 	if (*str2 >= num_s_strs[mode])
 		*str2 = -1;
 	if (*str2 >= 0){
 		if (mode == 0)
-			CDST(826,3,data_store->scen_strs[*str2 + 160]);
+			CDST(826,3,scenario.scen_strs(*str2 + 160));
 		if (mode == 1)
-			CDST(826,3,data_store->out_strs[*str2 + 10]);
+			CDST(826,3,current_terrain.out_strs(*str2 + 10));
 		if (mode == 2)
-			CDST(826,3,data_store->town_strs[*str2 + 20]);
+			CDST(826,3,town->town_strs(*str2 + 20));
 	}
 	item_hit = cd_run_dialog();
 
@@ -1094,13 +1007,13 @@ void edit_dialog_text_event_filter (short item_hit){
 				CDGT(842,2 + i,(char *) str);
 				switch (store_spec_str_mode) {
 					case 0:
-						strcpy(data_store->scen_strs[*store_str1 + 160 + i],(char *) str);
+						strcpy(scenario.scen_strs(*store_str1 + 160 + i),(char *) str);
 						break;				
 					case 1:
-						strcpy(data_store->out_strs[*store_str1 + 10 + i],(char *) str);
+						strcpy(current_terrain.out_strs(*store_str1 + 10 + i),(char *) str);
 						break;				
 					case 2:
-						strcpy(data_store->town_strs[*store_str1 + 20 + i],(char *) str);
+						strcpy(town->town_strs(*store_str1 + 20 + i),(char *) str);
 						break;				
 					}
 				}
@@ -1123,80 +1036,80 @@ void edit_dialog_text(short mode,short *str1,short parent)
 		*str1 = -1;
 	// first, assign the 6 strs for the dialog.
 	if (*str1 < 0) {
-					switch (store_spec_str_mode) {
-						case 0:
-							for (i = 160; i < 260 - 6; i++) {
-								for (j = i; j < i + 6; j++)
-									if (data_store->scen_strs[j][0] != '*') {
-										j = 500;
-										}
-								if (j < 500) {
-									*str1 = i - 160;
-									i = 500;
-									}
-								}
-							break;
-						case 1:
-							for (i = 10; i < 100 - 6; i++) {
-								for (j = i; j < i + 6; j++)
-									if (data_store->out_strs[j][0] != '*') {
-										j = 500;
-										}
-								if (j < 500) {
-									*str1 = i - 10;
-									i = 500;
-									}
-								}
-							break;
-						case 2:
-							for (i = 20; i < 120 - 6; i++) {
-								for (j = i; j < i + 6; j++)
-									if (data_store->town_strs[j][0] != '*') {
-										j = 500;
-										}
-								if (j < 500) {
-									*str1 = i - 20;
-									i = 500;
-									}
-								}
-							break;
-					
+		switch (store_spec_str_mode) {
+			case 0:
+				for (i = 160; i < 260 - 6; i++) {
+					for (j = i; j < i + 6; j++)
+						if (scenario.scen_strs(j)[0] != '*') {
+							j = 500;
 						}
+					if (j < 500) {
+						*str1 = i - 160;
+						i = 500;
+					}
+				}
+				break;
+				case 1:
+				for (i = 10; i < 100 - 6; i++) {
+					for (j = i; j < i + 6; j++)
+						if (current_terrain.out_strs(j)[0] != '*') {
+							j = 500;
+						}
+					if (j < 500) {
+						*str1 = i - 10;
+						i = 500;
+					}
+				}
+				break;
+				case 2:
+				for (i = 20; i < 120 - 6; i++) {
+					for (j = i; j < i + 6; j++)
+						if (town->town_strs(j)[0] != '*') {
+							j = 500;
+						}
+					if (j < 500) {
+						*str1 = i - 20;
+						i = 500;
+					}
+				}
+				break;
+				
+		}
 		if (*str1 >= 0)
 			for (i = *str1; i < *str1 + 6; i++) {
 				switch (store_spec_str_mode) {
 					case 0:
-						sprintf(data_store->scen_strs[160 + i],"");
+						sprintf(scenario.scen_strs(160 + i),"");
 						break;				
 					case 1:
-						sprintf(data_store->out_strs[10 + i],"");
+						sprintf(current_terrain.out_strs(10 + i),"");
 						break;				
 					case 2:
-						sprintf(data_store->town_strs[20 + i],"");
+						sprintf(town->town_strs(20 + i),"");
 						break;				
-					}			
-				}
-		}
+				}			
+			}
+	}
 	if (*str1 < 0) {
 		give_error("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
 		return;
-		}
-		
+	}
+	
 	cd_create_dialog_parent_num(842,parent);
 	
 	if (*str1 >= 0){
 		for (i = 0; i < 6; i++) {
 			if (mode == 0)
-				CDST(842,2 + i,data_store->scen_strs[*str1 + 160 + i]);
+				CDST(842,2 + i,scenario.scen_strs(*str1 + 160 + i));
 			if (mode == 1)
-				CDST(842,2 + i,data_store->out_strs[*str1 + 10 + i]);
+				CDST(842,2 + i,current_terrain.out_strs(*str1 + 10 + i));
 			if (mode == 2)
-				CDST(842,2 + i,data_store->town_strs[*str1 + 20 + i]);
-			}
+				CDST(842,2 + i,town->town_strs(*str1 + 20 + i));
+		}
 	}
 	
 	item_hit = cd_run_dialog();
-
+	
 	cd_kill_dialog(842,0);
 }
 
@@ -1254,7 +1167,7 @@ void edit_scen_intro_event_filter (short item_hit)
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				CDGT(804, 2 + i,data_store->scen_strs[4 + i]);
+				CDGT(804, 2 + i,scenario.scen_strs(4 + i));
 			toast_dialog(); 
 			break;
 		case 10: 
@@ -1263,10 +1176,10 @@ void edit_scen_intro_event_filter (short item_hit)
 
 		case 16:
 			i = CDGN(804,8);
-			i = choose_graphic(/*1600,1629,1600 + i,804*/0,PICT_N_SCEN,i,PICT_SCEN_TYPE,804);
+			i = choose_graphic(/*1600,1629,1600 + i,804*/0,PICT_N_SCEN,i,PICT_SCEN,804);
 			if (i >= 0) {
 				CDSN(804,8,i/* - 1600*/);
-				csp(804,11,i,PICT_SCEN_TYPE );
+				csp(804,11,i,PICT_SCEN );
 				}
 			break;
 		}
@@ -1283,8 +1196,8 @@ void edit_scen_intro()
 	
 	CDSN(804,8,scenario.intro_pic);
 	for (i = 0; i < 6; i++)
-		CDST(804, 2 + i,data_store->scen_strs[4 + i]);
-	csp(804,11,scenario.intro_pic/* + 1600*/,PICT_SCEN_TYPE);
+		CDST(804, 2 + i,scenario.scen_strs(4 + i));
+	csp(804,11,scenario.intro_pic/* + 1600*/,PICT_SCEN);
 	
 	item_hit = cd_run_dialog();
 

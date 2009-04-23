@@ -1,0 +1,351 @@
+/*
+ *  porting.cpp
+ *  BoE
+ *
+ *  Created by Celtic Minstrel on 22/04/09.
+ *
+ */
+
+#include "porting.h"
+
+extern bool cur_scen_is_mac, mac_is_intel;
+
+void port_town(legacy::town_record_type* dummy_town_ptr){
+	short i,j,k,l;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	flip_short(&dummy_town_ptr->town_chop_time);
+	flip_short(&dummy_town_ptr->town_chop_key);
+	flip_short(&dummy_town_ptr->lighting);
+	for (i =0 ; i < 4; i++)
+		flip_short(&dummy_town_ptr->exit_specs[i]);
+	flip_rect(&dummy_town_ptr->in_town_rect);
+	for (i =0 ; i < 64; i++) {
+		flip_short(&dummy_town_ptr->preset_items[i].item_code);
+		flip_short(&dummy_town_ptr->preset_items[i].ability);
+	}
+	for (i =0 ; i < 50; i++) {
+		flip_short(&dummy_town_ptr->preset_fields[i].field_type);
+	}
+	flip_short(&dummy_town_ptr->max_num_monst);
+	flip_short(&dummy_town_ptr->spec_on_entry);
+	flip_short(&dummy_town_ptr->spec_on_entry_if_dead);
+	for (i =0 ; i < 8; i++) 
+		flip_short(&dummy_town_ptr->timer_spec_times[i]);
+	for (i =0 ; i < 8; i++) 
+		flip_short(&dummy_town_ptr->timer_specs[i]);
+	flip_short(&dummy_town_ptr->difficulty);
+	for (i =0 ; i < 100; i++) 
+		flip_spec_node(&dummy_town_ptr->specials[i]);
+	
+}
+
+void port_dummy_t_d(short size,char *buffer)
+{
+	short i,j,k,l;
+	legacy::big_tr_type *d1;
+	legacy::ave_tr_type *d2;
+	legacy::tiny_tr_type *d3;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	switch (size) {
+		case 0:
+			d1 = (legacy::big_tr_type *) buffer;
+			for (i =0 ; i < 16; i++) 
+				flip_rect(&d1->room_rect[i]);
+			for (i =0 ; i < 60; i++) {
+				flip_short(&d1->creatures[i].spec1);
+				flip_short(&d1->creatures[i].spec2);
+				flip_short(&d1->creatures[i].monster_time);
+				flip_short(&d1->creatures[i].personality);
+				flip_short(&d1->creatures[i].special_on_kill);
+				flip_short(&d1->creatures[i].facial_pic);
+			}
+			break;
+			case 1:
+			d2 = (legacy::ave_tr_type *) buffer;
+			for (i =0 ; i < 16; i++) 
+				flip_rect(&d2->room_rect[i]);
+			for (i =0 ; i < 40; i++) {
+				flip_short(&d2->creatures[i].spec1);
+				flip_short(&d2->creatures[i].spec2);
+				flip_short(&d2->creatures[i].monster_time);
+				flip_short(&d2->creatures[i].personality);
+				flip_short(&d2->creatures[i].special_on_kill);
+				flip_short(&d2->creatures[i].facial_pic);
+			}
+			break;
+			case 2:
+			d3 = (legacy::tiny_tr_type *) buffer;
+			for (i =0 ; i < 16; i++) 
+				flip_rect(&d3->room_rect[i]);
+			for (i =0 ; i < 30; i++) {
+				flip_short(&d3->creatures[i].spec1);
+				flip_short(&d3->creatures[i].spec2);
+				flip_short(&d3->creatures[i].monster_time);
+				flip_short(&d3->creatures[i].personality);
+				flip_short(&d3->creatures[i].special_on_kill);
+				flip_short(&d3->creatures[i].facial_pic);
+			}
+			break;
+	} 
+}
+
+void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr)
+{
+	short i,j,k,l;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	for (i = 0; i < 60; i++) {
+		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
+		flip_short(&dummy_talk_ptr->talk_nodes[i].type);
+		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[0]);
+		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[1]);
+		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[2]);
+		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[3]);
+	}
+}
+
+void port_t_d(legacy::big_tr_type* old)
+{
+	short i,j,k,l;
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	for (i =0 ; i < 16; i++) 
+		flip_rect(&old->room_rect[i]);
+	for (i =0 ; i < 60; i++) {
+		flip_short(&old->creatures[i].spec1);
+		flip_short(&old->creatures[i].spec2);
+		flip_short(&old->creatures[i].monster_time);
+		flip_short(&old->creatures[i].personality);
+		flip_short(&old->creatures[i].special_on_kill);
+		flip_short(&old->creatures[i].facial_pic);
+	} 
+}
+
+void port_ave_t(legacy::ave_tr_type* old)
+{
+	short i,j,k,l;
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	for (i =0 ; i < 16; i++) 
+		flip_rect(&old->room_rect[i]);
+	for (i =0 ; i < 40; i++) {
+		flip_short(&old->creatures[i].spec1);
+		flip_short(&old->creatures[i].spec2);
+		flip_short(&old->creatures[i].monster_time);
+		flip_short(&old->creatures[i].personality);
+		flip_short(&old->creatures[i].special_on_kill);
+		flip_short(&old->creatures[i].facial_pic);
+	}
+}
+
+void port_tiny_t(legacy::tiny_tr_type* old)
+{
+	short i,j,k,l;
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	for (i =0 ; i < 16; i++) 
+		flip_rect(&old->room_rect[i]);
+	for (i =0 ; i < 30; i++) {
+		flip_short(&old->creatures[i].spec1);
+		flip_short(&old->creatures[i].spec2);
+		flip_short(&old->creatures[i].monster_time);
+		flip_short(&old->creatures[i].personality);
+		flip_short(&old->creatures[i].special_on_kill);
+		flip_short(&old->creatures[i].facial_pic);
+	} 
+}
+
+void port_scenario(legacy::scenario_data_type* temp_scenario)
+{
+	short i,j,k,l;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	flip_short(&temp_scenario->flag_a);
+	flip_short(&temp_scenario->flag_b);
+	flip_short(&temp_scenario->flag_c);
+	flip_short(&temp_scenario->flag_d);
+	flip_short(&temp_scenario->flag_e);
+	flip_short(&temp_scenario->flag_f);
+	flip_short(&temp_scenario->flag_g);
+	flip_short(&temp_scenario->flag_h);
+	flip_short(&temp_scenario->flag_i);
+	flip_short(&temp_scenario->intro_mess_pic);
+	flip_short(&temp_scenario->intro_mess_len);
+	flip_short(&temp_scenario->which_town_start);
+	for (i = 0; i < 200; i++)
+		for (j = 0; j < 5; j++)
+			flip_short(&temp_scenario->town_data_size[i][j]);
+	for (i = 0; i < 10; i++)
+		flip_short(&temp_scenario->town_to_add_to[i]);
+	for (i = 0; i < 10; i++)
+		for (j = 0; j < 2; j++)
+			flip_short(&temp_scenario->flag_to_add_to_town[i][j]);
+	for (i = 0; i < 100; i++)
+		for (j = 0; j < 2; j++)
+			flip_short(&temp_scenario->out_data_size[i][j]);
+	for (i = 0; i < 3; i++)
+		flip_rect(&temp_scenario->store_item_rects[i]);
+	for (i = 0; i < 3; i++)
+		flip_short(&temp_scenario->store_item_towns[i]);
+	for (i = 0; i < 50; i++)
+		flip_short(&temp_scenario->special_items[i]);
+	for (i = 0; i < 50; i++)
+		flip_short(&temp_scenario->special_item_special[i]);
+	flip_short(&temp_scenario->rating);
+	flip_short(&temp_scenario->uses_custom_graphics);
+	for (i = 0; i < 256; i++) {
+		flip_short(&temp_scenario->scen_monsters[i].health);
+		flip_short(&temp_scenario->scen_monsters[i].m_health);
+		flip_short(&temp_scenario->scen_monsters[i].max_mp);
+		flip_short(&temp_scenario->scen_monsters[i].mp);
+		flip_short(&temp_scenario->scen_monsters[i].a[1]);
+		flip_short(&temp_scenario->scen_monsters[i].a[0]);
+		flip_short(&temp_scenario->scen_monsters[i].a[2]);
+		flip_short(&temp_scenario->scen_monsters[i].morale);
+		flip_short(&temp_scenario->scen_monsters[i].m_morale);
+		flip_short(&temp_scenario->scen_monsters[i].corpse_item);
+		flip_short(&temp_scenario->scen_monsters[i].corpse_item_chance);
+		flip_short(&temp_scenario->scen_monsters[i].picture_num);
+	}
+	
+	for (i = 0; i < 256; i++) {
+		flip_short(&temp_scenario->ter_types[i].picture);
+	}
+	for (i = 0; i < 30; i++) {
+		flip_short(&temp_scenario->scen_boats[i].which_town);
+	}
+	for (i = 0; i < 30; i++) {
+		flip_short(&temp_scenario->scen_horses[i].which_town);
+	}
+	for (i = 0; i < 20; i++) 
+		flip_short(&temp_scenario->scenario_timer_times[i]);
+	for (i = 0; i < 20; i++) 
+		flip_short(&temp_scenario->scenario_timer_specs[i]);
+	for (i = 0; i < 256; i++) {
+		flip_spec_node(&temp_scenario->scen_specials[i]);
+	}
+	for (i = 0; i < 10; i++)  {
+		flip_short(&temp_scenario->storage_shortcuts[i].ter_type);
+		flip_short(&temp_scenario->storage_shortcuts[i].property);
+		for (j = 0; j < 10; j++)  {
+			flip_short(&temp_scenario->storage_shortcuts[i].item_num[j]);
+			flip_short(&temp_scenario->storage_shortcuts[i].item_odds[j]);
+		}
+	}
+	flip_short(&temp_scenario->last_town_edited);
+}
+
+
+void port_item_list(legacy::scen_item_data_type* old){
+	short i,j,k,l;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	for (i = 0; i < 400; i++) {
+		flip_short(&(old->scen_items[i].variety));
+		flip_short(&(old->scen_items[i].item_level));
+		flip_short(&(old->scen_items[i].value));
+	}
+}
+
+void port_out(legacy::outdoor_record_type *out)
+{
+	short i,j,k,l;
+	
+	if (cur_scen_is_mac != mac_is_intel)
+		return;
+	
+	for (i = 0; i < 4; i++) {
+		flip_short(&(out->wandering[i].spec_on_meet));
+		flip_short(&(out->wandering[i].spec_on_win));
+		flip_short(&(out->wandering[i].spec_on_flee));
+		flip_short(&(out->wandering[i].cant_flee));
+		flip_short(&(out->wandering[i].end_spec1));
+		flip_short(&(out->wandering[i].end_spec2));
+		flip_short(&(out->special_enc[i].spec_on_meet));
+		flip_short(&(out->special_enc[i].spec_on_win));
+		flip_short(&(out->special_enc[i].spec_on_flee));
+		flip_short(&(out->special_enc[i].cant_flee));
+		flip_short(&(out->special_enc[i].end_spec1));
+		flip_short(&(out->special_enc[i].end_spec2));	
+	}
+	for (i = 0; i < 8; i++) 
+		flip_rect(&(out->info_rect[i]));
+	for (i = 0; i < 60; i++) 
+		flip_spec_node(&(out->specials[i]));
+}
+
+void flip_spec_node(legacy::special_node_type *spec)
+{
+	flip_short(&(spec->type));
+	flip_short(&(spec->sd1));
+	flip_short(&(spec->sd2));
+	flip_short(&(spec->pic));
+	flip_short(&(spec->m1));
+	flip_short(&(spec->m2));
+	flip_short(&(spec->ex1a));
+	flip_short(&(spec->ex1b));
+	flip_short(&(spec->ex2a));
+	flip_short(&(spec->ex2b));
+	flip_short(&(spec->jumpto));
+}
+
+void flip_short(short *s)
+{
+	char store,*s1, *s2;
+	
+	s1 = (char *) s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+	
+}
+
+void flip_long(long *s)
+{
+	char store,*s1, *s2, *s3, *s4;
+	
+	s1 = (char *) s;
+	s2 = s1 + 1;
+	s3 = s1 + 2;
+	s4 = s1 + 3;
+	store = *s1;
+	*s1 = *s4;
+	*s4 = store;
+	store = *s2;
+	*s2 = *s3;
+	*s3 = store;
+	
+}
+
+void alter_rect(Rect *r)
+{
+	short a;
+	
+	a = r->top;
+	r->top = r->left;
+	r->left = a;
+	a = r->bottom;
+	r->bottom = r->right;
+}
+
+void flip_rect(Rect *s)
+{
+	flip_short((short *) &(s->top));
+	flip_short((short *) &(s->bottom));
+	flip_short((short *) &(s->left));
+	flip_short((short *) &(s->right));
+	if(!cur_scen_is_mac) alter_rect(s);
+}

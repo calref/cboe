@@ -6,6 +6,8 @@
  *
  */
 
+namespace legacy { struct monster_record_type; };
+
 class cMonster {
 public:
 	unsigned char m_num,level,m_name[26];
@@ -20,4 +22,5 @@ public:
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
 	
+	cMonster& operator = (legacy::monster_record_type& old);
 };

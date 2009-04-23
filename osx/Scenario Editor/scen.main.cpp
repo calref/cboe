@@ -13,6 +13,7 @@
 #include "scen.core.h"
 #include "scen.keydlgs.h"
 #include "mathutil.h"
+#include "fileio.h"
 
 
 /* Globals */
@@ -20,20 +21,20 @@ Rect	windRect, Drag_Rect;
 Boolean  All_Done = FALSE; // delete play_sounds
 EventRecord	event;
 WindowPtr	mainPtr;	
-town_record_type town;
-big_tr_type t_d;
+cTown* town = NULL;
+//big_tr_type t_d;
 bool diff_depth_ok = FALSE,mouse_button_held = FALSE,editing_town = FALSE;
 short cur_viewing_mode = 0;
-short town_type = 0;  // 0 - big 1 - ave 2 - small
-short max_dim[3] = {64,48,32};
+//short town_type = 0;  // 0 - big 1 - ave 2 - small
+//short max_dim[3] = {64,48,32};
 short cen_x, cen_y;
 short overall_mode = 61;
 Handle menu_bar_handle;
 ControlHandle right_sbar;
 short mode_count = 0;
 MenuHandle apple_menu;
-outdoor_record_type current_terrain;
-talking_record_type talking;
+cOutdoors current_terrain;
+//cSpeech talking;
 short given_password;
 short user_given_password = -1;
 short pixel_depth,old_depth = 8;
@@ -71,8 +72,8 @@ void set_pixel_depth();
 void restore_depth();
 void find_quickdraw() ;
 
-scenario_data_type scenario;
-piles_of_stuff_dumping_type *data_store;
+cScenario scenario;
+//piles_of_stuff_dumping_type *data_store;
 Rect right_sbar_rect;
 void check_for_intel();
 bool mac_is_intel;
@@ -88,10 +89,10 @@ int main(void)
 	short j,k;
 	long i;
 	size_t size;
-	outdoor_record_type dummy_outdoor, *store2;
+	//outdoor_record_type dummy_outdoor, *store2;
 
 
-	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
+	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	init_current_terrain();
 	//create_file();
 	//ExitToShell();
@@ -103,7 +104,7 @@ int main(void)
 	
 	init_dialogs();
 	Point p = {0,0};
-	init_graph_tool(redraw_screen,p);
+	init_graph_tool(redraw_screen,NULL);
 
 	cen_x = 18; cen_y = 18;
 
@@ -374,11 +375,27 @@ void handle_file_menu(int item_hit)
 	
 	switch (item_hit) {
 		case 1: // open
-			load_scenario();
-			if (overall_mode == 60) {
+			NavReplyRecord s_reply;
+			NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
+			if (s_reply.validRecord == FALSE)
+				break;
+			AEKeyword keyword;
+			DescType descType;
+			Size actualSize;
+			FSSpec file_to_load;
+			AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
+			if (load_scenario(file_to_load)) {
+				if(load_town(scenario.last_town_edited))
+					cur_town = scenario.last_town_edited;
+				if(load_outdoors(scenario.last_out_edited,0)){
+					cur_out = scenario.last_out_edited;
+					augment_terrain(cur_out);
+				}
+				overall_mode = 60;
+				change_made = false;
 				update_item_menu();
 				set_up_main_screen();
-				}
+			}
 			break;
 		case 2: // save
 			modify_lists();
@@ -427,9 +444,11 @@ void handle_scenario_menu(int item_hit)
 			set_starting_loc();
 			break;
 		case 6: // Change Password
-			//if (check_p(user_given_password) == TRUE) 
-			//	given_password = get_password();
-			give_error("Passwords have been disabled; they are no longer necessary.","",0);
+			if (check_p(user_given_password) == TRUE) {
+				user_given_password = get_password();
+				given_password = true;
+			}
+			//give_error("Passwords have been disabled; they are no longer necessary.","",0);
 			break;
 		case 9: // Edit Special Nodes
 			SetControlValue(right_sbar,0); start_special_editing(0,0);
@@ -443,12 +462,13 @@ void handle_scenario_menu(int item_hit)
 					"",0);
 				return;
 				}
-			i = pick_import_town(841,0);
+			FSSpec file;
+			i = pick_import_town(0,&file);
 			if (i >= 0) {
-				import_town(i);
-				change_made = TRUE;
+				import_town(i,file);
+				change_made = true;
 				redraw_screen();
-				}
+			}
 			break;
 		case 12: // Edit Saved Item Rectangles
 			edit_save_rects();
@@ -527,14 +547,14 @@ void handle_town_menu(int item_hit)
 				place_items_in_town();
 				 break; // add random
 		case 9: for (i = 0; i < 64; i++)
-					town.preset_items[i].property = 0;
+					town->preset_items[i].property = 0;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
 				break; // set not prop
 		case 10: if (fancy_choice_dialog(862,0) == 2)
 					break;
 				for (i = 0; i < 64; i++)
-					town.preset_items[i].item_code = -1;
+					town->preset_items[i].code = -1;
 				draw_terrain();
 				break; // clear all items
 		case 13:  SetControlValue(right_sbar,0); start_special_editing(2,0); break;
@@ -576,7 +596,7 @@ void handle_help_menu(int item_hit)
 
 void handle_item_menu(int item_hit)
 {
-	if (data_store->scen_item_list.scen_items[item_hit].variety == 0) {
+	if (scenario.scen_items[item_hit].variety == 0) {
 		give_error("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.","",0);
 		return;
 		}

@@ -87,7 +87,7 @@ short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern short cen_x, cen_y, overall_mode, stat_window,give_delays,pc_moves[6];
 extern Point	to_create;
 extern Boolean in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
-extern Boolean debug_on,registered,cartoon_happening,party_in_memory,in_scen_debug;
+extern Boolean debug_on,cartoon_happening,party_in_memory,in_scen_debug;
 
 // game info globals
 
@@ -104,7 +104,7 @@ extern town_item_list	t_i; // shouldn't be here
 extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
 extern cScenario scenario;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 
 // combat globals
 
@@ -1713,11 +1713,6 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 
 		case 'D':
 			if (in_scen_debug == TRUE)  {
-				if (registered == FALSE) {
-					ASB("Until your copy is registered,");
-					ASB("you can't turn debug mode off.");
-					break;
-					}
 				in_scen_debug = FALSE;
 				ASB("Debug mode OFF.");
 				}

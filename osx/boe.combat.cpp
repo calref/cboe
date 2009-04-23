@@ -1510,7 +1510,7 @@ void fire_missile(location target) ////
 				add_string_to_buf((char *) create_line);
 
 				switch (overall_mode) {
-					case 13:
+					case MODE_THROWING:
 						switch (adven[current_pc].items[ammo_inv_slot].item_level) {
 							case 7:m_type = 10;break;
 							case 4:m_type = 1;break;
@@ -1519,7 +1519,7 @@ void fire_missile(location target) ////
 							default:m_type = 10;break;
 							}
 						break;
-					case 12: case 14:
+					case MODE_FIRING: case MODE_FANCY_TARGET:
 						m_type = (adven[current_pc].items[ammo_inv_slot].is_magic() == TRUE) ? 4 : 3;
 						break; 
 					}

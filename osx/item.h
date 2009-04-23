@@ -8,6 +8,8 @@
 
 #include "location.h"
 
+namespace legacy { struct item_record_type; };
+
 class cItemRec {
 public:
 	short variety, item_level;
@@ -40,6 +42,7 @@ public:
 	
 	cItemRec();
 	cItemRec(long preset);
+	cItemRec& operator = (legacy::item_record_type& old);
 };
 
 /*

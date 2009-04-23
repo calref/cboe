@@ -88,7 +88,7 @@
 	<key>CFBundleIconFile</key>
 	<string>BoE</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.spidweb.Blades of Exile</string>
+	<string>com.spidweb.bladesofexile</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>

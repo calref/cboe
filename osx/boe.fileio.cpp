@@ -35,7 +35,7 @@ extern pc_record_type adven[6];
 extern outdoor_record_type outdoors[2][2];
 extern unsigned char out[96][96],out_e[96][96];
 extern short overall_mode,give_delays,stat_screen_mode;
-extern Boolean in_startup_mode,registered,play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
+extern Boolean in_startup_mode,play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
 extern current_town_type	c_town;
 extern town_item_list	t_i;
 extern location center;
@@ -60,7 +60,7 @@ extern short which_combat_type;
 extern char terrain_blocked[256];
 extern short terrain_pic[256],cur_town_talk_loaded;
 extern cScenario scenario;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern talking_record_type talking;
 extern outdoor_strs_type outdoor_text[2][2];
 extern vector<scen_header_type> scen_headers;
@@ -78,7 +78,7 @@ FSSpec file_to_load;
 FSSpec store_file_reply;
 short jl;
 
-Boolean cur_scen_is_mac = TRUE;
+bool cur_scen_is_mac = true;
 
 void print_write_position ();
 void save_outdoor_maps();
@@ -173,7 +173,40 @@ void do_apple_event_open(FSSpec file_info)
 	ae_loading = FALSE;
 }
 
-
+//void port_save_file(party_record_type* party){
+//	if(!mac_is_intel) return;
+//	short i,j;
+//	flip_long(&party->age);
+//	flip_short(&party->gold);
+//	flip_short(&party->food);
+//	flip_short(&party->light_level);
+//	for(i = 0; i < 30; i++)
+//		flip_short(&party->boats[i].which_town);
+//	for(i = 0; i < 30; i++)
+//		flip_short(&party->horses[i].which_town);
+//	flip_short
+//	creature_list_type creature_save[4];
+//	short in_boat,in_horse;
+//	outdoor_creature_type out_c[10];
+//	cItemRec magic_store_items[5][10];
+//	short imprisoned_monst[4];
+//	char m_seen[256];
+//	char journal_str[50];
+//	short journal_day[50];
+//	short special_notes_str[140][2];
+//	talk_save_type talk_save[120];
+//	short direction,at_which_save_slot;
+//	char alchemy[20];
+//	Boolean can_find_town[200];
+//	short key_times[100];
+//	short party_event_timers[30];
+//	short global_or_town[30];
+//	short node_to_call[30];
+//	char spec_items[50],help_received[120];
+//	short m_killed[200];
+//	long total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
+//	char scen_name[256];
+//}
 
 void load_file()
 {
@@ -412,7 +445,7 @@ void load_file()
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y,0,0,0,0,NULL);
 	
 	//end_anim();
-	overall_mode = (town_restore == TRUE) ? 1 : 0;
+	overall_mode = (town_restore == TRUE) ? MODE_TOWN : MODE_OUTDOORS;
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
@@ -795,8 +828,8 @@ void load_town(short town_num,short mode,short extra,char *str)
 		SysBeep(50);
 		return;
 		}
-	len_to_jump = 41942; // sizeof(scenario_data_type);
-	len_to_jump += 39200; // sizeof(scen_item_data_type);
+	len_to_jump = sizeof(scenario_data_type);
+	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
@@ -1314,8 +1347,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 	
 	out_sec_num = scenario.out_width * to_create_y + to_create_x;
 	
-	len_to_jump = 41942; // sizeof(scenario_data_type);
-	len_to_jump += 39200; // sizeof(scen_item_data_type);
+	len_to_jump = sizeof(scenario_data_type);
+	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
@@ -1440,7 +1473,7 @@ Boolean load_scenario()
 		SysBeep(2);	return FALSE;
 		}	
 		
-	len = 41942; // (long) sizeof(scenario_data_type);
+	len = (long) sizeof(scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 		FSClose(file_id); oops_error(29); return FALSE;
 		}
@@ -1449,20 +1482,19 @@ Boolean load_scenario()
 	  && (scenario.flag4 == 40)) {
 	  	file_ok = TRUE;
 	  	cur_scen_is_mac = TRUE;
-		if(mac_is_intel) port_scenario();
 	  	}
 	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 	 && (scenario.flag3 == 60)
 	  && (scenario.flag4 == 80)) {
 	  	file_ok = TRUE;
 	  	cur_scen_is_mac = FALSE;
-	  	if(!mac_is_intel) port_scenario();
 	  	}
 	 if (file_ok == FALSE) {
 		FSClose(file_id); 
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
 		return FALSE;	 
 	 	}
+	port_scenario();
 	len = sizeof(scen_item_data_type); // item data
 	if ((error = FSRead(file_id, &len, (char *) &(data_store->scen_item_list))) != 0){
 		FSClose(file_id); oops_error(30); return FALSE;
@@ -1521,6 +1553,11 @@ void build_scen_headers()
 	scen_headers.clear();
 //	for (i = 0; i < 25; i++)
 //		scen_headers[i].flag1 = 0;
+//	FSOpenIterator(&folderRef,0,&files);
+//	HFSUniStr255 names[MAXSHEETS];
+//	FSSpec locations[MAXSHEETS];
+//	int numFound=0;
+//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)
 	FSRef ref;
 	FSIterator iter;
 	err = FSPathMakeRef((UInt8*)scenDir.c_str(),&ref,NULL);
@@ -1529,9 +1566,9 @@ void build_scen_headers()
 		return;
 	}
 	/**TESTING**/
-	UniChar x[] = {0x0024, 0x0041, 0x0020, 0x0075, 0x0073, 0x0065, 0x006c, 0x0065, 0x0073, 0x0073, 0x0020, 0x0066, 0x0069, 0x006c, 0x0065};
-	err = FSCreateFileUnicode (&ref, 15, x, NULL, NULL, NULL, NULL);
-	if(err != noErr)printf("Error creating file.");
+//	UniChar x[] = {0x0024, 0x0041, 0x0020, 0x0075, 0x0073, 0x0065, 0x006c, 0x0065, 0x0073, 0x0073, 0x0020, 0x0066, 0x0069, 0x006c, 0x0065};
+//	err = FSCreateFileUnicode (&ref, 15, x, NULL, NULL, NULL, NULL);
+//	if(err != noErr)printf("Error creating file.");
 	/**END TESTING**/
 	err = FSOpenIterator(&ref, kFSIterateFlat, &iter);
 	if(err != noErr){
@@ -1552,7 +1589,7 @@ void build_scen_headers()
 		//err = PBGetCatalogInfoSync(&myCPB);
 		if(cur_entry == numScens){
 			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
-			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
+//			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
 			if(err == errFSNoMoreItems && cur_entry == 0){
 				printf("No scenarios were found!");
 				printf("\nnumScens = %d");
@@ -1643,7 +1680,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/)
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
-	len = 41942; // (long) sizeof(scenario_data_type);
+	len = (long) sizeof(scenario_data_type);
 	error = FSRead(file_id, &len, (char *) &scenario);
 	if (error != 0){
 		FSClose(file_id);
@@ -1893,7 +1930,7 @@ void port_talk_nodes()
 {
 	short i;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	for (i = 0; i < 60; i++) {
 		flip_short(&talking.talk_nodes[i].personality);
@@ -1909,7 +1946,7 @@ void port_town()
 {
 	short i;
 
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&c_town.town.town_chop_time);
 	flip_short(&c_town.town.town_chop_key);
@@ -1940,7 +1977,7 @@ void port_town()
 void port_t_d()
 {
 	short i;
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 
 	for (i =0 ; i < 16; i++) 
@@ -1960,7 +1997,7 @@ void port_scenario()
 {
 	short i,j;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&scenario.flag_a);
 	flip_short(&scenario.flag_b);
@@ -2042,7 +2079,7 @@ void port_item_list()
 {
 	short i;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	
 	for (i = 0; i < 400; i++) {
@@ -2056,7 +2093,7 @@ void port_out(outdoor_record_type *out)
 {
 	short i;
 	
-	if (cur_scen_is_mac == TRUE)
+	if (cur_scen_is_mac != mac_is_intel)
 		return;
 		
 	for (i = 0; i < 4; i++) {

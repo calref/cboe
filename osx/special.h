@@ -6,6 +6,8 @@
  *
  */
 
+namespace legacy { struct special_node_type; };
+
 class cSpecial {
 public:
 	short type;
@@ -19,4 +21,7 @@ public:
 	short ex2a;
 	short ex2b;
 	short jumpto;
+	
+	cSpecial();
+	cSpecial& operator = (legacy::special_node_type& old);
 };

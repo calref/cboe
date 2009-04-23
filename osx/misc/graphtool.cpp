@@ -8,6 +8,7 @@
 
 #define _GRAPHTOOL_CPP
 #include "graphtool.h"
+#include <Quicktime/Quicktime.h>
 
 //CursHandle arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
 short arrow_curs[3][3] = {
@@ -23,11 +24,11 @@ CursHandle cursors[24] = {
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 };
 void (*redraw_screen)();
-Point offset;
+Point* offset;
 PixPatHandle bg[21];
 short geneva_font_num, dungeon_font_num;
 
-void init_graph_tool(void (*redraw_callback)(), Point p){
+void init_graph_tool(void (*redraw_callback)(), Point* p){
 	redraw_screen = redraw_callback;
 	int i,j;
 	if (cursors[0] == NULL) {
@@ -58,6 +59,11 @@ void init_graph_tool(void (*redraw_callback)(), Point p){
 	if (dungeon_font_num == 0)
 		GetFNum(fn3,&dungeon_font_num);
 	offset = p;
+	if(offset == NULL){
+		offset = new Point;
+		offset->h = 0;
+		offset->v = 0;
+	}
 }
 
 unsigned short readUShort(unsigned char ** ptr){
@@ -247,7 +253,7 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 	test1 = GetPortPixMap(src_gworld);
 	
 	if (main_win == 1) 	
-		OffsetRect(&targ_rect,offset.h,offset.v); // would this cause problems for the pc editor?
+		OffsetRect(&targ_rect,offset->h,offset->v); // would this cause problems for the pc editor?
 	
 	LockPixels(test1);
 	if (main_win == 0) {
@@ -315,7 +321,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	short adjust_x = 0,adjust_y = 0;
 	
 	if (main_win) {
-		adjust_x = offset.h; adjust_y = offset.v;
+		adjust_x = offset->h; adjust_y = offset->v;
 	}
 	strcpy((char *) p_str,(char *) str);
 	strcpy((char *) c_str,(char *) str);
@@ -718,6 +724,33 @@ Rect get_custom_rect (short which_rect){
 	
 	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
 	return store_rect;
+}
+
+void get_str(Str255 str,short i, short j){
+	GetIndString(str, i, j);
+	p2cstr(str);
+}
+
+void writeGWorldToPNGFile(GWorldPtr gw, const FSSpec *fileSpec){
+    GraphicsExportComponent ge = 0; 
+    OpenADefaultComponent(GraphicsExporterComponentType, kQTFileTypePNG, &ge ); 
+    GraphicsExportSetInputGWorld(ge, gw); 
+    GraphicsExportSetOutputFile(ge, fileSpec); 
+    GraphicsExportDoExport(ge,nil); 
+    CloseComponent(ge); 
+}
+
+GWorldPtr importPictureFileToGWorld(const FSSpec *fileSpec){
+	GraphicsImportComponent gi;
+	GetGraphicsImporterForFile (fileSpec, &gi );
+	Rect naturalBounds;
+	GraphicsImportGetNaturalBounds (gi, &naturalBounds);
+	GWorldPtr temp;
+	NewGWorld(&temp,32,&naturalBounds,NULL,GetGDevice(),noNewDevice + kNativeEndianPixMap);
+	GraphicsImportSetGWorld (gi, temp, nil);
+	GraphicsImportDraw (gi);
+	CloseComponent(gi);
+	return(temp);
 }
 
 m_pic_index_t m_pic_index[] = {

@@ -8,7 +8,7 @@
 #include <math.h>
 #include "scen.btnmg.h"
 
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
  extern Rect right_sbar_rect;
 
 
@@ -18,6 +18,8 @@ extern Rect right_buttons[NRSONPAGE];
 Rect right_scrollbar_rect;
 Rect right_area_rect;
 extern short current_rs_top;
+char strings_ls[NLS][40];
+char strings_rs[NRS][40];
 
 Boolean left_buttons_active = 1,right_buttons_active = 0;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
@@ -45,7 +47,7 @@ void init_lb() {
 	short i;
 	for (i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
-		sprintf((char *) data_store->strings_ls[i], "");
+		sprintf((char *) strings_ls[i], "");
 		}
 }
 
@@ -73,9 +75,9 @@ void set_lb(short slot, short mode, char *label, short do_draw)
 			return;
 		}
 	left_button_status[slot] = mode;
-	//sprintf((char *)data_store->strings_ls[slot], "%-39.39s", label);
-	sprintf((char *)data_store->strings_ls[slot], "%-50.50s", label);
-	data_store->strings_ls[slot][39] = 0;
+	//sprintf((char *)strings_ls[slot], "%-39.39s", label);
+	sprintf((char *)strings_ls[slot], "%-50.50s", label);
+	strings_ls[slot][39] = 0;
 	if (do_draw > 0)
 		draw_lb_slot(slot,0);
 
@@ -91,7 +93,7 @@ void init_rb()
 	SetControlValue(right_sbar,0);
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
-		sprintf((char *) data_store->strings_rs[i], "");
+		sprintf((char *) strings_rs[i], "");
 		}
 }
 
@@ -123,12 +125,12 @@ void set_rb(short slot, short mode, char *label, short do_draw)
 			return;
 		}
 	right_button_status[slot] = mode;
-	//sprintf((char *)data_store->strings_rs[slot], "%-39.39s", label);
-	sprintf((char *)data_store->strings_rs[slot], "%s", label);
-	data_store->strings_rs[slot][39] = 0;
+	//sprintf((char *)strings_rs[slot], "%-39.39s", label);
+	sprintf((char *)strings_rs[slot], "%s", label);
+	strings_rs[slot][39] = 0;
 	for (i = 0; i < 39; i++)
-		if (data_store->strings_rs[slot][i] == '|')
-			data_store->strings_rs[slot][i] = ' ';
+		if (strings_rs[slot][i] == '|')
+			strings_rs[slot][i] = ' ';
 	if (do_draw > 0)
 		draw_rb_slot(slot,0);
 /*	for (i = 0; i < NRS; i++) 

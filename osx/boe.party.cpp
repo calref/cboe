@@ -138,7 +138,7 @@ extern short monst_marked_damage[T_M];
 extern location golem_m_locs[16];
 extern town_item_list t_i;
 extern cScenario scenario;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 
 char c_line[60];
 
@@ -500,7 +500,7 @@ void put_party_in_scen()
 	// Throw up intro dialog
 	buttons[0] = 1;
 	for (j = 0; j < 6; j++)
-		if (strlen(	data_store->scen_strs[4 + j]) > 0) {
+		if (strlen(	scenario.scen_strs(4 + j)) > 0) {
 			for (i = 0; i < 6; i++)	
 				strcpy((char *) strs[i],data_store->scen_strs[4 + i]);
 			custom_choice_dialog(strs,-1 * (1600 + scenario.intro_pic),buttons) ;
@@ -1295,10 +1295,10 @@ void spend_xp_event_filter (short item_hit)
 				if (item_hit >= 100) {
 					item_hit -= 100;
 					if ((item_hit == 3) || (item_hit == 4)) {
-						display_strings_with_nums(10,63,0,0,"About Health",57,24,PICT_DLG_TYPE,1010);
+						display_strings_with_nums(10,63,0,0,"About Health",57,24,PICT_DLG,1010);
 					}
 					else if ((item_hit == 5) || (item_hit == 6)){
-						display_strings_with_nums(10,64,0,0,"About Spell Points",57,24,PICT_DLG_TYPE,1010);
+						display_strings_with_nums(10,64,0,0,"About Spell Points",57,24,PICT_DLG,1010);
 					}
 					else {
 						which_skill = (item_hit - 7) / 2;
@@ -2884,7 +2884,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	make_cursor_sword();
 
 	cd_create_dialog(1098,mainPtr);
-	cd_set_pict(1098,2,14 + type,PICT_DLG_TYPE);
+	cd_set_pict(1098,2,14 + type,PICT_DLG);
 	for (i = 37; i < 75; i++) {
 		cd_add_label(1098,i,"",55);
 		if (i > 62)
@@ -3166,7 +3166,7 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 	cd_create_dialog_parent_num(1050,parent_num);
 
 	for (i = 41; i < 77; i++) 
-		csp(1050,i, i - 41, PICT_PC_TYPE);
+		csp(1050,i, i - 41, PICT_PC);
 	for (i = 5; i < 41; i++) {
 		if (store_pc_graphic + 5 == i)
 			cd_set_led(1050,i,1);

@@ -24,7 +24,7 @@
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
 
-extern WindowPtr	mainPtr;
+extern WindowPtr mainPtr;
 extern Rect	windRect;
 extern short stat_window,give_delays,overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
@@ -58,13 +58,12 @@ extern PixPatHandle map_pat[25];
 extern Point store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern Boolean registered,ed_reg;
 extern Boolean fast_bang;
 //extern unsigned char m_pic_index[200];
 extern PixPatHandle	bg[];
 extern KeyMap key_state;
 extern Boolean fry_startup;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 extern outdoor_strs_type outdoor_text[2][2];
 extern GWorldPtr spec_scen_g;
@@ -261,8 +260,8 @@ void adjust_window_mode()
 	Rect r;
 
 	if (display_mode == 5) {
-		ul.h = 0; ul.v = 0;
-		SizeWindow(mainPtr,594,430, TRUE);
+		ul.h = 14; ul.v = 2;
+		SizeWindow(mainPtr,605,430, TRUE);
 		MoveWindow(mainPtr,(windRect.right - 573) / 2,(windRect.bottom - 430) / 2 + 20,TRUE);
 		GetWindowPortBounds(mainPtr, &r);
 	}
@@ -653,10 +652,6 @@ void draw_startup_stats()
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
 	char_win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18,true);
-	if (registered == FALSE) {
-		pc_rect.left = startup_from[0].left + 6;
-		char_win_draw_string(mainPtr,pc_rect,"Unregistered copy. To order, select How To Order.",0,18,true);
-		}
 		
 	ForeColor(blackColor);
 }
@@ -927,39 +922,6 @@ void set_gworld_fonts(short font_num)
 	SetPort(old_port);	
 }
 
-// redraw_screen does the very first redraw, and any full redraw
-void redraw_screen(){
-	if(in_startup_mode)draw_startup(0);
-	else{
-		switch (overall_mode) {
-			case 20:
-				put_background();
-				break;
-			default:
-				draw_main_screen();
-				draw_terrain(0);
-				draw_text_bar(1);
-				if (overall_mode == MODE_COMBAT)
-					draw_pcs(pc_pos[current_pc],1);
-				if (overall_mode == MODE_FANCY_TARGET)
-					draw_targets(center);
-				break;
-			}
-		put_pc_screen();
-		put_item_screen(stat_window,0);
-		print_buf();
-		ShowControl(text_sbar);
-		Draw1Control(text_sbar);
-		ShowControl(item_sbar);
-		Draw1Control(item_sbar);
-		if (overall_mode == MODE_SHOPPING) {
-			ShowControl(shop_sbar);
-			Draw1Control(shop_sbar);
-			}
-		else HideControl(shop_sbar);
-	}
-}
-
 void draw_main_screen()
 {
 	if (overall_mode == MODE_TALKING) {
@@ -987,37 +949,76 @@ void draw_main_screen()
 
 }
 
-void refresh_screen(short mode)
-{
-	if (overall_mode == MODE_TALKING) {
-		put_background();
-		refresh_talking();
+// redraw_screen does the very first redraw, and any full redraw
+void redraw_screen(){
+	if(in_startup_mode)
+		draw_startup(0);
+	else{
+		switch (overall_mode) {
+			case MODE_TALKING:
+				put_background();
+				refresh_talking();
+				break;
+			case MODE_SHOPPING:
+				put_background();
+				refresh_shopping();
+				break;
+			default:
+				draw_main_screen();
+				draw_terrain(0);
+				draw_text_bar(1);
+				if (overall_mode == MODE_COMBAT)
+					draw_pcs(pc_pos[current_pc],1);
+				if (overall_mode == MODE_FANCY_TARGET)
+					draw_targets(center);
+				break;
 		}
-	else if (overall_mode == MODE_SHOPPING) { 
-		put_background();
-		refresh_shopping();
-		}
-		else {
-		draw_buttons(0);
-		redraw_terrain();
-		if (overall_mode == MODE_COMBAT)
-			draw_pcs(pc_pos[current_pc],1);
-		if (overall_mode == MODE_FANCY_TARGET)
-			draw_targets(center);
-		draw_text_bar(1);
-		}
-
-	draw_text_area(0);
-	ShowControl(text_sbar);
-	Draw1Control(text_sbar);
-	ShowControl(item_sbar);
-	Draw1Control(item_sbar);
-	if (overall_mode == MODE_SHOPPING) {
-		ShowControl(shop_sbar);
-		Draw1Control(shop_sbar);
+		put_pc_screen();
+		put_item_screen(stat_window,0);
+		print_buf();
+		ShowControl(text_sbar);
+		Draw1Control(text_sbar);
+		ShowControl(item_sbar);
+		Draw1Control(item_sbar);
+		if (overall_mode == MODE_SHOPPING) {
+			ShowControl(shop_sbar);
+			Draw1Control(shop_sbar);
 		}
 		else HideControl(shop_sbar);
+	}
 }
+
+//void refresh_screen(short mode)
+//{
+//	if (overall_mode == MODE_TALKING) {
+//		put_background();
+//		refresh_talking();
+//		}
+//	else if (overall_mode == MODE_SHOPPING) { 
+//		put_background();
+//		refresh_shopping();
+//		}
+//		else {
+//		draw_buttons(0);
+//		redraw_terrain();
+//		if (overall_mode == MODE_COMBAT)
+//			draw_pcs(pc_pos[current_pc],1);
+//		if (overall_mode == MODE_FANCY_TARGET)
+//			draw_targets(center);
+//		draw_text_bar(1);
+//		}
+//
+//	draw_text_area(0);
+//	ShowControl(text_sbar);
+//	Draw1Control(text_sbar);
+//	ShowControl(item_sbar);
+//	Draw1Control(item_sbar);
+//	if (overall_mode == MODE_SHOPPING) {
+//		ShowControl(shop_sbar);
+//		Draw1Control(shop_sbar);
+//		}
+//		else HideControl(shop_sbar);
+//}
 
 void put_background()
 {
@@ -1150,12 +1151,12 @@ void draw_text_bar(short mode)
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(data_store->town_strs[i + 1]);
+						put_text_bar(town->town_strs(i + 1));
 						remember_tiny_text = 200 + i;
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) data_store->town_strs[0]); ////
+			put_text_bar((char *) town->town_strs(0)); ////
 			remember_tiny_text = 250;
 			}
 	
@@ -1870,7 +1871,7 @@ void draw_terrain(short	mode)
 						if (cartoon_happening == TRUE)
 							can_draw = TRUE;
 							else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
-							(which_combat_type == 0) || (monsters_going == TRUE) || (overall_mode != 10))
+							(which_combat_type == 0) || (monsters_going == TRUE) || (overall_mode != MODE_COMBAT))
 							  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 						}
 					else {
@@ -1887,7 +1888,7 @@ void draw_terrain(short	mode)
 				spot_seen[q][r] = can_draw;
 
 						
-				if ((can_draw != 0) && (overall_mode != 50)) { // if can see, not a pit, and not resting
+				if ((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 					if ((is_combat()) && (cartoon_happening == FALSE)) {
 						anim_ticks = 0;
 						}
@@ -1980,28 +1981,28 @@ void draw_terrain(short	mode)
 						draw_one_terrain_spot(q,r,-1,0);	
 		 				}
 		 		
-		 		if ((can_draw != 0) && (overall_mode != 50) && (frills_on == TRUE)
+		 		if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == TRUE)
 		 		 && (draw_trim == TRUE) && (cartoon_happening == FALSE)) {  // Place the trim
 		 			place_trim((short) q,(short) r,where_draw,spec_terrain);
 		 			}
 			}
 		}
 		
-	if ((overall_mode != MODE_REDRAW) && (!is_out())) 
+	if ((overall_mode != MODE_RESTING) && (!is_out())) 
 		draw_sfx();
 		
 	// Now place items
-	if ((overall_mode > MODE_OUTDOORS) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_REDRAW))
+	if ((overall_mode > MODE_OUTDOORS) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_RESTING))
 		draw_items();		
 		
 	// Now place fields
-	if ((overall_mode != MODE_REDRAW) && (!is_out())) {
+	if ((overall_mode != MODE_RESTING) && (!is_out())) {
 		draw_fields();
 		draw_spec_items();
 		}
 
-	// Not camping. Place misc. shit.
-	if (overall_mode != MODE_REDRAW) {
+	// Not camping. Place misc. stuff
+	if (overall_mode != MODE_RESTING) {
 		if (is_out())
 			draw_outd_boats(party.p_loc);
 			else if ((is_town()) || (which_combat_type == 1))
@@ -2010,7 +2011,7 @@ void draw_terrain(short	mode)
 		}
 
 	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(c_town.p_loc,center) == TRUE))
-		|| (overall_mode == MODE_REDRAW))
+		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(mode,center);
 		else if (overall_mode != MODE_LOOK_TOWN)
 			draw_pcs(center,0);
@@ -2024,7 +2025,7 @@ void draw_terrain(short	mode)
 		redraw_terrain();
 		if (cartoon_happening == FALSE) {
 			draw_text_bar(0);
-			if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_REDRAW))
+			if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 				draw_pcs(center,1);
 			if (overall_mode == MODE_FANCY_TARGET)
 				draw_targets(center);
@@ -2292,7 +2293,7 @@ void draw_rest_screen()
 	short store_mode;
 
 	store_mode = overall_mode;
-	overall_mode = MODE_REDRAW;
+	overall_mode = MODE_RESTING;
 	draw_terrain(0);
 	overall_mode = store_mode ;
 }
@@ -2398,7 +2399,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 			FlushAndPause(del_len);
 		}
 	redraw_terrain();
-	if ((cartoon_happening == FALSE) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_REDRAW))
+	if ((cartoon_happening == FALSE) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 		draw_pcs(center,1);	
 }
 	
@@ -2648,21 +2649,21 @@ void dump_gworld()
 }
 
 // This tells the dialog engine to kill the dialog, and refreshes the screen
-void final_process_dialog(short which_dlog)
-{
-	GrafPtr old_port;
-
-	cd_kill_dialog(which_dlog,0);
-
-	GetPort(&old_port);
-	SetPort(GetWindowPort(mainPtr));
-	BeginUpdate(mainPtr);
-	if (in_startup_mode == FALSE)
-		refresh_screen(0);
-		else draw_startup(0);
-	EndUpdate(mainPtr);
-	SetPort(old_port);
-}
+//void final_process_dialog(short which_dlog)
+//{
+//	GrafPtr old_port;
+//
+//	cd_kill_dialog(which_dlog,0);
+//
+//	GetPort(&old_port);
+//	SetPort(GetWindowPort(mainPtr));
+//	BeginUpdate(mainPtr);
+//	if (in_startup_mode == FALSE)
+//		refresh_screen(0);
+//		else draw_startup(0);
+//	EndUpdate(mainPtr);
+//	SetPort(old_port);
+//}
 /*
 void HideMenuBar( void )
 {

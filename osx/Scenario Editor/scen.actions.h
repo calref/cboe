@@ -10,7 +10,7 @@ void get_town_info();
 void edit_monst(short mode,short x,short y);
 void get_sign_resource();
 void set_info_strings();
-preset_item_type edit_item(preset_item_type item);
+cTown::cItem edit_item(cTown::cItem item);
 void modify_lists();
 void set_up_lights();
 Boolean is_wall(short i,short j);

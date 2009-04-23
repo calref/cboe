@@ -18,3 +18,4 @@ struct shortloc {
 
 bool operator == (location p1,location p2);
 bool operator != (location p1,location p2);
+short dist(location p1,location p2);

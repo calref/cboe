@@ -73,7 +73,7 @@
 #define MODE_SPELL_TARGET	11
 #define MODE_FIRING			12 // firing from bow or crossbow
 #define MODE_THROWING		13 // throwing missle
-#define MODE_FANCY_TARGET	14 // spell target, that is
+#define MODE_FANCY_TARGET	14 // spell target, that is; I think it's for multitarget spells
 #define MODE_DROPPING		15
 #define MODE_TALKING		20
 #define MODE_SHOPPING		21
@@ -81,7 +81,54 @@
 #define MODE_LOOK_TOWN		36
 #define MODE_LOOK_COMBAT	37
 #define MODE_STARTUP		45
-#define MODE_REDRAW			50
+#define MODE_RESTING		50
+// Scenario Editor Modes
+// 0 - drawing
+// 2 - town wandering arrival point
+// 3 - room rectangle
+// 4 - place item
+// 5 - edit placed item
+// 8 - place same creature
+// 9 - set town boundary
+// 10 - place north town entrance
+// 11 - place east town entrance
+// 12 - place south town entrance
+// 13 - place west town entrance
+// 20 - place web
+// 21 - place crate
+// 22 - place barrel
+// 23 - place fire barrier
+// 24 - place force barrier
+// 25 - place quickfire
+// 26 - clear fields on space
+// 28 - place monster
+// 29 - large paintbrush?
+// 30 - small paintbrush?
+// 31 - large spraycan?
+// 32 - small spraycan?
+// 33 - place effect field (eg bloodstain)
+// 34 - eyedropper
+// 35 - hollow rectangle
+// 36 - filled rectangle
+// 37 - eraser
+// 38 - edit sign
+// 39 - edit creature
+// 40 - create/edit special
+// 41 - copy special
+// 42 - paste special
+// 43 - erase special
+// 44 - set/place special
+// 45 - outdoor town entrance
+// 46 - place same item
+// 47 - set outdoors starting location
+// 48 - delete creature
+// 49 - delete item
+// 60 - main screen (including editing anything other than terrain in the right column)
+// 61 - main screen (intro mode, no scenario open)
+// 62 - edit terrain types
+//#define MODE_	60
+//#define MODE_SCEN_INTRO		61
+//#define MODE_	62
 
 /* adven[i].main_status */ //complete
 #define MAIN_STATUS_ABSENT	0 // absent, empty slot

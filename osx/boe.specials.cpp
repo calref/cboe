@@ -24,6 +24,7 @@
 #include "dlgconsts.h"
 #include "mathutil.h"
 #include "boe.main.h"
+#include "dlgutil.h"
 
 extern WindowPtr mainPtr;
 extern short overall_mode;
@@ -34,7 +35,7 @@ extern unsigned char combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
 extern outdoor_record_type outdoors[2][2];
 extern location pc_pos[6],center;
-extern Boolean in_scen_debug,registered,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
+extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern big_tr_type t_d;
 extern pc_record_type adven[6];
 extern effect_pat_type current_pat;
@@ -47,7 +48,7 @@ extern Boolean fast_bang,end_scenario;
 extern short town_size[3];
 extern short town_type;
 extern cScenario scenario;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 
 Boolean can_draw_pcs = TRUE;
 
@@ -3032,7 +3033,7 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 			scenario.out_width * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
-		"",57,scenario.intro_pic,PICT_SCEN_TYPE,0);
+		"",57,scenario.intro_pic,PICT_SCEN,0);
 }
  
 void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 
@@ -3047,9 +3048,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 	switch (cur_type) {
 		case 0:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->scen_strs[which_str1]);
+				strcpy((char *) str1,scenario.scen_strs(which_str1));
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->scen_strs[which_str2]);
+				strcpy((char *) str2,scenario.scen_strs(which_str2));
 			break;
 		case 1:
 			if (which_str1 >= 0)
@@ -3063,9 +3064,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,data_store->town_strs[which_str1]);
+				strcpy((char *) str1,town->town_strs(which_str1));
 			if (which_str2 >= 0)
-				strcpy((char *) str2,data_store->town_strs[which_str2]);
+				strcpy((char *) str2,town->town_strs(which_str2));
 			break;
 		}
 

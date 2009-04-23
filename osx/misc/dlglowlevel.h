@@ -8,7 +8,7 @@
 
 #define IN_FRONT	(WindowPtr)-1L
 
-void process_new_window (WindowPtr hDlg);
+void process_new_window (short which_dlg);
 short cd_get_indices(short dlg_num, short item_num, short *dlg_index, short *item_index);
 short cd_get_dlg_index(short dlog_num);
 short cd_find_dlog(WindowPtr window, short *dlg_num, short *dlg_key);

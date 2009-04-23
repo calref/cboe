@@ -24,7 +24,7 @@ extern stored_town_maps_type maps;
 extern stored_outdoor_maps_type o_maps;
 
 extern WindowPtr	mainPtr;
-extern Boolean registered,play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
+extern Boolean play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
 
 extern short store_flags[3];
 extern GWorldPtr button_num_gworld;
@@ -1108,6 +1108,8 @@ void display_strings_event_filter (short item_hit)
 			break;
 		}
 }
+
+void record_display_strings(){}
 
 void display_strings(short str1a,short str1b,short str2a,short str2b,
 	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)

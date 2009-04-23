@@ -20,7 +20,7 @@ extern WindowPtr	mainPtr;
 extern Rect	windRect;
 extern short stat_window,give_delays,overall_mode;
 extern short current_spell_range,town_type;
-extern Boolean in_startup_mode,anim_onscreen,registered,play_sounds,frills_on,startup_loaded,cartoon_happening;
+extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,cartoon_happening;
 extern short town_size[3];
 extern party_record_type party;
 extern pc_record_type adven[6];
@@ -38,7 +38,7 @@ extern DialogPtr modeless_dialogs[18];
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr storage_gworld,terrain_screen_gworld,party_template_gworld,items_gworld,tiny_obj_gworld;
 extern GWorldPtr fields_gworld,mixed_gworld;
 extern short which_g_stored[STORED_GRAPHICS];
@@ -878,7 +878,7 @@ void make_town_trim(short mode)
 	short store_mode;
 	
 	store_mode = overall_mode;
-	overall_mode = (mode == 0) ? 1 : 10;
+	overall_mode = (mode == 0) ? MODE_TOWN : MODE_COMBAT;
 	for (where.x = 0; where.x < town_size[town_type]; where.x++)
 		for (where.y = 0; where.y < town_size[town_type]; where.y++)
 			town_trim[where.x][where.y] = add_trim_to_array(where,

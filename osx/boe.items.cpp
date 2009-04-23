@@ -572,7 +572,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 	if (adven[pc_num].equip[item_num] && adven[pc_num].items[item_num].is_cursed()) 
 			add_string_to_buf("Drop: Item is cursed.           ");	
 	else switch (overall_mode) {
-		case 0:
+		case MODE_OUTDOORS:
 			choice = fancy_choice_dialog(1093,0);
 			if (choice == 1)
 				return;
@@ -586,7 +586,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 				else take_item(pc_num,item_num);
 			break;
 		
-		case 5: case 15:
+		case 5: case MODE_DROPPING:
 			loc = where_drop;
 			if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 				how_many = get_num_of_items(item_store.charges);
@@ -685,7 +685,7 @@ void give_thing(short pc_num, short item_num)
 					}
 
 				if ((who_to < 6) && (who_to != pc_num) 
-					&& ((overall_mode != 10) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == TRUE))) {
+					&& ((overall_mode != MODE_COMBAT) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == TRUE))) {
 					if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 						how_many = get_num_of_items(item_store.charges);
 						if (how_many == 0)
@@ -891,7 +891,7 @@ void put_item_graphics()
 
 	for (i = 0; i < 8; i++) {
 		// first, clear whatever item graphic is there
-		csp(987,20 + i * 4,0,PICT_BLANK_TYPE);
+		csp(987,20 + i * 4,0,PICT_BLANK);
 
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]]; 
@@ -899,8 +899,8 @@ void put_item_graphics()
 					 (item.is_ident()) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)
-						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
-					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM_TYPE);
+						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 150,PICT_CUSTOM + PICT_ITEM);
+					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);			
 					storage = item.item_weight();		
@@ -925,7 +925,7 @@ void put_item_graphics()
 		
 	for (i = 0; i < 6; i++) 
 		if (adven[i].main_status == 1) {
-			csp(987,11 + i,adven[i].which_graphic,PICT_PC_TYPE);
+			csp(987,11 + i,adven[i].which_graphic,PICT_PC);
 			}
 }
 

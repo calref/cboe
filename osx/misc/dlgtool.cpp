@@ -39,8 +39,6 @@ dlg_item_t items[NI];
 char text_long_str[10][256];
 char text_short_str[140][40];
 dlg_label_t labels[NL];
-short store_free_slot;
-short store_dlog_num;
 bool dlg_not_toast;
 RGBColor clr[] = {{65535,65535,65535},{65535,0,0},{0,0,8192},{0,0,4096}};
 short dlg_bg = 5;
@@ -123,7 +121,6 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	char item_str[256];
 	short type,flag;
 	
-	store_dlog_num = dlog_num;
 	for (i = 0; i < ND; i++) {
 		if ((dlgs[i].key >= 0) && (dlgs[i].type == dlog_num))
 			return -1;
@@ -144,7 +141,6 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	dlgs[free_slot].win = NULL;
 	
 	// first, create dummy dlog
-	store_free_slot = free_slot;
 	dlgs[free_slot].win = GetDialogWindow(GetNewDialog (dlog_num, NULL, IN_FRONT));
 	if (dlgs[free_slot].win == NULL) {
 		play_sound(57);
@@ -153,7 +149,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	
 	dlgs[free_slot].parent = parent;
 	
-	process_new_window (dlgs[free_slot].win);
+	process_new_window (free_slot);
 	ShowWindow(dlgs[free_slot].win);
 	SetPortWindowPort(dlgs[free_slot].win);
 	ForeColor(blackColor);
@@ -184,10 +180,21 @@ short cd_kill_dialog(short dlog_num,short parent_message){
 	dlgs[which_dlg].key = -1;
 	if (dlgs[which_dlg].parent != NULL)
 		SetPortWindowPort( dlgs[which_dlg].parent);
-	if (FrontWindow() != mainPtr && redraw_screen != NULL)
+	if (redraw_screen != NULL && FrontWindow() != mainPtr)
 		redraw_screen();
 	untoast_dialog();
 	return 0;
+}
+
+bool type_is_clickable(short t){
+	if(t == DLG_BUTTON) return true;
+	if(t == DLG_DEFAULT_BTN) return true;
+	if(t == DLG_LED_BUTTON) return true;
+	if(t == DLG_TEXT_CLICKABLE) return true;
+	if(t == DLG_CUSTOM_BTN) return true;
+	if(t == DLG_CUSTOM_DEF_BTN) return true;
+	if(t == DLG_HIDDEN_BUTTON) return true;
+	return false;
 }
 
 short cd_process_click(WindowPtr window,Point the_point, short mods,short *item){
@@ -200,8 +207,7 @@ short cd_process_click(WindowPtr window,Point the_point, short mods,short *item)
 	for (i = 0; i <= dlgs[which_dlg].highest_item; i++)
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
 			if ((PtInRect(the_point,&items[item_id].rect)) && (items[item_id].active > 0)
-				&& ((items[item_id].type < 3) || (items[item_id].type == 8)
-					|| (items[item_id].type == 10)|| (items[item_id].type == 11))) {
+				&& (type_is_clickable(items[item_id].type))) {
 				*item = i;
 				if (mods & controlKey) 
 					*item += 100;
@@ -222,8 +228,7 @@ short cd_process_keystroke(WindowPtr window,char char_hit,short *item){
 	for (i = 0; i < dlgs[which_dlg].highest_item + 1; i++){
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
 			if ((items[item_id].key == char_hit) && (items[item_id].active > 0)
-				&&  ((items[item_id].type < 3) || (items[item_id].type == 8)
-					 || (items[item_id].type == 10) || (items[item_id].type == 11))) {
+				&&  (type_is_clickable(items[item_id].type))) {
 				*item = i;
 				if (items[item_id].type != 8)
 					cd_press_button(dlg_num,i);
@@ -238,7 +243,7 @@ short cd_process_keystroke(WindowPtr window,char char_hit,short *item){
 		for (i = 0; i < dlgs[which_dlg].highest_item + 1; i++){
 			if ((item_id = cd_get_item_id(dlg_num,i)) >= 0) {
 				if ((items[item_id].key == char_hit) && (items[item_id].active > 0)
-					&&  ((items[item_id].type < 3) || (items[item_id].type == 8))) {
+					&&  (type_is_clickable(items[item_id].type))) {
 					*item = i;
 					if (items[item_id].type != 8)
 						cd_press_button(dlg_num,i);
@@ -256,7 +261,7 @@ void cd_attach_key(short dlog_num,short item_num,char key){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
 	
-	if ((items[item_index].type > DLG_LED_BUTTON) && (items[item_index].type != DLG_TEXT_CLICKABLE)) {
+	if (!type_is_clickable(items[item_index].type)) {
 		SysBeep(20);
 		return;
 	}
@@ -586,7 +591,10 @@ void cd_draw_item(short dlog_num,short item_num){
 	}
 	else {
 		switch (items[item_index].type) {
-		case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE:
+		case DLG_HIDDEN_BUTTON:
+			/// it's hidden, duh! Hence we don't do anything.
+			break;
+		case DLG_BUTTON: case DLG_DEFAULT_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
 								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
@@ -599,7 +607,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			TextSize(10);
 			ForeColor(blackColor);
 			break;
-		case DLG_CUSTOM_BTN_TYPE: case DLG_CUSTOM_DEF_BTN_TYPE:
+		case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
 								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
@@ -674,7 +682,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			if (items[item_index].flag == -1)
 				cd_erase_item(dlog_num,item_num);
 			else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, items[item_index].flag,
-									 PICT_OLD_TYPE, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
+									 PICT_OLD, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
 			break;
 		default: // DLG_NEW_PICTURE
 			printf("Type = %i\t",items[item_index].type);
@@ -688,7 +696,7 @@ void cd_draw_item(short dlog_num,short item_num){
 		}
 	}//printf("Item %i drawn.\n",item_num);
 	
-	if (items[item_index].label != 0) {
+	if (items[item_index].label != 0 && items[item_index].type != DLG_HIDDEN_BUTTON) {
 		store_label = items[item_index].label;
 		if (store_label >= 1000) {
 			store_label -= 1000;
@@ -1113,178 +1121,6 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 	if (wind_hit < 0)
 		return FALSE;
 	else return TRUE;
-}
-
-short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,short btns[3]){
-	
-	short i,j,free_slot = -1,free_item = -1,str_width,cur_but_right = 0;
-	WindowPtr dlg;
-	short total_len = 0;
-	
-	
-	short cur_item = 1;
-	short but_items[3] = {-1,-1,-1};
-	Rect pic_rect = {8,8,44,44},cur_text_rect = {2,50,0,0};
-	short win_width = 100, win_height = 100;
-	
-	store_dlog_num = 900;
-	//store_parent = parent;
-	for (i = 0; i < ND; i++) {
-		if ((dlgs[i].key >= 0) && (dlgs[i].type == 900))
-			return -1;
-	}
-	for (i = 0; i < ND; i++) {
-		if (dlgs[i].key < 0) {
-			free_slot = i;
-			i = 500;
-		}
-	}
-	if (free_slot < 0)
-		return -2;
-	
-	// quick check, to make sure there's at least 1 button
-	if ((btns[0] < 0) && (btns[1] < 0) && (btns[2] < 0))
-		btns[0] = 1;
-	current_key++;
-	dlgs[free_slot].key = current_key;
-	dlgs[free_slot].type = 900;
-	dlgs[free_slot].highest_item = 1;
-	dlgs[free_slot].draw_ready = FALSE;
-	dlgs[free_slot].win = NULL;
-	
-	// first, create dummy dlog
-	store_free_slot = free_slot;
-	dlg = GetDialogWindow(GetNewDialog (900, NULL, IN_FRONT));
-	dlgs[free_slot].win = dlg;
-	if (dlgs[free_slot].win == NULL) {
-		play_sound(3);
-		return -3;
-	}
-	
-	dlgs[free_slot].parent = parent;
-	
-	//process_new_window (dlgs[free_slot]);
-	// instead of this, custom make items
-	free_item = -1;
-	
-	// first, do 1-3 buttons
-	for (i = 0; i < 3; i++) 
-		if (btns[i] >= 0) {// buttons
-			for (j = 150; j < NI; j++)
-				if (items[j].dlg < 0) {
-					free_item = j;
-					j = NI + 1;
-				}
-			items[free_item].dlg = store_dlog_num;
-			items[free_item].type = (i == 0) ? 1 : 0;
-			items[free_item].number = cur_item;
-			//items[free_item].rect = get_item_rect(hDlg,i + 1);
-			
-			items[free_item].flag = available_dlog_buttons[btns[i]];
-			items[free_item].active = 1;
-			items[free_item].label = 0;
-           	items[free_item].label_loc = -1;
-            items[free_item].key = buttons[available_dlog_buttons[btns[i]]].def_key;
-            if (i == 0)
-            	items[free_item].key = 31;
-            but_items[i] = free_item; // remember this to set item rect later
-       		cur_item++;
-		}
-	// next, the upper left picture (always there)
-	for (j = 150; j < NI; j++)
-		if (items[j].dlg < 0) {
-			free_item = j;
-			j = NI + 1;
-		}
-	items[free_item].dlg = store_dlog_num;
-	items[free_item].type = 5;
-	items[free_item].number = cur_item;
-	items[free_item].rect = pic_rect;
-	
-	if (pic_num < 0) {
-		items[free_item].flag = pic_num * -1;
-	}
-	else //if (pic_num < 1000)
-		items[free_item].flag = pic_num;
-	//			else items[free_item].flag = (pic_num % 1000) + 2400;
-	//	if (pic_num >= 2000)
-	//		items[free_item].flag += 300;
-	items[free_item].active = 1;
-	items[free_item].label = 0;
-    items[free_item].label_loc = -1;
-    items[free_item].key = 0;
-    cur_item++;
-	
-	// finally, 0-6 text, first do preprocessing to find out how much room we need
-	for (i = 0; i < 6; i++) 
-		total_len += string_length((char *) strs[i]);
-	total_len = total_len * 12;
-	str_width = s_sqrt(total_len) + 20;
-	//print_nums(0,total_len,str_width);
-	if (str_width < 340)
-		str_width = 340;
-	cur_text_rect.right = cur_text_rect.left + str_width;
-	// finally, 0-6 text, then create the items
-	for (i = 0; i < 6; i++) 
-		if (strlen((char *) strs[i]) > 0) {// text
-			for (j = 0; j < 10; j++)
-				if (items[j].dlg < 0) {
-					free_item = j;
-					j = NI + 1; 
-				}
-			items[free_item].dlg = store_dlog_num;
-			items[free_item].type = 9;
-			items[free_item].number = cur_item;
-			items[free_item].rect = cur_text_rect;
-			items[free_item].rect.bottom = items[free_item].rect.top + 
-			((string_length((char *) strs[i]) + 60) / str_width) * 12 + 16;
-			items[free_item].rect.right += 20;
-			
-			//print_nums(i,string_length((char *) strs[i]),str_width);
-			cur_text_rect.top = items[free_item].rect.bottom + 8;
-			items[free_item].flag = 0;
-			items[free_item].active = 1;
-			items[free_item].label = 0;
-           	items[free_item].label_loc = -1;
-            items[free_item].key = 0;
- 			sprintf(text_long_str[free_item],"%s",
-					(char *) strs[i]);
-      		cur_item++;
-		}
-	
-	dlgs[free_slot].highest_item = cur_item - 1;
-	
-	// finally, do button rects
-	cur_but_right = cur_text_rect.right + 30;
-	//cur_text_rect.top += 8;
-	for (i = 0; i < 3; i++)
-		if (btns[i] >= 0) {
-			items[but_items[i]].rect.right = cur_but_right;
-			items[but_items[i]].rect.top = cur_text_rect.top;
-			items[but_items[i]].rect.bottom = items[but_items[i]].rect.top + 23;
-			if (buttons[available_dlog_buttons[btns[i]]].type == 1)
-				items[but_items[i]].rect.left = items[but_items[i]].rect.right - 63;
-			else items[but_items[i]].rect.left = items[but_items[i]].rect.right - 110;
-			cur_but_right = items[but_items[i]].rect.left - 4;
-			if (i == 0) {
-				win_width = items[but_items[i]].rect.right + 6;
-				win_height = items[but_items[i]].rect.bottom + 6;
-			}
-		}	
-	
-	//MoveWindow(dlgs[free_slot].win,(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);	
-	SizeWindow(dlgs[free_slot].win,win_width,win_height,FALSE);
-	
-	ShowWindow(dlgs[free_slot].win);
-	SetPort(GetWindowPort(dlgs[free_slot].win));
-	TextFont(geneva_font_num);
-	TextFace(bold);
-	TextSize(10);
-	ForeColor(blackColor);
-	BackColor(whiteColor);
-	untoast_dialog();
-	
-	return 0;
 }
 
 void cd_set_bg_pat_num(short n){

@@ -28,14 +28,12 @@ extern dlg_item_t items[NI];
 extern char text_long_str[10][256];
 extern char text_short_str[140][40];
 extern dlg_label_t labels[NL];
-extern short store_free_slot;
-extern short store_dlog_num;
 extern short dlg_bg;
 
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern btn_t buttons[];
 
-void process_new_window (WindowPtr hDlg) {
+void process_new_window (short which_dlg) {
 	short i = -1,j,free_slot = -1,free_item = -1,type,flag;
 	char but_str[30];
 	Str255 item_str;
@@ -48,8 +46,9 @@ void process_new_window (WindowPtr hDlg) {
 	short item_hit,what_talk_field,num_items;
 	short str_offset = 1;
 	long typel,flagl;
+	WindowPtr hDlg = dlgs[which_dlg].win;
 	
-	free_slot = store_free_slot;
+	free_slot = which_dlg;
 	num_items = CountDITL(GetDialogFromWindow(hDlg));
 	
 	dlgs[free_slot].highest_item = 0;
@@ -95,7 +94,7 @@ void process_new_window (WindowPtr hDlg) {
 				str_stored = TRUE;
 			}
 			else if (item_str[0] == '^') {
-				type = DLG_CUSTOM_BTN_TYPE;
+				type = DLG_CUSTOM_BTN;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
@@ -108,14 +107,14 @@ void process_new_window (WindowPtr hDlg) {
 				str_stored = TRUE;
 			}
 			else if (item_str[0] == '&') {
-				type = DLG_CUSTOM_DEF_BTN_TYPE;
+				type = DLG_CUSTOM_DEF_BTN;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
 				str_stored = TRUE;
 			}
 //			else if (item_str[0] == '@') { // For potential future use
-//				type = DLG_PUSH_BTN_TYPE;
+//				type = DLG_PUSH_BTN;
 //				flag = 1;
 //				if (string_length((char *) item_str) > 55)
 //					flag = 2;
@@ -132,8 +131,8 @@ void process_new_window (WindowPtr hDlg) {
 			
 			free_item = -1;
 			// find free item
-			if(type == DLG_BUTTON_TYPE || type == DLG_DEFAULT_BTN_TYPE || type == DLG_LED_BUTTON ||
-			   type == DLG_OLD_PICTURE || type == 6 || type >= DLG_NEW_PICTURE){
+			if(type == DLG_BUTTON || type == DLG_DEFAULT_BTN || type == DLG_LED_BUTTON ||
+			   type == DLG_OLD_PICTURE || type == DLG_HIDDEN_BUTTON || type >= DLG_NEW_PICTURE){
 				for (j = 150; j < NI; j++)
 					if (items[j].dlg < 0) {
 						free_item = j;
@@ -154,7 +153,7 @@ void process_new_window (WindowPtr hDlg) {
 			}
 			
 			if (free_item >= 0) {
-				items[free_item].dlg = store_dlog_num;
+				items[free_item].dlg = dlgs[free_slot].type;
 				items[free_item].type = type;
 				items[free_item].number = i + 1;
 				
@@ -167,7 +166,7 @@ void process_new_window (WindowPtr hDlg) {
          		items[free_item].label_loc = -1;
            		items[free_item].key = 0;
 				switch (type) {
-					case DLG_BUTTON_TYPE: case DLG_DEFAULT_BTN_TYPE:
+					case DLG_BUTTON: case DLG_DEFAULT_BTN:
 						GetPortBounds(dlg_buttons_gworld[buttons[flag].type][0], &store_rect);
 						items[free_item].rect.right = items[free_item].rect.left + store_rect.right;
 						items[free_item].rect.bottom = items[free_item].rect.top + store_rect.bottom;
@@ -182,7 +181,7 @@ void process_new_window (WindowPtr hDlg) {
 						break;
 					case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE:
 					case DLG_TEXT_CLICKABLE: case DLG_TEXT_DEFAULT:
-					case DLG_CUSTOM_BTN_TYPE: case DLG_CUSTOM_DEF_BTN_TYPE: 
+					case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN: 
 						sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 						if (str_stored == TRUE) {
 							if (free_item < 10)
@@ -191,11 +190,11 @@ void process_new_window (WindowPtr hDlg) {
 								sprintf(text_short_str[free_item - 10],"%-39.39s", (char *) (item_str + str_offset));
 						}
 						items[free_item].key = 255; 
-						if (type >= DLG_CUSTOM_BTN_TYPE) {
+						if (type >= DLG_CUSTOM_BTN) {
 							GetPortBounds(dlg_buttons_gworld[1][0], &store_rect);
 							items[free_item].rect.right = items[free_item].rect.left + store_rect.right;
 							items[free_item].rect.bottom = items[free_item].rect.top + store_rect.bottom;
-							if (type == DLG_CUSTOM_DEF_BTN_TYPE)
+							if (type == DLG_CUSTOM_DEF_BTN)
 								items[free_item].key = DLG_KEY_RETURN;
 						}
 						break;
@@ -286,28 +285,28 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val, short med_or_lt){
 }
 
 // win_or_gworld: 0 - window  1 - gworld
-// 0 - 300   number of terrain graphic -> PICT_TER_TYPE (1), PICT_TER_ANIM_TYPE (2)
-// 400 + x - monster graphic num (uses index from scenario) -> PICT_MONST_TYPE
+// 0 - 300   number of terrain graphic -> PICT_TER (1), PICT_TER_ANIM (2)
+// 400 + x - monster graphic num (uses index from scenario) -> PICT_MONST
 //   400 is 1st monster from monster index, 401 is 2nd from m. index, and so on
-// 700 + x  dlog graphic -> PICT_DLG_TYPE
-// 800 + x  pc graphic -> PICT_PC_TYPE
-// 900 + x  B&W graphic -> PICT_BW_TYPE
-// 950 null item -> 0, PICT_BLANK_TYPE (0)
-// 1000 + x  Talking face -> PICT_TALK_TYPE
-// 1100 - item info help -> PICT_INFO_TYPE
-// 1200 - pc screen help -> PICT_PC_HELP_TYPE
-// 1300 - combat ap -> PICT_COMBAT_AP_TYPE
-// 1400-1402 - button help -> PICT_HELP_TYPE
-// 1500 - stat symbols help -> PICT_STAT_TYPE
-// 1600 + x - scen graphics -> PICT_SCEN_TYPE
-// 1700 + x - anim / field graphic -> PICT_FIELD_TYPE
-// 1800 + x  item graphic -> PICT_ITEM_TYPE
+// 700 + x  dlog graphic -> PICT_DLG
+// 800 + x  pc graphic -> PICT_PC
+// 900 + x  B&W graphic -> PICT_BW
+// 950 null item -> 0, PICT_BLANK (0)
+// 1000 + x  Talking face -> PICT_TALK
+// 1100 - item info help -> PICT_INFO
+// 1200 - pc screen help -> PICT_PC_HELP
+// 1300 - combat ap -> PICT_COMBAT_AP
+// 1400-1402 - button help -> PICT_HELP
+// 1500 - stat symbols help -> PICT_STAT
+// 1600 + x - scen graphics -> PICT_SCEN
+// 1700 + x - anim / field graphic -> PICT_FIELD
+// 1800 + x  item graphic -> PICT_ITEM
 // 2000 + x - custom graphics up to 2399
 // 2400 + x - custom graphics up to 2799, BUT it's a split graphic ...
 //    it looks at the size of rect, and places a 32 x 32 or 36 x 36 graphic drawn
 //    from the custom gworld, depending on the size of rect. half of graphic is
 //    drawn from one custom slot, and half is drawn from next one.
-// PICT_OLD_TYPE (-1) to revert to the old behaviour
+// PICT_OLD (-1) to revert to the old behaviour
 GrafPtr hDialog;
 short w__gw;
 bool fr;
@@ -325,11 +324,11 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 		do_frame = FALSE;
 	which_g = which_g % 2000;
 	
-	if (type_g == PICT_OLD_TYPE)
+	if (type_g == PICT_OLD)
 		convert_pict(which_g,type_g,rect); // pass by reference
 	printf("Drawing graphic %i of type %i.\n",which_g,type_g);
 	
-	if (type_g == PICT_BLANK_TYPE) { // Empty. Maybe clear space.
+	if (type_g == PICT_BLANK) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
 			InsetRect(&rect, -3, -3);
 			FillCRect(&rect,bg[dlg_bg]);
@@ -344,13 +343,13 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 	w__gw = win_or_gworld;
 	fr = do_frame;
 	switch (type_g) {
-		case PICT_TER_TYPE: // terrain
+		case PICT_TER: // terrain
 			draw_preset_ter_pic(which_g,rect);
 			break;
-		case PICT_TER_ANIM_TYPE: // animated terrain
+		case PICT_TER_ANIM: // animated terrain
 			draw_preset_anim_ter_pic(which_g,rect);
 			break;
-		case PICT_MONST_TYPE: // monster ... needs use index   small_monst_rect
+		case PICT_MONST: // monster ... needs use index   small_monst_rect
 			// There are 4 different ways to draw, depending on size of monster
 			if ((m_pic_index[which_g].x == 1) && (m_pic_index[which_g].y == 1))
 				draw_preset_monst_pic_small(which_g,rect);
@@ -362,70 +361,65 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 				draw_preset_monst_pic_large(which_g,rect);
 			break;
 			
-		case PICT_ITEM_TYPE: // item
+		case PICT_ITEM: // item
 			draw_preset_item_pic(which_g,rect);
 			break;
-		case PICT_DLG_TYPE: // dialog
+		case PICT_DLG: // dialog
 			draw_preset_dlg_pic(which_g,rect);
 			break;
-		case PICT_DLG_LARGE_TYPE:
+		case PICT_DLG_LARGE:
 			draw_preset_dlg_pic_large(which_g,rect);
 			break;
-		case PICT_PC_TYPE: // PC
+		case PICT_PC: // PC
 			draw_preset_pc_pic(which_g,rect);
 			break;
-		case PICT_TALK_TYPE: // talk face
+		case PICT_TALK: // talk face
 			draw_preset_talk_pic(which_g,rect);
 			break;
-		case PICT_INFO_HELP_TYPE: // item info help  
+		case PICT_INFO_HELP: // item info help  
 			draw_item_info_help_pic(rect);
 			break;
-		case PICT_PC_HELP_TYPE: // item info help  
+		case PICT_PC_HELP: // item info help  
 			draw_pc_info_help_pic(rect);
 			break;
-		case PICT_HELP_TYPE: // button help
+		case PICT_HELP: // button help
 			draw_help_pic(which_g,rect);
 			break;
-		case PICT_COMBAT_AP_TYPE: // combat ap help  
+		case PICT_COMBAT_AP: // combat ap help  
 			draw_combat_ap_help_pic(rect);
 			break;
-		case PICT_STAT_TYPE: // stat symbols help  
+		case PICT_STAT: // stat symbols help  
 			draw_pc_stat_help_pic(rect);
 			break;
-		case PICT_SCEN_TYPE:
+		case PICT_SCEN:
 			draw_preset_scen_pic(which_g,rect);
 			break;
-		case PICT_SCEN_LARGE_TYPE:
+		case PICT_SCEN_LARGE:
 			draw_preset_scen_pic_large(which_g,rect);
 			break;
-		case PICT_FIELD_TYPE: // dialog
+		case PICT_FIELD: // dialog
 			draw_preset_field_pic(which_g,rect);
 			break;
-		case PICT_CUSTOM_TYPE + PICT_TER_TYPE: // dialog
-		case PICT_CUSTOM_TYPE + PICT_TER_ANIM_TYPE:
-		case PICT_CUSTOM_TYPE + PICT_MONST_TYPE:
-		case PICT_CUSTOM_TYPE + PICT_ITEM_TYPE:
-		case PICT_CUSTOM_TYPE + PICT_PC_TYPE:
-		case PICT_CUSTOM_TYPE + PICT_FIELD_TYPE: // These are not necessarily all possible...
-			draw_custom_space_pic(which_g,rect);
-			break;
-		case PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_WIDE_MONSTER:
+		case PICT_CUSTOM + PICT_MONST + PICT_WIDE_MONSTER:
 			draw_custom_monst_wide_pic(which_g,rect);
 			break;
-		case PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_TALL_MONSTER:
+		case PICT_CUSTOM + PICT_MONST + PICT_TALL_MONSTER:
 			draw_custom_monst_tall_pic(which_g,rect);
 			break;
-		case PICT_CUSTOM_TYPE + PICT_MONST_TYPE + PICT_WIDE_MONSTER + PICT_TALL_MONSTER:
+		case PICT_CUSTOM + PICT_MONST + PICT_WIDE_MONSTER + PICT_TALL_MONSTER:
 			draw_custom_monst_large_pic(which_g,rect);
 			break;
-		case PICT_CUSTOM_TYPE + PICT_DLG_TYPE: // dialog, split
+		case PICT_CUSTOM + PICT_DLG: // dialog, split
 			draw_custom_dlg_pic_split(which_g,rect);
 			break;
-		case PICT_CUSTOM_TYPE + PICT_TALK_TYPE: // facial graphic, split
-		case PICT_CUSTOM_TYPE + PICT_SCEN_TYPE: // Not currently possible; not sure it ever will be
+		case PICT_CUSTOM + PICT_TALK: // facial graphic, split
+		case PICT_CUSTOM + PICT_SCEN: // Not currently possible; not sure it ever will be
 			draw_custom_talk_pic_split(which_g,rect);
 			break;
-			
+		default: // PICT_CUSTOM + PICT_TER, PICT_TER_ANIM, PICT_MONST, PICT_ITEM, PICT_PC, PICT_FIELD, etc
+			if(type_g < PICT_CUSTOM) break; // not all of which are necessarily valid...
+			draw_custom_space_pic(which_g,rect);
+			break;
 	}
 	w__gw = 0;
 	hDialog = NULL;
@@ -443,71 +437,71 @@ void convert_pict(short& which_g, short& type_g,Rect& rect){
 	unsigned short r = which_g / 100;
 	printf("Parsing old-style graphic %i.\t",which_g);
 	if (r < 3){
-		type_g = PICT_TER_TYPE;
+		type_g = PICT_TER;
 	}else if(r == 4){
-		type_g = PICT_TER_ANIM_TYPE;
+		type_g = PICT_TER_ANIM;
 		which_g -= 400;
 	}else if(r < 7){
-		type_g = PICT_MONST_TYPE;
+		type_g = PICT_MONST;
 		which_g -= 700;
 	}else if(r >= 20 && r <= 23){
-		type_g = PICT_CUSTOM_TYPE + PICT_TER_TYPE;
+		type_g = PICT_CUSTOM + PICT_TER;
 		// It may not be a terrain graphic, but it's at least a terrain-sized graphic, so it matters not
 		which_g -= 2000;
 	}else if(r >= 24 && r <= 27){
-		type_g = PICT_CUSTOM_TYPE;
+		type_g = PICT_CUSTOM;
 		which_g -= 2400;
 		if(rect.right - rect.left == 32){
-			type_g += PICT_TALK_TYPE;
+			type_g += PICT_TALK;
 		}else if(rect.right - rect.left == 36){
-			type_g += PICT_DLG_TYPE;
+			type_g += PICT_DLG;
 		}else{
-			type_g += PICT_TER_TYPE; // This should never happen
+			type_g += PICT_TER; // This should never happen
 		}
 	}else if(which_g == 950){
-		type_g = PICT_BLANK_TYPE;
+		type_g = PICT_BLANK;
 	}else switch(r){
 		case 7:
-			type_g = PICT_DLG_TYPE;
+			type_g = PICT_DLG;
 			which_g -= 700;
 			break;
 		case 10:
-			type_g = PICT_TALK_TYPE;
+			type_g = PICT_TALK;
 			which_g -= 1000;
 			break;
 		case 11:
-			type_g = PICT_INFO_HELP_TYPE;
+			type_g = PICT_INFO_HELP;
 			which_g -= 1100;
 			break;
 		case 12:
-			type_g = PICT_PC_HELP_TYPE;
+			type_g = PICT_PC_HELP;
 			which_g -= 1200;
 			break;
 		case 13:
-			type_g = PICT_COMBAT_AP_TYPE;
+			type_g = PICT_COMBAT_AP;
 			which_g -= 1300;
 			break;
 		case 14:
 			if(which_g > 10){
-				type_g = PICT_SCEN_LARGE_TYPE;
+				type_g = PICT_SCEN_LARGE;
 			}else{
-				type_g = PICT_HELP_TYPE;
+				type_g = PICT_HELP;
 			}
 			which_g -= 1400;
 			break;
 		case 15:
-			type_g = PICT_STAT_TYPE;
+			type_g = PICT_STAT;
 			which_g -= 1500;
 			break;
 		case 16:
-			type_g = PICT_SCEN_TYPE;
+			type_g = PICT_SCEN;
 			which_g -= 1600;
 			break;
 		case 17:
-			type_g = PICT_FIELD_TYPE;
+			type_g = PICT_FIELD;
 			which_g -= 1700;
 		case 18: case 19:
-			type_g = PICT_ITEM_TYPE;
+			type_g = PICT_ITEM;
 			which_g -= 1800;
 			break;
 	}

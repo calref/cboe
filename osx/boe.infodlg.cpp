@@ -20,7 +20,7 @@
 #include "boe.fileio.h"
 #include "boe.main.h"
 #include "mathutil.h"
-
+#include "dlgutil.h"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 pc_record_type *store_pc;
@@ -44,7 +44,7 @@ extern short on_monst_menu[256];
 extern big_tr_type t_d;
 extern ModalFilterUPP main_dialog_UPP;
 extern location tinraya_portculli[12];
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 
 Boolean full_roster = FALSE;
 
@@ -140,7 +140,7 @@ void display_spells(short mode,short force_spell,short parent_num)
 
 	cd_create_dialog_parent_num(1096,parent_num);
 
-      cd_set_pict(1096,18,14 + mode,PICT_DLG_TYPE);
+      cd_set_pict(1096,18,14 + mode,PICT_DLG);
 		put_spell_info();
 	if (mode == 0)
 		csit(1096,3,"Mage Spells");
@@ -279,7 +279,7 @@ void display_pc(short pc_num,short mode,short parent)
 		}
 	put_pc_graphics();
 
-	cd_set_pict(991,2,14 + mode,PICT_DLG_TYPE);
+	cd_set_pict(991,2,14 + mode,PICT_DLG);
 	
 	item_hit = cd_run_dialog();	
 	cd_kill_dialog(991,0);
@@ -299,10 +299,10 @@ void put_item_info(short pc,short item)////
 		
 	s_i = store_i;
 	
-	csp(998,1,0,PICT_BLANK_TYPE);
+	csp(998,1,0,PICT_BLANK);
 	if (s_i.graphic_num >= 150)
-		csp(998,1,s_i.graphic_num - 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
-		else csp(998,1,s_i.graphic_num,PICT_ITEM_TYPE);
+		csp(998,1,s_i.graphic_num - 150,PICT_CUSTOM + PICT_ITEM);
+		else csp(998,1,s_i.graphic_num,PICT_ITEM);
 		
 	// id? magic?
 	if (store_i.is_magic() && store_i.is_ident())
@@ -467,11 +467,11 @@ void put_monst_info()////
 	short abil,i;	
 	
 	if ( store_m->m_d.spec_skill == MONSTER_INVISIBLE) 
-		cd_set_pict(999,4,400,PICT_MONST_TYPE);// should probably be PICT_BLANK_TYPE?
+		cd_set_pict(999,4,400,PICT_MONST);// should probably be PICT_BLANK?
 		else if (store_m->m_d.picture_num < 1000)
-			cd_set_pict(999,4,store_m->m_d.picture_num,PICT_MONST_TYPE);
+			cd_set_pict(999,4,store_m->m_d.picture_num,PICT_MONST);
 		else {
-			short type_g = PICT_CUSTOM_TYPE + PICT_MONST_TYPE;
+			short type_g = PICT_CUSTOM + PICT_MONST;
 			short size_g = store_m->m_d.picture_num / 1000;
 			switch(size_g){
 				case 2:
@@ -819,7 +819,7 @@ void display_pc_info()
 	cdsin(1019,71,adven[pc].skill_pts);
 	store = adven[pc].level * get_tnl(&adven[pc]);
 	cdsin(1019,15,store);
-	csp(1019,7,800 + adven[pc].which_graphic,PICT_PC_TYPE);
+	csp(1019,7,800 + adven[pc].which_graphic,PICT_PC);
 
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
@@ -968,7 +968,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy((char *) place_str,scenario.scen_strs(party.special_notes_str[i][0] % 1000)); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -986,7 +986,7 @@ void adventure_notes_event_filter (short item_hit)
 	for (i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy((char *) place_str,scenario.scen_strs(party.special_notes_str[i][0] % 1000)); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1030,7 +1030,7 @@ void adventure_notes()
 	for (i = 0; i < 3; i++) {
 		if (party.special_notes_str[i][0] > 0) {
 			switch (party.special_notes_str[i][0] / 1000) {
-				case 0: strcpy((char *) place_str,data_store->scen_strs[party.special_notes_str[i][0] % 1000]); break;
+				case 0: strcpy((char *) place_str,scenario.scen_strs(party.special_notes_str[i][0] % 1000)); break;
 				case 1:
 					 load_outdoors(party.special_notes_str[i][1] % scenario.out_width,
 					 	party.special_notes_str[i][1] / scenario.out_width, 
@@ -1071,7 +1071,7 @@ void put_talk()
 		csit(960,9,(char *) place_str);
 		
 		//get_str(place_str,120 + ((personality - 1) / 10),((personality - 1) % 10) + 1);
-		csit(960,7,data_store->talk_strs[personality % 10]);
+		csit(960,7,town->talk_strs(personality % 10));
 
 		if (party.talk_save[store_page_on].str1 >= 1000) {
 			if (party.talk_save[store_page_on].str1 >= 3000) 
@@ -1185,7 +1185,7 @@ void journal_event_filter (short item_hit)
 	for (i = 0; i < 3; i++) {
 		if (party.journal_str[i + (store_page_on * 3)] > 0) {
 			////get_str(place_str,17,party.journal_str[i + (store_page_on * 3)]);
-			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
+			csit(962,3 + i,scenario.scen_strs(party.journal_str[i] + 10));
 			sprintf((char *)place_str,"Day: %d",party.journal_day[i + (store_page_on * 3)]);
 			csit(962,9 + i,(char *)place_str);
 			}
@@ -1213,7 +1213,7 @@ void journal()
 	for (i = 0; i < 3; i++) {
 		if (party.journal_str[i] > 0) {
 			////get_str(place_str,17,party.journal_str[i]);
-			csit(962,3 + i,data_store->scen_strs[party.journal_str[i] + 10]);
+			csit(962,3 + i,scenario.scen_strs(party.journal_str[i] + 10));
 			sprintf((char *)place_str,"Day: %d",party.journal_day[i]);
 			csit(962,9 + i,(char *)place_str);
 			}
@@ -1271,129 +1271,53 @@ void give_help(short help1,short help2,short parent_num)
 	if (help2 > 0)
 		get_str(str2,10,help2);
 	if (help2 == 0)
-		display_strings((char *)str1, "",-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG_TYPE, parent_num);
-	else display_strings((char *)str1,(char *)str2,-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG_TYPE, parent_num);
+		display_strings((char *)str1, "",-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG, parent_num);
+	else display_strings((char *)str1,(char *)str2,-1,-1,-1,-1,"Instant Help",57,24,PICT_DLG, parent_num);
 }
 
 void put_spec_item_info (short which_i)
 {
 	
-	display_strings(data_store->scen_strs[60 + 1 + which_i * 2],"",
+	display_strings(scenario.scen_strs(60 + 1 + which_i * 2),"",
 	-1,-1,-1,-1,
-	data_store->scen_strs[60 + which_i * 2],57,scenario.intro_pic,PICT_SCEN_TYPE,0);
+	data_store->scen_strs[60 + which_i * 2],57,scenario.intro_pic,PICT_SCEN,0);
 	//get_str(item_name,6,1 + which_i * 2);
 	//display_strings(6,2 + which_i * 2,0,0,
 	//(char *)item_name,-1,702,0);
 }
 
-void display_strings_event_filter (short item_hit)////
-{
-	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
-	
-	switch (item_hit) {
-		case 1:
-			toast_dialog();
-			break;
-		case 2:
-			play_sound(0);
-			for (i = 0; i < 140; i++)
-				if ((store_str_label_1 == party.special_notes_str[i][0]) &&
-					(store_str_label_1b == party.special_notes_str[i][1]))
-					had1 = TRUE;
-			if (had1 == FALSE) {
-				//give_help(58,0,store_which_string_dlog);
-				for (i = 0; i < 140; i++)
-					if (party.special_notes_str[i][0] <= 0) {
-						party.special_notes_str[i][0] = store_str_label_1;		
-						party.special_notes_str[i][1] = store_str_label_1b;		
-						//party.special_notes_str[i][1] = store_str1b;	
-						ASB("Info added to Encounter Notes.");	
-						i = 140;
-						}
-			
-				}
-			for (i = 0; i < 140; i++)
-				if ((store_str_label_2 == party.special_notes_str[i][0]) &&
-					(store_str_label_2b == party.special_notes_str[i][1]))
-						had2 = TRUE;
-			if (had2 == FALSE) {
-				for (i = 0; i < 140; i++)
-					if (party.special_notes_str[i][0] <= 0) {
-						party.special_notes_str[i][0] = store_str_label_2;		
-						party.special_notes_str[i][1] = store_str_label_2b;		
-						//party.special_notes_str[i][1] = store_str2b;		
-						i = 140;
-						}
-			
-				}
-			break;
-		}
-}
-
-// str_label_1 & str_label_2 uysed for saving button for journal
-// 1000 + x scen 2000 + x out 3000 + x town
-void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
-	short str_label_2b,
-	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
-{
-
-	short item_hit;
-
-	make_cursor_sword();
-	
-	store_str_label_1 = str_label_1;
-	store_str_label_2 = str_label_2;
-	store_str_label_1b = str_label_1b;
-	store_str_label_2b = str_label_2b;
-//	store_str1a = str1a;
-//	store_str1b = str1b;
-//	store_str2a = str2a;
-//	store_str2b = str2b;
-	
-//	if ((str1a <= 0) || (str1b <= 0))
-//		return;
-	store_which_string_dlog = 970;
-	if (strlen(title) > 0)
-		store_which_string_dlog += 2;
-	if ((text2 != NULL) && (text2[0] != 0))
-		store_which_string_dlog++;
-	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
-	
-	csp(store_which_string_dlog,store_which_string_dlog,graphic_num,graphic_type);
-	
-	csit(store_which_string_dlog,4,(char *) text1);
-	if (text2 != NULL) {
-		csit(store_which_string_dlog,5,(char *) text2);
-		}
-	if (strlen(title) > 0)
-		csit(store_which_string_dlog,6,title);
-	csp(store_which_string_dlog,3,graphic_num,graphic_type);
-	if (sound_num >= 0)
-		play_sound(sound_num);
-	
-	if ((str_label_1 < 0) && (str_label_2 < 0))
-		cd_activate_item(store_which_string_dlog,2,0);
-	
-	item_hit = cd_run_dialog();
-	//cd_kill_dialog(store_which_string_dlog,0);
-	final_process_dialog(store_which_string_dlog);
-}
-
-void give_error(char *text1, char *text2,short parent_num)
-{
-	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,16,PICT_DLG_TYPE,parent_num);
-}
-
-void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
-{
-	Str255 str1 = "", str2 = "";
-	
-	if ((a1 > 0) && (a2 > 0))
-		get_str(str1,a1,a2);
-	if ((b1 > 0) && (b2 > 0))
-		get_str(str2,b1,b2);
-	display_strings((char *) str1,(char *) str2,-1,-1,-1,-1,
-		title, sound_num, graphic_num, graphic_type, parent_num);
+void record_display_strings(){
+	bool had1 = false, had2 = false;
+	int i;
+	play_sound(0);
+	for (i = 0; i < 140; i++)
+		if ((store_str_label_1 == party.special_notes_str[i][0]) &&
+			(store_str_label_1b == party.special_notes_str[i][1]))
+			had1 = true;
+	if (!had1) {
+		//give_help(58,0,store_which_string_dlog);
+		for (i = 0; i < 140; i++)
+			if (party.special_notes_str[i][0] <= 0) {
+				party.special_notes_str[i][0] = store_str_label_1;		
+				party.special_notes_str[i][1] = store_str_label_1b;		
+				//party.special_notes_str[i][1] = store_str1b;	
+				ASB("Info added to Encounter Notes.");	
+				i = 140;
+			}
+		
+	}
+	for (i = 0; i < 140; i++)
+		if ((store_str_label_2 == party.special_notes_str[i][0]) &&
+			(store_str_label_2b == party.special_notes_str[i][1]))
+			had2 = true;
+	if (!had2) {
+		for (i = 0; i < 140; i++)
+			if (party.special_notes_str[i][0] <= 0) {
+				party.special_notes_str[i][0] = store_str_label_2;		
+				party.special_notes_str[i][1] = store_str_label_2b;		
+				//party.special_notes_str[i][1] = store_str2b;		
+				i = 140;
+			}
+		
+	}
 }

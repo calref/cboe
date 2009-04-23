@@ -130,11 +130,11 @@ Boolean loc_off_act_area(location p1)
 location get_cur_loc()
 {
 	switch (overall_mode) {
-		case 0: case 35:
+		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			return party.p_loc;
 			break;
 			
-		case 1: case 2: case 3: case 4: case 36:
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE: case MODE_LOOK_TOWN:
 			return c_town.p_loc;
 			break;
 			

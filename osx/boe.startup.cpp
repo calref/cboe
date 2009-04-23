@@ -20,11 +20,11 @@ using std::vector;
 
 extern party_record_type party;
 extern pc_record_type adven[6];
-extern Boolean in_startup_mode,registered,play_sounds,party_in_memory;
+extern Boolean in_startup_mode,play_sounds,party_in_memory;
 extern long register_flag;
 extern WindowPtr	mainPtr;	
 extern Point ul;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern vector<scen_header_type> scen_headers;
 extern Boolean unreg_party_in_scen_not_check;
 
@@ -73,10 +73,6 @@ Boolean handle_startup_press(Point the_point)
 				scen = pick_prefab_scen();
 				if (scen < 0)
 					break;
-				if ((registered == FALSE) && (scen > 0)) {
-					FCD(913,0);
-					break;
-				}
 				
 				switch (scen) {
 				case 0: sprintf(party.scen_name,"valleydy.exs"); break;
@@ -92,10 +88,6 @@ Boolean handle_startup_press(Point the_point)
 					FCD(867,0);
 					break;
 				}
-				if (registered == FALSE) {
-					FCD(913,0);
-					break;
-				}
 				// if not reg, rub out
 				
 				scen = pick_a_scen();
@@ -104,8 +96,6 @@ Boolean handle_startup_press(Point the_point)
 					FCD(912,0);
 					break;
 				}
-				if (registered == FALSE) 
-					unreg_party_in_scen_not_check = TRUE;
 				sprintf(party.scen_name,"%s",data_store->scen_names[scen].c_str());
 				put_party_in_scen();
 				break;

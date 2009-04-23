@@ -7,7 +7,7 @@
 #include "boe.global.h"
 #include "boe.itemdata.h"
 #include "mathutil.h"
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 
 
 //item_record_type convert_item (short_item_record_type s_item);
@@ -34,7 +34,7 @@ cItemRec get_stored_item(short which)
 		return s_item;
 		}
 	
-	s_item = data_store->scen_item_list.scen_items[which]; 
+	s_item = scenario.scen_items[which]; 
 	return s_item;
 }
 

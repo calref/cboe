@@ -6,6 +6,8 @@
  *
  */
 
+namespace legacy { struct terrain_type_type; };
+
 class cTerrain {
 public:
 	short picture;
@@ -23,4 +25,6 @@ public:
 	unsigned char res1;
 	unsigned char res2;
 	unsigned char res3;
+	
+	cTerrain& operator = (legacy::terrain_type_type& old);
 };

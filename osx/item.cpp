@@ -8,6 +8,7 @@
 
 #include "item.h"
 #include "boe.consts.h"
+#include "oldstructs.h"
 
 cItemRec k;
 unsigned char cItemRec::rec_treas_class() const {
@@ -276,5 +277,31 @@ cItemRec::cItemRec(long preset){
 	}
 }
 
-
-
+__attribute__((deprecated))
+cItemRec& cItemRec::operator = (legacy::item_record_type& old){
+	variety = old.variety;
+	item_level = old.item_level;
+	awkward = old.awkward;
+	bonus = old.bonus;
+	protection = old.protection;
+	charges = old.charges;
+	type = old.type;
+	magic_use_type = old.magic_use_type;
+	graphic_num = old.graphic_num;
+	ability = old.ability;
+	ability_strength = old.ability_strength;
+	type_flag = old.type_flag;
+	is_special = old.is_special;
+	value = old.value;
+	weight = old.weight;
+	special_class = old.special_class;
+	item_loc.x = old.item_loc.x;
+	item_loc.y = old.item_loc.y;
+	strcpy(full_name,old.full_name);
+	strcpy(name,old.name);
+	treas_class = old.treas_class;
+	item_properties = old.item_properties;
+	reserved1 = old.reserved1;
+	reserved2 = old.reserved2;
+	return *this;
+}

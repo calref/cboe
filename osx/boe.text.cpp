@@ -64,7 +64,7 @@ extern PixPatHandle	bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 
 extern GWorldPtr spec_scen_g,mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld;
@@ -305,7 +305,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) { 
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					strcpy((char *) to_draw,data_store->scen_strs[60 + spec_item_array[i_num] * 2]);
+					strcpy((char *) to_draw,scenario.scen_strs(60 + spec_item_array[i_num] * 2));
 					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10,false);
 					
 					place_item_button(3,i,4,0);
@@ -1044,7 +1044,7 @@ void get_m_name(char *str,unsigned char num)
 {
 	
 	////
-	strcpy((char *) str,(char *) data_store->scen_item_list.monst_names[num]);
+	strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1054,7 +1054,7 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf((char *) store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) data_store->scen_item_list.ter_names[num]);
+			strcpy((char *) store_name,(char *) scenario.ter_names[num]);
 			}
 	strcpy((char *) str,(char *) store_name);
 }
@@ -1531,12 +1531,6 @@ Rect coord_to_rect(short i,short j)
 void make_cursor_sword() 
 {
 	set_cursor(sword_curs);
-}
-
-void get_str(Str255 str,short i, short j)
-{
-	GetIndString(str, i, j);
-	p2cstr(str);
 }
 
 //short string_length(char *str)

@@ -32,7 +32,7 @@
 	<key>CFBundleIconFile</key>
 	<string>BoE Scenario Editor</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.spidweb.BoE Scenario Editor</string>
+	<string>com.spidweb.boesceneditor</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>

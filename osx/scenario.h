@@ -11,6 +11,20 @@
 #include "vehicle.h"
 #include "monster.h"
 #include "special.h"
+#include "item.h"
+#include "town.h"
+#include "outdoors.h"
+
+namespace legacy{
+	struct scenario_data_type;
+	struct item_storage_shortcut_type;
+	struct scen_item_data_type;
+};
+
+struct scenario_header_flags {
+	unsigned char flag1, flag2, flag3, flag4;
+	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
+};
 
 class cScenario {
 public:
@@ -21,10 +35,11 @@ public:
 		short item_odds[10];
 		short property;
 		cItemStorage();
+		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
 	};
 public:
-	unsigned char flag1, flag2, flag3, flag4;
-	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
+	//unsigned char flag1, flag2, flag3, flag4;
+	unsigned char num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	unsigned char town_size[200];
 	unsigned char town_hidden[200];
@@ -60,6 +75,26 @@ public:
 	short flag_i;
 	location last_out_edited;
 	short last_town_edited;
+	scenario_header_flags format;
+	// scen_item_data_type scen_item_list {
+	cItemRec scen_items[400];
+	//char monst_names[256][20];
+	char ter_names[256][30];
+	// };
+	//char scen_strs[270][256];
+	char scen_name[256];
+	char who_wrote[2][256];
+	char contact_info[256];
+	char intro_strs[6][256];
+	char journal_strs[50][256];
+	//char spec_item_strs[100][256];
+	char spec_item_names[50][256];
+	char spec_item_strs[50][256];
+	char spec_strs[100][256];
+	FSSpec scen_file;
 	
-	//cScenario();
+	char(& scen_strs(short i))[256];
+	cScenario& operator = (legacy::scenario_data_type& old);
+	void append(legacy::scen_item_data_type& old);
+	void writeTo(short file_id);
 };

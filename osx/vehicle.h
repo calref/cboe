@@ -8,6 +8,11 @@
 
 #include "location.h"
 
+namespace legacy {
+	struct horse_record_type;
+	struct boat_record_type;
+};
+
 class cVehicle {
 public:
 	// Both boats and horses use this type.
@@ -20,6 +25,8 @@ public:
 	bool property;
 	
 	cVehicle();
+	cVehicle& operator = (legacy::horse_record_type& old);
+	cVehicle& operator = (legacy::boat_record_type& old);
 };
 
 /*

@@ -182,7 +182,7 @@ btn_t buttons[] = {
 	{DLG_BTN_SM, "18", 0, 0},
 	{DLG_BTN_SM, "19", 0, 0},
 	{DLG_BTN_SM, "20", 0, 0},
-	{DLG_BTN_SM, "Invisible!", 0, 0},
+	{DLG_BTN_SM, "", 0, 0}, // invisible button; text was "Invisible!"
 	{DLG_BTN_SM, "", 0, 0},
 	{DLG_BTN_SM, "", 0, 0},
 	{DLG_BTN_SM, "", 0, 0},

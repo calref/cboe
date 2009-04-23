@@ -3,7 +3,6 @@
 #include <string>
 #include "boe.consts.h"
 #include "scenario.h"
-#include "item.h"
 
 //#define EXILE_BIG_GUNS 1
 
@@ -281,19 +280,21 @@ typedef struct {
 typedef struct {
 	char town_maps[200][8][64];
 	} stored_town_maps_type; 
+
 typedef struct {
-	char town_strs[180][256];
+//	char town_strs[180][256];
 	//char out_strs[120][256];
-	char scen_strs[270][256];
-	char talk_strs[170][256];
+//	char scen_strs[270][256];
+//	char talk_strs[170][256];
 	std::vector<std::string*> scen_header_strs;
 	std::vector<std::string> scen_names;
-	scen_item_data_type scen_item_list;
+//	scen_item_data_type scen_item_list;
 	stored_town_maps_type town_maps;
 	} piles_of_stuff_dumping_type;
-typedef struct {
-	char out_strs[9][256];
-	} outdoor_strs_type;
+
+//typedef struct {
+//	char out_strs[9][256];
+//	} outdoor_strs_type;
 typedef struct {
 	short main_status;
 	char name[20];

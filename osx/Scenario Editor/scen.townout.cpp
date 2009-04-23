@@ -14,30 +14,30 @@
 extern short cen_x, cen_y, overall_mode,user_given_password;
 extern Boolean mouse_button_held,editing_town;
 extern short cur_viewing_mode;
-extern town_record_type town;
-extern big_tr_type t_d;
-extern short town_type;  // 0 - big 1 - ave 2 - small
+extern cTown* town;
+//extern big_tr_type t_d;
+//extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3],mode_count,to_create,cur_town;
 extern unsigned char template_terrain[64][64];
-extern item_record_type item_list[400];
-extern scenario_data_type scenario;
-extern special_node_type null_spec_node;
-extern talking_node_type null_talk_node;
-extern piles_of_stuff_dumping_type *data_store;
-extern outdoor_record_type current_terrain;
+extern cItemRec item_list[400];
+extern cScenario scenario;
+extern cSpecial null_spec_node;
+extern cSpeech::cNode null_talk_node;
+//extern piles_of_stuff_dumping_type *data_store;
+extern cOutdoors current_terrain;
 extern unsigned char borders[4][50];
 extern location cur_out;
-extern talking_record_type talking;
+//extern cSpeech talking;
 
-creature_start_type store_placed_monst,store_placed_monst2;
+cTown::cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
-preset_item_type store_placed_item;
+cTown::cItem store_placed_item;
 short store_which_placed_item,store_which_sign;
-short dialog_answer,store_whigh_dlog;
+extern short dialog_answer;
 short str_do_delete[16];
 short a,b,c;
 short store_which_out_wand,store_out_wand_mode;
-out_wandering_type store_out_wand;
+cOutdoors::cWandering store_out_wand;
 
 char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 		"Unused","Unused","Unused","Unused","Unused"};
@@ -46,160 +46,65 @@ char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no ev
 					"Event code (0 - no event)","Event code (0 - no event)"};
 
 short store_which_talk_node,last_talk_node[60];
-talking_node_type store_talk_node;
+cSpeech::cNode store_talk_node;
 location store_cur_loc;
 
+__attribute__((deprecated))
 void init_town(short size)
 {
 	short i,j,s;
-	location d_loc = {100,0};
-	Rect d_rect = {0,0,0,0};
-	wandering_type d_wan = {0,0,0,0};
-	creature_start_type dummy_creature = {0,0,{0,0},0,0,0,0,0,0,0};
-	preset_item_type null_item = {{0,0},-1,0,0,0,0,0};
 	Str255 temp_str;
-	
-	town.town_chop_time = -1;
-	town.town_chop_key = -1;
-	for (i = 0; i < 4; i++) {
-		town.wandering[i] = d_wan;
-		town.wandering_locs[i] = d_loc;
-		}
-	for (i = 0; i < 50; i++) {
-		town.special_locs[i] = d_loc;
-		town.special_locs[i].x = 100;
-		town.spec_id[i] = -1;
-		}
-	town.lighting = 0;
-	for (i = 0; i < 4; i++) {
-		town.start_locs[i] = d_loc;
-		town.exit_specs[i] = -1;
-		town.exit_locs[i].x = -1;
-		town.exit_locs[i].y = -1;
-		}
-	s = max_dim[size];
-	town.start_locs[0].x = s / 2;
-	town.start_locs[0].y = 4;
-	town.start_locs[2].x = s / 2;
-	town.start_locs[2].y = s - 5;
-	town.start_locs[1].x = s - 5;
-	town.start_locs[1].y = s / 2;
-	town.start_locs[3].x = 4;
-	town.start_locs[3].y = s / 2;
-	town.in_town_rect.top = 3;
-	town.in_town_rect.bottom = s - 4;
-	town.in_town_rect.left = 3;
-	town.in_town_rect.right = s - 4;
-	for (i = 0; i < 64; i++) 
-		town.preset_items[i] = null_item;
-	town.max_num_monst = 30000;
-	for (i = 0; i < 50; i++) 
-		town.preset_fields[i].field_type = 0;
-	town.spec_on_entry = -1;
-	town.spec_on_entry_if_dead = -1;
-	for (i = 0; i < 15; i++) {
-		town.sign_locs[i] = d_loc;
-		town.sign_locs[i].x = 100;
-		}	
-	for (i = 0; i < 8; i++) {
-		town.timer_spec_times[i] = 0;
-		town.timer_specs[i] = -1;
-		}	
-	for (i = 0; i < 100; i++) {
-		town.specials[i] = null_spec_node;
-		}
-	town.specials1 = 0;
-	town.specials2 = 0;
-	town.res1 = 0;
-	town.res2 = 0;
-	town.difficulty = 0;
+	if(size == 0) town = new cBigTown;
+	else if(size == 1) town = new cMedTown;
+	else if(size == 2) town = new cTinyTown;
+	else return;
 	for (i = 0; i < 180; i++) {
 		get_str(temp_str,36,i + 1);
-		sprintf((char *)data_store->town_strs[i], "%s", temp_str);
-		town.strlens[i] = strlen((char *) data_store->town_strs[i]);
-		}
-		
-		
-		
-		
-	for (i = 0; i < 16; i++) {
-		t_d.room_rect[i] = d_rect;
-		//sprintf((char *) t_d.room_string[i], "");	
-		}	
+		sprintf((char *)town->town_strs(i), "%s", temp_str);
+		town->strlens[i] = strlen((char *) town->town_strs(i));
+	}
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++) {
-			t_d.terrain[i][j] = scenario.default_ground * 2;
-			t_d.lighting[i / 8][j] = 0;
-			}
-
-	for (i = 0; i < 60; i++) {
-		t_d.creatures[i] = dummy_creature;
+			town->terrain(i,j) = scenario.default_ground * 2;
+			town->lighting(i / 8,j) = 0;
 		}
-
+	
 	for(i = 0; i < 200; i++) 
-		talking.strlens[i] = 0;
+		town->talking.strlens[i] = 0;
 	for(i = 0; i < 170; i++) 
 		if (i < 10)
-			sprintf(data_store->talk_strs[i],"Unused");
-			else sprintf(data_store->talk_strs[i],"");
+			sprintf(town->talk_strs[i],"Unused");
+		else sprintf(town->talk_strs[i],"");
+	
 	for(i = 0; i < 60; i++) {
-		talking.talk_nodes[i].personality = -1;
-		talking.talk_nodes[i].type = 0;
-		talking.talk_nodes[i].extras[0] = 0;
-		talking.talk_nodes[i].extras[1] = 0;
-		talking.talk_nodes[i].extras[2] = 0;
-		talking.talk_nodes[i].extras[3] = -1;
+		town->talking.talk_nodes[i].personality = -1;
+		town->talking.talk_nodes[i].type = 0;
+		town->talking.talk_nodes[i].extras[0] = 0;
+		town->talking.talk_nodes[i].extras[1] = 0;
+		town->talking.talk_nodes[i].extras[2] = 0;
+		town->talking.talk_nodes[i].extras[3] = -1;
 		for (j = 0; j < 4; j++) {
-			talking.talk_nodes[i].link1[j] = 'x';
-			talking.talk_nodes[i].link2[j] = 'x';		
-			}
+			town->talking.talk_nodes[i].link1[j] = 'x';
+			town->talking.talk_nodes[i].link2[j] = 'x';		
 		}
-		
+	}	
 }
 
+__attribute__((deprecated))
 void init_out()
 {
 	short i,j;
-	location d_loc = {100,0};
-	out_wandering_type d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
-	Rect d_rect = {0,0,0,0};
-	location locs[4] = {{8,8},{32,8},{8,32},{32,32}};
 	Str255 temp_str;
 	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) {
-			current_terrain.terrain[i][j] = 0;
-			}
 	for (i = 0; i < 4; i++)
 		for (j = 0; j < 50; j++)
 			borders[i][j] = 90;
-			
-	for (i = 0; i < 18; i++) {
-		current_terrain.special_locs[i] = d_loc;
-		current_terrain.special_id[i] = 0;
-		}
-	for (i = 0; i < 8; i++) {
-		current_terrain.exit_locs[i] = d_loc;
-		current_terrain.exit_dests[i] = 0;
-		current_terrain.sign_locs[i] = d_loc;
-		current_terrain.sign_locs[i].x = 100;
-		current_terrain.info_rect[i] = d_rect;
-		}
-	for (i = 0; i < 4; i++) {
-		current_terrain.wandering[i] = d_monst;
-		current_terrain.wandering_locs[i] = locs[i];
-		current_terrain.special_enc[i] = d_monst;
-		}
-		
+	
 	for (i = 0; i < 120; i++) {
 		get_str(temp_str,37,i + 1);
-		sprintf((char *)data_store->out_strs[i], "%s", temp_str);
-		current_terrain.strlens[i] = strlen((char *) data_store->out_strs[i]);
-		}
-	for (i = 0; i < 60; i++) {
-		current_terrain.specials[i] = null_spec_node;
-		}
-	
+		sprintf((char *)current_terrain.out_strs(i), "%s", temp_str);
+		current_terrain.strlens[i] = strlen((char *) current_terrain.out_strs(i));
+	}
 }
 
 void put_placed_monst_in_dlog()
@@ -208,16 +113,16 @@ void put_placed_monst_in_dlog()
 	short i;
 	
 	cdsin(837,24,store_which_placed_monst);
-	csit(837,7,data_store->scen_item_list.monst_names[store_placed_monst.number]);
+	csit(837,7,(char*)scenario.scen_monsters[store_placed_monst.number].m_name);
  	cd_set_led_range(837,14,17,store_placed_monst.start_attitude);
  	cd_set_led_range(837,18,19,store_placed_monst.mobile);
  	CDSN(837,2,store_placed_monst.personality);
  	CDSN(837,3,store_placed_monst.facial_pic);
  	if ((store_placed_monst.facial_pic < 1))
-	 	csp(837,11,0,PICT_BLANK_TYPE);
+	 	csp(837,11,0,PICT_BLANK);
 	else if ((store_placed_monst.facial_pic >= 1000))
-	 	csp(837,11,store_placed_monst.facial_pic,PICT_CUSTOM_TYPE + PICT_TALK_TYPE);
-	else csp(837,11,store_placed_monst.facial_pic/* + 1000*/,PICT_TALK_TYPE);
+	 	csp(837,11,store_placed_monst.facial_pic,PICT_CUSTOM + PICT_TALK);
+	else csp(837,11,store_placed_monst.facial_pic/* + 1000*/,PICT_TALK);
 }
 Boolean get_placed_monst_in_dlog()
 {
@@ -229,7 +134,7 @@ Boolean get_placed_monst_in_dlog()
 	store_placed_monst.personality = CDGN(837,2);
 	store_placed_monst.facial_pic = CDGN(837,3);
 	// later
-	t_d.creatures[store_which_placed_monst] = store_placed_monst;
+	town->creatures(store_which_placed_monst) = store_placed_monst;
 	return TRUE;
 }
 
@@ -237,7 +142,7 @@ void edit_placed_monst_event_filter (short item_hit)
 {
 	Str255 str;
 	short i;
-	creature_start_type store_m;
+	cTown::cCreature store_m;
 	
 	switch (item_hit) {
 		case 20:
@@ -260,7 +165,7 @@ void edit_placed_monst_event_filter (short item_hit)
 		case 12: // facial pic
 			if (get_placed_monst_in_dlog() == FALSE)
 				break;
-			i = choose_graphic(/*1001,1084*/1,1+PICT_N_TALK,store_placed_monst.facial_pic/* + 1000*/,PICT_TALK_TYPE,837);
+			i = choose_graphic(/*1001,1084*/1,1+PICT_N_TALK,store_placed_monst.facial_pic/* + 1000*/,PICT_TALK,837);
 			if (i >= 0) {
 				store_placed_monst.facial_pic = i - 1000;
 				}
@@ -286,7 +191,7 @@ void edit_placed_monst(short which_m)
 	Str255 temp_str;
 	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 	
-	store_placed_monst = t_d.creatures[which_m];
+	store_placed_monst = town->creatures(which_m);
 	store_which_placed_monst = which_m;
 	
 	cd_create_dialog_parent_num(837,0);
@@ -311,7 +216,7 @@ void put_placed_monst_adv_in_dlog()
 	short i;
 	
 	cdsin(838,20,store_which_placed_monst);
-	csit(838,9,data_store->scen_item_list.monst_names[store_placed_monst2.number]);
+	csit(838,9,(char*)scenario.scen_monsters[store_placed_monst2.number].m_name);
 	for (i = 22; i < 30; i++)
 		cd_set_led(838,i,0);
 	if (store_placed_monst2.time_flag < 3)
@@ -376,7 +281,7 @@ void edit_placed_monst_adv_event_filter (short item_hit)
 		}
 }
 
-creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
+cTown::cCreature edit_placed_monst_adv(cTown::cCreature monst_record)
 {
 	
 	short item_hit,i,store_dialog_answer;
@@ -411,9 +316,9 @@ void put_placed_item_in_dlog()
 	short i;
 	
 	cdsin(836,17,store_which_placed_item);
-	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
+	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
 	csit(836,22,(char *) str);
-	csit(836,15,data_store->scen_item_list.scen_items[store_placed_item.item_code].full_name);
+	csit(836,15,scenario.scen_items[store_placed_item.code].full_name);
 	CDSN(836,2,store_placed_item.ability);
 	if (store_placed_item.always_there == TRUE)
 		cd_set_led(836,12,1);
@@ -425,10 +330,10 @@ void put_placed_item_in_dlog()
 		cd_set_led(836,14,1);
 		else cd_set_led(836,14,0);
 	
-	i = data_store->scen_item_list.scen_items[store_placed_item.item_code].graphic_num;
+	i = scenario.scen_items[store_placed_item.code].graphic_num;
 	if (i >= 150) // was 1000
-	 	csp(836,4,i % 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
-	else csp(836,4,/*1800 + */i,PICT_ITEM_TYPE);
+	 	csp(836,4,i % 150,PICT_CUSTOM + PICT_ITEM);
+	else csp(836,4,/*1800 + */i,PICT_ITEM);
 }
 Boolean get_placed_item_in_dlog()
 {
@@ -441,7 +346,7 @@ Boolean get_placed_item_in_dlog()
 			,"If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",836);
 		return FALSE;
 		}
-	i = data_store->scen_item_list.scen_items[store_placed_item.item_code].variety;
+	i = scenario.scen_items[store_placed_item.code].variety;
 	if ((store_placed_item.ability == 0) && ((i == 3) || (i == 11))) {
 		give_error("You must assign gold or food an amount of at least 1.","",836);
 		return FALSE;
@@ -450,7 +355,7 @@ Boolean get_placed_item_in_dlog()
 	store_placed_item.property = cd_get_led(836,13);
 	store_placed_item.contained = cd_get_led(836,14);
 
-	town.preset_items[store_which_placed_item] = store_placed_item;
+	town->preset_items[store_which_placed_item] = store_placed_item;
 	return TRUE;
 }
 
@@ -458,7 +363,7 @@ void edit_placed_item_event_filter (short item_hit)
 {
 	Str255 str;
 	short i;
-	creature_start_type store_m;
+	cTown::cCreature store_m;
 	
 	switch (item_hit) {
 		case 3:
@@ -470,9 +375,9 @@ void edit_placed_item_event_filter (short item_hit)
 			toast_dialog();
 			break;
 		case 18:
-			i = choose_text_res(-2,0,399,store_placed_item.item_code,836,"Place which item?");
+			i = choose_text_res(-2,0,399,store_placed_item.code,836,"Place which item?");
 			if (i >= 0) {
-				store_placed_item.item_code = i;
+				store_placed_item.code = i;
 				put_placed_item_in_dlog();		
 				}
 			break;
@@ -490,7 +395,7 @@ void edit_placed_item(short which_i)
 	short item_hit,i,store_dialog_answer;
 	Str255 temp_str;
 	
-	store_placed_item = town.preset_items[which_i];
+	store_placed_item = town->preset_items[which_i];
 	store_which_placed_item = which_i;
 	
 	cd_create_dialog_parent_num(836,0);
@@ -512,8 +417,8 @@ void edit_sign_event_filter (short item_hit)
 	switch (item_hit) {
 		case 9: case 4:
 			if (editing_town == FALSE)
-				CDGT(831,2,data_store->out_strs[100 + store_which_sign]);
-				else CDGT(831,2,data_store->town_strs[120 + store_which_sign]);
+				CDGT(831,2,current_terrain.out_strs(100 + store_which_sign));
+				else CDGT(831,2,town->town_strs(120 + store_which_sign));
 			if (item_hit == 9)
 				toast_dialog();
 				else {
@@ -532,8 +437,8 @@ void edit_sign_event_filter (short item_hit)
 		}
 	cdsin(831,5,store_which_sign);
 	if (editing_town == FALSE)
-		CDST(831,2,data_store->out_strs[100 + store_which_sign]);
-		else CDST(831,2,data_store->town_strs[120 + store_which_sign]);
+		CDST(831,2,current_terrain.out_strs(100 + store_which_sign));
+		else CDST(831,2,town->town_strs(120 + store_which_sign));
 }
 
 void edit_sign(short which_sign,short picture)
@@ -549,15 +454,15 @@ void edit_sign(short which_sign,short picture)
 	cd_create_dialog_parent_num(831,0);
 	
 	if (picture >= 1000)
-		csp(831,6,picture % 1000,PICT_CUSTOM_TYPE + PICT_TER_TYPE);
+		csp(831,6,picture % 1000,PICT_CUSTOM + PICT_TER);
 	else if (picture >= 400)
-		csp(831,6,picture - 400,PICT_TER_ANIM_TYPE);
-	else csp(831,6,picture,PICT_TER_TYPE);
+		csp(831,6,picture - 400,PICT_TER_ANIM);
+	else csp(831,6,picture,PICT_TER);
 
 	cdsin(831,5,store_which_sign);
 	if (editing_town == FALSE)
-		CDST(831,2,data_store->out_strs[100 + store_which_sign]);
-		else CDST(831,2,data_store->town_strs[120 + store_which_sign]);
+		CDST(831,2,current_terrain.out_strs(100 + store_which_sign));
+		else CDST(831,2,town->town_strs(120 + store_which_sign));
 	//cd_activate_item(831,3,0);
 	//cd_activate_item(831,4,0);
 	
@@ -573,7 +478,7 @@ Boolean save_out_strs()
 	
 	for (i = 0; i < 8; i++) {
 		CDGT(850,2 + i,(char *) str);
-		sprintf((char *)data_store->out_strs[i + 1],"%-29.29s",str);
+		sprintf((char *)current_terrain.out_strs(i + 1),"%-29.29s",str);
 		if (str_do_delete[i] > 0)
 			current_terrain.info_rect[i].right = 0;
 		}
@@ -593,7 +498,7 @@ void put_out_strs_in_dlog()
 			else sprintf((char *) str,"X = %d, Y = %d",current_terrain.info_rect[i].left,
 				current_terrain.info_rect[i].top);
 		csit(850,13 + i,(char *) str);
-		CDST(850,2 + i,data_store->out_strs[i + 1]);
+		CDST(850,2 + i,current_terrain.out_strs(i + 1));
 		}
 
 }
@@ -648,9 +553,9 @@ Boolean save_town_strs()
 	
 	for (i = 0; i < 16; i++) {
 		CDGT(839,2 + i,(char *) str);
-		sprintf((char *)data_store->town_strs[i + 1],"%-29.29s",str);
+		sprintf((char *)town->town_strs(i + 1),"%-29.29s",str);
 		if (str_do_delete[i] > 0)
-			t_d.room_rect[i].right = 0;
+			town->room_rect(i).right = 0;
 		}
 	return TRUE;
 }
@@ -661,14 +566,14 @@ void put_town_strs_in_dlog()
 	short i;
 	
 	for (i = 0; i < 16; i++) {
-		if ((t_d.room_rect[i].right == 0) || (str_do_delete[i] > 0)) {
+		if ((town->room_rect(i).right == 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(839,41 + i,0);
 			}
-			else sprintf((char *) str,"X = %d, Y = %d",t_d.room_rect[i].left,
-				t_d.room_rect[i].top);
+			else sprintf((char *) str,"X = %d, Y = %d",town->room_rect(i).left,
+				town->room_rect(i).top);
 		csit(839,21 + i,(char *) str);
-		CDST(839,2 + i,data_store->town_strs[i + 1]);
+		CDST(839,2 + i,town->town_strs(i + 1));
 		}
 
 }
@@ -716,7 +621,7 @@ void edit_town_strs()
 }
 
 
-
+short store_which_town_dlg;
 void pick_town_num_event_filter (short item_hit)
 {
 	Str255 str;
@@ -724,9 +629,9 @@ void pick_town_num_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 3:
-			dialog_answer = CDGN(store_whigh_dlog,2);
+			dialog_answer = CDGN(store_which_town_dlg,2);
 			if ((dialog_answer < 0) || (dialog_answer >= scenario.num_towns)) {
-				give_error("This number is out of the correct range. (0 to the number of towns minus 1)","",store_whigh_dlog);
+				give_error("This number is out of the correct range. (0 to the number of towns minus 1)","",store_which_town_dlg);
 				break;
 				}
 			 toast_dialog(); 
@@ -745,18 +650,18 @@ short pick_town_num(short which_dlog,short def)
 	short town_strs_hit,i,store_dialog_answer;
 	Str255 temp_str,str2;
 	
-	 store_whigh_dlog = which_dlog;
+	 store_which_town_dlg = which_dlog;
 	
-	cd_create_dialog_parent_num(store_whigh_dlog,0);
+	cd_create_dialog_parent_num(store_which_town_dlg,0);
 	
-	CDSN(store_whigh_dlog,2,def);
-	cd_get_item_text(which_dlog,7,(char *) temp_str);
+	CDSN(store_which_town_dlg,2,def);
+	cd_get_item_text(store_which_town_dlg,7,(char *) temp_str);
 	sprintf((char *) str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
-	csit(which_dlog,7,(char *) str2);
+	csit(store_which_town_dlg,7,(char *) str2);
 	
 	town_strs_hit = cd_run_dialog();
 
-	cd_kill_dialog(store_whigh_dlog,0);
+	cd_kill_dialog(store_which_town_dlg,0);
 	return dialog_answer;
 }
 
@@ -819,7 +724,7 @@ void outdoor_details_event_filter (short item_hit)
 		case 3:
 			CDGT(851,2,(char *) str);
 			str[29] = 0;
-			sprintf(data_store->out_strs[0],"%s",(char *) str);
+			sprintf(current_terrain.out_strs(0),"%s",(char *) str);
 			toast_dialog(); 
 			break;
 
@@ -835,7 +740,7 @@ void outdoor_details()
 	
 	cd_create_dialog_parent_num(851,0);
 	
-	CDST(851,2,data_store->out_strs[0]);
+	CDST(851,2,current_terrain.out_strs(0));
 	sprintf((char *) temp_str,"X = %d, Y = %d",cur_out.x,cur_out.y);
 	csit(851,8,(char *) temp_str);
 	
@@ -854,14 +759,14 @@ void put_out_wand_in_dlog()
 		if (store_out_wand.monst[i] == 0)
 			csit(852, i + 7, "Empty");
 			else {
-				get_str(str,-1,store_out_wand.monst[i]);
+				strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.monst[i]].m_name);
 				csit(852,i + 7,(char *) str);
 				}
 	for (i = 0; i < 3; i++)
 		if (store_out_wand.friendly[i] == 0)
 			csit(852, i + 7 + 7, "Empty");
 			else {
-				get_str(str,-1,store_out_wand.friendly[i]);
+				strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.friendly[i]].m_name);
 				csit(852,i + 7 + 7,(char *) str);
 				}
 	if (store_out_wand.cant_flee % 10 == 1)
@@ -913,7 +818,7 @@ void edit_out_wand_event_filter (short item_hit)
 {
 	Str255 str;
 	short i,spec;
-	creature_start_type store_m;
+	cTown::cCreature store_m;
 	
 	switch (item_hit) {
 		case 17:
@@ -1009,17 +914,17 @@ Boolean save_town_details()
 	short i;
 	
 	CDGT(832,2,(char *) str);
-	sprintf(data_store->town_strs[0],"%-29.29s",str);
-	town.town_chop_time = CDGN(832,3);
-	if (cre(town.town_chop_time,-1,10000,"The day the town becomes abandoned must be from 0 to 10000 (or -1 if it doesn't)."
+	sprintf(town->town_strs(0),"%-29.29s",str);
+	town->town_chop_time = CDGN(832,3);
+	if (cre(town->town_chop_time,-1,10000,"The day the town becomes abandoned must be from 0 to 10000 (or -1 if it doesn't)."
 		,"",832) == TRUE) return FALSE;
-	town.town_chop_key = CDGN(832,4);
-	if (cre(town.town_chop_key,-1,10,"The event which prevents the town from becoming abandoned must be from 1 to 10 (-1 or 0 for none)."
+	town->town_chop_key = CDGN(832,4);
+	if (cre(town->town_chop_key,-1,10,"The event which prevents the town from becoming abandoned must be from 1 to 10 (-1 or 0 for none)."
 		,"",832) == TRUE) return FALSE;
-	town.lighting = cd_get_led_range(832,19,22);
-	town.max_num_monst = CDGN(832,5);
-	town.difficulty = CDGN(832,6);
-	if (cre(town.difficulty,0,10,"The town difficulty must be between 0 (easiest) and 10 (hardest)."
+	town->lighting_type = cd_get_led_range(832,19,22);
+	town->max_num_monst = CDGN(832,5);
+	town->difficulty = CDGN(832,6);
+	if (cre(town->difficulty,0,10,"The town difficulty must be between 0 (easiest) and 10 (hardest)."
 		,"",832) == TRUE) return FALSE;
 	
 	return TRUE;
@@ -1030,12 +935,12 @@ void put_town_details_in_dlog()
 	Str255 str;
 	short i;
 	
-	CDST(832,2,data_store->town_strs[0]);
-	CDSN(832,3,town.town_chop_time);
-	CDSN(832,4,town.town_chop_key);
-	cd_set_led_range(832,19,22,town.lighting);
-	CDSN(832,5,town.max_num_monst);
-	CDSN(832,6,town.difficulty);
+	CDST(832,2,town->town_strs(0));
+	CDSN(832,3,town->town_chop_time);
+	CDSN(832,4,town->town_chop_key);
+	cd_set_led_range(832,19,22,town->lighting_type);
+	CDSN(832,5,town->max_num_monst);
+	CDSN(832,6,town->difficulty);
 	
 }
 
@@ -1075,9 +980,9 @@ Boolean save_town_events()
 	short i;
 	
 	for (i = 0; i < 8; i++) {
-		town.timer_spec_times[i] = CDGN(833,2 + i);
-		town.timer_specs[i] = CDGN(833,10 + i);
-		if (cre(town.timer_specs[i],-1,99,"The town special nodes must be between 0 at 99 (or -1 for no special)."
+		town->timer_spec_times[i] = CDGN(833,2 + i);
+		town->timer_specs[i] = CDGN(833,10 + i);
+		if (cre(town->timer_specs[i],-1,99,"The town special nodes must be between 0 at 99 (or -1 for no special)."
 			,"",833) == TRUE) return FALSE;
 		}
 	return TRUE;
@@ -1089,8 +994,8 @@ void put_town_events_in_dlog()
 	short i;
 	
 	for (i = 0; i < 8; i++) {
-		CDSN(833,2 + i,town.timer_spec_times[i]);
-		CDSN(833,10 + i,town.timer_specs[i]);
+		CDSN(833,2 + i,town->timer_spec_times[i]);
+		CDSN(833,10 + i,town->timer_specs[i]);
 		}
 
 }
@@ -1120,7 +1025,7 @@ void edit_town_events_event_filter (short item_hit)
 					CDSN(833,item_hit - 26 + 10,spec);
 					}	
 				edit_spec_enc(spec,2,833);
-				if ((spec >= 0) && (spec < 100) && (town.specials[spec].pic < 0))
+				if ((spec >= 0) && (spec < 100) && (town->specials[spec].pic < 0))
 					CDSN(833,item_hit - 26 + 10,-1);
 				}
 			break;
@@ -1149,21 +1054,21 @@ Boolean save_advanced_town()
 	short i;
 	
 	for (i = 0; i < 4; i++) {
-		town.exit_specs[i] = CDGN(834,2 + i);
-		if (cre(town.exit_specs[i],-1,99,"The town exit specials must be between 0 at 99 (or -1 for no special)."
+		town->exit_specs[i] = CDGN(834,2 + i);
+		if (cre(town->exit_specs[i],-1,99,"The town exit specials must be between 0 at 99 (or -1 for no special)."
 			,"",834) == TRUE) return FALSE;
-		town.exit_locs[i].x = CDGN(834,8 + i * 2);
-		if (cre(town.exit_locs[i].x,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
+		town->exit_locs[i].x = CDGN(834,8 + i * 2);
+		if (cre(town->exit_locs[i].x,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
 			,"",834) == TRUE) return FALSE;
-		town.exit_locs[i].y = CDGN(834,9 + i * 2);
-		if (cre(town.exit_locs[i].y,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
+		town->exit_locs[i].y = CDGN(834,9 + i * 2);
+		if (cre(town->exit_locs[i].y,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
 			,"",834) == TRUE) return FALSE;
 		}
-	town.spec_on_entry = CDGN(834,6);
-	town.spec_on_entry_if_dead = CDGN(834,7);
-	if (cre(town.spec_on_entry,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
+	town->spec_on_entry = CDGN(834,6);
+	town->spec_on_entry_if_dead = CDGN(834,7);
+	if (cre(town->spec_on_entry,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
 		,"",834) == TRUE) return FALSE;
-	if (cre(town.spec_on_entry_if_dead,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
+	if (cre(town->spec_on_entry_if_dead,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
 		,"",834) == TRUE) return FALSE;
 	scenario.town_hidden[cur_town] = cd_get_led(834,37);
 	return TRUE;
@@ -1175,12 +1080,12 @@ void put_advanced_town_in_dlog()
 	short i;
 	
 	for (i = 0; i < 4; i++) {
-		CDSN(834,2 + i,town.exit_specs[i]);
-		CDSN(834,8 + i * 2,town.exit_locs[i].x);
-		CDSN(834,9 + i * 2,town.exit_locs[i].y);
+		CDSN(834,2 + i,town->exit_specs[i]);
+		CDSN(834,8 + i * 2,town->exit_locs[i].x);
+		CDSN(834,9 + i * 2,town->exit_locs[i].y);
 		}
-	CDSN(834,6,town.spec_on_entry);
-	CDSN(834,7,town.spec_on_entry_if_dead);
+	CDSN(834,6,town->spec_on_entry);
+	CDSN(834,7,town->spec_on_entry_if_dead);
 	cd_set_led(834,37,scenario.town_hidden[cur_town]);
 
 }
@@ -1228,8 +1133,8 @@ Boolean save_town_wand()
 	for (i = 0; i < 4; i++) 
 	for (j = 0; j < 4; j++) 
 		{
-		town.wandering[i].monst[j] = CDGN(835,2 + i * 4 + j);
-		if (cre(town.wandering[i].monst[j],0,255,"Wandering monsters must all be from 0 to 255 (0 means no monster)."
+		town->wandering[i].monst[j] = CDGN(835,2 + i * 4 + j);
+		if (cre(town->wandering[i].monst[j],0,255,"Wandering monsters must all be from 0 to 255 (0 means no monster)."
 			,"",835) == TRUE) return FALSE;
 		}	
 		
@@ -1244,7 +1149,7 @@ void put_town_wand_in_dlog()
 	for (i = 0; i < 4; i++) 
 	for (j = 0; j < 4; j++) 
 		{
-		CDSN(835,2 + i * 4 + j,town.wandering[i].monst[j]);
+		CDSN(835,2 + i * 4 + j,town->wandering[i].monst[j]);
 		}
 
 }
@@ -1261,7 +1166,7 @@ void edit_town_wand_event_filter (short item_hit)
 			break;
 		case 27: case 28: case 29: case 30:
 			for (i = 0; i < 4; i++) {
-				j = choose_text_res(-1,0,255,town.wandering[item_hit - 27].monst[i],835,"Choose Which Monster:"); 
+				j = choose_text_res(-1,0,255,town->wandering[item_hit - 27].monst[i],835,"Choose Which Monster:"); 
 				if (j < 0)
 					i = 5;
 					else {
@@ -1293,12 +1198,12 @@ Boolean save_basic_dlog()
 	Str255 str;
 	short i,j;
 	
-	CDGT(821,2,data_store->talk_strs[store_which_talk_node]);
-	data_store->talk_strs[store_which_talk_node][30] = 0;
-	CDGT(821,3,data_store->talk_strs[160 + store_which_talk_node]);
-	CDGT(821,4,data_store->talk_strs[10 + store_which_talk_node]);
-	CDGT(821,5,data_store->talk_strs[20 + store_which_talk_node]);
-	CDGT(821,6,data_store->talk_strs[30 + store_which_talk_node]);
+	CDGT(821,2,town->talk_strs[store_which_talk_node]);
+	town->talk_strs[store_which_talk_node][30] = 0;
+	CDGT(821,3,town->talk_strs[160 + store_which_talk_node]);
+	CDGT(821,4,town->talk_strs[10 + store_which_talk_node]);
+	CDGT(821,5,town->talk_strs[20 + store_which_talk_node]);
+	CDGT(821,6,town->talk_strs[30 + store_which_talk_node]);
 		
 	return TRUE;
 }
@@ -1309,11 +1214,11 @@ void put_basic_dlog_in_dlog()
 	short i,j;
 	
 	cdsin(821,14,store_which_talk_node + cur_town * 10);
-	CDST(821,2,data_store->talk_strs[store_which_talk_node]);
-	CDST(821,3,data_store->talk_strs[160 + store_which_talk_node]);
-	CDST(821,4,data_store->talk_strs[10 + store_which_talk_node]);
-	CDST(821,5,data_store->talk_strs[20 + store_which_talk_node]);
-	CDST(821,6,data_store->talk_strs[30 + store_which_talk_node]);
+	CDST(821,2,town->talk_strs[store_which_talk_node]);
+	CDST(821,3,town->talk_strs[160 + store_which_talk_node]);
+	CDST(821,4,town->talk_strs[10 + store_which_talk_node]);
+	CDST(821,5,town->talk_strs[20 + store_which_talk_node]);
+	CDST(821,6,town->talk_strs[30 + store_which_talk_node]);
 
 }
 
@@ -1439,10 +1344,10 @@ Boolean save_talk_node()
 			break;	
 	}
 	
-	CDGT(817,9,data_store->talk_strs[40 + store_which_talk_node * 2]);
-	CDGT(817,10,data_store->talk_strs[40 + store_which_talk_node * 2 + 1]);
+	CDGT(817,9,town->talk_strs[40 + store_which_talk_node * 2]);
+	CDGT(817,10,town->talk_strs[40 + store_which_talk_node * 2 + 1]);
 	
-	talking.talk_nodes[store_which_talk_node] = store_talk_node;
+	town->talking.talk_nodes[store_which_talk_node] = store_talk_node;
 
 	return TRUE;
 }
@@ -1476,8 +1381,8 @@ void put_talk_node_in_dlog()
 	csit(817,21,(char *) str);
 	for (i = 0; i < 4; i++)
 		CDSN(817,5 + i,store_talk_node.extras[i]);
-	CDST(817,9,data_store->talk_strs[40 + store_which_talk_node * 2]);
-	CDST(817,10,data_store->talk_strs[40 + store_which_talk_node * 2 + 1]);
+	CDST(817,9,town->talk_strs[40 + store_which_talk_node * 2]);
+	CDST(817,10,town->talk_strs[40 + store_which_talk_node * 2 + 1]);
 
 	if ((store_talk_node.type == 7) || (store_talk_node.type == 9) ||
 		(store_talk_node.type == 10) || (store_talk_node.type == 11))
@@ -1522,7 +1427,7 @@ void edit_talk_node_event_filter (short item_hit)
 
 				spec = -1;
 				for (j = 0; j < 60; j++)
-					if ((talking.talk_nodes[j].personality < 0) && (talking.talk_nodes[j].extras[3] < 0)) {
+					if ((town->talking.talk_nodes[j].personality < 0) && (town->talking.talk_nodes[j].extras[3] < 0)) {
 						spec = j;
 						j = 60;
 						}
@@ -1595,7 +1500,7 @@ void edit_talk_node_event_filter (short item_hit)
 				edit_spec_enc(spec,2,817);
 				else edit_spec_enc(spec,0,817);
 			if (store_talk_node.type == 29) {
-				if ((spec >= 0) && (spec < 100) && (town.specials[spec].pic < 0))
+				if ((spec >= 0) && (spec < 100) && (town->specials[spec].pic < 0))
 					CDSN(817,5,-1);
 				}
 				else {
@@ -1608,7 +1513,7 @@ void edit_talk_node_event_filter (short item_hit)
 		}
 	if (node_to_change_to >= 0) {
 		store_which_talk_node = node_to_change_to;
-		store_talk_node = talking.talk_nodes[store_which_talk_node];
+		store_talk_node = town->talking.talk_nodes[store_which_talk_node];
 		if (store_talk_node.extras[3] < 0)
 			store_talk_node.extras[3] = 0;
 		put_talk_node_in_dlog();
@@ -1625,7 +1530,7 @@ void edit_talk_node(short which_node,short parent_num)
 	for (i = 0; i < 60; i++)
 		last_talk_node[i] = -1;
 	//last_talk_node[0] = store_which_mode * 1000 + store_which_talk_node;
-	store_talk_node = talking.talk_nodes[store_which_talk_node];
+	store_talk_node = town->talking.talk_nodes[store_which_talk_node];
 	if (store_talk_node.extras[3] < 0)
 		store_talk_node.extras[3] = 0;
 		
@@ -1729,58 +1634,59 @@ void new_town_event_filter (short item_hit)
 Boolean new_town(short which_town)
 // ignore parent in Mac version
 {
-	short basic_dlog_hit,i,j,store_dialog_answer;
-	Str255 temp_str;
-	short size = 0,preset = 0;
-
-	 
-	cd_create_dialog_parent_num(830,0);
-	
-	cdsin(830,22,which_town);
-	cd_set_led(830,12,1);
-	cd_set_led(830,18,1);
-	sprintf((char *) temp_str,"Town name");
-	CDST(830,2,(char *) temp_str);
-	
-	basic_dlog_hit = cd_run_dialog();
-
-	size = cd_get_led_range(830,11,13);
-	preset = cd_get_led_range(830,18,20);
-	CDGT(830,2,(char *) temp_str);
-	temp_str[30] = 0;
-	cd_kill_dialog(830,0);
-	if (dialog_answer < 0)
-		return FALSE;
-	
-	scenario.num_towns++;
-	scenario.town_size[which_town] = size;
-	scenario.town_hidden[which_town] = 0;
-	cur_town = which_town;
-	scenario.last_town_edited = cur_town;
-	init_town(size);
-	strcpy(data_store->town_strs[0],(char *) temp_str);
-	town_type = size;
-	
-	for (i = 0; i < max_dim[size]; i++)
-		for (j = 0; j < max_dim[size]; j++)
-			switch (preset) {
-				case 0:
-					t_d.terrain[i][j] = 0;
-					break;
-				case 1:
-					t_d.terrain[i][j] = 2;
-					break;
-				case 2:
-					t_d.terrain[i][j] = 2;
-					if (get_ran(1,0,8) == 0)
-						t_d.terrain[i][j] = 3;
-						else  if (get_ran(1,0,10) == 0)
-						t_d.terrain[i][j] = 4;
-					break;
-				}
-				
-	reset_pwd();
-	return TRUE;
+	printf("Town creation currently disabled.\n");
+//	short basic_dlog_hit,i,j,store_dialog_answer;
+//	Str255 temp_str;
+//	short size = 0,preset = 0;
+//
+//	 
+//	cd_create_dialog_parent_num(830,0);
+//	
+//	cdsin(830,22,which_town);
+//	cd_set_led(830,12,1);
+//	cd_set_led(830,18,1);
+//	sprintf((char *) temp_str,"Town name");
+//	CDST(830,2,(char *) temp_str);
+//	
+//	basic_dlog_hit = cd_run_dialog();
+//
+//	size = cd_get_led_range(830,11,13);
+//	preset = cd_get_led_range(830,18,20);
+//	CDGT(830,2,(char *) temp_str);
+//	temp_str[30] = 0;
+//	cd_kill_dialog(830,0);
+//	if (dialog_answer < 0)
+//		return FALSE;
+//	
+//	scenario.num_towns++;
+//	scenario.town_size[which_town] = size;
+//	scenario.town_hidden[which_town] = 0;
+//	cur_town = which_town;
+//	scenario.last_town_edited = cur_town;
+//	init_town(size);
+//	strcpy(town->town_strs(0),(char *) temp_str);
+//	town_type = size;
+//	
+//	for (i = 0; i < max_dim[size]; i++)
+//		for (j = 0; j < max_dim[size]; j++)
+//			switch (preset) {
+//				case 0:
+//					town->terrain(i,j) = 0;
+//					break;
+//				case 1:
+//					town->terrain(i,j) = 2;
+//					break;
+//				case 2:
+//					town->terrain(i,j) = 2;
+//					if (get_ran(1,0,8) == 0)
+//						town->terrain(i,j) = 3;
+//						else  if (get_ran(1,0,10) == 0)
+//						town->terrain(i,j) = 4;
+//					break;
+//				}
+//				
+//	reset_pwd();
+//	return TRUE;
 }
 
 // before calling this, be sure to do all checks to make sure it's safe.
@@ -1794,7 +1700,7 @@ void delete_last_town()
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_a = 41942 /*sizeof(scenario_data_type)*/ + get_ran(1,-1000,1000);
 	scenario.flag_b = town_s(user_given_password);
 	scenario.flag_c = out_s(user_given_password);
 	scenario.flag_e = str_size_1(user_given_password);
@@ -1812,9 +1718,9 @@ void pick_import_town_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 3:
-			dialog_answer = CDGN(store_whigh_dlog,2);
+			dialog_answer = CDGN(841,2);
 			if (dialog_answer < 0) {
-				give_error("This number is out of the correct range. It must be at least 0.","",store_whigh_dlog);
+				give_error("This number is out of the correct range. It must be at least 0.","",841);
 				break;
 				}
 			 toast_dialog(); 
@@ -1827,20 +1733,29 @@ void pick_import_town_event_filter (short item_hit)
 		}
 }
 
-short pick_import_town(short which_dlog,short def)
+short pick_import_town(short def, FSSpec* temp_file_to_load)
 // ignore parent in Mac version
 {
 	short town_strs_hit,i,store_dialog_answer;
 	Str255 temp_str,str2;
+	NavReplyRecord s_reply;
 	
-	 store_whigh_dlog = which_dlog;
+	NavChooseFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
 	
-	cd_create_dialog_parent_num(store_whigh_dlog,0);
+	if (s_reply.validRecord == FALSE)
+		return -1;
+	AEKeyword keyword;
+	DescType descType;
+	Size actualSize;
 	
-	CDSN(store_whigh_dlog,2,0);
+	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&temp_file_to_load,sizeof(FSSpec),&actualSize);
+	
+	cd_create_dialog_parent_num(841,0);
+	
+	CDSN(841,2,0);
 	
 	town_strs_hit = cd_run_dialog();
 
-	cd_kill_dialog(store_whigh_dlog,0);
+	cd_kill_dialog(841,0);
 	return dialog_answer;
 }

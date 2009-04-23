@@ -16,27 +16,28 @@
 extern short cen_x, cen_y, overall_mode,cur_town;
 extern Boolean mouse_button_held;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
-extern town_record_type town;
-extern big_tr_type t_d;
-extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create;
+extern cTown* town;
+//extern short town_type;  // 0 - big 1 - ave 2 - small
+short max_dim[3] = {64,48,32};
+extern short mode_count,to_create;
 extern unsigned char template_terrain[64][64];
-item_record_type item_list[400];
-extern scenario_data_type scenario;
-extern special_node_type null_spec_node;
-extern talking_node_type null_talk_node;
-extern piles_of_stuff_dumping_type *data_store;
+cItemRec item_list[400];
+extern cScenario scenario;
+extern cSpecial null_spec_node;
+extern cSpeech null_talk_node;
+//extern piles_of_stuff_dumping_type *data_store;
 extern location cur_out;
+extern short start_volume, start_dir;
 
 short store_which_ter;
-terrain_type_type store_ter;
+cTerrain store_ter;
 short store_which_monst;
-monster_record_type store_monst,store_monst2;
+cMonster store_monst,store_monst2;
 short store_which_item;
-item_record_type store_item,store_item2;
+cItemRec store_item,store_item2;
 short store_which_spec_item ;
 short spec_item_spec,store_horse_page,store_boat_page ;
-item_storage_shortcut_type store_storage;
+cScenario::cItemStorage store_storage;
 short cur_shortcut;
 
 char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
@@ -621,9 +622,9 @@ short ter_traits[256] = {
 21,21,21,21,21,21,0,0,0,0,
 0,0,16,17,18,19};
 
-monster_record_type return_monster_template(unsigned char store)
+cMonster return_monster_template(unsigned char store)
 {
-	monster_record_type monst;
+	cMonster monst;
 	short m_num,i;
 	
 	m_num = store;
@@ -711,75 +712,75 @@ monster_record_type return_monster_template(unsigned char store)
 	return monst;
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
-	item_record_type i;
-	location l = {0,0};
-	short temp_val;
-	
-	i.variety = (short) s_item.variety;
-	i.item_level = (short) s_item.item_level;
-	i.awkward = (short) s_item.awkward;
-	i.bonus = (short) s_item.bonus;
-	i.protection = (short) s_item.protection;
-	i.charges = (short) s_item.charges;
-	i.type = (short) s_item.type;
-	i.graphic_num = (short) s_item.graphic_num;
-	if (i.graphic_num >= 25)
-		i.graphic_num += 20;
-	i.ability = (short) s_item.real_abil;
-	i.type_flag = (short) s_item.type_flag;
-	i.is_special = (short) s_item.is_special;
-	i.value = (short) s_item.value;
-	i.weight = s_item.weight;
-	i.special_class = 0;
-	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
-
-	if (i.charges > 0)
-		temp_val = i.value * i.charges;
-		else temp_val = i.value;
-	if (temp_val >= 15)
-		i.treas_class = 1;
-	if (temp_val >= 100)
-		i.treas_class = 2;
-	if (temp_val >= 900)
-		i.treas_class = 3;
-	if (temp_val >= 2400)
-		i.treas_class = 4;
-		
-	i.magic_use_type = s_item.magic_use_type;
-	i.ability_strength = s_item.ability_strength;
-	i.reserved1 = 0;
-	i.reserved2 = 0;
-	i.item_properties = 0;
-	if (s_item.identified == TRUE)
-		i.item_properties = i.item_properties | 1;
-	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
-		i.item_properties = i.item_properties | 16;
-	if (s_item.magic == TRUE)
-		i.item_properties = i.item_properties | 4;
-
-	return i;
-}
+//item_record_type convert_item (short_item_record_type s_item) {
+//	item_record_type i;
+//	location l = {0,0};
+//	short temp_val;
+//	
+//	i.variety = (short) s_item.variety;
+//	i.item_level = (short) s_item.item_level;
+//	i.awkward = (short) s_item.awkward;
+//	i.bonus = (short) s_item.bonus;
+//	i.protection = (short) s_item.protection;
+//	i.charges = (short) s_item.charges;
+//	i.type = (short) s_item.type;
+//	i.graphic_num = (short) s_item.graphic_num;
+//	if (i.graphic_num >= 25)
+//		i.graphic_num += 20;
+//	i.ability = (short) s_item.real_abil;
+//	i.type_flag = (short) s_item.type_flag;
+//	i.is_special = (short) s_item.is_special;
+//	i.value = (short) s_item.value;
+//	i.weight = s_item.weight;
+//	i.special_class = 0;
+//	i.item_loc = l;
+//	strcpy((char *)i.full_name,(char *)s_item.full_name);
+//	strcpy((char *)i.name,(char *)s_item.name);
+//
+//	if (i.charges > 0)
+//		temp_val = i.value * i.charges;
+//		else temp_val = i.value;
+//	if (temp_val >= 15)
+//		i.treas_class = 1;
+//	if (temp_val >= 100)
+//		i.treas_class = 2;
+//	if (temp_val >= 900)
+//		i.treas_class = 3;
+//	if (temp_val >= 2400)
+//		i.treas_class = 4;
+//		
+//	i.magic_use_type = s_item.magic_use_type;
+//	i.ability_strength = s_item.ability_strength;
+//	i.reserved1 = 0;
+//	i.reserved2 = 0;
+//	i.item_properties = 0;
+//	if (s_item.identified == TRUE)
+//		i.item_properties = i.item_properties | 1;
+//	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
+//		i.item_properties = i.item_properties | 16;
+//	if (s_item.magic == TRUE)
+//		i.item_properties = i.item_properties | 4;
+//
+//	return i;
+//}
 
 void init_scenario()
 {
 	short i;
 	Rect dummy_rect = {0,0,0,0};
 	Str255 temp_str;
-	boat_record_type null_boat = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
-	horse_record_type null_horse = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
-	item_storage_shortcut_type null_item_s ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
+	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
+	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
+	cScenario::cItemStorage null_item_s;// ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
 	short j,item_to_hide[13] = {214,233,270,271,280,281,286,290,291,297,304,311,348};
 	
-	scenario.ver[0] = 1;
-	scenario.ver[1] = 0;
-	scenario.ver[2] = 0;
-	scenario.min_run_ver = 1;
-	scenario.prog_make_ver[0] = 1;
-	scenario.prog_make_ver[1] = 0;
-	scenario.prog_make_ver[2] = 0;
+	scenario.format.ver[0] = 1;
+	scenario.format.ver[1] = 0;
+	scenario.format.ver[2] = 0;
+	scenario.format.min_run_ver = 1;
+	scenario.format.prog_make_ver[0] = 1;
+	scenario.format.prog_make_ver[1] = 0;
+	scenario.format.prog_make_ver[2] = 0;
 	scenario.num_towns = 1;
 	scenario.out_width = 1;
 	scenario.out_height = 1;
@@ -825,21 +826,21 @@ void init_scenario()
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Unused");
-			else sprintf((char *)data_store->scen_item_list.monst_names[i], "%s", temp_str);
+			sprintf((char *)scenario.scen_monsters[i].m_name, "Unused");
+			else sprintf((char *)scenario.scen_monsters[i].m_name, "%s", temp_str);
 		if (i == 0)
-			sprintf((char *)data_store->scen_item_list.monst_names[i], "Empty");
+			sprintf((char *)scenario.scen_monsters[i].m_name, "Empty");
 		}
 	for (i = 0; i < 30; i++) {
-		scenario.scen_boats[i] = null_boat;
-		scenario.scen_horses[i] = null_horse;		
+		scenario.boats[i] = null_boat;
+		scenario.horses[i] = null_horse;		
 		}
 	for (i = 0; i < 256; i++) {
 		scenario.ter_types[i].picture = ter_pics[i];
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf((char *)data_store->scen_item_list.ter_names[i], "%s", temp_str);
+		sprintf((char *)scenario.ter_names[i], "%s", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 		}
@@ -854,16 +855,16 @@ void init_scenario()
 	scenario.last_out_edited.y = 0;
 	scenario.last_town_edited = 0;
 	for (i = 0; i < 400; i++) {
-		data_store->scen_item_list.scen_items[i] = item_list[i]; //convert_item(item_list[i]);
+		scenario.scen_items[i] = item_list[i]; //convert_item(item_list[i]);
 		for (j = 0; j < 13; j++)
 			if (i == item_to_hide[j]) 
-				data_store->scen_item_list.scen_items[i].item_properties =
-					data_store->scen_item_list.scen_items[i].item_properties | 32; 
+				scenario.scen_items[i].item_properties =
+					scenario.scen_items[i].item_properties | 32; 
 		}
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
-		sprintf((char *)data_store->scen_strs[i], "%s", temp_str);
-		scenario.scen_str_len[i] = strlen((char *) data_store->scen_strs[i]);
+		sprintf((char *)scenario.scen_strs(i), "%s", temp_str);
+		scenario.scen_str_len[i] = strlen((char *) scenario.scen_strs(i));
 		}
 }	
 void put_ter_info_in_dlog()
@@ -871,7 +872,7 @@ void put_ter_info_in_dlog()
 	Str255 str;
 	
 	cdsin(813,12,store_which_ter);
-	CDST(813,2,data_store->scen_item_list.ter_names[store_which_ter]);
+	CDST(813,2,scenario.ter_names[store_which_ter]);
 	CDSN(813,5,store_ter.picture);
 	cd_set_led_range(813,19,24,store_ter.blockage);
 	cd_set_led(813,25,store_ter.fly_over);
@@ -891,10 +892,10 @@ void put_ter_info_in_dlog()
 	get_str(str,21,80 + store_ter.special);
 	csit(813,68,(char *) str);
 	if (store_ter.picture >= 1000)
-		csp(813,14,store_ter.picture % 1000,PICT_CUSTOM_TYPE + PICT_TER_TYPE);
+		csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
 	else if (store_ter.picture >= 400)
-		csp(813,14,store_ter.picture - 400,PICT_TER_ANIM_TYPE);
-	else csp(813,14,store_ter.picture,PICT_TER_TYPE);
+		csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
+	else csp(813,14,store_ter.picture,PICT_TER);
 }
 
 Boolean save_ter_info()
@@ -951,7 +952,7 @@ Boolean save_ter_info()
 
 	CDGT(813,2,(char *) str);
 	str[29] = 0;
-	sprintf(data_store->scen_item_list.ter_names[store_which_ter],"%s",str);
+	sprintf(scenario.ter_names[store_which_ter],"%s",str);
 
 	scenario.ter_types[store_which_ter] = store_ter;
 	return TRUE;
@@ -985,8 +986,8 @@ void edit_ter_type_event_filter (short item_hit)
 		
 		case 13: case 70:
 			if (item_hit == 13)
-				i = choose_graphic(0,PICT_N_TER,store_ter.picture,PICT_TER_TYPE,813);
-			else i = 400 + choose_graphic(/*300,313*/0,PICT_N_TER_ANIM,store_ter.picture,PICT_TER_ANIM_TYPE,813);
+				i = choose_graphic(0,PICT_N_TER,store_ter.picture,PICT_TER,813);
+			else i = 400 + choose_graphic(/*300,313*/0,PICT_N_TER_ANIM,store_ter.picture,PICT_TER_ANIM,813);
 			if (i >= 0) {
 				//if (i >= 300) i += 100;
 				store_ter.picture = i;
@@ -994,10 +995,10 @@ void edit_ter_type_event_filter (short item_hit)
 			else break;
 			CDSN(813,5,store_ter.picture);
 			if (store_ter.picture >= 1000)
-				csp(813,14,store_ter.picture % 1000,PICT_CUSTOM_TYPE + PICT_TER_TYPE);
+				csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
 			else if (store_ter.picture >= 400)
-				csp(813,14,store_ter.picture - 400,PICT_TER_ANIM_TYPE);
-			else csp(813,14,store_ter.picture,PICT_TER_TYPE);
+				csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
+			else csp(813,14,store_ter.picture,PICT_TER);
 			break;
 		default:
 			cd_hit_led_range(813,32,55,item_hit);
@@ -1054,9 +1055,9 @@ void put_monst_info_in_dlog()
 	Str255 str;
 
 	if (store_monst.picture_num < 1000)
-		csp(814,34,/*400 + */store_monst.picture_num,PICT_MONST_TYPE);
+		csp(814,34,/*400 + */store_monst.picture_num,PICT_MONST);
 	else {
-		short type_g = PICT_CUSTOM_TYPE + PICT_MONST_TYPE;
+		short type_g = PICT_CUSTOM + PICT_MONST;
 		short size_g = store_monst.picture_num / 1000;
 		switch(size_g){
 			case 2:
@@ -1072,7 +1073,7 @@ void put_monst_info_in_dlog()
 		csp(814,34,store_monst.picture_num % 1000,type_g);
 	}
 	cdsin(814,33,store_which_monst);
-	CDST(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
+	CDST(814,2,(char*)scenario.scen_monsters[store_which_monst].m_name);
 	CDSN(814,3,store_monst.picture_num);
 	sprintf((char *) str,"Width = %d",store_monst.x_width);
 	csit(814,40,(char *) str);
@@ -1111,7 +1112,7 @@ Boolean save_monst_info()
 	
 	CDGT(814,2,(char *) str);
 	str[19] = 0;
-	sprintf(data_store->scen_item_list.monst_names[store_which_monst],"%s",str);
+	sprintf((char*)scenario.scen_monsters[store_which_monst].m_name,"%s",str);
 	//CDGT(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	store_monst.picture_num = CDGN(814,3);
 	if (cre(store_monst.picture_num,0,5000,"Monster pic must be from 0 to 5000.","",814) > 0) return FALSE;
@@ -1177,7 +1178,7 @@ void edit_monst_type_event_filter (short item_hit)
 {
 	Str255 str;
 	short i;
-	monster_record_type temp_monst;
+	cMonster temp_monst;
 	
 	switch (item_hit) {
 		case 20:
@@ -1213,7 +1214,7 @@ void edit_monst_type_event_filter (short item_hit)
 			break;
 		case 24: // picture
 			if (save_monst_info() == FALSE) break;
-			i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_monst.picture_num/* + 400*/,PICT_MONST_TYPE,814);
+			i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_monst.picture_num/* + 400*/,PICT_MONST,814);
 			if (i >= 0) {
 				store_monst.picture_num = i - 400;
 				}
@@ -1248,7 +1249,7 @@ void edit_monst_type_event_filter (short item_hit)
 			break;
 		case 28: // talk pic
 			if (save_monst_info() == FALSE) break;
-			i = choose_graphic(/*1001,1084*/1,1+PICT_N_TALK,store_monst.default_facial_pic/* + 1000*/,PICT_TALK_TYPE,814);
+			i = choose_graphic(/*1001,1084*/1,1+PICT_N_TALK,store_monst.default_facial_pic/* + 1000*/,PICT_TALK,814);
 			if (i >= 0) {
 				store_monst.default_facial_pic = i - 1000;
 				}
@@ -1393,7 +1394,7 @@ void edit_monst_abil_event_filter (short item_hit)
 		}
 }
 
-monster_record_type edit_monst_abil(monster_record_type starting_record,short parent_num)
+cMonster edit_monst_abil(cMonster starting_record,short parent_num)
 // ignore parent in Mac version
 {
 	short item_hit,i,store_dialog_answer;
@@ -1438,8 +1439,8 @@ void put_item_info_in_dlog()
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
 	if (store_item.graphic_num >= 150)
-		csp(818,49,store_item.graphic_num % 150,PICT_CUSTOM_TYPE + PICT_ITEM_TYPE);
-	else csp(818,49,/*1800 + */store_item.graphic_num,PICT_ITEM_TYPE);
+		csp(818,49,store_item.graphic_num % 150,PICT_CUSTOM + PICT_ITEM);
+	else csp(818,49,/*1800 + */store_item.graphic_num,PICT_ITEM);
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
 	CDSN(818,5,store_item.item_level);
@@ -1505,7 +1506,7 @@ Boolean save_item_info()
 		give_error("An item with the special ability selected must have at least 1 charge.","",818);
 		return FALSE;
 		}
-	data_store->scen_item_list.scen_items[store_which_item] = store_item ;
+	scenario.scen_items[store_which_item] = store_item ;
 	
 	return TRUE;
 }
@@ -1514,7 +1515,7 @@ void edit_item_type_event_filter (short item_hit)
 {
 	Str255 str;
 	short i;
-	item_record_type temp_item;
+	cItemRec temp_item;
 	
 	switch (item_hit) {
 		case 15:
@@ -1528,19 +1529,19 @@ void edit_item_type_event_filter (short item_hit)
 			if (save_item_info() == FALSE) break;
 			store_which_item--;
 			if (store_which_item < 0) store_which_item = 399;
-			store_item = data_store->scen_item_list.scen_items[store_which_item];
+			store_item = scenario.scen_items[store_which_item];
 			put_item_info_in_dlog();
 			break;
 		case 17:
 			if (save_item_info() == FALSE) break;
 			store_which_item++;
 			if (store_which_item > 399) store_which_item = 0;
-			store_item = data_store->scen_item_list.scen_items[store_which_item];
+			store_item = scenario.scen_items[store_which_item];
 			put_item_info_in_dlog();
 			break;
 		case 56:
 			if (save_item_info() == FALSE) break;
-			i = choose_graphic(/*1800,1922*/0,PICT_N_ITEM,store_item.graphic_num/* + 1800*/,PICT_ITEM_TYPE,818);
+			i = choose_graphic(/*1800,1922*/0,PICT_N_ITEM,store_item.graphic_num/* + 1800*/,PICT_ITEM,818);
 			if (i >= 0) {
 				store_item.graphic_num = i - 1800;
 				}
@@ -1578,7 +1579,7 @@ short edit_item_type(short which_item)
 	Str255 temp_str;
 				
 	store_which_item = which_item;
-	store_item = data_store->scen_item_list.scen_items[store_which_item];
+	store_item = scenario.scen_items[store_which_item];
 	//make_cursor_sword();
 	
 	cd_create_dialog_parent_num(818,0);
@@ -1737,7 +1738,7 @@ void edit_item_abil_event_filter (short item_hit)
 		}
 }
 
-item_record_type edit_item_abil(item_record_type starting_record,short parent_num)
+cItemRec edit_item_abil(cItemRec starting_record,short parent_num)
 // ignore parent in Mac version
 {
 	short item_hit,i,store_dialog_answer;
@@ -1778,8 +1779,8 @@ void put_spec_item_in_dlog()
 	short i;
 	
 	cdsin(806,19,store_which_spec_item);
-	CDST(806,2,data_store->scen_strs[60 + store_which_spec_item * 2]);
-	CDST(806,3,data_store->scen_strs[60 + store_which_spec_item * 2 + 1]);
+	CDST(806,2,scenario.scen_strs(60 + store_which_spec_item * 2));
+	CDST(806,3,scenario.scen_strs(60 + store_which_spec_item * 2 + 1));
 	CDSN(806,4,scenario.special_item_special[store_which_spec_item]);
 	if (scenario.special_items[store_which_spec_item] >= 10)
 		cd_set_led(806,15,1); else cd_set_led(806,15,0);
@@ -1794,8 +1795,8 @@ Boolean save_spec_item()
 	
 	CDGT(806,2,(char *) str);
 	str[25] = 0;
-	sprintf(data_store->scen_strs[60 + store_which_spec_item * 2 + 0],"%s",str);
-	CDGT(806,3,data_store->scen_strs[60 + store_which_spec_item * 2 + 1]);
+	sprintf(scenario.scen_strs(60 + store_which_spec_item * 2 + 0),"%s",str);
+	CDGT(806,3,scenario.scen_strs(60 + store_which_spec_item * 2 + 1));
 	spec_item_spec = CDGN(806,4);
 	if (cre(scenario.special_item_special[store_which_spec_item],
 		-1,255,"Scenario special node called must be from 0 to 255 (or -1 for no special).","",806) > 0) return FALSE;
@@ -1967,16 +1968,16 @@ Boolean save_horses()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		scenario.scen_horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].which_town,
+		scenario.horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
+		if (cre(scenario.horses[6 * store_horse_page + i].which_town,
 			-1,199,"Town number must be from 0 to 199 (or -1 for horse to not exist).","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].horse_loc.x = CDGN(808,8 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].horse_loc.x,
+		scenario.horses[6 * store_horse_page + i].loc.x = CDGN(808,8 + i);
+		if (cre(scenario.horses[6 * store_horse_page + i].loc.x,
 			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].horse_loc.y = CDGN(808,14 + i);
-		if (cre(scenario.scen_horses[6 * store_horse_page + i].horse_loc.y,
+		scenario.horses[6 * store_horse_page + i].loc.y = CDGN(808,14 + i);
+		if (cre(scenario.horses[6 * store_horse_page + i].loc.y,
 			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
-		scenario.scen_horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
+		scenario.horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
 		}
 	return TRUE;
 }
@@ -1988,10 +1989,10 @@ void put_horses_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(808,23 + i,6 * store_horse_page + i);
-		CDSN(808,2 + i,scenario.scen_horses[6 * store_horse_page + i].which_town);
-		CDSN(808,8 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
-		CDSN(808,14 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
-		cd_set_led(808,43 + i,scenario.scen_horses[6 * store_horse_page + i].property);
+		CDSN(808,2 + i,scenario.horses[6 * store_horse_page + i].which_town);
+		CDSN(808,8 + i,scenario.horses[6 * store_horse_page + i].loc.x);
+		CDSN(808,14 + i,scenario.horses[6 * store_horse_page + i].loc.y);
+		cd_set_led(808,43 + i,scenario.horses[6 * store_horse_page + i].property);
 		}
 
 }
@@ -2047,16 +2048,16 @@ Boolean save_boats()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		scenario.scen_boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].which_town,
+		scenario.boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
+		if (cre(scenario.boats[6 * store_boat_page + i].which_town,
 			-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].boat_loc.x = CDGN(809,8 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.x,
+		scenario.boats[6 * store_boat_page + i].loc.x = CDGN(809,8 + i);
+		if (cre(scenario.boats[6 * store_boat_page + i].loc.x,
 			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].boat_loc.y = CDGN(809,14 + i);
-		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.y,
+		scenario.boats[6 * store_boat_page + i].loc.y = CDGN(809,14 + i);
+		if (cre(scenario.boats[6 * store_boat_page + i].loc.y,
 			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
-		scenario.scen_boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
+		scenario.boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
 		}
 	return TRUE;
 }
@@ -2068,10 +2069,10 @@ void put_boats_in_dlog()
 	
 	for (i = 0; i < 6; i++) {
 		cdsin(809,24 + i,6 * store_boat_page + i);
-		CDSN(809,2 + i,scenario.scen_boats[6 * store_boat_page + i].which_town);
-		CDSN(809,8 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
-		CDSN(809,14 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
-		cd_set_led(809,43 + i,scenario.scen_boats[6 * store_boat_page + i].property);
+		CDSN(809,2 + i,scenario.boats[6 * store_boat_page + i].which_town);
+		CDSN(809,8 + i,scenario.boats[6 * store_boat_page + i].loc.x);
+		CDSN(809,14 + i,scenario.boats[6 * store_boat_page + i].loc.y);
+		cd_set_led(809,43 + i,scenario.boats[6 * store_boat_page + i].property);
 		}
 
 }
@@ -2288,19 +2289,19 @@ Boolean save_scen_details()
 	
 	scenario.difficulty = cd_get_led_range(803,30,33);
 	scenario.rating = cd_get_led_range(803,21,24);
-	scenario.ver[0] = CDGN(803,2);
-	scenario.ver[1] = CDGN(803,3);
-	scenario.ver[2] = CDGN(803,4);
+	scenario.format.ver[0] = CDGN(803,2);
+	scenario.format.ver[1] = CDGN(803,3);
+	scenario.format.ver[2] = CDGN(803,4);
 	for (i = 0; i < 3; i++)
-		if (cre(scenario.ver[i],
+		if (cre(scenario.format.ver[i],
 			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
-	strcpy(data_store->scen_strs[1],(char *) str);
+	strcpy(scenario.scen_strs(1),(char *) str);
 	CDGT(803,6,(char *) str);
 	str[59] = 0;
-	strcpy(data_store->scen_strs[2],(char *) str);
-	CDGT(803,7,data_store->scen_strs[3]);
+	strcpy(scenario.scen_strs(2),(char *) str);
+	CDGT(803,7,scenario.scen_strs(3));
 	
 	return TRUE;
 }
@@ -2312,12 +2313,12 @@ void put_scen_details_in_dlog()
 	
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);
-	CDSN(803,2,scenario.ver[0]);
-	CDSN(803,3,scenario.ver[1]);
-	CDSN(803,4,scenario.ver[2]);
-	CDST(803,5,data_store->scen_strs[1]);
-	CDST(803,6,data_store->scen_strs[2]);
-	CDST(803,7,data_store->scen_strs[3]);
+	CDSN(803,2,scenario.format.ver[0]);
+	CDSN(803,3,scenario.format.ver[1]);
+	CDSN(803,4,scenario.format.ver[2]);
+	CDST(803,5,scenario.scen_strs(1));
+	CDST(803,6,scenario.scen_strs(2));
+	CDST(803,7,scenario.scen_strs(3));
 }
 
 void edit_scen_details_event_filter (short item_hit)
@@ -2487,87 +2488,93 @@ short edit_make_scen_2(short *val_array)
 	return dialog_answer;
 }
 
-void build_scenario()
+bool build_scenario()
 {
-	short two_flags[6]; // width, height, large, med, small, default_town
-	Str255 f_name,f_name2,title;
-	short grass,password,which_town;
-	short i,j;
-	long dummy;
-	
-	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
-		return;
-	sprintf((char *) f_name2,"%s.exs",f_name);
-	if (edit_make_scen_2((short *) two_flags) == FALSE)
-		return;
-	user_given_password = given_password = get_password();
-	if (fancy_choice_dialog(860,0) == 2)
-		return;
-		
-	init_out();
-	init_scenario();
-	strcpy((char *) data_store->scen_strs[0],(char *) title);
-	if (two_flags[5] == 0) {
-		init_town(1);
-		if (grass == 0)
-			for (i = 0; i < 48; i++)
-				for (j = 0; j < 48; j++)
-					t_d.terrain[i][j] = 0;
-		}
-		else {
-			import_town(-1);
-			}
-	if (two_flags[3] > 0)
-		two_flags[3]--;
-	
-	make_new_scenario(f_name2,two_flags[0],two_flags[1],two_flags[5],grass);
-	
-	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
-	// for a while
-	overall_mode = 60;
-	cur_out.x = 0; cur_out.y = 0;
-	load_outdoors(cur_out,0);
-
-	for (i = 0; i < two_flags[2]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 0;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
-		init_town(0);
-		strcpy(data_store->town_strs[0],"Large town");
-		town_type = 0;
-		reset_pwd();
-		save_scenario();	
-		}
-	for (i = 0; i < two_flags[3]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 1;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
-		init_town(1);
-		strcpy(data_store->town_strs[0],"Medium town");
-		town_type = 1;
-		reset_pwd();
-		save_scenario();	
-		}
-	for (i = 0; i < two_flags[4]; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 2;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
-		init_town(2);
-		strcpy(data_store->town_strs[0],"Small town");
-		town_type = 2;
-		reset_pwd();
-		save_scenario();	
-		}
-	//Delay(200,&dummy);
-	load_town(0);
-	augment_terrain(cur_out);
-	update_item_menu();
+	printf("Building a scenario currently disabled.\n");
+//	short two_flags[6]; // width, height, large, med, small, default_town
+//	Str255 f_name,f_name2,title;
+//	short grass,password,which_town,error;
+//	FSSpec temp_file_to_load;
+//	short i,j;
+//	long dummy;
+//	
+//	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
+//		return false;
+//	sprintf((char *) f_name2,"%s.exs",f_name);
+//	if (edit_make_scen_2((short *) two_flags) == FALSE)
+//		return false;
+//	user_given_password = given_password = get_password();
+//	if (fancy_choice_dialog(860,0) == 2)
+//		return false;
+//	town = new cMedTown;
+//	//cMedTown* t_d = (cMedTown*) town;
+//	init_out();
+//	init_scenario();
+//	strcpy((char *) scenario.scen_strs(0),(char *) title);
+//	if (two_flags[5] == 0) {
+//		init_town(1);
+//		if (grass == 0)
+//			for (i = 0; i < 48; i++)
+//				for (j = 0; j < 48; j++)
+//					town->terrain(i,j) = 0;
+//		}
+//	else {
+//		error = FSMakeFSSpec(start_volume,start_dir,"\p::::Blades of Exile Base",&temp_file_to_load);
+//		if (error != 0) {oops_error(40);}
+//		import_town(0,temp_file_to_load);
+//	}
+//	if (two_flags[3] > 0)
+//		two_flags[3]--;
+//	
+//	make_new_scenario(f_name2,two_flags[0],two_flags[1],two_flags[5],grass);
+//	
+//	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
+//	// for a while
+//	overall_mode = 60;
+//	cur_out.x = 0; cur_out.y = 0;
+//	load_outdoors(cur_out,0);
+//
+//	for (i = 0; i < two_flags[2]; i++) {
+//		which_town = scenario.num_towns;
+//		scenario.num_towns++;
+//		scenario.town_size[which_town] = 0;
+//		scenario.town_hidden[which_town] = 0;
+//		cur_town = which_town;
+//		init_town(0);
+//		strcpy(data_store->town_strs[0],"Large town");
+//		town_type = 0;
+//		reset_pwd();
+//		save_scenario();	
+//		}
+//	for (i = 0; i < two_flags[3]; i++) {
+//		which_town = scenario.num_towns;
+//		scenario.num_towns++;
+//		scenario.town_size[which_town] = 1;
+//		scenario.town_hidden[which_town] = 0;
+//		cur_town = which_town;
+//		init_town(1);
+//		strcpy(data_store->town_strs[0],"Medium town");
+//		town_type = 1;
+//		reset_pwd();
+//		save_scenario();	
+//		}
+//	for (i = 0; i < two_flags[4]; i++) {
+//		which_town = scenario.num_towns;
+//		scenario.num_towns++;
+//		scenario.town_size[which_town] = 2;
+//		scenario.town_hidden[which_town] = 0;
+//		cur_town = which_town;
+//		init_town(2);
+//		strcpy(data_store->town_strs[0],"Small town");
+//		town_type = 2;
+//		reset_pwd();
+//		save_scenario();	
+//		}
+//	//Delay(200,&dummy);
+//	if(load_town(0)) cur_town = 0;
+//	cur_town = 0;
+//	augment_terrain(cur_out);
+//	update_item_menu();
 }
 
 void user_password_filter (short item_hit)

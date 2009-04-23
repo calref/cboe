@@ -31,11 +31,10 @@ extern stored_items_list_type stored_items[3];
 extern stored_town_maps_type town_maps;
 extern stored_outdoor_maps_type o_maps;
 
-extern Boolean registered,play_sounds,sys_7_avail,save_blocked,ed_reg;
+extern Boolean play_sounds,save_blocked;
 extern short current_active_pc;
-extern long register_flag,stored_key;
+extern long stored_key;
 extern WindowPtr mainPtr;
-extern long ed_flag,ed_key;
 
 extern item_record_type item_list[400];
 
@@ -663,65 +662,65 @@ void remove_party_from_scen()
 	load_base_item_defs();
 }
 
-long open_pref_file()
-{
-	Str255 pref_name;
-	short vol_ref = 0;
-	long dir_ID = 0,stored_key;
-	FSSpec pref;
-	short file_ref_num;
-	PrefHandle data_handle;
-	
-	GetIndString(pref_name,5,19);
-	if (sys_7_avail == TRUE)
-		FindFolder(kOnSystemDisk,kPreferencesFolderType,kDontCreateFolder,&vol_ref,&dir_ID);
-	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
-	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-	if (file_ref_num == -1) {
-		save_prefs();
-		//make_pref_file(pref);
-		return -1;
-	}
-		
-	UseResFile(file_ref_num);
-	data_handle = (PrefHandle) Get1Resource('PRFN',128);
-	
-	if ((**data_handle).l[2] != 0)
-		give_intro_hint = TRUE;
-	else
-		give_intro_hint = FALSE;
-	display_mode = (short) ((**data_handle).l[3]);
-	play_sounds = (short) ((**data_handle).l[4]);
-	register_flag = (long) (800000) - (**data_handle).l[5];
-	stored_key = (long) (700000) - (**data_handle).l[7];
-	ed_flag = (long) (800000) - (**data_handle).l[6];
-	ed_key = (long) (700000) - (**data_handle).l[8];
-	
-	if ((registered == TRUE) && (stored_key != init_data(register_flag))) {
-		display_mode = 0;
-		CloseResFile(file_ref_num);
-		save_prefs();
-		return -100;	
-	}
-	if ((stored_key != init_data(register_flag)) && ((register_flag < 10000) || (register_flag > 30000)
-		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
-		registered = FALSE;
-		if  ((register_flag < 10000) || (register_flag > 30000))
-			register_flag = get_ran(1,10000,30000);
-		if ((ed_flag < 0) || (ed_flag > 10000))
-			ed_flag = 10000;
-		
-		stored_key = 0;
-		display_mode = 0;
-		CloseResFile(file_ref_num);
-		save_prefs();
-		return -100;
-	}
-
-	CloseResFile(file_ref_num);
-	
-	return stored_key;
-}
+//long open_pref_file()
+//{
+//	Str255 pref_name;
+//	short vol_ref = 0;
+//	long dir_ID = 0,stored_key;
+//	FSSpec pref;
+//	short file_ref_num;
+//	PrefHandle data_handle;
+//	
+//	GetIndString(pref_name,5,19);
+//	if (sys_7_avail == TRUE)
+//		FindFolder(kOnSystemDisk,kPreferencesFolderType,kDontCreateFolder,&vol_ref,&dir_ID);
+//	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
+//	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
+//	if (file_ref_num == -1) {
+//		save_prefs();
+//		//make_pref_file(pref);
+//		return -1;
+//	}
+//		
+//	UseResFile(file_ref_num);
+//	data_handle = (PrefHandle) Get1Resource('PRFN',128);
+//	
+//	if ((**data_handle).l[2] != 0)
+//		give_intro_hint = TRUE;
+//	else
+//		give_intro_hint = FALSE;
+//	display_mode = (short) ((**data_handle).l[3]);
+//	play_sounds = (short) ((**data_handle).l[4]);
+//	register_flag = (long) (800000) - (**data_handle).l[5];
+//	stored_key = (long) (700000) - (**data_handle).l[7];
+//	ed_flag = (long) (800000) - (**data_handle).l[6];
+//	ed_key = (long) (700000) - (**data_handle).l[8];
+//	
+//	if ((registered == TRUE) && (stored_key != init_data(register_flag))) {
+//		display_mode = 0;
+//		CloseResFile(file_ref_num);
+//		save_prefs();
+//		return -100;	
+//	}
+//	if ((stored_key != init_data(register_flag)) && ((register_flag < 10000) || (register_flag > 30000)
+//		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
+//		registered = FALSE;
+//		if  ((register_flag < 10000) || (register_flag > 30000))
+//			register_flag = get_ran(1,10000,30000);
+//		if ((ed_flag < 0) || (ed_flag > 10000))
+//			ed_flag = 10000;
+//		
+//		stored_key = 0;
+//		display_mode = 0;
+//		CloseResFile(file_ref_num);
+//		save_prefs();
+//		return -100;
+//	}
+//
+//	CloseResFile(file_ref_num);
+//	
+//	return stored_key;
+//}
 
 void make_pref_file(FSSpec pref)
 {
@@ -778,72 +777,72 @@ void make_pref_file(FSSpec pref)
 	CloseResFile(file_ref_num);
 }
 
-void save_prefs()
-{
-	short file_ref_num;
-	Handle old_handle,data_handle;
-	short vol_ref,i;
-	short res_ID;
-	long dir_ID;
-	ResType res_type = 'PRFN';
-	Str255 res_name;
-	short res_attributes;
-	StringPtr source_str;
-	Size byte_count;
-	FSSpec pref;
-	short app_res_num;
-	Str255 pref_name;
-	
-	app_res_num = CurResFile();
-	
-	GetIndString(pref_name,5,19);
-	if (sys_7_avail == TRUE)
-		FindFolder(kOnSystemDisk,kPreferencesFolderType,
-			kDontCreateFolder,&vol_ref,&dir_ID);
-	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
-	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-	if (file_ref_num == -1) {
-		make_pref_file(pref);
-		file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-//		return;
-	}
-		
-	UseResFile(file_ref_num);
-
-	data_handle = NewHandleClear(sizeof(PrefRecord));
-	HLock(data_handle);
-
-	for (i = 0; i < 10; i++)
-		(**(PrefHandle)data_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
-	(**(PrefHandle)data_handle).l[2] = (long) (give_intro_hint);
-	(**(PrefHandle)data_handle).l[3] = (long) (display_mode);
-	(**(PrefHandle)data_handle).l[4] = (long) (play_sounds);
-	
-
-	if (register_flag == 0) {
-		register_flag = (long) get_ran(1,10000,20000);
-		ed_flag = get_ran(1,5000,9999);
-	}
-	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
-	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
-	if (registered == TRUE)
-		(**(PrefHandle)data_handle).l[7] = (long) (700000) - init_data(register_flag);
-	if (ed_reg == TRUE)
-		(**(PrefHandle)data_handle).l[8] = (long) (700000) - init_data(ed_flag);
-	
-	old_handle = Get1Resource('PRFN',128);
-	GetResInfo(old_handle,&res_ID,&res_type,res_name);
-	res_attributes = GetResAttrs(old_handle);
-	RemoveResource(old_handle);
-	
-	AddResource(data_handle,'PRFN',128,res_name);
-	WriteResource(data_handle);
-	HUnlock(data_handle);
-	ReleaseResource(data_handle);
-
-	CloseResFile(file_ref_num);
-	UseResFile(app_res_num);
-}
+//void save_prefs()
+//{
+//	short file_ref_num;
+//	Handle old_handle,data_handle;
+//	short vol_ref,i;
+//	short res_ID;
+//	long dir_ID;
+//	ResType res_type = 'PRFN';
+//	Str255 res_name;
+//	short res_attributes;
+//	StringPtr source_str;
+//	Size byte_count;
+//	FSSpec pref;
+//	short app_res_num;
+//	Str255 pref_name;
+//	
+//	app_res_num = CurResFile();
+//	
+//	GetIndString(pref_name,5,19);
+//	if (sys_7_avail == TRUE)
+//		FindFolder(kOnSystemDisk,kPreferencesFolderType,
+//			kDontCreateFolder,&vol_ref,&dir_ID);
+//	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
+//	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
+//	if (file_ref_num == -1) {
+//		make_pref_file(pref);
+//		file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
+////		return;
+//	}
+//		
+//	UseResFile(file_ref_num);
+//
+//	data_handle = NewHandleClear(sizeof(PrefRecord));
+//	HLock(data_handle);
+//
+//	for (i = 0; i < 10; i++)
+//		(**(PrefHandle)data_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
+//	(**(PrefHandle)data_handle).l[2] = (long) (give_intro_hint);
+//	(**(PrefHandle)data_handle).l[3] = (long) (display_mode);
+//	(**(PrefHandle)data_handle).l[4] = (long) (play_sounds);
+//	
+//
+//	if (register_flag == 0) {
+//		register_flag = (long) get_ran(1,10000,20000);
+//		ed_flag = get_ran(1,5000,9999);
+//	}
+//	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
+//	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
+//	if (registered == TRUE)
+//		(**(PrefHandle)data_handle).l[7] = (long) (700000) - init_data(register_flag);
+//	if (ed_reg == TRUE)
+//		(**(PrefHandle)data_handle).l[8] = (long) (700000) - init_data(ed_flag);
+//	
+//	old_handle = Get1Resource('PRFN',128);
+//	GetResInfo(old_handle,&res_ID,&res_type,res_name);
+//	res_attributes = GetResAttrs(old_handle);
+//	RemoveResource(old_handle);
+//	
+//	AddResource(data_handle,'PRFN',128,res_name);
+//	WriteResource(data_handle);
+//	HUnlock(data_handle);
+//	ReleaseResource(data_handle);
+//
+//	CloseResFile(file_ref_num);
+//	UseResFile(app_res_num);
+//}
 
 /* 
  * XXX This was referenced but not defined, so I copied the implementation

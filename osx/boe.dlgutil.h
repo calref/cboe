@@ -23,11 +23,11 @@ void put_party_stats();
 void edit_party(short can_create,short can_cancel);
 void prefs_event_filter (short item_hit);
 void pick_preferences()  ;
-void check_pref_file() ;
-long open_pref_file();
-void make_pref_file(FSSpec pref);
+//void check_pref_file() ;
+//long open_pref_file();
+//void make_pref_file(FSSpec pref);
 void save_prefs();
-
+void load_prefs();
 void sign_event_filter (short item_hit);
 void tip_of_day_event_filter (short item_hit);
 void tip_of_day();

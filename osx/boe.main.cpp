@@ -48,7 +48,7 @@ Boolean bgm_on = FALSE,bgm_init = FALSE;
 short dialog_answer;
 Point store_anim_ul;
 cScenario scenario;
-piles_of_stuff_dumping_type *data_store;
+//piles_of_stuff_dumping_type *data_store;
 talking_record_type talking;
 
 Boolean gInBackground = FALSE;
@@ -60,15 +60,12 @@ short on_monst_menu[256];
 // Cursors 
 extern short current_cursor;
 
-
-// Shareware globals
-Boolean registered = TRUE,ed_reg = FALSE;
-long register_flag = 0;
-long ed_flag = 0,ed_key;
-Boolean game_run_before = TRUE;
-
-Boolean debug_on = FALSE,give_intro_hint = TRUE,ask_to_change_color = TRUE,in_scen_debug = FALSE;
-Boolean belt_present = FALSE;
+bool game_run_before = false;
+bool debug_on = false;
+bool give_intro_hint = true;
+bool in_scen_debug = false;
+bool show_startup_splash = true;
+bool belt_present = false;
 
 /* Adventure globals */
 party_record_type party;
@@ -165,7 +162,7 @@ bool mac_is_intel;
 
 int main(void)
 {
-	data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
+	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	start_time = TickCount();
 	Initialize();
 #ifdef EXILE_BIG_GUNS
@@ -174,7 +171,7 @@ int main(void)
 	item_sbar_UPP = NewControlActionProc(item_sbar_action);
 	shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 #endif
-	init_graph_tool(redraw_screen,ul);
+	init_graph_tool(redraw_screen,&ul);
 
 	Set_Window_Drag_Bdry();
 
@@ -228,12 +225,12 @@ int main(void)
 	if (overall_mode == MODE_STARTUP)
 		overall_mode = MODE_OUTDOORS;
 
-	//if (fry_startup == FALSE) {
-		if (game_run_before == FALSE)
-			FCD(986,0);
-			else if (give_intro_hint == TRUE)
-				tip_of_day();
-	//	}
+	if (!game_run_before)
+		FCD(986,0);
+	else if (give_intro_hint)
+		tip_of_day();
+	game_run_before = true;
+	
 	check_for_intel();
 
 	menu_activate(0);
@@ -296,14 +293,15 @@ void Initialize(void)
 	find_quickdraw();
 	init_directories();
 
-	stored_key = open_pref_file();
-	if (stored_key == -100) {
-		stored_key = open_pref_file();
-		if (stored_key == -100) {
-			Alert(983,NIL);
-			ExitToShell();	
-		}
-	}
+//	stored_key = open_pref_file();
+//	if (stored_key == -100) {
+//		stored_key = open_pref_file();
+//		if (stored_key == -100) {
+//			Alert(983,NIL);
+//			ExitToShell();	
+//		}
+//	}
+	load_prefs();
 	set_pixel_depth();
 	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
 	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
@@ -1313,12 +1311,12 @@ void move_sound(unsigned char ter,short step){
 		on_swamp = true;
 	}else on_swamp = false;
 	
-	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {// is on boat ?
+	if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (party.in_boat >= 0)) {// is on boat ?
 		if (spec == 21) //town entrance ?
 			return;
 		play_sound(48); //play boat sound
 	}
-	else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {//// is on horse ?
+	else if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
 	else switch(scenario.ter_types[ter].step_sound){

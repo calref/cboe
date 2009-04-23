@@ -43,11 +43,6 @@ long start_time;
 Boolean party_in_scen = FALSE;
 Boolean scen_items_loaded = FALSE;
 
-// Shareware globals
-Boolean registered = TRUE,ed_reg = TRUE;
-long register_flag = 0;
-long ed_flag = 0,ed_key = 0,stored_key = 0;
-
 /* Adventure globals */
 party_record_type party;
 pc_record_type adven[6];
@@ -539,7 +534,7 @@ void handle_extra_menu(int item_hit)
 	boat_record_type v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
 	
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 	}
 	switch(item_hit) {
@@ -575,29 +570,29 @@ void handle_extra_menu(int item_hit)
 			
 
 		case 6:
-			display_strings(20,20,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
+			display_strings(20,20,0,0,"Editing party",57,7,PICT_DLG,0);
 			for (i = 0; i < 4; i++)
 				party.creature_save[i].which_town = 200;
 			break;
 		case 8: // damage
-			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
 				adven[i].cur_health = adven[i].max_health;
 			break;
 		case 9: // spell pts
-			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
 				adven[i].cur_sp = adven[i].max_sp;
 			break;
 		case 10: // raise dead
-			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
 				if ((adven[i].main_status == 2) || (adven[i].main_status == 3) ||
 					(adven[i].main_status == 4))
 						adven[i].main_status = 1;
 			break;
 		case 11: // conditions
-			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++) {
 				adven[i].status[2] = 0;
 				if (adven[i].status[3] < 0)
@@ -613,7 +608,7 @@ void handle_extra_menu(int item_hit)
 			
 		case 13:
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 			}
 			if (FCD(912,0) != 1)
@@ -630,7 +625,7 @@ void handle_edit_menu(int item_hit)
 	short choice,i,j,k;
 
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
 	if ((ed_reg == FALSE) && (save_blocked == FALSE))
@@ -642,7 +637,7 @@ void handle_edit_menu(int item_hit)
 			 display_alchemy();
 			break;
 		case 2: // all property
-			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
+			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG,0);
 			for (i = 0; i < 30; i++) {
 				party.boats[i].property = FALSE;
 				party.horses[i].property = FALSE;
@@ -653,10 +648,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 6: // ouit maps
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 				}
-			display_strings(20,13,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,13,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
 					for (k = 0; k < 48; k++)
@@ -664,10 +659,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 7: // town maps
 			if (party_in_scen == FALSE) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 				}
-			display_strings(20,14,0,0,"Editing party",57,15,PICT_DLG_TYPE,0);
+			display_strings(20,14,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
@@ -749,7 +744,7 @@ void handle_item_menu(int item_hit)
 	item_record_type store_i;
 	
 	if (file_in_mem == FALSE) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG_TYPE,0);
+		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
 	if ((ed_reg == FALSE) && (save_blocked == FALSE))

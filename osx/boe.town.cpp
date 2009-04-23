@@ -26,6 +26,7 @@
 #include "mathutil.h"
 #include "boe.main.h"
 #include "graphtool.h"
+#include "dlgutil.h"
 
 extern current_town_type c_town;
 extern party_record_type	party;
@@ -67,7 +68,7 @@ extern char terrain_blocked[256];
 extern location golem_m_locs[16];
 extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
-extern piles_of_stuff_dumping_type *data_store;
+//extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr spec_scen_g;
 Boolean need_map_full_refresh = TRUE,forcing_map_button_redraw = FALSE;
 extern GWorldPtr map_gworld,tiny_map_graphics;
@@ -531,7 +532,7 @@ void start_town_mode(short which_town, short entry_dir)
 	party.stuff_done[SDF_HOSTILES_PRESENT] = 0;
 		
 	add_string_to_buf("Now entering:");
-	sprintf ((char *) message, "   %-30.30s ",data_store->town_strs[0]);
+	sprintf ((char *) message, "   %-30.30s ",town->town_strs(0));
 	add_string_to_buf((char *) message);                       
 		
 							
@@ -1612,7 +1613,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			GetPortBounds(GetDialogPort(the_dialog),&the_rect);
 			FillCRect(&the_rect,bg[4]);
 			draw_dialog_graphic( GetDialogPort(the_dialog), dlogpicrect, 
- 				21, PICT_DLG_TYPE, FALSE,0);
+ 				21, PICT_DLG, FALSE,0);
  			ForeColor(whiteColor);
 			char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
 				map_title_rect,"Your map:      (Hit Escape to close.)",0,12,false);

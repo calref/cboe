@@ -252,9 +252,9 @@ short get_monst_picnum(unsigned char monst)
 
 short get_monst_pictype(unsigned char monst)
 {
-	short type = PICT_MONST_TYPE;
+	short type = PICT_MONST;
 	short n = scenario.scen_monsters[monst].picture_num;
-	if (n >= 1000) type += PICT_CUSTOM_TYPE;
+	if (n >= 1000) type += PICT_CUSTOM;
 	switch(n / 1000){
 		case 2:
 			type += PICT_WIDE_MONSTER;

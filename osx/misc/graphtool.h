@@ -11,7 +11,7 @@ struct m_pic_index_t {
 	unsigned char i, x, y;
 };
 
-void init_graph_tool(void (*redraw_callback)(),Point p);
+void init_graph_tool(void (*redraw_callback)(),Point* p);
 GWorldPtr load_pict(int picture_to_get);
 GWorldPtr load_bmp(unsigned char *data, long length);
 void set_cursor(short which_curs);
@@ -26,6 +26,9 @@ short string_length(char *str);
 //void draw_terrain();
 Rect calc_rect(short i, short j);
 Rect get_custom_rect (short which_rect);
+void get_str(Str255 str,short i, short j);
+GWorldPtr importPictureFileToGWorld(const FSSpec *fileSpec);
+void writeGWorldToPNGFile(GWorldPtr gw, const FSSpec *fileSpec);
 #ifndef _GRAPHTOOL_CPP
 extern short arrow_curs[3][3];
 extern short sword_curs, boot_curs, drop_curs, target_curs;
