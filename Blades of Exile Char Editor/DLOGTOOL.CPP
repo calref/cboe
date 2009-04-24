@@ -36,7 +36,7 @@ extern HBITMAP	terrain_screen_gworld, buttons_gworld, text_screen_gworld,text_ba
 extern HBITMAP	pc_info_screen_gworld,orig_pc_info_screen_gworld,terrain_gworld, party_template_gworld;
 extern HBITMAP	monster_template_gworld;
 extern HBITMAP startmsc_gworld;
-extern short far terrain_pic[256];
+extern short terrain_pic[256];
 extern short ulx,uly;
 
 extern HACCEL accel;
@@ -45,27 +45,27 @@ extern unsigned char m_pic_index_y[200];
 extern unsigned char m_pic_index[200];
 
 short current_key = 0;
-short far dlg_keys[ND];
-short far dlg_types[ND];
+short dlg_keys[ND];
+short dlg_types[ND];
 HWND dlgs[ND];
 HWND dlg_parent[ND];
-short far dlg_highest_item[ND];
+short dlg_highest_item[ND];
 Boolean dlg_draw_ready[ND];
 
-short far item_dlg[NI];
-short far item_number[NI];
-char far item_type[NI];
-RECT far item_rect[NI];
-short far item_flag[NI];
-char far item_active[NI];
-char far item_key[NI];
-short far item_label[NI];
-short far item_label_loc[NI];
+short item_dlg[NI];
+short item_number[NI];
+char item_type[NI];
+RECT item_rect[NI];
+short item_flag[NI];
+char item_active[NI];
+char item_key[NI];
+short item_label[NI];
+short item_label_loc[NI];
 
-char far text_long_str[10][256];
-char far text_short_str[140][35];
-char far labels[NL][25];
-Boolean far label_taken[NL];
+char text_long_str[10][256];
+char text_short_str[140][35];
+char labels[NL][25];
+Boolean label_taken[NL];
 
 HWND edit_box = NULL;
 HWND store_edit_parent; // kludgy
@@ -117,7 +117,7 @@ char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
 
-short far button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
+short button_left_adj[150] = {0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
 0,0,0,0,0, 0,0,0,0,0,
@@ -262,38 +262,15 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	dlg_parent[free_slot] = parent;
 
 	switch (dlog_num) {
-		case 958: SetWindowText(dlgs[free_slot],"Tip of the Day"); break;
-		case 959: SetWindowText(dlgs[free_slot],"Getting a Job"); break;
-		case 960: SetWindowText(dlgs[free_slot],"Talking Notes"); break;
-		case 961: SetWindowText(dlgs[free_slot],"Adventure Notes"); break;
-		case 962: SetWindowText(dlgs[free_slot],"Adventure Journal"); break;
 		case 970: case 971: case 972: case 973: SetWindowText(dlgs[free_slot],"Blades of Exile"); break;
-		case 987: SetWindowText(dlgs[free_slot],"Getting Items"); break;
-		case 988: SetWindowText(dlgs[free_slot],"Casting Simulacrum"); break;
-		case 989: SetWindowText(dlgs[free_slot],"Create a Party"); break;
 		case 991: SetWindowText(dlgs[free_slot],"Character Statistics"); break;
 		case 996: SetWindowText(dlgs[free_slot],"Known Alchemy"); break;
-		case 997: SetWindowText(dlgs[free_slot],"Getting Help"); break;
 		case 998: SetWindowText(dlgs[free_slot],"Item Information"); break;
-		case 999: SetWindowText(dlgs[free_slot],"Monster Stats"); break;
 		case 1012: SetWindowText(dlgs[free_slot],"How many?"); break;
 		case 1013: SetWindowText(dlgs[free_slot],"Race/Advantages/Disadvantages"); break;
 
 		case 1010: SetWindowText(dlgs[free_slot],"Training a PC"); break;
-		case 1014: SetWindowText(dlgs[free_slot],"Reading a Sign"); break;
-		case 1017: SetWindowText(dlgs[free_slot],"Blades of Exile"); break;
 		case 1018: SetWindowText(dlgs[free_slot],"Select a PC"); break;
-		case 1019: SetWindowText(dlgs[free_slot],"Character Statistics"); break;
-		case 1020: SetWindowText(dlgs[free_slot],"In a Shop"); break;
-		case 1021: SetWindowText(dlgs[free_slot],"Buying Food"); break;
-		case 1047: SetWindowText(dlgs[free_slot],"Select Alchemy"); break;
-		case 1048: SetWindowText(dlgs[free_slot],"Visiting the Healer"); break;
-		case 1050: SetWindowText(dlgs[free_slot],"Pick PC Graphic"); break;
-		case 1051: SetWindowText(dlgs[free_slot],"Pick PC Name"); break;
-		case 1096: SetWindowText(dlgs[free_slot],"Spells Help"); break;
-		case 1097: SetWindowText(dlgs[free_slot],"Skills Help"); break;
-		case 1098: SetWindowText(dlgs[free_slot],"Cast a Spell"); break;
-		case 1099: SetWindowText(dlgs[free_slot],"Preferences"); break;
 		default: SetWindowText(dlgs[free_slot],"Blades of Exile"); break;
 			}
 	ShowWindow(dlgs[free_slot],SW_SHOW);

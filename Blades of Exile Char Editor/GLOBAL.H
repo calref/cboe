@@ -134,19 +134,6 @@ typedef struct {
 
 typedef struct {
 	short variety, item_level;
-	char awkward, bonus, protection, charges, type;
-	unsigned char graphic_num,ability, type_flag, is_special;
-	short value;
-	Boolean identified, magic;
-	unsigned char weight, description_flag;
-	char full_name[25], name[15];
-	unsigned char reserved1,reserved2;
-	unsigned char magic_use_type, ability_strength, treas_class, real_abil;
-} short_item_record_type;
-
-
-typedef struct {
-	short variety, item_level;
 	char awkward, bonus, protection, charges, type, magic_use_type;
 	unsigned char graphic_num,ability, ability_strength,type_flag, is_special,a;
 	short value;
@@ -389,9 +376,7 @@ typedef struct {
 	char scen_name[256];
 	} party_record_type;
 
-typedef struct {
-	char town_maps[100][8][64];
-	} stored_town_maps_type;
+typedef struct { char town_maps[200][8][64];} stored_town_maps_type;
 typedef struct {
 	char town_strs[180][256];
 	} piles_of_stuff_dumping_type;
@@ -401,16 +386,16 @@ typedef struct {
 	scen_item_data_type scen_item_list;
 	} piles_of_stuff_dumping_type2;
 typedef struct {
-	char far talk_strs[170][256];
+	char talk_strs[170][256];
 	} piles_of_stuff_dumping_type3;
 typedef struct {
 	char out_strs[9][256];
 	} outdoor_strs_type;
 typedef struct {
-	outdoor_strs_type far outdoor_text[2][2];
+	outdoor_strs_type outdoor_text[2][2];
 	} piles_of_stuff_dumping_type4;
 typedef struct {
-char far scen_strs[160][256];
+char scen_strs[160][256];
 	} piles_of_stuff_dumping_type5;
 
 typedef struct {
@@ -431,12 +416,6 @@ typedef struct {
 	unsigned char setup[4][64][64];
 	} setup_save_type;
 
-typedef struct {
-	item_record_type items[NUM_TOWN_ITEMS];
-	} town_item_list;
-
-typedef struct {short i;} flag_type;
-
 typedef struct {unsigned char pattern[9][9];} effect_pat_type;
 
 typedef struct {
@@ -446,7 +425,6 @@ typedef struct {
 typedef struct {
 	char outdoor_maps[100][6][48];
 	} stored_outdoor_maps_type; 
-
 
 short s_pow(short x,short y);
 short a_v(short x);
