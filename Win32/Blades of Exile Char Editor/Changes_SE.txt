@@ -1,7 +1,0 @@
-Changes :
-
-- The editor now display the filename of the scenario you are in.
-- The editor now get the list of items from the scenario you're in. If not in a scenario, bladbase.exs is used. (clicking a item with food (resp. gold) type will give a random (1-20) amount of food (resp. gold).)
-- References to registration and shareware are removed.
-- Status Screen now show Food, Gold and Day.
-- Corrected the garbled status due to a non-alive character (Ishad Nha)
