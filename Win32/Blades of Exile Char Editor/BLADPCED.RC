@@ -22,38 +22,40 @@ Exile MENU
 {
  POPUP "&File"
  {
+  MENUITEM "&Open Game\tCtrl+O", 2    
   MENUITEM "&Save Game\tCtrl+S", 1
-  MENUITEM "&Open Game\tCtrl+O", 2
   MENUITEM SEPARATOR
   MENUITEM "&Quit\tCtrl+Q", 4
  }
 
- POPUP "Free Extras"
+ POPUP "&Scenario Editing"
  {
-  MENUITEM "Edit Gold", 41
-  MENUITEM "Edit Food", 42
+
+  MENUITEM "Edit Day", 70
   MENUITEM SEPARATOR
   MENUITEM "Leave Town", 44
-  MENUITEM "Reunite Party", 45
   MENUITEM "Make Towns Forget You", 48
-  MENUITEM SEPARATOR
-  MENUITEM "Heal Damage", 51
-  MENUITEM "Restore Spell Points", 52
-  MENUITEM "Raise Dead, Destone, etc.", 53
-  MENUITEM "Remove Bad Conditions", 54
+  MENUITEM "Add All Town Maps", 72
+  MENUITEM "Add All Outdoor Maps", 71
   MENUITEM SEPARATOR
   MENUITEM "Remove Party From Scenario", 55
  }
 
  POPUP "&Edit Party"
  {
-  MENUITEM "Add Alchemy", 62
+  MENUITEM "Edit Gold", 41
+  MENUITEM "Edit Food", 42
+  MENUITEM "Edit Alchemy", 62
+  MENUITEM SEPARATOR
+  MENUITEM "Heal Damage", 51
+  MENUITEM "Restore Spell Points", 52
+  MENUITEM "Raise Dead, Destone, etc.", 53
+  MENUITEM "Remove Bad Conditions", 54
+  MENUITEM SEPARATOR
+  MENUITEM "Reunite Party", 45
   MENUITEM "Own All Boats/Horses", 63
-  MENUITEM SEPARATOR
-  MENUITEM "Edit Day", 70
-  MENUITEM SEPARATOR
-  MENUITEM "Add All Outdoor Maps", 71
-  MENUITEM "Add All Town Maps", 72
+
+
  }
 
  POPUP "&I1"
@@ -128,335 +130,158 @@ ACCELERATORS_1 ACCELERATORS
 
 STRINGTABLE 
 {
- 1501, "Makes you more resistant to damage. Blows of all sorts have less of an effect on you."
- 1502, "The posessor of this advantage will find that his or her spell will function better. This helps both Priest and Mage spells."
- 1503, "An ambidextrous warrior will be able to use one weapon in each hand without any penalties. Normally using two weapons both of them much less likely to hit."
- 1504, "Having nimble fingers improves one's chance of picking locks and disarming traps."
- 1505, "When underground, knowledge of Cave Lore helps one hunt and forage food and deal better with special circumstances."
- 1506, "When roaming the surface of the world, a Woodsman is able to hunt and bring down food, find useful herbs, and deal with circumstances involving nature's adversity."
- 1507, "Someone with a Good Constitution will find that poison and disease has a reduced (although not elimated) effect."
- 1508, "Highly Alert people have the edginess that helps them resist magical sleep. In addition, having someone in your group who is Highly Alert may help keep you from being surprised."
- 1509, "An Exceptionally Strong character will be able to carry much more stuff, and, in addition, will do a small amount more damage in combat."
- 1510, "A very few adventurers have magical blood running in their veins, causing them to heal damage to their bodies at an amazing rate."
- 1511, "Sluggish characters just can't move that quickly, even when circumstances seem to demand it. A sluggish character gets less action points in combat."
- 1512, "Magically Inept characters just, for some reason, resist the effects of magical items, and are unable to use them. Potions and scolls won't work for them, although worn items, such as rings, will have a small effect."
- 1513, "Frail characters are cursed at birth with a weak constitution. Poison and disease will have a greater effect on such characters."
- 1514, "Chronic Disease is the worst disadvantage a character may posess. Such characters have a slow, lingering, incurable physical ailment, causing them to occasionally suffer the effects of a mild disease."
- 1515, "A character with a Bad Back cannot bear to haul too much weight. Such a person cannot carry as much as he or she might have been able to otherwise."
- 1516, "Human is the default species in Blades of Exile. Humans have skins of a variety of hues, and are soft, generally fragile, and incredibly resourceful."
- 1517, "The Nephilim are a race of feline humanoids. Once common on the surface world, they have been hunted to near extinction, although some now remain in Exile. Nephilim characters start with better dexterity, and are much better at using missile weapons."
- 1518, "The Slithzerikai (sliths for short) are a race of lizard men, both strong and smart. Once unknown on the surface world, they are starting to appear there. Slith characters get bonuses to strength and intelligence, and are better at using pole weapons."
- 1519, "Exile III Prefs"
  2101, "Light"
- 2102, "Creates a weak light."
  2103, "Spark"
- 2104, "Fires a weak bolt of electricity at an enemy."
  2105, "Minor Haste"
- 2106, "Makes the selected PC move faster for a while. All haste spells take effect at the beginning of the next round."
  2107, "Strength"
- 2108, "Makes the selected PC more skilled for a short time. Works like the priest spell ÔBless.Õ"
  2109, "Scare"
- 2110, "Decreases the morale of the victim. Casting this on a weak foe will make the foe flee. Even if the monster doesn't flee, later castings have a higher chance of success."
  2111, "Flame Cloud"
- 2112, "This spell fills the selected space with a short-lasting wall of fire."
  2113, "Identify"
- 2114, "This draining spell identifies all the unidentified items being held by your characters."
  2115, "Scry Monster"
- 2116, "This spell is cast during combat. When cast, you receive information about the monster you target: current health, spell points, morale, etc."
  2117, "Goo"
- 2118, "This spell covers the target with sticky goo, slowing it down and interfering with its attacks."
  2119, "True Sight"
- 2120, "This spell lets you see everything in a short radius around you, even spaces blocked off by walls. It's useful for finding secret passages, for example."
  2121, "Minor Poison"
- 2122, "Poisons the target creature. This does a fair amount of damage, but it takes time to happen."
  2123, "Flame"
- 2124, "Fires a decent-sized bolt of flame at the target. The damage done increases with the level of the caster."
  2125, "Slow"
- 2126, "Makes the victim get half its usual number of actions for a while."
  2127, "Dumbfound"
- 2128, "Makes the victim incompetent: easier to hit, easier to damage, and less able to attack you."
  2129, "Envenom"
- 2130, "This spell puts poison on the weapon of the selected PC, with no chance of failure or accidental poisoning."
  2131, "Stinking Cloud"
- 2132, "When cast, a 3x3 area you select becomes filled with choking gasses. Anyone entering will have far less effective attacks for a short time. The gas will slowly fade on its own."
  2133, "Summon Beast"
- 2134, "This spell summons one low-level non-magical monster to fight on your side. It disappears after a short time."
  2135, "Conflagration"
- 2136, "This spell makes the air in a radius 2 circle burst into flames, charring anyone inside the cloud. After creation, the cloud will rapidly fade."
  2137, "Dispel Fields"
- 2138, "This spell dispels magical fields in the selected area. It removes blade walls, ice walls, and similar fields. Note, however, that the spell doesn't work on Fire and Force Barriers."
  2139, "Sleep Cloud"
- 2140, "This spell creates a small cloud of sleep gas. There is a chance that anyone passing through the cloud will fall asleep (note that some creatures, like slimes, never sleep)."
  2141, "Unlock Doors"
- 2142, "Some doors are magically locked, and others are just hard to open. This spell can unlock them. However, it isnÕt guaranteed to succeed, and wonÕt work on all doors."
  2143, "Haste"
- 2144, "Makes the selected PC get twice the usual number of actions for a long time. All haste spells take effect at the beginning of the next round."
  2145, "Fireball"
- 2146, "Fires a powerful ball of flame, which affects the target space and every space adjacent. The damage done increases with the level of the caster."
  2147, "Long Light"
- 2148, "Like the first level light spell, but much more effective."
  2149, "Fear"
- 2150, "Like scare, but much more powerful. "
  2151, "Wall of Force"
- 2152, "This powerful spell creates a line of force walls, which are like fire walls but more damaging and lasting. Hitting space while targeting makes the wall rotate."
  2153, "Weak Summoning"
- 2154, "When cast, a group of monsters appears and attacks all enemies of the caster. The number of monsters depends on the level of the caster. After a time, they disappear."
  2155, "Flame Arrows"
- 2156, "This spell is like flame, but the caster gets to select several targets. The number of missiles increases with the level of the caster. If you don't want to use all the missiles, hit space to cast the spell."
  2157, "Web"
- 2158, "This spell covers a large circle with icky webs, slowing down everyone inside. The webs last until torn down."
  2159, "Resist Magic"
- 2160, "You can cast this spell on another PC to make him/her resistant to magical damage and effects. Note this does not help against damage from fire and cold."
  2161, "Poison"
- 2162, "This makes poison run thick in the veins of the target. Repeated castings will have a devastating effect."
  2163, "Ice Bolt"
- 2164, "Slams the target with a heavy, pointed bolt of ice. Effective against monsters who are resistant to fire. Damage increases as level of caster increases."
  2165, "Slow Group"
- 2166, "Makes all monsters within a 12 space radius move at half speed for a time."
  2167, "Magic Map"
- 2168, "When cast in town, this powerful spell gives you a vision - Your map will show you the entire area. However, to cast this spell you need a sapphire."
  2169, "Capture Soul"
- 2170, "This spell stores a target monster in a Soul Crystal, so that it may later be created with the Simulacrum spell. You need a Soul Crystal to cast this."
  2171, "Simulacrum"
- 2172, "This spell summons a monster you select from your Soul Crystal. The cost depends on the level of the monster being summoned."
  2173, "Venom Arrows"
- 2174, "This spell is similar to Flame Arrows, except that your targets are poisoned."
  2175, "Wall of Ice"
- 2176, "This spell is similar to Wall of Force, except that it creates an ice wall. Ice walls do as much damage as force walls, but last a lot longer."
  2177, "Stealth"
- 2178, "This powerful spell makes monsters less likely to see you for a time (duration depends on your level). Try casting it before walking through a room crowded with monsters."
  2179, "Major Haste"
- 2180, "Gives the entire party double its actions (duration depends on the level of the caster). All haste spells take effect at the beginning of the next round."
  2181, "Fire Storm"
- 2182, "This spell is like fireball, but does more damage, and affects all creatures within two spaces of the space you target. Be careful not to fry your party!"
  2183, "Dispel Barrier"
- 2184, "This spell has a chance (increasing with level) of destroying magical barriers. Some barriers are harder to dispel than others; some cannot be dispelled. Some barriers can be\twalked through."
  2185, "Fire Barrier"
- 2186, "This spell creates a single fire barrier at the target space. Fire barriers are damaging and permanent."
  2187, "Summoning"
- 2188, "This spell is like Minor Summoning, but summons more powerful monsters."
  2189, "Shockstorm"
- 2190, "This spell creates a large sphere of force walls."
  2191, "Spray Fields"
- 2192, "This spell creates a large number of small fields of a random sort, each of which may be individually targeted. The number of fields increases with the level of the caster."
  2193, "Major Poison"
- 2194, "This spell makes the targeted monster very poisoned. This spell does a huge amount of damage, but it takes time to take effect."
  2195, "Group Fear"
- 2196, "When cast, the caster begins to radiate a horrible aura of fear. All monsters within 12 spaces lose a lot of morale. This spell gains effectiveness rapidly with the level of the caster."
  2197, "Kill"
- 2198, "The deadly Kill spell deals a devastating blow to one target you select."
  2199, "Paralyze"
- 2200, "This spell affects several monsters - the number affected increases with your level and intelligence. Whoever you cast this on will be immobilized for a very long time. Powerful monsters might resist this spell."
  2201, "Daemon"
- 2202, "This dangerous spell summons a beast from the netherworld to fight at your side."
  2203, "Antimagic Cloud"
- 2204, "This spell created a spherical field, from which no spells may be cast and in which no spells may be targeted. After creation, it slowly fades."
  2205, "Mindduel"
- 2206, "When cast on a magic using enemy, the two creatures get in a mental battle, absorbing spell points from each other. The loser may end up dumbfounded or killed. Requires Smoky Crystal to cast."
  2207, "Flight"
- 2208, "When cast outdoors, the party can fly for a short time."
  2209, "Shockwave"
- 2210, "This spell sends a wave of force out from the caster, damaging \teveryone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. DonÕt cast in towns."
  2211, "Major Blessing"
- 2212, "When cast, the entire party is blessed and hasted, and has their weapons\tmildly poisoned."
  2213, "Mass Paralysis"
- 2214, "When cast, every monsters within a small radius of the caster will become paralyzed for quite some time. There is a chance they might resist the spell."
  2215, "Protection"
- 2216, "One of the most powerful spells in the mageÕs repertoire. It makes the whole party temporarily magic resistant, and makes one PC you select immune to ALL damage for a short time."
  2217, "Major Summoning"
- 2218, "This spell works like Summoning, but brings forth much more powerful creatures."
  2219, "Force Barrier"
- 2220, "This spell creates an impenetrable, permanent barrier. Be careful not to trap yourself."
  2221, "Quickfire"
- 2222, "Devastating beyond words, this spell creates a space of quickfire, which will sweep over the area killing everyone and everything."
  2223, "Death Arrows"
- 2224, "This spell is like the previous Arrow spells, but strikes each target with a kill spell. The number of arrows increases with the level of the caster."
  2401, "Minor Bless"
- 2402, "Makes the character harder to hit and take less damage from blows. It\talso makes the PC hit more often, and his or her blows do more damage. Its effects decay with time."
  2403, "Minor Heal"
- 2404, "Increases the health of the selected PC a small amount, up to the PCs\tmaximum health."
  2405, "Weaken Poison"
- 2406, "Reduces the amount of poison running around in the veins of the\tselected PC."
  2407, "Turn Undead"
- 2408, "When cast on an undead creature, it usually does a reasonable\tamount of damage to it. It has no effect on non-undead."
  2409, "Location"
- 2410, "Returns the partyÕs x-y location in the town."
  2411, "Sanctuary"
- 2412, "The target of this spell becomes magically shielded. For a time, monsters probably won't be able to attack him/her. The effects disappears when the PC attacks someone."
  2413, "Symbiosis"
- 2414, "This spell has the caster absorb the damage taken by another character. The higher the level, the less damage the caster takes per health point healed."
  2415, "Minor Manna"
- 2416, "Casting this spell gives the party a little more food."
  2417, "Ritual - Sanctify"
- 2418, "When cast on a location filled with evil magic, the location receives a blessing. This might drive out the evil magic. Then again, it might not."
  2419, "Stumble"
- 2420, "The victim of this spell moves slower and has worse attacks for a short time."
  2421, "Bless"
- 2422, "Like Minor Bless, but better. Its effect increases with the level of the caster."
  2423, "Cure Poison"
- 2424, "Like Weaken Poison, but better. Its effect increases with the level of the caster."
  2425, "Curse"
- 2426, "The opposite of bless. It makes everything much worse for the victim, for a time. Hitting someone with this spell several times vastly increases the effect."
  2427, "Light"
- 2428, "Creates a short duration magical light source."
  2429, "Wound"
- 2430, "Deals a painful blow to the targeted victim. The damage increases\twith your level."
  2431, "Summon Spirit"
- 2432, "This spell summons a shade from the netherworld to aid you. It will disappear after a short time."
  2433, "Move Mountains"
- 2434, "When cast on a fragile wall or outcropping of rock, the wall or outcropping crumbles into rubble. It doesn't work on all walls."
  2435, "Charm Foe"
- 2436, "This spell has a chance of making the target monster start to fight for the party. The chance of it working drops sharply with the level of the monster."
  2437, "Disease"
- 2438, "The victim of this spell is afflicted by a disease, which slowly weakens it. The disease lasts a long time."
  2439, "Awaken"
- 2440, "Casting this on a sleeping character instantly wakes that character up."
  2441, "Heal"
- 2442, "A much better version of Minor Heal."
  2443, "Light Heal All"
- 2444, "Casts one minor heal on each PC."
  2445, "Holy Scourge"
- 2446, "This spell gives the victim a powerful curse, the effect of which increases with the level of the caster."
  2447, "Detect Life"
- 2448, "This spell causes all other living things to appear on your map for a short time. Note, however, that this spell only detects creatures in areas you have explored."
  2449, "Cure Paralysis"
- 2450, "This spell instantly removes the effects of paralysis."
  2451, "Manna"
- 2452, "This spell magically creates a lot of food for the party."
  2453, "Forcefield"
- 2454, "This spell fills an area with walls of force, which are fairly damaging and reasonably long lasting."
  2455, "Cure Disease"
- 2456, "Casting this spell on a PC cures all his/her disease."
  2457, "Restore Mind"
- 2458, "This spell completely unfeebleminds the recipient."
  2459, "Smite"
- 2460, "This spell fires a number of bolts of divinely inspired cold, the number of which increases with the level of the caster. To cast without using all the target, hit space."
  2461, "Cure All Poison"
- 2462, "Causes everyone to become less poisoned. Useful for dealing with those nasty swamps."
  2463, "Curse All"
- 2464, "Causes all monsters within ten spaces to receive a powerful curse."
  2465, "Dispel Undead"
- 2466, "Deals a deadly blow to the targeted undead nasty. Chance of having\teffect increases with level."
  2467, "Remove Curse"
- 2468, "Occasionally, you will put on an item which then refuses to be taken off. Casting this spell has a chance of removing the curse."
  2469, "Sticks to Snakes"
- 2470, "This spell summons a bunch of snakes to aid the party. Skillful casters have a chance of getting asps instead of the weaker giant snakes."
  2471, "Martyr's Shield"
- 2472, "When something strikes the recipient of this spell in hand-to-hand combat, it takes as much damage as the victim. The duration of this spell increases with the level of the caster."
  2473, "Cleanse"
- 2474, "This spell purifies the recipient. The beneficiary is completely unwebbed, and all disease is cured."
  2475, "Firewalk"
- 2476, "When cast, for a short time everyone in the party can walk across lava with no damage. The duration increases slowly with the level of the caster."
  2477, "Bless Party"
- 2478, "Much like Bless, but affects everyone."
  2479, "Major Heal"
- 2480, "Works like the Heal spell, but gives much more bang for the spell points."
  2481, "Raise Dead"
- 2482, "This spell returns a body to life. You need Resurrection Balm to cast this. There is a small chance (decreasing with level) that it turns the body to dust. A dusted character can only be raised with a Resurrect spell. Raising a PC reduces his/her stats."
  2483, "Flamestrike"
- 2484, "The first area of affect offensive priest spell. It chars all beings adjacent\tto the space you target. The damage done increases with level."
  2485, "Mass Sanctuary"
- 2486, "This spell hides all PCs (like a sanctuary spell). As before, the effect for a PC is voided when that PC attacks."
  2487, "Summon Host"
- 2488, "This powerful spell summons four spirits, and a magical being to lead them. They then fight on the side of the caster for a little while. "
  2489, "Shatter"
- 2490, "This spell strikes every space adjacent to the party with a Move Mountains spell."
  2491, "Dispel Fields"
- 2492, "All magical walls, etc. in the large area affected by this spell will be dispelled. It has a small chance of affecting quickfire."
  2493, "Heal All"
- 2494, "Like the Heal spell, but affects the whole party. Very efficient."
  2495, "Revive"
- 2496, "This spell heals all damage and cures all poison for one PC."
  2497, "Hyperactivity"
- 2498, "This powerful instantly wakes up any sleeping characters in the party. What's more, it provides total resistance to magical sleep for a short time. Finally, it speeds back up any slowed character."
  2499, "Destone"
- 2500, "Certain rare monsters can turn one of your characters to stone. This valuable spell undoes the damage."
  2501, "Summon Guardian"
- 2502, "This spell summons a powerful, invisible being to fight on the side of the party. Be careful not to damage it by mistake!"
  2503, "Mass Charm"
- 2504, "When cast, all creatures within eight spaces of the caster have a chance of coming under his/her control."
  2505, "Protective Circle"
- 2506, "A very unusual and effective spell for a party on the defensive. The caster is surrounded by several layers of magical fields, which fend off anyone attacking."
  2507, "Pestilence"
- 2508, "This spell afflicts everyone within eight spaces with an effective but slow-acting disease."
  2509, "Revive All"
- 2510, "When cast, the party receives a powerful healing (increasing with level of\tthe caster) and has poison cured as well."
  2511, "Ravage Spirit"
- 2512, "Demons are resistant to most magic. This spell gives them a blow which usually does a lot of damage.\tThe chance of success increases with the level of the caster."
  2513, "Resurrect"
- 2514, "Like raise dead, but much more effective, and works on even a dusted\tcharacter. It also has a smaller chance of lowering the character's stats. It still requires Resurrection Balm to cast."
  2515, "Divine Thud"
- 2516, "The most powerful offensive priest spell. It delivers a stunning blow of force to all beings within two spaces of the targeted space."
  2517, "Avatar"
- 2518, "This spell temporarily makes the caster an invulnerable, incredibly powerful avatar of the gods. "
  2519, "Wall of Blades"
- 2520, "This spell creates a wall of the most damaging (and long lasting) of the magic walls. Rotate the wall by hitting space."
  2521, "Word of Recall"
- 2522, "This spell returns the party to Fort Emergence, where you began the game. Because of the danger of teleporting from narrow, windy tunnels, it can only be cast outdoors."
  2523, "Major Cleansing"
- 2524, "This spell removes all webs and disease from the party."
  2701, "Strength"
- 2702, "Measures how much brute strength the character possesses. High strength increases damage done in combat, improves odds of kicking down doors, and has other, more subtle effects."
  2703, "Dexterity"
- 2704, "Measure how nimble the character is. High dexterity gives a better chance of hitting in combat (esp. with missile weapons) and makes the character harder to hit. High dexterity also makes picking locks and disarming traps easier."
  2705, "Intelligence"
- 2706, "Measures mental strength and dexterity. High intelligence also makes your spells more effective, sometimes very much so. Intelligence below 4 makes your spells works poorly."
  2707, "Edged Weapons"
- 2708, "Makes you better at using daggers, swords, axes, etc."
  2709, "Bashing Weap."
- 2710, "Makes you better at using clubs, maces, hammers, flails, etc."
  2711, "Pole Weapons"
- 2712, "Makes you better at using spears of all sorts, halberds, etc."
  2713, "Thrown Missiles"
- 2714, "Makes you better at using darts, javelins, and throwing axes."
  2715, "Archery"
- 2716, "Makes you better at using a bow and arrows."
  2717, "Defense"
- 2718, "This skill has three effects. It determines how well a character does at parrying, decreases the penalty in combat from bulky armor, and occasionally decreases the damage taken from enemies weapons.|"
  2719, "Mage Spells"
- 2720, "Having a certain level of this skill enables you to cast mage spells of up to that level."
  2721, "Priest Spells"
- 2722, "Having a certain level of this skill enables you to cast priest spells of up to that level."
  2723, "Mage Lore"
- 2724, "You will occasionally need to decipher strange magical readings. This skill determines how good you are at this. If your skill is high enough, you may gain a spell or a valuable piece of information."
  2725, "Alchemy"
- 2726, "You will eventually gain the ability to make magic potions. To make a given potion, however, your Alchemy skill much be above a certain level. The higher it is above this level, the better the chance of succeeding."
  2727, "Item Lore"
- 2728, "Having Item Lore skill gives you a chance of having the items from slain monsters be identified when you find them. The more of this skill that is present, the higher the chance of this happening."
  2729, "Disarm Traps"
- 2730, "Many chests and some corridors will have traps on them, which can be devastating. The higher this skill, the better your chance of disarming them."
  2731, "Lockpicking"
- 2732, "Many towns and dungeons will have locked doors. A PC with some of this skill and lock picks equipped can try to pick them. The higher this skill, the better."
  2733, "Assassination"
- 2734, "Sometimes, when a character attacks a much weaker monster, the blow will do a good deal of extra damage. The more of this skill you have, the better the chance of this happening, and the stronger the monsters it can happen to."
  2735, "Poison"
- 2736, "You will find poisons, which you can put on your weapons for a extra damage. Having a few levels in this skill will make it more likely you will put the poison on at full strength, and the less likely you will nick yourself with the poison accidentally."
  2737, "Luck"
- 2738, "This skill is expensive, but can be a bargain at twice the cost. Its effects are pervasive, subtle, powerful, and sometimes irreplaceable."
  6001, "All of your character's damage has now been healed. Dead characters are still dead."
  6002, "All of your characters (even dead ones) now have their maximum number of spell points."
  6003, "All of your characters who were dead (or dust, or stoned) are now alive and intact. You may wish to select Heal Party now."
  6004, "All negative conditions (poison, dumbfounding, disease, paralysis, etc.) have been removed from your characters (even dead ones)."
  6005, "Before you can do this, you need to load in a Blades of Exile save file. Select Open from the file menu."
  6006, "All boats and horses are now your property."
- 6007, "Any major NPCs you may have slain, such as Erika or the dragons, are now alive again. You should now use the Leave Town and then Reset Towns menu items to make sure the characters appear."
- 6008, "You are now considered a member of the Anama church. You can no longer cast Mage spells. To get the full effect of this, add Anama Rings above."
- 6009, "If you own Erika Amulets, they are now active.  To get the full effect of this, add Erika Amulets above."
- 6010, "If a job dispatcher is angry at you for making a late delivery, he/she has just forgiven you."
- 6011, "If you belong to the Anama, you are no longer a member. If you robbed the Anama temple in Shayder, the people there will no longer attack you on sight."
- 6012, "If you slew the vampire Vahkohs but did not destroy the crystal containing his soul, he is now totally dead and will torment you no longer."
  6013, "Your party now has the complete maps for the outdoors of your current scenario."
  6014, "Your party now has the complete maps for the towns in your current scenario."
- 6015, "Your party now has the complete maps for outdoors southern Valorim. If your Save Maps preference is not set, this will have no effect."
- 6016, "Your party now has the complete maps for large (64x64) dungeons, and for Valorim's 5 large cities. If your Save Maps preference is not set, this will have no effect."
- 6017, "Your party now has the complete maps for medium (64x64) dungeons, and for medium size cities. If your Save Maps preference is not set, this will have no effect."
- 6018, "Your party now has the complete maps for small (32x32) dungeons, and for small huts, etc. across the Valorim countryside. If your Save Maps preference is not set, this will have no effect."
- 6019, "Your party now has the complete maps for the small towns dotting the Valorim countryside. If your Save Maps preference is not set, this will have no effect."
  6020, "Your save file no longer contains information on the towns you've visited. Monsters have reappeared, angry guards have forgotten you, etc. Note, if you are in town now, the game will still remember what happened in this town."
- 6021, "The Tower of Magi timer is not currently running, so this will have no effect."
- 6022, "You now have a bit more time before the Tower of Magi timer runs out. This time can be used to accumulate potions, train, and do other things to help you survive. Note that the Tower of Magi messages will eventually repeat themselves."
- 6023, "If your characters became addicted to Skribbane herb, the addiction is now cured."
- 6024, "You are now able to see all dungeons and towns, whether or not someone has told you about them."
  6025, "You can only use this feature if the current party is in a scenario."
 }
 
@@ -469,7 +294,7 @@ STRINGTABLE
      LTEXT "Your party will now be outdoors.|Things you have done in the town will not be remembered." 3, 52, 3, 257, 44
      }
 
-907 DIALOG 10, 10, 400, 142
+907 DIALOG 10, 10, 400, 142 //<= future return to start message ?
      STYLE WS_POPUP | WS_DLGFRAME
      {
      LTEXT "1_65" 1, 299, 113, 58, 20
@@ -529,86 +354,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "This will reset all boats and horses to their original positions. Whether you own them or not will remain unchanged. Be careful when using this that you don't strand yourself on an island somewhere! Go ahead?" 4, 51, 4, 253, 82
      }
 
-916 DIALOG 10, 10, 567, 391
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "5_707" 1, 6, 6, 36, 36
-     LTEXT "2_0" 2, 132, 61, 14, 10
-     LTEXT "2_0" 3, 132, 73, 14, 10
-     LTEXT "2_0" 4, 132, 85, 14, 10
-     LTEXT "2_0" 5, 132, 97, 14, 10
-     LTEXT "2_0" 6, 132, 109, 14, 10
-     LTEXT "2_0" 7, 132, 121, 14, 10
-     LTEXT "2_0" 8, 132, 133, 14, 10
-     LTEXT "2_0" 9, 132, 145, 14, 10
-     LTEXT "2_0" 10, 132, 157, 14, 10
-     LTEXT "2_0" 11, 132, 169, 14, 10
-     LTEXT "2_0" 12, 132, 181, 14, 10
-     LTEXT "2_0" 13, 132, 193, 14, 10
-     LTEXT "2_0" 14, 132, 205, 14, 10
-     LTEXT "2_0" 15, 261, 61, 14, 10
-     LTEXT "2_0" 16, 261, 73, 14, 10
-     LTEXT "2_0" 17, 261, 85, 14, 10
-     LTEXT "2_0" 18, 261, 97, 14, 10
-     LTEXT "2_0" 19, 261, 109, 14, 10
-     LTEXT "2_0" 20, 261, 121, 14, 10
-     LTEXT "2_0" 21, 261, 133, 14, 10
-     LTEXT "2_0" 22, 261, 145, 14, 10
-     LTEXT "2_0" 23, 261, 157, 14, 10
-     LTEXT "2_0" 24, 261, 169, 14, 10
-     LTEXT "2_0" 25, 261, 181, 14, 10
-     LTEXT "2_0" 26, 261, 193, 14, 10
-     LTEXT "2_0" 27, 261, 205, 14, 10
-     LTEXT "2_0" 28, 396, 61, 14, 10
-     LTEXT "2_0" 29, 396, 73, 14, 10
-     LTEXT "2_0" 30, 396, 85, 14, 10
-     LTEXT "2_0" 31, 396, 97, 14, 10
-     LTEXT "2_0" 32, 396, 109, 14, 10
-     LTEXT "2_0" 33, 396, 121, 14, 10
-     LTEXT "2_0" 34, 396, 133, 14, 10
-     LTEXT "2_0" 35, 396, 145, 14, 10
-     LTEXT "2_0" 36, 396, 157, 14, 10
-     LTEXT "2_0" 37, 396, 169, 14, 10
-     LTEXT "2_0" 38, 396, 181, 14, 10
-     LTEXT "2_0" 39, 396, 193, 14, 10
-     LTEXT "2_0" 40, 396, 205, 14, 10
-     LTEXT "2_0" 41, 531, 61, 14, 10
-     LTEXT "2_0" 42, 531, 73, 14, 10
-     LTEXT "2_0" 43, 531, 85, 14, 10
-     LTEXT "2_0" 44, 531, 97, 14, 10
-     LTEXT "2_0" 45, 531, 109, 14, 10
-     LTEXT "2_0" 46, 531, 121, 14, 10
-     LTEXT "2_0" 47, 531, 133, 14, 10
-     LTEXT "1_0" 48, 470, 356, 63, 23
-     LTEXT "~Edit Special Items/Traits" 49, 53, 15, 256, 15
-     LTEXT "*Special Items:" 50, 53, 37, 105, 16
-     LTEXT "*Other Special Traits:" 51, 11, 222, 200, 15
-     LTEXT "0_106" 52, 13, 239, 25, 23
-     LTEXT "*Raise special NPCs from dead." 53, 40, 243, 180, 15
-     LTEXT "0_106" 54, 13, 263, 25, 23
-     LTEXT "*Be member of Anama church." 55, 40, 267, 180, 15
-     LTEXT "0_106" 56, 13, 287, 25, 23
-     LTEXT "*Activate Erika amulets." 57, 40, 291, 180, 15
-     LTEXT "0_106" 58, 13, 311, 25, 23
-     LTEXT "*Make job dispatchers forgive you" 59, 40, 315, 180, 15
-     LTEXT "0_106" 60, 13, 335, 25, 23
-     LTEXT "*Reset Shayder, quit Anama." 61, 40, 339, 180, 15
-     LTEXT "0_106" 62, 13, 359, 25, 23
-     LTEXT "*End curse of Vahkohs" 63, 40, 363, 180, 15
-     LTEXT "*Add maps:" 64, 240, 222, 146, 15
-     LTEXT "2_0" 65, 386, 241, 14, 10
-     LTEXT "2_0" 66, 386, 253, 14, 10
-     LTEXT "2_0" 67, 386, 265, 14, 10
-     LTEXT "2_0" 68, 386, 277, 14, 10
-     LTEXT "2_0" 69, 386, 289, 14, 10
-     LTEXT "2_0" 70, 386, 301, 14, 10
-     LTEXT "2_0" 71, 386, 313, 14, 10
-     LTEXT "0_106" 72, 234, 335, 25, 23
-     LTEXT "*Cure Skribbane addiction." 73, 261, 339, 180, 15
-     LTEXT "0_106" 74, 234, 359, 25, 23
-     LTEXT "*Make all dungeons visible." 75, 261, 363, 180, 15
-     }
-
 917 DIALOG 10, 10, 352, 172
 STYLE WS_POPUP | WS_DLGFRAME
 {
@@ -627,178 +372,6 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "~How much food do you want?", 4, 49, 8, 209, 17
  LTEXT "1_63", 5, 184, 74, 75, 16
 }
-
-948 DIALOG 10, 10, 352, 260
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_81" 1, 268, 233, 66, 20
-     LTEXT "0_82" 2, 193, 233, 65, 20
-     LTEXT "0_83" 3, 118, 233, 66, 20
-     LTEXT "5_716" 4, 10, 9, 36, 36
-     LTEXT "At long last, victory is yours. The plague of monsters has been ended, and the Exiles can one again see the light of the sun. The bizarre and tormented odyssey of the people of Exile may finally be drawing to a close." 5, 58, 6, 276, 78
-     LTEXT "But surely not everything has been done! What of the plight of the people of Marish? The five artifact quests? The many small dungeons out in the wilderness? Perhaps your adventuring days are not yet done." 6, 58, 86, 276, 77
-     LTEXT "But then, perhaps they are. If so, thank you very much for playing Exile III: Ruined World, and I hope you try Spiderweb Software's next production. Until then, happy hunting!" 7, 58, 164, 276, 67
-     }
-
-949 DIALOG 10, 10, 326, 132
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 243, 106, 58, 20
-     LTEXT "5_723" 2, 6, 6, 36, 36
-     LTEXT "For some reason, the game was unable to open the files 'Exile III Towns' or 'Exile III Outdoors'. Quit Exile III, make sure these files are in the Exile III folder and run it again, and it should work. If not, contact Spiderweb Software." 3, 50, 6, 252, 98
-     }
-
-950 DIALOG 10, 10, 306, 298
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Krizsan Province:" 3, 50, 6, 241, 17
-     LTEXT "5_3600" 4, 50, 28, 240, 240
-     }
-
-951 DIALOG 10, 10, 300, 296
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Upper Exile:" 3, 50, 6, 241, 17
-     LTEXT "5_3601" 4, 50, 28, 240, 240
-     }
-
-952 DIALOG 10, 10, 312, 302
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of the Isle of Bigail:" 3, 50, 6, 241, 17
-     LTEXT "5_3602" 4, 50, 28, 240, 240
-     }
-
-953 DIALOG 10, 10, 312, 302
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Karnold Province:" 3, 50, 6, 241, 17
-     LTEXT "5_3603" 4, 50, 28, 240, 240
-     }
-
-954 DIALOG 10, 10, 312, 302
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map to Black Halberd:" 3, 50, 6, 241, 17
-     LTEXT "5_3604" 4, 50, 28, 240, 240
-     }
-
-955 DIALOG 10, 10, 330, 298
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Midori Province" 3, 50, 6, 241, 17
-     LTEXT "5_3605" 4, 50, 28, 240, 240
-     }
-
-956 DIALOG 10, 10, 330, 298
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Footracer Province" 3, 50, 6, 241, 17
-     LTEXT "5_3606" 4, 50, 28, 240, 240
-     }
-
-957 DIALOG 10, 10, 330, 298
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 232, 276, 58, 20
-     LTEXT "5_721" 2, 6, 6, 36, 36
-     LTEXT "Map of Monoroe Province" 3, 50, 6, 241, 17
-     LTEXT "5_3607" 4, 50, 28, 240, 240
-     }
-
-958 DIALOG 10, 10, 345, 189
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 242, 158, 70, 20
-     LTEXT "5_708" 2, 9, 9, 36, 36
-     LTEXT "= " 3, 53, 37, 257, 92
-     LTEXT "~Tip of the Day:" 4, 53, 9, 257, 19
-     LTEXT "0_103" 5, 54, 158, 70, 20
-     LTEXT "*See tips upon startup:" 6, 53, 138, 136, 16
-     LTEXT "2_0" 7, 192, 141, 28, 16
-     }
-
-959 DIALOG 10, 10, 546, 343
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 426, 305, 70, 20
-     LTEXT "5_708" 2, 9, 9, 36, 36
-     LTEXT "~THE JOB BOARD:" 3, 53, 9, 161, 19
-     LTEXT "= " 4, 54, 38, 364, 60
-     LTEXT "0_51" 5, 426, 78, 70, 20
-     LTEXT "= " 6, 54, 104, 364, 60
-     LTEXT "0_51" 7, 426, 144, 70, 20
-     LTEXT "= " 8, 54, 170, 364, 60
-     LTEXT "0_51" 9, 426, 210, 70, 20
-     LTEXT "= " 10, 54, 236, 364, 60
-     LTEXT "0_51" 11, 426, 276, 70, 20
-     LTEXT "Current day:" 12, 230, 9, 92, 19
-     LTEXT "*" 13, 324, 9, 92, 19
-     LTEXT " " 14, 19, 313, 183, 18
-     }
-
-960 DIALOG 10, 10, 377, 322
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 250, 285, 70, 20
-     LTEXT "5_708" 2, 9, 9, 36, 36
-     LTEXT "= " 3, 53, 82, 257, 92
-     LTEXT "~Conversation Journal:" 4, 53, 9, 257, 19
-     LTEXT "= " 5, 53, 181, 257, 92
-     LTEXT "*Speaking with:" 6, 53, 36, 105, 16
-     LTEXT "+" 7, 165, 36, 146, 16
-     LTEXT "*Located in:" 8, 53, 59, 105, 16
-     LTEXT "+" 9, 165, 59, 146, 16
-     LTEXT "0_2" 10, 39, 285, 63, 23
-     LTEXT "0_3" 11, 102, 285, 63, 23
-     LTEXT "0_53" 12, 173, 285, 70, 20
-     }
-
-961 DIALOG 10, 10, 423, 375
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 319, 341, 70, 20
-     LTEXT "5_708" 2, 9, 9, 36, 36
-     LTEXT "= " 3, 53, 37, 257, 92
-     LTEXT "= " 4, 53, 136, 257, 92
-     LTEXT "= " 5, 53, 235, 257, 92
-     LTEXT "~Encounter Notes:" 6, 53, 9, 257, 19
-     LTEXT "0_2" 7, 48, 340, 63, 23
-     LTEXT "0_3" 8, 111, 340, 63, 23
-     LTEXT "0_53" 9, 319, 109, 70, 20
-     LTEXT "0_53" 10, 319, 208, 70, 20
-     LTEXT "0_53" 11, 319, 307, 70, 20
-     }
-
-962 DIALOG 10, 10, 437, 371
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 319, 341, 70, 20
-     LTEXT "5_708" 2, 9, 9, 36, 36
-     LTEXT "= " 3, 121, 37, 257, 92
-     LTEXT "= " 4, 121, 136, 257, 92
-     LTEXT "= " 5, 121, 235, 257, 92
-     LTEXT "~Journal of your Travels:" 6, 53, 9, 257, 19
-     LTEXT "0_2" 7, 48, 340, 63, 23
-     LTEXT "0_3" 8, 111, 340, 63, 23
-     LTEXT "*" 9, 52, 37, 55, 15
-     LTEXT "*" 10, 52, 136, 55, 15
-     LTEXT "*" 11, 52, 234, 55, 15
-     }
 
 970 DIALOG 10, 10, 346, 167
      STYLE WS_POPUP | WS_DLGFRAME
@@ -854,144 +427,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "Finally, alas, the Macintosh world nowadays is rife with extension conflicts and other problems. If you experience crashes playing Exile III, there is troubleshooting info in the file _READ ME - Game and ASP Info_." 8, 50, 221, 411, 65
      LTEXT "WELCOME TO EXILE III: RUINED WORLD!" 9, 136, 4, 265, 16
      LTEXT "THIS IS A BETA COPY! DO NOT DISTRIBUTE! IF YOU ARE NOT AUTHORIZED TO HAVE THIS, PLEASE DELETE IT NOW!" 10, 3, 333, 381, 30
-     }
-
-987 DIALOG 10, 10, 433, 441
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 337, 408, 63, 23
-     LTEXT "5_702" 2, 10, 10, 36, 36
-     LTEXT "0_35" 3, 89, 354, 23, 23
-     LTEXT "0_36" 4, 174, 354, 23, 23
-     LTEXT "0_37" 5, 259, 354, 23, 23
-     LTEXT "0_38" 6, 89, 397, 23, 23
-     LTEXT "0_39" 7, 174, 397, 23, 23
-     LTEXT "0_40" 8, 259, 397, 23, 23
-     LTEXT "0_27" 9, 342, 5, 58, 20
-     LTEXT "0_28" 10, 342, 346, 58, 20
-     LTEXT "5_0" 11, 123, 348, 28, 36
-     LTEXT "5_0" 12, 208, 348, 28, 36
-     LTEXT "5_0" 13, 293, 348, 28, 36
-     LTEXT "5_0" 14, 123, 393, 28, 36
-     LTEXT "5_0" 15, 208, 393, 28, 36
-     LTEXT "5_0" 16, 293, 393, 28, 36
-     LTEXT "~You Find:" 17, 64, 6, 199, 18
-     LTEXT "+" 18, 73, 31, 327, 309
-     LTEXT "8_0" 19, 80, 37, 311, 36
-     LTEXT "5_0" 20, 80, 37, 28, 36
-     LTEXT "*" 21, 107, 37, 212, 18
-     LTEXT "*" 22, 116, 55, 275, 17
-     LTEXT "8_0" 23, 80, 74, 311, 36
-     LTEXT "5_0" 24, 80, 74, 28, 36
-     LTEXT "*" 25, 107, 74, 212, 18
-     LTEXT "*" 26, 116, 92, 275, 18
-     LTEXT "8_0" 27, 80, 111, 311, 36
-     LTEXT "5_0" 28, 80, 111, 28, 36
-     LTEXT "*" 29, 107, 111, 212, 18
-     LTEXT "*" 30, 116, 129, 275, 18
-     LTEXT "8_0" 31, 80, 148, 311, 36
-     LTEXT "5_0" 32, 80, 148, 28, 36
-     LTEXT "*" 33, 107, 148, 212, 18
-     LTEXT "*" 34, 116, 166, 275, 18
-     LTEXT "8_0" 35, 80, 185, 311, 36
-     LTEXT "5_0" 36, 80, 185, 28, 36
-     LTEXT "*" 37, 107, 185, 212, 18
-     LTEXT "*" 38, 116, 203, 275, 18
-     LTEXT "8_0" 39, 80, 222, 311, 36
-     LTEXT "5_0" 40, 80, 222, 28, 36
-     LTEXT "*" 41, 107, 222, 212, 18
-     LTEXT "*" 42, 116, 240, 275, 18
-     LTEXT "8_0" 43, 80, 259, 311, 37
-     LTEXT "5_0" 44, 80, 259, 28, 36
-     LTEXT "*" 45, 107, 259, 212, 18
-     LTEXT "*" 46, 116, 277, 275, 18
-     LTEXT "8_0" 47, 80, 297, 311, 36
-     LTEXT "5_0" 48, 80, 297, 28, 36
-     LTEXT "*" 49, 107, 297, 212, 18
-     LTEXT "*" 50, 116, 315, 275, 18
-     LTEXT "=Keyboard: To get item, hit 'a' - 'h'. To scroll, hit up and down arrows." 51, 1, 203, 64, 125
-     LTEXT "=" 52, 1, 347, 66, 79
-     LTEXT "*" 53, 319, 37, 72, 18
-     LTEXT "*" 54, 319, 74, 72, 18
-     LTEXT "*" 55, 319, 111, 72, 18
-     LTEXT "*" 56, 319, 148, 72, 18
-     LTEXT "*" 57, 319, 185, 72, 18
-     LTEXT "*" 58, 319, 222, 72, 18
-     LTEXT "*" 59, 319, 259, 72, 18
-     LTEXT "*" 60, 319, 297, 72, 18
-     }
-
-988 DIALOG 10, 10, 330, 174
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 238, 145, 58, 20
-     LTEXT "0_35" 2, 50, 50, 24, 20
-     LTEXT "+(spot empty)" 3, 83, 52, 172, 16
-     LTEXT "+" 4, 262, 52, 31, 16
-     LTEXT "0_36" 5, 50, 72, 24, 20
-     LTEXT "+(spot empty)" 6, 83, 74, 172, 16
-     LTEXT "+" 7, 262, 74, 31, 16
-     LTEXT "0_37" 8, 50, 94, 24, 20
-     LTEXT "+(spot empty)" 9, 83, 96, 172, 16
-     LTEXT "+" 10, 262, 96, 31, 16
-     LTEXT "0_38" 11, 50, 116, 24, 20
-     LTEXT "+(spot empty)" 12, 83, 118, 172, 16
-     LTEXT "+" 13, 262, 118, 31, 16
-     LTEXT "~Select monster to summon:" 14, 50, 6, 251, 16
-     LTEXT "5_713" 15, 6, 6, 36, 36
-     LTEXT "~#      Monster                        Cost" 16, 50, 28, 244, 16
-     }
-
-989 DIALOG 10, 10, 545, 347
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 455, 320, 58, 20
-     LTEXT "~Create/Edit Party:" 2, 50, 16, 205, 16
-     LTEXT "*Click PC name to rename." 3, 9, 324, 181, 15
-     LTEXT "5_707" 4, 6, 6, 36, 36
-     LTEXT "8_1" 5, 93, 62, 152, 16
-     LTEXT "0_96" 6, 258, 50, 58, 20
-     LTEXT "0_95" 7, 324, 50, 58, 20
-     LTEXT "0_31" 8, 390, 50, 58, 20
-     LTEXT "~PC #1" 9, 42, 63, 40, 16
-     LTEXT "8_1" 10, 93, 107, 152, 16
-     LTEXT "0_96" 11, 258, 95, 58, 20
-     LTEXT "0_95" 12, 324, 95, 58, 20
-     LTEXT "0_31" 13, 390, 95, 58, 20
-     LTEXT "~PC #2" 14, 42, 108, 40, 16
-     LTEXT "8_1" 15, 93, 152, 152, 16
-     LTEXT "0_96" 16, 258, 140, 58, 20
-     LTEXT "0_95" 17, 324, 140, 58, 20
-     LTEXT "0_31" 18, 390, 140, 58, 20
-     LTEXT "~PC #3" 19, 42, 153, 40, 16
-     LTEXT "8_1" 20, 93, 197, 152, 16
-     LTEXT "0_96" 21, 258, 185, 58, 20
-     LTEXT "0_95" 22, 324, 185, 58, 20
-     LTEXT "0_31" 23, 390, 185, 58, 20
-     LTEXT "~PC #4" 24, 42, 198, 40, 16
-     LTEXT "8_1" 25, 93, 242, 152, 16
-     LTEXT "0_96" 26, 258, 230, 58, 20
-     LTEXT "0_95" 27, 324, 230, 58, 20
-     LTEXT "0_31" 28, 390, 230, 58, 20
-     LTEXT "~PC #5" 29, 42, 243, 40, 16
-     LTEXT "8_1" 30, 93, 287, 152, 16
-     LTEXT "0_96" 31, 258, 275, 58, 20
-     LTEXT "0_95" 32, 324, 275, 58, 20
-     LTEXT "0_31" 33, 390, 275, 58, 20
-     LTEXT "~PC #6" 34, 42, 288, 40, 16
-     LTEXT "0_97" 35, 455, 50, 58, 20
-     LTEXT "0_97" 36, 455, 95, 58, 20
-     LTEXT "0_97" 37, 455, 140, 58, 20
-     LTEXT "0_97" 38, 455, 185, 58, 20
-     LTEXT "0_97" 39, 455, 230, 58, 20
-     LTEXT "0_97" 40, 455, 275, 58, 20
-     LTEXT "0_67" 41, 498, 4, 21, 16
-     LTEXT "5_0" 42, 12, 52, 28, 36
-     LTEXT "5_0" 43, 12, 97, 28, 36
-     LTEXT "5_0" 44, 12, 142, 28, 36
-     LTEXT "5_0" 45, 12, 187, 28, 36
-     LTEXT "5_0" 46, 12, 232, 28, 36
-     LTEXT "5_0" 47, 12, 277, 28, 36
      }
 
 991 DIALOG 10, 10, 514, 338
@@ -1067,16 +502,6 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "+", 69, 146, 15, 186, 16
 }
 
-993 DIALOG 10, 10, 362, 65
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_60" 1, 271, 36, 58, 20
-     LTEXT "0_59" 2, 161, 36, 75, 20
-     LTEXT "0_58" 3, 50, 36, 75, 20
-     LTEXT "This door is locked. What do you do?" 4, 50, 8, 252, 19
-     LTEXT "5_112" 5, 8, 8, 28, 36
-     }
-
 996 DIALOG 10, 10, 461, 206
      STYLE WS_POPUP | WS_DLGFRAME
      {
@@ -1105,16 +530,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "2_0" 23, 402, 159, 14, 10
      LTEXT "Number in ( ) is minimum skill to make." 24, 8, 179, 199, 16
      }
-997 DIALOG 10, 10, 296, 234
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "5_724" 2, 6, 6, 36, 36
-     LTEXT "1_0" 3, 199, 202, 63, 23
-     LTEXT "0_2" 4, 55, 202, 63, 23
-     LTEXT "0_3" 5, 124, 202, 63, 23
-     LTEXT "7_0" 6, 55, 17, 179, 16
-     LTEXT "=" 7, 17, 55, 238, 129
-     }
 
 998 DIALOG 10, 10, 330, 327
      STYLE WS_POPUP | WS_DLGFRAME
@@ -1139,41 +554,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "~Description:" 18, 8, 192, 102, 16
      LTEXT "=" 19, 8, 210, 286, 87
      LTEXT "+" 20, 60, 142, 44, 15
-     }
-
-999 DIALOG 10, 10, 345, 332
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "~Immunities:" 1, 21, 187, 137, 16
-     LTEXT "~Monster Info:" 2, 54, 7, 106, 16
-     LTEXT "1_0" 3, 249, 297, 63, 23
-     LTEXT "5_0" 4, 12, 8, 28, 36
-     LTEXT "" 5, 104, 32, 195, 16
-     LTEXT "" 6, 53, 59, 25, 16
-     LTEXT "" 7, 134, 59, 47, 16
-     LTEXT "" 8, 258, 59, 47, 16
-     LTEXT "" 9, 57, 85, 25, 16
-     LTEXT "" 10, 127, 85, 25, 16
-     LTEXT "" 11, 205, 85, 32, 16
-     LTEXT "" 12, 280, 85, 25, 16
-     LTEXT "" 13, 63, 111, 44, 16
-     LTEXT "" 14, 160, 111, 44, 16
-     LTEXT "" 15, 261, 111, 44, 16
-     LTEXT "" 16, 78, 137, 25, 17
-     LTEXT "" 17, 188, 137, 25, 17
-     LTEXT "" 18, 280, 137, 25, 17
-     LTEXT "" 19, 67, 165, 238, 16
-     LTEXT "2_0" 20, 118, 205, 14, 10
-     LTEXT "2_0" 21, 118, 220, 14, 10
-     LTEXT "2_0" 22, 118, 235, 14, 10
-     LTEXT "2_0" 23, 118, 250, 14, 10
-     LTEXT "2_0" 24, 241, 205, 14, 10
-     LTEXT "2_0" 25, 241, 220, 14, 10
-     LTEXT "2_0" 26, 241, 235, 14, 10
-     LTEXT "2_0" 27, 241, 250, 14, 10
-     LTEXT "0_2" 28, 11, 297, 63, 23
-     LTEXT "0_3" 29, 74, 297, 63, 23
-     LTEXT "*(To make monsters appear in roster menu, cast Scry Monster on them.)" 30, 10, 266, 305, 28
      }
 
 1010 DIALOG 10, 10, 570, 391
@@ -1262,15 +642,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "*Gold:" 81, 252, 344, 42, 16
      }
 
-1011 DIALOG 10, 10, 328, 78
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_9" 1, 236, 48, 58, 20
-     LTEXT "0_61" 2, 168, 48, 58, 20
-     LTEXT "5_412" 3, 6, 6, 36, 36
-     LTEXT "This item is clearly someone's property. Do you steal it?" 4, 48, 6, 246, 35
-     }
-
 1012 DIALOG 10, 10, 290, 94
 STYLE WS_POPUP | WS_DLGFRAME
 {
@@ -1331,23 +702,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "Number in () is how much having that trait affects the experience you need to gain a level." 46, 289, 223, 204, 43
      }
 
-1014 DIALOG 10, 10, 355, 124
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 260, 93, 63, 23
-     LTEXT "=Fred" 2, 47, 9, 273, 77
-     LTEXT "5_0" 3, 9, 10, 28, 36
-     }
-
-1017 DIALOG 10, 10, 243, 86
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "6_0" 2, 88, 34, 75, 16
-     LTEXT "~Ask about what?" 3, 55, 6, 141, 16
-     LTEXT "5_708" 4, 8, 8, 36, 36
-     LTEXT "1_63" 5, 146, 62, 75, 16
-     }
-
 1018 DIALOG 10, 10, 311, 220
      STYLE WS_POPUP | WS_DLGFRAME
      {
@@ -1369,112 +723,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "1_5" 16, 214, 187, 63, 25
      }
 
-1019 DIALOG 10, 10, 512, 372
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 418, 339, 58, 20
-     LTEXT "0_2" 2, 289, 339, 58, 20
-     LTEXT "0_3" 3, 352, 339, 58, 20
-     LTEXT "0_75" 4, 144, 310, 106, 20
-     LTEXT "0_76" 5, 257, 310, 106, 20
-     LTEXT "0_77" 6, 370, 310, 106, 20
-     LTEXT "5_0" 7, 9, 10, 28, 36
-     LTEXT "~Info on:" 8, 48, 6, 75, 16
-     LTEXT "~" 9, 127, 6, 174, 16
-     LTEXT "~Level:" 10, 48, 29, 53, 16
-     LTEXT "~" 11, 103, 29, 29, 16
-     LTEXT "~Experience:" 12, 134, 29, 78, 16
-     LTEXT "~" 13, 215, 29, 38, 16
-     LTEXT "~Next level:" 14, 258, 29, 78, 16
-     LTEXT "~" 15, 339, 29, 38, 16
-     LTEXT "~Statistics:" 16, 10, 51, 95, 16
-     LTEXT "*" 17, 24, 70, 92, 16
-     LTEXT "*" 18, 119, 70, 38, 16
-     LTEXT "*" 19, 24, 88, 92, 16
-     LTEXT "*" 20, 119, 88, 38, 16
-     LTEXT "*" 21, 24, 106, 92, 16
-     LTEXT "*" 22, 119, 106, 38, 16
-     LTEXT "*" 23, 24, 129, 92, 16
-     LTEXT "*" 24, 119, 129, 38, 16
-     LTEXT "*" 25, 24, 147, 92, 16
-     LTEXT "*" 26, 119, 147, 38, 16
-     LTEXT "*" 27, 24, 165, 92, 16
-     LTEXT "*" 28, 119, 165, 38, 16
-     LTEXT "*" 29, 24, 183, 92, 16
-     LTEXT "*" 30, 119, 183, 38, 16
-     LTEXT "*" 31, 24, 201, 92, 16
-     LTEXT "*" 32, 119, 201, 38, 16
-     LTEXT "*" 33, 24, 219, 92, 16
-     LTEXT "*" 34, 119, 219, 38, 16
-     LTEXT "*" 35, 171, 70, 92, 16
-     LTEXT "*" 36, 266, 70, 38, 16
-     LTEXT "*" 37, 171, 88, 92, 16
-     LTEXT "*" 38, 266, 88, 38, 16
-     LTEXT "*" 39, 171, 106, 92, 16
-     LTEXT "*" 40, 266, 106, 38, 16
-     LTEXT "*" 41, 171, 124, 92, 16
-     LTEXT "*" 42, 266, 124, 38, 16
-     LTEXT "*" 43, 171, 142, 92, 16
-     LTEXT "*" 44, 266, 142, 38, 16
-     LTEXT "*" 45, 171, 165, 92, 16
-     LTEXT "*" 46, 266, 165, 38, 16
-     LTEXT "*" 47, 171, 183, 92, 16
-     LTEXT "*" 48, 266, 183, 38, 16
-     LTEXT "*" 49, 171, 201, 92, 16
-     LTEXT "*" 50, 266, 201, 38, 16
-     LTEXT "*" 51, 171, 219, 92, 16
-     LTEXT "*" 52, 266, 219, 38, 16
-     LTEXT "*" 53, 24, 242, 92, 16
-     LTEXT "*" 54, 119, 242, 38, 16
-     LTEXT "*Weapon 1:" 55, 314, 131, 75, 16
-     LTEXT "*" 56, 325, 150, 155, 18
-     LTEXT "*" 57, 325, 170, 155, 18
-     LTEXT "*Weapon 2:" 58, 315, 191, 75, 16
-     LTEXT "*" 59, 326, 210, 154, 18
-     LTEXT "*" 60, 326, 230, 154, 18
-     LTEXT "~Total encumbrance:" 61, 11, 265, 139, 17
-     LTEXT "*" 62, 156, 265, 38, 16
-     LTEXT "Defense skill reduces this during combat." 63, 199, 265, 250, 16
-     LTEXT "Health" 64, 314, 50, 75, 16
-     LTEXT "*" 65, 325, 69, 155, 18
-     LTEXT "Spell Pts." 66, 314, 89, 75, 16
-     LTEXT "*" 67, 325, 108, 155, 18
-     LTEXT "0_89" 68, 176, 339, 106, 20
-     LTEXT "=" 69, 11, 285, 387, 17
-     LTEXT "~Skill Pts.:" 70, 382, 29, 62, 16
-     LTEXT "~" 71, 445, 29, 32, 16
-     }
-
-1020 DIALOG 10, 10, 364, 216
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_9" 1, 244, 46, 58, 20
-     LTEXT "0_88" 2, 176, 46, 58, 20
-     LTEXT "5_213" 3, 8, 9, 36, 36
-     LTEXT "There is a stout wooden lever protruding from the ground here. Pull it?" 4, 50, 4, 253, 34
-     }
-
-1021 DIALOG 10, 10, 367, 135
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "~Buying Food:" 2, 59, 8, 106, 17
-     LTEXT "5_703" 3, 9, 8, 36, 36
-     LTEXT "" 5, 103, 55, 28, 16
-     LTEXT "" 7, 173, 55, 21, 16
-     LTEXT "" 10, 103, 77, 63, 16
-     LTEXT "0_8" 11, 200, 103, 63, 23
-     LTEXT "" 13, 228, 77, 63, 16
-     LTEXT "1_0" 14, 271, 103, 63, 23
-     LTEXT "" 15, 120, 32, 171, 16
-     LTEXT "0_26" 16, 129, 103, 63, 23
-     LTEXT "~Buying:" 17, 59, 32, 55, 16
-     LTEXT "~Cost:" 18, 59, 55, 39, 16
-     LTEXT "~Per:" 19, 137, 55, 39, 16
-     LTEXT "~food." 20, 201, 55, 39, 16
-     LTEXT "~Gold:" 21, 59, 77, 39, 16
-     LTEXT "~Food:" 22, 182, 77, 39, 16
-     }
-
 1024 DIALOG 10, 10, 290, 183
 STYLE WS_POPUP | WS_DLGFRAME
 {
@@ -1486,78 +734,6 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "", 8, 201, 106, 84, 14
 }
 
-1045 DIALOG 10, 10, 276, 84
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 182, 53, 58, 20
-     LTEXT "0_62" 2, 114, 53, 58, 20
-     LTEXT "5_710" 3, 6, 6, 36, 36
-     LTEXT "This creature isn't hostile. |Attack anyway?" 4, 48, 6, 192, 40
-     }
-
-
-
-1047 DIALOG 10, 10, 510, 310
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 416, 279, 58, 20
-     LTEXT "~Alchemy:" 2, 53, 8, 71, 16
-     LTEXT "~For:" 3, 53, 29, 32, 16
-     LTEXT "" 4, 89, 29, 165, 16
-     LTEXT "5_720" 5, 8, 8, 36, 36
-     LTEXT "*(Difficulty follows in parenthesis.)" 6, 6, 283, 259, 17
-     LTEXT "~#" 7, 79, 54, 22, 16
-     LTEXT "~Make:" 8, 109, 54, 75, 16
-     LTEXT "0_35" 9, 76, 73, 23, 20
-     LTEXT "" 10, 109, 75, 160, 16
-     LTEXT "0_36" 11, 76, 96, 23, 20
-     LTEXT "" 12, 109, 98, 160, 16
-     LTEXT "0_37" 13, 76, 119, 23, 20
-     LTEXT "" 14, 109, 121, 160, 16
-     LTEXT "0_38" 15, 76, 142, 23, 20
-     LTEXT "" 16, 109, 144, 160, 16
-     LTEXT "0_39" 17, 76, 165, 23, 20
-     LTEXT "" 18, 109, 167, 160, 16
-     LTEXT "0_40" 19, 76, 188, 23, 20
-     LTEXT "" 20, 109, 190, 160, 16
-     LTEXT "0_41" 21, 76, 211, 23, 20
-     LTEXT "" 22, 109, 213, 160, 16
-     LTEXT "0_42" 23, 76, 234, 23, 20
-     LTEXT "" 24, 109, 236, 160, 16
-     LTEXT "0_43" 25, 76, 257, 23, 20
-     LTEXT "" 26, 109, 259, 160, 16
-     LTEXT "0_44" 27, 278, 74, 23, 20
-     LTEXT "" 28, 311, 76, 160, 16
-     LTEXT "0_45" 29, 278, 97, 23, 20
-     LTEXT "" 30, 311, 99, 160, 16
-     LTEXT "0_46" 31, 278, 120, 23, 20
-     LTEXT "" 32, 311, 122, 160, 16
-     LTEXT "0_47" 33, 278, 143, 23, 20
-     LTEXT "" 34, 311, 145, 160, 16
-     LTEXT "0_48" 35, 278, 166, 23, 20
-     LTEXT "" 36, 311, 168, 160, 16
-     LTEXT "0_49" 37, 278, 189, 23, 20
-     LTEXT "" 38, 311, 191, 160, 16
-     LTEXT "0_50" 39, 278, 212, 23, 20
-     LTEXT "" 40, 311, 214, 160, 16
-     LTEXT "0_90" 41, 278, 235, 23, 20
-     LTEXT "" 42, 311, 237, 160, 16
-     LTEXT "0_67" 43, 448, 8, 58, 20
-     }
-
-1048 DIALOG 10, 10, 358, 86
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "5_726" 2, 6, 6, 36, 36
-     LTEXT "" 4, 54, 10, 262, 16
-     LTEXT "~Gold:" 5, 53, 57, 44, 16
-     LTEXT "" 6, 102, 57, 63, 16
-     LTEXT "0_8" 7, 190, 54, 64, 23
-     LTEXT "" 8, 102, 33, 63, 16
-     LTEXT "1_5" 9, 261, 54, 63, 23
-     LTEXT "~Cost:" 10, 53, 33, 44, 16
-     }
-
 1049 DIALOG 10, 10, 338, 60
      STYLE WS_POPUP | WS_DLGFRAME
      {
@@ -1566,132 +742,12 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "No room in your inventory." 3, 52, 4, 255, 18
      }
 
-1050 DIALOG 10, 10, 466, 326
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_0" 1, 371, 297, 56, 20
-     LTEXT "5_707" 2, 6, 6, 36, 36
-     LTEXT "~Select a graphic for your PC:" 3, 50, 6, 248, 16
-     LTEXT "0_5" 4, 300, 297, 60, 20
-     LTEXT "2_1" 5, 55, 29, 16, 17
-     LTEXT "2_0" 6, 55, 74, 16, 18
-     LTEXT "2_0" 7, 55, 119, 16, 18
-     LTEXT "2_0" 8, 54, 164, 17, 18
-     LTEXT "2_0" 9, 54, 209, 17, 18
-     LTEXT "2_0" 10, 54, 254, 17, 18
-     LTEXT "2_0" 11, 117, 29, 16, 17
-     LTEXT "2_0" 12, 117, 74, 16, 18
-     LTEXT "2_0" 13, 117, 119, 16, 18
-     LTEXT "2_0" 14, 116, 164, 17, 18
-     LTEXT "2_0" 15, 116, 209, 17, 18
-     LTEXT "2_0" 16, 116, 254, 17, 18
-     LTEXT "2_0" 17, 179, 30, 16, 17
-     LTEXT "2_0" 18, 179, 75, 16, 18
-     LTEXT "2_0" 19, 179, 120, 16, 18
-     LTEXT "2_0" 20, 178, 165, 17, 18
-     LTEXT "2_0" 21, 178, 210, 17, 18
-     LTEXT "2_0" 22, 178, 255, 17, 18
-     LTEXT "2_0" 23, 245, 30, 16, 17
-     LTEXT "2_0" 24, 245, 75, 16, 18
-     LTEXT "2_0" 25, 245, 120, 16, 18
-     LTEXT "2_0" 26, 244, 165, 17, 18
-     LTEXT "2_0" 27, 244, 210, 17, 18
-     LTEXT "2_0" 28, 244, 255, 17, 18
-     LTEXT "2_0" 29, 312, 30, 16, 17
-     LTEXT "2_0" 30, 312, 75, 16, 18
-     LTEXT "2_0" 31, 312, 120, 16, 18
-     LTEXT "2_0" 32, 311, 165, 17, 18
-     LTEXT "2_0" 33, 311, 210, 17, 18
-     LTEXT "2_0" 34, 311, 255, 17, 18
-     LTEXT "2_0" 35, 378, 30, 16, 17
-     LTEXT "2_0" 36, 378, 75, 16, 18
-     LTEXT "2_0" 37, 378, 120, 16, 18
-     LTEXT "2_0" 38, 377, 165, 17, 18
-     LTEXT "2_0" 39, 377, 210, 17, 18
-     LTEXT "2_0" 40, 377, 255, 17, 18
-     LTEXT "5_400" 41, 76, 29, 28, 35
-     LTEXT "5_401" 42, 76, 74, 28, 35
-     LTEXT "5_402" 43, 76, 119, 28, 35
-     LTEXT "5_403" 44, 76, 164, 28, 35
-     LTEXT "5_404" 45, 76, 209, 28, 35
-     LTEXT "5_405" 46, 76, 254, 28, 35
-     LTEXT "5_406" 47, 138, 29, 28, 35
-     LTEXT "5_407" 48, 138, 74, 28, 35
-     LTEXT "5_408" 49, 138, 119, 28, 35
-     LTEXT "5_409" 50, 138, 164, 28, 35
-     LTEXT "5_410" 51, 138, 209, 28, 35
-     LTEXT "5_411" 52, 138, 254, 28, 35
-     LTEXT "5_412" 53, 200, 30, 28, 35
-     LTEXT "5_413" 54, 200, 75, 28, 35
-     LTEXT "5_414" 55, 200, 120, 28, 35
-     LTEXT "5_415" 56, 200, 165, 28, 35
-     LTEXT "5_416" 57, 200, 210, 28, 35
-     LTEXT "5_417" 58, 200, 255, 28, 35
-     LTEXT "5_418" 59, 266, 30, 28, 35
-     LTEXT "5_419" 60, 266, 75, 28, 35
-     LTEXT "5_420" 61, 266, 120, 28, 35
-     LTEXT "5_421" 62, 266, 165, 28, 35
-     LTEXT "5_422" 63, 266, 210, 28, 35
-     LTEXT "5_423" 64, 266, 255, 28, 35
-     LTEXT "5_424" 65, 333, 30, 28, 35
-     LTEXT "5_425" 66, 333, 75, 28, 35
-     LTEXT "5_426" 67, 333, 120, 28, 35
-     LTEXT "5_427" 68, 333, 165, 28, 35
-     LTEXT "5_428" 69, 333, 210, 28, 35
-     LTEXT "5_429" 70, 333, 255, 28, 35
-     LTEXT "5_430" 71, 399, 30, 28, 35
-     LTEXT "5_431" 72, 399, 75, 28, 35
-     LTEXT "5_432" 73, 399, 120, 28, 35
-     LTEXT "5_433" 74, 399, 165, 28, 35
-     LTEXT "5_434" 75, 399, 210, 28, 35
-     LTEXT "5_435" 76, 399, 255, 28, 35
-     LTEXT "Click button to left of graphic to select." 77, 2, 308, 245, 16
-     }
-
-1051 DIALOG 10, 10, 303, 121
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "6_0" 2, 118, 36, 148, 15
-     LTEXT "5_707" 3, 8, 8, 36, 36
-     LTEXT "~Select a name for your PC:" 4, 53, 6, 222, 20
-     LTEXT "~Name:" 5, 53, 36, 58, 16
-     LTEXT "" 6, 53, 63, 217, 16
-     LTEXT "1_63" 7, 209, 88, 65, 22
-     }
-
-1053 DIALOG 10, 10, 332, 116
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_65" 1, 239, 84, 58, 20
-     LTEXT "0_64" 2, 172, 84, 58, 20
-     LTEXT "5_707" 3, 6, 6, 36, 36
-     LTEXT "You are about to consign this character to the eternal void.||Are you sure you want to do this?" 4, 48, 6, 249, 67
-     }
-
-1054 DIALOG 10, 10, 330, 66
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_64" 1, 239, 37, 58, 20
-     LTEXT "0_65" 2, 170, 37, 58, 20
-     LTEXT "5_707" 3, 6, 6, 36, 36
-     LTEXT "Would you like to create another PC?" 4, 48, 6, 249, 21
-     }
-
-1061 DIALOG 10, 10, 332, 78
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_9" 1, 239, 49, 58, 20
-     LTEXT "0_66" 2, 150, 49, 78, 20
-     LTEXT "5_722" 3, 6, 6, 36, 36
-     LTEXT "There is a glowing portal here. " 4, 48, 6, 249, 33
-     }
-
 1062 DIALOG 10, 10, 529, 298
 STYLE WS_POPUP | WS_DLGFRAME
 {
  LTEXT "1_63", 1, 434, 268, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT "Classic Blades of Exile Character Editor Beta 1 |Released under the GNU General Public License, version 2.", 3, 50, 6, 358, 34
+ LTEXT "Classic Blades of Exile Character Editor Beta 2 |Released under the GNU General Public License, version 2.", 3, 50, 6, 358, 34
  LTEXT "Comments and questions? Feel free to express yourself on the Irony Central Board: http://www.ironycentral.com/forum/", 5, 50, 178, 354, 32
  LTEXT "Spiderweb Software web page: http://www.spidweb.com", 6, 60, 211, 354, 53
  LTEXT "The Blades of Exile Editor was originally created by Spiderweb Software - _Where our aberrations become your reality._ ||_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 91, 410, 51
@@ -1714,16 +770,6 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "Loading Blades of Exile save file failed.|" 3, 50, 6, 253, 19
      }
 
-1065 DIALOG 10, 10, 339, 189
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_52" 1, 248, 164, 58, 20
-     LTEXT "0_5" 2, 51, 164, 58, 20
-     LTEXT "5_707" 3, 8, 8, 36, 36
-     LTEXT "CREATING A PARTY: |You are now going to the party creation screen. You will be given a prefabricated party. To create new characters from scratch, press the Fry button by the existing characters." 4, 50, 3, 253, 76
-     LTEXT "Slithzerikai and Nephilim get bonuses to their statistics, and characters with Mage and Priest Spell skill get bonuses to their spell points. These bonuses are added after character creation is completed." 5, 50, 82, 254, 75
-     }
-
 1066 DIALOG 10, 10, 336, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
@@ -1744,379 +790,14 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "~Do you want to save before opening a new file?" 5, 52, 5, 262, 33
      }
 
-1069 DIALOG 10, 10, 372, 178
+1069 DIALOG 10, 10, 322, 68
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_81" 1, 272, 146, 66, 20
-     LTEXT "0_82" 2, 197, 146, 65, 20
-     LTEXT "0_83" 3, 122, 146, 66, 20
-     LTEXT "5_2700" 4, 6, 6, 36, 36
-     LTEXT "Alas, the cruel forces that are ravaging your world have claimed a new set of victims. " 5, 85, 6, 252, 44
-     LTEXT "Anaximander greets the news of your demise with sadness, and then starts the search for a new group of adventurers. The plagues of monsters must be ended, if the Exiles are ever to return to the surface. Care to take another shot?" 6, 85, 51, 253, 92
-     LTEXT "5_2701" 7, 42, 6, 36, 36
-     LTEXT "5_2704" 8, 6, 42, 36, 36
-     LTEXT "5_2705" 9, 42, 42, 36, 36
+     LTEXT "1_63" 1, 245, 34, 58, 20
+     LTEXT "5_723" 2, 6, 6, 36, 36
+     LTEXT "Saving Blades of Exile save file failed.|" 3, 50, 6, 253, 19
      }
 
-1070 DIALOG 10, 10, 320, 112
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "Go for it!" 1, 103, 41, 41, 10, WS_GROUP
-     PUSHBUTTON "Exit Exile" 100, 59, 41, 42, 10, WS_GROUP
-     LTEXT "Unfortunately, this program requires 8-bit Color Quickdraw to run optimally. It might work with less, or it might not work at all. Do you wish to try?" 3, 10, 7, 276, 66
-     }
-
-1071 DIALOG 10, 10, 303, 173
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "Yes" 1, 105, 73, 31, 10, WS_GROUP
-     PUSHBUTTON "Exit Exile" 100, 58, 73, 42, 10, WS_GROUP
-     PUSHBUTTON "Play as is" 3, 6, 73, 50, 10, WS_GROUP
-     LTEXT "This game is best with 256 Color Quickdraw, which you have on your system. It plays acceptably well with 16 colors. With more colors, the graphics sometimes turn to static, and the game will be unstable. " 4, 8, 6, 262, 98
-     LTEXT "Would you like your monitor set to 256 colors?" 5, 8, 106, 263, 31
-     }
-
-1072 DIALOG 10, 10, 535, 415
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 441, 391, 58, 20
-     LTEXT "5_724" 2, 6, 6, 36, 36
-     LTEXT "There are a wide variety of magical walls and barriers which you can create and will encounter..." 3, 60, 23, 418, 27
-     LTEXT "EXILE HELP: MAGIC BARRIERS" 4, 50, 6, 235, 16
-     LTEXT "Wall of Fire - The weakest wall. Short lived and low damage. | |Wall of Force - Does more damage than a Wall of Fire and lasts a bit longer." 5, 51, 55, 181, 86
-     LTEXT "Stinking Cloud - Lasts a short time, and curses anyone who enters." 6, 51, 253, 179, 40
-     LTEXT "Web - Lasts until walked through. Slows down the victim, and interfers with attacks. Pause to clean off webs. | |Antimagic Field - Spells cannot be casts while in this, nor may they be targeted into it. It fades eventually." 7, 284, 54, 219, 104
-     LTEXT "Wall of Ice - Does as much damage as a Wall of Force, but lasts much longer. | |Wall of Blades - Long lasting, and does the most damage of the wall spells." 8, 51, 154, 182, 86
-     LTEXT "Fire Barrier - Permanent. Only removable by Dispel Barrier spell. Damages anyone who walks into it. Blocks quickfire. |Force Barrier - Like Fire Barrier, but cannot be moved through." 9, 284, 169, 216, 81
-     LTEXT "Quickfire - The most deadly of the barriers, once created it spreads through the dungeon/town destroying everything. It can only be blocked by the two barrier spells. Antimagic fields slow it down." 10, 49, 348, 449, 41
-     LTEXT "5_1709" 11, 15, 59, 28, 36
-     LTEXT "5_1708" 12, 15, 108, 28, 36
-     LTEXT "5_1712" 13, 15, 158, 28, 36
-     LTEXT "5_1713" 14, 15, 207, 28, 36
-     LTEXT "5_1711" 15, 15, 257, 28, 36
-     LTEXT "5_1715" 16, 15, 352, 28, 36
-     LTEXT "5_1705" 17, 250, 62, 28, 36
-     LTEXT "5_1710" 18, 250, 123, 28, 36
-     LTEXT "5_1716" 19, 250, 177, 28, 36
-     LTEXT "Barrels,Crates - Can be pushed around. Have items in them sometimes." 20, 86, 309, 411, 28
-     LTEXT "5_1707" 21, 15, 306, 28, 36
-     LTEXT "5_1706" 22, 53, 306, 28, 36
-     LTEXT "Sleep Wall - Walking through can put character to sleep. Very dangerous." 23, 284, 261, 215, 43
-     LTEXT "5_1714" 24, 250, 265, 28, 36
-     }
-
-1079 DIALOG 10, 10, 518, 410
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 424, 381, 58, 20
-     LTEXT "5_724" 2, 8, 8, 36, 36
-     LTEXT "To move, click on the terrain screen in the direction you want to move, or use the keypad. To wait, click on your party.|The buttons on the bottom act as follows:" 3, 65, 31, 422, 34
-     LTEXT "EXILE III HELP: OUTDOOR COMMANDS" 4, 52, 10, 235, 16
-     LTEXT "To read a sign or search something, stand adjacent to it and look at it. To enter a town/dungeon/tower/pit. etc., move onto it." 5, 69, 209, 417, 33
-     LTEXT "To board a boat, move onto it. To disembark, steer it onto land. To investigate a special (specials are marked with small white circles), move onto it. Boats cannot move diagonally." 6, 69, 292, 417, 50
-     LTEXT "SECRET PASSAGES: Some walls have secret passages. To find them, walk into the wall." 7, 69, 343, 416, 33
-     LTEXT "TIME SAVER: Hitting 'l' and then pressing a direction on the keypad has you look at thing right next to you in that direction. This works in towns (and for talking, etc.) too." 8, 69, 243, 416, 48
-     LTEXT "5_1400" 9, 118, 78, 320, 100
-     }
-
-1080 DIALOG 10, 10, 525, 401
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 432, 388, 58, 20
-     LTEXT "5_724" 2, 8, 8, 36, 36
-     LTEXT "To move, click on the terrain screen in the direction you want to move, or use the keypad. To wait, click on your party.|The action buttons (and the equivalent keys) are:" 3, 62, 29, 423, 48
-     LTEXT "EXILE III HELP: TOWN COMMANDS" 4, 52, 11, 235, 16
-     LTEXT "To read a sign, open a chest, or search a barrel/crate/etc., stand adjacent to it and look at it. To leave town, keep moving towards the border of the map. Move into a door to open it." 5, 61, 278, 430, 48
-     LTEXT "To board a boat, move onto it. To leave it, steer it onto land. |You close a door by Using it. Some doors are locked - you can pick or bash open the lock when you move into them." 6, 61, 329, 430, 51
-     LTEXT "When talking, looking, or using, first click on the appropriate button, and then click on the space to act on. When looking, you can click on the terrain screen border to scroll the view." 7, 61, 227, 428, 49
-     LTEXT "5_1402" 8, 107, 87, 320, 100
-     }
-
-1081 DIALOG 10, 10, 590, 412
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 500, 403, 58, 20
-     LTEXT "5_724" 2, 9, 9, 36, 36
-     LTEXT "Your PCs will act one at a time. To move, click on the terrain screen in the direction you want to move, or use the keypad. To have the PC stand ready, click on him/her. |The buttons on the bottom act as follows:" 3, 66, 26, 473, 49
-	  LTEXT "EXILE III HELP: COMBAT COMMANDS" 4, 53, 9, 235, 16
-     LTEXT "Outdoors, you can only end combat when all foes are dead.|In an outdoor combat, to flee, move everyone off the border of the battlefield. To flee in town, leave combat mode and leave town." 5, 66, 348, 476, 49
-     LTEXT "Make Active - This either makes only current character active, or switches back to having entire party active.|" 6, 66, 206, 475, 35
-     LTEXT "Each PC gets a base 4 action pts. Each action uses some up. Heavy armor and being webbed or slowed reduces the total, and being hasted increases it. The cost of each action is ..." 7, 23, 260, 257, 81
-     LTEXT "5_1401" 8, 147, 79, 320, 100
-     LTEXT "5_1300" 9, 284, 242, 275, 100
-     }
-
-1082 DIALOG 10, 10, 504, 365
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 405, 342, 58, 20
-     LTEXT "5_724" 2, 8, 8, 36, 36
-     LTEXT "EXILE III HELP: PARTY STATUS SCREEN" 3, 52, 12, 235, 16
-     LTEXT "This area lists the names of your party members, their health and magic points, and two buttons:" 4, 61, 29, 394, 33
-     LTEXT "After each PCs name are graphics to show its status:" 5, 61, 151, 379, 16
-     LTEXT "5_1200" 6, 168, 66, 75, 16
-     LTEXT "To have two PCs switch places, click on their switch places buttons. To get a full description of a character, click on the '?' button." 7, 61, 102, 401, 46
-     LTEXT "5_1500" 8, 73, 173, 386, 94
-     LTEXT "Active PC: The character whose name is in italics is the active character. This is the PC who will cast spells selected from the cast spells menus. and who is shopping in stores. To make a PC active, click on its name or type '1'-'6." 9, 61, 276, 401, 65
-     }
-
-1083 DIALOG 10, 10, 534, 341
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 440, 312, 58, 20
-     LTEXT "~EXILE II: RUINED WORLD b1.0|" 2, 50, 6, 456, 16
-     LTEXT "Exile III was created on a PowerMac 6100 using CodeWarrior, development system of the Gods. It is written in C." 3, 50, 258, 453, 34
-     LTEXT "Enjoy playing!" 4, 50, 295, 274, 18
-     LTEXT "5_716" 5, 6, 6, 36, 36
-     LTEXT "_Exile III: Ruined World_ and Spiderweb Software are trademarks of Spiderweb Software." 6, 50, 225, 455, 31
-     LTEXT "Exile III is still being worked on. So there." 7, 50, 24, 451, 64
-     }
-
-1084 DIALOG 10, 10, 559, 375
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 468, 348, 58, 20
-     LTEXT "5_724" 2, 6, 6, 36, 36
-     LTEXT "~Bugs and Stuff:" 3, 50, 6, 131, 18
-     LTEXT "HINTS:" 4, 50, 77, 83, 15
-     LTEXT "The hint book can be had somehow. Alternately, send check (to ?) or money order to..." 5, 50, 155, 466, 48
-	  LTEXT "COMMENTS:|    We LOVE to hear what you have to say. Comments, questions, complaints, etc. can be sent to the address on the About Exile III page. Don't send comments to the address above. They don't want them." 6, 49, 274, 477, 66
-     LTEXT "THE ADDRESS:  " 7, 50, 205, 86, 15
-     LTEXT "" 8, 324, 212, 73, 14
-     LTEXT "Payment by credit card is available. Call ???." 9, 277, 229, 227, 33
-     LTEXT "" 10, 62, 222, 206, 49
-     LTEXT "   Alas, though we tried, we probably didn't get all the bugs and typos out of Exile III. Should you find one, a bug report form is enclosed with the game. Also, E-mail addresses for comments are available on the About Exile III page." 11, 50, 26, 475, 49
-     LTEXT "" 12, 50, 95, 466, 48
-     }
-
-1086 DIALOG 10, 10, 338, 76
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_80" 1, 246, 46, 58, 20
-     LTEXT "0_79" 2, 177, 46, 58, 20
-     LTEXT "You have come to a dock/bridge. Pilot under it or land?" 3, 50, 3, 254, 32
-     LTEXT "5_302" 4, 6, 6, 36, 36
-     }
-
-1088 DIALOG 10, 10, 524, 416
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "OK" 1, 216, 193, 31, 10, WS_GROUP
-     LTEXT "There are two sorts of magic spells: mage spells and priest spells. There are 62 spells of each type, each with a level of one to seven." 4, 60, 23, 423, 48
-     LTEXT "EXILE HELP: MAGIC" 5, 50, 6, 235, 16
-     LTEXT "You can only cast mage (or priest) spells of a level as high as your Mage (or Priest) Spells skill. Casting a spell costs spell points (the amount given in the Pick Spell window). Right-clicking on a spell button gives a description." 6, 60, 71, 423, 65
-     LTEXT "Mage spells cannot be cast by someone wearing bulky armor (although armor can be put on after the spells are cast). " 7, 60, 283, 417, 33
-     LTEXT "You start automatically knowing most spells up to level 3. Other spells you have to track down. Some are known by sages who can teach them to you (for a price). Others must be found in dungeons and ruins." 8, 60, 218, 424, 65
-     LTEXT "When you decide to cast a spell, you will be a given a list of spells with green lights next to the spells you are currently able to cast (and not those that you are, say, too low a level to cast)." 9, 60, 136, 436, 50
-     LTEXT "IMPORTANT: Spell effects are cumulative. Two poison spells do more than twice the damage of one poison spell. If a fear spell doesn't work, the next one will be more likely to. Casting 3 bless spells on a PC will make him/her a powerhouse." 10, 60, 316, 424, 62
-     LTEXT "WARNING: Spells cast by a PC with 1, 2 or 3 intelligence will be very weak!" 11, 60, 186, 432, 32
-     }
-
-1089 DIALOG 10, 10, 532, 404
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "OK" 1, 219, 187, 31, 10, WS_GROUP
-     LTEXT "To get anywhere in Exile, you will need to talk at great length to the people around you. To talk to someone, click on the mouth button and then on the person to talk to." 4, 60, 27, 423, 48
-     LTEXT "EXILE HELP: TALKING AND SHOPS" 5, 50, 6, 235, 16
-     LTEXT "In the talk window, type the thing to ask about (always a single word) and hit enter. Everyone responds to:|     'look'    'name'    'job'|Saying 'bye' ends the conversation. " 6, 60, 77, 424, 65
-     LTEXT "Talking to people is how you buy things, such as food or training. Usually, just saying 'buy' works. Sometimes, however, you have to say the specific thing they sell: if Albert says _I identify things._ ask about 'identify.'" 7, 60, 263, 436, 66
-     LTEXT "Some people may provide valuable hints about what others know about. For example, if someone says _You should ask Tor about supplies,_ when you meet Tor 'supplies' should be one of the first things you ask about." 8, 60, 196, 424, 65
-     LTEXT "You can figure out other things to ask the people about by picking words out of what they say. If JimBob says _I love killing Nephilim,_ 'killing' and 'Nephilim' are likely bets." 9, 60, 144, 436, 50
-     LTEXT "Due to finite memory, people will generally not have more to say about everything they talk about, just the important things." 10, 60, 331, 436, 34
-     }
-
-1090 DIALOG 10, 10, 525, 418
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_63" 1, 435, 384, 58, 20
-     LTEXT "5_724" 2, 9, 9, 36, 36
-     LTEXT "During your adventures, you will come across mind-boggling quantities of stuff. To pick up some of it, move your party (or active PC) near it, and hit the get button (or 'g'). Then, on the Get Item window, click on the item to grab." 3, 63, 30, 423, 64
-     LTEXT "EXILE III HELP: ITEM INFO SCREEN" 4, 53, 13, 235, 16
-     LTEXT "Once there, to equip (i.e. use) or unequip (take off) an item, click on its name. Other buttons will appear enabling you do to other things:" 5, 63, 131, 283, 57
-     LTEXT "Items from slain monsters normally appear unidentified. To identify them, take them to a sage (such as Habecker in Fort Emergence). Also, buying Item Lore skill sometimes makes monster's treasure appear already identified." 6, 63, 274, 429, 50
-     LTEXT "Once obtained, items show up in this window. Type '1'-'6' or click on the numbered button to bring up a character's inventory. " 7, 63, 95, 424, 33
-     LTEXT "5_1100" 8, 350, 136, 129, 132
-     LTEXT "The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things. Many shopkeepers will buy your items, and certain sages can identify and even enchant them." 9, 63, 189, 281, 84
-     LTEXT "Finally, hitting the Jobs button (or typing '8') takes you to the jobs page, where you can see what jobs you currently have. Hitting the 'Spec' button (or typing '9') brings up whatever special items you have." 10, 63, 325, 427, 50
-     }
-
-1091 DIALOG 10, 10, 333, 74
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 244, 45, 58, 20
-     LTEXT "0_78" 2, 134, 45, 78, 20
-     LTEXT "5_723" 3, 9, 9, 36, 36
-     LTEXT "Starting over will delete the current party. Are you sure you want to do this?" 4, 53, 6, 249, 31
-     }
-
-1092 DIALOG 10, 10, 580, 430
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "OK" 1, 242, 201, 31, 10, WS_GROUP
-     LTEXT "While playing Exile, you will meet many, many beings who want to kill you, both outdoors and in dungeons. When you are attacked outdoors, a battlefield will appear. When attacked in town, press the sword button to start combat. " 4, 60, 27, 482, 65
-     LTEXT "EXILE HELP: COMBAT" 5, 50, 6, 235, 16
-     LTEXT "During combat, each of your characters go, one after another, then the monsters act. Move into a monster to attack it. If you press the 'Active' button, only the currently active PC will act until you press it again." 6, 60, 160, 483, 50
-     LTEXT "When monsters hit you, you are damaged and lose health points. When a blow would take you below 0 health, you end up at 0 health. If you take damage when at 0 health, you die. If you take a lot of damage while at 0 health, you turn to dust." 7, 60, 93, 483, 66
-     LTEXT "When you use poison during combat, you poison your melee weapon or arrows (thrown weapons cannot be poisoned). The next several monsters you hit will take a lot of extra damage over time. " 8, 60, 344, 482, 49
-     LTEXT "There are five sorts of weapons: edged, bashing, and pole, which are hand-to-hand weapons, and bow and thrown missile, which are missile weapons. You can buy skill in each of the five weapon types, which makes them hit more often." 9, 60, 211, 483, 66
-     LTEXT "Equipping armor makes monster's blows do less damage. However, heavy armor makes you less likely to hit. Don't wear heavy armor if your weapon skill is low. You can equip two weapons, but this makes you MUCH less likely to hit." 10, 60, 278, 483, 65
-     }
-
-1093 DIALOG 10, 10, 332, 78
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 238, 42, 58, 20
-     LTEXT "0_63" 2, 169, 42, 58, 20
-     LTEXT "5_702" 3, 8, 8, 36, 36
-     LTEXT "~This item will be gone forever. Still drop it?" 4, 48, 2, 248, 33
-     }
-
-1095 DIALOG 10, 10, 573, 384
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "OK" 1, 242, 178, 31, 10, WS_GROUP
-     LTEXT "SCROLLING THE SCREEN - When looking in town or combat, clicking the gray border of the view screen shifts the view around. Similarly, you can target people offscreen in combat by clicking on the terrain border." 4, 60, 27, 481, 48
-     LTEXT "EXILE HELP: VALUABLE INFO" 5, 50, 6, 235, 16
-     LTEXT "For every (about) 100 experience a character gets, he/she gains a level. With each level comes more health and skill points. The latter may be traded at a trainer for better skills. " 6, 60, 126, 483, 50
-     LTEXT "EXPERIENCE - When you kill a monster, the character striking the death blow gets a bunch of experience, and everyone else gets a lesser amount. When a monster dies of poison, everyone splits the experience." 7, 60, 76, 482, 49
-     LTEXT "STORING ITEMS - Should you get too many items to carry, there are 3 places in the game where they can be stored. You only have to find them." 8, 60, 177, 489, 33
-     LTEXT "SAVING MAPS - Your maps are saved in your save files. To stop doing this (and make the save files much smaller) you can turn off Saved Maps on the Preferences screen.|HELPFUL HINTS - Many useful tips are available under the 'Library' menu." 9, 60, 211, 483, 66
-     LTEXT "SEARCHING - To search a barrel, crate, desk, etc. or open a chest, stand adjacent and look at it." 10, 60, 278, 483, 35
-     LTEXT "HEALTH WARNING - When a blow knocks you down to 0 health, you are warned by a coughing noise." 11, 60, 314, 482, 34
-     }
-
-1096 DIALOG 10, 10, 298, 286
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "5_724" 2, 8, 8, 36, 36
-     LTEXT "+" 3, 55, 27, 182, 16
-     LTEXT "+" 4, 70, 55, 167, 16
-     LTEXT "+" 5, 109, 80, 41, 16
-     LTEXT "+" 6, 215, 80, 28, 16
-     LTEXT "=" 7, 21, 151, 241, 93
-     LTEXT "1_0" 8, 201, 254, 63, 23
-     LTEXT "0_2" 9, 22, 254, 63, 23
-     LTEXT "0_3" 10, 85, 254, 64, 23
-     LTEXT "+" 11, 73, 105, 167, 17
-     LTEXT "*Spell Info:" 12, 55, 6, 83, 16
-     LTEXT "*Name:" 13, 15, 55, 48, 16
-     LTEXT "*Level/Cost:" 14, 15, 80, 87, 16
-     LTEXT "*Range:" 15, 156, 80, 51, 16
-     LTEXT "*When:" 16, 15, 105, 49, 17
-     LTEXT "~Description:" 17, 15, 128, 89, 16
-     }
-
-1097 DIALOG 10, 10, 299, 364
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "5_724" 1, 8, 8, 36, 36
-     LTEXT "*" 2, 191, 90, 12, 13
-     LTEXT "+" 3, 106, 30, 156, 16
-     LTEXT "+" 4, 133, 57, 29, 15
-     LTEXT "+" 5, 218, 57, 45, 15
-     LTEXT "+" 6, 96, 83, 28, 15
-     LTEXT "=" 7, 21, 130, 241, 88
-     LTEXT "=" 8, 21, 250, 241, 74
-     LTEXT "0_2" 9, 19, 332, 63, 23
-     LTEXT "0_3" 10, 82, 332, 63, 23
-     LTEXT "1_0" 11, 202, 332, 63, 23
-     LTEXT "~Skill Info:" 12, 53, 6, 134, 16
-     LTEXT "~Cost:" 13, 15, 57, 41, 16
-     LTEXT "*Skill Pts.:" 14, 59, 57, 66, 16
-     LTEXT "*Gold:" 15, 172, 57, 39, 15
-     LTEXT "*Max. Level:" 16, 15, 83, 73, 16
-     LTEXT "~Description:" 17, 15, 106, 75, 16
-     LTEXT "~Tips:" 18, 16, 229, 75, 16
-     LTEXT "*Name:" 19, 53, 30, 46, 16
-     }
-
-1098 DIALOG 10, 10, 557, 417
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     DEFPUSHBUTTON "Button" 1, 289, 83, 31, 10, WS_GROUP
-     LTEXT "5_712" 2, 9, 9, 36, 36
-     LTEXT "~Select a Spell:" 3, 54, 6, 141, 18
-     LTEXT "0_11" 4, 10, 81, 58, 20
-     LTEXT "0_12" 5, 10, 105, 58, 20
-     LTEXT "0_13" 6, 10, 129, 58, 20
-     LTEXT "0_14" 7, 10, 153, 58, 20
-     LTEXT "0_15" 8, 10, 177, 58, 20
-     LTEXT "0_16" 9, 10, 201, 58, 20
-     LTEXT "0_35" 10, 235, 82, 23, 23
-     LTEXT "0_36" 11, 235, 106, 23, 23
-     LTEXT "0_37" 12, 235, 130, 23, 23
-     LTEXT "0_38" 13, 235, 154, 23, 23
-     LTEXT "0_39" 14, 235, 178, 23, 23
-     LTEXT "0_40" 15, 235, 202, 23, 23
-     LTEXT "0_5" 16, 389, 394, 63, 25
-     LTEXT "1_17" 17, 459, 394, 63, 25
-     LTEXT "" 18, 88, 84, 122, 16
-     LTEXT "" 19, 88, 108, 122, 16
-     LTEXT "" 20, 88, 132, 122, 16
-     LTEXT "" 21, 88, 156, 122, 16
-     LTEXT "" 22, 88, 180, 122, 16
-     LTEXT "" 23, 88, 204, 122, 16
-     LTEXT "" 24, 265, 85, 32, 16
-     LTEXT "" 25, 265, 109, 32, 16
-     LTEXT "" 26, 265, 133, 32, 16
-     LTEXT "" 27, 265, 156, 32, 16
-     LTEXT "" 28, 265, 181, 32, 16
-     LTEXT "" 29, 265, 205, 32, 16
-     LTEXT "" 30, 304, 85, 32, 16
-     LTEXT "" 31, 304, 109, 32, 16
-     LTEXT "" 32, 304, 133, 32, 16
-     LTEXT "" 33, 304, 156, 32, 16
-     LTEXT "" 34, 304, 181, 32, 16
-     LTEXT "" 35, 304, 205, 32, 16
-     LTEXT "+Pick spell to cast." 36, 30, 400, 186, 16
-     LTEXT "2_0" 37, 114, 247, 14, 10
-     LTEXT "2_0" 38, 114, 261, 14, 10
-     LTEXT "2_0" 39, 114, 275, 14, 10
-     LTEXT "2_0" 40, 114, 289, 14, 10
-     LTEXT "2_0" 41, 114, 303, 14, 10
-     LTEXT "2_0" 42, 114, 317, 14, 10
-     LTEXT "2_0" 43, 114, 331, 14, 10
-     LTEXT "2_0" 44, 114, 345, 14, 10
-     LTEXT "2_0" 45, 114, 359, 14, 10
-     LTEXT "2_0" 46, 114, 373, 14, 10
-     LTEXT "2_0" 47, 247, 247, 14, 10
-     LTEXT "2_0" 48, 247, 261, 14, 10
-     LTEXT "2_0" 49, 247, 275, 14, 10
-     LTEXT "2_0" 50, 247, 289, 14, 10
-     LTEXT "2_0" 51, 247, 303, 14, 10
-     LTEXT "2_0" 52, 247, 317, 14, 10
-     LTEXT "2_0" 53, 247, 331, 14, 10
-     LTEXT "2_0" 54, 247, 345, 14, 10
-     LTEXT "2_0" 55, 247, 359, 14, 10
-     LTEXT "2_0" 56, 247, 373, 14, 10
-     LTEXT "2_0" 57, 379, 247, 14, 10
-     LTEXT "2_0" 58, 379, 261, 14, 10
-     LTEXT "2_0" 59, 379, 275, 14, 10
-     LTEXT "2_0" 60, 379, 289, 14, 10
-     LTEXT "2_0" 61, 379, 303, 14, 10
-     LTEXT "2_0" 62, 379, 317, 14, 10
-     LTEXT "2_0" 63, 379, 331, 14, 10
-     LTEXT "2_0" 64, 379, 345, 14, 10
-     LTEXT "2_0" 65, 379, 359, 14, 10
-     LTEXT "2_0" 66, 379, 373, 14, 10
-     LTEXT "2_0" 67, 508, 247, 14, 10
-     LTEXT "2_0" 68, 508, 261, 14, 10
-     LTEXT "2_0" 69, 508, 275, 14, 10
-     LTEXT "2_0" 70, 508, 289, 14, 10
-     LTEXT "2_0" 71, 508, 303, 14, 10
-     LTEXT "2_0" 72, 508, 317, 14, 10
-     LTEXT "2_0" 73, 508, 331, 14, 10
-     LTEXT "2_0" 74, 508, 345, 14, 10
-     LTEXT "0_25" 75, 281, 394, 102, 25
-     LTEXT "~Caster:" 76, 9, 60, 75, 16
-     LTEXT "~Target:  HP:   SP:    Status:" 77, 209, 60, 223, 16
-     LTEXT "Keyboard: Type '1'-'6' to pick caster, Shift-'1' - '6' to select target, 'space' for Other Spells, key by spell to cast spell. Right-click spell name for description." 78, 202, 0, 290, 57
-     LTEXT "0_67" 79, 506, 6, 17, 17
-     LTEXT "*" 80, 10, 227, 100, 16
-     LTEXT "*" 81, 132, 227, 100, 16
-     LTEXT "*" 82, 266, 227, 100, 16
-     LTEXT "*" 83, 396, 227, 100, 16
-     }
 900 DIALOG 13, 16, 334, 220
 STYLE WS_POPUP | WS_DLGFRAME
 {

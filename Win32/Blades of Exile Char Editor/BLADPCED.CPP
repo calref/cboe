@@ -26,12 +26,11 @@ void cursor_go();
 void cursor_stay();
 Boolean verify_restore_quit(short mode);
 void max_window(HWND window);
-void update_item_menu();
+void update_item_menu(short mode);
 void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam);
 
-scen_item_data_type far scen_item_list;
-
-
+scen_item_data_type scen_item_list;
+short item_menus_lock=1;
 
 /* Mac stuff globals */
 RECT	windRECT, Drag_RECT;
@@ -70,24 +69,25 @@ RECT edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
 Boolean game_run_before = TRUE;
 short store_flags[3];
+char town_strs[180][256];
 
 /* Adventure globals */
-party_record_type far party;
-pc_record_type far adven[6];
-outdoor_record_type far outdoors[2][2];
-current_town_type far c_town;
-big_tr_type far t_d;
-town_item_list far	t_i;
-unsigned char far out[96][96];
- unsigned char far out_e[96][96];
-setup_save_type far setup_save;
+party_record_type party;
+pc_record_type adven[6];
+outdoor_record_type outdoors[2][2];
+current_town_type  c_town;
+big_tr_type  t_d;
+stored_items_list_type 	t_i;
+unsigned char out[96][96];
+ unsigned char out_e[96][96];
+setup_save_type setup_save;
 unsigned char misc_i[64][64],sfx[64][64];
 
 short current_active_pc = 0;
 
-stored_items_list_type far stored_items[3];
-stored_town_maps_type far town_maps,town_maps2;
-stored_outdoor_maps_type far o_maps;
+stored_items_list_type stored_items[3];
+stored_town_maps_type town_maps;
+stored_outdoor_maps_type o_maps;
 
 
 /* Display globals */
@@ -189,7 +189,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 			NULL);
 
 	if (!hPrevInstance) { // initialize
-		Get_Path(file_path_name);
+		Get_Path(file_path_name); //store the path to the executable
   		store_hInstance = hInstance;
 		accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(1));
 
@@ -220,7 +220,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		file_initialize();
 		check_colors();
 		cursor_stay();
-//		update_item_menu();
+		update_item_menu(1);
 
 		cd_init_dialogs();
 
@@ -367,7 +367,7 @@ Boolean handle_menu (short item, HMENU)
 		case 2:
 			if (verify_restore_quit(1) == TRUE)
 				load_file();
-                update_item_menu();
+                update_item_menu(item_menus_lock);
 			break;
 		case 4:
 			All_Done = verify_restore_quit(0);
@@ -381,7 +381,6 @@ Boolean handle_menu (short item, HMENU)
 		case 42:
 				edit_gold_or_food(1);
 				redraw_screen();
-
 		break;
 		
 		case 44:
@@ -474,7 +473,7 @@ Boolean handle_menu (short item, HMENU)
 		case 70: // edit day
 			edit_day();
 			break;
-		case 71: // ouit maps
+		case 71: // out maps
 			if (party_in_scen == FALSE) {
 				display_strings(20,25,0,0,"Editing party",57,715,0);
 				break;
@@ -498,14 +497,10 @@ Boolean handle_menu (short item, HMENU)
 			for (i = 0; i < 64; i++)
 				for (j = 0; j < 64; j++)
 					c_town.explored[i][j] = 1;
-			for (i = 0; i < 100; i++)
+			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
 						town_maps.town_maps[i][j][k] = 255;
-			for (i = 0; i < 100; i++)
-				for (j = 0; j < 8; j++)
-					for (k = 0; k < 64; k++)
-						town_maps2.town_maps[i][j][k] = 255;
 			break;
 		case 100: // index
 			WinHelp(mainPtr,"bladhelp.hlp",HELP_CONTENTS,0L);
@@ -597,7 +592,8 @@ Boolean verify_restore_quit(short mode)
 	return TRUE;
 }
 
-void update_item_menu()
+void update_item_menu(short mode)
+//mode 0 - display item menus 1 - lock menus
 {
 	short i,j;
 
@@ -613,6 +609,8 @@ void update_item_menu()
 	   for (i=0;i<40;i++)
        		DeleteMenu(menu[j],600+(40*j)+i,MF_BYCOMMAND);
     }
+    switch(mode){
+    case 0:
 	for (j = 0; j < 10; j++) { //then populate it
 		for (i = 0; i < 40; i++) {
 				sprintf(item_name, "%s",scen_item_list.scen_items[i + j * 40].full_name);
@@ -621,6 +619,13 @@ void update_item_menu()
 					else AppendMenu(menu[j],MF_BYCOMMAND | MF_ENABLED | MF_STRING, 600 + (40 * j) + i, item_name);
 				}
 		}
+    break;
+
+    case 1:
+    for (j = 0; j < 10; j++) //then lock menus
+	       AppendMenu(menu[j],MF_MENUBREAK | MF_BYCOMMAND | MF_GRAYED | MF_STRING, 600 + (40 * j), "None");
+    break;
+    }
 }
 
 void max_window(HWND window)

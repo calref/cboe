@@ -7,18 +7,18 @@
 #include "dlogtool.h"
 
 /* Adventure globals */
-extern party_record_type far party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
-extern town_item_list far	t_i;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern party_record_type party;
+extern pc_record_type adven[6];
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
+extern stored_items_list_type t_i;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 extern short dialog_answer;
 
 extern short store_flags[3];

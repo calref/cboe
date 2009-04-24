@@ -1,0 +1,16 @@
+Changes :
+
+Beta 1
+- The editor now display the filename of the scenario you are in.
+- The editor now get the list of items from the scenario you're in. If not in a scenario, bladbase.exs is used. (clicking a item with food (resp. gold) type will give a random (1-20) amount of food (resp. gold).)
+- References to registration and shareware are removed.
+- Status Screen now show Food, Gold and Day.
+- Corrected the garbled status due to a non-alive character (Ishad Nha)
+Beta 2
+- Corrected the edit day option so that it sets the day to the one specified and not to the day after.
+- Fixed the saving function : now changes can be saved outdoors (that was crashing at save stored_items making give_map non functional).
+That also fixes the stored items arrays being filled with items from current town.
+- If in a scenario, the editor nows display the name of the town the party is in or if they are outdoor.
+- Giving PC items from a Mac made scenario doesn't crash the game anymore (overall Mac scenario support added)
+- Cleaned the ressource file. The executable is now smaller.
+- On give items : the editor now tries to load the bladbase.exs file if the scenario file is not found. If can't locate the bladbase, the items menus are grayed.

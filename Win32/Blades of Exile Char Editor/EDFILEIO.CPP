@@ -12,22 +12,23 @@
 
 
 /* Adventure globals */
-extern party_record_type far party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
-extern town_item_list far	t_i;
+extern party_record_type party;
+extern pc_record_type adven[6];
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
+extern stored_items_list_type t_i;
 extern unsigned char misc_i[64][64],sfx[64][64];
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 
-extern scen_item_data_type far scen_item_list;
+extern scen_item_data_type scen_item_list;
 extern char file_path_name[256];
+extern short item_menus_lock;
 
 extern Boolean play_sounds,sys_7_avail,party_in_scen;
 extern short current_active_pc;
@@ -43,16 +44,18 @@ typedef struct {
 extern short store_flags[3];
 
 // Big waste!
-out_info_type far store_map;
+out_info_type store_map;
 char last_load_file[63] = "blades.sav";
 char szFileName [128] = "blades.sav";
 char szTitleName [128] = "blades.sav";
 OPENFILENAME ofn;
-extern stored_town_maps_type far town_maps,town_maps2;
+extern stored_town_maps_type town_maps;
+extern char town_strs[180][256];
 
 short give_intro_hint = 1;
 short display_mode = 0;
- short store_size;
+short store_size;
+
 
 void Get_Path(char* path){
 
@@ -108,22 +111,20 @@ static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
 void load_file()
 {
 	long file_size;
-	HANDLE file_id, scen_file_id;
+	HANDLE file_id;
 	short i, j;
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
 	Boolean in_scen = FALSE;
 	char flag_data[8];
 	
-	DWORD len, dwByteRead;
+	DWORD dwByteRead;
 	
-	UINT store_len,count,error;
+	UINT count,error;
 
 	char *party_ptr;
 	char *pc_ptr;
-	flag_type flag;
-	flag_type *flag_ptr;
-
+	short flag;
 
 
 	short flags[3][2] = {{5790,1342}, // slot 0 ... 5790 - out  1342 - town
@@ -137,54 +138,40 @@ void load_file()
 
 	if (GetOpenFileName(&ofn) == 0)
 		return;
+
+    SetCurrentDirectory(file_path_name);
 		
 	file_id = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return;
 
-    SetCurrentDirectory(file_path_name);
-
 	file_size = sizeof(party_record_type);
 
-	len = sizeof(flag_type);
 
 	for (i = 0; i < 3; i++)
 	{
-		if (ReadFile(file_id, flag_data, sizeof(flag_type), &dwByteRead, NULL) == FALSE)
+		if (ReadFile(file_id, &flag, sizeof(short), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			return;
 		}
-		flag_ptr = (flag_type *) flag_data;
-		flag = *flag_ptr;
 		
-		store_flags[i] = (short) flag.i;
-		
-		if ((flag.i != flags[i][0]) && (flag.i != flags[i][1]))
+		if ((flag != flags[i][0]) && (flag != flags[i][1]))
 		{
 			CloseHandle(file_id);
 			FCD(1063,0);
 			return;
 		} 
 
-		if ((i == 0) && (flag.i == flags[i][1])) town_restore = TRUE;
-		if ((i == 1) && (flag.i == flags[i][0])) in_scen = TRUE;
-		if ((i == 2) && (flag.i == flags[i][1])) maps_there = TRUE;
+        store_flags[i]=flag;
+
+		if ((i == 0) && (flag == flags[i][1])) town_restore = TRUE;
+		if ((i == 1) && (flag == flags[i][0])) in_scen = TRUE;
+		if ((i == 2) && (flag == flags[i][1])) maps_there = TRUE;
 		}
 
 	// LOAD PARTY	
-	len = (UINT) sizeof(party_record_type);
-	store_len = len;
 	party_ptr = (char *) &party;
-	store_len = sizeof(party_record_type);
-	party_ptr = (char *) &party;
-	/*
-	if (ReadFile(file_id, party_ptr, sizeof(party_record_type), &dwByteRead, NULL) == FALSE)
-	{
-		CloseHandle(file_id);
-		FCD(1064,0);
-		return;
-	} */
 	
 	ReadFile(file_id, &party.age, 4, &dwByteRead, NULL);
 	ReadFile(file_id, &party.gold, 2, &dwByteRead, NULL);
@@ -381,10 +368,9 @@ void load_file()
 	ReadFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
 	ReadFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
 
-	for (count = 0; count < store_len; count++)	party_ptr[count] ^= 0x5C;	
+	for (count = 0; count < sizeof(party_record_type); count++)	party_ptr[count] ^= 0x5C;	
 
 	// LOAD SETUP
-	len = (UINT) sizeof(setup_save_type);
 	
 	if (ReadFile(file_id, &setup_save, sizeof(setup_save_type), &dwByteRead, NULL) == FALSE)
 		{
@@ -394,11 +380,9 @@ void load_file()
 		}
 
 	// LOAD PCS
-	store_len = (UINT) sizeof(pc_record_type);
 	
 	for (i = 0; i < 6; i++)
 	{
-		len = store_len;
 		pc_ptr = (char *) &adven[i];
 		if (ReadFile(file_id, pc_ptr, sizeof(pc_record_type), &dwByteRead, NULL) == FALSE)
 		{
@@ -407,14 +391,13 @@ void load_file()
 			return;
 		}
 		
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < sizeof(pc_record_type); count++)
 			pc_ptr[count] ^= 0x6B;	
 	}
 
 	if (in_scen == TRUE) {
 	
 	// LOAD OUTDOOR MAP
-	len = (long) sizeof(out_info_type);
 	if (ReadFile(file_id, out_e, sizeof(out_info_type), &dwByteRead, NULL) == FALSE)
 		{
 		CloseHandle(file_id);
@@ -425,7 +408,6 @@ void load_file()
 	// LOAD TOWN 
 	if (town_restore == TRUE)
 	{
-		len = (long) sizeof(current_town_type);
 		/*if (ReadFile(file_id, &c_town, sizeof(current_town_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -518,9 +500,10 @@ void load_file()
 			ReadFile(file_id, &c_town.in_boat, 1, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.p_loc.x, 1, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.p_loc.y, 1, &dwByteRead, NULL);
-		}
 		
-		len = (long) sizeof(big_tr_type);
+        
+        }
+		
 		if (ReadFile(file_id, &t_d, sizeof(big_tr_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -528,19 +511,20 @@ void load_file()
 			return;
 		}
 
-		len = (long) sizeof(town_item_list);
-		if (ReadFile(file_id, &t_i, sizeof(town_item_list), &dwByteRead, NULL) == FALSE)
+		if (ReadFile(file_id, &t_i, sizeof(stored_items_list_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
+		}
+
+        load_town_strings(c_town.town_num); // load town strings
+        
 	}
 
 	// LOAD STORED ITEMS
 	for (i = 0; i < 3; i++)
 	{
-		len = (long) sizeof(stored_items_list_type);
 		if (ReadFile(file_id, &stored_items[i], sizeof(stored_items_list_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -552,22 +536,13 @@ void load_file()
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE)
 	{
-		len = (long) sizeof(stored_town_maps_type);
 		if (ReadFile(file_id, &(town_maps), sizeof(stored_town_maps_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
 		}
-		len = (long) sizeof(stored_town_maps_type);
-		if (ReadFile(file_id, &(town_maps2), sizeof(stored_town_maps_type), &dwByteRead, NULL) == FALSE)
-		{
-			CloseHandle(file_id);
-			FCD(1064,0);
-			return;
-		}
 	
-		len = (long) sizeof(stored_outdoor_maps_type);
 		if (ReadFile(file_id, &o_maps, sizeof(stored_outdoor_maps_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -577,7 +552,6 @@ void load_file()
 	}
 
 	// LOAD SFX & MISC_I
-		len = (long) (64 * 64);
 		
 		if (ReadFile(file_id, &sfx, 64 * 64, &dwByteRead, NULL) == FALSE)
 		{
@@ -605,17 +579,17 @@ void load_file()
 	file_in_mem = TRUE;
 	party_in_scen = in_scen;
 
-    load_items_list();
+    item_menus_lock = load_items_list();
     
 	redraw_screen();
 }
 
-void load_items_list(){    //LOAD SCENARIO ITEMS LIST
+short load_items_list(){    //LOAD SCENARIO ITEMS LIST
 
     HANDLE scen_file_id;
-	DWORD len, dwScenByteRead;
+	DWORD dwScenByteRead;
 
-    scenario_data_type far scenario;
+    scenario_data_type scenario;
     char scen_name[256]="";
     
     if(party_in_scen)
@@ -627,33 +601,124 @@ void load_items_list(){    //LOAD SCENARIO ITEMS LIST
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scen_file_id == INVALID_HANDLE_VALUE)
 	{
-        MessageBox(mainPtr,"Couldn't open the scenario file !",
+      	CloseHandle(scen_file_id);
+        MessageBox(mainPtr,"Couldn't open the scenario file, trying to use bladbase.exs instead.",
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
+        scen_file_id = CreateFile("bladbase.exs", GENERIC_READ, FILE_SHARE_READ, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if(scen_file_id == INVALID_HANDLE_VALUE){        
+           	CloseHandle(scen_file_id);            
+            MessageBox(mainPtr,"Couldn't open bladbase.exs, can't give items.",
+	         "File Error",MB_OK | MB_ICONEXCLAMATION);
+        return 1;
+        }
+    }
 	
-		if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRead, NULL) == FALSE)
+    if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRead, NULL) == FALSE) //get scenario data
 	{
-		CloseHandle(scen_file_id);
-MessageBox(mainPtr,"Invalid scenario file !",
+	   CloseHandle(scen_file_id);
+        MessageBox(mainPtr,"Invalid scenario file !",
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
+		return 1;
+	}    
 	
-	len = sizeof(scen_item_data_type); // item data
+// item data
 	
 	if (ReadFile(scen_file_id, &scen_item_list, sizeof(scen_item_data_type), &dwScenByteRead, NULL) == FALSE)
 	{
 		CloseHandle(scen_file_id);
 MessageBox(mainPtr,"Couldn't read the scenario item list !",
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
-		return;
+		return 1;
 	}
-
+	
+	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
+	 && (scenario.flag3 == 30)
+	  && (scenario.flag4 == 40)) {
+		port_item_list(); //Mac scenario, so let's make sure to adjust items properties
+		}
+	
 	CloseHandle(scen_file_id);
 
+	return 0;
 }//END SCENARIO ITEMS LIST LOADING
 
+void load_town_strings(short which_town){    //LOAD TOWNS STRINGS LIST
+
+    HANDLE scen_file_id;
+	long len, len_to_jump=0;
+    DWORD dwScenByteRead;
+
+    scenario_data_type scenario;
+    
+    char scen_name[256]="";
+    int i,j;
+    
+    sprintf(scen_name,"scenarios/%s",party.scen_name);
+        
+	scen_file_id = CreateFile(scen_name, GENERIC_READ, FILE_SHARE_READ, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (scen_file_id == INVALID_HANDLE_VALUE)
+	{
+        MessageBox(mainPtr,"Couldn't open the scenario file !",
+	  "File Error",MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	
+if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRead, NULL) == FALSE)
+	{
+	   CloseHandle(scen_file_id);
+        MessageBox(mainPtr,"Invalid scenario file !",
+	  "File Error",MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	
+	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
+	 && (scenario.flag3 == 30)
+	  && (scenario.flag4 == 40)) {
+		port_scenario(&scenario); //Mac scenario, so let's make sure we can read it properly
+		}
+	
+	len_to_jump += sizeof(scen_item_data_type);//now let's jump to the town_strings position
+	for (i = 0; i < 300; i++)
+		len_to_jump += (long) scenario.scen_str_len[i];
+	long store = 0;
+	for (i = 0; i < 100; i++)
+		for (j = 0; j < 2; j++)
+			store += (long) (scenario.out_data_size[i][j]);
+	for (i = 0; i < which_town; i++)
+		for (j = 0; j < 5; j++)
+			store += (long) (scenario.town_data_size[i][j]);
+	len_to_jump += store;
+	len_to_jump += sizeof(town_record_type);
+
+    SetFilePointer(scen_file_id, len_to_jump, NULL, FILE_CURRENT);
+
+    switch (scenario.town_size[which_town]) {
+		case 0:
+			SetFilePointer(scen_file_id, sizeof(big_tr_type), NULL, FILE_CURRENT);
+			break;
+
+		case 1:
+            SetFilePointer(scen_file_id, sizeof(ave_tr_type), NULL, FILE_CURRENT);
+			break;
+
+		case 2:
+            SetFilePointer(scen_file_id, sizeof(tiny_tr_type), NULL, FILE_CURRENT);
+			break;
+		}
+
+        // town strings
+		
+		for (i = 0; i < 140; i++) {
+		len = (long) (c_town.town.strlens[i]);
+        ReadFile(scen_file_id,  &town_strs[i], len, &dwScenByteRead, NULL);
+   		town_strs[i][len] = 0;
+		}
+		
+	CloseHandle(scen_file_id);
+
+}//END TOWNS STRINGS LOADING
 
 void save_file(short mode)
 //short mode;  // 0 - normal  1 - save as
@@ -663,20 +728,12 @@ void save_file(short mode)
 
 	short i,j;
 
-	DWORD len,store_len,count, bytes, dwByteRead;
-	flag_type flag;
-	flag_type *store;
+	DWORD count, bytes, dwByteRead;
+	short flag;
+	short *store;
 	party_record_type *party_ptr;
 	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
-
-
-	current_town_type *town_ptr;
-	big_tr_type *town_data_ptr;
-	town_item_list *item_ptr;
-	stored_items_list_type *items_ptr;
-	stored_town_maps_type *maps_ptr;
-	stored_outdoor_maps_type *o_maps_ptr;
 
 	char *party_encryptor;
 
@@ -688,14 +745,11 @@ void save_file(short mode)
 
 	if (store_flags[0] == 1342)
 		town_save = TRUE;
-		else town_save = FALSE;
 	if (store_flags[1] == 100)
 		in_scen = TRUE;
-		else in_scen = FALSE;
 	if (store_flags[2] == 5567)  {
 		save_maps = TRUE;
   		}
-		else save_maps = FALSE;
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = szFileName;
@@ -709,38 +763,40 @@ void save_file(short mode)
 
 	file_id = CreateFile(szFileName, GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    SetCurrentDirectory(file_path_name);
+    
 	if (file_id == INVALID_HANDLE_VALUE) return;
 		
 	store = &flag;	
 
-	len = sizeof(flag_type);
-
-	flag.i = store_flags[0];
-	if (WriteFile(file_id, store, sizeof(flag_type), &bytes, NULL) == FALSE)
+	flag = (town_save == TRUE) ? 1342 : 5790;
+	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
+		FCD(1069,0);		
 		return;
 	}
-	flag.i = store_flags[1];
-	if (WriteFile(file_id, store, sizeof(flag_type), &bytes, NULL) == FALSE)
+	flag = (in_scen == TRUE) ? 100 : 200;
+	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
+		FCD(1069,0);		
 		return;
 	}
-	flag.i = store_flags[2];
-	if (WriteFile(file_id, store, sizeof(flag_type), &bytes, NULL) == FALSE)
+	flag = (save_maps == TRUE) ? 5567 : 3422;
+	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
+		FCD(1069,0);		
 		return;
 	}
 
 	// SAVE PARTY
 	party_ptr = &party;	
-	len = sizeof(party_record_type);
 
-	store_len = len;
 	party_encryptor = (char *) party_ptr;
-	for (count = 0; count < store_len; count++)
+	for (count = 0; count < sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
 		
 	WriteFile(file_id, &party.age, 4, &dwByteRead, NULL);
@@ -938,52 +994,49 @@ void save_file(short mode)
 	WriteFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
 	WriteFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
 		
-	for (count = 0; count < store_len; count++)
+	for (count = 0; count < sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
 
 	// SAVE SETUP
 	setup_ptr = &setup_save;	
-	len = sizeof(setup_save_type);
-	if (WriteFile(file_id, setup_ptr, sizeof(setup_save_type), &bytes, NULL) == FALSE)
+	if (WriteFile(file_id, &setup_save, sizeof(setup_save_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
+		FCD(1069,0);
 		return;
 	}
 		
 	// SAVE PCS	
-	store_len = sizeof(pc_record_type);
 	for (i = 0; i < 6; i++) {
 		pc_ptr = &adven[i];	
 
-		len = store_len;
 		party_encryptor = (char *) pc_ptr;
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		if (WriteFile(file_id, pc_ptr, sizeof(pc_record_type), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
-			for (count = 0; count < store_len; count++)
+			for (count = 0; count < sizeof(pc_record_type); count++)
 				party_encryptor[count] ^= 0x6B;
+    			FCD(1069,0);
 				MessageBeep(MB_OK); 
 			return;
 			}
-		for (count = 0; count < store_len; count++)
+		for (count = 0; count < sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		}
 		
 	if (party_in_scen == TRUE) {
 	
 	// SAVE OUT DATA
-	len = sizeof(out_info_type);
 	if (WriteFile(file_id, out_e, sizeof(out_info_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
+		FCD(1069,0);		
 		return;
 	}
 
 	if (town_save == TRUE) {	
-			town_ptr = &c_town;	
-
 	{
 			WriteFile(file_id, &c_town.town_num, 2, &dwByteRead, NULL);
 			WriteFile(file_id, &c_town.difficulty, 2, &dwByteRead, NULL);
@@ -1070,61 +1123,48 @@ void save_file(short mode)
 			WriteFile(file_id, &c_town.p_loc.y, 1, &dwByteRead, NULL);
 		}
 
-			town_data_ptr = &t_d;	
-			len = sizeof(big_tr_type);
-			if (WriteFile(file_id, town_data_ptr, sizeof(big_tr_type), &bytes, NULL) == FALSE)
+			if (WriteFile(file_id, &t_d, sizeof(big_tr_type), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
+    			FCD(1069,0);				
 				return;
 			}
-			item_ptr = &t_i;	
-			len = sizeof(town_item_list);
-			if (WriteFile(file_id, item_ptr, sizeof(town_item_list), &bytes, NULL) == FALSE)
+			if (WriteFile(file_id, &t_i, sizeof(stored_items_list_type), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
+    			FCD(1069,0);				
 				return;
 			}	
 		}
 	
 	// Save stored items 
 	for (i = 0; i < 3; i++) {
-		items_ptr = &stored_items[i];
-		len = (long) sizeof(stored_items_list_type);
-		if (WriteFile(file_id, item_ptr, sizeof(stored_items_list_type), &bytes, NULL) == FALSE)
+		if (WriteFile(file_id, &stored_items[i], sizeof(stored_items_list_type), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
+			FCD(1069,0);
 			return;
 		}
 	}
 			
 	// If saving maps, save maps
 	if (save_maps == TRUE) {
-		maps_ptr = &(town_maps);
-		len = (long) sizeof(stored_town_maps_type);
-		if (WriteFile(file_id, maps_ptr, sizeof(stored_town_maps_type), &bytes, NULL) == FALSE)
+		if (WriteFile(file_id, &(town_maps), sizeof(stored_town_maps_type), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
-			return;
-		}
-		maps_ptr = &(town_maps2);
-		len = (long) sizeof(stored_town_maps_type);
-		if (WriteFile(file_id, maps_ptr, sizeof(stored_town_maps_type), &bytes, NULL) == FALSE)
-		{
-			CloseHandle(file_id);
+			FCD(1069,0);
 			return;
 		}
 
-		o_maps_ptr = &o_maps;
-		len = (long) sizeof(stored_outdoor_maps_type);
-		if (WriteFile(file_id, o_maps_ptr, sizeof(stored_outdoor_maps_type), &bytes, NULL) == FALSE)
+		if (WriteFile(file_id, &o_maps, sizeof(stored_outdoor_maps_type), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
+			FCD(1069,0);
 			return;
 		}
 	} 
 	
 	// SAVE SFX and MISC_I
-		len = (long) (64 * 64);
 		if (WriteFile(file_id, sfx, (64 * 64), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -1133,6 +1173,7 @@ void save_file(short mode)
 		if (WriteFile(file_id, misc_i, (64 * 64), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
+			FCD(1069,0);			
 			return;
 		}
 	}
@@ -1153,81 +1194,141 @@ void remove_party_from_scen()
 	party_in_scen = FALSE;
 }
 
-
-
-long do_waterfall(long flag)
-{
-	long k = 0;
-		
-	k = flag;
-	k = k * k;
-	k = k + 50;
-	k = k % 3000;
-	k = k * 81;
-	k = k % 10000;
-	k = k + 10000;
-	
-	return k;
-
-}
-
-long init_data(long flag)
-{
-	long k = 0;
-		
-	k = flag;
-	k = k * k;
-	k = k + 50;
-	k = k % 3000;
-	k = k * 81;
-	k = k % 10000;
-	k = k + 10000;
-	
-	return k;
-}
-
 void build_data_file(short mode) // to do be rewrite to use ini file
 //mode; // 0 - make first time file  1 - customize  2 - new write
 {
 	return;
 }
 
-short FSWrite(HFILE file,long *len,char *buffer)
+//Mac porting stuff
+
+void port_scenario(scenario_data_type *scenario)
 {
-	long error = 0;
+	short i,j,k,l;
 
-	if ((error = _lwrite(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
-		return -1;
-	return 0;
-}
-
-short FSRead(HFILE file,long *len,char *buffer)
-{
-	long error = 0;
-
-	if ((error = _lread(file, (char *) buffer, (UINT) (*len)))  == HFILE_ERROR)
-		return -1;
-	return 0;
-		
-}
-
-short FSClose(HFILE file)
-{
-	_lclose(file);
-	return 0;
-}
-
-short SetFPos(HFILE file, short mode, long len)
-{
-	long error = 0; 
-	
-	switch (mode) {
-		case 1: error = _llseek(file,len,0); break; 
-		case 2: error = _llseek(file,len,2); break; 
-		case 3: error = _llseek(file,len,1); break; 
+	flip_short(&scenario->flag_a);
+	flip_short(&scenario->flag_b);
+	flip_short(&scenario->flag_c);
+	flip_short(&scenario->flag_d);
+	flip_short(&scenario->flag_e);
+	flip_short(&scenario->flag_f);
+	flip_short(&scenario->flag_g);
+	flip_short(&scenario->flag_h);
+	flip_short(&scenario->flag_i);
+	flip_short(&scenario->intro_mess_pic);
+	flip_short(&scenario->intro_mess_len);
+	flip_short(&scenario->which_town_start);
+	for (i = 0; i < 200; i++)
+		for (j = 0; j < 5; j++)
+			flip_short(&scenario->town_data_size[i][j]);
+	for (i = 0; i < 10; i++)
+		flip_short(&scenario->town_to_add_to[i]);
+	for (i = 0; i < 10; i++)
+		for (j = 0; j < 2; j++)
+			flip_short(&scenario->flag_to_add_to_town[i][j]);
+	for (i = 0; i < 100; i++)
+		for (j = 0; j < 2; j++)
+			flip_short(&scenario->out_data_size[i][j]);
+	for (i = 0; i < 3; i++)
+		flip_rect(&scenario->store_item_rects[i]);
+	for (i = 0; i < 3; i++)
+		flip_short(&scenario->store_item_towns[i]);
+	for (i = 0; i < 50; i++)
+		flip_short(&scenario->special_items[i]);
+	for (i = 0; i < 50; i++)
+		flip_short(&scenario->special_item_special[i]);
+	flip_short(&scenario->rating);
+	flip_short(&scenario->uses_custom_graphics);
+	for (i = 0; i < 256; i++) {
+		flip_short(&scenario->scen_monsters[i].health);
+		flip_short(&scenario->scen_monsters[i].m_health);
+		flip_short(&scenario->scen_monsters[i].max_mp);
+		flip_short(&scenario->scen_monsters[i].mp);
+		flip_short(&scenario->scen_monsters[i].a[1]);
+		flip_short(&scenario->scen_monsters[i].a[0]);
+		flip_short(&scenario->scen_monsters[i].a[2]);
+		flip_short(&scenario->scen_monsters[i].morale);
+		flip_short(&scenario->scen_monsters[i].m_morale);
+		flip_short(&scenario->scen_monsters[i].corpse_item);
+		flip_short(&scenario->scen_monsters[i].corpse_item_chance);
+		flip_short(&scenario->scen_monsters[i].picture_num);
 		}
 
-	if (error == HFILE_ERROR)
-		return -1;
-	return 0;
+	for (i = 0; i < 256; i++) {
+		flip_short(&scenario->ter_types[i].picture);
+		}
+	for (i = 0; i < 30; i++) {
+		flip_short(&scenario->scen_boats[i].which_town);
+		}
+	for (i = 0; i < 30; i++) {
+		flip_short(&scenario->scen_horses[i].which_town);
+		}
+	for (i = 0; i < 20; i++)
+		flip_short(&scenario->scenario_timer_times[i]);
+	for (i = 0; i < 20; i++)
+		flip_short(&scenario->scenario_timer_specs[i]);
+	for (i = 0; i < 256; i++) {
+		flip_spec_node(&scenario->scen_specials[i]);
+		}
+		for (i = 0; i < 10; i++)  {
+		flip_short(&scenario->storage_shortcuts[i].ter_type);
+		flip_short(&scenario->storage_shortcuts[i].property);
+		for (j = 0; j < 10; j++)  {
+			flip_short(&scenario->storage_shortcuts[i].item_num[j]);
+			flip_short(&scenario->storage_shortcuts[i].item_odds[j]);
+			}
+		}
+	flip_short(&scenario->last_town_edited);
+}
+
+void flip_short(short *s)
+{
+	char store,*s1, *s2;
+
+	s1 = (char *) s;
+	s2 = s1 + 1;
+	store = *s1;
+	*s1 = *s2;
+	*s2 = store;
+}
+
+void flip_rect(RECT16 *s)
+{
+   	short a;
+	flip_short((short *) &(s->top));
+	flip_short((short *) &(s->bottom));
+	flip_short((short *) &(s->left));
+	flip_short((short *) &(s->right));
+    a = s->top;
+	s->top = s->left;
+	s->left = a;
+	a = s->bottom;
+	s->bottom = s->right;
+	s->right = a;
+}
+
+void flip_spec_node(special_node_type *spec)
+{
+	flip_short(&(spec->type));
+	flip_short(&(spec->sd1));
+	flip_short(&(spec->sd2));
+	flip_short(&(spec->pic));
+	flip_short(&(spec->m1));
+	flip_short(&(spec->m2));
+	flip_short(&(spec->ex1a));
+	flip_short(&(spec->ex1b));
+	flip_short(&(spec->ex2a));
+	flip_short(&(spec->ex2b));
+	flip_short(&(spec->jumpto));
+}
+
+void port_item_list()
+{
+	short i,j,k,l;
+
+	for (i = 0; i < 400; i++) {
+		flip_short(&(scen_item_list.scen_items[i].variety));
+		flip_short(&(scen_item_list.scen_items[i].item_level));
+		flip_short(&(scen_item_list.scen_items[i].value));
+		}
 }

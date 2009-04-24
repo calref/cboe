@@ -12,18 +12,18 @@
 extern short store_size;
 
 /* Adventure globals */
-extern party_record_type far party;
-extern pc_record_type far adven[6];
-extern outdoor_record_type far outdoors[2][2];
-extern current_town_type far c_town;
-extern big_tr_type far t_d;
-extern town_item_list far	t_i;
-extern unsigned char far out[96][96];
-extern unsigned char far out_e[96][96];
-extern setup_save_type far setup_save;
-extern stored_items_list_type far stored_items[3];
-extern stored_town_maps_type far maps;
-extern stored_outdoor_maps_type far o_maps;
+extern party_record_type party;
+extern pc_record_type adven[6];
+extern outdoor_record_type outdoors[2][2];
+extern current_town_type c_town;
+extern big_tr_type t_d;
+extern stored_items_list_type t_i;
+extern unsigned char out[96][96];
+extern unsigned char out_e[96][96];
+extern setup_save_type setup_save;
+extern stored_items_list_type stored_items[3];
+extern stored_town_maps_type maps;
+extern stored_outdoor_maps_type o_maps;
 
 extern HWND	mainPtr;
 extern Boolean play_sounds,file_in_mem;
@@ -32,6 +32,7 @@ extern short store_flags[3];
 extern HBITMAP button_num_gworld;
 extern short current_active_pc,ulx,uly;
 extern Boolean dialog_not_toast,party_in_scen;
+extern char town_strs[180][256];
 
 extern HFONT font,italic_font,underline_font,bold_font,tiny_font,small_bold_font;
 extern HCURSOR arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
@@ -372,14 +373,14 @@ void draw_items(short clear_first)
 	if (file_in_mem == FALSE)
 		return;
 
-	dest_rect = item_string_rects[0][0];
-	dest_rect.bottom += 3;
-	OffsetRect(&dest_rect,0,-14);
+//	dest_rect = item_string_rects[0][0];
+//	dest_rect.bottom += 3;
+//	OffsetRect(&dest_rect,0,-14);
 
 	if (clear_first == 1) {
 		for (i = 0; i < 24; i++)
 			paint_pattern(NULL,1,item_string_rects[i][0],3);
-		paint_pattern(NULL,1,dest_rect,3);
+//		paint_pattern(NULL,1,dest_rect,3);
 		}
 	
 	// frame_dlog_rect(mainPtr,frame_rect,0);
@@ -450,12 +451,31 @@ void display_party(short,short clear_first)
 		}
 		else {
 
+        char buffer[256];
+
         from_rect = title_from; //draw gold, food and day variables
         from_rect.top = from_rect.bottom-10;
-        from_rect.left += 50;
-        char GFD[256];
-        sprintf(GFD,"Food: %d  Gold: %d  Day: %d",party.food,party.gold,(party.age/3700)+1);
-        char_win_draw_string(main_dc,from_rect,GFD,0,10);
+        from_rect.left += 57;
+        from_rect.right += 300;
+        if(party_in_scen == FALSE)
+        sprintf(buffer,"Food: %d  Gold: %d  Day: %d",party.food,party.gold,(party.age/3700)+1);
+        else{
+        if(store_flags[0] == 5790)
+        sprintf(buffer,"Food: %d  Gold: %d  Day: %d  Party is outdoor",party.food,party.gold,(party.age/3700)+1);
+        else
+        sprintf(buffer,"Food: %d  Gold: %d  Day: %d  Party in %s",party.food,party.gold,(party.age/3700)+1,town_strs[0]);
+        }
+        char_win_draw_string(main_dc,from_rect,buffer,0,10);
+        
+      /*  from_rect = title_from; //town variable
+        from_rect.top = from_rect.bottom - 10;
+        from_rect.left += 300;
+        from_rect.right = from_rect.left + 300;
+        if(store_flags[0] == 5790)
+        sprintf(buffer,"Party is outdoor");
+        else
+        sprintf(buffer,"In Town : %s ",town_strs[0]);
+        char_win_draw_string(main_dc,from_rect,buffer,0,10);*/
 
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
