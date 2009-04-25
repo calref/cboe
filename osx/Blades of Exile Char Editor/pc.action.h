@@ -20,4 +20,4 @@ void do_registration();
 void edit_day();
 void edit_day_event_filter (short item_hit);
 void edit_xp_event_filter (short item_hit);
-void edit_xp(pc_record_type *pc);
+void edit_xp(cPlayer *pc);

@@ -20,6 +20,7 @@
 #include "boe.graphutil.h"
 #include "boe.main.h"
 #include "mathutil.h"
+#include "dlgutil.h"
 
 //extern party_record_type party;
 //extern pc_record_type ADVEN[6];
@@ -49,7 +50,7 @@ extern location spell_targets[8];
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field,in_scen_debug;
 extern Boolean fast_bang;
-extern unsigned char misc_i[64][64],sfx[64][64];
+//extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
 extern short refer_mage[62],refer_priest[62];
 extern location monster_targs[T_M];
@@ -307,8 +308,8 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			univ.town.explored[i][j] = 0;
-			misc_i[i][j] = 0;
-			sfx[i][j] = 0;
+			univ.out.misc_i[i][j] = 0;
+			univ.out.sfx[i][j] = 0;
 			}
 	univ.town.town->in_town_rect = town_rect;
 

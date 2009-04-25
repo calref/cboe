@@ -36,6 +36,7 @@ bool operator != (location p1,location p2);
 bool operator == (rectangle r1, rectangle r2);
 bool operator != (rectangle r1, rectangle r2);
 short dist(location p1,location p2);
+short vdist(location p1,location p2);
 
 location loc(char a, char b);
 location loc();

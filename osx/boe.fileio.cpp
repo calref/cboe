@@ -1,6 +1,6 @@
 
 #include <string.h>
-#include <stdio.h>
+#include <iostream>
 
 //#include "item.h"
 
@@ -22,6 +22,7 @@
 #include "mathutil.h"
 #include "dlgutil.h"
 #include "fileio.h"
+#include "porting.h" // only needed for one little flip_short call, though...
 
 #include <vector>
 #include <string>
@@ -91,7 +92,7 @@ short specials_res_id,data_dump_file_id;
 Str255 start_name;
 short start_volume,data_volume;
 long start_dir,data_dir/*,scen_dir*/;
-string progPath;
+string progDir;
 
 //outdoor_record_type dummy_out;////
 //town_record_type dummy_town;
@@ -163,8 +164,21 @@ void init_directories()
 //	scen_dir = myCPB.dirInfo.ioDrDirID;
 	
 	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	CFStringGetCString(progURL, cPath, 768, kCFStringEncodingUTF8);
-	progPath = cPath;
+	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
+	if(tmp == NULL){
+		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
+		if(success) {
+			progDir = cPath;
+			std::cout << cPath << "\n\n" << progDir << "\n\n";
+		} else {
+			std::cout << "Couldn't retrieve application path.\n";
+			exit(1);
+		}
+	}else progDir = tmp;
+	//progDir = cPath;
+	size_t last_slash = progDir.find_last_of('/');
+	progDir.erase(last_slash);
+	std::cout<<progDir<<'\n';
 }
 
 
@@ -1080,17 +1094,17 @@ void set_up_ter_pics()
 	for (i = 0; i < 256; i++)
 		terrain_pic[i] = scenario.ter_types[i].picture;
 }
-void oops_error(short error)
-{
-	Str255 error_str;
-	
-		SysBeep(50);
-		SysBeep(50);
-		SysBeep(50);
-	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
-	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
-	//ExitToShell();
-}
+//void oops_error(short error)
+//{
+//	Str255 error_str;
+//	
+//		SysBeep(50);
+//		SysBeep(50);
+//		SysBeep(50);
+//	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+//	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
+//	//ExitToShell();
+//}
 
 /*
 
@@ -1106,21 +1120,17 @@ void build_scen_headers()
 	short cur_entry = 0;
 	Str255 scen_name;
 	OSErr err;
-	string scenDir = progPath;
-	scenDir.erase(scenDir.find_last_of("/"));
-	scenDir += "/Blades of Exile Scenarios";
-	printf("%s\n%s\n",progPath.c_str(),scenDir.c_str());
+	string scenDir = progDir;
+//	scenDir.erase(scenDir.find_last_of("/"));
+	scenDir += "/Blades of Exile Scenarios/";
+	printf("%s\n%s\n",progDir.c_str(),scenDir.c_str());
 	scen_headers.clear();
 //	for (i = 0; i < 25; i++)
 //		scen_headers[i].flag1 = 0;
 //	FSOpenIterator(&folderRef,0,&files);
-//	HFSUniStr255 names[MAXSHEETS];
-//	FSSpec locations[MAXSHEETS];
-//	int numFound=0;
-//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)
-	FSRef ref;
+	FSRef folderRef;
 	FSIterator iter;
-	err = FSPathMakeRef((UInt8*)scenDir.c_str(),&ref,NULL);
+	err = FSPathMakeRef((UInt8*)scenDir.c_str(),&folderRef,NULL);
 	if(err != noErr){
 		printf("Directory not found!\n");
 		return;
@@ -1130,7 +1140,7 @@ void build_scen_headers()
 //	err = FSCreateFileUnicode (&ref, 15, x, NULL, NULL, NULL, NULL);
 //	if(err != noErr)printf("Error creating file.");
 	/**END TESTING**/
-	err = FSOpenIterator(&ref, kFSIterateFlat, &iter);
+	err = FSOpenIterator(&folderRef, kFSIterateFlat, &iter);
 	if(err != noErr){
 		printf("Error opening iterator!\n");
 		return;
@@ -1143,6 +1153,10 @@ void build_scen_headers()
 	//myCPB.dirInfo.ioNamePtr = scen_name;
 	//myCPB.dirInfo.ioVRefNum = start_volume;
 	
+	//	HFSUniStr255 names[MAXSHEETS];
+	//	FSSpec locations[MAXSHEETS];
+	//	int numFound=0;
+	//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)	
 	do {
 		//myCPB.hFileInfo.ioFDirIndex = index;
 		//myCPB.hFileInfo.ioDirID = scen_dir;
@@ -1238,7 +1252,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 
 	// So file is OK, so load in string data and close it.
 	SetFPos(file_id,1,0);
-	len = (long) sizeof(scenario_data_type);
+	len = 41942;//(long) sizeof(scenario_data_type);
 	error = FSRead(file_id, &len, (char *) &scenario);
 	if (error != 0){
 		FSClose(file_id);
@@ -1250,7 +1264,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 		flip_short(&store);
 	curScen.default_ground = store;
 	
-	len = sizeof(scen_item_data_type);
+	len = 41942;//sizeof(scen_item_data_type);
 	if (SetFPos(file_id,3,len) != 0){
 		FSClose(file_id);
 		return FALSE;
@@ -1294,41 +1308,41 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 }
 
 //extern GWorldPtr spec_scen_g;
-void load_spec_graphics()
-{
-	short i,file_num;
-	Str255 file_name;
-	
-	if (spec_scen_g != NULL) {
-		DisposeGWorld(spec_scen_g);
-		spec_scen_g = NULL;
-		}
-	build_scen_file_name(file_name);
-	for (i = 0; i < 250; i++) {
-		if (file_name[i] == '.') {
-			file_name[i + 1] = 'm';
-			file_name[i + 2] = 'e';
-			file_name[i + 3] = 'g';
-			i = 250;
-			}
-		}
-	file_num = HOpenResFile(start_volume,start_dir,file_name,1);
-	if (file_num < 0)
-	{
-		for (i = 0; i < 250; i++) {
-			if (file_name[i] == '.') {
-				file_name[i + 1] = 'b';
-				file_name[i + 2] = 'm';
-				file_name[i + 3] = 'p';
-				i = 250;
-			}
-		}
-		spec_scen_g = load_bmp_from_file(file_name);
-		return;
-	}
-	spec_scen_g = load_pict(1);
-	CloseResFile(file_num);
-}
+//void load_spec_graphics()
+//{
+//	short i,file_num;
+//	Str255 file_name;
+//	
+//	if (spec_scen_g != NULL) {
+//		DisposeGWorld(spec_scen_g);
+//		spec_scen_g = NULL;
+//		}
+//	build_scen_file_name(file_name);
+//	for (i = 0; i < 250; i++) {
+//		if (file_name[i] == '.') {
+//			file_name[i + 1] = 'm';
+//			file_name[i + 2] = 'e';
+//			file_name[i + 3] = 'g';
+//			i = 250;
+//			}
+//		}
+//	file_num = HOpenResFile(start_volume,start_dir,file_name,1);
+//	if (file_num < 0)
+//	{
+//		for (i = 0; i < 250; i++) {
+//			if (file_name[i] == '.') {
+//				file_name[i + 1] = 'b';
+//				file_name[i + 2] = 'm';
+//				file_name[i + 3] = 'p';
+//				i = 250;
+//			}
+//		}
+//		spec_scen_g = load_bmp_from_file(file_name);
+//		return;
+//	}
+//	spec_scen_g = load_pict(1);
+//	CloseResFile(file_num);
+//}
 
 
 short init_data(short flag)

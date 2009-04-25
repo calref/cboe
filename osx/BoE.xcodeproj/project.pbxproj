@@ -97,6 +97,8 @@
 		91AC620B0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		91AC620C0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
+		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
+		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
@@ -1014,6 +1016,7 @@
 				91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */,
 				91AC60AA0FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
 				91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */,
+				91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,6 +1057,7 @@
 				91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */,
 				91AC60A90FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
 				91AC620C0FA2853700EEAE67 /* creatlist.cpp in Sources */,
+				91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1146,10 +1150,6 @@
 		2BF04AC50BF518D4006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1180,10 +1180,6 @@
 		2BF04AC60BF518D4006C0831 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1267,7 +1263,6 @@
 		91B3EF1B0F969C2300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1298,7 +1293,6 @@
 		91B3EF1C0F969C2300BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1328,10 +1322,6 @@
 		91B3EF420F969F0100BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1367,10 +1357,6 @@
 		91B3EF430F969F0100BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

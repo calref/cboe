@@ -36,7 +36,6 @@ public:
 	
 	unsigned char template_terrain[64][64];
 	
-	cCurTown();
 	void append(legacy::current_town_type& old,short which_size);
 	void append(legacy::town_item_list& old);
 	void append(legacy::setup_save_type& old);
@@ -65,4 +64,5 @@ public:
 	cParty party;
 	cCurTown town;
 	cCurOut out;
+	FSSpec file;
 };

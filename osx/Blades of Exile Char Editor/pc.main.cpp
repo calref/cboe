@@ -1,8 +1,9 @@
 
 //#include <Memory.h>
-#include <stdio.h>
+#include <iostream>
 #include <string.h>
 #include "pc.global.h"
+#include "classes.h"
 #include "pc.graphics.h" 
 #include "pc.editors.h" 
 #include "pc.action.h" 
@@ -13,6 +14,9 @@
 #include "graphtool.h"
 #include "boe.consts.h"
 #include "dlgutil.h"
+#include "fileio.h"
+
+cUniverse univ;
 
 Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
@@ -30,7 +34,7 @@ Rect pc_race_rect; //Holds current pc's race
 Rect edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
 short current_active_pc = 0;
-short dialog_answer;
+//short dialog_answer;
 
 /* Mac stuff globals */
 Rect	windRect, Drag_Rect;
@@ -45,27 +49,27 @@ Boolean party_in_scen = FALSE;
 Boolean scen_items_loaded = FALSE;
 
 /* Adventure globals */
-party_record_type party;
-pc_record_type adven[6];
-outdoor_record_type outdoors[2][2];
-current_town_type c_town;
-big_tr_type t_d;
-town_item_list	t_i;
-unsigned char out[96][96],out_e[96][96];
-setup_save_type setup_save;
-unsigned char misc_i[64][64],sfx[64][64];
-unsigned char template_terrain[64][64];
+//party_record_type party;
+//pc_record_type ADVEN[6];
+//outdoor_record_type outdoors[2][2];
+//current_town_type c_town;
+//big_tr_type t_d;
+//town_item_list	t_i;
+//unsigned char out[96][96],out_e[96][96];
+//setup_save_type setup_save;
+//unsigned char misc_i[64][64],sfx[64][64];
+//unsigned char template_terrain[64][64];
 
 short store_flags[3];
 extern short sword_curs;
 
-town_record_type anim_town;
-tiny_tr_type anim_t_d;
+//town_record_type anim_town;
+//tiny_tr_type anim_t_d;
 
-stored_items_list_type stored_items[3];
-stored_town_maps_type maps;
-stored_town_maps_type town_maps;
-stored_outdoor_maps_type o_maps;
+//stored_items_list_type stored_items[3];
+//stored_town_maps_type maps;
+//stored_town_maps_type town_maps;
+//stored_outdoor_maps_type o_maps;
 
 short old_depth = 16;
 extern FSSpec file_to_load;
@@ -101,15 +105,17 @@ void set_up_apple_events();
 void set_pixel_depth();
 void restore_depth();
 void handle_item_menu(int item_hit);
-item_record_type convert_item (short_item_record_type s_item);
-
+//item_record_type convert_item (short_item_record_type s_item);
+bool cur_scen_is_mac, mac_is_intel;
+std::string progDir;
 // File io
 short specials_res_id;
 Str255 start_name;
 ResFileRefNum graphicsRef, soundRef, mainRef;
 
 //#include "pc.itemdata.h" 
-item_record_type item_list[400];
+cItemRec item_list[400];
+cScenario scenario;
 
 // 
 //	Main body of program Exile
@@ -222,6 +228,22 @@ void Initialize(void)
 		ExitToShell();
 	}
 	
+	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
+	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
+	if(tmp == NULL){
+		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
+		if(success) {
+			progDir = cPath;
+			std::cout << cPath << "\n\n" << progDir << "\n\n";
+		} else {
+			std::cout << "Couldn't retrieve application path.\n";
+			exit(1);
+		}
+	}else progDir = tmp;
+	//progDir = cPath;
+	size_t last_slash = progDir.find_last_of('/');
+	progDir.erase(last_slash);
+	std::cout<<progDir<<'\n';
 	//
 	//	Test the computer to be sure we can do color.  
 	//	If not we would crash, which would be bad.  
@@ -510,15 +532,18 @@ void handle_file_menu(int item_hit)
 	
 	switch (item_hit) {
 		case 1://save
-			save_file(file_to_load);
+			save_party(file_to_load);
 			break;
 		case 2://save as
 			if(select_save_location(&file))
-				save_file(file);
+				save_party(file);
 			break;
 		case 3://open
-			if (verify_restore_quit(1) == TRUE)
-				load_file();
+			if (verify_restore_quit(1) == TRUE){
+				FSSpec* file = nav_get_party();
+				file_to_load = *file;
+				load_party(file_to_load);
+			}
 			break;
 		case 5://how to order
 			give_reg_info();
@@ -532,7 +557,7 @@ void handle_file_menu(int item_hit)
 void handle_extra_menu(int item_hit)
 {
 	short i,j,choice;
-	boat_record_type v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
+	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
 	
 	if (file_in_mem == FALSE) {
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
@@ -561,49 +586,49 @@ void handle_extra_menu(int item_hit)
 				break;
 				}
 			FCD(910,0);
-			c_town.p_loc.x = PSD[SDF_PARTY_SPLIT_X];
-			c_town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
+			univ.town.p_loc.x = PSD[SDF_PARTY_SPLIT_X];
+			univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
 			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status >= 10)
-					adven[i].main_status -= 10;
+				if (ADVEN[i].main_status >= 10)
+					ADVEN[i].main_status -= 10;
 			break;
 			
 
 		case 6:
 			display_strings(20,20,0,0,"Editing party",57,7,PICT_DLG,0);
 			for (i = 0; i < 4; i++)
-				party.creature_save[i].which_town = 200;
+				univ.party.creature_save[i].which_town = 200;
 			break;
 		case 8: // damage
 			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				adven[i].cur_health = adven[i].max_health;
+				ADVEN[i].cur_health = ADVEN[i].max_health;
 			break;
 		case 9: // spell pts
 			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				adven[i].cur_sp = adven[i].max_sp;
+				ADVEN[i].cur_sp = ADVEN[i].max_sp;
 			break;
 		case 10: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 2) || (adven[i].main_status == 3) ||
-					(adven[i].main_status == 4))
-						adven[i].main_status = 1;
+				if ((ADVEN[i].main_status == 2) || (ADVEN[i].main_status == 3) ||
+					(ADVEN[i].main_status == 4))
+						ADVEN[i].main_status = 1;
 			break;
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++) {
-				adven[i].status[2] = 0;
-				if (adven[i].status[3] < 0)
-					adven[i].status[3] = 0;
-				adven[i].status[6] = 0;
-				adven[i].status[7] = 0;
-				adven[i].status[9] = 0;
-				adven[i].status[11] = 0;
-				adven[i].status[12] = 0;
-				adven[i].status[13] = 0;
+				ADVEN[i].status[2] = 0;
+				if (ADVEN[i].status[3] < 0)
+					ADVEN[i].status[3] = 0;
+				ADVEN[i].status[6] = 0;
+				ADVEN[i].status[7] = 0;
+				ADVEN[i].status[9] = 0;
+				ADVEN[i].status[11] = 0;
+				ADVEN[i].status[12] = 0;
+				ADVEN[i].status[13] = 0;
 			}
 			break;
 			
@@ -640,8 +665,8 @@ void handle_edit_menu(int item_hit)
 		case 2: // all property
 			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG,0);
 			for (i = 0; i < 30; i++) {
-				party.boats[i].property = FALSE;
-				party.horses[i].property = FALSE;
+				univ.party.boats[i].property = FALSE;
+				univ.party.horses[i].property = FALSE;
 				}
 			break;
 		case 4: // edit day
@@ -656,7 +681,7 @@ void handle_edit_menu(int item_hit)
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
 					for (k = 0; k < 48; k++)
-						o_maps.outdoor_maps[i][j][k] = 255;
+						univ.out.maps[i][j][k] = 255;
 			break;
 		case 7: // town maps
 			if (party_in_scen == FALSE) {
@@ -667,7 +692,7 @@ void handle_edit_menu(int item_hit)
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
-						town_maps.town_maps[i][j][k] = 255;
+						univ.town.maps[i][j][k] = 255;
 			break;
 				case 9:
 					display_pc(current_active_pc,0,0);
@@ -676,73 +701,73 @@ void handle_edit_menu(int item_hit)
 			 		display_pc(current_active_pc,1,0);
 					break;
 				case 11: 
-					pick_race_abil(&adven[current_active_pc],0,0);
+					pick_race_abil(&ADVEN[current_active_pc],0,0);
 					break;
 				case 12: 
 					spend_xp(current_active_pc,1,0);
 					break;
 				case 13: 
-					edit_xp(&adven[current_active_pc]);
+					edit_xp(&ADVEN[current_active_pc]);
 					break;
 		}
 }
 
-item_record_type convert_item (short_item_record_type s_item) {
-	item_record_type i;
-	location l = {0,0};
-	short temp_val;
-	
-	i.variety = (short) s_item.variety;
-	i.item_level = (short) s_item.item_level;
-	i.awkward = (short) s_item.awkward;
-	i.bonus = (short) s_item.bonus;
-	i.protection = (short) s_item.protection;
-	i.charges = (short) s_item.charges;
-	i.type = (short) s_item.type;
-	i.graphic_num = (short) s_item.graphic_num;
-	if (i.graphic_num >= 25)
-		i.graphic_num += 20;
-	i.ability = (short) s_item.real_abil;
-	i.type_flag = (short) s_item.type_flag;
-	i.is_special = (short) s_item.is_special;
-	i.value = (short) s_item.value;
-	i.weight = s_item.weight;
-	i.special_class = 0;
-	i.item_loc = l;
-	strcpy((char *)i.full_name,(char *)s_item.full_name);
-	strcpy((char *)i.name,(char *)s_item.name);
-
-	if (i.charges > 0)
-		temp_val = i.value * i.charges;
-		else temp_val = i.value;
-	if (temp_val >= 15)
-		i.treas_class = 1;
-	if (temp_val >= 100)
-		i.treas_class = 2;
-	if (temp_val >= 900)
-		i.treas_class = 3;
-	if (temp_val >= 2400)
-		i.treas_class = 4;
-		
-	i.magic_use_type = s_item.magic_use_type;
-	i.ability_strength = s_item.ability_strength;
-	i.reserved1 = 0;
-	i.reserved2 = 0;
-	i.item_properties = 0;
-	if (s_item.identified == TRUE)
-		i.item_properties = i.item_properties | 1;
-	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
-		i.item_properties = i.item_properties | 16;
-	if (s_item.magic == TRUE)
-		i.item_properties = i.item_properties | 4;
-
-	return i;
-}
+//item_record_type convert_item (short_item_record_type s_item) {
+//	item_record_type i;
+//	location l = {0,0};
+//	short temp_val;
+//	
+//	i.variety = (short) s_item.variety;
+//	i.item_level = (short) s_item.item_level;
+//	i.awkward = (short) s_item.awkward;
+//	i.bonus = (short) s_item.bonus;
+//	i.protection = (short) s_item.protection;
+//	i.charges = (short) s_item.charges;
+//	i.type = (short) s_item.type;
+//	i.graphic_num = (short) s_item.graphic_num;
+//	if (i.graphic_num >= 25)
+//		i.graphic_num += 20;
+//	i.ability = (short) s_item.real_abil;
+//	i.type_flag = (short) s_item.type_flag;
+//	i.is_special = (short) s_item.is_special;
+//	i.value = (short) s_item.value;
+//	i.weight = s_item.weight;
+//	i.special_class = 0;
+//	i.item_loc = l;
+//	strcpy((char *)i.full_name,(char *)s_item.full_name);
+//	strcpy((char *)i.name,(char *)s_item.name);
+//
+//	if (i.charges > 0)
+//		temp_val = i.value * i.charges;
+//		else temp_val = i.value;
+//	if (temp_val >= 15)
+//		i.treas_class = 1;
+//	if (temp_val >= 100)
+//		i.treas_class = 2;
+//	if (temp_val >= 900)
+//		i.treas_class = 3;
+//	if (temp_val >= 2400)
+//		i.treas_class = 4;
+//		
+//	i.magic_use_type = s_item.magic_use_type;
+//	i.ability_strength = s_item.ability_strength;
+//	i.reserved1 = 0;
+//	i.reserved2 = 0;
+//	i.item_properties = 0;
+//	if (s_item.identified == TRUE)
+//		i.item_properties = i.item_properties | 1;
+//	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
+//		i.item_properties = i.item_properties | 16;
+//	if (s_item.magic == TRUE)
+//		i.item_properties = i.item_properties | 4;
+//
+//	return i;
+//}
 
 void handle_item_menu(int item_hit)
 {
 	short choice;
-	item_record_type store_i;
+	cItemRec store_i;
 	
 	if (file_in_mem == FALSE) {
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
@@ -918,7 +943,7 @@ Boolean verify_restore_quit(short mode)
 		return FALSE;
 	if (choice == 2)
 		return TRUE;
-	save_file(file_to_load);
+	save_party(file_to_load);
 	return TRUE;
 }
 

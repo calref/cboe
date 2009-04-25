@@ -31,7 +31,6 @@ extern Point ul;
 extern vector<scen_header_type> scen_headers;
 extern Boolean unreg_party_in_scen_not_check;
 extern std::vector<std::string> scen_names;;
-extern cUniverse univ;
 
 //void start_game();
 
@@ -39,7 +38,7 @@ Rect startup_button[6];
 
 Boolean handle_startup_press(Point the_point)
 {
-
+	std::string scen_name;
 	short i,scen;
 
 	the_point.h -= ul.h;
@@ -80,13 +79,13 @@ Boolean handle_startup_press(Point the_point)
 					break;
 				
 				switch (scen) {
-					case 0: sprintf(univ.party.scen_name,"valleydy.exs"); break;
+					case 0: scen_name = "valleydy.exs"; break;
 					// if not reg, rub out
-					case 1: sprintf(univ.party.scen_name,"stealth.exs"); break;
-					case 2: sprintf(univ.party.scen_name,"zakhazi.exs"); break;
+					case 1: scen_name = "stealth.exs"; break;
+					case 2: scen_name = "zakhazi.exs"; break;
 					//case 3: sprintf(univ.party.scen_name,"busywork.exs"); break;
 				}
-				put_party_in_scen();
+				put_party_in_scen(scen_name);
 				break;
 		
 			case STARTBTN_CUSTOM: // custom
@@ -102,8 +101,8 @@ Boolean handle_startup_press(Point the_point)
 					FCD(912,0);
 					break;
 				}
-				sprintf(univ.party.scen_name,"%s",scen_names[scen].c_str());
-				put_party_in_scen();
+				scen_name = scen_names[scen];
+				put_party_in_scen(scen_name);
 				break;
 		
 			case 5:

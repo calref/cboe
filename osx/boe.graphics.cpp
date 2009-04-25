@@ -18,6 +18,7 @@
 #include "soundtool.h"
 #include "gamma.h"
 #include "mathutil.h"
+#include "dlgutil.h"
 
 #include "boe.party.h"
 #include "boe.town.h"
@@ -82,6 +83,7 @@ extern Boolean modeless_exists[18];
 //extern dlg_filter_t give_pc_info_event_filter,alch_choice_event_filter,pc_graphic_event_filter,pc_name_event_filter;
 //extern dlg_filter_t give_reg_info_event_filter,do_registration_event_filter,display_spells_event_filter;
 //extern dlg_filter_t display_skills_event_filter,pick_spell_event_filter,prefs_event_filter,fancy_choice_dialog_event_filter;
+extern bool show_startup_splash;
 
 RgnHandle clip_region;
 
@@ -286,7 +288,8 @@ void adjust_window_mode()
 		if (in_startup_mode == TRUE)
 			draw_startup(0);
 		if (in_startup_mode == FALSE)
-			refresh_screen(0); 
+			//refresh_screen(0); 
+			redraw_screen();
 		}
 	if (text_sbar != NULL) {
 		MoveControl(text_sbar,ul.h + 546,ul.v + 283);
@@ -404,7 +407,7 @@ void plop_fancy_startup()
 
 	init_startup();
 	
-	if(!PSD[SDF_SKIP_STARTUP]){
+	if(show_startup_splash){
 		//init_anim(0);
 		pict_to_draw = GetPicture(3000);
 

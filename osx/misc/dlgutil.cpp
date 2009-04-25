@@ -193,13 +193,15 @@ short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,sho
 	return 0;
 }
 
-void oops_error(short error){
+void oops_error(short error, short code){
 	Str255 error_str;
 	
 	SysBeep(50);
 	SysBeep(50);
 	SysBeep(50);
 	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
+	if(code != 0)
+		sprintf((char*) error_str,"%s Result code: %i.",error_str,code);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	ExitToShell();
 }

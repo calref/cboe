@@ -70,5 +70,5 @@ void init_spell_menus();
 void adjust_spell_menus();
 void print_spell_cast(short spell_num,short which);
 void update_gold_skills();
-void put_party_in_scen();
+void put_party_in_scen(std::string scen_name);
 

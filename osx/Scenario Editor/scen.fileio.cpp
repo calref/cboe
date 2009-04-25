@@ -39,7 +39,7 @@ long start_dir,data_dir;
 
 FSSpec temp_file_to_load;
 Str63 last_load_file = "\pBlades of Exile Scenario";
-
+std::string progDir;
 Boolean cur_scen_is_mac = TRUE;			
 
 ResFileRefNum mainRef, graphicsRef, soundRef;
@@ -102,7 +102,23 @@ void init_directories()
 		printf("Error! File Blades of Exile Sounds not found.\n");
 		ExitToShell();
 	}
-
+	
+	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
+	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
+	if(tmp == NULL){
+		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
+		if(success) {
+			progDir = cPath;
+			std::cout << cPath << "\n\n" << progDir << "\n\n";
+		} else {
+			std::cout << "Couldn't retrieve application path.\n";
+			exit(1);
+		}
+	}else progDir = tmp;
+	//progDir = cPath;
+	size_t last_slash = progDir.find_last_of('/');
+	progDir.erase(last_slash);
+	std::cout<<progDir<<'\n';
 }
 
 // Here we go. this is going to hurt.
@@ -667,159 +683,160 @@ void create_basic_scenario()
 // if which_town is -1, load town from base
 void import_town(short which_town,FSSpec temp_file_to_load)
 {
-	short i,j,k,l,file_id;
-	Boolean file_ok = FALSE;
-	OSErr error;
-	long len,len_to_jump = 0,store;
-	Size buf_len = 100000;
-	char *buffer = NULL;
-	short import_user_given_password;
-	legacy::big_tr_type t_d;
-	legacy::ave_tr_type ave_t;
-	legacy::tiny_tr_type tiny_t;
-	legacy::talking_record_type talking;
-	legacy::scenario_data_type *temp_scenario;
-
-	if ((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
-		oops_error(42);	return;
-		}	
-	
-	buffer = new char[100000];	
-	if (buffer == NULL) {
-		oops_error(41); 
-		return;
-	}
-	scenario_header_flags temp_vers;
-	len = (long) sizeof(scenario_header_flags);
-	if ((error = FSRead(file_id, &len, &temp_vers)) != 0){
-		FSClose(file_id); oops_error(43); return;
-	}
-	
-	if ((temp_vers.flag1 == 10) && (temp_vers.flag2 == 20) &&
-		(temp_vers.flag3 == 30)  && (temp_vers.flag4 == 40)) {
-	  	file_ok = TRUE;
-	}
-	if (file_ok == FALSE) {
-		FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario.","",0); return;	 
-		DisposePtr(buffer); FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Macintosh scenario editor.","",0); return;	 
-	}
-	if (which_town >= temp_vers.num_towns) {
-		give_error("Oops ... the selected scenario doesn't have enough towns. The town you selected doesn't exist inside this scenario.","",0);
-		DisposePtr(buffer);	FSClose(file_id); 
-		return;
-	}
-	
-	len = (long) sizeof(legacy::scenario_data_type);
-	if ((error = FSRead(file_id, &len, buffer)) != 0){
-		FSClose(file_id); oops_error(43); return;
-	}
-	temp_scenario = (legacy::scenario_data_type *) buffer;
-	
-	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
-		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
-		DisposePtr(buffer);	FSClose(file_id); 
-		return;	
-	}
-
-	
-//	// Now check password
-//	if (import_check_p(0) == FALSE) {
-//		import_user_given_password = enter_password();
-//		if (import_check_p(import_user_given_password) == FALSE) {
-//			fancy_choice_dialog(868,0);
-//			if (overall_mode != 61) {
-//				import_user_given_password = enter_password();
-//				if (import_check_p(import_user_given_password) == FALSE) 
-//					ExitToShell();
+	printf("Town import currently disabled.\n");
+//	short i,j,k,l,file_id;
+//	Boolean file_ok = FALSE;
+//	OSErr error;
+//	long len,len_to_jump = 0,store;
+//	Size buf_len = 100000;
+//	char *buffer = NULL;
+//	short import_user_given_password;
+//	legacy::big_tr_type t_d;
+//	legacy::ave_tr_type ave_t;
+//	legacy::tiny_tr_type tiny_t;
+//	legacy::talking_record_type talking;
+//	legacy::scenario_data_type *temp_scenario;
+//
+//	if ((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
+//		oops_error(42);	return;
+//		}	
+//	
+//	buffer = new char[100000];	
+//	if (buffer == NULL) {
+//		oops_error(41); 
+//		return;
+//	}
+//	scenario_header_flags temp_vers;
+//	len = (long) sizeof(scenario_header_flags);
+//	if ((error = FSRead(file_id, &len, &temp_vers)) != 0){
+//		FSClose(file_id); oops_error(43); return;
+//	}
+//	
+//	if ((temp_vers.flag1 == 10) && (temp_vers.flag2 == 20) &&
+//		(temp_vers.flag3 == 30)  && (temp_vers.flag4 == 40)) {
+//	  	file_ok = TRUE;
+//	}
+//	if (file_ok == FALSE) {
+//		FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario.","",0); return;	 
+//		DisposePtr(buffer); FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Macintosh scenario editor.","",0); return;	 
+//	}
+//	if (which_town >= temp_vers.num_towns) {
+//		give_error("Oops ... the selected scenario doesn't have enough towns. The town you selected doesn't exist inside this scenario.","",0);
+//		DisposePtr(buffer);	FSClose(file_id); 
+//		return;
+//	}
+//	
+//	len = (long) sizeof(legacy::scenario_data_type);
+//	if ((error = FSRead(file_id, &len, buffer)) != 0){
+//		FSClose(file_id); oops_error(43); return;
+//	}
+//	temp_scenario = (legacy::scenario_data_type *) buffer;
+//	
+//	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
+//		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
+//		DisposePtr(buffer);	FSClose(file_id); 
+//		return;	
+//	}
+//
+//	
+////	// Now check password
+////	if (import_check_p(0) == FALSE) {
+////		import_user_given_password = enter_password();
+////		if (import_check_p(import_user_given_password) == FALSE) {
+////			fancy_choice_dialog(868,0);
+////			if (overall_mode != 61) {
+////				import_user_given_password = enter_password();
+////				if (import_check_p(import_user_given_password) == FALSE) 
+////					ExitToShell();
+////				}
+////				else return;
+////			}
+////		}
+//		
+//	len_to_jump = sizeof(legacy::scenario_data_type);
+//	len_to_jump += sizeof(scen_item_data_type);
+//	for (i = 0; i < 300; i++)
+//		len_to_jump += (long) temp_scenario->scen_str_len[i];
+//	store = 0;
+//	for (i = 0; i < 100; i++)
+//		for (j = 0; j < 2; j++)
+//			store += (long) (temp_scenario->out_data_size[i][j]);
+//	for (i = 0; i < which_town; i++)
+//		for (j = 0; j < 5; j++)
+//			store += (long) (temp_scenario->town_data_size[i][j]);
+//	len_to_jump += store;
+//	error = SetFPos (file_id, 1, len_to_jump);
+//	if (error != 0) {FSClose(file_id);oops_error(44);}
+//	
+//	len = sizeof(legacy::town_record_type);
+//	error = FSRead(file_id, &len , (char *) &town);
+//	if (error != 0) {FSClose(file_id);oops_error(45);}
+//
+//	switch (temp_scenario->town_size[which_town]) {
+//		case 0:
+//			len =  sizeof(legacy::big_tr_type);
+//			FSRead(file_id, &len, (char *) &t_d);
+//			break;
+//			
+//		case 1:
+//				len = sizeof(legacy::ave_tr_type);
+//				FSRead(file_id, &len, (char *) &ave_t);
+//				for (i = 0; i < 48; i++)
+//					for (j = 0; j < 48; j++) {
+//						town->terrain(i,j) = ave_t.terrain[i][j];
+//						town->lighting(i / 8,j) = ave_t.lighting[i / 8][j];					
+//						}
+//				for (i = 0; i < 16; i++) {
+//					town->room_rect(i) = ave_t.room_rect[i];
+//					}
+//				for (i = 0; i < 40; i++) {
+//					//town->creatures(i) = ave_t.creatures[i];
+//					}
+//				for (i = 40; i < 60; i++) {
+//					town->creatures(i).number = 0;
+//					}
+//			break;
+//			
+//		case 2:
+//			len = sizeof(legacy::tiny_tr_type);
+//			FSRead(file_id,&len , (char *) &tiny_t);
+//			for (i = 0; i < 32; i++)
+//				for (j = 0; j < 32; j++) {
+//					town->terrain(i,j) = tiny_t.terrain[i][j];
+//					town->lighting(i / 8,j) = tiny_t.lighting[i / 8][j];					
+//					}
+//			for (i = 0; i < 16; i++) {
+//				town->room_rect(i) = tiny_t.room_rect[i];
 //				}
-//				else return;
-//			}
+//			for (i = 0; i < 30; i++) {
+//				//town->creatures(i) = tiny_t.creatures[i];
+//				}
+//			for (i = 30; i < 60; i++) {
+//				town->creatures(i).number = 0;
+//				}
+//			break;
 //		}
-		
-	len_to_jump = sizeof(legacy::scenario_data_type);
-	len_to_jump += sizeof(scen_item_data_type);
-	for (i = 0; i < 300; i++)
-		len_to_jump += (long) temp_scenario->scen_str_len[i];
-	store = 0;
-	for (i = 0; i < 100; i++)
-		for (j = 0; j < 2; j++)
-			store += (long) (temp_scenario->out_data_size[i][j]);
-	for (i = 0; i < which_town; i++)
-		for (j = 0; j < 5; j++)
-			store += (long) (temp_scenario->town_data_size[i][j]);
-	len_to_jump += store;
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {FSClose(file_id);oops_error(44);}
-	
-	len = sizeof(legacy::town_record_type);
-	error = FSRead(file_id, &len , (char *) &town);
-	if (error != 0) {FSClose(file_id);oops_error(45);}
-
-	switch (temp_scenario->town_size[which_town]) {
-		case 0:
-			len =  sizeof(legacy::big_tr_type);
-			FSRead(file_id, &len, (char *) &t_d);
-			break;
-			
-		case 1:
-				len = sizeof(legacy::ave_tr_type);
-				FSRead(file_id, &len, (char *) &ave_t);
-				for (i = 0; i < 48; i++)
-					for (j = 0; j < 48; j++) {
-						town->terrain(i,j) = ave_t.terrain[i][j];
-						town->lighting(i / 8,j) = ave_t.lighting[i / 8][j];					
-						}
-				for (i = 0; i < 16; i++) {
-					town->room_rect(i) = ave_t.room_rect[i];
-					}
-				for (i = 0; i < 40; i++) {
-					//town->creatures(i) = ave_t.creatures[i];
-					}
-				for (i = 40; i < 60; i++) {
-					town->creatures(i).number = 0;
-					}
-			break;
-			
-		case 2:
-			len = sizeof(legacy::tiny_tr_type);
-			FSRead(file_id,&len , (char *) &tiny_t);
-			for (i = 0; i < 32; i++)
-				for (j = 0; j < 32; j++) {
-					town->terrain(i,j) = tiny_t.terrain[i][j];
-					town->lighting(i / 8,j) = tiny_t.lighting[i / 8][j];					
-					}
-			for (i = 0; i < 16; i++) {
-				town->room_rect(i) = tiny_t.room_rect[i];
-				}
-			for (i = 0; i < 30; i++) {
-				//town->creatures(i) = tiny_t.creatures[i];
-				}
-			for (i = 30; i < 60; i++) {
-				town->creatures(i).number = 0;
-				}
-			break;
-		}
-
-	for (i = 0; i < 140; i++) {
-		len = (long) (town->strlens[i]);
-		FSRead(file_id, &len, (char *) &(town->town_strs(i)));
-		town->town_strs(i)[len] = 0;
-		}
-
-	len = sizeof(legacy::talking_record_type);
-	error = FSRead(file_id, &len , (char *) &talking);
-	if (error != 0) {FSClose(file_id);oops_error(46);}
-	
-	for (i = 0; i < 170; i++) {
-		len = (long) (talking.strlens[i]);
-		FSRead(file_id, &len, (char *) &(town->talking.talk_strs[i]));
-		town->talking.talk_strs[i][len] = 0;
-		}
-	
-	town->talking = talking;
-	error = FSClose(file_id);
-	if (error != 0) {FSClose(file_id);oops_error(47);}
-	DisposePtr(buffer);
+//
+//	for (i = 0; i < 140; i++) {
+//		len = (long) (town->strlens[i]);
+//		FSRead(file_id, &len, (char *) &(town->town_strs(i)));
+//		town->town_strs(i)[len] = 0;
+//		}
+//
+//	len = sizeof(legacy::talking_record_type);
+//	error = FSRead(file_id, &len , (char *) &talking);
+//	if (error != 0) {FSClose(file_id);oops_error(46);}
+//	
+//	for (i = 0; i < 170; i++) {
+//		len = (long) (talking.strlens[i]);
+//		FSRead(file_id, &len, (char *) &(town->talking.talk_strs[i]));
+//		town->talking.talk_strs[i][len] = 0;
+//		}
+//	
+//	town->talking = talking;
+//	error = FSClose(file_id);
+//	if (error != 0) {FSClose(file_id);oops_error(47);}
+//	DisposePtr(buffer);
 }
 
 // When this is called, the current town is the town to make town 0. 

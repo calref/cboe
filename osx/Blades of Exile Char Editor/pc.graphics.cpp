@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "pc.global.h"
+#include "classes.h"
 #include "pc.graphics.h"
 #include "pc.editors.h"
 #include "pc.action.h"
@@ -9,19 +10,21 @@
 #include "graphtool.h"
 #include "dlgtool.h"
 #include "dlglowlevel.h"
+#include "dlgutil.h"
 
 /* Adventure globals */
-extern party_record_type party;
-extern pc_record_type adven[6];
-extern outdoor_record_type outdoors[2][2];
-extern current_town_type c_town;
-extern big_tr_type t_d;
-extern town_item_list	t_i;
-extern unsigned char out[96][96],out_e[96][96];
-extern setup_save_type setup_save;
-extern stored_items_list_type stored_items[3];
-extern stored_town_maps_type maps;
-extern stored_outdoor_maps_type o_maps;
+//extern party_record_type party;
+//extern pc_record_type ADVEN[6];
+//extern outdoor_record_type outdoors[2][2];
+//extern current_town_type c_town;
+//extern big_tr_type t_d;
+//extern town_item_list	t_i;
+//extern unsigned char out[96][96],out_e[96][96];
+//extern setup_save_type setup_save;
+//extern stored_items_list_type stored_items[3];
+//extern stored_town_maps_type maps;
+//extern stored_outdoor_maps_type o_maps;
+extern cUniverse univ;
 
 extern WindowPtr	mainPtr;
 extern Boolean play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
@@ -29,10 +32,10 @@ extern Boolean play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
 extern short store_flags[3];
 extern GWorldPtr button_num_gworld;
 extern short current_active_pc;
-extern Boolean ed_reg;
+//extern Boolean ed_reg;
 
-extern long register_flag,stored_key;
-extern long ed_flag,ed_key;
+//extern long register_flag,stored_key;
+//extern long ed_flag,ed_key;
 
 GWorldPtr title_gworld,pc_gworld,dlogpics_gworld;
 GWorldPtr mixed_gworld,buttons_gworld;
@@ -64,6 +67,7 @@ short store_page_on,store_num_i;
 Rect ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
 Boolean init_once = FALSE;
+GWorldPtr spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 
 void init_dialogs(){
 	cd_init_dialogs(NULL,NULL,NULL,NULL,NULL,&dlogpics_gworld,NULL,NULL,NULL,NULL,NULL,NULL/*,NULL,NULL,NULL,NULL,NULL,NULL,NULL*/,NULL,NULL);
@@ -353,7 +357,7 @@ void draw_main_screen()
 	TextSize(10);
 	TextFace(0);
 	OffsetRect(&dest_rect,300,0);
-	char_win_draw_string(mainPtr,dest_rect,"Copyright 1997, Spiderweb Software, Inc.",0,10,true);
+	char_win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,10,true);
 	TextFace(bold);
 	
 	
@@ -362,11 +366,6 @@ void draw_main_screen()
 	reg_rect.top += 8;
 	reg_rect.right -= 3;
 	
-	
-	if (ed_reg == FALSE) {
-		sprintf((char *)temp_str,"Unregistered Copy |To find out how to order, |select How To Order from File Menu.");
-		win_draw_string(GetWindowPort(mainPtr),reg_rect,temp_str,0,12,true);
-	}
 }
 
 void do_button_action(short which_pc,short which_button)
@@ -453,28 +452,28 @@ void draw_items(short clear_first)
 		}
 	
 	// First, draw "Fred's Items:"
-	//sprintf((char *)to_draw,"%s items:",adven[current_active_pc].name);
+	//sprintf((char *)to_draw,"%s items:",ADVEN[current_active_pc].name);
 	//TextSize(12);
 	//ClipRect(&dest_rect);
 	//win_draw_string(mainPtr,item_string_rects[0][0],to_draw,0,12);
 	//undo_clip();
 	//TextSize(10);
 
-	if (adven[current_active_pc].main_status != 1){
+	if (ADVEN[current_active_pc].main_status != 1){
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re draw entire frame 
 		frame_dlog_rect(GetWindowPort(mainPtr),info_area_rect,1); // draw the frame
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_race_rect,1); // draw the frame	
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (adven[current_active_pc].items[i].variety > 0) { // i.e. does item exist
+		if (ADVEN[current_active_pc].items[i].variety > 0) { // i.e. does item exist
 			sprintf((char *) to_draw, "");
-			if (adven[current_active_pc].items[i].item_properties & 1 == 0)
-				sprintf((char *) to_draw, "%d. %s  ",i + 1,adven[current_active_pc].items[i].name);
-				else if (adven[current_active_pc].items[i].charges > 0)
-					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
-					adven[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+			if (ADVEN[current_active_pc].items[i].item_properties & 1 == 0)
+				sprintf((char *) to_draw, "%d. %s  ",i + 1,ADVEN[current_active_pc].items[i].name);
+				else if (ADVEN[current_active_pc].items[i].charges > 0)
+					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,ADVEN[current_active_pc].items[i].full_name,
+					ADVEN[current_active_pc].items[i].charges);
+				else sprintf((char *) to_draw, "%d. %s ",i + 1,ADVEN[current_active_pc].items[i].full_name);			
 
 			//if (i % 2 == 0)
 			//	sprintf((char *) to_draw, "%d %d %d %d",
@@ -507,7 +506,7 @@ void display_party(short mode,short clear_first)
 	// lots of stuff is global. Like ...
 	// Boolean file_in_mem
 	// short current_active_pc
-	// pc_record_type adven[6]
+	// pc_record_type ADVEN[6]
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
 			FillCRect(&pc_area_buttons[i][0],bg[12]);
@@ -541,24 +540,24 @@ void display_party(short mode,short clear_first)
 				rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,pc_area_buttons[i][0],0,1);
 			ForeColor(blackColor);
 			
-			// pc_record_type adven[6] is the records that contains chaarcters
+			// pc_record_type ADVEN[6] is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
-			if (adven[i].main_status != 0) { // PC exists?
+			if (ADVEN[i].main_status != 0) { // PC exists?
 				from_rect = from_base;
 				// draw PC graphic
-				OffsetRect(&from_rect,56 * (adven[i].which_graphic / 8),36 * (adven[i].which_graphic % 8));
+				OffsetRect(&from_rect,56 * (ADVEN[i].which_graphic / 8),36 * (ADVEN[i].which_graphic % 8));
 				rect_draw_some_item(pc_gworld,from_rect,pc_gworld,pc_area_buttons[i][1],1,1);
 				
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0); 
 				// draw name
 				TextSize(9);
-				if( (strlen(adven[i].name)) >= 10) {
+				if( (strlen(ADVEN[i].name)) >= 10) {
 					TextFace(0);
-					sprintf((char *) to_draw, "%-s  ", (char *) adven[i].name);	
+					sprintf((char *) to_draw, "%-s  ", (char *) ADVEN[i].name);	
 					TextSize(6);
 				}
 				else {
-					sprintf((char *) to_draw, "%-s ", (char *) adven[i].name);	
+					sprintf((char *) to_draw, "%-s ", (char *) ADVEN[i].name);	
 				}
 				
 				ForeColor(whiteColor);
@@ -567,31 +566,31 @@ void display_party(short mode,short clear_first)
 				TextSize(10);
 				
 				if (i == current_active_pc){
-					sprintf((char *) to_draw, "%-.18s  ", (char *) adven[i].name);
-					if( (strlen(adven[i].name)) > 12)
+					sprintf((char *) to_draw, "%-.18s  ", (char *) ADVEN[i].name);
+					if( (strlen(ADVEN[i].name)) > 12)
 						TextSize(8);
 					ForeColor(blackColor);
 					win_draw_string(GetWindowPort(mainPtr),name_rect,to_draw,1,10,true);
 					TextSize(10);
 				}
 				if ((current_pressed_button < 0) || (current_pressed_button == i))
-					switch (adven[i].main_status) {
+					switch (ADVEN[i].main_status) {
 							// draw statistics
 						case 1:
 							if (i == current_active_pc) {
 								//Draw in race
-								if (adven[i].race == 0)
+								if (ADVEN[i].race == 0)
 									char_win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10,true);
-								if (adven[i].race == 1)
+								if (ADVEN[i].race == 1)
 									char_win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10,true);
-								if (adven[i].race == 2)
+								if (ADVEN[i].race == 2)
 									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10,true);
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");
 								win_draw_string(GetWindowPort(mainPtr),skill_rect,to_draw,0,10,true);
-								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
-										adven[i].max_sp);
+								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",ADVEN[i].cur_health,ADVEN[i].max_health,ADVEN[i].cur_sp,
+										ADVEN[i].max_sp);
 								win_draw_string(GetWindowPort(mainPtr),hp_sp_rect,to_draw,0,10,true);
 								
 								
@@ -606,7 +605,7 @@ void display_party(short mode,short clear_first)
 									get_str(to_draw,9,string_num);
 									win_draw_string(GetWindowPort(mainPtr),pc_skills_rect[k],to_draw,0,9,true);
 									
-									sprintf((char *) skill_value,"%d",adven[i].skills[k]);
+									sprintf((char *) skill_value,"%d",ADVEN[i].skills[k]);
 									win_draw_string(GetWindowPort(mainPtr),temp_rect,skill_value,0,9,true);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;
@@ -623,82 +622,82 @@ void display_party(short mode,short clear_first)
 								TextFace(0);
 								//for(k = 0 ; k < 10; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
-								if (adven[i].status[0] > 0) 
+								if (ADVEN[i].status[0] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[1] > 0) 
+								if (ADVEN[i].status[1] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9,true);
 										cur_rect++;
 									}
-									else if(adven[i].status[1] < 0)
+									else if(ADVEN[i].status[1] < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9,true);
 											cur_rect++;
 										}
-								if (adven[i].status[2] > 0) 
+								if (ADVEN[i].status[2] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9,true);
 										cur_rect++;
 									}	
-								if (adven[i].status[3] > 0) 
+								if (ADVEN[i].status[3] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9,true);
 										cur_rect++;
 									}
-									else if(adven[i].status[3] < 0)
+									else if(ADVEN[i].status[3] < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9,true);
 											cur_rect++;
 										}
-								if (adven[i].status[4] > 0) 
+								if (ADVEN[i].status[4] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[5] > 0) 
+								if (ADVEN[i].status[5] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[6] > 0) 
+								if (ADVEN[i].status[6] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[7] > 0) 
+								if (ADVEN[i].status[7] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[8] > 0) 
+								if (ADVEN[i].status[8] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[9] > 0) 
+								if (ADVEN[i].status[9] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[10] > 0) 
+								if (ADVEN[i].status[10] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[11] > 0) 
+								if (ADVEN[i].status[11] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[12] > 0) 
+								if (ADVEN[i].status[12] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].status[13] > 0) 
+								if (ADVEN[i].status[13] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9,true);
 										cur_rect++;
@@ -715,78 +714,78 @@ void display_party(short mode,short clear_first)
 								TextSize(9);
 								TextFace(0);	
 								cur_rect=0;
-								if (adven[i].traits[0] == 1) 
+								if (ADVEN[i].traits[0] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[1] == 1) 
+								if (ADVEN[i].traits[1] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9,true);
 										cur_rect++;
 									}		
-								if (adven[i].traits[2] == 1) 
+								if (ADVEN[i].traits[2] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[3] == 1) 
+								if (ADVEN[i].traits[3] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[4] == 1) 
+								if (ADVEN[i].traits[4] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9,true);
 										cur_rect++;
 									}
 								
-								if (adven[i].traits[5] == 1) 
+								if (ADVEN[i].traits[5] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[6] == 1) 
+								if (ADVEN[i].traits[6] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9,true);
 										cur_rect++;
 									}		
-								if (adven[i].traits[7] == 1) 
+								if (ADVEN[i].traits[7] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[8] == 1) 
+								if (ADVEN[i].traits[8] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[9] == 1) 
+								if (ADVEN[i].traits[9] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[10] == 1) 
+								if (ADVEN[i].traits[10] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[11] == 1) 
+								if (ADVEN[i].traits[11] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9,true);
 										cur_rect++;
 									}		
-								if (adven[i].traits[12] == 1) 
+								if (ADVEN[i].traits[12] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[13] == 1) 
+								if (ADVEN[i].traits[13] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9,true);
 										cur_rect++;
 									}
-								if (adven[i].traits[14] == 1) 
+								if (ADVEN[i].traits[14] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9,true);
 										cur_rect++;
@@ -1097,69 +1096,69 @@ void add_string_to_buf(char *str) {
 //	SetPort(old_port);
 //}
 
-void display_strings_event_filter (short item_hit)
-{
-	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
-	
-	switch (item_hit) {
-		case 1:
-			toast_dialog();
-			break;
-		}
-}
+//void display_strings_event_filter (short item_hit)
+//{
+//	short i;
+//	Boolean had1 = FALSE, had2 = FALSE;
+//	
+//	switch (item_hit) {
+//		case 1:
+//			toast_dialog();
+//			break;
+//		}
+//}
 
 void record_display_strings(){}
 
-void display_strings(short str1a,short str1b,short str2a,short str2b,
-	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
-{
-	short item_hit;
-	Str255 text;
-	location view_loc;
-	Boolean sound_done = FALSE;
+//void display_strings(short str1a,short str1b,short str2a,short str2b,
+//	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
+//{
+//	short item_hit;
+//	Str255 text;
+//	location view_loc;
+//	Boolean sound_done = FALSE;
+//
+//	make_cursor_sword();
+//	
+//	store_str1a = str1a;
+//	store_str1b = str1b;
+//	store_str2a = str2a;
+//	store_str2b = str2b;
+//	
+//	if ((str1a <= 0) || (str1b <= 0))
+//		return;
+//	store_which_string_dlog = 970;
+//	if (strlen(title) > 0)
+//		store_which_string_dlog += 2;
+//	if ((str2a > 0) && (str2b > 0))
+//		store_which_string_dlog++;
+//	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
+//	
+//	cd_activate_item(store_which_string_dlog,2,0);
+//	
+//	csp(store_which_string_dlog,store_which_string_dlog,graphic_num,graphic_type);
+//	
+//	get_str(text,str1a,str1b);
+//	csit(store_which_string_dlog,4,(char *) text);
+//	if ((str2a > 0) && (str2b > 0)) {
+//		get_str(text,str2a,str2b);
+//		csit(store_which_string_dlog,5,(char *) text);
+//		}
+//	if (strlen(title) > 0)
+//		csit(store_which_string_dlog,6,title);
+//	csp(store_which_string_dlog,3,graphic_num,graphic_type);
+//	if (sound_num >= 0)
+//		play_sound(sound_num);
+//	
+//	item_hit = cd_run_dialog();
+//	cd_kill_dialog(store_which_string_dlog,0);
+//}
 
-	make_cursor_sword();
-	
-	store_str1a = str1a;
-	store_str1b = str1b;
-	store_str2a = str2a;
-	store_str2b = str2b;
-	
-	if ((str1a <= 0) || (str1b <= 0))
-		return;
-	store_which_string_dlog = 970;
-	if (strlen(title) > 0)
-		store_which_string_dlog += 2;
-	if ((str2a > 0) && (str2b > 0))
-		store_which_string_dlog++;
-	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
-	
-	cd_activate_item(store_which_string_dlog,2,0);
-	
-	csp(store_which_string_dlog,store_which_string_dlog,graphic_num,graphic_type);
-	
-	get_str(text,str1a,str1b);
-	csit(store_which_string_dlog,4,(char *) text);
-	if ((str2a > 0) && (str2b > 0)) {
-		get_str(text,str2a,str2b);
-		csit(store_which_string_dlog,5,(char *) text);
-		}
-	if (strlen(title) > 0)
-		csit(store_which_string_dlog,6,title);
-	csp(store_which_string_dlog,3,graphic_num,graphic_type);
-	if (sound_num >= 0)
-		play_sound(sound_num);
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(store_which_string_dlog,0);
-}
-
-void get_str(Str255 str,short i, short j)
-{
-	GetIndString(str, i, j);
-	p2cstr(str);
-}
+//void get_str(Str255 str,short i, short j)
+//{
+//	GetIndString(str, i, j);
+//	p2cstr(str);
+//}
 
 void make_cursor_sword() 
 {

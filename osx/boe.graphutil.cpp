@@ -36,7 +36,7 @@ extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
-extern unsigned char misc_i[64][64],sfx[64][64];
+//extern unsigned char misc_i[64][64],sfx[64][64];
 extern short on_monst_menu[256];
 extern DialogPtr modeless_dialogs[18];
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
@@ -588,10 +588,10 @@ void draw_sfx()
 				if ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1)) 
 							;
-						else if (sfx[where_draw.x][where_draw.y] != 0) {
+						else if (univ.out.sfx[where_draw.x][where_draw.y] != 0) {
 							for (i = 0; i < 8; i++) {
 								flag = s_pow(2,i);
-								if (sfx[where_draw.x][where_draw.y] & flag) 
+								if (univ.out.sfx[where_draw.x][where_draw.y] & flag) 
 									if (spot_seen[q][r] > 0) {
 									loc.x = q; loc.y = r;
 									source_rect = orig_rect;
@@ -620,7 +620,7 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1)) 
 							;
 						else {
-							if (misc_i[where_draw.x][where_draw.y] & flag) 
+							if (univ.out.misc_i[where_draw.x][where_draw.y] & flag) 
 								if (spot_seen[q][r] > 0) {
 								loc.x = q; loc.y = r;
 								source_rect = orig_rect;

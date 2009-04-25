@@ -48,10 +48,10 @@ Rect sbar_rect = {283,546,421,562};
 Rect shop_sbar_rect = {67,258,357,274};
 Rect item_sbar_rect = {146,546,253,562};
 Boolean bgm_on = FALSE,bgm_init = FALSE;
-short dialog_answer;
+//short dialog_answer;
 Point store_anim_ul;
 cScenario scenario;
-extern cUniverse univ;
+cUniverse univ;
 //piles_of_stuff_dumping_type *data_store;
 //talking_record_type talking;
 
@@ -491,7 +491,8 @@ void Handle_Update()
 					redraw_screen();
 			// 1st update never combat
 				}
-				else refresh_screen(0);
+			else //refresh_screen(0); 
+				redraw_screen();
 			}
 		}
 		
@@ -618,7 +619,7 @@ void Mouse_Pressed()
 					if (choice == 3)
 						break;
 					if (choice == 1)
-						save_party(0);
+						save_party(univ.file);
 				}
 				All_Done = TRUE;
 			}
@@ -707,6 +708,8 @@ void close_program()
 {
 	restore_depth();
 	//end_music();
+	if(univ.town.town != NULL) delete univ.town.town;
+	if(univ.town.cur_talk != NULL) delete univ.town.cur_talk;
 }
 
 void handle_menu_choice(long choice)
@@ -785,8 +788,10 @@ void handle_file_menu(int item_hit)
 			do_save(0);
 			break;
 		case 3:
-			if (in_startup_mode == TRUE)
-				save_party(1);
+			if (in_startup_mode == TRUE){
+				FSSpec* file = nav_put_party();
+				save_party(*file);
+			}
 				else do_save(1);
 			break;
 		case 4:
@@ -824,7 +829,7 @@ void handle_file_menu(int item_hit)
 					if (choice == 3)
 						break;
 					if (choice == 1)
-						save_party(0);
+						save_party(univ.file);
 					}
 			All_Done = TRUE;
 			break;
@@ -1241,7 +1246,7 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 		if (choice == 3)
 			return userCanceledErr;
 		if (choice == 1)
-			save_party(0);
+			save_party(univ.file);
 		}
 		else {
 				choice = FCD(1067,0);

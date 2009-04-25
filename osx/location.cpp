@@ -23,6 +23,12 @@ short dist(location p1,location p2){
 	return s_sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
+short vdist(location p1,location p2) {
+	short i,j;
+	i = abs((short) (p1.x - p2.x)); j = abs((short) (p1.y - p2.y));
+	return max(i,j);
+}
+
 location::location() : x(0), y(0) {}
 location::location(char a,char b) : x(a), y(b) {}
 

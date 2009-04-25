@@ -23,6 +23,7 @@
 #include "boe.main.h"
 #include "graphtool.h"
 #include "mathutil.h"
+#include "dlgutil.h"
 
 extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
 //extern party_record_type party;
@@ -1080,11 +1081,11 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 }
 
 
-void fancy_choice_dialog_event_filter (short item_hit)
-{
-	toast_dialog();
-	dialog_answer = item_hit;
-}
+//void fancy_choice_dialog_event_filter (short item_hit)
+//{
+//	toast_dialog();
+//	dialog_answer = item_hit;
+//}
 
 short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 {
@@ -1103,9 +1104,10 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 	//if (parent < 2) {
 		SetPort(GetWindowPort(mainPtr));
 		BeginUpdate(mainPtr);
-		if (in_startup_mode == FALSE)
-			refresh_screen(0);
-			else draw_startup(0);
+//		if (in_startup_mode == FALSE)
+//			refresh_screen(0);
+//			else draw_startup(0);
+	redraw_screen();
 		EndUpdate(mainPtr);
 	//	}
 	i = dialog_answer;
@@ -1115,40 +1117,40 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 
 	}
 
-short fancy_choice_dialog(short which_dlog,short parent)
-// ignore parent in Mac version
-{
-	short item_hit,i,store_dialog_answer,err;
-	
-	store_dialog_answer = dialog_answer;
-	make_cursor_sword();
-	
-	err = cd_create_dialog_parent_num(which_dlog,parent);
-	if(err != 0)
-		printf("Error %i while creating dialog %i.\n",err,which_dlog);
-	
-	if (which_dlog == 1062) {
-		//i = get_ran(1,0,12);
-		//get_str(temp_str,11,10 + i);
-		//csit(1062,10,(char *) temp_str);
-	}
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(which_dlog,0);
-
-	if (parent < 2) {
-		SetPort(GetWindowPort(mainPtr));
-		BeginUpdate(mainPtr);
-		if (in_startup_mode == FALSE)
-			refresh_screen(0);
-			else draw_startup(0);
-		EndUpdate(mainPtr);
-		}
-	i = dialog_answer;
-	dialog_answer = store_dialog_answer;
-	
-	return i;
-}
+//short fancy_choice_dialog(short which_dlog,short parent)
+//// ignore parent in Mac version
+//{
+//	short item_hit,i,store_dialog_answer,err;
+//	
+//	store_dialog_answer = dialog_answer;
+//	make_cursor_sword();
+//	
+//	err = cd_create_dialog_parent_num(which_dlog,parent);
+//	if(err != 0)
+//		printf("Error %i while creating dialog %i.\n",err,which_dlog);
+//	
+//	if (which_dlog == 1062) {
+//		//i = get_ran(1,0,12);
+//		//get_str(temp_str,11,10 + i);
+//		//csit(1062,10,(char *) temp_str);
+//	}
+//	
+//	item_hit = cd_run_dialog();
+//	cd_kill_dialog(which_dlog,0);
+//
+//	if (parent < 2) {
+//		SetPort(GetWindowPort(mainPtr));
+//		BeginUpdate(mainPtr);
+//		if (in_startup_mode == FALSE)
+//			refresh_screen(0);
+//			else draw_startup(0);
+//		EndUpdate(mainPtr);
+//		}
+//	i = dialog_answer;
+//	dialog_answer = store_dialog_answer;
+//	
+//	return i;
+//}
 
 void select_pc_event_filter (short item_hit)
 {
@@ -1188,7 +1190,8 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 
 	BeginUpdate(mainPtr);
 	if (in_startup_mode == FALSE)
-		refresh_screen(0);
+		//refresh_screen(0); 
+		redraw_screen();
 		else draw_startup(0);
 	EndUpdate(mainPtr);
 
@@ -1615,8 +1618,8 @@ void get_text_response(short dlg,Str255 str,short parent_num)
 		if ((str[i] > 64) && (str[i] < 91))
 			str[i] = str[i] + 32;
 	//ASB((char *) str);
-	final_process_dialog(dlg);
-	//cd_kill_dialog(dlg,0);
+	//final_process_dialog(dlg);
+	cd_kill_dialog(dlg,0);
 		
 }
 

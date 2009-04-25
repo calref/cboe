@@ -83,7 +83,7 @@ void cCurTown::append(legacy::stored_town_maps_type& old){
 	for(int n = 0; n < 200; n++)
 		for(int i = 0; i < 8; i++)
 			for(int j = 0; j < 64; j++)
-				town_maps[n][i][j] = old.town_maps[n][i][j];
+				maps[n][i][j] = old.town_maps[n][i][j];
 }
 
 __attribute__((deprecated))
@@ -91,7 +91,7 @@ void cCurOut::append(legacy::stored_outdoor_maps_type& old){
 	for(int n = 0; n < 100; n++)
 		for(int i = 0; i < 6; i++)
 			for(int j = 0; j < 48; j++)
-				outdoor_maps[n][i][j] = old.outdoor_maps[n][i][j];
+				maps[n][i][j] = old.outdoor_maps[n][i][j];
 }
 
 __attribute__((deprecated))

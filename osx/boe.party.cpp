@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 
 //#include "item.h"
 
@@ -112,7 +112,7 @@ extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
 //extern current_town_type	univ.town;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
-extern std::string progPath;
+extern std::string progDir;
 extern location pc_pos[6],center;
 extern WindowPtr mainPtr;
 extern Boolean in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
@@ -431,7 +431,7 @@ void init_party_scen_data()
 // When the party is placed into a scen from the startinbg screen, this is called to put the game into game 
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(Str255 scen_name)
+void put_party_in_scen(string scen_name)
 {
 	short i,j;
 	Str255 strs[6] = {"","","","","",""};
@@ -475,7 +475,10 @@ void put_party_in_scen(Str255 scen_name)
 	FSRef file_ref;
 	FSSpec file_spec;
 	std::string path;
-	path = progPath + "Blades of Exile Scenarios/" + univ.party.scen_name;
+	//std::cout << progDir;
+	path = progDir + "/Blades of Exile Scenarios/";
+	path += scen_name;
+	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
 	FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
 	FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
 	if (!load_scenario(file_spec))
@@ -2755,7 +2758,9 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	
 	item_hit = cd_run_dialog();	
 
-	final_process_dialog(1098);
+	//final_process_dialog(1098);
+	cd_kill_dialog(1098,0);
+	
 
 	return dialog_answer;
 }
@@ -2943,7 +2948,8 @@ short alch_choice(short pc_num)
 	
 	item_hit = cd_run_dialog();	
 
-	final_process_dialog(1047);
+	//final_process_dialog(1047);
+	cd_kill_dialog(1047,0);
 	return dialog_answer;
 }
 

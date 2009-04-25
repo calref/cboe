@@ -26,7 +26,7 @@ void import_anim_terrain(short mode);
 void start_data_dump();
 void end_data_dump();
 void set_terrain(location l, unsigned char terrain_type);
-void oops_error(short error);
+//void oops_error(short error);
 void set_up_ter_pics();
 //Boolean load_scenario();
 short onm(char x_sector,char y_sector);

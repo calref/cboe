@@ -16,6 +16,7 @@
 #include "mathutil.h"
 #include "fileio.h"
 
+cUniverse univ; // not needed; just to silence the compiler
 
 /* Globals */
 Rect	windRect, Drag_Rect;
@@ -690,6 +691,7 @@ void Mouse_Pressed()
 void close_program()
 {
 	restore_depth();
+	if(town != NULL) delete town;
 }
 
 void ding()

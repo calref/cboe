@@ -87,7 +87,7 @@ Rect dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic;//,cur_town_talk_loaded = -1;
-std::vector<std::string*> scen_header_strs;
+extern std::vector<std::string*> scen_header_strs;
 
 // Shopping vars
 
@@ -196,7 +196,8 @@ void end_shop_mode()
 	stat_screen_mode = 0;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	refresh_screen(0);
+	//refresh_screen(0); 
+	redraw_screen();
 }
 
 void handle_shop_event(Point p)

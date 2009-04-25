@@ -68,7 +68,7 @@ cOutdoors::cOutdoors(){
 	short i,j;
 	location d_loc(100,0);
 	cOutdoors::cWandering d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
-	Rect d_rect = {0,0,0,0};
+	rectangle d_rect;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	Str255 temp_str;
 	

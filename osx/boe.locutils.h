@@ -1,7 +1,7 @@
 void set_terrain_blocked();
-short dist(location p1,location p2);
-short ex_sqrt(short val);
-short vdist(location p1,location p2) ;
+//short dist(location p1,location p2);
+//short ex_sqrt(short val);
+//short vdist(location p1,location p2) ;
 Boolean adjacent(location p1,location p2);
 Boolean point_onscreen(location center,location check);
 short set_direction (location old_pt, location new_pt);

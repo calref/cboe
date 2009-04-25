@@ -553,7 +553,7 @@ Boolean handle_action(EventRecord event)
 
 				case 5:
 					if (overall_mode == MODE_OUTDOORS) {
-						save_party(0);
+						save_party(univ.file);
 						need_redraw = TRUE;
 						current_switch = 6;
 						break;
@@ -1395,9 +1395,11 @@ Boolean handle_action(EventRecord event)
 		draw_startup(0);
 		menu_activate(1);
 		strcpy((char*)univ.party.scen_name,".exs"); // should be harmless...
-		if (FCD(901,0) == 2)
-			save_party(1);
+		if (FCD(901,0) == 2){
+			FSSpec* file = nav_put_party();
+			save_party(*file);
 		}
+	}
 	else if (party_toast() == TRUE) {
 		for (i = 0; i < 6; i++)
 			if (ADVEN[i].main_status == 5) {
@@ -2044,7 +2046,11 @@ void do_save(short mode)
 		print_buf();
 		return;
 		}
-	save_party(mode);
+	FSSpec file;
+	if(mode == 1) file = *nav_put_party();
+	else file = univ.file;
+	save_party(file);
+	
 	pause(6);
 	SetPort(GetWindowPort(mainPtr));
 	initiate_redraw();
@@ -2454,8 +2460,9 @@ void start_new_game()
 				}
 			ADVEN[i].max_sp += ADVEN[i].skills[9] * 3 + ADVEN[i].skills[10] * 3;
 			ADVEN[i].cur_sp = ADVEN[i].max_sp;
-			}
-	save_party(1);
+		}
+	FSSpec* file = nav_put_party();
+	save_party(*file);
 	party_in_memory = TRUE;
 
 	}

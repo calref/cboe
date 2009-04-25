@@ -22,7 +22,7 @@ Boolean is_water(short i,short j);
 Boolean is_correctable_water(short i,short j);
 void shy_change_circle_terrain(location center,short radius,unsigned char terrain_type,short probability);
 void change_circle_terrain(location center,short radius,unsigned char terrain_type,short probability);
-void change_rect_terrain(Rect r,unsigned char terrain_type,short probability,Boolean hollow);
+void change_rect_terrain(rectangle r,unsigned char terrain_type,short probability,Boolean hollow);
 void swap_val(unsigned char *val,short a,short b);
 void change_val_4 (unsigned char *val,short a,short b,short c,short d);
 void change_val (unsigned char *val,short a,short b);

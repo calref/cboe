@@ -9,7 +9,7 @@
 #include <string.h>
 #include <string>
 //#include "scen.global.h"
-#include <stdio.h>
+#include <iostream>
 #include "classes.h"
 //#include "scen.fileio.h"
 //#include "scen.keydlgs.h"
@@ -28,7 +28,7 @@ extern cUniverse univ;
 //extern unsigned char borders[4][50];
 //extern cOutdoors current_terrain;
 //extern cTown* town;
-extern std::string progPath;
+extern std::string progDir;
 //extern short overall_mode;
 
 NavDialogRef dlg_get_scen,dlg_get_game,dlg_put_scen,dlg_put_game;
@@ -153,10 +153,10 @@ bool load_scenario(FSSpec file_to_load){
 	OSErr error;
 	long len;
 //	FSSpec file_to_load;
-	legacy::scenario_data_type *temp_scenario;
-	legacy::scen_item_data_type *item_data;
-	
-	if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
+	legacy::scenario_data_type *temp_scenario = new legacy::scenario_data_type;
+	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
+	error = FSpOpenDF(&file_to_load,1,&file_id);
+	if (error != 0) {
 		oops_error(28);
 		SysBeep(2);
 		return false;
@@ -175,7 +175,7 @@ bool load_scenario(FSSpec file_to_load){
 	  	cur_scen_is_mac = true;
 	  	file_ok = TRUE;
 	}
-	if ((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
+	else if ((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 		(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
 	  	SysBeep(20);
 	  	cur_scen_is_mac = FALSE;
@@ -189,15 +189,16 @@ bool load_scenario(FSSpec file_to_load){
 	
 	len = (long) sizeof(legacy::scenario_data_type);
 	temp_scenario = new legacy::scenario_data_type;
-	
-	if ((error = FSRead(file_id, &len, (char *) temp_scenario)) != 0){
+	error = FSRead(file_id, &len, (char *) temp_scenario);
+	if (error != 0){
 		FSClose(file_id);
 		oops_error(29);
 		return false;
 	}
 	port_scenario(temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
-	if ((error = FSRead(file_id, &len, (char *) item_data)) != 0){
+	error = FSRead(file_id, &len, (char *) item_data);
+	if (error != 0){
 		FSClose(file_id);
 		oops_error(30);
 		return false;
@@ -245,6 +246,7 @@ bool load_scenario(FSSpec file_to_load){
 	
 	scenario.ter_types[23].fly_over = FALSE;
 	delete temp_scenario;
+	delete item_data;
 	
 	//store_file_reply = file_to_load;
 //	overall_mode = 60;
@@ -334,7 +336,7 @@ bool load_town(short which_town, cTown*& the_town){
 			the_town->append(t_d);
 			break;
 			
-			case 1:
+		case 1:
 			len = sizeof(legacy::ave_tr_type);
 			FSRead(file_id, &len, (char *) &ave_t);
 			port_ave_t(&ave_t);
@@ -343,7 +345,7 @@ bool load_town(short which_town, cTown*& the_town){
 			the_town->append(ave_t);
 			break;
 			
-			case 2:
+		case 2:
 			len = sizeof(legacy::tiny_tr_type);
 			FSRead(file_id,&len , (char *) &tiny_t);
 			port_tiny_t(&tiny_t);
@@ -473,7 +475,7 @@ bool load_town(short which_town, cSpeech& the_talk){
 	return true;
 }
 
-bool load_town(short which_town, short which_str, void* p){
+bool load_town_str(short which_town, short which_str, char* str){
 	short i,j,k,file_id;
 	long len,len_to_jump = 0,store;
 	OSErr error;
@@ -523,19 +525,79 @@ bool load_town(short which_town, short which_str, void* p){
 	}
 	error = SetFPos (file_id, 3, len);
 	
-	char* str = (char*) p;
-	cTown* t = (cTown*) p;
 	for (i = 0; i < 140; i++) {
-		len = (long) (t->strlens[i]);
-		if(which_str < 0){
-			FSRead(file_id, &len, (char *) &(t->town_strs(i)));
-			t->town_strs(i)[len] = 0;
-		}
-		else if(i == which_str){
+		len = (long) (univ.town.town->strlens[i]);
+		if(i == which_str){
 			FSRead(file_id, &len, (char *) str);
 			str[len] = 0;
 		}
 		else SetFPos (file_id, 3, len);
+	}
+	
+	//	town_type = scenario.town_size[which_town];
+	error = FSClose(file_id);
+	if (error != 0) {
+		FSClose(file_id);
+		oops_error(38);
+	}
+	
+	return true;
+}
+
+bool load_town_str(short which_town, cTown*& t){
+	short i,j,k,file_id;
+	long len,len_to_jump = 0,store;
+	OSErr error;
+	legacy::town_record_type store_town;
+	legacy::talking_record_type store_talk;
+	legacy::big_tr_type t_d;
+	legacy::ave_tr_type ave_t;
+	legacy::tiny_tr_type tiny_t;
+	
+	//	if (overall_mode == 61)
+	//		return;
+	
+	len_to_jump = get_town_offset(which_town);
+	
+	if ((error = FSpOpenDF(&scenario.scen_file,1,&file_id)) != 0) {
+		oops_error(34);
+		return false;
+	}
+	
+	error = SetFPos (file_id, 1, len_to_jump);
+	if (error != 0) {
+		FSClose(file_id);
+		oops_error(35);
+		return false;
+	}
+	
+	len = sizeof(legacy::town_record_type);
+	
+	error = FSRead(file_id, &len , (char *) &store_town);
+	port_town(&store_town);
+	if (error != 0) {
+		FSClose(file_id);
+		oops_error(36);
+		return false;
+	}
+	
+	switch (scenario.town_size[which_town]) {
+		case 0:
+			len =  sizeof(legacy::big_tr_type);
+			break;
+		case 1:
+			len = sizeof(legacy::ave_tr_type);
+			break;
+		case 2:
+			len = sizeof(legacy::tiny_tr_type);
+			break;
+	}
+	error = SetFPos (file_id, 3, len);
+	
+	for (i = 0; i < 140; i++) {
+		len = (long) (t->strlens[i]);
+		FSRead(file_id, &len, (char *) &(t->town_strs(i)));
+		t->town_strs(i)[len] = 0;
 	}
 	
 	//	town_type = scenario.town_size[which_town];
@@ -609,7 +671,7 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 	
 	port_out(&store_out);
 	the_out = store_out;
-	for (i = 0; i < 120; i++) {
+	for (i = 0; i < 108; i++) {
 		len = (long) (the_out.strlens[i]);
 		FSRead(file_id, &len, (char *) &(the_out.out_strs(i)));
 		the_out.out_strs(i)[len] = 0;
@@ -679,7 +741,7 @@ bool load_outdoors(location which_out, short mode, unsigned char borders[4][50])
 	return true;
 }
 
-bool load_outdoors(location which_out, short which_str, char* str){
+bool load_outdoor_str(location which_out, short which_str, char* str){
 	short i,j,k,file_id;
 	long len,len_to_jump,store;
 	short out_sec_num;
@@ -808,15 +870,15 @@ bool load_party(FSSpec file_to_load){
 	legacy::stored_outdoor_maps_type o_maps;
 	unsigned char misc_i[64][64], sfx[64][64];
 	
-	short flags[3][2] = {
+	static const short flags[3][2] = {
 		{5790,1342}, // slot 0 ... 5790 - out,         1342 - town
 		{100,200},   // slot 1 ... 100  - in scenario, 200  - not in
 		{3422,5567}  // slot 2 ... 3422 - no maps,     5567 - maps
 	};
 	// but if the first flag is 0x0B0E, we have a new-format save
 	// the three flags still follow that.
-	
-	if ((error = FSpOpenDF(&file_to_load,1,&file_id)) != 0) {
+	error = FSpOpenDF(&file_to_load,1,&file_id);
+	if (error != 0) {
 		FCD(1064,0);
 		SysBeep(2);
 		return false;
@@ -831,7 +893,8 @@ bool load_party(FSSpec file_to_load){
 	//	add_string_to_buf((char *) debug);
 	
 	for (i = 0; i < 3; i++) {
-		if ((error = FSRead(file_id, &len, (char *) &flag)) != 0) {
+		error = FSRead(file_id, &len, (char *) &flag);
+		if (error != 0) {
 			FSClose(file_id);
 			FCD(1064,0);
 			return false;
@@ -886,7 +949,8 @@ bool load_party(FSSpec file_to_load){
 	store_len = (long) sizeof(legacy::pc_record_type);
 	for (i = 0; i < 6; i++) {
 		len = store_len;
-		if ((error = FSRead(file_id, &len, (char *) &store_pc[i]))  != 0){
+		error = FSRead(file_id, &len, (char *) &store_pc[i]);
+		if (error  != 0){
 			FSClose(file_id);
 			SysBeep(2);
 			FCD(1064,0);
@@ -994,15 +1058,6 @@ bool load_party(FSSpec file_to_load){
 		return false;
 	}
 	
-	FSRef file_ref;
-	FSSpec file_spec;
-	std::string path;
-	path = progPath + "Blades of Exile Scenarios/" + univ.party.scen_name;
-	FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
-	FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
-	if (!load_scenario(file_spec))
-		return false;
-	
 	univ.party = store_party;
 	univ.town.append(store_setup);
 	for(i = 0; i < 6; i++)
@@ -1020,11 +1075,25 @@ bool load_party(FSSpec file_to_load){
 		univ.out.append(o_maps);
 		univ.out.append(sfx, misc_i);
 	}
+	if(in_scen){
+		FSRef file_ref;
+		FSSpec file_spec;
+		std::string path;
+		path = progDir + "/Blades of Exile Scenarios/" + univ.party.scen_name;
+		std::cout<<path<<'/n';
+		FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
+		FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
+		if (!load_scenario(file_spec))
+			return false;
+		univ.file = file_spec;
+	}else{
+		strcpy(univ.party.scen_name,"");
+	}
 	
 	return true;
 }
 
-void save_party(short mode)
+void save_party(FSSpec dest_file)
 //mode;  // 0 - normal  1 - save as
 {
 	printf("Saving is currently disabled.\n");

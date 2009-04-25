@@ -69,7 +69,7 @@ short store_str2a;
 short store_str2b;
 short store_which_string_dlog;
 short store_page_on,store_num_i;
-short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_label_2b;
+extern short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_label_2b;
 
 // Misc dialog vars
 short store_display_mode,store_displayed_item,position,cur_entry,num_entries,store_help_mode;
