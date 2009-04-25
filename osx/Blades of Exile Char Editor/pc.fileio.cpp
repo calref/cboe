@@ -9,6 +9,7 @@
 #include "soundtool.h"
 #include "pc.editors.h"
 #include "mathutil.h"
+#include "dlgutil.h"
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
@@ -326,7 +327,7 @@ void load_file()
 	save_blocked = FALSE;
 	party_in_scen = in_scen;
 	
-	if ((sys_7_avail == FALSE) && (ae_loading == FALSE)) {
+	if (ae_loading == FALSE) {
 		/* not reached with Carbon */
 		/*strcpy ((char *) last_load_file, (char *) reply.fName);*/
 	} else {

@@ -215,6 +215,7 @@ namespace legacy {
 	
 	struct talk_save_type {
 		short personality;
+		short town_num;
 		short str1,str2;
 	};
 	
@@ -266,7 +267,10 @@ namespace legacy {
 		short party_event_timers[30];
 		short global_or_town[30];
 		short node_to_call[30];
-		char spec_items[50];
+		char spec_items[50],help_received[120];
+		short m_killed[200];
+		long total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
+		char scen_name[256];
 	};
 	
 	struct scenario_data_type {
@@ -305,6 +309,54 @@ namespace legacy {
 		short flag_i;
 		location last_out_edited;
 		short last_town_edited;
+	};
+	
+	struct setup_save_type {
+		unsigned char setup[4][64][64];
+	};
+	
+	struct pc_record_type {
+		short main_status;
+		char name[20];
+		short skills[30];
+		short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
+		short status[15];
+		item_record_type items[24];
+		Boolean equip[24];
+		Boolean priest_spells[62],mage_spells[62];
+		short which_graphic,weap_poisoned;
+		Boolean advan[15],traits[15];
+		short race,exp_adj,direction;
+	};
+	
+	struct town_item_list {
+		item_record_type items[115];
+	};
+	
+	struct stored_town_maps_type {
+		char town_maps[200][8][64];
+	}; 
+	
+	typedef struct stored_outdoor_maps_type {
+		char outdoor_maps[100][6][48];
+	}; 
+	
+	struct stored_items_list_type {
+		item_record_type items[115];
+	};
+	
+	struct current_town_type {
+		short town_num, difficulty;
+		town_record_type	town;
+		char explored[64][64];
+		Boolean	hostile;
+		creature_list_type	monst;
+		Boolean	in_boat;
+		location p_loc;
+	};
+	
+	struct out_info_type {
+		char expl[96][96];
 	};
 	
 //	struct piles_of_stuff_dumping_type {

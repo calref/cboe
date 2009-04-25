@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "scen.global.h"
+#include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
 #include "scen.dlgutil.h"
@@ -73,8 +74,8 @@ void init_town(short size)
 		town->talking.strlens[i] = 0;
 	for(i = 0; i < 170; i++) 
 		if (i < 10)
-			sprintf(town->talk_strs[i],"Unused");
-		else sprintf(town->talk_strs[i],"");
+			sprintf(town->talking.talk_strs[i],"Unused");
+		else sprintf(town->talking.talk_strs[i],"");
 	
 	for(i = 0; i < 60; i++) {
 		town->talking.talk_nodes[i].personality = -1;
@@ -1198,12 +1199,12 @@ Boolean save_basic_dlog()
 	Str255 str;
 	short i,j;
 	
-	CDGT(821,2,town->talk_strs[store_which_talk_node]);
-	town->talk_strs[store_which_talk_node][30] = 0;
-	CDGT(821,3,town->talk_strs[160 + store_which_talk_node]);
-	CDGT(821,4,town->talk_strs[10 + store_which_talk_node]);
-	CDGT(821,5,town->talk_strs[20 + store_which_talk_node]);
-	CDGT(821,6,town->talk_strs[30 + store_which_talk_node]);
+	CDGT(821,2,town->talking.talk_strs[store_which_talk_node]);
+	town->talking.talk_strs[store_which_talk_node][30] = 0;
+	CDGT(821,3,town->talking.talk_strs[160 + store_which_talk_node]);
+	CDGT(821,4,town->talking.talk_strs[10 + store_which_talk_node]);
+	CDGT(821,5,town->talking.talk_strs[20 + store_which_talk_node]);
+	CDGT(821,6,town->talking.talk_strs[30 + store_which_talk_node]);
 		
 	return TRUE;
 }
@@ -1214,11 +1215,11 @@ void put_basic_dlog_in_dlog()
 	short i,j;
 	
 	cdsin(821,14,store_which_talk_node + cur_town * 10);
-	CDST(821,2,town->talk_strs[store_which_talk_node]);
-	CDST(821,3,town->talk_strs[160 + store_which_talk_node]);
-	CDST(821,4,town->talk_strs[10 + store_which_talk_node]);
-	CDST(821,5,town->talk_strs[20 + store_which_talk_node]);
-	CDST(821,6,town->talk_strs[30 + store_which_talk_node]);
+	CDST(821,2,town->talking.talk_strs[store_which_talk_node]);
+	CDST(821,3,town->talking.talk_strs[160 + store_which_talk_node]);
+	CDST(821,4,town->talking.talk_strs[10 + store_which_talk_node]);
+	CDST(821,5,town->talking.talk_strs[20 + store_which_talk_node]);
+	CDST(821,6,town->talking.talk_strs[30 + store_which_talk_node]);
 
 }
 
@@ -1344,8 +1345,8 @@ Boolean save_talk_node()
 			break;	
 	}
 	
-	CDGT(817,9,town->talk_strs[40 + store_which_talk_node * 2]);
-	CDGT(817,10,town->talk_strs[40 + store_which_talk_node * 2 + 1]);
+	CDGT(817,9,town->talking.talk_strs[40 + store_which_talk_node * 2]);
+	CDGT(817,10,town->talking.talk_strs[40 + store_which_talk_node * 2 + 1]);
 	
 	town->talking.talk_nodes[store_which_talk_node] = store_talk_node;
 
@@ -1381,8 +1382,8 @@ void put_talk_node_in_dlog()
 	csit(817,21,(char *) str);
 	for (i = 0; i < 4; i++)
 		CDSN(817,5 + i,store_talk_node.extras[i]);
-	CDST(817,9,town->talk_strs[40 + store_which_talk_node * 2]);
-	CDST(817,10,town->talk_strs[40 + store_which_talk_node * 2 + 1]);
+	CDST(817,9,town->talking.talk_strs[40 + store_which_talk_node * 2]);
+	CDST(817,10,town->talking.talk_strs[40 + store_which_talk_node * 2 + 1]);
 
 	if ((store_talk_node.type == 7) || (store_talk_node.type == 9) ||
 		(store_talk_node.type == 10) || (store_talk_node.type == 11))

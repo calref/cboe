@@ -1,5 +1,6 @@
 #include <string.h>
 #include "scen.global.h"
+#include "classes.h"
 #include <stdio.h>
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
@@ -438,23 +439,23 @@ void augment_terrain(location to_create)
 	to_load = to_create;
 	if (to_create.y > 0) {
 		to_load.y--;
-		load_outdoors(to_load, 1);
+		load_outdoors(to_load, 1, borders);
 		}
 	to_load = to_create;
 	if (to_create.y < scenario.out_height - 1) {
 		to_load.y++;
-		load_outdoors(to_load, 3);
+		load_outdoors(to_load, 3, borders);
 		}
 
 	to_load = to_create;
 	if (to_create.x < scenario.out_width - 1) {
 		to_load.x++;
-		load_outdoors(to_load, 2);
+		load_outdoors(to_load, 2, borders);
 		}
 	to_load = to_create;
 	if (to_create.x > 0) {
 		to_load.x--;
-		load_outdoors(to_load, 4);
+		load_outdoors(to_load, 4, borders);
 		}
 }
 
@@ -811,8 +812,8 @@ void import_town(short which_town,FSSpec temp_file_to_load)
 	
 	for (i = 0; i < 170; i++) {
 		len = (long) (talking.strlens[i]);
-		FSRead(file_id, &len, (char *) &(town->talk_strs[i]));
-		town->talk_strs[i][len] = 0;
+		FSRead(file_id, &len, (char *) &(town->talking.talk_strs[i]));
+		town->talking.talk_strs[i][len] = 0;
 		}
 	
 	town->talking = talking;
@@ -1342,37 +1343,37 @@ void scen_text_dump(){
 	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
 			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
-			load_outdoors(out_sec,0);
+			load_outdoors(out_sec,current_terrain);
 			for (i = 0; i < 108; i++)
 				if (current_terrain.out_strs(i)[0] != '*')
 					fout << "    Message " << i << ": " << current_terrain.out_strs(i) << endl;
 			fout << endl;
 		}
 	}
-	load_outdoors(cur_out,0);
+	load_outdoors(cur_out,current_terrain);
 	augment_terrain(cur_out);
 	fout << "Town Text:" << endl << endl;
 	for (short j = 0; j < scenario.num_towns; j++) {
 		fout << "  Town " << j << ':' << endl;
-		load_town(j);
+		load_town(j,town);
 		for (i = 0; i < 135; i++)
 			if (town->town_strs(i)[0] != '*')
 				fout << "    Message " << i << ": " << town->town_strs(i) << endl;
 		fout << endl;
 		for (i = 0; i < 10; i++) {
-			fout << "    Personality " << i << " (" << town->talk_strs[i] << "): " << endl;
-			fout << "    look: " << town->talk_strs[i + 10] << endl;
-			fout << "    name: " << town->talk_strs[i + 20] << endl;
-			fout << "    job: " << town->talk_strs[i + 30] << endl;
-			fout << "    confused: " << town->talk_strs[i + 160] << endl;
+			fout << "    Personality " << i << " (" << town->talking.talk_strs[i] << "): " << endl;
+			fout << "    look: " << town->talking.talk_strs[i + 10] << endl;
+			fout << "    name: " << town->talking.talk_strs[i + 20] << endl;
+			fout << "    job: " << town->talking.talk_strs[i + 30] << endl;
+			fout << "    confused: " << town->talking.talk_strs[i + 160] << endl;
 		}
 		for (i = 40; i < 160; i++)
-			if (strlen((char *) (town->talk_strs[i])) > 0)
-				fout << "    Node " << i << ": " << town->talk_strs[i] << endl;
+			if (strlen((char *) (town->talking.talk_strs[i])) > 0)
+				fout << "    Node " << i << ": " << town->talking.talk_strs[i] << endl;
 		fout << endl;
 	}
 	fout.close();
-	load_town(cur_town);
+	load_town(cur_town,town);
 }
 
 //void start_data_dump()

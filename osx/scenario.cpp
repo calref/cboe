@@ -6,7 +6,7 @@
  *
  */
 
-#include "scenario.h"
+#include "classes.h"
 #include "oldstructs.h"
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {

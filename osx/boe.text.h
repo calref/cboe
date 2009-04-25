@@ -9,7 +9,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 short first_active_pc();
 void refresh_stat_areas(short mode);
 short total_encumberance(short pc_num);
-short get_tnl(pc_record_type *pc);
+//short get_tnl(pc_record_type *pc);
 void draw_pc_effects(short pc);
 void print_party_stats() ;
 short do_look(location space);
@@ -17,7 +17,7 @@ short town_boat_there(location where);
 short out_boat_there(location where);
 short town_horse_there(location where);
 short out_horse_there(location where);
-void notify_out_combat_began(out_wandering_type encounter,short *nums) ;
+void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) ;
 void get_m_name(char *str,unsigned char num);
 void get_ter_name(char *str,unsigned char num);
 void print_monst_name(unsigned char m_type);

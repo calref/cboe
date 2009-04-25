@@ -24,6 +24,5 @@ Boolean is_ground(unsigned char ter_type);
 void make_town_trim(short mode);
 void make_out_trim();
 char add_trim_to_array(location where,unsigned char ter_type);
-Boolean pt_in_rect(location loc,Rect rect);
 void check_if_monst_seen(unsigned char m_num);
 void adjust_monst_menu();

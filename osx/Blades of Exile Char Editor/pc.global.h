@@ -32,7 +32,6 @@
 #define ASB	add_string_to_buf
 #define	PSD	party.stuff_done
 #define	DES	display_enc_string
-#define	FCD	fancy_choice_dialog
 #define	D2ES display_2_enc_string
 
 #define DOOR_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],4220,0); break;

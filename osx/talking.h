@@ -20,6 +20,7 @@ public:
 		short extras[4];
 	};
 	unsigned char strlens[200];
+	char talk_strs[170][256];
 	cNode talk_nodes[60];
 	
 	cSpeech& operator = (legacy::talking_record_type& old);

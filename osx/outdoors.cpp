@@ -6,8 +6,7 @@
  *
  */
 
-#include "special.h"
-#include "outdoors.h"
+#include "classes.h"
 #include "oldstructs.h"
 
 __attribute__((deprecated))
@@ -33,26 +32,28 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 		info_rect[i].right = old.info_rect[i].right;
 	}
 	for(i = 0; i < 4; i++){
-		for(j = 0; j < 7; j++){
-			wandering[i].monst[j] = old.wandering[i].monst[j];
-			special_enc[i].monst[j] = old.special_enc[i].monst[j];
-		}
-		for(j = 0; j < 3; j++){
-			wandering[i].friendly[j] = old.wandering[i].friendly[j];
-			special_enc[i].friendly[j] = old.special_enc[i].friendly[j];
-		}
-		wandering[i].spec_on_meet = old.wandering[i].spec_on_meet;
-		special_enc[i].spec_on_meet = old.special_enc[i].spec_on_meet;
-		wandering[i].spec_on_win = old.wandering[i].spec_on_win;
-		special_enc[i].spec_on_win = old.special_enc[i].spec_on_win;
-		wandering[i].spec_on_flee = old.wandering[i].spec_on_flee;
-		special_enc[i].spec_on_flee = old.special_enc[i].spec_on_flee;
-		wandering[i].cant_flee = old.wandering[i].cant_flee;
-		special_enc[i].cant_flee = old.special_enc[i].cant_flee;
-		wandering[i].end_spec1 = old.wandering[i].end_spec1;
-		special_enc[i].end_spec1 = old.special_enc[i].end_spec1;
-		wandering[i].end_spec2 = old.wandering[i].end_spec2;
-		special_enc[i].end_spec2 = old.special_enc[i].end_spec2;
+//		for(j = 0; j < 7; j++){
+//			wandering[i].monst[j] = old.wandering[i].monst[j];
+//			special_enc[i].monst[j] = old.special_enc[i].monst[j];
+//		}
+//		for(j = 0; j < 3; j++){
+//			wandering[i].friendly[j] = old.wandering[i].friendly[j];
+//			special_enc[i].friendly[j] = old.special_enc[i].friendly[j];
+//		}
+//		wandering[i].spec_on_meet = old.wandering[i].spec_on_meet;
+//		special_enc[i].spec_on_meet = old.special_enc[i].spec_on_meet;
+//		wandering[i].spec_on_win = old.wandering[i].spec_on_win;
+//		special_enc[i].spec_on_win = old.special_enc[i].spec_on_win;
+//		wandering[i].spec_on_flee = old.wandering[i].spec_on_flee;
+//		special_enc[i].spec_on_flee = old.special_enc[i].spec_on_flee;
+//		wandering[i].cant_flee = old.wandering[i].cant_flee;
+//		special_enc[i].cant_flee = old.special_enc[i].cant_flee;
+//		wandering[i].end_spec1 = old.wandering[i].end_spec1;
+//		special_enc[i].end_spec1 = old.special_enc[i].end_spec1;
+//		wandering[i].end_spec2 = old.wandering[i].end_spec2;
+//		special_enc[i].end_spec2 = old.special_enc[i].end_spec2;
+		wandering[i] = old.wandering[i];
+		special_enc[i] = old.special_enc[i];
 		wandering_locs[i].x = old.wandering_locs[i].x;
 		wandering_locs[i].y = old.wandering_locs[i].y;
 	}
@@ -65,20 +66,20 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 
 cOutdoors::cOutdoors(){
 	short i,j;
-	location d_loc = {100,0};
+	location d_loc(100,0);
 	cOutdoors::cWandering d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
 	Rect d_rect = {0,0,0,0};
-	location locs[4] = {{8,8},{32,8},{8,32},{32,32}};
+	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	Str255 temp_str;
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			terrain[i][j] = 0;
+			terrain[i][j] = 5; // formerly 0
 		}
 	
 	for (i = 0; i < 18; i++) {
 		special_locs[i] = d_loc;
-		special_id[i] = 0;
+		special_id[i] = -1;
 	}
 	for (i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
@@ -105,4 +106,23 @@ char(& cOutdoors::out_strs(short i))[256]{
 	if(i == 9) return comment;
 	if(i >= 10 && i < 100) return spec_strs[i - 10];
 	if(i >= 100 && i < 108) return sign_strs[i - 100];
+}
+
+cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_type old){
+	spec_on_meet = old.spec_on_meet;
+	spec_on_win = old.spec_on_win;
+	spec_on_flee = old.spec_on_flee;
+	cant_flee = old.cant_flee;
+	end_spec1 = old.end_spec1;
+	end_spec2 = old.end_spec2;
+}
+
+cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature_type old){
+	exists = old.exists;
+	direction = old.direction;
+	what_monst = old.what_monst;
+	which_sector.x = old.which_sector.x;
+	which_sector.y = old.which_sector.y;
+	m_loc.x = old.m_loc.x;
+	m_loc.y = old.m_loc.y;
 }

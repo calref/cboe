@@ -1,5 +1,6 @@
 
 #include "scen.global.h"
+#include "classes.h"
 #include "scen.dlgutil.h"
 
 DialogPtr make_dialog(int resource_num)

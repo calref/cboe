@@ -6,6 +6,8 @@
  *
  */
 
+#define FCD fancy_choice_dialog
+
 short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,short btns[3]);
 void oops_error(short error);
 void give_error(char *text1, char *text2,short parent_num);

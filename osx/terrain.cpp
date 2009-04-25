@@ -6,7 +6,7 @@
  *
  */
 
-#include "terrain.h"
+#include "classes.h"
 #include "oldstructs.h"
 
 __attribute__((deprecated))

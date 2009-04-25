@@ -2,6 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 #include "boe.newgraph.h"
 #include "boe.graphics.h"
 #include "boe.fileio.h"
@@ -14,12 +15,14 @@
 #include "boe.startup.h"
 #include "boe.party.h"
 #include "soundtool.h"
+#include "fileio.h"
+#include "dlgutil.h"
 
 #include <vector>
 using std::vector;
 
-extern party_record_type party;
-extern pc_record_type adven[6];
+//extern party_record_type party;
+//extern pc_record_type adven[6];
 extern Boolean in_startup_mode,play_sounds,party_in_memory;
 extern long register_flag;
 extern WindowPtr	mainPtr;	
@@ -27,6 +30,8 @@ extern Point ul;
 //extern piles_of_stuff_dumping_type *data_store;
 extern vector<scen_header_type> scen_headers;
 extern Boolean unreg_party_in_scen_not_check;
+extern std::vector<std::string> scen_names;;
+extern cUniverse univ;
 
 //void start_game();
 
@@ -75,10 +80,11 @@ Boolean handle_startup_press(Point the_point)
 					break;
 				
 				switch (scen) {
-				case 0: sprintf(party.scen_name,"valleydy.exs"); break;
+					case 0: sprintf(univ.party.scen_name,"valleydy.exs"); break;
 					// if not reg, rub out
-				case 1: sprintf(party.scen_name,"stealth.exs"); break;
-				case 2: sprintf(party.scen_name,"zakhazi.exs"); break;
+					case 1: sprintf(univ.party.scen_name,"stealth.exs"); break;
+					case 2: sprintf(univ.party.scen_name,"zakhazi.exs"); break;
+					//case 3: sprintf(univ.party.scen_name,"busywork.exs"); break;
 				}
 				put_party_in_scen();
 				break;
@@ -96,7 +102,7 @@ Boolean handle_startup_press(Point the_point)
 					FCD(912,0);
 					break;
 				}
-				sprintf(party.scen_name,"%s",data_store->scen_names[scen].c_str());
+				sprintf(univ.party.scen_name,"%s",scen_names[scen].c_str());
 				put_party_in_scen();
 				break;
 		
@@ -112,18 +118,19 @@ Boolean handle_startup_press(Point the_point)
 
 void startup_load()////
 {
-					load_file();
-					update_pc_graphics();
-					if (in_startup_mode == FALSE) {
-						//end_anim();
-						end_startup();
-						post_load();
-						}
-						else {
-							menu_activate(0);
-							draw_startup(0);
-							}
-
+	FSSpec* file_to_load = nav_get_party();
+	load_party(*file_to_load);
+	update_pc_graphics();
+	if (in_startup_mode == FALSE) {
+		//end_anim();
+		end_startup();
+		post_load();
+	}
+	else {
+		menu_activate(0);
+		draw_startup(0);
+	}
+	
 }
 /*
 void start_game () 

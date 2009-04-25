@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "scen.global.h"
+#include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
 #include "scen.dlgutil.h"
@@ -767,7 +768,7 @@ cMonster return_monster_template(unsigned char store)
 void init_scenario()
 {
 	short i;
-	Rect dummy_rect = {0,0,0,0};
+	rectangle dummy_rect;
 	Str255 temp_str;
 	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
 	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};

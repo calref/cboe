@@ -4,6 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 
 #include "boe.dlgutil.h"
 #include "boe.text.h"
@@ -27,15 +28,16 @@
 #include "graphtool.h"
 #include "mathutil.h"
 #include "dlgutil.h"
+#include "fileio.h"
 #define	NUM_HINTS	30
 
 #include <vector>
 using std::vector;
 
-extern big_tr_type t_d;
+//extern big_tr_type t_d;
 extern short stat_window,overall_mode,dialog_answer;
-extern current_town_type c_town;
-extern party_record_type party;
+//extern current_town_type univ.town;
+//extern party_record_type party;
 extern Boolean in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
 extern WindowPtr mainPtr;
 extern Rect d_rects[80];
@@ -44,17 +46,18 @@ extern short display_mode,stat_screen_mode,current_pc;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern Boolean save_maps,give_delays;
-extern pc_record_type adven[6];
+//extern pc_record_type ADVEN[6];
 extern location center;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern Boolean modeless_exists[18];
 extern DialogPtr modeless_dialogs[18] ;
-extern town_item_list	t_i;
+//extern town_item_list	t_i;
 extern Boolean game_run_before;
 extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
+extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern talking_record_type talking;
+//extern talking_record_type talking;
 
 
 					
@@ -83,7 +86,8 @@ short store_m_num;
 Rect dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
-short store_talk_face_pic,cur_town_talk_loaded = -1;
+short store_talk_face_pic;//,cur_town_talk_loaded = -1;
+std::vector<std::string*> scen_header_strs;
 
 // Shopping vars
 
@@ -186,7 +190,7 @@ void end_shop_mode()
 	if (overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if (overall_mode == MODE_TOWN) {
-		center = c_town.p_loc;
+		center = univ.town.p_loc;
 		update_explored(center);
 		}
 	stat_screen_mode = 0;
@@ -204,7 +208,7 @@ void handle_shop_event(Point p)
 
 	if (PtInRect(p,&talk_help_rect)) {
 		click_shop_rect(talk_help_rect);
-		party.help_received[26] = 0;
+		univ.party.help_received[26] = 0;
 		give_help(26,27,0);
 		return;
 		}
@@ -249,14 +253,14 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 5:
 			base_item = store_alchemy(what_chosen - 500);
-			if (party.alchemy[base_item.item_level] == TRUE)
+			if (univ.party.alchemy[base_item.item_level] == TRUE)
 				ASB("You already know that recipe.");
 				else if (take_gold(cost,FALSE) == FALSE)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy an alchemical recipe.");
-						party.alchemy[base_item.item_level] = TRUE;
+						univ.party.alchemy[base_item.item_level] = TRUE;
 						}
 			break;
 		case 6:
@@ -265,7 +269,7 @@ void handle_sale(short what_chosen,short cost)
 			//	ASB("Not enough gold.");
 			//	else {
 			//		play_sound(-38); ASB("You buy food.");
-			//		party.food += base_item.item_level;
+			//		univ.party.food += base_item.item_level;
 			//		}
 			break;
 		case 7:
@@ -277,26 +281,26 @@ void handle_sale(short what_chosen,short cost)
 					play_sound(68);
 					switch (what_chosen) {
 						case 0:
-							adven[current_pc].cur_health = adven[current_pc].max_health;
+							ADVEN[current_pc].cur_health = ADVEN[current_pc].max_health;
 							break;
 						case 1:
-							adven[current_pc].status[2] = 0;
+							ADVEN[current_pc].status[2] = 0;
 							break;
 						case 2:
-							adven[current_pc].status[7] = 0; break;
+							ADVEN[current_pc].status[7] = 0; break;
 						case 3:
-							adven[current_pc].status[12] = 0; break;
+							ADVEN[current_pc].status[12] = 0; break;
 						case 4: 
 							for (i = 0; i < 24; i++)
-								if ((adven[current_pc].equip[i] == TRUE) && 
-									(adven[current_pc].items[i].is_cursed()))
-										adven[current_pc].items[i].item_properties =
-											adven[current_pc].items[i].item_properties & 239;
+								if ((ADVEN[current_pc].equip[i] == TRUE) && 
+									(ADVEN[current_pc].items[i].is_cursed()))
+										ADVEN[current_pc].items[i].item_properties =
+											ADVEN[current_pc].items[i].item_properties & 239;
 							break;
 						case 5: case 6: case 7:
-							adven[current_pc].main_status = 1; break;
+							ADVEN[current_pc].main_status = 1; break;
 						case 8:
-							adven[current_pc].status[9] = 0; break;
+							ADVEN[current_pc].status[9] = 0; break;
 						}
 					}
 			break;
@@ -304,14 +308,14 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_mage_spells(what_chosen - 800 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				SysBeep(50); ASB("Error 102: Report this!"); break;}
-			if (adven[current_pc].mage_spells[base_item.item_level] == TRUE)
+			if (ADVEN[current_pc].mage_spells[base_item.item_level] == TRUE)
 				ASB("You already have this spell.");
 				else if (take_gold(cost,FALSE) == FALSE)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						adven[current_pc].mage_spells[base_item.item_level] = TRUE;
+						ADVEN[current_pc].mage_spells[base_item.item_level] = TRUE;
 						give_help(41,0,0);
 						}
 			break;
@@ -319,25 +323,25 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_priest_spells(what_chosen - 900 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				SysBeep(50); ASB("Error 101: Report this!"); break;}
-			if (adven[current_pc].priest_spells[base_item.item_level] == TRUE)
+			if (ADVEN[current_pc].priest_spells[base_item.item_level] == TRUE)
 				ASB("You already have this spell.");
 				else if (take_gold(cost,FALSE) == FALSE)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						adven[current_pc].priest_spells[base_item.item_level] = TRUE;
+						ADVEN[current_pc].priest_spells[base_item.item_level] = TRUE;
 						give_help(41,0,0);
 						}
 			break;
 		default:
 			what_magic_shop = (what_chosen / 1000) - 1;
 			what_magic_shop_item = what_chosen % 1000;
-			base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
+			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
-					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
+					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -383,7 +387,7 @@ void handle_info_request(short what_chosen)
 		default:
 			what_magic_shop = (what_chosen / 1000) - 1;
 			what_magic_shop_item = what_chosen % 1000;
-			base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
+			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.item_properties = base_item.item_properties | 1;
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -410,50 +414,50 @@ void set_up_shop_array()
 				}
 			break;		
 		case 3:
-			if (adven[current_pc].cur_health < adven[current_pc].max_health) {
+			if (ADVEN[current_pc].cur_health < ADVEN[current_pc].max_health) {
 				store_shop_items[shop_pos] = 700;
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[2] > 0) {
+			if (ADVEN[current_pc].status[2] > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[7] > 0) {
+			if (ADVEN[current_pc].status[7] > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[12] > 0) {
+			if (ADVEN[current_pc].status[12] > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[9] > 0) {
+			if (ADVEN[current_pc].status[9] > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (adven[current_pc].items[i].is_cursed() == TRUE))
+				if ((ADVEN[current_pc].equip[i] == TRUE) && (ADVEN[current_pc].items[i].is_cursed() == TRUE))
 					cursed_item = TRUE;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
 				store_shop_costs[shop_pos] = heal_costs[4];
 				shop_pos++;
 				}
-			if (adven[current_pc].main_status == 4) {
+			if (ADVEN[current_pc].main_status == 4) {
 				store_shop_items[shop_pos] = 705;
 				store_shop_costs[shop_pos] = heal_costs[5];
 				shop_pos++;
 				}
-			if (adven[current_pc].main_status == 2){
+			if (ADVEN[current_pc].main_status == 2){
 				store_shop_items[shop_pos] = 706;
 				store_shop_costs[shop_pos] = heal_costs[6];
 				shop_pos++;
 				}
-			if  (adven[current_pc].main_status == 3){
+			if  (ADVEN[current_pc].main_status == 3){
 				store_shop_items[shop_pos] = 707;
 				store_shop_costs[shop_pos] = heal_costs[7];
 				shop_pos++;
@@ -468,9 +472,9 @@ void set_up_shop_array()
 			break;
 		case 5: case 6: case 7: case 8: case 9:
 			for (i = 0; i < 10; i++)
-				if (party.magic_store_items[store_shop_type - 5][i].variety != 0) {
+				if (univ.party.magic_store_items[store_shop_type - 5][i].variety != 0) {
 					store_shop_items[shop_pos] = (store_shop_type - 4) * 1000 + i;
-					store_i = party.magic_store_items[store_shop_type - 5][i];
+					store_i = univ.party.magic_store_items[store_shop_type - 5][i];
 					store_shop_costs[shop_pos] = (store_i.charges == 0) ? 
 					  store_i.value : store_i.value * store_i.charges;
 					shop_pos++;
@@ -530,14 +534,17 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NULL, NULL, kNativeEndianPixMap);
 	
 	// first make sure relevant talk strs are loaded in
-	if (personality / 10 != cur_town_talk_loaded)
-		load_town(personality / 10,1,0,NULL);
+	if (personality / 10 != univ.town.cur_talk_loaded){
+		if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town.town->talking;
+		else load_town(personality / 10,*univ.town.cur_talk);
+		univ.town.cur_talk_loaded = personality / 10;
+	}
 
 	// load all possible responses
 	store_responses();
 
 	// Dredge up critter's name
-	sprintf((char *) title_string,"%s:",town->talk_strs[personality % 10]);
+	sprintf((char *) title_string,"%s:",univ.town.cur_talk->talk_strs[personality % 10]);
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
@@ -546,7 +553,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	sprintf((char *) place_string1,"%s",data_store->talk_strs[personality % 10 + 10]);
+	sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[personality % 10 + 10]);
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
@@ -571,7 +578,7 @@ void end_talk_mode()
 	if (overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if (overall_mode == MODE_TOWN) {
-		center = c_town.p_loc;
+		center = univ.town.p_loc;
 		update_explored(center);
 		}
 	stat_screen_mode = 0;
@@ -594,7 +601,7 @@ void handle_talk_event(Point p)
 	p.v -= 5;
 
 	if (PtInRect(p,&talk_help_rect)) {
-		party.help_received[5] = 0;
+		univ.party.help_received[5] = 0;
 		give_help(5,6,0);
 		return;
 		}
@@ -617,21 +624,21 @@ void handle_talk_event(Point p)
 						return;
 						}
 					for (j = 0; j < 120; j++)
-						if ((party.talk_save[j].personality == store_personality) && 
-						  (party.talk_save[j].str1 == strnum1) &&
-						  (party.talk_save[j].str2 == strnum2)) {
+						if ((univ.party.talk_save[j].personality == store_personality) && 
+						  (univ.party.talk_save[j].str1 == strnum1) &&
+						  (univ.party.talk_save[j].str2 == strnum2)) {
 						  	ASB("This is already saved.");
 						  	print_buf();
 						  	return;
 						  	}
 					for (j = 0; j < 120; j++)
-						if (party.talk_save[j].personality <= 0) {
+						if (univ.party.talk_save[j].personality <= 0) {
 							give_help(57,0,0);
 							play_sound(0);
-							party.talk_save[j].personality = store_personality;
-							party.talk_save[j].town_num = (unsigned char) c_town.town_num;
-							party.talk_save[j].str1 = strnum1;
-							party.talk_save[j].str2 = strnum2;
+							univ.party.talk_save[j].personality = store_personality;
+							univ.party.talk_save[j].town_num = (unsigned char) univ.town.num;
+							univ.party.talk_save[j].str1 = strnum1;
+							univ.party.talk_save[j].str2 = strnum2;
 							ASB("Noted in journal.");
 							j = 200;
 							}		
@@ -689,7 +696,7 @@ void handle_talk_event(Point p)
 			case 1: case 2: case 3:
 				get_str(place_string1,120 + ((store_personality - 1) / 10),
 				 ((store_personality - 1) % 10) * 3 + 10 + force_special);
-				sprintf((char *) place_string1,"%s",town->talk_strs[store_personality % 10 + 10 * force_special]);
+				sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[store_personality % 10 + 10 * force_special]);
 					
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
@@ -742,7 +749,7 @@ void handle_talk_event(Point p)
 		strcpy((char *) one_back1,(char *) old_str1);
 		strcpy((char *) one_back2,(char *) old_str2);
 		sprintf((char *) old_str2,"");
-		sprintf((char *) old_str1,"%s",town->talk_strs[store_personality % 10 + 160]);
+		sprintf((char *) old_str1,"%s",univ.town.cur_talk->talk_strs[store_personality % 10 + 160]);
 		if (strlen((char *) old_str1) < 2)
 			sprintf((char *) old_str1,"You get no response.");
 		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
@@ -750,14 +757,14 @@ void handle_talk_event(Point p)
 		return;	
 		}
 	
-	ttype = talking.talk_nodes[which_talk_entry].type;
-	a = talking.talk_nodes[which_talk_entry].extras[0];
-	b = talking.talk_nodes[which_talk_entry].extras[1];
-	c = talking.talk_nodes[which_talk_entry].extras[2];
-	d = talking.talk_nodes[which_talk_entry].extras[3];
+	ttype = univ.town.cur_talk->talk_nodes[which_talk_entry].type;
+	a = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[0];
+	b = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[1];
+	c = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[2];
+	d = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[3];
 
-	sprintf((char *) place_string1,"%s",town->talk_strs[40 + which_talk_entry * 2]);
-	sprintf((char *) place_string2,"%s",town->talk_strs[40 + which_talk_entry * 2 + 1]);
+	sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2]);
+	sprintf((char *) place_string2,"%s",univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2 + 1]);
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -777,20 +784,20 @@ void handle_talk_event(Point p)
 			PSD[a][b] = 1;
 			break;
 		case 3:
-			if (party.gold < a) {
+			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
 				else {
 					talk_end_forced = TRUE;
-					party.gold -= a;
+					univ.party.gold -= a;
 					put_pc_screen();
 					heal_party(30 * b);
 					restore_sp_party(25 * b);
-					party.age += 700;
-					c_town.p_loc.x = c;
-					c_town.p_loc.y = d;
-					center = c_town.p_loc;
+					univ.party.age += 700;
+					univ.town.p_loc.x = c;
+					univ.town.p_loc.y = d;
+					center = univ.town.p_loc;
 					}
 			strnum2 = 0;
 			sprintf((char *) place_string2,"");					
@@ -812,7 +819,7 @@ void handle_talk_event(Point p)
 			strnum2 = 0;
 			break;
 		case 6:
-			if (c_town.town_num != a) {
+			if (univ.town.num != a) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
@@ -840,8 +847,8 @@ void handle_talk_event(Point p)
 			strnum1 = -1;
 			return;
 		case 12: //healer
-			start_shop_mode(3,c_town.monst.dudes[store_m_num].monst_start.extra1,
-				c_town.monst.dudes[store_m_num].monst_start.extra2,a,(char *)place_string1);
+			start_shop_mode(3,univ.town.monst.dudes[store_m_num].monst_start.extra1,
+				univ.town.monst.dudes[store_m_num].monst_start.extra2,a,(char *)place_string1);
 			strnum1 = -1;
 			return;
 			break;
@@ -871,12 +878,12 @@ void handle_talk_event(Point p)
 			give_help(ttype - 16 + 44,0,0);
 			break;
 		case 18:
-			if (party.gold < a) {
+			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
 				else {
-					party.gold -= a;
+					univ.party.gold -= a;
 					put_pc_screen();
 
 					}
@@ -888,12 +895,12 @@ void handle_talk_event(Point p)
 				sprintf((char *) place_string1, "You've already learned that.");  
 				strnum1 = -1;
 				}
-			else if (party.gold < a) {
+			else if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
 				else {
-					party.gold -= a;
+					univ.party.gold -= a;
 					put_pc_screen();
 					if (sd_legit(b,c) == TRUE)
 						PSD[b][c] = d;
@@ -903,7 +910,7 @@ void handle_talk_event(Point p)
 			sprintf((char *) place_string2,"");					
 			break;
 		case 20:
-			if (party.gold < a) {
+			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy((char *) place_string1,(char *) place_string2);
@@ -912,10 +919,10 @@ void handle_talk_event(Point p)
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (party.boats[i].property == TRUE)) {
-							party.gold -= a;
+						if ((i >= 0) && (i < 30) && (univ.party.boats[i].property == TRUE)) {
+							univ.party.gold -= a;
 							put_pc_screen();
-							party.boats[i].property = FALSE;
+							univ.party.boats[i].property = FALSE;
 							sprintf((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
@@ -929,7 +936,7 @@ void handle_talk_event(Point p)
 			strnum2 = -1;
 			break;
 		case 21:
-			if (party.gold < a) {
+			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy((char *) place_string1,(char *) place_string2);
@@ -938,10 +945,10 @@ void handle_talk_event(Point p)
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (party.horses[i].property == TRUE)) {
-							party.gold -= a;
+						if ((i >= 0) && (i < 30) && (univ.party.horses[i].property == TRUE)) {
+							univ.party.gold -= a;
 							put_pc_screen();
-							party.horses[i].property = FALSE;
+							univ.party.horses[i].property = FALSE;
 							sprintf((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
@@ -955,18 +962,18 @@ void handle_talk_event(Point p)
 			strnum2 = -1;
 			break;
 		case 22:
-			if (party.spec_items[a] > 0) {
+			if (univ.party.spec_items[a] > 0) {
 				sprintf((char *) place_string1, "You already have it.");  
 				strnum1 = -1;
 				}
-			else if (party.gold < b) {
+			else if (univ.party.gold < b) {
 				strcpy((char *) place_string1,(char *) place_string2);
 				strnum1 = strnum2;
 				}
 				else {
-					party.gold -= b;
+					univ.party.gold -= b;
 					put_pc_screen();
-					party.spec_items[a] = 1;
+					univ.party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
 			sprintf((char *) place_string2,"");					
@@ -977,16 +984,16 @@ void handle_talk_event(Point p)
 			strnum1 = -1;
 			return;
 		case 24:		
-			if (party.can_find_town[b] > 0) {
+			if (univ.party.can_find_town[b] > 0) {
 				}
-				else if (party.gold < a) {
+				else if (univ.party.gold < a) {
 					strnum1 = strnum2;
 					strcpy((char *) place_string1,(char *) place_string2);
 					}
 					else {
-						party.gold -= a;
+						univ.party.gold -= a;
 						put_pc_screen();
-						party.can_find_town[b] = 1;
+						univ.party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
 			sprintf((char *) place_string2,"");					
@@ -995,8 +1002,8 @@ void handle_talk_event(Point p)
 			talk_end_forced = TRUE;
 			break;	
 		case 26:
-			c_town.monst.dudes[store_m_num].attitude = 1;
-			c_town.monst.dudes[store_m_num].mobile = 1;
+			univ.town.monst.dudes[store_m_num].attitude = 1;
+			univ.town.monst.dudes[store_m_num].mobile = 1;
 			talk_end_forced = TRUE;
 			break;	
 		case 27:
@@ -1004,14 +1011,14 @@ void handle_talk_event(Point p)
 			talk_end_forced = TRUE;
 			break;	
 		case 28:
-			c_town.monst.dudes[store_m_num].active = 0;
+			univ.town.monst.dudes[store_m_num].active = 0;
 	// Special killing effects
-	if (sd_legit(c_town.monst.dudes[store_m_num].monst_start.spec1,c_town.monst.dudes[store_m_num].monst_start.spec2) == TRUE)
-		party.stuff_done[c_town.monst.dudes[store_m_num].monst_start.spec1][c_town.monst.dudes[store_m_num].monst_start.spec2] = 1;
+	if (sd_legit(univ.town.monst.dudes[store_m_num].monst_start.spec1,univ.town.monst.dudes[store_m_num].monst_start.spec2) == TRUE)
+		PSD[univ.town.monst.dudes[store_m_num].monst_start.spec1][univ.town.monst.dudes[store_m_num].monst_start.spec2] = 1;
 			talk_end_forced = TRUE;
 			break;	
 		case 29: // town special
-			 run_special(7,2,a,c_town.p_loc,&s1,&s2,&s3);
+			 run_special(7,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
@@ -1028,7 +1035,7 @@ void handle_talk_event(Point p)
 			put_item_screen(stat_window,0);
 			 break;	
 		case 30: // scen special
-			 run_special(7,0,a,c_town.p_loc,&s1,&s2,&s3);
+			 run_special(7,0,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
@@ -1128,7 +1135,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	Str255 sign_text;
 	location view_loc;
 
-	view_loc = (is_out()) ? party.p_loc : c_town.p_loc;
+	view_loc = (is_out()) ? univ.party.p_loc : univ.town.p_loc;
 	make_cursor_sword();
 	
 	cd_create_dialog(1014,mainPtr);
@@ -1140,11 +1147,10 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	
 	if (town_num >= 200) {
 		town_num -= 200;
-		load_outdoors(town_num % scenario.out_width, town_num / scenario.out_width,party.i_w_c.x,party.i_w_c.y,
-			1,which_sign + 100,(char *) sign_text);
+		load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
 		}
 		else {
-			sprintf((char *) sign_text,"%s",town->town_strs(120 + which_sign));
+			sprintf((char *) sign_text,"%s",univ.town.town->town_strs(120 + which_sign));
 			}
 	csit(1014,2,(char *) sign_text);
 	
@@ -1519,17 +1525,17 @@ void prefs_event_filter (short item_hit)
 	if (done_yet== TRUE) {
 		if (did_cancel == FALSE) {
 			display_mode = cur_display_mode;
-			party.stuff_done[SFD_NO_MAPS] = cd_get_led(1099,18);
-			party.stuff_done[SDF_NO_SOUNDS] = cd_get_led(1099,20);
-			play_sounds = 1 - party.stuff_done[SDF_NO_SOUNDS];
-			party.stuff_done[SDF_NO_FRILLS] = cd_get_led(1099,22);
-			party.stuff_done[SDF_ROOM_DESCS_AGAIN] = cd_get_led(1099,24);
-			party.stuff_done[SDF_NO_INSTANT_HELP] = cd_get_led(1099,27);
-			party.stuff_done[SDF_EASY_MODE] = cd_get_led(1099,38);
-			party.stuff_done[SDF_LESS_WANDER_ENC] = cd_get_led(1099,40);
-			party.stuff_done[SDF_NO_TER_ANIM] = cd_get_led(1099,43);
-			party.stuff_done[SDF_NO_SHORE_FRILLS] = cd_get_led(1099,45);
-			//party.stuff_done[SDF_SKIP_STARTUP] = cd_get_led(1099,46);
+			PSD[SFD_NO_MAPS] = cd_get_led(1099,18);
+			PSD[SDF_NO_SOUNDS] = cd_get_led(1099,20);
+			play_sounds = 1 - PSD[SDF_NO_SOUNDS];
+			PSD[SDF_NO_FRILLS] = cd_get_led(1099,22);
+			PSD[SDF_ROOM_DESCS_AGAIN] = cd_get_led(1099,24);
+			PSD[SDF_NO_INSTANT_HELP] = cd_get_led(1099,27);
+			PSD[SDF_EASY_MODE] = cd_get_led(1099,38);
+			PSD[SDF_LESS_WANDER_ENC] = cd_get_led(1099,40);
+			PSD[SDF_NO_TER_ANIM] = cd_get_led(1099,43);
+			PSD[SDF_NO_SHORE_FRILLS] = cd_get_led(1099,45);
+			//PSD[SDF_SKIP_STARTUP] = cd_get_led(1099,46);
 			if (cd_get_led(1099,32) == 1)
 				PSD[SDF_GAME_SPEED] = 0;
 			else if (cd_get_led(1099,34) == 1)
@@ -1540,7 +1546,7 @@ void prefs_event_filter (short item_hit)
 				PSD[SDF_GAME_SPEED] = 3;
 			if (cd_get_led(1099,29) == 1)
 				for (i = 0; i < 120; i++)
-					party.help_received[i] = 0;
+					univ.party.help_received[i] = 0;
 			/*if (display_mode < 5)
 				max_window(mainPtr);
 				else {
@@ -1550,9 +1556,9 @@ void prefs_event_filter (short item_hit)
 					563 + 10,425 + 40,TRUE);
 					}*/
 			}
-		//play_sounds = 1 - party.stuff_done[SDF_NO_SOUNDS];
-		save_maps = 1 - party.stuff_done[SFD_NO_MAPS];
-		give_delays = party.stuff_done[SDF_NO_FRILLS];
+		//play_sounds = 1 - PSD[SDF_NO_SOUNDS];
+		save_maps = 1 - PSD[SFD_NO_MAPS];
+		give_delays = PSD[SDF_NO_FRILLS];
 		save_prefs();
 		}
 }
@@ -1569,21 +1575,21 @@ void pick_preferences()
 
 	cd_set_led(1099,4 + cur_display_mode,1);
 
-	cd_set_led(1099,18,(party.stuff_done[SFD_NO_MAPS] != 0) ? 1 : 0);
+	cd_set_led(1099,18,(PSD[SFD_NO_MAPS] != 0) ? 1 : 0);
 	cd_set_led(1099,20,(play_sounds == FALSE) ? 1 : 0);
-	cd_set_led(1099,22,(party.stuff_done[SDF_NO_FRILLS] != 0) ? 1 : 0);
-	cd_set_led(1099,24,(party.stuff_done[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
-	cd_set_led(1099,27,(party.stuff_done[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
-	cd_set_led(1099,38,(party.stuff_done[SDF_EASY_MODE] != 0) ? 1 : 0);
-	cd_set_led(1099,40,(party.stuff_done[SDF_LESS_WANDER_ENC] != 0) ? 1 : 0);
-	cd_set_led(1099,43,(party.stuff_done[SDF_NO_TER_ANIM] != 0) ? 1 : 0);
-	cd_set_led(1099,45,(party.stuff_done[SDF_NO_SHORE_FRILLS] != 0) ? 1 : 0);
-	//cd_set_led(1099,46,(party.stuff_done[SDF_SKIP_STARTUP] != 0) ? 1 : 0);
+	cd_set_led(1099,22,(PSD[SDF_NO_FRILLS] != 0) ? 1 : 0);
+	cd_set_led(1099,24,(PSD[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
+	cd_set_led(1099,27,(PSD[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
+	cd_set_led(1099,38,(PSD[SDF_EASY_MODE] != 0) ? 1 : 0);
+	cd_set_led(1099,40,(PSD[SDF_LESS_WANDER_ENC] != 0) ? 1 : 0);
+	cd_set_led(1099,43,(PSD[SDF_NO_TER_ANIM] != 0) ? 1 : 0);
+	cd_set_led(1099,45,(PSD[SDF_NO_SHORE_FRILLS] != 0) ? 1 : 0);
+	//cd_set_led(1099,46,(PSD[SDF_SKIP_STARTUP] != 0) ? 1 : 0);
 	if (PSD[SDF_GAME_SPEED] == 3) 
 		cd_set_led(1099,47,1);
 	else cd_set_led(1099,32 + PSD[SDF_GAME_SPEED] * 2,1);
 
-	if (party.help_received[55] == 0) {
+	if (univ.party.help_received[55] == 0) {
 		cd_initial_draw(1099);
 		give_help(55,0,1099);
 	}
@@ -1600,14 +1606,14 @@ void put_party_stats()
 
 
 	for (i = 0; i < 6; i++) {
-		if (adven[i].main_status > 0) {
-			cd_set_item_text(989,5 + 5 * i,adven[i].name);
+		if (ADVEN[i].main_status > 0) {
+			cd_set_item_text(989,5 + 5 * i,ADVEN[i].name);
 			cd_activate_item(989,7 + 5 * i,1);
 			cd_activate_item(989,8 + 5 * i,1);
 			cd_set_flag(989,6 + 5 * i,96);
 			cd_activate_item(989,35 + i,1);
 			cd_activate_item(989,42 + i,1);
-			csp(989,42 + i,adven[i].which_graphic,PICT_PC);
+			csp(989,42 + i,ADVEN[i].which_graphic,PICT_PC);
 		}
 		else {
 			cd_set_item_text(989,5 + 5 * i,"Empty.");
@@ -1632,13 +1638,13 @@ void edit_party_event_filter (short item_hit)
 				break;
 
 			case 41:
-				party.help_received[22] = 0;
+				univ.party.help_received[22] = 0;
 				give_help(222,23,989);
 				return;
 
 			case 5: case 10: case 15: case 20: case 25: case 30:
 				which_pc = (item_hit - 5) / 5;
-				if (adven[which_pc].main_status == 0) {
+				if (ADVEN[which_pc].main_status == 0) {
 					//give_help(56,0,989);
 					//create_pc(which_pc,989);
 					//cd_initial_draw(989); // extra redraw, just in case
@@ -1648,7 +1654,7 @@ void edit_party_event_filter (short item_hit)
 				break;
 			case 7: case 12: case 17: case 22: case 27: case 32:
 				which_pc = (item_hit - 7) / 5;
-				pick_race_abil(&adven[which_pc],0,989);
+				pick_race_abil(&ADVEN[which_pc],0,989);
 				put_party_stats();
 				break;
 			case 8: case 13: case 18: case 23: case 28: case 33:
@@ -1659,17 +1665,17 @@ void edit_party_event_filter (short item_hit)
 			case 35: case 36: case 37: case 38: case 39: case 40:
 				which_pc = item_hit - 35;
 
-				if (adven[which_pc].main_status <= 0)
+				if (ADVEN[which_pc].main_status <= 0)
 					break;
-				if (adven[which_pc].main_status != 0)
+				if (ADVEN[which_pc].main_status != 0)
 					pick_pc_graphic(which_pc,1,989);
 				put_party_stats();
 				break;
 			case 6: case 11: case 16: case 21: case 26: case 31:
 				which_pc = (item_hit - 6) / 5;
-				if (adven[which_pc].main_status != 0) {
+				if (ADVEN[which_pc].main_status != 0) {
 					if (FCD(1053,989) == 2)
-						adven[which_pc].main_status = 0;
+						ADVEN[which_pc].main_status = 0;
 					put_party_stats();
 					}
 					else {
@@ -1700,7 +1706,7 @@ void edit_party(short can_create,short can_cancel)
 	cd_create_dialog(989,mainPtr);
 
 	put_party_stats();
-	if (party.help_received[22] == 0) {
+	if (univ.party.help_received[22] == 0) {
 		cd_initial_draw(989);
 		give_help(22,23,989);
 	}
@@ -1714,7 +1720,7 @@ void edit_party(short can_create,short can_cancel)
 		pcs_gworld = NULL;
 		}
 
-	if (adven[current_pc].main_status != 1)
+	if (ADVEN[current_pc].main_status != 1)
 		current_pc = first_active_pc();
 
 
@@ -1780,14 +1786,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,scen_headers[store_scen_page_on * 3 + i].intro_pic,PICT_SCEN);
 			sprintf((char *) place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][0].c_str(),
+				scen_header_strs[store_scen_page_on * 3 + i][0].c_str(),
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][1].c_str(),
-				data_store->scen_header_strs[store_scen_page_on * 3 + i][2].c_str()); 
+				scen_header_strs[store_scen_page_on * 3 + i][1].c_str(),
+				scen_header_strs[store_scen_page_on * 3 + i][2].c_str()); 
 			csit(947,7 + i * 3,(char *) place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}

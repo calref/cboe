@@ -6,7 +6,7 @@
  *
  */
 
-#include "special.h"
+#include "classes.h"
 #include "oldstructs.h"
 
 cSpecial::cSpecial(){

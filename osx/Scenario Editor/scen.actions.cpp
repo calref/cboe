@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "scen.global.h"
+#include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
 #include "scen.dlgutil.h"
@@ -24,8 +25,8 @@ Rect border_rect[4];
 short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
-location spot_hit,last_spot_hit = {-1,-1};
-cTown::cCreature null_monst = {0,0,{0,0},0,0,0,0,0,0};
+location spot_hit,last_spot_hit(-1,-1);
+cTown::cCreature null_monst = {0,0,loc(),0,0,0,0,0,0};
 //creature_start_type store_monst = {0,0,{0,0},0,0,0,0,0,0};
 Boolean sign_error_received = FALSE;
 short copied_spec = -1;
@@ -36,7 +37,7 @@ Boolean good_palette_buttons[6][8] = {{1,1,1,1,1,1,1,1},
 									{1,1,1,0,1,1,1,1},
 									{1,1,1,1,1,1,0,1},
 									{1,1,1,1,1,1,1,1}};
-cTown::cItem store_place_item = {{0,0},-1,0,0,0,0,0};
+cTown::cItem store_place_item = {loc(),-1,0,0,0,0,0};
 
 short flood_count = 0;
 
@@ -67,12 +68,12 @@ short right_button_status[NRS];
 Rect right_buttons[NRSONPAGE];
 Rect palette_buttons[8][6];
 short current_rs_top = 0;
-cTown::cCreature last_placed_monst = {0,0,{0,0},0,0,0,0,0,0,0};
+cTown::cCreature last_placed_monst = {0,0,loc(),0,0,0,0,0,0,0};
 
 cSpecial null_spec_node;// = {0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 cSpeech::cNode null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
 
-Rect working_rect;
+rectangle working_rect;
 location last_space_hit;
 Boolean erasing_mode;
 unsigned char current_ground = 0;
@@ -86,10 +87,10 @@ short can_see(location p1,location p2,short mode);
 void init_current_terrain()
 {	
 	short i,j;
-	location d_loc = {0,0};
+	location d_loc(0,0);
 	Rect d_rect = {0,0,0,0};
 	cTown::cWandering d_wan = {0,0,0,0};
-	cTown::cCreature dummy_creature = {0,0,{0,0},0,0,0,0,0,0,0};
+	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
 	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
 		
 		
@@ -150,19 +151,11 @@ Boolean handle_action(Point the_point,EventRecord event)
 							break;
 	
 						case 4: // edit
-							NavReplyRecord s_reply;
-							NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
-							if (s_reply.validRecord == FALSE)
-								break;
-							AEKeyword keyword;
-							DescType descType;
-							Size actualSize;
-							FSSpec file_to_load;
-							AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
-							if (load_scenario(file_to_load)) {
-								if(load_town(scenario.last_town_edited))
+							FSSpec* file_to_load = nav_get_scenario();
+							if (load_scenario(*file_to_load)) {
+								if(load_town(scenario.last_town_edited,town))
 									cur_town = scenario.last_town_edited;
-								if(load_outdoors(scenario.last_out_edited,0)){
+								if(load_outdoors(scenario.last_out_edited,current_terrain)){
 									cur_out = scenario.last_out_edited;
 									augment_terrain(cur_out);
 								}
@@ -219,7 +212,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 							if (x >= 0) {
 								spot_hit.x = x / 100;
 								spot_hit.y = x % 100;
-								if(load_outdoors(spot_hit,0)){
+								if(load_outdoors(spot_hit,current_terrain)){
 									augment_terrain(spot_hit);
 									set_up_main_screen();
 								}
@@ -236,7 +229,7 @@ Boolean handle_action(Point the_point,EventRecord event)
 									break;							
 								}
 							x = pick_town_num(855,cur_town);
-							if (x >= 0 && load_town(x)){
+							if (x >= 0 && load_town(x,town)){
 								cur_town = x;
 								set_up_main_screen();
 							}
@@ -1695,7 +1688,7 @@ for (i = 0; i < ((editing_town == TRUE) ? town->max_dim() : 48); i++)
 		}
 }
 
-void change_rect_terrain(Rect r,unsigned char terrain_type,short probability,Boolean hollow)
+void change_rect_terrain(rectangle r,unsigned char terrain_type,short probability,Boolean hollow)
 // prob is 0 - 20, 0 no, 20 always
 {
 location l;
@@ -3438,7 +3431,7 @@ void start_dialogue_editing(short restoring)
 		}
 	for (i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
-			(char *) town->talk_strs[i]);
+			(char *) town->talking.talk_strs[i]);
 		set_rb(i,13000 + i,(char *) str,0);
 		}
 	for (i = 0; i < 60; i++) {

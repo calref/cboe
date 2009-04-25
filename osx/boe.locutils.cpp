@@ -3,6 +3,7 @@
 
 #include "mathutil.h"
 #include "boe.global.h"
+#include "classes.h"
 #include "boe.locutils.h"
 #include "boe.text.h"
 #include "boe.monster.h"
@@ -18,18 +19,19 @@ extern short town_size[3];
 location obs_sec;
 location which_party_sec;
 
-extern party_record_type party;
-extern current_town_type c_town;
+//extern party_record_type party;
+//extern current_town_type univ.town;
 extern short overall_mode,which_combat_type,current_pc,town_type;
-extern big_tr_type t_d;
-extern outdoor_record_type outdoors[2][2];
+//extern big_tr_type t_d;
+//extern cOutdoors outdoors[2][2];
 extern unsigned char combat_terrain[64][64];
-extern unsigned char out[96][96], out_e[96][96];
+//extern unsigned char out[96][96], out_e[96][96];
 extern location pc_pos[6],center;
-extern pc_record_type adven[6];
+//extern pc_record_type ADVEN[6];
 extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern cScenario scenario;
+extern cUniverse univ;
 
 location light_locs[40];
 short num_lights = 0;
@@ -95,9 +97,9 @@ location global_to_local(location global)
 	location local;
 	
 	local = global;
-	if (party.i_w_c.x == 1)
+	if (univ.party.i_w_c.x == 1)
 		local.x = local.x - 48; 
-	if (party.i_w_c.y == 1)
+	if (univ.party.i_w_c.y == 1)
 		local.y = local.y - 48;
 	return local; 
 }
@@ -106,9 +108,9 @@ location local_to_global(location local)
 	location global;
 	
 	global = local;
-	if (party.i_w_c.x == 1)
+	if (univ.party.i_w_c.x == 1)
 		global.x = global.x + 48; 
-	if (party.i_w_c.y == 1)
+	if (univ.party.i_w_c.y == 1)
 		global.y = global.y + 48;
 	return global; 
 }
@@ -121,8 +123,8 @@ Boolean loc_off_world(location p1)
 
 Boolean loc_off_act_area(location p1)
 {
-	if ((p1.x > c_town.town.in_town_rect.left) && (p1.x < c_town.town.in_town_rect.right) &&
-	 (p1.y > c_town.town.in_town_rect.top) && (p1.y < c_town.town.in_town_rect.bottom))
+	if ((p1.x > univ.town.town->in_town_rect.left) && (p1.x < univ.town.town->in_town_rect.right) &&
+	 (p1.y > univ.town.town->in_town_rect.top) && (p1.y < univ.town.town->in_town_rect.bottom))
 	 	return FALSE;
 	return TRUE;
 }
@@ -131,11 +133,11 @@ location get_cur_loc()
 {
 	switch (overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
-			return party.p_loc;
+			return univ.party.p_loc;
 			break;
 			
 		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE: case MODE_LOOK_TOWN:
-			return c_town.p_loc;
+			return univ.town.p_loc;
 			break;
 			
 		default:
@@ -302,9 +304,9 @@ unsigned char coord_to_ter(short x,short y)
 	char what_terrain;
 
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
-		what_terrain = out[x][y];
+		what_terrain = univ.out.out[x][y];
 	else if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT))|| (overall_mode == MODE_LOOK_TOWN))
-		what_terrain = t_d.terrain[x][y];
+		what_terrain = univ.town.town->terrain(x,y);
 	else {
 		what_terrain = combat_terrain[x][y];
 		}
@@ -333,17 +335,17 @@ void update_explored(location dest)
 	shortdest.x = (short) dest.x;
 	shortdest.y = (short) dest.y;
 	
-	which_party_sec.x = party.outdoor_corner.x + party.i_w_c.x;
-	which_party_sec.y = party.outdoor_corner.y + party.i_w_c.y;
+	which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+	which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	
 	if (overall_mode == MODE_OUTDOORS) {
-		out_e[dest.x][dest.y] = 2;
+		univ.out.out_e[dest.x][dest.y] = 2;
 		for (look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 
-			if (out_e[look.x][look.y] == 0)
+			if (univ.out.out_e[look.x][look.y] == 0)
 					if (short_can_see(shortdest, look) < 5)
-						out_e[look.x][look.y] = 1;
+						univ.out.out_e[look.x][look.y] = 1;
 			}	
 			
 
@@ -367,20 +369,20 @@ Boolean is_blocked(location to_check)
 	unsigned char ter;
 
 	if (is_out()) {
-		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
+		if (impassable(univ.out.out[to_check.x][to_check.y]) == TRUE) {
 			return TRUE;
 			}
-		if (to_check == party.p_loc)
+		if (to_check == univ.party.p_loc)
 			return TRUE;
 		for (i = 0; i < 20; i++)
-			if ((party.out_c[i].exists) == TRUE)  
-				if (party.out_c[i].m_loc == to_check)
+			if ((univ.party.out_c[i].exists) == TRUE)  
+				if (univ.party.out_c[i].m_loc == to_check)
 					return TRUE;
 		return FALSE;
 		}
 		
 	if ((is_town()) || (is_combat())) {
-		ter = (is_town()) ? t_d.terrain[to_check.x][to_check.y] : combat_terrain[to_check.x][to_check.y];
+		ter = (is_town()) ? univ.town.town->terrain(to_check.x,to_check.y) : combat_terrain[to_check.x][to_check.y];
 		gr = scenario.ter_types[ter].picture;
 	
 		////
@@ -397,11 +399,11 @@ Boolean is_blocked(location to_check)
 			
 		// Party there?
 		if (is_town())
-			if (to_check == c_town.p_loc)
+			if (to_check == univ.town.p_loc)
 				return TRUE;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (to_check == pc_pos[i]))
+				if ((ADVEN[i].main_status == 1) && (to_check == pc_pos[i]))
 					return TRUE;
 		
 		// Monster there?
@@ -420,12 +422,12 @@ Boolean is_blocked(location to_check)
 Boolean monst_on_space(location loc,short m_num)
 {
 	
-	if (c_town.monst.dudes[m_num].active == 0)
+	if (univ.town.monst.dudes[m_num].active == 0)
 		return FALSE;
-	if ((loc.x - c_town.monst.dudes[m_num].m_loc.x >= 0) && 
-	(loc.x - c_town.monst.dudes[m_num].m_loc.x <= c_town.monst.dudes[m_num].m_d.x_width - 1) &&
-	(loc.y - c_town.monst.dudes[m_num].m_loc.y >= 0) && 
-	(loc.y - c_town.monst.dudes[m_num].m_loc.y <= c_town.monst.dudes[m_num].m_d.y_width - 1))
+	if ((loc.x - univ.town.monst.dudes[m_num].m_loc.x >= 0) && 
+	(loc.x - univ.town.monst.dudes[m_num].m_loc.x <= univ.town.monst.dudes[m_num].m_d.x_width - 1) &&
+	(loc.y - univ.town.monst.dudes[m_num].m_loc.y >= 0) && 
+	(loc.y - univ.town.monst.dudes[m_num].m_loc.y <= univ.town.monst.dudes[m_num].m_d.y_width - 1))
 		return TRUE;
 	return FALSE;	
 	
@@ -435,7 +437,7 @@ short monst_there(location where) // returns 90 if no
 	short i;
 
 	for (i = 0; i < T_M; i++)
-		if ((c_town.monst.dudes[i].active != 0) && (monst_on_space(where,i) == TRUE))
+		if ((univ.town.monst.dudes[i].active != 0) && (monst_on_space(where,i) == TRUE))
 			return i;
 	return 90;	
 }
@@ -445,18 +447,18 @@ Boolean monst_can_be_there(location loc,short m_num)
 	location destination;
 	
 	// First clear monst away so it doesn't block itself
-	c_town.monst.dudes[m_num].m_loc.x += 100;
+	univ.town.monst.dudes[m_num].m_loc.x += 100;
 	
-	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
 			if ((is_blocked(destination) == TRUE)
 				|| (loc_off_act_area(destination) == TRUE)) {
-					c_town.monst.dudes[m_num].m_loc.x -= 100;
+					univ.town.monst.dudes[m_num].m_loc.x -= 100;
 					return FALSE;
 					}	
 			}
-	c_town.monst.dudes[m_num].m_loc.x -= 100;			
+	univ.town.monst.dudes[m_num].m_loc.x -= 100;			
 	return TRUE;
 }
 
@@ -465,10 +467,10 @@ Boolean monst_adjacent(location loc,short m_num)
 	short i,j;
 	location destination;
 	
-	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
-			destination.x = c_town.monst.dudes[m_num].m_loc.x + i; 
-			destination.y = c_town.monst.dudes[m_num].m_loc.y + j;
+	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+			destination.x = univ.town.monst.dudes[m_num].m_loc.x + i; 
+			destination.y = univ.town.monst.dudes[m_num].m_loc.y + j;
 			if (adjacent(destination,loc) == TRUE)
 				return TRUE;
 			}
@@ -480,10 +482,10 @@ Boolean monst_can_see(short m_num,location l)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
-			destination.x = c_town.monst.dudes[m_num].m_loc.x + i; 
-			destination.y = c_town.monst.dudes[m_num].m_loc.y + j;
+	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+			destination.x = univ.town.monst.dudes[m_num].m_loc.x + i; 
+			destination.y = univ.town.monst.dudes[m_num].m_loc.y + j;
 			if (can_see(destination,l,0) < 5)
 				return TRUE;
 			}
@@ -495,10 +497,10 @@ Boolean party_can_see_monst(short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
-			destination.x = c_town.monst.dudes[m_num].m_loc.x + i; 
-			destination.y = c_town.monst.dudes[m_num].m_loc.y + j;
+	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+			destination.x = univ.town.monst.dudes[m_num].m_loc.x + i; 
+			destination.y = univ.town.monst.dudes[m_num].m_loc.y + j;
 			if (party_can_see(destination) < 6)
 				return TRUE;
 			}
@@ -510,10 +512,10 @@ Boolean can_see_monst(location l,short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < c_town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < c_town.monst.dudes[m_num].m_d.y_width; j++) {
-			destination.x = c_town.monst.dudes[m_num].m_loc.x + i; 
-			destination.y = c_town.monst.dudes[m_num].m_loc.y + j;
+	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+			destination.x = univ.town.monst.dudes[m_num].m_loc.x + i; 
+			destination.y = univ.town.monst.dudes[m_num].m_loc.y + j;
 			if (can_see(l,destination,0) < 5)
 				return TRUE;
 			}
@@ -525,12 +527,12 @@ Boolean outd_is_blocked(location to_check)
 	short i;
 
 	if (overall_mode == MODE_OUTDOORS) {
-		if (impassable(out[to_check.x][to_check.y]) == TRUE) {
+		if (impassable(univ.out.out[to_check.x][to_check.y]) == TRUE) {
 			return TRUE;
 			}
 		for (i = 0; i < 10; i++)
-			if ((party.out_c[i].exists) == TRUE)  				
-				if (party.out_c[i].m_loc == to_check)
+			if ((univ.party.out_c[i].exists) == TRUE)  				
+				if (univ.party.out_c[i].m_loc == to_check)
 					return TRUE;
 		return FALSE;
 		}
@@ -560,7 +562,7 @@ Boolean is_special(location to_check)
 Boolean outd_is_special(location to_check)
 {
 	if (overall_mode == MODE_OUTDOORS) {
-		if (terrain_blocked[out[to_check.x][to_check.y]] == 2) {
+		if (terrain_blocked[univ.out.out[to_check.x][to_check.y]] == 2) {
 			return TRUE;
 			}
 			else return FALSE;
@@ -597,10 +599,10 @@ short light_radius()
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
 	if (((which_combat_type == 0) && (is_combat()))
-		|| (is_out()) || (c_town.town.lighting == 0))
+		|| (is_out()) || (univ.town.town->lighting_type == 0))
 				return 200;
 	for (i = 0; i < 6; i++)
-		if (party.light_level > extra_levels[i])
+		if (univ.party.light_level > extra_levels[i])
 			store++;
 	return store;
 }
@@ -608,12 +610,12 @@ short light_radius()
 Boolean pt_in_light(location from_where,location to_where) // Assumes, of course, in town or combat
 {
 
-	if (c_town.town.lighting == 0)
+	if (univ.town.town->lighting_type == 0)
 		return TRUE;
 	if ((to_where.x < 0) || (to_where.x >= town_size[town_type])
 		|| (to_where.y < 0) || (to_where.y >= town_size[town_type]))
 			return TRUE;
-	if (t_d.lighting[to_where.x / 8][to_where.y] & (char) (s_pow(2,to_where.x % 8)))
+	if (univ.town.town->lighting(to_where.x / 8,to_where.y) & (char) (s_pow(2,to_where.x % 8)))
 		return TRUE;
 		
 	if (dist(from_where,to_where) <= light_radius())
@@ -626,17 +628,17 @@ Boolean combat_pt_in_light(location to_where)
 {
 	short i,rad;
 
-	if ((c_town.town.lighting == 0) || (which_combat_type == 0))
+	if ((univ.town.town->lighting_type == 0) || (which_combat_type == 0))
 		return TRUE;
 	if ((to_where.x < 0) || (to_where.x >= town_size[town_type])
 		|| (to_where.y < 0) || (to_where.y >= town_size[town_type]))
 			return TRUE;
-	if (t_d.lighting[to_where.x / 8][to_where.y] & (char) (s_pow(2,to_where.x % 8)))
+	if (univ.town.town->lighting(to_where.x / 8,to_where.y) & (char) (s_pow(2,to_where.x % 8)))
 		return TRUE;	
 
 	rad = light_radius();
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1) {
+		if (ADVEN[i].main_status == 1) {
 			if (dist(pc_pos[i],to_where) <= rad)
 				return TRUE;
 			}
@@ -649,8 +651,8 @@ Boolean party_sees_a_monst() // Returns true is a hostile monster is in sight.
 	short i;
 	
 	for (i = 0; i < T_M; i++) {
-		if (c_town.monst.dudes[i].active > 0)
-			if ((c_town.monst.dudes[i].attitude == 1) &&
+		if (univ.town.monst.dudes[i].active > 0)
+			if ((univ.town.monst.dudes[i].attitude == 1) &&
 				(party_can_see_monst(i) == TRUE))
 					return TRUE;
 		}
@@ -665,13 +667,13 @@ short party_can_see(location where)
 	short i;
 	
 	if (is_out()) {
-		if ((point_onscreen(party.p_loc,where) == TRUE) && (can_see(party.p_loc,where,0) < 5))
+		if ((point_onscreen(univ.party.p_loc,where) == TRUE) && (can_see(univ.party.p_loc,where,0) < 5))
 			return 1;
 			else return 6;
 			}
 	if (is_town()) {
-		if ( ((point_onscreen(c_town.p_loc,where) == TRUE) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(c_town.p_loc,where)  == TRUE)
-			&& (can_see(c_town.p_loc,where,0) < 5))
+		if ( ((point_onscreen(univ.town.p_loc,where) == TRUE) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.town.p_loc,where)  == TRUE)
+			&& (can_see(univ.town.p_loc,where,0) < 5))
 				return 1;
 				else return 6;
 		}
@@ -682,7 +684,7 @@ short party_can_see(location where)
 		return 6;
 
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1) {
+		if (ADVEN[i].main_status == 1) {
 			if (can_see(pc_pos[i],where,0) < 5)
 					return i;
 			}
@@ -696,17 +698,17 @@ location push_loc(location from_where,location to_where)
 	loc_to_try = to_where;
 	loc_to_try.x = loc_to_try.x + (to_where.x - from_where.x);
 	loc_to_try.y = loc_to_try.y + (to_where.y - from_where.y);
-	if ((t_d.terrain[loc_to_try.x][loc_to_try.y] == 90) || 
-		 ((t_d.terrain[loc_to_try.x][loc_to_try.y] >= 50)&& (t_d.terrain[loc_to_try.x][loc_to_try.y] <= 64))
-		 || (t_d.terrain[loc_to_try.x][loc_to_try.y] == 71) 
-		 || ((t_d.terrain[loc_to_try.x][loc_to_try.y] >= 74)&& (t_d.terrain[loc_to_try.x][loc_to_try.y] <= 78))		 
+	if ((univ.town.town->terrain(loc_to_try.x,loc_to_try.y) == 90) || 
+		 ((univ.town.town->terrain(loc_to_try.x,loc_to_try.y) >= 50)&& (univ.town.town->terrain(loc_to_try.x,loc_to_try.y) <= 64))
+		 || (univ.town.town->terrain(loc_to_try.x,loc_to_try.y) == 71) 
+		 || ((univ.town.town->terrain(loc_to_try.x,loc_to_try.y) >= 74)&& (univ.town.town->terrain(loc_to_try.x,loc_to_try.y) <= 78))		 
 		 ) { 
 			// Destroy crate
 			loc_to_try.x = 0;
 			return loc_to_try;
 			}
 	if ((get_obscurity((short) loc_to_try.x,(short) loc_to_try.y) > 0) ||
-	    (terrain_blocked[t_d.terrain[loc_to_try.x][loc_to_try.y]] > 0) ||
+	    (terrain_blocked[univ.town.town->terrain(loc_to_try.x,loc_to_try.y)] > 0) ||
 		(loc_off_act_area(loc_to_try) == TRUE) ||
 		(monst_there(loc_to_try) < 90) ||
 		(pc_there(loc_to_try) < 6))
@@ -746,14 +748,14 @@ void alter_space(short i,short j,unsigned char ter)
 	
 	if (is_out()) {
 		l = local_to_global(l);
-		out[l.x][l.y] = ter;
-		outdoors[party.i_w_c.x][party.i_w_c.y].terrain[i][j] = ter;
+		univ.out.out[l.x][l.y] = ter;
+		univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].terrain[i][j] = ter;
 		}
 		else {
-			t_d.terrain[i][j] = ter;
+			univ.town.town->terrain(i,j) = ter;
 			combat_terrain[i][j] = ter;
-			if ((scenario.ter_types[t_d.terrain[i][j]].special >= 16) &&
-				(scenario.ter_types[t_d.terrain[i][j]].special <= 19))
+			if ((scenario.ter_types[univ.town.town->terrain(i,j)].special >= 16) &&
+				(scenario.ter_types[univ.town.town->terrain(i,j)].special <= 19))
 					belt_present = TRUE;	
 			}
 }

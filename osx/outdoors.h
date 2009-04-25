@@ -11,6 +11,7 @@
 namespace legacy {
 	struct out_wandering_type;
 	struct outdoor_record_type;
+	struct outdoor_creature_type;
 };
 
 struct cOutdoors {
@@ -21,6 +22,17 @@ public:
 		unsigned char friendly[3];
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
+		
+		cWandering& operator = (legacy::out_wandering_type old);
+	};
+	class cCreature { // formerly outdoor_creature_type
+	public:
+		bool exists;
+		short direction;
+		cWandering what_monst;
+		location which_sector,m_loc;
+		
+		cCreature& operator = (legacy::outdoor_creature_type old);
 	};
 	unsigned char terrain[48][48];
 	location special_locs[18];
@@ -30,7 +42,7 @@ public:
 	location sign_locs[8];
 	cWandering wandering[4],special_enc[4];
 	location wandering_locs[4];
-	Rect info_rect[8];
+	rectangle info_rect[8];
 	unsigned char strlens[180];
 	cSpecial specials[60];
 	//char strs[120][256];

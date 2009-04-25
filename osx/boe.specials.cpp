@@ -4,6 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 #include "boe.party.h"
 #include "boe.town.h"
 #include "boe.text.h"
@@ -25,22 +26,23 @@
 #include "mathutil.h"
 #include "boe.main.h"
 #include "dlgutil.h"
+#include "fileio.h"
 
 extern WindowPtr mainPtr;
 extern short overall_mode;
-extern party_record_type party;
-extern current_town_type	c_town;
-extern unsigned char out[96][96],out_e[96][96],sfx[64][64];
+//extern party_record_type party;
+//extern current_town_type	univ.town;
+//extern unsigned char univ.out.out[96][96],out_e[96][96],sfx[64][64];
 extern unsigned char combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
-extern outdoor_record_type outdoors[2][2];
+//extern cOutdoors univ.out.outdoors[2][2];
 extern location pc_pos[6],center;
 extern Boolean in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
-extern big_tr_type t_d;
-extern pc_record_type adven[6];
+//extern big_tr_type t_d;
+//extern pc_record_type ADVEN[6];
 extern effect_pat_type current_pat;
-extern town_item_list	t_i;
-extern out_wandering_type store_wandering_special;
+//extern town_item_list	univ.town;
+extern cOutdoors::cWandering store_wandering_special;
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
 extern DialogPtr modeless_dialogs[18];
@@ -48,6 +50,7 @@ extern Boolean fast_bang,end_scenario;
 extern short town_size[3];
 extern short town_type;
 extern cScenario scenario;
+extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 
 Boolean can_draw_pcs = TRUE;
@@ -99,8 +102,8 @@ Boolean town_specials(short which,short t_num)
 	location l;
 	
 	
-	l = c_town.town.special_locs[which];
-	spec_id = c_town.town.spec_id[which];
+	l = univ.town.town->special_locs[which];
+	spec_id = univ.town.town->spec_id[which];
 	if (spec_id < 0)
 		return TRUE;
 	
@@ -118,19 +121,18 @@ Boolean handle_wandering_specials (short which,short mode)
 {
 
 	short s1 = 0,s2 = 0,s3 = 0;
-	location null_loc = {0,0};
 	
 	if ((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
-	run_special(13,1,store_wandering_special.spec_on_meet,null_loc,&s1,&s2,&s3);
+	run_special(13,1,store_wandering_special.spec_on_meet,loc(),&s1,&s2,&s3);
 	if (s1 > 0)
 		return FALSE;
 	}
 		
 	if ((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
-	run_special(15,1,store_wandering_special.spec_on_win,null_loc,&s1,&s2,&s3);
+	run_special(15,1,store_wandering_special.spec_on_win,loc(),&s1,&s2,&s3);
 		}
 	if ((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
-	run_special(14,1,store_wandering_special.spec_on_flee,null_loc,&s1,&s2,&s3);
+	run_special(14,1,store_wandering_special.spec_on_flee,loc(),&s1,&s2,&s3);
 		}		
 return TRUE;
 }
@@ -138,7 +140,7 @@ return TRUE;
 
 Boolean check_special_terrain(location where_check,short mode,short which_pc,short *spec_num,
 	Boolean *forced)
-//short mode; // 0 - out 1 - town 2 - combat
+//short mode; // 0 - univ.out.out 1 - town 2 - combat
 // returns true if can enter this space
 // sets forced to TRUE if definitely can enter
 {
@@ -153,12 +155,12 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	
 	switch (mode) {
 		case 0:
-			ter = out[where_check.x][where_check.y];
-			from_loc = party.p_loc;
+			ter = univ.out.out[where_check.x][where_check.y];
+			from_loc = univ.party.p_loc;
 			break;	
 		case 1:
-			ter = t_d.terrain[where_check.x][where_check.y];
-			from_loc = c_town.p_loc;
+			ter = univ.town.town->terrain(where_check.x,where_check.y);
+			from_loc = univ.town.p_loc;
 			break;	
 		case 2:
 			ter = combat_terrain[where_check.x][where_check.y];
@@ -186,13 +188,13 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				out_where = global_to_local(where_check);
 
 				for (i = 0; i < 18; i++) 
-					if (out_where == outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i]) {
-						*spec_num = outdoors[party.i_w_c.x][party.i_w_c.y].special_id[i];
+					if (out_where == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i]) {
+						*spec_num = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i];
 						if ((*spec_num >= 0) &&
-							(outdoors[party.i_w_c.x][party.i_w_c.y].specials[*spec_num].type == 4))
+							(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[*spec_num].type == 4))
 								*forced = TRUE;
 						// call special
-						run_special(mode,1,outdoors[party.i_w_c.x][party.i_w_c.y].special_id[i],out_where,&s1,&s2,&s3);
+						run_special(mode,1,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i],out_where,&s1,&s2,&s3);
 						if (s1 > 0)
 							can_enter = FALSE;
 						erase_out_specials();
@@ -213,16 +215,16 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				return FALSE;
 				}
 			for (i = 0; i < 50; i++)
-				if ((where_check == c_town.town.special_locs[i]) &&
-					(c_town.town.spec_id[i] >= 0)) {
-					if (c_town.town.specials[c_town.town.spec_id[i]].type == 4) {
+				if ((where_check == univ.town.town->special_locs[i]) &&
+					(univ.town.town->spec_id[i] >= 0)) {
+					if (univ.town.town->specials[univ.town.town->spec_id[i]].type == 4) {
 						*forced = TRUE;
 						}
-					*spec_num = c_town.town.spec_id[i];
+					*spec_num = univ.town.town->spec_id[i];
 					if ((is_blocked(where_check) == FALSE) || (ter_special == 1)
 	 					|| (ter_special == 12) || (ter_special == 13)) {
 						give_help(54,0,0);
-						run_special(mode,2,c_town.town.spec_id[i],where_check,&s1,&s2,&s3);
+						run_special(mode,2,univ.town.town->spec_id[i],where_check,&s1,&s2,&s3);
 						if (s1 > 0)
 							can_enter = FALSE;
 						}
@@ -262,9 +264,9 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
-			 && (t_i.items[i].is_contained() == TRUE))
-			 	t_i.items[i].item_loc = to_loc;
+			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+			 && (univ.town.items[i].is_contained() == TRUE))
+			 	univ.town.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where_check.x,where_check.y)) {
 		add_string_to_buf("  You push the barrel.");
@@ -273,9 +275,9 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		if (to_loc.x > 0)
 			make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where_check)
-			 && (t_i.items[i].is_contained()))
-			 	t_i.items[i].item_loc = to_loc;
+			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+			 && (univ.town.items[i].is_contained()))
+			 	univ.town.items[i].item_loc = to_loc;
 		}
 		}
 
@@ -296,7 +298,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			if (ter_special == 2) {
 				add_string_to_buf("  It's hot!");
 				dam_type = 1; pic_type = 0;
-				if (party.stuff_done[SDF_PARTY_FIREWALK] > 0) {
+				if (PSD[SDF_PARTY_FIREWALK] > 0) {
 					add_string_to_buf("  It doesn't affect you.");			
 					break;
 					}
@@ -316,18 +318,18 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			if (mode == 2)
 				damage_pc(which_pc,r1,dam_type,-1);
 			if (overall_mode < MODE_COMBAT)
-				boom_space(party.p_loc,overall_mode,pic_type,r1,12);
+				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
 		case 5: case 6:
 			if (flying())
 				break;
-			if (party.in_boat >= 0)
+			if (univ.party.in_boat >= 0)
 				return TRUE;
 			//one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
-					if (adven[i].main_status == 1) 
+					if (ADVEN[i].main_status == 1) 
 						{
 						if (get_ran(1,1,100) <= ter_flag2) {
 							if (ter_special == 5)
@@ -382,7 +384,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		
 	// Action may change terrain, so update what's been seen
 	if (is_town())
-		update_explored(c_town.p_loc);
+		update_explored(univ.town.p_loc);
 	if (is_combat())
 		update_explored(pc_pos[current_pc]);
 
@@ -392,7 +394,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
 void check_fields(location where_check,short mode,short which_pc)
-//mode; // 0 - out 1 - town 2 - combat
+//mode; // 0 - univ.out.out 1 - town 2 - combat
 {
 	short r1,i;
 	
@@ -408,7 +410,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,1,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,0,r1,5);	
+					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
 	if (is_force_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Force wall!               ");
@@ -418,7 +420,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,3,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,1,r1,12);	
+					boom_space(univ.party.p_loc,overall_mode,1,r1,12);	
 		}
 	if (is_ice_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Ice wall!               ");
@@ -428,7 +430,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,5,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,4,r1,7);	
+					boom_space(univ.party.p_loc,overall_mode,4,r1,7);	
 		}
 	if (is_blade_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Blade wall!               ");
@@ -438,7 +440,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,0,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,3,r1,2);	
+					boom_space(univ.party.p_loc,overall_mode,3,r1,2);	
 		}
 	if (is_quickfire(where_check.x,where_check.y)) {
 			add_string_to_buf("  Quickfire!               ");
@@ -448,7 +450,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,1,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,0,r1,5);	
+					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
 	if (is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
@@ -483,7 +485,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			if (mode == 2)
 				damage_pc(which_pc,r1,3,-1);
 				if (overall_mode < MODE_COMBAT)
-					boom_space(party.p_loc,overall_mode,1,r1,12);		
+					boom_space(univ.party.p_loc,overall_mode,1,r1,12);		
 		}
 	fast_bang = 0;
 }
@@ -491,9 +493,9 @@ void check_fields(location where_check,short mode,short which_pc)
 void use_spec_item(short item)
 {
 	short i,j,k;
-	location null_loc = {0,0};
+	location null_loc;
 	
-	run_special(8,0,scenario.special_item_special[item],null_loc,&i,&j,&k);
+	run_special(8,0,scenario.special_item_special[item],loc(),&i,&j,&k);
 
 }
 
@@ -504,7 +506,7 @@ void use_item(short pc,short item)
 	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
 	char to_draw[60];
 	location user_loc;
-creature_data_type *which_m;
+cPopulation::cCreature *which_m;
 effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
@@ -514,8 +516,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};	
-	abil = adven[pc].items[item].ability;
-	level = adven[pc].items[item].item_level;
+	abil = ADVEN[pc].items[item].ability;
+	level = ADVEN[pc].items[item].item_level;
 	
 	item_use_code = abil_chart[abil];
 	if (item_use_code >= 10) {
@@ -524,9 +526,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 
 	if (is_out())
-		user_loc = party.p_loc;
+		user_loc = univ.party.p_loc;
 	if (is_town())
-		user_loc = c_town.p_loc;
+		user_loc = univ.town.p_loc;
 	if (is_combat())
 		user_loc = pc_pos[current_pc];
 
@@ -534,14 +536,14 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = FALSE;
 		}
-	if ((adven[pc].traits[11] == TRUE) && (inept_ok == FALSE)){
+	if ((ADVEN[pc].traits[11] == TRUE) && (inept_ok == FALSE)){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = FALSE;
 		}
 	
 	if (take_charge == TRUE) {
 			if ((overall_mode == MODE_OUTDOORS) && (item_use_code > 0) && (item_use_code != 5)) {
-				add_string_to_buf("Use: Not while outdoors.         ");
+				add_string_to_buf("Use: Not while univ.out.outdoors.         ");
 				take_charge = FALSE;
 				}
 			if ((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
@@ -553,23 +555,23 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				take_charge = FALSE;
 				}
 			if ((overall_mode != 0) && (item_use_code == 5)){
-				add_string_to_buf("Use: Only outdoors.           ");
+				add_string_to_buf("Use: Only univ.out.outdoors.           ");
 				take_charge = FALSE;
 				}
 		}
 	if (take_charge == TRUE) {
-		if (!adven[pc].items[item].is_ident())
-			sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].name);
-			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
+		if (!ADVEN[pc].items[item].is_ident())
+			sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].name);
+			else sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].full_name);
 		add_string_to_buf((char *) to_draw);
 
-		if ((adven[pc].items[item].variety == 7) &&
-		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
+		if ((ADVEN[pc].items[item].variety == 7) &&
+		      (ADVEN[pc].items[item].graphic_num >= 50) && (ADVEN[pc].items[item].graphic_num <= 52))
 		      	play_sound(56);
 		
-		str = adven[pc].items[item].ability_strength;
+		str = ADVEN[pc].items[item].ability_strength;
 		store_item_spell_level = str * 2 + 1;
-		type = adven[pc].items[item].magic_use_type;
+		type = ADVEN[pc].items[item].magic_use_type;
 				
 		switch (abil) {
 			case 70: // poison weapon
@@ -699,10 +701,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 86:
 				play_sound(68);
 				switch (type) {
-					case 0: ASB("  You feel much smarter."); adven[pc].skill_pts += str; break;
-					case 1: ASB("  You feel forgetful."); adven[pc].skill_pts = max(0,adven[pc].skill_pts - str); break;
-					case 2: ASB("  You all feel much smarter."); for (i = 0; i < 6; i++) adven[i].skill_pts += str; break;
-					case 3: ASB("  You all feel forgetful."); for (i = 0; i < 6; i++) adven[i].skill_pts = max(0,adven[i].skill_pts - str); break;
+					case 0: ASB("  You feel much smarter."); ADVEN[pc].skill_pts += str; break;
+					case 1: ASB("  You feel forgetful."); ADVEN[pc].skill_pts = max(0,ADVEN[pc].skill_pts - str); break;
+					case 2: ASB("  You all feel much smarter."); for (i = 0; i < 6; i++) ADVEN[i].skill_pts += str; break;
+					case 3: ASB("  You all feel forgetful."); for (i = 0; i < 6; i++) ADVEN[i].skill_pts = max(0,ADVEN[i].skill_pts - str); break;
 					}
 				break;
 			case 87:
@@ -716,9 +718,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 88:
 				switch (type) {
 					case 0: ASB("  You feel energized."); restore_sp_pc(pc,str * 5); break;
-					case 1: ASB("  You feel drained."); adven[pc].cur_sp = max(0,adven[pc].cur_sp - str * 5); break;
+					case 1: ASB("  You feel drained."); ADVEN[pc].cur_sp = max(0,ADVEN[pc].cur_sp - str * 5); break;
 					case 2: ASB("  You all feel energized."); restore_sp_party(str * 5); break;
-					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) adven[i].cur_sp = max(0,adven[i].cur_sp - str * 5); break;
+					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) ADVEN[i].cur_sp = max(0,ADVEN[i].cur_sp - str * 5); break;
 					}
 				break;
 			case 89:
@@ -734,22 +736,22 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				ASB("  You have more light."); increase_light(50 * str);
 				break;
 			case 91:
-				ASB("  Your footsteps become quieter."); party.stuff_done[SDF_PARTY_STEALTHY] += 5 * str;
+				ASB("  Your footsteps become quieter."); PSD[SDF_PARTY_STEALTHY] += 5 * str;
 				break;
 			case 92:
-				ASB("  You feel chilly."); party.stuff_done[SDF_PARTY_FIREWALK] += 2 * str;
+				ASB("  You feel chilly."); PSD[SDF_PARTY_FIREWALK] += 2 * str;
 				break;
 			case 93:
-				if (party.stuff_done[SDF_PARTY_FLIGHT] > 0) {
+				if (PSD[SDF_PARTY_FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
 					break;
 					}
-				if (party.in_boat >= 0)
+				if (univ.party.in_boat >= 0)
 					add_string_to_buf("  Leave boat first.             "); 
-				else if (party.in_horse >= 0)////
+				else if (univ.party.in_horse >= 0)////
 					add_string_to_buf("  Leave horse first.             "); 
 				else {
-					ASB("  You rise into the air!"); party.stuff_done[SDF_PARTY_FLIGHT] += str;
+					ASB("  You rise into the air!"); PSD[SDF_PARTY_FLIGHT] += str;
 					}
 				break;
 			case 94:
@@ -841,22 +843,22 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				start_spell_targeting(1062);
 				break;
 			case 129:
-				add_string_to_buf("Fire pours out!");
+				add_string_to_buf("Fire pours univ.out.out!");
 				make_quickfire(user_loc.x,user_loc.y);
 				break;
 			case 130: 
 				ASB("It throbs, and emits odd rays.");
 				for (i = 0; i < T_M; i++) {
-						if ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].attitude % 2 == 1) 
-						 && (dist(pc_pos[current_pc],c_town.monst.dudes[i].m_loc) <= 8)
-						 && (can_see(pc_pos[current_pc],c_town.monst.dudes[i].m_loc,0) < 5)) {
-								which_m = &c_town.monst.dudes[i];
+						if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
+						 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= 8)
+						 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc,0) < 5)) {
+								which_m = &univ.town.monst.dudes[i];
 								charm_monst(which_m,0,0,8);
 							}
 						}
 				break;
 			case 131:
-				if (c_town.town.specials2 % 10 == 1) {
+				if (univ.town.town->specials2 % 10 == 1) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 					}
@@ -899,7 +901,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	
 	put_pc_screen();
-	if ((take_charge == TRUE) && (adven[pc].items[item].charges > 0))
+	if ((take_charge == TRUE) && (ADVEN[pc].items[item].charges > 0))
 		remove_charge(pc,item);
 	if (take_charge == FALSE) {
 		draw_terrain(0);
@@ -907,7 +909,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 }
 
-// Returns TRUE if an action is actually carried out. This can only be reached in town.
+// Returns TRUE if an action is actually carried univ.out.out. This can only be reached in town.
 Boolean use_space(location where)
 {
 	unsigned char ter;
@@ -915,8 +917,8 @@ Boolean use_space(location where)
 	location from_loc,to_loc;
 	
 
-	ter = t_d.terrain[where.x][where.y];
-	from_loc = c_town.p_loc;
+	ter = univ.town.town->terrain(where.x,where.y);
+	from_loc = univ.town.p_loc;
 
 	add_string_to_buf("Use...");
 	
@@ -935,9 +937,9 @@ Boolean use_space(location where)
 		take_crate((short) where.x,(short) where.y);
 		make_crate((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where)
-			 && (t_i.items[i].is_contained()))
-			 	t_i.items[i].item_loc = to_loc;
+			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
+			 && (univ.town.items[i].is_contained()))
+			 	univ.town.items[i].item_loc = to_loc;
 		}
 	if (is_barrel(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
@@ -949,9 +951,9 @@ Boolean use_space(location where)
 		take_barrel((short) where.x,(short) where.y);
 		make_barrel((short) to_loc.x,(short) to_loc.y);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((t_i.items[i].variety > 0) && (t_i.items[i].item_loc == where)
-			 && (t_i.items[i].is_contained()))
-			 	t_i.items[i].item_loc = to_loc;
+			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
+			 && (univ.town.items[i].is_contained()))
+			 	univ.town.items[i].item_loc = to_loc;
 		}
 		
 	switch (scenario.ter_types[ter].special) {
@@ -976,7 +978,7 @@ Boolean use_space(location where)
 
 // Note ... if this is a container, the code must first process any specials. If
 //specials return FALSE, can't get items inside. If TRUE, can get items inside.
-// Can't get items out in combat.
+// Can't get items univ.out.out in combat.
 Boolean adj_town_look(location where)
 {
 	char terrain;
@@ -984,27 +986,27 @@ Boolean adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((t_i.items[i].variety > 0) && (t_i.items[i].is_contained()) &&
-			(where == t_i.items[i].item_loc))
+		if ((univ.town.items[i].variety > 0) && (univ.town.items[i].is_contained()) &&
+			(where == univ.town.items[i].item_loc))
 				item_there = TRUE;
 
-	terrain = t_d.terrain[where.x][where.y];
+	terrain = univ.town.town->terrain(where.x,where.y);
 	if (special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
-		if (adjacent(c_town.p_loc,where) == FALSE)
+		if (adjacent(univ.town.p_loc,where) == FALSE)
 			add_string_to_buf("  Not close enough to search.");
 			else {
 				for (i = 0; i < 50; i++)
-					if (where == c_town.town.special_locs[i]) {
-						if (get_blockage(t_d.terrain[where.x][where.y]) > 0) { 
+					if (where == univ.town.town->special_locs[i]) {
+						if (get_blockage(univ.town.town->terrain(where.x,where.y)) > 0) { 
 						// tell party you find something, if looking at a space they can't step in
-							//if (c_town.town.special_id[i] >= 10) 
+							//if (univ.town.town.special_id[i] >= 10) 
 							//	add_string_to_buf("  Search: You find something!          ");
-							//	else if (party.stuff_done[c_town.town_num][c_town.town.special_id[i]] < 20)
+							//	else if (PSD[univ.town.town_num][univ.town.town.special_id[i]] < 20)
 							//		add_string_to_buf("  Search: You find something!          ");
 							}
-						//call special can_open = town_specials(i,c_town.town_num);
+						//call special can_open = town_specials(i,univ.town.town_num);
 						
-						run_special(4,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
+						run_special(4,2,univ.town.town->spec_id[i],where,&s1,&s2,&s3);
 						if (s1 > 0)
 							can_open = FALSE;
 						got_special = TRUE;
@@ -1042,20 +1044,20 @@ void PSOE(short str1a,short str1b,short str2a,short str2b,
 			else *stuff_done_val = 20;
 		}
 	for (i = 0; i < 18; i++)
-		if (outdoors[party.i_w_c.x][party.i_w_c.y].special_id[i] == where_put) {
+		if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i] == where_put) {
 			for (j = 0; j < 7; j++) 
-				if (outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[which_special].monst[j] > 0) {
-					graphic_num = 400 + get_monst_picnum(outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[which_special].monst[j]);
+				if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j] > 0) {
+					graphic_num = 400 + get_monst_picnum(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j]);
 					j = 7;
 					}
 			//display_strings( str1a, str1b, str2a, str2b,
 			////	"Encounter!",57, graphic_num, 0);
 			draw_terrain(0);
 			pause(15);
-			//if (outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[which_special].spec_code == 0)
-			//	outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[which_special].spec_code = 1;
-			//place_outd_wand_monst(outdoors[party.i_w_c.x][party.i_w_c.y].special_locs[i],
-			//	outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[which_special]);
+			//if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code == 0)
+			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code = 1;
+			//place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i],
+			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special]);
 			
 			i = 18;
 			}
@@ -1070,7 +1072,7 @@ void out_move_party(char x,char y)
 	
 	l.x = x;l.y = y;
 	l = local_to_global(l);
-	party.p_loc = l;
+	univ.party.p_loc = l;
 	center = l;
 	update_explored(l);
 }
@@ -1084,7 +1086,7 @@ void teleport_party(short x,short y,short mode)
 	if (is_combat())
 		mode = 1;
 	
-	l = c_town.p_loc;
+	l = univ.town.p_loc;
 	update_explored(l);
 	
 	if (mode != 1) {
@@ -1104,8 +1106,8 @@ void teleport_party(short x,short y,short mode)
 		pc_pos[current_pc].x = x;pc_pos[current_pc].y = y;
 		}
 	l.x = x; l.y = y;
-	c_town.p_loc.x = x;
-	c_town.p_loc.y = y;
+	univ.town.p_loc.x = x;
+	univ.town.p_loc.y = y;
 	update_explored(l);
 	draw_terrain(0);
 	
@@ -1129,13 +1131,13 @@ void fade_party()
 	short i;
 	location l;
 	
-	l = c_town.p_loc;	
+	l = univ.town.p_loc;	
 	start_missile_anim();
 	for (i = 0; i < 14; i++)
 		add_explosion(l,-1,1,1,0,0);
 	do_explosion_anim(5,1);
-	c_town.p_loc.x = 100;
-	c_town.p_loc.y = 100;
+	univ.town.p_loc.x = 100;
+	univ.town.p_loc.y = 100;
 	do_explosion_anim(5,2);
 	end_missile_anim();	
 }
@@ -1165,16 +1167,16 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
  				 //+10 = no_print
  				 // 100s digit - damage sound for boom space
 {
-	creature_data_type *victim;
+	cPopulation::cCreature *victim;
 	short r1,which_spot,sound_type;
 	location where_put;
 	
 	Boolean do_print = TRUE;
 	char resist;
 
-	//print_num(which_m,(short)c_town.monst.dudes[which_m].m_loc.x,(short)c_town.monst.dudes[which_m].m_loc.y);
+	//print_num(which_m,(short)univ.town.monst.dudes[which_m].m_loc.x,(short)univ.town.monst.dudes[which_m].m_loc.y);
 
-	if (c_town.monst.dudes[which_m].active == 0) return FALSE;
+	if (univ.town.monst.dudes[which_m].active == 0) return FALSE;
 	
 	sound_type = dam_type / 100;
 	dam_type = dam_type % 100;
@@ -1196,7 +1198,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		}
 
 		
-	victim = &c_town.monst.dudes[which_m];	
+	victim = &univ.town.monst.dudes[which_m];	
 	resist = victim->m_d.immunities;
 
 	if (dam_type == 3) {
@@ -1282,13 +1284,13 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		where_put = find_clear_spot(victim->m_loc,1);
 		if (where_put.x > 0) 
 			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
-				c_town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
-				c_town.monst.dudes[which_spot].monst_start = victim->monst_start;
+				univ.town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
+				univ.town.monst.dudes[which_spot].monst_start = victim->monst_start;
 				monst_spell_note(victim->number,27);
 				}
 		}
 	if (who_hit < 7)
-		party.total_dam_done += how_much + how_much_spec;
+		univ.party.total_dam_done += how_much + how_much_spec;
 		
 	// Monster damages. Make it hostile.
 	victim->active = 2;
@@ -1329,7 +1331,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		make_town_hostile();
 		}
 	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
-	 ((processing_fields == TRUE) && (party.stuff_done[SDF_HOSTILES_PRESENT] == 0))) {
+	 ((processing_fields == TRUE) && (PSD[SDF_HOSTILES_PRESENT] == 0))) {
 		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
 		make_town_hostile();
@@ -1338,7 +1340,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	return TRUE;
 }
 
-void kill_monst(creature_data_type *which_m,short who_killed)
+void kill_monst(cPopulation::cCreature *which_m,short who_killed)
 {
 	short xp,i,j,s1,s2,s3;	
 	location l;
@@ -1360,7 +1362,7 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 	
 	// Special killing effects
 	if (sd_legit(which_m->monst_start.spec1,which_m->monst_start.spec2) == TRUE)
-		party.stuff_done[which_m->monst_start.spec1][which_m->monst_start.spec2] = 1;
+		PSD[which_m->monst_start.spec1][which_m->monst_start.spec2] = 1;
 		
 	run_special(12,2,which_m->monst_start.special_on_kill,which_m->m_loc,&s1,&s2,&s3);
 	if (which_m->m_d.radiate_1 == 15)
@@ -1373,7 +1375,7 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 			else if (who_killed == 6)
 				award_party_xp(xp / 6 + 1);
 		if (who_killed < 7) {
-			party.total_m_killed++;
+			univ.party.total_m_killed++;
 			i = max((xp / 6),1);
 			award_party_xp(i);
 			}
@@ -1397,10 +1399,10 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 
 
 	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
-		party.m_killed[c_town.town_num]++;
+		univ.party.m_killed[univ.town.num]++;
 		}
 
-	party.total_m_killed++;
+	univ.party.total_m_killed++;
 	
 	which_m->monst_start.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
 
@@ -1422,77 +1424,77 @@ void push_things()////
 		return;
 	
 	for (i = 0; i < T_M; i++)
-		if (c_town.monst.dudes[i].active > 0) {
-			l = c_town.monst.dudes[i].m_loc;
-			ter = t_d.terrain[l.x][l.y];
+		if (univ.town.monst.dudes[i].active > 0) {
+			l = univ.town.monst.dudes[i].m_loc;
+			ter = univ.town.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
 				case 18: l.y++; break;
 				case 19: l.x--; break;
 				}
-			if (l != c_town.monst.dudes[i].m_loc) {
-				c_town.monst.dudes[i].m_loc = l;
-				if ((point_onscreen(center,c_town.monst.dudes[i].m_loc) == TRUE) || 
+			if (l != univ.town.monst.dudes[i].m_loc) {
+				univ.town.monst.dudes[i].m_loc = l;
+				if ((point_onscreen(center,univ.town.monst.dudes[i].m_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
 						redraw = TRUE;
 				}
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (t_i.items[i].variety > 0) {
-			l = t_i.items[i].item_loc;
-			ter = t_d.terrain[l.x][l.y];
+		if (univ.town.items[i].variety > 0) {
+			l = univ.town.items[i].item_loc;
+			ter = univ.town.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
 				case 18: l.y++; break;
 				case 19: l.x--; break;
 				}
-			if (l != t_i.items[i].item_loc) {
-				t_i.items[i].item_loc = l;
-				if ((point_onscreen(center,t_i.items[i].item_loc) == TRUE) || 
+			if (l != univ.town.items[i].item_loc) {
+				univ.town.items[i].item_loc = l;
+				if ((point_onscreen(center,univ.town.items[i].item_loc) == TRUE) || 
 					(point_onscreen(center,l) == TRUE))
 						redraw = TRUE;
 				}
 			}
 	
 	if (is_town()) {
-		ter = t_d.terrain[c_town.p_loc.x][c_town.p_loc.y];
-		l = c_town.p_loc;
+		ter = univ.town.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+		l = univ.town.p_loc;
 		switch (scenario.ter_types[ter].special) {
 			case 16: l.y--; break;
 			case 17: l.x++; break;
 			case 18: l.y++; break;
 			case 19: l.x--; break;
 			}
-		if (l != c_town.p_loc) {
+		if (l != univ.town.p_loc) {
 			ASB("You get pushed.");
 			if (scenario.ter_types[ter].special >= 16)	
 				draw_terrain(0);
 			center = l;
-			c_town.p_loc = l;
+			univ.town.p_loc = l;
 			update_explored(l);
-			ter = t_d.terrain[c_town.p_loc.x][c_town.p_loc.y];
+			ter = univ.town.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			draw_map(modeless_dialogs[5],5);
-			if (is_barrel(c_town.p_loc.x,c_town.p_loc.y)) {
-				take_barrel(c_town.p_loc.x,c_town.p_loc.y);
+			if (is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
+				take_barrel(univ.town.p_loc.x,univ.town.p_loc.y);
 				ASB("You smash the barrel.");			
 				}
-			if (is_crate(c_town.p_loc.x,c_town.p_loc.y)) {
-				take_crate(c_town.p_loc.x,c_town.p_loc.y);
+			if (is_crate(univ.town.p_loc.x,univ.town.p_loc.y)) {
+				take_crate(univ.town.p_loc.x,univ.town.p_loc.y);
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (t_i.items[k].is_contained() == TRUE)
-				&& (t_i.items[k].item_loc == c_town.p_loc))
-					t_i.items[k].item_properties = t_i.items[k].item_properties & 247;				
+				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].is_contained() == TRUE)
+				&& (univ.town.items[k].item_loc == univ.town.p_loc))
+					univ.town.items[k].item_properties = univ.town.items[k].item_properties & 247;				
 			redraw = TRUE;
 			}	
 		}
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (adven[i].main_status == 1) {
-				ter = t_d.terrain[pc_pos[i].x][pc_pos[i].y];
+			if (ADVEN[i].main_status == 1) {
+				ter = univ.town.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
 				switch (scenario.ter_types[ter].special) {
 					case 16: l.y--; break;
@@ -1502,7 +1504,7 @@ void push_things()////
 					}
 				if (l != pc_pos[i]) {
 					ASB("Someone gets pushed.");	
-					ter = t_d.terrain[l.x][l.y];
+					ter = univ.town.town->terrain(l.x,l.y);
 					if (scenario.ter_types[ter].special >= 16)	
 						draw_terrain(0);
 					pc_pos[i] = l;
@@ -1517,9 +1519,9 @@ void push_things()////
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((t_i.items[k].variety > 0) && (t_i.items[k].is_contained() == TRUE)
-						&& (t_i.items[k].item_loc == pc_pos[i]))
-							t_i.items[k].item_properties = t_i.items[k].item_properties & 247;		
+						if ((univ.town.items[k].variety > 0) && (univ.town.items[k].is_contained() == TRUE)
+						&& (univ.town.items[k].item_loc == pc_pos[i]))
+							univ.town.items[k].item_properties = univ.town.items[k].item_properties & 247;		
 					redraw = TRUE;
 					}				
 				}
@@ -1534,35 +1536,35 @@ void special_increase_age()
 {
 	short i,s1,s2,s3;
 	Boolean redraw = FALSE,stat_area = FALSE;
-	location null_loc = {0,0};
+	location null_loc;
 	
 	for (i = 0; i < 8; i++)
-		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
+		if ((univ.town.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town.town->timer_spec_times[i] == 0)
 			&& ((is_town() == TRUE) || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
-			run_special(9,2,c_town.town.timer_specs[i],null_loc,&s1,&s2,&s3);
+			run_special(9,2,univ.town.town->timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
 				redraw = TRUE;
 			}
 	for (i = 0; i < 20; i++)
-		if ((scenario.scenario_timer_times[i] > 0) && (party.age % scenario.scenario_timer_times[i] == 0)) {
+		if ((scenario.scenario_timer_times[i] > 0) && (univ.party.age % scenario.scenario_timer_times[i] == 0)) {
 			run_special(10,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = TRUE;
 			if (s3 > 0)
 				redraw = TRUE;
 			}
 	for (i = 0; i < 30; i++)
-		if (party.party_event_timers[i] > 0) {
-			if (party.party_event_timers[i] == 1) {
-				if (party.global_or_town[i] == 0)
-					run_special(11,0,party.node_to_call[i],null_loc,&s1,&s2,&s3);
-					else run_special(11,2,party.node_to_call[i],null_loc,&s1,&s2,&s3);
-				party.party_event_timers[i] = 0;
+		if (univ.party.party_event_timers[i] > 0) {
+			if (univ.party.party_event_timers[i] == 1) {
+				if (univ.party.global_or_town[i] == 0)
+					run_special(11,0,univ.party.node_to_call[i],null_loc,&s1,&s2,&s3);
+					else run_special(11,2,univ.party.node_to_call[i],null_loc,&s1,&s2,&s3);
+				univ.party.party_event_timers[i] = 0;
 				stat_area = TRUE;
 				if (s3 > 0)
 					redraw = TRUE;
 				}
-				else party.party_event_timers[i]--;
+				else univ.party.party_event_timers[i]--;
 			}
 	if (stat_area == TRUE) {
 		put_pc_screen();
@@ -1575,10 +1577,10 @@ void special_increase_age()
 
 // This is the big painful one, the main special engine
 // which_mode - says when it was called
-// 0 - out moving (a - 1 if blocked)
+// 0 - univ.out.out moving (a - 1 if blocked)
 // 1 - town moving (a - 1 if blocked)
 // 2 - combat moving (a - 1 if blocked)
-// 3 - out looking (a - 1 if don't get items inside)  NOT USED!!!
+// 3 - univ.out.out looking (a - 1 if don't get items inside)  NOT USED!!!
 // 4 - town looking (a - 1 if don't get items inside)
 // 5 - entering town
 // 6 - leaving town
@@ -1593,7 +1595,7 @@ void special_increase_age()
 // 15 - fleeing outdoor enc
 // 16 - ritual of sanct
 // 17 - using space
-// which_type - 0 - scen 1 - out 2 - town
+// which_type - 0 - scen 1 - univ.out.out 2 - town
 // start spec - the number of the first spec to call
 // a,b - 2 values that can be returned
 // redraw - 1 if now need redraw
@@ -1672,24 +1674,24 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
 		if (cur_spec != minmax(0,255,cur_spec)) {
-			give_error("The scenario called a scenario special node out of range.","",0);
+			give_error("The scenario called a scenario special node univ.out.out of range.","",0);
 			return dummy_node;
 			}
 		return scenario.scen_specials[cur_spec];
 		}
 	if (cur_spec_type == 1) {
 		if (cur_spec != minmax(0,59,cur_spec)) {
-			give_error("The scenario called an outdoor special node out of range.","",0);
+			give_error("The scenario called an outdoor special node univ.out.out of range.","",0);
 			return dummy_node;
 			}
-		return outdoors[party.i_w_c.x][party.i_w_c.y].specials[cur_spec];
+		return univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[cur_spec];
 		}
 	if (cur_spec_type == 2) {
 		if (cur_spec != minmax(0,99,cur_spec)) {
-			give_error("The scenario called a town special node out of range.","",0);
+			give_error("The scenario called a town special node univ.out.out of range.","",0);
 			return dummy_node;
 			}
-		return c_town.town.specials[cur_spec];
+		return univ.town.town->specials[cur_spec];
 		}
 	return dummy_node;
 }
@@ -1733,7 +1735,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 7:
 			if (is_out()) *next_spec = -1;
 			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
-				ASB("Can't go here while outdoors.");
+				ASB("Can't go here while univ.out.outdoors.");
 				*a = 1;
 				}
 			break;	
@@ -1763,15 +1765,15 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case 12:
-			check_mess = TRUE; party.age += spec.ex1a;
+			check_mess = TRUE; univ.party.age += spec.ex1a;
 			break;
 		case 13:
 			check_mess = TRUE;
 			for (i = 0; i < 30; i++)
-	 			if (party.party_event_timers[i] == 0) {
-	 				party.party_event_timers[i] = spec.ex1a;
-	 				party.node_to_call[i] = spec.ex1b;
-	 				party.global_or_town[i] = 0;
+	 			if (univ.party.party_event_timers[i] == 0) {
+	 				univ.party.party_event_timers[i] = spec.ex1a;
+	 				univ.party.node_to_call[i] = spec.ex1b;
+	 				univ.party.global_or_town[i] = 0;
 	 				i = 30;
 	 				}
 			break;
@@ -1781,28 +1783,28 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 15:
 			check_mess = TRUE;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Horse out of range.","",0);
-				else party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
+				give_error("Horse univ.out.out of range.","",0);
+				else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 16:
 			check_mess = TRUE;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Boat out of range.","",0);
-				else party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
+				give_error("Boat univ.out.out of range.","",0);
+				else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 17:
 			check_mess = TRUE;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
-				give_error("Town out of range.","",0);
-				else party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
+				give_error("Town univ.out.out of range.","",0);
+				else univ.party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
 			*redraw = TRUE;
 			break;
 		case 18:
 			check_mess = TRUE;
 			if (spec.ex1a != minmax(1,10,spec.ex1a))
-				give_error("Event code out of range.","",0);
-				else if (party.key_times[spec.ex1a] == 30000)
-					party.key_times[spec.ex1a] = calc_day();
+				give_error("Event code univ.out.out of range.","",0);
+				else if (univ.party.key_times[spec.ex1a] == 30000)
+					univ.party.key_times[spec.ex1a] = calc_day();
 			break;
 		case 19:
 			check_mess = TRUE;
@@ -1827,12 +1829,12 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 22:
 			if (spec.sd1 != minmax(0,299,spec.sd1))
-				give_error("Stuff Done flag out of range.","",0);
+				give_error("Stuff Done flag univ.out.out of range.","",0);
 				else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case 23:
 			if ((sd_legit(spec.sd1,spec.sd2) == FALSE) || (sd_legit(spec.ex1a,spec.ex1b) == FALSE))
-				give_error("Stuff Done flag out of range.","",0);
+				give_error("Stuff Done flag univ.out.out of range.","",0);
 				else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
 		case 24:
@@ -1841,7 +1843,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 25:
 					check_mess = TRUE;
-					party.age += spec.ex1a;
+					univ.party.age += spec.ex1a;
 					heal_party(spec.ex1b); restore_sp_party(spec.ex1b);
 			break;
 		case 26:
@@ -1910,11 +1912,11 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 51:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is out of range.","",0);
+				give_error("Special item is univ.out.out of range.","",0);
 				set_sd = FALSE;
 				}
 				else {
-					party.spec_items[spec.ex1a] = (spec.ex1b == 0) ? 1 : 0;
+					univ.party.spec_items[spec.ex1a] = (spec.ex1b == 0) ? 1 : 0;
 					}
 			if (stat_window == 6)
 				set_stat_window(6);
@@ -1991,9 +1993,9 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 							give_gold(spec.ex1b,TRUE);
 							give_food(spec.ex2a,TRUE);
 							if ((spec.m2 >= 0) && (spec.m2 < 50)) {
-								if (party.spec_items[spec.m2] == 0)
+								if (univ.party.spec_items[spec.m2] == 0)
 									ASB("You get a special item.");
-								party.spec_items[spec.m2] = 1;
+								univ.party.spec_items[spec.m2] = 1;
 								*redraw = TRUE;
 								if (stat_window == 6)
 									set_stat_window(6);
@@ -2004,13 +2006,13 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 61:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
+				give_error("Special outdoor enc. is univ.out.out of range. Must be 0-3.","",0);
 				set_sd = FALSE;
 				}
 				else {
-					l = global_to_local(party.p_loc);			
+					l = global_to_local(univ.party.p_loc);			
 					place_outd_wand_monst(l,
-					outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[spec.ex1a],TRUE);			
+					univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[spec.ex1a],TRUE);			
 					}
 			break;
 		case 62:
@@ -2090,14 +2092,14 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 82:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_health = minmax(0,	adven[i].max_health,
-						adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					ADVEN[i].cur_health = minmax(0,	ADVEN[i].max_health,
+						ADVEN[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 83:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].cur_sp = minmax(0,	adven[i].max_sp,
-						adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					ADVEN[i].cur_sp = minmax(0,	ADVEN[i].max_sp,
+						ADVEN[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 84:
 			for (i = 0; i < 6; i++)
@@ -2108,15 +2110,15 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 85:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					adven[i].skill_pts = minmax(0,	100,
-						adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					ADVEN[i].skill_pts = minmax(0,	100,
+						ADVEN[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 86:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						if ((adven[i].main_status > 0) && (adven[i].main_status < 10))
-							adven[i].main_status = 1;
+						if ((ADVEN[i].main_status > 0) && (ADVEN[i].main_status < 10))
+							ADVEN[i].main_status = 1;
 						}
 						else kill_pc(i,spec.ex1a + 2 + 10);
 					}
@@ -2195,72 +2197,72 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 98:
 			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
-				give_error("Skill is out of range.","",0);
+				give_error("Skill is univ.out.out of range.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
 				if (((pc < 0) || (pc == i)) && (get_ran(1,1,100) < spec.pic))
-					adven[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
-						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					ADVEN[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
+						ADVEN[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 99:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
+				give_error("Mage spell is univ.out.out of range (0 - 31). See docs.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) 
-					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
+					ADVEN[i].mage_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 100:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
+				give_error("Priest spell is univ.out.out of range (0 - 31). See docs.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) 
-					adven[i].priest_spells[spec.ex1a + 30] = TRUE;
+					ADVEN[i].priest_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 101:
 			if (spec.ex1b == 0)
 				give_gold(spec.ex1a,TRUE);
-				else if (party.gold < spec.ex1a)
-					party.gold = 0;
+				else if (univ.party.gold < spec.ex1a)
+					univ.party.gold = 0;
 					else take_gold(spec.ex1a,FALSE);
 			break;
 		case 102:
 			if (spec.ex1b == 0)
 				give_food(spec.ex1a,TRUE);
-				else if (party.food < spec.ex1a)
-					party.food = 0;
+				else if (univ.party.food < spec.ex1a)
+					univ.party.food = 0;
 					else take_food(spec.ex1a,FALSE);
 			break;
 		case 103:
 			if (spec.ex1a != minmax(0,19,spec.ex1a)) {
-				give_error("Alchemy is out of range.","",0);
+				give_error("Alchemy is univ.out.out of range.","",0);
 				break;
 				}
-			party.alchemy[spec.ex1a] = TRUE;
+			univ.party.alchemy[spec.ex1a] = TRUE;
 			break;
 		case 104:
-			r1 = (short) party.stuff_done[SDF_PARTY_STEALTHY];
+			r1 = (short) PSD[SDF_PARTY_STEALTHY];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			party.stuff_done[SDF_PARTY_STEALTHY] = r1;
+			PSD[SDF_PARTY_STEALTHY] = r1;
 			break;
 		case 105:
-			r1 = (short) party.stuff_done[SDF_PARTY_FIREWALK];
+			r1 = (short) PSD[SDF_PARTY_FIREWALK];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			party.stuff_done[SDF_PARTY_FIREWALK] = r1;
+			PSD[SDF_PARTY_FIREWALK] = r1;
 			break;
 		case 106:
-			if (party.in_boat >= 0)
+			if (univ.party.in_boat >= 0)
 				add_string_to_buf("  Can't fly when on a boat. "); 
-			else if (party.in_horse >= 0)////
+			else if (univ.party.in_horse >= 0)////
 				add_string_to_buf("  Can't fly when on a horse.  "); 
 			else {
-				r1 = (short) party.stuff_done[SDF_PARTY_FLIGHT];
+				r1 = (short) PSD[SDF_PARTY_FLIGHT];
 				r1 = minmax(0,250,r1 + spec.ex1a);
-				party.stuff_done[SDF_PARTY_FLIGHT] = r1;
+				PSD[SDF_PARTY_FLIGHT] = r1;
 				}
 			break;
 		}
@@ -2288,7 +2290,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case 131:
-			if (((is_town()) || (is_combat())) && (c_town.town_num == spec.ex1a))
+			if (((is_town()) || (is_combat())) && (univ.town.num == spec.ex1a))
 				*next_spec = spec.ex1b;
 			break;
 		case 132:
@@ -2297,9 +2299,9 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 133:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is out of range.","",0);		
+				give_error("Special item is univ.out.out of range.","",0);		
 				}
-				else if (party.spec_items[spec.ex1a] > 0)
+				else if (univ.party.spec_items[spec.ex1a] > 0)
 					*next_spec = spec.ex1b;
 			break;
 		case 134:
@@ -2307,24 +2309,24 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				if (PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 				}
-				else give_error("A Stuff Done flag is out of range.","",0);	
+				else give_error("A Stuff Done flag is univ.out.out of range.","",0);	
 			break;
 		case 135:
-			if (((is_town()) || (is_combat())) && (t_d.terrain[spec.ex1a][spec.ex1b] == spec.ex2a))
+			if (((is_town()) || (is_combat())) && (univ.town.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 136:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (out[l.x][l.y] == spec.ex2a))
+			if ((is_out()) && (univ.out.out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 137:
-			if (party.gold >= spec.ex1a)
+			if (univ.party.gold >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case 138:
-			if (party.food >= spec.ex1a)
+			if (univ.party.food >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case 139:
@@ -2332,8 +2334,8 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
-					&& (l == t_i.items[i].item_loc))
+				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].special_class == spec.ex2a)
+					&& (l == univ.town.items[i].item_loc))
 						*next_spec = spec.ex2b;
 			break;
 		case 140:
@@ -2342,20 +2344,20 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 141:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1)
+				if (ADVEN[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
-							&& (adven[i].equip[j] == TRUE)) 
+						if ((ADVEN[i].items[j].variety > 0) && (ADVEN[i].items[j].special_class == spec.ex1a)
+							&& (ADVEN[i].equip[j] == TRUE)) 
 							*next_spec = spec.ex1b;			
 			break;
 		case 142:
-			if (party.gold >= spec.ex1a) {
+			if (univ.party.gold >= spec.ex1a) {
 				take_gold(spec.ex1a,TRUE);
 				*next_spec = spec.ex1b;
 				}
 			break;
 		case 143:
-			if (party.food >= spec.ex1a) {
+			if (univ.party.food >= spec.ex1a) {
 				take_food(spec.ex1a,TRUE);
 				*next_spec = spec.ex1b;
 				}
@@ -2365,11 +2367,11 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((t_i.items[i].variety > 0) && (t_i.items[i].special_class == spec.ex2a)
-					&& (l == t_i.items[i].item_loc)) {
+				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].special_class == spec.ex2a)
+					&& (l == univ.town.items[i].item_loc)) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
-						t_i.items[i].variety = 0;
+						univ.town.items[i].variety = 0;
 						}
 			break;
 		case 145:
@@ -2378,10 +2380,10 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 146:
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 1)
+				if (ADVEN[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((adven[i].items[j].variety > 0) && (adven[i].items[j].special_class == spec.ex1a)
-							&& (adven[i].equip[j] == TRUE)) {
+						if ((ADVEN[i].items[j].variety > 0) && (ADVEN[i].items[j].special_class == spec.ex1a)
+							&& (ADVEN[i].equip[j] == TRUE)) {
 							*next_spec = spec.ex1b;			
 							*redraw = 1;
 							take_item(i,j);
@@ -2409,12 +2411,12 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 151:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[4] > 0))
+				if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 152:
 			for (i = 0; i < 6; i++)
-				if ((adven[i].main_status == 1) && (adven[i].traits[5] > 0))
+				if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[5] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 153:
@@ -2558,18 +2560,18 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 182:
 			for (i = 0; i < T_M; i++)
-				if (c_town.monst.dudes[i].number == spec.ex1a) {
-					c_town.monst.dudes[i].active = 0;
+				if (univ.town.monst.dudes[i].number == spec.ex1a) {
+					univ.town.monst.dudes[i].active = 0;
 					}			
 			*redraw = 1;
 			break;
 		case 183:
 			for (i = 0; i < T_M; i++)
-				if ((c_town.monst.dudes[i].active > 0) &&
+				if ((univ.town.monst.dudes[i].active > 0) &&
 					(((spec.ex1a == 0) && (1 == 1)) || 
-					((spec.ex1a == 1) && (c_town.monst.dudes[i].attitude % 2 == 0)) || 
-					((spec.ex1a == 2) && (c_town.monst.dudes[i].attitude % 2 == 1)))){
-					c_town.monst.dudes[i].active = 0;
+					((spec.ex1a == 1) && (univ.town.monst.dudes[i].attitude % 2 == 0)) || 
+					((spec.ex1a == 2) && (univ.town.monst.dudes[i].attitude % 2 == 1)))){
+					univ.town.monst.dudes[i].active = 0;
 					}
 			*redraw = 1;
 			break;
@@ -2741,7 +2743,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 				check_mess = FALSE;
 				}
-			if (party.stuff_done[SDF_IS_PARTY_SPLIT] > 0) {
+			if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
 				ASB("Party is already split.");
 				if (which_mode < 3)
 					*a = 1;
@@ -2752,7 +2754,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (which_mode < 3)
 				*a = 1;
 			if (r1 != 6) {
-				party.stuff_done[SDF_PARTY_SPLIT_PC] = r1;
+				PSD[SDF_PARTY_SPLIT_PC] = r1;
 				*next_spec = -1;
 				start_split(spec.ex1a,spec.ex1b,spec.ex2a);
 				}
@@ -2771,10 +2773,10 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 195:
 			for (i = 0; i < 30; i++)
-	 			if (party.party_event_timers[i] == 0) {
-	 				party.party_event_timers[i] = spec.ex1a;
-	 				party.node_to_call[i] = spec.ex1b;
-	 				party.global_or_town[i] = 1;
+	 			if (univ.party.party_event_timers[i] == 0) {
+	 				univ.party.party_event_timers[i] = spec.ex1a;
+	 				univ.party.node_to_call[i] = spec.ex1b;
+	 				univ.party.global_or_town[i] = 1;
 	 				i = 30;
 	 				}
 			break;
@@ -2861,15 +2863,15 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 212:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (t_i.items[k].item_loc == l)) {
-					t_i.items[k].item_loc.x = spec.sd1;
-					t_i.items[k].item_loc.y = spec.sd2;
+				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].item_loc == l)) {
+					univ.town.items[k].item_loc.x = spec.sd1;
+					univ.town.items[k].item_loc.y = spec.sd2;
 				}
 			break;
 		case 213:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((t_i.items[k].variety > 0) && (t_i.items[k].item_loc == l)) {
-					t_i.items[k].variety = 0;
+				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].item_loc == l)) {
+					univ.town.items[k].variety = 0;
 				}
 			break;
 		case 214:
@@ -2949,23 +2951,23 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case 226:
-			outdoors[party.i_w_c.x][party.i_w_c.y].terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
+			univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
 			l.x = spec.ex1a;
 			l.y = spec.ex1b;
 			l = local_to_global(l);
-			out[l.x][l.y] = spec.ex2a;
+			univ.out.out[l.x][l.y] = spec.ex2a;
 			*redraw = 1;
 			check_mess = TRUE;
 			break;		
 		case 227:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
+				give_error("Special outdoor enc. is univ.out.out of range. Must be 0-3.","",0);
 				//set_sd = FALSE;
 				}
 				else {
-					l = global_to_local(party.p_loc);
+					l = global_to_local(univ.party.p_loc);
 					place_outd_wand_monst(l,
-					outdoors[party.i_w_c.x][party.i_w_c.y].special_enc[spec.ex1a],TRUE);			
+					univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[spec.ex1a],TRUE);			
 					check_mess = TRUE;
 					}
 			break;		
@@ -3001,7 +3003,7 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 void setsd(short a,short b,short val)
 {
 	if (sd_legit(a,b) == FALSE) {
-		give_error("The scenario attempted to change an out of range Stuff Done flag.","",0);
+		give_error("The scenario attempted to change an univ.out.out of range Stuff Done flag.","",0);
 		return;
 		}
 	PSD[a][b] = val;
@@ -3024,13 +3026,13 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 		mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
 	if (mess1 >= 0) {
 		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
-		label1b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
-			scenario.out_width * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
+		label1b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
+			scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
 		}
 	if (mess2 >= 0) {
 		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
-		label2b = (is_out()) ? (party.outdoor_corner.x + party.i_w_c.x) +
-			scenario.out_width * (party.outdoor_corner.y + party.i_w_c.y) : c_town.town_num;
+		label2b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
+			scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
 		}
 	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
 		"",57,scenario.intro_pic,PICT_SCEN,0);
@@ -3042,7 +3044,7 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 		
 	if (((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
 		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
-		give_error("The scenario attempted to access a message out of range.","",0);
+		give_error("The scenario attempted to access a message univ.out.out of range.","",0);
 		return;
 		}
 	switch (cur_type) {
@@ -3054,19 +3056,17 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 1:
 			if (which_str1 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str1,(char *) str1);
+				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x, 
+					univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
 			if (which_str2 >= 0)
-				load_outdoors(party.outdoor_corner.x + party.i_w_c.x, 
-					party.outdoor_corner.y + party.i_w_c.y, party.i_w_c.x, party.i_w_c.y,
-					1,which_str2,(char *) str2);
+				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x, 
+					univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,town->town_strs(which_str1));
+				strcpy((char *) str1,univ.town.town->town_strs(which_str1));
 			if (which_str2 >= 0)
-				strcpy((char *) str2,town->town_strs(which_str2));
+				strcpy((char *) str2,univ.town.town->town_strs(which_str2));
 			break;
 		}
 

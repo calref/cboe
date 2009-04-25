@@ -6,7 +6,7 @@
  *
  */
 
-#include "item.h"
+#include "classes.h"
 #include "boe.consts.h"
 #include "oldstructs.h"
 

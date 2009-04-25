@@ -81,6 +81,22 @@
 		913D026A0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D026B0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D026C0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
+		913D05B60FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
+		913D05B70FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
+		913D05B80FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
+		913D05BC0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
+		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
+		91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
+		91AC60A80FA26C1B00EEAE67 /* tmpltown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */; };
+		91AC60A90FA26C1B00EEAE67 /* tmpltown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */; };
+		91AC60AA0FA26C1B00EEAE67 /* tmpltown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */; };
+		91AC61C60FA2729900EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
+		91AC620B0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
+		91AC620C0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
+		91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
@@ -291,6 +307,19 @@
 		913D00840FA0021400184C18 /* dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgutil.h; path = misc/dlgutil.h; sourceTree = "<group>"; };
 		913D00850FA0021400184C18 /* dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgutil.cpp; path = misc/dlgutil.cpp; sourceTree = "<group>"; };
 		913D02680FA0EB0300184C18 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = DEVELOPER_DIR; };
+		913D05B40FA1E9E200184C18 /* party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
+		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
+		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.h; sourceTree = "<group>"; };
+		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
+		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regtown.h; sourceTree = "<group>"; };
+		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
+		91AC60A60FA26C1B00EEAE67 /* tmpltown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tmpltown.h; sourceTree = "<group>"; };
+		91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tmpltown.cpp; sourceTree = "<group>"; };
+		91AC61300FA270B300EEAE67 /* classes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = classes.h; sourceTree = "<group>"; };
+		91AC61C40FA2729900EEAE67 /* universe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = universe.h; sourceTree = "<group>"; };
+		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = universe.cpp; sourceTree = "<group>"; };
+		91AC62090FA2853700EEAE67 /* creatlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = creatlist.h; sourceTree = "<group>"; };
+		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
@@ -436,6 +465,7 @@
 			children = (
 				913D03330FA0FFE800184C18 /* headers */,
 				913D03320FA0FFE700184C18 /* src */,
+				91AC61300FA270B300EEAE67 /* classes.h */,
 			);
 			name = classes;
 			sourceTree = "<group>";
@@ -453,6 +483,12 @@
 				91E5C7980F9F60EC00C21460 /* town.cpp */,
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
 				91E5C7B70F9F619D00C21460 /* talking.cpp */,
+				913D05B50FA1E9E300184C18 /* party.cpp */,
+				913D05BB0FA1EA0A00184C18 /* pc.cpp */,
+				91AC607F0FA26A3B00EEAE67 /* regtown.cpp */,
+				91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */,
+				91AC61C50FA2729900EEAE67 /* universe.cpp */,
+				91AC620A0FA2853700EEAE67 /* creatlist.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -471,6 +507,12 @@
 				91E5C7970F9F60EC00C21460 /* town.h */,
 				91E5C79C0F9F60FA00C21460 /* outdoors.h */,
 				91E5C7B60F9F619D00C21460 /* talking.h */,
+				913D05B40FA1E9E200184C18 /* party.h */,
+				913D05BA0FA1EA0A00184C18 /* pc.h */,
+				91AC607E0FA26A3B00EEAE67 /* regtown.h */,
+				91AC60A60FA26C1B00EEAE67 /* tmpltown.h */,
+				91AC61C40FA2729900EEAE67 /* universe.h */,
+				91AC62090FA2853700EEAE67 /* creatlist.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -916,6 +958,12 @@
 				91E5C7B90F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005B0F9FEEC300184C18 /* porting.cpp in Sources */,
 				913D00860FA0021400184C18 /* dlgutil.cpp in Sources */,
+				913D05B60FA1E9E300184C18 /* party.cpp in Sources */,
+				913D05BC0FA1EA0A00184C18 /* pc.cpp in Sources */,
+				91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */,
+				91AC60A80FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
+				91AC61C60FA2729900EEAE67 /* universe.cpp in Sources */,
+				91AC620B0FA2853700EEAE67 /* creatlist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -961,6 +1009,11 @@
 				91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005D0F9FEEC300184C18 /* porting.cpp in Sources */,
 				913D00880FA0021400184C18 /* dlgutil.cpp in Sources */,
+				913D05B80FA1E9E300184C18 /* party.cpp in Sources */,
+				913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */,
+				91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */,
+				91AC60AA0FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
+				91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,6 +1049,11 @@
 				91E5C7B80F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005C0F9FEEC300184C18 /* porting.cpp in Sources */,
 				913D00870FA0021400184C18 /* dlgutil.cpp in Sources */,
+				913D05B70FA1E9E300184C18 /* party.cpp in Sources */,
+				913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */,
+				91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */,
+				91AC60A90FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
+				91AC620C0FA2853700EEAE67 /* creatlist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

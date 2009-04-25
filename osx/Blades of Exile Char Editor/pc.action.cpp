@@ -10,6 +10,7 @@
 #include "dlgtool.h"
 #include "mathutil.h"
 #include "dlgconsts.h"
+#include "dlgutil.h"
 
 /* Adventure globals */
 extern party_record_type party;

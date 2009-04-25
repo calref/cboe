@@ -12,6 +12,7 @@
 #include "dlgconsts.h"
 #include "graphtool.h"
 #include "boe.consts.h"
+#include "dlgutil.h"
 
 Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
@@ -129,7 +130,7 @@ int main(void)
 	init_main_buttons();
 	Set_up_win();
 	Point p = {0,0};
-	init_graph_tool(redraw_screen,p);
+	init_graph_tool(redraw_screen,&p);
 	init_snd_tool();
 	find_quickdraw();
 	set_pixel_depth();
@@ -546,7 +547,7 @@ void handle_extra_menu(int item_hit)
 		break;
 		
 		case 4:
-			if (party.stuff_done[SDF_IS_PARTY_SPLIT] > 0) {
+			if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
 				FCD(909,0);
 				break;
 				}
@@ -555,14 +556,14 @@ void handle_extra_menu(int item_hit)
 			break;
 	
 		case 5:
-			if (party.stuff_done[SDF_IS_PARTY_SPLIT] == 0) {
+			if (PSD[SDF_IS_PARTY_SPLIT] == 0) {
 				FCD(911,0);
 				break;
 				}
 			FCD(910,0);
-			c_town.p_loc.x = party.stuff_done[SDF_PARTY_SPLIT_X];
-			c_town.p_loc.y = party.stuff_done[SDF_PARTY_SPLIT_Y];
-			party.stuff_done[SDF_IS_PARTY_SPLIT] = 0;
+			c_town.p_loc.x = PSD[SDF_PARTY_SPLIT_X];
+			c_town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
+			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status >= 10)
 					adven[i].main_status -= 10;
@@ -614,7 +615,7 @@ void handle_extra_menu(int item_hit)
 			if (FCD(912,0) != 1)
 				break;
 			remove_party_from_scen();
-			party.stuff_done[SDF_IS_PARTY_SPLIT] = 0;
+			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			break;
 	}
 	redraw_screen();
@@ -628,7 +629,7 @@ void handle_edit_menu(int item_hit)
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
-	if ((ed_reg == FALSE) && (save_blocked == FALSE))
+	if (save_blocked == FALSE)
 		if ((choice = FCD(904,0)) == 1)
 			return;
 			else save_blocked = TRUE;
@@ -747,7 +748,7 @@ void handle_item_menu(int item_hit)
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
-	if ((ed_reg == FALSE) && (save_blocked == FALSE))
+	if (save_blocked == FALSE)
 		if ((choice = FCD(904,0)) == 1)
 			return;
 			else save_blocked = TRUE;

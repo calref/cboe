@@ -22,3 +22,6 @@ void port_out(legacy::outdoor_record_type* out);
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr);
 void port_dummy_t_d(short size,char *buffer);
 void port_town(legacy::town_record_type* dummy_town_ptr);
+void port_party(legacy::party_record_type* old);
+void port_pc(legacy::pc_record_type* old);
+void port_c_town(legacy::current_town_type* old);

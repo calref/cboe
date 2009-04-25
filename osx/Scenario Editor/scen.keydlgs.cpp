@@ -1,4 +1,5 @@
 #include "scen.global.h"
+#include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
 #include "scen.dlgutil.h"

@@ -1,7 +1,6 @@
 //#include <vector>
 //#include <string>
 //#include "scen.consts.h"
-#include "scenario.h"
 
 #define	SLEEP_TICKS		2L
 #define	MOUSE_REGION	0L
@@ -162,77 +161,77 @@
 //	city_ter_rect_type city_ter_rect[10];
 //	} template_town_type;
 
-typedef struct {
-	cItemRec scen_items[400];
-	char monst_names[256][20];
-	char ter_names[256][30];
-	} scen_item_data_type;
+//typedef struct {
+//	cItemRec scen_items[400];
+//	char monst_names[256][20];
+//	char ter_names[256][30];
+//	} scen_item_data_type;
 
 // for game
-typedef struct {
-	short personality;
-	short str1,str2;
-	} talk_save_type;
+//typedef struct {
+//	short personality;
+//	short str1,str2;
+//	} talk_save_type;
 
 
 
-typedef struct {
-	short active,attitude;
-	unsigned char number;
-	location m_loc;
-	cMonster m_d;
-	short mobile;
-	short summoned;
-	cTown::cCreature monst_start;
-	} creature_data_type;
+//typedef struct {
+//	short active,attitude;
+//	unsigned char number;
+//	location m_loc;
+//	cMonster m_d;
+//	short mobile;
+//	short summoned;
+//	cTown::cCreature monst_start;
+//	} creature_data_type;
 
-typedef struct {
-	creature_data_type dudes[60];
-	short which_town;
-	short friendly;
-	} creature_list_type;
+//typedef struct {
+//	creature_data_type dudes[60];
+//	short which_town;
+//	short friendly;
+//	} creature_list_type;
 
-typedef struct {
-	Boolean exists;
-	short direction;
-	cOutdoors::cWandering what_monst;
-	location which_sector,m_loc;	
-	} outdoor_creature_type;
+//typedef struct {
+//	Boolean exists;
+//	short direction;
+//	cOutdoors::cWandering what_monst;
+//	location which_sector,m_loc;	
+//	} outdoor_creature_type;
 	
-typedef struct {
-	long age;
-	short gold,food;
-	unsigned char stuff_done[310][10],item_taken[200][8];
-	short light_level;
-	location outdoor_corner,i_w_c,p_loc,loc_in_sec;
-	cVehicle boats[30];
-	cVehicle horses[30];
-	creature_list_type creature_save[4];
-	short in_boat,in_horse;
-	outdoor_creature_type out_c[10];
-	cItemRec magic_store_items[5][10];
-	short imprisoned_monst[4];
-	char m_seen[256];
-	char journal_str[50];
-	short journal_day[50];
-	short special_notes_str[140][2];
-	talk_save_type talk_save[120];
-	short direction,at_which_save_slot;
-	char alchemy[20];
-	bool can_find_town[200];
-	short key_times[100];
-	short party_event_timers[30];
-	short global_or_town[30];
-	short node_to_call[30];
-	char spec_items[50];
-	} party_record_type;
+//typedef struct {
+//	long age;
+//	short gold,food;
+//	unsigned char stuff_done[310][10],item_taken[200][8];
+//	short light_level;
+//	location outdoor_corner,i_w_c,p_loc,loc_in_sec;
+//	cVehicle boats[30];
+//	cVehicle horses[30];
+//	creature_list_type creature_save[4];
+//	short in_boat,in_horse;
+//	outdoor_creature_type out_c[10];
+//	cItemRec magic_store_items[5][10];
+//	short imprisoned_monst[4];
+//	char m_seen[256];
+//	char journal_str[50];
+//	short journal_day[50];
+//	short special_notes_str[140][2];
+//	talk_save_type talk_save[120];
+//	short direction,at_which_save_slot;
+//	char alchemy[20];
+//	bool can_find_town[200];
+//	short key_times[100];
+//	short party_event_timers[30];
+//	short global_or_town[30];
+//	short node_to_call[30];
+//	char spec_items[50];
+//	} party_record_type;
 
-typedef struct {
-	char strings_ls[NLS][40];
-	char strings_rs[NRS][40];
-	char town_strs[180][256];
-	char out_strs[120][256];
-	char scen_strs[270][256];
-	char talk_strs[170][256];
-	scen_item_data_type scen_item_list;
-} piles_of_stuff_dumping_type;
+//typedef struct {
+//	char strings_ls[NLS][40];
+//	char strings_rs[NRS][40];
+//	char town_strs[180][256];
+//	char out_strs[120][256];
+//	char scen_strs[270][256];
+//	char talk_strs[170][256];
+//	scen_item_data_type scen_item_list;
+//} piles_of_stuff_dumping_type;

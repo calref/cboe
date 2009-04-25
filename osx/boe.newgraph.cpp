@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 #include "boe.graphics.h"
 #include "boe.graphutil.h"
 #include "boe.monster.h"
@@ -48,19 +49,19 @@ extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern GWorldPtr fields_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
-extern party_record_type party;
-extern pc_record_type adven[6];
+//extern party_record_type party;
+//extern pc_record_type ADVEN[6];
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern location center;
 extern short pc_marked_damage[6],pc_dir[6];
 extern short monst_marked_damage[T_M];
 extern location pc_pos[6];
-extern current_town_type c_town;
-extern big_tr_type t_d;
-extern town_item_list	t_i;
+//extern current_town_type univ.town;
+//extern big_tr_type t_d;
+//extern town_item_list	t_i;
 extern unsigned char combat_terrain[64][64];
-extern unsigned char misc_i[64][64],sfx[64][64];
+//extern unsigned char misc_i[64][64],sfx[64][64];
 extern Point store_anim_ul;
 extern char light_area[13][13];
 extern short terrain_there[9][9];
@@ -69,7 +70,8 @@ extern PatHandle bw_pats[15];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
 extern cScenario scenario;
-extern talking_record_type talking;
+extern cUniverse univ;
+//extern talking_record_type talking;
 
 RgnHandle oval_region = NULL,dark_mask_region,temp_rect_rgn;
 
@@ -119,8 +121,8 @@ Rect explode_place_rect[30];
 
 
 // Animation vars
-extern town_record_type anim_town;
-extern tiny_tr_type anim_t_d;
+//extern town_record_type anim_town;
+//extern tiny_tr_type anim_t_d;
 extern short anim_step;
 short store_anim_type;
 extern char anim_str[60];
@@ -150,7 +152,7 @@ void apply_unseen_mask()
 
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
-	if (!(is_out()) && (c_town.town.lighting > 0))
+	if (!(is_out()) && (univ.town.town->lighting_type > 0))
 		return;
 		
 	for (i = 0; i < 11; i++)
@@ -203,7 +205,7 @@ void apply_light_mask()
 		return;
 	if (is_out())
 		return;
-	if (c_town.town.lighting == 0)
+	if (univ.town.town->lighting_type == 0)
 		return;
 	
 	if (oval_region == NULL) {
@@ -558,7 +560,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 short get_missile_direction(Point origin_point,Point the_point)
 {
-	location store_dir = {0,0};
+	location store_dir;
 	short dir = 0;
 	// To reuse legacy code, will renormalize the_point, which is missile destination,
 	// so that origin_point is moved to (149,185) and the_point is moved in proportion
@@ -834,12 +836,12 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 
 	RGBForeColor(&c[3]);
 	switch (store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",adven[current_pc].name); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",adven[current_pc].name);break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",adven[current_pc].name); break;
+		case 3: sprintf(cur_name,"Healing for %s.",ADVEN[current_pc].name); break;
+		case 10: sprintf(cur_name,"Mage Spells for %s.",ADVEN[current_pc].name);break;
+		case 11: sprintf(cur_name,"Priest Spells for %s.",ADVEN[current_pc].name); break;
 		case 12: sprintf(cur_name,"Buying Alchemy.");break;
 		case 4: sprintf(cur_name,"Buying Food.");break;
-		default:sprintf(cur_name,"Shopping for %s.",adven[current_pc].name); break;
+		default:sprintf(cur_name,"Shopping for %s.",ADVEN[current_pc].name); break;
 		}
 	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18,false);	
 
@@ -907,7 +909,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 			default:
 				what_magic_shop = (what_chosen / 1000) - 1;
 				what_magic_shop_item = what_chosen % 1000;
-				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
+				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, FALSE,1);
 				strcpy(cur_name,base_item.full_name);
@@ -1393,13 +1395,13 @@ short scan_for_response(char *str)
 	short i;
 	
 	for (i = 0; i < 60; i++) { // 60 response in each bunch
-		if ((talking.talk_nodes[i].personality != -1) &&
-			((talking.talk_nodes[i].personality == store_personality)
-		 || (talking.talk_nodes[i].personality == -2)) && 
-			(((str[0] == talking.talk_nodes[i].link1[0]) && (str[1] == talking.talk_nodes[i].link1[1]) 
-			&& (str[2] == talking.talk_nodes[i].link1[2]) && (str[3] == talking.talk_nodes[i].link1[3])) 
-			|| ((str[0] == talking.talk_nodes[i].link2[0]) && (str[1] == talking.talk_nodes[i].link2[1]) 
-			&& (str[2] == talking.talk_nodes[i].link2[2]) && (str[3] == talking.talk_nodes[i].link2[3]))))
+		if ((univ.town.cur_talk->talk_nodes[i].personality != -1) &&
+			((univ.town.cur_talk->talk_nodes[i].personality == store_personality)
+		 || (univ.town.cur_talk->talk_nodes[i].personality == -2)) && 
+			(((str[0] == univ.town.cur_talk->talk_nodes[i].link1[0]) && (str[1] == univ.town.cur_talk->talk_nodes[i].link1[1]) 
+			&& (str[2] == univ.town.cur_talk->talk_nodes[i].link1[2]) && (str[3] == univ.town.cur_talk->talk_nodes[i].link1[3])) 
+			|| ((str[0] == univ.town.cur_talk->talk_nodes[i].link2[0]) && (str[1] == univ.town.cur_talk->talk_nodes[i].link2[1]) 
+			&& (str[2] == univ.town.cur_talk->talk_nodes[i].link2[2]) && (str[3] == univ.town.cur_talk->talk_nodes[i].link2[3]))))
 				return i;
 		}
 	return -1;

@@ -6,15 +6,6 @@
  *
  */
 
-#include "location.h"
-#include "terrain.h"
-#include "vehicle.h"
-#include "monster.h"
-#include "special.h"
-#include "item.h"
-#include "town.h"
-#include "outdoors.h"
-
 namespace legacy{
 	struct scenario_data_type;
 	struct item_storage_shortcut_type;
@@ -53,7 +44,7 @@ public:
 	short flag_to_add_to_town[10][2];
 	short flag_c;
 	short out_data_size[100][2];
-	Rect store_item_rects[3];
+	rectangle store_item_rects[3];
 	short store_item_towns[3];
 	short flag_e;
 	short special_items[50];
@@ -91,7 +82,7 @@ public:
 	char spec_item_names[50][256];
 	char spec_item_strs[50][256];
 	char spec_strs[100][256];
-	FSSpec scen_file;
+	FSSpec scen_file; // transient
 	
 	char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);

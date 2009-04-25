@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "scen.global.h"
+#include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
 #include "scen.actions.h"
@@ -375,19 +376,11 @@ void handle_file_menu(int item_hit)
 	
 	switch (item_hit) {
 		case 1: // open
-			NavReplyRecord s_reply;
-			NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
-			if (s_reply.validRecord == FALSE)
-				break;
-			AEKeyword keyword;
-			DescType descType;
-			Size actualSize;
-			FSSpec file_to_load;
-			AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
-			if (load_scenario(file_to_load)) {
-				if(load_town(scenario.last_town_edited))
+			FSSpec* file_to_load = nav_get_scenario();
+			if (load_scenario(*file_to_load)) {
+				if(load_town(scenario.last_town_edited,town))
 					cur_town = scenario.last_town_edited;
-				if(load_outdoors(scenario.last_out_edited,0)){
+				if(load_outdoors(scenario.last_out_edited,current_terrain)){
 					cur_out = scenario.last_out_edited;
 					augment_terrain(cur_out);
 				}

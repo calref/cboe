@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 #include "boe.graphutil.h"
@@ -31,13 +32,14 @@ extern short current_spell_range,town_type,store_anim_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
 extern short anim_step;
-extern party_record_type party;
-extern pc_record_type adven[6];
-extern big_tr_type t_d;
-extern outdoor_record_type outdoors[2][2];
-extern current_town_type c_town;
-extern town_item_list t_i;
-extern unsigned char out[96][96],out_e[96][96],combat_terrain[64][64];
+//extern party_record_type univ.party;
+//extern pc_record_type ADVEN[6];
+//extern big_tr_type t_d;
+//extern cOutdoors univ.out.outdoors[2][2];
+//extern current_town_type univ.town;
+//extern town_item_list t_i;
+//extern unsigned char univ.out.out[96][96],out_e[96][96];
+extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Point ul;
@@ -65,7 +67,8 @@ extern KeyMap key_state;
 extern Boolean fry_startup;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
-extern outdoor_strs_type outdoor_text[2][2];
+extern cUniverse univ;
+//extern outdoor_strs_type outdoor_text[2][2];
 extern GWorldPtr spec_scen_g;
 extern DialogPtr modeless_dialogs[18];
 extern Boolean modeless_exists[18];
@@ -189,7 +192,7 @@ PatHandle bw_pats[15];
 
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 Boolean supressing_some_spaces = FALSE;
-location ok_space[4] = {{0,0},{0,0},{0,0},{0,0}};
+location ok_space[4] = {loc(),loc(),loc(),loc()};
 	PicHandle	hold_pict;
 	PictInfo p,p2;
 
@@ -592,7 +595,7 @@ void draw_startup_stats()
 
 		OffsetRect(&to_rect,203,37);
 		char_win_draw_string(mainPtr,to_rect,
-			"Your party:",0,18,true);
+			"Your univ.party:",0,18,true);
 		TextSize(12);	
 		TextFace(bold);
 		TextFont(geneva_font_num);
@@ -602,7 +605,7 @@ void draw_startup_stats()
 			pc_rect.bottom = pc_rect.top + 79;
 			OffsetRect(&pc_rect,60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
 			
-			if (adven[i].main_status > 0) {
+			if (ADVEN[i].main_status > 0) {
 				from_rect = party_from;
 				OffsetRect(&from_rect,56 * (i / 3),36 * (i % 3));
 				to_rect = party_from,
@@ -612,23 +615,23 @@ void draw_startup_stats()
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
 				char_win_draw_string(mainPtr,pc_rect,
-					adven[i].name,0,18,true);
+					ADVEN[i].name,0,18,true);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
 				}
 			TextSize(12);	
 			OffsetRect(&pc_rect,12,16);
-			switch (adven[i].main_status) {
+			switch (ADVEN[i].main_status) {
 				case 1:
-					switch (adven[i].race) {
-						case 0: sprintf((char *) str,"Level %d Human",adven[i].level); break;
-						case 1: sprintf((char *) str,"Level %d Nephilim",adven[i].level); break;
-						case 2: sprintf((char *) str,"Level %d Slithzerikai",adven[i].level); break;
+					switch (ADVEN[i].race) {
+						case 0: sprintf((char *) str,"Level %d Human",ADVEN[i].level); break;
+						case 1: sprintf((char *) str,"Level %d Nephilim",ADVEN[i].level); break;
+						case 2: sprintf((char *) str,"Level %d Slithzerikai",ADVEN[i].level); break;
 						}
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					OffsetRect(&pc_rect,0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
-						adven[i].max_health,adven[i].max_sp);
+						ADVEN[i].max_health,ADVEN[i].max_sp);
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					break;
 				case 2:
@@ -1025,22 +1028,22 @@ void put_background()
 	PixPatHandle bg_pict;
 
 	if (is_out()) {
-		if (party.outdoor_corner.x >= 7)
+		if (univ.party.outdoor_corner.x >= 7)
 			bg_pict = bg[0]; 
 			else bg_pict = bg[10];
 		}
 	else if (is_combat()) {
-		if (party.outdoor_corner.x >= 7)
+		if (univ.party.outdoor_corner.x >= 7)
 			bg_pict = bg[2]; 
 			else bg_pict = bg[4];
 		}
 	else {
-		if (c_town.town.lighting > 0) {
-			if (party.outdoor_corner.x >= 7)
+		if (univ.town.town->lighting_type > 0) {
+			if (univ.party.outdoor_corner.x >= 7)
 				bg_pict = bg[1]; 
 				else bg_pict = bg[9]; 
 			}
-			else if ((party.outdoor_corner.x >= 7) && (c_town.town_num != 21))
+			else if ((univ.party.outdoor_corner.x >= 7) && (univ.town.num != 21))
 				bg_pict = bg[8]; 
 				else bg_pict = bg[13]; 
 		}
@@ -1123,7 +1126,7 @@ void draw_text_bar(short mode)
 	location loc;
 	char combat_string[100];
 	
-	loc = (is_out()) ? global_to_local(party.p_loc) : c_town.p_loc;
+	loc = (is_out()) ? global_to_local(univ.party.p_loc) : univ.town.p_loc;
 
 	if (mode == 1)
 		remember_tiny_text = 500;	   
@@ -1132,46 +1135,46 @@ void draw_text_bar(short mode)
 		remember_tiny_text = 500;
 	if (is_out()) {
 		for (i = 0; i < 8; i++)
-			if (pt_in_rect(loc,outdoors[party.i_w_c.x][party.i_w_c.y].info_rect[i])) 
+			if (loc.in(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].info_rect[i])) 
 				if ((remember_tiny_text == i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[i + 1]);
+						put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(i + 1));
 						remember_tiny_text = i;
 						return;
 						}
-		if (remember_tiny_text != 50 + party.i_w_c.x + party.i_w_c.y) {
-			put_text_bar((char *) outdoor_text[party.i_w_c.x][party.i_w_c.y].out_strs[0]);
-			remember_tiny_text = 50 + party.i_w_c.x + party.i_w_c.y;
+		if (remember_tiny_text != 50 + univ.party.i_w_c.x + univ.party.i_w_c.y) {
+			put_text_bar((char *) univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(0));
+			remember_tiny_text = 50 + univ.party.i_w_c.x + univ.party.i_w_c.y;
 			}
 		}
 	if (is_town()) {
 		for (i = 0; i < num_rect[town_type]; i++)
-			if (pt_in_rect(loc,t_d.room_rect[i])) 
+			if (loc.in(univ.town.town->room_rect(i))) 
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(town->town_strs(i + 1));
+						put_text_bar(univ.town.town->town_strs(i + 1));
 						remember_tiny_text = 200 + i;
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) town->town_strs(0)); ////
+			put_text_bar((char *) univ.town.town->town_strs(0)); ////
 			remember_tiny_text = 250;
 			}
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
 		sprintf((char *) combat_string,"%s (ap: %d)",
-			adven[current_pc].name,pc_moves[current_pc]);
+			ADVEN[current_pc].name,pc_moves[current_pc]);
 		put_text_bar((char *) combat_string);
 		remember_tiny_text = 500;
 		}
 	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
-	   	if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going((char *) combat_string,c_town.monst.dudes[i].number,c_town.monst.dudes[i].m_d.ap);
+	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].m_d.ap > 0)) {
+	   		print_monster_going((char *) combat_string,univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].m_d.ap);
 			put_text_bar((char *) combat_string);
 			remember_tiny_text = 500;
 			i = 400;	   
@@ -1224,7 +1227,7 @@ void put_text_bar(char *str)
 	rect_draw_some_item (text_bar_gworld, win_from_rects[4], text_bar_gworld, win_to_rects[4], 0, 1);
 }
 
-// This is called when a new situation is entered. It figures out what graphics are needed,
+// This is called when a new situation is entered. It figures univ.out.out what graphics are needed,
 // sets up which_g_stored, and loads them.
 void load_area_graphics()
 {
@@ -1400,35 +1403,35 @@ void load_outdoor_graphics() ////
 
 	for (i = 0; i < 96; i++)
 		for (j = 0; j < 96; j++) 
-			add_terrain_to_wish_list(out[i][j]);
+			add_terrain_to_wish_list(univ.out.out[i][j]);
 
 	for (l = 0; l < 2; l++)
 	for (m = 0; m < 2; m++) 
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 7; j++)
-			if (outdoors[l][m].wandering[i].monst[j] != 0) {
-				pict = get_monst_picnum(outdoors[l][m].wandering[i].monst[j]);
+			if (univ.out.outdoors[l][m].wandering[i].monst[j] != 0) {
+				pict = get_monst_picnum(univ.out.outdoors[l][m].wandering[i].monst[j]);
 				//add_monst_graphic(pict,0);
-				add_monst_graphic(outdoors[l][m].wandering[i].monst[j],0);
+				add_monst_graphic(univ.out.outdoors[l][m].wandering[i].monst[j],0);
 
 				j = 8;
 				}
 		for (j = 0; j < 7; j++)
-			if (outdoors[l][m].special_enc[i].monst[j] != 0) {
-				pict = get_monst_picnum(outdoors[l][m].special_enc[i].monst[j]);
+			if (univ.out.outdoors[l][m].special_enc[i].monst[j] != 0) {
+				pict = get_monst_picnum(univ.out.outdoors[l][m].special_enc[i].monst[j]);
 				//add_monst_graphic(pict,0);
-				add_monst_graphic(outdoors[l][m].special_enc[i].monst[j],0);
+				add_monst_graphic(univ.out.outdoors[l][m].special_enc[i].monst[j],0);
 				j = 8;
 				}
 		}
 
 	for (i = 0; i < 10; i++)
-		if (party.out_c[i].exists == TRUE)
+		if (univ.party.out_c[i].exists == TRUE)
 			for (j = 0; j < 7; j++)
-				if (party.out_c[i].what_monst.monst[j] != 0) {
-					pict = get_monst_picnum(party.out_c[i].what_monst.monst[j]);
+				if (univ.party.out_c[i].what_monst.monst[j] != 0) {
+					pict = get_monst_picnum(univ.party.out_c[i].what_monst.monst[j]);
 					//add_monst_graphic(pict, 0);
-					add_monst_graphic(party.out_c[i].what_monst.monst[j], 0);
+					add_monst_graphic(univ.party.out_c[i].what_monst.monst[j], 0);
 					j = 8;
 					}
 }
@@ -1461,7 +1464,7 @@ void add_monst_graphic(unsigned char m,short mode)////
 
 void load_town_graphics() // Setting up town monsters takes some finess, due to the flexibility
 					// of the situation
-// This can be used for town or beginning out outdoor combat
+// This can be used for town or beginning univ.out.out outdoor combat
 {
 	short i,j;
 	
@@ -1469,15 +1472,15 @@ void load_town_graphics() // Setting up town monsters takes some finess, due to 
 		for (j = 0; j < town_size[town_type]; j++) 
 			if (is_combat())
 				add_terrain_to_wish_list(combat_terrain[i][j]);
-				else add_terrain_to_wish_list(t_d.terrain[i][j]);
+				else add_terrain_to_wish_list(univ.town.town->terrain(i,j));
 
 	for (i = 0; i < T_M; i++)
-		if ((c_town.monst.dudes[i].number != 0) && (c_town.monst.dudes[i].active > 0))
-			add_monst_graphic(c_town.monst.dudes[i].number,0);
+		if ((univ.town.monst.dudes[i].number != 0) && (univ.town.monst.dudes[i].active > 0))
+			add_monst_graphic(univ.town.monst.dudes[i].number,0);
 	if (is_town())
 		for (i = 0; i < 4; i++)
 			for (j = 0; j < 4; j++) {
-				add_monst_graphic(c_town.town.wandering[i].monst[j],0);
+				add_monst_graphic(univ.town.town->wandering[i].monst[j],0);
 				}
 }
 
@@ -1499,8 +1502,8 @@ void update_pc_graphics()
 	temp_gworld2 = load_pict(905);
 
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status > 0) 
-			if (adven[i].which_graphic != which_graphic_index[i]) {
+		if (ADVEN[i].main_status > 0) 
+			if (ADVEN[i].which_graphic != which_graphic_index[i]) {
 				template_rect.left = (i / 3) * 56;
 				template_rect.right = template_rect.left + 56;
 				template_rect.top = (i % 3) * 36;
@@ -1508,12 +1511,12 @@ void update_pc_graphics()
 
 				
 				store_source = GetPortPixMap(temp_gworld);
-				source_rect.left = (adven[i].which_graphic / 8) * 56;
+				source_rect.left = (ADVEN[i].which_graphic / 8) * 56;
 				source_rect.right = source_rect.left + 56;
-//				source_rect.top = (adven[i].which_graphic % 8) * 36;
+//				source_rect.top = (ADVEN[i].which_graphic % 8) * 36;
 //				source_rect.bottom = template_rect.top + 36;
-				source_rect.top = 36 * (adven[i].which_graphic % 8);
-				source_rect.bottom = 36 * (adven[i].which_graphic % 8) + 36;
+				source_rect.top = 36 * (ADVEN[i].which_graphic % 8);
+				source_rect.bottom = 36 * (ADVEN[i].which_graphic % 8) + 36;
 				store_dest = GetPortPixMap(party_template_gworld);
 	
 				CopyBits ( (BitMap *) *store_source ,
@@ -1528,7 +1531,7 @@ void update_pc_graphics()
 							&source_rect, &template_rect, 
 							0 , NULL);	
 			
-				which_graphic_index[i] = adven[i].which_graphic;
+				which_graphic_index[i] = ADVEN[i].which_graphic;
 				}
 	DisposeGWorld (temp_gworld);
 	DisposeGWorld (temp_gworld2);
@@ -1782,10 +1785,10 @@ void draw_terrain(short	mode)
 		supressing_some_spaces = TRUE;
 		for (i = 0; i < 4; i++) ok_space[i].x = -1;
 		if (current_working_monster >= 100) {
-			for (i = 0; i < c_town.monst.dudes[current_working_monster - 100].m_d.x_width; i++)
-				for (j = 0; j < c_town.monst.dudes[current_working_monster - 100].m_d.y_width; j++) {
-					ok_space[i + 2 * j].x = c_town.monst.dudes[current_working_monster - 100].m_loc.x + i;
-					ok_space[i + 2 * j].y = c_town.monst.dudes[current_working_monster - 100].m_loc.y + j;
+			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].m_d.x_width; i++)
+				for (j = 0; j < univ.town.monst.dudes[current_working_monster - 100].m_d.y_width; j++) {
+					ok_space[i + 2 * j].x = univ.town.monst.dudes[current_working_monster - 100].m_loc.x + i;
+					ok_space[i + 2 * j].y = univ.town.monst.dudes[current_working_monster - 100].m_loc.y + j;
 					ok_space[i + 2 * j].x = ok_space[i + 2 * j].x - center.x + 4;
 					ok_space[i + 2 * j].y = ok_space[i + 2 * j].y - center.y + 4;
 					}
@@ -1807,20 +1810,20 @@ void draw_terrain(short	mode)
 			}
 	
 			
-	sector_p_in.x = party.outdoor_corner.x + party.i_w_c.x;
-	sector_p_in.y = party.outdoor_corner.y + party.i_w_c.y;
+	sector_p_in.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+	sector_p_in.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 
 	anim_ticks++;
 	anim_onscreen = FALSE;
 
 	if (is_town())
-		view_loc = c_town.p_loc;
+		view_loc = univ.town.p_loc;
 	if (is_combat())
 		view_loc = pc_pos[(current_pc < 6) ? current_pc : first_active_pc()];
 	
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) {
-			where_draw =  (is_out()) ? party.p_loc : center;
+			where_draw =  (is_out()) ? univ.party.p_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
 			if (!(is_out())) 
@@ -1834,7 +1837,7 @@ void draw_terrain(short	mode)
 	for (q = 0; q < 9; q++) {
 		for (r = 0; r < 9; r++)
 			{
-				where_draw = (is_out()) ? party.p_loc : center;
+				where_draw = (is_out()) ? univ.party.p_loc : center;
 				where_draw.x += q - 4;
 				where_draw.y += r - 4;
 				off_terrain = FALSE;				
@@ -1862,8 +1865,8 @@ void draw_terrain(short	mode)
 						|| (where_draw.y < 0) || (where_draw.y > 95))
 						can_draw = 0;
 						else {
-							spec_terrain = out[where_draw.x][where_draw.y];
-							can_draw = out_e[where_draw.x][where_draw.y];
+							spec_terrain = univ.out.out[where_draw.x][where_draw.y];
+							can_draw = univ.out.out_e[where_draw.x][where_draw.y];
 							}						
 						}
 					else if (is_combat()) {
@@ -1875,11 +1878,11 @@ void draw_terrain(short	mode)
 							  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 						}
 					else {
-						spec_terrain = t_d.terrain[where_draw.x][where_draw.y];
+						spec_terrain = univ.town.town->terrain(where_draw.x,where_draw.y);
 						can_draw = is_explored(where_draw.x,where_draw.y);
 
 						if (can_draw > 0) {
-							if (pt_in_light(c_town.p_loc,where_draw) == FALSE)
+							if (pt_in_light(univ.town.p_loc,where_draw) == FALSE)
 								can_draw = 0;	
 							}	
 						if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
@@ -1934,32 +1937,32 @@ void draw_terrain(short	mode)
 
 						case 79: case 80: case 81:
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x][where_draw.y - 1] == 80) || (out[where_draw.x][where_draw.y - 1] == 79)))
+								&& ((univ.out.out[where_draw.x][where_draw.y - 1] == 80) || (univ.out.out[where_draw.x][where_draw.y - 1] == 79)))
 										short_spec_terrain = 42;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x][where_draw.y + 1] == 80) || (out[where_draw.x][where_draw.y + 1] == 79)))
+								&& ((univ.out.out[where_draw.x][where_draw.y + 1] == 80) || (univ.out.out[where_draw.x][where_draw.y + 1] == 79)))
 										short_spec_terrain = 38;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x - 1][where_draw.y] == 80) || (out[where_draw.x - 1][where_draw.y] == 79)))
+								&& ((univ.out.out[where_draw.x - 1][where_draw.y] == 80) || (univ.out.out[where_draw.x - 1][where_draw.y] == 79)))
 										short_spec_terrain = 44;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x + 1][where_draw.y ] == 80) || (out[where_draw.x + 1][where_draw.y] == 79)))
+								&& ((univ.out.out[where_draw.x + 1][where_draw.y ] == 80) || (univ.out.out[where_draw.x + 1][where_draw.y] == 79)))
 										short_spec_terrain = 40;
 							/*if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x][where_draw.y - 1] != 234) && (out[where_draw.x][where_draw.y - 1] != 81) &&
-									((out[where_draw.x][where_draw.y - 1] < 36) || (out[where_draw.x][where_draw.y - 1] > 49))))
+								&& ((univ.out.out[where_draw.x][where_draw.y - 1] != 234) && (univ.out.out[where_draw.x][where_draw.y - 1] != 81) &&
+									((univ.out.out[where_draw.x][where_draw.y - 1] < 36) || (univ.out.out[where_draw.x][where_draw.y - 1] > 49))))
 										short_spec_terrain = 42;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x][where_draw.y + 1] != 234) && (out[where_draw.x][where_draw.y + 1] != 81) &&
-									((out[where_draw.x][where_draw.y + 1] < 36) || (out[where_draw.x][where_draw.y + 1] > 49))))
+								&& ((univ.out.out[where_draw.x][where_draw.y + 1] != 234) && (univ.out.out[where_draw.x][where_draw.y + 1] != 81) &&
+									((univ.out.out[where_draw.x][where_draw.y + 1] < 36) || (univ.out.out[where_draw.x][where_draw.y + 1] > 49))))
 										short_spec_terrain = 38;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x - 1][where_draw.y] != 234) &&(out[where_draw.x - 1][where_draw.y] != 81) &&
-									((out[where_draw.x - 1][where_draw.y] < 36) || (out[where_draw.x - 1][where_draw.y] > 49))))
+								&& ((univ.out.out[where_draw.x - 1][where_draw.y] != 234) &&(univ.out.out[where_draw.x - 1][where_draw.y] != 81) &&
+									((univ.out.out[where_draw.x - 1][where_draw.y] < 36) || (univ.out.out[where_draw.x - 1][where_draw.y] > 49))))
 										short_spec_terrain = 44;
 							if ((short_spec_terrain == 81) 
-								&& ((out[where_draw.x + 1][where_draw.y] != 234) && (out[where_draw.x + 1][where_draw.y] != 81) &&
-									((out[where_draw.x + 1][where_draw.y] < 36) || (out[where_draw.x + 1][where_draw.y] > 49))))
+								&& ((univ.out.out[where_draw.x + 1][where_draw.y] != 234) && (univ.out.out[where_draw.x + 1][where_draw.y] != 81) &&
+									((univ.out.out[where_draw.x + 1][where_draw.y] < 36) || (univ.out.out[where_draw.x + 1][where_draw.y] > 49))))
 										short_spec_terrain = 40;*/
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);	
 							place_road(q,r,where_draw);
@@ -2004,13 +2007,13 @@ void draw_terrain(short	mode)
 	// Not camping. Place misc. stuff
 	if (overall_mode != MODE_RESTING) {
 		if (is_out())
-			draw_outd_boats(party.p_loc);
+			draw_outd_boats(univ.party.p_loc);
 			else if ((is_town()) || (which_combat_type == 1))
 				draw_town_boat(center);		
 		draw_monsters();
 		}
 
-	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(c_town.p_loc,center) == TRUE))
+	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center) == TRUE))
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(mode,center);
 		else if (overall_mode != MODE_LOOK_TOWN)
@@ -2305,7 +2308,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	// 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
-	location where_draw = {4,4};
+	location where_draw(4,4);
 	Rect source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len,sound_key;
 	char dam_str[20];
@@ -2355,8 +2358,8 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	// adjust for possible big monster
 	which_m = monst_there(where);
 	if (which_m < 90) {
-		x_adj += 14 * (c_town.monst.dudes[which_m].m_d.x_width - 1);
-		y_adj += 18 * (c_town.monst.dudes[which_m].m_d.y_width - 1);
+		x_adj += 14 * (univ.town.monst.dudes[which_m].m_d.x_width - 1);
+		y_adj += 18 * (univ.town.monst.dudes[which_m].m_d.y_width - 1);
 		}
 	OffsetRect(&dest_rect,where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;
@@ -2516,7 +2519,7 @@ void draw_targeting_line(Point where_curs)
 	
 	if (overall_mode >= MODE_COMBAT)
 		from_loc = pc_pos[current_pc];
-		else from_loc = c_town.p_loc;
+		else from_loc = univ.town.p_loc;
 	if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 	  || ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
 		GlobalToLocal(&where_curs);	
@@ -2601,7 +2604,7 @@ Boolean party_toast()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (adven[i].main_status == 1)
+		if (ADVEN[i].main_status == 1)
 			return FALSE;
 	return TRUE;
 }

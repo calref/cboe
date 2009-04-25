@@ -2,6 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+#include "classes.h"
 
 #include "gamma.h"
 #include "boe.graphics.h"
@@ -21,6 +22,8 @@
 #include "soundtool.h"
 #include "graphtool.h"
 #include "mathutil.h"
+#include "fileio.h"
+#include "dlgutil.h"
 
 //extern short arrow_curs[3][3];
 //extern short sword_curs, boot_curs, drop_curs, target_curs;
@@ -48,8 +51,9 @@ Boolean bgm_on = FALSE,bgm_init = FALSE;
 short dialog_answer;
 Point store_anim_ul;
 cScenario scenario;
+extern cUniverse univ;
 //piles_of_stuff_dumping_type *data_store;
-talking_record_type talking;
+//talking_record_type talking;
 
 Boolean gInBackground = FALSE;
 long start_time;
@@ -68,18 +72,18 @@ bool show_startup_splash = true;
 bool belt_present = false;
 
 /* Adventure globals */
-party_record_type party;
-pc_record_type adven[6];
-outdoor_record_type outdoors[2][2];
-current_town_type c_town;
-big_tr_type t_d;
-town_item_list	t_i;
-unsigned char out[96][96],out_e[96][96];
-setup_save_type setup_save;
-unsigned char misc_i[64][64],sfx[64][64];
+//party_record_type party;
+//pc_record_type adven[6];
+//outdoor_record_type outdoors[2][2];
+//current_town_type c_town;
+//big_tr_type t_d;
+//town_item_list	t_i;
+//unsigned char out[96][96],out_e[96][96];
+//setup_save_type setup_save;
+//unsigned char misc_i[64][64],sfx[64][64];
 ////unsigned char template_terrain[64][64];
 location monster_targs[T_M];
-outdoor_strs_type outdoor_text[2][2];
+//outdoor_strs_type outdoor_text[2][2];
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -129,10 +133,10 @@ short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
 ////town_record_type anim_town;
-tiny_tr_type anim_t_d;
+//tiny_tr_type anim_t_d;
 
-stored_items_list_type stored_items[3];
-stored_outdoor_maps_type o_maps;
+//stored_items_list_type stored_items[3];
+//stored_outdoor_maps_type o_maps;
 
 // Special stuff booleans
 Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -182,8 +186,8 @@ int main(void)
 	//import_anim_terrain(0);
 	plop_fancy_startup();
 
-	//party.stuff_done[SDF_NO_FRILLS] = 0;
-	//party.stuff_done[SDF_NO_SOUNDS] = 0;
+	//PSD[SDF_NO_FRILLS] = 0;
+	//PSD[SDF_NO_SOUNDS] = 0;
 
 	init_screen_locs();
 	
@@ -614,7 +618,7 @@ void Mouse_Pressed()
 					if (choice == 3)
 						break;
 					if (choice == 1)
-						save_file(0);
+						save_party(0);
 				}
 				All_Done = TRUE;
 			}
@@ -782,7 +786,7 @@ void handle_file_menu(int item_hit)
 			break;
 		case 3:
 			if (in_startup_mode == TRUE)
-				save_file(1);
+				save_party(1);
 				else do_save(1);
 			break;
 		case 4:
@@ -791,7 +795,7 @@ void handle_file_menu(int item_hit)
 				if (choice == 1)
 					return;
 				for (i = 0; i < 6; i++)
-					adven[i].main_status = 0;
+					ADVEN[i].main_status = 0;
 				party_in_memory = FALSE;
 				reload_startup();
 				in_startup_mode = TRUE;
@@ -820,7 +824,7 @@ void handle_file_menu(int item_hit)
 					if (choice == 3)
 						break;
 					if (choice == 1)
-						save_file(0);
+						save_party(0);
 					}
 			All_Done = TRUE;
 			break;
@@ -873,13 +877,13 @@ void handle_options_menu(int item_hit)
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (adven[i].main_status == 0)
+				if (ADVEN[i].main_status == 0)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 				}
-			if (c_town.town_num == scenario.which_town_start) {
+			if (univ.town.num == scenario.which_town_start) {
 				give_help(56,0,0);
 				create_pc(6,0);
 				}
@@ -1001,7 +1005,7 @@ void handle_priest_spells_menu(int item_hit)
 }
 void handle_monster_info_menu(int item_hit)
 {
-	display_monst(item_hit - 1,(creature_data_type *) NULL,1);
+	display_monst(item_hit - 1, NULL,1);
 }
 
 void handle_music_menu(int item_hit)
@@ -1017,8 +1021,8 @@ void handle_music_menu(int item_hit)
 				}
 				//else end_music(1);
 			if (bgm_on == TRUE)
-				party.stuff_done[SDF_NO_SHORE_FRILLS] = 1;
-				else party.stuff_done[SDF_NO_SHORE_FRILLS] = 0;
+				PSD[SDF_NO_SHORE_FRILLS] = 1;
+				else PSD[SDF_NO_SHORE_FRILLS] = 0;
 			break;
 		}
 }
@@ -1237,7 +1241,7 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 		if (choice == 3)
 			return userCanceledErr;
 		if (choice == 1)
-			save_file(0);
+			save_party(0);
 		}
 		else {
 				choice = FCD(1067,0);
@@ -1306,17 +1310,17 @@ void move_sound(unsigned char ter,short step){
 	snd = scenario.ter_types[ter].step_sound;
 	
 	//if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
-	if(snd == 4 && !flying() && party.in_boat == 0){
+	if(snd == 4 && !flying() && univ.party.in_boat == 0){
 		if(on_swamp && get_ran(1,1,100) >= 10)return;
 		on_swamp = true;
 	}else on_swamp = false;
 	
-	if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (party.in_boat >= 0)) {// is on boat ?
+	if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
 		if (spec == 21) //town entrance ?
 			return;
 		play_sound(48); //play boat sound
 	}
-	else if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (party.in_horse >= 0)) {//// is on horse ?
+	else if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
 	else switch(scenario.ter_types[ter].step_sound){
