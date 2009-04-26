@@ -12,7 +12,7 @@
 __attribute__((deprecated))
 cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	int i;
-	main_status = old.main_status;
+	main_status = (eMainStatus) old.main_status;
 	strcpy(name,old.name);
 	for(i = 0; i < 20; i++)
 		skills[i] = old.skills[i];
@@ -60,7 +60,7 @@ short cPlayer::get_tnl(){
 
 cPlayer::cPlayer(){
 	short i;
-	main_status = 0;
+	main_status = MAIN_STATUS_ABSENT;
 	sprintf	((char *) name, "\n");
 	
 	for (i = 0; i < 30; i++)
@@ -97,7 +97,7 @@ cPlayer::cPlayer(){
 
 cPlayer::cPlayer(long key,short slot){
 	short i;
-	main_status = 1;
+	main_status = MAIN_STATUS_ALIVE;
 	if(key == 'dbug'){
 		switch (slot) {
 			case 0:
@@ -141,7 +141,7 @@ cPlayer::cPlayer(long key,short slot){
 		}
 		//which_graphic = num * 3 + 1;	// 1, 4, 7, 10, 13, 16
 		which_graphic = slot + 4;		// 4, 5, 6, 7,  8,  9
-		weap_poisoned = 16;
+		weap_poisoned = 24; // was 16, as an E2 relic
 		
 		for (i = 0; i < 15; i++) {
 			advan[i] = FALSE;
@@ -173,7 +173,7 @@ cPlayer::cPlayer(long key,short slot){
 			{0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0}
 		};
 		
-		main_status = 1;
+		main_status = MAIN_STATUS_ALIVE;
 		switch (slot) {
 			case 0:
 				sprintf	((char *) name, "Jenneke");
@@ -227,6 +227,16 @@ cPlayer::cPlayer(long key,short slot){
 		
 		which_graphic = pc_graphics[slot];
 	}
+}
+
+void operator += (eMainStatus& stat, eMainStatus othr){
+	if(othr == MAIN_STATUS_SPLIT)
+		stat = (eMainStatus) (10 + stat);
+}
+
+void operator -= (eMainStatus& stat, eMainStatus othr){
+	if(othr == MAIN_STATUS_SPLIT)
+		stat = (eMainStatus) (-10 + stat);
 }
 
 //

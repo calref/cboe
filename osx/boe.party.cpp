@@ -108,7 +108,8 @@ Str255 empty_string = "                                           ";
 extern Boolean fast_bang;
 //extern party_record_type	party;
 //extern pc_record_type ADVEN[6];
-extern short stat_window,overall_mode,current_pc,town_size[3],town_type;
+extern short stat_window,current_pc,town_size[3],town_type;
+extern eGameMode overall_mode;
 //extern current_town_type	univ.town;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
@@ -442,8 +443,8 @@ void put_party_in_scen(string scen_name)
 	 	for (i = 0; i < 15; i++)
  			ADVEN[j].status[i] = 0;
 	for (j = 0; j < 6; j++) {
-		if (ADVEN[j].main_status >= 10)
-			ADVEN[j].main_status -= 10;
+		if (ADVEN[j].main_status >= MAIN_STATUS_SPLIT)
+			ADVEN[j].main_status -= MAIN_STATUS_SPLIT;
 		ADVEN[j].cur_health = ADVEN[j].max_health; 
  		ADVEN[j].cur_sp = ADVEN[j].max_sp; 
 		}
@@ -566,7 +567,7 @@ Boolean create_pc(short spot,short parent_num)
 		cd_initial_draw(989);
 	pick_pc_name(spot,parent_num);
 
-	ADVEN[spot].main_status = 1;
+	ADVEN[spot].main_status = MAIN_STATUS_ALIVE;
 	
 	if (in_startup_mode == FALSE) {
 			ADVEN[spot].items[0] = start_items[ADVEN[spot].race * 2];
@@ -1018,8 +1019,8 @@ void spend_xp_event_filter (short item_hit)
 
 		switch (item_hit) {
 			case 73:
-				if ((mode == 0) && (ADVEN[pc_num].main_status < 0))
-					ADVEN[pc_num].main_status = 0;
+				if ((mode == 0) && (ADVEN[pc_num].main_status < MAIN_STATUS_ABSENT))
+					ADVEN[pc_num].main_status = MAIN_STATUS_ABSENT;
 				dialog_answer = 0;
 				talk_done = TRUE;
 				break;
@@ -1843,8 +1844,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						one_sound(-53); one_sound(52);
 					}
 				if (spell_num == 49) {
-						if (ADVEN[target].main_status == 4) {
-							ADVEN[target].main_status = 1;
+						if (ADVEN[target].main_status == MAIN_STATUS_STONE) {
+							ADVEN[target].main_status = MAIN_STATUS_ALIVE;
 							sprintf ((char *) c_line, "  %s destoned.                                  ",
 									(char *) ADVEN[target].name);							
 							play_sound(53);
@@ -1876,10 +1877,10 @@ void do_priest_spell(short pc_num,short spell_num) ////
 										sprintf ((char *) c_line, "  %s now dust.                          ",
 											(char *) ADVEN[target].name);									
 										play_sound(5);
-										ADVEN[target].main_status = 3;								
+										ADVEN[target].main_status = MAIN_STATUS_DUST;								
 									}
 									else {
-									ADVEN[target].main_status = 1;
+									ADVEN[target].main_status = MAIN_STATUS_ALIVE;
 									for (i = 0; i < 3; i++)
 										if (get_ran(1,0,2) < 2)
 											ADVEN[target].skills[i] -= (ADVEN[target].skills[i] > 1) ? 1 : 0;
@@ -1892,8 +1893,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				
 					}
 				if (spell_num == 56) {
-						if (ADVEN[target].main_status != 1) {
-							ADVEN[target].main_status = 1;
+						if (ADVEN[target].main_status != MAIN_STATUS_ALIVE) {
+							ADVEN[target].main_status = MAIN_STATUS_ALIVE;
 							for (i = 0; i < 3; i++)
 								if (get_ran(1,0,2) < 1)
 									ADVEN[target].skills[i] -= (ADVEN[target].skills[i] > 1) ? 1 : 0;
@@ -2159,7 +2160,7 @@ void do_mindduel(short pc_num,cPopulation::cCreature *monst)
 				if (ADVEN[pc_num].status[9] > 7) {
 					sprintf((char *) c_line,"  %s is killed!",ADVEN[pc_num].name);
 					add_string_to_buf((char *) c_line);
-					kill_pc(pc_num,2);
+					kill_pc(pc_num,MAIN_STATUS_DEAD);
 					}
 					
 				}
@@ -2970,8 +2971,8 @@ void pc_graphic_event_filter (short item_hit)
 		case 4:
 			update_pc_graphics();
 			if (store_graphic_mode == 0) {
-				if (ADVEN[store_graphic_pc_num].main_status < 0)
-				   ADVEN[store_graphic_pc_num].main_status = 0;
+				if (ADVEN[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
+				   ADVEN[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
 					toast_dialog();
 				}
 				else {
@@ -3185,14 +3186,14 @@ void hit_party(short how_much,short damage_type)
 	put_pc_screen(); 
 }
 
-void slay_party(short mode)
+void slay_party(eMainStatus mode)
 { 
 	short i;
 	
-		boom_anim_active = FALSE;
-					for (i = 0; i < 6; i++)
-						if (ADVEN[i].main_status == 1)
-							ADVEN[i].main_status = mode;
+	boom_anim_active = FALSE;
+	for (i = 0; i < 6; i++)
+		if (ADVEN[i].main_status == MAIN_STATUS_ALIVE)
+			ADVEN[i].main_status = mode;
 	put_pc_screen(); 
 }
 
@@ -3368,12 +3369,12 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			 if (how_much > 25) {
 				sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) ADVEN[which_pc].name);
 				add_string_to_buf((char *) c_line);					
-				kill_pc(which_pc, 3);
+				kill_pc(which_pc, MAIN_STATUS_DUST);
 				}
 				else {
 				sprintf ((char *) c_line, "  %s is killed.",(char *) ADVEN[which_pc].name);
 				add_string_to_buf((char *) c_line);					
-				kill_pc(which_pc,2);
+				kill_pc(which_pc,MAIN_STATUS_DEAD);
 				}
 	if ((ADVEN[which_pc].cur_health == 0) && (ADVEN[which_pc].main_status == 1))
 		play_sound(3);
@@ -3381,26 +3382,26 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 	return TRUE;
 }
 
-void kill_pc(short which_pc,short type)
+void kill_pc(short which_pc,eMainStatus type)
 {
 	short i = 24;
 	Boolean dummy,no_save = FALSE;
 	location item_loc;
 	
-	if (type >= 10) {
-		type -= 10;
+	if (type >= MAIN_STATUS_SPLIT) {
+		type -= MAIN_STATUS_SPLIT;
 		no_save = TRUE;
 		}
 	
-	if (type != 4)
+	if (type != MAIN_STATUS_STONE)
 		i = pc_has_abil_equip(which_pc,48);
 
-	if ((no_save == FALSE) && (type != 0) && (ADVEN[which_pc].skills[18] > 0) && 
+	if ((no_save == FALSE) && (type != MAIN_STATUS_ABSENT) && (ADVEN[which_pc].skills[18] > 0) && 
 		(get_ran(1,1,100) < hit_chance[ADVEN[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
 			ADVEN[which_pc].cur_health = 0;
 			}
-		else if ((i == 24) || (type == 0)) {
+		else if ((i == 24) || (type == MAIN_STATUS_ABSENT)) {
 			if (combat_active_pc == which_pc)
 				combat_active_pc = 6;
 	
@@ -3409,7 +3410,7 @@ void kill_pc(short which_pc,short type)
 
 			item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
 	
-			if (type == 2)
+			if (type == MAIN_STATUS_DEAD)
 				make_sfx(item_loc.x,item_loc.y,3);
 				else if (type == 3)
 					make_sfx(item_loc.x,item_loc.y,6);
@@ -3420,7 +3421,7 @@ void kill_pc(short which_pc,short type)
 						dummy = place_item(ADVEN[which_pc].items[i],item_loc,TRUE);
 						ADVEN[which_pc].items[i].variety = 0;
 						}
-				if ((type == 2) || (type == 3))
+				if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
 					play_sound(21);
 				ADVEN[which_pc].main_status = type;
 				pc_moves[which_pc] = 0;
@@ -3430,7 +3431,7 @@ void kill_pc(short which_pc,short type)
 				take_item(which_pc,i);
 				heal_pc(which_pc,200);
 			}
-	if (ADVEN[current_pc].main_status != 1)
+	if (ADVEN[current_pc].main_status != MAIN_STATUS_ALIVE)
 		current_pc = first_active_pc();
 	put_pc_screen();
 	set_stat_window(current_pc);

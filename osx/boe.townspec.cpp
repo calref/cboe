@@ -19,7 +19,7 @@
 #include "mathutil.h"
 #include "dlgutil.h"
 
-extern short overall_mode;
+extern eGameMode overall_mode;
 //extern party_record_type univ.party;
 //extern current_town_type	univ.town;
 //extern unsigned char out[96][96],out_e[96][96];
@@ -282,7 +282,7 @@ void start_split(short a,short b,short noise)
 	univ.town.p_loc.y = b;
 	for (i = 0; i < 6; i++)
 		if (i != PSD[SDF_PARTY_SPLIT_PC])
-			ADVEN[i].main_status += 10;
+			ADVEN[i].main_status += MAIN_STATUS_SPLIT;
 	current_pc = PSD[SDF_PARTY_SPLIT_PC];
 	update_explored(univ.town.p_loc);
 	center = univ.town.p_loc;
@@ -302,8 +302,8 @@ void end_split(short noise)
 	univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
 	PSD[SDF_IS_PARTY_SPLIT] = 0;
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status >= 10)
-			ADVEN[i].main_status -= 10;
+		if (ADVEN[i].main_status >= MAIN_STATUS_SPLIT)
+			ADVEN[i].main_status -= MAIN_STATUS_SPLIT;
 	update_explored(univ.town.p_loc);
 	center = univ.town.p_loc;
 	if (noise > 0)

@@ -47,14 +47,15 @@ Rect status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297
 Rect item_buttons_from[7] = {{11,0,24,14},{11,14,24,28},{11,28,24,42},{11,42,24,56},
 						{24,0,36,30},{24,30,36,60},{36,0,48,30}};
 
-short store_mode;
+eGameMode store_mode;
 
 extern short had_text_freeze,stat_screen_mode;
 
 // graphics globals
 extern Rect status_panel_rect,status_panel_title_rect;
 extern Rect	text_panel_rect;
-extern short overall_mode,which_combat_type,stat_window;
+extern short which_combat_type,stat_window;
+extern eGameMode overall_mode;
 extern WindowPtr mainPtr;
 extern Rect more_info_button;
 extern short which_item_page[6],current_cursor;

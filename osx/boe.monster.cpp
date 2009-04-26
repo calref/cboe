@@ -19,7 +19,7 @@
 
 //extern current_town_type univ.town;
 //extern party_record_type party;
-extern short overall_mode;
+extern eGameMode overall_mode;
 //extern cOutdoors univ.out.outdoors[2][2];
 extern unsigned char combat_terrain[64][64];//,out[96][96];
 extern short which_combat_type;

@@ -34,7 +34,8 @@
 //extern party_record_type	party;
 //extern pc_record_type ADVEN[6];
 //extern town_item_list univ.town;
-extern short stat_window,overall_mode,store_spell_target,which_combat_type,current_pc,combat_active_pc;
+extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_active_pc;
+extern eGameMode overall_mode;
 extern location center;
 extern WindowPtr mainPtr;
 extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
@@ -44,7 +45,7 @@ extern unsigned char combat_terrain[64][64];
 extern short store_current_pc,current_ground;
 //extern pascal Boolean cd_event_filter();
 extern short dungeon_font_num,geneva_font_num;
-extern short store_pre_shop_mode,store_pre_talk_mode;
+extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern location monster_targs[T_M];
 extern short special_queue[20];
 

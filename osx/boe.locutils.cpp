@@ -21,7 +21,8 @@ location which_party_sec;
 
 //extern party_record_type party;
 //extern current_town_type univ.town;
-extern short overall_mode,which_combat_type,current_pc,town_type;
+extern short which_combat_type,current_pc,town_type;
+extern eGameMode overall_mode;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
 extern unsigned char combat_terrain[64][64];
@@ -136,7 +137,7 @@ location get_cur_loc()
 			return univ.party.p_loc;
 			break;
 			
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE: case MODE_LOOK_TOWN:
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN:
 			return univ.town.p_loc;
 			break;
 			

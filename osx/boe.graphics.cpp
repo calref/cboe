@@ -28,7 +28,8 @@
 
 extern WindowPtr mainPtr;
 extern Rect	windRect;
-extern short stat_window,give_delays,overall_mode;
+extern short stat_window,give_delays;
+extern eGameMode overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
@@ -2297,7 +2298,7 @@ void place_road(short q,short r,location where)
 
 void draw_rest_screen()
 {
-	short store_mode;
+	eGameMode store_mode;
 
 	store_mode = overall_mode;
 	overall_mode = MODE_RESTING;

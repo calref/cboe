@@ -44,7 +44,8 @@ short flood_count = 0;
 Rect terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];							
 
 
-extern short cen_x, cen_y, overall_mode,cur_town;
+extern short cen_x, cen_y, cur_town;
+extern eGameMode overall_mode;
 extern Boolean mouse_button_held,editing_town;
 extern short cur_viewing_mode,user_given_password;
 extern cTown* town;

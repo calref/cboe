@@ -25,7 +25,8 @@
 #include "mathutil.h"
 #include "dlgutil.h"
 
-extern short stat_window,overall_mode,current_cursor,which_combat_type,current_pc;
+extern short stat_window,current_cursor,which_combat_type,current_pc;
+extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type univ.town;
 //extern town_item_list	univ.town.items;
@@ -134,7 +135,8 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 			}
 		return FALSE;
 	  	}
-	if (((free_space = pc_has_space(pc_num)) == 24) || (ADVEN[pc_num].main_status != 1))
+	free_space = pc_has_space(pc_num);
+	if ((free_space == 24) || (ADVEN[pc_num].main_status != 1))
 		return FALSE;
 		else {
 			item.item_properties = item.item_properties & 253; // not property
@@ -589,7 +591,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 				else take_item(pc_num,item_num);
 			break;
 		
-		case 5: case MODE_DROPPING:
+		case MODE_DROP_TOWN: case MODE_DROP_COMBAT:
 			loc = where_drop;
 			if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 				how_many = get_num_of_items(item_store.charges);
@@ -846,8 +848,8 @@ void make_town_hostile()
 
 	if (fry_party == TRUE) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status > 0)
-				ADVEN[i].main_status = 0;
+			if (ADVEN[i].main_status > MAIN_STATUS_ABSENT)
+				ADVEN[i].main_status = MAIN_STATUS_ABSENT;
 		stat_window = 6;
 		boom_anim_active = FALSE;	
 		}

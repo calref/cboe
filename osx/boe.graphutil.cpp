@@ -20,7 +20,8 @@
 
 extern WindowPtr	mainPtr;
 extern Rect	windRect;
-extern short stat_window,give_delays,overall_mode;
+extern short stat_window,give_delays;
+extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
 extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,cartoon_happening;
 extern short town_size[3];
@@ -879,7 +880,7 @@ void make_town_trim(short mode)
 //mode; // 0 - town 1 - outdoor combat
 {
 	location where;
-	short store_mode;
+	eGameMode store_mode;
 	
 	store_mode = overall_mode;
 	overall_mode = (mode == 0) ? MODE_TOWN : MODE_COMBAT;
@@ -904,7 +905,7 @@ void make_town_trim(short mode)
 void make_out_trim()
 {
 	location where;
-	short store_mode;
+	eGameMode store_mode;
 	
 	store_mode = overall_mode;
 	overall_mode = MODE_OUTDOORS;

@@ -597,7 +597,8 @@ void cd_draw_item(short dlog_num,short item_num){
 		case DLG_BUTTON: case DLG_DEFAULT_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
+								(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
+								items[item_index].rect,0,2);
 			RGBForeColor(&clr[2]);
 			TextSize(12);
 			OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
@@ -610,7 +611,8 @@ void cd_draw_item(short dlog_num,short item_num){
 		case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-								dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
+								(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
+								items[item_index].rect,0,2);
 			RGBForeColor(&clr[2]);
 			TextSize(12);
 			char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
@@ -625,17 +627,17 @@ void cd_draw_item(short dlog_num,short item_num){
 			switch (items[item_index].flag) {
 			case 0:
 				rect_draw_some_item(dlg_buttons_gworld[10][0],
-									from_rect, dlg_buttons_gworld[10][0],
+									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[10][0],
 									items[item_index].rect,0,2);
 				break;
 			case 1:
 				rect_draw_some_item(dlg_buttons_gworld[9][1],
-									from_rect, dlg_buttons_gworld[9][1],
+									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[9][1],
 									items[item_index].rect,0,2);
 				break;
 			case 2:
 				rect_draw_some_item(dlg_buttons_gworld[9][0],
-									from_rect, dlg_buttons_gworld[9][0],
+									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[9][0],
 									items[item_index].rect,0,2);
 				break;
 			}
@@ -896,7 +898,8 @@ void cd_press_button(short dlog_num, short item_num){
 	TextSize(12);
 	GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][1],from_rect,
-						dlg_buttons_gworld[buttons[items[item_index].flag].type][1],items[item_index].rect,0,2);
+						(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][1],
+						items[item_index].rect,0,2);
 	TextFace(bold);
 	RGBForeColor(&clr[3]);
 	if (items[item_index].type < DLG_LED_BUTTON) {
@@ -918,7 +921,8 @@ void cd_press_button(short dlog_num, short item_num){
 	else Delay(14,&dummy);
 	
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-						dlg_buttons_gworld[buttons[items[item_index].flag].type][0],items[item_index].rect,0,2);
+						(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
+						items[item_index].rect,0,2);
 	
 	RGBForeColor(&clr[2]);
 	if (items[item_index].type < DLG_LED_BUTTON) {

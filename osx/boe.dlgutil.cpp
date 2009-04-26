@@ -35,7 +35,8 @@
 using std::vector;
 
 //extern big_tr_type t_d;
-extern short stat_window,overall_mode,dialog_answer;
+extern short stat_window,dialog_answer;
+extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern party_record_type party;
 extern Boolean in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
@@ -74,7 +75,8 @@ short store_tip_page_on = 0;
 
 // Talking vars
 word_rect_type store_words[50];
-short store_pre_talk_mode,store_personality,store_personality_graphic,shop_identify_cost;
+eGameMode store_pre_talk_mode;
+short store_personality,store_personality_graphic,shop_identify_cost;
 GWorldPtr talk_gworld = NULL;
 Boolean talk_end_forced;
 Str255 old_str1,old_str2,one_back1,one_back2; 
@@ -100,7 +102,8 @@ extern std::vector<std::string*> scen_header_strs;
 // n000 + i - magic store n item i
 short store_shop_items[30],store_shop_costs[30];
 // talk_area_rect and talk_help_rect used for this too
-short store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
+short store_shop_min,store_shop_max,store_cost_mult;
+eGameMode store_pre_shop_mode;
 char store_store_name[256];
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
@@ -299,7 +302,7 @@ void handle_sale(short what_chosen,short cost)
 											ADVEN[current_pc].items[i].item_properties & 239;
 							break;
 						case 5: case 6: case 7:
-							ADVEN[current_pc].main_status = 1; break;
+							ADVEN[current_pc].main_status = MAIN_STATUS_ALIVE; break;
 						case 8:
 							ADVEN[current_pc].status[9] = 0; break;
 						}
@@ -1674,9 +1677,9 @@ void edit_party_event_filter (short item_hit)
 				break;
 			case 6: case 11: case 16: case 21: case 26: case 31:
 				which_pc = (item_hit - 6) / 5;
-				if (ADVEN[which_pc].main_status != 0) {
+				if (ADVEN[which_pc].main_status != MAIN_STATUS_ABSENT) {
 					if (FCD(1053,989) == 2)
-						ADVEN[which_pc].main_status = 0;
+						ADVEN[which_pc].main_status = MAIN_STATUS_ABSENT;
 					put_party_stats();
 					}
 					else {

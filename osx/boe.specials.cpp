@@ -29,7 +29,7 @@
 #include "fileio.h"
 
 extern WindowPtr mainPtr;
-extern short overall_mode;
+extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type	univ.town;
 //extern unsigned char univ.out.out[96][96],out_e[96][96],sfx[64][64];
@@ -2119,10 +2119,18 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						if ((ADVEN[i].main_status > 0) && (ADVEN[i].main_status < 10))
-							ADVEN[i].main_status = 1;
+						if ((ADVEN[i].main_status > MAIN_STATUS_ABSENT) && (ADVEN[i].main_status < MAIN_STATUS_SPLIT))
+							ADVEN[i].main_status = MAIN_STATUS_ALIVE;
 						}
-						else kill_pc(i,spec.ex1a + 2 + 10);
+						else switch(spec.ex1a){
+								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
+							case 0:
+								kill_pc(i,MAIN_STATUS_SPLIT_DEAD);
+							case 1:
+								kill_pc(i,MAIN_STATUS_SPLIT_DUST);
+							case 2:
+								kill_pc(i,MAIN_STATUS_SPLIT_STONE);
+						}
 					}
 			*redraw = 1;
 			break;

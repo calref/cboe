@@ -27,7 +27,7 @@
 //extern current_town_type univ.town;
 //extern big_tr_type t_d;
 //extern town_item_list	t_i;
-extern short overall_mode;
+extern eGameMode overall_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
@@ -434,7 +434,7 @@ Boolean pc_combat_move(location destination) ////
 		}
 	else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
 			if (get_ran(1,1,10) < 3) {
-				ADVEN[current_pc].main_status = 5;
+				ADVEN[current_pc].main_status = MAIN_STATUS_FLED;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
 				sprintf ((char *) create_line, "Moved: Fled.                    ");
@@ -2320,7 +2320,7 @@ void monster_attack_pc(short who_att,short target)
 						{
 							add_string_to_buf("  Petrifying touch!");
 							print_buf();
-							kill_pc(target,4); // 4 being the stoned (petrified, duh!) status
+							kill_pc(target,MAIN_STATUS_STONE); // 4 being the stoned (petrified, duh!) status
 						}
 						
 						// Undead xp drain							
@@ -2621,7 +2621,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 					else {
 						sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) ADVEN[target].name);
 						add_string_to_buf((char *) create_line);
-						kill_pc(target,4);
+						kill_pc(target,MAIN_STATUS_STONE);
 						}
 				}
 				else {
@@ -4010,8 +4010,8 @@ void end_combat()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (ADVEN[i].main_status == 5)
-			ADVEN[i].main_status = 1;
+		if (ADVEN[i].main_status == MAIN_STATUS_FLED)
+			ADVEN[i].main_status = MAIN_STATUS_ALIVE;
 		ADVEN[i].status[0] = 0;
 		ADVEN[i].status[1] = 0;			
 		ADVEN[i].status[3] = 0;		

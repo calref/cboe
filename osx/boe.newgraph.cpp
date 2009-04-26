@@ -46,7 +46,8 @@ extern Rect	windRect;
 extern long anim_ticks;
 extern PixPatHandle	bg[];
 extern WindowPtr mainPtr;
-extern short dungeon_font_num,geneva_font_num,overall_mode,town_type,which_combat_type;
+extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
+extern eGameMode overall_mode;
 extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern GWorldPtr fields_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
 //extern party_record_type party;
@@ -77,7 +78,8 @@ RgnHandle oval_region = NULL,dark_mask_region,temp_rect_rgn;
 
 // Talk vars
 extern word_rect_type store_words[50];
-extern short store_pre_talk_mode,store_personality,store_personality_graphic,current_pc;
+extern eGameMode store_pre_talk_mode;
+extern short store_personality,store_personality_graphic,current_pc;
 extern GWorldPtr talk_gworld;
 extern Boolean talk_end_forced;
 extern Str255 old_str1,old_str2,one_back1,one_back2;
@@ -89,7 +91,8 @@ extern unsigned char store_monst_type;
 
 // Shop vars
 extern short store_shop_items[30],store_shop_costs[30];
-extern short store_shop_type,store_shop_min,store_shop_max,store_pre_shop_mode,store_cost_mult;
+extern short store_shop_type,store_shop_min,store_shop_max,store_cost_mult;
+extern eGameMode store_pre_shop_mode;
 extern char store_store_name[256];
 extern Rect shopping_rects[8][7];
 extern Rect bottom_help_rects[4];

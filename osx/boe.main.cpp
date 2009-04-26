@@ -89,7 +89,8 @@ location monster_targs[T_M];
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
 Boolean fast_bang = FALSE;
 short spec_item_array[60];
-short overall_mode = MODE_STARTUP,current_spell_range;
+short current_spell_range;
+eGameMode overall_mode = MODE_STARTUP;
 Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,sys_7_avail,suppress_stat_screen = FALSE;
 short stat_window = 0,store_modifier;
 Boolean monsters_going = FALSE,boom_anim_active = FALSE,cartoon_happening = FALSE;
@@ -279,7 +280,7 @@ void Initialize(void)
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don‚Äôt for each call of Random, or the sequence
+	//	will always be different.  Don‚Äö√Ñ√¥t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
 	unsigned long time;
@@ -800,7 +801,7 @@ void handle_file_menu(int item_hit)
 				if (choice == 1)
 					return;
 				for (i = 0; i < 6; i++)
-					ADVEN[i].main_status = 0;
+					ADVEN[i].main_status = MAIN_STATUS_ABSENT;
 				party_in_memory = FALSE;
 				reload_startup();
 				in_startup_mode = TRUE;
@@ -858,7 +859,7 @@ void handle_options_menu(int item_hit)
 					choice = char_select_pc(0,0,"Delete who?");
 					if (choice < 6) {
 						if ((i = FCD(1053,0)) == 2)
-							kill_pc(choice,0);
+							kill_pc(choice,MAIN_STATUS_ABSENT);
 						}
 					update_pc_graphics();
 					initiate_redraw();

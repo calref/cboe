@@ -64,24 +64,27 @@
  */
 
 /* overall mode; some seem to be missing */
-#define MODE_OUTDOORS		0
-#define MODE_TOWN			1
-#define MODE_TALK_TOWN		2 // looking for someone to talk
-#define MODE_TOWN_TARGET	3 // spell target, that is
-#define MODE_USE			4
-#define MODE_COMBAT			10
-#define MODE_SPELL_TARGET	11
-#define MODE_FIRING			12 // firing from bow or crossbow
-#define MODE_THROWING		13 // throwing missle
-#define MODE_FANCY_TARGET	14 // spell target, that is; I think it's for multitarget spells
-#define MODE_DROPPING		15
-#define MODE_TALKING		20
-#define MODE_SHOPPING		21
-#define MODE_LOOK_OUTDOORS	35 // looking at something
-#define MODE_LOOK_TOWN		36
-#define MODE_LOOK_COMBAT	37
-#define MODE_STARTUP		45
-#define MODE_RESTING		50
+enum eGameMode {
+	MODE_OUTDOORS = 0,
+	MODE_TOWN = 1,
+	MODE_TALK_TOWN = 2, // looking for someone to talk
+	MODE_TOWN_TARGET = 3, // spell target, that is
+	MODE_USE_TOWN = 4,
+	MODE_DROP_TOWN = 5,
+	MODE_COMBAT = 10,
+	MODE_SPELL_TARGET = 11,
+	MODE_FIRING = 12, // firing from bow or crossbow
+	MODE_THROWING = 13, // throwing missle
+	MODE_FANCY_TARGET = 14, // spell target, that is; I think it's for multitarget spells
+	MODE_DROP_COMBAT = 15,
+	MODE_TALKING = 20,
+	MODE_SHOPPING = 21,
+	MODE_LOOK_OUTDOORS = 35, // looking at something
+	MODE_LOOK_TOWN = 36,
+	MODE_LOOK_COMBAT = 37,
+	MODE_STARTUP = 45,
+	MODE_RESTING = 50,
+};
 // Scenario Editor Modes
 // 0 - drawing
 // 2 - town wandering arrival point
@@ -130,17 +133,17 @@
 //#define MODE_SCEN_INTRO		61
 //#define MODE_	62
 
-/* adven[i].main_status */ //complete
-#define MAIN_STATUS_ABSENT	0 // absent, empty slot
-#define MAIN_STATUS_ALIVE	1
-#define MAIN_STATUS_DEAD	2
-#define MAIN_STATUS_DUST	3
-#define MAIN_STATUS_STONE	4
-#define MAIN_STATUS_FLED	5
-#define MAIN_STATUS_SURFACE	6 // fled to surface?
-#define MAIN_STATUS_WON		7
-/* main status modifiers */
-#define MAIN_STATUS_SPLIT	10 // split from party
+///* adven[i].main_status */ //complete
+//#define MAIN_STATUS_ABSENT	0 // absent, empty slot
+//#define MAIN_STATUS_ALIVE	1
+//#define MAIN_STATUS_DEAD	2
+//#define MAIN_STATUS_DUST	3
+//#define MAIN_STATUS_STONE	4
+//#define MAIN_STATUS_FLED	5
+//#define MAIN_STATUS_SURFACE	6 // fled to surface?
+//#define MAIN_STATUS_WON		7
+///* main status modifiers */
+//#define MAIN_STATUS_SPLIT	10 // split from party
 
 
 /* adven[i].skills */ //complete

@@ -8,7 +8,8 @@
 #include "mathutil.h"
 
 //extern current_town_type univ.town;
-extern short overall_mode,which_combat_type,current_pc,town_type;
+extern short which_combat_type,current_pc,town_type;
+extern eGameMode overall_mode;
 extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Boolean sleep_field;
 //extern big_tr_type t_d;

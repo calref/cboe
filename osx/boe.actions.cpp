@@ -86,7 +86,8 @@ short store_shop_type;
 short debug_ok = 0;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 
-extern short cen_x, cen_y, overall_mode, stat_window,give_delays,pc_moves[6];
+extern short cen_x, cen_y, stat_window,give_delays,pc_moves[6];
+extern eGameMode overall_mode;
 extern Point	to_create;
 extern Boolean in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
 extern Boolean debug_on,cartoon_happening,party_in_memory,in_scen_debug;
@@ -356,7 +357,8 @@ Boolean handle_action(EventRecord event)
 					}
 			break;
 			
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_USE: case MODE_LOOK_TOWN: case 5:
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case 5:
+			// I think 5 is "town drop"
 //			cur_loc = c_town.p_loc;
 			cur_loc = center;
 			for (i = 0; i < 8; i++)
@@ -370,7 +372,7 @@ Boolean handle_action(EventRecord event)
 		case MODE_TALKING: case MODE_SHOPPING: break;
 		
 		case MODE_TOWN_TARGET: case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
-		case MODE_FANCY_TARGET: case MODE_DROPPING: case MODE_LOOK_COMBAT:
+		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
 			cur_loc = (overall_mode > MODE_COMBAT) ? center : pc_pos[current_pc];
 			for (i = 0; i < 9; i++)
 				if (PtInRect (the_point, &combat_buttons[i]) == TRUE) {
@@ -562,9 +564,9 @@ Boolean handle_action(EventRecord event)
 						add_string_to_buf("Use: Select a space or item.");
 						add_string_to_buf("  (Hit button again to cancel.)");
 						need_reprint = TRUE;
-						overall_mode = MODE_USE;				
+						overall_mode = MODE_USE_TOWN;				
 					}
-					else if (overall_mode == MODE_USE) {
+					else if (overall_mode == MODE_USE_TOWN) {
 						overall_mode = MODE_TOWN;
 						need_reprint = TRUE;
 						add_string_to_buf("  Cancelled.");						
@@ -930,7 +932,7 @@ Boolean handle_action(EventRecord event)
 
 // Begin : Targeting a space
 			if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || 
-			 (overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROPPING)) {
+			 (overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROP_COMBAT)) {
 				destination.x = destination.x + i - 4;
 				destination.y = destination.y + j - 4;
 				if (overall_mode == MODE_SPELL_TARGET)
@@ -945,7 +947,7 @@ Boolean handle_action(EventRecord event)
 					did_something = TRUE;
 					center = pc_pos[current_pc];
 					}
-				if (overall_mode == MODE_DROPPING) { // dropping
+				if (overall_mode == MODE_DROP_COMBAT) { // dropping
 					if (adjacent(pc_pos[current_pc],destination) == FALSE)
 						add_string_to_buf("Drop: must be adjacent.");
 						else {
@@ -964,18 +966,18 @@ Boolean handle_action(EventRecord event)
 				destination.x = destination.x + i - 4;
 				destination.y = destination.y + j - 4;
 				switch (overall_mode) {
-					case 3: 
+					case MODE_TOWN_TARGET: 
 						cast_town_spell(destination);
 						did_something = TRUE;
 					break;
-					case 4:
+					case MODE_USE_TOWN:
 						if (adjacent(destination,univ.town.p_loc) == FALSE)
 							add_string_to_buf("  Must be adjacent.              ");
 							else {
 								did_something = use_space(destination);
 								}
 					break;
-					case 5:
+					case MODE_DROP_TOWN:
 						if (adjacent(univ.town.p_loc,destination) == FALSE)
 							add_string_to_buf("Drop: must be adjacent.");
 							else if (get_obscurity(destination.x,destination.y) == 5)
@@ -1147,7 +1149,7 @@ Boolean handle_action(EventRecord event)
 						add_string_to_buf("Item action: Finish what you're doing first.");
 						else switch (j) {
 							case 0: // equip
-								if (overall_mode == MODE_USE) {
+								if (overall_mode == MODE_USE_TOWN) {
 									add_string_to_buf("Note: Clicking 'U' button by item");
 									add_string_to_buf("  uses the item.");
 									use_item(stat_window, item_hit);
@@ -1180,7 +1182,7 @@ Boolean handle_action(EventRecord event)
 									else {
 										add_string_to_buf("Drop item: Click where to drop item.");
 										store_drop_item = item_hit;
-										overall_mode = (is_town()) ? 5 : MODE_DROPPING;
+										overall_mode = (is_town()) ? MODE_DROP_TOWN : MODE_DROP_COMBAT;
 										}
 								break;
 							case 4: // info
@@ -1401,8 +1403,8 @@ Boolean handle_action(EventRecord event)
 	}
 	else if (party_toast() == TRUE) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status == 5) {
-				ADVEN[i].main_status = 1;
+			if (ADVEN[i].main_status == MAIN_STATUS_FLED) {
+				ADVEN[i].main_status = MAIN_STATUS_ALIVE;
 				if (is_combat()) {
 					end_town_mode(0,univ.town.p_loc);
 					add_string_to_buf("End combat.               ");
@@ -1754,7 +1756,7 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for (i = 0; i < 6; i++) {
-				ADVEN[i].main_status = 1;
+				ADVEN[i].main_status = MAIN_STATUS_ALIVE;
 				ADVEN[i].cur_health = ADVEN[i].max_health;
 				ADVEN[i].cur_sp = 100;
 				}
@@ -2104,7 +2106,7 @@ void increase_age()////
 	if (PSD[SDF_PARTY_FLIGHT] == 1) {
 		if (scenario.ter_types[univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage > 2) { 
 				add_string_to_buf("  You plummet to your deaths.                  ");
-				slay_party(2);
+				slay_party(MAIN_STATUS_DEAD);
 				print_buf();
 				pause(150);
 			}
@@ -2366,10 +2368,10 @@ void drop_pc(short which)
 		return;
 		}
 	add_string_to_buf("Delete PC: OK.                  ");
-	kill_pc(which,0);
+	kill_pc(which,MAIN_STATUS_ABSENT);
 	for (i = which; i < 5; i++)
 		ADVEN[i] = ADVEN[i + 1];
-	ADVEN[5].main_status = 0;
+	ADVEN[5].main_status = MAIN_STATUS_ABSENT;
 	set_stat_window(0);
 	put_pc_screen();
 }
