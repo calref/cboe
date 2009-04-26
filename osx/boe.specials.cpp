@@ -2085,9 +2085,11 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 81:
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			if (pc < 0) {
-				hit_party(r1,spec.ex2b);
-				}
-				else damage_pc(pc,r1,spec.ex2b,0);
+				if(spec.pic == 1 && overall_mode == MODE_COMBAT)
+					damage_pc(current_pc,r1,spec.ex2b,0);
+				else hit_party(r1,spec.ex2b);
+			}
+			else damage_pc(pc,r1,spec.ex2b,0);
 			break;
 		case 82:
 			for (i = 0; i < 6; i++)

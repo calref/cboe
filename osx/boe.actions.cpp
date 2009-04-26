@@ -902,21 +902,20 @@ Boolean handle_action(EventRecord event)
 							did_something = TRUE;
 							need_redraw = TRUE;
 							if (univ.town.monst.dudes[i].attitude % 2 == 1) {
-									add_string_to_buf("  Creature is hostile.        ");
-									}
-								else if ((univ.town.monst.dudes[i].summoned > 0)////
-									|| (univ.town.monst.dudes[i].monst_start.personality < 0))
-									add_string_to_buf("Talk: No response.            ");
-								else switch (univ.town.monst.dudes[i].monst_start.personality) {
-									default: 
-										start_talk_mode(i,univ.town.monst.dudes[i].monst_start.personality,univ.town.monst.dudes[i].number,
-											univ.town.monst.dudes[i].monst_start.facial_pic);
-										did_something = FALSE;
-										need_redraw = FALSE;				
-										break;
-									}
+								add_string_to_buf("  Creature is hostile.        ");
+							}
+							else if ((univ.town.monst.dudes[i].summoned > 0)////
+								|| (univ.town.monst.dudes[i].monst_start.personality < 0))
+								add_string_to_buf("Talk: No response.            ");
+							else {
+								start_talk_mode(i,univ.town.monst.dudes[i].monst_start.personality,univ.town.monst.dudes[i].number,
+									univ.town.monst.dudes[i].monst_start.facial_pic);
+								did_something = FALSE;
+								need_redraw = FALSE;				
+								break;
 							}
 						}
+					}
 					if ((did_something == FALSE) && (overall_mode != MODE_TALKING)){
 						add_string_to_buf("  Nobody there");
 						need_reprint = TRUE;

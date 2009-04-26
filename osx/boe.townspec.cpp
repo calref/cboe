@@ -164,7 +164,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 			skill = minmax(0,20,ADVEN[pc_num].skills[SKILL_DISARM_TRAPS] + 
 				+ ADVEN[pc_num].skills[SKILL_LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
 	
-			r1 = get_ran(1,0,100) + diff;
+			r1 = get_ran(1,1,100) + diff;
 			// Nimble?
 			if (ADVEN[pc_num].traits[TRAIT_NIMBLE])
 				r1 -= 6;

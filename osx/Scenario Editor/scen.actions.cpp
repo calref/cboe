@@ -1161,11 +1161,11 @@ Boolean handle_action(Point the_point,EventRecord event)
 		//draw_frames();
 		}
 
-	if ((get_ran(1,0,100) == 50) && (!check_p2(user_given_password))) {
+	if ((get_ran(1,1,100) == 50) && (!check_p2(user_given_password))) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}
-	if ((get_ran(1,0,100) == 50) && (!check_p3(user_given_password))) {
+	if ((get_ran(1,1,100) == 50) && (!check_p3(user_given_password))) {
 		fancy_choice_dialog(868,0);
 		return are_done;
 		}

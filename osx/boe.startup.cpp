@@ -31,6 +31,7 @@ extern Point ul;
 extern vector<scen_header_type> scen_headers;
 extern Boolean unreg_party_in_scen_not_check;
 extern std::vector<std::string> scen_names;;
+extern cUniverse univ;
 
 //void start_game();
 
@@ -118,9 +119,13 @@ Boolean handle_startup_press(Point the_point)
 void startup_load()////
 {
 	FSSpec* file_to_load = nav_get_party();
-	load_party(*file_to_load);
-	update_pc_graphics();
-	if (in_startup_mode == FALSE) {
+	if(file_to_load == NULL) return;
+	if(load_party(*file_to_load)){
+		party_in_memory = true;
+		update_pc_graphics();
+		in_startup_mode = strlen(univ.party.scen_name);
+	}
+	if (!in_startup_mode) {
 		//end_anim();
 		end_startup();
 		post_load();

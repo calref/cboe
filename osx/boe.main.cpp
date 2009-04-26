@@ -308,7 +308,7 @@ void Initialize(void)
 	load_prefs();
 	set_pixel_depth();
 	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
-	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
+	SetPortWindowPort(mainPtr);						/* set window to current graf port */
 	text_sbar = NewControl(mainPtr,&sbar_rect,tit,FALSE,58,0,58,scrollBarProc,1);
 	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,2);
 	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,3);

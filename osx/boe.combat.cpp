@@ -588,7 +588,7 @@ void pc_attack(short who_att,short target)////
 		sprintf ((char *) create_line, "%s punches.  ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 
-		r1 = get_ran(1,0,100) + hit_adj - 20;
+		r1 = get_ran(1,1,100) + hit_adj - 20;
 		r1 += 5 * (ADVEN[current_pc].status[6] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 		
@@ -614,7 +614,7 @@ void pc_attack(short who_att,short target)////
 		sprintf ((char *) create_line, "%s swings. ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 		
-		r1 = get_ran(1,0,100) - 5 + hit_adj
+		r1 = get_ran(1,1,100) - 5 + hit_adj
 		 - 5 * ADVEN[who_att].items[weap1].bonus;
 		r1 += 5 * (ADVEN[current_pc].status[6] / 3);
 		
@@ -634,7 +634,7 @@ void pc_attack(short who_att,short target)////
 				ADVEN[who_att].items[weap1].ability_strength,which_m);
 
 			// assassinate
-			r1 = get_ran(1,0,100);
+			r1 = get_ran(1,1,100);
 			if ((ADVEN[who_att].level >= which_m->m_d.level - 1) 
 				&& (ADVEN[who_att].skills[16] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != 12)) // Can't assassinate splitters
@@ -696,7 +696,7 @@ void pc_attack(short who_att,short target)////
 
 		sprintf ((char *) create_line, "%s swings.                    ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
-		r1 = get_ran(1,0,100) + hit_adj - 5 * ADVEN[who_att].items[weap2].bonus;
+		r1 = get_ran(1,1,100) + hit_adj - 5 * ADVEN[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
 		if (ADVEN[who_att].traits[2] == FALSE)
@@ -1311,7 +1311,7 @@ void do_combat_cast(location target)////
 										store_m_type = -1;
 										break;
 										}
-									r1 = get_ran(1,0,100);
+									r1 = get_ran(1,1,100);
 									if (r1 > hit_chance[minmax(0,19,level * 4 - cur_monst->m_d.level + 10)])
 										add_string_to_buf("  Demon resisted.                  ");
 										else {
@@ -1442,12 +1442,11 @@ void load_missile() ////
 	else add_string_to_buf("Fire: Equip a missile.       ");
 }
 
-void fire_missile(location target) ////
-{
+void fire_missile(location target) {
 	short r1, r2, skill, dam, dam_bonus, hit_bonus, range, targ_monst, spec_dam = 0,poison_amt = 0;
 	short skill_item,m_type = 0;
 	cPopulation::cCreature *cur_monst;
-	Boolean exploding = FALSE;
+	bool exploding = false;
 	
 	skill = (overall_mode == MODE_FIRING) ? ADVEN[current_pc].skills[7] : ADVEN[current_pc].skills[6];
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
@@ -1466,99 +1465,99 @@ void fire_missile(location target) ////
 		hit_bonus += 2;
 	
 	if (ADVEN[current_pc].items[ammo_inv_slot].ability == 172) 
-		exploding = TRUE;
-	if (ADVEN[current_pc].items[ammo_inv_slot].variety != 25) {
-		if (ADVEN[current_pc].items[ammo_inv_slot].ability != 170)
-			ADVEN[current_pc].items[ammo_inv_slot].charges--;
-			else ADVEN[current_pc].items[ammo_inv_slot].charges = 1;
-		if ((pc_has_abil_equip(current_pc,11) < 24) && (ADVEN[current_pc].items[ammo_inv_slot].ability != 170))
-			ADVEN[current_pc].items[ammo_inv_slot].charges--;
-		if (ADVEN[current_pc].items[ammo_inv_slot].charges <= 0)
-			take_item(current_pc,ammo_inv_slot);
-		}
-
-	// First, some missiles do special things
-	if (exploding == TRUE) {
-		take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
-		add_string_to_buf("  The arrow explodes!             ");
-		run_a_missile(pc_pos[current_pc],target,2,1,5,
-			0,0,100);
-		start_missile_anim();
-		add_missile(target,2,1, 0, 0);
-		do_missile_anim(100,pc_pos[current_pc], 5);
-		place_spell_pattern(rad2,target,
-			50 + ADVEN[current_pc].items[ammo_inv_slot].ability_strength * 2,TRUE,current_pc);
-		do_explosion_anim(5,0);
-		end_missile_anim();
-		handle_marked_damage();
-		return;
-		}
+		exploding = true;
 	
 	if (dist(pc_pos[current_pc],target) > range)
 		add_string_to_buf("  Out of range.");
-		else if (can_see(pc_pos[current_pc],target,0) == 5)
-			add_string_to_buf("  Can't see target.             ");
-			else {
-				combat_posing_monster = current_working_monster = current_pc;
-				draw_terrain(2);
-				void_sanctuary(current_pc);
-				//play_sound((overall_mode == MODE_FIRING) ? 12 : 14);
-				take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
-				missile_firer = current_pc;			
-				r1 = get_ran(1,0,100) - 5 * hit_bonus - 10;
-				r1 += 5 * (ADVEN[current_pc].status[6] / 3);
-				r2 = get_ran(1,1,dam) + dam_bonus;
-				sprintf ((char *) create_line, "%s fires.",(char *) ADVEN[current_pc].name); // debug
-				add_string_to_buf((char *) create_line);
-
-				switch (overall_mode) {
-					case MODE_THROWING:
-						switch (ADVEN[current_pc].items[ammo_inv_slot].item_level) {
-							case 7:m_type = 10;break;
-							case 4:m_type = 1;break;
-							case 8:m_type = 5;break;
-							case 9:m_type = 7;break;
-							default:m_type = 10;break;
-							}
-						break;
-					case MODE_FIRING: case MODE_FANCY_TARGET:
-						m_type = (ADVEN[current_pc].items[ammo_inv_slot].is_magic() == TRUE) ? 4 : 3;
-						break; 
+	else if (can_see(pc_pos[current_pc],target,0) == 5)
+		add_string_to_buf("  Can't see target.             ");
+	else {
+		// First, some missiles do special things
+		if (exploding) {
+			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
+			add_string_to_buf("  The arrow explodes!             ");
+			run_a_missile(pc_pos[current_pc],target,2,1,5,
+						  0,0,100);
+			start_missile_anim();
+			add_missile(target,2,1, 0, 0);
+			do_missile_anim(100,pc_pos[current_pc], 5);
+			place_spell_pattern(rad2,target,
+								50 + ADVEN[current_pc].items[ammo_inv_slot].ability_strength * 2,TRUE,current_pc);
+			do_explosion_anim(5,0);
+			end_missile_anim();
+			handle_marked_damage();
+		} else {
+			combat_posing_monster = current_working_monster = current_pc;
+			draw_terrain(2);
+			void_sanctuary(current_pc);
+			//play_sound((overall_mode == MODE_FIRING) ? 12 : 14);
+			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
+			missile_firer = current_pc;			
+			r1 = get_ran(1,1,100) - 5 * hit_bonus - 10;
+			r1 += 5 * (ADVEN[current_pc].status[6] / 3);
+			r2 = get_ran(1,1,dam) + dam_bonus;
+			sprintf ((char *) create_line, "%s fires.",(char *) ADVEN[current_pc].name); // debug
+			add_string_to_buf((char *) create_line);
+			
+			switch (overall_mode) {
+				case MODE_THROWING:
+					switch (ADVEN[current_pc].items[ammo_inv_slot].item_level) {
+						case 7:m_type = 10;break;
+						case 4:m_type = 1;break;
+						case 8:m_type = 5;break;
+						case 9:m_type = 7;break;
+						default:m_type = 10;break;
 					}
-				run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
-					0,0,100);
-
-				if (r1 > hit_chance[skill])
-					add_string_to_buf("  Missed.");
-					else if ((targ_monst = monst_there(target)) < T_M) {
-						cur_monst = &univ.town.monst.dudes[targ_monst];
-						spec_dam = calc_spec_dam(ADVEN[current_pc].items[ammo_inv_slot].ability,
-							ADVEN[current_pc].items[ammo_inv_slot].ability_strength,cur_monst);
-						if (ADVEN[current_pc].items[ammo_inv_slot].ability == 176) {
-							ASB("  There is a flash of light.");
-							cur_monst->m_d.health += r2;
-							}
-							else damage_monst(targ_monst, current_pc, r2, spec_dam, 1300);
-						
-						//if (ADVEN[current_pc].items[ammo_inv_slot].ability == 33)
-						//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
-
-						// poison			
-						if ((ADVEN[current_pc].status[0] > 0) && (ADVEN[current_pc].weap_poisoned == ammo_inv_slot)) {
-								poison_amt = ADVEN[current_pc].status[0];
-								if (pc_has_abil_equip(current_pc,51) < 24)
-									poison_amt++;
-								poison_monst(cur_monst,poison_amt);
-							}
-					
-						}
-						else hit_space(target,r2,0,1,0);
-						
-				}	
-
+					break;
+				case MODE_FIRING: case MODE_FANCY_TARGET:
+					m_type = (ADVEN[current_pc].items[ammo_inv_slot].is_magic() == TRUE) ? 4 : 3;
+					break; 
+			}
+			run_a_missile(pc_pos[current_pc],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
+						  0,0,100);
+			
+			if (r1 > hit_chance[skill])
+				add_string_to_buf("  Missed.");
+			else if ((targ_monst = monst_there(target)) < T_M) {
+				cur_monst = &univ.town.monst.dudes[targ_monst];
+				spec_dam = calc_spec_dam(ADVEN[current_pc].items[ammo_inv_slot].ability,
+										 ADVEN[current_pc].items[ammo_inv_slot].ability_strength,cur_monst);
+				if (ADVEN[current_pc].items[ammo_inv_slot].ability == 176) {
+					ASB("  There is a flash of light.");
+					cur_monst->m_d.health += r2;
+				}
+				else damage_monst(targ_monst, current_pc, r2, spec_dam, 1300);
+				
+				//if (ADVEN[current_pc].items[ammo_inv_slot].ability == 33)
+				//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
+				
+				// poison			
+				if ((ADVEN[current_pc].status[0] > 0) && (ADVEN[current_pc].weap_poisoned == ammo_inv_slot)) {
+					poison_amt = ADVEN[current_pc].status[0];
+					if (pc_has_abil_equip(current_pc,51) < 24)
+						poison_amt++;
+					poison_monst(cur_monst,poison_amt);
+				}
+				
+			}
+			else hit_space(target,r2,0,1,0);
+			
+		}
+		
+		if (ADVEN[current_pc].items[ammo_inv_slot].variety != 25) {
+			if (ADVEN[current_pc].items[ammo_inv_slot].ability != 170)
+				ADVEN[current_pc].items[ammo_inv_slot].charges--;
+			else ADVEN[current_pc].items[ammo_inv_slot].charges = 1;
+			if ((pc_has_abil_equip(current_pc,11) < 24) && (ADVEN[current_pc].items[ammo_inv_slot].ability != 170))
+				ADVEN[current_pc].items[ammo_inv_slot].charges--;
+			if (ADVEN[current_pc].items[ammo_inv_slot].charges <= 0)
+				take_item(current_pc,ammo_inv_slot);
+		}
+	}
+	
 	combat_posing_monster = current_working_monster = -1;
 	ADVEN[current_pc].status[0] = move_to_zero(ADVEN[current_pc].status[0]);
-	print_buf();////
+	print_buf();
 }
 
 // Select next active PC and, if necessary, run monsters
@@ -2085,29 +2084,29 @@ void do_monster_turn()
 				
 				// Place fields for monsters that create them. Only done when monst sees foe
 				if ((target != 6) && (can_see(cur_monst->m_loc,targ_space,0) < 5)) { ////
-					if ((cur_monst->m_d.radiate_1 == 1) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 1) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,5,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 2) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 2) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,8,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 3) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 3) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,4,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 4) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 4) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,6,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 5) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 5) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,12,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 6) && (get_ran(1,0,100) < cur_monst->m_d.radiate_2))
+					if ((cur_monst->m_d.radiate_1 == 6) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
 						place_spell_pattern(square,cur_monst->m_loc,7,FALSE,7);
-					if ((cur_monst->m_d.radiate_1 == 10) && (get_ran(1,0,100) < 5)){
+					if ((cur_monst->m_d.radiate_1 == 10) && (get_ran(1,1,100) < 5)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
-					if ((cur_monst->m_d.radiate_1 == 11) && (get_ran(1,0,100) < 20)){
+					if ((cur_monst->m_d.radiate_1 == 11) && (get_ran(1,1,100) < 20)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
-					if ((cur_monst->m_d.radiate_1 == 12) && (get_ran(1,0,100) < 50)){
+					if ((cur_monst->m_d.radiate_1 == 12) && (get_ran(1,1,100) < 50)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
 							cur_monst->m_loc,130,cur_monst->attitude) == TRUE)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
@@ -2239,7 +2238,7 @@ void monster_attack_pc(short who_att,short target)
 
 	// Check sanctuary
 	if (ADVEN[target].status[8] > 0) {
-		r1 = get_ran(1,0,100);
+		r1 = get_ran(1,1,100);
 		if (r1 > hit_chance[attacker->m_d.level / 2]) {
 			add_string_to_buf("  Can't find target!                 ");		
 			}
@@ -2252,7 +2251,7 @@ void monster_attack_pc(short who_att,short target)
 //			add_string_to_buf((char *) create_line);
 
 			// Attack roll
-			r1 = get_ran(1,0,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * ADVEN[target].status[1]
+			r1 = get_ran(1,1,100) - 5 * min(8,attacker->m_d.status[1]) + 5 * ADVEN[target].status[1]
 					+ 5 * stat_adj(target,1) - 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 			if (pc_parry[target] < 100)
@@ -2431,7 +2430,7 @@ void monster_attack_monster(short who_att,short attackee)
 				target->attitude = 2;
 
 			// Attack roll
-			r1 = get_ran(1,0,100) - 5 * min(10,attacker->m_d.status[1]) 
+			r1 = get_ran(1,1,100) - 5 * min(10,attacker->m_d.status[1]) 
 				+ 5 * target->m_d.status[1]	- 15;
 			r1 += 5 * (attacker->m_d.status[6] / 3);
 
@@ -2725,14 +2724,14 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 
 			// Check sanctuary
 			if (ADVEN[target].status[8] > 0) {
-				r1 = get_ran(1,0,100);
+				r1 = get_ran(1,1,100);
 				if (r1 > hit_chance[level]) {
 					add_string_to_buf("  Can't find target!                 ");		
 					}
 				return;
 				}
 
-			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * ADVEN[target].status[1]
+			r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * ADVEN[target].status[1]
 				- 5 * (can_see(source, pc_pos[target],0));
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -2774,7 +2773,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 					 monst_spell_note(m_target->number,14);
 				break;
 				}
-			r1 = get_ran(1,0,100) - 5 * min(10,bless) + 5 * m_target->m_d.status[1]
+			r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->m_d.status[1]
 				- 5 * (can_see(source, m_target->m_loc,0));
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 

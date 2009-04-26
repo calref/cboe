@@ -1125,7 +1125,8 @@ remember_tiny_text = 300;
 void draw_text_bar(short mode)
 //short mode; // 0 - no redraw  1 - forced
 {
-	short i,num_rect[3] = {12,10,4};
+	//short num_rect[3] = {12,10,4}; // Why? Just... why?
+	short i;
 	location loc;
 	char combat_string[100];
 	
@@ -1152,7 +1153,7 @@ void draw_text_bar(short mode)
 			}
 		}
 	if (is_town()) {
-		for (i = 0; i < num_rect[town_type]; i++)
+		for (i = 0; i < 16; i++)
 			if (loc.in(univ.town.town->room_rect(i))) 
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
@@ -1499,8 +1500,8 @@ void update_pc_graphics()
 	if (party_in_memory == FALSE)
 		return;
 		
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));	
+	//GetPort(&old_port);
+	SetPortWindowPort(mainPtr);	
 	temp_gworld = load_pict(902);
 	temp_gworld2 = load_pict(905);
 
@@ -1539,7 +1540,7 @@ void update_pc_graphics()
 	DisposeGWorld (temp_gworld);
 	DisposeGWorld (temp_gworld2);
 				
-	SetPort(old_port);	
+	//SetPort(old_port);	
 
 }
 

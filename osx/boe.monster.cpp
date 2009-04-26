@@ -1068,7 +1068,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 		if (guts < 3) return FALSE;
 		}
 	if (is_fire_barrier(where_check.x,where_check.y)) {
-		if ((which_m->attitude % 2 == 1) && (get_ran(1,0,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))) {
+		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))) {
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
 			take_fire_barrier(where_check.x,where_check.y);
@@ -1081,7 +1081,7 @@ Boolean monst_check_special_terrain(location where_check,short mode,short which_
 				}
 		}
 	if (is_force_barrier(where_check.x,where_check.y)) { /// Not in big towns
-		if ((which_m->attitude % 2 == 1) && (get_ran(1,0,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))
+		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))
 			&& (univ.town.num >= 20)) {
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
@@ -1271,7 +1271,7 @@ void charm_monst(cPopulation::cCreature *which_m,short penalty,short which_statu
 	if ((which_status == 11) && 
 		((which_m->m_d.m_type == 8) || (which_m->m_d.m_type == 10) || (which_m->m_d.m_type == 11)))
 		return;
-	r1 = get_ran(1,0,100);
+	r1 = get_ran(1,1,100);
 	if (which_m->m_d.immunities & 1)
 		r1 = r1 * 2;
 	if (which_m->m_d.immunities & 2)
@@ -1308,7 +1308,7 @@ void record_monst(cPopulation::cCreature *which_m)
 	short r1;
 	char str[60];
 	
-	r1 = get_ran(1,0,100);
+	r1 = get_ran(1,1,100);
 	r1 = (r1 * 7) / 10;
 	
 	if ((which_m->m_d.x_width > 1) || (which_m->m_d.y_width > 1)) {

@@ -402,7 +402,7 @@ void spread_sfx(short type,short prob)
 	
 	for (i = 0; i < town_size[town_type]; i++)
 		for (j = 0; j < town_size[town_type]; j++)
-			if ((univ.town.town->terrain(i,j) < 5) && (get_ran(1,0,100) <= prob))
+			if ((univ.town.town->terrain(i,j) < 5) && (get_ran(1,1,100) <= prob))
 				make_sfx(i,j,type);
 				
 }

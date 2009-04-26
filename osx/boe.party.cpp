@@ -688,7 +688,7 @@ void disease_pc(short which_pc,short how_much)
 
 	if (ADVEN[which_pc].main_status != 1)
 		return;
-	r1 = get_ran(1,0,100);
+	r1 = get_ran(1,1,100);
 	if (r1 < ADVEN[which_pc].level * 2)
 		how_much -= 2;
 	if (how_much <= 0) {
@@ -730,7 +730,7 @@ void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
 
 		}
 		
-	r1 = get_ran(1,0,100) + adjust;
+	r1 = get_ran(1,1,100) + adjust;
 	if (r1 < 30 + ADVEN[which_pc].level * 2)
 		how_much = -1;
 	if ((what_type == 11) && ((ADVEN[which_pc].traits[7] > 0) || (ADVEN[which_pc].status[11] < 0)))
@@ -884,7 +884,7 @@ void award_xp(short pc_num,short amt)
 		else adjust = xp_percent[ADVEN[pc_num].level / 2];
 
 	if ((amt > 0) && (ADVEN[pc_num].level > 7)) {
-		if (get_ran(1,0,100) < xp_percent[ADVEN[pc_num].level / 2])
+		if (get_ran(1,1,100) < xp_percent[ADVEN[pc_num].level / 2])
 			amt--;
 		}
 	if (amt <= 0)
@@ -1262,14 +1262,14 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 		else {
 				p_level = how_much;
 				add_string_to_buf("  You poison your weapon.       ");
-				r1 = get_ran(1,0,100);
+				r1 = get_ran(1,1,100);
 				// Nimble?
 				if (ADVEN[pc_num].traits[TRAIT_NIMBLE])
 					r1 -= 6;
 				if ((r1 > p_chance[ADVEN[pc_num].skills[17]]) && (safe == 0)) {
 					add_string_to_buf("  Poison put on badly.         ");
 					p_level = p_level / 2;
-					r1 = get_ran(1,0,100);
+					r1 = get_ran(1,1,100);
 					if (r1 > p_chance[ADVEN[pc_num].skills[17]] + 10) {
 						add_string_to_buf("  You nick yourself.          ");
 						ADVEN[pc_num].status[2] += p_level;
@@ -1821,7 +1821,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					targ_damaged = ADVEN[target].max_health - ADVEN[target].cur_health;
 					while ((targ_damaged > 0) && (ADVEN[pc_num].cur_health > 0)) {
 						ADVEN[target].cur_health++;
-						r1 = get_ran(1,0,100) + ADVEN[pc_num].level / 2 + 3 * adj;
+						r1 = get_ran(1,1,100) + ADVEN[pc_num].level / 2 + 3 * adj;
 						if (r1 < 100)
 							ADVEN[pc_num].cur_health--;
 						if (r1 < 50)
@@ -1868,8 +1868,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					if ((item = pc_has_abil(pc_num,160)) == 24) {
 						add_string_to_buf("  Need resurrection balm.        ");
 						spell_num = 500;
-						}
-						else take_item(pc_num,item);
+					}
+					else take_item(pc_num,item);
 				if (spell_num == 40) {
 						if (ADVEN[target].main_status == 2) 
 								if (get_ran(1,1,ADVEN[pc_num].level / 2) == 1) {
@@ -1905,7 +1905,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 							else sprintf ((char *) c_line,"  Was OK.              ");				
 					}
 				add_string_to_buf((char *) c_line);	
-				put_pc_screen();					
+				put_pc_screen();
 			}
 			break;	
 
@@ -2052,7 +2052,7 @@ void cast_town_spell(location where) ////
 			case 20:
 				switch (scenario.ter_types[ter].special) { ////
 					case 9: case 10:
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast,2) + 5 * univ.town.difficulty;
+						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * univ.town.difficulty;
 						r1 += scenario.ter_types[ter].flag2 * 7;
 						if (scenario.ter_types[ter].flag2 == 10)
 							r1 = 10000;
@@ -2075,7 +2075,7 @@ void cast_town_spell(location where) ////
 				
 			case 41:
 				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
-						r1 = get_ran(1,0,100) - 5 * stat_adj(who_cast,2) + 5 * (univ.town.difficulty / 10);
+						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * (univ.town.difficulty / 10);
 						if (is_fire_barrier(where.x,where.y))
 							r1 -= 8;
 						if (r1 < (120 - combat_percent[min(19,ADVEN[who_cast].level)])) {
@@ -2143,7 +2143,7 @@ void do_mindduel(short pc_num,cPopulation::cCreature *monst)
 	add_string_to_buf("Mindduel!");
 	while ((ADVEN[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
-		r1 = get_ran(1,0,100) + adjust;
+		r1 = get_ran(1,1,100) + adjust;
 		r1 += 5 * (monst->m_d.status[9] - ADVEN[pc_num].status[9]);
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
@@ -2874,7 +2874,7 @@ void do_alchemy() ////
 			if (ingred2_needed[which_p] > 0)
 				remove_charge(pc_num,which_item2);
 
-			r1 = get_ran(1,0,100);
+			r1 = get_ran(1,1,100);
 			if (r1 < fail_chance[ADVEN[pc_num].skills[12] - difficulty[which_p]]) {
 				add_string_to_buf("Alchemy: Failed.               ");
 				r1 = get_ran(1,0,1);
@@ -3246,7 +3246,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 						if (ADVEN[which_pc].items[i].bonus < 0) {
 							how_much = how_much - ADVEN[which_pc].items[i].bonus;
 							}
-						r1 = get_ran(1,0,100);
+						r1 = get_ran(1,1,100);
 						if (r1 < hit_chance[ADVEN[which_pc].skills[8]] - 20)
 							how_much -= 1;
 					}
@@ -3273,7 +3273,7 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 		if (ADVEN[which_pc].traits[0] == TRUE)
 			how_much--;
 		// luck
-		if (get_ran(1,0,100) < 2 * (hit_chance[ADVEN[which_pc].skills[18]] - 20))
+		if (get_ran(1,1,100) < 2 * (hit_chance[ADVEN[which_pc].skills[18]] - 20))
 			how_much -= 1;
 		}
 
@@ -3396,7 +3396,7 @@ void kill_pc(short which_pc,short type)
 		i = pc_has_abil_equip(which_pc,48);
 
 	if ((no_save == FALSE) && (type != 0) && (ADVEN[which_pc].skills[18] > 0) && 
-		(get_ran(1,0,100) < hit_chance[ADVEN[which_pc].skills[18]])) {
+		(get_ran(1,1,100) < hit_chance[ADVEN[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
 			ADVEN[which_pc].cur_health = 0;
 			}

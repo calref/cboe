@@ -1454,7 +1454,7 @@ void place_treasure(location where,short level,short loot,short mode)
 				place_item(new_item,where,FALSE);
 		}
 	for (j = 0; j < 5; j++) {
-		r1 = get_ran(1,0,100);
+		r1 = get_ran(1,1,100);
 		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + luck_total())) {
 			r1 = get_ran(1,0,9);
 			min = min_chart[treas_chart[loot][j]][r1];
@@ -1505,7 +1505,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
 					if ((ADVEN[i].main_status == 1) 
-						&& (get_ran(1,0,100) < id_odds[ADVEN[i].skills[13]]))
+						&& (get_ran(1,1,100) < id_odds[ADVEN[i].skills[13]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
 				}			
