@@ -859,7 +859,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						}
 				break;
 			case 131:
-				if (univ.town.town->specials2 % 10 == 1) {
+				if (univ.town.town->specials2 & 1) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 					}

@@ -1365,7 +1365,7 @@ void clear_map()
 
 pascal void draw_map (DialogPtr the_dialog, short the_item)
 //the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
-				// just update near party, if it gets 11, blank univ.out.out middle and leave
+				// just update near party, if it gets 11, blank out middle and leave
 				// No redrawing in gworld
 				// If a 10, do a regular full restore
 				// Also, can get a 5 even when the window is not up, so have to make
@@ -1386,7 +1386,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 	short small_adj = 0;
 	unsigned char what_ter,what_ter2;
 	bool draw_surroundings = false,expl,expl2;
-	short total_size = 48; // if full redraw, use this to figure univ.out.out everything
+	short total_size = 48; // if full redraw, use this to figure out everything
 	Rect area_to_put_on_map_rect;
 	Rect custom_from;
 	
@@ -1523,7 +1523,20 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				SetPort(old_port);
 				return;
 				}
-		}
+		 }else if((is_town() && univ.town.town->specials2 & 1)) {
+			 if (modeless_exists[5] == true) {
+				 SetPort(GetDialogPort(the_dialog));
+				 FillCRect(&map_bar_rect,bg[4]);
+				 char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
+									   map_bar_rect,"This place defies mapping.",0,12,false);
+				 draw_pcs = false;
+				 SetPort( map_gworld);
+			 }
+			 else {
+				 SetPort(old_port);
+				 return;
+			 }
+		 }
 	else {
 	if (modeless_exists[5] == true) {
 		//SetPort(the_dialog);

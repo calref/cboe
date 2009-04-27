@@ -536,6 +536,13 @@ void put_party_in_scen(string scen_name)
 	// this is kludgy, put here to prevent problems
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
+	
+	// Compatibility flags
+	if(scenario.format.prog_make_ver[0] < 2){
+		PSD[SDF_RESURRECT_NO_BALM] = 1;
+	} else {
+		PSD[SDF_RESURRECT_NO_BALM] = 0;
+	}
 }
 
 bool create_pc(short spot,short parent_num)
@@ -1500,7 +1507,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			item = pc_has_abil(pc_num,158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-				else if (univ.town.town->specials2 % 10 == 1)
+				else if (univ.town.town->specials2 & 1)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);
@@ -1870,7 +1877,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						sprintf ((char *) c_line,"  Your items glow.     ");				
 					}
 
-				if ((spell_num == 40) || (spell_num == 56))
+				if (!PSD[SDF_RESURRECT_NO_BALM] && ((spell_num == 40) || (spell_num == 56)))
 					if ((item = pc_has_abil(pc_num,160)) == 24) {
 						add_string_to_buf("  Need resurrection balm.        ");
 						spell_num = 500;

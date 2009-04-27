@@ -1090,6 +1090,13 @@ bool load_party(FSSpec file_to_load){
 		strcpy(univ.party.scen_name,"");
 	}
 	
+	// Compatibility flags
+	if(in_scen && scenario.format.prog_make_ver[0] < 2){
+		univ.party.stuff_done[305][8] = 1;
+	} else {
+		univ.party.stuff_done[305][8] = 0;
+	}
+	
 	return true;
 }
 
