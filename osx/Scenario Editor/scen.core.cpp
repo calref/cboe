@@ -15,7 +15,7 @@
 #include "scen.actions.h"
 
 extern short cen_x, cen_y,/* overall_mode,*/cur_town;
-extern Boolean mouse_button_held;
+extern bool mouse_button_held;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
 extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
@@ -755,11 +755,11 @@ cMonster return_monster_template(unsigned char store)
 //	i.reserved1 = 0;
 //	i.reserved2 = 0;
 //	i.item_properties = 0;
-//	if (s_item.identified == TRUE)
+//	if (s_item.identified == true)
 //		i.item_properties = i.item_properties | 1;
 //	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
 //		i.item_properties = i.item_properties | 16;
-//	if (s_item.magic == TRUE)
+//	if (s_item.magic == true)
 //		i.item_properties = i.item_properties | 4;
 //
 //	return i;
@@ -770,8 +770,8 @@ void init_scenario()
 	short i;
 	rectangle dummy_rect;
 	Str255 temp_str;
-	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
-	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,FALSE,FALSE};
+	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,false,false};
+	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,false,false};
 	cScenario::cItemStorage null_item_s;// ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
 	short j,item_to_hide[13] = {214,233,270,271,280,281,286,290,291,297,304,311,348};
 	
@@ -899,7 +899,7 @@ void put_ter_info_in_dlog()
 	else csp(813,14,store_ter.picture,PICT_TER);
 }
 
-Boolean save_ter_info()
+bool save_ter_info()
 {
 	Str255 str;
 	short i;
@@ -910,7 +910,7 @@ Boolean save_ter_info()
 		((store_ter.picture > PICT_N_TER) && (store_ter.picture < 400)) ||
 		((store_ter.picture > 400 + PICT_N_TER_ANIM) && (store_ter.picture < 1000))) {
 			give_error("Picture number isn't in the proper range.","",813);
-			return FALSE;
+			return false;
 	}
 	
 	if (store_which_ter > 90) {
@@ -918,33 +918,33 @@ Boolean save_ter_info()
 	store_ter.special = cd_get_led_range(813,32,55);
 	i = CDGN(813,6);
 	if ((store_ter.special < 2) || (store_ter.special > 6)) {
-		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == TRUE) return FALSE;
+		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
 		}
 		else if ((store_ter.special > 1) && (store_ter.special <= 4)) {
-		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == TRUE) return FALSE;
+		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
 		}
 		else if ((store_ter.special > 4) && (store_ter.special <= 7)) {
-		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == TRUE) return FALSE;
+		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
 		}
 	store_ter.flag1 = CDGN(813,6);
 	
 	i = CDGN(813,7);
 	if ((store_ter.special == 21) || (store_ter.special == 1)) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == TRUE) return FALSE;
+		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
 		}
 		else if ((store_ter.special > 1) && (store_ter.special <= 7)) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == TRUE) return FALSE;
+		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
 		}
 	store_ter.flag2 = CDGN(813,7);
 	
 	i = CDGN(813,4);
-	if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == TRUE) return FALSE;
+	if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == true) return false;
 	store_ter.trans_to_what = CDGN(813,4);
 	store_ter.fly_over = cd_get_led(813,25);
 	store_ter.boat_over = cd_get_led(813,26);
 	store_ter.block_horse = cd_get_led(813,27);
 	store_ter.light_radius = CDGN(813,8);
-	if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813) == TRUE) return FALSE;
+	if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813) == true) return false;
 
 	store_ter.step_sound = cd_get_led_range(813,28,31);
 		}
@@ -956,7 +956,7 @@ Boolean save_ter_info()
 	sprintf(scenario.ter_names[store_which_ter],"%s",str);
 
 	scenario.ter_types[store_which_ter] = store_ter;
-	return TRUE;
+	return true;
 }
 
 void edit_ter_type_event_filter (short item_hit)
@@ -968,17 +968,17 @@ void edit_ter_type_event_filter (short item_hit)
 		case 9:
 			toast_dialog(); break;	
 		case 62:
-			if (save_ter_info() == TRUE)
+			if (save_ter_info() == true)
 				 toast_dialog(); break;
 		case 10:
-			if (save_ter_info() == FALSE) break;
+			if (save_ter_info() == false) break;
 			store_which_ter--;
 			if (store_which_ter < 0) store_which_ter = 255;
 			store_ter = scenario.ter_types[store_which_ter];
 			put_ter_info_in_dlog();
 			break;
 		case 11:
-			if (save_ter_info() == FALSE) break;
+			if (save_ter_info() == false) break;
 			store_which_ter++;
 			if (store_which_ter > 255) store_which_ter = 0;
 			store_ter = scenario.ter_types[store_which_ter];
@@ -1106,7 +1106,7 @@ void put_monst_info_in_dlog()
 	csit(814,44,(char *) str);
 }
 
-Boolean save_monst_info()
+bool save_monst_info()
 {
 	Str255 str;
 	short i;
@@ -1116,7 +1116,7 @@ Boolean save_monst_info()
 	sprintf((char*)scenario.scen_monsters[store_which_monst].m_name,"%s",str);
 	//CDGT(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	store_monst.picture_num = CDGN(814,3);
-	if (cre(store_monst.picture_num,0,5000,"Monster pic must be from 0 to 5000.","",814) > 0) return FALSE;
+	if (cre(store_monst.picture_num,0,5000,"Monster pic must be from 0 to 5000.","",814) > 0) return false;
 		// later check pic num for error, and assign widths if custom
 	if (store_monst.picture_num >= 1000) {
 		if ((store_monst.picture_num >= 1000) && (store_monst.picture_num < 2000)) {
@@ -1129,38 +1129,38 @@ Boolean save_monst_info()
 			store_monst.x_width = 2; store_monst.y_width = 2; }
 		}
 		else {
-			if (cre(store_monst.picture_num,0,174,"Non-customized monster pic must be from 0 to 173.","",814) > 0) return FALSE;
+			if (cre(store_monst.picture_num,0,174,"Non-customized monster pic must be from 0 to 173.","",814) > 0) return false;
 			store_monst.x_width = m_pic_index[store_monst.picture_num].x;
 			store_monst.y_width = m_pic_index[store_monst.picture_num].y;
 
 			}
 	store_monst.level = CDGN(814,4);
-	if (cre(store_monst.level,0,40,"Level must be from 0 to 40.","",814) > 0) return FALSE;
+	if (cre(store_monst.level,0,40,"Level must be from 0 to 40.","",814) > 0) return false;
 	store_monst.m_health = store_monst.health = CDGN(814,5);
-	if (cre(store_monst.health,0,2500,"Health must be from 0 to 2500.","",814) > 0) return FALSE;
+	if (cre(store_monst.health,0,2500,"Health must be from 0 to 2500.","",814) > 0) return false;
 	store_monst.armor = CDGN(814,6);
-	if (cre(store_monst.armor,0,50,"Armor must be from 0 to 50.","",814) > 0) return FALSE;
+	if (cre(store_monst.armor,0,50,"Armor must be from 0 to 50.","",814) > 0) return false;
 	store_monst.skill = CDGN(814,7);
-	if (cre(store_monst.skill,0,40,"Skill must be from 0 to 40.","",814) > 0) return FALSE;
+	if (cre(store_monst.skill,0,40,"Skill must be from 0 to 40.","",814) > 0) return false;
 	store_monst.speed = CDGN(814,8);
-	if (cre(store_monst.speed,1,12,"Speed must be from 2 to 12.","",814) > 0) return FALSE;
+	if (cre(store_monst.speed,1,12,"Speed must be from 2 to 12.","",814) > 0) return false;
 	store_monst.mu = CDGN(814,9);
-	if (cre(store_monst.mu,0,7,"Magic Spells must be from 0 to 7.","",814) > 0) return FALSE;
+	if (cre(store_monst.mu,0,7,"Magic Spells must be from 0 to 7.","",814) > 0) return false;
 	store_monst.cl = CDGN(814,10);
-	if (cre(store_monst.cl,0,7,"Priest Spells must be from 0 to 7.","",814) > 0) return FALSE;
+	if (cre(store_monst.cl,0,7,"Priest Spells must be from 0 to 7.","",814) > 0) return false;
 	
 	i = CDGN(814,11);
-	if (cre(i,0,20,"Attack 1 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return FALSE;
+	if (cre(i,0,20,"Attack 1 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return false;
 	i = CDGN(814,13);
-	if (cre(i,0,20,"Attack 2 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return FALSE;
+	if (cre(i,0,20,"Attack 2 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return false;
 	i = CDGN(814,15);
-	if (cre(i,0,20,"Attack 3 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return FALSE;
+	if (cre(i,0,20,"Attack 3 number of dice must be from 0 to 20 (0 means no attack).","",814) > 0) return false;
 	i = CDGN(814,12);
-	if (cre(i,0,50,"Attack 1 damage per die must be from 1 to 50.","",814) > 0) return FALSE;
+	if (cre(i,0,50,"Attack 1 damage per die must be from 1 to 50.","",814) > 0) return false;
 	i = CDGN(814,14);
-	if (cre(i,0,50,"Attack 2 damage per die must be from 1 to 50.","",814) > 0) return FALSE;
+	if (cre(i,0,50,"Attack 2 damage per die must be from 1 to 50.","",814) > 0) return false;
 	i = CDGN(814,16);
-	if (cre(i,0,50,"Attack 3 damage per die must be from 1 to 50.","",814) > 0) return FALSE;
+	if (cre(i,0,50,"Attack 3 damage per die must be from 1 to 50.","",814) > 0) return false;
 	
 	
 	store_monst.a[0] = CDGN(814,11) * 100 + CDGN(814,12);
@@ -1169,10 +1169,10 @@ Boolean save_monst_info()
 
 	store_monst.default_facial_pic = CDGN(814,17); // later
 	store_monst.treasure = CDGN(814,18);
-	if (cre(store_monst.treasure,0,4,"Treasure must be from 0 to 4.","",814) > 0) return FALSE;
+	if (cre(store_monst.treasure,0,4,"Treasure must be from 0 to 4.","",814) > 0) return false;
 	store_monst.default_attitude = cd_get_led_range(814,29,32);
 	
-	return TRUE;
+	return true;
 }
 
 void edit_monst_type_event_filter (short item_hit)
@@ -1185,20 +1185,20 @@ void edit_monst_type_event_filter (short item_hit)
 		case 20:
 			toast_dialog(); break;	
 		case 19:
-			if (save_monst_info() == TRUE) {
+			if (save_monst_info() == true) {
 				scenario.scen_monsters[store_which_monst] = store_monst;
 				toast_dialog(); 
 				}
 			break;
 		case 23: // abils
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			temp_monst = edit_monst_abil(store_monst,814);
 			if ((temp_monst.level >= 0) && (temp_monst.level < 255))
 				store_monst = temp_monst;
 			put_monst_info_in_dlog();
 			break;
 		case 21:
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			scenario.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst--;
 			if (store_which_monst < 1) store_which_monst = 255;
@@ -1206,7 +1206,7 @@ void edit_monst_type_event_filter (short item_hit)
 			put_monst_info_in_dlog();
 			break;
 		case 22:
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			scenario.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst++;
 			if (store_which_monst > 255) store_which_monst = 1;
@@ -1214,7 +1214,7 @@ void edit_monst_type_event_filter (short item_hit)
 			put_monst_info_in_dlog();
 			break;
 		case 24: // picture
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_monst.picture_num/* + 400*/,PICT_MONST,814);
 			if (i >= 0) {
 				store_monst.picture_num = i - 400;
@@ -1225,7 +1225,7 @@ void edit_monst_type_event_filter (short item_hit)
 			put_monst_info_in_dlog();
 			break;
 		case 25: // m type
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			i = choose_text_res(20,150,164,store_monst.m_type + 150,814,"Choose Monster Type:");
 			if (i >= 0) {
 				i -= 150;
@@ -1234,7 +1234,7 @@ void edit_monst_type_event_filter (short item_hit)
 				}
 			break;
 		case 26: // att type 1
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			i = choose_text_res(20,130,139,store_monst.a1_type + 130,814,"Choose Attack 1 Type:");
 			if (i >= 0) {
 				store_monst.a1_type = i - 130;
@@ -1242,7 +1242,7 @@ void edit_monst_type_event_filter (short item_hit)
 				}
 			break;
 		case 27: // att type 23
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			i = choose_text_res(20,130,139,store_monst.a23_type + 130,814,"Choose Attack 2 & 3 Type:");
 			if (i >= 0) {
 				store_monst.a23_type = i - 130;
@@ -1250,7 +1250,7 @@ void edit_monst_type_event_filter (short item_hit)
 				}
 			break;
 		case 28: // talk pic
-			if (save_monst_info() == FALSE) break;
+			if (save_monst_info() == false) break;
 			i = choose_graphic(/*1001,1084*/1,1+PICT_N_TALK,store_monst.default_facial_pic/* + 1000*/,PICT_TALK,814);
 			if (i >= 0) {
 				store_monst.default_facial_pic = i - 1000;
@@ -1325,27 +1325,27 @@ void put_monst_abils_in_dlog()
  	if (store_monst2.immunities & 128 ) cd_set_led(815,20,1);
 }
 
-Boolean save_monst_abils()
+bool save_monst_abils()
 {
 	Str255 str;
 	short i;
 	
  	store_monst2.poison = CDGN(815,2);
- 	if (cre(store_monst2.poison,0,8,"Poison must be from 0 to 8.","",815) > 0) return FALSE;
+ 	if (cre(store_monst2.poison,0,8,"Poison must be from 0 to 8.","",815) > 0) return false;
 	store_monst2.breath = CDGN(815,3);
-  	if (cre(store_monst2.poison,0,40,"Breath Damage must be from 0 to 4.","",815) > 0) return FALSE;
+  	if (cre(store_monst2.poison,0,40,"Breath Damage must be from 0 to 4.","",815) > 0) return false;
 	store_monst2.breath_type = cd_get_led_range(815,9,12);
 	store_monst2.summon_type = cd_get_led_range(815,41,44);
  	store_monst2.radiate_2 = CDGN(815,4);
  	if ((store_monst2.radiate_1 >= 1) && (store_monst2.radiate_1 <= 6))
-   		if (cre(store_monst2.radiate_2,0,100,"Radiation Chance must be from 0 to 100.","",815) > 0) return FALSE;
+   		if (cre(store_monst2.radiate_2,0,100,"Radiation Chance must be from 0 to 100.","",815) > 0) return false;
  	if ((store_monst2.radiate_1 >= 10) && (store_monst2.radiate_1 <= 12))
-   		if (cre(store_monst2.radiate_2,0,255,"Summoned Monster must be from 0 to 255.","",815) > 0) return FALSE;
+   		if (cre(store_monst2.radiate_2,0,255,"Summoned Monster must be from 0 to 255.","",815) > 0) return false;
 	
  	store_monst2.corpse_item = CDGN(815,5);
-  	if (cre(store_monst2.corpse_item,-1,399,"Item To Drop must be from 0 to 399 (or -1 for no item).","",815) > 0) return FALSE;
+  	if (cre(store_monst2.corpse_item,-1,399,"Item To Drop must be from 0 to 399 (or -1 for no item).","",815) > 0) return false;
 	store_monst2.corpse_item_chance = CDGN(815,6);
-  	if (cre(store_monst2.corpse_item_chance,-1,100,"Dropping Chance must be from 0 to 100 (or -1 for no item).","",815) > 0) return FALSE;
+  	if (cre(store_monst2.corpse_item_chance,-1,100,"Dropping Chance must be from 0 to 100 (or -1 for no item).","",815) > 0) return false;
 	store_monst2.immunities = 0;
 	if (cd_get_led(815,13) == 1) store_monst2.immunities = store_monst2.immunities | 1;
 	if (cd_get_led(815,14) == 1) store_monst2.immunities = store_monst2.immunities | 2;
@@ -1355,7 +1355,7 @@ Boolean save_monst_abils()
 	if (cd_get_led(815,18) == 1) store_monst2.immunities = store_monst2.immunities | 32;
 	if (cd_get_led(815,19) == 1) store_monst2.immunities = store_monst2.immunities | 64;
 	if (cd_get_led(815,20) == 1) store_monst2.immunities = store_monst2.immunities | 128;
-	return TRUE;
+	return true;
 }
 
 void edit_monst_abil_event_filter (short item_hit)
@@ -1367,11 +1367,11 @@ void edit_monst_abil_event_filter (short item_hit)
 		case 8: store_monst2.level = -1;
 			toast_dialog(); break;	
 		case 7:
-			if (save_monst_abils() == TRUE)
+			if (save_monst_abils() == true)
 				 toast_dialog(); 
 			break;
 		case 31: // abils
-			if (save_monst_abils() == FALSE) break;
+			if (save_monst_abils() == false) break;
 			i = choose_text_res(20,1,38,store_monst2.spec_skill + 1,815,"Choose Monster Ability:");
 			if (i >= 0) {
 				store_monst2.spec_skill = i - 1;
@@ -1379,7 +1379,7 @@ void edit_monst_abil_event_filter (short item_hit)
 				}	
 			break;
 		case 34: // radiate
-			if (save_monst_abils() == FALSE) break;
+			if (save_monst_abils() == false) break;
 			i = choose_text_res(20,50,65,store_monst2.radiate_1 + 50,815,"Choose Radiation Ability:");
 			if (i >= 0) {
 				store_monst2.radiate_1 = i - 50;
@@ -1458,7 +1458,7 @@ void put_item_info_in_dlog()
 	
 }
 
-Boolean save_item_info()
+bool save_item_info()
 {
 	Str255 str;
 	short i;
@@ -1475,42 +1475,42 @@ Boolean save_item_info()
 	store_item.type = cd_get_led_range(818,46,48) + 1;
 
 	store_item.item_level = CDGN(818,5);
-	if (cre(store_item.item_level,0,50,"Item Level must be from 0 to 50.","",818) > 0) return FALSE;
+	if (cre(store_item.item_level,0,50,"Item Level must be from 0 to 50.","",818) > 0) return false;
 	if (((store_item.variety == 3) || (store_item.variety == 11)) && (store_item.item_level == 0))
 		store_item.item_level = 1;
 	
 	store_item.awkward = CDGN(818,6);
-	if (cre(store_item.awkward,0,20,"Awkward must be from 0 to 20.","",818) > 0) return FALSE;
+	if (cre(store_item.awkward,0,20,"Awkward must be from 0 to 20.","",818) > 0) return false;
 	store_item.bonus = CDGN(818,7);
-	if (cre(store_item.bonus,0,60,"Bonus must be from 0 to 60.","",818) > 0) return FALSE;
+	if (cre(store_item.bonus,0,60,"Bonus must be from 0 to 60.","",818) > 0) return false;
 	store_item.protection = CDGN(818,8);
-	if (cre(store_item.protection,-10,20,"Protection must be from -10 to 20.","",818) > 0) return FALSE;
+	if (cre(store_item.protection,-10,20,"Protection must be from -10 to 20.","",818) > 0) return false;
 	store_item.charges = CDGN(818,9);
-	if (cre(store_item.charges,0,100,"Charges must be from 0 to 100.","",818) > 0) return FALSE;
+	if (cre(store_item.charges,0,100,"Charges must be from 0 to 100.","",818) > 0) return false;
 	store_item.type_flag = CDGN(818,10);
-	if (cre(store_item.type_flag,0,1000,"Type Flag must be from 0 to 1000.","",818) > 0) return FALSE;
+	if (cre(store_item.type_flag,0,1000,"Type Flag must be from 0 to 1000.","",818) > 0) return false;
 	store_item.value  = CDGN(818,11);
-	if (cre(store_item.value,0,10000,"Value must be from 0 to 10000.","",818) > 0) return FALSE;
+	if (cre(store_item.value,0,10000,"Value must be from 0 to 10000.","",818) > 0) return false;
 	store_item.weight = CDGN(818,12);
-	if (cre(store_item.weight,0,250,"Weight must be from 0 to 250.","",818) > 0) return FALSE;
+	if (cre(store_item.weight,0,250,"Weight must be from 0 to 250.","",818) > 0) return false;
 	store_item.special_class = CDGN(818,13);
-	if (cre(store_item.special_class,0,100,"Special Class must be from 0 to 100.","",818) > 0) return FALSE;
+	if (cre(store_item.special_class,0,100,"Special Class must be from 0 to 100.","",818) > 0) return false;
 
 	if ((store_item.type_flag > 0) && (store_item.charges == 0)) {
 		give_error("If the Type Flag is greater than 0, the Charges must also be greater than 0.","",818);
-		return FALSE;
+		return false;
 		}
 	if (store_item.variety > 25) {
 		give_error("The Unused item varieties are reserved for later expansions, and can't be used now.","",818);
-		return FALSE;
+		return false;
 		}
 	if ((store_item.ability >= 70) && (store_item.ability < 170) && (store_item.charges == 0)) {
 		give_error("An item with the special ability selected must have at least 1 charge.","",818);
-		return FALSE;
+		return false;
 		}
 	scenario.scen_items[store_which_item] = store_item ;
 	
-	return TRUE;
+	return true;
 }
 
 void edit_item_type_event_filter (short item_hit)
@@ -1523,26 +1523,26 @@ void edit_item_type_event_filter (short item_hit)
 		case 15:
 			toast_dialog(); break;	
 		case 14:
-			if (save_item_info() == TRUE)
+			if (save_item_info() == true)
 				 toast_dialog(); break;
 			break;
 
 		case 16:
-			if (save_item_info() == FALSE) break;
+			if (save_item_info() == false) break;
 			store_which_item--;
 			if (store_which_item < 0) store_which_item = 399;
 			store_item = scenario.scen_items[store_which_item];
 			put_item_info_in_dlog();
 			break;
 		case 17:
-			if (save_item_info() == FALSE) break;
+			if (save_item_info() == false) break;
 			store_which_item++;
 			if (store_which_item > 399) store_which_item = 0;
 			store_item = scenario.scen_items[store_which_item];
 			put_item_info_in_dlog();
 			break;
 		case 56:
-			if (save_item_info() == FALSE) break;
+			if (save_item_info() == false) break;
 			i = choose_graphic(/*1800,1922*/0,PICT_N_ITEM,store_item.graphic_num/* + 1800*/,PICT_ITEM,818);
 			if (i >= 0) {
 				store_item.graphic_num = i - 1800;
@@ -1630,7 +1630,7 @@ void put_item_abils_in_dlog()
 		else cd_set_led(824,12,0);
 }
 
-Boolean save_item_abils()
+bool save_item_abils()
 {
 	Str255 str;
 	short i;
@@ -1639,15 +1639,15 @@ Boolean save_item_abils()
 	store_item2.treas_class = cd_get_led_range(824,26,30);
 	store_item2.ability_strength = CDGN(824,2);
 	if ((store_item2.ability != 119) && (store_item2.ability != 120)) {
-		if (cre(store_item2.ability_strength,0,10,"Ability Strength must always be a number from 0 to 10.","",824) > 0) return FALSE;
+		if (cre(store_item2.ability_strength,0,10,"Ability Strength must always be a number from 0 to 10.","",824) > 0) return false;
 		}
-		else if (cre(store_item2.ability_strength,0,255,"Ability Strength must be 0 to 255 - the number of the monster to summon.","",824) > 0) return FALSE;
+		else if (cre(store_item2.ability_strength,0,255,"Ability Strength must be 0 to 255 - the number of the monster to summon.","",824) > 0) return false;
 	store_item2.item_properties = 0;
 	store_item2.item_properties |= (cd_get_led(824,9) == 1) ? 1 : 0;
 	store_item2.item_properties |= (cd_get_led(824,10) == 1) ? 4 : 0;
 	store_item2.item_properties |= (cd_get_led(824,11) == 1) ? 16 : 0;
 	store_item2.item_properties |= (cd_get_led(824,12) == 1) ? 32 : 0;
-	return TRUE;
+	return true;
 }
 
 void edit_item_abil_event_filter (short item_hit)
@@ -1659,11 +1659,11 @@ void edit_item_abil_event_filter (short item_hit)
 		case 4: store_item2.ability = 0;
 			toast_dialog(); break;	
 		case 3:
-			if (save_item_abils() == TRUE)
+			if (save_item_abils() == true)
 				 toast_dialog(); 
 			break;
 		case 17:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if (store_item.variety > 2) {
 				give_error("You can only give an ability of this sort to a melee weapon.","",824);
 				break;
@@ -1674,7 +1674,7 @@ void edit_item_abil_event_filter (short item_hit)
 			put_item_abils_in_dlog();
 			break;
 		case 35:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if ((store_item.variety == 5) || (store_item.variety == 6)|| (store_item.variety == 7) || (store_item.variety == 8) ||
 				(store_item.variety == 9) || (store_item.variety == 10) || (store_item.variety == 20) ||
 				(store_item.variety == 21) || (store_item.variety == 24)){
@@ -1687,7 +1687,7 @@ void edit_item_abil_event_filter (short item_hit)
 			put_item_abils_in_dlog();
 			break;
 		case 36:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if ((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
@@ -1698,7 +1698,7 @@ void edit_item_abil_event_filter (short item_hit)
 			put_item_abils_in_dlog();
 			break;
 		case 39:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if ((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
@@ -1709,7 +1709,7 @@ void edit_item_abil_event_filter (short item_hit)
 			put_item_abils_in_dlog();
 			break;
 		case 38:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if (store_item.variety != 21){
 				give_error("You can only give an ability of this sort to an item of type Non-Use Object.","",824);
 				break;
@@ -1720,7 +1720,7 @@ void edit_item_abil_event_filter (short item_hit)
 			put_item_abils_in_dlog();
 			break;
 		case 37:
-			if (save_item_abils() == FALSE) break;
+			if (save_item_abils() == false) break;
 			if ((store_item.variety != 5) && (store_item.variety != 6) && (store_item.variety != 24)){
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
@@ -1790,7 +1790,7 @@ void put_spec_item_in_dlog()
 		cd_set_led(806,17,1); else cd_set_led(806,17,0);
 }
 
-Boolean save_spec_item()
+bool save_spec_item()
 {
 	Str255 str;
 	short i;
@@ -1801,14 +1801,14 @@ Boolean save_spec_item()
 	CDGT(806,3,scenario.scen_strs(60 + store_which_spec_item * 2 + 1));
 	spec_item_spec = CDGN(806,4);
 	if (cre(scenario.special_item_special[store_which_spec_item],
-		-1,255,"Scenario special node called must be from 0 to 255 (or -1 for no special).","",806) > 0) return FALSE;
+		-1,255,"Scenario special node called must be from 0 to 255 (or -1 for no special).","",806) > 0) return false;
 	scenario.special_item_special[store_which_spec_item] = spec_item_spec;
 	scenario.special_items[store_which_spec_item] = 0;
 	if (cd_get_led(806,15) == 1)
 		scenario.special_items[store_which_spec_item] += 10;
 	if (cd_get_led(806,17) == 1)
 		scenario.special_items[store_which_spec_item] += 1;
-	return TRUE;
+	return true;
 }
 
 void edit_spec_item_event_filter (short spec_item_hit)
@@ -1820,26 +1820,26 @@ void edit_spec_item_event_filter (short spec_item_hit)
 		case 11: 
 			toast_dialog(); break;	
 		case 5:
-			if (save_spec_item() == TRUE)
+			if (save_spec_item() == true)
 				 toast_dialog(); 
 			break;
 
 		case 20:
-			if (save_spec_item() == FALSE) break;
+			if (save_spec_item() == false) break;
 			store_which_spec_item--;
 			if (store_which_spec_item < 0) store_which_spec_item = 49;
 			spec_item_spec = scenario.special_item_special[store_which_spec_item];
 			put_spec_item_in_dlog();
 			break;
 		case 21:
-			if (save_spec_item() == FALSE) break;
+			if (save_spec_item() == false) break;
 			store_which_spec_item++;
 			if (store_which_spec_item > 49) store_which_spec_item = 0;
 			spec_item_spec = scenario.special_item_special[store_which_spec_item];
 			put_spec_item_in_dlog();
 			break;
 		case 13: //choose edit
-			if (save_spec_item() == FALSE)
+			if (save_spec_item() == false)
 				 break; 
 			spec = CDGN(806,4);
 			if ((spec < 0) || (spec >= 256)) {
@@ -1854,7 +1854,7 @@ void edit_spec_item_event_filter (short spec_item_hit)
 			edit_spec_enc(spec,0,806);
 			if ((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
 				CDSN(806,4,-1);
-			if (save_spec_item() == FALSE)
+			if (save_spec_item() == false)
 				 break; 
 			break;
 		default:
@@ -1903,7 +1903,7 @@ void put_save_rects_in_dlog()
 
 }
 
-Boolean save_save_rects()
+bool save_save_rects()
 {
 	Str255 str;
 	short i;
@@ -1916,7 +1916,7 @@ Boolean save_save_rects()
 		scenario.store_item_towns[i] = CDGN(807,2 + 5 * i);
 		if ((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
 			give_error("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",807);
-			return FALSE;
+			return false;
 			}
 		}
 	if (((scenario.store_item_towns[0] == scenario.store_item_towns[1]) && 
@@ -1929,9 +1929,9 @@ Boolean save_save_rects()
 		(scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
 		) {
 			give_error("The three towns towns with saved item rectangles must be different.","",807);
-			return FALSE;		
+			return false;		
 			}
-	return TRUE;
+	return true;
 }
 
 void edit_save_rects_event_filter (short save_rects_hit)
@@ -1943,7 +1943,7 @@ void edit_save_rects_event_filter (short save_rects_hit)
 		case 18: 
 			toast_dialog(); break;	
 		case 17:
-			if (save_save_rects() == TRUE)
+			if (save_save_rects() == true)
 				 toast_dialog(); 
 			break;
 				
@@ -1964,7 +1964,7 @@ void edit_save_rects()
 	cd_kill_dialog(807,0);
 }
 
-Boolean save_horses()
+bool save_horses()
 {
 	Str255 str;
 	short i;
@@ -1972,16 +1972,16 @@ Boolean save_horses()
 	for (i = 0; i < 6; i++) {
 		scenario.horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
 		if (cre(scenario.horses[6 * store_horse_page + i].which_town,
-			-1,199,"Town number must be from 0 to 199 (or -1 for horse to not exist).","",808) == TRUE) return FALSE;
+			-1,199,"Town number must be from 0 to 199 (or -1 for horse to not exist).","",808) == true) return false;
 		scenario.horses[6 * store_horse_page + i].loc.x = CDGN(808,8 + i);
 		if (cre(scenario.horses[6 * store_horse_page + i].loc.x,
-			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
+			0,63,"Horse location coordinates must be from 0 to 63.","",808) == true) return false;
 		scenario.horses[6 * store_horse_page + i].loc.y = CDGN(808,14 + i);
 		if (cre(scenario.horses[6 * store_horse_page + i].loc.y,
-			0,63,"Horse location coordinates must be from 0 to 63.","",808) == TRUE) return FALSE;
+			0,63,"Horse location coordinates must be from 0 to 63.","",808) == true) return false;
 		scenario.horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
 		}
-	return TRUE;
+	return true;
 }
 
 void put_horses_in_dlog()
@@ -2006,17 +2006,17 @@ void edit_horses_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 20:
-			if (save_horses() == TRUE)
+			if (save_horses() == true)
 				 toast_dialog(); 
 			break;
 		case 21:
-			if (save_horses() == FALSE) break;
+			if (save_horses() == false) break;
 			store_horse_page--;
 			if (store_horse_page < 0) store_horse_page = 4;
 			put_horses_in_dlog();
 			break;
 		case 22:
-			if (save_horses() == FALSE) break;
+			if (save_horses() == false) break;
 			store_horse_page++;
 			if (store_horse_page > 4) store_horse_page = 0;
 			put_horses_in_dlog();
@@ -2044,7 +2044,7 @@ void edit_horses()
 	cd_kill_dialog(808,0);
 }
 
-Boolean save_boats()
+bool save_boats()
 {
 	Str255 str;
 	short i;
@@ -2052,16 +2052,16 @@ Boolean save_boats()
 	for (i = 0; i < 6; i++) {
 		scenario.boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
 		if (cre(scenario.boats[6 * store_boat_page + i].which_town,
-			-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == TRUE) return FALSE;
+			-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == true) return false;
 		scenario.boats[6 * store_boat_page + i].loc.x = CDGN(809,8 + i);
 		if (cre(scenario.boats[6 * store_boat_page + i].loc.x,
-			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
+			0,63,"boat location coordinates must be from 0 to 63.","",809) == true) return false;
 		scenario.boats[6 * store_boat_page + i].loc.y = CDGN(809,14 + i);
 		if (cre(scenario.boats[6 * store_boat_page + i].loc.y,
-			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
+			0,63,"boat location coordinates must be from 0 to 63.","",809) == true) return false;
 		scenario.boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
 		}
-	return TRUE;
+	return true;
 }
 
 void put_boats_in_dlog()
@@ -2086,17 +2086,17 @@ void edit_boats_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 20:
-			if (save_boats() == TRUE)
+			if (save_boats() == true)
 				 toast_dialog(); 
 			break;
 		case 22:
-			if (save_boats() == FALSE) break;
+			if (save_boats() == false) break;
 			store_boat_page--;
 			if (store_boat_page < 0) store_boat_page = 4;
 			put_boats_in_dlog();
 			break;
 		case 23:
-			if (save_boats() == FALSE) break;
+			if (save_boats() == false) break;
 			store_boat_page++;
 			if (store_boat_page > 4) store_boat_page = 0;
 			put_boats_in_dlog();
@@ -2124,7 +2124,7 @@ void edit_boats()
 	cd_kill_dialog(809,0);
 }
 
-Boolean save_add_town()
+bool save_add_town()
 {
 	Str255 str;
 	short i;
@@ -2132,15 +2132,15 @@ Boolean save_add_town()
 	for (i = 0; i < 10; i++) {
 		scenario.town_to_add_to[i] = CDGN(810,2 + i);
 		if (cre(scenario.town_to_add_to[i],
-			-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == TRUE) return FALSE;
+			-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == true) return false;
 		scenario.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
 		if (cre(scenario.flag_to_add_to_town[i][0],
-			0,299,"First part of flag must be from 0 to 299.","",810) == TRUE) return FALSE;
+			0,299,"First part of flag must be from 0 to 299.","",810) == true) return false;
 		scenario.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
 		if (cre(scenario.flag_to_add_to_town[i][1],
-			0,9,"Second part of flag must be from 0 to 9.","",810) == TRUE) return FALSE;
+			0,9,"Second part of flag must be from 0 to 9.","",810) == true) return false;
 		}
-	return TRUE;
+	return true;
 }
 
 void put_add_town_in_dlog()
@@ -2163,7 +2163,7 @@ void edit_add_town_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 32:
-			if (save_add_town() == TRUE)
+			if (save_add_town() == true)
 				 toast_dialog(); 
 			break;
 
@@ -2184,7 +2184,7 @@ void edit_add_town()
 	cd_kill_dialog(810,0);
 }
 
-Boolean save_item_placement()
+bool save_item_placement()
 {
 	Str255 str;
 	short i;
@@ -2192,18 +2192,18 @@ Boolean save_item_placement()
 	store_storage.property = cd_get_led(812,38);
 	store_storage.ter_type = CDGN(812,22);
 	if (cre(store_storage.ter_type,
-		-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",812) == TRUE) return FALSE;
+		-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",812) == true) return false;
 	for (i = 0; i < 10; i++) {
 		store_storage.item_num[i] = CDGN(812,2 + i);
 		if (cre(store_storage.item_num[i],
-			-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",812) == TRUE) return FALSE;
+			-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",812) == true) return false;
 		store_storage.item_odds[i] = CDGN(812,12 + i);
 		if (cre(store_storage.item_odds[i],
-			0,100,"All item chances must bve from 0 to 100.","",812) == TRUE) return FALSE;
+			0,100,"All item chances must bve from 0 to 100.","",812) == true) return false;
 		}
 	scenario.storage_shortcuts[cur_shortcut] = store_storage;
 	
-	return TRUE;
+	return true;
 }
 
 void put_item_placement_in_dlog()
@@ -2228,21 +2228,21 @@ void edit_item_placement_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 23:
-			if (save_item_placement() == TRUE)
+			if (save_item_placement() == true)
 				 toast_dialog(); 
 			break;
 		case 24:
 				 toast_dialog(); 
 			break;
 		case 26:
-			if (save_item_placement() == FALSE) break;
+			if (save_item_placement() == false) break;
 			cur_shortcut--;
 			if (cur_shortcut < 0) cur_shortcut = 9;
 			store_storage = scenario.storage_shortcuts[cur_shortcut];
 			put_item_placement_in_dlog();
 			break;
 		case 25:
-			if (save_item_placement() == FALSE) break;
+			if (save_item_placement() == false) break;
 			cur_shortcut++;
 			if (cur_shortcut > 9) cur_shortcut = 0;
 			store_storage = scenario.storage_shortcuts[cur_shortcut];
@@ -2284,7 +2284,7 @@ void edit_item_placement()
 	cd_kill_dialog(812,0);
 }
 
-Boolean save_scen_details()
+bool save_scen_details()
 {
 	Str255 str;
 	short i;
@@ -2296,7 +2296,7 @@ Boolean save_scen_details()
 	scenario.format.ver[2] = CDGN(803,4);
 	for (i = 0; i < 3; i++)
 		if (cre(scenario.format.ver[i],
-			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
+			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == true) return false;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
 	strcpy(scenario.scen_strs(1),(char *) str);
@@ -2305,7 +2305,7 @@ Boolean save_scen_details()
 	strcpy(scenario.scen_strs(2),(char *) str);
 	CDGT(803,7,scenario.scen_strs(3));
 	
-	return TRUE;
+	return true;
 }
 
 void put_scen_details_in_dlog()
@@ -2330,7 +2330,7 @@ void edit_scen_details_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 8:
-			if (save_scen_details() == TRUE)
+			if (save_scen_details() == true)
 				 toast_dialog(); 
 			break;
 		default:
@@ -2440,23 +2440,23 @@ void edit_make_scen_2_event_filter (short item_hit)
 		case 11:
 			i = CDGN(801,2);
 			if (cre(i,
-				1,50,"Outdoors width must be between 1 and 50.","",801) == TRUE) return ;
+				1,50,"Outdoors width must be between 1 and 50.","",801) == true) return ;
 			j = CDGN(801,3);
 			if (cre(j,
-				1,50,"Outdoors height must be between 1 and 50.","",801) == TRUE) return ;
+				1,50,"Outdoors height must be between 1 and 50.","",801) == true) return ;
 			if (cre(i * j,
-				1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",801) == TRUE) return ;
+				1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",801) == true) return ;
 			i = CDGN(801,4);
 			j = CDGN(801,5);
 			k = CDGN(801,6);
 			if (cre(i,
-				0,200,"Number of small towns must be between 0 and 200.","",801) == TRUE) return ;
+				0,200,"Number of small towns must be between 0 and 200.","",801) == true) return ;
 			if (cre(j,
-				1,200,"Number of medium towns must be between 0 and 200. The first town (Town 0) must always be of medium size.","",801) == TRUE) return ;
+				1,200,"Number of medium towns must be between 0 and 200. The first town (Town 0) must always be of medium size.","",801) == true) return ;
 			if (cre(k,
-				0,200,"Number of large towns must be between 0 and 200.","",801) == TRUE) return ;
+				0,200,"Number of large towns must be between 0 and 200.","",801) == true) return ;
 			if (cre(i + j + k,
-				1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",801) == TRUE) return ;
+				1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",801) == true) return ;
 	
 			toast_dialog(); 
 			break;
@@ -2500,10 +2500,10 @@ bool build_scenario()
 //	short i,j;
 //	long dummy;
 //	
-//	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == FALSE)
+//	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == false)
 //		return false;
 //	sprintf((char *) f_name2,"%s.exs",f_name);
-//	if (edit_make_scen_2((short *) two_flags) == FALSE)
+//	if (edit_make_scen_2((short *) two_flags) == false)
 //		return false;
 //	user_given_password = given_password = get_password();
 //	if (fancy_choice_dialog(860,0) == 2)
@@ -2667,7 +2667,7 @@ void set_starting_loc()
 	
 }
 
-Boolean save_scenario_events()
+bool save_scenario_events()
 {
 	Str255 str;
 	short i;
@@ -2677,13 +2677,13 @@ Boolean save_scenario_events()
 		if ((scenario.scenario_timer_times[i] > 0) &&
 			(scenario.scenario_timer_times[i] % 10 != 0)) {
 				give_error("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).","",811);
-				return FALSE;
+				return false;
 				}
 		scenario.scenario_timer_specs[i] = CDGN(811,12 + i);
 		if (cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
-			,"",811) == TRUE) return FALSE;
+			,"",811) == true) return false;
 		}
-	return TRUE;
+	return true;
 }
 
 void put_scenario_events_in_dlog()
@@ -2705,12 +2705,12 @@ void edit_scenario_events_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 22:
-			if (save_scenario_events() == TRUE)
+			if (save_scenario_events() == true)
 				 toast_dialog(); 
 			break;
 		default:
 			if ((item_hit >= 30) && (item_hit <= 39)) {
-				if (save_scenario_events() == FALSE)
+				if (save_scenario_events() == false)
 					 break; 
 				spec = CDGN(811,item_hit - 30 + 12);
 				if ((spec < 0) || (spec > 255)) {

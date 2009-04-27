@@ -27,16 +27,16 @@
 //extern stored_outdoor_maps_type o_maps;
 extern cUniverse univ;
 
-//extern Boolean ed_reg;
+//extern bool ed_reg;
 //extern long ed_flag,ed_key;
 
 extern WindowPtr mainPtr;
-extern Boolean file_in_mem;
+extern bool file_in_mem;
 extern short current_cursor,dialog_answer;
 //extern long register_flag;
 
 extern GWorldPtr pc_gworld;
-extern Boolean diff_depth_ok,save_blocked;
+extern bool diff_depth_ok,save_blocked;
 
 
 
@@ -56,9 +56,9 @@ short store_trait_mode,store_train_pc;
 cPlayer *store_xp_pc;
 
 // Variables for spending xp
-	Boolean talk_done = FALSE;
+	bool talk_done = false;
 	long val_for_text;
-	Boolean keep_change = FALSE;
+	bool keep_change = false;
 	short store_skills[20],store_h,store_sp,i,which_skill,store_skp = 10000,store_g = 10000;
 
 
@@ -73,7 +73,7 @@ short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
 
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-Boolean handle_action(EventRecord event,short mode)
+bool handle_action(EventRecord event,short mode)
 //short mode; // ignore,
 {
 	short i,j,button_hit = 100,first_existing_pc = 0;
@@ -83,16 +83,16 @@ Boolean handle_action(EventRecord event,short mode)
 	Point the_point;
 	short choice = 4,for_pc = 6;
 	
-	Boolean to_return = FALSE;
+	bool to_return = false;
 
 	the_point = event.where;
 	GlobalToLocal(&the_point);	
 
-	if (file_in_mem == FALSE) 
-		return FALSE;
+	if (file_in_mem == false) 
+		return false;
 		
 	for (i = 0; i < 6; i++)
-		if ((PtInRect(the_point,&pc_area_buttons[i][0]) == TRUE) &&
+		if ((PtInRect(the_point,&pc_area_buttons[i][0]) == true) &&
 			(ADVEN[i].main_status > 0)) {
 			do_button_action(0,i);
 			current_active_pc = i;
@@ -100,13 +100,13 @@ Boolean handle_action(EventRecord event,short mode)
 			draw_items(1);
 			}
 	for (i = 0; i < 5; i++)
-		if ((PtInRect(the_point,&edit_rect[i][0]) == TRUE) &&
+		if ((PtInRect(the_point,&edit_rect[i][0]) == true) &&
 			(ADVEN[current_active_pc].main_status > 0)) {
 			do_button_action(0,i + 10);
-			if (save_blocked == FALSE)
+			if (save_blocked == false)
 				if ((choice = FCD(904,0)) == 1)
 					return to_return;
-					else save_blocked = TRUE;
+					else save_blocked = true;
 			switch(i) {
 				case 0:
 					display_pc(current_active_pc,0,0);
@@ -127,14 +127,14 @@ Boolean handle_action(EventRecord event,short mode)
 			}
 		}
 	for (i = 0; i < 24; i++)
-		if ((PtInRect(the_point,&item_string_rects[i][1]) == TRUE) && // drop item
+		if ((PtInRect(the_point,&item_string_rects[i][1]) == true) && // drop item
 			(ADVEN[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
 				draw_items(1);
 				}
 	for (i = 0; i < 24; i++)
-		if ((PtInRect(the_point,&item_string_rects[i][2]) == TRUE) && // identify item
+		if ((PtInRect(the_point,&item_string_rects[i][2]) == true) && // identify item
 			(ADVEN[current_active_pc].items[i].variety > 0)) {
 				flash_rect(item_string_rects[i][2]);
 				ADVEN[current_active_pc].items[i].item_properties = ADVEN[current_active_pc].items[i].item_properties | 1;
@@ -244,8 +244,8 @@ void put_pc_graphics()
 	short item_hit,what_talk_field,i;
 
 	for (i = 3; i < 65; i++) {
-		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == TRUE)) ||
-		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == TRUE)))
+		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == true)) ||
+		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == true)))
 			cd_set_led(991,i,1);
 			else cd_set_led(991,i,0);
 		}
@@ -432,14 +432,14 @@ void spend_xp_event_filter (short item_hit)
 {
 	short what_talk_field,i,j,pc_num,mode = 1;
 	char get_text[256];
-	Boolean talk_done = FALSE;
+	bool talk_done = false;
 
 	pc_num = store_train_pc;
 
 		switch (item_hit) {
 			case 73:
 				dialog_answer = 0;
-				talk_done = TRUE;
+				talk_done = true;
 				break;
 	
 
@@ -502,7 +502,7 @@ void spend_xp_event_filter (short item_hit)
 			case 48:
 					do_xp_keep(pc_num,0);
 					dialog_answer = 1;
-					talk_done = TRUE;
+					talk_done = true;
 				break;
 
 			case 49:
@@ -565,7 +565,7 @@ void spend_xp_event_filter (short item_hit)
 			}
 			
 	store_train_pc = pc_num;
-	if (talk_done == TRUE) {
+	if (talk_done == true) {
 		toast_dialog();
 		}
 }

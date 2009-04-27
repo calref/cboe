@@ -9,7 +9,7 @@
 #include "scen.core.h"
 
 extern short cen_x, cen_y/*, overall_mode*/;
-extern Boolean mouse_button_held;
+extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
 //extern big_tr_type t_d;
@@ -158,19 +158,19 @@ char edit_jumpto_mess[256] = {
 	0,0,0,0,0,0};
 
 //cre = check range error
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) 
+bool cre(short val,short min,short max,char *text1, char *text2,short parent_num) 
 {
 	if ((val < min) || (val > max)) {
 		give_error(text1,text2,parent_num);
-		return TRUE;
+		return true;
 		}		
-	return FALSE;
+	return false;
 }
 
 void choose_graphic_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
+	bool had1 = false, had2 = false;
 	
 	switch (item_hit) {
 		case 1:
@@ -229,7 +229,7 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,sh
 	short item_hit;
 	Str255 sign_text;
 	location view_loc;
-	Boolean sound_done = FALSE;
+	bool sound_done = false;
 
 	//make_cursor_sword();
 	
@@ -259,7 +259,7 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,sh
 void choose_text_res_event_filter (short item_hit)
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
+	bool had1 = false, had2 = false;
 	
 	switch (item_hit) {
 		case 2:
@@ -320,7 +320,7 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 	short item_hit;
 	Str255 sign_text;
 	location view_loc;
-	Boolean sound_done = FALSE;
+	bool sound_done = false;
 
 	//make_cursor_sword();
 	store_res_list = res_list;
@@ -416,7 +416,7 @@ void edit_area_rect_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 6:
-			dialog_answer = TRUE;
+			dialog_answer = true;
 			toast_dialog(); 
 			CDGT(840,2,(char *) str);
 			if (store_str_mode == 0)
@@ -425,14 +425,14 @@ void edit_area_rect_event_filter (short item_hit)
 			break;
 
 		case 3:
-			dialog_answer = FALSE;
+			dialog_answer = false;
 			toast_dialog(); 
 			break;
 		}
 }
 
 // mode 0 - out 1 - town
-Boolean edit_area_rect_str(short which_str,short mode)
+bool edit_area_rect_str(short which_str,short mode)
 // ignore parent in Mac version
 {
 	short area_rect_hit,i,store_dialog_answer,item_hit;
@@ -454,7 +454,7 @@ Boolean edit_area_rect_str(short which_str,short mode)
 	return dialog_answer;
 }
 
-Boolean save_spec_enc()
+bool save_spec_enc()
 {
 	Str255 str;
 	short i;
@@ -474,9 +474,9 @@ Boolean save_spec_enc()
 
 	if (edit_spec_stuff_done_mess[store_spec_node.type] == 1) {
 		if (cre(store_spec_node.sd1,-1,299,"The first part of a Stuff Done flag must be from 0 to 299 (or -1 if the Stuff Done flag is ignored.",
-			"",822) > 0) return FALSE;
+			"",822) > 0) return false;
 		if (cre(store_spec_node.sd2,-1,9,"The second part of a Stuff Done flag must be from 0 to 9 (or -1 if the Stuff Done flag is ignored.",
-			"",822) > 0) return FALSE;
+			"",822) > 0) return false;
 		}
 	
 	if (store_which_mode == 0)
@@ -485,7 +485,7 @@ Boolean save_spec_enc()
 		current_terrain.specials[store_which_node] = store_spec_node;
 	if (store_which_mode == 2)
 		town->specials[store_which_node] = store_spec_node;
-	return TRUE;
+	return true;
 }
 
 void put_spec_enc_in_dlog()
@@ -593,11 +593,11 @@ void edit_spec_enc_event_filter (short item_hit)
 	
 	switch (item_hit) {
 		case 12:
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			break;
 		case 14:  //go_back
-			if (save_spec_enc() == FALSE)
+			if (save_spec_enc() == false)
 				 break; 
 			for (i = 0; i < 256; i++) 
 				if (last_node[i] < 0) {
@@ -615,7 +615,7 @@ void edit_spec_enc_event_filter (short item_hit)
 				}
 			toast_dialog(); break;
 		case 43: case 44: case 45: // 1b, 2b, jump to spec
-			if (save_spec_enc() == FALSE)
+			if (save_spec_enc() == false)
 				 break; 
 			if (item_hit == 43)
 				spec = CDGN(822,8);
@@ -651,7 +651,7 @@ void edit_spec_enc_event_filter (short item_hit)
 					store_spec_node.jumpto = spec;
 				*/
 				}
-			if (save_spec_enc() == FALSE)
+			if (save_spec_enc() == false)
 				 break; 
 			if ((item_hit == 43) && (store_spec_node.type == 13))
 				node_to_change_to = spec;
@@ -693,7 +693,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			CDSN(822,9,store_spec_node.ex2a);
 			break;
 		case 49: // message
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			if ((edit_spec_mess_mess[store_spec_node.type] == 2) ||
 				(edit_spec_mess_mess[store_spec_node.type] == 4) ||
@@ -709,7 +709,7 @@ void edit_spec_enc_event_filter (short item_hit)
 					}
 			break;
 		case 46: // pict
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
@@ -724,7 +724,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			break;
 		
 		case 37: // 1st spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,1,28,store_spec_node.type + 1,822,"Choose General Use Special:");
 			if (i >= 0) {
@@ -733,7 +733,7 @@ void edit_spec_enc_event_filter (short item_hit)
 			put_spec_enc_in_dlog();	
 			break;
 		case 38: // 2 spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,51,64,store_spec_node.type + 1,822,"Choose One-Shot Special:");
 			if (i >= 0) {
@@ -745,14 +745,14 @@ void edit_spec_enc_event_filter (short item_hit)
 			put_spec_enc_in_dlog();	
 			break;
 		case 39: // 3 spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,81,107,store_spec_node.type + 1,822,"Choose Affect Party Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog();	
 			break;
 		case 40: // 4 spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,131,156,store_spec_node.type + 1,822,"Choose If-Then Special:");
 			if (i >= 0) {
@@ -761,14 +761,14 @@ void edit_spec_enc_event_filter (short item_hit)
 			put_spec_enc_in_dlog();	
 			break;
 		case 41: // 5 spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,171,219,store_spec_node.type + 1,822,"Choose Town Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog();	
 			break;
 		case 42: // 6 spec type
-			if (save_spec_enc() == TRUE)
+			if (save_spec_enc() == true)
 				 toast_dialog(); 
 			i = choose_text_res(22,226,230,store_spec_node.type + 1,822,"Choose Outdoor Special:");
 			if (i >= 0) store_spec_node.type = i - 1;

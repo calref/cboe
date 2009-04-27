@@ -38,9 +38,9 @@ short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
 char store_string[60],store_string2[60];
 short start_print_point= 0;
 short mark_where_printing_long;
-Boolean printing_long = FALSE;
+bool printing_long = false;
 Str255 c_str = "";
-Boolean save_mess_given = FALSE;
+bool save_mess_given = false;
 
 Rect status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
 
@@ -81,13 +81,13 @@ extern short terrain_there[9][9];
 //extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
 extern Point ul;
-extern Boolean play_sounds,suppress_stat_screen,cartoon_happening,in_startup_mode;
+extern bool play_sounds,suppress_stat_screen,cartoon_happening,in_startup_mode;
 extern Rect item_buttons[8][6];
  // name, use, give, drip, info, sell/id
 extern Rect pc_buttons[6][5];
  // name, hp, sp, info, trade
-extern Boolean item_area_button_active[8][6];
-extern Boolean pc_area_button_active[6][5];
+extern bool item_area_button_active[8][6];
+extern bool pc_area_button_active[6][5];
 extern Rect item_screen_button_rects[9];
 extern short spec_item_array[60];
 extern short abil_chart[200],store_anim_type;
@@ -100,7 +100,7 @@ extern short current_pc;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
-extern Boolean supressing_some_spaces;
+extern bool supressing_some_spaces;
 extern location ok_space[4];
 
 short text_pc_has_abil_equip(short pc_num,short abil)
@@ -108,7 +108,7 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 	short i = 0;
 	
 	while (((ADVEN[pc_num].items[i].variety == 0) || (ADVEN[pc_num].items[i].ability != abil)
-			|| (ADVEN[pc_num].equip[i] == FALSE)) && (i < 24))
+			|| (ADVEN[pc_num].equip[i] == false)) && (i < 24))
 				i++;
 	return i;
 				
@@ -293,7 +293,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 6; j++)
-			item_area_button_active[i][j] = FALSE;
+			item_area_button_active[i][j] = false;
 	
 	switch (screen_num) {
 		case 6: // On special items page
@@ -343,7 +343,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					
 					}
 					else {
-						if (ADVEN[pc].equip[i_num] == TRUE) {
+						if (ADVEN[pc].equip[i_num] == true) {
 							TextFace(italic | bold);
 							if (ADVEN[pc].items[i_num].variety < 3)
 								ForeColor(magentaColor);						
@@ -436,7 +436,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 	switch (stat_screen_mode) {
 		case 2:
 			if (!ADVEN[pc_num].items[item_num].is_ident()) { 
-				item_area_button_active[position][5] = TRUE;
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 				}
@@ -447,7 +447,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 				(ADVEN[pc_num].items[item_num].variety == 24)) &&
 				(ADVEN[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
 				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
-				item_area_button_active[position][5] = TRUE;
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
@@ -456,7 +456,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 				(!ADVEN[pc_num].equip[item_num]) &&
 				(ADVEN[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
 				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
-				item_area_button_active[position][5] = TRUE;
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
@@ -464,7 +464,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 			if ((val_to_place > 0) && (ADVEN[pc_num].items[item_num].is_ident()) && 
 				(!ADVEN[pc_num].equip[item_num]) &&
 				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
-				item_area_button_active[position][5] = TRUE;
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
@@ -473,7 +473,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 				(ADVEN[pc_num].items[item_num].is_ident()) &&
 				(ADVEN[pc_num].items[item_num].ability == 0) &&
 				(!ADVEN[pc_num].items[item_num].is_magic())) { 
-				item_area_button_active[position][5] = TRUE;
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,ADVEN[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
 				}
@@ -494,7 +494,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		}
 }
 
-//extern Boolean item_area_button_active[8][6];
+//extern bool item_area_button_active[8][6];
  // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
@@ -503,7 +503,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 	Rect from_rect = {0,0,18,18},to_rect;
 	
 	if (which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
-		item_area_button_active[which_slot][which_button_position] = TRUE;
+		item_area_button_active[which_slot][which_button_position] = true;
 		OffsetRect(&from_rect,(extra_val % 10) * 18,(extra_val / 10) * 18);
 		to_rect = item_buttons[which_slot][0];
 		to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
@@ -520,15 +520,15 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
-		item_area_button_active[which_slot][which_button_position] = TRUE;
+		item_area_button_active[which_slot][which_button_position] = true;
 		rect_draw_some_item (mixed_gworld, item_buttons_from[which_button_to_put], 
 		  item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
-		item_area_button_active[which_slot][1] = TRUE;
-		item_area_button_active[which_slot][2] = TRUE;
-		item_area_button_active[which_slot][3] = TRUE;
-		item_area_button_active[which_slot][4] = TRUE;
+		item_area_button_active[which_slot][1] = true;
+		item_area_button_active[which_slot][2] = true;
+		item_area_button_active[which_slot][3] = true;
+		item_area_button_active[which_slot][4] = true;
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
@@ -536,9 +536,9 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		  item_stats_gworld, to_rect, 1, 0);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
-		item_area_button_active[which_slot][2] = TRUE;
-		item_area_button_active[which_slot][3] = TRUE;
-		item_area_button_active[which_slot][4] = TRUE;
+		item_area_button_active[which_slot][2] = true;
+		item_area_button_active[which_slot][3] = true;
+		item_area_button_active[which_slot][4] = true;
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
@@ -560,14 +560,14 @@ void place_item_bottom_buttons()
 	
 	for (i = 0; i < 6; i++) {
 		if (ADVEN[i].main_status == 1) {
-		 	item_bottom_button_active[i] = TRUE;
+		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
 			pc_from_rect = get_party_template_rect(i,0);
 			InsetRect(&to_rect,2,2);
 			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
 			}
-			else item_bottom_button_active[i] = FALSE;
+			else item_bottom_button_active[i] = false;
 		}
 }
 
@@ -657,7 +657,7 @@ short total_encumberance(short pc_num)
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 24; i++)
-		if (ADVEN[pc_num].equip[i] == TRUE) {
+		if (ADVEN[pc_num].equip[i] == true) {
 			what_val = ADVEN[pc_num].items[i].awkward;
 			store += what_val;
 			}
@@ -672,7 +672,7 @@ short total_encumberance(short pc_num)
 //	
 //	tnl = (tnl * (100 + rp[pc->race])) / 100;
 //	for (i = 0; i < 15; i++)
-//		if (pc->traits[i] == TRUE) 
+//		if (pc->traits[i] == true) 
 //			store_per = store_per + ap[i];
 //
 //	tnl = (tnl * store_per) / 100;	
@@ -827,7 +827,7 @@ void print_party_stats() {
 short do_look(location space)
 {
 	short i,j,num_items = 0;
-	Boolean gold_here = FALSE, food_here = FALSE, is_lit = TRUE;
+	bool gold_here = false, food_here = false, is_lit = true;
 	location from_where;
 		
 	from_where = get_cur_loc();
@@ -839,15 +839,15 @@ short do_look(location space)
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
 			if ((space == pc_pos[i]) && (ADVEN[i].main_status == 1)
-				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
+				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				sprintf((char *) store_string, "    %s", (char *) ADVEN[i].name);
 				add_string_to_buf((char *) store_string);					
 				}
 		
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for (i = 0; i < T_M; i++)
-			if ((univ.town.monst.dudes[i].active != 0) && (is_lit == TRUE)
-				&& (monst_on_space(space,i) == TRUE) &&
+			if ((univ.town.monst.dudes[i].active != 0) && (is_lit == true)
+				&& (monst_on_space(space,i) == true) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (univ.town.monst.dudes[i].m_d.picture_num != 0)) {
 				
@@ -940,17 +940,17 @@ short do_look(location space)
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 			if ((univ.town.items[i].variety != 0) && (space == univ.town.items[i].item_loc)
-				&& (is_lit == TRUE)) {
+				&& (is_lit == true)) {
 				if (univ.town.items[i].variety == 3)
-					gold_here = TRUE;
+					gold_here = true;
 				else if (univ.town.items[i].variety == 11)
-					food_here = TRUE;
+					food_here = true;
 					else num_items++;
 				}
 			}
-		if (gold_here == TRUE)
+		if (gold_here == true)
 			add_string_to_buf("    Gold");
-		if (food_here == TRUE)
+		if (food_here == true)
 			add_string_to_buf("    Food");
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
@@ -965,7 +965,7 @@ short do_look(location space)
 				}
 		}
 		
-	if (is_lit == FALSE) {
+	if (is_lit == false) {
 		add_string_to_buf("    Dark                ");
 		return 0;
 		}
@@ -1270,12 +1270,12 @@ short print_terrain(location space)
 
 void add_string_to_buf(char *string)
 {
-	if (in_startup_mode == TRUE)
+	if (in_startup_mode == true)
 		return;
 		
 	SetControlValue(text_sbar,58);
 	if (buf_pointer == mark_where_printing_long) {
-		printing_long = TRUE;
+		printing_long = true;
 		print_buf();
 		through_sending();
 		}
@@ -1301,7 +1301,7 @@ void print_buf ()
 	short line_to_print;
 	short start_print_point;
 	GrafPtr old_port;
-	Boolean end_loop = FALSE;
+	bool end_loop = false;
 	Rect store_text_rect,dest_rect,erase_rect = {1,1,137,255};
 
 	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
@@ -1329,8 +1329,8 @@ void print_buf ()
 			line_to_print= 0;
 			}
 			
-		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == TRUE)) {
-			end_loop = FALSE;
+		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == true)) {
+			end_loop = false;
 			line_to_print= buf_pointer;
 			}
 	
@@ -1362,7 +1362,7 @@ void through_sending()
 	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
 	if (mark_where_printing_long > TEXT_BUF_LEN - 1)
 		mark_where_printing_long -= TEXT_BUF_LEN;
-	printing_long = FALSE;
+	printing_long = false;
 }
 
 void Display_String(Str255 str)
@@ -1402,7 +1402,7 @@ const BitMap * store_dest;
 		return;
 	if (src_gworld == NULL)
 		return;
-	if ((supressing_some_spaces == TRUE) && (target != ok_space[0]) &&
+	if ((supressing_some_spaces == true) && (target != ok_space[0]) &&
 		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 			return;
 	terrain_there[target.x][target.y] = -1;
@@ -1413,7 +1413,7 @@ const BitMap * store_dest;
 
 	destrec = coord_to_rect(target.x,target.y);
 	if (main_win == 1) { 
-		if (cartoon_happening == TRUE) {
+		if (cartoon_happening == true) {
 			OffsetRect(&destrec,ul.h,ul.v);
 			if (store_anim_type == 0) 
 				OffsetRect(&destrec,306,5);
@@ -1583,7 +1583,7 @@ void make_cursor_sword()
 //	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 //	short text_len[257];
 //	short total_width = 0;
-//	Boolean force_skip = FALSE;
+//	bool force_skip = false;
 //	RgnHandle current_clip;
 //	short adjust_x = 0,adjust_y = 0;
 //	
@@ -1632,7 +1632,7 @@ void make_cursor_sword()
 //				  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
 //				  	if (c_str[i] == '|') {
 //				  		c_str[i] = ' ';
-//				  		force_skip = TRUE;
+//				  		force_skip = true;
 //				  		last_word_break = i + 1;
 //				  		}
 //					sprintf((char *)str_to_draw,"%s",(char *)null_s);
@@ -1643,8 +1643,8 @@ void make_cursor_sword()
 //					on_what_line++;
 //					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 //					last_line_break = last_word_break;
-//					if (force_skip == TRUE) {
-//						force_skip = FALSE;
+//					if (force_skip == true) {
+//						force_skip = false;
 //						i++;
 //						//last_line_break++;
 //						//last_word_break++;
@@ -1693,17 +1693,17 @@ short calc_day()
 	return (short) ((univ.party.age) / 3700) + 1;
 }
 
-Boolean day_reached(unsigned char which_day, unsigned char which_event)
+bool day_reached(unsigned char which_day, unsigned char which_event)
 // which_day is day event should happen
 // which_event is the univ.party.key_times value to cross reference with. 
 // if the key_time is reached before which_day, event won't happen
 // if it's 0, event always happens
 {
 	if (which_event > 10)
-		return FALSE;
+		return false;
 	if ((which_event > 0) && (univ.party.key_times[which_event] < which_day))
-		return FALSE;
+		return false;
 	if (calc_day() >= which_day)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }

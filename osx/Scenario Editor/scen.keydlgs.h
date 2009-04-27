@@ -1,7 +1,7 @@
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
 void display_strings_event_filter (short item_hit);
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) ;
+bool cre(short val,short min,short max,char *text1, char *text2,short parent_num) ;
 void give_error(char *text1, char *text2,short parent_num);
 void display_strings_event_filter (short item_hit);
 void display_strings(char *text1, char *text2,
@@ -14,7 +14,7 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 void choose_text_res_event_filter (short item_hit);
 void edit_text_event_filter (short item_hit);
 void edit_text_str(short which_str,short mode);
-Boolean save_spec_enc();
+bool save_spec_enc();
 void put_spec_enc_in_dlog();
 void edit_spec_enc_event_filter (short item_hit);
 void edit_spec_enc(short which_node,short mode,short parent_num);
@@ -28,7 +28,7 @@ short edit_special_num(short mode,short what_start);
 void edit_scen_intro_event_filter (short item_hit);
 void edit_scen_intro();
 short choice_dialog(short pic,short num);
-Boolean edit_area_rect_str(short which_str,short mode);
+bool edit_area_rect_str(short which_str,short mode);
 void edit_area_rect_event_filter (short item_hit);
 void make_cursor_sword() ;
 void edit_dialog_text_event_filter (short item_hit);

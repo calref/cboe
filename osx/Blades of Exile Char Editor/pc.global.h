@@ -122,7 +122,7 @@
 //	char awkward, bonus, protection, charges, type;
 //	unsigned char graphic_num,ability, type_flag, is_special;
 //	short value;
-//	Boolean identified, magic;
+//	bool identified, magic;
 //	unsigned char weight, description_flag;
 //	char full_name[25], name[15];
 //	unsigned char reserved1,reserved2;
@@ -250,7 +250,7 @@
 //	unsigned char number;
 //	location m_loc;
 //	monster_record_type m_d;
-//	Boolean mobile;
+//	bool mobile;
 //	short summoned;
 //	creature_start_type monst_start;
 //	} creature_data_type;
@@ -259,12 +259,12 @@
 //typedef struct {
 //	location horse_loc,horse_loc_in_sec,horse_sector;
 //	short which_town;
-//	Boolean exists,property;
+//	bool exists,property;
 //	} horse_record_type;
 //typedef struct {
 //	location boat_loc,boat_loc_in_sec,boat_sector;
 //	short which_town;
-//	Boolean exists,property;
+//	bool exists,property;
 //} boat_record_type;
 
 //typedef struct {
@@ -335,14 +335,14 @@
 //	short town_num, difficulty;
 //	town_record_type	town;
 //	char explored[64][64];
-//	Boolean	hostile;
+//	bool	hostile;
 //	creature_list_type	monst;
-//	Boolean	in_boat;
+//	bool	in_boat;
 //	location p_loc;
 //	}	current_town_type;
 
 //typedef struct {
-//	Boolean exists;
+//	bool exists;
 //	short direction;
 //	out_wandering_type what_monst;
 //	location which_sector,m_loc;	
@@ -368,7 +368,7 @@
 //	talk_save_type talk_save[120];
 //	short direction,at_which_save_slot;
 //	char alchemy[20];
-//	Boolean can_find_town[200];
+//	bool can_find_town[200];
 //	short key_times[100];
 //	short party_event_timers[30];
 //	short global_or_town[30];
@@ -402,10 +402,10 @@
 //	short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
 //	short status[15];
 //	item_record_type items[24];
-//	Boolean equip[24];
-//	Boolean priest_spells[62],mage_spells[62];
+//	bool equip[24];
+//	bool priest_spells[62],mage_spells[62];
 //	short which_graphic,weap_poisoned;
-//	Boolean advan[15],traits[15];
+//	bool advan[15],traits[15];
 //	short race,exp_adj,direction;
 //	} pc_record_type;
 

@@ -12,7 +12,7 @@ char terrain_blocked[256];
 
 
 short short_can_see();
-Boolean combat_pt_in_light();
+bool combat_pt_in_light();
 //extern short town_size[3];
 location obs_sec;
 location which_party_sec;
@@ -26,7 +26,7 @@ extern unsigned char combat_terrain[64][64];
 extern unsigned char out[96][96], out_e[96][96];
 extern location pc_pos[6],center;
 //extern pc_record_type adven[6];
-extern Boolean belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
+extern bool belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern scenario_data_type scenario;
 extern bool editing_town;
@@ -51,18 +51,18 @@ short vdist(location p1,location p2) {
 	return max(i,j);
 }
 
-Boolean adjacent(location p1,location p2)
+bool adjacent(location p1,location p2)
 {
 	if ((abs((short) (p1.x - p2.x)) <= 1) && (abs((short) (p1.y - p2.y)) <= 1))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
-Boolean point_onscreen(location center,location check)
+bool point_onscreen(location center,location check)
 {
 	if ((abs((short) (center.x - check.x)) <=4) && (abs((short) (center.y - check.y)) <= 4))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 
@@ -85,51 +85,51 @@ short set_direction (location old_pt, location new_pt)
 		return 3;
 	return 2;	
 }
-Boolean is_container(location loc)
+bool is_container(location loc)
 {
 	unsigned char ter;
 	
 	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
-		return TRUE;
+		return true;
 	ter = coord_to_ter(loc.x,loc.y);
 	if (scenario.ter_types[ter].special == 14)
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
-Boolean special_which_blocks_monst(location to_check)
+bool special_which_blocks_monst(location to_check)
 {
 		if (terrain_blocked[coord_to_ter(to_check.x,to_check.y)] == 2)
-			return TRUE;
-			else return FALSE;
+			return true;
+			else return false;
 }
 
 // Checks if space is a special that prevents movement into or placement of a PC on
-Boolean is_special(location to_check)
+bool is_special(location to_check)
 {
 	unsigned char which_ter;
 
-	if (special_which_blocks_monst(to_check) == FALSE)
-		return FALSE;
+	if (special_which_blocks_monst(to_check) == false)
+		return false;
 	which_ter = coord_to_ter(to_check.x,to_check.y);
 	if (terrain_blocked[which_ter] == 2)
-			return TRUE;
-			else return FALSE;
+			return true;
+			else return false;
 }
 
-Boolean impassable(unsigned char terrain_to_check)
+bool impassable(unsigned char terrain_to_check)
 {
 	if (terrain_blocked[terrain_to_check] > 2)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
-Boolean spot_impassable(short i,short  j)
+bool spot_impassable(short i,short  j)
 {
 	unsigned char ter;
 
 	ter = coord_to_ter(i,j);
 	if (terrain_blocked[ter] == 5)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }

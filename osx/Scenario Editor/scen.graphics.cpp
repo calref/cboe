@@ -24,7 +24,7 @@ void place_location();
 void undo_clip();
 
 short find_index_spot();
-Boolean is_s_d();
+bool is_s_d();
 void sort_specials();
 
 extern cOutdoors current_terrain;
@@ -38,7 +38,7 @@ extern cTown* town;
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
 extern short available_dlog_buttons[NUM_DLOG_B];
-extern Boolean editing_town;
+extern bool editing_town;
 extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern Rect windRect;
@@ -53,7 +53,7 @@ extern Rect right_area_rect;
 extern unsigned char borders[4][50];
 extern ControlHandle right_sbar;
 
-extern Boolean left_buttons_active,right_buttons_active;
+extern bool left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS]; 
 //extern unsigned char m_pic_index[200];
@@ -91,7 +91,7 @@ Rect base_small_button_from = {120,0,127,7};
 extern Rect palette_buttons[10][6];
 extern Rect palette_buttons_from[71];
 extern short town_buttons[6][10], out_buttons[6][10];
-extern Boolean good_palette_buttons[2][6][10];
+extern bool good_palette_buttons[2][6][10];
 Rect palette_button_base = {0,0,18,25};
 Rect terrain_buttons_rect = {0,0,410,294};
 extern Rect left_buttons[NLS][2]; // 0 - whole, 1 - blue button
@@ -130,7 +130,7 @@ short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 				
 				
 unsigned char small_what_drawn[64][64];
-extern Boolean small_any_drawn;
+extern bool small_any_drawn;
 
 void init_dialogs(){
 	cd_init_dialogs(
@@ -522,7 +522,7 @@ void set_up_terrain_buttons()
 	if (overall_mode < MODE_MAIN_SCREEN) {
 //		palette_to.left = 5;
 //		palette_to.top = terrain_rects[255].bottom + 5;
-//		if (editing_town == TRUE) {
+//		if (editing_town == true) {
 //			palette_from.bottom = palette_buttons[0][5].bottom;
 //			palette_from.right = palette_buttons[7][5].right;
 //			}
@@ -583,7 +583,7 @@ void draw_terrain(){
 			for (r = 0; r < 9; r++)
 			{
 				where_draw.x = q; where_draw.y = r;
-				if (editing_town == TRUE) {
+				if (editing_town == true) {
 					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);		
 				}
 				else {
@@ -605,7 +605,7 @@ void draw_terrain(){
 				OffsetRect(&tiny_to,28 * q, 36 * r);
 				
 				// draw start icon, if starting point
-				if ((editing_town == TRUE) && 
+				if ((editing_town == true) && 
 					(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
 					&& (scenario.where_start.y == cen_y + r - 4)) {
 					from_rect = start_button_from;
@@ -614,7 +614,7 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 					OffsetRect(&tiny_to,0,-7);
 				}
-				if ((editing_town == FALSE)
+				if ((editing_town == false)
 					&& (scenario.out_sec_start.x == cur_out.x)
 					&& (scenario.out_sec_start.y == cur_out.y) 
 					&& (scenario.out_start.x == cen_x + q - 4)
@@ -637,7 +637,7 @@ void draw_terrain(){
 					OffsetRect(&tiny_to,0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				if (is_special(cen_x + q - 4,cen_y + r - 4) == true) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
@@ -649,9 +649,9 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
 					OffsetRect(&tiny_to,0,-7);
 				}	
-				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == true) {
 				//	}	
-				if (editing_town == FALSE) {
+				if (editing_town == false) {
 					for (i = 0; i < 4; i++)		
 						if ((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
 							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
@@ -664,7 +664,7 @@ void draw_terrain(){
 					
 				}
 				
-				if (editing_town == TRUE) {
+				if (editing_town == true) {
 					for (i = 0; i < 30; i++) {
 						if ((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
@@ -699,27 +699,27 @@ void draw_terrain(){
 							OffsetRect(&tiny_to,0,-7);
 							i = 4;
 						}			
-					if (is_web(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_crate(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_crate(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(6,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(2,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
@@ -739,7 +739,7 @@ void draw_terrain(){
 					
 				}
 			}
-		if (editing_town == TRUE) {
+		if (editing_town == true) {
 			draw_monsts();
 			draw_items();
 		}
@@ -747,7 +747,7 @@ void draw_terrain(){
 		SetPort( ter_draw_gworld);
 		ClipRect(&clipping_rect);
 		
-		if (editing_town == TRUE) {
+		if (editing_town == true) {
 			// draw info rects
 			for (i = 0; i < 16; i++)
 				if (town->room_rect(i).left > 0) {
@@ -768,7 +768,7 @@ void draw_terrain(){
 			FrameRect(&draw_rect);
 			ForeColor(blackColor);
 		}
-		if (editing_town == FALSE) {
+		if (editing_town == false) {
 			// draw info rects
 			for (i = 0; i < 8; i++)
 				if (current_terrain.info_rect[i].left > 0) {
@@ -784,27 +784,27 @@ void draw_terrain(){
 		ClipRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		
-		small_any_drawn = FALSE;
+		small_any_drawn = false;
 		//if (cur_viewing_mode == 0) 
 		//	draw_frames();
 	}
 	
 	if (cur_viewing_mode == 1) {
 		SetPort( ter_draw_gworld);
-		if (small_any_drawn == FALSE) {
+		if (small_any_drawn == false) {
 		 	FillCRect(&terrain_rect,bg[17]);
 			FrameRect(&terrain_rect);
 		}
 		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++) 
 			for (r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
-				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == FALSE)) {
+				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == false)) {
 					draw_one_tiny_terrain_spot(q,r,t_to_draw);
 					small_what_drawn[q][r] = t_to_draw;
 				}
 			}
 		SetPortWindowPort(mainPtr);
-		small_any_drawn = TRUE;
+		small_any_drawn = true;
 	}
 	
 	//draw_cur_string();
@@ -1271,20 +1271,20 @@ void undo_clip()
 }
 
 
-Boolean is_special(short i,short j)
+bool is_special(short i,short j)
 {
 	short k;
 	
-	if (editing_town == TRUE)
+	if (editing_town == true)
 		for (k = 0; k < 50; k++)
 			if ((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
-				return TRUE;
-	if (editing_town == FALSE)
+				return true;
+	if (editing_town == false)
 		for (k = 0; k < 18; k++)
 			if ((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
-				return TRUE;
+				return true;
 
-	return FALSE;
+	return false;
 }
 
 void take_special(short i,short j)
@@ -1297,7 +1297,7 @@ void make_special(short i,short j)
 void sort_specials()
 {}
 
-Boolean is_field_type(short i,short j,short field_type)
+bool is_field_type(short i,short j,short field_type)
 {
 	short k;
 	
@@ -1305,15 +1305,15 @@ Boolean is_field_type(short i,short j,short field_type)
 		if ((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j))
-				return TRUE;
-	return FALSE;
+				return true;
+	return false;
 }
 
 void make_field_type(short i,short j,short field_type)
 {
 	short k;
 	
-	if (is_field_type(i,j,field_type) == TRUE)
+	if (is_field_type(i,j,field_type) == true)
 		return;
 	for (k = 0; k < 50; k++)
 		if (town->preset_fields[k].type == 0) {
@@ -1339,7 +1339,7 @@ void take_field_type(short i,short j,short field_type)
 				}
 }
 
-Boolean is_web(short i,short j)
+bool is_web(short i,short j)
 {
 	return is_field_type(i,j,3);
 
@@ -1353,7 +1353,7 @@ void take_web(short i,short j)
 	take_field_type(i,j,3);
 }
 
-Boolean is_crate(short i,short j)
+bool is_crate(short i,short j)
 {
 	return is_field_type(i,j,4);
 }
@@ -1367,7 +1367,7 @@ void take_crate(short i,short j)
 	take_field_type(i,j,4);
 }
 
-Boolean is_barrel(short i,short j)
+bool is_barrel(short i,short j)
 {
 	return is_field_type(i,j,5);
 }
@@ -1380,7 +1380,7 @@ void take_barrel(short i,short j)
 	take_field_type(i,j,5);
 }
 
-Boolean is_fire_barrier(short i,short j)
+bool is_fire_barrier(short i,short j)
 {
 	return is_field_type(i,j,6);
 }
@@ -1393,7 +1393,7 @@ void take_fire_barrier(short i,short j)
 	take_field_type(i,j,6);
 }
 
-Boolean is_force_barrier(short i,short j)
+bool is_force_barrier(short i,short j)
 {
 	return is_field_type(i,j,7);
 }
@@ -1407,7 +1407,7 @@ void take_force_barrier(short i,short j)
 
 }
 
-Boolean is_sfx(short i,short j,short type)
+bool is_sfx(short i,short j,short type)
 {
 	return is_field_type(i,j,type + 14);
 }
@@ -1421,7 +1421,7 @@ void take_sfx(short i,short j,short type)
 }
 
 
-Boolean is_quickfire(short i,short j)
+bool is_quickfire(short i,short j)
 {
 	return is_field_type(i,j,8);
 }
@@ -1434,19 +1434,19 @@ void take_quickfire(short i,short j)
 	take_field_type(i,j,8);
 }
 
-Boolean container_there(location l)
+bool container_there(location l)
 {
 	
 	unsigned char ter;
 	
-	if (editing_town == FALSE)
-		return FALSE;
+	if (editing_town == false)
+		return false;
 	if (scenario.ter_types[town->terrain(l.x,l.y)].special == 14)
-		return TRUE;
-	if (is_barrel(l.x,l.y) == TRUE)
-		return TRUE;
-	if (is_crate(l.x,l.y) == TRUE)
-		return TRUE;
+		return true;
+	if (is_barrel(l.x,l.y) == true)
+		return true;
+	if (is_crate(l.x,l.y) == true)
+		return true;
 	return 0;		
 }
 

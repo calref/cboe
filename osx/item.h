@@ -51,7 +51,7 @@ public:
  char awkward, bonus, protection, charges, type;
  unsigned char graphic_num,ability, type_flag, is_special;
  short value;
- Boolean identified, magic;
+ bool identified, magic;
  unsigned char weight, description_flag;
  char full_name[25], name[15];
  unsigned char reserved1,reserved2;

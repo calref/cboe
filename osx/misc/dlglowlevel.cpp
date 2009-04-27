@@ -37,7 +37,7 @@ void process_new_window (short which_dlg) {
 	short i = -1,j,free_slot = -1,free_item = -1,type,flag;
 	char but_str[30];
 	Str255 item_str;
-	Boolean str_stored = FALSE;
+	bool str_stored = false;
 	Rect dlg_rect,store_rect;
 	short win_height = 0, win_width = 0;
 	short the_type;
@@ -61,64 +61,64 @@ void process_new_window (short which_dlg) {
 			GetDialogItemText(the_handle,item_str);
 			p2cstr(item_str);
 			dlgs[free_slot].highest_item++;
-			str_stored = FALSE;
+			str_stored = false;
 			if (strlen((char *)item_str) == 0) {
 				sprintf((char *) item_str, "+");
 				type = DLG_TEXT_BOLD;
 				flag = 1;
-	            str_stored = TRUE;
+	            str_stored = true;
 			}
 			else if (item_str[0] == '+') { // default is framed text
 				type = DLG_TEXT_BOLD;
 				flag = 1;
-	            str_stored = TRUE;
+	            str_stored = true;
 			}
 			else if (item_str[0] == '*') {
 				type = DLG_TEXT_BOLD;
 				flag = 0;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (item_str[0] == '~') {
 				type = DLG_TEXT_LARGE;
 				flag = 0;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (item_str[0] == '!') {
 				type = DLG_TEXT_PLAIN;
 				flag = 0;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (item_str[0] == '=') {
 				type = DLG_TEXT_DEFAULT;
 				flag = 1;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (item_str[0] == '^') {
 				type = DLG_CUSTOM_BTN;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (((item_str[0] >= 65) && (item_str[0] <= 122)) || (item_str[0] == '"')) {
 				type = DLG_TEXT_DEFAULT;
 				flag = 0;
 				str_offset = 0;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 			else if (item_str[0] == '&') {
 				type = DLG_CUSTOM_DEF_BTN;
 				flag = 1;
 				if (string_length((char *) item_str) > 55)
 					flag = 2;
-				str_stored = TRUE;
+				str_stored = true;
 			}
 //			else if (item_str[0] == '@') { // For potential future use
 //				type = DLG_PUSH_BTN;
 //				flag = 1;
 //				if (string_length((char *) item_str) > 55)
 //					flag = 2;
-//				str_stored = TRUE;
+//				str_stored = true;
 //			}
 			else {
 #ifndef EXILE_BIG_GUNS
@@ -183,7 +183,7 @@ void process_new_window (short which_dlg) {
 					case DLG_TEXT_CLICKABLE: case DLG_TEXT_DEFAULT:
 					case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN: 
 						sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
-						if (str_stored == TRUE) {
+						if (str_stored == true) {
 							if (free_item < 10)
 								sprintf(text_long_str[free_item],"%s",(char *) (item_str + str_offset));
 							else
@@ -205,7 +205,7 @@ void process_new_window (short which_dlg) {
 		}
 	}
 	ShortenDITL(GetDialogFromWindow(hDlg),dlgs[free_slot].highest_item);
-	SizeWindow(hDlg,win_width,win_height,FALSE);
+	SizeWindow(hDlg,win_width,win_height,false);
 	dlgs[free_slot].highest_item = num_items;
 }
 
@@ -311,7 +311,7 @@ GrafPtr hDialog;
 short w__gw;
 bool fr;
 void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
-						 short type_g, Boolean do_frame,short win_or_gworld){
+						 short type_g, bool do_frame,short win_or_gworld){
 	short picnum;
 	
 	RGBColor store_color;
@@ -321,7 +321,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 		return;
 	
 	if (which_g >= 2000)
-		do_frame = FALSE;
+		do_frame = false;
 	which_g = which_g % 2000;
 	
 	if (type_g == PICT_OLD)
@@ -423,9 +423,9 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
 	}
 	w__gw = 0;
 	hDialog = NULL;
-	fr = FALSE;
+	fr = false;
 	
-	if (do_frame == TRUE) {
+	if (do_frame == true) {
 		rect.bottom--;
 		rect.right--;
 		frame_dlog_rect(hDlg,rect,3);
@@ -806,7 +806,7 @@ void draw_custom_space_pic(short which_g,Rect& rect){
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = get_custom_rect(which_g);
-	if ((w__gw == 0) && (fr == TRUE))
+	if ((w__gw == 0) && (fr == true))
 		PaintRect(&rect);
 	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
 }
@@ -816,7 +816,7 @@ void draw_custom_monst_wide_pic(short which_g,Rect& rect){
 	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
 	rect.bottom = rect.top + 36;
-	if ((w__gw == 0) && (fr == TRUE))
+	if ((w__gw == 0) && (fr == true))
 		PaintRect(&rect);
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);
@@ -834,7 +834,7 @@ void draw_custom_monst_tall_pic(short which_g,Rect& rect){
 	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
 	rect.bottom = rect.top + 36;
-	if ((w__gw == 0) && (fr == TRUE))
+	if ((w__gw == 0) && (fr == true))
 		PaintRect(&rect);
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);
@@ -852,7 +852,7 @@ void draw_custom_monst_large_pic(short which_g,Rect& rect){
 	Rect small_monst_rect = {0,0,18,14};
 	rect.right = rect.left + 28;
 	rect.bottom = rect.top + 36;
-	if ((w__gw == 0) && (fr == TRUE))
+	if ((w__gw == 0) && (fr == true))
 		PaintRect(&rect);
 	GWorldPtr from_gworld = *dlg_gworlds["custom"];
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);

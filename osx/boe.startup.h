@@ -1,3 +1,3 @@
 
-Boolean handle_startup_press(Point the_point);
+bool handle_startup_press(Point the_point);
 void startup_load();

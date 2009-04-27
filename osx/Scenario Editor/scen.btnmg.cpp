@@ -22,7 +22,7 @@ extern short current_rs_top;
 char strings_ls[NLS][40];
 char strings_rs[NRS][40];
 
-Boolean left_buttons_active = 1,right_buttons_active = 0;
+bool left_buttons_active = 1,right_buttons_active = 0;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
 extern short right_button_status[NRS]; 
 extern ControlHandle right_sbar;

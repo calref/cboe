@@ -41,7 +41,7 @@ extern short which_pc_displayed;
 extern short mage_range[66],priest_range[66];
 extern short spell_cost[2][62],cur_town_talk_loaded;
 //extern current_town_type univ.town;
-extern Boolean in_startup_mode,give_intro_hint;
+extern bool in_startup_mode,give_intro_hint;
 extern WindowPtr mainPtr;
 extern short on_monst_menu[256];
 //extern big_tr_type t_d;
@@ -49,7 +49,7 @@ extern ModalFilterUPP main_dialog_UPP;
 extern location tinraya_portculli[12];
 //extern piles_of_stuff_dumping_type *data_store;
 
-Boolean full_roster = FALSE;
+bool full_roster = false;
 
 extern short dest_personalities[40];
 extern location dest_locs[40];
@@ -221,8 +221,8 @@ void put_pc_graphics()
 	short i;
 
 	for (i = 3; i < 65; i++) {
-		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == TRUE)) ||
-		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == TRUE)))
+		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == true)) ||
+		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == true)))
 			cd_set_led(991,i,1);
 			else cd_set_led(991,i,0);
 		}
@@ -579,9 +579,9 @@ void display_monst(short array_pos,cPopulation::cCreature *which_m,short mode)
 	short item_hit;
 	
 	position = array_pos;
-	full_roster = FALSE;
+	full_roster = false;
 	if (mode == 1) {
-		full_roster = TRUE;
+		full_roster = true;
 		store_m = &hold_m;
 		store_m->number = on_monst_menu[array_pos];
 		store_m->m_d = return_monster_template((unsigned char)on_monst_menu[array_pos]);
@@ -595,7 +595,7 @@ void display_monst(short array_pos,cPopulation::cCreature *which_m,short mode)
 
 	cd_create_dialog(999,mainPtr);
 
-	if (full_roster == FALSE) {
+	if (full_roster == false) {
 		cd_activate_item(999,28,0);
 		cd_activate_item(999,29,0);
 		}
@@ -749,7 +749,7 @@ void pick_race_abil_event_filter(short item_hit)
 					break;
 				case 36: case 37: case 38: case 39: case 40:
 					if (store_trait_mode != 1)
-						pc->traits[item_hit - 36 + 10] = (pc->traits[item_hit - 36 + 10] == TRUE) ? FALSE : TRUE;
+						pc->traits[item_hit - 36 + 10] = (pc->traits[item_hit - 36 + 10] == true) ? false : true;
 					display_traits_graphics();
 					get_str(abil_str,5,item_hit - 36 + 11);				
 					csit(1013,19,(char *) abil_str);
@@ -758,7 +758,7 @@ void pick_race_abil_event_filter(short item_hit)
 					if (item_hit >= 100)
 						return;
 					if (store_trait_mode != 1)
-						pc->traits[item_hit - 7] = (pc->traits[item_hit - 7] == TRUE) ? FALSE : TRUE;
+						pc->traits[item_hit - 7] = (pc->traits[item_hit - 7] == true) ? false : true;
 					display_traits_graphics();
 					get_str(abil_str,5,item_hit - 6);				
 					csit(1013,19,(char *) abil_str);
@@ -829,7 +829,7 @@ void display_pc_info()
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
 		if (((ADVEN[pc].items[i].variety == 1) || (ADVEN[pc].items[i].variety == 2)) &&
-			(ADVEN[pc].equip[i] == TRUE)) {
+			(ADVEN[pc].equip[i] == true)) {
 					if (weap1 == 24)
 						weap1 = i;
 						else weap2 = i;
@@ -837,7 +837,7 @@ void display_pc_info()
 				
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
 		+ 5 * minmax(-8,8,ADVEN[pc].status[1]);
-	if ((ADVEN[pc].traits[2] == FALSE) && (weap2 < 24))
+	if ((ADVEN[pc].traits[2] == false) && (weap2 < 24))
 		hit_adj -= 25;
 
 	dam_adj = stat_adj(pc,0) + minmax(-8,8,ADVEN[pc].status[1]);
@@ -1265,14 +1265,14 @@ void display_2_enc_string(short val1,short val2,short val3,short val4,short soun
 // Call call this anywhere, but don't forget parent!!!
 void give_help(short help1,short help2,short parent_num)
 {
-	Boolean help_forced = FALSE;
+	bool help_forced = false;
 	Str255 str1,str2;
 	
 	if (help1 >= 200) {
-		help_forced = TRUE;
+		help_forced = true;
 		help1 -= 200;
 		}
-	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && (help_forced == FALSE))
+	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && (help_forced == false))
 		return;
 	if (univ.party.help_received[help1] > 0)
 		return;

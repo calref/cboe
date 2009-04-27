@@ -1,4 +1,4 @@
-Boolean handle_action(EventRecord event,short mode);
+bool handle_action(EventRecord event,short mode);
 void flash_rect(Rect to_flash);
 void edit_gold_or_food_event_filter (short item_hit);
 void edit_gold_or_food(short which_to_edit);

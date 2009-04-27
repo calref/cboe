@@ -23,13 +23,13 @@ using std::vector;
 
 //extern party_record_type party;
 //extern pc_record_type adven[6];
-extern Boolean in_startup_mode,play_sounds,party_in_memory;
+extern bool in_startup_mode,play_sounds,party_in_memory;
 extern long register_flag;
 extern WindowPtr	mainPtr;	
 extern Point ul;
 //extern piles_of_stuff_dumping_type *data_store;
 extern vector<scen_header_type> scen_headers;
-extern Boolean unreg_party_in_scen_not_check;
+extern bool unreg_party_in_scen_not_check;
 extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
 
@@ -37,7 +37,7 @@ extern cUniverse univ;
 
 Rect startup_button[6];
 
-Boolean handle_startup_press(Point the_point)
+bool handle_startup_press(Point the_point)
 {
 	std::string scen_name;
 	short i,scen;
@@ -46,9 +46,9 @@ Boolean handle_startup_press(Point the_point)
 	the_point.v -= ul.v;
 	
 	for (i = 0; i < 5; i++) 
-		if (PtInRect(the_point,&startup_button[i]) == TRUE) {
+		if (PtInRect(the_point,&startup_button[i]) == true) {
 			draw_start_button(i,5);
-			if (play_sounds == TRUE)
+			if (play_sounds == true)
 				play_sound(37);
 			else FlushAndPause(5);
 			draw_start_button(i,0);			
@@ -71,7 +71,7 @@ Boolean handle_startup_press(Point the_point)
 				break;
 
 			case STARTBTN_JOIN: // regular scen
-				if (party_in_memory == FALSE) {
+				if (party_in_memory == false) {
 					FCD(867,0);
 					break;
 				}
@@ -90,7 +90,7 @@ Boolean handle_startup_press(Point the_point)
 				break;
 		
 			case STARTBTN_CUSTOM: // custom
-				if (party_in_memory == FALSE) {
+				if (party_in_memory == false) {
 					FCD(867,0);
 					break;
 				}
@@ -108,12 +108,12 @@ Boolean handle_startup_press(Point the_point)
 		
 			case 5:
 				FlushAndPause(50);
-				return TRUE;
+				return true;
 				break;
 		
 			}
 		}
-	return FALSE;
+	return false;
 }
 
 void startup_load()////
@@ -147,7 +147,7 @@ void start_game ()
 	
 	draw_main_screen();
 	
-	in_startup_mode = FALSE;
+	in_startup_mode = false;
 	
 	adjust_monst_menu();
 	adjust_spell_menus();

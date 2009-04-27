@@ -20,12 +20,12 @@ cUniverse univ; // not needed; just to silence the compiler
 
 /* Globals */
 Rect	windRect, Drag_Rect;
-Boolean  All_Done = FALSE; // delete play_sounds
+bool  All_Done = false; // delete play_sounds
 EventRecord	event;
 WindowPtr	mainPtr;	
 cTown* town = NULL;
 //big_tr_type t_d;
-bool diff_depth_ok = FALSE,mouse_button_held = FALSE,editing_town = FALSE;
+bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
 //short town_type = 0;  // 0 - big 1 - ave 2 - small
 //short max_dim[3] = {64,48,32};
@@ -44,7 +44,7 @@ short pixel_depth,old_depth = 8;
 unsigned char border1 = 90, border2 = 90; // kludgy thing ... leave right here, before borders
 unsigned char borders[4][50];
 
-Boolean change_made = FALSE;
+bool change_made = false;
 
 // Numbers of current areas being edited
 short cur_town;
@@ -157,7 +157,7 @@ int main(void)
 	check_for_intel();
 	redraw_screen();
 	
-	while (All_Done == FALSE) 
+	while (All_Done == false) 
 		Handle_One_Event();
 	
 	close_program();
@@ -213,7 +213,7 @@ void Initialize(void)
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
 	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT;
 	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-	right_sbar = NewControl(mainPtr,&right_sbar_rect,tit,TRUE,0,0,0,scrollBarProc,1);
+	right_sbar = NewControl(mainPtr,&right_sbar_rect,tit,true,0,0,0,scrollBarProc,1);
 	 
 }
 
@@ -247,7 +247,7 @@ void Handle_One_Event()
 
 
 	WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
-	if ((mouse_button_held == TRUE) && (event.what != 23) && (FrontWindow() == mainPtr)) {
+	if ((mouse_button_held == true) && (event.what != 23) && (FrontWindow() == mainPtr)) {
 		GlobalToLocal(&event.where);
 		handle_action(event.where,event);
 		}
@@ -267,7 +267,7 @@ void Handle_One_Event()
 						}
 					}
 					else if (chr == 'Q')
-						All_Done = TRUE;
+						All_Done = true;
 						else handle_keystroke(chr,chr2,event);
 			break;
 		
@@ -277,7 +277,7 @@ void Handle_One_Event()
 		
 		
 		case mouseUp:
-			mouse_button_held = FALSE;
+			mouse_button_held = false;
 			break;
 			
 		case activateEvt:
@@ -403,7 +403,7 @@ void handle_file_menu(int item_hit)
 			break;
 
 		case 5: // quit
-			if (save_check(869) == FALSE)
+			if (save_check(869) == false)
 				break;
 			ExitToShell();
 			break;
@@ -416,7 +416,7 @@ void handle_scenario_menu(int item_hit)
 	
 	switch (item_hit) {
 		case 1: // Create new town
-			if (change_made == TRUE) {
+			if (change_made == true) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
 				return;
@@ -426,7 +426,7 @@ void handle_scenario_menu(int item_hit)
 					"",0);
 				return;
 				}
-			if (new_town(scenario.num_towns) == TRUE)
+			if (new_town(scenario.num_towns) == true)
 				set_up_main_screen();
 			break;
 		case 3: // Scenario Details
@@ -439,7 +439,7 @@ void handle_scenario_menu(int item_hit)
 			set_starting_loc();
 			break;
 		case 6: // Change Password
-			if (check_p(user_given_password) == TRUE) {
+			if (check_p(user_given_password) == true) {
 				user_given_password = get_password();
 				given_password = true;
 			}
@@ -452,7 +452,7 @@ void handle_scenario_menu(int item_hit)
 			SetControlValue(right_sbar,0); start_string_editing(0,0);
 			break;
 		case 11: // Import Town
-			if (change_made == TRUE) {
+			if (change_made == true) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
 				return;
@@ -484,7 +484,7 @@ void handle_scenario_menu(int item_hit)
 			edit_item_placement();
 			break;
 		case 18: // Delete Last Town
-			if (change_made == TRUE) {
+			if (change_made == true) {
 				give_error("You need to save the changes made to your scenario before you can delete a town.",
 					"",0);
 				return;
@@ -518,14 +518,14 @@ void handle_scenario_menu(int item_hit)
 			break;
 		}
 	if ((item_hit != 18) && (item_hit != 19))
-		change_made = TRUE;
+		change_made = true;
 }
 
 void handle_town_menu(int item_hit)
 {
 	short i;
 	
-				change_made = TRUE;
+				change_made = true;
 	switch (item_hit) {
 		case 1: edit_town_details(); break;
 		case 2: edit_town_wand(); break;
@@ -562,7 +562,7 @@ void handle_outdoor_menu(int item_hit)
 {
 	short i;
 	
-				change_made = TRUE;
+				change_made = true;
 	switch (item_hit) {
 		case 1: outdoor_details(); break;
 		case 2: edit_out_wand(0); break;
@@ -658,7 +658,7 @@ void Mouse_Pressed()
 			break;
 		
 		case inGoAway:
-			All_Done = TRUE;
+			All_Done = true;
 			break;
 		
 		case inContent:
@@ -700,7 +700,7 @@ void ding()
 	SysBeep(1);
 }
  
-//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 //{
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
@@ -717,16 +717,16 @@ void ding()
 //		w = GetDialogWindow(hDlg);
 //		rgn = NewRgn();
 //		GetWindowRegion(w,kWindowUpdateRgn,rgn);
-//		if (EmptyRgn(rgn) == TRUE) {
+//		if (EmptyRgn(rgn) == true) {
 //			DisposeRgn(rgn);
-//			return TRUE;
+//			return true;
 //		}
 //		DisposeRgn(rgn);
 //		BeginUpdate(w);
 //		cd_redraw(w);
 //		EndUpdate(w);
 //		DrawDialog(hDlg);
-//		return FALSE;
+//		return false;
 //		break;
 //		
 //		case keyDown:
@@ -816,8 +816,8 @@ void ding()
 ////	}
 //
 //	if (wind_hit == -1)
-//		return FALSE;
-//	else return TRUE;
+//		return false;
+//	else return true;
 //}
 
 void set_pixel_depth() {
@@ -832,11 +832,11 @@ void set_pixel_depth() {
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
 	
-	if ((pixel_depth <= 8) && (diff_depth_ok == TRUE))
+	if ((pixel_depth <= 8) && (diff_depth_ok == true))
 		return;
 	
 	
-	diff_depth_ok = TRUE;
+	diff_depth_ok = true;
 	old_depth = pixel_depth;
 }
 
@@ -870,7 +870,7 @@ void find_quickdraw() {
 			choice = choice_dialog(0,1070);
 			if (choice == 2)
 				ExitToShell();
-				else diff_depth_ok = TRUE;
+				else diff_depth_ok = true;
 			}
 		}
 		else  {

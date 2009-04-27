@@ -38,15 +38,15 @@ short current_active_pc = 0;
 
 /* Mac stuff globals */
 Rect	windRect, Drag_Rect;
-Boolean Multifinder_Present, All_Done = FALSE,diff_depth_ok = FALSE;
+bool Multifinder_Present, All_Done = false,diff_depth_ok = false;
 EventRecord	event;
 WindowPtr	mainPtr;	
 Handle menu_bar_handle;
 MenuHandle apple_menu,file_menu,reg_menu,extra_menu,edit_menu,items_menu[4];
-Boolean gInBackground = FALSE,file_in_mem = FALSE,save_blocked = FALSE;
+bool gInBackground = false,file_in_mem = false,save_blocked = false;
 long start_time;
-Boolean party_in_scen = FALSE;
-Boolean scen_items_loaded = FALSE;
+bool party_in_scen = false;
+bool scen_items_loaded = false;
 
 /* Adventure globals */
 //party_record_type party;
@@ -75,7 +75,7 @@ short old_depth = 16;
 extern FSSpec file_to_load;
 
 /* Display globals */
-Boolean sys_7_avail;
+bool sys_7_avail;
 short give_delays = 0; /* XXX this wasn't defined anywhere, is this right? -jmr */
 
 /* Prototypes */
@@ -84,7 +84,7 @@ void Initialize(void);
 void Set_Window_Drag_Bdry();
 void Handle_One_Event();
 void Handle_Activate();
-Boolean handle_dialog_event() ;
+bool handle_dialog_event() ;
 void Handle_Update();
 void Mouse_Pressed();
 void handle_menu_choice(long choice);
@@ -100,7 +100,7 @@ void check_sys_7();
 pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-Boolean verify_restore_quit(short mode);
+bool verify_restore_quit(short mode);
 void set_up_apple_events();
 void set_pixel_depth();
 void restore_depth();
@@ -174,9 +174,9 @@ int main(void)
 	/* Multifinder_Present = (NGetTrapAddress(_WaitNextEvent, ToolTrap) != 
 		NGetTrapAddress(_Unimplemented, ToolTrap)); */
       /* no need to check this with Carbon -jmr */
-	Multifinder_Present = TRUE;
+	Multifinder_Present = true;
 	
-	while (All_Done == FALSE) 
+	while (All_Done == false) 
 		Handle_One_Event();
 	restore_depth();
       return 0;
@@ -321,12 +321,12 @@ void Handle_One_Event()
 {
 	short chr,chr2;
 	long menu_choice,cur_time;
-	Boolean event_in_dialog = FALSE;
+	bool event_in_dialog = false;
 	GrafPtr old_port;
 	
-	//ed_reg = FALSE;
+	//ed_reg = false;
 	
-	if (Multifinder_Present == TRUE) {
+	if (Multifinder_Present == true) {
 		WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
 		cur_time = TickCount();
 
@@ -426,7 +426,7 @@ void Mouse_Pressed()
       BitMap screenBits;
 	short	the_part,choice,i;
 	long menu_choice;
-	Boolean try_to_end;
+	bool try_to_end;
 		
 	the_part = FindWindow( event.where, &the_window);
 		
@@ -453,9 +453,9 @@ void Mouse_Pressed()
 			}
 			else {
 			/*	for (i = 0; i < 12; i++)
-					if ((the_window == modeless_dialogs[i]) && (modeless_exists[i] == TRUE)) {
+					if ((the_window == modeless_dialogs[i]) && (modeless_exists[i] == true)) {
 						CloseDialog(modeless_dialogs[i]);
-						modeless_exists[i] = FALSE;
+						modeless_exists[i] = false;
 						SelectWindow(mainPtr);
 						SetPort(mainPtr);		
 						}*/
@@ -471,7 +471,7 @@ void Mouse_Pressed()
 			else{ 
 				if (the_window == mainPtr) {
 					try_to_end = handle_action(event,0);
-					if (try_to_end == TRUE)
+					if (try_to_end == true)
 						All_Done = verify_restore_quit(0);
 				}
 			}
@@ -540,7 +540,7 @@ void handle_file_menu(int item_hit)
 				save_party(file);
 			break;
 		case 3://open
-			if (verify_restore_quit(1) == TRUE){
+			if (verify_restore_quit(1) == true){
 				FSSpec* file = nav_get_party();
 				file_to_load = *file;
 				load_party(file_to_load);
@@ -558,9 +558,9 @@ void handle_file_menu(int item_hit)
 void handle_extra_menu(int item_hit)
 {
 	short i,j,choice;
-	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,TRUE,FALSE};
+	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,true,false};
 	
-	if (file_in_mem == FALSE) {
+	if (file_in_mem == false) {
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 	}
@@ -634,7 +634,7 @@ void handle_extra_menu(int item_hit)
 			break;
 			
 		case 13:
-			if (party_in_scen == FALSE) {
+			if (party_in_scen == false) {
 				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 			}
@@ -651,14 +651,14 @@ void handle_edit_menu(int item_hit)
 {
 	short choice,i,j,k;
 
-	if (file_in_mem == FALSE) {
+	if (file_in_mem == false) {
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
-	if (save_blocked == FALSE)
+	if (save_blocked == false)
 		if ((choice = FCD(904,0)) == 1)
 			return;
-			else save_blocked = TRUE;
+			else save_blocked = true;
 	switch(item_hit) {
 		case 1:
 			 display_alchemy();
@@ -666,15 +666,15 @@ void handle_edit_menu(int item_hit)
 		case 2: // all property
 			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG,0);
 			for (i = 0; i < 30; i++) {
-				univ.party.boats[i].property = FALSE;
-				univ.party.horses[i].property = FALSE;
+				univ.party.boats[i].property = false;
+				univ.party.horses[i].property = false;
 				}
 			break;
 		case 4: // edit day
 			edit_day();
 			break;
 		case 6: // ouit maps
-			if (party_in_scen == FALSE) {
+			if (party_in_scen == false) {
 				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 				}
@@ -685,7 +685,7 @@ void handle_edit_menu(int item_hit)
 						univ.out.maps[i][j][k] = 255;
 			break;
 		case 7: // town maps
-			if (party_in_scen == FALSE) {
+			if (party_in_scen == false) {
 				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
 				break;
 				}
@@ -755,11 +755,11 @@ void handle_edit_menu(int item_hit)
 //	i.reserved1 = 0;
 //	i.reserved2 = 0;
 //	i.item_properties = 0;
-//	if (s_item.identified == TRUE)
+//	if (s_item.identified == true)
 //		i.item_properties = i.item_properties | 1;
 //	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
 //		i.item_properties = i.item_properties | 16;
-//	if (s_item.magic == TRUE)
+//	if (s_item.magic == true)
 //		i.item_properties = i.item_properties | 4;
 //
 //	return i;
@@ -770,17 +770,17 @@ void handle_item_menu(int item_hit)
 	short choice;
 	cItemRec store_i;
 	
-	if (file_in_mem == FALSE) {
+	if (file_in_mem == false) {
 		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
 		return;
 		}
-	if (save_blocked == FALSE)
+	if (save_blocked == false)
 		if ((choice = FCD(904,0)) == 1)
 			return;
-			else save_blocked = TRUE;
+			else save_blocked = true;
 	store_i = item_list[item_hit];
 	store_i.item_properties = store_i.item_properties | 1;
-	give_to_pc(current_active_pc,store_i,FALSE);
+	give_to_pc(current_active_pc,store_i,false);
 	draw_items(1);
 }
 
@@ -820,7 +820,7 @@ void find_quickdraw() {
 			if (choice == 2)
 				ExitToShell();
 			else
-				diff_depth_ok = TRUE;
+				diff_depth_ok = true;
 		}
 	}
 	else  {
@@ -834,7 +834,7 @@ void set_pixel_depth() {
 	PixMapHandle screen_pixmap_handle;
 	OSErr err;
 	short choice;
-	static Boolean diff_depth_ok = FALSE;
+	static bool diff_depth_ok = false;
 	short pixel_depth;
 	
 	cur_device = GetGDevice();	
@@ -842,21 +842,21 @@ void set_pixel_depth() {
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
 	
-	if ((diff_depth_ok == FALSE) && ((pixel_depth <= 16) && (HasDepth(cur_device,16,1,1)) == 0)) {
+	if ((diff_depth_ok == false) && ((pixel_depth <= 16) && (HasDepth(cur_device,16,1,1)) == 0)) {
 		choice = choice_dialog(0,1070);
 		if (choice == 1)
 			ExitToShell();
 		if (choice == 2)
-			diff_depth_ok = TRUE;
+			diff_depth_ok = true;
 	}
 	
-	if ((pixel_depth != 16) && (diff_depth_ok == TRUE))
+	if ((pixel_depth != 16) && (diff_depth_ok == true))
 		return;
 	
 	if (pixel_depth < 16) {
 		choice = choice_dialog(0,1071);
 		if (choice == 3)
-			diff_depth_ok = TRUE;
+			diff_depth_ok = true;
 		if (choice == 2)
 			ExitToShell();
 		if (choice == 1) {
@@ -882,9 +882,9 @@ void check_sys_7()
 	long response;
 	err = Gestalt(gestaltSystemVersion, &response);
 	if ((err == noErr) && (response >= 0x0700))
-		sys_7_avail = TRUE;
+		sys_7_avail = true;
 	else 
-		sys_7_avail = FALSE;
+		sys_7_avail = false;
 }
 
 pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
@@ -911,9 +911,9 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 						sizeof(myFSS),&actualSize);
 			if (myErr == noErr) {
 				do_apple_event_open(myFSS);
-				if ((in_startup_mode == FALSE) && (startup_loaded == TRUE)) 
+				if ((in_startup_mode == false) && (startup_loaded == true)) 
 					end_startup();
-				if (in_startup_mode == FALSE) {
+				if (in_startup_mode == false) {
 					post_load();
 					}
 				}
@@ -932,20 +932,20 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 	return noErr;
 }
 
-Boolean verify_restore_quit(short mode)
+bool verify_restore_quit(short mode)
 //short mode; // 0 - quit  1- restore
 {
 	short choice;
 
-	if (file_in_mem == FALSE)
-		return TRUE;
+	if (file_in_mem == false)
+		return true;
 	choice = FCD(1066 + mode,0);
 	if (choice == 3)
-		return FALSE;
+		return false;
 	if (choice == 2)
-		return TRUE;
+		return true;
 	save_party(file_to_load);
-	return TRUE;
+	return true;
 }
 
 void set_up_apple_events()
@@ -953,25 +953,25 @@ void set_up_apple_events()
 	OSErr myErr;
 
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenApplication,
-		(AEEventHandlerProcPtr) handle_open_app, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_open_app, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenDocuments,
-		(AEEventHandlerProcPtr) handle_open_doc, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_open_doc, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEQuitApplication,
-		(AEEventHandlerProcPtr) handle_quit, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_quit, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 }
  
-//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
+//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
 //{	
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
@@ -988,14 +988,14 @@ void set_up_apple_events()
 //			w = GetDialogWindow(hDlg);
 //			updateRgn = NewRgn();
 //			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-//			if (EmptyRgn(updateRgn) == TRUE) {
-//				return TRUE;
+//			if (EmptyRgn(updateRgn) == true) {
+//				return true;
 //			}
 //			BeginUpdate(GetDialogWindow(hDlg));
 //			cd_redraw(hDlg);
 //			EndUpdate(GetDialogWindow(hDlg));
 //			DrawDialog(hDlg);
-//			return TRUE;
+//			return true;
 //			break;
 //		
 //		case keyDown:

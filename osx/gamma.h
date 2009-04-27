@@ -75,13 +75,13 @@ typedef struct globalGammas {
 // * ****************************************************************************** *
 // Function Prototypes
 
-Boolean IsGammaAvailable(void);
-Boolean IsOneGammaAvailable(GDHandle theGDevice);
+bool IsGammaAvailable(void);
+bool IsOneGammaAvailable(GDHandle theGDevice);
 
 //	These routines help you determine whether you can use the Gamma Table Utils
 //		on the current machine. The first checks all attached monitors, and the 
-//		second just checks the indicated monitor. Each returns TRUE if you can 
-//		use the functions, or FALSE if you can't. ¥ Note: Before calling any other
+//		second just checks the indicated monitor. Each returns true if you can 
+//		use the functions, or false if you can't. ¥ Note: Before calling any other
 //		Gamma Table function below, use this function to see if you are allowed.
 
 // * ****************************************************************************** *

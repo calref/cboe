@@ -69,13 +69,13 @@ char numchannel = 3;
 char channel;
 short snd_played[4] = {-1,-1,-1,-1};
 
-Boolean sound_going(short which_s) {
+bool sound_going(short which_s) {
 	short i;
 	
 	for (i = 0; i < 4; i++)
 		if (snd_played[i] == which_s)
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand) {
@@ -91,11 +91,11 @@ pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand
 			channel = i;
 	which_sound = snd_played[channel];
 	snd_played[channel] = -1;
-	//if (in_startup_mode == FALSE)
+	//if (in_startup_mode == false)
 	//	print_num(0,snd_played[channel],channel);
-  	if ((sound_going(which_sound) == FALSE) && (load_when_play[which_sound] == TRUE)) {
+  	if ((sound_going(which_sound) == false) && (load_when_play[which_sound] == true)) {
 	  	HUnlock(sound_handles[which_sound]);
-		//if (in_startup_mode == FALSE)
+		//if (in_startup_mode == false)
 		//	print_num(99,snd_played[channel],channel);
 	}
 	
@@ -175,7 +175,7 @@ void play_sound(short which, short how_many_times){  // if < 0, play asynch
 #ifdef EXILE_BIG_GUNS
 		theCommand.param2 = 0;
 #endif
-		SndDoCommand(chan[channel],&theCommand,TRUE);
+		SndDoCommand(chan[channel],&theCommand,true);
 	}
 	else SysBeep(20);
 	if (which < 0)
@@ -197,5 +197,5 @@ void clear_sound_memory(){
 
 void flip_sound()
 {
-	play_sounds = (play_sounds == TRUE) ? FALSE : TRUE;
+	play_sounds = (play_sounds == true) ? false : true;
 }

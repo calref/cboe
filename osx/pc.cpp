@@ -77,18 +77,18 @@ cPlayer::cPlayer(){
 	for (i = 0; i < 24; i++)
 		items[i] = cItemRec();
 	for (i = 0; i < 24; i++)
-		equip[i] = FALSE;
+		equip[i] = false;
 	
  	for (i = 0; i < 62; i++) {
-		priest_spells[i] = (i < 30) ? TRUE : FALSE;
-		mage_spells[i] = (i < 30) ? TRUE : FALSE;
+		priest_spells[i] = (i < 30) ? true : false;
+		mage_spells[i] = (i < 30) ? true : false;
 	}
 	which_graphic = 0;
 	weap_poisoned = 24;
 	
 	for (i = 0; i < 15; i++) {
-		advan[i] = FALSE;
-		traits[i] = FALSE;	
+		advan[i] = false;
+		traits[i] = false;	
 	}		
 	race = 0;
 	exp_adj = 100;
@@ -133,19 +133,19 @@ cPlayer::cPlayer(long key,short slot){
 		for (i = 0; i < 24; i++)
 			items[i] = cItemRec();
 		for (i = 0; i < 24; i++)
-			equip[i] = FALSE;
+			equip[i] = false;
 		
 		for (i = 0; i < 62; i++) {
-			priest_spells[i] = TRUE;
-			mage_spells[i] = TRUE;
+			priest_spells[i] = true;
+			mage_spells[i] = true;
 		}
 		//which_graphic = num * 3 + 1;	// 1, 4, 7, 10, 13, 16
 		which_graphic = slot + 4;		// 4, 5, 6, 7,  8,  9
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
 		for (i = 0; i < 15; i++) {
-			advan[i] = FALSE;
-			traits[i] = FALSE;	
+			advan[i] = false;
+			traits[i] = false;	
 		}		
 		
 		race = 0;
@@ -209,16 +209,16 @@ cPlayer::cPlayer(long key,short slot){
 		for (i = 0; i < 24; i++)
 			items[i] = cItemRec();
 		for (i = 0; i < 24; i++)
-			equip[i] = FALSE;
+			equip[i] = false;
 		cur_sp = pc_sp[slot]; 
 		max_sp = pc_sp[slot]; 
 		for (i = 0; i < 62; i++) {
-			priest_spells[i] = (i < 30) ? TRUE : FALSE;
-			mage_spells[i] = (i < 30) ? TRUE : FALSE;
+			priest_spells[i] = (i < 30) ? true : false;
+			mage_spells[i] = (i < 30) ? true : false;
 		}
 		for (i = 0; i < 15; i++) {
 			traits[i] = pc_t[slot][i];
-			advan[i] = FALSE;
+			advan[i] = false;
 		}
 		
 		race = pc_race[slot];

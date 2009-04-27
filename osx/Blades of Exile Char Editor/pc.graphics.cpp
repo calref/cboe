@@ -27,12 +27,12 @@
 extern cUniverse univ;
 
 extern WindowPtr	mainPtr;
-extern Boolean play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
+extern bool play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
 
 extern short store_flags[3];
 extern GWorldPtr button_num_gworld;
 extern short current_active_pc;
-//extern Boolean ed_reg;
+//extern bool ed_reg;
 
 //extern long register_flag,stored_key;
 //extern long ed_flag,ed_key;
@@ -66,7 +66,7 @@ short store_which_string_dlog;
 short store_page_on,store_num_i;
 Rect ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
-Boolean init_once = FALSE;
+bool init_once = false;
 GWorldPtr spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 
 void init_dialogs(){
@@ -100,8 +100,8 @@ void init_main_buttons()
 	Str255 fn3 = "\pPalatino";
 	Rect mask_rect = {0,0,396,308},r,base_rect;
 	
-	if (init_once == FALSE) {
-		init_once = TRUE;
+	if (init_once == false) {
+		init_once = true;
 		GetFNum(fn1,&geneva_font_num);
 		if (geneva_font_num == 0)
 			GetFNum(fn3,&geneva_font_num);
@@ -338,21 +338,21 @@ void draw_main_screen()
 	dest_rect.left += 60;
 	//Off0setRect(&dest_rect,0,45);
 	OffsetRect(&dest_rect,0,21);
-	if (file_in_mem == TRUE)
+	if (file_in_mem == true)
 		char_win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10,true);
 	else
 		char_win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10,true);
-	if(file_in_mem == TRUE && party_in_scen==TRUE && scen_items_loaded==FALSE){
+	if(file_in_mem == true && party_in_scen==true && scen_items_loaded==false){
 		OffsetRect(&dest_rect,200,0);
 		char_win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,10,true);
 		OffsetRect(&dest_rect,-200,0);
 	}
 	OffsetRect(&dest_rect,0,12);
-	if (file_in_mem == TRUE)
+	if (file_in_mem == true)
 		char_win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10,true);
 	TextSize(12);
 	OffsetRect(&dest_rect,0,16);
-	if (file_in_mem == TRUE)
+	if (file_in_mem == true)
 		char_win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10,true);
 	TextSize(10);
 	TextFace(0);
@@ -417,7 +417,7 @@ GWorldPtr load_pict(short picture_to_get)
 	
 	offPMHandle = GetGWorldPixMap (myGWorld);
 	good = LockPixels (offPMHandle);
-	if (good == FALSE)  {
+	if (good == false)  {
 		SysBeep(50); }
 	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
 	DrawPicture (current_pic_handle, &pic_rect);
@@ -437,7 +437,7 @@ void draw_items(short clear_first)
 	Str255 to_draw;
 	Rect d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 
-	if (file_in_mem == FALSE)  // save file loaded
+	if (file_in_mem == false)  // save file loaded
 		return;
 
 	dest_rect = item_string_rects[0][0];
@@ -504,7 +504,7 @@ void display_party(short mode,short clear_first)
 	Rect to_rect,from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
 	
 	// lots of stuff is global. Like ...
-	// Boolean file_in_mem
+	// bool file_in_mem
 	// short current_active_pc
 	// pc_record_type ADVEN[6]
 	if (clear_first == 1) { // first erase what's already there
@@ -516,7 +516,7 @@ void display_party(short mode,short clear_first)
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re-draw the frame
 	}
 	
-	if (file_in_mem == FALSE) { // what if no party loaded?
+	if (file_in_mem == false) { // what if no party loaded?
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
@@ -525,7 +525,7 @@ void display_party(short mode,short clear_first)
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
-		if (party_in_scen == FALSE)
+		if (party_in_scen == false)
 			char_win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10,true);
 		else
 			char_win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10,true);
@@ -1000,7 +1000,7 @@ void add_string_to_buf(char *str) {
 //	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 //	short text_len[257];
 //	short total_width = 0;
-//	Boolean end_loop,force_skip = FALSE;
+//	bool end_loop,force_skip = false;
 //	KeyMap key_state;
 //	long dummy3;
 //	RgnHandle current_clip;
@@ -1043,7 +1043,7 @@ void add_string_to_buf(char *str) {
 //				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
 //				  	if (c_str[i] == '|') {
 //				  		c_str[i] = ' ';
-//				  		force_skip = TRUE;
+//				  		force_skip = true;
 //					}
 //					sprintf((char *)str_to_draw,"%s",(char *)null_s);
 //					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
@@ -1053,8 +1053,8 @@ void add_string_to_buf(char *str) {
 //					on_what_line++;
 //					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 //					last_line_break = last_word_break;
-//					if (force_skip == TRUE) {
-//						force_skip = FALSE;
+//					if (force_skip == true) {
+//						force_skip = false;
 //						i++;
 //						last_line_break++;
 //						last_word_break++;
@@ -1099,7 +1099,7 @@ void add_string_to_buf(char *str) {
 //void display_strings_event_filter (short item_hit)
 //{
 //	short i;
-//	Boolean had1 = FALSE, had2 = FALSE;
+//	bool had1 = false, had2 = false;
 //	
 //	switch (item_hit) {
 //		case 1:
@@ -1116,7 +1116,7 @@ void record_display_strings(){}
 //	short item_hit;
 //	Str255 text;
 //	location view_loc;
-//	Boolean sound_done = FALSE;
+//	bool sound_done = false;
 //
 //	make_cursor_sword();
 //	

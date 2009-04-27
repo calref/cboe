@@ -22,6 +22,6 @@ bool check_p2 (short pword);
 bool check_p3 (short pword);
 void reset_pwd();
 void start_data_dump();
-Boolean import_check_p (short pword);
+bool import_check_p (short pword);
 void scen_text_dump();
 

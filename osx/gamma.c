@@ -177,7 +177,7 @@ void FadeDevice( 	GDHandle fadeGDevice,
 }
 
 // Let's be optimistic for now and assume it is. If it breaks later, I'll try to work out how to do it properly.
-Boolean IsGammaAvailable() {
+bool IsGammaAvailable() {
 /*	GDHandle theGDevice;
 
 	if (NGetTrapAddress(kGetDeviceListTrapNum, ToolTrap) ==
@@ -193,7 +193,7 @@ Boolean IsGammaAvailable() {
 // * ****************************************************************************** *
 // * ****************************************************************************** *
 
-Boolean IsOneGammaAvailable(GDHandle theGDevice) {
+bool IsOneGammaAvailable(GDHandle theGDevice) {
 	/*
 	if (NGetTrapAddress(kGetDeviceListTrapNum, ToolTrap) ==
 			NGetTrapAddress(_Unimplemented, ToolTrap)) return(0);

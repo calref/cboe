@@ -241,7 +241,7 @@ enum eScenMode {
 //	} creature_list_type;
 
 //typedef struct {
-//	Boolean exists;
+//	bool exists;
 //	short direction;
 //	cOutdoors::cWandering what_monst;
 //	location which_sector,m_loc;	

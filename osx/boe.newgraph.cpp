@@ -48,7 +48,7 @@ extern PixPatHandle	bg[];
 extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
 extern eGameMode overall_mode;
-extern Boolean play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
+extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern GWorldPtr fields_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
 //extern party_record_type party;
 //extern pc_record_type ADVEN[6];
@@ -81,7 +81,7 @@ extern word_rect_type store_words[50];
 extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic,current_pc;
 extern GWorldPtr talk_gworld;
-extern Boolean talk_end_forced;
+extern bool talk_end_forced;
 extern Str255 old_str1,old_str2,one_back1,one_back2;
 extern word_rect_type preset_words[9];
 extern Rect talk_area_rect, word_place_rect,talk_help_rect;
@@ -119,7 +119,7 @@ typedef struct {
 	} store_boom_type;
 store_missile_type store_missiles[30];
 store_boom_type store_booms[30];
-Boolean have_missile,have_boom;
+bool have_missile,have_boom;
 Rect explode_place_rect[30];
 
 
@@ -148,7 +148,7 @@ void apply_unseen_mask()
 	GrafPtr old_port;
 	short i,j,k,l;
 	ConstPatternParam c;
-	Boolean need_bother = FALSE;
+	bool need_bother = false;
 	
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
@@ -161,8 +161,8 @@ void apply_unseen_mask()
 	for (i = 0; i < 11; i++)
 		for (j = 0; j < 11; j++) 
 			if (unexplored_area[i + 1][j + 1] == 1)
-				need_bother = TRUE;
-	if (need_bother == FALSE)
+				need_bother = true;
+	if (need_bother == false)
 		return;
 				
 	GetPort(&old_port);
@@ -203,7 +203,7 @@ void apply_light_mask()
 	Rect temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	Rect big_to = {13,13,337,265};
 	short i,j;
-	Boolean is_dark = FALSE,same_mask = TRUE;
+	bool is_dark = false,same_mask = true;
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	if (is_out())
@@ -223,8 +223,8 @@ void apply_light_mask()
 	// Process the light array
 	for (i = 2; i < 11; i++)
 		for (j = 2; j < 11; j++) 
-			if (light_area[i][j] == 0) is_dark = TRUE;
-	if (is_dark == FALSE) { 
+			if (light_area[i][j] == 0) is_dark = true;
+	if (is_dark == false) { 
 		for (i = 2; i < 11; i++)
 			for (j = 2; j < 11; j++) 
 				last_light_mask[i][j] = 0;
@@ -258,9 +258,9 @@ void apply_light_mask()
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) 
 			if (last_light_mask[i][j] != light_area[i][j])
-				same_mask = FALSE;
+				same_mask = false;
 	
-	if (same_mask == TRUE) {
+	if (same_mask == true) {
 		PaintRgn(dark_mask_region);
 		SetPort(old_port);
 		return;
@@ -302,9 +302,9 @@ void start_missile_anim()
 {
 	short i;
 	
-	if (boom_anim_active == TRUE)
+	if (boom_anim_active == true)
 		return;
-	boom_anim_active = TRUE;
+	boom_anim_active = true;
 	for (i = 0; i < 30; i++) {
 		store_missiles[i].missile_type = -1;
 		store_booms[i].boom_type = -1;
@@ -313,20 +313,20 @@ void start_missile_anim()
 		pc_marked_damage[i] = 0;
 	for (i = 0; i < T_M; i++) 
 		monst_marked_damage[i] = 0;
-	have_missile = FALSE;
-	have_boom = FALSE;
+	have_missile = false;
+	have_boom = false;
 }
 
 void end_missile_anim() 
 {
-	boom_anim_active = FALSE;
+	boom_anim_active = false;
 	}
 	
 void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj)
 {
 	short i;
 	
-	if (boom_anim_active == FALSE)
+	if (boom_anim_active == false)
 		return;
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
@@ -336,7 +336,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 			return;
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type < 0) {
-			have_missile = TRUE;
+			have_missile = true;
 			store_missiles[i].dest = dest;
 			store_missiles[i].missile_type =missile_type;
 			store_missiles[i].path_type =path_type;
@@ -348,7 +348,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 
 void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len)
 {
-//	if ((cartoon_happening == TRUE) && (anim_step < 140))
+//	if ((cartoon_happening == true) && (anim_step < 140))
 //		return;
 	start_missile_anim();
 	add_missile(fire_to,miss_type,path, x_adj, y_adj);
@@ -359,7 +359,7 @@ void run_a_missile(location from,location fire_to,short miss_type,short path,sho
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
 {
 
-//	if ((cartoon_happening == TRUE) && (anim_step < 140))
+//	if ((cartoon_happening == true) && (anim_step < 140))
 //		return;
 	if ((type < 0) || (type > 2))
 		return;
@@ -387,7 +387,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
-	if (boom_anim_active == FALSE)
+	if (boom_anim_active == false)
 		return;
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
@@ -399,7 +399,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 			}
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type < 0) {
-			have_boom = TRUE;
+			have_boom = true;
 			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
 			store_booms[i].dest = dest;
 			store_booms[i].val_to_place = val_to_place;
@@ -424,8 +424,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	GWorldPtr temp_gworld;
 	GrafPtr old_port;
 	
-	if ((have_missile == FALSE) || (boom_anim_active == FALSE)) {
-		boom_anim_active = FALSE;
+	if ((have_missile == false) || (boom_anim_active == false)) {
+		boom_anim_active = false;
 		return;
 		}
 	
@@ -436,11 +436,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == TRUE) && (store_anim_type == 0)) {
+	if ((in_startup_mode == true) && (store_anim_type == 0)) {
 		current_terrain_ul.h = 306;
 		current_terrain_ul.v = 5;
 		}
-		else if ((cartoon_happening == TRUE) && (store_anim_type > 0)) {
+		else if ((cartoon_happening == true) && (store_anim_type > 0)) {
 			current_terrain_ul = store_anim_ul;
 			}
 			else {
@@ -611,8 +611,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 	GrafPtr old_port;
 	short boom_type_sound[3] = {5,10,53};
 	
-	if ((have_boom == FALSE) || (boom_anim_active == FALSE)) {
-		boom_anim_active = FALSE;
+	if ((have_boom == false) || (boom_anim_active == false)) {
+		boom_anim_active = false;
 		return;
 		}
 	
@@ -623,11 +623,11 @@ void do_explosion_anim(short sound_num,short special_draw)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == TRUE) && (store_anim_type == 0)) {
+	if ((in_startup_mode == true) && (store_anim_type == 0)) {
 		current_terrain_ul.h = 306;
 		current_terrain_ul.v = 5;
 		}
-		else if ((cartoon_happening == TRUE) && (store_anim_type > 0)) {
+		else if ((cartoon_happening == true) && (store_anim_type > 0)) {
 			current_terrain_ul = store_anim_ul;
 			}
 			else {
@@ -678,7 +678,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 			Rect tempRect2;
 			GetPortBounds(terrain_screen_gworld,&tempRect2);
 			SectRect(&explode_place_rect[i],&tempRect2,&temp_rect);
-			if (EqualRect(&temp_rect,&explode_place_rect[i]) == FALSE) {
+			if (EqualRect(&temp_rect,&explode_place_rect[i]) == false) {
 				store_booms[i].boom_type = -1;
 				}
 			
@@ -763,7 +763,7 @@ void click_shop_rect(Rect area_rect)
 { 
 	
 	draw_shop_graphics(1,area_rect);
-	if (play_sounds == TRUE)
+	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
 	draw_shop_graphics(0,area_rect);
@@ -819,7 +819,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	if (draw_mode == 0) { 
 		SetPort(GetWindowPort(mainPtr));
 		i = faces[store_shop_type];
-		draw_dialog_graphic( talk_gworld, face_rect, i, PICT_TALK, FALSE,1);
+		draw_dialog_graphic( talk_gworld, face_rect, i, PICT_TALK, false,1);
 		SetPort( talk_gworld);
 	}
 
@@ -874,38 +874,38 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 			case 0: case 1: case 2: case 3: case 4: 
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM, FALSE,1);//// all graphic nums
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM, false,1);//// all graphic nums
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
 			case 6:
 				//base_item = food_types[what_chosen - 600];
-				//draw_dialog_graphic( talk_gworld, shopping_rects[i][2],633, FALSE,1);
+				//draw_dialog_graphic( talk_gworld, shopping_rects[i][2],633, false,1);
 				//strcpy(cur_name,base_item.full_name);
 				//get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 7:
 				what_chosen -= 700;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],99,PICT_ITEM, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],99,PICT_ITEM, false,1);
 				strcpy(cur_name,heal_types[what_chosen]);
 				sprintf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");		
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -914,7 +914,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, FALSE,1);
+				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
@@ -971,7 +971,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,Rect c_rect)
 {
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
-	if (play_sounds == TRUE)
+	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
@@ -1042,15 +1042,15 @@ cItemRec store_alchemy(short which_s)
 
 void get_item_interesting_string(cItemRec item,char *message)
 {
-	if (item.is_property() == TRUE) {
+	if (item.is_property() == true) {
 		sprintf(message,"Not yours.");
 		return;
 		}
-	if (item.is_ident() == FALSE) {
+	if (item.is_ident() == false) {
 		sprintf(message,"");
 		return;
 		}
-	if (item.is_cursed() == TRUE) {
+	if (item.is_cursed() == true) {
 		sprintf(message,"Cursed item.");
 		return;
 		}
@@ -1102,7 +1102,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	Str255 p_str,str,str_to_draw,str_to_draw2;
 	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
-	Boolean force_skip = FALSE;
+	bool force_skip = false;
 	short face_to_draw;
 	
 	RGBColor c[7] = {{0,0,0},{0,0,32767},{0,0,14535},{0,0,26623},{0,0,59391},
@@ -1146,13 +1146,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PICT_CUSTOM + PICT_TALK, FALSE,1);
+			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PICT_CUSTOM + PICT_TALK, false,1);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 				if (face_to_draw <= 0)
-					draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), FALSE,1);
-				else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PICT_MONST, FALSE,1);
+					draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), false,1);
+				else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PICT_MONST, false,1);
 			}
 		SetPort( talk_gworld);
 		}
@@ -1204,7 +1204,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
-			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
+			 && (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
@@ -1246,7 +1246,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-		 		force_skip = TRUE;
+		 		force_skip = true;
 	 			}
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
@@ -1259,8 +1259,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == TRUE) {
-				force_skip = FALSE;
+			if (force_skip == true) {
+				force_skip = false;
 				i++;
 				last_line_break++;
 				last_word_break++;
@@ -1296,7 +1296,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
-			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
+			 && (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
@@ -1336,7 +1336,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-		 		force_skip = TRUE;
+		 		force_skip = true;
 	 			}
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
@@ -1349,8 +1349,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == TRUE) {
-				force_skip = FALSE;
+			if (force_skip == true) {
+				force_skip = false;
 				i++;
 				last_line_break++;
 				last_word_break++;

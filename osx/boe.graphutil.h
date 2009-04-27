@@ -17,10 +17,10 @@ Rect get_monster_rect (unsigned char type_wanted,short mode) ;
 Rect get_monster_template_rect (unsigned char type_wanted,short mode,short which_part) ;
 Rect get_item_template_rect (short type_wanted);
 unsigned char get_t_t(char x,char y);  // returns terrain type at where
-Boolean is_fluid(unsigned char ter_type);
-Boolean is_shore(unsigned char ter_type);
-Boolean is_wall(unsigned char ter_type);
-Boolean is_ground(unsigned char ter_type);
+bool is_fluid(unsigned char ter_type);
+bool is_shore(unsigned char ter_type);
+bool is_wall(unsigned char ter_type);
+bool is_ground(unsigned char ter_type);
 void make_town_trim(short mode);
 void make_out_trim();
 char add_trim_to_array(location where,unsigned char ter_type);

@@ -171,7 +171,7 @@ void Initialize(void)
 void display_strings_event_filter (short item_hit)////
 {
 	short i;
-	Boolean had1 = FALSE, had2 = FALSE;
+	bool had1 = false, had2 = false;
 	
 	switch (item_hit) {
 		case 1:

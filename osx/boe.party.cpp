@@ -93,19 +93,19 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
 							0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}};
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-Boolean get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
-Boolean get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
+bool get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
+bool get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
 short combat_percent[20] = {150,120,100,90,80,80,80,70,70,70,
 								70,70,67,62,57,52,47,42,40,40};
 
 short town_spell,who_cast,which_pc_displayed;
-Boolean spell_button_active[90];
+bool spell_button_active[90];
 extern cItemRec start_items[6];
 
 Str255 empty_string = "                                           ";
 
 //extern stored_town_maps_type town_maps;
-extern Boolean fast_bang;
+extern bool fast_bang;
 //extern party_record_type	party;
 //extern pc_record_type ADVEN[6];
 extern short stat_window,current_pc,town_size[3],town_type;
@@ -116,7 +116,7 @@ extern eGameMode overall_mode;
 extern std::string progDir;
 extern location pc_pos[6],center;
 extern WindowPtr mainPtr;
-extern Boolean in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
+extern bool in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 //extern stored_items_list_type stored_items[3];
 //extern CursHandle sword_curs;
 //extern setup_save_type setup_save;
@@ -158,12 +158,12 @@ char c_line[60];
 	short spell_index[38] = {38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,90,90,
 							54,55,56,57,58,59,60,61,90,90, 90,90,90,90,90,90,90,90};
 		// Says which buttons hit which spells on second spell page, 90 means no button
-	Boolean can_choose_caster;
+	bool can_choose_caster;
 
 // Variables for spending xp
-	Boolean talk_done = FALSE;
+	bool talk_done = false;
 	long val_for_text;
-	Boolean keep_change = FALSE;
+	bool keep_change = false;
 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 	long store_g;
 	short store_train_mode,store_train_pc;
@@ -197,8 +197,8 @@ void init_party(short mode)
 {
 	short i,j,k,l;
 		
-	cVehicle null_boat;// = {{0,0},{0,0},{0,0},200,FALSE};
-	cVehicle null_horse;// = {{0,0},{0,0},{0,0},200,FALSE};
+	cVehicle null_boat;// = {{0,0},{0,0},{0,0},200,false};
+	cVehicle null_horse;// = {{0,0},{0,0},{0,0},200,false};
 	
 	univ.party.age = 0;
 	univ.party.gold = 200;
@@ -224,7 +224,7 @@ void init_party(short mode)
 	for (i = 0; i < 4; i++)
 		univ.party.creature_save[i].which_town = 200;
 	for (i = 0; i < 10; i++)
-		 univ.party.out_c[i].exists = FALSE;
+		 univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
 			 univ.party.magic_store_items[i][j].variety = 0;
@@ -306,7 +306,7 @@ void init_party(short mode)
 					
 	// Default is save maps
 	PSD[SDF_NO_MAPS] = 0;
-	save_maps = TRUE;	
+	save_maps = true;	
 			
 
 	// NOT DEBUG
@@ -322,7 +322,7 @@ void init_party(short mode)
 void init_party_scen_data()
 {
 	short i,j,k,l;
-	Boolean stored_item = FALSE;
+	bool stored_item = false;
 	short store_help;
 	
 	univ.party.age = 0;
@@ -346,15 +346,15 @@ void init_party_scen_data()
 		univ.party.horses[i] = scenario.horses[i];
 	for (i = 0; i < 30; i++) {
 		if ((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
-			if (univ.party.boats[i].exists == FALSE) {
+			if (univ.party.boats[i].exists == false) {
 				univ.party.boats[i] = scenario.boats[i];
-				univ.party.boats[i].exists = TRUE;
+				univ.party.boats[i].exists = true;
 				}
 			}
 		if ((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
-			if (univ.party.horses[i].exists == FALSE) {
+			if (univ.party.horses[i].exists == false) {
 				univ.party.horses[i] = scenario.horses[i];
-				univ.party.horses[i].exists = TRUE;
+				univ.party.horses[i].exists = true;
 				}
 			}
 		}
@@ -363,7 +363,7 @@ void init_party_scen_data()
 	for (i = 0; i < 4; i++)
 		univ.party.creature_save[i].which_town = 200;
 	for (i = 0; i < 10; i++)
-		 univ.party.out_c[i].exists = FALSE;
+		 univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
 			 univ.party.magic_store_items[i][j].variety = 0;
@@ -407,13 +407,13 @@ void init_party_scen_data()
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 			if (univ.party.stored_items[i][j].variety != 0)
-				stored_item = TRUE;
-	if (stored_item == TRUE)
+				stored_item = true;
+	if (stored_item == true)
 		if (FCD(911,0) == 1) {
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 					if (univ.party.stored_items[i][j].variety != 0)
-						if (!give_to_party(univ.party.stored_items[i][j],FALSE)) {
+						if (!give_to_party(univ.party.stored_items[i][j],false)) {
 							i = 20; j = NUM_TOWN_ITEMS + 1;
 							}
 			}
@@ -442,7 +442,7 @@ void put_party_in_scen(string scen_name)
 	short i,j;
 	Str255 strs[6] = {"","","","","",""};
 	short buttons[3] = {-1,-1,-1};
-	Boolean item_took = FALSE;
+	bool item_took = false;
 	
 	for (j = 0; j < 6; j++)
 	 	for (i = 0; i < 15; i++)
@@ -458,18 +458,18 @@ void put_party_in_scen(string scen_name)
 			ADVEN[j].items[i].special_class = 0;
 			if (ADVEN[j].items[i].graphic_num >= 150) {
 				take_item(j,i + 30); // strip away special items
-				item_took = TRUE;
+				item_took = true;
 				}
 			if (ADVEN[j].items[i].ability == 119) {
 				take_item(j,i + 30); // strip away summoning items
-				item_took = TRUE;
+				item_took = true;
 				}
 			if (ADVEN[j].items[i].ability == 120) {
 				take_item(j,i + 30); // strip away summoning items
-				item_took = TRUE;
+				item_took = true;
 				}
 			}
-	if (item_took == TRUE)
+	if (item_took == true)
 		FCD(910,0);
 	univ.party.age = 0;
 	for (i = 0; i < 200; i++)
@@ -496,7 +496,7 @@ void put_party_in_scen(string scen_name)
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();
-	in_startup_mode = FALSE;
+	in_startup_mode = false;
 	
 	set_up_ter_pics();
 	
@@ -538,10 +538,10 @@ void put_party_in_scen(string scen_name)
 		univ.party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
 }
 
-Boolean create_pc(short spot,short parent_num)
+bool create_pc(short spot,short parent_num)
 //spot; // if spot is 6, find one
 {
-	Boolean still_ok = TRUE;
+	bool still_ok = true;
 
 	if (spot == 6) {
 		for (spot = 0; spot < 6; spot++)
@@ -549,7 +549,7 @@ Boolean create_pc(short spot,short parent_num)
 				break;
 		}
 	if (spot == 6)
-		return FALSE;
+		return false;
 
 	ADVEN[spot] = cPlayer();
 
@@ -559,8 +559,8 @@ Boolean create_pc(short spot,short parent_num)
 		cd_initial_draw(989);
 	
 	still_ok = spend_xp(spot,0,parent_num);
-	if (still_ok == FALSE)
-		return FALSE;
+	if (still_ok == false)
+		return false;
 	ADVEN[spot].cur_health = ADVEN[spot].max_health;
 	ADVEN[spot].cur_sp = ADVEN[spot].max_sp;
 	if (parent_num != 0)
@@ -574,11 +574,11 @@ Boolean create_pc(short spot,short parent_num)
 
 	ADVEN[spot].main_status = MAIN_STATUS_ALIVE;
 	
-	if (in_startup_mode == FALSE) {
+	if (in_startup_mode == false) {
 			ADVEN[spot].items[0] = start_items[ADVEN[spot].race * 2];
-			ADVEN[spot].equip[0] = TRUE;
+			ADVEN[spot].equip[0] = true;
 			ADVEN[spot].items[1] = start_items[ADVEN[spot].race * 2 + 1];
-			ADVEN[spot].equip[1] = TRUE;
+			ADVEN[spot].equip[1] = true;
 
 			// Do stat adjs for selected race.
 			if (ADVEN[spot].race == 1)
@@ -592,15 +592,15 @@ Boolean create_pc(short spot,short parent_num)
 			}
 	
 	update_pc_graphics();
-	return TRUE;
+	return true;
 }
 
-Boolean take_sp(short pc_num,short amt)
+bool take_sp(short pc_num,short amt)
 {
 	if (ADVEN[pc_num].cur_sp < amt)
-		return FALSE;
+		return false;
 	ADVEN[pc_num].cur_sp -= amt;
-	return TRUE;
+	return true;
 }
 
 
@@ -704,10 +704,10 @@ void disease_pc(short which_pc,short how_much)
 		}
 	if ((level = get_prot_level(which_pc,62)) > 0)////
 		how_much -= level / 2;
-	if ((ADVEN[which_pc].traits[12] == TRUE) && 
+	if ((ADVEN[which_pc].traits[12] == true) && 
 		(how_much > 1))
 			how_much++;
-	if ((ADVEN[which_pc].traits[12] == TRUE) && 
+	if ((ADVEN[which_pc].traits[12] == true) && 
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 			how_much++;
 	if (ADVEN[which_pc].main_status == 1) {
@@ -1017,7 +1017,7 @@ void do_xp_draw()
 void spend_xp_event_filter (short item_hit)
 {
 	short mode,pc_num;
-	Boolean talk_done = FALSE;
+	bool talk_done = false;
 
 	mode = store_train_mode;
 	pc_num = store_train_pc;
@@ -1027,7 +1027,7 @@ void spend_xp_event_filter (short item_hit)
 				if ((mode == 0) && (ADVEN[pc_num].main_status < MAIN_STATUS_ABSENT))
 					ADVEN[pc_num].main_status = MAIN_STATUS_ABSENT;
 				dialog_answer = 0;
-				talk_done = TRUE;
+				talk_done = true;
 				break;
 	
 			case 82:
@@ -1101,7 +1101,7 @@ void spend_xp_event_filter (short item_hit)
 			case 48:
 					do_xp_keep(pc_num,mode);
 					dialog_answer = 1;
-					talk_done = TRUE;
+					talk_done = true;
 				break;
 
 			case 49:
@@ -1188,7 +1188,7 @@ void spend_xp_event_filter (short item_hit)
 			}
 			
 	store_train_pc = pc_num;
-	if (talk_done == TRUE) {
+	if (talk_done == true) {
 		toast_dialog();
 		}
 }
@@ -1197,7 +1197,7 @@ void update_gold_skills()
 	cd_set_item_num(1010,47,((store_train_mode == 0) ? 0 : (short) store_g));
 	cd_set_item_num(1010,46,(short) store_skp);
 }
-Boolean spend_xp(short pc_num, short mode, short parent)
+bool spend_xp(short pc_num, short mode, short parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
@@ -1249,7 +1249,7 @@ short mage_lore_total()
 }
 
 
-Boolean poison_weapon( short pc_num, short how_much,short safe)
+bool poison_weapon( short pc_num, short how_much,short safe)
 //short safe; // 1 - always succeeds
 {
 	short i,weap = 24,p_level,r1;
@@ -1257,13 +1257,13 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 							91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	
 	for (i = 0; i < 24; i++)
-		if ((ADVEN[pc_num].equip[i] == TRUE) && (is_weapon(pc_num,i) == TRUE)) {
+		if ((ADVEN[pc_num].equip[i] == true) && (is_weapon(pc_num,i) == true)) {
 			weap = i;
 			i = 30;
 			}
 	if (weap == 24) {
 		add_string_to_buf("  No weapon equipped.       ");
-		return FALSE;
+		return false;
 		}
 		else {
 				p_level = how_much;
@@ -1287,18 +1287,18 @@ Boolean poison_weapon( short pc_num, short how_much,short safe)
 				ADVEN[pc_num].status[0] = max (ADVEN[pc_num].status[0],
 					p_level);
 
-				return TRUE;
+				return true;
 			}
 }
 
-Boolean is_weapon(short pc_num,short item)
+bool is_weapon(short pc_num,short item)
 {
 	if ((ADVEN[pc_num].items[item].variety  == 1) ||
 		(ADVEN[pc_num].items[item].variety  == 2) ||
 		(ADVEN[pc_num].items[item].variety  == 5) ||
 		(ADVEN[pc_num].items[item].variety  == 24))
-			return TRUE;
-			else return FALSE;
+			return true;
+			else return false;
 
 }
 
@@ -1313,10 +1313,10 @@ void cast_spell(short type,short situation)
 		return;
 		}
 		
-		if (spell_forced == FALSE)
+		if (spell_forced == false)
 			spell = pick_spell(6, type, situation);
 			else {
-				if (repeat_cast_ok(type) == FALSE)
+				if (repeat_cast_ok(type) == false)
 					return;
 				spell = (type == 0) ? store_mage : store_priest;
 				}
@@ -1331,7 +1331,7 @@ void cast_spell(short type,short situation)
 			}
 }
 
-Boolean repeat_cast_ok(short type)
+bool repeat_cast_ok(short type)
 {
 	short store_select,who_would_cast,what_spell;
 
@@ -1339,35 +1339,35 @@ Boolean repeat_cast_ok(short type)
 		who_would_cast = current_pc;
 		else if (overall_mode < MODE_TALK_TOWN)
 			who_would_cast = pc_casting;
-			else return FALSE;
+			else return false;
 
 	if (is_combat())
 		what_spell = pc_last_cast[type][who_would_cast];
 		else what_spell = (type == 0) ? store_mage : store_priest;
 
-				if (pc_can_cast_spell(who_would_cast,type,what_spell) == FALSE) {
+				if (pc_can_cast_spell(who_would_cast,type,what_spell) == false) {
 					add_string_to_buf("Repeat cast: Can't cast.");
-					return FALSE;
+					return false;
 					}
 				store_select = (type == 0) ? mage_need_select[what_spell] : 
 					priest_need_select[what_spell];
 				if ((store_select > 0) && (store_spell_target == 6)) {
 					add_string_to_buf("Repeat cast: No target stored.");
-					return FALSE;
+					return false;
 					}
 				if ((store_select == 2) &&
 					 ((ADVEN[store_spell_target].main_status == 0) ||
 						(ADVEN[store_spell_target].main_status > 4))) {
 					add_string_to_buf("Repeat cast: No target stored.");
-					return FALSE;
+					return false;
 					}
 				if ((store_select == 1) &&
 					 (ADVEN[store_spell_target].main_status != 1)) {
 					add_string_to_buf("Repeat cast: No target stored.");
-					return FALSE;
+					return false;
 					}
 
-	return TRUE;
+	return true;
 
 }
 
@@ -1375,7 +1375,7 @@ void give_party_spell(short which) ////
 //which; // 100 + x : priest spell x
 {
 	short i;
-	Boolean sound_done = FALSE;
+	bool sound_done = false;
 	char str[60];
 	
 	if ((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
@@ -1384,21 +1384,21 @@ void give_party_spell(short which) ////
 
 	if (which < 100)
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].mage_spells[which] == FALSE) {
-				ADVEN[i].mage_spells[which] = TRUE;
+			if (ADVEN[i].mage_spells[which] == false) {
+				ADVEN[i].mage_spells[which] = true;
 				if (ADVEN[i].main_status == 1)
 					sprintf((char *) str,"%s learns spell.",ADVEN[i].name);
 				give_help(41,0,0);
-				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);};
+				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
 	if (which >= 100)
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].priest_spells[which - 100] == FALSE) {
-				ADVEN[i].priest_spells[which - 100] = TRUE;
+			if (ADVEN[i].priest_spells[which - 100] == false) {
+				ADVEN[i].priest_spells[which - 100] = true;
 				if (ADVEN[i].main_status == 1)
 					sprintf((char *) str,"%s learns spell.",ADVEN[i].name);
 				give_help(41,0,0);
-				if (sound_done == FALSE) {sound_done = TRUE; play_sound(62);};
+				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
 }
 
@@ -1441,7 +1441,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			if (r1 < 0) break;
 			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(3,1,4) + adj;
-			if (summon_monster(r1,where,store,2) == FALSE)
+			if (summon_monster(r1,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
 			break;
 		case 26: // summon 1
@@ -1452,7 +1452,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(4,1,4) + adj;
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == FALSE)
+				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 43: // summon 2
@@ -1463,7 +1463,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(5,1,4) + adj;
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == FALSE)
+				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 58: // summon 3
@@ -1474,12 +1474,12 @@ void do_mage_spell(short pc_num,short spell_num)
 			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(7,1,4) + stat_adj(who_cast,2);
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == FALSE)
+				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 50:
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,2);
-			if (summon_monster(85,where,store,2) == FALSE)
+			if (summon_monster(85,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");		
 				else ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
 			break;
@@ -1621,7 +1621,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				r1 = r1 / 3;
 			sprintf ((char *) c_line, "  You gain %d food.   ",r1);
 			add_string_to_buf((char *) c_line);	
-			give_food(r1,TRUE);
+			give_food(r1,true);
 			break;
 			
 		case 8: // Ritual - Sanctify
@@ -1638,7 +1638,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			
 		case 15:
 			store = stat_adj(who_cast,2);
-			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == FALSE)
+			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == false)
 				add_string_to_buf("  Summon failed.");		
 				else ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
@@ -1648,24 +1648,24 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			for (i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + stat_adj(who_cast,2);
-				if (summon_monster((r2 == 1) ? 100 : 99,where,store,2 ) == FALSE)
+				if (summon_monster((r2 == 1) ? 100 : 99,where,store,2 ) == false)
 					add_string_to_buf("  Summon failed.");
 				}	
 			break;
 		case 43:
 			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
 			store = get_ran(2,1,4) + stat_adj(who_cast,2);
-			if (summon_monster(126,where,store,2) == FALSE)
+			if (summon_monster(126,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");	
 			for (i = 0; i < 4; i++)	{
 				store = get_ran(2,1,4) + stat_adj(who_cast,2);
-				if (summon_monster(125,where,store,2) == FALSE)
+				if (summon_monster(125,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");		
 				}
 			break;
 		case 50:
 			store = get_ran(6,1,4) + stat_adj(who_cast,2);
-			if (summon_monster(122,where,store,2) == FALSE)
+			if (summon_monster(122,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");		
 				else ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
@@ -1997,7 +1997,7 @@ void cast_town_spell(location where) ////
 				targ = monst_there(where);
 				if (targ < T_M) {
 					if (town_spell == 7) {
-						univ.party.m_seen[univ.town.monst.dudes[targ].number] = TRUE;
+						univ.party.m_seen[univ.town.monst.dudes[targ].number] = true;
 						adjust_monst_menu();
 						display_monst(0,&univ.town.monst.dudes[targ],0);
 						}
@@ -2008,7 +2008,7 @@ void cast_town_spell(location where) ////
 				
 			case 119: case 145: case 18:
 				add_string_to_buf("  You attempt to dispel.              ");
-				place_spell_pattern(current_pat,where,11,FALSE,7);
+				place_spell_pattern(current_pat,where,11,false,7);
 				break;
 			case 116: // Move M.
 				add_string_to_buf("  You blast the area.              ");
@@ -2124,7 +2124,7 @@ void crumble_wall(location where)
 {
 	unsigned char ter;
 	
-	if (loc_off_act_area(where) == TRUE)
+	if (loc_off_act_area(where) == true)
 		return;
 	ter = univ.town.town->terrain(where.x,where.y);
 	if (scenario.ter_types[ter].special == 7) {
@@ -2231,7 +2231,7 @@ void dispel_fields(short i,short j,short mode)
 		take_blade_wall(i,j);
 }
 
-Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
+bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 //short type;  // 0 - mage  1 - priest
 {
 	short level,store_w_cast;
@@ -2239,42 +2239,42 @@ Boolean pc_can_cast_spell(short pc_num,short type,short spell_num)
 	level = spell_level[spell_num];
 	
 	if ((spell_num < 0) || (spell_num > 61))
-		return FALSE;
+		return false;
 	if (ADVEN[pc_num].skills[9 + type] < level)
-		return FALSE;
+		return false;
 	if (ADVEN[pc_num].main_status != 1)
-		return FALSE;
+		return false;
 	if (ADVEN[pc_num].cur_sp < spell_cost[type][spell_num])
-		return FALSE;
-	if ((type == 0) && (ADVEN[pc_num].mage_spells[spell_num] == FALSE))
-		return FALSE;
-	if ((type == 1) && (ADVEN[pc_num].priest_spells[spell_num] == FALSE))
-		return FALSE;
+		return false;
+	if ((type == 0) && (ADVEN[pc_num].mage_spells[spell_num] == false))
+		return false;
+	if ((type == 1) && (ADVEN[pc_num].priest_spells[spell_num] == false))
+		return false;
 	if (ADVEN[pc_num].status[9] >= 8 - level)
-		return FALSE;	
+		return false;	
 	if (ADVEN[pc_num].status[12] != 0)
-		return FALSE;	
+		return false;	
 	if (ADVEN[pc_num].status[11] > 0)
-		return FALSE;	
+		return false;	
 	
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
 	store_w_cast = spell_w_cast[type][spell_num];
 		if (is_out()) {
 			if ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)) {
-						return FALSE;
+						return false;
 						}
 				}		
 		if (is_town()) {
 			if ((store_w_cast == 1) || (store_w_cast == 5)) {
-						return FALSE;
+						return false;
 						}
 				}
 		if (is_combat()) {
 			if ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5)) {
-						return FALSE;
+						return false;
 						}
 				}
-	return TRUE;
+	return true;
 }
 
 
@@ -2283,7 +2283,7 @@ void draw_caster_buttons()
 {
 	short i;
 	
-	if (can_choose_caster == FALSE) {
+	if (can_choose_caster == false) {
 		for (i = 0; i < 6; i++) {
 			if (i == pc_casting) {
 				cd_activate_item(1098,4 + i,1);
@@ -2295,7 +2295,7 @@ void draw_caster_buttons()
 		}
 		else {
 			for (i = 0; i < 6; i++) {
-				if (pc_can_cast_spell(i,store_situation,store_situation) == TRUE) {
+				if (pc_can_cast_spell(i,store_situation,store_situation) == true) {
 					cd_activate_item(1098,4 + i,1);
 					}
 					else {
@@ -2407,7 +2407,7 @@ void put_spell_led_buttons()
 			 ((store_situation == 1) && (store_priest == spell_for_this_button))) {
 				cd_set_led(1098,i + 37,2);
 			 }
-			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button) == TRUE) {
+			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button) == true) {
 				cd_set_led(1098,i + 37,1);
 				}
 				else {
@@ -2487,14 +2487,14 @@ void pick_spell_event_filter (short item_hit)
 	char *bad_target = " Can't cast on him/her.";
 	char *got_target = " Target selected.";
 	char *bad_spell = " Spell not available.";
-	Boolean spell_toast = FALSE,dialog_done = FALSE;
+	bool spell_toast = false,dialog_done = false;
 	
 		switch (item_hit) {
 			case 4: case 5: case 6: case 7: case 8: case 9: // pick caster
 			if (cd_get_active(1098,item_hit) == 1) {
 				pc_casting = item_hit - 4;
 				if (pc_can_cast_spell(pc_casting,store_situation,
-					((store_situation == 0) ? store_mage : store_priest)) == FALSE) {
+					((store_situation == 0) ? store_mage : store_priest)) == false) {
 						if (store_situation == 0)
 							store_mage = 70;
 							else store_priest = 70;
@@ -2508,10 +2508,10 @@ void pick_spell_event_filter (short item_hit)
 					}
 				break;
 			case 10: case 11: case 12: case 13: case 14: case 15:  // pick target
-				if (cd_get_active(1098,10 + pc_casting) == FALSE) {
+				if (cd_get_active(1098,10 + pc_casting) == false) {
 					cd_set_item_text(1098,36,no_target);				
 					}
-					else if (cd_get_active(1098,item_hit) == FALSE) {
+					else if (cd_get_active(1098,item_hit) == false) {
 					cd_set_item_text(1098,36,bad_target);				
 					}
 					else {
@@ -2524,11 +2524,11 @@ void pick_spell_event_filter (short item_hit)
 				break;
 
 			case 16: // cancel
-				spell_toast = TRUE;
-				dialog_done = TRUE;
+				spell_toast = true;
+				dialog_done = true;
 				break;
 			case 1: case 17:  // cast!
-				dialog_done = TRUE;
+				dialog_done = true;
 				break;
 				
 			case 75: // other spells
@@ -2563,7 +2563,7 @@ void pick_spell_event_filter (short item_hit)
 							put_spell_led_buttons();
 	
 							if (store_spell_target < 6) {
-								if (cd_get_active(1098,10 + store_spell_target) == FALSE) {
+								if (cd_get_active(1098,10 + store_spell_target) == false) {
 									store_spell_target = 6;
 									draw_spell_info();
 									put_pc_target_buttons();
@@ -2583,8 +2583,8 @@ void pick_spell_event_filter (short item_hit)
 						}			
 				break;
 			}
-	if (dialog_done == TRUE) {
-	if (spell_toast == TRUE) {
+	if (dialog_done == true) {
+	if (spell_toast == true) {
 			store_mage = store_mage_store;
 			store_priest = store_priest_store;
 			store_spell_target = store_store_target ;
@@ -2653,15 +2653,15 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	store_store_target = store_spell_target;
 	store_situation = type;
 	store_last_target_darkened = 6;
-	can_choose_caster = (pc_num < 6) ? FALSE : TRUE;
+	can_choose_caster = (pc_num < 6) ? false : true;
 
 	pc_casting = (type == 0) ? store_last_cast_mage : store_last_cast_priest;
 	if (pc_casting == 6)
 		pc_casting = current_pc;
 	
 	if (pc_num == 6) { // See if can keep same caster
-		can_choose_caster = TRUE;
-		if (pc_can_cast_spell(pc_casting,type,type) == FALSE) {
+		can_choose_caster = true;
+		if (pc_can_cast_spell(pc_casting,type,type) == false) {
 			for (i = 0; i < 6; i++)
 				if (pc_can_cast_spell(i,type,type)) {
 					pc_casting = i;
@@ -2674,11 +2674,11 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 				}
 		}
 		else {
-			can_choose_caster = FALSE;
+			can_choose_caster = false;
 			pc_casting = pc_num;
 			}
 
-	if (can_choose_caster == FALSE) {
+	if (can_choose_caster == false) {
 		if ((type == 0) && (ADVEN[pc_num].skills[9] == 0)) {
 			add_string_to_buf("Cast: No mage skill.");
 			return 70;
@@ -2702,7 +2702,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 		}
 
 	// Keep the stored spell, if it's still castable
-	if (pc_can_cast_spell(pc_casting,type,((type == 0) ? store_mage : store_priest)) == FALSE) {
+	if (pc_can_cast_spell(pc_casting,type,((type == 0) ? store_mage : store_priest)) == false) {
 		if (type == 0) {
 				store_mage = 0;
 				store_mage_lev = 1;
@@ -2737,7 +2737,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 			cd_attach_key(1098,i,(char ) (65 + i - 63));
 			else cd_attach_key(1098,i,(char) (97 + i - 37));
 		cd_set_led(1098,i,( pc_can_cast_spell(pc_casting,type,
-		 (on_which_spell_page == 0) ? i - 37 : spell_index[i - 37]) == TRUE) ? 1 : 0);
+		 (on_which_spell_page == 0) ? i - 37 : spell_index[i - 37]) == true) ? 1 : 0);
 		}
 	cd_attach_key(1098,10,'!');
 	cd_attach_key(1098,11,'@');
@@ -2786,13 +2786,13 @@ short stat_adj(short pc_num,short which)
 	
 	tr = skill_bonus[ADVEN[pc_num].skills[which]];
 	if (which == 2) {
-		if (ADVEN[pc_num].traits[1] == TRUE)
+		if (ADVEN[pc_num].traits[1] == true)
 			tr++;
 		if (pc_has_abil_equip(pc_num,40) < 24) 
 			tr++;
 		}
 	if (which == 0) {
-		if (ADVEN[pc_num].traits[8] == TRUE)
+		if (ADVEN[pc_num].traits[8] == true)
 			tr++;
 		if (pc_has_abil_equip(pc_num,38) < 24) 
 			tr++;
@@ -2899,10 +2899,10 @@ void do_alchemy() ////
 						store_i.charges++;
 					if (store_i.variety == 7)
 						store_i.graphic_num += get_ran(1,0,2);
-					if (give_to_pc(pc_num,store_i,0) == FALSE) {
+					if (give_to_pc(pc_num,store_i,0) == false) {
 						ASB("No room in inventory.");
 						ASB("  Potion placed on floor.");
-						place_item(store_i,univ.town.p_loc,TRUE);
+						place_item(store_i,univ.town.p_loc,true);
 						}
 						else add_string_to_buf("Alchemy: Successful.             ");
 					}
@@ -2969,7 +2969,7 @@ void pc_graphic_event_filter (short item_hit)
 					toast_dialog();
 				else {
 					toast_dialog();
-					dialog_answer = TRUE;
+					dialog_answer = true;
 					}
 			break;
 
@@ -2982,7 +2982,7 @@ void pc_graphic_event_filter (short item_hit)
 				}
 				else {
 					toast_dialog();
-					dialog_answer =  TRUE;
+					dialog_answer =  true;
 					}
 			break;
 
@@ -2993,14 +2993,14 @@ void pc_graphic_event_filter (short item_hit)
 			break;
 		}
 
-	dialog_answer =  FALSE;
+	dialog_answer =  false;
 }
 
-Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
+bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 // mode ... 0 - create  1 - created
 {
 	short i,item_hit;
-	Boolean munch_pc_graphic = FALSE;
+	bool munch_pc_graphic = false;
 	
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
@@ -3009,7 +3009,7 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 	make_cursor_sword();
 
 	if (pcs_gworld == NULL) {
-		munch_pc_graphic = TRUE;
+		munch_pc_graphic = true;
 		pcs_gworld = load_pict(902);
 		}
 	cd_create_dialog_parent_num(1050,parent_num);
@@ -3025,7 +3025,7 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 	item_hit = cd_run_dialog();	
 	cd_kill_dialog(1050,0);
 
-	if (munch_pc_graphic == TRUE) {
+	if (munch_pc_graphic == true) {
 		DisposeGWorld(pcs_gworld);
 		pcs_gworld = NULL;
 		}
@@ -3047,7 +3047,7 @@ void pc_name_event_filter (short item_hit)
 
 }
 
-Boolean pick_pc_name(short pc_num,short parent_num)  
+bool pick_pc_name(short pc_num,short parent_num)  
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
@@ -3106,11 +3106,11 @@ unsigned char pick_trapped_monst()
 }
 
 
-Boolean flying() 
+bool flying() 
 {
 	if (PSD[SDF_PARTY_FLIGHT] == 0)
-		return FALSE;
-		else return TRUE;
+		return false;
+		else return true;
 }
 
 void poison_pc(short which_pc,short how_much)
@@ -3123,10 +3123,10 @@ void poison_pc(short which_pc,short how_much)
 		if ((level = get_prot_level(which_pc,31)) > 0)////
 			how_much -= level / 3;
 
-			if ((ADVEN[which_pc].traits[12] == TRUE) && 
+			if ((ADVEN[which_pc].traits[12] == true) && 
 				(how_much > 1))
 					how_much++;
-			if ((ADVEN[which_pc].traits[12] == TRUE) && 
+			if ((ADVEN[which_pc].traits[12] == true) && 
 				(how_much == 1) && (get_ran(1,0,1) == 0))
 					how_much++;
 			
@@ -3182,7 +3182,7 @@ void void_sanctuary(short pc_num)
 void hit_party(short how_much,eDamageType damage_type)
 {
 	short i;
-	Boolean dummy;
+	bool dummy;
 	
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == 1)
@@ -3195,14 +3195,14 @@ void slay_party(eMainStatus mode)
 { 
 	short i;
 	
-	boom_anim_active = FALSE;
+	boom_anim_active = false;
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == MAIN_STATUS_ALIVE)
 			ADVEN[i].main_status = mode;
 	put_pc_screen(); 
 }
 
-Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterType type_of_attacker, short sound_type)
+bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterType type_of_attacker, short sound_type)
 //short damage_type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
@@ -3210,16 +3210,16 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 					// 100s digit - sound data
 {
 	short i, r1,level;
-	Boolean do_print = TRUE;
+	bool do_print = true;
 	
 	if (ADVEN[which_pc].main_status != 1)
-		return FALSE;
+		return false;
 	
 	//sound_type = damage_type / 100;
 	//damage_type = damage_type % 100;
 
 	if (damage_type >= DAMAGE_NO_PRINT) {
-		do_print = FALSE;
+		do_print = false;
 		damage_type -= DAMAGE_NO_PRINT;
 		}
 
@@ -3238,7 +3238,7 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
 		how_much -= minmax(-5,5,ADVEN[which_pc].status[1]);
 		for (i = 0; i < 24; i++)
-			if ((ADVEN[which_pc].items[i].variety != 0) && (ADVEN[which_pc].equip[i] == TRUE)) {
+			if ((ADVEN[which_pc].items[i].variety != 0) && (ADVEN[which_pc].equip[i] == true)) {
 				if ((ADVEN[which_pc].items[i].variety >= 12) && (ADVEN[which_pc].items[i].variety <= 17)) {
 						r1 = get_ran(1,1,ADVEN[which_pc].items[i].item_level);
 						how_much -= r1;
@@ -3276,7 +3276,7 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 		if (PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
-		if (ADVEN[which_pc].traits[0] == TRUE)
+		if (ADVEN[which_pc].traits[0] == true)
 			how_much--;
 		// luck
 		if (get_ran(1,1,100) < 2 * (hit_chance[ADVEN[which_pc].skills[18]] - 20))
@@ -3323,7 +3323,7 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 	 && ((level = get_prot_level(which_pc,31)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
-	if (boom_anim_active == TRUE) {
+	if (boom_anim_active == true) {
 		if (how_much < 0)
 			how_much = 0;
 		pc_marked_damage[which_pc] += how_much;
@@ -3331,18 +3331,18 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 			else add_explosion(pc_pos[which_pc],how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 	//	sprintf ((char *) c_line, "  %s takes %d. ",(char *) ADVEN[which_pc].name, how_much);
-	//	if (do_print == TRUE)
+	//	if (do_print == true)
 	//		add_string_to_buf((char *) c_line);
 		if (how_much == 0)
-			return FALSE;
-			else return TRUE;
+			return false;
+			else return true;
 		}
 	
 	if (how_much <= 0) {
 		if ((damage_type == 0) || (damage_type == 6) || (damage_type == 7))
 			play_sound(2);
 		add_string_to_buf ("  No damage.");
-		return FALSE;
+		return false;
 		}
 		else {
 			// if asleep, get bonus
@@ -3350,7 +3350,7 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 				ADVEN[which_pc].status[11]--;
 			
 			sprintf ((char *) c_line, "  %s takes %d. ",(char *) ADVEN[which_pc].name, how_much);
-			if (do_print == TRUE)
+			if (do_print == true)
 				add_string_to_buf((char *) c_line);
 			if (damage_type != 10) {
 				if (is_combat())
@@ -3384,24 +3384,24 @@ Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonster
 	if ((ADVEN[which_pc].cur_health == 0) && (ADVEN[which_pc].main_status == 1))
 		play_sound(3);
 	put_pc_screen();
-	return TRUE;
+	return true;
 }
 
 void kill_pc(short which_pc,eMainStatus type)
 {
 	short i = 24;
-	Boolean dummy,no_save = FALSE;
+	bool dummy,no_save = false;
 	location item_loc;
 	
 	if (type >= MAIN_STATUS_SPLIT) {
 		type -= MAIN_STATUS_SPLIT;
-		no_save = TRUE;
+		no_save = true;
 		}
 	
 	if (type != MAIN_STATUS_STONE)
 		i = pc_has_abil_equip(which_pc,48);
 
-	if ((no_save == FALSE) && (type != MAIN_STATUS_ABSENT) && (ADVEN[which_pc].skills[18] > 0) && 
+	if ((no_save == false) && (type != MAIN_STATUS_ABSENT) && (ADVEN[which_pc].skills[18] > 0) && 
 		(get_ran(1,1,100) < hit_chance[ADVEN[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
 			ADVEN[which_pc].cur_health = 0;
@@ -3411,7 +3411,7 @@ void kill_pc(short which_pc,eMainStatus type)
 				combat_active_pc = 6;
 	
 			for (i = 0; i < 24; i++)
-				ADVEN[which_pc].equip[i] = FALSE;
+				ADVEN[which_pc].equip[i] = false;
 
 			item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
 	
@@ -3423,7 +3423,7 @@ void kill_pc(short which_pc,eMainStatus type)
 			if (overall_mode != MODE_OUTDOORS)	
 				for (i = 0; i < 24; i++)
 					if (ADVEN[which_pc].items[i].variety != 0) {
-						dummy = place_item(ADVEN[which_pc].items[i],item_loc,TRUE);
+						dummy = place_item(ADVEN[which_pc].items[i],item_loc,true);
 						ADVEN[which_pc].items[i].variety = 0;
 						}
 				if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
@@ -3450,7 +3450,7 @@ void set_pc_moves()
 		if (ADVEN[i].main_status != 1)
 			pc_moves[i] = 0;
 			else {
-				pc_moves[i] = (ADVEN[i].traits[10] == TRUE) ? 3 : 4;
+				pc_moves[i] = (ADVEN[i].traits[10] == true) ? 3 : 4;
 				r = get_encumberance(i);
 				pc_moves[i] = minmax(1,8,pc_moves[i] - (r / 3));
 				
@@ -3521,9 +3521,9 @@ void adjust_spell_menus()
 	MenuHandle spell_menu;
 	Str255 spell_name;
 	short old_on_spell_menu[2][62];
-	Boolean need_menu_change = FALSE;
+	bool need_menu_change = false;
 	
-	if (in_startup_mode == TRUE)
+	if (in_startup_mode == true)
 		return;
 		
 	for (i = 0; i < 2; i++)
@@ -3542,7 +3542,7 @@ void adjust_spell_menus()
 			}
 	for (i = 0; i < 62; i++) 
 		if (on_spell_menu[0][i] != old_on_spell_menu[0][i])
-			need_menu_change = TRUE;
+			need_menu_change = true;
 	if (need_menu_change) {
 		for (i = 0; i < 62; i++) {
 			DeleteMenuItem(spell_menu,3); 
@@ -3560,7 +3560,7 @@ void adjust_spell_menus()
 				}
 		}
 		
-	need_menu_change = FALSE;
+	need_menu_change = false;
 	spell_pos = 0;
 		
 		spell_menu = GetMenuHandle(950);
@@ -3575,7 +3575,7 @@ void adjust_spell_menus()
 			}
 	for (i = 0; i < 62; i++) 
 		if (on_spell_menu[1][i] != old_on_spell_menu[1][i])
-			need_menu_change = TRUE;
+			need_menu_change = true;
 	if (need_menu_change) {
 		for (i = 0; i < 62; i++) {
 			DeleteMenuItem(spell_menu,3); 

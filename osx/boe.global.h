@@ -228,16 +228,16 @@ struct scen_header_type {
 //	short town_num, difficulty;
 //	cTown* town;
 //	char explored[64][64];
-//	Boolean	hostile;
+//	bool	hostile;
 //	creature_list_type	monst;
-//	Boolean	in_boat;
+//	bool	in_boat;
 //	location p_loc;
 //	cSpeech* cur_talk;
 //	short cur_talk_loaded;
 //};
 //
 //struct outdoor_creature_type {
-//	Boolean exists;
+//	bool exists;
 //	short direction;
 //	cOutdoors::cWandering what_monst;
 //	location which_sector,m_loc;	
@@ -263,7 +263,7 @@ struct scen_header_type {
 //	talk_save_type talk_save[120];
 //	short direction,at_which_save_slot;
 //	char alchemy[20];
-//	Boolean can_find_town[200];
+//	bool can_find_town[200];
 //	short key_times[100];
 //	short party_event_timers[30];
 //	short global_or_town[30];
@@ -299,10 +299,10 @@ struct scen_header_type {
 //	short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
 //	short status[15];
 //	cItemRec items[24];
-//	Boolean equip[24];
-//	Boolean priest_spells[62],mage_spells[62];
+//	bool equip[24];
+//	bool priest_spells[62],mage_spells[62];
 //	short which_graphic,weap_poisoned;
-//	Boolean advan[15],traits[15];
+//	bool advan[15],traits[15];
 //	short race,exp_adj,direction;
 //};
 //

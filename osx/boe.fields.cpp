@@ -10,8 +10,8 @@
 //extern current_town_type univ.town;
 extern short which_combat_type,current_pc,town_type;
 extern eGameMode overall_mode;
-extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern Boolean sleep_field;
+extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
+extern bool sleep_field;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
 extern unsigned char combat_terrain[64][64];
@@ -22,14 +22,14 @@ extern short town_size[3];
 extern cScenario scenario;
 extern cUniverse univ;
 
-Boolean is_explored(short i,short j)
+bool is_explored(short i,short j)
 {
 	if (is_out())
-		return (univ.out.out_e[i][j] != 0) ? TRUE : FALSE;
+		return (univ.out.out_e[i][j] != 0) ? true : false;
 	if (univ.town.explored[i][j] & 1) {
-		return TRUE;
+		return true;
 		}
-		else return FALSE;
+		else return false;
 }
 void make_explored(short i,short j)
 {
@@ -45,32 +45,32 @@ void take_explored(short i,short j)
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 254;
 }
 
-Boolean is_out()
+bool is_out()
 {
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
-Boolean is_town()
+bool is_town()
 {
 	if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
-Boolean is_combat()
+bool is_combat()
 {
 	if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 
 
-Boolean special(short i,short j)
+bool special(short i,short j)
 /**/{
 	if (((univ.out.misc_i[i][j]) & 2) != 0)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 void flip_special(short i,short j)
 /**/{
@@ -85,59 +85,59 @@ void take_special(short i,short j)
 	univ.out.misc_i[i][j] =  univ.out.misc_i[i][j] & 253;
 }
 
-Boolean is_web(short i,short j)
+bool is_web(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 4) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 4) ? true : false;
 }
 void make_web(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.out.misc_i[i][j] & 224) || (univ.town.explored[i][j] & 238))
 		return;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 4;
-	web = TRUE;
+	web = true;
 }
 void take_web(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 251;
 }
 
-Boolean is_crate(short i,short j)
+bool is_crate(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 8) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 8) ? true : false;
 }
 void make_crate(short i,short j)
 /**/{
 //	if (univ.out.misc_i[i][j] & 240)
 //		return;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 8;
-	crate = TRUE;
+	crate = true;
 }
 void take_crate(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 247;
 }
 
-Boolean is_barrel(short i,short j)
+bool is_barrel(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 16) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 16) ? true : false;
 }
 void make_barrel(short i,short j)
 /**/{
 //	if (univ.out.misc_i[i][j] & 234)
 //		return;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 16;
-	barrel = TRUE;
+	barrel = true;
 }
 void take_barrel(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 239;
 }
 
-Boolean is_fire_barrier(short i,short j)
+bool is_fire_barrier(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 32) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 32) ? true : false;
 }
 void make_fire_barrier(short i,short j)
 /**/{
@@ -148,16 +148,16 @@ void make_fire_barrier(short i,short j)
 	take_web(i,j);
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 32;
-	fire_barrier = TRUE;
+	fire_barrier = true;
 }
 void take_fire_barrier(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 223;
 }
 
-Boolean is_force_barrier(short i,short j)
+bool is_force_barrier(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 64) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 64) ? true : false;
 }
 void make_force_barrier(short i,short j)
 /**/{
@@ -168,16 +168,16 @@ void make_force_barrier(short i,short j)
 	take_web(i,j);
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 64;
-	force_barrier = TRUE;
+	force_barrier = true;
 }
 void take_force_barrier(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 191;
 }
 
-Boolean is_quickfire(short i,short j)
+bool is_quickfire(short i,short j)
 /**/{
-	return (univ.out.misc_i[i][j] & 128) ? TRUE : FALSE;
+	return (univ.out.misc_i[i][j] & 128) ? true : false;
 }
 void make_quickfire(short i,short j)
 /**/{////
@@ -195,27 +195,27 @@ void make_quickfire(short i,short j)
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 3;
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] | 128;
-	quickfire = TRUE;
+	quickfire = true;
 }
 void take_quickfire(short i,short j)
 /**/{
 	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 127;
 }
 
-Boolean is_force_wall(short i,short j)
+bool is_force_wall(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 2) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 2) ? true : false;
 }
 void make_force_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.town.explored[i][j] & 74) || (univ.out.misc_i[i][j] & 248))
 		return;
 	take_web(i,j);
 	take_fire_wall(i,j);
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 2;
-	force_wall = TRUE;
+	force_wall = true;
 }
 void take_force_wall(short i,short j)
 /**/{
@@ -223,78 +223,78 @@ void take_force_wall(short i,short j)
 }
 
 
-Boolean is_fire_wall(short i,short j)
+bool is_fire_wall(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 4) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 4) ? true : false;
 }
 void make_fire_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.town.explored[i][j] & 248) || (univ.out.misc_i[i][j] & 254))
 		return;
 	take_web(i,j);
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 4;
-	fire_wall = TRUE;
+	fire_wall = true;
 }
 void take_fire_wall(short i,short j)
 /**/{
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 251;
 }
 
-Boolean is_antimagic(short i,short j)
+bool is_antimagic(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 8) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 8) ? true : false;
 }
 void make_antimagic(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if (univ.out.misc_i[i][j] & 224)
 		return;
 	
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 8;
-	antimagic = TRUE;
+	antimagic = true;
 }
 void take_antimagic(short i,short j)
 /**/{
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 247;
 }
 
-Boolean is_scloud(short i,short j)
+bool is_scloud(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 16) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 16) ? true : false;
 }
 void make_scloud(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 		
 	if ((univ.town.explored[i][j] & 238) || (univ.out.misc_i[i][j] & 224))
 		return;
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 16;
-	scloud = TRUE;
+	scloud = true;
 }
 void take_scloud(short i,short j)
 /**/{
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 239;
 }
 
-Boolean is_ice_wall(short i,short j)
+bool is_ice_wall(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 32) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 32) ? true : false;
 }
 void make_ice_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.town.explored[i][j] & 74) || (univ.out.misc_i[i][j] & 252))
 		return;
 	take_fire_wall(i,j);
 	take_scloud(i,j);
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 32;
-	ice_wall = TRUE;
+	ice_wall = true;
 }
 void take_ice_wall(short i,short j)
 /**/{
@@ -302,37 +302,37 @@ void take_ice_wall(short i,short j)
 }
 
 
-Boolean is_blade_wall(short i,short j)
+bool is_blade_wall(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 64) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 64) ? true : false;
 }
 void make_blade_wall(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.town.explored[i][j] & 8) || (univ.out.misc_i[i][j] & 224))
 		return;
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 9;
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 64;
-	blade_wall = TRUE;
+	blade_wall = true;
 }
 void take_blade_wall(short i,short j)
 /**/{
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 191;
 }
-Boolean is_sleep_cloud(short i,short j)
+bool is_sleep_cloud(short i,short j)
 /**/{
-	return (univ.town.explored[i][j] & 128) ? TRUE : FALSE;
+	return (univ.town.explored[i][j] & 128) ? true : false;
 }
 void make_sleep_cloud(short i,short j)
 /**/{
-	if (spot_impassable(i,j) == TRUE)
+	if (spot_impassable(i,j) == true)
 		return;
 	if ((univ.town.explored[i][j] & 8) || (univ.out.misc_i[i][j] & 224))
 		return;
 	univ.town.explored[i][j] = univ.town.explored[i][j] & 9;
 	univ.town.explored[i][j] = univ.town.explored[i][j] | 128;
-	sleep_field = TRUE;
+	sleep_field = true;
 }
 void take_sleep_cloud(short i,short j)
 /**/{
@@ -340,37 +340,37 @@ void take_sleep_cloud(short i,short j)
 }
 
 // START SFX
-Boolean is_small_blood(short i,short j)
+bool is_small_blood(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 1) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 1) ? true : false;
 }
-Boolean is_medium_blood(short i,short j)
+bool is_medium_blood(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 2) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 2) ? true : false;
 }
-Boolean is_large_blood(short i,short j)
+bool is_large_blood(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 4) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 4) ? true : false;
 }
-Boolean is_small_slime(short i,short j)
+bool is_small_slime(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 8) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 8) ? true : false;
 }
-Boolean is_big_slime(short i,short j)
+bool is_big_slime(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 16) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 16) ? true : false;
 }
-Boolean is_ash(short i,short j)
+bool is_ash(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 32) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 32) ? true : false;
 }
-Boolean is_bones(short i,short j)
+bool is_bones(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 64) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 64) ? true : false;
 }
-Boolean is_rubble(short i,short j)
+bool is_rubble(short i,short j)
 {
-	return (univ.out.sfx[i][j] & 128) ? TRUE : FALSE;
+	return (univ.out.sfx[i][j] & 128) ? true : false;
 }
 void make_sfx(short i,short j, short type)
 {

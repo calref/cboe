@@ -31,7 +31,7 @@ extern Rect	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
-extern Boolean in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
+extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short town_size[3];
 extern short anim_step;
 //extern party_record_type univ.party;
@@ -43,11 +43,11 @@ extern short anim_step;
 //extern unsigned char univ.out.out[96][96],out_e[96][96];
 extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
-extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
+extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Point ul;
 extern location pc_pos[6],pc_dir[6],center;
 extern short which_combat_type,current_pc;
-extern Boolean monsters_going,boom_anim_active,cartoon_happening;
+extern bool monsters_going,boom_anim_active,cartoon_happening,skip_boom_delay;
 extern 	PicHandle	spell_pict;
 extern short current_ground;
 extern short terrain_pic[256];
@@ -62,18 +62,18 @@ extern PixPatHandle map_pat[25];
 extern Point store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern Boolean fast_bang;
+extern bool fast_bang;
 //extern unsigned char m_pic_index[200];
 extern PixPatHandle	bg[];
 extern KeyMap key_state;
-extern Boolean fry_startup;
+extern bool fry_startup;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern outdoor_strs_type outdoor_text[2][2];
 extern GWorldPtr spec_scen_g;
 extern DialogPtr modeless_dialogs[18];
-extern Boolean modeless_exists[18];
+extern bool modeless_exists[18];
 //extern dlg_filter_t give_password_filter,pick_prefab_scen_event_filter,pick_a_scen_event_filter,tip_of_day_event_filter;
 //extern dlg_filter_t talk_notes_event_filter,adventure_notes_event_filter,journal_event_filter,display_strings_event_filter;
 //extern dlg_filter_t display_strings_event_filter,display_strings_event_filter,display_strings_event_filter;
@@ -164,7 +164,7 @@ short which_g_stored[STORED_GRAPHICS];
 short wish_list[STORED_GRAPHICS];
 short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 
-Boolean has_run_anim = FALSE,currently_loading_graphics = FALSE;
+bool has_run_anim = false,currently_loading_graphics = false;
 //short anim_step = 0;
 //short overall_anim_step = 0;
 
@@ -194,7 +194,7 @@ location anim_str_loc;
 PatHandle bw_pats[15];
 
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
-Boolean supressing_some_spaces = FALSE;
+bool supressing_some_spaces = false;
 location ok_space[4] = {loc(),loc(),loc(),loc()};
 	PicHandle	hold_pict;
 	PictInfo p,p2;
@@ -267,13 +267,13 @@ void adjust_window_mode()
 
 	if (display_mode == 5) {
 		ul.h = 14; ul.v = 2;
-		SizeWindow(mainPtr,605,430, TRUE);
-		MoveWindow(mainPtr,(windRect.right - 573) / 2,(windRect.bottom - 430) / 2 + 20,TRUE);
+		SizeWindow(mainPtr,605,430, true);
+		MoveWindow(mainPtr,(windRect.right - 573) / 2,(windRect.bottom - 430) / 2 + 20,true);
 		GetWindowPortBounds(mainPtr, &r);
 	}
 	else {
-			MoveWindow(mainPtr,-6,-6,TRUE);	
-			SizeWindow(mainPtr,windRect.right + 12, windRect.bottom + 12, TRUE);
+			MoveWindow(mainPtr,-6,-6,true);	
+			SizeWindow(mainPtr,windRect.right + 12, windRect.bottom + 12, true);
 			switch (display_mode) {
 				case 0: ul.h = (windRect.right - 560) / 2; ul.v = (windRect.bottom - 422) / 2 + 14; break;
 				case 1:	ul.h = 10; ul.v = 28; break;
@@ -286,9 +286,9 @@ void adjust_window_mode()
 	create_clip_region();
 	undo_clip();
 	if (overall_mode != MODE_STARTUP) {
-		if (in_startup_mode == TRUE)
+		if (in_startup_mode == true)
 			draw_startup(0);
-		if (in_startup_mode == FALSE)
+		if (in_startup_mode == false)
 			//refresh_screen(0); 
 			redraw_screen();
 		}
@@ -325,7 +325,7 @@ void plop_fancy_startup()
 	
 	md = GetMainDevice();
 	
-	if (fry_startup == FALSE)  {
+	if (fry_startup == false)  {
 		//color_pat = GetCTable(72);
 		//old_palette = NewPalette(256,color_pat,pmTolerant + pmExplicit,0x0000);
 		//GetPictInfo(pict_to_draw,&p2,1,256,0,0);
@@ -412,14 +412,14 @@ void plop_fancy_startup()
 		//init_anim(0);
 		pict_to_draw = GetPicture(3000);
 
-		if (fry_startup == FALSE) {
+		if (fry_startup == false) {
 			//for(i=100; i >= 0; i-=2) DoOneGammaFade(md, i);
 		
 			PaintRect(&whole_window);
 			// load and switch to new palette
 			GetPictInfo(pict_to_draw,&p,2,256,0,0);
 			new_palette = p.thePalette;
-			SetPalette(mainPtr,new_palette,FALSE);
+			SetPalette(mainPtr,new_palette,false);
 			ActivatePalette(mainPtr);
 // reerase menu
 /*	GetPort(&oldPort);
@@ -448,7 +448,7 @@ void plop_fancy_startup()
 //	NSetPalette(mainPtr,old_palette,pmAllUpdates);
 //	ActivatePalette(mainPtr);
 		QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
-		if (fry_startup == FALSE) {
+		if (fry_startup == false) {
 
 			play_sound(-22);
 			EventRecord event;
@@ -467,10 +467,10 @@ void fancy_startup_delay()
 	
 	md = GetMainDevice();
 	
-	if (fry_startup == FALSE){
+	if (fry_startup == false){
 		//ShowMenuBar();
 //		LMSetGrayRgn( originalGrayRgn );	
-		SetPalette(mainPtr,wank_palette,FALSE);
+		SetPalette(mainPtr,wank_palette,false);
 		ActivatePalette(mainPtr);
 		default_palette = GetPalette((WindowPtr) -1);
 		NSetPalette(mainPtr,default_palette,pmAllUpdates);
@@ -485,9 +485,9 @@ void fancy_startup_delay()
 	/*DisposeWindow(mainPtr);
 	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
 	SetPort(mainPtr);						/* set window to current graf port 
-	text_sbar = NewControl(mainPtr,&sbar_rect,tit,FALSE,58,0,58,scrollBarProc,1);
-	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,2);
-	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,3);
+	text_sbar = NewControl(mainPtr,&sbar_rect,tit,false,58,0,58,scrollBarProc,1);
+	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,false,0,0,16,scrollBarProc,2);
+	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,false,0,0,16,scrollBarProc,3);
 	adjust_window_mode();
 	RestoreDeviceClut(GetMainDevice()); */
 	
@@ -502,7 +502,7 @@ void fancy_startup_delay()
 
 void init_startup()
 {
-	startup_loaded = TRUE;
+	startup_loaded = true;
 
 	startup_gworld = load_pict(830);
 	startup_button_orig = load_pict(832);
@@ -525,7 +525,7 @@ void draw_startup(short but_type)
 	short i;
 	GrafPtr old_port;
 	
-	if (startup_loaded == FALSE)
+	if (startup_loaded == false)
 		return;
 	
 	GetPort(&old_port);	
@@ -583,13 +583,13 @@ void draw_startup_stats()
 
 	ForeColor(whiteColor);
 
-	if (party_in_memory == FALSE) {
+	if (party_in_memory == false) {
 		TextSize(20);
 		OffsetRect(&to_rect,175,40);
 		char_win_draw_string(mainPtr,to_rect,
 			"No Party in Memory",0,18,true);
 		}
-	if (party_in_memory == TRUE) {
+	if (party_in_memory == true) {
 		frame_rect = startup_top;
 		InsetRect(&frame_rect,50,50);
 		frame_rect.top += 30;
@@ -712,7 +712,7 @@ void main_button_click(short mode,Rect button_rect)
 	ClipRect(&button_rect);
 
 	draw_buttons(1);
-	if (play_sounds == TRUE)
+	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
 	draw_buttons(0);			
@@ -729,7 +729,7 @@ void arrow_button_click(Rect button_rect)
 	ClipRect(&button_rect);
 	
 	refresh_stat_areas(1);
-	if (play_sounds == TRUE)
+	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
 	refresh_stat_areas(0);
@@ -739,22 +739,22 @@ void arrow_button_click(Rect button_rect)
 
 void reload_startup()////
 {
-	if (startup_loaded == TRUE)
+	if (startup_loaded == true)
 		return;
 	
 	HideWindow(GetDialogWindow(modeless_dialogs[5])); 
-	modeless_exists[5] = FALSE;				
+	modeless_exists[5] = false;				
 	SelectWindow(mainPtr);
 	SetPort(GetWindowPort(mainPtr));
 	init_startup();
 
-	startup_loaded = TRUE;
+	startup_loaded = true;
 	//load_main_screen();
 }
 
 void end_startup()
 {
-	if (startup_loaded == FALSE)
+	if (startup_loaded == false)
 		return;
 
 	DisposeGWorld(startup_gworld);
@@ -762,7 +762,7 @@ void end_startup()
 	DisposeGWorld(startup_button_g);
 	DisposeGWorld(anim_mess);
 
-	startup_loaded = FALSE;
+	startup_loaded = false;
 	load_main_screen();
 }
 
@@ -1067,10 +1067,10 @@ void draw_buttons(short mode)
 	CGrafPtr	origPort;
 	GDHandle	origDev;
 	GWorldPtr	buttons_to_draw;
-	Boolean spec_draw = FALSE;
+	bool spec_draw = false;
 	
 	if (mode == 1) {
-		spec_draw = TRUE;
+		spec_draw = true;
 		mode -= 100;
 		}
 		
@@ -1093,14 +1093,14 @@ void draw_buttons(short mode)
 	dest_rec = win_to_rects[1];
 	OffsetRect(&dest_rec,ul.h,ul.v);
 		
-	if (spec_draw == TRUE)
+	if (spec_draw == true)
 		ForeColor(blueColor);
 	CopyBits ( (BitMap *) *store_source ,
 				store_dest ,
 				&source_rect, &dest_rec, 
 				0, NULL);
-				//((spec_draw == FALSE) ? 0 : addOver) , NULL);
-	if (spec_draw == TRUE)
+				//((spec_draw == false) ? 0 : addOver) , NULL);
+	if (spec_draw == true)
 		ForeColor(blackColor);
 
 	SetGWorld (origPort, origDev);	
@@ -1169,13 +1169,13 @@ void draw_text_bar(short mode)
 			}
 	
 		}
-	if ((is_combat()) && (current_pc < 6) && (monsters_going == FALSE)) {
+	if ((is_combat()) && (current_pc < 6) && (monsters_going == false)) {
 		sprintf((char *) combat_string,"%s (ap: %d)",
 			ADVEN[current_pc].name,pc_moves[current_pc]);
 		put_text_bar((char *) combat_string);
 		remember_tiny_text = 500;
 		}
-	if ((is_combat()) && (monsters_going == TRUE))	// Print bar for 1st monster with >0 ap -
+	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < T_M; i++)
 	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].m_d.ap > 0)) {
@@ -1200,7 +1200,7 @@ void put_text_bar(char *str)
 	MoveTo(5,14);
 	drawstring(str);
 
-	if (monsters_going == FALSE) {
+	if (monsters_going == false) {
 		if (PSD[SDF_PARTY_STEALTHY] > 0) {
 			MoveTo(xpos,14);
 			sprintf((char *) status_str,"Stealth");
@@ -1238,7 +1238,7 @@ void load_area_graphics()
 {
 	short i;
 	
-	currently_loading_graphics = TRUE;
+	currently_loading_graphics = true;
 	
 	// Set all graphics as loseable
 	for (i = 50; i < STORED_GRAPHICS; i++)
@@ -1256,7 +1256,7 @@ void load_area_graphics()
 	// Reserve all in wish list not taken
 	for (i = 0; i < STORED_GRAPHICS; i++)
 		if (wish_list[i] > 49)
-			if (reserve_graphic_num_in_array(wish_list[i]) == TRUE)
+			if (reserve_graphic_num_in_array(wish_list[i]) == true)
 				wish_list[i] = 0;
 				
 	// Place all graphics not found in array.
@@ -1269,7 +1269,7 @@ void load_area_graphics()
 	// Finally, load graphics.
 	put_graphics_in_template();
 	
-	currently_loading_graphics = FALSE;
+	currently_loading_graphics = false;
 }
 
 void add_to_wish_list(short which_g)
@@ -1291,19 +1291,19 @@ void add_to_wish_list(short which_g)
 }
 
 // Used to set up array. If graphic there, sets it to be saved, otherwise leaves.
-// Returns TRUE is already there
-Boolean reserve_graphic_num_in_array(short which_g)
+// Returns true is already there
+bool reserve_graphic_num_in_array(short which_g)
 {
 	short i;
 
 	if (which_g < 50)
-		return TRUE;
+		return true;
 	for (i = 50; i < STORED_GRAPHICS; i++)
 		if (which_g_stored[i] == which_g) {
 			storage_status[i] = 1;
-			return TRUE;
+			return true;
 			}
-	return FALSE;
+	return false;
 }
 
 // Otherwise, puts in array. Note ... if graphic is alreayd here and locked (i.e. 
@@ -1320,7 +1320,7 @@ void place_graphic_num_in_array(short which_g)
 			}
 	// if we get here, couldn't find a space. Time to flush excess crap.
 	
-	if (currently_loading_graphics == FALSE)
+	if (currently_loading_graphics == false)
 		load_area_graphics(); // calling this is nice and fast, because game won't try to reload 
 			// graphics already there. It'll only purge the trash.
 	
@@ -1431,7 +1431,7 @@ void load_outdoor_graphics() ////
 		}
 
 	for (i = 0; i < 10; i++)
-		if (univ.party.out_c[i].exists == TRUE)
+		if (univ.party.out_c[i].exists == true)
 			for (j = 0; j < 7; j++)
 				if (univ.party.out_c[i].what_monst.monst[j] != 0) {
 					pict = get_monst_picnum(univ.party.out_c[i].what_monst.monst[j]);
@@ -1498,7 +1498,7 @@ void update_pc_graphics()
 	Rect	source_rect;
 	GrafPtr old_port;
 	
-	if (party_in_memory == FALSE)
+	if (party_in_memory == false)
 		return;
 		
 	//GetPort(&old_port);
@@ -1552,7 +1552,7 @@ void put_graphics_in_template()
 {
 	GWorldPtr temp_gworld;
 	short i,j,which_position,offset;
-	Boolean this_graphic_needed = FALSE;
+	bool this_graphic_needed = false;
 	Rect from_rect,to_rect;
 	
 	// First, load all terrains
@@ -1560,9 +1560,9 @@ void put_graphics_in_template()
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= j * 50) && (which_g_stored[i] < j * 50 + 50) &&
 				(storage_status[i] == 3)) {
-					this_graphic_needed = TRUE;
+					this_graphic_needed = true;
 					}
-		if (this_graphic_needed == TRUE) {
+		if (this_graphic_needed == true) {
 			temp_gworld = load_pict(800 + j);
 			for (i = 50; i < STORED_GRAPHICS; i++)
 				if ((which_g_stored[i] >= j * 50) && (which_g_stored[i] < j * 50 + 50) &&
@@ -1576,7 +1576,7 @@ void put_graphics_in_template()
 					}
 			DisposeGWorld (temp_gworld);		
 			}
-		this_graphic_needed = FALSE;
+		this_graphic_needed = false;
 		}
 
 	// Now, load all monsters
@@ -1584,13 +1584,13 @@ void put_graphics_in_template()
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= 300 + j * 20) && (which_g_stored[i] < 300 + j * 20 + 20) &&
 				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
+					this_graphic_needed = true;
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= 600 + j * 20) && (which_g_stored[i] < 600 + j * 20 + 20) &&
 				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
+					this_graphic_needed = true;
 
-		if (this_graphic_needed == TRUE) {
+		if (this_graphic_needed == true) {
 			temp_gworld = load_pict(1100 + j);
 			for (i = 50; i < STORED_GRAPHICS; i++)
 				if ((which_g_stored[i] >= 300 + j * 20) && (which_g_stored[i] < 300 + j * 20 + 20) &&
@@ -1616,7 +1616,7 @@ void put_graphics_in_template()
 					}
 			DisposeGWorld (temp_gworld);		
 			}
-		this_graphic_needed = FALSE;
+		this_graphic_needed = false;
 		}
 
 	// Now, load all monster combat poses
@@ -1624,13 +1624,13 @@ void put_graphics_in_template()
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= 2300 + j * 20) && (which_g_stored[i] < 2300 + j * 20 + 20) &&
 				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
+					this_graphic_needed = true;
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= 2600 + j * 20) && (which_g_stored[i] < 2600 + j * 20 + 20) &&
 				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
+					this_graphic_needed = true;
 
-		if (this_graphic_needed == TRUE) {
+		if (this_graphic_needed == true) {
 			temp_gworld = load_pict(1200 + j);
 			for (i = 50; i < STORED_GRAPHICS; i++)
 				if ((which_g_stored[i] >= 2300 + j * 20) && (which_g_stored[i] < 2300 + j * 20 + 20) &&
@@ -1656,7 +1656,7 @@ void put_graphics_in_template()
 					}
 			DisposeGWorld (temp_gworld);		
 			}
-		this_graphic_needed = FALSE;
+		this_graphic_needed = false;
 		}
 
 
@@ -1664,8 +1664,8 @@ void put_graphics_in_template()
 	for (i = 50; i < STORED_GRAPHICS; i++) 
 		if ((which_g_stored[i] >= 1000) && (which_g_stored[i] < 1400) &&
 			(storage_status[i] == 3))
-				this_graphic_needed = TRUE;
-	if (this_graphic_needed == TRUE) {
+				this_graphic_needed = true;
+	if (this_graphic_needed == true) {
 		temp_gworld = load_pict(820);
 		for (i = 50; i < STORED_GRAPHICS; i++)
 			if ((which_g_stored[i] >= 1000) && (which_g_stored[i] < 1400) &&
@@ -1733,7 +1733,7 @@ GWorldPtr load_pict(short picture_to_get)
 	
 	offPMHandle = GetGWorldPixMap (myGWorld);
 	good = LockPixels (offPMHandle);
-	if (good == FALSE)  {
+	if (good == false)  {
 		SysBeep(50); }
 	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
 	DrawPicture (current_pic_handle, &pic_rect);
@@ -1746,7 +1746,7 @@ GWorldPtr load_pict(short picture_to_get)
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
-Boolean is_nature(char x, char y)
+bool is_nature(char x, char y)
 {
 	short pic;
 	unsigned char ter_type;
@@ -1754,21 +1754,21 @@ Boolean is_nature(char x, char y)
 	ter_type = coord_to_ter((short) x,(short) y);
 	pic = scenario.ter_types[ter_type].picture;
 	if ((pic >= 0) && (pic <= 45))
-		return TRUE;
+		return true;
 	if ((pic >= 67) && (pic <= 73))
-		return TRUE;
+		return true;
 	if ((pic >= 75) && (pic <= 87))
-		return TRUE;
+		return true;
 	if ((pic >= 121) && (pic <= 122))
-		return TRUE;
+		return true;
 	if ((pic >= 179) && (pic <= 208))
-		return TRUE;
+		return true;
 	if ((pic >= 211) && (pic <= 212))
-		return TRUE;
+		return true;
 	if ((pic >= 217) && (pic <= 246))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 
@@ -1781,13 +1781,13 @@ void draw_terrain(short	mode)
 	location sector_p_in,view_loc;
 	char can_draw;
 	unsigned char spec_terrain;
-	Boolean off_terrain = FALSE,draw_trim = TRUE;
+	bool off_terrain = false,draw_trim = true;
 	short i,j,short_spec_terrain;
 	GrafPtr old_port;
 
 	if (mode == 2) {
 		if (current_working_monster < 0) return;
-		supressing_some_spaces = TRUE;
+		supressing_some_spaces = true;
 		for (i = 0; i < 4; i++) ok_space[i].x = -1;
 		if (current_working_monster >= 100) {
 			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].m_d.x_width; i++)
@@ -1819,7 +1819,7 @@ void draw_terrain(short	mode)
 	sector_p_in.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 
 	anim_ticks++;
-	anim_onscreen = FALSE;
+	anim_onscreen = false;
 
 	if (is_town())
 		view_loc = univ.town.p_loc;
@@ -1845,12 +1845,12 @@ void draw_terrain(short	mode)
 				where_draw = (is_out()) ? univ.party.p_loc : center;
 				where_draw.x += q - 4;
 				where_draw.y += r - 4;
-				off_terrain = FALSE;				
+				off_terrain = false;				
 				
-				draw_trim = TRUE;
+				draw_trim = true;
 				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) {
-							draw_trim = FALSE;
+							draw_trim = false;
 							// Warning - this section changes where_draw
 							if (where_draw.x < 0)
 								where_draw.x = -1;
@@ -1876,10 +1876,10 @@ void draw_terrain(short	mode)
 						}
 					else if (is_combat()) {
 						spec_terrain = combat_terrain[where_draw.x][where_draw.y];
-						if (cartoon_happening == TRUE)
-							can_draw = TRUE;
+						if (cartoon_happening == true)
+							can_draw = true;
 							else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
-							(which_combat_type == 0) || (monsters_going == TRUE) || (overall_mode != MODE_COMBAT))
+							(which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
 							  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 						}
 					else {
@@ -1887,7 +1887,7 @@ void draw_terrain(short	mode)
 						can_draw = is_explored(where_draw.x,where_draw.y);
 
 						if (can_draw > 0) {
-							if (pt_in_light(univ.town.p_loc,where_draw) == FALSE)
+							if (pt_in_light(univ.town.p_loc,where_draw) == false)
 								can_draw = 0;	
 							}	
 						if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
@@ -1897,7 +1897,7 @@ void draw_terrain(short	mode)
 
 						
 				if ((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
-					if ((is_combat()) && (cartoon_happening == FALSE)) {
+					if ((is_combat()) && (cartoon_happening == false)) {
 						anim_ticks = 0;
 						}
 						
@@ -1906,7 +1906,7 @@ void draw_terrain(short	mode)
 					// Finally, draw this terrain spot	
 					switch (short_spec_terrain) { //// all draw_one_terrain_spot
 						case 82: // cave wway
-							 if (loc_off_act_area(where_draw) == FALSE) {
+							 if (loc_off_act_area(where_draw) == false) {
 								if ((is_nature(where_draw.x - 1,where_draw.y)) &&
 								 (is_nature(where_draw.x,where_draw.y - 1) )) 
 									short_spec_terrain = 10219;
@@ -1923,7 +1923,7 @@ void draw_terrain(short	mode)
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);
 							break;
 						case 83: // ground wway
-							if (loc_off_act_area(where_draw) == FALSE) {
+							if (loc_off_act_area(where_draw) == false) {
 								if ((is_nature(where_draw.x - 1,where_draw.y))  &&
 								 (is_nature(where_draw.x,where_draw.y - 1)) ) 
 									short_spec_terrain = 10223;
@@ -1989,8 +1989,8 @@ void draw_terrain(short	mode)
 						draw_one_terrain_spot(q,r,-1,0);	
 		 				}
 		 		
-		 		if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == TRUE)
-		 		 && (draw_trim == TRUE) && (cartoon_happening == FALSE)) {  // Place the trim
+		 		if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == true)
+		 		 && (draw_trim == true) && (cartoon_happening == false)) {  // Place the trim
 		 			place_trim((short) q,(short) r,where_draw,spec_terrain);
 		 			}
 			}
@@ -2018,7 +2018,7 @@ void draw_terrain(short	mode)
 		draw_monsters();
 		}
 
-	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center) == TRUE))
+	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center) == true))
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(mode,center);
 		else if (overall_mode != MODE_LOOK_TOWN)
@@ -2031,7 +2031,7 @@ void draw_terrain(short	mode)
 	
 	if (mode == 0) {
 		redraw_terrain();
-		if (cartoon_happening == FALSE) {
+		if (cartoon_happening == false) {
 			draw_text_bar(0);
 			if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 				draw_pcs(center,1);
@@ -2040,7 +2040,7 @@ void draw_terrain(short	mode)
 			}
 		}
 	SetPort(old_port);
-	supressing_some_spaces = FALSE;
+	supressing_some_spaces = false;
 }
 
 
@@ -2048,7 +2048,7 @@ void draw_terrain(short	mode)
 
 void place_trim(short q,short r,location where,unsigned char ter_type)
 {
-	Boolean at_top = FALSE,at_bot = FALSE,at_left = FALSE,at_right = FALSE;
+	bool at_top = false,at_bot = false,at_left = false,at_right = false;
 	unsigned char store,store2,store3,store1;
 	location targ;
 	
@@ -2066,20 +2066,20 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	
 					
 	if (where.x == 0)
-		at_left = TRUE;
+		at_left = true;
 	if (where.y == 0)
-		at_top = TRUE;
+		at_top = true;
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS)) {
 		if (where.x == 95)
-			at_right = TRUE;
+			at_right = true;
 		if (where.y == 95)
-			at_bot = TRUE;
+			at_bot = true;
 		}
 		else {
 		if (where.x == town_size[town_type])
-			at_right = TRUE;
+			at_right = true;
 		if (where.y == town_size[town_type])
-			at_bot = TRUE;
+			at_bot = true;
 		}
 		
 	// First, trim for fluids
@@ -2122,65 +2122,65 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		}
 
 				
-	if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == FALSE) &&
-		(at_bot == FALSE) && (at_left == FALSE) && (at_right == FALSE)) {
+	if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == false) &&
+		(at_bot == false) && (at_left == false) && (at_right == false)) {
 		store = get_t_t(where.x - 1,where.y);
 		store1 = get_t_t(where.x,where.y - 1);
 		store2 = get_t_t(where.x + 1,where.y);
 		store3 = get_t_t(where.x,where.y + 1);
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store3) == TRUE))
+		if ((is_wall(store) == true) 
+			&& (is_wall(store1) == true) &&
+			(is_ground(store2) == true) 
+			&& (is_ground(store3) == true))
 				draw_trim(q,r,3,6);		
 
-		if ((is_wall(store) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store1) == TRUE))
+		if ((is_wall(store) == true) 
+			&& (is_wall(store3) == true) &&
+			(is_ground(store2) == true) 
+			&& (is_ground(store1) == true))
 				draw_trim(q,r,3,5);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store3) == TRUE))
+		if ((is_wall(store2) == true) 
+			&& (is_wall(store1) == true) &&
+			(is_ground(store) == true) 
+			&& (is_ground(store3) == true))
 				draw_trim(q,r,3,7);		
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE))
+		if ((is_wall(store2) == true) 
+			&& (is_wall(store3) == true) &&
+			(is_ground(store) == true) 
+			&& (is_ground(store1) == true))
 				draw_trim(q,r,3,4);		
 
 
-		if ((is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_wall(store3) == TRUE)) {
+		if ((is_ground(store) == true) 
+			&& (is_ground(store1) == true) &&
+			(is_ground(store2) == true) 
+			&& (is_wall(store3) == true)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,5);						
 				}
 
-		if ((is_wall(store) == TRUE) 
-			&& (is_ground(store3) == TRUE) &&
-			(is_ground(store2) == TRUE) 
-			&& (is_ground(store1) == TRUE)) {
+		if ((is_wall(store) == true) 
+			&& (is_ground(store3) == true) &&
+			(is_ground(store2) == true) 
+			&& (is_ground(store1) == true)) {
 				draw_trim(q,r,3,5);		
 				draw_trim(q,r,3,6);						
 				}
 
-		if ((is_ground(store2) == TRUE) 
-			&& (is_wall(store1) == TRUE) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store3) == TRUE)) {
+		if ((is_ground(store2) == true) 
+			&& (is_wall(store1) == true) &&
+			(is_ground(store) == true) 
+			&& (is_ground(store3) == true)) {
 				draw_trim(q,r,3,6);		
 				draw_trim(q,r,3,7);		
 				}
 
-		if ((is_wall(store2) == TRUE) 
-			&& (is_ground(store3) == TRUE) &&
-			(is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE)) {
+		if ((is_wall(store2) == true) 
+			&& (is_ground(store3) == true) &&
+			(is_ground(store) == true) 
+			&& (is_ground(store1) == true)) {
 				draw_trim(q,r,3,4);		
 				draw_trim(q,r,3,7);		
 				}
@@ -2195,7 +2195,7 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 	PixMapHandle	store1,store2;
 	RGBColor	test_color = {0,0,0}, store_color;
 
-	if (frills_on == FALSE)
+	if (frills_on == false)
 		return;
 		
 	// if current ground is grass, forget trim
@@ -2235,7 +2235,7 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 }
 
 
-Boolean extend_road_terrain(unsigned char ter)
+bool extend_road_terrain(unsigned char ter)
 {
 	short i;
 	short extend_pics[39] = {61,62,63,64,65, 66,401,402,406,202,
@@ -2245,8 +2245,8 @@ Boolean extend_road_terrain(unsigned char ter)
 	
 	for (i = 0; i < 39; i++)
 		if (scenario.ter_types[ter].picture == extend_pics[i])
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 void place_road(short q,short r,location where)
@@ -2262,7 +2262,7 @@ void place_road(short q,short r,location where)
 
 	if (where.y > 0)
 		ter = coord_to_ter(where.x,where.y - 1);
-	if ((where.y == 0) || (extend_road_terrain(ter) == TRUE)) {
+	if ((where.y == 0) || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[0];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
@@ -2271,7 +2271,7 @@ void place_road(short q,short r,location where)
 	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x + 1,where.y);
 	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == town_size[town_type] - 1)) 
-	 || (extend_road_terrain(ter) == TRUE)) {
+	 || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[1];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
@@ -2280,7 +2280,7 @@ void place_road(short q,short r,location where)
 	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < town_size[town_type] - 1)))
 		ter = coord_to_ter(where.x,where.y + 1);
 	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == town_size[town_type] - 1)) 
-	 || (extend_road_terrain(ter) == TRUE)) {
+	 || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[2];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
@@ -2288,7 +2288,7 @@ void place_road(short q,short r,location where)
 
 	if (where.x > 0)
 		ter = coord_to_ter(where.x - 1,where.y);
-	if ((where.x == 0) || (extend_road_terrain(ter) == TRUE)) {
+	if ((where.x == 0) || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[3];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
@@ -2321,24 +2321,24 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
 			87,88,89,98,0, 0,0,0,0,0};
 
-	sound_key = type / 10;
-	type = type % 10;
+	//sound_key = type / 10;
+	//type = type % 10;
 	
-//	if ((cartoon_happening == TRUE) && (anim_step < 140))
+//	if ((cartoon_happening == true) && (anim_step < 140))
 //		return;
-	if ((cartoon_happening == FALSE) && ((mode != 100) && (party_can_see(where) == 6)))
+	if ((cartoon_happening == false) && ((mode != 100) && (party_can_see(where) == 6)))
 		return;
 	if ((type < 0) || (type > 4))
 		return;
-	if ((boom_anim_active == TRUE) && (type != 3))
+	if ((boom_anim_active == true) && (type != 3))
 		return;
-	if ((cartoon_happening == FALSE) && (PSD[SDF_NO_FRILLS] > 0) && (fast_bang == TRUE))
+	if ((cartoon_happening == false) && (PSD[SDF_NO_FRILLS] > 0) && (fast_bang == true))
 		return;
 	if (is_out())
 		return;
 			
 	// Redraw terrain in proper position
-	if ((((point_onscreen(center,where) == FALSE) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
+	if ((((point_onscreen(center,where) == false) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
 		) {
 		play_sound(sound_to_play[sound]);
 
@@ -2371,7 +2371,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	OffsetRect(&dest_rect,x_adj,y_adj);
 	SectRect(&dest_rect,&big_to,&dest_rect);
 
-	if (cartoon_happening == FALSE) 
+	if (cartoon_happening == false) 
 		OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
 		else if (store_anim_type == 0) 				
 			OffsetRect(&dest_rect,306,5);
@@ -2380,7 +2380,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	OffsetRect(&source_rect,-1 * store_rect.left + 28 * type,-1 * store_rect.top);
 	rect_draw_some_item(fields_gworld,source_rect,terrain_screen_gworld,dest_rect,1,1);
 	
-	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
+	if ((cartoon_happening == false) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
 		sprintf((char *) dam_str,"%d",damage);
 		TextSize(10);
@@ -2396,18 +2396,18 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		TextSize(0);
 		TextFace(0);
 		}
-		play_sound(sound_to_play[sound]);
-		if ((sound == 6) && (fast_bang == 0))
+		play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
+		if ((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
 			FlushAndPause(12);
 
 	
-	if (fast_bang == 0) {
+	if (fast_bang == 0 && !skip_boom_delay) {
 		del_len = PSD[SDF_GAME_SPEED] * 3 + 4;
-		if (play_sounds == FALSE)
+		if (play_sounds == false)
 			FlushAndPause(del_len);
 		}
 	redraw_terrain();
-	if ((cartoon_happening == FALSE) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+	if ((cartoon_happening == false) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 		draw_pcs(center,1);	
 }
 	
@@ -2419,7 +2419,7 @@ void draw_pointing_arrows()
 		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}};
 	short i;
 	
-	if ((monsters_going == TRUE) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
+	if ((monsters_going == true) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
 		|| (overall_mode == MODE_LOOK_OUTDOORS)) 
 			return;
 	for (i = 0; i < 4; i++) {
@@ -2432,7 +2432,7 @@ void redraw_terrain()
 {
 	Rect to_rect;
 	
-	if (cartoon_happening == FALSE)
+	if (cartoon_happening == false)
 		to_rect = win_to_rects[0];
 		else {
 			GetPortBounds(terrain_screen_gworld, &to_rect);
@@ -2455,11 +2455,11 @@ void draw_targets(location center)
 	Rect source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 
-	if (party_toast() == TRUE)
+	if (party_toast() == true)
 		return;
 
 	for (i = 0; i < 8; i++)
-		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == TRUE)) {
+		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == true)) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			OffsetRect(&dest_rect,5,5);
 			InsetRect(&dest_rect,8,12);
@@ -2473,7 +2473,7 @@ void frame_space(location where,short mode,short width,short height)
 	location where_put;
 	Rect to_frame;
 	
-	if (point_onscreen(center,where) == FALSE)
+	if (point_onscreen(center,where) == false)
 		return;
 
 	where_put.x = 4 + where.x - center.x;
@@ -2530,8 +2530,8 @@ void draw_targeting_line(Point where_curs)
 		GlobalToLocal(&where_curs);	
 		
 		OffsetRect(&on_screen_terrain_area,ul.h,ul.v);
-		if (PtInRect (where_curs, &on_screen_terrain_area) == TRUE) {
-		// && (point_onscreen(center,pc_pos[current_pc]) == TRUE)){		
+		if (PtInRect (where_curs, &on_screen_terrain_area) == true) {
+		// && (point_onscreen(center,pc_pos[current_pc]) == true)){		
 			i = (where_curs.h - 23 - ul.h) / 28;
 			j = (where_curs.v - 23 - ul.v) / 36;
 			which_space.x = center.x + (short) i - 4;
@@ -2604,14 +2604,14 @@ void draw_targeting_line(Point where_curs)
 }
 
 
-Boolean party_toast()
+bool party_toast()
 {
 	short i;
 	
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == 1)
-			return FALSE;
-	return TRUE;
+			return false;
+	return true;
 }
 
 void redraw_partial_terrain(Rect redraw_rect)
@@ -2666,7 +2666,7 @@ void dump_gworld()
 //	GetPort(&old_port);
 //	SetPort(GetWindowPort(mainPtr));
 //	BeginUpdate(mainPtr);
-//	if (in_startup_mode == FALSE)
+//	if (in_startup_mode == false)
 //		refresh_screen(0);
 //		else draw_startup(0);
 //	EndUpdate(mainPtr);

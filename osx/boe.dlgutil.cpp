@@ -39,21 +39,21 @@ extern short stat_window,dialog_answer;
 extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern party_record_type party;
-extern Boolean in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
+extern bool in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
 extern WindowPtr mainPtr;
 extern Rect d_rects[80];
 extern short d_rect_index[80];
 extern short display_mode,stat_screen_mode,current_pc;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern Boolean save_maps,give_delays;
+extern bool save_maps,give_delays;
 //extern pc_record_type ADVEN[6];
 extern location center;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
-extern Boolean modeless_exists[18];
+extern bool modeless_exists[18];
 extern DialogPtr modeless_dialogs[18] ;
 //extern town_item_list	t_i;
-extern Boolean game_run_before;
+extern bool game_run_before,skip_boom_delay;
 extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
 extern cUniverse univ;
@@ -78,7 +78,7 @@ word_rect_type store_words[50];
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost;
 GWorldPtr talk_gworld = NULL;
-Boolean talk_end_forced;
+bool talk_end_forced;
 Str255 old_str1,old_str2,one_back1,one_back2; 
 extern word_rect_type preset_words[9];
 Rect talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
@@ -248,7 +248,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item.item_properties = base_item.item_properties | 1;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
-				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); break;
+				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
 				case 4: ASB("Item is too heavy."); break;
@@ -257,19 +257,19 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 5:
 			base_item = store_alchemy(what_chosen - 500);
-			if (univ.party.alchemy[base_item.item_level] == TRUE)
+			if (univ.party.alchemy[base_item.item_level] == true)
 				ASB("You already know that recipe.");
-				else if (take_gold(cost,FALSE) == FALSE)
+				else if (take_gold(cost,false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy an alchemical recipe.");
-						univ.party.alchemy[base_item.item_level] = TRUE;
+						univ.party.alchemy[base_item.item_level] = true;
 						}
 			break;
 		case 6:
 			//base_item = food_types[what_chosen - 600];
-			//if (take_gold(cost,FALSE) == FALSE)
+			//if (take_gold(cost,false) == false)
 			//	ASB("Not enough gold.");
 			//	else {
 			//		play_sound(-38); ASB("You buy food.");
@@ -278,7 +278,7 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 7:
 			what_chosen -= 700;
-			if (take_gold(cost,FALSE) == FALSE)
+			if (take_gold(cost,false) == false)
 				ASB("Not enough gold.");
 				else {
 					ASB("You pay the healer.");
@@ -296,7 +296,7 @@ void handle_sale(short what_chosen,short cost)
 							ADVEN[current_pc].status[12] = 0; break;
 						case 4: 
 							for (i = 0; i < 24; i++)
-								if ((ADVEN[current_pc].equip[i] == TRUE) && 
+								if ((ADVEN[current_pc].equip[i] == true) && 
 									(ADVEN[current_pc].items[i].is_cursed()))
 										ADVEN[current_pc].items[i].item_properties =
 											ADVEN[current_pc].items[i].item_properties & 239;
@@ -312,14 +312,14 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_mage_spells(what_chosen - 800 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				SysBeep(50); ASB("Error 102: Report this!"); break;}
-			if (ADVEN[current_pc].mage_spells[base_item.item_level] == TRUE)
+			if (ADVEN[current_pc].mage_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
-				else if (take_gold(cost,FALSE) == FALSE)
+				else if (take_gold(cost,false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						ADVEN[current_pc].mage_spells[base_item.item_level] = TRUE;
+						ADVEN[current_pc].mage_spells[base_item.item_level] = true;
 						give_help(41,0,0);
 						}
 			break;
@@ -327,14 +327,14 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_priest_spells(what_chosen - 900 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				SysBeep(50); ASB("Error 101: Report this!"); break;}
-			if (ADVEN[current_pc].priest_spells[base_item.item_level] == TRUE)
+			if (ADVEN[current_pc].priest_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
-				else if (take_gold(cost,FALSE) == FALSE)
+				else if (take_gold(cost,false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						ADVEN[current_pc].priest_spells[base_item.item_level] = TRUE;
+						ADVEN[current_pc].priest_spells[base_item.item_level] = true;
 						give_help(41,0,0);
 						}
 			break;
@@ -344,7 +344,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
-				case 1: play_sound(-38); give_to_pc(current_pc,base_item,TRUE); 
+				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); 
 					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
@@ -401,7 +401,7 @@ void handle_info_request(short what_chosen)
 void set_up_shop_array()
 {
 	short i,shop_pos = 0;
-	Boolean cursed_item = FALSE;
+	bool cursed_item = false;
 	cItemRec store_i;
 	long store_l;
 	
@@ -444,8 +444,8 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((ADVEN[current_pc].equip[i] == TRUE) && (ADVEN[current_pc].items[i].is_cursed() == TRUE))
-					cursed_item = TRUE;
+				if ((ADVEN[current_pc].equip[i] == true) && (ADVEN[current_pc].items[i].is_cursed() == true))
+					cursed_item = true;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
 				store_shop_costs[shop_pos] = heal_costs[4];
@@ -553,7 +553,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
 	create_clip_region();
-	talk_end_forced = FALSE;
+	talk_end_forced = false;
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
@@ -611,7 +611,7 @@ void handle_talk_event(Point p)
 		}
 
 	for (i = 0; i < 9; i++)
-		if ((PtInRect(p,&preset_words[i].word_rect)) && ((talk_end_forced == FALSE) || (i == 6) || (i == 5))) {
+		if ((PtInRect(p,&preset_words[i].word_rect)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
 			click_talk_rect((char *) old_str1,(char *) old_str2,preset_words[i].word_rect);
 			switch (i) {
 				case 0: case 1: case 2: case 7: case 8:
@@ -666,7 +666,7 @@ void handle_talk_event(Point p)
 			}
 	if (i < 100) {
 		for (i = 0; i < 50; i++) 
-			if ((PtInRect(p,&store_words[i].word_rect)) && (talk_end_forced == FALSE)) {
+			if ((PtInRect(p,&store_words[i].word_rect)) && (talk_end_forced == false)) {
 				click_talk_rect((char *) old_str1,(char *) old_str2,store_words[i].word_rect);
 				for (j = 0; j < 4; j++)
 					asked[j] = store_words[i].word[j];
@@ -793,7 +793,7 @@ void handle_talk_event(Point p)
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
 				else {
-					talk_end_forced = TRUE;
+					talk_end_forced = true;
 					univ.party.gold -= a;
 					put_pc_screen();
 					heal_party(30 * b);
@@ -807,7 +807,7 @@ void handle_talk_event(Point p)
 			sprintf((char *) place_string2,"");					
 			break;
 		case 4:
-			if (day_reached((unsigned char) a,0) == TRUE) {
+			if (day_reached((unsigned char) a,0) == true) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
@@ -815,7 +815,7 @@ void handle_talk_event(Point p)
 			strnum2 = 0;
 			break;
 		case 5:
-			if (day_reached((unsigned char) a,(unsigned char) b) == TRUE) {
+			if (day_reached((unsigned char) a,(unsigned char) b) == true) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
@@ -895,7 +895,7 @@ void handle_talk_event(Point p)
 			strnum2 = 0;
 			break;
 		case 19:
-			if ((sd_legit(b,c) == TRUE) && (PSD[b][c] == d)) {
+			if ((sd_legit(b,c) == true) && (PSD[b][c] == d)) {
 				sprintf((char *) place_string1, "You've already learned that.");  
 				strnum1 = -1;
 				}
@@ -906,7 +906,7 @@ void handle_talk_event(Point p)
 				else {
 					univ.party.gold -= a;
 					put_pc_screen();
-					if (sd_legit(b,c) == TRUE)
+					if (sd_legit(b,c) == true)
 						PSD[b][c] = d;
 						else give_error("Invalid Stuff Done flag called in conversation.","",0);
 					}
@@ -923,10 +923,10 @@ void handle_talk_event(Point p)
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (univ.party.boats[i].property == TRUE)) {
+						if ((i >= 0) && (i < 30) && (univ.party.boats[i].property == true)) {
 							univ.party.gold -= a;
 							put_pc_screen();
-							univ.party.boats[i].property = FALSE;
+							univ.party.boats[i].property = false;
 							sprintf((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
@@ -949,10 +949,10 @@ void handle_talk_event(Point p)
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (univ.party.horses[i].property == TRUE)) {
+						if ((i >= 0) && (i < 30) && (univ.party.horses[i].property == true)) {
 							univ.party.gold -= a;
 							put_pc_screen();
-							univ.party.horses[i].property = FALSE;
+							univ.party.horses[i].property = false;
 							sprintf((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
@@ -1003,23 +1003,23 @@ void handle_talk_event(Point p)
 			sprintf((char *) place_string2,"");					
 			break;
 		case 25:
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;	
 		case 26:
 			univ.town.monst.dudes[store_m_num].attitude = 1;
 			univ.town.monst.dudes[store_m_num].mobile = 1;
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;	
 		case 27:
 			make_town_hostile();
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;	
 		case 28:
 			univ.town.monst.dudes[store_m_num].active = 0;
 	// Special killing effects
-	if (sd_legit(univ.town.monst.dudes[store_m_num].monst_start.spec1,univ.town.monst.dudes[store_m_num].monst_start.spec2) == TRUE)
+	if (sd_legit(univ.town.monst.dudes[store_m_num].monst_start.spec1,univ.town.monst.dudes[store_m_num].monst_start.spec2) == true)
 		PSD[univ.town.monst.dudes[store_m_num].monst_start.spec1][univ.town.monst.dudes[store_m_num].monst_start.spec2] = 1;
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;	
 		case 29: // town special
 			 run_special(7,2,a,univ.town.p_loc,&s1,&s2,&s3);
@@ -1229,7 +1229,7 @@ void do_registration_event_filter (short item_hit)
 //		play_sound(40);
 //		//build_data_file(2);
 //		FCD(1078,0);
-//		registered = TRUE;
+//		registered = true;
 //		save_prefs();
 //		check_pref_file();
 //		}
@@ -1254,6 +1254,8 @@ void load_prefs(){
 	if(valid) show_startup_splash = b;
 	b = CFPreferencesGetAppBooleanValue(CFSTR("GameRunBefore"), CFSTR("com.spidweb.bladesofexile"), &valid);
 	if(valid) game_run_before = b;
+	b = CFPreferencesGetAppBooleanValue(CFSTR("SkipBoomDelay"), CFSTR("com.spidweb.bladesofexile"), &valid);
+	if(valid) skip_boom_delay = b;
 }
 
 //void check_pref_file() {
@@ -1283,7 +1285,7 @@ void load_prefs(){
 //	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
 //	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
 //	if (file_ref_num == -1) {
-//		game_run_before = FALSE;
+//		game_run_before = false;
 //		save_prefs();
 //		//make_pref_file(pref);
 //		return -1;
@@ -1293,11 +1295,11 @@ void load_prefs(){
 //	data_handle = (PrefHandle) Get1Resource('PRFN',128);
 //	
 //	if ((**data_handle).l[1] != 0)
-//		ask_to_change_color = TRUE;
-//		else ask_to_change_color = FALSE;
+//		ask_to_change_color = true;
+//		else ask_to_change_color = false;
 //	if ((**data_handle).l[2] != 0)
-//		give_intro_hint = TRUE;
-//		else give_intro_hint = FALSE;
+//		give_intro_hint = true;
+//		else give_intro_hint = false;
 //	display_mode = (short) ((**data_handle).l[3]);
 //	play_sounds = (short) ((**data_handle).l[4]);
 //	register_flag = (long) (800000) - (**data_handle).l[5];
@@ -1305,7 +1307,7 @@ void load_prefs(){
 //	ed_flag = (long) (800000) - (**data_handle).l[6];
 //	ed_key = (long) (700000) - (**data_handle).l[8];
 //	
-//	if ((registered == TRUE) && (stored_key != init_data(register_flag))) {
+//	if ((registered == true) && (stored_key != init_data(register_flag))) {
 //		display_mode = 0;
 //		CloseResFile(file_ref_num);
 //		save_prefs();
@@ -1313,7 +1315,7 @@ void load_prefs(){
 //		}
 //	if ((stored_key != init_data(register_flag)) && ((register_flag < 10000) || (register_flag > 30000)
 //		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
-//		registered = FALSE;
+//		registered = false;
 //		if  ((register_flag < 10000) || (register_flag > 30000))
 //			register_flag = get_ran(1,10000,30000);
 //		if ((ed_flag < 0) || (ed_flag > 10000))
@@ -1361,11 +1363,11 @@ void load_prefs(){
 //	// Amputating this code, cause it's broken, while save prefs code works OK
 //	
 ////	(**(PrefHandle)app_handle).l[5] = (long) (800000) - register_flag;
-////	if (registered == TRUE)
+////	if (registered == true)
 ////		(**(PrefHandle)app_handle).l[7] = (long) (700000) - init_data(register_flag);
 //
 ////	(**(PrefHandle)app_handle).l[6] = (long) (800000) - ed_flag;
-////	if (ed_reg == TRUE)
+////	if (ed_reg == true)
 ////		(**(PrefHandle)app_handle).l[8] = (long) (700000) - init_data(ed_flag);
 //
 ////	GetResInfo((Handle) app_handle,&res_ID,&res_type,res_name);
@@ -1414,10 +1416,15 @@ void save_prefs(){
 		game_run_before ? kCFBooleanTrue : kCFBooleanFalse,
 		CFSTR("com.spidweb.bladesofexile")
 	);
+	CFPreferencesSetAppValue(
+		CFSTR("SkipBoomDelay"),
+		skip_boom_delay ? kCFBooleanTrue : kCFBooleanFalse,
+		CFSTR("com.spidweb.bladesofexile")
+	);
 	
 	bool success = CFPreferencesAppSynchronize (CFSTR("com.spidweb.bladesofexile"));
 	if(!success){
-		give_error("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their default values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.",0);
+		give_error("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.",0);
 	}
 }
 
@@ -1438,7 +1445,7 @@ void save_prefs(){
 //	app_res_num = CurResFile();
 //	
 //	GetIndString(pref_name,5,19);
-//	if (sys_7_avail == TRUE)
+//	if (sys_7_avail == true)
 //		FindFolder(kOnSystemDisk,kPreferencesFolderType,
 //			kDontCreateFolder,&vol_ref,&dir_ID);
 //	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
@@ -1468,9 +1475,9 @@ void save_prefs(){
 //		}
 //	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
 //	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
-//	if (registered == TRUE)
+//	if (registered == true)
 //		(**(PrefHandle)data_handle).l[7] = (long) (700000) - init_data(register_flag);
-//	if (ed_reg == TRUE)
+//	if (ed_reg == true)
 //		(**(PrefHandle)data_handle).l[8] = (long) (700000) - init_data(ed_flag);
 //	
 //	old_handle = Get1Resource('PRFN',128);
@@ -1489,19 +1496,19 @@ void save_prefs(){
 
 void prefs_event_filter (short item_hit)
 {
-	Boolean done_yet = FALSE,did_cancel = FALSE;
+	bool done_yet = false,did_cancel = false;
 	short i;
 	
 		switch (item_hit) {
 			case 1:
-				done_yet = TRUE;
+				done_yet = true;
 				toast_dialog();
 				break;
 
 			case 2:
-				done_yet = TRUE;
+				done_yet = true;
 				toast_dialog();
-				did_cancel = TRUE;
+				did_cancel = true;
 				break;
 
 			case 18: case 20: case 22: case 24: case 27: case 38: case 40: case 43: case 45:
@@ -1526,8 +1533,8 @@ void prefs_event_filter (short item_hit)
 				cd_set_led(1099,4 + cur_display_mode,1);
 				break;
 			}
-	if (done_yet== TRUE) {
-		if (did_cancel == FALSE) {
+	if (done_yet== true) {
+		if (did_cancel == false) {
 			display_mode = cur_display_mode;
 			PSD[SDF_NO_MAPS] = cd_get_led(1099,18);
 			PSD[SDF_NO_SOUNDS] = cd_get_led(1099,20);
@@ -1557,7 +1564,7 @@ void prefs_event_filter (short item_hit)
 					GetWindowRect(GetDesktopWindow(),&windRECT);
 					MoveWindow(mainPtr,(windRECT.right - (563 + 10)) / 2,
 					(windRECT.bottom - (425 + 40)) / 2 ,
-					563 + 10,425 + 40,TRUE);
+					563 + 10,425 + 40,true);
 					}*/
 			}
 		//play_sounds = 1 - PSD[SDF_NO_SOUNDS];
@@ -1580,7 +1587,7 @@ void pick_preferences()
 	cd_set_led(1099,4 + cur_display_mode,1);
 
 	cd_set_led(1099,18,(PSD[SDF_NO_MAPS] != 0) ? 1 : 0);
-	cd_set_led(1099,20,(play_sounds == FALSE) ? 1 : 0);
+	cd_set_led(1099,20,(play_sounds == false) ? 1 : 0);
 	cd_set_led(1099,22,(PSD[SDF_NO_FRILLS] != 0) ? 1 : 0);
 	cd_set_led(1099,24,(PSD[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
 	cd_set_led(1099,27,(PSD[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
@@ -1698,12 +1705,12 @@ void edit_party_event_filter (short item_hit)
 void edit_party(short can_create,short can_cancel)
 {
 	short item_hit;
-	Boolean munch_pc_graphic = FALSE;
+	bool munch_pc_graphic = false;
 	
 	make_cursor_sword();
 
 	if (pcs_gworld == NULL) {
-		munch_pc_graphic = TRUE;
+		munch_pc_graphic = true;
 		pcs_gworld = load_pict(902);
 		}	
 
@@ -1719,7 +1726,7 @@ void edit_party(short can_create,short can_cancel)
 
 	cd_kill_dialog(989,0);
 
-	if (munch_pc_graphic == TRUE) {
+	if (munch_pc_graphic == true) {
 		DisposeGWorld(pcs_gworld);
 		pcs_gworld = NULL;
 		}
@@ -1917,7 +1924,7 @@ void give_password_filter (short item_hit)
 		}
 }
 
-Boolean enter_password()
+bool enter_password()
 // ignore parent in Mac version
 {
 	short town_strs_hit,i;

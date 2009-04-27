@@ -1,20 +1,20 @@
-Boolean town_specials(short which,short t_num);
-Boolean handle_wandering_specials (short which,short mode);
-Boolean check_special_terrain(location where_check,short mode,short which_pc,short *spec_num,
-	Boolean *forced);
+bool town_specials(short which,short t_num);
+bool handle_wandering_specials (short which,short mode);
+bool check_special_terrain(location where_check,short mode,short which_pc,short *spec_num,
+	bool *forced);
 void check_fields(location where_check,short mode,short which_pc);
 void use_spec_item(short item);
 void use_item(short pc,short item);
-Boolean use_space(location where);
-Boolean adj_town_look(location where);
+bool use_space(location where);
+bool adj_town_look(location where);
 void PSOE(short str1a,short str1b,short str2a,short str2b,
 	short which_special,unsigned char *stuff_done_val,short where_put);
-Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type);
+bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type);
 void kill_monst(cPopulation::cCreature *which_m,short who_killed);
 void special_increase_age();
 void out_move_party(char x,char y) ;
 void teleport_party(short x,short y,short mode);
-Boolean run_stone_circle(short which);
+bool run_stone_circle(short which);
 void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();

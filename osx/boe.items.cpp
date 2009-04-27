@@ -31,7 +31,7 @@ extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern town_item_list	univ.town.items;
 extern WindowPtr mainPtr;
-extern Boolean in_startup_mode,boom_anim_active;
+extern bool in_startup_mode,boom_anim_active;
 extern Rect d_rects[80];
 extern short d_rect_index[80];
 //extern pc_record_type ADVEN[6];
@@ -39,7 +39,7 @@ extern short d_rect_index[80];
 extern location pc_pos[6];
 
 //extern CursHandle sword_curs;
-extern Boolean modeless_exists[18],diff_depth_ok;
+extern bool modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern DialogPtr modeless_dialogs[18];
 extern short town_size[3];
@@ -52,9 +52,9 @@ extern cScenario scenario;
 extern cUniverse univ;
 
 ////
-Boolean equippable[26] = {FALSE,TRUE,TRUE,FALSE,TRUE, TRUE,TRUE,FALSE,FALSE,FALSE,
-						TRUE,FALSE,TRUE,TRUE,TRUE, TRUE,TRUE,TRUE,TRUE,TRUE,
-						FALSE,FALSE,TRUE,TRUE,TRUE,TRUE};
+bool equippable[26] = {false,true,true,false,true, true,true,false,false,false,
+						true,false,true,true,true, true,true,true,true,true,
+						false,false,true,true,true,true};
 short num_hands_to_use[26] = {0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0};
 short num_that_can_equip[26] = {0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1}; 
 
@@ -75,15 +75,15 @@ void sort_pc_items(short pc_num)
 	cItemRec store_item;
 	////
 	short item_priority[26] = {20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9};
-	Boolean no_swaps = FALSE,store_equip;
+	bool no_swaps = false,store_equip;
 	short i;
 	
-	while (no_swaps == FALSE) {
-		no_swaps = TRUE;
+	while (no_swaps == false) {
+		no_swaps = true;
 		for (i = 0; i < 23; i++)
 			if (item_priority[ADVEN[pc_num].items[i + 1].variety] < 
 			  item_priority[ADVEN[pc_num].items[i].variety]) {
-			  	no_swaps = FALSE;
+			  	no_swaps = false;
 			  	store_item = ADVEN[pc_num].items[i + 1];
 			  	ADVEN[pc_num].items[i + 1] = ADVEN[pc_num].items[i];
 			  	ADVEN[pc_num].items[i] = store_item;
@@ -116,28 +116,28 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 	char announce_string[60];
 	
 	if (item.variety == 0)
-		return TRUE;
+		return true;
 	if (item.variety == 3) {
 		univ.party.gold += item.item_level;
 		ASB("You get some gold.");
-		return TRUE;
+		return true;
 		}
 	if (item.variety == 11) {
 		univ.party.food += item.item_level;
 		ASB("You get some food.");
-		return TRUE;
+		return true;
 		}
 	if (item.item_weight() > 
 	  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
-	  	if (print_result == TRUE) {
+	  	if (print_result == true) {
 		  	SysBeep(20);
 			ASB("Item too heavy to carry.");
 			}
-		return FALSE;
+		return false;
 	  	}
 	free_space = pc_has_space(pc_num);
 	if ((free_space == 24) || (ADVEN[pc_num].main_status != 1))
-		return FALSE;
+		return false;
 		else {
 			item.item_properties = item.item_properties & 253; // not property
 			item.item_properties = item.item_properties & 247; // not contained
@@ -147,22 +147,22 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 				if (stat_window == pc_num)
 					put_item_screen(stat_window,0);
 			}
-			if (in_startup_mode == FALSE) {
+			if (in_startup_mode == false) {
 				if (item.is_ident() == 0)
 					sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name,item.name);
 					else sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name,item.full_name);
-				if (print_result == TRUE)
+				if (print_result == true)
 					add_string_to_buf((char *)announce_string);
 				}
 
 			combine_things(pc_num);
 			sort_pc_items(pc_num);
-			return TRUE;
+			return true;
 			}
-	return FALSE;
+	return false;
 }
 
-Boolean forced_give(short item_num,short abil) ////
+bool forced_give(short item_num,short abil) ////
 // if abil > 0, force abil, else ignore
 {
 	short i,j;
@@ -170,7 +170,7 @@ Boolean forced_give(short item_num,short abil) ////
 	char announce_string[60];
 
 	if ((item_num < 0) || (item_num > 399))
-		return TRUE;
+		return true;
 	item = get_stored_item(item_num);
 	if (abil > 0)
 		item.ability = abil;
@@ -185,41 +185,41 @@ Boolean forced_give(short item_num,short abil) ////
 				add_string_to_buf((char *)announce_string);
 				combine_things(i);
 				sort_pc_items(i);
-				return TRUE;
+				return true;
 				}	
-	return FALSE;
+	return false;
 }
 
-Boolean GTP(short item_num)
+bool GTP(short item_num)
 {
 	cItemRec item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,true);
 }
-Boolean silent_GTP(short item_num)
+bool silent_GTP(short item_num)
 {
 	cItemRec item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,false);
 }
-void give_gold(short amount,Boolean print_result)////
+void give_gold(short amount,bool print_result)////
 {
 	if (amount < 0) return;
 	univ.party.gold = univ.party.gold + amount;
-	if (print_result == TRUE)
+	if (print_result == true)
 		put_pc_screen();
 }
 
-Boolean take_gold(short amount,Boolean print_result)
+bool take_gold(short amount,bool print_result)
 {
 	if (univ.party.gold < amount)
-		return FALSE;
+		return false;
 	univ.party.gold = univ.party.gold - amount;
-	if (print_result == TRUE)
+	if (print_result == true)
 		put_pc_screen();
-	return TRUE;
+	return true;
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
@@ -229,7 +229,7 @@ short get_prot_level(short pc_num,short abil) ////
 	
 	for (i = 0; i < 24; i++)
 		if ((ADVEN[pc_num].items[i].variety != 0) && (ADVEN[pc_num].items[i].ability == abil)
-			&& (ADVEN[pc_num].equip[i] == TRUE))
+			&& (ADVEN[pc_num].equip[i] == true))
 				return ADVEN[pc_num].items[i].ability_strength;
 	return -1;
 				
@@ -240,7 +240,7 @@ short pc_has_abil_equip(short pc_num,short abil)
 	short i = 0;
 	
 	while (((ADVEN[pc_num].items[i].variety == 0) || (ADVEN[pc_num].items[i].ability != abil)
-			|| (ADVEN[pc_num].equip[i] == FALSE)) && (i < 24))
+			|| (ADVEN[pc_num].equip[i] == false)) && (i < 24))
 				i++;
 	return i;
 				
@@ -256,18 +256,18 @@ short pc_has_abil(short pc_num,short abil)
 	return i;
 }
 
-Boolean party_has_abil(short abil)
+bool party_has_abil(short abil)
 {
 	short i;
 	
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == 1)
 			if (pc_has_abil(i,abil) < 24)
-				return TRUE;
-	return FALSE;
+				return true;
+	return false;
 }
 
-Boolean party_take_abil(short abil)
+bool party_take_abil(short abil)
 {
 	short i,item;
 	
@@ -277,19 +277,19 @@ Boolean party_take_abil(short abil)
 				if (ADVEN[i].items[item].charges > 1)
 					ADVEN[i].items[item].charges--;
 					else take_item(i,item);
-				return TRUE;
+				return true;
 				}
-	return FALSE;
+	return false;
 }
 
 // returns true is party has item of given item class
 // mode - 0 - take one of them, 1 - don't take
-Boolean party_check_class(short item_class,short mode) ////
+bool party_check_class(short item_class,short mode) ////
 {
 	short i,j;
 	
 	if (item_class == 0)
-		return FALSE;
+		return false;
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == 1)
 			for (j = 23; j >= 0; j--)
@@ -299,9 +299,9 @@ Boolean party_check_class(short item_class,short mode) ////
 							ADVEN[i].items[j].charges--;
 							else take_item(i,j);
 						}
-					return TRUE;
+					return true;
 					}
-	return FALSE;
+	return false;
 }
 short amount_pc_can_carry(short pc_num)
 {
@@ -330,28 +330,28 @@ short pc_carry_weight(short pc_num)
 	return storage;
 }
 
-void give_food(short amount,Boolean print_result)////
+void give_food(short amount,bool print_result)////
 {
 	if (amount < 0) return;
 	univ.party.food = univ.party.food + amount;
-	if (print_result == TRUE)
+	if (print_result == true)
 		put_pc_screen();	
 }
 
-short take_food(short amount,Boolean print_result)
+short take_food(short amount,bool print_result)
 {
 	short diff;
 
 	diff = amount - univ.party.food;
 	if (diff > 0) {
 		univ.party.food = 0;
-		if (print_result == TRUE)
+		if (print_result == true)
 			put_pc_screen();
 		return diff;
 		}
 
 	univ.party.food = univ.party.food - amount;
-	if (print_result == TRUE)
+	if (print_result == true)
 		put_pc_screen();	
 	return 0;	
 }
@@ -387,7 +387,7 @@ short pc_ok_to_buy(short pc_num,short cost,cItemRec item) ////
 	  		return 4;
 	  		}	
 	  	}
-	if (take_gold(cost,FALSE) == FALSE)
+	if (take_gold(cost,false) == false)
 		return 3;
 	return 1;
 
@@ -398,10 +398,10 @@ void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 30, don't update stat win, item is which_item - 30
 {
 	short i;
-	Boolean do_print = TRUE;
+	bool do_print = true;
 	
 	if (which_item >= 30) {
-		do_print = FALSE;
+		do_print = false;
 		which_item -= 30;
 		}
 		
@@ -417,9 +417,9 @@ void take_item(short pc_num,short which_item)
 		ADVEN[pc_num].equip[i] = ADVEN[pc_num].equip[i + 1];
 		}
 	ADVEN[pc_num].items[23] = cItemRec();
-	ADVEN[pc_num].equip[23] = FALSE;
+	ADVEN[pc_num].equip[23] = false;
 	
-	if ((stat_window == pc_num) && (do_print == TRUE))
+	if ((stat_window == pc_num) && (do_print == true))
 		put_item_screen(stat_window,1);
 }
 
@@ -510,11 +510,11 @@ if ((overall_mode == MODE_COMBAT) && (ADVEN[pc_num].items[item_num].variety == 1
 	else {
 
 		// unequip
-	if (ADVEN[pc_num].equip[item_num] == TRUE) {
+	if (ADVEN[pc_num].equip[item_num] == true) {
 		if (ADVEN[pc_num].equip[item_num] && ADVEN[pc_num].items[item_num].is_cursed())
 			add_string_to_buf("Equip: Item is cursed.           ");
 			else {
-				ADVEN[pc_num].equip[item_num] = FALSE;
+				ADVEN[pc_num].equip[item_num] = false;
 				add_string_to_buf("Equip: Unequipped");
 				if ((ADVEN[pc_num].weap_poisoned == item_num) && (ADVEN[pc_num].status[0] > 0)) {
 						add_string_to_buf("  Poison lost.           ");
@@ -524,11 +524,11 @@ if ((overall_mode == MODE_COMBAT) && (ADVEN[pc_num].items[item_num].variety == 1
 		}
 
 	else {  // equip
-		if (equippable[ADVEN[pc_num].items[item_num].variety] == FALSE)
+		if (equippable[ADVEN[pc_num].items[item_num].variety] == false)
 			add_string_to_buf("Equip: Can't equip this item.");
 				else {
 					for (i = 0; i < 24; i++) 
-						if (ADVEN[pc_num].equip[i] == TRUE) {
+						if (ADVEN[pc_num].equip[i] == true) {
 							if (ADVEN[pc_num].items[i].variety == ADVEN[pc_num].items[item_num].variety)
 								num_equipped_of_this_type++;
 							num_hands_occupied = num_hands_occupied + num_hands_to_use[ADVEN[pc_num].items[i].variety];
@@ -539,7 +539,7 @@ if ((overall_mode == MODE_COMBAT) && (ADVEN[pc_num].items[item_num].variety == 1
 					// Now if missile is already equipped, no more missiles
 					if (equip_item_type > 0) {
 						for (i = 0; i < 24; i++) 
-							if ((ADVEN[pc_num].equip[i] == TRUE) && (excluding_types[ADVEN[pc_num].items[i].variety] == equip_item_type)) {
+							if ((ADVEN[pc_num].equip[i] == true) && (excluding_types[ADVEN[pc_num].items[i].variety] == equip_item_type)) {
 								add_string_to_buf("Equip: You have something of");
 								add_string_to_buf("  this type equipped.");
 								return;
@@ -553,7 +553,7 @@ if ((overall_mode == MODE_COMBAT) && (ADVEN[pc_num].items[item_num].variety == 1
 							else if (num_that_can_equip[ADVEN[pc_num].items[item_num].variety] <= num_equipped_of_this_type)
 								add_string_to_buf("Equip: Can't equip another");
 								else {
-									ADVEN[pc_num].equip[item_num] = TRUE;
+									ADVEN[pc_num].equip[item_num] = true;
 									add_string_to_buf("Equip: OK");
 									}
 					}
@@ -569,7 +569,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 {
 	short choice,how_many = 0;
 	cItemRec item_store;
-	Boolean take_given_item = TRUE;
+	bool take_given_item = true;
 	location loc;
 	
 	item_store = ADVEN[pc_num].items[item_num];
@@ -598,12 +598,12 @@ void drop_item(short pc_num,short item_num,location where_drop)
 				if (how_many <= 0)
 					return;
 				if (how_many < item_store.charges)
-					take_given_item = FALSE;
+					take_given_item = false;
 				item_store.charges = how_many;
 				}
-			if (is_container(loc) == TRUE)
+			if (is_container(loc) == true)
 				item_store.item_properties = item_store.item_properties | 8;
-			if (!place_item(item_store,loc,FALSE)) {
+			if (!place_item(item_store,loc,false)) {
 				add_string_to_buf("Drop: Too many items on ground");
 				item_store.item_properties = item_store.item_properties & 247; // not contained
 				}
@@ -628,20 +628,20 @@ bool place_item(cItemRec item,location where,bool forced)
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
 			reset_item_max();
-			return TRUE;
+			return true;
 			}
-	if (forced == FALSE)
-		return FALSE;
+	if (forced == false)
+		return false;
 	destroy_an_item();
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].variety == 0) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
 			reset_item_max();
-			return TRUE;
+			return true;
 			}
 	
-	return TRUE;
+	return true;
 }
 
 void destroy_an_item()
@@ -677,30 +677,30 @@ void give_thing(short pc_num, short item_num)
 {
 	short who_to,how_many = 0;
 	cItemRec item_store;
-	Boolean take_given_item = TRUE;
+	bool take_given_item = true;
 	
 	if (ADVEN[pc_num].equip[item_num] && ADVEN[pc_num].items[item_num].is_cursed())
 			add_string_to_buf("Give: Item is cursed.           ");
 			else {
 				item_store = ADVEN[pc_num].items[item_num];
 				who_to = char_select_pc(1,1,"Give item to who?");
-				if ((overall_mode == MODE_COMBAT) && (adjacent(pc_pos[pc_num],pc_pos[who_to]) == FALSE)) {
+				if ((overall_mode == MODE_COMBAT) && (adjacent(pc_pos[pc_num],pc_pos[who_to]) == false)) {
 					add_string_to_buf("Give: Must be adjacent.");
 					who_to = 6;
 					}
 
 				if ((who_to < 6) && (who_to != pc_num) 
-					&& ((overall_mode != MODE_COMBAT) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == TRUE))) {
+					&& ((overall_mode != MODE_COMBAT) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == true))) {
 					if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 						how_many = get_num_of_items(item_store.charges);
 						if (how_many == 0)
 							return;
 						if (how_many < item_store.charges)
-							take_given_item = FALSE;
+							take_given_item = false;
 						ADVEN[pc_num].items[item_num].charges -= how_many;
 						item_store.charges = how_many;
 						}					
-					if (give_to_pc(who_to,item_store,0) == TRUE) {
+					if (give_to_pc(who_to,item_store,0) == true) {
 						if (take_given_item)
 							take_item(pc_num,item_num);	
 						}
@@ -733,9 +733,9 @@ void combine_things(short pc_num)
 						ASB("(Can have at most 125 of any item.");
 						}
 				 		else ADVEN[pc_num].items[i].charges += ADVEN[pc_num].items[j].charges;
-				 	if (ADVEN[pc_num].equip[j] == TRUE) {
-				 		ADVEN[pc_num].equip[i] = TRUE;
-				 		ADVEN[pc_num].equip[j] = FALSE;
+				 	if (ADVEN[pc_num].equip[j] == true) {
+				 		ADVEN[pc_num].equip[i] = true;
+				 		ADVEN[pc_num].equip[j] = false;
 				 		}
 					take_item(pc_num,30 + j);
 				 	}
@@ -770,11 +770,11 @@ void set_item_flag(cItemRec *item)
 		}
 }
 
-short get_item(location place,short pc_num,Boolean check_container)
+short get_item(location place,short pc_num,bool check_container)
 //short pc_num; // if 6, any   
 {
 	short i,taken = 0;
-	Boolean item_near = FALSE;
+	bool item_near = false;
 	short mass_get = 1;
 	
 	for (i = 0; i < T_M; i++)
@@ -784,18 +784,18 @@ short get_item(location place,short pc_num,Boolean check_container)
 		
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].variety != 0)
-			if (((adjacent(place,univ.town.items[i].item_loc) == TRUE) || 
-			 ((mass_get == 1) && (check_container == FALSE) &&
+			if (((adjacent(place,univ.town.items[i].item_loc) == true) || 
+			 ((mass_get == 1) && (check_container == false) &&
 			 ((dist(place,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 			  && (can_see(place,univ.town.items[i].item_loc,0) < 5))) 
-			  && ((!univ.town.items[i].is_contained()) || (check_container == TRUE))) {
+			  && ((!univ.town.items[i].is_contained()) || (check_container == true))) {
 				taken = 1;
 
 					if (univ.town.items[i].value < 2)
 						univ.town.items[i].item_properties = univ.town.items[i].item_properties | 1;
-					item_near = TRUE;
+					item_near = true;
 				}
-	if (item_near == TRUE)
+	if (item_near == true)
 		if (display_item(place,pc_num,mass_get,check_container) > 0) { // if true, there was a theft
 			for (i = 0; i < T_M; i++)
 				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 != 1)
@@ -821,7 +821,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 void make_town_hostile()
 {
 	short i,num;
-	Boolean fry_party = FALSE;
+	bool fry_party = false;
 	
 	if (which_combat_type == 0)
 		return;
@@ -832,7 +832,7 @@ void make_town_hostile()
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].summoned == 0)){
 			univ.town.monst.dudes[i].attitude = 1;
 			num = univ.town.monst.dudes[i].number;
-			univ.town.monst.dudes[i].mobile = TRUE;
+			univ.town.monst.dudes[i].mobile = true;
 			if (scenario.scen_monsters[num].spec_skill == 37) {
 				univ.town.monst.dudes[i].active = 2;
 				
@@ -846,12 +846,12 @@ void make_town_hostile()
 // In some towns, doin' this'll getcha' killed.
 //// wedge in special
 
-	if (fry_party == TRUE) {
+	if (fry_party == true) {
 		for (i = 0; i < 6; i++)
 			if (ADVEN[i].main_status > MAIN_STATUS_ABSENT)
 				ADVEN[i].main_status = MAIN_STATUS_ABSENT;
 		stat_window = 6;
-		boom_anim_active = FALSE;	
+		boom_anim_active = false;	
 		}
 }
 
@@ -981,11 +981,11 @@ void display_item_event_filter (short item_hit)
 					if (univ.town.items[item_array[item_hit]].item_level > 3000)
 						univ.town.items[item_array[item_hit]].item_level = 3000;
 				set_item_flag(&item);
-					give_gold(univ.town.items[item_array[item_hit]].item_level,FALSE);
+					give_gold(univ.town.items[item_array[item_hit]].item_level,false);
 					play_sound(39); // formerly force_play_sound
 					}
 				else if (univ.town.items[item_array[item_hit]].variety == 11) {
-					give_food(univ.town.items[item_array[item_hit]].item_level,FALSE);
+					give_food(univ.town.items[item_array[item_hit]].item_level,false);
 				set_item_flag(&item);
 					set_item_flag(&univ.town.items[item_array[item_hit]]);
 					play_sound(62); // formerly force_play_sound
@@ -1014,8 +1014,8 @@ void display_item_event_filter (short item_hit)
 }
 
 
-// Returns TRUE is a theft committed
-short display_item(location from_loc,short pc_num,short mode, Boolean check_container)
+// Returns true is a theft committed
+short display_item(location from_loc,short pc_num,short mode, bool check_container)
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 {
@@ -1035,12 +1035,12 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 	total_items_gettable = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].variety != 0) {
-			if (((adjacent(from_loc,univ.town.items[i].item_loc) == TRUE) || 
-				 ((mode == 1) && (check_container == FALSE) &&
+			if (((adjacent(from_loc,univ.town.items[i].item_loc) == true) || 
+				 ((mode == 1) && (check_container == false) &&
 				 ((dist(from_loc,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 				  && (can_see(from_loc,univ.town.items[i].item_loc,0) < 5))) &&
 				  (univ.town.items[i].is_contained() == check_container) &&
-				  ((check_container == FALSE) || (univ.town.items[i].item_loc == from_loc))) {
+				  ((check_container == false) || (univ.town.items[i].item_loc == from_loc))) {
 				  	item_array[array_position] = i;
 			  		array_position++;
 			  		total_items_gettable++;
@@ -1051,7 +1051,7 @@ short display_item(location from_loc,short pc_num,short mode, Boolean check_cont
 		pcs_gworld = load_pict(902);
 	cd_create_dialog(987,mainPtr);
 
-	if (check_container == TRUE)
+	if (check_container == true)
 		csit(987,17,"Looking in container:");
 		else if (mode == 0)
 		csit(987,17,"Getting all adjacent items:");
@@ -1106,7 +1106,7 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 	//if (parent < 2) {
 		SetPort(GetWindowPort(mainPtr));
 		BeginUpdate(mainPtr);
-//		if (in_startup_mode == FALSE)
+//		if (in_startup_mode == false)
 //			refresh_screen(0);
 //			else draw_startup(0);
 	redraw_screen();
@@ -1143,7 +1143,7 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 //	if (parent < 2) {
 //		SetPort(GetWindowPort(mainPtr));
 //		BeginUpdate(mainPtr);
-//		if (in_startup_mode == FALSE)
+//		if (in_startup_mode == false)
 //			refresh_screen(0);
 //			else draw_startup(0);
 //		EndUpdate(mainPtr);
@@ -1177,7 +1177,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 	
 	for (i = 0; i < 6; i++) {
 		if ((ADVEN[i].main_status == 0) ||
-			((active_only == TRUE) && (ADVEN[i].main_status > 1)) ||
+			((active_only == true) && (ADVEN[i].main_status > 1)) ||
 			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (ADVEN[i].main_status == 5)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
@@ -1191,7 +1191,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 	cd_kill_dialog(1018,0);
 
 	BeginUpdate(mainPtr);
-	if (in_startup_mode == FALSE)
+	if (in_startup_mode == false)
 		//refresh_screen(0); 
 		redraw_screen();
 		else draw_startup(0);
@@ -1278,7 +1278,7 @@ short choice_dialog(short pic,short num)
 //	SetPort(mainPtr);
 
 //	BeginUpdate(mainPtr);
-//	if (in_startup_mode == FALSE)
+//	if (in_startup_mode == false)
 //		refresh_screen(0);
 //		else draw_startup(0);
 //	EndUpdate(mainPtr);
@@ -1322,7 +1322,7 @@ void create_modeless_dialog(short which_dlog)
 			}
 	if (i == 18)
 		return;
- 	if (modeless_exists[which_d] == TRUE) {
+ 	if (modeless_exists[which_d] == true) {
 		SelectWindow(GetDialogWindow(modeless_dialogs[which_d]));
 		return;
 		}
@@ -1364,7 +1364,7 @@ void place_glands(location where,unsigned char m_type)
 	
 	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);
-		place_item(store_i,where,FALSE);
+		place_item(store_i,where,false);
 		}
 }
 
@@ -1453,7 +1453,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			r1 = get_ran(1,1,9);
 			if (((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
 				|| ((r1 < 6) && (party_total_level() < 30)) || (loot > 2) )
-				place_item(new_item,where,FALSE);
+				place_item(new_item,where,false);
 		}
 	for (j = 0; j < 5; j++) {
 		r1 = get_ran(1,1,100);
@@ -1509,7 +1509,7 @@ void place_treasure(location where,short level,short loot,short mode)
 					if ((ADVEN[i].main_status == 1) 
 						&& (get_ran(1,1,100) < id_odds[ADVEN[i].skills[13]]))
 							new_item.item_properties = new_item.item_properties | 1;
-				place_item(new_item,where,FALSE);
+				place_item(new_item,where,false);
 				}			
 			}
 		}

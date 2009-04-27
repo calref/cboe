@@ -33,11 +33,11 @@ public:
 typedef struct {
 	location horse_loc,horse_loc_in_sec,horse_sector;
 	short which_town;
-	Boolean exists,property;
+	bool exists,property;
 } horse_record_type;
 typedef struct {
 	location boat_loc,boat_loc_in_sec,boat_sector;
 	short which_town;
-	Boolean exists,property;
+	bool exists,property;
 } boat_record_type;
 */

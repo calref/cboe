@@ -108,7 +108,7 @@ FSSpecPtr nav_get_scenario(){
 	FSSpecPtr file_to_load;
 	
 	NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
-	if (s_reply.validRecord == FALSE)
+	if (s_reply.validRecord == false)
 		return NULL;
 	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,file_to_load,sizeof(FSSpec),&actualSize);
 	
@@ -173,15 +173,15 @@ bool load_scenario(FSSpec file_to_load){
 	if ((scenario.format.flag1 == 10) && (scenario.format.flag2 == 20) &&
 		(scenario.format.flag3 == 30) && (scenario.format.flag4 == 40)) {
 	  	cur_scen_is_mac = true;
-	  	file_ok = TRUE;
+	  	file_ok = true;
 	}
 	else if ((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 		(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
 	  	SysBeep(20);
-	  	cur_scen_is_mac = FALSE;
-	  	file_ok = TRUE;
+	  	cur_scen_is_mac = false;
+	  	file_ok = true;
 	}
-	if (file_ok == FALSE) {
+	if (file_ok == false) {
 		FSClose(file_id); 
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
 		return false;
@@ -217,7 +217,7 @@ bool load_scenario(FSSpec file_to_load){
 	// code for master
 	/*
 	 for (i = 0; i < 30000; i++) {
-	 if (check_p(i) == TRUE) {
+	 if (check_p(i) == true) {
 	 user_given_password = i;
 	 i = 30000;
 	 }
@@ -227,13 +227,13 @@ bool load_scenario(FSSpec file_to_load){
 	
 	/* Now check password
 	 
-	 if (check_p(0) == FALSE) {
+	 if (check_p(0) == false) {
 	 user_given_password = enter_password();
-	 if (check_p(user_given_password) == FALSE) {
+	 if (check_p(user_given_password) == false) {
 	 fancy_choice_dialog(868,0);
 	 if (overall_mode != 61) {
 	 user_given_password = enter_password();
-	 if (check_p(user_given_password) == FALSE) 
+	 if (check_p(user_given_password) == false) 
 	 ExitToShell();
 	 }
 	 else return;
@@ -244,13 +244,13 @@ bool load_scenario(FSSpec file_to_load){
 	
 	//given_password = user_given_password;
 	
-	scenario.ter_types[23].fly_over = FALSE;
+	scenario.ter_types[23].fly_over = false;
 	delete temp_scenario;
 	delete item_data;
 	
 	//store_file_reply = file_to_load;
 //	overall_mode = 60;
-//	change_made = FALSE;
+//	change_made = false;
 //	if(!load_town(scenario.last_town_edited)) return false;
 //	//load_town(0);
 //	if(!load_outdoors(scenario.last_out_edited,0)) return false;
@@ -1100,7 +1100,7 @@ void save_party(FSSpec dest_file)
 //	NavReplyRecord reply;
 //	OSErr error;
 //	short file_id;
-//	Boolean town_save = FALSE;
+//	bool town_save = false;
 //	Str63 store_name;
 //	FSSpec to_load;
 //	
@@ -1122,15 +1122,15 @@ void save_party(FSSpec dest_file)
 //	
 //	char *party_encryptor;	
 //	
-//	if ((in_startup_mode == FALSE) && (is_town()))
-//		town_save = TRUE;
+//	if ((in_startup_mode == false) && (is_town()))
+//		town_save = true;
 //	
 //	strcpy ((char *) store_name, (char *) last_load_file);
 //	
 //	
-//	if ((mode == 1) || (loaded_yet == FALSE)) {
+//	if ((mode == 1) || (loaded_yet == false)) {
 //		NavPutFile(NULL,&reply,NULL,NULL,'beSV','blx!',NULL);
-//		if (reply.validRecord == FALSE)
+//		if (reply.validRecord == false)
 //			return;
 //		
 //		AEKeyword keyword;
@@ -1138,7 +1138,7 @@ void save_party(FSSpec dest_file)
 //		Size actualSize;
 //		
 //		AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,&to_load,sizeof(FSSpec),&actualSize);
-//		loaded_yet = TRUE;
+//		loaded_yet = true;
 //	}
 //	else to_load = store_file_reply;
 //	
@@ -1161,20 +1161,20 @@ void save_party(FSSpec dest_file)
 //	
 //	len = sizeof(flag_type);
 //	
-//	flag.i = (town_save == TRUE) ? 1342 : 5790;
+//	flag.i = (town_save == true) ? 1342 : 5790;
 //	if ((error = FSWrite(file_id, &len, (char *) store))  != 0){
 //		add_string_to_buf("Save: Couldn't write to file.         ");
 //		FSClose(file_id);
 //		SysBeep(2);
 //	}
-//	flag.i = (in_startup_mode == FALSE) ? 100 : 200;
+//	flag.i = (in_startup_mode == false) ? 100 : 200;
 //	if ((error = FSWrite(file_id, &len, (char *) store)) != 0) {
 //		add_string_to_buf("Save: Couldn't write to file.         ");
 //		FSClose(file_id);
 //		SysBeep(2);
 //		return;
 //	}
-//	flag.i = (save_maps == TRUE) ? 5567 : 3422;
+//	flag.i = (save_maps == true) ? 5567 : 3422;
 //	if ((error = FSWrite(file_id, &len, (char *) store))  != 0){
 //		add_string_to_buf("Save: Couldn't write to file.         ");
 //		FSClose(file_id);
@@ -1232,7 +1232,7 @@ void save_party(FSSpec dest_file)
 //			party_encryptor[count] ^= 0x6B;
 //	}
 //	
-//	if (in_startup_mode == FALSE) {
+//	if (in_startup_mode == false) {
 //		
 //		// SAVE OUT DATA
 //		len = sizeof(out_info_type);
@@ -1243,7 +1243,7 @@ void save_party(FSSpec dest_file)
 //			return;
 //		}
 //		
-//		if (town_save == TRUE) {	
+//		if (town_save == true) {	
 //			town_ptr = &c_town;	
 //			len = sizeof(current_town_type);
 //			if ((error = FSWrite(file_id, &len, (char *) town_ptr)) != 0) {
@@ -1283,7 +1283,7 @@ void save_party(FSSpec dest_file)
 //		}
 //		
 //		// If saving maps, save maps
-//		if (save_maps == TRUE) {
+//		if (save_maps == true) {
 //			maps_ptr = &(town_maps);
 //			len = (long) sizeof(stored_town_maps_type);
 //			if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
@@ -1327,6 +1327,6 @@ void save_party(FSSpec dest_file)
 //		SysBeep(2);
 //		return;
 //	}
-//	if (in_startup_mode == FALSE)
+//	if (in_startup_mode == false)
 //		add_string_to_buf("Save: Game saved.              ");
 }

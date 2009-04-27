@@ -111,7 +111,7 @@ GWorldPtr load_pict(int picture_to_get)
 	
 	offPMHandle = GetGWorldPixMap (myGWorld);
 	good = LockPixels (offPMHandle);
-	if (good == FALSE)  {
+	if (good == false)  {
 		SysBeep(50);
 	}
 	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
@@ -150,10 +150,10 @@ GWorldPtr load_bmp(unsigned char *data, long length){
 			cur++;
 			colourTable[i] = (red << 16) + (green << 8) + blue;
 		}
-		indexed = TRUE;
+		indexed = true;
 	}
 	else if (bitCount == 24) {
-		indexed = FALSE;
+		indexed = false;
 	}
 	else {
 		return NULL;
@@ -314,7 +314,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 	short text_len[257];
 	short total_width = 0;
-	Boolean end_loop,force_skip = FALSE;
+	bool end_loop,force_skip = false;
 	KeyMap key_state;
 	long dummy3;
 	//RgnHandle current_clip;
@@ -360,7 +360,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 					 && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
 				  	if (c_str[i] == '|') {
 				  		c_str[i] = ' ';
-				  		force_skip = TRUE;
+				  		force_skip = true;
 					}
 					sprintf((char *)str_to_draw,"%s",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
@@ -372,8 +372,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 					on_what_line++;
 					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 					last_line_break = last_word_break;
-					if (force_skip == TRUE) {
-						force_skip = FALSE;
+					if (force_skip == true) {
+						force_skip = false;
 						i++;
 						last_line_break++;
 						last_word_break++;
@@ -439,7 +439,7 @@ short string_length(char *str){ // Why not just use strlen?
 	return total_width;
 }
 
-/*OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, Boolean isNative, void *refcon){
+/*OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon){
 	//PicHandle
 	PicPtr toFlip = (PicPtr) ptr;
 	
@@ -479,7 +479,7 @@ void draw_terrain(){
 			for (r = 0; r < 9; r++)
 			{
 				where_draw.x = q; where_draw.y = r;
-				if (editing_town == TRUE) {
+				if (editing_town == true) {
 					t_to_draw = t_d.terrain[cen_x + q - 4][cen_y + r - 4];		
 				}
 				else {
@@ -501,7 +501,7 @@ void draw_terrain(){
 				OffsetRect(&tiny_to,28 * q, 36 * r);
 				
 				// draw start icon, if starting point
-				if ((editing_town == TRUE) && 
+				if ((editing_town == true) && 
 					(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
 					&& (scenario.where_start.y == cen_y + r - 4)) {
 					from_rect = start_button_from;
@@ -510,7 +510,7 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 					OffsetRect(&tiny_to,0,-7);
 				}
-				if ((editing_town == FALSE)
+				if ((editing_town == false)
 					&& (scenario.out_sec_start.x == cur_out.x)
 					&& (scenario.out_sec_start.y == cur_out.y) 
 					&& (scenario.out_start.x == cen_x + q - 4)
@@ -533,7 +533,7 @@ void draw_terrain(){
 					OffsetRect(&tiny_to,0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				if (is_special(cen_x + q - 4,cen_y + r - 4) == true) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
@@ -545,9 +545,9 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
 					OffsetRect(&tiny_to,0,-7);
 				}	
-				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == true) {
 				//	}	
-				if (editing_town == FALSE) {
+				if (editing_town == false) {
 					for (i = 0; i < 4; i++)		
 						if ((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
 							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
@@ -560,7 +560,7 @@ void draw_terrain(){
 					
 				}
 				
-				if (editing_town == TRUE) {
+				if (editing_town == true) {
 					for (i = 0; i < 30; i++) {
 						if ((scenario.scen_boats[i].which_town == cur_town) &&
 							(scenario.scen_boats[i].boat_loc.x == cen_x + q - 4) &&
@@ -595,27 +595,27 @@ void draw_terrain(){
 							OffsetRect(&tiny_to,0,-7);
 							i = 4;
 						}			
-					if (is_web(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_crate(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_crate(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(6,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,0);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
-					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == TRUE) {
+					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(2,2);
 						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
@@ -635,7 +635,7 @@ void draw_terrain(){
 					
 				}
 			}
-		if (editing_town == TRUE) {
+		if (editing_town == true) {
 			draw_monsts();
 			draw_items();
 		}
@@ -643,7 +643,7 @@ void draw_terrain(){
 		SetPort( ter_draw_gworld);
 		ClipRect(&clipping_rect);
 		
-		if (editing_town == TRUE) {
+		if (editing_town == true) {
 			// draw info rects
 			for (i = 0; i < 16; i++)
 				if (t_d.room_rect[i].left > 0) {
@@ -664,7 +664,7 @@ void draw_terrain(){
 			FrameRect(&draw_rect);
 			ForeColor(blackColor);
 		}
-		if (editing_town == FALSE) {
+		if (editing_town == false) {
 			// draw info rects
 			for (i = 0; i < 8; i++)
 				if (current_terrain.info_rect[i].left > 0) {
@@ -680,28 +680,28 @@ void draw_terrain(){
 		ClipRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		
-		small_any_drawn = FALSE;
+		small_any_drawn = false;
 		//if (cur_viewing_mode == 0) 
 		//	draw_frames();
 	}
 	
 	if (cur_viewing_mode == 1) {
 		SetPort( ter_draw_gworld);
-		if (small_any_drawn == FALSE) {
+		if (small_any_drawn == false) {
 		 	FillCRect(&terrain_rect,bg[6]);
 			FrameRect(&terrain_rect);
 		}
-		for (q = 0; q < ((editing_town == TRUE) ? max_dim[town_type] : 48); q++) 
-			for (r = 0; r < ((editing_town == TRUE) ? max_dim[town_type] : 48); r++) {
-				t_to_draw = (editing_town == TRUE) ? t_d.terrain[q][r] :
+		for (q = 0; q < ((editing_town == true) ? max_dim[town_type] : 48); q++) 
+			for (r = 0; r < ((editing_town == true) ? max_dim[town_type] : 48); r++) {
+				t_to_draw = (editing_town == true) ? t_d.terrain[q][r] :
 				current_terrain.terrain[q][r];
-				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == FALSE)) {
+				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == false)) {
 					draw_one_tiny_terrain_spot(q,r,t_to_draw);
 					small_what_drawn[q][r] = t_to_draw;
 				}
 			}
 		SetPortWindowPort(mainPtr);
-		small_any_drawn = TRUE;
+		small_any_drawn = true;
 	}
 	
 	//draw_cur_string();

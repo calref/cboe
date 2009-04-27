@@ -40,7 +40,7 @@ DialogPtr	the_dialog;
 //extern unsigned char out[96][96],out_e[96][96];
 extern short give_delays,stat_screen_mode;
 extern eGameMode overall_mode;
-extern Boolean in_startup_mode,play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
+extern bool in_startup_mode,play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
 //extern current_town_type	c_town;
 //extern town_item_list	t_i;
 extern location center;
@@ -52,13 +52,13 @@ extern WindowPtr mainPtr;
 //extern big_tr_type t_d;
 extern short town_size[3];
 extern short town_type,current_pc;
-extern Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern Boolean sleep_field;
+extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
+extern bool sleep_field;
 //extern setup_save_type setup_save;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 //extern unsigned char template_terrain[64][64];
 //extern tiny_tr_type anim_t_d;
-extern Boolean modeless_exists[18];
+extern bool modeless_exists[18];
 extern location monster_targs[T_M];
 extern DialogPtr modeless_dialogs[18] ;
 extern short which_combat_type;
@@ -74,10 +74,10 @@ std::vector<std::string> scen_names;
 //extern outdoor_strs_type outdoor_text[2][2];
 extern vector<scen_header_type> scen_headers;
 extern unsigned char combat_terrain[64][64];
-extern Boolean belt_present;
+extern bool belt_present;
 extern bool mac_is_intel;
 
-Boolean loaded_yet = FALSE, got_nagged = FALSE,ae_loading = FALSE;
+bool loaded_yet = false, got_nagged = false,ae_loading = false;
 Str63 last_load_file = "\pBlades of Exile Save";
 FSSpec file_to_load;
 FSSpec store_file_reply;
@@ -187,13 +187,13 @@ void finish_load_party(){
 	bool town_restore = (univ.town.num < 200) ? true : false;
 	bool in_scen = (univ.party.scen_name[0] = '.') ? false : true;
 	
-	party_in_memory = TRUE;
+	party_in_memory = true;
 	
 	// now if not in scen, this is it.
 	if (!in_scen) {
 		if (!in_startup_mode) {
 			reload_startup();
-			in_startup_mode = TRUE;
+			in_startup_mode = true;
 			draw_startup(0);		
 		}
 		return;
@@ -237,29 +237,29 @@ void finish_load_party(){
 		// Set up field booleans
 		for (int j = 0; j < town_size[town_type]; j++)
 			for (int k = 0; k < town_size[town_type]; k++) {
-				if (is_web(j,k) == TRUE)
-					web = TRUE;
-				if (is_crate(j,k) == TRUE)
-					crate = TRUE;
-				if (is_barrel(j,k) == TRUE)
-					barrel = TRUE;
-				if (is_fire_barrier(j,k) == TRUE)
-					fire_barrier = TRUE;
-				if (is_force_barrier(j,k) == TRUE)
-					force_barrier = TRUE;
-				if (is_quickfire(j,k) == TRUE)
-					quickfire = TRUE;
+				if (is_web(j,k) == true)
+					web = true;
+				if (is_crate(j,k) == true)
+					crate = true;
+				if (is_barrel(j,k) == true)
+					barrel = true;
+				if (is_fire_barrier(j,k) == true)
+					fire_barrier = true;
+				if (is_force_barrier(j,k) == true)
+					force_barrier = true;
+				if (is_quickfire(j,k) == true)
+					quickfire = true;
 				if ((scenario.ter_types[univ.town.town->terrain(j,k)].special >= 16) &&
 					(scenario.ter_types[univ.town.town->terrain(j,k)].special <= 19))
-					belt_present = TRUE;
+					belt_present = true;
 			}
-		force_wall = TRUE;
-		fire_wall = TRUE;
-		antimagic = TRUE;
-		scloud = TRUE;
-		ice_wall = TRUE;
-		blade_wall = TRUE;
-		sleep_field = TRUE;
+		force_wall = true;
+		fire_wall = true;
+		antimagic = true;
+		scloud = true;
+		ice_wall = true;
+		blade_wall = true;
+		sleep_field = true;
 		center = univ.town.p_loc;
 		load_area_graphics();
 	}
@@ -267,7 +267,7 @@ void finish_load_party(){
 	create_clip_region();
 	redraw_screen();
 	current_pc = first_active_pc();
-	loaded_yet = TRUE;
+	loaded_yet = true;
 	
 	
 	strcpy ((char *) last_load_file, (char *) file_to_load.name);
@@ -276,25 +276,25 @@ void finish_load_party(){
 	add_string_to_buf("Load: Game loaded.            ");
 	
 	// Set sounds, map saving, and speed
-	if (((play_sounds == TRUE) && (PSD[SDF_NO_SOUNDS] == 1)) ||
-		((play_sounds == FALSE) && (PSD[SDF_NO_SOUNDS] == 0))) {
+	if (((play_sounds == true) && (PSD[SDF_NO_SOUNDS] == 1)) ||
+		((play_sounds == false) && (PSD[SDF_NO_SOUNDS] == 0))) {
 		flip_sound();
 	}
 	give_delays = PSD[SDF_NO_FRILLS]; 
 	if (PSD[SDF_NO_MAPS] == 0)
-		save_maps = TRUE;
-	else save_maps = FALSE;
+		save_maps = true;
+	else save_maps = false;
 	
-	in_startup_mode = FALSE;
-	in_scen_debug = FALSE;
+	in_startup_mode = false;
+	in_scen_debug = false;
 }
 
 void do_apple_event_open(FSSpec file_info)
 {
-	ae_loading = TRUE;
+	ae_loading = true;
 	load_party(file_info);
 	finish_load_party();
-	ae_loading = FALSE;
+	ae_loading = false;
 }
 
 //void port_save_file(party_record_type* party){
@@ -321,7 +321,7 @@ void do_apple_event_open(FSSpec file_info)
 //	talk_save_type talk_save[120];
 //	short direction,at_which_save_slot;
 //	char alchemy[20];
-//	Boolean can_find_town[200];
+//	bool can_find_town[200];
 //	short key_times[100];
 //	short party_event_timers[30];
 //	short global_or_town[30];
@@ -589,8 +589,8 @@ void shift_universe_left()
 
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x > 48)
-			univ.party.out_c[i].exists = FALSE;
-		if (univ.party.out_c[i].exists == TRUE) 
+			univ.party.out_c[i].exists = false;
+		if (univ.party.out_c[i].exists == true) 
 			univ.party.out_c[i].m_loc.x += 48;
 		}
 
@@ -628,8 +628,8 @@ void shift_universe_right()
 
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x < 48)
-			univ.party.out_c[i].exists = FALSE;
-		if (univ.party.out_c[i].exists == TRUE) 
+			univ.party.out_c[i].exists = false;
+		if (univ.party.out_c[i].exists == true) 
 			univ.party.out_c[i].m_loc.x -= 48;
 		}
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
@@ -665,8 +665,8 @@ void shift_universe_up()
 
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y > 48)
-			univ.party.out_c[i].exists = FALSE;
-		if (univ.party.out_c[i].exists == TRUE)
+			univ.party.out_c[i].exists = false;
+		if (univ.party.out_c[i].exists == true)
 			univ.party.out_c[i].m_loc.y += 48; 
 		}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
@@ -704,8 +704,8 @@ void shift_universe_down()
 
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y < 48)
-			univ.party.out_c[i].exists = FALSE;
-		if (univ.party.out_c[i].exists == TRUE) 
+			univ.party.out_c[i].exists = false;
+		if (univ.party.out_c[i].exists == true) 
 			univ.party.out_c[i].m_loc.y = univ.party.out_c[i].m_loc.y - 48;
 		}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
@@ -746,7 +746,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 	univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
 	univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
 	for (i = 0; i < 10; i++)
-		univ.party.out_c[i].exists = FALSE;
+		univ.party.out_c[i].exists = false;
 	for (i = 0; i < 96; i++)
 		for (j = 0; j < 96; j++) 	
 			univ.out.out_e[i][j] = 0;
@@ -768,14 +768,14 @@ void build_outdoors()
 	fix_boats();
 	add_outdoor_maps(); 
 	make_out_trim();
-	if (in_startup_mode == FALSE)
+	if (in_startup_mode == false)
 		erase_out_specials();
 	
 for (i = 0; i < 10; i++)
-		if (univ.party.out_c[i].exists == TRUE)
+		if (univ.party.out_c[i].exists == true)
 			if ((univ.party.out_c[i].m_loc.x < 0) || (univ.party.out_c[i].m_loc.y < 0) ||
 				(univ.party.out_c[i].m_loc.x > 95) || (univ.party.out_c[i].m_loc.y > 95))
-				univ.party.out_c[i].exists = FALSE;
+				univ.party.out_c[i].exists = false;
 	
 }
 
@@ -862,7 +862,7 @@ void fix_boats()
 	short i;
 
 	for (i = 0; i < 30; i++)
-		if ((univ.party.boats[i].exists == TRUE) && (univ.party.boats[i].which_town == 200)) {
+		if ((univ.party.boats[i].exists == true) && (univ.party.boats[i].which_town == 200)) {
 			if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
 				else if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x + 1)
@@ -875,7 +875,7 @@ void fix_boats()
 					else univ.party.boats[i].loc.y = 500;
 			}
 	for (i = 0; i < 30; i++)
-		if ((univ.party.horses[i].exists == TRUE) && (univ.party.horses[i].which_town == 200)) {
+		if ((univ.party.horses[i].exists == true) && (univ.party.horses[i].which_town == 200)) {
 			if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;
 				else if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x + 1)
@@ -1031,11 +1031,11 @@ void end_data_dump()
 }
 
 // expecting party record to contain name of proper scenario to load
-//Boolean load_scenario()
+//bool load_scenario()
 //{
 //
 //	short i,file_id;
-//	Boolean file_ok = FALSE;
+//	bool file_ok = false;
 //	OSErr error;
 //	long len;
 //	Str255 file_name;
@@ -1045,34 +1045,34 @@ void end_data_dump()
 //	error = HOpen(start_volume,start_dir,file_name,3,&file_id);	
 //	if (error != 0) {
 //		oops_error(10000 + error);
-//		SysBeep(2);	return FALSE;
+//		SysBeep(2);	return false;
 //		}	
 //		
 //	len = (long) sizeof(scenario_data_type);
 //	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
-//		FSClose(file_id); oops_error(29); return FALSE;
+//		FSClose(file_id); oops_error(29); return false;
 //		}
 //	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 //	 && (scenario.flag3 == 30)
 //	  && (scenario.flag4 == 40)) {
-//	  	file_ok = TRUE;
-//	  	cur_scen_is_mac = TRUE;
+//	  	file_ok = true;
+//	  	cur_scen_is_mac = true;
 //	  	}
 //	if ((scenario.flag1 == 20) && (scenario.flag2 == 40)
 //	 && (scenario.flag3 == 60)
 //	  && (scenario.flag4 == 80)) {
-//	  	file_ok = TRUE;
-//	  	cur_scen_is_mac = FALSE;
+//	  	file_ok = true;
+//	  	cur_scen_is_mac = false;
 //	  	}
-//	 if (file_ok == FALSE) {
+//	 if (file_ok == false) {
 //		FSClose(file_id); 
 //		give_error("This is not a legitimate Blades of Exile scenario.","",0);
-//		return FALSE;	 
+//		return false;	 
 //	 	}
 //	port_scenario();
 //	len = sizeof(scen_item_data_type); // item data
 //	if ((error = FSRead(file_id, &len, (char *) &(scen_item_list))) != 0){
-//		FSClose(file_id); oops_error(30); return FALSE;
+//		FSClose(file_id); oops_error(30); return false;
 //		}
 //	port_item_list();
 //	for (i = 0; i < 270; i++) {
@@ -1084,7 +1084,7 @@ void end_data_dump()
 //	FSClose(file_id);
 //	load_spec_graphics();
 //	set_up_ter_pics();
-//	return TRUE;
+//	return true;
 //}
 
 void set_up_ter_pics()
@@ -1178,7 +1178,7 @@ void build_scen_headers()
 			
 			} // folder, so do nothing
 			else {
-				if (load_scenario_header(fileRefs[cur_entry]) == TRUE) {
+				if (load_scenario_header(fileRefs[cur_entry]) == true) {
 					// now we need to store the file name, first stripping any path that occurs
 					// before it
 					last_colon = -1;
@@ -1216,39 +1216,39 @@ void build_scen_headers()
 bool load_scenario_header(FSRef file/*,short header_entry*/){
 	short i, file_id;
 	short store;
-	Boolean file_ok = FALSE;
+	bool file_ok = false;
 	OSErr error;
 	long len;
 	Str255 load_str;
-	Boolean mac_header = TRUE;
+	bool mac_header = true;
 		
 	//error = HOpen(start_volume,scen_dir,filename,3,&file_id);
 	error = FSOpenFork(&file, 0, NULL, fsRdPerm, &file_id);
 	if (error != 0) {
-		return FALSE;
+		return false;
 	}
 	scen_header_type curScen;
 	len = (long) sizeof(scen_header_type);
 	if ((error = FSRead(file_id, &len, (char *) &curScen)) != 0){
-		FSClose(file_id); return FALSE;
+		FSClose(file_id); return false;
 	}
 	if ((curScen.flag1 == 10) && (curScen.flag2 == 20)
 	 && (curScen.flag3 == 30)
 	  && (curScen.flag4 == 40)) {
-	  	file_ok = TRUE;
-	  	mac_header = TRUE;
+	  	file_ok = true;
+	  	mac_header = true;
 	}
 	if ((curScen.flag1 == 20) && (curScen.flag2 == 40)
 	 && (curScen.flag3 == 60)
 	  && (curScen.flag4 == 80)) {
-	  	file_ok = TRUE;
-	  	mac_header = FALSE;
+	  	file_ok = true;
+	  	mac_header = false;
 	}
-	if (file_ok == FALSE) {
+	if (file_ok == false) {
 		//scen_headers[header_entry].flag1 = 0;
 		//scen_headers.pop_back();
 		FSClose(file_id); 
-		return FALSE;
+		return false;
 	}
 
 	// So file is OK, so load in string data and close it.
@@ -1258,17 +1258,17 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	if (error != 0){
 		FSClose(file_id);
 		oops_error(29);
-		return FALSE;
+		return false;
 	}
 	store = scenario.rating;
-	if (mac_header == FALSE)
+	if (mac_header == false)
 		flip_short(&store);
 	curScen.default_ground = store;
 	
 	len = 41942;//sizeof(scen_item_data_type);
 	if (SetFPos(file_id,3,len) != 0){
 		FSClose(file_id);
-		return FALSE;
+		return false;
 	}
 	
 	scen_headers.push_back(curScen);
@@ -1287,7 +1287,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	
 	FSClose(file_id);
 
-	return TRUE;
+	return true;
 }
 
 GWorldPtr load_bmp_from_file(Str255 filename)
@@ -1481,22 +1481,22 @@ short get_buf_ptr(short flag)
 	return (short) k;
 }
 
-Boolean check_p (short pword)
+bool check_p (short pword)
 {
 	if (scenario.flag_b != town_s(pword))
-		return FALSE;
+		return false;
 	if (scenario.flag_c != out_s(pword))
-		return FALSE;
+		return false;
 	if (scenario.flag_e != str_size_1(pword))
-		return FALSE;
+		return false;
 	if (scenario.flag_f != str_size_2(pword))
-		return FALSE;
+		return false;
 	if (scenario.flag_h != str_size_3(pword))
-		return FALSE;
+		return false;
 	if (scenario.flag_d != init_data(pword))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 //void port_talk_nodes()

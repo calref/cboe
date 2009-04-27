@@ -31,23 +31,23 @@
 
 /* Mac stuff globals */
 Rect	windRect, Drag_Rect;
-Boolean  All_Done = FALSE;
+bool  All_Done = false;
 EventRecord	event;
 WindowPtr	mainPtr;	
 Handle menu_bar_handle;
 MenuHandle apple_menu,file_menu,extra_menu,help_menu,monster_info_menu,library_menu;
 MenuHandle actions_menu,music_menu,mage_spells_menu,priest_spells_menu;
 short had_text_freeze = 0,num_fonts;
-Boolean in_startup_mode = TRUE,app_started_normally = FALSE;
-Boolean first_startup_update = TRUE;
-Boolean diff_depth_ok = FALSE,first_sound_played = FALSE,spell_forced = FALSE,startup_loaded = FALSE;
-Boolean save_maps = TRUE,party_in_memory = FALSE;
+bool in_startup_mode = true,app_started_normally = false, skip_boom_delay = false;
+bool first_startup_update = true;
+bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
+bool save_maps = true,party_in_memory = false;
 CGrafPtr color_graf_port;
 ControlHandle text_sbar = NULL,item_sbar = NULL,shop_sbar = NULL;
 Rect sbar_rect = {283,546,421,562};
 Rect shop_sbar_rect = {67,258,357,274};
 Rect item_sbar_rect = {146,546,253,562};
-Boolean bgm_on = FALSE,bgm_init = FALSE;
+bool bgm_on = false,bgm_init = false;
 //short dialog_answer;
 Point store_anim_ul;
 cScenario scenario;
@@ -55,7 +55,7 @@ cUniverse univ;
 //piles_of_stuff_dumping_type *data_store;
 //talking_record_type talking;
 
-Boolean gInBackground = FALSE;
+bool gInBackground = false;
 long start_time;
 
 short on_spell_menu[2][62];
@@ -87,17 +87,17 @@ location monster_targs[T_M];
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
-Boolean fast_bang = FALSE;
+bool fast_bang = false;
 short spec_item_array[60];
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
-Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,sys_7_avail,suppress_stat_screen = FALSE;
+bool first_update = true,anim_onscreen = false,frills_on = true,sys_7_avail,suppress_stat_screen = false;
 short stat_window = 0,store_modifier;
-Boolean monsters_going = FALSE,boom_anim_active = FALSE,cartoon_happening = FALSE;
+bool monsters_going = false,boom_anim_active = false,cartoon_happening = false;
 short give_delays = 0;
-Boolean modeless_exists[18] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
+bool modeless_exists[18] = {false,false,false,false,false,false,
+								false,false,false,false,false,false,
+								false,false,false,false,false,false};
 short modeless_key[18] = {1079,1080,1081,1082,1084, 1046,1088,1089,1090,1092, 1095,1072,0,0,0,0,0,0};
 DialogPtr modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
@@ -140,8 +140,8 @@ short store_current_pc = 0;
 //stored_outdoor_maps_type o_maps;
 
 // Special stuff booleans
-Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-Boolean sleep_field;
+bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
+bool sleep_field;
 
 long last_anim_time = 0;
 
@@ -149,13 +149,13 @@ long last_anim_time = 0;
 ModalFilterUPP main_dialog_UPP;
 
 KeyMap key_state;
-Boolean fry_startup = FALSE;
+bool fry_startup = false;
 
 // 
 //	Main body of program Exile
 //
 #ifdef EXILE_BIG_GUNS
-//pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
+//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit);
 ControlActionUPP text_sbar_UPP;
 ControlActionUPP item_sbar_UPP;
 ControlActionUPP shop_sbar_UPP;
@@ -242,7 +242,7 @@ int main(void)
 	DrawMenuBar();
 	create_modeless_dialog(1046);
 
-	while (All_Done == FALSE) 
+	while (All_Done == false) 
 		Handle_One_Event();
 	
 	close_program();
@@ -311,9 +311,9 @@ void Initialize(void)
 	set_pixel_depth();
 	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
 	SetPortWindowPort(mainPtr);						/* set window to current graf port */
-	text_sbar = NewControl(mainPtr,&sbar_rect,tit,FALSE,58,0,58,scrollBarProc,1);
-	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,2);
-	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,FALSE,0,0,16,scrollBarProc,3);
+	text_sbar = NewControl(mainPtr,&sbar_rect,tit,false,58,0,58,scrollBarProc,1);
+	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,false,0,0,16,scrollBarProc,2);
+	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,false,0,0,16,scrollBarProc,3);
 	adjust_window_mode();
 	
 }
@@ -333,7 +333,7 @@ void Handle_One_Event()
 {
 	short chr,chr2;
 	long menu_choice,cur_time;
-	Boolean event_in_dialog = FALSE;
+	bool event_in_dialog = false;
 	GrafPtr old_port;
 	
 	through_sending();
@@ -347,13 +347,13 @@ void Handle_One_Event()
 	}
 
 	//(cur_time - last_anim_time > 42)
-	if ((cur_time % 40 == 0) && (in_startup_mode == FALSE) && (anim_onscreen == TRUE) && (PSD[SDF_NO_TER_ANIM] == 0)
+	if ((cur_time % 40 == 0) && (in_startup_mode == false) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
 		&& ((FrontWindow() == mainPtr) || (FrontWindow() ==GetDialogWindow(modeless_dialogs[5]))) && (!gInBackground)) {
 		last_anim_time = cur_time;
 		initiate_redraw();
 	}
-	if ((cur_time - last_anim_time > 20) && (in_startup_mode == TRUE) 
-		&& (app_started_normally == TRUE) && (FrontWindow() == mainPtr)) {
+	if ((cur_time - last_anim_time > 20) && (in_startup_mode == true) 
+		&& (app_started_normally == true) && (FrontWindow() == mainPtr)) {
 		last_anim_time = cur_time;
 		draw_startup_anim();
 	}
@@ -366,7 +366,7 @@ void Handle_One_Event()
 	
 	event_in_dialog = handle_dialog_event();
 	
-	if (event_in_dialog == FALSE)
+	if (event_in_dialog == false)
 	switch (event.what)
 	{
 		case keyDown: case autoKey:
@@ -427,9 +427,9 @@ void Handle_Activate()
 		SetPortWindowPort(mainPtr);
 }
 
-Boolean handle_dialog_event() 
+bool handle_dialog_event() 
 {
-	Boolean event_was_dlog = FALSE;
+	bool event_was_dlog = false;
 	short i,item_hit;
 	DialogPtr event_d;
 	
@@ -439,9 +439,9 @@ Boolean handle_dialog_event()
 				for (i = 0; i < 18; i++)
 					if (event_d == modeless_dialogs[i])	{
 						/*CloseDialog(modeless_dialogs[i]);
-						modeless_exists[i] = FALSE;
+						modeless_exists[i] = false;
 
-						event_was_dlog = TRUE;
+						event_was_dlog = true;
 						
 						SetPort(mainPtr);
 						SelectWindow(mainPtr);
@@ -475,18 +475,18 @@ void Handle_Update()
 	reset_text_bar(); // Guarantees text bar gets refreshed
 	
 	if (the_window == mainPtr) {
-		if (in_startup_mode == TRUE) {
-			/*if (first_startup_update == TRUE) 
-				first_startup_update = FALSE;
+		if (in_startup_mode == true) {
+			/*if (first_startup_update == true) 
+				first_startup_update = false;
 				else*/ draw_startup(0);
-/*			if (first_sound_played == FALSE) {
+/*			if (first_sound_played == false) {
 				play_sound(22);
-				first_sound_played = TRUE;
+				first_sound_played = true;
 				}  */
 			}
 		else {
-			if (first_update == TRUE) {
-				first_update = FALSE;
+			if (first_update == true) {
+				first_update = false;
 				if (overall_mode == MODE_OUTDOORS) 
 					redraw_screen();
 				if ((overall_mode > MODE_OUTDOORS) & (overall_mode < MODE_COMBAT))
@@ -607,8 +607,8 @@ void Mouse_Pressed()
 		
 		case inGoAway:
 			if (the_window == mainPtr) {
-				if (in_startup_mode == TRUE) {
-					All_Done = TRUE;
+				if (in_startup_mode == true) {
+					All_Done = true;
 					break;
 				}
 				if (overall_mode > MODE_TOWN){
@@ -623,14 +623,14 @@ void Mouse_Pressed()
 					if (choice == 1)
 						save_party(univ.file);
 				}
-				All_Done = TRUE;
+				All_Done = true;
 			}
 			else {
 				for (i = 0; i < 18; i++)
-					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i] == TRUE)) {
+					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i] == true)) {
 						//CloseDialog(modeless_dialogs[i]);
 						HideWindow(GetDialogWindow(modeless_dialogs[i])); 
-						modeless_exists[i] = FALSE;
+						modeless_exists[i] = false;
 						SelectWindow(mainPtr);
 						SetPortWindowPort(mainPtr);		
 					}
@@ -638,9 +638,9 @@ void Mouse_Pressed()
 			break;
 		
 		case inContent:
-			if ((the_window == mainPtr) && (((modeless_exists[5] == FALSE) && (FrontWindow() != the_window)) ||
-				((modeless_exists[5] == TRUE) && (the_window == mainPtr) && (FrontWindow() != GetDialogWindow(modeless_dialogs[5]))))) {
-				if (modeless_exists[5] == TRUE) {
+			if ((the_window == mainPtr) && (((modeless_exists[5] == false) && (FrontWindow() != the_window)) ||
+				((modeless_exists[5] == true) && (the_window == mainPtr) && (FrontWindow() != GetDialogWindow(modeless_dialogs[5]))))) {
+				if (modeless_exists[5] == true) {
 					SetPortWindowPort(mainPtr);
 					SelectWindow(mainPtr);
 					SetPortWindowPort(mainPtr);
@@ -694,7 +694,7 @@ void Mouse_Pressed()
 								
 							} // a control hit
 					 		else { // ordinary click
-								if (in_startup_mode == FALSE)
+								if (in_startup_mode == false)
 									All_Done = handle_action(event);
 								else All_Done = handle_startup_press(event.where);
 							}
@@ -702,7 +702,7 @@ void Mouse_Pressed()
 			break;
 	}
 
-	menu_activate((in_startup_mode == TRUE) ? 0 : 1);
+	menu_activate((in_startup_mode == true) ? 0 : 1);
 
 }
 
@@ -757,7 +757,7 @@ void handle_menu_choice(long choice)
 				break;
 			}
 		}
-	menu_activate((in_startup_mode == TRUE) ? 0 : 1);
+	menu_activate((in_startup_mode == true) ? 0 : 1);
  
 	HiliteMenu(0);
 }
@@ -782,7 +782,7 @@ void handle_file_menu(int item_hit)
 
 	switch (item_hit) {
 		case 1:
-			if (in_startup_mode == TRUE)
+			if (in_startup_mode == true)
 				startup_load();
 				else do_load();
 			break;
@@ -790,22 +790,22 @@ void handle_file_menu(int item_hit)
 			do_save(0);
 			break;
 		case 3:
-			if (in_startup_mode == TRUE){
+			if (in_startup_mode == true){
 				FSSpec* file = nav_put_party();
 				save_party(*file);
 			}
 				else do_save(1);
 			break;
 		case 4:
-			if (in_startup_mode == FALSE) {
+			if (in_startup_mode == false) {
 				choice = FCD(1091,0);
 				if (choice == 1)
 					return;
 				for (i = 0; i < 6; i++)
 					ADVEN[i].main_status = MAIN_STATUS_ABSENT;
-				party_in_memory = FALSE;
+				party_in_memory = false;
 				reload_startup();
-				in_startup_mode = TRUE;
+				in_startup_mode = true;
 				draw_startup(0);
 				}
 			start_new_game();
@@ -817,8 +817,8 @@ void handle_file_menu(int item_hit)
 			break;
 		case 8:
 
-			if (in_startup_mode == TRUE) {
-				All_Done = TRUE;
+			if (in_startup_mode == true) {
+				All_Done = true;
 				break;
 				}
 			if (overall_mode > MODE_TOWN) {
@@ -833,7 +833,7 @@ void handle_file_menu(int item_hit)
 					if (choice == 1)
 						save_party(univ.file);
 					}
-			All_Done = TRUE;
+			All_Done = true;
 			break;
 		}
 }
@@ -852,7 +852,7 @@ void handle_options_menu(int item_hit)
 			break;
 			
 		case 4:
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -919,7 +919,7 @@ void handle_options_menu(int item_hit)
 			adventure_notes();
 			break;
 		case 8:
-			if (in_startup_mode == FALSE)
+			if (in_startup_mode == false)
 				print_party_stats();
 			break;
 		}
@@ -967,7 +967,7 @@ void handle_actions_menu(int item_hit)
 			handle_keystroke('w',0,event);
 			break;
 		case 3:	
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -987,7 +987,7 @@ void handle_mage_spells_menu(int item_hit)
 			give_help(209,0,0);
 			break;
 		default:
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -1002,7 +1002,7 @@ void handle_priest_spells_menu(int item_hit)
 			give_help(209,0,0);
 			break;
 		default:
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -1021,13 +1021,13 @@ void handle_music_menu(int item_hit)
 
 	switch (item_hit) {
 		case 1: 
-			if (bgm_on == FALSE) {
+			if (bgm_on == false) {
 				choice = choice_dialog(0,600);
 				//if (choice == 1)
 				//init_bg_music();
 				}
 				//else end_music(1);
-			if (bgm_on == TRUE)
+			if (bgm_on == true)
 				PSD[SDF_NO_SHORE_FRILLS] = 1;
 				else PSD[SDF_NO_SHORE_FRILLS] = 0;
 			break;
@@ -1082,12 +1082,12 @@ void change_cursor(Point where_curs)
 	where_curs.h -= ul.h;
 	where_curs.v -= ul.v;
 	
-	if (PtInRect(where_curs,&world_screen) == FALSE)
+	if (PtInRect(where_curs,&world_screen) == false)
 		cursor_needed = 120;
 		else cursor_needed = curs_types[overall_mode];
 	
 	if (cursor_needed == 0) {
-		if ((PtInRect(where_curs,&world_screen) == FALSE) || (in_startup_mode == TRUE))
+		if ((PtInRect(where_curs,&world_screen) == false) || (in_startup_mode == true))
 			cursor_needed = 120;
 			else {
 				cursor_direction = get_cur_direction(where_curs);
@@ -1140,7 +1140,7 @@ void find_quickdraw() {
 			choice = choice_dialog(0,1070);
 			if (choice == 2)
 				ExitToShell();
-				else diff_depth_ok = TRUE;
+				else diff_depth_ok = true;
 			}
 		}
 		else  {
@@ -1158,7 +1158,7 @@ void set_pixel_depth() {
 	screen_pixmap_handle = (**(cur_device)).gdPMap;
 	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
 	
-	diff_depth_ok = TRUE;
+	diff_depth_ok = true;
 }
 
 void restore_depth()
@@ -1186,15 +1186,15 @@ void check_sys_7()
 	
 	err = Gestalt(gestaltSystemVersion, &response);
 	if ((err == noErr) && (response >= 0x0700))
-		sys_7_avail = TRUE;
-		else sys_7_avail = FALSE;
+		sys_7_avail = true;
+		else sys_7_avail = false;
 }
 
 pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 //AppleEvent *theAppleEvent,*reply;
 //long handlerRefcon;
 {
-	app_started_normally = TRUE;
+	app_started_normally = true;
 	return noErr;
 }
 
@@ -1219,9 +1219,9 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 						sizeof(myFSS),&actualSize);
 			if (myErr == noErr) {
 				do_apple_event_open(myFSS);
-				if ((in_startup_mode == FALSE) && (startup_loaded == TRUE)) 
+				if ((in_startup_mode == false) && (startup_loaded == true)) 
 					end_startup();
-				if (in_startup_mode == FALSE) {
+				if (in_startup_mode == false) {
 					post_load();
 					}
 					else update_pc_graphics();
@@ -1238,8 +1238,8 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 {
 	short choice;
 	
-	if ((overall_mode > MODE_STARTUP/*40*/) || (in_startup_mode == TRUE)) {
-		All_Done = TRUE;
+	if ((overall_mode > MODE_STARTUP/*40*/) || (in_startup_mode == true)) {
+		All_Done = true;
 		return noErr;
 		}
 
@@ -1256,7 +1256,7 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 					return userCanceledErr;		
 			}
 			
-	All_Done = TRUE;
+	All_Done = true;
 	return noErr;
 }
 
@@ -1266,19 +1266,19 @@ void set_up_apple_events()
 
 #ifndef EXILE_BIG_GUNS
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenApplication,
-		(AEEventHandlerProcPtr) handle_open_app, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_open_app, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenDocuments,
-		(AEEventHandlerProcPtr) handle_open_doc, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_open_doc, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEQuitApplication,
-		(AEEventHandlerProcPtr) handle_quit, 0, FALSE);
+		(AEEventHandlerProcPtr) handle_quit, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
@@ -1286,21 +1286,21 @@ void set_up_apple_events()
 #ifdef EXILE_BIG_GUNS
 	event_UPP1 = NewAEEventHandlerProc(handle_open_app);
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenApplication,
-		event_UPP1, 0, FALSE);
+		event_UPP1, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	event_UPP2 = NewAEEventHandlerProc(handle_open_doc);
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenDocuments,
-		event_UPP2, 0, FALSE);
+		event_UPP2, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
 
 	event_UPP3 = NewAEEventHandlerProc(handle_quit);
 	myErr = AEInstallEventHandler(kCoreEventClass,kAEQuitApplication,
-		event_UPP3, 0, FALSE);
+		event_UPP3, 0, false);
 			
 	if (myErr != noErr)
 		SysBeep(2);
@@ -1322,12 +1322,12 @@ void move_sound(unsigned char ter,short step){
 		on_swamp = true;
 	}else on_swamp = false;
 	
-	if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
+	if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
 		if (spec == 21) //town entrance ?
 			return;
 		play_sound(48); //play boat sound
 	}
-	else if ((monsters_going == FALSE) && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
+	else if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
 	else switch(scenario.ter_types[ter].step_sound){
@@ -1401,6 +1401,6 @@ void pause(short length)
 bool sd_legit(short a, short b)
 {
 	if ((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

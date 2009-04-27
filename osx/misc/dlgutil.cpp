@@ -56,7 +56,7 @@ short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,sho
 	dlgs[free_slot].key = current_key;
 	dlgs[free_slot].type = 900;
 	dlgs[free_slot].highest_item = 1;
-	dlgs[free_slot].draw_ready = FALSE;
+	dlgs[free_slot].draw_ready = false;
 	dlgs[free_slot].win = NULL;
 	
 	// first, create dummy dlog
@@ -178,8 +178,8 @@ short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,sho
 			}
 		}	
 	
-	//MoveWindow(dlgs[free_slot].win,(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,FALSE);	
-	SizeWindow(dlgs[free_slot].win,win_width,win_height,FALSE);
+	//MoveWindow(dlgs[free_slot].win,(windRect.right - win_width) / 2,(windRect.bottom - win_width) / 2 + 20,false);	
+	SizeWindow(dlgs[free_slot].win,win_width,win_height,false);
 	
 	ShowWindow(dlgs[free_slot].win);
 	SetPort(GetWindowPort(dlgs[free_slot].win));
@@ -321,7 +321,7 @@ void display_strings(char *text1, char *text2,
 	short item_hit;
 	Str255 sign_text;
 	location view_loc;
-	Boolean sound_done = FALSE;
+	bool sound_done = false;
 	
 	//make_cursor_sword();
 	

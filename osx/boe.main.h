@@ -3,7 +3,7 @@ void Initialize(void);
 void Set_Window_Drag_Bdry();
 void Handle_One_Event();
 void Handle_Activate();
-Boolean handle_dialog_event() ;
+bool handle_dialog_event() ;
 void Handle_Update();
 pascal void sbar_action(ControlHandle bar, short part);
 pascal void item_sbar_action(ControlHandle bar, short part);

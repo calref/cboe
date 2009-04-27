@@ -4,7 +4,7 @@ void terrain_under_rentar();
 location end_town_mode(short switching_level,location destination);  // returns new party location
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) ;
 void handle_town_specials(short town_number, short entry_dir,location start_loc) ;
-Boolean abil_exists(short abil) ;
+bool abil_exists(short abil) ;
 
 void start_town_combat(short direction);
 short end_town_combat();
@@ -24,7 +24,7 @@ void erase_out_specials();
 short get_town_spec_id(location where);
 void clear_map();
 pascal void draw_map (DialogPtr the_dialog, short the_item);
-Boolean is_door(location destination);
+bool is_door(location destination);
 void display_map();
 void check_done();
-Boolean quadrant_legal(short i, short j) ;
+bool quadrant_legal(short i, short j) ;

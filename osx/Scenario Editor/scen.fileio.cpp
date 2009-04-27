@@ -28,7 +28,7 @@ extern location cur_out;
 //extern cSpeech talking;
 extern cOutdoors current_terrain;
 extern unsigned char borders[4][50];
-extern Boolean change_made;
+extern bool change_made;
 extern GWorldPtr spec_scen_g;
 extern bool mac_is_intel;
 
@@ -40,7 +40,7 @@ long start_dir,data_dir;
 FSSpec temp_file_to_load;
 Str63 last_load_file = "\pBlades of Exile Scenario";
 std::string progDir;
-Boolean cur_scen_is_mac = TRUE;			
+bool cur_scen_is_mac = true;			
 
 ResFileRefNum mainRef, graphicsRef, soundRef;
 
@@ -145,7 +145,7 @@ void save_scenario()
 //	legacy::ave_tr_type ave_t;
 //	legacy::tiny_tr_type tiny_t;
 //	
-//	/*if (check_p(user_given_password) == FALSE) {
+//	/*if (check_p(user_given_password) == false) {
 //		fancy_choice_dialog(868,0);
 //		return;
 //		}
@@ -410,11 +410,11 @@ void save_scenario()
 //			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //		}
 //	
-//	change_made = FALSE;
+//	change_made = false;
 //	// now, everything is moved over. Delete the original, and rename the dummy
 //	error = FSClose(scen_f); 
 //	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(25);}
-//	cur_scen_is_mac = TRUE;
+//	cur_scen_is_mac = true;
 //	error = FSClose(dummy_f);		
 //	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(26);}
 //	error = FSpExchangeFiles(&to_load,&dummy_file);
@@ -685,7 +685,7 @@ void import_town(short which_town,FSSpec temp_file_to_load)
 {
 	printf("Town import currently disabled.\n");
 //	short i,j,k,l,file_id;
-//	Boolean file_ok = FALSE;
+//	bool file_ok = false;
 //	OSErr error;
 //	long len,len_to_jump = 0,store;
 //	Size buf_len = 100000;
@@ -714,9 +714,9 @@ void import_town(short which_town,FSSpec temp_file_to_load)
 //	
 //	if ((temp_vers.flag1 == 10) && (temp_vers.flag2 == 20) &&
 //		(temp_vers.flag3 == 30)  && (temp_vers.flag4 == 40)) {
-//	  	file_ok = TRUE;
+//	  	file_ok = true;
 //	}
-//	if (file_ok == FALSE) {
+//	if (file_ok == false) {
 //		FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario.","",0); return;	 
 //		DisposePtr(buffer); FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Macintosh scenario editor.","",0); return;	 
 //	}
@@ -740,13 +740,13 @@ void import_town(short which_town,FSSpec temp_file_to_load)
 //
 //	
 ////	// Now check password
-////	if (import_check_p(0) == FALSE) {
+////	if (import_check_p(0) == false) {
 ////		import_user_given_password = enter_password();
-////		if (import_check_p(import_user_given_password) == FALSE) {
+////		if (import_check_p(import_user_given_password) == false) {
 ////			fancy_choice_dialog(868,0);
 ////			if (overall_mode != 61) {
 ////				import_user_given_password = enter_password();
-////				if (import_check_p(import_user_given_password) == FALSE) 
+////				if (import_check_p(import_user_given_password) == false) 
 ////					ExitToShell();
 ////				}
 ////				else return;
@@ -1112,7 +1112,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 //			}
 //
 //	
-//	change_made = TRUE;
+//	change_made = true;
 //	// now, everything is moved over. Delete the original, and rename the dummy
 //	error = FSClose(dummy_f);		
 //	if (error != 0) {FSClose(dummy_f);oops_error(10);}
@@ -1135,7 +1135,7 @@ bool check_p (short pword)
 	if (scenario.flag_d != init_data(pword))
 		return false;
 
-	return TRUE;
+	return true;
 }
 
 bool check_p2 (short pword)

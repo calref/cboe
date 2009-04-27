@@ -15,7 +15,7 @@ short cd_find_dlog(WindowPtr window, short *dlg_num, short *dlg_key);
 short cd_get_item_id(short dlg_num, short item_num);
 Rect get_item_rect(WindowPtr hDlg, short item_num);
 void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val, short med_or_lt = 0);
-void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, Boolean do_frame,short win_or_gworld);
+void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, bool do_frame,short win_or_gworld);
 void convert_pict(short& which_g, short& type_g,Rect& rect);
 void draw_preset_ter_pic(short which_g,Rect& rect);
 void draw_preset_anim_ter_pic(short which_g,Rect& rect);

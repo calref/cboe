@@ -33,7 +33,7 @@ DialogPtr	the_dialog;
 //extern stored_town_maps_type town_maps;
 //extern stored_outdoor_maps_type o_maps;
 
-extern Boolean play_sounds,save_blocked;
+extern bool play_sounds,save_blocked;
 extern short current_active_pc;
 extern long stored_key;
 extern WindowPtr mainPtr;
@@ -41,9 +41,9 @@ extern WindowPtr mainPtr;
 extern cItemRec item_list[400];
 extern cUniverse univ;
 
-extern Boolean file_in_mem,party_in_scen,scen_items_loaded;
+extern bool file_in_mem,party_in_scen,scen_items_loaded;
 
-Boolean ae_loading = FALSE;
+bool ae_loading = false;
 
 typedef struct {
 	char expl[96][96];
@@ -83,10 +83,10 @@ bool load_scen_item_defs(char scen_name[256]);
 //	long descNum;
 //	FSRef fileRef;
 //	short file_id,i,j,k;
-//	Boolean town_restore = FALSE;
-//	Boolean maps_there = FALSE;
-//	Boolean map_doh = FALSE;
-//	Boolean in_scen = FALSE;
+//	bool town_restore = false;
+//	bool maps_there = false;
+//	bool map_doh = false;
+//	bool in_scen = false;
 //	
 //	flag_type fred;
 //	flag_type *store;
@@ -114,7 +114,7 @@ bool load_scen_item_defs(char scen_name[256]);
 //		BlockMoveData(&typeList, (*type_list)->osType, 2 * sizeof(OSType));
 //	}
 //	
-//	if (ae_loading == FALSE) {
+//	if (ae_loading == false) {
 //		//StandardGetFile(NULL,1,type_list,&s_reply);
 //		// StandardGetFile is not available in Carbon -jmr
 //		/* XXX FIXME general lack of error checking in these nav services calls */
@@ -183,12 +183,12 @@ bool load_scen_item_defs(char scen_name[256]);
 //		} 
 //		
 //		if ((i == 0) && (flag.i == flags[i][1]))
-//			town_restore = TRUE;
+//			town_restore = true;
 //		if ((i == 1) && (flag.i == flags[i][0])) {
-//			in_scen = TRUE;
+//			in_scen = true;
 //		}
 //		if ((i == 2) && (flag.i == flags[i][1]))
-//			maps_there = TRUE;
+//			maps_there = true;
 //	}
 //	
 //	// LOAD PARTY	
@@ -228,7 +228,7 @@ bool load_scen_item_defs(char scen_name[256]);
 //			pc_ptr[count] ^= 0x6B;	
 //	}
 //	
-//	if (in_scen == TRUE) {
+//	if (in_scen == true) {
 //		// LOAD OUTDOOR MAP
 //		len = (long) sizeof(out_info_type);
 //		if ((error = FSRead(file_id, &len, (char *) out_e)) != 0){
@@ -239,7 +239,7 @@ bool load_scen_item_defs(char scen_name[256]);
 //		}
 //		
 //		// LOAD TOWN 
-//		if (town_restore == TRUE) {
+//		if (town_restore == true) {
 //			len = (long) sizeof(current_town_type);
 //			if ((error = FSRead(file_id, &len, (char *) &c_town)) != 0){
 //				FSClose(file_id);
@@ -278,7 +278,7 @@ bool load_scen_item_defs(char scen_name[256]);
 //		}
 //		
 //		// LOAD SAVED MAPS
-//		if (maps_there == TRUE) {
+//		if (maps_there == true) {
 //			len = (long) sizeof(stored_town_maps_type);
 //			if ((error = FSRead(file_id, &len, (char *) &(town_maps)))  != 0){
 //				FSClose(file_id);
@@ -325,11 +325,11 @@ bool load_scen_item_defs(char scen_name[256]);
 //			i = 6;
 //		}
 //	}
-//	file_in_mem = TRUE;
-//	save_blocked = FALSE;
+//	file_in_mem = true;
+//	save_blocked = false;
 //	party_in_scen = in_scen;
 //	
-//	if (ae_loading == FALSE) {
+//	if (ae_loading == false) {
 //		/* not reached with Carbon */
 //		/*strcpy ((char *) last_load_file, (char *) reply.fName);*/
 //	} else {
@@ -449,7 +449,7 @@ bool select_save_location(FSSpec* to_save_ptr){
 //	OSErr error;
 //	
 //	short file_id;
-//	Boolean got_error = FALSE,in_scen = FALSE,town_save = FALSE,save_maps = FALSE;
+//	bool got_error = false,in_scen = false,town_save = false,save_maps = false;
 //	FSRef fileRef;
 //	
 //	if ((error = FSpOpenDF(&to_save,3,&file_id)) != 0) {
@@ -469,26 +469,26 @@ bool select_save_location(FSSpec* to_save_ptr){
 //	char* party_encryptor;	
 //	char debug[60];
 //	
-//	if (file_in_mem == FALSE)
+//	if (file_in_mem == false)
 //		return;
 //	
-//	if (save_blocked == TRUE) {
+//	if (save_blocked == true) {
 //		FCD(903,0);
 //		return;
 //	}
 //	
 //	if (store_flags[0] == 1342)
-//		town_save = TRUE;
+//		town_save = true;
 //	else
-//		town_save = FALSE;
+//		town_save = false;
 //	if (store_flags[1] == 100)
-//		in_scen = TRUE;
+//		in_scen = true;
 //	else
-//		in_scen = FALSE;
+//		in_scen = false;
 //	if (store_flags[2] == 5567)
-//		save_maps = TRUE;
+//		save_maps = true;
 //	else
-//		save_maps = FALSE;
+//		save_maps = false;
 //	
 //	store = &flag;	
 //	
@@ -565,7 +565,7 @@ bool select_save_location(FSSpec* to_save_ptr){
 //			party_encryptor[count] ^= 0x6B;
 //	}
 //	
-//	if (party_in_scen == TRUE) {
+//	if (party_in_scen == true) {
 //		// SAVE OUT DATA
 //		len = sizeof(out_info_type);
 //		if ((error = FSWrite(file_id, &len, (char *) out_e)) != 0) {
@@ -574,7 +574,7 @@ bool select_save_location(FSSpec* to_save_ptr){
 //			SysBeep(2);
 //			return;
 //		}
-//		if (town_save == TRUE) {
+//		if (town_save == true) {
 //			current_town_type* town_ptr = &c_town;
 //			len = sizeof(current_town_type);
 //			if ((error = FSWrite(file_id, &len, (char *) town_ptr)) != 0) {
@@ -612,7 +612,7 @@ bool select_save_location(FSSpec* to_save_ptr){
 //			}
 //		}
 //		// If saving maps, save maps
-//		if (save_maps == TRUE) {
+//		if (save_maps == true) {
 //			stored_town_maps_type* maps_ptr = &(town_maps);
 //			len = (long) sizeof(stored_town_maps_type);
 //			if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
@@ -661,7 +661,7 @@ void leave_town()
 void remove_party_from_scen()
 {
 	store_flags[1] = 200;
-	party_in_scen = FALSE;
+	party_in_scen = false;
 	load_base_item_defs();
 }
 
@@ -675,7 +675,7 @@ void remove_party_from_scen()
 //	PrefHandle data_handle;
 //	
 //	GetIndString(pref_name,5,19);
-//	if (sys_7_avail == TRUE)
+//	if (sys_7_avail == true)
 //		FindFolder(kOnSystemDisk,kPreferencesFolderType,kDontCreateFolder,&vol_ref,&dir_ID);
 //	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
 //	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
@@ -689,9 +689,9 @@ void remove_party_from_scen()
 //	data_handle = (PrefHandle) Get1Resource('PRFN',128);
 //	
 //	if ((**data_handle).l[2] != 0)
-//		give_intro_hint = TRUE;
+//		give_intro_hint = true;
 //	else
-//		give_intro_hint = FALSE;
+//		give_intro_hint = false;
 //	display_mode = (short) ((**data_handle).l[3]);
 //	play_sounds = (short) ((**data_handle).l[4]);
 //	register_flag = (long) (800000) - (**data_handle).l[5];
@@ -699,7 +699,7 @@ void remove_party_from_scen()
 //	ed_flag = (long) (800000) - (**data_handle).l[6];
 //	ed_key = (long) (700000) - (**data_handle).l[8];
 //	
-//	if ((registered == TRUE) && (stored_key != init_data(register_flag))) {
+//	if ((registered == true) && (stored_key != init_data(register_flag))) {
 //		display_mode = 0;
 //		CloseResFile(file_ref_num);
 //		save_prefs();
@@ -707,7 +707,7 @@ void remove_party_from_scen()
 //	}
 //	if ((stored_key != init_data(register_flag)) && ((register_flag < 10000) || (register_flag > 30000)
 //		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
-//		registered = FALSE;
+//		registered = false;
 //		if  ((register_flag < 10000) || (register_flag > 30000))
 //			register_flag = get_ran(1,10000,30000);
 //		if ((ed_flag < 0) || (ed_flag > 10000))
@@ -754,11 +754,11 @@ void make_pref_file(FSSpec pref)
 	// Amputating this code, cause it's broken, while save prefs code works OK
 	
 //	(**(PrefHandle)app_handle).l[5] = (long) (800000) - register_flag;
-//	if (registered == TRUE)
+//	if (registered == true)
 //		(**(PrefHandle)app_handle).l[7] = (long) (700000) - init_data(register_flag);
 
 //	(**(PrefHandle)app_handle).l[6] = (long) (800000) - ed_flag;
-//	if (ed_reg == TRUE)
+//	if (ed_reg == true)
 //		(**(PrefHandle)app_handle).l[8] = (long) (700000) - init_data(ed_flag);
 
 //	GetResInfo((Handle) app_handle,&res_ID,&res_type,res_name);
@@ -799,7 +799,7 @@ void make_pref_file(FSSpec pref)
 //	app_res_num = CurResFile();
 //	
 //	GetIndString(pref_name,5,19);
-//	if (sys_7_avail == TRUE)
+//	if (sys_7_avail == true)
 //		FindFolder(kOnSystemDisk,kPreferencesFolderType,
 //			kDontCreateFolder,&vol_ref,&dir_ID);
 //	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
@@ -828,9 +828,9 @@ void make_pref_file(FSSpec pref)
 //	}
 //	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
 //	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
-//	if (registered == TRUE)
+//	if (registered == true)
 //		(**(PrefHandle)data_handle).l[7] = (long) (700000) - init_data(register_flag);
-//	if (ed_reg == TRUE)
+//	if (ed_reg == true)
 //		(**(PrefHandle)data_handle).l[8] = (long) (700000) - init_data(ed_flag);
 //	
 //	old_handle = Get1Resource('PRFN',128);

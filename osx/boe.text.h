@@ -44,7 +44,7 @@ void get_str(Str255 str,short i, short j);
 void drawstring(char * str);
 short string_length(char *str);
 short calc_day();
-Boolean day_reached(unsigned char which_day, unsigned char which_event);
+bool day_reached(unsigned char which_day, unsigned char which_event);
 void display_string(char *str);
 void Draw_Some_Item (GWorldPtr src_gworld, Rect src_rect, GWorldPtr targ_gworld, location target, char masked, short main_win);
 //Rect get_custom_rect (short which_rect);

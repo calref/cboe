@@ -35,14 +35,14 @@ extern cScenario scenario;
 extern cUniverse univ;
 Str255 answer;
 
-/*Boolean (which)
+/*bool (which)
 short which;
 {
 	short choice,i;
 	item_record_type treas[] = {
-{0,0,0,0,0,0,0,0,0,0,0,0,FALSE,FALSE,FALSE,{0,0},"",""}	
+{0,0,0,0,0,0,0,0,0,0,0,0,false,false,false,{0,0},"",""}	
 		};
-	Boolean can_enter = TRUE;
+	bool can_enter = true;
 	location where;
 	
 	where = get_spec_loc(which);
@@ -82,11 +82,11 @@ void OTS(short str1b,short str2b,short str12a,short sound,unsigned char *flip_bi
 }
 
 // GFI go for it ... do simple dialog check
-Boolean GFI(short dialog_num)
+bool GFI(short dialog_num)
 {
 	if (FCD(dialog_num,0) > 1)
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 //DSG = Do Special Give
@@ -94,7 +94,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 //short special;  // 0 - nah  3** - Set spec item 1000 + * give food  2000 + * give cash
 {
 	short choice;
-	Boolean did_give;
+	bool did_give;
 	cItemRec item;
 
 	item = get_stored_item(item_num);	
@@ -106,9 +106,9 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 				return;
 			
 			if (item.variety == 0)
-				did_give = TRUE;
+				did_give = true;
 			else did_give = give_to_party(item,0);
-			if (did_give == TRUE) {
+			if (did_give == true) {
 				univ.party.food += amt_food;
 				univ.party.gold += amt_gold;
 				if (what_spec >= 0) {
@@ -127,7 +127,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 }
 
 
-Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
+bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here
 //short trap_type; // 0 - random  1 - blade  2 - dart  3 - gas  4 - boom  5 - paralyze  6  - no   
 				 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
@@ -140,13 +140,13 @@ Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 	if (pc_num > 7) { // Debug
 		SysBeep(50);
 		ASB("TRAP ERROR! REPORT!");
-		return TRUE;
+		return true;
 		}
 	
 	if (pc_num == 7) {
 		pc_num = select_pc(1,0);
 		if (pc_num == 6)
-			return FALSE;
+			return false;
 		}
 
 	
@@ -154,8 +154,8 @@ Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		
 	if (trap_type == TRAP_RANDOM)
 		trap_type = (eTrapType) get_ran(1,1,4);
-	if (trap_type == TRAP_FALSE_ALARM)
-		return TRUE;
+	if (trap_type == TRAP_false_ALARM)
+		return true;
 		
 	if (pc_num < 6) {
 			i = stat_adj(pc_num,1);
@@ -172,7 +172,7 @@ Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 
 			if (r1 < trap_odds[skill]) {
 				add_string_to_buf("  Trap disarmed.            ");
-				return TRUE;
+				return true;
 			}
 			else add_string_to_buf("  Disarm failed.          ");
 		}
@@ -255,7 +255,7 @@ Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		}
 	put_pc_screen();
 	put_item_screen(stat_window,0);
-	return TRUE;
+	return true;
 }
 
 location get_spec_loc(short which)

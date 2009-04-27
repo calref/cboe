@@ -64,7 +64,7 @@ void cd_init_dialogs(INIT_PARAMS){
 		items[i].dlg = -1;
 	}
 	for (i = 0; i < NL; i++) {
-		labels[i].taken = FALSE;
+		labels[i].taken = false;
 	}
 	for (i = 0; i < NUM_BUTTONS; i++){
 		for (j = 0; j < 2; j++)
@@ -172,7 +172,7 @@ short cd_kill_dialog(short dlog_num,short parent_message){
 	for (i = 0; i < NI; i++)
 		if (items[i].dlg == dlog_num) {
 			if (items[i].label > 0)
-				labels[items[i].label_loc].taken = FALSE;
+				labels[items[i].label_loc].taken = false;
 			items[i].dlg = -1;
 		}
 	
@@ -532,9 +532,9 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 	if (items[item_index].label_loc < 0) {
 		items[item_index].label = label_flag;
 		for (i = 0; i < 100; i++)
-			if (labels[i].taken == FALSE) {
+			if (labels[i].taken == false) {
 				label_loc = i;
-				labels[i].taken = TRUE;
+				labels[i].taken = true;
 				i = 100;
 			}
 		if (label_loc < 0) {
@@ -556,7 +556,7 @@ void cd_take_label(short dlog_num, short item_num){
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
 	items[item_index].label = 0;
-	labels[items[item_index].label_loc].taken = FALSE;
+	labels[items[item_index].label_loc].taken = false;
 }
 
 void cd_key_label(short dlog_num, short item_num,short loc){
@@ -576,7 +576,7 @@ void cd_draw_item(short dlog_num,short item_num){
 	//printf("In cd_draw_item(%i,%i)\n",dlog_num,item_num);
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	if (dlgs[dlg_index].draw_ready == FALSE)
+	if (dlgs[dlg_index].draw_ready == false)
 		return;
 	//printf("Drawing item %i of type %i\n",item_num,items[item_index].type);
 	GetPort(&old_port);
@@ -684,7 +684,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			if (items[item_index].flag == -1)
 				cd_erase_item(dlog_num,item_num);
 			else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, items[item_index].flag,
-									 PICT_OLD, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
+									 PICT_OLD, (items[item_index].flag >= 2000) ? false : true,0);
 			break;
 		default: // DLG_NEW_PICTURE
 			printf("Type = %i\t",items[item_index].type);
@@ -693,7 +693,7 @@ void cd_draw_item(short dlog_num,short item_num){
 			if (items[item_index].flag == -1)
 				cd_erase_item(dlog_num,item_num);
 			else draw_dialog_graphic(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, items[item_index].flag,
-									 items[item_index].type - DLG_NEW_PICTURE, (items[item_index].flag >= 2000) ? FALSE : TRUE,0);
+									 items[item_index].type - DLG_NEW_PICTURE, (items[item_index].flag >= 2000) ? false : true,0);
 			break;
 		}
 	}//printf("Item %i drawn.\n",item_num);
@@ -754,7 +754,7 @@ void cd_initial_draw(short dlog_num){
 	if (which_dlg < 0) {
 		return;
 	}
-	dlgs[which_dlg].draw_ready = TRUE;
+	dlgs[which_dlg].draw_ready = true;
 	
 	cd_erase_item(dlog_num, 0);
 	cd_draw(dlog_num);
@@ -778,7 +778,7 @@ void cd_redraw(WindowPtr window){
 	
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlg_key)) < 0)
 		return;
-	dlgs[which_dlg].draw_ready = TRUE;
+	dlgs[which_dlg].draw_ready = true;
 	cd_initial_draw(dlg_num);
 }
 
@@ -790,7 +790,7 @@ void cd_frame_item(short dlog_num, short item_num, short width){
 	frame_dlog_rect(GetWindowPort(dlgs[dlg_index].win), items[item_index].rect, width);
 }
 
-void cd_erase_item(short dlog_num, short item_num, Boolean just_label){
+void cd_erase_item(short dlog_num, short item_num, bool just_label){
 	// if item_num is 0, nail whole window
 	// item_num + 100  just erase label
 	short i,dlg_index,item_index,store_label;
@@ -799,7 +799,7 @@ void cd_erase_item(short dlog_num, short item_num, Boolean just_label){
 	
 	if (item_num >= 100) {
 		item_num -= 100;
-		just_label = TRUE;
+		just_label = true;
 	}
 	
 	if (item_num == 0) {
@@ -814,7 +814,7 @@ void cd_erase_item(short dlog_num, short item_num, Boolean just_label){
 		if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 			return;
 		to_fry = items[item_index].rect;
-		if (just_label == TRUE) {
+		if (just_label == true) {
 			if (items[item_index].label != 0) {
 				store_label = items[item_index].label;
 				if (store_label >= 1000)
@@ -849,7 +849,7 @@ void cd_erase_item(short dlog_num, short item_num, Boolean just_label){
 		InsetRect(&to_fry,-1,-1);
 		
 	}
-	if (dlgs[dlg_index].draw_ready == FALSE) {
+	if (dlgs[dlg_index].draw_ready == false) {
 		return;
 	}
 	GetPort(&old_port);
@@ -864,7 +864,7 @@ void cd_erase_rect(short dlog_num,Rect to_fry){
 	
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0)
 		return;
-	if (dlgs[dlg_index].draw_ready == FALSE)
+	if (dlgs[dlg_index].draw_ready == false)
 		return;
 	
 	GetPort(&old_port);
@@ -914,7 +914,7 @@ void cd_press_button(short dlog_num, short item_num){
 									   text_short_str[item_index - 10]),1,8,false);
 	}
 	
-	if (play_sounds == TRUE) {
+	if (play_sounds == true) {
 		play_sound(37);
 		Delay(6,&dummy);
 	}
@@ -982,7 +982,7 @@ void cd_register_default_event_filter(dlg_filter_t filter){
 	event_filters[0] = filter;
 }
 
-pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit){	
+pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit){	
 	char chr,chr2;
 	short wind_hit,item_hit;
 	Point the_point;
@@ -996,16 +996,16 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 			w = GetDialogWindow(hDlg);
 			rgn = NewRgn();
 			GetWindowRegion(w,kWindowUpdateRgn,rgn);
-			if (EmptyRgn(rgn) == TRUE) {
+			if (EmptyRgn(rgn) == true) {
 				DisposeRgn(rgn);
-				return FALSE;
+				return false;
 			}
 			DisposeRgn(rgn);
 			BeginUpdate(w);
 			cd_redraw(w);
 			EndUpdate(w);
 			DrawDialog(hDlg);
-			return TRUE;
+			return true;
 			break;
 			
 		case keyDown:
@@ -1123,8 +1123,8 @@ pascal Boolean cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy
 //	}
 	
 	if (wind_hit < 0)
-		return FALSE;
-	else return TRUE;
+		return false;
+	else return true;
 }
 
 void cd_set_bg_pat_num(short n){
