@@ -8,7 +8,7 @@
 #include "scen.keydlgs.h"
 #include "scen.core.h"
 
-extern short cen_x, cen_y, overall_mode;
+extern short cen_x, cen_y/*, overall_mode*/;
 extern Boolean mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;

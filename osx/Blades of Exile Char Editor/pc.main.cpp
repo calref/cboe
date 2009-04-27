@@ -591,8 +591,8 @@ void handle_extra_menu(int item_hit)
 			univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
 			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status >= 10)
-					ADVEN[i].main_status -= 10;
+				if (ADVEN[i].main_status >= MAIN_STATUS_SPLIT)
+					ADVEN[i].main_status -= MAIN_STATUS_SPLIT;
 			break;
 			
 
@@ -614,9 +614,9 @@ void handle_extra_menu(int item_hit)
 		case 10: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 2) || (ADVEN[i].main_status == 3) ||
-					(ADVEN[i].main_status == 4))
-						ADVEN[i].main_status = 1;
+				if ((ADVEN[i].main_status == MAIN_STATUS_DEAD) || (ADVEN[i].main_status == MAIN_STATUS_DUST) ||
+					(ADVEN[i].main_status == MAIN_STATUS_STONE))
+						ADVEN[i].main_status = MAIN_STATUS_ALIVE;
 			break;
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG,0);

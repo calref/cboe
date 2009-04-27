@@ -1,7 +1,7 @@
 #include <string.h>
 #include "scen.global.h"
 #include "classes.h"
-#include <stdio.h>
+#include <iostream>
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
 #include "graphtool.h"
@@ -22,7 +22,7 @@ extern cScenario scenario;
 DialogPtr	the_dialog;
 extern cTown* town;
 //extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
-extern short cur_town,overall_mode,given_password,user_given_password;
+extern short cur_town,/*overall_mode,*/given_password,user_given_password;
 extern location cur_out;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern cSpeech talking;

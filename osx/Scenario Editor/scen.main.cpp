@@ -30,7 +30,7 @@ short cur_viewing_mode = 0;
 //short town_type = 0;  // 0 - big 1 - ave 2 - small
 //short max_dim[3] = {64,48,32};
 short cen_x, cen_y;
-short overall_mode = 61;
+eScenMode overall_mode = MODE_INTRO_SCREEN;
 Handle menu_bar_handle;
 ControlHandle right_sbar;
 short mode_count = 0;
@@ -386,7 +386,7 @@ void handle_file_menu(int item_hit)
 					cur_out = scenario.last_out_edited;
 					augment_terrain(cur_out);
 				}
-				overall_mode = 60;
+				overall_mode = MODE_MAIN_SCREEN;
 				change_made = false;
 				update_item_menu();
 				set_up_main_screen();
@@ -398,7 +398,7 @@ void handle_file_menu(int item_hit)
 			break;
 		case 3: // new scen
 			build_scenario();
-			if (overall_mode == 60)
+			if (overall_mode == MODE_MAIN_SCREEN)
 				set_up_main_screen();
 			break;
 
@@ -529,7 +529,7 @@ void handle_town_menu(int item_hit)
 	switch (item_hit) {
 		case 1: edit_town_details(); break;
 		case 2: edit_town_wand(); break;
-		case 3: 							overall_mode = 9;
+		case 3: 							overall_mode = MODE_SET_TOWN_RECT;
 			mode_count = 2;
 			set_cursor(5);
 			set_string("Set town boundary","Select upper left corner");
@@ -570,7 +570,7 @@ void handle_outdoor_menu(int item_hit)
 		case 4: frill_up_terrain(); break;
 		case 5: unfrill_terrain(); break;
 		case 6: edit_out_strs(); break;
-		case 8: overall_mode = 47;
+		case 8: overall_mode = MODE_SET_OUT_START;
 			set_string("Select party starting location.",""); break;
 		case 11: SetControlValue(right_sbar,0); start_special_editing(1,0); break;
 		case 12: SetControlValue(right_sbar,0);  start_string_editing(1,0); break;
@@ -595,14 +595,14 @@ void handle_item_menu(int item_hit)
 		give_error("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.","",0);
 		return;
 		}
-			overall_mode = 4;
+			overall_mode = MODE_PLACE_ITEM;
 			set_string("Place the item.","Select item location");
 			mode_count = item_hit;
 }
 
 void handle_monst_menu(int item_hit)
 {
-			overall_mode = 28;
+			overall_mode = MODE_PLACE_CREATURE;
 			set_string("Place the monster.","Select monster location");
 			mode_count = item_hit;
 }

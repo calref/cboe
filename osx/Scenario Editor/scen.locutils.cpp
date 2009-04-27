@@ -19,7 +19,7 @@ location which_party_sec;
 
 //extern party_record_type party;
 //extern current_town_type c_town;
-extern short overall_mode/*,which_combat_type*/,current_pc,town_type;
+extern short /*overall_mode,which_combat_type,*/current_pc,town_type;
 extern big_tr_type t_d;
 //extern outdoor_record_type outdoors[2][2];
 extern unsigned char combat_terrain[64][64];

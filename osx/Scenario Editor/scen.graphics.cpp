@@ -35,7 +35,8 @@ extern cTown* town;
 //extern big_tr_type t_d;
 //extern template_town_type town_template;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short cur_viewing_mode,overall_mode;
+extern short cur_viewing_mode;
+extern eScenMode overall_mode;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern Boolean editing_town;
 extern short max_dim[3];
@@ -84,10 +85,13 @@ PixPatHandle map_pat[25];
 
 
 // begin new stuff
-Rect blue_button_from = {112,91,126,107};						
-Rect start_button_from = {112,70,119,91};
-Rect base_small_button_from = {112,0,119,7};
-extern Rect palette_buttons[8][6];
+Rect blue_button_from = {120,91,134,107};						
+Rect start_button_from = {120,70,127,91};
+Rect base_small_button_from = {120,0,127,7};
+extern Rect palette_buttons[10][6];
+extern Rect palette_buttons_from[71];
+extern short town_buttons[6][10], out_buttons[6][10];
+extern Boolean good_palette_buttons[2][6][10];
 Rect palette_button_base = {0,0,18,25};
 Rect terrain_buttons_rect = {0,0,410,294};
 extern Rect left_buttons[NLS][2]; // 0 - whole, 1 - blue button
@@ -216,23 +220,26 @@ void init_dialogs(){
 void Set_up_win ()
 {
 	short i,j;
-
-
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 70; i++){
+		palette_buttons_from[i] = palette_button_base;
+		OffsetRect(&palette_buttons_from[i],(i%10) * 25, (i/10) * 17);
+		palette_buttons_from[i].right++;
+	}
+	for (i = 0; i < 10; i++)
 		for (j = 0; j < 6; j++) {
-		palette_buttons[i][j] = palette_button_base;
-		OffsetRect(&palette_buttons[i][j],i * 25, j * 17);
-		if (i == 7)
-			palette_buttons[i][j].right++;
+			palette_buttons[i][j] = palette_button_base;
+			OffsetRect(&palette_buttons[i][j],i * 25, j * 17);
+			if (i == 10 || !good_palette_buttons[1][j][i+1])
+				palette_buttons[i][j].right++;
 		}
-	for (i = 0; i < 8; i++)
-		for (j = 2; j < 6; j++) 
+	for (i = 0; i < 10; i++)
+		for (j = /*2*/0; j < 6; j++) 
 			OffsetRect(&palette_buttons[i][j],0,3);
-	for (i = 0; i < 8; i++)
-		for (j = 3; j < 6; j++) 
+	for (i = 0; i < 10; i++)
+		for (j = /*3*/0; j < 6; j++) 
 			OffsetRect(&palette_buttons[i][j],0,3);
-	for (i = 0; i < 8; i++)
-		for (j = 4; j < 6; j++) 
+	for (i = 0; i < 10; i++)
+		for (j = /*4*/0; j < 6; j++) 
 			OffsetRect(&palette_buttons[i][j],0,3);
 	
 	for (i = 0; i < NLS; i++) {
@@ -333,7 +340,7 @@ void redraw_screen()
 	SetPortWindowPort (mainPtr);
 	FillCRect(&windRect,bg[20]);
 	draw_main_screen();
-	if (overall_mode < 60);
+	if (overall_mode < MODE_MAIN_SCREEN);
 		draw_terrain();
 	SetPort (old_port);
 }
@@ -351,7 +358,7 @@ void draw_main_screen()
 	draw_lb();
 		
 	// draw right buttons (only when not editing terrain)
-	if (overall_mode >= 60) {
+	if (overall_mode >= MODE_MAIN_SCREEN) {
 		draw_rect.left = RIGHT_AREA_UL_X;
 		draw_rect.top = RIGHT_AREA_UL_Y;
 		draw_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 16;
@@ -366,7 +373,7 @@ void draw_main_screen()
 		}
 		
 	// draw terrain palette
-	if ((overall_mode < 60) || (overall_mode == 62)) {
+	if ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
 		//draw_rect = terrain_buttons_rect;
 		//OffsetRect(&draw_rect,RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 		//rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
@@ -456,11 +463,11 @@ void draw_rb_slot (short which,short mode)
 
 void set_up_terrain_buttons()
 {
-	short i,pic,small_i;
+	short i,j,pic,small_i;
 	Rect ter_from,ter_to,ter_from_base = {0,0,36,28};
 	Rect tiny_from,tiny_to; 
 	
-	Rect palette_from = {0,0,0,0},palette_to;
+	Rect palette_from,palette_to = palette_button_base;
 					
  	SetPort( terrain_buttons_gworld);
 	FillCRect(&terrain_buttons_rect,bg[17]);
@@ -512,22 +519,44 @@ void set_up_terrain_buttons()
 				tiny_from,terrain_buttons_gworld,tiny_to,0,0);
 		}
 	
-	if (overall_mode < 60) {
-		palette_to.left = 5;
-		palette_to.top = terrain_rects[255].bottom + 5;
-		if (editing_town == TRUE) {
-			palette_from.bottom = palette_buttons[0][5].bottom;
-			palette_from.right = palette_buttons[7][5].right;
-			}
-			else {
-				palette_from.bottom = palette_buttons[0][2].bottom;
-				palette_from.right = palette_buttons[7][2].right;
+	if (overall_mode < MODE_MAIN_SCREEN) {
+//		palette_to.left = 5;
+//		palette_to.top = terrain_rects[255].bottom + 5;
+//		if (editing_town == TRUE) {
+//			palette_from.bottom = palette_buttons[0][5].bottom;
+//			palette_from.right = palette_buttons[7][5].right;
+//			}
+//			else {
+//				palette_from.bottom = palette_buttons[0][2].bottom;
+//				palette_from.right = palette_buttons[7][2].right;
+//				}
+//		palette_to.right = palette_to.left + palette_from.right;
+//		palette_to.bottom = palette_to.top + palette_from.bottom;
+//		rect_draw_some_item(editor_mixed,
+//			palette_from,terrain_buttons_gworld,palette_to,1,0);
+		OffsetRect(&palette_to,5,terrain_rects[255].bottom + 14);
+		palette_to.right++;
+		//printf("terrain_rects[255].bottom = %i\n", terrain_rects[255].bottom);
+		for(i = 0; i < 10; i++){
+			for(j = 0; j < 6; j++){
+				if(editing_town && town_buttons[j][i] >= 0)
+					palette_from = palette_buttons_from[town_buttons[j][i]];
+				else if(!editing_town && out_buttons[j][i] >= 0)
+					palette_from = palette_buttons_from[out_buttons[j][i]];
+				else palette_from = palette_button_base;
+				//printf("palette_from = {top = %i, left = %i, bottom = %i, right = %i\n",
+				//	   palette_from.top, palette_from.left, palette_from.bottom, palette_from.right);
+				//printf("palette_to = {top = %i, left = %i, bottom = %i, right = %i\n",
+				//	   palette_to.top, palette_to.left, palette_to.bottom, palette_to.right);
+				if(good_palette_buttons[editing_town][j][i]){
+					//printf("Drawing button %i at col %i, row %i\n",editing_town?town_buttons[j][i]:out_buttons[j][i],i,j);
+					rect_draw_some_item(editor_mixed,palette_from,terrain_buttons_gworld,palette_to,1,0);
 				}
-		palette_to.right = palette_to.left + palette_from.right;
-		palette_to.bottom = palette_to.top + palette_from.bottom;
-		rect_draw_some_item(editor_mixed,
-			palette_from,terrain_buttons_gworld,palette_to,1,0);
+				OffsetRect(&palette_to,0,17);
+			}
+			OffsetRect(&palette_to,25,-6*17);
 		}
+	}
 
 	SetPortWindowPort(mainPtr);
 }
@@ -540,7 +569,7 @@ void draw_terrain(){
 	Rect source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
 	Rect boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 	
-	if (overall_mode >= 60)
+	if (overall_mode >= MODE_MAIN_SCREEN)
 		return;
 	
 	OffsetRect(&boat_rect[0],61,0);
@@ -1103,11 +1132,12 @@ void place_location()
 	erase_rect.bottom = erase_rect.top + 12;
 	FillCRect(&erase_rect,bg[17]);
 	
-	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
-	if (overall_mode < 60)
+	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
+	MoveTo(5 ,terrain_rects[255].top + 26);
+	if (overall_mode < MODE_MAIN_SCREEN)
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
-			MoveTo(5 ,terrain_rects[255].top + 28);		
+			//MoveTo(5 ,terrain_rects[255].top + 28);
 			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2pstr((char*) draw_str);
@@ -1120,7 +1150,7 @@ void place_location()
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
 	FillCRect(&erase_rect,bg[17]);
 	
-	if (overall_mode < 60) {
+	if (overall_mode < MODE_MAIN_SCREEN) {
 		MoveTo(5,terrain_rects[255].bottom + 129);
 		DrawString(current_string);
 		MoveTo(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 129);
@@ -1130,12 +1160,12 @@ void place_location()
 	SetPortWindowPort(mainPtr);
 
 	draw_rect.top = palette_buttons[0][0].top + terrain_rects[255].bottom + 5;
-	draw_rect.left = palette_buttons[7][0].right + 17;
+	draw_rect.left = palette_buttons[9][0].right + 10; // + 17;
 	draw_rect.bottom = draw_rect.top + 36;
 	draw_rect.right = draw_rect.left + 28;
 	picture_wanted = scenario.ter_types[current_terrain_type].picture;
 	
-	if (overall_mode < 60) {
+	if (overall_mode < MODE_MAIN_SCREEN) {
 		if (picture_wanted >= 1000)	{
 			source_rect = get_custom_rect(picture_wanted % 1000);
 			rect_draw_some_item(spec_scen_g,
@@ -1179,11 +1209,12 @@ void place_just_location()
 	erase_rect.bottom = erase_rect.top + 12;
 	FillCRect(&erase_rect,bg[17]);
 	
-	MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
-	if (overall_mode < 60)
+	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
+	MoveTo(5 ,terrain_rects[255].top + 26);
+	if (overall_mode < MODE_MAIN_SCREEN)
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
-			MoveTo(5 ,terrain_rects[255].top + 28);		
+			//MoveTo(5 ,terrain_rects[255].top + 28);
 			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
 			}
 	c2pstr((char*) draw_str);

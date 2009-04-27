@@ -14,7 +14,7 @@
 #include "scen.fileio.h"
 #include "scen.actions.h"
 
-extern short cen_x, cen_y, overall_mode,cur_town;
+extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern Boolean mouse_button_held;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
 extern cTown* town;
@@ -650,7 +650,7 @@ cMonster return_monster_template(unsigned char store)
 		monst.a[2] += 100;
 	monst.a1_type = m_a1t[m_num];
 	monst.a23_type = m_a23t[m_num];
-	monst.m_type = m_type[m_num];
+	monst.m_type = (eMonsterType) m_type[m_num];
 	monst.speed = m_speed[m_num];
 	monst.ap = 0;
 	monst.mu = m_mu[m_num];
@@ -1228,7 +1228,8 @@ void edit_monst_type_event_filter (short item_hit)
 			if (save_monst_info() == FALSE) break;
 			i = choose_text_res(20,150,164,store_monst.m_type + 150,814,"Choose Monster Type:");
 			if (i >= 0) {
-				store_monst.m_type = i - 150;
+				i -= 150;
+				store_monst.m_type = (eMonsterType) i;
 				put_monst_info_in_dlog();
 				}
 			break;
