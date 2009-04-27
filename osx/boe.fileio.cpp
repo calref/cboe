@@ -281,7 +281,7 @@ void finish_load_party(){
 		flip_sound();
 	}
 	give_delays = PSD[SDF_NO_FRILLS]; 
-	if (PSD[SFD_NO_MAPS] == 0)
+	if (PSD[SDF_NO_MAPS] == 0)
 		save_maps = TRUE;
 	else save_maps = FALSE;
 	

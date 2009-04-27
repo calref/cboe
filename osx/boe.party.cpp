@@ -192,7 +192,7 @@ void put_spell_list();
 void put_pick_spell_graphics();
 
 
-//mode; // 0 - prefab 1 - regular
+//mode; // 0 - prefab 1 - regular 2 - debug
 void init_party(short mode)
 {
 	short i,j,k,l;
@@ -270,14 +270,19 @@ void init_party(short mode)
 
 	refresh_store_items();
 	
-		for (i = 0; i < 6; i++) {
-			if (mode != 1)
-				//ADVEN[i] = cPlayer('dbug',i);
+	for (i = 0; i < 6; i++) {
+		switch(mode){
+			case 0:
 				ADVEN[i] = cPlayer('dflt',i);
-			else
-				//ADVEN[i] = cPlayer('dbug',i);
+				break;
+			case 1:
 				ADVEN[i] = cPlayer();
+				break;
+			case 2:
+				ADVEN[i] = cPlayer('dbug',i);
+				break;
 		}
+	}
 		
 	for (i = 0; i < 96; i++)
 		for (j = 0; j < 96; j++)
@@ -300,7 +305,7 @@ void init_party(short mode)
 					univ.out.maps[i][k][l] = 0;
 					
 	// Default is save maps
-	PSD[SFD_NO_MAPS] = 0;
+	PSD[SDF_NO_MAPS] = 0;
 	save_maps = TRUE;	
 			
 
@@ -605,7 +610,7 @@ void heal_pc(short pc_num,short amt)
 {
 	if (ADVEN[pc_num].cur_health > ADVEN[pc_num].max_health)
 		return;
-	if (ADVEN[pc_num].main_status != 1)
+	if (ADVEN[pc_num].main_status != MAIN_STATUS_ALIVE)
 		return;
 	ADVEN[pc_num].cur_health += amt;
 	if (ADVEN[pc_num].cur_health > ADVEN[pc_num].max_health)
@@ -618,7 +623,7 @@ void heal_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (ADVEN[i].main_status == MAIN_STATUS_ALIVE )
 			heal_pc(i,amt);
 }
 
@@ -1512,7 +1517,7 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 		case 38:  // Stealth
 			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
-			PSD[SFD_NO_MAPS] += max(6,ADVEN[pc_num].level * 2);
+			PSD[SDF_PARTY_STEALTHY] += max(6,ADVEN[pc_num].level * 2);
 			break;	
 
 			

@@ -1469,7 +1469,7 @@ void fire_missile(location target) {
 	
 	if (dist(pc_pos[current_pc],target) > range)
 		add_string_to_buf("  Out of range.");
-	else if (can_see(pc_pos[current_pc],target,0) == 5)
+	else if (can_see(pc_pos[current_pc],target,0) >= 5)
 		add_string_to_buf("  Can't see target.             ");
 	else {
 		// First, some missiles do special things
@@ -1556,7 +1556,7 @@ void fire_missile(location target) {
 	}
 	
 	combat_posing_monster = current_working_monster = -1;
-	ADVEN[current_pc].status[0] = move_to_zero(ADVEN[current_pc].status[0]);
+	if(!exploding) ADVEN[current_pc].status[0] = move_to_zero(ADVEN[current_pc].status[0]);
 	print_buf();
 }
 

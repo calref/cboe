@@ -46,7 +46,7 @@
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6
 #define SDF_HOSTILES_PRESENT	305][9
-#define SFD_NO_MAPS				306][0
+#define SDF_NO_MAPS				306][0
 #define SDF_NO_SOUNDS			306][1
 #define SDF_NO_FRILLS			306][2
 #define SDF_ROOM_DESCS_AGAIN	306][3

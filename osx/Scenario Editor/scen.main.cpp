@@ -186,9 +186,10 @@ void Initialize(void)
 	//	will always be different.  Don’t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
-	unsigned long time;
-	GetDateTime(&time);
-	SetQDGlobalsRandomSeed(time);
+	//unsigned long time;
+	//GetDateTime(&time);
+	//SetQDGlobalsRandomSeed(time);
+	srand(time(NULL));
 
 	//
 	//	Make a new window for drawing in, and it must be a color window.  

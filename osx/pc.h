@@ -35,9 +35,9 @@ public:
 	eMainStatus main_status;
 	char name[20];
 	short skills[30];
-	short max_health;
+	unsigned short max_health;
 	short cur_health;
-	short max_sp;
+	unsigned short max_sp;
 	short cur_sp;
 	unsigned short experience;
 	short skill_pts;

@@ -194,7 +194,7 @@ void Initialize(void)
 
 	OSErr		error;
 	//SysEnvRec	theWorld;
-      unsigned long randSeed;
+    //  unsigned long randSeed;
       BitMap screenBits;
 	
 	
@@ -273,8 +273,9 @@ void Initialize(void)
 	//	will always be different.  Don’t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
-	GetDateTime(&randSeed);
-      SetQDGlobalsRandomSeed((long)randSeed);
+	//GetDateTime(&randSeed);
+    //  SetQDGlobalsRandomSeed((long)randSeed);
+	srand(time(NULL));
 
 	//
 	//	Make a new window for drawing in, and it must be a color window.  

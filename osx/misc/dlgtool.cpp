@@ -180,7 +180,7 @@ short cd_kill_dialog(short dlog_num,short parent_message){
 	dlgs[which_dlg].key = -1;
 	if (dlgs[which_dlg].parent != NULL)
 		SetPortWindowPort( dlgs[which_dlg].parent);
-	if (redraw_screen != NULL && FrontWindow() != mainPtr)
+	if (redraw_screen != NULL && FrontWindow() == mainPtr) // Was formerly checkin != mainPtr for some reason...
 		redraw_screen();
 	untoast_dialog();
 	return 0;

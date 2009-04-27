@@ -280,12 +280,13 @@ void Initialize(void)
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don‚Äö√Ñ√¥t for each call of Random, or the sequence
+	//	will always be different.  Don't for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
 	//
-	unsigned long time;
-	GetDateTime(&time);
-	SetQDGlobalsRandomSeed(time);
+	//unsigned long time;
+	//GetDateTime(&time);
+	//SetQDGlobalsRandomSeed(time);
+	srand(time(NULL));
 
 	//
 	//	Make a new window for drawing in, and it must be a color window.  

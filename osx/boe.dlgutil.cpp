@@ -1529,7 +1529,7 @@ void prefs_event_filter (short item_hit)
 	if (done_yet== TRUE) {
 		if (did_cancel == FALSE) {
 			display_mode = cur_display_mode;
-			PSD[SFD_NO_MAPS] = cd_get_led(1099,18);
+			PSD[SDF_NO_MAPS] = cd_get_led(1099,18);
 			PSD[SDF_NO_SOUNDS] = cd_get_led(1099,20);
 			play_sounds = 1 - PSD[SDF_NO_SOUNDS];
 			PSD[SDF_NO_FRILLS] = cd_get_led(1099,22);
@@ -1561,7 +1561,7 @@ void prefs_event_filter (short item_hit)
 					}*/
 			}
 		//play_sounds = 1 - PSD[SDF_NO_SOUNDS];
-		save_maps = 1 - PSD[SFD_NO_MAPS];
+		save_maps = 1 - PSD[SDF_NO_MAPS];
 		give_delays = PSD[SDF_NO_FRILLS];
 		save_prefs();
 		}
@@ -1579,7 +1579,7 @@ void pick_preferences()
 
 	cd_set_led(1099,4 + cur_display_mode,1);
 
-	cd_set_led(1099,18,(PSD[SFD_NO_MAPS] != 0) ? 1 : 0);
+	cd_set_led(1099,18,(PSD[SDF_NO_MAPS] != 0) ? 1 : 0);
 	cd_set_led(1099,20,(play_sounds == FALSE) ? 1 : 0);
 	cd_set_led(1099,22,(PSD[SDF_NO_FRILLS] != 0) ? 1 : 0);
 	cd_set_led(1099,24,(PSD[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);

@@ -15,7 +15,7 @@ short get_ran (short times,short  min,short  max){
 	
 	for (i = 1; i < times + 1; i++) {
 		store = rand();
-		to_ret += min + (((store + 32767) * (max - min + 1)) / 65536);
+		to_ret += min + (store % (max - min + 1));//min + (((store + 32767) * (max - min + 1)) / 65536);
 	}
 	return to_ret;
 }

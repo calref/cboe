@@ -698,8 +698,9 @@ location end_town_mode(short switching_level,location destination)  // returns n
 			erase_out_specials();
 
 			load_area_graphics();
-
+		
 		PSD[SDF_PARTY_STEALTHY] = 0;
+		//PSD[SDF_PARTY_DETECT_LIFE] = 0; //Yes? No? Maybe?
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 15; j++)
 					if ((j != 2) && (j != 7) && (j != 9))

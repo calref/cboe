@@ -2423,7 +2423,9 @@ void start_new_game()
 	//which = choice - 1;
 	
 //	display_intro();
-	init_party(0);
+	long keys = GetCurrentKeyModifiers();
+	if(keys & 256) init_party(2); // if command key held down, create debug party
+	else init_party(0);
 
 	//while (creation_done == FALSE) {
 		edit_party(1,0);

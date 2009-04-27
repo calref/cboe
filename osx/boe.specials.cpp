@@ -140,7 +140,7 @@ return TRUE;
 
 Boolean check_special_terrain(location where_check,short mode,short which_pc,short *spec_num,
 	Boolean *forced)
-//short mode; // 0 - univ.out.out 1 - town 2 - combat
+//short mode; // 0 - out 1 - town 2 - combat
 // returns true if can enter this space
 // sets forced to TRUE if definitely can enter
 {
@@ -314,7 +314,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
-				hit_party(r1,DAMAGE_FIRE);
+				hit_party(r1,dam_type);
 			fast_bang = 1;
 			if (mode == 2)
 				damage_pc(which_pc,r1,dam_type,MONSTER_TYPE_UNKNOWN,0);
@@ -1578,7 +1578,7 @@ void special_increase_age()
 
 // This is the big painful one, the main special engine
 // which_mode - says when it was called
-// 0 - univ.out.out moving (a - 1 if blocked)
+// 0 - out moving (a - 1 if blocked)
 // 1 - town moving (a - 1 if blocked)
 // 2 - combat moving (a - 1 if blocked)
 // 3 - univ.out.out looking (a - 1 if don't get items inside)  NOT USED!!!
