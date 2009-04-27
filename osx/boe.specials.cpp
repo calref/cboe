@@ -145,7 +145,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 // sets forced to TRUE if definitely can enter
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,pic_type = 0,ter_pic = 0;
+	eDamageType dam_type = DAMAGE_WEAPON;
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -297,7 +298,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				break;
 			if (ter_special == 2) {
 				add_string_to_buf("  It's hot!");
-				dam_type = 1; pic_type = 0;
+				dam_type = DAMAGE_FIRE; pic_type = 0;
 				if (PSD[SDF_PARTY_FIREWALK] > 0) {
 					add_string_to_buf("  It doesn't affect you.");			
 					break;
@@ -305,18 +306,18 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				}
 			if (ter_special == 3) {
 				add_string_to_buf("  You feel cold!");
-				dam_type = 5; pic_type = 4;
+				dam_type = DAMAGE_COLD; pic_type = 4;
 				}
 			if (ter_special == 4) {
 				add_string_to_buf("  Something shocks you!");
-				dam_type = 3; pic_type = 1;
+				dam_type = DAMAGE_MAGIC; pic_type = 1;
 				}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
-				hit_party(r1,1);
+				hit_party(r1,DAMAGE_FIRE);
 			fast_bang = 1;
 			if (mode == 2)
-				damage_pc(which_pc,r1,dam_type,-1);
+				damage_pc(which_pc,r1,dam_type,MONSTER_TYPE_UNKNOWN,0);
 			if (overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -408,7 +409,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //			if (mode < 2)
 //				hit_party(r1,1);
 			if (mode == 2)
-				damage_pc(which_pc,r1,1,-1);
+				damage_pc(which_pc,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
@@ -418,7 +419,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //			if (mode < 2)
 //				hit_party(r1,3);
 			if (mode == 2)
-				damage_pc(which_pc,r1,3,-1);
+				damage_pc(which_pc,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,1,r1,12);	
 		}
@@ -428,7 +429,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //			if (mode < 2)
 //				hit_party(r1,5);
 			if (mode == 2)
-				damage_pc(which_pc,r1,5,-1);
+				damage_pc(which_pc,r1,DAMAGE_COLD,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,4,r1,7);	
 		}
@@ -438,7 +439,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //			if (mode < 2)
 //				hit_party(r1,0);
 			if (mode == 2)
-				damage_pc(which_pc,r1,0,-1);
+				damage_pc(which_pc,r1,DAMAGE_WEAPON,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,3,r1,2);	
 		}
@@ -448,7 +449,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //			if (mode < 2)
 //				hit_party(r1,1);
 			if (mode == 2)
-				damage_pc(which_pc,r1,1,-1);
+				damage_pc(which_pc,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
@@ -481,9 +482,9 @@ void check_fields(location where_check,short mode,short which_pc)
 			add_string_to_buf("  Magic barrier!               ");
 			r1 = get_ran(2,1,10);
 			if (mode < 2)
-				hit_party(r1,3);
+				hit_party(r1,DAMAGE_MAGIC);
 			if (mode == 2)
-				damage_pc(which_pc,r1,3,-1);
+				damage_pc(which_pc,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,1,r1,12);		
 		}
@@ -710,9 +711,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 87:
 				switch (type) {
 					case 0: ASB("  You feel better."); heal_pc(pc,str * 20); break;
-					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,4,0); break;
+					case 1: ASB("  You feel sick."); damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0); break;
 					case 2: ASB("  You all feel better."); heal_party(str * 20); break;
-					case 3: ASB("  You all feel sick."); hit_party(20 * str,4); break;
+					case 3: ASB("  You all feel sick."); hit_party(20 * str,DAMAGE_UNBLOCKABLE); break;
 					}
 				break;
 			case 88:
@@ -726,10 +727,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 89:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel terrible."); drain_pc(pc,str * 5); damage_pc(pc,20 * str,4,0); disease_pc(pc,2 * str); dumbfound_pc(pc,2 * str); break;
+					case 1: ASB("  You feel terrible."); drain_pc(pc,str * 5); damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0); disease_pc(pc,2 * str); dumbfound_pc(pc,2 * str); break;
 					case 2: 
 					case 3: ASB("  You all feel terrible."); for (i = 0; i < 6; i++) {
-					drain_pc(i,str * 5); damage_pc(i,20 * str,4,0); disease_pc(i,2 * str); dumbfound_pc(i,2 * str);} break;
+					drain_pc(i,str * 5); damage_pc(i,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0); disease_pc(i,2 * str); dumbfound_pc(i,2 * str);} break;
 					}
 				break;
 			case 90:
@@ -1159,7 +1160,7 @@ void change_level(short town_num,short x,short y)
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type)
+Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
 //short dam_type;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold 
  				 // 6 - demon 7 - undead  
@@ -1168,7 +1169,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
  				 // 100s digit - damage sound for boom space
 {
 	cPopulation::cCreature *victim;
-	short r1,which_spot,sound_type;
+	short r1,which_spot;
 	location where_put;
 	
 	Boolean do_print = TRUE;
@@ -1178,12 +1179,12 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 
 	if (univ.town.monst.dudes[which_m].active == 0) return FALSE;
 	
-	sound_type = dam_type / 100;
-	dam_type = dam_type % 100;
+	//sound_type = dam_type / 100;
+	//dam_type = dam_type % 100;
 
-	if (dam_type >= 10) {
+	if (dam_type >= DAMAGE_MARKED) { // note: MARKED here actually means NO_PRINT
 		do_print = FALSE;
-		dam_type -= 10;
+		dam_type -= DAMAGE_MARKED;
 		}
 
 	if (sound_type == 0) {
@@ -2032,8 +2033,8 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (i == 1) {set_sd = FALSE; *next_spec = -1; *a = 1;}
 				else {
 					if (is_combat() == TRUE)
-						j = run_trap(current_pc,spec.ex1a,spec.ex1b,spec.ex2a);
-						else j = run_trap(7,spec.ex1a,spec.ex1b,spec.ex2a);
+						j = run_trap(current_pc,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
+						else j = run_trap(7,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
 					if (j == 0) {
 						*a = 1; set_sd = FALSE;
 						}
@@ -2082,15 +2083,16 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (i == 6)// && (spec.ex1b >= 0))
 				*next_spec = spec.ex1b;
 			break;
-		case 81:
+		case 81:{
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
+			eDamageType dam_type = (eDamageType) spec.ex2b;
 			if (pc < 0) {
 				if(spec.pic == 1 && overall_mode == MODE_COMBAT)
-					damage_pc(current_pc,r1,spec.ex2b,0);
-				else hit_party(r1,spec.ex2b);
+					damage_pc(current_pc,r1,dam_type,MONSTER_TYPE_HUMAN,0);
+				else hit_party(r1,dam_type);
 			}
-			else damage_pc(pc,r1,spec.ex2b,0);
-			break;
+			else damage_pc(pc,r1,dam_type,MONSTER_TYPE_HUMAN,0);
+			break;}
 		case 82:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
@@ -2532,13 +2534,13 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 175:
 			if (which_mode == 7)
 				break;
-			hit_space(l,spec.ex2a,spec.ex2b,1,1);
+			hit_space(l,spec.ex2a,(eDamageType) spec.ex2b,1,1);
 			*redraw = 1;
 			break;
 		case 176:
 			if (which_mode == 7)
 				break;
-			radius_damage(l,spec.pic, spec.ex2a, spec.ex2b);
+			radius_damage(l,spec.pic, spec.ex2a, (eDamageType) spec.ex2b);
 			*redraw = 1;
 			break;
 		case 177:

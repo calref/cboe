@@ -19,7 +19,7 @@ void monst_fire_missile(short m_num,short skill,short bless,short level,location
 Boolean monst_breathe(cPopulation::cCreature *caster,location targ_space,short dam_type);
 Boolean monst_cast_mage(cPopulation::cCreature *caster,short targ);
 Boolean monst_cast_priest(cPopulation::cCreature *caster,short targ);
-void damage_target(short target,short dam,short type);
+void damage_target(short target,short dam,eDamageType type);
 location find_fireball_loc(location where,short radius,short mode,short *m);
 location closest_pc_loc(location where);
 short count_levels(location where,short radius);
@@ -30,9 +30,9 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,Boolean 
 void handle_item_spell(location loc,short num);
 void modify_pattern(effect_pat_type *pat,short type);
 void do_shockwave(location target);
-void radius_damage(location target,short radius, short dam, short type);
-void hit_pcs_in_space(location target,short dam,short type,short report,short hit_all);
-void hit_space(location target,short dam,short type,short report,short hit_all);
+void radius_damage(location target,short radius, short dam, eDamageType type);
+void hit_pcs_in_space(location target,short dam,eDamageType type,short report,short hit_all);
+void hit_space(location target,short dam,eDamageType type,short report,short hit_all);
 void do_poison();
 void handle_disease();
 void handle_acid();

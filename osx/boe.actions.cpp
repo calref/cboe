@@ -1780,7 +1780,7 @@ Boolean handle_keystroke(char chr,char chr2,EventRecord event)
 					
 				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1)
 				&& (dist(univ.town.monst.dudes[i].m_loc,univ.town.p_loc) <= 10) )
-					damage_monst(i, 7,1000,0, 4);
+					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
 					}
 //				kill_monst(&c_town.monst.dudes[i],6);
 				initiate_redraw();
@@ -2176,7 +2176,7 @@ void increase_age()////
 				add_string_to_buf("Starving! ");
 				play_sound(66);
 				r1 = get_ran(3,1,6);
-				hit_party(r1,4);
+				hit_party(r1,DAMAGE_UNBLOCKABLE);
 				update_stat = TRUE;
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,0,r1,0);

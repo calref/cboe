@@ -3174,14 +3174,14 @@ void void_sanctuary(short pc_num)
 		}
 }
 
-void hit_party(short how_much,short damage_type)
+void hit_party(short how_much,eDamageType damage_type)
 {
 	short i;
 	Boolean dummy;
 	
 	for (i = 0; i < 6; i++)
 		if (ADVEN[i].main_status == 1)
-			dummy = damage_pc(i,how_much,damage_type,-1);
+			dummy = damage_pc(i,how_much,damage_type,MONSTER_TYPE_UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen(); 
 }
@@ -3197,25 +3197,25 @@ void slay_party(eMainStatus mode)
 	put_pc_screen(); 
 }
 
-Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_attacker)
+Boolean damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterType type_of_attacker, short sound_type)
 //short damage_type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 					// 5 - cold  6 - undead attack  7 - demon attack
 					// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 					// 30 + *   same as *, but no print
 					// 100s digit - sound data
 {
-	short i, r1,sound_type,level;
+	short i, r1,level;
 	Boolean do_print = TRUE;
 	
 	if (ADVEN[which_pc].main_status != 1)
 		return FALSE;
 	
-	sound_type = damage_type / 100;
-	damage_type = damage_type % 100;
+	//sound_type = damage_type / 100;
+	//damage_type = damage_type % 100;
 
-	if (damage_type >= 30) {
+	if (damage_type >= DAMAGE_NO_PRINT) {
 		do_print = FALSE;
-		damage_type -= 30;
+		damage_type -= DAMAGE_NO_PRINT;
 		}
 
 	if (sound_type == 0) {
@@ -3278,17 +3278,17 @@ Boolean damage_pc(short which_pc,short how_much,short damage_type,short type_of_
 			how_much -= 1;
 		}
 
-	if ((damage_type == 0) && ((level = get_prot_level(which_pc,30)) > 0))
+	if ((damage_type == DAMAGE_WEAPON) && ((level = get_prot_level(which_pc,30)) > 0))
 		how_much = how_much - level;
-	if ((damage_type == 6) && ((level = get_prot_level(which_pc,57)) > 0))
+	if ((damage_type == DAMAGE_UNDEAD) && ((level = get_prot_level(which_pc,57)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((damage_type == 7) && ((level = get_prot_level(which_pc,58)) > 0))
+	if ((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,58)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 6) && ((level = get_prot_level(which_pc,59)) > 0))
+	if ((type_of_attacker == MONSTER_TYPE_HUMANOID) && ((level = get_prot_level(which_pc,59)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 1) && ((level = get_prot_level(which_pc,60)) > 0))
+	if ((type_of_attacker == MONSTER_TYPE_REPTILE) && ((level = get_prot_level(which_pc,60)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == 9) && ((level = get_prot_level(which_pc,61)) > 0))
+	if ((type_of_attacker == MONSTER_TYPE_GIANT) && ((level = get_prot_level(which_pc,61)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 

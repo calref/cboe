@@ -208,33 +208,109 @@ enum eGameMode {
 
 /* damage type*/
 /* used as parameter to some functions */
-#define DAMAGE_WEAPON			0
-#define DAMAGE_FIRE				1
-#define DAMAGE_POISON			2
-#define DAMAGE_MAGIC			3
-#define DAMAGE_UNBLOCKABLE		4 //from the source files - the display is the same as the magic one (damage_monst in SPECIALS.cpp)
-#define DAMAGE_COLD				5
-#define DAMAGE_UNDEAD			6 //from the source files - the display is the same as the weapon one
-#define DAMAGE_DEMON			7 //from the source files - the display is the same as the weapon one
+enum eDamageType {
+	DAMAGE_WEAPON = 0,
+	DAMAGE_FIRE = 1,
+	DAMAGE_POISON = 2,
+	DAMAGE_MAGIC = 3,
+	DAMAGE_UNBLOCKABLE = 4, //from the source files - the display is the same as the magic one (damage_monst in SPECIALS.cpp)
+	DAMAGE_COLD = 5,
+	DAMAGE_UNDEAD = 6, //from the source files - the display is the same as the weapon one
+	DAMAGE_DEMON = 7, //from the source files - the display is the same as the weapon one
 // 8 and 9 aren't defined : doesn't print any damage. According to the source files the 9 is DAMAGE_MARKED though. Wrong ?
-#define DAMAGE_MARKED			10 // usage: DAMAGE_MARKED + damage_type
-#define DAMAGE_NO_PRINT			30 // usage: DAMAGE_NO_PRINT + damage_type
+	DAMAGE_MARKED = 10, // usage: DAMAGE_MARKED + damage_type
+	DAMAGE_WEAPON_MARKED = 10,
+	DAMAGE_FIRE_MARKED = 11,
+	DAMAGE_POISON_MARKED = 12,
+	DAMAGE_MAGIC_MARKED = 13,
+	DAMAGE_UNBLOCKABLE_MARKED = 14,
+	DAMAGE_COLD_MARKED = 15,
+	DAMAGE_UNDEAD_MARKED = 16,
+	DAMAGE_DEMON_MARKED = 17,
+	DAMAGE_NO_PRINT = 30, // usage: DAMAGE_NO_PRINT + damage_type
+	DAMAGE_WEAPON_NO_PRINT = 30,
+	DAMAGE_FIRE_NO_PRINT = 31,
+	DAMAGE_POISON_NO_PRINT = 32,
+	DAMAGE_MAGIC_NO_PRINT = 33,
+	DAMAGE_UNBLOCKABLE_NO_PRINT = 34,
+	DAMAGE_COLD_NO_PRINT = 35,
+	DAMAGE_UNDEAD_NO_PRINT = 36,
+	DAMAGE_DEMON_NO_PRINT = 37,
+	// What about both NO_PRINT and MARKED?
+};
+
+inline void operator -= (eDamageType& cur, eDamageType othr){
+	if((othr == DAMAGE_MARKED && cur >= DAMAGE_MARKED && cur < DAMAGE_NO_PRINT) ||
+	   (othr == DAMAGE_NO_PRINT && cur >= DAMAGE_NO_PRINT))
+		cur = (eDamageType) ((int)cur - (int)othr);
+}
+
+inline void operator += (eDamageType& cur, eDamageType othr){
+	if((othr == DAMAGE_MARKED || othr == DAMAGE_NO_PRINT) && cur < DAMAGE_MARKED)
+		cur = (eDamageType) ((int)cur + (int)othr);
+}
+//inline eDamageType operator + (eDamageType lhs, eDamageType rhs){
+//	if(lhs == DAMAGE_MARKED || lhs == DAMAGE_NO_PRINT){
+//		if(rhs != DAMAGE_MARKED && rhs != DAMAGE_NO_PRINT)
+//			return (eDamageType) ((int)lhs + (int)rhs);
+//	}else if(rhs == DAMAGE_MARKED || rhs == DAMAGE_NO_PRINT)
+//		return (eDamageType) ((int)lhs + (int)rhs);
+//	else{
+//		int a = lhs, b = rhs, c = 0;
+//		if(a > 30){
+//			c += 30;
+//			a -= 30;
+//			if(b > 30) b -= 30;
+//			else if(b > 10) b -= 10;
+//			if(a == b) c += a;
+//			else c += 4;
+//		}else if(b > 30){
+//			c += 30;
+//			b -= 30;
+//			if(a > 30) a -= 30;
+//			else if(a > 10) a -= 10;
+//			if(a == b) c += a;
+//			else c += 4;
+//		}else if(a > 10){
+//			c += 10;
+//			a -= 10;
+//			if(b > 30){
+//				b -= 30;
+//				c += 20;
+//			}else if(b > 10) b -= 10;
+//			if(a == b) c += a;
+//			else c += 4;
+//		}else if(b > 10){
+//			c += 10;
+//			b -= 10;
+//			if(a > 30){
+//				a -= 30;
+//				c += 20;
+//			}else if(a > 10) a -= 10;
+//			if(a == b) c += a;
+//			else c += 4;
+//		}
+//		return (eDamageType) c; // this SHOULD guarantee a valid result...
+//	}
+//}
 
 /* trap type */
 /* used in pc_record_type::runTrap(...) */
-#define TRAP_RANDOM				0
-#define TRAP_BLADE				1
-#define TRAP_DART				2
-#define TRAP_GAS				3 // poisons all
-#define TRAP_EXPLOSION			4 // damages all => uses c_town.difficulty rather than trap_level to calculates damages (and even c_town.difficulty /13).
-#define TRAP_SLEEP_RAY			5
-#define TRAP_FALSE_ALARM		6
-#define TRAP_DRAIN_XP			7
-#define TRAP_ALERT				8 // makes town hostile
-#define TRAP_FLAMES				9 // damages all => uses trap_level (*5) to calculates damages.
-#define TRAP_DUMBFOUND			10 //dumbfound all
-#define TRAP_DISEASE			11
-#define TRAP_DISEASE_ALL		12
+enum eTrapType {
+	TRAP_RANDOM = 0,
+	TRAP_BLADE = 1,
+	TRAP_DART = 2,
+	TRAP_GAS = 3, // poisons all
+	TRAP_EXPLOSION = 4, // damages all => uses c_town.difficulty rather than trap_level to calculates damages (and even c_town.difficulty /13).
+	TRAP_SLEEP_RAY = 5,
+	TRAP_FALSE_ALARM = 6,
+	TRAP_DRAIN_XP = 7,
+	TRAP_ALERT = 8, // makes town hostile
+	TRAP_FLAMES = 9, // damages all => uses trap_level (*5) to calculates damages.
+	TRAP_DUMBFOUND = 10, //dumbfound all
+	TRAP_DISEASE = 11,
+	TRAP_DISEASE_ALL = 12,
+};
 
 /*      items[i].type    a.k.a type of weapon         */
 #define ITEM_EDGED			1
@@ -406,98 +482,6 @@ enum eGameMode {
 #define ITEM_MISSILE_SLAY_UNDEAD	174
 #define ITEM_MISSILE_SLAY_DEMON		175
 #define ITEM_MISSILE_HEAL_TARGET	176
-
-/*      Monsters Stuff      */
-
-/* Skills Same as PC */
-
-/* Monster Type */
-
-#define MONSTER_TYPE_HUMAN			0
-#define MONSTER_TYPE_REPTILE		1
-#define MONSTER_TYPE_BEAST			2
-#define MONSTER_TYPE_IMPORTANT		3
-#define MONSTER_TYPE_MAGE			4
-#define MONSTER_TYPE_PRIEST			5
-#define MONSTER_TYPE_HUMANOID		6
-#define MONSTER_TYPE_DEMON			7
-#define MONSTER_TYPE_UNDEAD			8
-#define MONSTER_TYPE_GIANT			9
-#define MONSTER_TYPE_SLIME			10
-#define MONSTER_TYPE_STONE			11
-#define MONSTER_TYPE_BUG			12
-#define MONSTER_TYPE_DRAGON			13
-#define MONSTER_TYPE_MAGICAL		14
-
-/* Attack Types */
-
-#define MONSTER_ATTACK_SWINGS		0
-#define MONSTER_ATTACK_CLAWS		1
-#define MONSTER_ATTACK_BITES		2
-#define MONSTER_ATTACK_SLIMES		3
-#define MONSTER_ATTACK_PUNCHES		4
-#define MONSTER_ATTACK_STINGS		5
-#define MONSTER_ATTACK_CLUBS		6
-#define MONSTER_ATTACK_BURNS		7
-#define MONSTER_ATTACK_HARMS		8
-#define MONSTER_ATTACK_STABS		9
-
-/* Special Ability a.k.a spec_skill */
-
-#define MONSTER_NO_SPECIAL_ABILITY			0
-#define MONSTER_THROWS_DARTS				1
-#define MONSTER_SHOOTS_ARROWS				2
-#define MONSTER_THROWS_SPEARS				3
-#define MONSTER_THROWS_ROCKS1				4 //4-24 damages
-#define MONSTER_THROWS_ROCKS2				5 //5-30 damages
-#define MONSTER_THROWS_ROCKS3				6 //6-36 damages
-#define MONSTER_THROWS_RAZORDISKS			7
-#define MONSTER_PETRIFICATION_RAY			8
-#define MONSTER_SP_DRAIN_RAY				9 //spell points drain ray
-#define MONSTER_HEAT_RAY					10
-#define MONSTER_INVISIBLE					11
-#define MONSTER_SPLITS						12
-#define MONSTER_MINDLESS					13
-#define MONSTER_BREATHES_STINKING_CLOUDS	14
-#define MONSTER_ICY_TOUCH					15
-#define MONSTER_XP_DRAINING_TOUCH			16
-#define MONSTER_ICY_AND_DRAINING_TOUCH		17
-#define MONSTER_SLOWING_TOUCH				18
-#define MONSTER_SHOOTS_WEB					19
-#define MONSTER_GOOD_ARCHER					20
-#define MONSTER_STEALS_FOOD					21
-#define MONSTER_PERMANENT_MARTYRS_SHIELD	22
-#define MONSTER_PARALYSIS_RAY				23
-#define MONSTER_DUMBFOUNDING_TOUCH			24
-#define MONSTER_DISEASE_TOUCH				25
-#define MONSTER_ABSORB_SPELLS				26
-#define MONSTER_WEB_TOUCH					27
-#define MONSTER_SLEEP_TOUCH					28
-#define MONSTER_PARALYSIS_TOUCH				29
-#define MONSTER_PETRIFICATION_TOUCH			30
-#define MONSTER_ACID_TOUCH					31
-#define MONSTER_BREATHES_SLEEP_CLOUDS		32
-#define MONSTER_ACID_SPIT					33
-#define MONSTER_SHOOTS_SPINES				34
-#define MONSTER_DEATH_TOUCH					35
-#define MONSTER_INVULNERABILITY				36
-#define MONSTER_GUARD						37
-
-/* Create Monsters/Fields */
-
-#define MONSTER_NO_RADIATE					0
-#define MONSTER_RADIATE_FIRE_FIELDS			1
-#define MONSTER_RADIATE_ICE_FIELDS			2
-#define MONSTER_RADIATE_SHOCK_FIELDS		3
-#define MONSTER_RADIATE_ANTIMAGIC_FIELDS	4
-#define MONSTER_RADIATE_SLEEP_FIELDS		5
-#define MONSTER_RADIATE_STINKING_CLOUDS		6
-//as said 7,8 and 9 are unused
-#define MONSTER_SUMMON1						10 //5 percent chance
-#define MONSTER_SUMMON2						11 //20 percent chance
-#define MONSTER_SUMMON3						12 //50 percent chance
-//as said 13 and 14 are unused
-#define MONSTER_DEATH_TRIGGERS				15 //death triggers global special
 
 /* Terrains Specials Properties : scenario.ter_types[i].special */      //complete
 

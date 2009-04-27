@@ -1216,7 +1216,7 @@ void bash_door(location where,short pc_num) ////
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].special != 10))  {
 					add_string_to_buf("  Didn't work.                ");
-					damage_pc(pc_num,get_ran(1,1,4),4,-1);					
+					damage_pc(pc_num,get_ran(1,1,4),DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);					
 				} 
 				else {
 						add_string_to_buf("  Lock breaks.                ");

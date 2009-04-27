@@ -127,7 +127,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 }
 
 
-Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
+Boolean run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here
 //short trap_type; // 0 - random  1 - blade  2 - dart  3 - gas  4 - boom  5 - paralyze  6  - no   
 				 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
@@ -153,7 +153,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 	num_hits += trap_level;
 		
 	if (trap_type == TRAP_RANDOM)
-		trap_type = get_ran(1,1,4);
+		trap_type = (eTrapType) get_ran(1,1,4);
 	if (trap_type == TRAP_FALSE_ALARM)
 		return TRUE;
 		
@@ -182,7 +182,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 			for (i = 0; i < num_hits; i++) {
 					add_string_to_buf("  A knife flies out!              ");
 					r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
-					damage_pc(pc_num,r1,0,-1);
+					damage_pc(pc_num,r1,DAMAGE_WEAPON,MONSTER_TYPE_UNKNOWN,0);
 				}
 			break;
 			
@@ -205,7 +205,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 			for (i = 0; i < num_hits; i++) {
 					add_string_to_buf("  There is an explosion.        ");
 					r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
-					hit_party(r1,1);
+					hit_party(r1,DAMAGE_FIRE);
 				}
 			break;
 			
@@ -230,7 +230,7 @@ Boolean run_trap(short pc_num,short trap_type,short trap_level,short diff)
 		case TRAP_FLAMES: 
 			add_string_to_buf("  Flames shoot from the walls.        ");
 			r1 = get_ran(10 + trap_level * 5,1,8);
-			hit_party(r1,1);
+			hit_party(r1,DAMAGE_FIRE);
 			break;
 		case TRAP_DUMBFOUND: 
 			add_string_to_buf("  You feel disoriented.        ");
