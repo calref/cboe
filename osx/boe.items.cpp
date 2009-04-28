@@ -162,7 +162,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 	return false;
 }
 
-bool forced_give(short item_num,short abil) ////
+bool forced_give(short item_num,eItemAbil abil) ////
 // if abil > 0, force abil, else ignore
 {
 	short i,j;
@@ -172,7 +172,7 @@ bool forced_give(short item_num,short abil) ////
 	if ((item_num < 0) || (item_num > 399))
 		return true;
 	item = get_stored_item(item_num);
-	if (abil > 0)
+	if (abil > ITEM_NO_ABILITY)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
@@ -445,7 +445,8 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	if (ADVEN[pc_num].items[item_hit].is_magic() ||
 		(ADVEN[pc_num].items[item_hit].ability != 0))
 			return;
-	ADVEN[pc_num].items[item_hit].item_properties |= 4;
+	ADVEN[pc_num].items[item_hit].set_magic(true);
+	ADVEN[pc_num].items[item_hit].set_enchanted(true);
 	switch (enchant_type) {
 		case 0:
 			sprintf((char *)store_name,"%s (+1)",ADVEN[pc_num].items[item_hit].full_name);
@@ -464,14 +465,14 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 			break;
 		case 3:
 			sprintf((char *)store_name,"%s (F)",ADVEN[pc_num].items[item_hit].full_name);
-			ADVEN[pc_num].items[item_hit].ability = 110;
+			ADVEN[pc_num].items[item_hit].ability = ITEM_SPELL_FLAME;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
 			ADVEN[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
 			sprintf((char *)store_name,"%s (F!)",ADVEN[pc_num].items[item_hit].full_name);
 			ADVEN[pc_num].items[item_hit].value = new_val;
-			ADVEN[pc_num].items[item_hit].ability = 1;
+			ADVEN[pc_num].items[item_hit].ability = ITEM_FLAMING_WEAPON;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
@@ -482,7 +483,7 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 		case 6:
 			sprintf((char *)store_name,"%s (B)",ADVEN[pc_num].items[item_hit].full_name);
 			ADVEN[pc_num].items[item_hit].bonus++;
-			ADVEN[pc_num].items[item_hit].ability = 71;
+			ADVEN[pc_num].items[item_hit].ability = ITEM_BLESS_CURSE;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
 			ADVEN[pc_num].items[item_hit].magic_use_type = 0;
 			ADVEN[pc_num].items[item_hit].charges = 8;
@@ -650,26 +651,26 @@ void destroy_an_item()
 	ASB("Too many items. Some item destroyed.");
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].type_flag == 15) {
-			univ.town.items[i].variety = 0;
+			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 			return;
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].value < 3) {
-			univ.town.items[i].variety = 0;
+			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 			return;
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].value < 30) {
-			univ.town.items[i].variety = 0;
+			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 			return;
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (!univ.town.items[i].is_magic()) {
-			univ.town.items[i].variety = 0;
+			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 			return;
 			}
 	i = get_ran(1,0,NUM_TOWN_ITEMS);
-	univ.town.items[i].variety = 0;
+	univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 	
 }
 
@@ -1480,18 +1481,18 @@ void place_treasure(location where,short level,short loot,short mode)
 					if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
 						new_item = return_treasure(treas_chart[loot][j],level,mode);
 						if (item_val(new_item) > max)
-							new_item.variety = 0;
+							new_item.variety = ITEM_TYPE_NO_ITEM;
 						}
 					}
 
 			// not many magic items
 			if (mode == 0) {
 				if (new_item.is_magic() && (level < 2) && (get_ran(1,0,5) < 3))
-					new_item.variety = 0;
+					new_item.variety = ITEM_TYPE_NO_ITEM;
 				if (new_item.is_magic() && (level == 2) && (get_ran(1,0,5) < 2))
-					new_item.variety = 0;
+					new_item.variety = ITEM_TYPE_NO_ITEM;
 				if (new_item.is_cursed() && (get_ran(1,0,5) < 3))
-					new_item.variety = 0;
+					new_item.variety = ITEM_TYPE_NO_ITEM;
 				}
 				
 			// if forced, keep dipping until a treasure comes uo
@@ -1502,9 +1503,9 @@ void place_treasure(location where,short level,short loot,short mode)
 
 			// Not many cursed items
 			if (new_item.is_cursed() && (get_ran(1,0,2) == 1))
-				new_item.variety = 0;
+				new_item.variety = ITEM_TYPE_NO_ITEM;
 							
-			if (new_item.variety != 0) {
+			if (new_item.variety != ITEM_TYPE_NO_ITEM) {
 				for (i = 0; i < 6; i++)
 					if ((ADVEN[i].main_status == 1) 
 						&& (get_ran(1,1,100) < id_odds[ADVEN[i].skills[13]]))
@@ -1538,7 +1539,7 @@ cItemRec return_treasure(short loot,short level,short mode)
 	};
 	short r1;
 	
-	treas.variety = 0;
+	treas.variety = ITEM_TYPE_NO_ITEM;
 	r1 = get_ran(1,0,41);
 	if (loot >= 3)
 		r1 += 3;

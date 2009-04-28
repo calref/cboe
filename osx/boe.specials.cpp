@@ -1802,7 +1802,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 19:
 			check_mess = true;
-			if ((forced_give(spec.ex1a,0) == false) && ( spec.ex1b >= 0))
+			if ((forced_give(spec.ex1a,ITEM_NO_ABILITY) == false) && ( spec.ex1b >= 0))
 				*next_spec = spec.ex1b;
 			break;
 		case 20:
@@ -1894,7 +1894,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		}
 	switch (cur_node.type) {
 		case 50:
-			if (forced_give(spec.ex1a,0) == false) {
+			if (forced_give(spec.ex1a,ITEM_NO_ABILITY) == false) {
 				set_sd = false;
 				if ( spec.ex2b >= 0)
 					*next_spec = spec.ex2b;
@@ -2376,7 +2376,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					&& (l == univ.town.items[i].item_loc)) {
 						*next_spec = spec.ex2b;
 						*redraw = 1;
-						univ.town.items[i].variety = 0;
+						univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 						}
 			break;
 		case 145:
@@ -2861,15 +2861,15 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 212:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].item_loc == l)) {
+				if ((univ.town.items[k].variety > ITEM_TYPE_NO_ITEM) && (univ.town.items[k].item_loc == l)) {
 					univ.town.items[k].item_loc.x = spec.sd1;
 					univ.town.items[k].item_loc.y = spec.sd2;
 				}
 			break;
 		case 213:
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].item_loc == l)) {
-					univ.town.items[k].variety = 0;
+				if ((univ.town.items[k].variety > ITEM_TYPE_NO_ITEM) && (univ.town.items[k].item_loc == l)) {
+					univ.town.items[k].variety = ITEM_TYPE_NO_ITEM;
 				}
 			break;
 		case 214:

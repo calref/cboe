@@ -99,7 +99,7 @@ void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec
 
 	item = get_stored_item(item_num);	
 	if (item_num == 0)
-		item.variety = 0;
+		item.variety = ITEM_TYPE_NO_ITEM;
 	if (*flip_bit == 0) {
 			choice = fancy_choice_dialog(dialog_num,0);
 			if (choice == 1)

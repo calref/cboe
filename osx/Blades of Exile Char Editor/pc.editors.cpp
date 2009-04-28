@@ -151,7 +151,7 @@ void take_item(short pc_num,short which_item)
 		ADVEN[pc_num].items[i] = ADVEN[pc_num].items[i + 1];
 		ADVEN[pc_num].equip[i] = ADVEN[pc_num].equip[i + 1];
 		}
-	ADVEN[pc_num].items[23].variety = 0;
+	ADVEN[pc_num].items[23].variety = ITEM_TYPE_NO_ITEM;
 	ADVEN[pc_num].equip[23] = false;
 
 }

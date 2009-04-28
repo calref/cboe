@@ -389,7 +389,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 		}
 		
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		univ.town.items[i].variety = 0;
+		univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 	store_current_pc = current_pc;
 	current_pc = 0;
 	set_pc_moves();

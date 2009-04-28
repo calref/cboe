@@ -45,6 +45,10 @@ bool cItemRec::is_concealed() const {
 	return item_properties & 32;
 }
 
+bool cItemRec::is_enchanted() const {
+	return item_properties & 64;
+}
+
 // Set bit to 1: a |= b
 // Set bit to 0: a &= ~b
 // Toggle bit:   a ^= b
@@ -79,6 +83,11 @@ void cItemRec::set_concealed(bool b) {
 	else  item_properties &= ~32;
 }
 
+void cItemRec::set_enchanted(bool b) {
+	if(b) item_properties |=  64;
+	else  item_properties &= ~64;
+}
+
 short cItemRec::item_weight() const {
 	short n = charges, w = weight;
 	if (variety == 0)
@@ -91,16 +100,16 @@ short cItemRec::item_weight() const {
 }
 
 cItemRec::cItemRec(){
-	variety = 0;
+	variety = ITEM_TYPE_NO_ITEM;
 	item_level = 0;
 	awkward = 0;
 	bonus = 0;
 	protection = 0;
 	charges = 0;
-	type = 0;
+	type = ITEM_NOT_MELEE;
 	magic_use_type = 0;
 	graphic_num = 0;
-	ability = 0;
+	ability = ITEM_NO_ABILITY;
 	ability_strength = 0;
 	type_flag = 0;
 	is_special = 0;
@@ -118,7 +127,7 @@ cItemRec::cItemRec(){
 }
 
 cItemRec::cItemRec(long preset){
-	ability = 0;
+	ability = ITEM_NO_ABILITY;
 	ability_strength = 0;
 	type_flag = 0;
 	is_special = 0;
@@ -152,7 +161,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 65;
 			value = 2;
@@ -168,7 +177,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
@@ -184,7 +193,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 12;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 47;
 			value = 1;
@@ -216,7 +225,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 66;
 			value = 6;
@@ -232,7 +241,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 62;
 			value = 0;
@@ -248,7 +257,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 53;
 			value = 0;
@@ -264,7 +273,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 1;
-			type = 0;
+			type = ITEM_NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 50;
 			value = 0;
@@ -279,16 +288,16 @@ cItemRec::cItemRec(long preset){
 
 __attribute__((deprecated))
 cItemRec& cItemRec::operator = (legacy::item_record_type& old){
-	variety = old.variety;
+	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;
 	bonus = old.bonus;
 	protection = old.protection;
 	charges = old.charges;
-	type = old.type;
+	type = (eWeapType) old.type;
 	magic_use_type = old.magic_use_type;
 	graphic_num = old.graphic_num;
-	ability = old.ability;
+	ability = (eItemAbil) old.ability;
 	ability_strength = old.ability_strength;
 	type_flag = old.type_flag;
 	is_special = old.is_special;

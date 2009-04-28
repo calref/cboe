@@ -1544,7 +1544,7 @@ void initiate_outdoor_combat(short i)
 		for (n = 0; n < 24; n++)
 			if ((ADVEN[m].main_status != 1) && (ADVEN[m].items[n].variety != 0)) {
 				place_item(ADVEN[m].items[n],to_place,true);
-				ADVEN[m].items[n].variety = 0;
+				ADVEN[m].items[n].variety = ITEM_TYPE_NO_ITEM;
 				}
 							
 	overall_mode = MODE_COMBAT;

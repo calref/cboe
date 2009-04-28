@@ -863,7 +863,7 @@ void init_scenario() {
 	for (i = 0; i < 256; i++) {
 		scenario.ter_types[i].picture = ter_pics[i];
 		scenario.ter_types[i].blockage = ter_block[i];
-		scenario.ter_types[i].special = ter_traits[i];
+		scenario.ter_types[i].special = (eTerSpec) ter_traits[i];
 		get_str(temp_str,1,i + 1);
 		sprintf((char *)scenario.ter_names[i], "%s", temp_str);
 		
@@ -937,7 +937,7 @@ bool save_ter_info() {
 	
 	if (store_which_ter > 90) {
 		store_ter.blockage = cd_get_led_range(813,19,24);
-		store_ter.special = cd_get_led_range(813,32,55);
+		store_ter.special = (eTerSpec) cd_get_led_range(813,32,55);
 		i = CDGN(813,6);
 		if ((store_ter.special < 2) || (store_ter.special > 6)) {
 			if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
@@ -1494,8 +1494,8 @@ bool save_item_info() {
 	sprintf(store_item.name,"%s",str);
 	store_item.graphic_num = CDGN(818,4);
 	
-	store_item.variety = cd_get_led_range(818,18,45);
-	store_item.type = cd_get_led_range(818,46,48) + 1;
+	store_item.variety = (eItemType) cd_get_led_range(818,18,45);
+	store_item.type = (eWeapType) (cd_get_led_range(818,46,48) + 1);
 	
 	store_item.item_level = CDGN(818,5);
 	if (cre(store_item.item_level,0,50,"Item Level must be from 0 to 50.","",818) > 0) return false;
@@ -1588,9 +1588,10 @@ void edit_item_type_event_filter (short item_hit) {
 			break;
 		default:
 			cd_hit_led_range(818,18,45,item_hit);
-			store_item.variety = cd_get_led_range(818,18,45);
-			if ((store_item.variety == 1) || (store_item.variety == 2))
-				store_item.type = 1;
+			store_item.variety = (eItemType) cd_get_led_range(818,18,45);
+			if ((store_item.variety == ITEM_TYPE_ONE_HANDED) || (store_item.variety == ITEM_TYPE_TWO_HANDED))
+				store_item.type = ITEM_EDGED;
+			else store_item.type = ITEM_NOT_MELEE;
 			cd_hit_led_range(818,46,48,item_hit);
 			break;
 			
@@ -1676,7 +1677,7 @@ void edit_item_abil_event_filter (short item_hit) {
 	
 	switch (item_hit) {
 		case 4:
-			store_item2.ability = 0;
+			store_item2.ability = ITEM_NO_ABILITY;
 			toast_dialog();
 			break;
 		case 3:
@@ -1690,8 +1691,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,1,15,store_item2.ability + 1,824,"Choose Weapon Ability (inherent)");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		case 35:
@@ -1703,8 +1704,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,31,63,store_item2.ability + 1,824,"Choose General Ability (inherent)");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		case 36:
@@ -1714,8 +1715,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,71,95,store_item2.ability + 1,824,"Choose Usable Ability (Not spell)");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		case 39:
@@ -1725,8 +1726,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,111,136,store_item2.ability + 1,824,"Choose Usable Ability (Spell)");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		case 38:
@@ -1736,8 +1737,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,151,162,store_item2.ability + 1,824,"Choose Reagent Ability");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		case 37:
@@ -1747,8 +1748,8 @@ void edit_item_abil_event_filter (short item_hit) {
 				break;
 			}
 			i = choose_text_res(23,171,177,store_item2.ability + 1,824,"Choose Missile Ability");
-			if (i >= 0) store_item2.ability = i - 1;
-			else store_item2.ability = 0;
+			if (i >= 0) store_item2.ability = (eItemAbil) (i - 1);
+			else store_item2.ability = ITEM_NO_ABILITY;
 			put_item_abils_in_dlog();
 			break;
 		default:

@@ -345,7 +345,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); 
-					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
+					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = ITEM_TYPE_NO_ITEM;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;

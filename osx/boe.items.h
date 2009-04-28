@@ -1,6 +1,6 @@
 void sort_pc_items(short pc_num);
 bool give_to_pc(short pc_num,cItemRec  item,short  print_result);
-bool forced_give(short item_num,short abil);
+bool forced_give(short item_num,eItemAbil abil);
 bool GTP(short item_num);
 bool silent_GTP(short item_num);
 void give_gold(short amount,bool print_result);

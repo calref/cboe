@@ -500,7 +500,7 @@ void start_town_mode(short which_town, short entry_dir)
 			univ.town.monst.dudes[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(univ.town.items[i].item_loc) == true)
-				univ.town.items[i].variety = 0;		
+				univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;		
 				
 	// Clean univ.out.out unwanted monsters
 	for (i = 0; i < T_M; i++) 
@@ -551,7 +551,7 @@ void start_town_mode(short which_town, short entry_dir)
 		for (n = 0; n < 24; n++)
 			if ((ADVEN[m].main_status != 1) && (ADVEN[m].items[n].variety != 0)) {
 				place_item(ADVEN[m].items[n],univ.town.p_loc,true);
-				ADVEN[m].items[n].variety = 0;
+				ADVEN[m].items[n].variety = ITEM_TYPE_NO_ITEM;
 				}
 
 	for (i = 0; i < T_M; i++)
@@ -625,7 +625,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 				 (univ.town.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
 				 	univ.party.stored_items[j][i] = univ.town.items[i];
 				 	}
-				 	else univ.party.stored_items[j][i].variety = 0;			
+				 	else univ.party.stored_items[j][i].variety = ITEM_TYPE_NO_ITEM;			
 				}
 				
 			

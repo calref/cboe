@@ -52,7 +52,7 @@ cItemRec get_food()
 		food.graphic_num = 114;
 	// food doesn't always appear
 	if (get_ran(1,0,2) != 1)
-		food.variety = 0;
+		food.variety = ITEM_TYPE_NO_ITEM;
 	
 	return food;
 }

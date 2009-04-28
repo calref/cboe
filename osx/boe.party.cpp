@@ -227,7 +227,7 @@ void init_party(short mode)
 		 univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			 univ.party.magic_store_items[i][j].variety = 0;
+			 univ.party.magic_store_items[i][j].variety = ITEM_TYPE_NO_ITEM;
 	for (i = 0; i < 4; i++)
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -370,7 +370,7 @@ void init_party_scen_data()
 		 univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			 univ.party.magic_store_items[i][j].variety = 0;
+			 univ.party.magic_store_items[i][j].variety = ITEM_TYPE_NO_ITEM;
 	for (i = 0; i < 4; i++)
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -2905,7 +2905,7 @@ void do_alchemy() ////
 				else {
 					store_i.value = potion_val[which_p];
 					store_i.ability_strength = potion_strs[which_p];
-					store_i.ability = potion_abils[which_p];
+					store_i.ability = (eItemAbil) potion_abils[which_p];
 					if (which_p == 8)
 						store_i.magic_use_type = 2;
 					strcpy(store_i.full_name,alch_names_short[which_p]);
@@ -3440,7 +3440,7 @@ void kill_pc(short which_pc,eMainStatus type)
 				for (i = 0; i < 24; i++)
 					if (ADVEN[which_pc].items[i].variety != 0) {
 						dummy = place_item(ADVEN[which_pc].items[i],item_loc,true);
-						ADVEN[which_pc].items[i].variety = 0;
+						ADVEN[which_pc].items[i].variety = ITEM_TYPE_NO_ITEM;
 						}
 				if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
 					play_sound(21);
