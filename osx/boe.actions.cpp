@@ -1395,7 +1395,7 @@ bool handle_action(EventRecord event)
 		in_startup_mode = true;
 		draw_startup(0);
 		menu_activate(1);
-		strcpy((char*)univ.party.scen_name,".exs"); // should be harmless...
+		univ.party.scen_name = ".exs"; // should be harmless...
 		if (FCD(901,0) == 2){
 			FSSpec* file = nav_put_party();
 			save_party(*file);

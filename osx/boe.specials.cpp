@@ -1554,19 +1554,18 @@ void special_increase_age()
 			if (s3 > 0)
 				redraw = true;
 			}
-	for (i = 0; i < 30; i++)
-		if (univ.party.party_event_timers[i] > 0) {
-			if (univ.party.party_event_timers[i] == 1) {
-				if (univ.party.global_or_town[i] == 0)
-					run_special(11,0,univ.party.node_to_call[i],null_loc,&s1,&s2,&s3);
-					else run_special(11,2,univ.party.node_to_call[i],null_loc,&s1,&s2,&s3);
-				univ.party.party_event_timers[i] = 0;
+	for (i = 0; i < univ.party.party_event_timers.size(); i++) {
+			if (univ.party.party_event_timers[i].time == 1) {
+				if (univ.party.party_event_timers[i].global_or_town == 0)
+					run_special(11,0,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+				else run_special(11,2,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+				univ.party.party_event_timers[i].time = 0;
 				stat_area = true;
 				if (s3 > 0)
 					redraw = true;
 				}
-				else univ.party.party_event_timers[i]--;
-			}
+				else univ.party.party_event_timers[i].time--;
+		}
 	if (stat_area == true) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
@@ -1770,13 +1769,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 13:
 			check_mess = true;
-			for (i = 0; i < 30; i++)
-	 			if (univ.party.party_event_timers[i] == 0) {
-	 				univ.party.party_event_timers[i] = spec.ex1a;
-	 				univ.party.node_to_call[i] = spec.ex1b;
-	 				univ.party.global_or_town[i] = 0;
-	 				i = 30;
-	 				}
+			univ.party.start_timer(spec.ex1a, spec.ex1b, 0);
 			break;
 		case 14:
 			play_sound(spec.ex1a);
@@ -1784,26 +1777,26 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 15:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Horse univ.out.out of range.","",0);
+				give_error("Horse out of range.","",0);
 				else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 16:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Boat univ.out.out of range.","",0);
+				give_error("Boat out of range.","",0);
 				else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 17:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
-				give_error("Town univ.out.out of range.","",0);
+				give_error("Town out of range.","",0);
 				else univ.party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
 			*redraw = true;
 			break;
 		case 18:
 			check_mess = true;
 			if (spec.ex1a != minmax(1,10,spec.ex1a))
-				give_error("Event code univ.out.out of range.","",0);
+				give_error("Event code out of range.","",0);
 				else if (univ.party.key_times[spec.ex1a] == 30000)
 					univ.party.key_times[spec.ex1a] = calc_day();
 			break;
@@ -2784,14 +2777,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			end_split(spec.ex1a);
 			break;
 		case 195:
-			for (i = 0; i < 30; i++)
-	 			if (univ.party.party_event_timers[i] == 0) {
-	 				univ.party.party_event_timers[i] = spec.ex1a;
-	 				univ.party.node_to_call[i] = spec.ex1b;
-	 				univ.party.global_or_town[i] = 1;
-	 				i = 30;
-	 				}
-			break;
+			univ.party.start_timer(spec.ex1a, spec.ex1b, 1);			break;
 		}
 	if (check_mess == true) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);

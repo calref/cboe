@@ -647,9 +647,12 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		
 		to_return = univ.party.p_loc;
 
-		for (i = 0; i < 30; i++)
-	 		if ((univ.party.party_event_timers[i] > 0) && (univ.party.global_or_town[i] == 1))
-				univ.party.party_event_timers[i] = 0;
+		for (i = univ.party.party_event_timers.size() - 1; i >= 0; i++)
+	 		if (univ.party.party_event_timers[i].global_or_town == 1) {
+				cParty::timerIter iter = univ.party.party_event_timers.begin();
+				iter += i;
+				univ.party.party_event_timers.erase(iter);
+			}
 
 		}
 		
@@ -907,13 +910,13 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 13 - stalagmites
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 14 - cave road (proposed)
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 150 */	// 15 - surface road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - crops (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - cave fumarole (proposed)
-		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - surface fumarole (proposed)
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// (note: fumaroles would have lava.)
-		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// the numbers in this array are indices into the other arrays
-		1, 0, 2, 1, 1, 0, 1, 1, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
-		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - hills road (proposed)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - crops (proposed)
+		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - cave fumarole (proposed)
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - surface fumarole (proposed)
+		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// (note: fumaroles would have lava.)
+		1, 0, 2, 1, 1, 0, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
+		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1 /* 250 */

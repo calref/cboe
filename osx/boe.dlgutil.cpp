@@ -627,29 +627,20 @@ void handle_talk_event(Point p)
 						SysBeep(20);
 						return;
 						}
-					for (j = 0; j < 120; j++)
-						if ((univ.party.talk_save[j].personality == store_personality) && 
-						  (univ.party.talk_save[j].str1 == strnum1) &&
-						  (univ.party.talk_save[j].str2 == strnum2)) {
-						  	ASB("This is already saved.");
-						  	print_buf();
-						  	return;
-						  	}
-					for (j = 0; j < 120; j++)
-						if (univ.party.talk_save[j].personality <= 0) {
-							give_help(57,0,0);
-							play_sound(0);
-							univ.party.talk_save[j].personality = store_personality;
-							univ.party.talk_save[j].town_num = (unsigned char) univ.town.num;
-							univ.party.talk_save[j].str1 = strnum1;
-							univ.party.talk_save[j].str2 = strnum2;
+					if(univ.party.has_talk_save(store_personality, strnum1, strnum2)){
+					   ASB("This is already saved.");
+					   print_buf();
+					   return;
+					} else {
+						give_help(57,0,0);
+						play_sound(0);
+						bool success = univ.party.save_talk(store_personality,univ.town.num,strnum1,strnum2);
+						if(success){
 							ASB("Noted in journal.");
-							j = 200;
-							}		
-					if (j < 200) {
-						SysBeep(20);
-						ASB("No more room in talking journal.");
-						}		
+						} else {
+							ASB("No more room in talking journal.");
+						}
+					}	
 					print_buf();	
 					return;
 					break;

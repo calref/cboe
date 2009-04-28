@@ -123,7 +123,7 @@ void startup_load()////
 	if(load_party(*file_to_load)){
 		party_in_memory = true;
 		update_pc_graphics();
-		in_startup_mode = strlen(univ.party.scen_name);
+		in_startup_mode = univ.party.scen_name.length();
 	}
 	if (!in_startup_mode) {
 		//end_anim();

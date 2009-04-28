@@ -30,7 +30,7 @@ public:
 		bool exists;
 		short direction;
 		cWandering what_monst;
-		location which_sector,m_loc;
+		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
 		cCreature& operator = (legacy::outdoor_creature_type old);
 	};

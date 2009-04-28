@@ -232,13 +232,16 @@ void init_party(short mode)
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
 	 univ.party.m_seen[i] = 0;
-	for (i = 0; i < 50; i++) 
-	 univ.party.journal_str[i] = -1;
-	for (i = 0; i < 140; i++)
-		for (j = 0; j < 2; j++)
-	 	univ.party.special_notes_str[i][j] = 0;	 
-	for (i = 0; i < 120; i++)
-		 univ.party.talk_save[i].personality = -1;
+//	for (i = 0; i < 50; i++) 
+//	 univ.party.journal_str[i] = -1;
+//	for (i = 0; i < 140; i++)
+//		for (j = 0; j < 2; j++)
+//	 	univ.party.special_notes_str[i][j] = 0;	 
+//	for (i = 0; i < 120; i++)
+//		 univ.party.talk_save[i].personality = -1;
+	univ.party.journal.clear();
+	univ.party.special_notes.clear();
+	univ.party.talk_save.clear();
 		 	 
 	 univ.party.total_m_killed = 0;
 	univ.party.total_dam_done = 0;
@@ -252,16 +255,17 @@ void init_party(short mode)
 		univ.party.can_find_town[i] = 0;
 	for (i = 0; i < 20; i++)
 	 univ.party.key_times[i] = 30000;
-	for (i = 0; i < 30; i++)
-	 univ.party.party_event_timers[i] = 0;
+//	for (i = 0; i < 30; i++)
+//	 univ.party.party_event_timers[i] = 0;
+	univ.party.party_event_timers.clear();
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = 0;
 	for (i = 0; i < 120; i++) {
-	 univ.party.help_received[i] = 0;
-	 }
+		univ.party.help_received[i] = 0;
+	}
 	for (i = 0; i < 200; i++)
-	 univ.party.m_killed[i] = 0;
-	sprintf((char *) univ.party.scen_name,"");
+		univ.party.m_killed[i] = 0;
+	univ.party.scen_name = "";
 
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 8; j++)
@@ -371,13 +375,16 @@ void init_party_scen_data()
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
 	 univ.party.m_seen[i] = 0;
-	for (i = 0; i < 50; i++) 
-	 univ.party.journal_str[i] = -1;
-	for (i = 0; i < 140; i++)
-		for (j = 0; j < 2; j++)
-	 	univ.party.special_notes_str[i][j] = 0;	 
-	for (i = 0; i < 120; i++)
-		 univ.party.talk_save[i].personality = -1;
+//	for (i = 0; i < 50; i++) 
+//	 univ.party.journal_str[i] = -1;
+//	for (i = 0; i < 140; i++)
+//		for (j = 0; j < 2; j++)
+//	 	univ.party.special_notes_str[i][j] = 0;	 
+//	for (i = 0; i < 120; i++)
+	//		 univ.party.talk_save[i].personality = -1;
+	univ.party.journal.clear();
+	univ.party.special_notes.clear();
+	univ.party.talk_save.clear();
 		 	 
 	 univ.party.direction = 0;
 	univ.party.at_which_save_slot = 0;
@@ -385,8 +392,9 @@ void init_party_scen_data()
 		univ.party.can_find_town[i] = 1 - scenario.town_hidden[i];
 	for (i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
-	for (i = 0; i < 30; i++)
-	 	univ.party.party_event_timers[i] = 0;
+//	for (i = 0; i < 30; i++)
+//	 	univ.party.party_event_timers[i] = 0;
+	univ.party.party_event_timers.clear();
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
 
@@ -474,8 +482,9 @@ void put_party_in_scen(string scen_name)
 	univ.party.age = 0;
 	for (i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
-	for (i = 0; i < 30; i++)
-	 	univ.party.party_event_timers[i] = 0;
+//	for (i = 0; i < 30; i++)
+//	 	univ.party.party_event_timers[i] = 0;
+	univ.party.party_event_timers.clear();
 	
 	
 	FSRef file_ref;

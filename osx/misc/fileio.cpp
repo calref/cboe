@@ -1087,7 +1087,7 @@ bool load_party(FSSpec file_to_load){
 			return false;
 		univ.file = file_spec;
 	}else{
-		strcpy(univ.party.scen_name,"");
+		univ.party.scen_name = "";
 	}
 	
 	// Compatibility flags

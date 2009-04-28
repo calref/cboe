@@ -33,9 +33,9 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	for(i = 0; i < 30; i++){
 		boats[i] = old.boats[i];
 		horses[i] = old.horses[i];
-		party_event_timers[i] = old.party_event_timers[i];
-		global_or_town[i] = old.global_or_town[i];
-		node_to_call[i] = old.node_to_call[i];
+		party_event_timers[i].time = old.party_event_timers[i];
+		party_event_timers[i].global_or_town = old.global_or_town[i];
+		party_event_timers[i].node_to_call = old.node_to_call[i];
 	}
 	for(i = 0; i < 4; i++){
 		creature_save[i] = old.creature_save[i];
@@ -51,13 +51,13 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	for(i = 0; i < 256; i++)
 		m_seen[i] = old.m_seen[i];
 	for(i = 0; i < 50; i++){
-		journal_str[i] = old.journal_str[i];
-		journal_day[i] = old.journal_day[i];
+		journal[i].str_num = old.journal_str[i];
+		journal[i].day = old.journal_day[i];
 		spec_items[i] = old.spec_items[i];
 	}
 	for(i = 0; i < 140; i++){
-		special_notes_str[i][0] = old.special_notes_str[i][0];
-		special_notes_str[i][1] = old.special_notes_str[i][1];
+		special_notes[i].str_num = old.special_notes_str[i][0];
+		special_notes[i].where = old.special_notes_str[i][1];
 	}
 	for(i = 0; i < 120; i++){
 		talk_save[i] = old.talk_save[i];
@@ -77,7 +77,7 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	total_dam_done = old.total_dam_done;
 	total_xp_gained = old.total_xp_gained;
 	total_dam_taken = old.total_dam_taken;
-	strcpy(scen_name,old.scen_name);
+	scen_name = old.scen_name;
 }
 
 __attribute__((deprecated))
@@ -90,8 +90,8 @@ __attribute__((deprecated))
 cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 	personality = old.personality;
 	town_num = old.town_num;
-	str1 = old.str1;
-	str2 = old.str2;
+	str_num1 = old.str1;
+	str_num2 = old.str2;
 }
 
 __attribute__((deprecated))
@@ -109,4 +109,50 @@ void cParty::add_pc(cPlayer new_pc){
 			adven[i] = new_pc;
 			break;
 		}
+}
+
+bool cParty::has_talk_save(short who, short str1, short str2){
+	for (int j = 0; j < talk_save.size(); j++)
+		if ((talk_save[j].personality == who) && (talk_save[j].str_num1 == str1) &&	(talk_save[j].str_num2 == str2))
+			return true;
+	return false;
+}
+
+bool cParty::save_talk(short who, unsigned char where, short str1, short str2){
+	if(talk_save.size() == talk_save.max_size()) return false; // This is extremely unlikely
+	cConvers talk;
+	talk.personality = who;
+	talk.town_num = where;
+	talk.str_num1 = str1;
+	talk.str_num2 = str2;
+	// TODO: locate the strings and store them in the record.
+	talk_save.push_back(talk);
+	return true;
+}
+
+bool cParty::add_to_journal(short event, short day){
+	if(journal.size() == journal.max_size()) return false; // Practically impossible
+	cJournal entry;
+	entry.str_num = event;
+	entry.day = day;
+	journal.push_back(entry);
+	return true;
+}
+
+bool cParty::record(short what, short where){
+	if(special_notes.size() == special_notes.max_size()) return false; // Never happen
+	cEncNote note;
+	note.str_num = what;
+	note.where = where;
+	special_notes.push_back(note);
+	return true;
+}
+
+bool cParty::start_timer(short time, short node, short type){
+	if(party_event_timers.size() == party_event_timers.max_size()) return false; // Shouldn't be reached
+	cTimer t;
+	t.time = time;
+	t.global_or_town = type;
+	t.node_to_call = node;
+	party_event_timers.push_back(t);
 }

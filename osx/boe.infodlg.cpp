@@ -967,39 +967,43 @@ void adventure_notes_event_filter (short item_hit)
 					
 					break;
 				case 10: case 9: case 11:
-					univ.party.special_notes_str[(store_page_on * 3) + item_hit - 9][0] = -1;
+					short which_to_delete = (store_page_on * 3) + item_hit - 9;
+					cParty::encIter iter = univ.party.special_notes.begin();
+					iter += which_to_delete;
+					univ.party.special_notes.erase(iter);
+					//univ.party.special_notes_str[(store_page_on * 3) + item_hit - 9][0] = -1;
 					break;
 				}
 	for (i = 0; i < 3; i++) {
-		if (univ.party.special_notes_str[i][0] > 0) {
-			switch (univ.party.special_notes_str[i][0] / 1000) {
+		if (univ.party.special_notes.size() > i) {
+			switch (univ.party.special_notes[i].str_num / 1000) {
 				case 0:
-					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes_str[i][0] % 1000)); break;
+					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes[i].str_num % 1000)); break;
 				case 1:
-					 load_outdoor_str(loc(univ.party.special_notes_str[i][1] % scenario.out_width,
-					 	univ.party.special_notes_str[i][1] / scenario.out_width),univ.party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
+					 	univ.party.special_notes[i].where / scenario.out_width),univ.party.special_notes[i].str_num % 1000,(char *)place_str);
 					break;
 				case 2:
-					load_town_str(univ.party.special_notes_str[i][1],univ.party.special_notes_str[i][0],(char *)place_str); break;
+					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num,(char *)place_str); break;
 				}
 
-			get_str(place_str,univ.party.special_notes_str[i][0],univ.party.special_notes_str[i][1]);
+			get_str(place_str,univ.party.special_notes[i].str_num,univ.party.special_notes[i].where);
 			csit(961,3 + i,(char *) place_str);
 			cd_activate_item(961,9 + i,1);
 			}
 			else cd_activate_item(961,9 + i,0);
 		}
 	for (i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
-		if (univ.party.special_notes_str[i][0] > 0) {
-			switch (univ.party.special_notes_str[i][0] / 1000) {
+		if (univ.party.special_notes.size() > i) {
+			switch (univ.party.special_notes[i].str_num / 1000) {
 				case 0:
-					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes_str[i][0] % 1000)); break;
+					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes[i].str_num % 1000)); break;
 				case 1:
-					 load_outdoor_str(loc(univ.party.special_notes_str[i][1] % scenario.out_width,
-					 	univ.party.special_notes_str[i][1] / scenario.out_width), univ.party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
+					 	univ.party.special_notes[i].where / scenario.out_width), univ.party.special_notes[i].str_num % 1000,(char *)place_str);
 					break;
 				case 2:
-					load_town_str(univ.party.special_notes_str[i][1],univ.party.special_notes_str[i][0] % 1000,(char *)place_str); break;
+					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num % 1000,(char *)place_str); break;
 				}
 
 
@@ -1020,9 +1024,9 @@ void adventure_notes()
 	Str255 place_str;
 	
 	store_num_i = 0;
-	for (i = 0; i < 140; i++)
-		if (univ.party.special_notes_str[i][0] > 0)
-			store_num_i = i + 1;
+	//for (i = 0; i < 140; i++)
+		//if (univ.party.special_notes_str[i][0] > 0)
+			store_num_i = univ.party.special_notes.size(); //i + 1;
 	store_page_on = 0;
 	if (store_num_i == 0) {
 		ASB("Nothing in your journal.");
@@ -1035,16 +1039,16 @@ void adventure_notes()
 	cd_create_dialog_parent_num(961,0);
 
 	for (i = 0; i < 3; i++) {
-		if (univ.party.special_notes_str[i][0] > 0) {
-			switch (univ.party.special_notes_str[i][0] / 1000) {
+		if (univ.party.special_notes.size() > i) {
+			switch (univ.party.special_notes[i].str_num / 1000) {
 				case 0:
-					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes_str[i][0] % 1000)); break;
+					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes[i].str_num % 1000)); break;
 				case 1:
-					 load_outdoor_str(loc(univ.party.special_notes_str[i][1] % scenario.out_width,
-					 	univ.party.special_notes_str[i][1] / scenario.out_width), univ.party.special_notes_str[i][0] % 1000,(char *)place_str);
+					 load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
+					 	univ.party.special_notes[i].where / scenario.out_width), univ.party.special_notes[i].str_num % 1000,(char *)place_str);
 					break;
 				case 2:
-					load_town_str(univ.party.special_notes_str[i][1],univ.party.special_notes_str[i][0] % 1000,(char *)place_str); break;
+					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num % 1000,(char *)place_str); break;
 				}
 
 			csit(961,3 + i,(char *) place_str);
@@ -1084,29 +1088,29 @@ void put_talk()
 		//get_str(place_str,120 + ((personality - 1) / 10),((personality - 1) % 10) + 1);
 		csit(960,7,univ.town.cur_talk->talk_strs[personality % 10]);
 
-		if (univ.party.talk_save[store_page_on].str1 >= 1000) {
-			if (univ.party.talk_save[store_page_on].str1 >= 3000) 
-				csit(960,3,scenario.scen_strs(univ.party.talk_save[store_page_on].str1 - 3000));
+		if (univ.party.talk_save[store_page_on].str_num1 >= 1000) {
+			if (univ.party.talk_save[store_page_on].str_num1 >= 3000) 
+				csit(960,3,scenario.scen_strs(univ.party.talk_save[store_page_on].str_num1 - 3000));
 				else {
 					load_town_str(univ.party.talk_save[store_page_on].town_num,
-						univ.party.talk_save[store_page_on].str1 - 2000 ,(char *) place_str);
+						univ.party.talk_save[store_page_on].str_num1 - 2000 ,(char *) place_str);
 					csit(960,3,(char *) place_str);
 					}
 			}
-			else if (univ.party.talk_save[store_page_on].str1 > 0)
-				csit(960,3,univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str1]);
+			else if (univ.party.talk_save[store_page_on].str_num1 > 0)
+				csit(960,3,univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str_num1]);
 
-		if (univ.party.talk_save[store_page_on].str2 >= 1000) {
-			if (univ.party.talk_save[store_page_on].str2 >= 3000) 
-				csit(960,5,scenario.scen_strs(univ.party.talk_save[store_page_on].str2 - 3000 + 160));
+		if (univ.party.talk_save[store_page_on].str_num2 >= 1000) {
+			if (univ.party.talk_save[store_page_on].str_num2 >= 3000) 
+				csit(960,5,scenario.scen_strs(univ.party.talk_save[store_page_on].str_num2 - 3000 + 160));
 				else {
 					load_town_str(univ.party.talk_save[store_page_on].town_num,
-						univ.party.talk_save[store_page_on].str2 - 2000/* + 20*/,(char *) place_str);
+						univ.party.talk_save[store_page_on].str_num2 - 2000/* + 20*/,(char *) place_str);
 					csit(960,5,(char *) place_str);
 					}
 			}
-			else if (univ.party.talk_save[store_page_on].str2 > 0)
-				csit(960,5,univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str2]);
+			else if (univ.party.talk_save[store_page_on].str_num2 > 0)
+				csit(960,5,univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str_num2]);
 	}
 }
 
@@ -1194,10 +1198,10 @@ void journal_event_filter (short item_hit)
 
 				}
 	for (i = 0; i < 3; i++) {
-		if (univ.party.journal_str[i + (store_page_on * 3)] > 0) {
+		if (univ.party.journal.size() > i + (store_page_on * 3)) {
 			////get_str(place_str,17,univ.party.journal_str[i + (store_page_on * 3)]);
-			csit(962,3 + i,scenario.scen_strs(univ.party.journal_str[i] + 10));
-			sprintf((char *)place_str,"Day: %d",univ.party.journal_day[i + (store_page_on * 3)]);
+			csit(962,3 + i,scenario.scen_strs(univ.party.journal[i].str_num + 10));
+			sprintf((char *)place_str,"Day: %d",univ.party.journal[i + (store_page_on * 3)].day);
 			csit(962,9 + i,(char *)place_str);
 			}
 			else {csit(962,3 + i,"");csit(962,9 + i,"");}
@@ -1212,9 +1216,9 @@ void journal()
 	Str255 place_str;
 	
 	store_num_i = 0;
-	for (i = 0; i < 120; i++)
-		if (univ.party.journal_str[i] > 0)
-			store_num_i = i + 1;
+	//for (i = 0; i < 120; i++)
+		//if (univ.party.journal[i].str_num > 0)
+			store_num_i = univ.party.journal.size();//i + 1;
 	store_page_on = 0;
 	
 	make_cursor_sword();
@@ -1222,10 +1226,10 @@ void journal()
 	cd_create_dialog_parent_num(962,0);
 
 	for (i = 0; i < 3; i++) {
-		if (univ.party.journal_str[i] > 0) {
+		if (univ.party.journal.size() > i) {
 			////get_str(place_str,17,univ.party.journal_str[i]);
-			csit(962,3 + i,scenario.scen_strs(univ.party.journal_str[i] + 10));
-			sprintf((char *)place_str,"Day: %d",univ.party.journal_day[i]);
+			csit(962,3 + i,scenario.scen_strs(univ.party.journal[i].str_num + 10));
+			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
 			csit(962,9 + i,(char *)place_str);
 			}
 		}
@@ -1242,13 +1246,8 @@ void add_to_journal(short event)
 {
 	short i;
 	
-	for (i = 0; i < 120; i++)
-		if (univ.party.journal_str[i] == 0) {
-			univ.party.journal_str[i] = event;
-			univ.party.journal_day[i] = calc_day();
-			i = 120;
-			}
-	ASB("Something was added to your journal.");
+	if(univ.party.add_to_journal(event, calc_day()))
+	   ASB("Something was added to your journal.");
 }
 
 
@@ -1301,34 +1300,19 @@ void record_display_strings(){
 	bool had1 = false, had2 = false;
 	int i;
 	play_sound(0);
-	for (i = 0; i < 140; i++)
-		if ((store_str_label_1 == univ.party.special_notes_str[i][0]) &&
-			(store_str_label_1b == univ.party.special_notes_str[i][1]))
+	for (i = 0; i < univ.party.special_notes.size(); i++)
+		if ((store_str_label_1 == univ.party.special_notes[i].str_num) &&
+			(store_str_label_1b == univ.party.special_notes[i].where))
 			had1 = true;
 	if (!had1) {
-		//give_help(58,0,store_which_string_dlog);
-		for (i = 0; i < 140; i++)
-			if (univ.party.special_notes_str[i][0] <= 0) {
-				univ.party.special_notes_str[i][0] = store_str_label_1;		
-				univ.party.special_notes_str[i][1] = store_str_label_1b;		
-				//univ.party.special_notes_str[i][1] = store_str1b;	
-				ASB("Info added to Encounter Notes.");	
-				i = 140;
-			}
-		
+	   give_help(58,0,store_which_string_dlog);
+	   univ.party.record(store_str_label_1, store_str_label_1b);
 	}
-	for (i = 0; i < 140; i++)
-		if ((store_str_label_2 == univ.party.special_notes_str[i][0]) &&
-			(store_str_label_2b == univ.party.special_notes_str[i][1]))
+	for (i = 0; i < univ.party.special_notes.size(); i++)
+		if ((store_str_label_2 == univ.party.special_notes[i].str_num) &&
+			(store_str_label_2b == univ.party.special_notes[i].where))
 			had2 = true;
 	if (!had2) {
-		for (i = 0; i < 140; i++)
-			if (univ.party.special_notes_str[i][0] <= 0) {
-				univ.party.special_notes_str[i][0] = store_str_label_2;		
-				univ.party.special_notes_str[i][1] = store_str_label_2b;		
-				//univ.party.special_notes_str[i][1] = store_str2b;		
-				i = 140;
-			}
-		
+	   univ.party.record(store_str_label_2,store_str_label_2b);
 	}
 }

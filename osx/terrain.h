@@ -21,10 +21,13 @@ public:
 	unsigned char block_horse;
 	unsigned char light_radius;
 	unsigned char step_sound;
-	unsigned char shortcut_key;
-	unsigned char res1;
-	unsigned char res2;
-	unsigned char res3;
+	unsigned char shortcut_key; // for editor use only
+	unsigned char obj_num; // ditto (formerly res1)
+	unsigned char ground_type; // ditto (formerly res2)
+	unsigned char trim_type; // ditto, mostly (formerly res3)
+	unsigned short trim_ter; // ditto
+	unsigned short combat_arena;
+	location obj_pos; // editor use only
 	
 	cTerrain& operator = (legacy::terrain_type_type& old);
 };
