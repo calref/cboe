@@ -14,3 +14,8 @@ That also fixes the stored items arrays being filled with items from current tow
 - Giving PC items from a Mac made scenario doesn't crash the game anymore (overall Mac scenario support added)
 - Cleaned the ressource file. The executable is now smaller.
 - On give items : the editor now tries to load the bladbase.exs file if the scenario file is not found. If can't locate the bladbase, the items menus are grayed.
+Version 1.0 :
+- The character editor now search the right help file.
+- If sounds are desactivated in the game, they will now be desactivated in the character editor as well.
+- Reorganised menus.
+- Implemented a "Save as" option. "Save" now overwrite the loaded file.

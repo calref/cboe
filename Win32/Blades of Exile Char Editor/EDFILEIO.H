@@ -2,7 +2,7 @@ void file_initialize();
 void save_file(short mode);
 void load_file();
 void leave_town();
-void build_data_file(short mode);
+void get_reg_data();
 void remove_party_from_scen();
 void Get_Path(char* path);
 short load_items_list();
