@@ -34,7 +34,7 @@ public:
 		
 		cCreature& operator = (legacy::outdoor_creature_type old);
 	};
-	unsigned char terrain[48][48];
+	unsigned short terrain[48][48];
 	location special_locs[18];
 	unsigned char special_id[18];
 	location exit_locs[8];

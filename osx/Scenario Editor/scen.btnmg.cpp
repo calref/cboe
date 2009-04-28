@@ -10,7 +10,7 @@
 #include "scen.btnmg.h"
 
 //extern piles_of_stuff_dumping_type *data_store;
- extern Rect right_sbar_rect;
+extern Rect right_sbar_rect;
 
 
 
@@ -24,7 +24,7 @@ char strings_rs[NRS][40];
 
 bool left_buttons_active = 1,right_buttons_active = 0;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
-extern short right_button_status[NRS]; 
+extern short right_button_status[NRS];
 extern ControlHandle right_sbar;
 // 0 - clear
 // 1000 + x - terrain type x
@@ -49,21 +49,20 @@ void init_lb() {
 	for (i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
 		sprintf((char *) strings_ls[i], "");
-		}
+	}
 }
 
 void reset_lb() {
 	short i;
-	for (i = 0; i < NLS; i++) { 
+	for (i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
 		draw_lb_slot(i,0);
-		}
+	}
 }
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, char *label, short do_draw) 
-{
+void set_lb(short slot, short mode, char *label, short do_draw)  {
 	short i;
 	
 	if (slot < 0) {
@@ -71,23 +70,22 @@ void set_lb(short slot, short mode, char *label, short do_draw)
 			if (left_button_status[i] == 0) {
 				slot = i;
 				i = NLS + 5000;
-				}
+			}
 		if (i < NLS + 5000)
 			return;
-		}
+	}
 	left_button_status[slot] = mode;
 	//sprintf((char *)strings_ls[slot], "%-39.39s", label);
 	sprintf((char *)strings_ls[slot], "%-50.50s", label);
 	strings_ls[slot][39] = 0;
 	if (do_draw > 0)
 		draw_lb_slot(slot,0);
-
+	
 }
 
 
 
-void init_rb() 
-{
+void init_rb() {
 	short i;
 	
 	SetControlMinimum(right_sbar,0);
@@ -95,16 +93,15 @@ void init_rb()
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 		sprintf((char *) strings_rs[i], "");
-		}
+	}
 }
 
-void reset_rb() 
-{
+void reset_rb() {
 	short i;
 	
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
-		}
+	}
 	draw_rb();
 	SetControlMaximum(right_sbar,0);
 	SetControlValue(right_sbar,0);
@@ -112,8 +109,7 @@ void reset_rb()
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_rb(short slot, short mode, char *label, short do_draw) 
-{
+void set_rb(short slot, short mode, char *label, short do_draw) {
 	short i,highest_used = 0;
 	
 	if (slot < 0) {
@@ -121,10 +117,10 @@ void set_rb(short slot, short mode, char *label, short do_draw)
 			if (right_button_status[i] == 0) {
 				slot = i;
 				i = NRS + 5000;
-				}
+			}
 		if (i < NRS + 5000)
 			return;
-		}
+	}
 	right_button_status[slot] = mode;
 	//sprintf((char *)strings_rs[slot], "%-39.39s", label);
 	sprintf((char *)strings_rs[slot], "%s", label);
@@ -134,16 +130,16 @@ void set_rb(short slot, short mode, char *label, short do_draw)
 			strings_rs[slot][i] = ' ';
 	if (do_draw > 0)
 		draw_rb_slot(slot,0);
-/*	for (i = 0; i < NRS; i++) 
-		if (right_button_status[i] != 0)
-			highest_used = i;
-	if (highest_used < NRSONPAGE - 1) {
-		SetControlMaximum(right_sbar,0);
-		current_rs_top = 0;
-		}
-		else {
-			SetControlMaximum(right_sbar,highest_used - NRSONPAGE - 1);
-			//SetControlValue(right_sbar,new_setting);		
-			}*/
+	/*	for (i = 0; i < NRS; i++) 
+	 if (right_button_status[i] != 0)
+	 highest_used = i;
+	 if (highest_used < NRSONPAGE - 1) {
+	 SetControlMaximum(right_sbar,0);
+	 current_rs_top = 0;
+	 }
+	 else {
+	 SetControlMaximum(right_sbar,highest_used - NRSONPAGE - 1);
+	 //SetControlValue(right_sbar,new_setting);
+	 }*/
 }
 

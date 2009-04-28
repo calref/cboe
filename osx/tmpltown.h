@@ -24,13 +24,13 @@ public:
 	};
 private:
 	cCreature _creatures[30];
-	// unsigned char _terrain[?][?];
+	unsigned short _terrain[64][64];
 	rectangle _room_rect[16];
 	unsigned char _lighting[4][32];
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
 public:
-	unsigned char& terrain(size_t x, size_t y);
+	unsigned short& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);

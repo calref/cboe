@@ -8,8 +8,8 @@
 
 #include "classes.h"
 
-unsigned char& cTemplTown::terrain(size_t x, size_t y){
-	return  _lighting[0][0]; // will need to calculate the terrain somehow
+unsigned short& cTemplTown::terrain(size_t x, size_t y){
+	return  _terrain[0][0]; // will need to calculate the terrain somehow
 }
 
 rectangle& cTemplTown::room_rect(size_t i){

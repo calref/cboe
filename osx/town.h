@@ -89,7 +89,7 @@ public:
 	virtual void append(legacy::big_tr_type& old);
 	virtual void append(legacy::ave_tr_type& old);
 	virtual void append(legacy::tiny_tr_type& old);
-	virtual unsigned char& terrain(size_t x, size_t y) = 0;
+	virtual unsigned short& terrain(size_t x, size_t y) = 0;
 	virtual rectangle& room_rect(size_t i) = 0;
 	virtual cCreature& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
