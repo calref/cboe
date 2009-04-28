@@ -52,8 +52,6 @@ OPENFILENAME ofn;
 extern stored_town_maps_type town_maps;
 extern char town_strs[180][256];
 
-short give_intro_hint = 1;
-short display_mode = 0;
 short store_size;
 
 
@@ -739,7 +737,6 @@ void save_file(short mode)
 
 		Boolean town_save = FALSE,in_scen = FALSE,save_maps = FALSE;
 
-      mode = 1;
 	if (file_in_mem == FALSE)
 		return;
 
@@ -1194,10 +1191,15 @@ void remove_party_from_scen()
 	party_in_scen = FALSE;
 }
 
-void build_data_file(short mode) // to do be rewrite to use ini file
-//mode; // 0 - make first time file  1 - customize  2 - new write
-{
-	return;
+void get_reg_data()
+{	
+	const int BUFFER_LEN = 64;
+	char buffer[BUFFER_LEN];
+	const char * iniFile = "./blades.ini";
+	const char * section = "Blades of Exile";
+
+	GetPrivateProfileString(section, "play_sounds", "1", buffer, BUFFER_LEN, iniFile);
+	play_sounds = (atoi(buffer))? TRUE : FALSE;
 }
 
 //Mac porting stuff

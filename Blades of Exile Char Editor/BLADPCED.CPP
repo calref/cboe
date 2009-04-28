@@ -67,7 +67,6 @@ RECT pc_traits_rect[16]; //Holds pc traits
 RECT pc_race_rect; //Holds current pc's race
 RECT edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
-Boolean game_run_before = TRUE;
 short store_flags[3];
 char town_strs[180][256];
 
@@ -105,7 +104,6 @@ location store_choice_loc;
 
 short town_size[3] = {64,48,24};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
-//short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 short pixel_depth,dialog_answer;
 
 
@@ -192,6 +190,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		Get_Path(file_path_name); //store the path to the executable
   		store_hInstance = hInstance;
 		accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(1));
+
+        get_reg_data();
 
 		load_cursors();
 		seed = (short) GetCurrentTime();
@@ -353,7 +353,7 @@ Boolean handle_menu (short item, HMENU)
    item_record_type store_i;
    
 	
-	if ((file_in_mem == FALSE) && ((item == 1) ||
+	if ((file_in_mem == FALSE) && ((item == 1) || (item == 3) ||
 		(item >= 40)) && (item != 200) && (item != 100)) {
 		display_strings(20,5,0,0,"Editing party",57,707,0);
 		item = -1;
@@ -369,6 +369,9 @@ Boolean handle_menu (short item, HMENU)
 				load_file();
                 update_item_menu(item_menus_lock);
 			break;
+		case 3:
+            save_file(1);
+            break;
 		case 4:
 			All_Done = verify_restore_quit(0);
 			break;
@@ -503,7 +506,7 @@ Boolean handle_menu (short item, HMENU)
 						town_maps.town_maps[i][j][k] = 255;
 			break;
 		case 100: // index
-			WinHelp(mainPtr,"bladhelp.hlp",HELP_CONTENTS,0L);
+			WinHelp(mainPtr,"Blades of Exile.hlp",HELP_CONTENTS,0L);
 			break;
 		case 200: // about
 			FCD(1062,0);
