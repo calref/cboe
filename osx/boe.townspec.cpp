@@ -154,7 +154,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		
 	if (trap_type == TRAP_RANDOM)
 		trap_type = (eTrapType) get_ran(1,1,4);
-	if (trap_type == TRAP_false_ALARM)
+	if (trap_type == TRAP_FALSE_ALARM)
 		return true;
 		
 	if (pc_num < 6) {
@@ -264,8 +264,8 @@ location get_spec_loc(short which)
 	short i;
 	
 	for (i = 0; i < 50; i++)
-		if (univ.town.town->spec_id[i] == which)
-			return univ.town.town->special_locs[i];
+		if (univ.town->spec_id[i] == which)
+			return univ.town->special_locs[i];
 	return where;
 }
 
@@ -325,6 +325,6 @@ short handle_lever(location w)
 
 void switch_lever(location w)
 {
-	alter_space(w.x,w.y,scenario.ter_types[univ.town.town->terrain(w.x,w.y)].trans_to_what);
+	alter_space(w.x,w.y,scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
 }
 

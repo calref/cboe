@@ -1077,7 +1077,7 @@ void put_talk()
 	csit(960,9,"");
 	if ((personality = univ.party.talk_save[store_page_on].personality) >= 0) {
 		if (personality / 10 != univ.town.cur_talk_loaded){
-			if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town.town->talking;
+			if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town->talking;
 			else load_town(personality / 10,*univ.town.cur_talk);
 			univ.town.cur_talk_loaded = personality / 10;
 		}

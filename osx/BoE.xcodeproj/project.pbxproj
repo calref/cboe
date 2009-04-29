@@ -87,6 +87,7 @@
 		913D05BC0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		91A79DC70FA797BF00A6A41F /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91A79DC60FA797BF00A6A41F /* menu.xib */; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -313,6 +314,8 @@
 		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
 		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.h; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
+		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
+		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regtown.h; sourceTree = "<group>"; };
 		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
 		91AC60A60FA26C1B00EEAE67 /* tmpltown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tmpltown.h; sourceTree = "<group>"; };
@@ -757,6 +760,8 @@
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
 				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
+				91A79DC60FA797BF00A6A41F /* menu.xib */,
+				91A79DDD0FA79DEE00A6A41F /* dialogs.xib */,
 			);
 			name = rsrc;
 			sourceTree = "<group>";
@@ -883,6 +888,7 @@
 				91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */,
 				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
 				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
+				91A79DC70FA797BF00A6A41F /* menu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1231,7 +1237,6 @@
 		9127934B0F9C0FEA007B0D52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1259,7 +1264,6 @@
 		9127934C0F9C0FEA007B0D52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = ppc;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (

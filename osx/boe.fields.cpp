@@ -18,7 +18,7 @@ extern unsigned char combat_terrain[64][64];
 //extern unsigned char out[96][96], univ.out.out_e[96][96];
 //extern unsigned char univ.out.misc_i[64][64],univ.out.sfx[64][64];
 extern char terrain_blocked[256];
-extern short town_size[3];
+//extern short town_size[3];
 extern cScenario scenario;
 extern cUniverse univ;
 
@@ -401,9 +401,9 @@ void spread_sfx(short type,short prob)
 {
 	short i,j;
 	
-	for (i = 0; i < town_size[town_type]; i++)
-		for (j = 0; j < town_size[town_type]; j++)
-			if ((univ.town.town->terrain(i,j) < 5) && (get_ran(1,1,100) <= prob))
+	for (i = 0; i < univ.town->max_dim(); i++)
+		for (j = 0; j < univ.town->max_dim(); j++)
+			if ((univ.town->terrain(i,j) < 5) && (get_ran(1,1,100) <= prob))
 				make_sfx(i,j,type);
 				
 }

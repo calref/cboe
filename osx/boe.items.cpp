@@ -42,7 +42,7 @@ extern location pc_pos[6];
 extern bool modeless_exists[18],diff_depth_ok;
 extern short modeless_key[18];
 extern DialogPtr modeless_dialogs[18];
-extern short town_size[3];
+//extern short town_size[3];
 extern short town_type;
 
 extern short dialog_answer;
@@ -778,7 +778,7 @@ short get_item(location place,short pc_num,bool check_container)
 	bool item_near = false;
 	short mass_get = 1;
 	
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude == 1)
 			&& (can_see(place,univ.town.monst.dudes[i].m_loc,0) < 5))
 				mass_get = 0;
@@ -798,11 +798,11 @@ short get_item(location place,short pc_num,bool check_container)
 				}
 	if (item_near == true)
 		if (display_item(place,pc_num,mass_get,check_container) > 0) { // if true, there was a theft
-			for (i = 0; i < T_M; i++)
+			for (i = 0; i < univ.town->max_monst(); i++)
 				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 != 1)
 					&& (can_see(place,univ.town.monst.dudes[i].m_loc,0) < 5)) {
 						make_town_hostile();
-						i = T_M;
+						i = univ.town->max_monst();
 						add_string_to_buf("Your crime was seen!");
 						}
 			}
@@ -829,7 +829,7 @@ void make_town_hostile()
 	give_help(53,0,0);
 	univ.town.monst.friendly = 1;
 	////
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < univ.town->max_monst(); i++) 
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].summoned == 0)){
 			univ.town.monst.dudes[i].attitude = 1;
 			num = univ.town.monst.dudes[i].number;

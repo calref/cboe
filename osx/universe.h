@@ -18,10 +18,10 @@ namespace legacy {
 
 class cCurTown {
 public:
+	cTown* record;
 	// formerly current_town_type
 	short num; // 200 if outdoors (my addition)
 	short difficulty;
-	cTown* town;
 	char explored[64][64];
 	bool hostile;
 	cPopulation monst;
@@ -42,6 +42,10 @@ public:
 	void append(legacy::stored_town_maps_type& old);
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void cCurTown::append(legacy::big_tr_type& old);
+	
+	cTown* operator -> ();
+	bool loaded() const;
+	void unload();
 };
 
 class cCurOut {

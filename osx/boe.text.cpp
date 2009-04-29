@@ -845,7 +845,7 @@ short do_look(location space)
 				}
 		
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
-		for (i = 0; i < T_M; i++)
+		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst.dudes[i].active != 0) && (is_lit == true)
 				&& (monst_on_space(space,i) == true) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
@@ -1255,7 +1255,7 @@ short print_terrain(location space)
 		which_terrain = univ.out.out[space.x][space.y];
 		}
 	if (overall_mode == MODE_LOOK_TOWN) {
-		which_terrain = univ.town.town->terrain(space.x,space.y);
+		which_terrain = univ.town->terrain(space.x,space.y);
 		}
 	if (overall_mode == MODE_LOOK_COMBAT) {
 		which_terrain = combat_terrain[space.x][space.y];

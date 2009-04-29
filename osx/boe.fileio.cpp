@@ -50,7 +50,7 @@ extern WindowPtr mainPtr;
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
 //extern big_tr_type t_d;
-extern short town_size[3];
+//extern short town_size[3];
 extern short town_type,current_pc;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern bool sleep_field;
@@ -59,7 +59,7 @@ extern bool sleep_field;
 //extern unsigned char template_terrain[64][64];
 //extern tiny_tr_type anim_t_d;
 extern bool modeless_exists[18];
-extern location monster_targs[T_M];
+extern location monster_targs[60];
 extern DialogPtr modeless_dialogs[18] ;
 extern short which_combat_type;
 extern char terrain_blocked[256];
@@ -223,11 +223,11 @@ void finish_load_party(){
 		load_area_graphics();
 	}
 	else {	
-		load_town_str(univ.town.num,univ.town.town);
-		load_town(univ.town.num,univ.town.town);
+		load_town_str(univ.town.num,univ.town.record);
+		load_town(univ.town.num,univ.town.record);
 		univ.town.cur_talk_loaded = univ.town.num;
 		
-		for (int i = 0; i < T_M; i++){
+		for (int i = 0; i < univ.town->max_monst(); i++){
 			monster_targs[i].x = 0;
 			monster_targs[i].y = 0;
 		}
@@ -235,8 +235,8 @@ void finish_load_party(){
 		town_type = scenario.town_size[univ.town.num];
 		
 		// Set up field booleans
-		for (int j = 0; j < town_size[town_type]; j++)
-			for (int k = 0; k < town_size[town_type]; k++) {
+		for (int j = 0; j < univ.town->max_dim(); j++)
+			for (int k = 0; k < univ.town->max_dim(); k++) {
 				if (is_web(j,k) == true)
 					web = true;
 				if (is_crate(j,k) == true)
@@ -249,8 +249,8 @@ void finish_load_party(){
 					force_barrier = true;
 				if (is_quickfire(j,k) == true)
 					quickfire = true;
-				if ((scenario.ter_types[univ.town.town->terrain(j,k)].special >= 16) &&
-					(scenario.ter_types[univ.town.town->terrain(j,k)].special <= 19))
+				if ((scenario.ter_types[univ.town->terrain(j,k)].special >= 16) &&
+					(scenario.ter_types[univ.town->terrain(j,k)].special <= 19))
 					belt_present = true;
 			}
 		force_wall = true;
@@ -334,7 +334,7 @@ void do_apple_event_open(FSSpec file_info)
 
 void set_terrain(location l, unsigned char terrain_type)
 {
-	univ.town.town->terrain(l.x,l.y) = terrain_type;
+	univ.town->terrain(l.x,l.y) = terrain_type;
 	combat_terrain[l.x][l.y] = terrain_type;
 }
 
@@ -545,18 +545,18 @@ void init_town(){ // formerly part of load_town
 				univ.out.sfx[i][j] = 0;
 			}
 		for (i = 0; i < 50; i++)
-			if ((univ.town.town->spec_id[i] >= 0) && (univ.town.town->special_locs[i].x < 100)){
-				make_special(univ.town.town->special_locs[i].x,univ.town.town->special_locs[i].y);
+			if ((univ.town->spec_id[i] >= 0) && (univ.town->special_locs[i].x < 100)){
+				make_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y);
 			}
 		for (i = 0; i < 50; i++) {
-			if ((univ.town.town->preset_fields[i].type > 0) && (univ.town.town->preset_fields[i].type < 9))
-				univ.out.misc_i[univ.town.town->preset_fields[i].loc.x][univ.town.town->preset_fields[i].loc.y] = 
-				univ.out.misc_i[univ.town.town->preset_fields[i].loc.x][univ.town.town->preset_fields[i].loc.y] | 
-			 	(unsigned char) (s_pow(2,univ.town.town->preset_fields[i].type - 1));
-			if ((univ.town.town->preset_fields[i].type >= 14) && (univ.town.town->preset_fields[i].type <= 21))
-				univ.out.sfx[univ.town.town->preset_fields[i].loc.x][univ.town.town->preset_fields[i].loc.y] = 
-				univ.out.sfx[univ.town.town->preset_fields[i].loc.x][univ.town.town->preset_fields[i].loc.y] | 
-				(unsigned char) (s_pow(2,univ.town.town->preset_fields[i].type - 14));
+			if ((univ.town->preset_fields[i].type > 0) && (univ.town->preset_fields[i].type < 9))
+				univ.out.misc_i[univ.town->preset_fields[i].loc.x][univ.town->preset_fields[i].loc.y] = 
+				univ.out.misc_i[univ.town->preset_fields[i].loc.x][univ.town->preset_fields[i].loc.y] | 
+			 	(unsigned char) (s_pow(2,univ.town->preset_fields[i].type - 1));
+			if ((univ.town->preset_fields[i].type >= 14) && (univ.town->preset_fields[i].type <= 21))
+				univ.out.sfx[univ.town->preset_fields[i].loc.x][univ.town->preset_fields[i].loc.y] = 
+				univ.out.sfx[univ.town->preset_fields[i].loc.x][univ.town->preset_fields[i].loc.y] | 
+				(unsigned char) (s_pow(2,univ.town->preset_fields[i].type - 14));
 			
 		}
 //		univ.town.cur_talk_loaded = univ.town.town_num;
@@ -1010,7 +1010,7 @@ void start_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 
-		for (i = 0; i < T_M; i++) {
+		for (i = 0; i < univ.town->max_monst(); i++) {
 			sprintf((char *)get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
 				(short) i,(short) univ.town.monst.dudes[i].active,(short) univ.town.monst.dudes[i].m_loc.x,
 				(short) univ.town.monst.dudes[i].m_loc.y,(short) univ.town.monst.dudes[i].number,

@@ -539,7 +539,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	
 	// first make sure relevant talk strs are loaded in
 	if (personality / 10 != univ.town.cur_talk_loaded){
-		if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town.town->talking;
+		if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town->talking;
 		else load_town(personality / 10,*univ.town.cur_talk);
 		univ.town.cur_talk_loaded = personality / 10;
 	}
@@ -1145,7 +1145,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 		load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
 		}
 		else {
-			sprintf((char *) sign_text,"%s",univ.town.town->town_strs(120 + which_sign));
+			sprintf((char *) sign_text,"%s",univ.town->town_strs(120 + which_sign));
 			}
 	csit(1014,2,(char *) sign_text);
 	

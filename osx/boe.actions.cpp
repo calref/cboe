@@ -103,7 +103,7 @@ extern WindowPtr	mainPtr;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
 extern short which_item_page[6];
-extern short town_size[3],store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
+extern short /*town_size[3],*/store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
 //extern town_item_list	t_i; // shouldn't be here
 //extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
@@ -301,7 +301,8 @@ bool handle_action(EventRecord event)
 	short i,j,k,item_hit,which_t,s1,s2,s3;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
-	bool town_move_done = false,pc_delayed = false,storage;
+	bool town_move_done = false,pc_delayed = false;
+	short storage;
 	location destination,cur_loc,loc_in_sec,cur_direction;
 	unsigned char debug_storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
@@ -838,9 +839,9 @@ bool handle_action(EventRecord event)
 						k = 0;
 						if (overall_mode == MODE_LOOK_TOWN) {
 							while (k < 15) {
-								if (destination == univ.town.town->sign_locs[k]) {
+								if (destination == univ.town->sign_locs[k]) {
 									need_reprint = true;
-									if (adjacent(univ.town.town->sign_locs[k],univ.town.p_loc)==true)
+									if (adjacent(univ.town->sign_locs[k],univ.town.p_loc)==true)
 										do_sign(univ.town.num,k,(short) ter_looked_at,destination);
 										else add_string_to_buf("  Too far away to read sign.      ");
 									}
@@ -899,7 +900,7 @@ bool handle_action(EventRecord event)
 					}
 				else {
 
-					for (i = 0; i < T_M; i++) {
+					for (i = 0; i < univ.town->max_monst(); i++) {
 						if (monst_on_space(destination,i) == true) {
 							did_something = true;
 							need_redraw = true;
@@ -998,23 +999,23 @@ bool handle_action(EventRecord event)
 // Begin: Screen shift
 	if ((overall_mode == MODE_SPELL_TARGET) ||  (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| (overall_mode == MODE_LOOK_COMBAT) || (overall_mode == MODE_LOOK_TOWN)) {
-		if ((PtInRect (the_point, &border_rect[0])) && (center.y > univ.town.town->in_town_rect.top)
+		if ((PtInRect (the_point, &border_rect[0])) && (center.y > univ.town->in_town_rect.top)
 		&& (center.y > 4)) {
 			center.y--;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[1])) && (center.x > univ.town.town->in_town_rect.left)
+		if ((PtInRect (the_point, &border_rect[1])) && (center.x > univ.town->in_town_rect.left)
 		&& (center.x > 4)) {
 			center.x--;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[2])) && (center.y < univ.town.town->in_town_rect.bottom)
-		&& (center.y < town_size[town_type] - 5)) {
+		if ((PtInRect (the_point, &border_rect[2])) && (center.y < univ.town->in_town_rect.bottom)
+		&& (center.y < univ.town->max_dim() - 5)) {
 			center.y++;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[3])) && (center.x < univ.town.town->in_town_rect.right)
-		&& (center.x < town_size[town_type] - 5)) {
+		if ((PtInRect (the_point, &border_rect[3])) && (center.x < univ.town->in_town_rect.right)
+		&& (center.x < univ.town->max_dim() - 5)) {
 			center.x++;
 			need_redraw = true;
 			}
@@ -1774,7 +1775,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 
 		case 'K':
 			if (debug_on) {
-				for (i = 0; i < T_M; i++) {
+				for (i = 0; i < univ.town->max_monst(); i++) {
 				if ((is_combat()) && (univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1))
 					univ.town.monst.dudes[i].active = 0;
 					
@@ -2116,9 +2117,9 @@ void increase_age()////
 				
 	PSD[SDF_PARTY_FLIGHT] = move_to_zero(PSD[SDF_PARTY_FLIGHT]);
 
-	if ((overall_mode > MODE_OUTDOORS) && (univ.town.town->lighting_type == 2))
+	if ((overall_mode > MODE_OUTDOORS) && (univ.town->lighting_type == 2))
 		univ.party.light_level = max (0,univ.party.light_level - 9);
-	if (univ.town.town->lighting_type == 3) {
+	if (univ.town->lighting_type == 3) {
 		if (univ.party.light_level > 0)
 			ASB("Your light is drained.");
 		univ.party.light_level = 0;
@@ -2740,14 +2741,14 @@ bool town_move_party(location destination,short forced)////
 			}
 	*/
 			
-	if (monst_there(destination) > T_M)
+	if (monst_there(destination) > univ.town->max_monst())
 		keep_going = check_special_terrain(destination,1,0,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
 
 	if (spec_num == 50)
 		forced = true;
-	ter = univ.town.town->terrain(destination.x,destination.y);
+	ter = univ.town->terrain(destination.x,destination.y);
 	
 	if (keep_going == true) {
 		if (univ.party.in_boat >= 0) {
@@ -2820,7 +2821,7 @@ bool town_move_party(location destination,short forced)////
 					ASB("You can't take horses there!");
 					return false;
 					}
-				if ((univ.town.town->lighting_type > 0) && (get_ran(1,0,1) == 0)) {
+				if ((univ.town->lighting_type > 0) && (get_ran(1,0,1) == 0)) {
 					ASB("The darkness spooks your horses.");
 					return false;
 					}
@@ -2832,11 +2833,11 @@ bool town_move_party(location destination,short forced)////
 			add_string_to_buf((char *) create_line);
 //			place_treasure(destination,5,3);
 
-			move_sound(univ.town.town->terrain(destination.x,destination.y),(short) univ.party.age);
+			move_sound(univ.town->terrain(destination.x,destination.y),(short) univ.party.age);
 			
 			if (univ.party.in_boat >= 0) {
 				// Waterfall!!!
-				while (scenario.ter_types[univ.town.town->terrain(destination.x,destination.y + 1)].special == 15) {
+				while (scenario.ter_types[univ.town->terrain(destination.x,destination.y + 1)].special == 15) {
 					add_string_to_buf("  Waterfall!                     ");
 					destination.y += 2;
 					univ.town.p_loc.y += 2;

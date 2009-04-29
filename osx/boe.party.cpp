@@ -108,7 +108,7 @@ Str255 empty_string = "                                           ";
 extern bool fast_bang;
 //extern party_record_type	party;
 //extern pc_record_type ADVEN[6];
-extern short stat_window,current_pc,town_size[3],town_type;
+extern short stat_window,current_pc/*,town_size[3]*/,town_type;
 extern eGameMode overall_mode;
 //extern current_town_type	univ.town;
 //extern big_tr_type t_d;
@@ -141,7 +141,7 @@ extern short on_spell_menu[2][62];
 extern short mage_need_select[62];
 extern short priest_need_select[62];
 extern short pc_marked_damage[6];
-extern short monst_marked_damage[T_M];
+extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
 //extern town_item_list t_i;
 extern cScenario scenario;
@@ -1516,7 +1516,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			item = pc_has_abil(pc_num,158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-				else if (univ.town.town->specials2 & 1)
+				else if (univ.town->specials2 & 1)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);
@@ -1992,10 +1992,10 @@ void cast_town_spell(location where) ////
 	location loc;
 	unsigned char ter;
 	
-	if ((where.x <= univ.town.town->in_town_rect.left) ||
-		(where.x >= univ.town.town->in_town_rect.right) ||
-		(where.y <= univ.town.town->in_town_rect.top) ||
-		(where.y >= univ.town.town->in_town_rect.bottom)) {
+	if ((where.x <= univ.town->in_town_rect.left) ||
+		(where.x >= univ.town->in_town_rect.right) ||
+		(where.y <= univ.town->in_town_rect.top) ||
+		(where.y >= univ.town->in_town_rect.bottom)) {
 			add_string_to_buf("  Can't target outside town.");
 			return;
 			}
@@ -2004,14 +2004,14 @@ void cast_town_spell(location where) ////
 	if (town_spell < 1000) 
 		ADVEN[who_cast].cur_sp -= spell_cost[town_spell / 100][town_spell % 100];
 		else town_spell -= 1000;
-	ter = univ.town.town->terrain(where.x,where.y);
+	ter = univ.town->terrain(where.x,where.y);
 	
 	if (adjust > 4)
 		add_string_to_buf("  Can't see target.       ");
 		else switch (town_spell) {
 			case 7: case 34: // Scry, Capture Soul
 				targ = monst_there(where);
-				if (targ < T_M) {
+				if (targ < univ.town->max_monst()) {
 					if (town_spell == 7) {
 						univ.party.m_seen[univ.town.monst.dudes[targ].number] = true;
 						adjust_monst_menu();
@@ -2060,8 +2060,8 @@ void cast_town_spell(location where) ////
 
 			case 51: // am cloud
 				add_string_to_buf("  You create an antimagic cloud.              ");
-				for (loc.x = 0; loc.x < town_size[town_type]; loc.x++)
-					for (loc.y = 0; loc.y < town_size[town_type]; loc.y++) 
+				for (loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
+					for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++) 
 						if ((dist(where,loc) <= 2) && (can_see(where,loc,2) < 5) &&
 						((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 							make_antimagic(loc.x,loc.y);
@@ -2081,7 +2081,7 @@ void cast_town_spell(location where) ////
 						if (r1 < (135 - combat_percent[min(19,ADVEN[who_cast].level)])) {
 							add_string_to_buf("  Door unlocked.                 ");
 							play_sound(9);
-							univ.town.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
+							univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
 							}
 							else {
 								play_sound(41);
@@ -2127,10 +2127,10 @@ void sanctify_space(location where)
 	short i,s1,s2,s3;
 
 		for (i = 0; i < 50; i++)
-			if ((where == univ.town.town->special_locs[i]) &&
-				(univ.town.town->spec_id[i] >= 0)) {
-				if (univ.town.town->specials[univ.town.town->spec_id[i]].type == 24) 
-					run_special(16,2,univ.town.town->spec_id[i],where,&s1,&s2,&s3);
+			if ((where == univ.town->special_locs[i]) &&
+				(univ.town->spec_id[i] >= 0)) {
+				if (univ.town->specials[univ.town->spec_id[i]].type == 24) 
+					run_special(16,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 				return;
 				}
 	add_string_to_buf("  Nothing happens.");
@@ -2142,10 +2142,10 @@ void crumble_wall(location where)
 	
 	if (loc_off_act_area(where) == true)
 		return;
-	ter = univ.town.town->terrain(where.x,where.y);
+	ter = univ.town->terrain(where.x,where.y);
 	if (scenario.ter_types[ter].special == 7) {
 			play_sound(60);
-				univ.town.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
+				univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
 			add_string_to_buf("  Barrier crumbles.");	
 		}
 

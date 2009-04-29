@@ -82,7 +82,7 @@ bool belt_present = false;
 //setup_save_type setup_save;
 //unsigned char misc_i[64][64],sfx[64][64];
 ////unsigned char template_terrain[64][64];
-location monster_targs[T_M];
+location monster_targs[60]; // TODO: Integrate this into the town cCreature type
 //outdoor_strs_type outdoor_text[2][2];
 
 /* Display globals */
@@ -104,7 +104,7 @@ DialogPtr modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 								NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 //Rect d_rects[80];
 ////short d_rect_index[80];
-short town_size[3] = {64,48,32};
+//short town_size[3] = {64,48,32};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 Point ul = {28,10};
 short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
@@ -129,7 +129,8 @@ location pc_pos[6];
 short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;
-short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+// TODO: Integrate this ^ into the town cCreature type
 short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
@@ -710,7 +711,7 @@ void close_program()
 {
 	restore_depth();
 	//end_music();
-	if(univ.town.town != NULL) delete univ.town.town;
+	if(univ.town.loaded()) univ.town.unload();
 	if(univ.town.cur_talk != NULL) delete univ.town.cur_talk;
 }
 

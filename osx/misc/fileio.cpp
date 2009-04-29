@@ -526,7 +526,7 @@ bool load_town_str(short which_town, short which_str, char* str){
 	error = SetFPos (file_id, 3, len);
 	
 	for (i = 0; i < 140; i++) {
-		len = (long) (univ.town.town->strlens[i]);
+		len = (long) (univ.town->strlens[i]);
 		if(i == which_str){
 			FSRead(file_id, &len, (char *) str);
 			str[len] = 0;
@@ -973,7 +973,7 @@ bool load_party(FSSpec file_to_load){
 			return false;
 		}
 		
-		if(univ.town.town != NULL) delete univ.town.town;
+		if(univ.town.loaded()) univ.town.unload();
 		
 		// LOAD TOWN 
 		if (town_restore) {
@@ -1003,7 +1003,7 @@ bool load_party(FSSpec file_to_load){
 				return false;
 			}
 			
-		}else univ.town.num = 200, univ.town.town = NULL;
+		}else univ.town.num = 200;
 		
 		// LOAD STORED ITEMS
 		for (i = 0; i < 3; i++) {

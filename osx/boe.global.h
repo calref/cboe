@@ -11,8 +11,6 @@
 #define IN_FRONT	(WindowPtr)-1L
 #define	NIL				0L
 
-#define T_M 	60
-
 #define NUM_TOWN_ITEMS	115
 
 

@@ -32,7 +32,7 @@ extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type,store_anim_type;
 extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
-extern short town_size[3];
+//extern short town_size[3];
 extern short anim_step;
 //extern party_record_type univ.party;
 //extern pc_record_type ADVEN[6];
@@ -599,7 +599,7 @@ void draw_startup_stats()
 
 		OffsetRect(&to_rect,203,37);
 		char_win_draw_string(mainPtr,to_rect,
-			"Your univ.party:",0,18,true);
+			"Your party:",0,18,true);
 		TextSize(12);	
 		TextFace(bold);
 		TextFont(geneva_font_num);
@@ -1042,7 +1042,7 @@ void put_background()
 			else bg_pict = bg[4];
 		}
 	else {
-		if (univ.town.town->lighting_type > 0) {
+		if (univ.town->lighting_type > 0) {
 			if (univ.party.outdoor_corner.x >= 7)
 				bg_pict = bg[1]; 
 				else bg_pict = bg[9]; 
@@ -1155,16 +1155,16 @@ void draw_text_bar(short mode)
 		}
 	if (is_town()) {
 		for (i = 0; i < 16; i++)
-			if (loc.in(univ.town.town->room_rect(i))) 
+			if (loc.in(univ.town->room_rect(i))) 
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(univ.town.town->town_strs(i + 1));
+						put_text_bar(univ.town->town_strs(i + 1));
 						remember_tiny_text = 200 + i;
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) univ.town.town->town_strs(0)); ////
+			put_text_bar((char *) univ.town->town_strs(0)); ////
 			remember_tiny_text = 250;
 			}
 	
@@ -1177,7 +1177,7 @@ void draw_text_bar(short mode)
 		}
 	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
-	   for (i = 0; i < T_M; i++)
+	   for (i = 0; i < univ.town->max_monst(); i++)
 	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].m_d.ap > 0)) {
 	   		print_monster_going((char *) combat_string,univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].m_d.ap);
 			put_text_bar((char *) combat_string);
@@ -1469,23 +1469,23 @@ void add_monst_graphic(unsigned char m,short mode)////
 
 void load_town_graphics() // Setting up town monsters takes some finess, due to the flexibility
 					// of the situation
-// This can be used for town or beginning univ.out.out outdoor combat
+// This can be used for town or beginning outdoor combat
 {
 	short i,j;
 	
-	for (i = 0; i < town_size[town_type]; i++)
-		for (j = 0; j < town_size[town_type]; j++) 
+	for (i = 0; i < univ.town->max_dim(); i++)
+		for (j = 0; j < univ.town->max_dim(); j++) 
 			if (is_combat())
 				add_terrain_to_wish_list(combat_terrain[i][j]);
-				else add_terrain_to_wish_list(univ.town.town->terrain(i,j));
+				else add_terrain_to_wish_list(univ.town->terrain(i,j));
 
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].number != 0) && (univ.town.monst.dudes[i].active > 0))
 			add_monst_graphic(univ.town.monst.dudes[i].number,0);
 	if (is_town())
 		for (i = 0; i < 4; i++)
 			for (j = 0; j < 4; j++) {
-				add_monst_graphic(univ.town.town->wandering[i].monst[j],0);
+				add_monst_graphic(univ.town->wandering[i].monst[j],0);
 				}
 }
 
@@ -1833,8 +1833,8 @@ void draw_terrain(short	mode)
 			where_draw.y += j - 6;
 			if (!(is_out())) 
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
-				|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) 
+			if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
+				|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) 
 					unexplored_area[i][j] = 0;
 				else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 			}
@@ -1848,18 +1848,18 @@ void draw_terrain(short	mode)
 				off_terrain = false;				
 				
 				draw_trim = true;
-				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1) 
-						|| (where_draw.y < 0) || (where_draw.y > town_size[town_type] - 1))) {
+				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
+						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) {
 							draw_trim = false;
 							// Warning - this section changes where_draw
 							if (where_draw.x < 0)
 								where_draw.x = -1;
-							if (where_draw.x > town_size[town_type] - 1) 
-								where_draw.x = town_size[town_type];
+							if (where_draw.x > univ.town->max_dim() - 1) 
+								where_draw.x = univ.town->max_dim();
 							if (where_draw.y < 0)
 								where_draw.y = -1;
-							if (where_draw.y > town_size[town_type] - 1) 
-								where_draw.y = town_size[town_type];
+							if (where_draw.y > univ.town->max_dim() - 1) 
+								where_draw.y = univ.town->max_dim();
 							if (can_see(view_loc,where_draw,0) < 5)
 								can_draw = 1;
 								else can_draw = 0;							
@@ -1883,7 +1883,7 @@ void draw_terrain(short	mode)
 							  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 						}
 					else {
-						spec_terrain = univ.town.town->terrain(where_draw.x,where_draw.y);
+						spec_terrain = univ.town->terrain(where_draw.x,where_draw.y);
 						can_draw = is_explored(where_draw.x,where_draw.y);
 
 						if (can_draw > 0) {
@@ -2076,9 +2076,9 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 			at_bot = true;
 		}
 		else {
-		if (where.x == town_size[town_type])
+		if (where.x == univ.town->max_dim())
 			at_right = true;
-		if (where.y == town_size[town_type])
+		if (where.y == univ.town->max_dim())
 			at_bot = true;
 		}
 		
@@ -2268,18 +2268,18 @@ void place_road(short q,short r,location where)
 		rect_draw_some_item (fields_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < town_size[town_type] - 1)))
+	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
 		ter = coord_to_ter(where.x + 1,where.y);
-	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == town_size[town_type] - 1)) 
+	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1)) 
 	 || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[1];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 		rect_draw_some_item (fields_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
 
-	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < town_size[town_type] - 1)))
+	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
 		ter = coord_to_ter(where.x,where.y + 1);
-	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == town_size[town_type] - 1)) 
+	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1)) 
 	 || (extend_road_terrain(ter) == true)) {
 		to_rect = road_dest_rects[2];
 		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);

@@ -31,7 +31,7 @@ int main()
 	
 	Initialize();
 	Point p = {0,0};
-	init_graph_tool(NULL,p);
+	init_graph_tool(NULL,&p);
 	init_snd_tool();
 	
 //	menu_bar_handle = GetNewMBar(128);
@@ -65,6 +65,7 @@ int main()
 			display_strings("The dialog id 8000 could not be loaded.", "", "Dialog not found.",23,4,0);
 			exit(1);
 		}
+		cd_attach_key(8000, 4, 24);
 		//Handle_One_Event();
 		cd_run_dialog();
 		cd_kill_dialog(8000,0);
@@ -95,12 +96,12 @@ void Initialize(void)
 	{
 		char *path = "Scenario Editor/Blades of Exile Graphics";
 		error = FSPathMakeRef((UInt8*) path, &gRef, false);
-		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
 		if (error != noErr) {
 			//SysBeep(1);
 			printf("Error! File Blades of Exile Graphics not found.\n");
 			ExitToShell();
 		}
+		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
 	}
 	{
 		char *path = "Scenario Editor/Blades of Exile Sounds";
@@ -115,33 +116,34 @@ void Initialize(void)
 	{
 		char *path = "Blades of Exile.app/Contents/Resources/bladesofexile.rsrc";
 		error = FSPathMakeRef((UInt8*) path, &gRef, false);
-		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &boeRef);
 		if (error != noErr) {
 			//SysBeep(1);
 			printf("Error! Blades of Exile resource not found.\n");
 			ExitToShell();
 		}
+		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &boeRef);
 	}
 	{
-		char *path = "Blades of Exile Character Editor.app/Contents/Resources/boechared.rsrc";
+		char *path = "Blades of Exile Character Editor.app/Contents/Resources/bladespced.rsrc";
 		error = FSPathMakeRef((UInt8*) path, &gRef, false);
-		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &scenRef);
 		if (error != noErr) {
 			//SysBeep(1);
 			printf("Error! Blades of Exile PC Editor resource not found.\n");
 			ExitToShell();
 		}
+		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &scenRef);
 	}
 	{
-		char *path = "Scenario Editor/BoE Scenario Editor/Contents/Resources/boescen.rsrc";
+		char *path = "Scenario Editor/BoE Scenario Editor.app/Contents/Resources/BoEscen.rsrc";
 		error = FSPathMakeRef((UInt8*) path, &gRef, false);
-		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &pcRef);
 		if (error != noErr) {
 			//SysBeep(1);
 			printf("Error! Blades of Exile Scenario Editor resources not found.\n");
 			ExitToShell();
 		}
+		error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &pcRef);
 	}
+	UseResFile(boeRef);
 //	path = "Scenario Editor/Blades of Exile Sounds";
 //	FSPathMakeRef((UInt8*) path, &sRef, false);
 //	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
@@ -216,6 +218,8 @@ void choose_dialog_event_filter(short item_hit){
 	switch(item_hit){
 		case 3:
 			short n = cd_retrieve_text_edit_num(8000, 2);
+			if(n == 8000) break;
+			printf("Showing dialog %i\n",n);
 			if(cd_create_dialog_parent_num(n,8000) == -3){
 				char msg[100];
 				sprintf(msg,"The dialog id %i could not be loaded.",n);
@@ -230,18 +234,21 @@ void choose_dialog_event_filter(short item_hit){
 			All_Done = true;
 			break;
 		case 6:
+			printf("Switching to BoE resfile.\n");
 			cd_set_led_range(8000,6,8,6);
 			UseResFile(boeRef);
 			cd_set_bg_pat_num(5);
 			cd_set_text_clr(white);
 			break;
 		case 7:
+			printf("Switching to PC resfile.\n");
 			cd_set_led_range(8000,6,8,7);
 			UseResFile(pcRef);
 			cd_set_bg_pat_num(5);
 			cd_set_text_clr(white);
 			break;
 		case 8:
+			printf("Switching to Scen resfile.\n");
 			cd_set_led_range(8000,6,8,8);
 			UseResFile(scenRef);
 			cd_set_bg_pat_num(16);

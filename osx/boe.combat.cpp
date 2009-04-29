@@ -42,9 +42,9 @@ extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
-extern short town_size[3];
+//extern short town_size[3];
 extern short town_type;
-extern short monst_target[T_M]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short num_targets_left;
 extern location spell_targets[8];
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -53,7 +53,7 @@ extern bool fast_bang;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
 extern short refer_mage[62],refer_priest[62];
-extern location monster_targs[T_M];
+extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
 extern short spell_caster, missile_firer,current_monst_tactic;
@@ -111,7 +111,7 @@ extern short boom_gr[8];
 char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 
 short pc_marked_damage[6];
-short monst_marked_damage[T_M];
+short monst_marked_damage[60];
 
 location hor_vert_place[14] = {loc(0,0),loc(-1,1),loc(1,1),loc(-2,2),loc(0,2),
 								loc(2,2),loc(0,1),loc(-1,2),loc(1,2),loc(-1,3),
@@ -311,11 +311,11 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 			univ.out.misc_i[i][j] = 0;
 			univ.out.sfx[i][j] = 0;
 			}
-	univ.town.town->in_town_rect = town_rect;
+	univ.town->in_town_rect = town_rect;
 
 	create_out_combat_terrain((short) in_which_terrain,num_walls,0);////
 	
-	for (i = 0; i < T_M; i++) {
+	for (i = 0; i < univ.town->max_monst(); i++) {
 		univ.town.monst.dudes[i].number = 0;
 		univ.town.monst.dudes[i].active = 0;
 		}
@@ -351,7 +351,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 		}
 		
 	// place monsters, w. friendly monsts landing near PCs
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < univ.town->max_monst(); i++) 
 		if (univ.town.monst.dudes[i].active > 0) {
 			monst_target[i] = 6;
 			
@@ -380,12 +380,12 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 
 	combat_active_pc = 6;
 	spell_caster = 6; missile_firer = 6;
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		monst_target[i] = 6;
 
 	for (i = 0; i < 6; i++) {
 		pc_parry[i] = 0;
-		last_attacked[i] = T_M + 10;
+		last_attacked[i] = univ.town->max_monst() + 10;
 		}
 		
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -415,7 +415,7 @@ bool pc_combat_move(location destination) ////
 	location monst_loc,store_loc;
 	short spec_num;
 	
-	if (monst_there(destination) > T_M)
+	if (monst_there(destination) > univ.town->max_monst())
 		keep_going = check_special_terrain(destination,2,current_pc,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
@@ -447,7 +447,7 @@ bool pc_combat_move(location destination) ////
 			add_string_to_buf((char *) create_line);
 			return true;		
 		}
-		else if ((monst_hit = monst_there(destination)) <= T_M) {
+		else if ((monst_hit = monst_there(destination)) <= univ.town->max_monst()) {
 			s1 = univ.town.monst.dudes[monst_hit].attitude;
 			s2 = (s1 % 2 == 1) ? 2 : fancy_choice_dialog(1045,0);
 			if ((s2 == 2) && (s1 % 2 != 1)) 
@@ -479,7 +479,7 @@ bool pc_combat_move(location destination) ////
 				|| ((impassable(combat_terrain[destination.x][destination.y]) == false) && (pc_there(destination) == 6))) {
 			
 				// monsters get back-shots
-				for (i = 0; i < T_M; i++) {
+				for (i = 0; i < univ.town->max_monst(); i++) {
 					monst_loc = univ.town.monst.dudes[i].m_loc;
 					monst_exist = univ.town.monst.dudes[i].active;
 					
@@ -1167,7 +1167,7 @@ void do_combat_cast(location target)////
 							
 		default:
 					targ_num = monst_there(target);
-					if (targ_num > T_M)
+					if (targ_num > univ.town->max_monst())
 						add_string_to_buf("  Nobody there                 ");
 						else {
 							cur_monst = &univ.town.monst.dudes[targ_num];	
@@ -1364,7 +1364,7 @@ void handle_marked_damage()
 			damage_pc(i,pc_marked_damage[i],DAMAGE_MARKED,MONSTER_TYPE_UNKNOWN,0);
 			pc_marked_damage[i] = 0;
 			}
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if (monst_marked_damage[i] > 0)
 			{
 			damage_monst(i, current_pc, monst_marked_damage[i], 0, DAMAGE_MARKED,0); // was 9 rather than 10; probably a mistake
@@ -1519,7 +1519,7 @@ void fire_missile(location target) {
 			
 			if (r1 > hit_chance[skill])
 				add_string_to_buf("  Missed.");
-			else if ((targ_monst = monst_there(target)) < T_M) {
+			else if ((targ_monst = monst_there(target)) < univ.town->max_monst()) {
 				cur_monst = &univ.town.monst.dudes[targ_monst];
 				spec_dam = calc_spec_dam(ADVEN[missile_firer].items[ammo_inv_slot].ability,
 										 ADVEN[missile_firer].items[ammo_inv_slot].ability_strength,cur_monst);
@@ -1540,10 +1540,10 @@ void fire_missile(location target) {
 					poison_monst(cur_monst,poison_amt);
 				}
 			}
-			else if((targ_monst = pc_there(target)) < 6 && ADVEN[current_pc].items[ammo_inv_slot].ability == 176){
-				ASB("  There is a flash of light.");
-				heal_pc(targ_monst,r2);
-			}
+//			else if((targ_monst = pc_there(target)) < 6 && ADVEN[current_pc].items[ammo_inv_slot].ability == 176){
+//				ASB("  There is a flash of light.");
+//				heal_pc(targ_monst,r2);
+//			}
 			else hit_space(target,r2,DAMAGE_WEAPON,1,0);
 			
 		}
@@ -1662,9 +1662,9 @@ void combat_run_monst()
 
 		process_fields();
 		univ.party.light_level = move_to_zero(univ.party.light_level);
-		if ((which_combat_type == 1) && (univ.town.town->lighting_type == 2))
+		if ((which_combat_type == 1) && (univ.town->lighting_type == 2))
 			univ.party.light_level = max (0,univ.party.light_level - 9);
-		if (univ.town.town->lighting_type == 3)
+		if (univ.town->lighting_type == 3)
 			univ.party.light_level = 0;
 
 		PSD[SDF_PARTY_DETECT_LIFE] = move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
@@ -1749,7 +1749,7 @@ void do_monster_turn()
 	 
 	monsters_going = true; // This affects how graphics are drawn.
 
-	num_monst = T_M;
+	num_monst = univ.town->max_monst();
 	if (overall_mode < MODE_COMBAT) 
 		which_combat_type = 1;
 				
@@ -1765,7 +1765,7 @@ void do_monster_turn()
 			if (r1 < 50)
 				cur_monst->active = 2;
 			
-			for (j = 0; j < T_M; j++)
+			for (j = 0; j < univ.town->max_monst(); j++)
 				if (monst_near(j,cur_monst->m_loc,5,1) == true) {
 					cur_monst->active = 2;		
 					}
@@ -1773,7 +1773,7 @@ void do_monster_turn()
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1)) {
 			// Now it looks for PC-friendly monsters
 			// dist check is for efficiency
-			for (j = 0; j < T_M; j++) 
+			for (j = 0; j < univ.town->max_monst(); j++) 
 				if ((univ.town.monst.dudes[j].active > 0) && 
 					(univ.town.monst.dudes[j].attitude % 2 != 1) &&
 					(dist(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc) <= 6) &&
@@ -1784,7 +1784,7 @@ void do_monster_turn()
 		// See if friendly, fighting monster see hostile monster. If so, make mobile
 		// dist check is for efficiency
 		if ((cur_monst->active == 1) && (cur_monst->attitude == 2)) {
-			for (j = 0; j < T_M; j++)
+			for (j = 0; j < univ.town->max_monst(); j++)
 				if ((univ.town.monst.dudes[j].active > 0) && (univ.town.monst.dudes[j].attitude % 2 == 1) &&
 		 		 (dist(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc) <= 6)	
 		 		 && (can_see(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc,0) < 5)) {
@@ -3064,7 +3064,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 					for (i = 0; i < 6; i++)
 						if (pc_near(i,caster->m_loc,8))
 							slow_pc(i,2 + caster->m_d.level / 4);
-				for (i = 0; i < T_M; i++) {
+				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst.dudes[i].active != 0) && 
 					(((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) || 
 					((univ.town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
@@ -3075,7 +3075,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				break;
 			case 18: // major haste
 				play_sound(25);
-				for (i = 0; i < T_M; i++)
+				for (i = 0; i < univ.town->max_monst(); i++)
 					if ((monst_near(i,caster->m_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
@@ -3122,7 +3122,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				break;
 			case 25: // major bless
 				play_sound(25);
-				for (i = 0; i < T_M; i++)
+				for (i = 0; i < univ.town->max_monst(); i++)
 					if ((monst_near(i,caster->m_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
@@ -3348,7 +3348,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 							if (spell == 23)
 								disease_pc(i,2 + r2);
 							}
-				for (i = 0; i < T_M; i++) {
+				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst.dudes[i].active != 0) && 
 					(((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) || 
 					((univ.town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
@@ -3375,7 +3375,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 			case 16: case 24:// bless all,revive all
 				play_sound(24);
 				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
-				for (i = 0; i < T_M; i++)
+				for (i = 0; i < univ.town->max_monst(); i++)
 					if ((monst_near(i,caster->m_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
@@ -3460,8 +3460,8 @@ location find_fireball_loc(location where,short radius,short mode,short *m)
 	location check_loc,cast_loc(120,0);
 	short cur_lev,level_max = 10;
 	
-	for (check_loc.x = 1; check_loc.x < town_size[town_type] - 1; check_loc.x ++)
-		for (check_loc.y = 1; check_loc.y < town_size[town_type] - 1; check_loc.y ++)
+	for (check_loc.x = 1; check_loc.x < univ.town->max_dim() - 1; check_loc.x ++)
+		for (check_loc.y = 1; check_loc.y < univ.town->max_dim() - 1; check_loc.y ++)
 			if ((dist(where,check_loc) <= 8) && (can_see(where,check_loc,2) < 5) && (get_obscurity(check_loc.x,check_loc.y) < 5)) {
 					{
 						cur_lev = count_levels(check_loc,radius);
@@ -3495,7 +3495,7 @@ short count_levels(location where,short radius)
 {
 	short i,store = 0;
 
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if (monst_near(i,where,radius,0) == true) {
 			if (univ.town.monst.dudes[i].attitude % 2 == 1)
 				store = store - univ.town.monst.dudes[i].m_d.level;
@@ -3573,7 +3573,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 
 
 
-	active = univ.town.town->in_town_rect;
+	active = univ.town->in_town_rect;
 	// eliminate barriers that can't be seen
 		for (i = minmax(active.left + 1,active.right - 1,center.x - 4); 
 		 i <= minmax(active.left + 1,active.right - 1,center.x + 4); i++)
@@ -3586,8 +3586,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 
 
 	// First actually make barriers, then draw them, then inflict damaging effects.
-	for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-		for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++)
+	for (i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
+		for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++)
 			if (get_obscurity(i,j) < 5) {
 				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 				switch (effect) {
@@ -3616,8 +3616,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 		
 	// Damage to pcs
 	for (k = 0; k < 6; k++) 
-		for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-			for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++) {
+		for (i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
+			for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if ((get_obscurity(i,j) < 5) && (ADVEN[k].main_status == 1)
@@ -3662,12 +3662,12 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 	fast_bang = 0;
 	
 	// Damage to monsters
-	for (k = 0; k < T_M; k++) 
+	for (k = 0; k < univ.town->max_monst(); k++) 
 		if ((univ.town.monst.dudes[k].active > 0) && (dist(center,univ.town.monst.dudes[k].m_loc) <= 5)) {
 		monster_hit = false;
 		// First actually make barriers, then draw them, then inflict damaging effects.
-		for (i = minmax(0,town_size[town_type] - 1,center.x - 4); i <= minmax(0,town_size[town_type] - 1,center.x + 4); i++)
-			for (j = minmax(0,town_size[town_type] - 1,center.y - 4); j <= minmax(0,town_size[town_type] - 1,center.y + 4); j++) {
+		for (i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
+			for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
 
@@ -3758,7 +3758,7 @@ void do_shockwave(location target)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) < 11)
 			&& (ADVEN[i].main_status == 1))
 				damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
 			 && (dist(target,univ.town.monst.dudes[i].m_loc) < 11)
 			 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
@@ -3777,7 +3777,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 			if ((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
 				&& (ADVEN[i].main_status == 1))
 					damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
-		for (i = 0; i < T_M; i++)
+		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
 				 && (dist(target,univ.town.monst.dudes[i].m_loc) <= radius)
 				 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
@@ -3790,7 +3790,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) <= radius)
 			&& (ADVEN[i].main_status == 1))
 				damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
 			 && (dist(target,univ.town.monst.dudes[i].m_loc) <= radius)
 			 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
@@ -3841,7 +3841,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		return;
 		}
 	
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((hit_monsters == true) && (univ.town.monst.dudes[i].active != 0) && (stop_hitting == false))
 			if (monst_on_space(target,i)) {
 				if (processing_fields == true)
@@ -4005,7 +4005,7 @@ bool out_monst_all_dead()
 {
 	short i;
 
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1)) {
 			//print_nums(5555,i,univ.town.monst.dudes[i].number);
 			//print_nums(5555,univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y);
@@ -4192,7 +4192,7 @@ bool combat_cast_mage_spell()
 									case 56: sprintf ((char *) c_line, "  Enemy paralyzed:   ");break;
 									}
 								add_string_to_buf((char *) c_line);												
-								for (i = 0; i < T_M; i++) {
+								for (i = 0; i < univ.town->max_monst(); i++) {
 										if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
 										 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= mage_range[spell_num])
 										 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc,0) < 5)) {
@@ -4343,7 +4343,7 @@ bool combat_cast_priest_spell()
 						case 31: case 51: case 53:			
 								ADVEN[current_pc].cur_sp -= s_cost[1][spell_num];		
 								store_sound = 24;
-								for (i = 0; i < T_M; i++) {
+								for (i = 0; i < univ.town->max_monst(); i++) {
 									if ((univ.town.monst.dudes[i].active != 0) &&(univ.town.monst.dudes[i].attitude % 2 == 1) &&
 									 (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= priest_range[spell_num])) {
 											which_m = &univ.town.monst.dudes[i];
@@ -4510,9 +4510,9 @@ void process_fields()
 		return;
 	
 	if (quickfire) { ////
-		r = univ.town.town->in_town_rect;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		r = univ.town->in_town_rect;
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				qf[i][j] = (is_quickfire(i,j)) ? 2 : 0;
 		for (k = 0; k < ((is_combat()) ? 4 : 1); k++) {
 			for (i = r.left + 1; i < r.right ; i++)
@@ -4534,7 +4534,7 @@ void process_fields()
 			}
 		}
 
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if (univ.town.monst.dudes[i].active > 0)
 			monst_inflict_fields(i);
 
@@ -4542,8 +4542,8 @@ void process_fields()
 	processing_fields = true; // this, in hit_space, makes damage considered to come from whole party
 	if (force_wall) {
 		force_wall = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_force_wall(i,j)) {
 							r1 = get_ran(3,1,6);
 							loc.x = i; loc.y = j;
@@ -4558,8 +4558,8 @@ void process_fields()
 		}
 	if (fire_wall) {
 		fire_wall = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_fire_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(2,1,6) + 1;
@@ -4574,8 +4574,8 @@ void process_fields()
 		}
 	if (antimagic) {
 		antimagic = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_antimagic(i,j)) {
 					r1 = get_ran(1,1,8);
 					if (r1 == 2)
@@ -4585,8 +4585,8 @@ void process_fields()
 		}
 	if (scloud) {
 		scloud = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_scloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
@@ -4599,8 +4599,8 @@ void process_fields()
 		}		
 	if (sleep_field) {
 		sleep_field = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_sleep_cloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
@@ -4613,8 +4613,8 @@ void process_fields()
 		}	
 	if (ice_wall) {
 		ice_wall = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_ice_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(3,1,6);
@@ -4629,8 +4629,8 @@ void process_fields()
 		}		
 	if (blade_wall) {
 		blade_wall = false;
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++) 
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++) 
 				if (is_blade_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(6,1,8);
@@ -4649,8 +4649,8 @@ void process_fields()
 							// in hit_space
 	
 	if (quickfire) {
-		for (i = 0; i < town_size[town_type]; i++)
-			for (j = 0; j < town_size[town_type]; j++)
+		for (i = 0; i < univ.town->max_dim(); i++)
+			for (j = 0; j < univ.town->max_dim(); j++)
 				if (is_quickfire(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(2,1,8);

@@ -44,10 +44,10 @@ extern effect_pat_type current_pat;
 //extern town_item_list	univ.town;
 extern cOutdoors::cWandering store_wandering_special;
 extern short pc_marked_damage[6];
-extern short monst_marked_damage[T_M];
+extern short monst_marked_damage[60];
 extern DialogPtr modeless_dialogs[18];
 extern bool fast_bang,end_scenario;
-extern short town_size[3];
+//extern short town_size[3];
 extern short town_type;
 extern cScenario scenario;
 extern cUniverse univ;
@@ -102,8 +102,8 @@ bool town_specials(short which,short t_num)
 	location l;
 	
 	
-	l = univ.town.town->special_locs[which];
-	spec_id = univ.town.town->spec_id[which];
+	l = univ.town->special_locs[which];
+	spec_id = univ.town->spec_id[which];
 	if (spec_id < 0)
 		return true;
 	
@@ -160,7 +160,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			from_loc = univ.party.p_loc;
 			break;	
 		case 1:
-			ter = univ.town.town->terrain(where_check.x,where_check.y);
+			ter = univ.town->terrain(where_check.x,where_check.y);
 			from_loc = univ.town.p_loc;
 			break;	
 		case 2:
@@ -216,16 +216,16 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				return false;
 				}
 			for (i = 0; i < 50; i++)
-				if ((where_check == univ.town.town->special_locs[i]) &&
-					(univ.town.town->spec_id[i] >= 0)) {
-					if (univ.town.town->specials[univ.town.town->spec_id[i]].type == 4) {
+				if ((where_check == univ.town->special_locs[i]) &&
+					(univ.town->spec_id[i] >= 0)) {
+					if (univ.town->specials[univ.town->spec_id[i]].type == 4) {
 						*forced = true;
 						}
-					*spec_num = univ.town.town->spec_id[i];
+					*spec_num = univ.town->spec_id[i];
 					if ((is_blocked(where_check) == false) || (ter_special == 1)
 	 					|| (ter_special == 12) || (ter_special == 13)) {
 						give_help(54,0,0);
-						run_special(mode,2,univ.town.town->spec_id[i],where_check,&s1,&s2,&s3);
+						run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 						if (s1 > 0)
 							can_enter = false;
 						}
@@ -849,7 +849,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 130: 
 				ASB("It throbs, and emits odd rays.");
-				for (i = 0; i < T_M; i++) {
+				for (i = 0; i < univ.town->max_monst(); i++) {
 						if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
 						 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= 8)
 						 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc,0) < 5)) {
@@ -859,13 +859,13 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						}
 				break;
 			case 131:
-				if (univ.town.town->specials2 & 1) {
+				if (univ.town->specials2 & 1) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 					}
 				add_string_to_buf("  You have a vision.            ");
-				for (i = 0; i < town_size[town_type]; i++)
-					for (j = 0; j < town_size[town_type]; j++)
+				for (i = 0; i < univ.town->max_dim(); i++)
+					for (j = 0; j < univ.town->max_dim(); j++)
 						make_explored(i,j);
 				clear_map();
 				break;
@@ -918,7 +918,7 @@ bool use_space(location where)
 	location from_loc,to_loc;
 	
 
-	ter = univ.town.town->terrain(where.x,where.y);
+	ter = univ.town->terrain(where.x,where.y);
 	from_loc = univ.town.p_loc;
 
 	add_string_to_buf("Use...");
@@ -991,14 +991,14 @@ bool adj_town_look(location where)
 			(where == univ.town.items[i].item_loc))
 				item_there = true;
 
-	terrain = univ.town.town->terrain(where.x,where.y);
+	terrain = univ.town->terrain(where.x,where.y);
 	if (special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
 		if (adjacent(univ.town.p_loc,where) == false)
 			add_string_to_buf("  Not close enough to search.");
 			else {
 				for (i = 0; i < 50; i++)
-					if (where == univ.town.town->special_locs[i]) {
-						if (get_blockage(univ.town.town->terrain(where.x,where.y)) > 0) { 
+					if (where == univ.town->special_locs[i]) {
+						if (get_blockage(univ.town->terrain(where.x,where.y)) > 0) { 
 						// tell party you find something, if looking at a space they can't step in
 							//if (univ.town.town.special_id[i] >= 10) 
 							//	add_string_to_buf("  Search: You find something!          ");
@@ -1007,7 +1007,7 @@ bool adj_town_look(location where)
 							}
 						//call special can_open = town_specials(i,univ.town.town_num);
 						
-						run_special(4,2,univ.town.town->spec_id[i],where,&s1,&s2,&s3);
+						run_special(4,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 						if (s1 > 0)
 							can_open = false;
 						got_special = true;
@@ -1424,10 +1424,10 @@ void push_things()////
 	if (belt_present == false)
 		return;
 	
-	for (i = 0; i < T_M; i++)
+	for (i = 0; i < univ.town->max_monst(); i++)
 		if (univ.town.monst.dudes[i].active > 0) {
 			l = univ.town.monst.dudes[i].m_loc;
-			ter = univ.town.town->terrain(l.x,l.y);
+			ter = univ.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
@@ -1444,7 +1444,7 @@ void push_things()////
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].variety > 0) {
 			l = univ.town.items[i].item_loc;
-			ter = univ.town.town->terrain(l.x,l.y);
+			ter = univ.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].special) {
 				case 16: l.y--; break;
 				case 17: l.x++; break;
@@ -1460,7 +1460,7 @@ void push_things()////
 			}
 	
 	if (is_town()) {
-		ter = univ.town.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+		ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		l = univ.town.p_loc;
 		switch (scenario.ter_types[ter].special) {
 			case 16: l.y--; break;
@@ -1475,7 +1475,7 @@ void push_things()////
 			center = l;
 			univ.town.p_loc = l;
 			update_explored(l);
-			ter = univ.town.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			draw_map(modeless_dialogs[5],5);
 			if (is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				take_barrel(univ.town.p_loc.x,univ.town.p_loc.y);
@@ -1495,7 +1495,7 @@ void push_things()////
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
 			if (ADVEN[i].main_status == 1) {
-				ter = univ.town.town->terrain(pc_pos[i].x,pc_pos[i].y);
+				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
 				switch (scenario.ter_types[ter].special) {
 					case 16: l.y--; break;
@@ -1505,7 +1505,7 @@ void push_things()////
 					}
 				if (l != pc_pos[i]) {
 					ASB("Someone gets pushed.");	
-					ter = univ.town.town->terrain(l.x,l.y);
+					ter = univ.town->terrain(l.x,l.y);
 					if (scenario.ter_types[ter].special >= 16)	
 						draw_terrain(0);
 					pc_pos[i] = l;
@@ -1540,9 +1540,9 @@ void special_increase_age()
 	location null_loc;
 	
 	for (i = 0; i < 8; i++)
-		if ((univ.town.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town.town->timer_spec_times[i] == 0)
+		if ((univ.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town->timer_spec_times[i] == 0)
 			&& ((is_town() == true) || ((is_combat() == true) && (which_combat_type == 1)))) {
-			run_special(9,2,univ.town.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+			run_special(9,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = true;
 			if (s3 > 0)
 				redraw = true;
@@ -1691,7 +1691,7 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 			give_error("The scenario called a town special node univ.out.out of range.","",0);
 			return dummy_node;
 			}
-		return univ.town.town->specials[cur_spec];
+		return univ.town->specials[cur_spec];
 		}
 	return dummy_node;
 }
@@ -2317,7 +2317,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				else give_error("A Stuff Done flag is univ.out.out of range.","",0);	
 			break;
 		case 135:
-			if (((is_town()) || (is_combat())) && (univ.town.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
+			if (((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 136:
@@ -2399,14 +2399,14 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case 148:
-			for (j = 0; j < town_size[town_type]; j++)
-				for (k = 0; k < town_size[town_type]; k++) 
+			for (j = 0; j < univ.town->max_dim(); j++)
+				for (k = 0; k < univ.town->max_dim(); k++) 
 					if (is_barrel(j,k))
 						*next_spec = spec.ex1b;								
 			break;
 		case 149:
-			for (j = 0; j < town_size[town_type]; j++)
-				for (k = 0; k < town_size[town_type]; k++) 
+			for (j = 0; j < univ.town->max_dim(); j++)
+				for (k = 0; k < univ.town->max_dim(); k++) 
 					if (is_crate(j,k))
 						*next_spec = spec.ex1b;								
 			break;
@@ -2564,14 +2564,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case 182:
-			for (i = 0; i < T_M; i++)
+			for (i = 0; i < univ.town->max_monst(); i++)
 				if (univ.town.monst.dudes[i].number == spec.ex1a) {
 					univ.town.monst.dudes[i].active = 0;
 					}			
 			*redraw = 1;
 			break;
 		case 183:
-			for (i = 0; i < T_M; i++)
+			for (i = 0; i < univ.town->max_monst(); i++)
 				if ((univ.town.monst.dudes[i].active > 0) &&
 					(((spec.ex1a == 0) && (1 == 1)) || 
 					((spec.ex1a == 1) && (univ.town.monst.dudes[i].attitude % 2 == 0)) || 
@@ -3062,9 +3062,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,univ.town.town->town_strs(which_str1));
+				strcpy((char *) str1,univ.town->town_strs(which_str1));
 			if (which_str2 >= 0)
-				strcpy((char *) str2,univ.town.town->town_strs(which_str2));
+				strcpy((char *) str2,univ.town->town_strs(which_str2));
 			break;
 		}
 

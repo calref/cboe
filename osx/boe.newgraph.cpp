@@ -56,7 +56,7 @@ extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern location center;
 extern short pc_marked_damage[6],pc_dir[6];
-extern short monst_marked_damage[T_M];
+extern short monst_marked_damage[60];
 extern location pc_pos[6];
 //extern current_town_type univ.town;
 //extern big_tr_type t_d;
@@ -133,11 +133,11 @@ extern location anim_str_loc;
 
 // if < 6; target PC, if >= 100, targ monst, if 6, go to anim_pc_loc
 short anim_pc_targets[6];
-short anim_monst_targets[T_M];
+short anim_monst_targets[60];
 
 short anim_pcs[6];
 
-location anim_pc_locs[6],anim_monst_locs[T_M];
+location anim_pc_locs[6],anim_monst_locs[60];
 location anim_string_loc;
 char anim_string[60];
 char last_light_mask[13][13];
@@ -155,7 +155,7 @@ void apply_unseen_mask()
 
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
-	if (!(is_out()) && (univ.town.town->lighting_type > 0))
+	if (!(is_out()) && (univ.town->lighting_type > 0))
 		return;
 		
 	for (i = 0; i < 11; i++)
@@ -208,7 +208,7 @@ void apply_light_mask()
 		return;
 	if (is_out())
 		return;
-	if (univ.town.town->lighting_type == 0)
+	if (univ.town->lighting_type == 0)
 		return;
 	
 	if (oval_region == NULL) {
@@ -311,7 +311,7 @@ void start_missile_anim()
 		}
 	for (i = 0; i < 6; i++) 
 		pc_marked_damage[i] = 0;
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < univ.town->max_monst(); i++) 
 		monst_marked_damage[i] = 0;
 	have_missile = false;
 	have_boom = false;
