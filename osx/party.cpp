@@ -87,6 +87,14 @@ void cParty::append(legacy::stored_items_list_type& old,short which_list){
 }
 
 __attribute__((deprecated))
+void cParty::append(legacy::setup_save_type& old){
+	for(int n = 0; n < 4; n++)
+		for(int i = 0; i < 64; i++)
+			for(int j = 0; j < 64; j++)
+				setup[n][i][j] = old.setup[n][i][j];
+}
+
+__attribute__((deprecated))
 cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 	personality = old.personality;
 	town_num = old.town_num;

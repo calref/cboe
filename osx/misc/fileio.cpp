@@ -1059,7 +1059,7 @@ bool load_party(FSSpec file_to_load){
 	}
 	
 	univ.party = store_party;
-	univ.town.append(store_setup);
+	univ.party.append(store_setup);
 	for(i = 0; i < 6; i++)
 		univ.party.add_pc(store_pc[i]);
 	if(in_scen){
@@ -1071,9 +1071,9 @@ bool load_party(FSSpec file_to_load){
 		}
 		for(i = 0; i < 3; i++)
 			univ.party.append(stored_items[i],i);
-		univ.town.append(town_maps);
-		univ.out.append(o_maps);
-		univ.out.append(sfx, misc_i);
+		univ.append(town_maps);
+		univ.append(o_maps);
+		univ.town.append(sfx, misc_i);
 	}
 	if(in_scen){
 		FSRef file_ref;

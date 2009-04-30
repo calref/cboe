@@ -284,25 +284,25 @@ short get_obscurity(short x,short y)
 	store = get_blockage(what_terrain);
 	
 	if (is_town()) {
-		if (special(x,y))
+		if (univ.town.is_special(x,y))
 			store++;
 		}
 
 	if ((is_town()) || (is_combat())) {
-		if (is_web(x,y))
+		if (univ.town.is_web(x,y))
 			store += 2;
-		if ((is_fire_barrier(x,y)) || (is_force_barrier(x,y)))
+		if ((univ.town.is_fire_barr(x,y)) || (univ.town.is_force_barr(x,y)))
 			return 5;
-		if ((is_crate(x,y)) || (is_barrel(x,y)))
+		if ((univ.town.is_crate(x,y)) || (univ.town.is_barrel(x,y)))
 			store++;
 	
 		} 
 	return store;
 }
 
-unsigned char coord_to_ter(short x,short y)
+unsigned short coord_to_ter(short x,short y)
 {
-	char what_terrain;
+	unsigned short what_terrain;
 
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		what_terrain = univ.out.out[x][y];
@@ -319,7 +319,7 @@ bool is_container(location loc)
 {
 	unsigned char ter;
 	
-	if ((is_barrel(loc.x,loc.y)) || (is_crate(loc.x,loc.y)))
+	if ((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
 	ter = coord_to_ter(loc.x,loc.y);
 	if (scenario.ter_types[ter].special == 14)
@@ -412,7 +412,7 @@ bool is_blocked(location to_check)
 			return true;
 		
 		// Magic barrier?
-		if (is_force_barrier(to_check.x,to_check.y))
+		if (univ.town.is_force_barr(to_check.x,to_check.y))
 			return true;
 			
 		return false;

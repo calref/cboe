@@ -584,17 +584,20 @@ void draw_sfx()
 		for (q = 0; q < 9; q++) 
 			for (r = 0; r < 9; r++)
 				{
-				where_draw = center;where_draw.x += q - 4;where_draw.y += r - 4;
+				where_draw = center;
+					where_draw.x += q - 4;
+					where_draw.y += r - 4;
 				
 				if ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1)) 
 							;
-						else if (univ.out.sfx[where_draw.x][where_draw.y] != 0) {
+						else if (univ.town.sfx(where_draw.x,where_draw.y) != 0) {
 							for (i = 0; i < 8; i++) {
 								flag = s_pow(2,i);
-								if (univ.out.sfx[where_draw.x][where_draw.y] & flag) 
+								if (univ.town.sfx(where_draw.x,where_draw.y) & flag) 
 									if (spot_seen[q][r] > 0) {
-									loc.x = q; loc.y = r;
+									loc.x = q;
+										loc.y = r;
 									source_rect = orig_rect;
 									OffsetRect(&source_rect,28 * i,36 * 3);
 									Draw_Some_Item(fields_gworld,source_rect,terrain_screen_gworld,loc,
@@ -621,7 +624,7 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1)) 
 							;
 						else {
-							if (univ.out.misc_i[where_draw.x][where_draw.y] & flag) 
+							if (univ.town.misc_i(where_draw.x,where_draw.y) & flag) 
 								if (spot_seen[q][r] > 0) {
 								loc.x = q; loc.y = r;
 								source_rect = orig_rect;
@@ -652,7 +655,7 @@ void draw_one_spec_item(unsigned char flag,short source_x,short source_y)
 						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1)) 
 							;
 						else {
-							if (univ.town.explored[where_draw.x][where_draw.y] & flag) 
+							if (univ.town.explored(where_draw.x,where_draw.y) & flag) 
 								if (spot_seen[q][r] > 0) {
 								loc.x = q; loc.y = r;
 								source_rect = orig_rect;

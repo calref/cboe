@@ -186,12 +186,12 @@ void init_screen_locs() ////
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 8; j++)
 			for (k = 0; k < 64; k++)////
-				univ.town.maps[i][j][k] = 0;
+				univ.town_maps[i][j][k] = 0;
 
 	for (i = 0; i < 100; i++)
 			for (k = 0; k < 6; k++)
 				for (l = 0; l < 48; l++)
-					univ.out.maps[i][k][l] = 0;
+					univ.out_maps[i][k][l] = 0;
 
 	for (i = 0; i < 7; i++) {
 		bottom_buttons[i].top = 383;

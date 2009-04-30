@@ -207,9 +207,9 @@ void start_town_mode(short which_town, short entry_dir)
 	// Set up map, using stored map
 	for (i = 0; i < univ.town->max_dim(); i++)
 		for (j = 0; j < univ.town->max_dim(); j++) {
-			univ.town.explored[i][j] = 0;
+			univ.town.fields[i][j] = 0;
 			//univ.out.sfx[i][j] = 0;
-			if (univ.town.maps[univ.town.num][i / 8][j] & (char)(s_pow(2,i % 8)))
+			if (univ.town_maps[univ.town.num][i / 8][j] & (char)(s_pow(2,i % 8)))
 				make_explored(i,j);
 					
 			if (univ.town->terrain(i,j) == 0)
@@ -299,9 +299,9 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++) { // now load in saved setup,
 					// except that barrels and crates restore to orig locs
-					temp = univ.town.setup[i][j][k] & 231;
-					
-					univ.out.misc_i[j][k] = (univ.out.misc_i[j][k] & 24) | temp;//setup_save.setup[i][j][k];
+					temp = univ.party.setup[i][j][k] & 231;
+					temp <<= 8;
+					univ.town.fields[j][k] = (univ.town.fields[j][k] & 24) | temp;//setup_save.setup[i][j][k];
 				}
 		}
 							
@@ -436,19 +436,26 @@ void start_town_mode(short which_town, short entry_dir)
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++) {
 					loc.x = j; loc.y = k;
-					if (is_door(loc) == true) 
-						univ.out.misc_i[j][k] = univ.out.misc_i[j][k] & 3;
-					if (is_web(j,k) == true)
+					if (is_door(loc) == true) {
+						univ.town.set_web(j,k,false);
+						univ.town.set_crate(j,k,false);
+						univ.town.set_barrel(j,k,false);
+						univ.town.set_fire_barr(j,k,false);
+						univ.town.set_force_barr(j,k,false);
+						univ.town.set_quickfire(j,k,false);
+						//univ.out.misc_i[j][k] = univ.out.misc_i[j][k] & 3;
+					}
+					if (univ.town.is_web(j,k) == true)
 						web = true;
-					if (is_crate(j,k) == true)
+					if (univ.town.is_crate(j,k) == true)
 						crate = true;
-					if (is_barrel(j,k) == true)
+					if (univ.town.is_barrel(j,k) == true)
 						barrel = true;
-					if (is_fire_barrier(j,k) == true)
+					if (univ.town.is_fire_barr(j,k) == true)
 						fire_barrier = true;
-					if (is_force_barrier(j,k) == true)
+					if (univ.town.is_force_barr(j,k) == true)
 						force_barrier = true;
-					if (is_quickfire(j,k) == true)
+					if (univ.town.is_quickfire(j,k) == true)
 						quickfire = true;
 					}
 		
@@ -545,7 +552,13 @@ void start_town_mode(short which_town, short entry_dir)
 		
 							
 	// clear entry space, and check exploration
-	univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] = univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] & 3;
+	univ.town.set_web(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	univ.town.set_crate(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	univ.town.set_fire_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	univ.town.set_force_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	univ.town.set_quickfire(univ.town.p_loc.x,univ.town.p_loc.y,false);
+	//univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] = univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] & 3;
 	update_explored(univ.town.p_loc);
 
 	// If a PC dead, drop his items
@@ -605,14 +618,14 @@ location end_town_mode(short switching_level,location destination)  // returns n
 					univ.party.creature_save[i] = univ.town.monst;
 					for (j = 0; j < univ.town->max_dim(); j++)
 						for (k = 0; k < univ.town->max_dim(); k++)
-							univ.town.setup[i][j][k] = univ.out.misc_i[j][k];
+							univ.party.setup[i][j][k] = univ.town.misc_i(j,k);
 					data_saved = true;
 					}
 			if (data_saved == false) {
 				univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
 				for (j = 0; j < univ.town->max_dim(); j++)
 					for (k = 0; k < univ.town->max_dim(); k++)
-						univ.town.setup[univ.party.at_which_save_slot][j][k] = univ.out.misc_i[j][k];
+						univ.party.setup[univ.party.at_which_save_slot][j][k] = univ.town.misc_i(j,k);
 				univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 				} 
 
@@ -642,7 +655,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 			for (i = 0; i < univ.town->max_dim(); i++)
 				for (j = 0; j < univ.town->max_dim(); j++)
 					if (is_explored(i,j) > 0) {
-						univ.town.maps[univ.town.num][i / 8][j] = univ.town.maps[univ.town.num][i / 8][j] |
+						univ.town_maps[univ.town.num][i / 8][j] = univ.town_maps[univ.town.num][i / 8][j] |
 							(char) (s_pow(2,i % 8));
 					}
 		//	}
@@ -987,9 +1000,9 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			univ.town.explored[i][j] = 0;
-			univ.out.misc_i[i][j] = 0;
-			univ.out.sfx[i][j] = 0;
+			univ.town.fields[i][j] = 0;
+			//univ.out.misc_i[i][j] = 0;
+			//univ.out.sfx[i][j] = 0;
 			if ((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
 				else univ.town->terrain(i,j) = ter_base[ter_type];
@@ -1265,7 +1278,7 @@ void erase_specials()////
 						case 211: univ.town->terrain(where.x,where.y) = 2; break;
 						case 212: univ.town->terrain(where.x,where.y) = 36; break;
 						}
-					take_special(where.x,where.y);
+					univ.town.set_special(where.x,where.y,false);
 					}
 				}
 			

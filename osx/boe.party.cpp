@@ -301,12 +301,12 @@ void init_party(short mode)
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 8; j++)
 			for (k = 0; k < 64; k++)
-				univ.town.maps[i][j][k] = 0;
+				univ.town_maps[i][j][k] = 0;
 
 	for (i = 0; i < 100; i++)
 			for (k = 0; k < 6; k++)
 				for (l = 0; l < 48; l++)
-					univ.out.maps[i][k][l] = 0;
+					univ.out_maps[i][k][l] = 0;
 					
 	// Default is save maps
 	PSD[SDF_NO_MAPS] = 0;
@@ -433,12 +433,12 @@ void init_party_scen_data()
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 8; j++)
 			for (k = 0; k < 64; k++)
-				univ.town.maps[i][j][k] = 0;
+				univ.town_maps[i][j][k] = 0;
 
 	for (i = 0; i < 100; i++)
 			for (k = 0; k < 6; k++)
 				for (l = 0; l < 48; l++)
-					univ.out.maps[i][k][l] = 0;
+					univ.out_maps[i][k][l] = 0;
 
 }
 
@@ -1324,7 +1324,7 @@ void cast_spell(short type,short situation)
 {
 	short spell;
 	
-	if ((is_town()) && (is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
+	if ((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
 		return;
 		}
@@ -2036,8 +2036,8 @@ void cast_town_spell(location where) ////
 					add_string_to_buf("  Target space obstructed.");
 					break;
 					}
-				make_fire_barrier(where.x,where.y);
-				if (is_fire_barrier(where.x,where.y))
+				univ.town.set_fire_barr(where.x,where.y,true);
+				if (univ.town.is_fire_barr(where.x,where.y))
 					add_string_to_buf("  You create the barrier.              ");
 					else add_string_to_buf("  Failed.");
 				break;		
@@ -2046,14 +2046,14 @@ void cast_town_spell(location where) ////
 					add_string_to_buf("  Target space obstructed.");
 					break;
 					}
-				make_force_barrier(where.x,where.y);
-				if (is_force_barrier(where.x,where.y))
+				univ.town.set_force_barr(where.x,where.y,true);
+				if (univ.town.is_force_barr(where.x,where.y))
 					add_string_to_buf("  You create the barrier.              ");
 					else add_string_to_buf("  Failed.");				
 				break;		
 			case 60:
-				make_quickfire(where.x,where.y);
-				if (is_quickfire(where.x,where.y))
+				univ.town.set_quickfire(where.x,where.y,true);
+				if (univ.town.is_quickfire(where.x,where.y))
 					add_string_to_buf("  You create quickfire.              ");
 					else add_string_to_buf("  Failed.");				
 				break;
@@ -2096,14 +2096,14 @@ void cast_town_spell(location where) ////
 				break;
 				
 			case 41:
-				if ((is_fire_barrier(where.x,where.y)) || (is_force_barrier(where.x,where.y))) {
+				if ((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
 						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * (univ.town.difficulty / 10);
-						if (is_fire_barrier(where.x,where.y))
+						if (univ.town.is_fire_barr(where.x,where.y))
 							r1 -= 8;
 						if (r1 < (120 - combat_percent[min(19,ADVEN[who_cast].level)])) {
 							add_string_to_buf("  Barrier broken.                 ");
-							take_fire_barrier(where.x,where.y);
-							take_force_barrier(where.x,where.y);
+							univ.town.set_fire_barr(where.x,where.y,false);
+							univ.town.set_force_barr(where.x,where.y,false);
 								
 							// Now, show party new things
 							update_explored(univ.town.p_loc);
@@ -2219,32 +2219,32 @@ void dispel_fields(short i,short j,short mode)
 	short r1;
 	
 	if (mode == 2) {
-		take_fire_barrier(i,j);
-		take_force_barrier(i,j);
-		take_barrel(i,j);
-		take_crate(i,j);
-		take_web(i,j);
+		univ.town.set_fire_barr(i,j,false);
+		univ.town.set_force_barr(i,j,false);
+		univ.town.set_barrel(i,j,false);
+		univ.town.set_crate(i,j,false);
+		univ.town.set_web(i,j,false);
 		}
 	if (mode >= 1)
 		mode = -10;
-	take_fire_wall(i,j);
-	take_force_wall(i,j);
-	take_scloud(i,j);
+	univ.town.set_fire_wall(i,j,false);
+	univ.town.set_force_wall(i,j,false);
+	univ.town.set_scloud(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
 	if (r1 <= 1)
-		take_web(i,j);
+		univ.town.set_web(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
 	if (r1 < 6)
-		take_ice_wall(i,j);
+		univ.town.set_ice_wall(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
 	if (r1 < 5)
-		take_sleep_cloud(i,j);
+		univ.town.set_sleep_cloud(i,j,false);
 	r1 = get_ran(1,1,8) + mode;
 	if (r1 <= 1)
-		take_quickfire(i,j);
+		univ.town.set_quickfire(i,j,false);
 	r1 = get_ran(1,1,7) + mode;
 	if (r1 < 5)
-		take_blade_wall(i,j);
+		univ.town.set_blade_wall(i,j,false);
 }
 
 bool pc_can_cast_spell(short pc_num,short type,short spell_num)

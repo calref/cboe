@@ -307,9 +307,9 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 	// the combat to take place in
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			univ.town.explored[i][j] = 0;
-			univ.out.misc_i[i][j] = 0;
-			univ.out.sfx[i][j] = 0;
+			univ.town.fields[i][j] = 0;
+			//univ.out.misc_i[i][j] = 0;
+			//univ.out.sfx[i][j] = 0;
 			}
 	univ.town->in_town_rect = town_rect;
 
@@ -835,7 +835,7 @@ void place_target(location target)
 				 add_string_to_buf("  Target space obstructed.           ");
 				 return;
 				 }
-		if (is_antimagic(target.x,target.y)) {
+		if (univ.town.is_antimagic(target.x,target.y)) {
 				 add_string_to_buf("  Target in antimagic field.");
 				 return;
 				 }
@@ -953,7 +953,7 @@ void do_combat_cast(location target)////
 		add_string_to_buf("  Target out of range.");
 			else if ((get_obscurity(target.x,target.y) == 5) && (spell_being_cast != 41))
 			 add_string_to_buf("  Target space obstructed.           ");
-			else if (is_antimagic(target.x,target.y))
+			else if (univ.town.is_antimagic(target.x,target.y))
 			 add_string_to_buf("  Target in antimagic field.");
 			else {
 				if (ap_taken == false) {
@@ -1003,8 +1003,8 @@ void do_combat_cast(location target)////
 				play_sound(68);
 				r1 = get_ran(3,2,7);
 				hit_space(target,r1,DAMAGE_FIRE,true,true);
-				make_fire_barrier(target.x,target.y);
-				if (is_fire_barrier(target.x,target.y))
+				univ.town.set_fire_barr(target.x,target.y,true);
+				if (univ.town.is_fire_barr(target.x,target.y))
 					add_string_to_buf("  You create the barrier.              ");
 					else add_string_to_buf("  Failed.");
 				break;		
@@ -1012,8 +1012,8 @@ void do_combat_cast(location target)////
 				play_sound(68);
 				r1 = get_ran(7,2,7);
 				hit_space(target,r1,DAMAGE_FIRE,true,true);
-				make_force_barrier(target.x,target.y);
-				if (is_force_barrier(target.x,target.y))
+				univ.town.set_force_barr(target.x,target.y,true);
+				if (univ.town.is_force_barr(target.x,target.y))
 					add_string_to_buf("  You create the barrier.              ");
 					else add_string_to_buf("  Failed.");				
 				break;		
@@ -2857,7 +2857,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 								{18,26,19,27}};
 
 	
-	if (is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
+	if (univ.town.is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
 		return false;
 		}
 	// is target dead?
@@ -2908,17 +2908,17 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 		}
 	if (targ >= 100)
 		vict_loc = univ.town.monst.dudes[targ - 100].m_loc;
-	if ((targ == 6) && (is_antimagic(target.x,target.y)))
+	if ((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
 		return false;
 
 	// check antimagic
 	if (is_combat())
-		if ((targ < 6) && (is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
+		if ((targ < 6) && (univ.town.is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
 			return false;
 	if (is_town())
-		if ((targ < 6) && (is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y)))
+		if ((targ < 6) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y)))
 			return false;
-	if ((targ >= 100) && (is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
+	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
 	 univ.town.monst.dudes[targ - 100].m_loc.y)))
 		return false;
 
@@ -3179,7 +3179,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 		return false;
 	if ((targ >= 100) && (univ.town.monst.dudes[targ - 100].active == 0))
 		return false;
-	if (is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
+	if (univ.town.is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
 		return false;
 		}
 	level = max(1,caster->m_d.cl - caster->m_d.status[9]) - 1;
@@ -3215,11 +3215,11 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 		vict_loc = (is_town()) ? univ.town.p_loc : pc_pos[targ];
 	if (targ >= 100)
 		vict_loc = univ.town.monst.dudes[targ - 100].m_loc;
-	if ((targ == 6) && (is_antimagic(target.x,target.y)))
+	if ((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
 		return false;
-	if ((targ < 6) && (is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
+	if ((targ < 6) && (univ.town.is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
 		return false;
-	if ((targ >= 100) && (is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
+	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
 	 univ.town.monst.dudes[targ - 100].m_loc.y)))
 		return false;
 
@@ -3592,8 +3592,8 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 				switch (effect) {
 					case 1: web_space(i,j); break;
-					case 2: make_fire_barrier(i,j); break;
-					case 3: make_force_barrier(i,j); break;
+					case 2: univ.town.set_fire_barr(i,j,true); break;
+					case 3: univ.town.set_force_barr(i,j,true); break;
 					case 4: 
 						make_force_wall(i,j); break;
 					case 5: make_fire_wall(i,j); break;
@@ -3832,7 +3832,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		hit_all -= 10;
 		}
 	
-	if ((is_antimagic(target.x,target.y)) && ((type == 1) || (type == 3) || (type == 5))) {
+	if ((univ.town.is_antimagic(target.x,target.y)) && ((type == 1) || (type == 3) || (type == 5))) {
 		return;
 		}
 	
@@ -4045,7 +4045,7 @@ bool combat_cast_mage_spell()
 	cPopulation::cCreature *which_m;
 	cMonster get_monst;
 	
-	if (is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
+	if (univ.town.is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
 		add_string_to_buf("  Not in antimagic field.");
 		return false;
 		}
@@ -4256,7 +4256,7 @@ bool combat_cast_priest_spell()
 						{4,8,8,8,8,8,8,8,4},
 						{0,4,4,4,4,4,4,4,0}}};	
 						
-	if (is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
+	if (univ.town.is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
 		add_string_to_buf("  Not in antimagic field.");
 		return false;
 		}
@@ -4513,11 +4513,11 @@ void process_fields()
 		r = univ.town->in_town_rect;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				qf[i][j] = (is_quickfire(i,j)) ? 2 : 0;
+				qf[i][j] = (univ.town.is_quickfire(i,j)) ? 2 : 0;
 		for (k = 0; k < ((is_combat()) ? 4 : 1); k++) {
 			for (i = r.left + 1; i < r.right ; i++)
 				for (j = r.top + 1; j < r.bottom ; j++) 			
-					if (is_quickfire(i,j) > 0) {
+					if (univ.town.is_quickfire(i,j) > 0) {
 						r1 = get_ran(1,1,8);
 						if (r1 != 1) {
 							qf[i - 1][j] = 1;
@@ -4544,13 +4544,13 @@ void process_fields()
 		force_wall = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_force_wall(i,j)) {
+				if (univ.town.is_force_wall(i,j)) {
 							r1 = get_ran(3,1,6);
 							loc.x = i; loc.y = j;
 							hit_pcs_in_space(loc,r1,DAMAGE_MAGIC,1,1);
 					r1 = get_ran(1,1,6);
 					if (r1 == 2)
-						take_force_wall(i,j);
+						univ.town.set_force_wall(i,j,false);
 						else {
 							force_wall = true;
 							}
@@ -4560,13 +4560,13 @@ void process_fields()
 		fire_wall = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_fire_wall(i,j)) {
+				if (univ.town.is_fire_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(2,1,6) + 1;
 							 hit_pcs_in_space(loc,r1,DAMAGE_FIRE,1,1);					
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
-						take_fire_wall(i,j);
+						univ.town.set_fire_wall(i,j,false);
 						else {
 							fire_wall = true;
 							}
@@ -4576,10 +4576,10 @@ void process_fields()
 		antimagic = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_antimagic(i,j)) {
+				if (univ.town.is_antimagic(i,j)) {
 					r1 = get_ran(1,1,8);
 					if (r1 == 2)
-						take_antimagic(i,j);
+						univ.town.set_antimagic(i,j,false);
 						else antimagic = true;
 					}
 		}
@@ -4587,10 +4587,10 @@ void process_fields()
 		scloud = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_scloud(i,j)) {
+				if (univ.town.is_scloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
-						take_scloud(i,j);
+						univ.town.set_scloud(i,j,false);
 						else {
 							scloud_space(i,j);
 							scloud = true;
@@ -4601,10 +4601,10 @@ void process_fields()
 		sleep_field = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_sleep_cloud(i,j)) {
+				if (univ.town.is_sleep_cloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
-						take_sleep_cloud(i,j);
+						univ.town.set_sleep_cloud(i,j,false);
 						else {
 							sleep_cloud_space(i,j);
 							sleep_field = true;
@@ -4615,13 +4615,13 @@ void process_fields()
 		ice_wall = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_ice_wall(i,j)) {
+				if (univ.town.is_ice_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(3,1,6);
 							hit_pcs_in_space(loc,r1,DAMAGE_COLD,1,1);				
 					r1 = get_ran(1,1,6);
 					if (r1 == 1)
-						take_ice_wall(i,j);
+						univ.town.set_ice_wall(i,j,false);
 						else {
 							ice_wall = true;
 							}
@@ -4631,13 +4631,13 @@ void process_fields()
 		blade_wall = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++) 
-				if (is_blade_wall(i,j)) {
+				if (univ.town.is_blade_wall(i,j)) {
 							loc.x = i; loc.y = j;
 							r1 = get_ran(6,1,8);
 							hit_pcs_in_space(loc,r1,DAMAGE_WEAPON,1,1);						
 					r1 = get_ran(1,1,5);
 					if (r1 == 1)
-						take_blade_wall(i,j);
+						univ.town.set_blade_wall(i,j,false);
 						else {
 							blade_wall = true;
 							}
@@ -4651,7 +4651,7 @@ void process_fields()
 	if (quickfire) {
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++)
-				if (is_quickfire(i,j)) {
+				if (univ.town.is_quickfire(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(2,1,8);
 					hit_pcs_in_space(loc,r1,DAMAGE_FIRE,1,1);							

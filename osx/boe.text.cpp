@@ -896,46 +896,46 @@ short do_look(location space)
 		if (town_horse_there(space) < 30)
 			add_string_to_buf("    Horse               ");
 
-		if (is_web(space.x,space.y))
+		if (univ.town.is_web(space.x,space.y))
 			add_string_to_buf("    Web               ");
-		if (is_crate(space.x,space.y))
+		if (univ.town.is_crate(space.x,space.y))
 			add_string_to_buf("    Crate               ");
-		if (is_barrel(space.x,space.y))
+		if (univ.town.is_barrel(space.x,space.y))
 			add_string_to_buf("    Barrel               ");
-		if (is_fire_barrier(space.x,space.y))
+		if (univ.town.is_fire_barr(space.x,space.y))
 			add_string_to_buf("    Magic Barrier               ");
-		if (is_force_barrier(space.x,space.y))
+		if (univ.town.is_force_barr(space.x,space.y))
 			add_string_to_buf("    Magic Barrier               ");
-		if (is_quickfire(space.x,space.y))
+		if (univ.town.is_quickfire(space.x,space.y))
 			add_string_to_buf("    Quickfire               ");
-		if (is_fire_wall(space.x,space.y))
+		if (univ.town.is_fire_wall(space.x,space.y))
 			add_string_to_buf("    Wall of Fire               ");
-		if (is_force_wall(space.x,space.y))
+		if (univ.town.is_force_wall(space.x,space.y))
 			add_string_to_buf("    Wall of Force               ");
-		if (is_antimagic(space.x,space.y))
+		if (univ.town.is_antimagic(space.x,space.y))
 			add_string_to_buf("    Antimagic Field               ");
-		if (is_scloud(space.x,space.y))
+		if (univ.town.is_scloud(space.x,space.y))
 			add_string_to_buf("    Stinking Cloud               ");
-		if (is_ice_wall(space.x,space.y))
+		if (univ.town.is_ice_wall(space.x,space.y))
 			add_string_to_buf("    Ice Wall               ");
-		if (is_blade_wall(space.x,space.y))
+		if (univ.town.is_blade_wall(space.x,space.y))
 			add_string_to_buf("    Blade Wall               ");
 
-		if (is_small_blood(space.x,space.y))
+		if (univ.town.is_sm_blood(space.x,space.y))
 			add_string_to_buf("    Blood stain               ");
-		if (is_medium_blood(space.x,space.y))
+		if (univ.town.is_med_blood(space.x,space.y))
 			add_string_to_buf("    Blood stain               ");
-		if (is_large_blood(space.x,space.y))
+		if (univ.town.is_lg_blood(space.x,space.y))
 			add_string_to_buf("    Blood stain               ");
-		if (is_small_slime(space.x,space.y))
+		if (univ.town.is_sm_slime(space.x,space.y))
 			add_string_to_buf("    Smears of slime               ");
-		if (is_big_slime(space.x,space.y))
+		if (univ.town.is_lg_slime(space.x,space.y))
 			add_string_to_buf("    Smears of slime               ");
-		if (is_ash(space.x,space.y))
+		if (univ.town.is_ash(space.x,space.y))
 			add_string_to_buf("    Ashes               ");
-		if (is_bones(space.x,space.y))
+		if (univ.town.is_bones(space.x,space.y))
 			add_string_to_buf("    Bones               ");
-		if (is_rubble(space.x,space.y))
+		if (univ.town.is_rubble(space.x,space.y))
 			add_string_to_buf("    Rubble               ");
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {

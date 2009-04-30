@@ -401,20 +401,20 @@ bool monst_hate_spot(short which_m,location *good_loc)
 	location prospect,loc;
 	
 	loc = univ.town.monst.dudes[which_m].m_loc;
-	if ((univ.out.misc_i[loc.x][loc.y] & 224) 
-	|| (univ.town.explored[loc.x][loc.y] & 64) // hate regular fields
-	|| ((univ.town.explored[loc.x][loc.y] & 32) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 2)
+	if (univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y) || univ.town.is_quickfire(loc.x,loc.y)
+	|| univ.town.is_blade_wall(loc.x,loc.y) // hate regular fields
+	|| (univ.town.is_ice_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 2)
 		&& (univ.town.monst.dudes[which_m].m_d.immunities & 32 == 0)) // hate ice wall?
-	|| ((univ.town.explored[loc.x][loc.y] & 4) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 1)
+	|| (univ.town.is_fire_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 1)
 		&& (univ.town.monst.dudes[which_m].m_d.immunities & 8 == 0)) // hate fire wall?
-	|| ((univ.town.explored[loc.x][loc.y] & 16) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 6)
+	|| (univ.town.is_scloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 6)
 		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate stink cloud?
-	|| ((univ.town.explored[loc.x][loc.y] & 128) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 5)
+	|| (univ.town.is_sleep_cloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 5)
 		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate sleep cloud?
-	|| ((univ.town.explored[loc.x][loc.y] & 2) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 3)
+	|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 3)
 		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate shock cloud?
 	|| (((univ.town.monst.dudes[which_m].m_d.mu > 0) || (univ.town.monst.dudes[which_m].m_d.cl > 0))
-		 && (univ.town.explored[loc.x][loc.y] & 8))) // hate antimagic
+		 && univ.town.is_antimagic(loc.x,loc.y))) // hate antimagic
 		 {
 		 	prospect = find_clear_spot(loc,1);
 		 	if (prospect.x > 0) {
@@ -841,8 +841,8 @@ location find_clear_spot(location from_where,short mode)
 			&& (can_see(from_where,loc,1) == 0)
 			&& (!(is_combat()) || (pc_there(loc) == 6))
 			&& (!(is_town()) || (loc != univ.town.p_loc))
-			 && (!(univ.out.misc_i[loc.x][loc.y] & 248)) &&
-			(!(univ.town.explored[loc.x][loc.y] & 254))) {
+			 && (!(univ.town.misc_i(loc.x,loc.y) & 248)) && // check for crate, barrel, barrier, quickfire
+			(!(univ.town.explored(loc.x,loc.y) & 254))) { // check for fields, clouds
 				if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == true)))
 					return loc;
 					else store_loc = loc;			
@@ -926,44 +926,44 @@ void monst_inflict_fields(short which_monst)
 		if (univ.town.monst.dudes[which_monst].active > 0) {
 			where_check.x = univ.town.monst.dudes[which_monst].m_loc.x + i; 
 			where_check.y = univ.town.monst.dudes[which_monst].m_loc.y + j;
-			if (is_quickfire(where_check.x,where_check.y)) {
+			if (univ.town.is_quickfire(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,8);
 				damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
 				break;
 				}
-			if (is_blade_wall(where_check.x,where_check.y)) {
+			if (univ.town.is_blade_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(6,1,8);
 				damage_monst(which_monst,7,r1,0,DAMAGE_WEAPON,0);
 				break;
 				}
-			if (is_force_wall(where_check.x,where_check.y)) {
+			if (univ.town.is_force_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(3,1,6);
 				damage_monst(which_monst,7,r1,0,DAMAGE_MAGIC,0);
 				break;
 				}
-			if (is_sleep_cloud(where_check.x,where_check.y)) {
+			if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 				charm_monst(which_m,0,11,3);
 				break;
 				}
-			if (is_ice_wall(where_check.x,where_check.y)) {
+			if (univ.town.is_ice_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(3,1,6);
 				if (univ.town.monst.dudes[which_monst].m_d.spec_skill != 23)
 					damage_monst(which_monst,7,r1,0,DAMAGE_COLD,0);
 				break;
 				}
-			if (is_scloud(where_check.x,where_check.y)) {
+			if (univ.town.is_scloud(where_check.x,where_check.y)) {
 				r1 = get_ran(1,2,3);
 				curse_monst(which_m,r1);
 				break;
 				}
-			if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+			if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
 				monst_spell_note(which_m->number,19);
 				r1 = get_ran(1,2,3);
 				web_monst(which_m,r1);
-				take_web(where_check.x,where_check.y);
+				univ.town.set_web(where_check.x,where_check.y,false);
 				break;
 				}
-			if (is_fire_wall(where_check.x,where_check.y)) {
+			if (univ.town.is_fire_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,6);
 				if (univ.town.monst.dudes[which_monst].m_d.spec_skill != 22)
 					damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);	
@@ -975,15 +975,15 @@ void monst_inflict_fields(short which_monst)
 		for (j = 0; j < univ.town.monst.dudes[which_monst].m_d.y_width; j++) {
 			where_check.x = univ.town.monst.dudes[which_monst].m_loc.x + i; 
 			where_check.y = univ.town.monst.dudes[which_monst].m_loc.y + j;
-			if ((is_crate(where_check.x,where_check.y)) ||
-				(is_barrel(where_check.x,where_check.y)) )
+			if ((univ.town.is_crate(where_check.x,where_check.y)) ||
+				(univ.town.is_barrel(where_check.x,where_check.y)) )
 				for (k = 0; k < NUM_TOWN_ITEMS; k++)
 					if ((univ.town.items[k].variety > 0) && (univ.town.items[k].is_contained())
 					&& (univ.town.items[k].item_loc == where_check))
 						univ.town.items[k].item_properties = univ.town.items[k].item_properties & 247;
-			take_crate(where_check.x,where_check.y);
-			take_barrel(where_check.x,where_check.y);
-			if (is_fire_barrier(where_check.x,where_check.y)) {
+			univ.town.set_crate(where_check.x,where_check.y,false);
+			univ.town.set_barrel(where_check.x,where_check.y,false);
+			if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,10);
 				damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
 				}
@@ -1041,37 +1041,37 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if (which_m->attitude == 0)
 		guts = guts / 2;
 		
-	if ((is_antimagic(where_check.x,where_check.y)) && (mage == true))
+	if ((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage == true))
 		return false;
-	if ((is_fire_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 22)) {
+	if ((univ.town.is_fire_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 22)) {
 			if (guts < 3) return false;
 		}
-	if (is_force_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_force_wall(where_check.x,where_check.y)) {
 			if (guts < 4) return false;
 		}
-	if ((is_ice_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 23)) {
+	if ((univ.town.is_ice_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 23)) {
 			if (guts < 5) return false;
 		}
-	if (is_sleep_cloud(where_check.x,where_check.y)) {
+	if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 			if (guts < 8) return false;
 		}
-	if (is_blade_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_blade_wall(where_check.x,where_check.y)) {
 			if (guts < 8) return false;
 		}
-	if (is_quickfire(where_check.x,where_check.y)) {
+	if (univ.town.is_quickfire(where_check.x,where_check.y)) {
 			if (guts < 8) return false;
 		}
-	if (is_scloud(where_check.x,where_check.y)) {
+	if (univ.town.is_scloud(where_check.x,where_check.y)) {
 		if (guts < 4) return false;
 		}
-	if ((is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+	if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
 		if (guts < 3) return false;
 		}
-	if (is_fire_barrier(where_check.x,where_check.y)) {
+	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))) {
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
-			take_fire_barrier(where_check.x,where_check.y);
+			univ.town.set_fire_barr(where_check.x,where_check.y,false);
 			}
 			else {
 				if (guts < 6) return false;
@@ -1080,37 +1080,37 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 					can_enter = false;
 				}
 		}
-	if (is_force_barrier(where_check.x,where_check.y)) { /// Not in big towns
+	if (univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
 		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))
-			&& (univ.town.num >= 20)) {
+			/*&& (univ.town.num >= 20)*/) { // Checking for a town num > 20 seems utterly pointless
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
-			take_force_barrier(where_check.x,where_check.y);
+			univ.town.set_force_barr(where_check.x,where_check.y,false);
 			}
 			else can_enter = false;
 		}
-	if (is_crate(where_check.x,where_check.y)) {
+	if (univ.town.is_crate(where_check.x,where_check.y)) {
 		if (monster_placid(which_monst))
 			can_enter = false;
 			else {
 				to_loc = push_loc(from_loc,where_check);
-				take_crate((short) where_check.x,(short) where_check.y);
+				univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
 				if (to_loc.x > 0)
-					make_crate((short) to_loc.x,(short) to_loc.y);
+					univ.town.set_crate((short) to_loc.x,(short) to_loc.y, true);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
 					 && (univ.town.items[i].is_contained()))
 			 			univ.town.items[i].item_loc = to_loc;
 						}
 		}
-	if (is_barrel(where_check.x,where_check.y)) {
+	if (univ.town.is_barrel(where_check.x,where_check.y)) {
 		if (monster_placid(which_monst))
 			can_enter = false;
 			else {
 				to_loc = push_loc(from_loc,where_check);
-				take_barrel((short) where_check.x,(short) where_check.y);
+				univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
 				if (to_loc.x > 0)
-				    	make_barrel((short) to_loc.x,(short) to_loc.y);
+				    	univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
 					 && (univ.town.items[i].is_contained()))
@@ -1362,8 +1362,8 @@ short place_monster(unsigned char which,location where)
 			add_monst_graphic(which,1);
 			}
 
-		take_crate(where.x,where.y);
-		take_barrel(where.x,where.y);
+		univ.town.set_crate(where.x,where.y,false);
+		univ.town.set_barrel(where.x,where.y,false);
 		
 		return i;
 	}
@@ -1397,7 +1397,7 @@ bool summon_monster(unsigned char which,location where,short duration,short give
 				if (where.x == 0)
 					return false;
 				}
-			if ((is_barrel(where.x,where.y)) || (is_crate(where.x,where.y)))
+			if ((univ.town.is_barrel(where.x,where.y)) || (univ.town.is_crate(where.x,where.y)))
 				return false;
 			loc = where;
 			}
@@ -1445,8 +1445,8 @@ void activate_monsters(short code,short attitude)
 				monst_target[i] = 6;
 				
 				add_monst_graphic(univ.town.monst.dudes[i].number,1);
-				take_crate(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y);
-				take_barrel(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y);
+				univ.town.set_crate(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y,false);
+				univ.town.set_barrel(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y,false);
 			}
 }
 

@@ -17,6 +17,7 @@ namespace legacy {
 	struct talk_save_type;
 	struct creature_list_type;
 	struct pc_record_type;
+	struct setup_save_type;
 };
 
 class cParty {
@@ -86,6 +87,7 @@ public:
 	
 	cPlayer adven[6];
 	
+	unsigned short setup[4][64][64]; // formerly setup_save_type
 	cItemRec stored_items[3][115]; // formerly stored_items_list_type
 	
 	string graphicsFile; // the name of the png file holding this party's custom item, pc, and summonable monster graphics
@@ -96,6 +98,7 @@ public:
 	cParty& operator = (legacy::party_record_type& old);
 	void append(legacy::big_tr_type& old);
 	void append(legacy::stored_items_list_type& old,short which_list);
+	void append(legacy::setup_save_type& old);
 	
 	void add_pc(legacy::pc_record_type old);
 	void add_pc(cPlayer new_pc);

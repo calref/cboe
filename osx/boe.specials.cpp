@@ -210,8 +210,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 		}
 
 	if (((mode == 1) || ((mode == 2) && (which_combat_type == 1)))
-	&& (special(where_check.x,where_check.y))) {
-			if (is_force_barrier(where_check.x,where_check.y)) {
+	&& (univ.town.is_special(where_check.x,where_check.y))) {
+			if (univ.town.is_force_barr(where_check.x,where_check.y)) {
 				add_string_to_buf("  Magic barrier!               ");	
 				return false;
 				}
@@ -240,7 +240,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	if ((!is_out()) && (overall_mode < MODE_TALKING)) {
 	check_fields(where_check,mode,which_pc);
 
-	if (is_web(where_check.x,where_check.y)) {
+	if (univ.town.is_web(where_check.x,where_check.y)) {
 		add_string_to_buf("  Webs!               ");
 		if (mode < 2) {
 			suppress_stat_screen = true;
@@ -252,29 +252,29 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			put_pc_screen();	
 			}
 			else web_pc(current_pc,get_ran(1,2,3));
-		take_web(where_check.x,where_check.y);
+		univ.town.set_web(where_check.x,where_check.y,false);
 		}
-	if (is_force_barrier(where_check.x,where_check.y)) {
+	if (univ.town.is_force_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");	
 		can_enter = false;
 		}
-	if (is_crate(where_check.x,where_check.y)) {
+	if (univ.town.is_crate(where_check.x,where_check.y)) {
 		add_string_to_buf("  You push the crate.");
 		to_loc = push_loc(from_loc,where_check);
-		take_crate((short) where_check.x,(short) where_check.y);
+		univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
 		if (to_loc.x > 0)
-			make_crate((short) to_loc.x,(short) to_loc.y);
+			univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
 			 && (univ.town.items[i].is_contained() == true))
 			 	univ.town.items[i].item_loc = to_loc;
 		}
-	if (is_barrel(where_check.x,where_check.y)) {
+	if (univ.town.is_barrel(where_check.x,where_check.y)) {
 		add_string_to_buf("  You push the barrel.");
 		to_loc = push_loc(from_loc,where_check);
-		take_barrel((short) where_check.x,(short) where_check.y);
+		univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
 		if (to_loc.x > 0)
-			make_barrel((short) to_loc.x,(short) to_loc.y);
+			univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
 			 && (univ.town.items[i].is_contained()))
@@ -403,7 +403,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		return;
 	if (is_town())
 		fast_bang = 1;
-	if (is_fire_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_fire_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Fire wall!               ");
 			r1 = get_ran(1,1,6) + 1;
 //			if (mode < 2)
@@ -413,7 +413,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
-	if (is_force_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_force_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Force wall!               ");
 			r1 = get_ran(2,1,6);
 //			if (mode < 2)
@@ -423,7 +423,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,1,r1,12);	
 		}
-	if (is_ice_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_ice_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Ice wall!               ");
 			r1 = get_ran(2,1,6);
 //			if (mode < 2)
@@ -433,7 +433,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,4,r1,7);	
 		}
-	if (is_blade_wall(where_check.x,where_check.y)) {
+	if (univ.town.is_blade_wall(where_check.x,where_check.y)) {
 			add_string_to_buf("  Blade wall!               ");
 			r1 = get_ran(4,1,8);
 //			if (mode < 2)
@@ -443,7 +443,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,3,r1,2);	
 		}
-	if (is_quickfire(where_check.x,where_check.y)) {
+	if (univ.town.is_quickfire(where_check.x,where_check.y)) {
 			add_string_to_buf("  Quickfire!               ");
 			r1 = get_ran(2,1,8);
 //			if (mode < 2)
@@ -453,7 +453,7 @@ void check_fields(location where_check,short mode,short which_pc)
 				if (overall_mode < MODE_COMBAT)
 					boom_space(univ.party.p_loc,overall_mode,0,r1,5);	
 		}
-	if (is_scloud(where_check.x,where_check.y)) {
+	if (univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
 		if (mode < 2) {
 			suppress_stat_screen = true;
@@ -466,7 +466,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			}
 			else curse_pc(current_pc,get_ran(1,2,3));
 		}
-	if (is_sleep_cloud(where_check.x,where_check.y)) {
+	if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
 		if (mode < 2) {
 			suppress_stat_screen = true;
@@ -478,7 +478,7 @@ void check_fields(location where_check,short mode,short which_pc)
 			}
 			else sleep_pc(current_pc,3,11,0);
 		}
-	if (is_fire_barrier(where_check.x,where_check.y)) {
+	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
 			r1 = get_ran(2,1,10);
 			if (mode < 2)
@@ -923,34 +923,34 @@ bool use_space(location where)
 
 	add_string_to_buf("Use...");
 	
-	if (is_web(where.x,where.y)) {
+	if (univ.town.is_web(where.x,where.y)) {
 		add_string_to_buf("  You clear the webs.");
-		take_web(where.x,where.y);
+		univ.town.set_web(where.x,where.y,false);
 		return true;
 		}
-	if (is_crate(where.x,where.y)) {
+	if (univ.town.is_crate(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
 		if (from_loc == to_loc) {
 			add_string_to_buf("  Can't push crate.");
 			return false;
 			}
 		add_string_to_buf("  You push the crate.");
-		take_crate((short) where.x,(short) where.y);
-		make_crate((short) to_loc.x,(short) to_loc.y);
+		univ.town.set_crate((short) where.x,(short) where.y,false);
+		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
 			 && (univ.town.items[i].is_contained()))
 			 	univ.town.items[i].item_loc = to_loc;
 		}
-	if (is_barrel(where.x,where.y)) {
+	if (univ.town.is_barrel(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
 		if (from_loc == to_loc) {
 			add_string_to_buf("  Can't push barrel.");
 			return false;
 			}
 		add_string_to_buf("  You push the barrel.");
-		take_barrel((short) where.x,(short) where.y);
-		make_barrel((short) to_loc.x,(short) to_loc.y);
+		univ.town.set_barrel((short) where.x,(short) where.y,false);
+		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
 			 && (univ.town.items[i].is_contained()))
@@ -992,7 +992,7 @@ bool adj_town_look(location where)
 				item_there = true;
 
 	terrain = univ.town->terrain(where.x,where.y);
-	if (special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
+	if (univ.town.is_special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
 		if (adjacent(univ.town.p_loc,where) == false)
 			add_string_to_buf("  Not close enough to search.");
 			else {
@@ -1477,12 +1477,12 @@ void push_things()////
 			update_explored(l);
 			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			draw_map(modeless_dialogs[5],5);
-			if (is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
-				take_barrel(univ.town.p_loc.x,univ.town.p_loc.y);
+			if (univ.town.is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
+				univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the barrel.");			
 				}
-			if (is_crate(univ.town.p_loc.x,univ.town.p_loc.y)) {
-				take_crate(univ.town.p_loc.x,univ.town.p_loc.y);
+			if (univ.town.is_crate(univ.town.p_loc.x,univ.town.p_loc.y)) {
+				univ.town.set_crate(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the crate.");			
 				}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
@@ -1511,12 +1511,12 @@ void push_things()////
 					pc_pos[i] = l;
 					update_explored(l);
 					draw_map(modeless_dialogs[5],5);
-					if (is_barrel(pc_pos[i].x,pc_pos[i].y)) {
-						take_barrel(pc_pos[i].x,pc_pos[i].y);
+					if (univ.town.is_barrel(pc_pos[i].x,pc_pos[i].y)) {
+						univ.town.set_barrel(pc_pos[i].x,pc_pos[i].y,false);
 						ASB("You smash the barrel.");			
 						}
-					if (is_crate(pc_pos[i].x,pc_pos[i].y)) {
-						take_crate(pc_pos[i].x,pc_pos[i].y);
+					if (univ.town.is_crate(pc_pos[i].x,pc_pos[i].y)) {
+						univ.town.set_crate(pc_pos[i].x,pc_pos[i].y,false);
 						ASB("You smash the crate.");			
 						}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
@@ -2401,13 +2401,13 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 148:
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++) 
-					if (is_barrel(j,k))
+					if (univ.town.is_barrel(j,k))
 						*next_spec = spec.ex1b;								
 			break;
 		case 149:
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++) 
-					if (is_crate(j,k))
+					if (univ.town.is_crate(j,k))
 						*next_spec = spec.ex1b;								
 			break;
 		case 150:
@@ -2834,11 +2834,11 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 207:
 			if (get_ran(1,1,100) <= spec.sd1 )
-				make_fire_barrier(i,j);
+				univ.town.set_fire_barr(i,j,true);
 			break;
 		case 208:
 			if (get_ran(1,1,100) <= spec.sd1 )
-				make_force_barrier(i,j);
+				univ.town.set_force_barr(i,j,true);
 			break;
 		case 209:
 			if (spec.sd1 == 0)
@@ -2854,9 +2854,9 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				if (spec.sd2 == 0)
 					make_web(i,j);
 				if (spec.sd2 == 1)
-					make_barrel(i,j);
+					univ.town.set_barrel(i,j,true);
 				if (spec.sd2 == 2)
-					make_crate(i,j);
+					univ.town.set_crate(i,j,true);
 			}
 			break;
 		case 212:
