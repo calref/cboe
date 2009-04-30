@@ -386,7 +386,7 @@ void make_sleep_cloud(short i,short j)
 //}
 void make_sfx(short i,short j, short type)
 {
-	unsigned char ter, cur_sfx, new_sfx;
+	unsigned short ter;
 	
 	if (get_obscurity(i,j) > 0)
 		return;

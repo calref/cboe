@@ -78,6 +78,7 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	total_xp_gained = old.total_xp_gained;
 	total_dam_taken = old.total_dam_taken;
 	scen_name = old.scen_name;
+	return *this;
 }
 
 __attribute__((deprecated))
@@ -100,6 +101,7 @@ cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 	town_num = old.town_num;
 	str_num1 = old.str1;
 	str_num2 = old.str2;
+	return *this;
 }
 
 __attribute__((deprecated))

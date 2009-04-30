@@ -116,7 +116,13 @@ FSSpecPtr nav_get_scenario(){
 }
 
 FSSpecPtr nav_put_scenario(){
+	NavReplyRecord s_reply;
+	AEKeyword keyword;
+	DescType descType;
+	Size actualSize;
+	FSSpecPtr file_to_load;
 	
+	return file_to_load;
 }
 
 FSSpecPtr nav_get_party(){
@@ -144,11 +150,17 @@ FSSpecPtr nav_get_party(){
 	return file_to_load;
 }
 FSSpecPtr nav_put_party(){
+	NavReplyRecord s_reply;
+	AEKeyword keyword;
+	DescType descType;
+	Size actualSize;
+	FSSpecPtr file_to_load;
 	
+	return file_to_load;
 }
 
 bool load_scenario(FSSpec file_to_load){
-	short i,j,k,l,file_id;
+	short i,file_id;
 	bool file_ok = false;
 	OSErr error;
 	long len;
@@ -282,8 +294,8 @@ long get_town_offset(short which_town){
 }
 
 bool load_town(short which_town, cTown*& the_town){
-	short i,j,k,file_id;
-	long len,len_to_jump = 0,store;
+	short i,file_id;
+	long len,len_to_jump = 0;
 	OSErr error;
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
@@ -388,14 +400,11 @@ bool load_town(short which_town, cTown*& the_town){
 }
 
 bool load_town(short which_town, cSpeech& the_talk){
-	short i,j,k,file_id;
-	long len,len_to_jump = 0,store;
+	short i,file_id;
+	long len,len_to_jump = 0;
 	OSErr error;
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
-	legacy::big_tr_type t_d;
-	legacy::ave_tr_type ave_t;
-	legacy::tiny_tr_type tiny_t;
 	
 	//	if (overall_mode == 61)
 	//		return;
@@ -476,14 +485,10 @@ bool load_town(short which_town, cSpeech& the_talk){
 }
 
 bool load_town_str(short which_town, short which_str, char* str){
-	short i,j,k,file_id;
-	long len,len_to_jump = 0,store;
+	short i,file_id;
+	long len,len_to_jump = 0;
 	OSErr error;
 	legacy::town_record_type store_town;
-	legacy::talking_record_type store_talk;
-	legacy::big_tr_type t_d;
-	legacy::ave_tr_type ave_t;
-	legacy::tiny_tr_type tiny_t;
 	
 	//	if (overall_mode == 61)
 	//		return;
@@ -545,14 +550,10 @@ bool load_town_str(short which_town, short which_str, char* str){
 }
 
 bool load_town_str(short which_town, cTown*& t){
-	short i,j,k,file_id;
-	long len,len_to_jump = 0,store;
+	short i,file_id;
+	long len,len_to_jump = 0;
 	OSErr error;
 	legacy::town_record_type store_town;
-	legacy::talking_record_type store_talk;
-	legacy::big_tr_type t_d;
-	legacy::ave_tr_type ave_t;
-	legacy::tiny_tr_type tiny_t;
 	
 	//	if (overall_mode == 61)
 	//		return;
@@ -631,9 +632,8 @@ long get_outdoors_offset(location& which_out){
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
 bool load_outdoors(location which_out,cOutdoors& the_out){
-	short i,j,k,file_id;
-	long len,len_to_jump,store;
-	short out_sec_num;
+	short i,file_id;
+	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
 	OSErr error;
 	
@@ -686,9 +686,8 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 }
 
 bool load_outdoors(location which_out, short mode, unsigned char borders[4][50]){
-	short i,j,k,file_id;
-	long len,len_to_jump,store;
-	short out_sec_num;
+	short j,file_id;
+	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
 	OSErr error;
 	
@@ -742,9 +741,8 @@ bool load_outdoors(location which_out, short mode, unsigned char borders[4][50])
 }
 
 bool load_outdoor_str(location which_out, short which_str, char* str){
-	short i,j,k,file_id;
-	long len,len_to_jump,store;
-	short out_sec_num;
+	short i,file_id;
+	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
 	OSErr error;
 	
@@ -784,13 +782,12 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 
 void load_spec_graphics()
 {
-	short i,file_num;
+	short i;
 	Str255 file_name;
 	UInt8 path[256];
 	FSRef file;
 	ResFileRefNum custRef;
 	OSErr err;
-	char *whatever;
 	if (spec_scen_g != NULL) {
 		DisposeGWorld(spec_scen_g);
 		spec_scen_g = NULL;
@@ -844,13 +841,13 @@ void load_spec_graphics()
 bool load_party(FSSpec file_to_load){
 	long file_size;
 	OSErr error;
-	short file_id,i,j,k;
+	short file_id,i;
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
 	bool new_format = false;
 	
-	char flag_data[8];
+	//char flag_data[8];
 	
 	long len,store_len,count;
 	char *party_ptr;
@@ -1080,7 +1077,7 @@ bool load_party(FSSpec file_to_load){
 		FSSpec file_spec;
 		std::string path;
 		path = progDir + "/Blades of Exile Scenarios/" + univ.party.scen_name;
-		std::cout<<path<<'/n';
+		std::cout<<path<<'\n';
 		FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
 		FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
 		if (!load_scenario(file_spec))

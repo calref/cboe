@@ -217,7 +217,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1018,0);
+	cd_kill_dialog(1018);
 
 	return dialog_answer;
 }
@@ -380,7 +380,7 @@ void pick_race_abil(cPlayer *pc,short mode,short parent_num)
 	else csit(1013,19,start_str2);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1013,0);
+	cd_kill_dialog(1013);
 	untoast_dialog();
 }
 

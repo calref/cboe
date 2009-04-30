@@ -256,7 +256,7 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 		cd_activate_item(which_string_dlog,2,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(which_string_dlog,0);
+	cd_kill_dialog(which_string_dlog);
 	//final_process_dialog(which_string_dlog);
 }
 
@@ -274,8 +274,6 @@ void display_strings(short a1,short a2, short b1, short b2,
 
 extern void record_display_strings();
 void display_strings_event_filter (short item_hit){
-	short i;
-	
 	switch (item_hit) {
 		case 1:
 			toast_dialog();
@@ -297,7 +295,6 @@ short fancy_choice_dialog(short which_dlog,short parent)
 // ignore parent in Mac version
 {
 	short item_hit,i,store_dialog_answer;
-	Str255 temp_str;
 	
 	store_dialog_answer = dialog_answer;
 	//make_cursor_sword();
@@ -306,7 +303,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(which_dlog,0);
+	cd_kill_dialog(which_dlog);
 	
 	
 	i = dialog_answer;
@@ -319,7 +316,6 @@ void display_strings(char *text1, char *text2,
 					 char *title,short sound_num,short graphic_num,short graphic_type,short parent_num){
 	
 	short item_hit;
-	Str255 sign_text;
 	location view_loc;
 	bool sound_done = false;
 	
@@ -348,6 +344,6 @@ void display_strings(char *text1, char *text2,
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(which_string_dlog,0);
+	cd_kill_dialog(which_string_dlog);
 }
 

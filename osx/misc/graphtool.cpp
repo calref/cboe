@@ -123,7 +123,7 @@ GWorldPtr load_pict(int picture_to_get)
 	return myGWorld;
 }
 
-GWorldPtr load_bmp(unsigned char *data, long length){
+GWorldPtr load_bmp(unsigned char *data, unsigned long length){
 	
 	if (length < 54) {
 		return NULL; // Too short for headers
@@ -203,8 +203,6 @@ GWorldPtr load_bmp(unsigned char *data, long length){
 }
 
 void set_cursor(short which_c) {
-	short i;
-	
 	current_cursor = which_c;
 	HLock ((Handle) cursors[current_cursor]);
 	SetCursor (*cursors[current_cursor]);
@@ -226,7 +224,6 @@ void set_cursor(CursHandle which_curs){
 //   main_win; // if 2, drawing onto dialog
 void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,
 						  char masked,short main_win){
-	Rect	destrec;
 	PixMapHandle	test1, test2;
 	const BitMap * store_dest;
 	GrafPtr cur_port;
@@ -304,7 +301,7 @@ void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mo
 // uses current font
 void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,bool main_win){
 	GrafPtr old_port;
-	Str255 p_str,str_to_draw,str_to_draw2,c_str;
+	Str255 p_str,str_to_draw/*,str_to_draw2*/,c_str;
 	static Str255 null_s = "8";
 	if(null_s[0] == '8'){
 		for(int i = 0;i < 256; i++)
@@ -314,9 +311,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 	short text_len[257];
 	short total_width = 0;
-	bool end_loop,force_skip = false;
-	KeyMap key_state;
-	long dummy3;
+	bool /*end_loop,*/force_skip = false;
+	//KeyMap key_state;
 	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
@@ -334,8 +330,8 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 		return;
 	}
 	
-	//GetPort(&old_port);	
-	//SetPort( dest_window);
+	GetPort(&old_port);	
+	SetPort( dest_window);
 	
 	//current_clip = NewRgn();
 	//GetClip(current_clip);
@@ -417,7 +413,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	}
 	//SetClip(current_clip);
 	//DisposeRgn(current_clip);
-	//SetPort(old_port);printf("String drawn.\n");
+	SetPort(old_port);//printf("String drawn.\n");
 }
 
 short string_length(char *str){ // Why not just use strlen?

@@ -920,13 +920,13 @@ void award_xp(short pc_num,short amt)
 
 
 	
-	if (ADVEN[pc_num].experience < 0) {
-		SysBeep(50); SysBeep(50);
-		ASB("Oops! Xp became negative somehow!");
-		ASB("Report this!");
-		ADVEN[pc_num].experience = ADVEN[pc_num].level * (ADVEN[pc_num].get_tnl()) - 1;
-		return;
-		}
+//	if (ADVEN[pc_num].experience < 0) {
+//		SysBeep(50); SysBeep(50);
+//		ASB("Oops! Xp became negative somehow!");
+//		ASB("Report this!");
+//		ADVEN[pc_num].experience = ADVEN[pc_num].level * (ADVEN[pc_num].get_tnl()) - 1;
+//		return;
+//		}
 	if (ADVEN[pc_num].experience > 15000) {
 		ADVEN[pc_num].experience = 15000;
 		return;
@@ -1247,7 +1247,7 @@ bool spend_xp(short pc_num, short mode, short parent)
 	
 	item_hit = cd_run_dialog();
 
-	cd_kill_dialog(1010,0);
+	cd_kill_dialog(1010);
 
 	return dialog_answer;
 }
@@ -2127,8 +2127,7 @@ void sanctify_space(location where)
 	short i,s1,s2,s3;
 
 		for (i = 0; i < 50; i++)
-			if ((where == univ.town->special_locs[i]) &&
-				(univ.town->spec_id[i] >= 0)) {
+			if (where == univ.town->special_locs[i]) {
 				if (univ.town->specials[univ.town->spec_id[i]].type == 24) 
 					run_special(16,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 				return;
@@ -2781,7 +2780,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	item_hit = cd_run_dialog();	
 
 	//final_process_dialog(1098);
-	cd_kill_dialog(1098,0);
+	cd_kill_dialog(1098);
 	
 
 	return dialog_answer;
@@ -2971,7 +2970,7 @@ short alch_choice(short pc_num)
 	item_hit = cd_run_dialog();	
 
 	//final_process_dialog(1047);
-	cd_kill_dialog(1047,0);
+	cd_kill_dialog(1047);
 	return dialog_answer;
 }
 
@@ -3039,7 +3038,7 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 	}
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(1050,0);
+	cd_kill_dialog(1050);
 
 	if (munch_pc_graphic == true) {
 		DisposeGWorld(pcs_gworld);
@@ -3079,7 +3078,7 @@ bool pick_pc_name(short pc_num,short parent_num)
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(1051,0);
+	cd_kill_dialog(1051);
 	
 	return 1;
 }
@@ -3114,7 +3113,7 @@ unsigned char pick_trapped_monst()
 	
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(988,0);
+	cd_kill_dialog(988);
 
 	if (dialog_answer == 1)
 		return 0;

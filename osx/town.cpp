@@ -18,7 +18,7 @@ void cTown::append(legacy::tiny_tr_type& old){}
 
 __attribute__((deprecated))
 cTown& cTown::operator = (legacy::town_record_type& old){
-	int i,j;
+	int i;
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
 	for(i = 0; i < 4; i++){
@@ -78,17 +78,17 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 	res1 = old.res1;
 	res2 = old.res2;
 	difficulty = old.difficulty;
+	return *this;
 }
 
 cTown::cTown(){}
 
-extern short max_dim[3];
+short max_dim[3] = {64,48,32};
 cTown::cTown(short size){
-	short i,j,s;
+	short i,s;
 	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};
 	cTown::cItem null_item = {loc(),-1,0,0,0,0,0};
-	Str255 temp_str;
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
@@ -98,8 +98,7 @@ cTown::cTown(short size){
 	}
 	for (i = 0; i < 50; i++) {
 		special_locs[i] = d_loc;
-		special_locs[i].x = 100;
-		spec_id[i] = -1;
+		spec_id[i] = 0;
 	}
 	lighting_type = 0;
 	for (i = 0; i < 4; i++) {
@@ -173,6 +172,7 @@ cTown::cCreature& cTown::cCreature::operator = (legacy::creature_start_type old)
 	personality = old.personality;
 	special_on_kill = old.special_on_kill;
 	facial_pic = old.facial_pic;
+	return *this;
 }
 
 cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){
@@ -180,6 +180,7 @@ cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){
 	monst[1] = old.monst[1];
 	monst[2] = old.monst[2];
 	monst[3] = old.monst[3];
+	return *this;
 }
 
 cTown::cItem& cTown::cItem::operator = (legacy::preset_item_type old){
@@ -191,11 +192,13 @@ cTown::cItem& cTown::cItem::operator = (legacy::preset_item_type old){
 	always_there = old.always_there;
 	property = old.property;
 	contained = old.contained;
+	return *this;
 }
 
 cTown::cField& cTown::cField::operator = (legacy::preset_field_type old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
 	type = old.field_type;
+	return *this;
 }
 

@@ -13,7 +13,7 @@ struct m_pic_index_t {
 
 void init_graph_tool(void (*redraw_callback)(),Point* p);
 GWorldPtr load_pict(int picture_to_get);
-GWorldPtr load_bmp(unsigned char *data, long length);
+GWorldPtr load_bmp(unsigned char *data, unsigned long length);
 void set_cursor(short which_curs);
 void restore_cursor();
 void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,

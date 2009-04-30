@@ -18,7 +18,7 @@ extern short cur_viewing_mode;
 extern cTown* town;
 //extern big_tr_type t_d;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create,cur_town;
+extern short /*max_dim[3],*/mode_count,to_create,cur_town;
 extern unsigned char template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
@@ -63,8 +63,8 @@ void init_town(short size) {
 		sprintf((char *)town->town_strs(i), "%s", temp_str);
 		town->strlens[i] = strlen((char *) town->town_strs(i));
 	}
-	for (i = 0; i < 64; i++)
-		for (j = 0; j < 64; j++) {
+	for (i = 0; i < town->max_dim(); i++)
+		for (j = 0; j < town->max_dim(); j++) {
 			town->terrain(i,j) = scenario.default_ground * 2;
 			town->lighting(i / 8,j) = 0;
 		}
@@ -201,7 +201,7 @@ void edit_placed_monst(short which_m) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(837,0);
+	cd_kill_dialog(837);
 	
 }
 
@@ -297,7 +297,7 @@ cTown::cCreature edit_placed_monst_adv(cTown::cCreature monst_record) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(838,0);
+	cd_kill_dialog(838);
 	return store_placed_monst2;
 }
 
@@ -391,7 +391,7 @@ void edit_placed_item(short which_i) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(836,0);
+	cd_kill_dialog(836);
 	
 }
 
@@ -452,7 +452,7 @@ void edit_sign(short which_sign,short picture) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(831,0);
+	cd_kill_dialog(831);
 }
 
 bool save_out_strs() {
@@ -522,7 +522,7 @@ void edit_out_strs() {
 	
 	out_strs_hit = cd_run_dialog();
 	
-	cd_kill_dialog(850,0);
+	cd_kill_dialog(850);
 }
 
 
@@ -593,7 +593,7 @@ void edit_town_strs() {
 	
 	town_strs_hit = cd_run_dialog();
 	
-	cd_kill_dialog(839,0);
+	cd_kill_dialog(839);
 }
 
 
@@ -635,7 +635,7 @@ short pick_town_num(short which_dlog,short def) {
 	
 	town_strs_hit = cd_run_dialog();
 	
-	cd_kill_dialog(store_which_town_dlg,0);
+	cd_kill_dialog(store_which_town_dlg);
 	return dialog_answer;
 }
 
@@ -686,7 +686,7 @@ void change_ter(short *change_from,short *change_to,short *chance) {
 	*change_to = b;
 	*chance = c;
 	
-	cd_kill_dialog(857,0);
+	cd_kill_dialog(857);
 }
 
 void outdoor_details_event_filter (short item_hit) {
@@ -718,7 +718,7 @@ void outdoor_details() {
 	
 	town_strs_hit = cd_run_dialog();
 	
-	cd_kill_dialog(851,0);
+	cd_kill_dialog(851);
 }
 
 void put_out_wand_in_dlog() {
@@ -871,7 +871,7 @@ void edit_out_wand(short mode) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(852,0);
+	cd_kill_dialog(852);
 	
 }
 
@@ -934,7 +934,7 @@ void edit_town_details() {
 	put_town_details_in_dlog();
 	
 	town_details_hit = cd_run_dialog();
-	cd_kill_dialog(832,0);
+	cd_kill_dialog(832);
 }
 
 bool save_town_events() {
@@ -1004,7 +1004,7 @@ void edit_town_events() {
 	
 	advanced_town_hit = cd_run_dialog();
 	
-	cd_kill_dialog(833,0);
+	cd_kill_dialog(833);
 }
 
 bool save_advanced_town() {
@@ -1077,7 +1077,7 @@ void edit_advanced_town() {
 	
 	advanced_town_hit = cd_run_dialog();
 	
-	cd_kill_dialog(834,0);
+	cd_kill_dialog(834);
 }
 
 bool save_town_wand() {
@@ -1141,7 +1141,7 @@ void edit_town_wand() {
 	
 	town_wand_hit = cd_run_dialog();
 	
-	cd_kill_dialog(835,0);
+	cd_kill_dialog(835);
 }
 
 bool save_basic_dlog() {
@@ -1213,7 +1213,7 @@ void edit_basic_dlog(short which_node) {
 	put_basic_dlog_in_dlog();
 	
 	basic_dlog_hit = cd_run_dialog();
-	cd_kill_dialog(821,0);
+	cd_kill_dialog(821);
 }
 
 bool save_talk_node() {
@@ -1489,7 +1489,7 @@ void edit_talk_node(short which_node,short parent_num) {
 	
 	talk_node_hit = cd_run_dialog();
 	
-	cd_kill_dialog(817,0);
+	cd_kill_dialog(817);
 }
 
 void pick_out_event_filter (short item_hit) {
@@ -1546,7 +1546,7 @@ short pick_out(location default_loc) {
 	
 	basic_dlog_hit = cd_run_dialog();
 	
-	cd_kill_dialog(854,0);
+	cd_kill_dialog(854);
 	return dialog_answer;
 }
 
@@ -1692,6 +1692,6 @@ short pick_import_town(short def, FSSpec* temp_file_to_load) {
 	
 	town_strs_hit = cd_run_dialog();
 	
-	cd_kill_dialog(841,0);
+	cd_kill_dialog(841);
 	return dialog_answer;
 }

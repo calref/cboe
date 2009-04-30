@@ -41,6 +41,7 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	race = old.race;
 	exp_adj = old.exp_adj;
 	direction = old.direction;
+	return *this;
 }
 
 short cPlayer::get_tnl(){
@@ -239,4 +240,3 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 		stat = (eMainStatus) (-10 + stat);
 }
 
-//

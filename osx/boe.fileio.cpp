@@ -110,7 +110,7 @@ ResFileRefNum mainRef, graphicsRef, soundRef;
 void init_directories()
 {
 	short error;
-	Str255 folder_name = "\p::::Blades of Exile Scenarios";
+	//Str255 folder_name = "\p::::Blades of Exile Scenarios";
 	
 //	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
 //	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
@@ -365,11 +365,11 @@ void change_val (unsigned char *val,short a,short b)
 
 
 
-void build_scen_file_name (Str255 file_n)
-{
-	sprintf((char *) file_n,"::::Blades of Exile Scenarios:%s",univ.party.scen_name);
-	c2pstr((char*)file_n);
-}
+//void build_scen_file_name (Str255 file_n)
+//{
+//	sprintf((char *) file_n,"::::Blades of Exile Scenarios:%s",univ.party.scen_name);
+//	c2pstr((char*)file_n);
+//}
 
 // mode 0 want town and talking, 1 talking only, 2 want a string only, and extra is string num
 // Hey's let's be kludgy and overload these value again! If extra is -1, and mode 2, that
@@ -545,7 +545,7 @@ void init_town(){ // formerly part of load_town
 				//univ.out.sfx[i][j] = 0;
 			}
 		for (i = 0; i < 50; i++)
-			if ((univ.town->spec_id[i] >= 0) && (univ.town->special_locs[i].x < 100)){
+			if (univ.town->special_locs[i].x < 100){
 				univ.town.set_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
 			}
 		for (i = 0; i < 50; i++) {
@@ -1159,7 +1159,7 @@ void build_scen_headers()
 {
 	short i,index = 1,last_colon;
 	short cur_entry = 0;
-	Str255 scen_name;
+	//Str255 scen_name;
 	OSErr err;
 	string scenDir = progDir;
 //	scenDir.erase(scenDir.find_last_of("/"));
@@ -1207,7 +1207,7 @@ void build_scen_headers()
 //			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
 			if(err == errFSNoMoreItems && cur_entry == 0){
 				printf("No scenarios were found!");
-				printf("\nnumScens = %d");
+				printf("\nnumScens = %d",numScens);
 			}else if(err != noErr){
 				printf("Error getting catalog list!");
 			}
@@ -1231,7 +1231,7 @@ void build_scen_headers()
 //					data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
 //					cur_entry++;
 					std::string curScenarioName((char*) files[cur_entry].name);
-					for(i = 0; i < curScenarioName.length(); i++)
+					for(unsigned i = 0; i < curScenarioName.length(); i++)
 						if(curScenarioName[i] == ':')
 							last_colon = i;
 					curScenarioName.erase(0,last_colon + 1);

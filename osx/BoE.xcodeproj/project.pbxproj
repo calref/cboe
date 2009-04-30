@@ -1126,7 +1126,6 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
-					"-Wpadded",
 					"-Wno-long-long",
 				);
 			};
@@ -1170,7 +1169,6 @@
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
-					"-Wpadded",
 					"-Wno-long-long",
 				);
 			};

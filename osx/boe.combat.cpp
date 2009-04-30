@@ -881,7 +881,7 @@ void do_combat_cast(location target)////
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1,store_m_type = 2;
 	short spray_type_array[15] = {1,1,1,4,4,5,5,5,6,6,7,7,8,8,9};
-	unsigned char summon;
+	unsigned short summon;
 
 	location ashes_loc;
 
@@ -1111,32 +1111,32 @@ void do_combat_cast(location target)////
 				break;
 			case 16: // summon beast
 				r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
-				if ((summon < 0) || (summon_monster(summon,target,r2,2) == false))
+				if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 26: // summon 1
 				r2 = get_ran(4,1,4) + stat_adj(current_pc,2);
-				if ((summon < 0) || (summon_monster(summon,target,r2,2) == false))
+				if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 43: // summon 2
 				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
-				if ((summon < 0) || (summon_monster(summon,target,r2,2) == false))
+				if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 58: // summon 3
 				r2 = get_ran(7,1,4) + stat_adj(current_pc,2);
-				if ((summon < 0) || (summon_monster(summon,target,r2,2) == false))
+				if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 50: // Daemon
 				r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
-				if (summon_monster(85,target,r2,2) == false)
+				if (!summon_monster(85,target,r2,2))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case 63: // Rat!
 				r1 = get_ran(3,1,4);
-				if (summon_monster(80,target,r1,2) == false)
+				if (!summon_monster(80,target,r1,2))
 					add_string_to_buf("  Summon failed.");
 				break;
 			
@@ -1500,20 +1500,26 @@ void fire_missile(location target) {
 			sprintf ((char *) create_line, "%s fires.",(char *) ADVEN[missile_firer].name); // debug
 			add_string_to_buf((char *) create_line);
 			
-			switch (overall_mode) {
-				case MODE_THROWING:
-					switch (ADVEN[missile_firer].items[ammo_inv_slot].item_level) {
-						case 7:m_type = 10;break;
-						case 4:m_type = 1;break;
-						case 8:m_type = 5;break;
-						case 9:m_type = 7;break;
-						default:m_type = 10;break;
-					}
-					break;
-				case MODE_FIRING: case MODE_FANCY_TARGET:
-					m_type = (ADVEN[missile_firer].items[ammo_inv_slot].is_magic() == true) ? 4 : 3;
-					break; 
-			}
+			if (overall_mode == MODE_THROWING) {
+				switch (ADVEN[missile_firer].items[ammo_inv_slot].item_level) {
+					case 7:
+						m_type = 10;
+						break;
+					case 4:
+						m_type = 1;
+						break;
+					case 8:
+						m_type = 5;
+						break;
+					case 9:
+						m_type = 7;
+						break;
+					default:
+						m_type = 10;
+						break;
+				}
+			} else if (overall_mode == MODE_FIRING || overall_mode == MODE_FANCY_TARGET)
+				m_type = (ADVEN[missile_firer].items[ammo_inv_slot].is_magic() == true) ? 4 : 3;
 			run_a_missile(pc_pos[missile_firer],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
 						  0,0,100);
 			

@@ -36,4 +36,5 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 	ex2a = old.ex2a;
 	ex2b = old.ex2b;
 	jumpto = old.jumpto;
+	return *this;
 }

@@ -23,4 +23,5 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	light_radius = old.light_radius;
 	step_sound = old.step_sound;
 	shortcut_key = old.shortcut_key;
+	return *this;
 }

@@ -23,4 +23,5 @@ cSpeech& cSpeech::operator = (legacy::talking_record_type& old){
 			talk_nodes[i].extras[j] = old.talk_nodes[i].extras[j];
 		}
 	}
+	return *this;
 }

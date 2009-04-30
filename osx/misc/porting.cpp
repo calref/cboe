@@ -11,7 +11,7 @@
 extern bool cur_scen_is_mac, mac_is_intel;
 
 void port_town(legacy::town_record_type* dummy_town_ptr){
-	short i,j,k,l;
+	short i;
 	
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
@@ -43,7 +43,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 
 void port_dummy_t_d(short size,char *buffer)
 {
-	short i,j,k,l;
+	short i;
 	legacy::big_tr_type *d1;
 	legacy::ave_tr_type *d2;
 	legacy::tiny_tr_type *d3;
@@ -96,7 +96,7 @@ void port_dummy_t_d(short size,char *buffer)
 
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr)
 {
-	short i,j,k,l;
+	short i;
 	
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
@@ -112,7 +112,7 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr)
 
 void port_t_d(legacy::big_tr_type* old)
 {
-	short i,j,k,l;
+	short i;
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	
@@ -130,7 +130,7 @@ void port_t_d(legacy::big_tr_type* old)
 
 void port_ave_t(legacy::ave_tr_type* old)
 {
-	short i,j,k,l;
+	short i;
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	
@@ -148,7 +148,7 @@ void port_ave_t(legacy::ave_tr_type* old)
 
 void port_tiny_t(legacy::tiny_tr_type* old)
 {
-	short i,j,k,l;
+	short i;
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
 	
@@ -166,7 +166,7 @@ void port_tiny_t(legacy::tiny_tr_type* old)
 
 void port_scenario(legacy::scenario_data_type* temp_scenario)
 {
-	short i,j,k,l;
+	short i,j;
 	
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
@@ -247,7 +247,7 @@ void port_scenario(legacy::scenario_data_type* temp_scenario)
 
 
 void port_item_list(legacy::scen_item_data_type* old){
-	short i,j,k,l;
+	short i;
 	
 	if (cur_scen_is_mac != mac_is_intel)
 		return;
@@ -261,7 +261,7 @@ void port_item_list(legacy::scen_item_data_type* old){
 
 void port_out(legacy::outdoor_record_type *out)
 {
-	short i,j,k,l;
+	short i;
 	
 	if (cur_scen_is_mac != mac_is_intel)
 		return;

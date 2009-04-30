@@ -216,8 +216,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				return false;
 				}
 			for (i = 0; i < 50; i++)
-				if ((where_check == univ.town->special_locs[i]) &&
-					(univ.town->spec_id[i] >= 0)) {
+				if (where_check == univ.town->special_locs[i]) {
 					if (univ.town->specials[univ.town->spec_id[i]].type == 4) {
 						*forced = true;
 						}
@@ -957,8 +956,7 @@ bool use_space(location where)
 			 	univ.town.items[i].item_loc = to_loc;
 		}
 		
-	switch (scenario.ter_types[ter].special) {
-		case 22:
+	if (scenario.ter_types[ter].special == 22) {
 			if (where == from_loc) {
 				add_string_to_buf("  Not while on space.");
 				return false;
@@ -967,11 +965,8 @@ bool use_space(location where)
 			alter_space(where.x,where.y,scenario.ter_types[ter].flag1);
 			play_sound(scenario.ter_types[ter].flag2);
 			return true;
-			break;
-		case 23: // call special
+	}else if (scenario.ter_types[ter].special == 23) // call special
 			run_special(17,0,scenario.ter_types[ter].flag1,where,&i,&i,&i);
-			break;	
-		}
 	add_string_to_buf("  Nothing to use.");
 
 	return false;
@@ -1906,7 +1901,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 51:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is univ.out.out of range.","",0);
+				give_error("Special item is out of range.","",0);
 				set_sd = false;
 				}
 				else {
@@ -2000,7 +1995,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 61:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is univ.out.out of range. Must be 0-3.","",0);
+				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				set_sd = false;
 				}
 				else {

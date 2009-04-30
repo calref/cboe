@@ -778,7 +778,7 @@ void Set_up_win ()
 	Str255 fn1 = "\pGeneva";
 	Str255 fn2 = "\pDungeon Bold";
 	Str255 fn3 = "\pPalatino";
-	short i,j;
+	short i;
 	Rect r;
 	
 	
@@ -1501,7 +1501,7 @@ void update_pc_graphics()
 	if (party_in_memory == false)
 		return;
 		
-	//GetPort(&old_port);
+	GetPort(&old_port);
 	SetPortWindowPort(mainPtr);	
 	temp_gworld = load_pict(902);
 	temp_gworld2 = load_pict(905);
@@ -1541,7 +1541,7 @@ void update_pc_graphics()
 	DisposeGWorld (temp_gworld);
 	DisposeGWorld (temp_gworld2);
 				
-	//SetPort(old_port);	
+	SetPort(old_port);	
 
 }
 
@@ -2315,7 +2315,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 {
 	location where_draw(4,4);
 	Rect source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
-	short del_len,sound_key;
+	short del_len;
 	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,

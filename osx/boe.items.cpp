@@ -915,10 +915,10 @@ void put_item_graphics()
 
 			}
 			else { // erase the spot
-			 	sprintf ((char *) message, "");
-				csit(987,21 + i * 4,(char *) message);
-				csit(987,22 + i * 4,(char *) message);
-				csit(987,53 + i,(char *) message);
+			 	//sprintf ((char *) message, "");
+				csit(987,21 + i * 4,"");
+				csit(987,22 + i * 4,"");
+				csit(987,53 + i,"");
 				}
 		}
 	
@@ -1070,7 +1070,7 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(987,0);
+	cd_kill_dialog(987);
 
 	DisposeGWorld(pcs_gworld);
 	pcs_gworld = NULL;
@@ -1102,7 +1102,7 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 	
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(900,0);
+	cd_kill_dialog(900);
 
 	//if (parent < 2) {
 		SetPort(GetWindowPort(mainPtr));
@@ -1189,7 +1189,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1018,0);
+	cd_kill_dialog(1018);
 
 	BeginUpdate(mainPtr);
 	if (in_startup_mode == false)
@@ -1244,7 +1244,7 @@ short get_num_of_items(short max_num)
 	
 	item_hit = cd_run_dialog();		
 	
-	cd_kill_dialog(1012,0);
+	cd_kill_dialog(1012);
 	
 	dialog_answer = minmax(0,max_num,dialog_answer);
 	
@@ -1622,7 +1622,7 @@ void get_text_response(short dlg,Str255 str,short parent_num)
 			str[i] = str[i] + 32;
 	//ASB((char *) str);
 	//final_process_dialog(dlg);
-	cd_kill_dialog(dlg,0);
+	cd_kill_dialog(dlg);
 		
 }
 

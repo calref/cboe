@@ -39,7 +39,7 @@ extern short cur_viewing_mode;
 extern eScenMode overall_mode;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
-extern short max_dim[3];
+//extern short max_dim[3];
 extern short dungeon_font_num,geneva_font_num;
 extern Rect windRect;
 //extern piles_of_stuff_dumping_type *data_store;

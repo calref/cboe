@@ -19,7 +19,7 @@ extern bool mouse_button_held;
 extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
 extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
-short max_dim[3] = {64,48,32};
+extern short max_dim[3];
 extern short mode_count,to_create;
 extern unsigned char template_terrain[64][64];
 cItemRec item_list[400];
@@ -1069,7 +1069,7 @@ short edit_ter_type(short which_ter) {
 	cd_attach_key(813,11,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(813,0);
+	cd_kill_dialog(813);
 	return 0;
 }
 
@@ -1313,7 +1313,7 @@ short edit_monst_type(short which_monst) {
 	cd_attach_key(814,22,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(814,0);
+	cd_kill_dialog(814);
 	
 	return 0;
 }
@@ -1454,7 +1454,7 @@ cMonster edit_monst_abil(cMonster starting_record,short parent_num) {
 	cd_add_label(815,20,"Immune To Poison",55);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(815,0);
+	cd_kill_dialog(815);
 	return store_monst2;
 }
 
@@ -1621,7 +1621,7 @@ short edit_item_type(short which_item) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(818,0);
+	cd_kill_dialog(818);
 	return 0;
 }
 
@@ -1792,7 +1792,7 @@ cItemRec edit_item_abil(cItemRec starting_record,short parent_num) {
 	cd_add_label(824,12,"Conceal ability",50);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(824,0);
+	cd_kill_dialog(824);
 	return store_item2;
 }
 
@@ -1904,7 +1904,7 @@ void edit_spec_item(short which_item) {
 	
 	spec_item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(806,0);
+	cd_kill_dialog(806);
 }
 
 void put_save_rects_in_dlog() {
@@ -1978,7 +1978,7 @@ void edit_save_rects() {
 	put_save_rects_in_dlog();
 	
 	save_rects_hit = cd_run_dialog();
-	cd_kill_dialog(807,0);
+	cd_kill_dialog(807);
 }
 
 bool save_horses() {
@@ -2054,7 +2054,7 @@ void edit_horses() {
 	put_horses_in_dlog();
 	
 	horses_hit = cd_run_dialog();
-	cd_kill_dialog(808,0);
+	cd_kill_dialog(808);
 }
 
 bool save_boats() {
@@ -2130,7 +2130,7 @@ void edit_boats() {
 	put_boats_in_dlog();
 	
 	boats_hit = cd_run_dialog();
-	cd_kill_dialog(809,0);
+	cd_kill_dialog(809);
 }
 
 bool save_add_town() {
@@ -2186,7 +2186,7 @@ void edit_add_town() {
 	put_add_town_in_dlog();
 	
 	add_town_hit = cd_run_dialog();
-	cd_kill_dialog(810,0);
+	cd_kill_dialog(810);
 }
 
 bool save_item_placement() {
@@ -2282,7 +2282,7 @@ void edit_item_placement() {
 	put_item_placement_in_dlog();
 	
 	item_placement_hit = cd_run_dialog();
-	cd_kill_dialog(812,0);
+	cd_kill_dialog(812);
 }
 
 bool save_scen_details() {
@@ -2348,7 +2348,7 @@ void edit_scen_details() {
 	put_scen_details_in_dlog();
 	
 	scen_details_hit = cd_run_dialog();
-	cd_kill_dialog(803,0);
+	cd_kill_dialog(803);
 }
 
 
@@ -2409,7 +2409,7 @@ short edit_make_scen_1(char *filename,char *title,short *grass) {
 	title[30] = 0;
 	CDGT(800,3,filename);
 	*grass = cd_get_led(800,11);
-	cd_kill_dialog(800,0);
+	cd_kill_dialog(800);
 	return dialog_answer;
 }
 
@@ -2477,7 +2477,7 @@ short edit_make_scen_2(short *val_array) {
 	for (i = 0; i < 5; i++)
 		val_array[i] = CDGN(801,2 + i);
 	val_array[5] = cd_get_led(801,26);
-	cd_kill_dialog(801,0);
+	cd_kill_dialog(801);
 	return dialog_answer;
 }
 
@@ -2601,7 +2601,7 @@ short get_password() {
 	CDGT(802,2,(char *) temp_str);
 	i = wd_to_pwd(temp_str);
 	
-	cd_kill_dialog(802,0);
+	cd_kill_dialog(802);
 	
 	return i;
 }
@@ -2650,7 +2650,7 @@ void set_starting_loc() {
 	town_strs_hit = cd_run_dialog();
 	
 	
-	cd_kill_dialog(805,0);
+	cd_kill_dialog(805);
 	
 }
 
@@ -2726,7 +2726,7 @@ void edit_scenario_events() {
 	
 	advanced_town_hit = cd_run_dialog();
 	
-	cd_kill_dialog(811,0);
+	cd_kill_dialog(811);
 }
 
 void give_password_filter (short item_hit) {
@@ -2757,7 +2757,7 @@ short enter_password() {
 	i = wd_to_pwd(temp_str);
 	given_password = user_given_password = i;
 	
-	cd_kill_dialog(823,0);
+	cd_kill_dialog(823);
 	
 	return i;
 }

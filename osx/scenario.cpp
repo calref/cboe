@@ -89,11 +89,11 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 
 __attribute__((deprecated))
 cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type& old){
-	int i;
 	ter_type = old.ter_type;
 	for(int i = 0; i < 10; i++) item_num[i] = old.item_num[i];
 	for(int i = 0; i < 10; i++) item_odds[i] = old.item_odds[i];
 	property = old.property;
+	return *this;
 }
 
 __attribute__((deprecated))

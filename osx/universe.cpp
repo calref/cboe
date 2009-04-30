@@ -212,7 +212,7 @@ bool cCurTown::is_rubble(char x, char y) const{
 
 void cCurTown::set_explored(char x, char y, bool b){
 	if(b) fields[x][y] |=  1L;
-	else  fields[x][y] &  ~1L;
+	else  fields[x][y] &= ~1L;
 }
 
 bool cCurTown::set_force_wall(char x, char y, bool b){
@@ -226,6 +226,7 @@ bool cCurTown::set_force_wall(char x, char y, bool b){
 		set_fire_wall(x,y,false);
 	}
 	else fields[x][y] &= ~2L;
+	return true;
 }
 
 bool cCurTown::set_fire_wall(char x, char y, bool b){
@@ -241,6 +242,7 @@ bool cCurTown::set_fire_wall(char x, char y, bool b){
 		set_fire_wall(x,y,false);
 	}
 	else fields[x][y] &= ~4L;
+	return true;
 }
 
 bool cCurTown::set_antimagic(char x, char y, bool b){
@@ -257,6 +259,7 @@ bool cCurTown::set_antimagic(char x, char y, bool b){
 		set_sleep_cloud(x,y,false);
 	}
 	else fields[x][y] &= ~8L;
+	return true;
 }
 
 bool cCurTown::set_scloud(char x, char y, bool b){ // stinking cloud
@@ -270,6 +273,7 @@ bool cCurTown::set_scloud(char x, char y, bool b){ // stinking cloud
 		fields[x][y]  |=  16L;
 	}
 	else fields[x][y] &= ~16L;
+	return true;
 }
 
 bool cCurTown::set_ice_wall(char x, char y, bool b){
@@ -285,6 +289,7 @@ bool cCurTown::set_ice_wall(char x, char y, bool b){
 		set_scloud(x,y,false);
 	}
 	else fields[x][y] &= ~32L;
+	return true;
 }
 
 bool cCurTown::set_blade_wall(char x, char y, bool b){
@@ -296,6 +301,7 @@ bool cCurTown::set_blade_wall(char x, char y, bool b){
 		set_fire_wall(x,y,false);
 	}
 	else fields[x][y] &= ~64L;
+	return true;
 }
 
 bool cCurTown::set_sleep_cloud(char x, char y, bool b){
@@ -307,6 +313,7 @@ bool cCurTown::set_sleep_cloud(char x, char y, bool b){
 		set_fire_wall(x,y,false);
 	}
 	else fields[x][y] &= ~128L;
+	return true;
 }
 
 void cCurTown::set_block(char x, char y, bool b){ // currently unused
@@ -330,6 +337,7 @@ bool cCurTown::set_web(char x, char y, bool b){
 		fields[x][y]  |=  1024L;
 	}
 	else fields[x][y] &= ~1024L;
+	return true;
 }
 
 bool cCurTown::set_crate(char x, char y, bool b){
@@ -339,6 +347,7 @@ bool cCurTown::set_crate(char x, char y, bool b){
 		fields[x][y]  |=  2048L;
 	}
 	else fields[x][y] &= ~2048L;
+	return true;
 }
 
 bool cCurTown::set_barrel(char x, char y, bool b){
@@ -348,6 +357,7 @@ bool cCurTown::set_barrel(char x, char y, bool b){
 		fields[x][y]  |=  4096L;
 	}
 	else fields[x][y] &= ~4096L;
+	return true;
 }
 
 bool cCurTown::set_fire_barr(char x, char y, bool b){
@@ -368,6 +378,7 @@ bool cCurTown::set_fire_barr(char x, char y, bool b){
 		set_sleep_cloud(x,y,false);
 	}
 	else fields[x][y] &= ~8192L;
+	return true;
 }
 
 bool cCurTown::set_force_barr(char x, char y, bool b){
@@ -388,6 +399,7 @@ bool cCurTown::set_force_barr(char x, char y, bool b){
 		set_sleep_cloud(x,y,false);
 	}
 	else fields[x][y] &= ~16384L;
+	return true;
 }
 
 bool cCurTown::set_quickfire(char x, char y, bool b){
@@ -411,6 +423,7 @@ bool cCurTown::set_quickfire(char x, char y, bool b){
 		set_fire_barr(x,y,false);
 	}
 	else fields[x][y] &= ~32768;
+	return true;
 }
 
 void cCurTown::set_sm_blood(char x, char y, bool b){

@@ -20,6 +20,7 @@ cPopulation::cCreature& cPopulation::cCreature::operator = (legacy::creature_dat
 	mobile = old.mobile;
 	summoned = old.summoned;
 	monst_start = old.monst_start;
+	return *this;
 }
 
 __attribute__((deprecated))
@@ -28,4 +29,5 @@ cPopulation& cPopulation::operator = (legacy::creature_list_type old){
 		dudes[i] = old.dudes[i];
 	which_town = old.which_town;
 	friendly = old.friendly;
+	return *this;
 }

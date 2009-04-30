@@ -252,6 +252,9 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			for(i = 0; i < 6; i++)
 				disease_pc(i,r1);
 			break;
+			
+		default:
+			add_string_to_buf("ERROR: Invalid trap type."); // should never be reached
 		}
 	put_pc_screen();
 	put_item_screen(stat_window,0);

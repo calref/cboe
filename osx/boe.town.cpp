@@ -140,7 +140,7 @@ void start_town_mode(short which_town, short entry_dir)
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
 	unsigned char temp;
-	bool play_town_sound = false;
+	//bool play_town_sound = false;
 	
 	GetPort(&old_port);	
 	SetPort(GetWindowPort(mainPtr));
@@ -1256,7 +1256,7 @@ void erase_specials()////
 	if ((is_town() == false) && (is_combat() == false))
 		return;
 	for (k = 0; k < 50; k++) {
-		if (univ.town->spec_id[k] >= 0) {
+		//if (univ.town->spec_id[k] >= 0) {
 			sn = univ.town->specials[univ.town->spec_id[k]];
 			sd1 = sn.sd1; sd2 = sn.sd2;
 			if ((sd_legit(sd1,sd2) == true) && (PSD[sd1][sd2] == 250)) {
@@ -1283,7 +1283,7 @@ void erase_specials()////
 				}
 			
 
-				}
+				//}
 		}
 }
 
@@ -1319,7 +1319,7 @@ void erase_out_specials()
 		for (j = 0; j < 2; j++)
 			if (quadrant_legal(i,j) == true) {
 			for (k = 0; k < 18; k++) 
-				if (univ.out.outdoors[i][j].special_id[k] >= 0) {
+				//if (univ.out.outdoors[i][j].special_id[k] >= 0) {
 				out_num = scenario.out_width * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 
 				sn = univ.out.outdoors[i][j].specials[univ.out.outdoors[i][j].special_id[k]];
@@ -1331,7 +1331,8 @@ void erase_out_specials()
 						 || (where.x < 0) || (where.y < 0)) {
 							SysBeep(2);
 							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-							univ.out.outdoors[i][j].special_id[k] = -1;
+							//univ.out.outdoors[i][j].special_id[k] = -1;
+							univ.out.outdoors[i][j].special_locs[k].x = 100;
 							}
 				
 						switch (scenario.ter_types[univ.out.outdoors[i][j].terrain[where.x][where.y]].picture) {
@@ -1346,7 +1347,7 @@ void erase_out_specials()
 					}
 
 			
-				}
+				//}
 		}
 }
 

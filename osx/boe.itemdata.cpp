@@ -82,7 +82,7 @@ cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, 
 	return temp_i;
 }
 
-cItemRec	get_weapon(short loot,short level)
+cItemRec get_weapon(short loot,short level)
 {
 	cItemRec weapon;
 

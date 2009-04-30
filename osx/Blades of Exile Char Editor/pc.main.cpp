@@ -682,7 +682,7 @@ void handle_edit_menu(int item_hit)
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
 					for (k = 0; k < 48; k++)
-						univ.out.maps[i][j][k] = 255;
+						univ.out_maps[i][j][k] = 255;
 			break;
 		case 7: // town maps
 			if (party_in_scen == false) {
@@ -693,7 +693,7 @@ void handle_edit_menu(int item_hit)
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
-						univ.town.maps[i][j][k] = 255;
+						univ.town_maps[i][j][k] = 255;
 			break;
 				case 9:
 					display_pc(current_active_pc,0,0);

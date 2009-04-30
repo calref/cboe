@@ -72,7 +72,8 @@ short store_page_on,store_num_i;
 extern short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_label_2b;
 
 // Misc dialog vars
-short store_display_mode,store_displayed_item,position,cur_entry,num_entries,store_help_mode;
+short store_display_mode,store_displayed_item,position,num_entries,store_help_mode;
+unsigned short cur_entry;
 cPopulation::cCreature hold_m;
 	
 void put_spell_info()
@@ -152,7 +153,7 @@ void display_spells(short mode,short force_spell,short parent_num)
 	else csit(1096,3,"Priest Spells");
 	
 	item_hit = cd_run_dialog();		
-	cd_kill_dialog(1096,0);
+	cd_kill_dialog(1096);
 
 }
 
@@ -212,7 +213,7 @@ void display_skills(short force_skill,short parent)
 	put_skill_info();
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(1097,0);
+	cd_kill_dialog(1097);
 
 }
 
@@ -287,7 +288,7 @@ void display_pc(short pc_num,short mode,short parent)
 	cd_set_pict(991,2,14 + mode,PICT_DLG);
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(991,0);
+	cd_kill_dialog(991);
 }
 
 void put_item_info(short pc,short item)////
@@ -354,12 +355,17 @@ void put_item_info(short pc,short item)////
 			cd_set_item_num(998,7,s_i.bonus);
 		
 			switch (s_i.type) {
-				case 1:sprintf((char *) store_text, "Edged weapon");
+				case ITEM_EDGED:
+					sprintf((char *) store_text, "Edged weapon");
 					break;
-				case 2:sprintf((char *) store_text, "Bashing weapon");
+				case ITEM_BASHING:
+					sprintf((char *) store_text, "Bashing weapon");
 					break;
-				case 3:sprintf((char *) store_text, "Pole weapon");
+				case ITEM_POLE:
+					sprintf((char *) store_text, "Pole weapon");
 					break;
+				case ITEM_NOT_MELEE:
+					sprintf((char*)store_text, "Error weapon"); // should never be reached
 				}
 			if (s_i.ability == 0)
 				cd_set_item_text(998,12,store_text);
@@ -460,7 +466,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 	put_item_info(pc_num,item);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(998,0);
+	cd_kill_dialog(998);
 
 }
 
@@ -626,7 +632,7 @@ void display_monst(short array_pos,cPopulation::cCreature *which_m,short mode)
 	put_monst_info();
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(999,0);
+	cd_kill_dialog(999);
 }
 
 
@@ -672,7 +678,7 @@ void display_help(short mode,short parent)
 	
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(997,0);
+	cd_kill_dialog(997);
 
 }
 
@@ -706,7 +712,7 @@ void display_alchemy()
 		}
 	
 	item_hit = cd_run_dialog();		
-	cd_kill_dialog(996,0);
+	cd_kill_dialog(996);
 	untoast_dialog();
 
 }
@@ -786,7 +792,7 @@ void pick_race_abil(cPlayer *pc,short mode,short parent_num)
 		else csit(1013,19,start_str2);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1013,0);
+	cd_kill_dialog(1013);
 	untoast_dialog();
 }
 
@@ -940,7 +946,7 @@ void give_pc_info(short pc_num)
 	display_pc_info(); 
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(1019,0);
+	cd_kill_dialog(1019);
 }
 
 void adventure_notes_event_filter (short item_hit)
@@ -1062,7 +1068,7 @@ void adventure_notes()
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(961,0);
+	cd_kill_dialog(961);
 
 }
 
@@ -1168,7 +1174,7 @@ void talk_notes()
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(960,0);
+	cd_kill_dialog(960);
 
 }
 
@@ -1239,13 +1245,11 @@ void journal()
 	}
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(962,0);
+	cd_kill_dialog(962);
 
 }
 void add_to_journal(short event)
 {
-	short i;
-	
 	if(univ.party.add_to_journal(event, calc_day()))
 	   ASB("Something was added to your journal.");
 }

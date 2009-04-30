@@ -84,7 +84,7 @@ typedef GWorldPtr* gw;
 void cd_init_dialogs(INIT_PARAMS);
 short cd_create_dialog_parent_num(short dlog_num,short parent);
 short cd_create_dialog(short dlog_num,WindowPtr parent);
-short cd_kill_dialog(short dlog_num,short parent_message);
+short cd_kill_dialog(short dlog_num);
 short cd_process_keystroke(WindowPtr window,char char_hit,short *item);
 short cd_process_click(WindowPtr window,Point the_point, short mods,short *item);
 void cd_attach_key(short dlog_num,short item_num,char key);

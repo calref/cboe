@@ -189,7 +189,7 @@ void edit_gold_or_food(short which_to_edit)
 	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,2,(char *) sign_text);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog((which_to_edit == 0) ? 1012 : 947,0);
+	cd_kill_dialog((which_to_edit == 0) ? 1012 : 947);
 	dialog_answer = minmax(0,25000,dialog_answer);
 	if (which_to_edit == 0)
 		univ.party.gold = dialog_answer;
@@ -231,7 +231,7 @@ void edit_day()
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(917,0);
+	cd_kill_dialog(917);
 	
 	dialog_answer = minmax(0,500,dialog_answer);
 	
@@ -315,7 +315,7 @@ void display_pc(short pc_num,short mode,short parent)
 	cd_set_pict(991,2,14 + mode,PICT_DLG);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(991,0);
+	cd_kill_dialog(991);
 }
 
 
@@ -364,7 +364,7 @@ void display_alchemy()
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(996,0);
+	cd_kill_dialog(996);
 	untoast_dialog();
 
 }
@@ -602,7 +602,7 @@ bool spend_xp(short pc_num, short mode, short parent)
 	
 	item_hit = cd_run_dialog();	
 
-	cd_kill_dialog(1010,0);
+	cd_kill_dialog(1010);
 
 	return dialog_answer;
 }
@@ -632,7 +632,7 @@ void give_reg_info()
 	cd_create_dialog_parent_num(1073,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1073,0);
+	cd_kill_dialog(1073);
 
 }
 
@@ -673,7 +673,7 @@ void edit_xp(cPlayer *pc)
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(1024,0);
+	cd_kill_dialog(1024);
 	
 	if (dialog_answer < 0)
 		dialog_answer = dialog_answer * -1;

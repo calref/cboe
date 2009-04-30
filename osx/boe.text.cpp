@@ -808,17 +808,17 @@ void draw_pc_effects(short pc)
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
-	sprintf((char *) store_string, "  Number of kills: %ld                   ", univ.party.total_m_killed);
+	sprintf((char *) store_string, "  Number of kills: %lld                   ", univ.party.total_m_killed);
 	add_string_to_buf((char *) store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
 		sprintf((char *) store_string, "  Kills in this town: %d                   ", univ.party.m_killed[univ.town.num]);
 		add_string_to_buf((char *) store_string);
 		}
-	sprintf((char *) store_string, "  Total experience: %ld                   ", univ.party.total_xp_gained);
+	sprintf((char *) store_string, "  Total experience: %lld                   ", univ.party.total_xp_gained);
 	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage done: %ld                   ", univ.party.total_dam_done);
+	sprintf((char *) store_string, "  Total damage done: %lld                   ", univ.party.total_dam_done);
 	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage taken: %ld                   ", univ.party.total_dam_taken);
+	sprintf((char *) store_string, "  Total damage taken: %lld                   ", univ.party.total_dam_taken);
 	add_string_to_buf((char *) store_string);
 	print_buf();
 }

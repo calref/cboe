@@ -70,7 +70,6 @@ cOutdoors::cOutdoors(){
 	cOutdoors::cWandering d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
 	rectangle d_rect;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
-	Str255 temp_str;
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
@@ -79,7 +78,7 @@ cOutdoors::cOutdoors(){
 	
 	for (i = 0; i < 18; i++) {
 		special_locs[i] = d_loc;
-		special_id[i] = -1;
+		special_id[i] = 0;
 	}
 	for (i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
@@ -106,6 +105,7 @@ char(& cOutdoors::out_strs(short i))[256]{
 	if(i == 9) return comment;
 	if(i >= 10 && i < 100) return spec_strs[i - 10];
 	if(i >= 100 && i < 108) return sign_strs[i - 100];
+	return comment;
 }
 
 cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_type old){
@@ -115,6 +115,7 @@ cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_
 	cant_flee = old.cant_flee;
 	end_spec1 = old.end_spec1;
 	end_spec2 = old.end_spec2;
+	return *this;
 }
 
 cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature_type old){
@@ -125,4 +126,5 @@ cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature
 	which_sector.y = old.which_sector.y;
 	m_loc.x = old.m_loc.x;
 	m_loc.y = old.m_loc.y;
+	return *this;
 }

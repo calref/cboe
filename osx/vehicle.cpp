@@ -33,6 +33,7 @@ cVehicle& cVehicle::operator = (legacy::horse_record_type& old){
 	loc_in_sec.y = old.horse_loc_in_sec.y;
 	sector.x = old.horse_sector.x;
 	sector.y = old.horse_sector.y;
+	return *this;
 }
 
 __attribute__((deprecated))
@@ -46,4 +47,5 @@ cVehicle& cVehicle::operator = (legacy::boat_record_type& old){
 	loc_in_sec.y = old.boat_loc_in_sec.y;
 	sector.x = old.boat_sector.x;
 	sector.y = old.boat_sector.y;
+	return *this;
 }

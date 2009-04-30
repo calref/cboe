@@ -115,11 +115,7 @@ short cd_create_dialog_parent_num(short dlog_num,short parent){
 }
 
 short cd_create_dialog(short dlog_num,WindowPtr parent){
-	short i,j,free_slot = -1,free_item = -1;
-	WindowPtr dlg;
-	
-	char item_str[256];
-	short type,flag;
+	short i,free_slot = -1;
 	
 	for (i = 0; i < ND; i++) {
 		if ((dlgs[i].key >= 0) && (dlgs[i].type == dlog_num))
@@ -160,7 +156,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	return 0;
 }
 
-short cd_kill_dialog(short dlog_num,short parent_message){
+short cd_kill_dialog(short dlog_num){
 	short i,which_dlg = -1;
 	
 	for (i = 0; i < ND; i++)
@@ -180,7 +176,7 @@ short cd_kill_dialog(short dlog_num,short parent_message){
 	dlgs[which_dlg].key = -1;
 	if (dlgs[which_dlg].parent != NULL)
 		SetPortWindowPort( dlgs[which_dlg].parent);
-	if (redraw_screen != NULL && FrontWindow() == mainPtr) // Was formerly checkin != mainPtr for some reason...
+	if (redraw_screen != NULL && FrontWindow() == mainPtr) // Was formerly checking != mainPtr for some reason...
 		redraw_screen();
 	untoast_dialog();
 	return 0;
@@ -336,13 +332,12 @@ void cd_set_item_text(short dlog_num, short item_num, char *str){
 }
 
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str){
-	short dlg_index,item_index;
+	short dlg_index;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect the_rect;
 	Str255 store_ptr;
 	
-	sprintf(str,"");
 	dlg_index = cd_get_dlg_index(dlog_num);
 	if (dlg_index < 0) {
 		SysBeep(50); return ;
@@ -354,7 +349,7 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str){
 }
 
 short cd_retrieve_text_edit_num(short dlog_num, short item_num){
-	short dlg_index,item_index;
+	short dlg_index;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect the_rect;
@@ -373,7 +368,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num){
 
 // NOTE!!! Expects a c string
 void cd_set_text_edit_str(short dlog_num, short item_num, char *str){
-	short dlg_index,item_index;
+	short dlg_index;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect the_rect;
@@ -390,7 +385,7 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str){
 }
 
 void cd_set_text_edit_num(short dlog_num, short item_num, short num){
-	short dlg_index,item_index;
+	short dlg_index;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect the_rect;
@@ -859,7 +854,7 @@ void cd_erase_item(short dlog_num, short item_num, bool just_label){
 }
 
 void cd_erase_rect(short dlog_num,Rect to_fry){
-	short i,dlg_index,item_index,store_label;
+	short dlg_index;
 	GrafPtr old_port;
 	
 	if ((dlg_index = cd_get_dlg_index(dlog_num)) < 0)
@@ -876,7 +871,7 @@ void cd_erase_rect(short dlog_num,Rect to_fry){
 void cd_press_button(short dlog_num, short item_num){
 	short dlg_index,item_index;
 	unsigned long dummy;
-	Rect from_rect,to_rect,x = {0,0,55,55};
+	Rect from_rect;//,to_rect,x = {0,0,55,55};
 	GrafPtr old_port;
 	//RGBColor clr[2] = {{0,0,4096},{0,0,8192}};
 	

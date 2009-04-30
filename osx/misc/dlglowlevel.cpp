@@ -35,17 +35,17 @@ extern btn_t buttons[];
 
 void process_new_window (short which_dlg) {
 	short i = -1,j,free_slot = -1,free_item = -1,type,flag;
-	char but_str[30];
+	//char but_str[30];
 	Str255 item_str;
 	bool str_stored = false;
-	Rect dlg_rect,store_rect;
+	//Rect dlg_rect;
+	Rect store_rect;
 	short win_height = 0, win_width = 0;
 	short the_type;
 	Handle the_handle = NULL;
 	Rect small_rect;
-	short item_hit,what_talk_field,num_items;
+	short num_items;
 	short str_offset = 1;
-	long typel,flagl;
 	WindowPtr hDlg = dlgs[which_dlg].win;
 	
 	free_slot = which_dlg;
@@ -182,7 +182,7 @@ void process_new_window (short which_dlg) {
 					case DLG_TEXT_BOLD: case DLG_TEXT_PLAIN: case DLG_TEXT_LARGE:
 					case DLG_TEXT_CLICKABLE: case DLG_TEXT_DEFAULT:
 					case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN: 
-						sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
+						//sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
 						if (str_stored == true) {
 							if (free_item < 10)
 								sprintf(text_long_str[free_item],"%s",(char *) (item_str + str_offset));
@@ -254,7 +254,6 @@ Rect get_item_rect(WindowPtr hDlg, short item_num){
 	short the_type;
 	Handle the_handle = NULL;
 	Rect small_rect;
-	short item_hit,what_talk_field;
 	
 	GetDialogItem( GetDialogFromWindow(hDlg), item_num, &the_type, &the_handle, &small_rect);
 	
@@ -310,12 +309,8 @@ void frame_dlog_rect(GrafPtr hDlg, Rect rect, short val, short med_or_lt){
 GrafPtr hDialog;
 short w__gw;
 bool fr;
-void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g,
-						 short type_g, bool do_frame,short win_or_gworld){
-	short picnum;
-	
+void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, bool do_frame,short win_or_gworld){
 	RGBColor store_color;
-	GWorldPtr from_gworld, to_gworld;
 	
 	if (which_g < 0)
 		return;

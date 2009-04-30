@@ -14,7 +14,7 @@ extern short cur_viewing_mode;
 extern cTown* town;
 //extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short max_dim[3],mode_count,to_create;
+extern short /*max_dim[3],*/mode_count,to_create;
 extern unsigned char template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
@@ -257,7 +257,7 @@ short choose_graphic(short first_g,short last_g,short cur_choice,short g_type,sh
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(819,0);
+	cd_kill_dialog(819);
 	
 	return dialog_answer;
 }
@@ -345,7 +345,7 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(820,0);
+	cd_kill_dialog(820);
 	
 	return dialog_answer;
 }
@@ -407,7 +407,7 @@ void edit_text_str(short which_str,short mode) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(816,0);
+	cd_kill_dialog(816);
 }
 
 void edit_area_rect_event_filter (short item_hit) {
@@ -448,7 +448,7 @@ bool edit_area_rect_str(short which_str,short mode) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(840,0);
+	cd_kill_dialog(840);
 	
 	return dialog_answer;
 }
@@ -910,7 +910,7 @@ void edit_spec_enc(short which_node,short mode,short parent_num) {
 	
 	spec_enc_hit = cd_run_dialog();
 	
-	cd_kill_dialog(822,0);
+	cd_kill_dialog(822);
 }
 
 short get_fresh_spec(short which_mode) {
@@ -1072,7 +1072,7 @@ void edit_spec_text(short mode,short *str1,short *str2,short parent) {
 	}
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(826,0);
+	cd_kill_dialog(826);
 }
 
 void edit_dialog_text_event_filter (short item_hit){
@@ -1191,7 +1191,7 @@ void edit_dialog_text(short mode,short *str1,short parent) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(842,0);
+	cd_kill_dialog(842);
 }
 
 void edit_special_num_event_filter (short item_hit) {
@@ -1228,7 +1228,7 @@ short edit_special_num(short mode,short what_start) {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(825,0);
+	cd_kill_dialog(825);
 	
 	return dialog_answer;
 }
@@ -1278,7 +1278,7 @@ void edit_scen_intro() {
 	
 	item_hit = cd_run_dialog();
 	
-	cd_kill_dialog(804,0);
+	cd_kill_dialog(804);
 }
 
 void make_cursor_sword() {

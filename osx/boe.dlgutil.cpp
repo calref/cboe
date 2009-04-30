@@ -1150,7 +1150,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	csit(1014,2,(char *) sign_text);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1014,0);
+	cd_kill_dialog(1014);
 }
 
 
@@ -1175,7 +1175,7 @@ void give_reg_info()
 	cd_create_dialog_parent_num(1073,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(1073,0);
+	cd_kill_dialog(1073);
 
 }
 
@@ -1598,7 +1598,7 @@ void pick_preferences()
 	
 	item_hit = cd_run_dialog();
 
-	cd_kill_dialog(1099,0);
+	cd_kill_dialog(1099);
 	adjust_window_mode();
 }
 
@@ -1715,7 +1715,7 @@ void edit_party(short can_create,short can_cancel)
 	
 	item_hit = cd_run_dialog();
 
-	cd_kill_dialog(989,0);
+	cd_kill_dialog(989);
 
 	if (munch_pc_graphic == true) {
 		DisposeGWorld(pcs_gworld);
@@ -1771,7 +1771,7 @@ void tip_of_day()
 	cd_set_led(958,7,give_intro_hint);
 	
 	item_hit = cd_run_dialog();	
-	cd_kill_dialog(958,0);
+	cd_kill_dialog(958);
 	save_prefs();
 
 }
@@ -1840,7 +1840,7 @@ void pick_a_scen_event_filter (short item_hit)
 short pick_a_scen()
 {
 
-	short i,item_hit;
+	short item_hit;
 	
 	build_scen_headers();
 	
@@ -1866,7 +1866,7 @@ short pick_a_scen()
 	}
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(947,0);
+	cd_kill_dialog(947);
 	return dialog_answer;
 }
 
@@ -1899,7 +1899,7 @@ short pick_prefab_scen()
 	cd_activate_item(869,2,0);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(869,0);
+	cd_kill_dialog(869);
 	return dialog_answer;
 }
 
@@ -1930,7 +1930,7 @@ bool enter_password()
 	CDGT(823,2,(char *) temp_str);
 	i = wd_to_pwd(temp_str);
 	
-	cd_kill_dialog(823,0);
+	cd_kill_dialog(823);
 	
 	return check_p(i);
 }
