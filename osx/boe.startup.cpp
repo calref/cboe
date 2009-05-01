@@ -118,13 +118,16 @@ bool handle_startup_press(Point the_point)
 
 void startup_load()////
 {
-	FSSpec* file_to_load = nav_get_party();
-	if(file_to_load == NULL) return;
-	if(load_party(*file_to_load)){
-		party_in_memory = true;
-		update_pc_graphics();
-		in_startup_mode = univ.party.scen_name.length();
-	}
+	try{
+		FSSpec file_to_load = nav_get_party();
+		if(load_party(file_to_load)){
+			party_in_memory = true;
+			update_pc_graphics();
+			if(univ.party.scen_name.length() > 0)
+				in_startup_mode = false;
+			else in_startup_mode = true;
+		}
+	} catch(no_file_chosen){}
 	if (!in_startup_mode) {
 		//end_anim();
 		end_startup();

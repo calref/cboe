@@ -49,4 +49,4 @@ short place_monster(unsigned char which,location where);
 bool summon_monster(unsigned char which,location where,short duration,short given_attitude);
 void activate_monsters(short code,short attitude);
 short get_encumberance(short pc_num);
-short get_summon_monster(short summon_class);
+unsigned short get_summon_monster(short summon_class);

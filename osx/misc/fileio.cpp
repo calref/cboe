@@ -95,40 +95,43 @@ void init_fileio(){
 		NULL
 	};
 	err = NavCreatePutFileDialog (&opts, 'BlEd', 'BETM', NULL, NULL, &dlg_put_scen);
-	err = NavCreatePutFileDialog (&opts, 'blx!', 'beSV', NULL, NULL, &dlg_put_game);
 	err = NavCreateGetFileDialog (&opts, NULL, NULL, NULL, scen_file_filter, NULL, &dlg_get_scen);
-	err = NavCreateGetFileDialog (&opts, NULL, NULL, NULL, party_file_filter, NULL, &dlg_get_game);
+	NavDialogCreationOptions opts2 = opts;
+	opts2.clientName = CFSTR("com.spidweb.bladesofexile");
+	opts2.windowTitle = CFSTR("Blades of Exile");
+	err = NavCreatePutFileDialog (&opts2, 'blx!', 'beSV', NULL, NULL, &dlg_put_game);
+	err = NavCreateGetFileDialog (&opts2, NULL, NULL, NULL, party_file_filter, NULL, &dlg_get_game);
 }
 
-FSSpecPtr nav_get_scenario(){
+FSSpec nav_get_scenario() throw(no_file_chosen) {
 	NavReplyRecord s_reply;
 	AEKeyword keyword;
 	DescType descType;
 	Size actualSize;
-	FSSpecPtr file_to_load;
+	FSSpec file_to_load;
 	
 	NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
 	if (s_reply.validRecord == false)
-		return NULL;
-	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,file_to_load,sizeof(FSSpec),&actualSize);
+		throw no_file_chosen();
+	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
 	
 	return file_to_load;
 }
 
-FSSpecPtr nav_put_scenario(){
+FSSpec nav_put_scenario() throw(no_file_chosen) {
 	NavReplyRecord s_reply;
 	AEKeyword keyword;
 	DescType descType;
 	Size actualSize;
-	FSSpecPtr file_to_load;
+	FSSpec file_to_load;
 	
 	return file_to_load;
 }
 
-FSSpecPtr nav_get_party(){
+FSSpec nav_get_party() throw(no_file_chosen) {
 	NavReplyRecord reply;
 	NavTypeList type_list; // To be able to have more than one type, this wouldn't do.
-	FSSpecPtr file_to_load;
+	FSSpec file_to_load;
 	
 	type_list.componentSignature = kNavGenericSignature;
 	type_list.osTypeCount = 1;
@@ -139,22 +142,25 @@ FSSpecPtr nav_get_party(){
 	NavChooseFile(NULL,&reply,NULL,NULL,NULL,NULL,&type_list_p,NULL);
 	
 	if (!reply.validRecord)
-		return NULL;
+		throw no_file_chosen();
 	
 	AEKeyword keyword;
 	DescType descType;
 	Size actualSize;
 	
-	AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,file_to_load,sizeof(FSSpec),&actualSize);
+	AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
+	
+	NavDisposeReply(&reply);
 	
 	return file_to_load;
 }
-FSSpecPtr nav_put_party(){
+
+FSSpec nav_put_party() throw(no_file_chosen) {
 	NavReplyRecord s_reply;
 	AEKeyword keyword;
 	DescType descType;
 	Size actualSize;
-	FSSpecPtr file_to_load;
+	FSSpec file_to_load;
 	
 	return file_to_load;
 }

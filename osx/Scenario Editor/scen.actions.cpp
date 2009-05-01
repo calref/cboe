@@ -177,18 +177,20 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 						
 					case 4: // edit
-						FSSpec* file_to_load = nav_get_scenario();
-						if (load_scenario(*file_to_load)) {
-							if(load_town(scenario.last_town_edited,town))
-								cur_town = scenario.last_town_edited;
-							if(load_outdoors(scenario.last_out_edited,current_terrain)){
-								cur_out = scenario.last_out_edited;
-								augment_terrain(cur_out);
+						try{
+							FSSpec file_to_load = nav_get_scenario();
+							if (load_scenario(file_to_load)) {
+								if(load_town(scenario.last_town_edited,town))
+									cur_town = scenario.last_town_edited;
+								if(load_outdoors(scenario.last_out_edited,current_terrain)){
+									cur_out = scenario.last_out_edited;
+									augment_terrain(cur_out);
+								}
+								overall_mode = MODE_MAIN_SCREEN;
+								set_up_main_screen();
+								update_item_menu();
 							}
-							overall_mode = MODE_MAIN_SCREEN;
-							set_up_main_screen();
-							update_item_menu();
-						}
+						} catch(no_file_chosen){}
 						break;
 				}
 			}

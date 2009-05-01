@@ -71,7 +71,7 @@ public:
 	bool is_ash(char x, char y) const;
 	bool is_bones(char x, char y) const;
 	bool is_rubble(char x, char y) const;
-	void set_explored(char x, char y, bool b);
+	bool set_explored(char x, char y, bool b);
 	bool set_force_wall(char x, char y, bool b);
 	bool set_fire_wall(char x, char y, bool b);
 	bool set_antimagic(char x, char y, bool b);
@@ -79,22 +79,22 @@ public:
 	bool set_ice_wall(char x, char y, bool b);
 	bool set_blade_wall(char x, char y, bool b);
 	bool set_sleep_cloud(char x, char y, bool b);
-	void set_block(char x, char y, bool b); // currently unused
-	void set_special(char x, char y, bool b);
+	bool set_block(char x, char y, bool b); // currently unused
+	bool set_special(char x, char y, bool b);
 	bool set_web(char x, char y, bool b);
 	bool set_crate(char x, char y, bool b);
 	bool set_barrel(char x, char y, bool b);
 	bool set_fire_barr(char x, char y, bool b);
 	bool set_force_barr(char x, char y, bool b);
 	bool set_quickfire(char x, char y, bool b);
-	void set_sm_blood(char x, char y, bool b);
-	void set_med_blood(char x, char y, bool b);
-	void set_lg_blood(char x, char y, bool b);
-	void set_sm_slime(char x, char y, bool b);
-	void set_lg_slime(char x, char y, bool b);
-	void set_ash(char x, char y, bool b);
-	void set_bones(char x, char y, bool b);
-	void set_rubble(char x, char y, bool b);
+	bool set_sm_blood(char x, char y, bool b);
+	bool set_med_blood(char x, char y, bool b);
+	bool set_lg_blood(char x, char y, bool b);
+	bool set_sm_slime(char x, char y, bool b);
+	bool set_lg_slime(char x, char y, bool b);
+	bool set_ash(char x, char y, bool b);
+	bool set_bones(char x, char y, bool b);
+	bool set_rubble(char x, char y, bool b);
 };
 
 class cCurOut {

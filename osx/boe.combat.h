@@ -15,7 +15,7 @@ void combat_run_monst();
 void do_monster_turn();
 void monster_attack_pc(short who_att,short target);
 void monster_attack_monster(short who_att,short attackee);
-void monst_fire_missile(short m_num,short skill,short bless,short level,location source,short target);
+void monst_fire_missile(short m_num,short bless,short level,location source,short target);
 bool monst_breathe(cPopulation::cCreature *caster,location targ_space,short dam_type);
 bool monst_cast_mage(cPopulation::cCreature *caster,short targ);
 bool monst_cast_priest(cPopulation::cCreature *caster,short targ);

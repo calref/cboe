@@ -1994,7 +1994,7 @@ void do_monster_turn()
 									// missile range 
 									&& (dist(cur_monst->m_loc,targ_space) <= abil_range[cur_monst->m_d.spec_skill])) {
 									print_monst_name(cur_monst->number);
-									monst_fire_missile(i,cur_monst->m_d.skill,cur_monst->m_d.status[1],
+									monst_fire_missile(i/*,cur_monst->m_d.skill*/,cur_monst->m_d.status[1],
 										cur_monst->m_d.spec_skill,cur_monst->m_loc,target);
 
 									// Vapors don't count as action
@@ -2541,7 +2541,7 @@ void monster_attack_monster(short who_att,short attackee)
 }
 
 
-void monst_fire_missile(short m_num,short skill,short bless,short level,location source,short target)
+void monst_fire_missile(short m_num,short bless,short level,location source,short target)
 //short target; // 100 +  - monster is target
 {
 	cPopulation::cCreature *m_target;
@@ -2997,7 +2997,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				break;
 			case 10: // summon beast
 				r1 = get_summon_monster(1);
-				if (r1 < 0)
+				if (r1 == 0)
 					break;
 				x = get_ran(3,1,4);
 				//Delay(12,&dummy); // gives sound time to end
@@ -3022,19 +3022,19 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				play_sound(25);
 				if (spell == 13) {
 					r1 = get_summon_monster(1);
-					if (r1 < 0)
+					if (r1 == 0)
 						break;
 					j = get_ran(2,1,3) + 1;
 					}
 				if (spell == 20) {
 					r1 = get_summon_monster(2);
-					if (r1 < 0)
+					if (r1 == 0)
 						break;
 					j = get_ran(2,1,2) + 1;
 					}
 				if (spell == 26) {
 					r1 = get_summon_monster(3);
-					if (r1 < 0)
+					if (r1 == 0)
 						break;
 					j = get_ran(1,2,3);
 					}

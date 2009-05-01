@@ -372,19 +372,21 @@ void handle_file_menu(int item_hit) {
 	
 	switch (item_hit) {
 		case 1: // open
-			FSSpec* file_to_load = nav_get_scenario();
-			if (load_scenario(*file_to_load)) {
-				if(load_town(scenario.last_town_edited,town))
-					cur_town = scenario.last_town_edited;
-				if(load_outdoors(scenario.last_out_edited,current_terrain)){
-					cur_out = scenario.last_out_edited;
-					augment_terrain(cur_out);
+			try{
+				FSSpec file_to_load = nav_get_scenario();
+				if (load_scenario(file_to_load)) {
+					if(load_town(scenario.last_town_edited,town))
+						cur_town = scenario.last_town_edited;
+					if(load_outdoors(scenario.last_out_edited,current_terrain)){
+						cur_out = scenario.last_out_edited;
+						augment_terrain(cur_out);
+					}
+					overall_mode = MODE_MAIN_SCREEN;
+					change_made = false;
+					update_item_menu();
+					set_up_main_screen();
 				}
-				overall_mode = MODE_MAIN_SCREEN;
-				change_made = false;
-				update_item_menu();
-				set_up_main_screen();
-			}
+			} catch(no_file_chosen){}
 			break;
 		case 2: // save
 			modify_lists();

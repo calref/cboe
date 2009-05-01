@@ -144,7 +144,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
 {
-	unsigned char ter;
+	unsigned short ter;
 	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,pic_type = 0,ter_pic = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	bool can_enter = true;

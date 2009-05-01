@@ -1466,7 +1466,7 @@ short get_encumberance(short pc_num)
 	return store;
 }
 
-short get_summon_monster(short summon_class)
+unsigned short get_summon_monster(short summon_class)
 {
 	short i,j;
 	
@@ -1477,5 +1477,5 @@ short get_summon_monster(short summon_class)
 			}
 		}
 	ASB("  Summon failed.");
-	return -1;
+	return 0;
 }

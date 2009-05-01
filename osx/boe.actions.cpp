@@ -1398,8 +1398,10 @@ bool handle_action(EventRecord event)
 		menu_activate(1);
 		univ.party.scen_name = ".exs"; // should be harmless...
 		if (FCD(901,0) == 2){
-			FSSpec* file = nav_put_party();
-			save_party(*file);
+			try{
+				FSSpec file = nav_put_party();
+				save_party(file);
+			} catch(no_file_chosen){}
 		}
 	}
 	else if (party_toast() == true) {
@@ -1995,8 +1997,10 @@ void menu_activate( short type)
 
 void do_load()
 {
-	FSSpecPtr file_to_load = nav_get_party();
-	if(file_to_load != NULL) load_party(*file_to_load);
+	try{
+		FSSpec file_to_load = nav_get_party();
+		load_party(file_to_load);
+	} catch(no_file_chosen){}
 	if (in_startup_mode == false)
 		post_load();
 	menu_activate(1);
@@ -2049,9 +2053,11 @@ void do_save(short mode)
 		return;
 		}
 	FSSpec file;
-	if(mode == 1) file = *nav_put_party();
-	else file = univ.file;
-	save_party(file);
+	try{
+		if(mode == 1) file = nav_put_party();
+		else file = univ.file;
+		save_party(file);
+	} catch(no_file_chosen){}
 	
 	pause(6);
 	SetPort(GetWindowPort(mainPtr));
@@ -2396,8 +2402,10 @@ void handle_death()
 			}
 		if (choice == 1) {
 			in_startup_mode = false;
-			FSSpecPtr file_to_load = nav_get_party();
-			if(file_to_load != NULL) load_party(*file_to_load);
+			try{
+				FSSpec file_to_load = nav_get_party();
+				load_party(file_to_load);
+			} catch(no_file_chosen){}
 			if (party_toast() == false) {
 				if (in_startup_mode == false)
 					post_load();
@@ -2465,9 +2473,11 @@ void start_new_game()
 			ADVEN[i].max_sp += ADVEN[i].skills[9] * 3 + ADVEN[i].skills[10] * 3;
 			ADVEN[i].cur_sp = ADVEN[i].max_sp;
 		}
-	FSSpec* file = nav_put_party();
-	save_party(*file);
-	party_in_memory = true;
+	try{
+		FSSpec file = nav_put_party();
+		save_party(file);
+		party_in_memory = true;
+	} catch(no_file_chosen){}
 
 	}
 

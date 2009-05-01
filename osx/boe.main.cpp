@@ -792,8 +792,10 @@ void handle_file_menu(int item_hit)
 			break;
 		case 3:
 			if (in_startup_mode == true){
-				FSSpec* file = nav_put_party();
-				save_party(*file);
+				try{
+					FSSpec file = nav_put_party();
+					save_party(file);
+				} catch(no_file_chosen){}
 			}
 				else do_save(1);
 			break;
