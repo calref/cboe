@@ -877,7 +877,7 @@ bool outdoor_move_monster(short num,location dest)
 
 	if ((outd_is_blocked(dest) == false) && (outd_is_special(dest) == false) && 
 		(dest != univ.party.p_loc) && 
-		((univ.out.out[dest.x][dest.y] > 21) || (univ.out.out[dest.x][dest.y] < 5))) {
+		((univ.out[dest.x][dest.y] > 21) || (univ.out[dest.x][dest.y] < 5))) {
 		univ.party.out_c[num].direction = 
 				set_direction(univ.party.out_c[num].m_loc, dest);
 		univ.party.out_c[num].m_loc = dest;

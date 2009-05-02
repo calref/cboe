@@ -52,7 +52,7 @@ extern short special_queue[20];
 extern bool modeless_exists[18],diff_depth_ok,belt_present;
 extern short modeless_key[18];
 extern DialogPtr modeless_dialogs[18];
-//extern unsigned char univ.out.out[96][96],univ.out.out_e[96][96],univ.out.sfx[64][64];
+//extern unsigned char univ.out[96][96],univ.out.out_e[96][96],univ.out.sfx[64][64];
 //extern stored_items_list_type stored_items[3];
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
@@ -207,7 +207,7 @@ void start_town_mode(short which_town, short entry_dir)
 	// Set up map, using stored map
 	for (i = 0; i < univ.town->max_dim(); i++)
 		for (j = 0; j < univ.town->max_dim(); j++) {
-			univ.town.fields[i][j] = 0;
+			//univ.town.fields[i][j] = 0;
 			//univ.out.sfx[i][j] = 0;
 			if (univ.town_maps[univ.town.num][i / 8][j] & (char)(s_pow(2,i % 8)))
 				make_explored(i,j);
@@ -1303,13 +1303,13 @@ void erase_out_specials()
 						(univ.out.outdoors[k][l].exit_locs[m].x == minmax(0,47,univ.out.outdoors[k][l].exit_locs[m].x)) &&
 						(univ.out.outdoors[k][l].exit_locs[m].y == minmax(0,47,univ.out.outdoors[k][l].exit_locs[m].y))) {
 					if (univ.party.can_find_town[univ.out.outdoors[k][l].exit_dests[m]] == 0) {
-					univ.out.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] = 
+					univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] = 
 						scenario.ter_types[univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y]].flag1;
-						//exit_g_type[univ.out.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] - 217];
+						//exit_g_type[univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] - 217];
 					
 					}
 					else if (univ.party.can_find_town[univ.out.outdoors[k][l].exit_dests[m]] > 0) {
-					univ.out.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] = 
+					univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] = 
 						univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y];
 					
 						}
@@ -1336,12 +1336,12 @@ void erase_out_specials()
 							}
 				
 						switch (scenario.ter_types[univ.out.outdoors[i][j].terrain[where.x][where.y]].picture) {
-							case 207: univ.out.out[48 * i + where.x][48 * j + where.y] = 0; break;
-							case 208: univ.out.out[48 * i + where.x][48 * j + where.y] = 170; break;
-							case 209: univ.out.out[48 * i + where.x][48 * j + where.y] = 210; break;
-							case 210: univ.out.out[48 * i + where.x][48 * j + where.y] = 217; break;
-							case 211: univ.out.out[48 * i + where.x][48 * j + where.y] = 2; break;
-							case 212: univ.out.out[48 * i + where.x][48 * j + where.y] = 36; break;
+							case 207: univ.out[48 * i + where.x][48 * j + where.y] = 0; break;
+							case 208: univ.out[48 * i + where.x][48 * j + where.y] = 170; break;
+							case 209: univ.out[48 * i + where.x][48 * j + where.y] = 210; break;
+							case 210: univ.out[48 * i + where.x][48 * j + where.y] = 217; break;
+							case 211: univ.out[48 * i + where.x][48 * j + where.y] = 2; break;
+							case 212: univ.out[48 * i + where.x][48 * j + where.y] = 36; break;
 							}
 						}
 					}
@@ -1609,7 +1609,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 					OffsetRect(&draw_rect,6 * where.x + small_adj, 6 * where.y + small_adj);
 
 					if (out_mode == true)
-						what_ter = univ.out.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
+						what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 						else what_ter = univ.town->terrain(where.x,where.y);
 					
 					ter_temp_from = orig_draw_rect;
@@ -1647,7 +1647,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 									// Try a little optimization
 									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
 										if (out_mode == true)
-											what_ter2 = univ.out.out[(where.x + 1)+ 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
+											what_ter2 = univ.out[(where.x + 1)+ 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 											else what_ter2 = univ.town->terrain(where.x + 1,where.y);	
 										if (out_mode == true)
 											expl2 = univ.out.out_e[(where.x + 1) + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];

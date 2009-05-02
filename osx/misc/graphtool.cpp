@@ -311,7 +311,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 	short text_len[257];
 	short total_width = 0;
-	bool /*end_loop,*/force_skip = false;
+	//bool /*end_loop,*/force_skip = false;
 	//KeyMap key_state;
 	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
@@ -351,12 +351,13 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	switch (mode) {
 		case 0: 
 			MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
-			for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
+			for (i = 0;text_len[i] != text_len[i + 1] && i < str_len;i++) {
 				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
 					 && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
 				  	if (c_str[i] == '|') {
 				  		c_str[i] = ' ';
-				  		force_skip = true;
+				  		//force_skip = true;
+						last_word_break = i + 1;
 					}
 					sprintf((char *)str_to_draw,"%s",(char *)null_s);
 					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
@@ -368,12 +369,12 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 					on_what_line++;
 					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 					last_line_break = last_word_break;
-					if (force_skip == true) {
-						force_skip = false;
-						i++;
-						last_line_break++;
-						last_word_break++;
-					}
+					//if (force_skip) {
+						//force_skip = false;
+						//i++;
+						//last_line_break++;
+						//last_word_break++;
+					//}
 				}
 				if (c_str[i] == ' ')
 					last_word_break = i + 1;

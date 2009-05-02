@@ -6,7 +6,7 @@
  *
  */
 
-class cTemplTown : cTown {
+class cTemplTown {
 public:
 	class cCityBlock { // formerly city_block_type
 	public:
@@ -22,13 +22,16 @@ public:
 		unsigned char ter_type;
 		unsigned char hollow;
 	};
-private:
-	cCreature _creatures[30];
-	unsigned short _terrain[64][64];
-	rectangle _room_rect[16];
-	unsigned char _lighting[4][32];
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
+};
+
+class cBigTemplTown : public cBigTown, cTemplTown {
+private:
+	//cCreature _creatures[60];
+	//unsigned short _terrain[64][64];
+	//rectangle _room_rect[16];
+	//unsigned char _lighting[4][32];
 public:
 	unsigned short& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
@@ -36,8 +39,36 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
-	
-	cTemplTown();
+};
+
+class cMedTemplTown : public cMedTown, cTemplTown {
+private:
+	//cCreature _creatures[40];
+	//unsigned short _terrain[48][48];
+	//rectangle _room_rect[16];
+	//unsigned char _lighting[4][32];
+public:
+	unsigned short& terrain(size_t x, size_t y);
+	rectangle& room_rect(size_t i);
+	cCreature& creatures(size_t i);
+	unsigned char& lighting(size_t i, size_t r);
+	short max_dim();
+	short max_monst();
+};
+
+class cTinyTemplTown : public cTinyTown, cTemplTown {
+private:
+	//cCreature _creatures[30];
+	//unsigned short _terrain[32][32];
+	//rectangle _room_rect[16];
+	//unsigned char _lighting[4][32];
+public:
+	unsigned short& terrain(size_t x, size_t y);
+	rectangle& room_rect(size_t i);
+	cCreature& creatures(size_t i);
+	unsigned char& lighting(size_t i, size_t r);
+	short max_dim();
+	short max_monst();
 };
 
 // City blocks - I want to figure out how to use these sometime.

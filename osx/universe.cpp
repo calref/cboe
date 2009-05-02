@@ -601,3 +601,7 @@ unsigned char cCurTown::sfx(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return 0;
 	return (fields[x][y] & 0x00FF0000) >> 16;
 }
+
+unsigned short(& cCurOut::operator [] (size_t i))[96]{
+	return out[i];
+}

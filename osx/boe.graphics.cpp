@@ -40,7 +40,7 @@ extern short anim_step;
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern current_town_type univ.town;
 //extern town_item_list t_i;
-//extern unsigned char univ.out.out[96][96],out_e[96][96];
+//extern unsigned char univ.out[96][96],out_e[96][96];
 extern unsigned char combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -1232,7 +1232,7 @@ void put_text_bar(char *str)
 	rect_draw_some_item (text_bar_gworld, win_from_rects[4], text_bar_gworld, win_to_rects[4], 0, 1);
 }
 
-// This is called when a new situation is entered. It figures univ.out.out what graphics are needed,
+// This is called when a new situation is entered. It figures out what graphics are needed,
 // sets up which_g_stored, and loads them.
 void load_area_graphics()
 {
@@ -1408,7 +1408,7 @@ void load_outdoor_graphics() ////
 
 	for (i = 0; i < 96; i++)
 		for (j = 0; j < 96; j++) 
-			add_terrain_to_wish_list(univ.out.out[i][j]);
+			add_terrain_to_wish_list(univ.out[i][j]);
 
 	for (l = 0; l < 2; l++)
 	for (m = 0; m < 2; m++) 
@@ -1870,7 +1870,7 @@ void draw_terrain(short	mode)
 						|| (where_draw.y < 0) || (where_draw.y > 95))
 						can_draw = 0;
 						else {
-							spec_terrain = univ.out.out[where_draw.x][where_draw.y];
+							spec_terrain = univ.out[where_draw.x][where_draw.y];
 							can_draw = univ.out.out_e[where_draw.x][where_draw.y];
 							}						
 						}
@@ -1942,32 +1942,32 @@ void draw_terrain(short	mode)
 
 						case 79: case 80: case 81:
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x][where_draw.y - 1] == 80) || (univ.out.out[where_draw.x][where_draw.y - 1] == 79)))
+								&& ((univ.out[where_draw.x][where_draw.y - 1] == 80) || (univ.out[where_draw.x][where_draw.y - 1] == 79)))
 										short_spec_terrain = 42;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x][where_draw.y + 1] == 80) || (univ.out.out[where_draw.x][where_draw.y + 1] == 79)))
+								&& ((univ.out[where_draw.x][where_draw.y + 1] == 80) || (univ.out[where_draw.x][where_draw.y + 1] == 79)))
 										short_spec_terrain = 38;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x - 1][where_draw.y] == 80) || (univ.out.out[where_draw.x - 1][where_draw.y] == 79)))
+								&& ((univ.out[where_draw.x - 1][where_draw.y] == 80) || (univ.out[where_draw.x - 1][where_draw.y] == 79)))
 										short_spec_terrain = 44;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x + 1][where_draw.y ] == 80) || (univ.out.out[where_draw.x + 1][where_draw.y] == 79)))
+								&& ((univ.out[where_draw.x + 1][where_draw.y ] == 80) || (univ.out[where_draw.x + 1][where_draw.y] == 79)))
 										short_spec_terrain = 40;
 							/*if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x][where_draw.y - 1] != 234) && (univ.out.out[where_draw.x][where_draw.y - 1] != 81) &&
-									((univ.out.out[where_draw.x][where_draw.y - 1] < 36) || (univ.out.out[where_draw.x][where_draw.y - 1] > 49))))
+								&& ((univ.out[where_draw.x][where_draw.y - 1] != 234) && (univ.out[where_draw.x][where_draw.y - 1] != 81) &&
+									((univ.out[where_draw.x][where_draw.y - 1] < 36) || (univ.out[where_draw.x][where_draw.y - 1] > 49))))
 										short_spec_terrain = 42;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x][where_draw.y + 1] != 234) && (univ.out.out[where_draw.x][where_draw.y + 1] != 81) &&
-									((univ.out.out[where_draw.x][where_draw.y + 1] < 36) || (univ.out.out[where_draw.x][where_draw.y + 1] > 49))))
+								&& ((univ.out[where_draw.x][where_draw.y + 1] != 234) && (univ.out[where_draw.x][where_draw.y + 1] != 81) &&
+									((univ.out[where_draw.x][where_draw.y + 1] < 36) || (univ.out[where_draw.x][where_draw.y + 1] > 49))))
 										short_spec_terrain = 38;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x - 1][where_draw.y] != 234) &&(univ.out.out[where_draw.x - 1][where_draw.y] != 81) &&
-									((univ.out.out[where_draw.x - 1][where_draw.y] < 36) || (univ.out.out[where_draw.x - 1][where_draw.y] > 49))))
+								&& ((univ.out[where_draw.x - 1][where_draw.y] != 234) &&(univ.out[where_draw.x - 1][where_draw.y] != 81) &&
+									((univ.out[where_draw.x - 1][where_draw.y] < 36) || (univ.out[where_draw.x - 1][where_draw.y] > 49))))
 										short_spec_terrain = 44;
 							if ((short_spec_terrain == 81) 
-								&& ((univ.out.out[where_draw.x + 1][where_draw.y] != 234) && (univ.out.out[where_draw.x + 1][where_draw.y] != 81) &&
-									((univ.out.out[where_draw.x + 1][where_draw.y] < 36) || (univ.out.out[where_draw.x + 1][where_draw.y] > 49))))
+								&& ((univ.out[where_draw.x + 1][where_draw.y] != 234) && (univ.out[where_draw.x + 1][where_draw.y] != 81) &&
+									((univ.out[where_draw.x + 1][where_draw.y] < 36) || (univ.out[where_draw.x + 1][where_draw.y] > 49))))
 										short_spec_terrain = 40;*/
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);	
 							place_road(q,r,where_draw);

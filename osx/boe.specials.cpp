@@ -32,7 +32,7 @@ extern WindowPtr mainPtr;
 extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type	univ.town;
-//extern unsigned char univ.out.out[96][96],out_e[96][96],sfx[64][64];
+//extern unsigned char univ.out[96][96],out_e[96][96],sfx[64][64];
 extern unsigned char combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
 //extern cOutdoors univ.out.outdoors[2][2];
@@ -156,7 +156,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	
 	switch (mode) {
 		case 0:
-			ter = univ.out.out[where_check.x][where_check.y];
+			ter = univ.out[where_check.x][where_check.y];
 			from_loc = univ.party.p_loc;
 			break;	
 		case 1:
@@ -394,7 +394,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
 void check_fields(location where_check,short mode,short which_pc)
-//mode; // 0 - univ.out.out 1 - town 2 - combat
+//mode; // 0 - out 1 - town 2 - combat
 {
 	short r1,i;
 	
@@ -843,7 +843,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				start_spell_targeting(1062);
 				break;
 			case 129:
-				add_string_to_buf("Fire pours univ.out.out!");
+				add_string_to_buf("Fire pours out!");
 				make_quickfire(user_loc.x,user_loc.y);
 				break;
 			case 130: 
@@ -909,7 +909,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 }
 
-// Returns true if an action is actually carried univ.out.out. This can only be reached in town.
+// Returns true if an action is actually carried out. This can only be reached in town.
 bool use_space(location where)
 {
 	unsigned char ter;
@@ -974,7 +974,7 @@ bool use_space(location where)
 
 // Note ... if this is a container, the code must first process any specials. If
 //specials return false, can't get items inside. If true, can get items inside.
-// Can't get items univ.out.out in combat.
+// Can't get items out in combat.
 bool adj_town_look(location where)
 {
 	char terrain;
@@ -1575,7 +1575,7 @@ void special_increase_age()
 // 0 - out moving (a - 1 if blocked)
 // 1 - town moving (a - 1 if blocked)
 // 2 - combat moving (a - 1 if blocked)
-// 3 - univ.out.out looking (a - 1 if don't get items inside)  NOT USED!!!
+// 3 - out looking (a - 1 if don't get items inside)  NOT USED!!!
 // 4 - town looking (a - 1 if don't get items inside)
 // 5 - entering town
 // 6 - leaving town
@@ -1590,7 +1590,7 @@ void special_increase_age()
 // 15 - fleeing outdoor enc
 // 16 - ritual of sanct
 // 17 - using space
-// which_type - 0 - scen 1 - univ.out.out 2 - town
+// which_type - 0 - scen 1 - out 2 - town
 // start spec - the number of the first spec to call
 // a,b - 2 values that can be returned
 // redraw - 1 if now need redraw
@@ -1669,21 +1669,21 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
 		if (cur_spec != minmax(0,255,cur_spec)) {
-			give_error("The scenario called a scenario special node univ.out.out of range.","",0);
+			give_error("The scenario called a scenario special node out of range.","",0);
 			return dummy_node;
 			}
 		return scenario.scen_specials[cur_spec];
 		}
 	if (cur_spec_type == 1) {
 		if (cur_spec != minmax(0,59,cur_spec)) {
-			give_error("The scenario called an outdoor special node univ.out.out of range.","",0);
+			give_error("The scenario called an outdoor special node out of range.","",0);
 			return dummy_node;
 			}
 		return univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[cur_spec];
 		}
 	if (cur_spec_type == 2) {
 		if (cur_spec != minmax(0,99,cur_spec)) {
-			give_error("The scenario called a town special node univ.out.out of range.","",0);
+			give_error("The scenario called a town special node out of range.","",0);
 			return dummy_node;
 			}
 		return univ.town->specials[cur_spec];
@@ -1818,12 +1818,12 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 22:
 			if (spec.sd1 != minmax(0,299,spec.sd1))
-				give_error("Stuff Done flag univ.out.out of range.","",0);
+				give_error("Stuff Done flag out of range.","",0);
 				else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case 23:
 			if ((sd_legit(spec.sd1,spec.sd2) == false) || (sd_legit(spec.ex1a,spec.ex1b) == false))
-				give_error("Stuff Done flag univ.out.out of range.","",0);
+				give_error("Stuff Done flag out of range.","",0);
 				else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
 		case 24:
@@ -2197,7 +2197,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 98:
 			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
-				give_error("Skill is univ.out.out of range.","",0);
+				give_error("Skill is out of range.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
@@ -2207,7 +2207,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 99:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Mage spell is univ.out.out of range (0 - 31). See docs.","",0);
+				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
@@ -2216,7 +2216,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 100:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Priest spell is univ.out.out of range (0 - 31). See docs.","",0);
+				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
 				break;
 				}
 			for (i = 0; i < 6; i++)
@@ -2239,7 +2239,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 103:
 			if (spec.ex1a != minmax(0,19,spec.ex1a)) {
-				give_error("Alchemy is univ.out.out of range.","",0);
+				give_error("Alchemy is out of range.","",0);
 				break;
 				}
 			univ.party.alchemy[spec.ex1a] = true;
@@ -2299,7 +2299,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 133:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is univ.out.out of range.","",0);		
+				give_error("Special item is out of range.","",0);		
 				}
 				else if (univ.party.spec_items[spec.ex1a] > 0)
 					*next_spec = spec.ex1b;
@@ -2309,7 +2309,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				if (PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 				}
-				else give_error("A Stuff Done flag is univ.out.out of range.","",0);	
+				else give_error("A Stuff Done flag is out of range.","",0);	
 			break;
 		case 135:
 			if (((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
@@ -2318,7 +2318,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 136:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (univ.out.out[l.x][l.y] == spec.ex2a))
+			if ((is_out()) && (univ.out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case 137:
@@ -2948,13 +2948,13 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			l.x = spec.ex1a;
 			l.y = spec.ex1b;
 			l = local_to_global(l);
-			univ.out.out[l.x][l.y] = spec.ex2a;
+			univ.out[l.x][l.y] = spec.ex2a;
 			*redraw = 1;
 			check_mess = true;
 			break;		
 		case 227:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is univ.out.out of range. Must be 0-3.","",0);
+				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
 				//set_sd = false;
 				}
 				else {
@@ -2996,7 +2996,7 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 void setsd(short a,short b,short val)
 {
 	if (sd_legit(a,b) == false) {
-		give_error("The scenario attempted to change an univ.out.out of range Stuff Done flag.","",0);
+		give_error("The scenario attempted to change an out of range Stuff Done flag.","",0);
 		return;
 		}
 	PSD[a][b] = val;
@@ -3037,7 +3037,7 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 		
 	if (((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
 		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
-		give_error("The scenario attempted to access a message univ.out.out of range.","",0);
+		give_error("The scenario attempted to access a message out of range.","",0);
 		return;
 		}
 	switch (cur_type) {
@@ -3049,11 +3049,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 1:
 			if (which_str1 >= 0)
-				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x, 
-					univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
+				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
 			if (which_str2 >= 0)
-				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x, 
-					univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
+				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
 			break;
 		case 2:
 			if (which_str1 >= 0)

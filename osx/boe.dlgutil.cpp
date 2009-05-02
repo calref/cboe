@@ -1142,7 +1142,8 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	
 	if (town_num >= 200) {
 		town_num -= 200;
-		load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
+		//load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
+		strcpy((char*)sign_text,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_strs[which_sign]);
 		}
 		else {
 			sprintf((char *) sign_text,"%s",univ.town->town_strs(120 + which_sign));

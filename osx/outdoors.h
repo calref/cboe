@@ -14,7 +14,7 @@ namespace legacy {
 	struct outdoor_creature_type;
 };
 
-struct cOutdoors {
+class cOutdoors {
 public:
 	class cWandering { // formerly out_wandering_type
 	public:

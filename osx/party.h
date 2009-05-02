@@ -49,7 +49,7 @@ public:
 		short node_to_call;
 	};
 	// formerly party_record_type
-	long age;
+	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
 	unsigned char stuff_done[310][50];
@@ -102,6 +102,7 @@ public:
 	
 	void add_pc(legacy::pc_record_type old);
 	void add_pc(cPlayer new_pc);
+	void void_pcs();
 	bool has_talk_save(short who, short str1, short str2);
 	bool save_talk(short who, unsigned char where, short str1, short str2);
 	bool add_to_journal(short event, short day);

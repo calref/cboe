@@ -1252,7 +1252,7 @@ short print_terrain(location space)
 	unsigned char which_terrain;
 
 	if (overall_mode == MODE_LOOK_OUTDOORS) {
-		which_terrain = univ.out.out[space.x][space.y];
+		which_terrain = univ.out[space.x][space.y];
 		}
 	if (overall_mode == MODE_LOOK_TOWN) {
 		which_terrain = univ.town->terrain(space.x,space.y);

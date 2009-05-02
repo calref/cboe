@@ -305,7 +305,7 @@ unsigned short coord_to_ter(short x,short y)
 	unsigned short what_terrain;
 
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
-		what_terrain = univ.out.out[x][y];
+		what_terrain = univ.out[x][y];
 	else if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT))|| (overall_mode == MODE_LOOK_TOWN))
 		what_terrain = univ.town->terrain(x,y);
 	else {
@@ -370,7 +370,7 @@ bool is_blocked(location to_check)
 	unsigned char ter;
 
 	if (is_out()) {
-		if (impassable(univ.out.out[to_check.x][to_check.y]) == true) {
+		if (impassable(univ.out[to_check.x][to_check.y]) == true) {
 			return true;
 			}
 		if (to_check == univ.party.p_loc)
@@ -528,7 +528,7 @@ bool outd_is_blocked(location to_check)
 	short i;
 
 	if (overall_mode == MODE_OUTDOORS) {
-		if (impassable(univ.out.out[to_check.x][to_check.y]) == true) {
+		if (impassable(univ.out[to_check.x][to_check.y]) == true) {
 			return true;
 			}
 		for (i = 0; i < 10; i++)
@@ -563,7 +563,7 @@ bool is_special(location to_check)
 bool outd_is_special(location to_check)
 {
 	if (overall_mode == MODE_OUTDOORS) {
-		if (terrain_blocked[univ.out.out[to_check.x][to_check.y]] == 2) {
+		if (terrain_blocked[univ.out[to_check.x][to_check.y]] == 2) {
 			return true;
 			}
 			else return false;
@@ -749,7 +749,7 @@ void alter_space(short i,short j,unsigned char ter)
 	
 	if (is_out()) {
 		l = local_to_global(l);
-		univ.out.out[l.x][l.y] = ter;
+		univ.out[l.x][l.y] = ter;
 		univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].terrain[i][j] = ter;
 		}
 		else {

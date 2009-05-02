@@ -478,7 +478,7 @@ bool handle_action(EventRecord event)
 						}
 					if (overall_mode == MODE_OUTDOORS) { // Resting
 						i = 0;
-						ter = univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y];
+						ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 						if (univ.party.in_boat >= 0)////
 							add_string_to_buf("Rest:  Not in boat.               ");
 						else if (someone_poisoned() == true)
@@ -786,7 +786,7 @@ bool handle_action(EventRecord event)
 					}
 						else need_redraw = true;					
 					
-					storage = univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y];
+					storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 					if (scenario.ter_types[storage].special == 21) {//// town entry
 
 						if (univ.party.direction == 0) find_direction_from = 2;
@@ -1536,7 +1536,7 @@ void initiate_outdoor_combat(short i)
 
 //	Delay((long) 100,&dummy);
 							
-	start_outdoor_combat(univ.party.out_c[i], univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y],count_walls(univ.party.p_loc));
+	start_outdoor_combat(univ.party.out_c[i], univ.out[univ.party.p_loc.x][univ.party.p_loc.y],count_walls(univ.party.p_loc));
 
 	univ.party.out_c[i].exists = false;
 
@@ -2111,7 +2111,7 @@ void increase_age()////
 	if (PSD[SDF_PARTY_FLIGHT] == 2) 
 		add_string_to_buf("You are starting to descend.");
 	if (PSD[SDF_PARTY_FLIGHT] == 1) {
-		if (scenario.ter_types[univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage > 2) { 
+		if (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage > 2) { 
 				add_string_to_buf("  You plummet to your deaths.                  ");
 				slay_party(MAIN_STATUS_DEAD);
 				print_buf();
@@ -2317,7 +2317,7 @@ void handle_cave_lore()////
 	if (!is_out())
 		return;
 	
-	ter = univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y];
+	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
 		if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
@@ -2578,7 +2578,7 @@ bool outd_move_party(location destination,bool forced)
 	//		if (same_point(destination,party.out_c[i].m_loc) == true)
 	//				party.out_c[i].exists = false;
 
-		ter = univ.out.out[real_dest.x][real_dest.y];
+		ter = univ.out[real_dest.x][real_dest.y];
 	if (univ.party.in_boat >= 0) {
 		if ((outd_is_blocked(real_dest) == false) //&& (outd_is_special(real_dest) == false)
 		// not in towns
@@ -2671,11 +2671,11 @@ bool outd_move_party(location destination,bool forced)
 		univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
 		sprintf ((char *) create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
 		add_string_to_buf((char *) create_line);
-		move_sound(univ.out.out[real_dest.x][real_dest.y],num_out_moves);
+		move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 		num_out_moves++;
 		
 		if (univ.party.in_boat >= 0) { // Waterfall!!!
-			while (scenario.ter_types[univ.out.out[univ.party.p_loc.x][univ.party.p_loc.y + 1]].special == 15) {
+			while (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y + 1]].special == 15) {
 				add_string_to_buf("  Waterfall!                     ");
 				univ.party.p_loc.y += 2;
 				univ.party.loc_in_sec.y += 2;
@@ -2934,13 +2934,13 @@ short count_walls(location loc)
 	short k = 0;
 
 	for (k = 0; k < 31 ; k++) {
-		if (univ.out.out[loc.x + 1][loc.y] == walls[k]) 
+		if (univ.out[loc.x + 1][loc.y] == walls[k]) 
 			answer++;	
-		if (univ.out.out[loc.x - 1][loc.y] == walls[k]) 
+		if (univ.out[loc.x - 1][loc.y] == walls[k]) 
 			answer++;	
-		if (univ.out.out[loc.x][loc.y + 1] == walls[k]) 
+		if (univ.out[loc.x][loc.y + 1] == walls[k]) 
 			answer++;	
-		if (univ.out.out[loc.x][loc.y - 1] == walls[k]) 
+		if (univ.out[loc.x][loc.y - 1] == walls[k]) 
 			answer++;	
 		}
 	return answer;		

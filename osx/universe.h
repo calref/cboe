@@ -108,6 +108,8 @@ public:
 	//unsigned char misc_i[64][64];
 	
 	void append(legacy::out_info_type& old);
+	
+	unsigned short(& operator [] (size_t i))[96];
 };
 
 class cUniverse{
@@ -118,6 +120,7 @@ public:
 	cCurOut out;
 	char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
 	FSSpec file;
+	
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);
 };

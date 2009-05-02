@@ -133,9 +133,14 @@ void cParty::add_pc(legacy::pc_record_type old){
 		}
 }
 
+void cParty::void_pcs(){
+	for(int i = 0; i < 6; i++)
+		adven[i].main_status = MAIN_STATUS_ABSENT;
+}
+
 void cParty::add_pc(cPlayer new_pc){
 	for(int i = 0; i < 6; i++)
-		if(adven[i].main_status == 0){
+		if(adven[i].main_status == MAIN_STATUS_ABSENT){
 			adven[i] = new_pc;
 			break;
 		}

@@ -13,6 +13,7 @@ namespace legacy {
 };
 
 class cBigTown : public cTown { // formerly big_tr_type
+protected:
 	unsigned short _terrain[64][64];
 	rectangle _room_rect[16];
 	cCreature _creatures[60];
@@ -30,6 +31,7 @@ public:
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
+protected:
 	unsigned short _terrain[48][48];
 	rectangle _room_rect[16];
 	cCreature _creatures[40];
@@ -47,6 +49,7 @@ public:
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
+protected:
 	unsigned short _terrain[32][32];
 	rectangle _room_rect[16];
 	cCreature _creatures[30];

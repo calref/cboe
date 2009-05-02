@@ -273,8 +273,8 @@ bool load_scenario(FSSpec file_to_load){
 //	//load_town(0);
 //	if(!load_outdoors(scenario.last_out_edited,0)) return false;
 //	augment_terrain(scenario.last_out_edited);
-	load_spec_graphics();
 	scenario.scen_file = file_to_load;
+	load_spec_graphics();
 	return true;
 }
 
@@ -1063,6 +1063,7 @@ bool load_party(FSSpec file_to_load){
 	
 	univ.party = store_party;
 	univ.party.append(store_setup);
+	univ.party.void_pcs();
 	for(i = 0; i < 6; i++)
 		univ.party.add_pc(store_pc[i]);
 	if(in_scen){

@@ -8,26 +8,26 @@
 
 #include "classes.h"
 
-unsigned short& cTemplTown::terrain(size_t x, size_t y){
+unsigned short& cBigTemplTown::terrain(size_t x, size_t y){
 	return  _terrain[0][0]; // will need to calculate the terrain somehow
 }
 
-rectangle& cTemplTown::room_rect(size_t i){
+rectangle& cBigTemplTown::room_rect(size_t i){
 	return _room_rect[i];
 }
 
-cTown::cCreature& cTemplTown::creatures(size_t i){
+cTown::cCreature& cBigTemplTown::creatures(size_t i){
 	return _creatures[i];
 }
 
-unsigned char& cTemplTown::lighting(size_t i, size_t r){
+unsigned char& cBigTemplTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
 
-short cTemplTown::max_dim(){
+short cBigTemplTown::max_dim(){
 	return 0; // not sure what they are yet.
 }
 
-short cTemplTown::max_monst(){
+short cBigTemplTown::max_monst(){
 	return 30;
 }

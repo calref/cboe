@@ -816,7 +816,7 @@ Rect get_item_template_rect (short type_wanted)////
 unsigned char get_t_t(char x,char y)  // returns terrain type at where
 {
 	if (is_out())
-		return univ.out.out[x][y];
+		return univ.out[x][y];
 		else if (is_town())
 			return univ.town->terrain(x,y);
 			else return combat_terrain[x][y];
@@ -917,7 +917,7 @@ void make_out_trim()
 
 	for (where.x = 0; where.x < 96; where.x++)
 		for (where.y = 0; where.y < 96; where.y++)
-			out_trim[where.x][where.y] = add_trim_to_array(where,univ.out.out[where.x][where.y]);
+			out_trim[where.x][where.y] = add_trim_to_array(where,univ.out[where.x][where.y]);
 	for (where.x = 0; where.x < 96; where.x++)
 		for (where.y = 0; where.y < 96; where.y++) {
 			if (out_trim[where.x][where.y] & 1)

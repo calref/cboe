@@ -799,10 +799,10 @@ void build_outdoors()
 	short i,j;
 		for (i = 0; i < 48; i++)
 			for (j = 0; j < 48; j++) {
-				univ.out.out[i][j] = univ.out.outdoors[0][0].terrain[i][j];
-				univ.out.out[48 + i][j] = univ.out.outdoors[1][0].terrain[i][j];
-				univ.out.out[i][48 + j] = univ.out.outdoors[0][1].terrain[i][j];
-				univ.out.out[48 + i][48 + j] = univ.out.outdoors[1][1].terrain[i][j];	
+				univ.out[i][j] = univ.out.outdoors[0][0].terrain[i][j];
+				univ.out[48 + i][j] = univ.out.outdoors[1][0].terrain[i][j];
+				univ.out[i][48 + j] = univ.out.outdoors[0][1].terrain[i][j];
+				univ.out[48 + i][48 + j] = univ.out.outdoors[1][1].terrain[i][j];	
 			}
 			
 	fix_boats();
