@@ -16,7 +16,7 @@
 
 extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern bool mouse_button_held;
-extern short cur_viewing_mode,dialog_answer,given_password,user_given_password;
+extern short cur_viewing_mode,dialog_answer;//,given_password,user_given_password;
 extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3];
@@ -2570,41 +2570,41 @@ bool build_scenario() {
 	//	update_item_menu();
 }
 
-void user_password_filter (short item_hit) {
-	Str255 str;
-	short i;
-	
-	switch (item_hit) {
-		case 4:
-			i = CDGN(802,2);
-			if ((i < 0) || (i > 30000)) {
-				give_error("The password must be from 0 to 30000.","",802);
-				break;
-			}
-			toast_dialog();
-			break;
-			
-	}
-}
-
-short get_password() {
-	// ignore parent in Mac version
-	short town_strs_hit,i,store_dialog_answer;
-	Str255 temp_str,str2;
-	
-	cd_create_dialog_parent_num(802,0);
-	
-	CDSN(802,2,0);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	CDGT(802,2,(char *) temp_str);
-	i = wd_to_pwd(temp_str);
-	
-	cd_kill_dialog(802);
-	
-	return i;
-}
+//void user_password_filter (short item_hit) {
+//	Str255 str;
+//	short i;
+//	
+//	switch (item_hit) {
+//		case 4:
+//			i = CDGN(802,2);
+//			if ((i < 0) || (i > 30000)) {
+//				give_error("The password must be from 0 to 30000.","",802);
+//				break;
+//			}
+//			toast_dialog();
+//			break;
+//			
+//	}
+//}
+//
+//short get_password() {
+//	// ignore parent in Mac version
+//	short town_strs_hit,i,store_dialog_answer;
+//	Str255 temp_str,str2;
+//	
+//	cd_create_dialog_parent_num(802,0);
+//	
+//	CDSN(802,2,0);
+//	
+//	town_strs_hit = cd_run_dialog();
+//	
+//	CDGT(802,2,(char *) temp_str);
+//	i = wd_to_pwd(temp_str);
+//	
+//	cd_kill_dialog(802);
+//	
+//	return i;
+//}
 
 void set_starting_loc_filter (short item_hit) {
 	Str255 str;
@@ -2729,58 +2729,58 @@ void edit_scenario_events() {
 	cd_kill_dialog(811);
 }
 
-void give_password_filter (short item_hit) {
-	Str255 str;
-	short i;
-	
-	switch (item_hit) {
-		default:
-			
-			toast_dialog();
-			break;
-			
-	}
-}
-
-short enter_password() {
-	// ignore parent in Mac version
-	short town_strs_hit,i,store_dialog_answer;
-	Str255 temp_str,str2;
-	
-	cd_create_dialog_parent_num(823,0);
-	
-	CDSN(823,2,0);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	CDGT(823,2,(char *) temp_str);
-	i = wd_to_pwd(temp_str);
-	given_password = user_given_password = i;
-	
-	cd_kill_dialog(823);
-	
-	return i;
-}
-
-short wd_to_pwd(Str255 str) {
-	char pwd[8] = "aaaaaa";
-	short i;
-	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-	
-	for (i = 0; i < 6; i++) {
-		if (str[i] == 0) 
-			i = 6;
-		else {
-			if ((str[i] >= 65) && (str[i] <= 90))
-				pwd[i] = str[i] + 32;
-			else if ((str[i] >= 48) && (str[i] <= 57))
-				pwd[i] = str[i] + 49;
-			else if ((str[i] >= 97) && (str[i] <= 122))
-				pwd[i] = str[i];
-		}
-	}
-	for (i = 0; i < 6; i++)
-		val = val + pow[i] * (long) (pwd[i] - 97);
-	val = val % 30000;
-	return (short) val;
-}
+//void give_password_filter (short item_hit) {
+//	Str255 str;
+//	short i;
+//	
+//	switch (item_hit) {
+//		default:
+//			
+//			toast_dialog();
+//			break;
+//			
+//	}
+//}
+//
+//short enter_password() {
+//	// ignore parent in Mac version
+//	short town_strs_hit,i,store_dialog_answer;
+//	Str255 temp_str,str2;
+//	
+//	cd_create_dialog_parent_num(823,0);
+//	
+//	CDSN(823,2,0);
+//	
+//	town_strs_hit = cd_run_dialog();
+//	
+//	CDGT(823,2,(char *) temp_str);
+//	i = wd_to_pwd(temp_str);
+//	given_password = user_given_password = i;
+//	
+//	cd_kill_dialog(823);
+//	
+//	return i;
+//}
+//
+//short wd_to_pwd(Str255 str) {
+//	char pwd[8] = "aaaaaa";
+//	short i;
+//	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
+//	
+//	for (i = 0; i < 6; i++) {
+//		if (str[i] == 0) 
+//			i = 6;
+//		else {
+//			if ((str[i] >= 65) && (str[i] <= 90))
+//				pwd[i] = str[i] + 32;
+//			else if ((str[i] >= 48) && (str[i] <= 57))
+//				pwd[i] = str[i] + 49;
+//			else if ((str[i] >= 97) && (str[i] <= 122))
+//				pwd[i] = str[i];
+//		}
+//	}
+//	for (i = 0; i < 6; i++)
+//		val = val + pow[i] * (long) (pwd[i] - 97);
+//	val = val % 30000;
+//	return (short) val;
+//}

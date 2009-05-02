@@ -165,7 +165,7 @@ void init_dialogs(){
 	cd_register_event_filter(973,display_strings_event_filter);
 	cd_register_event_filter(800,edit_make_scen_1_event_filter);
 	cd_register_event_filter(801,edit_make_scen_2_event_filter);
-	cd_register_event_filter(802,user_password_filter);
+	//cd_register_event_filter(802,user_password_filter);
 	cd_register_event_filter(803,edit_scen_details_event_filter);
 	cd_register_event_filter(804,edit_scen_intro_event_filter);
 	cd_register_event_filter(805,set_starting_loc_filter);
@@ -186,7 +186,7 @@ void init_dialogs(){
 	cd_register_event_filter(820,choose_text_res_event_filter);
 	cd_register_event_filter(821,edit_basic_dlog_event_filter);
 	cd_register_event_filter(822,edit_spec_enc_event_filter);
-	cd_register_event_filter(823,give_password_filter);
+	//cd_register_event_filter(823,give_password_filter);
 	cd_register_event_filter(824,edit_item_abil_event_filter);
 	cd_register_event_filter(825,edit_special_num_event_filter);
 	cd_register_event_filter(826,edit_spec_text_event_filter);
@@ -1106,9 +1106,9 @@ void place_location() {
 	//EraseRect(&text_rect);
 	SetPort( terrain_buttons_gworld);
 	
-	erase_rect.left = terrain_rects[255].left + 17;
+	erase_rect.left = 2;//terrain_rects[255].left + 17;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
-	erase_rect.top = terrain_rects[255].top + 12 - 9;
+	erase_rect.top = terrain_rects[255].top + 26 - 9;//12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
 	FillCRect(&erase_rect,bg[17]);
 	

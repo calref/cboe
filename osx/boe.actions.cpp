@@ -323,7 +323,7 @@ bool handle_action(EventRecord event)
 	end_scenario = false;
 		
 	if (unreg_party_in_scen_not_check == true) {
-		if (enter_password() == false) {
+		if (/*enter_password() == */false) {
 			end_scenario = true;
 			}
 			else {
@@ -358,7 +358,7 @@ bool handle_action(EventRecord event)
 					}
 			break;
 			
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case 5:
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case MODE_DROP_TOWN:
 			// I think 5 is "town drop"
 //			cur_loc = c_town.p_loc;
 			cur_loc = center;
@@ -415,7 +415,7 @@ bool handle_action(EventRecord event)
 							add_string_to_buf("  Cancelled.                   ");
 							overall_mode = MODE_TOWN;
 							}
-					else if (overall_mode > MODE_COMBAT) {
+					else if (overall_mode >= MODE_COMBAT) {
 						if ((overall_mode == MODE_COMBAT) && (button_hit == 0)) {
 							did_something = combat_cast_mage_spell();
 							need_reprint = true;
@@ -1727,7 +1727,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				in_scen_debug = false;
 				ASB("Debug mode OFF.");
 				}
-				else if (enter_password() == false) 
+				else if (/*enter_password() == */false) 
 					ASB("Password incorrect.");
 					else {
 						in_scen_debug = true;

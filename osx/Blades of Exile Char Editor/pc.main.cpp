@@ -189,6 +189,7 @@ int main(void)
 //
 
 //MW specified argument and return type.
+void check_for_intel();
 void Initialize(void)
 {
 
@@ -197,7 +198,7 @@ void Initialize(void)
     //  unsigned long randSeed;
       BitMap screenBits;
 	
-	
+	check_for_intel();
 	//Open the resource files we'll be needing
 	char cPath[768];
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
@@ -536,14 +537,17 @@ void handle_file_menu(int item_hit)
 			save_party(file_to_load);
 			break;
 		case 2://save as
-			if(select_save_location(&file))
+			try{
+				file = nav_put_party();
 				save_party(file);
+			} catch(no_file_chosen){}
 			break;
 		case 3://open
 			if (verify_restore_quit(1) == true){
-				FSSpec* file = nav_get_party();
-				file_to_load = *file;
-				load_party(file_to_load);
+				try{
+					file_to_load = nav_get_party();
+					load_party(file_to_load);
+				} catch(no_file_chosen){}
 			}
 			break;
 		case 5://how to order
@@ -553,6 +557,18 @@ void handle_file_menu(int item_hit)
 			All_Done = verify_restore_quit(0);
 			break;
 		}
+}
+
+void check_for_intel(){
+	SInt32 response;
+	OSErr err;
+	err = Gestalt(gestaltSysArchitecture,&response);
+	if(err != noErr){
+		printf("Gestalt error %i\n",err);
+		exit(1);
+	}
+	if(response == gestaltIntel) mac_is_intel = true;
+	else mac_is_intel = false;
 }
 
 void handle_extra_menu(int item_hit)

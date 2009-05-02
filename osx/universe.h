@@ -55,7 +55,7 @@ public:
 	bool is_ice_wall(char x, char y) const;
 	bool is_blade_wall(char x, char y) const;
 	bool is_sleep_cloud(char x, char y) const;
-	bool is_block(char x, char y) const; // currently unused
+	bool is_spot(char x, char y) const; // currently unused
 	bool is_special(char x, char y) const;
 	bool is_web(char x, char y) const;
 	bool is_crate(char x, char y) const;
@@ -79,7 +79,7 @@ public:
 	bool set_ice_wall(char x, char y, bool b);
 	bool set_blade_wall(char x, char y, bool b);
 	bool set_sleep_cloud(char x, char y, bool b);
-	bool set_block(char x, char y, bool b); // currently unused
+	bool set_spot(char x, char y, bool b); // currently unused
 	bool set_special(char x, char y, bool b);
 	bool set_web(char x, char y, bool b);
 	bool set_crate(char x, char y, bool b);

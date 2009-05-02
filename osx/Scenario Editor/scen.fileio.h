@@ -10,18 +10,18 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	short use_grass);
 
 void oops_error(short error);
-short init_data(short flag);
-short town_s(short flag);
-short out_s(short flag);
-short str_size_1(short flag);
-short str_size_2(short flag);
-short str_size_3(short flag);
-short get_buf_ptr(short flag);
-bool check_p (short pword);
-bool check_p2 (short pword);
-bool check_p3 (short pword);
+//short init_data(short flag);
+//short town_s(short flag);
+//short out_s(short flag);
+//short str_size_1(short flag);
+//short str_size_2(short flag);
+//short str_size_3(short flag);
+//short get_buf_ptr(short flag);
+//bool check_p (short pword);
+//bool check_p2 (short pword);
+//bool check_p3 (short pword);
 void reset_pwd();
 void start_data_dump();
-bool import_check_p (short pword);
+//bool import_check_p (short pword);
 void scen_text_dump();
 

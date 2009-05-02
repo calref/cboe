@@ -225,7 +225,7 @@ void init_dialogs(){
 		&mixed_gworld,
 		&spec_scen_g
 	);
-	cd_register_event_filter(823,give_password_filter);
+	//cd_register_event_filter(823,give_password_filter);
 	cd_register_event_filter(869,pick_prefab_scen_event_filter);
 	cd_register_event_filter(947,pick_a_scen_event_filter);
 	cd_register_event_filter(958,tip_of_day_event_filter);

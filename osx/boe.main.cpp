@@ -170,6 +170,7 @@ int main(void)
 {
 	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	start_time = TickCount();
+	printf("Starting initialization...");
 	Initialize();
 #ifdef EXILE_BIG_GUNS
 	//main_dialog_UPP = NewModalFilterProc(cd_event_filter);

@@ -94,12 +94,12 @@ void init_fileio(){
 		kWindowModalityAppModal,
 		NULL
 	};
-	err = NavCreatePutFileDialog (&opts, 'BlEd', 'BETM', NULL, NULL, &dlg_put_scen);
+	err = NavCreatePutFileDialog (&opts, 'BETM', 'BlEd', NULL, NULL, &dlg_put_scen);
 	err = NavCreateGetFileDialog (&opts, NULL, NULL, NULL, scen_file_filter, NULL, &dlg_get_scen);
 	NavDialogCreationOptions opts2 = opts;
 	opts2.clientName = CFSTR("com.spidweb.bladesofexile");
 	opts2.windowTitle = CFSTR("Blades of Exile");
-	err = NavCreatePutFileDialog (&opts2, 'blx!', 'beSV', NULL, NULL, &dlg_put_game);
+	err = NavCreatePutFileDialog (&opts2, 'beSV', 'blx!', NULL, NULL, &dlg_put_game);
 	err = NavCreateGetFileDialog (&opts2, NULL, NULL, NULL, party_file_filter, NULL, &dlg_get_game);
 }
 
@@ -160,9 +160,74 @@ FSSpec nav_put_party() throw(no_file_chosen) {
 	AEKeyword keyword;
 	DescType descType;
 	Size actualSize;
-	FSSpec file_to_load;
+	FSSpec file_to_save;
+	OSStatus error;
+	long descCount;
 	
-	return file_to_load;
+	NavDialogRun(dlg_put_game);
+	NavUserAction e = NavDialogGetUserAction(dlg_put_game);
+	if (e == kNavUserActionCancel || e == kNavUserActionNone)
+		throw no_file_chosen();
+	
+	NavDialogGetReply(dlg_put_game, &s_reply);
+	if (!s_reply.validRecord)
+		throw no_file_chosen();
+	
+	//  Deal with multiple file selection
+	long    count;
+	error = AECountItems(&(s_reply.selection), &descCount);
+	// Set up index for file list
+	if (error == noErr){
+		long index = 1;
+		//for (index = 1; index <= 1; index++){
+		AEKeyword   theKeyword;
+		DescType    actualType;
+		Size        actualSize;
+		FSSpec      documentFSSpec;
+		// Get a pointer to selected file
+		error = AEGetNthPtr(&(s_reply.selection), index,
+							typeFSS, &theKeyword,
+							&actualType,&documentFSSpec,
+							sizeof(documentFSSpec),
+							&actualSize);
+		if (error == noErr){
+			FSRef tempRef;
+			FSpMakeFSRef(&documentFSSpec,&tempRef);
+			UniChar uniname[256];
+			CFRange range = {0,255};
+			CFStringGetCharacters (s_reply.saveFileName,range,uniname);
+			uniname[(UniCharCount)CFStringGetLength (s_reply.saveFileName)]=0;
+			error=FSCreateFileUnicode(&tempRef, (UniCharCount)CFStringGetLength (s_reply.saveFileName), (UniChar *) uniname, kFSCatInfoNone, NULL, NULL, &file_to_save);
+			if(error==noErr){//file didn't exist and so we just created it
+				printf("created file\n");
+				//kludge to correctly set creator and file types so that we'll recognize the file when we go to open it later
+				FInfo fileInfo;
+				FSpGetFInfo(&file_to_save, &fileInfo);
+				fileInfo.fdCreator='blx!';
+				fileInfo.fdType='beSV';
+				FSpSetFInfo(&file_to_save, &fileInfo);
+			}
+			else{
+				if(error==dupFNErr){ //file already exists
+					UInt8 tempPath[512];
+					FSpMakeFSRef(&file_to_save, &tempRef);
+					FSRefMakePath (&tempRef,tempPath,512);
+					CFStringRef path = CFStringCreateWithFormat(NULL, NULL, CFSTR("%s/%S"),tempPath,uniname);
+					CFStringGetCString(path, (char*)tempPath, 512, kCFStringEncodingUTF8);
+					FSPathMakeRef(tempPath, &tempRef, NULL);
+					error=FSGetCatalogInfo(&tempRef, kFSCatInfoNone, NULL,NULL, &file_to_save, NULL);
+				}
+				else{ //something bad happened
+					printf("creation error was: %i\n",error);
+					throw no_file_chosen(); // TODO: This should probably be some other exception.
+				}
+			}
+		}
+		else
+			throw no_file_chosen(); // TODO: This should probably be some other exception.
+	}
+
+	return file_to_save;
 }
 
 bool load_scenario(FSSpec file_to_load){

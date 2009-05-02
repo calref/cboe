@@ -109,6 +109,10 @@ char(& cOutdoors::out_strs(short i))[256]{
 }
 
 cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_type old){
+	for(int i = 0; i < 7; i++)
+		monst[i] = old.monst[i];
+	for(int j = 0; j < 3; j++)
+		friendly[j] = old.friendly[j];
 	spec_on_meet = old.spec_on_meet;
 	spec_on_win = old.spec_on_win;
 	spec_on_flee = old.spec_on_flee;

@@ -37,8 +37,8 @@ short mode_count = 0;
 MenuHandle apple_menu;
 cOutdoors current_terrain;
 //cSpeech talking;
-short given_password;
-short user_given_password = -1;
+//short given_password;
+//short user_given_password = -1;
 short pixel_depth,old_depth = 8;
 
 unsigned char border1 = 90, border2 = 90; // kludgy thing ... leave right here, before borders
@@ -434,11 +434,11 @@ void handle_scenario_menu(int item_hit) {
 			set_starting_loc();
 			break;
 		case 6: // Change Password
-			if (check_p(user_given_password) == true) {
-				user_given_password = get_password();
-				given_password = true;
-			}
-			//give_error("Passwords have been disabled; they are no longer necessary.","",0);
+//			if (check_p(user_given_password) == true) {
+//				user_given_password = get_password();
+//				given_password = true;
+//			}
+			give_error("Passwords have been disabled; they are no longer necessary.","",0);
 			break;
 		case 9: // Edit Special Nodes
 			SetControlValue(right_sbar,0);

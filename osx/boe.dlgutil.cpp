@@ -1785,7 +1785,7 @@ void put_scen_info()
 	char *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
-		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
+		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
 			cd_set_pict(947, 6 + i * 3,scen_headers[store_scen_page_on * 3 + i].intro_pic,PICT_SCEN);
 			sprintf((char *) place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
@@ -1904,58 +1904,58 @@ short pick_prefab_scen()
 	return dialog_answer;
 }
 
-void give_password_filter (short item_hit)
-{
-	
-	switch (item_hit) {
-		default:
-
-			toast_dialog(); 
-			break;
-
-		}
-}
-
-bool enter_password()
-// ignore parent in Mac version
-{
-	short town_strs_hit,i;
-	Str255 temp_str;
-		
-	cd_create_dialog_parent_num(823,0);
-	
-	CDSN(823,2,0);
-	
-	town_strs_hit = cd_run_dialog();
-
-	CDGT(823,2,(char *) temp_str);
-	i = wd_to_pwd(temp_str);
-	
-	cd_kill_dialog(823);
-	
-	return check_p(i);
-}
-
-short wd_to_pwd(Str255 str)
-{
-	char pwd[8] = "aaaaaa";
-	short i;
-	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-	
-	for (i = 0; i < 6; i++) {
-		if (str[i] == 0) 
-			i = 6;
-			else {
-				if ((str[i] >= 65) && (str[i] <= 90))
-					pwd[i] = str[i] + 32;
-				else if ((str[i] >= 48) && (str[i] <= 57))
-					pwd[i] = str[i] + 49;
-				else if ((str[i] >= 97) && (str[i] <= 122))
-					pwd[i] = str[i];
-				}
-		}
-	for (i = 0; i < 6; i++)
-		val = val + pow[i] * (long) (pwd[i] - 97);
-	val = val % 30000;
-	return (short) val;
-}
+//void give_password_filter (short item_hit)
+//{
+//	
+//	switch (item_hit) {
+//		default:
+//
+//			toast_dialog(); 
+//			break;
+//
+//		}
+//}
+//
+//bool enter_password()
+//// ignore parent in Mac version
+//{
+//	short town_strs_hit,i;
+//	Str255 temp_str;
+//		
+//	cd_create_dialog_parent_num(823,0);
+//	
+//	CDSN(823,2,0);
+//	
+//	town_strs_hit = cd_run_dialog();
+//
+//	CDGT(823,2,(char *) temp_str);
+//	i = wd_to_pwd(temp_str);
+//	
+//	cd_kill_dialog(823);
+//	
+//	return check_p(i);
+//}
+//
+//short wd_to_pwd(Str255 str)
+//{
+//	char pwd[8] = "aaaaaa";
+//	short i;
+//	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
+//	
+//	for (i = 0; i < 6; i++) {
+//		if (str[i] == 0) 
+//			i = 6;
+//			else {
+//				if ((str[i] >= 65) && (str[i] <= 90))
+//					pwd[i] = str[i] + 32;
+//				else if ((str[i] >= 48) && (str[i] <= 57))
+//					pwd[i] = str[i] + 49;
+//				else if ((str[i] >= 97) && (str[i] <= 122))
+//					pwd[i] = str[i];
+//				}
+//		}
+//	for (i = 0; i < 6; i++)
+//		val = val + pow[i] * (long) (pwd[i] - 97);
+//	val = val % 30000;
+//	return (short) val;
+//}

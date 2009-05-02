@@ -154,7 +154,7 @@ bool cCurTown::is_sleep_cloud(char x, char y) const{
 	return fields[x][y] & 128L;
 }
 
-bool cCurTown::is_block(char x, char y) const{ // currently unused
+bool cCurTown::is_spot(char x, char y) const{ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	return fields[x][y] & 256L;
 }
@@ -348,7 +348,7 @@ bool cCurTown::set_sleep_cloud(char x, char y, bool b){
 	return true;
 }
 
-bool cCurTown::set_block(char x, char y, bool b){ // currently unused
+bool cCurTown::set_spot(char x, char y, bool b){ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b) fields[x][y] |=  256L;
 	else  fields[x][y] &= ~256L;

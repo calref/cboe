@@ -58,7 +58,7 @@ Rect terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
 extern short cen_x, cen_y, cur_town;
 extern eScenMode overall_mode;
 extern bool mouse_button_held,editing_town;
-extern short cur_viewing_mode,user_given_password;
+extern short cur_viewing_mode;//,user_given_password;
 extern cTown* town;
 //extern big_tr_type t_d;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
@@ -154,7 +154,7 @@ bool handle_action(Point the_point,EventRecord event) {
 	eScenMode old_mode;
 	Rect temp_rect;
 	unsigned long dummy;
-	
+	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
 	//GlobalToLocal(&the_point);
 	if ((event.modifiers & cmdKey) != 0) 
 		option_hit = true;
@@ -1217,14 +1217,14 @@ bool handle_action(Point the_point,EventRecord event) {
 		//draw_frames();
 	}
 	
-	if ((get_ran(1,1,100) == 50) && (!check_p2(user_given_password))) {
-		fancy_choice_dialog(868,0);
-		return are_done;
-	}
-	if ((get_ran(1,1,100) == 50) && (!check_p3(user_given_password))) {
-		fancy_choice_dialog(868,0);
-		return are_done;
-	}
+//	if ((get_ran(1,1,100) == 50) && (!check_p2(user_given_password))) {
+//		fancy_choice_dialog(868,0);
+//		return are_done;
+//	}
+//	if ((get_ran(1,1,100) == 50) && (!check_p3(user_given_password))) {
+//		fancy_choice_dialog(868,0);
+//		return are_done;
+//	}
 	
 	return are_done;
 }
@@ -1278,9 +1278,11 @@ void handle_keystroke(char chr,char chr2,EventRecord event) {
 	//	Point terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
 	//							{120,185},{150,185},{180,185},
 	//								{120,155},{150,155},{180,155}};
-	Point terrain_click[10] = {{0,0},{359,7},{359,50},{359,270},
-		{50,7},{206,150},{50,270},
-		{27,7},{27,50},{27,275}};
+	Point terrain_click[10] = {{0,0},		// 0
+		{353,10},{353,150},{353,270},	// 1 2 3
+		{190,10},{190,150},{190,270},	// 4 5 6
+		{21, 10},{21, 150},{21,270},	// 7 8 9
+	};
 	Point pass_point;
 	short i,j,store_ter;
 	bool are_done;

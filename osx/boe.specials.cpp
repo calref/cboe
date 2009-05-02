@@ -3049,9 +3049,11 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 		case 1:
 			if (which_str1 >= 0)
-				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
+				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
+				strcpy((char*)str1,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str1));
 			if (which_str2 >= 0)
-				load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
+				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
+				strcpy((char*)str2,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str2));
 			break;
 		case 2:
 			if (which_str1 >= 0)

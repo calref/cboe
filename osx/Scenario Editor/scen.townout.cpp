@@ -12,7 +12,7 @@
 #include "scen.fileio.h"
 #include "mathutil.h"
 
-extern short cen_x, cen_y, overall_mode,user_given_password;
+extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
@@ -1638,14 +1638,14 @@ void delete_last_town() {
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	scenario.flag_a = 41942 /*sizeof(scenario_data_type)*/ + get_ran(1,-1000,1000);
-	scenario.flag_b = town_s(user_given_password);
-	scenario.flag_c = out_s(user_given_password);
-	scenario.flag_e = str_size_1(user_given_password);
-	scenario.flag_f = str_size_2(user_given_password);
-	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
-	scenario.flag_d = init_data(user_given_password);
+	//scenario.flag_a = 41942 /*sizeof(scenario_data_type)*/ + get_ran(1,-1000,1000);
+	//scenario.flag_b = town_s(user_given_password);
+	//scenario.flag_c = out_s(user_given_password);
+	//scenario.flag_e = str_size_1(user_given_password);
+	//scenario.flag_f = str_size_2(user_given_password);
+	//scenario.flag_h = str_size_3(user_given_password);
+	//scenario.flag_g = 10000 + get_ran(1,0,5000);
+	//scenario.flag_d = init_data(user_given_password);
 	save_scenario();
 }
 

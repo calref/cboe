@@ -31,7 +31,6 @@ using std::string;
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
-#define	NIL		0L
 
 DialogPtr	the_dialog;
 //extern party_record_type	party;
@@ -551,50 +550,50 @@ void init_town(){ // formerly part of load_town
 		for (i = 0; i < 50; i++) {
 			switch(univ.town->preset_fields[i].type){
 				case 1: // currently unused
-					univ.town.set_block(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_spot(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				// case 2 is covered by the preceding loop
 				case 3:
-					univ.town.set_web(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_web(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 4:
-					univ.town.set_crate(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_crate(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 5:
-					univ.town.set_barrel(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_barrel(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 6:
-					univ.town.set_fire_barr(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_fire_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 7:
-					univ.town.set_force_barr(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_force_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 8:
-					univ.town.set_quickfire(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_quickfire(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 14:
-					univ.town.set_sm_blood(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_sm_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 15:
-					univ.town.set_med_blood(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_med_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 16:
-					univ.town.set_lg_blood(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_lg_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 17:
-					univ.town.set_sm_slime(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_sm_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 18:
-					univ.town.set_lg_slime(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_lg_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 19:
-					univ.town.set_ash(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_ash(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 20:
-					univ.town.set_bones(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_bones(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 				case 21:
-					univ.town.set_rubble(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+					univ.town.set_rubble(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
 			}
 			
@@ -1205,43 +1204,42 @@ void build_scen_headers()
 		if(cur_entry == numScens){
 			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
 //			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
-			if(err == errFSNoMoreItems && cur_entry == 0){
-				printf("No scenarios were found!");
-				printf("\nnumScens = %d",numScens);
-			}else if(err != noErr){
-				printf("Error getting catalog list!");
-			}
+//			if(err == errFSNoMoreItems && cur_entry == 0){
+//				printf("No scenarios were found!");
+//				printf("\nnumScens = %d",numScens);
+//			}else if(err != noErr){
+//				printf("Error getting catalog list!");
+//			}
 			cur_entry = 0;
 		}
-		if (err == noErr) {
+		if (numScens > 0) {
 			if ( /*(myCPB.hFileInfo.ioFlAttrib & ioDirMask) != 0*/ false) {
 			
 			} // folder, so do nothing
 			else {
-				if (load_scenario_header(fileRefs[cur_entry]) == true) {
-					// now we need to store the file name, first stripping any path that occurs
-					// before it
-					last_colon = -1;
-					//p2cstr(scen_name);
-//					for (i = 0; i < strlen((char *) scen_name); i++)
-//						if (scen_name[i] == ':')
-//							last_colon = i;
-//					for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
-//						data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
-//					data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
-//					cur_entry++;
-					std::string curScenarioName((char*) files[cur_entry].name);
-					for(unsigned i = 0; i < curScenarioName.length(); i++)
-						if(curScenarioName[i] == ':')
-							last_colon = i;
-					curScenarioName.erase(0,last_colon + 1);
-					//if(curScenario != "valleydy.exs" &&
-					//   curScenario != "stealth.exs" &&
-					//   curScenario != "zakhazi.exs")
+				do{
+					if (load_scenario_header(fileRefs[cur_entry]) == true) {
+						// now we need to store the file name, first stripping any path that occurs
+						// before it
+						last_colon = -1;
+						//p2cstr(scen_name);
+//						for (i = 0; i < strlen((char *) scen_name); i++)
+//							if (scen_name[i] == ':')
+//								last_colon = i;
+//						for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
+//							data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
+//						data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
+//						cur_entry++;
+						std::string curScenarioName((char*) files[cur_entry].name);
+						for(unsigned i = 0; i < curScenarioName.length(); i++)
+							if(curScenarioName[i] == ':')
+								last_colon = i;
+						curScenarioName.erase(0,last_colon + 1);
 						scen_names.push_back(curScenarioName);
-				}
-				cur_entry++;
-				//entries_so_far++;
+					}
+					cur_entry++;
+					//entries_so_far++;
+				} while (cur_entry < numScens);
 			}
 		}
 		index++;
@@ -1292,40 +1290,55 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	}
 
 	// So file is OK, so load in string data and close it.
-	SetFPos(file_id,1,0);
-	len = 41942;//(long) sizeof(scenario_data_type);
-	error = FSRead(file_id, &len, (char *) &scenario);
-	if (error != 0){
-		FSClose(file_id);
-		oops_error(29);
-		return false;
-	}
-	store = scenario.rating;
-	if (mac_header == false)
-		flip_short(&store);
-	curScen.default_ground = store;
-	
-	len = 41942;//sizeof(scen_item_data_type);
-	if (SetFPos(file_id,3,len) != 0){
-		FSClose(file_id);
-		return false;
-	}
-	
-	scen_headers.push_back(curScen);
-	string* scen_strs = new string[3];
-	scen_header_strs.push_back(scen_strs);
-	for (i = 0; i < 3; i++) {
-		store = (short) scenario.scen_str_len[i];
-		len = (long) (store);
-		FSRead(file_id, &len, (char *) load_str);
-		load_str[len] = 0;
-		if (i == 0)
-			load_str[29] = 0;
-		else load_str[59] = 0;
-		scen_strs[i] = (char*)load_str;
-	}
+//	SetFPos(file_id,1,0);
+//	len = 41942;//(long) sizeof(scenario_data_type);
+//	error = FSRead(file_id, &len, (char *) &scenario);
+//	if (error != 0){
+//		FSClose(file_id);
+//		oops_error(29);
+//		return false;
+//	}
+//	store = scenario.rating;
+//	if (mac_header == false)
+//		flip_short(&store);
+//	curScen.default_ground = store;
+//	
+//	len = 39200;//sizeof(scen_item_data_type);
+//	if (SetFPos(file_id,3,len) != 0){
+//		FSClose(file_id);
+//		return false;
+//	}
 	
 	FSClose(file_id);
+	FSSpec spec;
+	FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
+	load_scenario(spec);
+	
+	string* scen_strs = new string[3];
+	scen_strs[0] = scenario.scen_name;
+	scen_strs[1] = scenario.who_wrote[0];
+	scen_strs[2] = scenario.who_wrote[1];
+	
+	if(scen_strs[0] == "Valley of Dying Things" ||
+	   scen_strs[0] == "A Small Rebellion" ||
+	   scen_strs[0] == "The Za-Khazi Run"/* ||
+	 scen_strs[0] == "Bandit Busywork" */)
+		return false;
+	
+	scen_headers.push_back(curScen);
+	scen_header_strs.push_back(scen_strs);
+//	for (i = 0; i < 3; i++) {
+//		store = (short) scenario.scen_str_len[i];
+//		len = (long) (store);
+//		FSRead(file_id, &len, (char *) load_str);
+//		load_str[len] = 0;
+//		if (i == 0)
+//			load_str[29] = 0;
+//		else load_str[59] = 0;
+//		scen_strs[i] = (char*)load_str;
+//	}
+	
+	//FSClose(file_id);
 
 	return true;
 }
@@ -1386,158 +1399,158 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 //}
 
 
-short init_data(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	k = k * k;
-	jl = jl * jl + 84 + k;
-	k = k + 51;
-		jl = jl * 2 + 1234 + k;
-k = k % 3000;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k * 82;
-	k = k % 10000;
-	k = k + 10000;
-	
-	return (short) k;
-}
-
-short town_s(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	k = k * k * k;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k + 51;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * scenario.num_towns;
-	k = k % 10000;
-	jl = jl * jl + 84 + k;
-	k = k + 10000;
-	
-	return (short) k;
-}
-
-short out_s(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	k = k * k * k;
-	jl = jl * jl + 84 + k;
-	k = k + scenario.out_data_size[0][1];
-	k = k % 3000;
-	k = k * 4;
-	jl = jl * 2 + 1234 + k;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k % 10000;
-	k = k + 4;
-	
-	return (short) k;
-}
-
-short str_size_1(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	k = k * k;
-	jl = jl * 2 + 1234 + k;
-	jl = jl * jl + 84 + k;
-	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
-	jl = jl * 2 + 1234 + k;
-	k = k % 3000;
-	jl = jl * 54;
-	jl = jl * jl + 84 + k;
-	k = k * 4;
-	k = k % 5000;
-	k = k - 9099;
-	
-	return (short) k;
-}
-
-short str_size_2(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	jl = jl * jl + 84 + k;
-	k = k * k * k * k;
-	jl = jl * 54;
-	k = k + 80;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * scenario.out_width * scenario.out_height;
-	jl = jl * jl + 84 + k;
-	k = k % 3124;
-	k = k - 5426;
-	
-	return (short) k;
-}
-
-short str_size_3(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
-	k = k + 80;
-	jl = jl * jl + 84 + k;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * 45;
-	jl = jl * 54;
-	jl = jl * jl + 84 + k;
-	k = k % 887;
-	k = k + 9452;
-	
-	return (short) k;
-}
-
-short get_buf_ptr(short flag)
-{
-	long k = 0;
-		
-	k = (long) flag;
-	jl = jl * jl + 84 + k;
-	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
-	k = k + 80;
-	jl = jl * jl + 84 + k;
-	k = k % 2443;
-	jl = jl * 54;
-	k = k * 322;
-	jl = jl * 2 + 1234 + k;
-	k = k % 2542;
-	jl = jl * jl + 84 + k;
-	k = k + 234;
-	
-	return (short) k;
-}
-
-bool check_p (short pword)
-{
-	if (scenario.flag_b != town_s(pword))
-		return false;
-	if (scenario.flag_c != out_s(pword))
-		return false;
-	if (scenario.flag_e != str_size_1(pword))
-		return false;
-	if (scenario.flag_f != str_size_2(pword))
-		return false;
-	if (scenario.flag_h != str_size_3(pword))
-		return false;
-	if (scenario.flag_d != init_data(pword))
-		return false;
-
-	return true;
-}
+//short init_data(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	k = k * k;
+//	jl = jl * jl + 84 + k;
+//	k = k + 51;
+//		jl = jl * 2 + 1234 + k;
+//k = k % 3000;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * 82;
+//	k = k % 10000;
+//	k = k + 10000;
+//	
+//	return (short) k;
+//}
+//
+//short town_s(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	k = k * k * k;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k + 51;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * scenario.num_towns;
+//	k = k % 10000;
+//	jl = jl * jl + 84 + k;
+//	k = k + 10000;
+//	
+//	return (short) k;
+//}
+//
+//short out_s(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	k = k * k * k;
+//	jl = jl * jl + 84 + k;
+//	k = k + scenario.out_data_size[0][1];
+//	k = k % 3000;
+//	k = k * 4;
+//	jl = jl * 2 + 1234 + k;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 10000;
+//	k = k + 4;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_1(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	k = k * k;
+//	jl = jl * 2 + 1234 + k;
+//	jl = jl * jl + 84 + k;
+//	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 3000;
+//	jl = jl * 54;
+//	jl = jl * jl + 84 + k;
+//	k = k * 4;
+//	k = k % 5000;
+//	k = k - 9099;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_2(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	jl = jl * jl + 84 + k;
+//	k = k * k * k * k;
+//	jl = jl * 54;
+//	k = k + 80;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * scenario.out_width * scenario.out_height;
+//	jl = jl * jl + 84 + k;
+//	k = k % 3124;
+//	k = k - 5426;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_3(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
+//	k = k + 80;
+//	jl = jl * jl + 84 + k;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * 45;
+//	jl = jl * 54;
+//	jl = jl * jl + 84 + k;
+//	k = k % 887;
+//	k = k + 9452;
+//	
+//	return (short) k;
+//}
+//
+//short get_buf_ptr(short flag)
+//{
+//	long k = 0;
+//		
+//	k = (long) flag;
+//	jl = jl * jl + 84 + k;
+//	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
+//	k = k + 80;
+//	jl = jl * jl + 84 + k;
+//	k = k % 2443;
+//	jl = jl * 54;
+//	k = k * 322;
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 2542;
+//	jl = jl * jl + 84 + k;
+//	k = k + 234;
+//	
+//	return (short) k;
+//}
+//
+//bool check_p (short pword)
+//{
+//	if (scenario.flag_b != town_s(pword))
+//		return false;
+//	if (scenario.flag_c != out_s(pword))
+//		return false;
+//	if (scenario.flag_e != str_size_1(pword))
+//		return false;
+//	if (scenario.flag_f != str_size_2(pword))
+//		return false;
+//	if (scenario.flag_h != str_size_3(pword))
+//		return false;
+//	if (scenario.flag_d != init_data(pword))
+//		return false;
+//
+//	return true;
+//}
 
 //void port_talk_nodes()
 //{

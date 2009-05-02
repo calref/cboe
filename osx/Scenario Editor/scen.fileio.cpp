@@ -22,7 +22,7 @@ extern cScenario scenario;
 DialogPtr	the_dialog;
 extern cTown* town;
 //extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
-extern short cur_town,/*overall_mode,*/given_password,user_given_password;
+extern short cur_town;//overall_mode,given_password,user_given_password;
 extern location cur_out;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern cSpeech talking;
@@ -1115,203 +1115,203 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	printf("Scenario not created; creation is currently disabled.\n");
 }
 
-bool check_p (short pword) {
-	if (scenario.flag_b != town_s(pword))
-		return false;
-	if (scenario.flag_c != out_s(pword))
-		return false;
-	if (scenario.flag_e != str_size_1(pword))
-		return false;
-	if (scenario.flag_f != str_size_2(pword))
-		return false;
-	if (scenario.flag_h != str_size_3(pword))
-		return false;
-	if (scenario.flag_d != init_data(pword))
-		return false;
-	
-	return true;
-}
-
-bool check_p2 (short pword) {
-	if (scenario.flag_b != town_s(pword))
-		return false;
-	if (scenario.flag_c != out_s(pword))
-		return false;
-	if (scenario.flag_e != str_size_1(pword))
-		return false;
-	if (scenario.flag_f != str_size_2(pword))
-		return false;
-	if (scenario.flag_h != str_size_3(pword))
-		return false;
-	if (scenario.flag_d != init_data(pword))
-		return false;
-	
-	return true;
-}
-
-bool check_p3 (short pword) {
-	if (scenario.flag_b != town_s(pword))
-		return false;
-	if (scenario.flag_c != out_s(pword))
-		return false;
-	if (scenario.flag_e != str_size_1(pword))
-		return false;
-	if (scenario.flag_f != str_size_2(pword))
-		return false;
-	if (scenario.flag_h != str_size_3(pword))
-		return false;
-	if (scenario.flag_d != init_data(pword))
-		return false;
-	
-	return true;
-}
-
-bool import_check_p (short flag_d,short pword) {
-	
-	if (flag_d != init_data(pword))
-		return false;
-	
-	return true;
-}
-short init_data(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * k;
-	jl = jl * jl + 84 + k;
-	k = k + 51;
-	jl = jl * 2 + 1234 + k;
-	k = k % 3000;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k * 82;
-	k = k % 10000;
-	k = k + 10000;
-	
-	return (short) k;
-}
-
-short town_s(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * k * k;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k + 51;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * scenario.num_towns;
-	k = k % 10000;
-	jl = jl * jl + 84 + k;
-	k = k + 10000;
-	
-	return (short) k;
-}
-
-short out_s(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * k * k;
-	jl = jl * jl + 84 + k;
-	k = k + scenario.out_data_size[0][1];
-	k = k % 3000;
-	k = k * 4;
-	jl = jl * 2 + 1234 + k;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k % 10000;
-	k = k + 4;
-	
-	return (short) k;
-}
-
-short str_size_1(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * k;
-	jl = jl * 2 + 1234 + k;
-	jl = jl * jl + 84 + k;
-	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
-	jl = jl * 2 + 1234 + k;
-	k = k % 3000;
-	jl = jl * 54;
-	jl = jl * jl + 84 + k;
-	k = k * 4;
-	k = k % 5000;
-	k = k - 9099;
-	
-	return (short) k;
-}
-
-short str_size_2(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	jl = jl * jl + 84 + k;
-	k = k * k * k * k;
-	jl = jl * 54;
-	k = k + 80;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * scenario.out_width * scenario.out_height;
-	jl = jl * jl + 84 + k;
-	k = k % 3124;
-	k = k - 5426;
-	
-	return (short) k;
-}
-
-short str_size_3(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
-	k = k + 80;
-	jl = jl * jl + 84 + k;
-	k = k % 3000;
-	jl = jl * 2 + 1234 + k;
-	k = k * 45;
-	jl = jl * 54;
-	jl = jl * jl + 84 + k;
-	k = k % 887;
-	k = k + 9452;
-	
-	return (short) k;
-}
-
-short get_buf_ptr(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	jl = jl * jl + 84 + k;
-	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
-	k = k + 80;
-	jl = jl * jl + 84 + k;
-	k = k % 2443;
-	jl = jl * 54;
-	k = k * 322;
-	jl = jl * 2 + 1234 + k;
-	k = k % 2542;
-	jl = jl * jl + 84 + k;
-	k = k + 234;
-	
-	return (short) k;
-}
-
-void reset_pwd() {
-	// now flags
-	scenario.flag_a = sizeof(scenario_header_flags) + sizeof(legacy::scenario_data_type) + get_ran(1,-1000,1000);
-	scenario.flag_b = town_s(user_given_password);
-	scenario.flag_c = out_s(user_given_password);
-	scenario.flag_e = str_size_1(user_given_password);
-	scenario.flag_f = str_size_2(user_given_password);
-	scenario.flag_h = str_size_3(user_given_password);
-	scenario.flag_g = 10000 + get_ran(1,0,5000);
-	scenario.flag_d = init_data(user_given_password);
-}
+//bool check_p (short pword) {
+//	if (scenario.flag_b != town_s(pword))
+//		return false;
+//	if (scenario.flag_c != out_s(pword))
+//		return false;
+//	if (scenario.flag_e != str_size_1(pword))
+//		return false;
+//	if (scenario.flag_f != str_size_2(pword))
+//		return false;
+//	if (scenario.flag_h != str_size_3(pword))
+//		return false;
+//	if (scenario.flag_d != init_data(pword))
+//		return false;
+//	
+//	return true;
+//}
+//
+//bool check_p2 (short pword) {
+//	if (scenario.flag_b != town_s(pword))
+//		return false;
+//	if (scenario.flag_c != out_s(pword))
+//		return false;
+//	if (scenario.flag_e != str_size_1(pword))
+//		return false;
+//	if (scenario.flag_f != str_size_2(pword))
+//		return false;
+//	if (scenario.flag_h != str_size_3(pword))
+//		return false;
+//	if (scenario.flag_d != init_data(pword))
+//		return false;
+//	
+//	return true;
+//}
+//
+//bool check_p3 (short pword) {
+//	if (scenario.flag_b != town_s(pword))
+//		return false;
+//	if (scenario.flag_c != out_s(pword))
+//		return false;
+//	if (scenario.flag_e != str_size_1(pword))
+//		return false;
+//	if (scenario.flag_f != str_size_2(pword))
+//		return false;
+//	if (scenario.flag_h != str_size_3(pword))
+//		return false;
+//	if (scenario.flag_d != init_data(pword))
+//		return false;
+//	
+//	return true;
+//}
+//
+//bool import_check_p (short flag_d,short pword) {
+//	
+//	if (flag_d != init_data(pword))
+//		return false;
+//	
+//	return true;
+//}
+//short init_data(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	k = k * k;
+//	jl = jl * jl + 84 + k;
+//	k = k + 51;
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 3000;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * 82;
+//	k = k % 10000;
+//	k = k + 10000;
+//	
+//	return (short) k;
+//}
+//
+//short town_s(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	k = k * k * k;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k + 51;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * scenario.num_towns;
+//	k = k % 10000;
+//	jl = jl * jl + 84 + k;
+//	k = k + 10000;
+//	
+//	return (short) k;
+//}
+//
+//short out_s(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	k = k * k * k;
+//	jl = jl * jl + 84 + k;
+//	k = k + scenario.out_data_size[0][1];
+//	k = k % 3000;
+//	k = k * 4;
+//	jl = jl * 2 + 1234 + k;
+//	jl = jl * 54;
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 10000;
+//	k = k + 4;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_1(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	k = k * k;
+//	jl = jl * 2 + 1234 + k;
+//	jl = jl * jl + 84 + k;
+//	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 3000;
+//	jl = jl * 54;
+//	jl = jl * jl + 84 + k;
+//	k = k * 4;
+//	k = k % 5000;
+//	k = k - 9099;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_2(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	jl = jl * jl + 84 + k;
+//	k = k * k * k * k;
+//	jl = jl * 54;
+//	k = k + 80;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * scenario.out_width * scenario.out_height;
+//	jl = jl * jl + 84 + k;
+//	k = k % 3124;
+//	k = k - 5426;
+//	
+//	return (short) k;
+//}
+//
+//short str_size_3(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
+//	k = k + 80;
+//	jl = jl * jl + 84 + k;
+//	k = k % 3000;
+//	jl = jl * 2 + 1234 + k;
+//	k = k * 45;
+//	jl = jl * 54;
+//	jl = jl * jl + 84 + k;
+//	k = k % 887;
+//	k = k + 9452;
+//	
+//	return (short) k;
+//}
+//
+//short get_buf_ptr(short flag) {
+//	long k = 0;
+//	
+//	k = (long) flag;
+//	jl = jl * jl + 84 + k;
+//	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
+//	k = k + 80;
+//	jl = jl * jl + 84 + k;
+//	k = k % 2443;
+//	jl = jl * 54;
+//	k = k * 322;
+//	jl = jl * 2 + 1234 + k;
+//	k = k % 2542;
+//	jl = jl * jl + 84 + k;
+//	k = k + 234;
+//	
+//	return (short) k;
+//}
+//
+//void reset_pwd() {
+//	// now flags
+//	scenario.flag_a = sizeof(scenario_header_flags) + sizeof(legacy::scenario_data_type) + get_ran(1,-1000,1000);
+//	scenario.flag_b = town_s(user_given_password);
+//	scenario.flag_c = out_s(user_given_password);
+//	scenario.flag_e = str_size_1(user_given_password);
+//	scenario.flag_f = str_size_2(user_given_password);
+//	scenario.flag_h = str_size_3(user_given_password);
+//	scenario.flag_g = 10000 + get_ran(1,0,5000);
+//	scenario.flag_d = init_data(user_given_password);
+//}
 
 void start_data_dump() {
 	short i;
