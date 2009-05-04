@@ -104,7 +104,7 @@ void cScenario::append(legacy::scen_item_data_type& old){
 	for(i = 0; i < 256; i++)
 		strcpy((char*)scen_monsters[i].m_name,(char*)old.monst_names[i]);
 	for(i = 0; i < 256; i++)
-		strcpy(ter_names[i],old.ter_names[i]);
+		ter_types[i].name = old.ter_names[i];
 }
 
 __attribute__((deprecated))

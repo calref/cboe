@@ -321,8 +321,8 @@ void put_placed_item_in_dlog() {
 	else cd_set_led(836,14,0);
 	
 	i = scenario.scen_items[store_placed_item.code].graphic_num;
-	if (i >= 150) // was 1000
-	 	csp(836,4,i % 150,PICT_CUSTOM + PICT_ITEM);
+	if (i >= 1000) // was 1000, then was 150
+	 	csp(836,4,i % 1000,PICT_CUSTOM + PICT_ITEM);
 	else csp(836,4,/*1800 + */i,PICT_ITEM);
 }
 bool get_placed_item_in_dlog() {

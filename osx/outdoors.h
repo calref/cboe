@@ -24,6 +24,8 @@ public:
 		short end_spec1,end_spec2;
 		
 		cWandering& operator = (legacy::out_wandering_type old);
+		void writeTo(ostream& file, string prefix = "");
+		void readAttrFrom(string cur, istream& sin);
 	};
 	class cCreature { // formerly outdoor_creature_type
 	public:
@@ -55,4 +57,5 @@ public:
 	
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
+	void writeTo(ostream& file);
 };

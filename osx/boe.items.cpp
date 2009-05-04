@@ -904,8 +904,8 @@ void put_item_graphics()
 					sprintf ((char *) message, "%s",
 					 (item.is_ident()) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
-					if (item.graphic_num >= 150)
-						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 150,PICT_CUSTOM + PICT_ITEM);
+					if (item.graphic_num >= 1000) // was 150
+						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
 					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
 					get_item_interesting_string(item,(char *) message);
 					csit(987,22 + i * 4,(char *) message);			

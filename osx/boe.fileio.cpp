@@ -105,25 +105,13 @@ string progDir;
 	CInfoPBRec myCPB;
 GWorldPtr spec_scen_g = NULL;
 ResFileRefNum mainRef, graphicsRef, soundRef;
-
+#include <fstream>
+ofstream flog("bladeslog.txt");
 void init_directories()
 {
 	short error;
 	//Str255 folder_name = "\p::::Blades of Exile Scenarios";
 	
-//	HGetVol((StringPtr) start_name,&start_volume,&start_dir);	
-//	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
-//	HOpenResFile(start_volume,start_dir,"\p::::bladesofexile.rsrc",1);
-//	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Sounds",1);
-//	if (ResError() != 0) {
-//		Alert(984,NIL);
-//		ExitToShell();
-//		}
-//	error = HOpenResFile(start_volume,start_dir,"\p::::Scenario Editor:Blades of Exile Graphics",1);
-//	if (ResError() != 0) {
-//		Alert(984,NIL);
-//		ExitToShell();
-//	}
 	char cPath[768];
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
 	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladesofexile.rsrc"),CFSTR(""),NULL);
@@ -133,35 +121,10 @@ void init_directories()
 	FSPathMakeRef((UInt8*)cPath, &gRef, false);
 	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
 	if (error != noErr) {
-		printf("Error! Main resource file not found.\n");
+		flog << "Error! Main resource file not found.\n";
+		flog << "\t(Error " << (long)error << " occurred.)\n";
 		ExitToShell();
 	}
-	char *path = "Scenario Editor/Blades of Exile Graphics";
-	error = FSPathMakeRef((UInt8*) path, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Graphics not found.\n");
-		ExitToShell();
-	}
-	path = "Scenario Editor/Blades of Exile Sounds";
-	FSPathMakeRef((UInt8*) path, &sRef, false);
-	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Sounds not found.\n");
-		ExitToShell();
-	}
-
-	// now I generate the directory ID of the folder which contains the scenarios
-	// code copied from Mac Prog FAQ book
-//	myCPB.dirInfo.ioNamePtr = folder_name;
-//	myCPB.dirInfo.ioVRefNum = start_volume;
-//	myCPB.dirInfo.ioFDirIndex = 0;
-//	myCPB.dirInfo.ioDrDirID = start_dir;
-//	error = PBGetCatalogInfoSync(&myCPB); // false means not async
-//	
-//	scen_dir = myCPB.dirInfo.ioDrDirID;
 	
 	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
 	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
@@ -179,6 +142,39 @@ void init_directories()
 	size_t last_slash = progDir.find_last_of('/');
 	progDir.erase(last_slash);
 	std::cout<<progDir<<'\n';
+	
+	string path = progDir + "/Scenario Editor/Blades of Exile Graphics";
+	flog << path << endl;
+	error = FSPathMakeRef((UInt8*) path.c_str(), &gRef, false);
+	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		flog << "Error! File Blades of Exile Graphics not found.\n";
+		flog << "\t(Error " << (long)error << " occurred.)\n";
+		ExitToShell();
+	}
+	path = progDir + "/Scenario Editor/Blades of Exile Sounds";
+	flog << path << endl;
+	FSPathMakeRef((UInt8*) path.c_str(), &sRef, false);
+	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
+	if (error != noErr) {
+		//SysBeep(1);
+		char errmsg[100];
+		sprintf(errmsg,"\t(Error %i occurred.)\n",error);
+		flog << "Error! File Blades of Exile Sounds not found.\n";
+		flog << errmsg;
+		ExitToShell();
+	}
+
+	// now I generate the directory ID of the folder which contains the scenarios
+	// code copied from Mac Prog FAQ book
+//	myCPB.dirInfo.ioNamePtr = folder_name;
+//	myCPB.dirInfo.ioVRefNum = start_volume;
+//	myCPB.dirInfo.ioFDirIndex = 0;
+//	myCPB.dirInfo.ioDrDirID = start_dir;
+//	error = PBGetCatalogInfoSync(&myCPB); // false means not async
+//	
+//	scen_dir = myCPB.dirInfo.ioDrDirID;
 }
 
 

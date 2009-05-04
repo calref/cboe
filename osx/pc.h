@@ -49,16 +49,18 @@ public:
 	bool mage_spells[62];
 	short which_graphic;
 	short weap_poisoned;
-	bool advan[15];
+	//bool advan[15];
 	bool traits[15];
 	short race;
-	short exp_adj;
+	//short exp_adj;
 	short direction;
 	
 	cPlayer& operator = (legacy::pc_record_type old);
 	cPlayer();
 	cPlayer(long key,short slot);
 	short get_tnl();
+	void writeTo(ostream& file);
+	void readFrom(istream& file);
 };
 
 void operator += (eMainStatus& stat, eMainStatus othr);

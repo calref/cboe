@@ -28,6 +28,7 @@ public:
 	short max_monst();
 	
 	cBigTown();
+	void writeTo(ostream& file);
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
@@ -46,6 +47,7 @@ public:
 	short max_monst();
 	
 	cMedTown();
+	void writeTo(ostream& file);
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
@@ -64,4 +66,5 @@ public:
 	short max_monst();
 	
 	cTinyTown();
+	void writeTo(ostream& file);
 };

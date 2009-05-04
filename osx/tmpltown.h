@@ -24,6 +24,7 @@ public:
 	};
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
+	void writeTo(ostream& file);
 };
 
 class cBigTemplTown : public cBigTown, cTemplTown {
@@ -39,6 +40,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	void writeTo(ostream& file);
 };
 
 class cMedTemplTown : public cMedTown, cTemplTown {
@@ -54,6 +56,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	void writeTo(ostream& file);
 };
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {

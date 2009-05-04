@@ -132,3 +132,46 @@ cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature
 	m_loc.y = old.m_loc.y;
 	return *this;
 }
+
+void cOutdoors::writeTo(ostream& file){
+//	for(int i = 0; i < 48; i++){
+//		file << expl[i][0];
+//		for(int j = 1; j < 48; j++){
+//			file << '\t' << expl[i][j];
+//		}
+//		file << endl;
+//	}
+}
+
+void cOutdoors::cWandering::writeTo(ostream& file, string prefix){
+	for(int i = 0; i < 7; i++)
+		file << prefix << "HOSTILE " << i << ' ' << monst[i] << endl;
+	for(int i = 0; i < 3; i++)
+		file << prefix << "FRIEND " << i << ' ' << friendly[i] << endl;
+	file << prefix << "MEET " << spec_on_meet << endl;
+	file << prefix << "WIN " << spec_on_win << endl;
+	file << prefix << "FLEE " << spec_on_flee << endl;
+	file << prefix << "FLAGS " << cant_flee << endl;
+	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << endl;
+}
+
+void cOutdoors::cWandering::readAttrFrom(string cur, istream& sin){
+	if(cur == "HOSTILE"){
+		int i;
+		sin >> i;
+		sin >> monst[i];
+	}else if(cur == "FRIEND"){
+		int i;
+		sin >> i;
+		sin >> friendly[i];
+	}else if(cur == "MEET")
+		sin >> spec_on_meet;
+	else if(cur == "WIN")
+		sin >> spec_on_win;
+	else if(cur == "FLEE")
+		sin >> spec_on_flee;
+	else if(cur == "FLAGS")
+		sin >> cant_flee;
+	else if(cur == "SDF")
+		sin >> end_spec1 >> end_spec2;
+}

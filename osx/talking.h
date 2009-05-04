@@ -24,4 +24,5 @@ public:
 	cNode talk_nodes[60];
 	
 	cSpeech& operator = (legacy::talking_record_type& old);
+	void writeTo(ostream& file);
 };

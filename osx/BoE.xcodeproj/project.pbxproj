@@ -394,7 +394,6 @@
 		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fileio.cpp; path = misc/fileio.cpp; sourceTree = "<group>"; };
 		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = talking.h; sourceTree = "<group>"; };
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
-		91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.locutils.cpp; path = "Scenario Editor/scen.locutils.cpp"; sourceTree = "<group>"; };
 		91EBE8AC0F9A2BF2002356F2 /* scen.locutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.locutils.h; path = "Scenario Editor/scen.locutils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -595,7 +594,6 @@
 		91B3EEEA0F969BA700BF5B67 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				91EBE8AA0F9A2BE1002356F2 /* scen.locutils.cpp */,
 				91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */,
 				91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */,
 				91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */,
@@ -1196,6 +1194,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1225,6 +1224,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1311,6 +1311,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1341,6 +1342,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1376,6 +1378,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";
@@ -1411,6 +1414,7 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Carbon,
+					"-lz",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";

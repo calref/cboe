@@ -1464,8 +1464,8 @@ void put_item_info_in_dlog() {
 	cdsin(818,52,store_which_item);
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
-	if (store_item.graphic_num >= 150)
-		csp(818,49,store_item.graphic_num % 150,PICT_CUSTOM + PICT_ITEM);
+	if (store_item.graphic_num >= 1000) // was 150
+		csp(818,49,store_item.graphic_num % 1000,PICT_CUSTOM + PICT_ITEM);
 	else csp(818,49,/*1800 + */store_item.graphic_num,PICT_ITEM);
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
@@ -1567,10 +1567,8 @@ void edit_item_type_event_filter (short item_hit) {
 		case 56:
 			if (save_item_info() == false) break;
 			i = choose_graphic(/*1800,1922*/0,PICT_N_ITEM,store_item.graphic_num/* + 1800*/,PICT_ITEM,818);
-			if (i >= 0) {
-				store_item.graphic_num = i - 1800;
-			}
-			else break;
+			if (i < 0) break;
+			store_item.graphic_num = i;
 			put_item_info_in_dlog();
 			break;
 		case 69:

@@ -99,4 +99,5 @@ public:
 	cTown();
 	cTown(short size);
 	cTown& operator = (legacy::town_record_type& old);
+	void writeTo(ostream& file);
 };

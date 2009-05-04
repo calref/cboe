@@ -24,4 +24,5 @@ public:
 	
 	cSpecial();
 	cSpecial& operator = (legacy::special_node_type& old);
+	void writeTo(ostream& file);
 };

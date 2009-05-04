@@ -118,4 +118,5 @@ public:
 	short picture_num;
 	
 	cMonster& operator = (legacy::monster_record_type& old);
+	void writeTo(ostream& file, string prefix);
 };

@@ -31,7 +31,7 @@ public:
 	
 	cItemRec items[115]; // formerly town_item_list type
 	
-	unsigned short template_terrain[64][64];
+	//unsigned short template_terrain[64][64];
 	unsigned long fields[64][64];
 	
 	void append(legacy::current_town_type& old,short which_size);
@@ -95,6 +95,8 @@ public:
 	bool set_ash(char x, char y, bool b);
 	bool set_bones(char x, char y, bool b);
 	bool set_rubble(char x, char y, bool b);
+	void writeTo(ostream& file);
+	void readFrom(istream& file);
 };
 
 class cCurOut {
@@ -110,6 +112,8 @@ public:
 	void append(legacy::out_info_type& old);
 	
 	unsigned short(& operator [] (size_t i))[96];
+	void writeTo(ostream& file);
+	void readFrom(istream& file);
 };
 
 class cUniverse{

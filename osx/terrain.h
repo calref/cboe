@@ -33,12 +33,13 @@ enum eTerSpec {
 	TER_SPEC_CONVEYOR_WEST = 19,
 	TER_SPEC_BLOCKED_TO_MONSTERS = 20,
 	TER_SPEC_TOWN_ENTRANCE = 21,
-	TER_SPEC_CHNAGE_WHEN_USED = 22,
+	TER_SPEC_CHANGE_WHEN_USED = 22,
 	TER_SPEC_CALL_SPECIAL_WHEN_USED = 23,
 };
 
 class cTerrain {
 public:
+	string name;
 	short picture;
 	unsigned char blockage;
 	unsigned char flag1;
@@ -59,4 +60,5 @@ public:
 	location obj_pos; // editor use only
 	
 	cTerrain& operator = (legacy::terrain_type_type& old);
+	void writeTo(ostream& file);
 };

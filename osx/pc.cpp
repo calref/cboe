@@ -25,7 +25,7 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	level = old.level;
 	for(i = 0; i < 15; i++){
 		status[i] = old.status[i];
-		advan[i] = old.advan[i];
+		//advan[i] = old.advan[i];
 		traits[i] = old.traits[i];
 	}
 	for(i = 0; i < 24; i++){
@@ -39,7 +39,7 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	which_graphic = old.which_graphic;
 	weap_poisoned = old.weap_poisoned;
 	race = old.race;
-	exp_adj = old.exp_adj;
+	//exp_adj = old.exp_adj;
 	direction = old.direction;
 	return *this;
 }
@@ -88,11 +88,11 @@ cPlayer::cPlayer(){
 	weap_poisoned = 24;
 	
 	for (i = 0; i < 15; i++) {
-		advan[i] = false;
+		//advan[i] = false;
 		traits[i] = false;	
 	}		
 	race = 0;
-	exp_adj = 100;
+	//exp_adj = 100;
 	direction = 0;
 }
 
@@ -145,12 +145,12 @@ cPlayer::cPlayer(long key,short slot){
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
 		for (i = 0; i < 15; i++) {
-			advan[i] = false;
+			//advan[i] = false;
 			traits[i] = false;	
 		}		
 		
 		race = 0;
-		exp_adj = 100;
+		//exp_adj = 100;
 		direction = 0;
 	}else if(key == 'dflt'){
 		static const short pc_stats[6][19] = {
@@ -219,11 +219,11 @@ cPlayer::cPlayer(long key,short slot){
 		}
 		for (i = 0; i < 15; i++) {
 			traits[i] = pc_t[slot][i];
-			advan[i] = false;
+			//advan[i] = false;
 		}
 		
 		race = pc_race[slot];
-		exp_adj = 100;
+		//exp_adj = 100;
 		direction = 0;
 		
 		which_graphic = pc_graphics[slot];
@@ -240,3 +240,116 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 		stat = (eMainStatus) (-10 + stat);
 }
 
+void cPlayer::writeTo(ostream& file){
+	file << "STATUS -1 " << main_status << endl;
+	file << "NAME " << name << endl;
+	file << "SKILL -2 " << max_health << endl;
+	file << "SKILL -1 " << max_sp << endl;
+	for(int i = 0; i < 30; i++)
+		if(skills[i] > 0)
+			file << "SKILL " << i << ' ' << skills[i] << endl;
+	file << "HEALTH " << cur_health << endl;
+	file << "MANA " << cur_sp << endl;
+	file << "EXPERIENCE " << experience << endl;
+	file << "SKILLPTS " << skill_pts << endl;
+	file << "LEVEL " << level << endl;
+	for(int i = 0; i < 15; i++)
+		if(status[i] != 0)
+			file << "STATUS " << i << ' ' << status[i] << endl;
+	for(int i; i < 24; i++)
+		if(items[i].variety > ITEM_TYPE_NO_ITEM){
+			ostringstream sout;
+			sout << "ITEM " << i << ' ';
+			items[i].writeTo(file, sout.str());
+		}
+	for(int i = 0; i < 24; i++)
+		if(equip[i])
+			file << "EQUIP " << i << endl;
+	for(int i = 0; i < 62; i++)
+		if(mage_spells[i])
+			file << "MAGE " << i << endl;
+	for(int i = 0; i < 62; i++)
+		if(priest_spells[i])
+			file << "PRIEST " << i << endl;
+	for(int i = 0; i < 62; i++)
+		if(traits[i])
+			file << "TRAIT " << i << endl;
+	file << "ICON " <<  which_graphic << endl;
+	file << "RACE " << race << endl;
+	file << "DIRECTION " << direction << endl;
+	file << "POISON " << weap_poisoned << endl;
+}
+
+void cPlayer::readFrom(istream& file){
+	istringstream bin, sin;
+	string cur;
+	getline(file, cur, '\f');
+	bin.str(cur);
+	while(bin) { // continue as long as no error, such as eof, occurs
+		getline(bin, cur);
+		sin.str(cur);
+		sin >> cur;
+		if(cur == "STATUS"){
+			int i;
+			sin >> i;
+			if(i < 0) sin >> main_status;
+			else sin >> status[i];
+		}else if(cur == "NAME")
+			sin >> name;
+		else if(cur == "SKILL"){
+			int i;
+			sin >> i;
+			switch(i){
+				case -1:
+					sin >> max_sp;
+					break;
+				case -2:
+					sin >> max_health;
+					break;
+				default:
+					sin >> skills[i];
+			}
+		}else if(cur == "HEALTH")
+			sin >> cur_health;
+		else if(cur == "MANA")
+			sin >> cur_sp;
+		else if(cur = "EXPERIENCE")
+			sin >> experience;
+		else if(cur == "SKILLPTS")
+			sin >> skill_pts;
+		else if(cur == "LEVEL")
+			sin >> level;
+		else if(cur == "STATUS"){
+			int i;
+			sin >> i;
+			sin >> status[i];
+		}else if(cur == "ITEM"){
+			int i;
+			sin >> i >> cur;
+			items[i].readAttrFrom(cur, sin);
+		}else if(cur == "EQUIP"){
+			int i;
+			sin >> i;
+			equip[i] = true;
+		}else if(cur == "MAGE"){
+			int i;
+			sin >> i;
+			mage_spells[i] = true;
+		}else if(cur == "PRIEST"){
+			int i;
+			sin >> i;
+			priest_spells[i] = true;
+		}else if(cur == "TRAIT"){
+			int i;
+			sin >> i;
+			traits[i] = true;
+		}else if(cur == "ICON")
+			sin >> which_graphic;
+		else if(cur == "DIRECTION")
+			sin >> direction;
+		else if(cur == "RACE")
+			sin >> race;
+		else if(cur == "POISON")
+			sin >> weap_poisoned;
+	}
+}

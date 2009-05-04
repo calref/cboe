@@ -605,3 +605,128 @@ unsigned char cCurTown::sfx(char x, char y) const{
 unsigned short(& cCurOut::operator [] (size_t i))[96]{
 	return out[i];
 }
+
+void cCurOut::writeTo(ostream& file){
+//	for(int i = 0; i < 96; i++){
+//		file << expl[i][0];
+//		for(int j = 1; j < 96; j++){
+//			file << '\t' << expl[i][j];
+//		}
+//		file << endl;
+//	}
+//	file << '\f';
+//	for(int i = 9; i < 96; i++){
+//		file << out[i][0];
+//		for(int j = 1; j < 96; j++){
+//			file << '\t' << out[i][j];
+//		}
+//		file << endl;
+//	}
+//	file << '\f';
+	for(int i = 0; i < 96; i++){
+		file << out_e[i][0];
+		for(int j = 1; j < 96; j++){
+			file << '\t' << out_e[i][j];
+		}
+		file << endl;
+	}
+//	file << "OUTDOORS 0 0" << endl;
+//	outdoors[0][0].writeTo(file);
+//	file << "OUTDOORS 0 1" << endl;
+//	outdoors[0][1].writeTo(file);
+//	file << "OUTDOORS 1 0" << endl;
+//	outdoors[1][0].writeTo(file);
+//	file << "OUTDOORS 1 1" << endl;
+//	outdoors[1][1].writeTo(file);
+//	file << endl;
+}
+
+void cCurTown::writeTo(ostream& file){
+	file << "TOWN " << num << endl;
+	file << "DIFFICULTY " << difficulty << endl;
+	if(hostile) file << "HOSTILE" << endl;
+	file << "INBOAT " << in_boat << endl;
+	file << "AT " << p_loc.x << ' ' << p_loc.y << endl;
+	for(int i; i < 115; i++)
+		if(items[i].variety > ITEM_TYPE_NO_ITEM){
+			ostringstream sout;
+			sout << "ITEM " << i << ' ';
+			items[i].writeTo(file, sout.str());
+		}
+	file << '\f';
+	for(int i = 0; i < 64; i++){
+		file << fields[i][0];
+		for(int j = 1; j < 64; j++)
+			file << '\t' << fields[i][j];
+		file << endl;
+	}
+	file << '\f' << record->max_dim() << endl;
+	for(int i = 0; i < record->max_dim(); i++){
+		file << record->terrain(i,0);
+		for(int j = 1; j < record->max_dim(); j++)
+			file << '\t' << record->terrain(i,j);
+		file << endl;
+	}
+	file << '\f';
+	// TODO: Write population
+}
+
+void cCurTown::readFrom(istream& file){
+	istringstream bin, sin;
+	string cur;
+	getline(file, cur, '\f');
+	bin.str(cur);
+	while(bin){
+		getline(bin, cur);
+		sin.str(cur);
+		sin >> cur;
+		if(cur == "TOWN")
+			sin >> num;
+		else if(cur == "DIFFICULTY")
+			sin >> difficulty;
+		else if(cur == "HOSTILE")
+			hostile = true;
+		else if(cur == "INBOAT")
+			sin >> in_boat;
+		else if(cur == "AT")
+			sin >> p_loc.x >> p_loc.y;
+		else if(cur == "ITEM"){
+			int i;
+			sin >> i >> cur;
+			items[i].readAttrFrom(cur, sin);
+		}
+	}
+	getline(file, cur, '\f');
+	bin.str(cur);
+	for(int i = 0; i < 64; i++)
+		for(int j = 1; j < 64; j++)
+			bin >> fields[i][j];
+	getline(file, cur, '\f');
+	bin.str(cur);
+	int dim;
+	bin >> dim;
+	if(record != NULL) delete record;
+	switch(dim){
+		case 32:
+			record = new cTinyTown;
+			break;
+		case 48;
+			record = new cMedTown;
+			break;
+		case 64:
+			record = new cBigTown;
+			break;
+	}
+	for(int i = 0; i < dim; i++)
+		for(int j = 1; j < dim; j++)
+			bin >> record->terrain(i,j);
+	// TODO: Read population
+}
+
+
+void cCurOut::readFrom(istream& file){
+	for(int i = 0; i < 96; i++)
+		for(int j = 1; j < 96; j++)
+			file >> out_e[i][j];
+}
+

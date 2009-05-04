@@ -170,7 +170,6 @@ int main(void)
 {
 	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
 	start_time = TickCount();
-	printf("Starting initialization...");
 	Initialize();
 #ifdef EXILE_BIG_GUNS
 	//main_dialog_UPP = NewModalFilterProc(cd_event_filter);
@@ -274,10 +273,11 @@ void Initialize(void)
 	Str255 tit = "  ";
 		
 	/* Initialize all the needed managers. */
-	InitCursor();
+	//InitCursor();
 	
-	GetKeys(key_state);
-		
+	
+	//GetKeys(key_state);
+	
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
@@ -296,9 +296,10 @@ void Initialize(void)
 	//
 	BitMap bmap;
 	GetQDGlobalsScreenBits(&bmap);
-	windRect = bmap.bounds;
+	SetRect(&windRect,bmap.bounds.left,bmap.bounds.top,bmap.bounds.right,bmap.bounds.bottom);
+	//windRect = bmap.bounds;
 
-	find_quickdraw();
+	//find_quickdraw();
 	init_directories();
 
 //	stored_key = open_pref_file();
@@ -1148,7 +1149,7 @@ void find_quickdraw() {
 			}
 		}
 		else  {
-			SysBeep(2);
+			SysBeep(50);
 			ExitToShell();
 			}
 }

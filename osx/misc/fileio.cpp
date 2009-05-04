@@ -7,6 +7,7 @@
  */
 
 #include <string.h>
+#include <zlib.h>
 #include <string>
 //#include "scen.global.h"
 #include <iostream>
@@ -228,6 +229,63 @@ FSSpec nav_put_party() throw(no_file_chosen) {
 	}
 
 	return file_to_save;
+}
+
+struct header_posix_ustar {
+	char name[100];
+	char mode[8];
+	char uid[8];
+	char gid[8];
+	char size[12];
+	char mtime[12];
+	char checksum[8];
+	char typeflag[1];
+	char linkname[100];
+	char magic[6];
+	char version[2];
+	char uname[32];
+	char gname[32];
+	char devmajor[8];
+	char devminor[8];
+	char prefix[155];
+	char pad[12];
+};
+
+#include <stdexcept>
+
+header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize,bool directory=false){
+	if(fileSize>077777777777LL)
+		throw length_error("Specified file size >= 8 GB");
+	if(fileName.length()>=100)
+		throw length_error("Specified file name longer than 99 characters.");
+	header_posix_ustar header;
+	
+	sprintf(header.name,"%s",fileName.c_str());
+	sprintf(header.mode,"%07o",0600);
+	//leave uid filled with NULs
+	//leave gid filled with NULs
+	sprintf(header.size,"%011o",fileSize);
+	sprintf(header.mtime,"%011o",time(NULL));
+	memset(header.checksum,' ',8);
+	header.typeflag[0]=directory?'5':'0';
+	//leave linkname filled with NULs
+	sprintf(header.magic,"ustar  "); //overwrites header with " \0"
+	//leave uname filled with NULs
+	//leave gname filled with NULs
+	//leave devmajor filled with NULs
+	//leave devminor filled with NULs
+	//leave prefix filled with NULs
+	//leave pad filled with NULs
+	
+	unsigned int sum=0;
+	unsigned char* ptr=reinterpret_cast<unsigned char*>(&header);
+	for(unsigned int i=0; i<sizeof(header); i++){
+		sum+=ptr[i];
+	}
+	if(sum>0777777)
+		throw runtime_error("Checksum overflow");
+	sprintf(header.checksum,"%o",sum);
+	return(header);
 }
 
 bool load_scenario(FSSpec file_to_load){
@@ -909,39 +967,32 @@ void load_spec_graphics()
 	CloseResFile(custRef);
 }
 
+bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
+bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there);
 bool load_party(FSSpec file_to_load){
 	long file_size;
 	OSErr error;
-	short file_id,i;
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
-	bool new_format = false;
+	enum {old_mac, old_win, new_oboe, unknown} format;
 	
 	//char flag_data[8];
-	
-	long len,store_len,count;
-	char *party_ptr;
-	char *pc_ptr;
+	long len;
 //	flag_type flag;
 //	flag_type *flag_ptr;
-	short flag;
-	legacy::party_record_type store_party;
-	legacy::setup_save_type store_setup;
-	legacy::pc_record_type store_pc[6];
-	legacy::out_info_type store_out_info;
-	legacy::current_town_type store_c_town;
-	legacy::big_tr_type t_d;
-	legacy::town_item_list t_i;
-	legacy::stored_items_list_type stored_items[3];
-	legacy::stored_town_maps_type town_maps;
-	legacy::stored_outdoor_maps_type o_maps;
-	unsigned char misc_i[64][64], sfx[64][64];
+	short vers,file_id;
+	struct __attribute__((packed)) {ushort a; ushort b; ushort c; ushort d; ushort e;} flags;
 	
-	static const short flags[3][2] = {
+	static const unsigned short mac_flags[3][2] = {
 		{5790,1342}, // slot 0 ... 5790 - out,         1342 - town
 		{100,200},   // slot 1 ... 100  - in scenario, 200  - not in
 		{3422,5567}  // slot 2 ... 3422 - no maps,     5567 - maps
+	};
+	static const unsigned short win_flags[3][2] = {
+		{40470,15877}, // slot 0 ... 40470 - out,         15877 - town
+		{25600,51200}, // slot 1 ... 25600 - in scenario, 51200 - not in
+		{24077,48917}  // slot 2 ... 24077 - no maps,     48917 - maps
 	};
 	// but if the first flag is 0x0B0E, we have a new-format save
 	// the three flags still follow that.
@@ -953,42 +1004,150 @@ bool load_party(FSSpec file_to_load){
 	}		
 	
 	
-	file_size = sizeof(legacy::party_record_type); // 45368
+	//file_size = sizeof(legacy::party_record_type); // 45368
 	
-	len = sizeof(short); // 2
+	len = sizeof(flags); // 2
 	
 	//	sprintf((char *) debug, "  Len %d               ", (short) len);
 	//	add_string_to_buf((char *) debug);
 	
-	for (i = 0; i < 3; i++) {
-		error = FSRead(file_id, &len, (char *) &flag);
-		if (error != 0) {
-			FSClose(file_id);
-			FCD(1064,0);
-			return false;
+	error = FSRead(file_id, &len, (char*) &flags);
+	if(error != 0) {
+		FSClose(file_id);
+		FCD(1063,0);
+		return false;
+	}
+	
+	if(mac_is_intel && flags.a == 0x0B0E){ // new format
+		format = new_oboe;
+		if(flags.b == mac_flags[0][1]) town_restore = true;
+		else if(flags.b != mac_flags[0][0]) format = unknown;
+		if(flags.c == mac_flags[1][0]) in_scen = true;
+		else if(flags.c != mac_flags[1][1]) format = unknown;
+		if(flags.d == mac_flags[2][1]) maps_there = true;
+		else if(flags.d != mac_flags[2][0]) format = unknown;
+		vers = flags.e;
+	}else if(!mac_is_intel && flags.a == 0x0E0B){ // new format
+		format = new_oboe;
+		flip_short((short*)&flags.b);
+		flip_short((short*)&flags.c);
+		flip_short((short*)&flags.d);
+		flip_short((short*)&flags.e);
+		if(flags.b == mac_flags[0][1]) town_restore = true;
+		else if(flags.b != mac_flags[0][0]) format = unknown;
+		if(flags.c == mac_flags[1][0]) in_scen = true;
+		else if(flags.c != mac_flags[1][1]) format = unknown;
+		if(flags.d == mac_flags[2][1]) maps_there = true;
+		else if(flags.d != mac_flags[2][0]) format = unknown;
+		vers = flags.e;
+	}else if(flags.a == mac_flags[0][0] || flags.a == mac_flags[0][1]){ // old format
+		if(mac_is_intel){ // it's actually a windows save
+			flip_short((short*)&flags.a);
+			flip_short((short*)&flags.b);
+			flip_short((short*)&flags.c);
+			if(flags.b == win_flags[0][1]) town_restore = true;
+			else if(flags.b != win_flags[0][0]) format = unknown;
+			if(flags.c == win_flags[1][0]) in_scen = true;
+			else if(flags.c != win_flags[1][1]) format = unknown;
+			if(flags.d == win_flags[2][1]) maps_there = true;
+			else if(flags.d != win_flags[2][0]) format = unknown;
+		}else{ // mac save
+			if(flags.b == mac_flags[0][1]) town_restore = true;
+			else if(flags.b != mac_flags[0][0]) format = unknown;
+			if(flags.c == mac_flags[1][0]) in_scen = true;
+			else if(flags.c != mac_flags[1][1]) format = unknown;
+			if(flags.d == mac_flags[2][1]) maps_there = true;
+			else if(flags.d != mac_flags[2][0]) format = unknown;
 		}
-//		flag_ptr = (flag_type *) flag_data;
-//		flag = *flag_ptr;
-		if (flag == 0x0B0E) { // new format save
-			new_format = true;
-			i--;
-			continue;
+	}else if(flags.a == win_flags[0][0] || flags.a == win_flags[0][1]){ // old format
+		if(mac_is_intel){ // it's actually a macintosh save
+			flip_short((short*)&flags.a);
+			flip_short((short*)&flags.b);
+			flip_short((short*)&flags.c);
+			if(flags.b == mac_flags[0][1]) town_restore = true;
+			else if(flags.b != mac_flags[0][0]) format = unknown;
+			if(flags.c == mac_flags[1][0]) in_scen = true;
+			else if(flags.c != mac_flags[1][1]) format = unknown;
+			if(flags.d == mac_flags[2][1]) maps_there = true;
+			else if(flags.d != mac_flags[2][0]) format = unknown;
+		}else{ // mac save
+			if(flags.b == win_flags[0][1]) town_restore = true;
+			else if(flags.b != win_flags[0][0]) format = unknown;
+			if(flags.c == win_flags[1][0]) in_scen = true;
+			else if(flags.c != win_flags[1][1]) format = unknown;
+			if(flags.d == win_flags[2][1]) maps_there = true;
+			else if(flags.d != win_flags[2][0]) format = unknown;
 		}
-		if(mac_is_intel && !new_format) flip_short(&flag); // because the old format save was made for non-intel macs
-		if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
-			FSClose(file_id);
+	}else format = unknown;
+	
+	FSClose(file_id);
+	switch(format){
+		case old_mac:
+			return load_party_v1(file_to_load, town_restore, in_scen, maps_there, mac_is_intel);
+		case old_win:
+			return load_party_v1(file_to_load, town_restore, in_scen, maps_there, !mac_is_intel);
+		case new_oboe:
+			return load_party_v2(file_to_load, town_restore, in_scen, maps_there);
+		case unknown:
 			FCD(1063,0);
 			return false;
-		} 
-		
-		if ((i == 0) && (flag == flags[i][1]))
-			town_restore = true;
-		if ((i == 1) && (flag == flags[i][0])) {
-			in_scen = true;
-		}
-		if ((i == 2) && (flag == flags[i][1]))
-			maps_there = true;
 	}
+	
+//	for (i = 0; i < 3; i++) {
+//		error = FSRead(file_id, &len, (char *) &flag);
+//		if (error != 0) {
+//			FSClose(file_id);
+//			FCD(1064,0);
+//			return false;
+//		}
+////		flag_ptr = (flag_type *) flag_data;
+////		flag = *flag_ptr;
+//		if (flag == 0x0B0E) { // new format save
+//			new_format = true;
+//			i--;
+//			continue;
+//		}
+//		if(mac_is_intel && !new_format) flip_short(&flag); // because the old format save was made for non-intel macs
+//		if ((flag != flags[i][0]) && (flag != flags[i][1])) { // OK Exile II save file?
+//			FSClose(file_id);
+//			FCD(1063,0);
+//			return false;
+//		} 
+//		
+//		if ((i == 0) && (flag == flags[i][1]))
+//			town_restore = true;
+//		if ((i == 1) && (flag == flags[i][0])) {
+//			in_scen = true;
+//		}
+//		if ((i == 2) && (flag == flags[i][1]))
+//			maps_there = true;
+//	}
+	
+}
+
+bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port){
+	short file_id,i;
+	OSErr error = FSpOpenDF(&file_to_load,1,&file_id);
+	if (error != 0) {
+		FCD(1064,0);
+		SysBeep(2);
+		return false;
+	}
+	
+	legacy::party_record_type store_party;
+	legacy::setup_save_type store_setup;
+	legacy::pc_record_type store_pc[6];
+	legacy::out_info_type store_out_info;
+	legacy::current_town_type store_c_town;
+	legacy::big_tr_type t_d;
+	legacy::town_item_list t_i;
+	legacy::stored_items_list_type stored_items[3];
+	legacy::stored_town_maps_type town_maps;
+	legacy::stored_outdoor_maps_type o_maps;
+	unsigned char misc_i[64][64], sfx[64][64];
+	char *party_ptr;
+	char *pc_ptr;
+	long len,store_len,count;
 	
 	// LOAD PARTY	
 	len = (long) sizeof(legacy::party_record_type); // 45368
@@ -999,7 +1158,7 @@ bool load_party(FSSpec file_to_load){
 		FCD(1064,0);
 		return false;
 	}
-	port_party(&store_party);
+	if(must_port) port_party(&store_party);
 	party_ptr = (char*) &store_party;
 	for (count = 0; count < store_len; count++)
 		party_ptr[count] ^= 0x5C;	
@@ -1024,7 +1183,7 @@ bool load_party(FSSpec file_to_load){
 			FCD(1064,0);
 			return false;
 		}
-		port_pc(&store_pc[i]);
+		if(must_port) port_pc(&store_pc[i]);
 		pc_ptr = (char*) &store_pc[i];
 		for (count = 0; count < store_len; count++)
 			pc_ptr[count] ^= 0x6B;	
@@ -1052,7 +1211,7 @@ bool load_party(FSSpec file_to_load){
 				FCD(1064,0);
 				return false;
 			}
-			port_c_town(&store_c_town);
+			if(must_port) port_c_town(&store_c_town);
 			
 			len = (long) sizeof(legacy::big_tr_type);
 			if ((error = FSRead(file_id, &len, (char *) &t_d)) != 0){
@@ -1061,7 +1220,7 @@ bool load_party(FSSpec file_to_load){
 				FCD(1064,0);
 				return false;
 			}
-			port_t_d(&t_d);
+			if(must_port) port_t_d(&t_d);
 			
 			len = (long) sizeof(legacy::town_item_list);
 			if ((error = FSRead(file_id, &len, (char *) &t_i))  != 0){
@@ -1169,10 +1328,268 @@ bool load_party(FSSpec file_to_load){
 	return true;
 }
 
-void save_party(FSSpec dest_file)
+#include <sstream>
+
+bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there){
+	FSRef dest_ref;
+	char* buf = new char[200];
+	FSpMakeFSRef(&file_to_load, &dest_ref);
+	FSRefMakePath(&dest_ref, (UInt8*)&buf, 200);
+	FILE* f = fopen(buf,"rb");
+	delete buf;
+	
+	// TODO: Write the parsers and stuff
+	/*   Skip header   */
+	fseek(f, sizeof(short) * 5, SEEK_SET);
+	gzFile party_file = gzdopen(fileno(f), "rb");
+	
+	/*   Initialize various variables   */
+	header_posix_ustar header;
+	istringstream sin;
+	string tar_name;
+	string tar_entry;
+	size_t tar_size;
+	int x;
+	map<string,string> party_archive;
+	
+	/*   Split the tar archive into its component files   */
+	while(!gzeof(party_file)){
+		gzread(party_file, &header, sizeof(header));
+		sscanf(header.size, "%o", &tar_size);
+		tar_name = header.name;
+		buf = new char[tar_size];
+		gzread(party_file, buf, tar_size);
+		tar_entry = buf;
+		delete buf;
+		party_archive[tar_name] = tar_entry;
+		gzseek(party_file, sizeof(header) * 2, SEEK_CUR);
+	}
+	
+	/*   Read the data from each file   */
+	if(party_archive.find("save/party.txt") == party_archive.end()){
+		FCD(1064,0);
+		return false;
+	}else{
+		sin.str(party_archive["save/party.txt"]);
+		univ.party.readFrom(sin);
+	}
+	for(int i = 0; i < 6; i++){
+		buf = new char[20];
+		sprintf(buf,"save/pc%i.txt",i);
+		string f_name = buf;
+		delete buf;
+		if(party_archive.find(f_name) == party_archive.end()){
+			FCD(1064,0);
+			return false;
+		}else{
+			sin.str(party_archive[f_name]);
+			univ.party.adven[i].readFrom(sin);
+		}
+	}
+	if(in_scen){
+		if(town_restore){
+			if(party_archive.find("save/town.txt") == party_archive.end()){
+				FCD(1064,0);
+				return false;
+			}else{
+				sin.str(party_archive["save/town.txt"]);
+				univ.town.readFrom(sin);
+			}
+			if(party_archive.find("save/townmaps.dat") == party_archive.end()){
+				FCD(1064,0);
+				return false;
+			}else{
+				sin.str(party_archive["save/townmaps.dat"]);
+				for(int i = 0; i < 200; i++)
+					for(int j = 0; j < 8; j++)
+						for(int k = 0; k < 64; k++)
+							univ.town_maps[i][j][k] = sin.get();
+			}
+		}
+		if(party_archive.find("save/out.txt") == party_archive.end()){
+			FCD(1064,0);
+			return false;
+		}else{
+			sin.str(party_archive["save/out.txt"]);
+			univ.out.readFrom(sin);
+		}
+		if(party_archive.find("save/outmaps.dat") == party_archive.end()){
+			FCD(1064,0);
+			return false;
+		}else{
+			sin.str(party_archive["save/outmaps.dat"]);
+			for(int i = 0; i < 100; i++)
+				for(int j = 0; j < 6; j++)
+					for(int k = 0; k < 48; k++)
+						univ.out_maps[i][j][k] = sin.get();
+		}
+	}
+	return true;
+}
+
+bool save_party(FSSpec dest_file)
 //mode;  // 0 - normal  1 - save as
 {
-	printf("Saving is currently disabled.\n");
+	//printf("Saving is currently disabled.\n");
+	bool in_scen = !univ.party.scen_name[0];
+	bool in_town = univ.town.num < 200;
+	bool save_maps = !univ.party.stuff_done[306][0];
+	
+	/*   Open the GZip file and write the (uncompressed) header   */
+	FSRef dest_ref;
+	char* path = new char[200];
+	FSpMakeFSRef(&dest_file, &dest_ref);
+	FSRefMakePath(&dest_ref, (UInt8*)&path, 200);
+	//buf = new char[10000];
+	FILE* f = fopen(path,"wb");
+	short flags[] = {
+		0x0B0E, // to indicate new format
+		in_town ? 1432 : 5790, // is the party in town?
+		in_scen ? 100 : 200, // is the party in a scenario?
+		save_maps ? 5567 : 3422, // is the save maps feature enabled?
+		0x0100, // current version number, major and minor revisions only
+		// Version 1 indicates a beta format that won't be supported in the final release
+	};
+	if(!mac_is_intel) // must flip all the flags to little-endian
+		for(int i = 0; i < 5; i++)
+			flip_short(&flags[i]);
+	fwrite((char*)flags, sizeof(short), 5, f);
+	gzFile party_file = gzdopen(fileno(f),"wb");
+	delete path;
+	
+	/*   Initialize buffer and other variables   */
+	header_posix_ustar header;
+	ostringstream sout;
+	string tar_entry;
+	size_t tar_size;
+	int x;
+	
+	/*   Write main party data to a buffer, and then to the file   */
+	header = generateTarHeader("save/party.txt",tar_size);
+	sout.write((char*)&header, sizeof(header));
+	univ.party.writeTo(sout);
+	//write the footer to end the file
+	for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+		sout.put('\0');
+	tar_entry = sout.str();
+	tar_size = tar_entry.length();
+	x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+	if(x == 0) { // error
+		gzerror(party_file, &x);
+		oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+		gzclose(party_file);
+		return false;
+	}
+	sout.str(""); // clear the stream (I think)
+	
+	/*   Write player character data to a buffer, and then to the file   */
+	for(int i = 0; i < 6; i++){
+		char f_name[20];
+		sprintf(f_name,"save/pc%i.txt",i+1);
+		header = generateTarHeader(f_name,tar_size);
+		sout.write((char*)&header, sizeof(header));
+		univ.party.adven[i].writeTo(sout);
+		//write the footer to end the file
+		for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+			sout.put('\0');
+		tar_entry = sout.str();
+		tar_size = tar_entry.length();
+		x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+		if(x == 0) { // error
+			gzerror(party_file, &x);
+			oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+			gzclose(party_file);
+			return false;
+		}
+		sout.str(""); // clear the stream (I think)
+	}
+	
+	if(in_scen){
+		if(in_town){
+			/*   Write current town data to a buffer, and then to the file   */
+			header = generateTarHeader("save/town.txt",tar_size);
+			sout.write((char*)&header, sizeof(header));
+			univ.town.writeTo(sout);
+			//write the footer to end the file
+			for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+				sout.put('\0');
+			tar_entry = sout.str();
+			tar_size = tar_entry.length();
+			x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+			if(x == 0) { // error
+				gzerror(party_file, &x);
+				oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+				gzclose(party_file);
+				return false;
+			}
+			sout.str(""); // clear the stream (I think)
+			
+			if(save_maps){
+				/*   Write town maps data to a buffer, and then to the file   */
+				header = generateTarHeader("save/townmaps.dat",tar_size);
+				sout.write((char*)&header, sizeof(header));
+				for(int i = 0; i < 200; i++)
+					for(int j = 0; j < 8; j++)
+						for(int k = 0; k < 64; k++)
+							sout.put(univ.town_maps[i][j][k]);
+				//write the footer to end the file
+				for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+					sout.put('\0');
+				tar_entry = sout.str();
+				tar_size = tar_entry.length();
+				x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+				if(x == 0) { // error
+					gzerror(party_file, &x);
+					oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+					gzclose(party_file);
+					return false;
+				}
+				sout.str(""); // clear the stream (I think)
+			}
+		}
+		
+		/*   Write current outdoors data to a buffer, and then to the file   */
+		header = generateTarHeader("save/out.txt",tar_size);
+		sout.write((char*)&header, sizeof(header));
+		univ.out.writeTo(sout);
+		//write the footer to end the file
+		for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+			sout.put('\0');
+		tar_entry = sout.str();
+		tar_size = tar_entry.length();
+		x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+		if(x == 0) { // error
+			gzerror(party_file, &x);
+			oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+			gzclose(party_file);
+			return false;
+		}
+		sout.str(""); // clear the stream (I think)
+		
+		if(save_maps){
+			/*   Write outdoor maps data to a buffer, and then to the file   */
+			header = generateTarHeader("save/outmaps.dat",tar_size);
+			sout.write((char*)&header, sizeof(header));
+			for(int i = 0; i < 100; i++)
+				for(int j = 0; j < 6; j++)
+					for(int k = 0; k < 48; k++)
+						sout.put(univ.out_maps[i][j][k]);
+			//write the footer to end the file
+			for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
+				sout.put('\0');
+			tar_entry = sout.str();
+			tar_size = tar_entry.length();
+			x = gzwrite(party_file, tar_entry.c_str(), tar_size);
+			if(x == 0) { // error
+				gzerror(party_file, &x);
+				oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
+				gzclose(party_file);
+				return false;
+			}
+			sout.str(""); // clear the stream (I think)
+		}
+	}
+	gzclose(party_file);
 //	NavReplyRecord reply;
 //	OSErr error;
 //	short file_id;

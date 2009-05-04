@@ -306,8 +306,8 @@ void put_item_info(short pc,short item)////
 	s_i = store_i;
 	
 	csp(998,1,0,PICT_BLANK);
-	if (s_i.graphic_num >= 150)
-		csp(998,1,s_i.graphic_num - 150,PICT_CUSTOM + PICT_ITEM);
+	if (s_i.graphic_num >= 1000) // was 150
+		csp(998,1,s_i.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
 		else csp(998,1,s_i.graphic_num,PICT_ITEM);
 		
 	// id? magic?

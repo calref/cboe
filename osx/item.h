@@ -230,7 +230,16 @@ public:
 	cItemRec();
 	cItemRec(long preset);
 	cItemRec& operator = (legacy::item_record_type& old);
+	void writeTo(ostream& file, string prefix = "");
+	void readAttrFrom(string cur, istream& sin);
 };
+
+ostream& operator << (ostream& out, eWeapType& e);
+ostream& operator << (ostream& out, eItemType& e);
+ostream& operator << (ostream& out, eItemAbil& e);
+istream& operator >> (istream& in, eWeapType& e);
+istream& operator >> (istream& in, eItemType& e);
+istream& operator >> (istream& in, eItemAbil& e);
 
 /*
  typedef struct {

@@ -8,6 +8,10 @@
  *
  */
 
+#include <string>
+#include <sstream>
+using namespace std;
+
 #include "location.h"
 #include "terrain.h"
 #include "vehicle.h"

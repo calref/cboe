@@ -27,7 +27,7 @@ extern bool modeless_exists[18];
 extern DialogPtr modeless_dialogs[18];
 
 extern PixPatHandle bg[];
-extern short geneva_font_num, sword_curs;
+extern short geneva_font_num;//, sword_curs;
 
 GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2];
 map<char*,GWorldPtr*> dlg_gworlds;
@@ -151,7 +151,7 @@ short cd_create_dialog(short dlog_num,WindowPtr parent){
 	ForeColor(blackColor);
 	BackColor(whiteColor);
 	untoast_dialog();
-	set_cursor(sword_curs);
+	//set_cursor(sword_curs);
 	
 	return 0;
 }

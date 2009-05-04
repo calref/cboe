@@ -297,6 +297,10 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	type = (eWeapType) old.type;
 	magic_use_type = old.magic_use_type;
 	graphic_num = old.graphic_num;
+	if(graphic_num >= 150) // custom item graphic
+		graphic_num += 850;
+	else if(graphic_num == 59) // duplicate mushroom graphic
+		graphic_num = 64;
 	ability = (eItemAbil) old.ability;
 	ability_strength = old.ability_strength;
 	type_flag = old.type_flag;
@@ -313,4 +317,107 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	reserved1 = old.reserved1;
 	reserved2 = old.reserved2;
 	return *this;
+}
+
+void cItemRec::writeTo(ostream& file, string prefix){
+	file << prefix << "VARIETY " << variety << endl;
+	file << prefix << "LEVEL " << item_level << endl;
+	file << prefix << "AWKWARD " << awkward << endl;
+	file << prefix << "BONUS " << bonus << endl;
+	file << prefix << "PROT " << protection << endl;
+	file << prefix << "CHARGES " << charges << endl;
+	file << prefix << "WEAPON " << type << endl;
+	file << prefix << "USE " << magic_use_type << endl;
+	file << prefix << "ICON " << graphic_num << endl;
+	file << prefix << "ABILITY " << ability << endl;
+	file << prefix << "ABILSTR " << ability_strength << endl;
+	file << prefix << "TYPE " << type_flag << endl;
+	file << prefix << "ISSPEC " << is_special << endl;
+	file << prefix << "VALUE " << value << endl;
+	file << prefix << "WEIGHT " << weight << endl;
+	file << prefix << "SPEC " << special_class << endl;
+	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << endl;
+	file << prefix << "FULLNAME " << full_name << endl;
+	file << prefix << "NAME " << name << endl;
+	file << prefix << "TREASURE " << treas_class << endl;
+	if(is_ident()) file << prefix << "IDENTIFIED" << endl;
+	if(is_property()) file << prefix << "PROPERTY" << endl;
+	if(is_magic()) file << prefix << "MAGIC" << endl;
+	if(is_contained()) file << prefix << "CONTAINED" << endl;
+	if(is_cursed()) file << prefix << "CURSED" << endl;
+	if(is_concealed()) file << prefix << "CONCEALED" << endl;
+	if(is_enchanted()) file << prefix << "ENCHANTED" << endl;
+}
+
+void cItemRec::readAttrFrom(string cur, istream& sin){
+	if(cur == "VARIETY") sin >> variety;
+	else if(cur == "LEVEL") sin >> item_level;
+	else if(cur == "AWKWARD") sin >> awkward;
+	else if(cur == "BONUS") sin >> bonus;
+	else if(cur == "PROT") sin >> protection;
+	else if(cur == "CHARGES") sin >> charges;
+	else if(cur == "WEAPON") sin >> type;
+	else if(cur == "USE") sin >> magic_use_type;
+	else if(cur == "ICON") sin >> graphic_num;
+	else if(cur == "ABILITY") sin >> ability;
+	else if(cur == "ABILSTR") sin >> ability_strength;
+	else if(cur == "TYPE") sin >> type_flag;
+	else if(cur == "ISSPEC") sin >> is_special;
+	else if(cur == "VALUE") sin >> value;
+	else if(cur == "WEIGHT") sin >> weight;
+	else if(cur == "SPEC") sin >> special_class;
+	else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
+	else if(cur == "FULLNAME"){
+		getline(sin,cur);
+		strcpy(full_name,cur.c_str());
+	}else if(cur == "NAME"){
+		getline(sin,cur);
+		strcpy(name,cur.c_str());
+	}
+	else if(cur == "TREASURE") sin >> treas_class;
+	else if(cur == "IDENTIFIED") set_ident(true);
+	else if(cur == "PROPERTY") set_property(true);
+	else if(cur == "MAGIC") set_magic(true);
+	else if(cur == "CONTAINED") set_contained(true);
+	else if(cur == "CURSED") set_cursed(true);
+	else if(cur == "CONCEALED") set_concealed(true);
+	else if(cur == "ENCHANTED") set_enchanted(true);
+}
+
+ostream& operator << (ostream& out, eWeapType& e){
+	out << (int) e;
+}
+
+ostream& operator << (ostream& out, eItemType& e){
+	out << (int) e;
+}
+
+ostream& operator << (ostream& out, eItemAbil& e){
+	out << (int) e;
+}
+
+istream& operator >> (istream& in, eWeapType& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 4)
+		e = (eWeapType) i;
+	else e = ITEM_NOT_MELEE;
+}
+
+istream& operator >> (istream& in, eItemType& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 28)
+		e = (eItemType) i;
+	else e = ITEM_TYPE_NO_ITEM;
+}
+
+istream& operator >> (istream& in, eItemAbil& e){
+	int i;
+	in >> i;
+	if((i > 0 && i < 15) || (i > 29 && i < 63) ||
+	   (i > 69 && i < 95) || (i > 109 && i < 136) ||
+	   (i > 149 && i < 162) || (i > 169 && i < 177))
+		e = (eItemAbil) i;
+	else e = ITEM_NO_ABILITY;
 }

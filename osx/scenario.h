@@ -70,7 +70,7 @@ public:
 	// scen_item_data_type scen_item_list {
 	cItemRec scen_items[400];
 	//char monst_names[256][20];
-	char ter_names[256][30];
+	//char ter_names[256][30];
 	// };
 	//char scen_strs[270][256];
 	char scen_name[256];
@@ -87,5 +87,5 @@ public:
 	char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
-	void writeTo(short file_id);
+	void writeTo(ostream& file);
 };

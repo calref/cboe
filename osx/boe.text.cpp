@@ -1056,7 +1056,7 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf((char *) store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) scenario.ter_names[num]);
+			strcpy((char *) store_name,(char *) scenario.ter_types[num].name.c_str());
 			}
 	strcpy((char *) str,(char *) store_name);
 }

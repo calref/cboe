@@ -733,10 +733,10 @@ bool handle_action(EventRecord event)
 			destination.x += cur_direction.x;
 			destination.y += cur_direction.y;
 				
-	for (i = 0; i < 6; i++) // debug
-		if (ADVEN[i].exp_adj != 100) {
-			ASB("Error: Flag 1");
-			}
+//	for (i = 0; i < 6; i++) // debug
+//		if (ADVEN[i].exp_adj != 100) {
+//			ASB("Error: Flag 1");
+//			}
 
 // Begin: Moving
 				if (overall_mode == MODE_COMBAT) {
@@ -2478,8 +2478,9 @@ void start_new_game()
 		save_party(file);
 		party_in_memory = true;
 	} catch(no_file_chosen){}
-
-	}
+	
+	party_in_memory = true;
+}
 
 location get_cur_direction(Point the_point)
 {

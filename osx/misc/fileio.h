@@ -27,4 +27,4 @@ void load_spec_graphics();
 FSSpec nav_get_party() throw(no_file_chosen);
 FSSpec nav_put_party() throw(no_file_chosen);
 bool load_party(FSSpec file_to_load);
-void save_party(FSSpec dest_file);
+bool save_party(FSSpec dest_file);
