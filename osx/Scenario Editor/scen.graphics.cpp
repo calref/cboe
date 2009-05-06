@@ -37,6 +37,7 @@ extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
+extern eDrawMode draw_mode = DRAW_TERRAIN;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
 //extern short max_dim[3];

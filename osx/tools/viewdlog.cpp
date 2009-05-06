@@ -68,7 +68,7 @@ int main()
 		cd_attach_key(8000, 4, 24);
 		//Handle_One_Event();
 		cd_run_dialog();
-		cd_kill_dialog(8000,0);
+		cd_kill_dialog(8000);
 	}
 	
 	
@@ -210,7 +210,7 @@ void display_strings(char *text1, char *text2, char *title,short graphic_num,sho
 	csp(store_which_string_dlog,3,graphic_num,graphic_type);
 	
 	item_hit = cd_run_dialog();
-	cd_kill_dialog(store_which_string_dlog,0);
+	cd_kill_dialog(store_which_string_dlog);
 }
 
 void choose_dialog_event_filter(short item_hit){
@@ -227,7 +227,7 @@ void choose_dialog_event_filter(short item_hit){
 				return;
 			}
 			cd_run_dialog();
-			cd_kill_dialog(n,0);
+			cd_kill_dialog(n);
 			break;
 		case 4:
 			toast_dialog();

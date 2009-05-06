@@ -84,6 +84,12 @@ enum eScenMode {
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
 };
 
+enum eDrawMode {
+	DRAW_TERRAIN = 0,
+	DRAW_MONST = 1,
+	DRAW_ITEM = 2,
+};
+
 //typedef struct {
 //	short personality,type;
 //	char link1[4],link2[4];
