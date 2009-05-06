@@ -710,7 +710,7 @@ void cCurTown::readFrom(istream& file){
 		case 32:
 			record = new cTinyTown;
 			break;
-		case 48;
+		case 48:
 			record = new cMedTown;
 			break;
 		case 64:
@@ -730,3 +730,10 @@ void cCurOut::readFrom(istream& file){
 			file >> out_e[i][j];
 }
 
+cCurTown::cCurTown(){
+	record = NULL;
+	num = 200;
+	for(int i = 0; i < 64; i++)
+		for(int j = 0; j < 64; j++)
+			fields[i][j] = 0L;
+}

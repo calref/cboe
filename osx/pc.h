@@ -65,3 +65,5 @@ public:
 
 void operator += (eMainStatus& stat, eMainStatus othr);
 void operator -= (eMainStatus& stat, eMainStatus othr);
+ostream& operator << (ostream& out, eMainStatus& e);
+istream& operator >> (istream& in, eMainStatus& e);

@@ -133,6 +133,7 @@ int main(void)
 	start_time = TickCount();
 	
 	Initialize();
+	init_fileio();
 	init_main_buttons();
 	Set_up_win();
 	Point p = {0,0};

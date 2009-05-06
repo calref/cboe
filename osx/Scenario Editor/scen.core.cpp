@@ -865,7 +865,7 @@ void init_scenario() {
 		scenario.ter_types[i].blockage = ter_block[i];
 		scenario.ter_types[i].special = (eTerSpec) ter_traits[i];
 		get_str(temp_str,1,i + 1);
-		sprintf((char *)scenario.ter_names[i], "%s", temp_str);
+		sprintf((char *)scenario.ter_types[i].name.c_str(), "%s", temp_str);
 		
 		scenario.scen_specials[i] = null_spec_node;
 	}
@@ -894,9 +894,10 @@ void init_scenario() {
 }	
 void put_ter_info_in_dlog() {
 	Str255 str;
+	strcpy((char*)str,(char*)scenario.ter_types[store_which_ter].name.c_str());
 	
 	cdsin(813,12,store_which_ter);
-	CDST(813,2,scenario.ter_names[store_which_ter]);
+	CDST(813,2,(char*)str);
 	CDSN(813,5,store_ter.picture);
 	cd_set_led_range(813,19,24,store_ter.blockage);
 	cd_set_led(813,25,store_ter.fly_over);
@@ -975,7 +976,7 @@ bool save_ter_info() {
 	
 	CDGT(813,2,(char *) str);
 	str[29] = 0;
-	sprintf(scenario.ter_names[store_which_ter],"%s",str);
+	scenario.ter_types[store_which_ter].name = (char*)str;
 	
 	scenario.ter_types[store_which_ter] = store_ter;
 	return true;

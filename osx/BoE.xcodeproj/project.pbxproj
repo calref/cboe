@@ -394,7 +394,6 @@
 		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fileio.cpp; path = misc/fileio.cpp; sourceTree = "<group>"; };
 		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = talking.h; sourceTree = "<group>"; };
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
-		91EBE8AC0F9A2BF2002356F2 /* scen.locutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.locutils.h; path = "Scenario Editor/scen.locutils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -577,7 +576,6 @@
 		91B3EEDC0F969BA700BF5B67 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				91EBE8AC0F9A2BF2002356F2 /* scen.locutils.h */,
 				91B3EEDE0F969BA700BF5B67 /* scen.global.h */,
 				91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */,
 				91B3EEE10F969BA700BF5B67 /* scen.core.h */,

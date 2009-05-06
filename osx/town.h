@@ -21,12 +21,12 @@ class cTown { // formerly town_record_type
 public:
 	class cCreature { // formerly creature_start_type
 	public:
-		unsigned char number;
+		unsigned short number;
 		unsigned char start_attitude;
 		location start_loc;
-		unsigned char  mobile;
-		unsigned char  time_flag;
-		unsigned char  extra1,extra2;
+		unsigned char mobile;
+		unsigned char time_flag;
+		unsigned char extra1,extra2;
 		short spec1, spec2;
 		char spec_enc_code,time_code;
 		short monster_time,personality;

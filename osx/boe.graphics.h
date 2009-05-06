@@ -39,7 +39,7 @@ void load_town_graphics();
 void update_pc_graphics();
 void put_graphics_in_template();
 //GWorldPtr load_pict(short picture_to_get);
-void draw_terrain(short	mode);
+void draw_terrain(short	mode = 0);
 void place_trim(short q,short r,location where,unsigned char ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);
 bool extend_road_terrain(unsigned char ter);

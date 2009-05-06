@@ -313,7 +313,7 @@ void cPlayer::readFrom(istream& file){
 			sin >> cur_health;
 		else if(cur == "MANA")
 			sin >> cur_sp;
-		else if(cur = "EXPERIENCE")
+		else if(cur == "EXPERIENCE")
 			sin >> experience;
 		else if(cur == "SKILLPTS")
 			sin >> skill_pts;
@@ -352,4 +352,16 @@ void cPlayer::readFrom(istream& file){
 		else if(cur == "POISON")
 			sin >> weap_poisoned;
 	}
+}
+
+ostream& operator << (ostream& out, eMainStatus& e){
+	out << (int) e;
+}
+
+istream& operator >> (istream& in, eMainStatus& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 18 && i !=8 && i != 9)
+		e = (eMainStatus) i;
+	else e = MAIN_STATUS_ABSENT;
 }

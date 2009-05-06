@@ -463,50 +463,58 @@ void set_up_terrain_buttons() {
 	FillCRect(&terrain_buttons_rect,bg[17]);
 	FrameRect(&terrain_buttons_rect);
  	
- 	// first make terrain buttons
-	for (i = 0; i < 256; i++) {
-		ter_from = ter_from_base;
-		pic = scenario.ter_types[i].picture;
-		if (pic >= 1000) {
-			ter_from = get_custom_rect(pic % 1000);
-			rect_draw_some_item(spec_scen_g,
-								ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
-		}
-		else if (pic < 400)	{
-			pic = pic % 50;
-			OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
-			rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
-								ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
-		}
-		else {
-			pic = pic % 50;
-			ter_from.left = 112 * (pic / 5);
-			ter_from.right = ter_from.left + 28;
-			ter_from.top = 36 * (pic % 5);
-			ter_from.bottom = ter_from.top + 36;
-			rect_draw_some_item(anim_gworld,
-								ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
-			
-		}
-		small_i = small_icons[scenario.ter_types[i].special];
-		if ((small_i == 30) && (scenario.ter_types[i].flag2 >= 5))
-			small_i = 31;
-		if ((small_i == 31) && (scenario.ter_types[i].flag2 == 10))
-			small_i = 32;
-		if (i == 82)
-			small_i = 3;
-		if (i == 83)
-			small_i = 2;
-		if ((i == 7) || (i == 10) || (i == 13) || (i == 16))
-			small_i = 23;
-		tiny_from = base_small_button_from;
-		OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
-		tiny_to = terrain_rects[i];
-		tiny_to.top = tiny_to.bottom - 7;
-		tiny_to.left = tiny_to.right - 7;
-		if (small_i > 0)
-			rect_draw_some_item(editor_mixed,
-								tiny_from,terrain_buttons_gworld,tiny_to,0,0);
+	// first make terrain buttons
+	switch(draw_mode){
+		case DRAW_TERRAIN:
+			for (i = 0; i < 256; i++) {
+				ter_from = ter_from_base;
+				pic = scenario.ter_types[i].picture;
+				if (pic >= 1000) {
+					ter_from = get_custom_rect(pic % 1000);
+					rect_draw_some_item(spec_scen_g,
+										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+				}
+				else if (pic < 400)	{
+					pic = pic % 50;
+					OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
+					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
+										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+				}
+				else {
+					pic = pic % 50;
+					ter_from.left = 112 * (pic / 5);
+					ter_from.right = ter_from.left + 28;
+					ter_from.top = 36 * (pic % 5);
+					ter_from.bottom = ter_from.top + 36;
+					rect_draw_some_item(anim_gworld,
+										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+					
+				}
+				small_i = small_icons[scenario.ter_types[i].special];
+				if ((small_i == 30) && (scenario.ter_types[i].flag2 >= 5))
+					small_i = 31;
+				if ((small_i == 31) && (scenario.ter_types[i].flag2 == 10))
+					small_i = 32;
+				if (i == 82)
+					small_i = 3;
+				if (i == 83)
+					small_i = 2;
+				if ((i == 7) || (i == 10) || (i == 13) || (i == 16))
+					small_i = 23;
+				tiny_from = base_small_button_from;
+				OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
+				tiny_to = terrain_rects[i];
+				tiny_to.top = tiny_to.bottom - 7;
+				tiny_to.left = tiny_to.right - 7;
+				if (small_i > 0)
+					rect_draw_some_item(editor_mixed,
+										tiny_from,terrain_buttons_gworld,tiny_to,0,0);
+			}
+			break;
+		case DRAW_MONST:
+			break;
+		case DRAW_ITEM:
+			break;
 	}
 	
 	if (overall_mode < MODE_MAIN_SCREEN) {

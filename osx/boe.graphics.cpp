@@ -1784,7 +1784,10 @@ void draw_terrain(short	mode)
 	bool off_terrain = false,draw_trim = true;
 	short i,j,short_spec_terrain;
 	GrafPtr old_port;
-
+	
+	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
+		return;
+	
 	if (mode == 2) {
 		if (current_working_monster < 0) return;
 		supressing_some_spaces = true;

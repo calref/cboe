@@ -177,6 +177,7 @@ int main(void)
 	item_sbar_UPP = NewControlActionProc(item_sbar_action);
 	shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 #endif
+	init_fileio();
 	init_graph_tool(redraw_screen,&ul);
 
 	Set_Window_Drag_Bdry();
@@ -353,7 +354,7 @@ void Handle_One_Event()
 	if ((cur_time % 40 == 0) && (in_startup_mode == false) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
 		&& ((FrontWindow() == mainPtr) || (FrontWindow() ==GetDialogWindow(modeless_dialogs[5]))) && (!gInBackground)) {
 		last_anim_time = cur_time;
-		initiate_redraw();
+		draw_terrain();
 	}
 	if ((cur_time - last_anim_time > 20) && (in_startup_mode == true) 
 		&& (app_started_normally == true) && (FrontWindow() == mainPtr)) {
@@ -793,13 +794,14 @@ void handle_file_menu(int item_hit)
 			do_save(0);
 			break;
 		case 3:
-			if (in_startup_mode == true){
-				try{
-					FSSpec file = nav_put_party();
-					save_party(file);
-				} catch(no_file_chosen){}
-			}
-				else do_save(1);
+//			if (in_startup_mode == true){
+//				try{
+//					FSSpec file = nav_put_party();
+//					save_party(file);
+//				} catch(no_file_chosen){}
+//			}
+//				else
+					do_save(1);
 			break;
 		case 4:
 			if (in_startup_mode == false) {
@@ -853,7 +855,7 @@ void handle_options_menu(int item_hit)
 			if (choice < 6)
 				pick_pc_graphic(choice,1,0);
 			update_pc_graphics();
-			initiate_redraw();
+			draw_terrain();
 			break;
 			
 		case 4:
@@ -868,7 +870,7 @@ void handle_options_menu(int item_hit)
 							kill_pc(choice,MAIN_STATUS_ABSENT);
 						}
 					update_pc_graphics();
-					initiate_redraw();
+					draw_terrain();
 					}
 			break;
 			

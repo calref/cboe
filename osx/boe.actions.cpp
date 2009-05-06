@@ -1286,7 +1286,7 @@ bool handle_action(EventRecord event)
 
  	// If in combat and pc delayed, jump forward a step
  	if (pc_delayed == true) {
- 		initiate_redraw();
+ 		draw_terrain();
 		//pause(2);
 		current_pc++;
 		combat_next_step();	
@@ -1307,7 +1307,7 @@ bool handle_action(EventRecord event)
 					break;
 				}
 			if (s3 > 0)
-				initiate_redraw();
+				draw_terrain();
 			}
 				
 	// Handle non-PC stuff (like monsters) if the party actually did something	
@@ -1326,7 +1326,7 @@ bool handle_action(EventRecord event)
 				else {
 
 					if (need_redraw == true) {
-						initiate_redraw();
+						draw_terrain();
 						if ((combat_active_pc == 6) || (pc_moves[combat_active_pc] > 0))
 							need_redraw = false;
 						}
@@ -1383,7 +1383,7 @@ bool handle_action(EventRecord event)
 		}
 		
 	if (need_redraw == true) {
-		initiate_redraw();
+		draw_terrain();
 		}
 
 
@@ -1426,7 +1426,7 @@ bool handle_action(EventRecord event)
 			center = univ.town.p_loc;
 			}
 		menu_activate(1);
-		initiate_redraw();
+		draw_terrain();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		if (party_toast() == true) {
@@ -1524,7 +1524,7 @@ void initiate_outdoor_combat(short i)
 	short m,n;
 	location to_place;
 
-	initiate_redraw();
+	draw_terrain();
 
 	// Is combat too easy?
 	if ((party_total_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
@@ -1552,16 +1552,8 @@ void initiate_outdoor_combat(short i)
 							
 	overall_mode = MODE_COMBAT;
 	center = pc_pos[current_pc];
-	initiate_redraw();
+	draw_terrain();
 }
-
-void initiate_redraw()
-// Draw changes in terrain, but only if terrain is onscreen
-{
-	if ((overall_mode < MODE_TALKING) || (overall_mode >= MODE_LOOK_OUTDOORS/*30*/))
-		draw_terrain(0);
-}
-
 
 bool handle_keystroke(char chr,char chr2,EventRecord event)
 {
@@ -1786,7 +1778,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
 					}
 //				kill_monst(&c_town.monst.dudes[i],6);
-				initiate_redraw();
+				draw_terrain();
 				add_string_to_buf("Debug: Kill things.            ");
 				print_buf();
 				}
@@ -2029,7 +2021,7 @@ void post_load()
 	HideControl(shop_sbar);
 	set_stat_window(0);
 	put_pc_screen();
-	initiate_redraw();
+	draw_terrain();
 	draw_buttons(0);
 	draw_text_bar(1);
 
@@ -2054,17 +2046,17 @@ void do_save(short mode)
 		}
 	FSSpec file;
 	try{
-		if(mode == 1) file = nav_put_party();
-		else file = univ.file;
-		save_party(file);
+		if(mode == 1) univ.file = nav_put_party();
+		save_party(univ.file);
 	} catch(no_file_chosen){}
 	
 	pause(6);
 	SetPort(GetWindowPort(mainPtr));
-	initiate_redraw();
-	put_pc_screen();
-	put_item_screen(stat_window,0);
-	print_buf();
+//	initiate_redraw();
+//	put_pc_screen();
+//	put_item_screen(stat_window,0);
+//	print_buf();
+	redraw_screen();
 }
 			
 void increase_age()////
@@ -2681,7 +2673,7 @@ bool outd_move_party(location destination,bool forced)
 				univ.party.p_loc.y += 2;
 				univ.party.loc_in_sec.y += 2;
 				update_explored(univ.party.p_loc);
-				initiate_redraw();
+				draw_terrain();
 				print_buf();
 				if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
 					add_string_to_buf("  (No supplies lost.)");
@@ -2853,7 +2845,7 @@ bool town_move_party(location destination,short forced)////
 					destination.y += 2;
 					univ.town.p_loc.y += 2;
 					update_explored(univ.party.p_loc);
-					initiate_redraw();
+					draw_terrain();
 					print_buf();
 					if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
 						add_string_to_buf("  (No supplies lost.)");

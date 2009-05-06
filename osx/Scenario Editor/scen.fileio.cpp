@@ -1320,7 +1320,7 @@ void start_data_dump() {
 	fout << "Scenario data for " << scen_name << ':' << endl << endl;
 	fout << "Terrain types for " << scen_name << ':' << endl;
 	for(i = 0; i < 256; i++)
-		fout << "  Terrain type " << i << ": " << scenario.ter_names[i] << endl;
+		fout << "  Terrain type " << i << ": " << scenario.ter_types[i].name << endl;
 	fout << endl << "Monster types for " << scen_name << ':' << endl;
 	for(i = 0; i < 256; i++)
 		fout << "  Monster type " << i << ": " << scenario.scen_monsters[i].m_name << endl;

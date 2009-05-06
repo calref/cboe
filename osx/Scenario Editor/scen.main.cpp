@@ -100,6 +100,7 @@ int main(void) {
 	
 	init_directories();
 	Initialize();
+	init_fileio();
 	init_snd_tool();
 	load_graphics();
 	

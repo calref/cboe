@@ -7,7 +7,6 @@ void flash_round_rect(Rect to_flash,short radius);
 void button_flash_rect(Rect to_flash);
 void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);
-void initiate_redraw();
 bool handle_keystroke(char chr,char chr2,EventRecord event);
 void menu_activate( short type);
 void do_load();

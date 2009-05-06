@@ -44,6 +44,7 @@ public:
 	unsigned char sfx(char x, char y) const;
 	
 	cTown* operator -> ();
+	cCurTown();
 	bool loaded() const;
 	void unload();
 	
