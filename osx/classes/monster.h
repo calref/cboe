@@ -6,7 +6,11 @@
  *
  */
 
-namespace legacy { struct monster_record_type; };
+namespace legacy {
+	struct monster_record_type;
+	struct creature_data_type;
+	struct creature_start_type;
+};
 /*      Monsters Stuff      */
 
 /* Skills Same as PC */
@@ -103,7 +107,8 @@ enum eMonsterType {
 
 class cMonster {
 public:
-	unsigned char m_num,level,m_name[26];
+	unsigned char m_num,level;
+	string m_name;
 	short health,m_health,mp,max_mp;
 	unsigned char armor,skill;
 	short a[3];
@@ -119,4 +124,29 @@ public:
 	
 	cMonster& operator = (legacy::monster_record_type& old);
 	void writeTo(ostream& file, string prefix);
+};
+
+class cCreature {
+public:
+	cMonster m_d;
+	unsigned long id;
+	unsigned short number;
+	short active, attitude;
+	unsigned char start_attitude;
+	location start_loc, cur_loc;
+	unsigned char mobility; // Was a bool, but am making it a char to allow for additional mobility states
+	unsigned char time_flag;
+	short summoned;
+	unsigned char extra1, extra2;
+	short spec1, spec2;
+	char spec_enc_code, time_code;
+	short monster_time, personality;
+	short special_on_kill, facial_pic;
+	short target;
+	location targ_loc;
+	
+	cCreature();
+	
+	cCreature& operator = (legacy::creature_data_type old);
+	cCreature& operator = (legacy::creature_start_type old);
 };

@@ -12,7 +12,7 @@ void display_pc_item_event_filter (short item_hit);
 void display_pc_item(short pc_num,short item,cItemRec si,short parent);
 void put_monst_info();
 void display_monst_event_filter (short item_hit);
-void display_monst(short array_pos,cPopulation::cCreature *which_m,short mode);
+void display_monst(short array_pos,cCreature *which_m,short mode);
 void display_help_event_filter (short item_hit);
 void display_help(short mode,short parent);
 void display_alchemy_event_filter (short item_hit);

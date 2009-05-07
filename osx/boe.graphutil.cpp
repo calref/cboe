@@ -40,7 +40,7 @@ extern bool sleep_field;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short on_monst_menu[256];
 extern DialogPtr modeless_dialogs[18];
-extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
 //extern piles_of_stuff_dumping_type *data_store;
@@ -56,7 +56,7 @@ extern location pc_pos[6],center;
 extern short which_combat_type,pc_dir[6],current_pc;
 extern bool monsters_going,anim_onscreen;
 
-extern short pc_moves[6];
+//extern short pc_moves[6];
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
@@ -294,10 +294,10 @@ void draw_monsters() ////
 		if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].m_d.spec_skill != 11))
 			if (party_can_see_monst(i)) {
 				check_if_monst_seen(univ.town.monst.dudes[i].number);
-				where_draw.x = univ.town.monst.dudes[i].m_loc.x - center.x + 4;
-				where_draw.y = univ.town.monst.dudes[i].m_loc.y - center.y + 4;
+				where_draw.x = univ.town.monst.dudes[i].cur_loc.x - center.x + 4;
+				where_draw.y = univ.town.monst.dudes[i].cur_loc.y - center.y + 4;
 				get_monst_dims(univ.town.monst.dudes[i].number,&width,&height);
-				if (point_onscreen(center,univ.town.monst.dudes[i].m_loc) == true)
+				if (point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true)
 					play_see_monster_str(univ.town.monst.dudes[i].number);
 				
 				for (k = 0; k < width * height; k++) {
@@ -314,13 +314,13 @@ void draw_monsters() ////
 					if (univ.town.monst.dudes[i].m_d.picture_num < 1000) {
 						source_rect = get_monster_template_rect(univ.town.monst.dudes[i].number,
 						 ((univ.town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),k);
-						ter = univ.town->terrain(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y);
+						ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 							(scenario.ter_types[ter].picture == 143) && 
 							((univ.town.monst.dudes[i].m_d.m_type < 7) 
 							&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
-							&& ((univ.town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
+							&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 							(width == 1) && (height == 1)) ////
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
@@ -330,11 +330,11 @@ void draw_monsters() ////
 	if (is_combat()) {	
 			for (i = 0; i < univ.town->max_monst(); i++)
 				if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].m_d.spec_skill != 11))
-					if (((point_onscreen(center,univ.town.monst.dudes[i].m_loc) == true) && (cartoon_happening == true))
+					if (((point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true) && (cartoon_happening == true))
 						|| (party_can_see_monst(i) == true)) {
 						check_if_monst_seen(univ.town.monst.dudes[i].number);
-						where_draw.x = univ.town.monst.dudes[i].m_loc.x - center.x + 4;
-						where_draw.y = univ.town.monst.dudes[i].m_loc.y - center.y + 4;
+						where_draw.x = univ.town.monst.dudes[i].cur_loc.x - center.x + 4;
+						where_draw.y = univ.town.monst.dudes[i].cur_loc.y - center.y + 4;
 						get_monst_dims(univ.town.monst.dudes[i].number,&width,&height);
 						
 						for (k = 0; k < width * height; k++) {
@@ -352,12 +352,12 @@ void draw_monsters() ////
 								source_rect = get_monster_template_rect(univ.town.monst.dudes[i].number,
 								 ((univ.town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0)
 								 ,k);
-								ter = univ.town->terrain(univ.town.monst.dudes[i].m_loc.x,univ.town.monst.dudes[i].m_loc.y);
+								ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 									(scenario.ter_types[ter].picture == 143) && 
 									((univ.town.monst.dudes[i].m_d.m_type < 7) 
 										&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
-									&& ((univ.town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
+									&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 									(width == 1) && (height == 1))
 										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); ////
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 

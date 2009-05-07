@@ -211,7 +211,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (ADVEN[i].main_status != 0) {
-				csit(1018,9 + i,ADVEN[i].name);		
+				csit(1018,9 + i,ADVEN[i].name.c_str());		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
 	}

@@ -26,7 +26,7 @@
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 cPlayer *store_pc;
-cPopulation::cCreature *store_m;
+cCreature *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 cItemRec store_i;
 
@@ -74,7 +74,7 @@ extern short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_la
 // Misc dialog vars
 short store_display_mode,store_displayed_item,position,num_entries,store_help_mode;
 unsigned short cur_entry;
-cPopulation::cCreature hold_m;
+cCreature hold_m;
 	
 void put_spell_info()
 {
@@ -228,7 +228,7 @@ void put_pc_graphics()
 			else cd_set_led(991,i,0);
 		}
 
-	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name);
+	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name.c_str());
 }
 
 void display_pc_event_filter (short item_hit)
@@ -326,11 +326,11 @@ void put_item_info(short pc,short item)////
 			
 
 	if (!s_i.is_ident()) {
-			cd_set_item_text(998,3,	s_i.name);
+			cd_set_item_text(998,3,	s_i.name.c_str());
 			return;
 		}	
 			
-	cd_set_item_text(998,3,	s_i.full_name);
+	cd_set_item_text(998,3,	s_i.full_name.c_str());
 	i = s_i.item_weight();
 	cd_set_item_num(998,20,i);
 	
@@ -473,7 +473,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 
 void put_monst_info()////
 {
-	char store_text[256];
+	string store_text;
 	Str255 str;
 	short abil,i;	
 	
@@ -498,8 +498,8 @@ void put_monst_info()////
 			cd_set_pict(999,4,(store_m->m_d.picture_num % 1000), type_g);
 		}
 		
-	get_m_name((char *) store_text,store_m->number);
-	cd_set_item_text(999,5,store_text);
+	store_text = get_m_name(store_m->number);
+	cd_set_item_text(999,5,store_text.c_str());
 	// Clear fields
 	for (i = 6; i < 20; i++) {
 		cd_set_item_text(999,i,"");
@@ -513,10 +513,11 @@ void put_monst_info()////
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			sprintf((char *) store_text," %dd%d              ",
-				store_m->m_d.a[i] / 100 + 1, store_m->m_d.a[i] % 100);
+			ostringstream sout(store_text);
+			sout << store_m->m_d.a[i] / 100 + 1 << 'd' << store_m->m_d.a[i] % 100;
+			store_text = sout.str();
 
-			cd_set_item_text(999,13 + i,store_text);
+			cd_set_item_text(999,13 + i,store_text.c_str());
 			}				
 	cd_set_item_num(999,6,store_m->m_d.level);
 	cd_set_item_num(999,7,store_m->m_d.health);
@@ -577,7 +578,7 @@ void display_monst_event_filter (short item_hit)
 				}
 }
 
-void display_monst(short array_pos,cPopulation::cCreature *which_m,short mode)
+void display_monst(short array_pos,cCreature *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from storwhich_me_m
 {
@@ -824,7 +825,7 @@ void display_pc_info()
 		}
 	store = total_encumberance(pc);
 	cdsin(1019,62,store);
-	csit(1019,9,ADVEN[pc].name);
+	csit(1019,9,ADVEN[pc].name.c_str());
 	cdsin(1019,11,ADVEN[pc].level);
 	cdsin(1019,13,ADVEN[pc].experience);
 	cdsin(1019,71,ADVEN[pc].skill_pts);

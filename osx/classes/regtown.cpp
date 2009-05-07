@@ -122,7 +122,7 @@ rectangle& cTinyTown::room_rect(size_t i){
 	return _room_rect[i];
 }
 
-cTown::cCreature& cTinyTown::creatures(size_t i){
+cCreature& cTinyTown::creatures(size_t i){
 	return _creatures[i];
 }
 
@@ -138,7 +138,7 @@ rectangle& cMedTown::room_rect(size_t i){
 	return _room_rect[i];
 }
 
-cTown::cCreature& cMedTown::creatures(size_t i){
+cCreature& cMedTown::creatures(size_t i){
 	return _creatures[i];
 }
 
@@ -154,7 +154,7 @@ rectangle& cBigTown::room_rect(size_t i){
 	return _room_rect[i];
 }
 
-cTown::cCreature& cBigTown::creatures(size_t i){
+cCreature& cBigTown::creatures(size_t i){
 	return _creatures[i];
 }
 
@@ -164,7 +164,7 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 
 cBigTown::cBigTown(){
 	int i;
-	cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
+	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	Rect d_rect = {0,0,0,0};
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
@@ -179,7 +179,7 @@ cBigTown::cBigTown(){
 
 cMedTown::cMedTown(){
 	int i;
-	cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
+	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	Rect d_rect = {0,0,0,0};
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
@@ -194,7 +194,7 @@ cMedTown::cMedTown(){
 
 cTinyTown::cTinyTown(){
 	int i;
-	cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
+	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	Rect d_rect = {0,0,0,0};
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;

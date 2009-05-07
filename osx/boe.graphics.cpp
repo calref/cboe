@@ -51,7 +51,7 @@ extern bool monsters_going,boom_anim_active,cartoon_happening,skip_boom_delay;
 extern 	PicHandle	spell_pict;
 extern short current_ground;
 extern short terrain_pic[256];
-extern short pc_moves[6];
+//extern short pc_moves[6];
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
@@ -408,6 +408,7 @@ void plop_fancy_startup()
 
 	init_startup();
 	
+	int delay = 220;
 	if(show_startup_splash){
 		//init_anim(0);
 		pict_to_draw = GetPicture(3000);
@@ -447,16 +448,16 @@ void plop_fancy_startup()
 
 //	NSetPalette(mainPtr,old_palette,pmAllUpdates);
 //	ActivatePalette(mainPtr);
-		QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
-		if (fry_startup == false) {
-
-			play_sound(-22);
-			EventRecord event;
-			WaitNextEvent(mDownMask + keyDownMask + mUpMask,&event,220,NULL);
-		}
-	
-		DisposeRgn(wholeRegion);
+	} else delay = 60;
+	QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
+	if (fry_startup == false) {
+		
+		play_sound(-22);
+		EventRecord event;
+		WaitNextEvent(mDownMask + keyDownMask + mUpMask,&event,delay,NULL);
 	}
+	
+	DisposeRgn(wholeRegion);
 }
 
 void fancy_startup_delay()
@@ -619,7 +620,7 @@ void draw_startup_stats()
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
 				char_win_draw_string(mainPtr,pc_rect,
-					ADVEN[i].name,0,18,true);
+					(char*)ADVEN[i].name.c_str(),0,18,true);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
 				}
@@ -1129,7 +1130,7 @@ void draw_text_bar(short mode)
 	//short num_rect[3] = {12,10,4}; // Why? Just... why?
 	short i;
 	location loc;
-	char combat_string[100];
+	string combat_string;
 	
 	loc = (is_out()) ? global_to_local(univ.party.p_loc) : univ.town.p_loc;
 
@@ -1170,17 +1171,18 @@ void draw_text_bar(short mode)
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == false)) {
-		sprintf((char *) combat_string,"%s (ap: %d)",
-			ADVEN[current_pc].name,pc_moves[current_pc]);
-		put_text_bar((char *) combat_string);
+		ostringstream sout;
+		sout << ADVEN[current_pc].name << " (ap: " << ADVEN[current_pc].ap << ')';
+		combat_string = sout.str();
+		put_text_bar((char *) combat_string.c_str());
 		remember_tiny_text = 500;
 		}
 	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < univ.town->max_monst(); i++)
 	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].m_d.ap > 0)) {
-	   		print_monster_going((char *) combat_string,univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].m_d.ap);
-			put_text_bar((char *) combat_string);
+	   		combat_string = print_monster_going(univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].m_d.ap);
+			put_text_bar((char *) combat_string.c_str());
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }
@@ -1795,8 +1797,8 @@ void draw_terrain(short	mode)
 		if (current_working_monster >= 100) {
 			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].m_d.x_width; i++)
 				for (j = 0; j < univ.town.monst.dudes[current_working_monster - 100].m_d.y_width; j++) {
-					ok_space[i + 2 * j].x = univ.town.monst.dudes[current_working_monster - 100].m_loc.x + i;
-					ok_space[i + 2 * j].y = univ.town.monst.dudes[current_working_monster - 100].m_loc.y + j;
+					ok_space[i + 2 * j].x = univ.town.monst.dudes[current_working_monster - 100].cur_loc.x + i;
+					ok_space[i + 2 * j].y = univ.town.monst.dudes[current_working_monster - 100].cur_loc.y + j;
 					ok_space[i + 2 * j].x = ok_space[i + 2 * j].x - center.x + 4;
 					ok_space[i + 2 * j].y = ok_space[i + 2 * j].y - center.y + 4;
 					}

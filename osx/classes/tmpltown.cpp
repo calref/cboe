@@ -16,7 +16,7 @@ rectangle& cBigTemplTown::room_rect(size_t i){
 	return _room_rect[i];
 }
 
-cTown::cCreature& cBigTemplTown::creatures(size_t i){
+cCreature& cBigTemplTown::creatures(size_t i){
 	return _creatures[i];
 }
 

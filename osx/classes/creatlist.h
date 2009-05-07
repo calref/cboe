@@ -13,18 +13,18 @@ namespace legacy {
 
 class cPopulation { // formerly creature_list_type
 public:
-	class cCreature { // formerly creature_data_type
-	public:
-		short active, attitude;
-		unsigned char number;
-		location m_loc;
-		cMonster m_d;
-		bool mobile;
-		short summoned;
-		cTown::cCreature monst_start;
-		
-		cCreature& operator = (legacy::creature_data_type old);
-	};
+//	class cCreature { // formerly creature_data_type
+//	public:
+//		short active, attitude;
+//		unsigned char number;
+//		location m_loc;
+//		cMonster m_d;
+//		bool mobile;
+//		short summoned;
+//		cTown::cCreature monst_start;
+//		
+//		cCreature& operator = (legacy::creature_data_type old);
+//	};
 	cCreature dudes[60];
 	short which_town;
 	short friendly;

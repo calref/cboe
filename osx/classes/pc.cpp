@@ -13,7 +13,7 @@ __attribute__((deprecated))
 cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	int i;
 	main_status = (eMainStatus) old.main_status;
-	strcpy(name,old.name);
+	name = old.name;
 	for(i = 0; i < 20; i++)
 		skills[i] = old.skills[i];
 	max_health = old.max_health;
@@ -62,7 +62,7 @@ short cPlayer::get_tnl(){
 cPlayer::cPlayer(){
 	short i;
 	main_status = MAIN_STATUS_ABSENT;
-	sprintf	((char *) name, "\n");
+	name = "\n";
 	
 	for (i = 0; i < 30; i++)
 		skills[i] = (i < 3) ? 1 : 0;
@@ -102,22 +102,22 @@ cPlayer::cPlayer(long key,short slot){
 	if(key == 'dbug'){
 		switch (slot) {
 			case 0:
-				sprintf	((char *) name, "Gunther");
+				name = "Gunther";
 				break;
 			case 1:
-				sprintf	((char *) name, "Yanni");
+				name = "Yanni";
 				break;
 			case 2:
-				sprintf	((char *) name, "Mandolin");
+				name = "Mandolin";
 				break;
 			case 3:
-				sprintf	((char *) name, "Pete");
+				name = "Pete";
 				break;
 			case 4:
-				sprintf	((char *) name, "Vraiment");
+				name = "Vraiment";
 				break;
 			case 5:
-				sprintf	((char *) name, "Goo");
+				name = "Goo";
 				break;
 		}
 		for (i = 0; i < 30; i++)
@@ -177,22 +177,22 @@ cPlayer::cPlayer(long key,short slot){
 		main_status = MAIN_STATUS_ALIVE;
 		switch (slot) {
 			case 0:
-				sprintf	((char *) name, "Jenneke");
+				name = "Jenneke";
 				break;
 			case 1:
-				sprintf	((char *) name, "Thissa");
+				name = "Thissa";
 				break;
 			case 2:
-				sprintf	((char *) name, "Frrrrrr");
+				name = "Frrrrrr";
 				break;
 			case 3:
-				sprintf	((char *) name, "Adrianna");
+				name = "Adrianna";
 				break;
 			case 4:
-				sprintf	((char *) name, "Feodoric");
+				name = "Feodoric";
 				break;
 			case 5:
-				sprintf	((char *) name, "Michael");
+				name = "Michael";
 				break;
 				
 		}

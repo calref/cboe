@@ -118,8 +118,8 @@ cItemRec::cItemRec(){
 	special_class = 0;
 	item_loc.x = 0;
 	item_loc.y = 0;
-	strcpy(full_name,"");
-	strcpy(name,"");
+	full_name = "";
+	name = "";
 	treas_class = 0;
 	item_properties = 0;
 	reserved1 = 0;
@@ -150,8 +150,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 45;
 			value = 2;
 			weight = 7;
-			strcpy(full_name,"Bronze Knife");
-			strcpy(name,"Knife");
+			full_name = "Bronze Knife";
+			name = "Knife";
 			set_ident(true);
 			break;
 		case 'buck':
@@ -166,8 +166,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 65;
 			value = 2;
 			weight = 20;
-			strcpy(full_name,"Crude Buckler");
-			strcpy(name,"Buckler");
+			full_name = "Crude Buckler";
+			name = "Buckler";
 			set_ident(true);
 			break;
 		case 'bow ':
@@ -182,8 +182,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 10;
 			value = 15;
 			weight = 20;
-			strcpy(full_name,"Cavewood Bow");
-			strcpy(name,"Bow");
+			full_name = "Cavewood Bow";
+			name = "Bow";
 			set_ident(true);
 			break;
 		case 'arrw':
@@ -198,8 +198,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 47;
 			value = 1;
 			weight = 1;
-			strcpy(full_name,"Arrows");
-			strcpy(name,"Arrows");
+			full_name = "Arrows";
+			name = "Arrows";
 			set_ident(true);
 			break;
 		case 'pole':
@@ -214,8 +214,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 4;
 			value = 10;
 			weight = 20;
-			strcpy(full_name,"Stone Spear");
-			strcpy(name,"Spear");
+			full_name = "Stone Spear";
+			name = "Spear";
 			set_ident(true);
 			break;
 		case 'helm':
@@ -230,8 +230,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 66;
 			value = 6;
 			weight = 15;
-			strcpy(full_name,"Leather Helm");
-			strcpy(name,"Helm");
+			full_name = "Leather Helm";
+			name = "Helm";
 			set_ident(true);
 			break;
 		case 'food':
@@ -246,8 +246,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 62;
 			value = 0;
 			weight = 0;
-			strcpy(full_name,"Food");
-			strcpy(name,"Food");
+			full_name = "Food";
+			name = "Food";
 			set_ident(false);
 			break;
 		case 'spel':
@@ -262,8 +262,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 53;
 			value = 0;
 			weight = 0;
-			strcpy(full_name,"");
-			strcpy(name,"");
+			full_name = "";
+			name = "";
 			set_ident(false);
 			break;
 		case 'alch':
@@ -278,8 +278,8 @@ cItemRec::cItemRec(long preset){
 			graphic_num = 50;
 			value = 0;
 			weight = 8;
-			strcpy(full_name,"Potion");
-			strcpy(name,"Potion");
+			full_name = "Potion";
+			name = "Potion";
 			set_ident(false);
 			set_magic(true);
 			break;
@@ -310,8 +310,8 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	special_class = old.special_class;
 	item_loc.x = old.item_loc.x;
 	item_loc.y = old.item_loc.y;
-	strcpy(full_name,old.full_name);
-	strcpy(name,old.name);
+	full_name = old.full_name;
+	name = old.name;
 	treas_class = old.treas_class;
 	item_properties = old.item_properties;
 	reserved1 = old.reserved1;
@@ -369,10 +369,10 @@ void cItemRec::readAttrFrom(string cur, istream& sin){
 	else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
 	else if(cur == "FULLNAME"){
 		getline(sin,cur);
-		strcpy(full_name,cur.c_str());
+		full_name = cur;
 	}else if(cur == "NAME"){
 		getline(sin,cur);
-		strcpy(name,cur.c_str());
+		name = cur;
 	}
 	else if(cur == "TREASURE") sin >> treas_class;
 	else if(cur == "IDENTIFIED") set_ident(true);

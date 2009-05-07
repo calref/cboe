@@ -44,7 +44,7 @@ extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
 //extern short town_size[3];
 extern short town_type;
-extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short num_targets_left;
 extern location spell_targets[8];
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
@@ -53,7 +53,7 @@ extern bool fast_bang;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
 extern short refer_mage[62],refer_priest[62];
-extern location monster_targs[60];
+//extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
 extern short spell_caster, missile_firer,current_monst_tactic;
@@ -273,7 +273,7 @@ effect_pat_type field[8] = {{{{0,0,0,0,1,1,0,0,0},
 							{0,0,0,0,0,0,0,1,1},
 							{0,0,0,0,0,0,0,0,1}}}};
 						
-short last_attacked[6],pc_dir[6],pc_parry[6],pc_moves[6];
+short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 bool center_on_monst;
 
 
@@ -353,35 +353,35 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_
 	// place monsters, w. friendly monsts landing near PCs
 	for (i = 0; i < univ.town->max_monst(); i++) 
 		if (univ.town.monst.dudes[i].active > 0) {
-			monst_target[i] = 6;
+			univ.town.monst.dudes[i].target = 6;
 			
-			univ.town.monst.dudes[i].m_loc.x  = get_ran(1,15,25);
-			univ.town.monst.dudes[i].m_loc.y  = get_ran(1,14,18);
+			univ.town.monst.dudes[i].cur_loc.x  = get_ran(1,15,25);
+			univ.town.monst.dudes[i].cur_loc.y  = get_ran(1,14,18);
 			if (univ.town.monst.dudes[i].attitude == 2)
-				univ.town.monst.dudes[i].m_loc.y += 9;
+				univ.town.monst.dudes[i].cur_loc.y += 9;
 				else if ((univ.town.monst.dudes[i].m_d.mu > 0) || (univ.town.monst.dudes[i].m_d.cl > 0))
-					univ.town.monst.dudes[i].m_loc.y = univ.town.monst.dudes[i].m_loc.y - 4;//max(12,univ.town.monst.dudes[i].m_loc.y - 4);
+					univ.town.monst.dudes[i].cur_loc.y -= 4;//max(12,univ.town.monst.dudes[i].m_loc.y - 4);
 			num_tries = 0;
-			while (((monst_can_be_there(univ.town.monst.dudes[i].m_loc,i) == false) ||
-			 (combat_terrain[univ.town.monst.dudes[i].m_loc.x][univ.town.monst.dudes[i].m_loc.y] == 180) ||
-			 (pc_there(univ.town.monst.dudes[i].m_loc) < 6)) &&
+			while (((monst_can_be_there(univ.town.monst.dudes[i].cur_loc,i) == false) ||
+			 (combat_terrain[univ.town.monst.dudes[i].cur_loc.x][univ.town.monst.dudes[i].cur_loc.y] == 180) ||
+			 (pc_there(univ.town.monst.dudes[i].cur_loc) < 6)) &&
 			 (num_tries++ < 50)) {
-				univ.town.monst.dudes[i].m_loc.x = get_ran(1,15,25);
-				univ.town.monst.dudes[i].m_loc.y = get_ran(1,14,18);		
+				univ.town.monst.dudes[i].cur_loc.x = get_ran(1,15,25);
+				univ.town.monst.dudes[i].cur_loc.y = get_ran(1,14,18);		
 				if (univ.town.monst.dudes[i].attitude == 2)
-					univ.town.monst.dudes[i].m_loc.y += 9;
+					univ.town.monst.dudes[i].cur_loc.y += 9;
 					else if ((univ.town.monst.dudes[i].m_d.mu > 0) || (univ.town.monst.dudes[i].m_d.cl > 0))
-						univ.town.monst.dudes[i].m_loc.y = univ.town.monst.dudes[i].m_loc.y - 4;//max(12,univ.town.monst.dudes[i].m_loc.y - 4);
+						univ.town.monst.dudes[i].cur_loc.y -= 4;//max(12,univ.town.monst.dudes[i].m_loc.y - 4);
 				}
-			if (get_blockage(combat_terrain[univ.town.monst.dudes[i].m_loc.x][univ.town.monst.dudes[i].m_loc.y]) > 0)
-				combat_terrain[univ.town.monst.dudes[i].m_loc.x][univ.town.monst.dudes[i].m_loc.y] = combat_terrain[0][0];	
+			if (get_blockage(combat_terrain[univ.town.monst.dudes[i].cur_loc.x][univ.town.monst.dudes[i].cur_loc.y]) > 0)
+				combat_terrain[univ.town.monst.dudes[i].cur_loc.x][univ.town.monst.dudes[i].cur_loc.y] = combat_terrain[0][0];	
 		}
 
 
 	combat_active_pc = 6;
 	spell_caster = 6; missile_firer = 6;
 	for (i = 0; i < univ.town->max_monst(); i++)
-		monst_target[i] = 6;
+		univ.town.monst.dudes[i].target = 6;
 
 	for (i = 0; i < 6; i++) {
 		pc_parry[i] = 0;
@@ -438,7 +438,7 @@ bool pc_combat_move(location destination) ////
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
 				sprintf ((char *) create_line, "Moved: Fled.                    ");
-				pc_moves[current_pc] = 0;
+				ADVEN[current_pc].ap = 0;
 				}
 				else {
 					take_ap(1);
@@ -459,12 +459,12 @@ bool pc_combat_move(location destination) ////
 				}
 			}
 			else if ((switch_pc = pc_there(destination)) < 6) {
-				if (pc_moves[switch_pc] == 0) {
+				if (ADVEN[switch_pc].ap == 0) {
 					add_string_to_buf("Move: Can't switch places.");
 					add_string_to_buf("  (other PC has no APs)	");
 					return false;
 					}
-					else pc_moves[switch_pc]--;
+					else ADVEN[switch_pc].ap--;
 				add_string_to_buf("Move: Switch places.");
 				store_loc = pc_pos[current_pc];
 				pc_pos[current_pc] = destination;
@@ -472,7 +472,7 @@ bool pc_combat_move(location destination) ////
 				ADVEN[current_pc].direction = dir;
 				take_ap(1);
 				check_special_terrain(store_loc,2,switch_pc,&spec_num,&check_f);
-				move_sound(combat_terrain[destination.x][destination.y],pc_moves[current_pc]);
+				move_sound(combat_terrain[destination.x][destination.y],ADVEN[current_pc].ap);
 				return true;
 				}
 			else if ((forced == true)
@@ -480,7 +480,7 @@ bool pc_combat_move(location destination) ////
 			
 				// monsters get back-shots
 				for (i = 0; i < univ.town->max_monst(); i++) {
-					monst_loc = univ.town.monst.dudes[i].m_loc;
+					monst_loc = univ.town.monst.dudes[i].cur_loc;
 					monst_exist = univ.town.monst.dudes[i].active;
 					
 					s1 = current_pc;
@@ -506,7 +506,7 @@ bool pc_combat_move(location destination) ////
 						take_ap(1);
 						sprintf ((char *) create_line, "Moved: %s               ",d_string[dir]);
 						add_string_to_buf((char *) create_line);
-						move_sound(combat_terrain[destination.x][destination.y],pc_moves[current_pc]);
+						move_sound(combat_terrain[destination.x][destination.y],ADVEN[current_pc].ap);
 
 					}
 					else return false;
@@ -523,21 +523,21 @@ bool pc_combat_move(location destination) ////
 
 void char_parry()
 {
-	pc_parry[current_pc] = (pc_moves[current_pc] / 4) * 
+	pc_parry[current_pc] = (ADVEN[current_pc].ap / 4) * 
 		(2 + stat_adj(current_pc,1) + ADVEN[current_pc].skills[8]);
-	pc_moves[current_pc] = 0;
+	ADVEN[current_pc].ap = 0;
 }
 
 void char_stand_ready()
 {
 	pc_parry[current_pc] = 100;
-	pc_moves[current_pc] = 0;
+	ADVEN[current_pc].ap = 0;
 }
 
 void pc_attack(short who_att,short target)////
 {
 	short r1,r2,what_skill1 = 1, what_skill2 = 1, weap1 = 24, weap2 = 24,i,store_hp,skill_item;
-	cPopulation::cCreature *which_m;	
+	cCreature *which_m;	
 	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
 
 	// slice out bad attacks
@@ -585,7 +585,7 @@ void pc_attack(short who_att,short target)////
 	
 	if (weap1 == 24) {	
 
-		sprintf ((char *) create_line, "%s punches.  ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
+		sprintf ((char *) create_line, "%s punches.  ",(char *) ADVEN[who_att].name.c_str());//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 
 		r1 = get_ran(1,1,100) + hit_adj - 20;
@@ -597,7 +597,7 @@ void pc_attack(short who_att,short target)////
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "%s misses. ",(char *) ADVEN[who_att].name);
+				sprintf ((char *) create_line, "%s misses. ",(char *) ADVEN[who_att].name.c_str());
 				add_string_to_buf((char *) create_line);	
 				play_sound(2);		
 			}
@@ -611,7 +611,7 @@ void pc_attack(short who_att,short target)////
 		if (what_skill1 == 2)
 			what_skill1 = 3;
 			
-		sprintf ((char *) create_line, "%s swings. ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
+		sprintf ((char *) create_line, "%s swings. ",(char *) ADVEN[who_att].name.c_str());//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 		
 		r1 = get_ran(1,1,100) - 5 + hit_adj
@@ -679,7 +679,7 @@ void pc_attack(short who_att,short target)////
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "  %s misses.              ",(char *) ADVEN[who_att].name);
+				sprintf ((char *) create_line, "  %s misses.              ",(char *) ADVEN[who_att].name.c_str());
 				add_string_to_buf((char *) create_line);			
 				if (what_skill1 == 5) 
 					play_sound(19);
@@ -694,7 +694,7 @@ void pc_attack(short who_att,short target)////
 			what_skill2 = 3;
 
 
-		sprintf ((char *) create_line, "%s swings.                    ",(char *) ADVEN[who_att].name);//,hit_adj, dam_adj);
+		sprintf ((char *) create_line, "%s swings.                    ",(char *) ADVEN[who_att].name.c_str());//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 		r1 = get_ran(1,1,100) + hit_adj - 5 * ADVEN[who_att].items[weap2].bonus;
 		
@@ -740,7 +740,7 @@ void pc_attack(short who_att,short target)////
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "%s misses.             ",(char *) ADVEN[who_att].name);
+				sprintf ((char *) create_line, "%s misses.             ",(char *) ADVEN[who_att].name.c_str());
 				add_string_to_buf((char *) create_line);	
 				if (what_skill2 == 5) 
 					play_sound(19);
@@ -760,7 +760,7 @@ void pc_attack(short who_att,short target)////
 }
 
 
-short calc_spec_dam(short abil,short abil_str,cPopulation::cCreature *monst) ////
+short calc_spec_dam(short abil,short abil_str,cCreature *monst) ////
 {
 	short store = 0;
 	
@@ -877,7 +877,7 @@ void place_target(location target)
 void do_combat_cast(location target)////
 {
 	short adjust,r1,r2,targ_num,s_num,level,bonus = 1,i,item,store_sound = 0;
-	cPopulation::cCreature *cur_monst;
+	cCreature *cur_monst;
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1,store_m_type = 2;
 	short spray_type_array[15] = {1,1,1,4,4,5,5,5,6,6,7,7,8,8,9};
@@ -1301,7 +1301,7 @@ void do_combat_cast(location target)////
 										else {
 										r1 = get_ran((spell_being_cast == 103) ? 2 : 6, 1, 14);	
 
-										hit_space(cur_monst->m_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
+										hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
 										}
 									break;
 									
@@ -1319,7 +1319,7 @@ void do_combat_cast(location target)////
 										//if (PSD[4][0] == 3) // anama
 										//	r1 += 25;
 										//play_sound(53);
-										hit_space(cur_monst->m_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
+										hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
 										}
 									break;
 								}
@@ -1445,7 +1445,7 @@ void load_missile() ////
 void fire_missile(location target) {
 	short r1, r2, skill, dam, dam_bonus, hit_bonus, range, targ_monst, spec_dam = 0,poison_amt = 0;
 	short skill_item,m_type = 0;
-	cPopulation::cCreature *cur_monst;
+	cCreature *cur_monst;
 	bool exploding = false;
 	missile_firer = current_pc;
 	
@@ -1497,7 +1497,7 @@ void fire_missile(location target) {
 			r1 = get_ran(1,1,100) - 5 * hit_bonus - 10;
 			r1 += 5 * (ADVEN[missile_firer].status[6] / 3);
 			r2 = get_ran(1,1,dam) + dam_bonus;
-			sprintf ((char *) create_line, "%s fires.",(char *) ADVEN[missile_firer].name); // debug
+			sprintf ((char *) create_line, "%s fires.",(char *) ADVEN[missile_firer].name.c_str()); // debug
 			add_string_to_buf((char *) create_line);
 			
 			if (overall_mode == MODE_THROWING) {
@@ -1607,7 +1607,7 @@ bool combat_next_step()
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
 			sprintf((char *)create_line, "Active:  %s (#%d, %d ap.)                     ",
-				ADVEN[current_pc].name,current_pc + 1,pc_moves[current_pc]);         
+				ADVEN[current_pc].name,current_pc + 1,ADVEN[current_pc].ap);         
 			add_string_to_buf((char *)create_line);
 			print_buf();
 		}
@@ -1629,22 +1629,22 @@ bool pick_next_pc()
 		
 	// If current pc isn't active, fry its moves
 	if ((combat_active_pc < 6) && (combat_active_pc != current_pc))
-		pc_moves[current_pc] = 0;
+		ADVEN[current_pc].ap = 0;
 					
 	// Find next PC with moves
-	while ((pc_moves[current_pc] <= 0) && (current_pc < 6)) {
+	while ((ADVEN[current_pc].ap <= 0) && (current_pc < 6)) {
 		current_pc++;		
 		if ((combat_active_pc < 6) && (combat_active_pc != current_pc))
-			pc_moves[current_pc] = 0;
+			ADVEN[current_pc].ap = 0;
 		}
 
 	// If run out of PC's, return to start and try again
 	if (current_pc == 6) {
 		current_pc = 0;
-		while ((pc_moves[current_pc] <= 0) && (current_pc < 6)) {
+		while ((ADVEN[current_pc].ap <= 0) && (current_pc < 6)) {
 			current_pc++;
 			if ((combat_active_pc < 6) && (combat_active_pc != current_pc))
-				pc_moves[current_pc] = 0;			
+				ADVEN[current_pc].ap = 0;			
 			}
 		if (current_pc == 6) {
 			store = true;
@@ -1746,7 +1746,7 @@ void do_monster_turn()
 	bool redraw_not_yet_done = true;
 	location targ_space,move_targ,l;
 	short i,j,k,num_monst, target,r1,move_target;
-	cPopulation::cCreature *cur_monst;
+	cCreature *cur_monst;
 	bool pc_adj[6];
 	short abil_range[40] = {0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
 							0,0,0,0,0, 0,0,8,6,9, 0,0,0,0,0};
@@ -1767,12 +1767,12 @@ void do_monster_turn()
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 45 : 0;
-			r1 += can_see(cur_monst->m_loc,closest_pc_loc(cur_monst->m_loc),0) * 10;
+			r1 += can_see(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),0) * 10;
 			if (r1 < 50)
 				cur_monst->active = 2;
 			
 			for (j = 0; j < univ.town->max_monst(); j++)
-				if (monst_near(j,cur_monst->m_loc,5,1) == true) {
+				if (monst_near(j,cur_monst->cur_loc,5,1) == true) {
 					cur_monst->active = 2;		
 					}
 			}
@@ -1782,8 +1782,8 @@ void do_monster_turn()
 			for (j = 0; j < univ.town->max_monst(); j++) 
 				if ((univ.town.monst.dudes[j].active > 0) && 
 					(univ.town.monst.dudes[j].attitude % 2 != 1) &&
-					(dist(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc) <= 6) &&
-				  (can_see(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc,0) < 5))
+					(dist(cur_monst->cur_loc,univ.town.monst.dudes[j].cur_loc) <= 6) &&
+				  (can_see(cur_monst->cur_loc,univ.town.monst.dudes[j].cur_loc,0) < 5))
 					cur_monst->active = 2;			
 			}
 						
@@ -1792,10 +1792,10 @@ void do_monster_turn()
 		if ((cur_monst->active == 1) && (cur_monst->attitude == 2)) {
 			for (j = 0; j < univ.town->max_monst(); j++)
 				if ((univ.town.monst.dudes[j].active > 0) && (univ.town.monst.dudes[j].attitude % 2 == 1) &&
-		 		 (dist(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc) <= 6)	
-		 		 && (can_see(cur_monst->m_loc,univ.town.monst.dudes[j].m_loc,0) < 5)) {
+		 		 (dist(cur_monst->cur_loc,univ.town.monst.dudes[j].cur_loc) <= 6)	
+		 		 && (can_see(cur_monst->cur_loc,univ.town.monst.dudes[j].cur_loc,0) < 5)) {
 					cur_monst->active = 2;	
-					cur_monst->mobile = true;	
+					cur_monst->mobility = 1;	
 					}
 			}
 		// End of seeing if monsters see others
@@ -1865,22 +1865,23 @@ void do_monster_turn()
 							if (target < 6)
 								targ_space = pc_pos[target];
 								else if (target != 6)
-									targ_space = univ.town.monst.dudes[target - 100].m_loc;	
-						monst_target[i] = target;
+									targ_space = univ.town.monst.dudes[target - 100].cur_loc;	
+						univ.town.monst.dudes[i].target = target;
 						}
 						else {
-							if (monst_target[i] < 6)
+							if (univ.town.monst.dudes[i].target < 6)
 								targ_space = univ.town.p_loc;
-								else if (monst_target[i] != 6)
-									targ_space = univ.town.monst.dudes[monst_target[i] - 100].m_loc;	
+								else if (univ.town.monst.dudes[i].target != 6)
+									targ_space = univ.town.monst.dudes[univ.town.monst.dudes[i].target - 100].cur_loc;	
 						}
 						
 		//			sprintf((char *)create_line,"  %d targets %d.",i,target);
 		//			add_string_to_buf((char *) create_line);
 
-					if ((monst_target[i] < 0) || ((monst_target[i] > 5) && (monst_target[i] < 100)))
-						monst_target[i] = 6;
-					target = monst_target[i];
+					if ((univ.town.monst.dudes[i].target < 0) || ((univ.town.monst.dudes[i].target > 5) &&
+																  (univ.town.monst.dudes[i].target < 100)))
+						univ.town.monst.dudes[i].target = 6;
+					target = univ.town.monst.dudes[i].target;
 
 				// Now if in town and monster about to attack, do a redraw, so we see monster
 				// in right place
@@ -1897,7 +1898,7 @@ void do_monster_turn()
 					&& ((target != 6) || (cur_monst->attitude % 2 == 1)) 
 					&& (party_can_see_monst(i) == true) ) {
 					center_on_monst = true;
-					center = cur_monst->m_loc;
+					center = cur_monst->cur_loc;
 					draw_terrain(0);
 					pause((PSD[SDF_GAME_SPEED] == 3) ? 9 : PSD[SDF_GAME_SPEED]);
 					}
@@ -1912,22 +1913,22 @@ void do_monster_turn()
 					// running to a nice position.
 					current_monst_tactic = 0;
 					if ((target != 6) && (cur_monst->m_d.ap > 1) && (futzing == 0)) {
-						l = closest_pc_loc(cur_monst->m_loc);
+						l = closest_pc_loc(cur_monst->cur_loc);
 						if (((cur_monst->m_d.mu > 0) || (cur_monst->m_d.cl > 0)) &&
-						(dist(cur_monst->m_loc,l) < 5) && (monst_adjacent(l,i) == false))
+						(dist(cur_monst->cur_loc,l) < 5) && (monst_adjacent(l,i) == false))
 							current_monst_tactic = 1; // this means flee
 						
 								
 						if ( (((cur_monst->m_d.spec_skill > 0) && (cur_monst->m_d.spec_skill < 4))
 							 || (cur_monst->m_d.spec_skill == 20)) && // Archer?
-						(dist(cur_monst->m_loc,targ_space) < 6) && 
+						(dist(cur_monst->cur_loc,targ_space) < 6) && 
 						 (monst_adjacent(targ_space,i) == false))
 							current_monst_tactic = 1; // this means flee
 						}	
 						
 
 					// flee
-					if ((monst_target[i] != 6) && (((cur_monst->m_d.morale <= 0)
+					if ((univ.town.monst.dudes[i].target != 6) && (((cur_monst->m_d.morale <= 0)
 						&& (cur_monst->m_d.spec_skill != 13) && (cur_monst->m_d.m_type != 8)) 
 						|| (current_monst_tactic == 1))) {
 						if (cur_monst->m_d.morale < 0)
@@ -1937,8 +1938,8 @@ void do_monster_turn()
 						r1 = get_ran(1,1,6);
 						if (r1 == 3)
 							cur_monst->m_d.morale++;
-						if ((ADVEN[monst_target[i]].main_status == 1)	&& (cur_monst->mobile == true)) {
-							acted_yet = flee_party (i,cur_monst->m_loc,targ_space);
+						if ((ADVEN[univ.town.monst.dudes[i].target].main_status == 1)	&& (cur_monst->mobility == 1)) {
+							acted_yet = flee_party (i,cur_monst->cur_loc,targ_space);
 							if (acted_yet == true) take_m_ap(1,cur_monst);
 							}
 						}
@@ -1954,7 +1955,7 @@ void do_monster_turn()
 							&& (get_ran(1,1,8) < 4) && (acted_yet == false)) {
 								//print_nums(cur_monst->m_d.breath,cur_monst->m_d.breath_type,dist(cur_monst->m_loc,targ_space) );
 								if ((target != 6)
-									&& (dist(cur_monst->m_loc,targ_space) <= 8)) {
+									&& (dist(cur_monst->cur_loc,targ_space) <= 8)) {
 										acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->m_d.breath_type);
 									had_monst = true;
 									acted_yet = true;
@@ -1966,7 +1967,7 @@ void do_monster_turn()
 							&& (acted_yet == false)) {
 								if (((monst_adjacent(targ_space,i) == false) || (get_ran(1,0,2) < 2) || (cur_monst->number >= 160)
 									|| (cur_monst->m_d.level > 9))
-										&& (dist(cur_monst->m_loc,targ_space) <= 10)) {	
+										&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {	
 											acted_yet = monst_cast_mage(cur_monst,target);
 											had_monst = true;
 											acted_yet = true;
@@ -1976,7 +1977,7 @@ void do_monster_turn()
 					// Priest spell
 						if ((cur_monst->m_d.cl > 0) && (get_ran(1,1,8) < 7) && (acted_yet == false)) {
 								if (((monst_adjacent(targ_space,i) == false) || (get_ran(1,0,2) < 2) || (cur_monst->m_d.level > 9))
-										&& (dist(cur_monst->m_loc,targ_space) <= 10)) {
+										&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
 											acted_yet = monst_cast_priest(cur_monst,target);
 											had_monst = true;
 											acted_yet = true;
@@ -1992,10 +1993,10 @@ void do_monster_turn()
 									((cur_monst->m_d.spec_skill > 7) && (cur_monst->m_d.spec_skill != 20)
 									&& (cur_monst->m_d.spec_skill != 33)))
 									// missile range 
-									&& (dist(cur_monst->m_loc,targ_space) <= abil_range[cur_monst->m_d.spec_skill])) {
+									&& (dist(cur_monst->cur_loc,targ_space) <= abil_range[cur_monst->m_d.spec_skill])) {
 									print_monst_name(cur_monst->number);
 									monst_fire_missile(i/*,cur_monst->m_d.skill*/,cur_monst->m_d.status[1],
-										cur_monst->m_d.spec_skill,cur_monst->m_loc,target);
+										cur_monst->m_d.spec_skill,cur_monst->cur_loc,target);
 
 									// Vapors don't count as action
 									if ((cur_monst->m_d.spec_skill == 11) || (cur_monst->m_d.spec_skill == 7) ||
@@ -2011,19 +2012,19 @@ void do_monster_turn()
 						} // Special attacks
 						
 					// Attack pc
-					if ((monst_target[i] < 6) && (ADVEN[monst_target[i]].main_status == 1) 
+					if ((univ.town.monst.dudes[i].target < 6) && (ADVEN[univ.town.monst.dudes[i].target].main_status == 1) 
 						&& (monst_adjacent(targ_space,i) == true)  && (cur_monst->attitude % 2 == 1)
 						 && (acted_yet == false)) {
-							monster_attack_pc(i,monst_target[i]);
+							monster_attack_pc(i,univ.town.monst.dudes[i].target);
 							take_m_ap(4,cur_monst);
 							acted_yet = true;
 							had_monst = true;
 						}
 					// Attack monst
-					if ((monst_target[i] >= 100) && (univ.town.monst.dudes[monst_target[i] - 100].active > 0) 
+					if ((univ.town.monst.dudes[i].target >= 100) && (univ.town.monst.dudes[univ.town.monst.dudes[i].target - 100].active > 0) 
 						&& (monst_adjacent(targ_space,i) == true)  && (cur_monst->attitude > 0)
 						 && (acted_yet == false)) {
-							monster_attack_monster(i,monst_target[i] - 100);
+							monster_attack_monster(i,univ.town.monst.dudes[i].target - 100);
 							take_m_ap(4,cur_monst);
 							acted_yet = true;
 							had_monst = true;
@@ -2038,14 +2039,14 @@ void do_monster_turn()
 						}
 					
 					if (overall_mode == MODE_COMBAT) {
-						if ((acted_yet == false) && (cur_monst->mobile == true)) {  // move monst
-							move_target = (monst_target[i] != 6) ? monst_target[i] : closest_pc(cur_monst->m_loc);
+						if ((acted_yet == false) && (cur_monst->mobility == 1)) {  // move monst
+							move_target = (univ.town.monst.dudes[i].target != 6) ? univ.town.monst.dudes[i].target : closest_pc(cur_monst->cur_loc);
 							if (monst_hate_spot(i,&move_targ) == true) // First, maybe move out of dangerous space
-								seek_party (i,cur_monst->m_loc,move_targ);
+								seek_party (i,cur_monst->cur_loc,move_targ);
 								else { // spot is OK, so go nuts
 								if ((cur_monst->attitude % 2 == 1) && (move_target < 6)) // Monsters seeking party do so
 									if (ADVEN[move_target].main_status == 1) {
-										seek_party (i,cur_monst->m_loc,pc_pos[move_target]);
+										seek_party (i,cur_monst->cur_loc,pc_pos[move_target]);
 										for (k = 0; k < 6; k++)
 											if ((pc_parry[k] > 99) && (monst_adjacent(pc_pos[k],i) == true)
 											&& (cur_monst->active > 0)) {
@@ -2056,7 +2057,7 @@ void do_monster_turn()
 
 								if (move_target >= 100) // Monsters seeking monsters do so
 									if (univ.town.monst.dudes[move_target - 100].active > 0) {
-										seek_party (i,cur_monst->m_loc,univ.town.monst.dudes[move_target - 100].m_loc);
+										seek_party (i,cur_monst->cur_loc,univ.town.monst.dudes[move_target - 100].cur_loc);
 										for (k = 0; k < 6; k++)
 											if ((pc_parry[k] > 99) && (monst_adjacent(pc_pos[k],i) == true)
 												&& (cur_monst->active > 0) && (cur_monst->attitude % 2 == 1)) {
@@ -2072,7 +2073,7 @@ void do_monster_turn()
 								}
 							take_m_ap(1,cur_monst);
 							}
-						if ((acted_yet == false) && (cur_monst->mobile == false)) { // drain action points
+						if ((acted_yet == false) && (cur_monst->mobility == 0)) { // drain action points
 							take_m_ap(1,cur_monst);
 							futzing++;
 							}
@@ -2095,32 +2096,32 @@ void do_monster_turn()
 									}
 				
 				// Place fields for monsters that create them. Only done when monst sees foe
-				if ((target != 6) && (can_see(cur_monst->m_loc,targ_space,0) < 5)) { ////
+				if ((target != 6) && (can_see(cur_monst->cur_loc,targ_space,0) < 5)) { ////
 					if ((cur_monst->m_d.radiate_1 == 1) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,5,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,5,false,7);
 					if ((cur_monst->m_d.radiate_1 == 2) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,8,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,8,false,7);
 					if ((cur_monst->m_d.radiate_1 == 3) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,4,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,4,false,7);
 					if ((cur_monst->m_d.radiate_1 == 4) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,6,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,6,false,7);
 					if ((cur_monst->m_d.radiate_1 == 5) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,12,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,12,false,7);
 					if ((cur_monst->m_d.radiate_1 == 6) && (get_ran(1,1,100) < cur_monst->m_d.radiate_2))
-						place_spell_pattern(square,cur_monst->m_loc,7,false,7);
+						place_spell_pattern(square,cur_monst->cur_loc,7,false,7);
 					if ((cur_monst->m_d.radiate_1 == 10) && (get_ran(1,1,100) < 5)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
-							cur_monst->m_loc,130,cur_monst->attitude) == true)
+							cur_monst->cur_loc,130,cur_monst->attitude) == true)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
 					if ((cur_monst->m_d.radiate_1 == 11) && (get_ran(1,1,100) < 20)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
-							cur_monst->m_loc,130,cur_monst->attitude) == true)
+							cur_monst->cur_loc,130,cur_monst->attitude) == true)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
 					if ((cur_monst->m_d.radiate_1 == 12) && (get_ran(1,1,100) < 50)){
 						if (summon_monster(cur_monst->m_d.radiate_2,
-							cur_monst->m_loc,130,cur_monst->attitude) == true)
+							cur_monst->cur_loc,130,cur_monst->attitude) == true)
 							{monst_spell_note(cur_monst->number,33); play_sound(61);}
 						}
 					}
@@ -2129,7 +2130,7 @@ void do_monster_turn()
 				// Redraw monster after it goes
 				if ((cur_monst->attitude > 0) && (cur_monst->active > 0) && (cur_monst->m_d.ap == 0)
 				 && (is_combat()) && (cur_monst->m_d.picture_num > 0) && (party_can_see_monst(i)  == true)) {
-					center = cur_monst->m_loc;
+					center = cur_monst->cur_loc;
 					draw_terrain(0);
 
 					}
@@ -2225,7 +2226,7 @@ void do_monster_turn()
 
 void monster_attack_pc(short who_att,short target)
 {
-	cPopulation::cCreature *attacker;
+	cCreature *attacker;
 	short r1,r2,i,store_hp,sound_type = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	
@@ -2240,7 +2241,7 @@ void monster_attack_pc(short who_att,short target)
 	if ((is_combat()) 
 		&& ((center_on_monst == true) || (monsters_going == false))) {
 		if (attacker->m_d.spec_skill != 11)
-		frame_space(attacker->m_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
+		frame_space(attacker->cur_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
 		frame_space(pc_pos[target],1,1,1);	
 		}
 
@@ -2416,7 +2417,7 @@ void monster_attack_pc(short who_att,short target)
 
 void monster_attack_monster(short who_att,short attackee)
 {
-	cPopulation::cCreature *attacker,*target;
+	cCreature *attacker,*target;
 	short r1,r2,i,store_hp,sound_type = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
 
@@ -2427,8 +2428,8 @@ void monster_attack_monster(short who_att,short attackee)
 	if ((is_combat()) 
 		&& ((center_on_monst == true) || (monsters_going == false))) {
 		if (attacker->m_d.spec_skill != 11)
-		frame_space(attacker->m_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
-		frame_space(target->m_loc,1,1,1);	
+		frame_space(attacker->cur_loc,0,attacker->m_d.x_width,attacker->m_d.y_width);
+		frame_space(target->cur_loc,1,1,1);	
 		}
 
 
@@ -2544,7 +2545,7 @@ void monster_attack_monster(short who_att,short attackee)
 void monst_fire_missile(short m_num,short bless,short level,location source,short target)
 //short target; // 100 +  - monster is target
 {
-	cPopulation::cCreature *m_target;
+	cCreature *m_target;
 	short r1,r2,dam[40] = {0,1,2,3,4, 6,8,7,0,0, 0,0,0,0,0, 0,0,0,0,0, 
 		8,0,0,0,0, 0,0,0,0,0, 0,0,0,0,6, 0,0,0,0,0},i,j;
 	location targ_space;
@@ -2552,7 +2553,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	if (target == 6)
 		return;
 	if (target >= 100) {
-		targ_space = univ.town.monst.dudes[target - 100].m_loc;
+		targ_space = univ.town.monst.dudes[target - 100].cur_loc;
 		if (univ.town.monst.dudes[target - 100].active == 0)
 			return;
 		}
@@ -2581,7 +2582,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 14) { // vapors
 			//play_sound(44);
 			if (target < 100) { // on PC
-				sprintf ((char *) create_line, "  Breathes on %s.                  ",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Breathes on %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				}
 				else {  // on monst
@@ -2594,7 +2595,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 19) { // webs
 			//play_sound(14);
 			if (target < 100) { // on PC
-				sprintf ((char *) create_line, "  Throws web at %s.                  ",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Throws web at %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				}
 				else {  // on monst
@@ -2607,7 +2608,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 23) { // paral
 			play_sound(51);
 			if (target < 100) { // on PC
-				sprintf ((char *) create_line, "  Fires ray at %s.                  ",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Fires ray at %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				sleep_pc(target,100,12,0);
 				}
@@ -2623,17 +2624,17 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			//play_sound(43);
 			run_a_missile(source,targ_space,14,0,43,0,0,100);
 			if (target < 100) { // on PC
-				sprintf ((char *) create_line, "  Gazes at %s.                  ",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Gazes at %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				r1 = get_ran(1,0,20) + ADVEN[target].level / 4 + ADVEN[target].status[1];
 				if (pc_has_abil_equip(target,49) < 24)
 					r1 = 20;
 				if (r1 > 14) {
-						sprintf ((char *) create_line, "  %s resists.                  ",(char *) ADVEN[target].name);
+						sprintf ((char *) create_line, "  %s resists.                  ",(char *) ADVEN[target].name.c_str());
 						add_string_to_buf((char *) create_line);
 					}
 					else {
-						sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) ADVEN[target].name);
+						sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) ADVEN[target].name.c_str());
 						add_string_to_buf((char *) create_line);
 						kill_pc(target,MAIN_STATUS_STONE);
 						}
@@ -2665,7 +2666,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 								
 					}
 				run_a_missile(source,targ_space,8,0,43,0,0,100);
-				sprintf ((char *) create_line, "  Drains %s.                  ",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Drains %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				ADVEN[target].cur_sp = ADVEN[target].cur_sp / 2;
 				}
@@ -2683,7 +2684,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			r1 = get_ran(7,1,6);
 			start_missile_anim();
 			if (target < 100) { // pc
-				sprintf ((char *) create_line, "  Hits %s with heat ray.",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Hits %s with heat ray.",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				damage_pc(target,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
 				}
@@ -2700,7 +2701,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				0,0,100);
 			//play_sound(64);
 			if (target < 100) { // pc
-				sprintf ((char *) create_line, "  Spits acid on %s.",(char *) ADVEN[target].name);
+				sprintf ((char *) create_line, "  Spits acid on %s.",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
 				acid_pc(target,6);
 				}
@@ -2714,23 +2715,23 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			switch (level) {
 				case 1: case 2: case 20:
 					run_a_missile(source,targ_space,3,1,12,0,0,100);
-					sprintf ((char *) create_line, "  Shoots at %s.",(char *) ADVEN[target].name);
+					sprintf ((char *) create_line, "  Shoots at %s.",(char *) ADVEN[target].name.c_str());
 				break;
 				case 3:
 					run_a_missile(source,targ_space,5,1,14,0,0,100);
-					sprintf ((char *) create_line, "  Throws spear at %s.",(char *) ADVEN[target].name);
+					sprintf ((char *) create_line, "  Throws spear at %s.",(char *) ADVEN[target].name.c_str());
 				break;
 				case 7:
 					run_a_missile(source,targ_space,7,1,14,0,0,100);
-					sprintf ((char *) create_line, "  Throws razordisk at %s.",(char *) ADVEN[target].name);
+					sprintf ((char *) create_line, "  Throws razordisk at %s.",(char *) ADVEN[target].name.c_str());
 				break;		
 				case 34:
 					run_a_missile(source,targ_space,5,1,14,0,0,100);
-					sprintf ((char *) create_line, "  Fires spines at %s.",(char *) ADVEN[target].name);
+					sprintf ((char *) create_line, "  Fires spines at %s.",(char *) ADVEN[target].name.c_str());
 				break;		
 				default:
 					run_a_missile(source,targ_space,12,1,14,0,0,100);
-					sprintf ((char *) create_line, "  Throws rock at %s.",(char *) ADVEN[target].name);		
+					sprintf ((char *) create_line, "  Throws rock at %s.",(char *) ADVEN[target].name.c_str());		
 				break;
 				}
 	
@@ -2759,7 +2760,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 						}	
 				}
 				else {
-					sprintf ((char *) create_line, "  Misses %s.",(char *) ADVEN[target].name);
+					sprintf ((char *) create_line, "  Misses %s.",(char *) ADVEN[target].name.c_str());
 					add_string_to_buf((char *) create_line);
 					}
 		
@@ -2788,7 +2789,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				break;
 				}
 			r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->m_d.status[1]
-				- 5 * (can_see(source, m_target->m_loc,0));
+				- 5 * (can_see(source, m_target->cur_loc,0));
 			r2 = get_ran(dam[level],1,7) + min(10,bless);
 
 			if (r1 <= hit_chance[dam[level] * 2]) {
@@ -2803,7 +2804,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 }
 
 
-bool monst_breathe(cPopulation::cCreature *caster,location targ_space,short dam_type)////
+bool monst_breathe(cCreature *caster,location targ_space,short dam_type)////
 //dam_type; // 0 - fire  1 - cold  2 - magic
 {
 	short level,missile_t[4] = {13,6,8,8};
@@ -2812,10 +2813,10 @@ bool monst_breathe(cPopulation::cCreature *caster,location targ_space,short dam_
 	
 	draw_terrain(2);
 	if ((is_combat()) && (center_on_monst == true)) {
-		frame_space(caster->m_loc,0,caster->m_d.x_width,caster->m_d.y_width);
+		frame_space(caster->cur_loc,0,caster->m_d.x_width,caster->m_d.y_width);
 		}
 	//if (dam_type < 2)
-	l = caster->m_loc;
+	l = caster->cur_loc;
 	if ((caster->m_d.direction < 4) &&
 		(caster->m_d.x_width > 1))
 			l.x++;
@@ -2841,12 +2842,12 @@ bool monst_breathe(cPopulation::cCreature *caster,location targ_space,short dam_
 	return true;
 }
 
-bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
+bool monst_cast_mage(cCreature *caster,short targ)////
 {
 	short r1,j,spell,i,level,target_levels,friend_levels_near,x;
 	bool acted = false;
 	location target,vict_loc,ashes_loc,l;
-	cPopulation::cCreature *affected;
+	cCreature *affected;
 	short caster_array[7][18] = {{1,1,1,2,2, 2,1,3,4,4, 1,1,1,2,2, 2,3,4},
 								{5,5,5,6,7, 8,9,10,11,11, 2,2,2,5,7, 10,10,5},
 								{5,5,2,9,11, 12,12,12,14,13, 13,12,12,2,2, 2,2,2},
@@ -2863,7 +2864,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 								{18,26,19,27}};
 
 	
-	if (univ.town.is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
+	if (univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
 		}
 	// is target dead?
@@ -2874,8 +2875,8 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 		
 	level = max(1,caster->m_d.mu - caster->m_d.status[9]) - 1;
 	
-	target = find_fireball_loc(caster->m_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
-	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
+	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
+	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 
 	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
@@ -2913,7 +2914,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 			vict_loc = target = univ.town.p_loc;
 		}
 	if (targ >= 100)
-		vict_loc = univ.town.monst.dudes[targ - 100].m_loc;
+		vict_loc = univ.town.monst.dudes[targ - 100].cur_loc;
 	if ((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
 		return false;
 
@@ -2924,22 +2925,22 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 	if (is_town())
 		if ((targ < 6) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y)))
 			return false;
-	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
-	 univ.town.monst.dudes[targ - 100].m_loc.y)))
+	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].cur_loc.x,
+	 univ.town.monst.dudes[targ - 100].cur_loc.y)))
 		return false;
 
 
 	// How about shockwave? Good idea?
 	if ((spell == 27) && (caster->attitude % 2 != 1))
 		spell = 26;
-	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->m_loc,10) < 45))
+	if ((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->cur_loc,10) < 45))
 		spell = 26;
 
 //	sprintf((char *)create_line,"m att %d trg %d trg2 x%dy%d spl %d mp %d tl:%d ",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->m_d.mp,target_levels);
 //	add_string_to_buf((char *) create_line);
 	
-	l = caster->m_loc;
+	l = caster->cur_loc;
 	if ((caster->m_d.direction < 4) && (caster->m_d.x_width > 1))
 		l.x++;
 	
@@ -3003,7 +3004,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				//Delay(12,&dummy); // gives sound time to end
 				play_sound(25);
 				play_sound(-61);
-				summon_monster(r1,caster->m_loc,
+				summon_monster(r1,caster->cur_loc,
 				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
 			case 11: // conflagration
@@ -3042,7 +3043,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				x = get_ran(4,1,4);
 				for (i = 0; i < j; i++){
 					play_sound(-61);
-					if (summon_monster(r1,caster->m_loc,
+					if (summon_monster(r1,caster->cur_loc,
 					 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude) == false) {
 						add_string_to_buf("  Summon failed."); i = j;}
 					}
@@ -3068,21 +3069,21 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				play_sound(25);
 				if (caster->attitude % 2 == 1)
 					for (i = 0; i < 6; i++)
-						if (pc_near(i,caster->m_loc,8))
+						if (pc_near(i,caster->cur_loc,8))
 							slow_pc(i,2 + caster->m_d.level / 4);
 				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst.dudes[i].active != 0) && 
 					(((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) || 
 					((univ.town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
 					((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst.dudes[i].attitude)))
-						 && (dist(caster->m_loc,univ.town.monst.dudes[i].m_loc) <= 7)) 
+						 && (dist(caster->cur_loc,univ.town.monst.dudes[i].cur_loc) <= 7)) 
 							slow_monst(&univ.town.monst.dudes[i],2 + caster->m_d.level / 4);
 					}
 				break;
 			case 18: // major haste
 				play_sound(25);
 				for (i = 0; i < univ.town->max_monst(); i++)
-					if ((monst_near(i,caster->m_loc,8,0)) && 
+					if ((monst_near(i,caster->cur_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
 						affected->m_d.status[3] += 3;
@@ -3123,13 +3124,13 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				play_sound(25);
 				play_sound(-61);
 				FlushAndPause(12); // gives sound time to end
-				summon_monster(85,caster->m_loc,
+				summon_monster(85,caster->cur_loc,
 				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
 			case 25: // major bless
 				play_sound(25);
 				for (i = 0; i < univ.town->max_monst(); i++)
-					if ((monst_near(i,caster->m_loc,8,0)) && 
+					if ((monst_near(i,caster->cur_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
 						affected->m_d.health += get_ran(2,1,10);	
@@ -3143,7 +3144,7 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 				play_sound(4);
 				break;
 			case 27: // shockwave
-				do_shockwave(caster->m_loc);
+				do_shockwave(caster->cur_loc);
 				break;
 			}
 		}
@@ -3158,12 +3159,12 @@ bool monst_cast_mage(cPopulation::cCreature *caster,short targ)////
 	return acted;
 }
 
-bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
+bool monst_cast_priest(cCreature *caster,short targ)
 {
 	short r1,r2,spell,i,x,level,target_levels,friend_levels_near;
 	bool acted = false;
 	location target,vict_loc,l;
-	cPopulation::cCreature *affected;
+	cCreature *affected;
 	short caster_array[7][10] = {{1,1,1,1,3,3,3,4,4,4},
 									{5,5,6,6,7,7,8,8,8,9},
 									{9,6,6,8,11,12,12,5,5,12},
@@ -3185,13 +3186,13 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 		return false;
 	if ((targ >= 100) && (univ.town.monst.dudes[targ - 100].active == 0))
 		return false;
-	if (univ.town.is_antimagic(caster->m_loc.x,caster->m_loc.y)) {
+	if (univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
 		}
 	level = max(1,caster->m_d.cl - caster->m_d.status[9]) - 1;
 
-	target = find_fireball_loc(caster->m_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
-	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->m_loc,3) : -1 * count_levels(caster->m_loc,3);
+	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
+	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 
 	if ((caster->m_d.health * 4 < caster->m_d.m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
@@ -3220,13 +3221,13 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 	if (targ < 6)
 		vict_loc = (is_town()) ? univ.town.p_loc : pc_pos[targ];
 	if (targ >= 100)
-		vict_loc = univ.town.monst.dudes[targ - 100].m_loc;
+		vict_loc = univ.town.monst.dudes[targ - 100].cur_loc;
 	if ((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
 		return false;
 	if ((targ < 6) && (univ.town.is_antimagic(pc_pos[targ].x,pc_pos[targ].y)))
 		return false;
-	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].m_loc.x,
-	 univ.town.monst.dudes[targ - 100].m_loc.y)))
+	if ((targ >= 100) && (univ.town.is_antimagic(univ.town.monst.dudes[targ - 100].cur_loc.x,
+	 univ.town.monst.dudes[targ - 100].cur_loc.y)))
 		return false;
 
 	
@@ -3239,7 +3240,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 	 ((spell == 17) || (spell == 20)))
 	 	spell--;
 
-	l = caster->m_loc;
+	l = caster->cur_loc;
 	if ((caster->m_d.direction < 4) && (caster->m_d.x_width > 1))
 		l.x++;
 
@@ -3282,7 +3283,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 				play_sound(-61);
 					
 				x =  get_ran(3,1,4);
-				summon_monster(((spell == 8) ? 125 : 122),caster->m_loc,
+				summon_monster(((spell == 8) ? 125 : 122),caster->cur_loc,
 				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
 			case 9: // disease
@@ -3320,7 +3321,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 					play_sound(-61);
 					r2 = get_ran(1,0,7);
 					x = get_ran(3,1,4);
-					summon_monster((r2 == 1) ? 100 : 99,caster->m_loc,
+					summon_monster((r2 == 1) ? 100 : 99,caster->cur_loc,
 					 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 					}	
 				break;
@@ -3332,11 +3333,11 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 				play_sound(24);
 				x = get_ran(3,1,4) + 1; 
 				play_sound(-61);
-				summon_monster(126,caster->m_loc,
+				summon_monster(126,caster->cur_loc,
 					((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude); 
 				for (i = 0; i < 4; i++)	{
 					play_sound(-61);
-					if (summon_monster(125,caster->m_loc,
+					if (summon_monster(125,caster->cur_loc,
 						 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude) == false)
 						 	i = 4;
 					}
@@ -3348,7 +3349,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 				r2 = get_ran(1,0,2);
 				if (caster->attitude % 2 == 1)
 					for (i = 0; i < 6; i++)
-						if (pc_near(i,caster->m_loc,8)) {
+						if (pc_near(i,caster->cur_loc,8)) {
 							if (spell == 13)
 								curse_pc(i,2 + r1);
 							if (spell == 23)
@@ -3359,7 +3360,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 					(((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) || 
 					((univ.town.monst.dudes[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
 					((univ.town.monst.dudes[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst.dudes[i].attitude)))
-						 && (dist(caster->m_loc,univ.town.monst.dudes[i].m_loc) <= 7)) {
+						 && (dist(caster->cur_loc,univ.town.monst.dudes[i].cur_loc) <= 7)) {
 							if (spell == 13)
 								curse_monst(&univ.town.monst.dudes[i],2 + r1);
 							if (spell == 23)
@@ -3382,7 +3383,7 @@ bool monst_cast_priest(cPopulation::cCreature *caster,short targ)
 				play_sound(24);
 				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
 				for (i = 0; i < univ.town->max_monst(); i++)
-					if ((monst_near(i,caster->m_loc,8,0)) && 
+					if ((monst_near(i,caster->cur_loc,8,0)) && 
 						(caster->attitude == univ.town.monst.dudes[i].attitude)) {
 						affected = &univ.town.monst.dudes[i];	
 						if (spell == 16)
@@ -3546,7 +3547,7 @@ location where;
 bool monst_near(short m_num,location where,short radius,short active)
 //short active; // 0 - any monst 1 - monster need be active
 {
-	if ((univ.town.monst.dudes[m_num].active != 0) && (vdist(univ.town.monst.dudes[m_num].m_loc,where) <= radius)
+	if ((univ.town.monst.dudes[m_num].active != 0) && (vdist(univ.town.monst.dudes[m_num].cur_loc,where) <= radius)
 		 && ((active == 0) || (univ.town.monst.dudes[m_num].active == 2)) )
 		return true;
 		else return false;
@@ -3570,7 +3571,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 	location spot_hit;
 	location s_loc;
 	rectangle active;
-	cPopulation::cCreature *which_m;
+	cCreature *which_m;
 	bool monster_hit = false;
 	
 	
@@ -3669,7 +3670,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 	
 	// Damage to monsters
 	for (k = 0; k < univ.town->max_monst(); k++) 
-		if ((univ.town.monst.dudes[k].active > 0) && (dist(center,univ.town.monst.dudes[k].m_loc) <= 5)) {
+		if ((univ.town.monst.dudes[k].active > 0) && (dist(center,univ.town.monst.dudes[k].cur_loc) <= 5)) {
 		monster_hit = false;
 		// First actually make barriers, then draw them, then inflict damaging effects.
 		for (i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
@@ -3765,10 +3766,10 @@ void do_shockwave(location target)
 			&& (ADVEN[i].main_status == 1))
 				damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
-			 && (dist(target,univ.town.monst.dudes[i].m_loc) < 11)
-			 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
-				damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst.dudes[i].m_loc) / 2 , 1, 6), 0, DAMAGE_UNBLOCKABLE,0);
+		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].cur_loc) > 0)
+			 && (dist(target,univ.town.monst.dudes[i].cur_loc) < 11)
+			 && (can_see(target,univ.town.monst.dudes[i].cur_loc,0) < 5))
+				damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst.dudes[i].cur_loc) / 2 , 1, 6), 0, DAMAGE_UNBLOCKABLE,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -3784,9 +3785,9 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 				&& (ADVEN[i].main_status == 1))
 					damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
 		for (i = 0; i < univ.town->max_monst(); i++)
-			if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
-				 && (dist(target,univ.town.monst.dudes[i].m_loc) <= radius)
-				 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
+			if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].cur_loc) > 0)
+				 && (dist(target,univ.town.monst.dudes[i].cur_loc) <= radius)
+				 && (can_see(target,univ.town.monst.dudes[i].cur_loc,0) < 5))
 					damage_monst(i, current_pc, dam, 0, type,0);
 		return;
 		}
@@ -3797,9 +3798,9 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 			&& (ADVEN[i].main_status == 1))
 				damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].m_loc) > 0)
-			 && (dist(target,univ.town.monst.dudes[i].m_loc) <= radius)
-			 && (can_see(target,univ.town.monst.dudes[i].m_loc,0) < 5))
+		if ((univ.town.monst.dudes[i].active != 0) && (dist(target,univ.town.monst.dudes[i].cur_loc) > 0)
+			 && (dist(target,univ.town.monst.dudes[i].cur_loc) <= radius)
+			 && (can_see(target,univ.town.monst.dudes[i].cur_loc,0) < 5))
 				damage_monst(i, current_pc, dam, 0, type,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
@@ -3941,7 +3942,7 @@ void handle_disease()
 							break;
 						case 9: case 10:
 							sprintf ((char *) create_line, "  %s unaffected. ",
-								(char *) ADVEN[i].name);
+								(char *) ADVEN[i].name.c_str());
 							add_string_to_buf((char *) create_line);						
 							break;
 						}
@@ -4048,7 +4049,7 @@ bool combat_cast_mage_spell()
 {
 	short spell_num,target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
 	char c_line[60];
-	cPopulation::cCreature *which_m;
+	cCreature *which_m;
 	cMonster get_monst;
 	
 	if (univ.town.is_antimagic(pc_pos[current_pc].x,pc_pos[current_pc].y)) {
@@ -4127,20 +4128,20 @@ bool combat_cast_mage_spell()
 									switch (spell_num) {
 										case 14:
 											sprintf ((char *) c_line, "  %s receives venom.               ",
-												(char *) ADVEN[target].name);
+												(char *) ADVEN[target].name.c_str());
 											poison_weapon(target,3 + bonus,1);
 											store_m_type = 11;
 											break;
 										
 										case  3:
 											sprintf ((char *) c_line, "  %s stronger.                     ",
-												(char *) ADVEN[target].name);
+												(char *) ADVEN[target].name.c_str());
 											ADVEN[target].status[1] = ADVEN[target].status[1] + 3;		
 											store_m_type = 8;
 											break;
 										case 29:			
 											sprintf ((char *) c_line, "  %s resistant.                     ",
-												(char *) ADVEN[target].name);
+												(char *) ADVEN[target].name.c_str());
 											ADVEN[target].status[5] = ADVEN[target].status[5] + 5 + bonus;		
 											store_m_type = 15;
 											break;
@@ -4150,7 +4151,7 @@ bool combat_cast_mage_spell()
 											ADVEN[target].status[3] = min(8,
 												ADVEN[target].status[3] + i);
 											sprintf ((char *) c_line, "  %s hasted.                       ",
-												(char *) ADVEN[target].name);
+												(char *) ADVEN[target].name.c_str());
 											store_m_type = 8;
 											break;
 										}
@@ -4200,8 +4201,8 @@ bool combat_cast_mage_spell()
 								add_string_to_buf((char *) c_line);												
 								for (i = 0; i < univ.town->max_monst(); i++) {
 										if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
-										 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= mage_range[spell_num])
-										 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc,0) < 5)) {
+										 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc) <= mage_range[spell_num])
+										 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc,0) < 5)) {
 												which_m = &univ.town.monst.dudes[i];
 												switch (spell_num) {
 													case 47:
@@ -4221,7 +4222,7 @@ bool combat_cast_mage_spell()
 														break;
 													}
 											num_opp++;
-											add_missile(univ.town.monst.dudes[i].m_loc,store_m_type,0,
+											add_missile(univ.town.monst.dudes[i].cur_loc,store_m_type,0,
 												14 * (which_m->m_d.x_width - 1),18 * (which_m->m_d.y_width - 1));
 											}	
 	
@@ -4251,7 +4252,7 @@ bool combat_cast_priest_spell()
 {
 	short spell_num,target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
 	char c_line[60];
-	cPopulation::cCreature *which_m;
+	cCreature *which_m;
 	effect_pat_type protect_pat = {{{0,4,4,4,4,4,4,4,0},
 						{4,8,8,8,8,8,8,8,4},
 						{4,8,9,9,9,9,9,8,4},
@@ -4311,7 +4312,7 @@ bool combat_cast_priest_spell()
 								ADVEN[target].status[1] += (spell_num == 0) ? 2 : 
 									max(2,(ADVEN[current_pc].level * 3) / 4 + 1 + bonus);
 								sprintf ((char *) c_line, "  %s blessed.              ",
-									(char *) ADVEN[target].name);
+									(char *) ADVEN[target].name.c_str());
 								add_string_to_buf((char *) c_line);				
 								add_missile(pc_pos[target],8,0,0,0);
 								}						
@@ -4332,7 +4333,7 @@ bool combat_cast_priest_spell()
 						case 58:
 							ADVEN[current_pc].cur_sp -= s_cost[1][spell_num];		
 							sprintf ((char *) c_line, "  %s is an avatar! ",
-								(char *) ADVEN[current_pc].name);
+								(char *) ADVEN[current_pc].name.c_str());
 							add_string_to_buf((char *) c_line);	
 							heal_pc(current_pc,200);
 							cure_pc(current_pc,8);	
@@ -4351,7 +4352,7 @@ bool combat_cast_priest_spell()
 								store_sound = 24;
 								for (i = 0; i < univ.town->max_monst(); i++) {
 									if ((univ.town.monst.dudes[i].active != 0) &&(univ.town.monst.dudes[i].attitude % 2 == 1) &&
-									 (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= priest_range[spell_num])) {
+									 (dist(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc) <= priest_range[spell_num])) {
 											which_m = &univ.town.monst.dudes[i];
 											switch (spell_num) {
 												case 31:
@@ -4368,7 +4369,7 @@ bool combat_cast_priest_spell()
 													break;
 												}
 											num_opp++;
-											add_missile(univ.town.monst.dudes[i].m_loc,store_m_type,0,
+											add_missile(univ.town.monst.dudes[i].cur_loc,store_m_type,0,
 												14 * (which_m->m_d.x_width - 1),18 * (which_m->m_d.y_width - 1));
 											}
 									}
@@ -4738,7 +4739,7 @@ void sleep_cloud_space(short m,short n)
 }
 
 
-void take_m_ap(short num,cPopulation::cCreature *monst)
+void take_m_ap(short num,cCreature *monst)
 {
 	monst->m_d.ap = max(0,monst->m_d.ap - num);
 }
@@ -4746,10 +4747,10 @@ void take_m_ap(short num,cPopulation::cCreature *monst)
 void add_new_action(short pc_num)
 {
 	if (pc_num < 6)
-		pc_moves[pc_num]++;
+		ADVEN[pc_num].ap++;
 }
 
-short get_monst_sound(cPopulation::cCreature *attacker,short which_att) {
+short get_monst_sound(cCreature *attacker,short which_att) {
 	short type,strength;
 	
 	type = (which_att == 0) ? attacker->m_d.a1_type :  attacker->m_d.a23_type;

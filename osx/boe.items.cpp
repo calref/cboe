@@ -489,14 +489,14 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 			ADVEN[pc_num].items[item_hit].charges = 8;
 			break;
 		default:
-			strcpy(store_name,ADVEN[pc_num].items[item_hit].full_name);
+			strcpy(store_name,ADVEN[pc_num].items[item_hit].full_name.c_str());
 			break;
 		}
 	if (ADVEN[pc_num].items[item_hit].value > 15000)
 		ADVEN[pc_num].items[item_hit].value = 15000;
 	if (ADVEN[pc_num].items[item_hit].value < 0)
 		ADVEN[pc_num].items[item_hit].value = 15000;
-	strcpy(ADVEN[pc_num].items[item_hit].full_name,store_name);
+	ADVEN[pc_num].items[item_hit].full_name = store_name;
 }
 
 void equip_item(short pc_num,short item_num)
@@ -780,7 +780,7 @@ short get_item(location place,short pc_num,bool check_container)
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude == 1)
-			&& (can_see(place,univ.town.monst.dudes[i].m_loc,0) < 5))
+			&& (can_see(place,univ.town.monst.dudes[i].cur_loc,0) < 5))
 				mass_get = 0;
 		
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -800,7 +800,7 @@ short get_item(location place,short pc_num,bool check_container)
 		if (display_item(place,pc_num,mass_get,check_container) > 0) { // if true, there was a theft
 			for (i = 0; i < univ.town->max_monst(); i++)
 				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 != 1)
-					&& (can_see(place,univ.town.monst.dudes[i].m_loc,0) < 5)) {
+					&& (can_see(place,univ.town.monst.dudes[i].cur_loc,0) < 5)) {
 						make_town_hostile();
 						i = univ.town->max_monst();
 						add_string_to_buf("Your crime was seen!");
@@ -833,7 +833,7 @@ void make_town_hostile()
 		if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].summoned == 0)){
 			univ.town.monst.dudes[i].attitude = 1;
 			num = univ.town.monst.dudes[i].number;
-			univ.town.monst.dudes[i].mobile = true;
+			univ.town.monst.dudes[i].mobility = 1;
 			if (scenario.scen_monsters[num].spec_skill == 37) {
 				univ.town.monst.dudes[i].active = 2;
 				
@@ -902,7 +902,7 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = univ.town.items[item_array[i + first_item_shown]]; 
 					sprintf ((char *) message, "%s",
-					 (item.is_ident()) ? (char *) item.full_name : (char *) item.name);
+					 (item.is_ident() ? item.full_name : item.name).c_str());
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 1000) // was 150
 						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
@@ -1183,7 +1183,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (ADVEN[i].main_status != 0) {
-				csit(1018,9 + i,ADVEN[i].name);		
+				csit(1018,9 + i,ADVEN[i].name.c_str());		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
 	}

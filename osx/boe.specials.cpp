@@ -506,7 +506,7 @@ void use_item(short pc,short item)
 	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
 	char to_draw[60];
 	location user_loc;
-cPopulation::cCreature *which_m;
+cCreature *which_m;
 effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
@@ -850,8 +850,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				ASB("It throbs, and emits odd rays.");
 				for (i = 0; i < univ.town->max_monst(); i++) {
 						if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
-						 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc) <= 8)
-						 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].m_loc,0) < 5)) {
+						 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc) <= 8)
+						 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc,0) < 5)) {
 								which_m = &univ.town.monst.dudes[i];
 								charm_monst(which_m,0,0,8);
 							}
@@ -1163,7 +1163,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
  				 //+10 = no_print
  				 // 100s digit - damage sound for boom space
 {
-	cPopulation::cCreature *victim;
+	cCreature *victim;
 	short r1,which_spot;
 	location where_put;
 	
@@ -1250,7 +1250,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		if (how_much < 0)
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->m_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
+		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
 		if (how_much == 0)
 			return false;
 			else return true;
@@ -1277,11 +1277,25 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		
 	// splitting monsters
 	if ((victim->m_d.spec_skill == 12) && (victim->m_d.health > 0)){
-		where_put = find_clear_spot(victim->m_loc,1);
+		where_put = find_clear_spot(victim->cur_loc,1);
 		if (where_put.x > 0) 
 			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
 				univ.town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
-				univ.town.monst.dudes[which_spot].monst_start = victim->monst_start;
+				univ.town.monst.dudes[which_spot].number = victim->number;
+				univ.town.monst.dudes[which_spot].start_attitude = victim->start_attitude;
+				univ.town.monst.dudes[which_spot].start_loc = victim->start_loc;
+				univ.town.monst.dudes[which_spot].mobility = victim->mobility;
+				univ.town.monst.dudes[which_spot].time_flag = victim->time_flag;
+				univ.town.monst.dudes[which_spot].extra1 = victim->extra1;
+				univ.town.monst.dudes[which_spot].extra2 = victim->extra2;
+				univ.town.monst.dudes[which_spot].spec1 = victim->spec1;
+				univ.town.monst.dudes[which_spot].spec2 = victim->spec2;
+				univ.town.monst.dudes[which_spot].spec_enc_code = victim->spec_enc_code;
+				univ.town.monst.dudes[which_spot].time_code = victim->time_code;
+				univ.town.monst.dudes[which_spot].monster_time = victim->monster_time;
+				univ.town.monst.dudes[which_spot].personality = victim->personality;
+				univ.town.monst.dudes[which_spot].special_on_kill = victim->special_on_kill;
+				univ.town.monst.dudes[which_spot].facial_pic = victim->facial_pic;
 				monst_spell_note(victim->number,27);
 				}
 		}
@@ -1294,14 +1308,14 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 
 	if (dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
 		if (party_can_see_monst(which_m) == true) {
-			boom_space(victim->m_loc,100,boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
 			if (how_much_spec > 0)
-				boom_space(victim->m_loc,100,51,how_much_spec,5);
+				boom_space(victim->cur_loc,100,51,how_much_spec,5);
 			}
 			else {
-				boom_space(victim->m_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
+				boom_space(victim->cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
 				if (how_much_spec > 0)
-					boom_space(victim->m_loc,overall_mode,51,how_much_spec,5);			
+					boom_space(victim->cur_loc,overall_mode,51,how_much_spec,5);			
 				}
 		}
 		
@@ -1336,7 +1350,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	return true;
 }
 
-void kill_monst(cPopulation::cCreature *which_m,short who_killed)
+void kill_monst(cCreature *which_m,short who_killed)
 {
 	short xp,i,j,s1,s2,s3;	
 	location l;
@@ -1357,12 +1371,12 @@ void kill_monst(cPopulation::cCreature *which_m,short who_killed)
 		}
 	
 	// Special killing effects
-	if (sd_legit(which_m->monst_start.spec1,which_m->monst_start.spec2) == true)
-		PSD[which_m->monst_start.spec1][which_m->monst_start.spec2] = 1;
+	if (sd_legit(which_m->spec1,which_m->spec2) == true)
+		PSD[which_m->spec1][which_m->spec2] = 1;
 		
-	run_special(12,2,which_m->monst_start.special_on_kill,which_m->m_loc,&s1,&s2,&s3);
+	run_special(12,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
 	if (which_m->m_d.radiate_1 == 15)
-		run_special(12,0,which_m->m_d.radiate_2,which_m->m_loc,&s1,&s2,&s3);
+		run_special(12,0,which_m->m_d.radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
 	if ((in_scen_debug == false) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
 		xp = which_m->m_d.level * 2;
@@ -1375,15 +1389,15 @@ void kill_monst(cPopulation::cCreature *which_m,short who_killed)
 			i = max((xp / 6),1);
 			award_party_xp(i);
 			}
-		l = which_m->m_loc;
+		l = which_m->cur_loc;
 		place_glands(l,which_m->number);
 		
 		}
 	if ((in_scen_debug == false) && (which_m->summoned == 0))
-		place_treasure(which_m->m_loc, which_m->m_d.level / 2, which_m->m_d.treasure, 0);
+		place_treasure(which_m->cur_loc, which_m->m_d.level / 2, which_m->m_d.treasure, 0);
 	
-	i = which_m->m_loc.x;
-	j = which_m->m_loc.y;
+	i = which_m->cur_loc.x;
+	j = which_m->cur_loc.y;
 	switch (which_m->m_d.m_type) {
 		case 7:	make_sfx(i,j,6); break;
 		case 8:	if (which_m->number <= 59) make_sfx(i,j,7); break;
@@ -1400,7 +1414,7 @@ void kill_monst(cPopulation::cCreature *which_m,short who_killed)
 
 	univ.party.total_m_killed++;
 	
-	which_m->monst_start.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
+	which_m->spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
 
 	which_m->active = 0;
 }
@@ -1421,7 +1435,7 @@ void push_things()////
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if (univ.town.monst.dudes[i].active > 0) {
-			l = univ.town.monst.dudes[i].m_loc;
+			l = univ.town.monst.dudes[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].special) {
 				case 16: l.y--; break;
@@ -1429,9 +1443,9 @@ void push_things()////
 				case 18: l.y++; break;
 				case 19: l.x--; break;
 				}
-			if (l != univ.town.monst.dudes[i].m_loc) {
-				univ.town.monst.dudes[i].m_loc = l;
-				if ((point_onscreen(center,univ.town.monst.dudes[i].m_loc) == true) || 
+			if (l != univ.town.monst.dudes[i].cur_loc) {
+				univ.town.monst.dudes[i].cur_loc = l;
+				if ((point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true) || 
 					(point_onscreen(center,l) == true))
 						redraw = true;
 				}

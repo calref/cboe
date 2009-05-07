@@ -313,11 +313,11 @@ void cd_get_item_text(short dlog_num, short item_num, char *str){
 	else sprintf(str,"%s",text_short_str[item_index - 10]);
 }
 
-void csit(short dlog_num, short item_num, char *str){
+void csit(short dlog_num, short item_num, const char *str){
 	cd_set_item_text( dlog_num,  item_num, str);
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str){
+void cd_set_item_text(short dlog_num, short item_num, const char *str){
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return ;
@@ -367,7 +367,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num){
 }
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str){
+void cd_set_text_edit_str(short dlog_num, short item_num, const char *str){
 	short dlg_index;
 	short the_type;
 	Handle the_handle = NULL;

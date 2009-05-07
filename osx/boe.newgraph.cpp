@@ -875,13 +875,13 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
-				strcpy(cur_name,base_item.full_name);
+				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM, false,1);//// all graphic nums
-				strcpy(cur_name,base_item.full_name);
+				strcpy(cur_name,base_item.full_name.c_str());
 				sprintf(cur_info_str,"");
 				break;
 			case 6:
@@ -900,13 +900,13 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				base_item = store_mage_spells(what_chosen - 800 - 30);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 
-				strcpy(cur_name,base_item.full_name);
+				strcpy(cur_name,base_item.full_name.c_str());
 				sprintf(cur_info_str,"");		
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
-				strcpy(cur_name,base_item.full_name);
+				strcpy(cur_name,base_item.full_name.c_str());
 				sprintf(cur_info_str,"");
 				break;
 			default:
@@ -915,7 +915,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
-				strcpy(cur_name,base_item.full_name);
+				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			}
@@ -989,14 +989,14 @@ cItemRec store_mage_spells(short which_s)
 		5000,3000,3500,4000,4000,4500,7000,5000
 	};
 
-	Str255 str;
+	char str[255];
 	
 	if (which_s != minmax(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
-	get_str(str,38,which_s + 1);
-	strcpy((char *)spell.full_name,(char *)str);
+	get_str((unsigned char*)str,38,which_s + 1);
+	spell.full_name = str;
 	return spell;
 }
 
@@ -1010,14 +1010,14 @@ cItemRec store_priest_spells(short which_s)
 		500,500,600,800, 1000,900,400,600,
 		2500,2000,4500,4500,3000,3000,2000,2000
 	};
-	Str255 str;
+	char str[255];
 
 	if (which_s != minmax(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
-	get_str(str,38,which_s + 50);
-	strcpy((char *)spell.full_name,(char *)str);
+	get_str((unsigned char*)str,38,which_s + 50);
+	spell.full_name = str;
 	return spell;
 }
 cItemRec store_alchemy(short which_s)
@@ -1029,14 +1029,14 @@ cItemRec store_alchemy(short which_s)
 		300, 500,600,750,700,
 		1000,10000,5000,7000,12000
 	};
-	Str255 str;
+	char str[255];
 	
 	if (which_s != minmax(0,19,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
-	get_str(str,38,which_s + 100);
-	strcpy((char *)spell.full_name,(char *)str);
+	get_str((unsigned char*)str,38,which_s + 100);
+	spell.full_name = str;
 	return spell; 
 }
 

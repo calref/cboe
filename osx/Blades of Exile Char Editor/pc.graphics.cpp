@@ -551,13 +551,13 @@ void display_party(short mode,short clear_first)
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0); 
 				// draw name
 				TextSize(9);
-				if( (strlen(ADVEN[i].name)) >= 10) {
+				if( (ADVEN[i].name.length()) >= 10) {
 					TextFace(0);
-					sprintf((char *) to_draw, "%-s  ", (char *) ADVEN[i].name);	
+					sprintf((char *) to_draw, "%-s  ", (char *) ADVEN[i].name.c_str());	
 					TextSize(6);
 				}
 				else {
-					sprintf((char *) to_draw, "%-s ", (char *) ADVEN[i].name);	
+					sprintf((char *) to_draw, "%-s ", (char *) ADVEN[i].name.c_str());	
 				}
 				
 				ForeColor(whiteColor);
@@ -566,8 +566,8 @@ void display_party(short mode,short clear_first)
 				TextSize(10);
 				
 				if (i == current_active_pc){
-					sprintf((char *) to_draw, "%-.18s  ", (char *) ADVEN[i].name);
-					if( (strlen(ADVEN[i].name)) > 12)
+					sprintf((char *) to_draw, "%-.18s  ", (char *) ADVEN[i].name.c_str());
+					if( (ADVEN[i].name.length()) > 12)
 						TextSize(8);
 					ForeColor(blackColor);
 					win_draw_string(GetWindowPort(mainPtr),name_rect,to_draw,1,10,true);

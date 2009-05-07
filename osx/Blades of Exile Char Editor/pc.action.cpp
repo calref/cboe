@@ -250,7 +250,7 @@ void put_pc_graphics()
 			else cd_set_led(991,i,0);
 		}
 
-	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name);
+	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name.c_str());
 }
 void display_pc_event_filter (short item_hit)
 {
@@ -411,7 +411,7 @@ void do_xp_draw()
 
 	pc_num = store_train_pc;
 
-			sprintf((char *) get_text, "%s",(char *) ADVEN[pc_num].name);
+			sprintf((char *) get_text, "%s",(char *) ADVEN[pc_num].name.c_str());
 
 
 	cd_set_item_text (1010, 51,get_text);

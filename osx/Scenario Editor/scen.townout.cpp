@@ -30,7 +30,7 @@ extern unsigned char borders[4][50];
 extern location cur_out;
 //extern cSpeech talking;
 
-cTown::cCreature store_placed_monst,store_placed_monst2;
+cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
 cTown::cItem store_placed_item;
 short store_which_placed_item,store_which_sign;
@@ -111,9 +111,9 @@ void put_placed_monst_in_dlog() {
 	short i;
 	
 	cdsin(837,24,store_which_placed_monst);
-	csit(837,7,(char*)scenario.scen_monsters[store_placed_monst.number].m_name);
+	csit(837,7,(char*)scenario.scen_monsters[store_placed_monst.number].m_name.c_str());
  	cd_set_led_range(837,14,17,store_placed_monst.start_attitude);
- 	cd_set_led_range(837,18,19,store_placed_monst.mobile);
+ 	cd_set_led_range(837,18,19,store_placed_monst.mobility);
  	CDSN(837,2,store_placed_monst.personality);
  	CDSN(837,3,store_placed_monst.facial_pic);
  	if ((store_placed_monst.facial_pic < 1))
@@ -127,7 +127,7 @@ bool get_placed_monst_in_dlog() {
 	short i;
 	
 	store_placed_monst.start_attitude = cd_get_led_range(837,14,17);
-	store_placed_monst.mobile = cd_get_led_range(837,18,19);
+	store_placed_monst.mobility = cd_get_led_range(837,18,19);
 	store_placed_monst.personality = CDGN(837,2);
 	store_placed_monst.facial_pic = CDGN(837,3);
 	// later
@@ -138,7 +138,7 @@ bool get_placed_monst_in_dlog() {
 void edit_placed_monst_event_filter (short item_hit) {
 	Str255 str;
 	short i;
-	cTown::cCreature store_m;
+	cCreature store_m;
 	
 	switch (item_hit) {
 		case 20:
@@ -210,7 +210,7 @@ void put_placed_monst_adv_in_dlog() {
 	short i;
 	
 	cdsin(838,20,store_which_placed_monst);
-	csit(838,9,(char*)scenario.scen_monsters[store_placed_monst2.number].m_name);
+	csit(838,9,(char*)scenario.scen_monsters[store_placed_monst2.number].m_name.c_str());
 	for (i = 22; i < 30; i++)
 		cd_set_led(838,i,0);
 	if (store_placed_monst2.time_flag < 3)
@@ -273,7 +273,7 @@ void edit_placed_monst_adv_event_filter (short item_hit) {
 	}
 }
 
-cTown::cCreature edit_placed_monst_adv(cTown::cCreature monst_record) {
+cCreature edit_placed_monst_adv(cCreature monst_record) {
 	
 	short item_hit,i,store_dialog_answer;
 	Str255 temp_str;
@@ -308,7 +308,7 @@ void put_placed_item_in_dlog() {
 	cdsin(836,17,store_which_placed_item);
 	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
 	csit(836,22,(char *) str);
-	csit(836,15,scenario.scen_items[store_placed_item.code].full_name);
+	csit(836,15,scenario.scen_items[store_placed_item.code].full_name.c_str());
 	CDSN(836,2,store_placed_item.ability);
 	if (store_placed_item.always_there == true)
 		cd_set_led(836,12,1);
@@ -351,7 +351,7 @@ bool get_placed_item_in_dlog() {
 void edit_placed_item_event_filter (short item_hit) {
 	Str255 str;
 	short i;
-	cTown::cCreature store_m;
+	cCreature store_m;
 	
 	switch (item_hit) {
 		case 3:
@@ -730,14 +730,14 @@ void put_out_wand_in_dlog() {
 		if (store_out_wand.monst[i] == 0)
 			csit(852, i + 7, "Empty");
 		else {
-			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.monst[i]].m_name);
+			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.monst[i]].m_name.c_str());
 			csit(852,i + 7,(char *) str);
 		}
 	for (i = 0; i < 3; i++)
 		if (store_out_wand.friendly[i] == 0)
 			csit(852, i + 7 + 7, "Empty");
 		else {
-			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.friendly[i]].m_name);
+			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.friendly[i]].m_name.c_str());
 			csit(852,i + 7 + 7,(char *) str);
 		}
 	if (store_out_wand.cant_flee % 10 == 1)
@@ -787,7 +787,7 @@ bool get_out_wand_in_dlog() {
 void edit_out_wand_event_filter (short item_hit) {
 	Str255 str;
 	short i,spec;
-	cTown::cCreature store_m;
+	cCreature store_m;
 	
 	switch (item_hit) {
 		case 17:

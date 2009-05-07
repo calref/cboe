@@ -4,7 +4,7 @@ void edit_placed_monst(short which_m);
 void edit_placed_monst_event_filter (short item_hit);
 bool get_placed_monst_in_dlog();
 void put_placed_monst_in_dlog();
-cTown::cCreature edit_placed_monst_adv(cTown::cCreature monst_record);
+cCreature edit_placed_monst_adv(cCreature monst_record);
 void edit_placed_monst_adv_event_filter (short item_hit);
 bool get_placed_monst_adv_in_dlog();
 void put_placed_monst_adv_in_dlog();

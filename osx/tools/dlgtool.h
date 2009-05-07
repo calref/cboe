@@ -93,11 +93,11 @@ void cd_set_pict(short dlog_num, short item_num, short pict_num, short pict_type
 void cd_activate_item(short dlog_num, short item_num, short status);
 short cd_get_active(short dlog_num, short item_num);
 void cd_get_item_text(short dlog_num, short item_num, char *str);
-void csit(short dlog_num, short item_num, char *str);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void csit(short dlog_num, short item_num, const char *str);
+void cd_set_item_text(short dlog_num, short item_num, const char *str);
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str);
 short cd_retrieve_text_edit_num(short dlog_num, short item_num);
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str);
+void cd_set_text_edit_str(short dlog_num, short item_num, const char *str);
 void cd_set_text_edit_num(short dlog_num, short item_num, short num);
 void cdsin(short dlog_num, short item_num, short num);
 void cd_set_item_num(short dlog_num, short item_num, short num);

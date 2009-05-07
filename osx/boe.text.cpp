@@ -35,7 +35,7 @@ typedef struct {
 
 buf_line text_buffer[TEXT_BUF_LEN];
 short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
-char store_string[60],store_string2[60];
+//char store_string[60],store_string2[60];
 short start_print_point= 0;
 short mark_where_printing_long;
 bool printing_long = false;
@@ -161,7 +161,7 @@ void put_pc_screen()
 				ForeColor(blueColor);
 				}
 
-			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) ADVEN[i].name);		
+			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) ADVEN[i].name.c_str());		
 			win_draw_string( pc_stats_gworld,pc_buttons[i][0],
  			 to_draw,0,10,false);
 			TextFace(0);
@@ -325,7 +325,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			pc = screen_num; 
 				ForeColor(whiteColor);
 			sprintf((char *) to_draw, "%s inventory:",
-				(char *) ADVEN[pc].name);
+				(char *) ADVEN[pc].name.c_str());
 			win_draw_string( item_stats_gworld,upper_frame_rect,
  			  to_draw,0,10,false);
 				ForeColor(blackColor);
@@ -710,7 +710,7 @@ void draw_pc_effects(short pc)
 		dest_rect.bottom += pc * 25 + 18;
 		}
 		else {
-			name_width = string_length(ADVEN[pc].name);
+			name_width = string_length(ADVEN[pc].name.c_str());
 			right_limit = pc_buttons[0][1].left - 5;
 			//dest_rect.left = pc_buttons[i][1].left - 16;
 			dest_rect.left = name_width + 33;
@@ -807,6 +807,7 @@ void draw_pc_effects(short pc)
 
 
 void print_party_stats() {
+	char store_string[255];
 	add_string_to_buf("PARTY STATS:");
 	sprintf((char *) store_string, "  Number of kills: %lld                   ", univ.party.total_m_killed);
 	add_string_to_buf((char *) store_string);
@@ -829,6 +830,7 @@ short do_look(location space)
 	short i,j,num_items = 0;
 	bool gold_here = false, food_here = false, is_lit = true;
 	location from_where;
+	string msg;
 		
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
@@ -840,8 +842,8 @@ short do_look(location space)
 		for (i = 0; i < 6; i++)
 			if ((space == pc_pos[i]) && (ADVEN[i].main_status == 1)
 				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
-				sprintf((char *) store_string, "    %s", (char *) ADVEN[i].name);
-				add_string_to_buf((char *) store_string);					
+				msg = "    " + ADVEN[i].name;
+				add_string_to_buf((char *) msg.c_str());					
 				}
 		
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
@@ -852,19 +854,19 @@ short do_look(location space)
 				&& (univ.town.monst.dudes[i].m_d.picture_num != 0)) {
 				
 				
-				get_m_name(store_string2,univ.town.monst.dudes[i].number);
+				msg = get_m_name(univ.town.monst.dudes[i].number);
 				if (univ.town.monst.dudes[i].m_d.health < univ.town.monst.dudes[i].m_d.m_health) {
 					if (univ.town.monst.dudes[i].attitude % 2 == 1)
-						sprintf((char *) store_string, "    Wounded %s (H)", store_string2);
-						else sprintf((char *) store_string, "    Wounded %s (F)", store_string2);
+						msg = "    Wounded " + msg + " (H)";
+						else msg = "    Wounded " + msg + " (F)";
 					}
 				else {
 					if (univ.town.monst.dudes[i].attitude % 2 == 1)
-						sprintf((char *) store_string, "    %s (H)", (char *) store_string2);
-						else sprintf((char *) store_string, "    %s (F)", (char *) store_string2);
+						msg = "    " + msg + " (H)";
+					else msg = "    " + msg + " (F)";
 					}
 				
-				add_string_to_buf((char *) store_string);					
+				add_string_to_buf((char *) msg.c_str());					
 
 				}
 		}
@@ -874,9 +876,9 @@ short do_look(location space)
 				&& (space == univ.party.out_c[i].m_loc)) {
 					for (j = 0; j < 7; j++) 
 						if (univ.party.out_c[i].what_monst.monst[j] != 0) {
-							get_m_name(store_string2,univ.party.out_c[i].what_monst.monst[j]);
-							sprintf((char *) store_string, "    %s", store_string2);
-							add_string_to_buf((char *) store_string);		
+							msg = get_m_name(univ.party.out_c[i].what_monst.monst[j]);
+							msg = "    " + msg;
+							add_string_to_buf((char *) msg.c_str());		
 							j = 7;
 						
 							}
@@ -958,9 +960,9 @@ short do_look(location space)
 				if ((univ.town.items[i].variety != 0) && (univ.town.items[i].variety != 3) &&(univ.town.items[i].variety != 11) &&
 				    (space == univ.town.items[i].item_loc) && (!univ.town.items[i].is_contained())) {		
 					if (univ.town.items[i].is_ident())
-						sprintf((char *) store_string, "    %s",univ.town.items[i].full_name); 
-						else sprintf((char *) store_string, "    %s",univ.town.items[i].name);				
-					add_string_to_buf((char *) store_string);
+						msg = "    " + univ.town.items[i].full_name;
+						else msg = "    " + univ.town.items[i].name;
+					add_string_to_buf((char *) msg.c_str());
 					}
 				}
 		}
@@ -1019,9 +1021,9 @@ short out_horse_there(location where)
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) 
 {
 	short i;
-
-	sprintf((char *) store_string, "COMBAT!                 ");				
-	add_string_to_buf((char *) store_string);	
+	string msg;
+	
+	add_string_to_buf((char *) "COMBAT!                 ");	
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
@@ -1029,221 +1031,240 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
 				////
 				
 				default:
-				get_m_name(store_string2,encounter.monst[i]);
-				sprintf((char *) store_string, "  %d x %s        ",nums[i],store_string2);
+				msg = get_m_name(encounter.monst[i]);
+					ostringstream sout;
+					sout << "  " << nums[i] << " x " << msg << "        ";
+					msg = sout.str();
 				break;		
 			}				
-			add_string_to_buf((char *) store_string);	
+			add_string_to_buf((char *) msg.c_str());	
 			}
 	if (encounter.monst[6] != 0) {
-			get_m_name(store_string2,encounter.monst[6]);
-			sprintf((char *) store_string, "  %s        ",store_string2);
-			add_string_to_buf((char *) store_string);		
+			msg = "  " +  get_m_name(encounter.monst[6]) + "        ";
+			add_string_to_buf((char *) msg.c_str());		
 		}
 }
 
-void get_m_name(char *str,unsigned char num)
+string get_m_name(unsigned char num)
 {
 	
 	////
-	strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
+	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
+	return scenario.scen_monsters[num].m_name;
 }
-void get_ter_name(char *str,unsigned char num)
+string get_ter_name(unsigned char num)
 {
-	Str255 store_name;
+	string store_name = "Pit";
 	
 	////
-	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
-		sprintf((char *) store_name,"Pit");
+	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))));
+		//sprintf((char *) store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) scenario.ter_types[num].name.c_str());
+			store_name = scenario.ter_types[num].name;
 			}
-	strcpy((char *) str,(char *) store_name);
+	return store_name;
 }
 
 void print_monst_name(unsigned char m_type)
 {
-	get_m_name(store_string2,m_type);
-	sprintf ((char *) store_string, "%s:",store_string2);
-	add_string_to_buf((char *) store_string);
+	string msg = get_m_name(m_type) + ':';
+	add_string_to_buf((char *) msg.c_str());
 }
 
 void print_monst_attacks(unsigned char m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
 {
-	char store_string3[60];
+	//char store_string3[60];
 	
-	get_m_name(store_string2,m_type);
+	string msg = get_m_name(m_type);
+	msg += " attacks ";
 	if (target < 100)
-		sprintf ((char *) store_string, "%s attacks %s",
-			store_string2,(char *) ADVEN[target].name);
-		else {
-			get_m_name(store_string3,univ.town.monst.dudes[target - 100].number);
-			sprintf ((char *) store_string, "%s attacks %s",
-			store_string2,store_string3);
-			}
-	add_string_to_buf((char *) store_string);
+		msg += ADVEN[target].name;
+		else
+			msg += get_m_name(univ.town.monst.dudes[target - 100].number);
+	add_string_to_buf((char *) msg.c_str());
 }
 
 ////
 void damaged_message(short damage,short type)
 {
+	string msg = "  ";
 	Str255 str;
-	
 	get_str(str,20,130 + type);
-	sprintf ((char *) store_string, "  %s for %d",
-			(char *) str,damage);
-	add_string_to_buf((char *) store_string);	
+	msg += (char*)str; 
+	ostringstream sout(msg);
+	sout << " for " << damage;
+	msg = sout.str();
+	add_string_to_buf((char *) msg.c_str());	
 }
 
 // This prepares the monster's string for the text bar
-void print_monster_going(char *combat_str,unsigned char m_num,short ap)
+string print_monster_going(unsigned char m_num,short ap)
 {
-	get_m_name(store_string2,m_num);
-	sprintf ((char *) combat_str, "%s (ap: %d)",
-		store_string2,ap);
+	ostringstream sout(get_m_name(m_num));
+	sout << " (ap: " << ap << ')';
+	return sout.str();
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
-	get_m_name(store_string2,number);
+	string msg = get_m_name(number);
 	switch (which_mess) {
 		case 1:
-	sprintf ((char *) store_string, "  %s scared. ",store_string2);break;
+			msg = "  " + msg + " scared. ";
+	break;
 	
 		case 2:
-	sprintf ((char *) store_string, "  %s slowed. ",store_string2);break;
+			msg = "  " + msg + " slowed. ";
+	break;
 	
 		case 3:
-	sprintf ((char *) store_string, "  %s weakened.",store_string2);break;
+			msg = "  " + msg + " weakened. ";
+	break;
 	
 		case 4:
-	sprintf ((char *) store_string, "  %s poisoned.",store_string2);break;
+			msg = "  " + msg + " poisoned. ";
+	break;
 	
 		case 5:
-	sprintf ((char *) store_string, "  %s cursed.",store_string2);break;
+			msg = "  " + msg + " cursed. ";
+	break;
 
 		case 6:
-	sprintf ((char *) store_string, "  %s ravaged.",store_string2);break;
+			msg = "  " + msg + " ravaged. ";
+	break;
 
 		case 7:
-	sprintf ((char *) store_string, "  %s undamaged.",store_string2);break;
+			msg = "  " + msg + " undamaged. ";
+	break;
 
 		case 8:
-	sprintf ((char *) store_string, "  %s is stoned.",store_string2);break;
+			msg = "  " + msg + " is stoned. ";
+	break;
 		case 9:
-	sprintf ((char *) store_string, "  Gazes at %s.",store_string2);break;
+			msg = "  Gazes at " + msg + '.';
+	break;
 		case 10:
-	sprintf ((char *) store_string, "  %s resists.",store_string2);break;		
+			msg = "  " + msg + " resists. ";
+	break;		
 		case 11:
-	sprintf ((char *) store_string, "  Drains %s.",store_string2);break;	
+			msg = "  Drains " + msg + '.';
+	break;	
 		case 12:
-	sprintf ((char *) store_string, "  Shoots at %s.",store_string2);break;	
+			msg = "  Shoots at " + msg + '.';
+	break;	
 		case 13:
-	sprintf ((char *) store_string, "  Throws spear at %s.",
-		store_string2);
+			msg = "  Throws spear at " + msg + '.';
 			break;	
 		case 14:
-	sprintf ((char *) store_string, "  Throws rock at %s.",
-		store_string2);
+			msg = "  Throws rock at " + msg + '.';
 			break;	
 		case 15:
-	sprintf ((char *) store_string, "  Throws razordisk at %s.",
-		store_string2);
+			msg = "  Throws razordisk at " + msg + '.';
 			break;
 		case 16:
-	sprintf ((char *) store_string, "  Hits %s.",
-		store_string2);
+			msg = "  Hits " + msg + '.';
 			break;
 		case 17:
-	sprintf ((char *) store_string, "%s disappears.",
-		store_string2);
+			msg = "  " + msg + " disappears. ";
 			break;
 		case 18:
-	sprintf ((char *) store_string, "  Misses %s.",
-		store_string2);
+			msg = "  Misses " + msg + '.';
 			break;
 		case 19:
-	sprintf ((char *) store_string, "  %s is webbed.",store_string2);break;
+			msg = "  " + msg + " is webbed. ";
+	break;
 		case 20:
-	sprintf ((char *) store_string, "  %s chokes.",store_string2);break;
+			msg = "  " + msg + " chokes. ";
+	break;
 		case 21:
-	sprintf ((char *) store_string, "  %s summoned.",store_string2);break;
+			msg = "  " + msg + " summoned. ";
+	break;
 		case 22:
-	sprintf ((char *) store_string, "  %s is dumbfounded.",store_string2);break;
+			msg = "  " + msg + " is dumbfounded. ";
+	break;
 		case 23:
-	sprintf ((char *) store_string, "  %s is charmed.",store_string2);break;
+			msg = "  " + msg + " is charmed. ";
+	break;
 		case 24:
-	sprintf ((char *) store_string, "  %s is recorded.",store_string2);break;
+			msg = "  " + msg + " is recorded. ";
+	break;
 		case 25:
-	sprintf ((char *) store_string, "  %s is diseased.",store_string2);break;
+			msg = "  " + msg + " is diseased. ";
+	break;
 		case 26:
-	sprintf ((char *) store_string, "  %s is an avatar!",store_string2);break;
+			msg = "  " + msg + " is an avatar!";
+	break;
 		case 27:
-	sprintf ((char *) store_string, "  %s splits!",store_string2);break;
+			msg = "  " + msg + " splits!";
+	break;
 		case 28:
-	sprintf ((char *) store_string, "  %s falls asleep.",store_string2);break;
+			msg = "  " + msg + " falls asleep. ";
+	break;
 		case 29:
-	sprintf ((char *) store_string, "  %s wakes up.",store_string2);break;
+			msg = "  " + msg + " wakes up. ";
+	break;
 		case 30:
-	sprintf ((char *) store_string, "  %s paralyzed.",store_string2);break;
+			msg = "  " + msg + " paralyzed. ";
+	break;
 		case 31:
-	sprintf ((char *) store_string, "  %s covered with acid.",store_string2);break;
+			msg = "  " + msg + " covered with acid. ";
+	break;
 		case 32:
-	sprintf ((char *) store_string, "  Fires spines at %s.",store_string2);break;
+			msg = "  Fires spines at " + msg + '.';
+	break;
 		case 33:
-	sprintf ((char *) store_string, "  %s summons aid.",store_string2);break;
+			msg = "  " + msg + " summons aid. ";
+	break;
 		}
 
 	if (which_mess > 0)
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf((char *) msg.c_str());
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
-	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s casts:",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
-	sprintf ((char *) store_string, "  %s",
-			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
-	add_string_to_buf((char *) store_string);
+	string msg = get_m_name(number);
+	msg += " casts:";
+	add_string_to_buf((char *) msg.c_str());
+	msg = (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1];
+	msg = "  " + msg;
+	add_string_to_buf((char *) msg.c_str());
 }
 
 void monst_breathe_note(unsigned char number)
 {
-	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s breathes.",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	string msg = get_m_name(number);
+	msg += " breathes.";
+	add_string_to_buf((char *) msg.c_str());
 
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
-	get_m_name(store_string2,univ.town.monst.dudes[which_m].number);
+	string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	msg = "  " + msg + " takes ";
+	ostringstream sout(msg);
+	sout << how_much;
 	if (how_much_spec > 0)
-		sprintf ((char *) store_string, "  %s takes %d+%d",
-			store_string2, how_much,how_much_spec);
-		else sprintf ((char *) store_string, "  %s takes %d",
-			store_string2, how_much);
- 
-	add_string_to_buf((char *) store_string);
+		sout << '+' << how_much_spec;
+	msg = sout.str();
+	add_string_to_buf((char *) msg.c_str());
 }
 
 void monst_killed_mes(short which_m)
 {
-	get_m_name(store_string2,univ.town.monst.dudes[which_m].number);
-	sprintf ((char *) store_string, "  %s dies.",
-		(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	msg = "  " + msg + " dies.";
+	add_string_to_buf((char *) msg.c_str());
 }
 
 void print_nums(short a,short b,short c)
 {
-	sprintf((char *) store_string, "debug: %d %d %d", a,b,c);
-	add_string_to_buf((char *) store_string);
+	ostringstream sout;
+	sout << "debug: " << a << ' ' << b << ' ' << c;
+	add_string_to_buf((char *) sout.str().c_str());
 
 }
 
@@ -1260,9 +1281,9 @@ short print_terrain(location space)
 	if (overall_mode == MODE_LOOK_COMBAT) {
 		which_terrain = combat_terrain[space.x][space.y];
 		}
-	get_ter_name(store_string2,which_terrain);
-	sprintf((char *) store_string, "    %s", store_string2);
-	add_string_to_buf((char *) store_string);
+	string msg = get_ter_name(which_terrain);
+	msg = "    " + msg;
+	add_string_to_buf((char *) msg.c_str());
 
 	return (short) which_terrain;
 }

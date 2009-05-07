@@ -38,7 +38,7 @@ extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_
 extern eGameMode overall_mode;
 extern location center;
 extern WindowPtr mainPtr;
-extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern unsigned char combat_terrain[64][64];
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern unsigned char univ.out.misc_i[64][64];
@@ -46,7 +46,7 @@ extern short store_current_pc,current_ground;
 //extern pascal bool cd_event_filter();
 extern short dungeon_font_num,geneva_font_num;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
-extern location monster_targs[60];
+//extern location monster_targs[60];
 extern short special_queue[20];
 
 extern bool modeless_exists[18],diff_depth_ok,belt_present;
@@ -62,7 +62,7 @@ extern short town_type;
 //extern setup_save_type setup_save;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location pc_pos[6];
-extern short last_attacked[6],pc_dir[6],pc_parry[6],pc_moves[6];
+extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 //extern stored_town_maps_type town_maps;
 
 extern location hor_vert_place[14];
@@ -233,11 +233,11 @@ void start_town_mode(short which_town, short entry_dir)
 			monsters_loaded = true;
 			
 			for (j = 0; j < univ.town->max_monst(); j++) {
-				if (loc_off_act_area(univ.town.monst.dudes[j].m_loc) == true)
+				if (loc_off_act_area(univ.town.monst.dudes[j].cur_loc) == true)
 					univ.town.monst.dudes[j].active = 0;
 				if (univ.town.monst.dudes[j].active == 2)
 					univ.town.monst.dudes[j].active = 1;
-				univ.town.monst.dudes[j].m_loc = univ.town->creatures(j).start_loc;
+				univ.town.monst.dudes[j].cur_loc = univ.town->creatures(j).start_loc;
 				univ.town.monst.dudes[j].m_d.health = univ.town.monst.dudes[j].m_d.m_health;
 				univ.town.monst.dudes[j].m_d.mp = univ.town.monst.dudes[j].m_d.max_mp;
 				univ.town.monst.dudes[j].m_d.morale = univ.town.monst.dudes[j].m_d.m_morale;
@@ -245,52 +245,52 @@ void start_town_mode(short which_town, short entry_dir)
 					univ.town.monst.dudes[j].m_d.status[k] = 0;
 				if (univ.town.monst.dudes[j].summoned > 0)
 					univ.town.monst.dudes[j].active = 0;
-				monst_target[j] = 6;
+				univ.town.monst.dudes[j].target = 6;
 			}
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
 			for (j = 0; j < univ.town->max_monst(); j++) {
-				switch (univ.town.monst.dudes[j].monst_start.time_flag){
+				switch (univ.town.monst.dudes[j].time_flag){
 					case 4: case 5 : //case 6:
-						if ((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst.dudes[j].monst_start.time_flag)
+						if ((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst.dudes[j].time_flag)
 							univ.town.monst.dudes[j].active = 0;
 						else {
 							univ.town.monst.dudes[j].active = 1;
-							univ.town.monst.dudes[j].monst_start.spec_enc_code = 0;
+							univ.town.monst.dudes[j].spec_enc_code = 0;
 							// Now remove time flag so it doesn't get reappearing
-							univ.town.monst.dudes[j].monst_start.time_flag = 0;
-							univ.town.monst.dudes[j].m_loc = univ.town->creatures(j).start_loc;
+							univ.town.monst.dudes[j].time_flag = 0;
+							univ.town.monst.dudes[j].cur_loc = univ.town->creatures(j).start_loc;
 							univ.town.monst.dudes[j].m_d.health = univ.town.monst.dudes[j].m_d.m_health;
 						}
 						break ;
 						
 						// Now, appearing/disappearing monsters might have arrived/disappeared.
 					case 1:
-						if (day_reached(univ.town.monst.dudes[j].monst_start.monster_time, univ.town.monst.dudes[j].monst_start.time_code) == true)
+						if (day_reached(univ.town.monst.dudes[j].monster_time, univ.town.monst.dudes[j].time_code) == true)
 						{
 							univ.town.monst.dudes[j].active = 1;
-							univ.town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get reappearing
+							univ.town.monst.dudes[j].time_flag=0; // Now remove time flag so it doesn't get reappearing
 						}
 						break;
 					case 2:
-						if (day_reached(univ.town.monst.dudes[j].monst_start.monster_time, univ.town.monst.dudes[j].monst_start.time_code) == true)
+						if (day_reached(univ.town.monst.dudes[j].monster_time, univ.town.monst.dudes[j].time_code) == true)
 						{
 							univ.town.monst.dudes[j].active = 0;
-							univ.town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get disappearing again
+							univ.town.monst.dudes[j].time_flag=0; // Now remove time flag so it doesn't get disappearing again
 						}
 						break;
 					case 7:
-						if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[j].monst_start.time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
+						if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
 							univ.town.monst.dudes[j].active = 1;
-							univ.town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get reappearing
+							univ.town.monst.dudes[j].time_flag=0; // Now remove time flag so it doesn't get reappearing
 						}
 						break;
 						
 					case 8:
-						if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[j].monst_start.time_code]){
+						if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[j].time_code]){
 							univ.town.monst.dudes[j].active = 0;
-							univ.town.monst.dudes[j].monst_start.time_flag=0; // Now remove time flag so it doesn't get disappearing again
+							univ.town.monst.dudes[j].time_flag=0; // Now remove time flag so it doesn't get disappearing again
 						}
 						break;
 				}
@@ -310,58 +310,59 @@ void start_town_mode(short which_town, short entry_dir)
 					if (univ.town->creatures(i).number == 0) {
 						univ.town.monst.dudes[i].active = 0;
 						univ.town.monst.dudes[i].number = 0;
-						univ.town.monst.dudes[i].monst_start.time_flag = 0;
-						univ.town.monst.dudes[i].m_loc.x = 80;
+						univ.town.monst.dudes[i].time_flag = 0;
+						univ.town.monst.dudes[i].cur_loc.x = 80;
 						}
 					else {
 						// First set up the values.
-						monst_target[i] = 6;
+						univ.town.monst.dudes[i] = univ.town->creatures(i);
+						univ.town.monst.dudes[i].target = 6;
 						univ.town.monst.dudes[i].active = 1;
 						univ.town.monst.dudes[i].number = univ.town->creatures(i).number;
 						univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
-						univ.town.monst.dudes[i].m_loc = univ.town->creatures(i).start_loc;
-						univ.town.monst.dudes[i].mobile = univ.town->creatures(i).mobile;
+						univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
+						univ.town.monst.dudes[i].mobility = univ.town->creatures(i).mobility;
 						univ.town.monst.dudes[i].m_d = return_monster_template(univ.town.monst.dudes[i].number);
 											
 						univ.town.monst.dudes[i].summoned = 0;
-						univ.town.monst.dudes[i].monst_start = univ.town->creatures(i);
+						univ.town.monst.dudes[i] = univ.town->creatures(i);
 
-						if (univ.town.monst.dudes[i].monst_start.spec_enc_code > 0)
+						if (univ.town.monst.dudes[i].spec_enc_code > 0)
 							univ.town.monst.dudes[i].active = 0;
 
 						// Now, if necessary, fry the monster.
-						switch (univ.town.monst.dudes[i].monst_start.time_flag) {
+						switch (univ.town.monst.dudes[i].time_flag) {
 							case 1:
-								if (!day_reached(univ.town.monst.dudes[i].monst_start.monster_time,
-								  univ.town.monst.dudes[i].monst_start.time_code))
+								if (!day_reached(univ.town.monst.dudes[i].monster_time,
+								  univ.town.monst.dudes[i].time_code))
 									univ.town.monst.dudes[i].active = 0;
 								break;
 							case 2:
-								if (day_reached(univ.town.monst.dudes[i].monst_start.monster_time,
-								  univ.town.monst.dudes[i].monst_start.time_code))
+								if (day_reached(univ.town.monst.dudes[i].monster_time,
+								  univ.town.monst.dudes[i].time_code))
 									univ.town.monst.dudes[i].active = 0;
 								break;
 							case 3:
 								// unused
 								break;
 							case 4: case 5: case 6:
-								if ((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst.dudes[i].monst_start.time_flag) {
+								if ((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst.dudes[i].time_flag) {
 									univ.town.monst.dudes[i].active = 0;
-									univ.town.monst.dudes[i].monst_start.spec_enc_code = 50;
+									univ.town.monst.dudes[i].spec_enc_code = 50;
 									}
 									else {
 										univ.town.monst.dudes[i].active = 1;
 										// Now remove time flag so it doesn't keep reappearing
-										univ.town.monst.dudes[i].monst_start.time_flag = 0;
+										univ.town.monst.dudes[i].time_flag = 0;
 										}
 								break;
 							case 7:
-								if (calc_day() < univ.party.key_times[univ.town.monst.dudes[i].monst_start.time_code])
+								if (calc_day() < univ.party.key_times[univ.town.monst.dudes[i].time_code])
 									univ.town.monst.dudes[i].active = 0;
 								break;
 
 							case 8:
-								if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[i].monst_start.time_code])
+								if (calc_day() >= univ.party.key_times[univ.town.monst.dudes[i].time_code])
 									univ.town.monst.dudes[i].active = 0;
 								break;
 							case 9:
@@ -376,7 +377,7 @@ void start_town_mode(short which_town, short entry_dir)
 								break;
 							default:
 								ASB("ERROR! Odd character data.");
-								print_nums(0,i,univ.town.monst.dudes[i].monst_start.time_flag);
+								print_nums(0,i,univ.town.monst.dudes[i].time_flag);
 								break;
 							}
 					}
@@ -389,7 +390,7 @@ void start_town_mode(short which_town, short entry_dir)
 	for (i = 0; i < univ.town->max_monst(); i++) {
 		if (univ.town.monst.dudes[i].active > 0)
 			if (((univ.town.monst.dudes[i].m_d.x_width > 1) || (univ.town.monst.dudes[i].m_d.y_width > 1)) && 
-				(monst_can_be_there(univ.town.monst.dudes[i].m_loc,i) == false))
+				(monst_can_be_there(univ.town.monst.dudes[i].cur_loc,i) == false))
 				univ.town.monst.dudes[i].active = 0;			
 		}
 
@@ -505,7 +506,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 							
 	for (i = 0; i < univ.town->max_monst(); i++) 
-		if (loc_off_act_area(univ.town.monst.dudes[i].m_loc) == true)
+		if (loc_off_act_area(univ.town.monst.dudes[i].cur_loc) == true)
 			univ.town.monst.dudes[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(univ.town.items[i].item_loc) == true)
@@ -513,8 +514,8 @@ void start_town_mode(short which_town, short entry_dir)
 				
 	// Clean out unwanted monsters
 	for (i = 0; i < univ.town->max_monst(); i++) 
-		if (sd_legit(univ.town.monst.dudes[i].monst_start.spec1,univ.town.monst.dudes[i].monst_start.spec2) == true) {
-			if (PSD[univ.town.monst.dudes[i].monst_start.spec1][univ.town.monst.dudes[i].monst_start.spec2] > 0)
+		if (sd_legit(univ.town.monst.dudes[i].spec1,univ.town.monst.dudes[i].spec2) == true) {
+			if (PSD[univ.town.monst.dudes[i].spec1][univ.town.monst.dudes[i].spec2] > 0)
 				univ.town.monst.dudes[i].active = 0;
 			}
 		
@@ -570,7 +571,7 @@ void start_town_mode(short which_town, short entry_dir)
 				}
 
 	for (i = 0; i < univ.town->max_monst(); i++)
-		{monster_targs[i].x = 0;  monster_targs[i].y = 0;}
+		{univ.town.monst.dudes[i].targ_loc.x = 0;  univ.town.monst.dudes[i].targ_loc.y = 0;}
 
 	//// check horses
 	for (i = 0; i < 30; i++) {
@@ -646,8 +647,8 @@ location end_town_mode(short switching_level,location destination)  // returns n
 			
 		// Clean up special data, just in case
 		for (i = 0; i < univ.town->max_monst(); i++) {
-			univ.town.monst.dudes[i].monst_start.spec1 = 0;
-			univ.town.monst.dudes[i].monst_start.spec2 = 0;
+			univ.town.monst.dudes[i].spec1 = 0;
+			univ.town.monst.dudes[i].spec2 = 0;
 			}
 
 		// Now store map
@@ -794,7 +795,7 @@ void start_town_combat(short direction)
 
 	combat_active_pc = 6;
 	for (i = 0; i < univ.town->max_monst(); i++)
-		monst_target[i] = 6;
+		univ.town.monst.dudes[i].target = 6;
 
 	for (i = 0; i < 6; i++) {
 		last_attacked[i] = univ.town->max_monst() + 10;
@@ -1710,7 +1711,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		if ((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
 			for (i = 0; i < univ.town->max_monst(); i++) 
 				if (univ.town.monst.dudes[i].active > 0) {
-					where = univ.town.monst.dudes[i].m_loc;
+					where = univ.town.monst.dudes[i].cur_loc;
 					if ((is_explored(where.x,where.y)) && 
 						((where.x >= view_rect.left) && (where.x < view_rect.right) 
 						&& (where.y >= view_rect.top) && (where.x < view_rect.bottom))){

@@ -26,7 +26,7 @@ short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit(-1,-1);
-cTown::cCreature null_monst = {0,0,loc(),0,0,0,0,0,0};
+//cTown::cCreature null_monst = {0,0,loc(),0,0,0,0,0,0};
 //creature_start_type store_monst = {0,0,{0,0},0,0,0,0,0,0};
 bool sign_error_received = false;
 short copied_spec = -1;
@@ -99,7 +99,7 @@ short town_buttons[6][10] = {
 	{50,51,52,53,54,55,56,57,-1,-1},
 };
 
-cTown::cCreature last_placed_monst = {0,0,loc(),0,0,0,0,0,0,0};
+cCreature last_placed_monst;
 
 cSpecial null_spec_node;// = {0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 cSpeech::cNode null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
@@ -116,12 +116,12 @@ bool monst_on_space(location loc,short m_num);
 short can_see(location p1,location p2,short mode);
 
 void init_current_terrain() {
-	short i,j;
-	location d_loc(0,0);
-	Rect d_rect = {0,0,0,0};
-	cTown::cWandering d_wan = {0,0,0,0};
-	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
-	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
+//	short i,j;
+//	location d_loc(0,0);
+//	Rect d_rect = {0,0,0,0};
+//	cTown::cWandering d_wan = {0,0,0,0};
+//	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
+//	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
 }
 
 void init_screen_locs() {
@@ -631,7 +631,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						town->creatures(i).number = mode_count;
 						town->creatures(i).start_attitude = 
 						scenario.scen_monsters[mode_count].default_attitude;
-						town->creatures(i).mobile = 1;
+						town->creatures(i).mobility = 1;
 						town->creatures(i).time_flag = 0;
 						town->creatures(i).extra1 = 0;
 						town->creatures(i).extra2 = 0;
@@ -3255,7 +3255,7 @@ void start_monster_editing(short just_redo_text) {
 		SetControlMaximum(right_sbar,255 - NRSONPAGE);
 	}
 	for (i = 1; i < 256; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_monsters[i].m_name);
+		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_monsters[i].m_name.c_str());
 		set_rb(i - 1,2000 + i,(char *) str,0);
 	}
 	if (draw_full == true)
@@ -3283,7 +3283,7 @@ void start_item_editing(short just_redo_text) {
 		SetControlMaximum(right_sbar,400 - NRSONPAGE);
 	}
 	for (i = 0; i < 400; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_items[i].full_name);
+		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_items[i].full_name.c_str());
 		set_rb(i,3000 + i,(char *) str,0);
 	}
 	if (draw_full == true)

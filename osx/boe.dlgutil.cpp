@@ -842,8 +842,8 @@ void handle_talk_event(Point p)
 			strnum1 = -1;
 			return;
 		case 12: //healer
-			start_shop_mode(3,univ.town.monst.dudes[store_m_num].monst_start.extra1,
-				univ.town.monst.dudes[store_m_num].monst_start.extra2,a,(char *)place_string1);
+			start_shop_mode(3,univ.town.monst.dudes[store_m_num].extra1,
+				univ.town.monst.dudes[store_m_num].extra2,a,(char *)place_string1);
 			strnum1 = -1;
 			return;
 			break;
@@ -998,7 +998,7 @@ void handle_talk_event(Point p)
 			break;	
 		case 26:
 			univ.town.monst.dudes[store_m_num].attitude = 1;
-			univ.town.monst.dudes[store_m_num].mobile = 1;
+			univ.town.monst.dudes[store_m_num].mobility = 1;
 			talk_end_forced = true;
 			break;	
 		case 27:
@@ -1008,8 +1008,8 @@ void handle_talk_event(Point p)
 		case 28:
 			univ.town.monst.dudes[store_m_num].active = 0;
 	// Special killing effects
-	if (sd_legit(univ.town.monst.dudes[store_m_num].monst_start.spec1,univ.town.monst.dudes[store_m_num].monst_start.spec2) == true)
-		PSD[univ.town.monst.dudes[store_m_num].monst_start.spec1][univ.town.monst.dudes[store_m_num].monst_start.spec2] = 1;
+	if (sd_legit(univ.town.monst.dudes[store_m_num].spec1,univ.town.monst.dudes[store_m_num].spec2) == true)
+		PSD[univ.town.monst.dudes[store_m_num].spec1][univ.town.monst.dudes[store_m_num].spec2] = 1;
 			talk_end_forced = true;
 			break;	
 		case 29: // town special
@@ -1610,7 +1610,7 @@ void put_party_stats()
 
 	for (i = 0; i < 6; i++) {
 		if (ADVEN[i].main_status > 0) {
-			cd_set_item_text(989,5 + 5 * i,ADVEN[i].name);
+			cd_set_item_text(989,5 + 5 * i,ADVEN[i].name.c_str());
 			cd_activate_item(989,7 + 5 * i,1);
 			cd_activate_item(989,8 + 5 * i,1);
 			cd_set_flag(989,6 + 5 * i,96);

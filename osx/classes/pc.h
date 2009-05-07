@@ -33,7 +33,7 @@ enum eMainStatus {
 class cPlayer {
 public:
 	eMainStatus main_status;
-	char name[20];
+	string name;
 	short skills[30];
 	unsigned short max_health;
 	short cur_health;
@@ -54,6 +54,7 @@ public:
 	short race;
 	//short exp_adj;
 	short direction;
+	short ap;
 	
 	cPlayer& operator = (legacy::pc_record_type old);
 	cPlayer();

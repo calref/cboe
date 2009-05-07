@@ -58,7 +58,7 @@ extern bool sleep_field;
 //extern unsigned char template_terrain[64][64];
 //extern tiny_tr_type anim_t_d;
 extern bool modeless_exists[18];
-extern location monster_targs[60];
+//extern location monster_targs[60];
 extern DialogPtr modeless_dialogs[18] ;
 extern short which_combat_type;
 extern char terrain_blocked[256];
@@ -223,8 +223,8 @@ void finish_load_party(){
 		univ.town.cur_talk_loaded = univ.town.num;
 		
 		for (int i = 0; i < univ.town->max_monst(); i++){
-			monster_targs[i].x = 0;
-			monster_targs[i].y = 0;
+			univ.town.monst.dudes[i].targ_loc.x = 0;
+			univ.town.monst.dudes[i].targ_loc.y = 0;
 		}
 		
 		town_type = scenario.town_size[univ.town.num];
@@ -1047,9 +1047,9 @@ void start_data_dump()
 
 		for (i = 0; i < univ.town->max_monst(); i++) {
 			sprintf((char *)get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
-				(short) i,(short) univ.town.monst.dudes[i].active,(short) univ.town.monst.dudes[i].m_loc.x,
-				(short) univ.town.monst.dudes[i].m_loc.y,(short) univ.town.monst.dudes[i].number,
-				(short) univ.town.monst.dudes[i].attitude,(short) univ.town.monst.dudes[i].monst_start.time_flag);
+				(short) i,(short) univ.town.monst.dudes[i].active,(short) univ.town.monst.dudes[i].cur_loc.x,
+				(short) univ.town.monst.dudes[i].cur_loc.y,(short) univ.town.monst.dudes[i].number,
+				(short) univ.town.monst.dudes[i].attitude,(short) univ.town.monst.dudes[i].time_flag);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);	
 			}

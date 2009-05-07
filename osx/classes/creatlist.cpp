@@ -10,20 +10,6 @@
 #include "oldstructs.h"
 
 __attribute__((deprecated))
-cPopulation::cCreature& cPopulation::cCreature::operator = (legacy::creature_data_type old){
-	active = old.active;
-	attitude = old.attitude;
-	number = old.number;
-	m_loc.x = old.m_loc.x;
-	m_loc.y = old.m_loc.y;
-	m_d = old.m_d;
-	mobile = old.mobile;
-	summoned = old.summoned;
-	monst_start = old.monst_start;
-	return *this;
-}
-
-__attribute__((deprecated))
 cPopulation& cPopulation::operator = (legacy::creature_list_type old){
 	for(int i = 0; i < 60; i++)
 		dudes[i] = old.dudes[i];

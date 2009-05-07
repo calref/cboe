@@ -21,7 +21,7 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height,bool main_win);
 void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height,bool main_win);
 void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,bool main_win);
-short string_length(char *str);
+short string_length(const char *str);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();
 Rect calc_rect(short i, short j);

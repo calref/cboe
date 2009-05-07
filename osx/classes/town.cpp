@@ -151,26 +151,6 @@ char(& cTown::town_strs(short i))[256]{
 	return comment[1]; // random unused string
 }
 
-cTown::cCreature& cTown::cCreature::operator = (legacy::creature_start_type old){
-	number = old.number;
-	start_attitude = old.start_attitude;
-	start_loc.x = old.start_loc.x;
-	start_loc.y = old.start_loc.y;
-	mobile = old.mobile;
-	time_flag = old.time_flag;
-	extra1 = old.extra1;
-	extra2 = old.extra2;
-	spec1 = old.spec1;
-	spec2 = old.spec2;
-	spec_enc_code = old.spec_enc_code;
-	time_code = old.time_code;
-	monster_time = old.monster_time;
-	personality = old.personality;
-	special_on_kill = old.special_on_kill;
-	facial_pic = old.facial_pic;
-	return *this;
-}
-
 cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];

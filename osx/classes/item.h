@@ -201,8 +201,8 @@ public:
 	unsigned char weight;
 	unsigned char special_class;
 	location item_loc;
-	char full_name[25];
-	char name[15];
+	string full_name;
+	string name;
 	unsigned char treas_class;
 	unsigned char item_properties;
 private:

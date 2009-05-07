@@ -82,7 +82,7 @@ bool belt_present = false;
 //setup_save_type setup_save;
 //unsigned char misc_i[64][64],sfx[64][64];
 ////unsigned char template_terrain[64][64];
-location monster_targs[60]; // TODO: Integrate this into the town cCreature type
+//location monster_targs[60]; // TODO: Integrate this into the town cCreature type
 //outdoor_strs_type outdoor_text[2][2];
 
 /* Display globals */
@@ -129,7 +129,7 @@ location pc_pos[6];
 short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;
-short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
+//short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 // TODO: Integrate this ^ into the town cCreature type
 short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;

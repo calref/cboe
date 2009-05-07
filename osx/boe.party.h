@@ -35,7 +35,7 @@ void do_priest_spell(short pc_num,short spell_num);
 void cast_town_spell(location where);
 void sanctify_space(location where);
 void crumble_wall(location where);
-void do_mindduel(short pc_num,cPopulation::cCreature *monst);
+void do_mindduel(short pc_num,cCreature *monst);
 void dispel_fields(short i,short j,short mode);
 bool pc_can_cast_spell(short pc_num,short type,short spell_num);
 void pick_spell_event_filter (short item_hit);

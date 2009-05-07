@@ -417,7 +417,7 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	SetPort(old_port);//printf("String drawn.\n");
 }
 
-short string_length(char *str){ // Why not just use strlen?
+short string_length(const char *str){ // Why not just use strlen?
 	short text_len[257];
 	short total_width = 0,i,len;
 	Str255 p_str;

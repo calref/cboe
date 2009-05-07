@@ -86,7 +86,7 @@ short store_shop_type;
 short debug_ok = 0;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 
-extern short cen_x, cen_y, stat_window,give_delays,pc_moves[6];
+extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern Point	to_create;
 extern bool in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
@@ -136,7 +136,7 @@ extern bool fry_startup;
 
 char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
-cTown::cCreature	save_monster_type;
+cCreature save_monster_type;
 
 short wand_loc_count = 0;
 short monst_place_count = 0; // 1 - standard place	2 - place last
@@ -908,11 +908,11 @@ bool handle_action(EventRecord event)
 								add_string_to_buf("  Creature is hostile.        ");
 							}
 							else if ((univ.town.monst.dudes[i].summoned > 0)////
-								|| (univ.town.monst.dudes[i].monst_start.personality < 0))
+								|| (univ.town.monst.dudes[i].personality < 0))
 								add_string_to_buf("Talk: No response.            ");
 							else {
-								start_talk_mode(i,univ.town.monst.dudes[i].monst_start.personality,univ.town.monst.dudes[i].number,
-									univ.town.monst.dudes[i].monst_start.facial_pic);
+								start_talk_mode(i,univ.town.monst.dudes[i].personality,univ.town.monst.dudes[i].number,
+									univ.town.monst.dudes[i].facial_pic);
 								did_something = false;
 								need_redraw = false;				
 								break;
@@ -1327,7 +1327,7 @@ bool handle_action(EventRecord event)
 
 					if (need_redraw == true) {
 						draw_terrain();
-						if ((combat_active_pc == 6) || (pc_moves[combat_active_pc] > 0))
+						if ((combat_active_pc == 6) || (ADVEN[combat_active_pc].ap > 0))
 							need_redraw = false;
 						}
 					//pause(2);
@@ -1774,7 +1774,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 					univ.town.monst.dudes[i].active = 0;
 					
 				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1)
-				&& (dist(univ.town.monst.dudes[i].m_loc,univ.town.p_loc) <= 10) )
+				&& (dist(univ.town.monst.dudes[i].cur_loc,univ.town.p_loc) <= 10) )
 					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
 					}
 //				kill_monst(&c_town.monst.dudes[i],6);

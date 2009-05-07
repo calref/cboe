@@ -851,10 +851,10 @@ void init_scenario() {
 		scenario.scen_monsters[i] = return_monster_template(i);
 		get_str(temp_str,2,i);
 		if ((i > 187) || (i == 0))
-			sprintf((char *)scenario.scen_monsters[i].m_name, "Unused");
-		else sprintf((char *)scenario.scen_monsters[i].m_name, "%s", temp_str);
+			scenario.scen_monsters[i].m_name = "Unused";
+		else scenario.scen_monsters[i].m_name = (char*)temp_str;
 		if (i == 0)
-			sprintf((char *)scenario.scen_monsters[i].m_name, "Empty");
+			scenario.scen_monsters[i].m_name = "Empty";
 	}
 	for (i = 0; i < 30; i++) {
 		scenario.boats[i] = null_boat;
@@ -1096,7 +1096,7 @@ void put_monst_info_in_dlog() {
 		csp(814,34,store_monst.picture_num % 1000,type_g);
 	}
 	cdsin(814,33,store_which_monst);
-	CDST(814,2,(char*)scenario.scen_monsters[store_which_monst].m_name);
+	CDST(814,2,(char*)scenario.scen_monsters[store_which_monst].m_name.c_str());
 	CDSN(814,3,store_monst.picture_num);
 	sprintf((char *) str,"Width = %d",store_monst.x_width);
 	csit(814,40,(char *) str);
@@ -1134,7 +1134,7 @@ bool save_monst_info() {
 	
 	CDGT(814,2,(char *) str);
 	str[19] = 0;
-	sprintf((char*)scenario.scen_monsters[store_which_monst].m_name,"%s",str);
+	scenario.scen_monsters[store_which_monst].m_name = (char*)str;
 	//CDGT(814,2,data_store->scen_item_list.monst_names[store_which_monst]);
 	store_monst.picture_num = CDGN(814,3);
 	if (cre(store_monst.picture_num,0,5000,"Monster pic must be from 0 to 5000.","",814) > 0) return false;
@@ -1463,8 +1463,8 @@ void put_item_info_in_dlog() {
 	Str255 str;
 	
 	cdsin(818,52,store_which_item);
-	CDST(818,2,store_item.full_name);
-	CDST(818,3,store_item.name);
+	CDST(818,2,store_item.full_name.c_str());
+	CDST(818,3,store_item.name.c_str());
 	if (store_item.graphic_num >= 1000) // was 150
 		csp(818,49,store_item.graphic_num % 1000,PICT_CUSTOM + PICT_ITEM);
 	else csp(818,49,/*1800 + */store_item.graphic_num,PICT_ITEM);
@@ -1489,10 +1489,10 @@ bool save_item_info() {
 	
 	CDGT(818,2,(char *) str);
 	str[24] = 0;
-	sprintf(store_item.full_name,"%s",str);
+	store_item.full_name = (char*)str;
 	CDGT(818,3,(char *) str);
 	str[14] = 0;
-	sprintf(store_item.name,"%s",str);
+	store_item.name = (char*)str;
 	store_item.graphic_num = CDGN(818,4);
 	
 	store_item.variety = (eItemType) cd_get_led_range(818,18,45);
@@ -1629,7 +1629,7 @@ void put_item_abils_in_dlog() {
 	short i;
 	
 	cdsin(824,16,store_which_item);
-	csit(824,32,store_item2.full_name);
+	csit(824,32,store_item2.full_name.c_str());
 	csit(824,34,item_types[store_item2.variety]);
 	get_str(str,23,store_item2.ability + 1);
 	csit(824,19,(char *) str);
