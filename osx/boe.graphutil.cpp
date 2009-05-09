@@ -229,9 +229,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
 				anim_onscreen = true;
 			}
 	
-	if (dest == 0)
-		rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 0);	  
-		else rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, 1);	  
+	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, dest);
 }
 
 void draw_monsters() ////
@@ -317,12 +315,12 @@ void draw_monsters() ////
 						ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-							(scenario.ter_types[ter].picture == 143) && 
+							(scenario.ter_types[ter].special == TER_SPEC_BED) &&
 							((univ.town.monst.dudes[i].m_d.m_type < 7) 
 							&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
 							&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 							(width == 1) && (height == 1)) ////
-							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 							}
 					}
@@ -354,12 +352,12 @@ void draw_monsters() ////
 								 ,k);
 								ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-									(scenario.ter_types[ter].picture == 143) && 
+									(scenario.ter_types[ter].special == TER_SPEC_BED) && 
 									((univ.town.monst.dudes[i].m_d.m_type < 7) 
 										&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
 									&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 									(width == 1) && (height == 1))
-										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); ////
+										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1,0); ////
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							}
@@ -691,10 +689,10 @@ void draw_party_symbol(short mode,location center)
 	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {////
 			i = first_active_pc();
 			source_rect = get_party_template_rect(i,(univ.party.direction < 4) ? 0 : 1);			
-
+		unsigned short ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			// now wedge in bed graphic
-			if ((is_town()) && (scenario.ter_types[univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y)].picture == 143))
-				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0); ////
+			if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
+				draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1,0); ////
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
 		else if (univ.party.in_boat >= 0) {
@@ -825,11 +823,10 @@ unsigned char get_t_t(char x,char y)  // returns terrain type at where
 // Is this is subterranean fluid that gets shore plopped down on it?
 bool is_fluid(unsigned char ter_type)////
 {
-
-	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
-		return true;
-	
-	return false;
+//	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
+//		return true;
+//	return false;
+	return scenario.ter_types[ter_type].trim_type == TRIM_FRILLS;
 }
 
 // Is this is subterranean beach that gets shore plopped down next to it?
@@ -837,10 +834,12 @@ bool is_shore(unsigned char ter_type)////
 {
 	if (is_fluid(ter_type) == true)
 		return false;
-	if (ter_type == 77)
+	if(scenario.ter_types[ter_type].trim_type = TRIM_WATERFALL)
 		return false;
-	if (ter_type == 90)
-		return false;
+//	if (ter_type == 77)
+//		return false;
+//	if (ter_type == 90)
+//		return false;
 /*	if (ter_type == 240)
 		return false;
 	if ((ter_type >= 117) && (ter_type <= 131))
@@ -1042,7 +1041,7 @@ void adjust_monst_menu()
 	for (i = 0; i < 256; i++) 	
 		if (on_monst_menu[i] >= 0) {
 			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf((char *) monst_name,"%s",scenario.scen_monsters[on_monst_menu[i]].m_name);
+			sprintf((char *) monst_name,"%s",scenario.scen_monsters[on_monst_menu[i]].m_name.c_str());
 			c2pstr((char*)monst_name);
 			AppendMenu(monst_menu,monst_name);
 			}

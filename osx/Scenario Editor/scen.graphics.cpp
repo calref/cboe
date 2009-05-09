@@ -10,6 +10,7 @@
 #include "scen.keydlgs.h"
 #include "soundtool.h"
 #include "mathutil.h"
+#include "boe.consts.h" // TODO: Put these constants in a global file
 
 #include "scen.core.h"
 #include "scen.townout.h"
@@ -78,12 +79,9 @@ GWorldPtr spec_scen_g = NULL;
 GWorldPtr ter_draw_gworld;
 GWorldPtr dlogpics_gworld;
 GWorldPtr talkfaces_gworld;
+GWorldPtr roads_gworld;
 GWorldPtr mixed_gworld;
 PixPatHandle map_pat[25];
-short small_icons[24] = {0,23,37,38,39,35,33,34,30,0,
-	30,26,0,0,36,0,27,28,29,20,
-21,22,0,0};
-
 
 // begin new stuff
 Rect blue_button_from = {120,91,134,107};
@@ -218,6 +216,145 @@ void init_dialogs(){
 	//return tmp;
 }
 
+short get_small_icon(unsigned short ter){
+	short icon;
+	switch(scenario.ter_types[ter].special){
+		case TER_SPEC_NONE:
+			icon = scenario.ter_types[ter].flag1;
+			break;
+		case TER_SPEC_CHANGE_WHEN_STEP_ON:
+			icon = 23;
+			break;
+		case TER_SPEC_DAMAGING:
+			switch(scenario.ter_types[ter].flag3){
+				case DAMAGE_WEAPON:
+					icon = 40;
+					break;
+				case DAMAGE_FIRE:
+					icon = 37;
+					break;
+				case DAMAGE_POISON:
+					icon = 43;
+					break;
+				case DAMAGE_MAGIC:
+					icon = 39;
+					break;
+				case DAMAGE_UNBLOCKABLE:
+					icon = 39;
+					break;
+				case DAMAGE_COLD:
+					icon = 38;
+					break;
+				case DAMAGE_UNDEAD:
+					icon = 18;
+					break;
+				case DAMAGE_DEMON:
+					icon = 19;
+					break;
+			}
+			break;
+		case TER_SPEC_BRIDGE:
+			icon = 42;
+			break;
+		case TER_SPEC_BED:
+			icon = -1;
+			break;
+		case TER_SPEC_DANGEROUS:
+			switch(scenario.ter_types[ter].flag3){
+				case STATUS_POISONED_WEAPON: // TODO: Do something here
+					break;
+				case STATUS_BLESS: // TODO: Do something here
+					break;
+				case STATUS_POISON:
+					icon = 35;
+					break;
+				case STATUS_HASTE: // TODO: Do something here
+					break;
+				case STATUS_INVULNERABLE: // TODO: Do something here
+					break;
+				case STATUS_MAGIC_RESISTANCE: // TODO: Do something here
+					break;
+				case STATUS_WEBS: // TODO: Do something here
+					break;
+				case STATUS_DISEASE:
+					icon = 33;
+					break;
+				case STATUS_INVISIBLE: // TODO: Do something here
+					break;
+				case STATUS_DUMB: // TODO: Do something here
+					break;
+				case STATUS_MARTYRS_SHIELD: // TODO: Do something here
+					break;
+				case STATUS_ASLEEP:
+					icon = 44;
+					break;
+				case STATUS_PARALYZED: // TODO: Do something here
+					break;
+				case STATUS_ACID:
+					icon = 41;
+					break;
+				case 14: // bless TODO: Do something here
+					break;
+				case 15: // haste TODO: Do something here
+					break;
+			}
+			break;
+		case TER_SPEC_CRUMBLING:
+			icon = 34;
+			break;
+		case TER_SPEC_LOCKABLE:
+			icon = 30;
+			break;
+		case TER_SPEC_UNLOCKABLE:
+			if (scenario.ter_types[ter].flag2 >= 5)
+				icon = (scenario.ter_types[ter].flag2 == 10) ? 32 : 31;
+			else icon = 30;
+			break;
+		case TER_SPEC_IS_A_SIGN:
+			icon = 26;
+			break;
+		case TER_SPEC_CALL_SPECIAL:
+			icon = scenario.ter_types[ter].flag3;
+			break;
+		case TER_SPEC_IS_A_CONTAINER:
+			icon = 36;
+			break;
+		case TER_SPEC_WATERFALL:
+			icon = -1;
+			break;
+		case TER_SPEC_CONVEYOR:
+			switch(scenario.ter_types[ter].flag1){ // TODO: Consider the other four possible directions
+				case DIR_N:
+					icon = 27;
+					break;
+				case DIR_E:
+					icon = 28;
+					break;
+				case DIR_S:
+					icon = 29;
+					break;
+				case DIR_W:
+					icon = 20;
+					break;
+			}
+			break;
+		case TER_SPEC_BLOCKED_TO_MONSTERS:
+			icon = 21;
+			break;
+		case TER_SPEC_TOWN_ENTRANCE:
+			icon = 22;
+			break;
+		case TER_SPEC_CHANGE_WHEN_USED:
+			icon = -1;
+			break;
+		case TER_SPEC_CALL_SPECIAL_WHEN_USED:
+			icon = scenario.ter_types[ter].flag3;
+			break;
+	}
+	if(icon == 255) icon = -1;
+	return icon;
+}
+
 void Set_up_win () {
 	short i,j;
 	for (i = 0; i < 70; i++){
@@ -294,6 +431,7 @@ void load_graphics(){
 	editor_mixed = load_pict(906);
 	anim_gworld = load_pict(820);
 	field_gworld = load_pict(821);
+	roads_gworld = load_pict(822);
 	talkfaces_gworld = load_pict(860);
 	items_gworld = load_pict(901);
 	tiny_obj_gworld = load_pict(900);
@@ -491,25 +629,20 @@ void set_up_terrain_buttons() {
 										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
 					
 				}
-				small_i = small_icons[scenario.ter_types[i].special];
-				if ((small_i == 30) && (scenario.ter_types[i].flag2 >= 5))
-					small_i = 31;
-				if ((small_i == 31) && (scenario.ter_types[i].flag2 == 10))
-					small_i = 32;
-				if (i == 82)
-					small_i = 3;
-				if (i == 83)
-					small_i = 2;
-				if ((i == 7) || (i == 10) || (i == 13) || (i == 16))
-					small_i = 23;
+				small_i = get_small_icon(i);
+//				if (i == 82)
+//					small_i = 3;
+//				if (i == 83)
+//					small_i = 2;
+//				if ((i == 7) || (i == 10) || (i == 13) || (i == 16))
+//					small_i = 23;
 				tiny_from = base_small_button_from;
 				OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
 				tiny_to = terrain_rects[i];
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
-				if (small_i > 0)
-					rect_draw_some_item(editor_mixed,
-										tiny_from,terrain_buttons_gworld,tiny_to,0,0);
+				if (small_i > 0 && small_i < 255)
+					rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to,0,0);
 			}
 			break;
 		case DRAW_MONST:
@@ -598,6 +731,11 @@ void draw_terrain(){
 					else t_to_draw = current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];
 				}
 				draw_one_terrain_spot(q,r,t_to_draw);
+				
+				if((editing_town  && is_field_type(cen_x + q - 4,cen_y + r - 4, 1)) ||
+				   (!editing_town && current_terrain.special_spot[cen_x + q - 4][cen_y + r - 4]))
+					Draw_Some_Item(roads_gworld, calc_rect(6, 0), ter_draw_gworld, where_draw, 1, 0);
+				
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
 				
@@ -625,11 +763,7 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
 					OffsetRect(&tiny_to,0,-7);
 				}
-				small_i = small_icons[scenario.ter_types[t_to_draw].special];
-				if ((small_i == 30) && (scenario.ter_types[t_to_draw].flag2 >= 5))
-					small_i = 31;
-				if ((small_i == 31) && (scenario.ter_types[t_to_draw].flag2 == 10))
-					small_i = 32;
+				small_i = get_small_icon(t_to_draw);
 				tiny_from = base_small_button_from;
 				OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
 				if (small_i > 0) {
@@ -1133,6 +1267,11 @@ void place_location() {
 	DrawString(draw_str);
 	//draw_cur_string();
 	
+	MoveTo(260 ,terrain_rects[255].top + 26);
+	sprintf((char*)draw_str,"%i",current_terrain_type);
+	c2pstr((char*) draw_str);
+	DrawString(draw_str);
+	
 	erase_rect.left = 2;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].bottom + 117;
@@ -1172,7 +1311,15 @@ void place_location() {
 			source_rect = get_template_rect(current_terrain_type);
 			rect_draw_some_item(terrain_gworld[picture_wanted / 50],source_rect,
 								terrain_buttons_gworld,draw_rect,0,0);
-		}	
+		}
+		short small_i = get_small_icon(current_terrain_type);
+		Rect tiny_to = draw_rect;
+		tiny_to.top = tiny_to.bottom - 7;
+		tiny_to.left = tiny_to.right - 7;
+		Rect tiny_from = base_small_button_from;
+		OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
+		if (small_i > 0 && small_i < 255)
+			rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to,0,0);
 	}
 	
 	draw_rect = terrain_buttons_rect;
@@ -1283,7 +1430,7 @@ void sort_specials() {
 bool is_field_type(short i,short j,short field_type) {
 	short k;
 	
-	for (k = 0; k < 50; k++)
+	for (k = 0; k < town->preset_fields.size(); k++)
 		if ((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j))
@@ -1296,21 +1443,26 @@ void make_field_type(short i,short j,short field_type) {
 	
 	if (is_field_type(i,j,field_type) == true)
 		return;
-	for (k = 0; k < 50; k++)
+	for (k = 0; k < town->preset_fields.size(); k++)
 		if (town->preset_fields[k].type == 0) {
 			town->preset_fields[k].loc.x = i;
 			town->preset_fields[k].loc.y = j;
 			town->preset_fields[k].type = field_type;
 			return;
 		}
-	give_error("Each town can have at most 50 fields and special effects (webs, barrels, blood stains, etc.). To place more, use the eraser first.","",0);
+	//give_error("Each town can have at most 50 fields and special effects (webs, barrels, blood stains, etc.). To place more, use the eraser first.","",0);
+	cTown::cField the_field;
+	the_field.loc.x = i;
+	the_field.loc.y = j;
+	the_field.type = field_type;
+	town->preset_fields.push_back(the_field);
 }
 
 
 void take_field_type(short i,short j,short field_type) {
 	short k;
 	
-	for (k = 0; k < 50; k++)
+	for (k = 0; k < town->preset_fields.size(); k++)
 		if ((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j)) {
@@ -1399,7 +1551,7 @@ bool container_there(location l) {
 	
 	if (editing_town == false)
 		return false;
-	if (scenario.ter_types[town->terrain(l.x,l.y)].special == 14)
+	if (scenario.ter_types[town->terrain(l.x,l.y)].special == TER_SPEC_IS_A_CONTAINER)
 		return true;
 	if (is_barrel(l.x,l.y) == true)
 		return true;

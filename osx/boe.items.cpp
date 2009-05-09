@@ -149,8 +149,8 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 			}
 			if (in_startup_mode == false) {
 				if (item.is_ident() == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name,item.full_name);
+					sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name.c_str(),item.name.c_str());
+					else sprintf((char *) announce_string,"  %s gets %s.",ADVEN[pc_num].name.c_str(),item.full_name.c_str());
 				if (print_result == true)
 					add_string_to_buf((char *)announce_string);
 				}
@@ -180,8 +180,8 @@ bool forced_give(short item_num,eItemAbil abil) ////
 				ADVEN[i].items[j] = item;
 			
 				if (item.is_ident() == 0)
-					sprintf((char *) announce_string,"  %s gets %s.",ADVEN[i].name,item.name);
-					else sprintf((char *) announce_string,"  %s gets %s.",ADVEN[i].name,item.full_name);
+					sprintf((char *) announce_string,"  %s gets %s.",ADVEN[i].name.c_str(),item.name.c_str());
+					else sprintf((char *) announce_string,"  %s gets %s.",ADVEN[i].name.c_str(),item.full_name.c_str());
 				add_string_to_buf((char *)announce_string);
 				combine_things(i);
 				sort_pc_items(i);
@@ -449,39 +449,39 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	ADVEN[pc_num].items[item_hit].set_enchanted(true);
 	switch (enchant_type) {
 		case 0:
-			sprintf((char *)store_name,"%s (+1)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (+1)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].bonus++;
 			ADVEN[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf((char *)store_name,"%s (+2)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (+2)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].bonus += 2;
 			ADVEN[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf((char *)store_name,"%s (+3)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (+3)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].bonus += 3;
 			ADVEN[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf((char *)store_name,"%s (F)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (F)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].ability = ITEM_SPELL_FLAME;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
 			ADVEN[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf((char *)store_name,"%s (F!)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (F!)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].value = new_val;
 			ADVEN[pc_num].items[item_hit].ability = ITEM_FLAMING_WEAPON;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf((char *)store_name,"%s (+5)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (+5)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].value = new_val;
 			ADVEN[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf((char *)store_name,"%s (B)",ADVEN[pc_num].items[item_hit].full_name);
+			sprintf((char *)store_name,"%s (B)",ADVEN[pc_num].items[item_hit].full_name.c_str());
 			ADVEN[pc_num].items[item_hit].bonus++;
 			ADVEN[pc_num].items[item_hit].ability = ITEM_BLESS_CURSE;
 			ADVEN[pc_num].items[item_hit].ability_strength = 5;
@@ -925,7 +925,7 @@ void put_item_graphics()
 	if (current_getting_pc < 6) {
 		i = amount_pc_can_carry(current_getting_pc);
 		storage = pc_carry_weight(current_getting_pc);
-		sprintf ((char *) message, "%s is carrying %d out of %d.",ADVEN[current_getting_pc].name,storage,i);
+		sprintf ((char *) message, "%s is carrying %d out of %d.",ADVEN[current_getting_pc].name.c_str(),storage,i);
 		csit(987,52,(char *) message);
 		}
 		

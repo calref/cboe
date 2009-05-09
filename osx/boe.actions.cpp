@@ -487,7 +487,7 @@ bool handle_action(EventRecord event)
 							add_string_to_buf("Rest: Not enough food.            ");
 						else if (nearest_monster() <= 3)
 							add_string_to_buf("Rest: Monster too close.            ");
-						else if ((scenario.ter_types[ter].special >= 2) && (scenario.ter_types[ter].special <= 6))
+						else if ((scenario.ter_types[ter].special == TER_SPEC_DAMAGING) || (scenario.ter_types[ter].special == TER_SPEC_DANGEROUS))
 							add_string_to_buf("Rest: It's dangerous here.");////
 						else if (flying() == true)
 							add_string_to_buf("Rest: Not while flying.           ");
@@ -626,7 +626,7 @@ bool handle_action(EventRecord event)
 						}
 					}
 					else if (overall_mode == MODE_COMBAT) {
-						if (which_combat_type == MODE_OUTDOORS) {
+						if (which_combat_type == 0) {
 							if (hit_end_c_button() == true) {
 								end_town_mode(0,univ.town.p_loc);
 								play_sound(93);
@@ -701,7 +701,7 @@ bool handle_action(EventRecord event)
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
 						if ((ADVEN[k].main_status == 1) && (ADVEN[k].status[6] > 0)) {
-							sprintf((char *) str,"%s cleans webs.",ADVEN[k].name);
+							sprintf((char *) str,"%s cleans webs.",ADVEN[k].name.c_str());
 							add_string_to_buf((char *) str);
 							ADVEN[k].status[6] = move_to_zero(ADVEN[k].status[6]);
 							ADVEN[k].status[6] = move_to_zero(ADVEN[k].status[6]);
@@ -787,7 +787,7 @@ bool handle_action(EventRecord event)
 						else need_redraw = true;					
 					
 					storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-					if (scenario.ter_types[storage].special == 21) {//// town entry
+					if (scenario.ter_types[storage].special == TER_SPEC_TOWN_ENTRANCE) {//// town entry
 
 						if (univ.party.direction == 0) find_direction_from = 2;
 						else if (univ.party.direction == 4) find_direction_from = 0;
@@ -1053,19 +1053,19 @@ bool handle_action(EventRecord event)
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == MODE_SHOPPING)
-										sprintf((char *) str,"Now shopping: %s",ADVEN[i].name);
-										else sprintf((char *) str,"Now active: %s",ADVEN[i].name);
+										sprintf((char *) str,"Now shopping: %s",ADVEN[i].name.c_str());
+										else sprintf((char *) str,"Now active: %s",ADVEN[i].name.c_str());
 									add_string_to_buf((char *)str);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							sprintf((char *) str,"%s has %d health out of %d.",ADVEN[i].name,
+							sprintf((char *) str,"%s has %d health out of %d.",ADVEN[i].name.c_str(),
 								ADVEN[i].cur_health,ADVEN[i].max_health);
 							add_string_to_buf((char *)str);
 							break;
 						case 2:
-							sprintf((char *) str,"%s has %d spell pts. out of %d.",ADVEN[i].name,
+							sprintf((char *) str,"%s has %d spell pts. out of %d.",ADVEN[i].name.c_str(),
 								ADVEN[i].cur_sp,ADVEN[i].max_sp);
 							add_string_to_buf((char *)str);
 							break;
@@ -1115,7 +1115,7 @@ bool handle_action(EventRecord event)
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											sprintf((char *) str,"Now active: %s",ADVEN[i].name);
+											sprintf((char *) str,"Now active: %s",ADVEN[i].name.c_str());
 											add_string_to_buf((char *)str);
 											adjust_spell_menus();
 											}
@@ -2314,7 +2314,7 @@ void handle_cave_lore()////
 	for (i = 0; i < 6; i++)
 		if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf((char *)str,"%s hunts.",ADVEN[i].name);
+			sprintf((char *)str,"%s hunts.",ADVEN[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();
@@ -2323,7 +2323,7 @@ void handle_cave_lore()////
 		if (
 		(ADVEN[i].main_status == 1) && (ADVEN[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf((char *)str,"%s hunts.",ADVEN[i].name);
+			sprintf((char *)str,"%s hunts.",ADVEN[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();
@@ -2577,7 +2577,7 @@ bool outd_move_party(location destination,bool forced)
 		// not in towns
 		&& ((scenario.ter_types[ter].boat_over == false)
 			|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
-			&& (scenario.ter_types[ter].special != 21)) {
+			&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE)) {
 					add_string_to_buf("You leave the boat.");
 					univ.party.in_boat = -1;
 					}
@@ -2586,7 +2586,7 @@ bool outd_move_party(location destination,bool forced)
 				return false;
 			else if ((outd_is_blocked(real_dest) == false) 
 				&& (scenario.ter_types[ter].boat_over == true)
-				&& (scenario.ter_types[ter].special != 21)) {
+				&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE)) {
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = true;
 					else {
@@ -2624,7 +2624,7 @@ bool outd_move_party(location destination,bool forced)
 			add_string_to_buf("Land before mounting horses.");
 			return false;
 			}
-		if ((scenario.ter_types[ter].special >= 2) && (scenario.ter_types[ter].special <= 4)) {
+		if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING) {
 			ASB("Your horses quite sensibly refuse.");
 			return false;
 			}
@@ -2652,7 +2652,7 @@ bool outd_move_party(location destination,bool forced)
 			(scenario.ter_types[ter].fly_over == true))   ) {
 		univ.party.direction = set_direction(univ.party.p_loc, destination); 
 
-		if ((flying() == true) && (scenario.ter_types[ter].special == 21)) {
+		if ((flying() == true) && (scenario.ter_types[ter].special == TER_SPEC_TOWN_ENTRANCE)) {
 			add_string_to_buf("Moved: You have to land first.               ");
 			return false;
 			}
@@ -2668,7 +2668,7 @@ bool outd_move_party(location destination,bool forced)
 		num_out_moves++;
 		
 		if (univ.party.in_boat >= 0) { // Waterfall!!!
-			while (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y + 1]].special == 15) {
+			while (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y + 1]].special == TER_SPEC_WATERFALL) { // TODO: Implement the 7 other possible directions
 				add_string_to_buf("  Waterfall!                     ");
 				univ.party.p_loc.y += 2;
 				univ.party.loc_in_sec.y += 2;
@@ -2755,33 +2755,33 @@ bool town_move_party(location destination,short forced)////
 	
 	if (keep_going == true) {
 		if (univ.party.in_boat >= 0) {
-				if ((is_blocked(destination) == false) && (is_special(destination) == false)
-				// If to bridge, exit if heading diagonal, keep going is head horiz or vert
-		&& ( (scenario.ter_types[ter].boat_over == false)
-		|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
-						add_string_to_buf("You leave the boat.             ");
-						univ.party.in_boat = -1;
-						}
-				else if ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
-					return false;	
-				// Crossing bridge: land or go through
-				else if ((is_blocked(destination) == false) && (scenario.ter_types[ter].boat_over == true)) {
-					if ((fancy_choice_dialog(1086,0)) == 1)
-						forced = true;
-						else if (is_blocked(destination) == false) {
-							add_string_to_buf("You leave the boat.             ");
-							univ.party.in_boat = -1;					
-							}				
-					}
-				// boat in destination
-				else if (town_boat_there(destination) < 30) {
-					add_string_to_buf("  Boat there already.             ");
-					return false;
-					}
-				// water or lava
-				else if (scenario.ter_types[ter].boat_over == true)
-					forced = true;
+			if ((!is_blocked(destination)) && (!is_special(destination))
+				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
+				&& ( (!scenario.ter_types[ter].boat_over)
+					|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
+				add_string_to_buf("You leave the boat.             ");
+				univ.party.in_boat = -1;
 			}
+			else if ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
+				return false;	
+			// Crossing bridge: land or go through
+			else if ((!is_blocked(destination)) && (scenario.ter_types[ter].boat_over) && (scenario.ter_types[ter].special == TER_SPEC_BRIDGE)) {
+				if ((fancy_choice_dialog(1086,0)) == 1)
+					forced = true;
+				else if (is_blocked(destination) == false) {
+					add_string_to_buf("You leave the boat.             ");
+					univ.party.in_boat = -1;					
+				}				
+			}
+			// boat in destination
+			else if (town_boat_there(destination) < 30) {
+				add_string_to_buf("  Boat there already.             ");
+				return false;
+			}
+			// water or lava
+			else if (scenario.ter_types[ter].boat_over == true)
+				forced = true;
+		}
 
 		if (((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
 			if (univ.party.boats[boat_there].property == true) {
@@ -2816,7 +2816,7 @@ bool town_move_party(location destination,short forced)////
 		} 
 		else if ((is_blocked(destination) == false) || (forced == 1)) {
 			if (univ.party.in_horse >= 0) {
-				if ((scenario.ter_types[ter].special >= 2) && (scenario.ter_types[ter].special <= 4)) {
+				if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 					}
@@ -2840,7 +2840,7 @@ bool town_move_party(location destination,short forced)////
 			
 			if (univ.party.in_boat >= 0) {
 				// Waterfall!!!
-				while (scenario.ter_types[univ.town->terrain(destination.x,destination.y + 1)].special == 15) {
+				while (scenario.ter_types[univ.town->terrain(destination.x,destination.y + 1)].special == TER_SPEC_WATERFALL) { // TODO: Implement the other 7 possible directions
 					add_string_to_buf("  Waterfall!                     ");
 					destination.y += 2;
 					univ.town.p_loc.y += 2;
@@ -2942,7 +2942,7 @@ short count_walls(location loc)
 bool is_sign(unsigned char ter)
 {
 	
-	if (scenario.ter_types[ter].special == 11)
+	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_SIGN)
 		return true;
 	return false;
 }

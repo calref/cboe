@@ -77,20 +77,20 @@ short set_direction (location old_pt, location new_pt)
 {
 	if (old_pt.x == new_pt.x)
 		if (old_pt.y > new_pt.y)
-			return 0;
-		else return 4;
+			return DIR_N;
+		else return DIR_S;
 	if (old_pt.x > new_pt.x) {
 		if (old_pt.y > new_pt.y)
-			return 7;
+			return DIR_NW;
 		if (old_pt.y < new_pt.y)
-			return 5;
-			return 6;
-		}
+			return DIR_SW;
+		return DIR_W;
+	}
 	if (old_pt.y > new_pt.y)
-		return 1;
+		return DIR_NE;
 	if (old_pt.y < new_pt.y)
-		return 3;
-	return 2;	
+		return DIR_SE;
+	return DIR_E;	
 }
 
 location global_to_local(location global)
@@ -322,7 +322,7 @@ bool is_container(location loc)
 	if ((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
 	ter = coord_to_ter(loc.x,loc.y);
-	if (scenario.ter_types[ter].special == 14)
+	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_CONTAINER)
 			return true;
 	return false;
 }
@@ -393,10 +393,10 @@ bool is_blocked(location to_check)
 			}
 			
 		// Keep away from marked specials during combat
-		if ((is_combat()) && (gr <= 212) && (gr >= 207))
+		if ((is_combat()) && univ.town.is_spot(to_check.x, to_check.y))
 			return true;
 		if ((is_combat()) && (gr == 406))
-			return true;
+			return true; // TODO: Replace gr == 406 with a blockage == clear/special && is_special() check
 			
 		// Party there?
 		if (is_town())
@@ -755,8 +755,7 @@ void alter_space(short i,short j,unsigned char ter)
 		else {
 			univ.town->terrain(i,j) = ter;
 			combat_terrain[i][j] = ter;
-			if ((scenario.ter_types[univ.town->terrain(i,j)].special >= 16) &&
-				(scenario.ter_types[univ.town->terrain(i,j)].special <= 19))
-					belt_present = true;	
+			if (scenario.ter_types[univ.town->terrain(i,j)].special == TER_SPEC_CONVEYOR)
+				belt_present = true;	
 			}
 }

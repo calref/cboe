@@ -195,13 +195,13 @@ short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,sho
 
 void oops_error(short error, short code, short mode){ // mode is 0 for scened, 1 for game, 2 for pced
 	Str255 error_str1, error_str2;
-	static const char* progname[] = {"the scenario editor", "Blades of Exile", "the PC editor"};
-	static const char* filetname[] = {"scenario", "game", "game"};
+	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};
+	static const char* filetname[3] = {"scenario", "game", "game"};
 	
 	SysBeep(50);
 	SysBeep(50);
 	SysBeep(50);
-	sprintf("The program encountered an error while loading/saving/creating the %s. To prevent future problems, the program will now terminate. Trying again may solve the problem.", filetname[mode]);
+	sprintf((char*)error_str1,"The program encountered an error while loading/saving/creating the %s. To prevent future problems, the program will now terminate. Trying again may solve the problem.", filetname[mode]);
 	sprintf((char *) error_str2,"Giving %s more memory might also help. Be sure to back your %s up often. Error number: %d.",progname[mode],filetname[mode],error);
 	if(code != 0)
 		sprintf((char*) error_str2,"%s Result code: %i.",error_str2,code);

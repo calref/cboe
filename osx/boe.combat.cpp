@@ -1607,7 +1607,7 @@ bool combat_next_step()
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
 			sprintf((char *)create_line, "Active:  %s (#%d, %d ap.)                     ",
-				ADVEN[current_pc].name,current_pc + 1,ADVEN[current_pc].ap);         
+				ADVEN[current_pc].name.c_str(),current_pc + 1,ADVEN[current_pc].ap);         
 			add_string_to_buf((char *)create_line);
 			print_buf();
 		}

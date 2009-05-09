@@ -224,7 +224,7 @@ void check_for_intel(){
 	OSErr err;
 	err = Gestalt(gestaltSysArchitecture,&response);
 	if(err != noErr){
-		printf("Gestalt error %i\n");
+		printf("Gestalt error %i\n",err);
 		exit(1);
 	}
 	if(response == gestaltIntel) mac_is_intel = true;

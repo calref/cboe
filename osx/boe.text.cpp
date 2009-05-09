@@ -355,12 +355,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 							//// 
 							if (!ADVEN[pc].items[i_num].is_ident())
-								sprintf((char *) to_draw, "%s  ",ADVEN[pc].items[i_num].name);
+								sprintf((char *) to_draw, "%s  ",ADVEN[pc].items[i_num].name.c_str());
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((ADVEN[pc].items[i_num].charges > 0) && (ADVEN[pc].items[i_num].type != 2)
 										&& (stat_screen_mode <= 1))
-										sprintf((char *) to_draw, "%s (%d)",ADVEN[pc].items[i_num].full_name,ADVEN[pc].items[i_num].charges);
-										else sprintf((char *) to_draw, "%s",ADVEN[pc].items[i_num].full_name);
+										sprintf((char *) to_draw, "%s (%d)",ADVEN[pc].items[i_num].full_name.c_str(),ADVEN[pc].items[i_num].charges);
+										else sprintf((char *) to_draw, "%s",ADVEN[pc].items[i_num].full_name.c_str());
 									}
 						dest_rect.left -= 2;
 						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10,false);

@@ -663,16 +663,20 @@ void cure_party(short amt)
 
 }
 
+// if how_much < 0, bless
 void curse_pc(short which_pc,short how_much)
 {
 	if (ADVEN[which_pc].main_status != 1)
 		return;
 	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[1] = max(ADVEN[which_pc].status[1] - how_much,-8);
-		sprintf ((char *) c_line, "  %s cursed.",(char *) ADVEN[which_pc].name.c_str());
+		ADVEN[which_pc].status[1] = minmax(-8,8,ADVEN[which_pc].status[1] - how_much);
+		if(how_much < 0)
+			sprintf ((char *) c_line, "  %s blessed.",(char *) ADVEN[which_pc].name.c_str());
+		else sprintf ((char *) c_line, "  %s cursed.",(char *) ADVEN[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 	put_pc_screen();
+	if (how_much < 0)
 		give_help(59,0,0);
 }
 
@@ -1403,7 +1407,7 @@ void give_party_spell(short which) ////
 			if (ADVEN[i].mage_spells[which] == false) {
 				ADVEN[i].mage_spells[which] = true;
 				if (ADVEN[i].main_status == 1)
-					sprintf((char *) str,"%s learns spell.",ADVEN[i].name);
+					sprintf((char *) str,"%s learns spell.",ADVEN[i].name.c_str());
 				give_help(41,0,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
@@ -1412,7 +1416,7 @@ void give_party_spell(short which) ////
 			if (ADVEN[i].priest_spells[which - 100] == false) {
 				ADVEN[i].priest_spells[which - 100] = true;
 				if (ADVEN[i].main_status == 1)
-					sprintf((char *) str,"%s learns spell.",ADVEN[i].name);
+					sprintf((char *) str,"%s learns spell.",ADVEN[i].name.c_str());
 				give_help(41,0,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
@@ -1588,7 +1592,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					}
 				if ((spell_num == 29) && (target < 6)) {
 						ADVEN[target].status[5] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
-						sprintf ((char *) c_line, "  %s protected.",ADVEN[target].name);
+						sprintf ((char *) c_line, "  %s protected.",ADVEN[target].name.c_str());
 					}
 				add_string_to_buf((char *) c_line);	
 			break;
@@ -2072,27 +2076,24 @@ void cast_town_spell(location where) ////
 				break;
 				
 			case 20:
-				switch (scenario.ter_types[ter].special) { ////
-					case 9: case 10:
+				if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
+					if (scenario.ter_types[ter].flag2 == 10)
+						r1 = 10000;
+					else{
 						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * univ.town.difficulty;
 						r1 += scenario.ter_types[ter].flag2 * 7;
-						if (scenario.ter_types[ter].flag2 == 10)
-							r1 = 10000;
-						if (r1 < (135 - combat_percent[min(19,ADVEN[who_cast].level)])) {
-							add_string_to_buf("  Door unlocked.                 ");
-							play_sound(9);
-							univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
-							}
-							else {
-								play_sound(41);
-								add_string_to_buf("  Didn't work.                  ");
-								}
-						break;
-
-					default:
-						add_string_to_buf("  Wrong terrain type.               ");
-						break;
 					}
+					if (r1 < (135 - combat_percent[min(19,ADVEN[who_cast].level)])) {
+						add_string_to_buf("  Door unlocked.                 ");
+						play_sound(9);
+						univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
+					}
+					else {
+						play_sound(41);
+						add_string_to_buf("  Didn't work.                  ");
+					}
+				}else
+					add_string_to_buf("  Wrong terrain type.               ");
 				break;
 				
 			case 41:
@@ -2135,14 +2136,14 @@ void sanctify_space(location where)
 	add_string_to_buf("  Nothing happens.");
 }
 
-void crumble_wall(location where)
+void crumble_wall(location where) // TODO: Add something like this to the spreading quickfire function
 {
 	unsigned char ter;
 	
 	if (loc_off_act_area(where) == true)
 		return;
 	ter = univ.town->terrain(where.x,where.y);
-	if (scenario.ter_types[ter].special == 7) {
+	if (scenario.ter_types[ter].special == TER_SPEC_CRUMBLING && scenario.ter_types[ter].flag3 < 2) {
 			play_sound(60);
 				univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
 			add_string_to_buf("  Barrier crumbles.");	
@@ -2169,16 +2170,16 @@ void do_mindduel(short pc_num,cCreature *monst)
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
-			sprintf((char *)c_line, "  %s is drained %d.",ADVEN[pc_num].name,r2);
+			sprintf((char *)c_line, "  %s is drained %d.",ADVEN[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
 			monst->m_d.mp += r2;
 			balance++;
 			if (ADVEN[pc_num].cur_sp == 0) {
 				ADVEN[pc_num].status[9] += 2;
-				sprintf((char *) c_line,"  %s is dumbfounded.",ADVEN[pc_num].name);
+				sprintf((char *) c_line,"  %s is dumbfounded.",ADVEN[pc_num].name.c_str());
 				add_string_to_buf((char *) c_line);
 				if (ADVEN[pc_num].status[9] > 7) {
-					sprintf((char *) c_line,"  %s is killed!",ADVEN[pc_num].name);
+					sprintf((char *) c_line,"  %s is killed!",ADVEN[pc_num].name.c_str());
 					add_string_to_buf((char *) c_line);
 					kill_pc(pc_num,MAIN_STATUS_DEAD);
 					}
@@ -2189,7 +2190,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 					}
 			}
 		if (r1 > 70) {
-			sprintf((char *)c_line, "  %s drains %d.",ADVEN[pc_num].name,r2);
+			sprintf((char *)c_line, "  %s drains %d.",ADVEN[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
 			ADVEN[pc_num].cur_sp += r2;
 			balance--;
@@ -2960,7 +2961,7 @@ short alch_choice(short pc_num)
 			cd_activate_item(1047,9 + i * 2,0);
 		}
 	sprintf((char *) get_text, "%s (skill %d)", 
-		ADVEN[pc_num].name,ADVEN[pc_num].skills[12]);
+		ADVEN[pc_num].name.c_str(),ADVEN[pc_num].skills[12]);
 	cd_set_item_text(1047,4,get_text);
 	if (univ.party.help_received[20] == 0) {
 		cd_initial_draw(1047);
@@ -3479,7 +3480,7 @@ void set_pc_moves()
 					else { // do webs
 						ADVEN[i].ap = max(0,ADVEN[i].ap - ADVEN[i].status[6] / 2);
 						if (ADVEN[i].ap == 0) {
-							sprintf((char *) c_line,"%s must clean webs.",ADVEN[i].name);
+							sprintf((char *) c_line,"%s must clean webs.",ADVEN[i].name.c_str());
 							add_string_to_buf((char *) c_line);
 							ADVEN[i].status[6] = max(0,ADVEN[i].status[6] - 3);
 							}

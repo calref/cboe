@@ -9,12 +9,18 @@
 #include "classes.h"
 #include "oldstructs.h"
 
+extern cScenario scenario;
+
 __attribute__((deprecated))
 cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 	int i,j;
 	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++)
+		for(j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
+			if(scenario.ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
+				special_spot[i][j] = true;
+			else special_spot[i][j] = false;
+		}
 	for(i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;

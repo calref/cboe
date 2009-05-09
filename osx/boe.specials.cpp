@@ -145,7 +145,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // sets forced to true if definitely can enter
 {
 	unsigned short ter;
-	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,ter_flag3,pic_type = 0,ter_pic = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	bool can_enter = true;
 	location out_where,from_loc,to_loc;
@@ -171,15 +171,15 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	ter_special = scenario.ter_types[ter].special;
 	ter_flag1 = scenario.ter_types[ter].flag1;
 	ter_flag2 = scenario.ter_types[ter].flag2;
+	ter_flag3 = scenario.ter_types[ter].flag3;
 	ter_pic = scenario.ter_types[ter].picture;
 
-		if ((mode > 0) && (ter_special >= 16) && 
-			(ter_special <= 19)) {
+		if ((mode > 0) && (ter_special == TER_SPEC_CONVEYOR)) {
 			if (
-				((ter_special == 16) && (where_check.y > from_loc.y)) ||
-				((ter_special == 17) && (where_check.x < from_loc.x)) ||
-				((ter_special == 18) && (where_check.y < from_loc.y)) ||
-				((ter_special == 19) && (where_check.x > from_loc.x)) ) {
+				((ter_flag3 == DIR_N) && (where_check.y > from_loc.y)) ||
+				((ter_flag3 == DIR_E) && (where_check.x < from_loc.x)) ||
+				((ter_flag3 == DIR_S) && (where_check.y < from_loc.y)) ||
+				((ter_flag3 == DIR_W) && (where_check.x > from_loc.x)) ) {
 					ASB("The moving floor prevents you.");
 					return false;
 					}
@@ -202,11 +202,11 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 						put_pc_screen();	
 						put_item_screen(stat_window,0);	
 					}
-				}
+			}
 
-	if ((is_combat()) && (((ter_pic <= 207) && (ter_pic >= 212)) || (ter_pic == 406))) {
+	if ((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) || (ter_pic == 406))) {
 		ASB("Move: Can't trigger this special in combat.");
-		return false;
+		return false; // TODO: Replace ter_pic == 406 with a blockage == clear/special && is_special() check
 		}
 
 	if (((mode == 1) || ((mode == 2) && (which_combat_type == 1)))
@@ -221,8 +221,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 						*forced = true;
 						}
 					*spec_num = univ.town->spec_id[i];
-					if ((is_blocked(where_check) == false) || (ter_special == 1)
-	 					|| (ter_special == 12) || (ter_special == 13)) {
+					if ((is_blocked(where_check) == false) || (ter_special == TER_SPEC_CHANGE_WHEN_STEP_ON)
+	 					|| (ter_special == TER_SPEC_CALL_SPECIAL)) {
 						give_help(54,0,0);
 						run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 						if (s1 > 0)
@@ -231,59 +231,58 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 					}
 			put_pc_screen();	
 			put_item_screen(stat_window,0);	
-		}
+	}
 	
 	if (can_enter == false)
 		return false;
 	
 	if ((!is_out()) && (overall_mode < MODE_TALKING)) {
-	check_fields(where_check,mode,which_pc);
-
-	if (univ.town.is_web(where_check.x,where_check.y)) {
-		add_string_to_buf("  Webs!               ");
-		if (mode < 2) {
-			suppress_stat_screen = true;
-			for (i = 0; i < 6; i++) {
-				r1 = get_ran(1,2,3);
-				web_pc(i,r1);
+		check_fields(where_check,mode,which_pc);
+		
+		if (univ.town.is_web(where_check.x,where_check.y)) {
+			add_string_to_buf("  Webs!               ");
+			if (mode < 2) {
+				suppress_stat_screen = true;
+				for (i = 0; i < 6; i++) {
+					r1 = get_ran(1,2,3);
+					web_pc(i,r1);
 				}
-			suppress_stat_screen = true;
-			put_pc_screen();	
+				suppress_stat_screen = true;
+				put_pc_screen();	
 			}
 			else web_pc(current_pc,get_ran(1,2,3));
-		univ.town.set_web(where_check.x,where_check.y,false);
+			univ.town.set_web(where_check.x,where_check.y,false);
 		}
-	if (univ.town.is_force_barr(where_check.x,where_check.y)) {
-		add_string_to_buf("  Magic barrier!               ");	
-		can_enter = false;
+		if (univ.town.is_force_barr(where_check.x,where_check.y)) {
+			add_string_to_buf("  Magic barrier!               ");	
+			can_enter = false;
 		}
-	if (univ.town.is_crate(where_check.x,where_check.y)) {
-		add_string_to_buf("  You push the crate.");
-		to_loc = push_loc(from_loc,where_check);
-		univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
-		if (to_loc.x > 0)
-			univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
-		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
-			 && (univ.town.items[i].is_contained() == true))
-			 	univ.town.items[i].item_loc = to_loc;
+		if (univ.town.is_crate(where_check.x,where_check.y)) {
+			add_string_to_buf("  You push the crate.");
+			to_loc = push_loc(from_loc,where_check);
+			univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
+			if (to_loc.x > 0)
+				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
+			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+					&& (univ.town.items[i].is_contained() == true))
+					univ.town.items[i].item_loc = to_loc;
 		}
-	if (univ.town.is_barrel(where_check.x,where_check.y)) {
-		add_string_to_buf("  You push the barrel.");
-		to_loc = push_loc(from_loc,where_check);
-		univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
-		if (to_loc.x > 0)
-			univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
-		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
-			 && (univ.town.items[i].is_contained()))
-			 	univ.town.items[i].item_loc = to_loc;
+		if (univ.town.is_barrel(where_check.x,where_check.y)) {
+			add_string_to_buf("  You push the barrel.");
+			to_loc = push_loc(from_loc,where_check);
+			univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
+			if (to_loc.x > 0)
+				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
+			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+					&& (univ.town.items[i].is_contained()))
+					univ.town.items[i].item_loc = to_loc;
 		}
-		}
-
+	}
 
 	switch (ter_special) {
-		case 1: 
+		case TER_SPEC_CHANGE_WHEN_STEP_ON: 
 			alter_space(where_check.x,where_check.y,ter_flag1);
 			if (ter_flag2 < 200) {
 				play_sound(-1 * ter_flag2);
@@ -292,25 +291,38 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (scenario.ter_types[ter].blockage > 2)
 				can_enter = false;
 			break;
-		case 2: case 3:case 4:
+		case TER_SPEC_DAMAGING:
 			if (flying())
 				break;
-			if (ter_special == 2) {
-				add_string_to_buf("  It's hot!");
-				dam_type = DAMAGE_FIRE; pic_type = 0;
-				if (PSD[SDF_PARTY_FIREWALK] > 0) {
-					add_string_to_buf("  It doesn't affect you.");			
-					break;
+			if(ter_flag3 > 0 && ter_flag3 < 8)
+				dam_type = (eDamageType) ter_flag3;
+			else dam_type = DAMAGE_WEAPON;
+			switch(dam_type){
+				case DAMAGE_FIRE:
+					add_string_to_buf("  It's hot!");
+					pic_type = 0;
+					if (PSD[SDF_PARTY_FIREWALK] > 0) {
+						add_string_to_buf("  It doesn't affect you.");			
+						goto LBL_NO_DAMAGE;
 					}
-				}
-			if (ter_special == 3) {
-				add_string_to_buf("  You feel cold!");
-				dam_type = DAMAGE_COLD; pic_type = 4;
-				}
-			if (ter_special == 4) {
-				add_string_to_buf("  Something shocks you!");
-				dam_type = DAMAGE_MAGIC; pic_type = 1;
-				}
+				case DAMAGE_COLD:
+					add_string_to_buf("  You feel cold!");
+					pic_type = 4;
+				case DAMAGE_MAGIC:
+				case DAMAGE_UNBLOCKABLE:
+					add_string_to_buf("  Something shocks you!");
+					pic_type = 1;
+				case DAMAGE_WEAPON:
+					add_string_to_buf("  You feel pain!");
+					pic_type = 3;
+				case DAMAGE_POISON:
+					add_string_to_buf("  You suddenly feel very ill for a moment...");
+					pic_type = 2;
+				case DAMAGE_UNDEAD:
+				case DAMAGE_DEMON:
+					add_string_to_buf("  A dark wind blows through you!");
+					pic_type = 1; // TODO: Verify that this is correct
+			}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
 				hit_party(r1,dam_type);
@@ -320,47 +332,96 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
-			break;
-		case 5: case 6:
+			LBL_NO_DAMAGE: break;
+		case TER_SPEC_DANGEROUS:
 			if (flying())
 				break;
 			if (univ.party.in_boat >= 0)
 				return true;
 			//one_sound(17);
-			if (mode < 2) {
-				for (i = 0; i < 6; i++) 
-					if (ADVEN[i].main_status == 1) 
-						{
-						if (get_ran(1,1,100) <= ter_flag2) {
-							if (ter_special == 5)
+			if (mode == 2) i = which_pc; else i = 0;
+			for ( ; i < 6; i++) 
+				if (ADVEN[i].main_status == 1) {
+					if (get_ran(1,1,100) <= ter_flag2) {
+						switch(ter_flag3){
+							case STATUS_POISONED_WEAPON: // TODO: Do something here
+								break;
+							case STATUS_BLESS:
+								curse_pc(i,ter_flag1);
+								break;
+							case STATUS_POISON:
 								poison_pc(i,ter_flag1);
-								else disease_pc(i,ter_flag1);
-							}
+								break;
+							case STATUS_HASTE:
+								slow_pc(i,ter_flag1);
+								break;
+							case STATUS_INVULNERABLE: // TODO: Do something here
+								break;
+							case STATUS_MAGIC_RESISTANCE: // TODO: Do something here
+								break;
+							case STATUS_WEBS:
+								web_pc(i,ter_flag1);
+								break;
+							case STATUS_DISEASE:
+								disease_pc(i,ter_flag1);
+								break;
+							case STATUS_INVISIBLE:
+								void_sanctuary(i);
+								break;
+							case STATUS_DUMB:
+								dumbfound_pc(i,ter_flag1);
+								break;
+							case STATUS_MARTYRS_SHIELD: // TODO: Do something here
+								break;
+							case STATUS_ASLEEP:
+								sleep_pc(i,ter_flag1,STATUS_ASLEEP,ter_flag1);
+								break;
+							case STATUS_PARALYZED: // TODO: Do something here
+								break;
+							case STATUS_ACID:
+								acid_pc(i,ter_flag1);
+								break;
+							case 14: // bless
+								curse_pc(i,-ter_flag1);
+								break;
+							case 15: // haste
+								slow_pc(i,-ter_flag1);
+								break;
 						}
+						if(mode == 2) break; // only damage once in combat!
+					}
 				}
 			//print_nums(1,which_pc,current_pc);
-			if (mode == 2) {
-						if (get_ran(1,1,100) <= ter_flag2){
-							if (ter_special == 5)
-								poison_pc(which_pc,ter_flag1);
-								else disease_pc(which_pc,ter_flag1);
-							}
-					}
+//			if (mode == 2) {
+//						if (get_ran(1,1,100) <= ter_flag2){
+//							if (ter_special == 5)
+//								poison_pc(which_pc,ter_flag1);
+//								else disease_pc(which_pc,ter_flag1);
+//							}
+//					}
 			break;
-		case 12: // local special
-			run_special(mode,2,ter_flag1,where_check,&s1,&s2,&s3);
+		case TER_SPEC_CALL_SPECIAL:{
+			short spec_type = 0;
+			if(ter_flag2 == 3){
+				if(mode == 1 || (mode == 2 && which_combat_type == 1)) spec_type = 2; else spec_type = 1;
+			}else if(ter_flag2 == 2 && (mode == 0 || (mode == 2 && which_combat_type == 0)))
+				spec_type = 1;
+			else if(ter_flag2 == 1 && (mode == 1 || (mode == 2 && which_combat_type == 1)))
+				spec_type = 2;
+			run_special(mode,spec_type,ter_flag1,where_check,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_enter = false;
 			break;
-		case 13: // global special
-			run_special(mode,0,ter_flag1,where_check,&s1,&s2,&s3);
-					if (s1 > 0)
-						can_enter = false;
-			break;
+		}
+//		case 13: // global special
+//			run_special(mode,0,ter_flag1,where_check,&s1,&s2,&s3);
+//					if (s1 > 0)
+//						can_enter = false;
+//			break;
 
 			
 		// Locked doors
-		case 9: case 10:
+		case TER_SPEC_UNLOCKABLE:
 			if (is_combat()) {  // No lockpicking in combat
 				add_string_to_buf("  Can't enter: It's locked.");
 				break;
@@ -561,8 +622,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	if (take_charge == true) {
 		if (!ADVEN[pc].items[item].is_ident())
-			sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].name);
-			else sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].full_name);
+			sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].name.c_str());
+			else sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].full_name.c_str());
 		add_string_to_buf((char *) to_draw);
 
 		if ((ADVEN[pc].items[item].variety == 7) &&
@@ -956,7 +1017,7 @@ bool use_space(location where)
 			 	univ.town.items[i].item_loc = to_loc;
 		}
 		
-	if (scenario.ter_types[ter].special == 22) {
+	if (scenario.ter_types[ter].special == TER_SPEC_CHANGE_WHEN_USED) {
 			if (where == from_loc) {
 				add_string_to_buf("  Not while on space.");
 				return false;
@@ -965,8 +1026,16 @@ bool use_space(location where)
 			alter_space(where.x,where.y,scenario.ter_types[ter].flag1);
 			play_sound(scenario.ter_types[ter].flag2);
 			return true;
-	}else if (scenario.ter_types[ter].special == 23) // call special
-			run_special(17,0,scenario.ter_types[ter].flag1,where,&i,&i,&i);
+	}else if (scenario.ter_types[ter].special == TER_SPEC_CALL_SPECIAL_WHEN_USED){ // call special
+		short spec_type = 0;
+		if(scenario.ter_types[ter].flag2 == 3){
+			if((is_town() || (is_combat() && which_combat_type == 1))) spec_type = 2; else spec_type = 1;
+		}else if(scenario.ter_types[ter].flag2 == 1 && (is_town() || (is_combat() && which_combat_type == 1)))
+			spec_type = 2;
+		else if(scenario.ter_types[ter].flag2 == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
+			spec_type = 1;
+		run_special(17,spec_type,scenario.ter_types[ter].flag1,where,&i,&i,&i);
+	}
 	add_string_to_buf("  Nothing to use.");
 
 	return false;
@@ -1428,7 +1497,7 @@ void push_things()////
 	unsigned char ter;
 	location l;
 	
-	if (is_out())
+	if (is_out()) // TODO: Make these work outdoors
 		return;
 	if (belt_present == false)
 		return;
@@ -1437,11 +1506,11 @@ void push_things()////
 		if (univ.town.monst.dudes[i].active > 0) {
 			l = univ.town.monst.dudes[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].special) {
-				case 16: l.y--; break;
-				case 17: l.x++; break;
-				case 18: l.y++; break;
-				case 19: l.x--; break;
+			switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				case DIR_N: l.y--; break;
+				case DIR_E: l.x++; break;
+				case DIR_S: l.y++; break;
+				case DIR_W: l.x--; break;
 				}
 			if (l != univ.town.monst.dudes[i].cur_loc) {
 				univ.town.monst.dudes[i].cur_loc = l;
@@ -1454,11 +1523,11 @@ void push_things()////
 		if (univ.town.items[i].variety > 0) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].special) {
-				case 16: l.y--; break;
-				case 17: l.x++; break;
-				case 18: l.y++; break;
-				case 19: l.x--; break;
+			switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				case DIR_N: l.y--; break;
+				case DIR_E: l.x++; break;
+				case DIR_S: l.y++; break;
+				case DIR_W: l.x--; break;
 				}
 			if (l != univ.town.items[i].item_loc) {
 				univ.town.items[i].item_loc = l;
@@ -1471,15 +1540,15 @@ void push_things()////
 	if (is_town()) {
 		ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		l = univ.town.p_loc;
-		switch (scenario.ter_types[ter].special) {
-			case 16: l.y--; break;
-			case 17: l.x++; break;
-			case 18: l.y++; break;
-			case 19: l.x--; break;
+		switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+			case DIR_N: l.y--; break;
+			case DIR_E: l.x++; break;
+			case DIR_S: l.y++; break;
+			case DIR_W: l.x--; break;
 			}
 		if (l != univ.town.p_loc) {
 			ASB("You get pushed.");
-			if (scenario.ter_types[ter].special >= 16)	
+			if (scenario.ter_types[ter].special == TER_SPEC_CONVEYOR)	
 				draw_terrain(0);
 			center = l;
 			univ.town.p_loc = l;
@@ -1506,16 +1575,16 @@ void push_things()////
 			if (ADVEN[i].main_status == 1) {
 				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
-				switch (scenario.ter_types[ter].special) {
-					case 16: l.y--; break;
-					case 17: l.x++; break;
-					case 18: l.y++; break;
-					case 19: l.x--; break;
+				switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					case DIR_N: l.y--; break;
+					case DIR_E: l.x++; break;
+					case DIR_S: l.y++; break;
+					case DIR_W: l.x--; break;
 					}
 				if (l != pc_pos[i]) {
 					ASB("Someone gets pushed.");	
 					ter = univ.town->terrain(l.x,l.y);
-					if (scenario.ter_types[ter].special >= 16)	
+					if (scenario.ter_types[ter].special == TER_SPEC_CONVEYOR)	
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
@@ -2490,7 +2559,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 171:
 			set_terrain(l,spec.ex2a);
-			if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = true;
 			draw_map(modeless_dialogs[5],10);
@@ -2498,12 +2567,12 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 172:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
 				set_terrain(l,spec.ex2b);
-				if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+				if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 			}
 			else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
 				set_terrain(l,spec.ex2a);
-				if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+				if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 			}
 			*redraw = 1;
@@ -2512,7 +2581,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 173:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
-			if(scenario.ter_types[spec.ex2a].special >= 16 && scenario.ter_types[spec.ex2a].special <=19)
+			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = 1;
 			draw_map(modeless_dialogs[5],10);
@@ -2547,13 +2616,13 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 177:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if (scenario.ter_types[ter].special == 8)
+			if (scenario.ter_types[ter].special == TER_SPEC_LOCKABLE)
 				set_terrain(l,scenario.ter_types[ter].flag1);
 			*redraw = 1;
 			break;
 		case 178:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if ((scenario.ter_types[ter].special == 9) || (scenario.ter_types[ter].special == 10))
+			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE)
 				set_terrain(l,scenario.ter_types[ter].flag1);
 			*redraw = 1;
 			break;
@@ -2884,7 +2953,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 214:
 			if (get_ran(1,1,100) <= spec.sd2){
 				set_terrain(l,spec.sd1);
-				if(scenario.ter_types[spec.sd1].special >= 16 && scenario.ter_types[spec.sd1].special <=19)
+				if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
 				draw_map(modeless_dialogs[5],10);
@@ -2893,14 +2962,14 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 215:
 			if (coord_to_ter(i,j) == spec.sd1){
 				set_terrain(l,spec.sd2);
-				if(scenario.ter_types[spec.sd2].special >= 16 && scenario.ter_types[spec.sd2].special <=19)
+				if(scenario.ter_types[spec.sd2].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
 				draw_map(modeless_dialogs[5],10);
 			}
 			else if (coord_to_ter(i,j) == spec.sd2){
 				set_terrain(l,spec.sd1);
-				if(scenario.ter_types[spec.sd1].special >= 16 && scenario.ter_types[spec.sd1].special <=19)
+				if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
 				draw_map(modeless_dialogs[5],10);
@@ -2909,7 +2978,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 216:
 			ter = coord_to_ter(i,j);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
-			if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+			if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = true;
 			draw_map(modeless_dialogs[5],10);
@@ -2918,7 +2987,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			ter = coord_to_ter(i,j);
 			if (scenario.ter_types[ter].special == 8){
 				set_terrain(l,scenario.ter_types[ter].flag1);
-				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
 				draw_map(modeless_dialogs[5],10);
@@ -2926,9 +2995,9 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 218:
 			ter = coord_to_ter(i,j);
-			if ((scenario.ter_types[ter].special == 9) || (scenario.ter_types[ter].special == 10)){
+			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
 				set_terrain(l,scenario.ter_types[ter].flag1);
-				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special >= 16 && scenario.ter_types[scenario.ter_types[ter].trans_to_what].special <=19)
+				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
 				draw_map(modeless_dialogs[5],10);

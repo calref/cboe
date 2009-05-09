@@ -159,6 +159,16 @@ enum eGameMode {
 #define STATUS_PARALYZED		12
 #define STATUS_ACID				13
 
+// Directions!
+#define DIR_N	0
+#define DIR_NE	1
+#define DIR_E	2
+#define DIR_SE	3
+#define DIR_S	4
+#define DIR_SW	5
+#define DIR_W	6	
+#define DIR_NW	7
+
 /* damage type*/
 /* used as parameter to some functions */
 enum eDamageType {

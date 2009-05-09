@@ -54,6 +54,7 @@ public:
 	char spec_strs[90][256];
 	char sign_strs[8][256];
 	char(& out_strs(short i))[256];
+	bool special_spot[48][48];
 	
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);

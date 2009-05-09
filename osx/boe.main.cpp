@@ -1330,7 +1330,7 @@ void move_sound(unsigned char ter,short step){
 	}else on_swamp = false;
 	
 	if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
-		if (spec == 21) //town entrance ?
+		if (spec == TER_SPEC_TOWN_ENTRANCE) //town entrance ?
 			return;
 		play_sound(48); //play boat sound
 	}

@@ -244,8 +244,7 @@ void finish_load_party(){
 					force_barrier = true;
 				if (univ.town.is_quickfire(j,k) == true)
 					quickfire = true;
-				if ((scenario.ter_types[univ.town->terrain(j,k)].special >= 16) &&
-					(scenario.ter_types[univ.town->terrain(j,k)].special <= 19))
+				if ((scenario.ter_types[univ.town->terrain(j,k)].special == TER_SPEC_CONVEYOR))
 					belt_present = true;
 			}
 		force_wall = true;
@@ -543,7 +542,7 @@ void init_town(){ // formerly part of load_town
 			if (univ.town->special_locs[i].x < 100){
 				univ.town.set_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
 			}
-		for (i = 0; i < 50; i++) {
+		for (i = 0; i < univ.town->preset_fields.size(); i++) {
 			switch(univ.town->preset_fields[i].type){
 				case 1: // currently unused
 					univ.town.set_spot(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
@@ -1226,11 +1225,13 @@ void build_scen_headers()
 //							data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
 //						data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
 //						cur_entry++;
-						std::string curScenarioName((char*) files[cur_entry].name);
-						for(unsigned i = 0; i < curScenarioName.length(); i++)
-							if(curScenarioName[i] == ':')
-								last_colon = i;
-						curScenarioName.erase(0,last_colon + 1);
+						p2cstr(files[cur_entry].name);
+						std::string curScenarioName((char*)files[cur_entry].name);
+						c2pstr((char*)files[cur_entry].name);
+//						for(unsigned i = 0; i < curScenarioName.length(); i++)
+//							if(curScenarioName[i] == ':')
+//								last_colon = i;
+//						curScenarioName.erase(0,last_colon + 1);
 						scen_names.push_back(curScenarioName);
 					}
 					cur_entry++;

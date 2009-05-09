@@ -263,8 +263,8 @@ header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long 
 	sprintf(header.mode,"%07o",0600);
 	//leave uid filled with NULs
 	//leave gid filled with NULs
-	sprintf(header.size,"%011o",fileSize);
-	sprintf(header.mtime,"%011o",time(NULL));
+	sprintf(header.size,"%011llo",fileSize);
+	sprintf(header.mtime,"%011lo",time(NULL));
 	memset(header.checksum,' ',8);
 	header.typeflag[0]=directory?'5':'0';
 	//leave linkname filled with NULs
@@ -1390,7 +1390,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	/*   Split the tar archive into its component files   */
 	while(!gzeof(party_file)){
 		gzread(party_file, &header, sizeof(header));
-		sscanf(header.size, "%o", &tar_size);
+		sscanf(header.size, "%lo", &tar_size);
 		tar_name = header.name;
 		buf = new char[tar_size];
 		gzread(party_file, buf, tar_size);

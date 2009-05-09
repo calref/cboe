@@ -68,7 +68,7 @@ public:
 	rectangle in_town_rect;
 	cItem preset_items[64];
 	short max_num_monst;
-	cField preset_fields[50];
+	vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
 	short timer_spec_times[8];
 	short timer_specs[8];

@@ -863,7 +863,7 @@ void init_scenario() {
 	for (i = 0; i < 256; i++) {
 		scenario.ter_types[i].picture = ter_pics[i];
 		scenario.ter_types[i].blockage = ter_block[i];
-		scenario.ter_types[i].special = (eTerSpec) ter_traits[i];
+		scenario.ter_types[i].special = (eTerSpec) ter_traits[i]; // ???: What on earth is all this for?
 		get_str(temp_str,1,i + 1);
 		sprintf((char *)scenario.ter_types[i].name.c_str(), "%s", temp_str);
 		
@@ -940,22 +940,22 @@ bool save_ter_info() {
 		store_ter.blockage = cd_get_led_range(813,19,24);
 		store_ter.special = (eTerSpec) cd_get_led_range(813,32,55);
 		i = CDGN(813,6);
-		if ((store_ter.special < 2) || (store_ter.special > 6)) {
+		/*if ((store_ter.special < 2) || (store_ter.special > 6)) {
 			if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
 		}
-		else if ((store_ter.special > 1) && (store_ter.special <= 4)) {
+		else*/ if (store_ter.special == TER_SPEC_DAMAGING) {
 			if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
 		}
-		else if ((store_ter.special > 4) && (store_ter.special <= 7)) {
+		else if (store_ter.special == TER_SPEC_DANGEROUS) {
 			if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
 		}
 		store_ter.flag1 = CDGN(813,6);
 		
 		i = CDGN(813,7);
-		if ((store_ter.special == 21) || (store_ter.special == 1)) {
+		if (store_ter.special == TER_SPEC_TOWN_ENTRANCE) {
 			if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
 		}
-		else if ((store_ter.special > 1) && (store_ter.special <= 7)) {
+		else if ((store_ter.special == TER_SPEC_DAMAGING) || (store_ter.special == TER_SPEC_DANGEROUS)) {
 			if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
 		}
 		store_ter.flag2 = CDGN(813,7);

@@ -1018,13 +1018,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	which_m = &univ.town.monst.dudes[which_monst];
 	ter_abil = scenario.ter_types[ter].special;
 	
-		if ((mode > 0) && (ter_abil >= 16) && 
-			(ter_abil <= 19)) {
+		if ((mode > 0) && (ter_abil == TER_SPEC_CONVEYOR)) {
 			if (
-				((ter_abil == 16) && (where_check.y > from_loc.y)) ||
-				((ter_abil == 17) && (where_check.x < from_loc.x)) ||
-				((ter_abil == 18) && (where_check.y < from_loc.y)) ||
-				((ter_abil == 19) && (where_check.x > from_loc.x)) ) {
+				((ter_abil == DIR_N) && (where_check.y > from_loc.y)) ||
+				((ter_abil == DIR_E) && (where_check.x < from_loc.x)) ||
+				((ter_abil == DIR_S) && (where_check.y < from_loc.y)) ||
+				((ter_abil == DIR_W) && (where_check.x > from_loc.x)) ) {
 					return false;
 					}
 			}
@@ -1119,10 +1118,10 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				
 				}
 		}
-	if (monster_placid(which_monst) && // monstyers don't hop into bed when things are calm
-		(scenario.ter_types[ter].picture == 143))
+	if (monster_placid(which_monst) && // monsters don't hop into bed when things are calm
+		(scenario.ter_types[ter].special == TER_SPEC_BED))
 				can_enter = false;
-	if ((scenario.ter_types[ter].picture <= 212) && (scenario.ter_types[ter].picture >= 207))
+	if (mode == 1 && univ.town.is_spot(where_check.x, where_check.y))
 		can_enter = false;
 	if (ter == 90) {
 			if ((is_combat()) && (which_combat_type == 0)) {

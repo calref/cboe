@@ -72,7 +72,10 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	for(i = 0; i < 30; i++) boats[i] = old.scen_boats[i];
 	for(i = 0; i < 30; i++) horses[i] = old.scen_horses[i];
 	flag_g = old.flag_g;
-	for(i = 0; i < 256; i++) ter_types[i] = old.ter_types[i];
+	for(i = 0; i < 256; i++){
+		ter_types[i].i = i;
+		ter_types[i] = old.ter_types[i];
+	}
 	for(i = 0; i < 20; i++) scenario_timer_times[i] = old.scenario_timer_times[i];
 	for(i = 0; i < 20; i++) scenario_timer_specs[i] = old.scenario_timer_specs[i];
 	flag_h = old.flag_h;

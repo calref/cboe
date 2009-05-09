@@ -1240,7 +1240,7 @@ void edit_scen_intro_event_filter (short item_hit) {
 	switch (item_hit) {
 		case 9:
 			scenario.intro_pic = CDGN(804,8);
-			if ((scenario.intro_pic < 0) || (scenario.intro_pic > 29)) {
+			if (scenario.intro_pic > 29) {
 				give_error("Intro picture number is out of range.","",804);
 				break;
 			}

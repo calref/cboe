@@ -9,13 +9,22 @@
 #include "classes.h"
 #include "oldstructs.h"
 
+extern cScenario scenario;
+
 __attribute__((deprecated))
 void cTinyTown::append(legacy::tiny_tr_type& old){
 	int i,j;
+	cField the_field;
+	the_field.type = 1;
 	for (i = 0; i < 32; i++)
 		for (j = 0; j < 32; j++) {
 			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];					
+			_lighting[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+				the_field.loc.x = i;
+				the_field.loc.y = j;
+				preset_fields.push_back(the_field);
+			}
 		}
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;
@@ -47,10 +56,17 @@ void cTinyTown::append(legacy::tiny_tr_type& old){
 __attribute__((deprecated))
 void cMedTown::append(legacy::ave_tr_type& old){
 	int i,j;
+	cField the_field;
+	the_field.type = 1;
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];					
+			_lighting[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+				the_field.loc.x = i;
+				the_field.loc.y = j;
+				preset_fields.push_back(the_field);
+			}
 		}
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;
@@ -82,10 +98,17 @@ void cMedTown::append(legacy::ave_tr_type& old){
 __attribute__((deprecated))
 void cBigTown::append(legacy::big_tr_type& old){
 	int i,j;
+	cField the_field;
+	the_field.type = 1;
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++) {
 			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];					
+			_lighting[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+				the_field.loc.x = i;
+				the_field.loc.y = j;
+				preset_fields.push_back(the_field);
+			}
 		}
 	for (i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;

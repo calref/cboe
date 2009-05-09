@@ -28,7 +28,7 @@ void change_val_4 (unsigned char *val,short a,short b,short c,short d);
 void change_val (unsigned char *val,short a,short b);
 void frill_up_terrain();
 void unfrill_terrain();
-void set_terrain(location l,unsigned char terrain_type);
+void set_terrain(location l,unsigned short terrain_type);
 bool fix_rubble(location l);
 bool fix_cave(location l);
 bool fix_mountain(location l);
@@ -67,3 +67,5 @@ void set_special(location spot_hit);
 bool save_check(short which_dlog);
 void update_item_menu();
 
+unsigned short get_ground_from_ter(unsigned short ter);
+bool terrain_matches(unsigned char x, unsigned char y, unsigned short ter);

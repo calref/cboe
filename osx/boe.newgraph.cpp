@@ -839,12 +839,12 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 
 	RGBForeColor(&c[3]);
 	switch (store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",ADVEN[current_pc].name); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",ADVEN[current_pc].name);break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",ADVEN[current_pc].name); break;
+		case 3: sprintf(cur_name,"Healing for %s.",ADVEN[current_pc].name.c_str()); break;
+		case 10: sprintf(cur_name,"Mage Spells for %s.",ADVEN[current_pc].name.c_str());break;
+		case 11: sprintf(cur_name,"Priest Spells for %s.",ADVEN[current_pc].name.c_str()); break;
 		case 12: sprintf(cur_name,"Buying Alchemy.");break;
 		case 4: sprintf(cur_name,"Buying Food.");break;
-		default:sprintf(cur_name,"Shopping for %s.",ADVEN[current_pc].name); break;
+		default:sprintf(cur_name,"Shopping for %s.",ADVEN[current_pc].name.c_str()); break;
 		}
 	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18,false);	
 

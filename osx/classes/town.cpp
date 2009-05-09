@@ -29,6 +29,8 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 		exit_specs[i] = old.exit_specs[i];
 		wandering[i] = old.wandering[i];
 	}
+	preset_fields.clear();
+	preset_fields.reserve(50);
 	for(i = 0; i < 50; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
@@ -36,7 +38,9 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 //		preset_fields[i].loc.x = old.preset_fields[i].field_loc.x;
 //		preset_fields[i].loc.y = old.preset_fields[i].field_loc.y;
 //		preset_fields[i].type = old.preset_fields[i].field_type;
-		preset_fields[i] = old.preset_fields[i];
+		cField temp;
+		temp = old.preset_fields[i];
+		preset_fields.push_back(temp);
 	}
 	for(i = 0; i < 15; i++){
 		sign_locs[i].x = old.sign_locs[i].x;
@@ -119,8 +123,8 @@ cTown::cTown(short size){
 	for (i = 0; i < 64; i++) 
 		preset_items[i] = null_item;
 	max_num_monst = 30000;
-	for (i = 0; i < 50; i++) 
-		preset_fields[i].type = 0;
+//	for (i = 0; i < 50; i++) 
+//		preset_fields[i].type = 0;
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
 	for (i = 0; i < 15; i++) {

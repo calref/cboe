@@ -216,9 +216,8 @@ void start_town_mode(short which_town, short entry_dir)
 				current_ground = 0;
 				else if (univ.town->terrain(i,j) == 2)
 				current_ground = 2;
-			if ((scenario.ter_types[univ.town->terrain(i,j)].special >= 16) &&
-				(scenario.ter_types[univ.town->terrain(i,j)].special <= 19))
-					belt_present = true;	
+			if (scenario.ter_types[univ.town->terrain(i,j)].special == TER_SPEC_CONVEYOR)
+				belt_present = true;	
 		}
 	
 	univ.town.hostile = 0;
@@ -907,45 +906,13 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 // spec_code is encounter's spec_code
 {
 	short i,j,k,r1,ter_type;
-	// 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
-	// 8 cave swamp 9 surfac eorcks 10 surf swamp 11 surface woods 12 s. shrub 13 stalags
-	static const short general_types[260] = {
-		1, 1, 0, 0, 0, 1, 1, 1, 1, 1,			//  0 - grassy field
-		1, 1, 1, 1, 1, 1, 1, 1, 2, 2,			//  1 - ordinary cave
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,			//  2 - mountain
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,			//  3 - surface bridge
-		2, 2, 2, 2, 2, 2, 0, 0, 0, 0,			//  4 - cave bridge
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,/* 50  */	//  5 - rubble-strewn cave
-		0, 3, 3, 3, 3, 3, 3, 5, 5, 5,			//  6 - cave tree forest
-		6, 6, 7, 7, 1, 1, 8, 9, 10,11,			//  7 - cave mushrooms
-		10,11,12,13,13,9, 9, 9, 1, 1,			//  8 - cave swamp
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			//  9 - surface rocks
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 100 */	// 10 - surface swamp
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 11 - surface woods
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 12 - shrubbery
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 13 - stalagmites
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 14 - cave road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 150 */	// 15 - surface road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - hills road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - crops (proposed)
-		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - cave fumarole (proposed)
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - surface fumarole (proposed)
-		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// (note: fumaroles would have lava.)
-		1, 0, 2, 1, 1, 0, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
-		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1 /* 250 */
+	static const short ter_base[16] = {
+		2,0,36,50,71,0,0,0,
+		0,2,2, 2, 2, 0,0,36
 	};
-	static const short ter_base[14] = {
-		2,0,36,50,71,
-		0,0,0,0,2,
-		2,2,2,0
-	};
-	static const short ground_type[14] = {
-		2,0,36,50,71,
-		0,0,0,0,2,
-		2,2,2,0
+	static const short ground_type[16] = {
+		2,0,36,50,71,0,0,0,
+		0,2,2, 2, 2, 0,0,36
 	};
 	static const location special_ter_locs[15] = {
 		loc(11,10),loc(11,14),loc(10,20),loc(11,26),loc(9,30),
@@ -976,7 +943,19 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 		{71,71,71,96},
 		{71,71,71,96}
 	};
-	static const short terrain_odds[14][10] = {
+	static const unsigned char surf_fume[4][4] = {
+		{75,75,75,36},
+		{75,75,75,75},
+		{75,75,75,75},
+		{36,37,75,75}
+	};
+	static const unsigned char cave_fume[4][4] = {
+		{98,0 ,75,75},
+		{0 ,75,75,75},
+		{75,75,75,0 },
+		{75,75,75,0 }
+	};
+	static const short terrain_odds[16][10] = {
 		{3,80,4,40,115,20,114,10,112,1},
 		{1,50,93,25,94,5,98,10,95,1},
 		{37,20,0,0,0,0,0,0,0,0},
@@ -990,14 +969,18 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 		{3,200,4,400,111,250,0,0,0,0},
 		{3,200,4,300,112,50,113,60,114,100},
 		{3,100,4,250,115,120,114,30,112,2},
-		{1,25,84,15,98,300,97,280,0,0}
+		{1,25,76,15,98,300,97,280,75,5},
+		{37,20,76,20,75,5,0,0,0,0}
 	}; // ter then odds then ter then odds ...
 	location stuff_ul;
 
-	ter_type = scenario.ter_types[type].picture;
-	if (ter_type > 260)
-		ter_type = 1;
-	else ter_type = general_types[ter_type];
+//	ter_type = scenario.ter_types[type].picture;
+//	if (ter_type > 260)
+//		ter_type = 1;
+//	else ter_type = general_types[ter_type];
+	ter_type = scenario.ter_types[type].combat_arena;
+	if(ter_type >= 1000) ter_type = 1; // TODO: load town ter_type - 1000 as the combat arena
+	// TODO: Also implement the roads and crops arenas
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
@@ -1062,7 +1045,23 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 				for (j = 0; j < 4; j++)
 					for (k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_lake[k][j];
-				}
+			}
+	if (ter_type == 14)
+		for (i = 0; i < 15; i++)
+			if (get_ran(1,0,5) == 1) {
+				stuff_ul = special_ter_locs[i];
+				for (j = 0; j < 4; j++)
+					for (k = 0; k < 4; k++)
+						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_fume[k][j];
+			}
+	if (ter_type == 15)
+		for (i = 0; i < 15; i++)
+			if (get_ran(1,0,5) == 1) {
+				stuff_ul = special_ter_locs[i];
+				for (j = 0; j < 4; j++)
+					for (k = 0; k < 4; k++)
+						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_fume[k][j];
+			}
 
 
 	if (ground_type[ter_type] == 0) {
@@ -1200,7 +1199,7 @@ void pick_lock(location where,short pc_num)
 	if (pc_has_abil_equip(pc_num,42) < 24)
 		r1 = r1 - 12;	
 
-	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
+	if (scenario.ter_types[terrain].special != TER_SPEC_UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
@@ -1228,13 +1227,13 @@ void bash_door(location where,short pc_num) ////
 	terrain = univ.town->terrain(where.x,where.y);
 	r1 = get_ran(1,1,100) - 15 * stat_adj(pc_num,0) + univ.town.difficulty * 4;
 	
-	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
+	if (scenario.ter_types[terrain].special != TER_SPEC_UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
 
 	unlock_adjust = scenario.ter_types[terrain].flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].special != 10))  {
+	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].flag3 != 1))  {
 					add_string_to_buf("  Didn't work.                ");
 					damage_pc(pc_num,get_ran(1,1,4),DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);					
 				} 
@@ -1271,14 +1270,15 @@ void erase_specials()////
 					}
 				
 				if (where.x != 100) {
-					switch (scenario.ter_types[univ.town->terrain(where.x,where.y)].picture) {
-						case 207: univ.town->terrain(where.x,where.y) = 0; break;
-						case 208: univ.town->terrain(where.x,where.y) = 170; break;
-						case 209: univ.town->terrain(where.x,where.y) = 210; break;
-						case 210: univ.town->terrain(where.x,where.y) = 217; break;
-						case 211: univ.town->terrain(where.x,where.y) = 2; break;
-						case 212: univ.town->terrain(where.x,where.y) = 36; break;
-						}
+//					switch (scenario.ter_types[univ.town->terrain(where.x,where.y)].picture) {
+//						case 207: univ.town->terrain(where.x,where.y) = 0; break;
+//						case 208: univ.town->terrain(where.x,where.y) = 170; break;
+//						case 209: univ.town->terrain(where.x,where.y) = 210; break;
+//						case 210: univ.town->terrain(where.x,where.y) = 217; break;
+//						case 211: univ.town->terrain(where.x,where.y) = 2; break;
+//						case 212: univ.town->terrain(where.x,where.y) = 36; break;
+					//						}
+					univ.town.set_spot(where.x,where.y,false);
 					univ.town.set_special(where.x,where.y,false);
 					}
 				}
@@ -1336,16 +1336,17 @@ void erase_out_specials()
 							univ.out.outdoors[i][j].special_locs[k].x = 100;
 							}
 				
-						switch (scenario.ter_types[univ.out.outdoors[i][j].terrain[where.x][where.y]].picture) {
-							case 207: univ.out[48 * i + where.x][48 * j + where.y] = 0; break;
-							case 208: univ.out[48 * i + where.x][48 * j + where.y] = 170; break;
-							case 209: univ.out[48 * i + where.x][48 * j + where.y] = 210; break;
-							case 210: univ.out[48 * i + where.x][48 * j + where.y] = 217; break;
-							case 211: univ.out[48 * i + where.x][48 * j + where.y] = 2; break;
-							case 212: univ.out[48 * i + where.x][48 * j + where.y] = 36; break;
-							}
-						}
+//						switch (scenario.ter_types[univ.out.outdoors[i][j].terrain[where.x][where.y]].picture) {
+//							case 207: univ.out[48 * i + where.x][48 * j + where.y] = 0; break;
+//							case 208: univ.out[48 * i + where.x][48 * j + where.y] = 170; break;
+//							case 209: univ.out[48 * i + where.x][48 * j + where.y] = 210; break;
+//							case 210: univ.out[48 * i + where.x][48 * j + where.y] = 217; break;
+//							case 211: univ.out[48 * i + where.x][48 * j + where.y] = 2; break;
+//							case 212: univ.out[48 * i + where.x][48 * j + where.y] = 36; break;
+//							}
 					}
+					univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
+				}
 
 			
 				//}
@@ -1764,9 +1765,8 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 bool is_door(location destination)
 {
 
-	if ((scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == 9) ||
-		(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == 1) ||
-		(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == 10))
+	if ((scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == TER_SPEC_UNLOCKABLE) ||
+		(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == TER_SPEC_CHANGE_WHEN_STEP_ON))
 			return true;
 	return false;
 }
