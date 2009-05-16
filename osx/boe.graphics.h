@@ -43,7 +43,7 @@ void draw_terrain(short	mode = 0);
 void place_trim(short q,short r,location where,unsigned char ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);
 bool extend_road_terrain(unsigned short ter);
-void place_road(short q,short r,location where);
+void place_road(short q,short r,location where,bool here);
 void draw_rest_screen();
 void boom_space(location where,short mode,short type,short damage,short sound);
 void draw_pointing_arrows() ;
@@ -63,6 +63,9 @@ void draw_startup_stats();
 void HideMenuBar( void );
 void ShowMenuBar( void );
 void FlushAndPause(unsigned long ticks);
+
+unsigned short get_ground_from_ter(unsigned short ter);
+unsigned short get_ter_from_ground(unsigned char ground);
 
 void draw_startup_anim();
 short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,short buttons[3]);

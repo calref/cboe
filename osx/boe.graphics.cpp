@@ -1777,7 +1777,10 @@ bool is_nature(char x, char y, unsigned char ground_t)
 }
 
 unsigned short get_ground_from_ter(unsigned short ter){
-	unsigned char ground = scenario.ter_types[ter].ground_type;
+	return get_ter_from_ground(scenario.ter_types[ter].ground_type);
+}
+
+unsigned short get_ter_from_ground(unsigned char ground){
 	for(int i = 0; i < 256; i++)
 		if(scenario.ter_types[i].ground_type == ground)
 			return i;
@@ -1919,7 +1922,7 @@ void draw_terrain(short	mode)
 						
 					eTrimType trim = scenario.ter_types[spec_terrain].trim_type;
 
-					// Finally, draw this terrain spot	TODO: Alter walkway drawing
+					// Finally, draw this terrain spot
 //					if(short_spec_terrain == 82) { // cave wway
 //						 if (loc_off_act_area(where_draw) == false) {
 //							if ((is_nature(where_draw.x - 1,where_draw.y)) &&
@@ -1954,8 +1957,8 @@ void draw_terrain(short	mode)
 //						draw_one_terrain_spot(q,r,short_spec_terrain,0);
 					if(trim == TRIM_WALKWAY){
 						int corner = -1;
-						unsigned short ground_ter = get_ground_from_ter(spec_terrain);
 						unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
+						unsigned short ground_ter = get_ter_from_ground(ground_t);
 						if (!loc_off_act_area(where_draw)) {
 							if ((is_nature(where_draw.x - 1,where_draw.y,ground_t)) &&
 								(is_nature(where_draw.x,where_draw.y - 1,ground_t)))
@@ -1973,7 +1976,8 @@ void draw_terrain(short	mode)
 						draw_one_terrain_spot(q,r,corner < 0 ? spec_terrain : ground_ter,0);
 						if(corner >= 0)
 							Draw_Some_Item(roads_gworld, calc_rect(corner,0), terrain_screen_gworld, loc(q,r), 1, 0);
-					}else if(trim == TRIM_ROAD) { // TODO: Alter road handling
+					}else if(trim == TRIM_ROAD || trim == TRIM_N || trim == TRIM_S ||
+							 trim == TRIM_W || trim == TRIM_E) {
 //						if ((short_spec_terrain == 81) 
 //							&& ((univ.out[where_draw.x][where_draw.y - 1] == 80) || (univ.out[where_draw.x][where_draw.y - 1] == 79)))
 //									short_spec_terrain = 42;
@@ -2003,7 +2007,7 @@ void draw_terrain(short	mode)
 								((univ.out[where_draw.x + 1][where_draw.y] < 36) || (univ.out[where_draw.x + 1][where_draw.y] > 49))))
 									short_spec_terrain = 40;*/
 						draw_one_terrain_spot(q,r,spec_terrain,0);	
-						place_road(q,r,where_draw);
+						place_road(q,r,where_draw,trim == TRIM_ROAD);
 					}else if(spec_terrain == 65535) {
 						draw_one_terrain_spot(q,r,-1,0);	
 					}else{
@@ -2271,8 +2275,8 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 
 bool extend_road_terrain(unsigned short ter)
 {
-	unsigned short trim = scenario.ter_types[ter].trim_type;
-	unsigned short spec = scenario.ter_types[ter].special;
+	eTrimType trim = scenario.ter_types[ter].trim_type;
+	eTerSpec spec = scenario.ter_types[ter].special;
 	unsigned short flag = scenario.ter_types[ter].flag1;
 	if(trim == TRIM_ROAD || trim == TRIM_CITY || trim == TRIM_WALKWAY)
 		return true;
@@ -2286,22 +2290,35 @@ bool extend_road_terrain(unsigned short ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == TER_SPEC_LOCKABLE)
 		return true; // open portcullis (most likely)
+	if(trim == TRIM_N || trim == TRIM_S || trim == TRIM_W || trim == TRIM_E)
+		return true; // connect roads to trim boundaries
+	return false;
 }
 
-void place_road(short q,short r,location where)
+bool connect_roads(unsigned short ter){
+	eTrimType trim = scenario.ter_types[ter].trim_type;
+	eTerSpec spec = scenario.ter_types[ter].special;
+	if(trim == TRIM_ROAD || trim == TRIM_CITY)
+		return true;
+	if(spec == TER_SPEC_TOWN_ENTRANCE && trim != TRIM_NONE)
+		return true; // cave entrance, most likely
+	return false;
+}
+
+void place_road(short q,short r,location where, bool here)
 {
 	location draw_loc;
 	unsigned char ter;
 	Rect to_rect;
 	//Rect road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
-	Rect road_rects[4] = {
+	static const Rect road_rects[4] = {
 		{4,112,8,125},	// horizontal partial
 		{0,144,18,148},	// vertical partial
 		{0,112,4,140},	// horizontal full
 		{0,140,36,144},	// vertical full
 	};
 	//Rect road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
-	Rect road_dest_rects[6] = {
+	static const Rect road_dest_rects[6] = {
 		{0,12,18,16},	// top
 		{16,15,20,28},	// right
 		{18,12,36,16},	// bottom
@@ -2309,80 +2326,83 @@ void place_road(short q,short r,location where)
 		{0,12,36,16},	// top + bottom
 		{16,0,20,28},	// right + left
 	};
-	draw_loc.x = q; draw_loc.y = r;
+	draw_loc.x = q;
+	draw_loc.y = r;
 	
 	terrain_there[q][r] = -1; // TODO: Test the new road-handling code on a hills boundary.
 	
-	if (where.y > 0)
-		ter = coord_to_ter(where.x,where.y - 1);
-	if ((where.y == 0) || (extend_road_terrain(ter))) {
-		to_rect = road_dest_rects[0];
-		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
-	}else{
-		ter = coord_to_ter(where.x,where.y - 2);
-		if(extend_road_terrain(ter)){
+	if(here){
+		if (where.y > 0)
+			ter = coord_to_ter(where.x,where.y - 1);
+		if ((where.y == 0) || extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[0];
 			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
-			to_rect = road_dest_rects[4];
-			OffsetRect(&to_rect,13 + q * 28,13 + (r - 1) * 36);
-			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld, to_rect, 0, 0);
 		}
-	}
-	
-	if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
-		ter = coord_to_ter(where.x + 1,where.y);
-	if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1)) 
-		|| (extend_road_terrain(ter) == true)) {
-		to_rect = road_dest_rects[1];
-		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
-	}else{
-		ter = coord_to_ter(where.x + 1,where.y);
-		if(extend_road_terrain(ter)){
+		
+		if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
+			ter = coord_to_ter(where.x + 1,where.y);
+		if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1)) 
+			|| extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[1];
 			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
-			to_rect = road_dest_rects[5];
-			OffsetRect(&to_rect,13 + (q + 1) * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld, to_rect, 0, 0);
+			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
 		}
-	}
-	
-	if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
-		ter = coord_to_ter(where.x,where.y + 1);
-	if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1)) 
-		|| (extend_road_terrain(ter) == true)) {
-		to_rect = road_dest_rects[2];
-		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
-	}else{
-		ter = coord_to_ter(where.x,where.y + 2);
-		if(extend_road_terrain(ter)){
+		
+		if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
+			ter = coord_to_ter(where.x,where.y + 1);
+		if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1)) 
+			|| extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[2];
 			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
-			to_rect = road_dest_rects[4];
-			OffsetRect(&to_rect,13 + q * 28,13 + (r + 1) * 36);
-			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld, to_rect, 0, 0);
 		}
-	}
-	
-	if (where.x > 0)
-		ter = coord_to_ter(where.x - 1,where.y);
-	if ((where.x == 0) || (extend_road_terrain(ter) == true)) {
-		to_rect = road_dest_rects[3];
-		OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-		rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
-	}else{
-		ter = coord_to_ter(where.x - 1,where.y);
-		if(extend_road_terrain(ter)){
+		
+		if (where.x > 0)
+			ter = coord_to_ter(where.x - 1,where.y);
+		if ((where.x == 0) || extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[3];
 			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect, 0, 0);
+			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect, 0, 0);
+		}
+	}else{
+		bool horz = false, vert = false;
+		if (where.y > 0)
+			ter = coord_to_ter(where.x,where.y - 1);
+		if ((where.y == 0) || connect_roads(ter))
+			vert = true;
+		
+		if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
+			ter = coord_to_ter(where.x + 1,where.y);
+		if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1)) 
+			|| connect_roads(ter))
+			horz = true;
+		
+		if(vert){
+			if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
+				ter = coord_to_ter(where.x,where.y + 1);
+			if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1)) 
+				|| connect_roads(ter))
+				vert = true;
+			else vert = false;
+		}
+		
+		if(horz){
+			if (where.x > 0)
+				ter = coord_to_ter(where.x - 1,where.y);
+			if ((where.x == 0) || connect_roads(ter)) 
+				horz = true;
+			else horz = false;
+		}
+		
+		if(horz){
 			to_rect = road_dest_rects[5];
-			OffsetRect(&to_rect,13 + (q - 1) * 28,13 + r * 36);
+			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			rect_draw_some_item (roads_gworld, road_rects[2], terrain_screen_gworld, to_rect, 0, 0);
+		}
+		if(vert){
+			to_rect = road_dest_rects[4];
+			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld, to_rect, 0, 0);
 		}
 	}

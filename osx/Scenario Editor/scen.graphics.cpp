@@ -69,7 +69,7 @@ GWorldPtr terrain_gworld[7];
 GWorldPtr editor_mixed;
 GWorldPtr terrain_buttons_gworld;
 GWorldPtr anim_gworld;
-GWorldPtr field_gworld;
+GWorldPtr fields_gworld;
 GWorldPtr dialog_gworld;
 GWorldPtr items_gworld;
 GWorldPtr tiny_obj_gworld;
@@ -430,7 +430,7 @@ void load_graphics(){
 		terrain_gworld[i] = load_pict(800 + i);
 	editor_mixed = load_pict(906);
 	anim_gworld = load_pict(820);
-	field_gworld = load_pict(821);
+	fields_gworld = load_pict(821);
 	roads_gworld = load_pict(822);
 	talkfaces_gworld = load_pict(860);
 	items_gworld = load_pict(901);
@@ -835,32 +835,32 @@ void draw_terrain(){
 						}			
 					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(5,0);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					if (is_crate(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(6,0);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,0);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(0,2);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,1);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(2,2);
-						Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 					}	
 					for (i = 0; i < 8; i++) 
 						if (is_sfx(cen_x + q - 4,cen_y + r - 4,i)) {
 							from_rect = calc_rect(i,3);
-							Draw_Some_Item(field_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}
 					for (x = 0; x < 64; x++)
 						if ((cen_x + q - 4 == town->preset_items[x].loc.x) &&

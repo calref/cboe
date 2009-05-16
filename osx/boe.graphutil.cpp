@@ -614,9 +614,10 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 	Rect orig_rect = {0,0,36,28},source_rect;
 	
 		for (q = 0; q < 9; q++) 
-			for (r = 0; r < 9; r++)
-				{
-				where_draw = center;where_draw.x += q - 4;where_draw.y += r - 4;
+			for (r = 0; r < 9; r++){
+				where_draw = center;
+				where_draw.x += q - 4;
+				where_draw.y += r - 4;
 				
 				if ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1)) 
@@ -625,8 +626,9 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 							if (univ.town.misc_i(where_draw.x,where_draw.y) & flag) 
 								if (spot_seen[q][r] > 0) {
 								loc.x = q; loc.y = r;
-								source_rect = orig_rect;
-								OffsetRect(&source_rect,28 * source_x,36 * source_y);
+								//source_rect = orig_rect;
+								//OffsetRect(&source_rect,28 * source_x,36 * source_y);
+								source_rect = calc_rect(source_x,source_y);
 								Draw_Some_Item(fields_gworld,source_rect,terrain_screen_gworld,loc,
 								 1,0);
 								if ((is_town()) && ((flag == 32) || (flag == 64)))
