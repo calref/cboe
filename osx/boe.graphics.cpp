@@ -149,7 +149,7 @@ GWorldPtr dlogpics_gworld;
 GWorldPtr anim_gworld;
 GWorldPtr talkfaces_gworld;
 GWorldPtr pc_gworld;
-GWorldPtr monst_gworld[10];
+GWorldPtr monst_gworld[11];
 GWorldPtr terrain_gworld[7];
 
 // Startup graphics, will die when play starts
@@ -816,7 +816,7 @@ void Set_up_win ()
 	dlogpics_gworld = load_pict(850);
 	
 	// possibly not ideal place for this, but...
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < 11; i++)
 		monst_gworld[i] = load_pict(1100 + i);	
 	for (i = 0; i < 7; i++)
 		terrain_gworld[i] = load_pict(800 + i);

@@ -52,6 +52,7 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	res2 = old.res2;
 	res3 = old.res3;
 	picture_num = old.picture_num;
+	if(picture_num = 122) picture_num = 119;
 	return *this;
 }
 

@@ -49,10 +49,10 @@
 #define PICT_WIDE_MONSTER		20
 #define PICT_TALL_MONSTER		40
 // These constants are the total number of preset graphics of each type.
-#define PICT_N_TER				252 // 336
-#define PICT_N_TER_ANIM			13 // 18
-#define PICT_N_MONST			172
-#define PICT_N_DLG				32 // 44
+#define PICT_N_TER				336 // was 252
+#define PICT_N_TER_ANIM			18 // was 13
+#define PICT_N_MONST			180 // was 172
+#define PICT_N_DLG				44 // was 33
 #define PICT_N_TALK				83
 #define PICT_N_SCEN				29
 #define PICT_N_ITEM				122

@@ -98,11 +98,13 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 				special = TER_SPEC_NONE;
 				flag1 = 23;
 				flag2 = flag3 = 0;
-			}else if(picture == 215){
+			}else if(picture == 215 || (picture >= 218 && picture <= 221)){
+				picture = 215;
 				special = TER_SPEC_NONE;
 				flag1 = 3;
 				flag2 = flag3 = 0;
-			}else if(picture == 216){
+			}else if(picture == 216 || (picture >= 222 && picture <= 225)){
+				picture = 215;
 				special = TER_SPEC_NONE;
 				flag1 = 2;
 				flag2 = flag3 = 0;
@@ -219,7 +221,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 			break;
 		case 23:
 			special = TER_SPEC_CALL_SPECIAL_WHEN_USED;
-			flag2 = 0;
+			flag2 = 3; // global special, always (2 would be local if outdoors, global if in town)
 			flag3 = 255;
 			break;
 	}
@@ -276,9 +278,6 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 			obj_size.x = 2;
 			obj_size.y = 1;
 			break;
-		case 233:
-			picture = 137;
-			break;
 		case 247:
 			obj_num = 3;
 			obj_pos.x = 0;
@@ -331,6 +330,15 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		case 212:
 			picture = 32;
 			i = 3000;
+			break;
+		// Misc
+		case 216:
+		case 218: case 219: case 220: case 221:
+		case 222: case 223: case 224: case 225:
+			picture = 215;
+			break;
+		case 233:
+			picture = 137;
 			break;
 	};
 	return *this;

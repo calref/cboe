@@ -64,7 +64,7 @@ extern location cur_out;
 
 short num_ir[3] = {12,10,4};
 
-GWorldPtr monst_gworld[10];
+GWorldPtr monst_gworld[11];
 GWorldPtr terrain_gworld[7];
 GWorldPtr editor_mixed;
 GWorldPtr terrain_buttons_gworld;
@@ -424,7 +424,7 @@ void load_graphics(){
 	for (i = 0; i < 25; i++) 
 	    map_pat[i] = GetPixPat (200 + i);
 	
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < 11; i++)
 		monst_gworld[i] = load_pict(1100 + i);
 	for (i = 0; i < 7; i++)
 		terrain_gworld[i] = load_pict(800 + i);

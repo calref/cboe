@@ -1158,7 +1158,7 @@ bool save_monst_info() {
 		}
 	}
 	else {
-		if (cre(store_monst.picture_num,0,174,"Non-customized monster pic must be from 0 to 173.","",814) > 0) return false;
+		if (cre(store_monst.picture_num,0,PICT_N_MONST,"Non-customized monster pic must be from 0 to 173.","",814) > 0) return false;
 		store_monst.x_width = m_pic_index[store_monst.picture_num].x;
 		store_monst.y_width = m_pic_index[store_monst.picture_num].y;
 		
@@ -1246,7 +1246,7 @@ void edit_monst_type_event_filter (short item_hit) {
 			if (save_monst_info() == false) break;
 			i = choose_graphic(/*400,572*/0,PICT_N_MONST,store_monst.picture_num/* + 400*/,PICT_MONST,814);
 			if (i >= 0) {
-				store_monst.picture_num = i - 400;
+				store_monst.picture_num = i;
 			}
 			else break;
 			store_monst.x_width = m_pic_index[i].x;
