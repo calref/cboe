@@ -1225,7 +1225,7 @@ bool save_talk_node() {
 	if ((store_talk_node.personality >= 0) &&
 		((store_talk_node.personality < cur_town * 10) || (store_talk_node.personality >= (cur_town + 1) * 10))) {
 		sprintf((char *) str,"The legal range for personalities in this town is from %d to %d.",
-				cur_town * 10,cur_town * 10 + 9,817);
+				cur_town * 10,cur_town * 10 + 9);
 		give_error("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.",
 				   (char *) str,817);
 		return false;

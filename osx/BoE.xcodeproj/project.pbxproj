@@ -42,18 +42,11 @@
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		910BBA450FB8E345001E34EA /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA180FB8BECA001E34EA /* dialog.cpp */; };
-		910BBA460FB8E347001E34EA /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
 		910BBA470FB8E34E001E34EA /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
 		910BBA480FB8E34E001E34EA /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
 		910BBA490FB8E34F001E34EA /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
 		910BBA4A0FB8E350001E34EA /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
 		910BBA4B0FB8E351001E34EA /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
-		910BBA8A0FB8EC57001E34EA /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
-		910BBAAA0FB8F733001E34EA /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
-		910BBAB60FB91A26001E34EA /* field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB50FB91A26001E34EA /* field.cpp */; };
-		910BBABA0FB91ADB001E34EA /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
-		910BBADB0FB91D2A001E34EA /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
@@ -1158,18 +1151,11 @@
 				91AC60A90FA26C1B00EEAE67 /* tmpltown.cpp in Sources */,
 				91AC620C0FA2853700EEAE67 /* creatlist.cpp in Sources */,
 				91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */,
-				910BBA450FB8E345001E34EA /* dialog.cpp in Sources */,
-				910BBA460FB8E347001E34EA /* control.cpp in Sources */,
 				910BBA470FB8E34E001E34EA /* ticpp.cpp in Sources */,
 				910BBA480FB8E34E001E34EA /* tinystr.cpp in Sources */,
 				910BBA490FB8E34F001E34EA /* tinyxml.cpp in Sources */,
 				910BBA4A0FB8E350001E34EA /* tinyxmlerror.cpp in Sources */,
 				910BBA4B0FB8E351001E34EA /* tinyxmlparser.cpp in Sources */,
-				910BBA8A0FB8EC57001E34EA /* button.cpp in Sources */,
-				910BBAAA0FB8F733001E34EA /* pict.cpp in Sources */,
-				910BBAB60FB91A26001E34EA /* field.cpp in Sources */,
-				910BBABA0FB91ADB001E34EA /* message.cpp in Sources */,
-				910BBADB0FB91D2A001E34EA /* dlogutil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

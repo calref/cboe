@@ -1125,7 +1125,7 @@ bool load_party(FSSpec file_to_load){
 //		if ((i == 2) && (flag == flags[i][1]))
 //			maps_there = true;
 //	}
-	
+	return true;
 }
 
 bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port){
@@ -1916,4 +1916,5 @@ bool save_party(FSSpec dest_file)
 //	}
 //	if (in_startup_mode == false)
 //		add_string_to_buf("Save: Game saved.              ");
+	return true;
 }

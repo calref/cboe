@@ -732,7 +732,7 @@ void draw_terrain(){
 				}
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
-				if((editing_town  && is_field_type(cen_x + q - 4,cen_y + r - 4, 1)) ||
+				if((editing_town  && is_field_type(cen_x + q - 4,cen_y + r - 4, 2)) ||
 				   (!editing_town && current_terrain.special_spot[cen_x + q - 4][cen_y + r - 4]))
 					Draw_Some_Item(roads_gworld, calc_rect(6, 0), ter_draw_gworld, where_draw, 1, 0);
 				
@@ -1350,7 +1350,7 @@ void place_just_location() {
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 	else {
 		//MoveTo(5 ,terrain_rects[255].top + 28);
-		sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+		sprintf((char *) draw_str,"Click terrain to edit. ");
 	}
 	c2pstr((char*) draw_str);
 	DrawString(draw_str);

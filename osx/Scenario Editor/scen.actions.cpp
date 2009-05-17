@@ -690,7 +690,7 @@ bool handle_action(Point the_point,EventRecord event) {
 					overall_mode = MODE_DRAWING;
 					break;
 				}
-				make_field_type(spot_hit.x, spot_hit.y, 1);
+				make_field_type(spot_hit.x, spot_hit.y, 2);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_CLEAR_FIELDS:
@@ -700,7 +700,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				take_barrel(spot_hit.x,spot_hit.y);
 				take_crate(spot_hit.x,spot_hit.y);
 				take_web(spot_hit.x,spot_hit.y);
-				take_field_type(spot_hit.x, spot_hit.y, 1);
+				take_field_type(spot_hit.x, spot_hit.y, 2);
 				for (i = 0; i < 8; i++)
 					take_sfx(spot_hit.x,spot_hit.y,i);
 				set_cursor(0);

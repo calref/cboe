@@ -154,9 +154,13 @@ bool cCurTown::is_sleep_cloud(char x, char y) const{
 	return fields[x][y] & 128L;
 }
 
-bool cCurTown::is_spot(char x, char y) const{ // currently unused
+bool cCurTown::is_block(char x, char y) const{ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	return fields[x][y] & 256L;
+}
+
+bool cCurTown::is_spot(char x, char y) const{
+	return special_spot[x][y];
 }
 
 bool cCurTown::is_special(char x, char y) const{
@@ -238,6 +242,7 @@ bool cCurTown::set_explored(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b) fields[x][y] |=  1L;
 	else  fields[x][y] &= ~1L;
+	return true;
 }
 
 bool cCurTown::set_force_wall(char x, char y, bool b){
@@ -348,16 +353,24 @@ bool cCurTown::set_sleep_cloud(char x, char y, bool b){
 	return true;
 }
 
-bool cCurTown::set_spot(char x, char y, bool b){ // currently unused
+bool cCurTown::set_block(char x, char y, bool b){ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b) fields[x][y] |=  256L;
 	else  fields[x][y] &= ~256L;
+	return true;
+}
+
+bool cCurTown::set_spot(char x, char y, bool b){
+	if(x > record->max_dim() || y > record->max_dim()) return false;
+	special_spot[x][y] = b;
+	return true;
 }
 
 bool cCurTown::set_special(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b) fields[x][y] |=  512L;
 	else  fields[x][y] &= ~512L;
+	return true;
 }
 
 bool cCurTown::set_web(char x, char y, bool b){
@@ -479,6 +492,7 @@ bool cCurTown::set_sm_blood(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~65536L;
+	return true;
 }
 
 bool cCurTown::set_med_blood(char x, char y, bool b){
@@ -495,6 +509,7 @@ bool cCurTown::set_med_blood(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~131072L;
+	return true;
 }
 
 bool cCurTown::set_lg_blood(char x, char y, bool b){
@@ -510,6 +525,7 @@ bool cCurTown::set_lg_blood(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~262144L;
+	return true;
 }
 
 bool cCurTown::set_sm_slime(char x, char y, bool b){
@@ -525,6 +541,7 @@ bool cCurTown::set_sm_slime(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~524288L;
+	return true;
 }
 
 bool cCurTown::set_lg_slime(char x, char y, bool b){
@@ -540,6 +557,7 @@ bool cCurTown::set_lg_slime(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~1048576L;
+	return true;
 }
 
 bool cCurTown::set_ash(char x, char y, bool b){
@@ -555,6 +573,7 @@ bool cCurTown::set_ash(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~2097152L;
+	return true;
 }
 
 bool cCurTown::set_bones(char x, char y, bool b){
@@ -570,6 +589,7 @@ bool cCurTown::set_bones(char x, char y, bool b){
 		set_rubble(x,y,false);
 	}
 	else fields[x][y] &= ~4194304L;
+	return true;
 }
 
 bool cCurTown::set_rubble(char x, char y, bool b){
@@ -585,6 +605,7 @@ bool cCurTown::set_rubble(char x, char y, bool b){
 		set_bones(x,y,false);
 	}
 	else fields[x][y] &= ~8388608L;
+	return true;
 }
 
 unsigned char cCurTown::explored(char x,char y) const{

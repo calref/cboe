@@ -1319,7 +1319,7 @@ void erase_out_specials()
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 2; j++)
 			if (quadrant_legal(i,j) == true) {
-			for (k = 0; k < 18; k++) 
+			for (k = 0; k < 18; k++) {
 				//if (univ.out.outdoors[i][j].special_id[k] >= 0) {
 				out_num = scenario.out_width * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 
@@ -1347,9 +1347,7 @@ void erase_out_specials()
 					}
 					univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
 				}
-
-			
-				//}
+			}
 		}
 }
 

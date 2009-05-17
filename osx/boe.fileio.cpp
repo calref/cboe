@@ -545,9 +545,11 @@ void init_town(){ // formerly part of load_town
 		for (i = 0; i < univ.town->preset_fields.size(); i++) {
 			switch(univ.town->preset_fields[i].type){
 				case 1: // currently unused
+					univ.town.set_block(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+					break;
+				case 2:
 					univ.town.set_spot(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;
-				// case 2 is covered by the preceding loop
 				case 3:
 					univ.town.set_web(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
 					break;

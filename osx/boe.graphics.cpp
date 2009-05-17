@@ -2030,7 +2030,7 @@ void draw_terrain(short	mode)
 				}
 				if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
 				   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
-					Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, where_draw, 1, 0);
+					Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
 			}
 	}
 	

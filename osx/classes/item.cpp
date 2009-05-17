@@ -385,15 +385,15 @@ void cItemRec::readAttrFrom(string cur, istream& sin){
 }
 
 ostream& operator << (ostream& out, eWeapType& e){
-	out << (int) e;
+	return out << (int) e;
 }
 
 ostream& operator << (ostream& out, eItemType& e){
-	out << (int) e;
+	return out << (int) e;
 }
 
 ostream& operator << (ostream& out, eItemAbil& e){
-	out << (int) e;
+	return out << (int) e;
 }
 
 istream& operator >> (istream& in, eWeapType& e){
@@ -402,6 +402,7 @@ istream& operator >> (istream& in, eWeapType& e){
 	if(i > 0 && i < 4)
 		e = (eWeapType) i;
 	else e = ITEM_NOT_MELEE;
+	return in;
 }
 
 istream& operator >> (istream& in, eItemType& e){
@@ -410,6 +411,7 @@ istream& operator >> (istream& in, eItemType& e){
 	if(i > 0 && i < 28)
 		e = (eItemType) i;
 	else e = ITEM_TYPE_NO_ITEM;
+	return in;
 }
 
 istream& operator >> (istream& in, eItemAbil& e){
@@ -420,4 +422,5 @@ istream& operator >> (istream& in, eItemAbil& e){
 	   (i > 149 && i < 162) || (i > 169 && i < 177))
 		e = (eItemAbil) i;
 	else e = ITEM_NO_ABILITY;
+	return in;
 }

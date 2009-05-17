@@ -355,7 +355,7 @@ void cPlayer::readFrom(istream& file){
 }
 
 ostream& operator << (ostream& out, eMainStatus& e){
-	out << (int) e;
+	return out << (int) e;
 }
 
 istream& operator >> (istream& in, eMainStatus& e){
@@ -364,4 +364,5 @@ istream& operator >> (istream& in, eMainStatus& e){
 	if(i > 0 && i < 18 && i !=8 && i != 9)
 		e = (eMainStatus) i;
 	else e = MAIN_STATUS_ABSENT;
+	return in;
 }
