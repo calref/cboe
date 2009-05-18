@@ -52,7 +52,7 @@ extern Rect left_button[NLS];
 extern Rect right_buttons[NRSONPAGE];
 extern Rect right_scrollbar_rect;
 extern Rect right_area_rect;
-extern unsigned char borders[4][50];
+extern unsigned short borders[4][50];
 extern ControlHandle right_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
@@ -1059,7 +1059,7 @@ void redraw_selected_ter() {
 	//	draw_one_terrain_spot(18,8,(unsigned char) current_terrain_type);
 }
 
-void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw) {
+void draw_one_terrain_spot (short i,short j,unsigned short terrain_to_draw) {
 	location where_draw;
 	Rect source_rect;
 	short picture_wanted;
@@ -1094,7 +1094,7 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw) {
 	Draw_Some_Item(source_gworld, source_rect, ter_draw_gworld, where_draw, 0, 0);
 }
 
-void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw) {
+void draw_one_tiny_terrain_spot (short i,short j,unsigned short terrain_to_draw) {
 	
 	location where_draw;
 	Rect source_rect,dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
@@ -1177,7 +1177,7 @@ void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,l
 
 /* Input terrain currently trying to draw. Get back Rect in terrain template containing 
  desired pixmap, or Rect to darkness if desired map not present */
-Rect get_template_rect (unsigned char type_wanted) {
+Rect get_template_rect (unsigned short type_wanted) {
 	Rect store_rect;
 	short i,j;
 	short picture_wanted;
@@ -1547,7 +1547,7 @@ void take_quickfire(short i,short j) {
 
 bool container_there(location l) {
 	
-	unsigned char ter;
+	unsigned short ter;
 	
 	if (editing_town == false)
 		return false;

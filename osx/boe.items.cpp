@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 
 #include "boe.graphics.h"
@@ -1356,7 +1357,7 @@ DialogPtr other_make_dialog(short which)
 }
 
 ////
-void place_glands(location where,unsigned char m_type)
+void place_glands(location where,unsigned short m_type)
 {
 	cItemRec store_i;
 	cMonster monst;

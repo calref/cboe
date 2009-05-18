@@ -4,6 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.graphutil.h"
 #include "boe.text.h"
@@ -33,7 +34,7 @@ extern cUniverse univ;
 //extern current_town_type c_town;
 //extern town_item_list t_i;
 //extern unsigned char out[96][96],out_e[96][96];
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern bool sleep_field;
@@ -65,7 +66,7 @@ extern long anim_ticks;
 
 extern short terrain_pic[256];
 extern char spot_seen[9][9];
-extern char out_trim[96][96],town_trim[64][64];
+//extern char out_trim[96][96],town_trim[64][64];
 extern short monster_index[21];
 
 extern bool supressing_some_spaces;
@@ -239,11 +240,13 @@ void draw_monsters() ////
 	Rect source_rect,to_rect;
 	location where_draw,store_loc;
 	short picture_wanted;
-	unsigned char ter;
-	Rect monst_rects[4][4] = {{{0,0,36,28},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
+	unsigned short ter;
+	Rect monst_rects[4][4] = {
+		{{0,0,36,28},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
 		{{0,7,18,21},{18,7,36,21},{0,0,0,0},{0,0,0,0}},
 		{{9,0,27,14},{9,14,27,28},{0,0,0,0},{0,0,0,0}},
-		{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}};
+		{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
+	};
 
 	if (is_out())
 		for (i = 0; i < 10; i++) 
@@ -365,7 +368,7 @@ void draw_monsters() ////
 	}
 }
 
-void play_see_monster_str(unsigned char m)
+void play_see_monster_str(unsigned short m)
 {}
 
 void draw_pcs(location center,short mode)
@@ -714,7 +717,7 @@ void draw_party_symbol(short mode,location center)
 
 /* Input terrain currently trying to draw. Get back Rect in terrain template containing 
 desired pixmap, or Rect to darkness if desired map not present */
-Rect get_terrain_template_rect (unsigned char type_wanted) ////
+Rect get_terrain_template_rect (unsigned short type_wanted) ////
 {
 	short picture_wanted;
 	
@@ -755,7 +758,7 @@ Rect return_item_rect(short wanted)////
 
 // Give the position of the monster graphic in the picture resource
 // Will store monsters the same in Exile's II and III
-Rect get_monster_rect (unsigned char type_wanted,short mode) ////
+Rect get_monster_rect (unsigned short type_wanted,short mode) ////
 //short mode; // 0 - left  1 - right  2 - both
 {
 	Rect store_rect;
@@ -772,7 +775,7 @@ Rect get_monster_rect (unsigned char type_wanted,short mode) ////
 }
 
 // Give the position of the monster graphic in the template in memory
-Rect get_monster_template_rect (unsigned char type_wanted,short mode,short which_part) ////
+Rect get_monster_template_rect (unsigned short type_wanted,short mode,short which_part) ////
 //mode; // 0 - left  1 - right  +10 - combat mode
 {
 	Rect store_rect = {0,0,36,28};
@@ -812,18 +815,8 @@ Rect get_item_template_rect (short type_wanted)////
 	return store_rect;
 }
 
-
-unsigned char get_t_t(char x,char y)  // returns terrain type at where
-{
-	if (is_out())
-		return univ.out[x][y];
-		else if (is_town())
-			return univ.town->terrain(x,y);
-			else return combat_terrain[x][y];
-}
-
 // Is this is subterranean fluid that gets shore plopped down on it?
-bool is_fluid(unsigned char ter_type)////
+bool is_fluid(unsigned short ter_type)////
 {
 //	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 //		return true;
@@ -832,7 +825,7 @@ bool is_fluid(unsigned char ter_type)////
 }
 
 // Is this is subterranean beach that gets shore plopped down next to it?
-bool is_shore(unsigned char ter_type)////
+bool is_shore(unsigned short ter_type)////
 {
 	if (is_fluid(ter_type) == true)
 		return false;
@@ -852,92 +845,100 @@ bool is_shore(unsigned char ter_type)////
 }
 
 // These two functions used to determine wall round-cornering
-bool is_wall(unsigned char ter_type)////
+bool is_wall(unsigned short ter_type)////
 {
-	short pic;
-
-	pic = scenario.ter_types[ter_type].picture;
-	
-	if ((pic >= 88) && (pic <= 120))
-		return true;
-	
-	return false;
+	return scenario.ter_types[ter_type].trim_type == TRIM_WALL;
+//	short pic;
+//
+//	pic = scenario.ter_types[ter_type].picture;
+//	
+//	if ((pic >= 88) && (pic <= 120))
+//		return true;
+//	
+//	return false;
 }
-bool is_ground(unsigned char ter_type)
+bool is_ground(unsigned short ter_type)
 {
-	short pic;
-
-	pic = scenario.ter_types[ter_type].picture;
-	if ((pic >= 0) && (pic <= 87))
-		return true;
-	if ((pic >= 121) && (pic <= 122))
-		return true;
-	if ((pic >= 179) && (pic <= 208))
-		return true;
-	if ((pic >= 211) && (pic <= 212))
-		return true;
-	if ((pic >= 215) && (pic <= 246))
-		return true;
-
-	return false;
-}
-
-void make_town_trim(short mode)
-//mode; // 0 - town 1 - outdoor combat
-{
-	location where;
-	eGameMode store_mode;
-	
-	store_mode = overall_mode;
-	overall_mode = (mode == 0) ? MODE_TOWN : MODE_COMBAT;
-	for (where.x = 0; where.x < univ.town->max_dim(); where.x++)
-		for (where.y = 0; where.y < univ.town->max_dim(); where.y++)
-			town_trim[where.x][where.y] = add_trim_to_array(where,
-			 (mode == 0) ? univ.town->terrain(where.x,where.y) : combat_terrain[where.x][where.y]);
-	for (where.x = 0; where.x < univ.town->max_dim(); where.x++)
-		for (where.y = 0; where.y < univ.town->max_dim(); where.y++) {
-			if (town_trim[where.x][where.y] & 1)
-				town_trim[where.x][where.y] &= 125;
-			if (town_trim[where.x][where.y] & 4)
-				town_trim[where.x][where.y] &= 245;
-			if (town_trim[where.x][where.y] & 10)
-				town_trim[where.x][where.y] &= 215;	
-			if (town_trim[where.x][where.y] & 64)
-				town_trim[where.x][where.y] &= 95;	
-			}
-	overall_mode = store_mode;			
+	if(scenario.ter_types[ter_type].trim_type == TRIM_WALL)
+		return false;
+	if(scenario.ter_types[ter_type].block_horse)
+		return false;
+	if(scenario.ter_types[ter_type].trim_type == TRIM_WALKWAY)
+		return false;
+	return true;
+//	short pic;
+//
+//	pic = scenario.ter_types[ter_type].picture;
+//	if ((pic >= 0) && (pic <= 87))
+//		return true;
+//	if ((pic >= 121) && (pic <= 122))
+//		return true;
+//	if ((pic >= 179) && (pic <= 208))
+//		return true;
+//	if ((pic >= 211) && (pic <= 212))
+//		return true;
+//	if ((pic >= 215) && (pic <= 246))
+//		return true;
+//
+//	return false;
 }
 
-void make_out_trim()
-{
-	location where;
-	eGameMode store_mode;
-	
-	store_mode = overall_mode;
-	overall_mode = MODE_OUTDOORS;
+//void make_town_trim(short mode)
+////mode; // 0 - town 1 - outdoor combat
+//{
+//	location where;
+//	eGameMode store_mode;
+//	
+//	store_mode = overall_mode;
+//	overall_mode = (mode == 0) ? MODE_TOWN : MODE_COMBAT;
+//	for (where.x = 0; where.x < univ.town->max_dim(); where.x++)
+//		for (where.y = 0; where.y < univ.town->max_dim(); where.y++)
+//			town_trim[where.x][where.y] = add_trim_to_array(where,
+//			 (mode == 0) ? univ.town->terrain(where.x,where.y) : combat_terrain[where.x][where.y]);
+//	for (where.x = 0; where.x < univ.town->max_dim(); where.x++)
+//		for (where.y = 0; where.y < univ.town->max_dim(); where.y++) {
+//			if (town_trim[where.x][where.y] & 1)
+//				town_trim[where.x][where.y] &= 125;
+//			if (town_trim[where.x][where.y] & 4)
+//				town_trim[where.x][where.y] &= 245;
+//			if (town_trim[where.x][where.y] & 10)
+//				town_trim[where.x][where.y] &= 215;	
+//			if (town_trim[where.x][where.y] & 64)
+//				town_trim[where.x][where.y] &= 95;	
+//			}
+//	overall_mode = store_mode;			
+//}
 
-	for (where.x = 0; where.x < 96; where.x++)
-		for (where.y = 0; where.y < 96; where.y++)
-			out_trim[where.x][where.y] = add_trim_to_array(where,univ.out[where.x][where.y]);
-	for (where.x = 0; where.x < 96; where.x++)
-		for (where.y = 0; where.y < 96; where.y++) {
-			if (out_trim[where.x][where.y] & 1)
-				out_trim[where.x][where.y] &= 125;
-			if (out_trim[where.x][where.y] & 4)
-				out_trim[where.x][where.y] &= 245;
-			if (out_trim[where.x][where.y] & 10)
-				out_trim[where.x][where.y] &= 215;	
-			if (out_trim[where.x][where.y] & 64)
-				out_trim[where.x][where.y] &= 95;	
-			}
-	overall_mode = store_mode;
-			
-}
+//void make_out_trim()
+//{
+//	location where;
+//	eGameMode store_mode;
+//	
+//	store_mode = overall_mode;
+//	overall_mode = MODE_OUTDOORS;
+//
+//	for (where.x = 0; where.x < 96; where.x++)
+//		for (where.y = 0; where.y < 96; where.y++)
+//			out_trim[where.x][where.y] = add_trim_to_array(where,univ.out[where.x][where.y]);
+//	for (where.x = 0; where.x < 96; where.x++)
+//		for (where.y = 0; where.y < 96; where.y++) {
+//			if (out_trim[where.x][where.y] & 1)
+//				out_trim[where.x][where.y] &= 125;
+//			if (out_trim[where.x][where.y] & 4)
+//				out_trim[where.x][where.y] &= 245;
+//			if (out_trim[where.x][where.y] & 10)
+//				out_trim[where.x][where.y] &= 215;	
+//			if (out_trim[where.x][where.y] & 64)
+//				out_trim[where.x][where.y] &= 95;	
+//			}
+//	overall_mode = store_mode;
+//			
+//}
 
-char add_trim_to_array(location where,unsigned char ter_type)
+char get_fluid_trim(location where,unsigned short ter_type)
 {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
-	unsigned char store;
+	unsigned short store;
 	char to_return = 0;
 	
 	if (where.x == 0)
@@ -960,56 +961,64 @@ char add_trim_to_array(location where,unsigned char ter_type)
 	// Set up trim for fluids
 	if (is_fluid(ter_type) == true) {
 		if (at_left == false) {
-			store = get_t_t(where.x - 1,where.y);
+			store = coord_to_ter(where.x - 1,where.y);
 			if (is_shore(store) == true)
 				to_return |= 64;
 			}
 		if (at_right == false) {
-			store = get_t_t(where.x + 1,where.y);
+			store = coord_to_ter(where.x + 1,where.y);
 			if (is_shore(store) == true)
 				to_return |= 4;
 			}
 		if (at_top == false) {
-			store = get_t_t(where.x,where.y - 1);
+			store = coord_to_ter(where.x,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 1;
 			}	
 		if (at_bot == false) {
-			store = get_t_t(where.x,where.y + 1);
+			store = coord_to_ter(where.x,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 16;
 			}
 		if ((at_left == false) && (at_top == false)) {
-			store = get_t_t(where.x - 1,where.y - 1);
+			store = coord_to_ter(where.x - 1,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 128;
 			}
-		if ((at_right == false) && (at_top == false)) {
-			store = get_t_t(where.x + 1,where.y + 1);
+		if ((at_right == false) && (at_bot == false)) {
+			store = coord_to_ter(where.x + 1,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 8;
 			}
-		if ((at_right == false) && (at_bot == false)) {
-			store = get_t_t(where.x + 1,where.y - 1);
+		if ((at_right == false) && (at_top == false)) {
+			store = coord_to_ter(where.x + 1,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 2;
 			}
 		if ((at_left == false) && (at_bot == false)) {
-			store = get_t_t(where.x - 1,where.y + 1);
+			store = coord_to_ter(where.x - 1,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 32;
 			}
-		}
+	}
+	if (to_return & 1)
+		to_return &= 125;
+	if (to_return & 4)
+		to_return &= 245;
+	if (to_return & 10)
+		to_return &= 215;	
+	if (to_return & 64)
+		to_return &= 95;	
 
 	return to_return;
 }
 
 // Sees if party has seen a monster of this sort, updates menu and gives
 // special messages as necessary
-void check_if_monst_seen(unsigned char m_num)
+void check_if_monst_seen(unsigned short m_num)
 {
 	// this rule has been changed
-	return;
+	return; // TODO: Bring this back?
 	if (univ.party.m_seen[m_num] == 0) {
 		univ.party.m_seen[m_num] = 1;
 		switch (m_num) {

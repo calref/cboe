@@ -4,6 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 
 #include "boe.dlgutil.h"
@@ -30,9 +31,6 @@
 #include "dlgutil.h"
 #include "fileio.h"
 #define	NUM_HINTS	30
-
-#include <vector>
-using std::vector;
 
 //extern big_tr_type t_d;
 extern short stat_window,dialog_answer;
@@ -65,6 +63,7 @@ extern cUniverse univ;
 short terrain_pic[256]; 
 
 vector<scen_header_type> scen_headers;
+vector<scen_header_str_type> scen_header_strs;
 					
 GWorldPtr pcs_gworld = NULL;
 
@@ -83,13 +82,12 @@ Str255 old_str1,old_str2,one_back1,one_back2;
 extern word_rect_type preset_words[9];
 Rect talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 char title_string[50];
-unsigned char store_monst_type;
+unsigned short store_monst_type;
 short store_m_num;
 Rect dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic;//,cur_town_talk_loaded = -1;
-extern std::vector<std::string*> scen_header_strs;
 
 // Shopping vars
 
@@ -522,7 +520,7 @@ void set_up_shop_array()
 	SetControlMaximum(shop_sbar,i);
 }
 
-void start_talk_mode(short m_num,short personality,unsigned char monst_type,short store_face_pic)////
+void start_talk_mode(short m_num,short personality,unsigned short monst_type,short store_face_pic)////
 {
 	Rect area_rect;
 	Str255 place_string1 = "";
@@ -1780,24 +1778,23 @@ void tip_of_day()
 void put_scen_info()
 {
 	short i;
-	Str255 place_str;
+	ostringstream sout;
 	char *ratings[] = {"G","PG","R","NC-17"};
 	char *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
 		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
 			cd_set_pict(947, 6 + i * 3,scen_headers[store_scen_page_on * 3 + i].intro_pic,PICT_SCEN);
-			sprintf((char *) place_str,
-				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				scen_header_strs[store_scen_page_on * 3 + i][0].c_str(),
-				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
-				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
-				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
-				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
-				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				scen_header_strs[store_scen_page_on * 3 + i][1].c_str(),
-				scen_header_strs[store_scen_page_on * 3 + i][2].c_str()); 
-			csit(947,7 + i * 3,(char *) place_str);
+			sout.str("");
+			sout << scen_header_strs[store_scen_page_on * 3 + i].name;
+			sout << " v" << scen_headers[store_scen_page_on * 3 + i].ver[0];
+			sout << '.' << scen_headers[store_scen_page_on * 3 + i].ver[1];
+			sout << '.' << scen_headers[store_scen_page_on * 3 + i].ver[2];
+			sout << " - |  Difficulty: " << difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty];
+			sout << ", Rating: " << ratings[scen_headers[store_scen_page_on * 3 + i].default_ground];
+			sout << " |" << scen_header_strs[store_scen_page_on * 3 + i].who1;
+			sout << " |" << scen_header_strs[store_scen_page_on * 3 + i].who2;
+			csit(947,7 + i * 3,(char *) sout.str().c_str());
 			cd_activate_item(947,8 + i * 3,1);			
 			}
 			else {

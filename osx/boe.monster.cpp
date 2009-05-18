@@ -3,6 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
@@ -16,12 +17,13 @@
 #include "dlgconsts.h"
 #include "boe.main.h"
 #include "mathutil.h"
+#include "graphtool.h"
 
 //extern current_town_type univ.town;
 //extern party_record_type party;
 extern eGameMode overall_mode;
 //extern cOutdoors univ.out.outdoors[2][2];
-extern unsigned char combat_terrain[64][64];//,out[96][96];
+extern unsigned short combat_terrain[64][64];//,out[96][96];
 extern short which_combat_type;
 //extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
@@ -44,7 +46,7 @@ short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 //cCreature null_start_type; = {0,0,loc(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 	
 ////				
-cMonster return_monster_template(unsigned char store)
+cMonster return_monster_template(unsigned short store)
 {
 	cMonster monst;
 	short m_num,i;
@@ -246,31 +248,36 @@ location get_monst_head(short m_num)
 	return l;
 }
 
-short get_monst_picnum(unsigned char monst)
+short get_monst_picnum(unsigned short monst)
 {
 	return scenario.scen_monsters[monst].picture_num;
 }
 
-short get_monst_pictype(unsigned char monst)
+short get_monst_pictype(unsigned short monst)
 {
 	short type = PICT_MONST;
 	short n = scenario.scen_monsters[monst].picture_num;
-	if (n >= 1000) type += PICT_CUSTOM;
-	switch(n / 1000){
-		case 2:
-			type += PICT_WIDE_MONSTER;
-			break;
-		case 3:
-			type += PICT_TALL_MONSTER;
-			break;
-		case 4:
-			type += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
-			break;
+	if (n >= 1000){
+		type += PICT_CUSTOM;
+		switch(n / 1000){
+			case 2:
+				type += PICT_WIDE_MONSTER;
+				break;
+			case 3:
+				type += PICT_TALL_MONSTER;
+				break;
+			case 4:
+				type += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
+				break;
+		}
+	}else{
+		if(m_pic_index[n].x == 2) type += PICT_WIDE_MONSTER;
+		if(m_pic_index[n].y == 2) type += PICT_TALL_MONSTER;
 	}
 	return type;
 }
 
-void get_monst_dims(unsigned char monst,short *width, short *height)
+void get_monst_dims(unsigned short monst,short *width, short *height)
 {
 
 	*width = scenario.scen_monsters[monst].x_width;
@@ -278,7 +285,7 @@ void get_monst_dims(unsigned char monst,short *width, short *height)
 }
 
 // Used to set up monsters for outdoor wandering encounters.
-void set_up_monst(short mode,unsigned char m_num)
+void set_up_monst(short mode,unsigned short m_num)
 //mode; // 0 - unfriendly  1 - friendly & fightin'
 {
 	short which;
@@ -997,7 +1004,7 @@ void monst_inflict_fields(short which_monst)
 bool monst_check_special_terrain(location where_check,short mode,short which_monst)
 //mode; // 1 - town 2 - combat
 {
-	unsigned char ter;
+	unsigned short ter;
 	short r1,i,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
@@ -1168,7 +1175,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void forced_place_monster(unsigned char which,location where)
+void forced_place_monster(unsigned short which,location where)
 {
 	bool free_spot = false;
 	short i = 0,r1;
@@ -1336,7 +1343,7 @@ void record_monst(cCreature *which_m)
 }
 // returns 90 is no placement, OW returns # of spot
 ////
-short place_monster(unsigned char which,location where)
+short place_monster(unsigned short which,location where)
 {
 	short i = 0;
 	
@@ -1347,7 +1354,7 @@ short place_monster(unsigned char which,location where)
 	
 	if (i < univ.town->max_monst()) {
 		univ.town.monst.dudes[i] = cCreature();
-		univ.town.monst.dudes[i].m_d = return_monster_template((unsigned char) which);
+		univ.town.monst.dudes[i].m_d = return_monster_template((unsigned short) which);
 		univ.town.monst.dudes[i].attitude = scenario.scen_monsters[which].default_attitude;
 		if (univ.town.monst.dudes[i].attitude % 2 == 0)
 			univ.town.monst.dudes[i].attitude = 1;
@@ -1372,7 +1379,7 @@ short place_monster(unsigned char which,location where)
 }
 
 // returns true if placement was successful
-bool summon_monster(unsigned char which,location where,short duration,short given_attitude)
+bool summon_monster(unsigned short which,location where,short duration,short given_attitude)
 //which; // if in town, this is caster loc., if in combat, this is where to try
 					// to put monster
 {
@@ -1428,7 +1435,7 @@ bool summon_monster(unsigned char which,location where,short duration,short give
 void activate_monsters(short code,short attitude)
 {
 	short i; 
-	unsigned char which;
+	unsigned short which;
 	
 	if (code == 0)
 		return;

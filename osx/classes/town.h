@@ -36,7 +36,7 @@ public:
 //	};
 	class cWandering { // formerly wandering_type
 	public:
-		unsigned char monst[4];
+		unsigned short monst[4];
 		
 		cWandering& operator = (legacy::wandering_type old);
 	};
@@ -59,7 +59,7 @@ public:
 	cWandering wandering[4];
 	location wandering_locs[4];
 	location special_locs[50];
-	unsigned char spec_id[50];
+	unsigned short spec_id[50];
 	location sign_locs[15];
 	short lighting_type;
 	location start_locs[4];

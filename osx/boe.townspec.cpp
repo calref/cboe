@@ -3,6 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.party.h"
 #include "boe.town.h"
@@ -23,7 +24,7 @@ extern eGameMode overall_mode;
 //extern party_record_type univ.party;
 //extern current_town_type	univ.town;
 //extern unsigned char out[96][96],out_e[96][96];
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern short current_pc,stat_window;
 //extern cOutdoors outdoors[2][2];
 extern location pc_pos[6],center;

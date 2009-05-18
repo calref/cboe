@@ -6,6 +6,12 @@
  *
  */
 
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
 #include "classes.h"
 #include "oldstructs.h"
 #include "mathutil.h"
@@ -237,6 +243,11 @@ bool cCurTown::is_rubble(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	return fields[x][y] & 8388608L;
 }
+
+//bool cCurTown::is_trim(char x, char y, char t){
+//	unsigned char bit = 1 << t;
+//	return trim[x][y] & bit;
+//}
 
 bool cCurTown::set_explored(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
@@ -607,6 +618,35 @@ bool cCurTown::set_rubble(char x, char y, bool b){
 	else fields[x][y] &= ~8388608L;
 	return true;
 }
+
+//bool cCurTown::set_trim(char x, char y, char t, bool b){
+//	unsigned char bit = 1 << t;
+//	if(b){
+//		switch(t){
+//			case 0:
+//				set_trim(x,y,1,false);
+//				break;
+//			case 1:
+//				if(!is_trim(x,y,3)) break;
+//				set_trim(x,y,3,false);
+//				set_trim(x,y,5,false);
+//				break;
+//			case 2:
+//				set_trim(x,y,1,false);
+//				set_trim(x,y,3,false);
+//				break;
+//			case 3:
+//				if(!is_trim(x,y,1)) break;
+//				set_trim(x,y,3,false);
+//				set_trim(x,y,5,false);
+//				break;
+//			case 6:
+//				set_trim(x,y,5,false);
+//				break;
+//		}
+//		trim[x][y] |= bit;
+//	}else trim[x][y] &= ~bit;
+//}
 
 unsigned char cCurTown::explored(char x,char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return 0;

@@ -3,6 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 
 #include "boe.graphics.h"
@@ -559,16 +560,16 @@ void display_monst_event_filter (short item_hit)
 						
 					if (on_monst_menu[position] < 0)
 						position = 0;
-					store_m->number = (unsigned char)on_monst_menu[position];
-					store_m->m_d = return_monster_template((unsigned char)on_monst_menu[position]);
+					store_m->number = (unsigned short)on_monst_menu[position];
+					store_m->m_d = return_monster_template((unsigned short)on_monst_menu[position]);
 					put_monst_info();
 					break;
 				case 29:
 					position++;
 					if (on_monst_menu[position] < 0)
 						position = 0;
-					store_m->number = (unsigned char)on_monst_menu[position];
-					store_m->m_d = return_monster_template((unsigned char)on_monst_menu[position]);
+					store_m->number = (unsigned short)on_monst_menu[position];
+					store_m->m_d = return_monster_template((unsigned short)on_monst_menu[position]);
 					put_monst_info();
 					break;
 
@@ -591,7 +592,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 		full_roster = true;
 		store_m = &hold_m;
 		store_m->number = on_monst_menu[array_pos];
-		store_m->m_d = return_monster_template((unsigned char)on_monst_menu[array_pos]);
+		store_m->m_d = return_monster_template((unsigned short)on_monst_menu[array_pos]);
 		}
 		else {
 			hold_m = *which_m;

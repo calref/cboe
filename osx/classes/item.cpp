@@ -6,6 +6,12 @@
  *
  */
 
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
 #include "classes.h"
 #include "boe.consts.h"
 #include "oldstructs.h"
@@ -310,7 +316,7 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	special_class = old.special_class;
 	item_loc.x = old.item_loc.x;
 	item_loc.y = old.item_loc.y;
-	full_name = old.full_name;
+	full_name = string(old.full_name);
 	name = old.name;
 	treas_class = old.treas_class;
 	item_properties = old.item_properties;

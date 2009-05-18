@@ -3,6 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 
 #include "boe.fileio.h"
@@ -130,10 +131,10 @@ extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern short hit_chance[21],pc_parry[6],combat_active_pc;//,pc_moves[6];
 extern short boom_gr[8];
-extern	unsigned char beasts[5];
-extern	unsigned char m1[20];
-extern	unsigned char m2[16];
-extern	unsigned char m3[16];
+//extern	unsigned char beasts[5];
+//extern	unsigned char m1[20];
+//extern	unsigned char m2[16];
+//extern	unsigned char m3[16];
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
 extern short current_ground,dialog_answer;
@@ -1994,7 +1995,7 @@ void cast_town_spell(location where) ////
 {
 	short adjust,r1,targ,store;
 	location loc;
-	unsigned char ter;
+	unsigned short ter;
 	
 	if ((where.x <= univ.town->in_town_rect.left) ||
 		(where.x >= univ.town->in_town_rect.right) ||
@@ -2138,7 +2139,7 @@ void sanctify_space(location where)
 
 void crumble_wall(location where) // TODO: Add something like this to the spreading quickfire function
 {
-	unsigned char ter;
+	unsigned short ter;
 	
 	if (loc_off_act_area(where) == true)
 		return;
@@ -3090,7 +3091,7 @@ void pick_trapped_monst_event_filter (short item_hit)
 	dialog_answer = item_hit;
 }
 
-unsigned char pick_trapped_monst()  
+unsigned short pick_trapped_monst()  
 // ignore parent in Mac version
 {
 	short item_hit,i;
@@ -3108,7 +3109,7 @@ unsigned char pick_trapped_monst()
 			else {
 				sp = get_m_name(univ.party.imprisoned_monst[i]);
 				csit(988,3 + 3 * i, sp.c_str());
-				get_monst = return_monster_template((unsigned char)(univ.party.imprisoned_monst[i]));
+				get_monst = return_monster_template((unsigned short)(univ.party.imprisoned_monst[i]));
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}
 	
@@ -3118,7 +3119,7 @@ unsigned char pick_trapped_monst()
 
 	if (dialog_answer == 1)
 		return 0;
-		else return ((unsigned char)(univ.party.imprisoned_monst[(dialog_answer - 2) / 3]));	
+		else return ((unsigned short)(univ.party.imprisoned_monst[(dialog_answer - 2) / 3]));	
 }
 
 

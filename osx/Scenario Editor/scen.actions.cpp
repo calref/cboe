@@ -63,7 +63,7 @@ extern cTown* town;
 //extern big_tr_type t_d;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short /*max_dim[3],*/mode_count,to_create;
-extern unsigned char template_terrain[64][64];
+extern unsigned short template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
 extern ControlHandle right_sbar;
@@ -107,7 +107,7 @@ cSpeech::cNode null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,
 rectangle working_rect;
 location last_space_hit;
 bool erasing_mode;
-unsigned char current_ground = 0;
+unsigned short current_ground = 0;
 
 short special_to_paste = -1;
 
@@ -1255,7 +1255,7 @@ void flash_rect(Rect to_flash) {
 
 void swap_terrain() {
 	short a,b,c,i,j;
-	unsigned char ter;
+	unsigned short ter;
 	
 	change_ter(&a,&b,&c);
 	if (a < 0) return;
@@ -1273,7 +1273,7 @@ void swap_terrain() {
 	
 }
 
-void set_new_terrain(unsigned char selected_terrain) {
+void set_new_terrain(unsigned short selected_terrain) {
 	current_terrain_type = selected_terrain;
 	redraw_selected_ter();
 //	if (selected_terrain < 2)
@@ -1552,7 +1552,7 @@ void set_up_lights() {
 
 
 bool is_wall(short i,short j) {
-	unsigned char ter,walls[3] = {77,77,224};
+	unsigned short ter,walls[3] = {77,77,224};
 	bool answer = false;
 	short k,pic;
 	
@@ -1581,7 +1581,7 @@ bool is_wall(short i,short j) {
 }
 
 bool is_correctable_wall(short i,short j) {
-	unsigned char ter,walls[13] = {5,6,8,9,11,12,
+	unsigned short ter,walls[13] = {5,6,8,9,11,12,
 	14,15,17,18,19,20,21};
 	bool answer = false;
 	short k;
@@ -1601,7 +1601,7 @@ bool is_correctable_wall(short i,short j) {
 bool is_mountain(short i,short j) {
 	bool answer = false;
 	short k,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1623,7 +1623,7 @@ bool is_mountain(short i,short j) {
 bool is_hill(short i,short j) {
 	bool answer = false;
 	short k,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1653,7 +1653,7 @@ bool is_hill_or_mountain(short i,short j) {
 bool is_erasable_water(short i,short j) {
 	bool answer = false;
 	short k,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1670,7 +1670,7 @@ bool is_erasable_water(short i,short j) {
 bool is_water(short i,short j) {
 	bool answer = false;
 	short k,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1687,7 +1687,7 @@ bool is_water(short i,short j) {
 bool is_correctable_water(short i,short j) {
 	bool answer = false;
 	short k,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1702,11 +1702,11 @@ bool is_correctable_water(short i,short j) {
 	return answer;
 }
 
-void shy_change_circle_terrain(location center,short radius,unsigned char terrain_type,short probability) {
+void shy_change_circle_terrain(location center,short radius,unsigned short terrain_type,short probability) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	short i,j;
-	unsigned char ter;
+	unsigned short ter;
 	
 	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
 		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
@@ -1719,7 +1719,7 @@ void shy_change_circle_terrain(location center,short radius,unsigned char terrai
 		}
 }
 
-void change_circle_terrain(location center,short radius,unsigned char terrain_type,short probability) {
+void change_circle_terrain(location center,short radius,unsigned short terrain_type,short probability) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	short i,j;
@@ -1733,7 +1733,7 @@ void change_circle_terrain(location center,short radius,unsigned char terrain_ty
 		}
 }
 
-void change_rect_terrain(rectangle r,unsigned char terrain_type,short probability,bool hollow) {
+void change_rect_terrain(rectangle r,unsigned short terrain_type,short probability,bool hollow) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	short i,j;
@@ -1772,7 +1772,7 @@ void change_val (unsigned char *val,short a,short b) {
 
 void frill_up_terrain() {
 	short i,j;
-	unsigned char terrain_type;
+	unsigned short terrain_type;
 	
 	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
 		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
@@ -1795,7 +1795,7 @@ void frill_up_terrain() {
 
 void unfrill_terrain() {
 	short i,j;
-	unsigned char terrain_type;
+	unsigned short terrain_type;
 	
 	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
 		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
@@ -2017,7 +2017,7 @@ void set_terrain(location l,unsigned short terrain_type) {
 }
 
 bool fix_rubble(location l) {
-	unsigned char terrain_type;
+	unsigned short terrain_type;
 	
 	if ((l.x < 0) || (l.y > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
 		return false;
@@ -2042,8 +2042,8 @@ bool fix_rubble(location l) {
 }
 
 bool fix_cave(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
@@ -2138,8 +2138,8 @@ bool fix_cave(location l) {
 
 
 bool fix_mountain(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
@@ -2233,8 +2233,8 @@ bool fix_mountain(location l) {
 }
 
 bool fix_hill(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
@@ -2332,8 +2332,8 @@ bool fix_hill(location l) {
 }
 
 bool fix_water(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
@@ -2430,7 +2430,7 @@ bool fix_water(location l) {
 
 // begin out
 bool out_fix_rubble(location l) {
-	unsigned char terrain_type;
+	unsigned short terrain_type;
 	
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
 		return false;
@@ -2455,8 +2455,8 @@ bool out_fix_rubble(location l) {
 }
 
 bool out_fix_cave(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
@@ -2551,8 +2551,8 @@ bool out_fix_cave(location l) {
 
 
 bool out_fix_mountain(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
@@ -2646,8 +2646,8 @@ bool out_fix_mountain(location l) {
 }
 
 bool out_fix_hill(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
@@ -2745,8 +2745,8 @@ bool out_fix_hill(location l) {
 }
 
 bool out_fix_water(location l) {
-	unsigned char ter_to_fix;
-	unsigned char store_ter;
+	unsigned short ter_to_fix;
+	unsigned short store_ter;
 	short i,j;
 	
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
@@ -3069,7 +3069,7 @@ void set_special(location spot_hit) {
 
 void town_entry(location spot_hit) {
 	short x,y;
-	unsigned char ter;
+	unsigned short ter;
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
 	if (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) {
@@ -3575,7 +3575,7 @@ bool is_lava(short x,short y) {
 }
 
 short get_obscurity(short x,short y) {
-	unsigned char what_terrain;
+	unsigned short what_terrain;
 	short store;
 	
 	what_terrain = coord_to_ter(x,y);
@@ -3588,8 +3588,8 @@ short get_obscurity(short x,short y) {
 	return 0;
 }
 
-unsigned char coord_to_ter(short x,short y) {
-	unsigned char what_terrain;
+unsigned short coord_to_ter(short x,short y) {
+	unsigned short what_terrain;
 	
 	if (editing_town == true)
 		what_terrain = town->terrain(x,y);

@@ -102,11 +102,11 @@ public:
 	string name;
 	short picture;
 	unsigned char blockage;
-	unsigned char flag1;
-	unsigned char flag2;
-	unsigned char flag3; // new additional flag for special properties
+	unsigned short flag1;
+	unsigned short flag2;
+	unsigned short flag3; // new additional flag for special properties
 	eTerSpec special;
-	unsigned char trans_to_what;
+	unsigned short trans_to_what;
 	unsigned char fly_over;
 	unsigned char boat_over;
 	unsigned char block_horse;

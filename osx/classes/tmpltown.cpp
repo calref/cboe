@@ -6,6 +6,12 @@
  *
  */
 
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
 #include "classes.h"
 
 unsigned short& cBigTemplTown::terrain(size_t x, size_t y){

@@ -6,6 +6,12 @@
  *
  */
 
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
 #include "classes.h"
 #include "oldstructs.h"
 
@@ -122,6 +128,6 @@ char(& cScenario::scen_strs(short i))[256]{
 		if(i % 2 == 0) return spec_item_names[(i - 60) / 2];
 		else return spec_item_strs[(i - 60) / 2];
 	}
-	if(i >= 160 && i < 260) return spec_strs[i];
+	if(i >= 160 && i < 260) return spec_strs[i - 100];
 	return journal_strs[6]; // random unused slot
 }

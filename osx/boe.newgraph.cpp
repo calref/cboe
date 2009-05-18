@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.graphics.h"
 #include "boe.graphutil.h"
@@ -61,7 +62,7 @@ extern location pc_pos[6];
 //extern current_town_type univ.town;
 //extern big_tr_type t_d;
 //extern town_item_list	t_i;
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern Point store_anim_ul;
 extern char light_area[13][13];
@@ -86,7 +87,7 @@ extern Str255 old_str1,old_str2,one_back1,one_back2;
 extern word_rect_type preset_words[9];
 extern Rect talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
-extern unsigned char store_monst_type;
+extern unsigned short store_monst_type;
 //extern hold_responses store_resp[83];
 
 // Shop vars

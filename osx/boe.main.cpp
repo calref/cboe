@@ -2,6 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 
 #include "gamma.h"
@@ -124,7 +125,7 @@ location spell_targets[8];
 /* Combat globals */
 short which_combat_type,town_type;
 location center;
-unsigned char combat_terrain[64][64];
+unsigned short combat_terrain[64][64];
 location pc_pos[6];
 short current_pc;
 short combat_active_pc;
@@ -1315,7 +1316,7 @@ void set_up_apple_events()
 
 }
 
-void move_sound(unsigned char ter,short step){
+void move_sound(unsigned short ter,short step){
 	static bool on_swamp = false;
 	short pic,spec,snd;
 	

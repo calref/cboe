@@ -107,7 +107,8 @@ enum eMonsterType {
 
 class cMonster {
 public:
-	unsigned char m_num,level;
+	unsigned short m_num;
+	unsigned char level;
 	string m_name;
 	short health,m_health,mp,max_mp;
 	unsigned char armor,skill;
@@ -118,7 +119,8 @@ public:
 	short morale,m_morale;
 	short corpse_item,corpse_item_chance;
 	short status[15];
-	unsigned char direction,immunities,x_width,y_width,radiate_1,radiate_2;
+	unsigned char direction,immunities,x_width,y_width,radiate_1;
+	unsigned short radiate_2; // I THINK this is the extra field for the second ability
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
 	

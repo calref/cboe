@@ -30,7 +30,7 @@ pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
 void set_up_apple_events();
-void move_sound(unsigned char ter,short step);
+void move_sound(unsigned short ter,short step);
 void incidental_noises(bool on_surface);
 void pause(short length);
 bool sd_legit(short a, short b);

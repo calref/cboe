@@ -4,6 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.actions.h"
 #include "boe.graphutil.h"
@@ -115,7 +116,7 @@ extern cUniverse univ;
 
 
 extern short which_combat_type,num_targets_left;
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern location center;
 extern location pc_pos[6];
 extern short current_pc,town_type;
@@ -307,7 +308,7 @@ bool handle_action(EventRecord event)
 	unsigned char debug_storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
-	unsigned char ter;
+	unsigned short ter;
 	
 	char str[60];	
 	Point the_point,point_in_area;
@@ -2009,10 +2010,10 @@ void post_load()
 
 	if (overall_mode == MODE_OUTDOORS)
 		update_explored(univ.party.p_loc);
-	if (overall_mode == MODE_TOWN) {
-		make_town_trim(0);
-		}
-	make_out_trim();
+//	if (overall_mode == MODE_TOWN) {
+//		make_town_trim(0);
+//		}
+//	make_out_trim();
 	
 	ShowControl(text_sbar);
 	Draw1Control(text_sbar);
@@ -2304,7 +2305,7 @@ void handle_cave_lore()////
 {
 	char str[60];
 	short i,pic;
-	unsigned char ter;
+	unsigned short ter;
 	
 	if (!is_out())
 		return;
@@ -2506,7 +2507,7 @@ bool outd_move_party(location destination,bool forced)
 	location real_dest, sector_p_in;
 	bool keep_going = true,check_f;
 	location store_corner,store_iwc;
-	unsigned char ter;
+	unsigned short ter;
 	
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == true)
@@ -2726,7 +2727,7 @@ bool town_move_party(location destination,short forced)////
 {
 	char create_line[60],keep_going = true;
 	short boat_there,horse_there,spec_num;
-	unsigned char ter;
+	unsigned short ter;
 	bool check_f = false;
 		
 	if (debug_on == true)
@@ -2919,7 +2920,7 @@ short get_outdoor_num()////
 	return (scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
 }
 
-short count_walls(location loc)
+short count_walls(location loc) // TODO: Generalize this function
 {
 	unsigned char walls[31] = {5,6,7,8,9, 10,11,12,13,14, 15,16,17,18,19, 20,21,22,23,24,
 							25,26,27,28,29, 30,31,32,33,34, 35};
@@ -2939,7 +2940,7 @@ short count_walls(location loc)
 	return answer;		
 }
 
-bool is_sign(unsigned char ter)
+bool is_sign(unsigned short ter)
 {
 	
 	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_SIGN)

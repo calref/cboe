@@ -2,6 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.newgraph.h"
 #include "boe.graphics.h"
@@ -30,7 +31,8 @@ extern Point ul;
 //extern piles_of_stuff_dumping_type *data_store;
 extern vector<scen_header_type> scen_headers;
 extern bool unreg_party_in_scen_not_check;
-extern std::vector<std::string> scen_names;;
+extern std::vector<scen_header_str_type> scen_header_strs;
+//extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
 
 //void start_game();
@@ -102,7 +104,7 @@ bool handle_startup_press(Point the_point)
 					FCD(912,0);
 					break;
 				}
-				scen_name = scen_names[scen];
+				scen_name = scen_header_strs[scen].file;
 				put_party_in_scen(scen_name);
 				break;
 		

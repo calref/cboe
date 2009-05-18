@@ -2,6 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
@@ -14,7 +15,7 @@ extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fir
 extern bool sleep_field;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 //extern unsigned char out[96][96], univ.out.out_e[96][96];
 //extern unsigned char univ.out.misc_i[64][64],univ.out.sfx[64][64];
 extern char terrain_blocked[256];

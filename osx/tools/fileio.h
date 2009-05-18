@@ -20,7 +20,7 @@ bool load_town(short which_town, cSpeech& the_talk);
 bool load_town_str(short which_town, short which_str, char* str);
 bool load_town_str(short which_town, cTown*& the_town);
 bool load_outdoors(location which_out,cOutdoors& the_out);
-bool load_outdoors(location which_out, short mode, unsigned char borders[4][50]);
+bool load_outdoors(location which_out, short mode, unsigned short borders[4][50]);
 bool load_outdoor_str(location which_out, short which_str, char* str);
 void load_spec_graphics();
 

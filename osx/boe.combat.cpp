@@ -3,6 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.monster.h"
 #include "boe.graphics.h"
@@ -31,7 +32,7 @@ extern eGameMode overall_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern location pc_pos[6];
 extern short current_pc;
 extern short pc_last_cast[2][6];
@@ -63,7 +64,7 @@ short missile_inv_slot, ammo_inv_slot;
 short force_wall_position = 10; //  10 -> no force wall
 bool processing_fields = true;
 short futzing;
-unsigned char store_sum_monst;
+unsigned short store_sum_monst;
 short store_sum_monst_cost;
 extern cUniverse univ;
 
@@ -280,7 +281,7 @@ bool center_on_monst;
 
 
 
-void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned char in_which_terrain,short num_walls)
+void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned short in_which_terrain,short num_walls)
 {
 	short i,j,how_many,num_tries = 0;
 	GrafPtr old_port;

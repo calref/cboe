@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.fileio.h"
 #include "boe.text.h"
@@ -66,13 +67,13 @@ extern short terrain_pic[256],cur_town_talk_loaded;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-std::vector<std::string*> scen_header_strs;
-std::vector<std::string> scen_names;
+extern vector<scen_header_str_type> scen_header_strs;
+//std::vector<std::string> scen_names;
 //stored_town_maps_type town_maps;
 //extern talking_record_type talking;
 //extern outdoor_strs_type outdoor_text[2][2];
 extern vector<scen_header_type> scen_headers;
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern bool belt_present;
 extern bool mac_is_intel;
 
@@ -326,7 +327,7 @@ void do_apple_event_open(FSSpec file_info)
 //	char scen_name[256];
 //}
 
-void set_terrain(location l, unsigned char terrain_type)
+void set_terrain(location l, unsigned short terrain_type)
 {
 	univ.town->terrain(l.x,l.y) = terrain_type;
 	combat_terrain[l.x][l.y] = terrain_type;
@@ -803,7 +804,7 @@ void build_outdoors()
 			
 	fix_boats();
 	add_outdoor_maps(); 
-	make_out_trim();
+//	make_out_trim();
 	if (in_startup_mode == false)
 		erase_out_specials();
 	
@@ -1215,27 +1216,7 @@ void build_scen_headers()
 			} // folder, so do nothing
 			else {
 				do{
-					if (load_scenario_header(fileRefs[cur_entry]) == true) {
-						// now we need to store the file name, first stripping any path that occurs
-						// before it
-						last_colon = -1;
-						//p2cstr(scen_name);
-//						for (i = 0; i < strlen((char *) scen_name); i++)
-//							if (scen_name[i] == ':')
-//								last_colon = i;
-//						for (i = last_colon + 1; i < strlen((char *) scen_name); i++)
-//							data_store->scen_names[cur_entry][i - last_colon - 1] = scen_name[i];
-//						data_store->scen_names[cur_entry][strlen((char *) scen_name) - last_colon - 1] = 0;
-//						cur_entry++;
-						p2cstr(files[cur_entry].name);
-						std::string curScenarioName((char*)files[cur_entry].name);
-						c2pstr((char*)files[cur_entry].name);
-//						for(unsigned i = 0; i < curScenarioName.length(); i++)
-//							if(curScenarioName[i] == ':')
-//								last_colon = i;
-//						curScenarioName.erase(0,last_colon + 1);
-						scen_names.push_back(curScenarioName);
-					}
+					load_scenario_header(fileRefs[cur_entry]);
 					cur_entry++;
 					//entries_so_far++;
 				} while (cur_entry < numScens);
@@ -1243,7 +1224,7 @@ void build_scen_headers()
 		}
 		index++;
 	}while (err == noErr);
-	if (scen_names.size() == 0) { // no scens present
+	if (scen_header_strs.size() == 0) { // no scens present
 	}
 	FSCloseIterator(iter);
 }
@@ -1313,15 +1294,19 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
 	load_scenario(spec);
 	
-	string* scen_strs = new string[3];
-	scen_strs[0] = scenario.scen_name;
-	scen_strs[1] = scenario.who_wrote[0];
-	scen_strs[2] = scenario.who_wrote[1];
+	scen_header_str_type scen_strs;
+	scen_strs.name = scenario.scen_name;
+	scen_strs.who1 = scenario.who_wrote[0];
+	scen_strs.who2 = scenario.who_wrote[1];
+	p2cstr(spec.name);
+	string curScenarioName((char*)spec.name);
+	c2pstr((char*)spec.name);
+	scen_strs.file = curScenarioName;
 	
-	if(scen_strs[0] == "Valley of Dying Things" ||
-	   scen_strs[0] == "A Small Rebellion" ||
-	   scen_strs[0] == "The Za-Khazi Run"/* ||
-	 scen_strs[0] == "Bandit Busywork" */)
+	if(scen_strs.file == "valleydy.exs" ||
+	   scen_strs.file == "stealth.exs" ||
+	   scen_strs.file == "zakhazi.exs"/* ||
+	   scen_strs.file == "busywork.exs" */)
 		return false;
 	
 	scen_headers.push_back(curScen);

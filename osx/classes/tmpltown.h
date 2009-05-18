@@ -19,7 +19,7 @@ public:
 	class cTerRect { // formerly city_ter_rect_type
 	public:
 		rectangle rect;
-		unsigned char ter_type;
+		unsigned short ter_type;
 		unsigned char hollow;
 	};
 	cCityBlock blocks[15];

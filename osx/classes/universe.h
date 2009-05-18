@@ -34,6 +34,7 @@ public:
 	//unsigned short template_terrain[64][64];
 	unsigned long fields[64][64];
 	bool special_spot[64][64];
+//	unsigned char trim[64][64]; // transient
 	
 	void append(legacy::current_town_type& old,short which_size);
 	void append(legacy::town_item_list& old);
@@ -74,6 +75,7 @@ public:
 	bool is_ash(char x, char y) const;
 	bool is_bones(char x, char y) const;
 	bool is_rubble(char x, char y) const;
+//	bool is_trim(char x, char y, char t) const;
 	bool set_explored(char x, char y, bool b);
 	bool set_force_wall(char x, char y, bool b);
 	bool set_fire_wall(char x, char y, bool b);
@@ -99,6 +101,7 @@ public:
 	bool set_ash(char x, char y, bool b);
 	bool set_bones(char x, char y, bool b);
 	bool set_rubble(char x, char y, bool b);
+//	bool set_trim(char x, char y, char t, bool b);
 	void writeTo(ostream& file);
 	void readFrom(istream& file);
 };

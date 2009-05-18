@@ -18,8 +18,8 @@ class cOutdoors {
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
-		unsigned char monst[7];
-		unsigned char friendly[3];
+		unsigned short monst[7];
+		unsigned short friendly[3];
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
 		
@@ -38,7 +38,7 @@ public:
 	};
 	unsigned short terrain[48][48];
 	location special_locs[18];
-	unsigned char special_id[18];
+	unsigned short special_id[18];
 	location exit_locs[8];
 	char exit_dests[8];
 	location sign_locs[8];

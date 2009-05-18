@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 #include "boe.consts.h"
 
 //#define EXILE_BIG_GUNS 1
@@ -207,6 +208,18 @@ struct scen_header_type {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
+};
+
+struct scen_header_str_type{
+	std::string name, who1, who2, file;
+	//scen_header_str_type(){}
+	scen_header_str_type& operator = (const scen_header_str_type& other) {
+		name = other.name;
+		who1 = other.who1;
+		who2 = other.who2;
+		file = other.file;
+		return *this;
+	}
 };
 
 // for game

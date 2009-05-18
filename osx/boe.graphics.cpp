@@ -5,6 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
+using namespace std;
 #include "classes.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
@@ -41,7 +42,7 @@ extern short anim_step;
 //extern current_town_type univ.town;
 //extern town_item_list t_i;
 //extern unsigned char univ.out[96][96],out_e[96][96];
-extern unsigned char combat_terrain[64][64];
+extern unsigned short combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Point ul;
@@ -112,8 +113,8 @@ Rect win_to_rects[6] = {{5,5,356,284},{383,5,420,263},{0,0,116,271},{0,0,144,271
 Rect startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}}; ////
 extern Rect startup_button[6];
 	
-	Rect trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
-						{0,0,5,5},{0,24,5,28},{31,24,36,28},{31,0,36,5}};
+//	Rect trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
+//						{0,0,5,5},{0,24,5,28},{31,24,36,28},{31,0,36,5}};
 
 Rect	top_left_rec = {0,0,36,28};
 short which_graphic_index[6] = {50,50,50,50,50,50};
@@ -184,7 +185,7 @@ Rect start_buttons_source_rect = {0,0,186,190},
 	start_buttons_rect = {214,30,400,220};
 
 // Variables to store trim. Makes game faster, but wastes 15K. We'll see how it works...
-char out_trim[96][96],town_trim[64][64];
+//char out_trim[96][96],town_trim[64][64];
 
 // Array to store which spots have been seen. Time-saver for drawing fields
 char spot_seen[9][9];
@@ -369,8 +370,8 @@ void plop_fancy_startup()
 		wish_list[i] = 0;
 		storage_status[i] = (i < 50) ? 1 : 0; 
 		}
-	for (i = 0;i < 8; i++)
-		OffsetRect(&trim_rects[i],61,37);
+//	for (i = 0;i < 8; i++)
+//		OffsetRect(&trim_rects[i],61,37);
 	for (i = 0; i < 9; i++)
 		for (j = 0; j < 9; j++)
 			terrain_there[i][j] = -1;
@@ -1355,7 +1356,7 @@ void add_one_graphic(short which_g)
 }
 
 
-void add_terrain_to_wish_list(unsigned char ter)////
+void add_terrain_to_wish_list(unsigned short ter)////
 {
 	if (terrain_pic[ter] >= 1000) 
 		return;
@@ -1446,7 +1447,7 @@ void load_outdoor_graphics() ////
 }
 
 
-void add_monst_graphic(unsigned char m,short mode)////
+void add_monst_graphic(unsigned short m,short mode)////
 // mode 0 - just put in list, 1 - actually add graphics
 {
 	short x,y,i,pict;
@@ -1753,7 +1754,7 @@ GWorldPtr load_pict(short picture_to_get)
 bool is_nature(char x, char y, unsigned char ground_t)
 {
 	short pic;
-	unsigned char ter_type;
+	unsigned short ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
 	return ground_t == scenario.ter_types[ter_type].ground_type;
@@ -1796,7 +1797,7 @@ void draw_terrain(short	mode)
 	location sector_p_in,view_loc;
 	char can_draw;
 	unsigned short spec_terrain;
-	bool off_terrain = false,draw_trim = true;
+	bool off_terrain = false,draw_frills = true;
 	short i,j;
 	GrafPtr old_port;
 	
@@ -1866,10 +1867,10 @@ void draw_terrain(short	mode)
 				where_draw.y += r - 4;
 				off_terrain = false;				
 				
-				draw_trim = true;
+				draw_frills = true;
 				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
 						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) {
-							draw_trim = false;
+							draw_frills = false;
 							// Warning - this section changes where_draw
 							if (where_draw.x < 0)
 								where_draw.x = -1;
@@ -1956,26 +1957,38 @@ void draw_terrain(short	mode)
 //							}
 //						draw_one_terrain_spot(q,r,short_spec_terrain,0);
 					if(trim == TRIM_WALKWAY){
-						int corner = -1;
+						int trim = -1;
 						unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
 						unsigned short ground_ter = get_ter_from_ground(ground_t);
 						if (!loc_off_act_area(where_draw)) {
-							if ((is_nature(where_draw.x - 1,where_draw.y,ground_t)) &&
-								(is_nature(where_draw.x,where_draw.y - 1,ground_t)))
-								corner = 1;
-							if ((is_nature(where_draw.x + 1,where_draw.y,ground_t)) &&
-								(is_nature(where_draw.x,where_draw.y - 1,ground_t)))
-								corner = 2;
-							if ((is_nature(where_draw.x + 1,where_draw.y,ground_t)) &&
-								(is_nature(where_draw.x,where_draw.y + 1,ground_t))) 
-								corner = 3;
-							if ((is_nature(where_draw.x - 1,where_draw.y,ground_t)) &&
-								(is_nature(where_draw.x,where_draw.y + 1,ground_t)))
-								corner = 0;
+							if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
+								if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
+									if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
+										if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+											trim = 8;
+										else trim = 4;
+									}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+										trim = 7;
+									else trim = 1;
+								}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)){ // check down
+									if(is_nature(where_draw.x + 1,where_draw.y,ground_t)) // check right
+										trim = 6;
+									else trim = 0;
+								}
+							}else if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
+								if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
+									if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+										trim = 5;
+									else trim = 2;
+								}
+							}else if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
+								if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+									trim = 3;
+							}
 						}
-						draw_one_terrain_spot(q,r,corner < 0 ? spec_terrain : ground_ter,0);
-						if(corner >= 0)
-							Draw_Some_Item(roads_gworld, calc_rect(corner,0), terrain_screen_gworld, loc(q,r), 1, 0);
+						draw_one_terrain_spot(q,r,trim < 0 ? spec_terrain : ground_ter,0);
+						if(trim >= 0)
+							draw_trim(q,r,trim + 50,spec_terrain);
 					}else if(trim == TRIM_ROAD || trim == TRIM_N || trim == TRIM_S ||
 							 trim == TRIM_W || trim == TRIM_E) {
 //						if ((short_spec_terrain == 81) 
@@ -2025,7 +2038,7 @@ void draw_terrain(short	mode)
 				}
 		 		
 		 		if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == true)
-					&& (draw_trim == true) && (cartoon_happening == false)) {  // Place the trim TODO: Alter trim
+					&& (draw_frills == true) && (cartoon_happening == false)) {  // Place the trim TODO: Alter trim
 		 			place_trim((short) q,(short) r,where_draw,spec_terrain);
 				}
 				if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
@@ -2082,16 +2095,19 @@ void draw_terrain(short	mode)
 }
 
 
+unsigned short get_ground_for_shore(unsigned short ter){
+	if(scenario.ter_types[ter].block_horse) return current_ground;
+	else if(scenario.ter_types[ter].blockage > 2) return current_ground;
+	else return ter;
+}
 
-
-void place_trim(short q,short r,location where,unsigned char ter_type)
+void place_trim(short q,short r,location where,unsigned short ter_type)
 {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
-	unsigned char store,store2,store3,store1;
 	location targ;
 	
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
-	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 86))
+	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 90))
 		return;
 	if (PSD[SDF_NO_SHORE_FRILLS] > 0)
 		return;
@@ -2121,116 +2137,131 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		}
 		
 	// First, trim for fluids
-	if (((is_town()) || (is_combat())) && (town_trim[where.x][where.y] != 0)) {
-
-		if (town_trim[where.x][where.y] & 1)
-				draw_trim(q,r,1,0);	
-		if (town_trim[where.x][where.y] & 2)
-				draw_trim(q,r,2,5);	
-		if (town_trim[where.x][where.y] & 4)
-				draw_trim(q,r,0,3);
-		if (town_trim[where.x][where.y] & 8)
-				draw_trim(q,r,2,6);
-		if (town_trim[where.x][where.y] & 16)
-				draw_trim(q,r,1,1);
-		if (town_trim[where.x][where.y] & 32)
-				draw_trim(q,r,2,7);
-		if (town_trim[where.x][where.y] & 64)
-				draw_trim(q,r,0,2);
-		if (town_trim[where.x][where.y] & 128)
-				draw_trim(q,r,2,4);			
+	if(is_fluid(ter_type)){
+		short trim = get_fluid_trim(where, ter_type);
+		if (trim != 0) {
+			unsigned short shore;
+			if (trim & 2){ // upper right
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,5,shore);
+			}if (trim & 8){ // lower right
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,7,shore);
+			}if (trim & 32){ // lower left
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,6,shore);
+			}if (trim & 128){ // upper left
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,4,shore);
+			}if (trim & 1){ // top
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,2,shore);
+			}if (trim & 4){ // right
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,1,shore);
+			}if (trim & 16){ // bottom
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,3,shore);
+			}if (trim & 64){ // left
+				shore = coord_to_ter(where.x, where.y);
+				shore = get_ground_for_shore(shore);
+				draw_trim(q,r,0,shore);
+			}
 		}
-	if ((is_out()) && (out_trim[where.x][where.y] != 0)) {
-		if (out_trim[where.x][where.y] & 1)
-				draw_trim(q,r,1,0);	
-		if (out_trim[where.x][where.y] & 2)
-				draw_trim(q,r,2,5);	
-		if (out_trim[where.x][where.y] & 4)
-				draw_trim(q,r,0,3);
-		if (out_trim[where.x][where.y] & 8)
-				draw_trim(q,r,2,6);
-		if (out_trim[where.x][where.y] & 16)
-				draw_trim(q,r,1,1);
-		if (out_trim[where.x][where.y] & 32)
-				draw_trim(q,r,2,7);
-		if (out_trim[where.x][where.y] & 64)
-				draw_trim(q,r,0,2);
-		if (out_trim[where.x][where.y] & 128)
-				draw_trim(q,r,2,4);			
+	}
+	
+	if(is_wall(ter_type) && !at_top && !at_bot && !at_left && !at_right){
+	//if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == false) &&
+	//	(at_bot == false) && (at_left == false) && (at_right == false)) {
+		unsigned short to_left = coord_to_ter(where.x - 1,where.y);
+		unsigned short above = coord_to_ter(where.x,where.y - 1);
+		unsigned short to_right = coord_to_ter(where.x + 1,where.y);
+		unsigned short below = coord_to_ter(where.x,where.y + 1);
+		if (is_wall(to_left) && is_wall(above) && is_ground(to_right) && is_ground(below))
+			draw_trim(q,r,11,ter_type);
+		
+		if (is_wall(to_left) && is_wall(below) && is_ground(to_right) && is_ground(above))
+			draw_trim(q,r,9,ter_type);
+		
+		if (is_wall(to_right) && is_wall(above) && is_ground(to_left) && is_ground(below))
+			draw_trim(q,r,10,ter_type);		
+			
+		if (is_wall(to_right) && is_wall(below) && is_ground(to_left) && is_ground(above))
+			draw_trim(q,r,8,ter_type);		
+			
+		if (is_ground(to_left) && is_ground(above) && is_ground(to_right) && is_wall(below)) {
+			draw_trim(q,r,8,ter_type);
+			draw_trim(q,r,9,ter_type);
 		}
 
-				
-	if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == false) &&
-		(at_bot == false) && (at_left == false) && (at_right == false)) {
-		store = get_t_t(where.x - 1,where.y);
-		store1 = get_t_t(where.x,where.y - 1);
-		store2 = get_t_t(where.x + 1,where.y);
-		store3 = get_t_t(where.x,where.y + 1);
-		if ((is_wall(store) == true) 
-			&& (is_wall(store1) == true) &&
-			(is_ground(store2) == true) 
-			&& (is_ground(store3) == true))
-				draw_trim(q,r,3,6);		
-
-		if ((is_wall(store) == true) 
-			&& (is_wall(store3) == true) &&
-			(is_ground(store2) == true) 
-			&& (is_ground(store1) == true))
-				draw_trim(q,r,3,5);		
-
-		if ((is_wall(store2) == true) 
-			&& (is_wall(store1) == true) &&
-			(is_ground(store) == true) 
-			&& (is_ground(store3) == true))
-				draw_trim(q,r,3,7);		
-
-		if ((is_wall(store2) == true) 
-			&& (is_wall(store3) == true) &&
-			(is_ground(store) == true) 
-			&& (is_ground(store1) == true))
-				draw_trim(q,r,3,4);		
-
-
-		if ((is_ground(store) == true) 
-			&& (is_ground(store1) == true) &&
-			(is_ground(store2) == true) 
-			&& (is_wall(store3) == true)) {
-				draw_trim(q,r,3,4);		
-				draw_trim(q,r,3,5);						
-				}
-
-		if ((is_wall(store) == true) 
-			&& (is_ground(store3) == true) &&
-			(is_ground(store2) == true) 
-			&& (is_ground(store1) == true)) {
-				draw_trim(q,r,3,5);		
-				draw_trim(q,r,3,6);						
-				}
-
-		if ((is_ground(store2) == true) 
-			&& (is_wall(store1) == true) &&
-			(is_ground(store) == true) 
-			&& (is_ground(store3) == true)) {
-				draw_trim(q,r,3,6);		
-				draw_trim(q,r,3,7);		
-				}
-
-		if ((is_wall(store2) == true) 
-			&& (is_ground(store3) == true) &&
-			(is_ground(store) == true) 
-			&& (is_ground(store1) == true)) {
-				draw_trim(q,r,3,4);		
-				draw_trim(q,r,3,7);		
-				}
+		if (is_wall(to_left) && is_ground(below) && is_ground(to_right) && is_ground(above)) {
+			draw_trim(q,r,9,ter_type);
+			draw_trim(q,r,11,ter_type);
 		}
+
+		if (is_ground(to_right) && is_wall(above) && is_ground(to_left) && is_ground(below)) {
+			draw_trim(q,r,10,ter_type);
+			draw_trim(q,r,11,ter_type);
+		}
+
+		if (is_wall(to_right) && is_ground(below) && is_ground(to_left) && is_ground(above)) {
+			draw_trim(q,r,8,ter_type);
+			draw_trim(q,r,10,ter_type);
+		}
+	//	}
+	}
 }
 
-void draw_trim(short q,short r,short which_trim,short which_mode)
+void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 {
-	Rect from_rect = {0,0,36,28},to_rect;
-	PixMapHandle	store1,store2;
+	// which_trim
+	// 0 - left, 1 - right, 2 - top, 3 - bottom, 4 - tl, 5 - tr, 6 - bl, 7 - br
+	// 8 - wall tl, 9 - wall tr, 10 - wall bl, 11 - wall br
+	// 50 - walkway bl, 51 - walkway tl, 52 - walkway tr, 53 - walkway br
+	// 54 - walkway top, 55 - walkway right, 56 - walkway bottom, 57 - walkway left
+	// 58 - lone walkway
+	Rect from_rect = {0,0,36,28},to_rect,mask_rect;
+	GWorldPtr from_gworld;
+	static Rect trim_rects[] = {
+		{0,0,36,14}, {0,0,36,14},
+		{0,0,18,28}, {0,0,18,28},
+		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
+		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
+	};
+	static Rect walkway_rects[] = {
+		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
+		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
+		{0,0,36,28},
+	};
+	static bool inited = false;
+	if(!inited){
+		inited = true;
+		OffsetRect(&trim_rects[1],14,0);
+		OffsetRect(&trim_rects[2],28,0);
+		OffsetRect(&trim_rects[3],28,18);
+		OffsetRect(&trim_rects[4],56,0);
+		OffsetRect(&trim_rects[5],70,0);
+		OffsetRect(&trim_rects[6],56,18);
+		OffsetRect(&trim_rects[7],70,18);
+		OffsetRect(&trim_rects[8],84,0);
+		OffsetRect(&trim_rects[9],98,0);
+		OffsetRect(&trim_rects[10],84,18);
+		OffsetRect(&trim_rects[11],98,18);
+		int i;
+		for(i = 0; i < 12; i++) OffsetRect(&trim_rects[i],112,36);
+		for(i = 0; i < 8 ; i++) OffsetRect(&walkway_rects[i],i*28,(i/4)*36);
+		OffsetRect(&walkway_rects[8],196,0);
+	}
+	PixMapHandle	store1,store2,store3;
 	RGBColor	test_color = {0,0,0}, store_color;
 
 	if (frills_on == false)
@@ -2244,30 +2275,49 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 	GetBackColor(&store_color);
 	RGBBackColor(&test_color);
 		
-	from_rect.left = 28 * which_trim + trim_rects[which_mode].left;
-	from_rect.right = 28 * which_trim + trim_rects[which_mode].right;
-	from_rect.top = trim_rects[which_mode].top;
-	from_rect.bottom = trim_rects[which_mode].bottom;
-	
-	if ((which_trim == 3) && (current_ground == 2)) // trim corner walls with grass instead of cave floor
-		OffsetRect(&from_rect,0,36);
+//	from_rect.left = 28 * which_trim + trim_rects[which_mode].left;
+//	from_rect.right = 28 * which_trim + trim_rects[which_mode].right;
+//	from_rect.top = trim_rects[which_mode].top;
+//	from_rect.bottom = trim_rects[which_mode].bottom;
+//	
+//	if ((which_trim == 3) && (current_ground == 2)) // trim corner walls with grass instead of cave floor
+//		OffsetRect(&from_rect,0,36);
+	unsigned short pic = scenario.ter_types[ground_ter].picture;
+	if(pic < 400){
+		from_gworld = terrain_gworld[pic / 50];
+		pic /= 50;
+		OffsetRect(&from_rect,28 * (pic % 10), 36 * (pic / 10));
+	}else if(pic < 1000){
+		from_gworld = anim_gworld;
+		pic %= 400;
+		OffsetRect(&from_rect,112 * (pic / 5),36 * (pic % 5));
+	}else{
+		from_gworld = spec_scen_g;
+		pic %= 1000;
+		from_rect = get_custom_rect(pic);
+	}
+	if(which_trim < 50) mask_rect = trim_rects[which_trim];
+	else mask_rect = walkway_rects[which_trim];
 	to_rect = coord_to_rect(q,r);
-	to_rect.right = to_rect.left + trim_rects[which_mode].right;
-	to_rect.left = to_rect.left + trim_rects[which_mode].left;
-	to_rect.bottom = to_rect.top + trim_rects[which_mode].bottom;
-	to_rect.top = to_rect.top + trim_rects[which_mode].top;
-	OffsetRect(&to_rect,-61,-37);
+//	to_rect.right = to_rect.left + trim_rects[which_mode].right;
+//	to_rect.left = to_rect.left + trim_rects[which_mode].left;
+//	to_rect.bottom = to_rect.top + trim_rects[which_mode].bottom;
+//	to_rect.top = to_rect.top + trim_rects[which_mode].top;
+//	OffsetRect(&to_rect,-61,-37);
 
-	store1 = GetPortPixMap(mixed_gworld);
-	store2 = GetPortPixMap(terrain_screen_gworld);
+	store1 = GetPortPixMap(from_gworld);
+	store2 = GetPortPixMap(roads_gworld);
+	store3 = GetPortPixMap(terrain_screen_gworld);
+	LockPixels(store3);
 	LockPixels(store2);
 	LockPixels(store1);
-	CopyBits ( (BitMap *) *store1 ,
-				(BitMap *) *store2 ,
-				&from_rect, &to_rect, 
-				 transparent, NULL);	
+	CopyMask ((BitMap*) *store1,
+			  (BitMap*) *store2,
+			  (BitMap*) *store3,
+			  &from_rect, &mask_rect, &to_rect);	
 	UnlockPixels(store1);
 	UnlockPixels(store2);
+	UnlockPixels(store3);
 
 	RGBBackColor(&store_color);
 }
@@ -2308,7 +2358,7 @@ bool connect_roads(unsigned short ter){
 void place_road(short q,short r,location where, bool here)
 {
 	location draw_loc;
-	unsigned char ter;
+	unsigned short ter;
 	Rect to_rect;
 	//Rect road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
 	static const Rect road_rects[4] = {
@@ -2329,7 +2379,7 @@ void place_road(short q,short r,location where, bool here)
 	draw_loc.x = q;
 	draw_loc.y = r;
 	
-	terrain_there[q][r] = -1; // TODO: Test the new road-handling code on a hills boundary.
+	terrain_there[q][r] = -1;
 	
 	if(here){
 		if (where.y > 0)

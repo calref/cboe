@@ -6,6 +6,12 @@
  *
  */
 
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
 #include <string.h>
 #include <zlib.h>
 #include <string>
@@ -813,7 +819,7 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 	return true;
 }
 
-bool load_outdoors(location which_out, short mode, unsigned char borders[4][50]){
+bool load_outdoors(location which_out, short mode, unsigned short borders[4][50]){
 	short j,file_id;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
