@@ -2185,35 +2185,35 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 		unsigned short to_right = coord_to_ter(where.x + 1,where.y);
 		unsigned short below = coord_to_ter(where.x,where.y + 1);
 		if (is_wall(to_left) && is_wall(above) && is_ground(to_right) && is_ground(below))
-			draw_trim(q,r,11,ter_type);
+			draw_trim(q,r,11,to_right);
 		
 		if (is_wall(to_left) && is_wall(below) && is_ground(to_right) && is_ground(above))
-			draw_trim(q,r,9,ter_type);
+			draw_trim(q,r,9,to_right);
 		
 		if (is_wall(to_right) && is_wall(above) && is_ground(to_left) && is_ground(below))
-			draw_trim(q,r,10,ter_type);		
+			draw_trim(q,r,10,to_left);
 			
 		if (is_wall(to_right) && is_wall(below) && is_ground(to_left) && is_ground(above))
-			draw_trim(q,r,8,ter_type);		
+			draw_trim(q,r,8,to_left);		
 			
 		if (is_ground(to_left) && is_ground(above) && is_ground(to_right) && is_wall(below)) {
-			draw_trim(q,r,8,ter_type);
-			draw_trim(q,r,9,ter_type);
+			draw_trim(q,r,8,to_right);
+			draw_trim(q,r,9,to_right);
 		}
 
 		if (is_wall(to_left) && is_ground(below) && is_ground(to_right) && is_ground(above)) {
-			draw_trim(q,r,9,ter_type);
-			draw_trim(q,r,11,ter_type);
+			draw_trim(q,r,9,to_right);
+			draw_trim(q,r,11,to_right);
 		}
 
 		if (is_ground(to_right) && is_wall(above) && is_ground(to_left) && is_ground(below)) {
-			draw_trim(q,r,10,ter_type);
-			draw_trim(q,r,11,ter_type);
+			draw_trim(q,r,10,to_left);
+			draw_trim(q,r,11,to_left);
 		}
 
 		if (is_wall(to_right) && is_ground(below) && is_ground(to_left) && is_ground(above)) {
-			draw_trim(q,r,8,ter_type);
-			draw_trim(q,r,10,ter_type);
+			draw_trim(q,r,8,to_left);
+			draw_trim(q,r,10,to_left);
 		}
 	//	}
 	}
@@ -2258,18 +2258,17 @@ void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 		OffsetRect(&trim_rects[11],98,18);
 		int i;
 		for(i = 0; i < 12; i++) OffsetRect(&trim_rects[i],112,36);
-		for(i = 0; i < 8 ; i++) OffsetRect(&walkway_rects[i],i*28,(i/4)*36);
+		for(i = 0; i < 8 ; i++) OffsetRect(&walkway_rects[i],(i%4)*28,(i/4)*36);
 		OffsetRect(&walkway_rects[8],196,0);
 	}
-	PixMapHandle	store1,store2,store3;
 	RGBColor	test_color = {0,0,0}, store_color;
 
 	if (frills_on == false)
 		return;
 		
 	// if current ground is grass, forget trim
-	if ((current_ground == 2) && (which_trim < 3))
-		return; 
+//	if ((current_ground == 2) && (which_trim < 3))
+//		return; 
 
 	terrain_there[q][r] = -1;
 	GetBackColor(&store_color);
@@ -2285,7 +2284,7 @@ void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 	unsigned short pic = scenario.ter_types[ground_ter].picture;
 	if(pic < 400){
 		from_gworld = terrain_gworld[pic / 50];
-		pic /= 50;
+		pic %= 50;
 		OffsetRect(&from_rect,28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
 		from_gworld = anim_gworld;
@@ -2297,27 +2296,41 @@ void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 		from_rect = get_custom_rect(pic);
 	}
 	if(which_trim < 50) mask_rect = trim_rects[which_trim];
-	else mask_rect = walkway_rects[which_trim];
+	else mask_rect = walkway_rects[which_trim - 50];
 	to_rect = coord_to_rect(q,r);
 //	to_rect.right = to_rect.left + trim_rects[which_mode].right;
 //	to_rect.left = to_rect.left + trim_rects[which_mode].left;
 //	to_rect.bottom = to_rect.top + trim_rects[which_mode].bottom;
 //	to_rect.top = to_rect.top + trim_rects[which_mode].top;
-//	OffsetRect(&to_rect,-61,-37);
+	//	OffsetRect(&to_rect,-61,-37);
+	if(which_trim == 0 || which_trim == 4 || which_trim == 6 || which_trim == 8 || which_trim == 10){
+		from_rect.right -= 14;
+		to_rect.right -= 14;
+	}else if(which_trim == 1 || which_trim == 5 || which_trim == 7 || which_trim == 9 || which_trim == 11){
+		from_rect.left += 14;
+		to_rect.left += 14;
+	}
+	if(which_trim == 2 || which_trim == 4 || which_trim == 5 || which_trim == 8 || which_trim == 9){
+		from_rect.bottom -= 18;
+		to_rect.bottom -= 18;
+	}else if(which_trim == 3 || which_trim == 6 || which_trim == 7 || which_trim == 10 || which_trim == 11){
+		from_rect.top += 18;
+		to_rect.top += 18;
+	}
 
-	store1 = GetPortPixMap(from_gworld);
-	store2 = GetPortPixMap(roads_gworld);
-	store3 = GetPortPixMap(terrain_screen_gworld);
-	LockPixels(store3);
-	LockPixels(store2);
-	LockPixels(store1);
-	CopyMask ((BitMap*) *store1,
-			  (BitMap*) *store2,
-			  (BitMap*) *store3,
+	PixMapHandle from_bits = GetPortPixMap(from_gworld);
+	PixMapHandle mask_bits = GetPortPixMap(roads_gworld);
+	PixMapHandle to_bits = GetPortPixMap(terrain_screen_gworld);
+	LockPixels(to_bits);
+	LockPixels(mask_bits);
+	LockPixels(from_bits);
+	CopyMask ((BitMap*) *from_bits,
+			  (BitMap*) *mask_bits,
+			  (BitMap*) *to_bits,
 			  &from_rect, &mask_rect, &to_rect);	
-	UnlockPixels(store1);
-	UnlockPixels(store2);
-	UnlockPixels(store3);
+	UnlockPixels(from_bits);
+	UnlockPixels(mask_bits);
+	UnlockPixels(to_bits);
 
 	RGBBackColor(&store_color);
 }

@@ -96,6 +96,22 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	};
 	picture = old.picture;
 	blockage = old.blockage;
+	if(picture >= 260) combat_arena = 1;
+	else combat_arena = arenas[picture];
+	if(picture < 260){
+		ground_type = ground[picture];
+		trim_type = (eTrimType) trims[picture];
+		trim_ter = trim_ters[picture];
+	}else if(picture >= 400 && picture < 1000){
+		ground_type = ground[picture - 140];
+		trim_type = (eTrimType) trims[picture - 140];
+		trim_ter = trim_ters[picture - 140];
+	}else{ // TODO: Implement new-style road and walkway handling, and deprecate picture 216.
+		ground_type = 255;
+		trim_type = TRIM_NONE;
+		trim_ter = 0;
+	}
+	if(trim_ter == 99) trim_ter = 0;
 	flag1 = old.flag1;
 	flag2 = old.flag2;
 	switch(old.special){
@@ -238,22 +254,6 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	light_radius = old.light_radius;
 	step_sound = old.step_sound;
 	shortcut_key = old.shortcut_key;
-	if(picture >= 260) combat_arena = 1;
-	else combat_arena = arenas[picture];
-	if(picture < 260){
-		ground_type = ground[picture];
-		trim_type = (eTrimType) trims[picture];
-		trim_ter = trim_ters[picture];
-	}else if(picture >= 400 && picture < 1000){
-		ground_type = ground[picture - 140];
-		trim_type = (eTrimType) trims[picture - 140];
-		trim_ter = trim_ters[picture - 140];
-	}else{ // TODO: Implement new-style road and walkway handling, and deprecate picture 216.
-		ground_type = 255;
-		trim_type = TRIM_NONE;
-		trim_ter = 0;
-	}
-	if(trim_ter == 99) trim_ter = 0;
 	switch(picture){
 		// Rubbles, plus pentagram as a bonus
 		case 68:

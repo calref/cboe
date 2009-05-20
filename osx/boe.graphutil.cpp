@@ -863,8 +863,8 @@ bool is_ground(unsigned short ter_type)
 		return false;
 	if(scenario.ter_types[ter_type].block_horse)
 		return false;
-	if(scenario.ter_types[ter_type].trim_type == TRIM_WALKWAY)
-		return false;
+//	if(scenario.ter_types[ter_type].trim_type == TRIM_WALKWAY)
+//		return false;
 	return true;
 //	short pic;
 //

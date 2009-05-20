@@ -307,23 +307,29 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 						add_string_to_buf("  It doesn't affect you.");			
 						goto LBL_NO_DAMAGE;
 					}
+					break;
 				case DAMAGE_COLD:
 					add_string_to_buf("  You feel cold!");
 					pic_type = 4;
+					break;
 				case DAMAGE_MAGIC:
 				case DAMAGE_UNBLOCKABLE:
 					add_string_to_buf("  Something shocks you!");
 					pic_type = 1;
+					break;
 				case DAMAGE_WEAPON:
 					add_string_to_buf("  You feel pain!");
 					pic_type = 3;
+					break;
 				case DAMAGE_POISON:
 					add_string_to_buf("  You suddenly feel very ill for a moment...");
 					pic_type = 2;
+					break;
 				case DAMAGE_UNDEAD:
 				case DAMAGE_DEMON:
 					add_string_to_buf("  A dark wind blows through you!");
 					pic_type = 1; // TODO: Verify that this is correct
+					break;
 			}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
