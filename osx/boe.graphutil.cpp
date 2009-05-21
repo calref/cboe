@@ -815,7 +815,7 @@ Rect get_item_template_rect (short type_wanted)////
 	return store_rect;
 }
 
-// Is this is subterranean fluid that gets shore plopped down on it?
+// Is this a fluid that gets shore plopped down on it?
 bool is_fluid(unsigned short ter_type)////
 {
 //	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
@@ -824,12 +824,12 @@ bool is_fluid(unsigned short ter_type)////
 	return scenario.ter_types[ter_type].trim_type == TRIM_FRILLS;
 }
 
-// Is this is subterranean beach that gets shore plopped down next to it?
+// Is this a beach that gets shore plopped down next to it?
 bool is_shore(unsigned short ter_type)////
 {
 	if (is_fluid(ter_type) == true)
 		return false;
-	if(scenario.ter_types[ter_type].trim_type = TRIM_WATERFALL)
+	if(scenario.ter_types[ter_type].trim_type == TRIM_WATERFALL)
 		return false;
 //	if (ter_type == 77)
 //		return false;

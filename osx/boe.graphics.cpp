@@ -2142,35 +2142,35 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 		if (trim != 0) {
 			unsigned short shore;
 			if (trim & 2){ // upper right
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x + 1, where.y - 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,5,shore);
 			}if (trim & 8){ // lower right
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x + 1, where.y + 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,7,shore);
 			}if (trim & 32){ // lower left
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x - 1, where.y + 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,6,shore);
 			}if (trim & 128){ // upper left
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x - 1, where.y - 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,4,shore);
 			}if (trim & 1){ // top
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x, where.y - 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,2,shore);
 			}if (trim & 4){ // right
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x + 1, where.y);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,1,shore);
 			}if (trim & 16){ // bottom
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x, where.y + 1);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,3,shore);
 			}if (trim & 64){ // left
-				shore = coord_to_ter(where.x, where.y);
+				shore = coord_to_ter(where.x - 1, where.y);
 				shore = get_ground_for_shore(shore);
 				draw_trim(q,r,0,shore);
 			}
@@ -2324,10 +2324,12 @@ void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 	LockPixels(to_bits);
 	LockPixels(mask_bits);
 	LockPixels(from_bits);
-	CopyMask ((BitMap*) *from_bits,
-			  (BitMap*) *mask_bits,
-			  (BitMap*) *to_bits,
-			  &from_rect, &mask_rect, &to_rect);	
+	CopyDeepMask ((BitMap*) *from_bits,
+				  (BitMap*) *mask_bits,
+				  (BitMap*) *to_bits,
+				  &from_rect, &mask_rect, &to_rect,
+				  transparent, NULL
+	);
 	UnlockPixels(from_bits);
 	UnlockPixels(mask_bits);
 	UnlockPixels(to_bits);

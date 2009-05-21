@@ -92,6 +92,7 @@
 		913D05BC0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
 		91A79DC70FA797BF00A6A41F /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91A79DC60FA797BF00A6A41F /* menu.xib */; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -342,6 +343,7 @@
 		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = party.cpp; path = classes/party.cpp; sourceTree = "<group>"; };
 		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.h; path = classes/pc.h; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.cpp; path = classes/pc.cpp; sourceTree = "<group>"; };
+		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
 		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
 		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = regtown.h; path = classes/regtown.h; sourceTree = "<group>"; };
@@ -842,6 +844,7 @@
 			children = (
 				91279BB30F9D03B6007B0D52 /* boesave.icns */,
 				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
+				913D6C040FC57A8E00E12527 /* boeresources.icns */,
 				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
 				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
@@ -976,6 +979,7 @@
 				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
 				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
 				91A79DC70FA797BF00A6A41F /* menu.xib in Resources */,
+				913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
