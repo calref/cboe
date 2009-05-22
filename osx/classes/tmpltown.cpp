@@ -37,3 +37,7 @@ short cBigTemplTown::max_dim(){
 short cBigTemplTown::max_monst(){
 	return 30;
 }
+
+short cBigTemplTown::max_items(){
+	return 64;
+}

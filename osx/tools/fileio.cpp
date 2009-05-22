@@ -330,7 +330,6 @@ bool load_scenario(FSSpec file_to_load){
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
-	temp_scenario = new legacy::scenario_data_type;
 	error = FSRead(file_id, &len, (char *) temp_scenario);
 	if (error != 0){
 		FSClose(file_id);

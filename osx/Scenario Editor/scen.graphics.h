@@ -21,7 +21,7 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned short terrain_to_draw)
 void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,location target,
 char masked,short main_win);
 //void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char masked,short main_win);
-Rect get_template_rect (unsigned char type_wanted);
+Rect get_template_rect (unsigned short type_wanted);
 void draw_frames();
 void place_location();
 void place_just_location();

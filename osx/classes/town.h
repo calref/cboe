@@ -101,6 +101,7 @@ public:
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual short max_dim() = 0;
 	virtual short max_monst() = 0;
+	virtual short max_items() = 0;
 	
 	cTown();
 	cTown(short size);

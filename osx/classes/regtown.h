@@ -31,6 +31,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 	
 	cBigTown();
 	void writeTo(std::ostream& file);
@@ -50,6 +51,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 	
 	cMedTown();
 	void writeTo(std::ostream& file);
@@ -69,6 +71,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 	
 	cTinyTown();
 	void writeTo(std::ostream& file);

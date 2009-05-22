@@ -259,3 +259,15 @@ short cMedTown::max_monst(){
 short cTinyTown::max_monst(){
 	return 30;
 }
+
+short cBigTown::max_items(){
+	return 64;
+}
+
+short cMedTown::max_items(){
+	return 64;
+}
+
+short cTinyTown::max_items(){
+	return 64;
+}

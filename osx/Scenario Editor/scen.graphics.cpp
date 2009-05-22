@@ -862,11 +862,11 @@ void draw_terrain(){
 							from_rect = calc_rect(i,3);
 							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
 						}
-					for (x = 0; x < 64; x++)
+					for (x = 0; x < town->max_items(); x++)
 						if ((cen_x + q - 4 == town->preset_items[x].loc.x) &&
 							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						}
-					for (x = 0; x < 60; x++)
+					for (x = 0; x < town->max_monst(); x++)
 						if ((cen_x + q - 4 == town->creatures(x).start_loc.x) &&
 							(cen_y + r - 4 == town->creatures(x).start_loc.y) && (town->creatures(x).number != 0)) {
 						}
@@ -956,7 +956,7 @@ void draw_monsts() {
 	location where_draw,store_loc;
 	GrafPtr cur_port;
 	
-	for (i = 0; i < 60; i++)
+	for (i = 0; i < town->max_monst(); i++)
 		if (town->creatures(i).number != 0) {
 			where_draw.x = town->creatures(i).start_loc.x - cen_x + 4;
 			where_draw.y = town->creatures(i).start_loc.y - cen_y + 4;
@@ -1014,7 +1014,7 @@ void draw_items() {
 	short pic_num;
 	GrafPtr cur_port;
 	
-	for (i = 0; i < 64; i++) {
+	for (i = 0; i < town->max_items(); i++) {
 		if (town->preset_items[i].code >= 0) {
 			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
 			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;

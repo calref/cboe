@@ -45,6 +45,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 	void writeTo(std::ostream& file);
 };
 
@@ -61,6 +62,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 	void writeTo(std::ostream& file);
 };
 
@@ -77,6 +79,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
+	short max_items();
 };
 
 // City blocks - I want to figure out how to use these sometime.
