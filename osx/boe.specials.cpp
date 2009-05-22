@@ -329,12 +329,9 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				case DAMAGE_DEMON:
 					add_string_to_buf("  A dark wind blows through you!");
 					pic_type = 1; // TODO: Verify that this is correct
-<<<<<<< .mine
-					default:
 					break;
-=======
+				default:
 					break;
->>>>>>> .r62
 			}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
