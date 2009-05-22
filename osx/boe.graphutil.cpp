@@ -4,7 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.graphutil.h"
 #include "boe.text.h"
@@ -614,7 +614,8 @@ void draw_one_field(unsigned char flag,short source_x,short source_y)
 {
 	short q,r;
 	location where_draw,loc;
-	Rect orig_rect = {0,0,36,28},source_rect;
+	//Rect orig_rect = {0,0,36,28}
+	Rect source_rect;
 	
 		for (q = 0; q < 9; q++) 
 			for (r = 0; r < 9; r++){

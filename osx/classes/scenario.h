@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef SCENARIO_H
+#define SCENARIO_H
+
+#include <iostream>
+
 namespace legacy{
 	struct scenario_data_type;
 	struct item_storage_shortcut_type;
@@ -87,5 +92,7 @@ public:
 	char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

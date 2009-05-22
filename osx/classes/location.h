@@ -6,7 +6,8 @@
  *
  */
 
-#pragma once
+#ifndef LOCATION_H
+#define LOCATION_H
 
 struct rectangle;
 
@@ -43,3 +44,5 @@ location loc();
 rectangle rect();
 rectangle rect(location tl, location br);
 rectangle rect(char top, char left, char bottom, char right);
+
+#endif

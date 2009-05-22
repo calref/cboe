@@ -6,6 +6,12 @@
  *
  */
 
+#ifndef TOWN_H
+#define TOWN_H
+
+#include <vector>
+#include <iostream>
+
 namespace legacy {
 	struct town_record_type;
 	struct big_tr_type;
@@ -68,7 +74,7 @@ public:
 	rectangle in_town_rect;
 	cItem preset_items[64];
 	short max_num_monst;
-	vector<cField> preset_fields;
+	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
 	short timer_spec_times[8];
 	short timer_specs[8];
@@ -99,5 +105,7 @@ public:
 	cTown();
 	cTown(short size);
 	cTown& operator = (legacy::town_record_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

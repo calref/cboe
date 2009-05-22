@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef TMPLTOWN_H
+#define TMPLTOWN_H
+
+#include <iostream>
+
 class cTemplTown {
 public:
 	class cCityBlock { // formerly city_block_type
@@ -24,7 +29,7 @@ public:
 	};
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 class cBigTemplTown : public cBigTown, cTemplTown {
@@ -40,7 +45,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 class cMedTemplTown : public cMedTown, cTemplTown {
@@ -56,7 +61,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim();
 	short max_monst();
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {
@@ -95,3 +100,5 @@ public:
 //	city_block_type city_block[15];
 //	city_ter_rect_type city_ter_rect[10];
 //};
+
+#endif

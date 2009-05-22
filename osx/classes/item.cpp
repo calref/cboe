@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 #include "classes.h"
 #include "boe.consts.h"
@@ -316,7 +316,7 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	special_class = old.special_class;
 	item_loc.x = old.item_loc.x;
 	item_loc.y = old.item_loc.y;
-	full_name = string(old.full_name);
+	full_name = std::string(old.full_name);
 	name = old.name;
 	treas_class = old.treas_class;
 	item_properties = old.item_properties;
@@ -325,37 +325,37 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	return *this;
 }
 
-void cItemRec::writeTo(ostream& file, string prefix){
-	file << prefix << "VARIETY " << variety << endl;
-	file << prefix << "LEVEL " << item_level << endl;
-	file << prefix << "AWKWARD " << awkward << endl;
-	file << prefix << "BONUS " << bonus << endl;
-	file << prefix << "PROT " << protection << endl;
-	file << prefix << "CHARGES " << charges << endl;
-	file << prefix << "WEAPON " << type << endl;
-	file << prefix << "USE " << magic_use_type << endl;
-	file << prefix << "ICON " << graphic_num << endl;
-	file << prefix << "ABILITY " << ability << endl;
-	file << prefix << "ABILSTR " << ability_strength << endl;
-	file << prefix << "TYPE " << type_flag << endl;
-	file << prefix << "ISSPEC " << is_special << endl;
-	file << prefix << "VALUE " << value << endl;
-	file << prefix << "WEIGHT " << weight << endl;
-	file << prefix << "SPEC " << special_class << endl;
-	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << endl;
-	file << prefix << "FULLNAME " << full_name << endl;
-	file << prefix << "NAME " << name << endl;
-	file << prefix << "TREASURE " << treas_class << endl;
-	if(is_ident()) file << prefix << "IDENTIFIED" << endl;
-	if(is_property()) file << prefix << "PROPERTY" << endl;
-	if(is_magic()) file << prefix << "MAGIC" << endl;
-	if(is_contained()) file << prefix << "CONTAINED" << endl;
-	if(is_cursed()) file << prefix << "CURSED" << endl;
-	if(is_concealed()) file << prefix << "CONCEALED" << endl;
-	if(is_enchanted()) file << prefix << "ENCHANTED" << endl;
+void cItemRec::writeTo(std::ostream& file, std::string prefix){
+	file << prefix << "VARIETY " << variety << std::endl;
+	file << prefix << "LEVEL " << item_level << std::endl;
+	file << prefix << "AWKWARD " << awkward << std::endl;
+	file << prefix << "BONUS " << bonus << std::endl;
+	file << prefix << "PROT " << protection << std::endl;
+	file << prefix << "CHARGES " << charges << std::endl;
+	file << prefix << "WEAPON " << type << std::endl;
+	file << prefix << "USE " << magic_use_type << std::endl;
+	file << prefix << "ICON " << graphic_num << std::endl;
+	file << prefix << "ABILITY " << ability << std::endl;
+	file << prefix << "ABILSTR " << ability_strength << std::endl;
+	file << prefix << "TYPE " << type_flag << std::endl;
+	file << prefix << "ISSPEC " << is_special << std::endl;
+	file << prefix << "VALUE " << value << std::endl;
+	file << prefix << "WEIGHT " << weight << std::endl;
+	file << prefix << "SPEC " << special_class << std::endl;
+	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << std::endl;
+	file << prefix << "FULLNAME " << full_name << std::endl;
+	file << prefix << "NAME " << name << std::endl;
+	file << prefix << "TREASURE " << treas_class << std::endl;
+	if(is_ident()) file << prefix << "IDENTIFIED" << std::endl;
+	if(is_property()) file << prefix << "PROPERTY" << std::endl;
+	if(is_magic()) file << prefix << "MAGIC" << std::endl;
+	if(is_contained()) file << prefix << "CONTAINED" << std::endl;
+	if(is_cursed()) file << prefix << "CURSED" << std::endl;
+	if(is_concealed()) file << prefix << "CONCEALED" << std::endl;
+	if(is_enchanted()) file << prefix << "ENCHANTED" << std::endl;
 }
 
-void cItemRec::readAttrFrom(string cur, istream& sin){
+void cItemRec::readAttrFrom(std::string cur, std::istream& sin){
 	if(cur == "VARIETY") sin >> variety;
 	else if(cur == "LEVEL") sin >> item_level;
 	else if(cur == "AWKWARD") sin >> awkward;
@@ -390,19 +390,19 @@ void cItemRec::readAttrFrom(string cur, istream& sin){
 	else if(cur == "ENCHANTED") set_enchanted(true);
 }
 
-ostream& operator << (ostream& out, eWeapType& e){
+std::ostream& operator << (std::ostream& out, eWeapType& e){
 	return out << (int) e;
 }
 
-ostream& operator << (ostream& out, eItemType& e){
+std::ostream& operator << (std::ostream& out, eItemType& e){
 	return out << (int) e;
 }
 
-ostream& operator << (ostream& out, eItemAbil& e){
+std::ostream& operator << (std::ostream& out, eItemAbil& e){
 	return out << (int) e;
 }
 
-istream& operator >> (istream& in, eWeapType& e){
+std::istream& operator >> (std::istream& in, eWeapType& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 4)
@@ -411,7 +411,7 @@ istream& operator >> (istream& in, eWeapType& e){
 	return in;
 }
 
-istream& operator >> (istream& in, eItemType& e){
+std::istream& operator >> (std::istream& in, eItemType& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 28)
@@ -420,7 +420,7 @@ istream& operator >> (istream& in, eItemType& e){
 	return in;
 }
 
-istream& operator >> (istream& in, eItemAbil& e){
+std::istream& operator >> (std::istream& in, eItemAbil& e){
 	int i;
 	in >> i;
 	if((i > 0 && i < 15) || (i > 29 && i < 63) ||

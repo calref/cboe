@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -49,8 +49,8 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 //			special_enc[i].monst[j] = old.special_enc[i].monst[j];
 //		}
 //		for(j = 0; j < 3; j++){
-//			wandering[i].friendly[j] = old.wandering[i].friendly[j];
-//			special_enc[i].friendly[j] = old.special_enc[i].friendly[j];
+//			wandering[i].fristd::endly[j] = old.wandering[i].fristd::endly[j];
+//			special_enc[i].fristd::endly[j] = old.special_enc[i].fristd::endly[j];
 //		}
 //		wandering[i].spec_on_meet = old.wandering[i].spec_on_meet;
 //		special_enc[i].spec_on_meet = old.special_enc[i].spec_on_meet;
@@ -145,29 +145,29 @@ cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature
 	return *this;
 }
 
-void cOutdoors::writeTo(ostream& file){
+void cOutdoors::writeTo(std::ostream& file){
 //	for(int i = 0; i < 48; i++){
 //		file << expl[i][0];
 //		for(int j = 1; j < 48; j++){
 //			file << '\t' << expl[i][j];
 //		}
-//		file << endl;
+//		file << std::endl;
 //	}
 }
 
-void cOutdoors::cWandering::writeTo(ostream& file, string prefix){
+void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix){
 	for(int i = 0; i < 7; i++)
-		file << prefix << "HOSTILE " << i << ' ' << monst[i] << endl;
+		file << prefix << "HOSTILE " << i << ' ' << monst[i] << std::endl;
 	for(int i = 0; i < 3; i++)
-		file << prefix << "FRIEND " << i << ' ' << friendly[i] << endl;
-	file << prefix << "MEET " << spec_on_meet << endl;
-	file << prefix << "WIN " << spec_on_win << endl;
-	file << prefix << "FLEE " << spec_on_flee << endl;
-	file << prefix << "FLAGS " << cant_flee << endl;
-	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << endl;
+		file << prefix << "FRIEND " << i << ' ' << friendly[i] << std::endl;
+	file << prefix << "MEET " << spec_on_meet << std::endl;
+	file << prefix << "WIN " << spec_on_win << std::endl;
+	file << prefix << "FLEE " << spec_on_flee << std::endl;
+	file << prefix << "FLAGS " << cant_flee << std::endl;
+	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << std::endl;
 }
 
-void cOutdoors::cWandering::readAttrFrom(string cur, istream& sin){
+void cOutdoors::cWandering::readAttrFrom(std::string cur, std::istream& sin){
 	if(cur == "HOSTILE"){
 		int i;
 		sin >> i;

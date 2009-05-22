@@ -6,6 +6,12 @@
  *
  */
 
+#ifndef MONSTER_H
+#define MONSTER_H
+
+#include <string>
+#include <iostream>
+
 namespace legacy {
 	struct monster_record_type;
 	struct creature_data_type;
@@ -109,7 +115,7 @@ class cMonster {
 public:
 	unsigned short m_num;
 	unsigned char level;
-	string m_name;
+	std::string m_name;
 	short health,m_health,mp,max_mp;
 	unsigned char armor,skill;
 	short a[3];
@@ -125,7 +131,7 @@ public:
 	short picture_num;
 	
 	cMonster& operator = (legacy::monster_record_type& old);
-	void writeTo(ostream& file, string prefix);
+	void writeTo(std::ostream& file, std::string prefix);
 };
 
 class cCreature {
@@ -152,3 +158,5 @@ public:
 	cCreature& operator = (legacy::creature_data_type old);
 	cCreature& operator = (legacy::creature_start_type old);
 };
+
+#endif

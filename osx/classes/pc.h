@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef PC_H
+#define PC_H
+
+#include <string>
+#include <iostream>
 
 namespace legacy { struct pc_record_type; };
 
@@ -33,7 +38,7 @@ enum eMainStatus {
 class cPlayer {
 public:
 	eMainStatus main_status;
-	string name;
+	std::string name;
 	short skills[30];
 	unsigned short max_health;
 	short cur_health;
@@ -60,11 +65,13 @@ public:
 	cPlayer();
 	cPlayer(long key,short slot);
 	short get_tnl();
-	void writeTo(ostream& file);
-	void readFrom(istream& file);
+	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
 
 void operator += (eMainStatus& stat, eMainStatus othr);
 void operator -= (eMainStatus& stat, eMainStatus othr);
-ostream& operator << (ostream& out, eMainStatus& e);
-istream& operator >> (istream& in, eMainStatus& e);
+std::ostream& operator << (std::ostream& out, eMainStatus& e);
+std::istream& operator >> (std::istream& in, eMainStatus& e);
+
+#endif

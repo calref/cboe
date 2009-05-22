@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef TALKING_H
+#define TALKING_H
+
+#include <iostream>
+
 namespace legacy {
 	struct talking_record_type;
 	struct talking_node_type;
@@ -24,5 +29,7 @@ public:
 	cNode talk_nodes[60];
 	
 	cSpeech& operator = (legacy::talking_record_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

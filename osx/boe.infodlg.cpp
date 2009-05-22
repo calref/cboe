@@ -3,7 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 
 #include "boe.graphics.h"
@@ -366,6 +366,7 @@ void put_item_info(short pc,short item)////
 					sprintf((char *) store_text, "Pole weapon");
 					break;
 				case ITEM_NOT_MELEE:
+				default:
 					sprintf((char*)store_text, "Error weapon"); // should never be reached
 				}
 			if (s_i.ability == 0)
@@ -514,7 +515,7 @@ void put_monst_info()////
 	
 	for (i = 0; i < 3; i++)
 		if (store_m->m_d.a[i] > 0) {
-			ostringstream sout(store_text);
+			std::ostringstream sout(store_text);
 			sout << store_m->m_d.a[i] / 100 + 1 << 'd' << store_m->m_d.a[i] % 100;
 			store_text = sout.str();
 
@@ -953,7 +954,7 @@ void give_pc_info(short pc_num)
 
 void adventure_notes_event_filter (short item_hit)
 {
-	short i;
+	unsigned short i;
 	Str255 place_str;
 	
 			switch (item_hit) {
@@ -1028,7 +1029,8 @@ void adventure_notes_event_filter (short item_hit)
 void adventure_notes()
 {
 
-	short i,item_hit;
+	unsigned short i;
+	short item_hit;
 	Str255 place_str;
 	
 	store_num_i = 0;
@@ -1206,21 +1208,24 @@ void journal_event_filter (short item_hit)
 
 				}
 	for (i = 0; i < 3; i++) {
-		if (univ.party.journal.size() > i + (store_page_on * 3)) {
+		if ((long)univ.party.journal.size() > i + (store_page_on * 3)) {
 			////get_str(place_str,17,univ.party.journal_str[i + (store_page_on * 3)]);
 			csit(962,3 + i,scenario.scen_strs(univ.party.journal[i].str_num + 10));
 			sprintf((char *)place_str,"Day: %d",univ.party.journal[i + (store_page_on * 3)].day);
 			csit(962,9 + i,(char *)place_str);
-			}
-			else {csit(962,3 + i,"");csit(962,9 + i,"");}
 		}
+		else{
+			csit(962,3 + i,"");csit(962,9 + i,"");
+		}
+	}
 
 }
 
 void journal()
 {
 
-	short i,item_hit;
+	unsigned short i;
+	short item_hit;
 	Str255 place_str;
 	
 	store_num_i = 0;
@@ -1304,7 +1309,7 @@ void put_spec_item_info (short which_i)
 
 void record_display_strings(){
 	bool had1 = false, had2 = false;
-	int i;
+	unsigned int i;
 	play_sound(0);
 	for (i = 0; i < univ.party.special_notes.size(); i++)
 		if ((store_str_label_1 == univ.party.special_notes[i].str_num) &&

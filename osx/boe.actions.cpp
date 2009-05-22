@@ -4,7 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.actions.h"
 #include "boe.graphutil.h"
@@ -2045,7 +2045,6 @@ void do_save(short mode)
 		print_buf();
 		return;
 		}
-	FSSpec file;
 	try{
 		if(mode == 1) univ.file = nav_put_party();
 		save_party(univ.file);

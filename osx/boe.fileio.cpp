@@ -1,11 +1,9 @@
-
-#include <string.h>
 #include <iostream>
+#include <fstream>
 
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
 #include "classes.h"
 #include "boe.fileio.h"
 #include "boe.text.h"
@@ -24,11 +22,6 @@ using namespace std;
 #include "dlgutil.h"
 #include "fileio.h"
 #include "porting.h" // only needed for one little flip_short call, though...
-
-#include <vector>
-#include <string>
-using std::vector;
-using std::string;
 
 #define	DONE_BUTTON_ITEM	1
 #define IN_FRONT	(WindowPtr)-1L
@@ -67,12 +60,12 @@ extern short terrain_pic[256],cur_town_talk_loaded;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern vector<scen_header_str_type> scen_header_strs;
+extern std::vector<scen_header_str_type> scen_header_strs;
 //std::vector<std::string> scen_names;
 //stored_town_maps_type town_maps;
 //extern talking_record_type talking;
 //extern outdoor_strs_type outdoor_text[2][2];
-extern vector<scen_header_type> scen_headers;
+extern std::vector<scen_header_type> scen_headers;
 extern unsigned short combat_terrain[64][64];
 extern bool belt_present;
 extern bool mac_is_intel;
@@ -93,7 +86,7 @@ short specials_res_id,data_dump_file_id;
 Str255 start_name;
 short start_volume,data_volume;
 long start_dir,data_dir/*,scen_dir*/;
-string progDir;
+std::string progDir;
 
 //outdoor_record_type dummy_out;////
 //town_record_type dummy_town;
@@ -106,8 +99,8 @@ string progDir;
 	CInfoPBRec myCPB;
 GWorldPtr spec_scen_g = NULL;
 ResFileRefNum mainRef, graphicsRef, soundRef;
-#include <fstream>
-ofstream flog("bladeslog.txt");
+
+std::ofstream flog("bladeslog.txt");
 void init_directories()
 {
 	short error;
@@ -144,8 +137,8 @@ void init_directories()
 	progDir.erase(last_slash);
 	std::cout<<progDir<<'\n';
 	
-	string path = progDir + "/Scenario Editor/Blades of Exile Graphics";
-	flog << path << endl;
+	std::string path = progDir + "/Scenario Editor/Blades of Exile Graphics";
+	flog << path << std::endl;
 	error = FSPathMakeRef((UInt8*) path.c_str(), &gRef, false);
 	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
 	if (error != noErr) {
@@ -155,7 +148,7 @@ void init_directories()
 		ExitToShell();
 	}
 	path = progDir + "/Scenario Editor/Blades of Exile Sounds";
-	flog << path << endl;
+	flog << path << std::endl;
 	FSPathMakeRef((UInt8*) path.c_str(), &sRef, false);
 	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
 	if (error != noErr) {
@@ -533,7 +526,7 @@ void change_val (unsigned char *val,short a,short b)
 void init_town(){ // formerly part of load_town
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 //	if (mode == 0) {
-	int i,j;
+	unsigned int i,j;
 		for (i = 0; i < 64; i++)
 			for (j = 0; j < 64; j++) {
 				univ.town.fields[i][j] = 0;
@@ -1154,11 +1147,11 @@ typedef struct {
 */
 void build_scen_headers()
 {
-	short i,index = 1,last_colon;
-	short cur_entry = 0;
+	short index = 1;
+	unsigned short cur_entry = 0;
 	//Str255 scen_name;
 	OSErr err;
-	string scenDir = progDir;
+	std::string scenDir = progDir;
 //	scenDir.erase(scenDir.find_last_of("/"));
 	scenDir += "/Blades of Exile Scenarios/";
 	printf("%s\n%s\n",progDir.c_str(),scenDir.c_str());
@@ -1232,12 +1225,10 @@ void build_scen_headers()
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
 bool load_scenario_header(FSRef file/*,short header_entry*/){
-	short i, file_id;
-	short store;
+	short file_id;
 	bool file_ok = false;
 	OSErr error;
 	long len;
-	Str255 load_str;
 	bool mac_header = true;
 		
 	//error = HOpen(start_volume,scen_dir,filename,3,&file_id);
@@ -1299,7 +1290,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	scen_strs.who1 = scenario.who_wrote[0];
 	scen_strs.who2 = scenario.who_wrote[1];
 	p2cstr(spec.name);
-	string curScenarioName((char*)spec.name);
+	std::string curScenarioName((char*)spec.name);
 	c2pstr((char*)spec.name);
 	scen_strs.file = curScenarioName;
 	

@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef UNIVERSE_H
+#define UNIVERSE_H
+
+#include <iostream>
+
 namespace legacy {
 	struct out_info_type;
 	struct current_town_type;
@@ -102,8 +107,8 @@ public:
 	bool set_bones(char x, char y, bool b);
 	bool set_rubble(char x, char y, bool b);
 //	bool set_trim(char x, char y, char t, bool b);
-	void writeTo(ostream& file);
-	void readFrom(istream& file);
+	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
 
 class cCurOut {
@@ -119,8 +124,8 @@ public:
 	void append(legacy::out_info_type& old);
 	
 	unsigned short(& operator [] (size_t i))[96];
-	void writeTo(ostream& file);
-	void readFrom(istream& file);
+	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
 
 class cUniverse{
@@ -135,3 +140,5 @@ public:
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);
 };
+
+#endif

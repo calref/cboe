@@ -3,7 +3,7 @@
 
 #include "mathutil.h"
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.locutils.h"
 #include "boe.text.h"

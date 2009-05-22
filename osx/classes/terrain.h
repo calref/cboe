@@ -6,6 +6,12 @@
  *
  */
 
+#ifndef TERRAIN_H
+#define TERRAIN_H
+
+#include <string>
+#include <iostream>
+
 namespace legacy { struct terrain_type_type; };
 
 /* Terrains Specials Properties : scenario.ter_types[i].special */      //complete
@@ -99,7 +105,7 @@ enum eTrimType {
 
 class cTerrain {
 public:
-	string name;
+	std::string name;
 	short picture;
 	unsigned char blockage;
 	unsigned short flag1;
@@ -123,5 +129,7 @@ public:
 	unsigned short i; // for temporary use in porting
 	
 	cTerrain& operator = (legacy::terrain_type_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

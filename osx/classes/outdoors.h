@@ -6,7 +6,12 @@
  *
  */
 
+#ifndef OUTDOORS_H
+#define OUTDOORS_H
+
 #include "location.h"
+#include <string>
+#include <iostream>
 
 namespace legacy {
 	struct out_wandering_type;
@@ -24,8 +29,8 @@ public:
 		short end_spec1,end_spec2;
 		
 		cWandering& operator = (legacy::out_wandering_type old);
-		void writeTo(ostream& file, string prefix = "");
-		void readAttrFrom(string cur, istream& sin);
+		void writeTo(std::ostream& file, std::string prefix = "");
+		void readAttrFrom(std::string cur, std::istream& sin);
 	};
 	class cCreature { // formerly outdoor_creature_type
 	public:
@@ -58,5 +63,7 @@ public:
 	
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

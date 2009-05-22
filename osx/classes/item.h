@@ -6,7 +6,12 @@
  *
  */
 
+#ifndef ITEM_H
+#define ITEM_H
+
 #include "location.h"
+#include <string>
+#include <iostream>
 
 namespace legacy { struct item_record_type; };
 
@@ -201,8 +206,8 @@ public:
 	unsigned char weight;
 	unsigned char special_class;
 	location item_loc;
-	string full_name;
-	string name;
+	std::string full_name;
+	std::string name;
 	unsigned char treas_class;
 	unsigned char item_properties;
 private:
@@ -230,16 +235,16 @@ public:
 	cItemRec();
 	cItemRec(long preset);
 	cItemRec& operator = (legacy::item_record_type& old);
-	void writeTo(ostream& file, string prefix = "");
-	void readAttrFrom(string cur, istream& sin);
+	void writeTo(std::ostream& file, std::string prefix = "");
+	void readAttrFrom(std::string cur, std::istream& sin);
 };
 
-ostream& operator << (ostream& out, eWeapType& e);
-ostream& operator << (ostream& out, eItemType& e);
-ostream& operator << (ostream& out, eItemAbil& e);
-istream& operator >> (istream& in, eWeapType& e);
-istream& operator >> (istream& in, eItemType& e);
-istream& operator >> (istream& in, eItemAbil& e);
+std::ostream& operator << (std::ostream& out, eWeapType& e);
+std::ostream& operator << (std::ostream& out, eItemType& e);
+std::ostream& operator << (std::ostream& out, eItemAbil& e);
+std::istream& operator >> (std::istream& in, eWeapType& e);
+std::istream& operator >> (std::istream& in, eItemType& e);
+std::istream& operator >> (std::istream& in, eItemAbil& e);
 
 /*
  typedef struct {
@@ -254,3 +259,5 @@ istream& operator >> (istream& in, eItemAbil& e);
  unsigned char magic_use_type, ability_strength, treas_class, real_abil;
  } short_item_record_type;
  */
+
+#endif

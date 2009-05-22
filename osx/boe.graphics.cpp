@@ -5,7 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
@@ -629,7 +629,7 @@ void draw_startup_stats()
 			TextSize(12);	
 			OffsetRect(&pc_rect,12,16);
 			switch (ADVEN[i].main_status) {
-				case 1:
+				case MAIN_STATUS_ALIVE:
 					switch (ADVEN[i].race) {
 						case 0: sprintf((char *) str,"Level %d Human",ADVEN[i].level); break;
 						case 1: sprintf((char *) str,"Level %d Nephilim",ADVEN[i].level); break;
@@ -641,14 +641,19 @@ void draw_startup_stats()
 						ADVEN[i].max_health,ADVEN[i].max_sp);
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					break;
-				case 2:
+				case MAIN_STATUS_DEAD:
 					char_win_draw_string(mainPtr,pc_rect,"Dead",0,18,true);
 					break;
-				case 3:
+				case MAIN_STATUS_DUST:
 					char_win_draw_string(mainPtr,pc_rect,"Dust",0,18,true);
 					break;
-				case 4:
+				case MAIN_STATUS_STONE:
 					char_win_draw_string(mainPtr,pc_rect,"Stone",0,18,true);
+					break;
+				case MAIN_STATUS_FLED:
+					char_win_draw_string(mainPtr,pc_rect,"Fled",0,18,true);
+					break;
+				default: //absent, and all variations thereof; do nothing
 					break;
 				}
 			}
@@ -1174,7 +1179,7 @@ void draw_text_bar(short mode)
 	
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == false)) {
-		ostringstream sout;
+		std::ostringstream sout;
 		sout << ADVEN[current_pc].name << " (ap: " << ADVEN[current_pc].ap << ')';
 		combat_string = sout.str();
 		put_text_bar((char *) combat_string.c_str());

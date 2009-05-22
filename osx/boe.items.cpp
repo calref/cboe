@@ -5,7 +5,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 
 #include "boe.graphics.h"
@@ -617,6 +617,8 @@ void drop_item(short pc_num,short item_num,location where_drop)
 					if (take_given_item)
 						take_item(pc_num,item_num);
 					}	
+			break;
+		default: //should never be reached
 			break;
 		}
 }

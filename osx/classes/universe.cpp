@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -667,13 +667,13 @@ unsigned short(& cCurOut::operator [] (size_t i))[96]{
 	return out[i];
 }
 
-void cCurOut::writeTo(ostream& file){
+void cCurOut::writeTo(std::ostream& file){
 //	for(int i = 0; i < 96; i++){
 //		file << expl[i][0];
 //		for(int j = 1; j < 96; j++){
 //			file << '\t' << expl[i][j];
 //		}
-//		file << endl;
+//		file << std::endl;
 //	}
 //	file << '\f';
 //	for(int i = 9; i < 96; i++){
@@ -681,7 +681,7 @@ void cCurOut::writeTo(ostream& file){
 //		for(int j = 1; j < 96; j++){
 //			file << '\t' << out[i][j];
 //		}
-//		file << endl;
+//		file << std::endl;
 //	}
 //	file << '\f';
 	for(int i = 0; i < 96; i++){
@@ -689,28 +689,28 @@ void cCurOut::writeTo(ostream& file){
 		for(int j = 1; j < 96; j++){
 			file << '\t' << out_e[i][j];
 		}
-		file << endl;
+		file << std::endl;
 	}
-//	file << "OUTDOORS 0 0" << endl;
+//	file << "OUTDOORS 0 0" << std::endl;
 //	outdoors[0][0].writeTo(file);
-//	file << "OUTDOORS 0 1" << endl;
+//	file << "OUTDOORS 0 1" << std::endl;
 //	outdoors[0][1].writeTo(file);
-//	file << "OUTDOORS 1 0" << endl;
+//	file << "OUTDOORS 1 0" << std::endl;
 //	outdoors[1][0].writeTo(file);
-//	file << "OUTDOORS 1 1" << endl;
+//	file << "OUTDOORS 1 1" << std::endl;
 //	outdoors[1][1].writeTo(file);
-//	file << endl;
+//	file << std::endl;
 }
 
-void cCurTown::writeTo(ostream& file){
-	file << "TOWN " << num << endl;
-	file << "DIFFICULTY " << difficulty << endl;
-	if(hostile) file << "HOSTILE" << endl;
-	file << "INBOAT " << in_boat << endl;
-	file << "AT " << p_loc.x << ' ' << p_loc.y << endl;
+void cCurTown::writeTo(std::ostream& file){
+	file << "TOWN " << num << std::endl;
+	file << "DIFFICULTY " << difficulty << std::endl;
+	if(hostile) file << "HOSTILE" << std::endl;
+	file << "INBOAT " << in_boat << std::endl;
+	file << "AT " << p_loc.x << ' ' << p_loc.y << std::endl;
 	for(int i; i < 115; i++)
 		if(items[i].variety > ITEM_TYPE_NO_ITEM){
-			ostringstream sout;
+			std::ostringstream sout;
 			sout << "ITEM " << i << ' ';
 			items[i].writeTo(file, sout.str());
 		}
@@ -719,22 +719,22 @@ void cCurTown::writeTo(ostream& file){
 		file << fields[i][0];
 		for(int j = 1; j < 64; j++)
 			file << '\t' << fields[i][j];
-		file << endl;
+		file << std::endl;
 	}
-	file << '\f' << record->max_dim() << endl;
+	file << '\f' << record->max_dim() << std::endl;
 	for(int i = 0; i < record->max_dim(); i++){
 		file << record->terrain(i,0);
 		for(int j = 1; j < record->max_dim(); j++)
 			file << '\t' << record->terrain(i,j);
-		file << endl;
+		file << std::endl;
 	}
 	file << '\f';
 	// TODO: Write population
 }
 
-void cCurTown::readFrom(istream& file){
-	istringstream bin, sin;
-	string cur;
+void cCurTown::readFrom(std::istream& file){
+	std::istringstream bin, sin;
+	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
 	while(bin){
@@ -785,7 +785,7 @@ void cCurTown::readFrom(istream& file){
 }
 
 
-void cCurOut::readFrom(istream& file){
+void cCurOut::readFrom(std::istream& file){
 	for(int i = 0; i < 96; i++)
 		for(int j = 1; j < 96; j++)
 			file >> out_e[i][j];

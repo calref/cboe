@@ -6,6 +6,10 @@
  *
  */
 
+#ifndef VEHICLE_H
+#define VEHICLE_H
+
+#include <iostream>
 #include "location.h"
 
 namespace legacy {
@@ -27,7 +31,7 @@ public:
 	cVehicle();
 	cVehicle& operator = (legacy::horse_record_type& old);
 	cVehicle& operator = (legacy::boat_record_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 /*
@@ -42,3 +46,5 @@ typedef struct {
 	bool exists,property;
 } boat_record_type;
 */
+
+#endif

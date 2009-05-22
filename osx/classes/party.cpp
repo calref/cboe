@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -153,7 +153,7 @@ void cParty::add_pc(cPlayer new_pc){
 }
 
 bool cParty::has_talk_save(short who, short str1, short str2){
-	for (int j = 0; j < talk_save.size(); j++)
+	for (unsigned int j = 0; j < talk_save.size(); j++)
 		if ((talk_save[j].personality == who) && (talk_save[j].str_num1 == str1) &&	(talk_save[j].str_num2 == str2))
 			return true;
 	return false;
@@ -198,27 +198,28 @@ bool cParty::start_timer(short time, short node, short type){
 	t.global_or_town = type;
 	t.node_to_call = node;
 	party_event_timers.push_back(t);
+	return(true);
 }
 
-void cParty::writeTo(ostream& file){
-	file << "AGE " << age << endl;
-	file << "GOLD " << gold << endl;
-	file << "FOOD " << food << endl;
+void cParty::writeTo(std::ostream& file){
+	file << "AGE " << age << std::endl;
+	file << "GOLD " << gold << std::endl;
+	file << "FOOD " << food << std::endl;
 	for(int i = 0; i < 310; i++)
 		for(int j = 0; j < 50; j++)
 			if(stuff_done[i][j] > 0)
-				file << "SDF " << i << ' ' << j << ' ' << stuff_done[i][j] << endl;
+				file << "SDF " << i << ' ' << j << ' ' << stuff_done[i][j] << std::endl;
 	for(int i = 0; i < 200; i++)
 		if(item_taken[i][0] > 0 || item_taken[i][1] > 0 || item_taken[i][2] > 0 || item_taken[i][3] > 0 ||
 		   item_taken[i][4] > 0 || item_taken[i][5] > 0 || item_taken[i][6] > 0 || item_taken[i][7] > 0)
 			file << "ITEMTAKEN " << i << ' ' << item_taken[i][0] << ' ' << item_taken[i][1] << ' '
 				 << item_taken[i][2] << ' ' << item_taken[i][3] << ' ' << item_taken[i][4] << ' ' << item_taken[i][5]
-				 << ' ' << item_taken[i][6] << ' ' << item_taken[i][7] << endl;
-	file << "LIGHT " << light_level << endl;
-	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << endl;
-	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << endl;
-	file << "SECTOR " << p_loc.x << ' ' << p_loc.y << endl;
-	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << endl;
+				 << ' ' << item_taken[i][6] << ' ' << item_taken[i][7] << std::endl;
+	file << "LIGHT " << light_level << std::endl;
+	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << std::endl;
+	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << std::endl;
+	file << "SECTOR " << p_loc.x << ' ' << p_loc.y << std::endl;
+	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << std::endl;
 	// TODO: Delegate this to the cVehicle class
 	for(int i = 0; i < 30; i++){
 		if(!boats[i].exists) continue;
@@ -226,7 +227,7 @@ void cParty::writeTo(ostream& file){
 		file << boats[i].loc.x << ' ' << boats[i].loc.y << ' ';
 		file << boats[i].loc_in_sec.x << ' ' << boats[i].loc_in_sec.y << ' ';
 		file << boats[i].sector.x << ' ' << boats[i].sector.y << ' ';
-		file << boats[i].which_town << ' ' << (short)boats[i].property << endl;
+		file << boats[i].which_town << ' ' << (short)boats[i].property << std::endl;
 	}
 	for(int i = 0; i < 30; i++){
 		if(!horses[i].exists) continue;
@@ -234,77 +235,77 @@ void cParty::writeTo(ostream& file){
 		file << horses[i].loc.x << ' ' << horses[i].loc.y << ' ';
 		file << horses[i].loc_in_sec.x << ' ' << horses[i].loc_in_sec.y << ' ';
 		file << horses[i].sector.x << ' ' << horses[i].sector.y << ' ';
-		file << horses[i].which_town << ' ' << (short)horses[i].property << endl;
+		file << horses[i].which_town << ' ' << (short)horses[i].property << std::endl;
 	}
-	file << "IN " << in_boat << ' ' << in_horse << endl;
+	file << "IN " << in_boat << ' ' << in_horse << std::endl;
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 50; j++)
 			if(magic_store_items[i][j].variety > ITEM_TYPE_NO_ITEM){
-				ostringstream sout;
+				std::ostringstream sout;
 				sout << "MAGICSTORE " << i << ' ' << j << ' ';
 				magic_store_items[i][j].writeTo(file, sout.str());
 			}
 	for(int i = 0; i < 256; i++)
 		if(m_seen[i])
-			file << "ROSTER " << i << endl;
+			file << "ROSTER " << i << std::endl;
 	for(int i = 0; i < 10; i++)
 		if(out_c[i].exists){
-			file << "ENCOUNTER " << i << " DIRECTION " << out_c[i].direction << endl;
-			file << "ENCOUNTER " << i << " SECTOR " << out_c[i].which_sector.x << ' ' << out_c[i].which_sector.y << endl;
-			file << "ENCOUNTER " << i << " LOCINSECTOR " << out_c[i].m_loc.x << ' ' << out_c[i].m_loc.y << endl;
-			file << "ENCOUNTER " << i << " HOME " << out_c[i].home_sector.x << ' ' << out_c[i].home_sector.y << endl;
-			ostringstream sout;
+			file << "ENCOUNTER " << i << " DIRECTION " << out_c[i].direction << std::endl;
+			file << "ENCOUNTER " << i << " SECTOR " << out_c[i].which_sector.x << ' ' << out_c[i].which_sector.y << std::endl;
+			file << "ENCOUNTER " << i << " LOCINSECTOR " << out_c[i].m_loc.x << ' ' << out_c[i].m_loc.y << std::endl;
+			file << "ENCOUNTER " << i << " HOME " << out_c[i].home_sector.x << ' ' << out_c[i].home_sector.y << std::endl;
+			std::ostringstream sout;
 			sout << "ENCOUNTER " << i << ' ';
 			out_c[i].what_monst.writeTo(file,sout.str());
 		}
 	for(int i = 0; i < 4; i++)
 		if(imprisoned_monst[i] > 0)
-			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << endl;
-	file << "DIRECTION " << direction << endl;
-	file << "WHICHSLOT " << at_which_save_slot << endl;
+			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << std::endl;
+	file << "DIRECTION " << direction << std::endl;
+	file << "WHICHSLOT " << at_which_save_slot << std::endl;
 	for(int i = 0; i < 20; i++)
 		if(alchemy[i])
-			file << "ALCHEMY " << i << endl;
+			file << "ALCHEMY " << i << std::endl;
 	for(int i = 0; i < 200; i++)
 		if(can_find_town[i])
-			file << "TOWN " << i << endl;
+			file << "TOWN " << i << std::endl;
 	for(int i = 0; i < 100; i++)
 		if(key_times[i])
-			file << "EVENT " << i << ' ' << key_times[i] << endl;
+			file << "EVENT " << i << ' ' << key_times[i] << std::endl;
 	for(int i = 0; i < 50; i++)
 		if(spec_items[i])
-			file << "ITEM " << i << endl;
+			file << "ITEM " << i << std::endl;
 	for(int i = 0; i < 120; i++)
 		if(help_received[i])
-			file << "HELP " << i << endl;
+			file << "HELP " << i << std::endl;
 	for(int i = 0; i < 200; i++)
 		if(m_killed[i] > 0)
-			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << endl;
-	file << "KILLS " << total_m_killed << endl;
-	file << "DAMAGE " << total_dam_done << endl;
-	file << "WOUNDS " << total_dam_taken << endl;
-	file << "EXPERIENCE " << total_xp_gained << endl;
-	file << "SCENARIO " << scen_name << endl;
-	file << "WON " << scen_won << endl;
-	file << "PLAYED " << scen_played << endl;
+			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << std::endl;
+	file << "KILLS " << total_m_killed << std::endl;
+	file << "DAMAGE " << total_dam_done << std::endl;
+	file << "WOUNDS " << total_dam_taken << std::endl;
+	file << "EXPERIENCE " << total_xp_gained << std::endl;
+	file << "SCENARIO " << scen_name << std::endl;
+	file << "WON " << scen_won << std::endl;
+	file << "PLAYED " << scen_played << std::endl;
 	for(campIter iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
-		for(int i = 0; i < iter->second.size(); i++)
+		for(unsigned int i = 0; i < iter->second.size(); i++)
 			if(iter->second[i] > 0)
-				file << "CAMPAIGN \"" << iter->first << "\" " << i << ' ' << iter->second[i] << endl;
+				file << "CAMPAIGN \"" << iter->first << "\" " << i << ' ' << iter->second[i] << std::endl;
 	}
-	for(int i = 0; i < 250; i++)
+	for(unsigned int i = 0; i < 250; i++)
 		if(graphicUsed[i])
-			file << "GRAPHIC " << i << endl;
-	for(int i = 0; i < party_event_timers.size(); i++)
+			file << "GRAPHIC " << i << std::endl;
+	for(unsigned int i = 0; i < party_event_timers.size(); i++)
 		file << "TIMER " << i << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].global_or_town
-			 << ' ' << party_event_timers[i].node_to_call << endl;
+			 << ' ' << party_event_timers[i].node_to_call << std::endl;
 	file << '\f';
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 64; j++){
 			file << setup[i][j][0];
 			for(int k = 1; k < 64; k++)
 				file << '\t' << setup[i][j][k];
-			file << endl;
+			file << std::endl;
 		}
 		file << '\f';
 	}
@@ -314,10 +315,10 @@ void cParty::writeTo(ostream& file){
 	// TODO: summons
 }
 
-void cParty::readFrom(istream& file){
+void cParty::readFrom(std::istream& file){
 	// TODO: Error-check input
-	istringstream bin, sin;
-	string cur;
+	std::istringstream bin, sin;
+	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
@@ -430,7 +431,8 @@ void cParty::readFrom(istream& file){
 		else if(cur == "PLAYED")
 			sin >> scen_played;
 		else if(cur == "CAMPAIGN"){
-			int i,j;
+			unsigned int i;
+			int j;
 			if(sin.peek() == '"'){
 				sin.get();
 				getline(sin, cur, '"');

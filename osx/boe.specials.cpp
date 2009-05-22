@@ -4,7 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.party.h"
 #include "boe.town.h"
@@ -305,7 +305,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 					pic_type = 0;
 					if (PSD[SDF_PARTY_FIREWALK] > 0) {
 						add_string_to_buf("  It doesn't affect you.");			
-						goto LBL_NO_DAMAGE;
+						goto LBL_NO_DAMAGE; //TODO: nix the goto
 					}
 					break;
 				case DAMAGE_COLD:
@@ -329,7 +329,12 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				case DAMAGE_DEMON:
 					add_string_to_buf("  A dark wind blows through you!");
 					pic_type = 1; // TODO: Verify that this is correct
+<<<<<<< .mine
+					default:
 					break;
+=======
+					break;
+>>>>>>> .r62
 			}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
@@ -1621,7 +1626,8 @@ void push_things()////
 
 void special_increase_age()
 {
-	short i,s1,s2,s3;
+	unsigned short i;
+	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
 	location null_loc;
 	

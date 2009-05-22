@@ -6,10 +6,12 @@
  *
  */
 
+#ifndef PARTY_H
+#define PARTY_H
+
 #include <string>
 #include <vector>
 #include <map>
-using namespace std;
 
 namespace legacy {
 	struct party_record_type;
@@ -28,7 +30,7 @@ public:
 		short personality;
 		short town_num;
 		short str_num1, str_num2;
-		string who_said, in_town, the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
+		std::string who_said, in_town, the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
 		
 		cConvers& operator = (legacy::talk_save_type old);
 	};
@@ -36,12 +38,12 @@ public:
 	public:
 		unsigned short str_num;
 		unsigned short day;
-		string the_str, in_scen; // the actual strings; not always saved, like maps
+		std::string the_str, in_scen; // the actual strings; not always saved, like maps
 	};
 	class cEncNote {
 	public:
 		unsigned short str_num, where;
-		string the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
+		std::string the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
 	};
 	class cTimer {
 	public:
@@ -69,22 +71,22 @@ public:
 	cItemRec magic_store_items[5][10];
 	short imprisoned_monst[4]; // Soul Crystal?
 	char m_seen[256];
-	vector<cJournal> journal;
-	vector<cEncNote> special_notes;
-	vector<cConvers> talk_save;
+	std::vector<cJournal> journal;
+	std::vector<cEncNote> special_notes;
+	std::vector<cConvers> talk_save;
 	short direction;
 	short at_which_save_slot;
 	char alchemy[20];
 	bool can_find_town[200];
 	short key_times[100];
-	vector<cTimer> party_event_timers;
+	std::vector<cTimer> party_event_timers;
 	//short global_or_town[30];
 	//short node_to_call[30];
 	char spec_items[50];
 	char help_received[120];
 	short m_killed[200]; // monsters killed per town, I think
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
-	string scen_name;
+	std::string scen_name;
 	
 	cPlayer adven[6];
 	
@@ -95,7 +97,7 @@ public:
 	cMonster summons; // an array of monsters which can be summoned by the parties items yet don't originate from this scenario
 	bool graphicUsed[250]; // whether each custom graphics slot on the party's sheet is actually used; needed to place new custom graphics on the sheet.
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
-	map<string,vector<int> > campaign_flags;
+	std::map<std::string,std::vector<int> > campaign_flags;
 	
 	cParty& operator = (legacy::party_record_type& old);
 	void append(legacy::big_tr_type& old);
@@ -111,11 +113,13 @@ public:
 	bool record(short what, short where);
 	bool start_timer(short time, short node, short type);
 	
-	typedef vector<cEncNote>::iterator encIter;
-	typedef vector<cJournal>::iterator journalIter;
-	typedef vector<cConvers>::iterator talkIter;
-	typedef vector<cTimer>::iterator timerIter;
-	typedef map<string,vector<int> >::iterator campIter;
-	void writeTo(ostream& file);
-	void readFrom(istream& file);
+	typedef std::vector<cEncNote>::iterator encIter;
+	typedef std::vector<cJournal>::iterator journalIter;
+	typedef std::vector<cConvers>::iterator talkIter;
+	typedef std::vector<cTimer>::iterator timerIter;
+	typedef std::map<std::string,std::vector<int> >::iterator campIter;
+	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
+
+#endif

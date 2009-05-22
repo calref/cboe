@@ -138,7 +138,7 @@ GWorldPtr load_bmp(unsigned char *data, unsigned long length){
 	cur+=24;
 	int indexed;
 	unsigned int colourTable[256];
-	int i;
+	unsigned int i;
 	if (bitCount == 8) {
 		if (length < 54 + 256 * 4) {
 			return NULL;
@@ -182,7 +182,7 @@ GWorldPtr load_bmp(unsigned char *data, unsigned long length){
 	unsigned int * picBuf = (unsigned int*) GetPixBaseAddr(pixMap);
 	int pixrow = ((*pixMap)->rowBytes & 0x3FFF) / 4;
 	
-	int j;
+	unsigned int j;
 	for (i = height - 1; i>= 0 ; --i) {
 		for (j=0; j<width; ++j) {
 			if (indexed) {

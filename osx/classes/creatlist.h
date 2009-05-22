@@ -6,6 +6,9 @@
  *
  */
 
+#ifndef CREATLIST_H
+#define CREATLIST_H
+
 namespace legacy {
 	struct creature_list_type;
 	struct creature_data_type;
@@ -31,3 +34,5 @@ public:
 	
 	cPopulation& operator = (legacy::creature_list_type old);
 };
+
+#endif

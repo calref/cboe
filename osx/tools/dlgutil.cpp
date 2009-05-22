@@ -320,7 +320,6 @@ void display_strings(char *text1, char *text2,
 	
 	short item_hit;
 	location view_loc;
-	bool sound_done = false;
 	
 	//make_cursor_sword();
 	

@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef REGTOWN_H
+#define REGTOWN_H
+
+#include <iostream>
+
 namespace legacy {
 	struct big_tr_type;
 	struct ave_tr_type;
@@ -28,7 +33,7 @@ public:
 	short max_monst();
 	
 	cBigTown();
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
@@ -47,7 +52,7 @@ public:
 	short max_monst();
 	
 	cMedTown();
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
@@ -66,5 +71,7 @@ public:
 	short max_monst();
 	
 	cTinyTown();
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif

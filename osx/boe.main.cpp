@@ -2,7 +2,6 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
 #include "classes.h"
 
 #include "gamma.h"

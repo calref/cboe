@@ -2,7 +2,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.newgraph.h"
 #include "boe.graphics.h"

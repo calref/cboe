@@ -3,7 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.monster.h"
 #include "boe.graphics.h"
@@ -4787,4 +4787,5 @@ short get_monst_sound(cCreature *attacker,short which_att) {
 			return 0;
 			break;
 		}
+	return 0;
 	}

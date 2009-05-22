@@ -3,7 +3,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 
 #include "boe.graphutil.h"
@@ -488,7 +488,8 @@ void start_town_mode(short which_town, short entry_dir)
 								if (univ.town->preset_items[i].ability > 0)
 									univ.town.items[j].item_level = univ.town->preset_items[i].ability;
 								break;
-
+							default: //leave other type alone
+								break;
 		 					}
 		 				}
 		 				

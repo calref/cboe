@@ -7,7 +7,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 #include "boe.text.h"
 #include "boe.locutils.h"
@@ -831,7 +831,7 @@ short do_look(location space)
 	short i,j,num_items = 0;
 	bool gold_here = false, food_here = false, is_lit = true;
 	location from_where;
-	string msg;
+	std::string msg;
 		
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
@@ -1022,7 +1022,7 @@ short out_horse_there(location where)
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) 
 {
 	short i;
-	string msg;
+	std::string msg;
 	
 	add_string_to_buf((char *) "COMBAT!                 ");	
 
@@ -1033,7 +1033,7 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
 				
 				default:
 				msg = get_m_name(encounter.monst[i]);
-					ostringstream sout;
+					std::ostringstream sout;
 					sout << "  " << nums[i] << " x " << msg << "        ";
 					msg = sout.str();
 				break;		
@@ -1046,16 +1046,16 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
 		}
 }
 
-string get_m_name(unsigned short num)
+std::string get_m_name(unsigned short num)
 {
 	
 	////
 	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
 	return scenario.scen_monsters[num].m_name;
 }
-string get_ter_name(unsigned short num)
+std::string get_ter_name(unsigned short num)
 {
-	string store_name = "Pit";
+	std::string store_name = "Pit";
 	
 	////
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))));
@@ -1068,7 +1068,7 @@ string get_ter_name(unsigned short num)
 
 void print_monst_name(unsigned short m_type)
 {
-	string msg = get_m_name(m_type) + ':';
+	std::string msg = get_m_name(m_type) + ':';
 	add_string_to_buf((char *) msg.c_str());
 }
 
@@ -1077,7 +1077,7 @@ void print_monst_attacks(unsigned short m_type,short target)
 {
 	//char store_string3[60];
 	
-	string msg = get_m_name(m_type);
+	std::string msg = get_m_name(m_type);
 	msg += " attacks ";
 	if (target < 100)
 		msg += ADVEN[target].name;
@@ -1089,27 +1089,27 @@ void print_monst_attacks(unsigned short m_type,short target)
 ////
 void damaged_message(short damage,short type)
 {
-	string msg = "  ";
+	std::string msg = "  ";
 	Str255 str;
 	get_str(str,20,130 + type);
 	msg += (char*)str; 
-	ostringstream sout(msg);
+	std::ostringstream sout(msg);
 	sout << " for " << damage;
 	msg = sout.str();
 	add_string_to_buf((char *) msg.c_str());	
 }
 
 // This prepares the monster's string for the text bar
-string print_monster_going(unsigned short m_num,short ap)
+std::string print_monster_going(unsigned short m_num,short ap)
 {
-	ostringstream sout(get_m_name(m_num));
+	std::ostringstream sout(get_m_name(m_num));
 	sout << " (ap: " << ap << ')';
 	return sout.str();
 }
 
 void monst_spell_note(unsigned short number,short which_mess)
 {
-	string msg = get_m_name(number);
+	std::string msg = get_m_name(number);
 	switch (which_mess) {
 		case 1:
 			msg = "  " + msg + " scared. ";
@@ -1226,7 +1226,7 @@ void monst_spell_note(unsigned short number,short which_mess)
 void monst_cast_spell_note(unsigned short number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
-	string msg = get_m_name(number);
+	std::string msg = get_m_name(number);
 	msg += " casts:";
 	add_string_to_buf((char *) msg.c_str());
 	msg = (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1];
@@ -1236,7 +1236,7 @@ void monst_cast_spell_note(unsigned short number,short spell,short type)
 
 void monst_breathe_note(unsigned short number)
 {
-	string msg = get_m_name(number);
+	std::string msg = get_m_name(number);
 	msg += " breathes.";
 	add_string_to_buf((char *) msg.c_str());
 
@@ -1244,9 +1244,9 @@ void monst_breathe_note(unsigned short number)
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
-	string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	std::string msg = get_m_name(univ.town.monst.dudes[which_m].number);
 	msg = "  " + msg + " takes ";
-	ostringstream sout(msg);
+	std::ostringstream sout(msg);
 	sout << how_much;
 	if (how_much_spec > 0)
 		sout << '+' << how_much_spec;
@@ -1256,14 +1256,14 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 
 void monst_killed_mes(short which_m)
 {
-	string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	std::string msg = get_m_name(univ.town.monst.dudes[which_m].number);
 	msg = "  " + msg + " dies.";
 	add_string_to_buf((char *) msg.c_str());
 }
 
 void print_nums(short a,short b,short c)
 {
-	ostringstream sout;
+	std::ostringstream sout;
 	sout << "debug: " << a << ' ' << b << ' ' << c;
 	add_string_to_buf((char *) sout.str().c_str());
 
@@ -1282,7 +1282,7 @@ short print_terrain(location space)
 	if (overall_mode == MODE_LOOK_COMBAT) {
 		which_terrain = combat_terrain[space.x][space.y];
 		}
-	string msg = get_ter_name(which_terrain);
+	std::string msg = get_ter_name(which_terrain);
 	msg = "    " + msg;
 	add_string_to_buf((char *) msg.c_str());
 

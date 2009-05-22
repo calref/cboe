@@ -4,7 +4,7 @@
 //#include "item.h"
 
 #include "boe.global.h"
-using namespace std;
+
 #include "classes.h"
 
 #include "boe.dlgutil.h"
@@ -62,8 +62,8 @@ extern cUniverse univ;
 					
 short terrain_pic[256]; 
 
-vector<scen_header_type> scen_headers;
-vector<scen_header_str_type> scen_header_strs;
+std::vector<scen_header_type> scen_headers;
+std::vector<scen_header_str_type> scen_header_strs;
 					
 GWorldPtr pcs_gworld = NULL;
 
@@ -1777,8 +1777,8 @@ void tip_of_day()
 
 void put_scen_info()
 {
-	short i;
-	ostringstream sout;
+	unsigned int i;
+	std::ostringstream sout;
 	char *ratings[] = {"G","PG","R","NC-17"};
 	char *difficulty[] = {"Low","Medium","High","Very High"};
 

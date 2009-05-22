@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -246,49 +246,49 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 		stat = (eMainStatus) (-10 + stat);
 }
 
-void cPlayer::writeTo(ostream& file){
-	file << "STATUS -1 " << main_status << endl;
-	file << "NAME " << name << endl;
-	file << "SKILL -2 " << max_health << endl;
-	file << "SKILL -1 " << max_sp << endl;
+void cPlayer::writeTo(std::ostream& file){
+	file << "STATUS -1 " << main_status << std::endl;
+	file << "NAME " << name << std::endl;
+	file << "SKILL -2 " << max_health << std::endl;
+	file << "SKILL -1 " << max_sp << std::endl;
 	for(int i = 0; i < 30; i++)
 		if(skills[i] > 0)
-			file << "SKILL " << i << ' ' << skills[i] << endl;
-	file << "HEALTH " << cur_health << endl;
-	file << "MANA " << cur_sp << endl;
-	file << "EXPERIENCE " << experience << endl;
-	file << "SKILLPTS " << skill_pts << endl;
-	file << "LEVEL " << level << endl;
+			file << "SKILL " << i << ' ' << skills[i] << std::endl;
+	file << "HEALTH " << cur_health << std::endl;
+	file << "MANA " << cur_sp << std::endl;
+	file << "EXPERIENCE " << experience << std::endl;
+	file << "SKILLPTS " << skill_pts << std::endl;
+	file << "LEVEL " << level << std::endl;
 	for(int i = 0; i < 15; i++)
 		if(status[i] != 0)
-			file << "STATUS " << i << ' ' << status[i] << endl;
+			file << "STATUS " << i << ' ' << status[i] << std::endl;
 	for(int i; i < 24; i++)
 		if(items[i].variety > ITEM_TYPE_NO_ITEM){
-			ostringstream sout;
+			std::ostringstream sout;
 			sout << "ITEM " << i << ' ';
 			items[i].writeTo(file, sout.str());
 		}
 	for(int i = 0; i < 24; i++)
 		if(equip[i])
-			file << "EQUIP " << i << endl;
+			file << "EQUIP " << i << std::endl;
 	for(int i = 0; i < 62; i++)
 		if(mage_spells[i])
-			file << "MAGE " << i << endl;
+			file << "MAGE " << i << std::endl;
 	for(int i = 0; i < 62; i++)
 		if(priest_spells[i])
-			file << "PRIEST " << i << endl;
+			file << "PRIEST " << i << std::endl;
 	for(int i = 0; i < 62; i++)
 		if(traits[i])
-			file << "TRAIT " << i << endl;
-	file << "ICON " <<  which_graphic << endl;
-	file << "RACE " << race << endl;
-	file << "DIRECTION " << direction << endl;
-	file << "POISON " << weap_poisoned << endl;
+			file << "TRAIT " << i << std::endl;
+	file << "ICON " <<  which_graphic << std::endl;
+	file << "RACE " << race << std::endl;
+	file << "DIRECTION " << direction << std::endl;
+	file << "POISON " << weap_poisoned << std::endl;
 }
 
-void cPlayer::readFrom(istream& file){
-	istringstream bin, sin;
-	string cur;
+void cPlayer::readFrom(std::istream& file){
+	std::istringstream bin, sin;
+	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
@@ -360,11 +360,11 @@ void cPlayer::readFrom(istream& file){
 	}
 }
 
-ostream& operator << (ostream& out, eMainStatus& e){
+std::ostream& operator << (std::ostream& out, eMainStatus& e){
 	return out << (int) e;
 }
 
-istream& operator >> (istream& in, eMainStatus& e){
+std::istream& operator >> (std::istream& in, eMainStatus& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 18 && i !=8 && i != 9)

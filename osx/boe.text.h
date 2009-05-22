@@ -1,3 +1,5 @@
+#include <string>
+
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
@@ -18,12 +20,12 @@ short out_boat_there(location where);
 short town_horse_there(location where);
 short out_horse_there(location where);
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) ;
-string get_m_name(unsigned short num);
-string get_ter_name(unsigned short num);
+std::string get_m_name(unsigned short num);
+std::string get_ter_name(unsigned short num);
 void print_monst_name(unsigned short m_type);
 void print_monst_attacks(unsigned short m_type,short target);
 void damaged_message(short damage,short type);
-string print_monster_going(unsigned short m_num,short ap);
+std::string print_monster_going(unsigned short m_num,short ap);
 void monst_spell_note(unsigned short number,short which_mess);
 void monst_cast_spell_note(unsigned short number,short spell,short type);
 void monst_breathe_note(unsigned short number);

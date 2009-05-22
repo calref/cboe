@@ -10,11 +10,8 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
 
-#include <string.h>
 #include <zlib.h>
-#include <string>
 //#include "scen.global.h"
 #include <fstream>
 #include "classes.h"
@@ -127,10 +124,10 @@ FSSpec nav_get_scenario() throw(no_file_chosen) {
 }
 
 FSSpec nav_put_scenario() throw(no_file_chosen) {
-	NavReplyRecord s_reply;
+	/*NavReplyRecord s_reply;
 	AEKeyword keyword;
 	DescType descType;
-	Size actualSize;
+	Size actualSize;*/
 	FSSpec file_to_load;
 	
 	return file_to_load;
@@ -182,7 +179,6 @@ FSSpec nav_put_party() throw(no_file_chosen) {
 		throw no_file_chosen();
 	
 	//  Deal with multiple file selection
-	long    count;
 	error = AECountItems(&(s_reply.selection), &descCount);
 	// Set up index for file list
 	if (error == noErr){
@@ -222,7 +218,7 @@ FSSpec nav_put_party() throw(no_file_chosen) {
 					error=FSGetCatalogInfo(&tempRef, kFSCatInfoNone, NULL,NULL, &file_to_save, NULL);
 				}
 				else{ //something bad happened
-					printf("creation error was: %i\n",error);
+					printf("creation error was: %i\n",(int32_t)error);
 					throw no_file_chosen(); // TODO: This should probably be some other exception.
 				}
 			}
@@ -258,12 +254,12 @@ struct header_posix_ustar {
 
 header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize,bool directory=false){
 	if(fileSize>077777777777LL)
-		throw length_error("Specified file size >= 8 GB");
+		throw std::length_error("Specified file size >= 8 GB");
 	if(fileName.length()>=100)
-		throw length_error("Specified file name longer than 99 characters.");
+		throw std::length_error("Specified file name longer than 99 characters.");
 	header_posix_ustar header;
 	char* init = (char*) &header;
-	for(int i = 0; i < sizeof(header); i++) init[i] = 0;
+	for(unsigned int i = 0; i < sizeof(header); i++) init[i] = 0;
 	
 	sprintf(header.name,"%s",fileName.c_str());
 	sprintf(header.mode,"%07o",0600);
@@ -288,7 +284,7 @@ header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long 
 		sum+=ptr[i];
 	}
 	if(sum>0777777)
-		throw runtime_error("Checksum overflow");
+		throw std::runtime_error("Checksum overflow");
 	sprintf(header.checksum,"%o",sum);
 	return(header);
 }
@@ -1139,8 +1135,8 @@ bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	char* path = new char[200];
 	FSpMakeFSRef(&file_to_load, &dest_ref);
 	FSRefMakePath(&dest_ref, (UInt8*) path, 200);
-	ifstream fin(path);
-	fin.seekg(3*sizeof(short),ios_base::beg); // skip the header, which is 6 bytes in the old format
+	std::ifstream fin(path);
+	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	//short flags[3];
 	//fin.read((char*)flags,3*sizeof(short));
 //	OSErr error = FSpOpenDF(&file_to_load,1,&file_id);
@@ -1386,12 +1382,11 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	
 	/*   Initialize various variables   */
 	header_posix_ustar header;
-	istringstream sin;
-	string tar_name;
-	string tar_entry;
+	std::istringstream sin;
+	std::string tar_name;
+	std::string tar_entry;
 	size_t tar_size;
-	int x;
-	map<string,string> party_archive;
+	std::map<std::string,std::string> party_archive;
 	
 	/*   Split the tar archive into its component files   */
 	while(!gzeof(party_file)){
@@ -1417,7 +1412,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	for(int i = 0; i < 6; i++){
 		buf = new char[20];
 		sprintf(buf,"save/pc%i.txt",i);
-		string f_name = buf;
+		std::string f_name = buf;
 		delete buf;
 		if(party_archive.find(f_name) == party_archive.end()){
 			FCD(1064,0);
@@ -1483,7 +1478,7 @@ bool save_party(FSSpec dest_file)
 	FSRefMakePath(&dest_ref, (UInt8*)path, 200);
 	//buf = new char[10000];
 	//FILE* f = fopen(path,"wb");
-	ofstream fout(path);
+	std::ofstream fout(path);
 	short flags[] = {
 		0x0B0E, // to indicate new format
 		in_town ? 1342 : 5790, // is the party in town?
@@ -1506,12 +1501,11 @@ bool save_party(FSSpec dest_file)
 	/*   Initialize buffer and other variables   */
 	header_posix_ustar header;
 	static char footer[2*sizeof(header_posix_ustar)] = {0};
-	ostringstream sout("");
-	ostringstream bout("",ios_base::binary);
-	string tar_entry;
+	std::ostringstream sout("");
+	std::ostringstream bout("",std::ios_base::binary);
+	std::string tar_entry;
 	size_t tar_size, y;
 	int x;
-	streambuf* tmp = sout.rdbuf();
 	sout << x;
 	/*   Write main party data to a buffer, and then to the file   */
 	univ.party.writeTo(sout);

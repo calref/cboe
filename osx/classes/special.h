@@ -6,6 +6,11 @@
  *
  */
 
+#ifndef SPECIAL_H
+#define SPECIAL_H
+
+#include <iostream>
+
 namespace legacy { struct special_node_type; };
 
 class cSpecial {
@@ -24,5 +29,7 @@ public:
 	
 	cSpecial();
 	cSpecial& operator = (legacy::special_node_type& old);
-	void writeTo(ostream& file);
+	void writeTo(std::ostream& file);
 };
+
+#endif
