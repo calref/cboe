@@ -1,6 +1,7 @@
 
 //#include "item.h"
 
+#define DIR_ARRAY_DEF
 #include "boe.global.h"
 #include "classes.h"
 
@@ -60,6 +61,8 @@ long start_time;
 
 short on_spell_menu[2][62];
 short on_monst_menu[256];
+signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
+signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 // Cursors 
 extern short current_cursor;

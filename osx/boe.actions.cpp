@@ -2499,6 +2499,91 @@ location get_cur_direction(Point the_point)
 	return store_dir;
 }
 
+eDirection find_waterfall(short x, short y, short mode){
+	// If more than one waterfall adjacent, randomly selects
+	bool to_dir[8];
+	for(eDirection i = DIR_N; i < DIR_HERE; i++){
+		if(mode == 0){
+			to_dir[i] = (scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == TER_SPEC_WATERFALL);
+			printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
+			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1 != i) to_dir[i] = false;
+		}else{
+			to_dir[i] = (scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == TER_SPEC_WATERFALL);
+			if(scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1 != i) to_dir[i] = false;
+		}
+	}
+	short count = 0;
+	for(int i = 0; i < 8; i++)
+		count += to_dir[i];
+	if(count > 0) count = get_ran(1,1,count);
+	else return DIR_HERE;
+	for(eDirection i = DIR_N; i < DIR_HERE; i++){
+		if(to_dir[i]){
+			count--;
+			if(count == 0) return i;
+		}
+	}
+	return DIR_HERE; // just in case something wonky happens
+}
+
+void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
+	short x,y;
+	if(mode == 0){
+		x = univ.town.p_loc.x;
+		y = univ.town.p_loc.y;
+	}else{
+		x = univ.party.p_loc.x;
+		y = univ.party.p_loc.y;
+	}
+	eDirection dir;
+	while((dir = find_waterfall(x,y,mode)) != DIR_HERE){
+		add_string_to_buf("  Waterfall!                     ");
+		if(mode == 0){
+			x += 2 * dir_x_dif[dir];
+			y += 2 * dir_y_dif[dir];
+			univ.town.p_loc.x += 2 * dir_x_dif[dir];
+			univ.town.p_loc.y += 2 * dir_y_dif[dir];
+			update_explored(univ.party.p_loc);
+		}else{
+			x += 2 * dir_x_dif[dir];
+			y += 2 * dir_y_dif[dir];
+			univ.party.p_loc.x += 2 * dir_x_dif[dir];
+			univ.party.loc_in_sec.x += 2 * dir_x_dif[dir];
+			univ.party.p_loc.y += 2 * dir_y_dif[dir];
+			univ.party.loc_in_sec.y += 2 * dir_y_dif[dir];
+			update_explored(univ.party.p_loc);
+		}
+		draw_terrain();
+		print_buf();
+		if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
+			add_string_to_buf("  (No supplies lost.)");
+		else if (univ.party.food > 1800){
+			add_string_to_buf("  (Many supplies lost.)");
+			univ.party.food -= 50;
+		}
+		else {
+			int n = univ.party.food;
+			char s[25];
+			univ.party.food = (univ.party.food * 19) / 20;
+			sprintf(s,"  (%d supplies lost.)",n - univ.party.food);
+			add_string_to_buf(s);
+		}
+		put_pc_screen();
+		play_sound(28);
+		pause(8);
+	}
+	if(mode == 0){
+		univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
+		univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+	}else{
+		univ.party.boats[univ.party.in_boat].which_town = 200;
+		univ.party.boats[univ.party.in_boat].loc_in_sec = univ.party.loc_in_sec;
+		univ.party.boats[univ.party.in_boat].loc = univ.party.p_loc;
+		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;	
+	}
+}
+
 bool outd_move_party(location destination,bool forced)
 {
 	char create_line[60];
@@ -2628,6 +2713,10 @@ bool outd_move_party(location destination,bool forced)
 			ASB("Your horses quite sensibly refuse.");
 			return false;
 			}
+		if (scenario.ter_types[ter].special == TER_SPEC_DANGEROUS) {
+			ASB("Your horses quite sensibly refuse.");
+			return false;
+		}
 			
 			give_help(60,0,0);
 			add_string_to_buf("Move: You mount the horses.           ");
@@ -2668,35 +2757,7 @@ bool outd_move_party(location destination,bool forced)
 		num_out_moves++;
 		
 		if (univ.party.in_boat >= 0) { // Waterfall!!!
-			while (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y + 1]].special == TER_SPEC_WATERFALL) { // TODO: Implement the 7 other possible directions
-				add_string_to_buf("  Waterfall!                     ");
-				univ.party.p_loc.y += 2;
-				univ.party.loc_in_sec.y += 2;
-				update_explored(univ.party.p_loc);
-				draw_terrain();
-				print_buf();
-				if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
-					add_string_to_buf("  (No supplies lost.)");
-				else if (univ.party.food > 1800){
-					add_string_to_buf("  (Many supplies lost.)");
-					univ.party.food -= 50;
-				}
-				else {
-					int n = univ.party.food;
-					char s[25];
-					univ.party.food = (univ.party.food * 19) / 20;
-					sprintf(s,"  (%d supplies lost.)",n - univ.party.food);
-					add_string_to_buf(s);
-				}
-				put_pc_screen();
-				play_sound(28);
-				pause(8);
-			}			
-			univ.party.boats[univ.party.in_boat].which_town = 200;
-			univ.party.boats[univ.party.in_boat].loc_in_sec = univ.party.loc_in_sec;
-			univ.party.boats[univ.party.in_boat].loc = univ.party.p_loc;
-			univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-			univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+			run_waterfalls(1);
 		}
 		if (univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
@@ -2840,32 +2901,7 @@ bool town_move_party(location destination,short forced)////
 			
 			if (univ.party.in_boat >= 0) {
 				// Waterfall!!!
-				while (scenario.ter_types[univ.town->terrain(destination.x,destination.y + 1)].special == TER_SPEC_WATERFALL) { // TODO: Implement the other 7 possible directions
-					add_string_to_buf("  Waterfall!                     ");
-					destination.y += 2;
-					univ.town.p_loc.y += 2;
-					update_explored(univ.party.p_loc);
-					draw_terrain();
-					print_buf();
-					if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
-						add_string_to_buf("  (No supplies lost.)");
-					else if (univ.party.food > 1800){
-						add_string_to_buf("  (Many supplies lost.)");
-						univ.party.food -= 50;
-					}
-					else {
-						int n = univ.party.food;
-						char s[25];
-						univ.party.food = (univ.party.food * 19) / 20;
-						sprintf(s,"  (%d supplies lost.)",n - univ.party.food);
-						add_string_to_buf(s);
-					}
-					put_pc_screen();
-					play_sound(28);
-					pause(8);
-				}
-				univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
-				univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+				run_waterfalls(0);
 			}
 			if (univ.party.in_horse >= 0) {
 					univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;

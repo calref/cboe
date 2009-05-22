@@ -250,7 +250,8 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	trans_to_what = old.trans_to_what;
 	fly_over = old.fly_over;
 	boat_over = old.boat_over;
-	block_horse = old.block_horse;
+	if(special == TER_SPEC_DANGEROUS) block_horse = false; // because it's now redundant and unhelpful
+	else block_horse = old.block_horse;
 	light_radius = old.light_radius;
 	step_sound = old.step_sound;
 	shortcut_key = old.shortcut_key;

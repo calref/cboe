@@ -160,14 +160,25 @@ enum eGameMode {
 #define STATUS_ACID				13
 
 // Directions!
-#define DIR_N	0
-#define DIR_NE	1
-#define DIR_E	2
-#define DIR_SE	3
-#define DIR_S	4
-#define DIR_SW	5
-#define DIR_W	6	
-#define DIR_NW	7
+enum eDirection {
+	DIR_N = 0,
+	DIR_NE = 1,
+	DIR_E = 2,
+	DIR_SE = 3,
+	DIR_S = 4,
+	DIR_SW = 5,
+	DIR_W = 6,
+	DIR_NW = 7,
+	DIR_HERE = 8,
+};
+#ifndef DIR_ARRAY_DEF
+extern signed char dir_x_dif[9];
+extern signed char dir_y_dif[9];
+#endif
+inline eDirection& operator++ (eDirection& me,int){
+	if(me == DIR_HERE) return me = DIR_N;
+	else return me = (eDirection) (1 + (int) me);
+}
 
 /* damage type*/
 /* used as parameter to some functions */

@@ -2220,6 +2220,13 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 			draw_trim(q,r,8,to_left);
 			draw_trim(q,r,10,to_left);
 		}
+		
+		if (is_ground(to_right) && is_ground(below) && is_ground(to_left) && is_ground(above)) {
+			draw_trim(q,r,8,to_left);
+			draw_trim(q,r,9,to_right);
+			draw_trim(q,r,10,to_left);
+			draw_trim(q,r,11,to_right);
+		}
 	//	}
 	}
 }
