@@ -294,7 +294,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				can_enter = false;
 			break;
 		case TER_SPEC_DAMAGING:
-			if (flying())
+			if (flying() || univ.party.in_boat >= 0) //if the party is flying or in a boat, they cannot be harmed by terrain
 				break;
 			if(ter_flag3 > 0 && ter_flag3 < 8)
 				dam_type = (eDamageType) ter_flag3;
@@ -344,7 +344,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			fast_bang = 0;
 			LBL_NO_DAMAGE: break;
 		case TER_SPEC_DANGEROUS:
-			if (flying())
+			if (flying() || univ.party.in_boat >= 0) //if party is flying or in a boat, they cannot receive statuses from terrain
 				break;
 			if (univ.party.in_boat >= 0)
 				return true;
