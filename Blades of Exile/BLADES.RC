@@ -1,0 +1,132 @@
+/****************************************************************************
+
+
+EXILE.RC
+
+produced by Borland Resource Workshop
+
+
+*****************************************************************************/
+
+#define CURSOR_1	1
+#define DIALOG_2	2
+#define DIALOG_1	1
+#define ACCELERATORS_1	1
+#define MENU_2	2
+#define MENU_1	1
+#define Exile	1
+
+Exile MENU 
+{
+ POPUP "&File"
+ {
+  MENUITEM "&Open Game\tCtrl+O", 1
+  MENUITEM "&Save Game\tCtrl+S", 2
+  MENUITEM "Save As...", 3
+  MENUITEM "&New Game\tCtrl+N", 4
+  MENUITEM SEPARATOR
+  MENUITEM "Preferences", 6
+  MENUITEM "Compatibility Options", 7
+  MENUITEM SEPARATOR
+  MENUITEM "&Quit\tCtrl+Q", 8
+ }
+
+ POPUP "&Options"
+ {
+  MENUITEM "Pick New PC Graphic", 21
+  MENUITEM "Pick New PC Name", 22
+  MENUITEM "Create New PC", 23
+  MENUITEM "Delete PC", 24
+  MENUITEM SEPARATOR
+  MENUITEM "See Talking Notes", 27
+  MENUITEM "See Encounter Notes", 28
+  MENUITEM "See Overall Party Stats", 29
+ }
+
+ POPUP "Help"
+ {
+  MENUITEM "Outdoor Commands", 41
+  MENUITEM "Town Commands", 42
+  MENUITEM "Combat Commands", 43
+  MENUITEM "Magic Barrier Help", 44
+  MENUITEM SEPARATOR
+  MENUITEM "Hints, Bugs, and Comments", 46
+  MENUITEM "Spell Casting Help", 47
+ }
+
+ POPUP "&Library"
+ {
+  MENUITEM "Mage Spells", 61
+  MENUITEM "Priest Spells", 62
+  MENUITEM "Skill Info", 63
+  MENUITEM "Alchemy/Poison", 64
+  MENUITEM "Tip of the Day", 65
+  MENUITEM SEPARATOR
+  MENUITEM "Show Introductory Dialog", 67
+ }
+
+ POPUP "&Actions"
+ {
+  MENUITEM "Do Alchemy\tCtrl+A", 81
+  MENUITEM "Wait 80 Moves\tCtrl+W", 82
+  MENUITEM "Display AutoMap\tCtrl+M", 84
+ }
+
+ POPUP "&Monsters"
+ {
+  MENUITEM "About this menu", 599
+ }
+
+ POPUP "&Cast Mage"
+ {
+  MENUITEM "About this menu", 399
+ }
+
+ POPUP "&Cast Priest"
+ {
+  MENUITEM "About this menu", 499
+ }
+
+ POPUP "&Help"
+ {
+  MENUITEM "Index\tF1", 100
+  MENUITEM SEPARATOR
+  MENUITEM "About Blades of Exile", 200
+ }
+
+}
+
+ACCELERATORS_1 ACCELERATORS 
+{
+ "^W", 82, ASCII
+ "^O", 1, ASCII
+ "^S", 2, ASCII
+ "^Q", 8, ASCII
+ "^M", 84, ASCII
+ "^A", 81, ASCII
+}
+
+89 CURSOR "resources/ul.cur"
+90 CURSOR "resources/u.cur"
+110 CURSOR "resources/d.cur"
+91 CURSOR "resources/ur.cur"
+99 CURSOR "resources/l.cur"
+100 CURSOR "resources/c.cur"
+101 CURSOR "resources/r.cur"
+109 CURSOR "resources/dl.cur"
+111 CURSOR "resources/dr.cur"
+
+120 CURSOR "resources/sword.cur"
+
+
+126 CURSOR "resources/talk.cur"
+
+
+124 CURSOR "resources/target.cur"
+
+
+122 CURSOR "resources/key.cur"
+
+129 CURSOR "resources/look.cur"
+
+10 ICON "resources/bladexil.ico"
