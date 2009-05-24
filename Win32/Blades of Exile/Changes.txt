@@ -1,0 +1,182 @@
+Bug Fixes :
+
+- Custom Scenario Loading now works.
+- Conceal Ability Flag now works.
+- Game now uses the font that comes with it. 
+- Strengh potions can now be made (Ishad Nha)
+- Add/Lose Sanctuary and Add/Lose Martyr's Shield abilities fixed. (Ishad Nha)
+- Acidic weapons works as living saving charm fixed. (Ishad Nha)
+- Fixed the raise_dead node so that it actually raise dead.  (Ishad Nha)
+- Fixed the second part of a special node dialog called from a conversation wasn't properly recorded (actually read).
+- Fixed custom items weren't properly masked (transparent background) in the inventory .
+- The Defense skill was used rather than the Thrown Missiles skill when firing missiles weapons .
+- Fixed the Paralysing Ray trap wasn't working.
+- Fixed the petrification touch was causing disease. You now have the same chance of being petrified that when a basilisk gazes at you each time your are hit (subject to changes) (!).
+- Make the automap updates after terrain change/swap/transform.
+- Cleaned and expanded the Debug Mode. Type 'D' to begin debug mode and '/' to see commands. (Ishad Nha)
+- Corrected doubling 152 index in m_pic_index (little alien beast graphic can now be used). (Ishad Nha)
+- Corrected the "Town Special Encounter" node so that it makes full use of the ten groups.
+- Fixed the ring of Will was not checked during mind duel. (Lots of people)
+- Fixed Destroy Items and Move Items nodes so that they work for rectangles as well as a single space.
+- Hide Town now works.
+- Appears/Disappears on Day X now works. So does Appears/Disappears on Events.
+- Fixed the day_reached function so that it correctly checks if the major event between 1 and 10 has occured (0 always happens)
+- Nimble trait actually gave lower chance to disarm a trap, picklock and to put poison correctly. Fixed, the game now gives bonus to nimble ones rather than penalizing characters without the trait.
+- Changing non-conveyer belt terrain into conveyer belt terrain will not work unless the town where the change occurs begins with a least one square of conveyer belt terrain as default. Fixed
+- Step on sound code implemented.
+- Corrected the Affect Statistic Node random calculation method, so that 100 happens all the time (and 0 never).
+- Conveyor freezes upon loading fixed.
+- Chances of dropping fixed, so that 100 happens all the time (and 0 never)
+- Monster radiates field and rect_spec were plagued with the same random calculation as affect statistic node. Monster special ability : summons is now accurate.
+- Last missile weapon in a group that possess special abilities will fail when fired and last stack of an ordinary thrown item that is placed immediately prior to a stack of another missile weapon with a special ability in that PC’s inventory will gain the special ability of the adjacent missile weapon fixed.
+- Fixed the bug where you could fire an exploding arrow everywhere on the map, even if the target was out of range or not in sight.
+- The 16 different area descriptions can now be used.
+- The Spells “Resurrection” and "Raise Dead" did not require a Resurrection Balm, despite advertisements to the contrary. This is fixed in new scenarios (major version more or equal to 2) and left alone in legacy scenarios for compatibility reasons.
+- If two friendly NPCs occupy the same space, and they both have dialogued personalities, talking to either of them will talk count as if talking to the first placed mosnter. This prevent the game from freezing.
+- According to the BOE Manual, the Affect Party — Do Damage special node allows the scenario designer to vary the Pict. box. Doing so will supposedly only cause damage to the PC who triggers the special, if the party is in combat node. Fortunately, this has been fixed. 
+- Ice and Magic damaging terrains now displays the right effect/plays the right sound when damaging the party while not in combat.
+- “Map Not Available” Option implemented. => (temporary ?) assigned to SDF[308][0]
+- Fixed oddities appearing in the map with animated terrains (torches, firecamp, water, ...).
+- Strength, Intelligence and Dexterity enhancing items will now works. (Windows specific)
+- Fixed demons were doing undead damage and vice-versa.
+- Loading a different party that is not in a scenario while playing a scenario won't result on mixed pc graphics in startup screen anymore.
+- Call Local Special terrain ability now correctly calls outdoor specials if outdoors (was calling last town specials) (Celtic Minstrel)
+- Fixed the town wandering function so that only the supposed monsters would appear in pair.
+- Fixed the outdoor wandering function so that the number of monster appearing follows the specified values in the Scenario Editor.
+- The generic portal/stairway node now don't call the next node if "Leave" is choose.
+- Damaging terrains (cold/fire/magic) will not damage party when in boat.
+
+Changes :
+- Created a compatibility menu
+- Debug mode : Set a SDF added.
+- Debug mode : Enter Town added (the party outdoor location is not changed).
+- Add a preference option that displays or not the start-up picture and music.
+- Changed the "Wait 40 moves" dialog to "Wait 80 moves" to better reflect the time actually waited.
+- Added a "Fast Boom Space Effects" option that speeds up any boom sfx in the game.
+- The party status text (Flying, Firewalk, Detect Life, Stealth) is not longer black on black. It should be readable now.
+- Once identified, the exploding arrows now shows the radius of the explosion.
+- Added a "Use Darker Graphics (Mac version)" option in the Preferences menu. To prevent mixing graphics, the game must be restarted after selecting this option (which can be set directly through the ini file to avoid this).
+- Frills won't appears on pits while in outdoor combat anymore (pits here = darkness which you can flee to)
+- Deleted a reference to PSD[181][6] which could prevent targeting lines from being drawn.
+- Cleans up from Exile 3 :
+	- Anama references removed (was able to gain Anama's bonus against demons when the right SDF was set and suffers the Anama's wrath for learning Mage Spells is the same SDF was set)
+	- Monsters can now breaks barriers in town which number is 20 or less.
+	- You can't destroy non-existant slimes pools in town number 23 and 46, effectively locking the game because of missing dialogs, anymore.
+- Variables changed to unsigned :
+	- Summoning variables
+	- Gold
+	- Food
+	- Party statistics (amount killed, ...)
+- When the party is split, the following affect nodes now only affect the lone pc (Affect Health, Affect SP, Affect Skill Points, Affect Statistic, Give Mage Spell, Give Priest Spell)
+- Trims (frills) now displays in grass terrain (compatibility option).
+- Creatures in "one time place town encounters" now checks their life flag.
+- Mac legacy saves compatibility added.
+	
+Cleans :
+
+- Removed build_scen_file_name function that actullay did just strcpy "scenarios/%s",party.scen_name to a string (FILEIO.cpp)
+- Various code cleaning (Ishad Nha)
+
+Changes :
+        
+- the global variable file_path_name now points to the executable path.
+- Checked/Completed the abilities, traits, status, main_status, items, monsters, terrain specials properties and race constants in CONST.h .
+- Began to use the MODE_ constants in CONST.h to clean up the ACTIONS.cpp file.
+- Fixed class pc_record_type::kill, so that it checks if the character has a protection from petrification item equipped before stoning him. (PC.cpp)
+=> so removed the doubling check in monst_fire_missile with stoning gaze. (COMBAT.cpp)
+- Moved the " %s turns to stone." message in the pc_record_type::kill class.
+- Changes the debug mode switch : now each time you returns to start screen, debug mode is desactivated. Loading games with debug mode on, leave it on.
+- Changed the way the ini file was handled so that it actually works
+- Created a compatibility menu
+- Debug mode : Set a SDF added.
+- Debug mode : Enter Town added (the party outdoor location is not changed).
+- Add a preference option that displays or not the start-up picture and music.
+- Fixed the day_reached function so that it checks if the major event between 1 and 10 has occured (0 always happens)
+- Changed "Turn off frills on shore" index to put it on a protected one ([306][5]).
+- PSD [4][0] was appartenance to Anama :) All references to Anama have been commented.
+- Changed the "Wait 40 moves" dialog to "Wait 80 moves" to better reflect the time actually waited.
+- Added a "Fast Boom Space Effects" option that speeds up any boom sfx in the game.
+- The party status text (Flying, Firewalk, Detect Life, Stealth) is not longer black on black. It should be readable now.
+- Once identified, the exploding arrows now shows the radius of the explosion.
+- Variables changed to unsigned :
+	- Summoning variables
+	- Gold
+	- Food
+	- Party statistics (amount killed, ...)
+- When the party is split, the following affect nodes now only affect the lone pc (Affect Health, Affect SP, Affect Skill Points, Affect Statistic, Give Mage Spell, Give Priest Spell)
+- Added legacy Exile graphics to the default terrains sheets.
+- Mac legacy saves compatibility added.
+
+Compatibility Switches :
+
+- Switch between legacy Resurrection Node or fixed one (so that only present pc are resurrected, not the full party).
+- Switch between Waterfalls working in Town or not (so that the user/scenario designer decided if the waterfall works in Town)
+- (Temporary ?) Switch between fixed and funky day_reached function (to test backwards compatibility)
+
+ToDo :
+
+- elim_monst() function is now unused.
+- Complete MIXED_D.BMP (ppats ...)
+- Make the variables for day, level, etc unsigned so that a roll-over does not leave you in the negative ?
+Note: Anywhere an unsigned char variable is used to store a terrain type or a monster type it must be changed to unsigned short! Otherwise we won't be able to extend the limit on the numbers of monsters and terrains. Local variables in particular should be looked out for.
+- When an item is placed and the Amount/Charges field is filled in with a number other than -1, it has no effect (unless the item is food or gold).
+*- Apparently event timers are broken.
+- Stairway nodes can only be called as a result of moving. You can’t look to change levels, you can’t change levels in the middle of combat, you can’t change levels at the end of a timer. For normal stairways, this doesn’t matter. For forced stairways, you NEED to put in looking blocks and combat blocks. 
+- Outdoor terrain changes are forgotten after loading saved games. If you call a special to change a piece of outdoor terrain, that change will be forgotten if the player loads a saved game. This can be a VERY problematic node — the only way around is to surround the terrain with special nodes that call if upon a certain SDF. Problem is, Outdoor sections have very limited special nodes, limiting the ability to do this in relatively open areas. It is the same with Towns.
+- Merging items wipes special classes if some of the merged items do not have a special class. For example, if you have arrows in your scenario that you give a special class, and the party brings in arrows from another scenario, and merges the two, NONE of the arrows will contain the new special class. For any combinable items that have a special class, make sure to give them a unique type class, so items from other scenarios won’t wipe them clean. You’ll still be vulnerable to the party taking items from your scenario, leaving the scenario, and then coming back in, but unfortunately there’s no way around this. 
+*- Empties! Occasionally, for no known reason, the BOE editor will stick in little “EMPTY” monsters, who appear with the Dwarf with the two-handed axe graphic, are hostile type “A”, and have no stats whatsoever. No one has quite yet figured out why this happens, but the effect has surfaced in several different scenarios. 
+- If you put a special class item in a crate and a party moves the crate in the game and then the special node checks where is the item (If-thens, Item with special class on a space), the node reacts as if the item was on the original space of the crate. This bug is especially bad because it makes a workaround for the lack of the node checking if the crate is on the space. (Thanks to Tigrene for pointing this out.) 
+*- Changing the visibility (i.e., opaque, transparent, etc.) of terrain types often does not work. I’m not sure if it always fails, but it definitely does sometimes. Make sure, through beta-testing, that the terrain type works properly. The work-around is this: if you want an opaque custom terrain type, don’t replace a terrain that is transparent. Instead, replace one that was already opaque. I’m not sure if this bug is also present with blocked vs. passable, but once again, during beta testing check all changed terrains by looking at them, looking through them (if possible), and trying to walk into them. 
+- Conveyors can push through solid objects (legacy compatibility warning !!!)
+*- 100% in Blades doesn’t equal 100%. It’s closer to 95% as near as I can figure. Places where this becomes problematic are many, the two most notable are affect Statistics nodes, and creatures dropping items when killed. NEVER make a single creature drop something that is vital to continuation of the scenario, even set at 100% it will still fail to do so fairly often.  <= this is normally fixed
+
+Suggestions :
+
+- Oh! One thing that could be done with the Extra values is allowing custom messages when being pushed or prevented by a conveyor belt. Right now, when you step on a conveyor belt and it pushes you, you get a small message in the text area that says "You get pushed." and if you attempt to move in the opposite direction of the conveyor belt, it says "The moving floor prevents you." Perhaps one Extra value could correspond to a scenario message that defines the two messages, separated by a | (the same character that creates line breaks in signs).
+For instance, let's say you select scenario message 10 to be the conveyor belt's messages. Message 10 says "You float down the river.|The water's too fast to move upstream!" Now, when the party moves along the "belt", it says "You float down the river." and when they try to move against the direction of the "belt", it says "The water's too fast to move upstream!" 
+- Outdoor conveyor belts ?
+- Also, perhaps instead of including only one version of the graphics, perhaps a switch could be put in the preferences for darker or lighter graphics
+
+Not a bug  ?/Fixed ?
+
+- If a “place monster” special node is called within a town that would force the town to hold more than its maximum number of monsters, (30 for small towns, 40 for medium towns, 60 for large towns), the game will freeze. <= seems to have been fixed (placement forced or not)
+- (don't use PSD[0][0] for a monster's life flag ?) <= seems ok ... such a monster (with life flag at PSD[0][0]) can be erased by forcing another monster to be placed.
+- You know what would be a good use for this? An option to specifically turn off damage sounds -- or better still, force them to play asynchronously. At the moment, walking on damage floors or damaging fields takes forever because you have to wait for the *zap* *zap* *zap* *zap* *zap* *zap* as all your characters get hit every single step.
+- 100 town bug lurking ? <= should be done
+- Trap type #0 is listed as “Random Trap Selected”. This is incorrect, any traps set to #0 will always produce trap type #1 — Damage Single Character (Knives fly out). <= random trap actually choose between traps 1 to 4
+- In shops, the item graphic 5 rows above the correct graphic is displayed.
+- When dumbfounded, characters disarms trap with more ease ? (Doesn't seems so after all)
+- Fix the bug that prevents the use of the small Alien Beast graphic. <= done ?
+- Select A PC, Certain Affect PCs nodes. In theory, if you call a select a PC, any further affect PC nodes in that chain should affect that PC and only that PC. But, for at least the nodes Affect Health and Affect Spell Points, no change occurs. This prohibits you from designing nebulous cauldrons with positive effects — e.g., the party comes across a cauldron, and is asked does anyone want to drink. If yes is pressed, they are asked to select a PC — that PC will not receive either the benefits or detriments from Affect Health or Affect Spell Points. 
+- Switch between legacy Town Place Encounter Node or fixed one (so that you can make full use of the 10 special groups in scenario editor) <= function worked correctly, the information text was to blame.
+- The Affect PC-Webbing Node’s values are reversed. Specials that add webs will in fact remove them, and specials that remove webs will add them. (Thanks to GazeDoom for pointing this out.)  <= corrected in the scen_editor
+- When the party is split up, Affect PC special nodes should only affect the active PC ? <= can be done with Select PC ... So, no fix ?
+
+
+PNG handling :
+
+void Paint(HWND hWnd, HDC hDC)
+{
+	Graphics	graphics(hDC);
+	Rect		rect(50, 50, 300, 600);
+	RECT		cRect;
+	Rect		CRect;
+	Image		* pImage = Image::FromFile( L"C:\\download\\Visine4.png");
+ 
+	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+	graphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
+	graphics.SetCompositingMode(CompositingModeSourceOver);
+	graphics.SetCompositingQuality(CompositingQualityGammaCorrected);
+	graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
+//	mGraphics->SetPageUnit(mMeasurementType);
+ 
+	GetClientRect(hWnd, &cRect);
+ 
+	CRect.Width	= cRect.right;
+	CRect.Height	= cRect.bottom;
+ 
+	graphics.FillRectangle(&SolidBrush(Color(252, 217, 211)), CRect);
+	graphics.DrawImage(pImage, rect);
+ 
+	delete pImage;
+}

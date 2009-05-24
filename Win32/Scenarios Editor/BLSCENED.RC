@@ -1,0 +1,242 @@
+
+#include <windows.h>
+#define  Exile	1
+#define MENU_1	1
+#define MENU_2	2
+#define ACCELERATORS_1	1
+#define DIALOG_1	1
+#define DIALOG_2	2
+#define DIALOG_3	3
+#define WAVE	100
+#define CURSOR_1	1
+#define CURSOR_2	2
+#define CURSOR_3	3
+#define CURSOR_4	4
+#define CURSOR_5	5
+#define CURSOR_6	6
+#define CURSOR_7	7
+#define CURSOR_8	8
+#define ICON_1	1
+
+
+Exile MENU 
+{
+ POPUP "&File"
+ {
+  MENUITEM "&Open Scenario\tCtrl+O", 1
+  MENUITEM "&Save Scenario\tCtrl+S", 2
+  MENUITEM "New Scenario\tCtrl+N", 3
+  MENUITEM SEPARATOR
+  MENUITEM "&Quit\tCtrl+Q", 5
+ }
+
+ POPUP "&Scenario"
+ {
+  MENUITEM "Create New Town", 101
+  MENUITEM SEPARATOR
+  MENUITEM "Scenario Details", 103
+  MENUITEM "Scenario Intro Text", 104
+  MENUITEM "Set Starting Location: Town", 105
+  MENUITEM "Set Starting Location: Outdoors", 106
+  MENUITEM SEPARATOR
+  MENUITEM "Advanced:", 107
+  MENUITEM "  Edit Special Nodes", 109
+  MENUITEM "  Edit Scenario Text", 110
+  MENUITEM "  Import Town", 111
+  MENUITEM "  Edit Saved Item Rectangles", 112
+  MENUITEM "  Edit Horses", 113
+  MENUITEM "  Edit Boats", 114
+  MENUITEM "  Set Variable Town Entry", 115
+  MENUITEM "  Set Scenario Event Timers", 116
+  MENUITEM "  Edit Item Placement Shortcuts", 117
+  MENUITEM "  Delete Last Town", 118
+  MENUITEM "  Write Data To Text File", 119
+  MENUITEM "  Do Full Text Dump", 120
+  MENUITEM "  Scenario Shopping Text Dump", 121
+ }
+
+ POPUP "&Town"
+ {
+  MENUITEM "Town Details\tCtrl+D", 201
+  MENUITEM "Town Wandering Monsters", 202
+  MENUITEM "Set Town Boundaries", 203
+  MENUITEM "Frill Up Terrain", 204
+  MENUITEM "Remove Terrain Frills", 205
+  MENUITEM "Edit Area Descriptions", 206
+  MENUITEM SEPARATOR
+  MENUITEM "Add Random Items", 208
+  MENUITEM "Set All Items Not Property", 209
+  MENUITEM "Clear All Items", 210
+  MENUITEM SEPARATOR
+  MENUITEM "Advanced:", 212
+  MENUITEM "  Edit Special Nodes\tCtrl+A", 213
+  MENUITEM "  Edit Town Text\tCtrl+B", 214
+  MENUITEM "  Advanced Town Details\tCtrl+C", 215
+  MENUITEM "  Set Town Event Timers", 216
+  MENUITEM SEPARATOR
+  MENUITEM "  Clear All Monsters", 217
+  MENUITEM "  Clear All Placed Specials", 218
+  MENUITEM "  Clear All Preset Fields", 219
+  MENUITEM "  Clear All Stains", 220
+ }
+
+ POPUP "&Outdoors"
+ {
+  MENUITEM "Outdoor Details\tCtrl+D", 301
+  MENUITEM "Outdoor Wandering Monsters", 302
+  MENUITEM "Outdoor Special Encounters", 303
+  MENUITEM "Frill Up Terrain", 304
+  MENUITEM "Remove Terrain Frills", 305
+  MENUITEM "Edit Area Descriptions", 306
+  MENUITEM SEPARATOR
+  MENUITEM "Advanced:", 310
+  MENUITEM "  Edit Special Nodes\tCtrl+U", 311
+  MENUITEM "  Edit Outdoor Text\tCtrl+V", 312
+  MENUITEM "  Delete All Placed Specials", 313
+ }
+
+  POPUP "&Additional Features"
+ {
+  MENUITEM "Terrain Animations Play", 411
+  MENUITEM SEPARATOR
+  MENUITEM "Edit Town\tCtrl+T", 401
+  MENUITEM "Edit Outdoor\tCtrl+R", 402
+  MENUITEM "Load Another Outdoor Zone/Town\tCtrl+L", 403
+  MENUITEM SEPARATOR  
+  MENUITEM "Edit Terrain Types\tCtrl+E", 404
+  MENUITEM "Edit Monsters\tCtrl+F", 405
+  MENUITEM "Edit Items\tCtrl+G", 406
+  MENUITEM SEPARATOR  
+  MENUITEM "Return to Main Screen\tCtrl+M", 407
+  MENUITEM "Switch Viewing Mode\tCtrl+I", 408
+  MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 409
+  MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 410
+
+	 }
+
+POPUP "&I1"
+ {
+  MENUITEM "Dummy", 600
+ }
+ POPUP "&I2"
+ {
+  MENUITEM "Dummy", 601
+ }
+ POPUP "&I3"
+ {
+  MENUITEM "Dummy", 602
+ }
+ POPUP "&I4"
+ {
+  MENUITEM "Dummy", 603
+ }
+ POPUP "&I5"
+ {
+  MENUITEM "Dummy", 604
+ }
+ POPUP "&I6"
+ {
+  MENUITEM "Dummy", 605
+ }
+ POPUP "&I7"
+ {
+  MENUITEM "Dummy", 606
+ }
+ POPUP "&I8"
+ {
+  MENUITEM "Dummy", 607
+ }
+ POPUP "&M1"
+ {
+  MENUITEM "Dummy", 608
+ }
+ POPUP "&M2"
+ {
+  MENUITEM "Dummy", 609
+ }
+ POPUP "&M3"
+ {
+  MENUITEM "Dummy", 610
+ }
+ POPUP "&M4"
+ {
+  MENUITEM "Dummy", 611
+ }
+ POPUP "&M5"
+ {
+  MENUITEM "Dummy", 612
+ }
+/*
+ POPUP "&T1"
+ {
+  MENUITEM "Dummy", 613
+ }
+ POPUP "&T2"
+ {
+  MENUITEM "Dummy", 614
+ }
+ POPUP "&T3"
+ {
+  MENUITEM "Dummy", 615
+ }
+ POPUP "&T4"
+ {
+  MENUITEM "Dummy", 616
+ }
+*/
+ POPUP "&Help"
+ {
+  MENUITEM "Index\tF1", 801
+  MENUITEM SEPARATOR
+  MENUITEM "Getting Started", 802
+  MENUITEM "Testing Your Scenario", 803
+  MENUITEM "Distributing Your Scenario", 804
+  MENUITEM SEPARATOR
+  MENUITEM "About Blades Scenario Editor", 805
+ }
+
+
+}
+
+ACCELERATORS_1 ACCELERATORS 
+{
+ VK_F1, 801, VIRTKEY
+ "^O", 1, ASCII
+ "^S", 2, ASCII
+ "^N", 3, ASCII
+ "^Q", 5, ASCII
+ "^A", 213, ASCII
+ "^B", 214, ASCII
+ "^C", 215, ASCII
+ "^U", 311, ASCII
+ "^V", 312, ASCII     
+ "^T", 401, ASCII
+ "^R", 402, ASCII
+ "^L", 403, ASCII   
+ "^E", 404, ASCII
+ "^F", 405, ASCII
+ "^G", 406, ASCII   
+ "^M", 407, ASCII
+ "^I", 408, ASCII
+ "^J", 409, ASCII
+ "^K", 410, ASCII
+}
+
+1 WAVE "snd0.wav"
+2 WAVE "snd1.wav"
+35 WAVE "snd34.wav"
+38 WAVE "snd37.wav"
+96 WAVE "snd95.wav"
+
+130 CURSOR "1.cur"
+131 CURSOR "2.cur"
+132 CURSOR "3.cur"
+133 CURSOR "4.cur"
+134 CURSOR "5.cur"
+135 CURSOR "6.cur"
+136 CURSOR "7.cur"
+137 CURSOR "8.cur"
+
+
+10 ICON "blscened.ico"
+
