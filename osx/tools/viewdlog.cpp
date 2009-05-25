@@ -35,7 +35,7 @@ int main()
 	init_snd_tool();
 	
 //	menu_bar_handle = GetNewMBar(128);
-//	if (menu_bar_handle == NIL) {
+//	if (menu_bar_handle == NULL) {
 //		SysBeep(2); 
 //		ExitToShell();
 //	}

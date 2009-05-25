@@ -206,7 +206,7 @@ int main(void)
 
 		
 	menu_bar_handle = GetNewMBar(128);
-	if (menu_bar_handle == NIL) {
+	if (menu_bar_handle == NULL) {
 		SysBeep(2); SysBeep(2); SysBeep(2);
 		ExitToShell();
 		}
@@ -310,13 +310,13 @@ void Initialize(void)
 //	if (stored_key == -100) {
 //		stored_key = open_pref_file();
 //		if (stored_key == -100) {
-//			Alert(983,NIL);
+//			Alert(983,NULL);
 //			ExitToShell();	
 //		}
 //	}
 	load_prefs();
 	set_pixel_depth();
-	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
+	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
 	SetPortWindowPort(mainPtr);						/* set window to current graf port */
 	text_sbar = NewControl(mainPtr,&sbar_rect,tit,false,58,0,58,scrollBarProc,1);
 	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,false,0,0,16,scrollBarProc,2);
@@ -440,7 +440,7 @@ bool handle_dialog_event()
 	short i,item_hit;
 	DialogPtr event_d;
 	
-	if (FrontWindow() != NIL) {
+	if (FrontWindow() != NULL) {
 		if (IsDialogEvent(&event)) {
 			if (DialogSelect(&event, &event_d, &item_hit))
 				for (i = 0; i < 18; i++)
@@ -667,7 +667,7 @@ void Mouse_Pressed()
 						if (content_part != 0) {
 							switch (content_part) {
 								case kControlIndicatorPart:
-									content_part = TrackControl(control_hit,event.where,NIL);
+									content_part = TrackControl(control_hit,event.where,NULL);
 									if (control_hit == text_sbar)
 										if (content_part == kControlIndicatorPart)
 											print_buf();

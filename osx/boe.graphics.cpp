@@ -486,7 +486,7 @@ void fancy_startup_delay()
 	
 	// OK try this ... destroy and recreate window.
 	/*DisposeWindow(mainPtr);
-	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
+	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
 	SetPort(mainPtr);						/* set window to current graf port 
 	text_sbar = NewControl(mainPtr,&sbar_rect,tit,false,58,0,58,scrollBarProc,1);
 	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,false,0,0,16,scrollBarProc,2);
@@ -1714,10 +1714,10 @@ GWorldPtr load_pict(short picture_to_get)
     	SysBeep(50);
     	print_nums(10,1000,x);
     	}
-	if (current_pic_handle == NIL)  {
+	if (current_pic_handle == NULL)  {
 		sprintf((char *) d_s, "Stuck on %d  ",(short) picture_to_get);
 		add_string_to_buf((char *)d_s);
-		Alert(1076,NIL);
+		Alert(1076,NULL);
 		return NULL;
 	}
 	QDGetPictureBounds(current_pic_handle, &pic_rect);
@@ -1735,7 +1735,7 @@ GWorldPtr load_pict(short picture_to_get)
 		sprintf((char *) d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
 		add_string_to_buf((char *)d_s);
 		print_buf(); 
-		Alert(1076,NIL);
+		Alert(1076,NULL);
 		return NULL;
 		}
 	

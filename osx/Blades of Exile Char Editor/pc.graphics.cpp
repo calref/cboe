@@ -394,7 +394,7 @@ GWorldPtr load_pict(short picture_to_get)
 	char debug[60];
 			
     current_pic_handle = GetPicture (picture_to_get);
-	if (current_pic_handle == NIL)  {
+	if (current_pic_handle == NULL)  {
 		SysBeep(2);SysBeep(50);SysBeep(50);
 		ExitToShell();
 	}

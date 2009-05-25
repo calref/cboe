@@ -4,7 +4,6 @@
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
-#define	NIL				0L
 
 #define T_M 	60
 
@@ -13,7 +12,6 @@
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
-#define	NIL				0L
 
 #define	DISPLAY_LEFT	23
 #define	DISPLAY_TOP		23

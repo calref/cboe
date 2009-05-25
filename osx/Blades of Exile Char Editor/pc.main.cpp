@@ -149,7 +149,7 @@ int main(void)
 	set_up_apple_events();
 
 	menu_bar_handle = GetNewMBar(128);
-	if (menu_bar_handle == NIL) {
+	if (menu_bar_handle == NULL) {
 		SysBeep(2); 
 		ExitToShell();
 	}
@@ -294,7 +294,7 @@ void Initialize(void)
 	//error = CreateWindowFromResource(128, &mainPtr);
 	//Rect winBounds={38,53,478,643};
 	//error = CreateNewWindow(kDocumentWindowClass, kWindowCloseBoxAttribute, &windRect, &mainPtr);
-	mainPtr = GetNewCWindow(128,NIL,IN_FRONT);
+	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
 	ActivateWindow(mainPtr,true);
 //	DrawGrowIcon(mainPtr);	
 	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
@@ -302,7 +302,7 @@ void Initialize(void)
 	if (stored_key == -100) {
 		stored_key = open_pref_file();
 		if (stored_key == -100) {
-			Alert(983,NIL);
+			Alert(983,NULL);
 			ExitToShell();	
 			}
 		}*/	
@@ -465,7 +465,7 @@ void Mouse_Pressed()
 			break;
 		
 		case inContent:
-			if ((the_window != NIL) && (FrontWindow() != the_window)) {
+			if ((the_window != NULL) && (FrontWindow() != the_window)) {
 				SetPort(GetWindowPort(the_window));
 				SelectWindow(the_window);
 				SetPort(GetWindowPort(the_window));

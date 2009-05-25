@@ -258,7 +258,7 @@ short choice_dialog(short pic,short num)
 
 	//if (pic > 0)
 	//	put_dialog_graphic(pic,0,the_rect);
-	ModalDialog(NIL, &item_hit);
+	ModalDialog(NULL, &item_hit);
 		
 	DisposeDialog(select_dialog);
 	

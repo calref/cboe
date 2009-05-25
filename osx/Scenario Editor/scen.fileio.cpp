@@ -61,12 +61,12 @@ void init_directories() {
 	//	}
 	//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Graphics",1);
 	//	if (ResError() != 0) {
-	//		Alert(984,NIL);
+	//		Alert(984,NULL);
 	//		ExitToShell();
 	//		}
 	//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Sounds",1);
 	//	if (ResError() != 0) {
-	//		Alert(984,NIL);
+	//		Alert(984,NULL);
 	//		ExitToShell();
 	//		}
 	

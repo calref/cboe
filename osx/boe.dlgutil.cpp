@@ -1255,7 +1255,7 @@ void load_prefs(){
 //		num_tries++;
 //		
 //	if (num_tries == 300) {
-//		Alert(983,NIL);		
+//		Alert(983,NULL);		
 //		ExitToShell();
 //		}	
 //	}

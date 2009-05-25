@@ -1275,7 +1275,7 @@ short choice_dialog(short pic,short num)
 
 	//if (pic > 0)
 	//	put_dialog_graphic(pic,0,the_rect);
-	ModalDialog(NIL, &item_hit);
+	ModalDialog(NULL, &item_hit);
 		
 	DisposeDialog(select_dialog);
 	
@@ -1349,7 +1349,7 @@ DialogPtr other_make_dialog(short which)
 {
 	DialogPtr store;
 
-	store = GetNewDialog (which, NIL, IN_FRONT);
+	store = GetNewDialog (which, NULL, IN_FRONT);
 	if (store == NULL) { 
 		SysBeep(50);
 		ExitToShell();
