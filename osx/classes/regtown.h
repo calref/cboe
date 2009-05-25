@@ -9,7 +9,7 @@
 #ifndef REGTOWN_H
 #define REGTOWN_H
 
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy {
 	struct big_tr_type;

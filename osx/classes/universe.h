@@ -9,7 +9,7 @@
 #ifndef UNIVERSE_H
 #define UNIVERSE_H
 
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy {
 	struct out_info_type;

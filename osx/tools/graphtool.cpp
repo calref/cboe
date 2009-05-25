@@ -284,11 +284,11 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 	SetPort(cur_port);
 }
 
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height,bool main_win){
+void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win){
 	char_port_draw_string(GetWindowPort(dest_window),dest_rect,str,mode,line_height, main_win);
 }
 
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height,bool main_win){
+void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win){
 	Str255 store_s;
 	
 	strcpy((char*) store_s,str);
@@ -721,6 +721,15 @@ Rect get_custom_rect (short which_rect){
 	
 	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
 	return store_rect;
+}
+
+short get_custom_rect (short which_rect, Rect& store_rect){ // returns the number of the sheet to use
+	short sheet = which_rect / 100;
+	which_rect %= 100;
+	SetRect(&store_rect,0,0,28,36);
+	
+	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
+	return sheet;
 }
 
 void get_str(Str255 str,short i, short j){

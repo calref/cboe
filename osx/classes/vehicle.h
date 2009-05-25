@@ -9,7 +9,7 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
-#include <iostream>
+#include <iosfwd>
 #include "location.h"
 
 namespace legacy {

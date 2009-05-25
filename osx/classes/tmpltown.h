@@ -9,7 +9,7 @@
 #ifndef TMPLTOWN_H
 #define TMPLTOWN_H
 
-#include <iostream>
+#include <iosfwd>
 
 class cTemplTown {
 public:

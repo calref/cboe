@@ -9,7 +9,7 @@
 #ifndef SPECIAL_H
 #define SPECIAL_H
 
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy { struct special_node_type; };
 

@@ -9,7 +9,7 @@
 #ifndef SCENARIO_H
 #define SCENARIO_H
 
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy{
 	struct scenario_data_type;

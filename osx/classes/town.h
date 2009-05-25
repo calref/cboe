@@ -10,7 +10,7 @@
 #define TOWN_H
 
 #include <vector>
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy {
 	struct town_record_type;

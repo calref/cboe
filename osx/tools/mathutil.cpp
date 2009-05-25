@@ -58,3 +58,13 @@ short move_to_zero(short val){
 		return val - 1;
 	return val;
 }
+
+short gcd(short a, short b){ // Grabbed from Wikipedia and translated to C code
+	short t;
+	while(b != 0){
+		t = b;
+		b = a % b;
+		a = t;
+	}
+	return a;
+}

@@ -85,7 +85,7 @@ namespace legacy {
 		char awkward, bonus, protection, charges, type;
 		unsigned char graphic_num,ability, type_flag, is_special;
 		short value;
-		bool identified, magic;
+		Boolean identified, magic;
 		unsigned char weight, description_flag;
 		char full_name[25], name[15];
 		unsigned char reserved1,reserved2;
@@ -207,13 +207,13 @@ namespace legacy {
 	struct horse_record_type {
 		location horse_loc,horse_loc_in_sec,horse_sector;
 		short which_town;
-		bool exists,property;
+		Boolean exists,property;
 	} __attribute__((packed));
 	
 	struct boat_record_type {
 		location boat_loc,boat_loc_in_sec,boat_sector;
 		short which_town;
-		bool exists,property;
+		Boolean exists,property;
 	} __attribute__((packed));
 	
 	struct talk_save_type {
@@ -239,7 +239,7 @@ namespace legacy {
 	} __attribute__((packed));
 	
 	struct outdoor_creature_type {
-		bool exists;
+		Boolean exists;
 		short direction;
 		out_wandering_type what_monst;
 		location which_sector,m_loc;	
@@ -253,6 +253,7 @@ namespace legacy {
 		location outdoor_corner,i_w_c,p_loc,loc_in_sec;
 		boat_record_type boats[30];
 		horse_record_type horses[30];
+		//char pad1[8];
 		creature_list_type creature_save[4];
 		short in_boat,in_horse;
 		outdoor_creature_type out_c[10];
@@ -265,7 +266,7 @@ namespace legacy {
 		talk_save_type talk_save[120];
 		short direction,at_which_save_slot;
 		char alchemy[20];
-		bool can_find_town[200];
+		Boolean can_find_town[200];
 		short key_times[100];
 		short party_event_timers[30];
 		short global_or_town[30];
@@ -326,10 +327,10 @@ namespace legacy {
 		short max_health,cur_health,max_sp,cur_sp,experience,skill_pts,level;
 		short status[15];
 		item_record_type items[24];
-		bool equip[24];
-		bool priest_spells[62],mage_spells[62];
+		Boolean equip[24];
+		Boolean priest_spells[62],mage_spells[62];
 		short which_graphic,weap_poisoned;
-		bool advan[15],traits[15];
+		Boolean advan[15],traits[15];
 		short race,exp_adj,direction;
 	} __attribute__((packed));
 	
@@ -353,9 +354,9 @@ namespace legacy {
 		short town_num, difficulty;
 		town_record_type	town;
 		char explored[64][64];
-		bool	hostile;
+		Boolean hostile;
 		creature_list_type	monst;
-		bool	in_boat;
+		Boolean in_boat;
 		location p_loc;
 	} __attribute__((packed));
 	

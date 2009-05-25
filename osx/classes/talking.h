@@ -9,7 +9,7 @@
 #ifndef TALKING_H
 #define TALKING_H
 
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy {
 	struct talking_record_type;

@@ -86,10 +86,6 @@ bool mac_is_intel;
 
 //Changed to ISO C specified argument and return type.
 int main(void) {
-	
-	short j,k;
-	long i;
-	size_t size;
 	//outdoor_record_type dummy_outdoor, *store2;
 	
 	
@@ -105,7 +101,6 @@ int main(void) {
 	load_graphics();
 	
 	init_dialogs();
-	Point p = {0,0};
 	init_graph_tool(redraw_screen,NULL);
 	
 	cen_x = 18;
@@ -175,7 +170,6 @@ int main(void) {
 void Initialize(void) {
 	
 	Str255 tit = "  ";
-	OSErr		error;
 	
 	
 	/* Initialize all the needed managers. */
@@ -207,7 +201,7 @@ void Initialize(void) {
 	//InsetRect(&windRect, 5, 34);
 	InsetRect(&windRect,(windRect.right - 584) / 2,(windRect.bottom - 420) / 2);
 	OffsetRect(&windRect,0,18);
-	mainPtr = NewCWindow(nil, &windRect, "\pBlades of Exile Scenario Editor", true, documentProc, 
+	mainPtr = NewCWindow(nil, &windRect, "\pBlades of Exile Scenario Editor", true, noGrowDocProc, 
 						 (WindowPtr) -1, false, 0);
 	GetWindowPortBounds(mainPtr,&windRect);
 	SetPortWindowPort(mainPtr);						/* set window to current graf port */
@@ -353,9 +347,6 @@ void handle_menu_choice(long choice) {
 }
 
 void handle_apple_menu(int item_hit) {
-	Str255 desk_acc_name;
-	short desk_acc_num;
-	
 	switch (item_hit) {
 		case 1:
 			fancy_choice_dialog(1062,0);
@@ -369,8 +360,6 @@ void handle_apple_menu(int item_hit) {
 
 
 void handle_file_menu(int item_hit) {
-	short create;
-	
 	switch (item_hit) {
 		case 1: // open
 			try{
@@ -580,8 +569,6 @@ void handle_town_menu(int item_hit) {
 	}
 }
 void handle_outdoor_menu(int item_hit) {
-	short i;
-	
 	change_made = true;
 	switch (item_hit) {
 		case 1:
@@ -618,8 +605,6 @@ void handle_outdoor_menu(int item_hit) {
 }
 
 void handle_help_menu(int item_hit) {
-	short i;
-	
 	switch (item_hit) {
 		case 1:
 			fancy_choice_dialog(986,0);
@@ -655,7 +640,7 @@ void handle_monst_menu(int item_hit) {
 
 
 pascal void right_sbar_action(ControlHandle bar, short part) {
-	short old_setting,new_setting,max,i;
+	short old_setting,new_setting,max;
 	
 	if (part == 0)
 		return;
@@ -686,7 +671,7 @@ pascal void right_sbar_action(ControlHandle bar, short part) {
 
 void Mouse_Pressed() {
 	WindowPtr	the_window;
-	short	the_part,content_part,i;
+	short	the_part,content_part;
 	long menu_choice;
 	BitMap bmap;
 	ControlHandle control_hit;
@@ -873,9 +858,6 @@ void ding() {
 void set_pixel_depth() {
 	GDHandle cur_device;
 	PixMapHandle screen_pixmap_handle;
-	OSErr err;
-	short choice;
-	
 	cur_device = GetGDevice();
 	
 	
@@ -894,8 +876,6 @@ void restore_depth() {
 	GDHandle cur_device;
 	PixMapHandle screen_pixmap_handle;
 	OSErr err;
-	short choice;
-	
 	cur_device = GetGDevice();
 	
 	screen_pixmap_handle = (**(cur_device)).gdPMap;

@@ -49,7 +49,6 @@ void load_spec_graphics();
 
 void init_directories() {
 	short error;
-	char thing[60];
 	//	Str255 data_name = "\pExile III data";
 	//
 	//	HGetVol((StringPtr) start_name,&start_volume,&start_dir);

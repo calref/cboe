@@ -10,7 +10,7 @@
 #define MONSTER_H
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy {
 	struct monster_record_type;

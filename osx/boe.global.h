@@ -10,7 +10,6 @@
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
-#define	NIL				0L
 
 #define NUM_TOWN_ITEMS	115
 

@@ -10,7 +10,7 @@
 #define PC_H
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy { struct pc_record_type; };
 

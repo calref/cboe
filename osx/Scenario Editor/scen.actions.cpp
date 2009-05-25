@@ -125,7 +125,7 @@ void init_current_terrain() {
 }
 
 void init_screen_locs() {
-	int i,j,q,r;
+	int i;
 	
 	for (i = 0; i < 4; i++)
 		border_rect[i] = world_screen;
@@ -142,11 +142,10 @@ void init_screen_locs() {
 }
 
 bool handle_action(Point the_point,EventRecord event) {
-	short i,j, x, y;
+	short i,j, x;
 	bool are_done = false;
-	Str255 str,s2;
+	Str255 s2;
 	
-	Rect targ_rect;
 	bool need_redraw = false,option_hit = false;
 	location spot_hit;
 	Point cur_point,cur_point2;
@@ -472,7 +471,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						for (x = 0; x < 16; x++)
 							if (town->room_rect(x).right == 0) {
 								town->room_rect(x) = working_rect;
-								sprintf(town->town_strs(x + 1),"");
+								strcpy(town->town_strs(x + 1),"");
 								if (edit_area_rect_str(x,1) == false)
 									town->room_rect(x).right = 0;
 								x = 500;
@@ -482,7 +481,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						for (x = 0; x < 8; x++)
 							if (current_terrain.info_rect[x].right == 0) {
 								current_terrain.info_rect[x] = working_rect;
-								sprintf(current_terrain.out_strs(x + 1),"");
+								strcpy(current_terrain.out_strs(x + 1),"");
 								if (edit_area_rect_str(x,0) == false)
 									current_terrain.info_rect[x].right = 0;
 								x = 500;
@@ -588,11 +587,11 @@ bool handle_action(Point the_point,EventRecord event) {
 				overall_mode = MODE_DRAWING;
 				set_cursor(0);
 				break;
-			case 7: // edit_monst does nothing at all, but I think this would otherwise be the same as mode 39
-				edit_monst(1,spot_hit.x,spot_hit.y);
-				overall_mode = MODE_DRAWING;
-				set_cursor(0);
-				break;
+//			case 7: // edit_monst does nothing at all, but I think this would otherwise be the same as mode 39
+//				edit_monst(1,spot_hit.x,spot_hit.y);
+//				overall_mode = MODE_DRAWING;
+//				set_cursor(0);
+//				break;
 			case MODE_PLACE_SAME_CREATURE:
 				if (last_placed_monst.number == 0) {
 					give_error("Either no monster has been placed, or the last time you tried to place a monster the operation failed.","",0);
@@ -1240,8 +1239,6 @@ bool handle_action(Point the_point,EventRecord event) {
 
 
 void flash_rect(Rect to_flash) {
-	RGBColor	test_color, store_color;
-	int i;
 	unsigned long dummy;
 	
 	InvertRect (&to_flash);
@@ -1446,23 +1443,23 @@ void handle_keystroke(char chr,char chr2,EventRecord event) {
 
 
 
-void get_wandering_monst() {
-}
-
-void get_town_info() {
-}
-
-void edit_monst(short mode,short x,short y) {
-	//mode; // 1 - place/edit  2 - place same
-}
-
-
-void get_sign_resource() {
-}
-
-
-void set_info_strings() {
-}
+//void get_wandering_monst() {
+//}
+//
+//void get_town_info() {
+//}
+//
+//void edit_monst(short mode,short x,short y) {
+//	//mode; // 1 - place/edit  2 - place same
+//}
+//
+//
+//void get_sign_resource() {
+//}
+//
+//
+//void set_info_strings() {
+//}
 
 
 
@@ -1513,7 +1510,7 @@ void modify_lists() {
 void set_up_lights() {
 	short i,j,rad;
 	location where,l;
-	location light_locs[40];
+	//location light_locs[40];
 	short num_lights = 0;
 	bool where_lit[64][64];
 	
@@ -1552,9 +1549,9 @@ void set_up_lights() {
 
 
 bool is_wall(short i,short j) {
-	unsigned short ter,walls[3] = {77,77,224};
+	unsigned short ter;
 	bool answer = false;
-	short k,pic;
+	short pic;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
@@ -1600,7 +1597,7 @@ bool is_correctable_wall(short i,short j) {
 
 bool is_mountain(short i,short j) {
 	bool answer = false;
-	short k,pic;
+	short pic;
 	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
@@ -1622,7 +1619,7 @@ bool is_mountain(short i,short j) {
 }
 bool is_hill(short i,short j) {
 	bool answer = false;
-	short k,pic;
+	short pic;
 	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
@@ -1652,7 +1649,7 @@ bool is_hill_or_mountain(short i,short j) {
 }
 bool is_erasable_water(short i,short j) {
 	bool answer = false;
-	short k,pic;
+	short pic;
 	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
@@ -1669,7 +1666,7 @@ bool is_erasable_water(short i,short j) {
 }
 bool is_water(short i,short j) {
 	bool answer = false;
-	short k,pic;
+	short pic;
 	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
@@ -1686,7 +1683,7 @@ bool is_water(short i,short j) {
 }
 bool is_correctable_water(short i,short j) {
 	bool answer = false;
-	short k,pic;
+	short pic;
 	unsigned short ter;
 	
 	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
@@ -3287,9 +3284,6 @@ void shut_down_menus(short mode) {
 }
 
 void start_terrain_editing() {
-	short i;
-	Str255 str;
-	
 	HideControl(right_sbar);
 	overall_mode = MODE_EDIT_TYPES;
 	set_up_terrain_buttons();
@@ -3538,7 +3532,7 @@ bool save_check(short which_dlog) {
 
 void update_item_menu() {
 	short i,j;
-	MenuHandle item_menu[5],mon_menu[4],block_menu;
+	MenuHandle item_menu[5],mon_menu[4];
 	Str255 item_name;
 	
 	for (i = 0; i < 5; i++)
@@ -3691,8 +3685,6 @@ short can_see(location p1,location p2,short mode) {
 }
 
 bool monst_on_space(location loc,short m_num) {
-	short i,j;
-	
 	if (editing_town == false)
 		return false;
 	if (town->creatures(m_num).number == 0)

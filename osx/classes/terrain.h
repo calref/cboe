@@ -10,7 +10,7 @@
 #define TERRAIN_H
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 
 namespace legacy { struct terrain_type_type; };
 

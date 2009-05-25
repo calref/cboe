@@ -38,7 +38,7 @@ extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
-extern eDrawMode draw_mode = DRAW_TERRAIN;
+eDrawMode draw_mode = DRAW_TERRAIN;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
 //extern short max_dim[3];
@@ -350,6 +350,8 @@ short get_small_icon(unsigned short ter){
 		case TER_SPEC_CALL_SPECIAL_WHEN_USED:
 			icon = scenario.ter_types[ter].flag3;
 			break;
+		default:
+			icon = -1;
 	}
 	if(icon == 255) icon = -1;
 	return icon;
@@ -444,7 +446,6 @@ void load_main_screen() {
 	Str255 fn1 = "\pGeneva";
 	Str255 fn2 = "\pDungeon Bold";
 	Str255 fn3 = "\pPalatino";
-	short i,j;
 	
 	GetFNum(fn1,&geneva_font_num);
 	if (geneva_font_num == 0)
@@ -481,7 +482,6 @@ void redraw_screen() {
 }
 
 void draw_main_screen() {
-	short i;
 	Rect draw_rect;
 	
 	
@@ -694,7 +694,7 @@ void set_up_terrain_buttons() {
 }
 
 void draw_terrain(){
-	short q,r,x,y,i,small_i;
+	short q,r,x,i,small_i;
 	location which_pt,where_draw;
 	Rect draw_rect,clipping_rect = {8,8,332,260};
 	unsigned char t_to_draw;
