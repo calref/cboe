@@ -1235,11 +1235,11 @@ void oops_error(short error)
 
 void start_data_dump()
 {
-	short i,j;
+	short i,j,last_town = cur_town;
 	char get_text[280];
 	HFILE data_dump_file_id;
 	long len;
-	location out_sec;
+	location out_sec,last_out = cur_out;
 	if (HFILE_ERROR == (data_dump_file_id = _lcreat("Scendata.txt", 0))) {
 			SysBeep(50);
 			return;
@@ -1338,10 +1338,8 @@ void start_data_dump()
 			}
 		}
 	}
-		out_sec.x = scenario.last_out_edited.x;
-		out_sec.y = scenario.last_out_edited.y;
-		load_outdoors(out_sec,0);
-		load_town(scenario.last_town_edited);
+		load_outdoors(last_out,0);
+		load_town(last_town);
 
 	_lclose(data_dump_file_id);
 
@@ -1349,14 +1347,12 @@ void start_data_dump()
 
 void start_shopping_data_dump()
 {
-	short i;
-	short j;
-	short count;
+	short i,j,last_town = cur_town,count;
 	char res[256];
 	char get_text[280];
 	HFILE data_dump_file_id;
 	long len;
-	location out_sec;
+	location out_sec,last_out = cur_out;
 	if (HFILE_ERROR == (data_dump_file_id = _lcreat("Scenario Shopping.txt", 0))) {
 			SysBeep(50);
 			return;
@@ -1618,10 +1614,8 @@ void start_shopping_data_dump()
 			len = (long) (strlen(get_text));
 			FSWrite(data_dump_file_id, &len, get_text);	
 
-		out_sec.x = scenario.last_out_edited.x;
-		out_sec.y = scenario.last_out_edited.y;
-		load_outdoors(out_sec,0);
-		load_town(scenario.last_town_edited);
+		load_outdoors(last_out,0);
+		load_town(last_town);
 
 	_lclose(data_dump_file_id);
 
@@ -1629,11 +1623,11 @@ void start_shopping_data_dump()
 
 void scen_text_dump()
 {
-	short i,j;
+	short i,j,last_town = cur_town;
 	HFILE data_dump_file_id;
 	char get_text[300];
 	long len;
-	location out_sec;
+	location out_sec,last_out = cur_out;
 	
 	if (HFILE_ERROR == (data_dump_file_id = _lcreat("Scentext.txt", 0))) {
 			SysBeep(50);
@@ -1721,10 +1715,9 @@ void scen_text_dump()
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		}
-		out_sec.x = scenario.last_out_edited.x;
-		out_sec.y = scenario.last_out_edited.y;
-		load_outdoors(out_sec,0);
-		load_town(scenario.last_town_edited);
+	//		out_sec.y = scenario.last_out_edited.y;
+		load_outdoors(last_out,0);
+		load_town(last_town);
 
 	_lclose(data_dump_file_id);
 

@@ -301,12 +301,12 @@ void pc_attack(short who_att,short target)
 		
 
 	if ((skill_item = text_pc_has_abil_equip(who_att,37)) < 24) {
-		hit_adj += 5 * (adven[who_att].items[skill_item].item_level / 2 + 1);
-		dam_adj += adven[who_att].items[skill_item].item_level / 2;
+		hit_adj += 5 * (adven[who_att].items[skill_item].ability_strength / 2 + 1);
+		dam_adj += adven[who_att].items[skill_item].ability_strength / 2;
 		}
 	if ((skill_item = text_pc_has_abil_equip(who_att,43)) < 24) {
-		dam_adj += adven[who_att].items[skill_item].item_level;
-		hit_adj += adven[who_att].items[skill_item].item_level * 2;
+		dam_adj += adven[who_att].items[skill_item].ability_strength;
+		hit_adj += adven[who_att].items[skill_item].ability_strength * 2;
 		}
 
 	void_sanctuary(who_att);
