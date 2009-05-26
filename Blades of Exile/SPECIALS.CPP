@@ -237,8 +237,11 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				can_enter = FALSE;
 			break;
 		case 2: case 3:case 4:
-			if (party.isFlying() || party.in_boat >= 0)
+			if (party.isFlying() || party.in_boat >= 0 || party.in_horse >= 0)
 				break;
+			for(i=0;i<30;i++)//boat at this point ?
+    			if(same_point(party.boats[i].boat_loc,where_check))
+            		    return TRUE;
 			if (ter_special == 2) {
 				add_string_to_buf("  It's hot!");
 				dam_type = 1; pic_type = 0;
@@ -264,9 +267,12 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			fast_bang = 0;
 			break;
 		case 5: case 6:
-			if (party.isFlying()) break;
-			if (party.in_boat >= 0)
+			if (party.isFlying() || party.in_horse >= 0) break;
+			if (party.in_boat >= 0 )
 				return TRUE;
+           	for(i=0;i<30;i++)//boat at this point ?
+    			if(same_point(party.boats[i].boat_loc,where_check))
+            		    return TRUE;
 			one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
