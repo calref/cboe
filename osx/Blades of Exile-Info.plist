@@ -7,19 +7,67 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeIconFile</key>
-			<string>boesounds</string>
-			<key>CFBundleTypeName</key>
-			<string>Sounds</string>
-			<key>CFBundleTypeOSTypes</key>
+			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>beSN</string>
+				<string>.SAV</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>LegacyWinSaveGame</string>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.spidweb.bladesofexile.oldsounds</string>
+				<string>com.spidweb.bladesofexile.oldwinsave</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>.boe</string>
+				<string>.mac</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>LegacyMacSaveGame</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>beSV</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.spidweb.bladesofexile.oldmacsave</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>.bmp</string>
+			</array>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>image/x-bmp</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>LegacyWinGraphics</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>BMPf</string>
+				<string>BMP</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.microsoft.bmp</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
@@ -34,16 +82,36 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>boegraphics</string>
 			<key>CFBundleTypeName</key>
-			<string>Graphics</string>
+			<string>LegacyMacGraphics</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>beGR</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.oldgraphics</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>boesounds</string>
+			<key>CFBundleTypeName</key>
+			<string>LegacySounds</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>beSN</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.spidweb.bladesofexile.oldsounds</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
@@ -61,7 +129,7 @@
 			<string>Saved Game</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>beSV</string>
+				<string>game</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -101,17 +169,17 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exd</string>
+				<string>.exr</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>boegraphics</string>
+			<string>boeresources</string>
 			<key>CFBundleTypeName</key>
-			<string>Preset Graphics</string>
+			<string>Resource File</string>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.spidweb.bladesofexile.newgraphics</string>
+				<string>com.spidweb.bladesofexile.resources</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
@@ -121,17 +189,35 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exr</string>
+				<string>.dlg</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>boeresources</string>
 			<key>CFBundleTypeName</key>
-			<string>Resource File</string>
+			<string>EncounterDialog</string>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.spidweb.bladesofexile.resources</string>
+				<string>com.spidweb.bladesofexile.dialog</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>XML</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>.exd</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boegraphics</string>
+			<key>CFBundleTypeName</key>
+			<string>Preset Graphics</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.spidweb.bladesofexile.graphics</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
@@ -148,10 +234,10 @@
 			<key>CFBundleTypeName</key>
 			<string>Preset Sounds</string>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.spidweb.bladesofexile.newsounds</string>
+				<string>com.spidweb.bladesofexile.sounds</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
