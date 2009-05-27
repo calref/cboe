@@ -294,7 +294,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				can_enter = false;
 			break;
 		case TER_SPEC_DAMAGING:
-			if (flying() || univ.party.in_boat >= 0) //if the party is flying or in a boat, they cannot be harmed by terrain
+			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
+			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
 				break;
 			if(ter_flag3 > 0 && ter_flag3 < 8)
 				dam_type = (eDamageType) ter_flag3;
@@ -344,10 +345,9 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			fast_bang = 0;
 			LBL_NO_DAMAGE: break;
 		case TER_SPEC_DANGEROUS:
-			if (flying() || univ.party.in_boat >= 0) //if party is flying or in a boat, they cannot receive statuses from terrain
+			//if party is flying, in a boat, or entering a boat, they cannot receive statuses from terrain
+			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
 				break;
-			if (univ.party.in_boat >= 0)
-				return true;
 			//one_sound(17);
 			if (mode == 2) i = which_pc; else i = 0;
 			for ( ; i < 6; i++) 
