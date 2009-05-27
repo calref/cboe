@@ -15,12 +15,10 @@ class cTextMsg : public cControl {
 public:
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	std::string getText();
-	void setText(std::string what);
-	cTextMsg(cDialog* parent);
+	explicit cTextMsg(cDialog* parent);
 	bool isClickable();
 	virtual ~cTextMsg();
 protected:

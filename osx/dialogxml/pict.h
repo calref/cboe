@@ -89,13 +89,13 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	static void setSheet(eSheetType type, short n, GWorldPtr sheet);
 	static bool isSheetSet(eSheetType type, size_t n);
 	void setPict(short num, ePicType type);
-	cPict(cDialog* parent);
+	explicit cPict(cDialog* parent);
 	bool isClickable();
 	static void advanceAnim();
 	virtual ~cPict();

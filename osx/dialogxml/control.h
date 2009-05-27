@@ -53,6 +53,17 @@ enum eFormat {
 	TXT_WRAP,
 };
 
+enum eControlType {
+	CTRL_UNKNOWN,
+	CTRL_BTN,	// An ordinary push button
+	CTRL_LED,	// An LED (checkbox/radiobutton)
+	CTRL_PICT,	// A picture
+	CTRL_FIELD,	// An edit text field
+	CTRL_TEXT,	// A static text object
+	CTRL_GROUP,	// A LED radiobutton-like group
+	CTRL_STACK,	// A group of controls that display pages (not implemented yet)
+};
+
 enum eTextFont {DUNGEON, GENEVA, SILOM, MAIDENWORD};
 
 class cDialog;
@@ -81,35 +92,40 @@ class cControl {
 public:
 	static void init();
 	void attachKey(cKey key);
+	void detachKey();
+	void setTextToKey();
 	virtual void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) = 0;
 	virtual void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) = 0;
-	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	virtual bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	//virtual void setPict(short pict, short type) = 0;
 	virtual void show(); // cd_activate_item true
 	virtual void hide(); // cd_activate_item false
 	bool isVisible(); // cd_get_active
-	void setLabel(std::string l);
-	std::string getLabel();
-	void setLabelToKey();
+	eControlType getType();
+	virtual void setText(std::string l);
+	virtual std::string getText();
 	virtual void setFormat(eFormat prop, short val) throw(xUnsupportedProp) = 0;
 	virtual short getFormat(eFormat prop) throw(xUnsupportedProp) = 0;
 	virtual bool isClickable() = 0;
 	bool handleClick();
-	cControl(cDialog* p);
+	cControl(cDialog* p,eControlType t);
 	virtual ~cControl();
 protected:
 	cDialog* parent;
 	std::string lbl;
-	cKey key;
 	bool visible, depressed; // depressed is only applicable for clickable controls
 	Rect frame;
+	cKey key;
 	friend class cDialog;
+	friend class cLedGroup;
+	//friend class cStack;
 	virtual void draw() = 0;
 	static bool foundSilom();
 	static short font_nums[4];
 	void drawFrame(short amt, short med_or_lt);
 private:
+	eControlType type;
 	static bool found_silom;
 };
 

@@ -31,9 +31,13 @@ class cDialog {
 	cKey parseKey(std::string what);
 	WindowRef win;
 	cTextField* currentFocus;
+	class _init {
+		_init();
+		~_init();
+	};
+	static _init init;
 public:
 	static const short BG_LIGHT, BG_DARK;
-	static void init(); // must call this before constructing any dialogs
 	cDialog(std::string path); // cd_create_dialog
 	cDialog(std::string path,cDialog parent); // cd_create_dialog_parent_num
 	~cDialog(); // cd_kill_dialog
@@ -44,6 +48,7 @@ public:
 	void setBg(short n);
 	void setDefTextClr(RGBColor clr);
 	void toast();
+	cControl& operator[](std::string id);
 private:
 	void draw();
 	std::string process_keystroke(cKey keyHit);
@@ -57,6 +62,7 @@ private:
 	friend class cPict;
 	friend class cTextField;
 	friend class cTextMsg;
+	friend class _init;
 };
 
 class xBadNode : std::exception {

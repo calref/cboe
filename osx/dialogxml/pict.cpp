@@ -71,7 +71,7 @@ void cPict::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw
 	throw xHandlerNotSupported(true);
 }
 
-bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
+bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
 	if(onClick != NULL) return onClick(me,id,mods);
 	else return false;
 }
@@ -228,7 +228,7 @@ void cPict::setPict(short num, ePicType type){
 	if(isVisible()) draw();
 }
 
-cPict::cPict(cDialog* parent) : cControl(parent) {}
+cPict::cPict(cDialog* parent) : cControl(parent,CTRL_PICT) {}
 
 bool cPict::isClickable(){
 	return clickable;

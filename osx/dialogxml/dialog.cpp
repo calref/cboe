@@ -12,6 +12,7 @@
 #include "dialog.h"
 #include "graphtool.h"
 #include "soundtool.h"
+#include <stdexcept>
 using namespace std;
 using namespace ticpp;
 
@@ -644,11 +645,15 @@ cDialog::cDialog(string path){
 	win = NewCWindow(NULL, &winRect, (unsigned char*) "", false, dBoxProc, IN_FRONT, false, 0);
 }
 
-void cDialog::init(){
+cDialog::_init::_init(){
 	cControl::init();
 	cButton::init();
 	cLed::init();
 	cPict::init();
+}
+
+cDialog::_init::~_init(){
+	cButton::finalize();
 }
 
 cDialog::~cDialog(){
@@ -787,7 +792,7 @@ void cDialog::run(){
 				break;
 		}
 		ctrlIter ctrl = controls.find(itemHit);
-		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod);
+		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod,currentEvent.where);
 	}
 	EndAppModalStateForWindow(win);
 	HideWindow(win);
@@ -917,4 +922,26 @@ void cDialog::draw(){
 	}
 	
 	SetPort(old_port);
+}
+
+cControl& cDialog::operator[](std::string id){
+	ctrlIter iter = controls.find(id);
+	if(iter != controls.end()) return *(iter->second);
+	
+	iter = controls.begin();
+	while(iter != controls.end()){
+		if(iter->second->getType() == CTRL_GROUP){
+			try{
+				cLedGroup* tmp = (cLedGroup*) (iter->second);
+				return tmp->operator[](id);
+			}catch(std::invalid_argument) {}
+		}else if(iter->second->getType() == CTRL_STACK){ // TODO: Implement stacks
+//			try{
+//			cStack* tmp = (cStack*) (iter->second);
+//			return tmp->operator[](id);
+//			}catch(std::invalid_argument) {}
+		}
+		iter++;
+	}
+	throw std::invalid_argument(id + " does not exist in the dialog.");
 }

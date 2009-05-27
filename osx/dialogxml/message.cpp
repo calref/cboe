@@ -18,7 +18,7 @@ void cTextMsg::attachFocusHandler(focus_callback_t f __attribute__((unused))) th
 	throw xHandlerNotSupported(true);
 }
 
-bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
+bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
 	if(onClick != NULL) return onClick(me,id,mods);
 	return false;
 }
@@ -90,15 +90,7 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 	return 0;
 }
 
-std::string cTextMsg::getText(){
-	return getLabel();
-}
-
-void cTextMsg::setText(std::string what){
-	setLabel(what);
-}
-
-cTextMsg::cTextMsg(cDialog* parent) : cControl(parent) {}
+cTextMsg::cTextMsg(cDialog* parent) : cControl(parent,CTRL_TEXT) {}
 
 bool cTextMsg::isClickable(){
 	return clickable;

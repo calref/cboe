@@ -12,54 +12,13 @@
 
 extern bool play_sounds;
 
-void cControl::setLabel(std::string l){
+void cControl::setText(std::string l){
 	lbl = l;
 	if(isVisible()) draw();
 }
 
-std::string cControl::getLabel(){
+std::string cControl::getText(){
 	return lbl;
-}
-
-static unsigned char applyShift(unsigned char c){
-	static const char afterShift[] = {
-		' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', '<', '_', '>', '?',
-		')', '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
-		'@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '^', '_',
-		'~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~',
-	};
-	return afterShift[c - ' '];
-}
-
-static unsigned char removeShift(unsigned char c){
-	static const char afterUnShift[] = {
-		' ', '1', '\'','3', '4', '5', '7', '\'','9', '0', '8', '=', ',', '-', '.', '/',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ';', ';', ',', '=', '.', '/',
-		'2', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '6', '-',
-		'`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '`',
-	};
-	return afterUnShift[c - ' '];
-}
-
-void cControl::setLabelToKey(){
-	if(key.spec); // TODO: Handle this case
-	else{
-		unsigned char c = key.c;
-		if(key.mod - mod_shift != key.mod) c = applyShift(c);
-		else c = removeShift(c);
-		if(key.mod - mod_ctrl != key.mod) lbl = "^" + c;
-		else if(key.mod - mod_alt != key.mod) lbl = "*" + c;
-		else lbl = c;
-	}
-	if(isVisible()) draw();
-}
-
-void cControl::attachKey(cKey key){
-	this->key = key;
 }
 
 const char* xHandlerNotSupported::focusMsg = "This control cannot handle focus events.\n";
@@ -227,11 +186,55 @@ bool cControl::handleClick(){
 	return clicked;
 }
 
-cControl::cControl(cDialog* p){
-	parent = p;
+static unsigned char applyShift(unsigned char c){
+	static const char afterShift[] = {
+		' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', '<', '_', '>', '?',
+		')', '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
+		'@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '^', '_',
+		'~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~',
+	};
+	return afterShift[c - ' '];
 }
 
-bool cControl::triggerClickHandler(cDialog& me __attribute__((unused)), std::string id __attribute__((unused)), eKeyMod mods __attribute__((unused))){
+static unsigned char removeShift(unsigned char c){
+	static const char afterUnShift[] = {
+		' ', '1', '\'','3', '4', '5', '7', '\'','9', '0', '8', '=', ',', '-', '.', '/',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ';', ';', ',', '=', '.', '/',
+		'2', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '6', '-',
+		'`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '`',
+	};
+	return afterUnShift[c - ' '];
+}
+
+void cControl::setTextToKey(){
+	if(key.spec); // TODO: Handle this case
+	else{
+		unsigned char c = key.c;
+		if(key.mod - mod_shift != key.mod) c = applyShift(c);
+		else c = removeShift(c);
+		if(key.mod - mod_ctrl != key.mod) lbl = "^" + c;
+		else if(key.mod - mod_alt != key.mod) lbl = "*" + c;
+		else lbl = c;
+	}
+	if(isVisible()) draw();
+}
+
+void cControl::attachKey(cKey key){
+	this->key = key;
+}
+
+void cControl::detachKey(){
+	this->key.spec = false;
+	this->key.c = 0;
+}
+
+cControl::cControl(cDialog* p, eControlType t) : parent(p), type(t) {}
+
+bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), Point __attribute__((unused))){
 	return true;
 }
 
@@ -296,3 +299,7 @@ bool cControl::foundSilom(){
 }
 
 cControl::~cControl() {}
+
+eControlType cControl::getType(){
+	return type;
+}

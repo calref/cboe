@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <map>
-using namespace std;
+#include <stdexcept>
 
 #include "dialog.h"
 #include "graphtool.h"
@@ -21,12 +21,14 @@ void cButton::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
 }
 
-bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
+bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
 	if(onClick != NULL) return onClick(me,id,mods);
 	return false;
 }
 
-cButton::cButton(cDialog* parent) : cControl(parent) {}
+cButton::cButton(cDialog* parent) : cControl(parent,CTRL_BTN) {}
+
+cButton::cButton(cDialog* parent,eControlType t) : cControl(parent,t) {}
 
 bool cButton::isClickable(){
 	return true;
@@ -131,6 +133,11 @@ void cButton::init(){
 	OffsetRect(&btnRects[BTN_PUSH][1],30,0);
 }
 
+void cButton::finalize(){
+	for(int i = 0; i < 7; i++)
+		DisposeGWorld(buttons[i]);
+}
+
 Rect cLed::ledRects[3][2];
 
 void cLed::init(){
@@ -142,19 +149,41 @@ void cLed::init(){
 		}
 }
 
-cLed::cLed(cDialog* parent) : cButton(parent) {}
+cLed::cLed(cDialog* parent) : cButton(parent,CTRL_LED) {}
 
 void cLed::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
 }
 
-void cLed::attachFocusHandler(focus_callback_t __attribute__((unused))) throw(xHandlerNotSupported){
-	throw xHandlerNotSupported(true);
+void cLed::attachFocusHandler(focus_callback_t f) throw(){
+	onFocus = f;
 }
 
-bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick != NULL) return onClick(me,id,mods);
-	return false;
+bool cLed::triggerFocusHandler(cDialog& me, std::string id, bool losing){
+	if(onFocus != NULL) return onFocus(me,id,losing);
+	return true;
+}
+
+bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
+	bool result;
+	eLedState oldState = state;
+	if(onClick != NULL) result = onClick(me,id,mods);
+	else{ // simple state toggle
+		switch(state){
+			case led_red:
+			case led_green:
+				state = led_off;
+				break;
+			case led_off:
+				state = led_red;
+		}
+		result = true;
+	}
+	if(!triggerFocusHandler(me,id, oldState != led_off)){
+		result = false;
+		state = oldState;
+	}
+	return result;
 }
 
 void cLed::setFormat(eFormat prop __attribute__((unused)), short val __attribute__((unused))) throw(xUnsupportedProp){
@@ -195,7 +224,7 @@ void cLed::draw(){
 	SetPort(old_port);
 }
 
-cLedGroup::cLedGroup(cDialog* parent) : cControl(parent) {}
+cLedGroup::cLedGroup(cDialog* parent) : cControl(parent,CTRL_GROUP) {}
 
 cButton::~cButton() {}
 
@@ -205,6 +234,134 @@ cLedGroup::~cLedGroup(){
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
 		delete iter->second;
+		iter++;
+	}
+}
+
+/** A click handler is called whenever a click is received, even on the currently selected element. */
+void cLedGroup::attachClickHandler(click_callback_t f) throw() {
+	onClick = f;
+}
+
+/** A focus handler is called when the currently selected element changes. */
+void cLedGroup::attachFocusHandler(focus_callback_t f) throw() {
+	onFocus = f;
+}
+
+void cLed::setState(eLedState to){
+	state = to;
+}
+
+eLedState cLed::getState(){
+	return state;
+}
+
+bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
+	std::string which_clicked;
+	ledIter iter = choices.begin();
+	while(iter != choices.end()){
+		if(iter->second->visible && PtInRect(where,&iter->second->frame)){
+			if(iter->second->handleClick())
+				which_clicked = iter->first;
+		}
+		iter++;
+	}
+	
+	if(choices[which_clicked]->triggerClickHandler(me,curSelect,mods,where)){
+		eLedState a, b;
+		a = choices[curSelect]->getState();
+		b = choices[which_clicked]->getState();
+		choices[curSelect]->setState(led_off);
+		choices[which_clicked]->setState(led_red);
+		if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
+			choices[curSelect]->setState(a);
+			choices[which_clicked]->setState(b);
+			return false;
+		}
+		if(!choices[which_clicked]->triggerFocusHandler(me,curSelect,false)){
+			choices[curSelect]->setState(a);
+			choices[which_clicked]->setState(b);
+			return false;
+		}
+		curSelect = which_clicked;
+	}else return false;
+	
+	return triggerFocusHandler(me,id,false);
+}
+
+bool cLedGroup::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
+	if(onFocus != NULL) return onFocus(me,id,losingFocus);
+	return true;
+}
+
+void cLedGroup::disable(std::string id) {
+	// TODO: Implement this
+}
+
+void cLedGroup::enable(std::string id) {
+	// TODO: Implement this
+}
+
+void cLedGroup::show(std::string id){
+	choices[id]->show();
+}
+
+void cLedGroup::hide(std::string id){
+	choices[id]->hide();
+}
+
+void cLedGroup::setFormat(eFormat prop __attribute__((unused)), short val __attribute__((unused))) throw(xUnsupportedProp) {
+	throw xUnsupportedProp(prop);
+}
+
+short cLedGroup::getFormat(eFormat prop __attribute__((unused))) throw(xUnsupportedProp) {
+	throw xUnsupportedProp(prop);
+}
+
+bool cLedGroup::isClickable(){
+	return true;
+}
+
+cLed& cLedGroup::operator[](std::string id){
+	ledIter iter = choices.find(id);
+	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
+	return *(iter->second);
+}
+
+void cLedGroup::setSelection(std::string id){
+	ledIter iter = choices.find(id);
+	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
+	
+	eLedState a, b;
+	a = choices[curSelect]->getState();
+	b = iter->second->getState();
+	choices[curSelect]->setState(led_off);
+	iter->second->setState(led_red);
+	if(!choices[curSelect]->triggerFocusHandler(*parent,curSelect,true)){
+		choices[curSelect]->setState(a);
+		iter->second->setState(b);
+		return;
+	}
+	if(!iter->second->triggerFocusHandler(*parent,curSelect,false)){
+		choices[curSelect]->setState(a);
+		iter->second->setState(b);
+		return;
+	}
+	curSelect = iter->first;
+}
+
+std::string cLedGroup::getSelection(){
+	return curSelect;
+}
+
+std::string cLedGroup::getPrevSelection(){
+	return prevSelect;
+}
+
+void cLedGroup::draw(){
+	ledIter iter = choices.begin();
+	while(iter != choices.end()){
+		iter->second->draw();
 		iter++;
 	}
 }

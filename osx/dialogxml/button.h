@@ -35,25 +35,27 @@ enum eLedState {led_green = 0, led_red, led_off};
 class cButton : public cControl {
 public:
 	static void init();
+	static void finalize();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	//virtual void setPict(short pict, short type) = 0;
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	cButton(cDialog* parent);
+	explicit cButton(cDialog* parent);
+	cButton(cDialog* parent,eControlType t);
 	bool isClickable();
 	virtual ~cButton();
 protected:
 	//friend class cDialog;
 	void draw();
+	eBtnType type;
+	click_callback_t onClick;
 private:
 	friend class cDialog;
-	click_callback_t onClick;
 	bool wrapLabel;
 	bool labelWithKey;
 	bool pressed;
-	eBtnType type;
 	std::string fromList;
 	static Rect btnRects[13][2];
 	static size_t btnGW[13];
@@ -65,22 +67,26 @@ class cLed : public cButton {
 public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	void attachFocusHandler(focus_callback_t f) throw();
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
+	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	cLed(cDialog* parent);
+	explicit cLed(cDialog* parent);
 	virtual ~cLed();
+	void setState(eLedState to);
+	eLedState getState();
 protected:
 	void draw();
 private:
 	friend class cDialog;
+	friend class cLedGroup;
 	eLedState state;
 	eTextFont textFont;
 	RGBColor color;
 	short textSize;
 	static Rect ledRects[3][2];
-	click_callback_t onClick;
+	focus_callback_t onFocus;
 };
 
 class cLedGroup : public cControl {
@@ -89,25 +95,32 @@ class cLedGroup : public cControl {
 	focus_callback_t onFocus;
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
-	friend class cDialog;
+	std::string curSelect, prevSelect;
 public:
 	void attachClickHandler(click_callback_t f) throw(); // activated whenever a click is received, even on the currently active LED
 	void attachFocusHandler(focus_callback_t f) throw(); // activated only when the selection changes
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setSelected(std::string id);
 	std::string getSelected();
 	void disable(std::string id);
 	void enable(std::string id);
+	using cControl::show;
+	using cControl::hide;
 	void hide(std::string id);
 	void show(std::string id);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	cLedGroup(cDialog* parent);
+	explicit cLedGroup(cDialog* parent);
 	bool isClickable();
 	virtual ~cLedGroup();
+	cLed& operator[](std::string id);
+	void setSelection(std::string id);
+	std::string getSelection();
+	std::string getPrevSelection(); // The id of the element that was last selected before the selection changed to the current selection.
 	typedef std::map<std::string,cLed*>::iterator ledIter;
 protected:
 	void draw();
+	friend class cDialog;
 };
 #endif
