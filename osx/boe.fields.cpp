@@ -15,7 +15,7 @@ extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fir
 extern bool sleep_field;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], univ.out.out_e[96][96];
 //extern unsigned char univ.out.misc_i[64][64],univ.out.sfx[64][64];
 extern char terrain_blocked[256];
@@ -186,7 +186,7 @@ void make_web(short i,short j)
 //}
 void make_quickfire(short i,short j)
 /**/{////
-	unsigned short ter;
+	ter_num_t ter;
 //
 //	if ((is_antimagic(i,j)) && (get_ran(1,0,1) == 0))
 //		return;
@@ -387,7 +387,7 @@ void make_sleep_cloud(short i,short j)
 //}
 void make_sfx(short i,short j, short type)
 {
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if (get_obscurity(i,j) > 0)
 		return;

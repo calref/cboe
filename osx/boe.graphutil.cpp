@@ -34,7 +34,7 @@ extern cUniverse univ;
 //extern current_town_type c_town;
 //extern town_item_list t_i;
 //extern unsigned char out[96][96],out_e[96][96];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern bool sleep_field;
@@ -240,7 +240,7 @@ void draw_monsters() ////
 	Rect source_rect,to_rect;
 	location where_draw,store_loc;
 	short picture_wanted;
-	unsigned short ter;
+	ter_num_t ter;
 	Rect monst_rects[4][4] = {
 		{{0,0,36,28},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
 		{{0,7,18,21},{18,7,36,21},{0,0,0,0},{0,0,0,0}},
@@ -368,7 +368,7 @@ void draw_monsters() ////
 	}
 }
 
-void play_see_monster_str(unsigned short m)
+void play_see_monster_str(unsigned short m) // TODO: Seems like this would be worth reviving
 {}
 
 void draw_pcs(location center,short mode)
@@ -695,7 +695,7 @@ void draw_party_symbol(short mode,location center)
 	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {////
 			i = first_active_pc();
 			source_rect = get_party_template_rect(i,(univ.party.direction < 4) ? 0 : 1);			
-		unsigned short ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			// now wedge in bed graphic
 			if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1,0); ////
@@ -718,7 +718,7 @@ void draw_party_symbol(short mode,location center)
 
 /* Input terrain currently trying to draw. Get back Rect in terrain template containing 
 desired pixmap, or Rect to darkness if desired map not present */
-Rect get_terrain_template_rect (unsigned short type_wanted) ////
+Rect get_terrain_template_rect (ter_num_t type_wanted) ////
 {
 	short picture_wanted;
 	
@@ -817,7 +817,7 @@ Rect get_item_template_rect (short type_wanted)////
 }
 
 // Is this a fluid that gets shore plopped down on it?
-bool is_fluid(unsigned short ter_type)////
+bool is_fluid(ter_num_t ter_type)////
 {
 //	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 //		return true;
@@ -826,7 +826,7 @@ bool is_fluid(unsigned short ter_type)////
 }
 
 // Is this a beach that gets shore plopped down next to it?
-bool is_shore(unsigned short ter_type)////
+bool is_shore(ter_num_t ter_type)////
 {
 	if (is_fluid(ter_type) == true)
 		return false;
@@ -846,7 +846,7 @@ bool is_shore(unsigned short ter_type)////
 }
 
 // These two functions used to determine wall round-cornering
-bool is_wall(unsigned short ter_type)////
+bool is_wall(ter_num_t ter_type)////
 {
 	return scenario.ter_types[ter_type].trim_type == TRIM_WALL;
 //	short pic;
@@ -858,7 +858,7 @@ bool is_wall(unsigned short ter_type)////
 //	
 //	return false;
 }
-bool is_ground(unsigned short ter_type)
+bool is_ground(ter_num_t ter_type)
 {
 	if(scenario.ter_types[ter_type].trim_type == TRIM_WALL)
 		return false;
@@ -936,10 +936,10 @@ bool is_ground(unsigned short ter_type)
 //			
 //}
 
-char get_fluid_trim(location where,unsigned short ter_type)
+char get_fluid_trim(location where,ter_num_t ter_type)
 {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
-	unsigned short store;
+	ter_num_t store;
 	char to_return = 0;
 	
 	if (where.x == 0)

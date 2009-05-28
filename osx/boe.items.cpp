@@ -1359,7 +1359,7 @@ DialogPtr other_make_dialog(short which)
 }
 
 ////
-void place_glands(location where,unsigned short m_type)
+void place_glands(location where,m_num_t m_type)
 {
 	cItemRec store_i;
 	cMonster monst;

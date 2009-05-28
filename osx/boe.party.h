@@ -50,7 +50,7 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num);
 void pc_name_event_filter (short item_hit);
 bool pick_pc_name(short pc_num,short parent_num)  ;
 void pick_trapped_monst_event_filter (short item_hit);
-unsigned short pick_trapped_monst()  ;
+m_num_t pick_trapped_monst()  ;
 bool flying() ;
 void acid_pc(short which_pc,short how_much);
 void poison_pc(short which_pc,short how_much);

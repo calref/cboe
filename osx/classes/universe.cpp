@@ -663,7 +663,7 @@ unsigned char cCurTown::sfx(char x, char y) const{
 	return (fields[x][y] & 0x00FF0000) >> 16;
 }
 
-unsigned short(& cCurOut::operator [] (size_t i))[96]{
+ter_num_t(& cCurOut::operator [] (size_t i))[96]{
 	return out[i];
 }
 

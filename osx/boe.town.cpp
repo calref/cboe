@@ -40,7 +40,7 @@ extern eGameMode overall_mode;
 extern location center;
 extern WindowPtr mainPtr;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern unsigned char univ.out.misc_i[64][64];
 extern short store_current_pc,current_ground;
@@ -921,37 +921,37 @@ void create_out_combat_terrain(short type,short num_walls,short spec_code)
 		loc(15,19),loc(23,19),loc(19,29),loc(20,11),loc(28,16),
 		loc(28,24),loc(27,19),loc(27,29),loc(15,28),loc(19,19)
 	};
-	static const unsigned short cave_pillar[4][4] = {
+	static const ter_num_t cave_pillar[4][4] = {
 		{0 ,14,11,1 },
 		{14,19,20,11},
 		{17,18,21,8 },
 		{1 ,17,8 ,0 }
 	};
-	static const unsigned short mntn_pillar[4][4] = {
+	static const ter_num_t mntn_pillar[4][4] = {
 		{37,29,27,36},
 		{29,33,34,27},
 		{31,32,35,25},
 		{36,31,25,37}
 	};
-	static const unsigned short surf_lake[4][4] = {
+	static const ter_num_t surf_lake[4][4] = {
 		{56,55,54,3 },
 		{57,50,61,54},
 		{58,51,59,53},
 		{3 ,4 ,58,52}
 	};
-	static const unsigned short cave_lake[4][4] = {
+	static const ter_num_t cave_lake[4][4] = {
 		{93,96,71,71},
 		{96,71,71,71},
 		{71,71,71,96},
 		{71,71,71,96}
 	};
-	static const unsigned short surf_fume[4][4] = {
+	static const ter_num_t surf_fume[4][4] = {
 		{75,75,75,36},
 		{75,75,75,75},
 		{75,75,75,75},
 		{36,37,75,75}
 	};
-	static const unsigned short cave_fume[4][4] = {
+	static const ter_num_t cave_fume[4][4] = {
 		{98,0 ,75,75},
 		{0 ,75,75,75},
 		{75,75,75,0 },
@@ -1174,7 +1174,7 @@ void dump_gold(short print_mes)
 
 void pick_lock(location where,short pc_num)
 {
-	unsigned short terrain;
+	ter_num_t terrain;
 	short r1,which_item;
 	bool will_break = false;
 	short unlock_adjust;
@@ -1223,7 +1223,7 @@ void pick_lock(location where,short pc_num)
 
 void bash_door(location where,short pc_num) ////
 {
-	unsigned short terrain;
+	ter_num_t terrain;
 	short r1,unlock_adjust;
 
 	terrain = univ.town->terrain(where.x,where.y);
@@ -1405,7 +1405,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 
 	Rect area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	short small_adj = 0;
-	unsigned short what_ter,what_ter2;
+	ter_num_t what_ter,what_ter2;
 	bool draw_surroundings = false,expl,expl2;
 	short total_size = 48; // if full redraw, use this to figure out everything
 	Rect area_to_put_on_map_rect;

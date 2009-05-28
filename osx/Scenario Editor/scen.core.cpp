@@ -21,7 +21,7 @@ extern cTown* town;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3];
 extern short mode_count,to_create;
-extern unsigned short template_terrain[64][64];
+extern ter_num_t template_terrain[64][64];
 cItemRec item_list[400];
 extern cScenario scenario;
 extern cSpecial null_spec_node;
@@ -649,7 +649,7 @@ short ter_traits[256] = {
 	0,0,16,17,18,19
 };
 
-cMonster return_monster_template(unsigned short store) {
+cMonster return_monster_template(m_num_t store) {
 	cMonster monst;
 	short m_num,i;
 	
@@ -668,11 +668,11 @@ cMonster return_monster_template(unsigned short store) {
 	monst.a[1] = m_a2[m_num];
 	monst.a[2] = m_a3[m_num];
 	if (monst.a[0] > 0)
-		monst.a[0] += 100;
+		monst.a[0] = monst.a[0] + 100;
 	if (monst.a[1] > 0)
-		monst.a[1] += 100;
+		monst.a[1] = monst.a[1] + 100;
 	if (monst.a[2] > 0)
-		monst.a[2] += 100;
+		monst.a[2] = monst.a[2] + 100;
 	monst.a1_type = m_a1t[m_num];
 	monst.a23_type = m_a23t[m_num];
 	monst.m_type = (eMonsterType) m_type[m_num];

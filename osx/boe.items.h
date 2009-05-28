@@ -50,7 +50,7 @@ pascal void draw_help_dialog_forcefields(DialogPtr dialog,short item);
 void create_modeless_dialog(short which_dlog);
 void make_cursor_watch() ;
 DialogPtr other_make_dialog(short which);
-void place_glands(location where,unsigned short m_type);
+void place_glands(location where,m_num_t m_type);
 short party_total_level() ;
 void reset_item_max();
 short item_val(cItemRec item);

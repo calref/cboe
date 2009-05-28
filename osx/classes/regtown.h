@@ -19,13 +19,13 @@ namespace legacy {
 
 class cBigTown : public cTown { // formerly big_tr_type
 protected:
-	unsigned short _terrain[64][64];
+	ter_num_t _terrain[64][64];
 	rectangle _room_rect[16];
 	cCreature _creatures[60];
 	unsigned char _lighting[8][64];
 public:
 	void append(legacy::big_tr_type& old);
-	unsigned short& terrain(size_t x, size_t y);
+	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
@@ -39,13 +39,13 @@ public:
 
 class cMedTown : public cTown { // formerly ave_tr_type
 protected:
-	unsigned short _terrain[48][48];
+	ter_num_t _terrain[48][48];
 	rectangle _room_rect[16];
 	cCreature _creatures[40];
 	unsigned char _lighting[6][48];
 public:
 	void append(legacy::ave_tr_type& old);
-	unsigned short& terrain(size_t x, size_t y);
+	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
@@ -59,13 +59,13 @@ public:
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
 protected:
-	unsigned short _terrain[32][32];
+	ter_num_t _terrain[32][32];
 	rectangle _room_rect[16];
 	cCreature _creatures[30];
 	unsigned char _lighting[4][32];
 public:
 	void append(legacy::tiny_tr_type& old);
-	unsigned short& terrain(size_t x, size_t y);
+	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);

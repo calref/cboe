@@ -66,7 +66,7 @@ extern std::vector<scen_header_str_type> scen_header_strs;
 //extern talking_record_type talking;
 //extern outdoor_strs_type outdoor_text[2][2];
 extern std::vector<scen_header_type> scen_headers;
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern bool belt_present;
 extern bool mac_is_intel;
 
@@ -320,7 +320,7 @@ void do_apple_event_open(FSSpec file_info)
 //	char scen_name[256];
 //}
 
-void set_terrain(location l, unsigned short terrain_type)
+void set_terrain(location l, ter_num_t terrain_type)
 {
 	univ.town->terrain(l.x,l.y) = terrain_type;
 	combat_terrain[l.x][l.y] = terrain_type;

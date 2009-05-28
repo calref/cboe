@@ -16,6 +16,8 @@ namespace legacy { struct terrain_type_type; };
 
 /* Terrains Specials Properties : scenario.ter_types[i].special */      //complete
 
+typedef unsigned short ter_num_t;
+
 enum eTerSpec {
 //	TER_SPEC_NONE = 0,
 //	TER_SPEC_CHANGE_WHEN_STEP_ON = 1,
@@ -112,7 +114,7 @@ public:
 	unsigned short flag2;
 	unsigned short flag3; // new additional flag for special properties
 	eTerSpec special;
-	unsigned short trans_to_what;
+	ter_num_t trans_to_what;
 	unsigned char fly_over;
 	unsigned char boat_over;
 	unsigned char block_horse;

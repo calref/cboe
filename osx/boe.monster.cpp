@@ -23,7 +23,7 @@
 //extern party_record_type party;
 extern eGameMode overall_mode;
 //extern cOutdoors univ.out.outdoors[2][2];
-extern unsigned short combat_terrain[64][64];//,out[96][96];
+extern ter_num_t combat_terrain[64][64];//,out[96][96];
 extern short which_combat_type;
 //extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
@@ -46,7 +46,7 @@ short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 //cCreature null_start_type; = {0,0,loc(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 	
 ////				
-cMonster return_monster_template(unsigned short store)
+cMonster return_monster_template(m_num_t store)
 {
 	cMonster monst;
 	short m_num,i;
@@ -248,12 +248,12 @@ location get_monst_head(short m_num)
 	return l;
 }
 
-short get_monst_picnum(unsigned short monst)
+short get_monst_picnum(m_num_t monst)
 {
 	return scenario.scen_monsters[monst].picture_num;
 }
 
-short get_monst_pictype(unsigned short monst)
+short get_monst_pictype(m_num_t monst)
 {
 	short type = PICT_MONST;
 	short n = scenario.scen_monsters[monst].picture_num;
@@ -277,7 +277,7 @@ short get_monst_pictype(unsigned short monst)
 	return type;
 }
 
-void get_monst_dims(unsigned short monst,short *width, short *height)
+void get_monst_dims(m_num_t monst,short *width, short *height)
 {
 
 	*width = scenario.scen_monsters[monst].x_width;
@@ -285,7 +285,7 @@ void get_monst_dims(unsigned short monst,short *width, short *height)
 }
 
 // Used to set up monsters for outdoor wandering encounters.
-void set_up_monst(short mode,unsigned short m_num)
+void set_up_monst(short mode,m_num_t m_num)
 //mode; // 0 - unfriendly  1 - friendly & fightin'
 {
 	short which;
@@ -1004,7 +1004,7 @@ void monst_inflict_fields(short which_monst)
 bool monst_check_special_terrain(location where_check,short mode,short which_monst)
 //mode; // 1 - town 2 - combat
 {
-	unsigned short ter;
+	ter_num_t ter;
 	short r1,i,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
@@ -1175,7 +1175,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void forced_place_monster(unsigned short which,location where)
+void forced_place_monster(m_num_t which,location where)
 {
 	bool free_spot = false;
 	short i = 0,r1;
@@ -1343,7 +1343,7 @@ void record_monst(cCreature *which_m)
 }
 // returns 90 is no placement, OW returns # of spot
 ////
-short place_monster(unsigned short which,location where)
+short place_monster(m_num_t which,location where)
 {
 	short i = 0;
 	
@@ -1354,7 +1354,7 @@ short place_monster(unsigned short which,location where)
 	
 	if (i < univ.town->max_monst()) {
 		univ.town.monst.dudes[i] = cCreature();
-		univ.town.monst.dudes[i].m_d = return_monster_template((unsigned short) which);
+		univ.town.monst.dudes[i].m_d = return_monster_template(which);
 		univ.town.monst.dudes[i].attitude = scenario.scen_monsters[which].default_attitude;
 		if (univ.town.monst.dudes[i].attitude % 2 == 0)
 			univ.town.monst.dudes[i].attitude = 1;
@@ -1379,7 +1379,7 @@ short place_monster(unsigned short which,location where)
 }
 
 // returns true if placement was successful
-bool summon_monster(unsigned short which,location where,short duration,short given_attitude)
+bool summon_monster(m_num_t which,location where,short duration,short given_attitude)
 //which; // if in town, this is caster loc., if in combat, this is where to try
 					// to put monster
 {
@@ -1435,7 +1435,7 @@ bool summon_monster(unsigned short which,location where,short duration,short giv
 void activate_monsters(short code,short attitude)
 {
 	short i; 
-	unsigned short which;
+	m_num_t which;
 	
 	if (code == 0)
 		return;
@@ -1444,12 +1444,12 @@ void activate_monsters(short code,short attitude)
 			{
 				univ.town.monst.dudes[i].spec_enc_code = 0;
 				univ.town.monst.dudes[i].active = 2;
-				which = univ.town.monst.dudes[i].number;
+				which = univ.town.monst.dudes[i].number = univ.town->creatures(i).number;
 				univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
 
 				univ.town.monst.dudes[i].summoned = 0;
 				univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
-				univ.town.monst.dudes[i].m_d = return_monster_template(univ.town.monst.dudes[i].number);
+				univ.town.monst.dudes[i].m_d = return_monster_template(which);
 				univ.town.monst.dudes[i].target = 6;
 				
 				add_monst_graphic(univ.town.monst.dudes[i].number,1);
@@ -1474,7 +1474,7 @@ short get_encumberance(short pc_num)
 	return store;
 }
 
-unsigned short get_summon_monster(short summon_class)
+m_num_t get_summon_monster(short summon_class)
 {
 	short i,j;
 	

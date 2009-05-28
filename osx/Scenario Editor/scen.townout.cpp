@@ -19,14 +19,14 @@ extern cTown* town;
 //extern big_tr_type t_d;
 //extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short /*max_dim[3],*/mode_count,to_create,cur_town;
-extern unsigned short template_terrain[64][64];
+extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
 extern cSpecial null_spec_node;
 extern cSpeech::cNode null_talk_node;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cOutdoors current_terrain;
-extern unsigned short borders[4][50];
+extern ter_num_t borders[4][50];
 extern location cur_out;
 //extern cSpeech talking;
 

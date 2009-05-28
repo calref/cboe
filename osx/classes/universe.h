@@ -36,7 +36,7 @@ public:
 	
 	cItemRec items[115]; // formerly town_item_list type
 	
-	//unsigned short template_terrain[64][64];
+	//ter_num_t template_terrain[64][64];
 	unsigned long fields[64][64];
 	bool special_spot[64][64];
 //	unsigned char trim[64][64]; // transient
@@ -114,7 +114,7 @@ public:
 class cCurOut {
 public:
 	char expl[96][96]; // formerly out_info_type
-	unsigned short out[96][96];
+	ter_num_t out[96][96];
 	unsigned char out_e[96][96];
 	cOutdoors outdoors[2][2];
 	
@@ -123,7 +123,7 @@ public:
 	
 	void append(legacy::out_info_type& old);
 	
-	unsigned short(& operator [] (size_t i))[96];
+	ter_num_t(& operator [] (size_t i))[96];
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);
 };

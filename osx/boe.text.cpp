@@ -96,7 +96,7 @@ extern short abil_chart[200],store_anim_type;
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
 extern location pc_pos[6];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
@@ -1046,14 +1046,14 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
 		}
 }
 
-std::string get_m_name(unsigned short num)
+std::string get_m_name(m_num_t num)
 {
 	
 	////
 	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
 	return scenario.scen_monsters[num].m_name;
 }
-std::string get_ter_name(unsigned short num)
+std::string get_ter_name(ter_num_t num)
 {
 	std::string store_name = "Pit";
 	
@@ -1066,13 +1066,13 @@ std::string get_ter_name(unsigned short num)
 	return store_name;
 }
 
-void print_monst_name(unsigned short m_type)
+void print_monst_name(m_num_t m_type)
 {
 	std::string msg = get_m_name(m_type) + ':';
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void print_monst_attacks(unsigned short m_type,short target)
+void print_monst_attacks(m_num_t m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
 {
 	//char store_string3[60];
@@ -1100,14 +1100,14 @@ void damaged_message(short damage,short type)
 }
 
 // This prepares the monster's string for the text bar
-std::string print_monster_going(unsigned short m_num,short ap)
+std::string print_monster_going(m_num_t m_num,short ap)
 {
 	std::ostringstream sout(get_m_name(m_num));
 	sout << " (ap: " << ap << ')';
 	return sout.str();
 }
 
-void monst_spell_note(unsigned short number,short which_mess)
+void monst_spell_note(m_num_t number,short which_mess)
 {
 	std::string msg = get_m_name(number);
 	switch (which_mess) {
@@ -1223,7 +1223,7 @@ void monst_spell_note(unsigned short number,short which_mess)
 		add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_cast_spell_note(unsigned short number,short spell,short type)
+void monst_cast_spell_note(m_num_t number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
 	std::string msg = get_m_name(number);
@@ -1234,7 +1234,7 @@ void monst_cast_spell_note(unsigned short number,short spell,short type)
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_breathe_note(unsigned short number)
+void monst_breathe_note(m_num_t number)
 {
 	std::string msg = get_m_name(number);
 	msg += " breathes.";
@@ -1271,7 +1271,7 @@ void print_nums(short a,short b,short c)
 
 short print_terrain(location space)
 {
-	unsigned short which_terrain;
+	ter_num_t which_terrain;
 
 	if (overall_mode == MODE_LOOK_OUTDOORS) {
 		which_terrain = univ.out[space.x][space.y];

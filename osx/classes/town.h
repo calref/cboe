@@ -42,7 +42,7 @@ public:
 //	};
 	class cWandering { // formerly wandering_type
 	public:
-		unsigned short monst[4];
+		m_num_t monst[4];
 		
 		cWandering& operator = (legacy::wandering_type old);
 	};
@@ -95,7 +95,7 @@ public:
 	virtual void append(legacy::big_tr_type& old);
 	virtual void append(legacy::ave_tr_type& old);
 	virtual void append(legacy::tiny_tr_type& old);
-	virtual unsigned short& terrain(size_t x, size_t y) = 0;
+	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
 	virtual rectangle& room_rect(size_t i) = 0;
 	virtual cCreature& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;

@@ -1,4 +1,4 @@
-cMonster return_monster_template(unsigned short store);
+cMonster return_monster_template(m_num_t store);
 //item_record_type convert_item (short_item_record_type s_item) ;
 void init_scenario();
 short edit_ter_type(short which_ter);

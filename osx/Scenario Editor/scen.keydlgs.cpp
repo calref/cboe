@@ -15,7 +15,7 @@ extern cTown* town;
 //extern big_tr_type t_d;
 extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short /*max_dim[3],*/mode_count,to_create;
-extern unsigned short template_terrain[64][64];
+extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
 extern cSpecial null_spec_node;

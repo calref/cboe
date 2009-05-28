@@ -26,7 +26,7 @@ extern short which_combat_type,current_pc,town_type;
 extern eGameMode overall_mode;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location pc_pos[6],center;
 //extern pc_record_type ADVEN[6];
@@ -161,7 +161,7 @@ short short_can_see(shortloc p1,shortloc p2)
 
 bool is_lava(short x,short y)////
 {
-	unsigned short ter;
+	ter_num_t ter;
 	
 	ter = coord_to_ter(x,y);
 	if (scenario.ter_types[ter].picture == 404)
@@ -274,7 +274,7 @@ short can_see(location p1,location p2,short mode)
 
 short get_obscurity(short x,short y)
 {
-	unsigned short what_terrain;
+	ter_num_t what_terrain;
 	short store;
 	
 	what_terrain = coord_to_ter(x,y);
@@ -301,9 +301,9 @@ short get_obscurity(short x,short y)
 	return store;
 }
 
-unsigned short coord_to_ter(short x,short y)
+ter_num_t coord_to_ter(short x,short y)
 {
-	unsigned short what_terrain;
+	ter_num_t what_terrain;
 
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		what_terrain = univ.out[x][y];
@@ -317,7 +317,7 @@ unsigned short coord_to_ter(short x,short y)
 ////
 bool is_container(location loc)
 {
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if ((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
@@ -367,7 +367,7 @@ void update_explored(location dest)
 bool is_blocked(location to_check)
 {
 	short i,gr;
-	unsigned short ter;
+	ter_num_t ter;
 
 	if (is_out()) {
 		if (impassable(univ.out[to_check.x][to_check.y]) == true) {
@@ -550,7 +550,7 @@ bool special_which_blocks_monst(location to_check)
 // Checks if space is a special that prevents movement into or placement of a PC on
 bool is_special(location to_check)
 {
-	unsigned short which_ter;
+	ter_num_t which_ter;
 
 	if (special_which_blocks_monst(to_check) == false)
 		return false;
@@ -571,14 +571,14 @@ bool outd_is_special(location to_check)
 	return false;
 }
 
-bool impassable(unsigned short terrain_to_check)
+bool impassable(ter_num_t terrain_to_check)
 {
 	if (terrain_blocked[terrain_to_check] > 2)
 		return true;
 		else return false;
 }
 
-short get_blockage(unsigned short terrain_type)
+short get_blockage(ter_num_t terrain_type)
 {
 	// little kludgy in here for pits
 	if ((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
@@ -721,7 +721,7 @@ location push_loc(location from_where,location to_where)
 
 bool spot_impassable(short i,short  j)
 {
-	unsigned short ter;
+	ter_num_t ter;
 
 	ter = coord_to_ter(i,j);
 	if (terrain_blocked[ter] == 5)
@@ -729,7 +729,7 @@ bool spot_impassable(short i,short  j)
 		else return false;
 }
 
-void swap_ter(short i,short j,unsigned short ter1,unsigned short ter2)
+void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2)
 {
 	if (coord_to_ter(i,j) == ter1)
 		alter_space(i,j,ter2);
@@ -737,7 +737,7 @@ void swap_ter(short i,short j,unsigned short ter1,unsigned short ter2)
 		alter_space(i,j,ter1);
 }
 
-void alter_space(short i,short j,unsigned short ter)
+void alter_space(short i,short j,ter_num_t ter)
 {
 	location l;
 	

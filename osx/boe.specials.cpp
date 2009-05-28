@@ -34,7 +34,7 @@ extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type	univ.town;
 //extern unsigned char univ.out[96][96],out_e[96][96],sfx[64][64];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
 //extern cOutdoors univ.out.outdoors[2][2];
 extern location pc_pos[6],center;
@@ -145,7 +145,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
 {
-	unsigned short ter;
+	ter_num_t ter;
 	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,ter_flag3,pic_type = 0,ter_pic = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	bool can_enter = true;
@@ -983,7 +983,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 // Returns true if an action is actually carried out. This can only be reached in town.
 bool use_space(location where)
 {
-	unsigned short ter;
+	ter_num_t ter;
 	short i;
 	location from_loc,to_loc;
 	
@@ -1504,7 +1504,7 @@ void push_things()////
 {
 	bool redraw = false;
 	short i,k;
-	unsigned short ter;
+	ter_num_t ter;
 	location l;
 	
 	if (is_out()) // TODO: Make these work outdoors
@@ -2554,7 +2554,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short i,buttons[3] = {-1,-1,-1},r1;
 	cSpecial spec;
 	location l;
-	unsigned short ter;
+	ter_num_t ter;
 	cItemRec store_i;
 	
 	spec = cur_node;
@@ -2879,7 +2879,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	short i,j,k;
 	cSpecial spec;
 	location l;
-	unsigned short ter;
+	ter_num_t ter;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;

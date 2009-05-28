@@ -27,7 +27,7 @@ extern location cur_out;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern cSpeech talking;
 extern cOutdoors current_terrain;
-extern unsigned short borders[4][50];
+extern ter_num_t borders[4][50];
 extern bool change_made;
 extern GWorldPtr spec_scen_g;
 extern bool mac_is_intel;

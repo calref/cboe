@@ -1,4 +1,4 @@
-void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned short in_which_terrain,short num_walls);
+void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls);
 bool pc_combat_move(location destination);
 void char_parry();
 void char_stand_ready();

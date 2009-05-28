@@ -41,8 +41,8 @@ cOutdoors current_terrain;
 //short user_given_password = -1;
 short pixel_depth,old_depth = 8;
 
-unsigned short border1 = 90, border2 = 90; // kludgy thing ... leave right here, before borders
-unsigned short borders[4][50];
+ter_num_t border1 = 90, border2 = 90; // kludgy thing ... leave right here, before borders
+ter_num_t borders[4][50];
 
 bool change_made = false;
 

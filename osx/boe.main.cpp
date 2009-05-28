@@ -127,7 +127,7 @@ location spell_targets[8];
 /* Combat globals */
 short which_combat_type,town_type;
 location center;
-unsigned short combat_terrain[64][64];
+ter_num_t combat_terrain[64][64];
 location pc_pos[6];
 short current_pc;
 short combat_active_pc;
@@ -1318,7 +1318,7 @@ void set_up_apple_events()
 
 }
 
-void move_sound(unsigned short ter,short step){
+void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
 	short pic,spec,snd;
 	

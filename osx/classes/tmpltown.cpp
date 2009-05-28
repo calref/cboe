@@ -14,7 +14,7 @@
 
 #include "classes.h"
 
-unsigned short& cBigTemplTown::terrain(size_t x, size_t y){
+ter_num_t& cBigTemplTown::terrain(size_t x, size_t y){
 	return  _terrain[0][0]; // will need to calculate the terrain somehow
 }
 

@@ -32,7 +32,7 @@ extern eGameMode overall_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern location pc_pos[6];
 extern short current_pc;
 extern short pc_last_cast[2][6];
@@ -64,7 +64,7 @@ short missile_inv_slot, ammo_inv_slot;
 short force_wall_position = 10; //  10 -> no force wall
 bool processing_fields = true;
 short futzing;
-unsigned short store_sum_monst;
+m_num_t store_sum_monst;
 short store_sum_monst_cost;
 extern cUniverse univ;
 
@@ -281,7 +281,7 @@ bool center_on_monst;
 
 
 
-void start_outdoor_combat(cOutdoors::cCreature encounter,unsigned short in_which_terrain,short num_walls)
+void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls)
 {
 	short i,j,how_many,num_tries = 0;
 	GrafPtr old_port;
@@ -882,7 +882,7 @@ void do_combat_cast(location target)////
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1,store_m_type = 2;
 	short spray_type_array[15] = {1,1,1,4,4,5,5,5,6,6,7,7,8,8,9};
-	unsigned short summon;
+	m_num_t summon;
 
 	location ashes_loc;
 

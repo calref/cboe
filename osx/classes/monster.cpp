@@ -123,3 +123,12 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	facial_pic = old.monst_start.facial_pic;
 	return *this;
 }
+
+cMonster::cAttack::operator int(){
+	return dice * 100 + sides;
+}
+
+cMonster::cAttack& cMonster::cAttack::operator=(int n){
+	dice = n / 100;
+	sides = n % 100;
+}

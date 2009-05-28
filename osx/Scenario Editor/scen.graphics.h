@@ -16,8 +16,8 @@ Rect get_item_template_rect (short type_wanted);
 void draw_items();
 void force_tiny_redraw();
 void redraw_selected_ter();
-void draw_one_terrain_spot (short i,short j,unsigned short terrain_to_draw);
-void draw_one_tiny_terrain_spot (short i,short j,unsigned short terrain_to_draw);
+void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw);
+void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw);
 void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,location target,
 char masked,short main_win);
 //void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char masked,short main_win);

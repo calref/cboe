@@ -143,7 +143,7 @@ void cBigTown::append(legacy::big_tr_type& old){
 	}
 }
 
-unsigned short& cTinyTown::terrain(size_t x, size_t y){
+ter_num_t& cTinyTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
 }
 
@@ -159,7 +159,7 @@ unsigned char& cTinyTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
 
-unsigned short& cMedTown::terrain(size_t x, size_t y){
+ter_num_t& cMedTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
 }
 
@@ -175,7 +175,7 @@ unsigned char& cMedTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
 
-unsigned short& cBigTown::terrain(size_t x, size_t y){
+ter_num_t& cBigTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
 }
 

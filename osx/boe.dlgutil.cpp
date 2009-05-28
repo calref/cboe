@@ -82,7 +82,7 @@ Str255 old_str1,old_str2,one_back1,one_back2;
 extern word_rect_type preset_words[9];
 Rect talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 char title_string[50];
-unsigned short store_monst_type;
+m_num_t store_monst_type;
 short store_m_num;
 Rect dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
@@ -520,7 +520,7 @@ void set_up_shop_array()
 	SetControlMaximum(shop_sbar,i);
 }
 
-void start_talk_mode(short m_num,short personality,unsigned short monst_type,short store_face_pic)////
+void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic)////
 {
 	Rect area_rect;
 	Str255 place_string1 = "";

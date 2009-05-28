@@ -14,7 +14,7 @@ short short_can_see(shortloc p1,shortloc p2);
 bool is_lava(short x,short y);
 short can_see(location p1,location p2,short mode);
 short get_obscurity(short x,short y);
-unsigned short coord_to_ter(short x,short y);
+ter_num_t coord_to_ter(short x,short y);
 bool is_container(location loc);
 void update_explored(location dest);
 bool is_blocked(location to_check);
@@ -29,8 +29,8 @@ bool outd_is_blocked(location to_check);
 bool special_which_blocks_monst(location to_check);
 bool is_special(location to_check);
 bool outd_is_special(location to_check);
-bool impassable(unsigned short terrain_to_check);
-short get_blockage(unsigned short terrain_type);
+bool impassable(ter_num_t terrain_to_check);
+short get_blockage(ter_num_t terrain_type);
 short light_radius();
 bool pt_in_light(location from_where,location to_where) ;// Assumes, of course, in town or combat
 bool combat_pt_in_light(location to_where);
@@ -38,5 +38,5 @@ bool party_sees_a_monst(); // Returns true is a hostile monster is in sight.
 short party_can_see(location where);
 location push_loc(location from_where,location to_where);
 bool spot_impassable(short i,short  j);
-void swap_ter(short i,short j,unsigned short ter1,unsigned short ter2);
-void alter_space(short i,short j,unsigned short ter);
+void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2);
+void alter_space(short i,short j,ter_num_t ter);

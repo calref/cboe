@@ -19,7 +19,7 @@ namespace legacy {
 };
 /*      Monsters Stuff      */
 
-/* Skills Same as PC */
+typedef unsigned short m_num_t;
 
 /* Monster Type */
 enum eMonsterType {
@@ -113,19 +113,25 @@ enum eMonsterType {
 
 class cMonster {
 public:
-	unsigned short m_num;
+	struct cAttack{
+		unsigned char dice, sides, type;
+		// TODO: Remove the need for these operators by changing the code that uses them
+		operator int();
+		cAttack& operator=(int n);
+	};
+	m_num_t m_num; // TODO: This probably shouldn't be necessary. Consider why it is, and determine if it can be removed
 	unsigned char level;
 	std::string m_name;
-	short health,m_health,mp,max_mp;
+	short health,m_health,mp,max_mp; // TODO: Move health and mp to cCreature
 	unsigned char armor,skill;
-	short a[3];
-	unsigned char a1_type,a23_type;
+	cAttack a[3];
+	unsigned char a1_type,a23_type; // TODO: Delete in favour of type field of cAttack
 	eMonsterType m_type;
-	unsigned char speed,ap,mu,cl,breath,breath_type,treasure,spec_skill,poison;
-	short morale,m_morale;
+	unsigned char speed,ap,mu,cl,breath,breath_type,treasure,spec_skill,poison; // TODO: Move ap to cCreature
+	short morale,m_morale; // TODO: Move to cCreature (since these are calculated in-game based on the level)
 	short corpse_item,corpse_item_chance;
-	short status[15];
-	unsigned char direction,immunities,x_width,y_width,radiate_1;
+	short status[15]; // TODO: Move to cCreature
+	unsigned char direction,immunities,x_width,y_width,radiate_1; // TODO: Move direction to cCreature
 	unsigned short radiate_2; // I THINK this is the extra field for the second ability
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
@@ -134,11 +140,11 @@ public:
 	void writeTo(std::ostream& file, std::string prefix);
 };
 
-class cCreature {
+class cCreature : public cMonster {
 public:
-	cMonster m_d;
+	cMonster m_d; // TODO: Delete this member in favour of the inherited fields
 	unsigned long id;
-	unsigned short number;
+	m_num_t number; // TODO: This appears to be a duplicate of cMonster::m_num (ie it's used for the same thing)
 	short active, attitude;
 	unsigned char start_attitude;
 	location start_loc, cur_loc;

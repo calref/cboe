@@ -116,7 +116,7 @@ extern cUniverse univ;
 
 
 extern short which_combat_type,num_targets_left;
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern location center;
 extern location pc_pos[6];
 extern short current_pc,town_type;
@@ -308,7 +308,7 @@ bool handle_action(EventRecord event)
 	unsigned char debug_storage;
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
-	unsigned short ter;
+	ter_num_t ter;
 	
 	char str[60];	
 	Point the_point,point_in_area;
@@ -2304,7 +2304,7 @@ void handle_cave_lore()////
 {
 	char str[60];
 	short i,pic;
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if (!is_out())
 		return;
@@ -2591,7 +2591,7 @@ bool outd_move_party(location destination,bool forced)
 	location real_dest, sector_p_in;
 	bool keep_going = true,check_f;
 	location store_corner,store_iwc;
-	unsigned short ter;
+	ter_num_t ter;
 	
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == true)
@@ -2787,7 +2787,7 @@ bool town_move_party(location destination,short forced)////
 {
 	char create_line[60],keep_going = true;
 	short boat_there,horse_there,spec_num;
-	unsigned short ter;
+	ter_num_t ter;
 	bool check_f = false;
 		
 	if (debug_on == true)
@@ -2975,7 +2975,7 @@ short count_walls(location loc) // TODO: Generalize this function
 	return answer;		
 }
 
-bool is_sign(unsigned short ter)
+bool is_sign(ter_num_t ter)
 {
 	
 	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_SIGN)

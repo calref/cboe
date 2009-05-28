@@ -42,7 +42,7 @@ extern short anim_step;
 //extern current_town_type univ.town;
 //extern town_item_list t_i;
 //extern unsigned char univ.out[96][96],out_e[96][96];
-extern unsigned short combat_terrain[64][64];
+extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern Point ul;
@@ -1759,7 +1759,7 @@ GWorldPtr load_pict(short picture_to_get)
 bool is_nature(char x, char y, unsigned char ground_t)
 {
 	short pic;
-	unsigned short ter_type;
+	ter_num_t ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
 	return ground_t == scenario.ter_types[ter_type].ground_type;
@@ -1782,11 +1782,11 @@ bool is_nature(char x, char y, unsigned char ground_t)
 //	return false;
 }
 
-unsigned short get_ground_from_ter(unsigned short ter){
+ter_num_t get_ground_from_ter(ter_num_t ter){
 	return get_ter_from_ground(scenario.ter_types[ter].ground_type);
 }
 
-unsigned short get_ter_from_ground(unsigned char ground){
+ter_num_t get_ter_from_ground(unsigned char ground){
 	for(int i = 0; i < 256; i++)
 		if(scenario.ter_types[i].ground_type == ground)
 			return i;
@@ -1801,7 +1801,7 @@ void draw_terrain(short	mode)
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
-	unsigned short spec_terrain;
+	ter_num_t spec_terrain;
 	bool off_terrain = false,draw_frills = true;
 	short i,j;
 	GrafPtr old_port;
@@ -1964,7 +1964,7 @@ void draw_terrain(short	mode)
 					if(trim == TRIM_WALKWAY){
 						int trim = -1;
 						unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
-						unsigned short ground_ter = get_ter_from_ground(ground_t);
+						ter_num_t ground_ter = get_ter_from_ground(ground_t);
 						if (!loc_off_act_area(where_draw)) {
 							if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
 								if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
@@ -2100,13 +2100,13 @@ void draw_terrain(short	mode)
 }
 
 
-unsigned short get_ground_for_shore(unsigned short ter){
+ter_num_t get_ground_for_shore(ter_num_t ter){
 	if(scenario.ter_types[ter].block_horse) return current_ground;
 	else if(scenario.ter_types[ter].blockage > 2) return current_ground;
 	else return ter;
 }
 
-void place_trim(short q,short r,location where,unsigned short ter_type)
+void place_trim(short q,short r,location where,ter_num_t ter_type)
 {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
 	location targ;
@@ -2145,7 +2145,7 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 	if(is_fluid(ter_type)){
 		short trim = get_fluid_trim(where, ter_type);
 		if (trim != 0) {
-			unsigned short shore;
+			ter_num_t shore;
 			if (trim & 2){ // upper right
 				shore = coord_to_ter(where.x + 1, where.y - 1);
 				shore = get_ground_for_shore(shore);
@@ -2185,10 +2185,10 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 	if(is_wall(ter_type) && !at_top && !at_bot && !at_left && !at_right){
 	//if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == false) &&
 	//	(at_bot == false) && (at_left == false) && (at_right == false)) {
-		unsigned short to_left = coord_to_ter(where.x - 1,where.y);
-		unsigned short above = coord_to_ter(where.x,where.y - 1);
-		unsigned short to_right = coord_to_ter(where.x + 1,where.y);
-		unsigned short below = coord_to_ter(where.x,where.y + 1);
+		ter_num_t to_left = coord_to_ter(where.x - 1,where.y);
+		ter_num_t above = coord_to_ter(where.x,where.y - 1);
+		ter_num_t to_right = coord_to_ter(where.x + 1,where.y);
+		ter_num_t below = coord_to_ter(where.x,where.y + 1);
 		if (is_wall(to_left) && is_wall(above) && is_ground(to_right) && is_ground(below))
 			draw_trim(q,r,11,to_right);
 		
@@ -2231,7 +2231,7 @@ void place_trim(short q,short r,location where,unsigned short ter_type)
 	}
 }
 
-void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
+void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 {
@@ -2350,11 +2350,11 @@ void draw_trim(short q,short r,short which_trim,unsigned short ground_ter)
 }
 
 
-bool extend_road_terrain(unsigned short ter)
+bool extend_road_terrain(ter_num_t ter)
 {
 	eTrimType trim = scenario.ter_types[ter].trim_type;
 	eTerSpec spec = scenario.ter_types[ter].special;
-	unsigned short flag = scenario.ter_types[ter].flag1;
+	ter_num_t flag = scenario.ter_types[ter].flag1;
 	if(trim == TRIM_ROAD || trim == TRIM_CITY || trim == TRIM_WALKWAY)
 		return true;
 	if(spec == TER_SPEC_BRIDGE)
@@ -2372,7 +2372,7 @@ bool extend_road_terrain(unsigned short ter)
 	return false;
 }
 
-bool connect_roads(unsigned short ter){
+bool connect_roads(ter_num_t ter){
 	eTrimType trim = scenario.ter_types[ter].trim_type;
 	eTerSpec spec = scenario.ter_types[ter].special;
 	if(trim == TRIM_ROAD || trim == TRIM_CITY)
@@ -2385,7 +2385,7 @@ bool connect_roads(unsigned short ter){
 void place_road(short q,short r,location where, bool here)
 {
 	location draw_loc;
-	unsigned short ter;
+	ter_num_t ter;
 	Rect to_rect;
 	//Rect road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
 	static const Rect road_rects[4] = {

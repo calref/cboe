@@ -23,8 +23,8 @@ class cOutdoors {
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
-		unsigned short monst[7];
-		unsigned short friendly[3];
+		m_num_t monst[7];
+		m_num_t friendly[3];
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
 		
@@ -41,7 +41,7 @@ public:
 		
 		cCreature& operator = (legacy::outdoor_creature_type old);
 	};
-	unsigned short terrain[48][48];
+	ter_num_t terrain[48][48];
 	location special_locs[18];
 	unsigned short special_id[18];
 	location exit_locs[8];

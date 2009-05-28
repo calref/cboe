@@ -4,7 +4,7 @@ void handle_shop_event(Point p);
 void handle_sale(short what_chosen,short cost);
 void handle_info_request(short what_chosen);
 void set_up_shop_array();
-void start_talk_mode(short m_num,short personality,unsigned short monst_type,short store_face_pic);
+void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic);
 void end_talk_mode();
 void handle_talk_event(Point p);
 void handle_talk_spec(short ttype,Str255 place_string1,Str255 place_string2);

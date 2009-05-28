@@ -814,7 +814,7 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 	return true;
 }
 
-bool load_outdoors(location which_out, short mode, unsigned short borders[4][50]){
+bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
 	short j,file_id;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;

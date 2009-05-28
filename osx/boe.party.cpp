@@ -1995,7 +1995,7 @@ void cast_town_spell(location where) ////
 {
 	short adjust,r1,targ,store;
 	location loc;
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if ((where.x <= univ.town->in_town_rect.left) ||
 		(where.x >= univ.town->in_town_rect.right) ||
@@ -2139,7 +2139,7 @@ void sanctify_space(location where)
 
 void crumble_wall(location where) // TODO: Add something like this to the spreading quickfire function
 {
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if (loc_off_act_area(where) == true)
 		return;
@@ -3091,7 +3091,7 @@ void pick_trapped_monst_event_filter (short item_hit)
 	dialog_answer = item_hit;
 }
 
-unsigned short pick_trapped_monst()  
+m_num_t pick_trapped_monst()  
 // ignore parent in Mac version
 {
 	short item_hit,i;
@@ -3109,7 +3109,7 @@ unsigned short pick_trapped_monst()
 			else {
 				sp = get_m_name(univ.party.imprisoned_monst[i]);
 				csit(988,3 + 3 * i, sp.c_str());
-				get_monst = return_monster_template((unsigned short)(univ.party.imprisoned_monst[i]));
+				get_monst = return_monster_template(univ.party.imprisoned_monst[i]);
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}
 	
@@ -3119,7 +3119,7 @@ unsigned short pick_trapped_monst()
 
 	if (dialog_answer == 1)
 		return 0;
-		else return ((unsigned short)(univ.party.imprisoned_monst[(dialog_answer - 2) / 3]));	
+		else return (univ.party.imprisoned_monst[(dialog_answer - 2) / 3]);	
 }
 
 

@@ -52,7 +52,7 @@ extern Rect left_button[NLS];
 extern Rect right_buttons[NRSONPAGE];
 extern Rect right_scrollbar_rect;
 extern Rect right_area_rect;
-extern unsigned short borders[4][50];
+extern ter_num_t borders[4][50];
 extern ControlHandle right_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
@@ -216,7 +216,7 @@ void init_dialogs(){
 	//return tmp;
 }
 
-short get_small_icon(unsigned short ter){
+short get_small_icon(ter_num_t ter){
 	short icon;
 	switch(scenario.ter_types[ter].special){
 		case TER_SPEC_NONE:
@@ -1059,7 +1059,7 @@ void redraw_selected_ter() {
 	//	draw_one_terrain_spot(18,8,(unsigned char) current_terrain_type);
 }
 
-void draw_one_terrain_spot (short i,short j,unsigned short terrain_to_draw) {
+void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	location where_draw;
 	Rect source_rect;
 	short picture_wanted;
@@ -1094,7 +1094,7 @@ void draw_one_terrain_spot (short i,short j,unsigned short terrain_to_draw) {
 	Draw_Some_Item(source_gworld, source_rect, ter_draw_gworld, where_draw, 0, 0);
 }
 
-void draw_one_tiny_terrain_spot (short i,short j,unsigned short terrain_to_draw) {
+void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	location where_draw;
 	Rect source_rect,dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
@@ -1547,7 +1547,7 @@ void take_quickfire(short i,short j) {
 
 bool container_there(location l) {
 	
-	unsigned short ter;
+	ter_num_t ter;
 	
 	if (editing_town == false)
 		return false;
