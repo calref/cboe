@@ -42,6 +42,7 @@
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		9122832E0FCF6C7200B21642 /* busywork.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
@@ -245,6 +246,7 @@
 			dstPath = "Blades of Exile Scenarios";
 			dstSubfolderSpec = 16;
 			files = (
+				9122832E0FCF6C7200B21642 /* busywork.exs in CopyFiles */,
 				91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */,
 				91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */,
 				91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */,
@@ -328,6 +330,7 @@
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = message.cpp; path = dialogxml/message.cpp; sourceTree = "<group>"; };
 		910BBAD90FB91D2A001E34EA /* dlogutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlogutil.h; path = dialogxml/dlogutil.h; sourceTree = "<group>"; };
 		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlogutil.cpp; path = dialogxml/dlogutil.cpp; sourceTree = "<group>"; };
+		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = tools/dlgbtns.cpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = "<group>"; };
@@ -407,7 +410,7 @@
 		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = bladespced.rsrc; path = "Blades of Exile Char Editor/bladespced.rsrc"; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Blades of Exile Character Editor-Info.plist"; path = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "Scenario Editor/Blades of Exile Base"; sourceTree = "<group>"; };
+		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "../rsrc/Blades of Exile Bases/Blades of Exile Base"; sourceTree = "<group>"; };
 		91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "Scenario Editor/Blades of Exile Graphics"; sourceTree = "<group>"; };
 		91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "Scenario Editor/Blades of Exile Sounds"; sourceTree = "<group>"; };
 		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -771,6 +774,7 @@
 				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
 				91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */,
 				91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */,
+				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -873,7 +877,6 @@
 				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
 				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
-				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 				91A79DC60FA797BF00A6A41F /* menu.xib */,
 				91A79DDD0FA79DEE00A6A41F /* dialogs.xib */,
 			);
@@ -883,6 +886,7 @@
 		91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */ = {
 			isa = PBXGroup;
 			children = (
+				9122832D0FCF6C7200B21642 /* busywork.exs */,
 				91D635AA0F90E7B500674AB3 /* stealth.exs */,
 				91D635AB0F90E7B500674AB3 /* stealth.meg */,
 				91D635AC0F90E7B500674AB3 /* valleydy.exs */,
@@ -890,7 +894,8 @@
 				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
 				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
 			);
-			path = "Blades of Exile Scenarios";
+			name = "Blades of Exile Scenarios";
+			path = "../rsrc/Blades of Exile Scenarios";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

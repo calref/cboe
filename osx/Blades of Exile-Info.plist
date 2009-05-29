@@ -11,6 +11,8 @@
 			<array>
 				<string>.SAV</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boesave</string>
 			<key>CFBundleTypeName</key>
 			<string>LegacyWinSaveGame</string>
 			<key>CFBundleTypeRole</key>
@@ -30,6 +32,8 @@
 				<string>.boe</string>
 				<string>.mac</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boesave</string>
 			<key>CFBundleTypeName</key>
 			<string>LegacyMacSaveGame</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -52,6 +56,8 @@
 			<array>
 				<string>.bmp</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boegraphics</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>image/x-bmp</string>
@@ -191,6 +197,8 @@
 			<array>
 				<string>.dlg</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>boeresources</string>
 			<key>CFBundleTypeName</key>
 			<string>EncounterDialog</string>
 			<key>CFBundleTypeRole</key>
