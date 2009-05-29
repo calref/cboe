@@ -335,7 +335,7 @@ void pick_race_abil_event_filter(short item_hit)
 					break;
 				case 4: case 5: case 6:
 					if (store_trait_mode == 0)
-						pc->race = item_hit - 4;
+						pc->race = (eRace) (item_hit - 4);
 					display_traits_graphics();
 					get_str(abil_str,5,12 + item_hit);
 					csit(1013,19,(char *) abil_str);

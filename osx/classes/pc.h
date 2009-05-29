@@ -14,6 +14,49 @@
 
 namespace legacy { struct pc_record_type; };
 
+/* adven[i].skills */ //complete
+enum eSkill {
+	SKILL_STRENGTH = 0,
+	SKILL_DEXTERITY = 1,
+	SKILL_INTELLIGENCE = 2,
+	SKILL_EDGED_WEAPONS = 3,
+	SKILL_BASHING_WEAPONS = 4,
+	SKILL_POLE_WEAPONS = 5,
+	SKILL_THROWN_MISSILES = 6,
+	SKILL_ARCHERY = 7,
+	SKILL_DEFENSE = 8,
+	SKILL_MAGE_SPELLS = 9,
+	SKILL_PRIEST_SPELLS = 10,
+	SKILL_MAGE_LORE = 11,
+	SKILL_ALCHEMY = 12,
+	SKILL_ITEM_LORE = 13,
+	SKILL_DISARM_TRAPS = 14,
+	SKILL_LOCKPICKING = 15,
+	SKILL_ASSASSINATION = 16,
+	SKILL_POISON = 17,
+	SKILL_LUCK = 18,
+};
+
+/* adven[i].traits */ //complete
+enum eTrait {
+	TRAIT_TOUGHNESS = 0,
+	TRAIT_MAGICALLY_APT = 1,
+	TRAIT_AMBIDEXTROUS = 2,
+	TRAIT_NIMBLE = 3,
+	TRAIT_CAVE_LORE = 4,
+	TRAIT_WOODSMAN = 5,
+	TRAIT_GOOD_CONST = 6,
+	TRAIT_HIGHLY_ALERT = 7,
+	TRAIT_STRENGTH = 8,
+	TRAIT_RECUPERATION = 9,
+	TRAIT_SLUGGISH = 10,
+	TRAIT_MAGICALLY_INEPT = 11,
+	TRAIT_FRAIL = 12,
+	TRAIT_CHRONIC_DISEASE = 13,
+	TRAIT_BAD_BACK = 14,
+	TRAIT_PACIFIST = 15,
+};
+
 enum eMainStatus {
 	MAIN_STATUS_ABSENT = 0, // absent, empty slot
 	MAIN_STATUS_ALIVE = 1,
@@ -56,7 +99,7 @@ public:
 	short weap_poisoned;
 	//bool advan[15];
 	bool traits[15];
-	short race;
+	eRace race;
 	//short exp_adj;
 	short direction;
 	short ap;

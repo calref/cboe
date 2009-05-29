@@ -217,16 +217,16 @@ void init_dialogs(){
 }
 
 short get_small_icon(ter_num_t ter){
-	short icon;
+	short icon = -1;
 	switch(scenario.ter_types[ter].special){
 		case TER_SPEC_NONE:
-			icon = scenario.ter_types[ter].flag1;
+			icon = scenario.ter_types[ter].flag1.s;
 			break;
 		case TER_SPEC_CHANGE_WHEN_STEP_ON:
 			icon = 23;
 			break;
 		case TER_SPEC_DAMAGING:
-			switch(scenario.ter_types[ter].flag3){
+			switch(scenario.ter_types[ter].flag3.u){
 				case DAMAGE_WEAPON:
 					icon = 40;
 					break;
@@ -260,15 +260,15 @@ short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case TER_SPEC_DANGEROUS:
-			switch(scenario.ter_types[ter].flag3){
+			switch(scenario.ter_types[ter].flag3.u){
 				case STATUS_POISONED_WEAPON: // TODO: Do something here
 					break;
-				case STATUS_BLESS: // TODO: Do something here
+				case STATUS_BLESS_CURSE: // TODO: Do something here (check flag1 to determine whether bless or curse)
 					break;
 				case STATUS_POISON:
 					icon = 35;
 					break;
-				case STATUS_HASTE: // TODO: Do something here
+				case STATUS_HASTE_SLOW: // TODO: Do something here (check flag1 to determine whether haste or slow)
 					break;
 				case STATUS_INVULNERABLE: // TODO: Do something here
 					break;
@@ -293,10 +293,6 @@ short get_small_icon(ter_num_t ter){
 				case STATUS_ACID:
 					icon = 41;
 					break;
-				case 14: // bless TODO: Do something here
-					break;
-				case 15: // haste TODO: Do something here
-					break;
 			}
 			break;
 		case TER_SPEC_CRUMBLING:
@@ -306,15 +302,15 @@ short get_small_icon(ter_num_t ter){
 			icon = 30;
 			break;
 		case TER_SPEC_UNLOCKABLE:
-			if (scenario.ter_types[ter].flag2 >= 5)
-				icon = (scenario.ter_types[ter].flag2 == 10) ? 32 : 31;
+			if (scenario.ter_types[ter].flag2.u >= 5)
+				icon = (scenario.ter_types[ter].flag2.u == 10) ? 32 : 31;
 			else icon = 30;
 			break;
 		case TER_SPEC_IS_A_SIGN:
 			icon = 26;
 			break;
 		case TER_SPEC_CALL_SPECIAL:
-			icon = scenario.ter_types[ter].flag3;
+			icon = scenario.ter_types[ter].flag3.s;
 			break;
 		case TER_SPEC_IS_A_CONTAINER:
 			icon = 36;
@@ -323,7 +319,7 @@ short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case TER_SPEC_CONVEYOR:
-			switch(scenario.ter_types[ter].flag1){ // TODO: Consider the other four possible directions
+			switch(scenario.ter_types[ter].flag1.u){ // TODO: Consider the other four possible directions
 				case DIR_N:
 					icon = 27;
 					break;
@@ -348,7 +344,7 @@ short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case TER_SPEC_CALL_SPECIAL_WHEN_USED:
-			icon = scenario.ter_types[ter].flag3;
+			icon = scenario.ter_types[ter].flag3.s;
 			break;
 		default:
 			icon = -1;

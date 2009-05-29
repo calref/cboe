@@ -112,139 +112,139 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		trim_ter = 0;
 	}
 	if(trim_ter == 99) trim_ter = 0;
-	flag1 = old.flag1;
-	flag2 = old.flag2;
+	flag1.u = old.flag1;
+	flag2.u = old.flag2;
 	switch(old.special){
 		case 0:
 			if(i == 7 || i == 10 || i == 13 || i == 16){
 				special = TER_SPEC_NONE;
-				flag1 = 23;
-				flag2 = flag3 = 0;
+				flag1.s = 23;
+				flag2.u = flag3.u = 0;
 			}else if(picture == 215 || (picture >= 218 && picture <= 221)){
 				picture = 215;
 				special = TER_SPEC_NONE;
-				flag1 = 3;
-				flag2 = flag3 = 0;
+				flag1.s = 3;
+				flag2.u = flag3.u = 0;
 			}else if(picture == 216 || (picture >= 222 && picture <= 225)){
 				picture = 215;
 				special = TER_SPEC_NONE;
-				flag1 = 2;
-				flag2 = flag3 = 0;
+				flag1.s = 2;
+				flag2.u = flag3.u = 0;
 			}else if(picture == 143) {
 				special = TER_SPEC_BED;
-				flag1 = 230;
-				flag2 = flag3 = 0;
+				flag1.s = 230;
+				flag2.u = flag3.u = 0;
 			}else if((picture >= 61 && picture <= 66) || picture == 401 || picture == 402){
 				special = TER_SPEC_BRIDGE;
-				flag1 = flag2 = flag3 = 0;
+				flag1.u = flag2.u = flag3.u = 0;
 				break;
 			}else{
 				special = TER_SPEC_NONE;
-				flag1 = 255;
-				flag2 = flag3 = 0;
+				flag1.s = -1;
+				flag2.u = flag3.u = 0;
 			}
 			break;
 		case 1:
 			special = TER_SPEC_CHANGE_WHEN_STEP_ON;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 2:
 			special = TER_SPEC_DAMAGING;
-			flag3 = DAMAGE_FIRE;
+			flag3.u = DAMAGE_FIRE;
 			break;
 		case 3:
 			special = TER_SPEC_DAMAGING;
-			flag3 = DAMAGE_COLD;
+			flag3.u = DAMAGE_COLD;
 			break;
 		case 4:
 			special = TER_SPEC_DAMAGING;
-			flag3 = DAMAGE_MAGIC;
+			flag3.u = DAMAGE_MAGIC;
 			break;
 		case 5:
 			special = TER_SPEC_DANGEROUS;
-			flag3 = STATUS_POISON;
+			flag3.u = STATUS_POISON;
 			break;
 		case 6:
 			special = TER_SPEC_DANGEROUS;
-			flag3 = STATUS_DISEASE;
+			flag3.u = STATUS_DISEASE;
 			break;
 		case 7:
 			special = TER_SPEC_CRUMBLING;
-			flag2 = 0; // ???: may change this
-			flag3 = 1; // destroyed by Move Mountains but not by quickfire; 0 = both, 2 = quickfire only
+			flag2.u = 0; // ???: may change this
+			flag3.u = 1; // destroyed by Move Mountains but not by quickfire; 0 = both, 2 = quickfire only
 			break;
 		case 8:
 			special = TER_SPEC_LOCKABLE;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 9:
 			special = TER_SPEC_UNLOCKABLE;
-			flag3 = false; // can't bash
+			flag3.u = false; // can't bash
 			break;
 		case 10:
 			special = TER_SPEC_UNLOCKABLE;
-			flag3 = true; // can bash
+			flag3.u = true; // can bash
 			break;
 		case 11:
 			special = TER_SPEC_IS_A_SIGN;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 12:
 			special = TER_SPEC_CALL_SPECIAL;
-			flag2 = 0; // local special, always (1 would be local if in town, global if outdoors)
-			flag3 = 255;
+			flag2.u = 0; // local special, always (1 would be local if in town, global if outdoors)
+			flag3.s = -1;
 			break;
 		case 13:
 			special = TER_SPEC_CALL_SPECIAL;
-			flag2 = 3; // global special, always (2 would be local if outdoors, global if in town)
-			flag3 = 255;
+			flag2.u = 3; // global special, always (2 would be local if outdoors, global if in town)
+			flag3.s = -1;
 			break;
 		case 14:
 			special = TER_SPEC_IS_A_CONTAINER;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 15:
 			special = TER_SPEC_WATERFALL;
-			flag1 = DIR_S;
-			flag3 = 0;
+			flag1.u = DIR_S;
+			flag3.u = 0;
 			break;
 		case 16:
 			special = TER_SPEC_CONVEYOR;
-			flag1 = DIR_N;
-			flag3 = 0;
+			flag1.u = DIR_N;
+			flag3.u = 0;
 			break;
 		case 17:
 			special = TER_SPEC_CONVEYOR;
-			flag1 = DIR_E;
-			flag3 = 0;
+			flag1.u = DIR_E;
+			flag3.u = 0;
 			break;
 		case 18:
 			special = TER_SPEC_CONVEYOR;
-			flag1 = DIR_S;
-			flag3 = 0;
+			flag1.u = DIR_S;
+			flag3.u = 0;
 			break;
 		case 19:
 			special = TER_SPEC_CONVEYOR;
-			flag1 = DIR_W;
-			flag3 = 0;
+			flag1.u = DIR_W;
+			flag3.u = 0;
 			break;
 		case 20:
 			special = TER_SPEC_BLOCKED_TO_MONSTERS;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 21:
 			special = TER_SPEC_TOWN_ENTRANCE;
-			flag3 = 0;
+			flag3.u = 0;
 			break;
 		case 22:
 			special = TER_SPEC_CHANGE_WHEN_USED;
-			flag2 = 3;
-			flag3 = 0;
+			flag2.u = 3;
+			flag3.u = 0;
 			break;
 		case 23:
 			special = TER_SPEC_CALL_SPECIAL_WHEN_USED;
-			flag2 = 3; // global special, always (2 would be local if outdoors, global if in town)
-			flag3 = 255;
+			flag2.u = 3; // global special, always (2 would be local if outdoors, global if in town)
+			flag3.s = -1;
 			break;
 	}
 	trans_to_what = old.trans_to_what;

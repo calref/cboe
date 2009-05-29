@@ -132,3 +132,29 @@ cMonster::cAttack& cMonster::cAttack::operator=(int n){
 	dice = n / 100;
 	sides = n % 100;
 }
+
+std::ostream& operator << (std::ostream& out, eStatus& e){
+	return out << (int) e;
+}
+
+std::istream& operator >> (std::istream& in, eStatus& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 14)
+		e = (eStatus) i;
+	else e = STATUS_POISONED_WEAPON;
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, eRace& e){
+	return out << (int) e;
+}
+
+std::istream& operator >> (std::istream& in, eRace& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 20)
+		e = (eRace) i;
+	else e = RACE_HUMAN;
+	return in;
+}

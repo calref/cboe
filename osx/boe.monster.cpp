@@ -1004,13 +1004,14 @@ void monst_inflict_fields(short which_monst)
 bool monst_check_special_terrain(location where_check,short mode,short which_monst)
 //mode; // 1 - town 2 - combat
 {
-	ter_num_t ter;
+	ter_num_t ter = 0;
 	short r1,i,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
 	cCreature *which_m;
 	short ter_abil;
+	unsigned short ter_flag;
 	
 	from_loc = univ.town.monst.dudes[which_monst].cur_loc;
 	switch (mode) {	
@@ -1024,13 +1025,14 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	////
 	which_m = &univ.town.monst.dudes[which_monst];
 	ter_abil = scenario.ter_types[ter].special;
+	ter_flag = scenario.ter_types[ter].flag3.u;
 	
 		if ((mode > 0) && (ter_abil == TER_SPEC_CONVEYOR)) {
 			if (
-				((ter_abil == DIR_N) && (where_check.y > from_loc.y)) ||
-				((ter_abil == DIR_E) && (where_check.x < from_loc.x)) ||
-				((ter_abil == DIR_S) && (where_check.y < from_loc.y)) ||
-				((ter_abil == DIR_W) && (where_check.x > from_loc.x)) ) {
+				((ter_flag == DIR_N) && (where_check.y > from_loc.y)) ||
+				((ter_flag == DIR_E) && (where_check.x < from_loc.x)) ||
+				((ter_flag == DIR_S) && (where_check.y < from_loc.y)) ||
+				((ter_flag == DIR_W) && (where_check.x > from_loc.x)) ) {
 					return false;
 					}
 			}
@@ -1140,23 +1142,25 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				
 	switch (ter_abil) {
 		// changing ter
-		case 1:
+		case TER_SPEC_CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if (!(monster_placid(which_monst))) {
-				univ.town->terrain(where_check.x,where_check.y) = scenario.ter_types[ter].flag1;
-				combat_terrain[where_check.x][where_check.y] = scenario.ter_types[ter].flag1;
+				univ.town->terrain(where_check.x,where_check.y) = scenario.ter_types[ter].flag1.u;
+				combat_terrain[where_check.x][where_check.y] = scenario.ter_types[ter].flag1.u;
 				do_look = true;
 				if (point_onscreen(center,where_check))
-					play_sound(scenario.ter_types[ter].flag2);
+					play_sound(scenario.ter_types[ter].flag2.u);
 				}
 			break;
 
-		case 20: case 21: case 15: 
+		case TER_SPEC_BLOCKED_TO_MONSTERS:
+		case TER_SPEC_TOWN_ENTRANCE:
+		case TER_SPEC_WATERFALL: 
 			can_enter = false;
 			break;
 						
-		case 2:
-			if (univ.town.monst.dudes[which_monst].m_d.immunities & 8)
+		case TER_SPEC_DAMAGING: // TODO: Update this to check other cases
+			if (ter_flag == DAMAGE_FIRE && univ.town.monst.dudes[which_monst].m_d.immunities & 8)
 				return true;
 				else return false;
 			break;

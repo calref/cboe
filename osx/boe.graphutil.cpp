@@ -323,7 +323,7 @@ void draw_monsters() ////
 							&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
 							&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 							(width == 1) && (height == 1)) ////
-							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1,0);
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 							}
 					}
@@ -360,7 +360,7 @@ void draw_monsters() ////
 										&& (univ.town.monst.dudes[i].m_d.m_type != 1) && (univ.town.monst.dudes[i].m_d.m_type != 2))
 									&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
 									(width == 1) && (height == 1))
-										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1,0); ////
+										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0); ////
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							}
@@ -698,7 +698,7 @@ void draw_party_symbol(short mode,location center)
 		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			// now wedge in bed graphic
 			if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
-				draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1,0); ////
+				draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u,0); ////
 				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
 		else if (univ.party.in_boat >= 0) {

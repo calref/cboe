@@ -146,7 +146,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // sets forced to true if definitely can enter
 {
 	ter_num_t ter;
-	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,ter_flag3,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_special,pic_type = 0,ter_pic = 0;
+	ter_flag_t ter_flag1,ter_flag2,ter_flag3;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	bool can_enter = true;
 	location out_where,from_loc,to_loc;
@@ -177,10 +178,10 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 
 		if ((mode > 0) && (ter_special == TER_SPEC_CONVEYOR)) {
 			if (
-				((ter_flag3 == DIR_N) && (where_check.y > from_loc.y)) ||
-				((ter_flag3 == DIR_E) && (where_check.x < from_loc.x)) ||
-				((ter_flag3 == DIR_S) && (where_check.y < from_loc.y)) ||
-				((ter_flag3 == DIR_W) && (where_check.x > from_loc.x)) ) {
+				((ter_flag3.u == DIR_N) && (where_check.y > from_loc.y)) ||
+				((ter_flag3.u == DIR_E) && (where_check.x < from_loc.x)) ||
+				((ter_flag3.u == DIR_S) && (where_check.y < from_loc.y)) ||
+				((ter_flag3.u == DIR_W) && (where_check.x > from_loc.x)) ) {
 					ASB("The moving floor prevents you.");
 					return false;
 					}
@@ -285,9 +286,9 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 
 	switch (ter_special) {
 		case TER_SPEC_CHANGE_WHEN_STEP_ON: 
-			alter_space(where_check.x,where_check.y,ter_flag1);
-			if (ter_flag2 < 200) {
-				play_sound(-1 * ter_flag2);
+			alter_space(where_check.x,where_check.y,ter_flag1.u);
+			if (ter_flag2.u < 200) {
+				play_sound(-1 * ter_flag2.u);
 				}
 			give_help(47,65,0);
 			if (scenario.ter_types[ter].blockage > 2)
@@ -297,8 +298,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
 				break;
-			if(ter_flag3 > 0 && ter_flag3 < 8)
-				dam_type = (eDamageType) ter_flag3;
+			if(ter_flag3.u > 0 && ter_flag3.u < 8)
+				dam_type = (eDamageType) ter_flag3.u;
 			else dam_type = DAMAGE_WEAPON;
 			switch(dam_type){
 				case DAMAGE_FIRE:
@@ -334,7 +335,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				default:
 					break;
 			}
-			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
+			r1 = get_ran(ter_flag2.u,dam_type,ter_flag1.u);
 			if (mode < 2)
 				hit_party(r1,dam_type);
 			fast_bang = 1;
@@ -352,50 +353,51 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (mode == 2) i = which_pc; else i = 0;
 			for ( ; i < 6; i++) 
 				if (ADVEN[i].main_status == 1) {
-					if (get_ran(1,1,100) <= ter_flag2) {
-						switch(ter_flag3){
+					if (get_ran(1,1,100) <= ter_flag2.u) {
+						switch(ter_flag3.u){
 							case STATUS_POISONED_WEAPON: // TODO: Do something here
+								if(get_ran(1,1,100) > 60) add_string_to_buf("It's eerie here...");
 								break;
-							case STATUS_BLESS:
-								curse_pc(i,ter_flag1);
+							case STATUS_BLESS_CURSE: // Should say "You feel awkward." / "You feel blessed."?
+								curse_pc(i,ter_flag1.s);
 								break;
 							case STATUS_POISON:
-								poison_pc(i,ter_flag1);
+								poison_pc(i,ter_flag1.u);
 								break;
-							case STATUS_HASTE:
-								slow_pc(i,ter_flag1);
+							case STATUS_HASTE_SLOW: // Should say "You feel sluggish." / "You feel speedy."?
+								slow_pc(i,ter_flag1.s);
 								break;
-							case STATUS_INVULNERABLE: // TODO: Do something here
+							case STATUS_INVULNERABLE: // Should say "You feel odd." / "You feel protected."?
+								affect_pc(i,STATUS_INVULNERABLE,ter_flag1.u);
 								break;
-							case STATUS_MAGIC_RESISTANCE: // TODO: Do something here
+							case STATUS_MAGIC_RESISTANCE: // Should say "You feel odd." / "You feel protected."?
+								affect_pc(i,STATUS_MAGIC_RESISTANCE,ter_flag1.u);
 								break;
-							case STATUS_WEBS:
-								web_pc(i,ter_flag1);
+							case STATUS_WEBS: // Should say "You feel sticky." / "Your skin tingles."?
+								web_pc(i,ter_flag1.u);
 								break;
-							case STATUS_DISEASE:
-								disease_pc(i,ter_flag1);
+							case STATUS_DISEASE: // Should say "You feel healthy." / "You feel sick."?
+								disease_pc(i,ter_flag1.u);
 								break;
 							case STATUS_INVISIBLE:
-								void_sanctuary(i);
+								if(ter_flag1.s < 0) add_string_to_buf("You feel obscure.");
+								else add_string_to_buf("You feel exposed.");
+								affect_pc(i,STATUS_INVISIBLE,ter_flag1.s);
 								break;
-							case STATUS_DUMB:
-								dumbfound_pc(i,ter_flag1);
+							case STATUS_DUMB: // Should say "You feel clearheaded." / "You feel confused."?
+								dumbfound_pc(i,ter_flag1.u);
 								break;
-							case STATUS_MARTYRS_SHIELD: // TODO: Do something here
+							case STATUS_MARTYRS_SHIELD: // Should say "You feel dull." / "You start to glow slightly."?
+								affect_pc(i,STATUS_MARTYRS_SHIELD,ter_flag1.u);
 								break;
-							case STATUS_ASLEEP:
-								sleep_pc(i,ter_flag1,STATUS_ASLEEP,ter_flag1);
+							case STATUS_ASLEEP: // Should say "You feel alert." / "You feel very tired."?
+								sleep_pc(i,ter_flag1.u,STATUS_ASLEEP,ter_flag1.u / 2);
 								break;
-							case STATUS_PARALYZED: // TODO: Do something here
+							case STATUS_PARALYZED: // Should say "You find it easier to move." / "You feel very stiff."?
+								sleep_pc(i,ter_flag1.u,STATUS_PARALYZED,ter_flag1.u / 2);
 								break;
-							case STATUS_ACID:
-								acid_pc(i,ter_flag1);
-								break;
-							case 14: // bless
-								curse_pc(i,-ter_flag1);
-								break;
-							case 15: // haste
-								slow_pc(i,-ter_flag1);
+							case STATUS_ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
+								acid_pc(i,ter_flag1.u);
 								break;
 						}
 						if(mode == 2) break; // only damage once in combat!
@@ -412,13 +414,13 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			break;
 		case TER_SPEC_CALL_SPECIAL:{
 			short spec_type = 0;
-			if(ter_flag2 == 3){
+			if(ter_flag2.u == 3){
 				if(mode == 1 || (mode == 2 && which_combat_type == 1)) spec_type = 2; else spec_type = 1;
-			}else if(ter_flag2 == 2 && (mode == 0 || (mode == 2 && which_combat_type == 0)))
+			}else if(ter_flag2.u == 2 && (mode == 0 || (mode == 2 && which_combat_type == 0)))
 				spec_type = 1;
-			else if(ter_flag2 == 1 && (mode == 1 || (mode == 2 && which_combat_type == 1)))
+			else if(ter_flag2.u == 1 && (mode == 1 || (mode == 2 && which_combat_type == 1)))
 				spec_type = 2;
-			run_special(mode,spec_type,ter_flag1,where_check,&s1,&s2,&s3);
+			run_special(mode,spec_type,ter_flag1.u,where_check,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_enter = false;
 			break;
@@ -541,12 +543,12 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2) {
 			suppress_stat_screen = true;
 			for (i = 0; i < 6; i++) {
-				sleep_pc(i,3,11,0);
+				sleep_pc(i,3,STATUS_ASLEEP,0);
 				}
 			suppress_stat_screen = false;
 			put_pc_screen();
 			}
-			else sleep_pc(current_pc,3,11,0);
+			else sleep_pc(current_pc,3,STATUS_ASLEEP,0);
 		}
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
@@ -574,7 +576,8 @@ void use_spec_item(short item)
 void use_item(short pc,short item)
 {
 	bool take_charge = true,inept_ok = false;
-	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
+	short abil,level,i,j,item_use_code,str,type,r1;
+	eStatus which_stat;
 	char to_draw[60];
 	location user_loc;
 cCreature *which_m;
@@ -652,34 +655,34 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				switch (abil) {
 					case 71: 
 						play_sound(4);
-						which_stat = 1;
+						which_stat = STATUS_BLESS_CURSE;
 						if (type % 2 == 1) {
 							ASB("  You feel awkward."); str = str * -1;}
 							else ASB("  You feel blessed.");
 						break;
 					case 73: 
 						play_sound(75);
-						which_stat = 3;
+						which_stat = STATUS_HASTE_SLOW;
 						if (type % 2 == 1) {
 							ASB("  You feel sluggish."); str = str * -1;}
 							else ASB("  You feel speedy.");
 						break;
 					case 74:
 						play_sound(68);
-						which_stat = 4;
+						which_stat = STATUS_INVULNERABLE;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 75: 
 						play_sound(51);
-						which_stat = 5;
+						which_stat = STATUS_MAGIC_RESISTANCE;
 						if (type % 2 == 1) {
 							ASB("  You feel odd."); str = str * -1;}
 							else ASB("  You feel protected.");
 						break;
 					case 76: 
-						which_stat = 6;
+						which_stat = STATUS_WEBS;
 						if (type % 2 == 1)
 							ASB("  You feel sticky.");
 							else {
@@ -687,14 +690,14 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						break;
 					case 78: 
 						play_sound(43);
-						which_stat = 8;
+						which_stat = STATUS_INVISIBLE;
 						if (type % 2 == 1) {
 							ASB("  You feel exposed."); str = str * -1;}
 							else ASB("  You feel obscure.");
 						break;
 					case 80: 
 						play_sound(43);
-						which_stat = 10;
+						which_stat = STATUS_MARTYRS_SHIELD;
 						if (type % 2 == 1) {
 							ASB("  You feel dull."); str = str * -1;}
 							else ASB("  You start to glow slightly.");
@@ -714,51 +717,51 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 77:
 				switch (type) {
-					case 0: ASB("  You feel healthy."); affect_pc(pc,7,-1 * str); break;
+					case 0: ASB("  You feel healthy."); affect_pc(pc,STATUS_DISEASE,-1 * str); break;
 					case 1: ASB("  You feel sick."); disease_pc(pc,str); break;
-					case 2: ASB("  You all feel healthy."); affect_party(7,-1 * str); break;
+					case 2: ASB("  You all feel healthy."); affect_party(STATUS_DISEASE,-1 * str); break;
 					case 3: ASB("  You all feel sick."); for (i = 0; i < 6; i++) disease_pc(i,str); break;
 					}
 				break;
 			case 79:
 				switch (type) {
-					case 0: ASB("  You feel clear headed."); affect_pc(pc,9,-1 * str); break;
+					case 0: ASB("  You feel clear headed."); affect_pc(pc,STATUS_DUMB,-1 * str); break;
 					case 1: ASB("  You feel confused."); dumbfound_pc(pc,str); break;
-					case 2: ASB("  You all feel clear headed."); affect_party(9,-1 * str); break;
+					case 2: ASB("  You all feel clear headed."); affect_party(STATUS_DUMB,-1 * str); break;
 					case 3: ASB("  You all feel confused."); for (i = 0; i < 6; i++) dumbfound_pc(i,str); break;
 					}
 				break;
 			case 81:
 				switch (type) {
-					case 0: ASB("  You feel alert."); affect_pc(pc,11,-1 * str); break;
-					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1,11,200); break;
-					case 2: ASB("  You all feel alert."); affect_party(11,-1 * str); break;
-					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1,11,200); break;
+					case 0: ASB("  You feel alert."); affect_pc(pc,STATUS_ASLEEP,-1 * str); break;
+					case 1: ASB("  You feel very tired."); sleep_pc(pc,str + 1,STATUS_ASLEEP,200); break;
+					case 2: ASB("  You all feel alert."); affect_party(STATUS_ASLEEP,-1 * str); break;
+					case 3: ASB("  You all feel very tired."); for (i = 0; i < 6; i++) sleep_pc(i,str + 1,STATUS_ASLEEP,200); break;
 					}
 				break;
 			case 82:
 				switch (type) {
-					case 0: ASB("  You find it easier to move."); affect_pc(pc,12,-1 * str * 100); break;
-					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10,12,200); break;
-					case 2: ASB("  You all find it easier to move."); affect_party(12,-1 * str * 100); break;
-					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10,12,200); break;
+					case 0: ASB("  You find it easier to move."); affect_pc(pc,STATUS_PARALYZED,-1 * str * 100); break;
+					case 1: ASB("  You feel very stiff."); sleep_pc(pc,str * 20 + 10,STATUS_PARALYZED,200); break;
+					case 2: ASB("  You all find it easier to move."); affect_party(STATUS_PARALYZED,-1 * str * 100); break;
+					case 3: ASB("  You all feel very stiff."); for (i = 0; i < 6; i++) sleep_pc(i,str * 20 + 10,STATUS_PARALYZED,200); break;
 					}
 				break;
 			case 83:
 				switch (type) {
-					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc,13,-1 * str); break;
+					case 0: ASB("  Your skin tingles pleasantly."); affect_pc(pc,STATUS_ACID,-1 * str); break;
 					case 1: ASB("  Your skin burns!"); acid_pc(pc,str); break;
-					case 2: ASB("  You all tingle pleasantly."); affect_party(13,-1 * str); break;
+					case 2: ASB("  You all tingle pleasantly."); affect_party(STATUS_ACID,-1 * str); break;
 					case 3: ASB("  Everyone's skin burns!"); for (i = 0; i < 6; i++) acid_pc(i,str); break;
 					}
 				break;
 			case 84:
 				switch (type) {
 					case 0: 
-					case 1: ASB("  You feel wonderful!"); heal_pc(pc,str * 20); affect_pc(pc,1,str); break;
+					case 1: ASB("  You feel wonderful!"); heal_pc(pc,str * 20); affect_pc(pc,STATUS_BLESS_CURSE,str); break;
 					case 2:
 					case 3: ASB("  Everyone feels wonderful!"); for (i = 0; i < 6; i++) {
-								heal_pc(i,str * 20); affect_pc(i,1,str); } break;
+								heal_pc(i,str * 20); affect_pc(i,STATUS_BLESS_CURSE,str); } break;
 					}
 				break;
 			case 85:
@@ -1033,18 +1036,18 @@ bool use_space(location where)
 				return false;
 				}
 			add_string_to_buf("  OK.");
-			alter_space(where.x,where.y,scenario.ter_types[ter].flag1);
-			play_sound(scenario.ter_types[ter].flag2);
+			alter_space(where.x,where.y,scenario.ter_types[ter].flag1.u);
+			play_sound(scenario.ter_types[ter].flag2.u);
 			return true;
 	}else if (scenario.ter_types[ter].special == TER_SPEC_CALL_SPECIAL_WHEN_USED){ // call special
 		short spec_type = 0;
-		if(scenario.ter_types[ter].flag2 == 3){
+		if(scenario.ter_types[ter].flag2.u == 3){
 			if((is_town() || (is_combat() && which_combat_type == 1))) spec_type = 2; else spec_type = 1;
-		}else if(scenario.ter_types[ter].flag2 == 1 && (is_town() || (is_combat() && which_combat_type == 1)))
+		}else if(scenario.ter_types[ter].flag2.u == 1 && (is_town() || (is_combat() && which_combat_type == 1)))
 			spec_type = 2;
-		else if(scenario.ter_types[ter].flag2 == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
+		else if(scenario.ter_types[ter].flag2.u == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
 			spec_type = 1;
-		run_special(17,spec_type,scenario.ter_types[ter].flag1,where,&i,&i,&i);
+		run_special(17,spec_type,scenario.ter_types[ter].flag1.u,where,&i,&i,&i);
 	}
 	add_string_to_buf("  Nothing to use.");
 
@@ -1516,7 +1519,7 @@ void push_things()////
 		if (univ.town.monst.dudes[i].active > 0) {
 			l = univ.town.monst.dudes[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
@@ -1533,7 +1536,7 @@ void push_things()////
 		if (univ.town.items[i].variety > 0) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
@@ -1550,7 +1553,7 @@ void push_things()////
 	if (is_town()) {
 		ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		l = univ.town.p_loc;
-		switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+		switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 			case DIR_N: l.y--; break;
 			case DIR_E: l.x++; break;
 			case DIR_S: l.y++; break;
@@ -1585,7 +1588,7 @@ void push_things()////
 			if (ADVEN[i].main_status == 1) {
 				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
-				switch (scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
@@ -2239,54 +2242,54 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 89:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,4,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,STATUS_INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 90:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,5,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,STATUS_MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 91:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,6,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,STATUS_WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 92:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,7,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+					affect_pc(i,STATUS_DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			break;
 		case 93:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,8,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,STATUS_INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 94:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,1,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,STATUS_BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 95:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,9,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+					affect_pc(i,STATUS_DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			break;
 		case 96:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,11,-1 * spec.ex1a);
+						affect_pc(i,STATUS_ASLEEP,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,11,10);
+						else sleep_pc(i,spec.ex1a,STATUS_ASLEEP,10);
 					}
 			break;
 		case 97:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,12,-1 * spec.ex1a);
+						affect_pc(i,STATUS_PARALYZED,-1 * spec.ex1a);
 						}
-						else sleep_pc(i,spec.ex1a,12,10);
+						else sleep_pc(i,spec.ex1a,STATUS_PARALYZED,10);
 					}
 			break;
 		case 98:
@@ -2628,13 +2631,13 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 177:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			if (scenario.ter_types[ter].special == TER_SPEC_LOCKABLE)
-				set_terrain(l,scenario.ter_types[ter].flag1);
+				set_terrain(l,scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
 		case 178:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE)
-				set_terrain(l,scenario.ter_types[ter].flag1);
+				set_terrain(l,scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
 		case 179:
@@ -2997,7 +3000,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 217:
 			ter = coord_to_ter(i,j);
 			if (scenario.ter_types[ter].special == 8){
-				set_terrain(l,scenario.ter_types[ter].flag1);
+				set_terrain(l,scenario.ter_types[ter].flag1.u);
 				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;
@@ -3007,7 +3010,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 218:
 			ter = coord_to_ter(i,j);
 			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
-				set_terrain(l,scenario.ter_types[ter].flag1);
+				set_terrain(l,scenario.ter_types[ter].flag1.u);
 				if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 					belt_present = true;
 				*redraw = true;

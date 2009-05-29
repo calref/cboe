@@ -2368,13 +2368,13 @@ void monster_attack_pc(short who_att,short target)
 						// Sleep target
 						if (attacker->m_d.spec_skill == 28) {
 							add_string_to_buf("  Sleeps!                    ");
-							sleep_pc(target,6,11,-15);
+							sleep_pc(target,6,STATUS_ASLEEP,-15);
 							put_pc_screen();
 							}
 						// Paralyze target
 						if (attacker->m_d.spec_skill == 29) {
 							add_string_to_buf("  Paralysis touch!                    ");
-							sleep_pc(target,500,12,-5);
+							sleep_pc(target,500,STATUS_PARALYZED,-5);
 							put_pc_screen();
 							}
 						// Acid touch
@@ -2611,7 +2611,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			if (target < 100) { // on PC
 				sprintf ((char *) create_line, "  Fires ray at %s.                  ",(char *) ADVEN[target].name.c_str());
 				add_string_to_buf((char *) create_line);
-				sleep_pc(target,100,12,0);
+				sleep_pc(target,100,STATUS_PARALYZED,0);
 				}
 				else {  // on monst
 					add_string_to_buf("  Shoots a ray.");
@@ -4730,12 +4730,12 @@ void sleep_cloud_space(short m,short n)
 		for (i = 0; i < 6; i++)
 			if (ADVEN[i].main_status == 1)
 				if (pc_pos[i] == target) {
-					sleep_pc(i,3,11,0);
+					sleep_pc(i,3,STATUS_ASLEEP,0);
 					}
 	if (overall_mode < MODE_COMBAT)
 		if (target == univ.town.p_loc) {
 			for (i = 0; i < 6; i++)
-				sleep_pc(i,3,11,0);
+				sleep_pc(i,3,STATUS_ASLEEP,0);
 			}
 }
 

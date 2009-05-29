@@ -17,9 +17,51 @@ namespace legacy {
 	struct creature_data_type;
 	struct creature_start_type;
 };
-/*      Monsters Stuff      */
 
 typedef unsigned short m_num_t;
+
+/* adven[i].race */ //complete
+enum eRace {
+	RACE_UNKNOWN = -1, // for parameters to some functions; not valid in the class
+	RACE_HUMAN = 0,
+	RACE_NEPHIL = 1,
+	RACE_SLITH = 2,
+	RACE_VAHNATAI = 3,
+	RACE_REPTILE = 4,
+	RACE_BEAST = 5,
+	RACE_IMPORTANT = 6,
+	RACE_MAGE = 7,
+	RACE_PRIEST = 8,
+	RACE_HUMANOID = 9,
+	RACE_DEMON = 10,
+	RACE_UNDEAD = 11,
+	RACE_GIANT = 12,
+	RACE_SLIME = 13,
+	RACE_STONE = 14,
+	RACE_BUG = 15,
+	RACE_DRAGON = 16,
+	RACE_MAGICAL = 17,
+	RACE_PLANT = 18,
+	RACE_BIRD = 19,
+}; // TODO: Expand and merge with eMonsterType
+
+/* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
+enum eStatus {
+	STATUS_POISONED_WEAPON = 0,
+	STATUS_BLESS_CURSE = 1,
+	STATUS_POISON = 2,
+	STATUS_HASTE_SLOW = 3,
+	STATUS_INVULNERABLE = 4,
+	STATUS_MAGIC_RESISTANCE = 5,
+	STATUS_WEBS = 6,
+	STATUS_DISEASE = 7,
+	STATUS_INVISIBLE = 8, //sanctuary
+	STATUS_DUMB = 9,
+	STATUS_MARTYRS_SHIELD = 10,
+	STATUS_ASLEEP = 11,
+	STATUS_PARALYZED = 12,
+	STATUS_ACID = 13,
+};
 
 /* Monster Type */
 enum eMonsterType {
@@ -165,4 +207,8 @@ public:
 	cCreature& operator = (legacy::creature_start_type old);
 };
 
+std::ostream& operator << (std::ostream& out, eStatus& e);
+std::istream& operator >> (std::istream& in, eStatus& e);
+std::ostream& operator << (std::ostream& out, eRace& e);
+std::istream& operator >> (std::istream& in, eRace& e);
 #endif

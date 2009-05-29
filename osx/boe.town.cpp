@@ -1205,7 +1205,7 @@ void pick_lock(location where,short pc_num)
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
-	unlock_adjust = scenario.ter_types[terrain].flag2;
+	unlock_adjust = scenario.ter_types[terrain].flag2.u;
 	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 					add_string_to_buf("  Didn't work.                ");
 					if (will_break == true) {
@@ -1217,7 +1217,7 @@ void pick_lock(location where,short pc_num)
 				else {
 						add_string_to_buf("  Door unlocked.                ");
 						play_sound(9);
-						univ.town->terrain(where.x,where.y) = scenario.ter_types[terrain].flag1;
+						univ.town->terrain(where.x,where.y) = scenario.ter_types[terrain].flag1.u;
 					}
 }
 
@@ -1234,15 +1234,15 @@ void bash_door(location where,short pc_num) ////
 		return;
 		}
 
-	unlock_adjust = scenario.ter_types[terrain].flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].flag3 != 1))  {
+	unlock_adjust = scenario.ter_types[terrain].flag2.u;
+	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].flag3.u != 1))  {
 					add_string_to_buf("  Didn't work.                ");
 					damage_pc(pc_num,get_ran(1,1,4),DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);					
 				} 
 				else {
 						add_string_to_buf("  Lock breaks.                ");
 						play_sound(9);
-						univ.town->terrain(where.x,where.y) = scenario.ter_types[terrain].flag1;
+						univ.town->terrain(where.x,where.y) = scenario.ter_types[terrain].flag1.u;
 					}
 }
 
@@ -1307,7 +1307,7 @@ void erase_out_specials()
 						(univ.out.outdoors[k][l].exit_locs[m].y == minmax(0,47,univ.out.outdoors[k][l].exit_locs[m].y))) {
 					if (univ.party.can_find_town[univ.out.outdoors[k][l].exit_dests[m]] == 0) {
 					univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] = 
-						scenario.ter_types[univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y]].flag1;
+						scenario.ter_types[univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y]].flag1.u;
 						//exit_g_type[univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] - 217];
 					
 					}

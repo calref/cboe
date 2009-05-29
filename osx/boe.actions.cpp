@@ -2506,10 +2506,10 @@ eDirection find_waterfall(short x, short y, short mode){
 		if(mode == 0){
 			to_dir[i] = (scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == TER_SPEC_WATERFALL);
 			printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
-			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1 != i) to_dir[i] = false;
+			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
 			to_dir[i] = (scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == TER_SPEC_WATERFALL);
-			if(scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1 != i) to_dir[i] = false;
+			if(scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
 		}
 	}
 	short count = 0;

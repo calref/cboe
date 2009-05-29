@@ -910,8 +910,8 @@ void put_ter_info_in_dlog() {
 	CDSN(813,4,store_ter.trans_to_what);
 	CDSN(813,8,store_ter.light_radius);
 	cd_set_led_range(813,32,55,store_ter.special);
-	CDSN(813,6,store_ter.flag1);
-	CDSN(813,7,store_ter.flag2);
+	CDSN(813,6,store_ter.flag1.u);
+	CDSN(813,7,store_ter.flag2.u);
 	get_str(str,21,40 + store_ter.special);
 	csit(813,67,(char *) str);
 	get_str(str,21,80 + store_ter.special);
@@ -949,7 +949,7 @@ bool save_ter_info() {
 		else if (store_ter.special == TER_SPEC_DANGEROUS) {
 			if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
 		}
-		store_ter.flag1 = CDGN(813,6);
+		store_ter.flag1.u = CDGN(813,6);
 		
 		i = CDGN(813,7);
 		if (store_ter.special == TER_SPEC_TOWN_ENTRANCE) {
@@ -958,7 +958,7 @@ bool save_ter_info() {
 		else if ((store_ter.special == TER_SPEC_DAMAGING) || (store_ter.special == TER_SPEC_DANGEROUS)) {
 			if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
 		}
-		store_ter.flag2 = CDGN(813,7);
+		store_ter.flag2.u = CDGN(813,7);
 		
 		i = CDGN(813,4);
 		if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == true) return false;

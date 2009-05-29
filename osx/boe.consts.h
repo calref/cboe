@@ -98,67 +98,6 @@ enum eGameMode {
 ///* main status modifiers */
 //#define MAIN_STATUS_SPLIT	10 // split from party
 
-
-/* adven[i].skills */ //complete
-#define SKILL_STRENGTH			0
-#define SKILL_DEXTERITY			1
-#define SKILL_INTELLIGENCE		2
-#define SKILL_EDGED_WEAPONS		3
-#define SKILL_BASHING_WEAPONS	4
-#define SKILL_POLE_WEAPONS		5
-#define SKILL_THROWN_MISSILES	6
-#define SKILL_ARCHERY			7
-#define SKILL_DEFENSE			8
-#define SKILL_MAGE_SPELLS		9
-#define SKILL_PRIEST_SPELLS		10
-#define SKILL_MAGE_LORE			11
-#define SKILL_ALCHEMY			12
-#define SKILL_ITEM_LORE			13
-#define SKILL_DISARM_TRAPS		14
-#define SKILL_LOCKPICKING		15
-#define SKILL_ASSASSINATION		16
-#define SKILL_POISON			17
-#define SKILL_LUCK				18
-
-
-/* adven[i].traits */ //complete
-#define TRAIT_TOUGHNESS			0
-#define TRAIT_MAGICALLY_APT		1
-#define TRAIT_AMBIDEXTROUS		2
-#define TRAIT_NIMBLE			3
-#define TRAIT_CAVE_LORE			4
-#define TRAIT_WOODSMAN			5
-#define TRAIT_GOOD_CONST		6
-#define TRAIT_HIGHLY_ALERT		7
-#define TRAIT_STRENGTH			8
-#define TRAIT_RECUPERATION		9
-#define TRAIT_SLUGGISH			10
-#define TRAIT_MAGICALLY_INEPT	11
-#define TRAIT_FRAIL				12
-#define TRAIT_CHRONIC_DISEASE	13
-#define TRAIT_BAD_BACK			14
-
-/* adven[i].race */ //complete
-#define RACE_HUMAN			0
-#define RACE_NEPHIL			1
-#define RACE_SLITH			2
-
-/* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
-#define STATUS_POISONED_WEAPON	0
-#define STATUS_BLESS			1
-#define STATUS_POISON			2
-#define STATUS_HASTE			3
-#define STATUS_INVULNERABLE		4
-#define STATUS_MAGIC_RESISTANCE	5
-#define STATUS_WEBS				6
-#define STATUS_DISEASE			7
-#define STATUS_INVISIBLE		8 //sanctuary
-#define STATUS_DUMB				9
-#define STATUS_MARTYRS_SHIELD	10
-#define STATUS_ASLEEP			11
-#define STATUS_PARALYZED		12
-#define STATUS_ACID				13
-
 // Directions!
 enum eDirection {
 	DIR_N = 0,

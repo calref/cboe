@@ -2354,7 +2354,7 @@ bool extend_road_terrain(ter_num_t ter)
 {
 	eTrimType trim = scenario.ter_types[ter].trim_type;
 	eTerSpec spec = scenario.ter_types[ter].special;
-	ter_num_t flag = scenario.ter_types[ter].flag1;
+	ter_num_t flag = scenario.ter_types[ter].flag1.u;
 	if(trim == TRIM_ROAD || trim == TRIM_CITY || trim == TRIM_WALKWAY)
 		return true;
 	if(spec == TER_SPEC_BRIDGE)
@@ -2363,7 +2363,7 @@ bool extend_road_terrain(ter_num_t ter)
 		return true; // cave entrance, most likely
 	if(spec == TER_SPEC_UNLOCKABLE || spec == TER_SPEC_CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == TER_SPEC_CHANGE_WHEN_USED && scenario.ter_types[flag].special == TER_SPEC_CHANGE_WHEN_STEP_ON && scenario.ter_types[flag].flag1 == ter)
+	if(spec == TER_SPEC_CHANGE_WHEN_USED && scenario.ter_types[flag].special == TER_SPEC_CHANGE_WHEN_STEP_ON && scenario.ter_types[flag].flag1.u == ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == TER_SPEC_LOCKABLE)
 		return true; // open portcullis (most likely)

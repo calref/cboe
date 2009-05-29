@@ -105,14 +105,17 @@ enum eTrimType {
 	TRIM_CITY = 18, // the game will join roads up to this space but not draw roads on the space
 };
 
+// Depending on the special ability, the flags may need to be treated as either signed or unsigned
+union ter_flag_t {signed short s; unsigned short u;};
+
 class cTerrain {
 public:
 	std::string name;
 	short picture;
 	unsigned char blockage;
-	unsigned short flag1;
-	unsigned short flag2;
-	unsigned short flag3; // new additional flag for special properties
+	ter_flag_t flag1;
+	ter_flag_t flag2;
+	ter_flag_t flag3; // new additional flag for special properties
 	eTerSpec special;
 	ter_num_t trans_to_what;
 	unsigned char fly_over;

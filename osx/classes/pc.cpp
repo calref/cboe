@@ -44,7 +44,7 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	}
 	which_graphic = old.which_graphic;
 	weap_poisoned = old.weap_poisoned;
-	race = old.race;
+	race = (eRace) old.race;
 	//exp_adj = old.exp_adj;
 	direction = old.direction;
 	return *this;
@@ -97,7 +97,7 @@ cPlayer::cPlayer(){
 		//advan[i] = false;
 		traits[i] = false;	
 	}		
-	race = 0;
+	race = RACE_HUMAN;
 	//exp_adj = 100;
 	direction = 0;
 }
@@ -155,7 +155,7 @@ cPlayer::cPlayer(long key,short slot){
 			traits[i] = false;	
 		}		
 		
-		race = 0;
+		race = RACE_HUMAN;
 		//exp_adj = 100;
 		direction = 0;
 	}else if(key == 'dflt'){
@@ -228,7 +228,7 @@ cPlayer::cPlayer(long key,short slot){
 			//advan[i] = false;
 		}
 		
-		race = pc_race[slot];
+		race = (eRace) pc_race[slot];
 		//exp_adj = 100;
 		direction = 0;
 		

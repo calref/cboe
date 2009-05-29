@@ -741,7 +741,7 @@ void disease_pc(short which_pc,short how_much)
 	give_help(29,0,0);
 }
 
-void sleep_pc(short which_pc,short how_much,short what_type,short adjust)
+void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // higher adjust, less chance of saving
 {
 	short r1,level;
@@ -2078,16 +2078,16 @@ void cast_town_spell(location where) ////
 				
 			case 20:
 				if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
-					if (scenario.ter_types[ter].flag2 == 10)
+					if (scenario.ter_types[ter].flag2.u == 10)
 						r1 = 10000;
 					else{
 						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * univ.town.difficulty;
-						r1 += scenario.ter_types[ter].flag2 * 7;
+						r1 += scenario.ter_types[ter].flag2.u * 7;
 					}
 					if (r1 < (135 - combat_percent[min(19,ADVEN[who_cast].level)])) {
 						add_string_to_buf("  Door unlocked.                 ");
 						play_sound(9);
-						univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
+						univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
 					}
 					else {
 						play_sound(41);
@@ -2144,9 +2144,9 @@ void crumble_wall(location where) // TODO: Add something like this to the spread
 	if (loc_off_act_area(where) == true)
 		return;
 	ter = univ.town->terrain(where.x,where.y);
-	if (scenario.ter_types[ter].special == TER_SPEC_CRUMBLING && scenario.ter_types[ter].flag3 < 2) {
+	if (scenario.ter_types[ter].special == TER_SPEC_CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
 			play_sound(60);
-				univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1;
+				univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
 			add_string_to_buf("  Barrier crumbles.");	
 		}
 
@@ -3166,7 +3166,7 @@ void poison_party(short how_much)
 	for (i = 0; i < 6; i++)
 		poison_pc(i,how_much);
 }
-void affect_pc(short which_pc,short type,short how_much)////
+void affect_pc(short which_pc,eStatus type,short how_much)////
 //type; // which status to affect
 {
 
@@ -3177,7 +3177,7 @@ void affect_pc(short which_pc,short type,short how_much)////
 		ADVEN[which_pc].status[type] = max(ADVEN[which_pc].status[type],0);
 	put_pc_screen(); 
 }
-void affect_party(short type,short how_much)
+void affect_party(eStatus type,short how_much)
 //type; // which status to affect
 {
 	short i;
