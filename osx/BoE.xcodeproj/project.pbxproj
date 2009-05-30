@@ -43,6 +43,7 @@
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		9122832E0FCF6C7200B21642 /* busywork.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
+		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
@@ -331,6 +332,8 @@
 		910BBAD90FB91D2A001E34EA /* dlogutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlogutil.h; path = dialogxml/dlogutil.h; sourceTree = "<group>"; };
 		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlogutil.cpp; path = dialogxml/dlogutil.cpp; sourceTree = "<group>"; };
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
+		912283C70FD0E16B00B21642 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = undo.h; path = tools/undo.h; sourceTree = "<group>"; };
+		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = undo.cpp; path = tools/undo.cpp; sourceTree = "<group>"; };
 		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = tools/dlgbtns.cpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = "<group>"; };
@@ -804,6 +807,8 @@
 				910BBA130FB8BE66001E34EA /* dialogs */,
 				913D03350FA1000200184C18 /* headers */,
 				913D03340FA0FFFF00184C18 /* src */,
+				912283C70FD0E16B00B21642 /* undo.h */,
+				912283C80FD0E16C00B21642 /* undo.cpp */,
 			);
 			name = tools;
 			sourceTree = "<group>";
@@ -1231,6 +1236,7 @@
 				91C1FCA90FCB6F7200EBAA65 /* field.cpp in Sources */,
 				91C1FCAA0FCB6F7200EBAA65 /* message.cpp in Sources */,
 				91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */,
+				912283C90FD0E16C00B21642 /* undo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
