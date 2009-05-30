@@ -215,7 +215,7 @@ enum eTrapType {
 	TRAP_DART = 2,
 	TRAP_GAS = 3, // poisons all
 	TRAP_EXPLOSION = 4, // damages all => uses c_town.difficulty rather than trap_level to calculates damages (and even c_town.difficulty /13).
-	TRAP_SLEEP_RAY = 5,
+	TRAP_SLEEP_RAY = 5, // TODO: Rename "Paralysis ray"
 	TRAP_FALSE_ALARM = 6,
 	TRAP_DRAIN_XP = 7,
 	TRAP_ALERT = 8, // makes town hostile

@@ -23,3 +23,7 @@ cPopulation& cPopulation::operator = (legacy::creature_list_type old){
 	friendly = old.friendly;
 	return *this;
 }
+
+cCreature& cPopulation::operator[](size_t n){
+	return dudes[n];
+}

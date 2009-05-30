@@ -40,20 +40,6 @@
 #define	NUM_FACE_G	80
 #define	NUM_DLOG_G	28
 
-
-#define DOOR_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],4220,0); break;
-#define DOOR_HEAVY can_enter = run_trap(7,&PSD[c_town.town_num][which],4220,20); break;
-#define DOOR_ALARM can_enter = run_trap(7,&PSD[c_town.town_num][which],4220,11); break;
-#define DRESSER_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],4221,0); break;
-#define DRESSER_HEAVY can_enter = run_trap(7,&PSD[c_town.town_num][which],4221,20); break;
-#define DRESSER_ALARM can_enter = run_trap(7,&PSD[c_town.town_num][which],4221,11); break;
-#define FLOOR_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],4222,0); break;
-#define FLOOR_HEAVY can_enter = run_trap(7,&PSD[c_town.town_num][which],4222,20); break;
-#define FLOOR_ALARM can_enter = run_trap(7,&PSD[c_town.town_num][which],4222,11); break;
-#define CHEST_LIGHT can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,0); break;
-#define CHEST_HEAVY can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,20); break;
-#define CHEST_ALARM can_enter = run_trap(7,&PSD[c_town.town_num][which],3450,11); break;
-
 #define	CDGT	cd_retrieve_text_edit_str
 #define	CDGN	cd_retrieve_text_edit_num
 #define	CDST	cd_set_text_edit_str

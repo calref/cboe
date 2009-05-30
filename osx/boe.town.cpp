@@ -550,7 +550,7 @@ void start_town_mode(short which_town, short entry_dir)
 		
 	add_string_to_buf("Now entering:");
 	sprintf ((char *) message, "   %-30.30s ",univ.town->town_strs(0));
-	add_string_to_buf((char *) message);                       
+	add_string_to_buf(message);                       
 		
 							
 	// clear entry space, and check exploration

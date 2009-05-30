@@ -32,7 +32,8 @@ public:
 	short which_town;
 	short friendly;
 	
-	cPopulation& operator = (legacy::creature_list_type old);
+	cPopulation& operator= (legacy::creature_list_type old);
+	cCreature& operator[](size_t n);
 };
 
 #endif

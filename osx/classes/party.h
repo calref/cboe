@@ -112,14 +112,15 @@ public:
 	bool add_to_journal(short event, short day);
 	bool record(short what, short where);
 	bool start_timer(short time, short node, short type);
+	cPlayer& operator[](unsigned short n);
+	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	typedef std::vector<cTimer>::iterator timerIter;
 	typedef std::map<std::string,std::vector<int> >::iterator campIter;
-	void writeTo(std::ostream& file);
-	void readFrom(std::istream& file);
 };
 
 #endif

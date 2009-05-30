@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-
+#include <stdexcept>
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -456,4 +456,9 @@ void cParty::readFrom(std::istream& file){
 		for(int j = 0; j < 64; j++)
 			for(int k = 0; k < 64; k++)
 				bin >> setup[i][j][k];
+}
+
+cPlayer& cParty::operator[](unsigned short n){
+	if(n >= 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
+	return adven[n];
 }

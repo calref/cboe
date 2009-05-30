@@ -811,17 +811,17 @@ void print_party_stats() {
 	char store_string[255];
 	add_string_to_buf("PARTY STATS:");
 	sprintf((char *) store_string, "  Number of kills: %lld                   ", univ.party.total_m_killed);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf(store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
 		sprintf((char *) store_string, "  Kills in this town: %d                   ", univ.party.m_killed[univ.town.num]);
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf(store_string);
 		}
 	sprintf((char *) store_string, "  Total experience: %lld                   ", univ.party.total_xp_gained);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf(store_string);
 	sprintf((char *) store_string, "  Total damage done: %lld                   ", univ.party.total_dam_done);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf(store_string);
 	sprintf((char *) store_string, "  Total damage taken: %lld                   ", univ.party.total_dam_taken);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf(store_string);
 	print_buf();
 }
 
@@ -844,7 +844,7 @@ short do_look(location space)
 			if ((space == pc_pos[i]) && (ADVEN[i].main_status == 1)
 				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				msg = "    " + ADVEN[i].name;
-				add_string_to_buf((char *) msg.c_str());					
+				add_string_to_buf(msg);					
 				}
 		
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
@@ -1284,13 +1284,13 @@ short print_terrain(location space)
 		}
 	std::string msg = get_ter_name(which_terrain);
 	msg = "    " + msg;
-	add_string_to_buf((char *) msg.c_str());
+	add_string_to_buf(msg);
 
 	return (short) which_terrain;
 }
 
 
-void add_string_to_buf(char *string)
+void add_string_to_buf(std::string str)
 {
 	if (in_startup_mode == true)
 		return;
@@ -1301,7 +1301,7 @@ void add_string_to_buf(char *string)
 		print_buf();
 		through_sending();
 		}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", string);
+	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", str.c_str());
 //	c2pstr((char *)text_buffer[buf_pointer].line);
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;

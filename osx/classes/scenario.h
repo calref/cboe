@@ -39,7 +39,7 @@ public:
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	unsigned char town_size[200];
 	unsigned char town_hidden[200];
-	short flag_a;
+	short flag_a; // TODO: Remove these flags
 	short intro_mess_pic,intro_mess_len;
 	location where_start,out_sec_start,out_start;
 	short which_town_start;
@@ -88,6 +88,8 @@ public:
 	char spec_item_strs[50][256];
 	char spec_strs[100][256];
 	FSSpec scen_file; // transient
+	cOutdoors* outdoors;
+	cTown* towns;
 	
 	char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);
