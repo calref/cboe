@@ -798,3 +798,21 @@ cCurTown::cCurTown(){
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = 0L;
 }
+extern cScenario scenario;
+short cUniverse::difficulty_adjust() {
+	short party_level = 0;
+	short adj = 1;
+	
+	for (short i = 0; i < 6; i++)
+		if (party[i].main_status == 1)
+			party_level += party[i].level;
+	
+	if ((scenario.difficulty <= 0) && (party_level >= 60))
+		adj++;
+	if ((scenario.difficulty <= 1) && (party_level >= 130))
+		adj++;
+	if ((scenario.difficulty <= 2) && (party_level >= 210))
+		adj++;
+	
+	return adj;
+}

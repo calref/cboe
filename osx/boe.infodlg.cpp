@@ -479,13 +479,13 @@ void put_monst_info()////
 	Str255 str;
 	short abil,i;	
 	
-	if ( store_m->m_d.spec_skill == MONSTER_INVISIBLE) 
-		cd_set_pict(999,4,400,PICT_MONST);// should probably be PICT_BLANK?
-		else if (store_m->m_d.picture_num < 1000)
-			cd_set_pict(999,4,store_m->m_d.picture_num,PICT_MONST);
+	if ( store_m->spec_skill == MONSTER_INVISIBLE) 
+		cd_set_pict(999,4,400,PICT_MONST);// TODO: should probably be PICT_BLANK?
+		else if (store_m->picture_num < 1000)
+			cd_set_pict(999,4,store_m->picture_num,PICT_MONST);
 		else {
 			short type_g = PICT_CUSTOM + PICT_MONST;
-			short size_g = store_m->m_d.picture_num / 1000;
+			short size_g = store_m->picture_num / 1000;
 			switch(size_g){
 				case 2:
 					type_g += PICT_WIDE_MONSTER;
@@ -497,7 +497,7 @@ void put_monst_info()////
 					type_g += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
 					break;
 			}
-			cd_set_pict(999,4,(store_m->m_d.picture_num % 1000), type_g);
+			cd_set_pict(999,4,(store_m->picture_num % 1000), type_g);
 		}
 		
 	store_text = get_m_name(store_m->number);
@@ -507,34 +507,34 @@ void put_monst_info()////
 		cd_set_item_text(999,i,"");
 		}
 
-	abil = store_m->m_d.spec_skill;
+	abil = store_m->spec_skill;
 	get_str(str,20,abil + 1);
 	cd_set_item_text(999,19,(char *) str);
-	get_str(str,20,store_m->m_d.radiate_1 + 50);
+	get_str(str,20,store_m->radiate_1 + 50);
 	cd_set_item_text(999,31,(char *) str);
 	
 	for (i = 0; i < 3; i++)
-		if (store_m->m_d.a[i] > 0) {
+		if (store_m->a[i] > 0) {
 			std::ostringstream sout(store_text);
-			sout << store_m->m_d.a[i] / 100 + 1 << 'd' << store_m->m_d.a[i] % 100;
+			sout << store_m->a[i] / 100 + 1 << 'd' << store_m->a[i] % 100;
 			store_text = sout.str();
 
 			cd_set_item_text(999,13 + i,store_text.c_str());
 			}				
-	cd_set_item_num(999,6,store_m->m_d.level);
-	cd_set_item_num(999,7,store_m->m_d.health);
-	cd_set_item_num(999,8,store_m->m_d.mp);
-	cd_set_item_num(999,9,store_m->m_d.armor);
-	cd_set_item_num(999,10,store_m->m_d.skill);
-	cd_set_item_num(999,11,store_m->m_d.morale);
-	cd_set_item_num(999,12,store_m->m_d.speed);
-	cd_set_item_num(999,16,store_m->m_d.mu);
-	cd_set_item_num(999,17,store_m->m_d.cl);
-	cd_set_item_num(999,18,store_m->m_d.poison);
+	cd_set_item_num(999,6,store_m->level);
+	cd_set_item_num(999,7,store_m->health);
+	cd_set_item_num(999,8,store_m->mp);
+	cd_set_item_num(999,9,store_m->armor);
+	cd_set_item_num(999,10,store_m->skill);
+	cd_set_item_num(999,11,store_m->morale);
+	cd_set_item_num(999,12,store_m->speed);
+	cd_set_item_num(999,16,store_m->mu);
+	cd_set_item_num(999,17,store_m->cl);
+	cd_set_item_num(999,18,store_m->poison);
 	// 2140 - lit  2141 - dark
 	// immunities
 	for (i = 0; i < 8; i++)
-		if (store_m->m_d.immunities & (char)(s_pow(2,i)))
+		if (store_m->immunities & (char)(s_pow(2,i)))
 			cd_set_led(999,20 + i,1);
 			else cd_set_led(999,20 + i,0);
 
@@ -562,7 +562,7 @@ void display_monst_event_filter (short item_hit)
 					if (on_monst_menu[position] < 0)
 						position = 0;
 					store_m->number = on_monst_menu[position];
-					store_m->m_d = return_monster_template(on_monst_menu[position]);
+					*store_m = *store_m; // to fill in fields that wouldn't otherwise be filled in; replaces return_monster_template
 					put_monst_info();
 					break;
 				case 29:
@@ -570,7 +570,7 @@ void display_monst_event_filter (short item_hit)
 					if (on_monst_menu[position] < 0)
 						position = 0;
 					store_m->number = on_monst_menu[position];
-					store_m->m_d = return_monster_template(on_monst_menu[position]);
+					*store_m = *store_m; // no, this is not redundant
 					put_monst_info();
 					break;
 
@@ -593,7 +593,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 		full_roster = true;
 		store_m = &hold_m;
 		store_m->number = on_monst_menu[array_pos];
-		store_m->m_d = return_monster_template(on_monst_menu[array_pos]);
+		*store_m = *store_m; // yes, this DOES do something
 		}
 		else {
 			hold_m = *which_m;

@@ -1,5 +1,5 @@
-cMonster return_monster_template(m_num_t store);
-short difficulty_adjust();
+//cMonster return_monster_template(m_num_t store);
+//short difficulty_adjust();
 short out_enc_lev_tot(short which);
 short count_monst();
 void create_wand_monst();

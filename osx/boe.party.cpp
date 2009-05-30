@@ -2156,7 +2156,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 {
 	short i = 0,adjust,r1,r2,balance = 0;
 	
-	adjust = (ADVEN[pc_num].level + ADVEN[pc_num].skills[2]) / 2 - monst->m_d.level * 2;
+	adjust = (ADVEN[pc_num].level + ADVEN[pc_num].skills[2]) / 2 - monst->level * 2;
 	if ((i = get_prot_level(pc_num,53)) > 0)
 		adjust += i * 5;
 	if (monst->attitude % 2 != 1)
@@ -2167,13 +2167,13 @@ void do_mindduel(short pc_num,cCreature *monst)
 	while ((ADVEN[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
 		r1 = get_ran(1,1,100) + adjust;
-		r1 += 5 * (monst->m_d.status[9] - ADVEN[pc_num].status[9]);
+		r1 += 5 * (monst->status[9] - ADVEN[pc_num].status[9]);
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
 			sprintf((char *)c_line, "  %s is drained %d.",ADVEN[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
-			monst->m_d.mp += r2;
+			monst->mp += r2;
 			balance++;
 			if (ADVEN[pc_num].cur_sp == 0) {
 				ADVEN[pc_num].status[9] += 2;
@@ -2195,16 +2195,16 @@ void do_mindduel(short pc_num,cCreature *monst)
 			add_string_to_buf((char *) c_line);
 			ADVEN[pc_num].cur_sp += r2;
 			balance--;
-			if (monst->m_d.mp == 0) {
-				monst->m_d.status[9] += 2;
+			if (monst->mp == 0) {
+				monst->status[9] += 2;
 				monst_spell_note(monst->number,22);
-				if (monst->m_d.status[9] > 7) {
+				if (monst->status[9] > 7) {
 					kill_monst(monst,pc_num);
 					}
 					
 				}
 				else {
-					monst->m_d.mp = max(0,monst->m_d.mp - r2);
+					monst->mp = max(0,monst->mp - r2);
 					}
 			
 		
@@ -3109,7 +3109,7 @@ m_num_t pick_trapped_monst()
 			else {
 				sp = get_m_name(univ.party.imprisoned_monst[i]);
 				csit(988,3 + 3 * i, sp.c_str());
-				get_monst = return_monster_template(univ.party.imprisoned_monst[i]);
+				get_monst = scenario.scen_monsters[univ.party.imprisoned_monst[i]];
 				cdsin(988,4 + 3 * i,get_monst.level);
 				}
 	

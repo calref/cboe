@@ -29,9 +29,8 @@ extern long register_flag;
 extern WindowPtr	mainPtr;	
 extern Point ul;
 //extern piles_of_stuff_dumping_type *data_store;
-extern vector<scen_header_type> scen_headers;
+extern cScenarioList scen_headers;;
 extern bool unreg_party_in_scen_not_check;
-extern std::vector<scen_header_str_type> scen_header_strs;
 //extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
 
@@ -100,11 +99,11 @@ bool handle_startup_press(Point the_point)
 				
 				scen = pick_a_scen();
 				if(scen < 0) break;
-				if (scen_headers[scen].prog_make_ver[0] >= 2) {
+				if (scen_headers.data(scen).prog_make_ver[0] >= 2) {
 					FCD(912,0);
 					break;
 				}
-				scen_name = scen_header_strs[scen].file;
+				scen_name = scen_headers.strs(scen).file;
 				put_party_in_scen(scen_name);
 				break;
 		

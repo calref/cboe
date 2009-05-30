@@ -1277,7 +1277,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 
 		
 	victim = &univ.town.monst.dudes[which_m];	
-	resist = victim->m_d.immunities;
+	resist = victim->immunities;
 
 	if (dam_type == 3) {
 		if (resist & 1)
@@ -1306,25 +1306,25 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	// Absorb damage?
 	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
-	 && (victim->m_d.spec_skill == 26)) {
-		victim->m_d.health += how_much;
+	 && (victim->spec_skill == 26)) {
+		victim->health += how_much;
 		ASB("  Magic absorbed.");
 		return false;
 		}
 		
 	// Saving throw
-	if (((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->m_d.level))
+	if (((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->level))
 		how_much = how_much / 2;
-	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->m_d.level))
+	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
 		how_much = how_much / 2;
 
 	// Rentar-Ihrno?
-	if (victim->m_d.spec_skill == 36)
+	if (victim->spec_skill == 36)
 		how_much = how_much / 10;
 
 		
-	r1 = get_ran(1,0,(victim->m_d.armor * 5) / 4);
-	r1 += victim->m_d.level / 4;
+	r1 = get_ran(1,0,(victim->armor * 5) / 4);
+	r1 += victim->level / 4;
 	if (dam_type == 0)
 		how_much -= r1;
 		
@@ -1332,7 +1332,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		if (how_much < 0)
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
+		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
 		if (how_much == 0)
 			return false;
 			else return true;
@@ -1352,17 +1352,17 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 
 	if (do_print == true)
 		monst_damaged_mes(which_m,how_much,how_much_spec);
-	victim->m_d.health = victim->m_d.health - how_much - how_much_spec;
+	victim->health = victim->health - how_much - how_much_spec;
 	
 	if (in_scen_debug == true)
-		victim->m_d.health = -1;
+		victim->health = -1;
 		
 	// splitting monsters
-	if ((victim->m_d.spec_skill == 12) && (victim->m_d.health > 0)){
+	if ((victim->spec_skill == 12) && (victim->health > 0)){
 		where_put = find_clear_spot(victim->cur_loc,1);
 		if (where_put.x > 0) 
 			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
-				univ.town.monst.dudes[which_spot].m_d.health = victim->m_d.health;
+				univ.town.monst.dudes[which_spot].health = victim->health;
 				univ.town.monst.dudes[which_spot].number = victim->number;
 				univ.town.monst.dudes[which_spot].start_attitude = victim->start_attitude;
 				univ.town.monst.dudes[which_spot].start_loc = victim->start_loc;
@@ -1401,19 +1401,19 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 				}
 		}
 		
-	if (victim->m_d.health < 0) {
+	if (victim->health < 0) {
 		monst_killed_mes(which_m);
 		kill_monst(victim,who_hit);		
 		}
 		else {	
 		if (how_much > 0)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim->morale = victim->morale - 1;
 		if (how_much > 5)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim->morale = victim->morale - 1;
 		if (how_much > 10)
-			victim->m_d.morale = victim->m_d.morale - 1;
+			victim->morale = victim->morale - 1;
 		if (how_much > 20)
-			victim->m_d.morale = victim->m_d.morale - 2;
+			victim->morale = victim->morale - 2;
 		}
 		
 	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
@@ -1437,7 +1437,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	short xp,i,j,s1,s2,s3;	
 	location l;
 
-	switch (which_m->m_d.m_type) {
+	switch (which_m->m_type) {
 		case 0: case 3: case 4: case 5: case 6:  
 			if (( which_m->number == 38) || 
 				( which_m->number == 39))
@@ -1457,11 +1457,11 @@ void kill_monst(cCreature *which_m,short who_killed)
 		PSD[which_m->spec1][which_m->spec2] = 1;
 		
 	run_special(12,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
-	if (which_m->m_d.radiate_1 == 15)
-		run_special(12,0,which_m->m_d.radiate_2,which_m->cur_loc,&s1,&s2,&s3);
+	if (which_m->radiate_1 == 15)
+		run_special(12,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
 	if ((in_scen_debug == false) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
-		xp = which_m->m_d.level * 2;
+		xp = which_m->level * 2;
 		if (who_killed < 6)
 			award_xp(who_killed,xp);
 			else if (who_killed == 6)
@@ -1476,11 +1476,11 @@ void kill_monst(cCreature *which_m,short who_killed)
 		
 		}
 	if ((in_scen_debug == false) && (which_m->summoned == 0))
-		place_treasure(which_m->cur_loc, which_m->m_d.level / 2, which_m->m_d.treasure, 0);
+		place_treasure(which_m->cur_loc, which_m->level / 2, which_m->treasure, 0);
 	
 	i = which_m->cur_loc.x;
 	j = which_m->cur_loc.y;
-	switch (which_m->m_d.m_type) {
+	switch (which_m->m_type) {
 		case 7:	make_sfx(i,j,6); break;
 		case 8:	if (which_m->number <= 59) make_sfx(i,j,7); break;
 		case 10: case 12: make_sfx(i,j,4); break;

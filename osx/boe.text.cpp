@@ -852,11 +852,11 @@ short do_look(location space)
 			if ((univ.town.monst.dudes[i].active != 0) && (is_lit == true)
 				&& (monst_on_space(space,i) == true) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
-				&& (univ.town.monst.dudes[i].m_d.picture_num != 0)) {
+				&& (univ.town.monst.dudes[i].picture_num != 0)) {
 				
 				
 				msg = get_m_name(univ.town.monst.dudes[i].number);
-				if (univ.town.monst.dudes[i].m_d.health < univ.town.monst.dudes[i].m_d.m_health) {
+				if (univ.town.monst.dudes[i].health < univ.town.monst.dudes[i].m_health) {
 					if (univ.town.monst.dudes[i].attitude % 2 == 1)
 						msg = "    Wounded " + msg + " (H)";
 						else msg = "    Wounded " + msg + " (F)";

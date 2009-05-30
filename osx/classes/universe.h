@@ -139,6 +139,7 @@ public:
 	
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);
+	short difficulty_adjust();
 };
 
 #endif

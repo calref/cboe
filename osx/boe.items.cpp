@@ -841,9 +841,9 @@ void make_town_hostile()
 				univ.town.monst.dudes[i].active = 2;
 				
 				// If a town, give pwoer boost
-				univ.town.monst.dudes[i].m_d.health *= 3;
-				univ.town.monst.dudes[i].m_d.status[3] = 8;
-				univ.town.monst.dudes[i].m_d.status[1] = 8;
+				univ.town.monst.dudes[i].health *= 3;
+				univ.town.monst.dudes[i].status[3] = 8;
+				univ.town.monst.dudes[i].status[1] = 8;
 				}
 			}
 			
@@ -1364,7 +1364,7 @@ void place_glands(location where,m_num_t m_type)
 	cItemRec store_i;
 	cMonster monst;
 	
-	monst = return_monster_template(m_type);
+	monst = scenario.scen_monsters[m_type];
 	
 	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);

@@ -426,9 +426,9 @@ bool monst_on_space(location loc,short m_num)
 	if (univ.town.monst.dudes[m_num].active == 0)
 		return false;
 	if ((loc.x - univ.town.monst.dudes[m_num].cur_loc.x >= 0) && 
-	(loc.x - univ.town.monst.dudes[m_num].cur_loc.x <= univ.town.monst.dudes[m_num].m_d.x_width - 1) &&
+	(loc.x - univ.town.monst.dudes[m_num].cur_loc.x <= univ.town.monst.dudes[m_num].x_width - 1) &&
 	(loc.y - univ.town.monst.dudes[m_num].cur_loc.y >= 0) && 
-	(loc.y - univ.town.monst.dudes[m_num].cur_loc.y <= univ.town.monst.dudes[m_num].m_d.y_width - 1))
+	(loc.y - univ.town.monst.dudes[m_num].cur_loc.y <= univ.town.monst.dudes[m_num].y_width - 1))
 		return true;
 	return false;	
 	
@@ -450,8 +450,8 @@ bool monst_can_be_there(location loc,short m_num)
 	// First clear monst away so it doesn't block itself
 	univ.town.monst.dudes[m_num].cur_loc.x += 100;
 	
-	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
 			if ((is_blocked(destination) == true)
 				|| (loc_off_act_area(destination) == true)) {
@@ -468,8 +468,8 @@ bool monst_adjacent(location loc,short m_num)
 	short i,j;
 	location destination;
 	
-	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
 			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
 			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
 			if (adjacent(destination,loc) == true)
@@ -483,8 +483,8 @@ bool monst_can_see(short m_num,location l)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
 			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
 			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
 			if (can_see(destination,l,0) < 5)
@@ -498,8 +498,8 @@ bool party_can_see_monst(short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
 			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
 			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
 			if (party_can_see(destination) < 6)
@@ -513,8 +513,8 @@ bool can_see_monst(location l,short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
 			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
 			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
 			if (can_see(l,destination,0) < 5)

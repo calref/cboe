@@ -185,7 +185,6 @@ public:
 class cCreature : public cMonster {
 public:
 	using cMonster::operator=;
-	cMonster m_d; // TODO: Delete this member in favour of the inherited fields
 	unsigned long id;
 	m_num_t number; // TODO: This appears to be a duplicate of cMonster::m_num (ie it's used for the same thing)
 	short active, attitude;
@@ -206,6 +205,8 @@ public:
 	
 	cCreature& operator = (legacy::creature_data_type old);
 	cCreature& operator = (legacy::creature_start_type old);
+	cCreature& operator = (const cCreature& other);
+	//cCreature& operator = (const cMonster& other);
 };
 
 std::ostream& operator << (std::ostream& out, eStatus& e);

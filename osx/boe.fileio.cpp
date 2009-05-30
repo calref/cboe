@@ -60,12 +60,11 @@ extern short terrain_pic[256],cur_town_talk_loaded;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern std::vector<scen_header_str_type> scen_header_strs;
 //std::vector<std::string> scen_names;
 //stored_town_maps_type town_maps;
 //extern talking_record_type talking;
 //extern outdoor_strs_type outdoor_text[2][2];
-extern std::vector<scen_header_type> scen_headers;
+cScenarioList scen_headers;
 extern ter_num_t combat_terrain[64][64];
 extern bool belt_present;
 extern bool mac_is_intel;
@@ -1217,7 +1216,7 @@ void build_scen_headers()
 		}
 		index++;
 	}while (err == noErr);
-	if (scen_header_strs.size() == 0) { // no scens present
+	if (scen_headers.size() == 0) { // no scens present
 	}
 	FSCloseIterator(iter);
 }
@@ -1300,8 +1299,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	   scen_strs.file == "busywork.exs" */)
 		return false;
 	
-	scen_headers.push_back(curScen);
-	scen_header_strs.push_back(scen_strs);
+	scen_headers.push_back(curScen,scen_strs);
 //	for (i = 0; i < 3; i++) {
 //		store = (short) scenario.scen_str_len[i];
 //		len = (long) (store);

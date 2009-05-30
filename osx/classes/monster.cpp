@@ -102,7 +102,7 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	number = old.number;
 	cur_loc.x = old.m_loc.x;
 	cur_loc.y = old.m_loc.y;
-	m_d = old.m_d;
+	*this = old.m_d;
 	mobility = old.mobile;
 	summoned = old.summoned;
 	number = old.monst_start.number;
@@ -157,4 +157,44 @@ std::istream& operator >> (std::istream& in, eRace& e){
 		e = (eRace) i;
 	else e = RACE_HUMAN;
 	return in;
+}
+
+extern cUniverse univ;
+extern cScenario scenario;
+cCreature& cCreature::operator = (const cCreature& other){ // replaces return_monster_template() from boe.monsters.cpp
+	id = other.id;
+	number = other.number;
+	start_attitude = other.start_attitude;
+	start_loc = other.start_loc;
+	mobility = other.mobility;
+	time_flag = other.time_flag;
+	extra1 = other.extra1;
+	extra2 = other.extra2;
+	spec1 = other.spec1;
+	spec2 = other.spec2;
+	spec_enc_code = other.spec_enc_code;
+	time_code = other.time_code;
+	monster_time = other.monster_time;
+	personality = other.personality;
+	special_on_kill = other.special_on_kill;
+	facial_pic = other.facial_pic;
+	*this = scenario.scen_monsters[number];
+	active = 1; // TODO: Is this right?
+	if(spec_skill == 11) picture_num = 0;
+	m_health /= (univ.party.stuff_done[306][7]) ? 2 : 1;
+	m_health *= univ.difficulty_adjust();
+	health = m_health;
+	ap = 0;
+	if((mu > 0 || cl > 0))
+		max_mp = mp = 12 * level;
+	else max_mp = mp = 0;
+	m_morale = 10 * level;
+	if(level >= 20) m_morale += 10 * (level - 20);
+	morale = m_morale;
+	direction = 0;
+	for(int i = 0; i < 15; i++) status[i] = 0;
+	attitude = start_attitude; // TODO: Is this right?
+	cur_loc = start_loc;
+	target = 6; // No target
+	return *this;
 }

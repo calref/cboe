@@ -1188,8 +1188,8 @@ void draw_text_bar(short mode)
 	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < univ.town->max_monst(); i++)
-	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].m_d.ap > 0)) {
-	   		combat_string = print_monster_going(univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].m_d.ap);
+	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].ap > 0)) {
+	   		combat_string = print_monster_going(univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].ap);
 			put_text_bar((char *) combat_string.c_str());
 			remember_tiny_text = 500;
 			i = 400;	   
@@ -1814,8 +1814,8 @@ void draw_terrain(short	mode)
 		supressing_some_spaces = true;
 		for (i = 0; i < 4; i++) ok_space[i].x = -1;
 		if (current_working_monster >= 100) {
-			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].m_d.x_width; i++)
-				for (j = 0; j < univ.town.monst.dudes[current_working_monster - 100].m_d.y_width; j++) {
+			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].x_width; i++)
+				for (j = 0; j < univ.town.monst.dudes[current_working_monster - 100].y_width; j++) {
 					ok_space[i + 2 * j].x = univ.town.monst.dudes[current_working_monster - 100].cur_loc.x + i;
 					ok_space[i + 2 * j].y = univ.town.monst.dudes[current_working_monster - 100].cur_loc.y + j;
 					ok_space[i + 2 * j].x = ok_space[i + 2 * j].x - center.x + 4;
@@ -2552,8 +2552,8 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	// adjust for possible big monster
 	which_m = monst_there(where);
 	if (which_m < 90) {
-		x_adj += 14 * (univ.town.monst.dudes[which_m].m_d.x_width - 1);
-		y_adj += 18 * (univ.town.monst.dudes[which_m].m_d.y_width - 1);
+		x_adj += 14 * (univ.town.monst.dudes[which_m].x_width - 1);
+		y_adj += 18 * (univ.town.monst.dudes[which_m].y_width - 1);
 		}
 	OffsetRect(&dest_rect,where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;

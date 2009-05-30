@@ -46,75 +46,54 @@ short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 //cCreature null_start_type; = {0,0,loc(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 	
 ////				
-cMonster return_monster_template(m_num_t store)
-{
-	cMonster monst;
-	short m_num,i;
-	
-	m_num = store;
-	monst = scenario.scen_monsters[store];
-	if (monst.spec_skill == 11)
-		monst.picture_num = 0;
-		
-	monst.m_num = m_num;
-	monst.health = (PSD[SDF_EASY_MODE] == 0) ? monst.health : monst.health / 2;
-	
-	// now adjust for difficulty
-	monst.health = monst.health * difficulty_adjust();
-	
-	monst.m_health = monst.health; // in scenario file, health is stored in health field
-	monst.max_mp = 0;
-	monst.mp = monst.max_mp;
-
-	monst.ap = 0;
-
-	if ((monst.mu > 0) || (monst.cl > 0))
-		monst.max_mp = monst.mp = 12 * monst.level;
-	
-	monst.m_morale = 10 * monst.level;
-	if (monst.level >= 20)
-		monst.m_morale += 10 * (monst.level - 20);
-	
-	monst.morale = monst.m_morale;
-	monst.direction = 0;
-	for (i = 0; i < 15; i++)
-		monst.status[i] = 0;
-		
-	return monst;
-}
-
-short difficulty_adjust()
-{
-	short i, j = 0;
-	short to_return = 1;
-	
-	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
-			j += ADVEN[i].level;
-	
-	if ((scenario.difficulty <= 0) && (j >= 60))
-		to_return++;
-	if ((scenario.difficulty <= 1) && (j >= 130))
-		to_return++;
-	if ((scenario.difficulty <= 2) && (j >= 210))
-		to_return++;
-	return to_return;
-}	
+//cMonster return_monster_template(m_num_t store)
+//{
+//	cMonster monst;
+//	short m_num,i;
+//	
+//	m_num = store;
+//	monst = scenario.scen_monsters[store];
+//	if (monst.spec_skill == 11)
+//		monst.picture_num = 0;
+//		
+//	monst.m_num = m_num;
+//	monst.health = (PSD[SDF_EASY_MODE] == 0) ? monst.health : monst.health / 2;
+//	
+//	// now adjust for difficulty
+//	monst.health = monst.health * difficulty_adjust();
+//	
+//	monst.m_health = monst.health; // in scenario file, health is stored in health field
+//	monst.max_mp = 0;
+//	monst.mp = monst.max_mp;
+//
+//	monst.ap = 0;
+//
+//	if ((monst.mu > 0) || (monst.cl > 0))
+//		monst.max_mp = monst.mp = 12 * monst.level;
+//	
+//	monst.m_morale = 10 * monst.level;
+//	if (monst.level >= 20)
+//		monst.m_morale += 10 * (monst.level - 20);
+//	
+//	monst.morale = monst.m_morale;
+//	monst.direction = 0;
+//	for (i = 0; i < 15; i++)
+//		monst.status[i] = 0;
+//		
+//	return monst;
+//}	
 
 short out_enc_lev_tot(short which)
 {
 	short count = 0,i;
-	cMonster store_m;
 	short num[7] = {22,8,4,4,3,2,1};
 	
 	if (univ.party.out_c[which].what_monst.cant_flee == true)
 		return 10000;
 		
 	for (i = 0; i < 7; i++)
-		if (univ.party.out_c[which].what_monst.monst[i] != 0) {
-			store_m = return_monster_template(univ.party.out_c[which].what_monst.monst[i]);
-			count += store_m.level * num[i];
-			}
+		if (univ.party.out_c[which].what_monst.monst[i] != 0)
+			count += scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
 	return count;
 }
 
@@ -241,8 +220,8 @@ location get_monst_head(short m_num)
 	location l;
 	
 	l = univ.town.monst.dudes[m_num].cur_loc;
-	if ((univ.town.monst.dudes[m_num].m_d.direction < 4) &&
-		(univ.town.monst.dudes[m_num].m_d.x_width > 1))
+	if ((univ.town.monst.dudes[m_num].direction < 4) &&
+		(univ.town.monst.dudes[m_num].x_width > 1))
 			l.x++;
 
 	return l;
@@ -292,16 +271,14 @@ void set_up_monst(short mode,m_num_t m_num)
 	
 	for (which = 0; which < univ.town->max_monst(); which++) 
 		if (univ.town.monst.dudes[which].active == 0) {
+			univ.town.monst.dudes[which].number = m_num;
 			univ.town.monst.dudes[which] = cCreature();
 			univ.town.monst.dudes[which].active = 2;
 			univ.town.monst.dudes[which].summoned = 0;
 			univ.town.monst.dudes[which].attitude = mode + 1;
-			univ.town.monst.dudes[which].number = m_num;
-			univ.town.monst.dudes[which].m_d = return_monster_template(m_num);
 			univ.town.monst.dudes[which].mobility = 1;
-			//univ.town.monst.dudes[which].monst_start = null_start_type;
 			break;
-			}
+		}
 }
 
 void do_monsters()
@@ -312,8 +289,8 @@ void do_monsters()
 	
 	if (overall_mode == MODE_TOWN) 
 		for (i = 0; i < univ.town->max_monst(); i++) 
-		if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].m_d.status[11] <= 0)
-			&& (univ.town.monst.dudes[i].m_d.status[12] <= 0)) {
+		if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].status[11] <= 0)
+			&& (univ.town.monst.dudes[i].status[12] <= 0)) {
 			// have to pick targets
 			if (univ.town.monst.dudes[i].active == 1)
 				target = 6;
@@ -349,15 +326,15 @@ void do_monsters()
 					l1 = univ.town.monst.dudes[i].cur_loc;
 					l2 = (univ.town.monst.dudes[i].target <= 6) ? univ.town.p_loc : univ.town.monst.dudes[target - 100].cur_loc;
 
-					if ((univ.town.monst.dudes[i].m_d.morale < 0) && (univ.town.monst.dudes[i].m_d.spec_skill != 13)
-						&&  (univ.town.monst.dudes[i].m_d.m_type != 8))  {
+					if ((univ.town.monst.dudes[i].morale < 0) && (univ.town.monst.dudes[i].spec_skill != 13)
+						&&  (univ.town.monst.dudes[i].m_type != 8))  {
 						acted_yet = flee_party(i,l1,l2);
 						if (get_ran(1,0,10) < 6)
-							univ.town.monst.dudes[i].m_d.morale++;
+							univ.town.monst.dudes[i].morale++;
 						}							
 						else if (monst_hate_spot(i,&l2) == true)
 							acted_yet = seek_party(i,l1,l2);
-						else if (((univ.town.monst.dudes[i].m_d.mu == 0) && (univ.town.monst.dudes[i].m_d.mu == 0))
+						else if (((univ.town.monst.dudes[i].mu == 0) && (univ.town.monst.dudes[i].mu == 0))
 							|| (can_see(l1,l2,0) > 3))
 							acted_yet = seek_party(i,l1,l2);
 					}
@@ -375,7 +352,7 @@ void do_monsters()
 					univ.town.monst.dudes[i].active = 2;
 					add_string_to_buf("Monster saw you!");
 					// play go active sound
-					switch (univ.town.monst.dudes[i].m_d.m_type) {
+					switch (univ.town.monst.dudes[i].m_type) {
 						case 0: case 3: case 4: case 5: case 6: case 9:  
 							play_sound(18); break;
 						default: play_sound(46); break;
@@ -411,17 +388,17 @@ bool monst_hate_spot(short which_m,location *good_loc)
 	loc = univ.town.monst.dudes[which_m].cur_loc;
 	if (univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y) || univ.town.is_quickfire(loc.x,loc.y)
 	|| univ.town.is_blade_wall(loc.x,loc.y) // hate regular fields
-	|| (univ.town.is_ice_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 2)
-		&& (univ.town.monst.dudes[which_m].m_d.immunities & 32 == 0)) // hate ice wall?
-	|| (univ.town.is_fire_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 1)
-		&& (univ.town.monst.dudes[which_m].m_d.immunities & 8 == 0)) // hate fire wall?
-	|| (univ.town.is_scloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 6)
-		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate stink cloud?
-	|| (univ.town.is_sleep_cloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 5)
-		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate sleep cloud?
-	|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].m_d.radiate_1 != 3)
-		&& (univ.town.monst.dudes[which_m].m_d.immunities & 3 == 0)) // hate shock cloud?
-	|| (((univ.town.monst.dudes[which_m].m_d.mu > 0) || (univ.town.monst.dudes[which_m].m_d.cl > 0))
+	|| (univ.town.is_ice_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].radiate_1 != 2)
+		&& (univ.town.monst.dudes[which_m].immunities & 32 == 0)) // hate ice wall?
+	|| (univ.town.is_fire_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].radiate_1 != 1)
+		&& (univ.town.monst.dudes[which_m].immunities & 8 == 0)) // hate fire wall?
+	|| (univ.town.is_scloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].radiate_1 != 6)
+		&& (univ.town.monst.dudes[which_m].immunities & 3 == 0)) // hate stink cloud?
+	|| (univ.town.is_sleep_cloud(loc.x,loc.y) && (univ.town.monst.dudes[which_m].radiate_1 != 5)
+		&& (univ.town.monst.dudes[which_m].immunities & 3 == 0)) // hate sleep cloud?
+	|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst.dudes[which_m].radiate_1 != 3)
+		&& (univ.town.monst.dudes[which_m].immunities & 3 == 0)) // hate shock cloud?
+	|| (((univ.town.monst.dudes[which_m].mu > 0) || (univ.town.monst.dudes[which_m].cl > 0))
 		 && univ.town.is_antimagic(loc.x,loc.y))) // hate antimagic
 		 {
 		 	prospect = find_clear_spot(loc,1);
@@ -811,7 +788,7 @@ bool combat_move_monster(short which,location destination)
 		else if (monst_check_special_terrain(destination,2,which) == false)
 		return false;
 			else {
-				univ.town.monst.dudes[which].m_d.direction = 
+				univ.town.monst.dudes[which].direction = 
 				  set_direction(univ.town.monst.dudes[which].cur_loc, destination);
 				univ.town.monst.dudes[which].cur_loc = destination;
 				monst_inflict_fields(which);
@@ -819,9 +796,9 @@ bool combat_move_monster(short which,location destination)
 				if (point_onscreen(destination,center) == true) {
 					if (is_combat())
 						 move_sound(combat_terrain[destination.x][destination.y],
-						  	(short) univ.town.monst.dudes[which].m_d.ap);
+						  	(short) univ.town.monst.dudes[which].ap);
 						else move_sound(univ.town->terrain(destination.x,destination.y),
-					  	(short) univ.town.monst.dudes[which].m_d.ap);
+					  	(short) univ.town.monst.dudes[which].ap);
 					}  
 					
 				return true;
@@ -900,7 +877,7 @@ bool town_move_monster(short num,location dest)
 		return false;
 
 		if (monst_can_be_there(dest,num) == true) {
-			univ.town.monst.dudes[num].m_d.direction = 
+			univ.town.monst.dudes[num].direction = 
 				set_direction(univ.town.monst.dudes[num].cur_loc, dest);
 			univ.town.monst.dudes[num].cur_loc = dest;
 			monst_inflict_fields(num);
@@ -929,8 +906,8 @@ void monst_inflict_fields(short which_monst)
 		return;
 		
 	which_m = &univ.town.monst.dudes[which_monst];
-	for (i = 0; i < univ.town.monst.dudes[which_monst].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[which_monst].m_d.y_width; j++) 
+	for (i = 0; i < univ.town.monst.dudes[which_monst].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[which_monst].y_width; j++) 
 		if (univ.town.monst.dudes[which_monst].active > 0) {
 			where_check.x = univ.town.monst.dudes[which_monst].cur_loc.x + i; 
 			where_check.y = univ.town.monst.dudes[which_monst].cur_loc.y + j;
@@ -955,7 +932,7 @@ void monst_inflict_fields(short which_monst)
 				}
 			if (univ.town.is_ice_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(3,1,6);
-				if (univ.town.monst.dudes[which_monst].m_d.spec_skill != 23)
+				if (univ.town.monst.dudes[which_monst].spec_skill != 23)
 					damage_monst(which_monst,7,r1,0,DAMAGE_COLD,0);
 				break;
 				}
@@ -964,7 +941,7 @@ void monst_inflict_fields(short which_monst)
 				curse_monst(which_m,r1);
 				break;
 				}
-			if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+			if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_type != 12)) {
 				monst_spell_note(which_m->number,19);
 				r1 = get_ran(1,2,3);
 				web_monst(which_m,r1);
@@ -973,14 +950,14 @@ void monst_inflict_fields(short which_monst)
 				}
 			if (univ.town.is_fire_wall(where_check.x,where_check.y)) {
 				r1 = get_ran(2,1,6);
-				if (univ.town.monst.dudes[which_monst].m_d.spec_skill != 22)
+				if (univ.town.monst.dudes[which_monst].spec_skill != 22)
 					damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);	
 				break;
 				}
 			}
 	if (univ.town.monst.dudes[which_monst].active > 0)
-	for (i = 0; i < univ.town.monst.dudes[which_monst].m_d.x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[which_monst].m_d.y_width; j++) {
+	for (i = 0; i < univ.town.monst.dudes[which_monst].x_width; i++)
+		for (j = 0; j < univ.town.monst.dudes[which_monst].y_width; j++) {
 			where_check.x = univ.town.monst.dudes[which_monst].cur_loc.x + i; 
 			where_check.y = univ.town.monst.dudes[which_monst].cur_loc.y + j;
 			if ((univ.town.is_crate(where_check.x,where_check.y)) ||
@@ -1039,12 +1016,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 
 	// begin determining guts, which determines how enthused the monst is about entering
 	// nasty barriers
-	if ((which_m->m_d.mu > 0) || (which_m->m_d.cl > 0))
+	if ((which_m->mu > 0) || (which_m->cl > 0))
 		mage = true;
-	if (which_m->m_d.spec_skill == 13)
+	if (which_m->spec_skill == 13)
 		guts = 20;
-		else guts = get_ran(1,1,(which_m->m_d.level / 2));
-	guts += which_m->m_d.health / 20;
+		else guts = get_ran(1,1,(which_m->level / 2));
+	guts += which_m->health / 20;
 	if (mage == true)
 		guts = guts / 2;
 	if (which_m->attitude == 0)
@@ -1052,13 +1029,13 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		
 	if ((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage == true))
 		return false;
-	if ((univ.town.is_fire_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 22)) {
+	if ((univ.town.is_fire_wall(where_check.x,where_check.y)) && (which_m->spec_skill != 22)) {
 			if (guts < 3) return false;
 		}
 	if (univ.town.is_force_wall(where_check.x,where_check.y)) {
 			if (guts < 4) return false;
 		}
-	if ((univ.town.is_ice_wall(where_check.x,where_check.y)) && (which_m->m_d.spec_skill != 23)) {
+	if ((univ.town.is_ice_wall(where_check.x,where_check.y)) && (which_m->spec_skill != 23)) {
 			if (guts < 5) return false;
 		}
 	if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
@@ -1073,11 +1050,11 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if (univ.town.is_scloud(where_check.x,where_check.y)) {
 		if (guts < 4) return false;
 		}
-	if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_d.m_type != 12)) {
+	if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_type != 12)) {
 		if (guts < 3) return false;
 		}
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
-		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))) {
+		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))) {
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
 			univ.town.set_fire_barr(where_check.x,where_check.y,false);
@@ -1090,7 +1067,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				}
 		}
 	if (univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
-		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->m_d.mu * 10 + which_m->m_d.cl * 4))
+		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))
 			/*&& (univ.town.num >= 20)*/) { // Checking for a town num > 20 seems utterly pointless
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
@@ -1160,7 +1137,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 						
 		case TER_SPEC_DAMAGING: // TODO: Update this to check other cases
-			if (ter_flag == DAMAGE_FIRE && univ.town.monst.dudes[which_monst].m_d.immunities & 8)
+			if (ter_flag == DAMAGE_FIRE && univ.town.monst.dudes[which_monst].immunities & 8)
 				return true;
 				else return false;
 			break;
@@ -1199,32 +1176,32 @@ void forced_place_monster(m_num_t which,location where)
 
 void magic_adjust(cCreature *which_m,short *how_much)
 {
-	if (which_m->m_d.spec_skill == 26) {
+	if (which_m->spec_skill == 26) {
 		*how_much = 0;
-		which_m->m_d.health += 3;
+		which_m->health += 3;
 		}
-	if (which_m->m_d.immunities & 1)
+	if (which_m->immunities & 1)
 		*how_much = *how_much / 2;
-	if (which_m->m_d.immunities & 2)
+	if (which_m->immunities & 2)
 		*how_much = 0;
 }
 
 void poison_monst(cCreature *which_m,short how_much)
 {
-	if (which_m->m_d.immunities & 64)
+	if (which_m->immunities & 64)
 		how_much = how_much / 2;
-	if (which_m->m_d.immunities & 128) {
+	if (which_m->immunities & 128) {
 		monst_spell_note(which_m->number,10);
 		return;
 		}
-	which_m->m_d.status[2] = min(8, which_m->m_d.status[2] + how_much);
+	which_m->status[2] = min(8, which_m->status[2] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
 
 }
 void acid_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[13] = minmax(-8,8, which_m->m_d.status[13] + how_much);
+	which_m->status[13] = minmax(-8,8, which_m->status[13] + how_much);
 	monst_spell_note(which_m->number,31);
 
 }
@@ -1232,35 +1209,35 @@ void acid_monst(cCreature *which_m,short how_much)
 void slow_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[3] = minmax(-8,8, which_m->m_d.status[3] - how_much);
+	which_m->status[3] = minmax(-8,8, which_m->status[3] - how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 
 }
 void curse_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[1] = minmax(-8,8, which_m->m_d.status[1] - how_much);
+	which_m->status[1] = minmax(-8,8, which_m->status[1] - how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 
 }
 void web_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[6] = minmax(-8,8, which_m->m_d.status[6] + how_much);
+	which_m->status[6] = minmax(-8,8, which_m->status[6] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 
 }
 void scare_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.morale = which_m->m_d.morale - how_much;
+	which_m->morale = which_m->morale - how_much;
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 1);
 
 }
 void disease_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[7] = minmax(-8,8, which_m->m_d.status[7] + how_much);
+	which_m->status[7] = minmax(-8,8, which_m->status[7] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 
 }
@@ -1268,7 +1245,7 @@ void disease_monst(cCreature *which_m,short how_much)
 void dumbfound_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->m_d.status[9] = minmax(-8,8, which_m->m_d.status[9] + how_much);
+	which_m->status[9] = minmax(-8,8, which_m->status[9] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 
 }
@@ -1280,22 +1257,22 @@ void charm_monst(cCreature *which_m,short penalty,short which_status,short amoun
 	
 
 	if ((which_status == 11) && 
-		((which_m->m_d.m_type == 8) || (which_m->m_d.m_type == 10) || (which_m->m_d.m_type == 11)))
+		((which_m->m_type == 8) || (which_m->m_type == 10) || (which_m->m_type == 11)))
 		return;
 	r1 = get_ran(1,1,100);
-	if (which_m->m_d.immunities & 1)
+	if (which_m->immunities & 1)
 		r1 = r1 * 2;
-	if (which_m->m_d.immunities & 2)
+	if (which_m->immunities & 2)
 		r1 = 200;
 	r1 += penalty;
 	if (which_status == 11)
 		r1 -= 25;
 	if (which_status == 12)
 		r1 -= 15;
-	if ((which_status == 11) && (which_m->m_d.spec_skill == 32))
+	if ((which_status == 11) && (which_m->spec_skill == 32))
 		return;
 	
-	if (r1 > charm_odds[which_m->m_d.level / 2]) {
+	if (r1 > charm_odds[which_m->level / 2]) {
 		//one_sound(68);
 		monst_spell_note(which_m->number,10);
 		}
@@ -1305,7 +1282,7 @@ void charm_monst(cCreature *which_m,short penalty,short which_status,short amoun
 				monst_spell_note(which_m->number,23);
 				}
 				else {
-					which_m->m_d.status[which_status] = amount;
+					which_m->status[which_status] = amount;
 					if (which_status == 11)
 						monst_spell_note(which_m->number,28);
 					if (which_status == 12)
@@ -1322,11 +1299,11 @@ void record_monst(cCreature *which_m)
 	r1 = get_ran(1,1,100);
 	r1 = (r1 * 7) / 10;
 	
-	if ((which_m->m_d.x_width > 1) || (which_m->m_d.y_width > 1)) {
+	if ((which_m->x_width > 1) || (which_m->y_width > 1)) {
 		ASB("Capture Soul: Monster is too big.");
 		}
-	else if ((r1 > charm_odds[which_m->m_d.level / 2]) || (which_m->m_d.spec_skill == 12)
-		|| (which_m->m_d.m_type == 3)) {
+	else if ((r1 > charm_odds[which_m->level / 2]) || (which_m->spec_skill == 12)
+		|| (which_m->m_type == 3)) {
 		monst_spell_note(which_m->number,10);
 		play_sound(68);
 		}
@@ -1357,20 +1334,18 @@ short place_monster(m_num_t which,location where)
 		}
 	
 	if (i < univ.town->max_monst()) {
+		univ.town.monst.dudes[i].number = which;
 		univ.town.monst.dudes[i] = cCreature();
-		univ.town.monst.dudes[i].m_d = return_monster_template(which);
 		univ.town.monst.dudes[i].attitude = scenario.scen_monsters[which].default_attitude;
 		if (univ.town.monst.dudes[i].attitude % 2 == 0)
 			univ.town.monst.dudes[i].attitude = 1;
 		univ.town.monst.dudes[i].mobility = 1;
 		univ.town.monst.dudes[i].active = 2;
-		univ.town.monst.dudes[i].number = which;
 		univ.town.monst.dudes[i].cur_loc = where;	
-		univ.town.monst.dudes[i].summoned = 0;
-		//univ.town.monst.dudes[i].monst_start = null_start_type;	
+		univ.town.monst.dudes[i].summoned = 0;	
 		univ.town.monst.dudes[i].target = 6;
 	
-		if (univ.town.monst.dudes[i].m_d.picture_num < 1000) {
+		if (univ.town.monst.dudes[i].picture_num < 1000) {
 			add_monst_graphic(which,1);
 			}
 
@@ -1446,14 +1421,13 @@ void activate_monsters(short code,short attitude)
 	for (i = 0; i < univ.town->max_monst(); i++) 
 		if (univ.town.monst.dudes[i].spec_enc_code == code)
 			{
+				univ.town.monst.dudes[i] = univ.town->creatures(i);
 				univ.town.monst.dudes[i].spec_enc_code = 0;
-				univ.town.monst.dudes[i].active = 2;
-				which = univ.town.monst.dudes[i].number = univ.town->creatures(i).number;
-				univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
+				univ.town.monst.dudes[i].active = 2; // TODO: Can thes be commented out? \/
+				//univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
 
 				univ.town.monst.dudes[i].summoned = 0;
-				univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
-				univ.town.monst.dudes[i].m_d = return_monster_template(which);
+				//univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
 				univ.town.monst.dudes[i].target = 6;
 				
 				add_monst_graphic(univ.town.monst.dudes[i].number,1);

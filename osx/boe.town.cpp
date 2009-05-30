@@ -238,11 +238,11 @@ void start_town_mode(short which_town, short entry_dir)
 				if (univ.town.monst.dudes[j].active == 2)
 					univ.town.monst.dudes[j].active = 1;
 				univ.town.monst.dudes[j].cur_loc = univ.town->creatures(j).start_loc;
-				univ.town.monst.dudes[j].m_d.health = univ.town.monst.dudes[j].m_d.m_health;
-				univ.town.monst.dudes[j].m_d.mp = univ.town.monst.dudes[j].m_d.max_mp;
-				univ.town.monst.dudes[j].m_d.morale = univ.town.monst.dudes[j].m_d.m_morale;
+				univ.town.monst.dudes[j].health = univ.town.monst.dudes[j].m_health;
+				univ.town.monst.dudes[j].mp = univ.town.monst.dudes[j].max_mp;
+				univ.town.monst.dudes[j].morale = univ.town.monst.dudes[j].m_morale;
 				for (k = 0; k < 15; k++)
-					univ.town.monst.dudes[j].m_d.status[k] = 0;
+					univ.town.monst.dudes[j].status[k] = 0;
 				if (univ.town.monst.dudes[j].summoned > 0)
 					univ.town.monst.dudes[j].active = 0;
 				univ.town.monst.dudes[j].target = 6;
@@ -261,7 +261,7 @@ void start_town_mode(short which_town, short entry_dir)
 							// Now remove time flag so it doesn't get reappearing
 							univ.town.monst.dudes[j].time_flag = 0;
 							univ.town.monst.dudes[j].cur_loc = univ.town->creatures(j).start_loc;
-							univ.town.monst.dudes[j].m_d.health = univ.town.monst.dudes[j].m_d.m_health;
+							univ.town.monst.dudes[j].health = univ.town.monst.dudes[j].m_health;
 						}
 						break ;
 						
@@ -317,15 +317,11 @@ void start_town_mode(short which_town, short entry_dir)
 						// First set up the values.
 						univ.town.monst.dudes[i] = univ.town->creatures(i);
 						univ.town.monst.dudes[i].target = 6;
-						univ.town.monst.dudes[i].active = 1;
-						univ.town.monst.dudes[i].number = univ.town->creatures(i).number;
-						univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
-						univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
-						univ.town.monst.dudes[i].mobility = univ.town->creatures(i).mobility;
-						univ.town.monst.dudes[i].m_d = return_monster_template(univ.town.monst.dudes[i].number);
-											
+						univ.town.monst.dudes[i].active = 1; // TODO: Can those two \/ be commented out?
+						//univ.town.monst.dudes[i].attitude = univ.town->creatures(i).start_attitude;
+						//univ.town.monst.dudes[i].cur_loc = univ.town->creatures(i).start_loc;
+						//univ.town.monst.dudes[i].mobility = univ.town->creatures(i).mobility;
 						univ.town.monst.dudes[i].summoned = 0;
-						univ.town.monst.dudes[i] = univ.town->creatures(i);
 
 						if (univ.town.monst.dudes[i].spec_enc_code > 0)
 							univ.town.monst.dudes[i].active = 0;
@@ -389,7 +385,7 @@ void start_town_mode(short which_town, short entry_dir)
 	// where they cannot be
 	for (i = 0; i < univ.town->max_monst(); i++) {
 		if (univ.town.monst.dudes[i].active > 0)
-			if (((univ.town.monst.dudes[i].m_d.x_width > 1) || (univ.town.monst.dudes[i].m_d.y_width > 1)) && 
+			if (((univ.town.monst.dudes[i].x_width > 1) || (univ.town.monst.dudes[i].y_width > 1)) && 
 				(monst_can_be_there(univ.town.monst.dudes[i].cur_loc,i) == false))
 				univ.town.monst.dudes[i].active = 0;			
 		}
@@ -423,7 +419,7 @@ void start_town_mode(short which_town, short entry_dir)
 							
 	// Flush excess doomguards and viscous goos
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].m_d.spec_skill == 12) &&
+		if ((univ.town.monst.dudes[i].spec_skill == 12) &&
 			(univ.town.monst.dudes[i].number != univ.town->creatures(i).number))
 				univ.town.monst.dudes[i].active = 0;
 		

@@ -62,8 +62,7 @@ extern cUniverse univ;
 					
 short terrain_pic[256]; 
 
-std::vector<scen_header_type> scen_headers;
-std::vector<scen_header_str_type> scen_header_strs;
+extern cScenarioList scen_headers;
 					
 GWorldPtr pcs_gworld = NULL;
 
@@ -1783,17 +1782,17 @@ void put_scen_info()
 	char *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
-		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
-			cd_set_pict(947, 6 + i * 3,scen_headers[store_scen_page_on * 3 + i].intro_pic,PICT_SCEN);
+		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
+			cd_set_pict(947, 6 + i * 3,scen_headers.data(store_scen_page_on * 3 + i).intro_pic,PICT_SCEN);
 			sout.str("");
-			sout << scen_header_strs[store_scen_page_on * 3 + i].name;
-			sout << " v" << scen_headers[store_scen_page_on * 3 + i].ver[0];
-			sout << '.' << scen_headers[store_scen_page_on * 3 + i].ver[1];
-			sout << '.' << scen_headers[store_scen_page_on * 3 + i].ver[2];
-			sout << " - |  Difficulty: " << difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty];
-			sout << ", Rating: " << ratings[scen_headers[store_scen_page_on * 3 + i].default_ground];
-			sout << " |" << scen_header_strs[store_scen_page_on * 3 + i].who1;
-			sout << " |" << scen_header_strs[store_scen_page_on * 3 + i].who2;
+			sout << scen_headers.strs(store_scen_page_on * 3 + i).name;
+			sout << " v" << scen_headers.data(store_scen_page_on * 3 + i).ver[0];
+			sout << '.' << scen_headers.data(store_scen_page_on * 3 + i).ver[1];
+			sout << '.' << scen_headers.data(store_scen_page_on * 3 + i).ver[2];
+			sout << " - |  Difficulty: " << difficulty[scen_headers.data(store_scen_page_on * 3 + i).difficulty];
+			sout << ", Rating: " << ratings[scen_headers.data(store_scen_page_on * 3 + i).rating];
+			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who1;
+			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who2;
 			csit(947,7 + i * 3,(char *) sout.str().c_str());
 			cd_activate_item(947,8 + i * 3,1);			
 			}
