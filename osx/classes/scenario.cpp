@@ -24,7 +24,6 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 //{-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0}
 
-__attribute__((deprecated))
 cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	int i,j;
 //	for(i = 0; i < 3; i++) format.ver[i] = old.ver[i];
@@ -96,7 +95,6 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	return *this;
 }
 
-__attribute__((deprecated))
 cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type& old){
 	ter_type = old.ter_type;
 	for(int i = 0; i < 10; i++) item_num[i] = old.item_num[i];
@@ -105,7 +103,6 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 	return *this;
 }
 
-__attribute__((deprecated))
 void cScenario::append(legacy::scen_item_data_type& old){
 	short i;
 	for(i = 0; i < 400; i++)

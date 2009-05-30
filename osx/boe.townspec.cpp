@@ -29,7 +29,6 @@ extern short current_pc,stat_window;
 //extern cOutdoors outdoors[2][2];
 extern location pc_pos[6],center;
 //extern town_item_list	t_i;
-//extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
 extern WindowPtr mainPtr;
 extern cScenario scenario;
@@ -162,12 +161,12 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			i = stat_adj(pc_num,1);
 			if ((i_level = get_prot_level(pc_num,42)) > 0)
 				i = i + i_level / 2;
-			skill = minmax(0,20,ADVEN[pc_num].skills[SKILL_DISARM_TRAPS] + 
-				+ ADVEN[pc_num].skills[SKILL_LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
+			skill = minmax(0,20,univ.party[pc_num].skills[SKILL_DISARM_TRAPS] + 
+				+ univ.party[pc_num].skills[SKILL_LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
 	
 			r1 = get_ran(1,1,100) + diff;
 			// Nimble?
-			if (ADVEN[pc_num].traits[TRAIT_NIMBLE])
+			if (univ.party[pc_num].traits[TRAIT_NIMBLE])
 				r1 -= 6;
 
 
@@ -220,7 +219,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			add_string_to_buf("  You feel weak.            ");
 			r1 = 40;
 			r1 = r1 + trap_level * 30;
-			ADVEN[pc_num].experience = max (0,ADVEN[pc_num].experience - r1);
+			univ.party[pc_num].experience = max (0,univ.party[pc_num].experience - r1);
 			break;
 		
 		case TRAP_ALERT:
@@ -286,7 +285,7 @@ void start_split(short a,short b,short noise)
 	univ.town.p_loc.y = b;
 	for (i = 0; i < 6; i++)
 		if (i != PSD[SDF_PARTY_SPLIT_PC])
-			ADVEN[i].main_status += MAIN_STATUS_SPLIT;
+			univ.party[i].main_status += MAIN_STATUS_SPLIT;
 	current_pc = PSD[SDF_PARTY_SPLIT_PC];
 	update_explored(univ.town.p_loc);
 	center = univ.town.p_loc;
@@ -306,8 +305,8 @@ void end_split(short noise)
 	univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
 	PSD[SDF_IS_PARTY_SPLIT] = 0;
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status >= MAIN_STATUS_SPLIT)
-			ADVEN[i].main_status -= MAIN_STATUS_SPLIT;
+		if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
+			univ.party[i].main_status -= MAIN_STATUS_SPLIT;
 	update_explored(univ.town.p_loc);
 	center = univ.town.p_loc;
 	if (noise > 0)

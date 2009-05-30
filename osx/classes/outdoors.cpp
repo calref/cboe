@@ -17,7 +17,6 @@
 
 extern cScenario scenario;
 
-__attribute__((deprecated))
 cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 	int i,j;
 	for(i = 0; i < 48; i++)

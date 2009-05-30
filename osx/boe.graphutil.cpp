@@ -292,36 +292,36 @@ void draw_monsters() ////
 			}
 	if (is_town())
 		for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].spec_skill != 11))
+		if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
 			if (party_can_see_monst(i)) {
-				check_if_monst_seen(univ.town.monst.dudes[i].number);
-				where_draw.x = univ.town.monst.dudes[i].cur_loc.x - center.x + 4;
-				where_draw.y = univ.town.monst.dudes[i].cur_loc.y - center.y + 4;
-				get_monst_dims(univ.town.monst.dudes[i].number,&width,&height);
-				if (point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true)
-					play_see_monster_str(univ.town.monst.dudes[i].number);
+				check_if_monst_seen(univ.town.monst[i].number);
+				where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
+				where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
+				get_monst_dims(univ.town.monst[i].number,&width,&height);
+				if (point_onscreen(center,univ.town.monst[i].cur_loc) == true)
+					play_see_monster_str(univ.town.monst[i].number);
 				
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
 					store_loc.x += k % width;
 					store_loc.y += k / width;
 					// customize?
-					if (univ.town.monst.dudes[i].picture_num >= 1000) {
-						source_rect = get_custom_rect((univ.town.monst.dudes[i].picture_num % 1000) +
-							 k + ((univ.town.monst.dudes[i].direction < 4) ? 0 : width * height)
+					if (univ.town.monst[i].picture_num >= 1000) {
+						source_rect = get_custom_rect((univ.town.monst[i].picture_num % 1000) +
+							 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
 							 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 						Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 						}
-					if (univ.town.monst.dudes[i].picture_num < 1000) {
-						source_rect = get_monster_template_rect(univ.town.monst.dudes[i].number,
-						 ((univ.town.monst.dudes[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),k);
-						ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
+					if (univ.town.monst[i].picture_num < 1000) {
+						source_rect = get_monster_template_rect(univ.town.monst[i].number,
+						 ((univ.town.monst[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),k);
+						ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 							(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-							((univ.town.monst.dudes[i].m_type < 7) 
-							&& (univ.town.monst.dudes[i].m_type != 1) && (univ.town.monst.dudes[i].m_type != 2))
-							&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
+							((univ.town.monst[i].m_type < 7) 
+							&& (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+							&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 							(width == 1) && (height == 1)) ////
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
@@ -330,35 +330,35 @@ void draw_monsters() ////
 				}
 	if (is_combat()) {	
 			for (i = 0; i < univ.town->max_monst(); i++)
-				if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].spec_skill != 11))
-					if (((point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true) && (cartoon_happening == true))
+				if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
+					if (((point_onscreen(center,univ.town.monst[i].cur_loc) == true) && (cartoon_happening == true))
 						|| (party_can_see_monst(i) == true)) {
-						check_if_monst_seen(univ.town.monst.dudes[i].number);
-						where_draw.x = univ.town.monst.dudes[i].cur_loc.x - center.x + 4;
-						where_draw.y = univ.town.monst.dudes[i].cur_loc.y - center.y + 4;
-						get_monst_dims(univ.town.monst.dudes[i].number,&width,&height);
+						check_if_monst_seen(univ.town.monst[i].number);
+						where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
+						where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
+						get_monst_dims(univ.town.monst[i].number,&width,&height);
 						
 						for (k = 0; k < width * height; k++) {
 							store_loc = where_draw;
 							store_loc.x += k % width;
 							store_loc.y += k / width;
 							// customize?
-							if (univ.town.monst.dudes[i].picture_num >= 1000) {
-								source_rect = get_custom_rect((univ.town.monst.dudes[i].picture_num % 1000) +
-									 k + ((univ.town.monst.dudes[i].direction < 4) ? 0 : width * height)
+							if (univ.town.monst[i].picture_num >= 1000) {
+								source_rect = get_custom_rect((univ.town.monst[i].picture_num % 1000) +
+									 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
 									 	+ ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 								Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
-							if (univ.town.monst.dudes[i].picture_num < 1000) {
-								source_rect = get_monster_template_rect(univ.town.monst.dudes[i].number,
-								 ((univ.town.monst.dudes[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0)
+							if (univ.town.monst[i].picture_num < 1000) {
+								source_rect = get_monster_template_rect(univ.town.monst[i].number,
+								 ((univ.town.monst[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0)
 								 ,k);
-								ter = univ.town->terrain(univ.town.monst.dudes[i].cur_loc.x,univ.town.monst.dudes[i].cur_loc.y);
+								ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 									(scenario.ter_types[ter].special == TER_SPEC_BED) && 
-									((univ.town.monst.dudes[i].m_type < 7) 
-										&& (univ.town.monst.dudes[i].m_type != 1) && (univ.town.monst.dudes[i].m_type != 2))
-									&& ((univ.town.monst.dudes[i].active == 1) || (univ.town.monst.dudes[i].target == 6)) &&
+									((univ.town.monst[i].m_type < 7) 
+										&& (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+									&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 									(width == 1) && (height == 1))
 										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0); ////
 										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
@@ -387,7 +387,7 @@ void draw_pcs(location center,short mode)
 		return;
 		
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			if (((point_onscreen(center, pc_pos[i])) == true) && 
 				((cartoon_happening == true) || (party_can_see(pc_pos[i]) < 6))){
 				where_draw.x = pc_pos[i].x - center.x + 4;
@@ -414,7 +414,7 @@ void draw_pcs(location center,short mode)
 			}
 
 	// Draw current pc on top
-	if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (ADVEN[current_pc].main_status == 1)) {
+	if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
 		where_draw.x = pc_pos[current_pc].x - center.x + 4;
 		where_draw.y = pc_pos[current_pc].y - center.y + 4;
 		source_rect = get_party_template_rect(current_pc,(pc_dir[current_pc] < 4) ? 0 : 1);

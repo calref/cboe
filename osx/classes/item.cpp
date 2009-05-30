@@ -292,7 +292,6 @@ cItemRec::cItemRec(long preset){
 	}
 }
 
-__attribute__((deprecated))
 cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;

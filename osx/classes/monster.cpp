@@ -15,7 +15,6 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	int i;
 	m_num = old.m_num;
@@ -95,7 +94,6 @@ cCreature& cCreature::operator = (legacy::creature_start_type old){
 	return *this;
 }
 
-__attribute__((deprecated))
 cCreature& cCreature::operator = (legacy::creature_data_type old){
 	active = old.active;
 	attitude = old.attitude;

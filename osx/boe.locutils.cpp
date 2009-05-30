@@ -29,7 +29,6 @@ extern eGameMode overall_mode;
 extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location pc_pos[6],center;
-//extern pc_record_type ADVEN[6];
 extern bool belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern cScenario scenario;
@@ -404,7 +403,7 @@ bool is_blocked(location to_check)
 				return true;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 1) && (to_check == pc_pos[i]))
+				if ((univ.party[i].main_status == 1) && (to_check == pc_pos[i]))
 					return true;
 		
 		// Monster there?
@@ -423,12 +422,12 @@ bool is_blocked(location to_check)
 bool monst_on_space(location loc,short m_num)
 {
 	
-	if (univ.town.monst.dudes[m_num].active == 0)
+	if (univ.town.monst[m_num].active == 0)
 		return false;
-	if ((loc.x - univ.town.monst.dudes[m_num].cur_loc.x >= 0) && 
-	(loc.x - univ.town.monst.dudes[m_num].cur_loc.x <= univ.town.monst.dudes[m_num].x_width - 1) &&
-	(loc.y - univ.town.monst.dudes[m_num].cur_loc.y >= 0) && 
-	(loc.y - univ.town.monst.dudes[m_num].cur_loc.y <= univ.town.monst.dudes[m_num].y_width - 1))
+	if ((loc.x - univ.town.monst[m_num].cur_loc.x >= 0) && 
+	(loc.x - univ.town.monst[m_num].cur_loc.x <= univ.town.monst[m_num].x_width - 1) &&
+	(loc.y - univ.town.monst[m_num].cur_loc.y >= 0) && 
+	(loc.y - univ.town.monst[m_num].cur_loc.y <= univ.town.monst[m_num].y_width - 1))
 		return true;
 	return false;	
 	
@@ -438,7 +437,7 @@ short monst_there(location where) // returns 90 if no
 	short i;
 
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].active != 0) && (monst_on_space(where,i) == true))
+		if ((univ.town.monst[i].active != 0) && (monst_on_space(where,i) == true))
 			return i;
 	return 90;	
 }
@@ -448,18 +447,18 @@ bool monst_can_be_there(location loc,short m_num)
 	location destination;
 	
 	// First clear monst away so it doesn't block itself
-	univ.town.monst.dudes[m_num].cur_loc.x += 100;
+	univ.town.monst[m_num].cur_loc.x += 100;
 	
-	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
+	for (i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
 			if ((is_blocked(destination) == true)
 				|| (loc_off_act_area(destination) == true)) {
-					univ.town.monst.dudes[m_num].cur_loc.x -= 100;
+					univ.town.monst[m_num].cur_loc.x -= 100;
 					return false;
 					}	
 			}
-	univ.town.monst.dudes[m_num].cur_loc.x -= 100;			
+	univ.town.monst[m_num].cur_loc.x -= 100;			
 	return true;
 }
 
@@ -468,10 +467,10 @@ bool monst_adjacent(location loc,short m_num)
 	short i,j;
 	location destination;
 	
-	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
-			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
-			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
+	for (i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
+			destination.x = univ.town.monst[m_num].cur_loc.x + i; 
+			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if (adjacent(destination,loc) == true)
 				return true;
 			}
@@ -483,10 +482,10 @@ bool monst_can_see(short m_num,location l)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
-			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
-			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
+	for (i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
+			destination.x = univ.town.monst[m_num].cur_loc.x + i; 
+			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if (can_see(destination,l,0) < 5)
 				return true;
 			}
@@ -498,10 +497,10 @@ bool party_can_see_monst(short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
-			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
-			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
+	for (i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
+			destination.x = univ.town.monst[m_num].cur_loc.x + i; 
+			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if (party_can_see(destination) < 6)
 				return true;
 			}
@@ -513,10 +512,10 @@ bool can_see_monst(location l,short m_num)
 	short i,j;
 	location destination;
 		
-	for (i = 0; i < univ.town.monst.dudes[m_num].x_width; i++)
-		for (j = 0; j < univ.town.monst.dudes[m_num].y_width; j++) {
-			destination.x = univ.town.monst.dudes[m_num].cur_loc.x + i; 
-			destination.y = univ.town.monst.dudes[m_num].cur_loc.y + j;
+	for (i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
+			destination.x = univ.town.monst[m_num].cur_loc.x + i; 
+			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if (can_see(l,destination,0) < 5)
 				return true;
 			}
@@ -639,7 +638,7 @@ bool combat_pt_in_light(location to_where)
 
 	rad = light_radius();
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1) {
+		if (univ.party[i].main_status == 1) {
 			if (dist(pc_pos[i],to_where) <= rad)
 				return true;
 			}
@@ -652,8 +651,8 @@ bool party_sees_a_monst() // Returns true is a hostile monster is in sight.
 	short i;
 	
 	for (i = 0; i < univ.town->max_monst(); i++) {
-		if (univ.town.monst.dudes[i].active > 0)
-			if ((univ.town.monst.dudes[i].attitude == 1) &&
+		if (univ.town.monst[i].active > 0)
+			if ((univ.town.monst[i].attitude == 1) &&
 				(party_can_see_monst(i) == true))
 					return true;
 		}
@@ -685,7 +684,7 @@ short party_can_see(location where)
 		return 6;
 
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1) {
+		if (univ.party[i].main_status == 1) {
 			if (can_see(pc_pos[i],where,0) < 5)
 					return i;
 			}

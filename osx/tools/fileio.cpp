@@ -1418,7 +1418,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 			return false;
 		}else{
 			sin.str(party_archive[f_name]);
-			univ.party.adven[i].readFrom(sin);
+			univ.party[i].readFrom(sin);
 		}
 	}
 	if(in_scen){
@@ -1534,7 +1534,7 @@ bool save_party(FSSpec dest_file)
 	/*   Write player character data to a buffer, and then to the file   */
 	for(int i = 0; i < 6; i++){
 		char f_name[20];
-		univ.party.adven[i].writeTo(sout);
+		univ.party[i].writeTo(sout);
 		//write the footer to end the file
 //		for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
 //			sout.put('\0');

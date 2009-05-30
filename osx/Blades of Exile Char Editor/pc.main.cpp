@@ -50,7 +50,6 @@ bool scen_items_loaded = false;
 
 /* Adventure globals */
 //party_record_type party;
-//pc_record_type ADVEN[6];
 //outdoor_record_type outdoors[2][2];
 //current_town_type c_town;
 //big_tr_type t_d;
@@ -608,8 +607,8 @@ void handle_extra_menu(int item_hit)
 			univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
 			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status >= MAIN_STATUS_SPLIT)
-					ADVEN[i].main_status -= MAIN_STATUS_SPLIT;
+				if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
+					univ.party[i].main_status -= MAIN_STATUS_SPLIT;
 			break;
 			
 
@@ -621,32 +620,32 @@ void handle_extra_menu(int item_hit)
 		case 8: // damage
 			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				ADVEN[i].cur_health = ADVEN[i].max_health;
+				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
 		case 9: // spell pts
 			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				ADVEN[i].cur_sp = ADVEN[i].max_sp;
+				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
 		case 10: // raise dead
 			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == MAIN_STATUS_DEAD) || (ADVEN[i].main_status == MAIN_STATUS_DUST) ||
-					(ADVEN[i].main_status == MAIN_STATUS_STONE))
-						ADVEN[i].main_status = MAIN_STATUS_ALIVE;
+				if ((univ.party[i].main_status == MAIN_STATUS_DEAD) || (univ.party[i].main_status == MAIN_STATUS_DUST) ||
+					(univ.party[i].main_status == MAIN_STATUS_STONE))
+						univ.party[i].main_status = MAIN_STATUS_ALIVE;
 			break;
 		case 11: // conditions
 			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG,0);
 			for (i = 0; i < 6; i++) {
-				ADVEN[i].status[2] = 0;
-				if (ADVEN[i].status[3] < 0)
-					ADVEN[i].status[3] = 0;
-				ADVEN[i].status[6] = 0;
-				ADVEN[i].status[7] = 0;
-				ADVEN[i].status[9] = 0;
-				ADVEN[i].status[11] = 0;
-				ADVEN[i].status[12] = 0;
-				ADVEN[i].status[13] = 0;
+				univ.party[i].status[2] = 0;
+				if (univ.party[i].status[3] < 0)
+					univ.party[i].status[3] = 0;
+				univ.party[i].status[6] = 0;
+				univ.party[i].status[7] = 0;
+				univ.party[i].status[9] = 0;
+				univ.party[i].status[11] = 0;
+				univ.party[i].status[12] = 0;
+				univ.party[i].status[13] = 0;
 			}
 			break;
 			
@@ -719,13 +718,13 @@ void handle_edit_menu(int item_hit)
 			 		display_pc(current_active_pc,1,0);
 					break;
 				case 11: 
-					pick_race_abil(&ADVEN[current_active_pc],0,0);
+					pick_race_abil(&univ.party[current_active_pc],0,0);
 					break;
 				case 12: 
 					spend_xp(current_active_pc,1,0);
 					break;
 				case 13: 
-					edit_xp(&ADVEN[current_active_pc]);
+					edit_xp(&univ.party[current_active_pc]);
 					break;
 		}
 }

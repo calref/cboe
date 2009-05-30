@@ -15,7 +15,6 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	int i;
 	main_status = (eMainStatus) old.main_status;

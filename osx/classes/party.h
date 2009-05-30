@@ -87,9 +87,9 @@ public:
 	short m_killed[200]; // monsters killed per town, I think
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
-	
+private:
 	cPlayer adven[6];
-	
+public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
 	cItemRec stored_items[3][115]; // formerly stored_items_list_type
 	

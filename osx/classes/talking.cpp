@@ -15,7 +15,6 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 cSpeech& cSpeech::operator = (legacy::talking_record_type& old){
 	int i,j;
 	for(i = 0; i < 200; i++)

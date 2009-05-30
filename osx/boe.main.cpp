@@ -812,7 +812,7 @@ void handle_file_menu(int item_hit)
 				if (choice == 1)
 					return;
 				for (i = 0; i < 6; i++)
-					ADVEN[i].main_status = MAIN_STATUS_ABSENT;
+					univ.party[i].main_status = MAIN_STATUS_ABSENT;
 				party_in_memory = false;
 				reload_startup();
 				in_startup_mode = true;
@@ -894,7 +894,7 @@ void handle_options_menu(int item_hit)
 				break;
 				}
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status == 0)
+				if (univ.party[i].main_status == 0)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");

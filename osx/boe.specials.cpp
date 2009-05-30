@@ -40,7 +40,6 @@ extern short which_combat_type,current_pc,stat_window;
 extern location pc_pos[6],center;
 extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 //extern big_tr_type t_d;
-//extern pc_record_type ADVEN[6];
 extern effect_pat_type current_pat;
 //extern town_item_list	univ.town;
 extern cOutdoors::cWandering store_wandering_special;
@@ -352,7 +351,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			//one_sound(17);
 			if (mode == 2) i = which_pc; else i = 0;
 			for ( ; i < 6; i++) 
-				if (ADVEN[i].main_status == 1) {
+				if (univ.party[i].main_status == 1) {
 					if (get_ran(1,1,100) <= ter_flag2.u) {
 						switch(ter_flag3.u){
 							case STATUS_POISONED_WEAPON: // TODO: Do something here
@@ -590,8 +589,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};	
-	abil = ADVEN[pc].items[item].ability;
-	level = ADVEN[pc].items[item].item_level;
+	abil = univ.party[pc].items[item].ability;
+	level = univ.party[pc].items[item].item_level;
 	
 	item_use_code = abil_chart[abil];
 	if (item_use_code >= 10) {
@@ -610,7 +609,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = false;
 		}
-	if ((ADVEN[pc].traits[11] == true) && (inept_ok == false)){
+	if ((univ.party[pc].traits[11] == true) && (inept_ok == false)){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = false;
 		}
@@ -634,18 +633,18 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				}
 		}
 	if (take_charge == true) {
-		if (!ADVEN[pc].items[item].is_ident())
-			sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].name.c_str());
-			else sprintf((char *) to_draw, "Use: %s",ADVEN[pc].items[item].full_name.c_str());
+		if (!univ.party[pc].items[item].is_ident())
+			sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].name.c_str());
+			else sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].full_name.c_str());
 		add_string_to_buf((char *) to_draw);
 
-		if ((ADVEN[pc].items[item].variety == 7) &&
-		      (ADVEN[pc].items[item].graphic_num >= 50) && (ADVEN[pc].items[item].graphic_num <= 52))
+		if ((univ.party[pc].items[item].variety == 7) &&
+		      (univ.party[pc].items[item].graphic_num >= 50) && (univ.party[pc].items[item].graphic_num <= 52))
 		      	play_sound(56);
 		
-		str = ADVEN[pc].items[item].ability_strength;
+		str = univ.party[pc].items[item].ability_strength;
 		store_item_spell_level = str * 2 + 1;
-		type = ADVEN[pc].items[item].magic_use_type;
+		type = univ.party[pc].items[item].magic_use_type;
 				
 		switch (abil) {
 			case 70: // poison weapon
@@ -775,10 +774,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 86:
 				play_sound(68);
 				switch (type) {
-					case 0: ASB("  You feel much smarter."); ADVEN[pc].skill_pts += str; break;
-					case 1: ASB("  You feel forgetful."); ADVEN[pc].skill_pts = max(0,ADVEN[pc].skill_pts - str); break;
-					case 2: ASB("  You all feel much smarter."); for (i = 0; i < 6; i++) ADVEN[i].skill_pts += str; break;
-					case 3: ASB("  You all feel forgetful."); for (i = 0; i < 6; i++) ADVEN[i].skill_pts = max(0,ADVEN[i].skill_pts - str); break;
+					case 0: ASB("  You feel much smarter."); univ.party[pc].skill_pts += str; break;
+					case 1: ASB("  You feel forgetful."); univ.party[pc].skill_pts = max(0,univ.party[pc].skill_pts - str); break;
+					case 2: ASB("  You all feel much smarter."); for (i = 0; i < 6; i++) univ.party[i].skill_pts += str; break;
+					case 3: ASB("  You all feel forgetful."); for (i = 0; i < 6; i++) univ.party[i].skill_pts = max(0,univ.party[i].skill_pts - str); break;
 					}
 				break;
 			case 87:
@@ -792,9 +791,9 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 88:
 				switch (type) {
 					case 0: ASB("  You feel energized."); restore_sp_pc(pc,str * 5); break;
-					case 1: ASB("  You feel drained."); ADVEN[pc].cur_sp = max(0,ADVEN[pc].cur_sp - str * 5); break;
+					case 1: ASB("  You feel drained."); univ.party[pc].cur_sp = max(0,univ.party[pc].cur_sp - str * 5); break;
 					case 2: ASB("  You all feel energized."); restore_sp_party(str * 5); break;
-					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) ADVEN[i].cur_sp = max(0,ADVEN[i].cur_sp - str * 5); break;
+					case 3: ASB("  You all feel drained."); for (i = 0; i < 6; i++) univ.party[i].cur_sp = max(0,univ.party[i].cur_sp - str * 5); break;
 					}
 				break;
 			case 89:
@@ -923,10 +922,10 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			case 130: 
 				ASB("It throbs, and emits odd rays.");
 				for (i = 0; i < univ.town->max_monst(); i++) {
-						if ((univ.town.monst.dudes[i].active != 0) && (univ.town.monst.dudes[i].attitude % 2 == 1) 
-						 && (dist(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc) <= 8)
-						 && (can_see(pc_pos[current_pc],univ.town.monst.dudes[i].cur_loc,0) < 5)) {
-								which_m = &univ.town.monst.dudes[i];
+						if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1) 
+						 && (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= 8)
+						 && (can_see(pc_pos[current_pc],univ.town.monst[i].cur_loc,0) < 5)) {
+								which_m = &univ.town.monst[i];
 								charm_monst(which_m,0,0,8);
 							}
 						}
@@ -975,7 +974,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 		}
 	
 	put_pc_screen();
-	if ((take_charge == true) && (ADVEN[pc].items[item].charges > 0))
+	if ((take_charge == true) && (univ.party[pc].items[item].charges > 0))
 		remove_charge(pc,item);
 	if (take_charge == false) {
 		draw_terrain(0);
@@ -1252,9 +1251,9 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	bool do_print = true;
 	char resist;
 
-	//print_num(which_m,(short)univ.town.monst.dudes[which_m].m_loc.x,(short)univ.town.monst.dudes[which_m].m_loc.y);
+	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 
-	if (univ.town.monst.dudes[which_m].active == 0) return false;
+	if (univ.town.monst[which_m].active == 0) return false;
 	
 	//sound_type = dam_type / 100;
 	//dam_type = dam_type % 100;
@@ -1276,7 +1275,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		}
 
 		
-	victim = &univ.town.monst.dudes[which_m];	
+	victim = &univ.town.monst[which_m];	
 	resist = victim->immunities;
 
 	if (dam_type == 3) {
@@ -1362,22 +1361,22 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		where_put = find_clear_spot(victim->cur_loc,1);
 		if (where_put.x > 0) 
 			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
-				univ.town.monst.dudes[which_spot].health = victim->health;
-				univ.town.monst.dudes[which_spot].number = victim->number;
-				univ.town.monst.dudes[which_spot].start_attitude = victim->start_attitude;
-				univ.town.monst.dudes[which_spot].start_loc = victim->start_loc;
-				univ.town.monst.dudes[which_spot].mobility = victim->mobility;
-				univ.town.monst.dudes[which_spot].time_flag = victim->time_flag;
-				univ.town.monst.dudes[which_spot].extra1 = victim->extra1;
-				univ.town.monst.dudes[which_spot].extra2 = victim->extra2;
-				univ.town.monst.dudes[which_spot].spec1 = victim->spec1;
-				univ.town.monst.dudes[which_spot].spec2 = victim->spec2;
-				univ.town.monst.dudes[which_spot].spec_enc_code = victim->spec_enc_code;
-				univ.town.monst.dudes[which_spot].time_code = victim->time_code;
-				univ.town.monst.dudes[which_spot].monster_time = victim->monster_time;
-				univ.town.monst.dudes[which_spot].personality = victim->personality;
-				univ.town.monst.dudes[which_spot].special_on_kill = victim->special_on_kill;
-				univ.town.monst.dudes[which_spot].facial_pic = victim->facial_pic;
+				univ.town.monst[which_spot].health = victim->health;
+				univ.town.monst[which_spot].number = victim->number;
+				univ.town.monst[which_spot].start_attitude = victim->start_attitude;
+				univ.town.monst[which_spot].start_loc = victim->start_loc;
+				univ.town.monst[which_spot].mobility = victim->mobility;
+				univ.town.monst[which_spot].time_flag = victim->time_flag;
+				univ.town.monst[which_spot].extra1 = victim->extra1;
+				univ.town.monst[which_spot].extra2 = victim->extra2;
+				univ.town.monst[which_spot].spec1 = victim->spec1;
+				univ.town.monst[which_spot].spec2 = victim->spec2;
+				univ.town.monst[which_spot].spec_enc_code = victim->spec_enc_code;
+				univ.town.monst[which_spot].time_code = victim->time_code;
+				univ.town.monst[which_spot].monster_time = victim->monster_time;
+				univ.town.monst[which_spot].personality = victim->personality;
+				univ.town.monst[which_spot].special_on_kill = victim->special_on_kill;
+				univ.town.monst[which_spot].facial_pic = victim->facial_pic;
 				monst_spell_note(victim->number,27);
 				}
 		}
@@ -1516,8 +1515,8 @@ void push_things()////
 		return;
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if (univ.town.monst.dudes[i].active > 0) {
-			l = univ.town.monst.dudes[i].cur_loc;
+		if (univ.town.monst[i].active > 0) {
+			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
@@ -1525,9 +1524,9 @@ void push_things()////
 				case DIR_S: l.y++; break;
 				case DIR_W: l.x--; break;
 				}
-			if (l != univ.town.monst.dudes[i].cur_loc) {
-				univ.town.monst.dudes[i].cur_loc = l;
-				if ((point_onscreen(center,univ.town.monst.dudes[i].cur_loc) == true) || 
+			if (l != univ.town.monst[i].cur_loc) {
+				univ.town.monst[i].cur_loc = l;
+				if ((point_onscreen(center,univ.town.monst[i].cur_loc) == true) || 
 					(point_onscreen(center,l) == true))
 						redraw = true;
 				}
@@ -1585,7 +1584,7 @@ void push_things()////
 		}
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status == 1) {
+			if (univ.party[i].main_status == 1) {
 				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
 				switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
@@ -2181,14 +2180,14 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 82:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					ADVEN[i].cur_health = minmax(0,	ADVEN[i].max_health,
-						ADVEN[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].cur_health = minmax(0,	univ.party[i].max_health,
+						univ.party[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 83:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					ADVEN[i].cur_sp = minmax(0,	ADVEN[i].max_sp,
-						ADVEN[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].cur_sp = minmax(0,	univ.party[i].max_sp,
+						univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 84:
 			for (i = 0; i < 6; i++)
@@ -2199,15 +2198,15 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case 85:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					ADVEN[i].skill_pts = minmax(0,	100,
-						ADVEN[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].skill_pts = minmax(0,	100,
+						univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 86:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						if ((ADVEN[i].main_status > MAIN_STATUS_ABSENT) && (ADVEN[i].main_status < MAIN_STATUS_SPLIT))
-							ADVEN[i].main_status = MAIN_STATUS_ALIVE;
+						if ((univ.party[i].main_status > MAIN_STATUS_ABSENT) && (univ.party[i].main_status < MAIN_STATUS_SPLIT))
+							univ.party[i].main_status = MAIN_STATUS_ALIVE;
 						}
 						else switch(spec.ex1a){
 								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
@@ -2299,8 +2298,8 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			for (i = 0; i < 6; i++)
 				if (((pc < 0) || (pc == i)) && (get_ran(1,1,100) < spec.pic))
-					ADVEN[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
-						ADVEN[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
+						univ.party[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 99:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
@@ -2309,7 +2308,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) 
-					ADVEN[i].mage_spells[spec.ex1a + 30] = true;
+					univ.party[i].mage_spells[spec.ex1a + 30] = true;
 			break;
 		case 100:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
@@ -2318,7 +2317,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) 
-					ADVEN[i].priest_spells[spec.ex1a + 30] = true;
+					univ.party[i].priest_spells[spec.ex1a + 30] = true;
 			break;
 		case 101:
 			if (spec.ex1b == 0)
@@ -2441,10 +2440,10 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 141:
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status == 1)
+				if (univ.party[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((ADVEN[i].items[j].variety > 0) && (ADVEN[i].items[j].special_class == spec.ex1a)
-							&& (ADVEN[i].equip[j] == true)) 
+						if ((univ.party[i].items[j].variety > 0) && (univ.party[i].items[j].special_class == spec.ex1a)
+							&& (univ.party[i].equip[j] == true)) 
 							*next_spec = spec.ex1b;			
 			break;
 		case 142:
@@ -2477,10 +2476,10 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 146:
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status == 1)
+				if (univ.party[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((ADVEN[i].items[j].variety > 0) && (ADVEN[i].items[j].special_class == spec.ex1a)
-							&& (ADVEN[i].equip[j] == true)) {
+						if ((univ.party[i].items[j].variety > 0) && (univ.party[i].items[j].special_class == spec.ex1a)
+							&& (univ.party[i].equip[j] == true)) {
 							*next_spec = spec.ex1b;			
 							*redraw = 1;
 							take_item(i,j);
@@ -2508,12 +2507,12 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 151:
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0))
+				if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 152:
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[5] > 0))
+				if ((univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0))
 					*next_spec = spec.ex1b;
 			break;
 		case 153:
@@ -2657,18 +2656,18 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case 182:
 			for (i = 0; i < univ.town->max_monst(); i++)
-				if (univ.town.monst.dudes[i].number == spec.ex1a) {
-					univ.town.monst.dudes[i].active = 0;
+				if (univ.town.monst[i].number == spec.ex1a) {
+					univ.town.monst[i].active = 0;
 					}			
 			*redraw = 1;
 			break;
 		case 183:
 			for (i = 0; i < univ.town->max_monst(); i++)
-				if ((univ.town.monst.dudes[i].active > 0) &&
+				if ((univ.town.monst[i].active > 0) &&
 					(((spec.ex1a == 0) && (1 == 1)) || 
-					((spec.ex1a == 1) && (univ.town.monst.dudes[i].attitude % 2 == 0)) || 
-					((spec.ex1a == 2) && (univ.town.monst.dudes[i].attitude % 2 == 1)))){
-					univ.town.monst.dudes[i].active = 0;
+					((spec.ex1a == 1) && (univ.town.monst[i].attitude % 2 == 0)) || 
+					((spec.ex1a == 2) && (univ.town.monst[i].attitude % 2 == 1)))){
+					univ.town.monst[i].active = 0;
 					}
 			*redraw = 1;
 			break;

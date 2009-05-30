@@ -14,7 +14,6 @@
 
 /* Adventure globals */
 //extern party_record_type party;
-//extern pc_record_type ADVEN[6];
 //extern outdoor_record_type outdoors[2][2];
 //extern current_town_type c_town;
 //extern big_tr_type t_d;
@@ -452,28 +451,28 @@ void draw_items(short clear_first)
 		}
 	
 	// First, draw "Fred's Items:"
-	//sprintf((char *)to_draw,"%s items:",ADVEN[current_active_pc].name);
+	//sprintf((char *)to_draw,"%s items:",univ.party[current_active_pc].name);
 	//TextSize(12);
 	//ClipRect(&dest_rect);
 	//win_draw_string(mainPtr,item_string_rects[0][0],to_draw,0,12);
 	//undo_clip();
 	//TextSize(10);
 
-	if (ADVEN[current_active_pc].main_status != 1){
+	if (univ.party[current_active_pc].main_status != 1){
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re draw entire frame 
 		frame_dlog_rect(GetWindowPort(mainPtr),info_area_rect,1); // draw the frame
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_race_rect,1); // draw the frame	
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (ADVEN[current_active_pc].items[i].variety > 0) { // i.e. does item exist
+		if (univ.party[current_active_pc].items[i].variety > 0) { // i.e. does item exist
 			sprintf((char *) to_draw, "");
-			if (ADVEN[current_active_pc].items[i].item_properties & 1 == 0)
-				sprintf((char *) to_draw, "%d. %s  ",i + 1,ADVEN[current_active_pc].items[i].name);
-				else if (ADVEN[current_active_pc].items[i].charges > 0)
-					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,ADVEN[current_active_pc].items[i].full_name,
-					ADVEN[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,ADVEN[current_active_pc].items[i].full_name);			
+			if (univ.party[current_active_pc].items[i].item_properties & 1 == 0)
+				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name);
+				else if (univ.party[current_active_pc].items[i].charges > 0)
+					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,univ.party[current_active_pc].items[i].full_name,
+					univ.party[current_active_pc].items[i].charges);
+				else sprintf((char *) to_draw, "%d. %s ",i + 1,univ.party[current_active_pc].items[i].full_name);			
 
 			//if (i % 2 == 0)
 			//	sprintf((char *) to_draw, "%d %d %d %d",
@@ -506,7 +505,6 @@ void display_party(short mode,short clear_first)
 	// lots of stuff is global. Like ...
 	// bool file_in_mem
 	// short current_active_pc
-	// pc_record_type ADVEN[6]
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
 			FillCRect(&pc_area_buttons[i][0],bg[12]);
@@ -540,24 +538,24 @@ void display_party(short mode,short clear_first)
 				rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,pc_area_buttons[i][0],0,1);
 			ForeColor(blackColor);
 			
-			// pc_record_type ADVEN[6] is the records that contains chaarcters
+			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
-			if (ADVEN[i].main_status != 0) { // PC exists?
+			if (univ.party[i].main_status != 0) { // PC exists?
 				from_rect = from_base;
 				// draw PC graphic
-				OffsetRect(&from_rect,56 * (ADVEN[i].which_graphic / 8),36 * (ADVEN[i].which_graphic % 8));
+				OffsetRect(&from_rect,56 * (univ.party[i].which_graphic / 8),36 * (univ.party[i].which_graphic % 8));
 				rect_draw_some_item(pc_gworld,from_rect,pc_gworld,pc_area_buttons[i][1],1,1);
 				
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0); 
 				// draw name
 				TextSize(9);
-				if( (ADVEN[i].name.length()) >= 10) {
+				if( (univ.party[i].name.length()) >= 10) {
 					TextFace(0);
-					sprintf((char *) to_draw, "%-s  ", (char *) ADVEN[i].name.c_str());	
+					sprintf((char *) to_draw, "%-s  ", (char *) univ.party[i].name.c_str());	
 					TextSize(6);
 				}
 				else {
-					sprintf((char *) to_draw, "%-s ", (char *) ADVEN[i].name.c_str());	
+					sprintf((char *) to_draw, "%-s ", (char *) univ.party[i].name.c_str());	
 				}
 				
 				ForeColor(whiteColor);
@@ -566,31 +564,31 @@ void display_party(short mode,short clear_first)
 				TextSize(10);
 				
 				if (i == current_active_pc){
-					sprintf((char *) to_draw, "%-.18s  ", (char *) ADVEN[i].name.c_str());
-					if( (ADVEN[i].name.length()) > 12)
+					sprintf((char *) to_draw, "%-.18s  ", (char *) univ.party[i].name.c_str());
+					if( (univ.party[i].name.length()) > 12)
 						TextSize(8);
 					ForeColor(blackColor);
 					win_draw_string(GetWindowPort(mainPtr),name_rect,to_draw,1,10,true);
 					TextSize(10);
 				}
 				if ((current_pressed_button < 0) || (current_pressed_button == i))
-					switch (ADVEN[i].main_status) {
+					switch (univ.party[i].main_status) {
 							// draw statistics
 						case 1:
 							if (i == current_active_pc) {
 								//Draw in race
-								if (ADVEN[i].race == 0)
+								if (univ.party[i].race == 0)
 									char_win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10,true);
-								if (ADVEN[i].race == 1)
+								if (univ.party[i].race == 1)
 									char_win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10,true);
-								if (ADVEN[i].race == 2)
+								if (univ.party[i].race == 2)
 									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10,true);
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");
 								win_draw_string(GetWindowPort(mainPtr),skill_rect,to_draw,0,10,true);
-								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",ADVEN[i].cur_health,ADVEN[i].max_health,ADVEN[i].cur_sp,
-										ADVEN[i].max_sp);
+								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",univ.party[i].cur_health,univ.party[i].max_health,univ.party[i].cur_sp,
+										univ.party[i].max_sp);
 								win_draw_string(GetWindowPort(mainPtr),hp_sp_rect,to_draw,0,10,true);
 								
 								
@@ -605,7 +603,7 @@ void display_party(short mode,short clear_first)
 									get_str(to_draw,9,string_num);
 									win_draw_string(GetWindowPort(mainPtr),pc_skills_rect[k],to_draw,0,9,true);
 									
-									sprintf((char *) skill_value,"%d",ADVEN[i].skills[k]);
+									sprintf((char *) skill_value,"%d",univ.party[i].skills[k]);
 									win_draw_string(GetWindowPort(mainPtr),temp_rect,skill_value,0,9,true);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;
@@ -622,82 +620,82 @@ void display_party(short mode,short clear_first)
 								TextFace(0);
 								//for(k = 0 ; k < 10; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
-								if (ADVEN[i].status[0] > 0) 
+								if (univ.party[i].status[0] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[1] > 0) 
+								if (univ.party[i].status[1] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9,true);
 										cur_rect++;
 									}
-									else if(ADVEN[i].status[1] < 0)
+									else if(univ.party[i].status[1] < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9,true);
 											cur_rect++;
 										}
-								if (ADVEN[i].status[2] > 0) 
+								if (univ.party[i].status[2] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9,true);
 										cur_rect++;
 									}	
-								if (ADVEN[i].status[3] > 0) 
+								if (univ.party[i].status[3] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9,true);
 										cur_rect++;
 									}
-									else if(ADVEN[i].status[3] < 0)
+									else if(univ.party[i].status[3] < 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9,true);
 											cur_rect++;
 										}
-								if (ADVEN[i].status[4] > 0) 
+								if (univ.party[i].status[4] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[5] > 0) 
+								if (univ.party[i].status[5] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[6] > 0) 
+								if (univ.party[i].status[6] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[7] > 0) 
+								if (univ.party[i].status[7] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[8] > 0) 
+								if (univ.party[i].status[8] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[9] > 0) 
+								if (univ.party[i].status[9] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[10] > 0) 
+								if (univ.party[i].status[10] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[11] > 0) 
+								if (univ.party[i].status[11] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[12] > 0) 
+								if (univ.party[i].status[12] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].status[13] > 0) 
+								if (univ.party[i].status[13] > 0) 
 									if(cur_rect <= 9) {
 										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9,true);
 										cur_rect++;
@@ -714,78 +712,78 @@ void display_party(short mode,short clear_first)
 								TextSize(9);
 								TextFace(0);	
 								cur_rect=0;
-								if (ADVEN[i].traits[0] == 1) 
+								if (univ.party[i].traits[0] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[1] == 1) 
+								if (univ.party[i].traits[1] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9,true);
 										cur_rect++;
 									}		
-								if (ADVEN[i].traits[2] == 1) 
+								if (univ.party[i].traits[2] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[3] == 1) 
+								if (univ.party[i].traits[3] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[4] == 1) 
+								if (univ.party[i].traits[4] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9,true);
 										cur_rect++;
 									}
 								
-								if (ADVEN[i].traits[5] == 1) 
+								if (univ.party[i].traits[5] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[6] == 1) 
+								if (univ.party[i].traits[6] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9,true);
 										cur_rect++;
 									}		
-								if (ADVEN[i].traits[7] == 1) 
+								if (univ.party[i].traits[7] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[8] == 1) 
+								if (univ.party[i].traits[8] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[9] == 1) 
+								if (univ.party[i].traits[9] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[10] == 1) 
+								if (univ.party[i].traits[10] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[11] == 1) 
+								if (univ.party[i].traits[11] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9,true);
 										cur_rect++;
 									}		
-								if (ADVEN[i].traits[12] == 1) 
+								if (univ.party[i].traits[12] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[13] == 1) 
+								if (univ.party[i].traits[13] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9,true);
 										cur_rect++;
 									}
-								if (ADVEN[i].traits[14] == 1) 
+								if (univ.party[i].traits[14] == 1) 
 									if(cur_rect <= 15) {
 										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9,true);
 										cur_rect++;

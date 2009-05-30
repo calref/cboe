@@ -16,7 +16,6 @@
 #include "oldstructs.h"
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
-__attribute__((deprecated))
 cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	static const short arenas[260] = {
 		1, 1, 0, 0, 0, 1, 1, 1, 1, 1,			//  0 - grassy field

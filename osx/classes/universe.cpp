@@ -16,14 +16,12 @@
 #include "oldstructs.h"
 #include "mathutil.h"
 
-__attribute__((deprecated))
 void cCurOut::append(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
 		for(int j = 0; j < 96; j++)
 			expl[i][j] = old.expl[i][j];
 }
 
-__attribute__((deprecated))
 void cCurTown::append(legacy::current_town_type& old,short which_size){
 	num = old.town_num;
 	difficulty = old.difficulty;
@@ -52,7 +50,6 @@ void cCurTown::append(legacy::current_town_type& old,short which_size){
 	cur_talk_loaded = num;
 }
 
-__attribute__((deprecated))
 void cCurTown::append(legacy::big_tr_type& old){
 	int i,j;
 	for(i = 0; i < record->max_dim(); i++)
@@ -71,13 +68,11 @@ void cCurTown::append(legacy::big_tr_type& old){
 			record->lighting(i,j) = old.lighting[i][j];
 }
 
-__attribute__((deprecated))
 void cCurTown::append(legacy::town_item_list& old){
 	for(int i = 0; i < 115; i++)
 		items[i] = old.items[i];
 }
 
-__attribute__((deprecated))
 void cUniverse::append(legacy::stored_town_maps_type& old){
 	for(int n = 0; n < 200; n++)
 		for(int i = 0; i < 8; i++)
@@ -85,7 +80,6 @@ void cUniverse::append(legacy::stored_town_maps_type& old){
 				town_maps[n][i][j] = old.town_maps[n][i][j];
 }
 
-__attribute__((deprecated))
 void cUniverse::append(legacy::stored_outdoor_maps_type& old){
 	for(int n = 0; n < 100; n++)
 		for(int i = 0; i < 6; i++)
@@ -93,7 +87,6 @@ void cUniverse::append(legacy::stored_outdoor_maps_type& old){
 				out_maps[n][i][j] = old.outdoor_maps[n][i][j];
 }
 
-__attribute__((deprecated))
 void cCurTown::append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]){
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++){

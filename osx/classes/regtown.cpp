@@ -17,7 +17,6 @@
 
 extern cScenario scenario;
 
-__attribute__((deprecated))
 void cTinyTown::append(legacy::tiny_tr_type& old){
 	int i,j;
 	cField the_field;
@@ -59,7 +58,6 @@ void cTinyTown::append(legacy::tiny_tr_type& old){
 	}
 }
 
-__attribute__((deprecated))
 void cMedTown::append(legacy::ave_tr_type& old){
 	int i,j;
 	cField the_field;
@@ -101,7 +99,6 @@ void cMedTown::append(legacy::ave_tr_type& old){
 	}
 }
 
-__attribute__((deprecated))
 void cBigTown::append(legacy::big_tr_type& old){
 	int i,j;
 	cField the_field;

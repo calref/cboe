@@ -42,6 +42,7 @@ bool load_scenario_header(FSRef filename/*,short header_entry*/);
 //short str_size_3(short flag);
 //short get_buf_ptr(short flag);
 //bool check_p (short pword);
+__attribute__((deprecated))
 void init_town();
 
 //void port_talk_nodes();

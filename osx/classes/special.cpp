@@ -29,7 +29,6 @@ cSpecial::cSpecial(){
 	jumpto = -1;
 }
 
-__attribute__((deprecated))
 cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 	type = old.type;
 	sd1 = old.sd1;

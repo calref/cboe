@@ -36,7 +36,6 @@ extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,p
 //extern short town_size[3];
 extern short anim_step;
 //extern party_record_type univ.party;
-//extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern current_town_type univ.town;
@@ -612,7 +611,7 @@ void draw_startup_stats()
 			pc_rect.bottom = pc_rect.top + 79;
 			OffsetRect(&pc_rect,60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
 			
-			if (ADVEN[i].main_status > 0) {
+			if (univ.party[i].main_status > 0) {
 				from_rect = party_from;
 				OffsetRect(&from_rect,56 * (i / 3),36 * (i % 3));
 				to_rect = party_from,
@@ -622,23 +621,23 @@ void draw_startup_stats()
 				TextSize(14);	
 				OffsetRect(&pc_rect,35,0);
 				char_win_draw_string(mainPtr,pc_rect,
-					(char*)ADVEN[i].name.c_str(),0,18,true);
+					(char*)univ.party[i].name.c_str(),0,18,true);
 				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
 				
 				}
 			TextSize(12);	
 			OffsetRect(&pc_rect,12,16);
-			switch (ADVEN[i].main_status) {
+			switch (univ.party[i].main_status) {
 				case MAIN_STATUS_ALIVE:
-					switch (ADVEN[i].race) {
-						case 0: sprintf((char *) str,"Level %d Human",ADVEN[i].level); break;
-						case 1: sprintf((char *) str,"Level %d Nephilim",ADVEN[i].level); break;
-						case 2: sprintf((char *) str,"Level %d Slithzerikai",ADVEN[i].level); break;
+					switch (univ.party[i].race) {
+						case 0: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
+						case 1: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
+						case 2: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
 						}
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					OffsetRect(&pc_rect,0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
-						ADVEN[i].max_health,ADVEN[i].max_sp);
+						univ.party[i].max_health,univ.party[i].max_sp);
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					break;
 				case MAIN_STATUS_DEAD:
@@ -1180,7 +1179,7 @@ void draw_text_bar(short mode)
 		}
 	if ((is_combat()) && (current_pc < 6) && (monsters_going == false)) {
 		std::ostringstream sout;
-		sout << ADVEN[current_pc].name << " (ap: " << ADVEN[current_pc].ap << ')';
+		sout << univ.party[current_pc].name << " (ap: " << univ.party[current_pc].ap << ')';
 		combat_string = sout.str();
 		put_text_bar((char *) combat_string.c_str());
 		remember_tiny_text = 500;
@@ -1188,8 +1187,8 @@ void draw_text_bar(short mode)
 	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
 	   // that is monster that is going
 	   for (i = 0; i < univ.town->max_monst(); i++)
-	   	if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].ap > 0)) {
-	   		combat_string = print_monster_going(univ.town.monst.dudes[i].number,univ.town.monst.dudes[i].ap);
+	   	if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].ap > 0)) {
+	   		combat_string = print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap);
 			put_text_bar((char *) combat_string.c_str());
 			remember_tiny_text = 500;
 			i = 400;	   
@@ -1490,8 +1489,8 @@ void load_town_graphics() // Setting up town monsters takes some finess, due to 
 				else add_terrain_to_wish_list(univ.town->terrain(i,j));
 
 	for (i = 0; i < univ.town->max_monst(); i++)
-		if ((univ.town.monst.dudes[i].number != 0) && (univ.town.monst.dudes[i].active > 0))
-			add_monst_graphic(univ.town.monst.dudes[i].number,0);
+		if ((univ.town.monst[i].number != 0) && (univ.town.monst[i].active > 0))
+			add_monst_graphic(univ.town.monst[i].number,0);
 	if (is_town())
 		for (i = 0; i < 4; i++)
 			for (j = 0; j < 4; j++) {
@@ -1517,8 +1516,8 @@ void update_pc_graphics()
 	temp_gworld2 = load_pict(905);
 
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status > 0) 
-			if (ADVEN[i].which_graphic != which_graphic_index[i]) {
+		if (univ.party[i].main_status > 0) 
+			if (univ.party[i].which_graphic != which_graphic_index[i]) {
 				template_rect.left = (i / 3) * 56;
 				template_rect.right = template_rect.left + 56;
 				template_rect.top = (i % 3) * 36;
@@ -1526,12 +1525,12 @@ void update_pc_graphics()
 
 				
 				store_source = GetPortPixMap(temp_gworld);
-				source_rect.left = (ADVEN[i].which_graphic / 8) * 56;
+				source_rect.left = (univ.party[i].which_graphic / 8) * 56;
 				source_rect.right = source_rect.left + 56;
-//				source_rect.top = (ADVEN[i].which_graphic % 8) * 36;
+//				source_rect.top = (univ.party[i].which_graphic % 8) * 36;
 //				source_rect.bottom = template_rect.top + 36;
-				source_rect.top = 36 * (ADVEN[i].which_graphic % 8);
-				source_rect.bottom = 36 * (ADVEN[i].which_graphic % 8) + 36;
+				source_rect.top = 36 * (univ.party[i].which_graphic % 8);
+				source_rect.bottom = 36 * (univ.party[i].which_graphic % 8) + 36;
 				store_dest = GetPortPixMap(party_template_gworld);
 	
 				CopyBits ( (BitMap *) *store_source ,
@@ -1546,7 +1545,7 @@ void update_pc_graphics()
 							&source_rect, &template_rect, 
 							0 , NULL);	
 			
-				which_graphic_index[i] = ADVEN[i].which_graphic;
+				which_graphic_index[i] = univ.party[i].which_graphic;
 				}
 	DisposeGWorld (temp_gworld);
 	DisposeGWorld (temp_gworld2);
@@ -1814,10 +1813,10 @@ void draw_terrain(short	mode)
 		supressing_some_spaces = true;
 		for (i = 0; i < 4; i++) ok_space[i].x = -1;
 		if (current_working_monster >= 100) {
-			for (i = 0; i < univ.town.monst.dudes[current_working_monster - 100].x_width; i++)
-				for (j = 0; j < univ.town.monst.dudes[current_working_monster - 100].y_width; j++) {
-					ok_space[i + 2 * j].x = univ.town.monst.dudes[current_working_monster - 100].cur_loc.x + i;
-					ok_space[i + 2 * j].y = univ.town.monst.dudes[current_working_monster - 100].cur_loc.y + j;
+			for (i = 0; i < univ.town.monst[current_working_monster - 100].x_width; i++)
+				for (j = 0; j < univ.town.monst[current_working_monster - 100].y_width; j++) {
+					ok_space[i + 2 * j].x = univ.town.monst[current_working_monster - 100].cur_loc.x + i;
+					ok_space[i + 2 * j].y = univ.town.monst[current_working_monster - 100].cur_loc.y + j;
 					ok_space[i + 2 * j].x = ok_space[i + 2 * j].x - center.x + 4;
 					ok_space[i + 2 * j].y = ok_space[i + 2 * j].y - center.y + 4;
 					}
@@ -2552,8 +2551,8 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	// adjust for possible big monster
 	which_m = monst_there(where);
 	if (which_m < 90) {
-		x_adj += 14 * (univ.town.monst.dudes[which_m].x_width - 1);
-		y_adj += 18 * (univ.town.monst.dudes[which_m].y_width - 1);
+		x_adj += 14 * (univ.town.monst[which_m].x_width - 1);
+		y_adj += 18 * (univ.town.monst[which_m].y_width - 1);
 		}
 	OffsetRect(&dest_rect,where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;
@@ -2798,7 +2797,7 @@ bool party_toast()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			return false;
 	return true;
 }

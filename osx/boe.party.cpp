@@ -108,7 +108,6 @@ Str255 empty_string = "                                           ";
 //extern stored_town_maps_type town_maps;
 extern bool fast_bang;
 //extern party_record_type	party;
-//extern pc_record_type ADVEN[6];
 extern short stat_window,current_pc/*,town_size[3]*/,town_type;
 extern eGameMode overall_mode;
 //extern current_town_type	univ.town;
@@ -194,6 +193,7 @@ void put_pick_spell_graphics();
 
 
 //mode; // 0 - prefab 1 - regular 2 - debug
+__attribute__((deprecated))
 void init_party(short mode)
 {
 	short i,j,k,l;
@@ -278,13 +278,13 @@ void init_party(short mode)
 	for (i = 0; i < 6; i++) {
 		switch(mode){
 			case 0:
-				ADVEN[i] = cPlayer('dflt',i);
+				univ.party[i] = cPlayer('dflt',i);
 				break;
 			case 1:
-				ADVEN[i] = cPlayer();
+				univ.party[i] = cPlayer();
 				break;
 			case 2:
-				ADVEN[i] = cPlayer('dbug',i);
+				univ.party[i] = cPlayer('dbug',i);
 				break;
 		}
 	}
@@ -324,6 +324,7 @@ void init_party(short mode)
 // Until that time, the party scen vals are uninited
 // Then, it inits the party properly for starting the scenario based
 // on the loaded scenario
+__attribute__((deprecated))
 void init_party_scen_data()
 {
 	short i,j,k,l;
@@ -455,25 +456,25 @@ void put_party_in_scen(string scen_name)
 	
 	for (j = 0; j < 6; j++)
 	 	for (i = 0; i < 15; i++)
- 			ADVEN[j].status[i] = 0;
+ 			univ.party[j].status[i] = 0;
 	for (j = 0; j < 6; j++) {
-		if (ADVEN[j].main_status >= MAIN_STATUS_SPLIT)
-			ADVEN[j].main_status -= MAIN_STATUS_SPLIT;
-		ADVEN[j].cur_health = ADVEN[j].max_health; 
- 		ADVEN[j].cur_sp = ADVEN[j].max_sp; 
+		if (univ.party[j].main_status >= MAIN_STATUS_SPLIT)
+			univ.party[j].main_status -= MAIN_STATUS_SPLIT;
+		univ.party[j].cur_health = univ.party[j].max_health; 
+ 		univ.party[j].cur_sp = univ.party[j].max_sp; 
 		}
 	for (j = 0; j < 6; j++)
 	 	for (i = 23; i >= 0; i--) {
-			ADVEN[j].items[i].special_class = 0;
-			if (ADVEN[j].items[i].graphic_num >= 150) {
+			univ.party[j].items[i].special_class = 0;
+			if (univ.party[j].items[i].graphic_num >= 150) {
 				take_item(j,i + 30); // strip away special items
 				item_took = true;
 				}
-			if (ADVEN[j].items[i].ability == 119) {
+			if (univ.party[j].items[i].ability == 119) {
 				take_item(j,i + 30); // strip away summoning items
 				item_took = true;
 				}
-			if (ADVEN[j].items[i].ability == 120) {
+			if (univ.party[j].items[i].ability == 120) {
 				take_item(j,i + 30); // strip away summoning items
 				item_took = true;
 				}
@@ -562,15 +563,15 @@ bool create_pc(short spot,short parent_num)
 
 	if (spot == 6) {
 		for (spot = 0; spot < 6; spot++)
-			if (ADVEN[spot].main_status == 0)
+			if (univ.party[spot].main_status == 0)
 				break;
 		}
 	if (spot == 6)
 		return false;
 
-	ADVEN[spot] = cPlayer();
+	univ.party[spot] = cPlayer();
 
-	pick_race_abil(&ADVEN[spot],0,parent_num);
+	pick_race_abil(&univ.party[spot],0,parent_num);
 	
 	if (parent_num != 0)
 		cd_initial_draw(989);
@@ -578,8 +579,8 @@ bool create_pc(short spot,short parent_num)
 	still_ok = spend_xp(spot,0,parent_num);
 	if (still_ok == false)
 		return false;
-	ADVEN[spot].cur_health = ADVEN[spot].max_health;
-	ADVEN[spot].cur_sp = ADVEN[spot].max_sp;
+	univ.party[spot].cur_health = univ.party[spot].max_health;
+	univ.party[spot].cur_sp = univ.party[spot].max_sp;
 	if (parent_num != 0)
 		cd_initial_draw(989);
 	
@@ -589,23 +590,23 @@ bool create_pc(short spot,short parent_num)
 		cd_initial_draw(989);
 	pick_pc_name(spot,parent_num);
 
-	ADVEN[spot].main_status = MAIN_STATUS_ALIVE;
+	univ.party[spot].main_status = MAIN_STATUS_ALIVE;
 	
 	if (in_startup_mode == false) {
-			ADVEN[spot].items[0] = start_items[ADVEN[spot].race * 2];
-			ADVEN[spot].equip[0] = true;
-			ADVEN[spot].items[1] = start_items[ADVEN[spot].race * 2 + 1];
-			ADVEN[spot].equip[1] = true;
+			univ.party[spot].items[0] = start_items[univ.party[spot].race * 2];
+			univ.party[spot].equip[0] = true;
+			univ.party[spot].items[1] = start_items[univ.party[spot].race * 2 + 1];
+			univ.party[spot].equip[1] = true;
 
 			// Do stat adjs for selected race.
-			if (ADVEN[spot].race == 1)
-				ADVEN[spot].skills[1] += 2;
-			if (ADVEN[spot].race == 2) {
-				ADVEN[spot].skills[0] += 2;
-				ADVEN[spot].skills[2] += 1;	
+			if (univ.party[spot].race == 1)
+				univ.party[spot].skills[1] += 2;
+			if (univ.party[spot].race == 2) {
+				univ.party[spot].skills[0] += 2;
+				univ.party[spot].skills[2] += 1;	
 				}
-			ADVEN[spot].max_sp += ADVEN[spot].skills[9] * 3 + ADVEN[spot].skills[10] * 3;
-			ADVEN[spot].cur_sp = ADVEN[spot].max_sp;
+			univ.party[spot].max_sp += univ.party[spot].skills[9] * 3 + univ.party[spot].skills[10] * 3;
+			univ.party[spot].cur_sp = univ.party[spot].max_sp;
 			}
 	
 	update_pc_graphics();
@@ -614,9 +615,9 @@ bool create_pc(short spot,short parent_num)
 
 bool take_sp(short pc_num,short amt)
 {
-	if (ADVEN[pc_num].cur_sp < amt)
+	if (univ.party[pc_num].cur_sp < amt)
 		return false;
-	ADVEN[pc_num].cur_sp -= amt;
+	univ.party[pc_num].cur_sp -= amt;
 	return true;
 }
 
@@ -625,13 +626,13 @@ bool take_sp(short pc_num,short amt)
 
 void heal_pc(short pc_num,short amt)
 {
-	if (ADVEN[pc_num].cur_health > ADVEN[pc_num].max_health)
+	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
 		return;
-	if (ADVEN[pc_num].main_status != MAIN_STATUS_ALIVE)
+	if (univ.party[pc_num].main_status != MAIN_STATUS_ALIVE)
 		return;
-	ADVEN[pc_num].cur_health += amt;
-	if (ADVEN[pc_num].cur_health > ADVEN[pc_num].max_health)
-		ADVEN[pc_num].cur_health = ADVEN[pc_num].max_health;
+	univ.party[pc_num].cur_health += amt;
+	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
+		univ.party[pc_num].cur_health = univ.party[pc_num].max_health;
 
 }
 
@@ -640,17 +641,17 @@ void heal_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == MAIN_STATUS_ALIVE )
+		if (univ.party[i].main_status == MAIN_STATUS_ALIVE )
 			heal_pc(i,amt);
 }
 
 void cure_pc(short pc_num,short amt)
 {
-	if (ADVEN[pc_num].main_status != 1)
+	if (univ.party[pc_num].main_status != 1)
 		return;
-	if (ADVEN[pc_num].status[2] <= amt)
-		ADVEN[pc_num].status[2] = 0;
-		else ADVEN[pc_num].status[2] -= amt;
+	if (univ.party[pc_num].status[2] <= amt)
+		univ.party[pc_num].status[2] = 0;
+		else univ.party[pc_num].status[2] -= amt;
 	one_sound(51);
 }
 
@@ -659,7 +660,7 @@ void cure_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			cure_pc(i,amt);
 
 }
@@ -667,13 +668,13 @@ void cure_party(short amt)
 // if how_much < 0, bless
 void curse_pc(short which_pc,short how_much)
 {
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[1] = minmax(-8,8,ADVEN[which_pc].status[1] - how_much);
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[1] = minmax(-8,8,univ.party[which_pc].status[1] - how_much);
 		if(how_much < 0)
-			sprintf ((char *) c_line, "  %s blessed.",(char *) ADVEN[which_pc].name.c_str());
-		else sprintf ((char *) c_line, "  %s cursed.",(char *) ADVEN[which_pc].name.c_str());
+			sprintf ((char *) c_line, "  %s blessed.",(char *) univ.party[which_pc].name.c_str());
+		else sprintf ((char *) c_line, "  %s cursed.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 	put_pc_screen();
@@ -685,23 +686,23 @@ void dumbfound_pc(short which_pc,short how_much)
 {
 	short r1;
 
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
 	r1 = get_ran(1,0,90);
 	if (pc_has_abil_equip(which_pc,53) < 24) {////
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 		}
-	if (r1 < ADVEN[which_pc].level)
+	if (r1 < univ.party[which_pc].level)
 		how_much -= 2;
 	if (how_much <= 0) {
-		sprintf ((char *) c_line, "  %s saved.",(char *) ADVEN[which_pc].name.c_str());
+		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 		}
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[9] = min(ADVEN[which_pc].status[9] + how_much,8);
-		sprintf ((char *) c_line, "  %s dumbfounded.",(char *) ADVEN[which_pc].name.c_str());
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[9] = min(univ.party[which_pc].status[9] + how_much,8);
+		sprintf ((char *) c_line, "  %s dumbfounded.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 	one_sound(67);
@@ -713,27 +714,27 @@ void disease_pc(short which_pc,short how_much)
 {
 	short r1,level;
 
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
 	r1 = get_ran(1,1,100);
-	if (r1 < ADVEN[which_pc].level * 2)
+	if (r1 < univ.party[which_pc].level * 2)
 		how_much -= 2;
 	if (how_much <= 0) {
-		sprintf ((char *) c_line, "  %s saved.",(char *) ADVEN[which_pc].name.c_str());
+		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 		}
 	if ((level = get_prot_level(which_pc,62)) > 0)////
 		how_much -= level / 2;
-	if ((ADVEN[which_pc].traits[12] == true) && 
+	if ((univ.party[which_pc].traits[12] == true) && 
 		(how_much > 1))
 			how_much++;
-	if ((ADVEN[which_pc].traits[12] == true) && 
+	if ((univ.party[which_pc].traits[12] == true) && 
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 			how_much++;
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[7] = min(ADVEN[which_pc].status[7] + how_much,8);
-		sprintf ((char *) c_line, "  %s diseased.",(char *) ADVEN[which_pc].name.c_str());
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[7] = min(univ.party[which_pc].status[7] + how_much,8);
+		sprintf ((char *) c_line, "  %s diseased.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 	one_sound(66);
@@ -745,7 +746,7 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // higher adjust, less chance of saving
 {
 	short r1,level;
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
 	if (how_much == 0)
 		return;
@@ -758,25 +759,25 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 		}
 		
 	r1 = get_ran(1,1,100) + adjust;
-	if (r1 < 30 + ADVEN[which_pc].level * 2)
+	if (r1 < 30 + univ.party[which_pc].level * 2)
 		how_much = -1;
-	if ((what_type == 11) && ((ADVEN[which_pc].traits[7] > 0) || (ADVEN[which_pc].status[11] < 0)))
+	if ((what_type == 11) && ((univ.party[which_pc].traits[7] > 0) || (univ.party[which_pc].status[11] < 0)))
 		how_much = -1;
 	if (how_much <= 0) {
-		sprintf ((char *) c_line, "  %s resisted.",(char *) ADVEN[which_pc].name.c_str());
+		sprintf ((char *) c_line, "  %s resisted.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 		}
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[what_type] = how_much;
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[what_type] = how_much;
 		if (what_type == 11)
-			sprintf ((char *) c_line, "  %s falls asleep.",(char *) ADVEN[which_pc].name.c_str());
-			else sprintf ((char *) c_line, "  %s paralyzed.",(char *) ADVEN[which_pc].name.c_str());
+			sprintf ((char *) c_line, "  %s falls asleep.",(char *) univ.party[which_pc].name.c_str());
+			else sprintf ((char *) c_line, "  %s paralyzed.",(char *) univ.party[which_pc].name.c_str());
 		if (what_type == 11)
 			play_sound(96);
 			else play_sound(90);
 		add_string_to_buf((char *) c_line);
-		ADVEN[which_pc].ap = 0;
+		univ.party[which_pc].ap = 0;
 		}
 	put_pc_screen();
 	if (what_type == 11)
@@ -788,14 +789,14 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // if how_much < 0, haste
 void slow_pc(short which_pc,short how_much)////
 {
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
-	if (ADVEN[which_pc].main_status == 1) {
+	if (univ.party[which_pc].main_status == 1) {
 
-		ADVEN[which_pc].status[3] = minmax(-8,8,ADVEN[which_pc].status[3] - how_much);
+		univ.party[which_pc].status[3] = minmax(-8,8,univ.party[which_pc].status[3] - how_much);
 		if (how_much < 0)
-			sprintf ((char *) c_line, "  %s hasted.",(char *) ADVEN[which_pc].name.c_str());
-			else sprintf ((char *) c_line, "  %s slowed.",(char *) ADVEN[which_pc].name.c_str());
+			sprintf ((char *) c_line, "  %s hasted.",(char *) univ.party[which_pc].name.c_str());
+			else sprintf ((char *) c_line, "  %s slowed.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 	put_pc_screen();
@@ -805,11 +806,11 @@ void slow_pc(short which_pc,short how_much)////
 
 void web_pc(short which_pc,short how_much)
 {
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[6] = min(ADVEN[which_pc].status[6] + how_much,8);
-		sprintf ((char *) c_line, "  %s webbed.",(char *) ADVEN[which_pc].name.c_str());
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[6] = min(univ.party[which_pc].status[6] + how_much,8);
+		sprintf ((char *) c_line, "  %s webbed.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		one_sound(17);
 		}
@@ -819,16 +820,16 @@ void web_pc(short which_pc,short how_much)
 
 void acid_pc(short which_pc,short how_much)
 {
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return;
 	if (pc_has_abil_equip(which_pc,36) < 24) {
-		sprintf ((char *) c_line, "  %s resists acid.",(char *) ADVEN[which_pc].name.c_str());
+		sprintf ((char *) c_line, "  %s resists acid.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 		}
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].status[13] += how_much;
-		sprintf ((char *) c_line, "  %s covered with acid!",(char *) ADVEN[which_pc].name.c_str());
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].status[13] += how_much;
+		sprintf ((char *) c_line, "  %s covered with acid!",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		one_sound(42);
 		}
@@ -843,7 +844,7 @@ void increase_light(short amt)
 	univ.party.light_level += amt;
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status == 1) {
+			if (univ.party[i].main_status == 1) {
 				update_explored(pc_pos[i]);
 				}
 		}
@@ -856,11 +857,11 @@ void increase_light(short amt)
 
 void restore_sp_pc(short pc_num,short amt)
 {
-	if (ADVEN[pc_num].cur_sp > ADVEN[pc_num].max_sp)
+	if (univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
 		return;
-	ADVEN[pc_num].cur_sp += amt;
-	if (ADVEN[pc_num].cur_sp > ADVEN[pc_num].max_sp)
-		ADVEN[pc_num].cur_sp = ADVEN[pc_num].max_sp;
+	univ.party[pc_num].cur_sp += amt;
+	if (univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
+		univ.party[pc_num].cur_sp = univ.party[pc_num].max_sp;
 }
 
 void restore_sp_party(short amt)
@@ -868,7 +869,7 @@ void restore_sp_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			restore_sp_pc(i,amt);
 }
 
@@ -877,7 +878,7 @@ void award_party_xp(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			award_xp(i,amt);
 }
 
@@ -887,8 +888,8 @@ void award_xp(short pc_num,short amt)
 	short xp_percent[30] = {150,120,100,90,80,70,60,50,50,50,
 								45,40,40,40,40,35,30,25,23,20,
 								15,15,15,15,15,15,15,15,15,15};	
-	if (ADVEN[pc_num].level > 49) {
-		ADVEN[pc_num].level = 50;
+	if (univ.party[pc_num].level > 49) {
+		univ.party[pc_num].level = 50;
 		return;
 		}
 	if (amt > 200) { // debug
@@ -903,56 +904,56 @@ void award_xp(short pc_num,short amt)
 		ASB("Report this!");
 		return;
 		}
-	if (ADVEN[pc_num].main_status != 1)
+	if (univ.party[pc_num].main_status != 1)
 		return;
 
-	if (ADVEN[pc_num].level >= 40)
+	if (univ.party[pc_num].level >= 40)
 		adjust = 15;
-		else adjust = xp_percent[ADVEN[pc_num].level / 2];
+		else adjust = xp_percent[univ.party[pc_num].level / 2];
 
-	if ((amt > 0) && (ADVEN[pc_num].level > 7)) {
-		if (get_ran(1,1,100) < xp_percent[ADVEN[pc_num].level / 2])
+	if ((amt > 0) && (univ.party[pc_num].level > 7)) {
+		if (get_ran(1,1,100) < xp_percent[univ.party[pc_num].level / 2])
 			amt--;
 		}
 	if (amt <= 0)
 		return;
 
 
-//	ADVEN[pc_num].experience += (max(((amt * adjust) / 100), 0) * ADVEN[pc_num].exp_adj) / 100;
-//	univ.party.total_xp_gained += (max(((amt * adjust) / 100), 0) * ADVEN[pc_num].exp_adj) / 100;
-	ADVEN[pc_num].experience += (max(((amt * adjust) / 100), 0) * 100) / 100;
+//	univ.party[pc_num].experience += (max(((amt * adjust) / 100), 0) * univ.party[pc_num].exp_adj) / 100;
+//	univ.party.total_xp_gained += (max(((amt * adjust) / 100), 0) * univ.party[pc_num].exp_adj) / 100;
+	univ.party[pc_num].experience += (max(((amt * adjust) / 100), 0) * 100) / 100;
 	univ.party.total_xp_gained += (max(((amt * adjust) / 100), 0) * 100) / 100;
 
 
 	
-//	if (ADVEN[pc_num].experience < 0) {
+//	if (univ.party[pc_num].experience < 0) {
 //		SysBeep(50); SysBeep(50);
 //		ASB("Oops! Xp became negative somehow!");
 //		ASB("Report this!");
-//		ADVEN[pc_num].experience = ADVEN[pc_num].level * (ADVEN[pc_num].get_tnl()) - 1;
+//		univ.party[pc_num].experience = univ.party[pc_num].level * (univ.party[pc_num].get_tnl()) - 1;
 //		return;
 //		}
-	if (ADVEN[pc_num].experience > 15000) {
-		ADVEN[pc_num].experience = 15000;
+	if (univ.party[pc_num].experience > 15000) {
+		univ.party[pc_num].experience = 15000;
 		return;
 		}
 	
-	while (ADVEN[pc_num].experience >= (ADVEN[pc_num].level * (ADVEN[pc_num].get_tnl()))) {
+	while (univ.party[pc_num].experience >= (univ.party[pc_num].level * (univ.party[pc_num].get_tnl()))) {
 			play_sound(7);
-			ADVEN[pc_num].level++;
-			sprintf ((char *) c_line, "  %s is level %d!  ",(char *) ADVEN[pc_num].name.c_str(),ADVEN[pc_num].level);
+			univ.party[pc_num].level++;
+			sprintf ((char *) c_line, "  %s is level %d!  ",(char *) univ.party[pc_num].name.c_str(),univ.party[pc_num].level);
 			add_string_to_buf((char *) c_line);		
-			ADVEN[pc_num].skill_pts += (ADVEN[pc_num].level < 20) ? 5 : 4;
-			add_hp = (ADVEN[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[ADVEN[pc_num].skills[0]]
-			   : max (skill_bonus[ADVEN[pc_num].skills[0]],0);
+			univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
+			add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[0]]
+			   : max (skill_bonus[univ.party[pc_num].skills[0]],0);
 			if (add_hp < 0)
 				add_hp = 0;
-			ADVEN[pc_num].max_health += add_hp;
-			if (ADVEN[pc_num].max_health > 250)
-				ADVEN[pc_num].max_health = 250;
-			ADVEN[pc_num].cur_health += add_hp;
-			if (ADVEN[pc_num].cur_health > 250)
-				ADVEN[pc_num].cur_health = 250;
+			univ.party[pc_num].max_health += add_hp;
+			if (univ.party[pc_num].max_health > 250)
+				univ.party[pc_num].max_health = 250;
+			univ.party[pc_num].cur_health += add_hp;
+			if (univ.party[pc_num].cur_health > 250)
+				univ.party[pc_num].cur_health = 250;
 			put_pc_screen();
 				
 		}
@@ -960,9 +961,9 @@ void award_xp(short pc_num,short amt)
 
 void drain_pc(short which_pc,short how_much)
 {
-	if (ADVEN[which_pc].main_status == 1) {
-		ADVEN[which_pc].experience = max(ADVEN[which_pc].experience - how_much,0);
-		sprintf ((char *) c_line, "  %s drained.",(char *) ADVEN[which_pc].name.c_str());
+	if (univ.party[which_pc].main_status == 1) {
+		univ.party[which_pc].experience = max(univ.party[which_pc].experience - how_much,0);
+		sprintf ((char *) c_line, "  %s drained.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		}
 }
@@ -972,14 +973,14 @@ void drain_pc(short which_pc,short how_much)
 void do_xp_keep(short pc_num,short mode)
 {
 					for (i = 0; i < 20; i++)
-						ADVEN[pc_num].skills[i] = store_skills[i];
-					ADVEN[pc_num].cur_health += store_h - ADVEN[pc_num].max_health;
-					ADVEN[pc_num].max_health = store_h;
-					ADVEN[pc_num].cur_sp += store_sp - ADVEN[pc_num].max_sp;
-					ADVEN[pc_num].max_sp = store_sp;
+						univ.party[pc_num].skills[i] = store_skills[i];
+					univ.party[pc_num].cur_health += store_h - univ.party[pc_num].max_health;
+					univ.party[pc_num].max_health = store_h;
+					univ.party[pc_num].cur_sp += store_sp - univ.party[pc_num].max_sp;
+					univ.party[pc_num].max_sp = store_sp;
 					if (mode == 1)
 						univ.party.gold = store_g;
-					ADVEN[pc_num].skill_pts = store_skp;
+					univ.party[pc_num].skill_pts = store_skp;
 
 }
 
@@ -1014,20 +1015,20 @@ void do_xp_draw()
 	mode = store_train_mode;
 	pc_num = store_train_pc;
 	if (mode == 0) {
-		if (ADVEN[pc_num].main_status == 1)
-			sprintf((char *) get_text, "%s",(char *) ADVEN[pc_num].name.c_str());
+		if (univ.party[pc_num].main_status == 1)
+			sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 			else sprintf((char *) get_text, "New PC");
 		}
-		else sprintf((char *) get_text, "%s",(char *) ADVEN[pc_num].name.c_str());
+		else sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 
 	cd_set_item_text (1010, 51,get_text);
 
 	for (i = 0; i < 20; i++)
-		store_skills[i] = ADVEN[pc_num].skills[i];
-	store_h = ADVEN[pc_num].max_health;
-	store_sp = ADVEN[pc_num].max_sp;
+		store_skills[i] = univ.party[pc_num].skills[i];
+	store_h = univ.party[pc_num].max_health;
+	store_sp = univ.party[pc_num].max_sp;
 	store_g = (mode == 0) ? 20000 : univ.party.gold;
-	store_skp = ADVEN[pc_num].skill_pts;
+	store_skp = univ.party[pc_num].skill_pts;
 
 	draw_xp_skills();
 
@@ -1045,8 +1046,8 @@ void spend_xp_event_filter (short item_hit)
 
 		switch (item_hit) {
 			case 73:
-				if ((mode == 0) && (ADVEN[pc_num].main_status < MAIN_STATUS_ABSENT))
-					ADVEN[pc_num].main_status = MAIN_STATUS_ABSENT;
+				if ((mode == 0) && (univ.party[pc_num].main_status < MAIN_STATUS_ABSENT))
+					univ.party[pc_num].main_status = MAIN_STATUS_ABSENT;
 				dialog_answer = 0;
 				talk_done = true;
 				break;
@@ -1058,7 +1059,7 @@ void spend_xp_event_filter (short item_hit)
 
 			case 3: case 4:
 					if (((store_h >= 250) && (item_hit == 4)) ||
-						((store_h == ADVEN[pc_num].max_health) && (item_hit == 3) && (mode == 1)) ||
+						((store_h == univ.party[pc_num].max_health) && (item_hit == 3) && (mode == 1)) ||
 						((store_h == 6) && (item_hit == 3) && (mode == 0)))
 							SysBeep(2);
 						else {
@@ -1090,7 +1091,7 @@ void spend_xp_event_filter (short item_hit)
 
 			case 5: case 6:
 					if (((store_sp >= 150) && (item_hit == 6)) ||
-						((store_sp == ADVEN[pc_num].max_sp) && (item_hit == 5) && (mode == 1)) ||
+						((store_sp == univ.party[pc_num].max_sp) && (item_hit == 5) && (mode == 1)) ||
 						((store_sp == 0) && (item_hit == 5) && (mode == 0)))
 							SysBeep(2);
 						else {
@@ -1134,7 +1135,7 @@ void spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,mode);
 						do {
 							pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (ADVEN[pc_num].main_status != 1);
+						} while (univ.party[pc_num].main_status != 1);
 						store_train_pc = pc_num;
 						do_xp_draw();
 						}
@@ -1149,7 +1150,7 @@ void spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,mode);
 						do {
 							pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (ADVEN[pc_num].main_status != 1);
+						} while (univ.party[pc_num].main_status != 1);
 						store_train_pc = pc_num;
 						do_xp_draw();
 						}
@@ -1176,7 +1177,7 @@ void spend_xp_event_filter (short item_hit)
 				which_skill = (item_hit - 7) / 2;
 				
 				if (((store_skills[which_skill] >= skill_max[which_skill]) && ((item_hit - 7) % 2 == 1)) ||
-					((store_skills[which_skill] == ADVEN[pc_num].skills[which_skill]) && ((item_hit - 7) % 2 == 0) && (mode == 1)) ||
+					((store_skills[which_skill] == univ.party[pc_num].skills[which_skill]) && ((item_hit - 7) % 2 == 0) && (mode == 1)) ||
 					((store_skills[which_skill] == 0) && ((item_hit - 7) % 2 == 0) && (mode == 0) && (which_skill > 2)) ||
 					((store_skills[which_skill] == 1) && ((item_hit - 7) % 2 == 0) && (mode == 0) && (which_skill <= 2)))
 						SysBeep(2);
@@ -1263,8 +1264,8 @@ short mage_lore_total()
 	short total = 0,i;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
-			total += ADVEN[i].skills[11];
+		if (univ.party[i].main_status == 1)
+			total += univ.party[i].skills[11];
 	
 	return total;
 }
@@ -1278,7 +1279,7 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 							91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	
 	for (i = 0; i < 24; i++)
-		if ((ADVEN[pc_num].equip[i] == true) && (is_weapon(pc_num,i) == true)) {
+		if ((univ.party[pc_num].equip[i] == true) && (is_weapon(pc_num,i) == true)) {
 			weap = i;
 			i = 30;
 			}
@@ -1291,21 +1292,21 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 				add_string_to_buf("  You poison your weapon.       ");
 				r1 = get_ran(1,1,100);
 				// Nimble?
-				if (ADVEN[pc_num].traits[TRAIT_NIMBLE])
+				if (univ.party[pc_num].traits[TRAIT_NIMBLE])
 					r1 -= 6;
-				if ((r1 > p_chance[ADVEN[pc_num].skills[17]]) && (safe == 0)) {
+				if ((r1 > p_chance[univ.party[pc_num].skills[17]]) && (safe == 0)) {
 					add_string_to_buf("  Poison put on badly.         ");
 					p_level = p_level / 2;
 					r1 = get_ran(1,1,100);
-					if (r1 > p_chance[ADVEN[pc_num].skills[17]] + 10) {
+					if (r1 > p_chance[univ.party[pc_num].skills[17]] + 10) {
 						add_string_to_buf("  You nick yourself.          ");
-						ADVEN[pc_num].status[2] += p_level;
+						univ.party[pc_num].status[2] += p_level;
 						}
 					}
 				if (safe != 1)
 					play_sound(55);
-				ADVEN[pc_num].weap_poisoned = weap;
-				ADVEN[pc_num].status[0] = max (ADVEN[pc_num].status[0],
+				univ.party[pc_num].weap_poisoned = weap;
+				univ.party[pc_num].status[0] = max (univ.party[pc_num].status[0],
 					p_level);
 
 				return true;
@@ -1314,10 +1315,10 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 
 bool is_weapon(short pc_num,short item)
 {
-	if ((ADVEN[pc_num].items[item].variety  == 1) ||
-		(ADVEN[pc_num].items[item].variety  == 2) ||
-		(ADVEN[pc_num].items[item].variety  == 5) ||
-		(ADVEN[pc_num].items[item].variety  == 24))
+	if ((univ.party[pc_num].items[item].variety  == 1) ||
+		(univ.party[pc_num].items[item].variety  == 2) ||
+		(univ.party[pc_num].items[item].variety  == 5) ||
+		(univ.party[pc_num].items[item].variety  == 24))
 			return true;
 			else return false;
 
@@ -1377,13 +1378,13 @@ bool repeat_cast_ok(short type)
 					return false;
 					}
 				if ((store_select == 2) &&
-					 ((ADVEN[store_spell_target].main_status == 0) ||
-						(ADVEN[store_spell_target].main_status > 4))) {
+					 ((univ.party[store_spell_target].main_status == 0) ||
+						(univ.party[store_spell_target].main_status > 4))) {
 					add_string_to_buf("Repeat cast: No target stored.");
 					return false;
 					}
 				if ((store_select == 1) &&
-					 (ADVEN[store_spell_target].main_status != 1)) {
+					 (univ.party[store_spell_target].main_status != 1)) {
 					add_string_to_buf("Repeat cast: No target stored.");
 					return false;
 					}
@@ -1405,19 +1406,19 @@ void give_party_spell(short which) ////
 
 	if (which < 100)
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].mage_spells[which] == false) {
-				ADVEN[i].mage_spells[which] = true;
-				if (ADVEN[i].main_status == 1)
-					sprintf((char *) str,"%s learns spell.",ADVEN[i].name.c_str());
+			if (univ.party[i].mage_spells[which] == false) {
+				univ.party[i].mage_spells[which] = true;
+				if (univ.party[i].main_status == 1)
+					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
 	if (which >= 100)
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].priest_spells[which - 100] == false) {
-				ADVEN[i].priest_spells[which - 100] = true;
-				if (ADVEN[i].main_status == 1)
-					sprintf((char *) str,"%s learns spell.",ADVEN[i].name.c_str());
+			if (univ.party[i].priest_spells[which - 100] == false) {
+				univ.party[i].priest_spells[which - 100] = true;
+				if (univ.party[i].main_status == 1)
+					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
@@ -1436,20 +1437,20 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 	switch (spell_num) {
 		case 0:  // Light
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			increase_light(50);
 			break;
 			
 		case 6: // Identify
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			ASB("All of your items are identified.");
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 24; j++)
-					ADVEN[i].items[j].item_properties = ADVEN[i].items[j].item_properties | 1;
+					univ.party[i].items[j].item_properties = univ.party[i].items[j].item_properties | 1;
 			break;
 		
 		case 9: // true sight
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			for (where.x = 0; where.x < 64; where.x++)
 				for (where.y = 0; where.y < 64; where.y++) 
 					if (dist(where,univ.town.p_loc) <= 2)
@@ -1460,39 +1461,39 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 16: // summon beast ////
 			r1 = get_summon_monster(1);
 			if (r1 < 0) break;
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(3,1,4) + adj;
 			if (summon_monster(r1,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
 			break;
 		case 26: // summon 1
-			store = ADVEN[who_cast].level / 5 + stat_adj(who_cast,2) / 3 + get_ran(1,0,2);
+			store = univ.party[who_cast].level / 5 + stat_adj(who_cast,2) / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(4,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 43: // summon 2
-			store = ADVEN[who_cast].level / 7 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			store = univ.party[who_cast].level / 7 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(5,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
 		case 58: // summon 3
-			store = ADVEN[who_cast].level / 10 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			store = univ.party[who_cast].level / 10 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			store = get_ran(7,1,4) + stat_adj(who_cast,2);
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
@@ -1502,7 +1503,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,2);
 			if (summon_monster(85,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");		
-				else ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+				else univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 			break;
 
 		case 18: // dispel field
@@ -1513,7 +1514,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 			
 		case 23:  // Long light
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];		
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];		
 			increase_light(200);
 			break;
 
@@ -1525,7 +1526,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);
-					ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+					univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 					add_string_to_buf("  As the sapphire dissolves,       ");
 					add_string_to_buf("  you have a vision.               ");
 					for (i = 0; i < 64; i++)
@@ -1537,8 +1538,8 @@ void do_mage_spell(short pc_num,short spell_num)
 	
 	
 		case 38:  // Stealth
-			ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
-			PSD[SDF_PARTY_STEALTHY] += max(6,ADVEN[pc_num].level * 2);
+			univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
+			PSD[SDF_PARTY_STEALTHY] += max(6,univ.party[pc_num].level * 2);
 			break;	
 
 			
@@ -1573,7 +1574,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			else if (univ.party.in_horse >= 0) ////
 				add_string_to_buf("  Leave horse first.             "); 
 			else {
-				ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+				univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 				add_string_to_buf("  You start flying!               ");
 				PSD[SDF_PARTY_FLIGHT] = 3;
 				}
@@ -1582,18 +1583,18 @@ void do_mage_spell(short pc_num,short spell_num)
 		case 29: case 57: //  resist magic  protection
 				target = store_spell_target;
 				if (target < 6)
-					ADVEN[pc_num].cur_sp -= spell_cost[0][spell_num];
+					univ.party[pc_num].cur_sp -= spell_cost[0][spell_num];
 				if ((spell_num == 57) && (target < 6)) {
-						ADVEN[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						univ.party[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
 						for (i = 0; i < 6; i++)
-							if (ADVEN[i].main_status == 1) {
-								ADVEN[i].status[5] += 4 + ADVEN[pc_num].level / 3 + stat_adj(pc_num,2);										
+							if (univ.party[i].main_status == 1) {
+								univ.party[i].status[5] += 4 + univ.party[pc_num].level / 3 + stat_adj(pc_num,2);										
 								}
 						sprintf ((char *) c_line, "  Party protected.                         ");
 					}
 				if ((spell_num == 29) && (target < 6)) {
-						ADVEN[target].status[5] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
-						sprintf ((char *) c_line, "  %s protected.",ADVEN[target].name.c_str());
+						univ.party[target].status[5] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
+						sprintf ((char *) c_line, "  %s protected.",univ.party[target].name.c_str());
 					}
 				add_string_to_buf((char *) c_line);	
 			break;
@@ -1617,7 +1618,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 	
 	switch (spell_num) {
 		case 4: ////
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 
 					if (is_town()) {
 					loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
@@ -1635,8 +1636,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;			
 	
 		case 7: case 25: // manna spells
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
-			store = ADVEN[pc_num].level / 3 + 2 * stat_adj(who_cast,2) + get_ran(2,1,4);
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
+			store = univ.party[pc_num].level / 3 + 2 * stat_adj(who_cast,2) + get_ran(2,1,4);
 			r1 = max(0,store);
 			if (spell_num == 7)
 				r1 = r1 / 3;
@@ -1653,7 +1654,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 			
 		case 13:
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			univ.party.light_level += 210;
 			break;
 			
@@ -1661,11 +1662,11 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			store = stat_adj(who_cast,2);
 			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == false)
 				add_string_to_buf("  Summon failed.");		
-				else ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+				else univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 		case 34:
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
-			r1 = ADVEN[who_cast].level / 6 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
+			r1 = univ.party[who_cast].level / 6 + stat_adj(who_cast,2) / 3 + get_ran(1,0,1);
 			for (i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + stat_adj(who_cast,2);
@@ -1674,7 +1675,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				}	
 			break;
 		case 43:
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			store = get_ran(2,1,4) + stat_adj(who_cast,2);
 			if (summon_monster(126,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");	
@@ -1688,7 +1689,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			store = get_ran(6,1,4) + stat_adj(who_cast,2);
 			if (summon_monster(122,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");		
-				else ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+				else univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 
 		case 16:
@@ -1709,17 +1710,17 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			add_string_to_buf("  Monsters now on map.                ");
 			PSD[SDF_PARTY_DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 		case 37: // firewalk
 			add_string_to_buf("  You are now firewalking.                ");
-			PSD[SDF_PARTY_FIREWALK] += ADVEN[pc_num].level / 12 + 2;
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			PSD[SDF_PARTY_FIREWALK] += univ.party[pc_num].level / 12 + 2;
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			break;
 			
 		case 44: // shatter
 			add_string_to_buf("  You send out a burst of energy. ");
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			for (loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
 				for (loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
@@ -1739,7 +1740,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				add_string_to_buf("  Not while on horseback. ");
 				return;			
 				}
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(scenario.which_town_start,scenario.where_start);
 			start_town_mode(scenario.which_town_start,9);
@@ -1756,63 +1757,63 @@ void do_priest_spell(short pc_num,short spell_num) ////
 //			target = select_pc(11,0);
 			target = store_spell_target;
 			if (target < 6) {
-				ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];
+				univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];
 				switch(spell_num) {
 					case 1: case 20: case 39:		
 						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
 						sprintf ((char *) c_line, "  %s healed %d.   ",
-						(char *) ADVEN[target].name.c_str(),r1);
+						(char *) univ.party[target].name.c_str(),r1);
 						heal_pc(target,r1);
 					one_sound(52);
 					break;
 
 					case 2: case 11:
 						sprintf ((char *) c_line, "  %s cured.    "
-							,(char *) ADVEN[target].name.c_str());
+							,(char *) univ.party[target].name.c_str());
 						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
 						cure_pc(target,r1);
 					break;
 					
 					case 19: // awaken
-						if (ADVEN[target].status[11] <= 0) {
+						if (univ.party[target].status[11] <= 0) {
 							sprintf ((char *) c_line, "  %s is already awake!    "
-								,(char *) ADVEN[target].name.c_str());
+								,(char *) univ.party[target].name.c_str());
 							break;
 							}
 						sprintf ((char *) c_line, "  %s wakes up.    "
-							,(char *) ADVEN[target].name.c_str());
-						ADVEN[target].status[11] = 0;
+							,(char *) univ.party[target].name.c_str());
+						univ.party[target].status[11] = 0;
 					break;
 					case 24: // cure paralysis
-						if (ADVEN[target].status[12] <= 0) {
+						if (univ.party[target].status[12] <= 0) {
 							sprintf ((char *) c_line, "  %s isn't paralyzed!    "
-								,(char *) ADVEN[target].name.c_str());
+								,(char *) univ.party[target].name.c_str());
 							break;
 							}
 						sprintf ((char *) c_line, "  %s can move now.    "
-							,(char *) ADVEN[target].name.c_str());
-						ADVEN[target].status[12] = 0;
+							,(char *) univ.party[target].name.c_str());
+						univ.party[target].status[12] = 0;
 					break;
 
 					case 27:
 						sprintf ((char *) c_line, "  %s recovers.      "
-							,(char *) ADVEN[target].name.c_str());
+							,(char *) univ.party[target].name.c_str());
 						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
-						ADVEN[target].status[7] = max(0,ADVEN[target].status[7] - r1);
+						univ.party[target].status[7] = max(0,univ.party[target].status[7] - r1);
 						break;
 
 					case 28:
 						sprintf ((char *) c_line, "  %s restored.      "
-							,(char *) ADVEN[target].name.c_str());
+							,(char *) univ.party[target].name.c_str());
 						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,2) / 2;
-						ADVEN[target].status[9] = max(0,ADVEN[target].status[9] - r1);
+						univ.party[target].status[9] = max(0,univ.party[target].status[9] - r1);
 						break;
 						
 					case 36:
 						sprintf ((char *) c_line, "  %s cleansed.      "
-							,(char *) ADVEN[target].name.c_str());
-						ADVEN[target].status[7] = 0;
-						ADVEN[target].status[6] = 0;					
+							,(char *) univ.party[target].name.c_str());
+						univ.party[target].status[7] = 0;
+						univ.party[target].status[6] = 0;					
 						break;
 					}
 				}
@@ -1829,62 +1830,62 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					return;
 					}					
 			
-				ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num]; 
+				univ.party[pc_num].cur_sp -= spell_cost[1][spell_num]; 
 				if (spell_num == 35) { // martyr's shield
 						sprintf ((char *) c_line, "  %s shielded.         ",
-							(char *) ADVEN[target].name.c_str());
-						r1 = max(1,get_ran((ADVEN[pc_num].level + 5) / 5,1,3) + adj);
-						ADVEN[target].status[10] += r1;
+							(char *) univ.party[target].name.c_str());
+						r1 = max(1,get_ran((univ.party[pc_num].level + 5) / 5,1,3) + adj);
+						univ.party[target].status[10] += r1;
 					}
 				if (spell_num == 5) { // sanctuary
 						sprintf ((char *) c_line, "  %s hidden.         ",
-							(char *) ADVEN[target].name.c_str());
-						r1 = max(0,get_ran(0,1,3) + ADVEN[pc_num].level / 4 + adj);
-						ADVEN[target].status[8] += r1;
+							(char *) univ.party[target].name.c_str());
+						r1 = max(0,get_ran(0,1,3) + univ.party[pc_num].level / 4 + adj);
+						univ.party[target].status[8] += r1;
 					}
 				if (spell_num == 6) { // symbiosis
-					store_victim_health = ADVEN[target].cur_health;
-					store_caster_health = ADVEN[pc_num].cur_health;
-					targ_damaged = ADVEN[target].max_health - ADVEN[target].cur_health;
-					while ((targ_damaged > 0) && (ADVEN[pc_num].cur_health > 0)) {
-						ADVEN[target].cur_health++;
-						r1 = get_ran(1,1,100) + ADVEN[pc_num].level / 2 + 3 * adj;
+					store_victim_health = univ.party[target].cur_health;
+					store_caster_health = univ.party[pc_num].cur_health;
+					targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
+					while ((targ_damaged > 0) && (univ.party[pc_num].cur_health > 0)) {
+						univ.party[target].cur_health++;
+						r1 = get_ran(1,1,100) + univ.party[pc_num].level / 2 + 3 * adj;
 						if (r1 < 100)
-							ADVEN[pc_num].cur_health--;
+							univ.party[pc_num].cur_health--;
 						if (r1 < 50)
-							ADVEN[pc_num].cur_health = move_to_zero(ADVEN[pc_num].cur_health);
-						targ_damaged = ADVEN[target].max_health - ADVEN[target].cur_health;
+							univ.party[pc_num].cur_health = move_to_zero(univ.party[pc_num].cur_health);
+						targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
 						}
 					add_string_to_buf("  You absorb damage.");
-					sprintf ((char *) c_line, "  %s healed %d.         ", (char *) ADVEN[target].name.c_str(),
-						ADVEN[target].cur_health - store_victim_health);
+					sprintf ((char *) c_line, "  %s healed %d.         ", (char *) univ.party[target].name.c_str(),
+						univ.party[target].cur_health - store_victim_health);
 					add_string_to_buf ((char *) c_line);
-					sprintf ((char *) c_line, "  %s takes %d.         ", (char *) ADVEN[pc_num].name.c_str(),
-						store_caster_health - ADVEN[pc_num].cur_health);
+					sprintf ((char *) c_line, "  %s takes %d.         ", (char *) univ.party[pc_num].name.c_str(),
+						store_caster_health - univ.party[pc_num].cur_health);
 					}
 				if (spell_num == 47) {
 						sprintf ((char *) c_line, "  %s healed.         ",
-							(char *) ADVEN[target].name.c_str());
+							(char *) univ.party[target].name.c_str());
 						heal_pc(target,250);
-						ADVEN[target].status[2] = 0;
+						univ.party[target].status[2] = 0;
 						one_sound(-53); one_sound(52);
 					}
 				if (spell_num == 49) {
-						if (ADVEN[target].main_status == MAIN_STATUS_STONE) {
-							ADVEN[target].main_status = MAIN_STATUS_ALIVE;
+						if (univ.party[target].main_status == MAIN_STATUS_STONE) {
+							univ.party[target].main_status = MAIN_STATUS_ALIVE;
 							sprintf ((char *) c_line, "  %s destoned.                                  ",
-									(char *) ADVEN[target].name.c_str());							
+									(char *) univ.party[target].name.c_str());							
 							play_sound(53);
 							}
 							else sprintf ((char *) c_line,"  Wasn't stoned.              ");				
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (ADVEN[target].items[i].is_cursed()){
+							if (univ.party[target].items[i].is_cursed()){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
 									if (r1 < 60) {
-										ADVEN[target].items[i].item_properties = 
-											ADVEN[target].items[i].item_properties & 239;
+										univ.party[target].items[i].item_properties = 
+											univ.party[target].items[i].item_properties & 239;
 										}
 								}
 						play_sound(52);
@@ -1898,35 +1899,35 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 					else take_item(pc_num,item);
 				if (spell_num == 40) {
-						if (ADVEN[target].main_status == 2) 
-								if (get_ran(1,1,ADVEN[pc_num].level / 2) == 1) {
+						if (univ.party[target].main_status == 2) 
+								if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
 										sprintf ((char *) c_line, "  %s now dust.                          ",
-											(char *) ADVEN[target].name.c_str());									
+											(char *) univ.party[target].name.c_str());									
 										play_sound(5);
-										ADVEN[target].main_status = MAIN_STATUS_DUST;								
+										univ.party[target].main_status = MAIN_STATUS_DUST;								
 									}
 									else {
-									ADVEN[target].main_status = MAIN_STATUS_ALIVE;
+									univ.party[target].main_status = MAIN_STATUS_ALIVE;
 									for (i = 0; i < 3; i++)
 										if (get_ran(1,0,2) < 2)
-											ADVEN[target].skills[i] -= (ADVEN[target].skills[i] > 1) ? 1 : 0;
-									ADVEN[target].cur_health = 1;
+											univ.party[target].skills[i] -= (univ.party[target].skills[i] > 1) ? 1 : 0;
+									univ.party[target].cur_health = 1;
 									sprintf ((char *) c_line, "  %s raised.                          ",
-											(char *) ADVEN[target].name.c_str());					
+											(char *) univ.party[target].name.c_str());					
 									play_sound(52);
 									}						
 							else sprintf ((char *) c_line,"  Didn't work.              ");					
 				
 					}
 				if (spell_num == 56) {
-						if (ADVEN[target].main_status != MAIN_STATUS_ALIVE) {
-							ADVEN[target].main_status = MAIN_STATUS_ALIVE;
+						if (univ.party[target].main_status != MAIN_STATUS_ALIVE) {
+							univ.party[target].main_status = MAIN_STATUS_ALIVE;
 							for (i = 0; i < 3; i++)
 								if (get_ran(1,0,2) < 1)
-									ADVEN[target].skills[i] -= (ADVEN[target].skills[i] > 1) ? 1 : 0;
-							ADVEN[target].cur_health = 1;
+									univ.party[target].skills[i] -= (univ.party[target].skills[i] > 1) ? 1 : 0;
+							univ.party[target].cur_health = 1;
 							sprintf ((char *) c_line, "  %s raised.",
-									(char *) ADVEN[target].name.c_str());							
+									(char *) univ.party[target].name.c_str());							
 							play_sound(52);					
 							}
 							else sprintf ((char *) c_line,"  Was OK.              ");				
@@ -1937,7 +1938,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;	
 
 		case 21: case 46: case 54:
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];			
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];			
 			r1 = get_ran(spell_num / 7 + adj, 1, 4);
 			if (spell_num < 54) {
 				sprintf ((char *) c_line, "  Party healed %d.       ", r1);
@@ -1957,14 +1958,14 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			break;
 			
 		case 30:
-				ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];			
+				univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];			
 				sprintf ((char *) c_line, "  Party cured.  ");
 				add_string_to_buf((char *) c_line);		
 				cure_party(3 + stat_adj(pc_num,2));
 			break;
 			
 		case 42: case 61: case 48:
-			ADVEN[pc_num].cur_sp -= spell_cost[1][spell_num];	
+			univ.party[pc_num].cur_sp -= spell_cost[1][spell_num];	
 			switch (spell_num) {
 				case 42: add_string_to_buf("  Party hidden.");break;
 				case 61: add_string_to_buf("  Party cleansed.");break;
@@ -1972,19 +1973,19 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				}		
 
 			for (i = 0; i < 6; i++)
-				if (ADVEN[i].main_status == 1) {
+				if (univ.party[i].main_status == 1) {
 					if (spell_num == 42) {
-						store = get_ran(0,1,3) + ADVEN[pc_num].level / 6 + stat_adj(pc_num,2);
+						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + stat_adj(pc_num,2);
 						r1 = max(0,store);
-						ADVEN[i].status[8] += r1;					
+						univ.party[i].status[8] += r1;					
 						}
 					if (spell_num == 61) {
-						ADVEN[i].status[6] = 0;
-						ADVEN[i].status[7] = 0;	
+						univ.party[i].status[6] = 0;
+						univ.party[i].status[7] = 0;	
 						}
 					if (spell_num == 48) { // Hyperactivity
-						ADVEN[i].status[11] -= 6 + 2 * stat_adj(pc_num,2);
-						ADVEN[i].status[3] = max(0,ADVEN[i].status[3]);
+						univ.party[i].status[11] -= 6 + 2 * stat_adj(pc_num,2);
+						univ.party[i].status[3] = max(0,univ.party[i].status[3]);
 						}
 				}
 			break;
@@ -2007,7 +2008,7 @@ void cast_town_spell(location where) ////
 			
 	adjust = can_see(univ.town.p_loc,where,0);
 	if (town_spell < 1000) 
-		ADVEN[who_cast].cur_sp -= spell_cost[town_spell / 100][town_spell % 100];
+		univ.party[who_cast].cur_sp -= spell_cost[town_spell / 100][town_spell % 100];
 		else town_spell -= 1000;
 	ter = univ.town->terrain(where.x,where.y);
 	
@@ -2018,11 +2019,11 @@ void cast_town_spell(location where) ////
 				targ = monst_there(where);
 				if (targ < univ.town->max_monst()) {
 					if (town_spell == 7) {
-						univ.party.m_seen[univ.town.monst.dudes[targ].number] = true;
+						univ.party.m_seen[univ.town.monst[targ].number] = true;
 						adjust_monst_menu();
-						display_monst(0,&univ.town.monst.dudes[targ],0);
+						display_monst(0,&univ.town.monst[targ],0);
 						}
-						else record_monst(&univ.town.monst.dudes[targ]);
+						else record_monst(&univ.town.monst[targ]);
 					}
 					else add_string_to_buf("  No monster there.");
 				break;
@@ -2084,7 +2085,7 @@ void cast_town_spell(location where) ////
 						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * univ.town.difficulty;
 						r1 += scenario.ter_types[ter].flag2.u * 7;
 					}
-					if (r1 < (135 - combat_percent[min(19,ADVEN[who_cast].level)])) {
+					if (r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
 						add_string_to_buf("  Door unlocked.                 ");
 						play_sound(9);
 						univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
@@ -2102,7 +2103,7 @@ void cast_town_spell(location where) ////
 						r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,2) + 5 * (univ.town.difficulty / 10);
 						if (univ.town.is_fire_barr(where.x,where.y))
 							r1 -= 8;
-						if (r1 < (120 - combat_percent[min(19,ADVEN[who_cast].level)])) {
+						if (r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
 							add_string_to_buf("  Barrier broken.                 ");
 							univ.town.set_fire_barr(where.x,where.y,false);
 							univ.town.set_force_barr(where.x,where.y,false);
@@ -2156,7 +2157,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 {
 	short i = 0,adjust,r1,r2,balance = 0;
 	
-	adjust = (ADVEN[pc_num].level + ADVEN[pc_num].skills[2]) / 2 - monst->level * 2;
+	adjust = (univ.party[pc_num].level + univ.party[pc_num].skills[2]) / 2 - monst->level * 2;
 	if ((i = get_prot_level(pc_num,53)) > 0)
 		adjust += i * 5;
 	if (monst->attitude % 2 != 1)
@@ -2164,36 +2165,36 @@ void do_mindduel(short pc_num,cCreature *monst)
 	monst->attitude = 1;
 	
 	add_string_to_buf("Mindduel!");
-	while ((ADVEN[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
+	while ((univ.party[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
 		play_sound(1);
 		r1 = get_ran(1,1,100) + adjust;
-		r1 += 5 * (monst->status[9] - ADVEN[pc_num].status[9]);
+		r1 += 5 * (monst->status[9] - univ.party[pc_num].status[9]);
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if (r1 < 30) {
-			sprintf((char *)c_line, "  %s is drained %d.",ADVEN[pc_num].name.c_str(),r2);
+			sprintf((char *)c_line, "  %s is drained %d.",univ.party[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
 			monst->mp += r2;
 			balance++;
-			if (ADVEN[pc_num].cur_sp == 0) {
-				ADVEN[pc_num].status[9] += 2;
-				sprintf((char *) c_line,"  %s is dumbfounded.",ADVEN[pc_num].name.c_str());
+			if (univ.party[pc_num].cur_sp == 0) {
+				univ.party[pc_num].status[9] += 2;
+				sprintf((char *) c_line,"  %s is dumbfounded.",univ.party[pc_num].name.c_str());
 				add_string_to_buf((char *) c_line);
-				if (ADVEN[pc_num].status[9] > 7) {
-					sprintf((char *) c_line,"  %s is killed!",ADVEN[pc_num].name.c_str());
+				if (univ.party[pc_num].status[9] > 7) {
+					sprintf((char *) c_line,"  %s is killed!",univ.party[pc_num].name.c_str());
 					add_string_to_buf((char *) c_line);
 					kill_pc(pc_num,MAIN_STATUS_DEAD);
 					}
 					
 				}
 				else {
-					ADVEN[pc_num].cur_sp = max(0,ADVEN[pc_num].cur_sp - r2);
+					univ.party[pc_num].cur_sp = max(0,univ.party[pc_num].cur_sp - r2);
 					}
 			}
 		if (r1 > 70) {
-			sprintf((char *)c_line, "  %s drains %d.",ADVEN[pc_num].name.c_str(),r2);
+			sprintf((char *)c_line, "  %s drains %d.",univ.party[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
-			ADVEN[pc_num].cur_sp += r2;
+			univ.party[pc_num].cur_sp += r2;
 			balance--;
 			if (monst->mp == 0) {
 				monst->status[9] += 2;
@@ -2257,21 +2258,21 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 	
 	if ((spell_num < 0) || (spell_num > 61))
 		return false;
-	if (ADVEN[pc_num].skills[9 + type] < level)
+	if (univ.party[pc_num].skills[9 + type] < level)
 		return false;
-	if (ADVEN[pc_num].main_status != 1)
+	if (univ.party[pc_num].main_status != 1)
 		return false;
-	if (ADVEN[pc_num].cur_sp < spell_cost[type][spell_num])
+	if (univ.party[pc_num].cur_sp < spell_cost[type][spell_num])
 		return false;
-	if ((type == 0) && (ADVEN[pc_num].mage_spells[spell_num] == false))
+	if ((type == 0) && (univ.party[pc_num].mage_spells[spell_num] == false))
 		return false;
-	if ((type == 1) && (ADVEN[pc_num].priest_spells[spell_num] == false))
+	if ((type == 1) && (univ.party[pc_num].priest_spells[spell_num] == false))
 		return false;
-	if (ADVEN[pc_num].status[9] >= 8 - level)
+	if (univ.party[pc_num].status[9] >= 8 - level)
 		return false;	
-	if (ADVEN[pc_num].status[12] != 0)
+	if (univ.party[pc_num].status[12] != 0)
 		return false;	
-	if (ADVEN[pc_num].status[11] > 0)
+	if (univ.party[pc_num].status[11] > 0)
 		return false;	
 	
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
@@ -2344,7 +2345,7 @@ void draw_spell_info()
 						cd_activate_item(1098,10 + i,0);
 						break;
 					case 1:
-						if (ADVEN[i].main_status != 1) {
+						if (univ.party[i].main_status != 1) {
 							cd_activate_item(1098,10 + i,0);
 							}
 							else {
@@ -2352,7 +2353,7 @@ void draw_spell_info()
 								}
 						break;
 					case 2:
-						if (ADVEN[i].main_status > 0) {
+						if (univ.party[i].main_status > 0) {
 							cd_activate_item(1098,10 + i,1);
 							}
 							else {
@@ -2371,15 +2372,15 @@ void draw_spell_pc_info()
 	short i;
 
 	for (i = 0; i < 6; i++) {
-		if (ADVEN[i].main_status != 0) {
-				cd_set_item_text(1098,18 + i,ADVEN[i].name.c_str());
+		if (univ.party[i].main_status != 0) {
+				cd_set_item_text(1098,18 + i,univ.party[i].name.c_str());
 				//if (pc_casting == i)
 				//	cd_text_frame(1098,24 + store_spell_target,11);
 				//	else cd_text_frame(1098,24 + store_spell_target,1);
 
-				if (ADVEN[i].main_status == 1) {
-					cd_set_item_num(1098,24 + i, ADVEN[i].cur_health);
-					cd_set_item_num(1098,30 + i, ADVEN[i].cur_sp);			
+				if (univ.party[i].main_status == 1) {
+					cd_set_item_num(1098,24 + i, univ.party[i].cur_health);
+					cd_set_item_num(1098,30 + i, univ.party[i].cur_sp);			
 					}
 			}		
 		}
@@ -2493,7 +2494,7 @@ void put_pick_spell_graphics()
 	put_pc_target_buttons();
 	put_spell_led_buttons();
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			draw_pc_effects(10 + i);
 }
 
@@ -2696,15 +2697,15 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 			}
 
 	if (can_choose_caster == false) {
-		if ((type == 0) && (ADVEN[pc_num].skills[9] == 0)) {
+		if ((type == 0) && (univ.party[pc_num].skills[9] == 0)) {
 			add_string_to_buf("Cast: No mage skill.");
 			return 70;
 			}
-		if ((type == 1) && (ADVEN[pc_num].skills[10] == 0)) {
+		if ((type == 1) && (univ.party[pc_num].skills[10] == 0)) {
 			add_string_to_buf("Cast: No priest skill.");
 			return 70;
 			}
-		if (ADVEN[pc_casting].cur_sp == 0) {
+		if (univ.party[pc_casting].cur_sp == 0) {
 			add_string_to_buf("Cast: No spell points.");
 			return 70;
 			}
@@ -2733,7 +2734,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	// If a target is needed, keep the same target if that PC still targetable
 	if (((type == 0) && (mage_need_select[store_mage] > 0)) ||
 		((type == 1) && (priest_need_select[store_priest] > 0))) {
-		if (ADVEN[store_spell_target].main_status != 1)
+		if (univ.party[store_spell_target].main_status != 1)
 			store_spell_target = 6;
 		}
 		else store_spell_target = 6;
@@ -2801,15 +2802,15 @@ short stat_adj(short pc_num,short which)
 {
 	short tr;
 	
-	tr = skill_bonus[ADVEN[pc_num].skills[which]];
+	tr = skill_bonus[univ.party[pc_num].skills[which]];
 	if (which == 2) {
-		if (ADVEN[pc_num].traits[1] == true)
+		if (univ.party[pc_num].traits[1] == true)
 			tr++;
 		if (pc_has_abil_equip(pc_num,40) < 24) 
 			tr++;
 		}
 	if (which == 0) {
-		if (ADVEN[pc_num].traits[8] == true)
+		if (univ.party[pc_num].traits[8] == true)
 			tr++;
 		if (pc_has_abil_equip(pc_num,38) < 24) 
 			tr++;
@@ -2898,7 +2899,7 @@ void do_alchemy() ////
 				remove_charge(pc_num,which_item2);
 
 			r1 = get_ran(1,1,100);
-			if (r1 < fail_chance[ADVEN[pc_num].skills[12] - difficulty[which_p]]) {
+			if (r1 < fail_chance[univ.party[pc_num].skills[12] - difficulty[which_p]]) {
 				add_string_to_buf("Alchemy: Failed.               ");
 				r1 = get_ran(1,0,1);
 				play_sound(41 );
@@ -2910,9 +2911,9 @@ void do_alchemy() ////
 					if (which_p == 8)
 						store_i.magic_use_type = 2;
 					store_i.full_name = alch_names_short[which_p];
-					if (ADVEN[pc_num].skills[12] - difficulty[which_p] >= 5)
+					if (univ.party[pc_num].skills[12] - difficulty[which_p] >= 5)
 						store_i.charges++;
-					if (ADVEN[pc_num].skills[12] - difficulty[which_p] >= 11)
+					if (univ.party[pc_num].skills[12] - difficulty[which_p] >= 11)
 						store_i.charges++;
 					if (store_i.variety == 7)
 						store_i.graphic_num += get_ran(1,0,2);
@@ -2958,11 +2959,11 @@ short alch_choice(short pc_num)
 	cd_create_dialog(1047,mainPtr);
 	for (i = 0; i < 20; i++) {
 		cd_set_item_text(1047,10 + i * 2,alch_names[i]);
-		if ((ADVEN[pc_num].skills[12] < difficulty[i]) || (univ.party.alchemy[i] == 0))
+		if ((univ.party[pc_num].skills[12] < difficulty[i]) || (univ.party.alchemy[i] == 0))
 			cd_activate_item(1047,9 + i * 2,0);
 		}
 	sprintf((char *) get_text, "%s (skill %d)", 
-		ADVEN[pc_num].name.c_str(),ADVEN[pc_num].skills[12]);
+		univ.party[pc_num].name.c_str(),univ.party[pc_num].skills[12]);
 	cd_set_item_text(1047,4,get_text);
 	if (univ.party.help_received[20] == 0) {
 		cd_initial_draw(1047);
@@ -2980,7 +2981,7 @@ void pc_graphic_event_filter (short item_hit)
 {
 	switch (item_hit) {
 		case 1:
-			ADVEN[store_graphic_pc_num].which_graphic = store_pc_graphic;
+			univ.party[store_graphic_pc_num].which_graphic = store_pc_graphic;
 			update_pc_graphics();
 			if (store_graphic_mode == 0)
 					toast_dialog();
@@ -2993,8 +2994,8 @@ void pc_graphic_event_filter (short item_hit)
 		case 4:
 			update_pc_graphics();
 			if (store_graphic_mode == 0) {
-				if (ADVEN[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
-				   ADVEN[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
+				if (univ.party[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
+				   univ.party[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
 					toast_dialog();
 				}
 				else {
@@ -3021,7 +3022,7 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 	
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
-	store_pc_graphic = ADVEN[pc_num].which_graphic;
+	store_pc_graphic = univ.party[pc_num].which_graphic;
 
 	make_cursor_sword();
 
@@ -3058,7 +3059,7 @@ void pc_name_event_filter (short item_hit)
 		csit(1051,6,"Must begin with a letter.");
 		}
 		else {
-			ADVEN[store_train_pc].name = string(get_text,get_text+18); // ???: Truncate to 18 characters... but is it necessary?
+			univ.party[store_train_pc].name = string(get_text,get_text+18); // ???: Truncate to 18 characters... but is it necessary?
 			toast_dialog();
 			}
 
@@ -3134,23 +3135,23 @@ void poison_pc(short which_pc,short how_much)
 {
 	short level;
 	
-	if (ADVEN[which_pc].main_status == 1) {
+	if (univ.party[which_pc].main_status == 1) {
 		if ((level = get_prot_level(which_pc,34)) > 0)////
 			how_much -= level / 2;
 		if ((level = get_prot_level(which_pc,31)) > 0)////
 			how_much -= level / 3;
 
-			if ((ADVEN[which_pc].traits[12] == true) && 
+			if ((univ.party[which_pc].traits[12] == true) && 
 				(how_much > 1))
 					how_much++;
-			if ((ADVEN[which_pc].traits[12] == true) && 
+			if ((univ.party[which_pc].traits[12] == true) && 
 				(how_much == 1) && (get_ran(1,0,1) == 0))
 					how_much++;
 			
 			if (how_much > 0) {
-				ADVEN[which_pc].status[2] = min(ADVEN[which_pc].status[2] + how_much,8);
+				univ.party[which_pc].status[2] = min(univ.party[which_pc].status[2] + how_much,8);
 				sprintf ((char *) c_line, "  %s poisoned.",
-					(char *) ADVEN[which_pc].name.c_str());
+					(char *) univ.party[which_pc].name.c_str());
 				add_string_to_buf((char *) c_line);
 				one_sound(17);
 				give_help(33,0,0);
@@ -3170,11 +3171,11 @@ void affect_pc(short which_pc,eStatus type,short how_much)////
 //type; // which status to affect
 {
 
-		if (ADVEN[which_pc].main_status != 1)
+		if (univ.party[which_pc].main_status != 1)
 			return;
-			ADVEN[which_pc].status[type] = minmax (-8,8,ADVEN[which_pc].status[type] + how_much);
+			univ.party[which_pc].status[type] = minmax (-8,8,univ.party[which_pc].status[type] + how_much);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
-		ADVEN[which_pc].status[type] = max(ADVEN[which_pc].status[type],0);
+		univ.party[which_pc].status[type] = max(univ.party[which_pc].status[type],0);
 	put_pc_screen(); 
 }
 void affect_party(eStatus type,short how_much)
@@ -3183,16 +3184,16 @@ void affect_party(eStatus type,short how_much)
 	short i;
 
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
-			ADVEN[i].status[type] = minmax (-8,8,ADVEN[i].status[type] + how_much);
+		if (univ.party[i].main_status == 1)
+			univ.party[i].status[type] = minmax (-8,8,univ.party[i].status[type] + how_much);
 	put_pc_screen(); 
 }
 
 void void_sanctuary(short pc_num)
 {
-	if (ADVEN[pc_num].status[8] > 0) {
+	if (univ.party[pc_num].status[8] > 0) {
 		add_string_to_buf("You become visible!");
-		ADVEN[pc_num].status[8] = 0;
+		univ.party[pc_num].status[8] = 0;
 		}
 }
 
@@ -3202,7 +3203,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	bool dummy;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			dummy = damage_pc(i,how_much,damage_type,MONSTER_TYPE_UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen(); 
@@ -3214,8 +3215,8 @@ void slay_party(eMainStatus mode)
 	
 	boom_anim_active = false;
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == MAIN_STATUS_ALIVE)
-			ADVEN[i].main_status = mode;
+		if (univ.party[i].main_status == MAIN_STATUS_ALIVE)
+			univ.party[i].main_status = mode;
 	put_pc_screen(); 
 }
 
@@ -3229,7 +3230,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 	short i, r1,level;
 	bool do_print = true;
 	
-	if (ADVEN[which_pc].main_status != 1)
+	if (univ.party[which_pc].main_status != 1)
 		return false;
 	
 	//sound_type = damage_type / 100;
@@ -3253,32 +3254,32 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		
 	// armor	
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
-		how_much -= minmax(-5,5,ADVEN[which_pc].status[1]);
+		how_much -= minmax(-5,5,univ.party[which_pc].status[1]);
 		for (i = 0; i < 24; i++)
-			if ((ADVEN[which_pc].items[i].variety != 0) && (ADVEN[which_pc].equip[i] == true)) {
-				if ((ADVEN[which_pc].items[i].variety >= 12) && (ADVEN[which_pc].items[i].variety <= 17)) {
-						r1 = get_ran(1,1,ADVEN[which_pc].items[i].item_level);
+			if ((univ.party[which_pc].items[i].variety != 0) && (univ.party[which_pc].equip[i] == true)) {
+				if ((univ.party[which_pc].items[i].variety >= 12) && (univ.party[which_pc].items[i].variety <= 17)) {
+						r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
 						how_much -= r1;
 						
 						// bonus for magical items
-						if (ADVEN[which_pc].items[i].bonus > 0) {
-							r1 = get_ran(1,1,ADVEN[which_pc].items[i].bonus);
+						if (univ.party[which_pc].items[i].bonus > 0) {
+							r1 = get_ran(1,1,univ.party[which_pc].items[i].bonus);
 							how_much -= r1;
-							how_much -= ADVEN[which_pc].items[i].bonus / 2;
+							how_much -= univ.party[which_pc].items[i].bonus / 2;
 							}
-						if (ADVEN[which_pc].items[i].bonus < 0) {
-							how_much = how_much - ADVEN[which_pc].items[i].bonus;
+						if (univ.party[which_pc].items[i].bonus < 0) {
+							how_much = how_much - univ.party[which_pc].items[i].bonus;
 							}
 						r1 = get_ran(1,1,100);
-						if (r1 < hit_chance[ADVEN[which_pc].skills[8]] - 20)
+						if (r1 < hit_chance[univ.party[which_pc].skills[8]] - 20)
 							how_much -= 1;
 					}
-				if (ADVEN[which_pc].items[i].protection > 0) {
-						r1 = get_ran(1,1,ADVEN[which_pc].items[i].protection);
+				if (univ.party[which_pc].items[i].protection > 0) {
+						r1 = get_ran(1,1,univ.party[which_pc].items[i].protection);
 						how_much -= r1;
 					}
-				if (ADVEN[which_pc].items[i].protection < 0) {
-						r1 = get_ran(1,1,-1 * ADVEN[which_pc].items[i].protection);
+				if (univ.party[which_pc].items[i].protection < 0) {
+						r1 = get_ran(1,1,-1 * univ.party[which_pc].items[i].protection);
 						how_much += r1;
 					}
 				}	
@@ -3293,10 +3294,10 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		if (PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
-		if (ADVEN[which_pc].traits[0] == true)
+		if (univ.party[which_pc].traits[0] == true)
 			how_much--;
 		// luck
-		if (get_ran(1,1,100) < 2 * (hit_chance[ADVEN[which_pc].skills[18]] - 20))
+		if (get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skills[18]] - 20))
 			how_much -= 1;
 		}
 
@@ -3315,7 +3316,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 	
 
 	// invuln
-	if (ADVEN[which_pc].status[4] > 0)
+	if (univ.party[which_pc].status[4] > 0)
 		how_much = 0;
 		
 	// magic resistance
@@ -3324,7 +3325,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 	
 	// Mag. res helps w. fire and cold
 	if (((damage_type == 1) || (damage_type == 5)) && 
-		(ADVEN[which_pc].status[5] > 0))
+		(univ.party[which_pc].status[5] > 0))
 			how_much = how_much / 2;
 			
 	// fire res.
@@ -3347,7 +3348,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		if (is_town())
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 			else add_explosion(pc_pos[which_pc],how_much,0,(damage_type > 2) ? 2 : 0,0,0);
-	//	sprintf ((char *) c_line, "  %s takes %d. ",(char *) ADVEN[which_pc].name, how_much);
+	//	sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name, how_much);
 	//	if (do_print == true)
 	//		add_string_to_buf((char *) c_line);
 		if (how_much == 0)
@@ -3363,10 +3364,10 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		}
 		else {
 			// if asleep, get bonus
-			if (ADVEN[which_pc].status[11] > 0)
-				ADVEN[which_pc].status[11]--;
+			if (univ.party[which_pc].status[11] > 0)
+				univ.party[which_pc].status[11]--;
 			
-			sprintf ((char *) c_line, "  %s takes %d. ",(char *) ADVEN[which_pc].name.c_str(), how_much);
+			sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name.c_str(), how_much);
 			if (do_print == true)
 				add_string_to_buf((char *) c_line);
 			if (damage_type != 10) {
@@ -3383,22 +3384,22 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 
 	univ.party.total_dam_taken += how_much;
 	
-	if (ADVEN[which_pc].cur_health >= how_much)
-		ADVEN[which_pc].cur_health = ADVEN[which_pc].cur_health - how_much;
-		else if (ADVEN[which_pc].cur_health > 0)
-			ADVEN[which_pc].cur_health = 0;
+	if (univ.party[which_pc].cur_health >= how_much)
+		univ.party[which_pc].cur_health = univ.party[which_pc].cur_health - how_much;
+		else if (univ.party[which_pc].cur_health > 0)
+			univ.party[which_pc].cur_health = 0;
 			else // Check if PC can die
 			 if (how_much > 25) {
-				sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) ADVEN[which_pc].name.c_str());
+				sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) univ.party[which_pc].name.c_str());
 				add_string_to_buf((char *) c_line);					
 				kill_pc(which_pc, MAIN_STATUS_DUST);
 				}
 				else {
-				sprintf ((char *) c_line, "  %s is killed.",(char *) ADVEN[which_pc].name.c_str());
+				sprintf ((char *) c_line, "  %s is killed.",(char *) univ.party[which_pc].name.c_str());
 				add_string_to_buf((char *) c_line);					
 				kill_pc(which_pc,MAIN_STATUS_DEAD);
 				}
-	if ((ADVEN[which_pc].cur_health == 0) && (ADVEN[which_pc].main_status == 1))
+	if ((univ.party[which_pc].cur_health == 0) && (univ.party[which_pc].main_status == 1))
 		play_sound(3);
 	put_pc_screen();
 	return true;
@@ -3418,17 +3419,17 @@ void kill_pc(short which_pc,eMainStatus type)
 	if (type != MAIN_STATUS_STONE)
 		i = pc_has_abil_equip(which_pc,48);
 
-	if ((no_save == false) && (type != MAIN_STATUS_ABSENT) && (ADVEN[which_pc].skills[18] > 0) && 
-		(get_ran(1,1,100) < hit_chance[ADVEN[which_pc].skills[18]])) {
+	if ((no_save == false) && (type != MAIN_STATUS_ABSENT) && (univ.party[which_pc].skills[18] > 0) && 
+		(get_ran(1,1,100) < hit_chance[univ.party[which_pc].skills[18]])) {
 			add_string_to_buf("  But you luck out!          ");
-			ADVEN[which_pc].cur_health = 0;
+			univ.party[which_pc].cur_health = 0;
 			}
 		else if ((i == 24) || (type == MAIN_STATUS_ABSENT)) {
 			if (combat_active_pc == which_pc)
 				combat_active_pc = 6;
 	
 			for (i = 0; i < 24; i++)
-				ADVEN[which_pc].equip[i] = false;
+				univ.party[which_pc].equip[i] = false;
 
 			item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
 	
@@ -3439,21 +3440,21 @@ void kill_pc(short which_pc,eMainStatus type)
 		
 			if (overall_mode != MODE_OUTDOORS)	
 				for (i = 0; i < 24; i++)
-					if (ADVEN[which_pc].items[i].variety != 0) {
-						dummy = place_item(ADVEN[which_pc].items[i],item_loc,true);
-						ADVEN[which_pc].items[i].variety = ITEM_TYPE_NO_ITEM;
+					if (univ.party[which_pc].items[i].variety != 0) {
+						dummy = place_item(univ.party[which_pc].items[i],item_loc,true);
+						univ.party[which_pc].items[i].variety = ITEM_TYPE_NO_ITEM;
 						}
 				if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
 					play_sound(21);
-				ADVEN[which_pc].main_status = type;
-				ADVEN[which_pc].ap = 0;
+				univ.party[which_pc].main_status = type;
+				univ.party[which_pc].ap = 0;
 			}
 			else {
 				add_string_to_buf("  Life saved!              ");
 				take_item(which_pc,i);
 				heal_pc(which_pc,200);
 			}
-	if (ADVEN[current_pc].main_status != MAIN_STATUS_ALIVE)
+	if (univ.party[current_pc].main_status != MAIN_STATUS_ALIVE)
 		current_pc = first_active_pc();
 	put_pc_screen();
 	set_stat_window(current_pc);
@@ -3464,34 +3465,34 @@ void set_pc_moves()
 	short i,r,i_level;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status != 1)
-			ADVEN[i].ap = 0;
+		if (univ.party[i].main_status != 1)
+			univ.party[i].ap = 0;
 			else {
-				ADVEN[i].ap = (ADVEN[i].traits[10] == true) ? 3 : 4;
+				univ.party[i].ap = (univ.party[i].traits[10] == true) ? 3 : 4;
 				r = get_encumberance(i);
-				ADVEN[i].ap = minmax(1,8,ADVEN[i].ap - (r / 3));
+				univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 				
 				if ((i_level = get_prot_level(i,55)) > 0)
-					ADVEN[i].ap += i_level / 7 + 1;
+					univ.party[i].ap += i_level / 7 + 1;
 				if ((i_level = get_prot_level(i,56)) > 0)
-					ADVEN[i].ap -= i_level / 5;
+					univ.party[i].ap -= i_level / 5;
 
-				if ((ADVEN[i].status[3] < 0) && (univ.party.age % 2 == 1)) // slowed?
-					ADVEN[i].ap = 0;
+				if ((univ.party[i].status[3] < 0) && (univ.party.age % 2 == 1)) // slowed?
+					univ.party[i].ap = 0;
 					else { // do webs
-						ADVEN[i].ap = max(0,ADVEN[i].ap - ADVEN[i].status[6] / 2);
-						if (ADVEN[i].ap == 0) {
-							sprintf((char *) c_line,"%s must clean webs.",ADVEN[i].name.c_str());
+						univ.party[i].ap = max(0,univ.party[i].ap - univ.party[i].status[6] / 2);
+						if (univ.party[i].ap == 0) {
+							sprintf((char *) c_line,"%s must clean webs.",univ.party[i].name.c_str());
 							add_string_to_buf((char *) c_line);
-							ADVEN[i].status[6] = max(0,ADVEN[i].status[6] - 3);
+							univ.party[i].status[6] = max(0,univ.party[i].status[6] - 3);
 							}
 						}
-				if (ADVEN[i].status[3] > 7)
-					ADVEN[i].ap = ADVEN[i].ap * 3;
-					else if (ADVEN[i].status[3] > 0)
-						ADVEN[i].ap = ADVEN[i].ap * 2;
-				if ((ADVEN[i].status[11] > 0) || (ADVEN[i].status[12] > 0)) 	
-					ADVEN[i].ap = 0;
+				if (univ.party[i].status[3] > 7)
+					univ.party[i].ap = univ.party[i].ap * 3;
+					else if (univ.party[i].status[3] > 0)
+						univ.party[i].ap = univ.party[i].ap * 2;
+				if ((univ.party[i].status[11] > 0) || (univ.party[i].status[12] > 0)) 	
+					univ.party[i].ap = 0;
 
 				}
 
@@ -3499,14 +3500,14 @@ void set_pc_moves()
 
 void take_ap(short num)
 {
-	ADVEN[current_pc].ap = max(0,ADVEN[current_pc].ap - num);
+	univ.party[current_pc].ap = max(0,univ.party[current_pc].ap - num);
 }
 
 short cave_lore_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0))
+		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0))
 			ret += 1;
 	return ret;
 }
@@ -3515,7 +3516,7 @@ short woodsman_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[5] > 0))
+		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0))
 			ret += 1;
 	return ret;
 }

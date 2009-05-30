@@ -28,7 +28,6 @@ cVehicle::cVehicle() :
 		sector.x = 0; sector.y = 0;
 }
 
-__attribute__((deprecated))
 cVehicle& cVehicle::operator = (legacy::horse_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
@@ -42,7 +41,6 @@ cVehicle& cVehicle::operator = (legacy::horse_record_type& old){
 	return *this;
 }
 
-__attribute__((deprecated))
 cVehicle& cVehicle::operator = (legacy::boat_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;

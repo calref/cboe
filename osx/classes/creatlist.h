@@ -15,7 +15,6 @@ namespace legacy {
 };
 
 class cPopulation { // formerly creature_list_type
-public:
 //	class cCreature { // formerly creature_data_type
 //	public:
 //		short active, attitude;
@@ -29,6 +28,7 @@ public:
 //		cCreature& operator = (legacy::creature_data_type old);
 //	};
 	cCreature dudes[60];
+public:
 	short which_town;
 	short friendly;
 	

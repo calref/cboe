@@ -8,7 +8,6 @@
 
 /* Adventure globals */
 //extern party_record_type party;
-//extern pc_record_type ADVEN[6];
 //extern outdoor_record_type outdoors[2][2];
 //extern current_town_type c_town;
 //extern big_tr_type t_d;
@@ -53,28 +52,28 @@ void combine_things(short pc_num)
 	short i,j,test;
 	
 	for (i = 0; i < 24; i++) {
-		if ((ADVEN[pc_num].items[i].variety > 0) &&
-			(ADVEN[pc_num].items[i].type_flag > 0) && (ADVEN[pc_num].items[i].item_properties & 254 != 0)) {
+		if ((univ.party[pc_num].items[i].variety > 0) &&
+			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].item_properties & 254 != 0)) {
 			for (j = i + 1; j < 24; j++)
-				if ((ADVEN[pc_num].items[j].variety > 0) &&
-				(ADVEN[pc_num].items[j].type_flag == ADVEN[pc_num].items[i].type_flag) 
-				 && (ADVEN[pc_num].items[j].item_properties & 254 != 0)) {
+				if ((univ.party[pc_num].items[j].variety > 0) &&
+				(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag) 
+				 && (univ.party[pc_num].items[j].item_properties & 254 != 0)) {
 					add_string_to_buf("(items combined)");
-					test = (short) (ADVEN[pc_num].items[i].charges) + (short) (ADVEN[pc_num].items[j].charges);
+					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
 					if (test > 125) {
-						ADVEN[pc_num].items[i].charges = 125;
+						univ.party[pc_num].items[i].charges = 125;
 						ASB("Can have at most 125 of any item.");
 						}
-				 		else ADVEN[pc_num].items[i].charges += ADVEN[pc_num].items[j].charges;
-				 	if (ADVEN[pc_num].equip[j] == true) {
-				 		ADVEN[pc_num].equip[i] = true;
-				 		ADVEN[pc_num].equip[j] = false;
+				 		else univ.party[pc_num].items[i].charges += univ.party[pc_num].items[j].charges;
+				 	if (univ.party[pc_num].equip[j] == true) {
+				 		univ.party[pc_num].equip[i] = true;
+				 		univ.party[pc_num].equip[j] = false;
 				 		}
 					take_item(pc_num,j);
 				 	}
 			}		
-		if ((ADVEN[pc_num].items[i].variety > 0) && (ADVEN[pc_num].items[i].charges < 0))
-			ADVEN[pc_num].items[i].charges = 1;
+		if ((univ.party[pc_num].items[i].variety > 0) && (univ.party[pc_num].items[i].charges < 0))
+			univ.party[pc_num].items[i].charges = 1;
 		}			
 }
 
@@ -85,10 +84,10 @@ bool give_to_pc(short pc_num,cItemRec item, short print_result)
 	
 	if (item.variety == 0)
 		return true;
-	if (((free_space = pc_has_space(pc_num)) == 24 ) || (ADVEN[pc_num].main_status != 1))
+	if (((free_space = pc_has_space(pc_num)) == 24 ) || (univ.party[pc_num].main_status != 1))
 		return false;
 		else {
-			ADVEN[pc_num].items[free_space] = item;
+			univ.party[pc_num].items[free_space] = item;
 			combine_things(pc_num);
 			return true;
 			}
@@ -126,7 +125,7 @@ short pc_has_space(short pc_num)
 	short i = 0;
 	
 	while (i < 24) {
-	if (ADVEN[pc_num].items[i].variety == 0)
+	if (univ.party[pc_num].items[i].variety == 0)
 		return i;
 	i++;
 	}
@@ -140,19 +139,19 @@ void take_item(short pc_num,short which_item)
 	short i;
 	bool do_print = true;
 
-	if ((ADVEN[pc_num].weap_poisoned == which_item) && (ADVEN[pc_num].status[0] > 0)) {
+	if ((univ.party[pc_num].weap_poisoned == which_item) && (univ.party[pc_num].status[0] > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
-			ADVEN[pc_num].status[0] = 0;
+			univ.party[pc_num].status[0] = 0;
 		}
-	if ((ADVEN[pc_num].weap_poisoned > which_item) && (ADVEN[pc_num].status[0] > 0)) 
-		ADVEN[pc_num].weap_poisoned--;
+	if ((univ.party[pc_num].weap_poisoned > which_item) && (univ.party[pc_num].status[0] > 0)) 
+		univ.party[pc_num].weap_poisoned--;
 		
 	for (i = which_item; i < 23; i++) {
-		ADVEN[pc_num].items[i] = ADVEN[pc_num].items[i + 1];
-		ADVEN[pc_num].equip[i] = ADVEN[pc_num].equip[i + 1];
+		univ.party[pc_num].items[i] = univ.party[pc_num].items[i + 1];
+		univ.party[pc_num].equip[i] = univ.party[pc_num].equip[i + 1];
 		}
-	ADVEN[pc_num].items[23].variety = ITEM_TYPE_NO_ITEM;
-	ADVEN[pc_num].equip[23] = false;
+	univ.party[pc_num].items[23].variety = ITEM_TYPE_NO_ITEM;
+	univ.party[pc_num].equip[23] = false;
 
 }
 
@@ -205,13 +204,13 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 		else csit(	1018,15,title);
 	
 	for (i = 0; i < 6; i++) {
-		if ((ADVEN[i].main_status == 0) ||
-			((active_only == true) && (ADVEN[i].main_status > 1)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (ADVEN[i].main_status == 5)) {
+		if ((univ.party[i].main_status == 0) ||
+			((active_only == true) && (univ.party[i].main_status > 1)) ||
+			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (univ.party[i].main_status == 5)) {
 				cd_activate_item(1018, 3 + i, 0);
 				}
-		if (ADVEN[i].main_status != 0) {
-				csit(1018,9 + i,ADVEN[i].name.c_str());		
+		if (univ.party[i].main_status != 0) {
+				csit(1018,9 + i,univ.party[i].name.c_str());		
 			}		
 			else cd_activate_item(1018, 9 + i, 0);
 	}
@@ -287,8 +286,8 @@ short party_total_level()
 	short i,j = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
-			j += ADVEN[i].level;
+		if (univ.party[i].main_status == 1)
+			j += univ.party[i].level;
 	return j;
 }
 
@@ -299,8 +298,8 @@ short luck_total()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
-			i += ADVEN[i].skills[18];
+		if (univ.party[i].main_status == 1)
+			i += univ.party[i].skills[18];
 	return i;
 }
 

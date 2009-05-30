@@ -79,7 +79,6 @@ extern short terrain_there[9][9];
 //extern cOutdoors outdoors[2][2];
 //extern town_item_list	univ.town;
 //extern unsigned char out[96][96];
-//extern pc_record_type ADVEN[6];
 //extern big_tr_type t_d;
 extern Point ul;
 extern bool play_sounds,suppress_stat_screen,cartoon_happening,in_startup_mode;
@@ -108,8 +107,8 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 {
 	short i = 0;
 	
-	while (((ADVEN[pc_num].items[i].variety == 0) || (ADVEN[pc_num].items[i].ability != abil)
-			|| (ADVEN[pc_num].equip[i] == false)) && (i < 24))
+	while (((univ.party[pc_num].items[i].variety == 0) || (univ.party[pc_num].items[i].ability != abil)
+			|| (univ.party[pc_num].equip[i] == false)) && (i < 24))
 				i++;
 	return i;
 				
@@ -154,7 +153,7 @@ void put_pc_screen()
 	ForeColor(blackColor);
 	
 	for (i = 0; i < 6; i++) {
-		if (ADVEN[i].main_status != 0) {
+		if (univ.party[i].main_status != 0) {
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
@@ -162,7 +161,7 @@ void put_pc_screen()
 				ForeColor(blueColor);
 				}
 
-			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) ADVEN[i].name.c_str());		
+			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());		
 			win_draw_string( pc_stats_gworld,pc_buttons[i][0],
  			 to_draw,0,10,false);
 			TextFace(0);
@@ -171,18 +170,18 @@ void put_pc_screen()
 	
 			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
-			switch (ADVEN[i].main_status) {
+			switch (univ.party[i].main_status) {
 				case 1:
-					if (ADVEN[i].cur_health == ADVEN[i].max_health) 
+					if (univ.party[i].cur_health == univ.party[i].max_health) 
 						ForeColor(greenColor);
 						else ForeColor(redColor);
-					sprintf((char *) to_draw, "%-3d              ",ADVEN[i].cur_health);
+					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][1],
  			 		  to_draw,0,10,false);
-					if (ADVEN[i].cur_sp == ADVEN[i].max_sp) 
+					if (univ.party[i].cur_sp == univ.party[i].max_sp) 
 						ForeColor(blueColor);
 						else ForeColor(magentaColor);
-					sprintf((char *) to_draw, "%-3d              ",ADVEN[i].cur_sp);
+					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][2],
  			 		  to_draw,0,10,false);
 					ForeColor(blackColor);
@@ -210,7 +209,7 @@ void put_pc_screen()
 					sprintf((char *) to_draw, "Absent");
 					break;
 				}
-			if (ADVEN[i].main_status != 1)
+			if (univ.party[i].main_status != 1)
 				win_draw_string( pc_stats_gworld,to_draw_rect,
  			 	 to_draw,0,10,false);
 			
@@ -242,7 +241,7 @@ void put_pc_screen()
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if ((current_pc < 6) && (ADVEN[current_pc].main_status != 1) && (stat_window == current_pc)) {
+	if ((current_pc < 6) && (univ.party[current_pc].main_status != 1) && (stat_window == current_pc)) {
 		set_stat_window(current_pc);
 		}
 }
@@ -326,7 +325,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			pc = screen_num; 
 				ForeColor(whiteColor);
 			sprintf((char *) to_draw, "%s inventory:",
-				(char *) ADVEN[pc].name.c_str());
+				(char *) univ.party[pc].name.c_str());
 			win_draw_string( item_stats_gworld,upper_frame_rect,
  			  to_draw,0,10,false);
 				ForeColor(blackColor);
@@ -340,28 +339,28 @@ void put_item_screen(short screen_num,short suppress_buttons)
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
 				
-				if (ADVEN[pc].items[i_num].variety == 0) {
+				if (univ.party[pc].items[i_num].variety == 0) {
 					
 					}
 					else {
-						if (ADVEN[pc].equip[i_num] == true) {
+						if (univ.party[pc].equip[i_num] == true) {
 							TextFace(italic | bold);
-							if (ADVEN[pc].items[i_num].variety < 3)
+							if (univ.party[pc].items[i_num].variety < 3)
 								ForeColor(magentaColor);						
-								else if ((ADVEN[pc].items[i_num].variety >= 12) && (ADVEN[pc].items[i_num].variety <= 17))
+								else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
 									ForeColor(greenColor);
 									else ForeColor(blueColor);
 							}
 							else ForeColor(blackColor);
 
 							//// 
-							if (!ADVEN[pc].items[i_num].is_ident())
-								sprintf((char *) to_draw, "%s  ",ADVEN[pc].items[i_num].name.c_str());
+							if (!univ.party[pc].items[i_num].is_ident())
+								sprintf((char *) to_draw, "%s  ",univ.party[pc].items[i_num].name.c_str());
 								else { /// Don't place # of charges when Sell button up and space tight
-									if ((ADVEN[pc].items[i_num].charges > 0) && (ADVEN[pc].items[i_num].type != 2)
+									if ((univ.party[pc].items[i_num].charges > 0) && (univ.party[pc].items[i_num].type != 2)
 										&& (stat_screen_mode <= 1))
-										sprintf((char *) to_draw, "%s (%d)",ADVEN[pc].items[i_num].full_name.c_str(),ADVEN[pc].items[i_num].charges);
-										else sprintf((char *) to_draw, "%s",ADVEN[pc].items[i_num].full_name.c_str());
+										sprintf((char *) to_draw, "%s (%d)",univ.party[pc].items[i_num].full_name.c_str(),univ.party[pc].items[i_num].charges);
+										else sprintf((char *) to_draw, "%s",univ.party[pc].items[i_num].full_name.c_str());
 									}
 						dest_rect.left -= 2;
 						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10,false);
@@ -373,19 +372,19 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						// make go faster, and I got lazy.
 						if ((stat_screen_mode == 0) && 
 						 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
-							place_item_button(0,i,0,ADVEN[pc].items[i_num].graphic_num); // item_graphic 
-							if (abil_chart[ADVEN[pc].items[i_num].ability] != 4) // place use if can
+							place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic 
+							if (abil_chart[univ.party[pc].items[i_num].ability] != 4) // place use if can
 								place_item_button(10,i,1,0);
 								else place_item_button(11,i,1,0);
 							}
 							else {
-								place_item_button(0,i,0,ADVEN[pc].items[i_num].graphic_num); // item_graphic 
+								place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic 
 								place_item_button(3,i,4,0); // info button
 								if ((stat_screen_mode == 0) && 
 								 ((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 									place_item_button(1,i,2,0);
 									place_item_button(2,i,3,0);
-									if (abil_chart[ADVEN[pc].items[i_num].ability] != 4) // place use if can
+									if (abil_chart[univ.party[pc].items[i_num].ability] != 4) // place use if can
 										place_item_button(0,i,1,0);
 									}
 								}
@@ -424,59 +423,59 @@ void place_buy_button(short position,short pc_num,short item_num)
 	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
-	if (ADVEN[pc_num].items[item_num].variety == 0)
+	if (univ.party[pc_num].items[item_num].variety == 0)
 		return;
 		
 	dest_rect = item_buttons[position][5];
 
-	val_to_place = (ADVEN[pc_num].items[item_num].charges > 0) ?
-		ADVEN[pc_num].items[item_num].charges * ADVEN[pc_num].items[item_num].value :
-		ADVEN[pc_num].items[item_num].value;
+	val_to_place = (univ.party[pc_num].items[item_num].charges > 0) ?
+		univ.party[pc_num].items[item_num].charges * univ.party[pc_num].items[item_num].value :
+		univ.party[pc_num].items[item_num].value;
 	val_to_place = val_to_place / 2;
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (!ADVEN[pc_num].items[item_num].is_ident()) { 
+			if (!univ.party[pc_num].items[item_num].is_ident()) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 				}
 			break;
 		case 3: // sell weapons 
-			if (((ADVEN[pc_num].items[item_num].variety < 7) || (ADVEN[pc_num].items[item_num].variety == 23) ||
-				(!ADVEN[pc_num].equip[item_num]) &&
-				(ADVEN[pc_num].items[item_num].variety == 24)) &&
-				(ADVEN[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
-				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
+			if (((univ.party[pc_num].items[item_num].variety < 7) || (univ.party[pc_num].items[item_num].variety == 23) ||
+				(!univ.party[pc_num].equip[item_num]) &&
+				(univ.party[pc_num].items[item_num].variety == 24)) &&
+				(univ.party[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
+				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 4: // sell armor
-			if ((ADVEN[pc_num].items[item_num].variety >= 12) && (ADVEN[pc_num].items[item_num].variety <= 17) &&
-				(!ADVEN[pc_num].equip[item_num]) &&
-				(ADVEN[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
-				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
+			if ((univ.party[pc_num].items[item_num].variety >= 12) && (univ.party[pc_num].items[item_num].variety <= 17) &&
+				(!univ.party[pc_num].equip[item_num]) &&
+				(univ.party[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
+				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (ADVEN[pc_num].items[item_num].is_ident()) && 
-				(!ADVEN[pc_num].equip[item_num]) &&
-				 (!ADVEN[pc_num].items[item_num].is_cursed())) { 
+			if ((val_to_place > 0) && (univ.party[pc_num].items[item_num].is_ident()) && 
+				(!univ.party[pc_num].equip[item_num]) &&
+				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 6: // augment weapons 
-			if ((ADVEN[pc_num].items[item_num].variety < 3) &&
-				(ADVEN[pc_num].items[item_num].is_ident()) &&
-				(ADVEN[pc_num].items[item_num].ability == 0) &&
-				(!ADVEN[pc_num].items[item_num].is_magic())) { 
+			if ((univ.party[pc_num].items[item_num].variety < 3) &&
+				(univ.party[pc_num].items[item_num].is_ident()) &&
+				(univ.party[pc_num].items[item_num].ability == 0) &&
+				(!univ.party[pc_num].items[item_num].is_magic())) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
-				val_to_place = max(aug_cost[shop_identify_cost] * 100,ADVEN[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
+				val_to_place = max(aug_cost[shop_identify_cost] * 100,univ.party[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
 				}
 			break;
 		}
@@ -560,7 +559,7 @@ void place_item_bottom_buttons()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (ADVEN[i].main_status == 1) {
+		if (univ.party[i].main_status == 1) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
@@ -590,7 +589,7 @@ void set_stat_window(short new_stat)
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
-	if ((stat_window < 6) && (ADVEN[stat_window].main_status != 1))
+	if ((stat_window < 6) && (univ.party[stat_window].main_status != 1))
 		stat_window = first_active_pc();
 	switch (stat_window) {
 		case 6:
@@ -621,7 +620,7 @@ short first_active_pc()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			return i;
 	return 6;
 }
@@ -658,8 +657,8 @@ short total_encumberance(short pc_num)
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 24; i++)
-		if (ADVEN[pc_num].equip[i] == true) {
-			what_val = ADVEN[pc_num].items[i].awkward;
+		if (univ.party[pc_num].equip[i] == true) {
+			what_val = univ.party[pc_num].items[i].awkward;
 			store += what_val;
 			}
 	return store;
@@ -711,7 +710,7 @@ void draw_pc_effects(short pc)
 		dest_rect.bottom += pc * 25 + 18;
 		}
 		else {
-			name_width = string_length(ADVEN[pc].name.c_str());
+			name_width = string_length(univ.party[pc].name.c_str());
 			right_limit = pc_buttons[0][1].left - 5;
 			//dest_rect.left = pc_buttons[i][1].left - 16;
 			dest_rect.left = name_width + 33;
@@ -720,85 +719,85 @@ void draw_pc_effects(short pc)
 			dest_rect.bottom += pc * 13;
 			}
 			
-	if (ADVEN[pc].main_status % 10 != 1)
+	if (univ.party[pc].main_status % 10 != 1)
 		return;
 			
-	if ((ADVEN[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
+	if ((univ.party[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[4],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[1] > 0) { 
+	if (univ.party[pc].status[1] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[2],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[1] < 0) { 
+	if (univ.party[pc].status[1] < 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[3],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[2] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[(ADVEN[pc].status[2] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
+	if (univ.party[pc].status[2] > 0) { 
+		rect_draw_some_item (mixed_gworld,source_rects[(univ.party[pc].status[2] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[4] > 0) { 
+	if (univ.party[pc].status[4] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[5],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[3] > 0) { 
+	if (univ.party[pc].status[3] > 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[6],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (ADVEN[pc].status[3] < 0) { 
+	if (univ.party[pc].status[3] < 0) { 
 		rect_draw_some_item (mixed_gworld,source_rects[8],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((ADVEN[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
+	if ((univ.party[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[9],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((ADVEN[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
+	if ((univ.party[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
 		rect_draw_some_item (mixed_gworld,source_rects[10],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((ADVEN[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[11],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((ADVEN[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[12],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((ADVEN[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[13],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((ADVEN[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[14],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((ADVEN[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[15],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((ADVEN[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[16],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((ADVEN[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
+	if ((univ.party[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
 		rect_draw_some_item (mixed_gworld,source_rects[17],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
@@ -841,28 +840,28 @@ short do_look(location space)
 			add_string_to_buf("    Your party");
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
-			if ((space == pc_pos[i]) && (ADVEN[i].main_status == 1)
+			if ((space == pc_pos[i]) && (univ.party[i].main_status == 1)
 				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
-				msg = "    " + ADVEN[i].name;
+				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);					
 				}
 		
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for (i = 0; i < univ.town->max_monst(); i++)
-			if ((univ.town.monst.dudes[i].active != 0) && (is_lit == true)
+			if ((univ.town.monst[i].active != 0) && (is_lit == true)
 				&& (monst_on_space(space,i) == true) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
-				&& (univ.town.monst.dudes[i].picture_num != 0)) {
+				&& (univ.town.monst[i].picture_num != 0)) {
 				
 				
-				msg = get_m_name(univ.town.monst.dudes[i].number);
-				if (univ.town.monst.dudes[i].health < univ.town.monst.dudes[i].m_health) {
-					if (univ.town.monst.dudes[i].attitude % 2 == 1)
+				msg = get_m_name(univ.town.monst[i].number);
+				if (univ.town.monst[i].health < univ.town.monst[i].m_health) {
+					if (univ.town.monst[i].attitude % 2 == 1)
 						msg = "    Wounded " + msg + " (H)";
 						else msg = "    Wounded " + msg + " (F)";
 					}
 				else {
-					if (univ.town.monst.dudes[i].attitude % 2 == 1)
+					if (univ.town.monst[i].attitude % 2 == 1)
 						msg = "    " + msg + " (H)";
 					else msg = "    " + msg + " (F)";
 					}
@@ -1080,9 +1079,9 @@ void print_monst_attacks(m_num_t m_type,short target)
 	std::string msg = get_m_name(m_type);
 	msg += " attacks ";
 	if (target < 100)
-		msg += ADVEN[target].name;
+		msg += univ.party[target].name;
 		else
-			msg += get_m_name(univ.town.monst.dudes[target - 100].number);
+			msg += get_m_name(univ.town.monst[target - 100].number);
 	add_string_to_buf((char *) msg.c_str());
 }
 
@@ -1244,7 +1243,7 @@ void monst_breathe_note(m_num_t number)
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 {
-	std::string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " takes ";
 	std::ostringstream sout(msg);
 	sout << how_much;
@@ -1256,7 +1255,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 
 void monst_killed_mes(short which_m)
 {
-	std::string msg = get_m_name(univ.town.monst.dudes[which_m].number);
+	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " dies.";
 	add_string_to_buf((char *) msg.c_str());
 }

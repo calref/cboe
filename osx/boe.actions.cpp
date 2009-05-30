@@ -98,7 +98,6 @@ extern bool debug_on,cartoon_happening,party_in_memory,in_scen_debug;
 //extern stored_town_maps_type town_maps;
 extern WindowPtr	mainPtr;	
 ////extern party_record_type	party;
-//extern pc_record_type ADVEN[6];
 //extern cOutdoors outdoors[2][2];
 //extern current_town_type	c_town;
 //extern big_tr_type t_d;
@@ -403,13 +402,13 @@ bool handle_action(EventRecord event)
 						}
 					else if (overall_mode == MODE_TOWN) {
 						for (i = 0; i < 6; i++)
-							store_sp[i] = ADVEN[i].cur_sp;
+							store_sp[i] = univ.party[i].cur_sp;
 						cast_spell(button_hit,1);
 						spell_forced = false;
 						need_reprint = true;
 						need_redraw = true;
 						for (i = 0; i < 6; i++)
-							if (store_sp[i] != ADVEN[i].cur_sp)
+							if (store_sp[i] != univ.party[i].cur_sp)
 								did_something = true;
 						}
 						else if (overall_mode == MODE_TOWN_TARGET) {
@@ -690,10 +689,10 @@ bool handle_action(EventRecord event)
 			if (overall_mode == MODE_COMBAT) {
 				char_stand_ready();
 				add_string_to_buf("Stand ready.  ");
-				if (ADVEN[current_pc].status[6] > 0) {
+				if (univ.party[current_pc].status[6] > 0) {
 					add_string_to_buf("You clean webs.  ");
-					ADVEN[current_pc].status[6] = move_to_zero(ADVEN[current_pc].status[6]);	
-					ADVEN[current_pc].status[6] = move_to_zero(ADVEN[current_pc].status[6]);
+					univ.party[current_pc].status[6] = move_to_zero(univ.party[current_pc].status[6]);	
+					univ.party[current_pc].status[6] = move_to_zero(univ.party[current_pc].status[6]);
 					put_pc_screen();	
 					}
 				check_fields(pc_pos[current_pc],2,current_pc);
@@ -701,11 +700,11 @@ bool handle_action(EventRecord event)
 				else {
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
-						if ((ADVEN[k].main_status == 1) && (ADVEN[k].status[6] > 0)) {
-							sprintf((char *) str,"%s cleans webs.",ADVEN[k].name.c_str());
+						if ((univ.party[k].main_status == 1) && (univ.party[k].status[6] > 0)) {
+							sprintf((char *) str,"%s cleans webs.",univ.party[k].name.c_str());
 							add_string_to_buf((char *) str);
-							ADVEN[k].status[6] = move_to_zero(ADVEN[k].status[6]);
-							ADVEN[k].status[6] = move_to_zero(ADVEN[k].status[6]);
+							univ.party[k].status[6] = move_to_zero(univ.party[k].status[6]);
+							univ.party[k].status[6] = move_to_zero(univ.party[k].status[6]);
 							}
 					if (univ.party.in_horse >= 0) {
 						if (overall_mode == MODE_OUTDOORS) {
@@ -735,7 +734,7 @@ bool handle_action(EventRecord event)
 			destination.y += cur_direction.y;
 				
 //	for (i = 0; i < 6; i++) // debug
-//		if (ADVEN[i].exp_adj != 100) {
+//		if (univ.party[i].exp_adj != 100) {
 //			ASB("Error: Flag 1");
 //			}
 
@@ -905,15 +904,15 @@ bool handle_action(EventRecord event)
 						if (monst_on_space(destination,i) == true) {
 							did_something = true;
 							need_redraw = true;
-							if (univ.town.monst.dudes[i].attitude % 2 == 1) {
+							if (univ.town.monst[i].attitude % 2 == 1) {
 								add_string_to_buf("  Creature is hostile.        ");
 							}
-							else if ((univ.town.monst.dudes[i].summoned > 0)////
-								|| (univ.town.monst.dudes[i].personality < 0))
+							else if ((univ.town.monst[i].summoned > 0)////
+								|| (univ.town.monst[i].personality < 0))
 								add_string_to_buf("Talk: No response.            ");
 							else {
-								start_talk_mode(i,univ.town.monst.dudes[i].personality,univ.town.monst.dudes[i].number,
-									univ.town.monst.dudes[i].facial_pic);
+								start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,
+									univ.town.monst[i].facial_pic);
 								did_something = false;
 								need_redraw = false;				
 								break;
@@ -1047,27 +1046,27 @@ bool handle_action(EventRecord event)
 								add_string_to_buf("Set active: Finish what you're doing first.");
 								else if (is_combat())
 								add_string_to_buf("Set active: Can't set this in combat.");
-								else if ((ADVEN[i].main_status != 1) &&
+								else if ((univ.party[i].main_status != 1) &&
 									((overall_mode != MODE_SHOPPING) || (store_shop_type != 3)))
 								add_string_to_buf("Set active: PC must be here & active.");
 							else {
 									current_pc = i;
 									set_stat_window (i);
 									if (overall_mode == MODE_SHOPPING)
-										sprintf((char *) str,"Now shopping: %s",ADVEN[i].name.c_str());
-										else sprintf((char *) str,"Now active: %s",ADVEN[i].name.c_str());
+										sprintf((char *) str,"Now shopping: %s",univ.party[i].name.c_str());
+										else sprintf((char *) str,"Now active: %s",univ.party[i].name.c_str());
 									add_string_to_buf((char *)str);
 									adjust_spell_menus();
 									}
 							break;
 						case 1:
-							sprintf((char *) str,"%s has %d health out of %d.",ADVEN[i].name.c_str(),
-								ADVEN[i].cur_health,ADVEN[i].max_health);
+							sprintf((char *) str,"%s has %d health out of %d.",univ.party[i].name.c_str(),
+								univ.party[i].cur_health,univ.party[i].max_health);
 							add_string_to_buf((char *)str);
 							break;
 						case 2:
-							sprintf((char *) str,"%s has %d spell pts. out of %d.",ADVEN[i].name.c_str(),
-								ADVEN[i].cur_sp,ADVEN[i].max_sp);
+							sprintf((char *) str,"%s has %d spell pts. out of %d.",univ.party[i].name.c_str(),
+								univ.party[i].cur_sp,univ.party[i].max_sp);
 							add_string_to_buf((char *)str);
 							break;
 						case 3: // pc info
@@ -1111,12 +1110,12 @@ bool handle_action(EventRecord event)
 							add_string_to_buf("Set active: Finish what you're doing first.");
 							else {
 								if (!(is_combat())) {
-									if ((ADVEN[i].main_status != 1) &&
+									if ((univ.party[i].main_status != 1) &&
 									((overall_mode != MODE_SHOPPING) || (store_shop_type != 12)))
 										add_string_to_buf("Set active: PC must be here & active.");
 										else {
 											current_pc = i;
-											sprintf((char *) str,"Now active: %s",ADVEN[i].name.c_str());
+											sprintf((char *) str,"Now active: %s",univ.party[i].name.c_str());
 											add_string_to_buf((char *)str);
 											adjust_spell_menus();
 											}
@@ -1190,7 +1189,7 @@ bool handle_action(EventRecord event)
 							case 4: // info
 								if (stat_window == 6)
 									put_spec_item_info(spec_item_array[item_hit]);
-									else display_pc_item(stat_window, item_hit,ADVEN[stat_window].items[item_hit],0);
+									else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case 5: // sell? That this codes was reached indicates that the item was sellable
 								switch (stat_screen_mode) {
@@ -1200,8 +1199,8 @@ bool handle_action(EventRecord event)
 											else {
 												play_sound(68);
 												ASB("Your item is identified.");
-												ADVEN[stat_window].items[item_hit].item_properties = 
-													ADVEN[stat_window].items[item_hit].item_properties | 1;
+												univ.party[stat_window].items[item_hit].item_properties = 
+													univ.party[stat_window].items[item_hit].item_properties | 1;
 												}
 										break;
 									case 3: case 4: case 5: // various selling
@@ -1257,8 +1256,8 @@ bool handle_action(EventRecord event)
 				draw_rest_screen();
 				pause(10);
 				for (i = 0; i < 6; i++) {
-					store_sp[i] = ADVEN[i].cur_health;
-					ADVEN[i].status[6] = 0;
+					store_sp[i] = univ.party[i].cur_health;
+					univ.party[i].status[6] = 0;
 					}
 				}
 		i = 0;			
@@ -1271,7 +1270,7 @@ bool handle_action(EventRecord event)
 			if (j == 10)
 				create_wand_monst();
 			for (j = 0; j < 6; j++)
-				if (ADVEN[j].cur_health < store_sp[j]) {
+				if (univ.party[j].cur_health < store_sp[j]) {
 					i = 200;
 					j = 6;
 					add_string_to_buf("  Waiting interrupted.");
@@ -1328,7 +1327,7 @@ bool handle_action(EventRecord event)
 
 					if (need_redraw == true) {
 						draw_terrain();
-						if ((combat_active_pc == 6) || (ADVEN[combat_active_pc].ap > 0))
+						if ((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
 							need_redraw = false;
 						}
 					//pause(2);
@@ -1407,8 +1406,8 @@ bool handle_action(EventRecord event)
 	}
 	else if (party_toast() == true) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status == MAIN_STATUS_FLED) {
-				ADVEN[i].main_status = MAIN_STATUS_ALIVE;
+			if (univ.party[i].main_status == MAIN_STATUS_FLED) {
+				univ.party[i].main_status = MAIN_STATUS_ALIVE;
 				if (is_combat()) {
 					end_town_mode(0,univ.town.p_loc);
 					add_string_to_buf("End combat.               ");
@@ -1448,7 +1447,7 @@ bool someone_awake()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((ADVEN[i].main_status == 1) && (ADVEN[i].status[11] <= 0) && (ADVEN[i].status[12] <= 0))
+		if ((univ.party[i].main_status == 1) && (univ.party[i].status[11] <= 0) && (univ.party[i].status[12] <= 0))
 			return true;
 	return false;
 }
@@ -1542,13 +1541,13 @@ void initiate_outdoor_combat(short i)
 	univ.party.out_c[i].exists = false;
 
 	for (m = 0; m < 6; m++)
-		if (ADVEN[m].main_status == 1)
+		if (univ.party[m].main_status == 1)
 			to_place = pc_pos[m];
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((ADVEN[m].main_status != 1) && (ADVEN[m].items[n].variety != 0)) {
-				place_item(ADVEN[m].items[n],to_place,true);
-				ADVEN[m].items[n].variety = ITEM_TYPE_NO_ITEM;
+			if ((univ.party[m].main_status != 1) && (univ.party[m].items[n].variety != 0)) {
+				place_item(univ.party[m].items[n],to_place,true);
+				univ.party[m].items[n].variety = ITEM_TYPE_NO_ITEM;
 				}
 							
 	overall_mode = MODE_COMBAT;
@@ -1743,8 +1742,8 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 
 			for (i = 0; i < 6; i++) 
 			for (j = 0; j < 30; j++) {
-				ADVEN[i].priest_spells[j] = 1;
-				ADVEN[i].mage_spells[j] = 1;
+				univ.party[i].priest_spells[j] = 1;
+				univ.party[i].mage_spells[j] = 1;
 				}
 			if (debug_on == false) {
 				break;
@@ -1752,15 +1751,15 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for (i = 0; i < 6; i++) {
-				ADVEN[i].main_status = MAIN_STATUS_ALIVE;
-				ADVEN[i].cur_health = ADVEN[i].max_health;
-				ADVEN[i].cur_sp = 100;
+				univ.party[i].main_status = MAIN_STATUS_ALIVE;
+				univ.party[i].cur_health = univ.party[i].max_health;
+				univ.party[i].cur_sp = 100;
 				}
 			award_party_xp(25);
 			for (i = 0; i < 6; i++) 
 			for (j = 0; j < 62; j++) {
-				ADVEN[i].priest_spells[j] = 1;
-				ADVEN[i].mage_spells[j] = 1;
+				univ.party[i].priest_spells[j] = 1;
+				univ.party[i].mage_spells[j] = 1;
 				}
 			refresh_store_items();
 			add_string_to_buf("Debug: Add stuff and heal.            ");
@@ -1771,14 +1770,14 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 		case 'K':
 			if (debug_on) {
 				for (i = 0; i < univ.town->max_monst(); i++) {
-				if ((is_combat()) && (univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1))
-					univ.town.monst.dudes[i].active = 0;
+				if ((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
+					univ.town.monst[i].active = 0;
 					
-				if ((univ.town.monst.dudes[i].active > 0) && (univ.town.monst.dudes[i].attitude % 2 == 1)
-				&& (dist(univ.town.monst.dudes[i].cur_loc,univ.town.p_loc) <= 10) )
+				if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
+				&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
 					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
 					}
-//				kill_monst(&c_town.monst.dudes[i],6);
+//				kill_monst(&c_town.monst[i],6);
 				draw_terrain();
 				add_string_to_buf("Debug: Kill things.            ");
 				print_buf();
@@ -2149,18 +2148,18 @@ void increase_age()////
 	// Protection, etc.
 	for (i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 	
-			if ((ADVEN[i].status[4] == 1) || (ADVEN[i].status[5] == 1) || (ADVEN[i].status[8] == 1)
-			|| (ADVEN[i].status[11] == 1)|| (ADVEN[i].status[12] == 1))
+			if ((univ.party[i].status[4] == 1) || (univ.party[i].status[5] == 1) || (univ.party[i].status[8] == 1)
+			|| (univ.party[i].status[11] == 1)|| (univ.party[i].status[12] == 1))
 				update_stat = true;
- 			ADVEN[i].status[4] = move_to_zero(ADVEN[i].status[4]);
-			ADVEN[i].status[5] = move_to_zero(ADVEN[i].status[5]);	
-			ADVEN[i].status[8] = move_to_zero(ADVEN[i].status[8]);	
-			ADVEN[i].status[10] = move_to_zero(ADVEN[i].status[10]);	
-			ADVEN[i].status[11] = move_to_zero(ADVEN[i].status[11]);	
-			ADVEN[i].status[12] = move_to_zero(ADVEN[i].status[12]);	
-			if ((univ.party.age % 40 == 0) && (ADVEN[i].status[0] > 0)) {
+ 			univ.party[i].status[4] = move_to_zero(univ.party[i].status[4]);
+			univ.party[i].status[5] = move_to_zero(univ.party[i].status[5]);	
+			univ.party[i].status[8] = move_to_zero(univ.party[i].status[8]);	
+			univ.party[i].status[10] = move_to_zero(univ.party[i].status[10]);	
+			univ.party[i].status[11] = move_to_zero(univ.party[i].status[11]);	
+			univ.party[i].status[12] = move_to_zero(univ.party[i].status[12]);	
+			if ((univ.party.age % 40 == 0) && (univ.party[i].status[0] > 0)) {
 				update_stat = true;
- 				ADVEN[i].status[0] = move_to_zero(ADVEN[i].status[0]);
+ 				univ.party[i].status[0] = move_to_zero(univ.party[i].status[0]);
  				}
 
 		}
@@ -2168,7 +2167,7 @@ void increase_age()////
 	// Food
 	if ((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
 		for (i = 0; i < 6; i++)
-			if (ADVEN[i].main_status == 1)
+			if (univ.party[i].main_status == 1)
 				how_many_short++;
 			how_many_short = take_food (how_many_short,false);
 			if (how_many_short > 0) {
@@ -2189,7 +2188,7 @@ void increase_age()////
 
 	// Poison, acid, disease damage
 	for (i = 0; i < 6; i++) // Poison
-		if (ADVEN[i].status[2] > 0) {
+		if (univ.party[i].status[2] > 0) {
 			i = 6;
 			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
 				update_stat = true;
@@ -2197,7 +2196,7 @@ void increase_age()////
 				}
 			}
 	for (i = 0; i < 6; i++) // Disease
-		if (ADVEN[i].status[7] > 0) {
+		if (univ.party[i].status[7] > 0) {
 			i = 6;
 			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
 				update_stat = true;
@@ -2205,7 +2204,7 @@ void increase_age()////
 				}
 			}
 	for (i = 0; i < 6; i++) // Acid
-		if (ADVEN[i].status[13] > 0) {
+		if (univ.party[i].status[13] > 0) {
 			i = 6;
 			update_stat = true;
 			handle_acid();
@@ -2215,7 +2214,7 @@ void increase_age()////
 	if (is_out()) {
 			if (univ.party.age % 100 == 0) {
 				for (i = 0; i < 6; i++)
-					if ((ADVEN[i].main_status == 1) && (ADVEN[i].cur_health < ADVEN[i].max_health))
+					if ((univ.party[i].main_status == 1) && (univ.party[i].cur_health < univ.party[i].max_health))
 						update_stat = true;
 				heal_party(2);
 				}
@@ -2223,7 +2222,7 @@ void increase_age()////
 		else {
 			if (univ.party.age % 50 == 0) {
 				for (i = 0; i < 6; i++)
-					if ((ADVEN[i].main_status == 1) && (ADVEN[i].cur_health < ADVEN[i].max_health))
+					if ((univ.party[i].main_status == 1) && (univ.party[i].cur_health < univ.party[i].max_health))
 						update_stat = true;
 				heal_party(1);
 				}
@@ -2231,7 +2230,7 @@ void increase_age()////
 	if (is_out()) {
 			if (univ.party.age % 80 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 1) && (ADVEN[i].cur_sp < ADVEN[i].max_sp))
+				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_sp < univ.party[i].max_sp))
 					update_stat = true;
 				restore_sp_party(2);
 				}
@@ -2239,7 +2238,7 @@ void increase_age()////
 		else {	
 			if (univ.party.age % 40 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((ADVEN[i].main_status == 1) && (ADVEN[i].cur_sp < ADVEN[i].max_sp))
+				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_sp < univ.party[i].max_sp))
 					update_stat = true;
 				restore_sp_party(1);
 				}
@@ -2247,12 +2246,12 @@ void increase_age()////
 
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++) 
-		if (ADVEN[i].main_status == 1) {
-			if ((ADVEN[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (ADVEN[i].cur_health < ADVEN[i].max_health)) {
+		if (univ.party[i].main_status == 1) {
+			if ((univ.party[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (univ.party[i].cur_health < univ.party[i].max_health)) {
 				heal_pc(i,2);
 				update_stat = true;
 				}
-			if ((ADVEN[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
+			if ((univ.party[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
 				disease_pc(i,4);
 				update_stat = true;
 				}
@@ -2263,15 +2262,15 @@ void increase_age()////
 	// Blessing, slowed,etc.
 	if (univ.party.age % 4 == 0) 
 		for (i = 0; i < 6; i++) {
-			if ((ADVEN[i].status[1] != 0) || (ADVEN[i].status[3] != 0))
+			if ((univ.party[i].status[1] != 0) || (univ.party[i].status[3] != 0))
 				update_stat = true;
-			ADVEN[i].status[1] = move_to_zero(ADVEN[i].status[1]);
-			ADVEN[i].status[3] = move_to_zero(ADVEN[i].status[3]);	
+			univ.party[i].status[1] = move_to_zero(univ.party[i].status[1]);
+			univ.party[i].status[3] = move_to_zero(univ.party[i].status[3]);	
 			if (((item = pc_has_abil_equip(i,50)) < 24) 
-				&& (ADVEN[i].cur_health < ADVEN[i].max_health)
+				&& (univ.party[i].cur_health < univ.party[i].max_health)
 				&& ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
-					j = get_ran(1,0,ADVEN[i].items[item].ability_strength / 3);
-					if (ADVEN[i].items[item].ability_strength / 3 == 0)
+					j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
+					if (univ.party[i].items[item].ability_strength / 3 == 0)
 						j = get_ran(1,0,1);
 					if (is_out()) j = j * 4;
 					heal_pc(i,j);	
@@ -2312,18 +2311,18 @@ void handle_cave_lore()////
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
-		if ((ADVEN[i].main_status == 1) && (ADVEN[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
+		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf((char *)str,"%s hunts.",ADVEN[i].name.c_str());
+			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();
 			}
 	for (i = 0; i < 6; i++)
 		if (
-		(ADVEN[i].main_status == 1) && (ADVEN[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
+		(univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf((char *)str,"%s hunts.",ADVEN[i].name.c_str());
+			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
 			put_pc_screen();
@@ -2339,9 +2338,9 @@ void switch_pc(short which)
 	if (current_switch < 6) {
 		add_string_to_buf("Switch: OK.");
 		if (current_switch != which) {
-			store_pc = ADVEN[which];
-			ADVEN[which] = ADVEN[current_switch];
-			ADVEN[current_switch] = store_pc;
+			store_pc = univ.party[which];
+			univ.party[which] = univ.party[current_switch];
+			univ.party[current_switch] = store_pc;
 			if (current_pc == current_switch)
 				current_pc = which;
 				else if (current_pc == which)
@@ -2369,8 +2368,8 @@ void drop_pc(short which)
 	add_string_to_buf("Delete PC: OK.                  ");
 	kill_pc(which,MAIN_STATUS_ABSENT);
 	for (i = which; i < 5; i++)
-		ADVEN[i] = ADVEN[i + 1];
-	ADVEN[5].main_status = MAIN_STATUS_ABSENT;
+		univ.party[i] = univ.party[i + 1];
+	univ.party[5].main_status = MAIN_STATUS_ABSENT;
 	set_stat_window(0);
 	put_pc_screen();
 }
@@ -2438,7 +2437,7 @@ void start_new_game()
 	
 	// if no PCs left, forget it
 	for (i = 0 ; i < 6; i++)
-		if (ADVEN[i].main_status == 1)
+		if (univ.party[i].main_status == 1)
 			i = 100;
 	if (i == 6)
 		return;
@@ -2446,24 +2445,24 @@ void start_new_game()
 	
 	// everyone gets a weapon
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1) {
-			ADVEN[i].items[0] = start_items[ADVEN[i].race * 2];
-			ADVEN[i].equip[0] = true;
-			ADVEN[i].items[1] = start_items[ADVEN[i].race * 2 + 1];
-			ADVEN[i].equip[1] = true;
+		if (univ.party[i].main_status == 1) {
+			univ.party[i].items[0] = start_items[univ.party[i].race * 2];
+			univ.party[i].equip[0] = true;
+			univ.party[i].items[1] = start_items[univ.party[i].race * 2 + 1];
+			univ.party[i].equip[1] = true;
 			}
 	// PCs get adjustments
 	for (i = 0; i < 6; i++)
-		if (ADVEN[i].main_status == 1) {
+		if (univ.party[i].main_status == 1) {
 			// Do stat adjs for selected race.
-			if (ADVEN[i].race == 1)
-				ADVEN[i].skills[1] += 2;
-			if (ADVEN[i].race == 2) {
-				ADVEN[i].skills[0] += 2;
-				ADVEN[i].skills[2] += 1;	
+			if (univ.party[i].race == 1)
+				univ.party[i].skills[1] += 2;
+			if (univ.party[i].race == 2) {
+				univ.party[i].skills[0] += 2;
+				univ.party[i].skills[2] += 1;	
 				}
-			ADVEN[i].max_sp += ADVEN[i].skills[9] * 3 + ADVEN[i].skills[10] * 3;
-			ADVEN[i].cur_sp = ADVEN[i].max_sp;
+			univ.party[i].max_sp += univ.party[i].skills[9] * 3 + univ.party[i].skills[10] * 3;
+			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}
 	try{
 		FSSpec file = nav_put_party();
@@ -2928,7 +2927,7 @@ bool someone_poisoned()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((ADVEN[i].main_status == 1) && (ADVEN[i].status[2] > 0))
+		if ((univ.party[i].main_status == 1) && (univ.party[i].status[2] > 0))
 			return true;
 	return false;
 }

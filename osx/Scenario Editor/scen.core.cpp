@@ -790,6 +790,7 @@ cMonster return_monster_template(m_num_t store) {
 //	return i;
 //}
 
+__attribute__((deprecated))
 void init_scenario() {
 	short i;
 	rectangle dummy_rect;

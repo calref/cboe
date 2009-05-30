@@ -15,7 +15,6 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 cPopulation& cPopulation::operator = (legacy::creature_list_type old){
 	for(int i = 0; i < 60; i++)
 		dudes[i] = old.dudes[i];

@@ -19,7 +19,6 @@ DialogPtr	the_dialog;
 
 /* Adventure globals */
 //extern party_record_type party;
-//extern pc_record_type ADVEN[6];
 //extern outdoor_record_type outdoors[2][2];
 //extern current_town_type c_town;
 //extern big_tr_type t_d;

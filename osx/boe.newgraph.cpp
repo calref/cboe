@@ -52,7 +52,6 @@ extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern GWorldPtr fields_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
 //extern party_record_type party;
-//extern pc_record_type ADVEN[6];
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern location center;
@@ -840,12 +839,12 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 
 	RGBForeColor(&c[3]);
 	switch (store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",ADVEN[current_pc].name.c_str()); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",ADVEN[current_pc].name.c_str());break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",ADVEN[current_pc].name.c_str()); break;
+		case 3: sprintf(cur_name,"Healing for %s.",univ.party[current_pc].name.c_str()); break;
+		case 10: sprintf(cur_name,"Mage Spells for %s.",univ.party[current_pc].name.c_str());break;
+		case 11: sprintf(cur_name,"Priest Spells for %s.",univ.party[current_pc].name.c_str()); break;
 		case 12: sprintf(cur_name,"Buying Alchemy.");break;
 		case 4: sprintf(cur_name,"Buying Food.");break;
-		default:sprintf(cur_name,"Shopping for %s.",ADVEN[current_pc].name.c_str()); break;
+		default:sprintf(cur_name,"Shopping for %s.",univ.party[current_pc].name.c_str()); break;
 		}
 	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18,false);	
 

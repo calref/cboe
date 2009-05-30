@@ -216,8 +216,8 @@ void finish_load_party(){
 		univ.town.cur_talk_loaded = univ.town.num;
 		
 		for (int i = 0; i < univ.town->max_monst(); i++){
-			univ.town.monst.dudes[i].targ_loc.x = 0;
-			univ.town.monst.dudes[i].targ_loc.y = 0;
+			univ.town.monst[i].targ_loc.x = 0;
+			univ.town.monst[i].targ_loc.y = 0;
 		}
 		
 		town_type = scenario.town_size[univ.town.num];
@@ -522,6 +522,7 @@ void change_val (unsigned char *val,short a,short b)
 //	
 //	// Now more initialization is needed. First need to properly create the misc_i array.
 //	
+__attribute__((deprecated))
 void init_town(){ // formerly part of load_town
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 //	if (mode == 0) {
@@ -1041,9 +1042,9 @@ void start_data_dump()
 
 		for (i = 0; i < univ.town->max_monst(); i++) {
 			sprintf((char *)get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
-				(short) i,(short) univ.town.monst.dudes[i].active,(short) univ.town.monst.dudes[i].cur_loc.x,
-				(short) univ.town.monst.dudes[i].cur_loc.y,(short) univ.town.monst.dudes[i].number,
-				(short) univ.town.monst.dudes[i].attitude,(short) univ.town.monst.dudes[i].time_flag);
+				(short) i,(short) univ.town.monst[i].active,(short) univ.town.monst[i].cur_loc.x,
+				(short) univ.town.monst[i].cur_loc.y,(short) univ.town.monst[i].number,
+				(short) univ.town.monst[i].attitude,(short) univ.town.monst[i].time_flag);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);	
 			}

@@ -15,14 +15,10 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 void cTown::append(legacy::big_tr_type& old){}
-__attribute__((deprecated))
 void cTown::append(legacy::ave_tr_type& old){}
-__attribute__((deprecated))
 void cTown::append(legacy::tiny_tr_type& old){}
 
-__attribute__((deprecated))
 cTown& cTown::operator = (legacy::town_record_type& old){
 	int i;
 	town_chop_time = old.town_chop_time;

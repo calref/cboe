@@ -30,7 +30,6 @@
 #define	NUM_BUTTONS		15
 #define ASB	add_string_to_buf
 #define	PSD	univ.party.stuff_done
-#define ADVEN univ.party.adven
 #define	DES	display_enc_string
 #define	D2ES display_2_enc_string
 

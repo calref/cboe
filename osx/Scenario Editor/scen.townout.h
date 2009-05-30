@@ -1,4 +1,6 @@
+__attribute__((deprecated))
 void init_town(short size);
+__attribute__((deprecated))
 void init_out();
 void edit_placed_monst(short which_m);
 void edit_placed_monst_event_filter (short item_hit);

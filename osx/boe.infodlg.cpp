@@ -36,7 +36,6 @@ extern short spell_level[62];
 extern short skill_cost[20];
 extern short skill_max[20];
 extern short skill_g_cost[20];
-//extern pc_record_type ADVEN[6];
 extern short which_pc_displayed;
 //extern party_record_type	party;
 extern short mage_range[66],priest_range[66];
@@ -223,13 +222,13 @@ void put_pc_graphics()
 	short i;
 
 	for (i = 3; i < 65; i++) {
-		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == true)) ||
-		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == true)))
+		if (((store_trait_mode == 0) && (univ.party[which_pc_displayed].mage_spells[i - 3] == true)) ||
+		 ((store_trait_mode == 1) && (univ.party[which_pc_displayed].priest_spells[i - 3] == true)))
 			cd_set_led(991,i,1);
 			else cd_set_led(991,i,0);
 		}
 
-	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name.c_str());
+	cd_set_item_text(991,69,univ.party[which_pc_displayed].name.c_str());
 }
 
 void display_pc_event_filter (short item_hit)
@@ -245,14 +244,14 @@ void display_pc_event_filter (short item_hit)
 				case 66:
 					do {
 						pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (ADVEN[pc_num].main_status == 0);
+						} while (univ.party[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();
 					break;
 				case 67:
 					do {
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (ADVEN[pc_num].main_status == 0);
+						} while (univ.party[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();	
 					break;
@@ -268,9 +267,9 @@ void display_pc(short pc_num,short mode,short parent)
 	short i,item_hit;
 	Str255 label_str;
 	
-	if (ADVEN[pc_num].main_status == 0) {
+	if (univ.party[pc_num].main_status == 0) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
-			if (ADVEN[pc_num].main_status == 1)
+			if (univ.party[pc_num].main_status == 1)
 				break;
 		}
 	which_pc_displayed = pc_num;
@@ -410,17 +409,17 @@ void display_pc_item_event_filter (short item_hit)
 				case 14:
 					do {
 						item = (item == 0) ? 23 : item - 1;
-						} while (ADVEN[pc_num].items[item].variety == 0);
+						} while (univ.party[pc_num].items[item].variety == 0);
 					store_displayed_item = item;
-					store_i = ADVEN[pc_num].items[item];
+					store_i = univ.party[pc_num].items[item];
 					put_item_info(pc_num,item);
 					break;
 				case 15:
 					do {
 						item = (item == 23) ? 0 : item + 1;
-						} while (ADVEN[pc_num].items[item].variety == 0);
+						} while (univ.party[pc_num].items[item].variety == 0);
 					store_displayed_item = item;
-					store_i = ADVEN[pc_num].items[item];
+					store_i = univ.party[pc_num].items[item];
 					put_item_info(pc_num,item);
 					break;
 
@@ -437,7 +436,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 		store_item_pc = pc_num;
 		if (pc_num == 6)
 			store_i = si;
-			else store_i = ADVEN[pc_num].items[item];
+			else store_i = univ.party[pc_num].items[item];
 	store_displayed_item = item;
 	make_cursor_sword();
 
@@ -812,51 +811,51 @@ void display_pc_info()
 	
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
-	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",ADVEN[pc].name.c_str(),store,i);
+	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",univ.party[pc].name.c_str(),store,i);
 	csit(1019,69,(char *) to_draw);
 
 	sprintf((char *) str,"%d out of %d.",
-			ADVEN[pc].cur_health,ADVEN[pc].max_health);
+			univ.party[pc].cur_health,univ.party[pc].max_health);
 	csit(1019,65,(char *) str);
 	sprintf((char *) str,"%d out of %d.",
-			ADVEN[pc].cur_sp,ADVEN[pc].max_sp);
+			univ.party[pc].cur_sp,univ.party[pc].max_sp);
 	csit(1019,67,(char *) str);
 
 	for (i = 0; i < 19; i++) {
-		cdsin(1019,18 + i * 2,ADVEN[pc].skills[i]);
+		cdsin(1019,18 + i * 2,univ.party[pc].skills[i]);
 		}
 	store = total_encumberance(pc);
 	cdsin(1019,62,store);
-	csit(1019,9,ADVEN[pc].name.c_str());
-	cdsin(1019,11,ADVEN[pc].level);
-	cdsin(1019,13,ADVEN[pc].experience);
-	cdsin(1019,71,ADVEN[pc].skill_pts);
-	store = ADVEN[pc].level * ADVEN[pc].get_tnl();
+	csit(1019,9,univ.party[pc].name.c_str());
+	cdsin(1019,11,univ.party[pc].level);
+	cdsin(1019,13,univ.party[pc].experience);
+	cdsin(1019,71,univ.party[pc].skill_pts);
+	store = univ.party[pc].level * univ.party[pc].get_tnl();
 	cdsin(1019,15,store);
-	csp(1019,7,800 + ADVEN[pc].which_graphic,PICT_PC);
+	csp(1019,7,800 + univ.party[pc].which_graphic,PICT_PC);
 
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
-		if (((ADVEN[pc].items[i].variety == 1) || (ADVEN[pc].items[i].variety == 2)) &&
-			(ADVEN[pc].equip[i] == true)) {
+		if (((univ.party[pc].items[i].variety == 1) || (univ.party[pc].items[i].variety == 2)) &&
+			(univ.party[pc].equip[i] == true)) {
 					if (weap1 == 24)
 						weap1 = i;
 						else weap2 = i;
 					}
 				
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5 
-		+ 5 * minmax(-8,8,ADVEN[pc].status[1]);
-	if ((ADVEN[pc].traits[2] == false) && (weap2 < 24))
+		+ 5 * minmax(-8,8,univ.party[pc].status[1]);
+	if ((univ.party[pc].traits[2] == false) && (weap2 < 24))
 		hit_adj -= 25;
 
-	dam_adj = stat_adj(pc,0) + minmax(-8,8,ADVEN[pc].status[1]);
+	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[1]);
 	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
-		hit_adj += 5 * (ADVEN[pc].items[skill_item].item_level / 2 + 1);
-		dam_adj += ADVEN[pc].items[skill_item].item_level / 2;
+		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
+		dam_adj += univ.party[pc].items[skill_item].item_level / 2;
 		}
 	if ((skill_item = text_pc_has_abil_equip(pc,43)) < 24) {
-		dam_adj += ADVEN[pc].items[skill_item].item_level;
-		hit_adj += ADVEN[pc].items[skill_item].item_level * 2;
+		dam_adj += univ.party[pc].items[skill_item].item_level;
+		hit_adj += univ.party[pc].items[skill_item].item_level * 2;
 		}
 
 		
@@ -865,29 +864,29 @@ void display_pc_info()
 	csit(1019,59,"No weapon.");	
 	csit(1019,60,"");	
 	if (weap1 < 24) {
-		if (!ADVEN[pc].items[weap1].is_ident())
+		if (!univ.party[pc].items[weap1].is_ident())
 			csit(1019,56,"Not identified.");
 			else {
-				if (hit_adj + 5 * ADVEN[pc].items[weap1].bonus < 0)
-					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * ADVEN[pc].items[weap1].bonus);
-					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * ADVEN[pc].items[weap1].bonus);
+				if (hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
+					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
+					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
 				csit(1019,56,to_draw);
-				sprintf(to_draw,"Damage: (1-%d) + %d",ADVEN[pc].items[weap1].item_level
-					,dam_adj + ADVEN[pc].items[weap1].bonus);
+				sprintf(to_draw,"Damage: (1-%d) + %d",univ.party[pc].items[weap1].item_level
+					,dam_adj + univ.party[pc].items[weap1].bonus);
 				csit(1019,57,to_draw);
 
 				}
 			}
 	if (weap2 < 24) {
-		if (!ADVEN[pc].items[weap2].is_ident())
+		if (!univ.party[pc].items[weap2].is_ident())
 			csit(1019,59,"Not identified.");
 			else {
-				if (hit_adj + 5 * ADVEN[pc].items[weap2].bonus < 0)
-					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * ADVEN[pc].items[weap2].bonus);
-					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * ADVEN[pc].items[weap2].bonus);
+				if (hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)
+					sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
+					else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
 				csit(1019,59,to_draw);
-				sprintf(to_draw,"Damage: (1-%d) + %d",ADVEN[pc].items[weap2].item_level
-					,dam_adj + ADVEN[pc].items[weap2].bonus);
+				sprintf(to_draw,"Damage: (1-%d) + %d",univ.party[pc].items[weap2].item_level
+					,dam_adj + univ.party[pc].items[weap2].bonus);
 				csit(1019,60,to_draw);
 
 				}
@@ -907,13 +906,13 @@ void give_pc_info_event_filter(short item_hit)
 		case 2: 
 			do				
 				store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
-				while (ADVEN[store_pc_num].main_status != 1);
+				while (univ.party[store_pc_num].main_status != 1);
 			display_pc_info();
 			break;
 		case 3: 
 			do 
 				store_pc_num = (store_pc_num + 1) % 6;
-				while (ADVEN[store_pc_num].main_status != 1);
+				while (univ.party[store_pc_num].main_status != 1);
 			display_pc_info();
 			break;
 		case 4:
@@ -923,7 +922,7 @@ void give_pc_info_event_filter(short item_hit)
 			display_pc(pc,1,1019);
 			break;
 		case 6:
-			pick_race_abil(&ADVEN[pc],1,1019);
+			pick_race_abil(&univ.party[pc],1,1019);
 			break;
 		case 68:
 			display_alchemy();

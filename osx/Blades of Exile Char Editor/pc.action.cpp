@@ -15,7 +15,6 @@
 
 /* Adventure globals */
 //extern party_record_type party;
-//extern pc_record_type ADVEN[6];
 //extern outdoor_record_type outdoors[2][2];
 //extern current_town_type c_town;
 //extern big_tr_type t_d;
@@ -93,7 +92,7 @@ bool handle_action(EventRecord event,short mode)
 		
 	for (i = 0; i < 6; i++)
 		if ((PtInRect(the_point,&pc_area_buttons[i][0]) == true) &&
-			(ADVEN[i].main_status > 0)) {
+			(univ.party[i].main_status > 0)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			display_party(6,1);
@@ -101,7 +100,7 @@ bool handle_action(EventRecord event,short mode)
 			}
 	for (i = 0; i < 5; i++)
 		if ((PtInRect(the_point,&edit_rect[i][0]) == true) &&
-			(ADVEN[current_active_pc].main_status > 0)) {
+			(univ.party[current_active_pc].main_status > 0)) {
 			do_button_action(0,i + 10);
 			if (save_blocked == false)
 				if ((choice = FCD(904,0)) == 1)
@@ -115,29 +114,29 @@ bool handle_action(EventRecord event,short mode)
 			 		display_pc(current_active_pc,1,0);
 					break;
 				case 2: 
-					pick_race_abil(&ADVEN[current_active_pc],0,0);
+					pick_race_abil(&univ.party[current_active_pc],0,0);
 					break;
 				case 3: 
 					spend_xp(current_active_pc,1,0);
 					break;
 				case 4: 
-					edit_xp(&ADVEN[current_active_pc]);
+					edit_xp(&univ.party[current_active_pc]);
 					
 					break;
 			}
 		}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(the_point,&item_string_rects[i][1]) == true) && // drop item
-			(ADVEN[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
+			(univ.party[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
 				draw_items(1);
 				}
 	for (i = 0; i < 24; i++)
 		if ((PtInRect(the_point,&item_string_rects[i][2]) == true) && // identify item
-			(ADVEN[current_active_pc].items[i].variety > 0)) {
+			(univ.party[current_active_pc].items[i].variety > 0)) {
 				flash_rect(item_string_rects[i][2]);
-				ADVEN[current_active_pc].items[i].item_properties = ADVEN[current_active_pc].items[i].item_properties | 1;
+				univ.party[current_active_pc].items[i].item_properties = univ.party[current_active_pc].items[i].item_properties | 1;
 				draw_items(1);
 				}
 	
@@ -244,13 +243,13 @@ void put_pc_graphics()
 	short item_hit,what_talk_field,i;
 
 	for (i = 3; i < 65; i++) {
-		if (((store_trait_mode == 0) && (ADVEN[which_pc_displayed].mage_spells[i - 3] == true)) ||
-		 ((store_trait_mode == 1) && (ADVEN[which_pc_displayed].priest_spells[i - 3] == true)))
+		if (((store_trait_mode == 0) && (univ.party[which_pc_displayed].mage_spells[i - 3] == true)) ||
+		 ((store_trait_mode == 1) && (univ.party[which_pc_displayed].priest_spells[i - 3] == true)))
 			cd_set_led(991,i,1);
 			else cd_set_led(991,i,0);
 		}
 
-	cd_set_item_text(991,69,ADVEN[which_pc_displayed].name.c_str());
+	cd_set_item_text(991,69,univ.party[which_pc_displayed].name.c_str());
 }
 void display_pc_event_filter (short item_hit)
 {
@@ -265,25 +264,25 @@ void display_pc_event_filter (short item_hit)
 				case 66:
 					do {
 						pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (ADVEN[pc_num].main_status == 0);
+						} while (univ.party[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();
 					break;
 				case 67:
 					do {
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (ADVEN[pc_num].main_status == 0);
+						} while (univ.party[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
 					put_pc_graphics();	
 					break;
 					
 				default:
 					if (store_trait_mode == 0)
-						ADVEN[which_pc_displayed].mage_spells[item_hit - 3] = 
-							1 - ADVEN[which_pc_displayed].mage_spells[item_hit - 3];
+						univ.party[which_pc_displayed].mage_spells[item_hit - 3] = 
+							1 - univ.party[which_pc_displayed].mage_spells[item_hit - 3];
 						else
-						ADVEN[which_pc_displayed].priest_spells[item_hit - 3] = 
-							1 - ADVEN[which_pc_displayed].priest_spells[item_hit - 3];
+						univ.party[which_pc_displayed].priest_spells[item_hit - 3] = 
+							1 - univ.party[which_pc_displayed].priest_spells[item_hit - 3];
 					put_pc_graphics();							
 					break;
 				}
@@ -294,9 +293,9 @@ void display_pc(short pc_num,short mode,short parent)
 	short i,item_hit;
 	Str255 label_str;
 	
-	if (ADVEN[pc_num].main_status == 0) {
+	if (univ.party[pc_num].main_status == 0) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
-			if (ADVEN[pc_num].main_status == 1)
+			if (univ.party[pc_num].main_status == 1)
 				break;
 		}
 	which_pc_displayed = pc_num;
@@ -372,11 +371,11 @@ void display_alchemy()
 void do_xp_keep(short pc_num,short mode)
 {
 					for (i = 0; i < 20; i++)
-						ADVEN[pc_num].skills[i] = store_skills[i];
-					ADVEN[pc_num].cur_health += store_h - ADVEN[pc_num].max_health;
-					ADVEN[pc_num].max_health = store_h;
-					ADVEN[pc_num].cur_sp += store_sp - ADVEN[pc_num].max_sp;
-					ADVEN[pc_num].max_sp = store_sp;
+						univ.party[pc_num].skills[i] = store_skills[i];
+					univ.party[pc_num].cur_health += store_h - univ.party[pc_num].max_health;
+					univ.party[pc_num].max_health = store_h;
+					univ.party[pc_num].cur_sp += store_sp - univ.party[pc_num].max_sp;
+					univ.party[pc_num].max_sp = store_sp;
 
 }
 
@@ -411,15 +410,15 @@ void do_xp_draw()
 
 	pc_num = store_train_pc;
 
-			sprintf((char *) get_text, "%s",(char *) ADVEN[pc_num].name.c_str());
+			sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 
 
 	cd_set_item_text (1010, 51,get_text);
 
 	for (i = 0; i < 20; i++)
-		store_skills[i] = ADVEN[pc_num].skills[i];
-	store_h = ADVEN[pc_num].max_health;
-	store_sp = ADVEN[pc_num].max_sp;
+		store_skills[i] = univ.party[pc_num].skills[i];
+	store_h = univ.party[pc_num].max_health;
+	store_sp = univ.party[pc_num].max_sp;
 	store_g = 12000;
 	store_skp = 10000;
 
@@ -510,7 +509,7 @@ void spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,0);
 						do {
 							pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (ADVEN[pc_num].main_status != 1);
+						} while (univ.party[pc_num].main_status != 1);
 						store_train_pc = pc_num;
 						do_xp_draw();
 				break;
@@ -520,7 +519,7 @@ void spend_xp_event_filter (short item_hit)
 						do_xp_keep(pc_num,0);
 						do {
 							pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (ADVEN[pc_num].main_status != 1);
+						} while (univ.party[pc_num].main_status != 1);
 						store_train_pc = pc_num;
 						do_xp_draw();
 				break;

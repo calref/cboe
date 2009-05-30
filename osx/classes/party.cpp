@@ -15,7 +15,6 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-__attribute__((deprecated))
 cParty& cParty::operator = (legacy::party_record_type& old){
 	int i,j;
 	age = old.age;
@@ -107,13 +106,11 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	return *this;
 }
 
-__attribute__((deprecated))
 void cParty::append(legacy::stored_items_list_type& old,short which_list){
 	for(int i = 0; i < 115; i++)
 		stored_items[which_list][i] = old.items[i];
 }
 
-__attribute__((deprecated))
 void cParty::append(legacy::setup_save_type& old){
 	for(int n = 0; n < 4; n++)
 		for(int i = 0; i < 64; i++)
@@ -121,7 +118,6 @@ void cParty::append(legacy::setup_save_type& old){
 				setup[n][i][j] = old.setup[n][i][j];
 }
 
-__attribute__((deprecated))
 cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 	personality = old.personality;
 	town_num = old.town_num;
@@ -130,7 +126,6 @@ cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 	return *this;
 }
 
-__attribute__((deprecated))
 void cParty::add_pc(legacy::pc_record_type old){
 	for(int i = 0; i < 6; i++)
 		if(adven[i].main_status == 0){
