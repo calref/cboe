@@ -11,6 +11,7 @@ struct m_pic_index_t {
 	unsigned char i, x, y;
 };
 
+typedef unsigned short pic_num_t;
 void init_graph_tool(void (*redraw_callback)(),Point* p);
 GWorldPtr load_pict(int picture_to_get);
 GWorldPtr load_bmp(unsigned char *data, unsigned long length);

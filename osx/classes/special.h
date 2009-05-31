@@ -13,6 +13,8 @@
 
 namespace legacy { struct special_node_type; };
 
+typedef signed short spec_num_t;
+
 class cSpecial {
 public:
 	short type;

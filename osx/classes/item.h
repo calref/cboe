@@ -187,6 +187,8 @@ enum eItemAbil {
 	ITEM_MISSILE_HEAL_TARGET = 176,
 };
 
+typedef signed short item_num_t;
+
 class cItemRec {
 public:
 	eItemType variety;

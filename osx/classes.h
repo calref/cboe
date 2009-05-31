@@ -8,13 +8,22 @@
  *
  */
 
+typedef unsigned short str_num_t;
+
+//class sbyte {
+//	signed char c;
+//public:
+//	operator int() {return c;}
+//	sbyte(signed char k) : c(k) {}
+//}
+
 #include "location.h"
 #include "terrain.h"
 #include "vehicle.h"
-#include "monster.h"
-#include "special.h"
-#include "talking.h"
 #include "item.h"
+#include "special.h"
+#include "monster.h"
+#include "talking.h"
 #include "town.h"
 #include "regtown.h"
 #include "tmpltown.h"

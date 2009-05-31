@@ -1312,6 +1312,7 @@ bool handle_action(EventRecord event)
 	// Handle non-PC stuff (like monsters) if the party actually did something	
 	if (did_something == true) {
 		draw_map(modeless_dialogs[5],5);
+		play_ambient_sound();
 
 		if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
 			if (no_pcs_left() == true) {

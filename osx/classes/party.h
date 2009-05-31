@@ -70,7 +70,8 @@ public:
 	cOutdoors::cCreature out_c[10];
 	cItemRec magic_store_items[5][10];
 	short imprisoned_monst[4]; // Soul Crystal?
-	char m_seen[256];
+	char m_noted[256]; // has the monster been scried?
+	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
 	std::vector<cJournal> journal;
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;

@@ -13,8 +13,9 @@
 #include "boe.graphics.h"
 #include "boe.infodlg.h"
 #include "boe.monster.h"
+#include "boe.specials.h"
 #include "dlgtool.h"
-//#include "soundtool.h"
+#include "soundtool.h"
 #include "graphtool.h"
 #include "mathutil.h"
 #include "dlgutil.h"
@@ -77,7 +78,7 @@ extern GWorldPtr spec_scen_g;
 
 Rect boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 bool gave_no_g_error = false;
-
+eAmbientSound ambient_sound;
 //unsigned char m_pic_index[200] = {////
 //1,2,3,4,5,6,7,8,9,10,
 //11,12,13,14,15,16,17,18,19,20,
@@ -368,8 +369,21 @@ void draw_monsters() ////
 	}
 }
 
-void play_see_monster_str(unsigned short m) // TODO: Seems like this would be worth reviving
-{}
+void play_see_monster_str(unsigned short m){
+	short str1, str2, pic, type, snd, spec, s1 = 0, s2 = 0, s3 = 0;
+	str1 = scenario.scen_monsters[m].see_str1;
+	str2 = scenario.scen_monsters[m].see_str2;
+	pic = scenario.scen_monsters[m].picture_num;
+	type =  get_monst_pictype(m);
+	snd = scenario.scen_monsters[m].see_sound;
+	spec = scenario.scen_monsters[m].see_spec;
+	// First display strings, if any
+	display_strings(str1 ? scenario.monst_strs[str1] : NULL, str2 ? scenario.monst_strs[str2] : NULL, "", snd, pic,type, 0);
+	// Then run the special, if any
+	if(spec > -1)
+		run_special(18, 0, spec, loc(0,0), &s1, &s2, &s3);
+	// TODO: may need to check s3 to determine if redraw is needed
+}
 
 void draw_pcs(location center,short mode)
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
@@ -1014,19 +1028,39 @@ char get_fluid_trim(location where,ter_num_t ter_type)
 	return to_return;
 }
 
-// Sees if party has seen a monster of this sort, updates menu and gives
-// special messages as necessary
-void check_if_monst_seen(unsigned short m_num)
-{
-	// this rule has been changed
-	return; // TODO: Bring this back?
-	if (univ.party.m_seen[m_num] == 0) {
-		univ.party.m_seen[m_num] = 1;
-		switch (m_num) {
-		
-			}
-		adjust_monst_menu();
-		}
+// Sees if party has seen a monster of this sort, gives special messages as necessary
+void check_if_monst_seen(unsigned short m_num) {
+	// Give special messages if necessary
+	if (!univ.party.m_seen[m_num]) {
+		univ.party.m_seen[m_num] = true;
+		play_see_monster_str(m_num);
+	}
+	// Make the monster vocalize if applicable
+	snd_num_t sound = scenario.scen_monsters[m_num].ambient_sound;
+	if(get_ran(1,1,100) < 10) play_sound(-sound);
+}
+
+void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sounds
+	static const short drip[2] = {78,79}, bird[3] = {76,77,91};
+	if(overall_mode != MODE_OUTDOORS) return; // ambient sounds are outdoors only at the moment
+	if(get_ran(1,1,100) > 10) return; // 10% chance per move of playing a sound
+	short sound_to_play;
+	switch(ambient_sound){
+		case AMBIENT_DRIP:
+			sound_to_play = get_ran(1,0,1);
+			play_sound(-drip[sound_to_play]);
+			break;
+		case AMBIENT_BIRD:
+			sound_to_play = get_ran(1,0,2);
+			play_sound(-bird[sound_to_play]);
+			break;
+		case AMBIENT_CUSTOM:
+			sound_to_play = univ.out_sound;
+			play_sound(-sound_to_play);
+			break;
+		case AMBIENT_NONE:
+			break; // obviously, do nothing
+	}
 }
 
 void adjust_monst_menu()
@@ -1042,7 +1076,7 @@ void adjust_monst_menu()
 		on_monst_menu[i] = -1; 
 		}
 	for (i = 1; i < 256; i++) 
-		if ((i == 1) || (univ.party.m_seen[i] > 0)) {
+		if ((i == 1) || (univ.party.m_noted[i] > 0)) {
 			on_monst_menu[monst_pos] = i;
 			monst_pos++;
 			}

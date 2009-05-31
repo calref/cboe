@@ -60,7 +60,7 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 			magic_store_items[j][i] = old.magic_store_items[j][i];
 	}
 	for(i = 0; i < 256; i++)
-		m_seen[i] = old.m_seen[i];
+		m_noted[i] = old.m_seen[i];
 	journal.reserve(50);
 	for(i = 0; i < 50; i++){
 		cJournal j;
@@ -241,8 +241,11 @@ void cParty::writeTo(std::ostream& file){
 				magic_store_items[i][j].writeTo(file, sout.str());
 			}
 	for(int i = 0; i < 256; i++)
-		if(m_seen[i])
+		if(m_noted[i])
 			file << "ROSTER " << i << std::endl;
+	for(int i = 0; i < 256; i++)
+		if(m_seen[i])
+			file << "SEEN " << i << std::endl;
 	for(int i = 0; i < 10; i++)
 		if(out_c[i].exists){
 			file << "ENCOUNTER " << i << " DIRECTION " << out_c[i].direction << std::endl;
@@ -364,6 +367,10 @@ void cParty::readFrom(std::istream& file){
 			sin >> i >> j >> cur;
 			magic_store_items[i][j].readAttrFrom(cur,sin);
 		}else if(cur == "ROSTER"){
+			int i;
+			sin >> i;
+			m_noted[i] = true;
+		}else if(cur == "SEEN"){
 			int i;
 			sin >> i;
 			m_seen[i] = true;

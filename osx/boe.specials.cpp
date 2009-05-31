@@ -1671,7 +1671,7 @@ void special_increase_age()
 // 0 - out moving (a - 1 if blocked)
 // 1 - town moving (a - 1 if blocked)
 // 2 - combat moving (a - 1 if blocked)
-// 3 - out looking (a - 1 if don't get items inside)  NOT USED!!!
+// 3 - out looking (a - 1 if don't get items inside) TODO: NOT USED!!!
 // 4 - town looking (a - 1 if don't get items inside)
 // 5 - entering town
 // 6 - leaving town
@@ -1684,8 +1684,9 @@ void special_increase_age()
 // 13 - encountering outdoor enc (a - 1 if no fight)
 // 14 - winning outdoor enc
 // 15 - fleeing outdoor enc
-// 16 - ritual of sanct
+// 16 - ritual of sanct TODO: This will become "target space", hopefully
 // 17 - using space
+// 18 - seeing monster TODO: This is currently unused
 // which_type - 0 - scen 1 - out 2 - town
 // start spec - the number of the first spec to call
 // a,b - 2 values that can be returned

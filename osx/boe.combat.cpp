@@ -1188,7 +1188,7 @@ void do_combat_cast(location target)////
 								case 7: // monster info
 									store_m_type = -1;
 									play_sound(52);
-									univ.party.m_seen[cur_monst->number] = true;
+									univ.party.m_noted[cur_monst->number] = true;
 									adjust_monst_menu();
 									display_monst(0,cur_monst,0);
 									break;

@@ -128,6 +128,13 @@ public:
 	void readFrom(std::istream& file);
 };
 
+enum eAmbientSound {
+	AMBIENT_NONE,
+	AMBIENT_DRIP,
+	AMBIENT_BIRD,
+	AMBIENT_CUSTOM,
+};
+
 class cUniverse{
 public:
 	cParty party;
@@ -135,6 +142,7 @@ public:
 	char town_maps[200][8][64]; // formerly stored_town_maps_type
 	cCurOut out;
 	char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
+	snd_num_t out_sound;
 	FSSpec file;
 	
 	void append(legacy::stored_town_maps_type& old);

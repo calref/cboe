@@ -25,3 +25,4 @@ bool is_ground(ter_num_t ter_type);
 char get_fluid_trim(location where,ter_num_t ter_type);
 void check_if_monst_seen(unsigned short m_num);
 void adjust_monst_menu();
+void play_ambient_sound();

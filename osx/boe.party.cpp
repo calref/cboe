@@ -232,7 +232,7 @@ void init_party(short mode)
 	for (i = 0; i < 4; i++)
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
-	 univ.party.m_seen[i] = 0;
+	 univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
 //	for (i = 0; i < 50; i++) 
 //	 univ.party.journal_str[i] = -1;
 //	for (i = 0; i < 140; i++)
@@ -376,7 +376,7 @@ void init_party_scen_data()
 	for (i = 0; i < 4; i++)
 	 univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
-	 univ.party.m_seen[i] = 0;
+	 univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
 //	for (i = 0; i < 50; i++) 
 //	 univ.party.journal_str[i] = -1;
 //	for (i = 0; i < 140; i++)
@@ -2019,7 +2019,7 @@ void cast_town_spell(location where) ////
 				targ = monst_there(where);
 				if (targ < univ.town->max_monst()) {
 					if (town_spell == 7) {
-						univ.party.m_seen[univ.town.monst[targ].number] = true;
+						univ.party.m_noted[univ.town.monst[targ].number] = true;
 						adjust_monst_menu();
 						display_monst(0,&univ.town.monst[targ],0);
 						}

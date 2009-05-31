@@ -164,19 +164,38 @@ public:
 	m_num_t m_num; // TODO: This probably shouldn't be necessary. Consider why it is, and determine if it can be removed
 	unsigned char level;
 	std::string m_name;
-	short health,m_health,mp,max_mp; // TODO: Move health and mp to cCreature
-	unsigned char armor,skill;
+	short health; // TODO: Move health, mp and max_mp to cCreature
+	short m_health;
+	short mp;
+	short max_mp;
+	unsigned char armor;
+	unsigned char skill;
 	cAttack a[3];
 	unsigned char a1_type,a23_type; // TODO: Delete in favour of type field of cAttack
 	eMonsterType m_type;
-	unsigned char speed,ap,mu,cl,breath,breath_type,treasure,spec_skill,poison; // TODO: Move ap to cCreature
+	unsigned char speed;
+	unsigned char ap; // TODO: Move ap to cCreature
+	unsigned char mu;
+	unsigned char cl;
+	unsigned char breath;
+	unsigned char breath_type;
+	unsigned char treasure;
+	unsigned char spec_skill;
+	unsigned char poison;
 	short morale,m_morale; // TODO: Move to cCreature (since these are calculated in-game based on the level)
-	short corpse_item,corpse_item_chance;
+	item_num_t corpse_item;
+	short corpse_item_chance;
 	short status[15]; // TODO: Move to cCreature
-	unsigned char direction,immunities,x_width,y_width,radiate_1; // TODO: Move direction to cCreature
+	unsigned char direction; // TODO: Move direction to cCreature
+	unsigned char immunities;
+	unsigned char x_width,y_width;
+	unsigned char radiate_1;
 	unsigned short radiate_2; // I THINK this is the extra field for the second ability
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
+	str_num_t see_str1, see_str2;
+	snd_num_t see_sound, ambient_sound; // ambient_sound has a 
+	spec_num_t see_spec;
 	
 	cMonster& operator = (legacy::monster_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix);
