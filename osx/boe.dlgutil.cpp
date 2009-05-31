@@ -171,10 +171,10 @@ void end_shop_mode()
 	
 	HideControl(shop_sbar);
 	if (store_pre_shop_mode == 20) {
-		sprintf((char *)old_str1,"You conclude your business.");
-		sprintf((char *)old_str2,"");
-		sprintf((char *)one_back1,"You conclude your business.");
-		sprintf((char *)one_back2,"");
+		strcpy((char *)old_str1,"You conclude your business.");
+		strcpy((char *)old_str2,"");
+		strcpy((char *)one_back1,"You conclude your business.");
+		strcpy((char *)one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str((char *)old_str1,"",0,dummy_rect);
@@ -739,10 +739,10 @@ void handle_talk_event(Point p)
 	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
 		strcpy((char *) one_back1,(char *) old_str1);
 		strcpy((char *) one_back2,(char *) old_str2);
-		sprintf((char *) old_str2,"");
+		strcpy((char *) old_str2,"");
 		sprintf((char *) old_str1,"%s",univ.town.cur_talk->talk_strs[store_personality % 10 + 160]);
 		if (strlen((char *) old_str1) < 2)
-			sprintf((char *) old_str1,"You get no response.");
+			strcpy((char *) old_str1,"You get no response.");
 		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
 		strnum1 = -1;
 		return;	
@@ -768,7 +768,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 2:
@@ -791,14 +791,14 @@ void handle_talk_event(Point p)
 					center = univ.town.p_loc;
 					}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			break;
 		case 4:
 			if (day_reached((unsigned char) a,0) == true) {
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 5:
@@ -806,7 +806,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 6:
@@ -814,7 +814,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strcpy((char *) place_string1,(char *) place_string2);
 				}
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 7: 
@@ -878,7 +878,7 @@ void handle_talk_event(Point p)
 					put_pc_screen();
 
 					}
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			strnum2 = 0;
 			break;
 		case 19:
@@ -898,14 +898,14 @@ void handle_talk_event(Point p)
 						else give_error("Invalid Stuff Done flag called in conversation.","",0);
 					}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			break;
 		case 20:
 			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy((char *) place_string1,(char *) place_string2);
-				sprintf((char *) place_string2,"");					
+				strcpy((char *) place_string2,"");					
 				break;
 				}
 				else {
@@ -914,15 +914,15 @@ void handle_talk_event(Point p)
 							univ.party.gold -= a;
 							put_pc_screen();
 							univ.party.boats[i].property = false;
-							sprintf((char *) place_string2,"");					
+							strcpy((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf((char *) place_string1, "There are no boats left.");  
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string1, "There are no boats left.");  
+			strcpy((char *) place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -931,7 +931,7 @@ void handle_talk_event(Point p)
 				strnum1 = strnum2;
 				strnum2 = 0;
 				strcpy((char *) place_string1,(char *) place_string2);
-				sprintf((char *) place_string2,"");					
+				strcpy((char *) place_string2,"");					
 				break;
 				}
 				else {
@@ -940,15 +940,15 @@ void handle_talk_event(Point p)
 							univ.party.gold -= a;
 							put_pc_screen();
 							univ.party.horses[i].property = false;
-							sprintf((char *) place_string2,"");					
+							strcpy((char *) place_string2,"");					
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf((char *) place_string1, "There are no horses left.");  
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string1, "There are no horses left.");  
+			strcpy((char *) place_string2,"");					
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -967,7 +967,7 @@ void handle_talk_event(Point p)
 					univ.party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			break;
 		case 23:
 			start_shop_mode(5 + b,0,
@@ -987,7 +987,7 @@ void handle_talk_event(Point p)
 						univ.party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");					
+			strcpy((char *) place_string2,"");					
 			break;
 		case 25:
 			talk_end_forced = true;
@@ -1014,8 +1014,8 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf((char *) place_string1,"");
-				sprintf((char *) place_string2,"");
+				strcpy((char *) place_string1,"");
+				strcpy((char *) place_string2,"");
 				}
 			 get_strs((char *) place_string1,(char *) place_string2,2,s1,s2); 
 			 //strnum1 = -1;
@@ -1031,8 +1031,8 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf((char *) place_string1,"");
-				sprintf((char *) place_string2,"");
+				strcpy((char *) place_string1,"");
+				strcpy((char *) place_string2,"");
 				}
 			 get_strs((char *) place_string1,(char *) place_string2,0,s1,s2); 
 			 //strnum1 = -1;

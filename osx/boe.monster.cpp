@@ -1412,8 +1412,7 @@ bool summon_monster(m_num_t which,location where,short duration,short given_atti
 
 void activate_monsters(short code,short attitude)
 {
-	short i; 
-	m_num_t which;
+	short i;
 	
 	if (code == 0)
 		return;

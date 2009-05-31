@@ -110,7 +110,7 @@ void reset_rb() {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_rb(short slot, short mode, char *label, short do_draw) {
-	short i,highest_used = 0;
+	short i;
 	
 	if (slot < 0) {
 		for (i = 0; i < NRS; i++)

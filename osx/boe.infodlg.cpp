@@ -350,7 +350,8 @@ void put_item_info(short pc,short item)////
 		cd_set_item_num(998,8,s_i.protection);
 
 	switch (s_i.variety) {
-		case 1: case 2:
+		case ITEM_TYPE_ONE_HANDED:
+		case ITEM_TYPE_TWO_HANDED:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 		
@@ -371,24 +372,41 @@ void put_item_info(short pc,short item)////
 			if (s_i.ability == 0)
 				cd_set_item_text(998,12,store_text);
 			break;
-		case 4: case 23:
+		case ITEM_TYPE_BOW:
+		case ITEM_TYPE_CROSSBOW:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);
 			break;
-		case 5:	case 6: case 24: case 25:
+		case ITEM_TYPE_ARROW:
+		case ITEM_TYPE_THROWN_MISSILE:
+		case ITEM_TYPE_BOLTS:
+		case ITEM_TYPE_MISSILE_NO_AMMO:
 			cd_set_item_num(998,6,s_i.item_level);
 			cd_set_item_num(998,7,s_i.bonus);	
 			break;
-		case 7: case 18:
+		case ITEM_TYPE_POTION:
+		case ITEM_TYPE_RING:
+		case ITEM_TYPE_SCROLL: // TODO: Does this make sense for a scroll, though?
+		case ITEM_TYPE_TOOL: // and what about for a tool?
+		case ITEM_TYPE_WAND: // and a wand? Maybe showing ability strength would be better...
+		case ITEM_TYPE_NECKLACE: // TODO: This doesn't seem right for a necklace...
 			cd_set_item_num(998,11,s_i.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17: 			
+		case ITEM_TYPE_SHIELD:
+		case ITEM_TYPE_ARMOR:
+		case ITEM_TYPE_HELM:
+		case ITEM_TYPE_GLOVES:
+		case ITEM_TYPE_SHIELD_2:
+		case ITEM_TYPE_BOOTS: // TODO: Should this also check ITEM_TYPE_PANTS?
 			cd_set_item_num(998,7,s_i.bonus + s_i.protection);	
 			cd_set_item_num(998,8,s_i.item_level);	
 			cd_set_item_num(998,9,s_i.awkward);
 			break;	
-		case 20:
+		case ITEM_TYPE_WEAPON_POISON:
 			cd_set_item_num(998,11,s_i.item_level);
+			break;
+		default:
+			// no item, gold, food, non-use, unused 1 and 2: do nothing
 			break;
 		}	
 

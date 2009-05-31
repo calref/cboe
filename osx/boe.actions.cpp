@@ -382,7 +382,11 @@ bool handle_action(EventRecord event)
 					main_button_click(overall_mode,combat_buttons[i]);					
 					}
 			break;
-		}
+		default:
+			// either resting or startup; do nothing
+			// TODO: A call to handle_startup_action() would make sense here, though
+			break;
+	}
 
 // Then, handle a button being hit.
 	if (button_hit != 12)
@@ -963,34 +967,29 @@ bool handle_action(EventRecord event)
 				put_pc_screen();
 				put_item_screen(stat_window,0);
 				}
-			if ((overall_mode > MODE_TALK_TOWN) && (overall_mode < MODE_COMBAT/*6*/)) {
-				destination.x = destination.x + i - 4;
-				destination.y = destination.y + j - 4;
-				switch (overall_mode) {
-					case MODE_TOWN_TARGET: 
-						cast_town_spell(destination);
-						did_something = true;
-					break;
-					case MODE_USE_TOWN:
-						if (adjacent(destination,univ.town.p_loc) == false)
-							add_string_to_buf("  Must be adjacent.              ");
-							else {
-								did_something = use_space(destination);
-								}
-					break;
-					case MODE_DROP_TOWN:
-						if (adjacent(univ.town.p_loc,destination) == false)
-							add_string_to_buf("Drop: must be adjacent.");
-							else if (get_obscurity(destination.x,destination.y) == 5)
-							ASB("Drop: Space is blocked.");
-							else drop_item(current_pc,store_drop_item,destination);
-						break;
-					}
-				overall_mode = MODE_TOWN;
-				need_redraw = true;
-				put_pc_screen();
-				put_item_screen(stat_window,0);
-				}
+		if ((overall_mode > MODE_TALK_TOWN) && (overall_mode < MODE_COMBAT/*6*/)) {
+			destination.x = destination.x + i - 4;
+			destination.y = destination.y + j - 4;
+			if (overall_mode == MODE_TOWN_TARGET) {
+				cast_town_spell(destination);
+				did_something = true;
+			}else if(overall_mode == MODE_USE_TOWN) {
+				if (adjacent(destination,univ.town.p_loc) == false)
+					add_string_to_buf("  Must be adjacent.              ");
+				else
+					did_something = use_space(destination);
+			}else if(overall_mode == MODE_DROP_TOWN) {
+				if (adjacent(univ.town.p_loc,destination) == false)
+					add_string_to_buf("Drop: must be adjacent.");
+				else if (get_obscurity(destination.x,destination.y) == 5)
+					ASB("Drop: Space is blocked.");
+				else drop_item(current_pc,store_drop_item,destination);
+			}
+		overall_mode = MODE_TOWN;
+		need_redraw = true;
+		put_pc_screen();
+		put_item_screen(stat_window,0);
+		}
 // End : Targeting a space
 
 		}
@@ -2504,7 +2503,7 @@ eDirection find_waterfall(short x, short y, short mode){
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
 			to_dir[i] = (scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == TER_SPEC_WATERFALL);
-			printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
+			//printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
 			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
 			to_dir[i] = (scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == TER_SPEC_WATERFALL);

@@ -123,12 +123,6 @@ cScenario scenario;
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(void)
 {
-	short error;
-	OSErr err;
-	MenuHandle cur_menu;
-	FSSpec spec;
-	short refNum, localizedRefNum;
-	CFBundleRef bundle;
 	start_time = TickCount();
 	
 	Initialize();
@@ -322,7 +316,6 @@ void Handle_One_Event()
 {
 	short chr,chr2;
 	long menu_choice,cur_time;
-	bool event_in_dialog = false;
 	GrafPtr old_port;
 	
 	//ed_reg = false;
@@ -425,7 +418,7 @@ void Mouse_Pressed()
 {
 	WindowPtr	the_window;
       BitMap screenBits;
-	short	the_part,choice,i;
+	short	the_part;
 	long menu_choice;
 	bool try_to_end;
 		
@@ -529,7 +522,6 @@ void handle_apple_menu(int item_hit)
 
 void handle_file_menu(int item_hit)
 {
-	short choice;
 	FSSpec file;
 	
 	switch (item_hit) {
@@ -573,7 +565,7 @@ void check_for_intel(){
 
 void handle_extra_menu(int item_hit)
 {
-	short i,j,choice;
+	short i;
 	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,true,false};
 	
 	if (file_in_mem == false) {
@@ -811,7 +803,7 @@ void update_item_menu()
 	for (j = 0; j < 4; j++){
 		DeleteMenuItems(item_menu[j],1,100);
 		for (i = 0; i < 100; i++) {
-			sprintf((char *) item_name, " %s",item_list[i + j * 100].full_name);
+			sprintf((char *) item_name, " %s",item_list[i + j * 100].full_name.c_str());
 			c2pstr((char *) item_name);
 			AppendMenu(item_menu[j],item_name);
 		} 
@@ -910,13 +902,13 @@ pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 
 pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
-	FSSpec myFSS;
-	AEDescList docList;
-	OSErr myErr, ignoreErr;
-	long index, itemsInList;
-	Size actualSize;
-	AEKeyword keywd;
-	DescType returnedType;
+//	FSSpec myFSS;
+//	AEDescList docList;
+//	OSErr myErr, ignoreErr;
+//	long index, itemsInList;
+//	Size actualSize;
+//	AEKeyword keywd;
+//	DescType returnedType;
 
 /*	myErr = AEGetParamDesc(theAppleEvent,keyDirectObject, typeAEList, &docList);
 	if (myErr == noErr) {
@@ -942,7 +934,6 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 
 pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
 {
-	short choice;
 			
 	All_Done = verify_restore_quit(0);
 	return noErr;

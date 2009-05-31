@@ -1244,8 +1244,6 @@ void edit_scen_intro_event_filter (short item_hit) {
 
 void edit_scen_intro() {
 	short i,item_hit;
-	short num_s_strs[3] = {100,90,100};
-	
 	
 	cd_create_dialog_parent_num(804,0);
 	

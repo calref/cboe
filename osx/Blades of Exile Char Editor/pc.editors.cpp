@@ -80,7 +80,6 @@ void combine_things(short pc_num)
 bool give_to_pc(short pc_num,cItemRec item, short print_result)
 {
 	short free_space;
-	char announce_string[60];
 	
 	if (item.variety == 0)
 		return true;
@@ -96,7 +95,7 @@ bool give_to_pc(short pc_num,cItemRec item, short print_result)
 
 bool give_to_party(cItemRec item,short print_result)
 {
-	short free_space, i = 0;
+	short i = 0;
 	
 	while (i < 6) {
 		if (give_to_pc(i,item,print_result) == true)
@@ -137,7 +136,6 @@ void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
 {
 	short i;
-	bool do_print = true;
 
 	if ((univ.party[pc_num].weap_poisoned == which_item) && (univ.party[pc_num].status[0] > 0)) {
 //			add_string_to_buf("  Poison lost.           ");
@@ -234,14 +232,7 @@ short select_pc(short active_only,short free_inv_only)
 short choice_dialog(short pic,short num)
 {
 	DialogPtr select_dialog = NULL;
-	short the_type;
-	Handle the_handle = NULL;
-	Rect the_rect;
-	short item_hit,i;
-	Str255 pc_name;
-	GrafPtr old_port;
-	PicHandle	pict_to_draw;
-
+	short item_hit;
 
 	select_dialog = GetNewDialog (num, 0, IN_FRONT);
 	if (select_dialog == NULL) { 
@@ -306,7 +297,6 @@ short luck_total()
 void display_traits_graphics()
 {
 	short i,store;
-	Str255 str;
 
 	for (i = 0; i < 3; i++) {
 		cd_set_led(1013,4 + i,(store_pc->race == i) ? 1 : 0);

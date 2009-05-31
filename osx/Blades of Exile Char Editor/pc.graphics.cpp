@@ -90,14 +90,13 @@ void init_dialogs(){
 void init_main_buttons()
 {
 
-	short i,j;
+	short i;
 	int	indent = 0, indent2 = 0;
-	Rect start_rect = {0,0,36,28};
 	GrafPtr old_port;
 	
 	Str255 fn1 = "\pGeneva";
 	Str255 fn3 = "\pPalatino";
-	Rect mask_rect = {0,0,396,308},r,base_rect;
+	Rect base_rect;
 	
 	if (init_once == false) {
 		init_once = true;
@@ -268,7 +267,7 @@ void init_main_buttons()
 
 void Set_up_win ()
 {
-	short i,j;
+	short i;
 	title_gworld = load_pict(5000);	
 	pc_gworld = load_pict(902);
 	mixed_gworld = load_pict(903);
@@ -292,8 +291,6 @@ void draw_main_screen()
 {
 	Rect	source_rect, dest_rec,dest_rect;
 	Rect reg_rect;
-	Str255 temp_str;
-	int i=0;
 
 	SetPort(GetWindowPort(mainPtr));
 	FillCRect(&whole_win_rect,bg[12]); // fill whole window with background texture
@@ -390,7 +387,6 @@ GWorldPtr load_pict(short picture_to_get)
 	QDErr		check_error;
 	PixMapHandle	offPMHandle;
 	char good;
-	char debug[60];
 			
     current_pic_handle = GetPicture (picture_to_get);
 	if (current_pic_handle == NULL)  {
@@ -466,13 +462,13 @@ void draw_items(short clear_first)
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
 		if (univ.party[current_active_pc].items[i].variety > 0) { // i.e. does item exist
-			sprintf((char *) to_draw, "");
+			strcpy((char *) to_draw, "");
 			if (univ.party[current_active_pc].items[i].item_properties & 1 == 0)
-				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name);
+				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name.c_str());
 				else if (univ.party[current_active_pc].items[i].charges > 0)
-					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,univ.party[current_active_pc].items[i].full_name,
+					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,univ.party[current_active_pc].items[i].full_name.c_str(),
 					univ.party[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,univ.party[current_active_pc].items[i].full_name);			
+				else sprintf((char *) to_draw, "%d. %s ",i + 1,univ.party[current_active_pc].items[i].full_name.c_str());
 
 			//if (i % 2 == 0)
 			//	sprintf((char *) to_draw, "%d %d %d %d",
@@ -497,10 +493,9 @@ void display_party(short mode,short clear_first)
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 {
-	short i,j,k,string_num, cur_rect=0, flag;
-	Str255 to_draw, skill_value;
-	short start_v = 115, start_h = 80;	
-	Rect to_rect,from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
+	short i,k,string_num, cur_rect=0;
+	Str255 to_draw, skill_value;	
+	Rect from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
 	
 	// lots of stuff is global. Like ...
 	// bool file_in_mem

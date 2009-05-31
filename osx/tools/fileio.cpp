@@ -970,7 +970,6 @@ void load_spec_graphics()
 bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
 bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there);
 bool load_party(FSSpec file_to_load){
-	long file_size;
 	OSErr error;
 	bool town_restore = false;
 	bool maps_there = false;

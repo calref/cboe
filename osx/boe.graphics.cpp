@@ -630,9 +630,27 @@ void draw_startup_stats()
 			switch (univ.party[i].main_status) {
 				case MAIN_STATUS_ALIVE:
 					switch (univ.party[i].race) {
-						case 0: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
-						case 1: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
-						case 2: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
+						case RACE_HUMAN: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
+						case RACE_NEPHIL: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
+						case RACE_SLITH: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
+						case RACE_VAHNATAI: sprintf((char *) str,"Level %d Vahnatai",univ.party[i].level); break;
+						case RACE_REPTILE: sprintf((char *) str,"Level %d Reptile",univ.party[i].level); break;
+						case RACE_BEAST: sprintf((char *) str,"Level %d Beast",univ.party[i].level); break;
+						case RACE_IMPORTANT: sprintf((char *) str,"Level %d V.I.P.",univ.party[i].level); break;
+						case RACE_MAGE: sprintf((char *) str,"Level %d Human Mage",univ.party[i].level); break;
+						case RACE_PRIEST: sprintf((char *) str,"Level %d Human Priest",univ.party[i].level); break;
+						case RACE_HUMANOID: sprintf((char *) str,"Level %d Humanoid",univ.party[i].level); break;
+						case RACE_DEMON: sprintf((char *) str,"Level %d Demon",univ.party[i].level); break;
+						case RACE_UNDEAD: sprintf((char *) str,"Level %d Undead",univ.party[i].level); break;
+						case RACE_GIANT: sprintf((char *) str,"Level %d Giant",univ.party[i].level); break;
+						case RACE_SLIME: sprintf((char *) str,"Level %d Slime",univ.party[i].level); break;
+						case RACE_STONE: sprintf((char *) str,"Level %d Golem",univ.party[i].level); break;
+						case RACE_BUG: sprintf((char *) str,"Level %d Bug",univ.party[i].level); break;
+						case RACE_DRAGON: sprintf((char *) str,"Level %d Dragon",univ.party[i].level); break;
+						case RACE_MAGICAL: sprintf((char *) str,"Level %d Magical Creature",univ.party[i].level); break;
+						case RACE_PLANT: sprintf((char *) str,"Level %d Plant",univ.party[i].level); break;
+						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
+						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 						}
 					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,true);
 					OffsetRect(&pc_rect,0,13);
@@ -1757,7 +1775,6 @@ GWorldPtr load_pict(short picture_to_get)
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(char x, char y, unsigned char ground_t)
 {
-	short pic;
 	ter_num_t ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);

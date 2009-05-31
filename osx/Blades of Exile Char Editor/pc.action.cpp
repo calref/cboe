@@ -75,12 +75,10 @@ short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
 bool handle_action(EventRecord event,short mode)
 //short mode; // ignore,
 {
-	short i,j,button_hit = 100,first_existing_pc = 0;
+	short i;
 	
-	char debug_line[60];	
-	RGBColor s;
 	Point the_point;
-	short choice = 4,for_pc = 6;
+	short choice = 4;
 	
 	bool to_return = false;
 
@@ -145,8 +143,6 @@ bool handle_action(EventRecord event,short mode)
 
 void flash_rect(Rect to_flash)
 {
-	RGBColor	test_color, store_color;
-	int i;
 	unsigned long dummy;
 	
 	InvertRect (&to_flash);
@@ -158,17 +154,10 @@ void flash_rect(Rect to_flash)
 void edit_gold_or_food_event_filter (short item_hit)
 {
 	Str255 get_text;
-	long dummy;
 	
 	cd_retrieve_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,2,(char *) get_text);
 	dialog_answer = 0;
-#ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%d",&dummy);
-	dialog_answer = dummy;
-#endif		
 	toast_dialog();
 }
 
@@ -199,17 +188,10 @@ void edit_gold_or_food(short which_to_edit)
 void edit_day_event_filter (short item_hit)
 {
 	Str255 get_text;
-	long dummy;
 	
 	cd_retrieve_text_edit_str(917,2,(char *) get_text);
 	dialog_answer = 0;
-#ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%d",&dummy);
-	dialog_answer = dummy;
-#endif		
 	toast_dialog();
 }
 
@@ -240,7 +222,7 @@ void edit_day()
 
 void put_pc_graphics()
 {
-	short item_hit,what_talk_field,i;
+	short i;
 
 	for (i = 3; i < 65; i++) {
 		if (((store_trait_mode == 0) && (univ.party[which_pc_displayed].mage_spells[i - 3] == true)) ||
@@ -400,11 +382,7 @@ void draw_xp_skills()
 }
 
 
-void do_xp_draw()
-
-{
-
-	short item_hit,what_talk_field;
+void do_xp_draw(){
 	char get_text[256];
 	short pc_num;
 
@@ -429,8 +407,7 @@ void do_xp_draw()
 
 void spend_xp_event_filter (short item_hit)
 {
-	short what_talk_field,i,j,pc_num,mode = 1;
-	char get_text[256];
+	short pc_num;
 	bool talk_done = false;
 
 	pc_num = store_train_pc;
@@ -608,8 +585,6 @@ bool spend_xp(short pc_num, short mode, short parent)
 
 void give_reg_info_event_filter (short item_hit)
 {
-	short i;
-	Str255 place_str;
 	
 			switch (item_hit) {
 				case 1: 
@@ -620,11 +595,7 @@ void give_reg_info_event_filter (short item_hit)
 
 void give_reg_info()
 {
-	long val_for_text;
-
-	short i,item_hit;
-	Str255 place_str;
-	
+	short item_hit;
 
 	make_cursor_sword();
 
@@ -638,17 +609,10 @@ void give_reg_info()
 void edit_xp_event_filter (short item_hit)
 {
 	Str255 get_text;
-	long dummy;
 	
 	cd_retrieve_text_edit_str(1024,2,(char *) get_text);
 	dialog_answer = 0;
-#ifndef EXILE_BIG_GUNS
 	sscanf((char *) get_text,"%d",&dialog_answer);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%d",&dummy);
-	dialog_answer = dummy;
-#endif		
 	toast_dialog();
 }
 

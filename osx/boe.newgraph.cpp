@@ -882,7 +882,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				base_item = store_alchemy(what_chosen - 500);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM, false,1);//// all graphic nums
 				strcpy(cur_name,base_item.full_name.c_str());
-				sprintf(cur_info_str,"");
+				strcpy(cur_info_str,"");
 				break;
 			case 6:
 				//base_item = food_types[what_chosen - 600];
@@ -894,20 +894,20 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_chosen -= 700;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],99,PICT_ITEM, false,1);
 				strcpy(cur_name,heal_types[what_chosen]);
-				sprintf(cur_info_str,"");
+				strcpy(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 
 				strcpy(cur_name,base_item.full_name.c_str());
-				sprintf(cur_info_str,"");		
+				strcpy(cur_info_str,"");		
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name.c_str());
-				sprintf(cur_info_str,"");
+				strcpy(cur_info_str,"");
 				break;
 			default:
 				what_magic_shop = (what_chosen / 1000) - 1;
@@ -1043,15 +1043,15 @@ cItemRec store_alchemy(short which_s)
 void get_item_interesting_string(cItemRec item,char *message)
 {
 	if (item.is_property() == true) {
-		sprintf(message,"Not yours.");
+		strcpy(message,"Not yours.");
 		return;
 		}
 	if (item.is_ident() == false) {
-		sprintf(message,"");
+		strcpy(message,"");
 		return;
 		}
 	if (item.is_cursed() == true) {
-		sprintf(message,"Cursed item.");
+		strcpy(message,"Cursed item.");
 		return;
 		}
 	switch (item.variety) {
@@ -1077,7 +1077,7 @@ void get_item_interesting_string(cItemRec item,char *message)
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
-			sprintf(message,"");		
+			strcpy(message,"");		
 			if (item.charges > 0)
 				sprintf(message,"Uses: %d",item.charges);		
 			break;

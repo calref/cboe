@@ -589,7 +589,7 @@ void draw_rb_slot (short which,short mode)  {
 
 void set_up_terrain_buttons() {
 	short i,j,pic,small_i;
-	Rect ter_from,ter_to,ter_from_base = {0,0,36,28};
+	Rect ter_from,ter_from_base = {0,0,36,28};
 	Rect tiny_from,tiny_to;
 	
 	Rect palette_from,palette_to = palette_button_base;
@@ -948,9 +948,8 @@ void draw_terrain(){
 void draw_monsts() {
 	short i,k,width,height,m_start_pic;
 	GWorldPtr from_gworld;
-	Rect source_rect,draw_rect;
+	Rect source_rect;
 	location where_draw,store_loc;
-	GrafPtr cur_port;
 	
 	for (i = 0; i < town->max_monst(); i++)
 		if (town->creatures(i).number != 0) {
@@ -1008,7 +1007,6 @@ void draw_items() {
 	Rect source_rect,dest_rect;
 	location where_draw;
 	short pic_num;
-	GrafPtr cur_port;
 	
 	for (i = 0; i < town->max_items(); i++) {
 		if (town->preset_items[i].code >= 0) {
@@ -1093,8 +1091,8 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	location where_draw;
-	Rect source_rect,dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
-	short picture_wanted,k;
+	Rect dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
+	short picture_wanted;
 	GWorldPtr source_gworld;
 	
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
@@ -1153,9 +1151,6 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,location target,
 					 char masked,short main_win) {
 	Rect	destrec;
-	PixMapHandle	test1, test2;
-	RGBColor	test_color, store_color;
-	BitMap store_dest;
 	
 	if ((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
 		return;
@@ -1175,7 +1170,6 @@ void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,l
  desired pixmap, or Rect to darkness if desired map not present */
 Rect get_template_rect (unsigned short type_wanted) {
 	Rect store_rect;
-	short i,j;
 	short picture_wanted;
 	
 	picture_wanted = scenario.ter_types[type_wanted].picture;
@@ -1191,7 +1185,7 @@ Rect get_template_rect (unsigned short type_wanted) {
 }
 
 void draw_frames() {
-	char q,r,i,k;
+	char q,r,i;
 	location which_pt;
 	Rect draw_rect;
 	
@@ -1228,9 +1222,8 @@ void draw_frames() {
 
 
 void place_location() {
-	Rect text_rect = {367,290,384,510};
 	Str255 draw_str;
-	Rect from_rect,draw_rect,source_rect,erase_rect;
+	Rect draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	
 	/*
@@ -1257,7 +1250,7 @@ void place_location() {
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 	else {
 		//MoveTo(5 ,terrain_rects[255].top + 28);
-		sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+		sprintf((char *) draw_str,"Click terrain to edit. ");
 	}
 	c2pstr((char*) draw_str);
 	DrawString(draw_str);
@@ -1326,11 +1319,8 @@ void place_location() {
 
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location() {
-	Rect text_rect = {367,290,384,510};
 	Str255 draw_str;
-	Rect from_rect,draw_rect,source_rect,erase_rect;
-	short picture_wanted;
-	
+	Rect from_rect,draw_rect,erase_rect;
 	
 	SetPort( terrain_buttons_gworld);
 	
@@ -1424,7 +1414,7 @@ void sort_specials() {
 }
 
 bool is_field_type(short i,short j,short field_type) {
-	short k;
+	unsigned short k;
 	
 	for (k = 0; k < town->preset_fields.size(); k++)
 		if ((town->preset_fields[k].type == field_type) &&
@@ -1435,7 +1425,7 @@ bool is_field_type(short i,short j,short field_type) {
 }
 
 void make_field_type(short i,short j,short field_type) {
-	short k;
+	unsigned short k;
 	
 	if (is_field_type(i,j,field_type) == true)
 		return;
@@ -1456,7 +1446,7 @@ void make_field_type(short i,short j,short field_type) {
 
 
 void take_field_type(short i,short j,short field_type) {
-	short k;
+	unsigned short k;
 	
 	for (k = 0; k < town->preset_fields.size(); k++)
 		if ((town->preset_fields[k].type == field_type) &&
@@ -1542,9 +1532,6 @@ void take_quickfire(short i,short j) {
 }
 
 bool container_there(location l) {
-	
-	ter_num_t ter;
-	
 	if (editing_town == false)
 		return false;
 	if (scenario.ter_types[town->terrain(l.x,l.y)].special == TER_SPEC_IS_A_CONTAINER)

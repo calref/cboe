@@ -4,8 +4,6 @@
 #include <sstream>
 #include "boe.consts.h"
 
-//#define EXILE_BIG_GUNS 1
-
 #define	SLEEP_TICKS		2L
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15

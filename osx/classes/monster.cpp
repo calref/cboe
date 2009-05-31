@@ -129,6 +129,7 @@ cMonster::cAttack::operator int(){
 cMonster::cAttack& cMonster::cAttack::operator=(int n){
 	dice = n / 100;
 	sides = n % 100;
+	return *this;
 }
 
 std::ostream& operator << (std::ostream& out, eStatus& e){
