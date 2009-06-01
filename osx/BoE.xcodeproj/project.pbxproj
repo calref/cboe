@@ -365,6 +365,7 @@
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C70FD0E16B00B21642 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = undo.h; path = tools/undo.h; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = undo.cpp; path = tools/undo.cpp; sourceTree = "<group>"; };
+		912287850FD41A2300B21642 /* simpletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simpletypes.h; path = classes/simpletypes.h; sourceTree = "<group>"; };
 		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = tools/dlgbtns.cpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = "<group>"; };
@@ -671,6 +672,7 @@
 				91AC60A60FA26C1B00EEAE67 /* tmpltown.h */,
 				91AC61C40FA2729900EEAE67 /* universe.h */,
 				91AC62090FA2853700EEAE67 /* creatlist.h */,
+				912287850FD41A2300B21642 /* simpletypes.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";

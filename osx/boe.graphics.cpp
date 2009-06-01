@@ -141,6 +141,7 @@ GWorldPtr party_template_gworld;
 GWorldPtr items_gworld;
 GWorldPtr tiny_obj_gworld;
 GWorldPtr fields_gworld;
+GWorldPtr boom_gworld;
 GWorldPtr roads_gworld;
 GWorldPtr map_gworld;
 GWorldPtr tiny_map_graphics;
@@ -835,6 +836,7 @@ void Set_up_win ()
 	tiny_obj_gworld = load_pict(900);
 	fields_gworld = load_pict(821);
 	roads_gworld = load_pict(822);
+	boom_gworld = load_pict(823);
 	missiles_gworld = load_pict(880);
 	dlogpics_gworld = load_pict(850);
 	
@@ -2583,7 +2585,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 			else OffsetRect(&dest_rect,store_anim_ul.h,store_anim_ul.v);
 
 	OffsetRect(&source_rect,-1 * store_rect.left + 28 * type,-1 * store_rect.top);
-	rect_draw_some_item(fields_gworld,source_rect,terrain_screen_gworld,dest_rect,1,1);
+	rect_draw_some_item(boom_gworld,source_rect,terrain_screen_gworld,dest_rect,1,1);
 	
 	if ((cartoon_happening == false) && (dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {

@@ -464,3 +464,22 @@ cPlayer& cParty::operator[](unsigned short n){
 	if(n >= 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
 	return adven[n];
 }
+
+void cParty::set_ptr(short p, unsigned short sdfx, unsigned short sdfy){ // This function is not used for setting the reserved pointers
+	if(p >= -199 && p <= -100){ // must be a mutable pointer
+		if(sdfx >= 300) throw std::range_error("SDF x-coordinate out of range (0..299)");
+		if(sdfy >= 50) throw std::range_error("SDF y-coordinate out of range (0..49)");
+		pointers[p] = std::make_pair(sdfx,sdfy);
+	}
+	else throw std::range_error("Pointer out of range (-199 to -100)");
+}
+
+void cParty::force_ptr(short p, unsigned short sdfx, unsigned short sdfy){
+	pointers[p] = std::make_pair(sdfx,sdfy);
+}
+
+unsigned char cParty::get_ptr(short p){
+	ptrIter iter = pointers.find(p);
+	if(iter == pointers.end()) return 0;
+	return stuff_done[iter->second.first][iter->second.second];
+}

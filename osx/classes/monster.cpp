@@ -53,9 +53,6 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	default_attitude = old.default_attitude;
 	summon_type = old.summon_type;
 	default_facial_pic = old.default_facial_pic;
-	res1 = old.res1;
-	res2 = old.res2;
-	res3 = old.res3;
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	return *this;
@@ -196,4 +193,288 @@ cCreature& cCreature::operator = (const cCreature& other){ // replaces return_mo
 	cur_loc = start_loc;
 	target = 6; // No target
 	return *this;
+}
+
+cMonster::cAbility::operator std::string(){
+	std::ostringstream sout;
+	short i = 0;
+	switch(abil){
+		case MONST_THROWS_DARTS:
+			sout << "Throws darts (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_SHOOTS_ARROWS:
+			sout << "Shoots arrows (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_THROWS_SPEARS:
+			sout << "Throws spears (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_THROWS_ROCKS:
+			sout << "Throws rocks (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_THROWS_RAZORDISKS:
+			sout << "Throws razordisks (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_GOOD_ARCHER:
+			sout << "Good archer ("  << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_SHOOTS_SPINES:
+			sout << "Shoots spines (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_THROWS_KNIVES:
+			sout << "Throws knives (" << extra1 << 'd' << extra2 << ')';
+			break;
+		case MONST_DAMAGE_RAY:
+		case MONST_DRAIN_XP_DAMAGE_RAY:
+		case MONST_DAMAGE_TOUCH:
+		case MONST_DRAIN_XP_DAMAGE_TOUCH:
+			switch(extra1){
+				case DAMAGE_WEAPON:
+					sout << "Health drain";
+					break;
+				case DAMAGE_FIRE:
+					sout << "Heat";
+					break;
+				case DAMAGE_POISON:
+					sout << "Pain";
+					break;
+				case DAMAGE_MAGIC:
+					sout << "Shock";
+					break;
+				case DAMAGE_UNBLOCKABLE:
+					sout << "Wounding";
+					break;
+				case DAMAGE_COLD:
+					sout << "Icy";
+					break;
+				case DAMAGE_UNDEAD:
+				case DAMAGE_DEMON:
+					sout << "Unholy";
+					break;
+				default:
+					sout << "*ERROR INVALID DAMAGE TYPE*";
+			}
+			if(abil == MONST_DRAIN_XP_DAMAGE_RAY || abil == MONST_DRAIN_XP_DAMAGE_TOUCH)
+				sout << ", draining";
+			if(abil == MONST_DAMAGE_RAY || abil == MONST_DRAIN_XP_DAMAGE_RAY)
+				sout << " ray";
+			else sout << " touch";
+			break;
+		case MONST_STATUS_RAY:
+		case MONST_STATUS_TOUCH:
+			switch(extra1){
+				case STATUS_BLESS_CURSE:
+					sout << "Curse";
+					break;
+				case STATUS_POISON:
+					sout << "Poison";
+					i = 1;
+					break;
+				case STATUS_HASTE_SLOW:
+					sout << "Slowing";
+					break;
+				case STATUS_WEBS:
+					sout << "Glue";
+					i = 1;
+					break;
+				case STATUS_DISEASE:
+					sout << "Infectious";
+					i = 1;
+					break;
+				case STATUS_DUMB:
+					sout << "Dumbfounding";
+					break;
+				case STATUS_ASLEEP:
+					sout << "Sleep";
+					break;
+				case STATUS_PARALYZED:
+					sout << "Paralysis";
+					break;
+				case STATUS_ACID:
+					sout << "Acid";
+					i = 1;
+					break;
+				default: // Poisoned weapon, invulnerable, magic resistance, sanctuary, martyr's shield, or invalid
+					sout << "*ERROR BAD OR INVALID STATUS TYPE*";
+			}
+			if(abil == MONST_STATUS_RAY)
+				if(i == 1) sout << " spit";
+				else sout << " ray";
+			else sout << " touch";
+			break;
+		case MONST_PETRIFY_RAY:
+			sout << "Petrification ray";
+			break;
+		case MONST_DRAIN_SP_RAY:
+			sout << "Spell point drain ray";
+			break;
+		case MONST_DRAIN_XP_RAY:
+			sout << "Experience draining ray";
+			break;
+		case MONST_KILL_RAY:
+			sout << "Death ray";
+			break;
+		case MONST_STEAL_FOOD_RAY:
+			sout << "Steals food from afar";
+			break;
+		case MONST_STEAL_GOLD_RAY:
+			sout << "Steals gold from afar";
+			break;
+			break;
+		case MONST_PETRIFY_TOUCH:
+			sout << "Petrification touch";
+			break;
+		case MONST_DRAIN_SP_TOUCH:
+			sout << "Spell point draining touch";
+			break;
+		case MONST_DRAIN_XP_TOUCH:
+			sout << "Experience draining touch";
+			break;
+			break;
+		case MONST_KILL_TOUCH:
+			sout << "Death touch";
+			break;
+		case MONST_STEAL_FOOD_TOUCH:
+			sout << "Steals food when hits";
+			break;
+		case MONST_STEAL_GOLD_TOUCH:
+			sout << "Steals gold when hits";
+			break;
+		case MONST_SUMMON_ONE:
+			sout << "Summons " << scenario.scen_monsters[extra1].m_name << "s (" << extra2 <<"% chance)";
+			break;
+		case MONST_SUMMON_TYPE:
+			sout << "Summons ";
+			switch(extra1){
+				case 0:
+					sout << "wildlife";
+					break;
+				case 1:
+					sout << "weak aid";
+					break;
+				case 2:
+					sout << "strong aid";
+					break;
+				case 3:
+					sout << "powerful aid";
+					break;
+				case 4:
+					sout << "friends";
+					break;
+			}
+			sout << " (" << extra2 << "% chance)";
+			break;
+		case MONST_SUMMON_SPECIES:
+			sout << "Summons ";
+			switch(extra1){
+				case RACE_HUMAN:
+					sout << "Humans";
+					break;
+				case RACE_NEPHIL:
+					sout << "Nephilim";
+					break;
+				case RACE_SLITH:
+					sout << "Slithzerikai";
+					break;
+				case RACE_VAHNATAI:
+					sout << "Vahnatai";
+					break;
+				case RACE_REPTILE:
+					sout << "reptiles";
+					break;
+				case RACE_BEAST:
+					sout << "beasts";
+					break;
+				case RACE_HUMANOID:
+					sout << "humanoids";
+					break;
+				case RACE_DEMON:
+					sout << "demons";
+					break;
+				case RACE_UNDEAD:
+					sout << "undead";
+					break;
+				case RACE_GIANT:
+					sout << "giants";
+					break;
+				case RACE_SLIME:
+					sout << "slimes";
+					break;
+				case RACE_STONE:
+					sout << "golems";
+					break;
+				case RACE_BUG:
+					sout << "bugs";
+					break;
+				case RACE_DRAGON:
+					sout << "Dragons";
+					break;
+				case RACE_MAGICAL:
+					sout << "magical creatures";
+					break;
+				case RACE_PLANT:
+					sout << "plants";
+					break;
+				case RACE_BIRD:
+					sout << "birds";
+					break;
+				default: // Important, Mage, Priest, or invalid
+					sout << "*ERROR INVALID RACE*";
+			}
+			sout << " (" << extra2 << "% chance)";
+			break;
+		case MONST_SUMMON_RANDOM:
+			sout << "Summons aid" << " (" << extra2 << "% chance)";
+			break;
+		case MONST_MASS_SUMMON:
+			sout << "Summons aid" << " (" << extra2 << "% chance)";
+			break;
+		case MONST_SPLITS:
+			sout << "Splits when hit" << " (" << extra2 << "% chance)";
+			break;
+		case MONST_FIELD_MISSILE:
+			// TODO: Fill these in
+			sout << "MONST_FIELD_MISSILE";
+			break;
+		case MONST_MARTYRS_SHIELD:
+			sout << "Permanent Martyr's shield";
+			break;
+		case MONST_ABSORB_SPELLS:
+			sout << "Absorbs spells";
+			break;
+		case MONST_INVULNERABLE:
+			sout << "Invulnerable";
+			break;
+		case MONST_RADIATE:
+			sout << "Radiates ";
+			switch(extra1){ // TODO: Fill these in
+			}
+			sout << " (" << extra2 << "% chance)";
+			break;
+		case MONST_CALL_LOCAL_SPECIAL:
+		case MONST_CALL_GLOBAL_SPECIAL:
+			sout << "Unusual ability";
+			break;
+	}
+	return "*ERROR INVALID ABILITY*";
+}
+
+std::string cMonster::getAbil1Name() {
+	return (std::string) abil1;
+}
+
+std::string cMonster::getAbil2Name() {
+	return (std::string) abil2;
+}
+
+bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
+	if(abil1.abil == what){
+		if(x1 != NULL) *x1 = abil1.extra1;
+		if(x2 != NULL) *x2 = abil1.extra2;
+		return true;
+	}else if(abil2.abil == what){
+		if(x1 != NULL) *x1 = abil2.extra1;
+		if(x2 != NULL) *x2 = abil2.extra2;
+		return true;
+	}
+	return false;
 }

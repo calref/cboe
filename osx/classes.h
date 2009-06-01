@@ -8,15 +8,7 @@
  *
  */
 
-typedef unsigned short str_num_t;
-
-//class sbyte {
-//	signed char c;
-//public:
-//	operator int() {return c;}
-//	sbyte(signed char k) : c(k) {}
-//}
-
+#include "simpletypes.h"
 #include "location.h"
 #include "terrain.h"
 #include "vehicle.h"

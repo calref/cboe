@@ -2640,7 +2640,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				set_terrain(l,scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
-		case 179:
+		case 179: // TODO: Add a "random offset" mode
 			if (which_mode == 7)
 				break;
 			run_a_boom(l,spec.ex2a,0,0);

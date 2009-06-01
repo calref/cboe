@@ -98,7 +98,12 @@ public:
 	cMonster summons; // an array of monsters which can be summoned by the parties items yet don't originate from this scenario
 	bool graphicUsed[250]; // whether each custom graphics slot on the party's sheet is actually used; needed to place new custom graphics on the sheet.
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
-	std::map<std::string,std::vector<int> > campaign_flags;
+	std::map<std::string,std::vector<signed short> > campaign_flags;
+	std::map<short,std::pair<unsigned short,unsigned char> > pointers;
+	
+	void set_ptr(short p, unsigned short sdfx, unsigned short sdfy);
+	void force_ptr(short p, unsigned short sdfx, unsigned short sdfy);
+	unsigned char get_ptr(short p);
 	
 	cParty& operator = (legacy::party_record_type& old);
 	void append(legacy::big_tr_type& old);
@@ -121,7 +126,8 @@ public:
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	typedef std::vector<cTimer>::iterator timerIter;
-	typedef std::map<std::string,std::vector<int> >::iterator campIter;
+	typedef std::map<std::string,std::vector<signed short> >::iterator campIter;
+	typedef std::map<short,std::pair<unsigned short,unsigned char> >::iterator ptrIter;
 };
 
 #endif

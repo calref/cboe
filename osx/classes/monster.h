@@ -11,76 +11,12 @@
 
 #include <string>
 #include <iosfwd>
+#include "soundtool.h"
 
 namespace legacy {
 	struct monster_record_type;
 	struct creature_data_type;
 	struct creature_start_type;
-};
-
-typedef unsigned short m_num_t;
-
-/* adven[i].race */ //complete
-enum eRace {
-	RACE_UNKNOWN = -1, // for parameters to some functions; not valid in the class
-	RACE_HUMAN = 0,
-	RACE_NEPHIL = 1,
-	RACE_SLITH = 2,
-	RACE_VAHNATAI = 3,
-	RACE_REPTILE = 4,
-	RACE_BEAST = 5,
-	RACE_IMPORTANT = 6,
-	RACE_MAGE = 7,
-	RACE_PRIEST = 8,
-	RACE_HUMANOID = 9,
-	RACE_DEMON = 10,
-	RACE_UNDEAD = 11,
-	RACE_GIANT = 12,
-	RACE_SLIME = 13,
-	RACE_STONE = 14,
-	RACE_BUG = 15,
-	RACE_DRAGON = 16,
-	RACE_MAGICAL = 17,
-	RACE_PLANT = 18,
-	RACE_BIRD = 19,
-}; // TODO: Expand and merge with eMonsterType
-
-/* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
-enum eStatus {
-	STATUS_POISONED_WEAPON = 0,
-	STATUS_BLESS_CURSE = 1,
-	STATUS_POISON = 2,
-	STATUS_HASTE_SLOW = 3,
-	STATUS_INVULNERABLE = 4,
-	STATUS_MAGIC_RESISTANCE = 5,
-	STATUS_WEBS = 6,
-	STATUS_DISEASE = 7,
-	STATUS_INVISIBLE = 8, //sanctuary
-	STATUS_DUMB = 9,
-	STATUS_MARTYRS_SHIELD = 10,
-	STATUS_ASLEEP = 11,
-	STATUS_PARALYZED = 12,
-	STATUS_ACID = 13,
-};
-
-/* Monster Type */
-enum eMonsterType {
-	MONSTER_TYPE_UNKNOWN = -1, // for parameters to some functions; not valid in the class
-	MONSTER_TYPE_HUMAN = 0,
-	MONSTER_TYPE_REPTILE = 1,
-	MONSTER_TYPE_BEAST = 2,
-	MONSTER_TYPE_IMPORTANT = 3,
-	MONSTER_TYPE_MAGE = 4,
-	MONSTER_TYPE_PRIEST = 5,
-	MONSTER_TYPE_HUMANOID = 6,
-	MONSTER_TYPE_DEMON = 7,
-	MONSTER_TYPE_UNDEAD = 8,
-	MONSTER_TYPE_GIANT = 9,
-	MONSTER_TYPE_SLIME = 10,
-	MONSTER_TYPE_STONE = 11,
-	MONSTER_TYPE_BUG = 12,
-	MONSTER_TYPE_DRAGON = 13,
-	MONSTER_TYPE_MAGICAL = 14,
 };
 
 /* Attack Types */
@@ -96,16 +32,15 @@ enum eMonsterType {
 #define MONSTER_ATTACK_HARMS		8
 #define MONSTER_ATTACK_STABS		9
 
-/* Special Ability a.k.a spec_skill */
 
 #define MONSTER_NO_SPECIAL_ABILITY			0
-#define MONSTER_THROWS_DARTS				1
-#define MONSTER_SHOOTS_ARROWS				2
-#define MONSTER_THROWS_SPEARS				3
+#define MONSTER_THROWS_DARTS				1 //1-6
+#define MONSTER_SHOOTS_ARROWS				2 //2-12
+#define MONSTER_THROWS_SPEARS				3 //3-18
 #define MONSTER_THROWS_ROCKS1				4 //4-24 damages
 #define MONSTER_THROWS_ROCKS2				5 //5-30 damages
 #define MONSTER_THROWS_ROCKS3				6 //6-36 damages
-#define MONSTER_THROWS_RAZORDISKS			7
+#define MONSTER_THROWS_RAZORDISKS			7 //4-24
 #define MONSTER_PETRIFICATION_RAY			8
 #define MONSTER_SP_DRAIN_RAY				9 //spell points drain ray
 #define MONSTER_HEAT_RAY					10
@@ -118,7 +53,7 @@ enum eMonsterType {
 #define MONSTER_ICY_AND_DRAINING_TOUCH		17
 #define MONSTER_SLOWING_TOUCH				18
 #define MONSTER_SHOOTS_WEB					19
-#define MONSTER_GOOD_ARCHER					20
+#define MONSTER_GOOD_ARCHER					20 //7-42
 #define MONSTER_STEALS_FOOD					21
 #define MONSTER_PERMANENT_MARTYRS_SHIELD	22
 #define MONSTER_PARALYSIS_RAY				23
@@ -132,7 +67,7 @@ enum eMonsterType {
 #define MONSTER_ACID_TOUCH					31
 #define MONSTER_BREATHES_SLEEP_CLOUDS		32
 #define MONSTER_ACID_SPIT					33
-#define MONSTER_SHOOTS_SPINES				34
+#define MONSTER_SHOOTS_SPINES				34 //7-42
 #define MONSTER_DEATH_TOUCH					35
 #define MONSTER_INVULNERABILITY				36
 #define MONSTER_GUARD						37
@@ -161,6 +96,11 @@ public:
 		operator int();
 		cAttack& operator=(int n);
 	};
+	struct cAbility{
+		eMonstAbil abil;
+		unsigned char extra1, extra2;
+		operator std::string();
+	};
 	m_num_t m_num; // TODO: This probably shouldn't be necessary. Consider why it is, and determine if it can be removed
 	unsigned char level;
 	std::string m_name;
@@ -180,7 +120,7 @@ public:
 	unsigned char breath;
 	unsigned char breath_type;
 	unsigned char treasure;
-	unsigned char spec_skill;
+	unsigned char spec_skill; // TODO: Delete in favour of cAbility
 	unsigned char poison;
 	short morale,m_morale; // TODO: Move to cCreature (since these are calculated in-game based on the level)
 	item_num_t corpse_item;
@@ -189,14 +129,22 @@ public:
 	unsigned char direction; // TODO: Move direction to cCreature
 	unsigned char immunities;
 	unsigned char x_width,y_width;
-	unsigned char radiate_1;
-	unsigned short radiate_2; // I THINK this is the extra field for the second ability
-	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
+	unsigned char radiate_1; // TODO: Delete in favour of cAbility
+	unsigned short radiate_2; // I THINK this is the extra field for the second ability TODO: Delete in favour of cAbility
+	unsigned char default_attitude;
+	unsigned char summon_type;
+	unsigned char default_facial_pic;
 	short picture_num;
 	str_num_t see_str1, see_str2;
-	snd_num_t see_sound, ambient_sound; // ambient_sound has a 
+	snd_num_t see_sound, ambient_sound; // ambient_sound has a chance of being played every move
 	spec_num_t see_spec;
+private:
+	cAbility abil1, abil2;
+public:
 	
+	std::string getAbil1Name();
+	std::string getAbil2Name();
+	bool hasAbil(eMonstAbil what, unsigned char* x1 = NULL, unsigned char* x2 = NULL);
 	cMonster& operator = (legacy::monster_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix);
 };
@@ -232,4 +180,6 @@ std::ostream& operator << (std::ostream& out, eStatus& e);
 std::istream& operator >> (std::istream& in, eStatus& e);
 std::ostream& operator << (std::ostream& out, eRace& e);
 std::istream& operator >> (std::istream& in, eRace& e);
+std::ostream& operator << (std::ostream& out, eMonstAbil& e);
+std::istream& operator >> (std::istream& in, eMonstAbil& e);
 #endif

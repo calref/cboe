@@ -50,7 +50,7 @@ extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
-extern GWorldPtr fields_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
+extern GWorldPtr fields_gworld,boom_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
 //extern party_record_type party;
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
@@ -703,8 +703,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 			if (store_booms[i].boom_type >= 0) {
 				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 						from_rect = base_rect;
-						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),144 + 36 * (store_booms[i].boom_type));
-						rect_draw_some_item(fields_gworld,from_rect,
+						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
+						rect_draw_some_item(boom_gworld,from_rect,
 							temp_gworld,explode_place_rect[i],1,0);
 					
 					if (store_booms[i].val_to_place > 0) {

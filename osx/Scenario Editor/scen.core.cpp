@@ -713,9 +713,6 @@ cMonster return_monster_template(m_num_t store) {
 	monst.default_attitude = 0;
 	monst.summon_type = 0;
 	monst.default_facial_pic = 0;
-	monst.res1 = 0;
-	monst.res2 = 0;
-	monst.res3 = 0;
 	
 	monst.immunities = 0;
 	if (m_magic_r[m_num] == 1)
