@@ -55,7 +55,13 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	default_facial_pic = old.default_facial_pic;
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
+	see_spec = -1;
 	return *this;
+}
+
+cMonster::cMonster(){
+	// TODO: Fill in
+	see_spec = -1;
 }
 
 cCreature::cCreature(){

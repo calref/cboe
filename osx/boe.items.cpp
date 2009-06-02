@@ -1030,7 +1030,6 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 	store_get_mode = mode;
 	current_getting_pc = current_pc;
 	store_pcnum = pc_num;
-	dialog_answer = 0;
 	
 	for (i = 0; i < 130; i++)
 		item_array[i] = 200;
@@ -1071,6 +1070,7 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 		give_help(36,37,987);
 	}
 	
+	dialog_answer = 0;
 	item_hit = cd_run_dialog();
 	cd_kill_dialog(987);
 

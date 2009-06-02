@@ -80,6 +80,7 @@ public:
 	bool is_ash(char x, char y) const;
 	bool is_bones(char x, char y) const;
 	bool is_rubble(char x, char y) const;
+	bool is_force_cage(char x, char y) const;
 //	bool is_trim(char x, char y, char t) const;
 	bool set_explored(char x, char y, bool b);
 	bool set_force_wall(char x, char y, bool b);
@@ -106,6 +107,7 @@ public:
 	bool set_ash(char x, char y, bool b);
 	bool set_bones(char x, char y, bool b);
 	bool set_rubble(char x, char y, bool b);
+	bool set_force_cage(char x, char y, bool b);
 //	bool set_trim(char x, char y, char t, bool b);
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);

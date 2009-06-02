@@ -484,3 +484,25 @@ inline void operator += (eDamageType& cur, eDamageType othr){
 //	operator int() {return c;}
 //	sbyte(signed char k) : c(k) {}
 //}
+
+enum eSpecContext {
+	SPEC_OUT_MOVE = 0,
+	SPEC_TOWN_MOVE = 1,
+	SPEC_COMBAT_MOVE = 2,
+	SPEC_OUT_LOOK = 3,
+	SPEC_TOWN_LOOK = 4,
+	SPEC_ENTER_TOWN = 5,
+	SPEC_LEAVE_TOWN = 6,
+	SPEC_TALK = 7,
+	SPEC_USE_SPEC_ITEM = 8,
+	SPEC_TOWN_TIMER = 9,
+	SPEC_SCEN_TIMER = 10,
+	SPEC_PARTY_TIMER = 11,
+	SPEC_KILL_MONST = 12,
+	SPEC_OUTDOOR_ENC = 13,
+	SPEC_WIN_ENCOUNTER = 14,
+	SPEC_FLEE_ENCOUNTER = 15,
+	SPEC_TARGET = 16,
+	SPEC_USE_SPACE = 17,
+	SPEC_SEE_MONST = 18,
+};

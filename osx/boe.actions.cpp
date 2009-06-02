@@ -144,7 +144,7 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
 Rect shopping_rects[8][7];
-short special_queue[20];
+pending_special_type special_queue[20];
 bool end_scenario = false;
 
 void init_screen_locs() ////
@@ -319,7 +319,7 @@ bool handle_action(EventRecord event)
 	the_point.h -= ul.h;
 	the_point.v -= ul.v;
 	for (i = 0; i < 20; i++)
-		special_queue[i] = -1;
+		special_queue[i].spec = -1;
 	end_scenario = false;
 		
 	if (unreg_party_in_scen_not_check == true) {
@@ -1295,16 +1295,11 @@ bool handle_action(EventRecord event)
  	
  	// At this point, see if any specials have been queued up, and deal with them
  	for (i = 0; i < 20; i++)
-		if (special_queue[i] >= 0) {
+		if (special_queue[i].spec >= 0) {
 			s3 = 0;
-			switch (i) {
-				case 0:
-					run_special(5,2,special_queue[0],univ.town.p_loc,&s1,&s2,&s3);
-					break;
-				case 1:
-					run_special(6,2,special_queue[1],univ.party.p_loc,&s1,&s2,&s3);
-					break;
-				}
+			run_special(special_queue[i].mode,special_queue[i].type,special_queue[i].spec,
+						special_queue[i].where,&s1,&s2,&s3);
+			special_queue[i].spec = -1;
 			if (s3 > 0)
 				draw_terrain();
 			}

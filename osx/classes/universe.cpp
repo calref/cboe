@@ -237,6 +237,11 @@ bool cCurTown::is_rubble(char x, char y) const{
 	return fields[x][y] & 8388608L;
 }
 
+bool cCurTown::is_force_cage(char x, char y) const{
+	if(x > record->max_dim() || y > record->max_dim()) return false;
+	return fields[x][y] & 16777216L;
+}
+
 //bool cCurTown::is_trim(char x, char y, char t){
 //	unsigned char bit = 1 << t;
 //	return trim[x][y] & bit;
@@ -609,6 +614,15 @@ bool cCurTown::set_rubble(char x, char y, bool b){
 		set_bones(x,y,false);
 	}
 	else fields[x][y] &= ~8388608L;
+	return true;
+}
+
+bool cCurTown::set_force_cage(char x, char y, bool b){
+	// TODO: Consider whether placing a forcecage should erase anything already present, or fail due to something already present
+	// TODO: Also consider checking for forcecage in some of the other placement functions.
+	if(x > record->max_dim() || y > record->max_dim()) return false;
+	if(b) fields[x][y] |=  16777216L;
+	else  fields[x][y] &= ~16777216L;
 	return true;
 }
 

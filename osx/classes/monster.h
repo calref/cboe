@@ -146,6 +146,7 @@ public:
 	std::string getAbil2Name();
 	bool hasAbil(eMonstAbil what, unsigned char* x1 = NULL, unsigned char* x2 = NULL);
 	cMonster& operator = (legacy::monster_record_type& old);
+	cMonster();
 	void writeTo(std::ostream& file, std::string prefix);
 };
 

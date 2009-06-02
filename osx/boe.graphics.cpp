@@ -1883,206 +1883,148 @@ void draw_terrain(short	mode)
 			}
 
 	for (q = 0; q < 9; q++) {
-		for (r = 0; r < 9; r++)
-			{
-				where_draw = (is_out()) ? univ.party.p_loc : center;
-				where_draw.x += q - 4;
-				where_draw.y += r - 4;
-				off_terrain = false;				
+		for (r = 0; r < 9; r++) {
+			where_draw = (is_out()) ? univ.party.p_loc : center;
+			where_draw.x += q - 4;
+			where_draw.y += r - 4;
+			off_terrain = false;
+			
+			draw_frills = true;
+			if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
+								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) {
+				draw_frills = false;
+				// Warning - this section changes where_draw
+				if (where_draw.x < 0)
+					where_draw.x = -1;
+				if (where_draw.x > univ.town->max_dim() - 1)
+					where_draw.x = univ.town->max_dim();
+				if (where_draw.y < 0)
+					where_draw.y = -1;
+				if (where_draw.y > univ.town->max_dim() - 1) 
+					where_draw.y = univ.town->max_dim();
+				if (can_see(view_loc,where_draw,0) < 5)
+					can_draw = 1;
+				else can_draw = 0;
+				spec_terrain = 0;
+			}
+			else if (is_out()) {
+				if ((where_draw.x < 0) || (where_draw.x > 95) 
+					|| (where_draw.y < 0) || (where_draw.y > 95))
+					can_draw = 0;
+				else {
+					spec_terrain = univ.out[where_draw.x][where_draw.y];
+					can_draw = univ.out.out_e[where_draw.x][where_draw.y];
+				}
+			}
+			else if (is_combat()) {
+				spec_terrain = combat_terrain[where_draw.x][where_draw.y];
+				if (cartoon_happening == true)
+					can_draw = true;
+				else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
+								  (which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
+								 && (party_can_see(where_draw) < 6)) ? 1 : 0;
+			}
+			else {
+				spec_terrain = univ.town->terrain(where_draw.x,where_draw.y);
+				can_draw = is_explored(where_draw.x,where_draw.y);
 				
-				draw_frills = true;
-				if (!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1) 
-						|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) {
-							draw_frills = false;
-							// Warning - this section changes where_draw
-							if (where_draw.x < 0)
-								where_draw.x = -1;
-							if (where_draw.x > univ.town->max_dim() - 1) 
-								where_draw.x = univ.town->max_dim();
-							if (where_draw.y < 0)
-								where_draw.y = -1;
-							if (where_draw.y > univ.town->max_dim() - 1) 
-								where_draw.y = univ.town->max_dim();
-							if (can_see(view_loc,where_draw,0) < 5)
-								can_draw = 1;
-								else can_draw = 0;							
-							spec_terrain = 0;
-							}
-				else if (is_out()) {
-					if ((where_draw.x < 0) || (where_draw.x > 95) 
-						|| (where_draw.y < 0) || (where_draw.y > 95))
+				if (can_draw > 0) {
+					if (pt_in_light(univ.town.p_loc,where_draw) == false)
 						can_draw = 0;
-						else {
-							spec_terrain = univ.out[where_draw.x][where_draw.y];
-							can_draw = univ.out.out_e[where_draw.x][where_draw.y];
-							}						
-						}
-					else if (is_combat()) {
-						spec_terrain = combat_terrain[where_draw.x][where_draw.y];
-						if (cartoon_happening == true)
-							can_draw = true;
-							else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
-							(which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
-							  && (party_can_see(where_draw) < 6)) ? 1 : 0;
-						}
-					else {
-						spec_terrain = univ.town->terrain(where_draw.x,where_draw.y);
-						can_draw = is_explored(where_draw.x,where_draw.y);
-
-						if (can_draw > 0) {
-							if (pt_in_light(univ.town.p_loc,where_draw) == false)
-								can_draw = 0;	
-							}	
-						if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
-							can_draw = (party_can_see(where_draw) < 6) ? 1 : 0;
-						}
-				spot_seen[q][r] = can_draw;
-
-						
-				if ((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
-					if ((is_combat()) && (cartoon_happening == false)) {
-						anim_ticks = 0;
-						}
-						
-					eTrimType trim = scenario.ter_types[spec_terrain].trim_type;
-
-					// Finally, draw this terrain spot
-//					if(short_spec_terrain == 82) { // cave wway
-//						 if (loc_off_act_area(where_draw) == false) {
-//							if ((is_nature(where_draw.x - 1,where_draw.y)) &&
-//							 (is_nature(where_draw.x,where_draw.y - 1) )) 
-//								short_spec_terrain = 10219;
-//							if ((is_nature(where_draw.x + 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y - 1) )) 
-//								short_spec_terrain = 10220;
-//							if ((is_nature(where_draw.x + 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y + 1) )) 
-//								short_spec_terrain = 10221;
-//							if ((is_nature(where_draw.x - 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y + 1) )) 
-//								short_spec_terrain = 10218;
-//							}
-//						draw_one_terrain_spot(q,r,short_spec_terrain,0);
-//					}else if(short_spec_terrain == 83) { // ground wway
-//						if (loc_off_act_area(where_draw) == false) {
-//							if ((is_nature(where_draw.x - 1,where_draw.y))  &&
-//							 (is_nature(where_draw.x,where_draw.y - 1)) ) 
-//								short_spec_terrain = 10223;
-//							if ((is_nature(where_draw.x + 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y - 1) ))
-//								short_spec_terrain = 10224;
-//							if ((is_nature(where_draw.x + 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y + 1) )) 
-//								short_spec_terrain = 10225;
-//							if ((is_nature(where_draw.x - 1,where_draw.y) ) &&
-//							 (is_nature(where_draw.x,where_draw.y + 1) )) 
-//								short_spec_terrain = 10222;
-//							}
-//						draw_one_terrain_spot(q,r,short_spec_terrain,0);
-					if(trim == TRIM_WALKWAY){
-						int trim = -1;
-						unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
-						ter_num_t ground_ter = get_ter_from_ground(ground_t);
-						if (!loc_off_act_area(where_draw)) {
-							if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
-								if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
-									if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
-										if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
-											trim = 8;
-										else trim = 4;
-									}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
-										trim = 7;
-									else trim = 1;
-								}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)){ // check down
-									if(is_nature(where_draw.x + 1,where_draw.y,ground_t)) // check right
-										trim = 6;
-									else trim = 0;
-								}
-							}else if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
+				}
+				if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
+					can_draw = (party_can_see(where_draw) < 6) ? 1 : 0;
+			}
+			spot_seen[q][r] = can_draw;
+			
+			if ((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
+				if ((is_combat()) && (cartoon_happening == false)) {
+					anim_ticks = 0;
+				}
+				
+				eTrimType trim = scenario.ter_types[spec_terrain].trim_type;
+				
+				// Finally, draw this terrain spot
+				if(trim == TRIM_WALKWAY){
+					int trim = -1;
+					unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
+					ter_num_t ground_ter = get_ter_from_ground(ground_t);
+					if (!loc_off_act_area(where_draw)) {
+						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
+							if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
 								if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
 									if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
-										trim = 5;
-									else trim = 2;
-								}
-							}else if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
-								if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
-									trim = 3;
+										trim = 8;
+									else trim = 4;
+								}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+									trim = 7;
+								else trim = 1;
+							}else if(is_nature(where_draw.x,where_draw.y + 1,ground_t)){ // check down
+								if(is_nature(where_draw.x + 1,where_draw.y,ground_t)) // check right
+									trim = 6;
+								else trim = 0;
 							}
+						}else if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
+							if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
+								if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+									trim = 5;
+								else trim = 2;
+							}
+						}else if(is_nature(where_draw.x + 1,where_draw.y,ground_t)){ // check right
+							if(is_nature(where_draw.x,where_draw.y + 1,ground_t)) // check down
+								trim = 3;
 						}
-						draw_one_terrain_spot(q,r,trim < 0 ? spec_terrain : ground_ter,0);
-						if(trim >= 0)
-							draw_trim(q,r,trim + 50,spec_terrain);
-					}else if(trim == TRIM_ROAD || trim == TRIM_N || trim == TRIM_S ||
-							 trim == TRIM_W || trim == TRIM_E) {
-//						if ((short_spec_terrain == 81) 
-//							&& ((univ.out[where_draw.x][where_draw.y - 1] == 80) || (univ.out[where_draw.x][where_draw.y - 1] == 79)))
-//									short_spec_terrain = 42;
-//						if ((short_spec_terrain == 81) 
-//							&& ((univ.out[where_draw.x][where_draw.y + 1] == 80) || (univ.out[where_draw.x][where_draw.y + 1] == 79)))
-//									short_spec_terrain = 38;
-//						if ((short_spec_terrain == 81) 
-//							&& ((univ.out[where_draw.x - 1][where_draw.y] == 80) || (univ.out[where_draw.x - 1][where_draw.y] == 79)))
-//									short_spec_terrain = 44;
-//						if ((short_spec_terrain == 81) 
-//							&& ((univ.out[where_draw.x + 1][where_draw.y ] == 80) || (univ.out[where_draw.x + 1][where_draw.y] == 79)))
-//									short_spec_terrain = 40;
-						/*if ((short_spec_terrain == 81) 
-							&& ((univ.out[where_draw.x][where_draw.y - 1] != 234) && (univ.out[where_draw.x][where_draw.y - 1] != 81) &&
-								((univ.out[where_draw.x][where_draw.y - 1] < 36) || (univ.out[where_draw.x][where_draw.y - 1] > 49))))
-									short_spec_terrain = 42;
-						if ((short_spec_terrain == 81) 
-							&& ((univ.out[where_draw.x][where_draw.y + 1] != 234) && (univ.out[where_draw.x][where_draw.y + 1] != 81) &&
-								((univ.out[where_draw.x][where_draw.y + 1] < 36) || (univ.out[where_draw.x][where_draw.y + 1] > 49))))
-									short_spec_terrain = 38;
-						if ((short_spec_terrain == 81) 
-							&& ((univ.out[where_draw.x - 1][where_draw.y] != 234) &&(univ.out[where_draw.x - 1][where_draw.y] != 81) &&
-								((univ.out[where_draw.x - 1][where_draw.y] < 36) || (univ.out[where_draw.x - 1][where_draw.y] > 49))))
-									short_spec_terrain = 44;
-						if ((short_spec_terrain == 81) 
-							&& ((univ.out[where_draw.x + 1][where_draw.y] != 234) && (univ.out[where_draw.x + 1][where_draw.y] != 81) &&
-								((univ.out[where_draw.x + 1][where_draw.y] < 36) || (univ.out[where_draw.x + 1][where_draw.y] > 49))))
-									short_spec_terrain = 40;*/
-						draw_one_terrain_spot(q,r,spec_terrain,0);	
-						place_road(q,r,where_draw,trim == TRIM_ROAD);
-					}else if(spec_terrain == 65535) {
-						draw_one_terrain_spot(q,r,-1,0);	
-					}else{
-//						if (spec_terrain < 2)
-//							current_ground = 0;
-//						if ((spec_terrain == 2) || (
-//							(spec_terrain >= 22) && (spec_terrain <= 49)))
-//							current_ground = 2;
-						current_ground = get_ground_from_ter(spec_terrain);
-						draw_one_terrain_spot(q,r,spec_terrain,0);
-					}	
+					}
+					draw_one_terrain_spot(q,r,trim < 0 ? spec_terrain : ground_ter,0);
+					if(trim >= 0)
+						draw_trim(q,r,trim + 50,spec_terrain);
+				}else if(trim == TRIM_ROAD || trim == TRIM_N || trim == TRIM_S ||
+						 trim == TRIM_W || trim == TRIM_E) {
+					draw_one_terrain_spot(q,r,spec_terrain,0);
+					place_road(q,r,where_draw,trim == TRIM_ROAD);
+				}else if(spec_terrain == 65535) {
+					draw_one_terrain_spot(q,r,-1,0);
+				}else{
+					current_ground = get_ground_from_ter(spec_terrain);
+					draw_one_terrain_spot(q,r,spec_terrain,0);
 				}
-				else {  // Can't see. Place darkness.
-					draw_one_terrain_spot(q,r,-1,0);	
-				}
-		 		
-		 		if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == true)
-					&& (draw_frills == true) && (cartoon_happening == false)) {  // Place the trim TODO: Alter trim
-		 			place_trim((short) q,(short) r,where_draw,spec_terrain);
-				}
-				if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
-				   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
-					Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
 			}
+			else {  // Can't see. Place darkness.
+				draw_one_terrain_spot(q,r,-1,0);
+			}
+			
+			if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == true)
+				&& (draw_frills == true) && (cartoon_happening == false)) {  // Place the trim TODO: Alter trim
+				place_trim((short) q,(short) r,where_draw,spec_terrain);
+			}
+//			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
+//			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
+//				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
+			// TODO: Move draw_sfx, draw_items, draw_fields, draw_spec_items, etc to here
+			
+			if (is_town() || is_combat()) {
+				draw_items(where_draw);
+			}
+			draw_fields(where_draw);
+			//draw_monsters(where_draw);
+			//draw_vehicles(where_draw);
+			//if(is_combat) draw_pcs(where_draw); else draw_party(where_draw);
+		}
 	}
 	
-	if ((overall_mode != MODE_RESTING) && (!is_out())) 
-		draw_sfx();
-		
-	// Now place items
-	if ((overall_mode > MODE_OUTDOORS) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_RESTING))
-		draw_items();		
-		
-	// Now place fields
-	if ((overall_mode != MODE_RESTING) && (!is_out())) {
-		draw_fields();
-		draw_spec_items();
-		}
-
+//	if ((overall_mode != MODE_RESTING) && (!is_out())) 
+//		draw_sfx();
+//		
+//	// Now place items
+//	if ((overall_mode > MODE_OUTDOORS) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_RESTING))
+//		draw_items();		
+//		
+//	// Now place fields
+//	if ((overall_mode != MODE_RESTING) && (!is_out())) {
+//		draw_fields();
+//		draw_spec_items();
+//		}
+//
 	// Not camping. Place misc. stuff
 	if (overall_mode != MODE_RESTING) {
 		if (is_out())
@@ -2097,8 +2039,7 @@ void draw_terrain(short	mode)
 		draw_party_symbol(mode,center);
 		else if (overall_mode != MODE_LOOK_TOWN)
 			draw_pcs(center,0);
-
-
+	
 	// Now do the light mask thing
 	apply_light_mask();
 	apply_unseen_mask();
@@ -2107,12 +2048,12 @@ void draw_terrain(short	mode)
 		redraw_terrain();
 		if (cartoon_happening == false) {
 			draw_text_bar(0);
-			if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+			if ((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 				draw_pcs(center,1);
 			if (overall_mode == MODE_FANCY_TARGET)
 				draw_targets(center);
-			}
 		}
+	}
 	SetPort(old_port);
 	supressing_some_spaces = false;
 }

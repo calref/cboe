@@ -47,7 +47,7 @@ extern short store_current_pc,current_ground;
 extern short dungeon_font_num,geneva_font_num;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 //extern location monster_targs[60];
-extern short special_queue[20];
+extern pending_special_type special_queue[20];
 
 extern bool modeless_exists[18],diff_depth_ok,belt_present;
 extern short modeless_key[18];
@@ -747,15 +747,21 @@ void handle_town_specials(short town_number, short entry_dir,location start_loc)
 	//	run_special(5,2,univ.town.town.spec_on_entry_if_dead,start_loc,&s1,&s2,&s3);
 	//	else run_special(5,2,univ.town.town.spec_on_entry,start_loc,&s1,&s2,&s3);
 	if (entry_dir > 0)
-		special_queue[0] = univ.town->spec_on_entry_if_dead;
-		else special_queue[0] = univ.town->spec_on_entry;
+		special_queue[0].spec = univ.town->spec_on_entry_if_dead;
+	else special_queue[0].spec = univ.town->spec_on_entry;
+	special_queue[0].where = univ.town.p_loc;
+	special_queue[0].type = 2;
+	special_queue[0].mode = SPEC_ENTER_TOWN;
 }
 
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) 
 {
 	
 	//run_special(6,2,which_spec,start_loc,&s1,&s2,&s3);
-	special_queue[1] = which_spec;
+	special_queue[1].spec = which_spec;
+	special_queue[1].where = univ.party.p_loc;
+	special_queue[1].type = 2;
+	special_queue[1].mode = SPEC_LEAVE_TOWN;
 }
 
 bool abil_exists(short abil) // use when univ.out.outdoors

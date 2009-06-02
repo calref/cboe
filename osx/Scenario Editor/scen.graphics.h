@@ -56,6 +56,7 @@ bool is_quickfire(short i,short j);
 void make_quickfire(short i,short j);
 void take_quickfire(short i,short j);
 bool container_there(location l);
+bool is_spot(short i,short j);
 //void get_str(Str255 str,short i, short j);
 short string_length(char *str);
 Rect get_custom_rect (short which_rect);

@@ -728,9 +728,8 @@ void draw_terrain(){
 				}
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
-				if((editing_town  && is_field_type(cen_x + q - 4,cen_y + r - 4, 2)) ||
-				   (!editing_town && current_terrain.special_spot[cen_x + q - 4][cen_y + r - 4]))
-					Draw_Some_Item(roads_gworld, calc_rect(6, 0), ter_draw_gworld, where_draw, 1, 0);
+				if(is_spot(cen_x + q - 4,cen_y + r - 4))
+					Draw_Some_Item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, where_draw, 1, 0);
 				
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
@@ -828,7 +827,7 @@ void draw_terrain(){
 							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
 							OffsetRect(&tiny_to,0,-7);
 							i = 4;
-						}			
+						}
 					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
@@ -1411,6 +1410,13 @@ void make_special(short i,short j) {
 }
 
 void sort_specials() {
+}
+
+bool is_spot(short i,short j){
+	if(editing_town)
+		return is_field_type(i,j,2);
+	else return current_terrain.special_spot[i][j];
+	return false;
 }
 
 bool is_field_type(short i,short j,short field_type) {
