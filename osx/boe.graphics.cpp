@@ -2929,3 +2929,55 @@ void HideShowMenuBar( )
 }	
 
 */
+void tileImage(Rect area, GWorldPtr img, short mode){
+	RgnHandle clip= NewRgn();
+	RectRgn(clip,&area);
+	
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	Rect imgRect;
+	GetPortBounds(img, &imgRect);
+	
+	int imgWidth=imgRect.right-imgRect.left;
+	int imgHeight=imgRect.bottom-imgRect.top;
+	int x,y;
+	unsigned int hrep = (int)((double(area.right-area.left)/imgWidth)+0.5);
+	unsigned int vrep = (int)((double(area.bottom-area.top)/imgHeight)+0.5);
+	for(unsigned int i=0; i<vrep; i++){
+		for(unsigned int j=0; j<hrep; j++){
+			x=area.left+i*imgWidth;
+			y=area.top+j*imgHeight;
+			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,clip);
+		}
+	}
+	DisposeRgn(clip);
+}
+
+void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
+	RgnHandle clip= NewRgn();
+	RectRgn(clip,&area);
+	
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	int srcWidth=srcRect.right-srcRect.left;
+	int srcHeight=srcRect.bottom-srcRect.top;
+	int x,y;
+	unsigned int hrep = (int)((double(area.right-area.left)/srcWidth)+0.5);
+	unsigned int vrep = (int)((double(area.bottom-area.top)/srcHeight)+0.5);
+	for(unsigned int i=0; i<vrep; i++){
+		for(unsigned int j=0; j<hrep; j++){
+			x=area.left+i*srcWidth;
+			y=area.top+j*srcHeight;
+			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,clip);
+		}
+	}
+	DisposeRgn(clip);
+}
