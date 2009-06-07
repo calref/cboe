@@ -72,6 +72,9 @@ background-image: url('bg/<xsl:value-of select='/dialog/@skin'/>.png');
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
 		<xsl:if test='@type = "push"'>width: <xsl:value-of select='./@width'/>;</xsl:if>
 	</xsl:attribute>
+	<xsl:attribute name='title'>
+		<xsl:value-of select='./@key'/>
+	</xsl:attribute>
 	<xsl:value-of select='.'/>
 	</div>
 </xsl:for-each>

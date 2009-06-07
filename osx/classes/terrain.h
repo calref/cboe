@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iosfwd>
+#include "graphtool.h" // for pic_num_t
 
 namespace legacy { struct terrain_type_type; };
 
@@ -20,7 +21,7 @@ union ter_flag_t {signed short s; unsigned short u;};
 class cTerrain {
 public:
 	std::string name;
-	short picture;
+	pic_num_t picture;
 	unsigned char blockage;
 	ter_flag_t flag1;
 	ter_flag_t flag2;
@@ -40,10 +41,14 @@ public:
 	unsigned short combat_arena;
 	location obj_pos; // editor use only
 	location obj_size; // editor use only
+	pic_num_t map_pic;
 	unsigned short i; // for temporary use in porting
 	
 	cTerrain& operator = (legacy::terrain_type_type& old);
 	void writeTo(std::ostream& file);
 };
+
+std::ostream& operator << (std::ostream& out, eTerSpec& e);
+std::istream& operator >> (std::istream& in, eTerSpec& e);
 
 #endif

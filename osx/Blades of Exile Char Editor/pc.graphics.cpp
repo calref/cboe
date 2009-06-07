@@ -1,6 +1,6 @@
-//#include <Memory.h>
-#include <stdio.h>
-#include <string.h>
+//#include <cMemory>
+#include <cstdio>
+#include <cstring>
 #include "pc.global.h"
 #include "classes.h"
 #include "pc.graphics.h"
@@ -12,17 +12,6 @@
 #include "dlglowlevel.h"
 #include "dlgutil.h"
 
-/* Adventure globals */
-//extern party_record_type party;
-//extern outdoor_record_type outdoors[2][2];
-//extern current_town_type c_town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
-//extern unsigned char out[96][96],out_e[96][96];
-//extern setup_save_type setup_save;
-//extern stored_items_list_type stored_items[3];
-//extern stored_town_maps_type maps;
-//extern stored_outdoor_maps_type o_maps;
 extern cUniverse univ;
 
 extern WindowPtr	mainPtr;
@@ -37,7 +26,7 @@ extern short current_active_pc;
 //extern long ed_flag,ed_key;
 
 GWorldPtr title_gworld,pc_gworld,dlogpics_gworld;
-GWorldPtr mixed_gworld,buttons_gworld;
+GWorldPtr buttons_gworld,invenbtn_gworld,status_gworld;
 //GWorldPtr race_dark,train_dark,items_dark,spells_dark;
 //GWorldPtr race_light,train_light,items_light,spells_light;
 Rect whole_win_rect = {0,0,440,590};
@@ -67,6 +56,10 @@ Rect ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
 bool init_once = false;
 GWorldPtr spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
+// (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
+GWorldPtr items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
+GWorldPtr monst_gworld[11],terrain_gworld[7],anim_gworld,talkfaces_gworld;
+GWorldPtr vehicle_gworld, small_ter_gworld;
 
 void init_dialogs(){
 	cd_init_dialogs(NULL,NULL,NULL,NULL,NULL,&dlogpics_gworld,NULL,NULL,NULL,NULL,NULL,NULL/*,NULL,NULL,NULL,NULL,NULL,NULL,NULL*/,NULL,NULL);
@@ -268,11 +261,16 @@ void init_main_buttons()
 void Set_up_win ()
 {
 	short i;
-	title_gworld = load_pict(5000);	
-	pc_gworld = load_pict(902);
-	mixed_gworld = load_pict(903);
-	dlogpics_gworld = load_pict(850);
-	buttons_gworld = load_pict(5001);
+//	title_gworld = load_pict(5000);	
+//	pc_gworld = load_pict(902);
+//	mixed_gworld = load_pict(903);
+//	dlogpics_gworld = load_pict(850);
+//	buttons_gworld = load_pict(5001);
+	title_gworld = load_pict("pcedtitle.png");
+	invenbtn_gworld = load_pict("invenbtns.png");
+	status_gworld = load_pict("staticons.png");
+	dlogpics_gworld = load_pict("dlogpics.png");
+	buttons_gworld = load_pict("pcedbuttons.png");
 
 	for (i = 0; i < 14; i++){
 	    bg[i] = GetPixPat (128 + i);
@@ -376,53 +374,6 @@ void do_button_action(short which_pc,short which_button)
 	display_party(6,0);
 }
 
-GWorldPtr load_pict(short picture_to_get)
-{
-	PicHandle	current_pic_handle;
-	Rect	pic_rect;
-	short	pic_wd,pic_hgt;
-	GWorldPtr	myGWorld;
-	CGrafPtr	origPort;
-	GDHandle	origDev;
-	QDErr		check_error;
-	PixMapHandle	offPMHandle;
-	char good;
-			
-    current_pic_handle = GetPicture (picture_to_get);
-	if (current_pic_handle == NULL)  {
-		SysBeep(2);SysBeep(50);SysBeep(50);
-		ExitToShell();
-	}
-	QDGetPictureBounds(current_pic_handle, &pic_rect);
-	pic_wd = pic_rect.right - pic_rect.left;
-	pic_hgt = pic_rect.bottom - pic_rect.top;  
-	GetGWorld (&origPort, &origDev);
-	check_error = NewGWorld (&myGWorld, 0,
-				&pic_rect,
-				NULL, NULL, kNativeEndianPixMap);
-	if (check_error != noErr)  {
-		SysBeep(50); 
-//		sprintf((char *) debug, "Stuck on %d          ",(short) picture_to_get);
-//		add_string_to_buf((char *)debug);
-//		print_buf(); 
-//		ExitToShell();
-		}
-	
-	SetGWorld(myGWorld, NULL);
-	
-	offPMHandle = GetGWorldPixMap (myGWorld);
-	good = LockPixels (offPMHandle);
-	if (good == false)  {
-		SysBeep(50); }
-	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
-	DrawPicture (current_pic_handle, &pic_rect);
-	SetGWorld (origPort, origDev);
-	UnlockPixels (offPMHandle);
-	ReleaseResource ((Handle) current_pic_handle);
-
-	return myGWorld;
-}
-
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
 void draw_items(short clear_first)
@@ -479,8 +430,8 @@ void draw_items(short clear_first)
 			char_win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10,true);
 
 			//Draw id/drop buttons
-			rect_draw_some_item(mixed_gworld,d_from,mixed_gworld,item_string_rects[i][1],1,1);
-			rect_draw_some_item(mixed_gworld,i_from,mixed_gworld,item_string_rects[i][2],1,1);
+			rect_draw_some_item(invenbtn_gworld,d_from,invenbtn_gworld,item_string_rects[i][1],1,1);
+			rect_draw_some_item(invenbtn_gworld,i_from,invenbtn_gworld,item_string_rects[i][2],1,1);
 			}
 	frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re draw entire frame 
 	frame_dlog_rect(GetWindowPort(mainPtr),name_rect,1); // draw the frame

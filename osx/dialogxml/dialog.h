@@ -36,25 +36,31 @@ class cDialog {
 		~_init();
 	};
 	static _init init;
+	cDialog* parent;
+	void loadFromFile(std::string path);
 public:
 	static const short BG_LIGHT, BG_DARK;
-	cDialog(std::string path); // cd_create_dialog
-	cDialog(std::string path,cDialog parent); // cd_create_dialog_parent_num
+	explicit cDialog(cDialog* p = NULL); // dialog with no items
+	explicit cDialog(std::string path); // cd_create_dialog
+	cDialog(std::string path,cDialog* p); // cd_create_dialog_parent_num
 	~cDialog(); // cd_kill_dialog
-	bool add(cControl* what, std::string key); // returns false if the key is used, true if the control was added
+	bool add(cControl* what, Rect ctrl_frame, std::string key); // returns false if the key is used, true if the control was added
 	bool remove(std::string key); // returns true if the key existed and was removed, false if the key did not exist
 	void run(); // cd_run_dialog
-	//template<class type> type getResult(); // This seems like an unimplementable function
+	template<class type> type& getResult();
+	template<class type> void setResult(const type& val);
 	void setBg(short n);
 	void setDefTextClr(RGBColor clr);
-	void toast();
+	bool toast();
 	cControl& operator[](std::string id);
+	void recalcRect();
 private:
 	void draw();
 	std::string process_keystroke(cKey keyHit);
 	std::string process_click(Point where, eKeyMod mods);
 	bool dialogNotToast;
 	Rect winRect;
+	unsigned long long result;
 	friend class cControl;
 	friend class cButton;
 	friend class cLed;
@@ -91,4 +97,7 @@ public:
 	~xBadVal() throw();
 	const char* what() throw();
 };
+
+#include "dialog.results.h" // public template definitions
+
 #endif

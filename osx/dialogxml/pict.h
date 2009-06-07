@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <map>
+#include "graphtool.h" // for pic_num_t
 
 enum ePicType {
 	PIC_TER = 1, // 28x36 terrain graphic from the preset sheets
@@ -28,6 +29,7 @@ enum ePicType {
 	PIC_DLOG_LG = 13, // 72x72 dialog graphic from the dialog sheet
 	PIC_SCEN_LG = 14, // 64x64 scenario graphic (currently each is on its own sheet)
 	PIC_TER_MAP = 15, // 12x12 map graphic... or should it be 6x6?
+	PIC_STATUS = 16, // 12x12 status icon
 	PIC_MONST_WIDE = 23, // 56x36 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_TALL = 43, // 28x72 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_LG = 63, // 56x72 monster graphic from the preset sheets, resized to fit in a 28x36 space
@@ -81,6 +83,7 @@ enum eSheetType {
 	SHEET_HEADER,
 	SHEET_TER_MAP,
 	SHEET_FULL,
+	SHEET_STATUS,
 	SHEET_CUSTOM,
 };
 
@@ -94,7 +97,9 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	static void setSheet(eSheetType type, short n, GWorldPtr sheet);
 	static bool isSheetSet(eSheetType type, size_t n);
-	void setPict(short num, ePicType type);
+	void setPict(pic_num_t num, ePicType type);
+	pic_num_t getPicNum();
+	ePicType getPicType();
 	explicit cPict(cDialog* parent);
 	bool isClickable();
 	static void advanceAnim();
@@ -107,7 +112,7 @@ private:
 	ePicType picType;
 	bool clickable, drawFramed;
 	friend class cDialog;
-	static GWorldPtr teranim, dlog, talk, scen, largeScen, item, tinyItem, pc, field, boom, missile, save, header, map;
+	static GWorldPtr teranim, dlog, talk, scen, largeScen, item, tinyItem, pc, field, boom, missile, save, header, map, status;
 	static std::vector<GWorldPtr> ter, monst, customSheets;
 	static std::map<size_t,GWorldPtr> largeSheets; // map instead of vector because it'll be a sparse array
 	static void drawPresetTer(short num, GWorldPtr to_gw, Rect to_rect);
@@ -127,6 +132,7 @@ private:
 	static void drawPresetBoom(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPresetMissile(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPresetTerMap(short num, GWorldPtr to_gw, Rect to_rect);
+	static void drawStatusIcon(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawFullSheet(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawCustomTer(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawCustomTerAnim(short num, GWorldPtr to_gw, Rect to_rect);

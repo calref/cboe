@@ -71,6 +71,7 @@ enum eGameMode {
 	MODE_TOWN_TARGET = 3, // spell target, that is
 	MODE_USE_TOWN = 4,
 	MODE_DROP_TOWN = 5,
+	MODE_BASH_TOWN = 6, // unused
 	MODE_COMBAT = 10,
 	MODE_SPELL_TARGET = 11,
 	MODE_FIRING = 12, // firing from bow or crossbow

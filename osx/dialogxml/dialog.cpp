@@ -9,15 +9,29 @@
 #define	MOUSE_REGION	0L
 #define IN_FRONT	(WindowPtr)-1L
 
+#include <cmath>
+#include <stdexcept>
+#include <boost/type_traits/is_pointer.hpp>
 #include "dialog.h"
 #include "graphtool.h"
 #include "soundtool.h"
-#include <stdexcept>
 using namespace std;
 using namespace ticpp;
 
 extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
+
+static std::string generateRandomString(){
+	// Not bothering to seed, because it doesn't actually matter if it's truly random.
+	// Though, this will be called after srand() is called in main() anyway.
+	int n_chars = rand() % 100;
+	std::string s;
+	while(n_chars > 0){
+		s += char(rand() % 223 + 32);
+		n_chars--;
+	}
+	return s;
+}
 
 template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	pair<string,cPict*> p;
@@ -124,6 +138,11 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			break;
 	}
 	if(custom) p.second->picType += PIC_CUSTOM;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
@@ -198,6 +217,11 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		}
 	}
 	p.second->lbl = content;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
@@ -363,6 +387,11 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		}
 	}
 	p.second->lbl = content;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
@@ -428,6 +457,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	string name, val;
 	int width = 0, height = 0;
 	p.second = new cLed(this);
+	p.second->type = BTN_LED;
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
 		attr->GetValue(&val);
@@ -497,6 +527,11 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		}
 	}
 	p.second->lbl = content;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
@@ -528,6 +563,11 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 		}
 	}
 	p.second->lbl = content;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
@@ -565,10 +605,25 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	}
 	p.second->frame.right = p.second->frame.left + width;
 	p.second->frame.bottom = p.second->frame.top + height;
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) == controls.end());
+	}
 	return p;
 }
 
-cDialog::cDialog(string path){
+cDialog::cDialog(cDialog* p) : parent(p) {}
+
+cDialog::cDialog(std::string path) : parent(NULL){
+	loadFromFile(path);
+}
+
+cDialog::cDialog(std::string path, cDialog* p) : parent(p){
+	loadFromFile(path);
+}
+
+void cDialog::loadFromFile(std::string path){
 	try{
 		Document xml(path);
 		xml.LoadFile();
@@ -626,13 +681,10 @@ cDialog::cDialog(string path){
 	bg = BG_DARK; // default is dark background
 	// now calculate window rect
 	SetRect(&winRect,0,0,0,0);
+	recalcRect();
 	ctrlIter iter = controls.begin();
 	currentFocus = NULL;
 	while(iter != controls.end()){
-		if(iter->second->frame.right > winRect.right)
-			winRect.right = iter->second->frame.right;
-		if(iter->second->frame.bottom > winRect.bottom)
-			winRect.bottom = iter->second->frame.bottom;
 		if(typeid(iter->second) == typeid(cTextField*)){
 			cTextField* fld = (cTextField*) iter->second;
 			if(currentFocus == NULL) currentFocus = fld;
@@ -640,9 +692,21 @@ cDialog::cDialog(string path){
 		}
 		iter++;
 	}
-	winRect.right += 4;
-	winRect.bottom += 4;
 	win = NewCWindow(NULL, &winRect, (unsigned char*) "", false, dBoxProc, IN_FRONT, false, 0);
+	// TODO: Set parent
+}
+
+void cDialog::recalcRect(){
+	ctrlIter iter = controls.begin();
+	while(iter != controls.end()){
+		if(iter->second->frame.right > winRect.right)
+			winRect.right = iter->second->frame.right;
+		if(iter->second->frame.bottom > winRect.bottom)
+			winRect.bottom = iter->second->frame.bottom;
+		iter++;
+	}
+	winRect.right += 6;
+	winRect.bottom += 6;
 }
 
 cDialog::_init::_init(){
@@ -665,10 +729,11 @@ cDialog::~cDialog(){
 	DisposeWindow(win);
 }
 
-bool cDialog::add(cControl* what, std::string key){
+bool cDialog::add(cControl* what, Rect ctrl_frame, std::string key){
 	// First make sure the key is not already present.
 	// If it is, we can't add the control, so return false.
 	if(controls.find(key) != controls.end()) return false;
+	what->frame = ctrl_frame;
 	controls.insert(std::make_pair(key,what));
 	return true;
 }
@@ -806,8 +871,9 @@ void cDialog::setDefTextClr(RGBColor clr){
 	defTextClr = clr;
 }
 
-void cDialog::toast(){
+bool cDialog::toast(){
 	dialogNotToast = false;
+	return true;
 }
 
 std::string cDialog::process_keystroke(cKey keyHit){

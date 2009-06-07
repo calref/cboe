@@ -1,8 +1,8 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 //#include "item.h"
 
@@ -59,7 +59,7 @@ extern short which_combat_type,stat_window;
 extern eGameMode overall_mode;
 extern WindowPtr mainPtr;
 extern Rect more_info_button;
-extern short which_item_page[6],current_cursor;
+extern short which_item_page[6];
 //extern CursHandle sword_curs;
 extern ControlHandle text_sbar,item_sbar;
 extern Point store_anim_ul;
@@ -70,7 +70,7 @@ extern location dest_locs[40] ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 
-extern GWorldPtr spec_scen_g,mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld;
+extern GWorldPtr spec_scen_g, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld,invenbtn_gworld,status_gworld;
 extern short terrain_there[9][9];
 
 // game globals
@@ -221,7 +221,7 @@ void put_pc_screen()
 			to_draw_rect.right = pc_buttons[i][4].right + 1;
 			from_rect = info_from;
 			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
-			rect_draw_some_item(mixed_gworld,from_rect,pc_stats_gworld,to_draw_rect,1,0);
+			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,1,0);
 			}
 			else {
 				for (j = 0; j < 5; j++)
@@ -418,7 +418,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 void place_buy_button(short position,short pc_num,short item_num)
 {
 	Rect dest_rect,source_rect;
-	Rect button_sources[3] = {{24,0,36,30},{24,30,36,60},{36,0,48,30}};
+	Rect button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
 	short val_to_place;
 	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
@@ -483,8 +483,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		store_selling_values[position] = val_to_place;	
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
-		rect_draw_some_item (mixed_gworld, source_rect, 
-		  item_stats_gworld, dest_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, 1, 0);
 		sprintf((char *) store_str,"        %d",val_to_place);
 		if (val_to_place >= 10000)
 			TextFace(0);
@@ -512,17 +511,14 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		InsetRect(&from_rect,2,2);
 		if (extra_val >= 150) {
 			from_rect = get_custom_rect(extra_val - 150);
-			rect_draw_some_item (spec_scen_g, from_rect, 
-			  item_stats_gworld, to_rect, 1, 0);
+			rect_draw_some_item (spec_scen_g, from_rect, item_stats_gworld, to_rect, 1, 0);
 			}
-			else rect_draw_some_item (tiny_obj_gworld, from_rect, 
-			  item_stats_gworld, to_rect, 1, 0);
+			else rect_draw_some_item (tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
 		item_area_button_active[which_slot][which_button_position] = true;
-		rect_draw_some_item (mixed_gworld, item_buttons_from[which_button_to_put], 
-		  item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
+		rect_draw_some_item (invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
 		item_area_button_active[which_slot][1] = true;
@@ -532,8 +528,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (mixed_gworld, from_rect, 
-		  item_stats_gworld, to_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
 		item_area_button_active[which_slot][2] = true;
@@ -542,8 +537,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (mixed_gworld, from_rect, 
-		  item_stats_gworld, to_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
 		}
 }
 //Rect get_custom_rect (short which_rect) ////
@@ -555,20 +549,27 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 //}
 void place_item_bottom_buttons()
 {
-	Rect pc_from_rect = {0,0,36,28},but_from_rect = {85,36,101,54},to_rect;
+	Rect pc_from_rect = {0,0,36,28},but_from_rect = {60,30,78,46},to_rect;
+	Rect spec_from_rect = {0,30,15,65}, job_from_rect = {15,30,15,65}, help_from_rect = {78,30,91,44};
 	short i;
 	
 	for (i = 0; i < 6; i++) {
 		if (univ.party[i].main_status == 1) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
-			rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
+			rect_draw_some_item (invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, 1, 0);
 			pc_from_rect = get_party_template_rect(i,0);
 			InsetRect(&to_rect,2,2);
-			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
+			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 1, 0);
 			}
 			else item_bottom_button_active[i] = false;
-		}
+	}
+	to_rect = item_screen_button_rects[6];
+	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, 1, 0);
+	to_rect = item_screen_button_rects[7];
+	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, 1, 0);
+	to_rect = item_screen_button_rects[8];
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, 1, 0);
 }
 
 Rect get_party_template_rect(short pc_num,short mode)
@@ -685,12 +686,14 @@ short total_encumberance(short pc_num)
 void draw_pc_effects(short pc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
-	Rect source_rects[18] = {{55,0,67,12},{55,12,67,24},{55,24,67,36},
-							{67,0,79,12},{67,12,79,24},{67,24,79,36},
-							{79,0,91,12},{79,12,91,24},{79,24,91,36},
-							{91,0,103,12},{91,12,103,24},{91,24,103,36},
-							{103,0,115,12},{103,12,115,24},{103,24,115,36},
-							{115,0,127,12},{115,12,127,24},{115,24,127,36}};
+	Rect source_rects[18] = {
+		{00,0,12,12},{00,12,12,24},{00,24,12,36},
+		{12,0,24,12},{12,12,24,24},{12,24,24,36},
+		{24,0,36,12},{24,12,36,24},{24,24,36,36},
+		{36,0,47,12},{36,12,47,24},{36,24,47,36},
+		{47,0,60,12},{47,12,60,24},{47,24,60,36},
+		{60,0,72,12},{60,12,72,24},{60,24,72,36}
+	};
 	Rect dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
 	short right_limit = 250;
 	short dest = 0; // 0 - in gworld  2 - on dialog
@@ -722,83 +725,87 @@ void draw_pc_effects(short pc)
 	if (univ.party[pc].main_status % 10 != 1)
 		return;
 			
-	if ((univ.party[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[4],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) { 
+		rect_draw_some_item (status_gworld,source_rects[4],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[1] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[2],pc_stats_gworld,dest_rect,1,dest);
+	if (univ.party[pc].status[STATUS_BLESS_CURSE] > 0) { 
+		rect_draw_some_item (status_gworld,source_rects[2],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[1] < 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[3],pc_stats_gworld,dest_rect,1,dest);
+	else if (univ.party[pc].status[STATUS_BLESS_CURSE] < 0) { 
+		rect_draw_some_item (status_gworld,source_rects[3],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[2] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[(univ.party[pc].status[2] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
+	if (univ.party[pc].status[STATUS_POISON] > 0) { 
+		rect_draw_some_item (status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[4] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[5],pc_stats_gworld,dest_rect,1,dest);
+	if (univ.party[pc].status[STATUS_INVULNERABLE] > 0) { 
+		rect_draw_some_item (status_gworld,source_rects[5],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[3] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[6],pc_stats_gworld,dest_rect,1,dest);
+	if (univ.party[pc].status[STATUS_HASTE_SLOW] > 0) { 
+		rect_draw_some_item (status_gworld,source_rects[6],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (univ.party[pc].status[3] < 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[8],pc_stats_gworld,dest_rect,1,dest);
+	else if (univ.party[pc].status[STATUS_HASTE_SLOW] < 0) { 
+		rect_draw_some_item (status_gworld,source_rects[8],pc_stats_gworld,dest_rect,1,dest);
+		dest_rect.left += 13;
+		dest_rect.right += 13;
+	}else{ 
+		rect_draw_some_item (status_gworld,source_rects[7],pc_stats_gworld,dest_rect,1,dest);
+		dest_rect.left += 13;
+		dest_rect.right += 13;
+	}
+	if ((univ.party[pc].status[STATUS_MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) { 
+		rect_draw_some_item (status_gworld,source_rects[9],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((univ.party[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[9],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_WEBS] > 0) && (dest_rect.right < right_limit)) { 
+		rect_draw_some_item (status_gworld,source_rects[10],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((univ.party[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (mixed_gworld,source_rects[10],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_DISEASE] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[11],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((univ.party[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[11],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_INVISIBLE] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[12],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((univ.party[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[12],pc_stats_gworld,dest_rect,1,dest);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-		}
-	if ((univ.party[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[13],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_DUMB] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[13],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((univ.party[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[14],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[14],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((univ.party[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[15],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_ASLEEP] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[15],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((univ.party[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[16],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_PARALYZED] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[16],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
-	if ((univ.party[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (mixed_gworld,source_rects[17],pc_stats_gworld,dest_rect,1,dest);
+	if ((univ.party[pc].status[STATUS_ACID] > 0) && (dest_rect.right < right_limit)){ 
+		rect_draw_some_item (status_gworld,source_rects[17],pc_stats_gworld,dest_rect,1,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	

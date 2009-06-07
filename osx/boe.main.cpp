@@ -64,9 +64,6 @@ short on_monst_menu[256];
 signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
 signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
-// Cursors 
-extern short current_cursor;
-
 bool game_run_before = false;
 bool debug_on = false;
 bool give_intro_hint = true;
@@ -232,8 +229,8 @@ int main(void)
 
 	init_spell_menus();
 
-	if (overall_mode == MODE_STARTUP)
-		overall_mode = MODE_OUTDOORS;
+//	if (overall_mode == MODE_STARTUP)
+//		overall_mode = MODE_OUTDOORS;
 
 	if (!game_run_before)
 		FCD(986,0);
@@ -416,7 +413,7 @@ void Handle_One_Event()
 					gInBackground = (event.message & 1) == 0;  // 1 is Resume Mask
 					//switch_bg_music(gInBackground);
 //					DoActivate(FrontWindow(), !gInBackground);
-					current_cursor = 300;
+					//current_cursor = 300;
 					break;
 			}
 			break;
@@ -719,6 +716,7 @@ void close_program()
 	//end_music();
 	if(univ.town.loaded()) univ.town.unload();
 	if(univ.town.cur_talk != NULL) delete univ.town.cur_talk;
+	clean_up_graphtool();
 }
 
 void handle_menu_choice(long choice)
@@ -1074,17 +1072,40 @@ void handle_music_menu(int item_hit)
 //	HUnlock((Handle) which_curs);
 //}
 
+cursor_type get_mode_cursor(){
+	switch(overall_mode){
+		case MODE_TOWN_TARGET:
+		case MODE_SPELL_TARGET:
+		case MODE_FIRING:
+		case MODE_THROWING:
+		case MODE_FANCY_TARGET:
+			return target_curs;
+		case MODE_TALK_TOWN:
+			return talk_curs;
+		case MODE_USE_TOWN:
+			return key_curs;
+		case MODE_BASH_TOWN:
+			return boot_curs;
+		case MODE_DROP_TOWN:
+		case MODE_DROP_COMBAT:
+			return drop_curs;
+		case MODE_LOOK_OUTDOORS:
+		case MODE_LOOK_TOWN:
+		case MODE_LOOK_COMBAT:
+			return look_curs;
+		case MODE_RESTING:
+			return wait_curs;
+		default:
+			return sword_curs;
+	}
+	return sword_curs; // this should never be reached, though
+}
+
 void change_cursor(Point where_curs)
 {
-	short curs_types[50] = {0,0,126,124,122,122,0,0,0,0,
-					0,124,124,124,124,122,0,0,0,0,
-					120,120,0,0,0,0,0,0,0,0,
-					0,0,0,0,0,129,129,129,0,0,
-					0,0,0,0,0,120,0,0,0,0},cursor_needed;
+	cursor_type cursor_needed;
 	location cursor_direction;
 	Rect world_screen = {23, 23, 346, 274};
-	
-
 		
 	SetPortWindowPort(mainPtr);
 	GlobalToLocal(&where_curs);	
@@ -1093,50 +1114,16 @@ void change_cursor(Point where_curs)
 	where_curs.v -= ul.v;
 	
 	if (PtInRect(where_curs,&world_screen) == false)
-		cursor_needed = 120;
-		else cursor_needed = curs_types[overall_mode];
+		cursor_needed = sword_curs;
+	else cursor_needed = get_mode_cursor();
 	
-	if (cursor_needed == 0) {
-		if ((PtInRect(where_curs,&world_screen) == false) || (in_startup_mode == true))
-			cursor_needed = 120;
-			else {
-				cursor_direction = get_cur_direction(where_curs);
-				cursor_needed = 100 + (cursor_direction.x) + 10 * ( cursor_direction.y);
-				if (cursor_needed == 100)
-					cursor_needed = 120;
-				}
-		}
+	if ((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && PtInRect(where_curs,&world_screen)){
+		cursor_direction = get_cur_direction(where_curs);
+		cursor_needed = arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1];// 100 + (cursor_direction.x) + 10 * ( cursor_direction.y);
+	}
 
-	if (cursor_needed == current_cursor)
-		return;
-	
-	current_cursor = cursor_needed;
-	
-	switch (cursor_needed) {
-		case 120:
-			set_cursor(sword_curs);
-			break;
-		case 121:
-			set_cursor(boot_curs);
-			break;
-		case 122:
-			set_cursor(key_curs);
-			break;
-		case 124:
-			set_cursor(target_curs);
-			break;
-		case 126:
-			set_cursor(talk_curs);
-			break;
-		case 129:
-			set_cursor(look_curs);
-			break;
-					
-		
-		default:  // an arrow
-			set_cursor(arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1]);
-			break;	
-		}	
+	if (cursor_needed != current_cursor)
+		set_cursor(cursor_needed);
 }
 
 void find_quickdraw() {
@@ -1248,7 +1235,7 @@ pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handle
 {
 	short choice;
 	
-	if ((overall_mode > MODE_STARTUP/*40*/) || (in_startup_mode == true)) {
+	if ((overall_mode == MODE_STARTUP/*40*/) || (in_startup_mode)) {
 		All_Done = true;
 		return noErr;
 		}

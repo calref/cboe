@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -47,7 +47,7 @@ extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x
 
 //extern piles_of_stuff_dumping_type *data_store; TODO: Abolish storage_gworld
 extern GWorldPtr storage_gworld,terrain_screen_gworld,party_template_gworld,items_gworld,tiny_obj_gworld;
-extern GWorldPtr fields_gworld,mixed_gworld,anim_gworld;
+extern GWorldPtr fields_gworld,anim_gworld,vehicle_gworld;
 extern short which_g_stored[STORED_GRAPHICS];
 extern short wish_list[STORED_GRAPHICS];
 extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
@@ -485,27 +485,27 @@ void draw_outd_boats(location center)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-			if ((point_onscreen(center, univ.party.boats[i].loc) == true) && (univ.party.boats[i].exists == true) &&
-				(univ.party.boats[i].which_town == 200) &&
-				(can_see(center, univ.party.boats[i].loc,0) < 5) && (univ.party.in_boat != i)) {
-				where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
-				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-				source_rect = boat_rects[0];
-				OffsetRect(&source_rect,61,0);
-				Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
-				}		
+		if ((point_onscreen(center, univ.party.boats[i].loc) == true) && (univ.party.boats[i].exists == true) &&
+			(univ.party.boats[i].which_town == 200) &&
+			(can_see(center, univ.party.boats[i].loc,0) < 5) && (univ.party.in_boat != i)) {
+			where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
+			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
+			//source_rect = boat_rects[0];
+			//OffsetRect(&source_rect,61,0);
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0); 
+		}
 	for (i = 0; i < 30; i++)
-			if ((point_onscreen(center, univ.party.horses[i].loc) == true) && (univ.party.horses[i].exists == true) &&
-				(univ.party.horses[i].which_town == 200) &&
-				(can_see(center, univ.party.horses[i].loc,0) < 5) && (univ.party.in_horse != i)) {
-				where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
-				where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-				source_rect = boat_rects[0];
-				OffsetRect(&source_rect,61,0);
-				OffsetRect(&source_rect,0,74);
-				OffsetRect(&source_rect,56,36);
-				Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
-				}		
+		if ((point_onscreen(center, univ.party.horses[i].loc) == true) && (univ.party.horses[i].exists == true) &&
+			(univ.party.horses[i].which_town == 200) &&
+			(can_see(center, univ.party.horses[i].loc,0) < 5) && (univ.party.in_horse != i)) {
+			where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
+			where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
+			//source_rect = boat_rects[0];
+			//OffsetRect(&source_rect,61,0);
+			//OffsetRect(&source_rect,0,74);
+			//OffsetRect(&source_rect,56,36);
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0); 
+		}
 }
 
 void draw_town_boat(location center) 
@@ -521,24 +521,23 @@ void draw_town_boat(location center)
 		 && (pt_in_light(center,univ.party.boats[i].loc) == true))) {
 		where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
 		where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-		source_rect = boat_rects[0];
-		OffsetRect(&source_rect,61,0);
-		Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
-		}		
-	for (i = 0; i < 30; i++)
+		//source_rect = boat_rects[0];
+		//OffsetRect(&source_rect,61,0);
+		Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0); 
+		}
+	for (i = 0; i < 30; i++)	
 		if ((univ.party.horses[i].which_town == univ.town.num) &&
 		((point_onscreen(center, univ.party.horses[i].loc) == true) && 
 		(can_see(center, univ.party.horses[i].loc,0) < 5) && (univ.party.in_horse != i)
 		 && (pt_in_light(center,univ.party.horses[i].loc) == true))) {
 		where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
 		where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-
-		source_rect = boat_rects[0];
-				OffsetRect(&source_rect,61,0);
-		OffsetRect(&source_rect,0,74);
-		OffsetRect(&source_rect,56,36);
-		Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
-		}		
+		//source_rect = boat_rects[0];
+		//OffsetRect(&source_rect,61,0);
+		//OffsetRect(&source_rect,0,74);
+		//OffsetRect(&source_rect,56,36);
+		Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0); 
+		}
 }
 
 void draw_fields(location where){
@@ -615,28 +614,29 @@ void draw_party_symbol(short mode,location center)
 	if (overall_mode == MODE_LOOK_TOWN) {
 		target.x += univ.town.p_loc.x - center.x;
 		target.y += univ.town.p_loc.y - center.y;
-		}
+	}
 
-	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {////
-			i = first_active_pc();
-			source_rect = get_party_template_rect(i,(univ.party.direction < 4) ? 0 : 1);			
+	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
+		i = first_active_pc();
+		source_rect = get_party_template_rect(i,univ.party.direction > 3);		
 		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
-			// now wedge in bed graphic
-			if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
-				draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u,0); ////
-				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
+		// now wedge in bed graphic
+		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
+			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u,0);
+		else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
-		else if (univ.party.in_boat >= 0) {
-				source_rect = boat_rects[dir_array[univ.party.direction]];
-				OffsetRect(&source_rect,61,0);
-				Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, target, 1, 0); 
-			}
-			else {
-				source_rect = boat_rects[(univ.party.direction < 4) ? 0 : 1];
-				OffsetRect(&source_rect,61,0);
-				OffsetRect(&source_rect,0,74);
-				Draw_Some_Item(mixed_gworld, source_rect, terrain_screen_gworld, target, 1, 0); 			
-				}
+	else if (univ.party.in_boat >= 0) {
+		//source_rect = boat_rects[dir_array[univ.party.direction]];
+		//OffsetRect(&source_rect,61,0);
+		if(univ.party.direction == 0 || univ.party.direction > 4) i = 4;
+		else i = 3;
+		Draw_Some_Item(vehicle_gworld, calc_rect(i,0), terrain_screen_gworld, target, 1, 0); 
+	}else {
+		//source_rect = boat_rects[(univ.party.direction < 4) ? 0 : 1];
+		//OffsetRect(&source_rect,61,0);
+		//OffsetRect(&source_rect,0,74);
+		Draw_Some_Item(vehicle_gworld, calc_rect( univ.party.direction > 3 , 1), terrain_screen_gworld, target, 1, 0);
+	}
 }
 
 

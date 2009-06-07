@@ -1,5 +1,5 @@
 
-#include <string.h>
+#include <cstring>
 
 //#include "item.h"
 
@@ -21,7 +21,7 @@
 #include "boe.main.h"
 #include "boe.items.h"
 #include "soundtool.h"
-#include <stdio.h>
+#include <cstdio>
 #include "dlgtool.h"
 #include "dlgconsts.h"
 #include "boe.newgraph.h"
@@ -56,14 +56,12 @@ extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern talking_record_type talking;
-
+extern GWorldPtr pc_gworld;
 
 					
 short terrain_pic[256]; 
 
 extern cScenarioList scen_headers;
-					
-GWorldPtr pcs_gworld = NULL;
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1697,9 +1695,9 @@ void edit_party(short can_create,short can_cancel)
 	
 	make_cursor_sword();
 
-	if (pcs_gworld == NULL) {
+	if (pc_gworld == NULL) {
 		munch_pc_graphic = true;
-		pcs_gworld = load_pict(902);
+		pc_gworld = load_pict(902);
 		}	
 
 	cd_create_dialog(989,mainPtr);
@@ -1715,8 +1713,8 @@ void edit_party(short can_create,short can_cancel)
 	cd_kill_dialog(989);
 
 	if (munch_pc_graphic == true) {
-		DisposeGWorld(pcs_gworld);
-		pcs_gworld = NULL;
+		DisposeGWorld(pc_gworld);
+		pc_gworld = NULL;
 		}
 
 	if (univ.party[current_pc].main_status != 1)

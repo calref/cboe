@@ -27,7 +27,9 @@
 
 extern bool cur_scen_is_mac, mac_is_intel;
 extern cScenario scenario;
-extern GWorldPtr spec_scen_g;
+extern GWorldPtr spec_scen_g,items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
+extern GWorldPtr dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
+extern GWorldPtr status_gworld, vehicle_gworld, small_ter_gworld;
 extern cUniverse univ;
 //extern unsigned char borders[4][50];
 //extern cOutdoors current_terrain;
@@ -925,47 +927,87 @@ void load_spec_graphics()
 	err = FSpMakeFSRef(&scenario.scen_file, &file);
 	err = FSRefMakePath(&file, path, 255);
 	printf("Loading scenario graphics... (%s)\n",(char*)path);
-	//	for (i = 0; i < 63; i++) 
-	//		file_name[i] = whatever[i];
 	for (i = 0; i < 250; i++) {
 		if (path[i] == '.') {
-			path[i + 1] = 'm';
-			path[i + 2] = 'e';
-			path[i + 3] = 'g';
+			path[i + 1] = 'e';
+			path[i + 2] = 'x';
+			path[i + 3] = 'r';
 			//path[i + 4] = 0;
 			break;
 		}
 	}
-	err = FSPathMakeRef(path, &file, NULL);
-	err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm /*fsRdWrPerm*/, &custRef);
-	//file_num = HOpen(file_to_load.vRefNum,file_to_load.parID,file_name,1);
-	//if (file_num < 0){
-	if(err != noErr){
-		//whatever = (char *) file_to_load.name;
-		printf("First attempt failed... (%s)\n",(char*)path);
+	err = FSPathMakeRef(path,&file,NULL);
+	// TODO: Load new-style sheets
+	//if(err != noErr)
+	{
+		//	for (i = 0; i < 63; i++) 
+		//		file_name[i] = whatever[i];
 		for (i = 0; i < 250; i++) {
 			if (path[i] == '.') {
-				path[i + 1] = 'b';
-				path[i + 2] = 'm';
-				path[i + 3] = 'p';
+				path[i + 1] = 'm';
+				path[i + 2] = 'e';
+				path[i + 3] = 'g';
 				//path[i + 4] = 0;
 				break;
 			}
 		}
 		err = FSPathMakeRef(path, &file, NULL);
-		FSSpec spec;
-		FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
-		err = FSpOpenDF(&spec, fsRdPerm, &custRef);
-		//spec_scen_g = load_bmp_from_file(file_name);
-		spec_scen_g = importPictureFileToGWorld(&spec);
-		if(spec_scen_g == NULL)printf("Scenario graphics not found (%s).\n",file_name);
-		return;
-	}
+		err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm /*fsRdWrPerm*/, &custRef);
+		//file_num = HOpen(file_to_load.vRefNum,file_to_load.parID,file_name,1);
+		//if (file_num < 0){
+		if(err != noErr){
+			//whatever = (char *) file_to_load.name;
+			printf("First attempt failed... (%s)\n",(char*)path);
+			for (i = 0; i < 250; i++) {
+				if (path[i] == '.') {
+					path[i + 1] = 'b';
+					path[i + 2] = 'm';
+					path[i + 3] = 'p';
+					//path[i + 4] = 0;
+					break;
+				}
+			}
+			err = FSPathMakeRef(path, &file, NULL);
+			FSSpec spec;
+			FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
+			err = FSpOpenDF(&spec, fsRdPerm, &custRef);
+			//spec_scen_g = load_bmp_from_file(file_name);
+			spec_scen_g = importPictureFileToGWorld(&spec);
+			if(spec_scen_g == NULL)printf("Scenario graphics not found (%s).\n",file_name);
+		}else{
+			spec_scen_g = load_pict(1);
+			CloseResFile(custRef);
+		}
+	}//else{}
 	
-	spec_scen_g = load_pict(1);
-	//CloseResFile(file_num);
-	CloseResFile(custRef);
+	// Now load regular graphics
+	items_gworld = load_pict("objects.png",univ.party.scen_name);
+	tiny_obj_gworld = load_pict("tinyobj.png",univ.party.scen_name);
+	fields_gworld = load_pict("fields.png",univ.party.scen_name);
+	roads_gworld = load_pict("trim.png",univ.party.scen_name);
+	boom_gworld = load_pict("booms.png",univ.party.scen_name);
+	missiles_gworld = load_pict("missiles.png",univ.party.scen_name);
+	dlogpics_gworld = load_pict("dlogpics.png",univ.party.scen_name);
+	status_gworld = load_pict("staticons.png",univ.party.scen_name);
+	
+	for (i = 0; i < 11; i++){
+		std::ostringstream sout;
+		sout << "monst" << i + 1 << ".png";
+		monst_gworld[i] = load_pict(sout.str(),univ.party.scen_name);
+	}
+	for (i = 0; i < 7; i++){
+		std::ostringstream sout;
+		sout << "ter" << i + 1 << ".png";
+		terrain_gworld[i] = load_pict(sout.str(),univ.party.scen_name);
+	}
+	anim_gworld = load_pict("teranim.png",univ.party.scen_name);
+	talkfaces_gworld = load_pict("talkportraits.png",univ.party.scen_name);
+	pc_gworld = load_pict("pcs.png",univ.party.scen_name);
+	vehicle_gworld = load_pict("vehicle.png",univ.party.scen_name);
+	small_ter_gworld = load_pict("mapOLD.png",univ.party.scen_name); // TODO: Should use the new map graphics instead
+	// TODO: Scenario icons ...
 }
+
 
 bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
 bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there);
@@ -1915,4 +1957,19 @@ bool save_party(FSSpec dest_file)
 //	if (in_startup_mode == false)
 //		add_string_to_buf("Save: Game saved.              ");
 	return true;
+}
+
+std::vector<std::string> load_strings(std::string which){
+	char stringsPath[512];
+	std::string path;
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	CFURLRef stringsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("strings"),CFSTR(""),NULL);
+	CFStringGetCString(CFURLCopyFileSystemPath(stringsURL, kCFURLPOSIXPathStyle), stringsPath, 512, kCFStringEncodingUTF8);
+	path = stringsPath + '/' + which;
+	std::ifstream fin(path.c_str());
+	std::string s;
+	std::vector<std::string> v;
+	while(getline(fin,s))
+		v.push_back(s);
+	return v;
 }

@@ -58,7 +58,7 @@ public:
 	char comment[256];
 	char spec_strs[90][256];
 	char sign_strs[8][256];
-	char(& out_strs(short i))[256];
+	char(& out_strs(short i))[256] __attribute__((deprecated));
 	bool special_spot[48][48];
 	
 	cOutdoors();

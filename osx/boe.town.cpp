@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -76,7 +76,7 @@ extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern GWorldPtr map_gworld,tiny_map_graphics;
+extern GWorldPtr map_gworld,small_ter_gworld;
 RGBColor parchment = {65535,65535,52428};
 PixPatHandle map_pat[25];
 
@@ -1641,7 +1641,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 										6 * (terrain_pic[what_ter] % 10),6 * (terrain_pic[what_ter] / 10));
 									else OffsetRect(&ter_temp_from,
 										24 * ((terrain_pic[what_ter] - 400) / 5),6 * ((terrain_pic[what_ter] - 400) % 5) + 156);
-								rect_draw_some_item(tiny_map_graphics,ter_temp_from,
+								rect_draw_some_item(small_ter_gworld,ter_temp_from,
 									map_gworld,draw_rect,0,0);
 								break;
 
@@ -1670,7 +1670,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 								//OffsetRect(&ter_temp_from,
 								//	24 * ((map_pats[pic] - 30) / 5),
 								//	138 + 6 * ((map_pats[pic] - 30) % 5));
-								//rect_draw_some_item(tiny_map_graphics,ter_temp_from,
+								//rect_draw_some_item(small_ter_gworld,ter_temp_from,
 								//	map_gworld,draw_rect,0,0);
 								break;																
 							}

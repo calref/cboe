@@ -522,7 +522,6 @@ void change_val (unsigned char *val,short a,short b)
 //	
 //	// Now more initialization is needed. First need to properly create the misc_i array.
 //	
-__attribute__((deprecated))
 void init_town(){ // formerly part of load_town
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 //	if (mode == 0) {

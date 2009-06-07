@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
@@ -50,7 +50,6 @@ short store_which_talk_node,last_talk_node[60];
 cSpeech::cNode store_talk_node;
 location store_cur_loc;
 
-__attribute__((deprecated))
 void init_town(short size) {
 	short i,j;
 	Str255 temp_str;
@@ -90,7 +89,6 @@ void init_town(short size) {
 	}	
 }
 
-__attribute__((deprecated))
 void init_out() {
 	short i,j;
 	Str255 temp_str;

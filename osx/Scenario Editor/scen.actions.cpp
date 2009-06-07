@@ -1,6 +1,6 @@
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
@@ -274,7 +274,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				}
 			}
 			if ((overall_mode < MODE_MAIN_SCREEN) && (i == NLS - 1)) {
-				set_cursor(0);
+				set_cursor(wand_curs);
 				set_up_main_screen();
 			}
 			mouse_button_held = false;
@@ -431,14 +431,14 @@ bool handle_action(Point the_point,EventRecord event) {
 				if ((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
 					(mouse_button_held && erasing_mode)) {
 					set_terrain(spot_hit,current_ground);
-					set_cursor(0);
+					set_cursor(wand_curs);
 					erasing_mode = true;
 					mouse_button_held = true;
 				}
 				else 
 				{
 					mouse_button_held = true;
-					set_cursor(0);
+					set_cursor(wand_curs);
 			 		set_terrain(spot_hit,current_terrain_type);
 					erasing_mode = false;
 				}
@@ -451,7 +451,7 @@ bool handle_action(Point the_point,EventRecord event) {
 					working_rect.left = spot_hit.x;
 				 	working_rect.top = spot_hit.y;
 					mode_count = 1;
-					set_cursor(6);
+					set_cursor(bottomright_curs);
 					set_string("Now select lower right corner","");
 					break;
 				}
@@ -492,7 +492,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						give_error("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).","",0);
 				}
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				break;
 			case MODE_SET_WANDER_POINTS:
 				if (mouse_button_held == true)
@@ -518,7 +518,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 0:
 						overall_mode = MODE_DRAWING;
-						set_cursor(0);
+						set_cursor(wand_curs);
 						set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 						break;
 				}
@@ -574,7 +574,7 @@ bool handle_action(Point the_point,EventRecord event) {
 					give_error("You can only have 64 preset items in each town.","",0);
 				
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 				break;
 			case MODE_EDIT_ITEM:
@@ -585,12 +585,12 @@ bool handle_action(Point the_point,EventRecord event) {
 						store_place_item = town->preset_items[x];
 					}
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				break;
 //			case 7: // edit_monst does nothing at all, but I think this would otherwise be the same as mode 39
 //				edit_monst(1,spot_hit.x,spot_hit.y);
 //				overall_mode = MODE_DRAWING;
-//				set_cursor(0);
+//				set_cursor(wand_curs);
 //				break;
 			case MODE_PLACE_SAME_CREATURE:
 				if (last_placed_monst.number == 0) {
@@ -612,7 +612,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						i = 60;
 					}
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				break;
 			case MODE_PLACE_CREATURE:
 				for (i = 0; i < 60; i++)
@@ -649,14 +649,14 @@ bool handle_action(Point the_point,EventRecord event) {
 					give_error("Large towns can have at most 60 preset monsters.","",0); // error
 				}
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				break;
 				
 			case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
 			case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
 				town->start_locs[overall_mode - 10].x = spot_hit.x;
 				town->start_locs[overall_mode - 10].y = spot_hit.y;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_WEB:
@@ -702,7 +702,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				take_field_type(spot_hit.x, spot_hit.y, 2);
 				for (i = 0; i < 8; i++)
 					take_sfx(spot_hit.x,spot_hit.y,i);
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_SFX:
@@ -713,7 +713,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				if (editing_town == true)
 					set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
 				else set_new_terrain(current_terrain.terrain[spot_hit.x][spot_hit.y]);
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_SAME_ITEM:
@@ -730,7 +730,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						town->preset_items[x].contained = container_there(town->preset_items[x].loc);
 						x = 64;
 					}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_SIGN: //edit sign
@@ -756,7 +756,7 @@ bool handle_action(Point the_point,EventRecord event) {
 								   "",0);
 					}	
 				}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_CREATURE: //edit monst
@@ -765,12 +765,12 @@ bool handle_action(Point the_point,EventRecord event) {
 						edit_placed_monst(x);
 						last_placed_monst = town->creatures(x);
 					}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_SPECIAL: //make special
 				place_edit_special(spot_hit);
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_COPY_SPECIAL: //copy special
@@ -790,7 +790,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				}
 				if (x < 500)
 					give_error("There wasn't a special on that spot.","",0);
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PASTE_SPECIAL: //paste special
@@ -822,7 +822,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				if (x < 500)
 					give_error("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.","",0);
 				
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_SPECIAL: //erase special
@@ -840,18 +840,18 @@ bool handle_action(Point the_point,EventRecord event) {
 							x = 500;
 						}
 				}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_SPECIAL: //edit special
 				set_special(spot_hit);
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_TOWN_ENTRANCE: //edit town entry
 				town_entry(spot_hit);
 				overall_mode = MODE_DRAWING;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				break;
 			case MODE_SET_OUT_START: //edit out start loc
 				if (fancy_choice_dialog(864,0) == 2)
@@ -864,7 +864,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				scenario.out_sec_start.x = cur_out.x;
 				scenario.out_sec_start.y = cur_out.y;
 				scenario.out_start = spot_hit;
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_CREATURE: //delete monst
@@ -872,7 +872,7 @@ bool handle_action(Point the_point,EventRecord event) {
 					if (monst_on_space(spot_hit,x) == true) {
 						town->creatures(x).number = 0;
 					}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_ITEM: // delete item
@@ -881,7 +881,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						town->preset_items[x].code = -1;
 					}
-				set_cursor(0);
+				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 		}
@@ -959,37 +959,37 @@ bool handle_action(Point the_point,EventRecord event) {
 						case 0:
 							set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 							overall_mode = MODE_DRAWING;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 1:
 							set_string("Paintbrush (large)",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 							overall_mode = MODE_LARGE_PAINTBRUSH;
-							set_cursor(2);
+							set_cursor(brush_curs);
 							break;
 						case 2:
 							set_string("Paintbrush (small)",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-							set_cursor(2);
+							set_cursor(brush_curs);
 							overall_mode = MODE_SMALL_PAINTBRUSH;
 							break;
 						case 3:
 							set_string("Spraycan (large)",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-							set_cursor(3);
+							set_cursor(spray_curs);
 							overall_mode = MODE_LARGE_SPRAYCAN;
 							break;
 						case 4:
 							set_string("Spraycan (small)",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-							set_cursor(3);
+							set_cursor(spray_curs);
 							overall_mode = MODE_SMALL_SPRAYCAN;
 							break;
 						case 5:
 							set_string("Eyedropper","Select terrain to draw");
-							set_cursor(1);
+							set_cursor(eyedropper_curs);
 							overall_mode = MODE_EYEDROPPER;
 							break;
 						case 6: case 7:
 							overall_mode = (i == 6) ? MODE_HOLLOW_RECT : MODE_FILLED_RECT;
 							mode_count = 2;
-							set_cursor(5);
+							set_cursor(topleft_curs);
 							if (i == 6)
 								set_string("Fill rectangle (hollow)","Select upper left corner");
 							else set_string("Fill rectangle (solid)","Select upper left corner");
@@ -1001,23 +1001,23 @@ bool handle_action(Point the_point,EventRecord event) {
 						case 101:
 							set_string("Erase space","Select space to clear");
 							overall_mode = MODE_ERASER;
-							set_cursor(4);
+							set_cursor(eraser_curs);
 							break;
 						case 102:
 							set_string("Edit sign","Select sign to edit");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_EDIT_SIGN;
 							break;
 						case 103:
 							overall_mode = MODE_ROOM_RECT;
 							mode_count = 2;
-							set_cursor(5);
+							set_cursor(topleft_curs);
 							set_string("Create room rectangle","Select upper left corner");
 							break;
 						case 104:
 							overall_mode = MODE_SET_WANDER_POINTS;
 							mode_count = 4;
-							set_cursor(7);
+							set_cursor(hand_curs);
 							set_string("Place first wandering monster arrival point","");
 							break;
 						case 105: // replace terrain
@@ -1031,7 +1031,7 @@ bool handle_action(Point the_point,EventRecord event) {
 								break;
 							}
 							set_string("Set town entrance","Select town to edit");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_EDIT_TOWN_ENTRANCE;
 							break;
 						case 200:
@@ -1040,7 +1040,7 @@ bool handle_action(Point the_point,EventRecord event) {
 								break;
 							}
 							set_string("Edit placed item","Select item to edit");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_EDIT_ITEM;
 							break;
 						case 201:
@@ -1049,7 +1049,7 @@ bool handle_action(Point the_point,EventRecord event) {
 								break;
 							}
 							set_string("Place same item","Select location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_SAME_ITEM;
 							break;
 						case 202:
@@ -1057,21 +1057,21 @@ bool handle_action(Point the_point,EventRecord event) {
 								//set_string("Edit placed item","Not while outdoors.");
 								set_string("Toggle special spot","Select location");
 								overall_mode = MODE_TOGGLE_SPECIAL_DOT;
-								set_cursor(0);
+								set_cursor(wand_curs);
 								break;
 							}
 							set_string("Delete an item","Select item");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_ERASE_ITEM;
 							break;
 						case 203:
 							set_string("Create/Edit special","Select special location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_EDIT_SPECIAL;
 							break;
 						case 204:
 							set_string("Copy special","Select special to copy");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_COPY_SPECIAL;
 							break;
 						case 205:
@@ -1080,140 +1080,140 @@ bool handle_action(Point the_point,EventRecord event) {
 							}
 							set_string("Paste special","Select location to paste");
 							overall_mode = MODE_PASTE_SPECIAL;
-							set_cursor(7);
+							set_cursor(hand_curs);
 							break;
 						case 206:
 							set_string("Erase special","Select special to erase");
 							overall_mode = MODE_ERASE_SPECIAL;
-							set_cursor(4);
+							set_cursor(eraser_curs);
 							break;
 						case 207:
 							set_string("Set/place special","Select special location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_SPECIAL;
 							break;
 						case 300:
 							set_string("Edit creature","Select creature to edit");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_EDIT_CREATURE;
 							break;
 						case 301:
 							set_string("Place same creature","Select creature location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_SAME_CREATURE;
 							break;
 						case 302:
 							set_string("Delete a creature","Select creature");
-							set_cursor(4);
+							set_cursor(eraser_curs);
 							overall_mode = MODE_ERASE_CREATURE;
 							break;
 						case 304:
 							set_string("Place north entrace","Select entrance location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_NORTH_ENTRANCE;
 							break;
 						case 305:
 							set_string("Place west entrace","Select entrance location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_WEST_ENTRANCE;
 							break;
 						case 306:
 							set_string("Place south entrace","Select entrance location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_SOUTH_ENTRANCE;
 							break;
 						case 307:
 							set_string("Place east entrace","Select entrance location");
-							set_cursor(7);
+							set_cursor(hand_curs);
 							overall_mode = MODE_PLACE_EAST_ENTRANCE;
 							break;
 						case 400:
 							set_string("Place web","Select location");
 							overall_mode = MODE_PLACE_WEB;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 401:
 							set_string("Place crate","Select location");
 							overall_mode = MODE_PLACE_CRATE;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 402:
 							set_string("Place barrel","Select location");
 							overall_mode = MODE_PLACE_BARREL;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 403:
 							set_string("Place fire barrier","Select location");
 							overall_mode = MODE_PLACE_FIRE_BARRIER;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 404:
 							set_string("Place force barrier","Select location");
 							overall_mode = MODE_PLACE_FORCE_BARRIER;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 405:
 							set_string("Place quickfire","Select location");
 							overall_mode = MODE_PLACE_QUICKFIRE;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 406:
 							set_string("Place special spot","Select location");
 							overall_mode = MODE_TOGGLE_SPECIAL_DOT;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 407:
 							set_string("Clear space","Select space to clear");
 							overall_mode = MODE_CLEAR_FIELDS;
-							set_cursor(4);
+							set_cursor(eraser_curs);
 							break;
 						case 500:
 							set_string("Place small blood stain","Select stain location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 0;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 501:
 							set_string("Place ave. blood stain","Select stain location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 1;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 502:
 							set_string("Place large blood stain","Select stain location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 2;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 503:
 							set_string("Place small slime pool","Select slime location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 3;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 504:
 							set_string("Place large slime pool","Select slime location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 4;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 505:
 							set_string("Place ash","Select ash location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 5;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 506:
 							set_string("Place bones","Select bones location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 6;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 						case 507:
 							set_string("Place rocks","Select rocks location");
 							overall_mode = MODE_PLACE_SFX;
 							mode_count = 7;
-							set_cursor(0);
+							set_cursor(wand_curs);
 							break;
 					}
 				}

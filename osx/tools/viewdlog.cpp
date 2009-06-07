@@ -14,7 +14,7 @@ void Initialize();
 void init_dialogs();
 void display_strings(char *text1, char *text2, char *title,short graphic_num,short graphic_type,short parent_num);
 
-GWorldPtr anim_gworld, talkfaces_gworld, items_gworld, tiny_obj_gworld, pc_gworld, dlog_gworld, monst_gworld[11], ter_gworld[7], small_ter_gworld, fields_gworld, pc_stats_gworld, item_stats_gworld, mixed_gworld;
+GWorldPtr anim_gworld, talkfaces_gworld, items_gworld, tiny_obj_gworld, pc_gworld, dlog_gworld, monst_gworld[11], ter_gworld[7], small_ter_gworld, fields_gworld, pc_stats_gworld, item_stats_gworld;
 ResFileRefNum graphicsRef, soundsRef, boeRef, scenRef, pcRef;
 bool All_Done = false;
 WindowPtr mainPtr = (WindowPtr) -1;

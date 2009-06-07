@@ -34,10 +34,10 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 13 - stalagmites
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 14 - cave fumarole (proposed)
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 150 */	// 15 - surface fumarole (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 101 - cave road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 102 - surface road (proposed)
-		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 103 - hills road (proposed)
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 104 - crops (proposed)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - cave road (proposed)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - surface road (proposed)
+		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - hills road (proposed)
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - crops (proposed)
 		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// (note: fumaroles would have lava.)
 		1, 0, 2, 1, 1, 0, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
 		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
@@ -105,7 +105,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		ground_type = ground[picture - 140];
 		trim_type = (eTrimType) trims[picture - 140];
 		trim_ter = trim_ters[picture - 140];
-	}else{ // TODO: Implement new-style road and walkway handling, and deprecate picture 216.
+	}else{
 		ground_type = 255;
 		trim_type = TRIM_NONE;
 		trim_ter = 0;
@@ -253,6 +253,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	else block_horse = old.block_horse;
 	light_radius = old.light_radius;
 	step_sound = old.step_sound;
+	if(step_sound > 99) step_sound = 99;
 	shortcut_key = old.shortcut_key;
 	switch(picture){
 		// Rubbles, plus pentagram as a bonus
@@ -348,4 +349,17 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 			break;
 	};
 	return *this;
+}
+
+std::ostream& operator << (std::ostream& out, eTerSpec& e){
+	return out << (int) e;
+}
+
+std::istream& operator >> (std::istream& in, eTerSpec& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 24)
+		e = (eTerSpec) i;
+	else e = TER_SPEC_NONE;
+	return in;
 }

@@ -6,6 +6,9 @@
  *
  */
 
+#include <string>
+#include <vector>
+
 void init_fileio();
 
 struct no_file_chosen {}; // an exception class
@@ -23,6 +26,7 @@ bool load_outdoors(location which_out,cOutdoors& the_out);
 bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]);
 bool load_outdoor_str(location which_out, short which_str, char* str);
 void load_spec_graphics();
+std::vector<std::string> load_strings(std::string which);
 
 FSSpec nav_get_party() throw(no_file_chosen);
 FSSpec nav_put_party() throw(no_file_chosen);

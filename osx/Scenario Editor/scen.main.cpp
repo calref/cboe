@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "scen.global.h"
 #include "classes.h"
@@ -314,7 +314,7 @@ void handle_menu_choice(long choice) {
 		menu = HiWord(choice);
 		menu_item = LoWord(choice);
 		
-		set_cursor(0);
+		set_cursor(wand_curs);
 		switch (menu) {
 			case 500:
 				handle_apple_menu(menu_item);
@@ -522,7 +522,7 @@ void handle_town_menu(int item_hit) {
 		case 3:
 			overall_mode = MODE_SET_TOWN_RECT;
 			mode_count = 2;
-			set_cursor(5);
+			set_cursor(topleft_curs);
 			set_string("Set town boundary","Select upper left corner");
 			break;
 		case 4:
@@ -729,6 +729,7 @@ void Mouse_Pressed() {
 void close_program() {
 	restore_depth();
 	if(town != NULL) delete town;
+	clean_up_graphtool();
 }
 
 void ding() {

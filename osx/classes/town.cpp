@@ -147,7 +147,6 @@ cTown::cTown(short size){
 	difficulty = 0;
 }
 
-__attribute__((deprecated))
 char(& cTown::town_strs(short i))[256]{
 	if(i == 0) return town_name;
 	if(i >= 1   && i < 17 ) return rect_names[i - 1];

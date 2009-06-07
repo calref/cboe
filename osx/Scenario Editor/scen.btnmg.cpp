@@ -1,12 +1,12 @@
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
-#include <math.h>
+#include <cmath>
 #include "scen.btnmg.h"
 
 //extern piles_of_stuff_dumping_type *data_store;

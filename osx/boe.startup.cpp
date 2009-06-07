@@ -33,6 +33,7 @@ extern cScenarioList scen_headers;;
 extern bool unreg_party_in_scen_not_check;
 //extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
+extern eGameMode overall_mode;
 
 //void start_game();
 
@@ -137,6 +138,7 @@ void startup_load()////
 	else {
 		menu_activate(0);
 		draw_startup(0);
+		overall_mode = MODE_STARTUP;
 	}
 	
 }

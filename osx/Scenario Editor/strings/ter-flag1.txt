@@ -1,0 +1,24 @@
+Small Icon
+What to change to?
+Amount of damage done
+Unused
+Graphic when occupied
+Strength (1-8)
+Unused
+Terrain to change to
+Terrain to change to when locked
+Terrain to change to when unlocked
+Unused
+Unused
+Number of special to call
+Unused
+Unused
+Direction
+Direction
+Unused
+Unused
+Unused
+Unused
+Terrain type if hidden
+Terrain to change to when used
+Number of special to call

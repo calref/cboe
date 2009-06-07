@@ -25,7 +25,7 @@ extern short current_active_pc;
 
 extern WindowPtr mainPtr;
 extern Rect d_rects[80];
-extern short d_rect_index[80],current_cursor;
+extern short d_rect_index[80];
 
 extern bool modeless_exists[12],diff_depth_ok,current_file_has_maps;
 extern short modeless_key[12];

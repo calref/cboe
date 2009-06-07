@@ -1,11 +1,12 @@
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <sstream>
+#include <cstring>
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
-#include <math.h>
+#include <cmath>
 #include "dlgtool.h"
 #include "scen.keydlgs.h"
 #include "soundtool.h"
@@ -64,23 +65,27 @@ extern location cur_out;
 
 short num_ir[3] = {12,10,4};
 
-GWorldPtr monst_gworld[11];
-GWorldPtr terrain_gworld[7];
-GWorldPtr editor_mixed;
-GWorldPtr terrain_buttons_gworld;
-GWorldPtr anim_gworld;
-GWorldPtr fields_gworld;
-GWorldPtr dialog_gworld;
-GWorldPtr items_gworld;
-GWorldPtr tiny_obj_gworld;
-GWorldPtr small_ter_gworld;
+GWorldPtr monst_gworld[11] = {0};
+GWorldPtr terrain_gworld[7] = {0};
+GWorldPtr editor_mixed = NULL;
+GWorldPtr terrain_buttons_gworld = NULL;
+GWorldPtr anim_gworld = NULL;
+GWorldPtr fields_gworld = NULL;
+GWorldPtr dialog_gworld = NULL;
+GWorldPtr items_gworld = NULL;
+GWorldPtr tiny_obj_gworld = NULL;
+GWorldPtr small_ter_gworld = NULL;
+GWorldPtr boom_gworld = NULL;
 GWorldPtr spec_scen_g = NULL;
+GWorldPtr vehicle_gworld = NULL;
 //GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2]
-GWorldPtr ter_draw_gworld;
-GWorldPtr dlogpics_gworld;
-GWorldPtr talkfaces_gworld;
-GWorldPtr roads_gworld;
-GWorldPtr mixed_gworld;
+GWorldPtr ter_draw_gworld = NULL;
+GWorldPtr dlogpics_gworld = NULL;
+GWorldPtr talkfaces_gworld = NULL;
+GWorldPtr roads_gworld = NULL;
+GWorldPtr missiles_gworld = NULL;
+GWorldPtr status_gworld = NULL;
+GWorldPtr pc_gworld = NULL;
 PixPatHandle map_pat[25];
 
 // begin new stuff
@@ -175,7 +180,7 @@ void init_dialogs(){
 	cd_register_event_filter(810,edit_add_town_event_filter);
 	cd_register_event_filter(811,edit_scenario_events_event_filter);
 	cd_register_event_filter(812,edit_item_placement_event_filter);
-	cd_register_event_filter(813,edit_ter_type_event_filter);
+	//cd_register_event_filter(813,edit_ter_type_event_filter);
 	cd_register_event_filter(814,edit_monst_type_event_filter);
 	cd_register_event_filter(815,edit_monst_abil_event_filter);
 	cd_register_event_filter(816,edit_text_event_filter);
@@ -422,20 +427,30 @@ void load_graphics(){
 	for (i = 0; i < 25; i++) 
 	    map_pat[i] = GetPixPat (200 + i);
 	
-	for (i = 0; i < 11; i++)
-		monst_gworld[i] = load_pict(1100 + i);
-	for (i = 0; i < 7; i++)
-		terrain_gworld[i] = load_pict(800 + i);
-	editor_mixed = load_pict(906);
-	anim_gworld = load_pict(820);
-	fields_gworld = load_pict(821);
-	roads_gworld = load_pict(822);
-	talkfaces_gworld = load_pict(860);
-	items_gworld = load_pict(901);
-	tiny_obj_gworld = load_pict(900);
-	dlogpics_gworld = load_pict(850);
-	small_ter_gworld = load_pict(904);
-	mixed_gworld = load_pict(903);
+	for (i = 0; i < 11; i++){
+		std::ostringstream sout;
+		sout << "monst" << i + 1 << ".png";
+		monst_gworld[i] = load_pict(sout.str());
+	}
+	for (i = 0; i < 7; i++){
+		std::ostringstream sout;
+		sout << "ter" << i + 1 << ".png";
+		terrain_gworld[i] = load_pict(sout.str());
+	}
+	editor_mixed = load_pict("edbuttons.png");
+	anim_gworld = load_pict("teranim.png");
+	fields_gworld = load_pict("fields.png");
+	roads_gworld = load_pict("trim.png");
+	talkfaces_gworld = load_pict("talkportraits.png");
+	items_gworld = load_pict("objects.png");
+	tiny_obj_gworld = load_pict("tinyobj.png");
+	dlogpics_gworld = load_pict("dlogpics.png");
+	small_ter_gworld = load_pict("termap.png");
+	//mixed_gworld = load_pict(903);
+	vehicle_gworld = load_pict("vehicle.png");
+	missiles_gworld = load_pict("missiles.png");
+	status_gworld = load_pict("staticons.png");
+	pc_gworld = load_pict("pcs.png");
 }
 
 void load_main_screen() {
@@ -695,12 +710,10 @@ void draw_terrain(){
 	Rect draw_rect,clipping_rect = {8,8,332,260};
 	unsigned char t_to_draw;
 	Rect source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
-	Rect boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
+	Rect boat_rect = {0,0,36,28};
 	
 	if (overall_mode >= MODE_MAIN_SCREEN)
 		return;
-	
-	OffsetRect(&boat_rect[0],61,0);
 	
 	if (cur_viewing_mode == 0) {
 		SetPort( ter_draw_gworld);
@@ -798,17 +811,16 @@ void draw_terrain(){
 						if ((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
 							(scenario.boats[i].loc.y == cen_y + r - 4))
-							Draw_Some_Item(mixed_gworld,boat_rect[0],ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,1,0);
 						
 					}	
 					for (i = 0; i < 30; i++) {
-						source_rect = boat_rect[0];
-						OffsetRect(&source_rect,0,74);
-						OffsetRect(&source_rect,56,36);
+						source_rect = boat_rect;
+						OffsetRect(&source_rect,0,36);
 						if ((scenario.horses[i].which_town == cur_town) &&
 							(scenario.horses[i].loc.x == cen_x + q - 4) &&
 							(scenario.horses[i].loc.y == cen_y + r - 4))
-							Draw_Some_Item(mixed_gworld,source_rect,ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,1,0);
 						
 					}	
 					for (i = 0; i < 4; i++)		

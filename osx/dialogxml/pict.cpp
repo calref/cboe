@@ -31,6 +31,7 @@ void cPict::init(){
 	drawPict[PIC_DLOG_LG] = drawPresetDlogLg;
 	drawPict[PIC_SCEN_LG] = drawPresetScenLg;
 	drawPict[PIC_TER_MAP] = drawPresetTerMap;
+	drawPict[PIC_TER_MAP] = drawStatusIcon;
 	drawPict[PIC_MONST_WIDE] = drawPresetMonstWide;
 	drawPict[PIC_MONST_TALL] = drawPresetMonstTall;
 	drawPict[PIC_MONST_LG] = drawPresetMonstLg;
@@ -173,6 +174,9 @@ void cPict::setSheet(eSheetType type, short n, GWorldPtr sheet){
 		case SHEET_HEADER:
 			header = sheet;
 			break;
+		case SHEET_STATUS:
+			status = sheet;
+			break;
 	}
 }
 
@@ -218,14 +222,24 @@ bool cPict::isSheetSet(eSheetType type, size_t num){
 			else return customSheets[num];
 		case SHEET_HEADER:
 			return header;
+		case SHEET_STATUS:
+			return status;
 	}
 	return false;
 }
 
-void cPict::setPict(short num, ePicType type){
+void cPict::setPict(pic_num_t num, ePicType type){
 	picNum = num;
 	picType = type;
 	if(isVisible()) draw();
+}
+
+pic_num_t cPict::getPicNum(){
+	return picNum;
+}
+
+ePicType cPict::getPicType(){
+	return picType;
 }
 
 cPict::cPict(cDialog* parent) : cControl(parent,CTRL_PICT) {}
@@ -480,7 +494,7 @@ ePicType& operator-= (ePicType& lhs, ePicTypeMod rhs){
 
 GWorldPtr cPict::teranim = NULL, cPict::dlog = NULL, cPict::talk = NULL, cPict::scen = NULL, cPict::largeScen = NULL;
 GWorldPtr cPict::item = NULL, cPict::tinyItem = NULL, cPict::pc = NULL, cPict::field = NULL, cPict::boom = NULL;
-GWorldPtr cPict::missile = NULL, cPict::save = NULL, cPict::header = NULL, cPict::map = NULL;
+GWorldPtr cPict::missile = NULL, cPict::save = NULL, cPict::header = NULL, cPict::map = NULL, cPict::status = NULL;
 std::vector<GWorldPtr> cPict::ter, cPict::monst, cPict::customSheets;
 std::map<size_t,GWorldPtr> cPict::largeSheets;
 std::map<ePicType,void(*)(short,GWorldPtr,Rect)> cPict::drawPict;
@@ -749,6 +763,15 @@ void cPict::drawPresetTerMap(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
 	OffsetRect(&from_rect,12 * (num % 10), 12 * (num / 10));
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+}
+
+void cPict::drawStatusIcon(short num, GWorldPtr to_gw, Rect to_rect){
+	Rect from_rect = {0,0,12,12};
+	GWorldPtr from_gw = status;
+	to_rect.right = to_rect.left + 12;
+	to_rect.bottom = to_rect.top + 12;
+	OffsetRect(&from_rect,12 * (num % 3), 12 * (num / 3));
 	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
 }
 

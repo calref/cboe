@@ -1,5 +1,6 @@
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
+#include <boost/bind.hpp>
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
@@ -13,6 +14,9 @@
 #include "scen.townout.h"
 #include "scen.fileio.h"
 #include "scen.actions.h"
+#include "dialog.h"
+#include "dlogutil.h"
+#include "fileio.h"
 
 extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern bool mouse_button_held;
@@ -787,7 +791,6 @@ cMonster return_monster_template(m_num_t store) {
 //	return i;
 //}
 
-__attribute__((deprecated))
 void init_scenario() {
 	short i;
 	rectangle dummy_rect;
@@ -890,186 +893,386 @@ void init_scenario() {
 		scenario.scen_str_len[i] = strlen((char *) scenario.scen_strs(i));
 	}
 }	
-void put_ter_info_in_dlog() {
-	Str255 str;
-	strcpy((char*)str,(char*)scenario.ter_types[store_which_ter].name.c_str());
-	
-	cdsin(813,12,store_which_ter);
-	CDST(813,2,(char*)str);
-	CDSN(813,5,store_ter.picture);
-	cd_set_led_range(813,19,24,store_ter.blockage);
-	cd_set_led(813,25,store_ter.fly_over);
-	cd_set_led(813,26,store_ter.boat_over);
-	cd_set_led(813,27,store_ter.block_horse);
-	cd_set_led_range(813,28,31,store_ter.step_sound);
-	str[0] = store_ter.shortcut_key;
-	str[1] = 0;
-	CDST(813,3,(char *) str);
-	CDSN(813,4,store_ter.trans_to_what);
-	CDSN(813,8,store_ter.light_radius);
-	cd_set_led_range(813,32,55,store_ter.special);
-	CDSN(813,6,store_ter.flag1.u);
-	CDSN(813,7,store_ter.flag2.u);
-	get_str(str,21,40 + store_ter.special);
-	csit(813,67,(char *) str);
-	get_str(str,21,80 + store_ter.special);
-	csit(813,68,(char *) str);
-	if (store_ter.picture >= 1000)
-		csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
-	else if (store_ter.picture >= 400)
-		csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
-	else csp(813,14,store_ter.picture,PICT_TER);
-}
+//void put_ter_info_in_dlog() {
+//	Str255 str;
+//	strcpy((char*)str,(char*)scenario.ter_types[store_which_ter].name.c_str());
+//	
+//	cdsin(813,12,store_which_ter);
+//	CDST(813,2,(char*)str);
+//	CDSN(813,5,store_ter.picture);
+//	cd_set_led_range(813,19,24,store_ter.blockage);
+//	cd_set_led(813,25,store_ter.fly_over);
+//	cd_set_led(813,26,store_ter.boat_over);
+//	cd_set_led(813,27,store_ter.block_horse);
+//	cd_set_led_range(813,28,31,store_ter.step_sound);
+//	str[0] = store_ter.shortcut_key;
+//	str[1] = 0;
+//	CDST(813,3,(char *) str);
+//	CDSN(813,4,store_ter.trans_to_what);
+//	CDSN(813,8,store_ter.light_radius);
+//	cd_set_led_range(813,32,55,store_ter.special);
+//	CDSN(813,6,store_ter.flag1.u);
+//	CDSN(813,7,store_ter.flag2.u);
+//	get_str(str,21,40 + store_ter.special);
+//	csit(813,67,(char *) str);
+//	get_str(str,21,80 + store_ter.special);
+//	csit(813,68,(char *) str);
+//	if (store_ter.picture >= 1000)
+//		csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
+//	else if (store_ter.picture >= 400)
+//		csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
+//	else csp(813,14,store_ter.picture,PICT_TER);
+//}
+//
+//bool save_ter_info() {
+//	Str255 str;
+//	short i;
+//	
+//	
+//	store_ter.picture = CDGN(813,5);
+//	if  ((store_ter.picture < 0) ||
+//		 ((store_ter.picture > PICT_N_TER) && (store_ter.picture < 400)) ||
+//		 ((store_ter.picture > 400 + PICT_N_TER_ANIM) && (store_ter.picture < 1000))) {
+//		give_error("Picture number isn't in the proper range.","",813);
+//		return false;
+//	}
+//	
+//	if (store_which_ter > 90) {
+//		store_ter.blockage = cd_get_led_range(813,19,24);
+//		store_ter.special = (eTerSpec) cd_get_led_range(813,32,55);
+//		i = CDGN(813,6);
+//		/*if ((store_ter.special < 2) || (store_ter.special > 6)) {
+//			if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
+//		}
+//		else*/ if (store_ter.special == TER_SPEC_DAMAGING) {
+//			if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
+//		}
+//		else if (store_ter.special == TER_SPEC_DANGEROUS) {
+//			if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
+//		}
+//		store_ter.flag1.u = CDGN(813,6);
+//		
+//		i = CDGN(813,7);
+//		if (store_ter.special == TER_SPEC_TOWN_ENTRANCE) {
+//			if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
+//		}
+//		else if ((store_ter.special == TER_SPEC_DAMAGING) || (store_ter.special == TER_SPEC_DANGEROUS)) {
+//			if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
+//		}
+//		store_ter.flag2.u = CDGN(813,7);
+//		
+//		i = CDGN(813,4);
+//		if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == true) return false;
+//		store_ter.trans_to_what = CDGN(813,4);
+//		store_ter.fly_over = cd_get_led(813,25);
+//		store_ter.boat_over = cd_get_led(813,26);
+//		store_ter.block_horse = cd_get_led(813,27);
+//		store_ter.light_radius = CDGN(813,8);
+//		if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813) == true) return false;
+//		
+//		store_ter.step_sound = cd_get_led_range(813,28,31);
+//	}
+//	CDGT(813,3,(char *) str);
+//	store_ter.shortcut_key = str[0];
+//	
+//	CDGT(813,2,(char *) str);
+//	str[29] = 0;
+//	scenario.ter_types[store_which_ter].name = (char*)str;
+//	
+//	scenario.ter_types[store_which_ter] = store_ter;
+//	return true;
+//}
 
-bool save_ter_info() {
-	Str255 str;
-	short i;
-	
-	
-	store_ter.picture = CDGN(813,5);
-	if  ((store_ter.picture < 0) ||
-		 ((store_ter.picture > PICT_N_TER) && (store_ter.picture < 400)) ||
-		 ((store_ter.picture > 400 + PICT_N_TER_ANIM) && (store_ter.picture < 1000))) {
-		give_error("Picture number isn't in the proper range.","",813);
+//void edit_ter_type_event_filter (short item_hit) {
+//	Str255 str;
+//	short i;
+//	
+//	switch (item_hit) {
+//		case 9:
+//			toast_dialog();
+//			break;
+//		case 62:
+//			if (save_ter_info() == true)
+//				toast_dialog();
+//			break;
+//		case 10:
+//			if (save_ter_info() == false) break;
+//			store_which_ter--;
+//			if (store_which_ter < 0) store_which_ter = 255;
+//			store_ter = scenario.ter_types[store_which_ter];
+//			put_ter_info_in_dlog();
+//			break;
+//		case 11:
+//			if (save_ter_info() == false) break;
+//			store_which_ter++;
+//			if (store_which_ter > 255) store_which_ter = 0;
+//			store_ter = scenario.ter_types[store_which_ter];
+//			put_ter_info_in_dlog();
+//			break;
+//			
+//		case 13: case 70:
+//			if (item_hit == 13)
+//				i = choose_graphic(0,PICT_N_TER,store_ter.picture,PICT_TER,813);
+//			else i = 400 + choose_graphic(/*300,313*/0,PICT_N_TER_ANIM,store_ter.picture,PICT_TER_ANIM,813);
+//			if (i >= 0) {
+//				//if (i >= 300) i += 100;
+//				store_ter.picture = i;
+//			}
+//			else break;
+//			CDSN(813,5,store_ter.picture);
+//			if (store_ter.picture >= 1000)
+//				csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
+//			else if (store_ter.picture >= 400)
+//				csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
+//			else csp(813,14,store_ter.picture,PICT_TER);
+//			break;
+//		default:
+//			cd_hit_led_range(813,32,55,item_hit);
+//			cd_hit_led_range(813,28,31,item_hit);
+//			cd_hit_led_range(813,19,24,item_hit);
+//			cd_flip_led(813,25,item_hit);
+//			cd_flip_led(813,26,item_hit);
+//			cd_flip_led(813,27,item_hit);
+//			if ((item_hit >= 32) && (item_hit <= 55)) {
+//				get_str(str,21,40 + item_hit - 32);
+//				csit(813,67,(char *) str);
+//				get_str(str,21,80 + item_hit - 32);
+//				csit(813,68,(char *) str);
+//			}
+//			break;
+//			
+//	}
+//}
+
+bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name){
+	if(!losing) return true;
+	cTextField& fld_ctrl = dynamic_cast<cTextField&>(me[id]);
+	long n = fld_ctrl.getTextAsNum();
+	if(n < min_val || n > max_val){
+		// TODO: Display error message
 		return false;
 	}
-	
-	if (store_which_ter > 90) {
-		store_ter.blockage = cd_get_led_range(813,19,24);
-		store_ter.special = (eTerSpec) cd_get_led_range(813,32,55);
-		i = CDGN(813,6);
-		/*if ((store_ter.special < 2) || (store_ter.special > 6)) {
-			if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
-		}
-		else*/ if (store_ter.special == TER_SPEC_DAMAGING) {
-			if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
-		}
-		else if (store_ter.special == TER_SPEC_DANGEROUS) {
-			if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
-		}
-		store_ter.flag1.u = CDGN(813,6);
-		
-		i = CDGN(813,7);
-		if (store_ter.special == TER_SPEC_TOWN_ENTRANCE) {
-			if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
-		}
-		else if ((store_ter.special == TER_SPEC_DAMAGING) || (store_ter.special == TER_SPEC_DANGEROUS)) {
-			if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
-		}
-		store_ter.flag2.u = CDGN(813,7);
-		
-		i = CDGN(813,4);
-		if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == true) return false;
-		store_ter.trans_to_what = CDGN(813,4);
-		store_ter.fly_over = cd_get_led(813,25);
-		store_ter.boat_over = cd_get_led(813,26);
-		store_ter.block_horse = cd_get_led(813,27);
-		store_ter.light_radius = CDGN(813,8);
-		if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813) == true) return false;
-		
-		store_ter.step_sound = cd_get_led_range(813,28,31);
-	}
-	CDGT(813,3,(char *) str);
-	store_ter.shortcut_key = str[0];
-	
-	CDGT(813,2,(char *) str);
-	str[29] = 0;
-	scenario.ter_types[store_which_ter].name = (char*)str;
-	
-	scenario.ter_types[store_which_ter] = store_ter;
 	return true;
 }
 
-void edit_ter_type_event_filter (short item_hit) {
-	Str255 str;
-	short i;
-	
-	switch (item_hit) {
-		case 9:
-			toast_dialog();
-			break;
-		case 62:
-			if (save_ter_info() == true)
-				toast_dialog();
-			break;
-		case 10:
-			if (save_ter_info() == false) break;
-			store_which_ter--;
-			if (store_which_ter < 0) store_which_ter = 255;
-			store_ter = scenario.ter_types[store_which_ter];
-			put_ter_info_in_dlog();
-			break;
-		case 11:
-			if (save_ter_info() == false) break;
-			store_which_ter++;
-			if (store_which_ter > 255) store_which_ter = 0;
-			store_ter = scenario.ter_types[store_which_ter];
-			put_ter_info_in_dlog();
-			break;
-			
-		case 13: case 70:
-			if (item_hit == 13)
-				i = choose_graphic(0,PICT_N_TER,store_ter.picture,PICT_TER,813);
-			else i = 400 + choose_graphic(/*300,313*/0,PICT_N_TER_ANIM,store_ter.picture,PICT_TER_ANIM,813);
-			if (i >= 0) {
-				//if (i >= 300) i += 100;
-				store_ter.picture = i;
-			}
-			else break;
-			CDSN(813,5,store_ter.picture);
-			if (store_ter.picture >= 1000)
-				csp(813,14,store_ter.picture % 1000,PICT_CUSTOM + PICT_TER);
-			else if (store_ter.picture >= 400)
-				csp(813,14,store_ter.picture - 400,PICT_TER_ANIM);
-			else csp(813,14,store_ter.picture,PICT_TER);
-			break;
-		default:
-			cd_hit_led_range(813,32,55,item_hit);
-			cd_hit_led_range(813,28,31,item_hit);
-			cd_hit_led_range(813,19,24,item_hit);
-			cd_flip_led(813,25,item_hit);
-			cd_flip_led(813,26,item_hit);
-			cd_flip_led(813,27,item_hit);
-			if ((item_hit >= 32) && (item_hit <= 55)) {
-				get_str(str,21,40 + item_hit - 32);
-				csit(813,67,(char *) str);
-				get_str(str,21,80 + item_hit - 32);
-				csit(813,68,(char *) str);
-			}
-			break;
-			
+bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t first, pic_num_t last, pic_num_t modifier){
+	pic_num_t cur_sel = 0;
+	if(result_fld != ""){
+		cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
+		cur_sel = fld_ctrl.getTextAsNum();
+		cur_sel -= modifier;
+	}else if(pic_fld != ""){
+		cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
+		if(pic_ctrl.getPicType() == type)
+			cur_sel = pic_ctrl.getPicNum();
 	}
+	std::vector<pic_num_t> pics;
+	for(pic_num_t i = first; i <= last; i++)
+		pics.push_back(i);
+	cPictChoice pic_dlg(pics,type,&parent);
+	pic_num_t pic = pic_dlg.show(last+1, cur_sel);
+	if(pic <= last){
+		if(result_fld != ""){
+			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
+			fld_ctrl.setTextToNum(pic + modifier);
+		}
+		if(pic_fld != ""){
+			cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
+			pic_ctrl.setPict(pic,type);
+		}
+	}
+	return true;
+}
+
+bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld){
+	size_t cur_sel = 0;
+	if(result_fld != ""){
+		cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
+		cur_sel = fld_ctrl.getTextAsNum();
+	}
+	std::vector<std::string> strings = load_strings(from_file);
+	cStringChoice str_dlg(strings, &parent);
+	size_t result = str_dlg.show(strings[cur_sel]);
+	if(result < strings.size()){
+		if(result_fld != ""){
+			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
+			fld_ctrl.setTextToNum(result);
+		}
+		if(str_fld != ""){
+			parent[str_fld].setText(strings[result]);
+		}
+	}
+	return true;
+}
+
+bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
+	std::vector<std::string> strings = load_strings(from_file);
+	cThreeChoice help(strings,-1,-1,63,pic,PIC_DLOG,&parent);
+	help.show();
+	return true;
+}
+
+bool fill_ter_flag_info(cDialog& me, std::string id, bool dummy){
+	static std::vector<std::string> flag1_strs = load_strings("ter-flag1.txt");
+	static std::vector<std::string> flag2_strs = load_strings("ter-flag2.txt");
+	static std::vector<std::string> flag3_strs = load_strings("ter-flag3.txt");
+	eTerSpec prop;
+	cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me[id]);
+	std::istringstream sel(led_ctrl.getSelected());
+	sel >> prop;
+	me["flag1text"].setText(flag1_strs[prop]);
+	me["flag2text"].setText(flag2_strs[prop]);
+	me["flag3text"].setText(flag3_strs[prop]);
+	// TODO: Click handlers for the "choose" buttons as necessary, plus hide/show them as needed
+	return true;
+}
+
+void fill_ter_info(cDialog& me, short ter){
+	cTerrain& ter_type = scenario.ter_types[ter];
+	{
+		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
+		pic_num_t pic = ter_type.picture;
+		if(pic < 400)
+			pic_ctrl.setPict(pic, PIC_TER);
+		else if(pic < 1000)
+			pic_ctrl.setPict(pic % 400, PIC_TER_ANIM);
+		else if(pic < 2000)
+			pic_ctrl.setPict(pic % 1000, PIC_CUSTOM_TER);
+		else
+			pic_ctrl.setPict(pic % 2000, PIC_CUSTOM_TER_ANIM);
+		me["pict"].setTextToNum(pic);
+	}{
+		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
+		pic_num_t pic = ter_type.map_pic;
+		if(pic < 1000)
+			pic_ctrl.setPict(pic, PIC_TER_MAP);
+		else pic_ctrl.setPict(pic, PIC_CUSTOM_TER_MAP);
+		me["map"].setTextToNum(pic);
+	}
+	me["number"].setTextToNum(ter);
+	me["name"].setText(ter_type.name);
+	me["key"].setTextToNum(ter_type.shortcut_key);
+	me["light"].setTextToNum(ter_type.light_radius);
+	me["trans"].setTextToNum(ter_type.trans_to_what);
+	me["ground"].setTextToNum(ter_type.ground_type);
+	me["trimter"].setTextToNum(ter_type.trim_ter);
+	me["trim"].setTextToNum(ter_type.trim_type);
+	fill_ter_flag_info(me, "prop", false);
+	{
+		cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me["blockage"]);
+		switch(ter_type.blockage){
+			case 0:
+				led_ctrl.setSelected("clear");
+				break;
+			case 1:
+				led_ctrl.setSelected("curtain");
+				break;
+			case 2:
+				led_ctrl.setSelected("special");
+				break;
+			case 3:
+				led_ctrl.setSelected("window");
+				break;
+			case 4:
+				led_ctrl.setSelected("obstructed");
+				break;
+			case 5:
+				led_ctrl.setSelected("opaque");
+				break;
+		}
+	}{
+		cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me["sound"]);
+		switch(ter_type.step_sound){
+			case 0:
+				led_ctrl.setSelected("step");
+				break;
+			case 1:
+				led_ctrl.setSelected("squish");
+				break;
+			case 2:
+				led_ctrl.setSelected("crunch");
+				break;
+			case 3:
+				led_ctrl.setSelected("nosound");
+				break;
+			case 4:
+				led_ctrl.setSelected("splash");
+				break;
+		}
+	}
+	if(ter_type.fly_over){
+		cLed& led_ctrl = dynamic_cast<cLed&>(me["flight"]);
+		led_ctrl.setState(led_red);
+	}
+	if(ter_type.boat_over){
+		cLed& led_ctrl = dynamic_cast<cLed&>(me["boat"]);
+		led_ctrl.setState(led_red);
+	}
+	if(ter_type.block_horse){
+		cLed& led_ctrl = dynamic_cast<cLed&>(me["horse"]);
+		led_ctrl.setState(led_red);
+	}
+	if(ter_type.special == TER_SPEC_NONE)
+		me["flag1"].setTextToNum(ter_type.flag1.s);
+	else me["flag1"].setTextToNum(ter_type.flag1.u);
+	if(false) // flag2 is never signed, apparently; but that could change?
+		me["flag2"].setTextToNum(ter_type.flag2.s);
+	else me["flag2"].setTextToNum(ter_type.flag2.u);
+	if(ter_type.special == TER_SPEC_CALL_SPECIAL || ter_type.special == TER_SPEC_CALL_SPECIAL_WHEN_USED)
+		me["flag3"].setTextToNum(ter_type.flag3.s);
+	else me["flag3"].setTextToNum(ter_type.flag3.u);
+	me["arena"].setTextToNum(ter_type.combat_arena);
 }
 
 short edit_ter_type(short which_ter) {
-	// ignore parent in Mac version
-	short item_hit,i;
-	Str255 temp_str;
-	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
-	"Blocked, Opaque"};
-	char *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
-	
-	store_which_ter = which_ter;
-	store_ter = scenario.ter_types[which_ter];
-	//make_cursor_sword();
-	
-	cd_create_dialog_parent_num(813,0);
-	printf("Created dialog.");
-	put_ter_info_in_dlog();
-	for (i = 0; i < 24; i++) {
-		get_str(temp_str,21,i + 1);
-		cd_add_label(813,32 + i,(char *) temp_str,57);
-	}
-	for (i = 0; i < 4; i++) 
-		cd_add_label(813,28 + i,sound_strs[i],35);
-	for (i = 0; i < 6; i++) 
-		cd_add_label(813,19 + i,blocked_strs[i],57);
-	cd_attach_key(813,10,0);
-	cd_attach_key(813,11,0);
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(813);
-	return 0;
+	cDialog ter_dlg("edit-terrain.xml");
+	// Attach handlers
+	ter_dlg["pict"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
+	ter_dlg["pickpict"].attachClickHandler(boost::bind(pick_picture,PIC_TER,_1,"pict","graphic",0,399,0));
+	ter_dlg["pickanim"].attachClickHandler(boost::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic",0,99,400));
+	ter_dlg["light"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,255,"light radius"));
+	ter_dlg["trans"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,65535,"\"transform to what?\""));
+	ter_dlg["ground"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,255,"ground type"));
+	ter_dlg["trimter"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,255,"trim terrain"));
+	ter_dlg["trim"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,18,"trim type"));
+	ter_dlg["prop"].attachFocusHandler(fill_ter_flag_info);
+	ter_dlg["cancel"].attachClickHandler(boost::bind(&cDialog::toast, &ter_dlg));
+	ter_dlg["arena"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,299,"ground type"));
+	// TODO: Add focus handler for key
+	// TODO: Add click handler for object, done, left, right, help
+	ter_dlg["picktrim"].attachClickHandler(boost::bind(pick_string,"trim-names.txt", _1, "trim", ""));
+	ter_dlg["pickarena"].attachClickHandler(boost::bind(pick_string,"arena-names.txt", _1, "arena", ""));
+	ter_dlg["help"].attachClickHandler(boost::bind(show_help, "ter-type-help.txt", _1, 16));
+	fill_ter_info(ter_dlg,which_ter);
+	ter_dlg.run();
+//	// ignore parent in Mac version
+//	short item_hit,i;
+//	Str255 temp_str;
+//	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
+//	"Blocked, Opaque"};
+//	char *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
+//	
+//	store_which_ter = which_ter;
+//	store_ter = scenario.ter_types[which_ter];
+//	//make_cursor_sword();
+//	
+//	cd_create_dialog_parent_num(813,0);
+//	printf("Created dialog.");
+//	put_ter_info_in_dlog();
+//	for (i = 0; i < 24; i++) {
+//		get_str(temp_str,21,i + 1);
+//		cd_add_label(813,32 + i,(char *) temp_str,57);
+//	}
+//	for (i = 0; i < 4; i++) 
+//		cd_add_label(813,28 + i,sound_strs[i],35);
+//	for (i = 0; i < 6; i++) 
+//		cd_add_label(813,19 + i,blocked_strs[i],57);
+//	cd_attach_key(813,10,0);
+//	cd_attach_key(813,11,0);
+//	
+//	item_hit = cd_run_dialog();
+//	cd_kill_dialog(813);
+//	return 0;
 }
 
 void put_monst_info_in_dlog() {

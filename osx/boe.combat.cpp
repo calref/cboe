@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -1938,7 +1938,8 @@ void do_monster_turn()
 						r1 = get_ran(1,1,6);
 						if (r1 == 3)
 							cur_monst->morale++;
-						if ((univ.party[univ.town.monst[i].target].main_status == 1)	&& (cur_monst->mobility == 1)) {
+						short targ = univ.town.monst[i].target;
+						if (targ < 6 && (univ.party[targ].main_status == 1)	&& (cur_monst->mobility == 1)) {
 							acted_yet = flee_party (i,cur_monst->cur_loc,targ_space);
 							if (acted_yet == true) take_m_ap(1,cur_monst);
 							}

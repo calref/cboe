@@ -1,6 +1,6 @@
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 //#include "item.h"
 
@@ -26,7 +26,7 @@
 #include "mathutil.h"
 #include "dlgutil.h"
 
-extern short stat_window,current_cursor,which_combat_type,current_pc;
+extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type univ.town;
@@ -44,9 +44,8 @@ extern short modeless_key[18];
 extern DialogPtr modeless_dialogs[18];
 //extern short town_size[3];
 extern short town_type;
-
+extern GWorldPtr pc_gworld;
 extern short dialog_answer;
-extern GWorldPtr pcs_gworld;
 extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
 extern cUniverse univ;
@@ -1049,8 +1048,8 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 			  		}
 			}
 
-	if (pcs_gworld == NULL)
-		pcs_gworld = load_pict(902);
+	if (pc_gworld == NULL)
+		pc_gworld = load_pict(902);
 	cd_create_dialog(987,mainPtr);
 
 	if (check_container == true)
@@ -1074,8 +1073,8 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 	item_hit = cd_run_dialog();
 	cd_kill_dialog(987);
 
-	DisposeGWorld(pcs_gworld);
-	pcs_gworld = NULL;
+	DisposeGWorld(pc_gworld);
+	pc_gworld = NULL;
 	
 	put_item_screen(stat_window,0);
 	put_pc_screen();

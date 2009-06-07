@@ -1,9 +1,8 @@
 cMonster return_monster_template(m_num_t store);
 //item_record_type convert_item (short_item_record_type s_item) ;
-__attribute__((deprecated))
-void init_scenario();
+void init_scenario() __attribute__((deprecated));
 short edit_ter_type(short which_ter);
-void edit_ter_type_event_filter (short item_hit);
+//void edit_ter_type_event_filter (short item_hit);
 bool save_ter_info();
 void put_ter_info_in_dlog();
 void put_monst_info_in_dlog();

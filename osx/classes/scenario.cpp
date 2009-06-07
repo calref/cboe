@@ -113,7 +113,6 @@ void cScenario::append(legacy::scen_item_data_type& old){
 		ter_types[i].name = old.ter_names[i];
 }
 
-__attribute__((deprecated))
 char(& cScenario::scen_strs(short i))[256]{
 	if(i == 0) return scen_name;
 	if(i == 1) return who_wrote[0];

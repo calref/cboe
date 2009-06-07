@@ -20,8 +20,6 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	std::string getText();
 	void setText(std::string what);
-	short getTextAsNum();
-	void setTextToNum(short what);
 	explicit cTextField(cDialog* parent);
 	bool isClickable();
 	virtual ~cTextField();

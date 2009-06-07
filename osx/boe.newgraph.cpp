@@ -1,6 +1,6 @@
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -50,7 +50,7 @@ extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
-extern GWorldPtr fields_gworld,boom_gworld,mixed_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld;
+extern GWorldPtr fields_gworld,boom_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld,invenbtn_gworld;
 //extern party_record_type party;
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
@@ -930,7 +930,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		TextSize(10);
 		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12,false);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
-			rect_draw_some_item(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1 - draw_mode,0);
+			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1 - draw_mode,0);
 
 		}
 

@@ -1,6 +1,6 @@
-//#inculde <Memory.h>
-#include <string.h>
-#include <stdio.h>
+//#inculde <cMemory>
+#include <cstring>
+#include <cstdio>
 
 #include "pc.global.h"
 #include "classes.h"

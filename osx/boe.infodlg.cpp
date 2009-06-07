@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -9,7 +9,7 @@
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 #include "boe.items.h"
-#include <string.h>
+#include <cstring>
 #include "boe.monster.h"
 #include "dlgtool.h"
 #include "dlgconsts.h"

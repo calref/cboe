@@ -109,7 +109,6 @@ cOutdoors::cOutdoors(){
 	
 }
 
-__attribute__((deprecated))
 char(& cOutdoors::out_strs(short i))[256]{
 	if(i == 0) return out_name;
 	if(i >= 1 && i < 9) return rect_names[i - 1];

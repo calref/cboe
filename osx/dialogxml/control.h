@@ -11,6 +11,7 @@
 
 #include <string>
 #include <exception>
+#include <boost/function.hpp>
 
 //struct cPict {
 //	short pict;
@@ -67,8 +68,10 @@ enum eControlType {
 enum eTextFont {DUNGEON, GENEVA, SILOM, MAIDENWORD};
 
 class cDialog;
-typedef bool (*click_callback_t)(cDialog&/*me*/,std::string/*id*/, eKeyMod/*mods*/);
-typedef bool (*focus_callback_t)(cDialog&/*me*/,std::string/*id*/,bool/*losing*/); // losing is true if losing focus, false if gaining focus.
+//typedef bool (*click_callback_t)(cDialog&/*me*/,std::string/*id*/, eKeyMod/*mods*/);
+//typedef bool (*focus_callback_t)(cDialog&/*me*/,std::string/*id*/,bool/*losing*/); // losing is true if losing focus, false if gaining focus.
+typedef boost::function<bool(cDialog&,std::string,eKeyMod)> click_callback_t;
+typedef boost::function<bool(cDialog&,std::string,bool)> focus_callback_t;
 
 class xHandlerNotSupported : std::exception {
 	static const char* focusMsg;
@@ -94,6 +97,7 @@ public:
 	void attachKey(cKey key);
 	void detachKey();
 	void setTextToKey();
+	bool hasKey();
 	virtual void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) = 0;
 	virtual void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) = 0;
 	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
@@ -105,6 +109,8 @@ public:
 	eControlType getType();
 	virtual void setText(std::string l);
 	virtual std::string getText();
+	long getTextAsNum();
+	void setTextToNum(long what);
 	virtual void setFormat(eFormat prop, short val) throw(xUnsupportedProp) = 0;
 	virtual short getFormat(eFormat prop) throw(xUnsupportedProp) = 0;
 	virtual bool isClickable() = 0;

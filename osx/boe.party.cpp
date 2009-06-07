@@ -14,7 +14,7 @@
 #include "boe.itemdata.h"
 #include "boe.infodlg.h"
 #include "boe.items.h"
-#include <string.h>
+#include <cstring>
 #include "boe.party.h"
 #include "boe.monster.h"
 #include "dlgtool.h"
@@ -147,7 +147,7 @@ extern location golem_m_locs[16];
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-
+extern GWorldPtr pc_gworld;
 char c_line[60];
 
 // Variables for spell selection
@@ -167,8 +167,7 @@ char c_line[60];
 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 	long store_g;
 	short store_train_mode,store_train_pc;
-	
-extern GWorldPtr pcs_gworld;
+
 extern ModalFilterUPP main_dialog_UPP;
 
 // Dialog vars
@@ -193,7 +192,6 @@ void put_pick_spell_graphics();
 
 
 //mode; // 0 - prefab 1 - regular 2 - debug
-__attribute__((deprecated))
 void init_party(short mode)
 {
 	short i,j,k,l;
@@ -324,7 +322,6 @@ void init_party(short mode)
 // Until that time, the party scen vals are uninited
 // Then, it inits the party properly for starting the scenario based
 // on the loaded scenario
-__attribute__((deprecated))
 void init_party_scen_data()
 {
 	short i,j,k,l;
@@ -3026,9 +3023,9 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 
 	make_cursor_sword();
 
-	if (pcs_gworld == NULL) {
+	if (pc_gworld == NULL) {
 		munch_pc_graphic = true;
-		pcs_gworld = load_pict(902);
+		pc_gworld = load_pict(902);
 		}
 	cd_create_dialog_parent_num(1050,parent_num);
 
@@ -3044,8 +3041,8 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 	cd_kill_dialog(1050);
 
 	if (munch_pc_graphic == true) {
-		DisposeGWorld(pcs_gworld);
-		pcs_gworld = NULL;
+		DisposeGWorld(pc_gworld);
+		pc_gworld = NULL;
 		}
 	return dialog_answer;
 }
@@ -3541,7 +3538,7 @@ void adjust_spell_menus()
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
 	
-	if (in_startup_mode == true)
+	if (in_startup_mode == true || current_pc == 6)
 		return;
 		
 	for (i = 0; i < 2; i++)

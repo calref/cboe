@@ -303,3 +303,21 @@ cControl::~cControl() {}
 eControlType cControl::getType(){
 	return type;
 }
+
+void cControl::setTextToNum(long what){
+	std::ostringstream sout;
+	sout << what;
+	setText(sout.str());
+}
+
+long cControl::getTextAsNum(){
+	std::istringstream sin(getText());
+	long n;
+	sin >> n;
+	return n;
+}
+
+bool cControl::hasKey(){
+	if(key.spec) return true;
+	return key.c != 0;
+}

@@ -59,6 +59,16 @@ title {
 	height: 72px;
 }
 
+.pict.status {
+	width: 12px;
+	height: 12px;
+}
+
+.pict.map {
+	width: 24px;
+	height: 24px;
+}
+
 .button , .led {
 	padding: 0px;
 	background-repeat: no-repeat;

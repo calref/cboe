@@ -1258,7 +1258,7 @@ void edit_scen_intro() {
 }
 
 void make_cursor_sword() {
-	set_cursor(0);
+	set_cursor(wand_curs);
 }
 
 // only used at beginning of program

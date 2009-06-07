@@ -71,6 +71,3 @@ ter_num_t get_ter_from_ground(unsigned char ground);
 void draw_startup_anim();
 short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,short buttons[3]);
 void init_dialogs();
-
-void tileImage(Rect area, GWorldPtr img, short mode=0);
-void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode=0);

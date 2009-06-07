@@ -43,14 +43,16 @@ public:
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	explicit cButton(cDialog* parent);
-	cButton(cDialog* parent,eControlType t);
 	bool isClickable();
+	void setType(eBtnType newType);
+	eBtnType getType();
 	virtual ~cButton();
 protected:
 	//friend class cDialog;
 	void draw();
 	eBtnType type;
 	click_callback_t onClick;
+	cButton(cDialog* parent,eControlType t);
 private:
 	friend class cDialog;
 	bool wrapLabel;
@@ -101,8 +103,6 @@ public:
 	void attachFocusHandler(focus_callback_t f) throw(); // activated only when the selection changes
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
-	void setSelected(std::string id);
-	std::string getSelected();
 	void disable(std::string id);
 	void enable(std::string id);
 	using cControl::show;
@@ -115,8 +115,8 @@ public:
 	bool isClickable();
 	virtual ~cLedGroup();
 	cLed& operator[](std::string id);
-	void setSelection(std::string id);
-	std::string getSelection();
+	void setSelected(std::string id);
+	std::string getSelected();
 	std::string getPrevSelection(); // The id of the element that was last selected before the selection changed to the current selection.
 	typedef std::map<std::string,cLed*>::iterator ledIter;
 protected:

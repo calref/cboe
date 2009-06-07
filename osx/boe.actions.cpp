@@ -1,5 +1,5 @@
 
-#include <math.h>
+#include <cmath>
 
 //#include "item.h"
 
@@ -2476,19 +2476,19 @@ location get_cur_direction(Point the_point)
 	the_point.v += 5;
 	the_point.h += 5;
 
-				if ((the_point.h < 135) & (the_point.v >= ((the_point.h * 34) / 10) - 293)
-					& (the_point.v <= (-1 * ((the_point.h * 34) / 10) + 663)))
-					store_dir.x--;
-				if ((the_point.h > 163) & (the_point.v <= ((the_point.h * 34) / 10) - 350)
-					& (the_point.v >= (-1 * ((the_point.h * 34) / 10) + 721)))
-					store_dir.x++;
-					
-				if ((the_point.v < 167) & (the_point.v <= (the_point.h / 2) + 102)
-					& (the_point.v <= (-1 * (the_point.h / 2) + 249)))
-					store_dir.y--;
-				if ((the_point.v > 203) & (the_point.v >= (the_point.h / 2) + 123)
-					& (the_point.v >= (-1 * (the_point.h / 2) + 268)))
-					store_dir.y++;
+	if ((the_point.h < 135) & (the_point.v >= ((the_point.h * 34) / 10) - 293)
+		& (the_point.v <= (-1 * ((the_point.h * 34) / 10) + 663)))
+		store_dir.x--;
+	if ((the_point.h > 163) & (the_point.v <= ((the_point.h * 34) / 10) - 350)
+		& (the_point.v >= (-1 * ((the_point.h * 34) / 10) + 721)))
+		store_dir.x++;
+		
+	if ((the_point.v < 167) & (the_point.v <= (the_point.h / 2) + 102)
+		& (the_point.v <= (-1 * (the_point.h / 2) + 249)))
+		store_dir.y--;
+	if ((the_point.v > 203) & (the_point.v >= (the_point.h / 2) + 123)
+		& (the_point.v >= (-1 * (the_point.h / 2) + 268)))
+		store_dir.y++;
 					
 	return store_dir;
 }

@@ -1,4 +1,4 @@
-#include <string.h>
+#include <cstring>
 #include "scen.global.h"
 #include "classes.h"
 #include <iostream>

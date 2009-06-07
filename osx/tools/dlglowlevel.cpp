@@ -6,8 +6,8 @@
  *
  */
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "dlgconsts.h"
 #include "dlglowlevel.h"

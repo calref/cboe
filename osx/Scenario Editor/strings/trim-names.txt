@@ -1,0 +1,19 @@
+Not a trim
+Wall (round off corners)
+South edge trim
+Southeast outer corner trim
+East edge trim
+Northeast outer corner trim
+North edge trim
+Northwest outer corner trim
+West edge trim
+Southwest outer corner trim
+Northeast inner corner trim
+Southeast inner corner trim
+Southwest inner corner trim
+Northwest inner corner trim
+Frills (draw edge frills)
+Road (connect with roads)
+Walkway (round off corners)
+Waterfall (both wall and water)
+City trim (connect to roads)

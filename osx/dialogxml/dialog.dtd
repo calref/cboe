@@ -10,7 +10,7 @@
 
 <!ENTITY % num 'NUMBER'>
 <!ENTITY % bool '(true|false)'>
-<!ENTITY % picttype '(blank|ter|teranim|monst|dlog|talk|scen|item|pc|field|boom|missile|full)'>
+<!ENTITY % picttype '(blank|ter|teranim|monst|dlog|talk|scen|item|pc|field|boom|missile|full|map|status)'>
 <!ENTITY % rect '
 	top			%num;						#REQUIRED
 	left		%num;						#REQUIRED

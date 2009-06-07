@@ -1,7 +1,7 @@
 
-//#include <Memory.h>
+//#include <cMemory>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include "pc.global.h"
 #include "classes.h"
 #include "pc.graphics.h" 
@@ -60,7 +60,6 @@ bool scen_items_loaded = false;
 //unsigned char template_terrain[64][64];
 
 short store_flags[3];
-extern short sword_curs;
 
 //town_record_type anim_town;
 //tiny_tr_type anim_t_d;
@@ -93,7 +92,6 @@ void handle_reg_menu(int item_hit);
 void handle_extra_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void update_item_menu();
-void set_cursor(CursHandle which_curs);
 void find_quickdraw();
 void check_sys_7();
 pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
@@ -173,6 +171,7 @@ int main(void)
 	while (All_Done == false) 
 		Handle_One_Event();
 	restore_depth();
+	clean_up_graphtool();
       return 0;
 }
 

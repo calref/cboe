@@ -6,19 +6,18 @@
  *
  */
 
-#define _GRAPHTOOL_CPP
-#include "graphtool.h"
+#define GRAPHTOOL_CPP
 #include <Quicktime/Quicktime.h>
+#include "graphtool.h"
+#include "cursors.h"
 
-//CursHandle arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
-short arrow_curs[3][3] = {
-	{8, 9, 10},
-	{11,12,13},
-	{14,15,16},
+cursor_type arrow_curs[3][3] = {
+	{NW_curs, N_curs, NE_curs},
+	{W_curs,wait_curs,E_curs},
+	{SW_curs, S_curs, SE_curs},
 };
-short sword_curs = 17, boot_curs = 18, drop_curs = 19, target_curs = 20;
-short talk_curs = 21, key_curs = 22, look_curs = 23, current_cursor = 0;
-CursHandle cursors[24] = {
+cursor_type current_cursor = sword_curs;
+CursorRef cursors[24] = {
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
@@ -27,25 +26,47 @@ void (*redraw_screen)();
 Point* offset;
 PixPatHandle bg[21];
 short geneva_font_num, dungeon_font_num;
+bool use_win_graphics = false;
+CursorRef GetCursorFromPath(std::string filename, Point hotspot);
+
+void clean_up_graphtool(){
+	for(int i = 0; i < 24; i++)
+		DisposeNSCursor(cursors[i]);
+	if(offset != NULL) delete offset;
+	CleanUp();
+}
 
 void init_graph_tool(void (*redraw_callback)(), Point* p){
 	redraw_screen = redraw_callback;
 	int i,j;
+	static const Point cursor_hs[24] = {
+		{ 4,1}, {1,14}, { 5,13}, {8,8}, {8,8}, {8,8}, {8,8}, {14,0},
+		{12,3}, {13,7}, {12, 3},
+		{9, 3}, {8, 8}, {8, 3},
+		{12,3}, {13, 7},{12, 3},
+		{ 1,1}, {3, 7}, {14, 0}, {8,8}, {7,6}, {2,3}, {6,7}
+	};
+	static const char*const edit_cursor_files[8] = {
+		"wand.gif","eyedropper.gif","brush.gif","spraycan.gif",
+		"eraser.gif","topleft.gif","bottomright.gif","hand.gif"
+	};
+	static const char*const arrow_files[3][3] = {
+		{"NW.gif","W.gif","SW.gif"},
+		{"N.gif","wait.gif","S.gif"},
+		{"NE.gif","E.gif","SE.gif"}
+	};
+	static const char*const game_cursor_files[7] = {
+		"sword.gif","boot.gif","drop.gif","target.gif",
+		"talk.gif","key.gif","look.gif"
+	};
 	if (cursors[0] == NULL) {
 		for (i = 0; i < 8; i++)
-			cursors[i] = GetCursor(130 + i);
+			cursors[i] = GetCursorFromPath(edit_cursor_files[i],cursor_hs[i]);
 		for (i = 0; i < 3; i++)
 			for (j = 0; j < 3; j++)
-				cursors[arrow_curs[i][j]] = GetCursor(100 + (i - 1) + 10 * (j - 1));
-		cursors[sword_curs] = GetCursor(120);
-		cursors[boot_curs] = GetCursor(121);
-		cursors[drop_curs] = GetCursor(122);
-		cursors[target_curs] = GetCursor(124);
-		cursors[talk_curs] = GetCursor(126);
-		cursors[key_curs] = GetCursor(127);
-		cursors[look_curs] = GetCursor(129);
-		set_cursor(sword_curs);
-		current_cursor = sword_curs;
+				cursors[arrow_curs[i][j]] = GetCursorFromPath(arrow_files[i][j],cursor_hs[arrow_curs[i][j]]);
+		for (i = 17; i < 24; i++)
+			cursors[i] = GetCursorFromPath(game_cursor_files[i - 17],cursor_hs[i]);
 	}
 	for (i = 0; i < 21; i++) 
 	    bg[i] = GetPixPat(128 + i);
@@ -76,6 +97,32 @@ unsigned int readUInt(unsigned char **ptr){
 	unsigned int ret = CFSwapInt32LittleToHost(*(unsigned int*)*ptr);
 	*ptr += 4;
 	return ret;
+}
+
+extern std::string progDir;
+GWorldPtr load_pict(std::string picture_to_get, std::string scen_name){
+	std::string filePath;
+	FSRef ref;
+	FSSpec spec;
+	if(scen_name != ""){
+		filePath = progDir + "/Blades of Exile Scenarios/" + scen_name;
+		filePath.replace(filePath.find_last_of('.'),filePath.size(),".exr");
+		filePath += '/' + picture_to_get;
+		printf(filePath.c_str());
+		printf("\n\n");
+		FSPathMakeRef((UInt8*)filePath.c_str(), &ref, NULL);
+		if(FSGetCatalogInfo(&ref, kFSCatInfoNone, NULL, NULL, &spec, NULL) != fnfErr)
+			return importPictureFileToGWorld(&spec);
+	}
+	filePath = progDir + "/Scenario Editor/graphics.exd/";
+	if(use_win_graphics) filePath += "win/";
+	else filePath += "mac/";
+	filePath += picture_to_get;
+	printf("Loading graphics sheet from: %s\n\n",filePath.c_str());
+	FSPathMakeRef((UInt8*)filePath.c_str(), &ref, NULL);
+	if(FSGetCatalogInfo(&ref, kFSCatInfoNone, NULL, NULL, &spec, NULL) != fnfErr)
+		return importPictureFileToGWorld(&spec);
+	throw std::string("Graphic ") + picture_to_get + std::string(" not found."); // TODO: Create an exception class for this
 }
 
 GWorldPtr load_pict(int picture_to_get)
@@ -202,11 +249,9 @@ GWorldPtr load_bmp(unsigned char *data, unsigned long length){
 	return newGWorld;
 }
 
-void set_cursor(short which_c) {
+void set_cursor(cursor_type which_c) {
 	current_cursor = which_c;
-	HLock ((Handle) cursors[current_cursor]);
-	SetCursor (*cursors[current_cursor]);
-	HUnlock((Handle) cursors[current_cursor]);
+	SetNSCursor(cursors[current_cursor]);
 }
 
 void restore_cursor(){
@@ -229,10 +274,10 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 	GrafPtr cur_port;
 	RGBColor	store_color;
 	
-	if (main_win == 2) {
+	//if (main_win == 2) {
 		GetBackColor(&store_color);
 		BackColor(whiteColor);
-	}
+	//}
 	
 	GetPort(&cur_port);
 	if (src_gworld == NULL) {
@@ -264,7 +309,7 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 		else CopyBits ( (BitMap*)* test1 ,
 					   (BitMap*)*test2 ,
 					   &src_rect, &targ_rect, 
-					   (masked == 10) ? addOver : 0, NULL);
+					   (masked == 10) ? addOver : srcCopy, NULL);
 		UnlockPixels(test2);
 	}  
 	else {
@@ -752,11 +797,25 @@ GWorldPtr importPictureFileToGWorld(const FSSpec *fileSpec){
 	Rect naturalBounds;
 	GraphicsImportGetNaturalBounds (gi, &naturalBounds);
 	GWorldPtr temp;
-	NewGWorld(&temp,32,&naturalBounds,NULL,GetGDevice(),noNewDevice + kNativeEndianPixMap);
+	NewGWorld(&temp,0,&naturalBounds,NULL,NULL,kNativeEndianPixMap);
 	GraphicsImportSetGWorld (gi, temp, nil);
 	GraphicsImportDraw (gi);
 	CloseComponent(gi);
 	return(temp);
+}
+
+extern std::string progDir;
+CursorRef GetCursorFromPath(std::string filename, Point hotspot){
+	std::string fullpath = progDir + "/Scenario Editor/graphics.exd/";
+	if(use_win_graphics) fullpath += "win";
+	else fullpath += "mac";
+	fullpath += "/cursors/";
+	fullpath += filename;
+	printf("Loading cursor from: %s\n\n",fullpath.c_str());
+	FSRef ref;
+	OSStatus err = FSPathMakeRef((UInt8*)fullpath.c_str(), &ref, NULL);
+	CFURLRef url = CFURLCreateFromFSRef(NULL, &ref);
+	return CreateCursorFromFile(url, hotspot.h, hotspot.v);
 }
 
 m_pic_index_t m_pic_index[] = {
@@ -981,3 +1040,56 @@ m_pic_index_t m_pic_index[] = {
 	{0, 1, 1},
 	//200
 };
+
+void tileImage(Rect area, GWorldPtr img, short mode){
+	RgnHandle clip= NewRgn();
+	RectRgn(clip,&area);
+	
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	Rect imgRect;
+	GetPortBounds(img, &imgRect);
+	
+	int imgWidth=imgRect.right-imgRect.left;
+	int imgHeight=imgRect.bottom-imgRect.top;
+	int x,y;
+	unsigned int hrep = (int)((double(area.right-area.left)/imgWidth)+0.5);
+	unsigned int vrep = (int)((double(area.bottom-area.top)/imgHeight)+0.5);
+	for(unsigned int i=0; i<vrep; i++){
+		for(unsigned int j=0; j<hrep; j++){
+			x=area.left+i*imgWidth;
+			y=area.top+j*imgHeight;
+			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,clip);
+		}
+	}
+	DisposeRgn(clip);
+}
+
+void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
+	RgnHandle clip= NewRgn();
+	RectRgn(clip,&area);
+	
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	int srcWidth=srcRect.right-srcRect.left;
+	int srcHeight=srcRect.bottom-srcRect.top;
+	int x,y;
+	unsigned int hrep = (int)((double(area.right-area.left)/srcWidth)+0.5);
+	unsigned int vrep = (int)((double(area.bottom-area.top)/srcHeight)+0.5);
+	for(unsigned int i=0; i<vrep; i++){
+		for(unsigned int j=0; j<hrep; j++){
+			x=area.left+i*srcWidth;
+			y=area.top+j*srcHeight;
+			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,clip);
+		}
+	}
+	DisposeRgn(clip);
+}

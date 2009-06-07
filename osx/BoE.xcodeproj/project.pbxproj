@@ -113,6 +113,14 @@
 		9141DAC40FCB95CA0047D3A3 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
 		9141DAC50FCB95CA0047D3A3 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
 		9141DAC60FCB95CB0047D3A3 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
+		91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B670FDB5F1000C4E957 /* choose-pict.xml */; };
+		91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B680FDB5F1000C4E957 /* choose-string.xml */; };
+		91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B690FDB5F1000C4E957 /* edit-terrain.xml */; };
+		91A32B770FDB5F6800C4E957 /* arena-names.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B720FDB5F6800C4E957 /* arena-names.txt */; };
+		91A32B780FDB5F6800C4E957 /* ter-flag1.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B730FDB5F6800C4E957 /* ter-flag1.txt */; };
+		91A32B790FDB5F6800C4E957 /* ter-flag2.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B740FDB5F6800C4E957 /* ter-flag2.txt */; };
+		91A32B7A0FDB5F6800C4E957 /* ter-flag3.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B750FDB5F6800C4E957 /* ter-flag3.txt */; };
+		91A32B7B0FDB5F6800C4E957 /* trim-names.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B760FDB5F6800C4E957 /* trim-names.txt */; };
 		91A79DC70FA797BF00A6A41F /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91A79DC60FA797BF00A6A41F /* menu.xib */; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -141,7 +149,6 @@
 		91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* pc.action.cpp */; };
 		91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
 		91B3EF4B0F969F2300BF5B67 /* pc.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */; };
-		91B3EF4D0F969F2300BF5B67 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
 		91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */; };
 		91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */; };
 		91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */; };
@@ -158,6 +165,13 @@
 		91C1FCA90FCB6F7200EBAA65 /* field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB50FB91A26001E34EA /* field.cpp */; };
 		91C1FCAA0FCB6F7200EBAA65 /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
+		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
+		91C686FA0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
+		91C686FB0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
+		91C686FC0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
+		91C688E80FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
+		91C688E90FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
+		91C688EA0FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
@@ -209,14 +223,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9141DAB40FCB94900047D3A3 /* ticpp */;
+			remoteGlobalIDString = 9141DAB40FCB94900047D3A3;
 			remoteInfo = ticpp;
 		};
 		912287110FD333AE00B21642 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9141DAB40FCB94900047D3A3 /* ticpp */;
+			remoteGlobalIDString = 9141DAB40FCB94900047D3A3;
 			remoteInfo = ticpp;
 		};
 		9141DABB0FCB95030047D3A3 /* PBXContainerItemProxy */ = {
@@ -250,6 +264,34 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		91A32B660FDB5EF100C4E957 /* Copy Dialogs */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Dialogs;
+			dstSubfolderSpec = 7;
+			files = (
+				91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */,
+				91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */,
+				91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */,
+			);
+			name = "Copy Dialogs";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91A32B710FDB5F5A00C4E957 /* Copy String Lists */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Strings;
+			dstSubfolderSpec = 7;
+			files = (
+				91A32B770FDB5F6800C4E957 /* arena-names.txt in Copy String Lists */,
+				91A32B780FDB5F6800C4E957 /* ter-flag1.txt in Copy String Lists */,
+				91A32B790FDB5F6800C4E957 /* ter-flag2.txt in Copy String Lists */,
+				91A32B7A0FDB5F6800C4E957 /* ter-flag3.txt in Copy String Lists */,
+				91A32B7B0FDB5F6800C4E957 /* trim-names.txt in Copy String Lists */,
+			);
+			name = "Copy String Lists";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91B3EF2C0F969D4700BF5B67 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +299,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				91B3EF300F969D7B00BF5B67 /* Blades of Exile Graphics in CopyFiles */,
+				91C686FC0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
 				91B3EF310F969D7B00BF5B67 /* Blades of Exile Sounds in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,8 +310,19 @@
 			dstPath = "Scenario Editor";
 			dstSubfolderSpec = 16;
 			files = (
+				91C686FB0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
 				91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */,
 				91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91C687050FD5F277000F6D01 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				91C686FA0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,6 +451,16 @@
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.cpp; path = classes/pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
 		9141DAB50FCB94900047D3A3 /* libticpp.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libticpp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		91A32B670FDB5F1000C4E957 /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-pict.xml"; path = "dialogxml/choose-pict.xml"; sourceTree = "<group>"; };
+		91A32B680FDB5F1000C4E957 /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-string.xml"; path = "dialogxml/choose-string.xml"; sourceTree = "<group>"; };
+		91A32B690FDB5F1000C4E957 /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "edit-terrain.xml"; path = "dialogxml/edit-terrain.xml"; sourceTree = "<group>"; };
+		91A32B720FDB5F6800C4E957 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "arena-names.txt"; path = "Scenario Editor/strings/arena-names.txt"; sourceTree = "<group>"; };
+		91A32B730FDB5F6800C4E957 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag1.txt"; path = "Scenario Editor/strings/ter-flag1.txt"; sourceTree = "<group>"; };
+		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag2.txt"; path = "Scenario Editor/strings/ter-flag2.txt"; sourceTree = "<group>"; };
+		91A32B750FDB5F6800C4E957 /* ter-flag3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag3.txt"; path = "Scenario Editor/strings/ter-flag3.txt"; sourceTree = "<group>"; };
+		91A32B760FDB5F6800C4E957 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "trim-names.txt"; path = "Scenario Editor/strings/trim-names.txt"; sourceTree = "<group>"; };
+		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
+		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
 		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
 		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = regtown.h; path = classes/regtown.h; sourceTree = "<group>"; };
@@ -461,6 +525,9 @@
 		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soundtool.cpp; path = tools/soundtool.cpp; sourceTree = "<group>"; };
 		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mathutil.h; path = tools/mathutil.h; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathutil.cpp; path = tools/mathutil.cpp; sourceTree = "<group>"; };
+		91C686B00FD5F217000F6D01 /* graphics.exd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = graphics.exd; path = ../rsrc/graphics.exd; sourceTree = SOURCE_ROOT; };
+		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cursors.h; path = tools/cursors.h; sourceTree = "<group>"; };
+		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cursors.m; path = tools/cursors.m; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -578,6 +645,8 @@
 				910BBAB40FB91A26001E34EA /* field.h */,
 				910BBAB80FB91ADB001E34EA /* message.h */,
 				910BBAD90FB91D2A001E34EA /* dlogutil.h */,
+				91A32BBA0FDB657800C4E957 /* dialog.results.h */,
+				91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -689,6 +758,8 @@
 				91E5C7A60F9F615400C21460 /* fileio.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
 				913D00850FA0021400184C18 /* dlgutil.cpp */,
+				91C688E70FD702B9000F6D01 /* cursors.m */,
+				912283C80FD0E16C00B21642 /* undo.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -696,6 +767,8 @@
 		913D03350FA1000200184C18 /* headers */ = {
 			isa = PBXGroup;
 			children = (
+				912283C70FD0E16B00B21642 /* undo.h */,
+				91C688E60FD702B9000F6D01 /* cursors.h */,
 				91B3F1090F9779C300BF5B67 /* graphtool.h */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.h */,
@@ -707,6 +780,56 @@
 				913D00840FA0021400184C18 /* dlgutil.h */,
 			);
 			name = headers;
+			sourceTree = "<group>";
+		};
+		91A32AFD0FDAC35D00C4E957 /* dialogs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = dialogs;
+			sourceTree = "<group>";
+		};
+		91A32AFE0FDAC36300C4E957 /* strings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = strings;
+			sourceTree = "<group>";
+		};
+		91A32AFF0FDAC37400C4E957 /* dialogs */ = {
+			isa = PBXGroup;
+			children = (
+				91A32B670FDB5F1000C4E957 /* choose-pict.xml */,
+				91A32B680FDB5F1000C4E957 /* choose-string.xml */,
+				91A32B690FDB5F1000C4E957 /* edit-terrain.xml */,
+			);
+			name = dialogs;
+			sourceTree = "<group>";
+		};
+		91A32B000FDAC37B00C4E957 /* strings */ = {
+			isa = PBXGroup;
+			children = (
+				91A32B720FDB5F6800C4E957 /* arena-names.txt */,
+				91A32B730FDB5F6800C4E957 /* ter-flag1.txt */,
+				91A32B740FDB5F6800C4E957 /* ter-flag2.txt */,
+				91A32B750FDB5F6800C4E957 /* ter-flag3.txt */,
+				91A32B760FDB5F6800C4E957 /* trim-names.txt */,
+			);
+			name = strings;
+			sourceTree = "<group>";
+		};
+		91A32B010FDAC39100C4E957 /* dialogs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = dialogs;
+			sourceTree = "<group>";
+		};
+		91A32B020FDAC39900C4E957 /* strings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = strings;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -722,6 +845,8 @@
 		91B3EED50F969BA700BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91A32B000FDAC37B00C4E957 /* strings */,
+				91A32AFF0FDAC37400C4E957 /* dialogs */,
 				91279BAD0F9CFCBA007B0D52 /* boescenario.icns */,
 				91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */,
 				91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */,
@@ -799,6 +924,8 @@
 		91B3EF0D0F969BD300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91A32B020FDAC39900C4E957 /* strings */,
+				91A32B010FDAC39100C4E957 /* dialogs */,
 				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
 				91B3EF120F969BD300BF5B67 /* bladespced.rsrc */,
 				91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */,
@@ -812,6 +939,7 @@
 				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
 				91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */,
 				91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */,
+				91C686B00FD5F217000F6D01 /* graphics.exd */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 			);
 			name = Files;
@@ -842,8 +970,6 @@
 				910BBA130FB8BE66001E34EA /* dialogs */,
 				913D03350FA1000200184C18 /* headers */,
 				913D03340FA0FFFF00184C18 /* src */,
-				912283C70FD0E16B00B21642 /* undo.h */,
-				912283C80FD0E16C00B21642 /* undo.cpp */,
 			);
 			name = tools;
 			sourceTree = "<group>";
@@ -910,6 +1036,8 @@
 		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91A32AFE0FDAC36300C4E957 /* strings */,
+				91A32AFD0FDAC35D00C4E957 /* dialogs */,
 				91279BB30F9D03B6007B0D52 /* boesave.icns */,
 				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
 				913D6C040FC57A8E00E12527 /* boeresources.icns */,
@@ -1029,6 +1157,9 @@
 			buildConfigurationList = 91B3EF440F969F0100BF5B67 /* Build configuration list for PBXNativeTarget "BoE Scenario Editor" */;
 			buildPhases = (
 				91B3EF3B0F969F0000BF5B67 /* Resources */,
+				91A32B710FDB5F5A00C4E957 /* Copy String Lists */,
+				91A32B660FDB5EF100C4E957 /* Copy Dialogs */,
+				91C687050FD5F277000F6D01 /* CopyFiles */,
 				91B3EF3C0F969F0000BF5B67 /* Sources */,
 				91B3EF3D0F969F0000BF5B67 /* Frameworks */,
 			);
@@ -1170,6 +1301,7 @@
 				912287040FD330F300B21642 /* field.cpp in Sources */,
 				912287050FD330F300B21642 /* message.cpp in Sources */,
 				912287060FD330F300B21642 /* pict.cpp in Sources */,
+				91C688E80FD702B9000F6D01 /* cursors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,7 +1345,6 @@
 				91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */,
 				91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */,
 				91B3EF4B0F969F2300BF5B67 /* pc.fileio.cpp in Sources */,
-				91B3EF4D0F969F2300BF5B67 /* pc.graphics.cpp in Sources */,
 				91279BE30F9D0F73007B0D52 /* location.cpp in Sources */,
 				91279C5A0F9D1253007B0D52 /* scenario.cpp in Sources */,
 				91279C680F9D12D6007B0D52 /* terrain.cpp in Sources */,
@@ -1240,6 +1371,8 @@
 				912286FD0FD330EC00B21642 /* field.cpp in Sources */,
 				912286FE0FD330EC00B21642 /* message.cpp in Sources */,
 				912286FF0FD330ED00B21642 /* pict.cpp in Sources */,
+				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
+				91C688E90FD702B9000F6D01 /* cursors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1289,6 +1422,7 @@
 				91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */,
 				912283C90FD0E16C00B21642 /* undo.cpp in Sources */,
 				912286F80FD330E500B21642 /* dlogutil.cpp in Sources */,
+				91C688EA0FD702B9000F6D01 /* cursors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1338,7 +1472,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_MODEL_TUNING = G4;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
@@ -1358,6 +1492,13 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-lz",
+				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -1380,7 +1521,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1399,6 +1540,13 @@
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-lz",
+				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -1432,11 +1580,6 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
-				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile";
@@ -1464,11 +1607,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1589,11 +1727,6 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
-				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile Character Editor";
@@ -1623,11 +1756,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PREBINDING = NO;
@@ -1665,11 +1793,6 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
-				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";
@@ -1706,11 +1829,6 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-lz",
-				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";

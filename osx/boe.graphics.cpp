@@ -1,6 +1,6 @@
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 //#include "item.h"
 
@@ -128,36 +128,38 @@ char light_area[13][13];
 char unexplored_area[13][13];
 
 // Declare the graphics
-GWorldPtr mixed_gworld;
-GWorldPtr pc_stats_gworld;
-GWorldPtr item_stats_gworld;
-GWorldPtr text_area_gworld;
-GWorldPtr storage_gworld;
-GWorldPtr terrain_screen_gworld;
-GWorldPtr text_bar_gworld;
-GWorldPtr orig_text_bar_gworld;
-GWorldPtr buttons_gworld;
-GWorldPtr party_template_gworld;
-GWorldPtr items_gworld;
-GWorldPtr tiny_obj_gworld;
-GWorldPtr fields_gworld;
-GWorldPtr boom_gworld;
-GWorldPtr roads_gworld;
-GWorldPtr map_gworld;
-GWorldPtr tiny_map_graphics;
-GWorldPtr missiles_gworld;
-GWorldPtr dlogpics_gworld;
-GWorldPtr anim_gworld;
-GWorldPtr talkfaces_gworld;
-GWorldPtr pc_gworld;
-GWorldPtr monst_gworld[11];
-GWorldPtr terrain_gworld[7];
+GWorldPtr status_gworld = NULL;
+GWorldPtr invenbtn_gworld = NULL;
+GWorldPtr vehicle_gworld = NULL;
+GWorldPtr pc_stats_gworld = NULL;
+GWorldPtr item_stats_gworld = NULL;
+GWorldPtr text_area_gworld = NULL;
+GWorldPtr storage_gworld = NULL; // TODO: Abolish
+GWorldPtr terrain_screen_gworld = NULL;
+GWorldPtr text_bar_gworld = NULL;
+GWorldPtr orig_text_bar_gworld = NULL;
+GWorldPtr buttons_gworld = NULL;
+GWorldPtr party_template_gworld = NULL;
+GWorldPtr items_gworld = NULL;
+GWorldPtr tiny_obj_gworld = NULL;
+GWorldPtr fields_gworld = NULL;
+GWorldPtr boom_gworld = NULL;
+GWorldPtr roads_gworld = NULL;
+GWorldPtr map_gworld = NULL;
+GWorldPtr small_ter_gworld = NULL;
+GWorldPtr missiles_gworld = NULL;
+GWorldPtr dlogpics_gworld = NULL;
+GWorldPtr anim_gworld = NULL;
+GWorldPtr talkfaces_gworld = NULL;
+GWorldPtr pc_gworld = NULL;
+GWorldPtr monst_gworld[11] = {0};
+GWorldPtr terrain_gworld[7] = {0};
 
 // Startup graphics, will die when play starts
-GWorldPtr startup_gworld;
-GWorldPtr startup_button_orig;
-GWorldPtr startup_button_g;
-GWorldPtr anim_mess;
+GWorldPtr startup_gworld = NULL;
+GWorldPtr startup_button_orig = NULL;
+GWorldPtr startup_button_g = NULL;
+GWorldPtr anim_mess = NULL;
 
 // Graphics storage vals
 short which_g_stored[STORED_GRAPHICS];
@@ -213,7 +215,7 @@ void init_dialogs(){
 		&dlogpics_gworld,
 		monst_gworld,
 		terrain_gworld,
-		&tiny_map_graphics,
+		&small_ter_gworld,
 		&fields_gworld,
 		&pc_stats_gworld,
 		&item_stats_gworld,/*
@@ -224,7 +226,7 @@ void init_dialogs(){
 		&orig_text_bar_gworld,
 		&buttons_gworld,
 		&party_template_gworld,*/
-		&mixed_gworld,
+		NULL,
 		&spec_scen_g
 	);
 	//cd_register_event_filter(823,give_password_filter);
@@ -287,7 +289,7 @@ void adjust_window_mode()
 			}
 	create_clip_region();
 	undo_clip();
-	if (overall_mode != MODE_STARTUP) {
+	if (overall_mode != MODE_STARTUP) { // TODO: This is odd – fix it
 		if (in_startup_mode == true)
 			draw_startup(0);
 		if (in_startup_mode == false)
@@ -304,12 +306,12 @@ void adjust_window_mode()
 
 void plop_fancy_startup()
 {
-	PicHandle	pict_to_draw;
+	GWorldPtr	pict_to_draw;
 	short i,j;
 	
 	GDHandle md;
 	
-	Rect whole_window;
+	Rect whole_window,from_rect;
 	Rect logo_from = {0,0,350,350};
 	Rect intro_from = {0,0,483,643};
 	GDHandle	mainScreen;
@@ -327,7 +329,7 @@ void plop_fancy_startup()
 	
 	md = GetMainDevice();
 	
-	if (fry_startup == false)  {
+	if (fry_startup == false)  { // TODO: What on earth is this for?
 		//color_pat = GetCTable(72);
 		//old_palette = NewPalette(256,color_pat,pmTolerant + pmExplicit,0x0000);
 		//GetPictInfo(pict_to_draw,&p2,1,256,0,0);
@@ -364,7 +366,7 @@ void plop_fancy_startup()
 		SetPort(oldPort);
 		*/
 		}
-	// initialize buffers and rects
+	// initialize buffers and rects TODO: Not needed
 	for (i = 0; i < STORED_GRAPHICS; i++) {
 		which_g_stored[i] = (i < 50) ? i : 0;
 		wish_list[i] = 0;
@@ -385,10 +387,14 @@ void plop_fancy_startup()
 	ForeColor(blackColor);
 	PaintRect(&whole_window);
 	
-	pict_to_draw = GetPicture(3001);
 	OffsetRect(&logo_from,(whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	DrawPicture(pict_to_draw, &logo_from);
-	ReleaseResource((Handle) pict_to_draw);	
+//	pict_to_draw = GetPicture(3001); // TODO: Read from file instead
+//	DrawPicture(pict_to_draw, &logo_from);
+//	ReleaseResource((Handle) pict_to_draw);
+	pict_to_draw = load_pict("spidlogo.png");
+	GetPortBounds(pict_to_draw,&from_rect);
+	rect_draw_some_item(pict_to_draw, from_rect, pict_to_draw, logo_from, 0, 1);
+	DisposeGWorld(pict_to_draw);
 	
 	RgnHandle wholeRegion = NewRgn();
 	GetWindowRegion(mainPtr, kWindowContentRgn, wholeRegion);
@@ -413,17 +419,17 @@ void plop_fancy_startup()
 	int delay = 220;
 	if(show_startup_splash){
 		//init_anim(0);
-		pict_to_draw = GetPicture(3000);
+		//pict_to_draw = GetPicture(3000); // TODO: Read from file instead
 
 		if (fry_startup == false) {
 			//for(i=100; i >= 0; i-=2) DoOneGammaFade(md, i);
 		
-			PaintRect(&whole_window);
-			// load and switch to new palette
-			GetPictInfo(pict_to_draw,&p,2,256,0,0);
-			new_palette = p.thePalette;
-			SetPalette(mainPtr,new_palette,false);
-			ActivatePalette(mainPtr);
+//			PaintRect(&whole_window);
+//			// load and switch to new palette
+//			GetPictInfo(pict_to_draw,&p,2,256,0,0);
+//			new_palette = p.thePalette;
+//			SetPalette(mainPtr,new_palette,false);
+//			ActivatePalette(mainPtr);
 // reerase menu
 /*	GetPort(&oldPort);
 	GetDeskTopGrafPort(&wMgrPort);
@@ -445,8 +451,12 @@ void plop_fancy_startup()
 	
 		PaintRect(&whole_window);
 		OffsetRect(&intro_from,(whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-		DrawPicture(pict_to_draw, &intro_from);
-		ReleaseResource((Handle) pict_to_draw);	
+//		DrawPicture(pict_to_draw, &intro_from);
+		//		ReleaseResource((Handle) pict_to_draw);	
+		pict_to_draw = load_pict("startsplash.png");
+		GetPortBounds(pict_to_draw,&from_rect);
+		rect_draw_some_item(pict_to_draw, from_rect, pict_to_draw, intro_from, 0, 1);
+		DisposeGWorld(pict_to_draw);
 
 //	NSetPalette(mainPtr,old_palette,pmAllUpdates);
 //	ActivatePalette(mainPtr);
@@ -507,10 +517,14 @@ void init_startup()
 {
 	startup_loaded = true;
 
-	startup_gworld = load_pict(830);
-	startup_button_orig = load_pict(832);
-	startup_button_g = load_pict(832);
-	anim_mess = load_pict(831);
+//	startup_gworld = load_pict(830);
+//	startup_button_orig = load_pict(832);
+//	startup_button_g = load_pict(832);
+//	anim_mess = load_pict(831);
+	startup_gworld = load_pict("startup.png");
+	startup_button_orig = load_pict("startbut.png");
+	startup_button_g = load_pict("startbut.png");
+	anim_mess = load_pict("startanim.png");
 }
 
 void init_animation()
@@ -821,32 +835,32 @@ void Set_up_win ()
 		SysBeep(2);
 		ExitToShell();
 		}
-	
-	temp_gworld = load_pict(800);
+	// TODO: This relates to the storage gworld, and hence should be abolished
+	temp_gworld = load_pict("ter1.png");
 	GetPortBounds(temp_gworld, &r);
 	rect_draw_some_item(temp_gworld,r,storage_gworld,r,0,0);
 	DisposeGWorld(temp_gworld);
 	
-	terrain_screen_gworld = load_pict(705);
+	terrain_screen_gworld = load_pict("terscreen.png");
 	err = NewGWorld(&party_template_gworld,  0 /*8*/,&pc_rect, NULL, NULL, kNativeEndianPixMap);
 	if (err != 0)
 		SysBeep(2);
-
-	items_gworld = load_pict(901);
-	tiny_obj_gworld = load_pict(900);
-	fields_gworld = load_pict(821);
-	roads_gworld = load_pict(822);
-	boom_gworld = load_pict(823);
-	missiles_gworld = load_pict(880);
-	dlogpics_gworld = load_pict(850);
-	
-	// possibly not ideal place for this, but...
-	for (i = 0; i < 11; i++)
-		monst_gworld[i] = load_pict(1100 + i);	
-	for (i = 0; i < 7; i++)
-		terrain_gworld[i] = load_pict(800 + i);
-	anim_gworld = load_pict(820);
-	talkfaces_gworld = load_pict(860);
+	// TODO: These should be loaded later, when a scenario is loaded. Exceptions: dialog pictures and pc graphics
+//	items_gworld = load_pict(901);
+//	tiny_obj_gworld = load_pict(900);
+//	fields_gworld = load_pict(821);
+//	roads_gworld = load_pict(822);
+//	boom_gworld = load_pict(823);
+//	missiles_gworld = load_pict(880);
+//	dlogpics_gworld = load_pict(850);
+//	
+//	// possibly not ideal place for this, but...
+//	for (i = 0; i < 11; i++)
+//		monst_gworld[i] = load_pict(1100 + i);	
+//	for (i = 0; i < 7; i++)
+//		terrain_gworld[i] = load_pict(800 + i);
+//	anim_gworld = load_pict(820);
+//	talkfaces_gworld = load_pict(860);
 
 	for (i = 0; i < 7; i++)
 		bw_pats[i] = GetPattern(128 + i * 2);
@@ -872,21 +886,16 @@ void Set_up_win ()
 
 void load_main_screen()
 {
-	if (tiny_map_graphics != NULL)
+	if (invenbtn_gworld != NULL)
 		return;
-		
-	tiny_map_graphics = load_pict(904);
-	mixed_gworld = load_pict(903);
-
-	pc_stats_gworld = load_pict(700);
-
-	item_stats_gworld = load_pict(701);
-
-	text_area_gworld = load_pict(702);
-
-	text_bar_gworld = load_pict(703);
-	orig_text_bar_gworld = load_pict(703);
-	buttons_gworld = load_pict(704);
+	
+	invenbtn_gworld = load_pict("invenbtns.png");
+	pc_stats_gworld = load_pict("statarea.png");
+	item_stats_gworld = load_pict("inventory.png");
+	text_area_gworld = load_pict("transcript.png");
+	text_bar_gworld = load_pict("textbar.png");
+	orig_text_bar_gworld = load_pict("textbar.png");
+	buttons_gworld = load_pict("buttons.png");
    
 	set_gworld_fonts(geneva_font_num);
 	
@@ -1109,7 +1118,7 @@ void draw_buttons(short mode)
 	buttons_to_draw = buttons_gworld;
 
 	store_source = GetPortPixMap(buttons_to_draw);
-	if (is_combat()) {
+	if (is_combat()) { // TODO: Draw buttons one at a time instead of singly
 		source_rect.top += 37;
 		source_rect.bottom += 37;
 		}
@@ -1518,10 +1527,10 @@ void load_town_graphics() // Setting up town monsters takes some finess, due to 
 				}
 }
 
-void update_pc_graphics()
+void update_pc_graphics() // TODO: The party_template_gworld isn't really necessary; abolish it
 {
 	short i;
-	GWorldPtr temp_gworld,temp_gworld2;
+	GWorldPtr temp_gworld;//,temp_gworld2;
 	Rect template_rect = {0,0,36,28};
 	PixMapHandle store_source, store_dest;
 	Rect	source_rect;
@@ -1532,8 +1541,9 @@ void update_pc_graphics()
 		
 	GetPort(&old_port);
 	SetPortWindowPort(mainPtr);	
-	temp_gworld = load_pict(902);
-	temp_gworld2 = load_pict(905);
+//	temp_gworld = load_pict(902);
+//	temp_gworld2 = load_pict(905);
+	temp_gworld = load_pict("pcs.png");
 
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status > 0) 
@@ -1558,7 +1568,7 @@ void update_pc_graphics()
 							&source_rect, &template_rect, 
 							0 , NULL);	
 			
-				store_source = GetPortPixMap(temp_gworld2);
+				OffsetRect(&source_rect,0,288);
 				OffsetRect(&template_rect,0,108);
 				CopyBits ( (BitMap *) *store_source ,
 							(BitMap *) *store_dest ,
@@ -1568,7 +1578,7 @@ void update_pc_graphics()
 				which_graphic_index[i] = univ.party[i].which_graphic;
 				}
 	DisposeGWorld (temp_gworld);
-	DisposeGWorld (temp_gworld2);
+	//DisposeGWorld (temp_gworld2);
 				
 	SetPort(old_port);	
 
@@ -1577,7 +1587,7 @@ void update_pc_graphics()
 
 // This one is complicated, but that's because it's optimized for efficiency.
 // Goes through, and loads graphics for anything with storage_status of 3////
-void put_graphics_in_template()
+void put_graphics_in_template() // TODO: Get rid of this! It's not necessary! Just keep everything in memory!
 {
 	GWorldPtr temp_gworld;
 	short i,j,which_position,offset;
@@ -2562,7 +2572,13 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 
 void draw_pointing_arrows() 
 {
-	Rect sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
+	//Rect sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
+	Rect sources[4] = {
+		{352,58,360,76}, // up
+		{352,20,360,38}, // left
+		{352,01,360,19}, // down
+		{352,39,360,57}  // right
+	};
 	Rect dests[8] = {{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
 		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}};
 	short i;
@@ -2571,8 +2587,8 @@ void draw_pointing_arrows()
 		|| (overall_mode == MODE_LOOK_OUTDOORS)) 
 			return;
 	for (i = 0; i < 4; i++) {
-		rect_draw_some_item (mixed_gworld,sources[i],mixed_gworld,dests[i * 2],1,1);
-		rect_draw_some_item (mixed_gworld,sources[i],mixed_gworld,dests[i * 2 + 1],1,1);
+		rect_draw_some_item (terrain_screen_gworld,sources[i],terrain_screen_gworld,dests[i * 2],1,1);
+		rect_draw_some_item (terrain_screen_gworld,sources[i],terrain_screen_gworld,dests[i * 2 + 1],1,1);
 		}
 }
 
@@ -2609,9 +2625,9 @@ void draw_targets(location center)
 	for (i = 0; i < 8; i++)
 		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == true)) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
-			OffsetRect(&dest_rect,5,5);
-			InsetRect(&dest_rect,8,12);
-			rect_draw_some_item (mixed_gworld,source_rect,mixed_gworld,dest_rect,1,1);
+			//OffsetRect(&dest_rect,5,5);
+			//InsetRect(&dest_rect,8,12);
+			rect_draw_some_item (roads_gworld,calc_rect(6,0),roads_gworld,dest_rect,1,1);
 			}
 }
 
@@ -2929,55 +2945,3 @@ void HideShowMenuBar( )
 }	
 
 */
-void tileImage(Rect area, GWorldPtr img, short mode){
-	RgnHandle clip= NewRgn();
-	RectRgn(clip,&area);
-	
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
-	
-	Rect imgRect;
-	GetPortBounds(img, &imgRect);
-	
-	int imgWidth=imgRect.right-imgRect.left;
-	int imgHeight=imgRect.bottom-imgRect.top;
-	int x,y;
-	unsigned int hrep = (int)((double(area.right-area.left)/imgWidth)+0.5);
-	unsigned int vrep = (int)((double(area.bottom-area.top)/imgHeight)+0.5);
-	for(unsigned int i=0; i<vrep; i++){
-		for(unsigned int j=0; j<hrep; j++){
-			x=area.left+i*imgWidth;
-			y=area.top+j*imgHeight;
-			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,clip);
-		}
-	}
-	DisposeRgn(clip);
-}
-
-void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
-	RgnHandle clip= NewRgn();
-	RectRgn(clip,&area);
-	
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
-	
-	int srcWidth=srcRect.right-srcRect.left;
-	int srcHeight=srcRect.bottom-srcRect.top;
-	int x,y;
-	unsigned int hrep = (int)((double(area.right-area.left)/srcWidth)+0.5);
-	unsigned int vrep = (int)((double(area.bottom-area.top)/srcHeight)+0.5);
-	for(unsigned int i=0; i<vrep; i++){
-		for(unsigned int j=0; j<hrep; j++){
-			x=area.left+i*srcWidth;
-			y=area.top+j*srcHeight;
-			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,clip);
-		}
-	}
-	DisposeRgn(clip);
-}

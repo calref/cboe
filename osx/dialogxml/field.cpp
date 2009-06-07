@@ -46,19 +46,6 @@ std::string cTextField::getText(){
 	return std::string((char*)message);
 }
 
-void cTextField::setTextToNum(short what){
-	std::ostringstream sout;
-	sout << what;
-	setText(sout.str());
-}
-
-short cTextField::getTextAsNum(){
-	std::istringstream sin(getText());
-	short n;
-	sin >> n;
-	return n;
-}
-
 bool cTextField::isClickable(){
 	return false;
 }

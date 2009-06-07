@@ -216,7 +216,6 @@ void give_error(char *text1, char *text2,short parent_num){
 short store_str_label_1, store_str_label_2, store_str_label_1b, store_str_label_2b;
 // str_label_1 & str_label_2 uysed for saving button for journal
 // 1000 + x scen 2000 + x out 3000 + x town
-__attribute__((deprecated))
 void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
 					 short str_label_2b,
 					 char *title,short sound_num,short graphic_num,short graphic_type,short parent_num){

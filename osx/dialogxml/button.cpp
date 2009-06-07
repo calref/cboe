@@ -101,8 +101,17 @@ GWorldPtr cButton::buttons[7] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 Rect cButton::btnRects[13][2];
 
 void cButton::init(){
+	static const char*const buttonFiles[7] = {
+		"dlogbtnsm.png",
+		"dlogbtnmed.png",
+		"dlogbtnlg.png",
+		"dlogbtntall.png",
+		"dlogbtnhelp.png",
+		"dlogbtnled.png",
+		"dlogbtnred.png"
+	};
 	for(int i = 0; i < 7; i++)
-		buttons[i] = load_pict(i + 2030);
+		buttons[i] = load_pict(buttonFiles[i]);
 	SetRect(&btnRects[BTN_SM][0],0,0,23,23);
 	SetRect(&btnRects[BTN_REG][0],0,0,63,23);
 	SetRect(&btnRects[BTN_LEFT][0],0,23,63,46);
@@ -267,7 +276,9 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, P
 		iter++;
 	}
 	
-	if(choices[which_clicked]->triggerClickHandler(me,curSelect,mods,where)){
+	if(which_clicked == "") return false;
+	
+	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods,where)){
 		eLedState a, b;
 		a = choices[curSelect]->getState();
 		b = choices[which_clicked]->getState();
@@ -278,7 +289,7 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, P
 			choices[which_clicked]->setState(b);
 			return false;
 		}
-		if(!choices[which_clicked]->triggerFocusHandler(me,curSelect,false)){
+		if(!choices[which_clicked]->triggerFocusHandler(me,which_clicked,false)){
 			choices[curSelect]->setState(a);
 			choices[which_clicked]->setState(b);
 			return false;
@@ -328,7 +339,17 @@ cLed& cLedGroup::operator[](std::string id){
 	return *(iter->second);
 }
 
-void cLedGroup::setSelection(std::string id){
+void cLedGroup::setSelected(std::string id){
+	if(id == "") { // deselect all
+		eLedState was = choices[curSelect]->getState();
+		choices[curSelect]->setState(led_off);
+		if(choices[curSelect]->triggerFocusHandler(*parent,curSelect,true))
+			curSelect = "";
+		else
+			choices[curSelect]->setState(was);
+		return;
+	}
+	
 	ledIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
 	
@@ -350,7 +371,7 @@ void cLedGroup::setSelection(std::string id){
 	curSelect = iter->first;
 }
 
-std::string cLedGroup::getSelection(){
+std::string cLedGroup::getSelected(){
 	return curSelect;
 }
 
@@ -364,4 +385,13 @@ void cLedGroup::draw(){
 		iter->second->draw();
 		iter++;
 	}
+}
+
+void cButton::setType(eBtnType newType){
+	if(type == BTN_LED) return; // can't change type
+	type = newType;
+}
+
+eBtnType cButton::getType(){
+	return type;
 }

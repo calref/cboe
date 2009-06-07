@@ -1,7 +1,5 @@
-__attribute__((deprecated))
-void init_party(short mode);
-__attribute__((deprecated))
-void init_party_scen_data();
+void init_party(short mode) __attribute__((deprecated));
+void init_party_scen_data() __attribute__((deprecated));
 void make_boats();
 bool create_pc(short spot,short parent_num);
 bool take_sp(short pc_num,short amt);

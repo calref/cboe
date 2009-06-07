@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include "pc.graphics.h"
 #include "pc.global.h"
@@ -31,7 +31,7 @@ extern cUniverse univ;
 
 extern WindowPtr mainPtr;
 extern bool file_in_mem;
-extern short current_cursor,dialog_answer;
+extern short dialog_answer;
 //extern long register_flag;
 
 extern GWorldPtr pc_gworld;
