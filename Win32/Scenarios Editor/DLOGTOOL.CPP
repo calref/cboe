@@ -1932,7 +1932,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			rect.bottom = rect.top + 32;
 			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: (HBITMAP)hdc)
 			  ,rect,0,draw_dest);
-			DisposeGWorld(from_gworld);
+			DeleteObject(from_gworld);
 			break;
 		}
 

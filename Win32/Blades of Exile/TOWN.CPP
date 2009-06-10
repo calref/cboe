@@ -389,8 +389,6 @@ void start_town_mode(short which_town, short entry_dir)
 	erase_specials();
 	make_town_trim(0);
 
-	load_area_graphics();
-							
 	c_town.p_loc = (entry_dir < 9) ? c_town.town.start_locs[entry_dir] : town_force_loc;
 	center = c_town.p_loc;
 	if (party.in_boat >= 0) {
@@ -561,7 +559,6 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 		erase_out_specials();
 
-		load_area_graphics();
 
 		party.stuff_done[305][0] = 0;
 			for (i = 0; i < 6; i++)
@@ -1471,9 +1468,8 @@ if (modeless_exists[5] == TRUE){
 								break;
 
 							default:
-								if (((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30) {//always true ?!?
-									// Try a little optimization
-									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
+//								if (((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30) {//always true ?!?
+									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {// Try a little optimization
 										if (out_mode == TRUE)
 											what_ter2 = out[(where.x + 1)+ 48 * party.i_w_c.x][where.y + 48 * party.i_w_c.y];
 											else what_ter2 = t_d.terrain[where.x + 1][where.y];	
@@ -1490,7 +1486,7 @@ if (modeless_exists[5] == TRUE){
 									SelectObject(hdc,map_brush[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
 									Rectangle(hdc,draw_rect.left, draw_rect.top,draw_rect.right + 1,draw_rect.bottom + 1);
 									break;
-									}
+//									}
 /*								OffsetRect(&ter_temp_from,
 									312 + 24 * ((map_pats[what_ter] - 30) / 5),
 									138 + 6 * ((map_pats[what_ter] - 30) % 5));//138 ??? <= nevermind cause never called ...
@@ -1582,7 +1578,7 @@ if (modeless_exists[5] == TRUE){
    		fry_dc(the_dialog,hdc2);
    		if ((draw_surroundings == TRUE) || (the_item != 5)) { // redraw much stuff
 			draw_dialog_graphic(the_dialog, dlogpicrect,
-				721, FALSE,0); // draw the map graphic
+				721, FALSE,0); // draw the icon map graphic
 			}
 		}
 }

@@ -5,7 +5,6 @@ void init_party(short mode);
 void init_party_scen_data();
 void make_boats() ;
 pc_record_type return_dummy_pc();
-pc_record_type create_debug_pc(short num);
 pc_record_type create_prefab_pc(short num);
 Boolean create_pc(short spot,short parent_num);
 void increase_light(short amt);

@@ -130,7 +130,6 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 	set_pc_moves();
 	pick_next_pc();	
 	center = pc_pos[current_pc];
-	load_area_graphics();
 	draw_buttons(0);
 	put_pc_screen();
 	set_stat_window(current_pc);
@@ -2575,7 +2574,7 @@ Boolean monst_cast_mage(creature_data_type *caster,short targ)
 		spell = emer_spells[level][3];
 		 
 
-	// Anything prventing spell?
+	// Anything preventing spell?
 	if ((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
@@ -3655,7 +3654,6 @@ void end_combat()
 		}
 	if (which_combat_type == 0) {
 		overall_mode = 0;
-		load_area_graphics();
 		}
 	combat_active_pc = 6;
 	current_pc = store_current_pc;

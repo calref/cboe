@@ -133,7 +133,6 @@ void init_party(short mode)
 			
 	// NOT DEBUG
 	build_outdoors();
-	update_pc_graphics();
 	get_reg_data();
 }
 
@@ -314,7 +313,6 @@ void put_party_in_scen()
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
-	update_pc_graphics();
 
 	current_pc = first_active_pc();
 	force_town_enter(scenario.which_town_start, scenario.where_start);
@@ -322,7 +320,6 @@ void put_party_in_scen()
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
 	overall_mode = MODE_TOWN;
-	load_area_graphics();
 	create_clip_region();
 	redraw_screen(0);
 	set_stat_window(0);
@@ -335,6 +332,9 @@ void put_party_in_scen()
 		if (strlen(data_store5->scen_strs[4 + j]) > 0) {
 			for (i = 0; i < 6; i++)
 				strcpy((char *) strs[i],data_store5->scen_strs[4 + i]);
+			if(scenario.intro_pic == 100)
+			custom_choice_dialog((char *) strs,2400,buttons) ;
+			else
 			custom_choice_dialog((char *) strs,-1 * (1600 + scenario.intro_pic),buttons) ;
 			j = 6;
 		}
@@ -514,7 +514,6 @@ Boolean create_pc(short spot,short parent_num)
 			adven[spot].cur_sp = adven[spot].max_sp;
 			}
 	
-	update_pc_graphics();
 	return TRUE;
 }
 
@@ -639,7 +638,7 @@ void do_xp_draw()
 
 Boolean spend_xp_event_filter (short item_hit)
 {
-	short i,j,mode,pc_num;
+	short mode,pc_num;
 
 	Boolean talk_done = FALSE;
 
@@ -2436,7 +2435,6 @@ void pc_graphic_event_filter (short item_hit)
 	switch (item_hit) {
 		case 1:
 			adven[store_graphic_pc_num].which_graphic = store_pc_graphic;
-			update_pc_graphics();
 			if (store_graphic_mode == 0)
 					dialog_not_toast = FALSE;
 				else {
@@ -2446,7 +2444,6 @@ void pc_graphic_event_filter (short item_hit)
 			break;
 
 		case 4:
-			update_pc_graphics();
 			if (store_graphic_mode == 0) {
 				if (adven[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
 				   adven[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
@@ -2811,7 +2808,7 @@ bool pc_record_type::damage(short how_much, short damage_type, short type_of_att
 					boom_space(pc_pos[which_pc],overall_mode,boom_gr[damage_type],how_much,sound_type);
 					else if (is_town()) 
 						boom_space(c_town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
-						else boom_space(c_town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
+						else boom_space(party.p_loc,100,boom_gr[damage_type],how_much,sound_type);
 				}
 				if (overall_mode != MODE_OUTDOORS)
 					FlushEvents(1);

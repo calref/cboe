@@ -78,7 +78,8 @@ void pc_record_type::kill(short type)
 				heal(200);
                }
             }
-	if (!isAlive())	current_pc = first_active_pc();
+
+        current_pc = first_active_pc();
 	
 	if (current_pc > 5) {
 		for (i = 0; i < NUM_OF_PCS; i++)

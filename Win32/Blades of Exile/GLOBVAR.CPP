@@ -566,7 +566,6 @@ RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144
 RECT startup_from[4] = {{0,0,602,274},{0,274,301,322},{301,0,579,67},{301,274,341,314}}; ////
 RECT trim_rects[8] = {{0,0,28,5},{0,31,28,36},{0,0,5,36},{24,0,28,36},
 	{0,0,5,5},{24,0,28,5},{24,31,28,36},{0,31,5,36}};  /**/
-short which_graphic_index[6] = {50,50,50,50,50,50};
 short remember_tiny_text = 300; // Remembers what's in the tiny text-bar, to prevent redrawing.
 // 50 indicates area name, other number indicates which-rect.
 // Add 200 if last mess. was in town
@@ -574,22 +573,16 @@ char light_area[13][13];
 char unexplored_area[13][13];
 // Declare the graphics
 HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld;
-HBITMAP storage_gworld,terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
-HBITMAP party_template_gworld,items_gworld,tiny_obj_gworld,fields_gworld;
+HBITMAP terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
+HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
 HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
+HBITMAP ter_anim_gworld, monsters_gworld[10], terrains_gworld[6];
 // Startup graphics, will die when play starts
 HBITMAP startup_gworld;
 HRGN clip_region;
 HBRUSH gbrush;
 HPEN gpen;
-// Graphics storage vals
-short which_g_stored[STORED_GRAPHICS];
-// 0 - 299 terrain graphic   300 + i  monster graphic i, face right  600 + i face left
-// 1000 + 100 * j + i   anim i pos j    2300 + i  combat monster graphic i, face right  2600 + i face left
-short wish_list[STORED_GRAPHICS];
-short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
-Boolean currently_loading_graphics = FALSE;
 // Variables to store trim. Makes game faster, but wastes 15K. We'll see how it works...
 char out_trim[96][96];
 char town_trim[64][64];
@@ -603,6 +596,28 @@ short dlog_pat_placed = 0;
 short current_pattern = -1;
 RECT boat_rects[4] = {{0,0,28,36}, {28,0,56,36},{56,0,84,36},{84,0,112,36}}; /**/
 Boolean gave_no_g_error = FALSE;
+unsigned char m_pic_sheet[200] = {////
+	0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,1,
+	1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,2,
+	2,2,2,2,2,2,2,2,2,2,
+	2,2,2,2,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,4,4,4,4,4,4,
+	4,4,4,4,4,4,4,4,4,4,
+	4,4,5,5,5,5,5,5,5,5,
+	5,5,5,5,5,5,5,5,5,5, //100
+	6,6,6,6,6,6,6,6,6,6,
+	6,6,6,7,7,7,7,7,7,7,
+	7,7,7,7,7,7,7,7,7,7,
+	8,8,8,8,8,8,8,8,8,8,
+	8,8,8,8,9,9,9,9,9,9,
+	9,9,9,9,9,9,9,9,9,9,
+	9,9,9,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0};
+
 unsigned char m_pic_index[200] = {////
 	1,2,3,4,5,6,7,8,9,10,
 	11,12,13,14,15,16,17,18,19,20,
@@ -851,7 +866,7 @@ Boolean can_choose_caster;
 short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 long store_g;
 short store_train_mode,store_train_pc;
-HBITMAP pcs_gworld;
+HBITMAP pcs_gworld,pc_gworld;
 // Dialog vars
 short store_mage_store ;
 short store_priest_store ;

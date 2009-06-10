@@ -1940,48 +1940,9 @@ STYLE WS_POPUP | WS_DLGFRAME
 {
  LTEXT "1_63", 1, 435, 295, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT "Classic Blades of Exile Scenario Editor Beta 1 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT "Classic Blades of Exile Scenario Editor Beta 1.1 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
  LTEXT "CREDITS : Initial coding/32-bit porting by Ormus . Aesthetic touches by Ishad Nha.", 4, 50, 227, 424, 33
  LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 271, 354, 32
  LTEXT "Blades of Exile was brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 154, 410, 51
  LTEXT "ORIGINAL CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Graphics: Andrew Hunter (Wormius@aol.com) |   Title Screen: James Ernest (ernest@speakeasy.org)", 8, 50, 82, 415, 51
 }
-
-1066 DIALOG 10, 10, 336, 64
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_84" 1, 230, 31, 80, 20
-     LTEXT "0_85" 2, 122, 31, 77, 20
-     LTEXT "0_5" 3, 54, 31, 58, 20
-     LTEXT "5_723" 4, 9, 9, 36, 36
-     LTEXT "~Do you want to save before quitting?" 5, 52, 5, 254, 18
-     }
-
-1067 DIALOG 10, 10, 336, 78
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "1_5" 1, 248, 46, 58, 20
-     LTEXT "0_83" 2, 178, 46, 63, 20
-     LTEXT "5_723" 3, 9, 9, 36, 36
-     LTEXT "Warning: If you quit now, your game will be lost." 4, 51, 5, 255, 32
-     }
-
-1070 DIALOG 10, 10, 320, 112
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     // DEFPUSHBUTTON "Go for it!" 1, 103, 41, 41, 10//, WS_GROUP | WS_TABSTOP
-     PUSHBUTTON "Exit Editor" 100, 59, 41, 42, 10//, WS_GROUP | WS_TABSTOP
-     LTEXT "Unfortunately, this program requires 8-bit Color Quickdraw to run optimally. It might work with less, or it might not work at all. Do you wish to try?" 3, 10, 7, 276, 66
-     }
-
-1071 DIALOG 10, 10, 306, 208
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     // DEFPUSHBUTTON "Yes" 1, 105, 90, 31, 10//, WS_GROUP | WS_TABSTOP
-     PUSHBUTTON "Exit Editor" 100, 61, 90, 42, 10//, WS_GROUP | WS_TABSTOP
-     PUSHBUTTON "Play as is" 3, 10, 90, 50, 10//, WS_GROUP | WS_TABSTOP
-     LTEXT "This program is best with 256 Color Quickdraw, which you have on your system. It works acceptably well with 16 colors." 4, 8, 6, 260, 64
-     LTEXT "Would you like your monitor set to 256 colors?" 5, 8, 139, 263, 31
-     LTEXT "With thousands or millions of colors, the game will only work well if you increase the memory (to do this, click on the game in the finder and hit -I)." 6, 8, 71, 259, 67
-     }
-

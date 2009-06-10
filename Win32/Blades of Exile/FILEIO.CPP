@@ -592,7 +592,6 @@ void load_file()
 			in_startup_mode = TRUE;
 			draw_startup(0);
 		}
-       	update_pc_graphics();
 	    in_scen_debug = FALSE;         
 		return;
 	}
@@ -612,13 +611,11 @@ void load_file()
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
-	update_pc_graphics();
 
     belt_present = FALSE;
     
 	if (town_restore == FALSE) {
 		center = party.p_loc;
-		load_area_graphics();
 		}
 		else {	
 			load_town(c_town.town_num,2,-1,NULL);
@@ -644,7 +641,6 @@ void load_file()
 force_wall = TRUE;fire_wall = TRUE;antimagic = TRUE;scloud = TRUE;ice_wall = TRUE;blade_wall = TRUE;
 sleep_field = TRUE;
 			center = c_town.p_loc;
-			load_area_graphics();
 			}
 
 	create_clip_region();
@@ -1348,8 +1344,6 @@ void shift_universe_left()
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y + 1,0,1,0,0,NULL);
 	build_outdoors();
 
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	SetCursor(sword_curs);
 }
 
@@ -1384,8 +1378,6 @@ void shift_universe_right()
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1,1,1,0,0,NULL);
 	build_outdoors();
 
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	SetCursor(sword_curs);
 
 }
@@ -1422,8 +1414,6 @@ void shift_universe_up()
 
 	build_outdoors();
 
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	SetCursor(sword_curs);
 
 }
@@ -1461,8 +1451,6 @@ void shift_universe_down()
 	
 	build_outdoors();
 
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	SetCursor(sword_curs);
 
 }

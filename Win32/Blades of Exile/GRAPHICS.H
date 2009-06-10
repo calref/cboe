@@ -29,18 +29,7 @@ void draw_text_area(short mode);
 void reset_text_bar();
 void draw_text_bar(short mode);
 void put_text_bar(char *str);
-void load_area_graphics();
-void add_to_wish_list(short which_g);
-Boolean reserve_graphic_num_in_array(short which_g);
-void place_graphic_num_in_array(short which_g);
 
-void add_one_graphic(short which_g);
-void add_terrain_to_wish_list(unsigned char ter);
-void load_outdoor_graphics();
-void add_monst_graphic(unsigned char m,short mode);
-void load_town_graphics();
-void update_pc_graphics();
-void put_graphics_in_template();
 void draw_terrain(short	mode);
 void place_trim(short q,short r,location where,unsigned char ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);
@@ -63,4 +52,5 @@ void lose_graphics();
 void put_anim_str();
 void pre_boom_space(location where,short mode,short type,short damage,short sound);
 
+void swap_platform_graphics();
 #endif

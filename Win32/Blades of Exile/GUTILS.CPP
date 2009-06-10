@@ -30,8 +30,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	HDC hdc;
 	HBITMAP store_bmp;
 
-	source_gworld = storage_gworld;
-
 	l.x = i; l.y = j;
 	if ((supressing_some_spaces == TRUE) &&
 		(same_point(l,ok_space[0]) == FALSE) &&
@@ -58,11 +56,12 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 	if (terrain_to_draw >= 10000) { // force using a specific graphic
  		if (terrain_there[i][j] == terrain_to_draw - 10000)
  			return;
+ 		source_gworld = terrains_gworld[(terrain_to_draw -10000) / 50];
  		terrain_there[i][j] = terrain_to_draw - 10000;
 		source_rect = return_item_rect(terrain_to_draw - 10000);
 		anim_type = -1;
 		}
-		else if (terrain_pic[terrain_to_draw] >= 2000) { // custom
+		else if (terrain_pic[terrain_to_draw] >= 2000) { // animated custom
 			source_gworld = spec_scen_g;
 			source_rect = get_custom_rect(terrain_pic[terrain_to_draw] - 2000 + (anim_ticks % 4));
 			anim_type = 0;
@@ -74,7 +73,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
 			terrain_there[i][j] = -1;
 			}
 		else if (terrain_pic[terrain_to_draw] >= 400) { // animated
-			source_rect = return_item_rect(terrain_pic[terrain_to_draw] + 600 + 100 * (anim_ticks % 4));
+            source_gworld = ter_anim_gworld;
+            source_rect = return_item_rect(terrain_pic[terrain_to_draw]);
 			terrain_there[i][j] = -1;
 			anim_type = 0;
 			}
@@ -85,7 +85,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest)
  						}
  					terrain_there[i][j] = terrain_pic[terrain_to_draw];
  					}
-				source_rect = return_item_rect(terrain_pic[terrain_to_draw]);
+                source_gworld = terrains_gworld[(terrain_pic[terrain_to_draw]) / 50];
+                source_rect = return_item_rect(terrain_pic[terrain_to_draw]);
 				anim_type = -1;
 				}
 
@@ -106,6 +107,7 @@ void draw_monsters()
 	short width,height;
 	RECT source_rect,to_rect;
 	location where_draw,store_loc;
+	HBITMAP source_gworld;
 
 	short picture_wanted;
 	unsigned char ter;
@@ -146,10 +148,23 @@ void draw_monsters()
 							}
 						if (picture_wanted < 1000) {
 							for (k = 0; k < width * height; k++) {
+                                if (picture_wanted == 73 && k == 1){//drake special case (split on two sheets)
+                                source_gworld = monsters_gworld[4];
+                                source_rect = get_monster_template_rect(20,
+						        (party.out_c[i].direction < 4) ? 0 : 1,0);
+                                }
+                                else if (picture_wanted == 101 && k == 1){//bear special case (split on two columns)
+                                source_gworld = monsters_gworld[5];
+                                source_rect = get_monster_template_rect(10,
+						        (party.out_c[i].direction < 4) ? 0 : 1,0);
+                                }
+                                else{
+                                source_gworld = monsters_gworld[m_pic_sheet[picture_wanted]];
 								source_rect = get_monster_template_rect(party.out_c[i].what_monst.monst[j],
 								  (party.out_c[i].direction < 4) ? 0 : 1,k);
+                                }
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								rect_draw_some_item(storage_gworld, source_rect, small_temp_gworld,to_rect, 0, 0); 			
+								rect_draw_some_item(source_gworld, source_rect, small_temp_gworld,to_rect, 0, 0); 			
 								source_rect = to_rect;
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(small_temp_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0);
@@ -178,8 +193,22 @@ void draw_monsters()
 						Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 						}
 					if (c_town.monst.dudes[i].m_d.picture_num < 1000) {
+                        if (c_town.monst.dudes[i].m_d.picture_num == 73 && k == 1){//drake special case (split on two sheets)
+                        source_gworld = monsters_gworld[4];
+                        source_rect = get_monster_template_rect(20,
+						 ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),0);
+                        }
+                        else if (c_town.monst.dudes[i].m_d.picture_num == 101 && k == 1){//bear special case (split on two columns)
+                                source_gworld = monsters_gworld[5];
+                                source_rect = get_monster_template_rect(10,
+						        
+						 ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),0);
+                            }
+                        else{
+                        source_gworld = monsters_gworld[m_pic_sheet[c_town.monst.dudes[i].m_d.picture_num]];
 						source_rect = get_monster_template_rect(c_town.monst.dudes[i].number,
 						 ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),k);
+                        }
 						ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 						// in bed?
 						if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
@@ -189,7 +218,7 @@ void draw_monsters()
 							&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
 							(width == 1) && (height == 1)) ////
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0);
-							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+							else Draw_Some_Item(source_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 							}
 					}
 				}
@@ -214,9 +243,22 @@ void draw_monsters()
 								Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							if (c_town.monst.dudes[i].m_d.picture_num < 1000) {
+                            if (c_town.monst.dudes[i].m_d.picture_num == 73 && k == 1){//drake special case (split on two sheets)
+                                source_gworld = monsters_gworld[4];
+                                source_rect = get_monster_template_rect(20,
+						        ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),0);
+                                }
+                                else if (c_town.monst.dudes[i].m_d.picture_num == 101 && k == 1){//bear special case (split on two columns)
+                                source_gworld = monsters_gworld[5];
+                                source_rect = get_monster_template_rect(10,
+						 ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),0);
+                            }
+                                else{
+                                source_gworld = monsters_gworld[m_pic_sheet[c_town.monst.dudes[i].m_d.picture_num]];
 								source_rect = get_monster_template_rect(c_town.monst.dudes[i].number,
 								 ((c_town.monst.dudes[i].m_d.direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0)
 								 ,k);
+                                }								 
 								ter = t_d.terrain[c_town.monst.dudes[i].m_loc.x][c_town.monst.dudes[i].m_loc.y];
 								if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 									(scenario.ter_types[ter].picture == 143) && 
@@ -225,7 +267,7 @@ void draw_monsters()
 									&& ((c_town.monst.dudes[i].active == 1) || (monst_target[i] == 6)) &&
 									(width == 1) && (height == 1))
 										draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10230,0); ////
-										else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+										else Draw_Some_Item(source_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 								}
 							}
 						}
@@ -253,10 +295,10 @@ void draw_pcs(location center,short mode)
 				where_draw.y = pc_pos[i].y - center.y + 4;
 				source_rect = get_party_template_rect(i,(pc_dir[i] < 4) ? 0 : 1);
 				if (combat_posing_monster == i)
-					OffsetRect(&source_rect,0,108);
+					OffsetRect(&source_rect,280,0);
 					
 				if (mode == 0)
-					Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
+					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 
 					
 				if ((current_pc == i) && (mode == 1) && (monsters_going == FALSE))
 					frame_space(pc_pos[current_pc],1,1,1);
@@ -270,10 +312,10 @@ void draw_pcs(location center,short mode)
 		where_draw.y = pc_pos[current_pc].y - center.y + 4;
 		source_rect = get_party_template_rect(current_pc,(pc_dir[current_pc] < 4) ? 0 : 1);
 				if (combat_posing_monster == current_pc)
-					OffsetRect(&source_rect,0,108);
+					OffsetRect(&source_rect,280,0);
 
 		if (mode == 0)
-			Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+            Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 	
 		}
 }
 
@@ -501,7 +543,7 @@ void draw_party_symbol(location center)
 			// now wedge in bed graphic
 			if ((is_town()) && (scenario.ter_types[t_d.terrain[c_town.p_loc.x][c_town.p_loc.y]].picture == 143))
 				draw_one_terrain_spot((short) target.x,(short) target.y,10230,0);
-				else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
+                else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
 		else if (party.in_boat >= 0) {
 				source_rect = boat_rects[dir_array[party.direction]];
@@ -519,29 +561,17 @@ void draw_party_symbol(location center)
 RECT return_item_rect(short wanted)
 {
 	RECT orig_rect = {0,0,28,36};
-	short i;
-	if (wanted < 50) {
-		OffsetRect(&orig_rect,28 * (wanted % 10),36 * (wanted / 10));
+	short ter;
+	if (wanted >= 400) {
+        ter = wanted - 400;
+		OffsetRect(&orig_rect, 112 * (ter / 5) + 28 * (anim_ticks % 4), 36 * (ter % 5));
 		return orig_rect;
 		}
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if (which_g_stored[i] == wanted) {
-			OffsetRect(&orig_rect,28 * (i % 10),36 * (i / 10));
+	else{
+            ter = wanted % 50;
+			OffsetRect(&orig_rect,28 * (ter % 10),36 * (ter / 10));
 			return orig_rect;
-			}
-	// oops it's not here. better try to add it.
-	add_one_graphic(wanted);
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if (which_g_stored[i] == wanted) {
-			OffsetRect(&orig_rect,28 * (i % 10),36 * (i / 10));
-			return orig_rect;
-			}
-	// oh well.
-	if (gave_no_g_error == FALSE) {
-		give_error("Blades of Exile doesn't have enough memory to show all the graphics needed. Some things may look like cave floor. The game can still be played safely - restarting isn't necessary.","",0);
-		gave_no_g_error = TRUE;
 		}
-	return orig_rect;
 }
 
 // Give the position of the monster graphic in the template in memory
@@ -551,14 +581,20 @@ RECT get_monster_template_rect (unsigned char type_wanted,short mode,short which
 	RECT store_rect = {0,0,28,36};
 
 	short picture_wanted;
-	short adj = 0;
+//	short adj = 0;
 	
-	if (mode >= 10) {adj = 2000; mode -= 10;}
+//	if (mode >= 10) {adj = 2000; mode -= 10;}
 	picture_wanted = get_monst_picnum(type_wanted);
 	if (picture_wanted >= 1000)
 		return store_rect;
-	picture_wanted = m_pic_index[picture_wanted] + which_part;
-	return return_item_rect(300 + picture_wanted + (300 * mode) + adj);
+	picture_wanted = m_pic_index[picture_wanted];// + which_part;
+	picture_wanted = picture_wanted % 20;
+    if(mode >= 10)
+        OffsetRect(&store_rect, 112 + 56 * (picture_wanted / 10) + 28 * (mode-10), 36 * ((picture_wanted % 10) + which_part));
+    else
+        OffsetRect(&store_rect, 56 *  (picture_wanted / 10) + 28 * mode, 36 * ((picture_wanted % 10)+ which_part));
+    
+	return store_rect;
 }
 
 

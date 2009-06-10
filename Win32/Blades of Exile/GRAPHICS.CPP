@@ -48,11 +48,6 @@ void plop_fancy_startup()
 	if (done_fancy_startup_once == FALSE)
 	{
 		// initialize buffers and rects
-		for (i = 0; i < STORED_GRAPHICS; i++)
-		{
-			storage_status[i] = which_g_stored[i] = (i < 50) ? i : 0;
-			wish_list[i] = 0;
-		}
 		
 		for (i = 0; i < 9; i++)
 			for (j = 0; j < 9; j++)
@@ -225,18 +220,17 @@ void draw_startup_stats()
 			
 			if (adven[i].main_status > MAIN_STATUS_ABSENT)
 			{
-				from_rect = party_from; // width = 28, height = 36
+				from_rect = get_party_template_rect(i,0);
 				// 1) 0 right, 36 down
 				// 2) 0 r, 72 down
 				// 3) 0 r, 108 down
 				// 4) 56 right, 36 down
 				// 5) 56 r, 72 down
 				// 6) 56 r, 108 down
-				OffsetRect(&from_rect, 56 * (i / 3), 36 * (i % 3));
 				
 				to_rect = party_from; // width = 28, height = 36
 				OffsetRect(&to_rect,pc_rect.left,pc_rect.top + 2);
-				rect_draw_some_item(party_template_gworld,from_rect,party_template_gworld,to_rect,0,1);
+				rect_draw_some_item(pc_gworld,from_rect,NULL,to_rect,0,1);    
 				InflateRect(&to_rect,1,1);
             	OffsetRect(&to_rect,ulx,uly);
 				FrameRect(main_dc,&to_rect,hbrush);
@@ -410,10 +404,8 @@ void end_startup()
 // This loads the graphics at the top of the game.
 void Set_up_win ()
 {
-	RECT temp_rect = {0,0,280,0};
 	RECT map_rect = {0,0,384,384};
 	RECT pc_rect = {0,0,113,216};
-	HBITMAP temp_gworld;
 	short i,j;
 	RECT r = {0,0,280,180}; /**/
 	RECT bg_from[9] = {{0,168,8,176},{23,206,31,214},{32,168,40,176},{102,174,110,182},	
@@ -428,16 +420,8 @@ void Set_up_win ()
 	checker_brush = CreatePatternBrush(checker_bitmap);
 	bw_bitmap = CreateBitmap(72,72,1,1,NULL);
 
-	temp_rect.bottom = (STORED_GRAPHICS / 10) * 36;
-	storage_gworld = CreateCompatibleBitmap(main_dc,temp_rect.right,temp_rect.bottom);
-	
-	temp_gworld = load_pict(800,main_dc);
-	rect_draw_some_item(temp_gworld,r,storage_gworld,r,0,0);
-	DeleteObject(temp_gworld);
-	
 	terrain_screen_gworld = load_pict(705,main_dc);
 
-	party_template_gworld = CreateCompatibleBitmap(main_dc,pc_rect.right,pc_rect.bottom);
 	small_temp_gworld = CreateCompatibleBitmap(main_dc,28,36);
 
 	items_gworld = load_pict(901,main_dc);
@@ -446,7 +430,18 @@ void Set_up_win ()
 	missiles_gworld = load_pict(880,main_dc);
 	dlogpics_gworld = load_pict(850,main_dc);
 	mixed_gworld = load_pict(903,main_dc);
+	//let's load the remaining sheets in memory
 
+    pc_gworld = load_pict(902,main_dc);
+
+	ter_anim_gworld = load_pict(820, main_dc);
+    	
+	for(i=0;i<10;i++)
+        monsters_gworld[i] = load_pict(1100+i, main_dc);
+
+    for(i=0;i<6;i++)
+        terrains_gworld[i] = load_pict(800+i, main_dc);
+    //end
 	dialog_pattern_gworld = CreateCompatibleBitmap(main_dc,192,256);
 	pattern_gworld = CreateCompatibleBitmap(main_dc,192,256);
 	status_pattern_gworld = CreateCompatibleBitmap(main_dc,256,128);
@@ -505,9 +500,7 @@ void lose_graphics()
 
 	DeleteObject(checker_bitmap);
 	DeleteObject(checker_brush);
-	DeleteObject(storage_gworld);
 	DeleteObject(terrain_screen_gworld);
-	DeleteObject(party_template_gworld);
 	DeleteObject(items_gworld);
 	DeleteObject(tiny_obj_gworld);
 	DeleteObject(fields_gworld);
@@ -517,6 +510,15 @@ void lose_graphics()
 	DeleteObject(dlg_buttons_gworld);
 	DeleteObject(map_gworld);
 	DeleteObject(small_temp_gworld);
+
+    DeleteObject(pc_gworld);
+    DeleteObject(ter_anim_gworld);
+
+	for(i=0;i<10;i++)
+	   DeleteObject(monsters_gworld[i]);
+	for(i=0;i<6;i++)
+	   DeleteObject(terrains_gworld[i]);
+	
 	DeleteDC(main_dc3);
 	DeleteDC(main_dc2);
 	DeleteObject(font);
@@ -524,6 +526,7 @@ void lose_graphics()
 	DeleteObject(underline_font);
 	DeleteObject(italic_font);
 	DeleteObject(bold_font);
+    RemoveFontResource("maidword.ttf"); // remove the font from the system font table
 	for (i = 0; i < 9; i++)
 	{
 		DeleteObject(bg_bitmap[i]);
@@ -872,439 +875,7 @@ void put_text_bar(char *str)
 	rect_draw_some_item (text_bar_gworld, win_from_rects[4], text_bar_gworld, win_to_rects[4], 0, 1);
 }
 
-// This is called when a new situation is entered. It figures out what graphics are needed,
-// sets up which_g_stored, and loads them.
-void load_area_graphics()
-{
-	short i;
-	
-	currently_loading_graphics = TRUE;
-	
-	// Set all graphics as loseable
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if (storage_status[i] == 1)
-			storage_status[i] = 2;
-	for (i = 0; i < STORED_GRAPHICS; i++)
-		wish_list[i] = 0;
-		
-	// Build wish list
-	if (is_out())
-		load_outdoor_graphics();
-	if ((is_town()) || (is_combat()))
-		load_town_graphics();
-	
-	// Reserve all in wish list not taken
-	for (i = 0; i < STORED_GRAPHICS; i++)
-		if (wish_list[i] > 49)
-			if (reserve_graphic_num_in_array(wish_list[i]) == TRUE)
-				wish_list[i] = 0;
-				
-	// Place all graphics not found in array.
-	for (i = 0; i < STORED_GRAPHICS; i++)
-		if (wish_list[i] > 49) {
-			place_graphic_num_in_array(wish_list[i]);
-			wish_list[i] = 0;
-			}
-			
-	// Finally, load graphics.
-	put_graphics_in_template();
-	
-	currently_loading_graphics = FALSE;
-}
-
-void add_to_wish_list(short which_g)
-{
-	short i;
-
-	if (which_g < 50) return;
-	
-	for (i = 0; i < STORED_GRAPHICS; i++)
-	{
-		if (wish_list[i] == which_g) return;
-		if (wish_list[i] == 0)
-		{
-			wish_list[i] = which_g;
-			return;
-		}
-	}
-	add_string_to_buf("No room for graphic 1.");
-}
-
-// Used to set up array. If graphic there, sets it to be saved, otherwise leaves.
-// Returns TRUE is already there
-Boolean reserve_graphic_num_in_array(short which_g)
-{
-	short i;
-
-	if (which_g < 50)
-		return TRUE;
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if (which_g_stored[i] == which_g) {
-			storage_status[i] = 1;
-			return TRUE;
-			}
-	return FALSE;
-}
-
-// Otherwise, puts in array. Note ... if graphic is alreayd here and locked (i.e. 
-// storage status is 1, this will add a new copy.
-void place_graphic_num_in_array(short which_g)
-{
-	short i;
-
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if ((storage_status[i] == 2) || (storage_status[i] == 0)) {
-			which_g_stored[i] = which_g;
-			storage_status[i] = 3;
-			return;
-			}
-	// if we get here, couldn't find a space. Time to flush excess crap.
-	
-	if (currently_loading_graphics == FALSE)
-		load_area_graphics(); // calling this is nice and fast, because game won't try to reload 
-			// graphics already there. It'll only purge the trash.
-	
-	// try again
-	for (i = 50; i < STORED_GRAPHICS; i++)
-		if ((storage_status[i] == 2) || (storage_status[i] == 0)) {
-			which_g_stored[i] = which_g;
-			storage_status[i] = 3;
-			return;
-			}
-	add_string_to_buf("No room for graphic 2.");
-	print_nums(0,0,which_g);
-}
-
-void add_one_graphic(short which_g)
-{
-	short i;
-	for (i = 0; i < STORED_GRAPHICS; i++) 
-		if (which_g_stored[i] == which_g) {
-			// Good. We got it. Now lock it and leave
-			storage_status[i] = 1;
-			return;	
-			}
-			
-	// otherwise, load it in
-	place_graphic_num_in_array(which_g);
-	put_graphics_in_template();
-}
-
-
-void add_terrain_to_wish_list(unsigned char ter)
-{
-	if (terrain_pic[ter] >= 1000) 
-		return;
-	else if (terrain_pic[ter] >= 400)
-	{
-		add_to_wish_list(600 + terrain_pic[ter]);
-		add_to_wish_list(700 + terrain_pic[ter]);
-		add_to_wish_list(800 + terrain_pic[ter]);
-		add_to_wish_list(900 + terrain_pic[ter]);
-	}
-	else switch (terrain_pic[ter]) {
-
-			case 143:
-				add_to_wish_list(230);			
-				add_to_wish_list(143);			
-				break;
-			case 213: case 214:
-				add_to_wish_list(213);			
-				add_to_wish_list(214);						
-				break;
-
-			case 215:
-				add_to_wish_list(215);
-				add_to_wish_list(218);
-				add_to_wish_list(219);
-				add_to_wish_list(220);
-				add_to_wish_list(221);
-				break;
-			case 216:
-				add_to_wish_list(216);
-				add_to_wish_list(222);
-				add_to_wish_list(223);
-				add_to_wish_list(224);
-				add_to_wish_list(225);
-				break;
-			case 68: case 69:
-				add_to_wish_list(68);			
-				add_to_wish_list(69);						
-				break;
-			case 86: case 87:
-				add_to_wish_list(86);			
-				add_to_wish_list(87);						
-				break;
-				
-			default:
-				add_to_wish_list((short) terrain_pic[ter]);
-				break;
-			}
-}
-
-void load_outdoor_graphics()
-{
-	short l,m,i,j;
-	short pict;
-
-	for (i = 0; i < 96; i++)
-		for (j = 0; j < 96; j++) 
-			add_terrain_to_wish_list(out[i][j]);
-
-	for (l = 0; l < 2; l++)
-	for (m = 0; m < 2; m++) 
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 7; j++)
-			if (outdoors[l][m].wandering[i].monst[j] != 0) {
-				pict = get_monst_picnum(outdoors[l][m].wandering[i].monst[j]);
-				//add_monst_graphic(pict,0);
-				add_monst_graphic(outdoors[l][m].wandering[i].monst[j],0);
-
-				j = 8;
-				}
-		for (j = 0; j < 7; j++)
-			if (outdoors[l][m].special_enc[i].monst[j] != 0) {
-				pict = get_monst_picnum(outdoors[l][m].special_enc[i].monst[j]);
-				//add_monst_graphic(pict,0);
-				add_monst_graphic(outdoors[l][m].special_enc[i].monst[j],0);
-				j = 8;
-				}
-		}
-
-	for (i = 0; i < 10; i++)
-		if (party.out_c[i].exists == TRUE)
-			for (j = 0; j < 7; j++)
-				if (party.out_c[i].what_monst.monst[j] != 0) {
-					pict = get_monst_picnum(party.out_c[i].what_monst.monst[j]);
-					//add_monst_graphic(pict, 0);
-					add_monst_graphic(party.out_c[i].what_monst.monst[j], 0);
-					j = 8;
-					}
-}
-
-void add_monst_graphic(unsigned char m,short mode)
-// mode 0 - just put in list, 1 - actually add graphics
-{
-	short x,y,i,pict;
-	get_monst_dims(m,&x,&y);
-	for (i = 0; i < x * y; i++) {
-		pict = get_monst_picnum(m);
-		if (pict >= NUM_MONST_G)
-			return;
-		pict = m_pic_index[pict];
-		if (mode == 0) {
-			add_to_wish_list(300 + pict + i);
-			add_to_wish_list(600 + pict + i);
-			add_to_wish_list(2300 + pict + i);
-			add_to_wish_list(2600 + pict + i);
-			}
-			else {
-				add_one_graphic(300 + pict + i);
-				add_one_graphic(600 + pict + i);
-				add_one_graphic(2300 + pict + i);
-				add_one_graphic(2600 + pict + i);
-				}
-		}
-}
-
-void load_town_graphics() // Setting up town monsters takes some finess, due to the flexibility
-					// of the situation
-// This can be used for town or beginning out outdoor combat
-{
-	short i,j;
-	
-	for (i = 0; i < town_size[town_type]; i++)
-		for (j = 0; j < town_size[town_type]; j++) 
-			if (is_combat())
-				add_terrain_to_wish_list(combat_terrain[i][j]);
-				else add_terrain_to_wish_list(t_d.terrain[i][j]);
-
-	for (i = 0; i < T_M; i++)
-		if ((c_town.monst.dudes[i].number != 0) && (c_town.monst.dudes[i].active > 0))
-			add_monst_graphic(c_town.monst.dudes[i].number,0);
-	if (is_town())
-		for (i = 0; i < 4; i++)
-			for (j = 0; j < 4; j++) {
-				add_monst_graphic(c_town.town.wandering[i].monst[j],0);
-				}
-}
-
-void update_pc_graphics()
-{
-	short i;
-	HBITMAP temp_gworld;
-	RECT template_rect = {0,0,28,36}; /**/
-	RECT	source_rect;
-
-	if (party_in_memory == FALSE)
-		return;
-
-	temp_gworld = load_pict(902,main_dc);
-
-	for (i = 0; i < 6; i++)
-		if (adven[i].main_status > MAIN_STATUS_ABSENT) 
-			if (adven[i].which_graphic != which_graphic_index[i]) {
-				template_rect.left = (i / 3) * 56;
-				template_rect.right = template_rect.left + 56;
-				template_rect.top = (i % 3) * 36;
-				template_rect.bottom = template_rect.top + 36;
-
-				source_rect.left = (adven[i].which_graphic / 8) * 56;
-				source_rect.right = source_rect.left + 56;
-				source_rect.top = 36 * (adven[i].which_graphic % 8);
-				source_rect.bottom = 36 * (adven[i].which_graphic % 8) + 36;
-				
-				rect_draw_some_item(temp_gworld,source_rect,party_template_gworld,template_rect,0,0);
-				
-				OffsetRect(&source_rect,280,0);
-				OffsetRect(&template_rect,0,108);
-				rect_draw_some_item(temp_gworld,source_rect,party_template_gworld,template_rect,0,0);
-			
-				which_graphic_index[i] = adven[i].which_graphic;
-				}
-	DeleteObject (temp_gworld);
-
-}
-
-
-// This one is complicated, but that's because it's optimized for efficiency.
-// Goes through, and loads graphics for anything with storage_status of 3
-void put_graphics_in_template()
-{
-	HBITMAP temp_gworld;
-	short i,j,which_position,offset;
-	Boolean this_graphic_needed = FALSE;
-	RECT from_rect,to_rect;
-	
-	// First, load all terrains
-	for (j = 1; j < 6; j++) {
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= j * 50) && (which_g_stored[i] < j * 50 + 50) &&
-				(storage_status[i] == 3)) {
-					this_graphic_needed = TRUE;
-					}
-		if (this_graphic_needed == TRUE) {
-			temp_gworld = load_pict(800 + j,main_dc);
-			for (i = 50; i < STORED_GRAPHICS; i++)
-				if ((which_g_stored[i] >= j * 50) && (which_g_stored[i] < j * 50 + 50) &&
-					(storage_status[i] == 3)) {
-					which_position = which_g_stored[i] - j * 50;
-					from_rect = calc_rect(which_position % 10,which_position / 10);
-					to_rect = calc_rect(i % 10,i / 10);
-				
-					rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-					storage_status[i] = 1;
-					}
-			DeleteObject (temp_gworld);		
-			}
-		this_graphic_needed = FALSE;
-		}
-
-	// Now, load all monsters
-	for (j = 0; j < 10; j++) {
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= 300 + j * 20) && (which_g_stored[i] < 300 + j * 20 + 20) &&
-				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= 600 + j * 20) && (which_g_stored[i] < 600 + j * 20 + 20) &&
-				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
-
-		if (this_graphic_needed == TRUE) {
-			temp_gworld = load_pict(1100 + j,main_dc);
-			for (i = 50; i < STORED_GRAPHICS; i++)
-				if ((which_g_stored[i] >= 300 + j * 20) && (which_g_stored[i] < 300 + j * 20 + 20) &&
-					(storage_status[i] == 3)) {
-					which_position = which_g_stored[i] % 20;
-					from_rect = calc_rect((which_position / 10) * 2,which_position % 10);
-					to_rect = calc_rect(i % 10,i / 10);
-				
-					rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-				
-					storage_status[i] = 1;
-					}
-			for (i = 50; i < STORED_GRAPHICS; i++)
-				if ((which_g_stored[i] >= 600 + j * 20) && (which_g_stored[i] < 600 + j * 20 + 20) &&
-					(storage_status[i] == 3)) {
-					which_position = which_g_stored[i] % 20;
-					from_rect = calc_rect((which_position / 10) * 2 + 1,which_position % 10);
-					to_rect = calc_rect(i % 10,i / 10);
-				
-					rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-				
-					storage_status[i] = 1;
-					}
-			DeleteObject (temp_gworld);		
-			}
-		this_graphic_needed = FALSE;
-		}
-
-	// Now, load all monster combat poses
-	for (j = 0; j < 10; j++) {
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= 2300 + j * 20) && (which_g_stored[i] < 2300 + j * 20 + 20) &&
-				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= 2600 + j * 20) && (which_g_stored[i] < 2600 + j * 20 + 20) &&
-				(storage_status[i] == 3))
-					this_graphic_needed = TRUE;
-
-		if (this_graphic_needed == TRUE) {
-			temp_gworld = load_pict(1200 + j,main_dc);
-			for (i = 50; i < STORED_GRAPHICS; i++)
-				if ((which_g_stored[i] >= 2300 + j * 20) && (which_g_stored[i] < 2300 + j * 20 + 20) &&
-					(storage_status[i] == 3)) {
-					which_position = which_g_stored[i] % 20;
-					from_rect = calc_rect((which_position / 10) * 2 + 4,which_position % 10);
-					to_rect = calc_rect(i % 10,i / 10);
-				
-					rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-				
-					storage_status[i] = 1;
-					}
-			for (i = 50; i < STORED_GRAPHICS; i++)
-				if ((which_g_stored[i] >= 2600 + j * 20) && (which_g_stored[i] < 2600 + j * 20 + 20) &&
-					(storage_status[i] == 3)) {
-					which_position = which_g_stored[i] % 20;
-					from_rect = calc_rect((which_position / 10) * 2 + 5,which_position % 10);
-					to_rect = calc_rect(i % 10,i / 10);
-				
-					rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-				
-					storage_status[i] = 1;
-					}
-			DeleteObject (temp_gworld);		
-			}
-		this_graphic_needed = FALSE;
-		}
-
-
-	// Now, anim terrains
-	for (i = 50; i < STORED_GRAPHICS; i++) 
-		if ((which_g_stored[i] >= 1000) && (which_g_stored[i] < 1400) &&
-			(storage_status[i] == 3))
-				this_graphic_needed = TRUE;
-	if (this_graphic_needed == TRUE) {
-		temp_gworld = load_pict(820,main_dc);
-		for (i = 50; i < STORED_GRAPHICS; i++)
-			if ((which_g_stored[i] >= 1000) && (which_g_stored[i] < 1400) &&
-				(storage_status[i] == 3)) {
-				which_position = which_g_stored[i] % 100;
-				offset = (which_g_stored[i] - 1000) / 100;
-				from_rect = calc_rect(4 * (which_position / 5) + offset,which_position % 5);
-				to_rect = calc_rect(i % 10,i / 10);
-				
-				rect_draw_some_item(temp_gworld,from_rect,storage_gworld,to_rect,0,0);
-			
-				storage_status[i] = 1;
-				}
-		DeleteObject(temp_gworld);		
-		}
-}
-
-// this is used for determinign whether to round off walkway corners
+// this is used for determining whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 Boolean is_nature(char x, char y)
 {
@@ -1331,7 +902,43 @@ Boolean is_nature(char x, char y)
 	return FALSE;
 }
 
+void swap_platform_graphics(){
+    int i,j;
+	RECT map_from_orig = {372,0,380,8},map_from,brush_to = {0,0,8,8};
 
+    DeleteObject(ter_anim_gworld);
+    ter_anim_gworld = load_pict(820, main_dc);
+    DeleteObject(fields_gworld);
+    fields_gworld = load_pict(821, main_dc);
+    DeleteObject(mixed_gworld);
+    mixed_gworld = load_pict(903, main_dc);
+    for(i=0;i<6;i++){
+        DeleteObject(terrains_gworld[i]);
+        terrains_gworld[i] = load_pict(800+i, main_dc);
+        }
+
+    for(i=0;i<9;i++)//told to redraw all visibles terrains
+      for(j=0;j<9;j++)
+          terrain_there[i][j] = -1;
+
+/*   	for (i = 0; i < 9; i++) {
+        DeleteObject(bg_bitmap[i]);
+        DeleteObject(bg[i]);
+		bg_bitmap[i] = CreateCompatibleBitmap(main_dc,8,8);
+		rect_draw_some_item(mixed_gworld,bg_from[i],bg_bitmap[i],brush_to,0,0);
+		bg[i] = CreatePatternBrush(bg_bitmap[i]);
+		}*/
+		
+	for (i = 0; i < 25; i++) {//need to remake the map brushes
+        DeleteObject(map_bitmap[i]);
+        DeleteObject(map_brush[i]);
+		map_from = map_from_orig;
+		OffsetRect(&map_from,8 * (i / 10),8 * (i % 10));
+		map_bitmap[i] = CreateCompatibleBitmap(main_dc,8,8);
+		rect_draw_some_item(mixed_gworld,map_from,map_bitmap[i],brush_to,0,0);
+		map_brush[i] = CreatePatternBrush(map_bitmap[i]);
+		}
+}
 
 void draw_terrain(short	mode)
 //mode ... if 1, don't place on screen after redoing

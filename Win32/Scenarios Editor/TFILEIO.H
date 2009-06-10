@@ -27,7 +27,6 @@ void flip_spec_node(special_node_type *spec);
 void flip_short(short *s);
 void alter_rect(RECT *r);
 void flip_rect(RECT *s);
-short FSWrite(HFILE file,long *len,char *buffer);
 short FSRead(HFILE file,long *len,char *buffer);
 short SetFPos(HFILE file, short mode, long len);
 void make_new_scenario(char *file_name,short out_width,short out_height,short making_warriors_grove,

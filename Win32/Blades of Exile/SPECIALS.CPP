@@ -92,6 +92,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 	Boolean can_enter = TRUE;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
+	char create_line[128];
 	
 	*spec_num = -1;
 	*forced = FALSE;
@@ -177,6 +178,11 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			put_item_screen(stat_window,0);	
 		}
 	
+	if((mode == 2) && town_boat_there(where_check) < 30){//can't enter boats while in combat mode
+        sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(pc_pos[current_pc], where_check)]);
+		add_string_to_buf((char *) create_line);
+        can_enter = FALSE;
+        }
 	if (can_enter == FALSE)
 		return FALSE;
 	
@@ -237,11 +243,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				can_enter = FALSE;
 			break;
 		case 2: case 3:case 4:
-			if (party.isFlying() || party.in_boat >= 0 || party.in_horse >= 0)
+			if (party.isFlying() || party.in_boat >= 0 || party.in_horse >= 0 || (mode ? town_boat_there(where_check) : out_boat_there(where_check)) < 30)
 				break;
-			for(i=0;i<30;i++)//boat at this point ?
-    			if(same_point(party.boats[i].boat_loc,where_check))
-            		    return TRUE;
 			if (ter_special == 2) {
 				add_string_to_buf("  It's hot!");
 				dam_type = 1; pic_type = 0;
@@ -267,12 +270,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 			fast_bang = 0;
 			break;
 		case 5: case 6:
-			if (party.isFlying() || party.in_horse >= 0) break;
-			if (party.in_boat >= 0 )
-				return TRUE;
-           	for(i=0;i<30;i++)//boat at this point ?
-    			if(same_point(party.boats[i].boat_loc,where_check))
-            		    return TRUE;
+			if (party.isFlying() || party.in_boat >= 0 || (mode ? town_boat_there(where_check) : out_boat_there(where_check)) < 30)
+			    break;
 			one_sound(17);
 			if (mode < 2) {
 				for (i = 0; i < 6; i++) 
@@ -1135,8 +1134,7 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	// Rentar-Ihrno?
 	if (victim->m_d.spec_skill == 36)
 		how_much = how_much / 10;
-
-		
+	
 	r1 = get_ran(1,0,(victim->m_d.armor * 5) / 4);
 	r1 += victim->m_d.level / 4;
 	if (dam_type == 0)
@@ -1146,9 +1144,14 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 		if (how_much < 0)
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
+		if (victim->m_d.spec_skill == 36)
+		add_explosion(victim->m_loc,how_much/10,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
+		else
 		add_explosion(victim->m_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->m_d.x_width - 1),18 * (victim->m_d.y_width - 1));
-		if (how_much == 0)
+		if (how_much == 0){
+			monst_spell_note(victim->number,7);
 			return FALSE;
+            }
 			else return TRUE;
 		}
 
