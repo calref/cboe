@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 #include <vector>
@@ -26,7 +27,8 @@ extern WindowPtr mainPtr;
 extern bool modeless_exists[18];
 extern DialogPtr modeless_dialogs[18];
 
-extern PixPatHandle bg[];
+extern GWorldPtr bg_gworld;
+extern Rect bg[];
 extern short geneva_font_num;//, sword_curs;
 
 GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2];
@@ -849,7 +851,7 @@ void cd_erase_item(short dlog_num, short item_num, bool just_label){
 	}
 	GetPort(&old_port);
 	SetPortWindowPort(dlgs[dlg_index].win);
-	FillCRect(&to_fry,bg[dlg_bg]);
+	tileImage(to_fry,bg_gworld,bg[dlg_bg]);
 	SetPort(old_port);
 }
 
@@ -864,7 +866,7 @@ void cd_erase_rect(short dlog_num,Rect to_fry){
 	
 	GetPort(&old_port);
 	SetPortWindowPort(dlgs[dlg_index].win);
-	FillCRect(&to_fry,bg[dlg_bg]);
+	tileImage(to_fry,bg_gworld,bg[dlg_bg]);
 	SetPort(old_port);
 }
 

@@ -59,8 +59,6 @@
 		912287040FD330F300B21642 /* field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB50FB91A26001E34EA /* field.cpp */; };
 		912287050FD330F300B21642 /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		912287060FD330F300B21642 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
-		912287280FD3358A00B21642 /* libticpp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9141DAB50FCB94900047D3A3 /* libticpp.dylib */; };
-		912287290FD3359300B21642 /* libticpp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9141DAB50FCB94900047D3A3 /* libticpp.dylib */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
@@ -107,12 +105,6 @@
 		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
-		9141DAC00FCB95B80047D3A3 /* libticpp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9141DAB50FCB94900047D3A3 /* libticpp.dylib */; };
-		9141DAC20FCB95C90047D3A3 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
-		9141DAC30FCB95C90047D3A3 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
-		9141DAC40FCB95CA0047D3A3 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
-		9141DAC50FCB95CA0047D3A3 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
-		9141DAC60FCB95CB0047D3A3 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
 		91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B670FDB5F1000C4E957 /* choose-pict.xml */; };
 		91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B680FDB5F1000C4E957 /* choose-string.xml */; };
 		91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B690FDB5F1000C4E957 /* edit-terrain.xml */; };
@@ -121,6 +113,21 @@
 		91A32B790FDB5F6800C4E957 /* ter-flag2.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B740FDB5F6800C4E957 /* ter-flag2.txt */; };
 		91A32B7A0FDB5F6800C4E957 /* ter-flag3.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B750FDB5F6800C4E957 /* ter-flag3.txt */; };
 		91A32B7B0FDB5F6800C4E957 /* trim-names.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B760FDB5F6800C4E957 /* trim-names.txt */; };
+		91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
+		91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
+		91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
+		91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
+		91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
+		91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
+		91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
+		91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
+		91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
+		91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
+		91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
+		91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
+		91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
+		91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
+		91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
 		91A79DC70FA797BF00A6A41F /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91A79DC60FA797BF00A6A41F /* menu.xib */; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -219,27 +226,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9122870E0FD3339F00B21642 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9141DAB40FCB94900047D3A3;
-			remoteInfo = ticpp;
-		};
-		912287110FD333AE00B21642 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9141DAB40FCB94900047D3A3;
-			remoteInfo = ticpp;
-		};
-		9141DABB0FCB95030047D3A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9141DAB40FCB94900047D3A3;
-			remoteInfo = ticpp;
-		};
 		91EBE9DD0F9A33A6002356F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
@@ -450,7 +436,6 @@
 		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.h; path = classes/pc.h; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.cpp; path = classes/pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
-		9141DAB50FCB94900047D3A3 /* libticpp.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libticpp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A32B670FDB5F1000C4E957 /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-pict.xml"; path = "dialogxml/choose-pict.xml"; sourceTree = "<group>"; };
 		91A32B680FDB5F1000C4E957 /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-string.xml"; path = "dialogxml/choose-string.xml"; sourceTree = "<group>"; };
 		91A32B690FDB5F1000C4E957 /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "edit-terrain.xml"; path = "dialogxml/edit-terrain.xml"; sourceTree = "<group>"; };
@@ -459,8 +444,8 @@
 		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag2.txt"; path = "Scenario Editor/strings/ter-flag2.txt"; sourceTree = "<group>"; };
 		91A32B750FDB5F6800C4E957 /* ter-flag3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag3.txt"; path = "Scenario Editor/strings/ter-flag3.txt"; sourceTree = "<group>"; };
 		91A32B760FDB5F6800C4E957 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "trim-names.txt"; path = "Scenario Editor/strings/trim-names.txt"; sourceTree = "<group>"; };
-		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
-		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
+		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.results.h; path = dialogxml/dialog.results.h; sourceTree = "<group>"; };
+		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlogutil.buttons.h; path = dialogxml/dlogutil.buttons.h; sourceTree = "<group>"; };
 		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
 		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = regtown.h; path = classes/regtown.h; sourceTree = "<group>"; };
@@ -551,7 +536,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				912287290FD3359300B21642 /* libticpp.dylib in Frameworks */,
 				2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */,
 				913D02690FA0EB0300184C18 /* QuickTime.framework in Frameworks */,
 			);
@@ -566,18 +550,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9141DAB30FCB94900047D3A3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		91B3EF160F969C2200BF5B67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				912287280FD3358A00B21642 /* libticpp.dylib in Frameworks */,
 				91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */,
 				913D026B0FA0EB0500184C18 /* QuickTime.framework in Frameworks */,
 			);
@@ -587,7 +563,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9141DAC00FCB95B80047D3A3 /* libticpp.dylib in Frameworks */,
 				91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */,
 				913D026A0FA0EB0500184C18 /* QuickTime.framework in Frameworks */,
 			);
@@ -619,7 +594,6 @@
 				91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */,
 				91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */,
 				912793480F9C0FE6007B0D52 /* ViewDlog.app */,
-				9141DAB50FCB94900047D3A3 /* libticpp.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1068,16 +1042,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		9141DAB10FCB94900047D3A3 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		2BF04AC00BF518D4006C0831 /* Blades of Exile */ = {
 			isa = PBXNativeTarget;
@@ -1092,7 +1056,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				912287120FD333AE00B21642 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile";
 			productName = "Blades of Exile";
@@ -1116,23 +1079,6 @@
 			productReference = 912793480F9C0FE6007B0D52 /* ViewDlog.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9141DAB40FCB94900047D3A3 /* ticpp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9141DAB80FCB94AE0047D3A3 /* Build configuration list for PBXNativeTarget "ticpp" */;
-			buildPhases = (
-				9141DAB10FCB94900047D3A3 /* Headers */,
-				9141DAB20FCB94900047D3A3 /* Sources */,
-				9141DAB30FCB94900047D3A3 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ticpp;
-			productName = ticpp;
-			productReference = 9141DAB50FCB94900047D3A3 /* libticpp.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91B3EF1D0F969C2400BF5B67 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */;
@@ -1145,7 +1091,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9122870F0FD3339F00B21642 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile Character Editor";
 			productName = "Blades of Exile Character Editor";
@@ -1166,7 +1111,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9141DABC0FCB95030047D3A3 /* PBXTargetDependency */,
 			);
 			name = "BoE Scenario Editor";
 			productName = "BoE Scenario Editor";
@@ -1194,7 +1138,6 @@
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
 				912793470F9C0FE5007B0D52 /* ViewDlog */,
 				91EBE9DA0F9A33A1002356F2 /* All */,
-				9141DAB40FCB94900047D3A3 /* ticpp */,
 			);
 		};
 /* End PBXProject section */
@@ -1302,6 +1245,11 @@
 				912287050FD330F300B21642 /* message.cpp in Sources */,
 				912287060FD330F300B21642 /* pict.cpp in Sources */,
 				91C688E80FD702B9000F6D01 /* cursors.m in Sources */,
+				91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */,
+				91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */,
+				91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */,
+				91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */,
+				91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1316,18 +1264,6 @@
 				91E5C2030F9E48CB00C21460 /* dlglowlevel.cpp in Sources */,
 				91E5C2040F9E48CB00C21460 /* dlgbtns.cpp in Sources */,
 				912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9141DAB20FCB94900047D3A3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9141DAC20FCB95C90047D3A3 /* ticpp.cpp in Sources */,
-				9141DAC30FCB95C90047D3A3 /* tinystr.cpp in Sources */,
-				9141DAC40FCB95CA0047D3A3 /* tinyxml.cpp in Sources */,
-				9141DAC50FCB95CA0047D3A3 /* tinyxmlerror.cpp in Sources */,
-				9141DAC60FCB95CB0047D3A3 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1373,6 +1309,11 @@
 				912286FF0FD330ED00B21642 /* pict.cpp in Sources */,
 				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
 				91C688E90FD702B9000F6D01 /* cursors.m in Sources */,
+				91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */,
+				91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */,
+				91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */,
+				91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */,
+				91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1423,27 +1364,17 @@
 				912283C90FD0E16C00B21642 /* undo.cpp in Sources */,
 				912286F80FD330E500B21642 /* dlogutil.cpp in Sources */,
 				91C688EA0FD702B9000F6D01 /* cursors.m in Sources */,
+				91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */,
+				91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */,
+				91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */,
+				91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */,
+				91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9122870F0FD3339F00B21642 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9141DAB40FCB94900047D3A3 /* ticpp */;
-			targetProxy = 9122870E0FD3339F00B21642 /* PBXContainerItemProxy */;
-		};
-		912287120FD333AE00B21642 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9141DAB40FCB94900047D3A3 /* ticpp */;
-			targetProxy = 912287110FD333AE00B21642 /* PBXContainerItemProxy */;
-		};
-		9141DABC0FCB95030047D3A3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9141DAB40FCB94900047D3A3 /* ticpp */;
-			targetProxy = 9141DABB0FCB95030047D3A3 /* PBXContainerItemProxy */;
-		};
 		91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2BF04AC00BF518D4006C0831 /* Blades of Exile */;
@@ -1474,6 +1405,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_MODEL_TUNING = G4;
+				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1522,6 +1454,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_INPUT_FILETYPE = automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1572,8 +1505,6 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Blades of Exile-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1600,8 +1531,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Blades of Exile-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1671,39 +1600,6 @@
 			};
 			name = Release;
 		};
-		9141DAB60FCB94900047D3A3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				EXECUTABLE_PREFIX = lib;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = ticpp;
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		9141DAB70FCB94900047D3A3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
-				INSTALL_PATH = /usr/local/lib;
-				PREBINDING = NO;
-				PRODUCT_NAME = ticpp;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 		91B3EF1B0F969C2300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1719,8 +1615,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1749,8 +1643,6 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1781,8 +1673,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1817,8 +1707,6 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
 				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1885,15 +1773,6 @@
 			buildConfigurations = (
 				9127934B0F9C0FEA007B0D52 /* Debug */,
 				9127934C0F9C0FEA007B0D52 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9141DAB80FCB94AE0047D3A3 /* Build configuration list for PBXNativeTarget "ticpp" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9141DAB60FCB94900047D3A3 /* Debug */,
-				9141DAB70FCB94900047D3A3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

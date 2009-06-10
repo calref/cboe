@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include <sstream>
 #include "dialog.h"
 

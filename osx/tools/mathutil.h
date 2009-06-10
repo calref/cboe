@@ -6,6 +6,8 @@
  *
  */
 
+#include <cmath>
+using std::abs;
 short get_ran (short times,short  min,short  max);
 short s_pow(short x,short y);
 short s_sqrt(short val);

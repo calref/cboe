@@ -6,9 +6,12 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include "graphtool.h"
 #include "mathutil.h"
 #include "dialog.h"
+
+extern GWorldPtr bg_gworld;
 
 void cTextMsg::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
@@ -102,7 +105,7 @@ void cTextMsg::draw(){
 	
 	GetPort(&old_port);
 	SetPortWindowPort(parent->win);
-	FillCRect(&frame,bg[parent->bg]);
+	tileImage(frame,bg_gworld,bg[parent->bg]);
 	
 	if(visible){
 		TextFont(font_nums[textFont]);

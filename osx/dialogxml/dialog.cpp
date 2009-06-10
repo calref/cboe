@@ -9,6 +9,7 @@
 #define	MOUSE_REGION	0L
 #define IN_FRONT	(WindowPtr)-1L
 
+#include <Carbon/Carbon.h>
 #include <cmath>
 #include <stdexcept>
 #include <boost/type_traits/is_pointer.hpp>
@@ -18,6 +19,7 @@
 using namespace std;
 using namespace ticpp;
 
+extern GWorldPtr bg_gworld;
 extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 
@@ -979,7 +981,7 @@ void cDialog::draw(){
 	GrafPtr old_port;
 	GetPort(&old_port);
 	SetPortWindowPort(win);
-	FillCRect(&winRect,::bg[bg]);
+	tileImage(winRect,bg_gworld,::bg[bg]);
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){

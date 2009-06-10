@@ -18,7 +18,7 @@ extern WindowPtr	mainPtr;
 extern bool play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
 
 extern short store_flags[3];
-extern GWorldPtr button_num_gworld;
+extern GWorldPtr button_num_gworld,bg_gworld;
 extern short current_active_pc;
 //extern bool ed_reg;
 
@@ -272,9 +272,9 @@ void Set_up_win ()
 	dlogpics_gworld = load_pict("dlogpics.png");
 	buttons_gworld = load_pict("pcedbuttons.png");
 
-	for (i = 0; i < 14; i++){
-	    bg[i] = GetPixPat (128 + i);
-	}
+//	for (i = 0; i < 14; i++){
+//	    bg[i] = GetPixPat (128 + i);
+//	}
 }
 
 
@@ -291,7 +291,7 @@ void draw_main_screen()
 	Rect reg_rect;
 
 	SetPort(GetWindowPort(mainPtr));
-	FillCRect(&whole_win_rect,bg[12]); // fill whole window with background texture
+	tileImage(whole_win_rect,bg_gworld,bg[12]); // fill whole window with background texture
 	dest_rec = source_rect = title_from; // initializes, to draw title 
 		 // title_from is a Rect constant
 	OffsetRect(&dest_rec,20,0);
@@ -350,7 +350,7 @@ void draw_main_screen()
 		char_win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10,true);
 	TextSize(10);
 	TextFace(0);
-	OffsetRect(&dest_rect,300,0);
+	OffsetRect(&dest_rect,280,0);
 	char_win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,10,true);
 	TextFace(bold);
 	
@@ -393,8 +393,8 @@ void draw_items(short clear_first)
 	// First erase crap there already by painting background texture over it
 	if (clear_first == 1) {
 		for (i = 0; i < 24; i++)
-			FillCRect(&item_string_rects[i][0],bg[12]);	
-		FillCRect(&dest_rect,bg[12]);	
+			tileImage(item_string_rects[i][0],bg_gworld,bg[12]);	
+		tileImage(dest_rect,bg_gworld,bg[12]);	
 		}
 	
 	// First, draw "Fred's Items:"
@@ -453,10 +453,10 @@ void display_party(short mode,short clear_first)
 	// short current_active_pc
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
-			FillCRect(&pc_area_buttons[i][0],bg[12]);
-		FillCRect(&name_rect,bg[12]);
-		FillCRect(&pc_race_rect,bg[12]);
-		FillCRect(&info_area_rect,bg[12]);
+			tileImage(pc_area_buttons[i][0],bg_gworld,bg[12]);
+		tileImage(name_rect,bg_gworld,bg[12]);
+		tileImage(pc_race_rect,bg_gworld,bg[12]);
+		tileImage(info_area_rect,bg_gworld,bg[12]);
 		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re-draw the frame
 	}
 	
@@ -805,7 +805,7 @@ void display_party(short mode,short clear_first)
 		for(i = 0; i < 5; i++) 
 			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
 				if (clear_first == 1) { // first erase what's already there
-					FillCRect(&edit_rect[i][0],bg[12]);
+					tileImage(edit_rect[i][0],bg_gworld,bg[12]);
 				}		
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][0],0);
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][1],0);

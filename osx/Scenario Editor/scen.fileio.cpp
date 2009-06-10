@@ -116,6 +116,10 @@ void init_directories() {
 	//progDir = cPath;
 	size_t last_slash = progDir.find_last_of('/');
 	progDir.erase(last_slash);
+	// Since the scenario editor is in a subdirectory, and progDir
+	// must hold the path to the game directory, we do this twice.
+	last_slash = progDir.find_last_of('/');
+	progDir.erase(last_slash);
 	std::cout<<progDir<<'\n';
 }
 

@@ -7,6 +7,7 @@
  */
 
 #define GRAPHTOOL_CPP
+#include <Carbon/Carbon.h>
 #include <Quicktime/Quicktime.h>
 #include "graphtool.h"
 #include "cursors.h"
@@ -24,7 +25,9 @@ CursorRef cursors[24] = {
 };
 void (*redraw_screen)();
 Point* offset;
-PixPatHandle bg[21];
+Rect bg[21];
+Rect map_pat[30];
+GWorldPtr bg_gworld;
 short geneva_font_num, dungeon_font_num;
 bool use_win_graphics = false;
 CursorRef GetCursorFromPath(std::string filename, Point hotspot);
@@ -40,11 +43,27 @@ void init_graph_tool(void (*redraw_callback)(), Point* p){
 	redraw_screen = redraw_callback;
 	int i,j;
 	static const Point cursor_hs[24] = {
-		{ 4,1}, {1,14}, { 5,13}, {8,8}, {8,8}, {8,8}, {8,8}, {14,0},
-		{12,3}, {13,7}, {12, 3},
-		{9, 3}, {8, 8}, {8, 3},
-		{12,3}, {13, 7},{12, 3},
-		{ 1,1}, {3, 7}, {14, 0}, {8,8}, {7,6}, {2,3}, {6,7}
+		{ 1, 4}, {14, 1}, {13, 5}, {8,8}, {8,8}, {8,8}, {8,8}, {0,14},
+		{ 3,12}, { 7,13}, { 3,12},
+		{ 3, 9}, { 8, 8}, { 8, 3},
+		{ 3,12}, { 7,13}, { 3,12},
+		{ 1, 1}, { 7, 3}, { 0,14}, {8,8}, {6,7}, {3,2}, {7,6}
+	};
+	static const Point pat_offs[17] = {
+		{3,0}, {1,1}, {1,2}, {0,2},
+		{0,3}, {1,3}, {3,1}, {0,0},
+		{2,0}, {2,1}, {1,0}, {2,2},
+		{3,2}, {2,3}, {0,1}, {0,4}, {3,3}
+	};
+	static const int pat_i[17] = {
+		2, 3, 4, 5, 6, 8, 9, 10,
+		11,12,13,14,15,16,17,19,20
+	};
+	static const int map_i[26] = {
+		0, 1, 2, 3, 4, 5, 6, 9,
+		10,11,12,13,14,15,16,17,
+		18,19,20,21,22,24,25,27,
+		28,29
 	};
 	static const char*const edit_cursor_files[8] = {
 		"wand.gif","eyedropper.gif","brush.gif","spraycan.gif",
@@ -68,8 +87,45 @@ void init_graph_tool(void (*redraw_callback)(), Point* p){
 		for (i = 17; i < 24; i++)
 			cursors[i] = GetCursorFromPath(game_cursor_files[i - 17],cursor_hs[i]);
 	}
-	for (i = 0; i < 21; i++) 
-	    bg[i] = GetPixPat(128 + i);
+//	for (i = 0; i < 21; i++) 
+//	    bg[i] = GetPixPat(128 + i);
+	for(i = 0; i < 17; i++){
+		SetRect(&bg[pat_i[i]],0,0,64,64);
+		OffsetRect(&bg[pat_i[i]],64 * pat_offs[i].h,64 * pat_offs[i].v);
+	}
+	Rect tmp_rect = bg[19];
+	OffsetRect(&tmp_rect, 0, 64);
+	bg[0] = bg[1] = bg[18] = map_pat[7] = tmp_rect;
+	bg[0].right -= 32;
+	bg[0].bottom -= 32;
+	bg[1].left -= 32;
+	bg[1].bottom -= 32;
+	bg[18].right -= 32;
+	bg[18].top -= 32;
+	map_pat[7].left -= 32;
+	map_pat[7].top -= 32;
+	OffsetRect(&tmp_rect, 0, 64);
+	map_pat[8] = map_pat[23] = map_pat[26] = tmp_rect;
+	map_pat[8].right -= 32;
+	map_pat[8].bottom -= 32;
+	map_pat[23].left -= 32;
+	map_pat[23].right -= 16;
+	map_pat[23].bottom -= 32;
+	map_pat[26].left -= 32 + 16;
+	map_pat[26].bottom -= 32;
+	OffsetRect(&tmp_rect, 0, 64);
+	bg[7] = tmp_rect;
+	bg[7].bottom = bg[7].top + 16;
+	OffsetRect(&tmp_rect, 0, -32);
+	tmp_rect.right = tmp_rect.left + 8;
+	tmp_rect.bottom = tmp_rect.top + 8;
+	for(i = 0; i < 26; i++){
+		map_pat[map_i[i]] = tmp_rect;
+		OffsetRect(&map_pat[map_i[i]],8 * (i % 8),8 * (i / 8));
+		// Note: 8 * (i / 8) != i, despite appearances, due to integer rounding
+	}
+	bg_gworld = load_pict("pixpats.png");
+	// TODO: Try to deprecate these font things
 	Str255 fn1 = "\pGeneva";
 	Str255 fn2 = "\pDungeon Bold";
 	Str255 fn3 = "\pPalatino";
@@ -324,7 +380,7 @@ void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gwor
 					   (masked == 10) ? addOver : 0, NULL);
 	}
 	UnlockPixels(test1);
-	if (main_win == 2) 
+	//if (main_win == 2) 
 		RGBBackColor(&store_color);
 	SetPort(cur_port);
 }
@@ -481,23 +537,6 @@ short string_length(const char *str){ // Why not just use strlen?
 	return total_width;
 }
 
-/*OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon){
-	//PicHandle
-	PicPtr toFlip = (PicPtr) ptr;
-	
-	if(!isNative){
-		printf("PICT %i Before: %i\t",id,toFlip->picFrame.bottom - toFlip->picFrame.top);
-		toFlip->picSize = Endian16_Swap(toFlip->picSize);
-		toFlip->picFrame.top = Endian16_Swap(toFlip->picFrame.top);
-		toFlip->picFrame.left = Endian16_Swap(toFlip->picFrame.left);
-		toFlip->picFrame.bottom = Endian16_Swap(toFlip->picFrame.bottom);
-		toFlip->picFrame.right = Endian16_Swap(toFlip->picFrame.right);
-		printf("After: %i\n",toFlip->picFrame.bottom - toFlip->picFrame.top);
-	}
-	
-	return noErr;
-}
-*/
 /*
 void draw_terrain(){
 	short q,r,x,y,i,small_i;
@@ -1055,11 +1094,13 @@ void tileImage(Rect area, GWorldPtr img, short mode){
 	
 	int imgWidth=imgRect.right-imgRect.left;
 	int imgHeight=imgRect.bottom-imgRect.top;
+	area.left -= area.left % imgWidth;
+	area.top -= area.top % imgHeight;
 	int x,y;
 	unsigned int hrep = (int)((double(area.right-area.left)/imgWidth)+0.5);
 	unsigned int vrep = (int)((double(area.bottom-area.top)/imgHeight)+0.5);
-	for(unsigned int i=0; i<vrep; i++){
-		for(unsigned int j=0; j<hrep; j++){
+	for(unsigned int i=0; i<=hrep; i++){
+		for(unsigned int j=0; j<=vrep; j++){
 			x=area.left+i*imgWidth;
 			y=area.top+j*imgHeight;
 			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
@@ -1080,11 +1121,13 @@ void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
 	
 	int srcWidth=srcRect.right-srcRect.left;
 	int srcHeight=srcRect.bottom-srcRect.top;
+	area.left -= area.left % srcWidth;
+	area.top -= area.top % srcHeight;
 	int x,y;
 	unsigned int hrep = (int)((double(area.right-area.left)/srcWidth)+0.5);
 	unsigned int vrep = (int)((double(area.bottom-area.top)/srcHeight)+0.5);
-	for(unsigned int i=0; i<vrep; i++){
-		for(unsigned int j=0; j<hrep; j++){
+	for(unsigned int i=0; i<=hrep; i++){
+		for(unsigned int j=0; j<=vrep; j++){
 			x=area.left+i*srcWidth;
 			y=area.top+j*srcHeight;
 			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
@@ -1092,4 +1135,57 @@ void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
 		}
 	}
 	DisposeRgn(clip);
+}
+
+void tileImage(RgnHandle area, GWorldPtr img, short mode){
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	Rect imgRect;
+	GetPortBounds(img, &imgRect);
+	
+	int imgWidth=imgRect.right-imgRect.left;
+	int imgHeight=imgRect.bottom-imgRect.top;
+	int x,y;
+	Rect bounds;
+	GetRegionBounds(area, &bounds);
+	bounds.left -= bounds.left % imgWidth;
+	bounds.top -= bounds.top % imgHeight;
+	unsigned int hrep = (int)((double(bounds.right-bounds.left)/imgWidth)+0.5);
+	unsigned int vrep = (int)((double(bounds.bottom-bounds.top)/imgHeight)+0.5);
+	for(unsigned int i=0; i<=hrep; i++){
+		for(unsigned int j=0; j<=vrep; j++){
+			x=bounds.left+i*imgWidth;
+			y=bounds.top+j*imgHeight;
+			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,area);
+		}
+	}
+}
+
+void tileImage(RgnHandle area, GWorldPtr img, Rect srcRect, short mode){
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
+	PixMapHandle drawSource = GetPortPixMap(img);
+	
+	int srcWidth=srcRect.right-srcRect.left;
+	int srcHeight=srcRect.bottom-srcRect.top;
+	int x,y;
+	Rect bounds;
+	GetRegionBounds(area, &bounds);
+	bounds.left -= bounds.left % srcWidth;
+	bounds.top -= bounds.top % srcHeight;
+	unsigned int hrep = (int)((double(bounds.right-bounds.left)/srcWidth)+0.5);
+	unsigned int vrep = (int)((double(bounds.bottom-bounds.top)/srcHeight)+0.5);
+	for(unsigned int i=0; i<=hrep; i++){
+		for(unsigned int j=0; j<=vrep; j++){
+			x=bounds.left+i*srcWidth;
+			y=bounds.top+j*srcHeight;
+			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
+			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,area);
+		}
+	}
 }

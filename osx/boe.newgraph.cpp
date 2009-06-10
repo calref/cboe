@@ -1,4 +1,5 @@
 
+#include <Carbon/Carbon.h>
 #include <cstring>
 #include <cstdio>
 
@@ -45,13 +46,14 @@ short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 extern Point ul;
 extern Rect	windRect;
 extern long anim_ticks;
-extern PixPatHandle	bg[];
+extern Rect	bg[];
 extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
 extern GWorldPtr fields_gworld,boom_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld,invenbtn_gworld;
 //extern party_record_type party;
+extern GWorldPtr bg_gworld;
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
 extern location center;
@@ -811,7 +813,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	GetPortBounds(talk_gworld,&area_rect);
 	FrameRect(&area_rect);
 	InsetRect(&area_rect,1,1);
-	FillCRect(&area_rect,bg[12]);
+	tileImage(area_rect,bg_gworld,bg[12]);
 
 	FrameRect(&shop_frame);
 	
@@ -1130,7 +1132,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	GetPortBounds(talk_gworld,&area_rect);
 	FrameRect(&area_rect);
 	InsetRect(&area_rect,1,1);
-	FillCRect(&area_rect,bg[12]);
+	tileImage(area_rect,bg_gworld,bg[12]);
 
 	// Put help button
 	GetPortBounds(dlg_buttons_gworld[3][0], &help_from);

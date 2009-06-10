@@ -7,6 +7,7 @@
  */
 #define BTNS_DEFINED
 
+#include <Carbon/Carbon.h>
 #include <sstream>
 #include <algorithm>
 

@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include "location.h"
 #include "dlgconsts.h"
 #include "dlgtool.h"

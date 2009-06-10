@@ -1,3 +1,5 @@
+
+#include <Carbon/Carbon.h>
 #include <cstdio>
 
 //#include "item.h"
@@ -76,11 +78,11 @@ extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern GWorldPtr spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern GWorldPtr map_gworld,small_ter_gworld;
+extern GWorldPtr map_gworld,small_ter_gworld,bg_gworld;
 RGBColor parchment = {65535,65535,52428};
-PixPatHandle map_pat[25];
+extern Rect map_pat[];
 
-
+// TODO: Add blue cave graphics to these arrays?
 unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 						7,7,7,7,7,7,7,7,3,3,
 						3,3,3,3,3,3,3,3,3,3,
@@ -1535,7 +1537,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		 {
 			if (modeless_exists[5] == true) {
 				SetPort(GetDialogPort(the_dialog));
-				FillCRect(&map_bar_rect,bg[4]);
+				tileImage(map_bar_rect,bg_gworld,bg[4]);
 				char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
 					map_bar_rect,"No map here.",0,12,false);
 				draw_pcs = false;
@@ -1548,7 +1550,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		 }else if((is_town() && univ.town->specials2 & 1)) {
 			 if (modeless_exists[5] == true) {
 				 SetPort(GetDialogPort(the_dialog));
-				 FillCRect(&map_bar_rect,bg[4]);
+				 tileImage(map_bar_rect,bg_gworld,bg[4]);
 				 char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
 									   map_bar_rect,"This place defies mapping.",0,12,false);
 				 draw_pcs = false;
@@ -1664,7 +1666,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 												map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
 											}
 										}
-									FillCRect(&draw_rect,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
+									tileImage(draw_rect,bg_gworld,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
 									break;
 									}
 								//OffsetRect(&ter_temp_from,
@@ -1688,7 +1690,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		
 		if ((draw_surroundings == true) || (the_item != 5)) { // redraw much stuff
 			GetPortBounds(GetDialogPort(the_dialog),&the_rect);
-			FillCRect(&the_rect,bg[4]);
+			tileImage(the_rect,bg_gworld,bg[4]);
 			draw_dialog_graphic( GetDialogPort(the_dialog), dlogpicrect, 
  				21, PICT_DLG, false,0);
  			ForeColor(whiteColor);

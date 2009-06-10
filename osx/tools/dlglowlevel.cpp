@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 
@@ -17,8 +18,9 @@
 #include "graphtool.h"
 #include "mathutil.h"
 
-extern PixPatHandle bg[];
+extern Rect bg[];
 
+extern GWorldPtr bg_gworld;
 extern GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2];
 extern map<char*,GWorldPtr*> dlg_gworlds;
 
@@ -326,7 +328,7 @@ void draw_dialog_graphic(GrafPtr hDlg, Rect rect, short which_g, short type_g, b
 	if (type_g == PICT_BLANK) { // Empty. Maybe clear space.
 		if (win_or_gworld == 0) {
 			InsetRect(&rect, -3, -3);
-			FillCRect(&rect,bg[dlg_bg]);
+			tileImage(rect,bg_gworld,bg[dlg_bg]);
 		}	
 		return;
 	}

@@ -6,12 +6,15 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include <vector>
 #include <map>
 #include <stdexcept>
 
 #include "graphtool.h"
 #include "dialog.h"
+
+extern GWorldPtr bg_gworld;
 
 void cPict::init(){
 	// TODO: Load or otherwise acquire the various GWorlds.
@@ -506,7 +509,7 @@ void cPict::draw(){
 	
 	if(!visible){ // Erase it
 		InsetRect(&rect, -3, -3);
-		FillCRect(&rect,bg[parent->bg]);
+		tileImage(rect,bg_gworld,bg[parent->bg]);
 		return;
 	}
 	if(picNum < 0) { // Just fill with black

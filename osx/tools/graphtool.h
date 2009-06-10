@@ -8,6 +8,7 @@
 
 #ifndef GRAPHTOOL_H
 #define GRAPHTOOL_H
+#include <Carbon/Carbon.h>
 #include <string>
 #define  LINES_IN_TEXT_WIN	11
 
@@ -64,14 +65,16 @@ short get_custom_rect (short which_rect, Rect& store_rect);
 void get_str(Str255 str,short i, short j);
 GWorldPtr importPictureFileToGWorld(const FSSpec *fileSpec);
 void writeGWorldToPNGFile(GWorldPtr gw, const FSSpec *fileSpec);
-void tileImage(Rect area, GWorldPtr img, short mode=0);
-void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode=0);
+void tileImage(Rect area, GWorldPtr img, short mode = srcCopy);
+void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode = srcCopy);
+void tileImage(RgnHandle area, GWorldPtr img, short mode = srcCopy);
+void tileImage(RgnHandle area, GWorldPtr img, Rect srcRect, short mode = srcCopy);
 
 #ifndef GRAPHTOOL_CPP
 extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
 extern m_pic_index_t m_pic_index[200];
-extern PixPatHandle bg[14];
+extern Rect bg[];
 extern short geneva_font_num,dungeon_font_num;
 #endif
 

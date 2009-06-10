@@ -48,7 +48,7 @@ extern Rect windRect;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 extern Rect world_screen;
-
+extern GWorldPtr bg_gworld;
 extern Rect left_button[NLS];
 extern Rect right_buttons[NRSONPAGE];
 extern Rect right_scrollbar_rect;
@@ -86,7 +86,7 @@ GWorldPtr roads_gworld = NULL;
 GWorldPtr missiles_gworld = NULL;
 GWorldPtr status_gworld = NULL;
 GWorldPtr pc_gworld = NULL;
-PixPatHandle map_pat[25];
+extern Rect map_pat[];
 
 // begin new stuff
 Rect blue_button_from = {120,91,134,107};
@@ -403,13 +403,14 @@ void Set_up_win () {
 }
 
 void run_startup_g() {
-	Rect pict_rect = {0,0,480,640};
-	PicHandle	pict_to_draw;
+	Rect pict_rect = {0,0,480,640}, dest_rect;
+	GWorldPtr pict_to_draw;
+	dest_rect = pict_rect;
 	
 	SetPortWindowPort(mainPtr);
-	OffsetRect(&pict_rect,-25,-25);
-	pict_to_draw = GetPicture(3002);
-	DrawPicture(pict_to_draw, &pict_rect);
+	OffsetRect(&dest_rect,-25,-25);
+	pict_to_draw = load_pict("edsplash.png");
+	rect_draw_some_item(pict_to_draw, pict_rect, pict_to_draw, dest_rect, 1, 1);
 	ReleaseResource((Handle) pict_to_draw);
 	play_sound(-95);
 	EventRecord event;
@@ -422,10 +423,10 @@ void load_graphics(){
 	//for (i = 0; i < NUM_BUTTONS; i++)
 	//	for (j = 0; j < 2; j++)
 	//		dlg_buttons_gworld[i][j] = load_pict(2000 + (2 * i) + j); // move to dlogtool
-	for (i = 0; i < 14; i++) 
-	    bg[i] = GetPixPat (128 + i);
-	for (i = 0; i < 25; i++) 
-	    map_pat[i] = GetPixPat (200 + i);
+//	for (i = 0; i < 14; i++) 
+//	    bg[i] = GetPixPat (128 + i);
+//	for (i = 0; i < 25; i++) 
+//	    map_pat[i] = GetPixPat (200 + i);
 	
 	for (i = 0; i < 11; i++){
 		std::ostringstream sout;
@@ -485,7 +486,7 @@ void redraw_screen() {
 	
 	GetPort (&old_port);
 	SetPortWindowPort (mainPtr);
-	FillCRect(&windRect,bg[20]);
+	tileImage(windRect,bg_gworld,bg[20]);
 	draw_main_screen();
 	if (overall_mode < MODE_MAIN_SCREEN);
 	draw_terrain();
@@ -511,7 +512,7 @@ void draw_main_screen() {
 		
 		FrameRect(&draw_rect);
 		InsetRect(&draw_rect,1,1);
-		FillCRect(&draw_rect,bg[17]);
+		tileImage(draw_rect,bg_gworld,bg[17]);
 		
 		draw_rb();
 		Draw1Control(right_sbar);
@@ -535,7 +536,7 @@ void draw_lb() {
 	
 	temp_rect = windRect;
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
-	FillCRect(&temp_rect,bg[20]);
+	tileImage(temp_rect,bg_gworld,bg[20]);
 	for (i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
@@ -544,7 +545,7 @@ void draw_lb() {
 void draw_lb_slot (short which,short mode)  {
 	Rect text_rect,from_rect;
 	
- 	FillCRect(&left_buttons[which][0],bg[20]);
+ 	tileImage(left_buttons[which][0],bg_gworld,bg[20]);
 	if (left_button_status[which] == 0)
 		return;
 	text_rect = left_buttons[which][0];
@@ -589,7 +590,7 @@ void draw_rb_slot (short which,short mode)  {
 	if ((which < pos) || (which >= pos + NRSONPAGE))
 		return;
 	
- 	FillCRect(&right_buttons[which - pos],bg[17]);
+ 	tileImage(right_buttons[which - pos],bg_gworld,bg[17]);
 	if (right_button_status[which] == 0)
 		return;
 	text_rect = right_buttons[which - pos];
@@ -610,7 +611,7 @@ void set_up_terrain_buttons() {
 	Rect palette_from,palette_to = palette_button_base;
 	
  	SetPort( terrain_buttons_gworld);
-	FillCRect(&terrain_buttons_rect,bg[17]);
+	tileImage(terrain_buttons_rect,bg_gworld,bg[17]);
 	FrameRect(&terrain_buttons_rect);
  	
 	// first make terrain buttons
@@ -717,7 +718,7 @@ void draw_terrain(){
 	
 	if (cur_viewing_mode == 0) {
 		SetPort( ter_draw_gworld);
-		FillCRect(&terrain_rect,bg[17]);
+		tileImage(terrain_rect,bg_gworld,bg[17]);
 		FrameRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		for (q = 0; q < 9; q++) 
@@ -933,7 +934,7 @@ void draw_terrain(){
 	if (cur_viewing_mode == 1) {
 		SetPort( ter_draw_gworld);
 		if (small_any_drawn == false) {
-		 	FillCRect(&terrain_rect,bg[17]);
+		 	tileImage(terrain_rect,bg_gworld,bg[17]);
 			FrameRect(&terrain_rect);
 		}
 		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++) 
@@ -1114,15 +1115,15 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	switch (picture_wanted) {
 			
 		case 0: case 1: case 73: case 72:
-			FillCRect(&dest_rect,map_pat[0]);
+			tileImage(dest_rect,bg_gworld,map_pat[0]);
 			break;
 		case 2: case 3: case 4:
-			FillCRect(&dest_rect,map_pat[1]);
+			tileImage(dest_rect,bg_gworld,map_pat[1]);
 			break;
 			
 		default:
 			if ((picture_wanted < 170) && (map_pats[picture_wanted] > 0)) {
-				FillCRect(&dest_rect,map_pat[map_pats[picture_wanted]]);
+				tileImage(dest_rect,bg_gworld,map_pat[map_pats[picture_wanted]]);
 			}
 			else if (picture_wanted >= 1000)	{
 				from_rect = get_custom_rect(picture_wanted % 1000);
@@ -1131,12 +1132,12 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 			else if (picture_wanted >= 400)	{
 				source_gworld = anim_gworld;
 				picture_wanted -= 400;
-				if (picture_wanted == 0) FillCRect(&dest_rect,map_pat[13]);
-				else if (picture_wanted == 4) FillCRect(&dest_rect,map_pat[21]);
-				else if (picture_wanted == 7) FillCRect(&dest_rect,map_pat[20]);
-				else if (picture_wanted == 8) FillCRect(&dest_rect,map_pat[19]);
-				else if (picture_wanted == 9) FillCRect(&dest_rect,map_pat[20]);
-				else if (picture_wanted == 10) FillCRect(&dest_rect,map_pat[19]);
+				if (picture_wanted == 0) tileImage(dest_rect,bg_gworld,map_pat[13]);
+				else if (picture_wanted == 4) tileImage(dest_rect,bg_gworld,map_pat[21]);
+				else if (picture_wanted == 7) tileImage(dest_rect,bg_gworld,map_pat[20]);
+				else if (picture_wanted == 8) tileImage(dest_rect,bg_gworld,map_pat[19]);
+				else if (picture_wanted == 9) tileImage(dest_rect,bg_gworld,map_pat[20]);
+				else if (picture_wanted == 10) tileImage(dest_rect,bg_gworld,map_pat[19]);
 				else {
 					//source_rect.left = 112 * (picture_wanted / 5);
 					//source_rect.right = source_rect.left + 28;
@@ -1253,7 +1254,7 @@ void place_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 26 - 9;//12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	FillCRect(&erase_rect,bg[17]);
+	tileImage(erase_rect,bg_gworld,bg[17]);
 	
 	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	MoveTo(5 ,terrain_rects[255].top + 26);
@@ -1276,7 +1277,7 @@ void place_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].bottom + 117;
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
-	FillCRect(&erase_rect,bg[17]);
+	tileImage(erase_rect,bg_gworld,bg[17]);
 	
 	if (overall_mode < MODE_MAIN_SCREEN) {
 		MoveTo(5,terrain_rects[255].bottom + 129);
@@ -1339,7 +1340,7 @@ void place_just_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	FillCRect(&erase_rect,bg[17]);
+	tileImage(erase_rect,bg_gworld,bg[17]);
 	
 	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	MoveTo(5 ,terrain_rects[255].top + 26);

@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include "porting.h"
 
 extern bool cur_scen_is_mac, mac_is_intel;

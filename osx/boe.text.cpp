@@ -1,6 +1,7 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
+#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 
@@ -63,7 +64,7 @@ extern short which_item_page[6];
 //extern CursHandle sword_curs;
 extern ControlHandle text_sbar,item_sbar;
 extern Point store_anim_ul;
-extern PixPatHandle	bg[];
+extern Rect	bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
@@ -102,6 +103,7 @@ extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern bool supressing_some_spaces;
 extern location ok_space[4];
+extern GWorldPtr bg_gworld;
 
 short text_pc_has_abil_equip(short pc_num,short abil)
 {
@@ -134,9 +136,9 @@ void put_pc_screen()
 	SetPort( pc_stats_gworld);
 
 	// First clean up gworld with pretty patterns
-	FillCRect(&erase_rect,bg[6]);
+	tileImage(erase_rect,bg_gworld,bg[6]);
 	for (i = 0; i < 3; i++)
-		FillCRect(&small_erase_rects[i],bg[7]);
+		tileImage(small_erase_rects[i],bg_gworld,bg[7]);
 	
 	ForeColor(whiteColor);
 	// Put food, gold, day
@@ -277,16 +279,16 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	SetPort( item_stats_gworld);
 
 	// First clean up gworld with pretty patterns
-	FillCRect(&erase_rect,bg[6]);
+	tileImage(erase_rect,bg_gworld,bg[6]);
 	if (suppress_buttons == 0)
 		for (i = 0; i < 6; i++)
-			FillCRect(&item_screen_button_rects[i],bg[7]);
-	FillCRect(&upper_frame_rect,bg[7]);
+			tileImage(item_screen_button_rects[i],bg_gworld,bg[7]);
+	tileImage(upper_frame_rect,bg_gworld,bg[7]);
 
 	// Draw buttons at bottom
 	if (suppress_buttons == 0) {
 		for (i = 0; i < 6; i++)
-			FillCRect(&item_screen_button_rects[i],bg[7]);
+			tileImage(item_screen_button_rects[i],bg_gworld,bg[7]);
 		}
 
 	item_offset = GetControlValue(item_sbar);
@@ -1340,7 +1342,7 @@ void print_buf ()
 	// First clean up gworld with pretty patterns
 	InsetRect(&erase_rect,1,1); ////
 	erase_rect.right++;
-	FillCRect(&erase_rect,bg[6]);
+	tileImage(erase_rect,bg_gworld,bg[6]);
 
 	ctrl_val = 58 - GetControlValue(text_sbar);
 	start_print_point = buf_pointer - LINES_IN_TEXT_WIN - ctrl_val;

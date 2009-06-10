@@ -25,7 +25,8 @@ short dist(location p1,location p2){
 
 short vdist(location p1,location p2) {
 	short i,j;
-	i = abs((short) (p1.x - p2.x)); j = abs((short) (p1.y - p2.y));
+	i = abs((long double)p1.x - p2.x);
+	j = abs((long double)p1.y - p2.y);
 	return max(i,j);
 }
 

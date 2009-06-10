@@ -6,6 +6,7 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include "soundtool.h"
 
 Handle sound_handles[NUM_SOUNDS];

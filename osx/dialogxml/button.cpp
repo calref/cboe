@@ -6,12 +6,17 @@
  *
  */
 
+#include <Carbon/Carbon.h>
 #include <vector>
 #include <map>
 #include <stdexcept>
 
 #include "dialog.h"
 #include "graphtool.h"
+
+#include <cmath>
+
+extern GWorldPtr bg_gworld;
 
 void cButton::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
@@ -63,7 +68,7 @@ void cButton::draw(){
 		ForeColor(blackColor);
 		if(key.spec && key.k == key_enter) drawFrame(2,0); // frame default button, to provide a visual cue that it's the default
 	}else{
-		FillCRect(&frame,bg[parent->bg]);
+		tileImage(frame,bg_gworld,bg[parent->bg]);
 	}
 	
 	SetPort(old_port);
@@ -227,7 +232,7 @@ void cLed::draw(){
 		// String location should be shifted right 20 pixels (or possibly 18)
 		ForeColor(blackColor);
 	}else{
-		FillCRect(&frame,bg[parent->bg]);
+		tileImage(frame,bg_gworld,bg[parent->bg]);
 	}
 	
 	SetPort(old_port);

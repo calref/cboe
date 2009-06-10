@@ -1,6 +1,7 @@
 
 //#include "item.h"
 
+#include <Carbon/Carbon.h>
 #define DIR_ARRAY_DEF
 #include "boe.global.h"
 #include "classes.h"

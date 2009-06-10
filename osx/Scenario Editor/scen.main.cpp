@@ -85,7 +85,7 @@ bool mac_is_intel;
 //
 
 //Changed to ISO C specified argument and return type.
-int main(void) {
+int main() {
 	//outdoor_record_type dummy_outdoor, *store2;
 	
 	

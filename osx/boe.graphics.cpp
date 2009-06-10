@@ -1,4 +1,5 @@
 
+#include <Carbon/Carbon.h>
 #include <cstring>
 #include <cstdio>
 
@@ -56,15 +57,16 @@ extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
 extern ControlHandle text_sbar,item_sbar,shop_sbar;
+extern GWorldPtr bg_gworld;
 extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
 extern Rect talk_area_rect, word_place_rect;
-extern PixPatHandle map_pat[25];
+extern Rect map_pat[];
 extern Point store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool fast_bang;
 //extern unsigned char m_pic_index[200];
-extern PixPatHandle	bg[];
+extern Rect	bg[];
 extern KeyMap key_state;
 extern bool fry_startup;
 //extern piles_of_stuff_dumping_type *data_store;
@@ -289,7 +291,7 @@ void adjust_window_mode()
 			}
 	create_clip_region();
 	undo_clip();
-	if (overall_mode != MODE_STARTUP) { // TODO: This is odd – fix it
+	if (overall_mode != MODE_STARTUP) { // TODO: This is odd ‚Äì fix it
 		if (in_startup_mode == true)
 			draw_startup(0);
 		if (in_startup_mode == false)
@@ -405,10 +407,10 @@ void plop_fancy_startup()
 
 	//Delay(30,&dummy);
 
-	for (i = 0; i < 14; i++) 
-	    bg[i] = GetPixPat (128 + i);
-	for (i = 0; i < 25; i++) 
-	    map_pat[i] = GetPixPat (200 + i);
+//	for (i = 0; i < 14; i++) 
+//	    bg[i] = GetPixPat (128 + i);
+//	for (i = 0; i < 25; i++) 
+//	    map_pat[i] = GetPixPat (200 + i);
 
 	// Do bulk of graphics loading!!!
 
@@ -548,13 +550,13 @@ void draw_startup(short but_type)
 	GetPort(&old_port);	
 	SetPort(GetWindowPort(mainPtr));
 	r1.bottom = ul.v + 5;
-	FillCRect(&r1,bg[4]);
+	tileImage(r1,bg_gworld,bg[4]);
 	r2.right = ul.h - 13;
-	FillCRect(&r2,bg[4]);
+	tileImage(r2,bg_gworld,bg[4]);
 	r3.top += ul.v + 5;
-	FillCRect(&r3,bg[4]);
+	tileImage(r3,bg_gworld,bg[4]);
 	r4.left += ul.h - 13;
-	FillCRect(&r4,bg[4]);
+	tileImage(r4,bg_gworld,bg[4]);
 	to_rect = startup_from[0];
 	OffsetRect(&to_rect,-13,5);
 	rect_draw_some_item(startup_gworld,startup_from[0],startup_gworld,to_rect,0,1);
@@ -1066,7 +1068,7 @@ void redraw_screen(){
 
 void put_background()
 {
-	PixPatHandle bg_pict;
+	Rect bg_pict;
 
 	if (is_out()) {
 		if (univ.party.outdoor_corner.x >= 7)
@@ -1084,11 +1086,11 @@ void put_background()
 				bg_pict = bg[1]; 
 				else bg_pict = bg[9]; 
 			}
-			else if ((univ.party.outdoor_corner.x >= 7) && (univ.town.num != 21))
+			else if ((univ.party.outdoor_corner.x >= 7) && (univ.town.num != 21)) // TODO: What's so special about town 21?
 				bg_pict = bg[8]; 
 				else bg_pict = bg[13]; 
 		}
-	FillCRgn(clip_region,bg_pict);
+	tileImage(clip_region,bg_gworld,bg_pict);
 	ShowControl(text_sbar);
 	Draw1Control(text_sbar);
 	ShowControl(item_sbar);
@@ -1720,67 +1722,6 @@ void put_graphics_in_template() // TODO: Get rid of this! It's not necessary! Ju
 				}
 		DisposeGWorld (temp_gworld);		
 		}
-}
-
-GWorldPtr load_pict(short picture_to_get)
-{
-	PicHandle	current_pic_handle;
-	Rect	pic_rect;
-	short	pic_wd,pic_hgt,x;
-	GWorldPtr	myGWorld;
-	CGrafPtr	origPort;
-	GDHandle	origDev;
-	QDErr		check_error;
-	PixMapHandle	offPMHandle;
-	char good;
-	char d_s[60];
-	
-    current_pic_handle = GetPicture (picture_to_get);
-    x = ResError();
-    if (x != 0) {
-    	if (picture_to_get == 1) // custom graphic
-    		return NULL;
-    	SysBeep(50);
-    	print_nums(10,1000,x);
-    	}
-	if (current_pic_handle == NULL)  {
-		sprintf((char *) d_s, "Stuck on %d  ",(short) picture_to_get);
-		add_string_to_buf((char *)d_s);
-		Alert(1076,NULL);
-		return NULL;
-	}
-	QDGetPictureBounds(current_pic_handle, &pic_rect);
-	pic_wd = pic_rect.right - pic_rect.left;
-	pic_hgt = pic_rect.bottom - pic_rect.top;  
-	GetGWorld (&origPort, &origDev);
-	check_error = NewGWorld (&myGWorld,  0 /*8*/,
-				&pic_rect,
-				NULL, NULL, kNativeEndianPixMap);
-	if (check_error != noErr)  {
-    	if (picture_to_get == 1) { // custom graphic
- 			ReleaseResource ((Handle) current_pic_handle);
-   			return NULL;
-   			}
-		sprintf((char *) d_s, "Stuck on %d  error %d ",(short) picture_to_get,check_error);
-		add_string_to_buf((char *)d_s);
-		print_buf(); 
-		Alert(1076,NULL);
-		return NULL;
-		}
-	
-	SetGWorld(myGWorld, NULL);
-	
-	offPMHandle = GetGWorldPixMap (myGWorld);
-	good = LockPixels (offPMHandle);
-	if (good == false)  {
-		SysBeep(50); }
-	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
-	DrawPicture (current_pic_handle, &pic_rect);
-	SetGWorld (origPort, origDev);
-	UnlockPixels (offPMHandle);
-	ReleaseResource ((Handle) current_pic_handle);
-
-	return myGWorld;
 }
 
 // this is used for determinign whether to round off walkway corners
