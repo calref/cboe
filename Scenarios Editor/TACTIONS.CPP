@@ -3005,7 +3005,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 	if (scen_item_list.scen_items[which_item].variety == 0)
 		return TRUE;
 	if (get_ran(1,1,100) > odds)
-		return FALSE;
+		return TRUE;
 	for (x = 0; x < 64; x++) 
 		if (town.preset_items[x].item_code < 0) {
 			town.preset_items[x].item_loc.x = spot_hit.x;
@@ -3022,7 +3022,7 @@ Boolean place_item(location spot_hit,short which_item,short property,short alway
 			town.preset_items[x].contained = container_there(town.preset_items[x].item_loc);
 			return TRUE;
 			}
-	return FALSE;
+	return FALSE;//out of memory ...
 }
 
 void place_items_in_town()

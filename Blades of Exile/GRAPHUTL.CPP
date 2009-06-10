@@ -303,8 +303,8 @@ HBITMAP load_pict(short pict_num,HDC)
 		case 880: got_bitmap = ReadBMP("images/MISSILES.BMP"); break;
 		case 900: got_bitmap = ReadBMP("images/TINYOBJ.BMP"); break;
 		case 901: got_bitmap = ReadBMP("images/OBJECTS.BMP"); break;
-		case 902: got_bitmap = ReadBMP("images/PCS.BMP"); break;
-		case 905: got_bitmap = ReadBMP("images/PCS.BMP"); break;
+		case 902:
+        case 905: got_bitmap = ReadBMP("images/PCS.BMP"); break;
 		case 903:
 		case 904: if(party.stuff_done[307][0] == 0)
                     got_bitmap = ReadBMP("images/MIXED.BMP");

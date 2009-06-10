@@ -277,11 +277,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 		PostQuitMessage(0);
  }
 
-void DisposeGWorld(HBITMAP bitmap)
-{
-	DeleteObject(bitmap);
-}
-
 // which_mode is 0 ... dest is a bitmap
 // is 1 ... ignore dest ... paint on mainPtr
 // is 2 ... dest is a dialog, use the dialog pattern

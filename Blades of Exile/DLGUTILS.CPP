@@ -1034,7 +1034,14 @@ Boolean prefs_event_filter (short item_hit)
 			party.stuff_done[305][5] = cd_get_led(1099,52);
 			fry_startup = cd_get_led(1099,54);
 			party.stuff_done[305][7] = cd_get_led(1099,56);
-			party.stuff_done[307][0] = cd_get_led(1099,58);
+
+			if(party.stuff_done[307][0] != cd_get_led(1099,58)){//changed graphic mode (Mac vs Windows) ?
+			 party.stuff_done[307][0] = cd_get_led(1099,58);//adjust the graphic mode SDF
+			 swap_platform_graphics();//swap graphics
+		     redraw_screen(0);//redraw screen with new graphics
+             clear_map();//redraw map with new graphics
+             }
+            
 			if (cd_get_led(1099,32) == 1)
 				PSD[306][6] = 0;
 			if (cd_get_led(1099,34) == 1)
@@ -1046,6 +1053,7 @@ Boolean prefs_event_filter (short item_hit)
 			if (cd_get_led(1099,29) == 1)
 				for (i = 0; i < 120; i++)
 					party.help_received[i] = 0;
+
 			if (display_mode < 5)
 				max_window(mainPtr);
 				else {
@@ -1350,6 +1358,16 @@ void put_scen_info()
 
 	for (i = 0; i < 3; i++)
 		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
+            if(scen_headers[store_scen_page_on * 3 + i].intro_pic == 100){//custom intro pic
+           	sprintf(place_str,"scenarios/%s",data_store2->scen_names[store_scen_page_on * 3 + i]);
+           	place_str[strlen(place_str)-3]='b';
+           	place_str[strlen(place_str)-2]='m';
+           	place_str[strlen(place_str)-1]='p';
+            spec_scen_g = ReadBMP(place_str);
+            cd_set_pict(947, 6 + i * 3,2400);
+            DeleteObject(spec_scen_g);
+            }
+            else
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			sprintf((char *) place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",

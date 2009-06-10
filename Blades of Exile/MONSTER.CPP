@@ -1231,9 +1231,6 @@ short current_town_type::placeMonster(unsigned char which, location where)
 		monst.dudes[i].monst_start = null_start_type;	
 		monst_target[i] = 6;
 	
-		if (monst.dudes[i].m_d.picture_num < 1000)
-			add_monst_graphic(which,1);
-
 		take_crate(where.x,where.y);
 		take_barrel(where.x,where.y);
 		
@@ -1307,7 +1304,6 @@ void current_town_type::activateMonsters(short code)
 				monst.dudes[i].m_d = return_monster_template(monst.dudes[i].number);
 				monst_target[i] = 6;
 				
-				add_monst_graphic(monst.dudes[i].number,1);
 				take_crate(monst.dudes[i].m_loc.x,monst.dudes[i].m_loc.y);
 				take_barrel(monst.dudes[i].m_loc.x,monst.dudes[i].m_loc.y);
 			}

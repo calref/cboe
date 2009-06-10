@@ -344,7 +344,6 @@ extern RECT win_to_rects[6];
 extern RECT startup_from[4];
 extern RECT trim_rects[8];
 extern RECT	top_left_rec;
-extern short which_graphic_index[6];
 
 extern char combat_graphics[5];
 extern short debug_nums[6];
@@ -355,9 +354,10 @@ extern char unexplored_area[13][13];
 
 // Declare the graphics
 extern HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworld;
-extern HBITMAP storage_gworld,terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
-extern HBITMAP party_template_gworld,items_gworld,tiny_obj_gworld,fields_gworld;
+extern HBITMAP terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
+extern HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 extern HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
+extern HBITMAP ter_anim_gworld,monsters_gworld[10], terrains_gworld[6];
 
 extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 
@@ -368,12 +368,7 @@ extern HRGN clip_region;
 extern HBRUSH gbrush;
 extern HPEN gpen;
 
-// Graphics storage vals
-extern short which_g_stored[STORED_GRAPHICS];
-extern short wish_list[STORED_GRAPHICS];
-extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
-
-extern Boolean has_run_anim ,currently_loading_graphics ;
+extern Boolean has_run_anim ;
 
 extern RECT main_win_rect;
 extern RECT main_win2_source_rect;
@@ -411,6 +406,7 @@ extern short current_pattern;
 extern RECT boat_rects[4]; /**/
 extern Boolean gave_no_g_error ;
 
+extern unsigned char m_pic_sheet[200];
 extern unsigned char m_pic_index[200];
 extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
@@ -523,7 +519,7 @@ extern 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 extern 	long store_g;
 extern 	short store_train_mode,store_train_pc;
 	
-extern HBITMAP pcs_gworld;
+extern HBITMAP pcs_gworld,pc_gworld;
 
 // Dialog vars
 extern short store_mage_store ;

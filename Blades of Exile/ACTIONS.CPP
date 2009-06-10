@@ -571,11 +571,14 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			
 // Begin: Moving
 				if ((right_button == FALSE) && (overall_mode == MODE_COMBAT)) {
+                    store_cur_pc = current_pc;
 					if (pc_combat_move(destination) == TRUE) {
 						center = pc_pos[current_pc];
 						did_something = TRUE;
 						update_explored(destination);
 						}
+					if(store_cur_pc != current_pc)
+					   did_something = TRUE; //pc dead by backshot
 					need_redraw = TRUE;
 					menu_activate(1);
 					}					
@@ -1461,7 +1464,6 @@ Boolean handle_syskeystroke(WPARAM wParam, LPARAM,short *handled)
 	return are_done;
 }
 
-
 Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 {
 	Boolean are_done = FALSE;
@@ -1711,10 +1713,11 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
     		break;			
 //  	case 'P': repeat Priest spell
        case 'I': //debug info
-   	       char buf[256]; //event timer off debug info
+/*   	       char buf[256]; //event timer off debug info
 	       sprintf(buf,"Party Age : %d", party.age);
-	       give_error(buf,"",0);
-           break;
+	       give_error(buf,"",0);*/
+	       clear_map();
+	        break;
 		case 'Q':  // Magic map
 			if (in_scen_debug) {
 				 if (overall_mode == MODE_OUTDOORS) {
@@ -2258,7 +2261,6 @@ void switch_pc(short which)
 				else if (current_pc == which)
 				current_pc = current_switch;
 			set_stat_window(current_pc);
-			update_pc_graphics();
 			current_switch = 6;
 			}
 			else {
@@ -2452,7 +2454,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 				return FALSE;
 			else if ((outd_is_blocked(real_dest) == FALSE) 
 				&& (scenario.ter_types[ter].boat_over == TRUE)
-				&& (scenario.ter_types[ter].special != 21)) {
+				&& (scenario.ter_types[ter].special != 21) && ter != 75 && ter!=76) {
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = TRUE;
 					else {
@@ -2492,11 +2494,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 			add_string_to_buf("Land before mounting horses.");
 			return FALSE;
 		}
-		if ((scenario.ter_types[ter].special >= 2) && (scenario.ter_types[ter].special <= 4)) {
-			ASB("Your horses quite sensibly refuse.");
-			return FALSE;
-			}
-			
+
 			give_help(60,0,0);
 			add_string_to_buf("Move: You mount the horses.           ");
 			play_sound(84);
@@ -2518,6 +2516,17 @@ Boolean outd_move_party(location destination,Boolean forced)
 		// Check if can fly over
 		|| ((party.isFlying()) &&  (scenario.ter_types[ter].fly_over == TRUE)))
 		{
+		if (party.in_horse >= 0){
+    		if ((scenario.ter_types[ter].special >= 2) && (scenario.ter_types[ter].special <= 4)) {
+	       		ASB("Your horses quite sensibly refuse.");
+		      	return FALSE;
+                }
+            if (scenario.ter_types[ter].block_horse == TRUE) {
+					ASB("You can't take horses there!");
+					return FALSE;
+				}
+       		}            
+            
 		party.direction = set_direction(party.p_loc, destination); 
 
 		if ((party.isFlying()) && (scenario.ter_types[ter].special == 21)) {
@@ -2675,7 +2684,6 @@ Boolean town_move_party(location destination,short forced)
 					ASB("The darkness spooks your horses.");
 					return FALSE;
 					}
-			
 				}
 			party.direction = set_direction(c_town.p_loc, destination);
 			c_town.p_loc = destination;

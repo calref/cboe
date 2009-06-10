@@ -535,7 +535,7 @@ void place_item_bottom_buttons()
 				rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
 				pc_from_rect = get_party_template_rect(i,0);
 				InsetRect(&to_rect,2,2);
-				rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
+				rect_draw_some_item (pc_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
 			//	}
 
 			}
@@ -544,12 +544,13 @@ void place_item_bottom_buttons()
 }
 
 RECT get_party_template_rect(short pc_num,short mode)
+//mode : 0 - right facing, 1 - left facing
 {
 	RECT source_rect;
 
-	source_rect.top = (pc_num % 3) * BITMAP_HEIGHT;
-	source_rect.bottom = 36 + (pc_num % 3) * BITMAP_HEIGHT;
-	source_rect.left = (pc_num / 3) * BITMAP_WIDTH * 2 + ((mode == 1) ? 28 : 0);
+	source_rect.top = (adven[pc_num].which_graphic % 8) * BITMAP_HEIGHT;
+	source_rect.bottom = source_rect.top + BITMAP_HEIGHT;
+	source_rect.left = (adven[pc_num].which_graphic / 8) * BITMAP_WIDTH * 2 + ((mode == 1) ? 28 : 0);
 	source_rect.right = source_rect.left + BITMAP_WIDTH;
 
 	return source_rect;

@@ -59,7 +59,6 @@ Boolean handle_startup_press(POINT the_point)
 				case 1:
 					draw_startup(0);
 					start_new_game();
-					update_pc_graphics();
 					draw_startup(0);
 					break;
 			
@@ -175,7 +174,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 	
 	RegisterClass(&wndclass2);
 
-	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile Beta 1",
+	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile Beta 1.1",
 			WS_OVERLAPPEDWINDOW,
 			0,
 			0,
@@ -290,8 +289,8 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 		delete data_store2;
 		delete data_store;
 		
-		RemoveFontResource("maidword.ttf"); // remove the font from the system font table
-
+		lose_graphics();
+		
 		FreeLibrary((HMODULE) boeSoundsDLL);
 				
 		return msg.wParam;
@@ -629,7 +628,6 @@ Boolean handle_menu (short item, HMENU)
 				draw_startup(0);
 			}
 			start_new_game();
-			update_pc_graphics();
 			draw_startup(0);
 			break;
 		case 6:
@@ -662,7 +660,6 @@ Boolean handle_menu (short item, HMENU)
 			choice = char_select_pc(0,0,"New graphic for who?");
 			if (choice < 6)
 				pick_pc_graphic(choice,1,0);
-			update_pc_graphics();
 			initiate_redraw();
 			break;
 			
@@ -713,7 +710,6 @@ Boolean handle_menu (short item, HMENU)
 						if ((i = FCD(1053,0)) == 2)
 							adven[choice].kill(0);
 						}
-					update_pc_graphics();
 					initiate_redraw();
 					}
 			break;
