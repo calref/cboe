@@ -24,7 +24,6 @@ CursorRef cursors[24] = {
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 };
 void (*redraw_screen)();
-Point* offset;
 Rect bg[21];
 Rect map_pat[30];
 GWorldPtr bg_gworld;
@@ -35,11 +34,10 @@ CursorRef GetCursorFromPath(std::string filename, Point hotspot);
 void clean_up_graphtool(){
 	for(int i = 0; i < 24; i++)
 		DisposeNSCursor(cursors[i]);
-	if(offset != NULL) delete offset;
 	CleanUp();
 }
 
-void init_graph_tool(void (*redraw_callback)(), Point* p){
+void init_graph_tool(void (*redraw_callback)()){
 	redraw_screen = redraw_callback;
 	int i,j;
 	static const Point cursor_hs[24] = {
@@ -135,12 +133,6 @@ void init_graph_tool(void (*redraw_callback)(), Point* p){
 	GetFNum(fn2,&dungeon_font_num);
 	if (dungeon_font_num == 0)
 		GetFNum(fn3,&dungeon_font_num);
-	offset = p;
-	if(offset == NULL){
-		offset = new Point;
-		offset->h = 0;
-		offset->v = 0;
-	}
 }
 
 unsigned short readUShort(unsigned char ** ptr){
@@ -322,85 +314,79 @@ void set_cursor(CursHandle which_curs){
 }
 */
 //	 masked; // if 10 - make AddOver
-//   main_win; // if 2, drawing onto dialog
-void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,
-						  char masked,short main_win){
-	PixMapHandle	test1, test2;
-	const BitMap * store_dest;
+void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char mode){
+	PixMapHandle pix1, pix2;
 	GrafPtr cur_port;
-	RGBColor	store_color;
+	RGBColor store_color;
 	
-	//if (main_win == 2) {
-		GetBackColor(&store_color);
-		BackColor(whiteColor);
-	//}
-	
+	GetBackColor(&store_color);
+	BackColor(whiteColor);
 	GetPort(&cur_port);
+	
 	if (src_gworld == NULL) {
-		if (main_win == 0) {
-			SetPort ( targ_gworld);
-			PaintRect(&targ_rect);
-			SetPort (cur_port);
-		}
-		else PaintRect(&targ_rect);
+		SetPort ( targ_gworld);
+		PaintRect(&targ_rect);
+		SetPort (cur_port);
 		return;
 	}
 	
-	store_dest = GetPortBitMapForCopyBits(cur_port);
+	pix1 = GetPortPixMap(src_gworld);
 	
-	test1 = GetPortPixMap(src_gworld);
+	LockPixels(pix1);
+	pix2 = GetPortPixMap(targ_gworld); 
+	LockPixels(pix2);
+	CopyBits((BitMap*)*pix1, (BitMap*)*pix2, &src_rect, &targ_rect, mode, NULL);
+	UnlockPixels(pix2);
+	UnlockPixels(pix1);
 	
-	if (main_win == 1) 	
-		OffsetRect(&targ_rect,offset->h,offset->v); // would this cause problems for the pc editor?
-	
-	LockPixels(test1);
-	if (main_win == 0) {
-		test2 = GetPortPixMap(targ_gworld); 
-		LockPixels(test2);
-		if (masked == 1) 
-			CopyBits ( (BitMap*)* test1 ,
-					  (BitMap*)*test2 ,
-					  &src_rect, &targ_rect, 
-					  transparent , NULL);	
-		else CopyBits ( (BitMap*)* test1 ,
-					   (BitMap*)*test2 ,
-					   &src_rect, &targ_rect, 
-					   (masked == 10) ? addOver : srcCopy, NULL);
-		UnlockPixels(test2);
-	}  
-	else {
-		if (masked == 1) 
-			CopyBits ( (BitMap*)*test1 ,
-					  store_dest ,
-					  &src_rect, &targ_rect, 
-					  transparent , NULL);
-		else CopyBits ((BitMap*) *test1 ,
-					   store_dest ,
-					   &src_rect, &targ_rect, 
-					   (masked == 10) ? addOver : 0, NULL);
-	}
-	UnlockPixels(test1);
-	//if (main_win == 2) 
-		RGBBackColor(&store_color);
+	RGBBackColor(&store_color);
 	SetPort(cur_port);
 }
 
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win){
-	char_port_draw_string(GetWindowPort(dest_window),dest_rect,str,mode,line_height, main_win);
+void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,Rect targ_rect,Point offset,char mode){
+	PixMapHandle pix1;
+	const BitMap* pix2;
+	GrafPtr cur_port;
+	RGBColor	store_color;
+	
+	GetBackColor(&store_color);
+	BackColor(whiteColor);
+	GetPort(&cur_port);
+	
+	if (src_gworld == NULL) {
+		PaintRect(&targ_rect);
+		return;
+	}
+	
+	OffsetRect(&targ_rect,offset.h,offset.v);
+	
+	pix2 = GetPortBitMapForCopyBits(cur_port);
+	pix1 = GetPortPixMap(src_gworld);
+	
+	LockPixels(pix1);
+	CopyBits((BitMap*)*pix1, pix2, &src_rect, &targ_rect, mode, NULL);
+	UnlockPixels(pix1);
+	
+	RGBBackColor(&store_color);
+	SetPort(cur_port);
 }
 
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win){
+void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset){
+	char_port_draw_string(GetWindowPort(dest_window),dest_rect,str,mode,line_height, offset);
+}
+
+void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset){
 	Str255 store_s;
 	
 	strcpy((char*) store_s,str);
-	win_draw_string(dest_window, dest_rect,store_s, mode, line_height, main_win);
+	win_draw_string(dest_window, dest_rect,store_s, mode, line_height, offset);
 	
 }
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,bool main_win){
+void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,Point offset){
 	GrafPtr old_port;
 	Str255 p_str,str_to_draw/*,str_to_draw2*/,c_str;
 	static Str255 null_s = "8";
@@ -417,9 +403,9 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
-	if (main_win) {
-		adjust_x = offset->h; adjust_y = offset->v;
-	}
+	adjust_x = offset.h;
+	adjust_y = offset.v;
+	
 	strcpy((char *) p_str,(char *) str);
 	strcpy((char *) c_str,(char *) str);
 	c2pstr((char*) p_str);	

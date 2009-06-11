@@ -37,7 +37,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand);
 void click_shop_rect(Rect area_rect);
-void draw_shop_graphics(short draw_mode,Rect clip_area_rect);
+void draw_shop_graphics(bool pressed,Rect clip_area_rect);
 void refresh_shopping();
 cItemRec store_mage_spells(short which_s) ;
 cItemRec store_priest_spells(short which_s);

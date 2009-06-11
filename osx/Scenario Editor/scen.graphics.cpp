@@ -410,7 +410,7 @@ void run_startup_g() {
 	SetPortWindowPort(mainPtr);
 	OffsetRect(&dest_rect,-25,-25);
 	pict_to_draw = load_pict("edsplash.png");
-	rect_draw_some_item(pict_to_draw, pict_rect, pict_to_draw, dest_rect, 1, 1);
+	rect_draw_some_item(pict_to_draw, pict_rect, dest_rect,(Point){0,0}, transparent);
 	ReleaseResource((Handle) pict_to_draw);
 	play_sound(-95);
 	EventRecord event;
@@ -554,7 +554,7 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if (mode > 0)
 			OffsetRect(&from_rect,from_rect.right - from_rect.left,0);
-		rect_draw_some_item(editor_mixed,from_rect,editor_mixed,left_buttons[which][1],0,1);
+		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],(Point){0,0});
 	}
 	if (left_button_status[which] % 10 == 3) 
 		text_rect.left += 16;
@@ -565,7 +565,7 @@ void draw_lb_slot (short which,short mode)  {
 	else OffsetRect(&text_rect,0,2);
 	if (mode > 0)
 		ForeColor(blueColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)strings_ls[which],0,12,true);
+	char_win_draw_string(mainPtr,text_rect,(char *)strings_ls[which],0,12);
 	ForeColor(blackColor);
 	
 	//char_win_draw_string(mainPtr,text_rect,"FIsh.",1,12);
@@ -597,7 +597,7 @@ void draw_rb_slot (short which,short mode)  {
 	
 	if (mode > 0)
 		ForeColor(redColor);
-	char_win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],0,12,true);
+	char_win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],0,12);
 	ForeColor(blackColor);
 	TextSize(10);
 	TextFace(bold);
@@ -623,13 +623,13 @@ void set_up_terrain_buttons() {
 				if (pic >= 1000) {
 					ter_from = get_custom_rect(pic % 1000);
 					rect_draw_some_item(spec_scen_g,
-										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}
 				else if (pic < 400)	{
 					pic = pic % 50;
 					OffsetRect(&ter_from,28 * (pic % 10), 36 * (pic / 10));
 					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
-										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}
 				else {
 					pic = pic % 50;
@@ -638,7 +638,7 @@ void set_up_terrain_buttons() {
 					ter_from.top = 36 * (pic % 5);
 					ter_from.bottom = ter_from.top + 36;
 					rect_draw_some_item(anim_gworld,
-										ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 					
 				}
 				small_i = get_small_icon(i);
@@ -654,7 +654,7 @@ void set_up_terrain_buttons() {
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
 				if (small_i > 0 && small_i < 255)
-					rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to,0,0);
+					rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 			}
 			break;
 		case DRAW_MONST:
@@ -694,7 +694,7 @@ void set_up_terrain_buttons() {
 				//	   palette_to.top, palette_to.left, palette_to.bottom, palette_to.right);
 				if(good_palette_buttons[editing_town][j][i]){
 					//printf("Drawing button %i at col %i, row %i\n",editing_town?town_buttons[j][i]:out_buttons[j][i],i,j);
-					rect_draw_some_item(editor_mixed,palette_from,terrain_buttons_gworld,palette_to,1,0);
+					rect_draw_some_item(editor_mixed,palette_from,terrain_buttons_gworld,palette_to,transparent);
 				}
 				OffsetRect(&palette_to,0,17);
 			}
@@ -743,7 +743,7 @@ void draw_terrain(){
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
 				if(is_spot(cen_x + q - 4,cen_y + r - 4))
-					Draw_Some_Item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, where_draw, 1, 0);
+					Draw_Some_Item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, where_draw, transparent);
 				
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
@@ -758,7 +758,7 @@ void draw_terrain(){
 					from_rect = start_button_from;
 					to_rect = tiny_to;
 					to_rect.left -= 14;
-					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
+					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
 					OffsetRect(&tiny_to,0,-7);
 				}
 				if ((editing_town == false)
@@ -769,27 +769,27 @@ void draw_terrain(){
 					from_rect = start_button_from;
 					to_rect = tiny_to;
 					to_rect.left -= 14;
-					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect,0,0);
+					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
 					OffsetRect(&tiny_to,0,-7);
 				}
 				small_i = get_small_icon(t_to_draw);
 				tiny_from = base_small_button_from;
 				OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
 				if (small_i > 0) {
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					OffsetRect(&tiny_to,0,-7);
 				}
 				
 				if (is_special(cen_x + q - 4,cen_y + r - 4) == true) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (7),7 * (0));
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					OffsetRect(&tiny_to,0,-7);
 				}	
 				if ((t_to_draw == 7) || (t_to_draw == 10) || (t_to_draw == 13) || (t_to_draw == 16)) {
 					tiny_from = base_small_button_from;
 					OffsetRect(&tiny_from,7 * (3),7 * (2));
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					OffsetRect(&tiny_to,0,-7);
 				}	
 				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == true) {
@@ -800,7 +800,7 @@ void draw_terrain(){
 							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							OffsetRect(&tiny_from,7 * (2),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 							OffsetRect(&tiny_to,0,-7);
 							i = 4;
 						}			
@@ -812,7 +812,7 @@ void draw_terrain(){
 						if ((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
 							(scenario.boats[i].loc.y == cen_y + r - 4))
-							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,transparent);
 						
 					}	
 					for (i = 0; i < 30; i++) {
@@ -821,7 +821,7 @@ void draw_terrain(){
 						if ((scenario.horses[i].which_town == cur_town) &&
 							(scenario.horses[i].loc.x == cen_x + q - 4) &&
 							(scenario.horses[i].loc.y == cen_y + r - 4))
-							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,transparent);
 						
 					}	
 					for (i = 0; i < 4; i++)		
@@ -829,7 +829,7 @@ void draw_terrain(){
 							(cen_y + r - 4 == town->start_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							OffsetRect(&tiny_from,7 * (6 + i),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 							OffsetRect(&tiny_to,0,-7);
 						}			
 					for (i = 0; i < 4; i++)		
@@ -837,38 +837,38 @@ void draw_terrain(){
 							(cen_y + r - 4 == town->wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							OffsetRect(&tiny_from,7 * (2),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 							OffsetRect(&tiny_to,0,-7);
 							i = 4;
 						}
 					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(5,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					if (is_crate(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(6,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(0,2);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(7,1);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
 						from_rect = calc_rect(2,2);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 					}	
 					for (i = 0; i < 8; i++) 
 						if (is_sfx(cen_x + q - 4,cen_y + r - 4,i)) {
 							from_rect = calc_rect(i,3);
-							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,1,0);
+							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,transparent);
 						}
 					for (x = 0; x < town->max_items(); x++)
 						if ((cen_x + q - 4 == town->preset_items[x].loc.x) &&
@@ -954,7 +954,7 @@ void draw_terrain(){
 	
 	//to_rect = world_screen;
 	//OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
-	rect_draw_some_item(ter_draw_gworld,terrain_rect,ter_draw_gworld,world_screen,0,1);
+	rect_draw_some_item(ter_draw_gworld,terrain_rect,world_screen,(Point){0,0});
 }
 
 void draw_monsts() {
@@ -978,7 +978,7 @@ void draw_monsts() {
 					source_rect = get_custom_rect((scenario.scen_monsters[town->creatures(i).number].picture_num + k) % 1000);
 					store_loc.x += k % width;
 					store_loc.y += k / width;
-					Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, 1, 0);
+					Draw_Some_Item(spec_scen_g, source_rect, ter_draw_gworld, store_loc, transparent);
 				}
 				else if (scenario.scen_monsters[town->creatures(i).number].picture_num < 1000) {
 					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures(i).number].picture_num].i + k;
@@ -987,7 +987,7 @@ void draw_monsts() {
 					source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 					store_loc.x += k % width;
 					store_loc.y += k / width;
-					Draw_Some_Item(from_gworld, source_rect, ter_draw_gworld, store_loc, 1, 0);
+					Draw_Some_Item(from_gworld, source_rect, ter_draw_gworld, store_loc, transparent);
 				}
 			}
 		}
@@ -1032,7 +1032,7 @@ void draw_items() {
 					source_rect = get_custom_rect(pic_num - 150);
 					dest_rect = calc_rect(where_draw.x,where_draw.y);
 					rect_draw_some_item(spec_scen_g,
-										source_rect, ter_draw_gworld, dest_rect, 1, 0);
+										source_rect, ter_draw_gworld, dest_rect, transparent);
 				}
 				else {
 					source_rect = get_item_template_rect(pic_num);
@@ -1045,7 +1045,7 @@ void draw_items() {
 						dest_rect.right -= 5;
 					}
 					rect_draw_some_item((pic_num < 45) ? items_gworld : tiny_obj_gworld,
-										source_rect, ter_draw_gworld, dest_rect, 1, 0);
+										source_rect, ter_draw_gworld, dest_rect,transparent);
 				}
 			}
 		}
@@ -1097,7 +1097,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 		source_gworld = terrain_gworld[picture_wanted / 50];
 	}
 	
-	Draw_Some_Item(source_gworld, source_rect, ter_draw_gworld, where_draw, 0, 0);
+	Draw_Some_Item(source_gworld, source_rect, ter_draw_gworld, where_draw);
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
@@ -1127,7 +1127,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 			}
 			else if (picture_wanted >= 1000)	{
 				from_rect = get_custom_rect(picture_wanted % 1000);
-				rect_draw_some_item(spec_scen_g, from_rect, ter_draw_gworld, dest_rect, 0, 0);
+				rect_draw_some_item(spec_scen_g, from_rect, ter_draw_gworld, dest_rect);
 			}
 			else if (picture_wanted >= 400)	{
 				source_gworld = anim_gworld;
@@ -1144,7 +1144,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 					//source_rect.top = 36 * (picture_wanted % 5);
 					//source_rect.bottom = source_rect.top + 36;
 					OffsetRect(&from_rect,(picture_wanted / 5) * 24 + 1,(picture_wanted % 5) * 6 + 1 + 156);
-					rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect, 0, 0);
+					rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 					//rect_draw_some_item(source_gworld, source_rect, ter_draw_gworld, dest_rect, 0, 0);
 				}
 			}
@@ -1152,7 +1152,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 				//source_rect = get_template_rect(terrain_to_draw);
 				//source_gworld = terrain_gworld[picture_wanted / 50];
 				OffsetRect(&from_rect,(picture_wanted % 10) * 6 + 1,(picture_wanted / 10) * 6 + 1);
-				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect, 0, 0);
+				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 			}
 			break;
 	}
@@ -1161,7 +1161,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
 void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,location target,
-					 char masked,short main_win) {
+					 short mode) {
 	Rect	destrec;
 	
 	if ((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
@@ -1174,7 +1174,7 @@ void Draw_Some_Item ( GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,l
 	destrec.left = destrec.right - (src_rect.right - src_rect.left);
 	destrec.top = destrec.bottom - (src_rect.bottom - src_rect.top);
 	
-	rect_draw_some_item(src_gworld,src_rect,ter_draw_gworld,destrec,masked,0);
+	rect_draw_some_item(src_gworld,src_rect,ter_draw_gworld,destrec,mode);
 	
 }
 
@@ -1298,7 +1298,7 @@ void place_location() {
 		if (picture_wanted >= 1000)	{
 			source_rect = get_custom_rect(picture_wanted % 1000);
 			rect_draw_some_item(spec_scen_g,
-								source_rect,terrain_buttons_gworld,draw_rect,0,0);
+								source_rect,terrain_buttons_gworld,draw_rect);
 		}
 		else if (picture_wanted >= 400)	{
 			picture_wanted -= 400;
@@ -1306,12 +1306,12 @@ void place_location() {
 			source_rect.right = source_rect.left + 28;
 			source_rect.top = 36 * (picture_wanted % 5);
 			source_rect.bottom = source_rect.top + 36;
-			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect,0,0);
+			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect);
 		}
 		else {
 			source_rect = get_template_rect(current_terrain_type);
 			rect_draw_some_item(terrain_gworld[picture_wanted / 50],source_rect,
-								terrain_buttons_gworld,draw_rect,0,0);
+								terrain_buttons_gworld,draw_rect);
 		}
 		short small_i = get_small_icon(current_terrain_type);
 		Rect tiny_to = draw_rect;
@@ -1320,13 +1320,12 @@ void place_location() {
 		Rect tiny_from = base_small_button_from;
 		OffsetRect(&tiny_from,7 * (small_i % 10),7 * (small_i / 10));
 		if (small_i > 0 && small_i < 255)
-			rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to,0,0);
+			rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 	}
 	
 	draw_rect = terrain_buttons_rect;
 	OffsetRect(&draw_rect,RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
-						terrain_buttons_gworld,draw_rect,0,1);
+	rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,draw_rect,(Point){0,0});
 }
 
 // klugde for speed ...exactly like place location above, but just writes location
@@ -1361,8 +1360,7 @@ void place_just_location() {
 	from_rect.bottom = erase_rect.bottom;
 	draw_rect = from_rect;
 	OffsetRect(&draw_rect,RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	rect_draw_some_item(terrain_buttons_gworld,from_rect,
-						terrain_buttons_gworld,draw_rect,0,1);
+	rect_draw_some_item(terrain_buttons_gworld,from_rect,draw_rect,(Point){0,0});
 }
 
 void set_string(char *string,char *string2) {

@@ -143,15 +143,12 @@ void put_pc_screen()
 	ForeColor(whiteColor);
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) univ.party.gold);		
-	win_draw_string( pc_stats_gworld,small_erase_rects[1],
- 	  to_draw,0,10,false);
+	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,10);
 	sprintf((char *) to_draw, "%d", (short) univ.party.food);		
-	win_draw_string( pc_stats_gworld,small_erase_rects[0],
- 	  to_draw,0,10,false);
+	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,0,10);
 	i = calc_day();
 	sprintf((char *) to_draw, "%d", i);		
-	win_draw_string( pc_stats_gworld,small_erase_rects[2],
- 	  to_draw,0,10,false);
+	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,10);
 	ForeColor(blackColor);
 	
 	for (i = 0; i < 6; i++) {
@@ -164,8 +161,7 @@ void put_pc_screen()
 				}
 
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());		
-			win_draw_string( pc_stats_gworld,pc_buttons[i][0],
- 			 to_draw,0,10,false);
+			win_draw_string( pc_stats_gworld,pc_buttons[i][0],to_draw,0,10);
 			TextFace(0);
  			TextFace(bold);
 			ForeColor(blackColor);
@@ -178,14 +174,12 @@ void put_pc_screen()
 						ForeColor(greenColor);
 						else ForeColor(redColor);
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][1],
- 			 		  to_draw,0,10,false);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,0,10);
 					if (univ.party[i].cur_sp == univ.party[i].max_sp) 
 						ForeColor(blueColor);
 						else ForeColor(magentaColor);
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][2],
- 			 		  to_draw,0,10,false);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,0,10);
 					ForeColor(blackColor);
 					draw_pc_effects(i);
 					break;
@@ -212,8 +206,7 @@ void put_pc_screen()
 					break;
 				}
 			if (univ.party[i].main_status != 1)
-				win_draw_string( pc_stats_gworld,to_draw_rect,
- 			 	 to_draw,0,10,false);
+				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,0,10);
 			
 			// Now put trade and info buttons
 			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
@@ -223,7 +216,7 @@ void put_pc_screen()
 			to_draw_rect.right = pc_buttons[i][4].right + 1;
 			from_rect = info_from;
 			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
-			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,1,0);
+			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,transparent);
 			}
 			else {
 				for (j = 0; j < 5; j++)
@@ -236,7 +229,7 @@ void put_pc_screen()
 	GetPortBounds(pc_stats_gworld, &to_draw_rect);
 	Rect oldRect = to_draw_rect;
 	OffsetRect(&to_draw_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item (pc_stats_gworld, oldRect, pc_stats_gworld, to_draw_rect, 0, 1);
+	rect_draw_some_item (pc_stats_gworld, oldRect, to_draw_rect,ul);
 	
 	SetPort(old_port);	
 	RGBBackColor(&store_color);
@@ -302,15 +295,14 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			TextFace(bold);
 				ForeColor(whiteColor);
 			sprintf((char *) to_draw, "Special items:");
-			win_draw_string( item_stats_gworld,upper_frame_rect,
- 			   to_draw,0,10,false);
+			win_draw_string( item_stats_gworld,upper_frame_rect,to_draw,0,10);
 				ForeColor(blackColor);
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) { 
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
 					strcpy((char *) to_draw,scenario.scen_strs(60 + spec_item_array[i_num] * 2));
-					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10,false);
+					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10);
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
@@ -328,15 +320,13 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				ForeColor(whiteColor);
 			sprintf((char *) to_draw, "%s inventory:",
 				(char *) univ.party[pc].name.c_str());
-			win_draw_string( item_stats_gworld,upper_frame_rect,
- 			  to_draw,0,10,false);
+			win_draw_string( item_stats_gworld,upper_frame_rect,to_draw,0,10);
 				ForeColor(blackColor);
 				
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				sprintf((char *) to_draw, "%d.",i_num + 1);
-				win_draw_string( item_stats_gworld,item_buttons[i][0],
- 				  to_draw,0,10,false);
+				win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10);
  				  
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -365,7 +355,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 										else sprintf((char *) to_draw, "%s",univ.party[pc].items[i_num].full_name.c_str());
 									}
 						dest_rect.left -= 2;
-						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10,false);
+						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10);
 						TextFace(0);
 						TextFace(bold);
 						ForeColor(blackColor);	
@@ -409,8 +399,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], 
-		  item_stats_gworld, dest_rect, 0, 1);
+		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], dest_rect,ul);
 		}
 		
 	SetPort(old_port);	
@@ -485,12 +474,11 @@ void place_buy_button(short position,short pc_num,short item_num)
 		store_selling_values[position] = val_to_place;	
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
-		rect_draw_some_item (invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, transparent);
 		sprintf((char *) store_str,"        %d",val_to_place);
 		if (val_to_place >= 10000)
 			TextFace(0);
-		char_port_draw_string( item_stats_gworld,item_buttons[position][5],
- 		  store_str,2,10,false);	
+		char_port_draw_string( item_stats_gworld,item_buttons[position][5],store_str,2,10);	
 		TextFace(bold);
 		}
 }
@@ -513,14 +501,14 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		InsetRect(&from_rect,2,2);
 		if (extra_val >= 150) {
 			from_rect = get_custom_rect(extra_val - 150);
-			rect_draw_some_item (spec_scen_g, from_rect, item_stats_gworld, to_rect, 1, 0);
+			rect_draw_some_item (spec_scen_g, from_rect, item_stats_gworld, to_rect,transparent);
 			}
-			else rect_draw_some_item (tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
+			else rect_draw_some_item (tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, transparent);
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
 		item_area_button_active[which_slot][which_button_position] = true;
-		rect_draw_some_item (invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
+		rect_draw_some_item (invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], transparent);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
 		item_area_button_active[which_slot][1] = true;
@@ -530,7 +518,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, transparent);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
 		item_area_button_active[which_slot][2] = true;
@@ -539,7 +527,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, 1, 0);
+		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, transparent);
 		}
 }
 //Rect get_custom_rect (short which_rect) ////
@@ -559,19 +547,19 @@ void place_item_bottom_buttons()
 		if (univ.party[i].main_status == 1) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
-			rect_draw_some_item (invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, 1, 0);
+			rect_draw_some_item (invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, transparent);
 			pc_from_rect = get_party_template_rect(i,0);
 			InsetRect(&to_rect,2,2);
-			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, 1, 0);
+			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, transparent);
 			}
 			else item_bottom_button_active[i] = false;
 	}
 	to_rect = item_screen_button_rects[6];
-	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, 1, 0);
+	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, transparent);
 	to_rect = item_screen_button_rects[7];
-	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, 1, 0);
+	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, transparent);
 	to_rect = item_screen_button_rects[8];
-	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, 1, 0);
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, transparent);
 }
 
 Rect get_party_template_rect(short pc_num,short mode)
@@ -634,22 +622,22 @@ void refresh_stat_areas(short mode)
 	short i,x;
 	Rect dest_rect,parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
 
-	x = mode * 10;
+	//x = mode * 10;
 	GetPortBounds(pc_stats_gworld, &dest_rect);
 	Rect oldRect = dest_rect;
 	OffsetRect(&dest_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item (pc_stats_gworld, oldRect, pc_stats_gworld, dest_rect, x, 1);
+	if(mode == 1) x = addOver;
+	else x = srcCopy;
+	rect_draw_some_item (pc_stats_gworld, oldRect, dest_rect,ul, x);
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], 
-		  item_stats_gworld, dest_rect, x, 1);
+		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], dest_rect,ul, x);
 		}
 	GetPortBounds(text_area_gworld, &dest_rect);
 	oldRect = dest_rect;
 	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	rect_draw_some_item (text_area_gworld,oldRect, text_area_gworld, dest_rect, x, 1);
-
+	rect_draw_some_item (text_area_gworld,oldRect, dest_rect,ul, x);
 }
 
 ////
@@ -706,7 +694,7 @@ void draw_pc_effects(short pc)
 	GetBackColor(&store_color);	
 	BackColor(whiteColor);	
 	
-	if (pc >= 10) {
+	if (pc >= 10) {return; // TODO: This is a temporary measure only!
 		pc -= 10;
 		right_limit = 490;
 		dest_rect = dlog_dest_rect;
@@ -726,88 +714,88 @@ void draw_pc_effects(short pc)
 			
 	if (univ.party[pc].main_status % 10 != 1)
 		return;
-			
+	// TODO: This used to draw the status icons in the spell dialog, but it no longer does. Fix that.
 	if ((univ.party[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[4],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[4],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_BLESS_CURSE] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[2],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[2],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	else if (univ.party[pc].status[STATUS_BLESS_CURSE] < 0) { 
-		rect_draw_some_item (status_gworld,source_rects[3],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[3],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_POISON] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_INVULNERABLE] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[5],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[5],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_HASTE_SLOW] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[6],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[6],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	else if (univ.party[pc].status[STATUS_HASTE_SLOW] < 0) { 
-		rect_draw_some_item (status_gworld,source_rects[8],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[8],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}else{ 
-		rect_draw_some_item (status_gworld,source_rects[7],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[7],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
 	if ((univ.party[pc].status[STATUS_MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[9],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[9],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_WEBS] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[10],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[10],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_DISEASE] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[11],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[11],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_INVISIBLE] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[12],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[12],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_DUMB] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[13],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[13],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[14],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[14],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_ASLEEP] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[15],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[15],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_PARALYZED] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[16],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[16],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_ACID] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[17],pc_stats_gworld,dest_rect,1,dest);
+		rect_draw_some_item (status_gworld,source_rects[17],pc_stats_gworld,dest_rect,transparent);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
@@ -1372,7 +1360,7 @@ void print_buf ()
 
 	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
 	SetPort(GetWindowPort(mainPtr));
-	rect_draw_some_item (text_area_gworld, store_text_rect, text_area_gworld, dest_rect, 0, 1);
+	rect_draw_some_item (text_area_gworld, store_text_rect, dest_rect,ul);
 	SetPort(old_port);		
 }
 
@@ -1421,6 +1409,7 @@ void display_string(char *str)
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
 	object is ptr. to bitmap to be drawn, and masking is for Copybits. */
+// TODO: Might as well make this call rect_draw_some_item instead of directly calling CopyBits
 void Draw_Some_Item (GWorldPtr src_gworld, Rect src_rect, GWorldPtr targ_gworld, 
 location target, char masked, short main_win)
 {

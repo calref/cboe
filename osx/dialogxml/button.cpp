@@ -58,9 +58,9 @@ void cButton::draw(){
 		to_gw = (GWorldPtr) parent->win;
 		from_rect = btnRects[btnGW[type]][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect,0,2);
+		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect); // TODO: This originally drew to dest 2 (dialog window); does it still?
 		RGBForeColor(&parent->defTextClr);
-		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8,false);
+		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
 		// TODO: Adjust string location as appropriate
 		// Tiny button string location should be shifted right 20 pixels (or possibly 18)
 		// Push button string should be centred below the button
@@ -225,9 +225,9 @@ void cLed::draw(){
 		to_gw = (GWorldPtr) parent->win;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect,0,2);
+		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect);
 		RGBForeColor(&parent->defTextClr);
-		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8,false);
+		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
 		// TODO: Adjust string location as appropriate
 		// String location should be shifted right 20 pixels (or possibly 18)
 		ForeColor(blackColor);

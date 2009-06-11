@@ -127,8 +127,7 @@ int main(void)
 	init_fileio();
 	init_main_buttons();
 	Set_up_win();
-	Point p = {0,0};
-	init_graph_tool(redraw_screen,&p);
+	init_graph_tool(redraw_screen);
 	init_snd_tool();
 	find_quickdraw();
 	set_pixel_depth();

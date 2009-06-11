@@ -454,8 +454,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	GetPortBounds(terrain_screen_gworld,&to_rect);
 	Rect oldBounds = to_rect;
 	OffsetRect(&to_rect,current_terrain_ul.h, current_terrain_ul.v);
-	rect_draw_some_item(terrain_screen_gworld,oldBounds,
-		terrain_screen_gworld,to_rect,0,1);
+	rect_draw_some_item(terrain_screen_gworld,oldBounds,to_rect,ul);
 			
 	GetPort(&old_port);	
 				
@@ -523,27 +522,25 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				
 				// Now put terrain in temporary;
 				rect_draw_some_item(terrain_screen_gworld,missile_place_rect[i],
-					temp_gworld,missile_place_rect[i],0,0);
+					temp_gworld,missile_place_rect[i]);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
 				if (store_missiles[i].missile_type >= 7) 
 					OffsetRect(&from_rect,18 * (t % 8),0);
 				rect_draw_some_item(missiles_gworld,from_rect,
-					temp_gworld,temp_rect,1,0);
+					temp_gworld,temp_rect,transparent);
 				}
 		// Now draw all missiles to screen
 		for (i = 0; i < 30; i++) 
 			if (store_missiles[i].missile_type >= 0) {
 				to_rect = store_erase_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(terrain_screen_gworld,store_erase_rect[i],
-					terrain_screen_gworld,to_rect,0,1);
+				rect_draw_some_item(terrain_screen_gworld,store_erase_rect[i],to_rect,ul);
 				
 				to_rect = missile_place_rect[i];
 				store_erase_rect[i] = to_rect;
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(temp_gworld,missile_place_rect[i],
-					temp_gworld,to_rect,0,1);
+				rect_draw_some_item(temp_gworld,missile_place_rect[i],to_rect,ul);
 				}
 		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
 			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
@@ -559,8 +556,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	GetPortBounds(terrain_screen_gworld,&to_rect);
 	Rect oldRect = to_rect;
 	OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-	rect_draw_some_item(terrain_screen_gworld,oldRect,
-		terrain_screen_gworld,to_rect,0,1);
+	rect_draw_some_item(terrain_screen_gworld,oldRect,to_rect,ul);
 }
 
 short get_missile_direction(Point origin_point,Point the_point)
@@ -643,8 +639,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		GetPortBounds(terrain_screen_gworld,&to_rect);
 		Rect oldRect = to_rect;
 		OffsetRect(&to_rect,current_terrain_ul.h, current_terrain_ul.v);
-		rect_draw_some_item(terrain_screen_gworld,oldRect,
-			terrain_screen_gworld,to_rect,0,1);
+		rect_draw_some_item(terrain_screen_gworld,oldRect,to_rect,ul);
 		}
 		
 	GetPort(&old_port);	
@@ -698,7 +693,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		for (i = 0; i < 30; i++) 
 			if (store_booms[i].boom_type >= 0) 
 				rect_draw_some_item(terrain_screen_gworld,explode_place_rect[i],
-					temp_gworld,explode_place_rect[i],0,0);
+					temp_gworld,explode_place_rect[i]);
 
 		// Now put in explosions
 		for (i = 0; i < 30; i++) 
@@ -707,7 +702,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						from_rect = base_rect;
 						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
 						rect_draw_some_item(boom_gworld,from_rect,
-							temp_gworld,explode_place_rect[i],1,0);
+							temp_gworld,explode_place_rect[i],transparent);
 					
 					if (store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
@@ -718,7 +713,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						sprintf(str,"%d",store_booms[i].val_to_place);
 						SetPort(temp_gworld);
 						ForeColor(whiteColor);
-						char_port_draw_string(temp_gworld,text_rect,str,1,12,false);
+						char_port_draw_string(temp_gworld,text_rect,str,1,12);
 						ForeColor(blackColor);
 						SetPort(GetWindowPort(mainPtr));
 						}
@@ -729,8 +724,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 			if (store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(temp_gworld,explode_place_rect[i],
-					temp_gworld,to_rect,0,1);
+				rect_draw_some_item(temp_gworld,explode_place_rect[i],to_rect,ul);
 				}
 		//if (((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 			FlushAndPause(2 * (1 + PSD[SDF_GAME_SPEED]));
@@ -771,7 +765,7 @@ void click_shop_rect(Rect area_rect)
 	draw_shop_graphics(0,area_rect);
 
 }
-void draw_shop_graphics(short draw_mode,Rect clip_area_rect)
+void draw_shop_graphics(bool pressed,Rect clip_area_rect)
 // mode 1 - drawing dark for button press
 {
 	Rect area_rect,item_info_from = {11,42,24,56};
@@ -806,7 +800,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	TextSize(18);
 	TextFace(0);
 
-	if (draw_mode > 0) {
+	if (pressed) {
 		ClipRect(&clip_area_rect);	
 		}
 
@@ -818,7 +812,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	FrameRect(&shop_frame);
 	
 	// Place store icon
-	if (draw_mode == 0) { 
+	if (!pressed) { 
 		SetPort(GetWindowPort(mainPtr));
 		i = faces[store_shop_type];
 		draw_dialog_graphic( talk_gworld, face_rect, i, PICT_TALK, false,1);
@@ -830,10 +824,10 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string(talk_gworld,dest_rect,store_store_name,2,18,false);
+	char_port_draw_string(talk_gworld,dest_rect,store_store_name,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,store_store_name,2,18,false);	
+	char_port_draw_string( talk_gworld,dest_rect,store_store_name,2,18);	
 
 	TextFont(geneva_font_num);
 	TextSize(12);
@@ -848,22 +842,22 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		case 4: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",univ.party[current_pc].name.c_str()); break;
 		}
-	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18,false);	
+	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18);	
 
 	// Place help and done buttons
 	ForeColor(blackColor);
 	GetPortBounds(dlg_buttons_gworld[3][0],&help_from);
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[3][draw_mode],help_from,talk_gworld,talk_help_rect,0,0);
+	rect_draw_some_item(dlg_buttons_gworld[3][pressed],help_from,talk_gworld,talk_help_rect);
 	GetPortBounds(dlg_buttons_gworld[11][0],&help_from);
 	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[11][draw_mode],help_from,talk_gworld,shop_done_rect,0,0);
+	rect_draw_some_item(dlg_buttons_gworld[11][pressed],help_from,talk_gworld,shop_done_rect);
 	
-	if (draw_mode == 0)
-		ForeColor(blackColor);
-		else RGBForeColor(&c[4]);
+	if (pressed)
+		RGBForeColor(&c[4]);
+	else ForeColor(blackColor);
 		
 	// Place all the items
 	for (i = 0; i < 8; i++) {
@@ -926,13 +920,13 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
 		TextSize(12);
-		char_port_draw_string( talk_gworld,shopping_rects[i][3],cur_name,0,12,false);
+		char_port_draw_string( talk_gworld,shopping_rects[i][3],cur_name,0,12);
 		sprintf(cur_name,"Cost: %d",cur_cost);
-		char_port_draw_string( talk_gworld,shopping_rects[i][4],cur_name,0,12,false);
+		char_port_draw_string( talk_gworld,shopping_rects[i][4],cur_name,0,12);
 		TextSize(10);
-		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12,false);
+		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
-			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1 - draw_mode,0);
+			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? srcCopy : transparent);
 
 		}
 
@@ -940,11 +934,11 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 	TextSize(12);
 	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
 	TextSize(10);
-	char_port_draw_string( talk_gworld,bottom_help_rects[0],cur_name,0,12,false);
-	char_port_draw_string( talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12,false);
-	char_port_draw_string( talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12,false);
+	char_port_draw_string( talk_gworld,bottom_help_rects[0],cur_name,0,12);
+	char_port_draw_string( talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
+	char_port_draw_string( talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_port_draw_string( talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12,false);
+		char_port_draw_string( talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
 	
 	
 	ForeColor(blackColor);
@@ -965,7 +959,7 @@ void refresh_shopping()
 	for (i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
 		OffsetRect(&to_rect,5,5);
-		rect_draw_some_item(talk_gworld,from_rects[i],talk_gworld,to_rect,0,1);
+		rect_draw_some_item(talk_gworld,from_rects[i],to_rect,ul);
 		}
 }
 
@@ -1138,7 +1132,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	GetPortBounds(dlg_buttons_gworld[3][0], &help_from);
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[3][0],help_from,talk_gworld,talk_help_rect,0,0);
+	rect_draw_some_item(dlg_buttons_gworld[3][0],help_from,talk_gworld,talk_help_rect);
 	
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) { 
@@ -1162,10 +1156,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	RGBForeColor(&c[3]);
 	dest_rect = title_rect;
 	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18,false);
+	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
 	OffsetRect(&dest_rect,-1,-1);
 	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18,false);
+	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
 		
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1174,7 +1168,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	for (i = 0; i < 9; i++) 
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,8);
-			char_port_draw_string( talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18,false);
+			char_port_draw_string( talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
 			OffsetRect(&preset_words[i].word_rect,0,-8);
 			}
 	// Place bulk of what said. Save words.
@@ -1376,7 +1370,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	
 	// Finally place processed graphics
 	SetPort(GetWindowPort(mainPtr));
-	rect_draw_some_item(talk_gworld,oldRect,talk_gworld,talk_area_rect,0,1);
+	rect_draw_some_item(talk_gworld,oldRect,talk_area_rect,ul);
 	SetPort(old_port);
 	
 	// Clean up strings
@@ -1391,7 +1385,7 @@ void refresh_talking()
 {
 	Rect tempRect;
 	GetPortBounds(talk_gworld,&tempRect);
-	rect_draw_some_item(talk_gworld,tempRect,talk_gworld,talk_area_rect,0,1);
+	rect_draw_some_item(talk_gworld,tempRect,talk_area_rect,ul);
 }
 
 short scan_for_response(char *str)

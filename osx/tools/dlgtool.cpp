@@ -594,13 +594,12 @@ void cd_draw_item(short dlog_num,short item_num){
 		case DLG_BUTTON: case DLG_DEFAULT_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-								(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
-								items[item_index].rect,0,2);
+								items[item_index].rect,(Point){0,0});
 			RGBForeColor(&clr[2]);
 			TextSize(12);
 			OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 			char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
-								 (char *) (buttons[items[item_index].flag].str),1,8,false);
+								 (char *) (buttons[items[item_index].flag].str),1,8);
 			OffsetRect(&items[item_index].rect,buttons[items[item_index].flag].left_adj,0);
 			TextSize(10);
 			ForeColor(blackColor);
@@ -608,13 +607,12 @@ void cd_draw_item(short dlog_num,short item_num){
 		case DLG_CUSTOM_BTN: case DLG_CUSTOM_DEF_BTN:
 			GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 			rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-								(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
-								items[item_index].rect,0,2);
+								items[item_index].rect,(Point){0,0});
 			RGBForeColor(&clr[2]);
 			TextSize(12);
 			char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 								 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-										   text_short_str[item_index - 10]),1,8,false);
+										   text_short_str[item_index - 10]),1,8);
 			TextSize(10);
 			ForeColor(blackColor);
 			break;
@@ -623,19 +621,13 @@ void cd_draw_item(short dlog_num,short item_num){
 			GetPortBounds(dlg_buttons_gworld[9][0], &from_rect);
 			switch (items[item_index].flag) {
 			case 0:
-				rect_draw_some_item(dlg_buttons_gworld[10][0],
-									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[10][0],
-									items[item_index].rect,0,2);
+				rect_draw_some_item(dlg_buttons_gworld[10][0], from_rect, items[item_index].rect,(Point){0,0});
 				break;
 			case 1:
-				rect_draw_some_item(dlg_buttons_gworld[9][1],
-									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[9][1],
-									items[item_index].rect,0,2);
+				rect_draw_some_item(dlg_buttons_gworld[9][1], from_rect, items[item_index].rect,(Point){0,0});
 				break;
 			case 2:
-				rect_draw_some_item(dlg_buttons_gworld[9][0],
-									from_rect, (GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[9][0],
-									items[item_index].rect,0,2);
+				rect_draw_some_item(dlg_buttons_gworld[9][0], from_rect, items[item_index].rect,(Point){0,0});
 				break;
 			}
 			break;
@@ -661,14 +653,14 @@ void cd_draw_item(short dlog_num,short item_num){
 				items[item_index].rect.left += 3;
 				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 									 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-											   text_short_str[item_index - 10]),3,12,false);
+											   text_short_str[item_index - 10]),3,12);
 				items[item_index].rect.left -= 3;
 			}
 			else {
 				InsetRect(&items[item_index].rect,4,4);
 				char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 									 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-											   text_short_str[item_index - 10]),0,(items[item_index].type == DLG_TEXT_LARGE) ? 14 : 12,false);
+											   text_short_str[item_index - 10]),0,(items[item_index].type == DLG_TEXT_LARGE) ? 14 : 12);
 				InsetRect(&items[item_index].rect,-4,-4);
 			}
 //			if ((items[item_index].type == DLG_TEXT_CLICKABLE) && (dlog_num == 989)) {
@@ -730,7 +722,7 @@ void cd_draw_item(short dlog_num,short item_num){
 		else OffsetRect(&to_rect, 0,(to_rect.bottom - to_rect.top) / 6);
 		if (items[item_index].active != 0) {
 			char_win_draw_string(dlgs[dlg_index].win,to_rect,
-								 labels[items[item_index].label_loc].str,2,12,false);
+								 labels[items[item_index].label_loc].str,2,12);
 			
 		}
 		TextFace(bold);
@@ -895,20 +887,19 @@ void cd_press_button(short dlog_num, short item_num){
 	TextSize(12);
 	GetPortBounds(dlg_buttons_gworld[buttons[items[item_index].flag].type][0], &from_rect);
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][1],from_rect,
-						(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][1],
-						items[item_index].rect,0,2);
+						items[item_index].rect,(Point){0,0});
 	TextFace(bold);
 	RGBForeColor(&clr[3]);
 	if (items[item_index].type < DLG_LED_BUTTON) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
-							 (char *) (buttons[items[item_index].flag].str),1,8,false);
+							 (char *) (buttons[items[item_index].flag].str),1,8);
 		OffsetRect(&items[item_index].rect,buttons[items[item_index].flag].left_adj,0);
 	}
 	else {
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-									   text_short_str[item_index - 10]),1,8,false);
+									   text_short_str[item_index - 10]),1,8);
 	}
 	
 	if (play_sounds == true) {
@@ -918,20 +909,19 @@ void cd_press_button(short dlog_num, short item_num){
 	else Delay(14,&dummy);
 	
 	rect_draw_some_item(dlg_buttons_gworld[buttons[items[item_index].flag].type][0],from_rect,
-						(GWorldPtr)dlgs[dlg_index].win,//dlg_buttons_gworld[buttons[items[item_index].flag].type][0],
-						items[item_index].rect,0,2);
+						items[item_index].rect,(Point){0,0});
 	
 	RGBForeColor(&clr[2]);
 	if (items[item_index].type < DLG_LED_BUTTON) {
 		OffsetRect(&items[item_index].rect,-1 * buttons[items[item_index].flag].left_adj,0);
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
-							 (char *) (buttons[items[item_index].flag].str),1,8,false);
+							 (char *) (buttons[items[item_index].flag].str),1,8);
 		OffsetRect(&items[item_index].rect,buttons[items[item_index].flag].left_adj,0);
 	}
 	else {
 		char_win_draw_string(dlgs[dlg_index].win,items[item_index].rect,
 							 (char *) ((item_index < 10) ? text_long_str[item_index] : 
-									   text_short_str[item_index - 10]),1,8,false);
+									   text_short_str[item_index - 10]),1,8);
 	}
 	
 	TextFont(0);

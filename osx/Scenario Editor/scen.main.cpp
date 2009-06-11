@@ -101,7 +101,7 @@ int main() {
 	load_graphics();
 	
 	init_dialogs();
-	init_graph_tool(redraw_screen,NULL);
+	init_graph_tool(redraw_screen);
 	
 	cen_x = 18;
 	cen_y = 18;

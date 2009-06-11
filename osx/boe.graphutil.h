@@ -1,4 +1,4 @@
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest);
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw);
 void draw_monsters();
 void play_see_monster_str(unsigned short m);
 void draw_pcs(location center,short mode);

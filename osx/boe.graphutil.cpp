@@ -160,7 +160,7 @@ eAmbientSound ambient_sound;
 //1,1,1,1,1,1,1,1,1,1,
 //1,1,1,1,1,1,1,1,1,1};
 
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) ////
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 1000, force to draw graphic which is terrain_to_draw - 1000
@@ -232,7 +232,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw,short dest) //
 				anim_onscreen = true;
 			}
 	
-	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw, (unsigned char) 0, dest);
+	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw);
 }
 
 void draw_monsters() ////
@@ -277,7 +277,7 @@ void draw_monsters() ////
 															  ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(spec_scen_g, source_rect, terrain_screen_gworld,to_rect, 1, 0); 			
+								rect_draw_some_item(spec_scen_g, source_rect, terrain_screen_gworld,to_rect, transparent); 			
 							}					
 						}
 						if (picture_wanted < 1000) {
@@ -286,7 +286,7 @@ void draw_monsters() ////
 																		(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(storage_gworld, source_rect, terrain_screen_gworld,to_rect, 1, 0); 			
+								rect_draw_some_item(storage_gworld, source_rect, terrain_screen_gworld,to_rect, transparent); 			
 							}
 						}
 					}
@@ -325,7 +325,7 @@ void draw_monsters() ////
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0);
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 						}
 					}
@@ -362,7 +362,7 @@ void draw_monsters() ////
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u,0); ////
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
 							else Draw_Some_Item(storage_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
 						}
 					}
@@ -463,16 +463,16 @@ void draw_items(location where){
 				from_rect = get_custom_rect(univ.town.items[i].graphic_num - 1000);
 				to_rect = coord_to_rect(where.x,where.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
-				rect_draw_some_item(spec_scen_g,from_rect,terrain_screen_gworld,to_rect,1,0);
+				rect_draw_some_item(spec_scen_g,from_rect,terrain_screen_gworld,to_rect,transparent);
 			}else{
 				from_rect = get_item_template_rect(univ.town.items[i].graphic_num);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
 				if(univ.town.items[i].graphic_num >= 45) {
 					InsetRect(&to_rect,5,9);
-					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect, 1, 0);
+					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect,transparent);
 				}else
-					rect_draw_some_item(items_gworld, from_rect, terrain_screen_gworld, to_rect, 1, 0);
+					rect_draw_some_item(items_gworld, from_rect, terrain_screen_gworld, to_rect,transparent);
 			}
 		}
 	}
@@ -622,7 +622,7 @@ void draw_party_symbol(short mode,location center)
 		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
-			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u,0);
+			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u);
 		else Draw_Some_Item(party_template_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 		}
 	else if (univ.party.in_boat >= 0) {

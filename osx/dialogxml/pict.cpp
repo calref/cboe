@@ -533,7 +533,7 @@ void cPict::drawPresetTer(short num, GWorldPtr to_gw, Rect to_rect){
 	Rect from_rect = calc_rect(num % 10, num / 10);
 	if (to_rect.right - to_rect.left > 28) 
 		InsetRect(&to_rect,4,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
@@ -544,7 +544,7 @@ void cPict::drawPresetTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
 		InsetRect(&to_rect,4,0);
 		to_rect.right = to_rect.left + 28;
 	}
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 static Rect calcDefMonstRect(short i, short animFrame){
@@ -571,7 +571,7 @@ void cPict::drawPresetMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPresetMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
@@ -584,14 +584,14 @@ void cPict::drawPresetMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPresetMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
@@ -605,14 +605,14 @@ void cPict::drawPresetMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,0,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPresetMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -626,28 +626,28 @@ void cPict::drawPresetMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 2;
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,-14,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 3;
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPresetDlog(short num, GWorldPtr to_gw, Rect to_rect){
@@ -656,7 +656,7 @@ void cPict::drawPresetDlog(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = dlog;
 	Rect from_rect = {0,0,36,36};
 	OffsetRect(&from_rect,36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetDlogLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -665,7 +665,7 @@ void cPict::drawPresetDlogLg(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = dlog;
 	Rect from_rect = {0,0,72,72};
 	OffsetRect(&from_rect,36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetTalk(short num, GWorldPtr to_gw, Rect to_rect){
@@ -675,7 +675,7 @@ void cPict::drawPresetTalk(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = talk;
 	Rect from_rect = {0,0,32,32};
 	OffsetRect(&from_rect,32 * (num % 10),32 * (num / 10));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetScen(short num, GWorldPtr to_gw, Rect to_rect){
@@ -684,7 +684,7 @@ void cPict::drawPresetScen(short num, GWorldPtr to_gw, Rect to_rect){
 	OffsetRect(&from_rect,32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetScenLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -693,7 +693,7 @@ void cPict::drawPresetScenLg(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.bottom = to_rect.top + 64;
 	Rect from_rect = {0,0,64,64};
 	OffsetRect(&from_rect, num * 64, 0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetItem(short num, GWorldPtr to_gw, Rect to_rect){
@@ -710,7 +710,7 @@ void cPict::drawPresetItem(short num, GWorldPtr to_gw, Rect to_rect){
 		InsetRect(&to_rect,5,9);
 		OffsetRect(&from_rect,18 * (num % 10), 18 * (num / 10));
 	}
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPresetPc(short num, GWorldPtr to_gw, Rect to_rect){
@@ -719,7 +719,7 @@ void cPict::drawPresetPc(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPresetField(short num, GWorldPtr to_gw, Rect to_rect){
@@ -728,7 +728,7 @@ void cPict::drawPresetField(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPresetBoom(short num, GWorldPtr to_gw, Rect to_rect){
@@ -737,7 +737,7 @@ void cPict::drawPresetBoom(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawFullSheet(short num, GWorldPtr to_gw, Rect to_rect){
@@ -746,7 +746,7 @@ void cPict::drawFullSheet(short num, GWorldPtr to_gw, Rect to_rect){
 	GetPortBounds(from_gw, &from_rect);
 	to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
 	to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPresetMissile(short num, GWorldPtr to_gw, Rect to_rect){
@@ -757,7 +757,7 @@ void cPict::drawPresetMissile(short num, GWorldPtr to_gw, Rect to_rect){
 	PaintRect(&to_rect);
 	short i = animFrame == 7 ? 0 : animFrame + 1;
 	OffsetRect(&from_rect,18 * i, 18 * num);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPresetTerMap(short num, GWorldPtr to_gw, Rect to_rect){
@@ -766,7 +766,7 @@ void cPict::drawPresetTerMap(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
 	OffsetRect(&from_rect,12 * (num % 10), 12 * (num / 10));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawStatusIcon(short num, GWorldPtr to_gw, Rect to_rect){
@@ -775,7 +775,7 @@ void cPict::drawStatusIcon(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.right = to_rect.left + 12;
 	to_rect.bottom = to_rect.top + 12;
 	OffsetRect(&from_rect,12 * (num % 3), 12 * (num / 3));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawCustomTer(short num, GWorldPtr to_gw, Rect to_rect){
@@ -784,7 +784,7 @@ void cPict::drawCustomTer(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.bottom = to_rect.top + 32;
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawCustomTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
@@ -794,7 +794,7 @@ void cPict::drawCustomTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
 	num += animFrame;
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawCustomMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
@@ -807,7 +807,7 @@ void cPict::drawCustomMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
 	
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawCustomMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
@@ -821,11 +821,11 @@ void cPict::drawCustomMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_gw = customSheets[get_custom_rect(num + 1,from_rect)];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawCustomMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
@@ -839,11 +839,11 @@ void cPict::drawCustomMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_gw = customSheets[get_custom_rect(num + 1,from_rect)];
 	OffsetRect(&small_monst_rect,0,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawCustomMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -857,19 +857,19 @@ void cPict::drawCustomMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_gw = customSheets[get_custom_rect(num+1,from_rect)];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_gw = customSheets[get_custom_rect(num+2,from_rect)];
 	OffsetRect(&small_monst_rect,-14,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_gw = customSheets[get_custom_rect(num+3,from_rect)];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawCustomDlog(short num, GWorldPtr to_gw, Rect to_rect){
@@ -879,13 +879,13 @@ void cPict::drawCustomDlog(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 	
 	from_gw = customSheets[get_custom_rect(num,from_rect)];
 	OffsetRect(&to_rect,18,0);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawCustomDlogLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -905,13 +905,13 @@ void cPict::drawCustomTalk(short num, GWorldPtr to_gw, Rect to_rect){
 	to_rect.bottom = to_rect.top + 32;
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 	
 	from_gw = customSheets[get_custom_rect(num+1,from_rect)];
 	OffsetRect(&to_rect,16,0);
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawCustomItem(short num, GWorldPtr to_gw, Rect to_rect){
@@ -921,7 +921,7 @@ void cPict::drawCustomItem(short num, GWorldPtr to_gw, Rect to_rect){
 	Rect from_rect;
 	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawCustomMissile(short num, GWorldPtr to_gw, Rect to_rect){
@@ -933,7 +933,7 @@ void cPict::drawCustomMissile(short num, GWorldPtr to_gw, Rect to_rect){
 	if(animFrame >= 4) OffsetRect(&from_rect, 0, 18);
 	PaintRect(&to_rect);
 	InsetRect(&to_rect,5,9);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawCustomTerMap(short num, GWorldPtr to_gw, Rect to_rect){
@@ -945,7 +945,7 @@ void cPict::drawCustomTerMap(short num, GWorldPtr to_gw, Rect to_rect){
 	OffsetRect(&from_rect, (num / 3) * 12, (num % 3) * 12);
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPartyMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
@@ -955,7 +955,7 @@ void cPict::drawPartyMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPartyMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
@@ -967,11 +967,11 @@ void cPict::drawPartyMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	from_rect = get_custom_rect(num+1);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPartyMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
@@ -983,11 +983,11 @@ void cPict::drawPartyMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	OffsetRect(&small_monst_rect,0,18);
 	from_rect = get_custom_rect(num+1);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPartyMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
@@ -999,19 +999,19 @@ void cPict::drawPartyMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(num+1);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	OffsetRect(&small_monst_rect,-14,18);
 	from_rect = get_custom_rect(num+2);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 	
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(num+3);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
 }
 
 void cPict::drawPartyScen(short num, GWorldPtr to_gw, Rect to_rect){
@@ -1020,7 +1020,7 @@ void cPict::drawPartyScen(short num, GWorldPtr to_gw, Rect to_rect){
 	OffsetRect(&from_rect,32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 0, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
 }
 
 void cPict::drawPartyItem(short num, GWorldPtr to_gw, Rect to_rect){
@@ -1030,7 +1030,7 @@ void cPict::drawPartyItem(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 void cPict::drawPartyPc(short num, GWorldPtr to_gw, Rect to_rect){
@@ -1040,7 +1040,7 @@ void cPict::drawPartyPc(short num, GWorldPtr to_gw, Rect to_rect){
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, 1, 0);
+	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
 }
 
 cPict::~cPict() {}

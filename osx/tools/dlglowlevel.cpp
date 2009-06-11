@@ -515,7 +515,7 @@ void draw_preset_ter_pic(short which_g,Rect& rect){ // terrain
 	Rect from_rect = calc_rect(which_g % 10, which_g / 10);
 	if (rect.right - rect.left > 28) 
 		InsetRect(&rect,4,0);
-	rect_draw_some_item(from_gworld,from_rect, to_gworld, rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect, to_gworld, rect);
 }
 
 void draw_preset_anim_ter_pic(short which_g,Rect& rect){ // animated terrain
@@ -531,7 +531,7 @@ void draw_preset_anim_ter_pic(short which_g,Rect& rect){ // animated terrain
 		InsetRect(&rect,4,0);
 		rect.right = rect.left + 28;
 	}
-	rect_draw_some_item(from_gworld ,from_rect, to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld ,from_rect, to_gworld,rect);
 }
 
 void draw_preset_monst_pic_small(short which_g,Rect& rect){ // monster
@@ -545,7 +545,7 @@ void draw_preset_monst_pic_small(short which_g,Rect& rect){ // monster
 	rect.right = rect.left + 28; rect.bottom = rect.top + 36;
 	if (w__gw == 0)
 		PaintRect(&rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,transparent);
 }
 
 void draw_preset_monst_pic_wide(short which_g,Rect& rect){
@@ -563,7 +563,7 @@ void draw_preset_monst_pic_wide(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,rect.left,rect.top + 7);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	m_start_pic = m_pic_index[which_g].i + 1;
 	from_gworld = dlg_gworlds["monst"][m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
@@ -571,7 +571,7 @@ void draw_preset_monst_pic_wide(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,14,0);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 
 void draw_preset_monst_pic_tall(short which_g,Rect& rect){
@@ -589,7 +589,7 @@ void draw_preset_monst_pic_tall(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,rect.left + 7,rect.top);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	m_start_pic = m_pic_index[which_g].i + 1;
 	from_gworld = dlg_gworlds["monst"][m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
@@ -597,7 +597,7 @@ void draw_preset_monst_pic_tall(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,0,18);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 
 void draw_preset_monst_pic_large(short which_g,Rect& rect){
@@ -615,7 +615,7 @@ void draw_preset_monst_pic_large(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,rect.left,rect.top);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	m_start_pic = m_pic_index[which_g].i + 1;
 	from_gworld = dlg_gworlds["monst"][m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
@@ -623,7 +623,7 @@ void draw_preset_monst_pic_large(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,14,0);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	m_start_pic = m_pic_index[which_g].i + 2;
 	from_gworld = dlg_gworlds["monst"][m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
@@ -631,7 +631,7 @@ void draw_preset_monst_pic_large(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,-14,18);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	m_start_pic = m_pic_index[which_g].i + 3;
 	from_gworld = dlg_gworlds["monst"][m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
@@ -639,7 +639,7 @@ void draw_preset_monst_pic_large(short which_g,Rect& rect){
 	OffsetRect(&small_monst_rect,14,0);
 	if (w__gw == 0)
 		PaintRect(&small_monst_rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 	
 void draw_preset_item_pic(short which_g,Rect& rect){ // item
@@ -662,7 +662,7 @@ void draw_preset_item_pic(short which_g,Rect& rect){ // item
 	}
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,transparent);
 }
 
 void draw_preset_dlg_pic(short which_g,Rect& rect){ // dialog
@@ -672,7 +672,7 @@ void draw_preset_dlg_pic(short which_g,Rect& rect){ // dialog
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = {0,0,36,36};
 	OffsetRect(&from_rect,36 * (which_g % 4),36 * (which_g / 4));
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 }
 
 void draw_preset_pc_pic(short which_g,Rect& rect){ // PC
@@ -686,7 +686,7 @@ void draw_preset_pc_pic(short which_g,Rect& rect){ // PC
 	//which_g -= 800;
 	Rect from_rect = calc_rect(2 * (which_g / 8), which_g % 8);
 	PaintRect(&rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,transparent);
 	if (*dlg_gworlds["pc"] == NULL)
 		DisposeGWorld(from_gworld);
 }
@@ -698,7 +698,7 @@ void draw_preset_talk_pic(short which_g,Rect& rect){ // talk face
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = {0,0,32,32};
 	OffsetRect(&from_rect,32 * ((which_g - 1) % 10),32 * ((which_g - 1) / 10));
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,0);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 }
 
 void draw_item_info_help_pic(Rect& rect){ // item info help
@@ -709,7 +709,7 @@ void draw_item_info_help_pic(Rect& rect){ // item info help
 	GWorldPtr to_gworld = (GWorldPtr)hDialog;
 	rect.right = rect.left + from_rect.right - from_rect.left;
 	rect.bottom = rect.top + from_rect.bottom - from_rect.top;
-	rect_draw_some_item(from_gworld ,from_rect, to_gworld ,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld ,from_rect, to_gworld ,rect);
 }
 
 void draw_pc_info_help_pic(Rect& rect){ // item info help 
@@ -720,7 +720,7 @@ void draw_pc_info_help_pic(Rect& rect){ // item info help
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	rect.right = rect.left + from_rect.right - from_rect.left;
 	rect.bottom = rect.top + from_rect.bottom - from_rect.top;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 }
 
 void draw_preset_scen_pic_large(short which_g,Rect& rect){
@@ -729,7 +729,7 @@ void draw_preset_scen_pic_large(short which_g,Rect& rect){
 	//GWorldPtr to_gworld = (GWorldPtr) ((w__gw == 1) ? (GWorldPtr) (hDialog): from_gworld);
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = {0,0,64,64};
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 	DisposeGWorld(from_gworld);
 }
 
@@ -742,7 +742,7 @@ void draw_help_pic(short which_g,Rect& rect){ // button help
 	rect.right = rect.left + from_rect.right;
 	rect.bottom = rect.top + from_rect.bottom;
 	OffsetRect(&from_rect,0,125 * which_g);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 	DisposeGWorld(from_gworld);
 }
 
@@ -754,7 +754,7 @@ void draw_combat_ap_help_pic(Rect& rect){ // combat ap help
 	Rect from_rect = {0,0,100,275};
 	rect.right = rect.left + from_rect.right;
 	rect.bottom = rect.top + from_rect.bottom;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 	DisposeGWorld(from_gworld);
 }
 
@@ -766,7 +766,7 @@ void draw_pc_stat_help_pic(Rect& rect){ // stat symbols help
 	Rect from_rect = {0,0,94,386};
 	rect.right = rect.left + from_rect.right;
 	rect.bottom = rect.top + from_rect.bottom;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 	DisposeGWorld(from_gworld);
 }
 
@@ -779,7 +779,7 @@ void draw_preset_scen_pic(short which_g,Rect& rect){
 	OffsetRect(&from_rect,32 * (which_g % 5),32 * (which_g / 5));
 	rect.right = rect.left + 32;
 	rect.bottom = rect.top + 32;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 	DisposeGWorld(from_gworld);
 }
 
@@ -791,7 +791,7 @@ void draw_preset_field_pic(short which_g,Rect& rect){ // dialog
 	Rect from_rect = calc_rect(which_g % 8, which_g / 8);
 	if (w__gw == 0)
 		PaintRect(&rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,transparent);
 }
 
 void draw_custom_space_pic(short which_g,Rect& rect){
@@ -805,7 +805,7 @@ void draw_custom_space_pic(short which_g,Rect& rect){
 	Rect from_rect = get_custom_rect(which_g);
 	if ((w__gw == 0) && (fr == true))
 		PaintRect(&rect);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,transparent);
 }
 
 void draw_custom_monst_wide_pic(short which_g,Rect& rect){
@@ -820,10 +820,10 @@ void draw_custom_monst_wide_pic(short which_g,Rect& rect){
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = get_custom_rect(which_g);
 	OffsetRect(&small_monst_rect,rect.left,rect.top + 7);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	from_rect = get_custom_rect(which_g+1);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 
 void draw_custom_monst_tall_pic(short which_g,Rect& rect){
@@ -838,10 +838,10 @@ void draw_custom_monst_tall_pic(short which_g,Rect& rect){
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = get_custom_rect(which_g);
 	OffsetRect(&small_monst_rect,rect.left + 7,rect.top);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	OffsetRect(&small_monst_rect,0,18);
 	from_rect = get_custom_rect(which_g+1);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 
 void draw_custom_monst_large_pic(short which_g,Rect& rect){
@@ -856,16 +856,16 @@ void draw_custom_monst_large_pic(short which_g,Rect& rect){
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = get_custom_rect(which_g);
 	OffsetRect(&small_monst_rect,rect.left,rect.top);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(which_g+1);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	OffsetRect(&small_monst_rect,-14,18);
 	from_rect = get_custom_rect(which_g+2);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(which_g+3);
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,small_monst_rect,transparent);
 }
 
 void draw_custom_dlg_pic_split(short which_g,Rect& rect){ // dialog, split
@@ -879,12 +879,12 @@ void draw_custom_dlg_pic_split(short which_g,Rect& rect){ // dialog, split
 	to_rect.bottom = to_rect.top + 36;
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect);
 	from_rect = get_custom_rect(which_g + 1);
 	OffsetRect(&to_rect,18,0);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect);
 }
 
 void draw_custom_talk_pic_split(short which_g,Rect& rect){ // facial graphic, split
@@ -898,12 +898,12 @@ void draw_custom_talk_pic_split(short which_g,Rect& rect){ // facial graphic, sp
 	to_rect.bottom = to_rect.top + 32;
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect);
 	from_rect = get_custom_rect(which_g + 1);
 	OffsetRect(&to_rect,16,0);
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,1,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect);
 }
 
 void draw_preset_dlg_pic_large(short which_g,Rect& rect){
@@ -913,5 +913,5 @@ void draw_preset_dlg_pic_large(short which_g,Rect& rect){
 	GWorldPtr to_gworld = (GWorldPtr) hDialog;
 	Rect from_rect = {0,0,72,72};
 	OffsetRect(&from_rect,36 * (which_g % 4),36 * (which_g / 4));
-	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect,0,draw_dest);
+	rect_draw_some_item(from_gworld,from_rect,to_gworld,rect);
 }

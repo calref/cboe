@@ -44,18 +44,18 @@ struct m_pic_index_t {
 };
 
 typedef unsigned short pic_num_t;
-void init_graph_tool(void (*redraw_callback)(),Point* p);
+void init_graph_tool(void (*redraw_callback)());
 void clean_up_graphtool();
 GWorldPtr load_pict(std::string picture_to_get, std::string scen_name = "");
 GWorldPtr load_pict(int picture_to_get) __attribute__((deprecated));
 GWorldPtr load_bmp(unsigned char *data, unsigned long length);
 void set_cursor(cursor_type which_curs);
 void restore_cursor();
-void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,
-						  char masked,short main_win);
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win);
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,bool main_win);
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,bool main_win);
+void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char mode = srcCopy);
+void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,Rect targ_rect,Point offset,char mode = srcCopy);
+void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset = (Point){0,0});
+void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset = (Point){0,0});
+void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,Point offset = (Point){0,0});
 short string_length(const char *str);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();

@@ -1538,8 +1538,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			if (modeless_exists[5] == true) {
 				SetPort(GetDialogPort(the_dialog));
 				tileImage(map_bar_rect,bg_gworld,bg[4]);
-				char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-					map_bar_rect,"No map here.",0,12,false);
+				char_port_draw_string( GetDialogPort(modeless_dialogs[5]),map_bar_rect,"No map here.",0,12);
 				draw_pcs = false;
 				SetPort( map_gworld);
 				}
@@ -1551,8 +1550,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			 if (modeless_exists[5] == true) {
 				 SetPort(GetDialogPort(the_dialog));
 				 tileImage(map_bar_rect,bg_gworld,bg[4]);
-				 char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-									   map_bar_rect,"This place defies mapping.",0,12,false);
+				 char_port_draw_string( GetDialogPort(modeless_dialogs[5]),map_bar_rect,"This place defies mapping.",0,12);
 				 draw_pcs = false;
 				 SetPort( map_gworld);
 			 }
@@ -1633,7 +1631,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 								pic = pic % 1000;
 								custom_from = coord_to_rect(pic % 10, pic / 10);
 								OffsetRect(&custom_from,-13,-13);
-								rect_draw_some_item(spec_scen_g,custom_from,map_gworld,draw_rect,0,0);								
+								rect_draw_some_item(spec_scen_g,custom_from,map_gworld,draw_rect);								
 								}
 							}
 						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
@@ -1643,8 +1641,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 										6 * (terrain_pic[what_ter] % 10),6 * (terrain_pic[what_ter] / 10));
 									else OffsetRect(&ter_temp_from,
 										24 * ((terrain_pic[what_ter] - 400) / 5),6 * ((terrain_pic[what_ter] - 400) % 5) + 156);
-								rect_draw_some_item(small_ter_gworld,ter_temp_from,
-									map_gworld,draw_rect,0,0);
+								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
 								break;
 
 							default:
@@ -1695,7 +1692,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
  				21, PICT_DLG, false,0);
  			ForeColor(whiteColor);
 			char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-				map_title_rect,"Your map:      (Hit Escape to close.)",0,12,false);
+				map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
  			ForeColor(blackColor);
 	
 			/*SetPort( the_dialog);
@@ -1707,7 +1704,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			PenSize(1,1); */
 			}
 	
-		rect_draw_some_item(map_gworld,area_to_draw_from,map_gworld,area_to_draw_on,0,2);
+		rect_draw_some_item(map_gworld,area_to_draw_from,map_gworld,area_to_draw_on);
 		}
 							
 	// Now place PCs and monsters

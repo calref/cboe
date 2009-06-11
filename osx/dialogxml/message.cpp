@@ -122,10 +122,10 @@ void cTextMsg::draw(){
 		RGBForeColor(&draw_color);
 		if (to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
 			to_rect.left += 3;
-			char_win_draw_string(parent->win,to_rect,lbl.c_str(),3,12,false);
+			char_win_draw_string(parent->win,to_rect,lbl.c_str(),3,12);
 		}else {
 			InsetRect(&to_rect,4,4);
-			char_win_draw_string(parent->win,to_rect,lbl.c_str(),0,textSize + 2,false);
+			char_win_draw_string(parent->win,to_rect,lbl.c_str(),0,textSize + 2);
 		}
 	}
 	

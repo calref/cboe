@@ -179,7 +179,7 @@ int main(void)
 	shop_sbar_UPP = NewControlActionProc(shop_sbar_action);
 #endif
 	init_fileio();
-	init_graph_tool(redraw_screen,&ul);
+	init_graph_tool(redraw_screen);
 
 	Set_Window_Drag_Bdry();
 
