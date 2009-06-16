@@ -319,7 +319,7 @@ void Handle_One_Event()
 	//ed_reg = false;
 	
 	if (Multifinder_Present == true) {
-		WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
+		WaitNextEvent(everyEvent, &event, 0, NULL);
 		cur_time = TickCount();
 
 		GetPort(&old_port);		

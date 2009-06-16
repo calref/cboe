@@ -1,7 +1,5 @@
 //#define EXILE_BIG_GUNS 1
 
-#define	SLEEP_TICKS		60L
-#define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
 
@@ -9,7 +7,6 @@
 
 #define NUM_TOWN_ITEMS	115
 
-#define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
 

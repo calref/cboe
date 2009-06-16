@@ -2,8 +2,6 @@
 //#include <string>
 //#include "scen.consts.h"
 
-#define	SLEEP_TICKS		2L
-#define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
 #define IN_FRONT	(WindowPtr)-1L
 

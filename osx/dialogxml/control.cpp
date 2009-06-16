@@ -233,7 +233,7 @@ void cControl::detachKey(){
 	this->key.c = 0;
 }
 
-cControl::cControl(cDialog* p, eControlType t) : parent(p), type(t) {}
+cControl::cControl(cDialog* p, eControlType t) : parent(p), type(t), visible(true) {}
 
 bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), Point __attribute__((unused))){
 	return true;

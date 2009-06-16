@@ -54,6 +54,7 @@ enum ePicType {
 	PIC_PARTY_MONST_WIDE = 223, // 56x36 monster graphic from the savegame sheet, resized to fit and centred in a 28x36 space
 	PIC_PARTY_MONST_TALL = 243, // 28x72 monster graphic from the savegame sheet, resized to fit and centred in a 28x36 space
 	PIC_PARTY_MONST_LG = 263, // 56x72 monster graphic from the savegame sheet, resized to fit in a 28x36 space
+	NUM_PIC_TYPES
 };
 
 enum ePicTypeMod {
@@ -153,7 +154,8 @@ private:
 	static void drawPartyScen(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPartyItem(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPartyPc(short num, GWorldPtr to_gw, Rect to_rect);
-	static std::map<ePicType,void(*)(short,GWorldPtr,Rect)> drawPict;
+	//static std::map<ePicType,void(*)(short,GWorldPtr,Rect)> drawPict;
+	static void(* drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
 	click_callback_t onClick;
 };
 

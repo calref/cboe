@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		912CF3570FE4494C0063B614 /* Common Data Files */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
+			buildPhases = (
+				912CF3560FE4494C0063B614 /* Copy Scenarios */,
+				912CF36C0FE44A2A0063B614 /* Copy Old Data Files */,
+				912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */,
+				912CF36E0FE44A2A0063B614 /* Copy Mac Cursors */,
+			);
+			dependencies = (
+			);
+			name = "Common Data Files";
+			productName = "Common Data Files";
+		};
 		91EBE9DA0F9A33A1002356F2 /* All */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 91EBE9F70F9A33D1002356F2 /* Build configuration list for PBXAggregateTarget "All" */;
@@ -42,7 +56,6 @@
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
-		9122832E0FCF6C7200B21642 /* busywork.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		912286F90FD330EA00B21642 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
@@ -88,6 +101,108 @@
 		91279D3E0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
 		91279D3F0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
 		91279D400F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
+		912CF34E0FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
+		912CF34F0FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
+		912CF3500FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
+		912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
+		912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
+		912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
+		912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
+		912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
+		912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
+		912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
+		912CF3680FE449B70063B614 /* Blades of Exile Graphics in Copy Old Data Files */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
+		912CF3690FE449C10063B614 /* Blades of Exile Sounds in Copy Old Data Files */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
+		912CF4140FE44AAF0063B614 /* actionhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF37F0FE44A9B0063B614 /* actionhelp.png */; };
+		912CF4150FE44AAF0063B614 /* bigscenpics.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3800FE44A9B0063B614 /* bigscenpics.png */; };
+		912CF4160FE44AAF0063B614 /* booms.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3810FE44A9B0063B614 /* booms.png */; };
+		912CF4170FE44AAF0063B614 /* buttons.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3820FE44A9B0063B614 /* buttons.png */; };
+		912CF4180FE44AAF0063B614 /* dlgbtnred.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF39C0FE44A9B0063B614 /* dlgbtnred.png */; };
+		912CF4190FE44AAF0063B614 /* dlogbtnhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF39D0FE44A9B0063B614 /* dlogbtnhelp.png */; };
+		912CF41A0FE44AAF0063B614 /* dlogbtnled.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF39E0FE44A9B0063B614 /* dlogbtnled.png */; };
+		912CF41B0FE44AAF0063B614 /* dlogbtnlg.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF39F0FE44A9B0063B614 /* dlogbtnlg.png */; };
+		912CF41C0FE44AAF0063B614 /* dlogbtnmed.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A00FE44A9B0063B614 /* dlogbtnmed.png */; };
+		912CF41D0FE44AAF0063B614 /* dlogbtnsm.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A10FE44A9B0063B614 /* dlogbtnsm.png */; };
+		912CF41E0FE44AAF0063B614 /* dlogbtntall.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A20FE44A9B0063B614 /* dlogbtntall.png */; };
+		912CF41F0FE44AAF0063B614 /* dlogpics.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A30FE44A9B0063B614 /* dlogpics.png */; };
+		912CF4200FE44AAF0063B614 /* edbuttons.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A40FE44A9B0063B614 /* edbuttons.png */; };
+		912CF4210FE44AAF0063B614 /* edsplash.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A50FE44A9B0063B614 /* edsplash.png */; };
+		912CF4220FE44AAF0063B614 /* fields.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A60FE44A9B0063B614 /* fields.png */; };
+		912CF4230FE44AAF0063B614 /* fighthelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A70FE44A9B0063B614 /* fighthelp.png */; };
+		912CF4240FE44AAF0063B614 /* invenbtns.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A80FE44A9B0063B614 /* invenbtns.png */; };
+		912CF4250FE44AAF0063B614 /* invenhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3A90FE44A9B0063B614 /* invenhelp.png */; };
+		912CF4260FE44AAF0063B614 /* inventory.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AA0FE44A9B0063B614 /* inventory.png */; };
+		912CF4270FE44AAF0063B614 /* mapOLD.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AB0FE44A9B0063B614 /* mapOLD.png */; };
+		912CF4280FE44AAF0063B614 /* missiles.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AC0FE44A9B0063B614 /* missiles.png */; };
+		912CF4290FE44AAF0063B614 /* monst1.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AD0FE44A9B0063B614 /* monst1.png */; };
+		912CF42A0FE44AAF0063B614 /* monst10.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AE0FE44A9B0063B614 /* monst10.png */; };
+		912CF42B0FE44AAF0063B614 /* monst11.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3AF0FE44A9B0063B614 /* monst11.png */; };
+		912CF42C0FE44AAF0063B614 /* monst2.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B00FE44A9B0063B614 /* monst2.png */; };
+		912CF42D0FE44AAF0063B614 /* monst3.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B10FE44A9B0063B614 /* monst3.png */; };
+		912CF42E0FE44AAF0063B614 /* monst4.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B20FE44A9B0063B614 /* monst4.png */; };
+		912CF42F0FE44AAF0063B614 /* monst5.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B30FE44A9B0063B614 /* monst5.png */; };
+		912CF4300FE44AAF0063B614 /* monst6.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B40FE44A9B0063B614 /* monst6.png */; };
+		912CF4310FE44AAF0063B614 /* monst7.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B50FE44A9B0063B614 /* monst7.png */; };
+		912CF4320FE44AAF0063B614 /* monst8.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B60FE44A9B0063B614 /* monst8.png */; };
+		912CF4330FE44AAF0063B614 /* monst9.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B70FE44A9B0063B614 /* monst9.png */; };
+		912CF4340FE44AAF0063B614 /* objects.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B80FE44A9B0063B614 /* objects.png */; };
+		912CF4350FE44AAF0063B614 /* outhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3B90FE44A9B0063B614 /* outhelp.png */; };
+		912CF4360FE44AAF0063B614 /* pcedbuttons.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BA0FE44A9B0063B614 /* pcedbuttons.png */; };
+		912CF4370FE44AAF0063B614 /* pcedtitle.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BB0FE44A9B0063B614 /* pcedtitle.png */; };
+		912CF4380FE44AAF0063B614 /* pcs.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BC0FE44A9B0063B614 /* pcs.png */; };
+		912CF4390FE44AAF0063B614 /* pixpats.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BD0FE44A9B0063B614 /* pixpats.png */; };
+		912CF43A0FE44AAF0063B614 /* scenpics.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BE0FE44A9B0063B614 /* scenpics.png */; };
+		912CF43B0FE44AAF0063B614 /* spidlogo.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3BF0FE44A9B0063B614 /* spidlogo.png */; };
+		912CF43C0FE44AAF0063B614 /* startanim.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C00FE44A9B0063B614 /* startanim.png */; };
+		912CF43D0FE44AAF0063B614 /* startbut.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C10FE44A9B0063B614 /* startbut.png */; };
+		912CF43E0FE44AAF0063B614 /* startsplash.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C20FE44A9B0063B614 /* startsplash.png */; };
+		912CF43F0FE44AAF0063B614 /* startup.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C30FE44A9B0063B614 /* startup.png */; };
+		912CF4400FE44AAF0063B614 /* statarea.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C40FE44A9B0063B614 /* statarea.png */; };
+		912CF4410FE44AAF0063B614 /* stathelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C50FE44A9B0063B614 /* stathelp.png */; };
+		912CF4420FE44AAF0063B614 /* staticonhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C60FE44A9B0063B614 /* staticonhelp.png */; };
+		912CF4430FE44AAF0063B614 /* staticons.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C70FE44A9B0063B614 /* staticons.png */; };
+		912CF4440FE44AAF0063B614 /* talkportraits.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C80FE44A9B0063B614 /* talkportraits.png */; };
+		912CF4450FE44AAF0063B614 /* ter1.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3C90FE44A9B0063B614 /* ter1.png */; };
+		912CF4460FE44AAF0063B614 /* ter2.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CA0FE44A9B0063B614 /* ter2.png */; };
+		912CF4470FE44AAF0063B614 /* ter3.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CB0FE44A9B0063B614 /* ter3.png */; };
+		912CF4480FE44AAF0063B614 /* ter4.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CC0FE44A9B0063B614 /* ter4.png */; };
+		912CF4490FE44AAF0063B614 /* ter5.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CD0FE44A9B0063B614 /* ter5.png */; };
+		912CF44A0FE44AAF0063B614 /* ter6.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CE0FE44A9B0063B614 /* ter6.png */; };
+		912CF44B0FE44AAF0063B614 /* ter7.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3CF0FE44A9B0063B614 /* ter7.png */; };
+		912CF44C0FE44AAF0063B614 /* ter8.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D00FE44A9B0063B614 /* ter8.png */; };
+		912CF44D0FE44AAF0063B614 /* teranim.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D10FE44A9B0063B614 /* teranim.png */; };
+		912CF44E0FE44AAF0063B614 /* termap.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D20FE44A9B0063B614 /* termap.png */; };
+		912CF44F0FE44AAF0063B614 /* terscreen.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D30FE44A9B0063B614 /* terscreen.png */; };
+		912CF4500FE44AAF0063B614 /* textbar.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D40FE44A9B0063B614 /* textbar.png */; };
+		912CF4510FE44AAF0063B614 /* tinyobj.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D50FE44A9B0063B614 /* tinyobj.png */; };
+		912CF4520FE44AAF0063B614 /* townhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D60FE44A9B0063B614 /* townhelp.png */; };
+		912CF4530FE44AAF0063B614 /* transcript.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D70FE44A9B0063B614 /* transcript.png */; };
+		912CF4540FE44AAF0063B614 /* trim.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D80FE44A9B0063B614 /* trim.png */; };
+		912CF4550FE44AAF0063B614 /* vehicle.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3D90FE44A9B0063B614 /* vehicle.png */; };
+		912CF4560FE44AC20063B614 /* boot.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3840FE44A9B0063B614 /* boot.gif */; };
+		912CF4570FE44AC20063B614 /* bottomright.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3850FE44A9B0063B614 /* bottomright.gif */; };
+		912CF4580FE44AC20063B614 /* brush.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3860FE44A9B0063B614 /* brush.gif */; };
+		912CF4590FE44AC20063B614 /* drop.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3870FE44A9B0063B614 /* drop.gif */; };
+		912CF45A0FE44AC20063B614 /* E.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3880FE44A9B0063B614 /* E.gif */; };
+		912CF45B0FE44AC20063B614 /* eraser.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3890FE44A9B0063B614 /* eraser.gif */; };
+		912CF45C0FE44AC20063B614 /* eyedropper.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38A0FE44A9B0063B614 /* eyedropper.gif */; };
+		912CF45D0FE44AC20063B614 /* hand.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38B0FE44A9B0063B614 /* hand.gif */; };
+		912CF45E0FE44AC20063B614 /* key.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38C0FE44A9B0063B614 /* key.gif */; };
+		912CF45F0FE44AC20063B614 /* look.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38D0FE44A9B0063B614 /* look.gif */; };
+		912CF4600FE44AC20063B614 /* N.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38E0FE44A9B0063B614 /* N.gif */; };
+		912CF4610FE44AC20063B614 /* NE.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF38F0FE44A9B0063B614 /* NE.gif */; };
+		912CF4620FE44AC20063B614 /* NW.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3900FE44A9B0063B614 /* NW.gif */; };
+		912CF4630FE44AC20063B614 /* S.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3910FE44A9B0063B614 /* S.gif */; };
+		912CF4640FE44AC20063B614 /* SE.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3920FE44A9B0063B614 /* SE.gif */; };
+		912CF4650FE44AC20063B614 /* spraycan.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3930FE44A9B0063B614 /* spraycan.gif */; };
+		912CF4660FE44AC20063B614 /* SW.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3940FE44A9B0063B614 /* SW.gif */; };
+		912CF4670FE44AC20063B614 /* sword.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3950FE44A9B0063B614 /* sword.gif */; };
+		912CF4680FE44AC20063B614 /* talk.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3960FE44A9B0063B614 /* talk.gif */; };
+		912CF4690FE44AC20063B614 /* target.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3970FE44A9B0063B614 /* target.gif */; };
+		912CF46A0FE44AC20063B614 /* topleft.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3980FE44A9B0063B614 /* topleft.gif */; };
+		912CF46B0FE44AC20063B614 /* W.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3990FE44A9B0063B614 /* W.gif */; };
+		912CF46C0FE44AC20063B614 /* wait.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF39A0FE44A9B0063B614 /* wait.gif */; };
+		912CF46D0FE44AC20063B614 /* wand.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF39B0FE44A9B0063B614 /* wand.gif */; };
 		913D005B0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
 		913D005C0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
 		913D005D0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
@@ -146,8 +261,6 @@
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
 		91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
 		91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
-		91B3EF300F969D7B00BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
-		91B3EF310F969D7B00BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
 		91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */; };
@@ -173,20 +286,11 @@
 		91C1FCAA0FCB6F7200EBAA65 /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
 		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
-		91C686FA0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
-		91C686FB0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
-		91C686FC0FD5F217000F6D01 /* graphics.exd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C686B00FD5F217000F6D01 /* graphics.exd */; };
 		91C688E80FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91C688E90FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91C688EA0FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
-		91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
-		91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
-		91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
-		91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
-		91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
-		91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		91E5C1F50F9E489B00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
@@ -226,6 +330,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		912CF35A0FE449570063B614 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 912CF3570FE4494C0063B614;
+			remoteInfo = "Common Data Files";
+		};
+		912CF35C0FE4495A0063B614 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 912CF3570FE4494C0063B614;
+			remoteInfo = "Common Data Files";
+		};
+		912CF35E0FE4495F0063B614 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 912CF3570FE4494C0063B614;
+			remoteInfo = "Common Data Files";
+		};
 		91EBE9DD0F9A33A6002356F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
@@ -250,6 +375,187 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		912CF3540FE448680063B614 /* Copy String Lists */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Strings;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			name = "Copy String Lists";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF3550FE448680063B614 /* Copy Dialogs */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Dialogs;
+			dstSubfolderSpec = 7;
+			files = (
+				912CF34F0FE448150063B614 /* dummy.xml in Copy Dialogs */,
+			);
+			name = "Copy Dialogs";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF3560FE4494C0063B614 /* Copy Scenarios */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Blades of Exile Scenarios";
+			dstSubfolderSpec = 16;
+			files = (
+				912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */,
+				912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */,
+				912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */,
+				912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */,
+				912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */,
+				912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */,
+				912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */,
+			);
+			name = "Copy Scenarios";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF36C0FE44A2A0063B614 /* Copy Old Data Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor";
+			dstSubfolderSpec = 16;
+			files = (
+				912CF3690FE449C10063B614 /* Blades of Exile Sounds in Copy Old Data Files */,
+				912CF3680FE449B70063B614 /* Blades of Exile Graphics in Copy Old Data Files */,
+			);
+			name = "Copy Old Data Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor/graphics.exd/mac";
+			dstSubfolderSpec = 16;
+			files = (
+				912CF4140FE44AAF0063B614 /* actionhelp.png in Copy Mac Graphics */,
+				912CF4150FE44AAF0063B614 /* bigscenpics.png in Copy Mac Graphics */,
+				912CF4160FE44AAF0063B614 /* booms.png in Copy Mac Graphics */,
+				912CF4170FE44AAF0063B614 /* buttons.png in Copy Mac Graphics */,
+				912CF4180FE44AAF0063B614 /* dlgbtnred.png in Copy Mac Graphics */,
+				912CF4190FE44AAF0063B614 /* dlogbtnhelp.png in Copy Mac Graphics */,
+				912CF41A0FE44AAF0063B614 /* dlogbtnled.png in Copy Mac Graphics */,
+				912CF41B0FE44AAF0063B614 /* dlogbtnlg.png in Copy Mac Graphics */,
+				912CF41C0FE44AAF0063B614 /* dlogbtnmed.png in Copy Mac Graphics */,
+				912CF41D0FE44AAF0063B614 /* dlogbtnsm.png in Copy Mac Graphics */,
+				912CF41E0FE44AAF0063B614 /* dlogbtntall.png in Copy Mac Graphics */,
+				912CF41F0FE44AAF0063B614 /* dlogpics.png in Copy Mac Graphics */,
+				912CF4200FE44AAF0063B614 /* edbuttons.png in Copy Mac Graphics */,
+				912CF4210FE44AAF0063B614 /* edsplash.png in Copy Mac Graphics */,
+				912CF4220FE44AAF0063B614 /* fields.png in Copy Mac Graphics */,
+				912CF4230FE44AAF0063B614 /* fighthelp.png in Copy Mac Graphics */,
+				912CF4240FE44AAF0063B614 /* invenbtns.png in Copy Mac Graphics */,
+				912CF4250FE44AAF0063B614 /* invenhelp.png in Copy Mac Graphics */,
+				912CF4260FE44AAF0063B614 /* inventory.png in Copy Mac Graphics */,
+				912CF4270FE44AAF0063B614 /* mapOLD.png in Copy Mac Graphics */,
+				912CF4280FE44AAF0063B614 /* missiles.png in Copy Mac Graphics */,
+				912CF4290FE44AAF0063B614 /* monst1.png in Copy Mac Graphics */,
+				912CF42A0FE44AAF0063B614 /* monst10.png in Copy Mac Graphics */,
+				912CF42B0FE44AAF0063B614 /* monst11.png in Copy Mac Graphics */,
+				912CF42C0FE44AAF0063B614 /* monst2.png in Copy Mac Graphics */,
+				912CF42D0FE44AAF0063B614 /* monst3.png in Copy Mac Graphics */,
+				912CF42E0FE44AAF0063B614 /* monst4.png in Copy Mac Graphics */,
+				912CF42F0FE44AAF0063B614 /* monst5.png in Copy Mac Graphics */,
+				912CF4300FE44AAF0063B614 /* monst6.png in Copy Mac Graphics */,
+				912CF4310FE44AAF0063B614 /* monst7.png in Copy Mac Graphics */,
+				912CF4320FE44AAF0063B614 /* monst8.png in Copy Mac Graphics */,
+				912CF4330FE44AAF0063B614 /* monst9.png in Copy Mac Graphics */,
+				912CF4340FE44AAF0063B614 /* objects.png in Copy Mac Graphics */,
+				912CF4350FE44AAF0063B614 /* outhelp.png in Copy Mac Graphics */,
+				912CF4360FE44AAF0063B614 /* pcedbuttons.png in Copy Mac Graphics */,
+				912CF4370FE44AAF0063B614 /* pcedtitle.png in Copy Mac Graphics */,
+				912CF4380FE44AAF0063B614 /* pcs.png in Copy Mac Graphics */,
+				912CF4390FE44AAF0063B614 /* pixpats.png in Copy Mac Graphics */,
+				912CF43A0FE44AAF0063B614 /* scenpics.png in Copy Mac Graphics */,
+				912CF43B0FE44AAF0063B614 /* spidlogo.png in Copy Mac Graphics */,
+				912CF43C0FE44AAF0063B614 /* startanim.png in Copy Mac Graphics */,
+				912CF43D0FE44AAF0063B614 /* startbut.png in Copy Mac Graphics */,
+				912CF43E0FE44AAF0063B614 /* startsplash.png in Copy Mac Graphics */,
+				912CF43F0FE44AAF0063B614 /* startup.png in Copy Mac Graphics */,
+				912CF4400FE44AAF0063B614 /* statarea.png in Copy Mac Graphics */,
+				912CF4410FE44AAF0063B614 /* stathelp.png in Copy Mac Graphics */,
+				912CF4420FE44AAF0063B614 /* staticonhelp.png in Copy Mac Graphics */,
+				912CF4430FE44AAF0063B614 /* staticons.png in Copy Mac Graphics */,
+				912CF4440FE44AAF0063B614 /* talkportraits.png in Copy Mac Graphics */,
+				912CF4450FE44AAF0063B614 /* ter1.png in Copy Mac Graphics */,
+				912CF4460FE44AAF0063B614 /* ter2.png in Copy Mac Graphics */,
+				912CF4470FE44AAF0063B614 /* ter3.png in Copy Mac Graphics */,
+				912CF4480FE44AAF0063B614 /* ter4.png in Copy Mac Graphics */,
+				912CF4490FE44AAF0063B614 /* ter5.png in Copy Mac Graphics */,
+				912CF44A0FE44AAF0063B614 /* ter6.png in Copy Mac Graphics */,
+				912CF44B0FE44AAF0063B614 /* ter7.png in Copy Mac Graphics */,
+				912CF44C0FE44AAF0063B614 /* ter8.png in Copy Mac Graphics */,
+				912CF44D0FE44AAF0063B614 /* teranim.png in Copy Mac Graphics */,
+				912CF44E0FE44AAF0063B614 /* termap.png in Copy Mac Graphics */,
+				912CF44F0FE44AAF0063B614 /* terscreen.png in Copy Mac Graphics */,
+				912CF4500FE44AAF0063B614 /* textbar.png in Copy Mac Graphics */,
+				912CF4510FE44AAF0063B614 /* tinyobj.png in Copy Mac Graphics */,
+				912CF4520FE44AAF0063B614 /* townhelp.png in Copy Mac Graphics */,
+				912CF4530FE44AAF0063B614 /* transcript.png in Copy Mac Graphics */,
+				912CF4540FE44AAF0063B614 /* trim.png in Copy Mac Graphics */,
+				912CF4550FE44AAF0063B614 /* vehicle.png in Copy Mac Graphics */,
+			);
+			name = "Copy Mac Graphics";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF36E0FE44A2A0063B614 /* Copy Mac Cursors */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor/graphics.exd/mac/cursors";
+			dstSubfolderSpec = 16;
+			files = (
+				912CF4560FE44AC20063B614 /* boot.gif in Copy Mac Cursors */,
+				912CF4570FE44AC20063B614 /* bottomright.gif in Copy Mac Cursors */,
+				912CF4580FE44AC20063B614 /* brush.gif in Copy Mac Cursors */,
+				912CF4590FE44AC20063B614 /* drop.gif in Copy Mac Cursors */,
+				912CF45A0FE44AC20063B614 /* E.gif in Copy Mac Cursors */,
+				912CF45B0FE44AC20063B614 /* eraser.gif in Copy Mac Cursors */,
+				912CF45C0FE44AC20063B614 /* eyedropper.gif in Copy Mac Cursors */,
+				912CF45D0FE44AC20063B614 /* hand.gif in Copy Mac Cursors */,
+				912CF45E0FE44AC20063B614 /* key.gif in Copy Mac Cursors */,
+				912CF45F0FE44AC20063B614 /* look.gif in Copy Mac Cursors */,
+				912CF4600FE44AC20063B614 /* N.gif in Copy Mac Cursors */,
+				912CF4610FE44AC20063B614 /* NE.gif in Copy Mac Cursors */,
+				912CF4620FE44AC20063B614 /* NW.gif in Copy Mac Cursors */,
+				912CF4630FE44AC20063B614 /* S.gif in Copy Mac Cursors */,
+				912CF4640FE44AC20063B614 /* SE.gif in Copy Mac Cursors */,
+				912CF4650FE44AC20063B614 /* spraycan.gif in Copy Mac Cursors */,
+				912CF4660FE44AC20063B614 /* SW.gif in Copy Mac Cursors */,
+				912CF4670FE44AC20063B614 /* sword.gif in Copy Mac Cursors */,
+				912CF4680FE44AC20063B614 /* talk.gif in Copy Mac Cursors */,
+				912CF4690FE44AC20063B614 /* target.gif in Copy Mac Cursors */,
+				912CF46A0FE44AC20063B614 /* topleft.gif in Copy Mac Cursors */,
+				912CF46B0FE44AC20063B614 /* W.gif in Copy Mac Cursors */,
+				912CF46C0FE44AC20063B614 /* wait.gif in Copy Mac Cursors */,
+				912CF46D0FE44AC20063B614 /* wand.gif in Copy Mac Cursors */,
+			);
+			name = "Copy Mac Cursors";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF37B0FE44A660063B614 /* Copy String Lists */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Strings;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			name = "Copy String Lists";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		912CF37C0FE44A660063B614 /* Copy Dialogs */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Dialogs;
+			dstSubfolderSpec = 7;
+			files = (
+				912CF3500FE448150063B614 /* dummy.xml in Copy Dialogs */,
+			);
+			name = "Copy Dialogs";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91A32B660FDB5EF100C4E957 /* Copy Dialogs */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,6 +565,7 @@
 				91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */,
 				91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */,
 				91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */,
+				912CF34E0FE448150063B614 /* dummy.xml in Copy Dialogs */,
 			);
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,25 +585,12 @@
 			name = "Copy String Lists";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		91B3EF2C0F969D4700BF5B67 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Scenario Editor";
-			dstSubfolderSpec = 16;
-			files = (
-				91B3EF300F969D7B00BF5B67 /* Blades of Exile Graphics in CopyFiles */,
-				91C686FC0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
-				91B3EF310F969D7B00BF5B67 /* Blades of Exile Sounds in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		91B3EF320F969D9900BF5B67 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "Scenario Editor";
 			dstSubfolderSpec = 16;
 			files = (
-				91C686FB0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
 				91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */,
 				91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */,
 			);
@@ -308,23 +602,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				91C686FA0FD5F217000F6D01 /* graphics.exd in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91D635A30F90E77C00674AB3 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Blades of Exile Scenarios";
-			dstSubfolderSpec = 16;
-			files = (
-				9122832E0FCF6C7200B21642 /* busywork.exs in CopyFiles */,
-				91D635B60F90E7D200674AB3 /* stealth.exs in CopyFiles */,
-				91D635B70F90E7D200674AB3 /* stealth.meg in CopyFiles */,
-				91D635B80F90E7D200674AB3 /* valleydy.exs in CopyFiles */,
-				91D635B90F90E7D200674AB3 /* valleydy.meg in CopyFiles */,
-				91D635BA0F90E7D200674AB3 /* zakhazi.exs in CopyFiles */,
-				91D635BB0F90E7D200674AB3 /* zakhazi.meg in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +703,97 @@
 		91279CC60F9D1A02007B0D52 /* special.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = special.cpp; path = classes/special.cpp; sourceTree = "<group>"; };
 		91279D3C0F9D1D6A007B0D52 /* item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = item.h; path = classes/item.h; sourceTree = "<group>"; };
 		91279D3D0F9D1D6A007B0D52 /* item.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = item.cpp; path = classes/item.cpp; sourceTree = "<group>"; };
+		912CF34D0FE448150063B614 /* dummy.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = dummy.xml; path = dialogxml/dummy.xml; sourceTree = "<group>"; };
+		912CF37F0FE44A9B0063B614 /* actionhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actionhelp.png; sourceTree = "<group>"; };
+		912CF3800FE44A9B0063B614 /* bigscenpics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bigscenpics.png; sourceTree = "<group>"; };
+		912CF3810FE44A9B0063B614 /* booms.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = booms.png; sourceTree = "<group>"; };
+		912CF3820FE44A9B0063B614 /* buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttons.png; sourceTree = "<group>"; };
+		912CF3840FE44A9B0063B614 /* boot.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = boot.gif; sourceTree = "<group>"; };
+		912CF3850FE44A9B0063B614 /* bottomright.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = bottomright.gif; sourceTree = "<group>"; };
+		912CF3860FE44A9B0063B614 /* brush.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = brush.gif; sourceTree = "<group>"; };
+		912CF3870FE44A9B0063B614 /* drop.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = drop.gif; sourceTree = "<group>"; };
+		912CF3880FE44A9B0063B614 /* E.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = E.gif; sourceTree = "<group>"; };
+		912CF3890FE44A9B0063B614 /* eraser.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = eraser.gif; sourceTree = "<group>"; };
+		912CF38A0FE44A9B0063B614 /* eyedropper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = eyedropper.gif; sourceTree = "<group>"; };
+		912CF38B0FE44A9B0063B614 /* hand.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = hand.gif; sourceTree = "<group>"; };
+		912CF38C0FE44A9B0063B614 /* key.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = key.gif; sourceTree = "<group>"; };
+		912CF38D0FE44A9B0063B614 /* look.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = look.gif; sourceTree = "<group>"; };
+		912CF38E0FE44A9B0063B614 /* N.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = N.gif; sourceTree = "<group>"; };
+		912CF38F0FE44A9B0063B614 /* NE.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = NE.gif; sourceTree = "<group>"; };
+		912CF3900FE44A9B0063B614 /* NW.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = NW.gif; sourceTree = "<group>"; };
+		912CF3910FE44A9B0063B614 /* S.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = S.gif; sourceTree = "<group>"; };
+		912CF3920FE44A9B0063B614 /* SE.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SE.gif; sourceTree = "<group>"; };
+		912CF3930FE44A9B0063B614 /* spraycan.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = spraycan.gif; sourceTree = "<group>"; };
+		912CF3940FE44A9B0063B614 /* SW.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SW.gif; sourceTree = "<group>"; };
+		912CF3950FE44A9B0063B614 /* sword.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = sword.gif; sourceTree = "<group>"; };
+		912CF3960FE44A9B0063B614 /* talk.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = talk.gif; sourceTree = "<group>"; };
+		912CF3970FE44A9B0063B614 /* target.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = target.gif; sourceTree = "<group>"; };
+		912CF3980FE44A9B0063B614 /* topleft.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = topleft.gif; sourceTree = "<group>"; };
+		912CF3990FE44A9B0063B614 /* W.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = W.gif; sourceTree = "<group>"; };
+		912CF39A0FE44A9B0063B614 /* wait.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wait.gif; sourceTree = "<group>"; };
+		912CF39B0FE44A9B0063B614 /* wand.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wand.gif; sourceTree = "<group>"; };
+		912CF39C0FE44A9B0063B614 /* dlgbtnred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlgbtnred.png; sourceTree = "<group>"; };
+		912CF39D0FE44A9B0063B614 /* dlogbtnhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtnhelp.png; sourceTree = "<group>"; };
+		912CF39E0FE44A9B0063B614 /* dlogbtnled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtnled.png; sourceTree = "<group>"; };
+		912CF39F0FE44A9B0063B614 /* dlogbtnlg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtnlg.png; sourceTree = "<group>"; };
+		912CF3A00FE44A9B0063B614 /* dlogbtnmed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtnmed.png; sourceTree = "<group>"; };
+		912CF3A10FE44A9B0063B614 /* dlogbtnsm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtnsm.png; sourceTree = "<group>"; };
+		912CF3A20FE44A9B0063B614 /* dlogbtntall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogbtntall.png; sourceTree = "<group>"; };
+		912CF3A30FE44A9B0063B614 /* dlogpics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogpics.png; sourceTree = "<group>"; };
+		912CF3A40FE44A9B0063B614 /* edbuttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edbuttons.png; sourceTree = "<group>"; };
+		912CF3A50FE44A9B0063B614 /* edsplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edsplash.png; sourceTree = "<group>"; };
+		912CF3A60FE44A9B0063B614 /* fields.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fields.png; sourceTree = "<group>"; };
+		912CF3A70FE44A9B0063B614 /* fighthelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fighthelp.png; sourceTree = "<group>"; };
+		912CF3A80FE44A9B0063B614 /* invenbtns.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = invenbtns.png; sourceTree = "<group>"; };
+		912CF3A90FE44A9B0063B614 /* invenhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = invenhelp.png; sourceTree = "<group>"; };
+		912CF3AA0FE44A9B0063B614 /* inventory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inventory.png; sourceTree = "<group>"; };
+		912CF3AB0FE44A9B0063B614 /* mapOLD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapOLD.png; sourceTree = "<group>"; };
+		912CF3AC0FE44A9B0063B614 /* missiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = missiles.png; sourceTree = "<group>"; };
+		912CF3AD0FE44A9B0063B614 /* monst1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst1.png; sourceTree = "<group>"; };
+		912CF3AE0FE44A9B0063B614 /* monst10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst10.png; sourceTree = "<group>"; };
+		912CF3AF0FE44A9B0063B614 /* monst11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst11.png; sourceTree = "<group>"; };
+		912CF3B00FE44A9B0063B614 /* monst2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst2.png; sourceTree = "<group>"; };
+		912CF3B10FE44A9B0063B614 /* monst3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst3.png; sourceTree = "<group>"; };
+		912CF3B20FE44A9B0063B614 /* monst4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst4.png; sourceTree = "<group>"; };
+		912CF3B30FE44A9B0063B614 /* monst5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst5.png; sourceTree = "<group>"; };
+		912CF3B40FE44A9B0063B614 /* monst6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst6.png; sourceTree = "<group>"; };
+		912CF3B50FE44A9B0063B614 /* monst7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst7.png; sourceTree = "<group>"; };
+		912CF3B60FE44A9B0063B614 /* monst8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst8.png; sourceTree = "<group>"; };
+		912CF3B70FE44A9B0063B614 /* monst9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monst9.png; sourceTree = "<group>"; };
+		912CF3B80FE44A9B0063B614 /* objects.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = objects.png; sourceTree = "<group>"; };
+		912CF3B90FE44A9B0063B614 /* outhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = outhelp.png; sourceTree = "<group>"; };
+		912CF3BA0FE44A9B0063B614 /* pcedbuttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pcedbuttons.png; sourceTree = "<group>"; };
+		912CF3BB0FE44A9B0063B614 /* pcedtitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pcedtitle.png; sourceTree = "<group>"; };
+		912CF3BC0FE44A9B0063B614 /* pcs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pcs.png; sourceTree = "<group>"; };
+		912CF3BD0FE44A9B0063B614 /* pixpats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pixpats.png; sourceTree = "<group>"; };
+		912CF3BE0FE44A9B0063B614 /* scenpics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scenpics.png; sourceTree = "<group>"; };
+		912CF3BF0FE44A9B0063B614 /* spidlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spidlogo.png; sourceTree = "<group>"; };
+		912CF3C00FE44A9B0063B614 /* startanim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startanim.png; sourceTree = "<group>"; };
+		912CF3C10FE44A9B0063B614 /* startbut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startbut.png; sourceTree = "<group>"; };
+		912CF3C20FE44A9B0063B614 /* startsplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startsplash.png; sourceTree = "<group>"; };
+		912CF3C30FE44A9B0063B614 /* startup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startup.png; sourceTree = "<group>"; };
+		912CF3C40FE44A9B0063B614 /* statarea.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = statarea.png; sourceTree = "<group>"; };
+		912CF3C50FE44A9B0063B614 /* stathelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stathelp.png; sourceTree = "<group>"; };
+		912CF3C60FE44A9B0063B614 /* staticonhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = staticonhelp.png; sourceTree = "<group>"; };
+		912CF3C70FE44A9B0063B614 /* staticons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = staticons.png; sourceTree = "<group>"; };
+		912CF3C80FE44A9B0063B614 /* talkportraits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkportraits.png; sourceTree = "<group>"; };
+		912CF3C90FE44A9B0063B614 /* ter1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter1.png; sourceTree = "<group>"; };
+		912CF3CA0FE44A9B0063B614 /* ter2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter2.png; sourceTree = "<group>"; };
+		912CF3CB0FE44A9B0063B614 /* ter3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter3.png; sourceTree = "<group>"; };
+		912CF3CC0FE44A9B0063B614 /* ter4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter4.png; sourceTree = "<group>"; };
+		912CF3CD0FE44A9B0063B614 /* ter5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter5.png; sourceTree = "<group>"; };
+		912CF3CE0FE44A9B0063B614 /* ter6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter6.png; sourceTree = "<group>"; };
+		912CF3CF0FE44A9B0063B614 /* ter7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter7.png; sourceTree = "<group>"; };
+		912CF3D00FE44A9B0063B614 /* ter8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ter8.png; sourceTree = "<group>"; };
+		912CF3D10FE44A9B0063B614 /* teranim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teranim.png; sourceTree = "<group>"; };
+		912CF3D20FE44A9B0063B614 /* termap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = termap.png; sourceTree = "<group>"; };
+		912CF3D30FE44A9B0063B614 /* terscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = terscreen.png; sourceTree = "<group>"; };
+		912CF3D40FE44A9B0063B614 /* textbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textbar.png; sourceTree = "<group>"; };
+		912CF3D50FE44A9B0063B614 /* tinyobj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tinyobj.png; sourceTree = "<group>"; };
+		912CF3D60FE44A9B0063B614 /* townhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = townhelp.png; sourceTree = "<group>"; };
+		912CF3D70FE44A9B0063B614 /* transcript.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transcript.png; sourceTree = "<group>"; };
+		912CF3D80FE44A9B0063B614 /* trim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trim.png; sourceTree = "<group>"; };
+		912CF3D90FE44A9B0063B614 /* vehicle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vehicle.png; sourceTree = "<group>"; };
 		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = porting.h; path = tools/porting.h; sourceTree = "<group>"; };
 		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = porting.cpp; path = tools/porting.cpp; sourceTree = "<group>"; };
 		913D00840FA0021400184C18 /* dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgutil.h; path = tools/dlgutil.h; sourceTree = "<group>"; };
@@ -510,7 +878,6 @@
 		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soundtool.cpp; path = tools/soundtool.cpp; sourceTree = "<group>"; };
 		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mathutil.h; path = tools/mathutil.h; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathutil.cpp; path = tools/mathutil.cpp; sourceTree = "<group>"; };
-		91C686B00FD5F217000F6D01 /* graphics.exd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = graphics.exd; path = ../rsrc/graphics.exd; sourceTree = SOURCE_ROOT; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cursors.h; path = tools/cursors.h; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cursors.m; path = tools/cursors.m; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
@@ -601,6 +968,7 @@
 		910BBA130FB8BE66001E34EA /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
+				912CF34D0FE448150063B614 /* dummy.xml */,
 				910BBA190FB8C43E001E34EA /* xml-parser */,
 				910BBA140FB8BE7D001E34EA /* headers */,
 				910BBA150FB8BE88001E34EA /* src */,
@@ -671,6 +1039,128 @@
 				91E5C5A10F9EACE200C21460 /* oldstructs.h */,
 			);
 			name = classes;
+			sourceTree = "<group>";
+		};
+		912CF37D0FE44A9B0063B614 /* graphics.exd */ = {
+			isa = PBXGroup;
+			children = (
+				912CF37E0FE44A9B0063B614 /* mac */,
+				912CF3DA0FE44A9B0063B614 /* win */,
+			);
+			name = graphics.exd;
+			path = ../rsrc/graphics.exd;
+			sourceTree = SOURCE_ROOT;
+		};
+		912CF37E0FE44A9B0063B614 /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				912CF37F0FE44A9B0063B614 /* actionhelp.png */,
+				912CF3800FE44A9B0063B614 /* bigscenpics.png */,
+				912CF3810FE44A9B0063B614 /* booms.png */,
+				912CF3820FE44A9B0063B614 /* buttons.png */,
+				912CF3830FE44A9B0063B614 /* cursors */,
+				912CF39C0FE44A9B0063B614 /* dlgbtnred.png */,
+				912CF39D0FE44A9B0063B614 /* dlogbtnhelp.png */,
+				912CF39E0FE44A9B0063B614 /* dlogbtnled.png */,
+				912CF39F0FE44A9B0063B614 /* dlogbtnlg.png */,
+				912CF3A00FE44A9B0063B614 /* dlogbtnmed.png */,
+				912CF3A10FE44A9B0063B614 /* dlogbtnsm.png */,
+				912CF3A20FE44A9B0063B614 /* dlogbtntall.png */,
+				912CF3A30FE44A9B0063B614 /* dlogpics.png */,
+				912CF3A40FE44A9B0063B614 /* edbuttons.png */,
+				912CF3A50FE44A9B0063B614 /* edsplash.png */,
+				912CF3A60FE44A9B0063B614 /* fields.png */,
+				912CF3A70FE44A9B0063B614 /* fighthelp.png */,
+				912CF3A80FE44A9B0063B614 /* invenbtns.png */,
+				912CF3A90FE44A9B0063B614 /* invenhelp.png */,
+				912CF3AA0FE44A9B0063B614 /* inventory.png */,
+				912CF3AB0FE44A9B0063B614 /* mapOLD.png */,
+				912CF3AC0FE44A9B0063B614 /* missiles.png */,
+				912CF3AD0FE44A9B0063B614 /* monst1.png */,
+				912CF3AE0FE44A9B0063B614 /* monst10.png */,
+				912CF3AF0FE44A9B0063B614 /* monst11.png */,
+				912CF3B00FE44A9B0063B614 /* monst2.png */,
+				912CF3B10FE44A9B0063B614 /* monst3.png */,
+				912CF3B20FE44A9B0063B614 /* monst4.png */,
+				912CF3B30FE44A9B0063B614 /* monst5.png */,
+				912CF3B40FE44A9B0063B614 /* monst6.png */,
+				912CF3B50FE44A9B0063B614 /* monst7.png */,
+				912CF3B60FE44A9B0063B614 /* monst8.png */,
+				912CF3B70FE44A9B0063B614 /* monst9.png */,
+				912CF3B80FE44A9B0063B614 /* objects.png */,
+				912CF3B90FE44A9B0063B614 /* outhelp.png */,
+				912CF3BA0FE44A9B0063B614 /* pcedbuttons.png */,
+				912CF3BB0FE44A9B0063B614 /* pcedtitle.png */,
+				912CF3BC0FE44A9B0063B614 /* pcs.png */,
+				912CF3BD0FE44A9B0063B614 /* pixpats.png */,
+				912CF3BE0FE44A9B0063B614 /* scenpics.png */,
+				912CF3BF0FE44A9B0063B614 /* spidlogo.png */,
+				912CF3C00FE44A9B0063B614 /* startanim.png */,
+				912CF3C10FE44A9B0063B614 /* startbut.png */,
+				912CF3C20FE44A9B0063B614 /* startsplash.png */,
+				912CF3C30FE44A9B0063B614 /* startup.png */,
+				912CF3C40FE44A9B0063B614 /* statarea.png */,
+				912CF3C50FE44A9B0063B614 /* stathelp.png */,
+				912CF3C60FE44A9B0063B614 /* staticonhelp.png */,
+				912CF3C70FE44A9B0063B614 /* staticons.png */,
+				912CF3C80FE44A9B0063B614 /* talkportraits.png */,
+				912CF3C90FE44A9B0063B614 /* ter1.png */,
+				912CF3CA0FE44A9B0063B614 /* ter2.png */,
+				912CF3CB0FE44A9B0063B614 /* ter3.png */,
+				912CF3CC0FE44A9B0063B614 /* ter4.png */,
+				912CF3CD0FE44A9B0063B614 /* ter5.png */,
+				912CF3CE0FE44A9B0063B614 /* ter6.png */,
+				912CF3CF0FE44A9B0063B614 /* ter7.png */,
+				912CF3D00FE44A9B0063B614 /* ter8.png */,
+				912CF3D10FE44A9B0063B614 /* teranim.png */,
+				912CF3D20FE44A9B0063B614 /* termap.png */,
+				912CF3D30FE44A9B0063B614 /* terscreen.png */,
+				912CF3D40FE44A9B0063B614 /* textbar.png */,
+				912CF3D50FE44A9B0063B614 /* tinyobj.png */,
+				912CF3D60FE44A9B0063B614 /* townhelp.png */,
+				912CF3D70FE44A9B0063B614 /* transcript.png */,
+				912CF3D80FE44A9B0063B614 /* trim.png */,
+				912CF3D90FE44A9B0063B614 /* vehicle.png */,
+			);
+			path = mac;
+			sourceTree = "<group>";
+		};
+		912CF3830FE44A9B0063B614 /* cursors */ = {
+			isa = PBXGroup;
+			children = (
+				912CF3840FE44A9B0063B614 /* boot.gif */,
+				912CF3850FE44A9B0063B614 /* bottomright.gif */,
+				912CF3860FE44A9B0063B614 /* brush.gif */,
+				912CF3870FE44A9B0063B614 /* drop.gif */,
+				912CF3880FE44A9B0063B614 /* E.gif */,
+				912CF3890FE44A9B0063B614 /* eraser.gif */,
+				912CF38A0FE44A9B0063B614 /* eyedropper.gif */,
+				912CF38B0FE44A9B0063B614 /* hand.gif */,
+				912CF38C0FE44A9B0063B614 /* key.gif */,
+				912CF38D0FE44A9B0063B614 /* look.gif */,
+				912CF38E0FE44A9B0063B614 /* N.gif */,
+				912CF38F0FE44A9B0063B614 /* NE.gif */,
+				912CF3900FE44A9B0063B614 /* NW.gif */,
+				912CF3910FE44A9B0063B614 /* S.gif */,
+				912CF3920FE44A9B0063B614 /* SE.gif */,
+				912CF3930FE44A9B0063B614 /* spraycan.gif */,
+				912CF3940FE44A9B0063B614 /* SW.gif */,
+				912CF3950FE44A9B0063B614 /* sword.gif */,
+				912CF3960FE44A9B0063B614 /* talk.gif */,
+				912CF3970FE44A9B0063B614 /* target.gif */,
+				912CF3980FE44A9B0063B614 /* topleft.gif */,
+				912CF3990FE44A9B0063B614 /* W.gif */,
+				912CF39A0FE44A9B0063B614 /* wait.gif */,
+				912CF39B0FE44A9B0063B614 /* wand.gif */,
+			);
+			path = cursors;
+			sourceTree = "<group>";
+		};
+		912CF3DA0FE44A9B0063B614 /* win */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = win;
 			sourceTree = "<group>";
 		};
 		913D03320FA0FFE700184C18 /* src */ = {
@@ -913,7 +1403,7 @@
 				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
 				91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */,
 				91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */,
-				91C686B00FD5F217000F6D01 /* graphics.exd */,
+				912CF37D0FE44A9B0063B614 /* graphics.exd */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 			);
 			name = Files;
@@ -1048,14 +1538,15 @@
 			buildConfigurationList = 2BF04AC40BF518D4006C0831 /* Build configuration list for PBXNativeTarget "Blades of Exile" */;
 			buildPhases = (
 				2BF04ABD0BF518D4006C0831 /* Resources */,
-				91D635A30F90E77C00674AB3 /* CopyFiles */,
-				91B3EF2C0F969D4700BF5B67 /* CopyFiles */,
 				2BF04ABE0BF518D4006C0831 /* Sources */,
+				912CF37B0FE44A660063B614 /* Copy String Lists */,
+				912CF37C0FE44A660063B614 /* Copy Dialogs */,
 				2BF04ABF0BF518D4006C0831 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				912CF35B0FE449570063B614 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile";
 			productName = "Blades of Exile";
@@ -1085,12 +1576,15 @@
 			buildPhases = (
 				91B3EF140F969C2200BF5B67 /* Resources */,
 				91B3EF320F969D9900BF5B67 /* CopyFiles */,
+				912CF3540FE448680063B614 /* Copy String Lists */,
+				912CF3550FE448680063B614 /* Copy Dialogs */,
 				91B3EF150F969C2200BF5B67 /* Sources */,
 				91B3EF160F969C2200BF5B67 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				912CF35D0FE4495A0063B614 /* PBXTargetDependency */,
 			);
 			name = "Blades of Exile Character Editor";
 			productName = "Blades of Exile Character Editor";
@@ -1111,6 +1605,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				912CF35F0FE4495F0063B614 /* PBXTargetDependency */,
 			);
 			name = "BoE Scenario Editor";
 			productName = "BoE Scenario Editor";
@@ -1133,6 +1628,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				912CF3570FE4494C0063B614 /* Common Data Files */,
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
 				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
@@ -1375,6 +1871,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		912CF35B0FE449570063B614 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 912CF3570FE4494C0063B614 /* Common Data Files */;
+			targetProxy = 912CF35A0FE449570063B614 /* PBXContainerItemProxy */;
+		};
+		912CF35D0FE4495A0063B614 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 912CF3570FE4494C0063B614 /* Common Data Files */;
+			targetProxy = 912CF35C0FE4495A0063B614 /* PBXContainerItemProxy */;
+		};
+		912CF35F0FE4495F0063B614 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 912CF3570FE4494C0063B614 /* Common Data Files */;
+			targetProxy = 912CF35E0FE4495F0063B614 /* PBXContainerItemProxy */;
+		};
 		91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2BF04AC00BF518D4006C0831 /* Blades of Exile */;
@@ -1600,6 +2111,27 @@
 			};
 			name = Release;
 		};
+		912CF3580FE4494C0063B614 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Common Data Files";
+			};
+			name = Debug;
+		};
+		912CF3590FE4494C0063B614 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Common Data Files";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		91B3EF1B0F969C2300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1773,6 +2305,15 @@
 			buildConfigurations = (
 				9127934B0F9C0FEA007B0D52 /* Debug */,
 				9127934C0F9C0FEA007B0D52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				912CF3580FE4494C0063B614 /* Debug */,
+				912CF3590FE4494C0063B614 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

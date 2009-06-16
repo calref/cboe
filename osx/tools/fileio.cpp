@@ -1961,12 +1961,21 @@ bool save_party(FSSpec dest_file)
 }
 
 std::vector<std::string> load_strings(std::string which){
+	UniChar* strListName = new UniChar[which.length()];
+	for(int i = 0; i < which.length(); i++) strListName[i] = which[i];
 	char stringsPath[512];
 	std::string path;
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef stringsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("strings"),CFSTR(""),NULL);
+	CFURLRef stringsURL = CFBundleCopyResourceURL(
+		mainBundle,
+		CFStringCreateWithCharacters(NULL, strListName, which.length()),
+		CFSTR(""), CFSTR("strings")
+	);
+	delete strListName;
+	if(stringsURL == NULL) return std::vector<std::string>(); // if not found, return an empty list
 	CFStringGetCString(CFURLCopyFileSystemPath(stringsURL, kCFURLPOSIXPathStyle), stringsPath, 512, kCFStringEncodingUTF8);
-	path = stringsPath + '/' + which;
+	path = stringsPath;// + '/' + which;
+	printf("Loading strings from: %s\n",path.c_str());
 	std::ifstream fin(path.c_str());
 	std::string s;
 	std::vector<std::string> v;

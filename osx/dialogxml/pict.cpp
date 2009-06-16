@@ -18,7 +18,7 @@ extern GWorldPtr bg_gworld;
 
 void cPict::init(){
 	// TODO: Load or otherwise acquire the various GWorlds.
-	teranim = dlog = talk = scen = largeScen = item = tinyItem = pc = field = boom = missile = save = header = map = NULL;
+	teranim = dlog = talk = scen = largeScen = item = tinyItem = pc = field = boom = missile = save = header = map = status = NULL;
 	drawPict[PIC_TER] = drawPresetTer;
 	drawPict[PIC_TER_ANIM] = drawPresetTerAnim;
 	drawPict[PIC_MONST] = drawPresetMonstSm;
@@ -500,7 +500,8 @@ GWorldPtr cPict::item = NULL, cPict::tinyItem = NULL, cPict::pc = NULL, cPict::f
 GWorldPtr cPict::missile = NULL, cPict::save = NULL, cPict::header = NULL, cPict::map = NULL, cPict::status = NULL;
 std::vector<GWorldPtr> cPict::ter, cPict::monst, cPict::customSheets;
 std::map<size_t,GWorldPtr> cPict::largeSheets;
-std::map<ePicType,void(*)(short,GWorldPtr,Rect)> cPict::drawPict;
+//std::map<ePicType,void(*)(short,GWorldPtr,Rect)> cPict::drawPict;
+void(* cPict::drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
 short cPict::animFrame = 0;
 
 void cPict::draw(){

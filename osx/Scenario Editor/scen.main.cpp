@@ -240,7 +240,7 @@ void Handle_One_Event() {
 	long menu_choice;
 	
 	
-	WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
+	WaitNextEvent(everyEvent, &event, 0, NULL);
 	if ((mouse_button_held == true) && (event.what != 23) && (FrontWindow() == mainPtr)) {
 		GlobalToLocal(&event.where);
 		handle_action(event.where,event);

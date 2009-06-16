@@ -5,8 +5,6 @@
  *  Created by Celtic Minstrel on 11/05/09.
  *
  */
-#define	SLEEP_TICKS		2L
-#define	MOUSE_REGION	0L
 #define IN_FRONT	(WindowPtr)-1L
 
 #include <Carbon/Carbon.h>
@@ -29,25 +27,30 @@ static std::string generateRandomString(){
 	int n_chars = rand() % 100;
 	std::string s;
 	while(n_chars > 0){
-		s += char(rand() % 223 + 32);
+		s += char(rand() % 223) + ' ';
 		n_chars--;
 	}
 	return s;
 }
 
 template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
-	pair<string,cPict*> p;
+	std::pair<std::string,cPict*> p;
 	Iterator<Attribute> attr;
-	string name, val;
-	int width = 0, height = 0;
+	std::string name, val;
+	std::istringstream sin(val);
 	bool wide = false, tall = false, custom = false;
+	int width = 0, height = 0;
+	printf("%p\n",p.second);
 	p.second = new cPict(this);
+	printf("%p\n",p.second);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+	printf("%p\n",p.second);
 		attr->GetName(&name);
 		attr->GetValue(&val);
 		if(name == "name")
 			p.first = val;
 		else if(name == "type"){
+	printf("%p\n",p.second);
 			if(val == "blank"){
 				p.second->picType = PIC_TER;
 				p.second->picNum = -1;
@@ -75,30 +78,35 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 				p.second->picType = PIC_MISSILE;
 			else if(val == "full")
 				p.second->picType = PIC_FULL;
+			else if(val == "map")
+				p.second->picType = PIC_TER_MAP;
+			else if(val == "status")
+				p.second->picType = PIC_STATUS;
 			else throw xBadVal("pict",name,val);
-		}else if(name == "custom") if(val == "true")
-			custom = true;
-		else if(name == "clickable") if(val == "true")
-			p.second->clickable = true;
-		else if(name == "size"){
+		}else if(name == "custom"){
+			if(val == "true") custom = true;
+		}else if(name == "clickable"){
+			if(val == "true") p.second->clickable = true;
+		}else if(name == "size"){
 			if(val == "wide") wide = true;
 			else if(val == "tall") tall = true;
 			else if(val == "large") wide = tall = true;
 			else throw xBadVal("pict",name,val);
 		}else if(name == "num"){
-			istringstream sin(val);
+	printf("%p\n",p.second);
+			sin.str(val);
 			sin >> p.second->picNum;
 		}else if(name == "top"){
-			istringstream sin(val);
+			sin.str(val);
 			sin >> p.second->frame.top;
 		}else if(name == "left"){
-			istringstream sin(val);
+			sin.str(val);
 			sin >> p.second->frame.left;
 		}else if(name == "width"){
-			istringstream sin(val);
+			sin.str(val);
 			sin >> width;
 		}else if(name == "height"){
-			istringstream sin(val);
+			sin.str(val);
 			sin >> height;
 		}else throw xBadAttr("pict",name);
 	}
@@ -109,6 +117,8 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 		else if(p.second->picType == PIC_SCEN) p.second->picType = PIC_SCEN_LG;
 		else if(p.second->picType == PIC_DLOG) p.second->picType = PIC_DLOG_LG;
 	}
+	p.second->frame.right = p.second->frame.left;
+	p.second->frame.bottom = p.second->frame.top;
 	if(width > 0 || height > 0 || p.second->picType == PIC_FULL){
 		p.second->frame.right = p.second->frame.left + width;
 		p.second->frame.bottom = p.second->frame.top + height;
@@ -134,6 +144,14 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			p.second->frame.right = p.second->frame.left + 18;
 			p.second->frame.bottom = p.second->frame.top + 18;
 			break;
+		case PIC_TER_MAP:
+			p.second->frame.right = p.second->frame.left + 24;
+			p.second->frame.bottom = p.second->frame.top + 24;
+			break;
+		case PIC_STATUS:
+			p.second->frame.right = p.second->frame.left + 12;
+			p.second->frame.bottom = p.second->frame.top + 12;
+			break;
 		default:
 			p.second->frame.right = p.second->frame.left + 28;
 			p.second->frame.bottom = p.second->frame.top + 36;
@@ -143,7 +161,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -160,11 +178,11 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		attr->GetValue(&val);
 		if(name == "name")
 			p.first = val;
-		else if(name == "framed") if(val == "true")
-			p.second->drawFramed = true;
-		else if(name == "clickable") if(val == "true")
-			p.second->clickable = true;
-		else if(name == "font"){
+		else if(name == "framed"){
+			if(val == "true") p.second->drawFramed = true;
+		}else if(name == "clickable"){
+			if(val == "true") p.second->clickable = true;
+		}else if(name == "font"){
 			if(val == "dungeon")
 				p.second->textFont = DUNGEON;
 			else if(val == "geneva")
@@ -222,7 +240,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -289,9 +307,9 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		attr->GetValue(&val);
 		if(name == "name")
 			p.first = val;
-		else if(name == "wrap") if(val == "true")
-			p.second->wrapLabel = true;
-		else if(name == "type"){
+		else if(name == "wrap"){
+			if(val == "true") p.second->wrapLabel = true;
+		}else if(name == "type"){
 			if(val == "small")
 				p.second->type = BTN_SM;
 			else if(val == "regular")
@@ -392,7 +410,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -532,7 +550,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -565,10 +583,11 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 		}
 	}
 	p.second->lbl = content;
+	p.second->recalcRect();
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -610,7 +629,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
-		}while(controls.find(p.first) == controls.end());
+		}while(controls.find(p.first) != controls.end());
 	}
 	return p;
 }
@@ -626,17 +645,30 @@ cDialog::cDialog(std::string path, cDialog* p) : parent(p){
 }
 
 void cDialog::loadFromFile(std::string path){
+	char cPath[512];
+	UniChar* ucpath = new UniChar[path.length()];
+	for(unsigned int i = 0; i < path.length(); i++) ucpath[i] = path[i];
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	CFURLRef url = CFBundleCopyResourceURL(
+		mainBundle,
+		CFStringCreateWithCharacters(NULL, ucpath, path.length()),
+		CFSTR(""), CFSTR("dialogs")
+	);
+	delete ucpath;
+	CFStringRef cfpath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+	CFStringGetCString(cfpath, cPath, 512, kCFStringEncodingUTF8);
 	try{
-		Document xml(path);
+		printf("Loading dialog from: %s\n", cPath);
+		Document xml(cPath);
 		xml.LoadFile();
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
 		string type, name, val;
 		
-		xml.GetValue(&type);
+		xml.FirstChildElement()->GetValue(&type);
 		if(type != "dialog") throw xBadNode(type);
-		for(attr = attr.begin(&xml); attr != attr.end(); attr++){
+		for(attr = attr.begin(xml.FirstChildElement()); attr != attr.end(); attr++){
 			attr->GetName(&name);
 			attr->GetValue(&val);
 			if(name == "skin"){
@@ -672,12 +704,16 @@ void cDialog::loadFromFile(std::string path){
 		}
 	} catch(Exception& x){ // XML processing exception
 		printf(x.what());
+		exit(1);
 	} catch(xBadVal& x){ // Invalid value for an attribute
 		printf(x.what());
+		exit(1);
 	} catch(xBadAttr& x){ // Invalid attribute for an element
 		printf(x.what());
+		exit(1);
 	} catch(xBadNode& x){ // Invalid element
 		printf(x.what());
+		exit(1);
 	}
 	dialogNotToast = true;
 	bg = BG_DARK; // default is dark background
@@ -701,6 +737,7 @@ void cDialog::loadFromFile(std::string path){
 void cDialog::recalcRect(){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
+		printf("%s \"%s\"\n",typeid(*(iter->second)).name(),iter->first.c_str());
 		if(iter->second->frame.right > winRect.right)
 			winRect.right = iter->second->frame.right;
 		if(iter->second->frame.bottom > winRect.bottom)
@@ -710,6 +747,8 @@ void cDialog::recalcRect(){
 	winRect.right += 6;
 	winRect.bottom += 6;
 }
+
+cDialog::_init cDialog::init;
 
 cDialog::_init::_init(){
 	cControl::init();
@@ -757,7 +796,7 @@ void cDialog::run(){
 	ShowWindow(win);
 	BeginAppModalStateForWindow(win);
 	while(dialogNotToast){
-		WaitNextEvent(everyEvent, &currentEvent, SLEEP_TICKS, MOUSE_REGION);
+		if(!WaitNextEvent(everyEvent, &currentEvent, 0, NULL))continue;
 		switch(currentEvent.what){
 			case updateEvt:
 				BeginUpdate(win);

@@ -342,7 +342,7 @@ void Handle_One_Event()
 	GrafPtr old_port;
 	
 	through_sending();
-	WaitNextEvent(everyEvent, &event, SLEEP_TICKS, MOUSE_REGION);
+	WaitNextEvent(everyEvent, &event, 0, NULL);
 	cur_time = TickCount();
 	if ((event.what != 23) && (!gInBackground) && 
 		((FrontWindow() == mainPtr) || (FrontWindow() == GetDialogWindow(modeless_dialogs[5])))) {

@@ -118,6 +118,7 @@ public:
 	void setSelected(std::string id);
 	std::string getSelected();
 	std::string getPrevSelection(); // The id of the element that was last selected before the selection changed to the current selection.
+	void recalcRect();
 	typedef std::map<std::string,cLed*>::iterator ledIter;
 protected:
 	void draw();

@@ -34,6 +34,7 @@ class cDialog {
 	class _init {
 		_init();
 		~_init();
+		friend class cDialog;
 	};
 	static _init init;
 	cDialog* parent;

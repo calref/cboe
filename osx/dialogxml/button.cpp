@@ -252,6 +252,19 @@ cLedGroup::~cLedGroup(){
 	}
 }
 
+void cLedGroup::recalcRect(){
+	ledIter iter = choices.begin();
+	while(iter != choices.end()){
+		if(iter->second->frame.right > frame.right)
+			frame.right = iter->second->frame.right;
+		if(iter->second->frame.bottom > frame.bottom)
+			frame.bottom = iter->second->frame.bottom;
+		iter++;
+	}
+	frame.right += 6;
+	frame.bottom += 6;
+}
+
 /** A click handler is called whenever a click is received, even on the currently selected element. */
 void cLedGroup::attachClickHandler(click_callback_t f) throw() {
 	onClick = f;
@@ -358,22 +371,29 @@ void cLedGroup::setSelected(std::string id){
 	ledIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
 	
-	eLedState a, b;
-	a = choices[curSelect]->getState();
-	b = iter->second->getState();
-	choices[curSelect]->setState(led_off);
-	iter->second->setState(led_red);
-	if(!choices[curSelect]->triggerFocusHandler(*parent,curSelect,true)){
-		choices[curSelect]->setState(a);
-		iter->second->setState(b);
-		return;
+	if(curSelect == ""){
+		if(iter->second->triggerFocusHandler(*parent,curSelect,false)){
+			iter->second->setState(led_red);
+			curSelect = iter->first;
+		}
+	}else{
+		eLedState a, b;
+		a = choices[curSelect]->getState();
+		b = iter->second->getState();
+		choices[curSelect]->setState(led_off);
+		iter->second->setState(led_red);
+		if(!choices[curSelect]->triggerFocusHandler(*parent,curSelect,true)){
+			choices[curSelect]->setState(a);
+			iter->second->setState(b);
+			return;
+		}
+		if(!iter->second->triggerFocusHandler(*parent,curSelect,false)){
+			choices[curSelect]->setState(a);
+			iter->second->setState(b);
+			return;
+		}
+		curSelect = iter->first;
 	}
-	if(!iter->second->triggerFocusHandler(*parent,curSelect,false)){
-		choices[curSelect]->setState(a);
-		iter->second->setState(b);
-		return;
-	}
-	curSelect = iter->first;
 }
 
 std::string cLedGroup::getSelected(){
