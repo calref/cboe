@@ -1546,7 +1546,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				SetPort(old_port);
 				return;
 				}
-		 }else if((is_town() && univ.town->specials2 & 1)) {
+		 }else if((is_town() && univ.town->defy_mapping)) {
 			 if (modeless_exists[5] == true) {
 				 SetPort(GetDialogPort(the_dialog));
 				 tileImage(map_bar_rect,bg_gworld,bg[4]);

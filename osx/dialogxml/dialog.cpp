@@ -40,17 +40,13 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	std::istringstream sin(val);
 	bool wide = false, tall = false, custom = false;
 	int width = 0, height = 0;
-	printf("%p\n",p.second);
 	p.second = new cPict(this);
-	printf("%p\n",p.second);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-	printf("%p\n",p.second);
 		attr->GetName(&name);
 		attr->GetValue(&val);
 		if(name == "name")
 			p.first = val;
 		else if(name == "type"){
-	printf("%p\n",p.second);
 			if(val == "blank"){
 				p.second->picType = PIC_TER;
 				p.second->picNum = -1;
@@ -93,7 +89,6 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			else if(val == "large") wide = tall = true;
 			else throw xBadVal("pict",name,val);
 		}else if(name == "num"){
-	printf("%p\n",p.second);
 			sin.str(val);
 			sin >> p.second->picNum;
 		}else if(name == "top"){

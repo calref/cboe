@@ -674,6 +674,10 @@ ter_num_t(& cCurOut::operator [] (size_t i))[96]{
 	return out[i];
 }
 
+ter_num_t& cCurOut::operator [] (location loc) {
+	return out[loc.x][loc.y];
+}
+
 void cCurOut::writeTo(std::ostream& file){
 //	for(int i = 0; i < 96; i++){
 //		file << expl[i][0];
@@ -822,4 +826,12 @@ short cUniverse::difficulty_adjust() {
 		adj++;
 	
 	return adj;
+}
+
+short cCurTown::countMonsters(){
+	short to_ret = 0;
+	for (short i = 0; i < record->max_monst(); i++)
+		if (monst[i].active > 0)
+			to_ret++;
+	return to_ret;
 }

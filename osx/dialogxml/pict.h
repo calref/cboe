@@ -154,8 +154,8 @@ private:
 	static void drawPartyScen(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPartyItem(short num, GWorldPtr to_gw, Rect to_rect);
 	static void drawPartyPc(short num, GWorldPtr to_gw, Rect to_rect);
-	//static std::map<ePicType,void(*)(short,GWorldPtr,Rect)> drawPict;
-	static void(* drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
+	static std::map<ePicType,void(*)(short,GWorldPtr,Rect)>& drawPict();
+	//static void(* drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
 	click_callback_t onClick;
 };
 

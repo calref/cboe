@@ -185,3 +185,10 @@ void cOutdoors::cWandering::readAttrFrom(std::string cur, std::istream& sin){
 	else if(cur == "SDF")
 		sin >> end_spec1 >> end_spec2;
 }
+
+bool cOutdoors::cWandering::isNull(){
+	for (short i = 0; i < 7; i++)
+		if (monst[i] != 0)
+			return false;
+	return true;
+}

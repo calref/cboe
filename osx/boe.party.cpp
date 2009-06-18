@@ -1521,7 +1521,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			item = pc_has_abil(pc_num,158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-				else if (univ.town->specials2 & 1)
+				else if (univ.town->defy_mapping)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);

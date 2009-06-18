@@ -44,6 +44,7 @@ public:
 	public:
 		m_num_t monst[4];
 		
+		bool isNull();
 		cWandering& operator = (legacy::wandering_type old);
 	};
 	class cItem { // formerly preset_item_type
@@ -80,7 +81,10 @@ public:
 	short timer_specs[8];
 	unsigned char strlens[180];
 	cSpecial specials[100];
-	unsigned char specials1,specials2,res1,res2;
+	//unsigned char specials1,specials2,res1,res2;
+	bool strong_barriers : 1;
+	bool defy_mapping : 1;
+	char reserved_bits : 6;
 	short difficulty;
 	//char town_strs[180][256];
 	char town_name[256];

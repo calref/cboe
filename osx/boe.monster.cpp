@@ -98,61 +98,44 @@ short out_enc_lev_tot(short which)
 	return count;
 }
 
-short count_monst()
-{
-	short to_ret = 0,i;
-
-	for (i = 0; i < univ.town->max_monst(); i++)
-		if (univ.town.monst[i].active > 0)
-			to_ret++;
-	return to_ret;
-}
-
 void create_wand_monst()
 {
-	short r1,r2,i = 0,num_tries = 0;
+	short r1,r2,r3,i = 0,num_tries = 0;
 	location p_loc;
 
 	r1 = get_ran(1,0,3);
 	if (overall_mode == MODE_OUTDOORS)
-		if (is_null_out_wand_entry(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1]) == 0) {
+		if (!univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1].isNull()) {
 			r2 = get_ran(1,0,3);
-			while ((point_onscreen(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],global_to_local(univ.party.p_loc)) == true)
-				&& (num_tries++ < 100))
+			while ((point_onscreen(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
+					global_to_local(univ.party.p_loc))) && (num_tries++ < 100))
 				r2 = get_ran(1,0,3);
-			if (is_blocked(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2]) == false)
+			if (!is_blocked(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2]))
 				place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
 					univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1],0);
 			}
-	
-////
-	
-	if (overall_mode != MODE_OUTDOORS) // won't place wandering is more than 50 monsters
-		if ((is_null_wand_entry(univ.town->wandering[r1]) == 0) && (count_monst() <= 50)
+	else // won't place wandering is more than 50 monsters
+		if ((!univ.town->wandering[r1].isNull()) && (univ.town.countMonsters() <= 50)
 			&& (univ.party.m_killed[univ.town.num] < univ.town->max_num_monst)) {
 			r2 = get_ran(1,0,3);
-			while ((point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) == true) && 
-			(loc_off_act_area(univ.town->wandering_locs[r2]) == false) && (num_tries++ < 100))
+			while (point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) && 
+					!loc_off_act_area(univ.town->wandering_locs[r2]) && (num_tries++ < 100))
 				r2 = get_ran(1,0,3);
 			for (i = 0; i < 4; i++) {
 				if (univ.town->wandering[r1].monst[i] != 0) { // place a monster
 					p_loc = univ.town->wandering_locs[r2];
 					p_loc.x += get_ran(1,0,4) - 2;
 					p_loc.y += get_ran(1,0,4) - 2;
-					if (is_blocked(p_loc) == false)
+					if (!is_blocked(p_loc))
 						place_monster(univ.town->wandering[r1].monst[i],p_loc);
-					p_loc = univ.town->wandering_locs[r2];
-					p_loc.x += get_ran(1,0,4) - 2;
-					p_loc.y += get_ran(1,0,4) - 2;
-					if ((r1 >= 2) && (i == 0) && (is_blocked(p_loc) == false)) // place extra monsters?
-						place_monster(univ.town->wandering[r1].monst[i],p_loc);
-					p_loc = univ.town->wandering_locs[r2];
-					p_loc.x += get_ran(1,0,4) - 2;
-					p_loc.y += get_ran(1,0,4) - 2;
-					if ((r1 == 3) && (i == 1) && (is_blocked(p_loc) == false)) 
-						place_monster(univ.town->wandering[r1].monst[i],p_loc);						
-					}
-				}			
+				}
+				p_loc = univ.town->wandering_locs[r2];
+				p_loc.x += get_ran(1,0,4) - 2;
+				p_loc.y += get_ran(1,0,4) - 2;
+				r3 = get_ran(1,0,3);
+				if ((r3 >= 2) && (!is_blocked(p_loc))) // place extra monsters?
+					place_monster(univ.town->wandering[r1].monst[3],p_loc);					
+				}
 		}
 }
 
@@ -190,30 +173,6 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 				i++;
 				}
 
-}
-
-short is_null_wand_entry(cTown::cWandering wand_entry)
-{
-	short i = 0;
-	
-	while (i < 4) {
-		if (wand_entry.monst[i] != 0)
-			return 0;
-		i++;	
-		}
-	return 1;
-}
-
-short is_null_out_wand_entry(cOutdoors::cWandering wand_entry)
-{
-	short i = 0;
-	
-	while (i < 7) {
-		if (wand_entry.monst[i] != 0)
-			return 0;
-		i++;	
-		}
-	return 1;
 }
 
 location get_monst_head(short m_num)
@@ -1069,7 +1028,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	if (univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
 		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))
-			/*&& (univ.town.num >= 20)*/) { // Checking for a town num > 20 seems utterly pointless
+			&& (!univ.town->strong_barriers)) {
 			play_sound(60);
 			add_string_to_buf("Monster breaks barrier.");
 			univ.town.set_force_barr(where_check.x,where_check.y,false);

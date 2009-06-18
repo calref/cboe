@@ -28,6 +28,7 @@ public:
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
 		
+		bool isNull();
 		cWandering& operator = (legacy::out_wandering_type old);
 		void writeTo(std::ostream& file, std::string prefix = "");
 		void readAttrFrom(std::string cur, std::istream& sin);
@@ -58,9 +59,9 @@ public:
 	char comment[256];
 	char spec_strs[90][256];
 	char sign_strs[8][256];
-	char(& out_strs(short i))[256] __attribute__((deprecated));
 	bool special_spot[48][48];
 	
+	char(& out_strs(short i))[256] __attribute__((deprecated));
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
 	void writeTo(std::ostream& file);

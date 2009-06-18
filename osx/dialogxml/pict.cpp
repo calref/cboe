@@ -19,46 +19,51 @@ extern GWorldPtr bg_gworld;
 void cPict::init(){
 	// TODO: Load or otherwise acquire the various GWorlds.
 	teranim = dlog = talk = scen = largeScen = item = tinyItem = pc = field = boom = missile = save = header = map = status = NULL;
-	drawPict[PIC_TER] = drawPresetTer;
-	drawPict[PIC_TER_ANIM] = drawPresetTerAnim;
-	drawPict[PIC_MONST] = drawPresetMonstSm;
-	drawPict[PIC_DLOG] = drawPresetDlog;
-	drawPict[PIC_TALK] = drawPresetTalk;
-	drawPict[PIC_SCEN] = drawPresetScen;
-	drawPict[PIC_ITEM] = drawPresetItem;
-	drawPict[PIC_PC] = drawPresetPc;
-	drawPict[PIC_FIELD] = drawPresetField;
-	drawPict[PIC_BOOM] = drawPresetBoom;
-	drawPict[PIC_FULL] = drawFullSheet;
-	drawPict[PIC_MISSILE] = drawPresetMissile;
-	drawPict[PIC_DLOG_LG] = drawPresetDlogLg;
-	drawPict[PIC_SCEN_LG] = drawPresetScenLg;
-	drawPict[PIC_TER_MAP] = drawPresetTerMap;
-	drawPict[PIC_TER_MAP] = drawStatusIcon;
-	drawPict[PIC_MONST_WIDE] = drawPresetMonstWide;
-	drawPict[PIC_MONST_TALL] = drawPresetMonstTall;
-	drawPict[PIC_MONST_LG] = drawPresetMonstLg;
-	drawPict[PIC_CUSTOM_TER] = drawCustomTer;
-	drawPict[PIC_CUSTOM_TER_ANIM] = drawCustomTerAnim;
-	drawPict[PIC_CUSTOM_MONST] = drawCustomMonstSm;
-	drawPict[PIC_CUSTOM_DLOG] = drawCustomDlog;
-	drawPict[PIC_CUSTOM_TALK] = drawCustomTalk;
-	drawPict[PIC_CUSTOM_SCEN] = drawCustomTalk;
-	drawPict[PIC_CUSTOM_ITEM] = drawCustomItem;
-	drawPict[PIC_CUSTOM_FULL] = drawFullSheet;
-	drawPict[PIC_CUSTOM_MISSILE] = drawCustomMissile;
-	drawPict[PIC_CUSTOM_DLOG_LG] = drawCustomDlogLg;
-	drawPict[PIC_CUSTOM_TER_MAP] = drawCustomTerMap;
-	drawPict[PIC_CUSTOM_MONST_WIDE] = drawCustomMonstWide;
-	drawPict[PIC_CUSTOM_MONST_TALL] = drawCustomMonstTall;
-	drawPict[PIC_CUSTOM_MONST_LG] = drawCustomMonstLg;
-	drawPict[PIC_PARTY_MONST] = drawPartyMonstSm;
-	drawPict[PIC_PARTY_SCEN] = drawPartyScen;
-	drawPict[PIC_PARTY_ITEM] = drawPartyItem;
-	drawPict[PIC_PARTY_PC] = drawPartyPc;
-	drawPict[PIC_PARTY_MONST_WIDE] = drawPartyMonstWide;
-	drawPict[PIC_PARTY_MONST_TALL] = drawPartyMonstTall;
-	drawPict[PIC_PARTY_MONST_LG] = drawPartyMonstLg;
+	drawPict()[PIC_TER] = drawPresetTer;
+	drawPict()[PIC_TER_ANIM] = drawPresetTerAnim;
+	drawPict()[PIC_MONST] = drawPresetMonstSm;
+	drawPict()[PIC_DLOG] = drawPresetDlog;
+	drawPict()[PIC_TALK] = drawPresetTalk;
+	drawPict()[PIC_SCEN] = drawPresetScen;
+	drawPict()[PIC_ITEM] = drawPresetItem;
+	drawPict()[PIC_PC] = drawPresetPc;
+	drawPict()[PIC_FIELD] = drawPresetField;
+	drawPict()[PIC_BOOM] = drawPresetBoom;
+	drawPict()[PIC_FULL] = drawFullSheet;
+	drawPict()[PIC_MISSILE] = drawPresetMissile;
+	drawPict()[PIC_DLOG_LG] = drawPresetDlogLg;
+	drawPict()[PIC_SCEN_LG] = drawPresetScenLg;
+	drawPict()[PIC_TER_MAP] = drawPresetTerMap;
+	drawPict()[PIC_TER_MAP] = drawStatusIcon;
+	drawPict()[PIC_MONST_WIDE] = drawPresetMonstWide;
+	drawPict()[PIC_MONST_TALL] = drawPresetMonstTall;
+	drawPict()[PIC_MONST_LG] = drawPresetMonstLg;
+	drawPict()[PIC_CUSTOM_TER] = drawCustomTer;
+	drawPict()[PIC_CUSTOM_TER_ANIM] = drawCustomTerAnim;
+	drawPict()[PIC_CUSTOM_MONST] = drawCustomMonstSm;
+	drawPict()[PIC_CUSTOM_DLOG] = drawCustomDlog;
+	drawPict()[PIC_CUSTOM_TALK] = drawCustomTalk;
+	drawPict()[PIC_CUSTOM_SCEN] = drawCustomTalk;
+	drawPict()[PIC_CUSTOM_ITEM] = drawCustomItem;
+	drawPict()[PIC_CUSTOM_FULL] = drawFullSheet;
+	drawPict()[PIC_CUSTOM_MISSILE] = drawCustomMissile;
+	drawPict()[PIC_CUSTOM_DLOG_LG] = drawCustomDlogLg;
+	drawPict()[PIC_CUSTOM_TER_MAP] = drawCustomTerMap;
+	drawPict()[PIC_CUSTOM_MONST_WIDE] = drawCustomMonstWide;
+	drawPict()[PIC_CUSTOM_MONST_TALL] = drawCustomMonstTall;
+	drawPict()[PIC_CUSTOM_MONST_LG] = drawCustomMonstLg;
+	drawPict()[PIC_PARTY_MONST] = drawPartyMonstSm;
+	drawPict()[PIC_PARTY_SCEN] = drawPartyScen;
+	drawPict()[PIC_PARTY_ITEM] = drawPartyItem;
+	drawPict()[PIC_PARTY_PC] = drawPartyPc;
+	drawPict()[PIC_PARTY_MONST_WIDE] = drawPartyMonstWide;
+	drawPict()[PIC_PARTY_MONST_TALL] = drawPartyMonstTall;
+	drawPict()[PIC_PARTY_MONST_LG] = drawPartyMonstLg;
+}
+
+std::map<ePicType,void(*)(short,GWorldPtr,Rect)>& cPict::drawPict(){
+	static std::map<ePicType,void(*)(short,GWorldPtr,Rect)> f;
+	return f;
 }
 
 void cPict::attachClickHandler(click_callback_t f) throw(){
@@ -500,8 +505,8 @@ GWorldPtr cPict::item = NULL, cPict::tinyItem = NULL, cPict::pc = NULL, cPict::f
 GWorldPtr cPict::missile = NULL, cPict::save = NULL, cPict::header = NULL, cPict::map = NULL, cPict::status = NULL;
 std::vector<GWorldPtr> cPict::ter, cPict::monst, cPict::customSheets;
 std::map<size_t,GWorldPtr> cPict::largeSheets;
-//std::map<ePicType,void(*)(short,GWorldPtr,Rect)> cPict::drawPict;
-void(* cPict::drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
+//std::map<ePicType,void(*)(short,GWorldPtr,Rect)> cPict::drawPict();
+//void(* cPict::drawPict()[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
 short cPict::animFrame = 0;
 
 void cPict::draw(){
@@ -523,7 +528,7 @@ void cPict::draw(){
 	GetBackColor(&store_color);
 	BackColor(whiteColor);
 	
-	drawPict[picType](picNum,(GWorldPtr) parent->win,rect);
+	drawPict()[picType](picNum,(GWorldPtr) parent->win,rect);
 	if(drawFramed) drawFrame(2,0);
 }
 

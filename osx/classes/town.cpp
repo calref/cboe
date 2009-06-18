@@ -75,10 +75,6 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 		strlens[i] = old.strlens[i];
 	for(i = 0; i < 100; i++)
 		specials[i] = old.specials[i];
-	specials1 = old.specials1;
-	specials2 = old.specials2;
-	res1 = old.res1;
-	res2 = old.res2;
 	difficulty = old.difficulty;
 	return *this;
 }
@@ -140,10 +136,6 @@ cTown::cTown(short size){
 	for (i = 0; i < 100; i++) {
 		specials[i] = cSpecial();
 	}
-	specials1 = 0;
-	specials2 = 0;
-	res1 = 0;
-	res2 = 0;
 	difficulty = 0;
 }
 
@@ -183,3 +175,9 @@ cTown::cField& cTown::cField::operator = (legacy::preset_field_type old){
 	return *this;
 }
 
+bool cTown::cWandering::isNull(){
+	for (short i = 0;i < 4;i++)
+		if (monst[i] != 0)
+			return false;
+	return true;
+}

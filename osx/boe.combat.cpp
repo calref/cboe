@@ -286,8 +286,10 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 {
 	short i,j,how_many,num_tries = 0;
 	GrafPtr old_port;
-	short low[10] = {15,7,3,3,1,1,1,7,2,1};
-	short high[10] = {30,10,5,5,3,2,1,10,4,1};
+//	short low[10] = {15,7,3,3,1,1,1,7,2,1};
+//	short high[10] = {30,10,5,5,3,2,1,10,4,1};
+	short low[10] = {15,7,4,3,2,1,1,7,2,1};
+	short high[10] = {30,10,6,5,3,2,1,10,4,1};
 	rectangle town_rect(0,0,47,47);
 	short nums[10];
 	

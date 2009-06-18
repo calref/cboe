@@ -46,14 +46,15 @@ public:
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void cCurTown::append(legacy::big_tr_type& old);
 	
-	unsigned char explored(char x,char y) const;
-	unsigned char misc_i(char x, char y) const;
-	unsigned char sfx(char x, char y) const;
+	unsigned char explored(char x,char y) const __attribute__((deprecated));
+	unsigned char misc_i(char x, char y) const __attribute__((deprecated));
+	unsigned char sfx(char x, char y) const __attribute__((deprecated));
 	
 	cTown* operator -> ();
 	cCurTown();
 	bool loaded() const;
 	void unload();
+	short countMonsters();
 	
 	bool is_explored(char x, char y) const;
 	bool is_force_wall(char x, char y) const;
@@ -126,6 +127,7 @@ public:
 	void append(legacy::out_info_type& old);
 	
 	ter_num_t(& operator [] (size_t i))[96];
+	ter_num_t& operator [] (location loc);
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);
 };

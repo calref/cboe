@@ -1117,7 +1117,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case ITEM_SPELL_MAGIC_MAP:
-				if (univ.town->specials2 & 1) {
+				if (univ.town->defy_mapping) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 				}
@@ -1254,7 +1254,7 @@ bool use_space(location where)
 // Can't get items out in combat.
 bool adj_town_look(location where)
 {
-	char terrain;
+	ter_num_t terrain;
 	bool can_open = true,item_there = false,got_special = false;
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 	
@@ -1272,11 +1272,7 @@ bool adj_town_look(location where)
 				if (where == univ.town->special_locs[i]) {
 					if (get_blockage(univ.town->terrain(where.x,where.y)) > 0) { 
 						// tell party you find something, if looking at a space they can't step in
-						// TODO: That stuff done flag isn't right, is it?
-						if (univ.town.town.special_id[i] >= 10) 
-							add_string_to_buf("  Search: You find something!          ");
-						else if (PSD[univ.town.town_num][univ.town.town.special_id[i]] < 20)
-							add_string_to_buf("  Search: You find something!          ");
+						add_string_to_buf("  Search: You find something!          ");
 					}
 					//call special can_open = town_specials(i,univ.town.town_num);
 					
@@ -1897,6 +1893,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	cSpecial cur_node;
 	short num_nodes = 0;
+	EventRecord evt;
 	
 	if (special_in_progress == true) {
 		give_error("The scenario called a special node while processing another special encounter. The second special will be ignored.","",0);
@@ -1948,10 +1945,21 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		}
 		
 		num_nodes++;
-		if (num_nodes >= 50) {
-			give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
-			next_spec = -1;
+		
+		if(WaitNextEvent(keyDownMask|autoKeyMask, &evt, 1, NULL)){
+			char c = evt.message & charCodeMask;
+			bool interrupt = false;
+			if((toupper(c) == 'C' && (evt.modifiers & controlKey))) interrupt = true;
+			if((c == '.' && (evt.modifiers & cmdKey))) interrupt = true;
+			if(interrupt){
+				give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
+				next_spec = -1;
+			}
 		}
+//		if (num_nodes >= 50) {
+//			give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
+//			next_spec = -1;
+//		}
 	}
 	if (is_out())
 		erase_out_specials();
@@ -2359,16 +2367,13 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	pc = current_pc_picked_in_spec_enc;
-	
-	
-	if ((check_mess == true) && (cur_node.type != 80)) {
-		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
-	}
-	
+	if(PSD[SDF_IS_PARTY_SPLIT] && cur_node.type != SPEC_AFFECT_DEADNESS)
+		pc = PSD[SDF_PARTY_SPLIT_PC];
+	else pc = current_pc_picked_in_spec_enc;
 	
 	switch (cur_node.type) {
 		case SPEC_SELECT_PC:
+			check_mess = false;
 			if (spec.ex1a == 2)
 				current_pc_picked_in_spec_enc = -1;
 			else if (spec.ex1a == 1) {
@@ -2399,13 +2404,13 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_AFFECT_HP:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					univ.party[i].cur_health = minmax(0,	univ.party[i].max_health,
-													  univ.party[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
+													  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
 			break;
 		case SPEC_AFFECT_SP:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					univ.party[i].cur_sp = minmax(0,	univ.party[i].max_sp,
+					univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
 												  univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_XP:
@@ -2580,6 +2585,9 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				PSD[SDF_PARTY_FLIGHT] = r1;
 			}
 			break;
+	}
+	if (check_mess) {
+		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
 
@@ -3057,6 +3065,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
+				break;
 			}
 			if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
 				ASB("Party is already split.");
@@ -3064,6 +3073,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
+				break;
 			}
 			r1 = char_select_pc(1,0,"Which character goes?");
 			if (which_mode < 3)
