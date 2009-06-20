@@ -10,7 +10,10 @@
 #define GRAPHTOOL_H
 #include <Carbon/Carbon.h>
 #include <string>
-#define  LINES_IN_TEXT_WIN	11
+
+#define LINES_IN_TEXT_WIN	11
+#define NUM_TER_SHEETS		7
+#define NUM_MONST_SHEETS	11
 
 enum cursor_type {
 	wand_curs = 0,

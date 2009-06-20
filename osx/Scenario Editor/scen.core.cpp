@@ -1225,6 +1225,7 @@ void fill_ter_info(cDialog& me, short ter){
 }
 
 short edit_ter_type(short which_ter) {
+	init_sheets();
 	cDialog ter_dlg("edit-terrain.xml");
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(boost::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));

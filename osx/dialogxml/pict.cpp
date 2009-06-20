@@ -34,7 +34,7 @@ void cPict::init(){
 	drawPict()[PIC_DLOG_LG] = drawPresetDlogLg;
 	drawPict()[PIC_SCEN_LG] = drawPresetScenLg;
 	drawPict()[PIC_TER_MAP] = drawPresetTerMap;
-	drawPict()[PIC_TER_MAP] = drawStatusIcon;
+	drawPict()[PIC_STATUS] = drawStatusIcon;
 	drawPict()[PIC_MONST_WIDE] = drawPresetMonstWide;
 	drawPict()[PIC_MONST_TALL] = drawPresetMonstTall;
 	drawPict()[PIC_MONST_LG] = drawPresetMonstLg;
@@ -61,8 +61,8 @@ void cPict::init(){
 	drawPict()[PIC_PARTY_MONST_LG] = drawPartyMonstLg;
 }
 
-std::map<ePicType,void(*)(short,GWorldPtr,Rect)>& cPict::drawPict(){
-	static std::map<ePicType,void(*)(short,GWorldPtr,Rect)> f;
+std::map<ePicType,void(*)(short,Rect)>& cPict::drawPict(){
+	static std::map<ePicType,void(*)(short,Rect)> f;
 	return f;
 }
 
@@ -96,7 +96,7 @@ short cPict::getFormat(eFormat prop) throw(xUnsupportedProp){
 	else throw xUnsupportedProp(prop);
 }
 
-void cPict::setSheet(eSheetType type, short n, GWorldPtr sheet){
+void cPict::setSheet(eSheetType type, GWorldPtr sheet, short n){
 	// Step one: verify
 	if(n < -1) throw std::out_of_range("Negative values for n, other than -1, are invalid.");
 	if(n == -1 && type == SHEET_FULL)
@@ -512,6 +512,9 @@ short cPict::animFrame = 0;
 void cPict::draw(){
 	RGBColor store_color;
 	Rect rect = frame;
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	SetPortWindowPort(parent->win);
 	
 	if(!visible){ // Erase it
 		InsetRect(&rect, -3, -3);
@@ -528,29 +531,32 @@ void cPict::draw(){
 	GetBackColor(&store_color);
 	BackColor(whiteColor);
 	
-	drawPict()[picType](picNum,(GWorldPtr) parent->win,rect);
+	drawPict()[picType](picNum,rect);
 	if(drawFramed) drawFrame(2,0);
+	SetPort(cur_port);
 }
 
-void cPict::drawPresetTer(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetTer(short num, Rect to_rect){
 	printf("Getting terrain icon from sheet %i.\n",num / 50);
+	if(!isSheetSet(SHEET_TER,num / 50)) throw xMissingSheet(SHEET_TER,num / 50);
 	GWorldPtr from_gw = ter[num / 50];
 	num = num % 50;
 	Rect from_rect = calc_rect(num % 10, num / 10);
 	if (to_rect.right - to_rect.left > 28) 
 		InsetRect(&to_rect,4,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetTerAnim(short num, Rect to_rect){
 	Rect from_rect = calc_rect(4 * (num / 5) + animFrame, num % 5);
+	if(!isSheetSet(SHEET_TER_ANIM)) throw xMissingSheet(SHEET_TER_ANIM);
 	GWorldPtr from_gw = teranim;
 	printf("Getting animated terrain graphic %i from sheet 20", num);
 	if (to_rect.right - to_rect.left > 28) {
 		InsetRect(&to_rect,4,0);
 		to_rect.right = to_rect.left + 28;
 	}
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
 static Rect calcDefMonstRect(short i, short animFrame){
@@ -569,241 +575,268 @@ static Rect calcDefMonstRect(short i, short animFrame){
 	return r;
 }
 
-void cPict::drawPresetMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetMonstSm(short num, Rect to_rect){
 	short m_start_pic = m_pic_index[num].i;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	GWorldPtr from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetMonstWide(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28; to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
 	
 	short m_start_pic = m_pic_index[num].i;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	GWorldPtr from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetMonstTall(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
 	
 	short m_start_pic = m_pic_index[num].i;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	GWorldPtr from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,0,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetMonstLg(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
 	
 	short m_start_pic = m_pic_index[num].i;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	GWorldPtr from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	Rect from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 1;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 2;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,-14,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	m_start_pic = m_pic_index[num].i + 3;
+	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
 	from_rect = calcDefMonstRect(num, animFrame);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetDlog(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetDlog(short num, Rect to_rect){
 	to_rect.right = to_rect.left + 36;
 	to_rect.bottom = to_rect.top + 36;
+	if(!isSheetSet(SHEET_DLOG)) throw xMissingSheet(SHEET_DLOG);
 	GWorldPtr from_gw = dlog;
 	Rect from_rect = {0,0,36,36};
 	OffsetRect(&from_rect,36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetDlogLg(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetDlogLg(short num, Rect to_rect){
 	to_rect.right = to_rect.left + 72;
 	to_rect.bottom = to_rect.top + 72;
+	if(!isSheetSet(SHEET_DLOG)) throw xMissingSheet(SHEET_DLOG);
 	GWorldPtr from_gw = dlog;
 	Rect from_rect = {0,0,72,72};
 	OffsetRect(&from_rect,36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetTalk(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetTalk(short num, Rect to_rect){
 	num--;
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
+	if(!isSheetSet(SHEET_TALK)) throw xMissingSheet(SHEET_TALK);
 	GWorldPtr from_gw = talk;
 	Rect from_rect = {0,0,32,32};
 	OffsetRect(&from_rect,32 * (num % 10),32 * (num / 10));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetScen(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetScen(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_SCEN)) throw xMissingSheet(SHEET_SCEN);
 	GWorldPtr from_gw = scen;
 	Rect from_rect = {0,0,32,32};
 	OffsetRect(&from_rect,32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetScenLg(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetScenLg(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_SCEN_LG)) throw xMissingSheet(SHEET_SCEN_LG);
 	GWorldPtr from_gw = largeScen;
 	to_rect.right = to_rect.left + 64;
 	to_rect.bottom = to_rect.top + 64;
 	Rect from_rect = {0,0,64,64};
 	OffsetRect(&from_rect, num * 64, 0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetItem(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetItem(short num, Rect to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
 	GWorldPtr from_gw;
 	Rect from_rect = {0,0,18,18};
 	if (num < 45) {
+		if(!isSheetSet(SHEET_ITEM)) throw xMissingSheet(SHEET_ITEM);
 		from_gw = item;
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
+		if(!isSheetSet(SHEET_TINY_ITEM)) throw xMissingSheet(SHEET_TINY_ITEM);
 		from_gw = tinyItem;
 		InsetRect(&to_rect,5,9);
 		OffsetRect(&from_rect,18 * (num % 10), 18 * (num / 10));
 	}
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetPc(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetPc(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_PC)) throw xMissingSheet(SHEET_PC);
 	GWorldPtr from_gw = pc;
 	Rect from_rect = calc_rect(2 * (num / 8), num % 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetField(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetField(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_FIELD)) throw xMissingSheet(SHEET_FIELD);
 	GWorldPtr from_gw = field;
 	Rect from_rect = calc_rect(num % 8, num / 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetBoom(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetBoom(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_BOOM)) throw xMissingSheet(SHEET_BOOM);
 	GWorldPtr from_gw = boom;
 	Rect from_rect = calc_rect(num % 8, num / 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawFullSheet(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawFullSheet(short num, Rect to_rect){
 	Rect from_rect;
+	if(!isSheetSet(SHEET_FULL,num)) throw xMissingSheet(SHEET_FULL,num);
 	GWorldPtr from_gw = largeSheets[num];
 	GetPortBounds(from_gw, &from_rect);
 	to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
 	to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPresetMissile(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetMissile(short num, Rect to_rect){
 	Rect from_rect = {0,0,18,18};
+	if(!isSheetSet(SHEET_MISSILE)) throw xMissingSheet(SHEET_MISSILE);
 	GWorldPtr from_gw = missile;
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
 	PaintRect(&to_rect);
 	short i = animFrame == 7 ? 0 : animFrame + 1;
 	OffsetRect(&from_rect,18 * i, 18 * num);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPresetTerMap(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPresetTerMap(short num, Rect to_rect){
 	Rect from_rect = {0,0,12,12};
+	if(!isSheetSet(SHEET_TER_MAP)) throw xMissingSheet(SHEET_TER_MAP);
 	GWorldPtr from_gw = map;
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
 	OffsetRect(&from_rect,12 * (num % 10), 12 * (num / 10));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawStatusIcon(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawStatusIcon(short num, Rect to_rect){
 	Rect from_rect = {0,0,12,12};
+	if(!isSheetSet(SHEET_STATUS)) throw xMissingSheet(SHEET_STATUS);
 	GWorldPtr from_gw = status;
 	to_rect.right = to_rect.left + 12;
 	to_rect.bottom = to_rect.top + 12;
 	OffsetRect(&from_rect,12 * (num % 3), 12 * (num / 3));
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomTer(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomTer(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom terrain pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawCustomTerAnim(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomTerAnim(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom animated terrain pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
 	num += animFrame;
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawCustomMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomMonstSm(short num, Rect to_rect){
 	static const short adj[4] = {0, 2, 1, 3};
 	num += adj[animFrame];
 	printf("Drawing graphic %i as a custom space pic.\n",num);
@@ -812,11 +845,13 @@ void cPict::drawCustomMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
 	PaintRect(&to_rect);
 	
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomMonstWide(short num, Rect to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
 	num += adj[animFrame];
 	Rect small_monst_rect = {0,0,18,14};
@@ -825,16 +860,20 @@ void cPict::drawCustomMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
 	PaintRect(&to_rect);
 	
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
-	from_gw = customSheets[get_custom_rect(num + 1,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomMonstTall(short num, Rect to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
 	num += adj[animFrame];
 	Rect small_monst_rect = {0,0,18,14};
@@ -843,16 +882,20 @@ void cPict::drawCustomMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
 	PaintRect(&to_rect);
 	
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
-	from_gw = customSheets[get_custom_rect(num + 1,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,0,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomMonstLg(short num, Rect to_rect){
 	static const short adj[4] = {0, 8, 4, 12};
 	num += adj[animFrame];
 	Rect small_monst_rect = {0,0,18,14};
@@ -861,192 +904,256 @@ void cPict::drawCustomMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
 	PaintRect(&to_rect);
 	
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
-	from_gw = customSheets[get_custom_rect(num+1,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
-	from_gw = customSheets[get_custom_rect(num+2,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,-14,18);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
-	from_gw = customSheets[get_custom_rect(num+3,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomDlog(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomDlog(short num, Rect to_rect){
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 36;
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 	
-	from_gw = customSheets[get_custom_rect(num,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&to_rect,18,0);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawCustomDlogLg(short num, GWorldPtr to_gw, Rect to_rect){
-	drawCustomDlog(num,to_gw,to_rect);
-	OffsetRect(&to_rect,28,0);
-	drawCustomDlog(num+2,to_gw,to_rect);
-	OffsetRect(&to_rect,-28,36);
-	drawCustomDlog(num+4,to_gw,to_rect);
-	OffsetRect(&to_rect,28,0);
-	drawCustomDlog(num+6,to_gw,to_rect);
+void cPict::drawCustomDlogLg(short num, Rect to_rect){
+	drawCustomDlog(num,to_rect);
+	OffsetRect(&to_rect,36,0);
+	drawCustomDlog(num + 2,to_rect);
+	OffsetRect(&to_rect,-36,36);
+	drawCustomDlog(num + 4,to_rect);
+	OffsetRect(&to_rect,36,0);
+	drawCustomDlog(num + 6,to_rect);
 }
 
-void cPict::drawCustomTalk(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomTalk(short num, Rect to_rect){
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	to_rect.right = to_rect.left + 16;
 	to_rect.bottom = to_rect.top + 32;
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 	
-	from_gw = customSheets[get_custom_rect(num+1,from_rect)];
+	n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	from_gw = customSheets[n];
 	OffsetRect(&to_rect,16,0);
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawCustomItem(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomItem(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomMissile(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomMissile(short num, Rect to_rect){
 	num += animFrame % 4;
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 18;
 	if(animFrame >= 4) OffsetRect(&from_rect, 0, 18);
 	PaintRect(&to_rect);
 	InsetRect(&to_rect,5,9);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawCustomTerMap(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawCustomTerMap(short num, Rect to_rect){
 	Rect from_rect;
-	GWorldPtr from_gw = customSheets[get_custom_rect(num % 1000,from_rect)];
+	short n = get_custom_rect(num,from_rect);
+	if(!isSheetSet(SHEET_CUSTOM,n)) throw xMissingSheet(SHEET_CUSTOM,n);
+	GWorldPtr from_gw = customSheets[n];
 	from_rect.right = from_rect.left + 12;
 	from_rect.bottom = from_rect.top + 12;
 	num /= 1000; num--;
 	OffsetRect(&from_rect, (num / 3) * 12, (num % 3) * 12);
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPartyMonstSm(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyMonstSm(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPartyMonstWide(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyMonstWide(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	from_rect = get_custom_rect(num+1);
 	OffsetRect(&small_monst_rect,14,0);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPartyMonstTall(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyMonstTall(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	OffsetRect(&small_monst_rect,0,18);
 	from_rect = get_custom_rect(num+1);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPartyMonstLg(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyMonstLg(short num, Rect to_rect){
 	Rect small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	
 	Rect from_rect = get_custom_rect(num);
 	OffsetRect(&small_monst_rect,to_rect.left,to_rect.top);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(num+1);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	OffsetRect(&small_monst_rect,-14,18);
 	from_rect = get_custom_rect(num+2);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 	
 	OffsetRect(&small_monst_rect,14,0);
 	from_rect = get_custom_rect(num+3);
-	rect_draw_some_item(from_gw, from_rect, to_gw, small_monst_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, small_monst_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPartyScen(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyScen(short num, Rect to_rect){
+	if(!isSheetSet(SHEET_HEADER)) throw xMissingSheet(SHEET_HEADER);
 	GWorldPtr from_gw = header;
 	Rect from_rect = {0,0,32,32};
 	OffsetRect(&from_rect,32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0});
 }
 
-void cPict::drawPartyItem(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyItem(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
-void cPict::drawPartyPc(short num, GWorldPtr to_gw, Rect to_rect){
+void cPict::drawPartyPc(short num, Rect to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
+	if(!isSheetSet(SHEET_PARTY)) throw xMissingSheet(SHEET_PARTY);
 	GWorldPtr from_gw = save;
 	Rect from_rect = get_custom_rect(num);
 	PaintRect(&to_rect);
-	rect_draw_some_item(from_gw, from_rect, to_gw, to_rect, transparent);
+	rect_draw_some_item(from_gw, from_rect, to_rect, (Point){0,0}, transparent);
 }
 
 cPict::~cPict() {}
+
+xMissingSheet::xMissingSheet(eSheetType t, size_t n) throw() : type(t), num(n) {}
+
+xMissingSheet::~xMissingSheet() throw() {}
+
+const char* xMissingSheet::what() throw(){
+	const size_t len = strlen(messages[type]) + strlen(messages[NUM_SHEET_TYPES]) + 1;
+	char*const msg = new char[len];
+	sprintf(msg,messages[type],num);
+	strcat(msg,messages[NUM_SHEET_TYPES]);
+	return msg;
+}
+
+const char*const xMissingSheet::messages[] = {
+	"Terrain sheet #%d has not been set!",
+	"The animated terrain sheet has not been set!",
+	"Monster sheet #%d has not been set!",
+	"The dialog sheet has not been set!",
+	"The talk portraits sheet has not been set!",
+	"The scenario icon sheet has not been set!",
+	"The large scenario icon sheet has not been set!",
+	"The large items sheet has not been set!",
+	"The tiny items sheet has not been set!",
+	"The PC sheet has not been set!",
+	"The fields sheet has not been set!",
+	"The booms sheet has not been set!",
+	"The missile sheet has not been set!",
+	"The party sheet has not been set!",
+	"The scenario header sheet has not been set!",
+	"The terrain map sheet has not been set!",
+	"Full sheet #%d has not been set!",
+	"The status sheet has not been set!",
+	"Custom sheet #%d has not been set!",
+	"%s It was accessed before it was set."
+};

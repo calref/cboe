@@ -991,12 +991,12 @@ void load_spec_graphics()
 	dlogpics_gworld = load_pict("dlogpics.png",univ.party.scen_name);
 	status_gworld = load_pict("staticons.png",univ.party.scen_name);
 	
-	for (i = 0; i < 11; i++){
+	for (i = 0; i < NUM_MONST_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "monst" << i + 1 << ".png";
 		monst_gworld[i] = load_pict(sout.str(),univ.party.scen_name);
 	}
-	for (i = 0; i < 7; i++){
+	for (i = 0; i < NUM_TER_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "ter" << i + 1 << ".png";
 		terrain_gworld[i] = load_pict(sout.str(),univ.party.scen_name);

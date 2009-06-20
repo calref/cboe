@@ -2977,3 +2977,16 @@ bool is_sign(ter_num_t ter)
 		return true;
 	return false;
 }
+
+bool check_for_interrupt(){
+	bool interrupt = false;
+	EventRecord evt;
+	if(WaitNextEvent(keyDownMask|autoKeyMask, &evt, 1, NULL)){
+		char c = evt.message & charCodeMask;
+		if((toupper(c) == 'C') && (evt.modifiers & controlKey))
+			interrupt = true;
+		if((c == '.') && (evt.modifiers & cmdKey))
+			interrupt = true;
+	}
+	return interrupt;
+}

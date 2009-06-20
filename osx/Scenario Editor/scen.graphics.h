@@ -62,3 +62,4 @@ Rect get_custom_rect (short which_rect);
 GWorldPtr load_bmp(unsigned char *data, long length);
 void init_dialogs();
 void record_display_strings();
+void init_sheets();

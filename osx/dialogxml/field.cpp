@@ -71,5 +71,9 @@ void cTextField::hide(){
 }
 
 void cTextField::draw(){
+	GrafPtr cur_port;
+	GetPort(&cur_port);
+	SetPortWindowPort(parent->win);
 	Draw1Control(theField);
+	SetPort(cur_port);
 }

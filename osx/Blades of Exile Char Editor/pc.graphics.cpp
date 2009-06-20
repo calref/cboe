@@ -58,7 +58,7 @@ bool init_once = false;
 GWorldPtr spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 // (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
 GWorldPtr items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
-GWorldPtr monst_gworld[11],terrain_gworld[7],anim_gworld,talkfaces_gworld;
+GWorldPtr monst_gworld[NUM_MONST_SHEETS],terrain_gworld[NUM_TER_SHEETS],anim_gworld,talkfaces_gworld;
 GWorldPtr vehicle_gworld, small_ter_gworld;
 
 void init_dialogs(){

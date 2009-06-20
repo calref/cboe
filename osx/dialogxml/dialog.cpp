@@ -25,9 +25,9 @@ static std::string generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
 	// Though, this will be called after srand() is called in main() anyway.
 	int n_chars = rand() % 100;
-	std::string s;
+	std::string s = "$";
 	while(n_chars > 0){
-		s += char(rand() % 223) + ' ';
+		s += char(rand() % 96) + ' '; // was 223 ...
 		n_chars--;
 	}
 	return s;
@@ -36,17 +36,17 @@ static std::string generateRandomString(){
 template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	std::pair<std::string,cPict*> p;
 	Iterator<Attribute> attr;
-	std::string name, val;
-	std::istringstream sin(val);
+	std::string name;
 	bool wide = false, tall = false, custom = false;
 	int width = 0, height = 0;
 	p.second = new cPict(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "type"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "blank"){
 				p.second->picType = PIC_TER;
 				p.second->picNum = -1;
@@ -80,29 +80,30 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 				p.second->picType = PIC_STATUS;
 			else throw xBadVal("pict",name,val);
 		}else if(name == "custom"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "true") custom = true;
 		}else if(name == "clickable"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "true") p.second->clickable = true;
 		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "wide") wide = true;
 			else if(val == "tall") tall = true;
 			else if(val == "large") wide = tall = true;
 			else throw xBadVal("pict",name,val);
 		}else if(name == "num"){
-			sin.str(val);
-			sin >> p.second->picNum;
+			attr->GetValue(&p.second->picNum);
 		}else if(name == "top"){
-			sin.str(val);
-			sin >> p.second->frame.top;
+			attr->GetValue(&p.second->frame.top);
 		}else if(name == "left"){
-			sin.str(val);
-			sin >> p.second->frame.left;
+			attr->GetValue(&p.second->frame.left);
 		}else if(name == "width"){
-			sin.str(val);
-			sin >> width;
+			attr->GetValue(&width);
 		}else if(name == "height"){
-			sin.str(val);
-			sin >> height;
+			attr->GetValue(&height);
 		}else throw xBadAttr("pict",name);
 	}
 	if(wide && !tall && p.second->picType == PIC_MONST) p.second->picType = PIC_MONST_WIDE;
@@ -165,19 +166,24 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	pair<string,cTextMsg*> p;
 	Iterator<Attribute> attr;
 	Iterator<Node> node;
-	string name, val;
+	string name;
 	int width = 0, height = 0;
 	p.second = new cTextMsg(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "true") p.second->drawFramed = true;
 		}else if(name == "clickable"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "true") p.second->clickable = true;
 		}else if(name == "font"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "dungeon")
 				p.second->textFont = DUNGEON;
 			else if(val == "geneva")
@@ -188,12 +194,16 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 				p.second->textFont = MAIDENWORD;
 			else throw xBadVal("text",name,val);
 		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "large")
 				p.second->textSize = 12;
 			else if(val == "small")
 				p.second->textSize = 10;
 			else throw xBadVal("text",name,val);
 		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
 			RGBColor clr;
 			try{
 				clr = parseColor(val);
@@ -202,19 +212,15 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			}
 			p.second->color = clr;
 		}else if(name == "top"){
-			istringstream sin(val);
-			sin >> p.second->frame.top;
+			attr->GetValue(&p.second->frame.top);
 		}else if(name == "left"){
-			istringstream sin(val);
-			sin >> p.second->frame.left;
+			attr->GetValue(&p.second->frame.left);
 		}else if(name == "width"){
-			istringstream sin(val);
-			sin >> width;
+			attr->GetValue(&width);
 		}else if(name == "height"){
-			istringstream sin(val);
-			sin >> height;
+			attr->GetValue(&height);
 		}else if(name == "fromlist"){
-			p.second->fromList = val;
+			attr->GetValue(&p.second->fromList);
 		}else throw xBadAttr("pict",name);
 	}
 	p.second->frame.right = p.second->frame.left + width;
@@ -294,17 +300,20 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 	pair<string,cButton*> p;
 	Iterator<Attribute> attr;
 	Iterator<Node> node;
-	string name, val;
+	string name;
 	int width = 0, height = 0;
 	p.second = new cButton(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "wrap"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "true") p.second->wrapLabel = true;
 		}else if(name == "type"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "small")
 				p.second->type = BTN_SM;
 			else if(val == "regular")
@@ -332,25 +341,23 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			else if(val == "push")
 				p.second->type = BTN_PUSH;
 		}else if(name == "def-key"){
+			std::string val;
+			attr->GetValue(&val);
 			try{
 				p.second->key = parseKey(val);
 			}catch(int){
 				throw xBadVal("button",name,val);
 			}
 		}else if(name == "fromlist")
-			p.second->fromList = val;
+			attr->GetValue(&p.second->fromList);
 		else if(name == "top"){
-			istringstream sin(val);
-			sin >> p.second->frame.top;
+			attr->GetValue(&p.second->frame.top);
 		}else if(name == "left"){
-			istringstream sin(val);
-			sin >> p.second->frame.left;
+			attr->GetValue(&p.second->frame.left);
 		}else if(name == "width"){
-			istringstream sin;
-			sin >> width;
+			attr->GetValue(&width);
 		}else if(name == "height"){
-			istringstream sin;
-			sin >> height;
+			attr->GetValue(&height);
 		}else throw xBadAttr("button",name);
 	}
 	if(width > 0 || height > 0) {
@@ -469,23 +476,26 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	pair<string,cLed*> p;
 	Iterator<Attribute> attr;
 	Iterator<Node> node;
-	string name, val;
+	string name;
 	int width = 0, height = 0;
 	p.second = new cLed(this);
 	p.second->type = BTN_LED;
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "state"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "red") p.second->state = led_red;
 			else if(val == "green") p.second->state = led_green;
 			else if(val == "off") p.second->state = led_off;
 			else throw xBadVal("led",name,val);
 		}else if(name == "fromlist")
-			p.second->fromList = val;
+			attr->GetValue(&p.second->fromList);
 		else if(name == "font"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "dungeon")
 				p.second->textFont = DUNGEON;
 			else if(val == "geneva")
@@ -496,12 +506,16 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->textFont = MAIDENWORD;
 			else throw xBadVal("text",name,val);
 		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "large")
 				p.second->textSize = 12;
 			else if(val == "small")
 				p.second->textSize = 10;
 			else throw xBadVal("text",name,val);
 		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
 			RGBColor clr;
 			try{
 				clr = parseColor(val);
@@ -510,17 +524,13 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			}
 			p.second->color = clr;
 		}else if(name == "top"){
-			istringstream sin(val);
-			sin >> p.second->frame.top;
+			attr->GetValue(&p.second->frame.top);
 		}else if(name == "left"){
-			istringstream sin(val);
-			sin >> p.second->frame.left;
+			attr->GetValue(&p.second->frame.left);
 		}else if(name == "width"){
-			istringstream sin;
-			sin >> width;
+			attr->GetValue(&width);
 		}else if(name == "height"){
-			istringstream sin;
-			sin >> height;
+			attr->GetValue(&height);
 		}else throw xBadAttr("button",name);
 	}
 	if(width > 0 || height > 0) {
@@ -554,15 +564,14 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 	pair<string,cLedGroup*> p;
 	Iterator<Attribute> attr;
 	Iterator<Element> node;
-	string name, val;
+	string name;
 	p.second = new cLedGroup(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "fromlist")
-			p.second->fromList = val;
+			attr->GetValue(&p.second->fromList);
 		else throw xBadAttr("button",name);
 	}
 	string content;
@@ -591,32 +600,29 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	pair<string,cTextField*> p;
 	Iterator<Attribute> attr;
 	Iterator<Node> node;
-	string name, val;
+	string name;
 	int width = 0, height = 0;
 	p.second = new cTextField(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
-		attr->GetValue(&val);
 		if(name == "name")
-			p.first = val;
+			attr->GetValue(&p.first);
 		else if(name == "type"){
+			std::string val;
+			attr->GetValue(&val);
 			if(val == "num")
 				p.second->isNumericField = true;
 			else if(val == "text")
 				p.second->isNumericField = false;
 			else throw xBadVal("field",name,val);
 		}else if(name == "top"){
-			istringstream sin(val);
-			sin >> p.second->frame.top;
+			attr->GetValue(&p.second->frame.top);
 		}else if(name == "left"){
-			istringstream sin(val);
-			sin >> p.second->frame.left;
+			attr->GetValue(&p.second->frame.left);
 		}else if(name == "width"){
-			istringstream sin;
-			sin >> width;
+			attr->GetValue(&width);
 		}else if(name == "height"){
-			istringstream sin;
-			sin >> height;
+			attr->GetValue(&height);
 		}else throw xBadAttr("button",name);
 	}
 	p.second->frame.right = p.second->frame.left + width;
@@ -786,9 +792,12 @@ void cDialog::run(){
 	char c, k;
 	cKey key;
 	EventRecord currentEvent;
+	GrafPtr old_port;
 	std::string itemHit = "";
 	dialogNotToast = true;
+	GetPort(&old_port);
 	ShowWindow(win);
+	SetPortWindowPort(win);
 	BeginAppModalStateForWindow(win);
 	while(dialogNotToast){
 		if(!WaitNextEvent(everyEvent, &currentEvent, 0, NULL))continue;
@@ -896,6 +905,7 @@ void cDialog::run(){
 		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod,currentEvent.where);
 	}
 	EndAppModalStateForWindow(win);
+	SetPort(old_port);
 	HideWindow(win);
 }
 

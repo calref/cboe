@@ -55,10 +55,9 @@ void cButton::draw(){
 		else if(type == BTN_PUSH) TextSize(10);
 		else TextSize(12);
 		from_gw = buttons[btnGW[type]];
-		to_gw = (GWorldPtr) parent->win;
 		from_rect = btnRects[btnGW[type]][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect); // TODO: This originally drew to dest 2 (dialog window); does it still?
+		rect_draw_some_item(from_gw,from_rect,to_rect,(Point){0,0}); // TODO: This originally drew to dest 2 (dialog window); does it still?
 		RGBForeColor(&parent->defTextClr);
 		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
 		// TODO: Adjust string location as appropriate
@@ -86,7 +85,7 @@ short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
 }
 
 // Indices within the buttons array.
-size_t cButton::btnGW[13] = {
+size_t cButton::btnGW[14] = {
 	0, // BTN_SM
 	1, // BTN_REG
 	2, // BTN_LG
@@ -100,6 +99,7 @@ size_t cButton::btnGW[13] = {
 	3, // BTN_TALL
 	3, // BTN_TRAIT
 	6, // BTN_PUSH
+	5, // BTN_LED
 };
 
 GWorldPtr cButton::buttons[7] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
@@ -221,11 +221,10 @@ void cLed::draw(){
 		if(foundSilom())TextFace(normal);
 		else TextFace(bold);
 		TextSize(9);
-		from_gw = buttons[BTN_LED];
-		to_gw = (GWorldPtr) parent->win;
+		from_gw = buttons[btnGW[BTN_LED]];
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_gw,to_rect);
+		rect_draw_some_item(from_gw,from_rect,to_rect,(Point){0,0});
 		RGBForeColor(&parent->defTextClr);
 		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
 		// TODO: Adjust string location as appropriate

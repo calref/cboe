@@ -18,6 +18,7 @@
 #include "boe.monster.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
+#include "boe.actions.h"
 #include "soundtool.h"
 #include "boe.townspec.h"
 #include "boe.graphics.h"
@@ -1893,7 +1894,6 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	cSpecial cur_node;
 	short num_nodes = 0;
-	EventRecord evt;
 	
 	if (special_in_progress == true) {
 		give_error("The scenario called a special node while processing another special encounter. The second special will be ignored.","",0);
@@ -1946,20 +1946,10 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		
 		num_nodes++;
 		
-		if(WaitNextEvent(keyDownMask|autoKeyMask, &evt, 1, NULL)){
-			char c = evt.message & charCodeMask;
-			bool interrupt = false;
-			if((toupper(c) == 'C' && (evt.modifiers & controlKey))) interrupt = true;
-			if((c == '.' && (evt.modifiers & cmdKey))) interrupt = true;
-			if(interrupt){
-				give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
-				next_spec = -1;
-			}
+		if(check_for_interrupt()){
+			give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
+			next_spec = -1;
 		}
-//		if (num_nodes >= 50) {
-//			give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
-//			next_spec = -1;
-//		}
 	}
 	if (is_out())
 		erase_out_specials();

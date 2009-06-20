@@ -153,8 +153,8 @@ GWorldPtr dlogpics_gworld = NULL;
 GWorldPtr anim_gworld = NULL;
 GWorldPtr talkfaces_gworld = NULL;
 GWorldPtr pc_gworld = NULL;
-GWorldPtr monst_gworld[11] = {0};
-GWorldPtr terrain_gworld[7] = {0};
+GWorldPtr monst_gworld[NUM_MONST_SHEETS] = {0};
+GWorldPtr terrain_gworld[NUM_TER_SHEETS] = {0};
 
 // Startup graphics, will die when play starts
 GWorldPtr startup_gworld = NULL;

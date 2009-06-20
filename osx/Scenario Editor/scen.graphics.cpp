@@ -13,6 +13,8 @@
 #include "mathutil.h"
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
+#include "dialog.h"
+
 #include "scen.core.h"
 #include "scen.townout.h"
 
@@ -65,8 +67,8 @@ extern location cur_out;
 
 short num_ir[3] = {12,10,4};
 
-GWorldPtr monst_gworld[11] = {0};
-GWorldPtr terrain_gworld[7] = {0};
+GWorldPtr monst_gworld[NUM_MONST_SHEETS] = {0};
+GWorldPtr terrain_gworld[NUM_TER_SHEETS] = {0};
 GWorldPtr editor_mixed = NULL;
 GWorldPtr terrain_buttons_gworld = NULL;
 GWorldPtr anim_gworld = NULL;
@@ -219,6 +221,50 @@ void init_dialogs(){
 	RGBColor c = {0,0,0};
 	cd_set_text_clr(c);
 	//return tmp;
+}
+
+void init_sheets(){
+	// Must be called before displaying a dialog that contains icons to ensure the sheets are set.
+	if(!cPict::isSheetSet(SHEET_TER))
+		for(short i = 0; i < NUM_TER_SHEETS; i++)
+			cPict::setSheet(SHEET_TER,terrain_gworld[i],-1);
+	if(!cPict::isSheetSet(SHEET_TER_ANIM))
+		cPict::setSheet(SHEET_TER_ANIM,anim_gworld);
+	if(!cPict::isSheetSet(SHEET_MONST))
+		for(short j = 0; j < NUM_MONST_SHEETS; j++)
+			cPict::setSheet(SHEET_MONST,monst_gworld[j],-1);
+	if(!cPict::isSheetSet(SHEET_DLOG))
+		cPict::setSheet(SHEET_DLOG,dlogpics_gworld);
+	if(!cPict::isSheetSet(SHEET_TALK))
+		cPict::setSheet(SHEET_TALK,talkfaces_gworld);
+//	if(!cPict::isSheetSet(SHEET_SCEN)) TODO: Find/add these
+//		cPict::setSheet(SHEET_SCEN,,);
+//	if(!cPict::isSheetSet(SHEET_SCEN_LG))
+//		cPict::setSheet(SHEET_SCEN_LG,,);
+	if(!cPict::isSheetSet(SHEET_ITEM))
+		cPict::setSheet(SHEET_ITEM,items_gworld);
+	if(!cPict::isSheetSet(SHEET_TINY_ITEM))
+		cPict::setSheet(SHEET_TINY_ITEM,tiny_obj_gworld);
+	if(!cPict::isSheetSet(SHEET_PC))
+		cPict::setSheet(SHEET_PC,pc_gworld);
+	if(!cPict::isSheetSet(SHEET_FIELD))
+		cPict::setSheet(SHEET_FIELD,fields_gworld);
+	if(!cPict::isSheetSet(SHEET_BOOM))
+		cPict::setSheet(SHEET_BOOM,boom_gworld);
+	if(!cPict::isSheetSet(SHEET_MISSILE))
+		cPict::setSheet(SHEET_MISSILE,missiles_gworld);
+//	if(!cPict::isSheetSet(SHEET_PARTY)) // TODO: Add these
+//		cPict::setSheet(SHEET_PARTY,,);
+//	if(!cPict::isSheetSet(SHEET_HEADER))
+//		cPict::setSheet(SHEET_HEADER,,);
+	if(!cPict::isSheetSet(SHEET_TER_MAP))
+		cPict::setSheet(SHEET_TER_MAP,small_ter_gworld);
+	if(!cPict::isSheetSet(SHEET_STATUS))
+		cPict::setSheet(SHEET_STATUS,status_gworld);
+//	if(!cPict::isSheetSet(SHEET_FULL)) // TODO: Add these
+//		cPict::setSheet(SHEET_FULL,,);
+//	if(!cPict::isSheetSet(SHEET_CUSTOM) // TODO: Add these too (must also break them up if old))
+//		cPict::setSheet(SHEET_CUSTOM,,);
 }
 
 short get_small_icon(ter_num_t ter){

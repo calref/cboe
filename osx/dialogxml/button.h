@@ -60,8 +60,8 @@ private:
 	bool pressed;
 	std::string fromList;
 	static Rect btnRects[13][2];
-	static size_t btnGW[13];
 protected:
+	static size_t btnGW[14];
 	static GWorldPtr buttons[7];
 };
 
