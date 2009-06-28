@@ -1508,7 +1508,23 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 		
 	for (k = 0; k < (short) LOWORD(lParam); k++)
 	switch(chr)
-		{
+	{
+		case '&':
+			add_string_to_buf("If Valorim ...");
+			print_buf();
+			break;
+		case '*':
+			add_string_to_buf("You want to save ...");
+			print_buf();
+			break;
+		case '(':
+			add_string_to_buf("Back up your save files ...");
+			print_buf();
+			break;
+		case ')':
+			add_string_to_buf("Burma Shave.");
+			print_buf();
+			break;
 		case 'D':
 			if (in_scen_debug)
 			{
@@ -1523,8 +1539,18 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			print_buf();
 			break;
 		case '?':
+			if (overall_mode == MODE_SHOPPING) {
+				univ.party.help_received[26] = 0;
+				give_help(226,27,0);
+				break;
+			}
+			if (overall_mode == MODE_TALKING) {
+				univ.party.help_received[5] = 0;
+				give_help(205,6,0);
+				break;
+			}
 			if (is_out()) FCD(1079,0);
-			if (is_town()) FCD(1080,0); 
+			if (is_town()) FCD(1080,0);
 			if (is_combat()) FCD(1081,0);
 			break;
 
@@ -1594,7 +1620,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
     //	case 'A': Alchemy
 		case 'B': // Leave town
 			if (in_scen_debug) {
-			party.stuff_done[304][0] = 0;				
+			party.stuff_done[304][0] = 0;
             if(overall_mode == MODE_OUTDOORS){
                 add_string_to_buf("Debug - Leave Town: You're not in town !");
                 print_buf();
@@ -1737,18 +1763,22 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			break;
 		case 'R': // Return to Start
 			if (in_scen_debug) {				 
-			if (party.in_boat >= 0) {
-				add_string_to_buf("  Not while in boat. ");
-				break;	
+				if (party.in_boat >= 0) {
+					add_string_to_buf("  Not while in boat. ");
+					break;	
+				}		 
+				if (party.in_horse >= 0) {
+					add_string_to_buf("  Not while on horse. ");
+					break;	
 				}
-			force_town_enter(scenario.which_town_start,scenario.where_start);
-			start_town_mode(scenario.which_town_start,9);
-			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
-				scenario.out_start.x,scenario.out_start.y);
-			center = c_town.p_loc = scenario.where_start;
-			redraw_screen(0);
-			add_string_to_buf("Debug:  You are moved... ");
-			print_buf();
+				force_town_enter(scenario.which_town_start,scenario.where_start);
+				start_town_mode(scenario.which_town_start,9);
+				position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
+					scenario.out_start.x,scenario.out_start.y);
+				center = c_town.p_loc = scenario.where_start;
+				redraw_screen(0);
+				add_string_to_buf("Debug:  You are moved... ");
+				print_buf();
 			}			
 			break;
 		case 'S': // Set a SDF <= can't set the SDF 0 (it's the default return value if the first character of the string is not a number)
