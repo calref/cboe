@@ -66,7 +66,6 @@ signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
 signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 bool game_run_before = false;
-bool debug_on = false;
 bool give_intro_hint = true;
 bool in_scen_debug = false;
 bool show_startup_splash = true;

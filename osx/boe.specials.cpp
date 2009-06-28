@@ -1543,7 +1543,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		monst_damaged_mes(which_m,how_much,how_much_spec);
 	victim->health = victim->health - how_much - how_much_spec;
 	
-	if (in_scen_debug == true)
+	if (in_scen_debug)
 		victim->health = -1;
 	
 	// splitting monsters
@@ -1649,7 +1649,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	if (which_m->radiate_1 == 15)
 		run_special(12,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
-	if ((in_scen_debug == false) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
+	if ((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
 		xp = which_m->level * 2;
 		if (who_killed < 6)
 			award_xp(who_killed,xp);
@@ -1664,7 +1664,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 		place_glands(l,which_m->number);
 		
 	}
-	if ((in_scen_debug == false) && (which_m->summoned == 0))
+	if ((!in_scen_debug) && (which_m->summoned == 0))
 		place_treasure(which_m->cur_loc, which_m->level / 2, which_m->treasure, 0);
 	
 	i = which_m->cur_loc.x;

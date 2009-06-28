@@ -30,6 +30,7 @@
 #include "mathutil.h"
 #include "fileio.h"
 #include "dlgutil.h"
+#include "dlgconsts.h"
 
 Rect bottom_buttons[7];
 Rect town_buttons[10];
@@ -52,6 +53,7 @@ Rect pc_buttons[6][5];
 short num_chirps_played = 0;
 
 extern Rect startup_button[6];
+bool ghost_mode;
 Rect startup_top;
 
 // For menu spell casting, some info needs to be stored up here.
@@ -85,14 +87,13 @@ cOutdoors::cWandering store_wandering_special;
 long dummy;
 short store_shop_type;
 
-short debug_ok = 0;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 
 extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern Point	to_create;
 extern bool in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
-extern bool debug_on,cartoon_happening,party_in_memory,in_scen_debug;
+extern bool cartoon_happening,party_in_memory,in_scen_debug;
 
 // game info globals
 
@@ -1551,16 +1552,17 @@ void initiate_outdoor_combat(short i)
 	draw_terrain();
 }
 
-bool handle_keystroke(char chr,char chr2,EventRecord event)
-{
+bool handle_keystroke(char chr,char chr2,EventRecord event){
 	bool are_done = false;
 	Point pass_point;
 	short i,j;
-
+	std::ostringstream sout;
+	char response[255];
+	
 	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
 	Point terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
-							{120,185},{150,185},{180,185},
-								{120,155},{150,155},{180,135}};
+		{120,185},{150,185},{180,185},
+		{120,155},{150,155},{180,135}};
 	char talk_chars[9] = {'l','n','j','b','s','r','d','g','a'};
 	bool dialog_grabbed_key = false;
 	
@@ -1569,30 +1571,30 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			if (modeless_exists[i] == true)
 				if ((FrontWindow() == GetDialogWindow(modeless_dialogs[i])) && ((chr == 13) || (chr2 == 76)|| (chr2 == 53))
 					&& (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-						//GetDialogItem(modeless_dialogs[i], 1, &the_type, &the_handle, &the_rect);
-						//HiliteControl((ControlHandle)the_handle,inButton);
-						//Delay(8,&dummy);
-						//HiliteControl((ControlHandle)the_handle,0);						
-						HideWindow(GetDialogWindow(modeless_dialogs[i])); 
-						modeless_exists[i] = false;				
-						SelectWindow(mainPtr);
-						SetPort(GetWindowPort(mainPtr));
-						dialog_grabbed_key = true;
-					}
+					//GetDialogItem(modeless_dialogs[i], 1, &the_type, &the_handle, &the_rect);
+					//HiliteControl((ControlHandle)the_handle,inButton);
+					//Delay(8,&dummy);
+					//HiliteControl((ControlHandle)the_handle,0);						
+					HideWindow(GetDialogWindow(modeless_dialogs[i])); 
+					modeless_exists[i] = false;				
+					SelectWindow(mainPtr);
+					SetPort(GetWindowPort(mainPtr));
+					dialog_grabbed_key = true;
+				}
 		if (dialog_grabbed_key == true)
 			return false;
-		}
-		
+	}
+	
 	if (in_startup_mode == true)
 		return false;
-		
+	
 	ObscureCursor();
 	SetPort(GetWindowPort(mainPtr));
 	
-// DEBUG
-//	sprintf((char *) debug, "%d    ",(short) chr2); 
-//	add_string_to_buf((char *) debug);
-//	print_buf();
+	// DEBUG
+	//	sprintf((char *) debug, "%d    ",(short) chr2); 
+	//	add_string_to_buf((char *) debug);
+	//	print_buf();
 	if (overall_mode == MODE_TALKING) {
 		if (chr2 == 53)
 			chr = 'd';
@@ -1605,16 +1607,16 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);			
-				}
-		}
+			}
+	}
 	else if (overall_mode == MODE_SHOPPING) { // shopping keystrokes
 		if (chr2 == 53) {
-				pass_point.h = 222;
-				pass_point.v = 398;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);			
-				}
+			pass_point.h = 222;
+			pass_point.v = 398;
+			AddPt(ul,&pass_point);
+			event.where = pass_point;
+			are_done = handle_action(event);			
+		}
 		for (i = 0; i < 8; i++)
 			if (chr == 97 + i) {
 				pass_point.h = shopping_rects[i][1].left + 9;
@@ -1622,29 +1624,29 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);			
-				}
-		}
-		
+			}
+	}
+	
 	if ((overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-	for (i = 0; i < 10; i++)
-		if (chr2 == keypad[i]) {
+		for (i = 0; i < 10; i++)
+			if (chr2 == keypad[i]) {
 				if (i == 0) {
 					chr = 'z';
-					}
-					else {
+				}
+				else {
 					pass_point.h = terrain_click[i].v;
 					pass_point.v = terrain_click[i].h;
 					AddPt(ul,&pass_point);
 					event.where = pass_point;
 					are_done = handle_action(event);
 					return are_done;
-					}
 				}
-		}
-		
-	switch(chr)
-		{
+			}
+	}
 	
+	switch(chr)
+	{
+			
 		case '&':
 			add_string_to_buf("If Valorim ...");
 			print_buf();
@@ -1661,161 +1663,316 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			add_string_to_buf("Burma Shave.");
 			print_buf();
 			break;
-
+			
 		case '?':
-			if (is_out()) FCD(1079,0);
-			if (is_town()) FCD(1080,0); 
-			if (is_combat()) FCD(1081,0);
 			if (overall_mode == MODE_SHOPPING) {
 				univ.party.help_received[26] = 0;
 				give_help(226,27,0);
-				}
-			if (overall_mode == MODE_SHOPPING) {
-				univ.party.help_received[26] = 0;
-				give_help(226,27,0);
-				}
+				break;
+			}
 			if (overall_mode == MODE_TALKING) {
 				univ.party.help_received[5] = 0;
 				give_help(205,6,0);
-				}
+				break;
+			}
+			if (is_out()) FCD(1079,0);
+			if (is_town()) FCD(1080,0); 
+			if (is_combat()) FCD(1081,0);
 			break;
-
+			
 		case '1': case '2': case '3': case '4': case '5': case '6':
 			pass_point.h = pc_buttons[((short) chr) - 49][0].left + 1 + PC_WIN_UL_X;
 			pass_point.v = pc_buttons[((short) chr) - 49][0].top + PC_WIN_UL_Y;
 			AddPt(ul,&pass_point);
 			event.where = pass_point;
 			are_done = handle_action(event);
-		break;
-		
+			break;
+			
 		case '9':
 			pass_point.h = item_screen_button_rects[6].left + ITEM_WIN_UL_X;
 			pass_point.v = item_screen_button_rects[6].top + ITEM_WIN_UL_Y;
 			AddPt(ul,&pass_point);
 			event.where = pass_point;
 			are_done = handle_action(event);
-		break;
-
+			break;
+			
 		case ' ':
 			if (overall_mode == MODE_FANCY_TARGET) { // cast multi-target spell, set # targets to 0 so that
-									// space clicked doesn't matter
+				// space clicked doesn't matter
 				num_targets_left = 0;
 				pass_point = terrain_click[5];
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);			
-				}
+			}
 			if (overall_mode == MODE_SPELL_TARGET)
 				spell_cast_hit_return();
-		break;
-		
-
+			break;
+			
+			
 		case 'D':
-			if (in_scen_debug == true)  {
+			if (in_scen_debug) {
 				in_scen_debug = false;
 				ASB("Debug mode OFF.");
-				}
-				else if (/*enter_password() == */false) 
-					ASB("Password incorrect.");
-					else {
-						in_scen_debug = true;
-						ASB("Debug mode ON.");
-						}
+			} else {
+				in_scen_debug = true;
+				ASB("Debug mode ON.");
+			}
 			print_buf();
 			break;
 		case 'z': 
 			if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
-				 set_stat_window(current_pc);
+				set_stat_window(current_pc);
 				put_item_screen(stat_window,0);
-				}
-				else {
-					set_stat_window(0);
-					put_item_screen(stat_window,0);								
-					}
-		break;
-
+			} else {
+				set_stat_window(0);
+				put_item_screen(stat_window,0);								
+			}
+			break;
+			
 		case '=':
-
-			for (i = 0; i < 6; i++) 
-			for (j = 0; j < 30; j++) {
-				univ.party[i].priest_spells[j] = 1;
-				univ.party[i].mage_spells[j] = 1;
-				}
-			if (debug_on == false) {
-				break;
-				}
+			if(!in_scen_debug) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for (i = 0; i < 6; i++) {
 				univ.party[i].main_status = MAIN_STATUS_ALIVE;
 				univ.party[i].cur_health = univ.party[i].max_health;
 				univ.party[i].cur_sp = 100;
-				}
+			}
 			award_party_xp(25);
 			for (i = 0; i < 6; i++) 
-			for (j = 0; j < 62; j++) {
-				univ.party[i].priest_spells[j] = 1;
-				univ.party[i].mage_spells[j] = 1;
+				for (j = 0; j < 62; j++) {
+					univ.party[i].priest_spells[j] = 1;
+					univ.party[i].mage_spells[j] = 1;
 				}
 			refresh_store_items();
-			add_string_to_buf("Debug: Add stuff and heal.            ");
+			add_string_to_buf("Debug: Add stuff and heal.");
 			print_buf();
 			put_pc_screen();
-			break; 
-
+			break;
+			
+		case 'B':
+			if(!in_scen_debug) break;
+			PSD[SDF_IS_PARTY_SPLIT] = 0;
+			if(overall_mode == MODE_OUTDOORS){
+				add_string_to_buf("Debug - Leave Town: You're not in town!");
+				print_buf();
+				break;
+			}
+			overall_mode = MODE_OUTDOORS;	
+			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.p_loc.x,univ.party.p_loc.y);
+			clear_map();			
+			add_string_to_buf("Debug: Reunite party and leave town.");	
+			print_buf();
+			redraw_screen();
+			break;
+			
+		case 'C':
+			if(!in_scen_debug) break;
+			for (i = 0; i < 6; i++) {
+				univ.party[i].status[STATUS_POISON] = 0;
+				if(univ.party[i].status[STATUS_BLESS_CURSE] < 0)
+					univ.party[i].status[STATUS_BLESS_CURSE] = 0;
+				if (univ.party[i].status[STATUS_HASTE_SLOW] < 0)
+					univ.party[i].status[STATUS_HASTE_SLOW] = 0;
+				univ.party[i].status[STATUS_WEBS] = 0;
+				univ.party[i].status[STATUS_DISEASE] = 0;
+				univ.party[i].status[STATUS_DUMB] = 0;
+				univ.party[i].status[STATUS_ASLEEP] = 0;
+				univ.party[i].status[STATUS_PARALYZED] = 0;
+				univ.party[i].status[STATUS_ACID] = 0;
+			}
+			add_string_to_buf("Debug: You get cleaned up!");				
+			print_buf();
+			put_pc_screen();
+			break;
+			
+		case 'E':
+			if(!in_scen_debug) break;
+			PSD[SDF_PARTY_STEALTHY] += 10;
+			PSD[SDF_PARTY_DETECT_LIFE] += 10;
+			PSD[SDF_PARTY_FIREWALK] += 10;
+			add_string_to_buf("Debug: Stealth, Detect Life, Firewalk!");
+			print_buf();
+			put_pc_screen();
+			break;
+			
+		case 'F':
+			if(!in_scen_debug) break;
+			if(overall_mode != MODE_OUTDOORS){
+				add_string_to_buf("Debug: Can only fly outdoors.");
+			}else{
+				PSD[SDF_PARTY_FLIGHT] += 10;
+				add_string_to_buf("Debug: You start flying!");
+			}
+			print_buf();
+			put_pc_screen();
+			break;
+			
+		case 'G':
+			if(!in_scen_debug) break;
+			if(ghost_mode){
+				ghost_mode = false;
+				ASB("Debug: Ghost mode OFF.");
+			}else{
+				ghost_mode = true;
+				ASB("Debug:Ghost mode ON.");
+			}
+			print_buf();
+			break;
+			
+		case 'H':
+			if(!in_scen_debug) break;
+			univ.party.gold += 100;
+			univ.party.food += 100;
+			for (i = 0; i < 6; i++) {
+				if ((univ.party[i].main_status > MAIN_STATUS_ALIVE) && (univ.party[i].main_status < MAIN_STATUS_FLED))
+					univ.party[i].main_status = MAIN_STATUS_ALIVE;
+			}
+			heal_party(250);
+			restore_sp_party(100);
+			add_string_to_buf("Debug: Heal party.");
+			print_buf();
+			put_pc_screen();
+			break;
+			
 		case 'K':
-			if (debug_on) {
-				for (i = 0; i < univ.town->max_monst(); i++) {
+			if (!in_scen_debug) break;
+			for (i = 0; i < univ.town->max_monst(); i++) {
 				if ((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
 					univ.town.monst[i].active = 0;
-					
-				if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
-				&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
-					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
-					}
-//				kill_monst(&c_town.monst[i],6);
-				draw_terrain();
-				add_string_to_buf("Debug: Kill things.            ");
-				print_buf();
-				}
 				
+				if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
+					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
+					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
+			}
+			// kill_monst(&univ.town.monst[i],6);
+			draw_terrain();
+			add_string_to_buf("Debug: Kill things.            ");
+			print_buf();
 			break;   
 			
-
-
+		case 'N':
+			if(!in_scen_debug) break;
+			end_scenario = true;
+			in_scen_debug = false;
+			break;
+			
+		case 'O':
+			if(!in_scen_debug) break;
+			if (is_town()) {
+				sout << "Debug:  You're at x " << (short) univ.town.p_loc.x << ", y " << (short) univ.town.p_loc.y
+					 << " in town " << univ.town.num << '.';
+			} else if (is_out()) {
+				short x = univ.party.p_loc.x;
+				short y = univ.party.p_loc.y;
+				x += 48 * univ.party.outdoor_corner.x;
+				y += 48 * univ.party.outdoor_corner.y;
+				sout << "Debug:  You're outside at x " << x << ", y " << y << ',';
+			}
+			add_string_to_buf(sout.str());
+			print_buf();
+			break;
+			
+		case 'I': // TODO: Seems useless?
+			if(!in_scen_debug) break;
+			sout << "Debug: The party's age is " << univ.party.age;
+			add_string_to_buf(sout.str());
+			add_string_to_buf("Debug: Reset map."); // Surely this won't work?
+			print_buf();
+			break;
+			
+		case 'Q':
+			if(!in_scen_debug) break;
+			if (overall_mode == MODE_OUTDOORS) {
+				for (i = 0; i < 96; i++)
+					for (j = 0; j < 96; j++) 
+						make_explored(i,j);
+			} else {
+				for (i = 0; i < 64; i++)
+					for (j = 0; j < 64; j++) 
+						make_explored(i,j);
+			}	
+			clear_map();
+			add_string_to_buf("Debug:  Magic Map.");
+			print_buf();
+			break;
+			
+		case 'R':
+			if(!in_scen_debug) break;
+			if (univ.party.in_boat >= 0) {
+				add_string_to_buf("  Not while in boat. ");
+				break;	
+			}		 
+			if (univ.party.in_horse >= 0) {
+				add_string_to_buf("  Not while on horse. ");
+				break;	
+			}
+			force_town_enter(scenario.which_town_start,scenario.where_start);
+			start_town_mode(scenario.which_town_start,9);
+			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
+						   scenario.out_start.x,scenario.out_start.y);
+			center = univ.town.p_loc = scenario.where_start;
+			redraw_screen();
+			add_string_to_buf("Debug:  You return to the start.");
+			print_buf();
+			break;
+			
+		case 'S': // TODO: Create a dedicated dialog for this.
+			if(!in_scen_debug) break;
+			display_strings("Enter Stuff Done Flag Part A (between 1 and 299)","","Which SDFa ?",-1,130,PICT_DLG,0);
+            get_text_response(873,(unsigned char*) response,0);
+            i = atoi(response);
+            if(i > 0 && i < 300){
+				display_strings("Enter Stuff Done Flag Part B (between 0 and 49)","","Which SDFb ?",-1,130,PICT_DLG,0);
+				get_text_response(873,(unsigned char*) response,0);
+				j = atoi(response);
+				if(j >= 0 && j < 50){
+					display_strings("Enter Stuff Done Flag Value (up to 255)","","Which value ?",-1,130,PICT_DLG,0);
+					get_text_response(873,(unsigned char*) response,0);
+					int x = atoi(response);
+					if(x < 256 && x >= 0)
+						PSD[i][j] = x;
+				}
+			}
+			break;
+			
+		case 'T':
+			if(!in_scen_debug) break;
+			short find_direction_from;
+			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
+           	display_strings(sout.str().c_str(),"","Which Town ?",-1,130,PICT_DLG,0);
+            get_text_response(873,(unsigned char*) response,0);
+            i = atoi(response);
+            if(i >= 0 && i < scenario.num_towns ){
+            	if (univ.party.direction == 0) find_direction_from = 2;
+				else if (univ.party.direction == 4) find_direction_from = 0;
+				else if (univ.party.direction < 4) find_direction_from = 3;
+				else find_direction_from = 1;
+				start_town_mode(i, find_direction_from);
+			}
+			break;
+			
 		case 'W':
 			refresh_store_items();
 			add_string_to_buf("Debug: Refreshed jobs/shops.            ");
 			print_buf();
 			break; 
-
-		case '`':
-			break;
-		case '[':
+			
+//		case '`':
+//			break;
+//		case '[':
+//			break;
+//		case '+':
+//			break;
+		case '<':
 			//break;
-			debug_ok = 1;
-			return false;
-			break;
-		case '+':
-			//break;
-			if (debug_on == true) {
-				print_nums(-999,-999,-999);
-				debug_on = false;
-				}
-			if (debug_ok == 1) {
-				print_nums(999,999,999);
-				debug_on = true;
-				}
-			break;
-		case '/':
-			//break;
-			if ((debug_on == true) || (in_scen_debug == true)) {
-				ASB("Debug: Increase age.");
-				ASB("  It is now 1 day later.");
-				print_buf();
-				univ.party.age += 3700;
-				put_pc_screen();
-				}
+			if (!in_scen_debug) break;
+			ASB("Debug: Increase age.");
+			ASB("  It is now 1 day later.");
+			print_buf();
+			univ.party.age += 3700;
+			put_pc_screen();
 			break;
 		case '>':
 			ASB("DEBUG: Towns have short memory.");
@@ -1823,7 +1980,31 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			print_buf();
 			for (i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
-			break;			
+			break;
+		case '/':
+			if(!in_scen_debug) break;
+			ASB("Debug hot keys");		
+			ASB("  B  Leave town");
+			ASB("  C  Get cleaned up");
+			ASB("  D  Toggle Debug mode");
+			ASB("  E  Stealth, Detect Life, Firewalk");
+			ASB("  F  Flight");
+			ASB("  G  Ghost");
+			ASB("  H  Heal");
+			ASB("  K  Kill things");
+			ASB("  N  End Scenario");
+			ASB("  O  Location");			
+			ASB("  Q  Magic map");
+			ASB("  R  Return to Start");
+			ASB("  S  Set a SDF");
+			ASB("  T  Enter Town");
+			ASB("  W  Refresh jobs/shops");
+			ASB("  =  Heal, increase magic skills");
+			ASB("  <  Make one day pass");
+			ASB("  >  Towns forgive you");
+			ASB("  /  Bring up this list");
+			print_buf();
+			break;
 		case 'a':
 			if (overall_mode < MODE_TALK_TOWN) {
 				pass_point.h = (overall_mode == MODE_OUTDOORS) ? 170 : 221;
@@ -1831,10 +2012,9 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);
-				}
-				
+			}
 			break;
-
+			
 		case 'b': case 'u': case 'L':
 			if (overall_mode == MODE_TOWN) {
 				pass_point.h = (chr == 'u') ? 220 : 205;
@@ -1842,9 +2022,9 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);
-				}
+			}
 			break;
-
+			
 		case 's': case 'x': case 'e':
 			if ((overall_mode == MODE_COMBAT) ||
 				((overall_mode == MODE_FIRING)  && (chr == 's')) ||
@@ -1854,10 +2034,10 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);
-				}
+			}
 			break;
-		
-		
+			
+			
 		case 'm': case 'p': case 'l': case 'r': case 'w': case 't': case 'd': case 'g': case 'f':
 		case 'M': case 'P': case 'A':
 			j = 50;
@@ -1866,67 +2046,63 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			if ((chr == 'p') && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FANCY_TARGET))) // cancel spell 
 				j = 1;
 			if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-			switch (chr) {
-				case 'M': spell_forced = true; j = 0; break;
-				case 'm': j = 0; break;
-				case 'P': spell_forced = true; j = 1; break;
-				case 'p': j = 1; break;
-				case 'l': j = 2; break;
-				case 'r': if (overall_mode != MODE_OUTDOORS) return false;
-					j = 3;
-					break;
-				case 't': if (overall_mode == MODE_TOWN)
+				switch (chr) {
+					case 'M': spell_forced = true; j = 0; break;
+					case 'm': j = 0; break;
+					case 'P': spell_forced = true; j = 1; break;
+					case 'p': j = 1; break;
+					case 'l': j = 2; break;
+					case 'r': if (overall_mode != MODE_OUTDOORS) return false;
+						j = 3;
+						break;
+						case 't': if (overall_mode == MODE_TOWN)
 							j = 3;
-								else return false;
-					break;
-				case 'A':if (overall_mode == MODE_TOWN) {
-									pass_point.h = 1000 + ul.h;
-									event.where = pass_point;
-									are_done = handle_action(event);								
-									}
-								else {
-									add_string_to_buf("Alchemy: In town only.");
-									print_buf();
-									return false;
-									}
-					break;
-				case 'w':if (overall_mode == MODE_COMBAT)
-								j = 5;
-								else if (overall_mode == MODE_TOWN) {
-									pass_point.h = 1001 + ul.h;
-									event.where = pass_point;
-									are_done = handle_action(event);								
-									}
-								else {
-									add_string_to_buf("Wait: In town only.");
-									print_buf();
-									return false;
-									}
-					break;
-				case 'd': if (overall_mode != MODE_COMBAT) return false;
-					j = 3;
-					break;
-				case 'g': if (overall_mode == MODE_OUTDOORS) return false;
-					j = 4;
-					break;
-				case 'f': if (overall_mode != MODE_TOWN) return false;
-					j = 6;
-					break;
+						else return false;
+						break;
+						case 'A':if (overall_mode == MODE_TOWN) {
+							pass_point.h = 1000 + ul.h;
+							event.where = pass_point;
+							are_done = handle_action(event);								
+						}
+						else {
+							add_string_to_buf("Alchemy: In town only.");
+							print_buf();
+							return false;
+						}
+						break;
+						case 'w':if (overall_mode == MODE_COMBAT)
+							j = 5;
+						else if (overall_mode == MODE_TOWN) {
+							pass_point.h = 1001 + ul.h;
+							event.where = pass_point;
+							are_done = handle_action(event);								
+						}
+						else {
+							add_string_to_buf("Wait: In town only.");
+							print_buf();
+							return false;
+						}
+						break;
+						case 'd': if (overall_mode != MODE_COMBAT) return false;
+						j = 3;
+						break;
+						case 'g': if (overall_mode == MODE_OUTDOORS) return false;
+						j = 4;
+						break;
+						case 'f': if (overall_mode != MODE_TOWN) return false;
+						j = 6;
+						break;
 				}
-				}
+			}
 			if (j < 50) {
 				pass_point.h = bottom_buttons[j].left + 5;
 				pass_point.v = bottom_buttons[j].top + 5;
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);
-				}
-			break;  
 			}
-			
-		
-	debug_ok = 0;
-	
+			break;  
+	}
 	spell_forced = false;
 	return are_done;
 }
@@ -2588,7 +2764,7 @@ bool outd_move_party(location destination,bool forced)
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
-	if (debug_on == true)
+	if (in_scen_debug && ghost_mode)
 		forced = true;
 	if (spec_num == 50)
 		forced = true;
@@ -2782,7 +2958,7 @@ bool town_move_party(location destination,short forced)////
 	ter_num_t ter;
 	bool check_f = false;
 		
-	if (debug_on == true)
+	if (in_scen_debug && ghost_mode)
 		forced = true;
 	
 	// remove if not registered
