@@ -250,7 +250,9 @@ ePicType cPict::getPicType(){
 	return picType;
 }
 
-cPict::cPict(cDialog* parent) : cControl(parent,CTRL_PICT) {}
+cPict::cPict(cDialog* parent) :
+	cControl(parent,CTRL_PICT),
+	clickable(false) {}
 
 bool cPict::isClickable(){
 	return clickable;
@@ -580,7 +582,7 @@ void cPict::drawPresetMonstSm(short num, Rect to_rect){
 	if(!isSheetSet(SHEET_MONST,m_start_pic / 20)) throw xMissingSheet(SHEET_MONST,m_start_pic / 20);
 	GWorldPtr from_gw = monst[m_start_pic / 20];
 	m_start_pic = m_start_pic % 20;
-	Rect from_rect = calcDefMonstRect(num, animFrame);
+	Rect from_rect = calcDefMonstRect(m_start_pic, animFrame);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	PaintRect(&to_rect);

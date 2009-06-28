@@ -51,7 +51,9 @@ bool cTextField::isClickable(){
 	return false;
 }
 
-cTextField::cTextField(cDialog* parent) : cControl(parent,CTRL_FIELD) {
+cTextField::cTextField(cDialog* parent) :
+		cControl(parent,CTRL_FIELD),
+		isNumericField(false) {
 	OSStatus err;
 	err = CreateEditTextControl(parent->win,&frame,NULL,false,true/*useInlineInput*/,NULL,&theField);
 }

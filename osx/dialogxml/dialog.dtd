@@ -7,32 +7,34 @@
 <!ELEMENT button (#PCDATA*|key)>
 <!ELEMENT led (CDATA)>
 <!ELEMENT group (led+)>
+<!ELEMENT stack ((field | text | pict | button | led | group)*)>
 
 <!ENTITY % num 'NUMBER'>
 <!ENTITY % bool '(true|false)'>
 <!ENTITY % picttype '(blank|ter|teranim|monst|dlog|talk|scen|item|pc|field|boom|missile|full|map|status)'>
-<!ENTITY % rect '
-	top			%num;						#REQUIRED
-	left		%num;						#REQUIRED
-	width		%num;						#IMPLIED
-	height		%num;						#IMPLIED'
->
-<!ENTITY % font "
-	font		(dungeon|geneva|silom|maidenword)	'silom'
-	size		(small|large)				'small'
-	color		CDATA						'#000000'"
-	colour		CDATA						'#000000'"
->
 <!ENTITY % btntype '(small|regular|large|help|left|right|up|down|tiny|done|tall|trait|push)'>
 <!ENTITY % digit '(0|1|2|3|4|5|6|7|8|9)'>
 <!ENTITY % letter '(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)'>
 <!ENTITY % symbol '(`|-|=|[|]|\|;|'|,|.|/)'>
 <!ENTITY % mod '((ctrl|shift|alt)*)'>
 <!ENTITY % key '(%mod; (%digit;|%letter;|%symbol;|left|right|up|down|esc|enter|return|tab|help|space))'>
+<!ENTITY % rect '
+	top			%num;						#REQUIRED
+	left		%num;						#REQUIRED
+	width		%num;						#IMPLIED
+	height		%num;						#IMPLIED
+'>
+<!ENTITY % font "
+	font		(dungeon|geneva|silom|maidenword)	'silom'
+	size		(small|large)				'small'
+	color		CDATA						#IMPLIED
+	colour		CDATA						#IMPLIED
+">
 
 <!ATTLIST dialog
 	skin		(light|dark)				'dark'
 	debug		%bool;						'false'
+	fore		CDATA						'black'
 >
 <!ATTLIST field
 	name		ID							#IMPLIED
@@ -43,6 +45,7 @@
 	name		ID							#IMPLIED
 	framed		%bool;						'true'
 	%font;
+	def-key		(%key;|none)				'none'
 	clickable	%bool;						'false'
 	fromlist	(none|CDATA)				'none'
 	%rect;
@@ -52,6 +55,7 @@
 	type		%picttype;					#REQUIRED
 	custom		%bool;						'false'
 	size		(small|wide|tall|large)		#IMPLIED
+	def-key		(%key;|none)				'none'
 	clickable	%bool;						'false'
 	num			%num;						#REQUIRED
 	%rect;
@@ -60,7 +64,7 @@
 	name		ID							#IMPLIED
 	type		%btntype;					#REQUIRED
 	wrap		%bool;						'false'
-	def-key		%key;						'none'
+	def-key		(%key;|none)				'none'
 	fromlist	(none|CDATA)				'none'
 	%rect;
 >
@@ -74,4 +78,7 @@
 <!ATTLIST group
 	name		ID							#IMPLIED
 	fromlist 	(none|CDATA)				'none'
+>
+<!ATTLIST stack
+	name		ID							#IMPLIED
 >

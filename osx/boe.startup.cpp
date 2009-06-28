@@ -63,7 +63,6 @@ bool handle_startup_press(Point the_point)
 			case STARTBTN_NEW:
 				draw_startup(0);
 				start_new_game();
-				update_pc_graphics();
 				make_cursor_sword();
 				draw_startup(0);
 				break;
@@ -125,7 +124,6 @@ void startup_load()////
 		FSSpec file_to_load = nav_get_party();
 		if(load_party(file_to_load)){
 			party_in_memory = true;
-			update_pc_graphics();
 			if(univ.party.scen_name.length() > 0)
 				in_startup_mode = false;
 			else in_startup_mode = true;

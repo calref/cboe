@@ -11,10 +11,6 @@
 #include "boe.monster.h"
 #include "boe.fields.h"
 
-
-char terrain_blocked[256];
-
-
 short short_can_see();
 bool combat_pt_in_light();
 //extern short town_size[3];
@@ -39,14 +35,14 @@ location light_locs[40];
 short num_lights = 0;
 char d_s[60];
 
-////
-void set_terrain_blocked()
-{
-	short i;
-	
-	for (i = 0; i < 256; i++)
-		terrain_blocked[i] = scenario.ter_types[i].blockage;
-}
+//
+//void set_terrain_blocked()
+//{
+//	short i;
+//	
+//	for (i = 0; i < 256; i++)
+//		terrain_blocked[i] = scenario.ter_types[i].blockage;
+//}
 
 //short dist(location p1,location p2)
 //{
@@ -191,7 +187,7 @@ short can_see(location p1,location p2,short mode)
 		if (p1.x > p2.x) {
 			for (count = p2.x + 1; count < p1.x; count++) {
 				storage = storage + get_obscurity(count, p1.y);
-				if (((terrain_blocked[coord_to_ter(count,p1.y)] > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
+				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -199,7 +195,7 @@ short can_see(location p1,location p2,short mode)
 				for (count = p1.x + 1; count < p2.x; count++) {
 
 				storage = storage + get_obscurity(count, p1.y);
-				if (((terrain_blocked[coord_to_ter(count,p1.y)] > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
+				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
 					return 5;
 				}
 			}
@@ -209,14 +205,14 @@ short can_see(location p1,location p2,short mode)
 		if (p1.y > p2.y) {
 			for (count = p1.y - 1; count > p2.y; count--) {
 				storage = storage + get_obscurity(p1.x, count);
-				if (((terrain_blocked[coord_to_ter(p1.x,count)] > 2) || (is_lava(p1.x,count) == true)) && (mode == 1))
+				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true)) && (mode == 1))
 					return 5;
 				}
 			}
 			else {
 				for (count = p1.y + 1; count < p2.y; count++) {
 					storage = storage + get_obscurity(p1.x, count);
-					if (((terrain_blocked[coord_to_ter(p1.x,count)] > 2) || (is_lava(p1.x,count) == true))  && (mode == 1))
+					if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true))  && (mode == 1))
 						return 5;
 					}
 			}
@@ -229,7 +225,7 @@ short can_see(location p1,location p2,short mode)
 		if (p2.y > p1.y) {
 			for (count = 1; count < dy; count++) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((terrain_blocked[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)] > 2) ||
+				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)].blockage > 2) ||
 					(is_lava(p1.x + (count * dx) / dy,p1.y + count) == true))
 					 && (mode == 1))
 					return 5;
@@ -238,7 +234,7 @@ short can_see(location p1,location p2,short mode)
 		else {
 			for (count = -1; count > dy; count--) {
 				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((terrain_blocked[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)] > 2) ||
+				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)].blockage > 2) ||
 					(is_lava(p1.x + (count * dx) / dy, p1.y + count) == true))
 					&& (mode == 1))
 					return 5;				
@@ -250,7 +246,7 @@ short can_see(location p1,location p2,short mode)
 		if (p2.x > p1.x) {
 			for (count = 1; count < dx; count++) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if (((terrain_blocked[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)] > 2) ||
+				if (((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
 					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
 					&& (mode == 1))
 					return 5;
@@ -259,7 +255,7 @@ short can_see(location p1,location p2,short mode)
 		else {
 			for (count = -1; count > dx; count--) {
 				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if ( ((terrain_blocked[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)] > 2) ||
+				if ( ((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
 					(is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
 					&& (mode == 1))
 					return 5;
@@ -542,7 +538,7 @@ return false;
 
 bool special_which_blocks_monst(location to_check)
 {
-		if (terrain_blocked[coord_to_ter(to_check.x,to_check.y)] == 2)
+		if (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].blockage == 2)
 			return true;
 			else return false;
 }
@@ -555,7 +551,7 @@ bool is_special(location to_check)
 	if (special_which_blocks_monst(to_check) == false)
 		return false;
 	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if (terrain_blocked[which_ter] == 2)
+	if (scenario.ter_types[which_ter].blockage == 2)
 			return true;
 			else return false;
 }
@@ -563,7 +559,7 @@ bool is_special(location to_check)
 bool outd_is_special(location to_check)
 {
 	if (overall_mode == MODE_OUTDOORS) {
-		if (terrain_blocked[univ.out[to_check.x][to_check.y]] == 2) {
+		if (scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == 2) {
 			return true;
 			}
 			else return false;
@@ -573,7 +569,7 @@ bool outd_is_special(location to_check)
 
 bool impassable(ter_num_t terrain_to_check)
 {
-	if (terrain_blocked[terrain_to_check] > 2)
+	if (scenario.ter_types[terrain_to_check].blockage > 2)
 		return true;
 		else return false;
 }
@@ -583,9 +579,9 @@ short get_blockage(ter_num_t terrain_type)
 	// little kludgy in here for pits
 	if ((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
-	if ((terrain_blocked[terrain_type] == 5) || (terrain_blocked[terrain_type] == 1))
+	if ((scenario.ter_types[terrain_type].blockage == 5) || (scenario.ter_types[terrain_type].blockage == 1))
 		return 5;
-		else if (terrain_blocked[terrain_type] > 3)
+		else if (scenario.ter_types[terrain_type].blockage > 3)
 			return 1;
 			else {
 				return 0;
@@ -709,7 +705,7 @@ location push_loc(location from_where,location to_where)
 			return loc_to_try;
 			}
 	if ((get_obscurity((short) loc_to_try.x,(short) loc_to_try.y) > 0) ||
-	    (terrain_blocked[univ.town->terrain(loc_to_try.x,loc_to_try.y)] > 0) ||
+	    (scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage > 0) ||
 		(loc_off_act_area(loc_to_try) == true) ||
 		(monst_there(loc_to_try) < 90) ||
 		(pc_there(loc_to_try) < 6))
@@ -724,7 +720,7 @@ bool spot_impassable(short i,short  j)
 	ter_num_t ter;
 
 	ter = coord_to_ter(i,j);
-	if (terrain_blocked[ter] == 5)
+	if (scenario.ter_types[ter].blockage == 5)
 		return true;
 		else return false;
 }

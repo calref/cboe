@@ -74,27 +74,40 @@ private:
 
 class xBadNode : std::exception {
 	std::string type;
+	int row, col;
 	const char* msg;
 public:
-	xBadNode(std::string t) throw();
+	xBadNode(std::string t, int r, int c) throw();
 	~xBadNode() throw();
 	const char* what() throw();
 };
 
 class xBadAttr : std::exception {
 	std::string type, name;
+	int row, col;
 	const char* msg;
 public:
-	xBadAttr(std::string t,std::string n) throw();
+	xBadAttr(std::string t,std::string n, int r, int c) throw();
 	~xBadAttr() throw();
+	const char* what() throw();
+};
+
+class xMissingAttr : std::exception {
+	std::string type, name;
+	int row, col;
+	const char* msg;
+public:
+	xMissingAttr(std::string t,std::string n, int r, int c) throw();
+	~xMissingAttr() throw();
 	const char* what() throw();
 };
 
 class xBadVal : std::exception {
 	std::string type, name, val;
+	int row, col;
 	const char* msg;
 public:
-	xBadVal(std::string t,std::string n,std::string v) throw();
+	xBadVal(std::string t,std::string n,std::string v, int r, int c) throw();
 	~xBadVal() throw();
 	const char* what() throw();
 };

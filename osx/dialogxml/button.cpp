@@ -31,9 +31,15 @@ bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Poi
 	return false;
 }
 
-cButton::cButton(cDialog* parent) : cControl(parent,CTRL_BTN) {}
+cButton::cButton(cDialog* parent) :
+	cControl(parent,CTRL_BTN),
+	wrapLabel(false),
+	fromList("none") {}
 
-cButton::cButton(cDialog* parent,eControlType t) : cControl(parent,t) {}
+cButton::cButton(cDialog* parent,eControlType t) :
+	cControl(parent,t),
+	fromList("none"),
+	wrapLabel("true") {/* This constructor is only called for LEDs. TODO: Should wrapLabel be true for LEDs? */}
 
 bool cButton::isClickable(){
 	return true;
@@ -163,7 +169,12 @@ void cLed::init(){
 		}
 }
 
-cLed::cLed(cDialog* parent) : cButton(parent,CTRL_LED) {}
+cLed::cLed(cDialog* parent) :
+	cButton(parent,CTRL_LED),
+	state(led_off),
+	textFont(SILOM),
+	textSize(10),
+	color(parent->defTextClr) {}
 
 void cLed::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
@@ -237,7 +248,9 @@ void cLed::draw(){
 	SetPort(old_port);
 }
 
-cLedGroup::cLedGroup(cDialog* parent) : cControl(parent,CTRL_GROUP) {}
+cLedGroup::cLedGroup(cDialog* parent) :
+	cControl(parent,CTRL_GROUP),
+	fromList("none") {}
 
 cButton::~cButton() {}
 

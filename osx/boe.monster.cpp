@@ -1304,10 +1304,6 @@ short place_monster(m_num_t which,location where)
 		univ.town.monst[i].cur_loc = where;	
 		univ.town.monst[i].summoned = 0;	
 		univ.town.monst[i].target = 6;
-	
-		if (univ.town.monst[i].picture_num < 1000) {
-			add_monst_graphic(which,1);
-			}
 
 		univ.town.set_crate(where.x,where.y,false);
 		univ.town.set_barrel(where.x,where.y,false);
@@ -1389,7 +1385,6 @@ void activate_monsters(short code,short attitude)
 				//univ.town.monst[i].cur_loc = univ.town->creatures(i).start_loc;
 				univ.town.monst[i].target = 6;
 				
-				add_monst_graphic(univ.town.monst[i].number,1);
 				univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
 				univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
 			}

@@ -399,7 +399,6 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	set_pc_moves();
 	pick_next_pc();	
 	center = pc_pos[current_pc];
-	load_area_graphics();
 	draw_buttons(0);
 	put_pc_screen();
 	set_stat_window(current_pc);
@@ -4039,7 +4038,6 @@ void end_combat()
 		}
 	if (which_combat_type == 0) {
 		overall_mode = MODE_OUTDOORS;
-		load_area_graphics();
 		}
 	combat_active_pc = 6;
 	current_pc = store_current_pc;

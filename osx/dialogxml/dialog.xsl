@@ -86,7 +86,7 @@ background-image: url('bg/<xsl:value-of select='/dialog/@skin'/>.png');
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
 	</xsl:attribute>
 	<xsl:attribute name='style'>
-		color: <xsl:value-of select='./@color'/>;
+		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family:
 		<xsl:choose>
 			<xsl:when test='@font = "plain"'>Geneva</xsl:when>
@@ -108,7 +108,7 @@ background-image: url('bg/<xsl:value-of select='/dialog/@skin'/>.png');
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
 	</xsl:attribute>
 	<xsl:attribute name='style'>
-		color: <xsl:value-of select='./@color'/>;
+		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family:
 		<xsl:choose>
 			<xsl:when test='@font = "plain"'>Geneva</xsl:when>
@@ -133,7 +133,7 @@ background-image: url('bg/<xsl:value-of select='/dialog/@skin'/>.png');
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
 	</xsl:attribute>
 	<xsl:attribute name='style'>
-		color: <xsl:value-of select='./@color'/>;
+		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family: <xsl:value-of select='./@font'/>;
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
 		width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;

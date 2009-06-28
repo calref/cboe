@@ -52,7 +52,7 @@ public:
 	bool equip[24];
 	bool priest_spells[62];
 	bool mage_spells[62];
-	short which_graphic;
+	pic_num_t which_graphic;
 	short weap_poisoned;
 	//bool advan[15];
 	bool traits[15];

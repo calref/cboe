@@ -19,7 +19,6 @@ extern bool sleep_field;
 extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], univ.out.out_e[96][96];
 //extern unsigned char univ.out.misc_i[64][64],univ.out.sfx[64][64];
-extern char terrain_blocked[256];
 //extern short town_size[3];
 extern cScenario scenario;
 extern cUniverse univ;
@@ -393,7 +392,7 @@ void make_sfx(short i,short j, short type)
 	if (get_obscurity(i,j) > 0)
 		return;
 	ter = coord_to_ter(i,j);
-	if (terrain_blocked[ter] != 0)
+	if (scenario.ter_types[ter].blockage != 0)
 		return;
 	switch (type) {
 //		case 1: case 2: 

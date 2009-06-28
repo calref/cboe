@@ -69,8 +69,6 @@ extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
-extern short terrain_pic[256];
-extern char terrain_blocked[256];
 extern location golem_m_locs[16];
 extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
@@ -520,9 +518,6 @@ void start_town_mode(short which_town, short entry_dir)
 	erase_specials();
 //	make_town_trim(0);
 							
-
-	load_area_graphics();
-							
 	
 	univ.town.p_loc = (entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc;
 	center = univ.town.p_loc;
@@ -713,8 +708,6 @@ location end_town_mode(short switching_level,location destination)  // returns n
 			overall_mode = MODE_OUTDOORS;
 
 			erase_out_specials();
-
-			load_area_graphics();
 		
 		PSD[SDF_PARTY_STEALTHY] = 0;
 		//PSD[SDF_PARTY_DETECT_LIFE] = 0; //Yes? No? Maybe?
@@ -1636,11 +1629,11 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 							}
 						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
 							case 0: case 10: case 11:
-								if (terrain_pic[what_ter] < 400)
+								if (scenario.ter_types[what_ter].picture < 400)
 									OffsetRect(&ter_temp_from,
-										6 * (terrain_pic[what_ter] % 10),6 * (terrain_pic[what_ter] / 10));
+										6 * (scenario.ter_types[what_ter].picture % 10),6 * (scenario.ter_types[what_ter].picture / 10));
 									else OffsetRect(&ter_temp_from,
-										24 * ((terrain_pic[what_ter] - 400) / 5),6 * ((terrain_pic[what_ter] - 400) % 5) + 156);
+										24 * ((scenario.ter_types[what_ter].picture - 400) / 5),6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
 								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
 								break;
 

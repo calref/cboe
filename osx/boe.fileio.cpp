@@ -57,8 +57,7 @@ extern bool modeless_exists[18];
 //extern location monster_targs[60];
 extern DialogPtr modeless_dialogs[18] ;
 extern short which_combat_type;
-extern char terrain_blocked[256];
-extern short terrain_pic[256],cur_town_talk_loaded;
+extern short cur_town_talk_loaded;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
@@ -193,8 +192,6 @@ void finish_load_party(){
 	// graphics wise
 	end_startup();
 	
-	set_up_ter_pics();
-	
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
@@ -205,12 +202,10 @@ void finish_load_party(){
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
-	update_pc_graphics();
 	
 	
 	if (!town_restore) {
 		center = univ.party.p_loc;
-		load_area_graphics();
 	}
 	else {	
 		load_town_str(univ.town.num,univ.town.record);
@@ -250,7 +245,6 @@ void finish_load_party(){
 		blade_wall = true;
 		sleep_field = true;
 		center = univ.town.p_loc;
-		load_area_graphics();
 	}
 	
 	create_clip_region();
@@ -628,10 +622,6 @@ void shift_universe_left()
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	build_outdoors();
-
-
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	make_cursor_sword();
 
 }
@@ -666,9 +656,6 @@ void shift_universe_right()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	build_outdoors();
-
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	make_cursor_sword();
 
 }
@@ -704,9 +691,6 @@ void shift_universe_up()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 
 	build_outdoors();
-
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	make_cursor_sword();
 
 }
@@ -743,9 +727,6 @@ void shift_universe_down()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	
 	build_outdoors();
-
-	// reload graphics -- who knows what we added
-	load_area_graphics();		
 	make_cursor_sword();
 
 }
@@ -1118,14 +1099,14 @@ void end_data_dump()
 //	return true;
 //}
 
-void set_up_ter_pics()
-{
-	short i;
-	
-	set_terrain_blocked();
-	for (i = 0; i < 256; i++)
-		terrain_pic[i] = scenario.ter_types[i].picture;
-}
+//void set_up_ter_pics()
+//{
+//	short i;
+//	
+//	set_terrain_blocked();
+//	for (i = 0; i < 256; i++)
+//		terrain_pic[i] = scenario.ter_types[i].picture;
+//}
 //void oops_error(short error)
 //{
 //	Str255 error_str;

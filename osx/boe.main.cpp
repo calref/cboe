@@ -818,7 +818,6 @@ void handle_file_menu(int item_hit)
 				draw_startup(0);
 				}
 			start_new_game();
-			update_pc_graphics();
 			draw_startup(0);
 			break;
 		case 6:
@@ -856,7 +855,6 @@ void handle_options_menu(int item_hit)
 			choice = char_select_pc(0,0,"New graphic for who?");
 			if (choice < 6)
 				pick_pc_graphic(choice,1,0);
-			update_pc_graphics();
 			draw_terrain();
 			break;
 			
@@ -871,7 +869,6 @@ void handle_options_menu(int item_hit)
 						if ((i = FCD(1053,0)) == 2)
 							kill_pc(choice,MAIN_STATUS_ABSENT);
 						}
-					update_pc_graphics();
 					draw_terrain();
 					}
 			break;
@@ -1196,10 +1193,7 @@ pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 	return noErr;
 }
 
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
-//AppleEvent *theAppleEvent,*reply;
-//long handlerRefcon;
-{
+pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon){
 	FSSpec myFSS;
 	AEDescList docList;
 	OSErr myErr;
@@ -1219,10 +1213,9 @@ pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long ha
 				do_apple_event_open(myFSS);
 				if ((in_startup_mode == false) && (startup_loaded == true)) 
 					end_startup();
-				if (in_startup_mode == false) {
+				if (!in_startup_mode) {
 					post_load();
-					}
-					else update_pc_graphics();
+				}
 
 				}
 			}

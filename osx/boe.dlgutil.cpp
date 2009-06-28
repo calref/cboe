@@ -58,9 +58,6 @@ extern cUniverse univ;
 //extern talking_record_type talking;
 extern GWorldPtr pc_gworld;
 
-					
-short terrain_pic[256]; 
-
 extern cScenarioList scen_headers;
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
@@ -1130,8 +1127,8 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 	cd_create_dialog(1014,mainPtr);
 	
 	store_sign_mode = sign_type;
-	if (terrain_pic[sign_type] < 1000)
-		csp(1014,3,terrain_pic[sign_type],PICT_TER);
+	if (scenario.ter_types[sign_type].picture < 1000)
+		csp(1014,3,scenario.ter_types[sign_type].picture,PICT_TER);
 	else csp(1014,3,94,PICT_TER);
 	
 	if (town_num >= 200) {

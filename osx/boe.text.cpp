@@ -71,7 +71,8 @@ extern location dest_locs[40] ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 
-extern GWorldPtr spec_scen_g, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,party_template_gworld,invenbtn_gworld,status_gworld;
+extern GWorldPtr spec_scen_g, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,invenbtn_gworld,status_gworld;
+extern GWorldPtr pc_gworld;
 extern short terrain_there[9][9];
 
 // game globals
@@ -548,9 +549,9 @@ void place_item_bottom_buttons()
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item (invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, transparent);
-			pc_from_rect = get_party_template_rect(i,0);
+			pc_from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
 			InsetRect(&to_rect,2,2);
-			rect_draw_some_item (party_template_gworld, pc_from_rect, item_stats_gworld, to_rect, transparent);
+			rect_draw_some_item (pc_gworld, pc_from_rect, item_stats_gworld, to_rect, transparent);
 			}
 			else item_bottom_button_active[i] = false;
 	}
@@ -561,19 +562,6 @@ void place_item_bottom_buttons()
 	to_rect = item_screen_button_rects[8];
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, transparent);
 }
-
-Rect get_party_template_rect(short pc_num,short mode)
-{
-	Rect source_rect;
-
-	source_rect.top = (pc_num % 3) * BITMAP_HEIGHT;
-	source_rect.bottom = 36 + (pc_num % 3) * BITMAP_HEIGHT;
-	source_rect.left = (pc_num / 3) * BITMAP_WIDTH * 2 + ((mode == 1) ? 28 : 0);
-	source_rect.right = source_rect.left + BITMAP_WIDTH;
-	
-	return source_rect;
-}
-
 
 void set_stat_window(short new_stat)
 {

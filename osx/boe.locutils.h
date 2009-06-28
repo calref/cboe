@@ -1,4 +1,4 @@
-void set_terrain_blocked();
+//void set_terrain_blocked();
 //short dist(location p1,location p2);
 //short ex_sqrt(short val);
 //short vdist(location p1,location p2) ;

@@ -93,7 +93,14 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 	return 0;
 }
 
-cTextMsg::cTextMsg(cDialog* parent) : cControl(parent,CTRL_TEXT), drawFramed(true), textFont(SILOM), textSize(10) {}
+cTextMsg::cTextMsg(cDialog* parent) :
+	cControl(parent,CTRL_TEXT),
+	drawFramed(true),
+	textFont(SILOM),
+	textSize(10),
+	color(parent->defTextClr),
+	clickable(false),
+	fromList("none") {}
 
 bool cTextMsg::isClickable(){
 	return clickable;

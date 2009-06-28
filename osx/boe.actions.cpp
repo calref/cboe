@@ -1790,8 +1790,6 @@ bool handle_keystroke(char chr,char chr2,EventRecord event)
 			break; 
 
 		case '`':
-			//break;
-			dump_gworld();
 			break;
 		case '[':
 			//break;
@@ -2342,7 +2340,6 @@ void switch_pc(short which)
 				else if (current_pc == which)
 				current_pc = current_switch;
 			set_stat_window(current_pc);
-			update_pc_graphics();
 			current_switch = 6;
 			}
 		}

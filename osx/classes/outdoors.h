@@ -32,6 +32,7 @@ public:
 		cWandering& operator = (legacy::out_wandering_type old);
 		void writeTo(std::ostream& file, std::string prefix = "");
 		void readAttrFrom(std::string cur, std::istream& sin);
+		template<class type> type get(m_num_t who,bool hostile,type cMonster::* what);
 	};
 	class cCreature { // formerly outdoor_creature_type
 	public:

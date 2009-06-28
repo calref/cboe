@@ -316,7 +316,6 @@ void init_party(short mode)
 
 	// NOT DEBUG
 	build_outdoors();
-	update_pc_graphics();
 
 }
 
@@ -499,7 +498,7 @@ void put_party_in_scen(string scen_name)
 	FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
 	if (!load_scenario(file_spec))
 		return;
-	set_up_ter_pics();
+	
 	init_party_scen_data();
 
 
@@ -507,9 +506,7 @@ void put_party_in_scen(string scen_name)
 	// graphics wise
 	end_startup();
 	in_startup_mode = false;
-	
-	set_up_ter_pics();
-	
+		
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
@@ -517,7 +514,6 @@ void put_party_in_scen(string scen_name)
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
-	update_pc_graphics();
 		
 	current_pc = first_active_pc();
 	force_town_enter(scenario.which_town_start,scenario.where_start);
@@ -525,7 +521,6 @@ void put_party_in_scen(string scen_name)
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
 	overall_mode = MODE_TOWN;
-	load_area_graphics();
 	create_clip_region();
 	redraw_screen();
 	set_stat_window(0);
@@ -608,7 +603,6 @@ bool create_pc(short spot,short parent_num)
 			univ.party[spot].cur_sp = univ.party[spot].max_sp;
 			}
 	
-	update_pc_graphics();
 	return true;
 }
 
@@ -2981,7 +2975,6 @@ void pc_graphic_event_filter (short item_hit)
 	switch (item_hit) {
 		case 1:
 			univ.party[store_graphic_pc_num].which_graphic = store_pc_graphic;
-			update_pc_graphics();
 			if (store_graphic_mode == 0)
 					toast_dialog();
 				else {
@@ -2991,7 +2984,6 @@ void pc_graphic_event_filter (short item_hit)
 			break;
 
 		case 4:
-			update_pc_graphics();
 			if (store_graphic_mode == 0) {
 				if (univ.party[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
 				   univ.party[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
