@@ -65,7 +65,6 @@ RECT sbar_rect = {545,284,562,421};
 RECT shop_sbar_rect = {258,67,274,357};
 RECT item_sbar_rect = {545,146,562,254};
 int dialog_answer;
-POINT store_anim_ul;
 Boolean All_Done = FALSE, dialog_not_toast = FALSE;
 Boolean in_startup_mode = TRUE;
 Boolean play_sounds;
@@ -74,7 +73,7 @@ Boolean save_maps = TRUE,party_in_memory = FALSE,in_scen_debug = FALSE;
 Boolean window_in_front = FALSE;
 Boolean belt_present = FALSE;
 Boolean game_run_before = TRUE;
-Boolean debug_on = FALSE, give_intro_hint = TRUE;
+Boolean give_intro_hint = TRUE;
 short on_spell_menu[2][62];
 short on_monst_menu[256];
 short current_cursor = 120;
@@ -94,7 +93,7 @@ short spec_item_array[60];
 short overall_mode = 45,current_spell_range;
 Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,suppress_stat_screen = FALSE;
 short stat_window = 0;
-Boolean monsters_going = FALSE,boom_anim_active = FALSE,cartoon_happening = FALSE;
+Boolean monsters_going = FALSE,boom_anim_active = FALSE;
 short give_delays = 0;
 Boolean modeless_exists[18] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
 	FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -149,10 +148,12 @@ char file_path_name[256];
 Boolean block_erase = FALSE;
 /* dynamically allocated */
 piles_of_stuff_dumping_type *data_store;
-piles_of_stuff_dumping_type2 *data_store2;
+piles_of_stuff_dumping_type2 *data_store2 = NULL;
 piles_of_stuff_dumping_type3 *data_store3;
 piles_of_stuff_dumping_type4 *data_store4;
 piles_of_stuff_dumping_type5 *data_store5;
+scen_item_data_type *scen_item_list;
+scen_header_type *scen_headers = NULL;
 /* end of dynamically allocated */
 char create_line[60];
 short spell_being_cast;
@@ -377,7 +378,6 @@ short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
 long cost_mult[7] = {5,7,10,13,16,20,25};
 short cur_display_mode;
 short terrain_pic[256]; 
-scen_header_type scen_headers[100];
 short store_scen_page_on,store_num_scen;
 #define ND	15
 #define	NI	500
@@ -543,6 +543,7 @@ void print_write_position ();
 char szFileName [128] = "blades.sav";
 char szTitleName [128] = "blades.sav";
 OPENFILENAME ofn;
+SCROLLINFO lpsi;
 // Trying this to fix bug. Hope it works.
 tiny_tr_type tiny_t;
 ave_tr_type ave_t;
@@ -577,7 +578,7 @@ HBITMAP terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworl
 HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
 HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
-HBITMAP ter_anim_gworld, monsters_gworld[10], terrains_gworld[6];
+HBITMAP talking_portraits_gworld, frills_gworld, ter_anim_gworld, monsters_gworld[10], terrains_gworld[6];
 // Startup graphics, will die when play starts
 HBITMAP startup_gworld;
 HRGN clip_region;
@@ -708,7 +709,7 @@ short first_item_shown,store_get_mode,current_getting_pc,store_pcnum,total_items
 short item_array[130]; // NUM_TOWN_ITEMS + a bit
 char *store_str;
 short store_dnum;
-char terrain_blocked[256] = {0,0,0,0,0,5,5,1,5,5,
+char terrain_blocked[256];/* = {0,0,0,0,0,5,5,1,5,5,
 	1,5,5,1,5,5,1,5,5,5,
 	5,5,5,5,5,5,5,5,5,5,
 	5,5,5,5,5,5,0,0,0,0,
@@ -733,7 +734,7 @@ char terrain_blocked[256] = {0,0,0,0,0,5,5,1,5,5,
 	2,2,2,2,2,2,2,2,5,5,
 	2,2,0,0,0,0,0,2,2,2,
 	2,2,2,2,2,0,0,0,0,0,
-	0,0,4,4,4,3};
+	0,0,4,4,4,3};*/
 short short_can_see();
 Boolean combat_pt_in_light();
 location which_party_sec;
@@ -866,7 +867,7 @@ Boolean can_choose_caster;
 short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 long store_g;
 short store_train_mode,store_train_pc;
-HBITMAP pcs_gworld,pc_gworld;
+HBITMAP pcs_gworld;
 // Dialog vars
 short store_mage_store ;
 short store_priest_store ;
@@ -976,5 +977,6 @@ word_rect_type preset_words[9] = {{"Look",{4,366,54,389}},{"Name",{70,366,130,38
 	{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},
 	{"Ask About...",{4,343,134,366}}};
 word_rect_type store_words[50];
-// Animation vars
-short store_anim_type;
+//Timer Special happened ?
+BOOL timed_special_happened = FALSE;
+BOOL ghost_mode = FALSE;

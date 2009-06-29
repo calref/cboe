@@ -48,8 +48,8 @@ void init_party(short mode)
 	for (i = 0; i < 310; i++)
 		for (j = 0; j < 10; j++)
 			party.stuff_done[i][j] = 0;
-	if(scenario.prog_make_ver[0] < 2) PSD[305][8] = 1; //old scenario format ? so, no resurrection balm needed
-    else PSD[305][8] = 0;			
+	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ? so, no resurrection balm needed
+    else PSD[SDF_LEGACY_SCENARIO] = 0;			
 			
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
 			
@@ -152,8 +152,8 @@ void init_party_scen_data()
 		for (j = 0; j < 10; j++)
 			party.stuff_done[i][j] = 0;
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
-	if(scenario.prog_make_ver[0] < 2) PSD[305][8] = 1; //old scenario format ? so, no resurrection balm needed
-    else PSD[305][8] = 0;
+	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ? so, no resurrection balm needed
+    else PSD[SDF_LEGACY_SCENARIO] = 0;
 
 		party.light_level = 0;
 	party.outdoor_corner.x = scenario.out_sec_start.x;
@@ -1467,7 +1467,7 @@ void do_priest_spell(short pc_num,short spell_num)
 						play_sound(52);
 						sprintf ((char *) c_line,"  Your items glow.     ");
 	  					}
-				if (PSD[305][8] == 0 && ((spell_num == 40) || (spell_num == 56))){
+				if (PSD[SDF_LEGACY_SCENARIO] == 0 && ((spell_num == 40) || (spell_num == 56))){
 				    if ((item = adven[pc_num].hasAbil(160)) == 24) {
                     sprintf(c_line,"  Need resurrection balm.        ");
 					spell_num = 500;
@@ -1650,7 +1650,7 @@ void cast_town_spell(location where)
 				break;
 
 			case 108: // RItual - sanctify
-				sanctify_space(where);
+				check_spell_on_space(where,108);
 				break;
 				
 			case 20:
@@ -1706,10 +1706,11 @@ void cast_town_spell(location where)
 	}
 }
 
-void sanctify_space(location where)
+void check_spell_on_space(location where, unsigned char spell)
 {
 	short i,s1,s2,s3;
 
+    if(PSD[SDF_LEGACY_SCENARIO] == 1){
 	for (i = 0; i < 50; i++)
 		if ((same_point(where,c_town.town.special_locs[i]) == TRUE)
 			//GK && (c_town.town.spec_id[i] >= 0)
@@ -1720,6 +1721,20 @@ void sanctify_space(location where)
 		return;
 		}
 	add_string_to_buf("  Nothing happens.");
+    }
+	else{
+        for (i = 0; i < 50; i++)
+		  if ((same_point(where,c_town.town.special_locs[i]) == TRUE)
+			//GK && (c_town.town.spec_id[i] >= 0)
+			)
+		{
+		if ((c_town.town.specials[c_town.town.spec_id[i]].type == 24) && (c_town.town.specials[c_town.town.spec_id[i]].ex1a == spell)) 
+			run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
+		return;
+		}
+    if(spell == 108)
+    	add_string_to_buf("  Nothing happens.");
+        }
 }
 
 void do_mindduel(short pc_num,creature_data_type *monst)
@@ -2469,7 +2484,6 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 // mode ... 0 - create  1 - created
 {
 	short i;
-	Boolean munch_pc_graphic = FALSE;
 	
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
@@ -2477,10 +2491,6 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 
 	SetCursor(sword_curs);
 
-	if (pcs_gworld == NULL) {
-		munch_pc_graphic = TRUE;
-		pcs_gworld = load_pict(902,main_dc);
-		}
 	cd_create_dialog_parent_num(1050,parent_num);
 
 	for (i = 41; i < 77; i++) 
@@ -2493,10 +2503,6 @@ Boolean pick_pc_graphic(short pc_num,short mode,short parent_num)
 	while (dialog_not_toast)
 		ModalDialog();	cd_kill_dialog(1050,0);
 
-	if (munch_pc_graphic == TRUE) {
-		DeleteObject(pcs_gworld);
-		pcs_gworld = NULL;
-		}
 	return dialog_answer;
 }
 
@@ -2738,11 +2744,11 @@ bool pc_record_type::damage(short how_much, short damage_type, short type_of_att
 	if ((damage_type == DAMAGE_DEMON) && ((tlevel = getProtLevel(58)) > 0))
 		how_much /= ((tlevel >= 7) ? 4 : 2);
 		
-	if ((type_of_attacker == 6) && ((tlevel = getProtLevel(59)) > 0))
+	if ((type_of_attacker == 6) && ((tlevel = getProtLevel(59)) > 0))//protection from humanoids
 		how_much /= ((tlevel >= 7) ? 4 : 2);
-	if ((type_of_attacker == 1) && ((tlevel = getProtLevel(60)) > 0))
+	if ((type_of_attacker == 1) && ((tlevel = getProtLevel(60)) > 0))//protection from reptiles
 		how_much /= ((tlevel >= 7) ? 4 : 2);
-	if ((type_of_attacker == 9) && ((tlevel = getProtLevel(61)) > 0))
+	if ((type_of_attacker == 9) && ((tlevel = getProtLevel(61)) > 0))//protection from giants
 		how_much /= ((tlevel >= 7) ? 4 : 2);
 	
 

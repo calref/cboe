@@ -1,6 +1,7 @@
 #ifndef _FILEIO_H
 	#define _FILEIO_H
 
+BOOL check_for_interrupt();
 void Get_Path(char* path);
 void file_initialize();
 void load_file();

@@ -828,7 +828,7 @@ STRINGTABLE
   9777, "Damage to inflict (0 .. 1000)"
   9778, "Unused"
   9779, "Unused"
-  9780, "0 - fire, 1 - elec., 2 - telep."
+  9780, "0 - fire, 1 - telep., 2 - elec."
   9781, "Unused"
   9782, "Number of creature to place"
   9783, "Unused"

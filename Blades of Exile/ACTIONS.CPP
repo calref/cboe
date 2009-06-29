@@ -29,6 +29,7 @@
 #include "globvar.h"
 
 extern short store_flags[3];
+//extern BOOL timed_special_happened;
 
 void init_screen_locs()
 {
@@ -349,6 +350,10 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 												i = 200;
 												add_string_to_buf("  Monsters nearby.");
 												}
+											if(timed_special_happened){
+                                                i=200;
+												add_string_to_buf("  Rest interrupted.");                                                
+                                                }
 												else i++;
 											}
 										put_pc_screen();
@@ -1076,7 +1081,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			else add_string_to_buf("Alchemy: Only in town.");
 		}
 
-	// Wait 40 spaces (town only)
+	// Wait 80 spaces (town only)
 	if (the_point.x == 1001) {
 		need_reprint = TRUE;
 		need_redraw = TRUE;
@@ -1103,6 +1108,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			j = get_ran(1,1,160 - c_town.difficulty);
 			if (j == 10)
 				create_wand_monst();
+            if(timed_special_happened){
+            i = 200;
+            add_string_to_buf("  Waiting interrupted.");
+            }
+            else{
 			for (j = 0; j < 6; j++)
 				if (adven[j].cur_health < store_sp[j]) {
 					i = 200;
@@ -1115,6 +1125,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				}
 				else i++;
 				}
+            }
 		put_pc_screen();		
 		}
 
@@ -1215,6 +1226,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 		reload_startup();
 		in_startup_mode = TRUE;
         in_scen_debug=FALSE;
+        ghost_mode = FALSE;
 		draw_startup(0);
 		menu_activate(1);		
 		if (FCD(901,0) == 2) save_file(1);
@@ -1486,6 +1498,10 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 	if (overall_mode == MODE_TALKING) {
 		if (chr == ' ')
 			chr = 'g';
+        if (chr == '?') {
+            party.help_received[5] = 0;
+            give_help(205,6,0);
+            } 
 		for (i = 0; i < 9; i++)
 			if (chr == talk_chars[i]) {
 				pass_point.x = preset_words[i].word_rect.left + 9;
@@ -1495,6 +1511,10 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 				}
 		}
 	else if (overall_mode == MODE_SHOPPING) { // shopping keystrokes
+        if (chr == '?') {
+            party.help_received[26] = 0;
+            give_help(226,27,0);
+            }
 		for (i = 0; i < 8; i++)
 			if (chr == 97 + i) {
 				pass_point.x = shopping_rects[i][1].left + 9;
@@ -1508,23 +1528,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 		
 	for (k = 0; k < (short) LOWORD(lParam); k++)
 	switch(chr)
-	{
-		case '&':
-			add_string_to_buf("If Valorim ...");
-			print_buf();
-			break;
-		case '*':
-			add_string_to_buf("You want to save ...");
-			print_buf();
-			break;
-		case '(':
-			add_string_to_buf("Back up your save files ...");
-			print_buf();
-			break;
-		case ')':
-			add_string_to_buf("Burma Shave.");
-			print_buf();
-			break;
+		{
 		case 'D':
 			if (in_scen_debug)
 			{
@@ -1538,20 +1542,36 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			} 
 			print_buf();
 			break;
+        case '&':  
+            add_string_to_buf("If Valorim ...");
+            print_buf();
+            break;
+        case '*':
+            add_string_to_buf("You want to save ...");
+            print_buf();
+            break;
+        case '(':  
+            add_string_to_buf("Back up your save files ...");
+            print_buf();
+            break;
+        case ')':
+            add_string_to_buf("Burma Shave.");
+            print_buf();
+            break; 
+
 		case '?':
-			if (overall_mode == MODE_SHOPPING) {
-				univ.party.help_received[26] = 0;
-				give_help(226,27,0);
-				break;
-			}
-			if (overall_mode == MODE_TALKING) {
-				univ.party.help_received[5] = 0;
-				give_help(205,6,0);
-				break;
-			}
-			if (is_out()) FCD(1079,0);
-			if (is_town()) FCD(1080,0);
-			if (is_combat()) FCD(1081,0);
+			if (is_out()){
+                FCD(1079,0);
+                break;
+                }
+			if (is_town()){
+                FCD(1080,0); 
+                break;
+                }
+			if (is_combat()){
+                FCD(1081,0);
+                break;
+                }
 			break;
 
 		case '1': case '2': case '3': case '4': case '5': case '6':
@@ -1620,7 +1640,10 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
     //	case 'A': Alchemy
 		case 'B': // Leave town
 			if (in_scen_debug) {
-			party.stuff_done[304][0] = 0;
+			party.stuff_done[304][0] = 0;		
+            for(i=0;i<6;i++)
+                if(adven[i].main_status > 9)
+                    adven[i].main_status -= 10;		
             if(overall_mode == MODE_OUTDOORS){
                 add_string_to_buf("Debug - Leave Town: You're not in town !");
                 print_buf();
@@ -1680,6 +1703,19 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			print_buf();
 			}
 			break;
+		case 'G': //Ghost Mode
+    if(in_scen_debug){
+        if(ghost_mode){
+            ghost_mode = FALSE;
+            ASB("Debug: Ghost mode OFF.");            
+            }
+        else{
+            ghost_mode = TRUE;
+            ASB("Debug: Ghost mode ON.");
+            }
+        print_buf();
+        }
+		break;
 		case 'H': // Heal PCs and restore their SP
 			if (in_scen_debug) {
 			party.gold += 100;
@@ -1717,6 +1753,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			reload_startup();
     		in_startup_mode = TRUE;
     		in_scen_debug=FALSE;
+    		ghost_mode = FALSE;
     	   	draw_startup(0);
 	       	menu_activate(1);		
 	       	if (FCD(901,0) == 2) save_file(1);
@@ -1739,11 +1776,12 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
     		break;			
 //  	case 'P': repeat Priest spell
        case 'I': //debug info
-/*   	       char buf[256]; //event timer off debug info
+   	       char buf[256]; //event timer off debug info
 	       sprintf(buf,"Party Age : %d", party.age);
-	       give_error(buf,"",0);*/
-	       clear_map();
-	        break;
+	       give_error(buf,"",0);
+/*        char buf[256];
+        sprintf(buf,"Scen name = %s",party.scen_name);*/
+            break;
 		case 'Q':  // Magic map
 			if (in_scen_debug) {
 				 if (overall_mode == MODE_OUTDOORS) {
@@ -1763,22 +1801,24 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			break;
 		case 'R': // Return to Start
 			if (in_scen_debug) {				 
-				if (party.in_boat >= 0) {
-					add_string_to_buf("  Not while in boat. ");
-					break;	
-				}		 
-				if (party.in_horse >= 0) {
-					add_string_to_buf("  Not while on horse. ");
-					break;	
+			if (party.in_boat >= 0) {
+				add_string_to_buf("  Not while in boat. ");
+    			print_buf();
+				break;	
 				}
-				force_town_enter(scenario.which_town_start,scenario.where_start);
-				start_town_mode(scenario.which_town_start,9);
-				position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
-					scenario.out_start.x,scenario.out_start.y);
-				center = c_town.p_loc = scenario.where_start;
-				redraw_screen(0);
-				add_string_to_buf("Debug:  You are moved... ");
-				print_buf();
+            if (party.in_horse >= 0) {
+                add_string_to_buf(" Not while on horse. ");
+    			print_buf();
+                break;
+                } 				
+			force_town_enter(scenario.which_town_start,scenario.where_start);
+			start_town_mode(scenario.which_town_start,9);
+			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
+				scenario.out_start.x,scenario.out_start.y);
+			center = c_town.p_loc = scenario.where_start;
+			redraw_screen(0);
+			add_string_to_buf("Debug:  You are moved... ");
+			print_buf();
 			}			
 			break;
 		case 'S': // Set a SDF <= can't set the SDF 0 (it's the default return value if the first character of the string is not a number)
@@ -1849,6 +1889,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			ASB(" D:  Toggle Debug mode");
 			ASB(" E:  Sanctuary, Detect, Lavawalk");
 			ASB(" F:  Flight");
+            ASB(" G:  Ghost Mode");
 			ASB(" H:  Heal");
 			ASB(" K:  Kill things");
 			ASB(" N:  End Scenario");
@@ -2040,7 +2081,6 @@ void post_load()
 	adjust_spell_menus();
 	adjust_monst_menu();
 
-	cartoon_happening = FALSE;
 }
 
 void do_save(short mode) //mode 0 - normal  1 - save as
@@ -2263,7 +2303,7 @@ void increase_age()
 			}
 	dump_gold(1);
 
-	special_increase_age();
+	timed_special_happened = special_increase_age();
 	push_things();
 		
 	if (is_town()) process_fields();
@@ -2425,7 +2465,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 	
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == TRUE)	forced = TRUE;
-	if (debug_on == TRUE)	forced = TRUE;
+	if (in_scen_debug && ghost_mode)	forced = TRUE;
 	if (spec_num == 50)		forced = TRUE;
 
 	// If not blocked and not put in town by a special, process move
@@ -2630,7 +2670,7 @@ Boolean town_move_party(location destination,short forced)
 	unsigned char ter;
 	Boolean check_f = FALSE;
 		
-	if (debug_on == TRUE) forced = TRUE;
+	if (in_scen_debug && ghost_mode) forced = TRUE;
 	
 	if (monst_there(destination) > T_M) keep_going = check_special_terrain(destination,1,0,&spec_num,&check_f);
 	if (check_f == TRUE) forced = TRUE;

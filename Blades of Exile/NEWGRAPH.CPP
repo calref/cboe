@@ -349,16 +349,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == TRUE) && (store_anim_type == 0)) {
-		current_terrain_ul.x = 306;
-		current_terrain_ul.y = 5;
-		}
-		else if ((cartoon_happening == TRUE) && (store_anim_type > 0)) {
-			current_terrain_ul = store_anim_ul;
-			}
-			else {
-				current_terrain_ul.x = current_terrain_ul.y = 5;
-				}
+
+	current_terrain_ul.x = current_terrain_ul.y = 5;
+
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
@@ -453,8 +446,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				}
 		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
 			Delay(1,&delay_dummy);
-		if ((cartoon_happening == TRUE) && (t % 3 == 0)  )
-			Delay(1,&delay_dummy);
+
 		}
 
 	// Exit gracefully, and clean up screen
@@ -544,16 +536,7 @@ void do_explosion_anim(short, short special_draw)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == TRUE) && (store_anim_type == 0)) {
-		current_terrain_ul.x = 306;
-		current_terrain_ul.y = 5;
-		}
-		else if ((cartoon_happening == TRUE) && (store_anim_type > 0)) {
-			current_terrain_ul = store_anim_ul;
-			}
-			else {
-				current_terrain_ul.x = current_terrain_ul.y = 5;
-				}
+	current_terrain_ul.x = current_terrain_ul.y = 5;
 
 	
 	// make terrain_template contain current terrain all nicely
@@ -643,8 +626,6 @@ void do_explosion_anim(short, short special_draw)
 				}
 
 			Delay(2 * (1 + PSD[306][6]),&delay_dummy);
-		if (cartoon_happening == TRUE)
-			Delay(1,&delay_dummy);
 		}
 		
 	// Exit gracefully, and clean up screen

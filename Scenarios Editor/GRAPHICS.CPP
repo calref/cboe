@@ -43,6 +43,7 @@ extern RECT right_scrollbar_rect;
 extern RECT right_area_rect;
 extern unsigned char borders[4][50];
 extern HWND right_sbar;
+extern RECT right_sbar_rect;
 
 extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
@@ -285,6 +286,12 @@ void draw_main_screen()
 		draw_rb();
 
 		// redraw scroll bar here
+		lpsi.fMask = SIF_POS;
+        GetScrollInfo(right_sbar,SB_CTL,&lpsi);//ugly hack to redraw the bar + thumb
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+        EnableScrollBar(right_sbar,SB_CTL,ESB_DISABLE_BOTH);//ugly hack to redraw the arrows
+        EnableScrollBar(right_sbar,SB_CTL,ESB_ENABLE_BOTH);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 		}
 
 	// draw terrain palette
@@ -662,7 +669,7 @@ void draw_terrain()
 	if (editing_town == TRUE) {
 		// draw info rects
 		for (i = 0; i < 16; i++)
-			if (t_d.room_rect[i].left > 0) {
+			if (t_d.room_rect[i].left > -1) {
 				draw_rect.left = 22 + 28 * (t_d.room_rect[i].left - cen_x + 4);
 				draw_rect.right = 22 + 28 * (t_d.room_rect[i].right - cen_x + 4);
 				draw_rect.top = 24 + 36 * (t_d.room_rect[i].top - cen_y + 4);
@@ -687,7 +694,7 @@ void draw_terrain()
 	if (editing_town == FALSE) {
 		// draw info rects
 		for (i = 0; i < 8; i++)
-			if (current_terrain.info_rect[i].left > 0) {
+			if (current_terrain.info_rect[i].left > -1) {
 				draw_rect.left = 22 + 28 * (current_terrain.info_rect[i].left - cen_x + 4);
 				draw_rect.right = 22 + 28 * (current_terrain.info_rect[i].right - cen_x + 4);
 				draw_rect.top = 24 + 36 * (current_terrain.info_rect[i].top - cen_y + 4);
@@ -817,6 +824,7 @@ void draw_items(HDC hdc)
 					if (pic_num >= 150) {
 						source_rect = get_custom_rect(pic_num - 150);
 						draw_rect = calc_rect(where_draw.x,where_draw.y);
+						OffsetRect(&draw_rect,8,8);
 						rect_draw_some_item(spec_scen_g,source_rect, ter_draw_gworld, draw_rect, 1, 0);
   						}
 						else {

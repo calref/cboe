@@ -114,7 +114,7 @@ void handle_shop_event(POINT p)
 	if (PtInRect(&talk_help_rect,p)) {
 		click_shop_rect(talk_help_rect);
 		party.help_received[26] = 0;
-		give_help(26,27,0);
+		give_help(226,27,0);
 		return;
 		}
 	if (PtInRect(&shop_done_rect, p)) {
@@ -406,7 +406,10 @@ void set_up_shop_array()
 			store_shop_costs[i] = (short) store_l;
 			}
   	i = max(0,shop_pos - 8);
-	SetScrollRange(shop_sbar,SB_CTL,0,i,TRUE);
+    lpsi.nMax = i;
+    lpsi.fMask = SIF_RANGE;
+    SetScrollInfo(shop_sbar,SB_CTL,&lpsi,FALSE);
+	//SetScrollRange(shop_sbar,SB_CTL,0,i,TRUE);
 
 }
 
@@ -485,8 +488,9 @@ void handle_talk_event(POINT p)
 	p.y -= 5;
 
 	if (PtInRect(&talk_help_rect,p)) {
+    	if (play_sounds == TRUE) play_sound(37);
 		party.help_received[5] = 0;
-		give_help(5,6,0);
+		give_help(205,6,0);
 		return;
 		}
 
@@ -729,8 +733,7 @@ void handle_talk_event(POINT p)
 			strnum1 = -1;
 			return;
 		case 12: //healer
-			start_shop_mode(3,c_town.monst.dudes[store_m_num].monst_start.extra1,
-				c_town.monst.dudes[store_m_num].monst_start.extra2,a,(char *)place_string1);
+			start_shop_mode(3,0,0,a,(char *)place_string1);
 			strnum1 = -1;
 			return;
 			break;
@@ -1257,14 +1260,8 @@ void edit_party_event_filter (short item_hit)
 
 void edit_party()
 {
-	Boolean munch_pc_graphic = FALSE;
 	
 	SetCursor(sword_curs);
-
-	if (pcs_gworld == NULL) {
-		munch_pc_graphic = TRUE;
-		pcs_gworld = load_pict(902,main_dc);
-		}	
 
 	cd_create_dialog(989,mainPtr);
 
@@ -1276,11 +1273,6 @@ void edit_party()
 	while (dialog_not_toast)
 		ModalDialog();
 	cd_kill_dialog(989,0);
-
-	if (munch_pc_graphic == TRUE) {
-		DeleteObject(pcs_gworld);
-		pcs_gworld = NULL;
-		}
 
 	if (adven[current_pc].isAlive() == false)
 		current_pc = first_active_pc();
@@ -1357,9 +1349,9 @@ void put_scen_info()
 	char *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
-		if (scen_headers[store_scen_page_on * 3 + i].flag1 != 0) {
+	   if(store_scen_page_on * 3 + i < store_num_scen){
             if(scen_headers[store_scen_page_on * 3 + i].intro_pic == 100){//custom intro pic
-           	sprintf(place_str,"scenarios/%s",data_store2->scen_names[store_scen_page_on * 3 + i]);
+           	sprintf(place_str,"scenarios/%s",data_store2[store_scen_page_on * 3 + i].scen_names);
            	place_str[strlen(place_str)-3]='b';
            	place_str[strlen(place_str)-2]='m';
            	place_str[strlen(place_str)-1]='p';
@@ -1371,14 +1363,14 @@ void put_scen_info()
 			cd_set_pict(947, 6 + i * 3,1600 + scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			sprintf((char *) place_str,
 				"%s v%d.%d.%d - |  Difficulty: %s, Rating: %s |%s |%s",
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][0],
+				data_store2[store_scen_page_on * 3 + i].scen_header_strs[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[0],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[1],
 				(short) scen_headers[store_scen_page_on * 3 + i].ver[2],
 				difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty],
 				ratings[scen_headers[store_scen_page_on * 3 + i].default_ground],
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][1],
-				data_store2->scen_header_strs[store_scen_page_on * 3 + i][2]); 
+				data_store2[store_scen_page_on * 3 + i].scen_header_strs[1],
+				data_store2[store_scen_page_on * 3 + i].scen_header_strs[2]); 
 			csit(947,7 + i * 3,(char *) place_str);
 			cd_activate_item(947,8 + i * 3,1);			
 			}
@@ -1421,16 +1413,11 @@ void pick_a_scen_event_filter (short item_hit)
 
 short pick_a_scen()
 {
-	short i;
 	
 	build_scen_headers();
 	
-	store_num_scen = 0;
-	for (i = 0; i < 100; i++)
-		if (scen_headers[i].flag1 != 0)
-			store_num_scen++;
 	store_scen_page_on = 0;
-	
+			
 	if (store_num_scen == 0) {
 		FCD(868,0);
 		return -1;

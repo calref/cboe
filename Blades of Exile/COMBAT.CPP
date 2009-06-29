@@ -151,8 +151,11 @@ Boolean pc_combat_move(location destination)
 	if (check_f == TRUE)
 		forced = TRUE;
 
+    if (in_scen_debug && ghost_mode)
+        forced = TRUE;
+
 	if (spec_num == 50)
-		forced = TRUE;
+	   forced = TRUE;
 	
 	if (keep_going == TRUE) {
 
@@ -1200,8 +1203,12 @@ void fire_missile(location target)
 		           add_string_to_buf("  The arrow explodes!             ");
 /*		           run_a_missile(pc_pos[current_pc],target,2,1,5,
 			          0,0,100);*/
-                   run_a_missile(pc_pos[current_pc],target,2,1,5,
+                   run_a_missile(pc_pos[current_pc],target,2,1,(overall_mode == 12) ? 12 : 14,
 			          0,0,100);
+                   if(PSD[306][6] == 0)
+                   pause(dist(pc_pos[current_pc],target));
+                   else
+			       pause(dist(pc_pos[current_pc],target)*5);
 		           start_missile_anim();
 		           add_missile(target,2,1, 0, 0);
 //		           do_missile_anim(100,pc_pos[current_pc], 5); <= redundant missile anim
@@ -1434,7 +1441,7 @@ void combat_run_monst()
 
 			}
 
-		special_increase_age();
+		timed_special_happened = special_increase_age();
 		push_things();
 					
 		if (party.age % 2 == 0) do_poison();
@@ -3575,7 +3582,7 @@ void handle_disease()
 					r1 = get_ran(1,0,7);
 					if (adven[i].traits[6] == TRUE)
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (adven[i].hasAbilEquip(67) < 24))
+					if ((get_ran(1,0,7) <= 0) || (adven[i].hasAbilEquip(62) < 24))
 						move_to_zero(adven[i].status[7]);
 				}
 		put_pc_screen();

@@ -224,9 +224,8 @@ void sound_pause(long len) {
 }
 void move_sound(unsigned char ter,short step)
 {
-	short pic,spec;
+	short spec;
 	
-	pic = scenario.ter_types[ter].picture;
 	spec = scenario.ter_types[ter].special;
 	
 	if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_boat >= 0)) {
@@ -237,9 +236,9 @@ void move_sound(unsigned char ter,short step)
 	else if ((monsters_going == FALSE) && (overall_mode < 10) && (party.in_horse >= 0)) {////
 		play_sound(85);
 		}
-	else if(scenario.ter_types[ter].special == 5) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
+	else if(spec == 5) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
 		  return;
-//  else if(scenario.ter_types[ter].special == 6) //if diseased land do the same
+//  else if(spec == 6) //if diseased land do the same
 //		  return;
 		else switch(scenario.ter_types[ter].step_sound){
             case 0:

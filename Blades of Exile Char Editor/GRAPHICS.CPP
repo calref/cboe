@@ -477,16 +477,21 @@ void display_party(short,short clear_first)
         sprintf(buffer,"In Town : %s ",town_strs[0]);
         char_win_draw_string(main_dc,from_rect,buffer,0,10);*/
 
-		from_rect = pc_info_rect;
+		from_rect = title_from;
+		from_rect.bottom += 385;
 		from_rect.top = from_rect.bottom - 14;
-		from_rect.left += 3;
+		from_rect.left -= 40;
+		from_rect.right = from_rect.left + 604;
 		if (party_in_scen == FALSE)
-			char_win_draw_string(main_dc,from_rect,"Party not in a scenario.",0,10);
+			char_win_draw_string(main_dc,from_rect," Party not in a scenario.",0,10);
 			else {
                 char buf[256];
-                sprintf(buf,"Party is in : %s.",party.scen_name);
+                sprintf(buf," Party is in : %s.",party.scen_name);
                 char_win_draw_string(main_dc,from_rect,buf,0,10);
             }
+        from_rect.left -= 1;
+        from_rect.top -= 1;
+        frame_dlog_rect(mainPtr,from_rect,0);
 			
 			for (i = 0; i < 6; i++) {
 				if (i == current_active_pc)

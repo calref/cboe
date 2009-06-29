@@ -475,8 +475,7 @@ short display_item(location from_loc,short pc_num, short mode, bool check_contai
 			  		total_items_gettable++;
 			  		}
 			}
-	if (pcs_gworld == NULL)
-		pcs_gworld = load_pict(902,main_dc);
+
 	cd_create_dialog(987,mainPtr);
 
 	if (check_container == true)
@@ -501,9 +500,6 @@ short display_item(location from_loc,short pc_num, short mode, bool check_contai
 		
 	cd_kill_dialog(987,0);
 
-	DeleteObject(pcs_gworld);
-	pcs_gworld = NULL;
-	
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	

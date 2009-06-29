@@ -50,9 +50,12 @@ Exile MENU
   MENUITEM "  Set Scenario Event Timers", 116
   MENUITEM "  Edit Item Placement Shortcuts", 117
   MENUITEM "  Delete Last Town", 118
+  MENUITEM SEPARATOR
   MENUITEM "  Write Data To Text File", 119
   MENUITEM "  Do Full Text Dump", 120
   MENUITEM "  Scenario Shopping Text Dump", 121
+  MENUITEM "  Scenario Monster Dump", 122
+  MENUITEM "  Scenario Specials Dump", 123
  }
 
  POPUP "&Town"
