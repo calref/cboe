@@ -83,7 +83,7 @@ extern short terrain_there[9][9];
 //extern unsigned char out[96][96];
 //extern big_tr_type t_d;
 extern Point ul;
-extern bool play_sounds,suppress_stat_screen,cartoon_happening,in_startup_mode;
+extern bool play_sounds,suppress_stat_screen,in_startup_mode;
 extern Rect item_buttons[8][6];
  // name, use, give, drip, info, sell/id
 extern Rect pc_buttons[6][5];
@@ -92,7 +92,7 @@ extern bool item_area_button_active[8][6];
 extern bool pc_area_button_active[6][5];
 extern Rect item_screen_button_rects[9];
 extern short spec_item_array[60];
-extern short abil_chart[200],store_anim_type;
+extern short abil_chart[200];
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
@@ -1419,15 +1419,7 @@ const BitMap * store_dest;
 	test1 = GetPortPixMap(src_gworld);
 
 	destrec = coord_to_rect(target.x,target.y);
-	if (main_win == 1) { 
-		if (cartoon_happening == true) {
-			OffsetRect(&destrec,ul.h,ul.v);
-			if (store_anim_type == 0) 
-				OffsetRect(&destrec,306,5);
-				else OffsetRect(&destrec,store_anim_ul.h,store_anim_ul.v);
-			}
-			else OffsetRect(&destrec,ul.h + 5,ul.v + 5);
-		}
+	if (main_win == 1) OffsetRect(&destrec,ul.h + 5,ul.v + 5);
 		
 	LockPixels(test1);
 	if (main_win == 0) {

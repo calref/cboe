@@ -50,7 +50,7 @@ extern Rect	bg[];
 extern WindowPtr mainPtr;
 extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
 extern eGameMode overall_mode;
-extern bool play_sounds,boom_anim_active,cartoon_happening,in_startup_mode;
+extern bool play_sounds,boom_anim_active,in_startup_mode;
 extern GWorldPtr fields_gworld,boom_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld,invenbtn_gworld;
 //extern party_record_type party;
 extern GWorldPtr bg_gworld;
@@ -128,20 +128,19 @@ Rect explode_place_rect[30];
 // Animation vars
 //extern town_record_type anim_town;
 //extern tiny_tr_type anim_t_d;
-extern short anim_step;
-short store_anim_type;
-extern char anim_str[60];
-extern location anim_str_loc;
-
-// if < 6; target PC, if >= 100, targ monst, if 6, go to anim_pc_loc
-short anim_pc_targets[6];
-short anim_monst_targets[60];
-
-short anim_pcs[6];
-
-location anim_pc_locs[6],anim_monst_locs[60];
-location anim_string_loc;
-char anim_string[60];
+//extern short anim_step;
+//extern char anim_str[60];
+//extern location anim_str_loc;
+//
+//// if < 6; target PC, if >= 100, targ monst, if 6, go to anim_pc_loc
+//short anim_pc_targets[6];
+//short anim_monst_targets[60];
+//
+//short anim_pcs[6];
+//
+//location anim_pc_locs[6],anim_monst_locs[60];
+//location anim_string_loc;
+//char anim_string[60];
 char last_light_mask[13][13];
 
 void apply_unseen_mask()
@@ -438,16 +437,10 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == true) && (store_anim_type == 0)) {
+	if (in_startup_mode) {
 		current_terrain_ul.h = 306;
 		current_terrain_ul.v = 5;
-		}
-		else if ((cartoon_happening == true) && (store_anim_type > 0)) {
-			current_terrain_ul = store_anim_ul;
-			}
-			else {
-				current_terrain_ul.h = current_terrain_ul.v = 5;
-				}
+	} else current_terrain_ul.h = current_terrain_ul.v = 5;
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
@@ -621,17 +614,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 		return;
 
 	// initialize general data
-	if ((in_startup_mode == true) && (store_anim_type == 0)) {
+	if (in_startup_mode) {
 		current_terrain_ul.h = 306;
 		current_terrain_ul.v = 5;
-		}
-		else if ((cartoon_happening == true) && (store_anim_type > 0)) {
-			current_terrain_ul = store_anim_ul;
-			}
-			else {
-				current_terrain_ul.h = current_terrain_ul.v = 5;
-				}
-
+	} else current_terrain_ul.h = current_terrain_ul.v = 5;
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);

@@ -32,7 +32,7 @@ extern WindowPtr mainPtr;
 extern Rect	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
-extern short current_spell_range,town_type,store_anim_type;
+extern short current_spell_range,town_type;
 extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern short anim_step;
 extern ter_num_t combat_terrain[64][64];
@@ -41,7 +41,7 @@ extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fir
 extern Point ul;
 extern location pc_pos[6],pc_dir[6],center;
 extern short which_combat_type,current_pc;
-extern bool monsters_going,boom_anim_active,cartoon_happening,skip_boom_delay;
+extern bool monsters_going,boom_anim_active,skip_boom_delay;
 extern 	PicHandle	spell_pict;
 extern short current_ground;
 extern short num_targets_left;
@@ -1279,9 +1279,7 @@ void draw_terrain(short	mode)
 			}
 			else if (is_combat()) {
 				spec_terrain = combat_terrain[where_draw.x][where_draw.y];
-				if (cartoon_happening == true)
-					can_draw = true;
-				else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
+				can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
 								  (which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
 								 && (party_can_see(where_draw) < 6)) ? 1 : 0;
 			}
@@ -1299,9 +1297,7 @@ void draw_terrain(short	mode)
 			spot_seen[q][r] = can_draw;
 			
 			if ((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
-				if ((is_combat()) && (cartoon_happening == false)) {
-					anim_ticks = 0;
-				}
+				if (is_combat()) anim_ticks = 0;
 				
 				eTrimType trim = scenario.ter_types[spec_terrain].trim_type;
 				
@@ -1354,10 +1350,8 @@ void draw_terrain(short	mode)
 				draw_one_terrain_spot(q,r,-1);
 			}
 			
-			if ((can_draw != 0) && (overall_mode != MODE_RESTING) && (frills_on == true)
-				&& (draw_frills == true) && (cartoon_happening == false)) {  // Place the trim TODO: Alter trim
+			if ((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && (draw_frills))
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
-			}
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
 //			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
 //				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
@@ -1407,13 +1401,11 @@ void draw_terrain(short	mode)
 	
 	if (mode == 0) {
 		redraw_terrain();
-		if (cartoon_happening == false) {
-			draw_text_bar(0);
-			if ((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
-				draw_pcs(center,1);
-			if (overall_mode == MODE_FANCY_TARGET)
-				draw_targets(center);
-		}
+		draw_text_bar(0);
+		if ((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+			draw_pcs(center,1);
+		if (overall_mode == MODE_FANCY_TARGET)
+			draw_targets(center);
 	}
 	SetPort(old_port);
 	supressing_some_spaces = false;
@@ -1835,13 +1827,13 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	
 //	if ((cartoon_happening == true) && (anim_step < 140))
 //		return;
-	if ((cartoon_happening == false) && ((mode != 100) && (party_can_see(where) == 6)))
+	if ((mode != 100) && (party_can_see(where) == 6))
 		return;
 	if ((type < 0) || (type > 4))
 		return;
 	if ((boom_anim_active == true) && (type != 3))
 		return;
-	if ((cartoon_happening == false) && (PSD[SDF_NO_FRILLS] > 0) && (fast_bang == true))
+	if ((PSD[SDF_NO_FRILLS] > 0) && fast_bang)
 		return;
 	if (is_out())
 		return;
@@ -1880,17 +1872,12 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	OffsetRect(&dest_rect,x_adj,y_adj);
 	SectRect(&dest_rect,&big_to,&dest_rect);
 
-	if (cartoon_happening == false) 
-		OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
-		else if (store_anim_type == 0) 				
-			OffsetRect(&dest_rect,306,5);
-			else OffsetRect(&dest_rect,store_anim_ul.h,store_anim_ul.v);
+	OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
 
 	OffsetRect(&source_rect,-1 * store_rect.left + 28 * type,-1 * store_rect.top);
 	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,transparent);
 	
-	if ((cartoon_happening == false) && (dest_rect.right - dest_rect.left >= 28)
-		&& (dest_rect.bottom - dest_rect.top >= 36)) {
+	if ((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
 		sprintf((char *) dam_str,"%d",damage);
 		TextSize(10);
 		TextFace(bold);
@@ -1916,7 +1903,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 			FlushAndPause(del_len);
 		}
 	redraw_terrain();
-	if ((cartoon_happening == false) && (overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+	if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 		draw_pcs(center,1);	
 }
 	
@@ -1947,14 +1934,7 @@ void redraw_terrain()
 {
 	Rect to_rect;
 	
-	if (cartoon_happening == false)
-		to_rect = win_to_rects[0];
-		else {
-			GetPortBounds(terrain_screen_gworld, &to_rect);
-			if (store_anim_type == 0) 
-				OffsetRect(&to_rect,306,5);
-				else OffsetRect(&to_rect,store_anim_ul.h,store_anim_ul.v);
-			}
+	to_rect = win_to_rects[0];
 	rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], to_rect,ul);
 
 

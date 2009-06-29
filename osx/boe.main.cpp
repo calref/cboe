@@ -93,7 +93,7 @@ short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
 bool first_update = true,anim_onscreen = false,frills_on = true,sys_7_avail,suppress_stat_screen = false;
 short stat_window = 0,store_modifier;
-bool monsters_going = false,boom_anim_active = false,cartoon_happening = false;
+bool monsters_going = false,boom_anim_active = false;
 short give_delays = 0;
 bool modeless_exists[18] = {false,false,false,false,false,false,
 								false,false,false,false,false,false,

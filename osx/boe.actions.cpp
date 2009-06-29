@@ -93,7 +93,7 @@ extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern Point	to_create;
 extern bool in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
-extern bool cartoon_happening,party_in_memory,in_scen_debug;
+extern bool party_in_memory,in_scen_debug;
 
 // game info globals
 
@@ -1596,7 +1596,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 	//	add_string_to_buf((char *) debug);
 	//	print_buf();
 	if (overall_mode == MODE_TALKING) {
-		if (chr2 == 53)
+		if (chr2 == 53) // escape
 			chr = 'd';
 		if (chr == ' ')
 			chr = 'g';
@@ -1610,7 +1610,7 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			}
 	}
 	else if (overall_mode == MODE_SHOPPING) { // shopping keystrokes
-		if (chr2 == 53) {
+		if (chr2 == 53) { // escape
 			pass_point.h = 222;
 			pass_point.v = 398;
 			AddPt(ul,&pass_point);
@@ -1618,16 +1618,14 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			are_done = handle_action(event);			
 		}
 		for (i = 0; i < 8; i++)
-			if (chr == 97 + i) {
+			if (chr == 'a' + i) {
 				pass_point.h = shopping_rects[i][1].left + 9;
 				pass_point.v = shopping_rects[i][1].top + 9;
 				AddPt(ul,&pass_point);
 				event.where = pass_point;
 				are_done = handle_action(event);			
 			}
-	}
-	
-	if ((overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
+	} else {
 		for (i = 0; i < 10; i++)
 			if (chr2 == keypad[i]) {
 				if (i == 0) {
@@ -1754,6 +1752,9 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 		case 'B':
 			if(!in_scen_debug) break;
 			PSD[SDF_IS_PARTY_SPLIT] = 0;
+			for(i=0;i<6;i++)
+                if(univ.party[i].main_status >= MAIN_STATUS_SPLIT)
+                    univ.party[i].main_status -= MAIN_STATUS_SPLIT;
 			if(overall_mode == MODE_OUTDOORS){
 				add_string_to_buf("Debug - Leave Town: You're not in town!");
 				print_buf();
@@ -1875,11 +1876,11 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			break;
 			
 		case 'I': // TODO: Seems useless?
-			if(!in_scen_debug) break;
-			sout << "Debug: The party's age is " << univ.party.age;
-			add_string_to_buf(sout.str());
-			add_string_to_buf("Debug: Reset map."); // Surely this won't work?
-			print_buf();
+//			if(!in_scen_debug) break;
+//			sout << "Debug: The party's age is " << univ.party.age;
+//			add_string_to_buf(sout.str());
+//			add_string_to_buf("Debug: Reset map."); // Surely this won't work?
+//			print_buf();
 			break;
 			
 		case 'Q':
@@ -2200,8 +2201,6 @@ void post_load()
 	clear_map();
 	adjust_spell_menus();
 	adjust_monst_menu();
-	
-	cartoon_happening = false;
 }
 
 void do_save(short mode)

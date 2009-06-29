@@ -25,7 +25,7 @@ extern Rect	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
-extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,cartoon_happening;
+extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded;
 //extern short town_size[3];
 //extern cParty party;
 //extern pc_record_type adven[6];
@@ -99,7 +99,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 	where_draw = calc_rect(i,j);
  	OffsetRect(&where_draw,13,13);
  	if (terrain_to_draw == -1) {
- 		if ((cartoon_happening == false) && (terrain_there[i][j] == 300)) {
+ 		if (terrain_there[i][j] == 300) {
  			return;
 		}
  		terrain_there[i][j] = 300;
@@ -139,12 +139,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		anim_type = 0;
 	}
 	else {
-		if (cartoon_happening == false) {
-			if (terrain_there[i][j] == scenario.ter_types[terrain_to_draw].picture) {
-				return;
-			}
-			terrain_there[i][j] = scenario.ter_types[terrain_to_draw].picture;
-		}
+		if (terrain_there[i][j] == scenario.ter_types[terrain_to_draw].picture) return;
+		terrain_there[i][j] = scenario.ter_types[terrain_to_draw].picture;
 		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
 		source_gworld = terrain_gworld[terrain_to_draw / 50];
  		terrain_there[i][j] = terrain_to_draw;
@@ -267,8 +263,7 @@ void draw_monsters() ////
 	if (is_combat()) {	
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
-				if (((point_onscreen(center,univ.town.monst[i].cur_loc) == true) && (cartoon_happening == true))
-					|| (party_can_see_monst(i) == true)) {
+				if (point_onscreen(center,univ.town.monst[i].cur_loc) || party_can_see_monst(i)) {
 					check_if_monst_seen(univ.town.monst[i].number);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
@@ -348,38 +343,35 @@ void draw_pcs(location center,short mode)
 		return;
 	if (can_draw_pcs == false)
 		return;
-	
-	if ((mode == 1) && (cartoon_happening == true))
-		return;
 		
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == 1)
-			if (((point_onscreen(center, pc_pos[i])) == true) && 
-				((cartoon_happening == true) || (party_can_see(pc_pos[i]) < 6))){
-				where_draw.x = pc_pos[i].x - center.x + 4;
-				where_draw.y = pc_pos[i].y - center.y + 4;
-				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-				if(pc_dir[i] >= 4)
-					OffsetRect(&source_rect,28,0);
-				if (combat_posing_monster == i)
-					OffsetRect(&source_rect,0,288);
-					
-				if (mode == 0) {
-					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
-					}
-					
-				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
-					active_pc_rect.top = 18 + where_draw.y * 36;
-					active_pc_rect.left = 18 + where_draw.x * 28;
-					active_pc_rect.bottom = 54 + where_draw.y * 36;
-					active_pc_rect.right = 46 + where_draw.x * 28;
-					OffsetRect(&active_pc_rect,ul.h,ul.v);
-				
-					ForeColor(magentaColor);
-					FrameRoundRect(&active_pc_rect,8,8);
-					ForeColor(blackColor);
-					}
-			}
+//			if (((point_onscreen(center, pc_pos[i])) == true) && 
+//				((cartoon_happening == true) || (party_can_see(pc_pos[i]) < 6))){
+//				where_draw.x = pc_pos[i].x - center.x + 4;
+//				where_draw.y = pc_pos[i].y - center.y + 4;
+//				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
+//				if(pc_dir[i] >= 4)
+//					OffsetRect(&source_rect,28,0);
+//				if (combat_posing_monster == i)
+//					OffsetRect(&source_rect,0,288);
+//					
+//				if (mode == 0) {
+//					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
+//					}
+//					
+//				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
+//					active_pc_rect.top = 18 + where_draw.y * 36;
+//					active_pc_rect.left = 18 + where_draw.x * 28;
+//					active_pc_rect.bottom = 54 + where_draw.y * 36;
+//					active_pc_rect.right = 46 + where_draw.x * 28;
+//					OffsetRect(&active_pc_rect,ul.h,ul.v);
+//				
+//					ForeColor(magentaColor);
+//					FrameRoundRect(&active_pc_rect,8,8);
+//					ForeColor(blackColor);
+//					}
+//			}
 
 	// Draw current pc on top
 	if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
@@ -405,7 +397,7 @@ void draw_items(location where){
 	for (int i = 0; i < NUM_TOWN_ITEMS; i++) {
 		if(univ.town.items[i].variety != ITEM_TYPE_NO_ITEM && univ.town.items[i].item_loc == where) {
 			if(univ.town.items[i].is_contained()) continue;
-			if(!cartoon_happening && party_can_see(where) >= 6) continue;
+			if(party_can_see(where) >= 6) continue;
 			if(univ.town.items[i].graphic_num >= 1000){
 				from_rect = get_custom_rect(univ.town.items[i].graphic_num - 1000);
 				to_rect = coord_to_rect(where.x,where.y);
@@ -489,7 +481,7 @@ void draw_town_boat(location center)
 
 void draw_fields(location where){
 	if(!point_onscreen(center,where)) return;
-	if(!cartoon_happening && party_can_see(where) >= 6) return;
+	if(party_can_see(where) >= 6) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
 	if(is_out()){
 		if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where.x][where.y])

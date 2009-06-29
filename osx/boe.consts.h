@@ -85,6 +85,7 @@ enum eGameMode {
 	MODE_LOOK_COMBAT = 37,
 	MODE_STARTUP = 45,
 	MODE_RESTING = 50,
+	MODE_CUTSCENE = 51, // for future use
 };
 
 // Directions!
