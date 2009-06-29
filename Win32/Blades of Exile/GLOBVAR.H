@@ -58,7 +58,6 @@ extern RECT sbar_rect;
 extern RECT shop_sbar_rect;
 extern RECT item_sbar_rect;
 extern int dialog_answer;
-extern POINT store_anim_ul;
 extern Boolean All_Done, dialog_not_toast;
 extern Boolean in_startup_mode ;
 extern Boolean play_sounds;
@@ -67,7 +66,7 @@ extern Boolean save_maps ,party_in_memory ,in_scen_debug ;
 extern Boolean window_in_front ;
 extern Boolean belt_present ;
 extern Boolean game_run_before ;
-extern Boolean debug_on , give_intro_hint ;
+extern Boolean give_intro_hint ;
 extern short on_spell_menu[2][62];
 extern short on_monst_menu[256];
 extern short current_cursor;
@@ -87,7 +86,7 @@ extern short spec_item_array[60];
 extern short overall_mode,current_spell_range;
 extern Boolean first_update ,anim_onscreen ,frills_on ,sys_7_avail,suppress_stat_screen ;
 extern short stat_window,store_modifier;
-extern Boolean monsters_going ,boom_anim_active ,cartoon_happening ;
+extern Boolean monsters_going, boom_anim_active;
 extern short give_delays;
 extern Boolean modeless_exists[18];
 extern short modeless_key[18];
@@ -160,6 +159,8 @@ extern piles_of_stuff_dumping_type2 *data_store2;
 extern piles_of_stuff_dumping_type3 *data_store3;
 extern piles_of_stuff_dumping_type4 *data_store4;
 extern piles_of_stuff_dumping_type5 *data_store5;
+extern scen_item_data_type *scen_item_list;
+extern scen_header_type *scen_headers;
 /* end of dynamically allocated */
 
 extern char create_line[60];
@@ -252,8 +253,6 @@ extern short cur_display_mode;
 
 extern short terrain_pic[256]; 
 
-extern scen_header_type scen_headers[100];
-
 extern short store_scen_page_on,store_num_scen;
 
 #define ND	15
@@ -320,6 +319,7 @@ extern char szFileName [128];
 extern char szTitleName [128];
 extern OPENFILENAME ofn;
 extern OFSTRUCT save_dir,save_dir2;
+extern SCROLLINFO lpsi;
 
 // Trying this to fix bug. Hope it works.
 extern 	tiny_tr_type tiny_t;
@@ -357,7 +357,7 @@ extern HBITMAP mixed_gworld, pc_stats_gworld, item_stats_gworld, text_area_gworl
 extern HBITMAP terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,buttons_gworld;
 extern HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 extern HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
-extern HBITMAP ter_anim_gworld,monsters_gworld[10], terrains_gworld[6];
+extern HBITMAP talking_portraits_gworld, frills_gworld, ter_anim_gworld,monsters_gworld[10], terrains_gworld[6];
 
 extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 
@@ -519,7 +519,7 @@ extern 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 extern 	long store_g;
 extern 	short store_train_mode,store_train_pc;
 	
-extern HBITMAP pcs_gworld,pc_gworld;
+extern HBITMAP pcs_gworld;
 
 // Dialog vars
 extern short store_mage_store ;
@@ -596,7 +596,8 @@ extern Boolean kludge_force_full_refresh ;
 extern word_rect_type preset_words[9];
 extern word_rect_type store_words[50];
 
-// Animation vars
-extern short store_anim_type;
+//Timer Special happened ?
+extern BOOL timed_special_happened;
+extern BOOL ghost_mode;
 
 #endif

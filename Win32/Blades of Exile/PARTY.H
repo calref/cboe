@@ -21,7 +21,7 @@ void give_party_spell(short which);
 void do_mage_spell(short pc_num,short spell_num);
 void do_priest_spell(short pc_num,short spell_num);
 void cast_town_spell(location where);
-void sanctify_space(location where);
+void check_spell_on_space(location where, unsigned char spell);
 void do_mindduel(short pc_num,creature_data_type *monst);
 void dispel_fields(short i,short j,short mode);
 Boolean pc_can_cast_spell(short pc_num,short type,short spell_num);

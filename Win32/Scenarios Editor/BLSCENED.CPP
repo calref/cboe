@@ -167,7 +167,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		}
 
 		mainPtr = CreateWindow (szAppName,
-			"Classic BoE Scenario Editor Beta 1.1",
+			"Classic BoE Scenario Editor Beta 2",
 			WS_OVERLAPPEDWINDOW,
 			0,
 			0,
@@ -218,9 +218,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		load_sounds();
 
 		right_sbar_rect.top = RIGHT_AREA_UL_Y;
-		right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
+		right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 16 ;
 		right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT;
-		right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
+		right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH ;
 		right_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,
 			right_sbar_rect.right - right_sbar_rect.left,
@@ -347,8 +347,10 @@ RECT r;
                 }
             if(overall_mode == 62){
             if(store_ter.picture >= 2000){
+//                old_setting = custom_pic;
                 custom_pic = 5;
                 csp(813,14,store_ter.picture - 2000);
+//                custom_pic = old_setting;
             }
        	    else if (store_ter.picture >= 400 && store_ter.picture < 1000){
 			    csp(813,14,store_ter.picture - 100);
@@ -419,7 +421,12 @@ RECT r;
 					sbar_pos = 0;
 				if (sbar_pos > max)
 					sbar_pos = max;
-				SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
+
+                lpsi.fMask = SIF_POS;
+                lpsi.nPos = sbar_pos;
+                SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//				SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
+
 				if (sbar_pos != old_setting)
 					draw_rb();
 				break;
@@ -528,9 +535,18 @@ Boolean handle_menu (short item, HMENU menu)
 		case 106: overall_mode = 47;
 			set_string("Select party starting location.","");
 			break;
-		case 109:  SetScrollPos(right_sbar,SB_CTL,0,TRUE); start_special_editing(0,0); break;
+		case 109:  
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+            //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+            start_special_editing(0,0); break;
 		case 110:
-			 SetScrollPos(right_sbar,SB_CTL,0,TRUE); start_string_editing(0,0);
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+			 //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+             start_string_editing(0,0);
 			break;
 		case 111:
 			if (change_made == TRUE) {
@@ -603,10 +619,17 @@ Boolean handle_menu (short item, HMENU menu)
 			break;
 			
 		case 121:
-			if (fancy_choice_dialog(868,0) == 1)
+			if (fancy_choice_dialog(867,0) == 1)
 				start_shopping_data_dump();
 		break;
-
+		case 122:
+			if (fancy_choice_dialog(868,0) == 1)
+				start_monst_data_dump();
+		break;
+        case 123:
+			if (fancy_choice_dialog(890,0) == 1)
+            start_spec_data_dump();
+        break;
 			// Town Menu
 		case 201: edit_town_details(); break;
 		case 202: edit_town_wand(); break;
@@ -633,8 +656,18 @@ Boolean handle_menu (short item, HMENU menu)
 					town.preset_items[i].item_code = -1;
 				draw_terrain();
 				break; 
-		case 213:  SetScrollPos(right_sbar,SB_CTL,0,TRUE); start_special_editing(2,0); break;
-		case 214:  SetScrollPos(right_sbar,SB_CTL,0,TRUE); start_string_editing(2,0); break;
+		case 213:  
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+            //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+             start_special_editing(2,0); break;
+		case 214:  
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+            //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+        start_string_editing(2,0); break;
 		case 215: edit_advanced_town(); break;
 		case 216: edit_town_events(); break;
 		case 217: if (fancy_choice_dialog(872,0) == 2) // clear all monsters
@@ -643,6 +676,10 @@ Boolean handle_menu (short item, HMENU menu)
 						t_d.creatures[i].number = 0;
 						t_d.creatures[i].start_loc.x = 0;
 						t_d.creatures[i].start_loc.y = 0;						
+						t_d.creatures[i].spec_enc_code = 0;
+						t_d.creatures[i].time_flag = 0;
+                        t_d.creatures[i].spec1 = -1;
+                        t_d.creatures[i].spec2 = -1;                        						
 						}
 		break; 
 		case 218: if (fancy_choice_dialog(873,0) == 2) // clear all special encounters
@@ -680,8 +717,18 @@ Boolean handle_menu (short item, HMENU menu)
 		case 304: frill_up_terrain(); break;
 		case 305: unfrill_terrain(); break;
 		case 306: edit_out_strs(); break;
-		case 311: SetScrollPos(right_sbar,SB_CTL,0,TRUE); start_special_editing(1,0); break;
-		case 312: SetScrollPos(right_sbar,SB_CTL,0,TRUE);  start_string_editing(1,0); break;
+		case 311: 
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+            //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+            start_special_editing(1,0); break;
+		case 312:
+            lpsi.fMask = SIF_POS;
+            lpsi.nPos = 0;
+            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+            //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+            start_string_editing(1,0); break;
 		case 313: if (fancy_choice_dialog(875,0) == 2) // clear all special encounters
 					break;
 					for (i = 0; i < 18; i++) {

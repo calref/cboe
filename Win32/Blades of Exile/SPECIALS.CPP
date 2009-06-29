@@ -497,8 +497,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 			else sprintf((char *) to_draw, "Use: %s",adven[pc].items[item].full_name);
 		add_string_to_buf((char *) to_draw);
 
-		if ((adven[pc].items[item].variety == 7) &&
-		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
+		if ((adven[pc].items[item].variety == ITEM_TYPE_POTION))// &&
+//		      (adven[pc].items[item].graphic_num >= 50) && (adven[pc].items[item].graphic_num <= 52))
 		      	play_sound(56);
 		
 		str = adven[pc].items[item].ability_strength;
@@ -762,7 +762,8 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 				break;
 			case 120:
 				r1 = get_ran(6,1,4);
-				for (i = 0; i < get_ran(1,3,5); i++)
+				j = get_ran(1,3,5);
+				for (i = 0; i < j; i++)
 					if (summon_monster(str,user_loc,r1,2) == FALSE)
 						add_string_to_buf("  Summon failed.");
 				break;
@@ -924,6 +925,7 @@ Boolean use_space(location where)
 			break;
 		case 23: // call special
 			run_special(17,0,scenario.ter_types[ter].flag1,where,&i,&i,&i);
+			return TRUE;
 			break;	
 		}
 	add_string_to_buf("  Nothing to use.");
@@ -936,7 +938,7 @@ Boolean use_space(location where)
 // Can't get items out in combat.
 Boolean adj_town_look(location where)
 {
-	char terrain;
+	unsigned char terrain;
 	Boolean can_open = TRUE,item_there = FALSE,got_special = FALSE;
 	short i = 0, s1 = 0, s2 = 0, s3 = 0;
 
@@ -962,16 +964,15 @@ Boolean adj_town_look(location where)
 	if ((is_container(where)) && (item_there == TRUE) && (can_open == TRUE)) 
 		get_item(where,6,TRUE);
 		
-	else switch (terrain)
+	else if (scenario.ter_types[terrain].special == 22 || scenario.ter_types[terrain].special == 23)
 		{
-		case 22: case 23:
 			add_string_to_buf("  (Use this space to do something");
 			add_string_to_buf("  with it.)");
-			break;
-		default:
-			if (got_special == FALSE) add_string_to_buf("  Search: You don't find anything.          ");
-			return FALSE;
-		}
+
+        }
+        
+    else if (got_special == FALSE) add_string_to_buf("  Search: You don't find anything.          ");
+
 	return FALSE;
 }
 
@@ -1120,7 +1121,8 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	// Absorb damage?
 	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
 	 && (victim->m_d.spec_skill == 26)) {
-		victim->m_d.health += how_much;
+        if((victim->m_d.health + how_much) < 32767)
+    		victim->m_d.health += how_much;
 		ASB("  Magic absorbed.");
 		return FALSE;
 		}
@@ -1424,10 +1426,11 @@ void push_things()
 		}
 }
 
-void special_increase_age()
+BOOL special_increase_age()
 {
 	short i,s1,s2,s3;
 	Boolean redraw = FALSE,stat_area = FALSE;
+	BOOL to_return = FALSE;
 	
 	for (i = 0; i < 8; i++)
 		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
@@ -1436,6 +1439,7 @@ void special_increase_age()
 			stat_area = TRUE;
 			if (s3 > 0)
 				redraw = TRUE;
+			to_return = TRUE;
 			}
 	for (i = 0; i < 20; i++)
 		if ((scenario.scenario_timer_times[i] > 0) && (party.age % scenario.scenario_timer_times[i] == 0)) {
@@ -1443,6 +1447,7 @@ void special_increase_age()
 			stat_area = TRUE;
 			if (s3 > 0)
 				redraw = TRUE;
+			to_return = TRUE;				
 			}
 	for (i = 0; i < 30; i++)
 		if (party.party_event_timers[i] > 0) {
@@ -1454,6 +1459,7 @@ void special_increase_age()
 				stat_area = TRUE;
 				if (s3 > 0)
 					redraw = TRUE;
+    			to_return = TRUE;
 				}
 				else party.party_event_timers[i]--;
 			}
@@ -1464,6 +1470,7 @@ void special_increase_age()
 	if (redraw == TRUE)
 		draw_terrain(0);
 
+return to_return;
 }
 
 // This is the big painful one, the main special engine
@@ -1494,12 +1501,12 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	special_node_type cur_node;
-	short num_nodes = 0;
 	
 	if (special_in_progress == TRUE) {
 		give_error("The scenario called a special node while processing another special encounter. The second special will be ignored.","",0);
 		return;
 		}
+		
 	special_in_progress = TRUE;
 	next_spec = start_spec;
 	next_spec_type = which_type;
@@ -1509,7 +1516,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		special_in_progress = FALSE;
 		return;
 		}
-	
+		
 	while (next_spec >= 0) {
 	
 		cur_spec = next_spec;
@@ -1543,12 +1550,13 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 			outdoor_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
 			
-		num_nodes++;
-		if (num_nodes >= 50) {
-			give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
-			next_spec = -1;
-			}
+//	if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) && ((GetAsyncKeyState(0x43) & 32768) == 32768))  {//Ctrl-C escape sequence check
+    if(check_for_interrupt()){
+        give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
+// 	    give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
+		next_spec = -1;
 		}
+	}
 	if (is_out())
 		erase_out_specials();
 		else erase_specials();
@@ -1742,7 +1750,13 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
 		case 27:
-			end_scenario = TRUE;
+        char count=0;//temporary fix, maybe we'll do a special "you lose" dialog.
+            for(i=0;i<6;i++)
+                if(adven[i].isAlive() == FALSE)
+                    count++;
+                
+            if(count != 6)                    
+			 end_scenario = TRUE;
 			break;
 		}
 	if (check_mess == TRUE) {
@@ -1934,7 +1948,10 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	pc = current_pc_picked_in_spec_enc;
+	if((PSD[SDF_IS_PARTY_SPLIT] > 0) && (cur_node.type != SPEC_AFFECT_DEADNESS))
+        pc = PSD[SDF_PARTY_SPLIT_PC];
+    else pc = current_pc_picked_in_spec_enc;
+
 
 
 	if ((check_mess == TRUE) && (cur_node.type != 80)) {
@@ -1971,19 +1988,13 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 82:
 			for (i = 0; i < 6; i++)
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE) //party split ?
-					adven[i].cur_health = minmax(0,	(int)adven[i].max_health,
-						adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i)))
+				if ((pc < 0) || (pc == i))
 					adven[i].cur_health = minmax(0,	(int)adven[i].max_health,
 						adven[i].cur_health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 83:
 			for (i = 0; i < 6; i++){
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE) //party split ?
-				   adven[i].cur_sp = minmax(0,	(int)adven[i].max_sp,
-                        adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i)))
+				if ((pc < 0) || (pc == i))
 				   adven[i].cur_sp = minmax(0,	(int)adven[i].max_sp,
                         adven[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
                 }
@@ -1997,10 +2008,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 			break;
 		case 85:
 			for (i = 0; i < 6; i++)
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE) //party split ?
-                    adven[i].skill_pts = minmax(0,	100,
-	       					adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i)))
+				if ((pc < 0) || (pc == i))
 					adven[i].skill_pts = minmax(0,	100,
 						adven[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
@@ -2100,10 +2108,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 				}
 			for (i = 0; i < 6; i++)
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE && (get_ran(1,1,100) <= spec.pic)) //party split ?
-                	adven[i].skills[spec.ex2a] = minmax(0, (int)skill_max[spec.ex2a],
-						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i)) && (get_ran(1,1,100) <= spec.pic))
+				if (((pc < 0) || (pc == i)) && (get_ran(1,1,100) <= spec.pic))
 					adven[i].skills[spec.ex2a] = minmax(0, (int)skill_max[spec.ex2a],
 						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
@@ -2113,9 +2118,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 				}
 			for (i = 0; i < 6; i++)
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE && (get_ran(1,1,100) <= spec.pic)) //party split ?
-					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i))) 
+                if ((pc < 0) || (pc == i)) 
 					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 100:
@@ -2124,9 +2127,7 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				break;
 				}
 			for (i = 0; i < 6; i++)
-                if(PSD[304][0] > 0 && adven[i].main_status == MAIN_STATUS_ALIVE && (get_ran(1,1,100) <= spec.pic)) //party split ?
-					adven[i].priest_spells[spec.ex1a + 30] = TRUE;
-				else if (PSD[304][0] == 0 && ((pc < 0) || (pc == i))) 
+                if ((pc < 0) || (pc == i)) 
 					adven[i].priest_spells[spec.ex1a + 30] = TRUE;
 			break;
 		case 101:
@@ -2651,13 +2652,14 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				*next_spec = -1;
 				check_mess = FALSE;
 				}
-			if (party.stuff_done[304][0] > 0) {
+			else if (party.stuff_done[304][0] > 0) {
 				ASB("Party is already split.");
 				if (which_mode < 3)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = FALSE;
 				}
+			else{
 			r1 = char_select_pc(1,0,"Which character goes?");
 			if (which_mode < 3)
 				*a = 1;
@@ -2666,7 +2668,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				*next_spec = -1;
 				start_split(spec.ex1a,spec.ex1b,spec.ex2a);
 				}
-				else check_mess = FALSE;				
+				else check_mess = FALSE;
+            }				
 			break;
 		case 194:
 			if (is_combat()) {

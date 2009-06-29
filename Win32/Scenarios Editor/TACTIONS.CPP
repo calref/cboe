@@ -185,7 +185,10 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 								set_up_main_screen();
 							break;
 						case 6:
-							SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+                            lpsi.fMask = SIF_POS;
+                            lpsi.nPos = 0;
+                            SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+							//SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 							start_string_editing(0,0);
 							break;
 						case 7: 
@@ -335,7 +338,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				}
 		//draw_rb_slot(i + right_top,0);
 		mouse_button_held = FALSE;
-		}
+		  }
 		}
 	if ((overall_mode < 60) //&& (PtInRect (the_point, &world_screen))
 		&& (the_point.x > world_screen.left + 8) && (the_point.x < world_screen.right - 8)
@@ -420,21 +423,21 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							else {
 								if (editing_town == TRUE) {
 									for (x = 0; x < 16; x++)
-									if (t_d.room_rect[x].right == 0) {
+									if (t_d.room_rect[x].right == -1) {
 										t_d.room_rect[x] = working_rect;
 										sprintf(town_strs[x + 1],"");
 										if (edit_area_rect_str(x,1) == FALSE)
-											t_d.room_rect[x].right = 0;
+											t_d.room_rect[x].right = -1;
 										x = 500;
 										}
 									}
 								if (editing_town == FALSE) {
 									for (x = 0; x < 8; x++)
-									if (current_terrain.info_rect[x].right == 0) {
+									if (current_terrain.info_rect[x].right == -1) {
 										current_terrain.info_rect[x] = working_rect;
 										sprintf(data_store->out_strs[x + 1],"");
 										if (edit_area_rect_str(x,0) == FALSE)
-											current_terrain.info_rect[x].right = 0;
+											current_terrain.info_rect[x].right = -1;
 										x = 500;
 										}
 									
@@ -790,6 +793,10 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						t_d.creatures[x].number = 0;
 						t_d.creatures[x].start_loc.x = 0;
 						t_d.creatures[x].start_loc.y = 0;
+						t_d.creatures[x].spec_enc_code = 0;
+						t_d.creatures[x].time_flag = 0;
+                        t_d.creatures[x].spec1 = -1;
+                        t_d.creatures[x].spec2 = -1;   						
 						}
 				set_cursor(0);
 				overall_mode = 0;
@@ -3262,7 +3269,6 @@ void set_up_main_screen()
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 	shut_down_menus(4);
 	shut_down_menus(3);
-	//DrawMenuBar();
 	redraw_screen();
 	//draw_main_screen();
 }
@@ -3333,7 +3339,7 @@ void shut_down_menus(short mode)
 {
 	HMENU menu;
 	short i;
-	short scen_items[18] = {101,103,104,105,106, 109,110,112,113,114, 115,116,117,118,119, 120,111, 121};
+	short scen_items[20] = {101,103,104,105,106, 109,110,112,113,114, 115,116,117,118,119, 120,111,121,122,123};
 	short town_items[17] = {201,202,203,204,205, 206,208,209,210,213, 214,215,216, 217,218,219,220};
 	short out_items[10] = {301,302,303,304,305,306,308,311,312,313};
 	menu = GetMenu(mainPtr);
@@ -3341,7 +3347,7 @@ void shut_down_menus(short mode)
 
 	if (mode == 0) {
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 0; i < 18; i++)
+		for (i = 0; i < 20; i++)
 			EnableMenuItem(menu,scen_items[i],MF_GRAYED | MF_BYCOMMAND);
 		for (i = 0; i < 17; i++)
 			EnableMenuItem(menu,town_items[i],MF_GRAYED | MF_BYCOMMAND);
@@ -3361,7 +3367,7 @@ void shut_down_menus(short mode)
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,5,MF_ENABLED | MF_BYCOMMAND);
-		for (i = 0; i < 18; i++)
+		for (i = 0; i < 20; i++)
 			EnableMenuItem(menu,scen_items[i],MF_ENABLED | MF_BYCOMMAND);
 		for (i = 0; i < 17; i++)
 			EnableMenuItem(menu,town_items[i],MF_ENABLED | MF_BYCOMMAND);
@@ -3427,10 +3433,16 @@ void start_monster_editing(short just_redo_text)
 	if (just_redo_text == 0) {
 		overall_mode = 60;
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 	
 		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,255 - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 255 - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,255 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 256; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scen_item_list.monst_names[i]);
@@ -3473,10 +3485,16 @@ void start_item_editing(short just_redo_text)
 			draw_full = TRUE;
 		overall_mode = 60;
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 	
 		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,400 - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 400 - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,400 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 400; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scen_item_list.scen_items[i].full_name);
@@ -3500,9 +3518,16 @@ void start_special_item_editing()
 	if (overall_mode == 62)
 		draw_full = TRUE;
 	overall_mode = 60;
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 	
-		SetScrollRange(right_sbar,SB_CTL,0,50 - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 50 - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,50 - NRSONPAGE,TRUE);
 		reset_rb();
 	for (i = 0; i < 50; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scen_strs[60 + i * 2]);
@@ -3531,10 +3556,17 @@ void start_string_editing(short mode,short just_redo_text)
 			draw_full = TRUE;
 		overall_mode = 60;
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 	
 		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,num_strs[mode] - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = num_strs[mode] - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,num_strs[mode] - NRSONPAGE,TRUE);
 
 		}
 	for (i = 0; i < num_strs[mode]; i++) {
@@ -3582,7 +3614,10 @@ void start_special_editing(short mode,short just_redo_text)
 		ShowScrollBar(right_sbar,SB_CTL,TRUE);
 	
 		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,num_specs[mode] - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = num_specs[mode] - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,num_specs[mode] - NRSONPAGE,TRUE);
 
 		}
 		
@@ -3628,9 +3663,15 @@ void start_dialogue_editing(short restoring)
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 	
 	if (restoring == 0) {
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 70 - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,

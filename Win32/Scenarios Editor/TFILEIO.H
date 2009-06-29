@@ -13,6 +13,8 @@ void import_town(short which_town);
 void oops_error(short error);
 void start_data_dump();
 void start_shopping_data_dump();
+void start_monst_data_dump();
+void start_spec_data_dump();
 void scen_text_dump();
 void port_talk_nodes();
 void port_town();

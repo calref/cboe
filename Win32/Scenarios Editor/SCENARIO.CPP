@@ -1013,7 +1013,7 @@ Boolean save_ter_info()
 void edit_ter_type_event_filter (short item_hit)
 {
 	char str[256];
-	short i;
+	short i,store;
 	switch (item_hit) {
 		case 9:
 			dialog_not_toast = FALSE;
@@ -1040,8 +1040,9 @@ void edit_ter_type_event_filter (short item_hit)
 			break;
 		
 		case 13: case 70:
-			if (item_hit == 13) // Pick Picture
+			if (item_hit == 13){ // Pick Picture
 			  	 i = choose_graphic(0,252,store_ter.picture,813);
+                }
 			else {
                 do_choose_anim = TRUE;
                 i = choose_graphic(300,313,store_ter.picture,813); // Animated
@@ -1058,16 +1059,17 @@ void edit_ter_type_event_filter (short item_hit)
 			CDSN(813,5,store_ter.picture);
 			
             if(store_ter.picture >= 2000){
-            custom_pic = 5;
 			csp(813,14,store_ter.picture-2000);
             }
 			else if (store_ter.picture >= 1000) {
             custom_pic = 1;
 			csp(813,14,store_ter.picture-1000);
  			}
-			else if (store_ter.picture >= 400)
-				csp(813,14,store_ter.picture - 100);
-			else csp(813,14,store_ter.picture);
+			else {
+                if (store_ter.picture >= 400)
+		      		csp(813,14,store_ter.picture - 100);
+       			else csp(813,14,store_ter.picture);
+                }
 			break;
 			
 		default:
@@ -1124,10 +1126,11 @@ void put_monst_info_in_dlog()
 {
 	char str[256];
 
-	if (store_monst.picture_num < 1000)
+	if (store_monst.picture_num < 1000){
 		csp(814,34,400 + store_monst.picture_num);
+        }
 		else{
-            custom_pic = store_monst.picture_num / 1000;
+            custom_pic = (store_monst.picture_num) / 1000;
             csp(814,34,store_monst.picture_num - custom_pic * 1000);
             }
 	cdsin(814,33,store_which_monst);
@@ -1250,25 +1253,27 @@ void edit_monst_type_event_filter (short item_hit)
 		case 23: // abils
 			if (save_monst_info() == FALSE) break;
 			temp_monst = edit_monst_abil(store_monst,814);
-			if ((temp_monst.level >= 0) && (temp_monst.level < 255))
-				store_monst = temp_monst;
+			store_monst = temp_monst;
 			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;
 			break;
-		case 21:
+		case 21://previous monster
 			if (save_monst_info() == FALSE) break;
 			scenario.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst--;
 			if (store_which_monst < 1) store_which_monst = 255;
 			store_monst = scenario.scen_monsters[store_which_monst];
 			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
-		case 22:
+		case 22://next monster
 			if (save_monst_info() == FALSE) break;
 			scenario.scen_monsters[store_which_monst] = store_monst;
 			store_which_monst++;
 			if (store_which_monst > 255) store_which_monst = 1;
 			store_monst = scenario.scen_monsters[store_which_monst];
 			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
 		case 24: // picture
 			if (save_monst_info() == FALSE) break;
@@ -1276,34 +1281,42 @@ void edit_monst_type_event_filter (short item_hit)
 			if (i >= 0) {
 				store_monst.picture_num = i - 400;
 				}
-				else break;
+				else{
+    			put_monst_info_in_dlog();
+                custom_pic = (store_monst.picture_num) / 1000;    			
+                break;
+                }
 			store_monst.x_width = m_pic_index_x[i-400];
 			store_monst.y_width = m_pic_index_y[i-400];
 			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
 		case 25: // m type
 			if (save_monst_info() == FALSE) break;
 			i = choose_text_res(20,150,164,store_monst.m_type + 150,814,"Choose Monster Type:");
 			if (i >= 0) {
 				store_monst.m_type = i - 150;
-				put_monst_info_in_dlog();
 				}
+			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;            		
 			break;
 		case 26: // att type 1
 			if (save_monst_info() == FALSE) break;
 			i = choose_text_res(20,130,139,store_monst.a1_type + 130,814,"Choose Attack 1 Type:");
 			if (i >= 0) {
 				store_monst.a1_type = i - 130;
-				put_monst_info_in_dlog();
 				}
+			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;            		
 			break;
 		case 27: // att type 23
 			if (save_monst_info() == FALSE) break;
 			i = choose_text_res(20,130,139,store_monst.a23_type + 130,814,"Choose Attack 2 & 3 Type:");
 			if (i >= 0) {
 				store_monst.a23_type = i - 130;
-				put_monst_info_in_dlog();
 				}
+			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;            		
 			break;
 		case 28: // talk pic
 			if (save_monst_info() == FALSE) break;
@@ -1311,8 +1324,13 @@ void edit_monst_type_event_filter (short item_hit)
 			if (i >= 0) {
 				store_monst.default_facial_pic = i - 1000;
 				}
-				else break;
+				else{
+    			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;
+                break;
+                }
 			put_monst_info_in_dlog();
+            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
 		default:
 			cd_hit_led_range(814,29,32,item_hit);
@@ -1421,8 +1439,7 @@ void edit_monst_abil_event_filter (short item_hit)
 	short i;
 	
 	switch (item_hit) {
-		case 8: store_monst2.level = -1;
-			dialog_not_toast = FALSE; break;	
+		case 8: dialog_not_toast = FALSE; break;	
 		case 7:
 			if (save_monst_abils() == TRUE)
 				 dialog_not_toast = FALSE; 
@@ -1503,7 +1520,9 @@ void put_item_info_in_dlog()
         custom_pic = 1;
 		csp(818,49,store_item.graphic_num - 150);
         }
-	else csp(818,49,1800 + store_item.graphic_num);
+	else{
+        csp(818,49,1800 + store_item.graphic_num);
+        }
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
 	CDSN(818,5,store_item.item_level);
@@ -1608,8 +1627,8 @@ void edit_item_type_event_filter (short item_hit)
 			if (i >= 0) {
 				store_item.graphic_num = i - 1800;
 				}
-				else break;
 			put_item_info_in_dlog();
+			custom_pic = (store_item.graphic_num >= 150) ? 1 : 0;
 			break;
 		case 69:
 			if (store_item.variety == 0) {
@@ -1620,9 +1639,12 @@ void edit_item_type_event_filter (short item_hit)
 				give_error("Gold and Food cannot be given special abilities.","",818);
 				break;
 				}
+            if(save_item_info() == FALSE) break;
 			temp_item = edit_item_abil(store_item,818);
 			if (temp_item.variety != 0)
 				store_item = temp_item;
+			put_item_info_in_dlog();
+			custom_pic = (store_item.graphic_num >= 150) ? 1 : 0;
 			break;
 		default:
 			cd_hit_led_range(818,18,45,item_hit);
@@ -1717,7 +1739,7 @@ void edit_item_abil_event_filter (short item_hit)
 	short i;
 	
 	switch (item_hit) {
-		case 4: store_item2.ability = 0;
+		case 4:
 			dialog_not_toast = FALSE; break;	
 		case 3:
 			if (save_item_abils() == TRUE)

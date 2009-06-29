@@ -338,3 +338,5 @@ void SysBeep(short a);
 void Delay(short val,long *dummy);
 short minmax(short min,short max,short k);
 short abs(short x);
+
+extern SCROLLINFO lpsi;

@@ -1160,12 +1160,19 @@ STYLE WS_POPUP | WS_DLGFRAME
 1062 DIALOG 10, 10, 529, 316
 STYLE WS_POPUP | WS_DLGFRAME
 {
- LTEXT "1_63", 1, 435, 299, 61, 20
+/* LTEXT "1_63", 1, 435, 299, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT "Classic Blades of Exile Beta 1.1 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT "Classic Blades of Exile Beta 2 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
  LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 226, 354, 32
  LTEXT "Blades of Exile is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 160, 410, 51
- LTEXT "ORIGINAL CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Graphics: Andrew Hunter (Wormius@aol.com) |   Business Manager: Mariann Krizsan (krizsan@spidweb.com)|   Title Screen: James Ernest (ernest@speakeasy.org)", 8, 50, 82, 434, 67
+ LTEXT "ORIGINAL CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Graphics: Andrew Hunter (Wormius@aol.com) |   Business Manager: Mariann Krizsan (krizsan@spidweb.com)|   Title Screen: James Ernest (ernest@speakeasy.org)", 8, 50, 82, 434, 67*/
+ LTEXT "1_63", 1, 435, 295, 61, 20
+ LTEXT "5_716", 2, 6, 6, 36, 36
+ LTEXT  "Classic Blades of Exile Beta 2 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT "CONTRIBUTORS : Ormus, Ishad Nha, Celtic Minstrel, Niemand and all involved in the BoE community.", 4, 50, 227, 424, 33
+ LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 271, 354, 32
+ LTEXT "Blades of Exile was brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 154, 410, 51
+ LTEXT "ORIGINAL CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Graphics: Andrew Hunter (Wormius@aol.com) |   Business Manager: Mariann Krizsan (krizsan@spidweb.com)|   Title Screen: James Ernest (ernest@speakeasy.org)", 8, 50, 82, 415, 51
 }
 
 1063 DIALOG 10, 10, 324, 58
@@ -1318,10 +1325,10 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "5_724" 2, 6, 6, 36, 36
      LTEXT "~Bugs and Stuff:" 3, 50, 6, 131, 18
      LTEXT "Need a Hint?" 4, 50, 69, 84, 13
-     LTEXT "To order Blades of Exile, click on How To Order on the title screen to get full ordering instructions." 5, 50, 139, 473, 28
-     LTEXT "COMMENTS: |We LOVE to hear what you have to say. Comments, questions, complaints, etc. can be sent to the addresses on the About Blades of Exile page. Also, be sure to visit Spiderweb Software's web site: ||    http://www.spidweb.com" 6, 50, 174, 480, 65
-     LTEXT "Alas, though we tried, we probably didn't get all the bugs and typos out of Blades of Exile. Should you find one, a bug report form is enclosed with the game. Also, an E-mail address for comments is on the About Blades of Exile page." 7, 50, 26, 475, 41
-	  LTEXT "Can't get into the School of Magery? The Valley plague getting you down? Can't get to the end of the Za-Khazi Run in time? Help is available! When you register, the documentation comes with a hint book for the 3 Blades of Exile scenarios!" 8, 50, 84, 474, 54
+     LTEXT "Classic Blades of Exile is released under the GNU GPL 2 license." 5, 50, 139, 473, 28
+     LTEXT "COMMENTS: |We LOVE to hear what you have to say. Comments, questions, complaints, etc. should be put on the forum on the About Blades of Exile page. Also, be sure to visit Spiderweb Software's web site: ||    http://www.spidweb.com" 6, 50, 174, 480, 65
+     LTEXT "Alas, though we tried, we probably didn't get all the bugs and typos out of Blades of Exile. Should you find one, please report it to the Blades of Exile forum on the About Blades of Exile page." 7, 50, 26, 475, 41
+	 LTEXT "Can't get into the School of Magery? The Valley plague getting you down? Can't get to the end of the Za-Khazi Run in time? Help is available! The forementioned forum has lots of links to walkthroughs and hints; not to mention the community!" 8, 50, 84, 474, 54
      }
 
 1086 DIALOG 10, 10, 338, 76
@@ -1370,7 +1377,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "During your adventures, you will come across mind-boggling quantities of stuff. To pick up some of it, move your party (or active PC) near it, and hit the get button (or 'g'). Then, on the Get Item window, click on the item to grab." 3, 63, 30, 423, 64
      LTEXT "BLADES OF EXILE HELP: ITEM INFO SCREEN" 4, 53, 13, 235, 16
      LTEXT "Once there, to equip (i.e. use) or unequip (take off) an item, click on its name. Other buttons will appear enabling you do to other things:" 5, 63, 131, 283, 57
-     LTEXT "Items from slain monsters normally appear unidentified. To identify them, take them to a sage (such as Habecker in Fort Emergence). Also, buying Item Lore skill sometimes makes monster's treasure appear already identified." 6, 63, 274, 429, 50
+     LTEXT "Items from slain monsters normally appear unidentified. To identify them, take them to a sage. Also, buying Item Lore skill sometimes makes monster's treasure appear already identified." 6, 63, 274, 429, 50
      LTEXT "Once obtained, items show up in this window. Type '1'-'6' or click on the numbered button to bring up a character's inventory. " 7, 63, 95, 424, 33
      LTEXT "5_1100" 8, 350, 136, 129, 132
      LTEXT "The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things. Many shopkeepers will buy your items, and certain sages can identify and even enchant them." 9, 63, 189, 281, 84

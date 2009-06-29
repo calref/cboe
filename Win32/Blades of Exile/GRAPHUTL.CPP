@@ -299,7 +299,7 @@ HBITMAP load_pict(short pict_num,HDC)
 		case 850: got_bitmap = ReadBMP("images/DLOGPICS.BMP"); break;
 		case 851: got_bitmap = ReadBMP("images/SCENPICS.BMP"); break;
 		case 860: got_bitmap = ReadBMP("images/TALKPORT.BMP"); break;
-		case 875: got_bitmap = ReadBMP("images/DLOGMAPS.BMP"); break;
+//		case 875: got_bitmap = ReadBMP("images/DLOGMAPS.BMP"); break; => Exile III maps
 		case 880: got_bitmap = ReadBMP("images/MISSILES.BMP"); break;
 		case 900: got_bitmap = ReadBMP("images/TINYOBJ.BMP"); break;
 		case 901: got_bitmap = ReadBMP("images/OBJECTS.BMP"); break;

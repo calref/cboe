@@ -92,12 +92,14 @@ Boolean handle_startup_press(POINT the_point)
 						break;
 						}
 					scen = pick_a_scen();                              // return a short to scen specifying the chosen scenario
-					if (scen_headers[scen].prog_make_ver[0] >= 2) {
+
+/*   				if (scen_headers[scen].prog_make_ver[0] >= 2) { => warning if scen = -1 (no scenarios in directory), then it will crash !!!
 						FCD(912,0);
 						break;
-						}
-					if (scen >= 0) {                           
-						sprintf(party.scen_name,"%s",data_store2->scen_names[scen]); //put scenario filename in party.scen_name retrieving it using scen
+						}*/
+
+					if (scen >= 0) {
+						sprintf(party.scen_name,"%s",data_store2[scen].scen_names); //put scenario filename in party.scen_name retrieving it using scen
 						put_party_in_scen();                                        //put the party in the scenario and begin the game
 						}
 
@@ -174,7 +176,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 	
 	RegisterClass(&wndclass2);
 
-	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile Beta 1.1",
+	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile Beta 2",
 			WS_OVERLAPPEDWINDOW,
 			0,
 			0,
@@ -209,10 +211,10 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 		/* cursors loaded */
 		
 		data_store = new piles_of_stuff_dumping_type;
-		data_store2 = new piles_of_stuff_dumping_type2;
 		data_store3 = new piles_of_stuff_dumping_type3;
 		data_store4 = new piles_of_stuff_dumping_type4;
 		data_store5 = new piles_of_stuff_dumping_type5;
+		scen_item_list = new scen_item_data_type;
 
 		srand(GetCurrentTime());
 
@@ -230,7 +232,10 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 		shop_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT, shop_sbar_rect.left,shop_sbar_rect.top,shop_sbar_rect.right,shop_sbar_rect.bottom,
 			mainPtr,(HMENU) 3, store_hInstance,NULL);
-		SetScrollRange(shop_sbar,SB_CTL,0,16,FALSE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 16;
+        SetScrollInfo(shop_sbar,SB_CTL,&lpsi,FALSE);
+//		SetScrollRange(shop_sbar,SB_CTL,0,16,FALSE);
 
 		ShowWindow(mainPtr, nCmdShow);
 
@@ -283,10 +288,14 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 			}
 		}		
 		
-		delete data_store5;
+		delete scen_item_list;
+        delete data_store5;
 		delete data_store4;
 		delete data_store3;
-		delete data_store2;
+        if(data_store2 != NULL)
+    		delete[] data_store2;
+        if(scen_headers != NULL)
+   		   delete[] scen_headers;
 		delete data_store;
 		
 		lose_graphics();
@@ -516,8 +525,12 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
-				if (sbar_pos > 58) sbar_pos = 58;
-				SetScrollPos(text_sbar,SB_CTL,sbar_pos,TRUE);
+				if (sbar_pos > 58) sbar_pos = 58;{
+//				SetScrollPos(text_sbar,SB_CTL,sbar_pos,TRUE);
+                lpsi.nPos = sbar_pos;
+                lpsi.fMask = SIF_POS;
+                SetScrollInfo(text_sbar,SB_CTL,&lpsi,TRUE);
+                }
 				string_added = TRUE;
 				print_buf();
 			break;
@@ -537,8 +550,12 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
-				if (sbar_pos > smax) sbar_pos = smax;
-				SetScrollPos(item_sbar,SB_CTL,sbar_pos,TRUE);
+				if (sbar_pos > smax) sbar_pos = smax;{
+//				SetScrollPos(item_sbar,SB_CTL,sbar_pos,TRUE);
+                lpsi.nPos = sbar_pos;
+                lpsi.fMask = SIF_POS;
+                SetScrollInfo(item_sbar,SB_CTL,&lpsi,TRUE);
+                }
 				if (sbar_pos != old_setting)
 					put_item_screen(stat_window,1);
 			break;
@@ -558,8 +575,12 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
-				if (sbar_pos > smax) sbar_pos = smax;
-				SetScrollPos(shop_sbar,SB_CTL,sbar_pos,TRUE);
+				if (sbar_pos > smax) sbar_pos = smax;{
+//				SetScrollPos(shop_sbar,SB_CTL,sbar_pos,TRUE);
+                lpsi.nPos = sbar_pos;
+                lpsi.fMask = SIF_POS;
+                SetScrollInfo(shop_sbar,SB_CTL,&lpsi,TRUE);
+                }
 				if (sbar_pos != old_setting)
 					draw_shop_graphics(0,shop_sbar_rect);			
 			break;

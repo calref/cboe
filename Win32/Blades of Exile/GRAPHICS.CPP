@@ -14,6 +14,8 @@
 #include "exlsound.h"
 #include "graphutl.h"
 
+#include "infodlgs.h"
+
 #include "globvar.h"
 
 BOOL fry_startup = FALSE;
@@ -230,7 +232,7 @@ void draw_startup_stats()
 				
 				to_rect = party_from; // width = 28, height = 36
 				OffsetRect(&to_rect,pc_rect.left,pc_rect.top + 2);
-				rect_draw_some_item(pc_gworld,from_rect,NULL,to_rect,0,1);    
+				rect_draw_some_item(pcs_gworld,from_rect,NULL,to_rect,0,1);    
 				InflateRect(&to_rect,1,1);
             	OffsetRect(&to_rect,ulx,uly);
 				FrameRect(main_dc,&to_rect,hbrush);
@@ -405,9 +407,7 @@ void end_startup()
 void Set_up_win ()
 {
 	RECT map_rect = {0,0,384,384};
-	RECT pc_rect = {0,0,113,216};
 	short i,j;
-	RECT r = {0,0,280,180}; /**/
 	RECT bg_from[9] = {{0,168,8,176},{23,206,31,214},{32,168,40,176},{102,174,110,182},	
 		{173,191,181,199},{203,190,211,198},{273,183,281,191},{373,0,381,8},
 		{380,17,388,25}};
@@ -432,10 +432,14 @@ void Set_up_win ()
 	mixed_gworld = load_pict(903,main_dc);
 	//let's load the remaining sheets in memory
 
-    pc_gworld = load_pict(902,main_dc);
+    pcs_gworld = load_pict(902,main_dc);
 
 	ter_anim_gworld = load_pict(820, main_dc);
-    	
+	
+	frills_gworld = load_pict(4000, main_dc);
+	
+	talking_portraits_gworld = load_pict(860,main_dc);
+	
 	for(i=0;i<10;i++)
         monsters_gworld[i] = load_pict(1100+i, main_dc);
 
@@ -511,8 +515,10 @@ void lose_graphics()
 	DeleteObject(map_gworld);
 	DeleteObject(small_temp_gworld);
 
-    DeleteObject(pc_gworld);
+    DeleteObject(pcs_gworld);
     DeleteObject(ter_anim_gworld);
+    DeleteObject(frills_gworld);
+    DeleteObject(talking_portraits_gworld);
 
 	for(i=0;i<10;i++)
 	   DeleteObject(monsters_gworld[i]);
@@ -632,11 +638,16 @@ void redraw_screen(short)
 		text_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, sbar_rect.left,sbar_rect.top,sbar_rect.right,sbar_rect.bottom,
 			mainPtr,(HMENU) 1,store_hInstance,NULL);
-		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax =58;
+        SetScrollInfo(text_sbar,SB_CTL,&lpsi,FALSE);        
+//		SetScrollRange(text_sbar,SB_CTL,0,58,FALSE);
 		item_sbar = CreateWindow("scrollbar",NULL,
 			WS_CHILD | WS_TABSTOP | SBS_VERT | WS_VISIBLE, item_sbar_rect.left,item_sbar_rect.top,item_sbar_rect.right,item_sbar_rect.bottom,
 			mainPtr,(HMENU) 2,store_hInstance,NULL);
-		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
+        lpsi.nMax = 16;
+        SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
+//		SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
  		ShowScrollBar(text_sbar,SB_CTL,TRUE);
 		ShowScrollBar(item_sbar,SB_CTL,TRUE);
 	MoveWindow(text_sbar,ulx + 547,uly + 283,15,138,TRUE);
@@ -892,11 +903,11 @@ Boolean is_nature(char x, char y)
 		return TRUE;
 	if ((pic >= 121) && (pic <= 122))
 		return TRUE;
-	if ((pic >= 179) && (pic <= 208))
+	if ((pic >= 179) && (pic <= 207))
 		return TRUE;
 	if ((pic >= 211) && (pic <= 212))
 		return TRUE;
-	if ((pic >= 217) && (pic <= 246))
+	if ((pic >= 217) && (pic <= 245))
 		return TRUE;
 
 	return FALSE;
@@ -906,6 +917,8 @@ void swap_platform_graphics(){
     int i,j;
 	RECT map_from_orig = {372,0,380,8},map_from,brush_to = {0,0,8,8};
 
+    DeleteObject(frills_gworld);
+    frills_gworld = load_pict(4000, main_dc);
     DeleteObject(ter_anim_gworld);
     ter_anim_gworld = load_pict(820, main_dc);
     DeleteObject(fields_gworld);
@@ -1041,9 +1054,7 @@ void draw_terrain(short	mode)
 					else if (is_combat()) {
 
 								spec_terrain = combat_terrain[where_draw.x][where_draw.y];
-								if (cartoon_happening == TRUE)
-									can_draw = TRUE;
-									else can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
+								can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
 									(which_combat_type == 0) || (monsters_going == TRUE) || (overall_mode != 10))
 									  && (party_can_see(where_draw) < 6)) ? 1 : 0;
 
@@ -1063,7 +1074,7 @@ void draw_terrain(short	mode)
 
 						
 				if ((can_draw != 0) && (overall_mode != 50)) { // if can see, not a pit, and not resting
-					if ((is_combat()) && (cartoon_happening == FALSE)) {
+					if (is_combat()) {
 						anim_ticks = 0;
 						}
 						
@@ -1129,8 +1140,8 @@ void draw_terrain(short	mode)
 						default:
 							if (short_spec_terrain < 2)
 								current_ground = 0;
-							if ((short_spec_terrain == 2) || (
-								(short_spec_terrain >= 22) && (short_spec_terrain <= 49)))
+							if (((short_spec_terrain >= 2) && (short_spec_terrain <= 4)) || 
+								((short_spec_terrain >= 22) && (short_spec_terrain <= 49)))
 								current_ground = 2;
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);
 							break;
@@ -1142,7 +1153,7 @@ void draw_terrain(short	mode)
 						}
 
 				if ((can_draw != 0) && (overall_mode != 50) && (frills_on == TRUE)
-				 && (draw_trim == TRUE) && (cartoon_happening == FALSE)) {  // Place the trim
+				 && (draw_trim == TRUE)) {  // Place the trim
 					place_trim((short) q,(short) r,where_draw,spec_terrain);
 					}
 			}
@@ -1196,14 +1207,11 @@ void draw_terrain(short	mode)
 	if (mode == 0) {
 		redraw_terrain();
 
-		if (cartoon_happening == FALSE) {
 			draw_text_bar(0);
 			if ((overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
 				draw_pcs(center,1);
 			if (overall_mode == 14)
 				draw_targets(center);
-
-			}
 
 		}
 
@@ -1282,7 +1290,8 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		}
 
 				
-	if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == FALSE) &&
+//	if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == FALSE) &&
+  	if (((ter_type >= 122) && (ter_type <= 169)) && (at_top == FALSE) &&
 		(at_bot == FALSE) && (at_left == FALSE) && (at_right == FALSE)) {
 		store = get_t_t(where.x - 1,where.y);
 		store1 = get_t_t(where.x,where.y - 1);
@@ -1292,7 +1301,8 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 			&& (is_wall(store1) == TRUE) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store3) == TRUE))
-				draw_trim(q,r,3,6);		
+				draw_trim(q,r,3,6);
+
 
 		if ((is_wall(store) == TRUE) 
 			&& (is_wall(store3) == TRUE) &&
@@ -1351,14 +1361,10 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 {
-    HBITMAP from_file;
 	RECT from_rect = {0,0,28,36},to_rect;
 
-    from_file = load_pict(4000,main_dc);
 
-	if (frills_on == FALSE)
-		return;
-	if (current_ground == 2 && PSD[309][3] == 0)
+	if ((frills_on == FALSE) || ((current_ground == 2) && (PSD[309][3] == 0)))
 	    return;
 
 	terrain_there[q][r] = -1;
@@ -1376,9 +1382,8 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 	to_rect.bottom = to_rect.top + trim_rects[which_mode].bottom;
 	to_rect.top = to_rect.top + trim_rects[which_mode].top;
 
-	rect_draw_some_item(from_file,from_rect,terrain_screen_gworld,to_rect,1,0);
+	rect_draw_some_item(frills_gworld,from_rect,terrain_screen_gworld,to_rect,1,0);
 	
-	DeleteObject(from_file);
 }
 
 
@@ -1469,11 +1474,11 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	sound_key = type / 10;
 	type = type % 10;
 
-	if ((cartoon_happening == FALSE) && ((mode != 100) && (party_can_see(where) == 6)))
+	if ((mode != 100) && (party_can_see(where) == 6))
 		return;
 	if ((type < 0) || (type > 4)) return;
 	if ((boom_anim_active == TRUE) && (type != 3)) return;
-	if ((cartoon_happening == FALSE) && (PSD[306][2] > 0) && (fast_bang == TRUE)) return;
+	if ((PSD[306][2] > 0) && (fast_bang == TRUE)) return;
 	if (is_out()) return;
 
 	// Redraw terrain in proper position
@@ -1536,11 +1541,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	//SectRect(&dest_rect,&big_to,&dest_rect);
 	IntersectRect(&dest_rect,&dest_rect,&big_to);
 
-	if (cartoon_happening == FALSE)
-		OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
-		else if (store_anim_type == 0)
-			OffsetRect(&dest_rect,306,5);
-			else OffsetRect(&dest_rect,store_anim_ul.x,store_anim_ul.y);
+	OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
 
 	OffsetRect(&source_rect,-1 * store_rect.left + 28 * type,-1 * store_rect.top);
 
@@ -1549,7 +1550,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 //	rect_draw_some_item(fields_gworld,source_rect,mixed_gworld,mixed_square,1,0);
     rect_draw_some_item(fields_gworld,source_rect,mixed_gworld,dest_rect,1,1);
 
-	if ((cartoon_happening == FALSE) && (dest_rect.right - dest_rect.left >= 28)
+	if ((dest_rect.right - dest_rect.left >= 28)
 		&& (dest_rect.bottom - dest_rect.top >= 36)) {
 				sprintf((char *) dam_str,"%d",damage);
 		text_rect = dest_rect;
@@ -1580,7 +1581,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
     }
     
 	redraw_terrain();
-	if ((cartoon_happening == FALSE) && (overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
+	if ((overall_mode > 9) && (overall_mode != 35) && (overall_mode != 36) && (overall_mode != 50))
 		draw_pcs(center,1);	
 }
 	
@@ -1607,18 +1608,7 @@ void draw_pointing_arrows()
 
 void redraw_terrain()
 {
-	RECT to_rect;
-	RECT ter_scrn_rect = {0,0,279,351};
-
-	if (cartoon_happening == FALSE)
-		to_rect = win_to_rects[0];
-		else {
-			to_rect = ter_scrn_rect;
-			if (store_anim_type == 0)
-				OffsetRect(&to_rect,306,5);
-				else OffsetRect(&to_rect,store_anim_ul.x,store_anim_ul.y);
-			}
-	rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], terrain_screen_gworld, to_rect, 0, 1);
+	rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], terrain_screen_gworld, win_to_rects[0], 0, 1);
 
 	// Now place arrows
 	draw_pointing_arrows();

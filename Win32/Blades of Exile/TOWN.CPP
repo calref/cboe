@@ -201,6 +201,7 @@ void start_town_mode(short which_town, short entry_dir)
 						c_town.monst.dudes[i].number = 0;
 						c_town.monst.dudes[i].monst_start.time_flag = 0;
 						c_town.monst.dudes[i].m_loc.x = 80;
+						c_town.monst.dudes[i].monst_start.spec_enc_code = 0;
 						}
 					else {
 						// First set up the values.
@@ -708,7 +709,7 @@ void create_out_combat_terrain(short type,short num_walls)
 {
 	short i,j,k,r1,ter_type;
 // 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
-// 8 cave swamp 9 surface rocks 10 surf swamp 11 surface woods 12 s. shrub 13 stalags
+// 8 cave swamp 9 surface rocks 10 surface swamp 11 surface woods 12 s. shrub 13 stalags
 short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,2,2,
 2,2,2,2,2,2,2,2,2,2,
@@ -717,7 +718,7 @@ short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 0,0,0,0,0,0,0,0,0,0,// 50
 0,3,3,3,3,3,3,5,5,5,
 6,6,7,7,1,1,8,9,10,11,
-10,11,12,13,13,9,9,9,1,1,
+11,11,12,13,13,9,9,9,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,// 100
 1,1,1,1,1,1,1,1,1,1,
@@ -728,15 +729,15 @@ short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,0,1,1,1,1,1,1,1,0,
-0,0,0,0,1,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
 0,0,1,0,2,0,0,1,1,1,// 200
-1,0,2,1,1,0,1,1,1,1,
+1,0,2,1,1,1,0,1,1,1,
 1,1,0,0,0,0,1,0,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};// 250
 short ter_base[14] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0};	
-short ground_type[14] = {2,0,36,50,71, 0,0,0,0,2,	2,2,2,0};
+//short ground_type[14] = {2,0,36,50,71, 0,0,0,0,2,	2,2,2,0};
 
 location special_ter_locs[15] =
 	{ 
@@ -766,7 +767,9 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 
 
 	ter_type = scenario.ter_types[type].picture;
-	if (ter_type > 260)
+    if(ter_type == 401 || ter_type == 402)
+        ter_type = 4;
+	else if (ter_type > 260)
 		ter_type = 1;
 		else ter_type = general_types[ter_type];
 	
@@ -793,7 +796,7 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 			for (j = 9; j < 35; j++)
 				t_d.terrain[i][j] = 83;
 		}
-	if ((type >= 79) && (type <= 81)) {
+	if (ter_type == 11) {
 		t_d.terrain[0][0] = 82;
 		for (i = 19; i < 23; i++)
 			for (j = 9; j < 35; j++)
@@ -836,7 +839,7 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 				}
 
 
-	if (ground_type[ter_type] == 0) {
+	if (ter_base[ter_type] == 0) {
 	for (i = 0; i < num_walls; i++) {
 		r1 = get_ran(1,0,3);
 		for (j = 9; j < 35; j++)
@@ -864,7 +867,7 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 	if ((t_d.terrain[8][20] == 9) && (t_d.terrain[17][35] == 12))
 		t_d.terrain[8][35] = 20;	
 	}
-	if (ground_type[ter_type] == 36) {
+	if (ter_base[ter_type] == 36) {
 	for (i = 0; i < num_walls; i++) {
 		r1 = get_ran(1,0,3);
 		for (j = 9; j < 35; j++)

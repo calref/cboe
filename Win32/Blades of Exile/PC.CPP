@@ -484,7 +484,7 @@ void pc_record_type::acid(short how_much)
 {
 	if (!isAlive()) return;
 	
-	if (hasAbilEquip(122) < 24) {
+	if (hasAbilEquip(36) < 24) {
 		sprintf ((char *) c_line, "  %s resists acid.",(char *) name);
 		add_string_to_buf((char *) c_line);
 		return;

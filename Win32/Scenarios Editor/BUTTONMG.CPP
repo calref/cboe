@@ -77,8 +77,14 @@ void init_rb()
 {
 	short i;
 	
-	SetScrollPos(right_sbar,SB_CTL,0,FALSE);
-	SetScrollRange(right_sbar,SB_CTL,0,0,TRUE);
+    lpsi.fMask = SIF_POS;
+    lpsi.nPos = 0;
+    SetScrollInfo(right_sbar,SB_CTL,&lpsi,FALSE);
+//	SetScrollPos(right_sbar,SB_CTL,0,FALSE);
+    lpsi.fMask = SIF_RANGE;
+    lpsi.nMax = 0;
+    SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+//	SetScrollRange(right_sbar,SB_CTL,0,0,TRUE);
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 		sprintf((char *) data_store->strings_rs[i], "");
@@ -93,7 +99,10 @@ void reset_rb()
 		right_button_status[i] = 0;
 		}
 	draw_rb();
-	SetScrollPos(right_sbar,SB_CTL,0,FALSE);
+    lpsi.fMask = SIF_POS;
+    lpsi.nPos = 0;
+    SetScrollInfo(right_sbar,SB_CTL,&lpsi,FALSE);
+//	SetScrollPos(right_sbar,SB_CTL,0,FALSE);
 }
 
 // is slot >= 0, force that slot

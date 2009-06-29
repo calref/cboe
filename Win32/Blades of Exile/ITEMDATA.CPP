@@ -28,7 +28,7 @@ item_record_type get_stored_item(short which)
 		return s_item;
 		}
 	
-	s_item = data_store2->scen_item_list.scen_items[which]; 
+	s_item = scen_item_list->scen_items[which]; 
 	return s_item;
 }
 

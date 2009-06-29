@@ -15,11 +15,13 @@
 #include "dlogtool.h"
 #include "keydlgs.h"
 
+
 extern Boolean play_sounds,cursor_shown,dialog_not_toast,block_erase,mouse_button_held;
 extern HBITMAP title_gworld,dlogpics_gworld,items_gworld,tiny_obj_gworld;
 extern HBITMAP dlg_buttons_gworld,mixed_gworld,monst_gworld[10],talkfaces_gworld;
 extern HFONT font,italic_font,underline_font,bold_font,tiny_font,small_bold_font;
 extern HWND mainPtr;
+extern HWND right_sbar;
 extern HDC main_dc;
 extern HINSTANCE store_hInstance;
 long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
@@ -291,7 +293,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	SetWindowText(dlgs[free_slot],"Blades of Exile Scenario Editor");
 
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-	DestroyWindow(dlg); //Necesary? Dunno.
+	DestroyWindow(dlg); //Necessary? Dunno.
 
 	if (dlg_parent[free_slot] != NULL) {
 		EnableWindow(dlg_parent[free_slot],FALSE);
@@ -575,7 +577,7 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
 		cd_set_edit_focus((short)dlg_parent[which_dlg]);
-		}
+        }
 
 	if (parent_message > 0)
 		SendMessage(dlg_parent[which_dlg],WM_COMMAND,parent_message,0);
@@ -1486,7 +1488,9 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 }
 
 void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld){
-short picnum;
+
+    short picnum;
+    
 	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
@@ -1502,7 +1506,7 @@ short picnum;
 	HDC hdc;
 	HBRUSH old_brush;
 	RECT small_monst_rect = {0,0,14,18};
-
+	
 	if (win_or_gworld == 1)
 		draw_dest = 0;
 

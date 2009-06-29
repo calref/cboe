@@ -10,6 +10,8 @@
 #include "graphics.h"
 #include "newgraph.h"
 
+#include "infodlgs.h"
+
 #include "globvar.h"
 
 monster_record_type return_monster_template(unsigned char store)
@@ -1065,16 +1067,35 @@ void forced_place_monster(unsigned char which,location where)
 	Boolean free_spot = FALSE;
 	short i = 0,r1;
 
-	while ((free_spot == FALSE) && (i < T_M)) {
+	while ((free_spot == FALSE) && (i < T_M)) {//is there already an available spot ?
 		if (c_town.monst.dudes[i].active == 0)
 			free_spot = TRUE;
 		i++;
 		}
-	do
+
+    if (free_spot == FALSE){//is there any summoned monster to flush ?
+       	i=0;
+        while ((free_spot == FALSE) && (i < T_M)) {
+    		if (c_town.monst.dudes[i].summoned > 0){
+                c_town.monst.dudes[i].active = 0;//flush the monster
+            	free_spot = TRUE;//break the loop and say we've make a free spot
+                }
+    		i++;
+		  }
+        }
+        
+	if (free_spot == FALSE){//get a random monster that has no life flag or break after 1200 try.
+       	i=0;
+	do{
 		r1 = get_ran(1,0,59);
-		while ((c_town.monst.dudes[r1].monst_start.spec1 != 0) || (c_town.monst.dudes[r1].monst_start.spec2 != 0));
-	if (free_spot == FALSE)
-		c_town.monst.dudes[r1].active = 0;
+		i++;
+        }
+		while (((c_town.monst.dudes[r1].monst_start.spec1 != 0) || (c_town.monst.dudes[r1].monst_start.spec2 != 0)) && i < 1200);
+        if(i == 1200)
+            give_error("Couldn't force place the monster, make sure all monsters don't have a life flag.","",0);
+        else
+		  c_town.monst.dudes[r1].active = 0;
+    }
 	c_town.placeMonster(which,where);
 }
 
@@ -1082,7 +1103,8 @@ void creature_data_type::adjustMagic(short *how_much)
 {
 	if (m_d.spec_skill == 26) {
 		*how_much = 0;
-		m_d.health += 3;
+        if(m_d.health + 3 < 32767)
+    		m_d.health += 3;
 		}
 	if (m_d.immunities & 1)	*how_much = *how_much / 2;
 	if (m_d.immunities & 2)	*how_much = 0;   /* crash!! */
@@ -1287,16 +1309,13 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 void current_town_type::activateMonsters(short code)
 {
 	short i; 
-	unsigned char which;
-	
 	if (code == 0) return;
-	
+
 	for (i = 0; i < T_M; i++) 
 		if (monst.dudes[i].monst_start.spec_enc_code == code && party.stuff_done[monst.dudes[i].monst_start.spec1][monst.dudes[i].monst_start.spec2] == 0)
 			{
 				monst.dudes[i].monst_start.spec_enc_code = 0;
 				monst.dudes[i].active = 2;
-				which = monst.dudes[i].number;
 				monst.dudes[i].attitude = t_d.creatures[i].start_attitude;
 
 				monst.dudes[i].summoned = 0;

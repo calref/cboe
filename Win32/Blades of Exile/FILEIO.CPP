@@ -45,6 +45,14 @@ void flip_rect(RECT16* s);
 Boolean load_scenario_header(char *filename,short header_entry);
 void oops_error(short error);
 
+BOOL check_for_interrupt(){
+
+	if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) && ((GetAsyncKeyState(0x43) & 32768) == 32768))
+        return TRUE;
+    
+    return FALSE;
+    }
+
 void Get_Path(char* path){
 
 char file_path[256]="";                   // initialization
@@ -96,6 +104,12 @@ static char * szFilter[] =
 		ofn.lCustData = 0L;
 		ofn.lpfnHook = NULL;
 		ofn.lpTemplateName = NULL;
+		
+		lpsi.cbSize = sizeof(SCROLLINFO);
+		lpsi.fMask = SIF_RANGE;
+		lpsi.nMin = 0;
+		lpsi.nMax = 0;
+    	lpsi.nPos = 0;		
 }
 
 void load_file()
@@ -1784,7 +1798,7 @@ Boolean load_scenario()	// OK
 	}
 	 	
 	// item data	
-	if (ReadFile(file_id, &(data_store2->scen_item_list), sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE)
+	if (ReadFile(file_id, scen_item_list, sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		return FALSE;
@@ -1845,45 +1859,101 @@ void oops_error(short error)
 	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 }
+
+void ListFiles(char *path, HWND listbox){
+
+    short len;
+	HANDLE find_file_id;
+    WIN32_FIND_DATA lpFindFileData;
+    char copy_str[256];
+    
+    sprintf(copy_str,"scenarios/%s*.*",path);
+    
+    if((find_file_id = FindFirstFile(copy_str,&lpFindFileData)) == INVALID_HANDLE_VALUE){// is directory empty ?
+        FindClose(find_file_id);
+        return;
+        }
+		
+	do{
+    len = strlen(lpFindFileData.cFileName);
+    if(((lpFindFileData.cFileName[len-1] == 's') ||( lpFindFileData.cFileName[len-1] == 'S')) 
+    && ((lpFindFileData.cFileName[len-2] == 'x') || (lpFindFileData.cFileName[len-2] == 'X'))
+    && ((lpFindFileData.cFileName[len-3] == 'e') || (lpFindFileData.cFileName[len-3] == 'E'))){// is extension .exs ?
+        sprintf(copy_str,"%s%s",path,lpFindFileData.cFileName);
+        SendMessage(listbox,LB_ADDSTRING,0,(LPARAM) (LPCTSTR) copy_str);
+        }
+    else if((lpFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) && (strcmp(lpFindFileData.cFileName,".") != 0) && (strcmp(lpFindFileData.cFileName,"..") != 0)){
+        sprintf(copy_str,"%s%s/",path,lpFindFileData.cFileName);
+        ListFiles(copy_str,listbox);//so list scenarios under the subdirectory
+        }
+    }while(FindNextFile(find_file_id,&lpFindFileData) != 0);
+
+    FindClose(find_file_id);
+    
+}
+
 void build_scen_headers()
 {
-	short i;
-	short cur_entry = 0;
+	short i,current_entry = 0;
 	HWND listbox;
 	WORD count;
 	char filename[256],filename2[256];
 	
-	for (i = 0; i < 100; i++)
-		scen_headers[i].flag1 = 0;
-		
 	listbox = CreateWindow("listbox", NULL,	WS_CHILDWINDOW,	// 3
 		 0,0,0,0,	// 7
 		mainPtr, // 8
 		(HMENU) 1, // 9
 		(HINSTANCE) GetWindowLong(mainPtr, GWL_HINSTANCE), // 10
 		NULL); // 11
+	
+    ListFiles("", listbox);//First list the scenarios under the scenarios folder
 		
-	SendMessage(listbox,LB_DIR,0x0,(LPARAM) (LPCTSTR) "scenarios/*.exs");
+//	SendMessage(listbox,LB_DIR,0x0,(LPARAM) (LPCTSTR) "scenarios/*.exs");
+
 	count = (WORD) SendMessage(listbox,LB_GETCOUNT,0,0L);
 
-	count = min(count,100);
+	if(count == 0){
+    store_num_scen = 0;
+    return;    
+    }
+// memory allocation (if there's an invalid file, the memory is allocated too, but unused)
+    if(data_store2 != NULL){
+   		delete[] data_store2;
+        data_store2 = NULL;
+        }
+
+    data_store2 = new piles_of_stuff_dumping_type2[count];	
+
+    if(scen_headers != NULL){
+   		delete[] scen_headers;
+        scen_headers = NULL;
+    }
+	
+	scen_headers = new scen_header_type[count];
+// end of memory allocation	
 
 	for (i = 0; i < count; i++)
 	{
 		SendMessage(listbox,LB_GETTEXT,i,(LONG) (LPSTR) filename2);
 
-		sprintf((char *) filename,"scenarios/%s",filename2);
+		sprintf(filename,"scenarios/%s",filename2);
 
-		if (load_scenario_header(filename,cur_entry) == TRUE)
-		{
-			// now we need to store the file name, first stripping any path that occurs
-			// before it
-			strcpy((char *) data_store2->scen_names[cur_entry],(char *) filename2);
-			cur_entry++;
-		}
+		if (load_scenario_header(filename,current_entry) == TRUE){
+        	// now we need to store the file name, first stripping any path that occurs
+    	   	// before it
+	       	strcpy(data_store2[current_entry].scen_names, filename2);	
+    		current_entry++;
+            }
 	}
 
+    store_num_scen = current_entry; //number of valid scenarios
+    
+	/*for (i = 0; i < count ; i++)
+		if (scen_headers[i].flag1 != 0)
+			store_num_scen++;*/
+
     DestroyWindow(listbox);
+
 }
 
 // This is only called at startup, when bringing headers of active scenarios.
@@ -1927,7 +1997,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	{
 		scen_headers[header_entry].flag1 = 0;
 		CloseHandle(file_id);
-		return FALSE;	 
+		return FALSE;
 	}
 
 	// So file is OK, so load in string data and close it.
@@ -1953,7 +2023,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		if (i == 0) load_str[29] = 0;
 		else load_str[59] = 0;
 		
-		strcpy(data_store2->scen_header_strs[header_entry][i],(char *) load_str);
+		strcpy(data_store2[header_entry].scen_header_strs[i],load_str);
 	}
 	
 	CloseHandle(file_id);
@@ -2313,9 +2383,9 @@ void port_item_list()
 		return;
 
 	for (i = 0; i < 400; i++) {
-		flip_short(&(data_store2->scen_item_list.scen_items[i].variety));
-		flip_short(&(data_store2->scen_item_list.scen_items[i].item_level));
-		flip_short(&(data_store2->scen_item_list.scen_items[i].value));
+		flip_short(&(scen_item_list->scen_items[i].variety));
+		flip_short(&(scen_item_list->scen_items[i].item_level));
+		flip_short(&(scen_item_list->scen_items[i].value));
 		}
 }
 
@@ -2389,7 +2459,7 @@ void flip_short(short* s){
 
 void flip_long(long *s)
 {
-        char store,*s1, *s2, *s3, *s4;
+/*        char store,*s1, *s2, *s3, *s4;
 
         s1 = (char *) s;
         s2 = s1 + 1;
@@ -2400,7 +2470,9 @@ void flip_long(long *s)
         *s4 = store;
         store = *s2;
         *s2 = *s3;
-        *s3 = store;
+        *s3 = store;*/
+        
+*s=((*s&255)<<24)|(((*s>>8)&255) << 16)|(((*s>>16)&255) << 8)|((*s >> 24)&255);
 }
 
 

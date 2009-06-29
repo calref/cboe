@@ -118,7 +118,7 @@ char edit_pict_mess[256] = {
 	0,0,0,0,0,1,2,3,1,2, // 50
 	3,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
+	0,7,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,4,0,
 	0,0,0,0,0,0,0,0,0,0, // 100
 	0,0,0,0,0,0,0,0,0,0,
@@ -606,7 +606,7 @@ void put_spec_enc_in_dlog()
 	switch (edit_spec_stuff_done_mess[store_spec_node.type]) {
 		case 0: csit(822,20,"Unused."); csit(822,21,"Unused."); break;
 		case 1: csit(822,20,"Stuff Done Flag Part A"); csit(822,21,"Stuff Done Flag Part B"); break;
-		case 2: csit(822,20,"Chance of placing (0 - 100)"); csit(822,21,"Unused"); break;
+		case 2: csit(822,20,"0 - partial cleaning, 1 - cleans all"); csit(822,21,"Unused"); break;
 		case 3: csit(822,20,"Stuff Done Flag Part A"); csit(822,21,"Unused"); break;
 		case 4: csit(822,20,"X of space to move to"); csit(822,21,"Y of space to move to"); break;
 		case 5: csit(822,20,"Terrain to change to"); csit(822,21,"Chance of changing (0 - 100)"); break;
@@ -642,6 +642,7 @@ void put_spec_enc_in_dlog()
 		case 4: csit(822,24,"Chance of changing (0 - 100)"); cd_activate_item(822,46,0); break;
 		case 5: csit(822,24,"Number of letters to match"); cd_activate_item(822,46,0); break;
 		case 6: csit(822,24,"Radius of explosion"); cd_activate_item(822,46,0); break;
+		case 7: csit(822,24,"See help description."); cd_activate_item(822,46,0); break;
 		}
 
 	CDSN(822,7,store_spec_node.ex1a);

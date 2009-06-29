@@ -779,18 +779,25 @@ void display_pc_info()
 		hit_adj -= 25;
 
 	dam_adj = adven[pc].statAdj(0) + minmax(-8,8,(int)adven[pc].status[1]);
-	if ((skill_item = text_pc_has_abil_equip(pc,101)) < 24) {
-		hit_adj += 5 * (adven[pc].items[skill_item].item_level + 1);
-		dam_adj += adven[pc].items[skill_item].item_level;
+
+	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
+		hit_adj += 5 * (adven[pc].items[skill_item].ability_strength / 2 + 1);
+		dam_adj += adven[pc].items[skill_item].ability_strength / 2;
+        }
+	if ((skill_item = text_pc_has_abil_equip(pc,43)) < 24) {
+		dam_adj += adven[pc].items[skill_item].ability_strength;
+		hit_adj += adven[pc].items[skill_item].ability_strength * 2;
 		}
-	if ((skill_item = text_pc_has_abil_equip(pc,96)) < 24) {
+//		hit_adj += 5 * (adven[pc].items[skill_item].item_level + 1);
+//		dam_adj += adven[pc].items[skill_item].item_level;
+/*	if ((skill_item = text_pc_has_abil_equip(pc,96)) < 24) {
 		dam_adj += 2;
 		hit_adj += 1;
 		}
 	if ((skill_item = text_pc_has_abil_equip(pc,97)) < 24) {
 		hit_adj += 5;
 		dam_adj += 3;
-		}
+		}*/
 		
 	csit(1019,56,"No weapon.");	
 	csit(1019,57,"");	

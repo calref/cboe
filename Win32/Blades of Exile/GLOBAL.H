@@ -342,7 +342,7 @@ struct party_record_type
 {
 	long age;
 	unsigned short gold,food;
-	unsigned char stuff_done[310][10],item_taken[200][8]; //stuff_done[309] is compatibility switch
+	unsigned char stuff_done[310][10],item_taken[200][8]; //stuff_done[309] is compatibility switches
 	short light_level;
 	location outdoor_corner,i_w_c,p_loc,loc_in_sec;
 	boat_record_type boats[30];
@@ -382,9 +382,8 @@ typedef struct { char town_maps[200][8][64]; } stored_town_maps_type;
 typedef struct { char town_strs[180][256]; } piles_of_stuff_dumping_type;
 	
 typedef struct {
-	char scen_header_strs[100][3][80];
-	char scen_names[100][256];
-	scen_item_data_type scen_item_list;
+	char scen_header_strs[3][80];
+	char scen_names[256];
 	} piles_of_stuff_dumping_type2;
 	
 typedef struct { char talk_strs[170][256]; } piles_of_stuff_dumping_type3;

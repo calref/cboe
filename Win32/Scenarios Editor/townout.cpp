@@ -57,7 +57,7 @@ void init_town(short size)
 {
 	short i,j,s;
 	location d_loc = {100,0};
-	RECT d_rect = {0,0,0,0};
+	RECT d_rect = {-1,-1,-1,-1};
 	wandering_type d_wan = {0,0,0,0};
 	creature_start_type dummy_creature = {0,0,{0,0},0,0,0,0,0,0,0,0,0,0,0,0};
 	preset_item_type null_item = {{0,0},-1,0,0,0,0,0};
@@ -167,7 +167,7 @@ void init_out()
 	short i,j;
 	location d_loc = {100,0};
 	out_wandering_type d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
-	RECT d_rect = {0,0,0,0};
+	RECT d_rect = {-1,-1,-1,-1};
 	location locs[4] = {{8,8},{32,8},{8,32},{32,32}};
 	Str255 temp_str;
 	
@@ -581,7 +581,7 @@ Boolean save_out_strs()
 		CDGT(850,2 + i,(char *) str);
 		sprintf((char *)data_store->out_strs[i + 1],"%-29.29s",str);
 		if (str_do_delete[i] > 0)
-			current_terrain.info_rect[i].right = 0;
+			current_terrain.info_rect[i].right = -1;
 		}
 	return TRUE;
 }
@@ -592,7 +592,7 @@ void put_out_strs_in_dlog()
 	short i;
 	
 	for (i = 0; i < 8; i++) {
-		if ((current_terrain.info_rect[i].right == 0) || (str_do_delete[i] > 0)) {
+		if ((current_terrain.info_rect[i].right == -1) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(850,25 + i,0);
 			}
@@ -657,7 +657,7 @@ Boolean save_town_strs()
 		CDGT(839,2 + i,(char *) str);
 		sprintf((char *)town_strs[i + 1],"%-29.29s",str);
 		if (str_do_delete[i] > 0)
-			t_d.room_rect[i].right = 0;
+			t_d.room_rect[i].right = -1;
 		}
 	return TRUE;
 }
@@ -668,7 +668,7 @@ void put_town_strs_in_dlog()
 	short i;
 	
 	for (i = 0; i < 16; i++) {
-		if ((t_d.room_rect[i].right == 0) || (str_do_delete[i] > 0)) {
+		if ((t_d.room_rect[i].right == -1) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(839,41 + i,0);
 			}

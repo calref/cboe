@@ -324,7 +324,7 @@ Boolean is_blocked(location to_check)
 		// Keep away from marked specials during combat
 		if ((is_combat()) && (gr <= 212) && (gr >= 207))
 			return TRUE;
-		if ((is_combat()) && (gr == 406))
+		if ((is_combat()) && (gr == 406))//portal
 			return TRUE;
 			
 		// Party there?

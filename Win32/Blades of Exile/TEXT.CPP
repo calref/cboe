@@ -82,14 +82,14 @@ void put_pc_screen()
 
 	// Put food, gold, day
 	SetTextColor(hdc,colors[5]);
-	sprintf((char *) to_draw, "%d", (short) party.gold);
+	sprintf(to_draw, "%d", party.gold);
 	win_draw_string(hdc,small_erase_rects[1],
 	  to_draw,0,10);
-	sprintf((char *) to_draw, "%d", (short) party.food);
+	sprintf(to_draw, "%d", party.food);
 	win_draw_string(hdc,small_erase_rects[0],
 	  to_draw,0,10);
 	i = calc_day();
-	sprintf((char *) to_draw, "%d", i);
+	sprintf(to_draw, "%d", i);
 	win_draw_string(hdc,small_erase_rects[2],
 	  to_draw,0,10);
 	SetTextColor(hdc,colors[0]);
@@ -103,7 +103,7 @@ void put_pc_screen()
 				SetTextColor(hdc,colors[4]);
 				}
 
-			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) adven[i].name);
+			sprintf(to_draw, "%d. %-20s             ", i + 1, adven[i].name);
 			win_draw_string(hdc,pc_buttons[i][0],
 			 to_draw,0,10);
 			SelectObject(hdc,small_bold_font);
@@ -116,13 +116,13 @@ void put_pc_screen()
 					if (adven[i].cur_health == adven[i].max_health)
 						SetTextColor(hdc,colors[3]);
 						else SetTextColor(hdc,colors[1]);
-					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_health);
+					sprintf(to_draw, "%-3d              ",adven[i].cur_health);
 					win_draw_string(hdc,pc_buttons[i][1],
 					  to_draw,0,10);
 					if (adven[i].cur_sp == adven[i].max_sp)
 						SetTextColor(hdc,colors[4]);
 						else SetTextColor(hdc,colors[2]);
-					sprintf((char *) to_draw, "%-3d              ",adven[i].cur_sp);
+					sprintf(to_draw, "%-3d              ",adven[i].cur_sp);
 					win_draw_string(hdc,pc_buttons[i][2],
 					  to_draw,0,10);
 					SetTextColor(hdc,colors[0]);
@@ -131,26 +131,26 @@ void put_pc_screen()
 					SelectObject(hdc,pc_stats_gworld);
 					break;
 				case MAIN_STATUS_DEAD:
-					sprintf((char *) to_draw, "Dead");
+					sprintf(to_draw, "Dead");
 					break;
 				case MAIN_STATUS_DUST:
-					sprintf((char *) to_draw, "Dust");
+					sprintf(to_draw, "Dust");
 					break;
 				case MAIN_STATUS_STONE:
-					sprintf((char *) to_draw, "Stone");
+					sprintf(to_draw, "Stone");
 					break;
 				case MAIN_STATUS_FLED:
-					sprintf((char *) to_draw, "Fled");
+					sprintf(to_draw, "Fled");
 					break;
 				case MAIN_STATUS_SURFACE:
-					sprintf((char *) to_draw, "Surface");
+					sprintf(to_draw, "Surface");
 					break;
 				case MAIN_STATUS_WON:
-					sprintf((char *) to_draw, "Won");
+					sprintf(to_draw, "Won");
 					break;
 				case MAIN_STATUS_ABSENT:
 				default:
-					sprintf((char *) to_draw, "Absent");
+					sprintf(to_draw, "Absent");
 					break;
 				}
 			if (adven[i].isAlive() == false)
@@ -285,6 +285,11 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				}
 			break;
 		case 7: // On jobs page
+			SelectObject(hdc,bold_font);
+            win_draw_string(hdc,upper_frame_rect,"Your current jobs:",0,10);
+/*			SelectObject(hdc,font);
+ 		 	SetTextColor(hdc,colors[0]);
+			win_draw_string(hdc,item_buttons[0][0],"Test",0,10);*/
 			break;
 
 		default: // on an items page
@@ -385,6 +390,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 	RECT button_sources[3] = {{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
 	short val_to_place;
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
+
 	HBITMAP store_bmp;
 
 	if (adven[pc_num].items[item_num].variety == 0)
@@ -441,7 +447,10 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 				(adven[pc_num].items[item_num].isMagic() == false)) { 
 				item_area_button_active[position][5] = TRUE;
 				source_rect = button_sources[2];
-				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
+                if(adven[pc_num].items[item_num].value <=1400)
+    				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));//original
+				else
+				    val_to_place = 1400 * (5 + aug_cost[shop_identify_cost]) + (30000 - 1400 * (5 + aug_cost[shop_identify_cost]))* (adven[pc_num].items[item_num].value - 1400)/8600;//really smoothen the price curve
 				}
 			break;
 		}
@@ -535,7 +544,7 @@ void place_item_bottom_buttons()
 				rect_draw_some_item (mixed_gworld, but_from_rect, item_stats_gworld, to_rect, 0, 0);
 				pc_from_rect = get_party_template_rect(i,0);
 				InsetRect(&to_rect,2,2);
-				rect_draw_some_item (pc_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
+				rect_draw_some_item (pcs_gworld, pc_from_rect, item_stats_gworld, to_rect, 0, 0);
 			//	}
 
 			}
@@ -562,8 +571,10 @@ void set_stat_window(short new_stat)
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
+
 	if ((stat_window < 6) && (adven[stat_window].isAlive() == false))
 		stat_window = first_active_pc();
+    lpsi.fMask = SIF_RANGE;		
 	switch (stat_window) {
 		case 6:
 			for (i = 0; i < 60; i++)
@@ -574,16 +585,25 @@ void set_stat_window(short new_stat)
 					array_pos++;
 					}
 			array_pos = max(0,array_pos - 8);
-			SetScrollRange(item_sbar,SB_CTL,0,array_pos,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,array_pos,FALSE);
+            lpsi.nMax = array_pos;
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
 			break;
 		case 7:
-			SetScrollRange(item_sbar,SB_CTL,0,2,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,2,FALSE);
+            lpsi.nMax = 2;
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
 			break;
 		default:
-			SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
+            lpsi.nMax = 16;
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
 			break;
 		}
-	SetScrollPos(item_sbar,SB_CTL,0,TRUE);
+//	SetScrollPos(item_sbar,SB_CTL,0,TRUE);
+    lpsi.nPos = 0;
+    lpsi.fMask = SIF_POS;
+    SetScrollInfo(item_sbar,SB_CTL,&lpsi,TRUE);
 	put_item_screen(stat_window,0);
 
 }
@@ -1017,7 +1037,7 @@ void notify_out_combat_began(out_wandering_type encounter,short *nums)
 
 void get_m_name(char *str,unsigned char num)
 {
-	strcpy((char *) str,(char *) data_store2->scen_item_list.monst_names[num]);
+	strcpy( str, scen_item_list->monst_names[num]);
 }
 void get_ter_name(char *str,unsigned char num)
 {
@@ -1027,7 +1047,7 @@ void get_ter_name(char *str,unsigned char num)
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf((char *) store_name,"Pit");
 		else {
-			strcpy((char *) store_name,(char *) data_store2->scen_item_list.ter_names[num]);
+			strcpy(store_name, scen_item_list->ter_names[num]);
 			}
 	strcpy((char *) str,(char *) store_name);
 }
@@ -1179,7 +1199,10 @@ short print_terrain(location space)
 
 void add_string_to_buf(char *string)
 {
-	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
+//	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
+    lpsi.nPos = 58;
+    lpsi.fMask = SIF_POS;
+    SetScrollInfo(text_sbar,SB_CTL,&lpsi,TRUE);
 	string_added = TRUE;
 	if (buf_pointer == mark_where_printing_long) {
 		printing_long = TRUE;
@@ -1379,7 +1402,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode, short)
 
 short calc_day()
 {
-	return (short) ((party.age) / 3700) + 1;
+	return ((party.age) / 3700) + 1;
 }
 
 Boolean day_reached(unsigned char which_day, unsigned char which_event)

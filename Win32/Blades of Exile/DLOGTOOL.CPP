@@ -387,7 +387,7 @@ short cd_create_dialog(short dlog_num, HWND parent)
 			}
 			
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-	DestroyWindow(dlg); //Necesary? Dunno.
+	DestroyWindow(dlg); //Necessary? Dunno.
 
 	if (dlg_parent[free_slot] != NULL)
 	{
@@ -1443,7 +1443,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 1500 - stat symbols help
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
-// 10000 + x - custom graphic
+
 {
 	RECT from2 = {0,0,36,36},tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
@@ -1650,21 +1650,16 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			  ,rect,0,draw_dest);
 			break;
 		case 8: // PC
-			if (pcs_gworld != NULL)
-				from_gworld = pcs_gworld;
-				else from_gworld = load_pict(902,main_dc);
 			which_g -= 800;
 			from_rect = calc_rect(2 * (which_g / 8), which_g % 8);
 			old_brush = (HBRUSH)SelectObject(hdc,GetStockObject(BLACK_BRUSH));
 			Rectangle(hdc,rect.left,rect.top,rect.right,rect.bottom);
 			SelectObject(hdc,old_brush);
 			//PaintRect(&rect);
-			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: (HBITMAP)hdc)
+			rect_draw_some_item(pcs_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: (HBITMAP)hdc)
 			  ,rect,1,draw_dest);
-			if (pcs_gworld == NULL)
-				DeleteObject(from_gworld);
 			break;
-		case 9: // B&W
+/*		case 9: // B&W => Exile III maps
 			which_g -= 900;
 			from_gworld = load_pict(875,main_dc);
 			from_rect = bw_from;
@@ -1673,16 +1668,14 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				 rect_draw_some_item(from_gworld,from_rect,(HBITMAP) hDlg,rect,0,0);
 				else rect_draw_some_item(from_gworld,from_rect,(HBITMAP)hdc,rect,0,draw_dest);
 			DeleteObject(from_gworld);
-			break;
+			break;*/
 		case 10: // talk face
 			which_g -= 1000;
-			from_gworld = load_pict(860,main_dc);
 			from_rect = face_from;
 			OffsetRect(&from_rect,32 * ((which_g - 1) % 10),32 * ((which_g - 1) / 10));
 			if (win_or_gworld == 1)
-				 rect_draw_some_item(from_gworld,from_rect,(HBITMAP) hDlg,rect,0,0);
-				else rect_draw_some_item(from_gworld,from_rect,(HBITMAP)hdc,rect,0,draw_dest);
-			DeleteObject(from_gworld);
+				 rect_draw_some_item(talking_portraits_gworld,from_rect,(HBITMAP) hDlg,rect,0,0);
+				else rect_draw_some_item(talking_portraits_gworld,from_rect,(HBITMAP)hdc,rect,0,draw_dest);
 			break;
 		case 11: // item info help  
 			from_rect = item_info_from;
