@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="949.46">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica; min-height: 12.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.Apple-tab-span {white-space:pre}
+  </style>
+</head>
+<body>
+<p class="p1"><b>Section 12: Customizing Graphics</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>One of the best ways to put your own personal spin on your scenario is to give it your own graphics. You can provide your own graphics for monsters, items, terrain (animated or not), and dialog pictures (36 x 36).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>To create your own graphics, you need to use a painting program. The basic dimension of customized graphics is 28 x 36. The custom graphics must be arranged in a one single PICT (Macintosh) or .BMP file (Windows) which is 280 wide (wide enough for 10 graphics and some multiple of 36 (36,72, 108, etc.) high. This single graphic containing all your custom graphics is called the custom sheet.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>The custom graphics are arranged on the custom sheet in rows, 10 to each row. Each row is considered to have 10 slots. The first ten slots are in the top row, the next 10 slots are in the next row, and so on. The upper left graphic is considered slot 0. The top row contains slots 0 to 9 (numbered left to right), the second row contains slots 11 to 20, and so on.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>How to Make Your Custom Sheet (Macintosh)</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Make your graphic in a painting program. Make it in the standard Macintosh 256 color palette. Find a copy of the freeware Apple utility ResEdit (available online, or at the Spiderweb Software web site, www.spidweb.com). Run it and make a new resource file. Give the file the same name as your scenario file, but with .meg at the end instead of .exs (for example, if your scenario is called swords.exs, title the graphics resource file swords.meg).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Select the custom sheet in your painting program, and copy it. Move to ResEdit, and select paste to paste your graphic into the resource file as a PICT. Double click on the PICT icon in the ResEdit window, and you will see your custom graphic. Click on it, hit Command-I, and give the PICT resource number 1. Save the file, and copy it into the Blades of Exile Scenario folder.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>How to Make Your Custom Sheet (Windows)</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>You must make your graphic in a painting program. However, you need to use a palette similar to the Blades of Exile palette. Create a copy of one of the Blades of Exile graphics files. Give the file the same name as your scenario file, but with .bmp at the end instead of .exs (for example, if your scenario is called swords.exs, title the bitmap file swords.bmp).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Open it with your painting program, and change its size to the size of your custom sheet. Draw your graphic here, so that you can be sure to be using the same palette as Blades of Exile. Place your bitmap file in the BLDSSCEN folder to use it.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Note that Macintosh and Windows custom graphics are not compatible. If you dont know how to translate a custom graphics file, submit your full scenario at www.spidweb.com (or mail a copy on disk to us) and well translate your graphics file when we put your adventure on our web site (more on this in the next chapter).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Custon graphics can be drawn in the scenario editor. To see your custom graphics, place your custom graphics file in the same folder/directory as your scenario. If your graphics file isn't there, the custom graphics won't be known. THis is a good way to test to make sure your custom graphics file is valid.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Placing and Using Your Custom Graphics</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>When you use custom graphics, you must arrange them pr operly on your custom sheet, and then tell the editor to use them. These are the graphics you can customize, and how to use them:</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Terrain (not animated) - </b>Place the 28 x 36 custom terrain graphic in one of the custom sheets slots. To give a terrain type this graphic, add 1000 to the number of the slot the graphic is in, and put that number in the Terrain Picture field on the editing terrain window.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>To use this graphic as the dialog picture in a dialog (created by a special node), select Display Dialog (Terrain pic) as the special node type. Add 1000 to the slot the graphic is in, and put that number in the Pict spot.</p>
+<p class="p3"><b>Terrain (animated) -</b> Animated terrain has four different graphics. Put the 4 graphics in 4 consecutive custom sheet slots. To give a terrain type this graphic, add 2000 to the number of the slot the first of the four graphics is in, and put that number in the Terrain Picture field on the editing terrain window.</p>
+<p class="p3"><b>Monster (1 x 1) - </b>There are 4 graphics needed: monster facing right, monster facing left, monster attacking facing right, and monster attacking facing left. Put these 4 graphics in 4 consecutive custom sheet slots. To give a monster type this graphic, add 1000 to the number of the slot the first of the four graphics is in, and put that number in the Monster Picture field on the editing monster window.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>To use this graphic as the dialog picture in a dialog (created by a special node), select Display Dialog (Monster pic) as the special node type. Add 1000 to the slot the first of the 4 graphics is in, and put that number in the Pict spot.</p>
+<p class="p3"><b>Monster (2 x 1) -</b> There are 8 graphics needed: the left half and then the right half of the monster facing right, the left half and then the right half of the monster facing left, the 2 parts of the monster attacking facing right, and the 2 parts of the monster attacking facing left. Put these 8 graphics in 8 consecutive custom sheet slots. To give a monster type this graphic (and make is a 2 x 1 monster), add 2000 to the number of the slot the first of the four graphics is in, and put that number in the Monster Picture field on the editing monster window.</p>
+<p class="p3"><b>Monster (1 x 2), Monster (2 x 2) -</b> These 2 graphics require 8 and 16 custom sheet slots. Put the parts of the monster facing right, then facing left, then attacking right, then attacking left, with the parts arranged left to right and top to bottom. To give a monster type this graphic, add 3000 (if 1 x 2) or 4000 (if 2 x 2)<span class="Apple-converted-space">  </span>to the number of the slot the first of the four graphics is in, and put that number in the Monster Picture field on the editing monster window.</p>
+<p class="p3"><b>Dialog Picture -</b> You can put a custom 36 x 36 graphic in the upper left corner of a dialog box. Split the graphic into 2 18 x 36 halves, and put the 2 graphics in 2 consecutive custom sheet slots (pushed into the upper left corner).<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>To use this graphic as the dialog picture in a dialog (created by a special node), select Display Dialog (Dialog pic) as the special node type. Add 1000 to the slot the left half is in, and put that number in the Pict spot.</p>
+<p class="p3"><b>Item - </b>An item graphic takes up one 28 x 36 slot.<span class="Apple-converted-space">  </span>Add 150 to the slot the graphic is in, and put that number in the Item Picture field on the editing items window. You can only put new item graphics in the first 105 slots (the highest item graphic number Blades can handle is 255).</p>
+<p class="p3"><b>Face in Dialogue - </b>You can customize the face of a character the party is talking to. A dialogue face is a 32x32 graphic. Split the graphic into 2 16x32 halves, and put them in two adjacent slots (left half in one slot, and then the right half in the next slot). Add 1000 to the slot the left half is in, and put that number in the Facial Graphic space in the Editing a Townsperson/Monster window.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>For examples of using custom graphics, look at the scenarios that came with Blades of Exile. The three Blades of Exile scenarios, between them, contain examples of Custom Sheets with all of the different sorts of custom graphics.</p>
+<p class="p4"><b></b><br></p>
+</body>
+</html>

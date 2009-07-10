@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="949.46">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica; min-height: 12.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica}
+    span.Apple-tab-span {white-space:pre}
+  </style>
+</head>
+<body>
+<p class="p1"><b>Appendix 2 - Item Ability Types</b></p>
+<p class="p2"><br></p>
+<p class="p3">Each item type can have a special ability. The types of abilities available range from shooting fireballs to weapons doing special damage to dragons to items being ingredients for alchemical recipes.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>There are two types of item abilities: usable and inherent.</p>
+<p class="p2"><b></b><br></p>
+<p class="p3"><b>Usable abilities:<span class="Apple-converted-space"> </span></b> Usable item abilities are only activated by pressing the items use button on the PC inventory screen. Otherwise, the ability has no effect. Examples are a wand that shoots fireballs or a healing potion.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Usable abilities are always linked to the items charges. Whenever an item with a usable ability is actually used, the items amount of charges goes down by 1. When the items charge level goes down to 0, the item disappears. An item with a usable ability must have at least 1 charge.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>The cash value of an item with a usable ability is calculated differently from normal items. The items actual cost is its value multiplied by the number of its charges. (Example: Suppose a Potion of Healing has a value of 100 and 2 charges. This potion would cost 200 gold and sell for half that.)</p>
+<p class="p3"><b>Inherent Abilities:</b><span class="Apple-converted-space">  </span>Inherent abilities are abilities that are always present and are activated automatically, as opposed to being activated by pressing the Use button on the PC Inventory screen. Examples are a shield with fire protection (which is activated automatically when the character takes fire damage) or comfrey root (whose ability it that it can be used as an alchemical ingredient, and which is used automatically when the party tries to make a potion with it).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Some inherent abilities have charges (such as alchemical ingredients). When used, the amount of charges goes down by one. When there are no charges left, the item disappears. The name of inherent ability types that require charges have a (c) after them.The value of these items is calculated the same way as for Usable abilities.</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>There are six different classes of item ability type, each with its own properties and varieties of items that can possess it. These are listed below, along with whether they are classes of Usable or Inherent abilities:</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Weapon Abilities (Inherent):<span class="Apple-converted-space"> </span></b> Abilities of this type can be given to one and two handed weapons, weapon ammunition (darts, arrows, etc.) and non-ammunition missiles (like slings). None of these items have charges.</p>
+<p class="p3"><b>General Abilities (Inherent):</b><span class="Apple-converted-space">  </span>Abilities of this type can be given to non-missile items which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items that cant (e.g. wands, potions). Only a few of these ability types require for the item having them to have charges.</p>
+<p class="p3"><b>Non-Spell Usable (Usable):<span class="Apple-converted-space"> </span></b> Abilities of this type change the status of the party or individual character in some way, such as making them more or less poisoned, or raising or lowering health. Abilities of these types can be given to any item thats not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities must have charges.</p>
+<p class="p3"><b>Spell Usable (Usable):<span class="Apple-converted-space"> </span></b> Abilities of this type cast some sort of a spell, such as firing a fireball or summoning monsters. Abilities of these types can be given to any item thats not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities must have charges.</p>
+<p class="p3"><b>Reagents (Inherent):<span class="Apple-converted-space"> </span></b> Items with these abilities are alchemical ingredients, spell reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an ability of this type must have charges, and must be of variety Non-use Object.</p>
+<p class="p3"><b>Missiles (Inherent):</b> These abilities can only be given to missiles (e.g. arrows, bolts, darts). Each ability is activated when the missile is fired (such as exploding a fireball on the target space).</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>As mentioned before, each item type has accompanying Ability Strength and Magic Item Adjust targets. For each ability, these two fields have different ranges and different affects, and their values will modify the affects of the item abilities in different ways. What each ability does and how the Ability Strength and Magic Item Adjust fields affect it are described below.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 0 - No ability<span class="Apple-converted-space">  </span>The item has no special ability.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Weapon Abilities (Inherent):<span class="Apple-converted-space"> </span></b> For each of these abilities, the Ability Strength is a number from 0 to 10, which represents the strength of the ability (0 is weakest, 10 is most powerful). The Magic Item Adjust field is ignored.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 1 - Flaming Weapon<span class="Apple-converted-space">  </span>The weapon does extra fire damage.</p>
+<p class="p3">Ability 2 - Demon slayer<span class="Apple-converted-space">  </span>Does extra damage to demons. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 3 - Undead slayer<span class="Apple-converted-space">  </span>Does extra damage to undead. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 4 - Lizard slayer<span class="Apple-converted-space">  </span>Does extra damage to lizards. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 5 - Giant slayer<span class="Apple-converted-space">  </span>Does extra damage to giants. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 6 - Mage slayer<span class="Apple-converted-space">  </span>Does extra damage to mages. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 7 - Priest slayer<span class="Apple-converted-space">  </span>Does extra damage to priests. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 8 - Bug slayer<span class="Apple-converted-space">  </span>Does extra damage to insects. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 9 - Acidic Weapon<span class="Apple-converted-space">  </span>Sprays acid on anything it hits.</p>
+<p class="p3">Ability 10 - Soulsucker<span class="Apple-converted-space">  </span>When it hits, the wielder is healed. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 11 - Drain Missiles<span class="Apple-converted-space">  </span>Drains missiles twice as fast. This only has an effect on bows and crossbows. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 12 - Weak Weapon<span class="Apple-converted-space">  </span>Does less damage than usual. If Ability Strength is 10, does no damage at all.</p>
+<p class="p3">Ability 13 - Causes Fear<span class="Apple-converted-space">  </span>Drains morale of target.</p>
+<p class="p3">Ability 14 - Poisoned Weapon<span class="Apple-converted-space">  </span>The weapon poisons any monster it hits.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>General Abilities (Inherent):<span class="Apple-converted-space"> </span></b> For each of these abilities (unless otherwise stated), the Ability Strength is a number from 0 to 10, which represents the strength of the ability (0 is weakest, 10 is most powerful). The Magic Item Adjust field is ignored.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 30 - Protection<span class="Apple-converted-space">  </span>This partially blocks weapon damage the wielder takes.</p>
+<p class="p3">Ability 31 - Full Protection<span class="Apple-converted-space">  </span>This partially blocks weapon and spell damage the wielder takes.</p>
+<p class="p3">Ability 32 - Fire protection<span class="Apple-converted-space">  </span>This reduces fire damage the wielder takes.</p>
+<p class="p3">Ability 33 - Cold protection<span class="Apple-converted-space">  </span>This reduces cold damage the wielder takes.</p>
+<p class="p3">Ability 34 - Poison protection<span class="Apple-converted-space">  </span>This reduces poison damage the wielder takes.</p>
+<p class="p3">Ability 35 - Magic protection<span class="Apple-converted-space">  </span>This reduces magic damage the wielder takes.</p>
+<p class="p3">Ability 36 - Acid Protection<span class="Apple-converted-space">  </span>Acid sprayed on the wielder is weakened. <span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 37 - Skill<span class="Apple-converted-space">  </span>Increases the wielders chance of hitting in combat. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 38 - Strength <span class="Apple-converted-space">  </span>The wielders bonuses due to strength are increased.</p>
+<p class="p3">Ability 39 - Dexterity <span class="Apple-converted-space">  </span>The wielders bonuses due to dexterity are increased.</p>
+<p class="p3">Ability 40 - Intelligence <span class="Apple-converted-space">  </span>The wielders bonuses due to intelligence are increased.</p>
+<p class="p3">Ability 41 - Accuracy<span class="Apple-converted-space">  </span>Missile weapons are more accurate.<span class="Apple-converted-space">     </span></p>
+<p class="p3">Ability 42 - Thieving<span class="Apple-converted-space">  </span>Picking locks and disarming traps is easier. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 43 - Giant Strength<span class="Apple-converted-space">  </span>Improves odds of hitting and damage in combat.<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 44 - Lighter object<span class="Apple-converted-space">  </span>Wielder can carrier more weight. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 45 - Heavier object<span class="Apple-converted-space">  </span>Wielder can carry less weight. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 46 - Occasional Bless<span class="Apple-converted-space">  </span>Sometimes blesses the wearer in combat. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 47 - Occasional Haste<span class="Apple-converted-space">  </span>Sometimes hastes the wearer in combat. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 48 - Life Saving (c)<span class="Apple-converted-space">  </span>When the wielder takes a death blow, he/she survives and is healed, and the item loses a charge. This item must be given charges.</p>
+<p class="p3">Ability 49 - Prot. from petrify<span class="Apple-converted-space">  </span>Reduces chance of being petrified.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 50 - Regenerate <span class="Apple-converted-space">  </span>Heals wielder occasionally.</p>
+<p class="p3">Ability 51 - Poison Augment<span class="Apple-converted-space">  </span>Wielders weapon poison more effective.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 52 - Disease Party<span class="Apple-converted-space">  </span>When carried (not just equipped), the item occasionally diseases the entire party.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 53 - Will<span class="Apple-converted-space">  </span>Wielder more effective in a mindduel, and resists sleeping and paralysis.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 54 - Free Action <span class="Apple-converted-space">  </span>Wielder resists sleeping and paralysis.</p>
+<p class="p3">Ability 55 - Speed<span class="Apple-converted-space">  </span>The wearer gets more action points in combat (powerful).<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 56 - Slow Wearer<span class="Apple-converted-space">  </span>Occasionally slows the wearer in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 57 - Undead Protection<span class="Apple-converted-space">  </span>Protects from blows received from undead in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 58 - Demon Protection<span class="Apple-converted-space">  </span>Protects from blows received from demons in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 59 - Humanoid Protection<span class="Apple-converted-space">  </span>Protects from blows received from humanoids in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 60 - Reptile Protection<span class="Apple-converted-space">  </span>Protects from blows received from reptiles in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 61 - Giant Protection<span class="Apple-converted-space">  </span>Protects from blows received from giants in combat.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 62 - Disease Protection<span class="Apple-converted-space">  </span>Provides resistance from disease.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Non-Spell Usable (Usable):<span class="Apple-converted-space"> </span></b> Each of these item abilities affects a characters statistics (e.g. health, spell points) or status (e.g. poison, flying) when the item is used.<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>For each of these abilities, the Ability Strength is a number from 0 to 10, which represents the strength of the ability (0 is weakest, 10 is most powerful). The meaning of this changes depending on the ability affected. Sometimes, the number affects the duration, sometimes the damage done.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>The Item Use Properties buttons affect whether using the item affects just the using character or the whole party, and whether the item helps or hurts the party.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Some of these abilities can only help (like Bliss) or only hurt (like Doom). For these abilities, the Magic Item Adjust values of 0 and 1 have the same effect, and the values 2 and 3 have the same effect. Also, some abilities only affect the whole party (like Light or Firewalk).</p>
+<p class="p2"><br></p>
+<p class="p3">Example: Suppose you give an item the ability Dumbfound, set Ability Strength to 2, and Magic Item Adjust to 0. Then, when the item is used, the users level of dumbfounding will go down a little bit. If Ability Strength is set instead to 10, the user will be totally cured of Dumbfounding.</p>
+<p class="p3">Example: Suppose you give an item the ability Cause/Cure Acid, set Ability Strength to 5, and Magic Item Adjust to 3. When someone uses the item, the entire party gets 5 levels of acid (which means the acid lasts about 5 turns).</p>
+<p class="p2"><span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 70 - Poison Weapon<span class="Apple-converted-space">  </span>Increases or decreases the amount of poison on the users/parties weapons. If the item is beneficial, when used, the user has a chance (based on the Poison skill) of poisoning him/herself.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 71 - Curse/Bless User<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 72 - Cure/Cause Poison<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 73 - Speed/Slow User<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 74 - Add/Lose Invulnerability<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 75 - Add/Lose Magic Resistance<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 76 - Add/Lose Web<span class="Apple-converted-space">  </span>Affects how much web is on the PC/party.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 77 - Cure/Cause Disease<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 78 - Add/Lose Sanctuary<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 79 - Cure/Cause Dumbfounding<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 80 - Add/Lose Martyrs Shield<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 81 - Cure/Cause Sleep<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 82 - Cure/Cause Paralysis<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 83 - Cure/Cause Acid<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 84 - Bliss<span class="Apple-converted-space">  </span>Both heals and blesses. Only has a positive effect.</p>
+<p class="p3">Ability 85 - Add/Lose Experience<span class="Apple-converted-space">  </span>Experience gained/lost is equal to 5 times Ability Strength.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 86 - Add/Lose Skill Pts. Amount of skill points gained/lost is equal to Ability Strength.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 87 - Add/Lose Health<span class="Apple-converted-space">  </span>Amount added or lost is 10 times Ability Strength plus or minus a small random amount. Health will not be reduced below 0. This can be as high as 20.</p>
+<p class="p3">Ability 88 - Add/Lose Spell Points <span class="Apple-converted-space">  </span>Amount added or lost is 5 times Ability Strength plus or minus a small random amount.</p>
+<p class="p3">Ability 89 - Doom <span class="Apple-converted-space">  </span>Poisons, damages, diseases, dumbfounds, and drains experience. Only has a negative effect.</p>
+<p class="p3">Ability 90 - Light<span class="Apple-converted-space">  </span>Acts as a Light spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 91 - Stealth<span class="Apple-converted-space">  </span>Acts as a Stealth spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 92 - Firewalk<span class="Apple-converted-space">  </span>Acts as a Firewalk spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 93 - Flying<span class="Apple-converted-space">  </span>Acts as a Flying spell.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Spell Usable (Usable):<span class="Apple-converted-space"> </span></b> When an item with one of these abilities is used, it casts a spell (which may need to be targeted). For each of these abilities, the Ability Strength is a number from 0 to 10, which represents the level the spell is cast at (0 is weakest, 10 is most powerful). The meaning of this changes depending on the ability affected. Sometimes, the number affects the duration, sometimes the damage done.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>The Magic Item Adjust field is not used, except as noted below.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 110 - Flame<span class="Apple-converted-space">  </span>Casts a Flame spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 111 - Fireball<span class="Apple-converted-space">  </span>Casts a Fireball spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 112 - Firestorm<span class="Apple-converted-space">  </span>Casts a Firestorm spell.</p>
+<p class="p3">Ability 113 - Kill<span class="Apple-converted-space">  </span>Casts a Kill spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 114 - Ice Bolt<span class="Apple-converted-space">  </span>Casts an Ice Bolt spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 115 - Slow<span class="Apple-converted-space">  </span>Casts a Slow spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 116 - Shockwave<span class="Apple-converted-space">  </span>Casts a Shockwave spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 117 - Dispel Undead<span class="Apple-converted-space">  </span>Casts a Dispel Undead spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 118 - Dispel Spirit<span class="Apple-converted-space">  </span>Casts a Dispel Spirit spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 119 - Summoning<span class="Apple-converted-space">  </span>Summons one monster. The Ability Strength field contains the number of the monster to summon. When the party leaves the scenario, all items of this type are taken away (because the monsters in the next scenario might be completely different).</p>
+<p class="p3">Ability 120 - Mass Summoning <span class="Apple-converted-space">  </span>Summons 3-5 monsters. The Ability Strength field contains the number of the monsters to summon.<span class="Apple-converted-space">  </span>When the party leaves the scenario, all items of this type are taken away (because the monsters in the next scenario might be completely different).</p>
+<p class="p3">Ability 121 - Acid Spray<span class="Apple-converted-space">  </span>Sprays acid on target. Amount depends on value of Ability Strength field.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 122 - Stinking Cloud Casts a Stinking Cloud spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 123 - Sleep Field<span class="Apple-converted-space">  </span>Creates a Sleep Field at target.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 124 - Venom<span class="Apple-converted-space">  </span>Casts a Venom spell.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 125 - Shockstorm Casts a Shockstorm spell. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 126 - Paralysis<span class="Apple-converted-space">  </span>Casts a Paralysis spell. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 127 - Web Spell Casts a Web spell. <span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 128 - Strengthen Target<span class="Apple-converted-space">  </span>Makes the target monster stronger. Can only be used on unfriendly monsters.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 129 - Quickfire<span class="Apple-converted-space">  </span>Creates quickfire on space where its used.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 130 - Mass Charm<span class="Apple-converted-space">  </span>Charms all monsters nearby.</p>
+<p class="p3">Ability 131 - Magic Map<span class="Apple-converted-space">  </span>Casts a Magic Map spell.</p>
+<p class="p3">Ability 132 - Dispel Barrier<span class="Apple-converted-space">  </span>Casts a Dispel Barrier spell.</p>
+<p class="p3">Ability 133 - Ice Wall<span class="Apple-converted-space">  </span>Casts an Ice Wall spell.</p>
+<p class="p3">Ability 134 - Charm<span class="Apple-converted-space">  </span>Casts a Charm spell.</p>
+<p class="p3">Ability 130 - Antimagic Cloud<span class="Apple-converted-space">  </span>Casts an Antimagic Cloud spell.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Reagents (Inherent):</b><span class="Apple-converted-space">  </span>To perform alchemy or cast certain spells, the alchemist/caster must have items with certain abilities in his/her inventory. For example, to make a Weak Poison potion, the maker must have an item with the Holly ability, or to cast a Magic Map spell, the caster must have an item with the Sapphire ability.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>These items must have charges, representing the number of times they can be used. The Magic Item Adjust and Ability Strength fields are not used (except for Lockpicks).</p>
+<p class="p3"><span class="Apple-tab-span">	</span>The name of each ability represents the ingredient/spell component that the item with that ability can substitute for. For example, a gem with the ability Smoky Crystal can be used to cast Mindduel.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 150 - Holly/Toadstool<span class="Apple-converted-space">   </span></p>
+<p class="p3">Ability 151 - Comfrey Root</p>
+<p class="p3">Ability 152 - Glowing Nettle</p>
+<p class="p3">Ability 153 - Crypt Shroom/Wormgrass</p>
+<p class="p3">Ability 154 - Asptongue Mold</p>
+<p class="p3">Ability 155 - Ember Flowers</p>
+<p class="p3">Ability 156 - Graymold</p>
+<p class="p3">Ability 157 - Mandrake</p>
+<p class="p3">Ability 158 - Sapphire</p>
+<p class="p3">Ability 159 - Smoky Crystal</p>
+<p class="p3">Ability 160 - Resurrection Balm</p>
+<p class="p3">Ability 161 - Lockpicks<span class="Apple-converted-space">  </span>This item can be used as a lockpick. The Ability Strength determines how good a pick it is.</p>
+<p class="p2"><br></p>
+<p class="p3"><b>Missiles (Inherent): </b>These abilities can only be given to missile ammunition. The Magic Item Adjust and Ability Strength fields are not used, except as noted below.</p>
+<p class="p2"><br></p>
+<p class="p3">Ability 170 - Returning<span class="Apple-converted-space">  </span>This missile is not used up when fired. It is best to only give it one use.</p>
+<p class="p3">Ability 171 - Lightning<span class="Apple-converted-space">  </span>Target takes an amount of magical damage equal to the Ability Strength.</p>
+<p class="p3">Ability 172 - Exploding<span class="Apple-converted-space">  </span>Fireball explodes at the target, cast at a level equal to the Ability strength.</p>
+<p class="p3">Ability 173 - Acid<span class="Apple-converted-space">  </span>Target is sprayed with acid.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 174 - Slay Undead<span class="Apple-converted-space">  </span>Does major extra damage versus undead.</p>
+<p class="p3">Ability 175 - Slay Demon<span class="Apple-converted-space">  </span>Does major extra damage against demons.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Ability 176 - Heal Target<span class="Apple-converted-space">  </span>Restores health to target.</p>
+<p class="p2"><br></p>
+</body>
+</html>
