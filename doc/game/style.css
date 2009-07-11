@@ -1,0 +1,40 @@
+body {
+  background-image: url("../img/background.gif");
+}
+
+p.p1 {
+  margin: 0.0px 0.0px 0.0px 0.0px;
+  font: 10.0px Geneva;
+  min-height: 14.0px
+}
+
+p.p2, p.p4 {
+  margin: 0.0px 0.0px 0.0px 0.0px;
+  font: 12.0px Geneva}
+
+p.p3, p.p5  {
+  margin: 0.0px 0.0px 0.0px 0.0px;
+  font: 10.0px Geneva}
+
+span.s1 {
+  text-decoration: underline
+}
+
+span.Apple-tab-span {
+  white-space:pre
+}
+
+img {
+border: 0px;
+}
+
+span.key { /* Just to make things easier to read */
+  background-color: #F1F2EC;
+  width: 32px;
+  border-style: outset;
+  border-width: 1px;
+  margin:0;
+  padding:0 2px;
+  clear:none;
+  font-family:monospace;
+}
