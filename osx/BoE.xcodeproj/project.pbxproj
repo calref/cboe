@@ -74,8 +74,6 @@
 		912287060FD330F300B21642 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
-		912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */; };
-		912793660F9C108D007B0D52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BAD0F9CFCBA007B0D52 /* boescenario.icns */; };
 		91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB30F9D03B6007B0D52 /* boesave.icns */; };
 		91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB40F9D03B7007B0D52 /* boesounds.icns */; };
@@ -101,9 +99,6 @@
 		91279D3E0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
 		91279D3F0F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
 		91279D400F9D1D6A007B0D52 /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
-		912CF34E0FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
-		912CF34F0FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
-		912CF3500FE448150063B614 /* dummy.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 912CF34D0FE448150063B614 /* dummy.xml */; };
 		912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
 		912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
 		912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
@@ -212,7 +207,6 @@
 		913D02690FA0EB0300184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D026A0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D026B0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
-		913D026C0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D05B60FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
 		913D05B70FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
 		913D05B80FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
@@ -303,12 +297,6 @@
 		91E5C1FC0F9E48AF00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
 		91E5C1FD0F9E48AF00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
 		91E5C1FE0F9E48AF00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
-		91E5C1FF0F9E48CB00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
-		91E5C2000F9E48CB00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
-		91E5C2010F9E48CB00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
-		91E5C2020F9E48CB00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
-		91E5C2030F9E48CB00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
-		91E5C2040F9E48CB00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91E5C2050F9E48D900C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C2060F9E48D900C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		91E5C2070F9E48D900C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
@@ -391,7 +379,6 @@
 			dstPath = Dialogs;
 			dstSubfolderSpec = 7;
 			files = (
-				912CF34F0FE448150063B614 /* dummy.xml in Copy Dialogs */,
 			);
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,7 +538,6 @@
 			dstPath = Dialogs;
 			dstSubfolderSpec = 7;
 			files = (
-				912CF3500FE448150063B614 /* dummy.xml in Copy Dialogs */,
 			);
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,7 +551,6 @@
 				91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */,
 				91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */,
 				91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */,
-				912CF34E0FE448150063B614 /* dummy.xml in Copy Dialogs */,
 			);
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -656,54 +641,51 @@
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.town.h; sourceTree = "<group>"; };
 		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		910BBA170FB8BECA001E34EA /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = dialogxml/dialog.h; sourceTree = "<group>"; };
-		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog.cpp; path = dialogxml/dialog.cpp; sourceTree = "<group>"; };
-		910BBA270FB8C459001E34EA /* ticpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ticpp.cpp; path = "dialogxml/xml-parser/ticpp.cpp"; sourceTree = "<group>"; };
-		910BBA280FB8C459001E34EA /* ticpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ticpp.h; path = "dialogxml/xml-parser/ticpp.h"; sourceTree = "<group>"; };
-		910BBA290FB8C459001E34EA /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = "dialogxml/xml-parser/tinystr.h"; sourceTree = "<group>"; };
-		910BBA2A0FB8C459001E34EA /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = "dialogxml/xml-parser/tinyxml.cpp"; sourceTree = "<group>"; };
-		910BBA2B0FB8C459001E34EA /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = "dialogxml/xml-parser/tinyxml.h"; sourceTree = "<group>"; };
-		910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = "dialogxml/xml-parser/tinyxmlerror.cpp"; sourceTree = "<group>"; };
-		910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = "dialogxml/xml-parser/tinyxmlparser.cpp"; sourceTree = "<group>"; };
-		910BBA2E0FB8C459001E34EA /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = "dialogxml/xml-parser/tinystr.cpp"; sourceTree = "<group>"; };
-		910BBA2F0FB8C470001E34EA /* ticpprc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ticpprc.h; path = "dialogxml/xml-parser/ticpprc.h"; sourceTree = "<group>"; };
-		910BBA3B0FB8DA8E001E34EA /* control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = control.h; path = dialogxml/control.h; sourceTree = "<group>"; };
-		910BBA3C0FB8DA8E001E34EA /* control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = control.cpp; path = dialogxml/control.cpp; sourceTree = "<group>"; };
-		910BBA880FB8EC57001E34EA /* button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = button.h; path = dialogxml/button.h; sourceTree = "<group>"; };
-		910BBA890FB8EC57001E34EA /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = button.cpp; path = dialogxml/button.cpp; sourceTree = "<group>"; };
-		910BBAA80FB8F733001E34EA /* pict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pict.h; path = dialogxml/pict.h; sourceTree = "<group>"; };
-		910BBAA90FB8F733001E34EA /* pict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pict.cpp; path = dialogxml/pict.cpp; sourceTree = "<group>"; };
-		910BBAB40FB91A26001E34EA /* field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = field.h; path = dialogxml/field.h; sourceTree = "<group>"; };
-		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = field.cpp; path = dialogxml/field.cpp; sourceTree = "<group>"; };
-		910BBAB80FB91ADB001E34EA /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = message.h; path = dialogxml/message.h; sourceTree = "<group>"; };
-		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = message.cpp; path = dialogxml/message.cpp; sourceTree = "<group>"; };
-		910BBAD90FB91D2A001E34EA /* dlogutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlogutil.h; path = dialogxml/dlogutil.h; sourceTree = "<group>"; };
-		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlogutil.cpp; path = dialogxml/dlogutil.cpp; sourceTree = "<group>"; };
+		910BBA170FB8BECA001E34EA /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.h; sourceTree = "<group>"; };
+		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialog.cpp; sourceTree = "<group>"; };
+		910BBA270FB8C459001E34EA /* ticpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ticpp.cpp; sourceTree = "<group>"; };
+		910BBA280FB8C459001E34EA /* ticpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ticpp.h; sourceTree = "<group>"; };
+		910BBA290FB8C459001E34EA /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
+		910BBA2A0FB8C459001E34EA /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		910BBA2B0FB8C459001E34EA /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		910BBA2E0FB8C459001E34EA /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
+		910BBA2F0FB8C470001E34EA /* ticpprc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ticpprc.h; sourceTree = "<group>"; };
+		910BBA3B0FB8DA8E001E34EA /* control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = control.h; sourceTree = "<group>"; };
+		910BBA3C0FB8DA8E001E34EA /* control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = control.cpp; sourceTree = "<group>"; };
+		910BBA880FB8EC57001E34EA /* button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = button.h; sourceTree = "<group>"; };
+		910BBA890FB8EC57001E34EA /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
+		910BBAA80FB8F733001E34EA /* pict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pict.h; sourceTree = "<group>"; };
+		910BBAA90FB8F733001E34EA /* pict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pict.cpp; sourceTree = "<group>"; };
+		910BBAB40FB91A26001E34EA /* field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = field.h; sourceTree = "<group>"; };
+		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = field.cpp; sourceTree = "<group>"; };
+		910BBAB80FB91ADB001E34EA /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
+		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
+		910BBAD90FB91D2A001E34EA /* dlogutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.h; sourceTree = "<group>"; };
+		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlogutil.cpp; sourceTree = "<group>"; };
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
-		912283C70FD0E16B00B21642 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = undo.h; path = tools/undo.h; sourceTree = "<group>"; };
-		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = undo.cpp; path = tools/undo.cpp; sourceTree = "<group>"; };
-		912287850FD41A2300B21642 /* simpletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simpletypes.h; path = classes/simpletypes.h; sourceTree = "<group>"; };
-		912793480F9C0FE6007B0D52 /* ViewDlog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewDlog.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgbtns.cpp; path = tools/dlgbtns.cpp; sourceTree = "<group>"; };
-		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = "<group>"; };
+		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
+		912287850FD41A2300B21642 /* simpletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simpletypes.h; sourceTree = "<group>"; };
+		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgbtns.cpp; sourceTree = "<group>"; };
+		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = SOURCE_ROOT; };
 		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesave.icns; sourceTree = "<group>"; };
 		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesounds.icns; sourceTree = "<group>"; };
 		91279BB50F9D03B7007B0D52 /* boegraphics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boegraphics.icns; sourceTree = "<group>"; };
-		91279BE00F9D0F73007B0D52 /* location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = location.h; path = classes/location.h; sourceTree = "<group>"; };
-		91279BE10F9D0F73007B0D52 /* location.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = location.cpp; path = classes/location.cpp; sourceTree = "<group>"; };
-		91279C570F9D1253007B0D52 /* scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scenario.h; path = classes/scenario.h; sourceTree = "<group>"; };
-		91279C580F9D1253007B0D52 /* scenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scenario.cpp; path = classes/scenario.cpp; sourceTree = "<group>"; };
-		91279C650F9D12D6007B0D52 /* terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = terrain.h; path = classes/terrain.h; sourceTree = "<group>"; };
-		91279C660F9D12D6007B0D52 /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = terrain.cpp; path = classes/terrain.cpp; sourceTree = "<group>"; };
-		91279C740F9D15E4007B0D52 /* vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vehicle.h; path = classes/vehicle.h; sourceTree = "<group>"; };
-		91279C750F9D15E5007B0D52 /* vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vehicle.cpp; path = classes/vehicle.cpp; sourceTree = "<group>"; };
-		91279CC00F9D19DA007B0D52 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = monster.h; path = classes/monster.h; sourceTree = "<group>"; };
-		91279CC10F9D19DA007B0D52 /* monster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monster.cpp; path = classes/monster.cpp; sourceTree = "<group>"; };
-		91279CC50F9D1A02007B0D52 /* special.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = special.h; path = classes/special.h; sourceTree = "<group>"; };
-		91279CC60F9D1A02007B0D52 /* special.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = special.cpp; path = classes/special.cpp; sourceTree = "<group>"; };
-		91279D3C0F9D1D6A007B0D52 /* item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = item.h; path = classes/item.h; sourceTree = "<group>"; };
-		91279D3D0F9D1D6A007B0D52 /* item.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = item.cpp; path = classes/item.cpp; sourceTree = "<group>"; };
-		912CF34D0FE448150063B614 /* dummy.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = dummy.xml; path = dialogxml/dummy.xml; sourceTree = "<group>"; };
+		91279BE00F9D0F73007B0D52 /* location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = location.h; sourceTree = "<group>"; };
+		91279BE10F9D0F73007B0D52 /* location.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = location.cpp; sourceTree = "<group>"; };
+		91279C570F9D1253007B0D52 /* scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenario.h; sourceTree = "<group>"; };
+		91279C580F9D1253007B0D52 /* scenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenario.cpp; sourceTree = "<group>"; };
+		91279C650F9D12D6007B0D52 /* terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = terrain.h; sourceTree = "<group>"; };
+		91279C660F9D12D6007B0D52 /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = terrain.cpp; sourceTree = "<group>"; };
+		91279C740F9D15E4007B0D52 /* vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vehicle.h; sourceTree = "<group>"; };
+		91279C750F9D15E5007B0D52 /* vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vehicle.cpp; sourceTree = "<group>"; };
+		91279CC00F9D19DA007B0D52 /* monster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monster.h; sourceTree = "<group>"; };
+		91279CC10F9D19DA007B0D52 /* monster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monster.cpp; sourceTree = "<group>"; };
+		91279CC50F9D1A02007B0D52 /* special.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = special.h; sourceTree = "<group>"; };
+		91279CC60F9D1A02007B0D52 /* special.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = special.cpp; sourceTree = "<group>"; };
+		91279D3C0F9D1D6A007B0D52 /* item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item.h; sourceTree = "<group>"; };
+		91279D3D0F9D1D6A007B0D52 /* item.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item.cpp; sourceTree = "<group>"; };
 		912CF37F0FE44A9B0063B614 /* actionhelp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actionhelp.png; sourceTree = "<group>"; };
 		912CF3800FE44A9B0063B614 /* bigscenpics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bigscenpics.png; sourceTree = "<group>"; };
 		912CF3810FE44A9B0063B614 /* booms.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = booms.png; sourceTree = "<group>"; };
@@ -794,92 +776,91 @@
 		912CF3D70FE44A9B0063B614 /* transcript.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transcript.png; sourceTree = "<group>"; };
 		912CF3D80FE44A9B0063B614 /* trim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trim.png; sourceTree = "<group>"; };
 		912CF3D90FE44A9B0063B614 /* vehicle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vehicle.png; sourceTree = "<group>"; };
-		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = porting.h; path = tools/porting.h; sourceTree = "<group>"; };
-		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = porting.cpp; path = tools/porting.cpp; sourceTree = "<group>"; };
-		913D00840FA0021400184C18 /* dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgutil.h; path = tools/dlgutil.h; sourceTree = "<group>"; };
-		913D00850FA0021400184C18 /* dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgutil.cpp; path = tools/dlgutil.cpp; sourceTree = "<group>"; };
+		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = porting.h; sourceTree = "<group>"; };
+		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = porting.cpp; sourceTree = "<group>"; };
+		913D00840FA0021400184C18 /* dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgutil.h; sourceTree = "<group>"; };
+		913D00850FA0021400184C18 /* dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgutil.cpp; sourceTree = "<group>"; };
 		913D02680FA0EB0300184C18 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
-		913D05B40FA1E9E200184C18 /* party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = party.h; path = classes/party.h; sourceTree = "<group>"; };
-		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = party.cpp; path = classes/party.cpp; sourceTree = "<group>"; };
-		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.h; path = classes/pc.h; sourceTree = "<group>"; };
-		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.cpp; path = classes/pc.cpp; sourceTree = "<group>"; };
+		913D05B40FA1E9E200184C18 /* party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
+		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
+		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.h; sourceTree = "<group>"; };
+		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
-		91A32B670FDB5F1000C4E957 /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-pict.xml"; path = "dialogxml/choose-pict.xml"; sourceTree = "<group>"; };
-		91A32B680FDB5F1000C4E957 /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-string.xml"; path = "dialogxml/choose-string.xml"; sourceTree = "<group>"; };
-		91A32B690FDB5F1000C4E957 /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "edit-terrain.xml"; path = "dialogxml/edit-terrain.xml"; sourceTree = "<group>"; };
-		91A32B720FDB5F6800C4E957 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "arena-names.txt"; path = "Scenario Editor/strings/arena-names.txt"; sourceTree = "<group>"; };
-		91A32B730FDB5F6800C4E957 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag1.txt"; path = "Scenario Editor/strings/ter-flag1.txt"; sourceTree = "<group>"; };
-		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag2.txt"; path = "Scenario Editor/strings/ter-flag2.txt"; sourceTree = "<group>"; };
-		91A32B750FDB5F6800C4E957 /* ter-flag3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag3.txt"; path = "Scenario Editor/strings/ter-flag3.txt"; sourceTree = "<group>"; };
-		91A32B760FDB5F6800C4E957 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "trim-names.txt"; path = "Scenario Editor/strings/trim-names.txt"; sourceTree = "<group>"; };
-		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.results.h; path = dialogxml/dialog.results.h; sourceTree = "<group>"; };
-		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlogutil.buttons.h; path = dialogxml/dlogutil.buttons.h; sourceTree = "<group>"; };
+		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
+		91A32B670FDB5F1000C4E957 /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-pict.xml"; path = "dialogxml/choose-pict.xml"; sourceTree = SOURCE_ROOT; };
+		91A32B680FDB5F1000C4E957 /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-string.xml"; path = "dialogxml/choose-string.xml"; sourceTree = SOURCE_ROOT; };
+		91A32B690FDB5F1000C4E957 /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "edit-terrain.xml"; path = "dialogxml/edit-terrain.xml"; sourceTree = SOURCE_ROOT; };
+		91A32B720FDB5F6800C4E957 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "arena-names.txt"; sourceTree = "<group>"; };
+		91A32B730FDB5F6800C4E957 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag1.txt"; sourceTree = "<group>"; };
+		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag2.txt"; sourceTree = "<group>"; };
+		91A32B750FDB5F6800C4E957 /* ter-flag3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag3.txt"; sourceTree = "<group>"; };
+		91A32B760FDB5F6800C4E957 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "trim-names.txt"; sourceTree = "<group>"; };
+		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
+		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
 		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
 		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
-		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = regtown.h; path = classes/regtown.h; sourceTree = "<group>"; };
-		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = regtown.cpp; path = classes/regtown.cpp; sourceTree = "<group>"; };
-		91AC60A60FA26C1B00EEAE67 /* tmpltown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tmpltown.h; path = classes/tmpltown.h; sourceTree = "<group>"; };
-		91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tmpltown.cpp; path = classes/tmpltown.cpp; sourceTree = "<group>"; };
-		91AC61300FA270B300EEAE67 /* classes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = classes.h; sourceTree = "<group>"; };
-		91AC61C40FA2729900EEAE67 /* universe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = universe.h; path = classes/universe.h; sourceTree = "<group>"; };
-		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = universe.cpp; path = classes/universe.cpp; sourceTree = "<group>"; };
-		91AC62090FA2853700EEAE67 /* creatlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = creatlist.h; path = classes/creatlist.h; sourceTree = "<group>"; };
-		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = creatlist.cpp; path = classes/creatlist.cpp; sourceTree = "<group>"; };
+		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regtown.h; sourceTree = "<group>"; };
+		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
+		91AC60A60FA26C1B00EEAE67 /* tmpltown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tmpltown.h; sourceTree = "<group>"; };
+		91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tmpltown.cpp; sourceTree = "<group>"; };
+		91AC61300FA270B300EEAE67 /* classes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = classes.h; sourceTree = SOURCE_ROOT; };
+		91AC61C40FA2729900EEAE67 /* universe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = universe.h; sourceTree = "<group>"; };
+		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = universe.cpp; sourceTree = "<group>"; };
+		91AC62090FA2853700EEAE67 /* creatlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = creatlist.h; sourceTree = "<group>"; };
+		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
-		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoE Scenario Editor-Info.plist"; path = "Scenario Editor/BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
-		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = BOEScen.rsrc; path = "Scenario Editor/BOEScen.rsrc"; sourceTree = "<group>"; };
-		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "BoE Scenario Editor.icns"; path = "Scenario Editor/BoE Scenario Editor.icns"; sourceTree = "<group>"; };
-		91B3EEDE0F969BA700BF5B67 /* scen.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.global.h; path = "Scenario Editor/scen.global.h"; sourceTree = "<group>"; };
-		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.keydlgs.h; path = "Scenario Editor/scen.keydlgs.h"; sourceTree = "<group>"; };
-		91B3EEE10F969BA700BF5B67 /* scen.core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.core.h; path = "Scenario Editor/scen.core.h"; sourceTree = "<group>"; };
-		91B3EEE30F969BA700BF5B67 /* scen.actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.actions.h; path = "Scenario Editor/scen.actions.h"; sourceTree = "<group>"; };
-		91B3EEE40F969BA700BF5B67 /* scen.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.fileio.h; path = "Scenario Editor/scen.fileio.h"; sourceTree = "<group>"; };
-		91B3EEE50F969BA700BF5B67 /* scen.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.graphics.h; path = "Scenario Editor/scen.graphics.h"; sourceTree = "<group>"; };
-		91B3EEE60F969BA700BF5B67 /* scen.townout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.townout.h; path = "Scenario Editor/scen.townout.h"; sourceTree = "<group>"; };
-		91B3EEE70F969BA700BF5B67 /* scen.btnmg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.btnmg.h; path = "Scenario Editor/scen.btnmg.h"; sourceTree = "<group>"; };
-		91B3EEE80F969BA700BF5B67 /* scen.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scen.dlgutil.h; path = "Scenario Editor/scen.dlgutil.h"; sourceTree = "<group>"; };
-		91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.main.cpp; path = "Scenario Editor/scen.main.cpp"; sourceTree = "<group>"; };
-		91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.keydlgs.cpp; path = "Scenario Editor/scen.keydlgs.cpp"; sourceTree = "<group>"; };
-		91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.core.cpp; path = "Scenario Editor/scen.core.cpp"; sourceTree = "<group>"; };
-		91B3EEF10F969BA700BF5B67 /* scen.actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.actions.cpp; path = "Scenario Editor/scen.actions.cpp"; sourceTree = "<group>"; };
-		91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.fileio.cpp; path = "Scenario Editor/scen.fileio.cpp"; sourceTree = "<group>"; };
-		91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.graphics.cpp; path = "Scenario Editor/scen.graphics.cpp"; sourceTree = "<group>"; };
-		91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.townout.cpp; path = "Scenario Editor/scen.townout.cpp"; sourceTree = "<group>"; };
-		91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.btnmg.cpp; path = "Scenario Editor/scen.btnmg.cpp"; sourceTree = "<group>"; };
-		91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scen.dlgutil.cpp; path = "Scenario Editor/scen.dlgutil.cpp"; sourceTree = "<group>"; };
-		91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = viewdlog.cpp; path = tools/viewdlog.cpp; sourceTree = "<group>"; };
-		91B3EEFC0F969BD300BF5B67 /* pc.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.action.h; path = "Blades of Exile Char Editor/pc.action.h"; sourceTree = "<group>"; };
-		91B3EEFD0F969BD300BF5B67 /* pc.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.editors.h; path = "Blades of Exile Char Editor/pc.editors.h"; sourceTree = "<group>"; };
-		91B3EEFE0F969BD300BF5B67 /* pc.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.fileio.h; path = "Blades of Exile Char Editor/pc.fileio.h"; sourceTree = "<group>"; };
-		91B3EEFF0F969BD300BF5B67 /* pc.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.global.h; path = "Blades of Exile Char Editor/pc.global.h"; sourceTree = "<group>"; };
-		91B3EF000F969BD300BF5B67 /* pc.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pc.graphics.h; path = "Blades of Exile Char Editor/pc.graphics.h"; sourceTree = "<group>"; };
-		91B3EF050F969BD300BF5B67 /* pc.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.main.cpp; path = "Blades of Exile Char Editor/pc.main.cpp"; sourceTree = "<group>"; };
-		91B3EF060F969BD300BF5B67 /* pc.action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.action.cpp; path = "Blades of Exile Char Editor/pc.action.cpp"; sourceTree = "<group>"; };
-		91B3EF070F969BD300BF5B67 /* pc.editors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.editors.cpp; path = "Blades of Exile Char Editor/pc.editors.cpp"; sourceTree = "<group>"; };
-		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.fileio.cpp; path = "Blades of Exile Char Editor/pc.fileio.cpp"; sourceTree = "<group>"; };
-		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pc.graphics.cpp; path = "Blades of Exile Char Editor/pc.graphics.cpp"; sourceTree = "<group>"; };
-		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = "Blades of Exile Char Editor/BoECharEd.icns"; sourceTree = "<group>"; };
-		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = bladespced.rsrc; path = "Blades of Exile Char Editor/bladespced.rsrc"; sourceTree = "<group>"; };
-		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Blades of Exile Character Editor-Info.plist"; path = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
+		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
+		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = BOEScen.rsrc; sourceTree = "<group>"; };
+		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "BoE Scenario Editor.icns"; sourceTree = "<group>"; };
+		91B3EEDE0F969BA700BF5B67 /* scen.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.global.h; sourceTree = "<group>"; };
+		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.keydlgs.h; sourceTree = "<group>"; };
+		91B3EEE10F969BA700BF5B67 /* scen.core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.core.h; sourceTree = "<group>"; };
+		91B3EEE30F969BA700BF5B67 /* scen.actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.actions.h; sourceTree = "<group>"; };
+		91B3EEE40F969BA700BF5B67 /* scen.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.fileio.h; sourceTree = "<group>"; };
+		91B3EEE50F969BA700BF5B67 /* scen.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.graphics.h; sourceTree = "<group>"; };
+		91B3EEE60F969BA700BF5B67 /* scen.townout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.townout.h; sourceTree = "<group>"; };
+		91B3EEE70F969BA700BF5B67 /* scen.btnmg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.btnmg.h; sourceTree = "<group>"; };
+		91B3EEE80F969BA700BF5B67 /* scen.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.dlgutil.h; sourceTree = "<group>"; };
+		91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.main.cpp; sourceTree = "<group>"; };
+		91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.keydlgs.cpp; sourceTree = "<group>"; };
+		91B3EEEF0F969BA700BF5B67 /* scen.core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.core.cpp; sourceTree = "<group>"; };
+		91B3EEF10F969BA700BF5B67 /* scen.actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.actions.cpp; sourceTree = "<group>"; };
+		91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.fileio.cpp; sourceTree = "<group>"; };
+		91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.graphics.cpp; sourceTree = "<group>"; };
+		91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.townout.cpp; sourceTree = "<group>"; };
+		91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.btnmg.cpp; sourceTree = "<group>"; };
+		91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.dlgutil.cpp; sourceTree = "<group>"; };
+		91B3EEFC0F969BD300BF5B67 /* pc.action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.action.h; sourceTree = "<group>"; };
+		91B3EEFD0F969BD300BF5B67 /* pc.editors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.editors.h; sourceTree = "<group>"; };
+		91B3EEFE0F969BD300BF5B67 /* pc.fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.fileio.h; sourceTree = "<group>"; };
+		91B3EEFF0F969BD300BF5B67 /* pc.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.global.h; sourceTree = "<group>"; };
+		91B3EF000F969BD300BF5B67 /* pc.graphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.graphics.h; sourceTree = "<group>"; };
+		91B3EF050F969BD300BF5B67 /* pc.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.main.cpp; sourceTree = "<group>"; };
+		91B3EF060F969BD300BF5B67 /* pc.action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.action.cpp; sourceTree = "<group>"; };
+		91B3EF070F969BD300BF5B67 /* pc.editors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.editors.cpp; sourceTree = "<group>"; };
+		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.fileio.cpp; sourceTree = "<group>"; };
+		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
+		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoECharEd.icns; sourceTree = "<group>"; };
+		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladespced.rsrc; sourceTree = "<group>"; };
+		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "../rsrc/Blades of Exile Bases/Blades of Exile Base"; sourceTree = "<group>"; };
-		91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "Scenario Editor/Blades of Exile Graphics"; sourceTree = "<group>"; };
-		91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "Scenario Editor/Blades of Exile Sounds"; sourceTree = "<group>"; };
+		91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "scenedit/Blades of Exile Graphics"; sourceTree = SOURCE_ROOT; };
+		91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "scenedit/Blades of Exile Sounds"; sourceTree = SOURCE_ROOT; };
 		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		91B3F0610F96D25200BF5B67 /* dlgtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgtool.h; path = tools/dlgtool.h; sourceTree = "<group>"; };
-		91B3F0620F96D25200BF5B67 /* dlgtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlgtool.cpp; path = tools/dlgtool.cpp; sourceTree = "<group>"; };
-		91B3F0670F96D29600BF5B67 /* ViewDlog-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ViewDlog-Info.plist"; path = "tools/ViewDlog-Info.plist"; sourceTree = "<group>"; };
-		91B3F0840F975D0E00BF5B67 /* dlgconsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlgconsts.h; path = tools/dlgconsts.h; sourceTree = "<group>"; };
-		91B3F09A0F97672700BF5B67 /* dlglowlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dlglowlevel.h; path = tools/dlglowlevel.h; sourceTree = "<group>"; };
-		91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dlglowlevel.cpp; path = tools/dlglowlevel.cpp; sourceTree = "<group>"; wrapsLines = 0; };
-		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = graphtool.h; path = tools/graphtool.h; sourceTree = "<group>"; };
-		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graphtool.cpp; path = tools/graphtool.cpp; sourceTree = "<group>"; };
-		91B3F10E0F9779D000BF5B67 /* soundtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soundtool.h; path = tools/soundtool.h; sourceTree = "<group>"; };
-		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soundtool.cpp; path = tools/soundtool.cpp; sourceTree = "<group>"; };
-		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mathutil.h; path = tools/mathutil.h; sourceTree = "<group>"; };
-		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathutil.cpp; path = tools/mathutil.cpp; sourceTree = "<group>"; };
-		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cursors.h; path = tools/cursors.h; sourceTree = "<group>"; };
-		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cursors.m; path = tools/cursors.m; sourceTree = "<group>"; };
+		91B3F0610F96D25200BF5B67 /* dlgtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgtool.h; sourceTree = "<group>"; };
+		91B3F0620F96D25200BF5B67 /* dlgtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgtool.cpp; sourceTree = "<group>"; };
+		91B3F0840F975D0E00BF5B67 /* dlgconsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgconsts.h; sourceTree = "<group>"; };
+		91B3F09A0F97672700BF5B67 /* dlglowlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlglowlevel.h; sourceTree = "<group>"; };
+		91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlglowlevel.cpp; sourceTree = "<group>"; wrapsLines = 0; };
+		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphtool.h; sourceTree = "<group>"; };
+		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtool.cpp; sourceTree = "<group>"; };
+		91B3F10E0F9779D000BF5B67 /* soundtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundtool.h; sourceTree = "<group>"; };
+		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundtool.cpp; sourceTree = "<group>"; };
+		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathutil.h; sourceTree = "<group>"; };
+		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
+		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
+		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cursors.m; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -887,15 +868,15 @@
 		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
 		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
 		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
-		91E5C5A10F9EACE200C21460 /* oldstructs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oldstructs.h; sourceTree = "<group>"; };
-		91E5C7970F9F60EC00C21460 /* town.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = town.h; path = classes/town.h; sourceTree = "<group>"; };
-		91E5C7980F9F60EC00C21460 /* town.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = town.cpp; path = classes/town.cpp; sourceTree = "<group>"; };
-		91E5C79C0F9F60FA00C21460 /* outdoors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = outdoors.h; path = classes/outdoors.h; sourceTree = "<group>"; };
-		91E5C79D0F9F60FA00C21460 /* outdoors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = outdoors.cpp; path = classes/outdoors.cpp; sourceTree = "<group>"; };
-		91E5C7A50F9F615400C21460 /* fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileio.h; path = tools/fileio.h; sourceTree = "<group>"; };
-		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fileio.cpp; path = tools/fileio.cpp; sourceTree = "<group>"; };
-		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = talking.h; path = classes/talking.h; sourceTree = "<group>"; };
-		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = talking.cpp; path = classes/talking.cpp; sourceTree = "<group>"; };
+		91E5C5A10F9EACE200C21460 /* oldstructs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oldstructs.h; path = ../oldstructs.h; sourceTree = "<group>"; };
+		91E5C7970F9F60EC00C21460 /* town.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = town.h; sourceTree = "<group>"; };
+		91E5C7980F9F60EC00C21460 /* town.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = town.cpp; sourceTree = "<group>"; };
+		91E5C79C0F9F60FA00C21460 /* outdoors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = outdoors.h; sourceTree = "<group>"; };
+		91E5C79D0F9F60FA00C21460 /* outdoors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = outdoors.cpp; sourceTree = "<group>"; };
+		91E5C7A50F9F615400C21460 /* fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileio.h; sourceTree = "<group>"; };
+		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileio.cpp; sourceTree = "<group>"; };
+		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = talking.h; sourceTree = "<group>"; };
+		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -905,15 +886,6 @@
 			files = (
 				2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */,
 				913D02690FA0EB0300184C18 /* QuickTime.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912793460F9C0FE5007B0D52 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				912793660F9C108D007B0D52 /* Carbon.framework in Frameworks */,
-				913D026C0FA0EB0500184C18 /* QuickTime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,11 +915,10 @@
 			children = (
 				91279BAB0F9CFB18007B0D52 /* classes */,
 				91B3F0FF0F97797200BF5B67 /* tools */,
-				91B3EF5E0F969F3D00BF5B67 /* ViewDlog */,
-				91B3EF380F969E4A00BF5B67 /* Game */,
+				91B3EF380F969E4A00BF5B67 /* osx */,
 				91B3EEF90F969BBD00BF5B67 /* CharEd */,
 				91B3EECD0F969B7000BF5B67 /* ScenEd */,
-				91B3EF220F969CA300BF5B67 /* Files */,
+				91B3EF220F969CA300BF5B67 /* rsrc */,
 				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
 				913D02680FA0EB0300184C18 /* QuickTime.framework */,
 				2BF04AB30BF5187A006C0831 /* Products */,
@@ -960,22 +931,20 @@
 				2BF04AC10BF518D4006C0831 /* Blades of Exile.app */,
 				91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */,
 				91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */,
-				912793480F9C0FE6007B0D52 /* ViewDlog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		910BBA130FB8BE66001E34EA /* dialogs */ = {
+		910BBA130FB8BE66001E34EA /* dialogxml */ = {
 			isa = PBXGroup;
 			children = (
-				912CF34D0FE448150063B614 /* dummy.xml */,
 				910BBA190FB8C43E001E34EA /* xml-parser */,
 				910BBA140FB8BE7D001E34EA /* headers */,
 				910BBA150FB8BE88001E34EA /* src */,
 				910BBA160FB8BE98001E34EA /* common */,
 			);
-			name = dialogs;
-			sourceTree = "<group>";
+			path = dialogxml;
+			sourceTree = SOURCE_ROOT;
 		};
 		910BBA140FB8BE7D001E34EA /* headers */ = {
 			isa = PBXGroup;
@@ -1027,7 +996,7 @@
 				910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */,
 				910BBA2E0FB8C459001E34EA /* tinystr.cpp */,
 			);
-			name = "xml-parser";
+			path = "xml-parser";
 			sourceTree = "<group>";
 		};
 		91279BAB0F9CFB18007B0D52 /* classes */ = {
@@ -1038,7 +1007,7 @@
 				91AC61300FA270B300EEAE67 /* classes.h */,
 				91E5C5A10F9EACE200C21460 /* oldstructs.h */,
 			);
-			name = classes;
+			path = classes;
 			sourceTree = "<group>";
 		};
 		912CF37D0FE44A9B0063B614 /* graphics.exd */ = {
@@ -1047,9 +1016,8 @@
 				912CF37E0FE44A9B0063B614 /* mac */,
 				912CF3DA0FE44A9B0063B614 /* win */,
 			);
-			name = graphics.exd;
-			path = ../rsrc/graphics.exd;
-			sourceTree = SOURCE_ROOT;
+			path = graphics.exd;
+			sourceTree = "<group>";
 		};
 		912CF37E0FE44A9B0063B614 /* mac */ = {
 			isa = PBXGroup;
@@ -1231,7 +1199,7 @@
 		913D03350FA1000200184C18 /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				912283C70FD0E16B00B21642 /* undo.h */,
+				917B573F100B956C0096C978 /* undo.h */,
 				91C688E60FD702B9000F6D01 /* cursors.h */,
 				91B3F1090F9779C300BF5B67 /* graphtool.h */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
@@ -1250,14 +1218,14 @@
 			isa = PBXGroup;
 			children = (
 			);
-			name = dialogs;
+			path = dialogs;
 			sourceTree = "<group>";
 		};
 		91A32AFE0FDAC36300C4E957 /* strings */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = strings;
+			path = strings;
 			sourceTree = "<group>";
 		};
 		91A32AFF0FDAC37400C4E957 /* dialogs */ = {
@@ -1267,7 +1235,7 @@
 				91A32B680FDB5F1000C4E957 /* choose-string.xml */,
 				91A32B690FDB5F1000C4E957 /* edit-terrain.xml */,
 			);
-			name = dialogs;
+			path = dialogs;
 			sourceTree = "<group>";
 		};
 		91A32B000FDAC37B00C4E957 /* strings */ = {
@@ -1279,21 +1247,21 @@
 				91A32B750FDB5F6800C4E957 /* ter-flag3.txt */,
 				91A32B760FDB5F6800C4E957 /* trim-names.txt */,
 			);
-			name = strings;
+			path = strings;
 			sourceTree = "<group>";
 		};
 		91A32B010FDAC39100C4E957 /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = dialogs;
+			path = dialogs;
 			sourceTree = "<group>";
 		};
 		91A32B020FDAC39900C4E957 /* strings */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = strings;
+			path = strings;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -1304,6 +1272,7 @@
 				91B3EED50F969BA700BF5B67 /* rsrc */,
 			);
 			name = ScenEd;
+			path = scenedit;
 			sourceTree = "<group>";
 		};
 		91B3EED50F969BA700BF5B67 /* rsrc */ = {
@@ -1359,6 +1328,7 @@
 				91B3EF0D0F969BD300BF5B67 /* rsrc */,
 			);
 			name = CharEd;
+			path = pcedit;
 			sourceTree = "<group>";
 		};
 		91B3EEFB0F969BD300BF5B67 /* headers */ = {
@@ -1397,7 +1367,7 @@
 			name = rsrc;
 			sourceTree = "<group>";
 		};
-		91B3EF220F969CA300BF5B67 /* Files */ = {
+		91B3EF220F969CA300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
 				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
@@ -1406,36 +1376,28 @@
 				912CF37D0FE44A9B0063B614 /* graphics.exd */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 			);
-			name = Files;
-			sourceTree = "<group>";
+			name = rsrc;
+			path = ../rsrc;
+			sourceTree = SOURCE_ROOT;
 		};
-		91B3EF380F969E4A00BF5B67 /* Game */ = {
+		91B3EF380F969E4A00BF5B67 /* osx */ = {
 			isa = PBXGroup;
 			children = (
 				91D62F2C0F8EB7AB00674AB3 /* src */,
 				91D62F2D0F8EB7BA00674AB3 /* headers */,
 				91D62F2E0F8EB80200674AB3 /* rsrc */,
 			);
-			name = Game;
-			sourceTree = "<group>";
-		};
-		91B3EF5E0F969F3D00BF5B67 /* ViewDlog */ = {
-			isa = PBXGroup;
-			children = (
-				91B3EEF80F969BA700BF5B67 /* viewdlog.cpp */,
-				91B3F0670F96D29600BF5B67 /* ViewDlog-Info.plist */,
-			);
-			name = ViewDlog;
+			name = osx;
 			sourceTree = "<group>";
 		};
 		91B3F0FF0F97797200BF5B67 /* tools */ = {
 			isa = PBXGroup;
 			children = (
-				910BBA130FB8BE66001E34EA /* dialogs */,
+				910BBA130FB8BE66001E34EA /* dialogxml */,
 				913D03350FA1000200184C18 /* headers */,
 				913D03340FA0FFFF00184C18 /* src */,
 			);
-			name = tools;
+			path = tools;
 			sourceTree = "<group>";
 		};
 		91D62F2C0F8EB7AB00674AB3 /* src */ = {
@@ -1526,8 +1488,7 @@
 				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
 				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
 			);
-			name = "Blades of Exile Scenarios";
-			path = "../rsrc/Blades of Exile Scenarios";
+			path = "Blades of Exile Scenarios";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1551,23 +1512,6 @@
 			name = "Blades of Exile";
 			productName = "Blades of Exile";
 			productReference = 2BF04AC10BF518D4006C0831 /* Blades of Exile.app */;
-			productType = "com.apple.product-type.application";
-		};
-		912793470F9C0FE5007B0D52 /* ViewDlog */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9127934D0F9C0FEA007B0D52 /* Build configuration list for PBXNativeTarget "ViewDlog" */;
-			buildPhases = (
-				912793440F9C0FE5007B0D52 /* Resources */,
-				912793450F9C0FE5007B0D52 /* Sources */,
-				912793460F9C0FE5007B0D52 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ViewDlog;
-			productName = ViewDlog;
-			productReference = 912793480F9C0FE6007B0D52 /* ViewDlog.app */;
 			productType = "com.apple.product-type.application";
 		};
 		91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */ = {
@@ -1632,7 +1576,6 @@
 				2BF04AC00BF518D4006C0831 /* Blades of Exile */,
 				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
-				912793470F9C0FE5007B0D52 /* ViewDlog */,
 				91EBE9DA0F9A33A1002356F2 /* All */,
 			);
 		};
@@ -1650,13 +1593,6 @@
 				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
 				91A79DC70FA797BF00A6A41F /* menu.xib in Resources */,
 				913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912793440F9C0FE5007B0D52 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1746,20 +1682,6 @@
 				91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */,
 				91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912793450F9C0FE5007B0D52 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				91E5C1FF0F9E48CB00C21460 /* graphtool.cpp in Sources */,
-				91E5C2000F9E48CB00C21460 /* soundtool.cpp in Sources */,
-				91E5C2010F9E48CB00C21460 /* mathutil.cpp in Sources */,
-				91E5C2020F9E48CB00C21460 /* dlgtool.cpp in Sources */,
-				91E5C2030F9E48CB00C21460 /* dlglowlevel.cpp in Sources */,
-				91E5C2040F9E48CB00C21460 /* dlgbtns.cpp in Sources */,
-				912793640F9C107B007B0D52 /* viewdlog.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2056,61 +1978,6 @@
 			};
 			name = Release;
 		};
-		9127934B0F9C0FEA007B0D52 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INFOPLIST_FILE = "tools/ViewDlog-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = ViewDlog;
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		9127934C0F9C0FEA007B0D52 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
-				INFOPLIST_FILE = "tools/ViewDlog-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = ViewDlog;
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 		912CF3580FE4494C0063B614 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2147,7 +2014,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
+				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2175,7 +2042,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = "Blades of Exile Char Editor/Blades of Exile Character Editor-Info.plist";
+				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2205,7 +2072,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
+				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2239,7 +2106,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = "Scenario Editor/BoE Scenario Editor-Info.plist";
+				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2296,15 +2163,6 @@
 			buildConfigurations = (
 				2BF04AC50BF518D4006C0831 /* Debug */,
 				2BF04AC60BF518D4006C0831 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9127934D0F9C0FEA007B0D52 /* Build configuration list for PBXNativeTarget "ViewDlog" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9127934B0F9C0FEA007B0D52 /* Debug */,
-				9127934C0F9C0FEA007B0D52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
