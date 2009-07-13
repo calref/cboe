@@ -579,7 +579,7 @@ void handle_extra_menu(int item_hit)
 		break;
 		
 		case 4:
-			if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
+			if (univ.party.is_split() > 0) {
 				FCD(909,0);
 				break;
 				}
@@ -588,14 +588,12 @@ void handle_extra_menu(int item_hit)
 			break;
 	
 		case 5:
-			if (PSD[SDF_IS_PARTY_SPLIT] == 0) {
+			if (univ.party.is_split() == 0) {
 				FCD(911,0);
 				break;
 				}
 			FCD(910,0);
-			univ.town.p_loc.x = PSD[SDF_PARTY_SPLIT_X];
-			univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
-			PSD[SDF_IS_PARTY_SPLIT] = 0;
+			univ.town.p_loc = univ.party.left_at();
 			for (i = 0; i < 6; i++)
 				if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
 					univ.party[i].main_status -= MAIN_STATUS_SPLIT;
@@ -647,7 +645,6 @@ void handle_extra_menu(int item_hit)
 			if (FCD(912,0) != 1)
 				break;
 			remove_party_from_scen();
-			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			break;
 	}
 	redraw_screen();

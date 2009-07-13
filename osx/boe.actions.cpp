@@ -320,7 +320,7 @@ bool handle_action(EventRecord event)
 	the_point = event.where;
 	the_point.h -= ul.h;
 	the_point.v -= ul.v;
-	for (i = 0; i < 20; i++)
+	for (i = 0; i < 20; i++) // TODO: Does this cause problems by leaving some specials uncalled?
 		special_queue[i].spec = -1;
 	end_scenario = false;
 		
@@ -1298,10 +1298,14 @@ bool handle_action(EventRecord event)
  	// At this point, see if any specials have been queued up, and deal with them
  	for (i = 0; i < 20; i++)
 		if (special_queue[i].spec >= 0) {
+			long long store_time = univ.party.age;
+			univ.party.age = special_queue[i].trigger_time;
 			s3 = 0;
 			run_special(special_queue[i].mode,special_queue[i].type,special_queue[i].spec,
 						special_queue[i].where,&s1,&s2,&s3);
 			special_queue[i].spec = -1;
+			long long change_time = univ.party.age - special_queue[i].trigger_time;
+			univ.party.age = store_time + change_time;
 			if (s3 > 0)
 				draw_terrain();
 			}
@@ -1412,22 +1416,24 @@ bool handle_action(EventRecord event)
 
 					}	
 				}
-		if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
-			end_split(0);
+		if (univ.party.is_split()) {
+			ASB(univ.party.end_split(0));
+			update_explored(univ.town.p_loc);
+			center = univ.town.p_loc;
 			if (is_combat()) {
 				overall_mode = MODE_TOWN;
-				}
-				else if (is_town()) {
-				
-					}
-			center = univ.town.p_loc;
 			}
+			else if (is_town()) {
+				
+			}
+			center = univ.town.p_loc;
+		}
 		menu_activate(1);
 		draw_terrain();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		if (party_toast() == true) {
-				play_sound(13);
+			play_sound(13);
 			handle_death();
 			if (All_Done == true)
 				return true;
@@ -1751,7 +1757,6 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			
 		case 'B':
 			if(!in_scen_debug) break;
-			PSD[SDF_IS_PARTY_SPLIT] = 0;
 			for(i=0;i<6;i++)
                 if(univ.party[i].main_status >= MAIN_STATUS_SPLIT)
                     univ.party[i].main_status -= MAIN_STATUS_SPLIT;
@@ -1934,6 +1939,10 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 					int x = atoi(response);
 					if(x < 256 && x >= 0)
 						PSD[i][j] = x;
+					else if(x == -1){
+						sout << "SDF(" << i << ',' << j << ") = " << PSD[i][j];
+						add_string_to_buf(sout.str());
+					}
 				}
 			}
 			break;
@@ -2876,14 +2885,6 @@ bool outd_move_party(location destination,bool forced)
 			add_string_to_buf("Land before mounting horses.");
 			return false;
 			}
-		if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING) {
-			ASB("Your horses quite sensibly refuse.");
-			return false;
-			}
-		if (scenario.ter_types[ter].special == TER_SPEC_DANGEROUS) {
-			ASB("Your horses quite sensibly refuse.");
-			return false;
-		}
 			
 			give_help(60,0,0);
 			add_string_to_buf("Move: You mount the horses.           ");
@@ -2906,6 +2907,10 @@ bool outd_move_party(location destination,bool forced)
 		// Check if can fly over
 		|| ((flying() == true) && 
 			(scenario.ter_types[ter].fly_over == true))   ) {
+		if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING || scenario.ter_types[ter].special == TER_SPEC_DANGEROUS) {
+			ASB("Your horses quite sensibly refuse.");
+			return false;
+		}
 		univ.party.direction = set_direction(univ.party.p_loc, destination); 
 
 		if ((flying() == true) && (scenario.ter_types[ter].special == TER_SPEC_TOWN_ENTRANCE)) {

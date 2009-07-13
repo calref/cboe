@@ -88,6 +88,8 @@ public:
 	char spec_item_strs[50][256];
 	char spec_strs[100][256];
 	char monst_strs[100][256];
+	bool adjust_diff : 1;
+	char : 7;
 	FSSpec scen_file; // transient
 	cOutdoors* outdoors;
 	cTown* towns;

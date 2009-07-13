@@ -666,16 +666,22 @@ void handle_talk_event(Point p)
 		asked[3] = place_string1[3];
 		}
 	
-	if ((asked[0] == 'n') && (asked[1] == 'a') &&(asked[2] == 'm') &&(asked[3] == 'a')) {
+	if ((asked[0] == 'n') && (asked[1] == 'a') &&(asked[2] == 'm') &&(asked[3] == 'e')) {
 		force_special = 2;
 		}
-	if ((asked[0] == 'l') && (asked[1] == 'o') &&(asked[2] == 'o') &&(asked[3] == 'k')) {
+	else if ((asked[0] == 'l') && (asked[1] == 'o') &&(asked[2] == 'o') &&(asked[3] == 'k')) {
 		force_special = 1;
-		}
-	if (((asked[0] == 'j') && (asked[1] == 'o') &&(asked[2] == 'b')) ||
+	}
+	else if (((asked[0] == 'j') && (asked[1] == 'o') &&(asked[2] == 'b')) ||
 		((asked[0] == 'w') && (asked[1] == 'o') &&(asked[2] == 'r')&&(asked[3] == 'k')) ) {
-		force_special = 3;	
-		}
+		force_special = 3;
+	}
+	else if (((asked[0] == 'b') && (asked[1] == 'u') &&(asked[2] == 'y'))) {
+		force_special = 3;
+	}
+	else if (((asked[0] == 'b') && (asked[1] == 'y') &&(asked[2] == 'e'))) {
+		end_talk_mode();
+	}
 
 	if (force_special > 0) {
 		switch (force_special) {

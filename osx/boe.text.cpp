@@ -1278,7 +1278,9 @@ void add_string_to_buf(std::string str)
 {
 	if (in_startup_mode == true)
 		return;
-		
+	
+	if(str == "") return;
+	
 	SetControlValue(text_sbar,58);
 	if (buf_pointer == mark_where_printing_long) {
 		printing_long = true;

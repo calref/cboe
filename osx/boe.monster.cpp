@@ -1138,8 +1138,10 @@ void magic_adjust(cCreature *which_m,short *how_much)
 {
 	if (which_m->spec_skill == 26) {
 		*how_much = 0;
-		which_m->health += 3;
-		}
+		if(32767 - which_m->health > 3)
+			which_m->health = 32767;
+		else which_m->health += 3;
+	}
 	if (which_m->immunities & 1)
 		*how_much = *how_much / 2;
 	if (which_m->immunities & 2)

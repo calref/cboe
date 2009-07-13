@@ -1350,7 +1350,7 @@ void draw_terrain(short	mode)
 				draw_one_terrain_spot(q,r,-1);
 			}
 			
-			if ((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && (draw_frills))
+			if ((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && draw_frills)
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
 //			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))

@@ -747,6 +747,7 @@ void handle_town_specials(short town_number, short entry_dir,location start_loc)
 	special_queue[0].where = univ.town.p_loc;
 	special_queue[0].type = 2;
 	special_queue[0].mode = SPEC_ENTER_TOWN;
+	special_queue[0].trigger_time = univ.party.age; // TODO: Simply pushing into slot 0 seems like a bad idea
 }
 
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) 
@@ -757,6 +758,7 @@ void handle_leave_town_specials(short town_number, short which_spec,location sta
 	special_queue[1].where = univ.party.p_loc;
 	special_queue[1].type = 2;
 	special_queue[1].mode = SPEC_LEAVE_TOWN;
+	special_queue[1].trigger_time = univ.party.age; // TODO: Simply pushing into slot 1 seems like a bad idea
 }
 
 bool abil_exists(short abil) // use when univ.out.outdoors

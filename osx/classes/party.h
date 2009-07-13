@@ -122,6 +122,14 @@ public:
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);
 	
+	std::string start_split(short a, short b, snd_num_t noise, short who);
+	std::string end_split(snd_num_t noise);
+	bool is_split();
+	bool pc_present(short n);
+	short pc_present(); // If only one pc is present, returns the number of that pc. Otherwise returns 6.
+	location left_at(); // The location that the left-behind character in a split were left at.
+	size_t left_in(); // The town they were left in.
+	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;

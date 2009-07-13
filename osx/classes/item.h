@@ -28,7 +28,7 @@ public:
 	unsigned short graphic_num;
 	eItemAbil ability;
 	unsigned char ability_strength;
-	unsigned char type_flag;
+	unsigned short type_flag;
 	unsigned char is_special;
 	short value;
 	unsigned char weight;

@@ -1496,16 +1496,18 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	// Absorb damage?
 	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
 		&& (victim->spec_skill == 26)) {
-		victim->health += how_much;
+		if(32767 - victim->health > how_much)
+			victim->health = 32767;
+		else victim->health += how_much;
 		ASB("  Magic absorbed.");
 		return false;
 	}
 	
 	// Saving throw
 	if (((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->level))
-		how_much = how_much / 2;
+		how_much /= 2;
 	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
-		how_much = how_much / 2;
+		how_much /= 2;
 	
 	// Rentar-Ihrno?
 	if (victim->spec_skill == 36)
@@ -2352,14 +2354,16 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	bool check_mess = true;
-	short i,pc,r1;
+	short i,pc = 6,r1;
 	cSpecial spec;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	if(PSD[SDF_IS_PARTY_SPLIT] && cur_node.type != SPEC_AFFECT_DEADNESS)
-		pc = PSD[SDF_PARTY_SPLIT_PC];
-	else pc = current_pc_picked_in_spec_enc;
+	if(univ.party.is_split() && cur_node.type != SPEC_AFFECT_DEADNESS)
+		pc = univ.party.pc_present();
+	if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
+		pc = current_pc_picked_in_spec_enc;
+	if(pc == 6) pc = -1;
 	
 	switch (cur_node.type) {
 		case SPEC_SELECT_PC:
@@ -3057,7 +3061,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 				break;
 			}
-			if (PSD[SDF_IS_PARTY_SPLIT] > 0) {
+			if (univ.party.is_split() > 0) {
 				ASB("Party is already split.");
 				if (which_mode < 3)
 					*a = 1;
@@ -3069,9 +3073,11 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (which_mode < 3)
 				*a = 1;
 			if (r1 != 6) {
-				PSD[SDF_PARTY_SPLIT_PC] = r1;
+				current_pc = r1;
 				*next_spec = -1;
-				start_split(spec.ex1a,spec.ex1b,spec.ex2a);
+				ASB(univ.party.start_split(spec.ex1a,spec.ex1b,spec.ex2a,r1));
+				update_explored(univ.town.p_loc);
+				center = univ.town.p_loc;
 			}
 			else check_mess = false;				
 			break;
@@ -3084,7 +3090,9 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				*a = 1;
 			*next_spec = -1;
 			check_mess = false;		
-			end_split(spec.ex1a);
+			ASB(univ.party.end_split(spec.ex1a));
+			update_explored(univ.town.p_loc);
+			center = univ.town.p_loc;
 			break;
 		case SPEC_TOWN_TIMER_START:
 			univ.party.start_timer(spec.ex1a, spec.ex1b, 1);

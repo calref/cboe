@@ -92,6 +92,7 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	last_out_edited.x = old.last_out_edited.x;
 	last_out_edited.y = old.last_out_edited.y;
 	last_town_edited = old.last_town_edited;
+	adjust_diff = true;
 	return *this;
 }
 

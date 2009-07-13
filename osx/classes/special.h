@@ -37,6 +37,7 @@ struct pending_special_type {
 	eSpecContext mode;
 	unsigned char type; // 0 - scen, 1 - out, 2 - town
 	location where;
+	long long trigger_time;
 };
 
 #endif

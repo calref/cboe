@@ -814,6 +814,8 @@ short cUniverse::difficulty_adjust() {
 	short party_level = 0;
 	short adj = 1;
 	
+	if(!scenario.adjust_diff) return 1;
+	
 	for (short i = 0; i < 6; i++)
 		if (party[i].main_status == 1)
 			party_level += party[i].level;

@@ -17,7 +17,7 @@
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
 cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
-	static const short arenas[260] = {
+	static const short arenas[274] = {
 		1, 1, 0, 0, 0, 1, 1, 1, 1, 1,			//  0 - grassy field
 		1, 1, 1, 1, 1, 1, 1, 1, 2, 2,			//  1 - ordinary cave
 		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,			//  2 - mountain
@@ -26,7 +26,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,/* 50  */	//  5 - rubble-strewn cave
 		0, 3, 3, 3, 3, 3, 3, 5, 5, 5,			//  6 - cave tree forest
 		6, 6, 7, 7, 1, 1, 8, 9, 10,11,			//  7 - cave mushrooms
-		10,11,12,13,13,9, 9, 9, 1, 1,			//  8 - cave swamp
+		11,11,12,13,13,9, 9, 9, 1, 1,			//  8 - cave swamp
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			//  9 - surface rocks
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 100 */	// 10 - surface swamp
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 11 - surface woods
@@ -38,12 +38,14 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - surface road (proposed)
 		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - hills road (proposed)
 		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - crops (proposed)
-		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// (note: fumaroles would have lava.)
-		1, 0, 2, 1, 1, 0, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
-		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1 /* 250 */
+		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// 20 - cave camp (proposed)
+		1, 0, 2, 1, 1, 1, 0, 1, 1, 1,			// 21 - surface camp (proposed)
+		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (note: fumaroles would have lava.)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 250 */
+		4, 4, 4, 4, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1
 	};
 	static const short ground[274] = {
 		0, 0, 1, 1, 1, 2, 2, 2, 2, 2,   2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
@@ -95,17 +97,18 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	};
 	picture = old.picture;
 	blockage = old.blockage;
-	if(picture >= 260) combat_arena = 1;
-	else combat_arena = arenas[picture];
 	if(picture < 260){
+		combat_arena = arenas[picture];
 		ground_type = ground[picture];
 		trim_type = (eTrimType) trims[picture];
 		trim_ter = trim_ters[picture];
 	}else if(picture >= 400 && picture < 1000){
+		combat_arena = arenas[picture - 140];
 		ground_type = ground[picture - 140];
 		trim_type = (eTrimType) trims[picture - 140];
 		trim_ter = trim_ters[picture - 140];
 	}else{
+		combat_arena = 1;
 		ground_type = 255;
 		trim_type = TRIM_NONE;
 		trim_ter = 0;

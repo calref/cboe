@@ -651,11 +651,11 @@ void destroy_an_item()
 {
 	short i;
 	ASB("Too many items. Some item destroyed.");
-	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (univ.town.items[i].type_flag == 15) {
-			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
-			return;
-			}
+//	for (i = 0; i < NUM_TOWN_ITEMS; i++)
+//		if (univ.town.items[i].type_flag == 15) {
+//			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
+//			return;
+//			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (univ.town.items[i].value < 3) {
 			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;

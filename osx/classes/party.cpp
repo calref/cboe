@@ -484,3 +484,73 @@ unsigned char cParty::get_ptr(short p){
 	if(iter == pointers.end()) return 0;
 	return stuff_done[iter->second.first][iter->second.second];
 }
+
+bool cParty::is_split(){
+	bool ret = false;
+	for(int i = 0; i < 6; i++)
+		if(!stuff_done[304][i])
+			ret = true;
+	return ret;
+}
+
+bool cParty::pc_present(short i){
+	if(i >= 6 || i < 0) return false;
+	return stuff_done[304][i];
+}
+
+location cParty::left_at(){
+	return loc(stuff_done[304][6],stuff_done[304][7]);
+}
+
+size_t cParty::left_in(){
+	return stuff_done[304][8];
+}
+extern cUniverse univ;
+std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
+	short i;
+	
+	if(who >= 6 || who < 0) return "";
+	if(is_split())
+		return "Party already split!";
+	stuff_done[304][who] = 0;
+	stuff_done[304][6] = univ.town.p_loc.x;
+	stuff_done[304][7] = univ.town.p_loc.y;
+	stuff_done[304][8] = univ.town.num;
+	univ.town.p_loc.x = a;
+	univ.town.p_loc.y = b;
+	for (i = 0; i < 6; i++)
+		if (!stuff_done[304][who])
+			adven[i].main_status += MAIN_STATUS_SPLIT;
+	if (noise > 0)
+		play_sound(10);
+	return "";
+}
+
+std::string cParty::end_split(snd_num_t noise) {
+	short i;
+	
+	if (!is_split())
+		return "Party already together!";
+	univ.town.p_loc = left_at();
+	univ.town.num = left_in();
+	for (i = 0; i < 6; i++){
+		if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
+			univ.party[i].main_status -= MAIN_STATUS_SPLIT;
+		stuff_done[304][i] = true;
+	}
+	if (noise > 0)
+		play_sound(10);	
+	return "You are reunited.";
+}
+
+short cParty::pc_present(){
+	short ret = 7;
+	for(int i = 0; i < 6; i++){
+		if(stuff_done[304][i] && ret == 7)
+			ret = i;
+		else if(stuff_done[304][i] && ret < 6)
+			ret = 6;
+	}
+	if(ret == 7) ret = 6;
+	return ret;
+}

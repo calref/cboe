@@ -32,11 +32,11 @@
 #define SFX_RUBBLE			128
 
 /* stuff done flags */
-#define SDF_IS_PARTY_SPLIT		304][0
-#define SDF_PARTY_SPLIT_X		304][1
-#define SDF_PARTY_SPLIT_Y		304][2
-#define SDF_PARTY_SPLIT_PC		304][3
-#define SDF_PARTY_SPLIT_TOWN	304][4 // for future use, hopefully
+//#define SDF_IS_PARTY_SPLIT		304][0
+//#define SDF_PARTY_SPLIT_X		304][1
+//#define SDF_PARTY_SPLIT_Y		304][2
+//#define SDF_PARTY_SPLIT_PC		304][3
+//#define SDF_PARTY_SPLIT_TOWN	304][4 // for future use, hopefully
 #define SDF_PARTY_STEALTHY		305][0
 #define SDF_PARTY_FLIGHT		305][1
 #define SDF_PARTY_DETECT_LIFE	305][2

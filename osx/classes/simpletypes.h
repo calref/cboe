@@ -12,6 +12,27 @@ typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
 
+enum eMainStatus {
+	MAIN_STATUS_ABSENT = 0, // absent, empty slot
+	MAIN_STATUS_ALIVE = 1,
+	MAIN_STATUS_DEAD = 2,
+	MAIN_STATUS_DUST = 3,
+	MAIN_STATUS_STONE = 4,
+	MAIN_STATUS_FLED = 5,
+	MAIN_STATUS_SURFACE = 6, // fled to surface?
+	MAIN_STATUS_WON = 7,
+	MAIN_STATUS_SPLIT = 10,
+	// The rest are not really necessary, but are here for completeness so that all valid values have a name.
+	MAIN_STATUS_SPLIT_ABSENT = MAIN_STATUS_SPLIT + MAIN_STATUS_ABSENT,
+	MAIN_STATUS_SPLIT_ALIVE = MAIN_STATUS_SPLIT + MAIN_STATUS_ALIVE,
+	MAIN_STATUS_SPLIT_DEAD = MAIN_STATUS_SPLIT + MAIN_STATUS_DEAD,
+	MAIN_STATUS_SPLIT_DUST = MAIN_STATUS_SPLIT + MAIN_STATUS_DUST,
+	MAIN_STATUS_SPLIT_STONE = MAIN_STATUS_SPLIT + MAIN_STATUS_STONE,
+	MAIN_STATUS_SPLIT_FLED = MAIN_STATUS_SPLIT + MAIN_STATUS_FLED,
+	MAIN_STATUS_SPLIT_SURFACE = MAIN_STATUS_SPLIT + MAIN_STATUS_SURFACE,
+	MAIN_STATUS_SPLIT_WON = MAIN_STATUS_SPLIT + MAIN_STATUS_WON,
+};
+
 /* adven[i].race */ //complete
 enum eRace {
 	RACE_UNKNOWN = -1, // for parameters to some functions; not valid in the class

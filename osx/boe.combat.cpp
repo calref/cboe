@@ -498,7 +498,7 @@ bool pc_combat_move(location destination) ////
 							draw_terrain(0);
 							}
 					if (s1 != current_pc)
-						return false;
+						return true;
 					}
 				
 				// move if still alive
@@ -3953,7 +3953,7 @@ void handle_disease()
 					r1 = get_ran(1,0,7);
 					if (univ.party[i].traits[6] == true)
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,67) < 24))
+					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,ITEM_PROTECT_FROM_DISEASE) < 24))
 						univ.party[i].status[7] = move_to_zero(univ.party[i].status[7]);
 				}
 		put_pc_screen();

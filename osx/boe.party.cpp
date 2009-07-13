@@ -3194,7 +3194,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	bool dummy;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if (univ.party[i].main_status == MAIN_STATUS_ALIVE)
 			dummy = damage_pc(i,how_much,damage_type,MONSTER_TYPE_UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen(); 

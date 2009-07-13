@@ -273,48 +273,6 @@ location get_spec_loc(short which)
 	return where;
 }
 
-
-void start_split(short a,short b,short noise) 
-{
-	short i;
-
-	PSD[SDF_IS_PARTY_SPLIT] = 1;
-	PSD[SDF_PARTY_SPLIT_X] = univ.town.p_loc.x;
-	PSD[SDF_PARTY_SPLIT_Y] = univ.town.p_loc.y;
-	PSD[SDF_PARTY_SPLIT_TOWN] = univ.town.num;
-	univ.town.p_loc.x = a;
-	univ.town.p_loc.y = b;
-	for (i = 0; i < 6; i++)
-		if (i != PSD[SDF_PARTY_SPLIT_PC])
-			univ.party[i].main_status += MAIN_STATUS_SPLIT;
-	current_pc = PSD[SDF_PARTY_SPLIT_PC];
-	update_explored(univ.town.p_loc);
-	center = univ.town.p_loc;
-	if (noise > 0)
-		play_sound(10);	
-}
-
-void end_split(short noise) 
-{
-	short i;
-
-	if (PSD[SDF_IS_PARTY_SPLIT] == 0) {
-		ASB("Party already together!");
-		return;
-		}
-	univ.town.p_loc.x = PSD[SDF_PARTY_SPLIT_X];
-	univ.town.p_loc.y = PSD[SDF_PARTY_SPLIT_Y];
-	PSD[SDF_IS_PARTY_SPLIT] = 0;
-	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
-			univ.party[i].main_status -= MAIN_STATUS_SPLIT;
-	update_explored(univ.town.p_loc);
-	center = univ.town.p_loc;
-	if (noise > 0)
-		play_sound(10);	
-	add_string_to_buf("You are reunited.");
-}
-
 // 0 if no pull.
 // 1 if pull
 // levers should always start to left.
