@@ -9,6 +9,7 @@
 #include "text.h"
 #include "string.h"
 #include "exlsound.h"
+#include "infodlgs.h"
 
 #include "graphutl.h"
 #include "globvar.h"
@@ -327,7 +328,7 @@ HBITMAP load_pict(short pict_num,HDC)
 		case 1400: got_bitmap = ReadBMP("images/STSCICON.BMP"); break;
 		case 1401: got_bitmap = ReadBMP("images/HELPPICS.BMP"); break;
 		case 1402: got_bitmap = ReadBMP("images/APPIC.BMP"); break;
-		case 1500: 
+/*		case 1500: 
 		case 1501: 
 		case 1502: 
 		case 1503: 
@@ -335,7 +336,7 @@ HBITMAP load_pict(short pict_num,HDC)
 		case 1505: 
 		case 1506: 
 		case 1507:
-			got_bitmap = ReadBMP("images/BIGMAPS.BMP"); break;
+			got_bitmap = ReadBMP("images/BIGMAPS.BMP"); break;*/  // <= doesn't exists
 		case 2000: got_bitmap = ReadBMP("images/DLOGBTNS.BMP"); break;
 		case 3000: got_bitmap = ReadBMP("images/START.BMP"); break;
 		case 3001: got_bitmap = ReadBMP("images/SPIDLOGO.BMP"); break;
@@ -355,4 +356,19 @@ HBITMAP load_pict(short pict_num,HDC)
 HBITMAP ReadBMP(char * fileName)
 {
 	return (HBITMAP) LoadImage(0, fileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+}
+
+HBITMAP ReadScenFile(char* filename){ //like ReadBMP but in the current scenario folder only.
+
+        short store_val;
+        char str[256]= "scenarios/";
+           store_val= strlen(party.scen_name)-1;
+            while(party.scen_name[store_val] != '.'){ // get rid of the .exs part
+                store_val--;
+                }
+            strncat(str, party.scen_name, store_val + 1); // the scenario is in a subfolder so add that to the filepath
+            strcat(str,"exr/");
+            strcat(str,filename);
+            
+    return (HBITMAP) LoadImage(0, str, IMAGE_BITMAP, 0 ,0 , LR_LOADFROMFILE);
 }

@@ -1199,6 +1199,8 @@ short print_terrain(location space)
 
 void add_string_to_buf(char *string)
 {
+    if(strcmp(string,"") == 0)
+        return;
 //	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
     lpsi.nPos = 58;
     lpsi.fMask = SIF_POS;

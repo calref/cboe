@@ -161,7 +161,11 @@ struct town_record_type
 	short timer_specs[8];
 	unsigned char strlens[180];
 	special_node_type specials[100];
-	unsigned char specials1,specials2,res1,res2;
+	unsigned char defy_mapping,defy_scrying;
+    char hostile_spec_to_call,res2;
+/*    bool strong_barriers : 1;
+    bool defy_mapping : 1;
+    char reserved_bits : 6;*/
 	short difficulty;
 	
 	/* functions */
@@ -296,7 +300,8 @@ typedef struct {
 	item_storage_shortcut_type storage_shortcuts[10];
 	short flag_d;
 	unsigned char scen_str_len[300];
-	short flag_i;
+//	short flag_i;
+    short adjust_diff;
 	location last_out_edited;
 	short last_town_edited;
 	} scenario_data_type;
@@ -459,5 +464,14 @@ void move_to_zero(T & value)
 	if (value > 0) --value;
 	else if (value < 0)	++value;
 };
+
+typedef  struct { 
+    
+    short queued_special;
+    long trigger_time;
+    unsigned short mode;
+    unsigned char type; // 0 - scen, 1 - out, 2 - town
+    location where;
+    }pending_special_type;
 
 #endif

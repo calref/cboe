@@ -169,7 +169,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	Boolean town_move_done = FALSE,pc_delayed = FALSE;
 	location destination,cur_loc,loc_in_sec,cur_direction;
 	unsigned char storage;
-	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
+	short find_direction_from,ter_looked_at,button_hit = 12;
 	short store_sp[6];
 
 	char str[60];	
@@ -187,7 +187,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 		ctrl_key = TRUE;
 
 	for (i = 0; i < 20; i++)
-		special_queue[i] = -1;
+		special_queue[i].queued_special = -1;
 	end_scenario = FALSE;
 
 	// Now split off the extra stuff, like talking and shopping.
@@ -350,7 +350,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 												i = 200;
 												add_string_to_buf("  Monsters nearby.");
 												}
-											if(timed_special_happened){
+											if(timed_special_happened && PSD[309][4] == 1){
                                                 i=200;
 												add_string_to_buf("  Rest interrupted.");                                                
                                                 }
@@ -359,11 +359,38 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 										put_pc_screen();
 									}
 							if (i == 50) {
+                                if(PSD[309][6] == 1){
+                                    for(i=0; i < 115; i++){
+                                        party.age += 10;
+                                      	// Specials countdowns
+	                                    if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (adven.hasAbil(52) == true)) {
+                                        	i = 200;
+                                   			adven.disease(2);
+                                    		}
+                                    	// Plants and magic shops	
+                                       	if (party.age % 4000 == 0) refresh_store_items();
+
+                                        timed_special_happened = special_increase_age(0);
+
+                                        if(timed_special_happened && PSD[309][4] == 1){
+                                            i=200;
+    										add_string_to_buf("  Rest interrupted.");                                                
+                                            }
+                                        }
+                                        if(i == 115){
+               								add_string_to_buf("  Rest successful.                ");
+            								adven.heal(get_ran(5,1,10));
+			             					adven.restoreSP(50);
+						              		put_pc_screen();               								
+                                        }
+                                }
+                                else{
 								party.age += 1200;////
 								add_string_to_buf("  Rest successful.                ");
 								adven.heal(get_ran(5,1,10));
 								adven.restoreSP(50);
 								put_pc_screen();
+                                    }
 								}
 							need_reprint = TRUE;
 							need_redraw = TRUE;
@@ -576,14 +603,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			
 // Begin: Moving
 				if ((right_button == FALSE) && (overall_mode == MODE_COMBAT)) {
-                    store_cur_pc = current_pc;
 					if (pc_combat_move(destination) == TRUE) {
 						center = pc_pos[current_pc];
 						did_something = TRUE;
 						update_explored(destination);
 						}
-					if(store_cur_pc != current_pc)
-					   did_something = TRUE; //pc dead by backshot
 					need_redraw = TRUE;
 					menu_activate(1);
 					}					
@@ -1108,7 +1132,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			j = get_ran(1,1,160 - c_town.difficulty);
 			if (j == 10)
 				create_wand_monst();
-            if(timed_special_happened){
+            if(timed_special_happened && PSD[309][4] == 1){
             i = 200;
             add_string_to_buf("  Waiting interrupted.");
             }
@@ -1141,15 +1165,24 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
  	 
 	// At this point, see if any specials have been queued up, and deal with them
  	for (i = 0; i < 20; i++)
-		if (special_queue[i] >= 0) {
+		if (special_queue[i].queued_special >= 0) {
 			s3 = 0;
 			switch (i) {
 				case 0:
-					run_special(5,2,special_queue[0],c_town.p_loc,&s1,&s2,&s3);
+					run_special(5,2,special_queue[0].queued_special,c_town.p_loc,&s1,&s2,&s3);
 					break;
 				case 1:
-					run_special(6,2,special_queue[1],party.p_loc,&s1,&s2,&s3);
+					run_special(6,2,special_queue[1].queued_special,party.p_loc,&s1,&s2,&s3);
 					break;
+				default:
+                    long store_time = party.age;
+                    party.age = special_queue[i].trigger_time;
+// Call run_special() with the other data from special_queue[i] (which is a pending_special_type struct)
+                    run_special(special_queue[i].mode, special_queue[i].type, special_queue[i].queued_special, special_queue[i].where, &s1, &s2, &s3);
+                    party.age = max(party.age, store_time);
+                    queue_position--; //free the queue slot
+                    break;
+
 				}
 			if (s3 > 0)
 				initiate_redraw();
@@ -1175,7 +1208,6 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						if ((combat_active_pc == 6) || (pc_moves[combat_active_pc] > 0))
 							need_redraw = FALSE;
 						}
-					store_cur_pc = current_pc;
 					if (combat_next_step() == TRUE)
 						need_redraw = TRUE;
 					}
@@ -1328,7 +1360,7 @@ void check_cd_event(HWND hwnd,UINT message, WPARAM wparam, LPARAM lparam)
 		case 1010: spend_xp_event_filter (item_hit); break;
 		case 1012: get_num_of_items_event_filter (item_hit); break;
 		case 1013: pick_race_abil_event_filter (item_hit); break;
-		case 1014: dialog_not_toast = FALSE; break;
+        case 1014: dialog_not_toast = FALSE; break;
 		case 1017: case 873: get_text_response_event_filter(item_hit); break;
 		case 1018: select_pc_event_filter (item_hit); break;
 		case 1019: give_pc_info_event_filter(item_hit); break;
@@ -1640,15 +1672,15 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
     //	case 'A': Alchemy
 		case 'B': // Leave town
 			if (in_scen_debug) {
-			party.stuff_done[304][0] = 0;		
-            for(i=0;i<6;i++)
-                if(adven[i].main_status > 9)
-                    adven[i].main_status -= 10;		
-            if(overall_mode == MODE_OUTDOORS){
+            if(overall_mode != MODE_TOWN){
                 add_string_to_buf("Debug - Leave Town: You're not in town !");
                 print_buf();
                 break;
             }
+   			party.stuff_done[304][0] = 0;		
+            for(i=0;i<6;i++)
+                if(adven[i].main_status > 9)
+                    adven[i].main_status -= 10;	            
 			overall_mode = MODE_OUTDOORS;	
 			position_party(party.outdoor_corner.x,party.outdoor_corner.y,party.p_loc.x,party.p_loc.y);
 			clear_map();			
@@ -1761,26 +1793,29 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 		    break; 				
 		case 'O': // Location
 					if (is_town()) {
-					loc = (overall_mode == MODE_OUTDOORS) ? party.p_loc : c_town.p_loc;
-						sprintf ((char *) c_line, "Debug:  You're at x %d  y %d in town %d.",
+					loc = c_town.p_loc;
+						sprintf ((char *) c_line, "Debug:  You're at x %d,  y %d in town %d.",
 						(short) loc.x, (short) loc.y, c_town.town_num);
 						}
 					if (is_out()) {
-						loc = (overall_mode == MODE_OUTDOORS) ? party.p_loc : c_town.p_loc;
+						loc = party.p_loc;
 						x = loc.x; y = loc.y;
 							x += 48 * party.outdoor_corner.x; y += 48 * party.outdoor_corner.y;
-							sprintf ((char *) c_line, "Debug:  You're outside at x %d  y %d.",x,y);
+							sprintf ((char *) c_line, "Debug:  You're outside at x %d,  y %d.",x,y);
 						}
+					if(is_combat()){
+                        loc = pc_pos[current_pc];
+						sprintf (c_line, "Debug:  You're in combat at x %d,  y %d.", loc.x, loc.y);
+                    }
 					add_string_to_buf((char *) c_line);
 					print_buf();					
     		break;			
 //  	case 'P': repeat Priest spell
        case 'I': //debug info
    	       char buf[256]; //event timer off debug info
-	       sprintf(buf,"Party Age : %d", party.age);
+//	       sprintf(buf,"Party Age : %d, Ctown ploc : x = %d, y = %d", party.age, center.x, center.y);
+           sprintf(buf,"Town chop time : %d, chop key : %d",c_town.town.town_chop_time, c_town.town.town_chop_key);
 	       give_error(buf,"",0);
-/*        char buf[256];
-        sprintf(buf,"Scen name = %s",party.scen_name);*/
             break;
 		case 'Q':  // Magic map
 			if (in_scen_debug) {
@@ -1832,9 +1867,14 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
                get_text_response(873,response,0);
                j = atoi(response);
             if(j >= 0 && j < 10){
-                display_strings("Enter Stuff Done Flag Part Value (outrageous values are a sure way to crash, or at least broke, the game)","",0,0,0,0,"Which value ?",-1,130,0);
+                display_strings("Enter Stuff Done Flag Part Value (outrageous values are a sure way to crash, or at least broke, the game)|Entering -1 show the value of the specified SDF.","",0,0,0,0,"Which value ?",-1,130,0);
                 get_text_response(873,response,0);
                 x = atoi(response);
+                if(x == -1){
+                sprintf(response,"SDF[%d][%d] = %d",i,j,party.stuff_done[i][j]);
+                give_error(response,"",0);
+                }
+                else
                 party.stuff_done[i][j]=x;
             }
         }
@@ -2303,7 +2343,7 @@ void increase_age()
 			}
 	dump_gold(1);
 
-	timed_special_happened = special_increase_age();
+	timed_special_happened = special_increase_age(0);
 	push_things();
 		
 	if (is_town()) process_fields();

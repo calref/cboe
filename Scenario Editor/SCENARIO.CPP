@@ -1263,8 +1263,8 @@ void edit_monst_type_event_filter (short item_hit)
 			store_which_monst--;
 			if (store_which_monst < 1) store_which_monst = 255;
 			store_monst = scenario.scen_monsters[store_which_monst];
+            custom_pic = (store_monst.picture_num) / 1000;
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
 		case 22://next monster
 			if (save_monst_info() == FALSE) break;
@@ -1272,8 +1272,8 @@ void edit_monst_type_event_filter (short item_hit)
 			store_which_monst++;
 			if (store_which_monst > 255) store_which_monst = 1;
 			store_monst = scenario.scen_monsters[store_which_monst];
+            custom_pic = (store_monst.picture_num) / 1000;
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;			
 			break;
 		case 24: // picture
 			if (save_monst_info() == FALSE) break;
@@ -1568,7 +1568,7 @@ Boolean save_item_info()
 	store_item.charges = CDGN(818,9);
 	if (cre(store_item.charges,0,100,"Charges must be from 0 to 100.","",818) > 0) return FALSE;
 	store_item.type_flag = CDGN(818,10);
-	if (cre(store_item.type_flag,0,1000,"Type Flag must be from 0 to 1000.","",818) > 0) return FALSE;
+	if (cre(store_item.type_flag,0,255,"Type Flag must be from 0 to 255.","",818) > 0) return FALSE;
 	store_item.value  = CDGN(818,11);
 	if (cre(store_item.value,0,10000,"Value must be from 0 to 10000.","",818) > 0) return FALSE;
 	store_item.weight = CDGN(818,12);
@@ -1584,7 +1584,7 @@ Boolean save_item_info()
 		give_error("The Unused item varieties are reserved for later expansions, and can't be used now.","",818);
 		return FALSE;
 		}
-	if ((store_item.ability >= 70) && (store_item.ability < 170) && (store_item.charges == 0)) {
+	if ((store_item.ability >= 70) && (store_item.ability < 170) && (store_item.ability != 95) && (store_item.charges == 0)) {
 		give_error("An item with the special ability selected must have at least 1 charge.","",818);
 		return FALSE;
 		}
@@ -1721,10 +1721,10 @@ Boolean save_item_abils()
 	store_item2.magic_use_type = cd_get_led_range(824,5,8);
 	store_item2.treas_class = cd_get_led_range(824,26,30);
 	store_item2.ability_strength = CDGN(824,2);
-	if ((store_item2.ability != 119) && (store_item2.ability != 120)) {
+	if ((store_item2.ability != 119) && (store_item2.ability != 120) && (store_item2.ability != 95)) {
 		if (cre(store_item2.ability_strength,0,10,"Ability Strength must always be a number from 0 to 10.","",824) > 0) return FALSE;
 		}
-		else if (cre(store_item2.ability_strength,0,255,"Ability Strength must be 0 to 255 - the number of the monster to summon.","",824) > 0) return FALSE;
+//		else if (cre(store_item2.ability_strength,0,255,"Ability Strength must be 0 to 255 - the number of the monster to summon.","",824) > 0) return FALSE; => useless, ability strength is an unsigned char
 	store_item2.item_properties = 0;
 	store_item2.item_properties |= (cd_get_led(824,9) == 1) ? 1 : 0;
 	store_item2.item_properties |= (cd_get_led(824,10) == 1) ? 4 : 0;
@@ -1753,7 +1753,6 @@ void edit_item_abil_event_filter (short item_hit)
 				}
 			i = choose_text_res(23,1,15,store_item2.ability + 1,824,"Choose Weapon Ability (inherent)");
 			if (i >= 0) store_item2.ability = i - 1;
-				else store_item2.ability = 0;
 				put_item_abils_in_dlog();
 			break;
 		case 35:
@@ -1766,7 +1765,6 @@ void edit_item_abil_event_filter (short item_hit)
 				}
 			i = choose_text_res(23,31,63,store_item2.ability + 1,824,"Choose General Ability (inherent)");
 			if (i >= 0) store_item2.ability = i - 1;
- 				else store_item2.ability = 0;
 			put_item_abils_in_dlog();
 			break;
 		case 36:
@@ -1775,9 +1773,8 @@ void edit_item_abil_event_filter (short item_hit)
 				give_error("You can only give an ability of this sort to an item which isn't a missile.","",824);
 				break;
 				}
-			i = choose_text_res(23,71,95,store_item2.ability + 1,824,"Choose Usable Ability (Not spell)");
+			i = choose_text_res(23,71,96,store_item2.ability + 1,824,"Choose Usable Ability (Not spell)");
 			if (i >= 0) store_item2.ability = i - 1;
-				else store_item2.ability = 0;
 			put_item_abils_in_dlog();
 			break;
 		case 39:
@@ -1788,7 +1785,6 @@ void edit_item_abil_event_filter (short item_hit)
 				}
 			i = choose_text_res(23,111,136,store_item2.ability + 1,824,"Choose Usable Ability (Spell)");
 			if (i >= 0) store_item2.ability = i - 1;
-				else store_item2.ability = 0;
 			put_item_abils_in_dlog();
 			break;
 		case 38:
@@ -1799,7 +1795,6 @@ void edit_item_abil_event_filter (short item_hit)
 				}
 			i = choose_text_res(23,151,162,store_item2.ability + 1,824,"Choose Reagent Ability");
 			if (i >= 0) store_item2.ability = i - 1;
- 				else store_item2.ability = 0;
 			put_item_abils_in_dlog();
 			break;
 		case 37:
@@ -1810,7 +1805,6 @@ void edit_item_abil_event_filter (short item_hit)
 				}
 			i = choose_text_res(23,171,177,store_item2.ability + 1,824,"Choose Missile Ability");
 			if (i >= 0) store_item2.ability = i - 1;
-				else store_item2.ability = 0;
 			put_item_abils_in_dlog();
 			break;
 		default:
@@ -2388,6 +2382,7 @@ Boolean save_scen_details()
 	
 	scenario.difficulty = cd_get_led_range(803,30,33);
 	scenario.rating = cd_get_led_range(803,21,24);
+    scenario.adjust_diff = cd_get_led(803,35);
 	scenario.ver[0] = CDGN(803,2);
 	scenario.ver[1] = CDGN(803,3);
 	scenario.ver[2] = CDGN(803,4);
@@ -2412,6 +2407,7 @@ void put_scen_details_in_dlog()
 	
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);
+    cd_set_led(803,35,scenario.adjust_diff);
 	CDSN(803,2,scenario.ver[0]);
 	CDSN(803,3,scenario.ver[1]);
 	CDSN(803,4,scenario.ver[2]);
@@ -2429,6 +2425,9 @@ void edit_scen_details_event_filter (short item_hit)
 		case 8:
 			if (save_scen_details() == TRUE)
 				 dialog_not_toast = FALSE; 
+			break;
+        case 35:
+			cd_set_led(803,35,1 - cd_get_led(803,35));
 			break;
 		default:
 			cd_hit_led_range(803,21,24,item_hit);

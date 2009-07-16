@@ -113,10 +113,11 @@ void init_town(short size)
 	for (i = 0; i < 100; i++) {
 		town.specials[i] = null_spec_node;
 		}
-	town.specials1 = 0;
-	town.specials2 = 0;
-	town.res1 = 0;
+	town.defy_scrying = 0;
+	town.hostile_spec_to_call = -1;
 	town.res2 = 0;
+//    town.strong_barriers = 0;
+	town.defy_mapping = 0;
 	town.difficulty = 0;
 	for (i = 0; i < 180; i++) {
 		get_str(temp_str,36,i + 1);
@@ -1176,11 +1177,16 @@ Boolean save_advanced_town()
 		}
 	town.spec_on_entry = CDGN(834,6);
 	town.spec_on_entry_if_dead = CDGN(834,7);
+	town.hostile_spec_to_call = CDGN(834,43);
 	if (cre(town.spec_on_entry,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
 		,"",834) == TRUE) return FALSE;
 	if (cre(town.spec_on_entry_if_dead,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
 		,"",834) == TRUE) return FALSE;
+	if (cre(town.hostile_spec_to_call,-1,99,"The town specials to call must be from 0 to 99 (or -1 for no special)."
+		,"",834) == TRUE) return FALSE;	
 	scenario.town_hidden[cur_town] = cd_get_led(834,37);
+	town.defy_mapping = cd_get_led(834,39);
+	town.defy_scrying = cd_get_led(834,41);	
 	return TRUE;
 }
 
@@ -1193,11 +1199,13 @@ void put_advanced_town_in_dlog()
 		CDSN(834,2 + i,town.exit_specs[i]);
 		CDSN(834,8 + i * 2,town.exit_locs[i].x);
 		CDSN(834,9 + i * 2,town.exit_locs[i].y);
+		CDSN(834,43,town.hostile_spec_to_call);
 		}
 	CDSN(834,6,town.spec_on_entry);
 	CDSN(834,7,town.spec_on_entry_if_dead);
 	cd_set_led(834,37,scenario.town_hidden[cur_town]);
-
+	cd_set_led(834,39,town.defy_mapping);	
+	cd_set_led(834,41,town.defy_scrying);		
 }
 
 void edit_advanced_town_event_filter (short item_hit)
@@ -1216,6 +1224,12 @@ void edit_advanced_town_event_filter (short item_hit)
 		case 37:
 			cd_flip_led(834,37,item_hit);
 			break;
+		case 39:
+			cd_flip_led(834,39,item_hit);
+			break;	   
+		case 41:
+    		cd_flip_led(834,41,item_hit);
+			break;	   
 		}
 }
 

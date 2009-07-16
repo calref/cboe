@@ -104,6 +104,7 @@ ACCELERATORS_1 ACCELERATORS
  "^Q", 8, ASCII
  "^M", 84, ASCII
  "^A", 81, ASCII
+ "^N", 4, ASCII
 }
 
 89 CURSOR "resources/ul.cur"

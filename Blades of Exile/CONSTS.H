@@ -24,12 +24,6 @@
 #define SFX_BONES 			64
 #define SFX_RUBBLE 			128
 
-/* stuff done flags */
-#define SDF_IS_PARTY_SPLIT	304][0
-#define SDF_PARTY_SPLIT_X	304][1
-#define SDF_PARTY_SPLIT_Y	304][2
-#define SDF_NO_INSTANT_HELP	306][4	// boolean
-
 /* overall mode; some seem to be missing */
  #define MODE_OUTDOORS 0
  #define MODE_TOWN 1
@@ -61,7 +55,7 @@
 #define MAIN_STATUS_SURFACE 6		// fled to surface?
 #define MAIN_STATUS_WON 7
 /* main status modifiers */
-#define MAIN_STATUS_SPLIT 10		// split from party, added to previous status (e.g 11 is splited alive : waiting for the active pc to return). 
+#define MAIN_STATUS_SPLIT 10		// split from party, added to previous status (e.g 11 is splitted and alive : waiting for the active pc to return). 
 
 
 /* adven[i].skills */     //complete
@@ -511,7 +505,8 @@
 #define SPELL_TARGET 2
 #define SPELL_FANCY_TARGET 3
 
-#define SDF_IS_PARTY_SLIPT 304][0
+/* stuff done flags */
+#define SDF_IS_PARTY_SPLIT 304][0
 #define SDF_PARTY_SPLIT_WHERE_PARTY_X 304][1
 #define SDF_PARTY_SPLIT_WHERE_PARTY_Y 304][2
 #define SDF_PARTY_SPLIT_PC      304][3

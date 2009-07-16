@@ -449,7 +449,7 @@ Boolean spend_xp_event_filter (short item_hit)
 
 
 			case 3: case 4:
-					if ((store_h >= 250) && (item_hit == 4)) 
+					if (((store_h >= 250) && (item_hit == 4)) ||((store_h <= 2) && (item_hit == 3))) 
 							play_sound(0);
 						else {
 							if (item_hit == 3) {
@@ -477,7 +477,7 @@ Boolean spend_xp_event_filter (short item_hit)
 				break;
 
 			case 5: case 6:
-					if ((store_sp >= 150) && (item_hit == 6))
+					if (((store_sp >= 150) && (item_hit == 6)) || ((store_sp <= 0) && (item_hit == 5)))
 							play_sound(0);
 						else {
 							if (item_hit == 5) {

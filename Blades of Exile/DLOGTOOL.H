@@ -42,6 +42,7 @@ RECT get_item_rect(HWND hDlg, short item_num);
 void frame_dlog_rect(HWND hDlg, RECT rect, short val);
 void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)   ;
 void showcursor(Boolean a);
+short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture);
 
 void cd_get_text_edit_str(short dlog_num, char *str);
 // NOTE!!! Expects a c string
@@ -55,6 +56,8 @@ inline void csp(short dlog_num, short item_num, short pict_num)
 	{ cd_set_pict( dlog_num, item_num, pict_num); }
 inline void cd_set_edit_focus() { if (edit_box) SetFocus(edit_box); }
 void ModalDialog();
+
+extern HWND dlgs[ND];
 
 RECT calc_rect(short i, short j);
 

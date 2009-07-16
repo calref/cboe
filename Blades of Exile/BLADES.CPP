@@ -176,8 +176,8 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 	
 	RegisterClass(&wndclass2);
 
-	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile Beta 2",
-			WS_OVERLAPPEDWINDOW,
+	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile 1.0",
+			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,
 			588,
@@ -326,7 +326,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 // First, handle window size
 	GetWindowRect(mainPtr,&wind_rect);
 	
-	switch (display_mode) {
+	switch (display_mode) { //case 0 is center
 		case 1:	store_ulx = 0;
 				store_uly = 0;
 				break;

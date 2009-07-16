@@ -102,7 +102,7 @@ char edit_spec_mess_mess[256] = {
 	0,0,0,0,0,0,0,0,0,0,
 	1,1,1,1,1,1,1,1,1,1,
 	1,1,1,1,0,0,0,0,2,2,
-	2,1,1,1,1,1,0,0,0,0,
+	2,1,1,1,1,1,1,0,0,0,
 	1,1,1,1,1,1,1,1,1,1, // 200
 	1,1,1,1,1,1,1,1,1,0,
 	0,0,0,0,0,0,1,1,1,3,
@@ -152,7 +152,7 @@ char edit_jumpto_mess[256] = {
 	0,0,0,0,0,0,0,0,0,0,
 	3,3,3,3,3,3,3,3,3,3,
 	3,3,3,3,3,3,3,3,3,3,
-	3,3,3,3,3,0,0,0,0,0, // 150
+	3,3,3,3,3,0,3,0,0,0, // 150
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
@@ -819,7 +819,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		case 37: // 1st spec type
 			if (save_spec_enc() == TRUE)
 				 dialog_not_toast = FALSE; 
-			i = choose_text_res(22,1,28,store_spec_node.type + 1,822,"Choose General Use Special:");
+			i = choose_text_res(22,1,29,store_spec_node.type + 1,822,"Choose General Use Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
 				}
@@ -848,7 +848,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		case 40: // 4 spec type
 			if (save_spec_enc() == TRUE)
 				 dialog_not_toast = FALSE; 
-			i = choose_text_res(22,131,156,store_spec_node.type + 1,822,"Choose If-Then Special:");
+			i = choose_text_res(22,131,157,store_spec_node.type + 1,822,"Choose If-Then Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
 				}

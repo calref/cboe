@@ -164,7 +164,7 @@ bool pc_record_type::runTrap(short trap_type, short trap_level, short diff)
 		
 		case TRAP_ALERT:
 			add_string_to_buf("  An alarm goes off!!!            ");
-			make_town_hostile();
+			set_town_status(0);
 			break;
 
 		case TRAP_FLAMES: 
