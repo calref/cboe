@@ -172,7 +172,8 @@ typedef struct {
 	short timer_specs[8];
 	unsigned char strlens[180];
 	special_node_type specials[100];
-	unsigned char specials1,specials2,res1,res2;
+    unsigned char defy_mapping, defy_scrying;
+    char hostile_spec_to_call, res2;
 	short difficulty;
 	} town_record_type;
 
@@ -288,7 +289,8 @@ typedef struct {
 	item_storage_shortcut_type storage_shortcuts[10];
 	short flag_d;
 	unsigned char scen_str_len[300];
-	short flag_i;
+//	short flag_i;
+    short adjust_diff;
 	location last_out_edited;
 	short last_town_edited;
 

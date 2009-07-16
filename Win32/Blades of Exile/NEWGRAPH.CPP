@@ -1033,7 +1033,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		paint_pattern(talk_gworld,0,c_rect,3);
 		}
 		else paint_pattern(talk_gworld,0,area_rect,3);
-
+		
 	// Put help button
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
@@ -1070,6 +1070,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	if (color == 0)
 		SetTextColor(hdc,colors[5]);
 		else SetTextColor(hdc,colors[6]);
+    if((PSD[307][1] == 1) && (talk_end_forced))
+    	ShowWindow(talk_edit_box, SW_HIDE);
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,-2);
@@ -1249,12 +1251,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		if (on_what_line == 17)
 			i = 10000;
 		}
+
 	}
 	
 	SelectObject(hdc,store_bmp);
 	SelectObject(hdc,store_font);
 	if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 7");
-	
+
 	refresh_talking();
 	
 	// Clean up strings
@@ -1262,6 +1265,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		for (j = 0; j < 4; j++)
 			if ((store_words[current_rect].word[j] >= 65) && (store_words[current_rect].word[j] <= 90))
 				store_words[current_rect].word[j] += 32;
+
+
 
 }
 

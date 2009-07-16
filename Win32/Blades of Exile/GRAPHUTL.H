@@ -11,5 +11,6 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 
 /* GK */
 extern HBITMAP ReadBMP(char * fileName);
+extern HBITMAP ReadScenFile(char* filename);
 
 #endif

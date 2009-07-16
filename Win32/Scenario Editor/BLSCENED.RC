@@ -72,9 +72,9 @@ Exile MENU
   MENUITEM "Clear All Items", 210
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 212
-  MENUITEM "  Edit Special Nodes\tCtrl+A", 213
-  MENUITEM "  Edit Town Text\tCtrl+B", 214
-  MENUITEM "  Advanced Town Details\tCtrl+C", 215
+  MENUITEM "  Edit Special Nodes", 213
+  MENUITEM "  Edit Town Text", 214
+  MENUITEM "  Advanced Town Details", 215
   MENUITEM "  Set Town Event Timers", 216
   MENUITEM SEPARATOR
   MENUITEM "  Clear All Monsters", 217
@@ -94,7 +94,7 @@ Exile MENU
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 310
   MENUITEM "  Edit Special Nodes\tCtrl+U", 311
-  MENUITEM "  Edit Outdoor Text\tCtrl+V", 312
+  MENUITEM "  Edit Outdoor Text", 312
   MENUITEM "  Delete All Placed Specials", 313
  }
 
@@ -208,11 +208,7 @@ ACCELERATORS_1 ACCELERATORS
  "^S", 2, ASCII
  "^N", 3, ASCII
  "^Q", 5, ASCII
- "^A", 213, ASCII
- "^B", 214, ASCII
- "^C", 215, ASCII
  "^U", 311, ASCII
- "^V", 312, ASCII     
  "^T", 401, ASCII
  "^R", 402, ASCII
  "^L", 403, ASCII   

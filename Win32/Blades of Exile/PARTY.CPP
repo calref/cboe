@@ -858,6 +858,8 @@ Boolean spend_xp(short pc_num, short mode, short parent)
 		ModalDialog();
 		
 	cd_kill_dialog(1010,0);
+	
+	
 
 	return dialog_answer;
 }
@@ -1096,7 +1098,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			item = adven[pc_num].hasAbil(158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-				else if (c_town.town.specials2 % 10 == 1)
+				else if ((c_town.town.defy_scrying == 1) || (c_town.town.defy_mapping == 1))
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					adven[pc_num].removeCharge(item);
@@ -1706,34 +1708,32 @@ void cast_town_spell(location where)
 	}
 }
 
-void check_spell_on_space(location where, unsigned char spell)
+void check_spell_on_space(location where, unsigned char spell) //code is basically done for a "Check spell" node, remains to do a check when targeting a space in all mode ...
 {
 	short i,s1,s2,s3;
 
-    if(PSD[SDF_LEGACY_SCENARIO] == 1){
-	for (i = 0; i < 50; i++)
-		if ((same_point(where,c_town.town.special_locs[i]) == TRUE)
-			//GK && (c_town.town.spec_id[i] >= 0)
-			)
-		{
-		if (c_town.town.specials[c_town.town.spec_id[i]].type == 24) 
-			run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
-		return;
-		}
-	add_string_to_buf("  Nothing happens.");
-    }
-	else{
+  if(PSD[SDF_LEGACY_SCENARIO] == 1){
+    if(spell == 108){ // legacy behavior, only checks Ritual of Sanctify
+    	for (i = 0; i < 50; i++)
+	       	if (same_point(where,c_town.town.special_locs[i]) == TRUE)
+		      {
+           		if (c_town.town.specials[c_town.town.spec_id[i]].type == 24) 
+		          	run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
+            		return;
+            		}
+            	add_string_to_buf("  Nothing happens.");
+              }
+           }
+   	else{
         for (i = 0; i < 50; i++)
-		  if ((same_point(where,c_town.town.special_locs[i]) == TRUE)
-			//GK && (c_town.town.spec_id[i] >= 0)
-			)
-		{
-		if ((c_town.town.specials[c_town.town.spec_id[i]].type == 24) && (c_town.town.specials[c_town.town.spec_id[i]].ex1a == spell)) 
-			run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
-		return;
-		}
-    if(spell == 108)
-    	add_string_to_buf("  Nothing happens.");
+            if (same_point(where,c_town.town.special_locs[i]) == TRUE)
+  		       {
+           	   if ((c_town.town.specials[c_town.town.spec_id[i]].type == 24) && (c_town.town.specials[c_town.town.spec_id[i]].ex1a == spell)) 
+           	        run_special(16,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
+                    return;
+           	    }
+               if(spell == 108)
+                   add_string_to_buf("  Nothing happens.");
         }
 }
 
@@ -1746,7 +1746,7 @@ void do_mindduel(short pc_num,creature_data_type *monst)
 	if (adven[pc_num].hasAbilEquip(53) < 24)
 		adjust += 20;
 	if (monst->attitude % 2 != 1)
-		make_town_hostile();
+		set_town_status(0);
 	monst->attitude = 1;
 	
 	add_string_to_buf("Mindduel!");

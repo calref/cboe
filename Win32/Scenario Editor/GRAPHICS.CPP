@@ -284,14 +284,6 @@ void draw_main_screen()
 		paint_pattern(NULL,1,draw_rect,3);
 
 		draw_rb();
-
-		// redraw scroll bar here
-		lpsi.fMask = SIF_POS;
-        GetScrollInfo(right_sbar,SB_CTL,&lpsi);//ugly hack to redraw the bar + thumb
-        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
-        EnableScrollBar(right_sbar,SB_CTL,ESB_DISABLE_BOTH);//ugly hack to redraw the arrows
-        EnableScrollBar(right_sbar,SB_CTL,ESB_ENABLE_BOTH);
-//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 		}
 
 	// draw terrain palette

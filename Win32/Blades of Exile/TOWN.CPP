@@ -99,8 +99,8 @@ void start_town_mode(short which_town, short entry_dir)
 				if (town_maps.town_maps[c_town.town_num][i / 8][j] & (char)(s_pow(2,i % 8)))
 					make_explored(i,j);
 					
-			if (t_d.terrain[i][j] == 0)	current_ground = 0;
-			else if (t_d.terrain[i][j] == 2) current_ground = 2;
+/*			if (t_d.terrain[i][j] == 0)	current_ground = 0;
+			else if (t_d.terrain[i][j] == 2) current_ground = 2;*/
 			
 			if ((scenario.ter_types[t_d.terrain[i][j]].special >= 16) &&
 				(scenario.ter_types[t_d.terrain[i][j]].special <= 19))
@@ -300,8 +300,8 @@ void start_town_mode(short which_town, short entry_dir)
 					else c_town.monst.dudes[i].active = 0;			
 		}
 	if ((short) town_toast > 0)
-		special_queue[0] = c_town.town.spec_on_entry_if_dead;
-		else special_queue[0] = c_town.town.spec_on_entry;
+		special_queue[0].queued_special = c_town.town.spec_on_entry_if_dead;
+		else special_queue[0].queued_special = c_town.town.spec_on_entry;
 	// Flush excess doomguards and viscous goos
 	for (i = 0; i < T_M; i++)
 		if ((c_town.monst.dudes[i].m_d.spec_skill == 12) &&
@@ -526,28 +526,28 @@ location end_town_mode(short switching_level,location destination)  // returns n
 					to_return = c_town.town.exit_locs[1].toGlobal();
 					else to_return.x--;
 				party.p_loc = to_return; party.p_loc.x++;
-				special_queue[1] = c_town.town.exit_specs[1];
+				special_queue[1].queued_special = c_town.town.exit_specs[1];
 				}
 			else if (destination.x >= c_town.town.in_town_rect.right) {
 				if (c_town.town.exit_locs[3].x > 0) 
 					to_return = c_town.town.exit_locs[3].toGlobal();
 					else to_return.x++;
 				party.p_loc = to_return; party.p_loc.x--;
-				special_queue[1] = c_town.town.exit_specs[3];
+				special_queue[1].queued_special = c_town.town.exit_specs[3];
 				}
 			else if (destination.y <= c_town.town.in_town_rect.top) {
 				if (c_town.town.exit_locs[0].x > 0) 
 					to_return = c_town.town.exit_locs[0].toGlobal();
 					else to_return.y--;
 				party.p_loc = to_return; party.p_loc.y++;
-				special_queue[1] = c_town.town.exit_specs[0];
+				special_queue[1].queued_special = c_town.town.exit_specs[0];
 				}
 			else if (destination.y >= c_town.town.in_town_rect.bottom) {
 				if (c_town.town.exit_locs[2].x > 0) 
 					to_return = c_town.town.exit_locs[2].toGlobal();
 					else to_return.y++;			
 				party.p_loc = to_return; party.p_loc.y--;
-				special_queue[1] = c_town.town.exit_specs[2];
+				special_queue[1].queued_special = c_town.town.exit_specs[2];
 				}
 
 			}
@@ -572,6 +572,8 @@ location end_town_mode(short switching_level,location destination)  // returns n
 	}
 
 	if (combat_end == FALSE) clear_map();
+	
+    c_town.town_num = -1; //no longer in a town
 	
 	return to_return;
 }
@@ -710,6 +712,7 @@ void create_out_combat_terrain(short type,short num_walls)
 	short i,j,k,r1,ter_type;
 // 0 grass 1 cave 2 mntn 3 bridge 4 cave bridge 5 rubble cave 6 cave tree 7 cave mush
 // 8 cave swamp 9 surface rocks 10 surface swamp 11 surface woods 12 s. shrub 13 stalags
+// 14 cave road, 15 grass road, 16 mountain road
 short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,2,2,
 2,2,2,2,2,2,2,2,2,2,
@@ -730,13 +733,13 @@ short general_types[260] = {1,1,0,0,0,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,0,1,1,1,1,1,1,1,0,
 0,0,0,0,0,0,0,0,0,0,
-0,0,1,0,2,0,0,1,1,1,// 200
+0,0,14,15,16,0,0,1,1,1,// 200
 1,0,2,1,1,1,0,1,1,1,
 1,1,0,0,0,0,1,0,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1};// 250
-short ter_base[14] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0};	
+short ter_base[17] = {2,0,36,50,71, 0,0,0,0,2, 2,2,2,0, 0,2,36};	
 //short ground_type[14] = {2,0,36,50,71, 0,0,0,0,2,	2,2,2,0};
 
 location special_ter_locs[15] =
@@ -750,7 +753,7 @@ unsigned char mntn_pillar[4][4] = {{37,29,27,36},{29,33,34,27},{31,32,35,25},{36
 unsigned char surf_lake[4][4] = {{56,55,54,3},{57,50,61,54},{58,51,59,53},{3,4,58,52}};
 unsigned char cave_lake[4][4] = {{93,96,71,71},{96,71,71,71},{71,71,71,96},{71,71,71,96}};
 location stuff_ul;
-short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1}, 
+short terrain_odds[17][10] = {{3,80,4,40,115,20,114,10,112,1}, 
 							{1,50,93,25,94,5,98,10,95,1}, 
 							{37,20,0,0,0,0,0,0,0,0}, 
 							{64,3,63,1,0,0,0,0,0,0}, 
@@ -763,7 +766,10 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 							{3,200,4,400,111,250,0,0,0,0}, 
 							{3,200,4,300,112,50,113,60,114,100}, 
 							{3,100,4,250,115,120,114,30,112,2}, 
-							{1,25,84,15,98,300,97,280,0,0}}; // ter then odds then ter then odds ...
+							{1,25,84,15,98,300,97,280,0,0},
+                            {1,50,93,25,94,5,98,10,95,1},
+                            {3,80,4,40,115,20,114,10,112,1},
+                            {37,20,0,0,0,0,0,0,0,0}}; // ter then odds then ter then odds ...
 
 
 	ter_type = scenario.ter_types[type].picture;
@@ -790,13 +796,21 @@ short terrain_odds[14][10] = {{3,80,4,40,115,20,114,10,112,1},
 	
 	t_d.terrain[0][0] = ter_base[ter_type];
 	
-	if ((ter_type == 3) || (ter_type == 4) ) {
+	if (ter_type == 3) {
 		t_d.terrain[0][0] = 83;
 		for (i = 15; i < 26; i++)
 			for (j = 9; j < 35; j++)
 				t_d.terrain[i][j] = 83;
 		}
-	if (ter_type == 11) {
+		
+	if(ter_type == 4){
+    	t_d.terrain[0][0] = 82;
+	   for (i = 15; i < 26; i++)
+	       for (j = 9; j < 35; j++)
+		      t_d.terrain[i][j] = 82;
+        }
+    
+	if (ter_type == 14 || ter_type == 15 || ter_type == 16) {
 		t_d.terrain[0][0] = 82;
 		for (i = 19; i < 23; i++)
 			for (j = 9; j < 35; j++)
@@ -1261,8 +1275,7 @@ void draw_map (HWND the_dialog, short the_item)
 	Boolean out_mode;
 //	UINT c;
 
-if(party.stuff_done[308][0] > 0 ){//map not available ; (temporary ?) assigned to SDF[308][0]
-
+if(c_town.town.defy_mapping == 1 ){//map not available
 if (modeless_exists[5] == TRUE){
 //    RECT text_rect = {30,265,230,275}; // legacy text position (lower left corner)
     RECT text_rect = {0,0,300,290};
@@ -1271,7 +1284,7 @@ if (modeless_exists[5] == TRUE){
 	SetBkMode(hdc2,TRANSPARENT);
    	SelectObject(hdc2,bold_font);
     SetTextColor(hdc2,RGB(255,255,255));
-	char_win_draw_string(hdc2,text_rect,"Map unavailable.",1,10);
+	char_win_draw_string(hdc2,text_rect,"This place defies mapping.",1,10);
 	GetClientRect(GetDlgItem(the_dialog,1),&draw_rect);
 	InvalidateRect(GetDlgItem(the_dialog,1),&draw_rect,FALSE);
     fry_dc(the_dialog,hdc2);
@@ -1629,7 +1642,6 @@ BOOL CALLBACK map_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM)
 		}
 	return FALSE;
 }
-
 
 void display_map()
 {

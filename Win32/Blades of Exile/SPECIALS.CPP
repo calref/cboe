@@ -18,9 +18,11 @@
 #include "specials.h"
 #include "newgraph.h"
 #include "dlgutils.h"
+#include "actions.h"
+#include "graphutl.h"
+#include "dlogtool.h"
 
 #include "globvar.h"
-
 
 void start_split(short a, short b, short noise) 
 {
@@ -718,6 +720,31 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						break;
 					}
 				break;
+			case 95:
+                switch(type){
+                case 0:
+                if((is_town()) || ((is_combat()) && (which_combat_type == 1)))
+                    run_special(8,2,str,location(),&i,&j,&r1);// Call town special
+                else
+                    run_special(8,1,str,location(),&i,&j,&r1);// Call outdoor special
+                break;
+                case 1:
+                if((is_town()) || ((is_combat()) && (which_combat_type == 1)))
+                    run_special(8,2,str,location(),&i,&j,&r1);// Call town special
+                else
+                    run_special(8,0,str,location(),&i,&j,&r1);// Call scenario special                    
+                break;
+                case 2:
+                if((is_town()) || ((is_combat()) && (which_combat_type == 1)))
+                    run_special(8,0,str,location(),&i,&j,&r1);// Call scenario special
+                else
+                    run_special(8,1,str,location(),&i,&j,&r1);// Call outdoor special
+                break;
+                case 3:
+                    run_special(8,0,str,location(),&i,&j,&r1);// Call scenario special
+                break;                                
+                }
+            break;
 				
 			// spell effects
 			case 110:
@@ -815,7 +842,7 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						}
 				break;
 			case 131:
-				if (c_town.town.specials2 % 10 == 1) {
+				if ((c_town.town.defy_scrying == 1) && (c_town.town.defy_mapping == 1)) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 					}
@@ -1223,13 +1250,13 @@ Boolean damage_monst(short which_m, short who_hit, short how_much, short how_muc
 	 (processing_fields == FALSE) && (monsters_going == FALSE)) {
 		add_string_to_buf("Damaged an innocent.           ");
 		victim->attitude = 1;
-		make_town_hostile();
+		set_town_status(0);
 		}
 	if ((victim->attitude % 2 != 1) && (who_hit < 7) && 
 	 ((processing_fields == TRUE) && (party.stuff_done[305][9] == 0))) {
 		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
-		make_town_hostile();
+		set_town_status(0);
 		}
 		 
 	return TRUE;
@@ -1426,7 +1453,8 @@ void push_things()
 		}
 }
 
-BOOL special_increase_age()
+BOOL special_increase_age(char mode)
+//mode : 0 triggers, 1 delay
 {
 	short i,s1,s2,s3;
 	Boolean redraw = FALSE,stat_area = FALSE;
@@ -1435,32 +1463,68 @@ BOOL special_increase_age()
 	for (i = 0; i < 8; i++)
 		if ((c_town.town.timer_spec_times[i] > 0) && (party.age % c_town.town.timer_spec_times[i] == 0)
 			&& ((is_town() == TRUE) || ((is_combat() == TRUE) && (which_combat_type == 1)))) {
-			run_special(9,2,c_town.town.timer_specs[i],location(),&s1,&s2,&s3);
-			stat_area = TRUE;
-			if (s3 > 0)
-				redraw = TRUE;
-			to_return = TRUE;
+            if(mode == 0){
+    			run_special(9,2,c_town.town.timer_specs[i],location(),&s1,&s2,&s3);
+    			stat_area = TRUE;
+    			if (s3 > 0)
+    				redraw = TRUE;
+    			to_return = TRUE;
+                }
+            else if (queue_position < 20){
+                special_queue[queue_position].queued_special = c_town.town.timer_specs[i];
+                special_queue[queue_position].trigger_time = party.age;     
+                special_queue[queue_position].type = 2;                                               
+                special_queue[queue_position].mode = 9;
+                special_queue[queue_position].where = location();
+                queue_position++;                
+                }
 			}
 	for (i = 0; i < 20; i++)
 		if ((scenario.scenario_timer_times[i] > 0) && (party.age % scenario.scenario_timer_times[i] == 0)) {
-			run_special(10,0,scenario.scenario_timer_specs[i],location(),&s1,&s2,&s3);
-			stat_area = TRUE;
-			if (s3 > 0)
-				redraw = TRUE;
-			to_return = TRUE;				
+            if(mode == 0){
+    			run_special(10,0,scenario.scenario_timer_specs[i],location(),&s1,&s2,&s3);
+    			stat_area = TRUE;
+    	   		if (s3 > 0)
+    				redraw = TRUE;
+    			to_return = TRUE;
+                }
+            else if (queue_position < 20){
+                special_queue[queue_position].queued_special = scenario.scenario_timer_specs[i];
+                special_queue[queue_position].trigger_time = party.age;
+                special_queue[queue_position].type = 0;
+                special_queue[queue_position].mode = 10;
+                special_queue[queue_position].where = location();                
+                queue_position++;                
+                }
 			}
 	for (i = 0; i < 30; i++)
 		if (party.party_event_timers[i] > 0) {
 			if (party.party_event_timers[i] == 1) {
-				if (party.global_or_town[i] == 0)
-					run_special(11,0,party.node_to_call[i],location(),&s1,&s2,&s3);
-					else run_special(11,2,party.node_to_call[i],location(),&s1,&s2,&s3);
-				party.party_event_timers[i] = 0;
-				stat_area = TRUE;
-				if (s3 > 0)
-					redraw = TRUE;
-    			to_return = TRUE;
-				}
+                if(mode == 0){
+    				if (party.global_or_town[i] == 0)
+	       				run_special(11,0,party.node_to_call[i],location(),&s1,&s2,&s3);
+		      			else run_special(11,2,party.node_to_call[i],location(),&s1,&s2,&s3);
+    				party.party_event_timers[i] = 0;
+	       			stat_area = TRUE;
+    				if (s3 > 0)
+	       				redraw = TRUE;
+    	       	  	to_return = TRUE;
+			     	}
+			    else if (queue_position < 20){
+                    if (party.global_or_town[i] == 0){
+                        special_queue[queue_position].type = 0;
+                        special_queue[queue_position].mode = 11;
+                        }
+                    else{
+                        special_queue[queue_position].type = 2;
+                        special_queue[queue_position].mode = 11;
+                        }
+                    special_queue[queue_position].queued_special = party.node_to_call[i];
+                    special_queue[queue_position].trigger_time = party.age;
+                    special_queue[queue_position].where = location();
+                    queue_position++;
+                    }
+                }
 				else party.party_event_timers[i]--;
 			}
 	if (stat_area == TRUE) {
@@ -1501,7 +1565,6 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	special_node_type cur_node;
-	
 	if (special_in_progress == TRUE) {
 		give_error("The scenario called a special node while processing another special encounter. The second special will be ignored.","",0);
 		return;
@@ -1528,7 +1591,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 			special_in_progress = FALSE;
 			return;
 			}
-		if ((cur_node.type >= 0) && (cur_node.type <= 27)) {
+		if ((cur_node.type >= 0) && (cur_node.type <= 28)) {
 			general_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
 		if ((cur_node.type >= 50) && (cur_node.type <= 63)) {
@@ -1537,10 +1600,10 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		if ((cur_node.type >= 80) && (cur_node.type <= 106)) {
 			affect_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
-		if ((cur_node.type >= 130) && (cur_node.type <= 155)) {
+		if ((cur_node.type >= 130) && (cur_node.type <= 156)) {
 			ifthen_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
-		if ((cur_node.type >= 170) && (cur_node.type <= 195)) {
+		if ((cur_node.type >= 170) && (cur_node.type <= 197)) {
 			townmode_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
 		if ((cur_node.type >= 200) && (cur_node.type <= 218)) {
@@ -1549,8 +1612,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		if ((cur_node.type >= 225) && (cur_node.type <= 229)) {
 			outdoor_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
-			
-//	if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) && ((GetAsyncKeyState(0x43) & 32768) == 32768))  {//Ctrl-C escape sequence check
+
     if(check_for_interrupt()){
         give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
 // 	    give_error("A special encounter can be at most 50 nodes long. The 50th node was just processed. The encounter will now end.","",0);
@@ -1561,6 +1623,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		erase_out_specials();
 		else erase_specials();
 	special_in_progress = FALSE;
+
 }
 
 special_node_type get_node(short cur_spec,short cur_spec_type)
@@ -1675,7 +1738,10 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 	 				}
 			break;
 		case 14:
-			play_sound(1000 + spec.ex1a);
+            if(spec.ex1a < 0)
+                play_sound(spec.ex1a);
+            else
+			    play_sound(1000 + spec.ex1a);
 			break;
 		case 15:
 			check_mess = TRUE;
@@ -1740,7 +1806,14 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			break;
 		case 25:
 					check_mess = TRUE;
-					party.age += spec.ex1a;
+					if(party.stuff_done[309][6] == 1){
+                        for(i = 0; i < spec.ex1a ; i++){
+                        party.age++;
+                        special_increase_age(1);//if timed special happens, put them on the timer queue
+                        }
+                    }
+                    else
+       					party.age += spec.ex1a;
 					adven.heal(spec.ex1b);
 					adven.restoreSP(spec.ex1b);
 			break;
@@ -1750,15 +1823,36 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
 		case 27:
-        char count=0;//temporary fix, maybe we'll do a special "you lose" dialog.
-            for(i=0;i<6;i++)
+            for(i=0;i<6;i++)//temporary fix, maybe we'll do a special "you lose" dialog.
                 if(adven[i].isAlive() == FALSE)
-                    count++;
+                    store_val++;
                 
-            if(count != 6)                    
+            if(store_val != 6)                    
 			 end_scenario = TRUE;
 			break;
-		}
+	   case 28:
+            check_mess = FALSE;
+            if(spec.ex1a >= 160 && spec.ex1a < 260)
+                strcpy(str1, scen_strs2[spec.ex1a - 160]);
+            else{
+                give_error("Wrong scenario text number has been called (must be between 160 and 259).","",0);
+                break;
+                }
+            if ((displayed_picture = ReadScenFile(str1)) == NULL){
+                give_error("Error opening the image file. Make sure the extension (.bmp) is specified in the scenario message text (the first search directory is the current scenario folder).","",0);
+                break;
+                }
+
+         cd_create_custom_pic_dialog(mainPtr,displayed_picture);
+
+         while (dialog_not_toast) 
+             ModalDialog();
+
+         cd_kill_dialog(905,0);
+         DeleteObject(displayed_picture);
+         displayed_picture = NULL;
+         break;
+		 }
 	if (check_mess == TRUE) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 		}
@@ -1953,11 +2047,9 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
     else pc = current_pc_picked_in_spec_enc;
 
 
-
 	if ((check_mess == TRUE) && (cur_node.type != 80)) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 		}
-
 
 	switch (cur_node.type) {
 		case 80:
@@ -2113,22 +2205,42 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 						adven[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case 99:
-			if (spec.ex1a != minmax(0,31,(int)spec.ex1a)) {
-				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
+            if(spec.ex1b == -1)
+                spec.ex1b = 1;
+            if ((spec.ex1b != 0) && (spec.ex1b != 1)){
+                give_error("Error the Extra 1b field should be 0 (take spell) or 1 (give spell). (-1 is legacy compatibility)","",0);
+                break;
+                }
+            if((spec.ex1a < 0) || ((spec.ex1a > 31) && ( spec.ex1a < 100)) || (spec.ex1a > 129)){
+				give_error("Mage spell is out of range (0 - 31) or (100-129). See docs.","",0);
 				break;
 				}
+            if(spec.ex1a >= 100)
+                r1 = spec.ex1a - 130;
+            else
+                r1 = spec.ex1a;
 			for (i = 0; i < 6; i++)
                 if ((pc < 0) || (pc == i)) 
-					adven[i].mage_spells[spec.ex1a + 30] = TRUE;
+					adven[i].mage_spells[r1 + 30] = spec.ex1b;
 			break;
 		case 100:
-			if (spec.ex1a != minmax(0,31,(int)spec.ex1a)) {
-				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
+            if(spec.ex1b == -1)
+                spec.ex1b = 1;
+            if ((spec.ex1b != 0) && (spec.ex1b != 1)){
+                give_error("Error the Extra 1b field should be 0 (take spell) or 1 (give spell). (-1 is legacy compatibility)","",0);
+                break;
+                }
+            if((spec.ex1a < 0) || ((spec.ex1a > 31) && ( spec.ex1a < 100)) || (spec.ex1a > 129)){
+				give_error("Priest spell is out of range (0 - 31) or (100-129). See docs.","",0);
 				break;
 				}
+            if(spec.ex1a >= 100)
+                r1 = spec.ex1a - 130;
+            else
+                r1 = spec.ex1a;
 			for (i = 0; i < 6; i++)
                 if ((pc < 0) || (pc == i)) 
-					adven[i].priest_spells[spec.ex1a + 30] = TRUE;
+					adven[i].priest_spells[r1 + 30] = spec.ex1b;
 			break;
 		case 101:
 			if (spec.ex1b == 0)
@@ -2326,9 +2438,350 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 				if ((adven[i].isAlive()) && (adven[i].traits[5] > 0))
 					*next_spec = spec.ex1b;
 			break;
-		case 153:
-			if (adven.getMageLore() >= spec.ex1a)
-					*next_spec = spec.ex1b;
+		case 153: //has enough statistic ?
+            char to_check;
+            k=0; // number to compare to
+            j=0; // number of alive pc
+
+            if((spec.ex2b == -1) || (spec.ex2a == -1)){
+            	if (adven.getMageLore() >= spec.ex1a)
+				    *next_spec = spec.ex1b;
+			         break;
+                }
+            
+            if((spec.ex2a < -1) || (spec.ex2a > 25)){
+                give_error("The check statistic node tried to check an out-of-range statistic (shoud be between 0 - strengh to 18 - luck and 25. -1 is default compatibility to check mage lore.).","",0);
+                break;
+                }
+             
+            if(current_pc_picked_in_spec_enc >= 0)// is a pc selected ?
+               to_check = 10 + current_pc_picked_in_spec_enc;
+            else
+                to_check = spec.ex2b;
+
+            switch(to_check){
+                case 1: // highest
+                    for(i = 0;i < 6; i++)
+                        if(adven[i].main_status == MAIN_STATUS_ALIVE){
+                            switch (spec.ex2a){
+                            case 19: //current health
+                                if(k < adven[i].cur_health)
+                                    k = adven[i].cur_health;
+                                break;
+                            case 20: //max health
+                                if(k < adven[i].max_health)
+                                    k = adven[i].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                if(k < adven[i].cur_sp)
+                                    k = adven[i].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                if(k < adven[i].max_sp)
+                                    k = adven[i].max_sp;
+                                break;
+                            case 23 ://experience
+                                if(k < adven[i].experience)
+                                    k = adven[i].experience;
+                                break;
+                            case 24 ://skill points
+                                if(k < adven[i].skill_pts)
+                                    k = adven[i].skill_pts;
+                                break;
+                            case 25://level
+                                if(k < adven[i].level)
+                                    k = adven[i].level;
+                                break;
+                            default :
+                                if(k < adven[i].skills[spec.ex2a])
+                                    k = adven[i].skills[spec.ex2a];
+                                break;
+                            }
+                        }
+                break;
+                case 2:// average
+                    for(i = 0;i < 6;i++)
+                        if(adven[i].main_status == MAIN_STATUS_ALIVE){
+                            switch (spec.ex2a){
+                                case 19: //current health
+                                    k += adven[i].cur_health;
+                                    break;
+                                case 20: //max health
+                                    k += adven[i].max_health;
+                                    break;                                
+                                case 21: //current spell points
+                                    k += adven[i].cur_sp;
+                                    break;
+                                case 22: //max spell points
+                                    k += adven[i].max_sp;
+                                    break;
+                                case 23 ://experience
+                                    k += adven[i].experience;
+                                break;
+                                case 24 ://skill points
+                                    k += adven[i].skill_pts;
+                                    break;
+                                case 25://level
+                                    k += adven[i].level;
+                                    break;
+                                default :
+                                    k += adven[i].skills[spec.ex2a];
+                                    break;
+                                }
+                            j++;
+                        }
+                    k = k / j;
+                break;
+                case 3: // lowest
+                    k = 32000;
+                    for(i = 0;i < 6 ; i++)
+                        if(adven[i].main_status == MAIN_STATUS_ALIVE)
+                          switch (spec.ex2a){
+                            case 19: //current health
+                                if(k > adven[i].cur_health)
+                                    k = adven[i].cur_health;
+                                break;
+                            case 20: //max health
+                                if(k > adven[i].max_health)
+                                    k = adven[i].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                if(k > adven[i].cur_sp)
+                                    k = adven[i].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                if(k > adven[i].max_sp)
+                                    k = adven[i].max_sp;
+                                break;
+                            case 23 ://experience
+                                if(k > adven[i].experience)
+                                    k = adven[i].experience;
+                                break;
+                            case 24 ://skill points
+                                if(k > adven[i].skill_pts)
+                                    k = adven[i].skill_pts;
+                                break;
+                            case 25://level
+                                if(k > adven[i].level)
+                                    k = adven[i].level;
+                                break;
+                            default :
+                                if(k > adven[i].skills[spec.ex2a])
+                                    k = adven[i].skills[spec.ex2a];
+                                break;
+                            }
+                            
+                break;
+                case 10: //pc 1
+                    if(adven[0].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[0].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[0].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[0].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[0].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[0].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[0].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[0].level;
+                                break;
+                            default :
+                                k = adven[0].skills[spec.ex2a];
+                                break;
+                            }
+                break;
+                case 11: //pc 2
+                    if(adven[1].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[1].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[1].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[1].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[1].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[1].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[1].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[1].level;
+                                break;
+                            default :
+                                k = adven[1].skills[spec.ex2a];
+                                break;
+                            }
+                break;         
+                case 12: //pc 3
+                    if(adven[2].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[2].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[2].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[2].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[2].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[2].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[2].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[2].level;
+                                break;
+                            default :
+                                k = adven[2].skills[spec.ex2a];
+                                break;
+                            }
+                break;
+                case 13: //pc 4
+                    if(adven[3].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[3].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[3].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[3].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[3].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[3].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[3].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[3].level;
+                                break;
+                            default :
+                                k = adven[3].skills[spec.ex2a];
+                                break;
+                            }
+                break;
+                case 14: //pc 5
+                    if(adven[4].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[4].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[4].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[4].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[4].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[4].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[4].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[4].level;
+                                break;
+                            default :
+                                k = adven[4].skills[spec.ex2a];
+                                break;
+                            }
+                break;
+                case 15: //pc 6
+                    if(adven[5].main_status == MAIN_STATUS_ALIVE)
+                        switch (spec.ex2a){
+                            case 19: //current health
+                                k = adven[5].cur_health;
+                                break;
+                            case 20: //max health
+                                k = adven[5].max_health;
+                                break;                                
+                            case 21: //current spell points
+                                k = adven[5].cur_sp;
+                                break;
+                            case 22: //max spell points
+                                k = adven[5].max_sp;
+                                break;
+                            case 23 ://experience
+                                k = adven[5].experience;
+                                break;
+                            case 24 ://skill points
+                                k = adven[5].skill_pts;
+                                break;
+                            case 25://level
+                                k = adven[5].level;
+                                break;
+                            default :
+                                k = adven[5].skills[spec.ex2a];
+                                break;
+                            }
+                break;                                                                       
+                default : // cumulative
+                    for(i = 0;i < 6;i++)
+                        if(adven[i].main_status == MAIN_STATUS_ALIVE)
+                            switch (spec.ex2a){
+                                case 19: //current health
+                                    k += adven[i].cur_health;
+                                    break;
+                                case 20: //max health
+                                    k += adven[i].max_health;
+                                    break;                                
+                                case 21: //current spell points
+                                    k += adven[i].cur_sp;
+                                    break;
+                                case 22: //max spell points
+                                    k += adven[i].max_sp;
+                                    break;
+                                case 23 ://experience
+                                    k += adven[i].experience;
+                                break;
+                                case 24 ://skill points
+                                    k += adven[i].skill_pts;
+                                    break;
+                                case 25://level
+                                    k += adven[i].level;
+                                    break;
+                                default :
+                                    k += adven[i].skills[spec.ex2a];
+                                    break;
+                                }
+                break;
+                }
+                char buf[256];
+                sprintf(buf,"%d",k);
+                give_error(buf,"",0);
+				if (k >= spec.ex1a)
+					*next_spec = spec.ex1b;	
 			break;
 		case 154: // text response
 			check_mess = FALSE;
@@ -2353,6 +2806,19 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 					*next_spec = spec.ex1b;
 				}
 			break;
+       		case 156:
+                k = 0; // number to compare to
+
+                if((spec.ex1a < 0) || (spec.ex1a > 2)){
+                    give_error("Species out of range. (should be 0 - Human, 1 - Nephilim, 2 - Slith)","",0);
+                    break;
+                    }
+                for(i = 0; i < 6; i++)
+                    if((adven[i].main_status == MAIN_STATUS_ALIVE) && (adven[i].race == spec.ex1a))
+                        k++;
+                if(((spec.ex2b == -1) && (k < spec.ex2a)) || ((spec.ex2b == 0) && (k == spec.ex2a)) || ((spec.ex2b == -1) && (k > spec.ex2a)))
+                    *next_spec = spec.ex1b;
+            break;
 		}
 	if (check_mess == TRUE) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -2379,7 +2845,13 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 		return;
 	switch (cur_node.type) {
 		case 170:
-			make_town_hostile();
+            if(spec.ex1a == -1)// legacy compatibility check
+                spec.ex1a = 0;
+            if((spec.ex1a < 0) || (spec.ex1a > 2)){
+                give_error("The status to change town to was out of reach (should be 0 - Hostile, 1 - Friendly, 2- Dead).","",0);
+                break;
+            }
+			set_town_status(spec.ex1a);
 			break;
 		case 171:
 			set_terrain(l,spec.ex2a);
@@ -2422,6 +2894,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				check_mess = FALSE;
 				}
 				else { // 1 no
+				if (which_mode < 3)				
 					*a = 1;
 					if ((which_mode == 7) || (spec.ex2a == 0))
 						teleport_party(spec.ex1a,spec.ex1b,1);
@@ -2508,7 +2981,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					}
 				else if (FCD(870,0) == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
                 else{		
-					*a = 1;
+                    if (which_mode < 3)
+					   *a = 1;
 					if ((which_mode == 7) || (spec.ex2a == 0))
 						teleport_party(spec.ex1a,spec.ex1b,1);
 						else teleport_party(spec.ex1a,spec.ex1b,0);
@@ -2521,13 +2995,13 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			break;
 		case 187:
 			check_mess = FALSE;
-			if (is_combat()) {
+/*			if (is_combat()) {
 				ASB("Can't change level in combat.");
 				if (which_mode < 3)
 					*a = 1;
 				*next_spec = -1;
-				}
-				else if (which_mode != 1) {
+				}*/
+				if (which_mode != 1 && PSD[309][5] == 0) {
 					ASB("Can't change level now.");
 					if (which_mode < 3)
 						*a = 1;
@@ -2536,8 +3010,27 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 				else {
                     if (spec.ex2b < 0) spec.ex2b = 0;
                     if (spec.ex2b > 7) spec.ex2b = 7;
-                    if (FCD(880 + spec.ex2b,0) == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
+                    if (FCD(880 + spec.ex2b,0) == 1) {
+                         *next_spec = -1;
+                         if (which_mode < 3) *a = 1;
+                         }
                 else {
+                    if(overall_mode == MODE_TALKING)
+                        end_talk_mode();
+                    if (is_combat()){
+						if (which_combat_type == 0){ //outdoor combat
+						  end_combat();
+   						  end_town_mode(0,c_town.p_loc);
+               			  menu_activate(1);
+						  put_pc_screen();
+						  set_stat_window(current_pc);
+                          }
+                        else{ //town combat
+                            party.direction = end_town_combat();
+						    set_stat_window(current_pc);
+						    menu_activate(1);		
+                        }
+                    }
 					*a = 1;
 					change_level(spec.ex2a,l.x,l.y);
 					}
@@ -2592,8 +3085,9 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					i = custom_choice_dialog((char *) strs,722,buttons);
 					if (i == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
 						else {
-							*a = 1;
-							if (which_mode == 7 || (spec.ex2a == 0)) 
+                            if (which_mode < 3)
+							    *a = 1;
+							if (spec.ex2a == 0) 
 								teleport_party(spec.ex1a,spec.ex1b,1);
 								else teleport_party(spec.ex1a,spec.ex1b,0);							
 							}
@@ -2603,14 +3097,7 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 			check_mess = FALSE;
 			if ((spec.m1 < 0) && (spec.ex2b != 1))
 				break;
-			if (is_combat()) {
-				ASB("Can't change level in combat.");
-				if (which_mode < 3)
-					*a = 1;
-				*next_spec = -1;
-				check_mess = FALSE;
-				}
-				else if (which_mode != 1) {
+				if (which_mode != 1 && PSD[309][5] == 0) {
 					ASB("Can't change level now.");
 					if (which_mode < 3)
 						*a = 1;
@@ -2627,11 +3114,35 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 					if (spec.ex2b == 1)
 						i = 2;
 						else i = custom_choice_dialog((char *) strs,719,buttons) ;
-					*a = 1;
-					if (i == 1) { *next_spec = -1;}
+					
+					if (i == 1) { 
+                        *next_spec = -1; 
+                        if(which_mode < 3)
+                             *a = 1; 
+                        }
 						else {
+                            if(overall_mode == MODE_TALKING)
+                                end_talk_mode();
+                            if (is_combat()){
+                                i = 10; //was in combat ...
+					           	if (which_combat_type == 0){ //outdoor combat
+        						  end_combat();
+   		       		      		  end_town_mode(0,c_town.p_loc);
+                    			  menu_activate(1);
+						          put_pc_screen();
+        						  set_stat_window(current_pc);
+                                  }
+                                else{ //town combat
+                                    party.direction = end_town_combat();
+        						    set_stat_window(current_pc);
+		      				    menu_activate(1);		
+                              }
+                            }
 							*a = 1;
 							change_level(spec.ex2a,l.x,l.y);
+                            if(i == 10){ // ... so back in combat
+                                start_town_combat(party.direction);
+                                }
 							}
 					}
 			break;
@@ -2691,6 +3202,25 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 	 				i = 30;
 	 				}
 			break;
+        case 196:
+            if(spec.ex1a >= 0 && spec.ex1a < 4)//change town lightning
+                c_town.town.lighting = spec.ex1a;
+            if(spec.ex2b == 0)//give party light
+                party.light_level += spec.ex2a;
+            else if(spec.ex2b == 1)//take party light
+                party.light_level -= spec.ex2a;
+            break;
+        case 197: //attitude: 0 - Friendly, Docile, 1 - Hostile, Type A, 2 - Friendly, Will fight, 3 - Hostile, Type B
+            if((spec.ex1a < 0) || (spec.ex1a > 59)){
+                give_error("The monster number in Extra 1a was out of bound (should be between 0 and 59).","",0);
+                break;
+                }
+            if((spec.ex1b < 0) || (spec.ex1b > 3)){
+                give_error("The attitude Extra 1b was out of bound (0 - Friendly Docile, 1 - Hostile Type A, 2 - Friendly Will Fight, 3 -Hostile Type B).","",0);
+                break;
+                }
+            c_town.monst.dudes[spec.ex1a].attitude = spec.ex1b;
+            break;
 		}
 	if (check_mess == TRUE) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -2797,7 +3327,6 @@ void rect_spec(short which_mode,special_node_type cur_node,short cur_spec_type,
             if(party.stuff_done[308][0] == 0)
             draw_map_rect(modeless_dialogs[5],l.x,l.y,l.x,l.y);
 			break;
-			
 		}
 	}
 }
@@ -2888,8 +3417,9 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 	short label1 = -1,label2 = -1,label1b = -1,label2b = -1;
 	short mess_adj[3] = {160,10,20};
 	
-	if ((mess1 < 0) && (mess2 < 0))
-		return;
+	if ((mess1 < 0) && (mess2 < 0)){
+    	return;
+        }
 	if (which_mode == 7) { // talking
 		*a = mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0); 
 		*b = mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0);

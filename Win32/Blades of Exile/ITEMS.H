@@ -14,7 +14,7 @@ void destroy_an_item();
 void set_item_flag(item_record_type *item);
 short get_item(location place,short pc_num,Boolean check_container);
 void put_item_graphics();
-void make_town_hostile();
+void set_town_status(unsigned char attitude);
 void display_item_event_filter (short item_hit);
 short display_item(location from_loc,short pc_num,short mode, bool check_container);
 void fancy_choice_dialog_event_filter (short item_hit);

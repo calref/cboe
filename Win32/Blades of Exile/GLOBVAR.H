@@ -15,7 +15,7 @@ extern  RECT medium_buttons[4];
 extern RECT startup_top;
 extern RECT item_buttons[8][6]; 	// name, use, give, drip, info, sell/id
 extern RECT pc_buttons[6][5];		// name, hp, sp, info, trade
-extern short special_queue[20];
+extern pending_special_type special_queue[20];
 extern Boolean end_scenario ;
 extern short refer_priest[62];
 extern short mage_need_select[62];
@@ -265,7 +265,7 @@ extern char text_short_str[140][35];
 extern char labels[NL][25];
 extern Boolean label_taken[NL];
 
-extern HWND edit_box;
+extern HWND edit_box, talk_edit_box;
 extern HWND store_edit_parent; // kludgy
 
 extern HDC dlg_force_dc; // save HDCs when dealing with dlogs
@@ -320,6 +320,8 @@ extern char szTitleName [128];
 extern OPENFILENAME ofn;
 extern OFSTRUCT save_dir,save_dir2;
 extern SCROLLINFO lpsi;
+extern MSG msg;
+extern BITMAP bitmap_info;
 
 // Trying this to fix bug. Hope it works.
 extern 	tiny_tr_type tiny_t;
@@ -358,6 +360,7 @@ extern HBITMAP terrain_screen_gworld,text_bar_gworld,orig_text_bar_gworld,button
 extern HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 extern HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
 extern HBITMAP talking_portraits_gworld, frills_gworld, ter_anim_gworld,monsters_gworld[10], terrains_gworld[6];
+extern HBITMAP displayed_picture;
 
 extern HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 
@@ -498,7 +501,7 @@ extern short combat_percent[20];
 extern short town_spell,who_cast,which_pc_displayed;
 extern Boolean spell_button_active[90];
 
-extern char empty_string[256];
+extern char talk_edit_string[40];
 
 extern char c_line[60];
 
@@ -599,5 +602,6 @@ extern word_rect_type store_words[50];
 //Timer Special happened ?
 extern BOOL timed_special_happened;
 extern BOOL ghost_mode;
+extern unsigned char queue_position;
 
 #endif

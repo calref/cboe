@@ -175,7 +175,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		}
 
 		mainPtr = CreateWindow (szAppName,
-			"Blades of Exile Editor",
+			"Classic Blades of Exile Character Editor 1.1",
 			WS_OVERLAPPEDWINDOW,
 			0,
 			0,

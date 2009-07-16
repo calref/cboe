@@ -46,6 +46,7 @@ void start_outdoor_combat(outdoor_creature_type encounter,unsigned char in_which
 			misc_i[i][j] = 0;
 			sfx[i][j] = 0;
 			}
+
 	c_town.town.in_town_rect = town_rect;
 
 	create_out_combat_terrain((short) in_which_terrain,num_walls);////
@@ -185,7 +186,7 @@ Boolean pc_combat_move(location destination)
 			s1 = c_town.monst.dudes[monst_hit].attitude;
 			s2 = (s1 % 2 == 1) ? 2 : fancy_choice_dialog(1045,0);
 			if ((s2 == 2) && (s1 % 2 != 1)) 
-				make_town_hostile();
+				set_town_status(0);
 			if (s2 == 2) {
 					last_attacked[current_pc] = monst_hit;
 					pc_attack(current_pc,monst_hit);
@@ -229,7 +230,7 @@ Boolean pc_combat_move(location destination)
 							draw_terrain(0);
 							}
 					if (s1 != current_pc)
-						return FALSE;
+						return TRUE;
 					}
 				
 				// move if still alive
@@ -894,7 +895,7 @@ void do_combat_cast(location target)
 							cur_monst = &c_town.monst.dudes[targ_num];	
 							if ((cur_monst->attitude % 2 != 1) && (spell_being_cast != 7)
 							 && (spell_being_cast != 34))
-								make_town_hostile();
+								set_town_status(0);
 							store_sound = (spell_being_cast >= 50) ? 24 : 25;
 							switch (spell_being_cast) {
 								case 68: // spray acid
@@ -1301,6 +1302,7 @@ void fire_missile(location target)
 // if monsters go or PC switches (i.e. if need redraw above), return TRUE
 Boolean combat_next_step()
 {
+
 	Boolean to_return = FALSE;
 	short store_pc; // will print current pc name is active pc changes
 
@@ -1316,8 +1318,14 @@ Boolean combat_next_step()
 	pick_next_pc();
 	if (current_pc != store_pc)
 		to_return = TRUE;
-	center = pc_pos[current_pc];		
-		
+
+    if(overall_mode == MODE_OUTDOORS) // has combat ended ? (stairway node)
+        center = party.p_loc;
+    else if (overall_mode == MODE_TOWN)
+        center = c_town.p_loc;
+    else
+    	center = pc_pos[current_pc];		
+
 	adjust_spell_menus();
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
@@ -1441,7 +1449,7 @@ void combat_run_monst()
 
 			}
 
-		timed_special_happened = special_increase_age();
+		timed_special_happened = special_increase_age(0);
 		push_things();
 					
 		if (party.age % 2 == 0) do_poison();
@@ -3660,7 +3668,7 @@ void end_combat()
 		adven[i].status[3] = 0;		
 		}
 	if (which_combat_type == 0) {
-		overall_mode = 0;
+		overall_mode = MODE_OUTDOORS;
 		}
 	combat_active_pc = 6;
 	current_pc = store_current_pc;

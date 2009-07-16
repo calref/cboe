@@ -13,7 +13,7 @@ void PSOE(short str1a,short str1b,short str2a,short str2b,
 	short which_special,unsigned char *stuff_done_val,short where_put);
 Boolean damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, short dam_type);
 void kill_monst(creature_data_type *which_m,short who_killed);
-BOOL special_increase_age();
+BOOL special_increase_age(char mode);
 void out_move_party(char x,char y) ;
 void teleport_party(short x,short y,short mode);
 Boolean run_stone_circle(short which);

@@ -7,6 +7,8 @@
 #include "dlogtool.h"
 #include "text.h"
 #include "locutils.h"
+#include "dlgutils.h"
+#include "infodlgs.h"
 
 #include "globvar.h"
 
@@ -69,6 +71,21 @@ void cd_init_dialogs()
 
 long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if(hwnd == talk_edit_box){
+    switch (message) {
+        case WM_KEYDOWN:
+			if (wParam == VK_RETURN){// talk edit box
+                POINT p = {-1,-1};
+           		GetWindowText(talk_edit_box,talk_edit_string,40);
+                SetWindowText(talk_edit_box,"");
+           		FlushEvents(0);
+           		handle_talk_event(p);
+           		SetFocus(talk_edit_box);
+                }
+			break;
+        }
+    }
+    else{
 	switch (message) {
 		case WM_KEYDOWN:
 			if (wParam == VK_RETURN)
@@ -78,6 +95,7 @@ long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 					9,
 					0
 					);
+			break;
 			if (wParam == VK_ESCAPE)
 				SendMessage(store_edit_parent,
 					WM_COMMAND,
@@ -85,8 +103,8 @@ long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 					0);
 			break;
 		}
+    }
 		
-	//return CallWindowProc((WNDPROC) old_edit_proc,hwnd,message,wParam,lParam);
 	return CallWindowProc((WNDPROC) old_edit_proc,hwnd,message,wParam,lParam);
 }
 
@@ -101,6 +119,127 @@ short cd_create_dialog_parent_num(short dlog_num,short parent)
 		return -1;
 	return cd_create_dialog(dlog_num,dlgs[i]);
 
+}
+
+short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture)
+{
+
+	short i,j,free_slot = -1,free_item = -1;
+
+	short cur_item = 1, but_items;
+	RECT pic_rect = {0,0,0,0}, c_rect;
+
+	if (parent != NULL) {
+		if (IsWindowEnabled(parent) == 0)
+			return -1;
+		}
+    GetObject(picture, sizeof(bitmap_info), &bitmap_info);
+    
+    GetClientRect(mainPtr, &c_rect);
+    
+    if(bitmap_info.bmWidth > c_rect.right)
+        bitmap_info.bmWidth = c_rect.right;
+        
+    if(bitmap_info.bmHeight > c_rect.bottom)
+        bitmap_info.bmHeight = c_rect.bottom - 60;
+
+    pic_rect.right = bitmap_info.bmWidth;
+    pic_rect.bottom = bitmap_info.bmHeight;
+    
+	store_dlog_num = 905;
+
+	for (i = 0; i < ND; i++) {
+		if ((dlg_keys[i] >= 0) && (dlg_types[i] == 905)) //custom_pic_dialog is number 905
+			return -1;
+		}
+	for (i = 0; i < ND; i++) {
+		if (dlg_keys[i] < 0) {
+			free_slot = i;
+			i = 500;
+			}
+		}
+	if (free_slot < 0)
+		return -2;
+
+	current_key++;
+	dlg_keys[free_slot] = current_key;
+	dlg_types[free_slot] = 905;
+	dlg_highest_item[free_slot] = 1;
+	dlg_draw_ready[free_slot] = FALSE;
+	dlgs[free_slot] = NULL;
+
+	// first, create dummy dlog
+	store_free_slot = free_slot;
+
+	dlgs[free_slot] = CreateWindow (szWinName,
+			"Blades of Exile",
+			0,// was visible
+			0,
+			0,
+			bitmap_info.bmWidth + 2,
+			bitmap_info.bmHeight + 65, // additional space for the ok button
+			NULL,
+			NULL,
+			store_hInstance,
+			NULL);
+	if (dlgs[free_slot] == NULL) {
+		play_sound(3);
+		return -3;
+		}
+
+	dlg_parent[free_slot] = parent;
+
+	//process_new_window (dlgs[free_slot]);
+	// instead of this, custom make items
+	free_item = -1;
+
+    	for (j = 150; j < NI; j++)
+				if (item_dlg[j] < 0) {
+					free_item = j;
+					j = NI + 1;
+					}
+			item_dlg[free_item] = store_dlog_num;
+			item_type[free_item] = 1;
+			item_number[free_item] = cur_item;
+
+			item_flag[free_item] = available_dlog_buttons[1];
+			item_active[free_item] = 1;
+			item_label[free_item] = 0;
+				item_label_loc[free_item] = -1;
+				item_key[free_item] = 31;
+				but_items = free_item; // remember this to set item rect later
+				cur_item++;
+	
+	item_rect[but_items].right = bitmap_info.bmWidth - 10;
+	item_rect[but_items].left = item_rect[but_items].right - 63;
+	item_rect[but_items].top = bitmap_info.bmHeight + 5;
+	item_rect[but_items].bottom = item_rect[but_items].top + 23;
+	
+  	for (j = 150; j < NI; j++)
+		if (item_dlg[j] < 0) {
+			free_item = j;
+			j = NI + 1;
+			}
+		item_dlg[free_item] = store_dlog_num;			
+		item_number[free_item] = cur_item;
+		item_type[free_item] = 20; //draw loaded picture
+		item_active[free_item] = 1;	
+        cur_item++;	
+
+	dlg_highest_item[free_slot] = cur_item - 1;
+	
+	center_window(dlgs[free_slot]);
+	ShowWindow(dlgs[free_slot],SW_SHOW);
+					
+	if (dlg_parent[free_slot] != NULL) {
+		EnableWindow(dlg_parent[free_slot],FALSE);
+		if (dlg_parent[free_slot] == mainPtr)
+			for (i = 0; i < 18; i++)
+				if (modeless_exists[i] == TRUE)
+					EnableWindow(modeless_dialogs[i],FALSE);
+		}
+	dialog_not_toast = TRUE;
+	return 0;
 }
 
 short cd_create_custom_dialog(HWND parent,
@@ -962,7 +1101,7 @@ void cd_key_label(short dlog_num, short item_num,short loc)
 void cd_draw_item(short dlog_num,short item_num)
 {
 	short dlg_index,item_index,store_label;
-	HDC win_dc;
+	HDC win_dc, hdc;
 	COLORREF colors[4] = {RGB(0,0,0),RGB(255,0,0),RGB(0,0,102),RGB(255,255,255)};
 	RECT from_rect,to_rect;
 	HFONT old_font;
@@ -973,7 +1112,7 @@ void cd_draw_item(short dlog_num,short item_num)
 		return;
 		
 	win_dc = cd_get_dlog_dc(dlg_index);
-   old_font = (HFONT) SelectObject(win_dc,small_bold_font);
+    old_font = (HFONT) SelectObject(win_dc,small_bold_font);
 	dlg_force_dc = win_dc;
 
 	if (item_active[item_index] == 0) {
@@ -1058,6 +1197,25 @@ void cd_draw_item(short dlog_num,short item_num)
 						else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
 							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
 					break;
+				case 20: // display picture special case
+
+                from_rect.right = bitmap_info.bmWidth;
+                from_rect.bottom = bitmap_info.bmHeight;
+                
+                GetObject(displayed_picture, sizeof(bitmap_info), &bitmap_info); //is picture greater ...
+
+                hdc = CreateCompatibleDC(NULL); //let's draw the picture
+            	SelectObject(hdc, displayed_picture);
+	           	if((from_rect.right != bitmap_info.bmWidth) || (from_rect.bottom != bitmap_info.bmHeight)){ // ... than the screen ?
+                   StretchBlt(win_dc,0, 0, from_rect.right, from_rect.bottom, hdc, 0 ,0 , bitmap_info.bmWidth, bitmap_info.bmHeight, SRCCOPY); 
+                    bitmap_info.bmWidth = from_rect.right; //in case of redraw ...
+                    bitmap_info.bmHeight = from_rect.bottom; //... put back the screen max values
+                }
+                else
+    	           	BitBlt(win_dc,0, 0, from_rect.right, from_rect.bottom, hdc, 0 ,0 , SRCCOPY);
+                       	           	
+	            DeleteDC(hdc); //clean after drawing
+                //careful with the graphic files, if streched the quality can drop significantly.
 				}
 			}
 
@@ -1239,7 +1397,7 @@ void cd_press_button(short dlog_num, short item_num)
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	// no press action for redio buttons
+	// no press action for redo buttons
 	if ((item_type[item_index] == 2) || (item_flag[item_index] == 143)) {
 		play_sound(34);
 		return;
@@ -1449,7 +1607,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
 	RECT to_rect = {6,6,42,42};
-	RECT bw_from = {0,0,120,120};
+//	RECT bw_from = {0,0,120,120};
 	
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};

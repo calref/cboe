@@ -18,7 +18,7 @@
 
 #include "globvar.h"
 
-BOOL fry_startup = FALSE;
+BOOL play_startup = FALSE;
 
 void adjust_window_mode()
 {
@@ -86,14 +86,15 @@ void plop_fancy_startup()
 	to_rect = from_rect;
 	OffsetRect(&to_rect,graphic_ul.x,graphic_ul.y);
 	rect_draw_some_item(pict_to_draw,from_rect,pict_to_draw,to_rect,0,1);
-	//play_sound(95);
+    if(play_startup == TRUE)
+       	play_sound(95);
 	DeleteObject(pict_to_draw);
 
 	cur_time = GetCurrentTime();
 	while (GetCurrentTime() - cur_time < 1500);
 	
 
-if(fry_startup == TRUE){
+    if(play_startup == TRUE){
     
     pict_to_draw = load_pict(3000, (HDC) 0);
 
@@ -139,22 +140,15 @@ void init_startup()
 
 void draw_startup(short but_type)
 {
-	RECT to_rect;
-	RECT r1 = {-1000,-1000,1000,5},r2 = {-1000,-1000,5,1000},r3 = {-1000,418,1000,2000},
-		r4 = {579,-1000,2500,1000};
+	RECT to_rect, rect;
 	short i;
 
 	if (startup_loaded == FALSE)
 		return;
 
-	r1.bottom = uly + 5;
-	paint_pattern(NULL,1,r1,0);
-	r2.right = ulx + 5;
-	paint_pattern(NULL,1,r2,0);
-	r3.top += uly + 5;
-	paint_pattern(NULL,1,r3,0);
-	r4.left += ulx + 5;
-	paint_pattern(NULL,1,r4,0);
+	GetClientRect(mainPtr,&rect);
+	paint_pattern(NULL,1,rect,0);
+
 	to_rect = startup_from[0];
 	OffsetRect(&to_rect,5,5);
 	rect_draw_some_item(startup_gworld,startup_from[0],startup_gworld,to_rect,0,1);
@@ -384,6 +378,10 @@ void reload_startup()////
  		ShowScrollBar(text_sbar,SB_CTL,FALSE);
 		ShowScrollBar(item_sbar,SB_CTL,FALSE);
 		}
+	if(talk_edit_box != NULL){ //exited while talking so delete the talk edit box
+	DestroyWindow(talk_edit_box);
+    talk_edit_box = NULL;
+    }
 	init_startup();
 
 	startup_loaded = TRUE;
@@ -1118,7 +1116,7 @@ void draw_terrain(short	mode)
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);
 							break;
 
-						case 79: case 80: case 81:
+						case 79: case 80: case 81: //roads (cave, grass, mountain)
 							if ((short_spec_terrain == 81) 
 								&& ((out[where_draw.x][where_draw.y - 1] == 80) || (out[where_draw.x][where_draw.y - 1] == 79)))
 										short_spec_terrain = 42;
@@ -1134,15 +1132,10 @@ void draw_terrain(short	mode)
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);	
 							place_road(q,r,where_draw);
 							break;
-						case 90:
+						case 90: //pits
 							draw_one_terrain_spot(q,r,-1,0);	
 							break;
 						default:
-							if (short_spec_terrain < 2)
-								current_ground = 0;
-							if (((short_spec_terrain >= 2) && (short_spec_terrain <= 4)) || 
-								((short_spec_terrain >= 22) && (short_spec_terrain <= 49)))
-								current_ground = 2;
 							draw_one_terrain_spot(q,r,short_spec_terrain,0);
 							break;
 						}
@@ -1224,8 +1217,36 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	Boolean at_top = FALSE,at_bot = FALSE,at_left = FALSE,at_right = FALSE;
 	unsigned char store,store2,store3,store1;
 	location targ;
+
+	char ground_type[260]= 
+    {0,0,2,2,2,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,36,36,36,36,36,36,36,36,
+    36,36,36,36,36,36,36,36,2,2,
+    2,2,2,2,2,2,2,2,2,2, 
+    2,2,2,2,2,2,2,2,2,2,// 50
+    2,2,2,2,2,2,2,2,2,2,
+    2,0,0,0,0, 0,0 ,0,0,0,
+    2,36,0,2,0,0,0,2,2,2,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,// 100
+    2,2,2,2,2,2,2,2,2,2,
+    2,2,0,0,0,0,0,0,0,0,
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,// 150
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,
+    1,0,1,1,1,1,1,1,1,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,1,1,1,// 200
+    1,0,2,1,1,1,0,1,1,1,
+    1,1,0,0,0,0,1,0,1,1,
+    1,1,0,0,2,2,2,2,2,2,
+    2,2,2,2,2,2,0,2,2,2,
+    2,2,2,2,2,1,1,1,1,1};// 250
 	
-	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
+	// First quick check ... if a pit or barrier in outdoor combat, no trim
 	if ((is_combat()) && (which_combat_type == 0) && (ter_type == 90))
 		return;
 	if (PSD[306][5] > 0)
@@ -1261,32 +1282,81 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 	// First, trim for fluids
 	if (((is_town()) || (is_combat())) && (town_trim[where.x][where.y] != 0)) {
 
-		if (town_trim[where.x][where.y] & 1)
-				draw_trim(q,r,1,0);	
-		if (town_trim[where.x][where.y] & 2)
+		if (town_trim[where.x][where.y] & 1){
+                current_ground = ground_type[t_d.terrain[where.x][where.y - 1]];
+   				draw_trim(q,r,1,0);
+                }
+		if (town_trim[where.x][where.y] & 2){
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y - 1]];
 				draw_trim(q,r,2,5);	
-		if (town_trim[where.x][where.y] & 4)
+                }
+		if (town_trim[where.x][where.y] & 4){
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y]];
 				draw_trim(q,r,0,3);
-		if (town_trim[where.x][where.y] & 8)
+                }
+		if (town_trim[where.x][where.y] & 8){
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y + 1]];
 				draw_trim(q,r,2,6);
-		if (town_trim[where.x][where.y] & 16)
-				draw_trim(q,r,1,1);
-		if (town_trim[where.x][where.y] & 32)
+                }
+		if (town_trim[where.x][where.y] & 16){
+                current_ground = ground_type[t_d.terrain[where.x][where.y + 1]];
+				draw_trim(q,r,1,1);                
+                }
+		if (town_trim[where.x][where.y] & 32){
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y + 1]];
 				draw_trim(q,r,2,7);
-		if (town_trim[where.x][where.y] & 64)
+                }
+		if (town_trim[where.x][where.y] & 64){
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y]];
 				draw_trim(q,r,0,2);
-		if (town_trim[where.x][where.y] & 128)
-				draw_trim(q,r,2,4);			
+                }
+		if (town_trim[where.x][where.y] & 128){
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y - 1]];
+				draw_trim(q,r,2,4);
+                }			
 		}
 	if ((is_out()) && (out_trim[where.x][where.y] != 0)) {
-		if (out_trim[where.x][where.y] & 1)	draw_trim(q,r,1,0);	
-		if (out_trim[where.x][where.y] & 2)	draw_trim(q,r,2,5);	
-		if (out_trim[where.x][where.y] & 4)	draw_trim(q,r,0,3);
-		if (out_trim[where.x][where.y] & 8)	draw_trim(q,r,2,6);
-		if (out_trim[where.x][where.y] & 16) draw_trim(q,r,1,1);
-		if (out_trim[where.x][where.y] & 32) draw_trim(q,r,2,7);
-		if (out_trim[where.x][where.y] & 64) draw_trim(q,r,0,2);
-		if (out_trim[where.x][where.y] & 128) draw_trim(q,r,2,4);			
+        targ = where.toLocal();
+		if (out_trim[where.x][where.y] & 1){	
+//        current_ground = ground_type[out[where.x][where.y - 1]];
+        current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x][targ.y - 1]];
+        draw_trim(q,r,1,0);
+        }
+		if (out_trim[where.x][where.y] & 2){
+//            current_ground = ground_type[out[where.x - 1][where.y - 1]];
+          current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x + 1][targ.y - 1]];
+           	draw_trim(q,r,2,5);	
+            }
+		if (out_trim[where.x][where.y] & 4){
+//            current_ground = ground_type[out[where.x - 1][where.y - 1]];
+          current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x + 1][targ.y ]];
+            draw_trim(q,r,0,3);
+            }
+		if (out_trim[where.x][where.y] & 8){
+//            current_ground = ground_type[out[where.x - 1][where.y - 1]];
+          current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x + 1][targ.y + 1]];
+            draw_trim(q,r,2,6);
+            }
+		if (out_trim[where.x][where.y] & 16){ 
+//        current_ground = ground_type[out[where.x - 1][where.y - 1]];
+      current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x][targ.y + 1]];
+        draw_trim(q,r,1,1);        
+        }
+		if (out_trim[where.x][where.y] & 32){
+//            current_ground = ground_type[out[where.x - 1][where.y - 1]];
+          current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x - 1][targ.y + 1]];
+            draw_trim(q,r,2,7);
+            }
+		if (out_trim[where.x][where.y] & 64){
+//            current_ground = ground_type[out[where.x - 1][where.y ]];
+            current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x - 1][targ.y ]];
+            draw_trim(q,r,0,2);
+            }
+		if (out_trim[where.x][where.y] & 128){
+//            current_ground = ground_type[out[where.x - 1][where.y - 1]];
+          current_ground = ground_type[outdoors[party.i_w_c.x][party.i_w_c.y].terrain[targ.x - 1][targ.y - 1]];
+            draw_trim(q,r,2,4);
+            }
 		}
 
 				
@@ -1300,34 +1370,44 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 		if ((is_wall(store) == TRUE) 
 			&& (is_wall(store1) == TRUE) &&
 			(is_ground(store2) == TRUE) 
-			&& (is_ground(store3) == TRUE))
+			&& (is_ground(store3) == TRUE)){
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y + 1]];
 				draw_trim(q,r,3,6);
+                }
 
 
 		if ((is_wall(store) == TRUE) 
 			&& (is_wall(store3) == TRUE) &&
 			(is_ground(store2) == TRUE) 
-			&& (is_ground(store1) == TRUE))
+			&& (is_ground(store1) == TRUE)){
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y - 1]];                
 				draw_trim(q,r,3,5);		
+                }
 
 		if ((is_wall(store2) == TRUE) 
 			&& (is_wall(store1) == TRUE) &&
 			(is_ground(store) == TRUE) 
-			&& (is_ground(store3) == TRUE))
-				draw_trim(q,r,3,7);		
+			&& (is_ground(store3) == TRUE)){
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y + 1]];
+				draw_trim(q,r,3,7);
+                }		
 
 		if ((is_wall(store2) == TRUE) 
 			&& (is_wall(store3) == TRUE) &&
 			(is_ground(store) == TRUE) 
-			&& (is_ground(store1) == TRUE))
-				draw_trim(q,r,3,4);		
+			&& (is_ground(store1) == TRUE)){
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y - 1]];
+				draw_trim(q,r,3,4);
+                }		
 
 
 		if ((is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_wall(store3) == TRUE)) {
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y - 1]];
 				draw_trim(q,r,3,4);		
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y - 1]];  				
 				draw_trim(q,r,3,5);						
 				}
 
@@ -1335,7 +1415,9 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store2) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y - 1]];  
 				draw_trim(q,r,3,5);		
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y + 1]];
 				draw_trim(q,r,3,6);						
 				}
 
@@ -1343,7 +1425,9 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 			&& (is_wall(store1) == TRUE) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store3) == TRUE)) {
+                current_ground = ground_type[t_d.terrain[where.x + 1][where.y + 1]];
 				draw_trim(q,r,3,6);		
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y + 1]];				
 				draw_trim(q,r,3,7);		
 				}
 
@@ -1351,7 +1435,9 @@ void place_trim(short q,short r,location where,unsigned char ter_type)
 			&& (is_ground(store3) == TRUE) &&
 			(is_ground(store) == TRUE) 
 			&& (is_ground(store1) == TRUE)) {
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y - 1]];
 				draw_trim(q,r,3,4);		
+                current_ground = ground_type[t_d.terrain[where.x - 1][where.y + 1]];
 				draw_trim(q,r,3,7);		
 				}
 		}
@@ -1364,7 +1450,7 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 	RECT from_rect = {0,0,28,36},to_rect;
 
 
-	if ((frills_on == FALSE) || ((current_ground == 2) && (PSD[309][3] == 0)))
+	if ((frills_on == FALSE) || (((current_ground == 2) || (current_ground == 36)) && (PSD[309][3] == 0)))
 	    return;
 
 	terrain_there[q][r] = -1;
@@ -1376,6 +1462,8 @@ void draw_trim(short q,short r,short which_trim,short which_mode)
 
 	if (current_ground == 2) // trim with grass instead of cave floor
 		OffsetRect(&from_rect,0,36);
+	if(current_ground == 36) // trim with mountains instead of cave floor
+		OffsetRect(&from_rect,0,72);
 	to_rect = coord_to_rect(q,r);
 	to_rect.right = to_rect.left + trim_rects[which_mode].right;
 	to_rect.left = to_rect.left + trim_rects[which_mode].left;

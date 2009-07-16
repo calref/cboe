@@ -23,7 +23,7 @@
 
 #define	NUM_HINTS	30
 
-extern BOOL fry_startup;
+extern BOOL play_startup;
 
 /*
 shop_type:
@@ -40,6 +40,9 @@ shop_type:
 void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,char *store_name)
 {
 	RECT area_rect;
+	
+    if(PSD[307][1] == 1)
+    	ShowWindow(talk_edit_box, SW_HIDE);
 	
 	if (shop_max < shop_min)
 		shop_max = shop_min; ////
@@ -75,6 +78,9 @@ void end_shop_mode()
 {
 	RECT dummy_rect = {0,0,0,0};
 	
+    if(PSD[307][1] == 1)
+    	ShowWindow(talk_edit_box, SW_SHOW);
+	    	
 	ShowScrollBar(shop_sbar,SB_CTL,FALSE);
 	if (store_pre_shop_mode == 20) {
 		sprintf((char *)old_str1,"You conclude your business.");
@@ -415,7 +421,7 @@ void set_up_shop_array()
 
 void start_talk_mode(short m_num,short personality,unsigned char monst_type,short store_face_pic)////
 {
-	RECT area_rect;
+	RECT area_rect, talk_edit_box_rect;
 	char place_string1[256] = "";
 	char place_string2[256] = "";
 
@@ -426,7 +432,20 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
 	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
-	talk_gworld = CreateCompatibleBitmap(main_dc,area_rect.right,area_rect.bottom);
+   	talk_gworld = CreateCompatibleBitmap(main_dc,area_rect.right,area_rect.bottom);
+
+    if(PSD[307][1] == 1){
+        talk_edit_box_rect = preset_words[8].word_rect;
+        OffsetRect(&talk_edit_box_rect,ulx,uly+3);
+    	talk_edit_box = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE,
+									talk_edit_box_rect.left+125,talk_edit_box_rect.top,
+									140,
+									20,
+									mainPtr,(HMENU) 160,(HINSTANCE) store_hInstance,NULL);
+        store_edit_parent =  mainPtr;
+    	old_edit_proc = (WNDPROC) (GetWindowLong(talk_edit_box,GWL_WNDPROC));
+    	SetWindowLong(talk_edit_box,GWL_WNDPROC,(LONG) edit_proc);
+        }
 
 	// first make sure relevant talk strs are loaded in
 	if (personality / 10 != cur_town_talk_loaded)
@@ -458,10 +477,16 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 
 void end_talk_mode()
 {
+
 	DeleteObject(talk_gworld);
 	talk_gworld = NULL;
+    if((PSD [307][1] == 1) && (talk_edit_box != NULL)){
+        DestroyWindow(talk_edit_box);
+	    talk_edit_box = NULL;
+    }
 	
-	overall_mode = store_pre_talk_mode;
+    overall_mode = store_pre_talk_mode;
+
 	create_clip_region();
 	if (overall_mode == 2)
 		overall_mode = 1;
@@ -469,10 +494,14 @@ void end_talk_mode()
 		center = c_town.p_loc;
 		update_explored(center);
 		}
+		
 	stat_screen_mode = 0;
-	put_item_screen(stat_window,0);
+	
+    put_item_screen(stat_window,0);
 	put_pc_screen();
 	redraw_screen(0);
+	
+	
 }
 
 void handle_talk_event(POINT p)
@@ -537,6 +566,28 @@ void handle_talk_event(POINT p)
 					break;
 				case 6: // quit
 					end_talk_mode();
+
+                	if(talk_end_forced == 10){ // party is in inn
+                        talk_end_forced = TRUE; // safety set
+                        for(j=0; j < 700; j++){
+                            party.age++;
+                            // Specials countdowns
+                            if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (adven.hasAbil(52) == true)) {
+                                j = 900;
+                                adven.disease(2);
+                             }
+                             // Plants and magic shops	
+                             if (party.age % 4000 == 0) refresh_store_items();
+                               
+                             timed_special_happened = special_increase_age(0);
+                               
+                             if(timed_special_happened && PSD[309][4] == 1){
+                                j = 900;
+               			        add_string_to_buf("  Rest interrupted.");
+               			        print_buf();
+                            }
+                         }
+                      }					
 					return;
 					break;
 				default:
@@ -556,6 +607,13 @@ void handle_talk_event(POINT p)
 				i = 100;
 				}
 		}
+    if(strcmp(talk_edit_string,"") != 0){
+        for(j = 0; j < 4; j++)
+            asked[j] = talk_edit_string[j];
+        talk_edit_string[0] = '\0';
+        i =  100;
+        }
+
 	if (i == 50) // no event
 		return;
 	if (force_special == 9) {
@@ -566,7 +624,7 @@ void handle_talk_event(POINT p)
 		asked[3] = place_string1[3];
 		}
 	
-	if ((asked[0] == 'n') && (asked[1] == 'a') &&(asked[2] == 'm') &&(asked[3] == 'a')) {
+	if ((asked[0] == 'n') && (asked[1] == 'a') &&(asked[2] == 'm') &&(asked[3] == 'e')) {
 		force_special = 2;
 		}
 	if ((asked[0] == 'l') && (asked[1] == 'o') &&(asked[2] == 'o') &&(asked[3] == 'k')) {
@@ -576,6 +634,12 @@ void handle_talk_event(POINT p)
 		((asked[0] == 'w') && (asked[1] == 'o') &&(asked[2] == 'r')&&(asked[3] == 'k')) ) {
 		force_special = 3;	
 		}
+	if((asked[0] == 'b') && (asked[1] == 'u') && (asked[2] == 'y'))
+	   force_special = 4;
+	if((asked[0] == 'b') && (asked[1] == 'y') && (asked[2] == 'e')){
+		end_talk_mode();
+        return;
+        }
 
 	if (force_special > 0) {
 		switch (force_special) {
@@ -678,13 +742,23 @@ void handle_talk_event(POINT p)
 					talk_end_forced = TRUE;
 					party.gold -= a;
 					put_pc_screen();
-					adven.heal(30 * b);
+                    if(PSD[309][6] == 1){
+                       talk_end_forced = 10;
+                       adven.heal(30 * b);
+	                   adven.restoreSP(25 * b);
+      				   c_town.p_loc.x = c;
+	          		   c_town.p_loc.y = d;
+			           center = c_town.p_loc;
+                       }					
+					else{
+                    adven.heal(30 * b);
 					adven.restoreSP(25 * b);
 					party.age += 700;
 					c_town.p_loc.x = c;
 					c_town.p_loc.y = d;
 					center = c_town.p_loc;
-					}
+                    }
+				}
 			strnum2 = 0;
 			sprintf((char *) place_string2,"");					
 			break;
@@ -724,6 +798,7 @@ void handle_talk_event(POINT p)
 				spend_xp(get_pc,1, 0);
 				}
 			sprintf((char *) place_string1, "You conclude your training.");  
+            put_pc_screen();
 			return;
 		
 		case 9: case 10: case 11: 
@@ -892,7 +967,7 @@ void handle_talk_event(POINT p)
 			talk_end_forced = TRUE;
 			break;	
 		case 27:
-			make_town_hostile();
+			set_town_status(0);
 			talk_end_forced = TRUE;
 			break;	
 		case 28:
@@ -939,7 +1014,6 @@ void handle_talk_event(POINT p)
 	strcpy((char *) old_str1,(char *) place_string1);
 	strcpy((char *) old_str2,(char *) place_string2);
 	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
-	
 }
 
 void do_sign(short town_num, short which_sign, short sign_type)
@@ -995,7 +1069,7 @@ Boolean prefs_event_filter (short item_hit)
 				did_cancel = TRUE;
 				break;
 
-			case 50: case 52: case 54: case 56: case 18: case 20: case 22: case 24: case 27: case 38: case 40: case 43: case 45: 
+			case 50: case 52: case 54: case 56: case 60: case 18: case 20: case 22: case 24: case 27: case 38: case 40: case 43: case 45: 
 				cd_set_led(1099,item_hit,1 - cd_get_led(1099,item_hit));
 				break;
 			
@@ -1035,10 +1109,11 @@ Boolean prefs_event_filter (short item_hit)
 			party.stuff_done[306][5] = cd_get_led(1099,45);
 			party.stuff_done[305][6] = cd_get_led(1099,50);
 			party.stuff_done[305][5] = cd_get_led(1099,52);
-			fry_startup = cd_get_led(1099,54);
+			play_startup = cd_get_led(1099,54);
 			party.stuff_done[305][7] = cd_get_led(1099,56);
+			party.stuff_done[307][1] = cd_get_led(1099,60);			
 
-			if(party.stuff_done[307][0] != cd_get_led(1099,58)){//changed graphic mode (Mac vs Windows) ?
+			if(party.stuff_done[307][0] != cd_get_led(1099,58)){ //changed graphic mode (Mac vs Windows) ?
 			 party.stuff_done[307][0] = cd_get_led(1099,58);//adjust the graphic mode SDF
 			 swap_platform_graphics();//swap graphics
 		     redraw_screen(0);//redraw screen with new graphics
@@ -1096,9 +1171,10 @@ void pick_preferences()
 	cd_set_led(1099,45,(party.stuff_done[306][5] != 0) ? 1 : 0);
 	cd_set_led(1099,50,(party.stuff_done[305][6] != 0) ? 1 : 0);
 	cd_set_led(1099,52,(party.stuff_done[305][5] != 0) ? 1 : 0);
-	cd_set_led(1099,54,(fry_startup != FALSE) ? 1 : 0);
+	cd_set_led(1099,54,(play_startup != FALSE) ? 1 : 0);
 	cd_set_led(1099,56,(party.stuff_done[305][7] != 0) ? 1 : 0);
 	cd_set_led(1099,58,(party.stuff_done[307][0] != 0) ? 1 : 0);
+	cd_set_led(1099,60,(party.stuff_done[307][1] != 0) ? 1 : 0);// talk edit box appearing ?
 		cd_set_flag(1099,3,1);
 	if (PSD[306][6] == 3) 
 		cd_set_led(1099,47,1);
@@ -1132,7 +1208,7 @@ Boolean compatibility_event_filter (short item_hit)
 				break;
 
 			
-			case 7: case 9: case 11: case 13:
+			case 7: case 9: case 11: case 13: case 15: case 17: case 19:
 				cd_set_led(1100,item_hit,1 - cd_get_led(1100,item_hit));
 				break;
 			}
@@ -1143,6 +1219,9 @@ Boolean compatibility_event_filter (short item_hit)
 			party.stuff_done[309][1]=1-cd_get_led(1100,9);
 			party.stuff_done[309][2]=1-cd_get_led(1100,11);
 			party.stuff_done[309][3]=cd_get_led(1100,13);
+			party.stuff_done[309][4]=cd_get_led(1100,15);
+			party.stuff_done[309][5]=cd_get_led(1100,17);
+			party.stuff_done[309][6]=cd_get_led(1100,19);			
 			}
 	build_data_file(1);
     }
@@ -1161,6 +1240,9 @@ void pick_compatibility()
     cd_set_led(1100,9,(party.stuff_done[309][1] != 0) ? 0 : 1);// party.stuff_done[309][1] legacy_kill_node
     cd_set_led(1100,11,(party.stuff_done[309][2] != 0) ? 0 : 1);// party.stuff_done[309][2] town_waterfalls
     cd_set_led(1100,13,(party.stuff_done[309][3] != 0) ? 1 : 0);// party.stuff_done[309][3] display_grass_trims
+    cd_set_led(1100,15,(party.stuff_done[309][4] != 0) ? 1 : 0);// party.stuff_done[309][4] special_interrupt   
+    cd_set_led(1100,17,(party.stuff_done[309][5] != 0) ? 1 : 0);// party.stuff_done[309][5] stairway_everywhere       
+    cd_set_led(1100,19,(party.stuff_done[309][6] != 0) ? 1 : 0);// party.stuff_done[309][6] resting_checks_timers 
 
 	if (party.help_received[110] == 0) {
 		cd_initial_draw(1100);

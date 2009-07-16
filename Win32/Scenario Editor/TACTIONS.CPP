@@ -222,7 +222,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							if (x >= 0) {
 								load_town(x);
 								set_up_main_screen();
-							start_town_edit();
+//							start_town_edit();
 							mouse_button_held = FALSE;
 							return FALSE;
 								}

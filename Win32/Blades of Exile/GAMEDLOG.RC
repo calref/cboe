@@ -145,7 +145,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      STYLE WS_POPUP | WS_DLGFRAME
      {
      }
-
+     
 901 DIALOG 10, 10, 338, 113
      STYLE WS_POPUP | WS_DLGFRAME
      {
@@ -1160,15 +1160,9 @@ STYLE WS_POPUP | WS_DLGFRAME
 1062 DIALOG 10, 10, 529, 316
 STYLE WS_POPUP | WS_DLGFRAME
 {
-/* LTEXT "1_63", 1, 435, 299, 61, 20
- LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT "Classic Blades of Exile Beta 2 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
- LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 226, 354, 32
- LTEXT "Blades of Exile is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 160, 410, 51
- LTEXT "ORIGINAL CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Graphics: Andrew Hunter (Wormius@aol.com) |   Business Manager: Mariann Krizsan (krizsan@spidweb.com)|   Title Screen: James Ernest (ernest@speakeasy.org)", 8, 50, 82, 434, 67*/
  LTEXT "1_63", 1, 435, 295, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT  "Classic Blades of Exile Beta 2 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT  "Classic Blades of Exile version 1.0 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
  LTEXT "CONTRIBUTORS : Ormus, Ishad Nha, Celtic Minstrel, Niemand and all involved in the BoE community.", 4, 50, 227, 424, 33
  LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 271, 354, 32
  LTEXT "Blades of Exile was brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 154, 410, 51
@@ -1562,11 +1556,11 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "*" 83, 396, 227, 100, 16
      }
 
-1099 DIALOG 10, 10, 470, 510
+1099 DIALOG 10, 10, 470, 530
 STYLE WS_POPUP | WS_DLGFRAME
 {
- LTEXT "1_63", 1, 354, 480, 58, 20
- LTEXT "0_5", 2, 281, 480, 62, 20
+ LTEXT "1_63", 1, 354, 500, 58, 20
+ LTEXT "0_5", 2, 281, 500, 62, 20
  LTEXT "", 3, 64, 48, 277, 102
  LTEXT "2_0", 4, 147, 88, 16, 18
  LTEXT "2_0", 5, 72, 55, 16, 18
@@ -1623,6 +1617,8 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "*Faster Boom Space Effects",57,72,440,340,16
  LTEXT "2_0", 58, 53, 462,17,18
  LTEXT "*Use Darker (Mac) Graphics",59,72,458,340,16
+ LTEXT "2_0", 60, 53, 480,17,18
+ LTEXT "*Ask About text box in talking mode",61,72,476,340,16
 }
 1100 DIALOG 10, 10, 450, 451
 STYLE WS_POPUP | WS_DLGFRAME
@@ -1638,14 +1634,12 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "2_0", 9, 49, 86, 17, 18
  LTEXT "Waterfalls won't work on Town (Legacy behavior)", 10, 70 ,102 ,182 ,17
  LTEXT "2_0", 11, 49, 106, 17, 18
- LTEXT "Display Grass Trims", 12, 70 ,122 ,182 ,17
+ LTEXT "Display Grass and Moutains Trims", 12, 70 ,122 ,182 ,17
  LTEXT "2_0", 13, 49, 126, 17, 18
-}
-1101 DIALOG 10, 10, 252, 82
-STYLE WS_POPUP | WS_DLGFRAME
-{
- LTEXT "6_0", 2, 90, 33, 126, 16
- LTEXT "5_716", 3, 8, 8, 36, 36
- LTEXT "~Enter Stuff Done Flag Part A (between 1 and 299):", 4, 49, 8, 163, 16
- LTEXT "1_63", 5, 190, 59, 60, 15
+ LTEXT "Specials Interrupt Waiting/Rest", 14, 70 ,142 ,182 ,17
+ LTEXT "2_0", 15, 49, 146, 17, 18 
+ LTEXT "Stairway Nodes can be called anytime", 16, 70 ,162 ,182 ,17
+ LTEXT "2_0", 17, 49, 166, 17, 18 
+ LTEXT "Special Timers are checked when resting outdoor/in inn", 18, 70 ,182 ,182 ,17
+ LTEXT "2_0", 19, 49, 186, 17, 18  
 }

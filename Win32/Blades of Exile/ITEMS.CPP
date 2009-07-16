@@ -18,6 +18,7 @@
 #include "string.h"
 #include "graphutl.h"
 #include "monster.h"
+#include "specials.h"
 
 #include "globvar.h"
 
@@ -66,6 +67,10 @@ void party_record_type::giveGold(short amount, bool print_result)
 	if (amount < 0) return;
 	
 	gold += amount;
+	if(gold > 30000){
+	   gold = 30000;
+       add_string_to_buf("Excess gold dropped.            ");
+      }
 	if (print_result) put_pc_screen();
 }
 
@@ -74,6 +79,8 @@ bool party_record_type::takeGold(short amount, bool print_result)
 	if (gold < amount) return false;
 	
 	gold -= amount;
+	if(gold < 0)
+	   gold = 0;
 	
 	if (print_result) put_pc_screen();
 	
@@ -108,6 +115,10 @@ void party_record_type::giveFood(short amount, bool print_result)
 	if (amount < 0) return;
 	
 	food += amount;
+	if(food > 25000){
+	   food = 25000;
+	   add_string_to_buf("Excess food dropped.            ");
+       }
 	
 	if (print_result) put_pc_screen();	
 }
@@ -163,10 +174,10 @@ void destroy_an_item()
 	short i;
 	ASB("Too many items. Some item destroyed.");
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (t_i.items[i].type_flag == 15) {
+/*		if (t_i.items[i].type_flag == 15) {
 			t_i.items[i].variety = 0;
 			return;
-			}
+			}*/
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (t_i.items[i].value < 3) {
 			t_i.items[i].variety = 0;
@@ -228,7 +239,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 			for (i = 0; i < T_M; i++)
 				if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude % 2 != 1)
 					&& (can_see(place,c_town.monst.dudes[i].m_loc,0) < 5)) {
-						make_town_hostile();
+						set_town_status(0);
 						i = T_M;
 						add_string_to_buf("Your crime was seen!");
 						}
@@ -245,11 +256,12 @@ short get_item(location place,short pc_num,Boolean check_container)
 	return taken;
 }
 
-void make_town_hostile()
+void set_town_status(unsigned char attitude)
+//0 - hostile, 1 - friendly, 2 - dead
 {
-	short i,num;
-	Boolean fry_party = FALSE;
+	short i,num,s1,s2,s3;
 
+    if(attitude == 0){
 	if (which_combat_type == 0)
 		return;
 	give_help(53,0,0);
@@ -270,16 +282,25 @@ void make_town_hostile()
 				}
 			}
 			
+			
 // In some towns, doin' this'll getcha' killed.
 // wedge in special
 
-	if (fry_party == TRUE) {
-		for (i = 0; i < 6; i++)
-			if (adven[i].main_status > MAIN_STATUS_ABSENT)
-				adven[i].main_status = MAIN_STATUS_ABSENT;
-		stat_window = 6;
-		boom_anim_active = FALSE;	
-		}
+    if((PSD[SDF_LEGACY_SCENARIO] == 1) && (c_town.town.hostile_spec_to_call == 0))//preserve legacy towns
+        c_town.town.hostile_spec_to_call = -1;
+
+	if ((c_town.town.hostile_spec_to_call >= 0) && (c_town.town.hostile_spec_to_call < 100))
+        run_special(1,2,c_town.town.hostile_spec_to_call,c_town.p_loc,&s1,&s2,&s3);
+
+    }
+    else if (attitude == 1){
+        for (i = 0; i < T_M; i++)
+			c_town.monst.dudes[i].attitude = 0;
+        }
+    else {// dead part non working for now
+        c_town.town.town_chop_time = party.age/3700;
+        c_town.town.town_chop_key = 0;
+    }
 }
 
 
@@ -922,3 +943,4 @@ bool pc_array::checkClass(short item_class, short mode)
 					}
 	return false;
 }
+

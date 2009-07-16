@@ -44,7 +44,67 @@ Bug Fixes :
 - Fixed the town wandering function so that only the supposed monsters would appear in pair.
 - Fixed the outdoor wandering function so that the number of monster appearing follows the specified values in the Scenario Editor.
 - The generic portal/stairway node now don't call the next node if "Leave" is choose.
-- Damaging terrains (cold/fire/magic) will not damage party when in boat.
+
+Beta 2 :
+
+- Giant Strength ability and Skill ability now use the ability strength rather than the item level to calculate effect.
+- Won't take damage when moving boats over damaging terrains (fire, cold, magic, poison, disease) anymore.
+- Won't take damage when horses refuses to enter a damaging terrain (fire, cold, magic) anymore.
+- Horses won't enter damaging terrains (fire, cold, magic) or "horse blocking" terrains when outdoors anymore.
+- Boom effects won't be displayed at random places when being damaged outdoors anymore.
+- Damage won't be displayed in boom animation when attacking invulnerable monsters when they are in fact unharmed ...
+- The first pc won't become active with 0 AP anymore when a pc get killed by backshots.
+- All terrains and monsters sheets now loaded in memory to bypass storage sheet. That should speed up the game and fix some graphical oddities. Mac and Windows graphics can now be swapped on the fly (i.e without restarting the game). That also removes any graphical limitation in the game.
+- In the same way, PC graphics will now be drawn directly to the game gworld.
+- You can't end the scenario via a special node if the party is dead anymore (prevent saving an "all dead" party)
+- Fixed the town loading behavior so that Empties won't appear in Place Town Encounters anymore.
+- Cleaned the ressource file (smaller executable).
+- Changed the "force place monster" function to preferably flush a summoned monster if flushing is needed. Also prevent a potential infinite loop if trying to force place a monster and all the 60 monsters of a town have a life flag.
+- Tweaked exploding arrows firing animation to be smoother (arrow fired, then explosion).
+- Added a safety check to monsters with Absorb Spells ability to prevent negative health.
+- The spell usable Stinking Cloud ability was protecting against acid instead of the Protection from Acid ability. Fixed.
+- The Protection from Disease item ability should now works to the full extent.
+- Removed a check on the item graphic when deciding whether to play the"swallow" sound; now checks only for item variety. (Celtic Minstrel)
+- Corrected the code so that the party cannot be split again if already split.
+- Various messages code cleaning/fixing (Celtic Minstrel)
+- Removed the 50 node limit. To prevent infinite loop an interrupt sequence has been implemented (Ctrl-C).
+- Jobs dialog reimplemented.
+- Cave Bridges battlefield should now appears instead of basic cave floor.
+- Wall trims are now working.
+- Slowdowns due to trims drawing (animated water, ...) should be fixed now.
+- Scenarios in subfolders (under Scenarios/) are now found.
+- No more limit for the number of listed scenarios.
+- Clicking '?' icon on shopping and talk mode now gives help, even if in 'No instant help' mode.
+- 'Burma Shave' Easter Egg readded.
+- Debug Mode : ghost mode implemented.
+
+Version 1.0 :
+
+- Added a new item ability : Call a scenario special when using the item. The special called is specified by the ability strength.
+The type of scenario to call depends of the magic_use_type (the boxes from help pc (0) to harm all (4)) : 0 is only local, 1 is town local and out global,
+2 is town global and out local and 3 is only global.
+If the number of charge is greater than 0, then using the item takes one charge. If not, the item can be used at will.
+- Changed the "Set SDF" debug command to display the value of the specified SDF if value to set it to is -1 (BoA style).
+- Added a missing compatibility switch from the introduced "Specials interrupt wait/rest" feature.
+- Misc. battlefield adjustment (forest battlefield doesn't show a road anymore, road battlefields appear correctly, cave bridge now has cave trims, ...)
+- Fixed a bug where an absent boat or horse could prevent a pc from entering a square while in outdoor combat.
+- Trims now use the next terrain type (cave, grass, mountain) when drawn.
+- Fixed a potential negative pointer to an array.
+- Readded Spidweb logo intro sound.
+- Event Timers will now triggers even when resting (compatibility switch available)
+- Stairway can now be called in any mode except outdoor : town, looking, talking, even fighting (put in fight mode at destination).
+- The three basics scenarios are no longer listed in the custom scenario list.
+- Talking mode : fixed a typo which would prevent the keyword "name" from giving the name dialogue. Added the keywords "buy" (for purchase) and "bye" to end conversation.
+- Time for event timers is now taken into account correctly while resting Outdoor/ in Inn / via "Have a Rest Node". The "Change Time" node is unchanged.
+- Added a preference to show a talk entry field next to "Ask About" (like in older Exiles) for direct typing.
+- Fixed clipping error in the main menu screen for high resolutions.
+- Added the Ctrl+N shortcut who was advertised but not working.
+- Gold is now updated after training.
+- If not using special messages, a "Move Party" node won't mess with talking responses anymore.
+- Affect Gold/Food nodes could give more gold/food than the maximum allowed. Fixed.
+- Deleted a check that was destroying items with "type Flag" 15 first.
+- Calling add_string_to_buf() with an empty string now does nothing.
+
 
 Changes :
 - Created a compatibility menu
@@ -59,7 +119,7 @@ Changes :
 - Frills won't appears on pits while in outdoor combat anymore (pits here = darkness which you can flee to)
 - Deleted a reference to PSD[181][6] which could prevent targeting lines from being drawn.
 - Cleans up from Exile 3 :
-	- Anama references removed (was able to gain Anama's bonus against demons when the right SDF was set and suffers the Anama's wrath for learning Mage Spells is the same SDF was set)
+	- Anama references removed (was able to gain Anama's bonus against demons when the right SDF was set and suffers Anama's wrath for learning Mage Spells if the same SDF was set)
 	- Monsters can now breaks barriers in town which number is 20 or less.
 	- You can't destroy non-existant slimes pools in town number 23 and 46, effectively locking the game because of missing dialogs, anymore.
 - Variables changed to unsigned :
@@ -115,27 +175,34 @@ Compatibility Switches :
 
 ToDo :
 
-- elim_monst() function is now unused.
-- Complete MIXED_D.BMP (ppats ...)
+//- Jobs page ? <= not in Classic BoE
+//- Check Spell on space Node ? <= not for now
+//- Implement new trims method. <= not in Classic BoE
+
+System Shock 2
+
+
+/* => should be done
+- Changing Terrain with different light radius will have no effect. The town will remember the value of the original terrain, and display the light radius for that terrain, regardless of what it mutates into. I have been told this effect may work on MACs, I can say for certain it will NOT work on PCs. 
 - Make the variables for day, level, etc unsigned so that a roll-over does not leave you in the negative ?
 Note: Anywhere an unsigned char variable is used to store a terrain type or a monster type it must be changed to unsigned short! Otherwise we won't be able to extend the limit on the numbers of monsters and terrains. Local variables in particular should be looked out for.
 - When an item is placed and the Amount/Charges field is filled in with a number other than -1, it has no effect (unless the item is food or gold).
-*- Apparently event timers are broken.
-- Stairway nodes can only be called as a result of moving. You can’t look to change levels, you can’t change levels in the middle of combat, you can’t change levels at the end of a timer. For normal stairways, this doesn’t matter. For forced stairways, you NEED to put in looking blocks and combat blocks. 
 - Outdoor terrain changes are forgotten after loading saved games. If you call a special to change a piece of outdoor terrain, that change will be forgotten if the player loads a saved game. This can be a VERY problematic node — the only way around is to surround the terrain with special nodes that call if upon a certain SDF. Problem is, Outdoor sections have very limited special nodes, limiting the ability to do this in relatively open areas. It is the same with Towns.
 - Merging items wipes special classes if some of the merged items do not have a special class. For example, if you have arrows in your scenario that you give a special class, and the party brings in arrows from another scenario, and merges the two, NONE of the arrows will contain the new special class. For any combinable items that have a special class, make sure to give them a unique type class, so items from other scenarios won’t wipe them clean. You’ll still be vulnerable to the party taking items from your scenario, leaving the scenario, and then coming back in, but unfortunately there’s no way around this. 
-*- Empties! Occasionally, for no known reason, the BOE editor will stick in little “EMPTY” monsters, who appear with the Dwarf with the two-handed axe graphic, are hostile type “A”, and have no stats whatsoever. No one has quite yet figured out why this happens, but the effect has surfaced in several different scenarios. 
+/*- Empties! Occasionally, for no known reason, the BOE editor will stick in little “EMPTY” monsters, who appear with the Dwarf with the two-handed axe graphic, are hostile type “A”, and have no stats whatsoever. No one has quite yet figured out why this happens, but the effect has surfaced in several different scenarios. 
 - If you put a special class item in a crate and a party moves the crate in the game and then the special node checks where is the item (If-thens, Item with special class on a space), the node reacts as if the item was on the original space of the crate. This bug is especially bad because it makes a workaround for the lack of the node checking if the crate is on the space. (Thanks to Tigrene for pointing this out.) 
-*- Changing the visibility (i.e., opaque, transparent, etc.) of terrain types often does not work. I’m not sure if it always fails, but it definitely does sometimes. Make sure, through beta-testing, that the terrain type works properly. The work-around is this: if you want an opaque custom terrain type, don’t replace a terrain that is transparent. Instead, replace one that was already opaque. I’m not sure if this bug is also present with blocked vs. passable, but once again, during beta testing check all changed terrains by looking at them, looking through them (if possible), and trying to walk into them. 
-- Conveyors can push through solid objects (legacy compatibility warning !!!)
-*- 100% in Blades doesn’t equal 100%. It’s closer to 95% as near as I can figure. Places where this becomes problematic are many, the two most notable are affect Statistics nodes, and creatures dropping items when killed. NEVER make a single creature drop something that is vital to continuation of the scenario, even set at 100% it will still fail to do so fairly often.  <= this is normally fixed
+/*- Changing the visibility (i.e., opaque, transparent, etc.) of terrain types often does not work. I’m not sure if it always fails, but it definitely does sometimes. Make sure, through beta-testing, that the terrain type works properly. The work-around is this: if you want an opaque custom terrain type, don’t replace a terrain that is transparent. Instead, replace one that was already opaque. I’m not sure if this bug is also present with blocked vs. passable, but once again, during beta testing check all changed terrains by looking at them, looking through them (if possible), and trying to walk into them. 
+/*- 100% in Blades doesn’t equal 100%. It’s closer to 95% as near as I can figure. Places where this becomes problematic are many, the two most notable are affect Statistics nodes, and creatures dropping items when killed. NEVER make a single creature drop something that is vital to continuation of the scenario, even set at 100% it will still fail to do so fairly often.  <= this is normally fixed
+- On an unrelated note... Is it possible to alter any member functions that call add_string_to_buf so that they return the string to add instead of adding it themselves? That's what I'm going to do when I get there (and already have done with the splitting functions). Since add_string_to_buffer only exists in the game (and not the editors), it's necessary in order to be able to use the exact same code for all three. (Unless we do some conditional compilation stuff, I suppose.)
+- Check Trait Node ?
+- Just wondering, did you implement this yet? I'll be doing it soon if I haven't already (I suspect I added the code to set it when enchanting a weapons but forgot to add the code to check it when deducting a charge from an item). 
+- Add a "strong_barrier" field to match Mac behavior.
 
 Suggestions :
 
 - Oh! One thing that could be done with the Extra values is allowing custom messages when being pushed or prevented by a conveyor belt. Right now, when you step on a conveyor belt and it pushes you, you get a small message in the text area that says "You get pushed." and if you attempt to move in the opposite direction of the conveyor belt, it says "The moving floor prevents you." Perhaps one Extra value could correspond to a scenario message that defines the two messages, separated by a | (the same character that creates line breaks in signs).
 For instance, let's say you select scenario message 10 to be the conveyor belt's messages. Message 10 says "You float down the river.|The water's too fast to move upstream!" Now, when the party moves along the "belt", it says "You float down the river." and when they try to move against the direction of the "belt", it says "The water's too fast to move upstream!" 
 - Outdoor conveyor belts ?
-- Also, perhaps instead of including only one version of the graphics, perhaps a switch could be put in the preferences for darker or lighter graphics
 
 Not a bug  ?/Fixed ?
 
@@ -180,3 +247,36 @@ void Paint(HWND hWnd, HDC hDC)
  
 	delete pImage;
 }
+
+// Load our PNG image
+CImage img;
+img.Load("circle.png");
+// Get dimensions
+int iWidth = img.GetWidth();
+int iHeight = img.GetHeight();
+// Make mem DC + mem  bitmap
+HDC hdcScreen = GetDC(NULL);
+HDC hDC = CreateCompatibleDC(hdcScreen);
+HBITMAP hBmp = CreateCompatibleBitmap(hdcScreen, iWidth, iHeight);
+HBITMAP hBmpOld = (HBITMAP)SelectObject(hDC, hBmp);
+// Draw image to memory DC
+img.Draw(hDC, 0, 0, iWidth, iHeight, 0, 0, iWidth, iHeight);
+
+// Call UpdateLayeredWindow
+BLENDFUNCTION blend = {0};
+blend.BlendOp = AC_SRC_OVER;
+blend.SourceConstantAlpha = 255;
+blend.AlphaFormat = AC_SRC_ALPHA;
+POINT ptPos = {0, 0};
+SIZE sizeWnd = {iWidth, iHeight};
+POINT ptSrc = {0, 0};
+UpdateLayeredWindow(hWnd, hdcScreen, &ptPos, &sizeWnd, hDC, &ptSrc, 0, &blend, ULW_ALPHA);
+
+SelectObject(hDC, hBmpOld);
+DeleteObject(hBmp);
+DeleteDC(hDC);
+ReleaseDC(NULL, hdcScreen);Because I’m using CImage, you need to include the atlimage.h header.
+
+That’s all that is required for the basics of UpdateLayeredWindow.
+
+NOTE: The example above does not include any error checking. That is left for the reader as an exercise.

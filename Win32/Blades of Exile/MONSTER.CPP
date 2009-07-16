@@ -56,6 +56,9 @@ short difficulty_adjust()
 	short i, j = 0;
 	short to_return = 1;
 	
+	if(scenario.adjust_diff > 0) // don't automatically adjust difficulty flag activated
+	   return 1;
+	
 	for (i = 0; i < 6; i++)
 		if (adven[i].isAlive())	j += adven[i].level;
 	
@@ -1312,7 +1315,11 @@ void current_town_type::activateMonsters(short code)
 	if (code == 0) return;
 
 	for (i = 0; i < T_M; i++) 
-		if (monst.dudes[i].monst_start.spec_enc_code == code && party.stuff_done[monst.dudes[i].monst_start.spec1][monst.dudes[i].monst_start.spec2] == 0)
+		if (monst.dudes[i].monst_start.spec_enc_code == code){
+            if((sd_legit(monst.dudes[i].monst_start.spec1,monst.dudes[i].monst_start.spec2) == TRUE)
+             && (party.stuff_done[monst.dudes[i].monst_start.spec1][monst.dudes[i].monst_start.spec2] == 1))
+                monst.dudes[i].monst_start.spec_enc_code = 0;//monster has a life flag and is already dead
+            else
 			{
 				monst.dudes[i].monst_start.spec_enc_code = 0;
 				monst.dudes[i].active = 2;
@@ -1326,6 +1333,7 @@ void current_town_type::activateMonsters(short code)
 				take_crate(monst.dudes[i].m_loc.x,monst.dudes[i].m_loc.y);
 				take_barrel(monst.dudes[i].m_loc.x,monst.dudes[i].m_loc.y);
 			}
+        }
 }
 
 short get_encumberance(short pc_num)

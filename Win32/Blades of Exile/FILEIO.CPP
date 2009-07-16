@@ -23,7 +23,7 @@
 
 #define	DONE_BUTTON_ITEM	1
 
-extern BOOL fry_startup;
+extern BOOL play_startup;
 
 typedef struct {
 	char expl[96][96];
@@ -58,7 +58,7 @@ void Get_Path(char* path){
 char file_path[256]="";                   // initialization
 GetModuleFileName(NULL,file_path,256); // get path to the executable
 
-int i=255;                       // initialize the first while loop
+int i=strlen(file_path);                       // initialize the first while loop
 while(file_path[i] != '\\')
    {
     i--;                                   // find the last '\' in the path to the executable
@@ -1719,9 +1719,11 @@ void get_reg_data()
 	GetPrivateProfileString(section, "no_instant_help", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[SDF_NO_INSTANT_HELP] = atoi(buffer);
 	GetPrivateProfileString(section, "fancy_startup", "1", buffer, BUFFER_LEN, iniFile);
-	fry_startup = atoi(buffer);
+	play_startup = atoi(buffer);
 	GetPrivateProfileString(section, "darker_graphics", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[307][0] = atoi(buffer); //1 is darker
+	GetPrivateProfileString(section, "talk_edit_box", "0", buffer, BUFFER_LEN, iniFile);
+	party.stuff_done[307][1] = atoi(buffer); //1 is darker	
 	GetPrivateProfileString(section, "legacy_day_reached", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[309][0] = atoi(buffer); //1 is legacy
 	GetPrivateProfileString(section, "legacy_kill_node", "1", buffer, BUFFER_LEN, iniFile);
@@ -1730,6 +1732,12 @@ void get_reg_data()
 	party.stuff_done[309][2] = (atoi(buffer))? FALSE : TRUE; //0 is legacy to preserve backwards compatibility, since SDF are initialized at 0.
 	GetPrivateProfileString(section, "display_grass_trims", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[309][3] = atoi(buffer); //0 is display
+	GetPrivateProfileString(section, "special_interrupt", "0", buffer, BUFFER_LEN, iniFile);
+	party.stuff_done[309][4] = atoi(buffer);
+	GetPrivateProfileString(section, "stairway_everywhere", "0", buffer, BUFFER_LEN, iniFile);
+	party.stuff_done[309][5] = atoi(buffer);
+	GetPrivateProfileString(section, "resting_checks_timers", "0", buffer, BUFFER_LEN, iniFile);
+	party.stuff_done[309][6] = atoi(buffer);    	
 
 }
 
@@ -1744,14 +1752,18 @@ void build_data_file(short which) // 1 - compatibility ; 2 - preferences
 	WritePrivateProfileString(section, "game_run_before", (game_run_before)? "1" : "0", iniFile);
 	WritePrivateProfileString(section, "display_mode", itoa((int) display_mode, tmp, 10), iniFile);
 	WritePrivateProfileString(section, "no_instant_help", itoa((int) party.stuff_done[SDF_NO_INSTANT_HELP], tmp, 10), iniFile);
-	WritePrivateProfileString(section, "fancy_startup", (fry_startup == TRUE) ? "1" : "0", iniFile);
+	WritePrivateProfileString(section, "fancy_startup", (play_startup == TRUE) ? "1" : "0", iniFile);
 	WritePrivateProfileString(section, "darker_graphics", (party.stuff_done[307][0] == 0) ? "0": "1", iniFile);
+	WritePrivateProfileString(section, "talk_edit_box", (party.stuff_done[307][1] == 0) ? "0": "1", iniFile);	
     }
     if(which == 1){
     WritePrivateProfileString(section, "legacy_day_reached", (party.stuff_done[309][0] == 0)? "0" : "1", iniFile);
     WritePrivateProfileString(section, "legacy_kill_node", (party.stuff_done[309][1] == 0)? "1" : "0", iniFile);
     WritePrivateProfileString(section, "town_waterfalls", (party.stuff_done[309][2] == 0)? "1" : "0", iniFile);
     WritePrivateProfileString(section, "display_grass_trims", (party.stuff_done[309][3] == 0)? "0" : "1", iniFile);
+    WritePrivateProfileString(section, "special_interrupt", (party.stuff_done[309][4] == 0)? "0" : "1", iniFile);
+    WritePrivateProfileString(section, "stairway_everywhere", (party.stuff_done[309][5] == 0)? "0" : "1", iniFile);   
+    WritePrivateProfileString(section, "resting_checks_timers", (party.stuff_done[309][6] == 0)? "0" : "1", iniFile);    
     }
 }
 
@@ -1865,7 +1877,7 @@ void ListFiles(char *path, HWND listbox){
     short len;
 	HANDLE find_file_id;
     WIN32_FIND_DATA lpFindFileData;
-    char copy_str[256];
+    char copy_str[256], test_str[256];
     
     sprintf(copy_str,"scenarios/%s*.*",path);
     
@@ -1873,20 +1885,22 @@ void ListFiles(char *path, HWND listbox){
         FindClose(find_file_id);
         return;
         }
-		
-	do{
-    len = strlen(lpFindFileData.cFileName);
-    if(((lpFindFileData.cFileName[len-1] == 's') ||( lpFindFileData.cFileName[len-1] == 'S')) 
-    && ((lpFindFileData.cFileName[len-2] == 'x') || (lpFindFileData.cFileName[len-2] == 'X'))
-    && ((lpFindFileData.cFileName[len-3] == 'e') || (lpFindFileData.cFileName[len-3] == 'E'))){// is extension .exs ?
-        sprintf(copy_str,"%s%s",path,lpFindFileData.cFileName);
-        SendMessage(listbox,LB_ADDSTRING,0,(LPARAM) (LPCTSTR) copy_str);
-        }
-    else if((lpFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) && (strcmp(lpFindFileData.cFileName,".") != 0) && (strcmp(lpFindFileData.cFileName,"..") != 0)){
-        sprintf(copy_str,"%s%s/",path,lpFindFileData.cFileName);
-        ListFiles(copy_str,listbox);//so list scenarios under the subdirectory
-        }
-    }while(FindNextFile(find_file_id,&lpFindFileData) != 0);
+	
+   	do{
+    	if((strcmp(lpFindFileData.cFileName, "VALLEYDY.EXS") != 0) && (strcmp(lpFindFileData.cFileName, "STEALTH.EXS") != 0) && (strcmp(lpFindFileData.cFileName, "ZAKHAZI.EXS") != 0)){
+           len = strlen(lpFindFileData.cFileName);
+            if(((lpFindFileData.cFileName[len-1] == 's') ||( lpFindFileData.cFileName[len-1] == 'S')) 
+            && ((lpFindFileData.cFileName[len-2] == 'x') || (lpFindFileData.cFileName[len-2] == 'X'))
+            && ((lpFindFileData.cFileName[len-3] == 'e') || (lpFindFileData.cFileName[len-3] == 'E'))){// is extension .exs ?
+                sprintf(copy_str,"%s%s",path,lpFindFileData.cFileName);
+                SendMessage(listbox,LB_ADDSTRING,0,(LPARAM) (LPCTSTR) copy_str);
+            }
+            else if((lpFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) && (strcmp(lpFindFileData.cFileName,".") != 0) && (strcmp(lpFindFileData.cFileName,"..") != 0)){
+                sprintf(copy_str,"%s%s/",path,lpFindFileData.cFileName);
+                ListFiles(copy_str,listbox);//so list scenarios under the subdirectory
+                }
+            }
+        }while(FindNextFile(find_file_id,&lpFindFileData) != 0);
 
     FindClose(find_file_id);
     
@@ -1923,6 +1937,7 @@ void build_scen_headers()
         }
 
     data_store2 = new piles_of_stuff_dumping_type2[count];	
+
 
     if(scen_headers != NULL){
    		delete[] scen_headers;
@@ -2174,7 +2189,7 @@ void port_scenario()
 	flip_short(&scenario.flag_f);
 	flip_short(&scenario.flag_g);
 	flip_short(&scenario.flag_h);
-	flip_short(&scenario.flag_i);
+	flip_short(&scenario.adjust_diff);
 	flip_short(&scenario.intro_mess_pic);
 	flip_short(&scenario.intro_mess_len);
 	flip_short(&scenario.which_town_start);

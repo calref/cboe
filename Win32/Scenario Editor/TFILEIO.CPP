@@ -2201,7 +2201,7 @@ void port_scenario()
 	flip_short(&scenario.flag_f);
 	flip_short(&scenario.flag_g);
 	flip_short(&scenario.flag_h);
-	flip_short(&scenario.flag_i);
+	flip_short(&scenario.adjust_diff);
 	flip_short(&scenario.intro_mess_pic);
 	flip_short(&scenario.intro_mess_len);
 	flip_short(&scenario.which_town_start);

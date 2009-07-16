@@ -23,7 +23,7 @@ RECT medium_buttons[4] =
 RECT startup_top;
 RECT item_buttons[8][6]; 	// name, use, give, drip, info, sell/id
 RECT pc_buttons[6][5];		// name, hp, sp, info, trade
-short special_queue[20];
+pending_special_type special_queue[20];
 Boolean end_scenario = FALSE;
 // For menu spell casting, some info needs to be stored up here.
 short mage_need_select[62] = {0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
@@ -387,7 +387,7 @@ char text_long_str[10][256];
 char text_short_str[140][35];
 char labels[NL][25];
 Boolean label_taken[NL];
-HWND edit_box ;
+HWND edit_box, talk_edit_box = NULL ;
 HWND store_edit_parent; // kludgy
 HDC dlg_force_dc ; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
@@ -544,6 +544,8 @@ char szFileName [128] = "blades.sav";
 char szTitleName [128] = "blades.sav";
 OPENFILENAME ofn;
 SCROLLINFO lpsi;
+MSG msg;
+BITMAP bitmap_info;
 // Trying this to fix bug. Hope it works.
 tiny_tr_type tiny_t;
 ave_tr_type ave_t;
@@ -579,6 +581,7 @@ HBITMAP items_gworld,tiny_obj_gworld,fields_gworld;
 HBITMAP dlg_buttons_gworld,missiles_gworld,dlogpics_gworld,small_temp_gworld;
 HBITMAP dialog_pattern_gworld,pattern_gworld,status_pattern_gworld;
 HBITMAP talking_portraits_gworld, frills_gworld, ter_anim_gworld, monsters_gworld[10], terrains_gworld[6];
+HBITMAP displayed_picture = NULL;
 // Startup graphics, will die when play starts
 HBITMAP startup_gworld;
 HRGN clip_region;
@@ -896,7 +899,7 @@ short abil_chart[200] = {4,4,4,4,4,4,4,4,4,4,
 	4,4,4,4,4,4,4,4,4,4,
 	13,0,0,0,3, 3,3,0,3,3,
 	3,3,3,3,3, 0,0,0,0,3,
-	13,3,3,5,0, 0,0,0,0,0,
+	13,3,3,5,0, 10,0,0,0,0,
 	4,4,4,4,4,4,4,4,4,4, // 100
 	1,1,1,1,1, 1,1,1,1,3,
 	3,1,1,1,1, 1,1,1,1,3,
@@ -980,3 +983,5 @@ word_rect_type store_words[50];
 //Timer Special happened ?
 BOOL timed_special_happened = FALSE;
 BOOL ghost_mode = FALSE;
+char talk_edit_string[40] = "";
+unsigned char queue_position = 1; //timer queue position
