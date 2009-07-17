@@ -3,7 +3,7 @@ ToDo :
 Game : 
 
 - Jobs page ? 
-- Check Spell on space Node ? <= mostly done only a check when casting needs to be programmed (see 
+- Check Spell on space Node ? <= mostly done only a check when casting needs to be programmed (see check_spell_on_space() function )
 - Implement new trims method (align code with Celtic Minstrel's).
 
 /* => should be done
