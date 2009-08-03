@@ -19,12 +19,16 @@ public:
 	short sd1;
 	short sd2;
 	short pic;
+	short pictype;
 	short m1;
 	short m2;
+	short m3;
 	short ex1a;
 	short ex1b;
+	short ex1c;
 	short ex2a;
 	short ex2b;
+	short ex2c;
 	short jumpto;
 	
 	cSpecial();

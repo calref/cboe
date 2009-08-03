@@ -474,64 +474,7 @@ LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 DLGPROC d_proc;
 WNDPROC edit_proc;
 WNDPROC old_edit_proc;
-#define	NUM_SOUNDS	100
-HGLOBAL sound_handles[NUM_SOUNDS];
-char * snds[NUM_SOUNDS];
-short last_played = 10000;
-short store_last_sound_played = 0;
 HMODULE hModule;
-Boolean always_asynch[100] = {FALSE,FALSE,FALSE,FALSE,FALSE,
-	TRUE,TRUE,FALSE,FALSE,FALSE,
-	TRUE,FALSE,FALSE,FALSE,FALSE, // 10
-	FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,TRUE,FALSE,TRUE, // 20
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,TRUE,  // 30
-	FALSE,FALSE,TRUE,FALSE,TRUE,
-	FALSE,TRUE,TRUE,TRUE,TRUE, // 40
-	TRUE,TRUE,TRUE,TRUE,TRUE,
-	TRUE,FALSE,FALSE,TRUE,FALSE, // 50
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,TRUE,FALSE,FALSE,FALSE, // 60
-	FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,FALSE, // 70
-	FALSE,TRUE,TRUE,TRUE,TRUE,
-	TRUE,TRUE,TRUE,TRUE,FALSE, // 80
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,TRUE,FALSE,FALSE,FALSE, // 90
-	FALSE,FALSE,FALSE,FALSE,FALSE};
-Boolean load_when_play[100] = {
-	0,0,1,1,1,0,0,1,1,1,
-	0,0,0,1,0,1,1,1,1,1,
-	1,1,0,1,1,1,1,0,1,1,
-	1,1,1,1,0,1,1,0,1,1,
-	1,1,1,1,1,1,1,0,0,0,
-	0,1,1,0,1,0,1,1,1,1, // 50
-	1,0,1,1,1,1,1,1,1,0,
-	0,0,0,0,0,0,0,0,0,0, // 70
-	1,1,1,1,1,0,0,0,0,0,
-	1,0,1,1,1,1,1,1,1,0
-};
-short can_ignore[100] = {
-	0,0,0,0,0,5,3,0,0,0,
-	5,5,5,0,5,0,0,0,0,0,
-	0,0,5,0,0,0,0,0,0,2,
-	2,2,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,1,1,1,
-	1,0,0,5,0,1,0,0,0,0, // 50
-	0,0,0,0,5,0,0,0,0,0,
-	0,0,0,0,0, 0,5,5,5,5, // 70
-	4,4,4,4,0,0,0,0,0,0,
-	0,5,5,0,0,0,0,0,0,0};
-// 1 - polite asych, 1 or 2 or 3- lose easily when pref is set for fewer snds
-// 3 can be async
-// 4 - nostop asynch ... when 4, this sound is NOSTOP, i.e. when played, is played
-//     asynch, and refuses all other sounds. Sounds that come in are ignored, and
-//     disappear into the ether
-// 5 - finally, bold asynch ... when 5, this sound is NOSTOP, i.e. when played, is played
-//     asynch, and refuses all other sounds. When a sound is played on top of this, game
-//     hangs on until sound is done, and then and only then plays later sound.
-Boolean sounds_fucked = FALSE;
 long intro_music_start_time = -1;
 HBITMAP spec_scen_g ;
 typedef struct {

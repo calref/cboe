@@ -34,7 +34,7 @@ SupportXPThemes=0
 CompilerSet=0
 
 [Unit1]
-FileName=ACTIONS.CPP
+FileName=boe.actions.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -44,7 +44,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=BLADES.CPP
+FileName=boe.main.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -54,7 +54,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=COMBAT.CPP
+FileName=boe.combat.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -64,7 +64,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=DLGUTILS.CPP
+FileName=boe.dlgutil.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -84,7 +84,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=EXLSOUND.CPP
+FileName=sountool.CPP
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -94,7 +94,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=FIELDS.CPP
+FileName=boe.fields.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -104,7 +104,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=FILEIO.CPP
+FileName=boe.fileio.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -124,7 +124,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=GRAPHICS.CPP
+FileName=boe.graphics.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -134,17 +134,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=GRAPHUTL.CPP
-CompileCpp=1
-Folder=Blades of Exile
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
-FileName=GUTILS.CPP
+FileName=boe.graphutil.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -154,7 +144,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=INFODLGS.CPP
+FileName=boe.infodlg.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -164,7 +154,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=ITEMDATA.CPP
+FileName=boe.itemdata.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -174,7 +164,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=ITEMS.CPP
+FileName=boe.items.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -184,7 +174,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=LOCUTILS.CPP
+FileName=boe.locutils.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -194,7 +184,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=MONSTER.CPP
+FileName=boe.monster.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -204,7 +194,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=NEWGRAPH.CPP
+FileName=boe.newgraph.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -214,7 +204,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=PARTY.CPP
+FileName=boe.party.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -224,7 +214,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=SPECIALS.CPP
+FileName=boe.specials.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -234,7 +224,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=TOWN.CPP
+FileName=boe.town.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -274,7 +264,7 @@ AutoIncBuildNrOnCompile=0
 AutoIncBuildNr=0
 
 [Unit26]
-FileName=ACTIONS.H
+FileName=boe.actions.h
 Folder=Blades of Exile
 Compile=1
 Link=1
@@ -293,7 +283,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=COMBAT.H
+FileName=boe.combat.h
 Folder=Blades of Exile
 Compile=1
 Link=1
@@ -303,7 +293,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit28]
-FileName=DLGUTILS.H
+FileName=boe.dlgutil.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -323,7 +313,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=EXLSOUND.H
+FileName=soundtool.H
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -333,7 +323,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=FIELDS.H
+FileName=boe.fields.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -343,7 +333,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit32]
-FileName=FILEIO.H
+FileName=boe.fileio.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -363,7 +353,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit34]
-FileName=GRAPHICS.H
+FileName=boe.graphics.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -373,17 +363,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit35]
-FileName=GRAPHUTL.H
-CompileCpp=1
-Folder=Blades of Exile
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit36]
-FileName=GUTILS.H
+FileName=boe.graphutil.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -393,7 +373,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit37]
-FileName=INFODLGS.H
+FileName=boe.infodlg.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -403,7 +383,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit38]
-FileName=ITEMDATA.H
+FileName=boe.itemdata.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -413,7 +393,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit39]
-FileName=ITEMS.H
+FileName=boe.items.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -423,7 +403,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit40]
-FileName=LOCUTILS.H
+FileName=boe.locutils.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -433,7 +413,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit41]
-FileName=MONSTER.H
+FileName=boe.monster.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -443,7 +423,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit42]
-FileName=NEWGRAPH.H
+FileName=boe.newgraph.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -453,7 +433,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit45]
-FileName=TEXT.H
+FileName=boe.text.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -463,7 +443,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit46]
-FileName=TOWN.H
+FileName=boe.town.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -523,7 +503,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit43]
-FileName=PARTY.H
+FileName=boe.party.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -533,7 +513,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit44]
-FileName=SPECIALS.H
+FileName=boe.specials.h
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -630,7 +610,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit60]
+[Unit36]
 FileName=GLOBVAR.H
 CompileCpp=1
 Folder=
@@ -640,7 +620,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit61]
+[Unit12]
 FileName=CONSTS.H
 CompileCpp=1
 Folder=
@@ -651,7 +631,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=TEXT.CPP
+FileName=boe.text.cpp
 CompileCpp=1
 Folder=Blades of Exile
 Compile=1
@@ -661,7 +641,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit47]
-FileName=BLADES.H
+FileName=boe.main.h
 CompileCpp=1
 Folder=
 Compile=1

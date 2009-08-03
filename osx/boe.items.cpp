@@ -139,8 +139,8 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 	if ((free_space == 24) || (univ.party[pc_num].main_status != 1))
 		return false;
 		else {
-			item.item_properties = item.item_properties & 253; // not property
-			item.item_properties = item.item_properties & 247; // not contained
+			item.property = false;
+			item.contained = false;
 			univ.party[pc_num].items[free_space] = item;
 
 			if (print_result == 1) {
@@ -148,7 +148,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 					put_item_screen(stat_window,0);
 			}
 			if (in_startup_mode == false) {
-				if (item.is_ident() == 0)
+				if (!item.ident)
 					sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.name.c_str());
 					else sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.full_name.c_str());
 				if (print_result == true)
@@ -179,7 +179,7 @@ bool forced_give(short item_num,eItemAbil abil) ////
 			if ((univ.party[i].main_status == 1) && (univ.party[i].items[j].variety == 0)) {
 				univ.party[i].items[j] = item;
 			
-				if (item.is_ident() == 0)
+				if (!item.ident)
 					sprintf((char *) announce_string,"  %s gets %s.",univ.party[i].name.c_str(),item.name.c_str());
 					else sprintf((char *) announce_string,"  %s gets %s.",univ.party[i].name.c_str(),item.full_name.c_str());
 				add_string_to_buf((char *)announce_string);
@@ -442,11 +442,11 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	char store_name[60];
 
 	////
-	if (univ.party[pc_num].items[item_hit].is_magic() ||
+	if (univ.party[pc_num].items[item_hit].magic ||
 		(univ.party[pc_num].items[item_hit].ability != 0))
 			return;
-	univ.party[pc_num].items[item_hit].set_magic(true);
-	univ.party[pc_num].items[item_hit].set_enchanted(true);
+	univ.party[pc_num].items[item_hit].magic = true;
+	univ.party[pc_num].items[item_hit].enchanted = true;
 	switch (enchant_type) {
 		case 0:
 			sprintf((char *)store_name,"%s (+1)",univ.party[pc_num].items[item_hit].full_name.c_str());
@@ -512,7 +512,7 @@ if ((overall_mode == MODE_COMBAT) && (univ.party[pc_num].items[item_num].variety
 
 		// unequip
 	if (univ.party[pc_num].equip[item_num] == true) {
-		if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].is_cursed())
+		if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 			add_string_to_buf("Equip: Item is cursed.           ");
 			else {
 				univ.party[pc_num].equip[item_num] = false;
@@ -575,7 +575,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 	
 	item_store = univ.party[pc_num].items[item_num];
 
-	if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].is_cursed()) 
+	if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed) 
 			add_string_to_buf("Drop: Item is cursed.           ");	
 	else switch (overall_mode) {
 		case MODE_OUTDOORS:
@@ -603,13 +603,13 @@ void drop_item(short pc_num,short item_num,location where_drop)
 				item_store.charges = how_many;
 				}
 			if (is_container(loc) == true)
-				item_store.item_properties = item_store.item_properties | 8;
+				item_store.contained = true;
 			if (!place_item(item_store,loc,false)) {
 				add_string_to_buf("Drop: Too many items on ground");
-				item_store.item_properties = item_store.item_properties & 247; // not contained
+				item_store.contained = false;
 				}
 				else {
-					if (item_store.is_contained())
+					if (item_store.contained)
 						add_string_to_buf("Drop: Item put away");
 						else add_string_to_buf("Drop: OK");
 					univ.party[pc_num].items[item_num].charges -= how_many;
@@ -667,7 +667,7 @@ void destroy_an_item()
 			return;
 			}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (!univ.town.items[i].is_magic()) {
+		if (!univ.town.items[i].magic) {
 			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
 			return;
 			}
@@ -682,7 +682,7 @@ void give_thing(short pc_num, short item_num)
 	cItemRec item_store;
 	bool take_given_item = true;
 	
-	if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].is_cursed())
+	if (univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 			add_string_to_buf("Give: Item is cursed.           ");
 			else {
 				item_store = univ.party[pc_num].items[item_num];
@@ -724,11 +724,11 @@ void combine_things(short pc_num)
 	
 	for (i = 0; i < 24; i++) {
 		if ((univ.party[pc_num].items[i].variety > 0) &&
-			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].is_ident())) {
+			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
 			for (j = i + 1; j < 24; j++)
 				if ((univ.party[pc_num].items[j].variety > 0) &&
 				(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag) 
-				 && (univ.party[pc_num].items[j].is_ident())) {
+				 && (univ.party[pc_num].items[j].ident)) {
 					add_string_to_buf("(items combined)");
 					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
 					if (test > 125) {
@@ -791,11 +791,11 @@ short get_item(location place,short pc_num,bool check_container)
 			 ((mass_get == 1) && (check_container == false) &&
 			 ((dist(place,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 			  && (can_see(place,univ.town.items[i].item_loc,0) < 5))) 
-			  && ((!univ.town.items[i].is_contained()) || (check_container == true))) {
+			  && ((!univ.town.items[i].contained) || (check_container == true))) {
 				taken = 1;
 
 					if (univ.town.items[i].value < 2)
-						univ.town.items[i].item_properties = univ.town.items[i].item_properties | 1;
+						univ.town.items[i].ident = true;
 					item_near = true;
 				}
 	if (item_near == true)
@@ -904,7 +904,7 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = univ.town.items[item_array[i + first_item_shown]]; 
 					sprintf ((char *) message, "%s",
-					 (item.is_ident() ? item.full_name : item.name).c_str());
+					 (item.ident ? item.full_name : item.name).c_str());
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 1000) // was 150
 						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
@@ -970,13 +970,13 @@ void display_item_event_filter (short item_hit)
 				if (item_array[item_hit] >= NUM_TOWN_ITEMS) 
 					break;
 				item = univ.town.items[item_array[item_hit]];
-				if (item.is_property()) {
+				if (item.property) {
 					i = (dialog_answer == 0) ? fancy_choice_dialog(1011,987) : 2;
 					if (i == 1) 
 						break;
 						else {
 							dialog_answer = 1;
-							item.item_properties = item.item_properties & 253;
+							item.property = false;
 							}
 					}
 
@@ -1041,8 +1041,8 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 				 ((mode == 1) && (check_container == false) &&
 				 ((dist(from_loc,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 				  && (can_see(from_loc,univ.town.items[i].item_loc,0) < 5))) &&
-				  (univ.town.items[i].is_contained() == check_container) &&
-				  ((check_container == false) || (univ.town.items[i].item_loc == from_loc))) {
+				  (univ.town.items[i].contained == check_container) &&
+				  ((!check_container) || (univ.town.items[i].item_loc == from_loc))) {
 				  	item_array[array_position] = i;
 			  		array_position++;
 			  		total_items_gettable++;
@@ -1489,29 +1489,29 @@ void place_treasure(location where,short level,short loot,short mode)
 
 			// not many magic items
 			if (mode == 0) {
-				if (new_item.is_magic() && (level < 2) && (get_ran(1,0,5) < 3))
+				if (new_item.magic && (level < 2) && (get_ran(1,0,5) < 3))
 					new_item.variety = ITEM_TYPE_NO_ITEM;
-				if (new_item.is_magic() && (level == 2) && (get_ran(1,0,5) < 2))
+				if (new_item.magic && (level == 2) && (get_ran(1,0,5) < 2))
 					new_item.variety = ITEM_TYPE_NO_ITEM;
-				if (new_item.is_cursed() && (get_ran(1,0,5) < 3))
+				if (new_item.cursed && (get_ran(1,0,5) < 3))
 					new_item.variety = ITEM_TYPE_NO_ITEM;
 				}
 				
-			// if forced, keep dipping until a treasure comes uo
+			// if forced, keep dipping until a treasure comes up
 			if ((mode == 1)	&& (max >= 20)) {
 				do new_item = return_treasure(treas_chart[loot][j],level,mode);
 				while ((new_item.variety == 0) || (item_val(new_item) > max));
 			}
 
 			// Not many cursed items
-			if (new_item.is_cursed() && (get_ran(1,0,2) == 1))
+			if (new_item.cursed && (get_ran(1,0,2) == 1))
 				new_item.variety = ITEM_TYPE_NO_ITEM;
 							
 			if (new_item.variety != ITEM_TYPE_NO_ITEM) {
 				for (i = 0; i < 6; i++)
 					if ((univ.party[i].main_status == 1) 
 						&& (get_ran(1,1,100) < id_odds[univ.party[i].skills[13]]))
-							new_item.item_properties = new_item.item_properties | 1;
+							new_item.ident = true;
 				place_item(new_item,where,false);
 				}			
 			}
@@ -1592,8 +1592,7 @@ void refresh_store_items()
 			if ((univ.party.magic_store_items[i][j].variety == 3) ||
 				(univ.party.magic_store_items[i][j].variety == 11))
 				univ.party.magic_store_items[i][j] = cItemRec();
-			univ.party.magic_store_items[i][j].item_properties =
-			univ.party.magic_store_items[i][j].item_properties | 1;
+			univ.party.magic_store_items[i][j].ident = true;
 		}
 
 }

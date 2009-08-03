@@ -1522,7 +1522,7 @@ void fire_missile(location target) {
 						break;
 				}
 			} else if (overall_mode == MODE_FIRING || overall_mode == MODE_FANCY_TARGET)
-				m_type = (univ.party[missile_firer].items[ammo_inv_slot].is_magic() == true) ? 4 : 3;
+				m_type = univ.party[missile_firer].items[ammo_inv_slot].magic ? 4 : 3;
 			run_a_missile(pc_pos[missile_firer],target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
 						  0,0,100);
 			

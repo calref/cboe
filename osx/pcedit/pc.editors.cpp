@@ -54,11 +54,11 @@ void combine_things(short pc_num)
 	
 	for (i = 0; i < 24; i++) {
 		if ((univ.party[pc_num].items[i].variety > 0) &&
-			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].item_properties & 254 != 0)) {
+			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
 			for (j = i + 1; j < 24; j++)
 				if ((univ.party[pc_num].items[j].variety > 0) &&
 				(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag) 
-				 && (univ.party[pc_num].items[j].item_properties & 254 != 0)) {
+				 && (univ.party[pc_num].items[j].ident)) {
 					add_string_to_buf("(items combined)");
 					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
 					if (test > 125) {

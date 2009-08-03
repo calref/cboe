@@ -414,7 +414,7 @@ void draw_items(short clear_first)
 	for (i = 0; i < 24; i++) // Loop through items and draw each
 		if (univ.party[current_active_pc].items[i].variety > 0) { // i.e. does item exist
 			strcpy((char *) to_draw, "");
-			if (univ.party[current_active_pc].items[i].item_properties & 1 == 0)
+			if (!univ.party[current_active_pc].items[i].ident)
 				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name.c_str());
 				else if (univ.party[current_active_pc].items[i].charges > 0)
 					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,univ.party[current_active_pc].items[i].full_name.c_str(),

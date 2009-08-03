@@ -1200,8 +1200,7 @@ bool handle_action(EventRecord event)
 											else {
 												play_sound(68);
 												ASB("Your item is identified.");
-												univ.party[stat_window].items[item_hit].item_properties = 
-													univ.party[stat_window].items[item_hit].item_properties | 1;
+												univ.party[stat_window].items[item_hit].ident = true;
 												}
 										break;
 									case 3: case 4: case 5: // various selling

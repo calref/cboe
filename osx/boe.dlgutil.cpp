@@ -236,7 +236,7 @@ void handle_sale(short what_chosen,short cost)
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
 			base_item = get_stored_item(what_chosen);
-			base_item.item_properties = base_item.item_properties | 1;
+			base_item.ident = true;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); break;
@@ -288,9 +288,8 @@ void handle_sale(short what_chosen,short cost)
 						case 4: 
 							for (i = 0; i < 24; i++)
 								if ((univ.party[current_pc].equip[i] == true) && 
-									(univ.party[current_pc].items[i].is_cursed()))
-										univ.party[current_pc].items[i].item_properties =
-											univ.party[current_pc].items[i].item_properties & 239;
+									(univ.party[current_pc].items[i].cursed))
+										univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
 							break;
 						case 5: case 6: case 7:
 							univ.party[current_pc].main_status = MAIN_STATUS_ALIVE; break;
@@ -333,7 +332,7 @@ void handle_sale(short what_chosen,short cost)
 			what_magic_shop = (what_chosen / 1000) - 1;
 			what_magic_shop_item = what_chosen % 1000;
 			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
-			base_item.item_properties = base_item.item_properties | 1;
+			base_item.ident = true;
 			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); 
 					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = ITEM_TYPE_NO_ITEM;
@@ -365,7 +364,7 @@ void handle_info_request(short what_chosen)
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
 			base_item = get_stored_item(what_chosen);
-			base_item.item_properties = base_item.item_properties | 1;
+			base_item.ident = true;
 			display_pc_item(6,0, base_item,0);
 			break;
 		case 5:
@@ -383,7 +382,7 @@ void handle_info_request(short what_chosen)
 			what_magic_shop = (what_chosen / 1000) - 1;
 			what_magic_shop_item = what_chosen % 1000;
 			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
-			base_item.item_properties = base_item.item_properties | 1;
+			base_item.ident = true;
 			display_pc_item(6,0, base_item,0);
 			break;
 	}
@@ -435,7 +434,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((univ.party[current_pc].equip[i] == true) && (univ.party[current_pc].items[i].is_cursed() == true))
+				if ((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed))
 					cursed_item = true;
 			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
@@ -1143,7 +1142,7 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 		strcpy((char*)sign_text,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_strs[which_sign]);
 		}
 		else {
-			sprintf((char *) sign_text,"%s",univ.town->town_strs(120 + which_sign));
+			sprintf((char *) sign_text,"%s",univ.town->sign_strs[which_sign]);
 			}
 	csit(1014,2,(char *) sign_text);
 	

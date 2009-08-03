@@ -782,7 +782,7 @@ void handle_item_menu(int item_hit)
 			return;
 			else save_blocked = true;
 	store_i = item_list[item_hit];
-	store_i.item_properties = store_i.item_properties | 1;
+	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
 	draw_items(1);
 }

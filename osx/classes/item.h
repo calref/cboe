@@ -37,27 +37,35 @@ public:
 	std::string full_name;
 	std::string name;
 	unsigned char treas_class;
-	unsigned char item_properties;
+	//unsigned char item_properties;
+	bool ident : 1;
+	bool property : 1;
+	bool magic : 1;
+	bool contained : 1;
+	bool cursed : 1;
+	bool concealed : 1;
+	bool enchanted : 1;
+	bool unsellable : 1;
 private:
 	unsigned char reserved1;
 	unsigned char reserved2;
 public:
 	//string desc; // for future use
 	unsigned char rec_treas_class() const;
-	bool is_ident() const;
-	bool is_property() const;
-	bool is_magic() const;
-	bool is_contained() const;
-	bool is_cursed() const;
-	bool is_concealed() const;
-	bool is_enchanted() const;
-	void set_ident(bool b);
-	void set_property(bool b);
-	void set_magic(bool b);
-	void set_contained(bool b);
-	void set_cursed(bool b);
-	void set_concealed(bool b);
-	void set_enchanted(bool b);
+//	bool is_ident() const;
+//	bool is_property() const;
+//	bool is_magic() const;
+//	bool is_contained() const;
+//	bool is_cursed() const;
+//	bool is_concealed() const;
+//	bool is_enchanted() const;
+//	void set_ident(bool b);
+//	void set_property(bool b);
+//	void set_magic(bool b);
+//	void set_contained(bool b);
+//	void set_cursed(bool b);
+//	void set_concealed(bool b);
+//	void set_enchanted(bool b);
 	short item_weight() const;
 	
 	cItemRec();

@@ -397,7 +397,7 @@ void draw_items(location where){
 		return;
 	for (int i = 0; i < NUM_TOWN_ITEMS; i++) {
 		if(univ.town.items[i].variety != ITEM_TYPE_NO_ITEM && univ.town.items[i].item_loc == where) {
-			if(univ.town.items[i].is_contained()) continue;
+			if(univ.town.items[i].contained) continue;
 			if(party_can_see(where) >= 6) continue;
 			if(univ.town.items[i].graphic_num >= 1000){
 				from_rect = get_custom_rect(univ.town.items[i].graphic_num - 1000);

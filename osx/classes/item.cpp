@@ -27,72 +27,72 @@ unsigned char cItemRec::rec_treas_class() const {
 	return 0;
 }
 
-bool cItemRec::is_ident() const {
-	return item_properties & 1;
-}
-
-bool cItemRec::is_property() const {
-	return item_properties & 2;
-}
-
-bool cItemRec::is_magic() const {
-	return item_properties & 4;
-}
-
-bool cItemRec::is_contained() const {
-	return item_properties & 8;
-}
-
-bool cItemRec::is_cursed() const {
-	return item_properties & 16;
-}
-
-bool cItemRec::is_concealed() const {
-	return item_properties & 32;
-}
-
-bool cItemRec::is_enchanted() const {
-	return item_properties & 64;
-}
-
-// Set bit to 1: a |= b
-// Set bit to 0: a &= ~b
-// Toggle bit:   a ^= b
-
-void cItemRec::set_ident(bool b) {
-	if(b) item_properties |=  1;
-	else  item_properties &= ~1;
-}
-
-void cItemRec::set_property(bool b) {
-	if(b) item_properties |=  2;
-	else  item_properties &= ~2;
-}
-
-void cItemRec::set_magic(bool b) {
-	if(b) item_properties |=  4;
-	else  item_properties &= ~4;
-}
-
-void cItemRec::set_contained(bool b) {
-	if(b) item_properties |=  8;
-	else  item_properties &= ~8;
-}
-
-void cItemRec::set_cursed(bool b) {
-	if(b) item_properties |=  16;
-	else  item_properties &= ~16;
-}
-
-void cItemRec::set_concealed(bool b) {
-	if(b) item_properties |=  32;
-	else  item_properties &= ~32;
-}
-
-void cItemRec::set_enchanted(bool b) {
-	if(b) item_properties |=  64;
-	else  item_properties &= ~64;
-}
+//bool cItemRec::is_ident() const {
+//	return item_properties & 1;
+//}
+//
+//bool cItemRec::is_property() const {
+//	return item_properties & 2;
+//}
+//
+//bool cItemRec::is_magic() const {
+//	return item_properties & 4;
+//}
+//
+//bool cItemRec::is_contained() const {
+//	return item_properties & 8;
+//}
+//
+//bool cItemRec::is_cursed() const {
+//	return item_properties & 16;
+//}
+//
+//bool cItemRec::is_concealed() const {
+//	return item_properties & 32;
+//}
+//
+//bool cItemRec::is_enchanted() const {
+//	return item_properties & 64;
+//}
+//
+//// Set bit to 1: a |= b
+//// Set bit to 0: a &= ~b
+//// Toggle bit:   a ^= b
+//
+//void cItemRec::set_ident(bool b) {
+//	if(b) item_properties |=  1;
+//	else  item_properties &= ~1;
+//}
+//
+//void cItemRec::set_property(bool b) {
+//	if(b) item_properties |=  2;
+//	else  item_properties &= ~2;
+//}
+//
+//void cItemRec::set_magic(bool b) {
+//	if(b) item_properties |=  4;
+//	else  item_properties &= ~4;
+//}
+//
+//void cItemRec::set_contained(bool b) {
+//	if(b) item_properties |=  8;
+//	else  item_properties &= ~8;
+//}
+//
+//void cItemRec::set_cursed(bool b) {
+//	if(b) item_properties |=  16;
+//	else  item_properties &= ~16;
+//}
+//
+//void cItemRec::set_concealed(bool b) {
+//	if(b) item_properties |=  32;
+//	else  item_properties &= ~32;
+//}
+//
+//void cItemRec::set_enchanted(bool b) {
+//	if(b) item_properties |=  64;
+//	else  item_properties &= ~64;
+//}
 
 short cItemRec::item_weight() const {
 	short n = charges, w = weight;
@@ -127,7 +127,8 @@ cItemRec::cItemRec(){
 	full_name = "";
 	name = "";
 	treas_class = 0;
-	item_properties = 0;
+	ident = property = magic = contained = false;
+	cursed = concealed = enchanted = unsellable = false;
 	reserved1 = 0;
 	reserved2 = 0;
 }
@@ -141,6 +142,8 @@ cItemRec::cItemRec(long preset){
 	item_loc.x = 0;
 	item_loc.y = 0;
 	treas_class = 0;
+	ident = property = magic = contained = false;
+	cursed = concealed = enchanted = unsellable = false;
 	reserved1 = 0;
 	reserved2 = 0;
 	switch(preset){
@@ -158,7 +161,7 @@ cItemRec::cItemRec(long preset){
 			weight = 7;
 			full_name = "Bronze Knife";
 			name = "Knife";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'buck':
 			variety = ITEM_TYPE_SHIELD;
@@ -174,7 +177,7 @@ cItemRec::cItemRec(long preset){
 			weight = 20;
 			full_name = "Crude Buckler";
 			name = "Buckler";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'bow ':
 			variety = ITEM_TYPE_BOW;
@@ -190,7 +193,7 @@ cItemRec::cItemRec(long preset){
 			weight = 20;
 			full_name = "Cavewood Bow";
 			name = "Bow";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'arrw':
 			variety = ITEM_TYPE_ARROW;
@@ -206,7 +209,7 @@ cItemRec::cItemRec(long preset){
 			weight = 1;
 			full_name = "Arrows";
 			name = "Arrows";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'pole':
 			variety = ITEM_TYPE_TWO_HANDED;
@@ -222,7 +225,7 @@ cItemRec::cItemRec(long preset){
 			weight = 20;
 			full_name = "Stone Spear";
 			name = "Spear";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'helm':
 			variety = ITEM_TYPE_HELM;
@@ -238,7 +241,7 @@ cItemRec::cItemRec(long preset){
 			weight = 15;
 			full_name = "Leather Helm";
 			name = "Helm";
-			set_ident(true);
+			ident = true;
 			break;
 		case 'food':
 			variety = ITEM_TYPE_FOOD;
@@ -254,7 +257,7 @@ cItemRec::cItemRec(long preset){
 			weight = 0;
 			full_name = "Food";
 			name = "Food";
-			set_ident(false);
+			ident = false;
 			break;
 		case 'spel':
 			variety = ITEM_TYPE_NON_USE_OBJECT;
@@ -270,7 +273,7 @@ cItemRec::cItemRec(long preset){
 			weight = 0;
 			full_name = "";
 			name = "";
-			set_ident(false);
+			ident = false;
 			break;
 		case 'alch':
 			variety = ITEM_TYPE_POTION;
@@ -286,8 +289,8 @@ cItemRec::cItemRec(long preset){
 			weight = 8;
 			full_name = "Potion";
 			name = "Potion";
-			set_ident(false);
-			set_magic(true);
+			ident = false;
+			magic = true;
 			break;
 	}
 }
@@ -318,7 +321,14 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	full_name = std::string(old.full_name);
 	name = old.name;
 	treas_class = old.treas_class;
-	item_properties = old.item_properties;
+	ident = old.item_properties & 1;
+	property = old.item_properties & 2;
+	magic = old.item_properties & 4;
+	contained = old.item_properties & 8;
+	cursed = old.item_properties & 16;
+	concealed = old.item_properties & 32;
+	enchanted = false;
+	unsellable = old.item_properties & 16;
 	reserved1 = old.reserved1;
 	reserved2 = old.reserved2;
 	return *this;
@@ -345,13 +355,14 @@ void cItemRec::writeTo(std::ostream& file, std::string prefix){
 	file << prefix << "FULLNAME " << full_name << std::endl;
 	file << prefix << "NAME " << name << std::endl;
 	file << prefix << "TREASURE " << treas_class << std::endl;
-	if(is_ident()) file << prefix << "IDENTIFIED" << std::endl;
-	if(is_property()) file << prefix << "PROPERTY" << std::endl;
-	if(is_magic()) file << prefix << "MAGIC" << std::endl;
-	if(is_contained()) file << prefix << "CONTAINED" << std::endl;
-	if(is_cursed()) file << prefix << "CURSED" << std::endl;
-	if(is_concealed()) file << prefix << "CONCEALED" << std::endl;
-	if(is_enchanted()) file << prefix << "ENCHANTED" << std::endl;
+	if(ident) file << prefix << "IDENTIFIED" << std::endl;
+	if(property) file << prefix << "PROPERTY" << std::endl;
+	if(magic) file << prefix << "MAGIC" << std::endl;
+	if(contained) file << prefix << "CONTAINED" << std::endl;
+	if(cursed) file << prefix << "CURSED" << std::endl;
+	if(concealed) file << prefix << "CONCEALED" << std::endl;
+	if(enchanted) file << prefix << "ENCHANTED" << std::endl;
+	if(unsellable) file << prefix << "UNSELLABLE" << std::endl;
 }
 
 void cItemRec::readAttrFrom(std::string cur, std::istream& sin){
@@ -380,13 +391,14 @@ void cItemRec::readAttrFrom(std::string cur, std::istream& sin){
 		name = cur;
 	}
 	else if(cur == "TREASURE") sin >> treas_class;
-	else if(cur == "IDENTIFIED") set_ident(true);
-	else if(cur == "PROPERTY") set_property(true);
-	else if(cur == "MAGIC") set_magic(true);
-	else if(cur == "CONTAINED") set_contained(true);
-	else if(cur == "CURSED") set_cursed(true);
-	else if(cur == "CONCEALED") set_concealed(true);
-	else if(cur == "ENCHANTED") set_enchanted(true);
+	else if(cur == "IDENTIFIED") ident = true;
+	else if(cur == "PROPERTY") property = true;
+	else if(cur == "MAGIC") magic = true;
+	else if(cur == "CONTAINED") contained = true;
+	else if(cur == "CURSED") cursed = true;
+	else if(cur == "CONCEALED") concealed = true;
+	else if(cur == "ENCHANTED") enchanted = true;
+	else if(cur == "UNSELLABLE") unsellable = true;
 }
 
 std::ostream& operator << (std::ostream& out, eWeapType& e){

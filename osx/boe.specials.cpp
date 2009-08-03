@@ -67,7 +67,7 @@ short skill_max[20] = {20,20,20,20,20,20,20,20,20,7,
 7,20,20,10,20,20,20,20,20};
 location store_special_loc;
 bool special_in_progress = false;
-short spec_str_offset[3] = {160,10,20};
+short spec_str_offset[3] = {160,10,0};
 
 //// Pretty much all of this is new for BoE
 
@@ -272,7 +272,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
-					&& (univ.town.items[i].is_contained() == true))
+					&& (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
 		if (univ.town.is_barrel(where_check.x,where_check.y)) {
@@ -283,7 +283,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
-					&& (univ.town.items[i].is_contained()))
+					&& (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
 	}
@@ -642,7 +642,7 @@ void use_item(short pc,short item)
 		}
 	}
 	if (take_charge) {
-		if (!univ.party[pc].items[item].is_ident())
+		if (!univ.party[pc].items[item].ident)
 			sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].name.c_str());
 		else sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].full_name.c_str());
 		add_string_to_buf((char *) to_draw);
@@ -1118,7 +1118,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case ITEM_SPELL_MAGIC_MAP:
-				if (univ.town->defy_mapping) {
+				if (univ.town->defy_scrying || univ.town->defy_mapping) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 				}
@@ -1197,7 +1197,7 @@ bool use_space(location where)
 		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
-				&& (univ.town.items[i].is_contained()))
+				&& (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if (univ.town.is_barrel(where.x,where.y)) {
@@ -1211,7 +1211,7 @@ bool use_space(location where)
 		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
-				&& (univ.town.items[i].is_contained()))
+				&& (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if (univ.town.is_block(where.x,where.y)) {
@@ -1260,7 +1260,7 @@ bool adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++) 
-		if ((univ.town.items[i].variety > 0) && (univ.town.items[i].is_contained()) &&
+		if ((univ.town.items[i].variety > 0) && (univ.town.items[i].contained) &&
 			(where == univ.town.items[i].item_loc))
 			item_there = true;
 	
@@ -1772,9 +1772,9 @@ void push_things()////
 				hit_party(get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE);
 			}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].is_contained() == true)
+				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].contained)
 					&& (univ.town.items[k].item_loc == univ.town.p_loc))
-					univ.town.items[k].item_properties = univ.town.items[k].item_properties & 247;				
+					univ.town.items[k].contained = false;
 			redraw = true;
 		}	
 	}
@@ -1810,9 +1810,9 @@ void push_things()////
 						damage_pc(i,get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((univ.town.items[k].variety > 0) && (univ.town.items[k].is_contained() == true)
+						if ((univ.town.items[k].variety > 0) && (univ.town.items[k].contained)
 							&& (univ.town.items[k].item_loc == pc_pos[i]))
-							univ.town.items[k].item_properties = univ.town.items[k].item_properties & 247;		
+							univ.town.items[k].contained = false;
 					redraw = true;
 				}				
 			}
@@ -1996,7 +1996,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	Str255 str1 = "",str2 = "";
 	short store_val = 0,i;
 	cSpecial spec;
-	short mess_adj[3] = {160,10,20};
+	short mess_adj[3] = {160,10,0};
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -2029,7 +2029,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_OUT_BLOCK:
 			if (is_out()) *next_spec = -1;
 			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
-				ASB("Can't go here while univ.out.outdoors.");
+				ASB("Can't go here while outdoors.");
 				*a = 1;
 			}
 			break;	
@@ -3330,7 +3330,7 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 {
 	Str255 str1 = "",str2 = "";
 	short label1 = -1,label2 = -1,label1b = -1,label2b = -1;
-	short mess_adj[3] = {160,10,20};
+	short mess_adj[3] = {160,10,0};
 	
 	if ((mess1 < 0) && (mess2 < 0))
 		return;
@@ -3381,9 +3381,9 @@ void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_
 			break;
 			case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,univ.town->town_strs(which_str1));
+				strcpy((char *) str1,univ.town->spec_strs[which_str1]);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,univ.town->town_strs(which_str2));
+				strcpy((char *) str2,univ.town->spec_strs[which_str2]);
 			break;
 	}
 	

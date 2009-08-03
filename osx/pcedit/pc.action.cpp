@@ -136,7 +136,7 @@ bool handle_action(EventRecord event,short mode)
 		if ((PtInRect(the_point,&item_string_rects[i][2]) == true) && // identify item
 			(univ.party[current_active_pc].items[i].variety > 0)) {
 				flash_rect(item_string_rects[i][2]);
-				univ.party[current_active_pc].items[i].item_properties = univ.party[current_active_pc].items[i].item_properties | 1;
+				univ.party[current_active_pc].items[i].ident = true;
 				draw_items(1);
 				}
 	

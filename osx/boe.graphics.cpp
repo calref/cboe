@@ -1077,12 +1077,12 @@ void draw_text_bar(short mode)
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 					else {
-						put_text_bar(univ.town->town_strs(i + 1));
+						put_text_bar(univ.town->rect_names[i]);
 						remember_tiny_text = 200 + i;
 						return;
 						}
 		if (remember_tiny_text != 250) {
-			put_text_bar((char *) univ.town->town_strs(0)); ////
+			put_text_bar((char *) univ.town->town_name); ////
 			remember_tiny_text = 250;
 			}
 	

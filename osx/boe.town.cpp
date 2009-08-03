@@ -488,12 +488,11 @@ void start_town_mode(short which_town, short entry_dir)
 		 					}
 		 				}
 		 				
-					if (univ.town->preset_items[i].property == true)
-		 				univ.town.items[j].item_properties = univ.town.items[j].item_properties | 2;
-		 			if (town_toast == true) 
-		 				univ.town.items[j].item_properties = univ.town.items[j].item_properties & 253;
-		 			if (univ.town->preset_items[i].contained == true)
-		 				univ.town.items[j].item_properties = univ.town.items[j].item_properties | 8;
+		 			if (town_toast)
+		 				univ.town.items[j].property = false;
+					else
+						univ.town.items[j].property = univ.town->preset_items[i].property;
+		 			univ.town.items[j].contained = univ.town->preset_items[i].contained;
 		 			univ.town.items[j].is_special = i + 1;
 		 			
 					j = NUM_TOWN_ITEMS;
@@ -541,7 +540,7 @@ void start_town_mode(short which_town, short entry_dir)
 	PSD[SDF_HOSTILES_PRESENT] = 0;
 		
 	add_string_to_buf("Now entering:");
-	sprintf ((char *) message, "   %-30.30s ",univ.town->town_strs(0));
+	sprintf ((char *) message, "   %-30.30s ",univ.town->town_name);
 	add_string_to_buf(message);                       
 		
 							

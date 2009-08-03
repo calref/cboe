@@ -3,7 +3,7 @@
 	
 #include <windows.h>
 #include "global.h"
-#include "newgraph.h"
+#include "boe.newgraph.h"
 
 extern RECT bottom_buttons[7];
 extern RECT town_buttons[10];
@@ -295,7 +295,6 @@ extern char * snds[NUM_SOUNDS];
 
 extern short last_played;
 extern short store_last_sound_played;
-extern HMODULE hModule;
 
 extern Boolean always_asynch[100];
 extern Boolean load_when_play[100];

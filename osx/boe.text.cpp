@@ -347,7 +347,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							else ForeColor(blackColor);
 
 							//// 
-							if (!univ.party[pc].items[i_num].is_ident())
+							if (!univ.party[pc].items[i_num].ident)
 								sprintf((char *) to_draw, "%s  ",univ.party[pc].items[i_num].name.c_str());
 								else { /// Don't place # of charges when Sell button up and space tight
 									if ((univ.party[pc].items[i_num].charges > 0) && (univ.party[pc].items[i_num].type != 2)
@@ -427,7 +427,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (!univ.party[pc_num].items[item_num].is_ident()) { 
+			if (!univ.party[pc_num].items[item_num].ident) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
@@ -437,8 +437,8 @@ void place_buy_button(short position,short pc_num,short item_num)
 			if (((univ.party[pc_num].items[item_num].variety < 7) || (univ.party[pc_num].items[item_num].variety == 23) ||
 				(!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].variety == 24)) &&
-				(univ.party[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
-				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
+				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
+				 (!univ.party[pc_num].items[item_num].unsellable)) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
@@ -446,25 +446,25 @@ void place_buy_button(short position,short pc_num,short item_num)
 		case 4: // sell armor
 			if ((univ.party[pc_num].items[item_num].variety >= 12) && (univ.party[pc_num].items[item_num].variety <= 17) &&
 				(!univ.party[pc_num].equip[item_num]) &&
-				(univ.party[pc_num].items[item_num].is_ident()) && (val_to_place > 0) &&
-				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
+				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
+				 (!univ.party[pc_num].items[item_num].unsellable)) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (univ.party[pc_num].items[item_num].is_ident()) && 
+			if ((val_to_place > 0) && (univ.party[pc_num].items[item_num].ident) && 
 				(!univ.party[pc_num].equip[item_num]) &&
-				 (!univ.party[pc_num].items[item_num].is_cursed())) { 
+				 (!univ.party[pc_num].items[item_num].unsellable)) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 6: // augment weapons 
 			if ((univ.party[pc_num].items[item_num].variety < 3) &&
-				(univ.party[pc_num].items[item_num].is_ident()) &&
+				(univ.party[pc_num].items[item_num].ident) &&
 				(univ.party[pc_num].items[item_num].ability == 0) &&
-				(!univ.party[pc_num].items[item_num].is_magic())) { 
+				(!univ.party[pc_num].items[item_num].magic)) { 
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,univ.party[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
@@ -943,8 +943,8 @@ short do_look(location space)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 				if ((univ.town.items[i].variety != 0) && (univ.town.items[i].variety != 3) &&(univ.town.items[i].variety != 11) &&
-				    (space == univ.town.items[i].item_loc) && (!univ.town.items[i].is_contained())) {		
-					if (univ.town.items[i].is_ident())
+				    (space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {		
+					if (univ.town.items[i].ident)
 						msg = "    " + univ.town.items[i].full_name;
 						else msg = "    " + univ.town.items[i].name;
 					add_string_to_buf((char *) msg.c_str());

@@ -313,12 +313,12 @@ void put_item_info(short pc,short item)////
 		else csp(998,1,s_i.graphic_num,PICT_ITEM);
 		
 	// id? magic?
-	if (store_i.is_magic() && store_i.is_ident())
+	if (store_i.magic && store_i.ident)
 		cd_set_led(998,17,1);
-		else cd_set_led(998,17,0);
-	if (store_i.is_ident())
+	else cd_set_led(998,17,0);
+	if (store_i.ident)
 		cd_set_led(998,16,1);
-		else cd_set_led(998,16,0);
+	else cd_set_led(998,16,0);
 	cd_set_item_text(998,4,	item_types[s_i.variety]);
 	
 	// Clear fields
@@ -327,7 +327,7 @@ void put_item_info(short pc,short item)////
 		}
 			
 
-	if (!s_i.is_ident()) {
+	if (!s_i.ident) {
 			cd_set_item_text(998,3,	s_i.name.c_str());
 			return;
 		}	
@@ -339,7 +339,7 @@ void put_item_info(short pc,short item)////
 	cd_set_item_num(998,5,(s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
 
 	if (s_i.ability > 0) {////
-		if (s_i.item_properties & 32) { // Concealed ability
+		if (s_i.concealed) {
 			cd_set_item_text(998,12,"???");
 		} else {
 			get_str(desc_str,23,s_i.ability + 1);
@@ -884,7 +884,7 @@ void display_pc_info()
 	csit(1019,59,"No weapon.");	
 	csit(1019,60,"");	
 	if (weap1 < 24) {
-		if (!univ.party[pc].items[weap1].is_ident())
+		if (!univ.party[pc].items[weap1].ident)
 			csit(1019,56,"Not identified.");
 			else {
 				if (hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
@@ -898,7 +898,7 @@ void display_pc_info()
 				}
 			}
 	if (weap2 < 24) {
-		if (!univ.party[pc].items[weap2].is_ident())
+		if (!univ.party[pc].items[weap2].ident)
 			csit(1019,59,"Not identified.");
 			else {
 				if (hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)

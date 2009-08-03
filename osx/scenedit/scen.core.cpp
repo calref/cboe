@@ -884,8 +884,7 @@ void init_scenario() {
 		scenario.scen_items[i] = item_list[i]; //convert_item(item_list[i]);
 		for (j = 0; j < 13; j++)
 			if (i == item_to_hide[j]) 
-				scenario.scen_items[i].item_properties =
-				scenario.scen_items[i].item_properties | 32;
+				scenario.scen_items[i].concealed = true;
 	}
 	for (i = 0; i < 270; i++) {
 		get_str(temp_str,35,i + 1);
@@ -1826,16 +1825,16 @@ void put_item_abils_in_dlog() {
 	cd_set_led_range(824,5,8,store_item2.magic_use_type);
 	cd_set_led_range(824,26,30,store_item2.treas_class);
 	CDSN(824,2,store_item2.ability_strength);
-	if (store_item2.item_properties & 1)
+	if (store_item2.ident)
 		cd_set_led(824,9,1);
 	else cd_set_led(824,9,0);
-	if (store_item2.item_properties & 4)
+	if (store_item2.magic)
 		cd_set_led(824,10,1);
 	else cd_set_led(824,10,0);
-	if (store_item2.item_properties & 16)
+	if (store_item2.cursed)
 		cd_set_led(824,11,1);
 	else cd_set_led(824,11,0);
-	if (store_item2.item_properties & 32)
+	if (store_item2.concealed)
 		cd_set_led(824,12,1);
 	else cd_set_led(824,12,0);
 }
@@ -1848,11 +1847,11 @@ bool save_item_abils() {
 		if (cre(store_item2.ability_strength,0,10,"Ability Strength must always be a number from 0 to 10.","",824) > 0) return false;
 	}
 	else if (cre(store_item2.ability_strength,0,255,"Ability Strength must be 0 to 255 - the number of the monster to summon.","",824) > 0) return false;
-	store_item2.item_properties = 0;
-	store_item2.item_properties |= (cd_get_led(824,9) == 1) ? 1 : 0;
-	store_item2.item_properties |= (cd_get_led(824,10) == 1) ? 4 : 0;
-	store_item2.item_properties |= (cd_get_led(824,11) == 1) ? 16 : 0;
-	store_item2.item_properties |= (cd_get_led(824,12) == 1) ? 32 : 0;
+	store_item2.property = store_item2.enchanted = store_item2.contained = false;
+	store_item2.ident = cd_get_led(824,9);
+	store_item2.magic = cd_get_led(824,10);
+	store_item2.cursed = store_item2.unsellable = cd_get_led(824,11);
+	store_item2.concealed = cd_get_led(824,12);
 	return true;
 }
 

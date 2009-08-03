@@ -1439,7 +1439,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			ASB("All of your items are identified.");
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 24; j++)
-					univ.party[i].items[j].item_properties = univ.party[i].items[j].item_properties | 1;
+					univ.party[i].items[j].ident = true;
 			break;
 		
 		case 9: // true sight
@@ -1515,7 +1515,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			item = pc_has_abil(pc_num,158);////
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-				else if (univ.town->defy_mapping)
+				else if (univ.town->defy_scrying || univ.town->defy_mapping)
 					add_string_to_buf("  The spell fails.                ");
 				else {
 					remove_charge(pc_num,item);
@@ -1874,11 +1874,10 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 				if (spell_num == 33) {
 						for (i = 0; i < 24; i++) 
-							if (univ.party[target].items[i].is_cursed()){
+							if (univ.party[target].items[i].cursed){
 									r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,2);
 									if (r1 < 60) {
-										univ.party[target].items[i].item_properties = 
-											univ.party[target].items[i].item_properties & 239;
+										univ.party[target].items[i].cursed = univ.party[target].items[i].unsellable = false;
 										}
 								}
 						play_sound(52);

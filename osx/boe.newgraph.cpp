@@ -855,7 +855,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		switch (what_chosen / 100) {
 			case 0: case 1: case 2: case 3: case 4: 
 				base_item = get_stored_item(what_chosen);
-				base_item.item_properties = base_item.item_properties | 1;
+				base_item.ident = true;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
@@ -895,7 +895,7 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_magic_shop = (what_chosen / 1000) - 1;
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
-				base_item.item_properties = base_item.item_properties | 1;
+				base_item.ident = true;
 				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
@@ -1024,15 +1024,15 @@ cItemRec store_alchemy(short which_s)
 
 void get_item_interesting_string(cItemRec item,char *message)
 {
-	if (item.is_property() == true) {
+	if (item.property == true) {
 		strcpy(message,"Not yours.");
 		return;
 		}
-	if (item.is_ident() == false) {
+	if (item.ident == false) {
 		strcpy(message,"");
 		return;
 		}
-	if (item.is_cursed() == true) {
+	if (item.cursed == true) {
 		strcpy(message,"Cursed item.");
 		return;
 		}
