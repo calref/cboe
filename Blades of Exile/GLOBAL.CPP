@@ -1,6 +1,6 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include "global.h"
-#include "math.h"
+#include <cmath>
 #include "globvar.h"
 
 RECT RECT16::rect32()

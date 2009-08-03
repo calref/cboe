@@ -2,14 +2,14 @@
 	#define _GLOBAL_H
 
 #include <windows.h>
-#include <stdio.h>		/* for sprintf */
-#include <stdlib.h>
-#include <math.h>
+#include <cstdio>		/* for sprintf */
+#include <cstdlib>
+#include <cmath>
 
 #include "consts.h"
-#include "item.h"
-#include "location.h"
-#include "pc.h"
+#include "classes/item.h"
+#include "classes/location.h"
+#include "classes/pc.h"
 
 #define huge
 
