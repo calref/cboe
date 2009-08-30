@@ -38,3 +38,8 @@ span.key { /* Just to make things easier to read */
   clear:none;
   font-family:monospace;
 }
+
+.figure {
+  float:right;
+  border:1px dashed #444444;
+}
