@@ -1,5 +1,6 @@
 body {
   background-image: url("../img/background.gif");
+
 }
 
 p.p1 {
@@ -42,4 +43,16 @@ span.key { /* Just to make things easier to read */
 .figure {
   float:right;
   border:1px dashed #444444;
+}
+.navbar {
+  position: relative;
+  left: 1em;
+  width: 9em;
+  top: 1em
+}
+.content {
+  position:absolute;
+  left: 12em;
+  right: 2em;
+  top: 1em
 }
