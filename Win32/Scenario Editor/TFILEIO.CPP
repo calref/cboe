@@ -519,7 +519,7 @@ void load_scenario()
 //extern GWorldPtr spec_scen_g;
 void load_spec_graphics()
 {
-	short i,file_num;
+	short i;
 	char file_name[256];
 
 	if (spec_scen_g != NULL) {
@@ -529,14 +529,10 @@ void load_spec_graphics()
 
 	//build_scen_file_name(file_name);
 	sprintf(file_name,"%s",szFileName);
-	for (i = 0; i < 256; i++) {
-		if (file_name[i] == '.') {
-  			file_name[i + 1] = 'b';
-			file_name[i + 2] = 'm';
-			file_name[i + 3] = 'p';
-			i = 256;
-			}
-		}
+    i = strlen(file_name);
+	file_name[i - 3] = 'b';
+	file_name[i - 2] = 'm';
+	file_name[i - 1] = 'p';
 	suppress_load_file_name = TRUE;
 	spec_scen_g = ReadBMP(file_name);
 	suppress_load_file_name = FALSE;
