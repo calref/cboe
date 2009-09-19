@@ -445,6 +445,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
         store_edit_parent =  mainPtr;
     	old_edit_proc = (WNDPROC) (GetWindowLong(talk_edit_box,GWL_WNDPROC));
     	SetWindowLong(talk_edit_box,GWL_WNDPROC,(LONG) edit_proc);
+    	SetFocus(talk_edit_box);    	
         }
 
 	// first make sure relevant talk strs are loaded in

@@ -26,7 +26,7 @@ STYLE WS_POPUP | WS_DLGFRAME
  LTEXT "=The Valley of Dying Things - Easy Difficulty|  The crops have withered, the children are dying, and even the water burns. Can you find the source of the sickness before the entire valley dies?", 5, 81, 34, 292, 80
  LTEXT "0_143", 6, 11, 33, 367, 81
  LTEXT "5_1411", 7, 10, 135, 64, 64
- LTEXT "=A Mild Rebellion - Medium Difficulty|  The enemy - a secret band of deadly rebels. The job - infiltrate them, win their trust, and find their leader. The question - are you fighting on the right side?", 8, 81, 127, 292, 80
+ LTEXT "=A Small Rebellion - Medium Difficulty|  The enemy - a secret band of deadly rebels. The job - infiltrate them, win their trust, and find their leader. The question - are you fighting on the right side?", 8, 81, 127, 292, 80
  LTEXT "0_143", 9, 10, 127, 368, 80
  LTEXT "5_1412", 10, 10, 228, 64, 64
  LTEXT "=The Za-Khazi Run - Hard Difficulty|  A fortress is under siege, and only you can get them the weapons they need to survive. You have 20 days to find your way through the nastiest caves in Exile, or all will be lost.", 11, 81, 220, 292, 80
