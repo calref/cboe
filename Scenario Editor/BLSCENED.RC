@@ -76,6 +76,7 @@ Exile MENU
   MENUITEM "  Edit Town Text", 214
   MENUITEM "  Advanced Town Details", 215
   MENUITEM "  Set Town Event Timers", 216
+  MENUITEM "  Concise Town Report",221  
   MENUITEM SEPARATOR
   MENUITEM "  Clear All Monsters", 217
   MENUITEM "  Clear All Placed Specials", 218

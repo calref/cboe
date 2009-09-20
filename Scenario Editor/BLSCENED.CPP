@@ -710,6 +710,10 @@ Boolean handle_menu (short item, HMENU menu)
 						}
 		break;
 
+		case 221:    if (fancy_choice_dialog(877,0) == 1) // make concise town report
+			start_town_data_dump();
+			break;
+
 			// Outdoor Menu
 		case 301: outdoor_details(); break;
 		case 302: edit_out_wand(0); break;
