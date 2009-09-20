@@ -1855,13 +1855,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			print_buf();
 			}			
 			break;
-		case 'S': // Set a SDF <= can't set the SDF 0 (it's the default return value if the first character of the string is not a number)
+		case 'S': // Set a SDF 
 			if (in_scen_debug) {		//and leave alone the 300+ SDF (game options/mechanics)
            	char response[256]="";
-            display_strings("Enter Stuff Done Flag Part A (between 1 and 299)","",0,0,0,0,"Which SDFa ?",-1,130,0);
+            display_strings("Enter Stuff Done Flag Part A (between 0 and 299)","",0,0,0,0,"Which SDFa ?",-1,130,0);
             get_text_response(873,response,0);
             i = atoi(response);
-            if(i>0 && i <300){
+            if(i >= 0 && i <300){
                display_strings("Enter Stuff Done Flag Part B (between 0 and 9)","",0,0,0,0,"Which SDFb ?",-1,130,0);
                get_text_response(873,response,0);
                j = atoi(response);

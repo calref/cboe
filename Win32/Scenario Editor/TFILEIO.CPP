@@ -62,6 +62,8 @@ SCROLLINFO lpsi;
 OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
+char *field_names[22] = {"Blank","Unknown","Unknown","Web","Crate","Barrel","Fire Barrier","Force Barrier","Quickfire","Unknown","Unknown","Unknown","Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain","Small Slime Pool","Large Slime Pool","Ash","Bones","Rocks"};
+
 void print_write_position ();
 
 void Get_Path(char* path){
@@ -1207,6 +1209,118 @@ void oops_error(short error)
 	sprintf((char *) error_str,"You may need more memory ... run the editor with no other programs running. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 	PostQuitMessage(0);
+}
+
+void start_town_data_dump()
+{
+	short i;
+	HANDLE data_dump_file_id;
+    DWORD dwByteRead;	
+	char get_text[280], spec_name[256];
+	
+    data_dump_file_id = CreateFile("BoE Concise Town Report.txt", GENERIC_WRITE, FILE_SHARE_READ, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		
+	if (data_dump_file_id == INVALID_HANDLE_VALUE)
+	{
+		oops_error(28);
+		beep();
+		return;
+	}
+
+ 	sprintf(get_text,"\r\rConcise Town Data Printout for town %d, %s\r\r",cur_town,town_strs[0]);
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);			
+	sprintf(get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.\r\r  Maximum number of any given type of town object is shown by \"[ # ]\".\rNull objects are frequently not listed.");
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+   	sprintf(get_text,"\r\r   In town rectangle: tl = (%d,%d), br = (%d,%d)\r",town.in_town_rect.left,town.in_town_rect.top,town.in_town_rect.right,town.in_town_rect.bottom);
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+	sprintf(get_text,"\r\r  Town Placed Specials: [50]\r");
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+	for (i = 0; i < 50; i++) {
+		if (town.spec_id[i] < 255){
+            get_str(spec_name,22,town.specials[town.spec_id[i]].type + 1);
+   			sprintf(get_text,"   Placed special %d:  x = %d, y = %d, state = %d, name = %s\r",i,town.special_locs[i].x,town.special_locs[i].y,town.spec_id[i],spec_name);
+           	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+	      	}
+   		}
+	sprintf(get_text,"\r\r  Town Signs: [15]\r");
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+	for (i = 0; i < 15; i++) {
+		sprintf(get_text,"   Town Sign %d:  x = %d, y = %d, text: \"%s\"\r",i,town.sign_locs[i].x,town.sign_locs[i].y,town_strs[120 + i]);
+       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		}
+
+   	sprintf(get_text,"\r\r  Town Preset Items: [64]\r");
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);	
+
+	for (i = 0; i < 64; i++) {
+		if (town.preset_items[i].item_code > 0) {
+		    sprintf(get_text,"   Item %d: type = %d,  x,y = (%d,%d), charges = %d, properties = %d, contained = %d, name = %s\r",i,town.preset_items[i].item_code,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,town.preset_items[i].charges,town.preset_items[i].property,town.preset_items[i].contained,scen_item_list.scen_items[town.preset_items[i].item_code].full_name);
+           	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+			}
+   		}
+
+	sprintf(get_text,"\r\r  Town Preset Fields: [50]\r");
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+	for (i = 0; i < 50; i++) {
+        if (town.preset_fields[i].field_type > 0) {
+		    sprintf(get_text,"   Preset field %d: x = %d, y = %d, type = %d, name = %s\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type,field_names[town.preset_fields[i].field_type]);
+           	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+			}
+		}
+
+    switch(scenario.town_size[cur_town]){
+        case 0:
+			sprintf(get_text,"\r\r  Big Town Creatures [60]: type number > 0\r");
+        	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+	       	for (i = 0; i < 60; i++) {
+    			if (t_d.creatures[i].number > 0) {
+	   		      sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,t_d.creatures[i].start_loc.x,t_d.creatures[i].start_loc.y,t_d.creatures[i].number,t_d.creatures[i].start_attitude,t_d.creatures[i].spec_enc_code,scen_item_list.monst_names[t_d.creatures[i].number]);
+                  WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+			    }
+    		}
+        break;
+        
+        case 1:
+    		sprintf(get_text,"\r\r  Medium Town Creatures [40]: type number > 0\r");
+            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+    		for (i = 0; i < 40; i++) {
+			    if (ave_t.creatures[i].number > 0) {
+			    sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,ave_t.creatures[i].start_loc.x,ave_t.creatures[i].start_loc.y,ave_t.creatures[i].number,ave_t.creatures[i].start_attitude,ave_t.creatures[i].spec_enc_code,scen_item_list.monst_names[ave_t.creatures[i].number]);
+                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+	       		}
+    		}
+        break;
+
+        case 2:
+			sprintf(get_text,"\r\r  Small Town Creatures [30]: type number > 0\r");
+            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+		    for (i = 0; i < 30; i++) {
+    			if (tiny_t.creatures[i].number > 0) {
+	       		    sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,tiny_t.creatures[i].start_loc.x,tiny_t.creatures[i].start_loc.y,tiny_t.creatures[i].number,tiny_t.creatures[i].start_attitude,tiny_t.creatures[i].spec_enc_code,scen_item_list.monst_names[tiny_t.creatures[i].number]);
+                    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+		        }
+		   }
+        break;
+    }
+	sprintf(get_text,"\r\r  Town Special Nodes: [100]\r");
+    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+	for (i = 0; i < 100; i++) {
+        if (town.specials[i].type > 0) {
+           get_str(spec_name,22,town.specials[i].type + 1);            
+	       sprintf(get_text,"   Town special %d:	Type = %d, SD1 = %d, SD2 = %d, Pic = %d, M1 = %d, M2 = %d, Ex1a = %d, Ex1b = %d, Ex2a = %d, Ex2b = %d, JumpTo = %d, Name = %s\r",i,town.specials[i].type,town.specials[i].sd1,town.specials[i].sd2,town.specials[i].pic,town.specials[i].m1,town.specials[i].m2,town.specials[i].ex1a,town.specials[i].ex1b,town.specials[i].ex2a,town.specials[i].ex2b,town.specials[i].jumpto,spec_name);
+           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+        }
+	}
+	sprintf(get_text,"\r\r");
+    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+
+	CloseHandle(data_dump_file_id);
 }
 
 void start_data_dump()

@@ -11,6 +11,7 @@ void load_outdoors(location which_out,short mode);
 void load_town(short which_town);
 void import_town(short which_town);
 void oops_error(short error);
+void start_town_data_dump();
 void start_data_dump();
 void start_shopping_data_dump();
 void start_monst_data_dump();
