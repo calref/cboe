@@ -6,8 +6,6 @@
 #include "string.h"
 #include "stdio.h"
 #include "math.h"
-
-
 #include "Global.h"
 #include "graphics.h"
 #include "tactions.h"
@@ -87,7 +85,7 @@ Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 char szWinName[] = "BoE for Win32 dialogs";
 char szAppName[] = "Classic BoE Scenario Editor";
-
+extern void object_scenario_data_dump();
 char szBladBase[128];
 
 void loadSettingsFromFile()
@@ -721,6 +719,14 @@ Boolean handle_menu (short item, HMENU menu)
 		case 304: frill_up_terrain(); break;
 		case 305: unfrill_terrain(); break;
 		case 306: edit_out_strs(); break;
+		case 307: if (fancy_choice_dialog(875,0) == 2) // clear all special encounters
+					break;
+					for (i = 0; i < 18; i++) {
+							current_terrain.special_locs[i].x = 100;
+							current_terrain.special_locs[i].y = 0;
+							current_terrain.special_id[i] = 255;
+							}
+
 		case 311: 
             lpsi.fMask = SIF_POS;
             lpsi.nPos = 0;
@@ -733,13 +739,6 @@ Boolean handle_menu (short item, HMENU menu)
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
             //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
             start_string_editing(1,0); break;
-		case 313: if (fancy_choice_dialog(875,0) == 2) // clear all special encounters
-					break;
-					for (i = 0; i < 18; i++) {
-							current_terrain.special_locs[i].x = 100;
-							current_terrain.special_locs[i].y = 0;
-							current_terrain.special_id[i] = 255;
-							}
 		break; 
 
 		case 401: 
@@ -873,6 +872,48 @@ Boolean handle_menu (short item, HMENU menu)
                 CheckMenuItem(menu,411,MF_BYCOMMAND | MF_UNCHECKED);
                 }
             break;
+
+		case 412: // load outdoor zone above
+							if (editing_town)
+							break;
+							if (cur_out.y > 0) {
+							 x = cur_out.x;
+				 			 y = cur_out.y - 1;
+				 			 }
+							else {
+							 x = cur_out.x;
+				 			y = scenario.out_height - 1;
+				 			}
+								spot_hit.x = x;
+								spot_hit.y = y;
+								load_outdoors(spot_hit,0);
+								augment_terrain(spot_hit);
+								start_out_edit();
+		break;
+
+		case 413: // load outdoor zone below
+							if (editing_town)
+							break;
+							if (cur_out.y == scenario.out_height - 1) {
+							 x = cur_out.x;
+				 			 y = 0;
+				 			 }
+							else {
+							 x = cur_out.x;
+				 			 y = cur_out.y + 1;
+				 			}
+								spot_hit.x = x;
+								spot_hit.y = y;
+								load_outdoors(spot_hit,0);
+								augment_terrain(spot_hit);
+								start_out_edit();
+		break;
+		
+		case 414:
+			if (fancy_choice_dialog(878,0) == 1)
+			object_scenario_data_dump();
+			break;
+
 
 				// Extra Help
 		case 801: // help file
