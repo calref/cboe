@@ -71,17 +71,17 @@ Exile MENU
   MENUITEM "Set All Items Not Property", 209
   MENUITEM "Clear All Items", 210
   MENUITEM SEPARATOR
+  MENUITEM "Clear All Monsters", 217
+  MENUITEM "Clear All Placed Specials", 218
+  MENUITEM "Clear All Preset Fields", 219
+  MENUITEM "Clear All Stains", 220
+  MENUITEM SEPARATOR
   MENUITEM "Advanced:", 212
-  MENUITEM "  Edit Special Nodes", 213
-  MENUITEM "  Edit Town Text", 214
+  MENUITEM "  Edit Special Nodes\tCtrl+A", 213
+  MENUITEM "  Edit Town Text\tCtrl+B", 214
   MENUITEM "  Advanced Town Details", 215
   MENUITEM "  Set Town Event Timers", 216
-  MENUITEM "  Concise Town Report",221  
-  MENUITEM SEPARATOR
-  MENUITEM "  Clear All Monsters", 217
-  MENUITEM "  Clear All Placed Specials", 218
-  MENUITEM "  Clear All Preset Fields", 219
-  MENUITEM "  Clear All Stains", 220
+  MENUITEM "  Concise Town Report",221
  }
 
  POPUP "&Outdoors"
@@ -92,11 +92,11 @@ Exile MENU
   MENUITEM "Frill Up Terrain", 304
   MENUITEM "Remove Terrain Frills", 305
   MENUITEM "Edit Area Descriptions", 306
+  MENUITEM "Clear All Placed Specials", 307
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 310
   MENUITEM "  Edit Special Nodes\tCtrl+U", 311
-  MENUITEM "  Edit Outdoor Text", 312
-  MENUITEM "  Delete All Placed Specials", 313
+  MENUITEM "  Edit Outdoor Text\tCtrl+V", 312
  }
 
   POPUP "&Additional Features"
@@ -106,16 +106,17 @@ Exile MENU
   MENUITEM "Edit Town\tCtrl+T", 401
   MENUITEM "Edit Outdoor\tCtrl+R", 402
   MENUITEM "Load Another Outdoor Zone/Town\tCtrl+L", 403
-  MENUITEM SEPARATOR  
+  MENUITEM SEPARATOR
   MENUITEM "Edit Terrain Types\tCtrl+E", 404
   MENUITEM "Edit Monsters\tCtrl+F", 405
   MENUITEM "Edit Items\tCtrl+G", 406
-  MENUITEM SEPARATOR  
+  MENUITEM SEPARATOR
   MENUITEM "Return to Main Screen\tCtrl+M", 407
   MENUITEM "Switch Viewing Mode\tCtrl+I", 408
   MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 409
   MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 410
-
+  MENUITEM SEPARATOR
+  MENUITEM "Scenario Object Data Dump", 414
 	 }
 
 POPUP "&I1"
@@ -209,7 +210,10 @@ ACCELERATORS_1 ACCELERATORS
  "^S", 2, ASCII
  "^N", 3, ASCII
  "^Q", 5, ASCII
+ "^A", 213, ASCII
+ "^B", 214, ASCII
  "^U", 311, ASCII
+ "^V", 312, ASCII
  "^T", 401, ASCII
  "^R", 402, ASCII
  "^L", 403, ASCII   
@@ -220,6 +224,15 @@ ACCELERATORS_1 ACCELERATORS
  "^I", 408, ASCII
  "^J", 409, ASCII
  "^K", 410, ASCII
+ VK_TAB,         408,                   VIRTKEY, CONTROL, NOINVERT
+ VK_LEFT,        409,                   VIRTKEY, CONTROL, NOINVERT
+ VK_RIGHT,       410,                   VIRTKEY, CONTROL, NOINVERT
+ VK_UP,          412,                   VIRTKEY, CONTROL, NOINVERT
+ VK_DOWN,        413,                   VIRTKEY, CONTROL, NOINVERT
+
+// Defined elsewhere: D,L
+// Keys currently available: C,H,P,W,X,Y,Z
+
 }
 
 1 WAVE "snd0.wav"

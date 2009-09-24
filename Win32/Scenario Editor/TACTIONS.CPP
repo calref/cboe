@@ -1308,7 +1308,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 	are_done = handle_action(pass_point,wParam,-1);
 	break; 
 
-	case'I':
+	case'I': case'[':
 	pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[0][1].left;
 	pass_point.y = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[0][1].top;
 	are_done = handle_action(pass_point,wParam,-1);
@@ -3339,22 +3339,20 @@ void shut_down_menus(short mode)
 {
 	HMENU menu;
 	short i;
-	short scen_items[20] = {101,103,104,105,106, 109,110,112,113,114, 115,116,117,118,119, 120,111,121,122,123};
-	short town_items[17] = {201,202,203,204,205, 206,208,209,210,213, 214,215,216, 217,218,219,220};
-	short out_items[10] = {301,302,303,304,305,306,308,311,312,313};
 	menu = GetMenu(mainPtr);
 		//menu[i] = GetSubMenu(big_menu,5 + i);
 
-	if (mode == 0) {
-		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 0; i < 20; i++)
-			EnableMenuItem(menu,scen_items[i],MF_GRAYED | MF_BYCOMMAND);
-		for (i = 0; i < 17; i++)
-			EnableMenuItem(menu,town_items[i],MF_GRAYED | MF_BYCOMMAND);
-		for (i = 0; i < 10; i++)
-			EnableMenuItem(menu,out_items[i],MF_GRAYED | MF_BYCOMMAND);
-        for (i = 0; i < 10; i++)
-           	EnableMenuItem(menu,401+i,MF_GRAYED | MF_BYCOMMAND);
+		if (mode == 0) {
+		 // Item 2 is Save Scenario
+		 	EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
+		for (i = 101; i < 124; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		for (i = 201; i < 222; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		for (i = 301; i < 314; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+    for (i = 401; i < 415; i++)
+     	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//	}
@@ -3362,40 +3360,42 @@ void shut_down_menus(short mode)
 		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//	}
 		}
+		
+	if ((mode == 1) || (mode == 3)) {
+		for (i = 201; i < 212; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		for (i = 217; i < 221; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		//for (i = 600; i < 1000; i++) {
+		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		//	}
+		//for (i = 1000; i < 1256; i++) {
+		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		//	}
+		}
+		
+	if ((mode == 2) || (mode == 3)) {
+		for (i = 301; i < 308; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		}
+
 	if  (mode == 4) {
-		EnableMenuItem(menu,1,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,5,MF_ENABLED | MF_BYCOMMAND);
-		for (i = 0; i < 20; i++)
-			EnableMenuItem(menu,scen_items[i],MF_ENABLED | MF_BYCOMMAND);
-		for (i = 0; i < 17; i++)
-			EnableMenuItem(menu,town_items[i],MF_ENABLED | MF_BYCOMMAND);
-		for (i = 0; i < 10; i++)
-			EnableMenuItem(menu,out_items[i],MF_ENABLED | MF_BYCOMMAND);
-        for (i = 0; i < 10; i++)
-           	EnableMenuItem(menu,401+i,MF_ENABLED | MF_BYCOMMAND);			
+		for (i = 1; i < 6; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (i = 101; i < 124; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (i = 201; i < 222; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (i = 301; i < 314; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+    for (i = 401; i < 415; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		 //	EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		//	}
 		//for (i = 1000; i < 1256; i++) {
 		//	EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		//	}
-
-		}
-	if ((mode == 1) || (mode == 3)) {
-		for (i = 0; i < 9; i++)
-			EnableMenuItem(menu,town_items[i],MF_GRAYED | MF_BYCOMMAND);
-		//for (i = 600; i < 1000; i++) {
-		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		//	}
-		//for (i = 1000; i < 1256; i++) {
-		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		//	}
-		}
-	if ((mode == 2) || (mode == 3)) {
-		for (i = 0; i < 7; i++)
-			EnableMenuItem(menu,out_items[i],MF_GRAYED | MF_BYCOMMAND);
 		}
 }
 
