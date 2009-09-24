@@ -77,7 +77,7 @@ Exile MENU
   MENUITEM "Clear All Stains", 220
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 212
-  MENUITEM "  Edit Special Nodes\tCtrl+A", 213
+  MENUITEM "  Edit Special Nodes", 213
   MENUITEM "  Edit Town Text\tCtrl+B", 214
   MENUITEM "  Advanced Town Details", 215
   MENUITEM "  Set Town Event Timers", 216
@@ -96,7 +96,7 @@ Exile MENU
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 310
   MENUITEM "  Edit Special Nodes\tCtrl+U", 311
-  MENUITEM "  Edit Outdoor Text\tCtrl+V", 312
+  MENUITEM "  Edit Outdoor Text", 312
  }
 
   POPUP "&Additional Features"
@@ -210,10 +210,8 @@ ACCELERATORS_1 ACCELERATORS
  "^S", 2, ASCII
  "^N", 3, ASCII
  "^Q", 5, ASCII
- "^A", 213, ASCII
  "^B", 214, ASCII
  "^U", 311, ASCII
- "^V", 312, ASCII
  "^T", 401, ASCII
  "^R", 402, ASCII
  "^L", 403, ASCII   
@@ -231,7 +229,8 @@ ACCELERATORS_1 ACCELERATORS
  VK_DOWN,        413,                   VIRTKEY, CONTROL, NOINVERT
 
 // Defined elsewhere: D,L
-// Keys currently available: C,H,P,W,X,Y,Z
+// Keys currently available: H,P,W,Y,Z
+// Don't use keys A, X, C and V as they are Windows shortcuts (select all, cut, copy and paste)
 
 }
 

@@ -85,7 +85,7 @@ Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 char szWinName[] = "BoE for Win32 dialogs";
 char szAppName[] = "Classic BoE Scenario Editor";
-extern void object_scenario_data_dump();
+
 char szBladBase[128];
 
 void loadSettingsFromFile()
