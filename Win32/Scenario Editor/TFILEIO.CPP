@@ -51,8 +51,6 @@ Boolean cur_scen_is_win = TRUE;
 talking_record_type *dummy_talk_ptr;			
 town_record_type *dummy_town_ptr;
 extern char file_path_name[256];
-void object_scenario_data_dump();
-extern item_storage_shortcut_type store_storage;
 
 // Big waste!
 char last_load_file[63] = "newscen.exs";
@@ -1342,51 +1340,52 @@ void object_scenario_data_dump()
 		return;
 	}
 	 	sprintf(get_text,"\n\nConcise Scenario Object Data Printout for %s\n\n",scen_strs[0]);
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-			sprintf(get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.\n\n  Maximum number of any given type of town object is shown by \"[ # ]\".\n  Null objects are frequently not listed.\n\n");
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		sprintf(get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.\n\n  Maximum number of any given type of town object is shown by \"[ # ]\".\n  Null objects are frequently not listed.\n\n");
+		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		sprintf(get_text,"The Special Items [50]\n  Special Item Properties: A value of 1 means that the Special Item can be used,\n  while a value of 10 means that the party starts the scenario with the item. \n  A value of 11 means that it can be used and the party starts with it.\n\n");
+		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+
+		for (i = 0; i < 50; i++) {
+		      sprintf(get_text,"Special Item %d: Scenario Special Called = %d, Properties = %d, Name = \"%s\"\n",i,scenario.special_item_special[i],scenario.special_items[i],scen_strs[60 + i * 2]);
+		      WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		}
+        		sprintf(get_text,"\n\nItem Storage Shortcuts [10]\n");
 		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
-		for (short i = 0; i < 50; i++) {
-		sprintf(get_text,"Special Item %d: Scenario Special Called = %d, Properties = %d, Name = \"%s\"\n",i,scenario.special_item_special[i],scenario.special_items[i],scen_strs[60 + i * 2]);
+		for (i = 0; i < 10; i++) {
+		        sprintf(get_text,"Shortcut %d: All Items Property = %d, Terrain type = %d, Name = %s\n",i,scenario.storage_shortcuts[i].property,scenario.storage_shortcuts[i].ter_type,scen_item_list.ter_names[scenario.storage_shortcuts[i].ter_type]);
 		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		}
-		sprintf(get_text,"\n\nItem Storage Shortcuts [10]\n");
-		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-
-		for (short i = 0; i < 10; i++) {
-		sprintf(get_text,"Shortcut %d: All Items Property = %d, Terrain type = %d, Name = %s\n",i,scenario.storage_shortcuts[i].property,scenario.storage_shortcuts[i].ter_type,scen_item_list.ter_names[scenario.storage_shortcuts[i].ter_type]);
-		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		}
-				sprintf(get_text,"\n\n  Scenario Horse Records: [30]\n");
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		for (short i = 0; i < 30; i++) {
-        if (scenario.scen_horses[i].which_town >= 0) {
-		sprintf(get_text,"   Scenario Horse %d:	Town = %d, X = %d, Y = %d, Property = %d\n",i,scenario.scen_horses[i].which_town,scenario.scen_horses[i].horse_loc.x,scenario.scen_horses[i].horse_loc.y,scenario.scen_horses[i].property);
-    	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		}
-	}
+		sprintf(get_text,"\n\n  Scenario Horse Records: [30]\n");
+		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		for (i = 0; i < 30; i++) {
+            if (scenario.scen_horses[i].which_town >= 0) {
+        		sprintf(get_text,"   Scenario Horse %d:	Town = %d, X = %d, Y = %d, Property = %d\n",i,scenario.scen_horses[i].which_town,scenario.scen_horses[i].horse_loc.x,scenario.scen_horses[i].horse_loc.y,scenario.scen_horses[i].property);
+            	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+            }
+        }
 
 		sprintf(get_text,"\n\n  Scenario Boat Records: [30]\n");
+		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		
+		for (i = 0; i < 30; i++) {
+            if (scenario.scen_boats[i].which_town >= 0) {
+        		sprintf(get_text,"   Scenario Boat %d:	Town = %d, X = %d, Y = %d, Property = %d\n",i,scenario.scen_boats[i].which_town,scenario.scen_boats[i].boat_loc.x,scenario.scen_boats[i].boat_loc.y,scenario.scen_boats[i].property);
+		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+		    }
+    	}
 
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		for (short i = 0; i < 30; i++) {
-        if (scenario.scen_boats[i].which_town >= 0) {
-		sprintf(get_text,"   Scenario Boat %d:	Town = %d, X = %d, Y = %d, Property = %d\n",i,scenario.scen_boats[i].which_town,scenario.scen_boats[i].boat_loc.x,scenario.scen_boats[i].boat_loc.y,scenario.scen_boats[i].property);
-					       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		}
-	}
-
-			sprintf(get_text,"\n\n  Scenario Special Nodes: [256]\n");
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		for (short i = 0; i < 256; i++) {
-        if ((scenario.scen_specials[i].type > 0) || (scenario.scen_specials[i].jumpto >= 0)) {
-           get_str(spec_name,22,town.specials[i].type + 1);
-		sprintf(get_text,"   Scenario special %d:	Type = %d, SD1 = %d, SD2 = %d, Pic = %d, M1 = %d, M2 = %d, Ex1a = %d, Ex1b = %d, Ex2a = %d, Ex2b = %d, JumpTo = %d, Name = %s\n",i,scenario.scen_specials[i].type,scenario.scen_specials[i].sd1,scenario.scen_specials[i].sd2,scenario.scen_specials[i].pic,scenario.scen_specials[i].m1,scenario.scen_specials[i].m2,scenario.scen_specials[i].ex1a,scenario.scen_specials[i].ex1b,scenario.scen_specials[i].ex2a,scenario.scen_specials[i].ex2b,scenario.scen_specials[i].jumpto,spec_name);
-			       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		}
-	}
+		sprintf(get_text,"\n\n  Scenario Special Nodes: [256]\n");
+	   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+	   	
+		for (i = 0; i < 256; i++) {
+            if ((scenario.scen_specials[i].type > 0) || (scenario.scen_specials[i].jumpto >= 0)) {
+                 get_str(spec_name,22,town.specials[i].type + 1);
+            	 sprintf(get_text,"   Scenario special %d:	Type = %d, SD1 = %d, SD2 = %d, Pic = %d, M1 = %d, M2 = %d, Ex1a = %d, Ex1b = %d, Ex2a = %d, Ex2b = %d, JumpTo = %d, Name = %s\n",i,scenario.scen_specials[i].type,scenario.scen_specials[i].sd1,scenario.scen_specials[i].sd2,scenario.scen_specials[i].pic,scenario.scen_specials[i].m1,scenario.scen_specials[i].m2,scenario.scen_specials[i].ex1a,scenario.scen_specials[i].ex1b,scenario.scen_specials[i].ex2a,scenario.scen_specials[i].ex2b,scenario.scen_specials[i].jumpto,spec_name);
+			     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+    		}
+    	}
 		sprintf(get_text,"\n\n");
     	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
