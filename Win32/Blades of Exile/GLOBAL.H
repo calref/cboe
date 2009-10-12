@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "consts.h"
+#include "classes/consts.h"
 #include "classes/item.h"
 #include "classes/location.h"
 #include "classes/pc.h"
