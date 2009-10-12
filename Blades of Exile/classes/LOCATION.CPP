@@ -116,7 +116,7 @@ void location::pickLock(short pc_num)
 		return;
 		}
 	unlock_adjust = scenario.ter_types[terrain].flag2;
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
+	if ((unlock_adjust >= 5) || (r1 > (90 - unlock_adjust * 15))) {        
 					add_string_to_buf("  Didn't work.                ");
 					if (will_break == TRUE)
 					{
@@ -151,7 +151,7 @@ void location::bashDoor(short pc_num)
 
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 	
-	if ((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 40)) || (scenario.ter_types[terrain].special != 10))
+	if ((unlock_adjust >= 5) || (r1 > (100 - unlock_adjust * 15)) || (scenario.ter_types[terrain].special != 10))		
 	{
 		add_string_to_buf("  Didn't work.                ");
 		adven[pc_num].damage(get_ran(1,1,4),4,-1);

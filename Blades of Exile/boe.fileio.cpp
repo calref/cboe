@@ -1207,6 +1207,10 @@ void load_town(short town_num,short mode,short extra,char *str)
 	{
 		ReadFile(file_id, &c_town.town, sizeof(town_record_type), &dwBytesRead, NULL);
 		port_town(0);
+        if(PSD[SDF_LEGACY_SCENARIO] == 0)
+    		c_town.difficulty = c_town.town.difficulty;
+    	else//legacy no difficulty setting case
+        	c_town.difficulty = 0;
 	}
 	else ReadFile(file_id, &dummy_town, sizeof(town_record_type), &dwBytesRead, NULL);
 
@@ -1876,7 +1880,7 @@ void ListFiles(char *path, HWND listbox){
     short len;
 	HANDLE find_file_id;
     WIN32_FIND_DATA lpFindFileData;
-    char copy_str[256], test_str[256];
+    char copy_str[256];
     
     sprintf(copy_str,"scenarios/%s*.*",path);
     
