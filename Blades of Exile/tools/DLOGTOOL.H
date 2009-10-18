@@ -1,7 +1,7 @@
 #ifndef _DLOGTOOL_H
 	#define _DLOGTOOL_H
 	
-#include "globvar.h"
+#include "../globvar.h"
 //#include "boe.graphutil.h"
 
 void cd_set_flag(short dlog_num,short item_num,short flag);

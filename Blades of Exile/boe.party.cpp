@@ -17,7 +17,8 @@
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "boe.text.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
+#include "tools/mathutil.h"
 #include "boe.graphutil.h"
 #include "globvar.h"
 
@@ -2117,7 +2118,8 @@ void pick_spell_event_filter (short item_hit)
 						if ((store_spell_target == 6) && (cd_get_active(1098,10 + pc_casting) == 1)) {
 							cd_set_item_text(1098,36,choose_target);				
 							draw_spell_info();
-							force_play_sound(45);
+//							force_play_sound(45);
+                            play_sound(45);
 							}
 							else if (cd_get_active(1098,10 + pc_casting) == 0) {
 								store_spell_target = 6;
@@ -2682,7 +2684,7 @@ bool pc_record_type::damage(short how_much, short damage_type, short type_of_att
 		
 	// armor	
 	if ((damage_type == DAMAGE_WEAPON) || (damage_type == DAMAGE_UNDEAD) ||(damage_type == DAMAGE_DEMON)) {
-		how_much -= minmax(-5, 5, (int)status[STATUS_BLESS]);
+		how_much -= minmax(-5, 5, (int)status[STATUS_BLESS_CURSE]);
 		for (i = 0; i < 24; i++)
 			if ((items[i].variety != 0) && (equip[i] == TRUE)) {
 				if ((items[i].variety >= 12) && (items[i].variety <= 17)) {

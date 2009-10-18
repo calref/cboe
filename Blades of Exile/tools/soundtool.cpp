@@ -17,6 +17,14 @@
 #include <cstdio>
 
 #include "soundtool.h"
+#include "../classes/consts.h"
+#include "../globvar.h"
+#include "../boe.text.h"
+
+char* snds[NUM_SOUNDS];
+#if defined(WIN32)
+HGLOBAL sound_handles[NUM_SOUNDS];
+#endif
 
 bool sound_going(short which_s) {
 	short i;
@@ -156,7 +164,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if (which >= 100)
 		return;
 
-	if ((always_async[which] == true) &&
+	if ((always_asynch[which] == true) &&
 	((can_ignore[which] == 1) || (can_ignore[which] >= 3)))
 		asyn = true;
 	if ((can_ignore[which] > 0) && (can_ignore[which] < 5) && (party.stuff_done[305][5] == 1))
@@ -348,4 +356,44 @@ void load_sounds(HMODULE handle)
 		}
 	}
 }
+
+void move_sound(unsigned char ter,short step)
+{
+	short spec;
+	
+	spec = scenario.ter_types[ter].special;
+	
+	if ((monsters_going == false) && (overall_mode < 10) && (party.in_boat >= 0)) {
+		if (spec == 21)
+			return;
+		play_sound(48);
+		}
+	else if ((monsters_going == false) && (overall_mode < 10) && (party.in_horse >= 0)) {////
+		play_sound(85);
+		}
+	else if(spec == 5) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
+		  return;
+//  else if(spec == 6) //if diseased land do the same
+//		  return;
+		else switch(scenario.ter_types[ter].step_sound){
+            case 0:
+                if (step % 2 == 0)          //footsteps alternate sound
+					play_sound(49);
+				else play_sound(50);
+                break;
+            case 1:
+                play_sound(55);         //squish
+                break;
+            case 2:
+                play_sound(47);         //crunch
+                break;
+            case 3:
+                break;                //silence : do nothing
+            default:
+                 if (step % 2 == 0)          //safety footsteps valve
+					play_sound(49);
+				else play_sound(50);
+        }
+}
+
 #endif

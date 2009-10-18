@@ -6,7 +6,8 @@
 #include "boe.monster.h"
 #include "boe.text.h"
 #include "boe.specials.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
+#include "tools/mathutil.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 

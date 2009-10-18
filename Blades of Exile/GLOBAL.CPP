@@ -72,7 +72,7 @@ void alter_rect(RECT16 *r)
 	r->right = a;
 }
 
-short get_ran (short times, short min, short max)
+/*short get_ran (short times, short min, short max) => already defined in mathutil.cpp
 {
 	short store;
 	short i, to_ret = 0;
@@ -86,7 +86,7 @@ short get_ran (short times, short min, short max)
 		to_ret = to_ret + min + store;
 	}
 	return to_ret;
-}
+}*/
 
 Boolean same_point(location p1,location p2)
 {
@@ -95,12 +95,12 @@ Boolean same_point(location p1,location p2)
 		else return FALSE;
 }
 
-short s_pow(short x,short y)
+/*short s_pow(short x,short y) => already defined in mathutil.cpp
 {
 	if (y == 0)
    	return 1;
 	return (short) pow((double) x, (double) y);
-}
+}*/
 
 void Delay(short val, long *)
 {

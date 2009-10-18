@@ -4,7 +4,6 @@
 #include "classes/pc.h"			// party_record_type
 #include "global.h"		// structs
 
-void move_sound(unsigned char ter,short step);
 void check_game_done();
 Boolean handle_menu (short item, HMENU menu);
 void load_cursors();

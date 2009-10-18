@@ -60,7 +60,7 @@ extern RECT item_sbar_rect;
 extern int dialog_answer;
 extern Boolean All_Done, dialog_not_toast;
 extern Boolean in_startup_mode ;
-extern Boolean play_sounds;
+//extern Boolean play_sounds;
 extern Boolean diff_depth_ok ,spell_forced ,startup_loaded ;
 extern Boolean save_maps ,party_in_memory ,in_scen_debug ;
 extern Boolean window_in_front ;
@@ -288,7 +288,7 @@ extern DLGPROC d_proc;
 extern WNDPROC edit_proc;
 extern WNDPROC old_edit_proc;
 
-#define	NUM_SOUNDS	100
+//#define	NUM_SOUNDS	100
 
 extern HGLOBAL sound_handles[NUM_SOUNDS];
 extern char * snds[NUM_SOUNDS];
@@ -296,8 +296,8 @@ extern char * snds[NUM_SOUNDS];
 extern short last_played;
 extern short store_last_sound_played;
 
-extern Boolean always_asynch[100];
-extern Boolean load_when_play[100];
+//extern bool always_asynch[100];
+//extern Boolean load_when_play[100];
 
 extern short can_ignore[100];
 

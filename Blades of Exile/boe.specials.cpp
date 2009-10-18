@@ -12,7 +12,7 @@
 #include "boe.monster.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.graphics.h"
 #include "boe.fileio.h"
 #include "boe.specials.h"
@@ -21,6 +21,7 @@
 #include "boe.actions.h"
 #include "boe.graphutil.h"
 #include "tools/dlogtool.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 

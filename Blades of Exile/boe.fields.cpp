@@ -4,6 +4,7 @@
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "globvar.h"
+#include "tools/mathutil.h"
 
 Boolean is_explored(short i,short j)
 {

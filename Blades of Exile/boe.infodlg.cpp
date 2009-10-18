@@ -13,7 +13,8 @@
 #include "boe.fields.h"
 #include "boe.locutils.h"
 #include "boe.text.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
+#include "tools/mathutil.h"
 #include "boe.infodlg.h"
 #include "boe.fileio.h"
 

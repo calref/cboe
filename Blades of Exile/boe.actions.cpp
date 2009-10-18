@@ -18,10 +18,11 @@
 #include "boe.newgraph.h"
 #include "boe.combat.h"
 #include "boe.items.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.infodlg.h"
 #include "boe.itemdata.h"
 #include "tools/dlogtool.h"
+#include "tools/mathutil.h"
 #include "boe.graphutil.h"
 #include "boe.actions.h"
 
@@ -1694,10 +1695,10 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 			if (in_scen_debug) {
 			for (i = 0; i < 6; i++) {
 				adven[i].status[STATUS_POISON] = 0;
-   				if (adven[i].status[STATUS_BLESS] < 0)
-					adven[i].status[STATUS_BLESS] = 0;
-				if (adven[i].status[STATUS_HASTE] < 0)
-					adven[i].status[STATUS_HASTE] = 0;
+   				if (adven[i].status[STATUS_BLESS_CURSE] < 0)
+					adven[i].status[STATUS_BLESS_CURSE] = 0;
+				if (adven[i].status[STATUS_HASTE_SLOW] < 0)
+					adven[i].status[STATUS_HASTE_SLOW] = 0;
 				adven[i].status[STATUS_WEBS] = 0;
 				adven[i].status[STATUS_DISEASE] = 0;
 				adven[i].status[STATUS_DUMB] = 0;

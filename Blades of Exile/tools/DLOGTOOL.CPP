@@ -1,16 +1,16 @@
 #include <windows.h>
 #include <cstring>
-#include "global.h"
-#include "boe.graphutil.h"
+#include "../global.h"
+#include "../boe.graphutil.h"
 #include <cstdio>
-#include "exlsound.h"
+#include "soundtool.h"
 #include "dlogtool.h"
-#include "boe.text.h"
-#include "boe.locutils.h"
-#include "boe.dlgutil.h"
-#include "boe.infodlg.h"
+#include "../boe.text.h"
+#include "../boe.locutils.h"
+#include "../boe.dlgutil.h"
+#include "../boe.infodlg.h"
 
-#include "globvar.h"
+#include "../globvar.h"
 
 /*
 struct Dialog

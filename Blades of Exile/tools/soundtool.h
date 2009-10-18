@@ -8,7 +8,8 @@
 
 #ifndef _SOUNDTOOL_H
 #define _SOUNDTOOL_H
-const int NUM_SOUNDS = 100;
+
+#define NUM_SOUNDS 100
 
 typedef unsigned short snd_num_t;
 void init_snd_tool();
@@ -32,8 +33,8 @@ void kill_sound();
 extern HMODULE hModule;
 extern short can_ignore[100];
 extern bool sounds_missing;
-HGLOBAL sound_handles[NUM_SOUNDS];
-char* snds[NUM_SOUNDS];
+extern HGLOBAL sound_handles[NUM_SOUNDS];
+extern char* snds[NUM_SOUNDS];
 #else
 #error Invalid platform
 #endif
@@ -41,9 +42,11 @@ char* snds[NUM_SOUNDS];
 extern short snd_played[4];
 extern bool play_sounds;
 extern short last_played;
-extern bool always_async[100];
+extern bool always_asynch[100];
 extern bool load_when_play[100];
 extern short sound_delay[100];
 extern short store_last_sound_played;
+
+void move_sound(unsigned char ter,short step);
 
 #endif
