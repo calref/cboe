@@ -6,11 +6,85 @@
  *
  */
 
+#ifndef _CONSTS_H
+	#define _CONSTS_H
+
+#define NUM_OF_PCS		6
+#define INVALID_PC		6
+
+#define	NUM_SOUNDS	100
+
+#define NUM_OF_BOATS	30
+#define NUM_OF_HORSES	30
+
+/* stuff done flags */
+#define SDF_IS_PARTY_SPLIT 304][0
+#define SDF_PARTY_SPLIT_WHERE_PARTY_X 304][1
+#define SDF_PARTY_SPLIT_WHERE_PARTY_Y 304][2
+#define SDF_PARTY_SPLIT_PC      304][3
+#define SDF_PARTY_SPLIT_TOWN    304][4 // for future use, hopefully
+#define SDF_SKIP_STARTUP        305][4
+#define SDF_LESS_SOUND          305][5
+#define SDF_NO_TARGET_LINE      305][6
+#define SFD_NO_MAPS             306][0
+#define SDF_NO_SOUNDS           306][1
+#define SDF_NO_FRILLS           306][2
+#define SDF_ROOM_DESCS_AGAIN    306][3
+#define SDF_NO_INSTANT_HELP     306][4 // boolean
+#define SDF_NO_SHORE_FRILLS     306][5
+#define SDF_GAME_SPEED          306][6
+#define SDF_EASY_MODE           306][7
+#define SDF_LESS_WANDER_ENC     306][8
+#define SDF_NO_TER_ANIM         306][9
+#define SDF_HIDDEN_MAP          308][0 
+#define SDF_LEGACY_SCENARIO     305][8 //0 is new scenario, 1 is legacy
+
+#define INVALID_TOWN	200
+
 typedef unsigned short m_num_t;
 typedef unsigned short ter_num_t;
 typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
+
+/* overall mode; some seem to be missing */
+enum eMode {
+    MODE_OUTDOORS = 0,
+    MODE_TOWN = 1,
+    MODE_TALK_TOWN = 2, // looking for someone to talk
+    MODE_TOWN_TARGET = 3, // spell target, that is
+    MODE_USE = 4,
+    MODE_COMBAT = 10,
+    MODE_SPELL_TARGET = 11,
+    MODE_FIRING = 12, // firing from bow or crossbow
+    MODE_THROWING = 13, // throwing missile
+    MODE_FANCY_TARGET = 14, // spell target, that is
+    MODE_DROPPING = 15,
+    MODE_TALKING = 20,
+    MODE_SHOPPING = 21,
+    MODE_LOOK_OUTDOORS = 35, // looking at something
+    MODE_LOOK_TOWN = 36,
+    MODE_LOOK_COMBAT = 37,
+    MODE_STARTUP = 45,
+    MODE_REDRAW = 50,
+    MODE_CUTSCENE = 51,
+};
+
+enum eTrapType {
+    TRAP_RANDOM = 0,
+    TRAP_BLADE = 1,
+    TRAP_DART = 2,
+    TRAP_GAS = 3,			// poisons all
+    TRAP_EXPLOSION = 4,	// damages all => uses c_town.difficulty rather than trap_level to calculates damages (and even c_town.difficulty /13).
+    TRAP_SLEEP_RAY = 5,
+    TRAP_FALSE_ALARM = 6,
+    TRAP_DRAIN_XP = 7,
+    TRAP_ALERT = 8,		// makes town hostile
+    TRAP_FLAMES = 9,		// damages all => uses trap_level (*5) to calculates damages.
+    TRAP_DUMBFOUND = 10,   //dumbfound all
+    TRAP_DISEASE = 11,
+    TRAP_DISEASE_ALL = 12,
+};
 
 enum eMainStatus {
 	MAIN_STATUS_ABSENT = 0, // absent, empty slot
@@ -709,3 +783,5 @@ enum eTalkNodeType {
 	TALK_CALL_TOWN_SPEC = 29,
 	TALK_CALL_SCEN_SPEC = 30,
 };
+
+#endif

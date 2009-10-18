@@ -67,7 +67,7 @@ RECT item_sbar_rect = {545,146,562,254};
 int dialog_answer;
 Boolean All_Done = FALSE, dialog_not_toast = FALSE;
 Boolean in_startup_mode = TRUE;
-Boolean play_sounds;
+//Boolean play_sounds;
 Boolean spell_forced = FALSE,startup_loaded = FALSE;
 Boolean save_maps = TRUE,party_in_memory = FALSE,in_scen_debug = FALSE;
 Boolean window_in_front = FALSE;
@@ -474,7 +474,7 @@ LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 DLGPROC d_proc;
 WNDPROC edit_proc;
 WNDPROC old_edit_proc;
-HMODULE hModule;
+//HMODULE hModule;
 long intro_music_start_time = -1;
 HBITMAP spec_scen_g ;
 typedef struct {
@@ -685,7 +685,8 @@ short short_can_see();
 Boolean combat_pt_in_light();
 location which_party_sec;
 short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
-creature_start_type null_start_type = {0,0,location(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
+//creature_start_type null_start_type = {0,0,location(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
+creature_start_type null_start_type = {0,0,location(80,80),1,0,0,0,-1,-1,0,0, 0,-1,-1,-1};
 HRGN oval_region ,dark_mask_region,temp_rect_rgn;
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 	5, 1,2,4,2,1, 4,2,5,0};

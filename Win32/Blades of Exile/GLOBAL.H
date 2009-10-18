@@ -437,8 +437,8 @@ typedef struct { unsigned char pattern[9][9]; } effect_pat_type;
 typedef struct { item_record_type items[NUM_TOWN_ITEMS]; } stored_items_list;
 typedef struct { char outdoor_maps[100][6][48]; } stored_outdoor_maps_type; 
 
-short s_pow(short x,short y);
-short get_ran (short times, short min, short max);
+//extern short s_pow(short x,short y);
+//extern short get_ran (short times, short min, short max);
 Boolean same_point(location p1,location p2);
 void pause(short length);
 void Delay(short val,long *dummy);

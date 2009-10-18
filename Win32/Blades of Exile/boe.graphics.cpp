@@ -10,7 +10,7 @@
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "boe.text.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.graphutil.h"
 
 #include "boe.infodlg.h"

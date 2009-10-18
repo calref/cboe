@@ -8,8 +8,14 @@
 #include "global.h"
 #include "boe.text.h"
 #include <cstring>
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.infodlg.h"
+#include "tools/dlogtool.h"
+#include "tools/mathutil.h"
+#include "boe.fields.h"
+#include "boe.locutils.h"
+#include "boe.monster.h"
+#include "boe.graphics.h"
 
 #include "boe.graphutil.h"
 #include "globvar.h"

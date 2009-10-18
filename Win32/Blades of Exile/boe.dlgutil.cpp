@@ -12,7 +12,8 @@
 #include "boe.fileio.h"
 #include "boe.graphics.h"
 #include "boe.items.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
+#include "tools/mathutil.h"
 #include <cstdio>
 #include "tools/dlogtool.h"
 #include "boe.newgraph.h"

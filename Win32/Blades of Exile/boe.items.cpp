@@ -12,12 +12,13 @@
 #include "boe.newgraph.h"
 #include "boe.itemdata.h"
 #include "boe.infodlg.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include <cstdio>
 #include <cstring>
 #include "boe.graphutil.h"
 #include "boe.monster.h"
 #include "boe.specials.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 
@@ -432,13 +433,15 @@ void display_item_event_filter (short item_hit)
 						t_i.items[item_array[item_hit]].item_level = 3000;
 				set_item_flag(&item);
 					party.giveGold(t_i.items[item_array[item_hit]].item_level, false);
-					force_play_sound(39);
+//					force_play_sound(39);
+                    play_sound(39);
 					}
 				else if (t_i.items[item_array[item_hit]].variety == 11) {
 					party.giveFood(t_i.items[item_array[item_hit]].item_level, false);
  				set_item_flag(&item);
 					set_item_flag(&t_i.items[item_array[item_hit]]);
-					force_play_sound(62);
+//					force_play_sound(62);
+                    play_sound(62);
 					}
   				else {
 					if (item_weight(item) >
@@ -450,7 +453,8 @@ void display_item_event_filter (short item_hit)
 						}
 
  				set_item_flag(&item);
-					force_play_sound(0);
+//					force_play_sound(0);
+                    play_sound(0);
 					adven[current_getting_pc].giveToPC(item, 0);
 					}
 				t_i.items[item_array[item_hit]] = return_dummy_item();

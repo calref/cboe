@@ -17,8 +17,8 @@ using std::abs;
 #undef min
 #endif
 
-short get_ran (short times,short  min,short  max);
-short s_pow(short x,short y);
+extern short get_ran (short times,short  min,short  max);
+extern short s_pow(short x,short y);
 short s_sqrt(short val);
 short max(short a,short b);
 short min(short a,short b);

@@ -5,6 +5,7 @@
 #include "boe.text.h"
 #include "boe.monster.h"
 #include "boe.fields.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 

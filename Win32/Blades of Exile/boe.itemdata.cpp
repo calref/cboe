@@ -5,6 +5,7 @@
 #include "boe.itemdata.h"
 #include <cstdio>
 #include <cstring>
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 

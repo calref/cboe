@@ -16,7 +16,8 @@
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
 #include "boe.graphutil.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 

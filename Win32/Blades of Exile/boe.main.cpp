@@ -6,7 +6,7 @@
 #include "boe.actions.h"
 #include "boe.text.h"
 #include "boe.party.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.items.h"
 #include "boe.fields.h"
 #include "boe.town.h"
@@ -913,43 +913,4 @@ void cursor_stay()
 		cursor_shown = TRUE;
 		showcursor(TRUE);
       }
-}
-
-void move_sound(unsigned char ter,short step)
-{
-	short spec;
-	
-	spec = scenario.ter_types[ter].special;
-	
-	if ((monsters_going == false) && (overall_mode < 10) && (party.in_boat >= 0)) {
-		if (spec == 21)
-			return;
-		play_sound(48);
-		}
-	else if ((monsters_going == false) && (overall_mode < 10) && (party.in_horse >= 0)) {////
-		play_sound(85);
-		}
-	else if(spec == 5) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
-		  return;
-//  else if(spec == 6) //if diseased land do the same
-//		  return;
-		else switch(scenario.ter_types[ter].step_sound){
-            case 0:
-                if (step % 2 == 0)          //footsteps alternate sound
-					play_sound(49);
-				else play_sound(50);
-                break;
-            case 1:
-                play_sound(55);         //squish
-                break;
-            case 2:
-                play_sound(47);         //crunch
-                break;
-            case 3:
-                break;                //silence : do nothing
-            default:
-                 if (step % 2 == 0)          //safety footsteps valve
-					play_sound(49);
-				else play_sound(50);
-        }
 }

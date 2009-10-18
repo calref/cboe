@@ -1,17 +1,18 @@
 #include "pc.h"				// party_record_type
 #include "location.h"		// location
-//#include "boe.text.h"			// add_string_to_buf
+#include "../boe.text.h"			// add_string_to_buf
 //#include "boe.main.h"			// globals
-#include "tools/soundtool.h"		// play_sound
+#include "../tools/soundtool.h"		// play_sound
 //#include "boe.combat.h"			// hit_chance
-//#include "boe.items.h"			// place_item
-//#include "boe.fields.h"			// make_sfx
-#include "tools/mathutil.h"			// get_ran
-//#include "boe.infodlg.h"		// give_help
-//#include "boe.party.h"			// adjust_spell_menu
-//#include "boe.itemdata.h"		// return_dummy_item
-//#include "boe.locutils.h"		// is_container
-//#include "globvar.h"
+#include "../boe.items.h"			// place_item
+#include "../boe.fields.h"			// make_sfx
+#include "../tools/mathutil.h"			// get_ran
+#include "../boe.infodlg.h"		// give_help
+#include "../boe.party.h"			// adjust_spell_menu
+#include "../boe.itemdata.h"		// return_dummy_item
+#include "../boe.locutils.h"		// is_container
+#include "../globvar.h"
+#include "consts.h"
 
 void pc_record_type::kill(short type)
 {
@@ -334,7 +335,7 @@ void pc_record_type::curse(short how_much)
 {
 	if (!isAlive()) return;
 	
-	status[STATUS_BLESS] = max(status[STATUS_BLESS] - how_much, -8);
+	status[STATUS_BLESS_CURSE] = max(status[STATUS_BLESS_CURSE] - how_much, -8);
 	sprintf ((char *) c_line, "  %s cursed.",(char *) name);
 	add_string_to_buf((char *) c_line);
 		
@@ -456,7 +457,7 @@ void pc_record_type::slow(short how_much)
 {
 	if (!isAlive()) return;
 	
-	status[STATUS_HASTE] = minmax(-8,8,status[STATUS_HASTE] - how_much);
+	status[STATUS_HASTE_SLOW] = minmax(-8,8,status[STATUS_HASTE_SLOW] - how_much);
 	if (how_much < 0)
 		sprintf ((char *) c_line, "  %s hasted.",(char *) name);
 		else sprintf ((char *) c_line, "  %s slowed.",(char *) name);

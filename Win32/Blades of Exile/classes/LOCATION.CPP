@@ -1,12 +1,13 @@
 #include "location.h"		// location
-#include "exlsound.h"		// play_sound
-#include "boe.main.h"			// out
-#include "boe.text.h"			// add_string_to_buf
-#include "boe.locutils.h"		// alter_space
-#include "boe.items.h"			// fancy_choice_dialog
+#include "../tools/soundtool.h"		// play_sound
+#include "../boe.main.h"			// out
+#include "../boe.text.h"			// add_string_to_buf
+#include "../boe.locutils.h"		// alter_space
+#include "../boe.items.h"			// fancy_choice_dialog
 
-#include "global.h"
-#include "globvar.h"
+#include "../global.h"
+#include "../globvar.h"
+#include "../tools/mathutil.h"
 
 location location::toGlobal()
 {

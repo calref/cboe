@@ -11,11 +11,13 @@
 #include "boe.combat.h"
 #include "boe.party.h"
 #include "boe.text.h"
-#include "tools/exlsound.h"
+#include "tools/soundtool.h"
 #include "boe.fields.h"
 #include "boe.locutils.h"
-.#include "boe.infodlg.h"
+#include "boe.infodlg.h"
 #include "boe.graphutil.h"
+#include "tools/dlogtool.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 
