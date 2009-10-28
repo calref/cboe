@@ -85,7 +85,7 @@ Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 char szWinName[] = "BoE for Win32 dialogs";
 char szAppName[] = "Classic BoE Scenario Editor";
-
+short last_file_printed = 0;
 char szBladBase[128];
 
 void loadSettingsFromFile()
@@ -602,32 +602,50 @@ Boolean handle_menu (short item, HMENU menu)
 				delete_last_town();
 			break;
 		case 119:
-			if (fancy_choice_dialog(866,0) == 1)
+			if (fancy_choice_dialog(866,0) == 1) {
+        last_file_printed = 0;
 				start_data_dump();
+				}
 			break;
 		case 120:
 			if (change_made == TRUE) {
-				give_error("You need to save the changes made to your scenario before you can delete a town.",
+				give_error("You need to save the changes made to your scenario before you can print the file Scenario Text.",
 					"",0);
 				return to_return;
 				}
-			if (fancy_choice_dialog(871,0) == 1)
+			if (fancy_choice_dialog(871,0) == 1) {
+        last_file_printed = 1;
 				scen_text_dump();
 			redraw_screen();
+			}
 			break;
 			
 		case 121:
-			if (fancy_choice_dialog(867,0) == 1)
+			if (fancy_choice_dialog(867,0) == 1) {
+        last_file_printed = 2;
 				start_shopping_data_dump();
+				}
 		break;
 		case 122:
-			if (fancy_choice_dialog(868,0) == 1)
+			if (fancy_choice_dialog(868,0) == 1) {
+        last_file_printed = 3;
 				start_monst_data_dump();
+				}
 		break;
-        case 123:
-			if (fancy_choice_dialog(890,0) == 1)
-            start_spec_data_dump();
-        break;
+    case 123:
+			if (fancy_choice_dialog(890,0) == 1) {
+         last_file_printed = 4;
+         start_spec_data_dump();
+				}
+    break;
+		case 124:
+			if (fancy_choice_dialog(878,0) == 1) {
+      	 last_file_printed = 7;
+				 object_scenario_data_dump();
+			}
+			break;
+
+
 			// Town Menu
 		case 201: edit_town_details(); break;
 		case 202: edit_town_wand(); break;
@@ -708,9 +726,16 @@ Boolean handle_menu (short item, HMENU menu)
 						}
 		break;
 
-		case 221:    if (fancy_choice_dialog(877,0) == 1) // make concise town report
-			start_town_data_dump();
+		case 221:    if (fancy_choice_dialog(877,0) == 1) { // make concise town report
+		              last_file_printed = 5;
+									start_town_data_dump();
+									}
 			break;
+			
+		case 222:
+					start_dialogue_editing(0);
+		break;
+
 
 			// Outdoor Menu
 		case 301: outdoor_details(); break;
@@ -740,6 +765,13 @@ Boolean handle_menu (short item, HMENU menu)
             //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
             start_string_editing(1,0); break;
 		break; 
+
+		case 313:
+			if (fancy_choice_dialog(879,0) == 1) {
+				 last_file_printed = 6;
+				 start_outdoor_data_dump();
+				 }
+			break;
 
 		case 401: 
 				 start_town_edit(); 
@@ -857,7 +889,7 @@ Boolean handle_menu (short item, HMENU menu)
 						 }
 			break;
 			
-			case 411:
+			case 411: //   MENUITEM "Terrain Animations Play", 411
 
             HMENU menu,big_menu;
             big_menu = GetMenu(mainPtr);
@@ -909,11 +941,40 @@ Boolean handle_menu (short item, HMENU menu)
 								start_out_edit();
 		break;
 		
-		case 414:
-			if (fancy_choice_dialog(878,0) == 1)
-			object_scenario_data_dump();
-			break;
-
+		case 414: //   Repeat print of last file printed
+         if (last_file_printed == 0) {
+				 set_string("File Repeat Printing:","Scenario Data");
+				start_data_dump();
+				 }
+         if (last_file_printed == 1) {
+				 set_string("File Repeat Printing:","Scenario Text");
+				scen_text_dump();
+				 }
+         if (last_file_printed == 2) {
+				 set_string("File Repeat Printing:","Scenario Shopping");
+				start_shopping_data_dump();
+				 }
+         if (last_file_printed == 3) {
+				 set_string("File Repeat Printing:","Monstdata");
+				start_monst_data_dump();
+				 }
+         if (last_file_printed == 4) {
+				 set_string("File Repeat Printing:","Specdata");
+         start_spec_data_dump();
+				 }
+         if (last_file_printed == 5) {
+				 set_string("File Repeat Printing:","Concise Town Report");
+				start_town_data_dump();
+				 }
+         if (last_file_printed == 6) {
+				 set_string("File Repeat Printing:","Concise Outdoor Report");
+				 start_outdoor_data_dump();
+				 }
+         if (last_file_printed == 7) {
+				 set_string("File Repeat Printing:","Scenario Object Data");
+				 object_scenario_data_dump();
+				 }
+				break;
 
 				// Extra Help
 		case 801: // help file

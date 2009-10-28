@@ -25,98 +25,101 @@ Exile MENU
  {
   MENUITEM "&Open Scenario\tCtrl+O", 1
   MENUITEM "&Save Scenario\tCtrl+S", 2
-  MENUITEM "New Scenario\tCtrl+N", 3
+  MENUITEM "&New Scenario\tCtrl+N", 3
   MENUITEM SEPARATOR
   MENUITEM "&Quit\tCtrl+Q", 5
  }
 
  POPUP "&Scenario"
  {
-  MENUITEM "Create New Town", 101
+  MENUITEM "&Create New Town", 101
   MENUITEM SEPARATOR
-  MENUITEM "Scenario Details", 103
-  MENUITEM "Scenario Intro Text", 104
-  MENUITEM "Set Starting Location: Town", 105
-  MENUITEM "Set Starting Location: Outdoors", 106
+  MENUITEM "&Scenario Details", 103
+  MENUITEM "Scenario Intr&o Text", 104
+  MENUITEM "Set Starting &Location: Town", 105
+  MENUITEM "Set Starting &Location: Outdoors", 106
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 107
-  MENUITEM "  Edit Special Nodes", 109
-  MENUITEM "  Edit Scenario Text", 110
-  MENUITEM "  Import Town", 111
-  MENUITEM "  Edit Saved Item Rectangles", 112
-  MENUITEM "  Edit Horses", 113
-  MENUITEM "  Edit Boats", 114
-  MENUITEM "  Set Variable Town Entry", 115
-  MENUITEM "  Set Scenario Event Timers", 116
-  MENUITEM "  Edit Item Placement Shortcuts", 117
-  MENUITEM "  Delete Last Town", 118
+  MENUITEM "  Edit Special &Nodes", 109
+  MENUITEM "  Edit Scenario &Text", 110
+  MENUITEM "  &Import Town", 111
+  MENUITEM "  Edit Saved Item &Rectangles", 112
+  MENUITEM "  Edit &Horses", 113
+  MENUITEM "  Edit &Boats", 114
+  MENUITEM "  Set &Variable Town Entry", 115
+  MENUITEM "  Set Scenario &Event Timers", 116
+  MENUITEM "  Edit Item &Placement Shortcuts", 117
+  MENUITEM "  &Delete Last Town", 118
   MENUITEM SEPARATOR
-  MENUITEM "  Write Data To Text File", 119
-  MENUITEM "  Do Full Text Dump", 120
-  MENUITEM "  Scenario Shopping Text Dump", 121
-  MENUITEM "  Scenario Monster Dump", 122
-  MENUITEM "  Scenario Specials Dump", 123
+  MENUITEM "  Write D&ata To Text File", 119
+  MENUITEM "  Do &Full Text Dump", 120
+  MENUITEM "  Scenario Shoppin&g Text Dump", 121
+  MENUITEM "  Scenario &Monster Dump", 122
+  MENUITEM "  Scenario Specials D&ump", 123
+  MENUITEM "  Scenario Ob&ject Data Dump", 124
  }
 
  POPUP "&Town"
  {
-  MENUITEM "Town Details\tCtrl+D", 201
-  MENUITEM "Town Wandering Monsters", 202
-  MENUITEM "Set Town Boundaries", 203
-  MENUITEM "Frill Up Terrain", 204
-  MENUITEM "Remove Terrain Frills", 205
-  MENUITEM "Edit Area Descriptions", 206
+  MENUITEM "Town &Details\tCtrl+D", 201
+  MENUITEM "Town &Wandering Monsters", 202
+  MENUITEM "Set Town &Boundaries", 203
+  MENUITEM "&Frill Up Terrain", 204
+  MENUITEM "Remo&ve Terrain Frills", 205
+  MENUITEM "Edit &Area Descriptions", 206
   MENUITEM SEPARATOR
-  MENUITEM "Add Random Items", 208
-  MENUITEM "Set All Items Not Property", 209
-  MENUITEM "Clear All Items", 210
+  MENUITEM "Add Rand&om Items", 208
+  MENUITEM "Set All Items Not Propert&y", 209
+  MENUITEM "Clear All &Items", 210
   MENUITEM SEPARATOR
-  MENUITEM "Clear All Monsters", 217
-  MENUITEM "Clear All Placed Specials", 218
-  MENUITEM "Clear All Preset Fields", 219
-  MENUITEM "Clear All Stains", 220
+  MENUITEM "Clear All &Monsters", 217
+  MENUITEM "&Clear All Placed Specials", 218
+  MENUITEM "Clear All &Preset Fields", 219
+  MENUITEM "Clear All &Stains", 220
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 212
-  MENUITEM "  Edit Special Nodes", 213
-  MENUITEM "  Edit Town Text\tCtrl+B", 214
-  MENUITEM "  Advanced Town Details", 215
-  MENUITEM "  Set Town Event Timers", 216
-  MENUITEM "  Concise Town Report",221
+  MENUITEM "  Edit Special &Nodes\tCtrl+1", 213
+  MENUITEM "  Edit Town &Text\tCtrl+2", 214
+  MENUITEM "  Edit Town Dialo&g\tCtrl+3", 222
+  MENUITEM "  Advanced Town Detai&ls\tCtrl+4", 215
+  MENUITEM "  Set Town &Event Timers\tCtrl+5", 216
+  MENUITEM "  Concise Town &Report\tCtrl+6",221
  }
 
  POPUP "&Outdoors"
  {
-  MENUITEM "Outdoor Details\tCtrl+D", 301
-  MENUITEM "Outdoor Wandering Monsters", 302
-  MENUITEM "Outdoor Special Encounters", 303
-  MENUITEM "Frill Up Terrain", 304
-  MENUITEM "Remove Terrain Frills", 305
-  MENUITEM "Edit Area Descriptions", 306
-  MENUITEM "Clear All Placed Specials", 307
+  MENUITEM "Outdoor &Details\tCtrl+D", 301
+  MENUITEM "Outdoor &Wandering Monsters", 302
+  MENUITEM "&Outdoor Special Encounters", 303
+  MENUITEM "&Frill Up Terrain", 304
+  MENUITEM "Remo&ve Terrain Frills", 305
+  MENUITEM "Edit &Area Descriptions", 306
+  MENUITEM "&Clear All Placed Specials", 307
   MENUITEM SEPARATOR
   MENUITEM "Advanced:", 310
-  MENUITEM "  Edit Special Nodes\tCtrl+U", 311
-  MENUITEM "  Edit Outdoor Text", 312
+  MENUITEM "  Edit Special &Nodes\tCtrl+7", 311
+  MENUITEM "  Edit Outdoor &Text\tCtrl+8", 312
+  MENUITEM "  Concise Outdoor &Report\tCtrl+9",313
  }
 
   POPUP "&Additional Features"
  {
-  MENUITEM "Terrain Animations Play", 411
+  MENUITEM "Terrain &Animations Play", 411
   MENUITEM SEPARATOR
-  MENUITEM "Edit Town\tCtrl+T", 401
-  MENUITEM "Edit Outdoor\tCtrl+R", 402
-  MENUITEM "Load Another Outdoor Zone/Town\tCtrl+L", 403
+  MENUITEM "Edit &Town\tCtrl+T", 401
+  MENUITEM "Edit Outdoo&r\tCtrl+R", 402
+  MENUITEM "&Load Another Outdoor Zone/Town\tCtrl+L", 403
   MENUITEM SEPARATOR
-  MENUITEM "Edit Terrain Types\tCtrl+E", 404
-  MENUITEM "Edit Monsters\tCtrl+F", 405
-  MENUITEM "Edit Items\tCtrl+G", 406
+  MENUITEM "&Edit Terrain Types\tCtrl+E", 404
+  MENUITEM "Edit &Monsters\tCtrl+F", 405
+  MENUITEM "Edit &Items\tCtrl+G", 406
   MENUITEM SEPARATOR
-  MENUITEM "Return to Main Screen\tCtrl+M", 407
-  MENUITEM "Switch Viewing Mode\tCtrl+I", 408
-  MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 409
-  MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 410
+  MENUITEM "Return to Main &Screen\tCtrl+M", 407
+  MENUITEM "Switch &Viewing Mode\tCtrl+I", 408
+  MENUITEM "Load &Previous Outdoor Zone/Town\tCtrl+J", 409
+  MENUITEM "Load &Next Outdoor Zone/Town\tCtrl+K", 410
   MENUITEM SEPARATOR
-  MENUITEM "Scenario Object Data Dump", 414
+  MENUITEM "Repeat Printing of Last &File\tCtrl+P", 414
 	 }
 
 POPUP "&I1"
@@ -191,13 +194,13 @@ POPUP "&I1"
 */
  POPUP "&Help"
  {
-  MENUITEM "Index\tF1", 801
+  MENUITEM "&Index\tF1", 801
   MENUITEM SEPARATOR
-  MENUITEM "Getting Started", 802
-  MENUITEM "Testing Your Scenario", 803
-  MENUITEM "Distributing Your Scenario", 804
+  MENUITEM "&Getting Started", 802
+  MENUITEM "&Testing Your Scenario", 803
+  MENUITEM "&Distributing Your Scenario", 804
   MENUITEM SEPARATOR
-  MENUITEM "About Blades Scenario Editor", 805
+  MENUITEM "&About Blades Scenario Editor", 805
  }
 
 
@@ -222,6 +225,16 @@ ACCELERATORS_1 ACCELERATORS
  "^I", 408, ASCII
  "^J", 409, ASCII
  "^K", 410, ASCII
+ "^P", 414, ASCII
+ "^1", 213, ASCII
+ "^2", 214, ASCII
+ "^3", 222, ASCII
+ "^4", 215, ASCII
+ "^5", 216, ASCII
+ "^6", 221, ASCII
+ "^7", 311, ASCII
+ "^8", 312, ASCII
+ "^9", 313, ASCII
  VK_TAB,         408,                   VIRTKEY, CONTROL, NOINVERT
  VK_LEFT,        409,                   VIRTKEY, CONTROL, NOINVERT
  VK_RIGHT,       410,                   VIRTKEY, CONTROL, NOINVERT
@@ -229,7 +242,7 @@ ACCELERATORS_1 ACCELERATORS
  VK_DOWN,        413,                   VIRTKEY, CONTROL, NOINVERT
 
 // Defined elsewhere: D,L
-// Keys currently available: H,P,W,Y,Z
+// Keys currently available: H,W,Y,Z
 // Don't use keys A, X, C and V as they are Windows shortcuts (select all, cut, copy and paste)
 
 }

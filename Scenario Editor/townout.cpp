@@ -591,18 +591,20 @@ void put_out_strs_in_dlog()
 {
 	Str255 str;
 	short i;
-	
+
 	for (i = 0; i < 8; i++) {
-		if ((current_terrain.info_rect[i].right == -1) || (str_do_delete[i] > 0)) {
+		if ((current_terrain.info_rect[i].left < 1) && (current_terrain.info_rect[i].top < 1) && (current_terrain.info_rect[i].right < 1) && (current_terrain.info_rect[i].bottom < 1))
+		 {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(850,25 + i,0);
 			}
-			else sprintf((char *) str,"X = %d, Y = %d",current_terrain.info_rect[i].left,
-				current_terrain.info_rect[i].top);
+			else
+		sprintf((char *) str,"L = %d, T = %d",current_terrain.info_rect[i].left,current_terrain.info_rect[i].top);
 		csit(850,13 + i,(char *) str);
+		sprintf((char *) str,"R = %d, B = %d",current_terrain.info_rect[i].right,current_terrain.info_rect[i].bottom);
+		csit(850,33 + i,(char *) str);
 		CDST(850,2 + i,data_store->out_strs[i + 1]);
 		}
-
 }
 
 void edit_out_strs_event_filter (short item_hit)
@@ -669,16 +671,18 @@ void put_town_strs_in_dlog()
 	short i;
 	
 	for (i = 0; i < 16; i++) {
-		if ((t_d.room_rect[i].right == -1) || (str_do_delete[i] > 0)) {
-			sprintf((char *) str,"Not yet placed.");
+		if ((t_d.room_rect[i].left < 1) && (t_d.room_rect[i].top < 1) && (t_d.room_rect[i].right < 1) && (t_d.room_rect[i].bottom < 1)) {
 			cd_activate_item(839,41 + i,0);
+			sprintf((char *) str,"Not yet placed.");
+			sprintf((char *) str,"Not yet placed.");
 			}
-			else sprintf((char *) str,"X = %d, Y = %d",t_d.room_rect[i].left,
-				t_d.room_rect[i].top);
+		else
+		 sprintf((char *) str,"L = %d, T = %d",t_d.room_rect[i].left,t_d.room_rect[i].top);
 		csit(839,21 + i,(char *) str);
+		 sprintf((char *) str,"R = %d, B = %d",t_d.room_rect[i].right,t_d.room_rect[i].bottom);
+		csit(839,57 + i,(char *) str);
 		CDST(839,2 + i,town_strs[i + 1]);
 		}
-
 }
 
 void edit_town_strs_event_filter (short item_hit)
