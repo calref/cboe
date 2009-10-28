@@ -37,4 +37,5 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 void flip_rect(RECT16 *s);
 void alter_rect(RECT16 *r);
 void object_scenario_data_dump();
+void start_outdoor_data_dump();
 #endif

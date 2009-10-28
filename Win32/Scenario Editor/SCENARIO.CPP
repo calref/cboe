@@ -2407,13 +2407,17 @@ void put_scen_details_in_dlog()
 	
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);
-    cd_set_led(803,35,scenario.adjust_diff);
+  cd_set_led(803,35,scenario.adjust_diff);
 	CDSN(803,2,scenario.ver[0]);
 	CDSN(803,3,scenario.ver[1]);
 	CDSN(803,4,scenario.ver[2]);
 	CDST(803,5,scen_strs[1]);
 	CDST(803,6,scen_strs[2]);
 	CDST(803,7,scen_strs[3]);
+	CDSN(803,36,scenario.min_run_ver);
+	CDSN(803,37,scenario.prog_make_ver[0]);
+	CDSN(803,38,scenario.prog_make_ver[1]);
+	CDSN(803,39,scenario.prog_make_ver[2]);
 }
 
 void edit_scen_details_event_filter (short item_hit)

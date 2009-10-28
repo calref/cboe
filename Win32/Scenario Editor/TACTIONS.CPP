@@ -423,7 +423,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							else {
 								if (editing_town == TRUE) {
 									for (x = 0; x < 16; x++)
-									if (t_d.room_rect[x].right == -1) {
+									if ((t_d.room_rect[x].left < 1) && (t_d.room_rect[x].top < 1) && (t_d.room_rect[x].right < 1) && (t_d.room_rect[x].bottom < 1)) {
 										t_d.room_rect[x] = working_rect;
 										sprintf(town_strs[x + 1],"");
 										if (edit_area_rect_str(x,1) == FALSE)
@@ -433,7 +433,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 									}
 								if (editing_town == FALSE) {
 									for (x = 0; x < 8; x++)
-									if (current_terrain.info_rect[x].right == -1) {
+										if ((current_terrain.info_rect[x].left < 1) && (current_terrain.info_rect[x].top < 1) && (current_terrain.info_rect[x].right < 1) && (current_terrain.info_rect[x].bottom < 1)) {
 										current_terrain.info_rect[x] = working_rect;
 										sprintf(data_store->out_strs[x + 1],"");
 										if (edit_area_rect_str(x,0) == FALSE)
@@ -3345,13 +3345,13 @@ void shut_down_menus(short mode)
 		if (mode == 0) {
 		 // Item 2 is Save Scenario
 		 	EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 101; i < 124; i++)
+		for (i = 101; i < 125; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 201; i < 222; i++)
+		for (i = 201; i < 223; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (i = 301; i < 314; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-    for (i = 401; i < 415; i++)
+    for (i = 401; i < 416; i++)
      	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3364,7 +3364,7 @@ void shut_down_menus(short mode)
 	if ((mode == 1) || (mode == 3)) {
 		for (i = 201; i < 212; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 217; i < 221; i++)
+		for (i = 217; i < 223; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3382,13 +3382,13 @@ void shut_down_menus(short mode)
 	if  (mode == 4) {
 		for (i = 1; i < 6; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (i = 101; i < 124; i++)
+		for (i = 101; i < 125; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (i = 201; i < 222; i++)
+		for (i = 201; i < 223; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (i = 301; i < 314; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-    for (i = 401; i < 415; i++)
+    for (i = 401; i < 416; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		 //	EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
@@ -3647,31 +3647,24 @@ void start_special_editing(short mode,short just_redo_text)
 	set_lb(NLS - 3,1,"Control-click to clear",1);
 }
 
-// if restoring is 1, this is just a redraw, so don't move scroll bar position
 void start_dialogue_editing(short restoring)
 {
 	short i,j;
 	char str[256];
 	char s[15] = "    ,      ";
 	Boolean draw_full = FALSE;
-	
+
 	if (overall_mode < 60)
 		set_up_main_screen();
 	if (overall_mode == 62)
 		draw_full = TRUE;
 	overall_mode = 60;
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
-	
+
 	if (restoring == 0) {
-        lpsi.fMask = SIF_POS;
-        lpsi.nPos = 0;
-        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
-//		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
+		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
 		reset_rb();
-        lpsi.fMask = SIF_RANGE;
-        lpsi.nMax = 70 - NRSONPAGE;
-        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
-//		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
+		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
 		}
 	for (i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
@@ -3690,9 +3683,10 @@ void start_dialogue_editing(short restoring)
 	if (draw_full == TRUE)
 		redraw_screen();
 		else for (i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0); 
+		draw_rb_slot(i,0);
 	set_lb(NLS - 3,0,"",1);
 }
+
 
 Boolean save_check(short which_dlog)
 {
