@@ -85,7 +85,7 @@ Boolean editing_town = FALSE;
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 char szWinName[] = "BoE for Win32 dialogs";
 char szAppName[] = "Classic BoE Scenario Editor";
-short last_file_printed = 0;
+char last_file_printed = 0;
 char szBladBase[128];
 
 void loadSettingsFromFile()
@@ -942,39 +942,40 @@ Boolean handle_menu (short item, HMENU menu)
 		break;
 		
 		case 414: //   Repeat print of last file printed
-         if (last_file_printed == 0) {
-				 set_string("File Repeat Printing:","Scenario Data");
+         switch (last_file_printed){
+            case 0:
 				start_data_dump();
-				 }
-         if (last_file_printed == 1) {
-				 set_string("File Repeat Printing:","Scenario Text");
+		    break;
+
+            case 1:
 				scen_text_dump();
-				 }
-         if (last_file_printed == 2) {
-				 set_string("File Repeat Printing:","Scenario Shopping");
+            break;
+
+            case 2:
 				start_shopping_data_dump();
-				 }
-         if (last_file_printed == 3) {
-				 set_string("File Repeat Printing:","Monstdata");
+			break;
+			
+            case 3:
 				start_monst_data_dump();
-				 }
-         if (last_file_printed == 4) {
-				 set_string("File Repeat Printing:","Specdata");
-         start_spec_data_dump();
-				 }
-         if (last_file_printed == 5) {
-				 set_string("File Repeat Printing:","Concise Town Report");
+            break;
+            
+            case 4:
+             start_spec_data_dump();
+            break;
+
+            case 5:
 				start_town_data_dump();
-				 }
-         if (last_file_printed == 6) {
-				 set_string("File Repeat Printing:","Concise Outdoor Report");
+            break;
+            
+            case 6:
 				 start_outdoor_data_dump();
-				 }
-         if (last_file_printed == 7) {
-				 set_string("File Repeat Printing:","Scenario Object Data");
+            break;
+            
+            case 7:
 				 object_scenario_data_dump();
-				 }
-				break;
+            break;
+            }
+		break;
 
 				// Extra Help
 		case 801: // help file

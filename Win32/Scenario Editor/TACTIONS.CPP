@@ -423,7 +423,9 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							else {
 								if (editing_town == TRUE) {
 									for (x = 0; x < 16; x++)
-									if ((t_d.room_rect[x].left < 1) && (t_d.room_rect[x].top < 1) && (t_d.room_rect[x].right < 1) && (t_d.room_rect[x].bottom < 1)) {
+//									if ((t_d.room_rect[x].left < 1) && (t_d.room_rect[x].top < 1) && (t_d.room_rect[x].right < 1) && (t_d.room_rect[x].bottom < 1)) {
+//rectangle (0,0,0,0) is a valid rectangle (and in fact placed in legacy scenarios). With the new scenario format, the rectangle may have its own utility.
+                                    if (t_d.room_rect[x].right == -1) {
 										t_d.room_rect[x] = working_rect;
 										sprintf(town_strs[x + 1],"");
 										if (edit_area_rect_str(x,1) == FALSE)
@@ -433,7 +435,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 									}
 								if (editing_town == FALSE) {
 									for (x = 0; x < 8; x++)
-										if ((current_terrain.info_rect[x].left < 1) && (current_terrain.info_rect[x].top < 1) && (current_terrain.info_rect[x].right < 1) && (current_terrain.info_rect[x].bottom < 1)) {
+//										if ((current_terrain.info_rect[x].left < 1) && (current_terrain.info_rect[x].top < 1) && (current_terrain.info_rect[x].right < 1) && (current_terrain.info_rect[x].bottom < 1)) {
+                                        if (current_terrain.info_rect[x].right == -1) {    
 										current_terrain.info_rect[x] = working_rect;
 										sprintf(data_store->out_strs[x + 1],"");
 										if (edit_area_rect_str(x,0) == FALSE)
@@ -3268,7 +3271,7 @@ void set_up_main_screen()
 	overall_mode = 60;
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 	shut_down_menus(4);
-	shut_down_menus(3);
+//	shut_down_menus(3);
 	redraw_screen();
 	//draw_main_screen();
 }
@@ -3364,7 +3367,7 @@ void shut_down_menus(short mode)
 	if ((mode == 1) || (mode == 3)) {
 		for (i = 201; i < 212; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (i = 217; i < 223; i++)
+		for (i = 217; i < 221; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		//for (i = 600; i < 1000; i++) {
 		//	EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3662,9 +3665,15 @@ void start_dialogue_editing(short restoring)
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 
 	if (restoring == 0) {
-		SetScrollPos(right_sbar,SB_CTL,0,TRUE);
-		reset_rb();
-		SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE);
+        lpsi.fMask = SIF_POS;
+        lpsi.nPos = 0;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+        // SetScrollPos(right_sbar,SB_CTL,0,TRUE); <= deprecated see MSDN
+        reset_rb();
+        lpsi.fMask = SIF_RANGE;
+        lpsi.nMax = 70 - NRSONPAGE;
+        SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
+        // SetScrollRange(right_sbar,SB_CTL,0,70 - NRSONPAGE,TRUE); <= deprecated see MSDN
 		}
 	for (i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
@@ -3686,7 +3695,6 @@ void start_dialogue_editing(short restoring)
 		draw_rb_slot(i,0);
 	set_lb(NLS - 3,0,"",1);
 }
-
 
 Boolean save_check(short which_dlog)
 {

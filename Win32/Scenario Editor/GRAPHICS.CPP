@@ -246,6 +246,7 @@ void redraw_screen()
 
 	pat_rect = windRect;
 	InflateRect(&pat_rect,500,500);
+	OffsetRect(&pat_rect,-ulx, -uly); //to counteract the shifting done in paint_pattern for ALL patterns. We're dealing with the background pattern here.
 	paint_pattern(NULL,1,pat_rect,3);
 	draw_main_screen();
 	if (overall_mode < 60);
