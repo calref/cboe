@@ -2778,9 +2778,6 @@ void ifthen_spec(short which_mode,special_node_type cur_node,short cur_spec_type
                                 }
                 break;
                 }
-                char buf[256];
-                sprintf(buf,"%d",k);
-                give_error(buf,"",0);
 				if (k >= spec.ex1a)
 					*next_spec = spec.ex1b;	
 			break;
