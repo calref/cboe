@@ -183,8 +183,10 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 		the_point.y -= uly;
 		}
 	if (lparam == -2) right_button = TRUE;
-	if (MK_CONTROL & wparam)
+    if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) || ((GetAsyncKeyState(VK_RCONTROL) & 32768) == 32768)){
 		ctrl_key = TRUE;
+        }
+
 
 	for (i = 0; i < 20; i++)
 		special_queue[i].queued_special = -1;
@@ -206,7 +208,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 
 // First, figure out where party is
 	switch (overall_mode) {
-		case 0: case 35:
+		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			cur_loc = party.p_loc;
 			for (i = 0; i < 7; i++)
 				if (PtInRect ( &bottom_buttons[i], the_point) == TRUE) {
@@ -216,7 +218,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					}
 			break;
 			
-		case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 36:
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE: case 5: case 6: case 7: case MODE_LOOK_TOWN:
 			cur_loc = center;
 			for (i = 0; i < 8; i++)
 				if (PtInRect (&town_buttons[i], the_point) == TRUE) {
@@ -268,7 +270,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							if (store_sp[i] != adven[i].cur_sp)
 								did_something = TRUE;
 						}
-						else if (overall_mode == 3) {
+						else if (overall_mode == MODE_TOWN_TARGET) {
 							add_string_to_buf("  Cancelled.                   ");
 							overall_mode = MODE_TOWN;
 							}
@@ -285,7 +287,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						spell_forced = FALSE;
 						redraw_terrain();
 						}
-					else if ((overall_mode == 11) || (overall_mode == 14)) {
+					else if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FANCY_TARGET)) {
 						add_string_to_buf("  Cancelled.         ");
 						overall_mode = MODE_COMBAT;
 						center = pc_pos[current_pc];
@@ -436,10 +438,10 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						add_string_to_buf("Use: Select a space or item.");
 						add_string_to_buf("  (Hit button again to cancel.)");
 						need_reprint = TRUE;
-						overall_mode = 4;				
+						overall_mode = MODE_USE;				
 						}
-						else if (overall_mode == 4) {
-							overall_mode = 1;
+						else if (overall_mode == MODE_USE) {
+							overall_mode = MODE_TOWN;
 							need_reprint = TRUE;
 							add_string_to_buf("  Cancelled.");						
 							}
@@ -452,11 +454,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					break;
 
 				case 6: 
-					if (overall_mode == 0) {
+					if (overall_mode == MODE_OUTDOORS) {
 						do_load();
 						break;
 						}
-					if (overall_mode == 1) {
+					if (overall_mode == MODE_TOWN) {
 						give_help(62,0,0);
 						display_map();
 						SetCursor(sword_curs);
@@ -467,7 +469,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						need_reprint = TRUE;
 						redraw_terrain();
 						}
-						else if ((overall_mode == 12) || (overall_mode == 13)) {
+						else if ((overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING)) {
 							add_string_to_buf("  Cancelled.             ");
 							center = pc_pos[current_pc];
 							pause(10);
@@ -552,7 +554,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 
 		destination = cur_loc;
 
-		if ((overall_mode == 0) || (overall_mode == 1) || (overall_mode == MODE_COMBAT))
+		if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT))
 		if ((i == 4) && (j == 4) && (right_button == FALSE)) { // Pausing
 			if (overall_mode == MODE_COMBAT) {
 				char_stand_ready();
@@ -575,7 +577,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							move_to_zero(adven[k].status[STATUS_WEBS]);
 							}
 					if (party.in_horse >= 0) {
-						if (overall_mode == 0) {
+						if (overall_mode == MODE_OUTDOORS) {
 							party.horses[party.in_horse].which_town = 200;
 							party.horses[party.in_horse].horse_loc_in_sec = party.p_loc.toLocal();
 							party.horses[party.in_horse].horse_loc = party.p_loc;
@@ -583,7 +585,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							party.horses[party.in_horse].horse_sector.y = party.outdoor_corner.y + party.i_w_c.y;
 							party.in_horse = -1;
 							}
-							else if (overall_mode == 1){
+							else if (overall_mode == MODE_TOWN){
 								party.horses[party.in_horse].horse_loc = c_town.p_loc;
 								party.horses[party.in_horse].which_town = c_town.town_num;
 								party.in_horse = -1;
@@ -611,7 +613,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					need_redraw = TRUE;
 					menu_activate(1);
 					}					
-				if ((right_button == FALSE) && (overall_mode == 1)) {
+				if ((right_button == FALSE) && (overall_mode == MODE_TOWN)) {
 					if (someone_awake() == FALSE) {
 						ASB("Everyone's asleep/paralyzed.");
 						need_reprint = TRUE;
@@ -637,7 +639,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							menu_activate(1);
 							}
 					}
-				if ((right_button == FALSE) && (overall_mode == 0))  {
+				if ((right_button == FALSE) && (overall_mode == MODE_OUTDOORS))  {
 					if (outd_move_party(destination,town_move_done) == TRUE) {
 						center = destination;
 						need_redraw = TRUE;
@@ -671,13 +673,13 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 									}
 								}
 					}
-					} // End if(overall_mode == 0)
+					} // End if(overall_mode == MODE_OUTDOORS)
 
 				}	
 // End: Moving
 
 // Begin: Looking at something				
-		if ((right_button == TRUE) || (overall_mode == 35) || (overall_mode == 36) || (overall_mode == 37)) {
+		if ((right_button == TRUE) || (overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
 
@@ -730,19 +732,19 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 
 			// If option not pressed, looking done, so restore center
 			if ((ctrl_key == FALSE) && (right_button == FALSE)) {
-				if (overall_mode == 37) {
-					overall_mode = 10;
+				if (overall_mode == MODE_LOOK_COMBAT) {
+					overall_mode = MODE_COMBAT;
 					center = pc_pos[current_pc];
 					pause(5);
 					need_redraw = TRUE;
 					}
-				else if (overall_mode == 36) {
-					overall_mode = 1;
+				else if (overall_mode == MODE_LOOK_TOWN) {
+					overall_mode = MODE_TOWN;
 					center = c_town.p_loc;
 					need_redraw = TRUE;
 					}
-				else if (overall_mode == 35)
-					overall_mode = 0;
+				else if (overall_mode == MODE_LOOK_OUTDOORS)
+					overall_mode = MODE_OUTDOORS;
 
 				}
 			}
@@ -750,7 +752,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 // End: looking at something
 
 // Begin : talking to someone			
-			if (overall_mode == 2) { 
+			if (overall_mode == MODE_TALK_TOWN) { 
 				destination.x = destination.x + i - 4;
 				destination.y = destination.y + j - 4;
         
@@ -783,8 +785,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						add_string_to_buf("  Nobody there");
 						need_reprint = TRUE;
 					}
-				if (overall_mode != 20)
-					overall_mode = 1;
+				if (overall_mode != MODE_TALKING)
+					overall_mode = MODE_TOWN;
 				}
 				if (overall_mode != 20)
 					need_redraw = TRUE;
@@ -792,19 +794,19 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 // End : talking to someone
 
 // Begin : Targeting a space
-			if ((overall_mode == 11) || (overall_mode == 12) || (overall_mode == 13) || 
-			 (overall_mode == 14) || (overall_mode == MODE_DROPPING)) {
+			if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || 
+			 (overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROPPING)) {
 				destination.x += i - 4;
 				destination.y += j - 4;
-				if (overall_mode == 11)
+				if (overall_mode == MODE_SPELL_TARGET)
 					do_combat_cast(destination);
-				if ((overall_mode == 13) || (overall_mode == 12))
+				if ((overall_mode == MODE_THROWING) || (overall_mode == MODE_FIRING))
 					fire_missile(destination);
-				if (overall_mode == 14) {
+				if (overall_mode == MODE_FANCY_TARGET) {
 					place_target(destination);
 					need_reprint = TRUE;
 					}
-				if (overall_mode != 14) {
+				if (overall_mode != MODE_FANCY_TARGET) {
 					did_something = TRUE;
 					center = pc_pos[current_pc];
 					}
@@ -818,12 +820,12 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					}
 				pause(6);
 				need_redraw = TRUE;
-				if ((overall_mode >= 10) && (overall_mode < 20) && (overall_mode != 14))
-					overall_mode = 10;
+				if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING) && (overall_mode != MODE_FANCY_TARGET))
+					overall_mode = MODE_COMBAT;
 				put_pc_screen();
 				put_item_screen(stat_window,0);
 				}
-			if ((overall_mode > 2) && (overall_mode < 6)) {
+			if ((overall_mode > MODE_TALK_TOWN) && (overall_mode < 6)) {
 				destination.x += i - 4;
 				destination.y += j - 4;
 				switch (overall_mode) {
@@ -846,7 +848,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							else adven[current_pc].dropItem(store_drop_item,destination);
 						break;
 					}
-				overall_mode = 1;
+				overall_mode = MODE_TOWN;
 				need_redraw = TRUE;
 				put_pc_screen();
 				put_item_screen(stat_window,0);
@@ -857,8 +859,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 //End: click in terrain		
 
 // Begin: Screen shift
-	if ((overall_mode == 11) ||  (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == 14)
-		|| (overall_mode == 37) || (overall_mode == 36)) {
+	if ((overall_mode == MODE_SPELL_TARGET) ||  (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
+		|| (overall_mode == MODE_LOOK_COMBAT) || (overall_mode == MODE_LOOK_TOWN)) {
 		if ((PtInRect ( &border_rect[0],the_point)) && (center.y > c_town.town.in_town_rect.top)
 		&& (center.y > 4)) {
 			center.y--;
@@ -1813,8 +1815,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 //  	case 'P': repeat Priest spell
        case 'I': //debug info
    	       char buf[256]; //event timer off debug info
-//	       sprintf(buf,"Party Age : %d, Ctown ploc : x = %d, y = %d", party.age, center.x, center.y);
-           sprintf(buf,"Town chop time : %d, chop key : %d",c_town.town.town_chop_time, c_town.town.town_chop_key);
+	       sprintf(buf,"Party Age : %d, Ctown ploc : x = %d, y = %d", party.age, center.x, center.y);
+//           sprintf(buf,"Town chop time : %d, chop key : %d",c_town.town.town_chop_time, c_town.town.town_chop_key);
 	       give_error(buf,"",0);
             break;
 		case 'Q':  // Magic map

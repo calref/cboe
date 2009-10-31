@@ -88,7 +88,7 @@ void init_party(short mode)
 	
 	for (i = 0; i < 20; i++)	party.alchemy[i] = 0;
 	for (i = 0; i < 200; i++)	party.can_find_town[i] = 0;
-	for (i = 0; i < 20; i++)	party.key_times[i] = 30000;
+	for (i = 0; i < 100; i++)	party.key_times[i] = 30000;
 	for (i = 0; i < 30; i++)	party.party_event_timers[i] = 0;
 	for (i = 0; i < 50; i++)	party.spec_items[i] = 0;
 	for (i = 0; i < 120; i++)	party.help_received[i] = 0;
@@ -201,7 +201,7 @@ void init_party_scen_data()
 	party.direction = 0;
 	party.at_which_save_slot = 0;
 	for (i = 0; i < 200; i++) party.can_find_town[i] = 1 - scenario.town_hidden[i];
-	for (i = 0; i < 20; i++) party.key_times[i] = 30000;
+	for (i = 0; i < 100; i++) party.key_times[i] = 30000;
 	for (i = 0; i < 30; i++) party.party_event_timers[i] = 0;
 	for (i = 0; i < 50; i++) party.spec_items[i] = (scenario.special_items[i] >= 10) ? 1 : 0;
 	for (i = 0; i < 200; i++) party.m_killed[i] = 0;
