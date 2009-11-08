@@ -2114,11 +2114,11 @@ void affect_spec(short which_mode,special_node_type cur_node,short cur_spec_type
 						}
 						else 
                         if(party.stuff_done[309][1] == 0){//legacy behavior
-                         adven[i].kill(spec.ex1a + 2 + 10);
+                         adven[i].kill(spec.ex1a + ((spec.ex1b == 2)? 22 : 12));
                             }
                         else{//kill only present pc
                         if ((adven[i].main_status > MAIN_STATUS_ABSENT) && (adven[i].main_status < MAIN_STATUS_SPLIT))
-                            adven[i].kill(spec.ex1a + 2 + 10);
+                            adven[i].kill(spec.ex1a + ((spec.ex1b == 2)? 22 : 12));
                         }
 
 					}
