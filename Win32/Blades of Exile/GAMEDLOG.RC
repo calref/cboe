@@ -1350,7 +1350,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "SPELL CASTING WINDOW - Press the mage or priest spell button to the lower left (or type 'm' or 'p'). Press the number of the character to cast, the button by the spell, and then the target button by the PC to cast the spell on (if needed)." 11, 77, 136, 398, 54
      }
 
-1089 DIALOG 10, 10, 532, 404
+/*1089 DIALOG 10, 10, 532, 404
      STYLE WS_POPUP | WS_DLGFRAME
      {
      // DEFPUSHBUTTON "OK" 1, 219, 187, 31, 10, WS_GROUP
@@ -1376,7 +1376,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "5_1100" 8, 350, 136, 129, 132
      LTEXT "The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things. Many shopkeepers will buy your items, and certain sages can identify and even enchant them." 9, 63, 189, 281, 84
      LTEXT "Finally, hitting the Jobs button (or typing '8') takes you to the jobs page, where you can see what jobs you currently have. Hitting the 'Spec' button (or typing '9') brings up whatever special items you have." 10, 63, 325, 427, 50
-     }
+     }*/
 
 1091 DIALOG 10, 10, 333, 74
      STYLE WS_POPUP | WS_DLGFRAME
@@ -1387,7 +1387,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "Starting over will delete the current party. Are you sure you want to do this?" 4, 53, 6, 249, 31
      }
 
-1092 DIALOG 10, 10, 580, 430
+/*1092 DIALOG 10, 10, 580, 430
      STYLE WS_POPUP | WS_DLGFRAME
      {
      // DEFPUSHBUTTON "OK" 1, 242, 201, 31, 10, WS_GROUP
@@ -1398,7 +1398,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "When you use poison during combat, you poison your melee weapon or arrows (thrown weapons cannot be poisoned). The next several monsters you hit will take a lot of extra damage over time. " 8, 60, 344, 482, 49
      LTEXT "There are five sorts of weapons: edged, bashing, and pole, which are hand-to-hand weapons, and bow and thrown missile, which are missile weapons. You can buy skill in each of the five weapon types, which makes them hit more often." 9, 60, 211, 483, 66
      LTEXT "Equipping armor makes monster's blows do less damage. However, heavy armor makes you less likely to hit. Don't wear heavy armor if your weapon skill is low. You can equip two weapons, but this makes you MUCH less likely to hit." 10, 60, 278, 483, 65
-     }
+     }*/
 
 1093 DIALOG 10, 10, 332, 78
 STYLE WS_POPUP | WS_DLGFRAME

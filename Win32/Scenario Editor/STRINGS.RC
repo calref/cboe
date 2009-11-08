@@ -642,7 +642,7 @@ STRINGTABLE
   9384, "0 - raise, 1 - lower"
   9385, "0 - raise, 1 - lower"
   9386, "0 - raise, 1 - lower"
-  9387, "0 - raise dead, 1 - hurt"
+  9387, "0 - raise dead, 1 - hurt, 2 - force"
   9388, "0 - cure, 1 - inflict"
   9389, "0 - cure, 1 - inflict"
   9390, "0 - cure, 1 - inflict"

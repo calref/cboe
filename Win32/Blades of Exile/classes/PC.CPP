@@ -17,23 +17,30 @@
 void pc_record_type::kill(short type)
 {
 	short i = 24;
-	bool dummy, no_save = false;
+	bool dummy, no_save = false, no_luck = false;
 	location item_loc;
 	
-	if (type >= 10)
+	if (type >= 20)
 	{
 		type -= 10;
 		no_save = true;
 	}
+    if(type >= 10)
+    {
+    	type -= 10;
+	    no_luck = true;        
+    }
 	
+    if(no_save == false){
 	if (type != 4)
 		i = hasAbilEquip(48); //check if has life saving items
     else
 	    i = hasAbilEquip(49); //check if has protection vs petrification items
+    }
 		
 	short which_pc = getNum();
 
-	if ((no_save == false) && (type != 0) && (skills[SKILL_LUCK] > 0) && 
+	if ((no_luck == false) && (type != 0) && (skills[SKILL_LUCK] > 0) && 
 		(get_ran(1,0,100) < hit_chance[skills[SKILL_LUCK]])) {
 			add_string_to_buf("  But you luck out!          ");
 			cur_health = 0;

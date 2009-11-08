@@ -183,11 +183,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 		the_point.y -= uly;
 		}
 	if (lparam == -2) right_button = TRUE;
+	
     if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) || ((GetAsyncKeyState(VK_RCONTROL) & 32768) == 32768)){
 		ctrl_key = TRUE;
         }
-
-
+        
 	for (i = 0; i < 20; i++)
 		special_queue[i].queued_special = -1;
 	end_scenario = FALSE;
@@ -1493,20 +1493,37 @@ Boolean handle_syskeystroke(WPARAM wParam, LPARAM,short *handled)
 				}
 		}
 
-	if ((wParam == VK_LEFT) || (wParam == VK_RIGHT)) {
+	if ((wParam == VK_LEFT) || (wParam == VK_RIGHT)) { //go left or right
 			*handled = 1;
 			pass_point.x = (wParam == VK_LEFT) ? 120 : 180;
 			pass_point.y = 185;
 			are_done = handle_action(pass_point,wParam,-1);
 			return are_done;
 			}	
-	if ((wParam == VK_UP) || (wParam == VK_DOWN)) {
+	if ((wParam == VK_UP) || (wParam == VK_DOWN)) { //go up or down
 			*handled = 1;
 			pass_point.x = 150;
 			pass_point.y = (wParam == VK_UP) ? 155 : 215;
 			are_done = handle_action(pass_point,wParam,-1);
 			return are_done;
 			}
+			
+	if ((wParam == VK_HOME) || (wParam == VK_PRIOR)) { //go northwest or northeast
+			*handled = 1;
+			pass_point.x = (wParam == VK_HOME) ? 120 : 170;
+			pass_point.y = 155;
+			are_done = handle_action(pass_point,wParam,-1);
+			return are_done;
+            }
+            
+    if ((wParam == VK_END) || (wParam == VK_NEXT)) { //go southwest or southeast
+			*handled = 1;
+			pass_point.x = (wParam == VK_END) ? 120 : 180;
+			pass_point.y = 215;
+			are_done = handle_action(pass_point,wParam,-1);
+			return are_done;
+            }
+			
 	return are_done;
 }
 
