@@ -9,6 +9,7 @@
 #include "boe.fields.h"
 #include "tools/soundtool.h"
 #include "boe.graphutil.h"
+#include "tools/mathutil.h"
 
 #include "globvar.h"
 

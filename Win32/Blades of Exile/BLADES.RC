@@ -16,6 +16,12 @@ produced by Borland Resource Workshop
 #define MENU_1	1
 #define Exile	1
 
+#ifndef _INCLUDED_RC //Resource files conditional inclusion to allow Code::Block compliance
+	#define _INCLUDED_RC
+#include "GAMEDLOG.RC"
+#include "GAMESTR.RC"
+#endif
+
 Exile MENU 
 {
  POPUP "&File"

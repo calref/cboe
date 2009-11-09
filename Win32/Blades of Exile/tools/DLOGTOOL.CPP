@@ -9,6 +9,7 @@
 #include "../boe.locutils.h"
 #include "../boe.dlgutil.h"
 #include "../boe.infodlg.h"
+#include "mathutil.h"
 
 #include "../globvar.h"
 
