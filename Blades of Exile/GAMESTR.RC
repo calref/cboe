@@ -1,3 +1,9 @@
+#ifndef _INCLUDED_RC //Resource files conditional inclusion to allow Code::Block compliance
+	#define _INCLUDED_RC
+#include "BLADES.RC"
+#include "GAMEDLOG.RC"
+#endif
+
 STRINGTABLE
 {
   301, "Cave Floor"

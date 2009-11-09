@@ -12,6 +12,7 @@
 #include "boe.text.h"
 #include "tools/soundtool.h"
 #include "boe.graphutil.h"
+#include "tools/mathutil.h"
 
 #include "boe.infodlg.h"
 

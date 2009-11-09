@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Blades of Exile" />
+		<Option platforms="Windows;" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Windows;" />
+				<Option output="bin\Debug\Blades of Exile" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libwinmm.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option platforms="Windows;" />
+				<Option output="bin\Release\Blades of Exile" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libwinmm.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="BLADES.RC">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="GAMEDLOG.RC">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="GAMESTR.RC">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="GLOBAL.CPP" />
+		<Unit filename="GLOBAL.H" />
+		<Unit filename="GLOBVAR.CPP" />
+		<Unit filename="GLOBVAR.H" />
+		<Unit filename="boe.actions.cpp" />
+		<Unit filename="boe.actions.h" />
+		<Unit filename="boe.combat.cpp" />
+		<Unit filename="boe.combat.h" />
+		<Unit filename="boe.consts.h" />
+		<Unit filename="boe.dlgutil.cpp" />
+		<Unit filename="boe.dlgutil.h" />
+		<Unit filename="boe.fields.cpp" />
+		<Unit filename="boe.fields.h" />
+		<Unit filename="boe.fileio.cpp" />
+		<Unit filename="boe.fileio.h" />
+		<Unit filename="boe.graphics.cpp" />
+		<Unit filename="boe.graphics.h" />
+		<Unit filename="boe.graphutil.cpp" />
+		<Unit filename="boe.graphutil.h" />
+		<Unit filename="boe.infodlg.cpp" />
+		<Unit filename="boe.infodlg.h" />
+		<Unit filename="boe.itemdata.cpp" />
+		<Unit filename="boe.itemdata.h" />
+		<Unit filename="boe.items.cpp" />
+		<Unit filename="boe.items.h" />
+		<Unit filename="boe.locutils.cpp" />
+		<Unit filename="boe.locutils.h" />
+		<Unit filename="boe.main.cpp" />
+		<Unit filename="boe.main.h" />
+		<Unit filename="boe.monster.cpp" />
+		<Unit filename="boe.monster.h" />
+		<Unit filename="boe.newgraph.cpp" />
+		<Unit filename="boe.newgraph.h" />
+		<Unit filename="boe.party.cpp" />
+		<Unit filename="boe.party.h" />
+		<Unit filename="boe.specials.cpp" />
+		<Unit filename="boe.specials.h" />
+		<Unit filename="boe.text.cpp" />
+		<Unit filename="boe.text.h" />
+		<Unit filename="boe.town.cpp" />
+		<Unit filename="boe.town.h" />
+		<Unit filename="classes\LOCATION.CPP" />
+		<Unit filename="classes\LOCATION.H" />
+		<Unit filename="classes\PC.CPP" />
+		<Unit filename="classes\PC.H" />
+		<Unit filename="classes\consts.h" />
+		<Unit filename="classes\item.cpp" />
+		<Unit filename="classes\item.h" />
+		<Unit filename="tools\DLOGTOOL.CPP" />
+		<Unit filename="tools\DLOGTOOL.H" />
+		<Unit filename="tools\mathutil.cpp" />
+		<Unit filename="tools\mathutil.h" />
+		<Unit filename="tools\soundtool.cpp" />
+		<Unit filename="tools\soundtool.h" />
+		<Unit filename="tools\soundvars.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
