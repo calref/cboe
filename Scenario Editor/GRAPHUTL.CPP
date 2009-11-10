@@ -41,7 +41,7 @@ short current_pattern = -1;
 
     char buffer[128];
     int i=strlen(szFileName),j=0;
-    
+
     while(szFileName[i] != '\\')
         i--;
 
@@ -106,14 +106,14 @@ HBITMAP load_pict(short pict_num)
 		case 1400: got_bitmap = ReadBMP("Images/STSCICON.BMP"); break;
 		case 1401: got_bitmap = ReadBMP("Images/HELPPICS.BMP"); break;
 		case 1402: got_bitmap = ReadBMP("Images/APPIC.BMP"); break;
-		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507: 
+		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
 			got_bitmap = ReadBMP("Images/BIGMAPS.BMP"); break;
 		case 2000: got_bitmap = ReadBMP("Images/DLOGBTNS.BMP"); break;
 		case 3000: got_bitmap = ReadBMP("Images/START.BMP"); break;
 		case 3001: got_bitmap = ReadBMP("Images/SPIDLOGO.BMP"); break;
 		case 3002: got_bitmap = ReadBMP("Images/EDSTART.BMP"); break;
 		case 5000: got_bitmap = ReadBMP("Images/E3EDTITL.BMP"); break;
-		
+
 		default: got_bitmap = NULL;
 		}
 	return got_bitmap;
@@ -121,10 +121,9 @@ HBITMAP load_pict(short pict_num)
 
 void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	short trans, short main_win) {
-	HDC hdcMem,hdcMem2,hdcMem3,destDC,storeDC;
+	HDC hdcMem,hdcMem2,hdcMem3,destDC;
 	HBITMAP transbmp;
-	COLORREF white = RGB(255,255,255),black = RGB(0,0,0),oldcolor;
-	RECT debug = {0,0,200,20};
+	COLORREF white = RGB(255,255,255),oldcolor;
 	HBRUSH hbrush,old_brush;
 	COLORREF x = RGB(17,17,17);
 	HBITMAP store,store2;

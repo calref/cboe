@@ -9,7 +9,7 @@
 #include "math.h"
 
 #include "global.h"
-#include "graphics.h" 
+#include "graphics.h"
 #include "editors.h"
 #include "edfileio.h"
 #include "edsound.h"
@@ -48,12 +48,12 @@ Boolean bgm_on = FALSE,bgm_init = FALSE;
 Boolean gInBackground = FALSE;
 long start_time;
 
-// Cursors 
+// Cursors
 short current_cursor = 120;
 HCURSOR arrow_curs[3][3], sword_curs, boot_curs, key_curs, target_curs,talk_curs,look_curs;
 
 RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 RECT pc_info_rect; // Frame that holds a pc's basic info and items
 RECT name_rect; //Holds pc name inside pc_info_rect
 RECT info_area_rect;
@@ -157,9 +157,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		wndclass.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
 		wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 		wndclass.lpszClassName = szAppName;
-		
+
 		RegisterClass(&wndclass);
-	
+
 		wndclass2.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 		wndclass2.lpfnWndProc = WndProc;
 		wndclass2.cbClsExtra = 0;
@@ -170,7 +170,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		wndclass2.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
-		
+
 		RegisterClass(&wndclass2);
 		}
 
@@ -280,7 +280,7 @@ HMENU menu;
 			check_cd_event(hwnd,message,wParam,lParam);
 		return 0;
 		break;
-		
+
 	case WM_ACTIVATE:
 		if (hwnd == mainPtr) {
 			if ((LOWORD(wParam) == WA_ACTIVE) ||(LOWORD(wParam) == WA_CLICKACTIVE)) {
@@ -306,7 +306,7 @@ HMENU menu;
 		return 0;
 
 
-	case WM_COMMAND:    
+	case WM_COMMAND:
 		if (hwnd == mainPtr) {
 
 			menu = GetMenu(mainPtr);
@@ -348,11 +348,11 @@ void check_game_done()
 
 Boolean handle_menu (short item, HMENU)
 {
-	short choice,i,j,k;
+	short i,j,k;
 	Boolean to_return = FALSE;
    item_record_type store_i;
-   
-	
+
+
 	if ((file_in_mem == FALSE) && ((item == 1) || (item == 3) ||
 		(item >= 40)) && (item != 200) && (item != 100)) {
 		display_strings(20,5,0,0,"Editing party",57,707,0);
@@ -385,7 +385,7 @@ Boolean handle_menu (short item, HMENU)
 				edit_gold_or_food(1);
 				redraw_screen();
 		break;
-		
+
 		case 44:
 			if (party.stuff_done[304][0] > 0) {
 				FCD(909,0);
@@ -394,7 +394,7 @@ Boolean handle_menu (short item, HMENU)
 			FCD(901,0);
 			leave_town();
 			break;
-	
+
 		case 45:
 			if (party.stuff_done[304][0] == 0) {
 				FCD(911,0);
@@ -406,10 +406,10 @@ Boolean handle_menu (short item, HMENU)
 			party.stuff_done[304][0] = 0;
 			for (i = 0; i < 6; i++)
 				if (adven[i].main_status >= 10)
-					adven[i].main_status -= 10;				
+					adven[i].main_status -= 10;
 			redraw_screen();
 			break;
-			
+
 
 		case 48:
 			display_strings(20,20,0,0,"Editing party",57,707,0);
@@ -483,7 +483,7 @@ Boolean handle_menu (short item, HMENU)
 				}
 			display_strings(20,13,0,0,"Editing party",57,715,0);
 			for (i = 0; i < 96; i++)
-				for (j = 0; j < 96; j++)   
+				for (j = 0; j < 96; j++)
 					out_e[i][j] = 1;
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
@@ -536,7 +536,7 @@ Boolean handle_menu (short item, HMENU)
 void load_cursors()
 {
 	sword_curs = LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
-	
+
 	set_cursor(sword_curs);
 	current_cursor = 124;
 }

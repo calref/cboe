@@ -66,7 +66,7 @@ while(file_path[i] != '\\')
     i--;                                   // find the last '\' in the path to the executable
    }                                       // in order to get rid of 'blades of exile.exe'
 
-   
+
 int j=0;                                // initialize the second loop
 
 for(j=0;j<i+1;j++)
@@ -114,11 +114,10 @@ void load_file()
 	Boolean town_restore = FALSE;
 	Boolean maps_there = FALSE;
 	Boolean in_scen = FALSE;
-	char flag_data[8];
-	
+
 	DWORD dwByteRead;
-	
-	UINT count,error;
+
+	UINT count;
 
 	char *party_ptr;
 	char *pc_ptr;
@@ -138,7 +137,7 @@ void load_file()
 		return;
 
     SetCurrentDirectory(file_path_name);
-		
+
 	file_id = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return;
@@ -153,13 +152,13 @@ void load_file()
 			CloseHandle(file_id);
 			return;
 		}
-		
+
 		if ((flag != flags[i][0]) && (flag != flags[i][1]))
 		{
 			CloseHandle(file_id);
 			FCD(1063,0);
 			return;
-		} 
+		}
 
         store_flags[i]=flag;
 
@@ -168,9 +167,9 @@ void load_file()
 		if ((i == 2) && (flag == flags[i][1])) maps_there = TRUE;
 		}
 
-	// LOAD PARTY	
+	// LOAD PARTY
 	party_ptr = (char *) &party;
-	
+
 	ReadFile(file_id, &party.age, 4, &dwByteRead, NULL);
 	ReadFile(file_id, &party.gold, 2, &dwByteRead, NULL);
 	ReadFile(file_id, &party.food, 2, &dwByteRead, NULL);
@@ -185,7 +184,7 @@ void load_file()
 	ReadFile(file_id, &party.p_loc.y, 1, &dwByteRead, NULL);
 	ReadFile(file_id, &party.loc_in_sec.x, 1, &dwByteRead, NULL);
 	ReadFile(file_id, &party.loc_in_sec.y, 1, &dwByteRead, NULL);
-	
+
 	for (i = 0; i < 30; i++)
 	{
 		ReadFile(file_id, &party.boats[i].boat_loc.x, 1, &dwByteRead, NULL);
@@ -212,7 +211,7 @@ void load_file()
 	}
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 60; j++)	
+		for (j = 0; j < 60; j++)
 		{
 			ReadFile(file_id, &party.creature_save[i].dudes[j].active, 2, &dwByteRead, NULL);
 			ReadFile(file_id, &party.creature_save[i].dudes[j].attitude, 2, &dwByteRead, NULL);
@@ -282,11 +281,11 @@ void load_file()
 				ReadFile(file_id, &party.creature_save[i].dudes[j].monst_start.facial_pic, 2, &dwByteRead, NULL);
 			}
 		}
-		
+
 		ReadFile(file_id, &party.creature_save[i].which_town, 2, &dwByteRead, NULL);
 		ReadFile(file_id, &party.creature_save[i].friendly, 2, &dwByteRead, NULL);
 	}
-	
+
 	ReadFile(file_id, &party.in_boat, 2, &dwByteRead, NULL);
 	ReadFile(file_id, &party.in_horse, 2, &dwByteRead, NULL);
 	for (i = 0; i < 10; i++)
@@ -366,10 +365,10 @@ void load_file()
 	ReadFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
 	ReadFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
 
-	for (count = 0; count < sizeof(party_record_type); count++)	party_ptr[count] ^= 0x5C;	
+	for (count = 0; count < sizeof(party_record_type); count++)	party_ptr[count] ^= 0x5C;
 
 	// LOAD SETUP
-	
+
 	if (ReadFile(file_id, &setup_save, sizeof(setup_save_type), &dwByteRead, NULL) == FALSE)
 		{
 		CloseHandle(file_id);
@@ -378,7 +377,7 @@ void load_file()
 		}
 
 	// LOAD PCS
-	
+
 	for (i = 0; i < 6; i++)
 	{
 		pc_ptr = (char *) &adven[i];
@@ -388,13 +387,13 @@ void load_file()
 			FCD(1064,0);
 			return;
 		}
-		
+
 		for (count = 0; count < sizeof(pc_record_type); count++)
-			pc_ptr[count] ^= 0x6B;	
+			pc_ptr[count] ^= 0x6B;
 	}
 
 	if (in_scen == TRUE) {
-	
+
 	// LOAD OUTDOOR MAP
 	if (ReadFile(file_id, out_e, sizeof(out_info_type), &dwByteRead, NULL) == FALSE)
 		{
@@ -403,7 +402,7 @@ void load_file()
 		return;
 		}
 
-	// LOAD TOWN 
+	// LOAD TOWN
 	if (town_restore == TRUE)
 	{
 		/*if (ReadFile(file_id, &c_town, sizeof(current_town_type), &dwByteRead, NULL) == FALSE)
@@ -412,11 +411,11 @@ void load_file()
 			FCD(1064,0);
 			return;
 		}*/
-		
+
 		{
 			ReadFile(file_id, &c_town.town_num, 2, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.difficulty, 2, &dwByteRead, NULL);
-			
+
 			ReadFile(file_id, &c_town.town, sizeof(town_record_type), &dwByteRead, NULL);
 			ReadFile(file_id, c_town.explored, 64 * 64, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.hostile, 1, &dwByteRead, NULL);
@@ -498,10 +497,10 @@ void load_file()
 			ReadFile(file_id, &c_town.in_boat, 1, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.p_loc.x, 1, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.p_loc.y, 1, &dwByteRead, NULL);
-		
-        
+
+
         }
-		
+
 		if (ReadFile(file_id, &t_d, sizeof(big_tr_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
@@ -517,7 +516,7 @@ void load_file()
 		}
 
         load_town_strings(c_town.town_num); // load town strings
-        
+
 	}
 
 	// LOAD STORED ITEMS
@@ -528,7 +527,7 @@ void load_file()
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}		
+		}
 	}
 
 	// LOAD SAVED MAPS
@@ -540,34 +539,34 @@ void load_file()
 			FCD(1064,0);
 			return;
 		}
-	
+
 		if (ReadFile(file_id, &o_maps, sizeof(stored_outdoor_maps_type), &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
+		}
 	}
 
 	// LOAD SFX & MISC_I
-		
+
 		if (ReadFile(file_id, &sfx, 64 * 64, &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
-		
+		}
+
 		if (ReadFile(file_id, &misc_i, 64 * 64, &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
+		}
 } // end if_scen
 
 	CloseHandle(file_id);
-	
+
 	for (i = 0; i < 6; i++)
 		if (adven[i].main_status > 0) {
 			current_active_pc = i;
@@ -578,7 +577,7 @@ void load_file()
 	party_in_scen = in_scen;
 
     item_menus_lock = load_items_list();
-    
+
 	redraw_screen();
 }
 
@@ -589,12 +588,12 @@ short load_items_list(){    //LOAD SCENARIO ITEMS LIST
 
     scenario_data_type scenario;
     char scen_name[256]="";
-    
+
     if(party_in_scen)
         sprintf(scen_name,"scenarios/%s",party.scen_name);
     else
         sprintf(scen_name,"bladbase.exs");
-        
+
 	scen_file_id = CreateFile(scen_name, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scen_file_id == INVALID_HANDLE_VALUE)
@@ -604,24 +603,24 @@ short load_items_list(){    //LOAD SCENARIO ITEMS LIST
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
         scen_file_id = CreateFile("bladbase.exs", GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if(scen_file_id == INVALID_HANDLE_VALUE){        
-           	CloseHandle(scen_file_id);            
+		if(scen_file_id == INVALID_HANDLE_VALUE){
+           	CloseHandle(scen_file_id);
             MessageBox(mainPtr,"Couldn't open bladbase.exs, can't give items.",
 	         "File Error",MB_OK | MB_ICONEXCLAMATION);
         return 1;
         }
     }
-	
+
     if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRead, NULL) == FALSE) //get scenario data
 	{
 	   CloseHandle(scen_file_id);
         MessageBox(mainPtr,"Invalid scenario file !",
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 		return 1;
-	}    
-	
+	}
+
 // item data
-	
+
 	if (ReadFile(scen_file_id, &scen_item_list, sizeof(scen_item_data_type), &dwScenByteRead, NULL) == FALSE)
 	{
 		CloseHandle(scen_file_id);
@@ -629,13 +628,13 @@ MessageBox(mainPtr,"Couldn't read the scenario item list !",
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
-	
+
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 	 && (scenario.flag3 == 30)
 	  && (scenario.flag4 == 40)) {
 		port_item_list(); //Mac scenario, so let's make sure to adjust items properties
 		}
-	
+
 	CloseHandle(scen_file_id);
 
 	return 0;
@@ -648,12 +647,12 @@ void load_town_strings(short which_town){    //LOAD TOWNS STRINGS LIST
     DWORD dwScenByteRead;
 
     scenario_data_type scenario;
-    
+
     char scen_name[256]="";
     int i,j;
-    
+
     sprintf(scen_name,"scenarios/%s",party.scen_name);
-        
+
 	scen_file_id = CreateFile(scen_name, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scen_file_id == INVALID_HANDLE_VALUE)
@@ -662,7 +661,7 @@ void load_town_strings(short which_town){    //LOAD TOWNS STRINGS LIST
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 		return;
 	}
-	
+
 if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRead, NULL) == FALSE)
 	{
 	   CloseHandle(scen_file_id);
@@ -670,13 +669,13 @@ if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRea
 	  "File Error",MB_OK | MB_ICONEXCLAMATION);
 		return;
 	}
-	
+
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 	 && (scenario.flag3 == 30)
 	  && (scenario.flag4 == 40)) {
 		port_scenario(&scenario); //Mac scenario, so let's make sure we can read it properly
 		}
-	
+
 	len_to_jump += sizeof(scen_item_data_type);//now let's jump to the town_strings position
 	for (i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
@@ -707,13 +706,13 @@ if (ReadFile(scen_file_id, &scenario, sizeof(scenario_data_type), &dwScenByteRea
 		}
 
         // town strings
-		
+
 		for (i = 0; i < 140; i++) {
 		len = (long) (c_town.town.strlens[i]);
         ReadFile(scen_file_id,  &town_strs[i], len, &dwScenByteRead, NULL);
    		town_strs[i][len] = 0;
 		}
-		
+
 	CloseHandle(scen_file_id);
 
 }//END TOWNS STRINGS LOADING
@@ -722,7 +721,6 @@ void save_file(short mode)
 //short mode;  // 0 - normal  1 - save as
 {
 	HANDLE file_id;
-	UINT error;
 
 	short i,j;
 
@@ -762,40 +760,40 @@ void save_file(short mode)
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     SetCurrentDirectory(file_path_name);
-    
+
 	if (file_id == INVALID_HANDLE_VALUE) return;
-		
-	store = &flag;	
+
+	store = &flag;
 
 	flag = (town_save == TRUE) ? 1342 : 5790;
 	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
-		FCD(1069,0);		
+		FCD(1069,0);
 		return;
 	}
 	flag = (in_scen == TRUE) ? 100 : 200;
 	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
-		FCD(1069,0);		
+		FCD(1069,0);
 		return;
 	}
 	flag = (save_maps == TRUE) ? 5567 : 3422;
 	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
-		FCD(1069,0);		
+		FCD(1069,0);
 		return;
 	}
 
 	// SAVE PARTY
-	party_ptr = &party;	
+	party_ptr = &party;
 
 	party_encryptor = (char *) party_ptr;
 	for (count = 0; count < sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
-		
+
 	WriteFile(file_id, &party.age, 4, &dwByteRead, NULL);
 	WriteFile(file_id, &party.gold, 2, &dwByteRead, NULL);
 	WriteFile(file_id, &party.food, 2, &dwByteRead, NULL);
@@ -810,7 +808,7 @@ void save_file(short mode)
 	WriteFile(file_id, &party.p_loc.y, 1, &dwByteRead, NULL);
 	WriteFile(file_id, &party.loc_in_sec.x, 1, &dwByteRead, NULL);
 	WriteFile(file_id, &party.loc_in_sec.y, 1, &dwByteRead, NULL);
-	
+
 	for (i = 0; i < 30; i++)
 	{
 		WriteFile(file_id, &party.boats[i].boat_loc.x, 1, &dwByteRead, NULL);
@@ -837,7 +835,7 @@ void save_file(short mode)
 	}
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 60; j++)	
+		for (j = 0; j < 60; j++)
 		{
 			WriteFile(file_id, &party.creature_save[i].dudes[j].active, 2, &dwByteRead, NULL);
 			WriteFile(file_id, &party.creature_save[i].dudes[j].attitude, 2, &dwByteRead, NULL);
@@ -907,11 +905,11 @@ void save_file(short mode)
 				WriteFile(file_id, &party.creature_save[i].dudes[j].monst_start.facial_pic, 2, &dwByteRead, NULL);
 			}
 		}
-		
+
 		WriteFile(file_id, &party.creature_save[i].which_town, 2, &dwByteRead, NULL);
 		WriteFile(file_id, &party.creature_save[i].friendly, 2, &dwByteRead, NULL);
 	}
-	
+
 	WriteFile(file_id, &party.in_boat, 2, &dwByteRead, NULL);
 	WriteFile(file_id, &party.in_horse, 2, &dwByteRead, NULL);
 	for (i = 0; i < 10; i++)
@@ -990,22 +988,22 @@ void save_file(short mode)
 	WriteFile(file_id, &party.total_xp_gained, 4, &dwByteRead, NULL);
 	WriteFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
 	WriteFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
-		
+
 	for (count = 0; count < sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
 
 	// SAVE SETUP
-	setup_ptr = &setup_save;	
+	setup_ptr = &setup_save;
 	if (WriteFile(file_id, &setup_save, sizeof(setup_save_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		FCD(1069,0);
 		return;
 	}
-		
-	// SAVE PCS	
+
+	// SAVE PCS
 	for (i = 0; i < 6; i++) {
-		pc_ptr = &adven[i];	
+		pc_ptr = &adven[i];
 
 		party_encryptor = (char *) pc_ptr;
 		for (count = 0; count < sizeof(pc_record_type); count++)
@@ -1016,24 +1014,24 @@ void save_file(short mode)
 			for (count = 0; count < sizeof(pc_record_type); count++)
 				party_encryptor[count] ^= 0x6B;
     			FCD(1069,0);
-				MessageBeep(MB_OK); 
+				MessageBeep(MB_OK);
 			return;
 			}
 		for (count = 0; count < sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		}
-		
+
 	if (party_in_scen == TRUE) {
-	
+
 	// SAVE OUT DATA
 	if (WriteFile(file_id, out_e, sizeof(out_info_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
-		FCD(1069,0);		
+		FCD(1069,0);
 		return;
 	}
 
-	if (town_save == TRUE) {	
+	if (town_save == TRUE) {
 	{
 			WriteFile(file_id, &c_town.town_num, 2, &dwByteRead, NULL);
 			WriteFile(file_id, &c_town.difficulty, 2, &dwByteRead, NULL);
@@ -1123,18 +1121,18 @@ void save_file(short mode)
 			if (WriteFile(file_id, &t_d, sizeof(big_tr_type), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
-    			FCD(1069,0);				
+    			FCD(1069,0);
 				return;
 			}
 			if (WriteFile(file_id, &t_i, sizeof(stored_items_list_type), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
-    			FCD(1069,0);				
+    			FCD(1069,0);
 				return;
-			}	
+			}
 		}
-	
-	// Save stored items 
+
+	// Save stored items
 	for (i = 0; i < 3; i++) {
 		if (WriteFile(file_id, &stored_items[i], sizeof(stored_items_list_type), &bytes, NULL) == FALSE)
 		{
@@ -1143,7 +1141,7 @@ void save_file(short mode)
 			return;
 		}
 	}
-			
+
 	// If saving maps, save maps
 	if (save_maps == TRUE) {
 		if (WriteFile(file_id, &(town_maps), sizeof(stored_town_maps_type), &bytes, NULL) == FALSE)
@@ -1159,8 +1157,8 @@ void save_file(short mode)
 			FCD(1069,0);
 			return;
 		}
-	} 
-	
+	}
+
 	// SAVE SFX and MISC_I
 		if (WriteFile(file_id, sfx, (64 * 64), &bytes, NULL) == FALSE)
 		{
@@ -1170,7 +1168,7 @@ void save_file(short mode)
 		if (WriteFile(file_id, misc_i, (64 * 64), &bytes, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
-			FCD(1069,0);			
+			FCD(1069,0);
 			return;
 		}
 	}
@@ -1192,7 +1190,7 @@ void remove_party_from_scen()
 }
 
 void get_reg_data()
-{	
+{
 	const int BUFFER_LEN = 64;
 	char buffer[BUFFER_LEN];
 	const char * iniFile = "./blades.ini";
@@ -1206,7 +1204,7 @@ void get_reg_data()
 
 void port_scenario(scenario_data_type *scenario)
 {
-	short i,j,k,l;
+	short i,j;
 
 	flip_short(&scenario->flag_a);
 	flip_short(&scenario->flag_b);
@@ -1326,7 +1324,7 @@ void flip_spec_node(special_node_type *spec)
 
 void port_item_list()
 {
-	short i,j,k,l;
+	short i;
 
 	for (i = 0; i < 400; i++) {
 		flip_short(&(scen_item_list.scen_items[i].variety));

@@ -34,7 +34,7 @@ Scenario Editor :
 -Inverted/Skewed Values — many things in the BOE editor have the wrong value to start off with. Crystal Wand and Prismatic Wand are inverted. Many monsters are this way as well — One of the Unicorns begins the game as reptile. (Thanks to ‘A Short Term Effect’ for pointing this one out.)
 If you change these values in Bladbase.exs, they will remain changed in any new scenarios you create, saving you the trouble of fixing these in every new scenario you create. => should be done.
 
-/************************** Uncheked Facts *********************************/
+/************************** Unchecked Facts *********************************/
 
 First, I was reading a section under the BOE FAQ, and it mentioned something
 along the lines of a lock-picking sword. Which would presumably be a weapon
@@ -93,7 +93,7 @@ properly.
 23) At high levels, casting the bless spell once will make your character
 impossible to be hit by physical attacks.
 
-24) Using the refresh jobs/shops debug option while shoping in one of the
+24) Using the refresh jobs/shops debug option while shopping in one of the
 Magic Shops will produce strange results. Also there are no jobs, so
 souldn't it be called just refresh shops instead of refresh jobs/shops?
 /***********************************************************************/

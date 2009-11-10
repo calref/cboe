@@ -66,14 +66,14 @@ HBITMAP load_pict(short pict_num,HDC model_hdc)
 		case 1400: got_bitmap = ReadBMP("images/STSCICON.BMP"); break;
 		case 1401: got_bitmap = ReadBMP("images/HELPPICS.BMP"); break;
 		case 1402: got_bitmap = ReadBMP("images/APPIC.BMP"); break;
-		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507: 
+		case 1500: case 1501: case 1502: case 1503: case 1504: case 1505: case 1506: case 1507:
 			got_bitmap = ReadBMP("images/BIGMAPS.BMP"); break;
 		case 2000: got_bitmap = ReadBMP("images/DLOGBTNS.BMP"); break;
 		case 3000: got_bitmap = ReadBMP("images/START.BMP"); break;
 		case 3001: got_bitmap = ReadBMP("images/SPIDLOGO.BMP"); break;
 		case 5000: got_bitmap = ReadBMP("images/BLEDTITL.BMP"); break;
 		case 5001: got_bitmap = ReadBMP("images/PCEDBTNS.BMP"); break;
-		
+
 		default: got_bitmap = NULL;
 		}
 	return got_bitmap;
@@ -86,7 +86,6 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 	COLORREF white = RGB(255,255,255),oldcolor;
 
 	HBRUSH hbrush,old_brush;
-	COLORREF x = RGB(17,17,17);
 	UINT c;
 	HBITMAP store,store2;
 	Boolean dlog_draw = FALSE;
@@ -173,7 +172,7 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 			src_rect.bottom - src_rect.top,SRCINVERT);
 		DeleteDC(hdcMem3);
 		DeleteDC(hdcMem2);
-	
+
 			DeleteObject(transbmp);
 		}
 		else {
@@ -228,7 +227,7 @@ void DisposeGWorld(HBITMAP bitmap)
 	DeleteObject(bitmap);
 }
 
-void SectRect(RECT *a, RECT *b, RECT *c) 
+void SectRect(RECT *a, RECT *b, RECT *c)
 	{
 	IntersectRect(c,a,b);
 	}

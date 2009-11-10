@@ -86,7 +86,7 @@ void load_sounds ()
 {
 	short i,t,err;
 	HRSRC h;
-	char snd_name[20],str[60];
+	char snd_name[20];
 	WAVEOUTCAPS wavecaps;
 
 	t = waveOutGetNumDevs();
@@ -150,14 +150,11 @@ void play_sound(short which)  // if < 0, play asynch
 
 void force_play_sound(short which)
 {
-	short i,err,num_fails = 0;
-	char snd_name[30],str[60];
-	Boolean asyn = FALSE,a_sound_did_get_played = FALSE,sound_played_nostop = FALSE;
+	short i,num_fails = 0;
+	char snd_name[30];
+	Boolean asyn = FALSE,a_sound_did_get_played = FALSE;
 	Boolean check_sound;
-	long dummy;
 	HRSRC h;
-	char *snd;
-	DWORD size;
 
 	if ((sounds_fucked == TRUE) || (play_sounds == FALSE))
 		return;

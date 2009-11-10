@@ -18,11 +18,11 @@ produced by Borland Resource Workshop
 #define MENU_1	1
 #define Exile	1
 
-Exile MENU 
+Exile MENU
 {
  POPUP "&File"
  {
-  MENUITEM "&Open Game\tCtrl+O", 2    
+  MENUITEM "&Open Game\tCtrl+O", 2
   MENUITEM "&Save Game\tCtrl+S", 1
   MENUITEM "Save As...", 3
   MENUITEM SEPARATOR
@@ -109,7 +109,7 @@ Exile MENU
 
 }
 
-ACCELERATORS_1 ACCELERATORS 
+ACCELERATORS_1 ACCELERATORS
 {
 
  "^O", 2, ASCII
@@ -129,7 +129,7 @@ ACCELERATORS_1 ACCELERATORS
 35 WAVE "resources/snd34.wav"
 38 WAVE "resources/snd37.wav"
 
-STRINGTABLE 
+STRINGTABLE
 {
  2101, "Light"
  2103, "Spark"
@@ -290,51 +290,51 @@ STRINGTABLE
 901 DIALOG 10, 10, 332, 74
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 252, 48, 58, 20
-     LTEXT "5_708" 2, 8, 8, 36, 36
-     LTEXT "Your party will now be outdoors.|Things you have done in the town will not be remembered." 3, 52, 3, 257, 44
+     LTEXT "1_63", 1, 252, 48, 58, 20
+     LTEXT "5_708", 2, 8, 8, 36, 36
+     LTEXT "Your party will now be outdoors.|Things you have done in the town will not be remembered.", 3, 52, 3, 257, 44
      }
 
 907 DIALOG 10, 10, 400, 142 //<= future return to start message ?
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_65" 1, 299, 113, 58, 20
-     LTEXT "0_64" 2, 231, 113, 58, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "This option moves your party to just outside Fort Emergence, where you started. Be careful that you aren't getting yourself stuck in doing this, by, for example, leaving a boat in a place where you can't get back to it." 4, 51, 4, 305, 66
-     LTEXT "Saving a backup copy of the save file before using this option is recommended. Are you sure you want to do this?" 5, 51, 71, 306, 40
+     LTEXT "1_65", 1, 299, 113, 58, 20
+     LTEXT "0_64", 2, 231, 113, 58, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "This option moves your party to just outside Fort Emergence, where you started. Be careful that you aren't getting yourself stuck in doing this, by, for example, leaving a boat in a place where you can't get back to it.", 4, 51, 4, 305, 66
+     LTEXT "Saving a backup copy of the save file before using this option is recommended. Are you sure you want to do this?", 5, 51, 71, 306, 40
      }
 
 908 DIALOG 10, 10, 328, 70
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 255, 37, 58, 20
-     LTEXT "5_708" 2, 8, 8, 36, 36
-     LTEXT "You cannot use this option while the party is indoors, in a boat, or on a horse." 3, 52, 3, 261, 32
+     LTEXT "1_63", 1, 255, 37, 58, 20
+     LTEXT "5_708", 2, 8, 8, 36, 36
+     LTEXT "You cannot use this option while the party is indoors, in a boat, or on a horse.", 3, 52, 3, 261, 32
      }
 
 909 DIALOG 10, 10, 328, 72
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 251, 49, 58, 20
-     LTEXT "5_708" 2, 8, 8, 36, 36
-     LTEXT "You cannot use this option while the party is split up. Select Reunite party from this menu." 3, 52, 3, 256, 44
+     LTEXT "1_63", 1, 251, 49, 58, 20
+     LTEXT "5_708", 2, 8, 8, 36, 36
+     LTEXT "You cannot use this option while the party is split up. Select Reunite party from this menu.", 3, 52, 3, 256, 44
      }
 
 910 DIALOG 10, 10, 344, 110
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 261, 86, 58, 20
-     LTEXT "5_708" 2, 8, 8, 36, 36
-     LTEXT "Your party is now reunited. You are located where you were when you split up. Warning - doing this can trap your party if you didn't do something you needed to do while split up. Be sure to back up your save file before saving this change." 3, 52, 3, 266, 80
+     LTEXT "1_63", 1, 261, 86, 58, 20
+     LTEXT "5_708", 2, 8, 8, 36, 36
+     LTEXT "Your party is now reunited. You are located where you were when you split up. Warning - doing this can trap your party if you didn't do something you needed to do while split up. Be sure to back up your save file before saving this change.", 3, 52, 3, 266, 80
      }
 
 911 DIALOG 10, 10, 316, 48
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 246, 25, 58, 20
-     LTEXT "5_708" 2, 8, 8, 36, 36
-     LTEXT "Your party is not split up!" 3, 52, 3, 252, 16
+     LTEXT "1_63", 1, 246, 25, 58, 20
+     LTEXT "5_708", 2, 8, 8, 36, 36
+     LTEXT "Your party is not split up!", 3, 52, 3, 252, 16
      }
 
 912 DIALOG 10, 10, 400, 142
@@ -349,10 +349,10 @@ STYLE WS_POPUP | WS_DLGFRAME
 915 DIALOG 10, 10, 336, 110
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_65" 1, 246, 88, 58, 20
-     LTEXT "0_64" 2, 178, 88, 58, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "This will reset all boats and horses to their original positions. Whether you own them or not will remain unchanged. Be careful when using this that you don't strand yourself on an island somewhere! Go ahead?" 4, 51, 4, 253, 82
+     LTEXT "1_65", 1, 246, 88, 58, 20
+     LTEXT "0_64", 2, 178, 88, 58, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "This will reset all boats and horses to their original positions. Whether you own them or not will remain unchanged. Be careful when using this that you don't strand yourself on an island somewhere! Go ahead?", 4, 51, 4, 253, 82
      }
 
 917 DIALOG 10, 10, 352, 172
@@ -377,57 +377,42 @@ STYLE WS_POPUP | WS_DLGFRAME
 970 DIALOG 10, 10, 346, 167
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_0" 1, 251, 107, 70, 20
-     LTEXT "0_68" 2, 8, 107, 70, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "= " 4, 55, 8, 257, 90
+     LTEXT "1_0", 1, 251, 107, 70, 20
+     LTEXT "0_68", 2, 8, 107, 70, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "= ", 4, 55, 8, 257, 90
      }
 
 971 DIALOG 10, 10, 347, 240
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_0" 1, 248, 212, 70, 20
-     LTEXT "0_68" 2, 6, 212, 70, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "= " 4, 55, 8, 257, 91
-     LTEXT "= " 5, 55, 107, 257, 98
+     LTEXT "1_0", 1, 248, 212, 70, 20
+     LTEXT "0_68", 2, 6, 212, 70, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "= ", 4, 55, 8, 257, 91
+     LTEXT "= ", 5, 55, 107, 257, 98
      }
 
 972 DIALOG 10, 10, 350, 164
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_0" 1, 247, 140, 70, 20
-     LTEXT "0_68" 2, 8, 140, 70, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "= " 4, 53, 38, 257, 92
-     LTEXT "*" 5, 26, 74, 14, 19
-     LTEXT "+" 6, 53, 9, 257, 19
+     LTEXT "1_0", 1, 247, 140, 70, 20
+     LTEXT "0_68", 2, 8, 140, 70, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "= ", 4, 53, 38, 257, 92
+     LTEXT "*", 5, 26, 74, 14, 19
+     LTEXT "+", 6, 53, 9, 257, 19
      }
 
 973 DIALOG 10, 10, 347, 264
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_0" 1, 253, 238, 70, 20
-     LTEXT "0_68" 2, 9, 238, 70, 20
-     LTEXT "5_708" 3, 9, 9, 36, 36
-     LTEXT "= " 4, 55, 39, 257, 87
-     LTEXT "= " 5, 55, 136, 257, 93
-     LTEXT "+" 6, 55, 9, 257, 19
-     }
-
-986 DIALOG 10, 10, 491, 374
-     STYLE WS_POPUP | WS_DLGFRAME
-     {
-     LTEXT "0_63" 1, 395, 334, 65, 20
-     LTEXT "5_716" 2, 6, 6, 36, 36
-     LTEXT "Welcome to the wonderful world of Exile III! Exile III is a true epic, with an intricate plot, a world that changes as events progress, and an amazing variety of paths your characters can take." 3, 50, 22, 413, 49
-     LTEXT "Exile III, like most games of its type, is fairly complicated. Fortunately, there are plenty of places to look for help should you get confused. Be sure to read the file _Exile III Instructions/Order Form_ which comes with the game." 4, 50, 72, 411, 58
-     LTEXT "This file contains not only complete instructions for playing and ordering the game, but a quick guide to getting started and a mini-hint book for the first few quests." 5, 50, 131, 411, 44
-     LTEXT "Also be sure to look at the Preferences Window (in the Options menu). It can make the game faster, slower, and even easier, change the display, and remove the special effects." 6, 50, 176, 413, 44
-     LTEXT "Rest assured, if you get stuck, there's plenty of stuff available to help you out. So on with the game, have fun, and watch your back!" 7, 50, 287, 410, 43
-     LTEXT "Finally, alas, the Macintosh world nowadays is rife with extension conflicts and other problems. If you experience crashes playing Exile III, there is troubleshooting info in the file _READ ME - Game and ASP Info_." 8, 50, 221, 411, 65
-     LTEXT "WELCOME TO EXILE III: RUINED WORLD!" 9, 136, 4, 265, 16
-     LTEXT "THIS IS A BETA COPY! DO NOT DISTRIBUTE! IF YOU ARE NOT AUTHORIZED TO HAVE THIS, PLEASE DELETE IT NOW!" 10, 3, 333, 381, 30
+     LTEXT "1_0", 1, 253, 238, 70, 20
+     LTEXT "0_68", 2, 9, 238, 70, 20
+     LTEXT "5_708", 3, 9, 9, 36, 36
+     LTEXT "= ", 4, 55, 39, 257, 87
+     LTEXT "= ", 5, 55, 136, 257, 93
+     LTEXT "+", 6, 55, 9, 257, 19
      }
 
 991 DIALOG 10, 10, 514, 338
@@ -506,141 +491,141 @@ STYLE WS_POPUP | WS_DLGFRAME
 996 DIALOG 10, 10, 461, 206
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "~Alchemy known:" 1, 54, 10, 163, 15
-     LTEXT "5_720" 2, 6, 6, 36, 36
-     LTEXT "1_0" 3, 356, 174, 63, 23
-     LTEXT "2_0" 4, 217, 33, 14, 10
-     LTEXT "2_0" 5, 217, 47, 14, 10
-     LTEXT "2_0" 6, 217, 61, 14, 10
-     LTEXT "2_0" 7, 217, 75, 14, 10
-     LTEXT "2_0" 8, 217, 89, 14, 10
-     LTEXT "2_0" 9, 217, 103, 14, 10
-     LTEXT "2_0" 10, 217, 117, 14, 10
-     LTEXT "2_0" 11, 217, 131, 14, 10
-     LTEXT "2_0" 12, 217, 145, 14, 10
-     LTEXT "2_0" 13, 217, 159, 14, 10
-     LTEXT "2_0" 14, 402, 33, 14, 10
-     LTEXT "2_0" 15, 402, 47, 14, 10
-     LTEXT "2_0" 16, 402, 61, 14, 10
-     LTEXT "2_0" 17, 402, 75, 14, 10
-     LTEXT "2_0" 18, 402, 89, 14, 10
-     LTEXT "2_0" 19, 402, 103, 14, 10
-     LTEXT "2_0" 20, 402, 117, 14, 10
-     LTEXT "2_0" 21, 402, 131, 14, 10
-     LTEXT "2_0" 22, 402, 145, 14, 10
-     LTEXT "2_0" 23, 402, 159, 14, 10
-     LTEXT "Number in ( ) is minimum skill to make." 24, 8, 179, 199, 16
+     LTEXT "~Alchemy known:", 1, 54, 10, 163, 15
+     LTEXT "5_720", 2, 6, 6, 36, 36
+     LTEXT "1_0", 3, 356, 174, 63, 23
+     LTEXT "2_0", 4, 217, 33, 14, 10
+     LTEXT "2_0", 5, 217, 47, 14, 10
+     LTEXT "2_0", 6, 217, 61, 14, 10
+     LTEXT "2_0", 7, 217, 75, 14, 10
+     LTEXT "2_0", 8, 217, 89, 14, 10
+     LTEXT "2_0", 9, 217, 103, 14, 10
+     LTEXT "2_0", 10, 217, 117, 14, 10
+     LTEXT "2_0", 11, 217, 131, 14, 10
+     LTEXT "2_0", 12, 217, 145, 14, 10
+     LTEXT "2_0", 13, 217, 159, 14, 10
+     LTEXT "2_0", 14, 402, 33, 14, 10
+     LTEXT "2_0", 15, 402, 47, 14, 10
+     LTEXT "2_0", 16, 402, 61, 14, 10
+     LTEXT "2_0", 17, 402, 75, 14, 10
+     LTEXT "2_0", 18, 402, 89, 14, 10
+     LTEXT "2_0", 19, 402, 103, 14, 10
+     LTEXT "2_0", 20, 402, 117, 14, 10
+     LTEXT "2_0", 21, 402, 131, 14, 10
+     LTEXT "2_0", 22, 402, 145, 14, 10
+     LTEXT "2_0", 23, 402, 159, 14, 10
+     LTEXT "Number in ( ) is minimum skill to make.", 24, 8, 179, 199, 16
      }
 
 998 DIALOG 10, 10, 330, 327
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "5_0" 1, 8, 9, 28, 36
-     LTEXT "~Item Info:" 2, 45, 6, 102, 16
-     LTEXT "+" 3, 101, 33, 141, 16
-     LTEXT "+" 4, 58, 61, 141, 16
-     LTEXT "+" 5, 245, 61, 47, 16
-     LTEXT "+" 6, 58, 89, 25, 15
-     LTEXT "+" 7, 146, 89, 25, 15
-     LTEXT "+" 8, 231, 89, 25, 15
-     LTEXT "+" 9, 65, 117, 25, 16
-     LTEXT "+" 10, 138, 118, 26, 16
-     LTEXT "+" 11, 255, 118, 25, 16
-     LTEXT "+" 12, 61, 168, 230, 16
-     LTEXT "1_0" 13, 232, 307, 63, 23
-     LTEXT "0_2" 14, 88, 307, 63, 23
-     LTEXT "0_3" 15, 157, 307, 63, 23
-     LTEXT "2_0" 16, 213, 8, 14, 10
-     LTEXT "2_0" 17, 280, 8, 14, 10
-     LTEXT "~Description:" 18, 8, 192, 102, 16
-     LTEXT "=" 19, 8, 210, 286, 87
-     LTEXT "+" 20, 60, 142, 44, 15
+     LTEXT "5_0", 1, 8, 9, 28, 36
+     LTEXT "~Item Info:", 2, 45, 6, 102, 16
+     LTEXT "+", 3, 101, 33, 141, 16
+     LTEXT "+", 4, 58, 61, 141, 16
+     LTEXT "+", 5, 245, 61, 47, 16
+     LTEXT "+", 6, 58, 89, 25, 15
+     LTEXT "+", 7, 146, 89, 25, 15
+     LTEXT "+", 8, 231, 89, 25, 15
+     LTEXT "+", 9, 65, 117, 25, 16
+     LTEXT "+", 10, 138, 118, 26, 16
+     LTEXT "+", 11, 255, 118, 25, 16
+     LTEXT "+", 12, 61, 168, 230, 16
+     LTEXT "1_0", 13, 232, 307, 63, 23
+     LTEXT "0_2", 14, 88, 307, 63, 23
+     LTEXT "0_3", 15, 157, 307, 63, 23
+     LTEXT "2_0", 16, 213, 8, 14, 10
+     LTEXT "2_0", 17, 280, 8, 14, 10
+     LTEXT "~Description:", 18, 8, 192, 102, 16
+     LTEXT "=", 19, 8, 210, 286, 87
+     LTEXT "+", 20, 60, 142, 44, 15
      }
 
 1010 DIALOG 10, 10, 570, 391
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "~Main statistics:" 1, 38, 99, 133, 17
-     LTEXT "~Training For:" 2, 56, 8, 110, 16
-     LTEXT "0_7" 3, 231, 53, 23, 20
-     LTEXT "0_6" 4, 256, 53, 23, 20
-     LTEXT "0_7" 5, 231, 75, 23, 20
-     LTEXT "0_6" 6, 256, 75, 23, 20
-     LTEXT "0_7" 7, 231, 119, 23, 20
-     LTEXT "0_6" 8, 256, 119, 23, 20
-     LTEXT "0_7" 9, 231, 141, 23, 20
-     LTEXT "0_6" 10, 256, 141, 23, 20
-     LTEXT "0_7" 11, 231, 163, 23, 20
-     LTEXT "0_6" 12, 256, 163, 23, 20
-     LTEXT "0_7" 13, 231, 204, 23, 20
-     LTEXT "0_6" 14, 256, 204, 23, 20
-     LTEXT "0_7" 15, 231, 226, 23, 20
-     LTEXT "0_6" 16, 256, 226, 23, 20
-     LTEXT "0_7" 17, 231, 248, 23, 20
-     LTEXT "0_6" 18, 256, 248, 23, 20
-     LTEXT "0_7" 19, 231, 270, 23, 20
-     LTEXT "0_6" 20, 256, 270, 23, 20
-     LTEXT "0_7" 21, 231, 292, 23, 20
-     LTEXT "0_6" 22, 256, 292, 23, 20
-     LTEXT "0_7" 23, 231, 314, 23, 20
-     LTEXT "0_6" 24, 256, 314, 23, 20
-     LTEXT "0_7" 25, 472, 74, 23, 20
-     LTEXT "0_6" 26, 497, 74, 23, 20
-     LTEXT "0_7" 27, 472, 96, 23, 20
-     LTEXT "0_6" 28, 497, 96, 23, 20
-     LTEXT "0_7" 29, 472, 118, 23, 20
-     LTEXT "0_6" 30, 497, 118, 23, 20
-     LTEXT "0_7" 31, 472, 140, 23, 20
-     LTEXT "0_6" 32, 497, 140, 23, 20
-     LTEXT "0_7" 33, 472, 162, 23, 20
-     LTEXT "0_6" 34, 497, 162, 23, 20
-     LTEXT "0_7" 35, 472, 206, 23, 20
-     LTEXT "0_6" 36, 497, 206, 23, 20
-     LTEXT "0_7" 37, 472, 228, 23, 20
-     LTEXT "0_6" 38, 497, 228, 23, 20
-     LTEXT "0_7" 39, 472, 250, 23, 20
-     LTEXT "0_6" 40, 497, 250, 23, 20
-     LTEXT "0_7" 41, 472, 272, 23, 20
-     LTEXT "0_6" 42, 497, 272, 23, 20
-     LTEXT "0_7" 43, 472, 294, 23, 20
-     LTEXT "0_6" 44, 497, 294, 23, 20
-     LTEXT "5_707" 45, 6, 7, 36, 36
-     LTEXT "" 46, 148, 344, 75, 16
-     LTEXT "" 47, 300, 344, 75, 16
-     LTEXT "0_4" 48, 403, 355, 63, 25
-     LTEXT "0_2" 49, 403, 329, 63, 23
-     LTEXT "0_3" 50, 470, 329, 63, 23
-     LTEXT "" 51, 177, 8, 166, 16
-     LTEXT "" 52, 194, 56, 28, 15
-     LTEXT "" 53, 194, 77, 28, 15
-     LTEXT "" 54, 194, 121, 28, 15
-     LTEXT "" 55, 194, 143, 28, 15
-     LTEXT "" 56, 194, 165, 28, 15
-     LTEXT "" 57, 194, 207, 28, 15
-     LTEXT "" 58, 194, 229, 28, 15
-     LTEXT "" 59, 194, 251, 28, 15
-     LTEXT "" 60, 194, 272, 28, 15
-     LTEXT "" 61, 194, 294, 28, 15
-     LTEXT "" 62, 194, 316, 28, 15
-     LTEXT "" 63, 435, 76, 28, 15
-     LTEXT "" 64, 435, 98, 29, 15
-     LTEXT "" 65, 435, 121, 29, 15
-     LTEXT "" 66, 435, 142, 29, 15
-     LTEXT "" 67, 435, 164, 29, 15
-     LTEXT "" 68, 434, 208, 29, 15
-     LTEXT "" 69, 434, 230, 29, 15
-     LTEXT "" 70, 434, 252, 29, 15
-     LTEXT "" 71, 434, 274, 29, 15
-     LTEXT "" 72, 434, 296, 29, 15
-     LTEXT "1_5" 73, 470, 355, 63, 25
-     LTEXT "~Skill:                Cost: Level:" 74, 56, 32, 228, 16
-     LTEXT "~Skill:                Cost: Level:" 75, 292, 32, 228, 16
-     LTEXT "~Warrior Skills:" 76, 38, 185, 133, 17
-     LTEXT "~Magic Skills:" 77, 292, 53, 133, 17
-     LTEXT "~Other Skills:" 78, 292, 185, 133, 17
-     LTEXT "*Cost: (Skill pts./Gold)  " 79, 6, 365, 382, 16
-     LTEXT "*Skill Pts.:" 80, 71, 344, 68, 16
-     LTEXT "*Gold:" 81, 252, 344, 42, 16
+     LTEXT "~Main statistics:", 1, 38, 99, 133, 17
+     LTEXT "~Training For:", 2, 56, 8, 110, 16
+     LTEXT "0_7", 3, 231, 53, 23, 20
+     LTEXT "0_6", 4, 256, 53, 23, 20
+     LTEXT "0_7", 5, 231, 75, 23, 20
+     LTEXT "0_6", 6, 256, 75, 23, 20
+     LTEXT "0_7", 7, 231, 119, 23, 20
+     LTEXT "0_6", 8, 256, 119, 23, 20
+     LTEXT "0_7", 9, 231, 141, 23, 20
+     LTEXT "0_6", 10, 256, 141, 23, 20
+     LTEXT "0_7", 11, 231, 163, 23, 20
+     LTEXT "0_6", 12, 256, 163, 23, 20
+     LTEXT "0_7", 13, 231, 204, 23, 20
+     LTEXT "0_6", 14, 256, 204, 23, 20
+     LTEXT "0_7", 15, 231, 226, 23, 20
+     LTEXT "0_6", 16, 256, 226, 23, 20
+     LTEXT "0_7", 17, 231, 248, 23, 20
+     LTEXT "0_6", 18, 256, 248, 23, 20
+     LTEXT "0_7", 19, 231, 270, 23, 20
+     LTEXT "0_6", 20, 256, 270, 23, 20
+     LTEXT "0_7", 21, 231, 292, 23, 20
+     LTEXT "0_6", 22, 256, 292, 23, 20
+     LTEXT "0_7", 23, 231, 314, 23, 20
+     LTEXT "0_6", 24, 256, 314, 23, 20
+     LTEXT "0_7", 25, 472, 74, 23, 20
+     LTEXT "0_6", 26, 497, 74, 23, 20
+     LTEXT "0_7", 27, 472, 96, 23, 20
+     LTEXT "0_6", 28, 497, 96, 23, 20
+     LTEXT "0_7", 29, 472, 118, 23, 20
+     LTEXT "0_6", 30, 497, 118, 23, 20
+     LTEXT "0_7", 31, 472, 140, 23, 20
+     LTEXT "0_6", 32, 497, 140, 23, 20
+     LTEXT "0_7", 33, 472, 162, 23, 20
+     LTEXT "0_6", 34, 497, 162, 23, 20
+     LTEXT "0_7", 35, 472, 206, 23, 20
+     LTEXT "0_6", 36, 497, 206, 23, 20
+     LTEXT "0_7", 37, 472, 228, 23, 20
+     LTEXT "0_6", 38, 497, 228, 23, 20
+     LTEXT "0_7", 39, 472, 250, 23, 20
+     LTEXT "0_6", 40, 497, 250, 23, 20
+     LTEXT "0_7", 41, 472, 272, 23, 20
+     LTEXT "0_6", 42, 497, 272, 23, 20
+     LTEXT "0_7", 43, 472, 294, 23, 20
+     LTEXT "0_6", 44, 497, 294, 23, 20
+     LTEXT "5_707", 45, 6, 7, 36, 36
+     LTEXT "", 46, 148, 344, 75, 16
+     LTEXT "", 47, 300, 344, 75, 16
+     LTEXT "0_4", 48, 403, 355, 63, 25
+     LTEXT "0_2", 49, 403, 329, 63, 23
+     LTEXT "0_3", 50, 470, 329, 63, 23
+     LTEXT "", 51, 177, 8, 166, 16
+     LTEXT "", 52, 194, 56, 28, 15
+     LTEXT "", 53, 194, 77, 28, 15
+     LTEXT "", 54, 194, 121, 28, 15
+     LTEXT "", 55, 194, 143, 28, 15
+     LTEXT "", 56, 194, 165, 28, 15
+     LTEXT "", 57, 194, 207, 28, 15
+     LTEXT "", 58, 194, 229, 28, 15
+     LTEXT "", 59, 194, 251, 28, 15
+     LTEXT "", 60, 194, 272, 28, 15
+     LTEXT "", 61, 194, 294, 28, 15
+     LTEXT "", 62, 194, 316, 28, 15
+     LTEXT "", 63, 435, 76, 28, 15
+     LTEXT "", 64, 435, 98, 29, 15
+     LTEXT "", 65, 435, 121, 29, 15
+     LTEXT "", 66, 435, 142, 29, 15
+     LTEXT "", 67, 435, 164, 29, 15
+     LTEXT "", 68, 434, 208, 29, 15
+     LTEXT "", 69, 434, 230, 29, 15
+     LTEXT "", 70, 434, 252, 29, 15
+     LTEXT "", 71, 434, 274, 29, 15
+     LTEXT "", 72, 434, 296, 29, 15
+     LTEXT "1_5", 73, 470, 355, 63, 25
+     LTEXT "~Skill:                Cost: Level:", 74, 56, 32, 228, 16
+     LTEXT "~Skill:                Cost: Level:", 75, 292, 32, 228, 16
+     LTEXT "~Warrior Skills:", 76, 38, 185, 133, 17
+     LTEXT "~Magic Skills:", 77, 292, 53, 133, 17
+     LTEXT "~Other Skills:", 78, 292, 185, 133, 17
+     LTEXT "*Cost: (Skill pts./Gold)  ", 79, 6, 365, 382, 16
+     LTEXT "*Skill Pts.:", 80, 71, 344, 68, 16
+     LTEXT "*Gold:", 81, 252, 344, 42, 16
      }
 
 1012 DIALOG 10, 10, 290, 94
@@ -655,73 +640,73 @@ STYLE WS_POPUP | WS_DLGFRAME
 1013 DIALOG 10, 10, 525, 379
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "~Special Characteristics:" 1, 55, 9, 181, 16
-     LTEXT "5_707" 2, 6, 6, 36, 36
-     LTEXT "1_0" 3, 423, 349, 63, 23
-     LTEXT "2_0" 4, 161, 55, 14, 10
-     LTEXT "2_0" 5, 289, 55, 14, 10
-     LTEXT "2_0" 6, 447, 55, 14, 11
-     LTEXT "2_0" 7, 215, 97, 14, 10
-     LTEXT "2_0" 8, 215, 112, 14, 10
-     LTEXT "2_0" 9, 215, 127, 14, 10
-     LTEXT "2_0" 10, 215, 142, 14, 10
-     LTEXT "2_0" 11, 215, 157, 14, 10
-     LTEXT "2_0" 12, 416, 97, 14, 10
-     LTEXT "2_0" 13, 416, 112, 14, 10
-     LTEXT "2_0" 14, 416, 127, 14, 10
-     LTEXT "2_0" 15, 416, 142, 14, 10
-     LTEXT "2_0" 16, 416, 157, 14, 10
-     LTEXT "~Species:" 17, 55, 30, 65, 18
-     LTEXT "" 18, 254, 352, 50, 16
-     LTEXT "=Select species and traits." 19, 15, 282, 469, 59
-     LTEXT "*Human (%0)" 20, 55, 53, 75, 15
-     LTEXT "*Nephilim (%12)" 21, 186, 53, 75, 15
-     LTEXT "*Slithzerikai (%20)" 22, 316, 53, 92, 15
-     LTEXT "*Toughness (%10)" 23, 55, 95, 75, 15
-     LTEXT "*Magically Apt. (%20)" 24, 55, 110, 75, 15
-     LTEXT "*Ambidextrous (%8)" 25, 55, 125, 116, 15
-     LTEXT "*Nimble Fingers (%10)" 26, 55, 140, 75, 15
-     LTEXT "*Cave Lore (%4)" 27, 55, 155, 75, 15
-     LTEXT "*Woodsman (%6)" 28, 236, 95, 126, 15
-     LTEXT "*Sluggish (%-10)         " 29, 55, 197, 116, 15
-     LTEXT "*Magically Inept (%-8)       " 30, 55, 212, 75, 15
-     LTEXT "*Frail (%-8)       " 31, 55, 227, 75, 15
-     LTEXT "*Chronic Disease (%-20)                   " 32, 55, 242, 126, 15
-     LTEXT "Experience needed to gain each level:" 33, 19, 352, 216, 16
-     LTEXT "~Advantages" 34, 55, 74, 75, 16
-     LTEXT "~Disadvantages" 35, 55, 178, 75, 16
-     LTEXT "2_0" 36, 237, 198, 14, 10
-     LTEXT "2_0" 37, 237, 213, 14, 10
-     LTEXT "2_0" 38, 237, 228, 14, 10
-     LTEXT "2_0" 39, 237, 243, 14, 10
-     LTEXT "2_0" 40, 237, 258, 14, 10
-     LTEXT "*Good Constitution (%10)" 41, 236, 110, 126, 15
-     LTEXT "*Highly Alert (%7)" 42, 236, 125, 126, 15
-     LTEXT "*Exceptional Strength (%12)" 43, 236, 140, 126, 15
-     LTEXT "*Recuperation (%15)" 44, 236, 155, 126, 15
-     LTEXT "*Bad Back (%-8)       " 45, 55, 257, 126, 15
-     LTEXT "Number in () is how much having that trait affects the experience you need to gain a level." 46, 289, 223, 204, 43
+     LTEXT "~Special Characteristics:", 1, 55, 9, 181, 16
+     LTEXT "5_707", 2, 6, 6, 36, 36
+     LTEXT "1_0", 3, 423, 349, 63, 23
+     LTEXT "2_0", 4, 161, 55, 14, 10
+     LTEXT "2_0", 5, 289, 55, 14, 10
+     LTEXT "2_0", 6, 447, 55, 14, 11
+     LTEXT "2_0", 7, 215, 97, 14, 10
+     LTEXT "2_0", 8, 215, 112, 14, 10
+     LTEXT "2_0", 9, 215, 127, 14, 10
+     LTEXT "2_0", 10, 215, 142, 14, 10
+     LTEXT "2_0", 11, 215, 157, 14, 10
+     LTEXT "2_0", 12, 416, 97, 14, 10
+     LTEXT "2_0", 13, 416, 112, 14, 10
+     LTEXT "2_0", 14, 416, 127, 14, 10
+     LTEXT "2_0", 15, 416, 142, 14, 10
+     LTEXT "2_0", 16, 416, 157, 14, 10
+     LTEXT "~Species:", 17, 55, 30, 65, 18
+     LTEXT "", 18, 254, 352, 50, 16
+     LTEXT "=Select species and traits.", 19, 15, 282, 469, 59
+     LTEXT "*Human (%0)", 20, 55, 53, 75, 15
+     LTEXT "*Nephilim (%12)", 21, 186, 53, 75, 15
+     LTEXT "*Slithzerikai (%20)", 22, 316, 53, 92, 15
+     LTEXT "*Toughness (%10)", 23, 55, 95, 75, 15
+     LTEXT "*Magically Apt. (%20)", 24, 55, 110, 75, 15
+     LTEXT "*Ambidextrous (%8)", 25, 55, 125, 116, 15
+     LTEXT "*Nimble Fingers (%10)", 26, 55, 140, 75, 15
+     LTEXT "*Cave Lore (%4)", 27, 55, 155, 75, 15
+     LTEXT "*Woodsman (%6)", 28, 236, 95, 126, 15
+     LTEXT "*Sluggish (%-10)         ", 29, 55, 197, 116, 15
+     LTEXT "*Magically Inept (%-8)       ", 30, 55, 212, 75, 15
+     LTEXT "*Frail (%-8)       ", 31, 55, 227, 75, 15
+     LTEXT "*Chronic Disease (%-20)                   ", 32, 55, 242, 126, 15
+     LTEXT "Experience needed to gain each level:", 33, 19, 352, 216, 16
+     LTEXT "~Advantages", 34, 55, 74, 75, 16
+     LTEXT "~Disadvantages", 35, 55, 178, 75, 16
+     LTEXT "2_0", 36, 237, 198, 14, 10
+     LTEXT "2_0", 37, 237, 213, 14, 10
+     LTEXT "2_0", 38, 237, 228, 14, 10
+     LTEXT "2_0", 39, 237, 243, 14, 10
+     LTEXT "2_0", 40, 237, 258, 14, 10
+     LTEXT "*Good Constitution (%10)", 41, 236, 110, 126, 15
+     LTEXT "*Highly Alert (%7)", 42, 236, 125, 126, 15
+     LTEXT "*Exceptional Strength (%12)", 43, 236, 140, 126, 15
+     LTEXT "*Recuperation (%15)", 44, 236, 155, 126, 15
+     LTEXT "*Bad Back (%-8)       ", 45, 55, 257, 126, 15
+     LTEXT "Number in () is how much having that trait affects the experience you need to gain a level.", 46, 289, 223, 204, 43
      }
 
 1018 DIALOG 10, 10, 311, 220
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "*Hit a button or type '1'-'6'." 1, 11, 190, 184, 18
-     LTEXT "5_706" 2, 8, 8, 36, 36
-     LTEXT "0_11" 3, 69, 31, 58, 20
-     LTEXT "0_12" 4, 69, 56, 58, 20
-     LTEXT "0_13" 5, 69, 81, 58, 20
-     LTEXT "0_14" 6, 69, 106, 58, 20
-     LTEXT "0_15" 7, 69, 131, 58, 20
-     LTEXT "0_16" 8, 69, 156, 58, 20
-     LTEXT "+" 9, 138, 35, 139, 16
-     LTEXT "+" 10, 138, 60, 139, 16
-     LTEXT "+ " 11, 138, 85, 139, 16
-     LTEXT "+" 12, 138, 110, 139, 16
-     LTEXT "+" 13, 138, 135, 139, 16
-     LTEXT "+" 14, 138, 160, 139, 16
-     LTEXT "~Select a PC:" 15, 49, 10, 228, 16
-     LTEXT "1_5" 16, 214, 187, 63, 25
+     LTEXT "*Hit a button or type '1'-'6'.", 1, 11, 190, 184, 18
+     LTEXT "5_706", 2, 8, 8, 36, 36
+     LTEXT "0_11", 3, 69, 31, 58, 20
+     LTEXT "0_12", 4, 69, 56, 58, 20
+     LTEXT "0_13", 5, 69, 81, 58, 20
+     LTEXT "0_14", 6, 69, 106, 58, 20
+     LTEXT "0_15", 7, 69, 131, 58, 20
+     LTEXT "0_16", 8, 69, 156, 58, 20
+     LTEXT "+", 9, 138, 35, 139, 16
+     LTEXT "+", 10, 138, 60, 139, 16
+     LTEXT "+", 11, 138, 85, 139, 16
+     LTEXT "+", 12, 138, 110, 139, 16
+     LTEXT "+", 13, 138, 135, 139, 16
+     LTEXT "+", 14, 138, 160, 139, 16
+     LTEXT "~Select a PC:", 15, 49, 10, 228, 16
+     LTEXT "1_5", 16, 214, 187, 63, 25
      }
 
 1024 DIALOG 10, 10, 290, 183
@@ -738,9 +723,9 @@ STYLE WS_POPUP | WS_DLGFRAME
 1049 DIALOG 10, 10, 338, 60
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 249, 30, 58, 20
-     LTEXT "5_702" 2, 8, 8, 36, 36
-     LTEXT "No room in your inventory." 3, 52, 4, 255, 18
+     LTEXT "1_63", 1, 249, 30, 58, 20
+     LTEXT "5_702", 2, 8, 8, 36, 36
+     LTEXT "No room in your inventory.", 3, 52, 4, 255, 18
      }
 
 1062 DIALOG 10, 10, 529, 298
@@ -758,45 +743,45 @@ STYLE WS_POPUP | WS_DLGFRAME
 1063 DIALOG 10, 10, 324, 58
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 246, 31, 58, 20
-     LTEXT "5_723" 2, 6, 6, 36, 36
-     LTEXT "This is not a Blades of Exile save file." 3, 50, 6, 254, 16
+     LTEXT "1_63", 1, 246, 31, 58, 20
+     LTEXT "5_723", 2, 6, 6, 36, 36
+     LTEXT "This is not a Blades of Exile save file.", 3, 50, 6, 254, 16
      }
 
 1064 DIALOG 10, 10, 322, 68
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 245, 34, 58, 20
-     LTEXT "5_723" 2, 6, 6, 36, 36
-     LTEXT "Loading Blades of Exile save file failed.|" 3, 50, 6, 253, 19
+     LTEXT "1_63", 1, 245, 34, 58, 20
+     LTEXT "5_723", 2, 6, 6, 36, 36
+     LTEXT "Loading Blades of Exile save file failed.|", 3, 50, 6, 253, 19
      }
 
 1066 DIALOG 10, 10, 336, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_84" 1, 230, 31, 80, 20
-     LTEXT "0_85" 2, 122, 31, 77, 20
-     LTEXT "0_5" 3, 54, 31, 58, 20
-     LTEXT "5_723" 4, 9, 9, 36, 36
-     LTEXT "~Do you want to save before quitting?" 5, 52, 5, 254, 18
+     LTEXT "1_84", 1, 230, 31, 80, 20
+     LTEXT "0_85", 2, 122, 31, 77, 20
+     LTEXT "0_5", 3, 54, 31, 58, 20
+     LTEXT "5_723", 4, 9, 9, 36, 36
+     LTEXT "~Do you want to save before quitting?", 5, 52, 5, 254, 18
      }
 
 1067 DIALOG 10, 10, 336, 78
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_84" 1, 233, 41, 80, 20
-     LTEXT "0_105" 2, 125, 41, 77, 20
-     LTEXT "0_5" 3, 57, 41, 58, 20
-     LTEXT "5_723" 4, 9, 9, 36, 36
-     LTEXT "~Do you want to save before opening a new file?" 5, 52, 5, 262, 33
+     LTEXT "1_84", 1, 233, 41, 80, 20
+     LTEXT "0_105", 2, 125, 41, 77, 20
+     LTEXT "0_5", 3, 57, 41, 58, 20
+     LTEXT "5_723", 4, 9, 9, 36, 36
+     LTEXT "~Do you want to save before opening a new file?", 5, 52, 5, 262, 33
      }
 
 1069 DIALOG 10, 10, 322, 68
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 245, 34, 58, 20
-     LTEXT "5_723" 2, 6, 6, 36, 36
-     LTEXT "Saving Blades of Exile save file failed.|" 3, 50, 6, 253, 19
+     LTEXT "1_63", 1, 245, 34, 58, 20
+     LTEXT "5_723", 2, 6, 6, 36, 36
+     LTEXT "Saving Blades of Exile save file failed.|", 3, 50, 6, 253, 19
      }
 
 900 DIALOG 13, 16, 334, 220

@@ -31,7 +31,7 @@ RECT16::RECT16 (const RECT & tmp)
 	right = tmp.right;
 	bottom = tmp.bottom;
 }
-	
+
 RECT16 & RECT16::operator=(const RECT & tmp)
 {
 	left = tmp.left;
@@ -44,12 +44,12 @@ RECT16 & RECT16::operator=(const RECT & tmp)
 POINT MAKEPOINT(LONG lParam)
 {
 	POINT point;
-	
+
 	point.x = LOWORD(lParam);
 	point.y = HIWORD(lParam);
-	
+
 	return point;
-} 
+}
 
 short get_ran (short times,short  min,short  max)
 {

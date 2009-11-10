@@ -5,10 +5,10 @@
 #include "graphics.h"
 #include "global.h"
 #include "editors.h"
-#include "edfileio.h" 
-#include "edaction.h" 
-#include "edsound.h" 
-#include "dlogtool.h" 
+#include "edfileio.h"
+#include "edaction.h"
+#include "edsound.h"
+#include "dlogtool.h"
 #include "graphutl.h"
 
 /* Adventure globals */
@@ -42,7 +42,7 @@ short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
 char empty_string[256] = " ";
 extern RECT pc_area_buttons[6][4],name_rect; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 
 short store_trait_mode,store_train_pc;
 
@@ -65,15 +65,12 @@ short skill_bonus[21] = {-3,-3,-2,-1,0,0,1,1,1,2,
 pc_record_type *store_xp_pc;
 
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+//extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 //short mode; // ignore,
 {
 	short i;
-	
-	
-	short choice = 4;
-	
+
 	Boolean to_return = FALSE;
 	Boolean ctrl_key = FALSE;
 	Boolean right_button = FALSE;
@@ -87,7 +84,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	if (MK_CONTROL & wparam)
 		ctrl_key = TRUE;
 
-	if (file_in_mem == FALSE) 
+	if (file_in_mem == FALSE)
 		return FALSE;
 
 
@@ -110,15 +107,15 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				case 1:
 			 		display_pc(current_active_pc,1,0);
 					break;
-				case 2: 
+				case 2:
 					pick_race_abil(&adven[current_active_pc],0,0);
 					break;
-				case 3: 
+				case 3:
 					spend_xp(current_active_pc,1,0);
 					break;
-				case 4: 
+				case 4:
 					edit_xp(&adven[current_active_pc]);
-					
+
 					break;
 			}
 		}
@@ -136,7 +133,7 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 				adven[current_active_pc].items[i].item_properties = adven[current_active_pc].items[i].item_properties | 1;
 				draw_items(1);
 				}
-	
+
 	return to_return;
 }
 
@@ -160,7 +157,7 @@ void edit_gold_or_food_event_filter (short)
 	char get_text[256];
 
 	int tmp;
-	
+
 	cd_get_text_edit_str((store_which_to_edit == 0) ? 1012 : 947,(char *) get_text);
 	dialog_answer = 0;
 	sscanf((char *) get_text,"%d",&tmp);
@@ -176,24 +173,24 @@ void edit_gold_or_food(short which_to_edit)
 	store_which_to_edit = which_to_edit;
 
 	make_cursor_sword();
-	
+
 	cd_create_dialog((which_to_edit == 0) ? 1012 : 947,mainPtr);
-		
+
 	sprintf((char *) sign_text,"%d",(short) ((which_to_edit == 0) ? party.gold : party.food));
 	cd_set_text_edit_str((which_to_edit == 0) ? 1012 : 947,(char *) sign_text);
-	
+
 	cd_set_edit_focus();
 	while (dialog_not_toast)
-		ModalDialog();	
-	
+		ModalDialog();
+
 	cd_kill_dialog((which_to_edit == 0) ? 1012 : 947,0);
 
 	if (dialog_answer < 0)
 		dialog_answer = -1;
 		else dialog_answer = minmax(0,25000,dialog_answer);
-	
+
 	if (dialog_answer >= 0) {
-		if (which_to_edit == 0) 
+		if (which_to_edit == 0)
 			party.gold = dialog_answer;
 			else party.food = dialog_answer;
 		}
@@ -203,7 +200,7 @@ void edit_day_event_filter (short)
 {
 	char get_text[256];
 	int tmp;
-	
+
 	cd_get_text_edit_str(917,(char *) get_text);
 	sscanf((char *) get_text,"%d",&tmp);
 	dialog_answer = tmp;
@@ -219,21 +216,21 @@ void edit_day()
 
 
 	make_cursor_sword();
-	
+
 	cd_create_dialog(917,mainPtr);
-		
+
 	sprintf((char *) sign_text,"%d",(short) ( ((party.age) / 3700) + 1));
 	cd_set_text_edit_str(917,(char *) sign_text);
-	
+
 	cd_set_edit_focus();
 	while (dialog_not_toast)
-		ModalDialog();	
-	
-	
+		ModalDialog();
+
+
 	cd_kill_dialog(917,0);
-	
+
 	dialog_answer = minmax(1,500,dialog_answer)-1;
-	
+
 	party.age = (long) (3700) * (long) (dialog_answer);
 }
 
@@ -273,19 +270,19 @@ Boolean display_pc_event_filter (short item_hit)
 						pc_num = (pc_num == 5) ? 0 : pc_num + 1;
 						} while (adven[pc_num].main_status == 0);
 					which_pc_displayed = pc_num;
-					put_pc_graphics();	
+					put_pc_graphics();
 					break;
-					
+
 				default:
 					if (store_trait_mode == 0)
-						adven[which_pc_displayed].mage_spells[item_hit - 3] = 
+						adven[which_pc_displayed].mage_spells[item_hit - 3] =
 							1 - adven[which_pc_displayed].mage_spells[item_hit - 3];
 						else
-						adven[which_pc_displayed].priest_spells[item_hit - 3] = 
+						adven[which_pc_displayed].priest_spells[item_hit - 3] =
 							1 - adven[which_pc_displayed].priest_spells[item_hit - 3];
-					put_pc_graphics();							
+					put_pc_graphics();
 					break;
-				}	
+				}
 	return FALSE;
 }
 
@@ -293,7 +290,7 @@ void display_pc(short pc_num,short mode,short)
 {
 	short i;
 	char label_str[256];
-	
+
 	if (adven[pc_num].main_status == 0) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
 			if (adven[pc_num].main_status == 1)
@@ -445,11 +442,11 @@ Boolean spend_xp_event_filter (short item_hit)
 				dialog_answer = 0;
 				talk_done = TRUE;
 				break;
-	
+
 
 
 			case 3: case 4:
-					if (((store_h >= 250) && (item_hit == 4)) ||((store_h <= 2) && (item_hit == 3))) 
+					if (((store_h >= 250) && (item_hit == 4)) ||((store_h <= 2) && (item_hit == 3)))
 							play_sound(0);
 						else {
 							if (item_hit == 3) {
@@ -537,7 +534,7 @@ Boolean spend_xp_event_filter (short item_hit)
 					}
 				else {
 				which_skill = (item_hit - 7) / 2;
-				
+
 				if (((store_skills[which_skill] >= skill_max[which_skill]) && ((item_hit - 7) % 2 == 1)) ||
 					((store_skills[which_skill] == 0) && ((item_hit - 7) % 2 == 0) && (which_skill > 2)) ||
 					((store_skills[which_skill] == 1) && ((item_hit - 7) % 2 == 0) && (which_skill <= 2)))
@@ -564,10 +561,10 @@ Boolean spend_xp_event_filter (short item_hit)
 							cd_set_item_num(1010,54 + which_skill,store_skills[which_skill]);
 							draw_xp_skills();
 						}
-				}	
+				}
 				break;
 			}
-			
+
 	store_train_pc = pc_num;
 	if (talk_done == TRUE) {
 		dialog_not_toast = FALSE;
@@ -602,12 +599,12 @@ Boolean spend_xp(short pc_num, short, short parent)
 		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
 		}
 	do_xp_draw();
-	
+
 	dialog_answer = 0;
 
 	while (dialog_not_toast)
-		ModalDialog();	
-	
+		ModalDialog();
+
 
 	cd_kill_dialog(1010,0);
 
@@ -618,7 +615,7 @@ void edit_xp_event_filter (short)
 {
 	char get_text[256];
 	int tmp;
-	
+
 	cd_get_text_edit_str(1024,(char *) get_text);
 	sscanf((char *) get_text,"%d",&tmp);
 	dialog_answer = tmp;
@@ -635,22 +632,22 @@ void edit_xp(pc_record_type *pc)
 	store_xp_pc = pc;
 
 	make_cursor_sword();
-	
+
 	cd_create_dialog(1024,mainPtr);
-		
+
 	sprintf((char *) sign_text,"%d",(short)pc->experience);
 	cd_set_text_edit_str(1024,(char *) sign_text);
 	item_hit = get_tnl(store_xp_pc);
 	cdsin(1024,8,item_hit);
-	
+
 	while (dialog_not_toast)
 		ModalDialog();
-	
+
 	cd_kill_dialog(1024,0);
-	
+
 	if (dialog_answer < 0)
 		dialog_answer = dialog_answer * -1;
 	dialog_answer = minmax(0,10000,dialog_answer);
-	
+
 	pc->experience = dialog_answer;
 }

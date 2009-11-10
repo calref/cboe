@@ -89,13 +89,13 @@ char last_file_printed = 0;
 char szBladBase[128];
 
 void loadSettingsFromFile()
-{	
+{
 	const int BUFFER_LEN = 64;
 	char buffer[BUFFER_LEN];
-	
+
 	const char * iniFile = "./blades.ini";
 	const char * section = "Scenario Editor";
-	
+
 	GetPrivateProfileString(section, "bladbase.exs", "bladbase.exs",
 		szBladBase, 126, iniFile);
 	szBladBase[127] = 0;
@@ -113,7 +113,6 @@ void loadSettingsFromFile()
 
 void saveSettingsToFile()
 {
-	char tmp[] = "?";
 	const char * iniFile = "./blades.ini";
 	const char * section = "Scenario Editor";
 
@@ -134,7 +133,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 
 	MSG msg;
 	WNDCLASS wndclass,wndclass2;
-	short i,seed;
+	short seed;
 
 	if (!hPrevInstance) {
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -160,7 +159,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		wndclass2.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
 		wndclass2.lpszMenuName = NULL;
 		wndclass2.lpszClassName = szWinName;
-		
+
 		RegisterClass(&wndclass2);
 		}
 
@@ -247,10 +246,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 					}
 				}
 			}
-			
+
 		delete data_store;
 		saveSettingsToFile();
-			
+
 		return msg.wParam;
 }
 
@@ -258,14 +257,12 @@ long CALLBACK WndProc (HWND hwnd, UINT message,WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
-RECT rect;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
 short handled = 0,sbar_pos = 0,old_setting;
 long which_sbar;
 int min = 0, max = 0;
 HMENU menu;
-RECT wind_rect;
 POINT p;
 RECT r;
 
@@ -473,7 +470,7 @@ void check_game_done()
 
 Boolean handle_menu (short item, HMENU menu)
 {
-	short i,j;
+	short i;
 	Boolean to_return = FALSE;
 	short item_hit;
 	Boolean need_redraw = FALSE;
@@ -533,7 +530,7 @@ Boolean handle_menu (short item, HMENU menu)
 		case 106: overall_mode = 47;
 			set_string("Select party starting location.","");
 			break;
-		case 109:  
+		case 109:
             lpsi.fMask = SIF_POS;
             lpsi.nPos = 0;
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
@@ -619,7 +616,7 @@ Boolean handle_menu (short item, HMENU menu)
 			redraw_screen();
 			}
 			break;
-			
+
 		case 121:
 			if (fancy_choice_dialog(867,0) == 1) {
         last_file_printed = 2;
@@ -660,25 +657,25 @@ Boolean handle_menu (short item, HMENU menu)
 		case 208: if (fancy_choice_dialog(863,0) == 2) // add random
 					break;
 				place_items_in_town();
-				 break; 
+				 break;
 		case 209: for (i = 0; i < 64; i++) // set not prop
 					town.preset_items[i].property = 0;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
-				break; 
+				break;
 		case 210: if (fancy_choice_dialog(862,0) == 2) // clear all items
 					break;
 				for (i = 0; i < 64; i++)
 					town.preset_items[i].item_code = -1;
 				draw_terrain();
-				break; 
-		case 213:  
+				break;
+		case 213:
             lpsi.fMask = SIF_POS;
             lpsi.nPos = 0;
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
             //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
              start_special_editing(2,0); break;
-		case 214:  
+		case 214:
             lpsi.fMask = SIF_POS;
             lpsi.nPos = 0;
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
@@ -691,13 +688,13 @@ Boolean handle_menu (short item, HMENU menu)
 				for (i = 0; i < 60; i++) {
 						t_d.creatures[i].number = 0;
 						t_d.creatures[i].start_loc.x = 0;
-						t_d.creatures[i].start_loc.y = 0;						
+						t_d.creatures[i].start_loc.y = 0;
 						t_d.creatures[i].spec_enc_code = 0;
 						t_d.creatures[i].time_flag = 0;
                         t_d.creatures[i].spec1 = -1;
-                        t_d.creatures[i].spec2 = -1;                        						
+                        t_d.creatures[i].spec2 = -1;
 						}
-		break; 
+		break;
 		case 218: if (fancy_choice_dialog(873,0) == 2) // clear all special encounters
 					break;
 					for (i = 0; i < 50; i++) {
@@ -705,7 +702,7 @@ Boolean handle_menu (short item, HMENU menu)
 							town.special_locs[i].y = 0;
 							town.spec_id[i] = 255;
 							}
-		break; 
+		break;
 		case 219: if (fancy_choice_dialog(874,0) == 2) // clear all fields
 					break;
 				for (i = 0; i < 50; i++)
@@ -714,7 +711,7 @@ Boolean handle_menu (short item, HMENU menu)
 						town.preset_fields[i].field_loc.x = 0;
 						town.preset_fields[i].field_loc.y = 0;
 						}
-		break; 
+		break;
 
 		case 220: if (fancy_choice_dialog(876,0) == 2) // clear all stains
 					break;
@@ -731,7 +728,7 @@ Boolean handle_menu (short item, HMENU menu)
 									start_town_data_dump();
 									}
 			break;
-			
+
 		case 222:
 					start_dialogue_editing(0);
 		break;
@@ -752,7 +749,7 @@ Boolean handle_menu (short item, HMENU menu)
 							current_terrain.special_id[i] = 255;
 							}
 
-		case 311: 
+		case 311:
             lpsi.fMask = SIF_POS;
             lpsi.nPos = 0;
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
@@ -764,7 +761,7 @@ Boolean handle_menu (short item, HMENU menu)
             SetScrollInfo(right_sbar,SB_CTL,&lpsi,TRUE);
             //SetScrollPos(right_sbar,SB_CTL,0,TRUE);
             start_string_editing(1,0); break;
-		break; 
+		break;
 
 		case 313:
 			if (fancy_choice_dialog(879,0) == 1) {
@@ -773,17 +770,17 @@ Boolean handle_menu (short item, HMENU menu)
 				 }
 			break;
 
-		case 401: 
-				 start_town_edit(); 
+		case 401:
+				 start_town_edit();
 		break;
-		case 402: 
-				 start_out_edit(); 
+		case 402:
+				 start_out_edit();
 		break;
-		case 403: 	
+		case 403:
 			short x, y;
 			location spot_hit;
-				 					
-			if (editing_town == false) {	 
+
+			if (editing_town == false) {
 
 							if (change_made == TRUE) {
 								if (save_check(859) == FALSE)
@@ -795,34 +792,34 @@ Boolean handle_menu (short item, HMENU menu)
 								spot_hit.y = x % 100;
 								load_outdoors(spot_hit,0);
 								augment_terrain(spot_hit);
-								start_out_edit(); 								
+								start_out_edit();
 								}
 
 							}
-			else {				
+			else {
 							if (change_made == TRUE) {
 								if (save_check(859) == FALSE)
-									break;							
+									break;
 								}
 							x = pick_town_num(855,cur_town);
 							if (x >= 0) {
 								load_town(x);
-								start_town_edit(); 
+								start_town_edit();
 								}
 							}
 			break;
-		case 404: 
+		case 404:
                     set_up_main_screen();
 					start_terrain_editing();
 		break;
-		case 405: 
-                    set_up_main_screen();            
+		case 405:
+                    set_up_main_screen();
 					start_monster_editing(0);
 		break;
-		case 406: 
+		case 406:
 					start_item_editing(0);
 		break;
-		case 407: 
+		case 407:
 					set_up_main_screen();
 		break;
 
@@ -860,7 +857,7 @@ Boolean handle_menu (short item, HMENU menu)
 								start_out_edit();
 						}
 		break;
-			
+
 		case 410: // load next town/outdoor zone
 					if (editing_town == true) {
 								if (cur_town + 1 == scenario.num_towns)
@@ -888,7 +885,7 @@ Boolean handle_menu (short item, HMENU menu)
 								start_out_edit();
 						 }
 			break;
-			
+
 			case 411: //   MENUITEM "Terrain Animations Play", 411
 
             HMENU menu,big_menu;
@@ -940,7 +937,7 @@ Boolean handle_menu (short item, HMENU menu)
 								augment_terrain(spot_hit);
 								start_out_edit();
 		break;
-		
+
 		case 414: //   Repeat print of last file printed
          switch (last_file_printed){
             case 0:
@@ -954,11 +951,11 @@ Boolean handle_menu (short item, HMENU menu)
             case 2:
 				start_shopping_data_dump();
 			break;
-			
+
             case 3:
 				start_monst_data_dump();
             break;
-            
+
             case 4:
              start_spec_data_dump();
             break;
@@ -966,11 +963,11 @@ Boolean handle_menu (short item, HMENU menu)
             case 5:
 				start_town_data_dump();
             break;
-            
+
             case 6:
 				 start_outdoor_data_dump();
             break;
-            
+
             case 7:
 				 object_scenario_data_dump();
             break;
@@ -984,10 +981,10 @@ Boolean handle_menu (short item, HMENU menu)
 		case 802: fancy_choice_dialog(986,0); break; // started
 		case 803: fancy_choice_dialog(1000,0); break; // testing
 		case 804: fancy_choice_dialog(1001,0); break; // distributing
-		case 805: 
-		fancy_choice_dialog(1062,0); 
+		case 805:
+		fancy_choice_dialog(1062,0);
 		break;
-		
+
 		default:
 			if ((overall_mode >= 60) || (editing_town == FALSE)) {
 				give_error("You can only place items and individual monsters in town sections, not outdoors.","",0);

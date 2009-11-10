@@ -43,7 +43,7 @@ HBITMAP dlg_buttons_gworld,mixed_gworld,dialog_pattern_gworld,pattern_gworld;
 RECT whole_win_rect;
 	RECT title_from = {41,0,380,70};
 extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 extern RECT pc_info_rect; // Frame that holds a pc's basic info and items
 extern RECT name_rect;
 extern RECT pc_race_rect;
@@ -51,11 +51,11 @@ extern RECT info_area_rect;
 extern RECT hp_sp_rect;
 extern RECT skill_rect;
 extern RECT pc_skills_rect[19];
-extern RECT status_rect; 
-extern RECT pc_status_rect[10]; 
+extern RECT status_rect;
+extern RECT pc_status_rect[10];
 extern RECT traits_rect;
-extern RECT pc_traits_rect[16]; 
-extern RECT edit_rect[5][2]; 
+extern RECT pc_traits_rect[16];
+extern RECT edit_rect[5][2];
 extern HINSTANCE store_hInstance;
 
 short store_str1a;
@@ -294,7 +294,6 @@ void draw_main_screen()
 {
 	RECT	source_rect, dest_rec,dest_rect;
 	RECT reg_rect;
-	char temp_str[256];
 	RECT top_pic_from = {3,16,41,54};
 
 
@@ -315,7 +314,7 @@ void draw_main_screen()
 	dest_rect.left -=5;
 	SelectObject(main_dc,bold_font);
 	char_win_draw_string(main_dc,dest_rect,"Your party:",0,10);
-	
+
 	dest_rec = whole_win_rect;
 	InflateRect(&dest_rec,-10,-10);
 
@@ -345,7 +344,7 @@ void draw_main_screen()
 	reg_rect.left = reg_rect.right - 170;
 	reg_rect.top = pc_info_rect.top - 70;
 	reg_rect.bottom = pc_info_rect.top;
-	
+
 }
 
 void do_button_action(short,short which_button)
@@ -362,13 +361,13 @@ void do_button_action(short,short which_button)
 
 
 //extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+//extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 void draw_items(short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
 	char to_draw[256];
-	RECT d_from = {28,12,42,24},i_from = {42,12,56,24},dest_rect;
+	RECT d_from = {28,12,42,24},i_from = {42,12,56,24};
 
 	if (file_in_mem == FALSE)
 		return;
@@ -382,10 +381,10 @@ void draw_items(short clear_first)
 			paint_pattern(NULL,1,item_string_rects[i][0],3);
 //		paint_pattern(NULL,1,dest_rect,3);
 		}
-	
+
 	// frame_dlog_rect(mainPtr,frame_rect,0);
 	if (adven[current_active_pc].main_status != 1){
-		frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame 
+		frame_dlog_rect(mainPtr,pc_info_rect,0); // re draw entire frame
 		frame_dlog_rect(mainPtr,info_area_rect,0); // draw the frame
 		frame_dlog_rect(mainPtr,pc_race_rect,0); // draw the frame
 		return; // If PC is dead, it has no items
@@ -398,7 +397,7 @@ void draw_items(short clear_first)
 				else if (adven[current_active_pc].items[i].charges > 0)
 					sprintf((char *) to_draw, "%d. %s (%d)",i + 1,adven[current_active_pc].items[i].full_name,
 					adven[current_active_pc].items[i].charges);
-				else sprintf((char *) to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);			
+				else sprintf((char *) to_draw, "%d. %s ",i + 1,adven[current_active_pc].items[i].full_name);
 
 			char_win_draw_string(main_dc,item_string_rects[i][0],(char *) to_draw,0,10);
 
@@ -466,7 +465,7 @@ void display_party(short,short clear_first)
         sprintf(buffer,"Food: %d  Gold: %d  Day: %d  Party in %s",party.food,party.gold,(party.age/3700)+1,town_strs[0]);
         }
         char_win_draw_string(main_dc,from_rect,buffer,0,10);
-        
+
       /*  from_rect = title_from; //town variable
         from_rect.top = from_rect.bottom - 10;
         from_rect.left += 300;
@@ -492,7 +491,7 @@ void display_party(short,short clear_first)
         from_rect.left -= 1;
         from_rect.top -= 1;
         frame_dlog_rect(mainPtr,from_rect,0);
-			
+
 			for (i = 0; i < 6; i++) {
 				if (i == current_active_pc)
 					SetTextColor(main_dc,colors[1]);
@@ -503,7 +502,7 @@ void display_party(short,short clear_first)
 				if ((current_pressed_button < 0) || (current_pressed_button == i))
 					rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,pc_area_buttons[i][0],0,1);
 				SetTextColor(main_dc,colors[0]);
-				
+
 				// pc_record_type adven[6] is the records that contains characters
 				// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
 				if (adven[i].main_status != 0) { // PC exists?
@@ -513,7 +512,7 @@ void display_party(short,short clear_first)
 					rect_draw_some_item(pc_gworld,from_rect,pc_gworld,pc_area_buttons[i][1],0,1);
 					frame_dlog_rect(mainPtr,pc_area_buttons[i][1],0); // re-draw the frame
 
-					//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][1],0); 
+					//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][1],0);
 					// draw name
 					//TextSize(9);
 					if( (strlen(adven[i].name)) >= 0) {
@@ -553,48 +552,48 @@ void display_party(short,short clear_first)
 									char_win_draw_string(main_dc,pc_race_rect,"Nephilim   ",1,10);
 								if (adven[i].race == 2)
 									char_win_draw_string(main_dc,pc_race_rect,"Slithzerikai  ",1,10);
-								// Draw in skills	
-								
+								// Draw in skills
+
 								sprintf((char *) to_draw, "Skills:");
 								win_draw_string(main_dc,skill_rect,to_draw,0,10);
 								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",adven[i].cur_health,adven[i].max_health,adven[i].cur_sp,
 									adven[i].max_sp);
 								win_draw_string(main_dc,hp_sp_rect,to_draw,0,10);
-								
-								
+
+
 								SelectObject(main_dc,font);
 								string_num=1;
 								for( k = 0; k < 19 ; ++k)
 								{
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + ((k < 10) ? 90 : 83);
-									
+
 									get_str(to_draw,9,string_num);
 									win_draw_string(main_dc,pc_skills_rect[k],to_draw,0,9);
-									
+
 									sprintf((char *) skill_value,"%d",adven[i].skills[k]);
 									OffsetRect(&temp_rect,-8,0);
                            temp_rect.right += 10;
-									win_draw_string(main_dc,temp_rect,skill_value,0,9);	
+									win_draw_string(main_dc,temp_rect,skill_value,0,9);
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_skills_rect[k],0);
 									string_num+=2;
 								}
 								//end skills
-								
+
 								//Write in pc Status
 								SelectObject(main_dc,bold_font);
 								sprintf((char *) to_draw, "Status:");
 								win_draw_string(main_dc,status_rect,to_draw,0,10);
-								
+
 								SelectObject(main_dc,font);
 								//for(k = 0 ; k < 10; k++)
 									//frame_dlog_rect((GrafPtr) mainPtr,pc_status_rect[k],0);
-								if (adven[i].status[0] > 0) 
+								if (adven[i].status[0] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[1] > 0) 
+								if (adven[i].status[1] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Blessed",0,9);
 											cur_rect++;
@@ -604,12 +603,12 @@ void display_party(short,short clear_first)
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Cursed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[2] > 0) 
+								if (adven[i].status[2] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Poisoned",0,9);
 											cur_rect++;
-										}	
-								if (adven[i].status[3] > 0) 
+										}
+								if (adven[i].status[3] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Hasted",0,9);
 											cur_rect++;
@@ -619,126 +618,126 @@ void display_party(short,short clear_first)
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Slowed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[4] > 0) 
+								if (adven[i].status[4] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Invulnerable",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[5] > 0) 
+								if (adven[i].status[5] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Magic Resistant",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[6] > 0) 
+								if (adven[i].status[6] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Webbed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[7] > 0) 
+								if (adven[i].status[7] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Diseased",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[8] > 0) 
+								if (adven[i].status[8] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Sanctury",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[9] > 0) 
+								if (adven[i].status[9] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Dumbfounded",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[10] > 0) 
+								if (adven[i].status[10] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[11] > 0) 
+								if (adven[i].status[11] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Asleep",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[12] > 0) 
+								if (adven[i].status[12] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Paralyzed",0,9);
 											cur_rect++;
 										}
-								if (adven[i].status[13] > 0) 
+								if (adven[i].status[13] > 0)
 										if(cur_rect <= 9) {
 											char_win_draw_string(main_dc,pc_status_rect[cur_rect],"Acid",0,9);
 											cur_rect++;
 										}
 								//end pc status section
-								
+
 								//Write in Traits
 								SelectObject(main_dc,bold_font);
 								sprintf((char *) to_draw, "Traits:");
 								win_draw_string(main_dc,traits_rect,to_draw,0,10);
 								SelectObject(main_dc,font);
 								cur_rect=0;
-								if (adven[i].traits[0] == 1) 
+								if (adven[i].traits[0] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Toughness",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[1] == 1) 
+								if (adven[i].traits[1] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Magically Apt",0,9);
 											cur_rect++;
-										}		
-								if (adven[i].traits[2] == 1) 
+										}
+								if (adven[i].traits[2] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[3] == 1) 
+								if (adven[i].traits[3] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[4] == 1) 
+								if (adven[i].traits[4] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Cave Lore",0,9);
 											cur_rect++;
 										}
-										
-								if (adven[i].traits[5] == 1) 
+
+								if (adven[i].traits[5] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Woodsman",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[6] == 1) 
+								if (adven[i].traits[6] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Good Constitution",0,9);
 											cur_rect++;
-										}		
-								if (adven[i].traits[7] == 1) 
+										}
+								if (adven[i].traits[7] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Highly Alert",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[8] == 1) 
+								if (adven[i].traits[8] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[9] == 1) 
+								if (adven[i].traits[9] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Recuperation",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[10] == 1) 
+								if (adven[i].traits[10] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Sluggish",0,9);
 											cur_rect++;
 										}
-								if (adven[i].traits[11] == 1) 
+								if (adven[i].traits[11] == 1)
 										if(cur_rect <= 15) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Magically Inept",0,9);
 											cur_rect++;
-										}		
-								if (adven[i].traits[12] == 1) 
+										}
+								if (adven[i].traits[12] == 1)
 										if(cur_rect <= 14) {
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Frail",0,9);
 											cur_rect++;
@@ -753,10 +752,10 @@ void display_party(short,short clear_first)
 											char_win_draw_string(main_dc,pc_traits_rect[cur_rect],"Bad Back",0,9);
 											cur_rect++;
 										}
-										
+
 								//end traits
-							
-							
+
+
 							SetTextColor(main_dc,colors[0]);
 							SelectObject(main_dc,bold_font);
 							char_win_draw_string(main_dc,pc_area_buttons[i][3],"Alive ",1,10);
@@ -812,19 +811,19 @@ void display_party(short,short clear_first)
 							break;
                             }
 						}
-				//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][0],0); 
-				
+				//frame_dlog_rect((GrafPtr) mainPtr,pc_area_buttons[i][0],0);
+
 
 				}
-				
+
 			} // Closes the for i=6 loop
 		SetTextColor(main_dc,colors[0]);
-		
-		for(i = 0; i < 5; i++) 
-			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
+
+		for(i = 0; i < 5; i++)
+			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {
 			if (clear_first == 1) { // first erase what's already there
 				paint_pattern(NULL,1,edit_rect[i][0],3);
-				}		
+				}
 
 			from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
 			rect_draw_some_item(buttons_gworld,from_rect,buttons_gworld,edit_rect[i][0],0,1);
@@ -849,7 +848,7 @@ void display_party(short,short clear_first)
 					break;
 			}
 			SetTextColor(main_dc,colors[0]);
-			 
+
 		}
 
 		}
@@ -860,7 +859,7 @@ void display_strings_event_filter (short item_hit)
 {
 
 
-	
+
 	switch (item_hit) {
 		case 1:
 			dialog_not_toast = FALSE;
@@ -878,12 +877,12 @@ void display_strings(short str1a,short str1b,short str2a,short str2b,
 
 
 	make_cursor_sword();
-	
+
 	store_str1a = str1a;
 	store_str1b = str1b;
 	store_str2a = str2a;
 	store_str2b = str2b;
-	
+
 	if ((str1a <= 0) || (str1b <= 0))
 		return;
 	store_which_string_dlog = 970;
@@ -892,11 +891,11 @@ void display_strings(short str1a,short str1b,short str2a,short str2b,
 	if ((str2a > 0) && (str2b > 0))
 		store_which_string_dlog++;
 	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
-	
+
 	cd_activate_item(store_which_string_dlog,2,0);
-	
+
 	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
-	
+
 	get_str(sign_text,str1a,str1b);
 	csit(store_which_string_dlog,4,(char *) sign_text);
 	if ((str2a > 0) && (str2b > 0)) {
@@ -909,8 +908,8 @@ void display_strings(short str1a,short str1b,short str2a,short str2b,
 	if (sound_num >= 0)
 		play_sound(sound_num);
 	while (dialog_not_toast)
-		ModalDialog();	
-	
+		ModalDialog();
+
 	cd_kill_dialog(store_which_string_dlog,0);
 }
 
@@ -922,7 +921,7 @@ void get_str(char *str,short i, short j)
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
 {
 	char store_s[256];
-	
+
 	strcpy((char *) store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
@@ -959,7 +958,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short)
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
-	
+
 }
 
 short string_length(char *str,HDC hdc)
@@ -967,10 +966,10 @@ short string_length(char *str,HDC hdc)
 	short text_len[257];
 	short total_width = 0,i,len;
 	char p_str[256];
-	
+
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
-	
+
 	strcpy((char *) p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
 	len = strlen((char *)str);
@@ -1029,7 +1028,7 @@ void GetIndString(char *str,short i, short j) {
 }
 
 
-void make_cursor_sword() 
+void make_cursor_sword()
 {
 	SetCursor(sword_curs);
 }

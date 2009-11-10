@@ -48,7 +48,7 @@ short start_volume,data_volume,jl = 0;
 long start_dir,data_dir;
 // outdoor_record_type current_terrain;
 Boolean cur_scen_is_win = TRUE;
-talking_record_type *dummy_talk_ptr;			
+talking_record_type *dummy_talk_ptr;
 town_record_type *dummy_town_ptr;
 extern char file_path_name[256];
 extern char edit_jumpto_mess[256];
@@ -80,7 +80,7 @@ while(file_path[i] != '\\')
     i--;                                   // find the last '\' in the path to the executable
    }                                       // in order to get rid of 'blades of exile.exe'
 
-   
+
 int j=0;                                // initialize the second loop
 
 for(j=0;j<i+1;j++)
@@ -117,19 +117,19 @@ static char *szFilter[] = {"Blades of Exile Scenarios (*.EXS)","*.exs",
 		ofn.lCustData = 0L;
 		ofn.lpfnHook = NULL;
 		ofn.lpTemplateName = NULL;
-		
+
 		lpsi.cbSize = sizeof(SCROLLINFO);
 		lpsi.fMask = SIF_RANGE;
 		lpsi.nMin = 0;
 		lpsi.nMax = 0;
-    	lpsi.nPos = 0;	
-		
+    	lpsi.nPos = 0;
+
 }
 
 // Here we go. this is going to hurt.
 // Note no save as is available for scenarios.
 //At this point, szFileName MUST contain the name for the currently edited scen.
-// Strategy ... assemble a big Dummy file containing the whole scenario 
+// Strategy ... assemble a big Dummy file containing the whole scenario
 //chunk by chunk, copy the dummy over the original, and delete the dummy
 // the whole scenario is too big be be shifted around at once
 void save_scenario()
@@ -156,7 +156,7 @@ void save_scenario()
 			oops_error(11);
 			return;
 			}
-	
+
 	file_id = CreateFile(szFileName, GENERIC_READ , FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE){
@@ -196,9 +196,9 @@ void save_scenario()
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario.town_size[cur_town] == 0) 
+	if (scenario.town_size[cur_town] == 0)
 		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario.town_size[cur_town] == 1) 
+		else if (scenario.town_size[cur_town] == 1)
 			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenario.town_data_size[cur_town][1] = 0;
@@ -218,8 +218,8 @@ void save_scenario()
 	scenario.out_data_size[out_num][1] = 0;
 	for (i = 0; i < 120; i++)
 		scenario.out_data_size[out_num][1] += strlen(data_store->out_strs[i]);
-		
-	for (i = 0; i < 300; i++) 
+
+	for (i = 0; i < 300; i++)
 		scenario.scen_str_len[i] = 0;
 	for (i = 0; i < 160; i++)
 		scenario.scen_str_len[i] = strlen(scen_strs[i]);
@@ -227,7 +227,7 @@ void save_scenario()
 		scenario.scen_str_len[i] = strlen(scen_strs2[i - 160]);
 	scenario.last_town_edited = cur_town;
 	scenario.last_out_edited = cur_out;
-	
+
 	// now write scenario data
 	scenario.flag1 = 20;
 	scenario.flag2 = 40;
@@ -239,7 +239,7 @@ void save_scenario()
         CloseHandle(file_id); CloseHandle(dummy_f);oops_error(15);
 		return;
         }
-		
+
     // item data
     if(WriteFile(dummy_f, &scen_item_list, sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE){
         CloseHandle(file_id); CloseHandle(dummy_f);oops_error(16);
@@ -256,11 +256,11 @@ void save_scenario()
                     CloseHandle(file_id); CloseHandle(dummy_f);oops_error(17);
 		            return;
                     }
-				}	
+				}
 		}
-	
+
 	SetFilePointer(file_id,scen_ptr_move,NULL,0);
-	
+
 	// OK ... scenario written. Now outdoors.
 	num_outdoors = scenario.out_width * scenario.out_height;
 	for (i = 0; i < num_outdoors; i++)
@@ -289,9 +289,9 @@ void save_scenario()
 				if (WriteFile(dummy_f, buffer, len, &dwByteRead, NULL) == FALSE) {
 					SysBeep(2); CloseHandle(file_id); CloseHandle(dummy_f);oops_error(20);
 					return;
-					}			
+					}
 				}
-				
+
 	// now, finally, write towns.
 	for (k = 0; k < scenario.num_towns; k++)
 		if (k == cur_town) {
@@ -299,7 +299,7 @@ void save_scenario()
 				town.strlens[i] = 0;
 			for (i = 0; i < 140; i++)
 				town.strlens[i] = strlen(town_strs[i]);
-			
+
 			// write towns
 			if(WriteFile(dummy_f, &town, sizeof(town_record_type), &dwByteRead, NULL) == FALSE){
             CloseHandle(file_id); CloseHandle(dummy_f);oops_error(21);}
@@ -308,13 +308,13 @@ void save_scenario()
 				case 0:
 					WriteFile(dummy_f, &t_d, sizeof(big_tr_type), &dwByteRead, NULL);
 					break;
-			
+
 				case 1:
 					for (i = 0; i < 48; i++)
 						for (j = 0; j < 48; j++) {
 							ave_t.terrain[i][j] = t_d.terrain[i][j];
-							ave_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];					
-							}					
+							ave_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];
+							}
 					for (i = 0; i < 16; i++) {
 						ave_t.room_rect[i] = t_d.room_rect[i];
 						}
@@ -323,13 +323,13 @@ void save_scenario()
 						}
                     WriteFile(dummy_f, &ave_t, sizeof(ave_tr_type), &dwByteRead, NULL);
 				break;
-			
-			
+
+
 				case 2:
 					for (i = 0; i < 32; i++)
 						for (j = 0; j < 32; j++) {
 							tiny_t.terrain[i][j] = t_d.terrain[i][j];
-							tiny_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];					
+							tiny_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];
 							}
 					for (i = 0; i < 16; i++) {
 						tiny_t.room_rect[i] = t_d.room_rect[i];
@@ -337,7 +337,7 @@ void save_scenario()
 					for (i = 0; i < 30; i++) {
 						tiny_t.creatures[i] = t_d.creatures[i];
 						}
-                    WriteFile(dummy_f, &tiny_t, sizeof(tiny_tr_type), &dwByteRead, NULL)	;				
+                    WriteFile(dummy_f, &tiny_t, sizeof(tiny_tr_type), &dwByteRead, NULL)	;
 					break;
 				}
 			for (j = 0; j < 140; j++) {
@@ -351,7 +351,7 @@ void save_scenario()
             if(WriteFile(dummy_f, &talking, sizeof(talking_record_type), &dwByteRead, NULL) == FALSE){
                 CloseHandle(file_id); CloseHandle(dummy_f);oops_error(22);}
 			for (j = 0; j < 170; j++) {
-                WriteFile(dummy_f, &(talk_strs[j]), talking.strlens[j], &dwByteRead, NULL);			
+                WriteFile(dummy_f, &(talk_strs[j]), talking.strlens[j], &dwByteRead, NULL);
 				}
         	SetFilePointer(file_id,save_town_size,NULL,1);
 			}
@@ -361,39 +361,39 @@ void save_scenario()
                     CloseHandle(file_id); CloseHandle(dummy_f);oops_error(24);}
 				dummy_town_ptr = (town_record_type *) buffer;
 				port_dummy_town();
-				if (WriteFile(dummy_f,buffer,sizeof(town_record_type),&dwByteRead, NULL) == FALSE){  
-                        CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}						
-			if (scenario.town_size[k] == 0) 
+				if (WriteFile(dummy_f,buffer,sizeof(town_record_type),&dwByteRead, NULL) == FALSE){
+                        CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}
+			if (scenario.town_size[k] == 0)
 					len = (long) ( sizeof(big_tr_type));
-					else if (scenario.town_size[k] == 1) 
+					else if (scenario.town_size[k] == 1)
 						len = (long) ( sizeof(ave_tr_type));
 						else len = (long) ( sizeof(tiny_tr_type));
-	            if(ReadFile(file_id,buffer,len,&dwByteRead,NULL)== FALSE){			
+	            if(ReadFile(file_id,buffer,len,&dwByteRead,NULL)== FALSE){
                 CloseHandle(file_id); CloseHandle(dummy_f);oops_error(24);}
 				port_dummy_t_d(scenario.town_size[k],buffer);
 				if (WriteFile(dummy_f,buffer,len,&dwByteRead, NULL)== FALSE){
-                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}						
-				
+                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}
+
 				len = (long) (scenario.town_data_size[k][1])
 					+ (long) (scenario.town_data_size[k][2]);
                 if(ReadFile(file_id,buffer,len,&dwByteRead,NULL) == FALSE){
                 CloseHandle(file_id); CloseHandle(dummy_f);oops_error(24);}
                 if(WriteFile(dummy_f, buffer, len, &dwByteRead, NULL) == FALSE){
-                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}						
+                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}
 				len = (long) (scenario.town_data_size[k][3]);
                 if(ReadFile(file_id, buffer, len, &dwByteRead, NULL) == FALSE){
                 CloseHandle(file_id); CloseHandle(dummy_f);oops_error(24);}
 				dummy_talk_ptr = (talking_record_type *) buffer;
 				port_dummy_talk_nodes();
                 if(WriteFile(dummy_f, buffer, len, &dwByteRead, NULL) == FALSE){
-                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}						
+                CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}
 				len = (long) (scenario.town_data_size[k][4]);
                 if(ReadFile(file_id, buffer, len, &dwByteRead, NULL) == FALSE){
                 CloseHandle(file_id); CloseHandle(dummy_f);oops_error(24);}
                 if(WriteFile(dummy_f, buffer, len, &dwByteRead, NULL) == FALSE){
                     CloseHandle(file_id); CloseHandle(dummy_f);oops_error(23);return;}
 				}
-	
+
 	change_made = FALSE;
 
 
@@ -402,7 +402,7 @@ void save_scenario()
 	if(CloseHandle(file_id) == 0){
     CloseHandle(file_id); CloseHandle(dummy_f);oops_error(25);}
 	cur_scen_is_win = TRUE;
-	
+
     file_id = CreateFile(szFileName, GENERIC_WRITE, FILE_SHARE_READ, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(file_id == INVALID_HANDLE_VALUE ){
@@ -430,15 +430,14 @@ void save_scenario()
 	DeleteFile(szFileName2);
 	GlobalUnlock(temp_buffer);
 	GlobalFree(temp_buffer);
-	
+
 }
 
 void load_scenario()
 {
-	short i,j,k,l;
+	short i;
 	Boolean file_ok = FALSE;
 	HANDLE file_id;
-	short error;
 	DWORD dwByteRead, len;
 
 	ofn.hwndOwner = mainPtr;
@@ -448,9 +447,9 @@ void load_scenario()
 
 	if (GetOpenFileName(&ofn) == 0)
 		return;
-		
+
 	SetCurrentDirectory(file_path_name);
-		
+
 	file_id = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE)
@@ -459,14 +458,14 @@ void load_scenario()
 		beep();
 		return;
 	}
-	
+
 	if (ReadFile(file_id, &scenario, sizeof(scenario_data_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		oops_error(30);
 		return;
 	}
-		
+
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20)
 	 && (scenario.flag3 == 30)
 	  && (scenario.flag4 == 40)) {
@@ -486,16 +485,16 @@ void load_scenario()
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
 		return;
 		}
-		
+
 	len = sizeof(scen_item_data_type); // item data
-	
+
 	if (ReadFile(file_id, &scen_item_list, sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		oops_error(30);
 		return;
 	}
-		
+
 	port_item_list();
 	for (i = 0; i < 270; i++) {
 		len = scenario.scen_str_len[i];
@@ -508,9 +507,9 @@ void load_scenario()
 				scen_strs2[i - 160][len] = 0;
 				}
 		}
-	
+
 	CloseHandle(file_id);
-	
+
 	//store_file_reply = file_to_load;
 	overall_mode = 60;
 	change_made = FALSE;
@@ -569,11 +568,11 @@ void augment_terrain(location to_create)
 {
 	location to_load;
 	short i,j;
-	
+
 	for (i = 0 ; i < 4; i++)
 		for (j = 0 ; j < 50; j++)
 			borders[i][j] = 90;
-			
+
 	to_load = to_create;
 	if (to_create.y > 0) {
 		to_load.y--;
@@ -617,9 +616,9 @@ void load_outdoors(location which_out,short mode)
 			oops_error(31);
 			return;
 			}
-	
+
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
-	
+
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
@@ -629,7 +628,7 @@ void load_outdoors(location which_out,short mode)
 		for (j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
 	len_to_jump += store;
-	
+
     if(SetFilePointer(file_id,len_to_jump,NULL,0) == INVALID_SET_FILE_POINTER){CloseHandle(file_id);oops_error(32);}
 
     if(ReadFile(file_id, &store_out, sizeof(outdoor_record_type),&dwByteRead, NULL) == FALSE){
@@ -645,23 +644,23 @@ void load_outdoors(location which_out,short mode)
 		cur_out = which_out;
 		}
 
-	if (mode == 1) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 1)
+		for (j = 0; j < 48; j++) {
 				borders[0][j] = store_out.terrain[j][47];
 				}
-	if (mode == 2) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 2)
+		for (j = 0; j < 48; j++) {
 				borders[1][j] = store_out.terrain[0][j];
 				}
-	if (mode == 3) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 3)
+		for (j = 0; j < 48; j++) {
 				borders[2][j] = store_out.terrain[j][0];
 				}
-	if (mode == 4) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 4)
+		for (j = 0; j < 48; j++) {
 				borders[3][j] = store_out.terrain[47][j];
 				}
-				
+
 
 	error = CloseHandle(file_id);
 	if (error == 0) {CloseHandle(file_id);oops_error(33);}
@@ -675,17 +674,17 @@ void load_town(short which_town)
     DWORD dwByteRead;
 	long len_to_jump = 0,store;
 	short error;
-	
+
 	if (overall_mode == 61)
 		return;
-		
+
 	file_id = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE){
 			oops_error(34);
 			return;
 			}
-	
+
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
@@ -698,9 +697,9 @@ void load_town(short which_town)
 		for (j = 0; j < 5; j++)
 			store += (long) (scenario.town_data_size[i][j]);
 	len_to_jump += store;
-	
+
 	if(SetFilePointer(file_id,len_to_jump,NULL,0) == INVALID_SET_FILE_POINTER){CloseHandle(file_id);oops_error(35);}
-	
+
 	error = ReadFile(file_id, &town, sizeof(town_record_type),&dwByteRead,NULL);
 	port_town();
 	if (error == FALSE) {CloseHandle(file_id);oops_error(36);}
@@ -735,7 +734,7 @@ void load_town(short which_town)
 			for (i = 0; i < 32; i++)
 				for (j = 0; j < 32; j++) {
 					t_d.terrain[i][j] = tiny_t.terrain[i][j];
-					t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];					
+					t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];
 					}
 			for (i = 0; i < 16; i++) {
 				t_d.room_rect[i] = tiny_t.room_rect[i];
@@ -758,12 +757,12 @@ void load_town(short which_town)
 
     if(ReadFile(file_id, &talking, sizeof(talking_record_type), &dwByteRead, NULL) == FALSE){CloseHandle(file_id);oops_error(37);}
 	port_talk_nodes();
-	
+
 	for (i = 0; i < 170; i++) {
 		ReadFile(file_id,&(talk_strs[i]),talking.strlens[i],&dwByteRead, NULL);
 		talk_strs[i][talking.strlens[i]] = 0;
 		}
-			
+
 	town_type = scenario.town_size[which_town];
 	cur_town = which_town;
 	error = CloseHandle(file_id);
@@ -783,7 +782,7 @@ void import_town(short which_town)
 	char *buffer = NULL;
 	char szFileName3 [128] = "scen.exs";
 	HGLOBAL temp_buffer;
-	
+
 	if (which_town >= 0) {
 		ofn.hwndOwner = mainPtr;
 		ofn.lpstrFile = szFileName3;
@@ -800,14 +799,14 @@ void import_town(short which_town)
 			}
 
 	SetCurrentDirectory(file_path_name);
-	
+
 	file_id = CreateFile(szFileName3, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE){
 			oops_error(42);
 			return;
 			}
-	
+
 	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
 	if (temp_buffer == NULL) {
 		CloseHandle(file_id); oops_error(41);
@@ -823,7 +822,7 @@ void import_town(short which_town)
 		CloseHandle(file_id); oops_error(43); return;
 		}
 	temp_scenario = (scenario_data_type *) buffer;
-	
+
 	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
 		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
 		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); CloseHandle(file_id);
@@ -831,19 +830,19 @@ void import_town(short which_town)
 		}
 	if (which_town >= temp_scenario->num_towns) {
 		give_error("Oops ... the selected scenario doesn't have enough towns. The town you selected doesn't exist inside this scenario.","",0);
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); CloseHandle(file_id); 
+		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); CloseHandle(file_id);
 		return;
 		}
-	
+
 	if ((temp_scenario->flag1 == 20) && (temp_scenario->flag2 == 40)
 	 && (temp_scenario->flag3 == 60)
 	  && (temp_scenario->flag4 == 80)) {
 	  	file_ok = TRUE;
 	  	}
 	 if (file_ok == FALSE) {
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); CloseHandle(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0); return;	 
+		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); CloseHandle(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0); return;
 	 	}
-		
+
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
 	for (i = 0; i < 300; i++)
@@ -858,7 +857,7 @@ void import_town(short which_town)
 	len_to_jump += store;
 
 	if(SetFilePointer(file_id,len_to_jump,NULL,0) == INVALID_SET_FILE_POINTER){CloseHandle(file_id);oops_error(44);}
-	
+
 	if(ReadFile(file_id,&town,sizeof(town_record_type),&dwByteRead,NULL) == FALSE){
         CloseHandle(file_id);oops_error(45);}
 
@@ -866,13 +865,13 @@ void import_town(short which_town)
 		case 0:
             ReadFile(file_id,&t_d,sizeof(big_tr_type),&dwByteRead,NULL);
 			break;
-			
+
 		case 1:
                 ReadFile(file_id,&ave_t,sizeof(ave_tr_type),&dwByteRead,NULL);
 				for (i = 0; i < 48; i++)
 					for (j = 0; j < 48; j++) {
 						t_d.terrain[i][j] = ave_t.terrain[i][j];
-						t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];					
+						t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];
 						}
 				for (i = 0; i < 16; i++) {
 					t_d.room_rect[i] = ave_t.room_rect[i];
@@ -884,13 +883,13 @@ void import_town(short which_town)
 					t_d.creatures[i].number = 0;
 					}
 			break;
-			
+
 		case 2:
             ReadFile(file_id,&tiny_t,sizeof(tiny_tr_type),&dwByteRead,NULL);
 			for (i = 0; i < 32; i++)
 				for (j = 0; j < 32; j++) {
 					t_d.terrain[i][j] = tiny_t.terrain[i][j];
-					t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];					
+					t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];
 					}
 			for (i = 0; i < 16; i++) {
 				t_d.room_rect[i] = tiny_t.room_rect[i];
@@ -911,7 +910,7 @@ void import_town(short which_town)
 
     if(ReadFile(file_id, &talking, sizeof(talking_record_type), &dwByteRead, NULL) == FALSE){
     CloseHandle(file_id);oops_error(46);}
-	
+
 	for (i = 0; i < 170; i++) {
         ReadFile(file_id, &(talk_strs[i]), talking.strlens[i], &dwByteRead, NULL);
 		talk_strs[i][talking.strlens[i]] = 0;
@@ -920,7 +919,7 @@ void import_town(short which_town)
 	error = CloseHandle(file_id);
 	if (error == 0) {CloseHandle(file_id);oops_error(47);}
 	GlobalUnlock(temp_buffer);
-	GlobalFree(temp_buffer);	
+	GlobalFree(temp_buffer);
 }
 
 // When this is called, the current town is the town to make town 0.
@@ -931,8 +930,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	HANDLE dummy_f,file_id;
 	DWORD buf_len = 100000, dwByteRead;
 	short error;
-	short out_num;
-	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
+	long scen_ptr_move = 0;
 	location loc;
 	short x,y;
 	HGLOBAL temp_buffer;
@@ -940,7 +938,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 
 	// Step 1 - load scenario file from scenario base. It contains all the monsters and
 	// items done up properly!
-	
+
 		file_id = CreateFile(szBladBase, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -963,7 +961,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		CloseHandle(file_id); oops_error(114);
 		return;
 		}
-	
+
     if (ReadFile(file_id, &scenario, sizeof(scenario_data_type), &dwByteRead, NULL) == FALSE){
 		CloseHandle(file_id); oops_error(82); return;
 		}
@@ -990,7 +988,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	// which we'll build the new scenario in   Blades of Exile Base
 		dummy_f = CreateFile(szFileName, GENERIC_WRITE, FILE_SHARE_READ, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		
+
 		if (file_id == INVALID_HANDLE_VALUE){
 		oops_error(111);
 		return;
@@ -1004,7 +1002,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	scenario.num_towns = 1;
 	scenario.town_size[0] = 1;
 	scenario.out_width = out_width;
-	scenario.out_height = out_height;	
+	scenario.out_height = out_height;
 	cur_out.x = 0;
 	cur_out.y = 0;
 	scenario.last_out_edited = cur_out;
@@ -1012,9 +1010,9 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 	// We're finally set up. Let's first set up the new scenario field
 	// We need the new info for the current town and outdoors, which may have been changed
 	scenario.town_data_size[cur_town][0] = sizeof(town_record_type);
-	if (scenario.town_size[cur_town] == 0) 
+	if (scenario.town_size[cur_town] == 0)
 		scenario.town_data_size[cur_town][0] += sizeof(big_tr_type);
-		else if (scenario.town_size[cur_town] == 1) 
+		else if (scenario.town_size[cur_town] == 1)
 			scenario.town_data_size[cur_town][0] += sizeof(ave_tr_type);
 			else scenario.town_data_size[cur_town][0] += sizeof(tiny_tr_type);
 	scenario.town_data_size[cur_town][1] = 0;
@@ -1037,8 +1035,8 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		for (j = 0; j < 120; j++)
 			scenario.out_data_size[i][1] += strlen(data_store->out_strs[j]);
 		}
-		
-	for (i = 0; i < 300; i++) 
+
+	for (i = 0; i < 300; i++)
 		scenario.scen_str_len[i] = 0;
 	for (i = 0; i < 160; i++)
 		scenario.scen_str_len[i] = strlen(scen_strs[i]);
@@ -1046,55 +1044,55 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 		scenario.scen_str_len[i] = strlen(scen_strs2[i - 160]);
 	scenario.last_town_edited = cur_town;
 	scenario.last_out_edited = cur_out;
-	
+
 	// now write scenario data
 	scenario.flag1 = 20;
 	scenario.flag2 = 40;
 	scenario.flag3 = 60;
 	scenario.flag4 = 80; /// these mean made on mac
-	
+
     //scenario data
 	scen_ptr_move += sizeof(scenario_data_type);
     if (WriteFile(dummy_f, &scenario, sizeof(scenario_data_type), &dwByteRead, NULL) == FALSE){
 		CloseHandle(dummy_f);
 		oops_error(3);
 		return;
-		}	
+		}
     // item data
 	scen_ptr_move += sizeof(scen_item_data_type);
     if (WriteFile(dummy_f, &scen_item_list, sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE){
  		CloseHandle(dummy_f);
 		oops_error(4);
 		return;
-		}	
+		}
 	for (i = 0; i < 270; i++) { // scenario strings
 		scen_ptr_move += scenario.scen_str_len[i];
 		if (i < 160) {
             if (WriteFile(dummy_f, &(scen_strs[i]), scenario.scen_str_len[i], &dwByteRead, NULL) == FALSE){
 				CloseHandle(dummy_f);oops_error(5);
 				return;
-				}		
-			}	
+				}
+			}
 			else {
                 if (WriteFile(dummy_f, &(scen_strs2[i - 160]), scenario.scen_str_len[i], &dwByteRead, NULL) == FALSE){
 					CloseHandle(dummy_f);oops_error(5);
 					return;
-					}		
+					}
 				}
 		}
-	
-	
+
+
 	// OK ... scenario written. Now outdoors.
 	num_outdoors = scenario.out_width * scenario.out_height;
 	for (i = 0; i < num_outdoors; i++)
 		{
 			loc.x = i % scenario.out_width;
 			loc.y = i / scenario.out_width;
-			
+
 			for (x = 0; x < 48; x++)
 				for (y = 0; y < 48; y++) {
 					current_terrain.terrain[x][y] = (use_grass > 0) ? 2 : 0;
-					
+
 					if ((x < 4) && (loc.x == 0))
 						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
 					if ((y < 4) && (loc.y == 0))
@@ -1111,7 +1109,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 						}
 						else current_terrain.exit_locs[0].x = 100;
 					}
-					
+
 			// write outdoors
 			for (j = 0; j < 180; j++)
 				current_terrain.strlens[j] = 0;
@@ -1124,7 +1122,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
                 if (WriteFile(dummy_f, &(data_store->out_strs[j]), current_terrain.strlens[j], &dwByteRead, NULL) == FALSE){
                 CloseHandle(dummy_f);oops_error(7);}
 				}
-			
+
 			}
 
 
@@ -1135,7 +1133,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 				town.strlens[i] = 0;
 			for (i = 0; i < 140; i++)
 				town.strlens[i] = strlen(town_strs[i]);
-			
+
 			// write towns
             if(WriteFile(dummy_f, &town, sizeof(town_record_type), &dwByteRead, NULL) == FALSE){
             CloseHandle(dummy_f);oops_error(8);}
@@ -1144,13 +1142,13 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 				case 0:
                     WriteFile(dummy_f, &t_d, sizeof(big_tr_type), &dwByteRead, NULL);
 					break;
-			
+
 				case 1:
 					for (i = 0; i < 48; i++)
 						for (j = 0; j < 48; j++) {
 							ave_t.terrain[i][j] = t_d.terrain[i][j];
-							ave_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];					
-							}					
+							ave_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];
+							}
 					for (i = 0; i < 16; i++) {
 						ave_t.room_rect[i] = t_d.room_rect[i];
 						}
@@ -1159,13 +1157,13 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 						}
                     WriteFile(dummy_f, &ave_t, sizeof(ave_tr_type), &dwByteRead, NULL);
 				break;
-			
-			
+
+
 				case 2:
 					for (i = 0; i < 32; i++)
 						for (j = 0; j < 32; j++) {
 							tiny_t.terrain[i][j] = t_d.terrain[i][j];
-							tiny_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];					
+							tiny_t.lighting[i / 8][j] = t_d.lighting[i / 8][j];
 							}
 					for (i = 0; i < 16; i++) {
 						tiny_t.room_rect[i] = t_d.room_rect[i];
@@ -1189,13 +1187,13 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 			for (j = 0; j < 170; j++) {
                 WriteFile(dummy_f, &(talk_strs[j]), talking.strlens[j], &dwByteRead, NULL);
 				}
-			
+
 			}
 
-	
+
 	change_made = TRUE;
 	// now, everything is moved over. Delete the original, and rename the dummy
-	error = CloseHandle(dummy_f);		
+	error = CloseHandle(dummy_f);
 	if (error == 0) {CloseHandle(dummy_f);oops_error(10);}
 
 	GlobalUnlock(temp_buffer);
@@ -1205,7 +1203,7 @@ void make_new_scenario(char *file_name,short out_width,short out_height,short ma
 void oops_error(short error)
 {
 	char error_str[256];
-	
+
 		SysBeep(50);
 		SysBeep(50);
 		SysBeep(50);
@@ -1482,12 +1480,12 @@ void start_town_data_dump()
 {
 	short i;
 	HANDLE data_dump_file_id;
-    DWORD dwByteRead;	
+    DWORD dwByteRead;
 	char get_text[280], spec_name[256], str[256];
-	
+
 	 sprintf(get_text,"%s - BoE Concise Town Report.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -1521,7 +1519,7 @@ void start_town_data_dump()
 		}
 
    	sprintf(get_text,"\r\r  Town Preset Items: [64]\r");
-   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);	
+   	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
 	for (i = 0; i < 64; i++) {
 		if (town.preset_items[i].item_code > 0) {
@@ -1536,10 +1534,10 @@ void start_town_data_dump()
 	for (i = 0; i < 50; i++) {
         if (town.preset_fields[i].field_type > 0) {
 		    sprintf(get_text,"   Preset field %d: x = %d, y = %d, type = %d, name = %s\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type,field_names[town.preset_fields[i].field_type]);
-           	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+           	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 			}
 		}
-		
+
 	sprintf(get_text,"\r\r  Town Area Rectangles: [16]\r");
    	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
@@ -1569,29 +1567,29 @@ void start_town_data_dump()
 	       	for (i = 0; i < 60; i++) {
     			if (t_d.creatures[i].number > 0) {
 	   		      sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,t_d.creatures[i].start_loc.x,t_d.creatures[i].start_loc.y,t_d.creatures[i].number,t_d.creatures[i].start_attitude,t_d.creatures[i].spec_enc_code,scen_item_list.monst_names[t_d.creatures[i].number]);
-                  WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+                  WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 			    }
     		}
         break;
-        
+
         case 1:
     		sprintf(get_text,"\r\r  Medium Town Creatures [40]: type number > 0\r");
-            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
     		for (i = 0; i < 40; i++) {
 			    if (ave_t.creatures[i].number > 0) {
 			    sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,ave_t.creatures[i].start_loc.x,ave_t.creatures[i].start_loc.y,ave_t.creatures[i].number,ave_t.creatures[i].start_attitude,ave_t.creatures[i].spec_enc_code,scen_item_list.monst_names[ave_t.creatures[i].number]);
-                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 	       		}
     		}
         break;
 
         case 2:
 			sprintf(get_text,"\r\r  Small Town Creatures [30]: type number > 0\r");
-            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		    for (i = 0; i < 30; i++) {
     			if (tiny_t.creatures[i].number > 0) {
 	       		    sprintf(get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, name = %s\r",i,tiny_t.creatures[i].start_loc.x,tiny_t.creatures[i].start_loc.y,tiny_t.creatures[i].number,tiny_t.creatures[i].start_attitude,tiny_t.creatures[i].spec_enc_code,scen_item_list.monst_names[tiny_t.creatures[i].number]);
-                    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+                    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		        }
 		   }
         break;
@@ -1847,7 +1845,7 @@ void start_town_data_dump()
         }
 
 	sprintf(get_text,"\r\r");
-    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);    
+    WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
 	CloseHandle(data_dump_file_id);
 }
@@ -1855,14 +1853,14 @@ void start_town_data_dump()
 
 void object_scenario_data_dump()
 {
-	short i,j;
+	short i;
 	char get_text[280], spec_name[256], str[256];
 	HANDLE data_dump_file_id;
     DWORD dwByteRead;
-    
+
 	 sprintf(get_text,"%s - BoE Scenario Object Data.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-   
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -1904,14 +1902,14 @@ void object_scenario_data_dump()
 
 		sprintf(get_text,"\n\n  Scenario Boat Records: [30]\n");
 		WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-		
+
 		for (i = 0; i < 30; i++) {
             if (scenario.scen_boats[i].which_town >= 0) {
         		sprintf(get_text,"   Scenario Boat %d:	Town = %d, X = %d, Y = %d, Property = %d\n",i,scenario.scen_boats[i].which_town,scenario.scen_boats[i].boat_loc.x,scenario.scen_boats[i].boat_loc.y,scenario.scen_boats[i].property);
 		       	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		    }
     	}
-    	
+
 	sprintf(get_text,"\n\n  Scenario Timers: [20]\n");
    	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
@@ -2114,7 +2112,7 @@ void object_scenario_data_dump()
 		break;
 	}
 	}
-	
+
 	}
 	}
 	sprintf(get_text,"\n\n  Scenario String Lengths: [300]\n");
@@ -2139,7 +2137,7 @@ void start_data_dump()
 	HANDLE data_dump_file_id;
     DWORD dwByteRead;
 	location out_sec,last_out = cur_out;
-	
+
 	 sprintf(get_text,"%s - BoE Scenario Data.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -2181,7 +2179,7 @@ void start_data_dump()
 			load_outdoors(out_sec,0);
 			sprintf(get_text,"  Section X = %d, Y = %d:  %s \n",(short) out_sec.x,(short) out_sec.y,data_store->out_strs[0]);
         	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-			}		
+			}
 	sprintf(get_text,"\nNames of the towns in %s:\n",scen_strs[0]);
 	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 			for (j = 0; j < scenario.num_towns; j++) {
@@ -2190,7 +2188,7 @@ void start_data_dump()
     	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		}
 		sprintf(get_text,"\n  Outdoor Start Zone: X = %d, Y = %d\n",scenario.out_sec_start.x,scenario.out_sec_start.y);
-        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);		
+        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		sprintf(get_text,"  Outdoor Start Location: X = %d, Y = %d\n",scenario.out_start.x,scenario.out_start.y);
     	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 		sprintf(get_text,"  Starting Town: = %d\n",scenario.which_town_start);
@@ -2244,7 +2242,7 @@ void start_monst_data_dump()
 
 	 sprintf(get_text,"%s - BoE Monstdata.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-   	
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -2254,7 +2252,7 @@ void start_monst_data_dump()
 
 	sprintf(get_text,"Monsters data dump for %s :\n\n",scen_strs[0]);
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-	
+
 	sprintf(get_text,"Outdoor Monsters :\n");
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
@@ -2269,49 +2267,49 @@ void start_monst_data_dump()
                 sprintf(get_text,"\n  Encounter %d :\n",i);
                 WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n   Hostiles :\n\n    15-30 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[0]],current_terrain.special_enc[i].monst[0]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    7-10 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[1]],current_terrain.special_enc[i].monst[1]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);      
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    4-6 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[2]],current_terrain.special_enc[i].monst[2]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                            
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    3-5 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[3]],current_terrain.special_enc[i].monst[3]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    2-3 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[4]],current_terrain.special_enc[i].monst[4]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1-2 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[5]],current_terrain.special_enc[i].monst[5]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].monst[6]],current_terrain.special_enc[i].monst[6]);
                 WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n   Friendly :\n\n    7-10 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].friendly[0]],current_terrain.special_enc[i].friendly[0]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    2-4 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].friendly[1]],current_terrain.special_enc[i].friendly[1]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);      
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[current_terrain.special_enc[i].friendly[2]],current_terrain.special_enc[i].friendly[2]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                            
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             }
             for(i=0;i<4;i++){
                 sprintf(get_text,"\n  Wandering %d :\n",i);
                 WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n   Hostiles :\n\n    15-30 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[0]],current_terrain.wandering[i].monst[0]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    7-10 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[1]],current_terrain.wandering[i].monst[1]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);      
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    4-6 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[2]],current_terrain.wandering[i].monst[2]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                            
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    3-5 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[3]],current_terrain.wandering[i].monst[3]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    2-3 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[4]],current_terrain.wandering[i].monst[4]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1-2 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[5]],current_terrain.wandering[i].monst[5]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].monst[6]],current_terrain.wandering[i].monst[6]);
                 WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n   Friendly :\n\n    7-10 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].friendly[0]],current_terrain.wandering[i].friendly[0]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    2-4 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].friendly[1]],current_terrain.wandering[i].friendly[1]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);      
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[current_terrain.wandering[i].friendly[2]],current_terrain.wandering[i].friendly[2]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                            
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             }
         sprintf(get_text,"\n---------------------------------------------------\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2321,25 +2319,25 @@ void start_monst_data_dump()
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 	sprintf(get_text,"\nTown Monsters :\n");
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-	
+
 	for (j = 0; j < scenario.num_towns; j++) {
 		load_town(j);
     	sprintf((char *)get_text,"\n Town %d : %s\n",j,town_strs[0]);
     	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-        
+
         for(i=0;i<4;i++){
                 sprintf(get_text,"\n  Wandering %d :\n",i);
                 WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[town.wandering[i].monst[0]],town.wandering[i].monst[0]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[town.wandering[i].monst[1]],town.wandering[i].monst[1]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);                            
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1 %s (number %d)\n",scen_item_list.monst_names[town.wandering[i].monst[2]],town.wandering[i].monst[2]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"\n    1-2 %s (number %d)\n",scen_item_list.monst_names[town.wandering[i].monst[3]],town.wandering[i].monst[3]);
-                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);  
+                WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             }
-            
+
         for(i=0;i<60;i++){
             sprintf(get_text,"\n  Monster %d :\n\n",i);
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
@@ -2357,18 +2355,18 @@ void start_monst_data_dump()
                 break;
                 case 3:
                 sprintf(get_text,"   Start Attitude : Hostile Type B\n");
-                break;                                
+                break;
                 }
-            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);   
+            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             if(t_d.creatures[i].mobile == TRUE)
             sprintf(get_text,"   Monster can move : Yes\n");
             else
             sprintf(get_text,"   Monster can move : No\n");
-            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);   
+            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Personality : %d\n",t_d.creatures[i].personality);
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Facial Graphic : %d\n",t_d.creatures[i].facial_pic);
-            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);              
+            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             switch(t_d.creatures[i].time_flag){
                 case 0:
                 sprintf(get_text,"   Timing : Always Here\n");
@@ -2382,19 +2380,19 @@ void start_monst_data_dump()
                 //case 3 doesn't exist
                 case 4:
                 sprintf(get_text,"   Timing : Sometimes here A\n");
-                break;                               
+                break;
                 case 5:
                 sprintf(get_text,"   Timing : Sometimes here B\n");
-                break;     
+                break;
                 case 6:
                 sprintf(get_text,"   Timing : Sometimes here C\n");
                 break;
                 case 7:
                 sprintf(get_text,"   Timing : Appear when event %d\n",t_d.creatures[i].time_code);
-                break;                                                          
+                break;
                 case 8:
                 sprintf(get_text,"   Timing : Disappear when event %d\n",t_d.creatures[i].time_code);
-                break;                                                                          
+                break;
             }
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Event Code : %d\n", t_d.creatures[i].time_code);
@@ -2402,13 +2400,13 @@ void start_monst_data_dump()
             sprintf(get_text,"   Part of Special Encounter : %d\n",t_d.creatures[i].spec_enc_code);
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Special to call on death : %d\n", t_d.creatures[i].special_on_kill);
-            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);            
+            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Life Flag 1 : %d\n",t_d.creatures[i].spec1);
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Life Flag 2 : %d\n",t_d.creatures[i].spec2);
             WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text,"   Start Location : x=%d, y=%d\n",t_d.creatures[i].start_loc.x,t_d.creatures[i].start_loc.y);
-            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);            
+            WriteFile(data_dump_file_id, get_text, strlen(get_text),&dwByteRead,NULL);
             }
         sprintf(get_text,"\n---------------------------------------------------\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2432,7 +2430,7 @@ void start_spec_data_dump(){
 
 	 sprintf(get_text,"%s - BoE Specdata.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-   	
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -2445,7 +2443,7 @@ void start_spec_data_dump(){
 
 	sprintf(get_text,"Scenario Specials :\n\n");
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-    
+
     for(i=0;i < 256 ; i++){
         if(scenario.scen_specials[i].type != 0){
     	   sprintf(get_text," Node Number : %d\n\n",i);
@@ -2456,24 +2454,24 @@ void start_spec_data_dump(){
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
            sprintf(get_text,"\n  Stuff Done Flag Part A : %d,",scenario.scen_specials[i].sd1);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text," Part B : %d\n",scenario.scen_specials[i].sd2);           
+           sprintf(get_text," Part B : %d\n",scenario.scen_specials[i].sd2);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text,"  Message Part 1 : %d\n",scenario.scen_specials[i].m1);           
+           sprintf(get_text,"  Message Part 1 : %d\n",scenario.scen_specials[i].m1);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text,"  Message Part 2 : %d\n",scenario.scen_specials[i].m2);           
+           sprintf(get_text,"  Message Part 2 : %d\n",scenario.scen_specials[i].m2);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text,"  Picture : %d\n",scenario.scen_specials[i].pic);           
+           sprintf(get_text,"  Picture : %d\n",scenario.scen_specials[i].pic);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text,"  Extra 1a : %d\n",scenario.scen_specials[i].ex1a);           
-           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-           sprintf(get_text,"  Extra 1b : %d\n",scenario.scen_specials[i].ex1b);           
-           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-           sprintf(get_text,"  Extra 2a : %d\n",scenario.scen_specials[i].ex2a);           
-           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-           sprintf(get_text,"  Extra 2b : %d\n",scenario.scen_specials[i].ex2b);           
+           sprintf(get_text,"  Extra 1a : %d\n",scenario.scen_specials[i].ex1a);
            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-           sprintf(get_text,"  Special to Jump to : %d\n\n",scenario.scen_specials[i].jumpto);           
-           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
+           sprintf(get_text,"  Extra 1b : %d\n",scenario.scen_specials[i].ex1b);
+           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+           sprintf(get_text,"  Extra 2a : %d\n",scenario.scen_specials[i].ex2a);
+           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+           sprintf(get_text,"  Extra 2b : %d\n",scenario.scen_specials[i].ex2b);
+           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+           sprintf(get_text,"  Special to Jump to : %d\n\n",scenario.scen_specials[i].jumpto);
+           WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             }
     }
 
@@ -2488,12 +2486,12 @@ void start_spec_data_dump(){
         sprintf(get_text," \nTimer Number : %d\n\n",i);
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         sprintf(get_text," Moves between calls : %d\n",scenario.scenario_timer_times[i]);
-        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);        
+        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         sprintf(get_text," Scenario Special to call : %d\n",scenario.scenario_timer_specs[i]);
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         }
     }
-    
+
     if(count == 0){
     sprintf(get_text,"\nNo Scenario Timers.\n");
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2509,7 +2507,7 @@ void start_spec_data_dump(){
 			load_outdoors(out_sec,0);
 			sprintf(get_text,"\n Section X = %d, Y = %d:  %s \n",(short) out_sec.x,(short) out_sec.y,data_store->out_strs[0]);
         	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-        	
+
         for(i=0;i < 60 ; i++){
             if(current_terrain.specials[i].type != 0){
         	   sprintf(get_text," \n Node Number : %d\n\n",i);
@@ -2520,27 +2518,27 @@ void start_spec_data_dump(){
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                sprintf(get_text,"\n  Stuff Done Flag Part A : %d,",current_terrain.specials[i].sd1);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text," Part B : %d\n",current_terrain.specials[i].sd2);           
+               sprintf(get_text," Part B : %d\n",current_terrain.specials[i].sd2);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Message Part 1 : %d\n",current_terrain.specials[i].m1);           
+               sprintf(get_text,"  Message Part 1 : %d\n",current_terrain.specials[i].m1);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Message Part 2 : %d\n",current_terrain.specials[i].m2);           
+               sprintf(get_text,"  Message Part 2 : %d\n",current_terrain.specials[i].m2);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Picture : %d\n",current_terrain.specials[i].pic);           
+               sprintf(get_text,"  Picture : %d\n",current_terrain.specials[i].pic);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Extra 1a : %d\n",current_terrain.specials[i].ex1a);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 1b : %d\n",current_terrain.specials[i].ex1b);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 2a : %d\n",current_terrain.specials[i].ex2a);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 2b : %d\n",current_terrain.specials[i].ex2b);           
+               sprintf(get_text,"  Extra 1a : %d\n",current_terrain.specials[i].ex1a);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Special to Jump to : %d\n",current_terrain.specials[i].jumpto);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
+               sprintf(get_text,"  Extra 1b : %d\n",current_terrain.specials[i].ex1b);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Extra 2a : %d\n",current_terrain.specials[i].ex2a);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Extra 2b : %d\n",current_terrain.specials[i].ex2b);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Special to Jump to : %d\n",current_terrain.specials[i].jumpto);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             }
         }
- 
+
         sprintf(get_text,"\n---------------------------------------------------\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
     }
@@ -2549,12 +2547,12 @@ void start_spec_data_dump(){
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 	sprintf(get_text,"\nTown Specials :\n");
     WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-	
+
 	for (j = 0; j < scenario.num_towns; j++) {
 		load_town(j);
     	sprintf((char *)get_text,"\n Town %d : %s\n",j,town_strs[0]);
     	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-        
+
         for(i=0;i < 100 ; i++){
             if(town.specials[i].type != 0){
         	   sprintf(get_text," \n Node Number : %d\n\n",i);
@@ -2565,41 +2563,41 @@ void start_spec_data_dump(){
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                sprintf(get_text,"\n  Stuff Done Flag Part A : %d,",town.specials[i].sd1);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text," Part B : %d\n",town.specials[i].sd2);           
+               sprintf(get_text," Part B : %d\n",town.specials[i].sd2);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Message Part 1 : %d\n",town.specials[i].m1);           
+               sprintf(get_text,"  Message Part 1 : %d\n",town.specials[i].m1);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Message Part 2 : %d\n",town.specials[i].m2);           
+               sprintf(get_text,"  Message Part 2 : %d\n",town.specials[i].m2);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Picture : %d\n",town.specials[i].pic);           
+               sprintf(get_text,"  Picture : %d\n",town.specials[i].pic);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Extra 1a : %d\n",town.specials[i].ex1a);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 1b : %d\n",town.specials[i].ex1b);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 2a : %d\n",town.specials[i].ex2a);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
-               sprintf(get_text,"  Extra 2b : %d\n",town.specials[i].ex2b);           
+               sprintf(get_text,"  Extra 1a : %d\n",town.specials[i].ex1a);
                WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-               sprintf(get_text,"  Special to Jump to : %d\n",town.specials[i].jumpto);           
-               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);           
+               sprintf(get_text,"  Extra 1b : %d\n",town.specials[i].ex1b);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Extra 2a : %d\n",town.specials[i].ex2a);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Extra 2b : %d\n",town.specials[i].ex2b);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
+               sprintf(get_text,"  Special to Jump to : %d\n",town.specials[i].jumpto);
+               WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             }
         }
 
         sprintf(get_text,"\n---------------------------------------------------\n");
-        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);        
+        WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         sprintf(get_text,"Town Timers :\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
         count = 0;
-    
+
         for(i= 0;i < 8 ;i++){
         if(town.timer_spec_times[i] > 0){
             count++;
             sprintf(get_text," \nTimer Number : %d\n\n",i);
             WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text," Moves between calls : %d\n",town.timer_spec_times[i]);
-            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);        
+            WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             sprintf(get_text," Town Special to call : %d\n",town.timer_specs[i]);
             WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
             }
@@ -2609,7 +2607,7 @@ void start_spec_data_dump(){
         sprintf(get_text,"\nNo Town Timers.\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         }
-        
+
         sprintf(get_text,"\n---------------------------------------------------\n");
         WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
         }
@@ -2633,7 +2631,7 @@ void start_shopping_data_dump()
 
 	 sprintf(get_text,"%s - BoE Scenario Shopping.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -2655,7 +2653,7 @@ void start_shopping_data_dump()
 				if (current_terrain.specials[i].type == 229) {
                 count++;
    				sprintf(get_text,"\n  Number of node : %d\n",i);
-            	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);	
+            	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 				sprintf(get_text,"  Name of Store : %s\n",data_store->out_strs[current_terrain.specials[i].m1+10]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 
@@ -2667,21 +2665,21 @@ void start_shopping_data_dump()
 				case 1:
   				sprintf(get_text,"  Store type  : 1 - Mage spells\n");
 				break;
-				
+
 				case 2:
   				sprintf(get_text,"  Store type  : 2 - Priest spells\n");
 				break;
 
 				case 3:
   				sprintf(get_text,"  Store type  : 3 - Alchemy\n");
-				break;				
+				break;
 
 				case 4:
   				sprintf(get_text,"  Store type  : 4 - Healing\n");
 				break;
-				
+
                 }
-                
+
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 				sprintf(get_text,"  Number of first item in store : %d, full name : %s\n",current_terrain.specials[i].ex1a, scen_item_list.scen_items[current_terrain.specials[i].ex1a].full_name);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2702,7 +2700,7 @@ void start_shopping_data_dump()
 
 	sprintf(get_text,"\nList of town stores:\n");
 	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-	
+
 	for (j = 0; j < scenario.num_towns; j++) {
 		count = 0;
 		load_town(j);
@@ -2752,7 +2750,7 @@ void start_shopping_data_dump()
 				sprintf(get_text,"  Cost adjust (0 .. 6, lower = cheaper) : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 				break;
-				
+
 				case 10:
                 sprintf(get_text,"  Name of Store : %s\n",talk_strs[2*i+40]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2764,7 +2762,7 @@ void start_shopping_data_dump()
 				sprintf(get_text,"  Cost adjust (0 .. 6, lower = cheaper) : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 				break;
-				
+
 				case 11:
                 sprintf(get_text,"  Name of Store : %s\n",talk_strs[2*i+40]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2776,24 +2774,24 @@ void start_shopping_data_dump()
 				sprintf(get_text,"  Number of recipes in shop : %d\n",talking.talk_nodes[i].extras[2]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
 				break;
-				
+
 				case 12:
                 sprintf(get_text,"  Name of healer : %s\n",talk_strs[2*i+40]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"  Cost adjust (0 .. 6, lower = cheaper) : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 break;
-                
+
                 case 16:
                 sprintf(get_text,"  Cost to identify : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 break;
-                
+
                 case 17:
                 sprintf(get_text,"  Type of enchantment : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 break;
-                
+
                 case 20:
 				sprintf(get_text,"  Cost of Boat : %d\n",talking.talk_nodes[i].extras[0]);
                	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2802,7 +2800,7 @@ void start_shopping_data_dump()
 				sprintf(get_text,"  Total number of boats sold : %d\n",talking.talk_nodes[i].extras[2]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 break;
-            
+
                 case 21:
 				sprintf(get_text,"  Cost of Horse : %d\n",talking.talk_nodes[i].extras[0]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
@@ -2817,7 +2815,7 @@ void start_shopping_data_dump()
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"  Cost of item : %d\n",talking.talk_nodes[i].extras[1]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-                break;                
+                break;
 
 
                 case 23:
@@ -2827,11 +2825,11 @@ void start_shopping_data_dump()
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
                 sprintf(get_text,"  Which shop (0 .. 4) : %d\n",talking.talk_nodes[i].extras[1]);
             	WriteFile(data_dump_file_id, get_text,strlen(get_text),&dwByteRead,NULL);
-                break;                                            
+                break;
                         }
                     }
     			}
-    			
+
             if(count == 0)
 			sprintf(get_text,"\n -- No shop found.\n");
 			else if (count == 1)
@@ -2857,12 +2855,11 @@ void scen_text_dump()
 	HANDLE data_dump_file_id;
 	DWORD dwByteRead;
 	char get_text[300];
-	long len;
 	location out_sec,last_out = cur_out;
 
 	 sprintf(get_text,"%s - BoE Scenario Text.txt",scen_strs[0]);
    data_dump_file_id = CreateFile(get_text, GENERIC_WRITE, FILE_SHARE_READ, NULL,CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		
+
 	if (data_dump_file_id == INVALID_HANDLE_VALUE)
 	{
 		oops_error(28);
@@ -2944,7 +2941,7 @@ void scen_text_dump()
 }
 void port_talk_nodes()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -2960,7 +2957,7 @@ void port_talk_nodes()
 
 void port_town()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -2992,7 +2989,7 @@ void port_town()
 
 void port_dummy_town()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -3024,7 +3021,7 @@ void port_dummy_town()
 
 void port_dummy_t_d(short size,char *buffer)
 {
-	short i,j,k,l;
+	short i;
 	big_tr_type *d1;
 	ave_tr_type *d2;
 	tiny_tr_type *d3;
@@ -3077,7 +3074,7 @@ void port_dummy_t_d(short size,char *buffer)
 
 void port_dummy_talk_nodes()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -3093,7 +3090,7 @@ void port_dummy_talk_nodes()
 
 void port_t_d()
 {
-	short i,j,k,l;
+	short i,;
 	if (cur_scen_is_win == TRUE)
 		return;
 
@@ -3112,7 +3109,7 @@ void port_t_d()
 
 void port_scenario()
 {
-	short i,j,k,l;
+	short i,j;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -3195,7 +3192,7 @@ void port_scenario()
 
 void port_item_list()
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -3209,7 +3206,7 @@ void port_item_list()
 
 void port_out(outdoor_record_type *out)
 {
-	short i,j,k,l;
+	short i;
 
 	if (cur_scen_is_win == TRUE)
 		return;
@@ -3293,12 +3290,12 @@ short FSRead(HFILE file,long *len,char *buffer)
 
 short SetFPos(HFILE file, short mode, long len)
 {
-	long error = 0; 
-	
+	long error = 0;
+
 	switch (mode) {
-		case 1: error = _llseek(file,len,0); break; 
-		case 2: error = _llseek(file,len,2); break; 
-		case 3: error = _llseek(file,len,1); break; 
+		case 1: error = _llseek(file,len,0); break;
+		case 2: error = _llseek(file,len,2); break;
+		case 3: error = _llseek(file,len,1); break;
 		}
 
 	if (error == HFILE_ERROR)
@@ -3315,7 +3312,7 @@ void flip_rect(RECT16 *s)
 	alter_rect(s);
 }
 
-void alter_rect(RECT16 *r) 
+void alter_rect(RECT16 *r)
 {
 	short a;
 
@@ -3341,7 +3338,7 @@ void import_outdoors(location which_out)
 	HGLOBAL temp_buffer;
 	short out_sec_num;
 	outdoor_record_type store_out;
-	
+
 	if (overall_mode == 61)
 		return;
 
@@ -3350,11 +3347,11 @@ void import_outdoors(location which_out)
 		oops_error(31);
 		beep();
 		return;
-		}	
-	
+		}
+
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
-	
-	
+
+
 	if (out_sec_num >= 0) {
 		ofn.hwndOwner = mainPtr;
 		ofn.lpstrFile = szFileName3;
@@ -3369,7 +3366,7 @@ void import_outdoors(location which_out)
 			strncpy(szFileName3, szBladBase, 128);
 			which_town = 0;
 			}
-			
+
 	SetCurrentDirectory(file_path_name);
 
 	file_id = _lopen(szFileName3,OF_READ | OF_SHARE_DENY_WRITE);
@@ -3377,7 +3374,7 @@ void import_outdoors(location which_out)
 		oops_error(42); beep();
 		return;
 		}
-	
+
 	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
 	if (temp_buffer == NULL) {
 		_lclose(file_id); oops_error(41);
@@ -3394,21 +3391,21 @@ void import_outdoors(location which_out)
 		_lclose(file_id); oops_error(43); return;
 		}
 	temp_scenario = (scenario_data_type *) buffer;
-	
+
 	if ((which.out.x >= temp_scenario->out_width) || (which.out.y >= temp_scenario->out_height)) {
 		give_error("Oops ... the selected scenario doesn't have those dimensions. The zone you selected doesn't exist inside this scenario.","",0);
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id); 
+		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id);
 		return;
 		}
-	
+
 	if ((temp_scenario->flag1 == 20) && (temp_scenario->flag2 == 40)
 	 && (temp_scenario->flag3 == 60)
 	  && (temp_scenario->flag4 == 80)) {
 	  	file_ok = TRUE;
 	  	}
 	 if (file_ok == FALSE) {
-		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0); 
-		return;	 
+		GlobalUnlock(temp_buffer); GlobalFree(temp_buffer); _lclose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Windows scenario editor.","",0);
+		return;
 	 	}
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
@@ -3419,8 +3416,8 @@ void import_outdoors(location which_out)
 		for (j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
 	len_to_jump += store;
-	
-	error = SetFPos (file_id, 1, len_to_jump);	
+
+	error = SetFPos (file_id, 1, len_to_jump);
 	if (error != 0) {_lclose(file_id);oops_error(32);}
 
 	len = sizeof(outdoor_record_type);
@@ -3437,28 +3434,28 @@ void import_outdoors(location which_out)
 			}
 
 		}
-	
+
 	if (mode == 0) 	{
 		cur_out = which_out;
 		}
-		
-	if (mode == 1) 
-		for (j = 0; j < 48; j++) {				
+
+	if (mode == 1)
+		for (j = 0; j < 48; j++) {
 				borders[0][j] = store_out.terrain[j][47];
 				}
-	if (mode == 2) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 2)
+		for (j = 0; j < 48; j++) {
 				borders[1][j] = store_out.terrain[0][j];
 				}
-	if (mode == 3) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 3)
+		for (j = 0; j < 48; j++) {
 				borders[2][j] = store_out.terrain[j][0];
 				}
-	if (mode == 4) 
-		for (j = 0; j < 48; j++) {				
+	if (mode == 4)
+		for (j = 0; j < 48; j++) {
 				borders[3][j] = store_out.terrain[47][j];
 				}
-				
+
 
 	error = _lclose(file_id);
 	if (error != 0) {_lclose(file_id);oops_error(33);}
