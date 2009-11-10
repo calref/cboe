@@ -72,7 +72,7 @@ HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								128,
 								9,10,11,12,13,
 								14,15,16,17,29, 51,60,61,62,
@@ -139,8 +139,8 @@ char button_def_key[140] = {0,0,20,21,'k', 24,0,0,0,0,
 							0,0,0,0,0,0,0,0,0,0,
 							0,0,0,0,'o',0,0,0,0,0
 							};
-							// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-							// 25-30  ctrl 1-6  31 - return\
+							/* specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
+							 25-30  ctrl 1-6  31 - return\ */
 
 short button_ul_x[15] = {0,46,0,126,0, 0,126,126,126,138, 166,0,0,126,172};
 short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
@@ -222,7 +222,7 @@ long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
 							SetFocus(edit_box[first_edit_box]);
 					return TRUE;
 					}
-				break;   
+				break;
 			}
 
 			return CallWindowProc((WNDPROC) old_edit_proc[cur_box],hwnd,message,wParam,lParam);
@@ -245,12 +245,8 @@ short cd_create_dialog_parent_num(short dlog_num,short parent)
 
 short cd_create_dialog(short dlog_num,HWND parent)
 {
-	short i,j,free_slot = -1,free_item = -1;
+	short i,free_slot = -1;
 	HWND dlg;
-
-	char item_str[256];
-	short type,flag;
-	HDC win_dc;
 
 	if (parent != NULL) {
 		if (IsWindowEnabled(parent) == 0)
@@ -318,7 +314,7 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 	switch (message)
 	{
 		case WM_INITDIALOG:
-			
+
 	// now, make a window, matching dialog
 	GetWindowRect(hDlg,&dlg_rect);
 	dlgs[store_free_slot] = CreateWindow (szWinName,
@@ -332,17 +328,17 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 			NULL,
 			store_hInstance,
 			NULL);
-			
-			
+
+
 	// Now, give the window its items
 	for (i = 0; i < 200; i++)
-		if (GetDlgItem(hDlg,i) != NULL) 
+		if (GetDlgItem(hDlg,i) != NULL)
 		{
 			GetDlgItemText(hDlg,i,item_str,256);
       		str_offset = 1;
 			dlg_highest_item[free_slot] = i;
 			str_stored = FALSE;
-			
+
 			if (strlen((char *)item_str) == 0)
 			{
 				sprintf((char *) item_str, "+");
@@ -386,17 +382,17 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 				flag = 1;
 				str_stored = TRUE;
 				}
-			else 
+			else
 			{
 				//sscanf(item_str,"%d_%d",&type,&flag);
 				type = atoi(item_str);
 				flag = atoi(item_str+2);
 			}
 
-			
+
 			free_item = -1;
 			// find free item
-			switch (type) 
+			switch (type)
 			{
 				case 0: case 1: case 2: case 5: case 6:
 					for (j = 150; j < NI; j++)
@@ -435,7 +431,7 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 					item_rect[free_item].left = item_rect[free_item].left / 2;
 					item_rect[free_item].bottom = item_rect[free_item].bottom / 2;
 					item_rect[free_item].right = item_rect[free_item].right / 2;
-					
+
 					item_flag[free_item] = flag;
 					item_active[free_item] = 1;
 					item_label[free_item] = 0;
@@ -529,15 +525,15 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 			MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
 			EndDialog(hDlg, 0);
 			return TRUE;
-			
+
 		} /* end of switch(message) */
 		return TRUE;
 	}
 
 void cd_set_edit_focus(short which_win)
-{  
+{
 	short i;
-	
+
 	for (i = 0; i < 80; i++)
 		if (store_edit_parent_num[i] == which_win) {
 			if (edit_box[i] != NULL)
@@ -779,10 +775,8 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
-	
+	short i;
+
 	for (i = 0; i < 80; i++)
 		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 			&& (edit_box[i] != NULL)) {
@@ -790,14 +784,13 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 				return;
 				}
 }
-	
+
 short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 {
-	short dlg_index,item_index,i;
-	short the_type,num_given;
-	RECT the_rect;
+	short i;
+	short num_given;
 	char str[256];
-	
+
 	for (i = 0; i < 80; i++)
 		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 			&& (edit_box[i] != NULL)) {
@@ -806,17 +799,15 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 				return (short) num_given;
 				}
 	return -1;
-				
 
-}	
+
+}
 
 
 // NOTE!!! Expects a c string
 void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
+	short i;
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
 				&& (edit_box[i] != NULL))
@@ -826,11 +817,9 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 // NOTE!!! Expects a c string
 void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 {
-	short dlg_index,item_index,i;
-	short the_type;
-	RECT the_rect;
+	short i;
 	char store_ptr[256];
-	
+
 		sprintf(store_ptr,"%d",num);
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
@@ -838,7 +827,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 					SetWindowText(edit_box[i],store_ptr);
 }
 
-void cdsin(short dlog_num, short item_num, short num) 
+void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
@@ -933,7 +922,7 @@ void cd_flip_led(short dlog_num,short item_num,short item_hit)
 void cd_set_led_range(short dlog_num,short first_led,short last_led,short which_to_set)
 {
 	short i;
-	
+
 	for (i = first_led; i <= last_led; i++) {
 		if (i - first_led == which_to_set)
 			cd_set_led(dlog_num,i,1);
@@ -946,7 +935,7 @@ void cd_set_led_range(short dlog_num,short first_led,short last_led,short which_
 void cd_hit_led_range(short dlog_num,short first_led,short last_led,short which_to_set)
 {
 	short i;
-	
+
 	if ((which_to_set < first_led) || (which_to_set > last_led))
 		return;
 	for (i = first_led; i <= last_led; i++) {
@@ -958,7 +947,7 @@ void cd_hit_led_range(short dlog_num,short first_led,short last_led,short which_
 short cd_get_led_range(short dlog_num,short first_led,short last_led)
 {
 	short i;
-	
+
 	for (i = first_led; i <= last_led; i++) {
 		if (cd_get_led(dlog_num,i) == 1)
 			return i - first_led;
@@ -1099,7 +1088,7 @@ void cd_draw_item(short dlog_num,short item_num)
                     else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
 						item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
 					break;
-					
+
 				}
 			}
 
@@ -1212,8 +1201,6 @@ void cd_erase_item(short dlog_num, short item_num)
 	short i,dlg_index,item_index,store_label;
 	RECT to_fry;
 	HDC win_dc;
-	HBRUSH old_brush;
-	HPEN old_pen;
 	Boolean just_label = FALSE;
 
 	if (item_num >= 100) {
@@ -1272,7 +1259,7 @@ void cd_erase_item(short dlog_num, short item_num)
 	win_dc = cd_get_dlog_dc(dlg_index);
 
 	paint_pattern((HBITMAP)win_dc,2,to_fry,0);
-	cd_kill_dc(dlg_index,win_dc);  
+	cd_kill_dc(dlg_index,win_dc);
 
 
 
@@ -1285,7 +1272,7 @@ void cd_press_button(short dlog_num, short item_num)
 	short dlg_index,item_index;
 	long dummy;
 	HDC win_dc;
-	RECT from_rect,to_rect;
+	RECT from_rect;
 	COLORREF colors[3] = {RGB(0,0,0),RGB(0,0,112),RGB(0,255,255)};
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -1298,13 +1285,13 @@ void cd_press_button(short dlog_num, short item_num)
 
 	win_dc = cd_get_dlog_dc(dlg_index);
 
-	
+
 	from_rect.top = button_ul_y[button_type[item_flag[item_index]]];
 	from_rect.left = button_ul_x[button_type[item_flag[item_index]]];
 	from_rect.bottom = from_rect.top + button_height[button_type[item_flag[item_index]]];
 	from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
 	OffsetRect(&from_rect,button_width[button_type[item_flag[item_index]]],0);
-	
+
 	rect_draw_some_item(dlg_buttons_gworld,from_rect,(HBITMAP)win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
@@ -1317,7 +1304,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1341,7 +1328,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1451,7 +1438,6 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	HDC hdc;
 	HPEN dpen,lpen,old_pen;
 	COLORREF x = RGB(0,204,255),y = RGB(0,204,255);//y = RGB(119,119,119);
-	UINT c;
 	Boolean keep_dc = FALSE;
 
 	InflateRect(&rect,val,val);
@@ -1490,24 +1476,15 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 
 void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld){
 
-    short picnum;
-    
-	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
+
 	RECT from_rect = {0,0,28, 36};
-	RECT face_from = {0,0,32,32};
-	RECT death_to = {6,6,78,78};
-	RECT to_rect = {6,6,42,42};
-	RECT m_to_rect = {10,6,38,42};
-	RECT pc_info_from = {0,127,106,157};
-	RECT item_info_from = {174,0,312,112};
-	RECT stat_symbols_from = {0,0,386,94}; /**/
 
 	HBITMAP from_gworld;
 	short draw_dest = 2,m_start_pic;
 	HDC hdc;
 	HBRUSH old_brush;
 	RECT small_monst_rect = {0,0,14,18};
-	
+
 	if (win_or_gworld == 1)
 		draw_dest = 0;
 
@@ -1532,9 +1509,9 @@ void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_
 			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP) (hDlg): (HBITMAP)hdc)
 			  ,rect,0,draw_dest);
         break;
-        
+
 	case 2: //custom 2x1 monster
-        
+
 				rect.right = rect.left + 28; rect.bottom = rect.top + 36;
 				if (win_or_gworld == 0) {
 					old_brush = (HBRUSH)SelectObject(hdc,GetStockObject(BLACK_BRUSH));
@@ -1586,8 +1563,8 @@ void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_
 					else rect_draw_some_item(from_gworld,from_rect,(HBITMAP)hdc,small_monst_rect,0,draw_dest);
 
                 break;
-    
-    case 4:	//custom 2x2 monster		
+
+    case 4:	//custom 2x2 monster
                 rect.right = rect.left + 28; rect.bottom = rect.top + 36;
 				if (win_or_gworld == 0) {
 					old_brush = (HBRUSH)SelectObject(hdc,GetStockObject(BLACK_BRUSH));
@@ -1620,7 +1597,7 @@ void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_
 				if (win_or_gworld == 1)
 					rect_draw_some_item(from_gworld,from_rect,(HBITMAP) hDlg,small_monst_rect,0,0);
 					else rect_draw_some_item(from_gworld,from_rect,(HBITMAP)hdc,small_monst_rect,0,draw_dest);
-					
+
 				m_start_pic = which_g + 3;
 				from_gworld = spec_scen_g;
 				from_rect = calc_rect(m_start_pic % 10, m_start_pic / 10);
@@ -1630,7 +1607,7 @@ void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_
 					rect_draw_some_item(from_gworld,from_rect,(HBITMAP) hDlg,small_monst_rect,0,0);
 					else rect_draw_some_item(from_gworld,from_rect,(HBITMAP)hdc,small_monst_rect,0,draw_dest);
             break;
-            
+
     case 5: // animated custom terrain
 
 			from_gworld = spec_scen_g;
@@ -1665,24 +1642,20 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 900 + x  B&W graphic
 // 950 null item
 // 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
+// 1100 - item info help
+// 1200 - pc screen help
 // 1300 - combat ap
 // 1400-1402 - button help
 // 1500 - stat symbols help
 // 1600 + x - B&W maps
 // 1700 + x - anim graphic
 {
-	short picnum;
-	RECT from1 = {0,0,36,28},from2 = {0,0,36,36},from3 = {0,0,72,72},tiny_obj_rect = {0,0,18,18};
+	RECT from2 = {0,0,36,36}, tiny_obj_rect = {0,0,18,18};
 	RECT from_rect = {0,0,28, 36};
 	RECT face_from = {0,0,32,32};
-	RECT death_to = {6,6,78,78};
 	RECT to_rect = {6,6,42,42};
-	RECT m_to_rect = {10,6,38,42};
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};
-	RECT stat_symbols_from = {0,0,386,94}; /**/
 
 	HBITMAP from_gworld;
 	short draw_dest = 2,m_start_pic;

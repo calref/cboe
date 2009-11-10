@@ -12,7 +12,7 @@ extern RECT right_sbar_rect;
 extern RECT right_buttons[NRSONPAGE];
 extern short current_rs_top;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
-extern short right_button_status[NRS]; 
+extern short right_button_status[NRS];
 extern HWND right_sbar;
 // 0 - clear
 // 1000 + x - terrain type x
@@ -42,7 +42,7 @@ void init_lb() {
 
 void reset_lb() {
 	short i;
-	for (i = 0; i < NLS; i++) { 
+	for (i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
 		draw_lb_slot(i,0);
 		}
@@ -50,10 +50,10 @@ void reset_lb() {
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, char *label, short do_draw) 
+void set_lb(short slot, short mode, char *label, short do_draw)
 {
 	short i;
-	
+
 	if (slot < 0) {
 		for (i = 0; i < NLS; i++)
 			if (left_button_status[i] == 0) {
@@ -73,10 +73,10 @@ void set_lb(short slot, short mode, char *label, short do_draw)
 
 
 
-void init_rb() 
+void init_rb()
 {
 	short i;
-	
+
     lpsi.fMask = SIF_POS;
     lpsi.nPos = 0;
     SetScrollInfo(right_sbar,SB_CTL,&lpsi,FALSE);
@@ -91,10 +91,10 @@ void init_rb()
 		}
 }
 
-void reset_rb() 
+void reset_rb()
 {
 	short i;
-	
+
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 		}
@@ -107,10 +107,10 @@ void reset_rb()
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_rb(short slot, short mode, char *label, short do_draw) 
+void set_rb(short slot, short mode, char *label, short do_draw)
 {
 	short i;
-	
+
 	if (slot < 0) {
 		for (i = 0; i < NRS; i++)
 			if (right_button_status[i] == 0) {

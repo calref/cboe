@@ -76,7 +76,7 @@ HDC dlg_force_dc = NULL; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
 
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								128,
 								9,
 								10, // 10
@@ -136,7 +136,7 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 							'g','1','2','3','4', '5','6',0,0,0,
 							0,0,0,0,0,' ',0,22,23,0,
 							0,0,0,0,0,'1','2','3','4','5',
-							'6','7','8','9','a', 'b','c','d','e','f',  
+							'6','7','8','9','a', 'b','c','d','e','f',
 							'g',0,0,0,0,0,0,0,0,0,
 							0,0,0,0,'y','n',0,'?','r',0,
 							0,0,0,0,0,0,0,0,0, 0,
@@ -292,7 +292,7 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 	RECT dlg_rect;
 	short win_height = 0, win_width = 0;
 	short str_offset = 1;
-	
+
 	free_slot = store_free_slot;
 
 	switch (message) {
@@ -368,7 +368,7 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 				type = atoi(item_str);
 				flag = atoi(item_str+2);
 			}
-			
+
 			free_item = -1;
 			// find free item
 			switch (type) {
@@ -409,12 +409,12 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 					item_rect[free_item].bottom = item_rect[free_item].bottom / 2;
 					item_rect[free_item].right = item_rect[free_item].right / 2;
 
-					if ((type != 5) && ((store_dlog_num >= 2000) || (store_dlog_num == 986))) {
+					/*if ((type != 5) && ((store_dlog_num >= 2000) || (store_dlog_num == 986))) {
 						item_rect[free_item].top =
 							(item_rect[free_item].top * 11) / 10;
 						item_rect[free_item].bottom =
 							(item_rect[free_item].bottom * 11) / 10;
-						}
+						}*/
 
 					item_flag[free_item] = flag;
 					item_active[free_item] = 1;
@@ -467,7 +467,7 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 								}
 							item_key[free_item] = 255;
 							break;
-						case 6:							
+						case 6:
 							edit_box = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE,
 								item_rect[free_item].left,item_rect[free_item].top,
 								item_rect[free_item].right - item_rect[free_item].left,
@@ -749,7 +749,7 @@ void cd_set_text_edit_str(short, char *str)
 		if (edit_box != NULL)
 			SetWindowText(edit_box,str);
 }
-void cdsin(short dlog_num, short item_num, short num) 
+void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
@@ -1180,7 +1180,7 @@ void cd_erase_item(short dlog_num, short item_num)
 		return;
 	win_dc = cd_get_dlog_dc(dlg_index);
 	paint_pattern((HBITMAP)win_dc,2,to_fry,0);
-	cd_kill_dc(dlg_index,win_dc);  
+	cd_kill_dc(dlg_index,win_dc);
 }
 
 void cd_erase_rect(short dlog_num,RECT to_fry)
@@ -1219,13 +1219,13 @@ void cd_press_button(short dlog_num, short item_num)
 	c[1] = GetNearestPaletteIndex(hpal,colors[1]);
 	c[2] = GetNearestPaletteIndex(hpal,colors[2]);*/
 	win_dc = cd_get_dlog_dc(dlg_index);
-	
+
 	from_rect.top = button_ul_y[button_type[item_flag[item_index]]];
 	from_rect.left = button_ul_x[button_type[item_flag[item_index]]];
 	from_rect.bottom = from_rect.top + button_height[button_type[item_flag[item_index]]];
 	from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
 	OffsetRect(&from_rect,button_width[button_type[item_flag[item_index]]],0);
-	
+
 	rect_draw_some_item(dlg_buttons_gworld,from_rect,(HBITMAP) win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
@@ -1238,7 +1238,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1263,7 +1263,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1425,8 +1425,8 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 900 + x  B&W graphic
 // 950 null item
 // 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
+// 1100 - item info help
+// 1200 - pc screen help
 // 1300 - combat ap
 // 1400-1402 - button help
 // 1500 - stat symbols help

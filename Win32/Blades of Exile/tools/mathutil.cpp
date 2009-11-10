@@ -12,9 +12,9 @@
 short get_ran (short times,short  min,short  max){
 	long int store;
 	short i, to_ret = 0;
-	
+
 	if(max < min) max = min;
-	
+
 	for (i = 1; i < times + 1; i++) {
 		store = rand();
 		to_ret += min + (store % (max - min + 1));//min + (((store + 32767) * (max - min + 1)) / 65536);

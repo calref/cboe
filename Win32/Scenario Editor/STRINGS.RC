@@ -5,6 +5,13 @@ ex1b text : 9300 + x +1
 ex2a text : 9600 + x +1
 ex2b text : 9900 + x +1
 */
+
+#ifndef _INCLUDED_RC //Resource files conditional inclusion to allow Code::Block compliance
+	#define _INCLUDED_RC
+#include "BLSCENED.RC"
+#include "GAMEDLOG.RC"
+#endif
+
 STRINGTABLE
 {
   6001, "No special ability"
@@ -202,7 +209,7 @@ STRINGTABLE
   6626, "Have a Rest"
   6627, "Wandering will fight"
   6628, "End Scenario"
-  6629, "Display Picture"  
+  6629, "Display Picture"
   6651, "Give Item"
   6652, "Give Special Item"
   6653, "One-Time Do Nothing"

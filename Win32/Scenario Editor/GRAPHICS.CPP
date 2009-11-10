@@ -47,7 +47,7 @@ extern RECT right_sbar_rect;
 
 extern Boolean left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
-extern short right_button_status[NRS]; 
+extern short right_button_status[NRS];
 extern unsigned char m_pic_index[200];
 extern char *button_strs[140];
 extern location cur_out;
@@ -109,10 +109,10 @@ short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 				0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,0,0,0, // 200
-				0,0,0,0,0,0,0,0,0,0				
+				0,0,0,0,0,0,0,0,0,0
 				};
-				
-				
+
+
 unsigned char small_what_drawn[64][64];
 extern Boolean small_any_drawn;
 
@@ -134,15 +134,15 @@ void Set_up_win ()
 			palette_buttons[i][j].right++;
 		}
 	for (i = 0; i < 8; i++)
-		for (j = 2; j < 6; j++) 
+		for (j = 2; j < 6; j++)
 			OffsetRect(&palette_buttons[i][j],0,3);
 	for (i = 0; i < 8; i++)
-		for (j = 3; j < 6; j++) 
+		for (j = 3; j < 6; j++)
 			OffsetRect(&palette_buttons[i][j],0,3);
 	for (i = 0; i < 8; i++)
-		for (j = 4; j < 6; j++) 
+		for (j = 4; j < 6; j++)
 			OffsetRect(&palette_buttons[i][j],0,3);
-	
+
 	for (i = 0; i < NLS; i++) {
 		left_buttons[i][0] = left_button_base;
 		OffsetRect(&left_buttons[i][0],0,i * 16);
@@ -151,7 +151,7 @@ void Set_up_win ()
 		left_buttons[i][1].bottom -= 1;
 		left_buttons[i][1].left += 0;
 		left_buttons[i][1].right = left_buttons[i][1].left + 16;
-		}		
+		}
 	right_button_base.left = RIGHT_AREA_UL_X + 1;
 	right_button_base.top = RIGHT_AREA_UL_Y + 1;
 	right_button_base.bottom = right_button_base.top + 12;
@@ -159,7 +159,7 @@ void Set_up_win ()
 	for (i = 0; i < NRSONPAGE; i++) {
 		right_buttons[i] = right_button_base;
 		OffsetRect(&right_buttons[i],0,i * 12);
-		}		
+		}
 	load_main_screen();
 }
 
@@ -191,7 +191,7 @@ void run_startup_g()
 void load_main_screen()
 {
 
-	short i,j;	
+	short i;
  	RECT map_from_orig = {372,0,380,8},map_from,brush_to = {0,0,8,8};
 
 	main_dc = GetDC(mainPtr);
@@ -216,9 +216,9 @@ void load_main_screen()
 	OffsetRect(&world_screen,TER_RECT_UL_X,TER_RECT_UL_Y);
 
 	for (i = 0; i < 10; i++)
-		monst_gworld[i] = load_pict(1100 + i);	
+		monst_gworld[i] = load_pict(1100 + i);
 	for (i = 0; i < 6; i++)
-		terrain_gworld[i] = load_pict(800 + i);	
+		terrain_gworld[i] = load_pict(800 + i);
 	small_terrain_gworld = load_pict(904);
 	editor_mixed = load_pict(906);
 	anim_gworld = load_pict(820);
@@ -255,11 +255,9 @@ void redraw_screen()
 
 void draw_main_screen()
 {
-	short i;
 	RECT draw_rect,big_rect = {-1,-1,582,414};
-	HBRUSH old_brush,new_brush;
+	HBRUSH new_brush;
 	COLORREF y = RGB(128,128,128);//y = RGB(119,119,119);
-	UINT c;
 
 	// draw left buttons (always active)
 	draw_lb();
@@ -291,15 +289,15 @@ void draw_main_screen()
 	if ((overall_mode < 60) || (overall_mode == 62)) {
 		place_location();
 		}
-	
-	
+
+
 }
 
 void draw_lb()
 {
 	RECT temp_rect;
 	short i;
-	
+
 	temp_rect = windRect;
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
 	paint_pattern(NULL,1,temp_rect,3);
@@ -308,11 +306,11 @@ void draw_lb()
 }
 
 // mode 0 normal 1 click
-void draw_lb_slot (short which,short mode) 
+void draw_lb_slot (short which,short mode)
 {
 	RECT text_rect,from_rect;
  	COLORREF colors = RGB(0,0,102),colors2 = RGB(0,0,0);
-	
+
 	paint_pattern(NULL,1,left_buttons[which][0],3);
 	if (left_button_status[which] == 0)
 		return;
@@ -324,7 +322,7 @@ void draw_lb_slot (short which,short mode)
 			OffsetRect(&from_rect,from_rect.right - from_rect.left,0);
 		rect_draw_some_item(editor_mixed,from_rect,editor_mixed,left_buttons[which][1],0,1);
 		}
-	if (left_button_status[which] % 10 == 3) 
+	if (left_button_status[which] % 10 == 3)
 		text_rect.left += 16;
 	if (left_button_status[which] % 10 == 2) {
 		SelectObject(main_dc,bold_font);
@@ -343,23 +341,23 @@ void draw_lb_slot (short which,short mode)
 void draw_rb()
 {
 	short i,pos;
-	
+
  	pos = GetScrollPos(right_sbar,SB_CTL);
 	for (i = pos; i < pos + NRSONPAGE; i++)
 		draw_rb_slot(i,0);
 }
 
 // mode 0 normal 1 pressed
-void draw_rb_slot (short which,short mode) 
+void draw_rb_slot (short which,short mode)
 {
 	RECT text_rect;
  	short pos;
   	COLORREF colors = RGB(255,0,0),colors2 = RGB(0,0,0);
-	
+
  	pos = GetScrollPos(right_sbar,SB_CTL);
 	if ((which < pos) || (which >= pos + NRSONPAGE))
 		return;
-		
+
 	text_rect = right_buttons[which - pos];
 	text_rect.right += 2;
    text_rect.bottom += 2;
@@ -378,16 +376,16 @@ void draw_rb_slot (short which,short mode)
 void set_up_terrain_buttons()
 {
 	short i,pic,small_i;
-	RECT ter_from,ter_to,ter_from_base = {0,0,28,36};
-	RECT tiny_from,tiny_to; 
+	RECT ter_from,ter_from_base = {0,0,28,36};
+	RECT tiny_from,tiny_to;
 	HDC hdc;
 	RECT palette_from = {0,0,0,0},palette_to;
 	HBITMAP store_bmp;
 	COLORREF y = RGB(128,128,128);//y = RGB(119,119,119);
 	HBRUSH new_brush;
-			
+
 	paint_pattern(terrain_buttons_gworld,0,terrain_buttons_rect,1);
-	
+
 	hdc = CreateCompatibleDC(main_dc);
 
 	SetBkMode(hdc,TRANSPARENT);
@@ -453,7 +451,7 @@ void set_up_terrain_buttons()
 				tiny_from,terrain_buttons_gworld,tiny_to,0,0);
 			}
 		}
-	
+
 	if (overall_mode < 60) {
 		palette_to.left = 5;
 		palette_to.top = terrain_rects[255].bottom + 5;
@@ -476,9 +474,9 @@ void set_up_terrain_buttons()
 
 void draw_terrain()
 {
-	short q,r,x,y,i,small_i;
+	short q,r,x,i,small_i;
 	location which_pt,where_draw;
-	RECT draw_rect,clipping_rect = {8,8,260,332};	
+	RECT draw_rect,clipping_rect = {8,8,260,332};
 	unsigned char t_to_draw;
 	RECT tiny_to,tiny_to_base = {29,37,36,44},tiny_from,from_rect,to_rect;
 	HBITMAP store_bmp;
@@ -736,24 +734,20 @@ void draw_monsts(HDC hdc)
 {
 	short i,k,width,height,m_start_pic;
 	GWorldPtr from_gworld;
-	RECT source_rect,draw_rect;
+	RECT source_rect;
 	location where_draw,store_loc;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	HBITMAP store_bmp;
-	UINT c;
-	HBRUSH new_brush;
-	
+
 		for (i = 0; i < 60; i++)
 		if (t_d.creatures[i].number != 0) {
 				where_draw.x = t_d.creatures[i].start_loc.x - cen_x + 4;
 				where_draw.y = t_d.creatures[i].start_loc.y - cen_y + 4;
 				width = scenario.scen_monsters[t_d.creatures[i].number].x_width;
 				height = scenario.scen_monsters[t_d.creatures[i].number].y_width;
-				
+
 				for (k = 0; k < width * height; k++) {
 					store_loc = where_draw;
-					if ((where_draw.x == minmax(0,8,where_draw.x)) && 
-					(where_draw.y == minmax(0,8,where_draw.y)) && 
+					if ((where_draw.x == minmax(0,8,where_draw.x)) &&
+					(where_draw.y == minmax(0,8,where_draw.y)) &&
 						(scenario.scen_monsters[t_d.creatures[i].number].picture_num >= 1000)) {
 						source_rect = get_custom_rect((scenario.scen_monsters[t_d.creatures[i].number].picture_num + k) % 1000);
 						store_loc.x += k % width;
@@ -764,10 +758,10 @@ void draw_monsts(HDC hdc)
 							m_start_pic = m_pic_index[scenario.scen_monsters[t_d.creatures[i].number].picture_num] + k;
 							from_gworld = monst_gworld[m_start_pic / 20];
 							m_start_pic = m_start_pic % 20;
-							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);				
+							source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 							store_loc.x += k % width;
 							store_loc.y += k / width;
-							Draw_Some_Item(from_gworld, source_rect, ter_draw_gworld, store_loc, 1, 0); 
+							Draw_Some_Item(from_gworld, source_rect, ter_draw_gworld, store_loc, 1, 0);
 							}
 					}
 			}
@@ -778,7 +772,7 @@ void draw_monsts(HDC hdc)
 RECT get_item_template_rect (short type_wanted)
 {
 	RECT store_rect;
-	
+
 	if (type_wanted < 45) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
 		store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
@@ -789,9 +783,9 @@ RECT get_item_template_rect (short type_wanted)
 			store_rect.top = (type_wanted / 10) * 18;
 			store_rect.bottom = store_rect.top + 18;
 			store_rect.left = (type_wanted % 10) * 18;
-			store_rect.right = store_rect.left + 18;		
+			store_rect.right = store_rect.left + 18;
 			}
-	
+
 	return store_rect;
 }
 
@@ -801,11 +795,7 @@ void draw_items(HDC hdc)
 	RECT source_rect,draw_rect;
 	location where_draw;
 	short pic_num;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),blue = RGB(0,0,255);//y = RGB(119,119,119);
-	HBITMAP store_bmp;
-	UINT c;
-	HBRUSH new_brush;
-	
+
 	for (i = 0; i < 64; i++) {
 		if (town.preset_items[i].item_code >= 0) {
 			where_draw.x = town.preset_items[i].item_loc.x - cen_x + 4;
@@ -813,7 +803,7 @@ void draw_items(HDC hdc)
 			pic_num = scen_item_list.scen_items[town.preset_items[i].item_code].graphic_num;
 			if ((where_draw.x >= 0) && (where_draw.x <= 8) &&
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
-					
+
 					if (pic_num >= 150) {
 						source_rect = get_custom_rect(pic_num - 150);
 						draw_rect = calc_rect(where_draw.x,where_draw.y);
@@ -850,12 +840,12 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw)
 	short picture_wanted;
 	GWorldPtr source_gworld;
 	short k;
-	
+
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
 
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
-	
+
 	if ((picture_wanted >= 2000) && (spec_scen_g != NULL)) {
         source_gworld = spec_scen_g;
         source_rect = get_custom_rect(picture_wanted % 2000);
@@ -903,8 +893,8 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 {
 
 	location where_draw;
-	RECT source_rect,dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
-	short picture_wanted,k;
+	RECT dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
+	short picture_wanted;
 	GWorldPtr source_gworld;
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
@@ -1008,8 +998,8 @@ RECT	destrec;
 	destrec.left = 8 + BITMAP_WIDTH * target.x;
 	destrec.right = destrec.left + BITMAP_WIDTH;
 	destrec.top = 8 + BITMAP_HEIGHT * target.y;
-	destrec.bottom = destrec.top + BITMAP_HEIGHT;	
-	
+	destrec.bottom = destrec.top + BITMAP_HEIGHT;
+
 	destrec.left = destrec.right - (src_rect.right - src_rect.left);
 	destrec.top = destrec.bottom - (src_rect.bottom - src_rect.top);
 
@@ -1060,14 +1050,13 @@ void discard_graphics()
 		}
 }
 
-/* Input terrain currently trying to draw. Get back RECT in terrain template containing 
+/* Input terrain currently trying to draw. Get back RECT in terrain template containing
 desired pixmap, or RECT to darkness if desired map not present */
 RECT get_template_rect (unsigned char type_wanted)
 {
 	RECT store_rect;
-	short i,j;
 	short picture_wanted;
-	
+
 	picture_wanted = scenario.ter_types[type_wanted].picture;
 	if (picture_wanted >= 1000)
 		picture_wanted = 0;
@@ -1083,14 +1072,10 @@ RECT get_template_rect (unsigned char type_wanted)
 
 void place_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
-	RECT from_rect,draw_rect,source_rect,erase_rect;
+	RECT draw_rect,source_rect,erase_rect;
 	short picture_wanted;
 	HBITMAP store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	UINT c;
-	HBRUSH new_brush;
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1113,11 +1098,11 @@ void place_location()
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",(short) cen_x, (short) cen_y);
+		sprintf( draw_str,"Center: x = %d, y = %d  ", cen_x, cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
@@ -1179,14 +1164,9 @@ void place_location()
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location()
 {
-	RECT text_rect = {367,290,384,510};
 	char draw_str[256];
-	RECT from_rect,draw_rect,source_rect,erase_rect;
-	short picture_wanted;
+	RECT from_rect,draw_rect,erase_rect;
 	HBITMAP store_bmp;
-	COLORREF y = RGB(128,128,128),red = RGB(255,0,0),white = RGB(255,255,255);//y = RGB(119,119,119);
-	UINT c;
-	HBRUSH new_brush;
 	HDC hdc;
 
 	erase_rect.left = terrain_rects[255].left + 17;
@@ -1200,22 +1180,22 @@ void place_just_location()
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 	store_bmp = (HBITMAP)SelectObject(hdc,terrain_buttons_gworld);
-	
+
 	draw_rect.left = terrain_rects[255].left + 20;
 	draw_rect.top = terrain_rects[255].top;
 	if (overall_mode < 60)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
+		sprintf(draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 		else {
 			draw_rect.left = 5;
 			draw_rect.top = terrain_rects[255].top + 28;
-			sprintf((char *) draw_str,"Click terrain to edit. ",cen_x,cen_y);
+			sprintf(draw_str,"Click terrain to edit. ");
 			}
 
 	draw_rect.bottom = draw_rect.top + 14;
 	draw_rect.right = draw_rect.left + 200;
 	win_draw_string(hdc,draw_rect,draw_str,0,12);
 	SelectObject(hdc,store_bmp);
-	
+
 
 	from_rect = terrain_buttons_rect;
 	from_rect.top = erase_rect.top;
@@ -1237,7 +1217,7 @@ void set_string(char *string,char *string2)
 Boolean is_special(short i,short j)
 {
 	short k;
-	
+
 	if (editing_town == TRUE)
 		for (k = 0; k < 50; k++)
 			if ((town.special_locs[k].x == i) && (town.special_locs[k].y == j))
@@ -1253,7 +1233,7 @@ Boolean is_special(short i,short j)
 Boolean is_field_type(short i,short j,short field_type)
 {
 	short k;
-	
+
 	for (k = 0; k < 50; k++)
 		if ((town.preset_fields[k].field_type == field_type) &&
 			(town.preset_fields[k].field_loc.x == i) &&
@@ -1282,7 +1262,7 @@ void make_field_type(short i,short j,short field_type)
 void take_field_type(short i,short j,short field_type)
 {
 	short k;
-	
+
 	for (k = 0; k < 50; k++)
 		if ((town.preset_fields[k].field_type == field_type) &&
 			(town.preset_fields[k].field_loc.x == i) &&
@@ -1389,9 +1369,7 @@ void take_quickfire(short i,short j)
 
 Boolean container_there(location l)
 {
-	
-	unsigned char ter;
-	
+
 	if (editing_town == FALSE)
 		return FALSE;
 	if (scenario.ter_types[t_d.terrain[l.x][l.y]].special == 14)
@@ -1400,14 +1378,14 @@ Boolean container_there(location l)
 		return TRUE;
 	if (is_crate(l.x,l.y) == TRUE)
 		return TRUE;
-	return 0;		
+	return 0;
 }
 
 
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
 {
 	char store_s[256];
-	
+
 	strcpy((char *) store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 
@@ -1431,7 +1409,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
 		OffsetRect(&dest_rect,ulx,uly);
-		
+
 	switch (mode) {
 		case 0:
          dest_rect.bottom += 6;
@@ -1446,7 +1424,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
 		}
 	// not yet done adjusts for 1, 2, 3
-	
+
 }
 
 // Note ... this expects a str len of at most 256 and
@@ -1454,7 +1432,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line
 void MeasureText(short str_len,char *str, short *len_array,HDC hdc)
 {
 	short text_len[257];
-	short total_width = 0,i,len;
+	short i;
 	char p_str[257];
 	SIZE val_returned;
 	char *store_array;

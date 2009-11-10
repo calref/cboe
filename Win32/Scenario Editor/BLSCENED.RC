@@ -18,8 +18,13 @@
 #define CURSOR_8	8
 #define ICON_1	1
 
+#ifndef _INCLUDED_RC //Resource files conditional inclusion to allow Code::Block compliance
+	#define _INCLUDED_RC
+#include "GAMEDLOG.RC"
+#include "STRINGS.RC"
+#endif
 
-Exile MENU 
+Exile MENU
 {
  POPUP "&File"
  {
@@ -206,7 +211,7 @@ POPUP "&I1"
 
 }
 
-ACCELERATORS_1 ACCELERATORS 
+ACCELERATORS_1 ACCELERATORS
 {
  VK_F1, 801, VIRTKEY
  "^O", 1, ASCII
@@ -217,10 +222,10 @@ ACCELERATORS_1 ACCELERATORS
  "^U", 311, ASCII
  "^T", 401, ASCII
  "^R", 402, ASCII
- "^L", 403, ASCII   
+ "^L", 403, ASCII
  "^E", 404, ASCII
  "^F", 405, ASCII
- "^G", 406, ASCII   
+ "^G", 406, ASCII
  "^M", 407, ASCII
  "^I", 408, ASCII
  "^J", 409, ASCII

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Blades Char Editor" />
+		<Option platforms="Windows;" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Windows;" />
+				<Option output="bin\Debug\Blades of Exile Character Editor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libwinmm.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option platforms="Windows;" />
+				<Option output="bin\Release\Blades of Exile Character Editor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Linker>
+					<Add option="-s" />
+					<Add library="libwinmm.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="BLADPCED.CPP" />
+		<Unit filename="BLADPCED.RC">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="DLOGTOOL.CPP" />
+		<Unit filename="DLOGTOOL.H" />
+		<Unit filename="EDACTION.CPP" />
+		<Unit filename="EDACTION.H" />
+		<Unit filename="EDFILEIO.CPP" />
+		<Unit filename="EDFILEIO.H" />
+		<Unit filename="EDITORS.CPP" />
+		<Unit filename="EDITORS.H" />
+		<Unit filename="EDSOUND.CPP" />
+		<Unit filename="EDSOUND.H" />
+		<Unit filename="GLOBAL.CPP" />
+		<Unit filename="GLOBAL.H" />
+		<Unit filename="GRAPHICS.CPP" />
+		<Unit filename="GRAPHICS.H" />
+		<Unit filename="GRAPHUTL.CPP" />
+		<Unit filename="GRAPHUTL.H" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
