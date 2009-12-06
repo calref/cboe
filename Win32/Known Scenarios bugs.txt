@@ -10,6 +10,8 @@
 		- Have some NPC killed 
 		- Open the scenario in the Scenario Editor, go to town 28 and change the town special 54 to No Special (or whatever that does nothing), save and redo the encounter (if you're already in the Nuclear Bomb town, that you won't work).
 		- Persist on trying, one moment or another the free slot won't be 10 (the thing is not to summon anything after the second pink is dead. Note that if Disco Joe cast Major Haste, then it will likely be ok, given that Bladesman Wasazore will have 24 AP that is often enough to single-hand two pink forms).
+
+=> should be fixed with the new monster_kill function.
 	
 - Fog :
 
