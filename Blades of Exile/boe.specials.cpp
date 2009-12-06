@@ -1267,13 +1267,21 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 {
 	short xp,i,j,s1,s2,s3;	
 	location l;
+	creature_data_type killed_monster;
 	
-	switch (which_m->m_d.m_type) {
+	killed_monster = *which_m; //work on a local copy of the monster
+	
+	//erase the original monster now so that if during a special chain the original monster's slot is filled with a new monster, it's not the new monster that is erased.
+	which_m->monst_start.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
+
+	which_m->active = 0;
+	
+	switch (killed_monster.m_d.m_type) {
 		case 0: case 3: case 4: case 5: case 6:  
-			if (( which_m->number == 38) || 
-				( which_m->number == 39))
+			if (( killed_monster.number == 38) || 
+				( killed_monster.number == 39))
 				i = 4;
-				else if ( which_m->number == 45)
+				else if ( killed_monster.number == 45)
 					i = 0;
 					else i = get_ran(1,0,1); 
 			play_sound(29 + i); break;
@@ -1284,15 +1292,15 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 		}
 	
 	// Special killing effects
-	if (sd_legit(which_m->monst_start.spec1,which_m->monst_start.spec2) == TRUE)
-		party.stuff_done[which_m->monst_start.spec1][which_m->monst_start.spec2] = 1;
+	if (sd_legit(killed_monster.monst_start.spec1,killed_monster.monst_start.spec2) == TRUE)
+		party.stuff_done[killed_monster.monst_start.spec1][killed_monster.monst_start.spec2] = 1;
 		
-	run_special(12,2,which_m->monst_start.special_on_kill,which_m->m_loc,&s1,&s2,&s3);
-	if (which_m->m_d.radiate_1 == 15)
-		run_special(12,0,which_m->m_d.radiate_2,which_m->m_loc,&s1,&s2,&s3);
+	run_special(12,2,killed_monster.monst_start.special_on_kill,killed_monster.m_loc,&s1,&s2,&s3);
+	if (killed_monster.m_d.radiate_1 == 15)
+		run_special(12,0,killed_monster.m_d.radiate_2,killed_monster.m_loc,&s1,&s2,&s3);
 	
-	if ((in_scen_debug == FALSE) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
-		xp = which_m->m_d.level * 2;
+	if ((in_scen_debug == FALSE) && ((killed_monster.summoned >= 100) || (killed_monster.summoned == 0))) { // no xp for party-summoned monsters
+		xp = killed_monster.m_d.level * 2;
 		if (who_killed < NUM_OF_PCS)
 			adven[who_killed].giveXP(xp);
 			else if (who_killed == INVALID_PC)
@@ -1301,18 +1309,18 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 			i = max((xp / 6),1);
 			adven.giveXP(i);
 			}
-		l = which_m->m_loc;
-		place_glands(l,which_m->number);
+		l = killed_monster.m_loc;
+		place_glands(l,killed_monster.number);
 		
 		}
-	if ((in_scen_debug == FALSE) && (which_m->summoned == 0))
-		place_treasure(which_m->m_loc, which_m->m_d.level / 2, which_m->m_d.treasure, 0);
+	if ((in_scen_debug == FALSE) && (killed_monster.summoned == 0))
+		place_treasure(killed_monster.m_loc, killed_monster.m_d.level / 2, killed_monster.m_d.treasure, 0);
 	
-	i = which_m->m_loc.x;
-	j = which_m->m_loc.y;
-	switch (which_m->m_d.m_type) {
+	i = killed_monster.m_loc.x;
+	j = killed_monster.m_loc.y;
+	switch (killed_monster.m_d.m_type) {
 		case 7:	make_sfx(i,j,6); break;
-		case 8:	if (which_m->number <= 59) make_sfx(i,j,7); break;
+		case 8:	if (killed_monster.number <= 59) make_sfx(i,j,7); break;
 		case 10: case 12: make_sfx(i,j,4); break;
 		case 11: make_sfx(i,j,8); break;
 		default: make_sfx(i,j,1); break;
@@ -1320,15 +1328,12 @@ void kill_monst(creature_data_type *which_m,short who_killed)
 	
 
 
-	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if (((is_town()) || (which_combat_type == 1)) && (killed_monster.summoned == 0)) {
 		party.m_killed[c_town.town_num]++;
 		}
 
 	party.total_m_killed++;
 	
-	which_m->monst_start.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
-
-	which_m->active = 0;
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts. 
