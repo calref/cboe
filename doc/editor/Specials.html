@@ -5,6 +5,11 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div class="navbar">
+<script src='nav.js' type='application/javascript'></script>
+<noscript>Javascript required for the navbar.</noscript>
+</div>
+<div class="content">
 <p class="p1"><b>Section 10: Special Encounters<span class="Apple-converted-space"> </span></b></p>
 <p class="p2"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span>When you walk into a room and a description comes up, that was a special encounter (called a special, for short). When you enter a valley and monsters appear to attack you, that was a special too. When you reach a locked door, and its unlocked if you have the right key, that is a special. In general, anything strange or out of the ordinary that happens is a special encounter.</p>
@@ -95,7 +100,6 @@
 <p class="p3"><span class="Apple-tab-span">	</span>Similarly, when talking to characters, you can have their responses depend on whether events have happened or not. Suppose, Sue, in the same town, talks about Fred. Before Fred dies, she says something nice about him. After he dies, she says he died. When writing Sue's dialog, give her a dialogue node of type Depends On Time (and event). Set the day the response changes (the first field) to 90, and the Event which prevents the change (the second field) to 4. If Fred was killed (i.e. if the Goblin Chief was not killed before Day 90), she will respond with the second text field. Otherwise, she will respond with the first.</p>
 <p class="p3"><span class="Apple-tab-span">	</span>Finally, you can use the If-Then Special Node Type 150: Special Thing happened?, which calls different special nodes depending on whether a day has been reached and whether an Event has happened before that day or not.</p>
 <p class="p3"><span class="Apple-tab-span">	</span>Using Events is a good way to spice up your scenario. By picking things that will disappear and people that can die and Events to prevent those occurances, you can create the feeling of the passing of time. This can create a real feeling of urgency in the player!</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
+</div>
 </body>
 </html>
