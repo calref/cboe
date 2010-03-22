@@ -723,10 +723,10 @@ short pick_town_num(short which_dlog,short def)
 
 	cd_create_dialog_parent_num(store_whigh_dlog,0);
 
-	CDSN(store_whigh_dlog,2,def);
-	cd_get_item_text(which_dlog,7,(char *) temp_str);
-	sprintf((char *) str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
-	csit(which_dlog,7,(char *) str2);
+	CDSN(store_whigh_dlog,2,def,true);
+	cd_get_item_text(which_dlog,7, temp_str);
+	sprintf(str2,"%s (0 - %d)", temp_str,scenario.num_towns - 1);
+	csit(which_dlog,7, str2);
 
 	while (dialog_not_toast)
 		ModalDialog();

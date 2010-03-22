@@ -16,6 +16,7 @@
 #include "boe.town.h"
 #include "boe.specials.h"
 #include "boe.graphutil.h"
+#include "classes/consts.h"
 
 #include "globvar.h"
 
@@ -249,8 +250,8 @@ Boolean pc_combat_move(location destination)
 				return TRUE;
 				}
 				else {
-					sprintf ((char *) create_line, "Blocked: %s               ",d_string[dir]);
-					add_string_to_buf((char *) create_line);
+					sprintf (create_line, "Blocked: %s               ",d_string[dir]);
+					add_string_to_buf(create_line);
 					return FALSE;
 				}
 	}
@@ -279,38 +280,38 @@ void pc_attack(short who_att,short target)
 	// slice out bad attacks
 	if (adven[who_att].isAlive() == false)
 		return;
-	if ((adven[who_att].status[11] > 0) || (adven[who_att].status[12] > 0))
+	if ((adven[who_att].status[STATUS_ASLEEP] > 0) || (adven[who_att].status[STATUS_PARALYZED] > 0))
 		return;
 
 	last_attacked[who_att] = target;
 	which_m = &c_town.monst.dudes[target];
 
 	for (i = 0; i < 24; i++)
-		if (((adven[who_att].items[i].variety == 1) || (adven[who_att].items[i].variety == 2)) &&
+		if (((adven[who_att].items[i].variety == ITEM_TYPE_ONE_HANDED) || (adven[who_att].items[i].variety == ITEM_TYPE_TWO_HANDED)) &&
 			(adven[who_att].equip[i] == TRUE))
 				if (weap1 == 24)
 					weap1 = i;
 					else weap2 = i;
 
-	hit_adj = (-5 * minmax(-8,8,(int)adven[who_att].status[1])) + 5 * minmax(-8,8,(int)which_m->m_d.status[1])
-			- adven[who_att].statAdj(1) * 5 + (get_encumberance(who_att)) * 5;
+	hit_adj = (-5 * minmax(-8,8,(int)adven[who_att].status[STATUS_BLESS_CURSE])) + 5 * minmax(-8,8,(int)which_m->m_d.status[STATUS_BLESS_CURSE])
+			- adven[who_att].statAdj(SKILL_DEXTERITY) * 5 + (get_encumberance(who_att)) * 5;
 
-	dam_adj = minmax(-8,8,(int)adven[who_att].status[1]) - minmax(-8,8,(int)which_m->m_d.status[1])
-			+ adven[who_att].statAdj(0);
+	dam_adj = minmax(-8,8,(int)adven[who_att].status[STATUS_BLESS_CURSE]) - minmax(-8,8,(int)which_m->m_d.status[STATUS_BLESS_CURSE])
+			+ adven[who_att].statAdj(SKILL_STRENGTH);
 
-	if ((which_m->m_d.status[11] > 0) || (which_m->m_d.status[12] > 0)) {
+	if ((which_m->m_d.status[STATUS_ASLEEP] > 0) || (which_m->m_d.status[STATUS_PARALYZED] > 0)) {
 		hit_adj -= 80;
 		dam_adj += 10;
 		}
 
 
-	if ((skill_item = text_pc_has_abil_equip(who_att,37)) < 24) {
-		hit_adj += 5 * (adven[who_att].items[skill_item].ability_strength / 2 + 1);
+	if ((skill_item = text_pc_has_abil_equip(who_att,ITEM_SKILL)) < 24) {
+		hit_adj -= 5 * (adven[who_att].items[skill_item].ability_strength / 2 + 1);
 		dam_adj += adven[who_att].items[skill_item].ability_strength / 2;
 		}
-	if ((skill_item = text_pc_has_abil_equip(who_att,43)) < 24) {
+	if ((skill_item = text_pc_has_abil_equip(who_att,ITEM_GIANT_STRENGTH)) < 24) {
+		hit_adj -= adven[who_att].items[skill_item].ability_strength * 2;
 		dam_adj += adven[who_att].items[skill_item].ability_strength;
-		hit_adj += adven[who_att].items[skill_item].ability_strength * 2;
 		}
 
 	void_sanctuary(who_att);
@@ -321,11 +322,11 @@ void pc_attack(short who_att,short target)
 
 	if (weap1 == 24) {
 
-		sprintf ((char *) create_line, "%s punches.  ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
+		sprintf (create_line, "%s punches.  ", adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 
 		r1 = get_ran(1,0,100) + hit_adj - 20;
-		r1 += 5 * (adven[current_pc].status[6] / 3);
+		r1 += 5 * (adven[current_pc].status[STATUS_WEBS] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 
 		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
@@ -333,8 +334,8 @@ void pc_attack(short who_att,short target)
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "%s misses. ",(char *) adven[who_att].name);
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "%s misses. ",adven[who_att].name);
+				add_string_to_buf(create_line);
 				play_sound(2);
 			}
 		}
@@ -347,8 +348,8 @@ void pc_attack(short who_att,short target)
 		if (what_skill1 == 2)
 			what_skill1 = 3;
 
-		sprintf ((char *) create_line, "%s swings. ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
-		add_string_to_buf((char *) create_line);
+		sprintf (create_line, "%s swings. ",adven[who_att].name);//,hit_adj, dam_adj);
+		add_string_to_buf(create_line);
 
 		r1 = get_ran(1,0,100) - 5 + hit_adj
 		 - 5 * adven[who_att].items[weap1].bonus;
@@ -358,11 +359,11 @@ void pc_attack(short who_att,short target)
 			r1 += 25;
 
 		// race adj.
-		if ((adven[who_att].race == RACE_SLITH) && (adven[who_att].items[weap1].type == 3))
+		if ((adven[who_att].race == RACE_SLITH) && (adven[who_att].items[weap1].type == ITEM_POLE))
 			r1 -= 10;
 
 		r2 = get_ran(1,1,adven[who_att].items[weap1].item_level) + dam_adj + 2 + adven[who_att].items[weap1].bonus;
-		if (adven[who_att].items[weap1].ability == 12)
+		if (adven[who_att].items[weap1].ability == ITEM_WEAK_WEAPON)
 			r2 = (r2 * (10 - adven[who_att].items[weap1].ability_strength)) / 10;
 
 		if (r1 <= hit_chance[adven[who_att].skills[what_skill1]]) {
@@ -372,9 +373,9 @@ void pc_attack(short who_att,short target)
 			// assassinate
 			r1 = get_ran(1,0,100);
 			if ((adven[who_att].level >= which_m->m_d.level - 1)
-				&& (adven[who_att].skills[16] >= which_m->m_d.level / 2)
+				&& (adven[who_att].skills[SKILL_ASSASSINATION] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != 12)) // Can't assassinate splitters
-				if (r1 < hit_chance[max(adven[who_att].skills[16] - which_m->m_d.level,0)]) {
+				if (r1 < hit_chance[max(adven[who_att].skills[SKILL_ASSASSINATION] - which_m->m_d.level,0)]) {
 					add_string_to_buf("  You assassinate.           ");
 					spec_dam += r2;
 					}
@@ -393,30 +394,30 @@ void pc_attack(short who_att,short target)
 					break;
 				}
 			// poison
-			if ((adven[who_att].status[0] > 0) && (adven[who_att].weap_poisoned == weap1)) {
-					poison_amt = adven[who_att].status[0];
-					if (adven[who_att].hasAbilEquip(51) < 24)
+			if ((adven[who_att].status[STATUS_POISONED_WEAPON] > 0) && (adven[who_att].weap_poisoned == weap1)) {
+					poison_amt = adven[who_att].status[STATUS_POISONED_WEAPON];
+					if (adven[who_att].hasAbilEquip(ITEM_POISON_AUGMENT) < 24)
 						poison_amt += 2;
 					which_m->poison(poison_amt);
-					move_to_zero(adven[who_att].status[0]);
+					move_to_zero(adven[who_att].status[STATUS_POISONED_WEAPON]);
 				}
-			if ((adven[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == ITEM_POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				which_m->poison(adven[who_att].items[weap1].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap1].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == ITEM_ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				which_m->acid(adven[who_att].items[weap1].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap1].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap1].ability == ITEM_SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				adven[who_att].heal(adven[who_att].items[weap1].ability_strength / 2);
 				}
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "  %s misses.              ",(char *) adven[who_att].name);
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "  %s misses.              ", adven[who_att].name);
+				add_string_to_buf(create_line);
 				if (what_skill1 == 5)
 					play_sound(19);
 					else play_sound(2);
@@ -430,17 +431,17 @@ void pc_attack(short who_att,short target)
 			what_skill2 = 3;
 
 
-		sprintf ((char *) create_line, "%s swings.                    ",(char *) adven[who_att].name);//,hit_adj, dam_adj);
-		add_string_to_buf((char *) create_line);
+		sprintf (create_line, "%s swings.                    ", adven[who_att].name);//,hit_adj, dam_adj);
+		add_string_to_buf(create_line);
 		r1 = get_ran(1,0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
 
 		// Ambidextrous?
 		if (adven[who_att].traits[TRAIT_AMBIDEXTROUS] == FALSE)
 			r1 += 25;
 
-		r1 += 5 * (adven[current_pc].status[6] / 3);
+		r1 += 5 * (adven[current_pc].status[STATUS_WEBS] / 3);
 		r2 = get_ran(1,1,adven[who_att].items[weap2].item_level) + dam_adj - 1 + adven[who_att].items[weap2].bonus;
-		if (adven[who_att].items[weap2].ability == 12)
+		if (adven[who_att].items[weap2].ability == ITEM_WEAK_WEAPON)
 			r2 = (r2 * (10 - adven[who_att].items[weap2].ability_strength)) / 10;
 
 		if (r1 <= hit_chance[adven[who_att].skills[what_skill2]]) {
@@ -460,15 +461,15 @@ void pc_attack(short who_att,short target)
 					break;
 				}
 
-			if ((adven[who_att].items[weap2].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == ITEM_POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				which_m->poison(adven[who_att].items[weap2].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap2].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == ITEM_ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				which_m->acid(adven[who_att].items[weap2].ability_strength / 2);
 				}
-			if ((adven[who_att].items[weap2].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((adven[who_att].items[weap2].ability == ITEM_SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				adven[who_att].heal(adven[who_att].items[weap2].ability_strength / 2);
 				}
@@ -476,8 +477,8 @@ void pc_attack(short who_att,short target)
 			}
 			else {
 				draw_terrain(2);
-				sprintf ((char *) create_line, "%s misses.             ",(char *) adven[who_att].name);
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "%s misses.             ", adven[who_att].name);
+				add_string_to_buf( create_line);
 				if (what_skill2 == 5)
 					play_sound(19);
 					else play_sound(2);
@@ -486,7 +487,7 @@ void pc_attack(short who_att,short target)
 	move_to_zero(adven[who_att].status[0]);
 	take_ap(4);
 
-	if (((c_town.monst.dudes[target].m_d.status[10] > 0) || (c_town.monst.dudes[target].m_d.spec_skill == 22))
+	if (((c_town.monst.dudes[target].m_d.status[STATUS_MARTYRS_SHIELD] > 0) || (c_town.monst.dudes[target].m_d.spec_skill == 22))
 	 && (store_hp - c_town.monst.dudes[target].m_d.health > 0)) {
 		add_string_to_buf("  Shares damage!   ");
 		adven[who_att].damage(store_hp - c_town.monst.dudes[target].m_d.health, 3,-1);

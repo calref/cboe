@@ -814,8 +814,10 @@ void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
 					SetWindowText(edit_box[i],str);
 
 }
+
 // NOTE!!! Expects a c string
-void cd_set_text_edit_num(short dlog_num, short item_num, short num)
+//highlight is to select the dialog text
+void cd_set_text_edit_num(short dlog_num, short item_num, short num, bool highlight)
 {
 	short i;
 	char store_ptr[256];
@@ -823,14 +825,18 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 		sprintf(store_ptr,"%d",num);
 		for (i = 0; i < 80; i++)
 			if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
-				&& (edit_box[i] != NULL))
+				&& (edit_box[i] != NULL)){
 					SetWindowText(edit_box[i],store_ptr);
+					if(highlight)
+					   SendMessage(edit_box[i],EM_SETSEL,0,-1);	
+                    }
 }
 
 void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
+
 void csit(short dlog_num, short item_num, char *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
@@ -839,7 +845,6 @@ void csp(short dlog_num, short item_num, short pict_num)
 {
 	cd_set_pict( dlog_num,  item_num,  pict_num);
 }
-
 
 void cd_set_item_text(short dlog_num, short item_num, char *str)
 {
