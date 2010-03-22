@@ -1876,6 +1876,7 @@ void oops_error(short error)
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
 }
 
+//called recursively if a sub-directory is founded
 void ListFiles(char *path, HWND listbox){
 
     short len;

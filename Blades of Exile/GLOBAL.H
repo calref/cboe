@@ -474,4 +474,9 @@ typedef  struct {
     location where;
     }pending_special_type;
 
+//text buffer struct (i.e bottom right window's content)
+typedef struct {
+	char line[50];
+	} buf_line;
+
 #endif

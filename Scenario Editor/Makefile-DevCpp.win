@@ -1,0 +1,66 @@
+# Project: Blades of Exile Scenario Editor
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = Blades_of_Exile_Scenario_Editor_private.res
+OBJ  = BUTTONMG.o DLOGTOOL.o GLOBAL.o GRAPHUTL.o KEYDLGS.o TFILEIO.o townout.o EDSOUND.o GRAPHICS.o SCENARIO.o BLSCENED.o TACTIONS.o $(RES)
+LINKOBJ  = BUTTONMG.o DLOGTOOL.o GLOBAL.o GRAPHUTL.o KEYDLGS.o TFILEIO.o townout.o EDSOUND.o GRAPHICS.o SCENARIO.o BLSCENED.o TACTIONS.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib/GTK+" -mwindows -lwinmm --strip-all  
+INCS =  -I"include" 
+CXXINCS = 
+BIN  = "Blades of Exile Scenario Editor.exe"
+CXXFLAGS = $(CXXINCS) -fno-exceptions -fno-rtti  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before "Blades of Exile Scenario Editor.exe" all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Blades of Exile Scenario Editor.exe" $(LIBS)
+
+BUTTONMG.o: BUTTONMG.CPP
+	$(CPP) -c BUTTONMG.CPP -o BUTTONMG.o $(CXXFLAGS)
+
+DLOGTOOL.o: DLOGTOOL.CPP
+	$(CPP) -c DLOGTOOL.CPP -o DLOGTOOL.o $(CXXFLAGS)
+
+GLOBAL.o: GLOBAL.CPP
+	$(CPP) -c GLOBAL.CPP -o GLOBAL.o $(CXXFLAGS)
+
+GRAPHUTL.o: GRAPHUTL.CPP
+	$(CPP) -c GRAPHUTL.CPP -o GRAPHUTL.o $(CXXFLAGS)
+
+KEYDLGS.o: KEYDLGS.CPP
+	$(CPP) -c KEYDLGS.CPP -o KEYDLGS.o $(CXXFLAGS)
+
+TFILEIO.o: TFILEIO.CPP
+	$(CPP) -c TFILEIO.CPP -o TFILEIO.o $(CXXFLAGS)
+
+townout.o: townout.cpp
+	$(CPP) -c townout.cpp -o townout.o $(CXXFLAGS)
+
+EDSOUND.o: EDSOUND.CPP
+	$(CPP) -c EDSOUND.CPP -o EDSOUND.o $(CXXFLAGS)
+
+GRAPHICS.o: GRAPHICS.CPP
+	$(CPP) -c GRAPHICS.CPP -o GRAPHICS.o $(CXXFLAGS)
+
+SCENARIO.o: SCENARIO.CPP
+	$(CPP) -c SCENARIO.CPP -o SCENARIO.o $(CXXFLAGS)
+
+BLSCENED.o: BLSCENED.CPP
+	$(CPP) -c BLSCENED.CPP -o BLSCENED.o $(CXXFLAGS)
+
+TACTIONS.o: TACTIONS.CPP
+	$(CPP) -c TACTIONS.CPP -o TACTIONS.o $(CXXFLAGS)
+
+Blades_of_Exile_Scenario_Editor_private.res: Blades_of_Exile_Scenario_Editor_private.rc STRINGS.RC BLSCENED.RC GAMEDLOG.RC 
+	$(WINDRES) -i Blades_of_Exile_Scenario_Editor_private.rc --input-format=rc -o Blades_of_Exile_Scenario_Editor_private.res -O coff  -D_INCLUDED_RC

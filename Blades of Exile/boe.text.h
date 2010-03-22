@@ -7,6 +7,8 @@
 
 #include "global.h"		// structs
 
+#define	TEXT_BUF_LEN	70
+
 short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num,HDC hdc);

@@ -47,7 +47,6 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 void showcursor(Boolean a);
 
 void cd_get_text_edit_str(short dlog_num, char *str);
-void cd_set_text_edit_str(short dlog_num, char *str);
 void cdsin(short dlog_num, short item_num, short num); 
 void csit(short dlog_num, short item_num, char *str);
 void csp(short dlog_num, short item_num, short pict_num);
@@ -58,6 +57,6 @@ RECT calc_rect(short i, short j);
 void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str);
 short cd_retrieve_text_edit_num(short dlog_num, short item_num) ;
 void cd_set_text_edit_str(short dlog_num, short item_num, char *str) ;
-void cd_set_text_edit_num(short dlog_num, short item_num, short num);
+void cd_set_text_edit_num(short dlog_num, short item_num, short num, bool highlight = false);
 void InsetRect(RECT *rect,short x, short y);
 void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld);

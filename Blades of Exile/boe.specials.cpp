@@ -182,8 +182,8 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		}
 	
 	if((mode == 2) && town_boat_there(where_check) < 30){//can't enter boats while in combat mode
-        sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(pc_pos[current_pc], where_check)]);
-		add_string_to_buf((char *) create_line);
+        sprintf (create_line, "Blocked: %s",dir_string[set_direction(pc_pos[current_pc], where_check)]);
+		add_string_to_buf(create_line);
         can_enter = FALSE;
         }
 	if (can_enter == FALSE)

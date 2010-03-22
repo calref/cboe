@@ -171,6 +171,7 @@ enum eMonsterType {
 };
 
 
+//future spec_skill !!!
 /* Special Ability a.k.a spec_skill */
 
 enum eMonstAbil {
@@ -220,6 +221,66 @@ enum eMonstAbil {
 	MONST_CALL_LOCAL_SPECIAL,
 	MONST_CALL_GLOBAL_SPECIAL,
 };
+
+//at least for proper code comprehension
+//legacy spec_skill
+/* Special Ability a.k.a spec_skill */ 
+  
+/* #define MONSTER_NO_SPECIAL_ABILITY 0 
+ #define MONSTER_THROWS_DARTS 1 
+ #define MONSTER_SHOOTS_ARROWS 2 
+ #define MONSTER_THROWS_SPEARS 3 
+ #define MONSTER_THROWS_ROCKS1 4    //4-24 damages 
+ #define MONSTER_THROWS_ROCKS2 5    //5-30 damages 
+ #define MONSTER_THROWS_ROCKS3 6    //6-36 damages 
+ #define MONSTER_THROWS_RAZORDISKS 7 
+ #define MONSTER_PETRIFICATION_RAY 8 
+ #define MONSTER_SP_DRAIN_RAY 9    //spell points drain ray 
+ #define MONSTER_HEAT_RAY 10 
+ #define MONSTER_INVISIBLE 11 
+ #define MONSTER_SPLITS 12 
+ #define MONSTER_MINDLESS 13 
+ #define MONSTER_BREATHES_STINKING_CLOUDS 14 
+ #define MONSTER_ICY_TOUCH 15 
+ #define MONSTER_XP_DRAINING_TOUCH 16 
+ #define MONSTER_ICY_AND_DRAINING_TOUCH 17 
+ #define MONSTER_SLOWING_TOUCH 18 
+ #define MONSTER_SHOOTS_WEB 19 
+ #define MONSTER_GOOD_ARCHER 20 
+ #define MONSTER_STEALS_FOOD 21 
+ #define MONSTER_PERMANENT_MARTYRS_SHIELD 22 
+ #define MONSTER_PARALYSIS_RAY 23 
+ #define MONSTER_DUMBFOUNDING_TOUCH 24 
+ #define MONSTER_DISEASE_TOUCH 25 
+ #define MONSTER_ABSORB_SPELLS 26 
+ #define MONSTER_WEB_TOUCH 27 
+ #define MONSTER_SLEEP_TOUCH 28 
+ #define MONSTER_PARALYSIS_TOUCH 29 
+ #define MONSTER_PETRIFICATION_TOUCH 30 
+ #define MONSTER_ACID_TOUCH 31 
+ #define MONSTER_BREATHES_SLEEP_CLOUDS 32 
+ #define MONSTER_ACID_SPIT 33 
+ #define MONSTER_SHOOTS_SPINES 34 
+ #define MONSTER_DEATH_TOUCH 35 
+ #define MONSTER_INVULNERABILITY 36 
+ #define MONSTER_GUARD 37 */
+  
+ /* Create Monsters/Fields */ 
+  
+/* #define MONSTER_NO_RADIATE 0 
+ #define MONSTER_RADIATE_FIRE_FIELDS 1 
+ #define MONSTER_RADIATE_ICE_FIELDS 2 
+ #define MONSTER_RADIATE_SHOCK_FIELDS 3 
+ #define MONSTER_RADIATE_ANTIMAGIC_FIELDS 4 
+ #define MONSTER_RADIATE_SLEEP_FIELDS 5 
+ #define MONSTER_RADIATE_STINKING_CLOUDS 6 
+ //as said 7,8 and 9 are unused 
+ #define MONSTER_SUMMON1 10    //5 percent chance 
+ #define MONSTER_SUMMON2 11    //20 percent chance 
+ #define MONSTER_SUMMON3 12    //50 percent chance 
+ //as said 13 and 14 are unused 
+ #define MONSTER_DEATH_TRIGGERS 15        //death triggers global special 
+ */
 
 
 /* Terrains Special Properties : scenario.ter_types[i].special */      //complete

@@ -1,5 +1,4 @@
 #define  LINES_IN_TEXT_WIN	11
-#define	TEXT_BUF_LEN	70
 
 #include "global.h"
 #include <cstdio>
@@ -12,10 +11,6 @@
 #include "tools/mathutil.h"
 
 #include "globvar.h"
-
-typedef struct {
-	char line[50];
-	} buf_line;
 
 buf_line text_buffer[TEXT_BUF_LEN];
 
@@ -1212,7 +1207,7 @@ void add_string_to_buf(char *string)
 		print_buf();
 		through_sending();
 		}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", string);
+	sprintf(text_buffer[buf_pointer].line, "%-49.49s", string);
    text_buffer[buf_pointer].line[49] = 0;
 	if (buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;

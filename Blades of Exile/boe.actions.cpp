@@ -31,6 +31,10 @@
 extern short store_flags[3];
 //extern BOOL timed_special_happened;
 
+unsigned char previous_blocked_direction = 50;//no previous block on initialisation
+unsigned short times_blocked=0;
+extern buf_line text_buffer[TEXT_BUF_LEN];
+
 void init_screen_locs()
 {
 	short i,j,k,l;
@@ -2521,6 +2525,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 	Boolean keep_going = TRUE,check_f;
 	location store_corner,store_iwc;
 	unsigned char ter;
+	short buffer_ptr;
 	
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == TRUE)	forced = TRUE;
@@ -2712,8 +2717,19 @@ Boolean outd_move_party(location destination,Boolean forced)
 		return TRUE;
 		}
 		else {
-			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
-			add_string_to_buf((char *) create_line);	
+            if(set_direction(party.p_loc, destination) == previous_blocked_direction){
+                times_blocked++;
+                buffer_ptr = ((buf_pointer - 1) == -1) ? (TEXT_BUF_LEN - 1) : buf_pointer - 1;
+    			sprintf(text_buffer[buffer_ptr].line, "Blocked: %s (x%d)",dir_string[set_direction(party.p_loc, destination)], times_blocked);
+                string_added = true;
+                print_buf();
+                }
+            else{
+    			sprintf (create_line, "Blocked: %s",dir_string[set_direction(party.p_loc, destination)]);		
+	       		add_string_to_buf(create_line);	
+    			previous_blocked_direction = set_direction(party.p_loc, destination);
+    			times_blocked = 1;
+                }
 			return FALSE;
 			}
 	}
@@ -2728,6 +2744,7 @@ Boolean town_move_party(location destination,short forced)
 	short boat_there,horse_there,spec_num;
 	unsigned char ter;
 	Boolean check_f = FALSE;
+	short buffer_ptr;
 		
 	if (in_scen_debug && ghost_mode) forced = TRUE;
 	
@@ -2854,10 +2871,26 @@ Boolean town_move_party(location destination,short forced)
 			return TRUE;
 			}
 		else {
-			if (destination.isDoor())
-				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-				else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
-			add_string_to_buf((char *) create_line);
+			if (destination.isDoor()){
+				sprintf (create_line, "Door locked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);		
+        		add_string_to_buf(create_line);
+                }
+				else{
+                    if(set_direction(c_town.p_loc, destination) == previous_blocked_direction){
+                        times_blocked++;
+                        buffer_ptr = ((buf_pointer - 1) == -1) ? (TEXT_BUF_LEN - 1) : buf_pointer - 1;
+    	           		sprintf (text_buffer[buffer_ptr].line, "Blocked: %s (x%d)",dir_string[set_direction(c_town.p_loc, destination)], times_blocked);
+                        string_added = true;
+                        print_buf();
+                        }
+                    else{
+                        sprintf (create_line, "Blocked: %s               ",dir_string[set_direction(c_town.p_loc, destination)]);
+        	       		add_string_to_buf(create_line);	
+    	           		previous_blocked_direction = set_direction(c_town.p_loc, destination);
+            			times_blocked = 1;
+                        }
+                    }
+	
 			return FALSE;
 			}
 		}

@@ -22,12 +22,12 @@ OverrideOutputName=Blades of Exile Scenario Editor.exe
 HostApplication=
 Folders=
 CommandLine=
-UseCustomMakefile=0
-CustomMakefile=
+UseCustomMakefile=1
+CustomMakefile=Makefile-DevCpp.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSettings=0000000000010000000000
 
 [Unit3]
 FileName=DLOGTOOL.CPP
