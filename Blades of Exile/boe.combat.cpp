@@ -261,7 +261,7 @@ Boolean pc_combat_move(location destination)
 void char_parry()
 {
 	pc_parry[current_pc] = (pc_moves[current_pc] / 4) *
-		(2 + adven[current_pc].statAdj(1) + adven[current_pc].skills[8]);
+		(2 + adven[current_pc].statAdj(SKILL_DEXTERITY) + adven[current_pc].skills[SKILL_DEFENSE]);
 	pc_moves[current_pc] = 0;
 }
 
@@ -633,7 +633,7 @@ void do_combat_cast(location target)
 		}
 		else {
 			level = 1 + adven[current_pc].level / 2;
-			bonus = adven[current_pc].statAdj(2);
+			bonus = adven[current_pc].statAdj(SKILL_INTELLIGENCE);
 			}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -745,7 +745,7 @@ void do_combat_cast(location target)
 				start_missile_anim();
 				switch (spell_being_cast) {
 
-				case 157:
+				case 157: //Divine Thud
 					add_missile(target,9,1,0,0);
 					store_sound = 11;
 					r1 = min(18,(level * 7) / 10 + 2 * bonus);
@@ -753,51 +753,51 @@ void do_combat_cast(location target)
 					ashes_loc = target;
 					break;
 
-				case 1: case 31:
+				case 1: case 31: //Spark - Ice Bolt
 					r1 = (spell_being_cast == 1) ? get_ran(2,1,4) : get_ran(min(20,level + bonus),1,4);
 					add_missile(target,6,1,0,0);
 					do_missile_anim(100,pc_pos[current_pc],11);
 					hit_space(target,r1,(spell_being_cast == 1) ? 3 : 5,1,0);
 					break;
-				case 27: // flame arrows
+				case 27: //Flame Arrows
 					add_missile(target,4,1,0,0);
 					r1 = get_ran(2,1,4);
 					boom_type[i] = 1;
 					boom_dam[i] = r1;
 					//hit_space(target,r1,1,1,0);
 					break;
-				case 129: // smite
+				case 129: //Smite
 					add_missile(target,6,1,0,0);
 					r1 = get_ran(2,1,5);
 					boom_type[i] = 5;
 					boom_dam[i] = r1;
 					//hit_space(target,r1,5,1,0);
 					break;
-				case 114:
+				case 114: //Wound
 					r1 = get_ran(min(7,2 + bonus + level / 2),1,4);
 					add_missile(target,14,1,0,0);
 					do_missile_anim(100,pc_pos[current_pc],24);
 					hit_space(target,r1,4,1,0);
 					break;
-				case 11:
+				case 11: //Flame
 					r1 = get_ran(min(10,1 + level / 3 + bonus),1,6);
 					add_missile(target,2,1,0,0);
 					do_missile_anim(100,pc_pos[current_pc],11);
 					hit_space(target,r1,1,1,0);
 					break;
-				case 22: case 141:
+				case 22: case 141: //Fireball - Flamestrike
 					r1 = min(9,1 + (level * 2) / 3 + bonus) + 1;
 					add_missile(target,2,1,0,0);
 					store_sound = 11;
 					//do_missile_anim(100,pc_pos[current_pc],11);
-					if (spell_being_cast == 141)
+					if (spell_being_cast == 141) //Flamestrike
 						r1 = (r1 * 14) / 10;
 						else if (r1 > 10) r1 = (r1 * 8) / 10;
 					if (r1 <= 0) r1 = 1;
 					place_spell_pattern(square,target,50 + r1,TRUE,current_pc);
 					ashes_loc = target;
 					break;
-				case 40:
+				case 40: //Fire Storm
 					add_missile(target,2,1,0,0);
 					store_sound = 11;
 					//do_missile_anim(100,pc_pos[current_pc],11);
@@ -807,13 +807,13 @@ void do_combat_cast(location target)
 					place_spell_pattern(radius2,target,50 + r1,TRUE,current_pc);
 					ashes_loc = target;
 					break;
-				case 48:  // kill
+				case 48:  // Kill
 					add_missile(target,9,1,0,0);
 					do_missile_anim(100,pc_pos[current_pc],11);
 					r1 = get_ran(3,0,10) + adven[current_pc].level * 2;
 					hit_space(target,40 + r1,3,1,0);
 					break;
-				case 61:	// death arrows
+				case 61:	//Death Arrows
 					add_missile(target,9,1,0,0);
 					store_sound = 11;
 					r1 = get_ran(3,0,10) + adven[current_pc].level + 3 * bonus;
@@ -953,31 +953,31 @@ void do_combat_cast(location target)
 									store_sound = 55;
 									break;
 
-								case 13:
+								case 13: //Dumbfound
 									store_m_type = 14;
 									cur_monst->dumbfound(1 + bonus / 3);
 									store_sound = 53;
 									break;
 
-								case 4:
+								case 4: //Scare
 									store_m_type = 11;
 									cur_monst->scare(get_ran(2 + bonus,1,6));
 									store_sound = 54;
 									break;
-								case 24:
+								case 24: //Fear
 									store_m_type = 11;
 									cur_monst->scare(get_ran(min(20,adven[current_pc].level / 2 + bonus),1,
 										((spell_being_cast == 24) ? 8 : 6)));
 									store_sound = 54;
 									break;
 
-								case 12:
+								case 12: //Slow
 									store_m_type = 11;
 									r1 = get_ran(1,0,1);
 									cur_monst->slow(2 + r1 + bonus);
 									break;
 
-								case 10: case 36:
+								case 10: case 36: //Minor Poison - Venom Arrows
 									store_m_type = (spell_being_cast == 36) ? 4 : 11;
 									cur_monst->poison(2 + bonus / 2);
 									store_sound = 55;
@@ -986,33 +986,33 @@ void do_combat_cast(location target)
 									store_m_type = 9;
 									cur_monst->charm(-10,12,1000);
 									break;
-								case 30:
+								case 30: //Poison
 									store_m_type = 11;
 									cur_monst->poison(4 + bonus / 2);
 									store_sound = 55;
 									break;
-								case 46:
+								case 46: //Major Poison
 									store_m_type = 11;
 									cur_monst->poison(8 + bonus / 2);
 									store_sound = 55;
 									break;
 
-								case 109: // stumble
+								case 109: // Stumble
 									store_m_type = 8;
 									cur_monst->curse(4 + bonus);
 									break;
 
-								case 112:
+								case 112: //Curse
 									store_m_type = 8;
 									cur_monst->curse(2 + bonus);
 									break;
 
-								case 122:
+								case 122: //Holy Scourge
 									store_m_type = 8;
 									cur_monst->curse(2 + adven[current_pc].level / 2);
 									break;
 
-								case 103: case 132:
+								case 103: case 132: //Turn Undead - Dispel Undead
 									if (cur_monst->m_d.m_type != 8) {
 										add_string_to_buf("  Not undead.                    ");
 										store_m_type = -1;
@@ -1029,7 +1029,7 @@ void do_combat_cast(location target)
 										}
 									break;
 
-								case 155:
+								case 155: //Ravage Spirit
 									if (cur_monst->m_d.m_type != 7) {
 										add_string_to_buf("  Not a demon.                    ");
 										store_m_type = -1;
@@ -1177,11 +1177,11 @@ void fire_missile(location target)
 	skill = (overall_mode == MODE_FIRING) ? adven[current_pc].skills[SKILL_ARCHERY] : adven[current_pc].skills[SKILL_THROWN_MISSILES];
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = adven[current_pc].items[ammo_inv_slot].item_level;
-	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + minmax(-8,8,(int)adven[current_pc].status[1]);
+	dam_bonus = adven[current_pc].items[ammo_inv_slot].bonus + minmax(-8,8,(int)adven[current_pc].status[STATUS_BLESS_CURSE]);
 	hit_bonus = (overall_mode == MODE_FIRING) ? adven[current_pc].items[missile_inv_slot].bonus : 0;
-	hit_bonus += adven[current_pc].statAdj(1) - can_see(pc_pos[current_pc],target,0)
-		+ minmax(-8,8,(int) adven[current_pc].status[1]);
-	if ((skill_item = adven[current_pc].hasAbilEquip(41)) < 24) {
+	hit_bonus += adven[current_pc].statAdj(SKILL_DEXTERITY) - can_see(pc_pos[current_pc],target,0)
+		+ minmax(-8,8,(int) adven[current_pc].status[STATUS_BLESS_CURSE]);
+	if ((skill_item = adven[current_pc].hasAbilEquip(ITEM_ACCURACY)) < 24) {
 		hit_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		dam_bonus += adven[current_pc].items[skill_item].ability_strength / 2;
 		}
@@ -1190,7 +1190,7 @@ void fire_missile(location target)
 	if (adven[current_pc].race == RACE_NEPHIL)
 		hit_bonus += 2;
 
-   if (adven[current_pc].items[ammo_inv_slot].ability == 172)
+   if (adven[current_pc].items[ammo_inv_slot].ability == ITEM_MISSILE_EXPLODING)
 		exploding = TRUE;
 
 	if (dist(pc_pos[current_pc],target) > range)
@@ -1234,8 +1234,8 @@ void fire_missile(location target)
 				r1 = get_ran(1,0,100) - 5 * hit_bonus - 10;
 				r1 += 5 * (adven[current_pc].status[6] / 3);
 				r2 = get_ran(1,1,dam) + dam_bonus;
-				sprintf ((char *) create_line, "%s fires.",(char *) adven[current_pc].name); // debug
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "%s fires.",adven[current_pc].name); // debug
+				add_string_to_buf(create_line);
 
 				switch (overall_mode) {
 					case MODE_THROWING:
@@ -1434,13 +1434,13 @@ void combat_run_monst()
 				move_to_zero(adven[i].status[12]);
 
 				// Do special items
-				if (((item_level = adven[i].getProtLevel(47)) > 0)
+				if (((item_level = adven[i].getProtLevel(ITEM_OCCASIONAL_HASTE)) > 0)
 					&& (get_ran(1,0,10) == 5)) {
 						update_stat = TRUE;
 						adven[i].status[3] += item_level / 2;
 						add_string_to_buf("An item hastes you!");
 						}
-				if ((item_level = adven[i].getProtLevel(46)) > 0) {
+				if ((item_level = adven[i].getProtLevel(ITEM_OCCASIONAL_BLESS)) > 0) {
 					if (get_ran(1,0,10) == 5) {
 						update_stat = TRUE;
 						adven[i].status[1] += item_level / 2;
@@ -3543,7 +3543,7 @@ void do_poison()
 					if (get_ran(1,0,8) < 6)
 						move_to_zero(adven[i].status[2]);
 					if (get_ran(1,0,8) < 6)
-						if (adven[i].traits[6] == TRUE)
+						if (adven[i].traits[TRAIT_GOOD_CONST] == TRUE)
 							move_to_zero(adven[i].status[2]);
 				}
 		put_pc_screen();
@@ -3558,14 +3558,14 @@ void handle_disease()
 
 	for (i = 0; i < 6; i++)
 		if (adven[i].isAlive())
-			if (adven[i].status[7] > 0)
+			if (adven[i].status[STATUS_DISEASE] > 0)
 				disease = TRUE;
 
 	if (disease == TRUE) {
 		add_string_to_buf("Disease:                        ");
 		for (i = 0; i < NUM_OF_PCS; i++)
 			if (adven[i].isAlive())
-				if (adven[i].status[7] > 0) {
+				if (adven[i].status[STATUS_DISEASE] > 0) {
 					r1 = get_ran(1,1,10);
 					switch (r1) {
 						case 1: case 2:
@@ -3584,16 +3584,15 @@ void handle_disease()
 							adven[i].dumbfound(3);
 							break;
 						case 9: case 10:
-							sprintf ((char *) create_line, "  %s unaffected. ",
-								(char *) adven[i].name);
-							add_string_to_buf((char *) create_line);
+							sprintf ( create_line, "  %s unaffected. ", adven[i].name);
+							add_string_to_buf(create_line);
 							break;
 						}
 					r1 = get_ran(1,0,7);
-					if (adven[i].traits[6] == TRUE)
+					if (adven[i].traits[TRAIT_GOOD_CONST] == true)
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (adven[i].hasAbilEquip(62) < 24))
-						move_to_zero(adven[i].status[7]);
+					if ((r1 <= 0) || (adven[i].hasAbilEquip(ITEM_PROTECT_FROM_DISEASE) < 24))
+						move_to_zero(adven[i].status[STATUS_DISEASE]);
 				}
 		put_pc_screen();
 		}

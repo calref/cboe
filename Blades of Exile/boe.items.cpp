@@ -25,7 +25,7 @@
 Boolean give_to_party(item_record_type item,short print_result)
 {
 	short i = 0;
-	
+
 	while (i < 6) {
 		if (adven[i].giveToPC(item,print_result) == true)
 			return TRUE;
@@ -65,7 +65,7 @@ Boolean forced_give(short item_num,short abil)
 void party_record_type::giveGold(short amount, bool print_result)
 {
 	if (amount < 0) return;
-	
+
 	gold += amount;
 	if(gold > 30000){
 	   gold = 30000;
@@ -77,13 +77,13 @@ void party_record_type::giveGold(short amount, bool print_result)
 bool party_record_type::takeGold(short amount, bool print_result)
 {
 	if (gold < amount) return false;
-	
+
 	gold -= amount;
 	if(gold < 0)
 	   gold = 0;
-	
+
 	if (print_result) put_pc_screen();
-	
+
 	return true;
 }
 
@@ -92,7 +92,7 @@ bool party_record_type::takeGold(short amount, bool print_result)
 bool pc_array::hasAbil(short abil)
 {
 	short i;
-	
+
 	for (i = 0; i < NUM_OF_PCS; i++)
 		if (pc[i].isAlive())
 			if (pc[i].hasAbil(abil) < 24)
@@ -113,14 +113,14 @@ short item_weight(item_record_type item)
 void party_record_type::giveFood(short amount, bool print_result)
 {
 	if (amount < 0) return;
-	
+
 	food += amount;
 	if(food > 25000){
 	   food = 25000;
 	   add_string_to_buf("Excess food dropped.            ");
        }
-	
-	if (print_result) put_pc_screen();	
+
+	if (print_result) put_pc_screen();
 }
 
 short party_record_type::takeFood(short amount, bool print_result)
@@ -128,7 +128,7 @@ short party_record_type::takeFood(short amount, bool print_result)
 	short diff;
 
 	diff = amount - food;
-	
+
 	if (diff > 0)
 	{
 		food = 0;
@@ -137,8 +137,8 @@ short party_record_type::takeFood(short amount, bool print_result)
 	}
 
 	food -= amount;
-	if (print_result) put_pc_screen();	
-	return 0;	
+	if (print_result) put_pc_screen();
+	return 0;
 }
 
 
@@ -146,7 +146,7 @@ short party_record_type::takeFood(short amount, bool print_result)
 Boolean place_item(item_record_type item,location where,Boolean forced)
 {
 	short i;
-	
+
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (t_i.items[i].variety == 0) {
 			t_i.items[i] = item;
@@ -164,7 +164,7 @@ Boolean place_item(item_record_type item,location where,Boolean forced)
 			reset_item_max();
 			return TRUE;
 			}
-	
+
 	return TRUE;
 }
 
@@ -195,7 +195,7 @@ void destroy_an_item()
 			}
 	i = get_ran(1,0,NUM_TOWN_ITEMS);
 	t_i.items[i].variety = 0;
-	
+
 }
 
 void set_item_flag(item_record_type *item)
@@ -209,24 +209,24 @@ void set_item_flag(item_record_type *item)
 }
 
 short get_item(location place,short pc_num,Boolean check_container)
-//short pc_num; // if 6, any   
+//short pc_num; // if 6, any
 {
 	short i,taken = 0;
 
 	Boolean item_near = FALSE;
 	short mass_get = 1;
-	
+
 	for (i = 0; i < T_M; i++)
 		if ((c_town.monst.dudes[i].active > 0) && (c_town.monst.dudes[i].attitude == 1)
 			&& (can_see(place,c_town.monst.dudes[i].m_loc,0) < 5))
 				mass_get = 0;
-		
+
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (t_i.items[i].variety != 0)
-			if (((adjacent(place,t_i.items[i].item_loc) == TRUE) || 
+			if (((adjacent(place,t_i.items[i].item_loc) == TRUE) ||
 			 ((mass_get == 1) && (check_container == FALSE) &&
 			 ((dist(place,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
-			  && (can_see(place,t_i.items[i].item_loc,0) < 5))) 
+			  && (can_see(place,t_i.items[i].item_loc,0) < 5)))
 			  && ((t_i.items[i].isContained() == false) || (check_container == TRUE))) {
 				taken = 1;
 
@@ -244,7 +244,7 @@ short get_item(location place,short pc_num,Boolean check_container)
 						add_string_to_buf("Your crime was seen!");
 						}
 			}
-				
+
 	if (pc_num != 10) {
 		if (taken == 0)
 			add_string_to_buf("Get: nothing here");
@@ -274,15 +274,15 @@ void set_town_status(unsigned char attitude)
 			c_town.monst.dudes[i].mobile = TRUE;
 			if (scenario.scen_monsters[num].spec_skill == 37) {
 				c_town.monst.dudes[i].active = 2;
-				
+
 				// If a town, give power boost
 				c_town.monst.dudes[i].m_d.health *= 3;
 				c_town.monst.dudes[i].m_d.status[3] = 8;
 				c_town.monst.dudes[i].m_d.status[1] = 8;
 				}
 			}
-			
-			
+
+
 // In some towns, doin' this'll getcha' killed.
 // wedge in special
 
@@ -312,7 +312,7 @@ void put_item_graphics()
 	char message[256];
 
 	// First make sure all arrays for who can get stuff are in order.
-	if ((current_getting_pc < 6) && ((adven[current_getting_pc].isAlive() == false) 
+	if ((current_getting_pc < 6) && ((adven[current_getting_pc].isAlive() == false)
 	 || (adven[current_getting_pc].hasSpace() == 24)))
 	 {
 	 	current_getting_pc = 6;
@@ -331,23 +331,23 @@ void put_item_graphics()
 	for (i = 0; i < NUM_OF_PCS; i++)
 		if (current_getting_pc == i)
 			cd_add_label(987,3 + i,"*   ",1007);
-			else cd_add_label(987,3 + i,"    ",1007); 
-			
+			else cd_add_label(987,3 + i,"    ",1007);
+
 	// darken arrows, as appropriate
 	if (first_item_shown == 0)
 		cd_activate_item(987,9,0);
 		else cd_activate_item(987,9,1);
-	if ((first_item_shown > total_items_gettable - 7) || 
+	if ((first_item_shown > total_items_gettable - 7) ||
 		(total_items_gettable <= 8) )
 		cd_activate_item(987,10,0);
-		else cd_activate_item(987,10,1); 
+		else cd_activate_item(987,10,1);
 
 	for (i = 0; i < 8; i++) {
 		// first, clear whatever item graphic is there
 		csp(987,20 + i * 4,950);
 
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
-			item = t_i.items[item_array[i + first_item_shown]]; 
+			item = t_i.items[item_array[i + first_item_shown]];
 
 					sprintf ((char *) message, "%s",
 					 (item.isIdent()) ? (char *) item.full_name : (char *) item.name);
@@ -369,15 +369,15 @@ void put_item_graphics()
 				csit(987,53 + i,(char *) message);
 				}
 		}
-	
+
 	if (current_getting_pc < 6) {
 		i = adven[current_getting_pc].amountCanCarry();
 		storage = adven[current_getting_pc].amountCarried();
 		sprintf ((char *) message, "%s is carrying %d out of %d.", adven[current_getting_pc].name,storage,i);
 		csit(987,52,(char *) message);
 		}
-		
-	for (i = 0; i < 6; i++) 
+
+	for (i = 0; i < 6; i++)
 		if (adven[i].isAlive()) {
 			csp(987,11 + i,800 + adven[i].which_graphic);
 			}
@@ -388,7 +388,7 @@ void display_item_event_filter (short item_hit)
 {
 	item_record_type item;
 	short i;
-	
+
 		switch (item_hit) {
 			case 1:
 				dialog_not_toast = FALSE;
@@ -396,16 +396,16 @@ void display_item_event_filter (short item_hit)
 			case 9:
 				if (first_item_shown > 0)
 					first_item_shown -= 8;
-				put_item_graphics();					
+				put_item_graphics();
 				break;
 			case 10:
 				if (first_item_shown < 116)
 					first_item_shown += 8;
-				put_item_graphics();					
+				put_item_graphics();
 				break;
-			case 3: case 4: case 5: case 6:case 7: case 8: 
+			case 3: case 4: case 5: case 6:case 7: case 8:
 				current_getting_pc = item_hit - 3;
-				put_item_graphics();					
+				put_item_graphics();
 				break;
 			default:
 				if (current_getting_pc == 6) {
@@ -473,22 +473,22 @@ short display_item(location from_loc,short pc_num, short mode, bool check_contai
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 {
-	short i,array_position = 0;	
+	short i,array_position = 0;
 	SetCursor(sword_curs);
-	
+
 	first_item_shown = 0;
 	store_get_mode = mode;
 	current_getting_pc = current_pc;
 	store_pcnum = pc_num;
 	dialog_answer = 0;
-	
+
 	for (i = 0; i < 130; i++)
 		item_array[i] = 200;
-	
+
 	total_items_gettable = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (t_i.items[i].variety != 0) {
-			if (((adjacent(from_loc,t_i.items[i].item_loc) == TRUE) || 
+			if (((adjacent(from_loc,t_i.items[i].item_loc) == TRUE) ||
 				 ((mode == 1) && (check_container == false) &&
 				 ((dist(from_loc,t_i.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
 				  && (can_see(from_loc,t_i.items[i].item_loc,0) < 5))) &&
@@ -520,13 +520,13 @@ short display_item(location from_loc,short pc_num, short mode, bool check_contai
 		}
 
 	while (dialog_not_toast)
-		ModalDialog();	
-		
+		ModalDialog();
+
 	cd_kill_dialog(987,0);
 
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	
+
 	return dialog_answer;
 }
 
@@ -567,20 +567,20 @@ short fancy_choice_dialog(short which_dlog,short parent)
 {
 	short i,store_dialog_answer;
 	char temp_str[256];
-	
+
 	store_dialog_answer = dialog_answer;
 	SetCursor(sword_curs);
-	
+
 	cd_create_dialog_parent_num(which_dlog,parent);
-	
+
 	if (which_dlog == 1062) {
 		i = get_ran(1,0,12);
 		GetIndString(temp_str,11,10 + i);
 		csit(1062,10,(char *) temp_str);
 		}
 	while (dialog_not_toast)
-		ModalDialog();	
-	
+		ModalDialog();
+
 	cd_kill_dialog(which_dlog,0);
 
 	if (parent < 2) {
@@ -590,7 +590,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
   		}
 	i = dialog_answer;
 	dialog_answer = store_dialog_answer;
-	
+
 	return i;
 }
 
@@ -603,18 +603,18 @@ void select_pc_event_filter (short item_hit)
 }
 
 short char_select_pc(short active_only,short free_inv_only,char *title)
-//active_only;  // 0 - no  1 - yes   2 - disarm trap   
+//active_only;  // 0 - no  1 - yes   2 - disarm trap
 {
 	short i;
 
 	SetCursor(sword_curs);
-	
+
 	cd_create_dialog(1018,mainPtr);
-	
+
 	if (active_only == 2)
 		csit(1018,15,"Select PC to disarm trap:");
 		else csit(	1018,15,title);
-	
+
 	for (i = 0; i < 6; i++) {
 		if ((adven[i].main_status == MAIN_STATUS_ABSENT) ||
 			((active_only == TRUE) && (adven[i].main_status > MAIN_STATUS_ALIVE)) ||
@@ -623,13 +623,13 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 				cd_activate_item(1018, 3 + i, 0);
 				}
 		if (adven[i].main_status != MAIN_STATUS_ABSENT) {
-				csit(1018,9 + i,adven[i].name);		
-			}		
+				csit(1018,9 + i,adven[i].name);
+			}
 			else cd_activate_item(1018, 9 + i, 0);
 		}
-	
+
 	while (dialog_not_toast)
-		ModalDialog();	
+		ModalDialog();
 	cd_kill_dialog(1018,0);
 
 	if (in_startup_mode == FALSE)
@@ -640,7 +640,7 @@ short char_select_pc(short active_only,short free_inv_only,char *title)
 }
 
 short select_pc(short active_only,short free_inv_only)
-//active_only;  // 0 - no  1 - yes   2 - disarm trap   
+//active_only;  // 0 - no  1 - yes   2 - disarm trap
 {
 	if (active_only == 2)
 		return char_select_pc(active_only,free_inv_only,"Trap! Who will disarm?");
@@ -664,21 +664,21 @@ short get_num_of_items(short max_num)
 	char sign_text[256];
 
 	SetCursor(sword_curs);
-	
+
 	cd_create_dialog(1012,mainPtr);
-		
+
 	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
-	csit(1012,4,(char *)sign_text);	
+	csit(1012,4,(char *)sign_text);
 	sprintf((char *) sign_text,"%d",max_num);
 	cd_set_text_edit_str(1012,(char *) sign_text);
 	cd_set_edit_focus();
-		
+
 	while (dialog_not_toast)
-		ModalDialog();	
+		ModalDialog();
 	cd_kill_dialog(1012,0);
-	
+
 	dialog_answer = minmax(0,(int)max_num,dialog_answer);
-	
+
 	return dialog_answer;
 }
 
@@ -692,19 +692,19 @@ void place_glands(location where,unsigned char m_type)
 {
 	item_record_type store_i;
 	monster_record_type monst;
-	
+
 	monst = return_monster_template(m_type);
-	
+
 	if ((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) <= monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);
 		place_item(store_i,where,FALSE);
 		}
 }
 
-short pc_array::getTotalLevel() 
+short pc_array::getTotalLevel()
 {
 	short i, j = 0;
-	
+
 	for (i = 0; i < NUM_OF_PCS; i++)
 		if (pc[i].isAlive())
 			j += pc[i].level;
@@ -756,17 +756,17 @@ void place_treasure(location where,short level,short loot,short mode)
 						{10,10,15,20,20,30,40,50,75,100},
 						{50,100,100,100,100,200,200,200,200,200}};
 	short max,min;
-	
+
 	if (loot == 1)
 		amt = get_ran(2,1,7) + 1;
 		else amt = loot * (get_ran(1,0,10 + (loot * 6) + (level * 2)) + 5);
 
 	if (adven.getTotalLevel() <= 12)
-		amt += 1;	
+		amt += 1;
 	if ((adven.getTotalLevel() <= 60) && (amt > 2))
 		amt += 2;
-		
-	if (amt > 3) {	
+
+	if (amt > 3) {
 			new_item = get_stored_item(0);
 			new_item.item_level = amt;
 			r1 = get_ran(1,1,9);
@@ -785,14 +785,14 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 10000;
 				min = 100;
 				}
-				
+
 			// reality check
 			if ((loot == 1) && (max > 100) && (get_ran(1,0,8) < 7))
 				max = 100;
 			if ((loot == 2) && (max > 200) && (get_ran(1,0,8) < 6))
 				max = 200;
-				
-				
+
+
 				new_item = return_treasure(treas_chart[loot][j],level,mode);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
 					new_item = return_treasure(treas_chart[loot][j],level,mode);
@@ -812,7 +812,7 @@ void place_treasure(location where,short level,short loot,short mode)
 				if (new_item.isCursed() && (get_ran(1,0,5) < 3))
 					new_item.variety = 0;
 				}
-				
+
 			// if forced, keep dipping until a treasure comes uo
 			if ((mode == 1)	&& (max >= 20)) {
 				do
@@ -823,14 +823,14 @@ void place_treasure(location where,short level,short loot,short mode)
 			// Not many cursed items
 			if (new_item.isCursed() && (get_ran(1,0,2) == 1))
 				new_item.variety = 0;
-							
+
 			if (new_item.variety != 0) {
 				for (i = 0; i < 6; i++)
-					if ((adven[i].isAlive()) 
-						&& (get_ran(1,0,100) < id_odds[adven[i].skills[13]]))
+					if ((adven[i].isAlive())
+						&& (get_ran(1,0,100) < id_odds[adven[i].skills[SKILL_ITEM_LORE]]))
 							new_item.item_properties = new_item.item_properties | 1;
 				place_item(new_item,where,FALSE);
-				}			
+				}
 			}
 		}
 
@@ -839,11 +839,11 @@ void place_treasure(location where,short level,short loot,short mode)
 short pc_array::getTotalLuck()
 {
 	short i = 0;
-	
+
 	for (i = 0; i < NUM_OF_PCS; i++)
 		if (pc[i].isAlive())
 			i += pc[i].skills[SKILL_LUCK];
-			
+
 	return i;
 }
 
@@ -862,7 +862,7 @@ item_record_type return_treasure(short loot,short,short)
 								7,8,8,9,9,10,11,12,12,13,
 								13,14, 9,10,11,9,10,11};
 	short r1;
-	
+
 	treas.variety = 0;
 	r1 = get_ran(1,0,41);
 	if (loot >= 3) r1 += 3;
@@ -875,14 +875,14 @@ item_record_type return_treasure(short loot,short,short)
 		case 6: treas = get_missile(loot); break;
 		case 7: treas = get_potion(loot); break;
 		case 8: treas = get_scroll(loot); break;
-		case 9: treas = get_wand(loot); break; 
+		case 9: treas = get_wand(loot); break;
 		case 10: treas = get_ring(loot); break;
 		case 11: treas = get_necklace(loot); break;
 		case 12: treas = get_poison(loot); break;
 		case 13: treas = get_gloves(loot); break;
 		case 14: treas = get_boots(loot); break;
-		} 
-	if (treas.variety == 0)	treas.value = 0;	
+		}
+	if (treas.variety == 0)	treas.value = 0;
 	return treas;
 
 }
@@ -892,7 +892,7 @@ void refresh_store_items()
 {
 	short i,j;
 	short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
-	
+
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++) {
 			party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
@@ -909,15 +909,15 @@ void get_text_response(short dlg,char *str,short parent_num)
 	short i;
 
 	SetCursor(sword_curs);
-	
+
 	store_str = (char *) str;
 	store_dnum = dlg;
-	
+
 	cd_create_dialog_parent_num(dlg,parent_num);
 	cd_set_edit_focus();
-			
+
 	while (dialog_not_toast)
-		ModalDialog();	
+		ModalDialog();
 	for (i = 0; i < 15; i++)
 		if ((str[i] > 64) && (str[i] < 91))
 			str[i] = str[i] + 32;
@@ -930,7 +930,7 @@ void get_text_response(short dlg,char *str,short parent_num)
 bool pc_array::checkClass(short item_class, short mode)
 {
 	short i,j;
-	
+
 	if (item_class == 0)
 		return false;
 	for (i = 0; i < NUM_OF_PCS; i++)

@@ -19,7 +19,7 @@ void pc_record_type::kill(short type)
 	short i = 24;
 	bool dummy, no_save = false, no_luck = false;
 	location item_loc;
-	
+
 	if (type >= 20)
 	{
 		type -= 10;
@@ -28,19 +28,19 @@ void pc_record_type::kill(short type)
     if(type >= 10)
     {
     	type -= 10;
-	    no_luck = true;        
+	    no_luck = true;
     }
-	
+
     if(no_save == false){
 	if (type != 4)
 		i = hasAbilEquip(48); //check if has life saving items
     else
 	    i = hasAbilEquip(49); //check if has protection vs petrification items
     }
-		
+
 	short which_pc = getNum();
 
-	if ((no_luck == false) && (type != 0) && (skills[SKILL_LUCK] > 0) && 
+	if ((no_luck == false) && (type != 0) && (skills[SKILL_LUCK] > 0) &&
 		(get_ran(1,0,100) < hit_chance[skills[SKILL_LUCK]])) {
 			add_string_to_buf("  But you luck out!          ");
 			cur_health = 0;
@@ -48,18 +48,18 @@ void pc_record_type::kill(short type)
 		else if ((i == 24) || (type == 0)) {
 			if (combat_active_pc == which_pc)
 				combat_active_pc = 6;
-	
+
 			for (i = 0; i < 24; i++)
 				equip[i] = false;
 
 			item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : c_town.p_loc;
-	
+
 			if (type == 2)
 				make_sfx(item_loc.x,item_loc.y,3);
 				else if (type == 3)
 					make_sfx(item_loc.x,item_loc.y,6);
-		
-			if (overall_mode != 0)	
+
+			if (overall_mode != 0)
 				for (i = 0; i < 24; i++)
 					if (items[i].variety != 0) {
 						dummy = place_item(items[i],item_loc,true);
@@ -88,13 +88,13 @@ void pc_record_type::kill(short type)
             }
 
         current_pc = first_active_pc();
-	
+
 	if (current_pc > 5) {
 		for (i = 0; i < NUM_OF_PCS; i++)
 			if (adven[i].status > 0)
 				current_pc = i;
 		}
-		
+
 	put_pc_screen();
 	set_stat_window(current_pc);
 }
@@ -106,20 +106,20 @@ bool pc_record_type::runTrap(short trap_type, short trap_level, short diff)
 							78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 
 	num_hits += trap_level;
-		
+
 	if (trap_type == TRAP_RANDOM)
 		trap_type = get_ran(1,1,4);
-		
+
 	/// ??? => no trap after all ;)
 	if (trap_type == 6)
 		return true;
-		
-	i = statAdj(1);
-	
-	if ((i_level = getProtLevel(42)) > 0)
+
+	i = statAdj(SKILL_DEXTERITY);
+
+	if ((i_level = getProtLevel(ITEM_THIEVING)) > 0)
 		i += i_level / 2;
-		
-	skill = minmax(0, 20, skills[14] + skills[SKILL_LUCK] / 2 + 1 - c_town.difficulty + 2 * i);
+
+	skill = minmax(0, 20, skills[SKILL_DISARM_TRAPS] + skills[SKILL_LUCK] / 2 + 1 - c_town.difficulty + 2 * i);
 
 	r1 = get_ran(1,0,100) + diff;
 	// Nimble?
@@ -131,7 +131,7 @@ bool pc_record_type::runTrap(short trap_type, short trap_level, short diff)
 		return true;
 	}
 		else add_string_to_buf("  Disarm failed.          ");
-	
+
 	switch (trap_type)
 	{
 		case TRAP_BLADE:
@@ -141,65 +141,65 @@ bool pc_record_type::runTrap(short trap_type, short trap_level, short diff)
 				damage(get_ran(2 + c_town.difficulty / 14,1,10),DAMAGE_WEAPON,-1);
 			}
 			break;
-			
+
 		case TRAP_DART:
 			add_string_to_buf("  A dart flies out.              ");
 			poison((3 + c_town.difficulty / 14) + (trap_level * 2));
 			break;
-			
+
 		case TRAP_GAS:
 			add_string_to_buf("  Poison gas pours out.          ");
 			adven.poison((2 + c_town.difficulty / 14) + trap_level * 2);
 			break;
-	
-		case TRAP_EXPLOSION: 
+
+		case TRAP_EXPLOSION:
 			for (i = 0; i < num_hits; i++)
 			{
 				add_string_to_buf("  There is an explosion.        ");
 				adven.damage(get_ran(3 + c_town.difficulty / 13,1,8), DAMAGE_FIRE);
 			}
 			break;
-			
+
 		case TRAP_SLEEP_RAY:
 			add_string_to_buf("  A purple ray flies out.          ");
 			sleep((200 + c_town.difficulty * 100) + (trap_level * 400),12,50);
 			break;
-			
+
 		case TRAP_DRAIN_XP:
 			add_string_to_buf("  You feel weak.            ");
 			experience = max(0, experience - (40 + trap_level * 30));
 			break;
-		
+
 		case TRAP_ALERT:
 			add_string_to_buf("  An alarm goes off!!!            ");
 			set_town_status(0);
 			break;
 
-		case TRAP_FLAMES: 
+		case TRAP_FLAMES:
 			add_string_to_buf("  Flames shoot from the walls.        ");
 			adven.damage(get_ran(10 + trap_level * 5,1,8),DAMAGE_FIRE);
 			break;
-			
-		case TRAP_DUMBFOUND: 
+
+		case TRAP_DUMBFOUND:
 			add_string_to_buf("  You feel disoriented.        ");
 			adven.dumbfound(2 + trap_level * 2);
 			break;
-			
+
 		case TRAP_DISEASE:
 			add_string_to_buf("  You prick your finger. ");
 			disease((3 + c_town.difficulty / 14) + (trap_level * 2));
 			break;
-			
+
 		case TRAP_DISEASE_ALL:
 			add_string_to_buf("  A foul substance sprays out.");
 			adven.disease((2 + c_town.difficulty / 14) + (trap_level * 2));
 			break;
-			
+
 		default:
 			add_string_to_buf("  (ERROR: Unknown type of trap!)");
 			break;
 	}
-	
+
 	put_pc_screen();
 	put_item_screen(stat_window,0);
 	return true;
@@ -208,24 +208,24 @@ bool pc_record_type::runTrap(short trap_type, short trap_level, short diff)
 short pc_record_type::statAdj(short which)
 {
 	short tr;
-	
+
 	tr = skill_bonus[skills[which]];
-	
-	if (which == 2) {
-		if (traits[1] == true) tr++;
-		if (hasAbilEquip(40) < 24) tr++;
+
+	if (which == 2) { //2 = SKILL_INTELLIGENCE
+		if (traits[TRAIT_MAGICALLY_APT] == true) tr++;
+		if (hasAbilEquip(ITEM_INTELLIGENCE) < 24) tr++;
 		}
-		
-	if (which == 0)
-		if (traits[8] == true) tr++;
-        if (hasAbilEquip(38) < 24) 
+
+	if (which == 0) // 0 = SKILL_STRENGTH
+		if (traits[TRAIT_STRENGTH] == true) tr++;
+        if (hasAbilEquip(ITEM_STRENGTH) < 24)
             tr++;
-            
-    if (which == 1) {
-        if (hasAbilEquip(39) < 24) 
+
+    if (which == 1) { // 1 = SKILL_DEXTERITY
+        if (hasAbilEquip(ITEM_DEXTERITY) < 24)
             tr++;
     }
-		
+
 	return tr;
 }
 
@@ -234,23 +234,23 @@ void pc_record_type::giveXP(short amt)
 	short adjust,add_hp;
 	short xp_percent[30] = {150,120,100,90,80,70,60,50,50,50,
 								45,40,40,40,40,35,30,25,23,20,
-								15,15,15,15,15,15,15,15,15,15};	
-								
+								15,15,15,15,15,15,15,15,15,15};
+
 	if (!isAlive())	return;
-	
+
 	if (level > 49)
 	{
 		level = 50;
 		return;
 	}
-	
+
 	if (amt > 200) { // debug
 		MessageBeep(MB_OK);
 		ASB("Oops! Too much xp!");
 		ASB("Report this!");
 		return;
 		}
-		
+
 	if (amt < 0) { // debug
 		MessageBeep(MB_OK);
 		ASB("Oops! Negative xp!");
@@ -265,13 +265,13 @@ void pc_record_type::giveXP(short amt)
 	{
 		if (get_ran(1,0,100) < xp_percent[level / 2]) amt--;
 	}
-	
+
 	if (amt <= 0) return;
 
 	experience += (max(((amt * adjust) / 100), 0) * 100) / 100;
-	
+
 	party.total_xp_gained += (max(((amt * adjust) / 100), 0) * 100) / 100;
-	
+
 	if (experience < 0) {
 		MessageBeep(MB_OK);
 		ASB("Oops! Xp became negative somehow!");
@@ -279,33 +279,33 @@ void pc_record_type::giveXP(short amt)
 		experience = level * (get_tnl(this)) - 1;
 		return;
 		}
-		
+
 	if (experience > 15000)
 	{
 		experience = 15000;
 		return;
 	}
-	
+
 	while (experience >= (level * (get_tnl(this))))
 	{
 		play_sound(7);
 		level++;
-		
+
 		sprintf ((char *) c_line, "  %s is level %d!  ",(char *) name, level);
-		add_string_to_buf((char *) c_line);		
+		add_string_to_buf((char *) c_line);
 		skill_pts += (level < 20) ? 5 : 4;
 		add_hp = (level < 26) ? get_ran(1,2,6) + skill_bonus[skills[0]]
 		   : max (skill_bonus[skills[0]],0);
-		   
+
 		if (add_hp < 0) add_hp = 0;
 		max_health += add_hp;
-		
+
 		if (max_health > 250) max_health = 250;
 		cur_health += add_hp;
-		
+
 		if (cur_health > 250) cur_health = 250;
-		
-		put_pc_screen();		
+
+		put_pc_screen();
 	}
 }
 
@@ -334,18 +334,18 @@ void pc_record_type::cure(short amt)
 		status[STATUS_POISON] = 0;
 	else
 		status[STATUS_POISON] -= amt;
-	
+
 	one_sound(51);
 }
 
 void pc_record_type::curse(short how_much)
 {
 	if (!isAlive()) return;
-	
+
 	status[STATUS_BLESS_CURSE] = max(status[STATUS_BLESS_CURSE] - how_much, -8);
 	sprintf ((char *) c_line, "  %s cursed.",(char *) name);
 	add_string_to_buf((char *) c_line);
-		
+
 	put_pc_screen();
 	give_help(59,0,0);
 }
@@ -355,23 +355,23 @@ void pc_record_type::dumbfound(short how_much)
 	short r1;
 
 	if (!isAlive()) return;
-	
+
 	r1 = get_ran(1,0,90);
-	
+
 	if (hasAbilEquip(53) < 24) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 		}
-		
+
 	if (r1 < level)
 		how_much -= 2;
-		
+
 	if (how_much <= 0) {
 		sprintf ((char *) c_line, "  %s saved.",(char *) name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
-		
+
 	status[STATUS_DUMB] = min(status[STATUS_DUMB] + how_much, 8);
 	sprintf ((char *) c_line, "  %s dumbfounded.",(char *) name);
 	add_string_to_buf((char *) c_line);
@@ -387,28 +387,28 @@ void pc_record_type::disease(short how_much)
 	short r1, tlevel;
 
 	if (!isAlive()) return;
-	
+
 	r1 = get_ran(1,0,100);
-	
+
 	if (r1 < level * 2)
 		how_much -= 2;
-		
+
 	if (how_much <= 0)
 	{
-		sprintf ((char *) c_line, "  %s saved.",(char *) name);
-		add_string_to_buf((char *) c_line);
+		sprintf (c_line, "  %s saved.", name);
+		add_string_to_buf(c_line);
 		return;
 	}
 
-	if ((tlevel = getProtLevel(62)) > 0)
+	if ((tlevel = getProtLevel(ITEM_PROTECT_FROM_DISEASE)) > 0)
 		how_much -= tlevel / 2;
-		
-	if ((traits[12] == true) && (how_much > 1))	how_much++;
-	if ((traits[12] == true) && (how_much == 1) && (get_ran(1,0,1) == 0)) how_much++;
-	
+
+	if ((traits[TRAIT_FRAIL] == true) && (how_much > 1))	how_much++;
+	if ((traits[TRAIT_FRAIL] == true) && (how_much == 1) && (get_ran(1,0,1) == 0)) how_much++;
+
 	status[STATUS_DISEASE] = min(status[STATUS_DISEASE] + how_much,8);
-	sprintf ((char *) c_line, "  %s diseased.",(char *) name);
-	add_string_to_buf((char *) c_line);
+	sprintf (c_line, "  %s diseased.", name);
+	add_string_to_buf(c_line);
 
 	one_sound(66);
 	put_pc_screen();
@@ -421,37 +421,37 @@ void pc_record_type::sleep(short how_much,short what_type,short adjust)
 {
 	short r1, tlevel;
 	if (!isAlive()) return;
-	
+
 	if (how_much == 0)
 		return;
-		
+
 	if ((what_type == STATUS_ASLEEP) || (what_type == STATUS_PARALYZED)) { ////
-		if ((tlevel = getProtLevel(53)) > 0)
+		if ((tlevel = getProtLevel(ITEM_WILL)) > 0)
 			how_much -= tlevel / 2;
-		if ((tlevel = getProtLevel(54)) > 0)
+		if ((tlevel = getProtLevel(ITEM_FREE_ACTION)) > 0)
 			how_much -= (what_type == STATUS_ASLEEP) ? tlevel : tlevel * 300;
 
 		}
-		
+
 	r1 = get_ran(1,0,100) + adjust;
 	if (r1 < 30 + level * 2)
 		how_much = -1;
-	if ((what_type == STATUS_ASLEEP) && ((traits[7] > 0) || (status[STATUS_ASLEEP] < 0)))
+	if ((what_type == STATUS_ASLEEP) && ((traits[TRAIT_HIGHLY_ALERT] > 0) || (status[STATUS_ASLEEP] < 0)))
 		how_much = -1;
 	if (how_much <= 0) {
-		sprintf ((char *) c_line, "  %s resisted.",(char *) name);
-		add_string_to_buf((char *) c_line);
+		sprintf (c_line, "  %s resisted.", name);
+		add_string_to_buf( c_line);
 		return;
 		}
 	if (isAlive()) {
 		status[what_type] = how_much;
 		if (what_type == STATUS_ASLEEP)
-			sprintf ((char *) c_line, "  %s falls asleep.",(char *) name);
-			else sprintf ((char *) c_line, "  %s paralyzed.",(char *) name);
+			sprintf (c_line, "  %s falls asleep.", name);
+			else sprintf (c_line, "  %s paralyzed.", name);
 		if (what_type == STATUS_ASLEEP)
 			play_sound(96);
 			else play_sound(90);
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf(c_line);
 		pc_moves[getNum()] = 0;
 		}
 	put_pc_screen();
@@ -463,7 +463,7 @@ void pc_record_type::sleep(short how_much,short what_type,short adjust)
 void pc_record_type::slow(short how_much)
 {
 	if (!isAlive()) return;
-	
+
 	status[STATUS_HASTE_SLOW] = minmax(-8,8,status[STATUS_HASTE_SLOW] - how_much);
 	if (how_much < 0)
 		sprintf ((char *) c_line, "  %s hasted.",(char *) name);
@@ -478,7 +478,7 @@ void pc_record_type::slow(short how_much)
 void pc_record_type::web(short how_much)
 {
 	if (!isAlive()) return;
-	
+
 	status[STATUS_WEBS] = min(status[STATUS_WEBS] + how_much,8);
 	sprintf ((char *) c_line, "  %s webbed.",(char *) name);
 	add_string_to_buf((char *) c_line);
@@ -491,18 +491,18 @@ void pc_record_type::web(short how_much)
 void pc_record_type::acid(short how_much)
 {
 	if (!isAlive()) return;
-	
+
 	if (hasAbilEquip(36) < 24) {
 		sprintf ((char *) c_line, "  %s resists acid.",(char *) name);
 		add_string_to_buf((char *) c_line);
 		return;
 		}
-		
+
 	status[STATUS_ACID] += how_much;
 	sprintf ((char *) c_line, "  %s covered with acid!",(char *) name);
 	add_string_to_buf((char *) c_line);
 	one_sound(42);
-	
+
 	put_pc_screen();
 }
 
@@ -510,9 +510,9 @@ void pc_record_type::heal(short amt)
 {
 	if (!isAlive())	return;
 	if (cur_health > max_health) return;
-	
+
 	cur_health += amt;
-	
+
 	if (cur_health > max_health)
 		cur_health = max_health;
 }
@@ -523,11 +523,11 @@ void pc_record_type::sortItems()
 	short item_priority[26] = {20,8,8,20,9, 9,3,2,1,0, 7,20,10,10,10, 10,10,10,5,6, 4,11,12,9,9, 9};
 	bool no_swaps = false, store_equip;
 	int i;
-	
+
 	while (no_swaps == false) {
 		no_swaps = true;
 		for (i = 0; i < 23; i++)
-			if (item_priority[items[i + 1].variety] < 
+			if (item_priority[items[i + 1].variety] <
 			  item_priority[items[i].variety]) {
 			  	no_swaps = false;
 			  	store_item = items[i + 1];
@@ -547,12 +547,12 @@ void pc_record_type::sortItems()
 short pc_record_type::getNum()
 {
 	short i;
-	
+
 	for (i = 0; i < NUM_OF_PCS; i++)
 	{
 		if (&adven[i] == this) break;;
 	}
-	
+
 	return i;
 }
 
@@ -560,10 +560,10 @@ bool pc_record_type::giveToPC(item_record_type item, bool print_result)
 {
 	short free_space;
 	char announce_string[60];
-	
+
 	if (item.variety == 0)
 		return true;
-		
+
 	if (item.variety == 3) {
 		party.gold += item.item_level;
 		ASB("You get some gold.");
@@ -614,13 +614,13 @@ short pc_record_type::getProtLevel(short abil)
 	for (int i = 0; i < 24; i++)
 		if ((items[i].variety != 0) && (items[i].ability == abil) && (equip[i] == true))
 				return items[i].ability_strength;
-	return (-1);	
+	return (-1);
 }
 
 short pc_record_type::hasAbilEquip(short abil)
 {
 	short i = 0;
-	
+
 	while (((items[i].variety == 0) || (items[i].ability != abil)
 			|| (equip[i] == false)) && (i < 24))
 				i++;
@@ -630,48 +630,48 @@ short pc_record_type::hasAbilEquip(short abil)
 short pc_record_type::hasAbil(short abil)
 {
 	short i = 0;
-	
+
 	while (((items[i].variety == 0) || (items[i].ability != abil)) && (i < 24)) i++;
 	return i;
 }
 
 short pc_record_type::amountCanCarry()
 {
-	return 100 + (15 * min(skills[0],20)) + ((traits[8] == 0) ? 0 : 30)
-		+ ((traits[14] == 0) ? 0 : -50);
+	return 100 + (15 * min(skills[0],20)) + ((traits[TRAIT_STRENGTH] == 0) ? 0 : 30)
+		+ ((traits[TRAIT_BAD_BACK] == 0) ? 0 : -50);
 }
 
 short pc_record_type::amountCarried()
 {
 	short i, storage = 0;
 	bool airy = false, heavy = false;
-	
-	for (i = 0; i < 24; i++) 
+
+	for (i = 0; i < 24; i++)
 		if (items[i].variety > 0)
 		{
 			storage += item_weight(items[i]);
 			if (items[i].ability == 44) airy = true;
 			if (items[i].ability == 45)	heavy = true;
 		}
-		
+
 	if (airy) storage -= 30;
 	if (heavy) storage += 30;
 	if (storage < 0) storage = 0;
-	
+
 	return storage;
 }
 
 short pc_record_type::hasSpace()
 {
 	int i = 0;
-	
+
 	while (i < 24)
 	{
 	if (items[i].variety == 0)
 		return i;
 	i++;
 	}
-	
+
 	return 24;
 }
 
@@ -679,7 +679,7 @@ short pc_record_type::hasSpace()
 short pc_record_type::okToBuy(short cost, item_record_type item)
 {
 	int i;
-	
+
 	if ((item.variety != 3) && (item.variety != 11)) {
 		for (i = 0; i < 24; i++)
 			if ((items[i].variety > 0) && (items[i].type_flag == item.type_flag)
@@ -689,7 +689,7 @@ short pc_record_type::okToBuy(short cost, item_record_type item)
 		if (hasSpace() == 24) return 2;
 		if (item_weight(item) > amountCanCarry() - amountCarried()) return 4;
 	  	}
-	  	
+
 	if (party.takeGold(cost, false) == false)
 		return 3;
 	return 1;
@@ -700,27 +700,27 @@ void pc_record_type::takeItem(short which_item)
 {
 	int i;
 	bool do_print = true;
-	
+
 	if (which_item >= 30) {
 		do_print = false;
 		which_item -= 30;
 		}
-		
+
 	if ((weap_poisoned == which_item) && (status[0] > 0)) {
 			add_string_to_buf("  Poison lost.           ");
 			status[0] = 0;
 		}
-		
-	if ((weap_poisoned > which_item) && (status[0] > 0)) 
+
+	if ((weap_poisoned > which_item) && (status[0] > 0))
 		weap_poisoned--;
-		
+
 	for (i = which_item; i < 23; i++) {
 		items[i] = items[i + 1];
 		equip[i] = equip[i + 1];
 		}
 	items[23] = return_dummy_item();
 	equip[23] = false;
-	
+
 	if ((stat_window == getNum()) && (do_print))
 		put_item_screen(stat_window,1);
 }
@@ -743,9 +743,9 @@ void pc_record_type::enchantWeapon(short item_hit, short enchant_type, short new
 	char store_name[60];
 
 	if ((items[item_hit].isMagic()) || (items[item_hit].ability != 0)) return;
-	
+
 	items[item_hit].item_properties |= 4;
-	
+
 	switch (enchant_type) {
 		case 0:
 			sprintf((char *)store_name,"%s (+1)", items[item_hit].full_name);
@@ -804,7 +804,7 @@ void pc_record_type::equipItem(short item_num)
 	short num_hands_occupied = 0;
 	short i;
 	short equip_item_type = 0;
-	
+
 	if ((overall_mode == MODE_COMBAT) && (items[item_num].variety == 11))
 		add_string_to_buf("Equip: Not in combat");
 	else {
@@ -827,18 +827,18 @@ void pc_record_type::equipItem(short item_num)
 		if (equippable[items[item_num].variety] == false)
 			add_string_to_buf("Equip: Can't equip this item.");
 				else {
-					for (i = 0; i < 24; i++) 
+					for (i = 0; i < 24; i++)
 						if (equip[i] == true) {
 							if (items[i].variety == items[item_num].variety)
 								num_equipped_of_this_type++;
 							num_hands_occupied = num_hands_occupied + num_hands_to_use[items[i].variety];
 						}
-						
-						
+
+
 					equip_item_type = excluding_types[items[item_num].variety];
 					// Now if missile is already equipped, no more missiles
 					if (equip_item_type > 0) {
-						for (i = 0; i < 24; i++) 
+						for (i = 0; i < 24; i++)
 							if ((equip[i] == true) && (excluding_types[items[i].variety] == equip_item_type)) {
 								add_string_to_buf("Equip: You have something of");
 								add_string_to_buf("  this type equipped.");
@@ -857,7 +857,7 @@ void pc_record_type::equipItem(short item_num)
 									add_string_to_buf("Equip: OK");
 									}
 					}
-			
+
 		}
 	}
 
@@ -872,11 +872,11 @@ void pc_record_type::dropItem(short item_num, location where_drop)
 	item_record_type item_store;
 	bool take_given_item = true;
 	location loc;
-	
+
 	item_store = items[item_num];
 
-	if ((equip[item_num] == true) && (items[item_num].isCursed())) 
-			add_string_to_buf("Drop: Item is cursed.           ");	
+	if ((equip[item_num] == true) && (items[item_num].isCursed()))
+			add_string_to_buf("Drop: Item is cursed.           ");
 	else switch (overall_mode) {
 		case 0:
 			choice = fancy_choice_dialog(1093,0);
@@ -891,7 +891,7 @@ void pc_record_type::dropItem(short item_num, location where_drop)
 				}
 				else takeItem(item_num);
 			break;
-		
+
 		case 5: case 15:
 			loc = where_drop;
 			if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
@@ -914,7 +914,7 @@ void pc_record_type::dropItem(short item_num, location where_drop)
 						else add_string_to_buf("Drop: OK");
 					items[item_num].charges -= how_many;
 					if (take_given_item) takeItem(item_num);
-					}	
+					}
 			break;
 		}
 }
@@ -925,7 +925,7 @@ void pc_record_type::giveThing(short item_num)
 	item_record_type item_store;
 	bool take_given_item = true;
 	short pc_num = getNum();
-	
+
 	if ((equip[item_num] == true) && (items[item_num].isCursed()))
 			add_string_to_buf("Give: Item is cursed.           ");
   			else {
@@ -936,7 +936,7 @@ void pc_record_type::giveThing(short item_num)
 					who_to = 6;
 					}
 
-				if ((who_to < 6) && (who_to != pc_num) 
+				if ((who_to < 6) && (who_to != pc_num)
 					&& ((overall_mode != MODE_COMBAT) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == true))) {
 					if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 						how_many = get_num_of_items(item_store.charges);
@@ -946,9 +946,9 @@ void pc_record_type::giveThing(short item_num)
 							take_given_item = false;
 						items[item_num].charges -= how_many;
 						item_store.charges = how_many;
-						}					
+						}
 					if (adven[who_to].giveToPC(item_store,0) == true) {
-						if (take_given_item) takeItem(item_num);	
+						if (take_given_item) takeItem(item_num);
 						}
 						else {
 							if (adven[who_to].hasSpace() == 24)
@@ -956,7 +956,7 @@ void pc_record_type::giveThing(short item_num)
 								else ASB("Can't give: PC carrying too much.");
 							if (how_many > 0)
 								items[item_num].charges += how_many;
-							}				
+							}
 				}
 		}
 }
@@ -964,12 +964,12 @@ void pc_record_type::giveThing(short item_num)
 void pc_record_type::combineThings()
 {
 	int i,j,test;
-	
+
 	for (i = 0; i < 24; i++) {
-		if ((items[i].variety > 0) && (items[i].type_flag > 0) && (items[i].isIdent())) 
+		if ((items[i].variety > 0) && (items[i].type_flag > 0) && (items[i].isIdent()))
 			{
 			for (j = i + 1; j < 24; j++)
-				if ((items[j].variety > 0) && (items[j].type_flag == items[i].type_flag) && (items[j].isIdent())) 
+				if ((items[j].variety > 0) && (items[j].type_flag == items[i].type_flag) && (items[j].isIdent()))
 				 {
 					add_string_to_buf("(items combined)");
 					test = items[i].charges + items[j].charges;
@@ -984,7 +984,7 @@ void pc_record_type::combineThings()
 				 		}
 					takeItem(30 + j);
 				}
-			}		
+			}
 		if ((items[i].variety > 0) && (items[i].charges < 0))
 			items[i].charges = 1;
 		}
