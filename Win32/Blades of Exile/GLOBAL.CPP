@@ -2,6 +2,7 @@
 #include "global.h"
 #include <cmath>
 #include "globvar.h"
+#include "tools/mathutil.h"
 
 RECT RECT16::rect32()
 {
@@ -20,7 +21,7 @@ RECT16::RECT16 (const RECT & tmp)
 	right = tmp.right;
 	bottom = tmp.bottom;
 }
-	
+
 RECT16 & RECT16::operator=(const RECT & tmp)
 {
 	left = tmp.left;
@@ -33,10 +34,10 @@ RECT16 & RECT16::operator=(const RECT & tmp)
 POINT MAKEPOINT(LONG lParam)
 {
 	POINT point;
-	
+
 	point.x = LOWORD(lParam);
 	point.y = HIWORD(lParam);
-	
+
 	return point;
 }
 
@@ -48,7 +49,7 @@ void DebugQuit(char * msg)
 	PostQuitMessage(EXIT_FAILURE);
 }
 
-void alter_rect(RECT *r) 
+void alter_rect(RECT *r)
 {
 	long a;
 
@@ -60,7 +61,7 @@ void alter_rect(RECT *r)
 	r->right = a;
 }
 
-void alter_rect(RECT16 *r) 
+void alter_rect(RECT16 *r)
 {
 	short a;
 
@@ -79,7 +80,7 @@ void alter_rect(RECT16 *r)
 
 	if ((max - min + 1) == 0)
 		return 0;
-		
+
 	for (i = 1; i < times + 1; i++)
 	{
 		store = rand() % (max - min + 1);
