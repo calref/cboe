@@ -57,11 +57,11 @@ struct RECT16
 typedef char Boolean;
 
 struct shortloc { short x, y; };
-	
+
 struct special_node_type
 {
 	short type,sd1,sd2,pic,m1,m2,ex1a,ex1b,ex2a,ex2b,jumpto;
-	
+
 	void flip();	/* reverse byte order */
 };
 
@@ -81,11 +81,11 @@ typedef struct {
 	unsigned char blockage,flag1,flag2,special,trans_to_what,fly_over,boat_over;
 	unsigned char block_horse,light_radius,step_sound,shortcut_key,res1,res2,res3;
 	} terrain_type_type;
-	
+
 struct wandering_type
 {
 	unsigned char monst[4];
-	
+
 	bool isNull() const;
 };
 
@@ -95,7 +95,7 @@ struct out_wandering_type
 	unsigned char friendly[3];
 	short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 	short end_spec1,end_spec2;
-	
+
 	bool isNull() const;
 };
 
@@ -112,7 +112,7 @@ struct outdoor_record_type
 	RECT16 info_rect[8];
 	unsigned char strlens[180];
 	special_node_type specials[60];
-	
+
 	void flip();	/* reverse byte order */
 };
 
@@ -126,20 +126,20 @@ typedef struct {
 	short spec1, spec2;
 	char spec_enc_code, time_code;
 	short monster_time,personality;
-	short special_on_kill,facial_pic;	
+	short special_on_kill,facial_pic;
 	} creature_start_type;
-	
+
 typedef struct {
 	location item_loc;
 	short item_code,ability;
 	unsigned char charges,always_there,property,contained;
 	} preset_item_type;
-	
+
 typedef struct {
 	location field_loc;
 	short field_type;
 	} preset_field_type;
-	
+
 struct town_record_type
 {
 	short town_chop_time,town_chop_key;
@@ -167,7 +167,7 @@ struct town_record_type
     bool defy_mapping : 1;
     char reserved_bits : 6;*/
 	short difficulty;
-	
+
 	/* functions */
 	location getSpecLoc(int spec);
 };
@@ -186,13 +186,13 @@ typedef struct {
 	creature_start_type creatures[40];
 	unsigned char lighting[6][48];
 	} ave_tr_type;
-	
+
 typedef struct {
 	unsigned char terrain[32][32];
 	RECT16 room_rect[16];
 	creature_start_type creatures[30];
 	unsigned char lighting[4][32];
-	} tiny_tr_type;	
+	} tiny_tr_type;
 
 typedef struct {
 	item_record_type scen_items[400];
@@ -217,7 +217,7 @@ typedef struct {
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
 	} monster_record_type;
-	
+
 /* CREATURE_DATA_TYPE */
 class creature_data_type
 {
@@ -230,7 +230,7 @@ public:
 	Boolean mobile;
 	short summoned;
 	creature_start_type monst_start;
-	
+
 	/* functions */
 private:
 	void adjustMagic(short *how_much);
@@ -245,14 +245,14 @@ public:
 	void dumbfound(short how_much);
 	void charm(short penalty, short which_status, short amount);
 	void record();
-};	
-	
+};
+
 typedef struct {
 	location horse_loc,horse_loc_in_sec,horse_sector;
 	short which_town;
 	Boolean exists,property;
 	} horse_record_type;
-	
+
 typedef struct {
 	location boat_loc,boat_loc_in_sec,boat_sector;
 	short which_town;
@@ -264,7 +264,7 @@ typedef struct {
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	} scen_header_type;
-	
+
 typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
@@ -328,7 +328,7 @@ struct current_town_type
 	creature_list_type	monst;
 	Boolean	in_boat;
 	location p_loc;
-	
+
 	/* functions */
 	short placeMonster(unsigned char which, location where);
 	short countMonsters();
@@ -340,9 +340,9 @@ struct outdoor_creature_type
 	Boolean exists;
 	short direction;
 	out_wandering_type what_monst;
-	location which_sector,m_loc;	
+	location which_sector,m_loc;
 };
-	
+
 struct party_record_type
 {
 	long age;
@@ -373,10 +373,10 @@ struct party_record_type
 	short m_killed[200];
 	unsigned long total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
 	char scen_name[256];
-	
+
 	/* functions */
 	bool isFlying() { return (bool) stuff_done[305][1]; }
-	
+
 	void giveGold(short amount, bool print_result);
 	bool takeGold(short amount, bool print_result);
 	void giveFood(short amount, bool print_result);
@@ -385,12 +385,12 @@ struct party_record_type
 
 typedef struct { char town_maps[200][8][64]; } stored_town_maps_type;
 typedef struct { char town_strs[180][256]; } piles_of_stuff_dumping_type;
-	
+
 typedef struct {
 	char scen_header_strs[3][80];
 	char scen_names[256];
 	} piles_of_stuff_dumping_type2;
-	
+
 typedef struct { char talk_strs[170][256]; } piles_of_stuff_dumping_type3;
 typedef struct { char out_strs[9][256]; } outdoor_strs_type;
 typedef struct { outdoor_strs_type outdoor_text[2][2]; } piles_of_stuff_dumping_type4;
@@ -401,10 +401,10 @@ class pc_array
 private:
 	//pc_record_type pc[6];
 	pc_record_type pc[NUM_OF_PCS];
-	
+
 public:
 	pc_record_type & operator[](int num) { return pc[num]; }
-	
+
 	/* remember - all this functions refer to all PCs */
 	void affect(short type, short how_much);
 	void cure(short how_much);							/* cure all */
@@ -416,26 +416,26 @@ public:
 	void poison(short how_much);						/* poison all */
 
 	void drainXP(short how_much);		// drain experience points
-	
+
 	void giveXP(short how_much);		// give experience points
-	
+
 	void restoreSP(short how_much);		// restore spell points
-	
+
 	bool hasAbil(short ability);
-	
+
 	bool isPoisoned();									/* is someone posioned? */
-	
+
 	short getMageLore();								/* count total mage lore */
 	short getTotalLevel();
 	short getTotalLuck();
-	
+
 	bool checkClass(short item_class,short mode);
 };
 
 typedef struct { unsigned char setup[4][64][64]; } setup_save_type;
 typedef struct { unsigned char pattern[9][9]; } effect_pat_type;
 typedef struct { item_record_type items[NUM_TOWN_ITEMS]; } stored_items_list;
-typedef struct { char outdoor_maps[100][6][48]; } stored_outdoor_maps_type; 
+typedef struct { char outdoor_maps[100][6][48]; } stored_outdoor_maps_type;
 
 //extern short s_pow(short x,short y);
 //extern short get_ran (short times, short min, short max);
@@ -446,27 +446,8 @@ void alter_rect(RECT *r) ;
 void alter_rect(RECT16 *r) ;
 Boolean sd_legit(short a, short b);
 
-template <class T>
-T minmax(T min, T max, T k)
-{	
-	return (k < min)? min : (k > max)? max : k;
-};
+typedef  struct {
 
-template <class T>
-T ex_abs(T value)
-{
-	return (value < 0)? (-value) : value;
-};
-
-template <class T>
-void move_to_zero(T & value)
-{
-	if (value > 0) --value;
-	else if (value < 0)	++value;
-};
-
-typedef  struct { 
-    
     short queued_special;
     long trigger_time;
     unsigned short mode;

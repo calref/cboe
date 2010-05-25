@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include "mathutil.h"
 
+//minmax, move_to_zero and ex_abs (return absolute value) are templates in the header file
+
 short get_ran (short times,short  min,short  max){
 	long int store;
 	short i, to_ret = 0;
@@ -41,22 +43,6 @@ short min(short a,short b){
 	if (a < b)
 		return a;
 	else return b;
-}
-
-short minmax(short min,short max,short k){
-	if (k < min)
-		return min;
-	if (k > max)
-		return max;
-	return k;
-}
-
-short move_to_zero(short val){
-	if (val < 0)
-		return val + 1;
-	if (val > 0)
-		return val - 1;
-	return val;
 }
 
 short gcd(short a, short b){ // Grabbed from Wikipedia and translated to C code
