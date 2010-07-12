@@ -1,7 +1,7 @@
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 #include "string.h"
-#include "Global.h"
+#include "global.h"
 #include "graphics.h"
 #include "graphutl.h"
 #include "scenario.h"

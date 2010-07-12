@@ -1,7 +1,7 @@
-#include <Windows.h>
+#include <windows.h>
 #include <commdlg.h>
 #include "string.h"
-#include "Global.h"
+#include "global.h"
 #include "stdio.h"
 #include "tfileio.h"
 #include "keydlgs.h"

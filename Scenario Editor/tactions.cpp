@@ -1,8 +1,8 @@
-#include <Windows.h>
+#include <windows.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "Global.h"
+#include "global.h"
 #include "graphics.h"
 #include "tactions.h"
 #include "edsound.h"

@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = Blades_of_Exile_Scenario_Editor_private.res
-OBJ  = BUTTONMG.o DLOGTOOL.o GLOBAL.o GRAPHUTL.o KEYDLGS.o TFILEIO.o townout.o EDSOUND.o GRAPHICS.o SCENARIO.o BLSCENED.o TACTIONS.o $(RES)
-LINKOBJ  = BUTTONMG.o DLOGTOOL.o GLOBAL.o GRAPHUTL.o KEYDLGS.o TFILEIO.o townout.o EDSOUND.o GRAPHICS.o SCENARIO.o BLSCENED.o TACTIONS.o $(RES)
+OBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
+LINKOBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib/GTK+" -mwindows -lwinmm --strip-all  
 INCS =  -I"include" 
 CXXINCS = 
@@ -26,41 +26,41 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o "Blades of Exile Scenario Editor.exe" $(LIBS)
 
-BUTTONMG.o: BUTTONMG.CPP
-	$(CPP) -c BUTTONMG.CPP -o BUTTONMG.o $(CXXFLAGS)
+buttonmg.o: buttonmg.cpp
+	$(CPP) -c buttonmg.cpp -o buttonmg.o $(CXXFLAGS)
 
-DLOGTOOL.o: DLOGTOOL.CPP
-	$(CPP) -c DLOGTOOL.CPP -o DLOGTOOL.o $(CXXFLAGS)
+dlogtool.o: dlogtool.cpp
+	$(CPP) -c dlogtool.cpp -o dlogtool.o $(CXXFLAGS)
 
-GLOBAL.o: GLOBAL.CPP
-	$(CPP) -c GLOBAL.CPP -o GLOBAL.o $(CXXFLAGS)
+global.o: global.cpp
+	$(CPP) -c global.cpp -o global.o $(CXXFLAGS)
 
-GRAPHUTL.o: GRAPHUTL.CPP
-	$(CPP) -c GRAPHUTL.CPP -o GRAPHUTL.o $(CXXFLAGS)
+graphutl.o: graphutl.cpp
+	$(CPP) -c graphutl.cpp -o graphutl.o $(CXXFLAGS)
 
-KEYDLGS.o: KEYDLGS.CPP
-	$(CPP) -c KEYDLGS.CPP -o KEYDLGS.o $(CXXFLAGS)
+keydlgs.o: keydlgs.cpp
+	$(CPP) -c keydlgs.cpp -o keydlgs.o $(CXXFLAGS)
 
-TFILEIO.o: TFILEIO.CPP
-	$(CPP) -c TFILEIO.CPP -o TFILEIO.o $(CXXFLAGS)
+tfileio.o: tfileio.cpp
+	$(CPP) -c tfileio.cpp -o tfileio.o $(CXXFLAGS)
 
 townout.o: townout.cpp
 	$(CPP) -c townout.cpp -o townout.o $(CXXFLAGS)
 
-EDSOUND.o: EDSOUND.CPP
-	$(CPP) -c EDSOUND.CPP -o EDSOUND.o $(CXXFLAGS)
+edsound.o: edsound.cpp
+	$(CPP) -c edsound.cpp -o edsound.o $(CXXFLAGS)
 
-GRAPHICS.o: GRAPHICS.CPP
-	$(CPP) -c GRAPHICS.CPP -o GRAPHICS.o $(CXXFLAGS)
+graphics.o: graphics.cpp
+	$(CPP) -c graphics.cpp -o graphics.o $(CXXFLAGS)
 
-SCENARIO.o: SCENARIO.CPP
-	$(CPP) -c SCENARIO.CPP -o SCENARIO.o $(CXXFLAGS)
+scenario.o: scenario.cpp
+	$(CPP) -c scenario.cpp -o scenario.o $(CXXFLAGS)
 
-BLSCENED.o: BLSCENED.CPP
-	$(CPP) -c BLSCENED.CPP -o BLSCENED.o $(CXXFLAGS)
+blscened.o: blscened.cpp
+	$(CPP) -c blscened.cpp -o blscened.o $(CXXFLAGS)
 
-TACTIONS.o: TACTIONS.CPP
-	$(CPP) -c TACTIONS.CPP -o TACTIONS.o $(CXXFLAGS)
+tactions.o: tactions.cpp
+	$(CPP) -c tactions.cpp -o tactions.o $(CXXFLAGS)
 
 Blades_of_Exile_Scenario_Editor_private.res: Blades_of_Exile_Scenario_Editor_private.rc STRINGS.RC BLSCENED.RC GAMEDLOG.RC 
 	$(WINDRES) -i Blades_of_Exile_Scenario_Editor_private.rc --input-format=rc -o Blades_of_Exile_Scenario_Editor_private.res -O coff  -D_INCLUDED_RC
