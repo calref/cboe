@@ -29,27 +29,18 @@ SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000
 
-[Unit1]
-FileName=BLADPCED.CPP
-CompileCpp=1
+[Unit2]
+FileName=bladpced.cpp
 Folder=Blades of Exile Character Editor
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-
-[Unit2]
-FileName=BLADPCED.RC
-Folder=Blades of Exile Character Editor
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
+CompileCpp=1
 
 [Unit3]
-FileName=DLOGTOOL.CPP
+FileName=dlogtool.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -59,7 +50,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=DLOGTOOL.H
+FileName=edaction.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -69,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=EDACTION.CPP
+FileName=edfileio.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -79,7 +70,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=EDACTION.H
+FileName=editors.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -89,7 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=EDFILEIO.CPP
+FileName=edsound.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -99,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=EDFILEIO.H
+FileName=global.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -109,7 +100,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=EDITORS.CPP
+FileName=graphics.cpp
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -119,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=EDITORS.H
+FileName=graphutl.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -129,7 +120,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=EDSOUND.CPP
+FileName=dlogtool.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -139,7 +130,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=EDSOUND.H
+FileName=edaction.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -149,7 +140,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=GLOBAL.CPP
+FileName=edfileio.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -159,7 +150,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=GLOBAL.H
+FileName=editors.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -169,7 +160,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=GRAPHICS.CPP
+FileName=edsound.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -179,7 +170,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=GRAPHICS.H
+FileName=global.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -189,7 +180,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=GRAPHUTL.CPP
+FileName=graphics.h
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
@@ -199,11 +190,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=GRAPHUTL.H
+FileName=BLADPCED.RC
 CompileCpp=1
 Folder=Blades of Exile Character Editor
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -225,4 +216,14 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+
+[Unit1]
+FileName=graphutl.cpp
+CompileCpp=1
+Folder=Blades of Exile Character Editor
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

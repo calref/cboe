@@ -35,26 +35,26 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="BLADPCED.CPP" />
 		<Unit filename="BLADPCED.RC">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="DLOGTOOL.CPP" />
-		<Unit filename="DLOGTOOL.H" />
-		<Unit filename="EDACTION.CPP" />
-		<Unit filename="EDACTION.H" />
-		<Unit filename="EDFILEIO.CPP" />
-		<Unit filename="EDFILEIO.H" />
-		<Unit filename="EDITORS.CPP" />
-		<Unit filename="EDITORS.H" />
-		<Unit filename="EDSOUND.CPP" />
-		<Unit filename="EDSOUND.H" />
-		<Unit filename="GLOBAL.CPP" />
-		<Unit filename="GLOBAL.H" />
-		<Unit filename="GRAPHICS.CPP" />
-		<Unit filename="GRAPHICS.H" />
-		<Unit filename="GRAPHUTL.CPP" />
-		<Unit filename="GRAPHUTL.H" />
+		<Unit filename="bladpced.cpp" />
+		<Unit filename="dlogtool.cpp" />
+		<Unit filename="dlogtool.h" />
+		<Unit filename="edaction.cpp" />
+		<Unit filename="edaction.h" />
+		<Unit filename="edfileio.cpp" />
+		<Unit filename="edfileio.h" />
+		<Unit filename="editors.cpp" />
+		<Unit filename="editors.h" />
+		<Unit filename="edsound.cpp" />
+		<Unit filename="edsound.h" />
+		<Unit filename="global.cpp" />
+		<Unit filename="global.h" />
+		<Unit filename="graphics.cpp" />
+		<Unit filename="graphics.h" />
+		<Unit filename="graphutl.cpp" />
+		<Unit filename="graphutl.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
