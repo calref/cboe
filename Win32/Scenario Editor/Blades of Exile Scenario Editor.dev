@@ -30,7 +30,7 @@ CompilerSet=0
 CompilerSettings=0000000000010000000000
 
 [Unit3]
-FileName=DLOGTOOL.CPP
+FileName=buttonmg.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=DLOGTOOL.H
+FileName=dlogtool.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -50,17 +50,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=GLOBAL.CPP
-CompileCpp=1
-Folder=Blades of Exile Scenario Editor
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
-FileName=GLOBAL.H
+FileName=edsound.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -70,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=GRAPHUTL.H
+FileName=keydlgs.cpp
 Folder=Blades of Exile Scenario Editor
 Compile=1
 Link=1
@@ -80,17 +70,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit11]
-FileName=KEYDLGS.H
-CompileCpp=1
-Folder=Blades of Exile Scenario Editor
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
-FileName=SCENARIO.H
+FileName=tactions.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -100,26 +80,16 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=TACTIONS.H
+FileName=BLSCENED.RC
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=townout.cpp
-CompileCpp=1
-Folder=Blades of Exile Scenario Editor
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=townout.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
@@ -129,8 +99,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
-FileName=EDSOUND.CPP
+[Unit17]
+FileName=buttonmg.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -140,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=EDSOUND.H
+FileName=edsound.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -150,7 +120,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=GRAPHICS.CPP
+FileName=global.h
 Folder=Blades of Exile Scenario Editor
 Compile=1
 Link=1
@@ -160,7 +130,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit21]
-FileName=SCENARIO.CPP
+FileName=graphics.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -170,21 +140,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=STRINGS.RC
+FileName=graphutl.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit23]
-FileName=BLSCENED.RC
-CompileCpp=1
-Folder=Blades of Exile Scenario Editor
-Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -208,7 +168,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit8]
-FileName=GRAPHUTL.CPP
+FileName=graphutl.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -218,7 +178,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=KEYDLGS.CPP
+FileName=scenario.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -228,17 +188,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=GAMEDLOG.RC
-CompileCpp=1
-Folder=Blades of Exile Scenario Editor
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=GRAPHICS.H
+FileName=tfileio.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -248,17 +198,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=TFILEIO.H
+FileName=STRINGS.RC
 CompileCpp=1
-Folder=
+Folder=Blades of Exile Scenario Editor
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=BUTTONMG.H
+FileName=blscened.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -268,7 +218,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=TACTIONS.CPP
+FileName=tactions.h
 Folder=Blades of Exile Scenario Editor
 Compile=1
 Link=1
@@ -278,7 +228,37 @@ BuildCmd=
 CompileCpp=1
 
 [Unit1]
-FileName=BUTTONMG.CPP
+FileName=townout.cpp
+CompileCpp=1
+Folder=Blades of Exile Scenario Editor
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=global.cpp
+CompileCpp=1
+Folder=Blades of Exile Scenario Editor
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=graphics.cpp
+CompileCpp=1
+Folder=Blades of Exile Scenario Editor
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=tfileio.cpp
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -288,7 +268,26 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=TFILEIO.CPP
+FileName=GAMEDLOG.RC
+Folder=Blades of Exile Scenario Editor
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=dlogtool.h
+CompileCpp=1
+Folder=Blades of Exile Scenario Editor
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=keydlgs.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1
@@ -298,7 +297,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=BLSCENED.CPP
+FileName=scenario.h
 CompileCpp=1
 Folder=Blades of Exile Scenario Editor
 Compile=1

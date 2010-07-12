@@ -6,7 +6,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "math.h"
-#include "Global.h"
+#include "global.h"
 #include "graphics.h"
 #include "tactions.h"
 #include "tfileio.h"
@@ -164,7 +164,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		}
 
 		mainPtr = CreateWindow (szAppName,
-			"Classic BoE Scenario Editor 1.0",
+			"Classic BoE Scenario Editor build_30.04.2010",
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,

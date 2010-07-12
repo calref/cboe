@@ -8,7 +8,7 @@
 #include <string.h>
 #include "global.h"
 
-#include "KEYDLGS.h"
+#include "keydlgs.h"
 #include "edsound.h"
 
 #include "graphutl.h"

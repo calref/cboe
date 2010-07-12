@@ -35,36 +35,36 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="BLSCENED.CPP" />
 		<Unit filename="BLSCENED.RC">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="BUTTONMG.CPP" />
-		<Unit filename="BUTTONMG.H" />
-		<Unit filename="DLOGTOOL.CPP" />
-		<Unit filename="DLOGTOOL.H" />
-		<Unit filename="EDSOUND.CPP" />
-		<Unit filename="EDSOUND.H" />
 		<Unit filename="GAMEDLOG.RC">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="GLOBAL.CPP" />
-		<Unit filename="GLOBAL.H" />
-		<Unit filename="GRAPHICS.CPP" />
-		<Unit filename="GRAPHICS.H" />
-		<Unit filename="GRAPHUTL.CPP" />
-		<Unit filename="GRAPHUTL.H" />
-		<Unit filename="KEYDLGS.CPP" />
-		<Unit filename="KEYDLGS.H" />
-		<Unit filename="SCENARIO.CPP" />
-		<Unit filename="SCENARIO.H" />
 		<Unit filename="STRINGS.RC">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="TACTIONS.CPP" />
-		<Unit filename="TACTIONS.H" />
-		<Unit filename="TFILEIO.CPP" />
-		<Unit filename="TFILEIO.H" />
+		<Unit filename="blscened.cpp" />
+		<Unit filename="buttonmg.cpp" />
+		<Unit filename="buttonmg.h" />
+		<Unit filename="dlogtool.cpp" />
+		<Unit filename="dlogtool.h" />
+		<Unit filename="edsound.cpp" />
+		<Unit filename="edsound.h" />
+		<Unit filename="global.cpp" />
+		<Unit filename="global.h" />
+		<Unit filename="graphics.cpp" />
+		<Unit filename="graphics.h" />
+		<Unit filename="graphutl.cpp" />
+		<Unit filename="graphutl.h" />
+		<Unit filename="keydlgs.cpp" />
+		<Unit filename="keydlgs.h" />
+		<Unit filename="scenario.cpp" />
+		<Unit filename="scenario.h" />
+		<Unit filename="tactions.cpp" />
+		<Unit filename="tactions.h" />
+		<Unit filename="tfileio.cpp" />
+		<Unit filename="tfileio.h" />
 		<Unit filename="townout.cpp" />
 		<Unit filename="townout.h" />
 		<Extensions>
