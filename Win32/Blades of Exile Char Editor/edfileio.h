@@ -1,0 +1,14 @@
+void file_initialize();
+void save_file(short mode);
+void load_file();
+void leave_town();
+void get_reg_data();
+void remove_party_from_scen();
+void Get_Path(char* path);
+short load_items_list();
+void load_town_strings(short which_town);
+void port_scenario(scenario_data_type *scenario);
+void port_item_list();
+void flip_short(short *s);
+void flip_rect(RECT16 *s);
+void flip_spec_node(special_node_type *spec);
