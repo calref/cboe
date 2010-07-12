@@ -1,5 +1,5 @@
 
-#include <Windows.h>
+#include <windows.h>
 #include <commdlg.h>
 
 #include <cstring>
@@ -49,7 +49,7 @@ BOOL check_for_interrupt(){
 
 	if(((GetAsyncKeyState(VK_LCONTROL) & 32768) == 32768) && ((GetAsyncKeyState(0x43) & 32768) == 32768))
         return TRUE;
-    
+
     return FALSE;
     }
 
@@ -64,7 +64,7 @@ while(file_path[i] != '\\')
     i--;                                   // find the last '\' in the path to the executable
    }                                       // in order to get rid of 'blades of exile.exe'
 
-   
+
 int j=0;                                // initialize the second loop
 
 for(j=0;j<i+1;j++)
@@ -77,7 +77,7 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 void file_initialize()
 {
 static char * szFilter[] =
-	{	
+	{
 		"Classic BoE Save Files (*.SAV)\0*.sav\0"
 		"Experimental BoE Save Files (*.savx)\0*.savx\0"
 		"All Files (*.*)\0*.*\0"
@@ -104,12 +104,12 @@ static char * szFilter[] =
 		ofn.lCustData = 0L;
 		ofn.lpfnHook = NULL;
 		ofn.lpTemplateName = NULL;
-		
+
 		lpsi.cbSize = sizeof(SCROLLINFO);
 		lpsi.fMask = SIF_RANGE;
 		lpsi.nMin = 0;
 		lpsi.nMax = 0;
-    	lpsi.nPos = 0;		
+    	lpsi.nPos = 0;
 }
 
 void load_file()
@@ -139,11 +139,11 @@ void load_file()
 	ofn.Flags = 0;
 
 	if (GetOpenFileName(&ofn) == 0)	return;
-	
+
 	file_id = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return;
-	
+
 		SetCurrentDirectory(file_path_name);
 
 	for (i = 0; i < 3; i++)
@@ -153,7 +153,7 @@ void load_file()
 			CloseHandle(file_id);
 			return;
 		}
-		
+
 		if( (flag == mac_flags[i][0] ) || (flag == mac_flags[i][1] )){//legacy mac save
             need_porting = TRUE;
             flip_short(&flag);
@@ -163,8 +163,8 @@ void load_file()
 			CloseHandle(file_id);
 			FCD(1063,0);
 			return;
-		} 
-		
+		}
+
 
 
 		if ((i == 0) && (flag == flags[i][1])) town_restore = TRUE;
@@ -172,18 +172,18 @@ void load_file()
 		if ((i == 2) && (flag == flags[i][1])) maps_there = TRUE;
 	}
 
-	// LOAD PARTY	
-	
+	// LOAD PARTY
+
 	party_ptr = (char *) &party;
-	
+
 	if(need_porting){//legacy mac save special loading procedure
     ReadFile(file_id, &party, sizeof(party_record_type)-272, &dwByteRead, NULL);//read until the 2 bytes skipping of the party structure
     SetFilePointer(file_id,-2,NULL,1);//get back of 2 bytes to read the 2 skipped bytes
     ReadFile(file_id, &party.total_m_killed, 4, &dwByteRead, NULL);
-    ReadFile(file_id, &party.total_dam_done, 4, &dwByteRead, NULL);    
-    ReadFile(file_id, &party.total_xp_gained, 4, &dwByteRead, NULL);        
-    ReadFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);        
-    ReadFile(file_id, &party.scen_name, 256, &dwByteRead, NULL);        
+    ReadFile(file_id, &party.total_dam_done, 4, &dwByteRead, NULL);
+    ReadFile(file_id, &party.total_xp_gained, 4, &dwByteRead, NULL);
+    ReadFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
+    ReadFile(file_id, &party.scen_name, 256, &dwByteRead, NULL);
     }
 	else{
 	ReadFile(file_id, &party.age, 4, &dwByteRead, NULL);
@@ -200,7 +200,7 @@ void load_file()
 	ReadFile(file_id, &party.p_loc.y, 1, &dwByteRead, NULL);
 	ReadFile(file_id, &party.loc_in_sec.x, 1, &dwByteRead, NULL);
 	ReadFile(file_id, &party.loc_in_sec.y, 1, &dwByteRead, NULL);
-	
+
 	for (i = 0; i < 30; i++)
 	{
 		ReadFile(file_id, &party.boats[i].boat_loc.x, 1, &dwByteRead, NULL);
@@ -227,7 +227,7 @@ void load_file()
 	}
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 60; j++)	
+		for (j = 0; j < 60; j++)
 		{
 			ReadFile(file_id, &party.creature_save[i].dudes[j].active, 2, &dwByteRead, NULL);
 			ReadFile(file_id, &party.creature_save[i].dudes[j].attitude, 2, &dwByteRead, NULL);
@@ -297,11 +297,11 @@ void load_file()
 				ReadFile(file_id, &party.creature_save[i].dudes[j].monst_start.facial_pic, 2, &dwByteRead, NULL);
 			}
 		}
-		
+
 		ReadFile(file_id, &party.creature_save[i].which_town, 2, &dwByteRead, NULL);
 		ReadFile(file_id, &party.creature_save[i].friendly, 2, &dwByteRead, NULL);
 	}
-	
+
 	ReadFile(file_id, &party.in_boat, 2, &dwByteRead, NULL);
 	ReadFile(file_id, &party.in_horse, 2, &dwByteRead, NULL);
 	for (i = 0; i < 10; i++)
@@ -381,11 +381,11 @@ void load_file()
 	ReadFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
 	ReadFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
 }
-	for (count = 0; count < sizeof(party_record_type); count++)	party_ptr[count] ^= 0x5C;	
+	for (count = 0; count < sizeof(party_record_type); count++)	party_ptr[count] ^= 0x5C;
 
     if(need_porting)//legacy mac save special loading procedure
         port_party();
-        
+
 	// LOAD SETUP
 	if (ReadFile(file_id, &setup_save, sizeof(setup_save_type), &dwByteRead, NULL) == FALSE)
 		{
@@ -404,11 +404,11 @@ void load_file()
 			FCD(1064,0);
 			return;
 		}
-		
+
 		for (count = 0; count < sizeof(dummy_pc_record_type); count++)
-			pc_ptr[count] ^= 0x6B;	
+			pc_ptr[count] ^= 0x6B;
 	}
-	
+
     if(need_porting)//legacy mac save special loading procedure
         port_pc();
 
@@ -422,7 +422,7 @@ void load_file()
 		return;
 		}
 
-	// LOAD TOWN 
+	// LOAD TOWN
 	if (town_restore == TRUE)
 	{
 		if(need_porting){//legacy mac save special loading procedure
@@ -434,11 +434,11 @@ void load_file()
 		}
     }
     else{
-		
+
 		{
 			ReadFile(file_id, &c_town.town_num, 2, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.difficulty, 2, &dwByteRead, NULL);
-			
+
 			ReadFile(file_id, &c_town.town, sizeof(town_record_type), &dwByteRead, NULL);
 			ReadFile(file_id, c_town.explored, 64 * 64, &dwByteRead, NULL);
 			ReadFile(file_id, &c_town.hostile, 1, &dwByteRead, NULL);
@@ -558,7 +558,7 @@ void load_file()
             for(i = 0; i < 3; i++)
                 port_stored_items(&stored_items[i]);
 	}
-	
+
 	// LOAD SAVED MAPS
 	if (maps_there == TRUE)
 	{
@@ -574,7 +574,7 @@ void load_file()
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
+		}
 	}
 	// LOAD SFX & MISC_I
 		if (ReadFile(file_id, &sfx, 64 * 64, &dwByteRead, NULL) == FALSE)
@@ -582,14 +582,14 @@ void load_file()
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
-		
+		}
+
 		if (ReadFile(file_id, &misc_i, 64 * 64, &dwByteRead, NULL) == FALSE)
 		{
 			CloseHandle(file_id);
 			FCD(1064,0);
 			return;
-		}	
+		}
 
 	} // end if_scen
 
@@ -600,16 +600,16 @@ void load_file()
 	// now if not in scen, this is it.
 	if (in_scen == FALSE)
 	{
-		if (in_startup_mode == FALSE) 
+		if (in_startup_mode == FALSE)
 		{
 			reload_startup();
 			in_startup_mode = TRUE;
 			draw_startup(0);
 		}
-	    in_scen_debug = FALSE;         
+	    in_scen_debug = FALSE;
 		return;
 	}
-		
+
 	if (load_scenario() == FALSE)  return;
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
@@ -627,11 +627,11 @@ void load_file()
 	erase_out_specials();
 
     belt_present = FALSE;
-    
+
 	if (town_restore == FALSE) {
 		center = party.p_loc;
 		}
-		else {	
+		else {
 			load_town(c_town.town_num,2,-1,NULL);
 			load_town(c_town.town_num,1,-1,NULL);
 			for (i = 0; i < T_M; i++)
@@ -651,7 +651,7 @@ void load_file()
                     if ((scenario.ter_types[t_d.terrain[j][k]].special >= 16) &&
 			             (scenario.ter_types[t_d.terrain[j][k]].special <= 19))
 				                belt_present = TRUE;
-					}		
+					}
 force_wall = TRUE;fire_wall = TRUE;antimagic = TRUE;scloud = TRUE;ice_wall = TRUE;blade_wall = TRUE;
 sleep_field = TRUE;
 			center = c_town.p_loc;
@@ -664,7 +664,7 @@ sleep_field = TRUE;
 	loaded_yet = TRUE;
 
 	add_string_to_buf("Load: Game loaded.            ");
-		
+
 	// Set sounds, map saving, and speed
 	/*
 	if (((play_sounds == TRUE) && (party.stuff_done[306][1] == 1)) ||
@@ -672,13 +672,13 @@ sleep_field = TRUE;
 		play_sounds = 1 - play_sounds;
 		}
 		*/
-	give_delays = party.stuff_done[306][2]; 
+	give_delays = party.stuff_done[306][2];
 	if (party.stuff_done[306][0] == 0)
 		save_maps = TRUE;
-		else save_maps = FALSE;	
+		else save_maps = FALSE;
 
 	in_startup_mode = FALSE;
-	
+
 }
 
 void save_file(short mode) //mode 0 - normal  1 - save as
@@ -695,8 +695,8 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
 	current_town_type *town_ptr;
-		
-	char *party_encryptor;	
+
+	char *party_encryptor;
 
 	if ((in_startup_mode == FALSE) && (is_town()))
 		town_save = TRUE;
@@ -705,12 +705,12 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
 	ofn.Flags = OFN_OVERWRITEPROMPT;
-	
+
 	if ((mode == 1) || (in_startup_mode == TRUE)) {
 		if (GetSaveFileName(&ofn) == 0)
 			return;
 		}
-		
+
 /*	if (strcmpi(&ofn.lpstrFile[ofn.nFileExtension], "savx") == 0)
 	{
 		// for experimental formats of save-game files
@@ -721,8 +721,8 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	if (file_id == INVALID_HANDLE_VALUE) return;
 
 	SetCurrentDirectory(file_path_name);
-		
-	store = &flag;	
+
+	store = &flag;
 
 	flag = (town_save == TRUE) ? 1342 : 5790;
 	if (WriteFile(file_id, store, sizeof(short), &bytes, NULL) == FALSE)
@@ -744,19 +744,19 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	}
 
 	// SAVE PARTY
-	party_ptr = &party;	
+	party_ptr = &party;
 
 	party_encryptor = (char *) party_ptr;
 	for (count = 0; count < sizeof(party_record_type); count++)
 		party_encryptor[count] ^= 0x5C;
-	
+
 /*	if (WriteFile(file_id, party_ptr, sizeof(party_record_type), &bytes, NULL) == FALSE)
 	{
 		add_string_to_buf("Save: Couldn't write to file.         ");
 		CloseHandle(file_id);
 		for (count = 0; count < store_len; count++)
 			party_encryptor[count] ^= 0x5C;
-			SysBeep(2); 
+			SysBeep(2);
 		return;
 		}*/
 
@@ -774,7 +774,7 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	WriteFile(file_id, &party.p_loc.y, 1, &dwByteRead, NULL);
 	WriteFile(file_id, &party.loc_in_sec.x, 1, &dwByteRead, NULL);
 	WriteFile(file_id, &party.loc_in_sec.y, 1, &dwByteRead, NULL);
-	
+
 	for (i = 0; i < 30; i++)
 	{
 		WriteFile(file_id, &party.boats[i].boat_loc.x, 1, &dwByteRead, NULL);
@@ -801,7 +801,7 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	}
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 60; j++)	
+		for (j = 0; j < 60; j++)
 		{
 			WriteFile(file_id, &party.creature_save[i].dudes[j].active, 2, &dwByteRead, NULL);
 			WriteFile(file_id, &party.creature_save[i].dudes[j].attitude, 2, &dwByteRead, NULL);
@@ -871,11 +871,11 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 				WriteFile(file_id, &party.creature_save[i].dudes[j].monst_start.facial_pic, 2, &dwByteRead, NULL);
 			}
 		}
-		
+
 		WriteFile(file_id, &party.creature_save[i].which_town, 2, &dwByteRead, NULL);
 		WriteFile(file_id, &party.creature_save[i].friendly, 2, &dwByteRead, NULL);
 	}
-	
+
 	WriteFile(file_id, &party.in_boat, 2, &dwByteRead, NULL);
 	WriteFile(file_id, &party.in_horse, 2, &dwByteRead, NULL);
 	for (i = 0; i < 10; i++)
@@ -953,22 +953,22 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	WriteFile(file_id, &party.total_dam_done, 4, &dwByteRead, NULL);
 	WriteFile(file_id, &party.total_xp_gained, 4, &dwByteRead, NULL);
 	WriteFile(file_id, &party.total_dam_taken, 4, &dwByteRead, NULL);
-	WriteFile(file_id, party.scen_name, 256, &dwByteRead, NULL);		
-	
+	WriteFile(file_id, party.scen_name, 256, &dwByteRead, NULL);
+
 		for (count = 0; count < sizeof(party_record_type); count++)
 			party_encryptor[count] ^= 0x5C;
 
 	// SAVE SETUP
-	setup_ptr = &setup_save;	
+	setup_ptr = &setup_save;
 	if (WriteFile(file_id, setup_ptr, sizeof(setup_save_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		return;
 	}
 
-	// SAVE PCS	
+	// SAVE PCS
 	for (i = 0; i < 6; i++) {
-		pc_ptr = &adven[i];	
+		pc_ptr = &adven[i];
 
 		party_encryptor = (char *) pc_ptr;
 		for (count = 0; count < sizeof(pc_record_type); count++)
@@ -979,15 +979,15 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 			CloseHandle(file_id);
 			for (count = 0; count < sizeof(pc_record_type); count++)
 				party_encryptor[count] ^= 0x6B;
-				MessageBeep(MB_OK); 
+				MessageBeep(MB_OK);
 			return;
 			}
 		for (count = 0; count < sizeof(pc_record_type); count++)
 			party_encryptor[count] ^= 0x6B;
 		}
-		
+
 	if (in_startup_mode == FALSE) {
-	
+
 	// SAVE OUT DATA
 	if (WriteFile(file_id, out_e, sizeof(out_info_type), &bytes, NULL) == FALSE)
 	{
@@ -995,8 +995,8 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 		return;
 	}
 
-	if (town_save == TRUE) {	
-			town_ptr = &c_town;	
+	if (town_save == TRUE) {
+			town_ptr = &c_town;
 			/*
 			len = sizeof(current_town_type);
 			if (WriteFile(file_id, town_ptr, sizeof(current_town_type), &bytes, NULL) == FALSE)
@@ -1004,7 +1004,7 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 				CloseHandle(file_id);
 				return;
 			}*/
-			
+
 /** saving c_town **/
 
 		{
@@ -1092,22 +1092,22 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 			WriteFile(file_id, &c_town.p_loc.x, 1, &dwByteRead, NULL);
 			WriteFile(file_id, &c_town.p_loc.y, 1, &dwByteRead, NULL);
 		}
-			
+
 /** end of saving c_town **/
 			if (WriteFile(file_id, &t_d, sizeof(big_tr_type), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
 				return;
 			}
-			
+
 			if (WriteFile(file_id, &t_i, sizeof(stored_items_list), &bytes, NULL) == FALSE)
 			{
 				CloseHandle(file_id);
 				return;
-			}	
+			}
 		}
-	
-	// Save stored items 
+
+	// Save stored items
 	for (i = 0; i < 3; i++)
 	{
 		if (WriteFile(file_id, &stored_items[i], sizeof(stored_items_list), &bytes, NULL) == FALSE)
@@ -1116,7 +1116,7 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 			return;
 		}
 	}
-			
+
 	// If saving maps, save maps
 	if (save_maps == TRUE) {
 		if (WriteFile(file_id, &(town_maps), sizeof(stored_town_maps_type), &bytes, NULL) == FALSE)
@@ -1130,8 +1130,8 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 			CloseHandle(file_id);
 			return;
 		}
-	} 
-	
+	}
+
 	// SAVE SFX and MISC_I
 		if (WriteFile(file_id, sfx, (64 * 64), &bytes, NULL) == FALSE)
 		{
@@ -1146,7 +1146,7 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	}
 
 	CloseHandle(file_id);
-		
+
 	if (in_startup_mode == FALSE)
 		add_string_to_buf("Save: Game saved.              ");
 }
@@ -1190,7 +1190,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 
 	len_to_jump = sizeof(scenario_data_type);
 	len_to_jump += sizeof(scen_item_data_type);
-	
+
 	for (i = 0; i < 300; i++) len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
 	for (i = 0; i < 100; i++)
@@ -1224,14 +1224,14 @@ void load_town(short town_num,short mode,short extra,char *str)
 			}
 			else SetFilePointer(file_id, sizeof(big_tr_type), NULL, FILE_CURRENT);
 			break;
-			
+
 		case 1:
 				if (mode == 0) {
 					ReadFile(file_id, &ave_t, sizeof(ave_tr_type), &dwBytesRead, NULL);
 					for (i = 0; i < 48; i++)
 						for (j = 0; j < 48; j++) {
 							t_d.terrain[i][j] = ave_t.terrain[i][j];
-							t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];					
+							t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];
 							}
 					for (i = 0; i < 16; i++) t_d.room_rect[i] = ave_t.room_rect[i];
 					for (i = 0; i < 40; i++) t_d.creatures[i] = ave_t.creatures[i];
@@ -1240,14 +1240,14 @@ void load_town(short town_num,short mode,short extra,char *str)
 					}
 					else SetFilePointer(file_id, sizeof(ave_tr_type), NULL, FILE_CURRENT);
 			break;
-			
+
 		case 2:
 			if (mode == 0) {
 				ReadFile(file_id, &tiny_t, sizeof(tiny_tr_type), &dwBytesRead, NULL);
 				for (i = 0; i < 32; i++)
 					for (j = 0; j < 32; j++) {
 						t_d.terrain[i][j] = tiny_t.terrain[i][j];
-						t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];					
+						t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];
 						}
 				for (i = 0; i < 16; i++) t_d.room_rect[i] = tiny_t.room_rect[i];
 				for (i = 0; i < 30; i++) t_d.creatures[i] = tiny_t.creatures[i];
@@ -1257,7 +1257,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 				else SetFilePointer(file_id, sizeof(tiny_tr_type), NULL, FILE_CURRENT);
 			break;
 		}
-		
+
 	for (i = 0; i < 140; i++) {
 		len = (mode == 0) ? (long) (c_town.town.strlens[i]) : (long) (dummy_town.strlens[i]);
 		switch (mode) {
@@ -1265,11 +1265,11 @@ void load_town(short town_num,short mode,short extra,char *str)
 				ReadFile(file_id, &(data_store->town_strs[i]), len, &dwBytesRead, NULL);
 				data_store->town_strs[i][len] = 0;
 				break;
-				
+
 			case 1:
 				SetFilePointer(file_id, len, NULL, FILE_CURRENT);
 				break;
-				
+
 			case 2:
 				if (extra < 0) {
 					ReadFile(file_id, &(data_store->town_strs[i]), len, &dwBytesRead, NULL);
@@ -1288,22 +1288,22 @@ void load_town(short town_num,short mode,short extra,char *str)
 	{
 		ReadFile(file_id, &talking, sizeof(talking_record_type), &dwBytesRead, NULL);
 		port_talk_nodes();
-	
+
 		for (i = 0; i < 170; i++)
 		{
 			len = (long) (talking.strlens[i]);
 			ReadFile(file_id, &(data_store3->talk_strs[i]), len, &dwBytesRead, NULL);
 			data_store3->talk_strs[i][len] = 0;
 		}
-		
+
 		cur_town_talk_loaded = town_num;
 	}
-		
+
 	if (mode == 0) town_type = scenario.town_size[which_town];
 	CloseHandle(file_id);
-	
+
 	// Now more initialization is needed. First need to properly create the misc_i array.
-	
+
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 	if (mode == 0) {
 		for (i = 0; i < 64; i++)
@@ -1317,12 +1317,12 @@ void load_town(short town_num,short mode,short extra,char *str)
 				}
 	for (i = 0; i < 50; i++) {
 			if ((c_town.town.preset_fields[i].field_type > 0) && (c_town.town.preset_fields[i].field_type < 9))
-				misc_i[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] = 
-				 misc_i[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] | 
+				misc_i[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] =
+				 misc_i[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] |
 			 	(unsigned char) (s_pow(2,c_town.town.preset_fields[i].field_type - 1));
 			if ((c_town.town.preset_fields[i].field_type >= 14) && (c_town.town.preset_fields[i].field_type <= 21))
-				sfx[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] = 
-				 sfx[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] | 
+				sfx[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] =
+				 sfx[(short) c_town.town.preset_fields[i].field_loc.x][(short) c_town.town.preset_fields[i].field_loc.y] |
 				 (unsigned char) (s_pow(2,c_town.town.preset_fields[i].field_type - 14));
 			}
 		}
@@ -1331,9 +1331,9 @@ void load_town(short town_num,short mode,short extra,char *str)
 void shift_universe_left()
 {
 	short i,j;
-	
+
 	make_cursor_watch();
-	
+
 	save_outdoor_maps();
 	party.outdoor_corner.x--;
 	party.i_w_c.x++;
@@ -1354,7 +1354,7 @@ void shift_universe_left()
 	for (i = 0; i < 10; i++) {
 		if (party.out_c[i].m_loc.x > 48)
 			party.out_c[i].exists = FALSE;
-		if (party.out_c[i].exists == TRUE) 
+		if (party.out_c[i].exists == TRUE)
 			party.out_c[i].m_loc.x += 48;
 		}
 
@@ -1368,7 +1368,7 @@ void shift_universe_left()
 void shift_universe_right()
 {
 	short i,j;
-	
+
 	make_cursor_watch();
 	save_outdoor_maps();
 	party.outdoor_corner.x++;
@@ -1389,7 +1389,7 @@ void shift_universe_right()
 	for (i = 0; i < 10; i++) {
 		if (party.out_c[i].m_loc.x < 48)
 			party.out_c[i].exists = FALSE;
-		if (party.out_c[i].exists == TRUE) 
+		if (party.out_c[i].exists == TRUE)
 			party.out_c[i].m_loc.x -= 48;
 		}
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y,1,0,0,0,NULL);
@@ -1403,7 +1403,7 @@ void shift_universe_right()
 void shift_universe_up()
 {
 	short i,j;
-	
+
 	make_cursor_watch();
 	save_outdoor_maps();
 	party.outdoor_corner.y--;
@@ -1419,13 +1419,13 @@ void shift_universe_up()
 				out_e[i][j] = out_e[i][j - 48];
 		for (i = 0; i < 96; i++)
 			for (j = 0; j < 48; j++)
-				out_e[i][j] = 0;	 
+				out_e[i][j] = 0;
 
 	for (i = 0; i < 10; i++) {
 		if (party.out_c[i].m_loc.y > 48)
 			party.out_c[i].exists = FALSE;
 		if (party.out_c[i].exists == TRUE)
-			party.out_c[i].m_loc.y += 48; 
+			party.out_c[i].m_loc.y += 48;
 		}
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y,0,0,0,0,NULL);
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y,1,0,0,0,NULL);
@@ -1441,7 +1441,7 @@ void shift_universe_down()
 	short i,j;
 
 	make_cursor_watch();
-	
+
 	save_outdoor_maps();
 	party.outdoor_corner.y++;
 	party.i_w_c.y--;
@@ -1456,17 +1456,17 @@ void shift_universe_down()
 				out_e[i][j] = out_e[i][j + 48];
 		for (i = 0; i < 96; i++)
 			for (j = 48; j < 96; j++)
-				out_e[i][j] = 0;	
+				out_e[i][j] = 0;
 
 	for (i = 0; i < 10; i++) {
 		if (party.out_c[i].m_loc.y < 48)
 			party.out_c[i].exists = FALSE;
-		if (party.out_c[i].exists == TRUE) 
+		if (party.out_c[i].exists == TRUE)
 			party.out_c[i].m_loc.y = party.out_c[i].m_loc.y - 48;
 		}
 	load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y + 1,0,1,0,0,NULL);
 	load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1,1,1,0,0,NULL);
-	
+
 	build_outdoors();
 
 	SetCursor(sword_curs);
@@ -1480,11 +1480,11 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y)
 	party.p_loc.x = pc_pos_x;
 	party.p_loc.y = pc_pos_y;
 	party.loc_in_sec = party.p_loc.toLocal();
-	
+
 	if ((party.outdoor_corner.x != out_x) || (party.outdoor_corner.y != out_y))
 	{
 		party.outdoor_corner.x = out_x;
-		party.outdoor_corner.y = out_y;	
+		party.outdoor_corner.y = out_y;
 		load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1,1,1,0,0,NULL);
 		load_outdoors(party.outdoor_corner.x,party.outdoor_corner.y + 1,0,1,0,0,NULL);
 		load_outdoors(party.outdoor_corner.x + 1,party.outdoor_corner.y,1,0,0,0,NULL);
@@ -1494,26 +1494,26 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y)
 	party.i_w_c.y = (party.p_loc.y > 47) ? 1 : 0;
 	for (i = 0; i < 10; i++) party.out_c[i].exists = FALSE;
 	for (i = 0; i < 96; i++)
-		for (j = 0; j < 96; j++) 	
+		for (j = 0; j < 96; j++)
 			out_e[i][j] = 0;
-	build_outdoors();	
+	build_outdoors();
 }
 
 void build_outdoors()
 {
 	short i,j;
 
-	for (i = 0; i < 48; i++)  
+	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++)
 		{
 			out[i][j] = outdoors[0][0].terrain[i][j];
 			out[48 + i][j] = outdoors[1][0].terrain[i][j];
 			out[i][48 + j] = outdoors[0][1].terrain[i][j];
-			out[48 + i][48 + j] = outdoors[1][1].terrain[i][j];	
+			out[48 + i][48 + j] = outdoors[1][1].terrain[i][j];
 		}
 
 	fix_boats();
-	add_outdoor_maps(); 
+	add_outdoor_maps();
 	make_out_trim();
 	if (in_startup_mode == FALSE) erase_out_specials();
 
@@ -1533,28 +1533,28 @@ short onm(char x_sector,char y_sector)
 void save_outdoor_maps()
 {
 	short i,j;
-	
+
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			if (out_e[i][j] > 0) 
+			if (out_e[i][j] > 0)
 				o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y)][i / 8][j] =
 				 o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y)][i / 8][j] |
-				 (char) (s_pow(2,i % 8));	
+				 (char) (s_pow(2,i % 8));
 			if (party.outdoor_corner.x + 1 < scenario.out_width) {
-				if (out_e[i + 48][j] > 0) 
+				if (out_e[i + 48][j] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y)][i / 8][j] =
 					 o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y)][i / 8][j] |
 					 (char) (s_pow(2,i % 8));
 				}
 			if (party.outdoor_corner.y + 1 < scenario.out_height) {
-				if (out_e[i][j + 48] > 0) 
+				if (out_e[i][j + 48] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y + 1)][i / 8][j] =
 					 o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y + 1)][i / 8][j] |
 					 (char) (s_pow(2,i % 8));
 				}
 			if ((party.outdoor_corner.y + 1 < scenario.out_height) &&
 				(party.outdoor_corner.x + 1 < scenario.out_width)) {
-				if (out_e[i + 48][j + 48] > 0) 
+				if (out_e[i + 48][j + 48] > 0)
 					o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1)][i / 8][j] =
 					 o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1)][i / 8][j] |
 					 (char) (s_pow(2,i % 8));
@@ -1566,34 +1566,34 @@ void add_outdoor_maps()  // This takes the existing outdoor map info and supplem
 						// with the saved map info
 {
 	short i,j;
-	
+
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			if ((out_e[i][j] == 0) && 
+			if ((out_e[i][j] == 0) &&
 			 ((o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y)][i / 8][j] &
 			  (char) (s_pow(2,i % 8))) != 0))
 			 	out_e[i][j] = 1;
 			if (party.outdoor_corner.x + 1 < scenario.out_width) {
-				if ((out_e[i + 48][j] == 0) && 
+				if ((out_e[i + 48][j] == 0) &&
 				 ((o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y)][i / 8][j] &
 				  (char) (s_pow(2,i % 8))) != 0))
-				 	out_e[i + 48][j] = 1;		
-			 		}	 	
+				 	out_e[i + 48][j] = 1;
+			 		}
 			if (party.outdoor_corner.y + 1 < scenario.out_height) {
-				if ((out_e[i][j + 48] == 0) && 
+				if ((out_e[i][j + 48] == 0) &&
 				 ((o_maps.outdoor_maps[onm(party.outdoor_corner.x,party.outdoor_corner.y + 1)][i / 8][j] &
 				  (char) (s_pow(2,i % 8))) != 0))
 				 	out_e[i][j + 48] = 1;
 				}
 			if ((party.outdoor_corner.y + 1 < scenario.out_height) &&
 				(party.outdoor_corner.x + 1 < scenario.out_width)) {
-				if ((out_e[i + 48][j + 48] == 0) && 
+				if ((out_e[i + 48][j + 48] == 0) &&
 				 ((o_maps.outdoor_maps[onm(party.outdoor_corner.x + 1,party.outdoor_corner.y + 1)][i / 8][j] &
 				  (char) (s_pow(2,i % 8))) != 0))
 				 	out_e[i + 48][j + 48] = 1;
 			 	}
 			 }
-} 
+}
 
 void fix_boats()
 {
@@ -1607,14 +1607,14 @@ void fix_boats()
 			else if (party.boats[i].boat_sector.x == party.outdoor_corner.x + 1)
 				party.boats[i].boat_loc.x = party.boats[i].boat_loc_in_sec.x + 48;
 				else party.boats[i].boat_loc.x = 500;
-				
-			if (party.boats[i].boat_sector.y == party.outdoor_corner.y) 
+
+			if (party.boats[i].boat_sector.y == party.outdoor_corner.y)
 				party.boats[i].boat_loc.y = party.boats[i].boat_loc_in_sec.y;
 				else if (party.boats[i].boat_sector.y == party.outdoor_corner.y + 1)
 				party.boats[i].boat_loc.y = party.boats[i].boat_loc_in_sec.y + 48;
 					else party.boats[i].boat_loc.y = 500;
 		}
-		
+
 	for (i = 0; i < NUM_OF_HORSES; i++)
 		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == INVALID_TOWN)) {
 			if (party.horses[i].horse_sector.x == party.outdoor_corner.x)
@@ -1622,7 +1622,7 @@ void fix_boats()
 				else if (party.horses[i].horse_sector.x == party.outdoor_corner.x + 1)
 				party.horses[i].horse_loc.x = party.horses[i].horse_loc_in_sec.x + 48;
 					else party.horses[i].horse_loc.x = 500;
-			if (party.horses[i].horse_sector.y == party.outdoor_corner.y) 
+			if (party.horses[i].horse_sector.y == party.outdoor_corner.y)
 				party.horses[i].horse_loc.y = party.horses[i].horse_loc_in_sec.y;
 				else if (party.horses[i].horse_sector.y == party.outdoor_corner.y + 1)
 				party.horses[i].horse_loc.y = party.horses[i].horse_loc_in_sec.y + 48;
@@ -1679,7 +1679,7 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 		outdoors[targ_x][targ_y].flip();
 	}
 	else ReadFile(file_id, &dummy_out, sizeof(outdoor_record_type), &dwBytesRead, NULL);
-		
+
 	if (mode == 0) {
 		for (i = 0; i < 9; i++) {
 			len = (long) (outdoors[targ_x][targ_y].strlens[i]);
@@ -1687,8 +1687,8 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 			data_store4->outdoor_text[targ_x][targ_y].out_strs[i][len] = 0;
 			}
 		}
-		
-	if (mode == 1) 
+
+	if (mode == 1)
 	{
 		for (i = 0; i < 120; i++)
 		{
@@ -1699,15 +1699,15 @@ void load_outdoors(short to_create_x, short to_create_y, short targ_x, short tar
 				str[len] = 0;
 			}
 			SetFilePointer(file_id, len, NULL, FILE_CURRENT);
-		}	
+		}
 	}
-	
+
 	CloseHandle(file_id);
 }
 
 
 void get_reg_data()
-{	
+{
 	const int BUFFER_LEN = 64;
 	char buffer[BUFFER_LEN];
 	const char * iniFile = "./blades.ini";
@@ -1727,7 +1727,7 @@ void get_reg_data()
 	GetPrivateProfileString(section, "darker_graphics", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[307][0] = atoi(buffer); //1 is darker
 	GetPrivateProfileString(section, "talk_edit_box", "0", buffer, BUFFER_LEN, iniFile);
-	party.stuff_done[307][1] = atoi(buffer); //1 is darker	
+	party.stuff_done[307][1] = atoi(buffer); //1 is darker
 	GetPrivateProfileString(section, "legacy_day_reached", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[309][0] = atoi(buffer); //1 is legacy
 	GetPrivateProfileString(section, "legacy_kill_node", "1", buffer, BUFFER_LEN, iniFile);
@@ -1741,7 +1741,7 @@ void get_reg_data()
 	GetPrivateProfileString(section, "stairway_everywhere", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[309][5] = atoi(buffer);
 	GetPrivateProfileString(section, "resting_checks_timers", "0", buffer, BUFFER_LEN, iniFile);
-	party.stuff_done[309][6] = atoi(buffer);    	
+	party.stuff_done[309][6] = atoi(buffer);
 
 }
 
@@ -1758,7 +1758,7 @@ void build_data_file(short which) // 1 - compatibility ; 2 - preferences
 	WritePrivateProfileString(section, "no_instant_help", itoa((int) party.stuff_done[SDF_NO_INSTANT_HELP], tmp, 10), iniFile);
 	WritePrivateProfileString(section, "fancy_startup", (play_startup == TRUE) ? "1" : "0", iniFile);
 	WritePrivateProfileString(section, "darker_graphics", (party.stuff_done[307][0] == 0) ? "0": "1", iniFile);
-	WritePrivateProfileString(section, "talk_edit_box", (party.stuff_done[307][1] == 0) ? "0": "1", iniFile);	
+	WritePrivateProfileString(section, "talk_edit_box", (party.stuff_done[307][1] == 0) ? "0": "1", iniFile);
     }
     if(which == 1){
     WritePrivateProfileString(section, "legacy_day_reached", (party.stuff_done[309][0] == 0)? "0" : "1", iniFile);
@@ -1766,8 +1766,8 @@ void build_data_file(short which) // 1 - compatibility ; 2 - preferences
     WritePrivateProfileString(section, "town_waterfalls", (party.stuff_done[309][2] == 0)? "1" : "0", iniFile);
     WritePrivateProfileString(section, "display_grass_trims", (party.stuff_done[309][3] == 0)? "0" : "1", iniFile);
     WritePrivateProfileString(section, "special_interrupt", (party.stuff_done[309][4] == 0)? "0" : "1", iniFile);
-    WritePrivateProfileString(section, "stairway_everywhere", (party.stuff_done[309][5] == 0)? "0" : "1", iniFile);   
-    WritePrivateProfileString(section, "resting_checks_timers", (party.stuff_done[309][6] == 0)? "0" : "1", iniFile);    
+    WritePrivateProfileString(section, "stairway_everywhere", (party.stuff_done[309][5] == 0)? "0" : "1", iniFile);
+    WritePrivateProfileString(section, "resting_checks_timers", (party.stuff_done[309][6] == 0)? "0" : "1", iniFile);
     }
 }
 
@@ -1779,19 +1779,19 @@ Boolean load_scenario()	// OK
 	Boolean file_ok = FALSE;
 	DWORD len, dwByteRead;
 	char file_name[256];
-	
+
 	sprintf(file_name,"scenarios/%s",party.scen_name);
-	
+
 	file_id = CreateFile(file_name, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return FALSE;
-	
+
 	if (ReadFile(file_id, &scenario, sizeof(scenario_data_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		return FALSE;
 	}
-	
+
 	if ((scenario.flag1 == 10) && (scenario.flag2 == 20) && (scenario.flag3 == 30)
 	  && (scenario.flag4 == 40))
 	  {
@@ -1805,23 +1805,23 @@ Boolean load_scenario()	// OK
 		file_ok = TRUE;
 		cur_scen_is_win = TRUE;
 		}
-		
+
 	 if (file_ok == FALSE)
 	 {
 		CloseHandle(file_id);
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
-		return FALSE;	 
+		return FALSE;
 	}
-	 	
-	// item data	
+
+	// item data
 	if (ReadFile(file_id, scen_item_list, sizeof(scen_item_data_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		return FALSE;
 	}
-	
+
 	port_item_list();
-	
+
 	for (i = 0; i < 270; i++) {
 		len = (DWORD) (scenario.scen_str_len[i]);
 		if (i < 160)
@@ -1834,15 +1834,15 @@ Boolean load_scenario()	// OK
 			scen_strs2[i - 160][len] = 0;
 			}
 		}
-		
+
 	CloseHandle(file_id);
-	
+
 	if (spec_scen_g != NULL)
 	{
 		DeleteObject(spec_scen_g);
 		spec_scen_g = NULL;
 	}
-	
+
 	sprintf(file_name,"scenarios/%s",party.scen_name);
 	for (i = 0; i < 256; i++) {
 		if (file_name[i] == '.') {
@@ -1852,7 +1852,7 @@ Boolean load_scenario()	// OK
 			i = 256;
 			}
 		}
-		
+
 	spec_scen_g = ReadBMP(file_name);
 
 	set_up_ter_pics();
@@ -1870,7 +1870,7 @@ void set_up_ter_pics()
 void oops_error(short error)
 {
 	char error_str[256];
-	
+
 	MessageBeep(MB_OK);
 	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.",error);
 	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
@@ -1883,18 +1883,18 @@ void ListFiles(char *path, HWND listbox){
 	HANDLE find_file_id;
     WIN32_FIND_DATA lpFindFileData;
     char copy_str[256];
-    
+
     sprintf(copy_str,"scenarios/%s*.*",path);
-    
+
     if((find_file_id = FindFirstFile(copy_str,&lpFindFileData)) == INVALID_HANDLE_VALUE){// is directory empty ?
         FindClose(find_file_id);
         return;
         }
-	
+
    	do{
     	if((strcmp(lpFindFileData.cFileName, "VALLEYDY.EXS") != 0) && (strcmp(lpFindFileData.cFileName, "STEALTH.EXS") != 0) && (strcmp(lpFindFileData.cFileName, "ZAKHAZI.EXS") != 0)){
            len = strlen(lpFindFileData.cFileName);
-            if(((lpFindFileData.cFileName[len-1] == 's') ||( lpFindFileData.cFileName[len-1] == 'S')) 
+            if(((lpFindFileData.cFileName[len-1] == 's') ||( lpFindFileData.cFileName[len-1] == 'S'))
             && ((lpFindFileData.cFileName[len-2] == 'x') || (lpFindFileData.cFileName[len-2] == 'X'))
             && ((lpFindFileData.cFileName[len-3] == 'e') || (lpFindFileData.cFileName[len-3] == 'E'))){// is extension .exs ?
                 sprintf(copy_str,"%s%s",path,lpFindFileData.cFileName);
@@ -1908,7 +1908,7 @@ void ListFiles(char *path, HWND listbox){
         }while(FindNextFile(find_file_id,&lpFindFileData) != 0);
 
     FindClose(find_file_id);
-    
+
 }
 
 void build_scen_headers()
@@ -1917,23 +1917,23 @@ void build_scen_headers()
 	HWND listbox;
 	WORD count;
 	char filename[256],filename2[256];
-	
+
 	listbox = CreateWindow("listbox", NULL,	WS_CHILDWINDOW,	// 3
 		 0,0,0,0,	// 7
 		mainPtr, // 8
 		(HMENU) 1, // 9
 		(HINSTANCE) GetWindowLong(mainPtr, GWL_HINSTANCE), // 10
 		NULL); // 11
-	
+
     ListFiles("", listbox);//First list the scenarios under the scenarios folder
-		
+
 //	SendMessage(listbox,LB_DIR,0x0,(LPARAM) (LPCTSTR) "scenarios/*.exs");
 
 	count = (WORD) SendMessage(listbox,LB_GETCOUNT,0,0L);
 
 	if(count == 0){
     store_num_scen = 0;
-    return;    
+    return;
     }
 // memory allocation (if there's an invalid file, the memory is allocated too, but unused)
     if(data_store2 != NULL){
@@ -1941,16 +1941,16 @@ void build_scen_headers()
         data_store2 = NULL;
         }
 
-    data_store2 = new piles_of_stuff_dumping_type2[count];	
+    data_store2 = new piles_of_stuff_dumping_type2[count];
 
 
     if(scen_headers != NULL){
    		delete[] scen_headers;
         scen_headers = NULL;
     }
-	
+
 	scen_headers = new scen_header_type[count];
-// end of memory allocation	
+// end of memory allocation
 
 	for (i = 0; i < count; i++)
 	{
@@ -1961,13 +1961,13 @@ void build_scen_headers()
 		if (load_scenario_header(filename,current_entry) == TRUE){
         	// now we need to store the file name, first stripping any path that occurs
     	   	// before it
-	       	strcpy(data_store2[current_entry].scen_names, filename2);	
+	       	strcpy(data_store2[current_entry].scen_names, filename2);
     		current_entry++;
             }
 	}
 
     store_num_scen = current_entry; //number of valid scenarios
-    
+
 	/*for (i = 0; i < count ; i++)
 		if (scen_headers[i].flag1 != 0)
 			store_num_scen++;*/
@@ -1987,17 +1987,17 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	DWORD len, dwByteRead;
 	char load_str[256];
 	Boolean mac_header = TRUE;
-	
+
 	file_id = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return FALSE;
-	
+
 	if (ReadFile(file_id, &(scen_headers[header_entry]), sizeof(scen_header_type), &dwByteRead, NULL) == FALSE)
 	{
 		CloseHandle(file_id);
 		return FALSE;
 	}
-	
+
 	if ((scen_headers[header_entry].flag1 == 10) && (scen_headers[header_entry].flag2 == 20)
 	 && (scen_headers[header_entry].flag3 == 30)
 	  && (scen_headers[header_entry].flag4 == 40))
@@ -2012,7 +2012,7 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	  	file_ok = TRUE;
 	  	mac_header = FALSE;
 	}
-	
+
 	if (file_ok == FALSE)
 	{
 		scen_headers[header_entry].flag1 = 0;
@@ -2031,9 +2031,9 @@ Boolean load_scenario_header(char *filename,short header_entry)
 	store = scenario.rating;
 	if (mac_header == TRUE)	flip_short(&store);
 	scen_headers[header_entry].default_ground = store;
-	
+
 	SetFilePointer(file_id, sizeof(scen_item_data_type), NULL, FILE_CURRENT);
-		
+
 	for (i = 0; i < 3; i++)
 	{
 		store = (WORD) scenario.scen_str_len[i];
@@ -2042,10 +2042,10 @@ Boolean load_scenario_header(char *filename,short header_entry)
 		load_str[len] = 0;
 		if (i == 0) load_str[29] = 0;
 		else load_str[59] = 0;
-		
+
 		strcpy(data_store2[header_entry].scen_header_strs[i],load_str);
 	}
-	
+
 	CloseHandle(file_id);
 	return TRUE;
 }
@@ -2088,44 +2088,44 @@ void port_town(short mode)//0 scenario port, 1 save port <= check already done i
 	flip_short(&c_town.town.max_num_monst);
 	flip_short(&c_town.town.spec_on_entry);
 	flip_short(&c_town.town.spec_on_entry_if_dead);
-	for (i =0 ; i < 8; i++) 
+	for (i =0 ; i < 8; i++)
 		flip_short(&c_town.town.timer_spec_times[i]);
-	for (i =0 ; i < 8; i++) 
+	for (i =0 ; i < 8; i++)
 		flip_short(&c_town.town.timer_specs[i]);
 	flip_short(&c_town.town.difficulty);
-	for (i =0 ; i < 100; i++) 
+	for (i =0 ; i < 100; i++)
 		c_town.town.specials[i].flip();
 
 	if(mode == 1){
     flip_short(&c_town.monst.friendly);
     flip_short(&c_town.monst.which_town);
-    
+
     for(i=0;i<60;i++){
         flip_short(&c_town.monst.dudes[i].active);
-        flip_short(&c_town.monst.dudes[i].attitude);        
+        flip_short(&c_town.monst.dudes[i].attitude);
         flip_short(&c_town.monst.dudes[i].summoned);
-        
+
         flip_short(&c_town.monst.dudes[i].monst_start.spec1);
 		flip_short(&c_town.monst.dudes[i].monst_start.spec2);
 		flip_short(&c_town.monst.dudes[i].monst_start.monster_time);
 		flip_short(&c_town.monst.dudes[i].monst_start.personality);
 		flip_short(&c_town.monst.dudes[i].monst_start.special_on_kill);
 		flip_short(&c_town.monst.dudes[i].monst_start.facial_pic);
-		
+
         for(j=0;j<3;j++)
     		flip_short(&c_town.monst.dudes[i].m_d.a[j]);
    		flip_short(&c_town.monst.dudes[i].m_d.corpse_item);
     	flip_short(&c_town.monst.dudes[i].m_d.corpse_item_chance);
 		flip_short(&c_town.monst.dudes[i].m_d.health);
 		flip_short(&c_town.monst.dudes[i].m_d.m_health);
-		flip_short(&c_town.monst.dudes[i].m_d.m_morale);		
-		flip_short(&c_town.monst.dudes[i].m_d.max_mp);				
-		flip_short(&c_town.monst.dudes[i].m_d.morale);		
-		flip_short(&c_town.monst.dudes[i].m_d.mp);				
-		flip_short(&c_town.monst.dudes[i].m_d.picture_num);						
+		flip_short(&c_town.monst.dudes[i].m_d.m_morale);
+		flip_short(&c_town.monst.dudes[i].m_d.max_mp);
+		flip_short(&c_town.monst.dudes[i].m_d.morale);
+		flip_short(&c_town.monst.dudes[i].m_d.mp);
+		flip_short(&c_town.monst.dudes[i].m_d.picture_num);
 		for(j=0;j<15;j++)
-    		flip_short(&c_town.monst.dudes[i].m_d.status[j]);	
-        }					
+    		flip_short(&c_town.monst.dudes[i].m_d.status[j]);
+        }
     }
 }
 
@@ -2151,12 +2151,12 @@ void port_town(short mode)//0 scenario port, 1 save port <= check already done i
 	flip_short(&c_town.town.max_num_monst);
 	flip_short(&c_town.town.spec_on_entry);
 	flip_short(&c_town.town.spec_on_entry_if_dead);
-	for (i =0 ; i < 8; i++) 
+	for (i =0 ; i < 8; i++)
 		flip_short(&c_town.town.timer_spec_times[i]);
-	for (i =0 ; i < 8; i++) 
+	for (i =0 ; i < 8; i++)
 		flip_short(&c_town.town.timer_specs[i]);
 	flip_short(&c_town.town.difficulty);
-	for (i =0 ; i < 100; i++) 
+	for (i =0 ; i < 100; i++)
 		c_town.town.specials[i].flip();
 }*/
 
@@ -2264,7 +2264,7 @@ void port_scenario()
 void port_party(){
 
     int i,j,k;
-    
+
     flip_long(&party.age);
     flip_short(&party.food);
     flip_short(&party.gold);
@@ -2277,7 +2277,7 @@ void port_party(){
         }
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 60; j++)	
+		for (j = 0; j < 60; j++)
 		{
 			flip_short(&party.creature_save[i].dudes[j].active);
 			flip_short(&party.creature_save[i].dudes[j].attitude);
@@ -2306,7 +2306,7 @@ void port_party(){
 				flip_short(&party.creature_save[i].dudes[j].monst_start.facial_pic);
 			}
 		}
-		
+
 	    flip_short(&party.creature_save[i].which_town);
 		flip_short(&party.creature_save[i].friendly);
 	}
@@ -2337,7 +2337,7 @@ for (i = 0; i < 10; i++)
 	flip_short(&party.journal_day[k]);
 	for(k=0;k<140;k++){
 	       flip_short(&party.special_notes_str[k][0]);
-	       flip_short(&party.special_notes_str[k][1]);	       
+	       flip_short(&party.special_notes_str[k][1]);
         }
 	for (i = 0; i < 120; i++)
 	{
@@ -2367,7 +2367,7 @@ for (i = 0; i < 10; i++)
 void port_pc(){
 
     int i,j;
-    
+
     for(i=0;i<6;i++){
     flip_short(&adven[i].cur_health);
     flip_short(&adven[i].cur_sp);
@@ -2378,14 +2378,14 @@ void port_pc(){
     flip_short(&adven[i].main_status);
     flip_short(&adven[i].max_health);
     flip_short(&adven[i].max_sp);
-    flip_short(&adven[i].race);            
+    flip_short(&adven[i].race);
     flip_short(&adven[i].skill_pts);
     for(j=0;j<30;j++)
         flip_short(&adven[i].skills[j]);
     for(j=0;j<15;j++)
         flip_short(&adven[i].status[j]);
     flip_short(&adven[i].weap_poisoned);
-    flip_short(&adven[i].which_graphic);    
+    flip_short(&adven[i].which_graphic);
     for(j=0;j<24;j++){
         flip_short(&adven[i].items[j].item_level);
         flip_short(&adven[i].items[j].value);
@@ -2491,7 +2491,7 @@ void flip_long(long *s)
         store = *s2;
         *s2 = *s3;
         *s3 = store;*/
-        
+
 *s=((*s&255)<<24)|(((*s>>8)&255) << 16)|(((*s>>16)&255) << 8)|((*s >> 24)&255);
 }
 

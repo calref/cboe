@@ -37,31 +37,31 @@ Boolean handle_startup_press(POINT the_point)
 {
 	short i,scen;
 	long dummy;
-	
+
 	the_point.x -= ulx;
 	the_point.y -= uly;
-	
-	for (i = 0; i < 5; i++) 
+
+	for (i = 0; i < 5; i++)
 		if (PtInRect(&startup_button[i],the_point) == TRUE)
 		{
 		draw_start_button(i,5);
-		
+
 		if (play_sounds == TRUE) play_sound(37);
 			else Delay(5,&dummy);
-			
-		draw_start_button(i,0);	
-		
+
+		draw_start_button(i,0);
+
 			switch (i) {
 				case 0:
 					startup_load();
 					break;
-					
+
 				case 1:
 					draw_startup(0);
 					start_new_game();
 					draw_startup(0);
 					break;
-			
+
 				case 2:
 					/* how to order button */
 					//draw_startup(0);
@@ -72,7 +72,7 @@ Boolean handle_startup_press(POINT the_point)
 						FCD(867,0);                   //no party loaded error message
 						break;
 						}
-						
+
 					scen = pick_prefab_scen();             // return a short in scen specifying the chosen scenario
 					if (scen < 0)
 						break;
@@ -119,7 +119,7 @@ void loadCursors()
 		for (int j = 0; j < 3; j++)
 			arrow_curs[i][j] =
 				LoadCursor(store_hInstance,MAKEINTRESOURCE(100 + (i - 1) + 10 * (j - 1)));
-	
+
 	sword_curs 	=	LoadCursor(store_hInstance,MAKEINTRESOURCE(120));
 	key_curs 	= 	LoadCursor(store_hInstance,MAKEINTRESOURCE(122));
 	target_curs	= 	LoadCursor(store_hInstance,MAKEINTRESOURCE(124));
@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 	wndclass.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
 	wndclass.lpszMenuName = MAKEINTRESOURCE(1);
 	wndclass.lpszClassName = szAppName;
-	
+
 	RegisterClass(&wndclass);
 
 	wndclass2.style = CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -173,10 +173,10 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 	wndclass2.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
 	wndclass2.lpszMenuName = NULL;
 	wndclass2.lpszClassName = szWinName;
-	
+
 	RegisterClass(&wndclass2);
 
-	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile 1.1",
+	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile build_26.05.2010",
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,
@@ -187,29 +187,29 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 			hInstance,
 			NULL);
 
-	if (!hPrevInstance) 
+	if (!hPrevInstance)
 	{ // initialize
 		Get_Path(file_path_name);
-		
+
 		store_hInstance = hInstance;
 		accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(1));
-		
+
 		boeSoundsDLL = LoadLibrary("./boesounds.dll");
-		
+
 		if (!boeSoundsDLL)
 		{
 			MessageBox(mainPtr, "BOESOUNDS.DLL not found", "Error", MB_OK | MB_ICONEXCLAMATION);
 			return (-1);
 		}
-		
+
 		load_sounds(boeSoundsDLL);
 		loadFonts();
 		loadCursors();
-	
+
 		SetCursor(sword_curs);
 		current_cursor = 124;
 		/* cursors loaded */
-		
+
 		data_store = new piles_of_stuff_dumping_type;
 		data_store3 = new piles_of_stuff_dumping_type3;
 		data_store4 = new piles_of_stuff_dumping_type4;
@@ -240,16 +240,16 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 		ShowWindow(mainPtr, nCmdShow);
 
 		plop_fancy_startup();
-		
+
 		init_screen_locs();
 
 		FlushEvents(2);
 
 		SetTimer(mainPtr,1,620,NULL);
 		SetTimer(mainPtr,2,200,NULL);
-		
+
 		file_initialize();
-		
+
 		if (GetDeviceCaps(main_dc,BITSPIXEL) * GetDeviceCaps(main_dc,PLANES) < 8)
 		{
 			MessageBox(mainPtr,"Blades of Exile is designed for 256 colors. The current graphics device is set for less. Exile 3 is playable with less colors, but will look somewhat odd."	,
@@ -257,7 +257,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 			MessageBox(mainPtr,"For tips on how to get 256 colors, hit F1 for help, and then select 'Getting 256 Colors' from the table of contents."	,
 		  "Not 256 colors!",MB_OK | MB_ICONEXCLAMATION);
 		}
-		
+
 		menu_activate(0);
 		cursor_stay();
 		showcursor(TRUE);
@@ -275,7 +275,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 
 		}
 		event_handled = FALSE;
-		
+
 		while(GetMessage(&msg,NULL,0,0))
 		{
 			if (event_handled == FALSE)
@@ -286,8 +286,8 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 					DispatchMessage(&msg);
 				}
 			}
-		}		
-		
+		}
+
 		delete scen_item_list;
         delete data_store5;
 		delete data_store4;
@@ -297,11 +297,11 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
         if(scen_headers != NULL)
    		   delete[] scen_headers;
 		delete data_store;
-		
+
 		lose_graphics();
-		
+
 		FreeLibrary((HMODULE) boeSoundsDLL);
-				
+
 		return msg.wParam;
 }
 
@@ -313,7 +313,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HMENU menu;
 	RECT dlg_rect;
 	RECT wind_rect;
-	
+
 	short handled = 0;
 	short store_ulx;
 	short store_uly;
@@ -325,7 +325,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 // First, handle window size
 	GetWindowRect(mainPtr,&wind_rect);
-	
+
 	switch (display_mode) { //case 0 is center
 		case 1:	store_ulx = 0;
 				store_uly = 0;
@@ -347,10 +347,10 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				store_uly = ((wind_rect.bottom - wind_rect.top) - 478) / 2 + 8;
 				break;
 		}
-		
+
 	store_ulx -= store_ulx % 8;
 	store_uly -= store_uly % 8;
-	
+
 	if ((store_ulx != ulx) || (store_uly != uly))
 	{
 		ulx = store_ulx;
@@ -369,7 +369,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 		if (handled == 1)
 			FlushEvents(0);
-			
+
 		return 0;
 
 	case WM_CHAR:
@@ -388,7 +388,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		else {
 				SetFocus(hwnd);
 				press = MAKEPOINT(lParam);
-				if (in_startup_mode == FALSE) 
+				if (in_startup_mode == FALSE)
 						All_Done = handle_action(press, wParam,lParam);
 				else 	All_Done = handle_startup_press(press);
 				change_cursor(press);
@@ -412,19 +412,19 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 		return 0;
 		break;
-		
+
 	case WM_ACTIVATE:
 		if (hwnd == mainPtr)
 		{
 			WORD fActive = LOWORD(wParam);
-			
+
 			if ((fActive == WA_ACTIVE) ||(fActive == WA_CLICKACTIVE))
 			{
 				window_in_front = TRUE;
 				GetClientRect(hwnd,&dlg_rect);
 				InvalidateRect(hwnd,&dlg_rect,FALSE);
 			}
-			
+
 			if (fActive == WA_INACTIVE)
 			{
 				cursor_stay();
@@ -438,7 +438,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (hwnd != mainPtr) break;
 		block_erase = FALSE;
 		return 1;
-		
+
 	case WM_MOUSEMOVE:
 		if (store_mouse != lParam) cursor_stay();
 		store_mouse = lParam;
@@ -463,7 +463,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				string_added = TRUE;
 				reset_text_bar();
 				if (in_startup_mode == TRUE) draw_startup(0);
-				else if (first_update == TRUE) 
+				else if (first_update == TRUE)
 				{
 					first_update = FALSE;
 					if (overall_mode == 0) redraw_screen(0);
@@ -504,7 +504,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			check_game_done();
 			}
 			else check_cd_event(hwnd,message,wParam,lParam);
-			
+
 		return 0;
 
 	case WM_VSCROLL:
@@ -582,10 +582,10 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 SetScrollInfo(shop_sbar,SB_CTL,&lpsi,TRUE);
                 }
 				if (sbar_pos != old_setting)
-					draw_shop_graphics(0,shop_sbar_rect);			
+					draw_shop_graphics(0,shop_sbar_rect);
 			break;
 			}
-			
+
 	    SetFocus(mainPtr);
 		return 0;
 
@@ -609,7 +609,7 @@ return DefWindowProc(hwnd,message,wParam,lParam);
 void check_game_done()
 {
 	through_sending();
-	
+
 	if (All_Done == TRUE)
 	{
 		lose_graphics();
@@ -683,7 +683,7 @@ Boolean handle_menu (short item, HMENU)
 				pick_pc_graphic(choice,1,0);
 			initiate_redraw();
 			break;
-			
+
 		case 22:
 			choice = select_pc(0,0);
 			if (choice < 6)
@@ -691,8 +691,8 @@ Boolean handle_menu (short item, HMENU)
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
-			
-			
+
+
 		case 23:
 			if (!(is_town())) {
 				add_string_to_buf("Add PC: Town mode only.");
@@ -718,8 +718,8 @@ Boolean handle_menu (short item, HMENU)
 			print_buf();
 			put_pc_screen();
 			put_item_screen(stat_window,0);
-			break;	
-			
+			break;
+
 		case 24:
 			if (prime_time() == FALSE) {
 				ASB("Finish what you're doing first.");
@@ -734,8 +734,8 @@ Boolean handle_menu (short item, HMENU)
 					initiate_redraw();
 					}
 			break;
-			
-		case 27:	
+
+		case 27:
 			if (overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
@@ -798,16 +798,16 @@ Boolean handle_menu (short item, HMENU)
 			party.help_received[9] = FALSE; break;
 
 		// Priest is 499
-		case 499: give_help(209,0,0); 
+		case 499: give_help(209,0,0);
 			party.help_received[9] = FALSE; break;
-		
+
 		// Monsters is 599
 		case 599: give_help(212,0,0); break;
-		
+
 		case 100: // Index
 			WinHelp(mainPtr,"Blades of Exile.hlp",HELP_CONTENTS,0L);
 			break;
-			
+
 		case 200: // About
 			FCD(1062,0);
 			break;
@@ -892,13 +892,13 @@ void change_cursor(POINT where_curs)
 		default:  // an arrow
 			SetCursor(arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1]);
 			break;
-		}	
+		}
 }
 
 void cursor_go()
 {
 	if (in_startup_mode == TRUE) return;
-	
+
 	if (cursor_shown == TRUE)
 	{
 		cursor_shown = FALSE;

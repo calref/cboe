@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 
 #include <cstring>
 #include <cstdio>
@@ -24,7 +24,7 @@ typedef struct {
 	short missile_type; // -1 no miss
 	short path_type,x_adj,y_adj;
 	} store_missile_type;
-	
+
 typedef struct {
 	location dest;
 	short val_to_place,offset;
@@ -32,7 +32,7 @@ typedef struct {
 	short boom_type;  // -1 no miss
 	short x_adj,y_adj;
 	} store_boom_type;
-	
+
 store_missile_type store_missiles[30];
 store_boom_type store_booms[30];
 Boolean have_missile,have_boom;
@@ -62,14 +62,14 @@ void apply_unseen_mask()
 		return;
 	if (!(is_out()) && (c_town.town.lighting > 0))
 		return;
-		
+
 	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++) 
+		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1)
 				need_bother = TRUE;
 	if (need_bother == FALSE)
 		return;
-				
+
 	hdc = CreateCompatibleDC(main_dc);
 	SetBkMode(hdc,TRANSPARENT);
 	old_brush = (HBRUSH) SelectObject(hdc,checker_brush);
@@ -79,7 +79,7 @@ void apply_unseen_mask()
 	store_bmp = (HBITMAP) SelectObject(hdc,terrain_screen_gworld);
 
 	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++) 
+		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1) {
 
 					to_rect = base_rect;
@@ -93,65 +93,65 @@ void apply_unseen_mask()
 							if ((k >= 0) && (l >= 0) && (k < 9) && (l < 9) && ((k != i - 1) || (l != j - 1)))
 								terrain_there[k][l] = -1;
 				}
-	
+
 	// Now put text on window.
 	SelectObject(hdc,old_brush);
 	SelectObject(hdc,old_pen);
 	SelectObject(hdc,store_bmp);
 	if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 3");
 }
- 
-void apply_light_mask() 
+
+void apply_light_mask()
 {
 	RECT temp = {0,0,84,108},paint_rect,base_rect = {0,0,28,36};
 	RECT big_to = {13,13,265,337}; /**/
 	short i,j;
 	Boolean is_dark = FALSE,same_mask = TRUE;
-	
+
 	HDC hdc;
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
-	
+
 	if (PSD[306][2] > 0)
 		return;
 	if (is_out())
 		return;
 	if (c_town.town.lighting == 0)
 		return;
-	
+
 	if (oval_region == NULL) {
 		temp_rect_rgn = CreateRectRgn(0,0,0,0);
 		dark_mask_region = CreateRectRgn(0,0,0,0);
 		oval_region = CreateEllipticRgnIndirect(&temp);
 		}
-	
+
 	// Process the light array
 	for (i = 2; i < 11; i++)
-		for (j = 2; j < 11; j++) 
+		for (j = 2; j < 11; j++)
 			if (light_area[i][j] == 0) is_dark = TRUE;
-	if (is_dark == FALSE) { 
+	if (is_dark == FALSE) {
 		for (i = 2; i < 11; i++)
-			for (j = 2; j < 11; j++) 
+			for (j = 2; j < 11; j++)
 				last_light_mask[i][j] = 0;
 		return;
 		}
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) && 
-				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) && 
-				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) && 
+			if ((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
+				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) &&
+				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) &&
 				(light_area[i][j - 1] >= 1) && (light_area[i][j + 1] >= 1)) {
 					light_area[i][j] = 2;
 					}
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) && 
-				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) && 
-				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) && 
+			if ((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) &&
+				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) &&
+				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) &&
 				(light_area[i][j - 1] >= 2) && (light_area[i][j + 1] >= 2)) {
 					light_area[i][j] = 3;
 					}
-		
+
 	hdc = CreateCompatibleDC(main_dc);
 	SetBkMode(hdc,TRANSPARENT);
 	store_bmp = (HBITMAP) SelectObject(hdc,terrain_screen_gworld);
@@ -163,10 +163,10 @@ void apply_light_mask()
 				terrain_there[i - 2][j - 2] = -1;
 			}
 	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++) 
+		for (j = 0; j < 13; j++)
 			if (last_light_mask[i][j] != light_area[i][j])
 				same_mask = FALSE;
-	
+
 	if (same_mask == TRUE) {
 		PaintRgn(hdc,dark_mask_region);
 		SelectObject(hdc,store_bmp);
@@ -175,16 +175,16 @@ void apply_light_mask()
 		}
 	SetRectRgn(dark_mask_region,big_to.left,big_to.top,big_to.right,big_to.bottom);
 	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++) 
+		for (j = 0; j < 13; j++)
 			last_light_mask[i][j] = light_area[i][j];
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++) {
 			if (light_area[i][j] == 2) {
-				
+
 				OffsetRgn(oval_region,13 + 28 * (i - 3), 13 + 36 * (j - 3));
-				
+
 				CombineRgn(dark_mask_region,dark_mask_region,oval_region,RGN_DIFF);
-				
+
 				OffsetRgn(oval_region,-13 + -1 * (28 * (i - 3)),-13 + -1 * (36 * (j - 3)));
 				}
 			if (light_area[i][j] == 3) {
@@ -209,7 +209,7 @@ void apply_light_mask()
 void start_missile_anim()
 {
 	short i;
-	
+
 	if (boom_anim_active == TRUE)
 		return;
 	boom_anim_active = TRUE;
@@ -217,23 +217,23 @@ void start_missile_anim()
 		store_missiles[i].missile_type = -1;
 		store_booms[i].boom_type = -1;
 		}
-	for (i = 0; i < 6; i++) 
+	for (i = 0; i < 6; i++)
 		pc_marked_damage[i] = 0;
-	for (i = 0; i < T_M; i++) 
+	for (i = 0; i < T_M; i++)
 		monst_marked_damage[i] = 0;
 	have_missile = FALSE;
 	have_boom = FALSE;
 }
 
-void end_missile_anim() 
+void end_missile_anim()
 {
 	boom_anim_active = FALSE;
 }
-	
+
 void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj)
 {
 	short i;
-	
+
 	if (boom_anim_active == FALSE)
 		return;
 	if (PSD[306][2] > 0)
@@ -249,7 +249,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 			store_missiles[i].missile_type =missile_type;
 			store_missiles[i].path_type =path_type;
 			store_missiles[i].x_adj =x_adj;
-			store_missiles[i].y_adj =y_adj;			
+			store_missiles[i].y_adj =y_adj;
 			return;
 			}
 }
@@ -271,23 +271,23 @@ void run_a_boom(location boom_where,short type,short x_adj,short y_adj)
 	do_explosion_anim(5,0);
 	end_missile_anim();
 }
-	
+
 void mondo_boom(location l,short type)
 {
 	short i;
-	
+
 	start_missile_anim();
 	for (i = 0; i < 12; i++)
 		add_explosion(l,-1,1,type,0,0);
 	do_explosion_anim(5,0);
 
-	end_missile_anim();	
+	end_missile_anim();
 }
-		
+
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj)
 {
 	short i;
-	
+
 	if (PSD[306][2] > 0)
 		return;
 	if (boom_anim_active == FALSE)
@@ -309,21 +309,21 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 			store_booms[i].place_type = place_type;
 			store_booms[i].boom_type =  boom_type;
 			store_booms[i].x_adj =x_adj;
-			store_booms[i].y_adj =y_adj;			
+			store_booms[i].y_adj =y_adj;
 			return;
 			}
-}		
+}
 
-void do_missile_anim(short num_steps,location missile_origin,short sound_num) 
+void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 {
 	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
 	short i,store_missile_dir;
 	POINT start_point,finish_point[30];
 	location screen_ul;
-	
+
 	short x1[30],x2[30],y1[30],y2[30],t; // for path paramaterization
 	RECT missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
-	POINT current_terrain_ul; 
+	POINT current_terrain_ul;
 	HBITMAP temp_gworld;
 	long delay_dummy;
 	RECT ter_scrn_rect = {0,0,279,351};
@@ -341,7 +341,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		boom_anim_active = FALSE;
 		return;
 		}
-	
+
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type >= 0)
 			i = 50;
@@ -352,15 +352,15 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 	current_terrain_ul.x = current_terrain_ul.y = 5;
 
-	
+
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	to_rect = ter_scrn_rect;
 	OffsetRect(&to_rect,current_terrain_ul.x, current_terrain_ul.y);
 	rect_draw_some_item(terrain_screen_gworld,ter_scrn_rect,
 		terrain_screen_gworld,to_rect,0,1);
-							
-	// create and clip temporary anim template 
+
+	// create and clip temporary anim template
 	temp_rect = ter_scrn_rect;
 	temp_gworld = CreateCompatibleBitmap(main_dc,ter_scrn_rect.right,ter_scrn_rect.bottom);
 	active_area_rect = temp_rect;
@@ -473,21 +473,21 @@ short get_missile_direction(POINT origin_point,POINT the_point)
 	// so that origin_point is moved to (149,185) and the_point is moved in proportion
 	the_point.x +=  149 - origin_point.x;
 	the_point.y +=  185 - origin_point.y;
-	
+
 				if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
 					& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
 					store_dir.x--;
 				if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
 					& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
 					store_dir.x++;
-					
+
 				if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
 					& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
 					store_dir.y--;
 				if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
 					& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
 					store_dir.y++;
-			
+
 	switch (store_dir.y) {
 		case 0:
 			dir = 4 - 2 * (store_dir.x); break;
@@ -495,7 +495,7 @@ short get_missile_direction(POINT origin_point,POINT the_point)
 			dir = (store_dir.x == -1) ? 7 : store_dir.x; break;
 		case 1:
 			dir = 4 - store_dir.x; break;
-		}	
+		}
 	return dir;
 }
 
@@ -509,9 +509,9 @@ void do_explosion_anim(short, short special_draw)
 	short i,temp_val,temp_val2;
 
 	location screen_ul;
-	
-	short t,cur_boom_type = 0; 
-	POINT current_terrain_ul; 
+
+	short t,cur_boom_type = 0;
+	POINT current_terrain_ul;
 	HBITMAP temp_gworld;
 	long delay_dummy;
 	short boom_type_sound[3] = {5,10,53};
@@ -528,7 +528,7 @@ void do_explosion_anim(short, short special_draw)
 		boom_anim_active = FALSE;
 		return;
 		}
-	
+
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type >= 0)
 			i = 50;
@@ -538,7 +538,7 @@ void do_explosion_anim(short, short special_draw)
 	// initialize general data
 	current_terrain_ul.x = current_terrain_ul.y = 5;
 
-	
+
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if (special_draw != 2) {
@@ -547,9 +547,9 @@ void do_explosion_anim(short, short special_draw)
 		rect_draw_some_item(terrain_screen_gworld,ter_scrn_rect,
 			terrain_screen_gworld,to_rect,0,1);
 		}
-		
-				
-	// create and clip temporary anim template 
+
+
+	// create and clip temporary anim template
 	temp_rect = ter_scrn_rect;
 	temp_gworld = CreateCompatibleBitmap(main_dc,ter_scrn_rect.right,ter_scrn_rect.bottom);
 
@@ -557,52 +557,52 @@ void do_explosion_anim(short, short special_draw)
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
 	SetTextColor(hdc,colors[4]);
-		
+
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		if ((store_booms[i].boom_type >= 0)  && (special_draw < 2)) {
 			cur_boom_type = store_booms[i].boom_type;
 			explode_place_rect[i] = base_rect;
 			OffsetRect(&explode_place_rect[i],13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 				13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
-				
+
 			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
 				temp_val = get_ran(1,0,50) - 25;
 				temp_val2 = get_ran(1,0,50) - 25;
 				OffsetRect(&explode_place_rect[i],temp_val,temp_val2);
 				}
-			
-			// eliminate stuff that's too gone. 
+
+			// eliminate stuff that's too gone.
 			IntersectRect(&temp_rect,&explode_place_rect[i],&ter_scrn_rect);
 			if (EqualRect(&temp_rect,&explode_place_rect[i]) == FALSE) {
 				store_booms[i].boom_type = -1;
 				}
-			
+
 			}
 			else if (special_draw < 2)
 				explode_place_rect[i].top =explode_place_rect[i].left =explode_place_rect[i].bottom =explode_place_rect[i].right = 0;
-	
+
 	if (special_draw < 2)
 		play_sound(boom_type_sound[cur_boom_type]);
-	
+
 	// Now, at last, do explosion
 	for (t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		// First, lay terrain in temporary graphic area;
-		for (i = 0; i < 30; i++) 
-			if (store_booms[i].boom_type >= 0) 
+		for (i = 0; i < 30; i++)
+			if (store_booms[i].boom_type >= 0)
 				rect_draw_some_item(terrain_screen_gworld,explode_place_rect[i],
 					temp_gworld,explode_place_rect[i],0,0);
 
 		// Now put in explosions
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_booms[i].boom_type >= 0) {
 				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 						from_rect = base_rect;
 						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),144 + 36 * (store_booms[i].boom_type));
 						rect_draw_some_item(fields_gworld,from_rect,
 							temp_gworld,explode_place_rect[i],1,0);
-					
+
 					if (store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
 						text_rect.top += 2;
@@ -617,7 +617,7 @@ void do_explosion_anim(short, short special_draw)
 					}
 				}
 		// Now draw all missiles to screen
-		for (i = 0; i < 30; i++) 
+		for (i = 0; i < 30; i++)
 			if (store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
 				OffsetRect(&to_rect,current_terrain_ul.x,current_terrain_ul.y);
@@ -627,9 +627,9 @@ void do_explosion_anim(short, short special_draw)
 
 			Delay(2 * (1 + PSD[306][6]),&delay_dummy);
 		}
-		
+
 	// Exit gracefully, and clean up screen
-	for (i = 0; i < 30; i++) 
+	for (i = 0; i < 30; i++)
 		if (special_draw != 1)
 			store_booms[i].boom_type = -1;
 	SelectObject(hdc,store_bmp);
@@ -659,11 +659,11 @@ shop_type:
 void click_shop_rect(RECT area_rect)
 {
 	long dum;
-	
+
 	draw_shop_graphics(1,area_rect);
 	if (play_sounds == TRUE) play_sound(37);
 	else Delay(5,&dum);
-	
+
 	draw_shop_graphics(0,area_rect);
 
 }
@@ -671,20 +671,20 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
 {
 	RECT area_rect,from_rect,item_info_from = {42,11,56,24};
-	
+
 	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {48,15,260,42};
 	RECT dest_rect,help_from = {126,23,142,36},done_from = {0,23,63,46}; /**/
 	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
-	
+
 	short i,what_chosen;
 	RECT shopper_name = {6,44,260,56};
 	short current_pos;
-	
+
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[256];
 	char cur_info_str[256];
-	char *cost_strs[] = 
+	char *cost_strs[] =
 		{	"Extremely Cheap",
 			"Very Reasonable",
 			"Pretty Average",
@@ -699,7 +699,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		RGB(0,220,0),RGB(255,110,255)};
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
-	
+
 	hdc = CreateCompatibleDC(main_dc);
 	SetBkMode(hdc,TRANSPARENT);
 	SelectObject(hdc,small_bold_font);
@@ -713,7 +713,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	OffsetRect(&area_rect,-5,-5);
 
 	old_brush = (HBRUSH) SelectObject(hdc,GetStockObject(NULL_BRUSH));
-	Rectangle(hdc,area_rect.left,area_rect.top,area_rect.right,area_rect.bottom);  
+	Rectangle(hdc,area_rect.left,area_rect.top,area_rect.right,area_rect.bottom);
 	SelectObject(hdc,old_brush);
 	InflateRect(&area_rect,-1,-1);
 	SelectObject(hdc,store_bmp);
@@ -723,7 +723,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		else paint_pattern(talk_gworld,0,area_rect,3);
 
 	SelectObject(hdc,talk_gworld);
-	
+
 	old_brush = (HBRUSH) SelectObject(hdc,GetStockObject(NULL_BRUSH));
 	Rectangle(hdc,shop_frame.left,shop_frame.top,shop_frame.right,shop_frame.bottom);
 	SelectObject(hdc,old_brush);
@@ -850,7 +850,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	char_win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
 		char_win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
-	
+
 	SelectObject(hdc,store_bmp);
 	if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 8");
 
@@ -863,7 +863,7 @@ void refresh_shopping()
 	RECT from_rects[4] = {{0,0,279,62},{0,62,253,352},{269,62,279,352},{0,352,279,415}},to_rect;
 	/**/
 	short i;
-	
+
 	for (i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
 		OffsetRect(&to_rect,5,5);
@@ -883,17 +883,17 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
 }
 
-item_record_type store_mage_spells(short which_s) 
+item_record_type store_mage_spells(short which_s)
 {
 	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, location(),"", "",0,0,0,0};
 
  short cost[32] = {150,200,150,1000,1200,400,300,200,
- 200,250,500,1500,300,  250,125,150, 
+ 200,250,500,1500,300,  250,125,150,
   400,450, 800,600,700,600,7500, 500,
  5000,3000,3500,4000,4000,4500,7000,5000};
 
 	char str[256];
-	
+
 	if (which_s != minmax(0,31,(int)which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
@@ -928,14 +928,14 @@ item_record_type store_alchemy(short which_s)
 	item_record_type spell = {21,0, 0,0,0,0,0,0, 53,0,0,0,0,0, 0, 0,0, location(),"", "",0,0,0,0};
 short val[20] = {50,75,30,130,100,150, 200,200,300,250,300, 500,600,750,700,1000,10000,5000,7000,12000};
 	char str[256];
-	
+
 	if (which_s != minmax(0,19,(int)which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
 	GetIndString(str,38,which_s + 100);
 	strcpy((char *)spell.full_name,(char *)str);
-	return spell; 
+	return spell;
 }
 
 void get_item_interesting_string(item_record_type item,char *message)
@@ -978,11 +978,11 @@ void get_item_interesting_string(item_record_type item,char *message)
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
-			sprintf(message,"");		
+			sprintf(message,"");
 			if (item.charges > 0)
-				sprintf(message,"Uses: %d",item.charges);		
+				sprintf(message,"Uses: %d",item.charges);
 			break;
-		}	
+		}
 	if (item.charges > 0)
 		sprintf(message,"Uses: %d",item.charges);
 		}
@@ -992,7 +992,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;
-	
+
 	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {48,19,260,42};
 	RECT dest_rect,help_from = {126,23,142,36}; /**/
@@ -1003,7 +1003,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	Boolean force_skip = FALSE;
 	short face_to_draw;
-	
+
 	HDC hdc;
 	COLORREF colors[7] = {RGB(0,0,0),RGB(0,0,204),RGB(0,0,102),RGB(0,0,100),RGB(0,0,220),
 		RGB(51,153,51),RGB(0,204,0)};
@@ -1033,7 +1033,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		paint_pattern(talk_gworld,0,c_rect,3);
 		}
 		else paint_pattern(talk_gworld,0,area_rect,3);
-		
+
 	// Put help button
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
@@ -1105,18 +1105,18 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
-			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
+			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
 			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
 				store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
 
-				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96) 
+				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96)
 					|| (str[store_last_word_break] > 122)
 					|| ((str[store_last_word_break] >= 58) && (str[store_last_word_break] <= 64)))
 						store_last_word_break++;
-				
+
 				store_words[current_rect].word[0] = str[store_last_word_break];
 				store_words[current_rect].word[1] = str[store_last_word_break + 1];
 				store_words[current_rect].word[2] = str[store_last_word_break + 2];
@@ -1136,7 +1136,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 				last_stored_word_break = i + 1;
 				}
 			}
-		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
@@ -1242,7 +1242,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 				last_word_break++;
 				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);				
+	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
 				}
 		}
 		if (str[i] == ' ') { // New word
@@ -1253,13 +1253,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		}
 
 	}
-	
+
 	SelectObject(hdc,store_bmp);
 	SelectObject(hdc,store_font);
 	if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 7");
 
 	refresh_talking();
-	
+
 	// Clean up strings
 	for (i = 0; i < 50; i++)
 		for (j = 0; j < 4; j++)
@@ -1280,14 +1280,14 @@ short scan_for_response(char *str)
 // returns -1 if no go
 {
 	short i;
-	
+
 	for (i = 0; i < 60; i++) { // 60 response in each bunch
 		if ((talking.talk_nodes[i].personality != -1) &&
 			((talking.talk_nodes[i].personality == store_personality)
-		 || (talking.talk_nodes[i].personality == -2)) && 
-			(((str[0] == talking.talk_nodes[i].link1[0]) && (str[1] == talking.talk_nodes[i].link1[1]) 
-			&& (str[2] == talking.talk_nodes[i].link1[2]) && (str[3] == talking.talk_nodes[i].link1[3])) 
-			|| ((str[0] == talking.talk_nodes[i].link2[0]) && (str[1] == talking.talk_nodes[i].link2[1]) 
+		 || (talking.talk_nodes[i].personality == -2)) &&
+			(((str[0] == talking.talk_nodes[i].link1[0]) && (str[1] == talking.talk_nodes[i].link1[1])
+			&& (str[2] == talking.talk_nodes[i].link1[2]) && (str[3] == talking.talk_nodes[i].link1[3]))
+			|| ((str[0] == talking.talk_nodes[i].link2[0]) && (str[1] == talking.talk_nodes[i].link2[1])
 			&& (str[2] == talking.talk_nodes[i].link2[2]) && (str[3] == talking.talk_nodes[i].link2[3]))))
 				return i;
 		}

@@ -44,10 +44,6 @@
 		<Unit filename="GAMESTR.RC">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="GLOBAL.CPP" />
-		<Unit filename="GLOBAL.H" />
-		<Unit filename="GLOBVAR.CPP" />
-		<Unit filename="GLOBVAR.H" />
 		<Unit filename="boe.actions.cpp" />
 		<Unit filename="boe.actions.h" />
 		<Unit filename="boe.combat.cpp" />
@@ -85,15 +81,19 @@
 		<Unit filename="boe.text.h" />
 		<Unit filename="boe.town.cpp" />
 		<Unit filename="boe.town.h" />
-		<Unit filename="classes\LOCATION.CPP" />
-		<Unit filename="classes\LOCATION.H" />
-		<Unit filename="classes\PC.CPP" />
-		<Unit filename="classes\PC.H" />
 		<Unit filename="classes\consts.h" />
 		<Unit filename="classes\item.cpp" />
 		<Unit filename="classes\item.h" />
-		<Unit filename="tools\DLOGTOOL.CPP" />
-		<Unit filename="tools\DLOGTOOL.H" />
+		<Unit filename="classes\location.cpp" />
+		<Unit filename="classes\location.h" />
+		<Unit filename="classes\pc.cpp" />
+		<Unit filename="classes\pc.h" />
+		<Unit filename="global.cpp" />
+		<Unit filename="global.h" />
+		<Unit filename="globvar.cpp" />
+		<Unit filename="globvar.h" />
+		<Unit filename="tools\dlogtool.cpp" />
+		<Unit filename="tools\dlogtool.h" />
 		<Unit filename="tools\mathutil.cpp" />
 		<Unit filename="tools\mathutil.h" />
 		<Unit filename="tools\soundtool.cpp" />

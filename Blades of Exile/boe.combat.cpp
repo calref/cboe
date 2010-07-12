@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 #include <cstdio>
 #include "global.h"
 #include "boe.monster.h"
