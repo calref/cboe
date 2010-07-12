@@ -22,7 +22,7 @@ struct Dialog
 	HWND parent;
 	short highest_item;
 	Boolean draw_ready;
-	
+
 	Dialog() : key(-1), type(0), handle(NULL), highest_item(0) { }
 } dialogs[ND];
 */
@@ -65,7 +65,7 @@ void cd_init_dialogs()
 	}
 	for (i = 0; i < NI; i++) item_dlg[i] = -1;
 	for (i = 0; i < NL; i++) label_taken[i] = FALSE;
-	
+
 	d_proc = dummy_dialog_proc;
 	edit_proc = fresh_edit_proc;
 }
@@ -105,7 +105,7 @@ long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			break;
 		}
     }
-		
+
 	return CallWindowProc((WNDPROC) old_edit_proc,hwnd,message,wParam,lParam);
 }
 
@@ -135,18 +135,18 @@ short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture)
 			return -1;
 		}
     GetObject(picture, sizeof(bitmap_info), &bitmap_info);
-    
+
     GetClientRect(mainPtr, &c_rect);
-    
+
     if(bitmap_info.bmWidth > c_rect.right)
         bitmap_info.bmWidth = c_rect.right;
-        
+
     if(bitmap_info.bmHeight > c_rect.bottom)
         bitmap_info.bmHeight = c_rect.bottom - 60;
 
     pic_rect.right = bitmap_info.bmWidth;
     pic_rect.bottom = bitmap_info.bmHeight;
-    
+
 	store_dlog_num = 905;
 
 	for (i = 0; i < ND; i++) {
@@ -210,28 +210,28 @@ short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture)
 				item_key[free_item] = 31;
 				but_items = free_item; // remember this to set item rect later
 				cur_item++;
-	
+
 	item_rect[but_items].right = bitmap_info.bmWidth - 10;
 	item_rect[but_items].left = item_rect[but_items].right - 63;
 	item_rect[but_items].top = bitmap_info.bmHeight + 5;
 	item_rect[but_items].bottom = item_rect[but_items].top + 23;
-	
+
   	for (j = 150; j < NI; j++)
 		if (item_dlg[j] < 0) {
 			free_item = j;
 			j = NI + 1;
 			}
-		item_dlg[free_item] = store_dlog_num;			
+		item_dlg[free_item] = store_dlog_num;
 		item_number[free_item] = cur_item;
 		item_type[free_item] = 20; //draw loaded picture
-		item_active[free_item] = 1;	
-        cur_item++;	
+		item_active[free_item] = 1;
+        cur_item++;
 
 	dlg_highest_item[free_slot] = cur_item - 1;
-	
+
 	center_window(dlgs[free_slot]);
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-					
+
 	if (dlg_parent[free_slot] != NULL) {
 		EnableWindow(dlg_parent[free_slot],FALSE);
 		if (dlg_parent[free_slot] == mainPtr)
@@ -401,7 +401,7 @@ short cd_create_custom_dialog(HWND parent,
 				(char *) strs[i]);
       		cur_item++;
        		}
-	
+
 	dlg_highest_item[free_slot] = cur_item - 1;
 
 	// finally, do button rects
@@ -420,14 +420,14 @@ short cd_create_custom_dialog(HWND parent,
 				win_width = item_rect[but_items[i]].right + 6;
 				win_height = item_rect[but_items[i]].bottom + 6;
 				}
-			}	
-	
+			}
+
 	win_height += 18;
 
 	MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
 	center_window(dlgs[free_slot]);
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-					
+
 	if (dlg_parent[free_slot] != NULL) {
 		EnableWindow(dlg_parent[free_slot],FALSE);
 		if (dlg_parent[free_slot] == mainPtr)
@@ -451,9 +451,9 @@ short cd_create_dialog(short dlog_num, HWND parent)
 	store_dlog_num = dlog_num;
 	store_parent = parent;
 
-	for (i = 0; i < ND; i++) 
+	for (i = 0; i < ND; i++)
 		if ((dlg_keys[i] >= 0) && (dlg_types[i] == dlog_num)) return -1;
-		
+
 	for (i = 0; i < ND; i++) {
 		if (dlg_keys[i] < 0) {
 			free_slot = i;
@@ -461,9 +461,9 @@ short cd_create_dialog(short dlog_num, HWND parent)
 			}
 		}
 	if (free_slot < 0) return -2;
-	
+
 	current_key++;
-	
+
 	dlg_keys[free_slot] = current_key;
 	dlg_types[free_slot] = dlog_num;
 	dlg_highest_item[free_slot] = 1;
@@ -472,7 +472,7 @@ short cd_create_dialog(short dlog_num, HWND parent)
 
 	// first, create dummy dlog
 	store_free_slot = free_slot;
-	
+
 	dlg = CreateDialog(
 			(HINSTANCE) store_hInstance,
 			MAKEINTRESOURCE(dlog_num),
@@ -486,7 +486,7 @@ short cd_create_dialog(short dlog_num, HWND parent)
 		DebugQuit("Couldn't create Dialog Box");
 		return -3;
 	}
-	
+
 	center_window(dlgs[free_slot]);
 
 	dlg_parent[free_slot] = parent;
@@ -525,14 +525,14 @@ short cd_create_dialog(short dlog_num, HWND parent)
 		case 1100: SetWindowText(dlgs[free_slot],"Compatibility Options"); break;
 		default: SetWindowText(dlgs[free_slot],"Blades of Exile"); break;
 			}
-			
+
 	ShowWindow(dlgs[free_slot],SW_SHOW);
 	DestroyWindow(dlg); //Necessary? Dunno.
 
 	if (dlg_parent[free_slot] != NULL)
 	{
 		EnableWindow(dlg_parent[free_slot], FALSE);
-		
+
 		if (dlg_parent[free_slot] == mainPtr)
 			for (i = 0; i < 18; i++)
 				if (modeless_exists[i] == TRUE) EnableWindow(modeless_dialogs[i],FALSE);
@@ -570,7 +570,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 				NULL,
 				store_hInstance,
 				NULL);
-			
+
 		// Now, give the window its items
 		for (i = 0; i < 200; i++)
 			if (GetDlgItem(hDlg,i) != NULL)
@@ -579,7 +579,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 	      		str_offset = 1;
 				dlg_highest_item[free_slot] = i;
 				str_stored = FALSE;
-				
+
 				if (strlen((char *)item_str) == 0)
 				{
 					sprintf((char *) item_str, "+");
@@ -624,7 +624,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 					str_stored = TRUE;
 					}
 				else sscanf(item_str,"%d_%d",&type,&flag);
-	
+
 				free_item = -1;
 				// find free item
 				switch (type) {
@@ -653,37 +653,37 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 								}
 						break;
 					}
-	
+
 				if (free_item >= 0) {
 						item_dlg[free_item] = store_dlog_num;
 						item_type[free_item] = type;
 						item_number[free_item] = i;
-	
+
 						item_rect[free_item] = get_item_rect(hDlg,i);
 						item_rect[free_item].top = item_rect[free_item].top / 2;
 						item_rect[free_item].left = item_rect[free_item].left / 2;
 						item_rect[free_item].bottom = item_rect[free_item].bottom / 2;
 						item_rect[free_item].right = item_rect[free_item].right / 2;
-	
+
 						if ((type != 5) && ((store_dlog_num >= 2000) || (store_dlog_num == 986))) {
 							item_rect[free_item].top =
 								(item_rect[free_item].top * 11) / 10;
 							item_rect[free_item].bottom =
 								(item_rect[free_item].bottom * 11) / 10;
 							}
-	
+
 						item_flag[free_item] = flag;
 						item_active[free_item] = 1;
 						item_label[free_item] = 0;
 	            	    item_label_loc[free_item] = -1;
 	               		item_key[free_item] = 0;
-	
+
 						switch (type) {
 							case 0: case 1:
 								if (item_flag[free_item] != 143) {
 									item_rect[free_item].right = item_rect[free_item].left + button_width[button_type[flag]];
 									item_rect[free_item].bottom = item_rect[free_item].top + button_height[button_type[flag]];
-	
+
 									item_key[free_item] = button_def_key[flag];
 									if (type == 1)
 										item_key[free_item] = 31;
@@ -738,8 +738,8 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 				MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
 				EndDialog(hDlg, 0);
 				return TRUE;
-	} /* end of switch */	
-		
+	} /* end of switch */
+
 	return TRUE;
 }
 
@@ -750,7 +750,7 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 	for (i = 0; i < ND; i++)
 		if ((dlg_keys[i] >= 0) && (dlg_types[i] == dlog_num))
 			which_dlg = i;
-			
+
 	if (which_dlg < 0)
 		return -1;
 
@@ -792,14 +792,14 @@ short cd_process_click(HWND window, POINT the_point, WPARAM wparam, LPARAM,short
 	short i,which_dlg,dlg_num,item_id;
 	short dlog_key;
 //	char dummy[256];
-	
+
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlog_key)) < 0)
 		return -1;
-		
+
 	for (i = 0; i < dlg_highest_item[which_dlg] + 1; i++)
 	{
 		if ((item_id = cd_get_item_id(dlg_num,i)) >= 0)
-		{	
+		{
 			if (PtInRect(&item_rect[item_id],the_point) && (item_active[item_id] > 0)
 				&& ((item_type[item_id] < 3) || (item_type[item_id] == 8)
 				|| (item_type[item_id] == 10)|| (item_type[item_id] == 11)))
@@ -811,7 +811,7 @@ short cd_process_click(HWND window, POINT the_point, WPARAM wparam, LPARAM,short
 			}
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -1111,7 +1111,7 @@ void cd_draw_item(short dlog_num,short item_num)
 		return;
 	if (dlg_draw_ready[dlg_index] == FALSE)
 		return;
-		
+
 	win_dc = cd_get_dlog_dc(dlg_index);
     old_font = (HFONT) SelectObject(win_dc,small_bold_font);
 	dlg_force_dc = win_dc;
@@ -1202,19 +1202,19 @@ void cd_draw_item(short dlog_num,short item_num)
 
                 from_rect.right = bitmap_info.bmWidth;
                 from_rect.bottom = bitmap_info.bmHeight;
-                
+
                 GetObject(displayed_picture, sizeof(bitmap_info), &bitmap_info); //is picture greater ...
 
                 hdc = CreateCompatibleDC(NULL); //let's draw the picture
             	SelectObject(hdc, displayed_picture);
 	           	if((from_rect.right != bitmap_info.bmWidth) || (from_rect.bottom != bitmap_info.bmHeight)){ // ... than the screen ?
-                   StretchBlt(win_dc,0, 0, from_rect.right, from_rect.bottom, hdc, 0 ,0 , bitmap_info.bmWidth, bitmap_info.bmHeight, SRCCOPY); 
+                   StretchBlt(win_dc,0, 0, from_rect.right, from_rect.bottom, hdc, 0 ,0 , bitmap_info.bmWidth, bitmap_info.bmHeight, SRCCOPY);
                     bitmap_info.bmWidth = from_rect.right; //in case of redraw ...
                     bitmap_info.bmHeight = from_rect.bottom; //... put back the screen max values
                 }
                 else
     	           	BitBlt(win_dc,0, 0, from_rect.right, from_rect.bottom, hdc, 0 ,0 , SRCCOPY);
-                       	           	
+
 	            DeleteDC(hdc); //clean after drawing
                 //careful with the graphic files, if streched the quality can drop significantly.
 				}
@@ -1385,7 +1385,7 @@ void cd_erase_item(short dlog_num, short item_num)
 		return;
 	win_dc = cd_get_dlog_dc(dlg_index);
 	paint_pattern((HBITMAP) win_dc,2,to_fry,0);
-	cd_kill_dc(dlg_index,win_dc);  
+	cd_kill_dc(dlg_index,win_dc);
 }
 
 void cd_press_button(short dlog_num, short item_num)
@@ -1411,7 +1411,7 @@ void cd_press_button(short dlog_num, short item_num)
 	from_rect.bottom = from_rect.top + button_height[button_type[item_flag[item_index]]];
 	from_rect.right = from_rect.left + button_width[button_type[item_flag[item_index]]];
 	OffsetRect(&from_rect,button_width[button_type[item_flag[item_index]]],0);
-	
+
 	rect_draw_some_item(dlg_buttons_gworld,from_rect,(HBITMAP)win_dc,item_rect[item_index],0,2);
 
 	SelectObject(win_dc,bold_font);
@@ -1424,7 +1424,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1449,7 +1449,7 @@ void cd_press_button(short dlog_num, short item_num)
 		}
 		else {
 			char_win_draw_string(win_dc,item_rect[item_index],
-			 (char *) ((item_index < 10) ? text_long_str[item_index] : 
+			 (char *) ((item_index < 10) ? text_long_str[item_index] :
 			text_short_str[item_index - 10]),1,8);
 			}
 	if (item_type[item_index] < 2)
@@ -1560,7 +1560,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 		keep_dc = TRUE;
 	}
 	else hdc = GetDC(hDlg);
-	
+
 	if (hdc == NULL)
 	{
 		beep();
@@ -1595,8 +1595,8 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 // 900 + x  B&W graphic
 // 950 null item
 // 1000 + x  Talking face
-// 1100 - item info help  
-// 1200 - pc screen help  
+// 1100 - item info help
+// 1200 - pc screen help
 // 1300 - combat ap
 // 1400-1402 - button help
 // 1500 - stat symbols help
@@ -1609,7 +1609,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 	RECT face_from = {0,0,32,32};
 	RECT to_rect = {6,6,42,42};
 //	RECT bw_from = {0,0,120,120};
-	
+
 	RECT pc_info_from = {0,127,106,157};
 	RECT item_info_from = {174,0,312,112};
 	RECT button_help_from = {0,0,320,100};
@@ -1836,14 +1836,14 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 				 rect_draw_some_item(talking_portraits_gworld,from_rect,(HBITMAP) hDlg,rect,0,0);
 				else rect_draw_some_item(talking_portraits_gworld,from_rect,(HBITMAP)hdc,rect,0,draw_dest);
 			break;
-		case 11: // item info help  
+		case 11: // item info help
 			from_rect = item_info_from;
 			rect.right = rect.left + from_rect.right - from_rect.left;
 			rect.bottom = rect.top + from_rect.bottom - from_rect.top;
 			rect_draw_some_item(mixed_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP)hDlg: (HBITMAP)hdc)
 			  ,rect,0,draw_dest);
 			break;
-		case 12: // item info help  
+		case 12: // item info help
 			from_rect = pc_info_from;
 			rect.right = rect.left + pc_info_from.right - pc_info_from.left;
 			rect.bottom = rect.top + pc_info_from.bottom - pc_info_from.top;
@@ -1871,7 +1871,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			  ,rect,0,draw_dest);
 			DeleteObject(from_gworld);
 			break;
-		case 13: // combat ap help  
+		case 13: // combat ap help
 			from_gworld = load_pict(1402,main_dc);
 			from_rect = combat_ap_from;
 			rect.right = rect.left + from_rect.right;
@@ -1880,7 +1880,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			  ,rect,0,draw_dest);
 			DeleteObject(from_gworld);
 			break;
-		case 15: // stat symbols help  
+		case 15: // stat symbols help
 			from_gworld = load_pict(1400,main_dc);
 			from_rect = stat_symbols_from;
 			rect.right = rect.left + from_rect.right;
@@ -1889,7 +1889,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			  ,rect,0,draw_dest);
 			DeleteObject(from_gworld);
 			break;
-		case 16: 
+		case 16:
 			which_g -= 1600;
 			from_gworld = load_pict(851,main_dc);
 			from_rect.right = 32;
