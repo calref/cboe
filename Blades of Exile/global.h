@@ -268,6 +268,8 @@ typedef struct {
 typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
+	//ver = scenario (inner) version
+	//prog_make_ver = scenario "format" version (prog_make_ver[0] == 1 means it's a legacy scenario)
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
 	unsigned char town_size[200];
 	unsigned char town_hidden[200],a;

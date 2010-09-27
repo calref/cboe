@@ -1210,7 +1210,7 @@ void load_town(short town_num,short mode,short extra,char *str)
 		port_town(0);
         if(PSD[SDF_LEGACY_SCENARIO] == 0)
     		c_town.difficulty = c_town.town.difficulty;
-    	else//legacy no difficulty setting case
+    	else//legacy, no difficulty setting case
         	c_town.difficulty = 0;
 	}
 	else ReadFile(file_id, &dummy_town, sizeof(town_record_type), &dwBytesRead, NULL);

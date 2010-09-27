@@ -1836,8 +1836,9 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM lParam)
 //  	case 'P': repeat Priest spell
        case 'I': //debug info
    	       char buf[256]; //event timer off debug info
-	       sprintf(buf,"Party Age : %d, Ctown ploc : x = %d, y = %d", party.age, center.x, center.y);
+	       //sprintf(buf,"Party Age : %d, Ctown ploc : x = %d, y = %d", party.age, center.x, center.y);
 //           sprintf(buf,"Town chop time : %d, chop key : %d",c_town.town.town_chop_time, c_town.town.town_chop_key);
+	       sprintf(buf,"Scenario prog version %d %d %d", scenario.prog_make_ver[0], scenario.prog_make_ver[1], scenario.prog_make_ver[2]);
 	       give_error(buf,"",0);
             break;
 		case 'Q':  // Magic map

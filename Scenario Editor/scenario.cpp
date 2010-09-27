@@ -2324,6 +2324,10 @@ Boolean save_scen_details()
 	scenario.ver[0] = CDGN(803,2);
 	scenario.ver[1] = CDGN(803,3);
 	scenario.ver[2] = CDGN(803,4);
+	scenario.min_run_ver = CDGN(803,36);
+    scenario.prog_make_ver[0] = CDGN(803,37);
+	scenario.prog_make_ver[1] = CDGN(803,38);
+	scenario.prog_make_ver[2] = CDGN(803,39);
 	for (i = 0; i < 3; i++)
 		if (cre(scenario.ver[i],
 			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
@@ -2342,7 +2346,7 @@ void put_scen_details_in_dlog()
 {
 	cd_set_led_range(803,30,33,scenario.difficulty);
 	cd_set_led_range(803,21,24,scenario.rating);
-  cd_set_led(803,35,scenario.adjust_diff);
+    cd_set_led(803,35,scenario.adjust_diff);
 	CDSN(803,2,scenario.ver[0]);
 	CDSN(803,3,scenario.ver[1]);
 	CDSN(803,4,scenario.ver[2]);

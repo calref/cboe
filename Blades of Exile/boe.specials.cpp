@@ -1762,11 +1762,16 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 				else party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case 17:
-			check_mess = TRUE;
+			check_mess = true;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,(int)spec.ex1a))
 				give_error("Town out of range.","",0);
-				else party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
-			*redraw = TRUE;
+            else{
+			    if(PSD[SDF_LEGACY_SCENARIO] == 0) //"new" scenario, fixed show/hide town node
+                    party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
+                else //legacy scenario, old buggy show/hide town node (for compatibility purposes)
+                    party.can_find_town[spec.ex1a] = (spec.ex2a == 0) ? 0 : 1;
+				}
+			*redraw = true;
 			break;
 		case 18:
 			check_mess = TRUE;
