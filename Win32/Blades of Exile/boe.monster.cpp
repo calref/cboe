@@ -49,6 +49,9 @@ monster_record_type return_monster_template(unsigned char store)
 	for (i = 0; i < 15; i++)
 		monst.status[i] = 0;
 
+    if((PSD[SDF_LEGACY_SCENARIO] == 1) && (monst.spec_skill == 30))//legacy scenario, petrifying touch is (was), in fact, disease touch
+        monst.spec_skill = 25;
+
 	return monst;
 }
 

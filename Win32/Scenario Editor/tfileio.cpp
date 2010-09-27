@@ -175,9 +175,6 @@ void save_scenario()
 		CloseHandle(file_id); CloseHandle(dummy_f); oops_error(14);
 		return;
 		}
-	scenario.prog_make_ver[0] = 1;
-	scenario.prog_make_ver[1] = 0;
-	scenario.prog_make_ver[2] = 0;
 
 	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
 	// To do so, we'll remember the size of the saved town and out now.
