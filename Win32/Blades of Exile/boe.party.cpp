@@ -48,7 +48,7 @@ void init_party(short mode)
 	for (i = 0; i < 310; i++)
 		for (j = 0; j < 10; j++)
 			party.stuff_done[i][j] = 0;
-	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ? so, no resurrection balm needed
+	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ?
     else PSD[SDF_LEGACY_SCENARIO] = 0;
 
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
@@ -152,7 +152,7 @@ void init_party_scen_data()
 		for (j = 0; j < 10; j++)
 			party.stuff_done[i][j] = 0;
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
-	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ? so, no resurrection balm needed
+	if(scenario.prog_make_ver[0] < 2) PSD[SDF_LEGACY_SCENARIO] = 1; //old scenario format ?
     else PSD[SDF_LEGACY_SCENARIO] = 0;
 
 		party.light_level = 0;
@@ -1467,10 +1467,10 @@ void do_priest_spell(short pc_num,short spell_num)
 										}
 								}
 						play_sound(52);
-						sprintf ((char *) c_line,"  Your items glow.     ");
+						sprintf ( c_line,"  Your items glow.     ");
 	  					}
 				if (PSD[SDF_LEGACY_SCENARIO] == 0 && ((spell_num == 40) || (spell_num == 56))){
-				    if ((item = adven[pc_num].hasAbil(160)) == 24) {
+				    if ((item = adven[pc_num].hasAbil(ITEM_RESSURECTION_BALM)) == 24) {
                     sprintf(c_line,"  Need resurrection balm.        ");
 					spell_num = 500;
 					}
@@ -1479,8 +1479,8 @@ void do_priest_spell(short pc_num,short spell_num)
 				if (spell_num == 40) {
 						if (adven[target].main_status == MAIN_STATUS_DEAD)
 								if (get_ran(1,1,adven[pc_num].level / 2) == 1) {
-										sprintf ((char *) c_line, "  %s now dust.                          ",
-											(char *) adven[target].name);
+										sprintf (c_line, "  %s now dust.                          ",
+											 adven[target].name);
 										play_sound(5);
 										adven[target].main_status = MAIN_STATUS_DUST;
 									}
@@ -1490,11 +1490,11 @@ void do_priest_spell(short pc_num,short spell_num)
 										if (get_ran(1,0,2) < 2)
 											adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 									adven[target].cur_health = 1;
-									sprintf ((char *) c_line, "  %s raised.                          ",
-											(char *) adven[target].name);
+									sprintf (c_line, "  %s raised.                          ",
+											 adven[target].name);
 									play_sound(52);
 									}
-							else sprintf ((char *) c_line,"  Didn't work.              ");
+							else sprintf ( c_line,"  Didn't work.              ");
 
 					}
 				if (spell_num == 56) {
@@ -1504,13 +1504,13 @@ void do_priest_spell(short pc_num,short spell_num)
 								if (get_ran(1,0,2) < 1)
 									adven[target].skills[i] -= (adven[target].skills[i] > 1) ? 1 : 0;
 							adven[target].cur_health = 1;
-							sprintf ((char *) c_line, "  %s raised.",
-									(char *) adven[target].name);
+							sprintf (c_line, "  %s raised.",
+									 adven[target].name);
 							play_sound(52);
 							}
-							else sprintf ((char *) c_line,"  Was OK.              ");
+							else sprintf (c_line,"  Was OK.              ");
 					}
-				add_string_to_buf((char *) c_line);
+				add_string_to_buf(c_line);
 				put_pc_screen();
 			}
 			break;
