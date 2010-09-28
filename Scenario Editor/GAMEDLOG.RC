@@ -51,17 +51,17 @@
      LTEXT "2_0", 26, 257, 414, 38, 15
      }
 
-803 DIALOG 10, 10, 505, 520
+803 DIALOG 10, 10, 505, 455
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     DEFPUSHBUTTON "", 1, 279, 470, 31, 10
+     DEFPUSHBUTTON "", 1, 279, 427, 31, 10
      LTEXT "6_0", 2, 181, 85, 43, 16
      LTEXT "6_0", 3, 234, 85, 43, 16
      LTEXT "6_0", 4, 287, 85, 43, 16
      LTEXT "6_0", 5, 181, 109, 243, 47
      LTEXT "6_0", 6, 181, 164, 243, 47
      LTEXT "6_0", 7, 181, 219, 243, 65
-     LTEXT "1_63", 8, 395, 487, 54, 16
+     LTEXT "1_63", 8, 395, 407, 54, 16
      LTEXT "5_716", 9, 8, 8, 36, 36
      LTEXT "This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario. The meanings of all these fields are given in the documentation.", 10, 50, 23, 372, 53
      LTEXT "~Scenario Details", 11, 50, 6, 256, 17
@@ -89,14 +89,9 @@
      LTEXT "2_0", 33, 423, 344, 26, 15
      LTEXT "*Don't automatically adjust difficulty", 34, 50, 367, 50, 15
      LTEXT "2_0", 35, 260, 371, 32, 15
-     LTEXT "6_0", 36, 201,397, 43, 16
-     LTEXT "6_0", 37, 201,424, 43, 16
-     LTEXT "6_0", 38, 254,424, 43, 16
-     LTEXT "6_0", 39, 307,424, 43, 16
-     LTEXT "*Minimum Version:", 40, 50,397, 120, 14
-     LTEXT "*Program Make Version:", 41, 50,424, 120, 14
-     LTEXT "N.B: setting the major _program make version_ number (the first one) to 1 force the legacy compatibility. Therefore, legacy scenarii _program make version_ should always be of the form 1.x.x", 42, 50,444, 320, 53
-     }
+     LTEXT "*Enable legacy compatibility", 36, 50, 387, 50, 15
+     LTEXT "2_0", 37, 260, 391, 32, 15
+    }
 
 804 DIALOG 10, 10, 639, 391
 STYLE WS_POPUP | WS_DLGFRAME

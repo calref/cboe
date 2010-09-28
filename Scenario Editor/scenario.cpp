@@ -2324,13 +2324,9 @@ Boolean save_scen_details()
 	scenario.ver[0] = CDGN(803,2);
 	scenario.ver[1] = CDGN(803,3);
 	scenario.ver[2] = CDGN(803,4);
-	scenario.min_run_ver = CDGN(803,36);
-    scenario.prog_make_ver[0] = CDGN(803,37);
-	scenario.prog_make_ver[1] = CDGN(803,38);
-	scenario.prog_make_ver[2] = CDGN(803,39);
 	for (i = 0; i < 3; i++)
 		if (cre(scenario.ver[i],
-			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
+			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == true) return false;
 	CDGT(803,5,(char *) str);
 	str[59] = 0;
 	strcpy(scen_strs[1],(char *) str);
@@ -2339,7 +2335,13 @@ Boolean save_scen_details()
 	strcpy(scen_strs[2],(char *) str);
 	CDGT(803,7,scen_strs[3]);
 
-	return TRUE;
+    //enable legacy compatibility switch
+    if(cd_get_led(803,37) == 1)
+        scenario.prog_make_ver[0]=1;
+    else
+        scenario.prog_make_ver[0]=2;
+
+	return true;
 }
 
 void put_scen_details_in_dlog()
@@ -2353,10 +2355,13 @@ void put_scen_details_in_dlog()
 	CDST(803,5,scen_strs[1]);
 	CDST(803,6,scen_strs[2]);
 	CDST(803,7,scen_strs[3]);
-	CDSN(803,36,scenario.min_run_ver);
-	CDSN(803,37,scenario.prog_make_ver[0]);
-	CDSN(803,38,scenario.prog_make_ver[1]);
-	CDSN(803,39,scenario.prog_make_ver[2]);
+
+    //enable legacy compatibility switch
+    if(scenario.prog_make_ver[0]==1)
+        cd_set_led(803,37,1);
+    else
+        cd_set_led(803,37,0);
+
 }
 
 void edit_scen_details_event_filter (short item_hit)
@@ -2368,6 +2373,9 @@ void edit_scen_details_event_filter (short item_hit)
 			break;
         case 35:
 			cd_set_led(803,35,1 - cd_get_led(803,35));
+			break;
+        case 37://enable legacy compatibility switch
+			cd_set_led(803,37,1 - cd_get_led(803,37));
 			break;
 		default:
 			cd_hit_led_range(803,21,24,item_hit);
