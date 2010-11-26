@@ -24,7 +24,7 @@ RECT startup_top;
 RECT item_buttons[8][6]; 	// name, use, give, drip, info, sell/id
 RECT pc_buttons[6][5];		// name, hp, sp, info, trade
 pending_special_type special_queue[20];
-Boolean end_scenario = FALSE;
+Boolean end_scenario = false;
 // For menu spell casting, some info needs to be stored up here.
 short mage_need_select[62] = {0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
 	0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,1,0,0,0,0};
@@ -65,15 +65,15 @@ RECT sbar_rect = {545,284,562,421};
 RECT shop_sbar_rect = {258,67,274,357};
 RECT item_sbar_rect = {545,146,562,254};
 int dialog_answer;
-Boolean All_Done = FALSE, dialog_not_toast = FALSE;
-Boolean in_startup_mode = TRUE;
+Boolean All_Done = false, dialog_not_toast = false;
+Boolean in_startup_mode = true;
 //Boolean play_sounds;
-Boolean spell_forced = FALSE,startup_loaded = FALSE;
-Boolean save_maps = TRUE,party_in_memory = FALSE,in_scen_debug = FALSE;
-Boolean window_in_front = FALSE;
-Boolean belt_present = FALSE;
-Boolean game_run_before = TRUE;
-Boolean give_intro_hint = TRUE;
+Boolean spell_forced = false,startup_loaded = false;
+Boolean save_maps = true,party_in_memory = false,in_scen_debug = false;
+Boolean window_in_front = false;
+Boolean belt_present = false;
+Boolean game_run_before = true;
+Boolean give_intro_hint = true;
 short on_spell_menu[2][62];
 short on_monst_menu[256];
 short current_cursor = 120;
@@ -88,17 +88,17 @@ setup_save_type setup_save;
 location monster_targs[T_M];
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
-Boolean fast_bang = FALSE;
+Boolean fast_bang = false;
 short spec_item_array[60];
-short overall_mode = 45,current_spell_range;
-Boolean first_update = TRUE,anim_onscreen = FALSE,frills_on = TRUE,suppress_stat_screen = FALSE;
+short overall_mode = MODE_STARTUP,current_spell_range;
+Boolean first_update = true,anim_onscreen = false,frills_on = true,suppress_stat_screen = false;
 short stat_window = 0;
-Boolean monsters_going = FALSE,boom_anim_active = FALSE;
+Boolean monsters_going = false,boom_anim_active = false;
 short give_delays = 0;
-Boolean modeless_exists[18] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
-HWND modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	
+Boolean modeless_exists[18] = {false,false,false,false,false,false,
+	false,false,false,false,false,false,
+	false,false,false,false,false,false};
+HWND modeless_dialogs[18] = {NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 	NULL,	NULL,	NULL,	NULL,	NULL,	NULL};
 short town_size[3] = {64,48,32};
@@ -131,7 +131,7 @@ stored_outdoor_maps_type o_maps;
 Boolean web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 Boolean sleep_field;
 /* Windoze stuff globals */
-Boolean cursor_shown = TRUE;
+Boolean cursor_shown = true;
 HWND mainPtr;
 HFONT font,fantasy_font,small_bold_font,italic_font,underline_font,bold_font,tiny_font;
 HDC main_dc,main_dc2,main_dc3;
@@ -145,7 +145,7 @@ stored_town_maps_type town_maps;
 char szWinName[] = "BoE Dialogs";
 char szAppName[] = "BoE for Win32";
 char file_path_name[256];
-Boolean block_erase = FALSE;
+Boolean block_erase = false;
 /* dynamically allocated */
 piles_of_stuff_dumping_type *data_store;
 piles_of_stuff_dumping_type2 *data_store2 = NULL;
@@ -159,7 +159,7 @@ char create_line[60];
 short spell_being_cast;
 short missile_inv_slot, ammo_inv_slot;
 short force_wall_position = 10; //  10 -> no force wall
-Boolean processing_fields = TRUE;
+Boolean processing_fields = true;
 short futzing;
 unsigned char store_sum_monst;
 short store_sum_monst_cost;
@@ -174,7 +174,7 @@ short s_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6
 	{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
 		5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
 short mage_range[80] = {0,6,0,0,7,7,0,14,8,0, 6,8,7,10,0,8,3,8,10,6, 0,0,12,0,10,12,4,10,8,0,
-	8,12,12,0,10,4,8,8, 0,0,14,0,2,4,10,12, 8,12,6,8,5,8,4,0, 0,0,8,0,4,2,4,6 
+	8,12,12,0,10,4,8,8, 0,0,14,0,2,4,10,12, 8,12,6,8,5,8,4,0, 0,0,8,0,4,2,4,6
 	,10,8,8,12,8,10,10,10, 10,10,10,10,10,10,10,10,10,10};
 short priest_range[62] = {0,0,0,8,0,0,0,0,0,10, 0,0,10,0,6,4,0,6,6,8, 0,0,8,0,10,0,8,0,0,8,
 	0,10,8,0,6,0,0,0, 0,0,0,9,0,4,0,8, 0,0,10,0,4,8,0,8, 0,4,0,12,0,10,0,0};
@@ -182,15 +182,15 @@ short monst_mage_cost[27] = {1,1,1,1,2, 2,2,2,2,4, 2,4,4,3,4, 4,4,5,5,5, 5,6,6,6
 short monst_mage_area_effect[27] = {0,0,0,0,0, 0,0,0,1,0, 1,1,0,1,0, 0,0,0,1,0, 1,0,0,0,0, 0,0};
 short monst_priest_cost[26] = {1,1,1,1,2, 2,2,4,2,3, 3,3,4,4,4, 5,5,5,10,6, 6,10,8,8,8, 8};
 short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0, 1};
-char *d_string[] = 
+char *d_string[] =
 {
-	"North", 
-	"NorthEast", 
-	"East", 
-	"SouthEast", 
-	"South", 
-	"SouthWest", 
-	"West", 
+	"North",
+	"NorthEast",
+	"East",
+	"SouthEast",
+	"South",
+	"SouthWest",
+	"West",
 	"NorthWest"
 };
 short pc_marked_damage[6];
@@ -345,7 +345,7 @@ Boolean talk_end_forced;
 char old_str1[256];
 char old_str2[256];
 char one_back1[256];
-char one_back2[256]; 
+char one_back2[256];
 RECT talk_area_rect = {5,5,284,420}, word_place_rect = {7,44,257,372},talk_help_rect = {254,5,272,21};
 /**/
 char title_string[50];
@@ -377,7 +377,7 @@ char *heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis
 short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
 long cost_mult[7] = {5,7,10,13,16,20,25};
 short cur_display_mode;
-short terrain_pic[256]; 
+short terrain_pic[256];
 short store_scen_page_on,store_num_scen;
 #define ND	15
 #define	NI	500
@@ -392,7 +392,7 @@ HWND store_edit_parent; // kludgy
 HDC dlg_force_dc ; // save HDCs when dealing with dlogs
 short store_free_slot,store_dlog_num;
 HWND store_parent;
-short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 	128,
 	9,
 	10, // 10
@@ -451,7 +451,7 @@ char button_def_key[150] = {0,0,20,21,'k', 24,0,0,0,0,
 	'g','1','2','3','4', '5','6',0,0,0,
 	0,0,0,0,0,' ',0,22,23,0,
 	0,0,0,0,0,'1','2','3','4','5',
-	'6','7','8','9','a', 'b','c','d','e','f',  
+	'6','7','8','9','a', 'b','c','d','e','f',
 	'g',0,0,0,0,0,0,0,0,0,
 	0,0,0,0,'y','n',0,'?','r',0,
 	0,0,0,0,0,0,0,0,0, 0,
@@ -480,8 +480,8 @@ HBITMAP spec_scen_g ;
 typedef struct {
 	char expl[96][96];
 }	out_info_type;
-Boolean loaded_yet = FALSE;
-Boolean cur_scen_is_win = TRUE;
+Boolean loaded_yet = false;
+Boolean cur_scen_is_win = true;
 void print_write_position ();
 char szFileName [128] = "blades.sav";
 char szTitleName [128] = "blades.sav";
@@ -498,13 +498,13 @@ HBITMAP bg_bitmap[14];
 HBRUSH checker_brush ;
 HBITMAP checker_bitmap ,bw_bitmap;
 HBITMAP startup_button_orig,startup_button_g,anim_mess ;
-Boolean done_fancy_startup_once = FALSE;
+Boolean done_fancy_startup_once = false;
 short terrain_there[9][9]; // this is an optimization variabel. Keeps track of what terrain
-// is in the terrain spot, so things don't get redrawn. 
+// is in the terrain spot, so things don't get redrawn.
 // 0 - 299 just terrain graphic in place
 // 300 - blackness
-// -1 - nothign worth saving 
-// 0 - terrain   1 - buttons   2 - pc stats 
+// -1 - nothign worth saving
+// 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
 RECT win_from_rects[6] = {{0,0,279,351},{0,0,258,37},{0,0,288,115},{0,0,288,143},{0,0,279,21},{0,0,288,0}};
 RECT win_to_rects[6] = {{5,5,284,356},{5,383,263,420},{0,0,271,116},{0,0,271,144},{5,358,284,379},{0,0,256,138}};
@@ -536,13 +536,13 @@ char town_trim[64][64];
 // Array to store which spots have been seen. Time-saver for drawing fields
 char spot_seen[9][9];
 short startup_anim_pos = 43;
-Boolean supressing_some_spaces = FALSE;
+Boolean supressing_some_spaces = false;
 location ok_space[4];
 char combat_string[100];
 short dlog_pat_placed = 0;
 short current_pattern = -1;
 RECT boat_rects[4] = {{0,0,28,36}, {28,0,56,36},{56,0,84,36},{84,0,112,36}}; /**/
-Boolean gave_no_g_error = FALSE;
+Boolean gave_no_g_error = false;
 unsigned char m_pic_sheet[200] = {////
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,1,
@@ -633,7 +633,7 @@ pc_record_type *store_pc;
 creature_data_type *store_m;
 short store_trait_mode,store_item_pc,store_pc_num;
 item_record_type store_i;
-Boolean full_roster = FALSE;
+Boolean full_roster = false;
 // Displaying string vars
 short store_which_string_dlog;
 short store_page_on,store_num_i;
@@ -642,9 +642,9 @@ short store_str_label_1,store_str_label_2,store_str_label_1b,store_str_label_2b;
 short store_display_mode,store_displayed_item,position,cur_entry,num_entries,store_help_mode;
 creature_data_type hold_m;
 ////
-Boolean equippable[26] = {FALSE,TRUE,TRUE,FALSE,TRUE, TRUE,TRUE,FALSE,FALSE,FALSE,
-	TRUE,FALSE,TRUE,TRUE,TRUE, TRUE,TRUE,TRUE,TRUE,TRUE,
-	FALSE,FALSE,TRUE,TRUE,TRUE,TRUE};
+Boolean equippable[26] = {false,true,true,false,true, true,true,false,false,false,
+	true,false,true,true,true, true,true,true,true,true,
+	false,false,true,true,true,true};
 short num_hands_to_use[26] = {0,1,2,0,0, 0,0,0,0,0 ,0,0,1,0,0, 0,1,0,0,0, 0,0,0,0,0, 0};
 short num_that_can_equip[26] = {0,2,1,0,1, 1,1,0,0,0, 1,0,1,1,1, 1,1,1,2,1, 0,0,1,1,1, 1};
 // For following, if an item of type n is equipped, no other items of type n can be equipped,
@@ -684,7 +684,7 @@ char terrain_blocked[256];/* = {0,0,0,0,0,5,5,1,5,5,
 short short_can_see();
 Boolean combat_pt_in_light();
 location which_party_sec;
-short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};	
+short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,5,2,1, 0,0,0,0,0};
 //creature_start_type null_start_type = {0,0,location(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
 creature_start_type null_start_type = {0,0,location(80,80),1,0,0,0,-1,-1,0,0, 0,-1,-1,-1};
 HRGN oval_region ,dark_mask_region,temp_rect_rgn;
@@ -823,9 +823,9 @@ short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
 pc_array adven;
-Boolean can_draw_pcs = TRUE;
+Boolean can_draw_pcs = true;
 short store_item_spell_level = 10;
-Boolean special_in_progress = FALSE;
+Boolean special_in_progress = false;
 short spec_str_offset[3] = {160,10,20};
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
 location store_special_loc;
@@ -859,10 +859,10 @@ short buf_pointer = 30;
 char store_string[256];
 char store_string2[256];
 short mark_where_printing_long;
-Boolean printing_long = FALSE;
+Boolean printing_long = false;
 RECT item_buttons_from[7] = {{0,12,14,24},{14,12,28,24},{28,12,42,24},{42,12,56,24},
 	{0,24,30,36},{30,24,60,36},{0,36,30,48}}; /**/
-Boolean string_added = FALSE;
+Boolean string_added = false;
 short store_text_x = 0, store_text_y = 0;
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};
 short pc_button_state[6] = {-1,-1,-1,-1,-1,-1};
@@ -875,14 +875,14 @@ char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 char *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 	"Curse","Wound","Summon Spirit","Disease","Heal",
 	"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
-	"Bless All","Major Heal","Flamestrike","Summon Host","Heal All",
+	"Bless All","Major Heal","Flamestrike","Summon Host","Full Heal",
 	"Unholy Ravaging","Summon Guardian","Pestilence","Revive All","Avatar",
 	"Divine Thud"};
 // extra devices for maps
 HBRUSH hbrush[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
 HPEN hpen[6];
 RECT store_map_window_rect = {0,0,0,0};
-Boolean need_map_full_refresh = TRUE;
+Boolean need_map_full_refresh = true;
 HBITMAP map_gworld;
 HBRUSH	bg[14];
 HBRUSH map_brush[25];
@@ -911,21 +911,21 @@ unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
 	0,0,0,0,0,17,17,0,17,17,
 	17,17,17,17,17,17,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0, 
+	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0};// 250
 unsigned char anim_map_pats[18] = {14,0,0,0,22, 0,0,21,20,21, 20,0,0,0,0, 0,0,0};
 location town_map_adj;
 short town_force = INVALID_TOWN;
 location town_force_loc;
 unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
-Boolean kludge_force_full_refresh = FALSE;
+Boolean kludge_force_full_refresh = false;
 word_rect_type preset_words[9] = {{"Look",{4,366,54,389}},{"Name",{70,366,130,389}},{"Job",{136,366,186,389}},
 	{"Buy",{4,389,54,412}},{"Sell",{70,389,120,412}},{"Record",{121,389,186,412}},
 	{"Done",{210,389,270,412}},{"Go Back",{190,366,270,389}},
 	{"Ask About...",{4,343,134,366}}};
 word_rect_type store_words[50];
 //Timer Special happened ?
-BOOL timed_special_happened = FALSE;
-BOOL ghost_mode = FALSE;
+BOOL timed_special_happened = false;
+BOOL ghost_mode = false;
 char talk_edit_string[40] = "";
-unsigned char queue_position = 1; //timer queue position
+unsigned char queue_position = 0; //timer queue position

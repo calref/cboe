@@ -21,7 +21,7 @@
 void startup_load()
 {
 	load_file();
-	if (in_startup_mode == FALSE)
+	if (in_startup_mode == false)
 	{
 		end_startup();
 		post_load();
@@ -42,11 +42,11 @@ Boolean handle_startup_press(POINT the_point)
 	the_point.y -= uly;
 
 	for (i = 0; i < 5; i++)
-		if (PtInRect(&startup_button[i],the_point) == TRUE)
+		if (PtInRect(&startup_button[i],the_point) == true)
 		{
 		draw_start_button(i,5);
 
-		if (play_sounds == TRUE) play_sound(37);
+		if (play_sounds == true) play_sound(37);
 			else Delay(5,&dummy);
 
 		draw_start_button(i,0);
@@ -68,7 +68,7 @@ Boolean handle_startup_press(POINT the_point)
 					break;
 
 				case 3:
-					if (party_in_memory == FALSE) {   // check if party is loaded
+					if (party_in_memory == false) {   // check if party is loaded
 						FCD(867,0);                   //no party loaded error message
 						break;
 						}
@@ -87,7 +87,7 @@ Boolean handle_startup_press(POINT the_point)
 					break;
 
 				case 4: // intro
-					if (party_in_memory == FALSE) {               // check if party is loaded
+					if (party_in_memory == false) {               // check if party is loaded
 						FCD(867,0);                               //no party loaded error message
 						break;
 						}
@@ -107,10 +107,10 @@ Boolean handle_startup_press(POINT the_point)
 
 				default:
 					Delay(50,&dummy);
-					return TRUE;
+					return true;
 				}
 			}
-	return FALSE;
+	return false;
 }
 
 void loadCursors()
@@ -176,7 +176,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 
 	RegisterClass(&wndclass2);
 
-	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile build_27.09.2010",
+	mainPtr = CreateWindow (szAppName, "Classic Blades of Exile build_26.11.2010",
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,
@@ -226,7 +226,7 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 					GetWindowRect(GetDesktopWindow(),&windRECT);
 					MoveWindow(mainPtr,(windRECT.right - (588 + 10)) / 2,
 					(windRECT.bottom - (425 + 52)) / 2 ,
-					588 + 10,425 + 52,TRUE);
+					588 + 10,425 + 52,true);
 				}
 
 		shop_sbar = CreateWindow("scrollbar",NULL,
@@ -234,8 +234,8 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 			mainPtr,(HMENU) 3, store_hInstance,NULL);
         lpsi.fMask = SIF_RANGE;
         lpsi.nMax = 16;
-        SetScrollInfo(shop_sbar,SB_CTL,&lpsi,FALSE);
-//		SetScrollRange(shop_sbar,SB_CTL,0,16,FALSE);
+        SetScrollInfo(shop_sbar,SB_CTL,&lpsi,false);
+//		SetScrollRange(shop_sbar,SB_CTL,0,16,false);
 
 		ShowWindow(mainPtr, nCmdShow);
 
@@ -260,25 +260,25 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 
 		menu_activate(0);
 		cursor_stay();
-		showcursor(TRUE);
+		showcursor(true);
 		reset_text_bar();
 
 		adjust_window_mode();
 
 		cd_init_dialogs();
 
-		if (game_run_before == FALSE) {
+		if (game_run_before == false) {
          FCD(986,0);
          WritePrivateProfileString("Blades of Exile", "game_run_before", "1", "./blades.ini");
         }
-		else if (give_intro_hint == TRUE) tip_of_day();
+		else if (give_intro_hint == true) tip_of_day();
 
 		}
-		event_handled = FALSE;
+		event_handled = false;
 
 		while(GetMessage(&msg,NULL,0,0))
 		{
-			if (event_handled == FALSE)
+			if (event_handled == false)
 			{
 				if (!TranslateAccelerator(mainPtr, accel, &msg))
 				{
@@ -388,7 +388,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		else {
 				SetFocus(hwnd);
 				press = MAKEPOINT(lParam);
-				if (in_startup_mode == FALSE)
+				if (in_startup_mode == false)
 						All_Done = handle_action(press, wParam,lParam);
 				else 	All_Done = handle_startup_press(press);
 				change_cursor(press);
@@ -404,7 +404,7 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			else {
 				SetFocus(hwnd);
 				press = MAKEPOINT(lParam);
-				if (in_startup_mode == FALSE)
+				if (in_startup_mode == false)
 					All_Done = handle_action(press, wParam,-2);
 					else All_Done = handle_startup_press(press);
 				change_cursor(press);
@@ -420,23 +420,23 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if ((fActive == WA_ACTIVE) ||(fActive == WA_CLICKACTIVE))
 			{
-				window_in_front = TRUE;
+				window_in_front = true;
 				GetClientRect(hwnd,&dlg_rect);
-				InvalidateRect(hwnd,&dlg_rect,FALSE);
+				InvalidateRect(hwnd,&dlg_rect,false);
 			}
 
 			if (fActive == WA_INACTIVE)
 			{
 				cursor_stay();
-				anim_onscreen = FALSE;
-				window_in_front = FALSE;
+				anim_onscreen = false;
+				window_in_front = false;
 			}
 		}
 		return 0;
 
 	case WM_ERASEBKGND:
 		if (hwnd != mainPtr) break;
-		block_erase = FALSE;
+		block_erase = false;
 		return 1;
 
 	case WM_MOUSEMOVE:
@@ -445,14 +445,14 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		press = MAKEPOINT(lParam);
 		if (hwnd == mainPtr) {
 			change_cursor(press);
-			if ((overall_mode > 10) && (overall_mode < 20))
+			if ((overall_mode > MODE_COMBAT) && (overall_mode < MODE_TALKING))
 				draw_targeting_line(press);
 			}
 		return 0;
 
 	case WM_PAINT:
-		if ((block_erase == TRUE) && (hwnd == mainPtr)) {
-			block_erase = FALSE;
+		if ((block_erase == true) && (hwnd == mainPtr)) {
+			block_erase = false;
 			}
 		hdc = BeginPaint(hwnd,&ps);
 		EndPaint(hwnd,&ps);
@@ -460,14 +460,14 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (hwnd != mainPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
-				string_added = TRUE;
+				string_added = true;
 				reset_text_bar();
-				if (in_startup_mode == TRUE) draw_startup(0);
-				else if (first_update == TRUE)
+				if (in_startup_mode == true) draw_startup(0);
+				else if (first_update == true)
 				{
-					first_update = FALSE;
-					if (overall_mode == 0) redraw_screen(0);
-					if ((overall_mode > 0) & (overall_mode < 10)) redraw_screen(1);
+					first_update = false;
+					if (overall_mode == MODE_OUTDOORS) redraw_screen(0);
+					if ((overall_mode > MODE_OUTDOORS) & (overall_mode < MODE_COMBAT)) redraw_screen(1);
 				// 1st update never combat
 				}
 			else refresh_screen(overall_mode);
@@ -477,20 +477,21 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		switch(wParam) {
 			case 1:
-				if ((in_startup_mode == FALSE) && (anim_onscreen == TRUE)
-				 && (window_in_front == TRUE) && (give_delays == FALSE)) {
-						anim_ticks++;
+				if ((in_startup_mode == false) && (anim_onscreen == true)
+				 && (window_in_front == true) && (give_delays == false)) {
+                        if(PSD[SDF_NO_TER_ANIM] != 1)
+                            anim_ticks++;
 						initiate_redraw();
 					}
 				break;
 			case 2:
-				if ((overall_mode > 10) && (overall_mode < 20)) {
+				if ((overall_mode > MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
 					GetCursorPos(&press);
 					press.x -= wind_rect.left + 3;
 					press.y -= wind_rect.top + 41;
 					draw_targeting_line(press);
 					}
-				if ((in_startup_mode == TRUE) && (window_in_front == TRUE))
+				if ((in_startup_mode == true) && (window_in_front == true))
 					draw_startup_anim();
 				break;
 			}
@@ -526,12 +527,12 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
 				if (sbar_pos > 58) sbar_pos = 58;{
-//				SetScrollPos(text_sbar,SB_CTL,sbar_pos,TRUE);
+//				SetScrollPos(text_sbar,SB_CTL,sbar_pos,true);
                 lpsi.nPos = sbar_pos;
                 lpsi.fMask = SIF_POS;
-                SetScrollInfo(text_sbar,SB_CTL,&lpsi,TRUE);
+                SetScrollInfo(text_sbar,SB_CTL,&lpsi,true);
                 }
-				string_added = TRUE;
+				string_added = true;
 				print_buf();
 			break;
 			case 2:
@@ -551,10 +552,10 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
 				if (sbar_pos > smax) sbar_pos = smax;{
-//				SetScrollPos(item_sbar,SB_CTL,sbar_pos,TRUE);
+//				SetScrollPos(item_sbar,SB_CTL,sbar_pos,true);
                 lpsi.nPos = sbar_pos;
                 lpsi.fMask = SIF_POS;
-                SetScrollInfo(item_sbar,SB_CTL,&lpsi,TRUE);
+                SetScrollInfo(item_sbar,SB_CTL,&lpsi,true);
                 }
 				if (sbar_pos != old_setting)
 					put_item_screen(stat_window,1);
@@ -576,10 +577,10 @@ long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				if (sbar_pos < 0) sbar_pos = 0;
 				if (sbar_pos > smax) sbar_pos = smax;{
-//				SetScrollPos(shop_sbar,SB_CTL,sbar_pos,TRUE);
+//				SetScrollPos(shop_sbar,SB_CTL,sbar_pos,true);
                 lpsi.nPos = sbar_pos;
                 lpsi.fMask = SIF_POS;
-                SetScrollInfo(shop_sbar,SB_CTL,&lpsi,TRUE);
+                SetScrollInfo(shop_sbar,SB_CTL,&lpsi,true);
                 }
 				if (sbar_pos != old_setting)
 					draw_shop_graphics(0,shop_sbar_rect);
@@ -610,10 +611,10 @@ void check_game_done()
 {
 	through_sending();
 
-	if (All_Done == TRUE)
+	if (All_Done == true)
 	{
 		lose_graphics();
-		showcursor(TRUE);
+		showcursor(true);
 		PostQuitMessage(0);
 	}
 }
@@ -622,30 +623,30 @@ Boolean handle_menu (short item, HMENU)
 {
 	short choice,i;
 	POINT x = {1001,0},pass_point;
-	Boolean to_return = FALSE;
+	Boolean to_return = false;
 
 	switch (item) {
 		case 1:  // File Menu
-			if (in_startup_mode == TRUE) startup_load();
+			if (in_startup_mode == true) startup_load();
 			else do_load();
 			break;
 		case 2:
 			do_save(0);
 			break;
 		case 3:
-			if (in_startup_mode == TRUE) save_file(1);
+			if (in_startup_mode == true) save_file(1);
 			else do_save(1);
 			break;
 		case 4:
-			if (in_startup_mode == FALSE)
+			if (in_startup_mode == false)
 			{
 				choice = FCD(1091,0);
-				if (choice == 1) return FALSE;
+				if (choice == 1) return false;
 				for (i = 0; i < 6; i++)
 					adven[i].main_status = MAIN_STATUS_ABSENT;
-				party_in_memory = FALSE;
+				party_in_memory = false;
 				reload_startup();
-				in_startup_mode = TRUE;
+				in_startup_mode = true;
 				draw_startup(0);
 			}
 			start_new_game();
@@ -658,11 +659,11 @@ Boolean handle_menu (short item, HMENU)
             pick_compatibility();
             break;
 		case 8:  // Quit
-			if (in_startup_mode == TRUE) {
-				to_return = All_Done = TRUE;
+			if (in_startup_mode == true) {
+				to_return = All_Done = true;
 				break;
 				}
-			if (overall_mode > 1) {
+			if (overall_mode > MODE_TOWN) {
 				choice = FCD(1067,0);
 				if (choice == 1) return All_Done;
 				}
@@ -673,7 +674,7 @@ Boolean handle_menu (short item, HMENU)
 					if (choice == 1)
 						save_file(0);
 					}
-			to_return = All_Done = TRUE;
+			to_return = All_Done = true;
 			break;
 
 		// Options menu
@@ -721,7 +722,7 @@ Boolean handle_menu (short item, HMENU)
 			break;
 
 		case 24:
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -747,7 +748,7 @@ Boolean handle_menu (short item, HMENU)
 			adventure_notes();
 			break;
 		case 29:
-			if (in_startup_mode == FALSE) print_party_stats();
+			if (in_startup_mode == false) print_party_stats();
 			break;
 
 		// Help menu
@@ -769,7 +770,7 @@ Boolean handle_menu (short item, HMENU)
 
 		// Actions
 		case 81:
-			if (overall_mode != 1) {
+			if (overall_mode != MODE_TOWN) {
 				ASB("Alchemy: In town mode only.");
 				print_buf();
 				break;
@@ -782,7 +783,7 @@ Boolean handle_menu (short item, HMENU)
 			to_return = handle_action(x,(WPARAM) 0,(LPARAM)-1);
 			break;
 		case 84:
-			if (prime_time() == FALSE) {
+			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 				}
@@ -795,11 +796,11 @@ Boolean handle_menu (short item, HMENU)
 
 		// Mage is 399
 		case 399: give_help(209,0,0);
-			party.help_received[9] = FALSE; break;
+			party.help_received[9] = false; break;
 
 		// Priest is 499
 		case 499: give_help(209,0,0);
-			party.help_received[9] = FALSE; break;
+			party.help_received[9] = false; break;
 
 		// Monsters is 599
 		case 599: give_help(212,0,0); break;
@@ -814,7 +815,7 @@ Boolean handle_menu (short item, HMENU)
 
 		default:
 			if ((item >= 400) && (item < 500))  { // mage spell
-				if (prime_time() == FALSE) {
+				if (prime_time() == false) {
 					ASB("Finish what you're doing first.");
 					print_buf();
 					}
@@ -822,7 +823,7 @@ Boolean handle_menu (short item, HMENU)
 				break;
 				}
 			if ((item >= 500) && (item < 600))  { // priest spell
-				if (prime_time() == FALSE) {
+				if (prime_time() == false) {
 					ASB("Finish what you're doing first.");
 					print_buf();
 					}
@@ -835,7 +836,7 @@ Boolean handle_menu (short item, HMENU)
 				}
 			break;
 		}
-	if (in_startup_mode == TRUE)
+	if (in_startup_mode == true)
 		menu_activate(0);
 		else menu_activate(1);
 	return to_return;
@@ -854,14 +855,14 @@ void change_cursor(POINT where_curs)
 	where_curs.x -= ulx;
 	where_curs.y -= uly;
 
-	if (PtInRect(&world_screen,where_curs) == FALSE)
+	if (PtInRect(&world_screen,where_curs) == false)
 		cursor_needed = 120;
 		else cursor_needed = curs_types[overall_mode];
 
-	if (in_startup_mode == TRUE)
+	if (in_startup_mode == true)
 		cursor_needed = 120;
 		else if (cursor_needed == 0) {
-		if ((PtInRect(&world_screen,where_curs) == FALSE) || (in_startup_mode == TRUE))
+		if ((PtInRect(&world_screen,where_curs) == false) || (in_startup_mode == true))
 			cursor_needed = 120;
 			else {
 				cursor_direction = get_cur_direction(where_curs);
@@ -897,20 +898,20 @@ void change_cursor(POINT where_curs)
 
 void cursor_go()
 {
-	if (in_startup_mode == TRUE) return;
+	if (in_startup_mode == true) return;
 
-	if (cursor_shown == TRUE)
+	if (cursor_shown == true)
 	{
-		cursor_shown = FALSE;
-		showcursor(FALSE);
+		cursor_shown = false;
+		showcursor(false);
 	}
 }
 
 void cursor_stay()
 {
-	if ((cursor_shown == FALSE) || (in_startup_mode == TRUE))
+	if ((cursor_shown == false) || (in_startup_mode == true))
 	{
-		cursor_shown = TRUE;
-		showcursor(TRUE);
+		cursor_shown = true;
+		showcursor(true);
       }
 }

@@ -62,23 +62,23 @@ void location::crumbleWall()
 {
 	unsigned char ter;
 
-	if (loc_off_act_area(*this) == TRUE)
+	if (loc_off_act_area(*this) == true)
 		return;
 	ter = t_d.terrain[x][y];
-	if (scenario.ter_types[ter].special == 7) {
+	if (scenario.ter_types[ter].special == TER_SPEC_CRUMBLING_TERRAIN) {
 			play_sound(60);
 			t_d.terrain[x][y] = scenario.ter_types[ter].flag1;
-			if(scenario.ter_types[scenario.ter_types[ter].flag1].special >= 16 && scenario.ter_types[scenario.ter_types[ter].flag1].special <=19)
-                belt_present = TRUE;
+			if(scenario.ter_types[scenario.ter_types[ter].flag1].special >= TER_SPEC_CONVEYOR_NORTH && scenario.ter_types[scenario.ter_types[ter].flag1].special <= TER_SPEC_CONVEYOR_WEST)
+                belt_present = true;
 			add_string_to_buf("  Barrier crumbles.");
 		}
 }
 
 bool location::isDoor() const
 {
-	if ((scenario.ter_types[t_d.terrain[x][y]].special == 9) ||
-		(scenario.ter_types[t_d.terrain[x][y]].special == 1) ||
-		(scenario.ter_types[t_d.terrain[x][y]].special == 10))
+	if ((scenario.ter_types[t_d.terrain[x][y]].special == TER_SPEC_UNLOCKABLE_TERRAIN) ||
+		(scenario.ter_types[t_d.terrain[x][y]].special == TER_SPEC_CHANGE_WHEN_STEP_ON) ||
+		(scenario.ter_types[t_d.terrain[x][y]].special == TER_SPEC_UNLOCKABLE_BASHABLE))
 			return true;
 	return false;
 }
@@ -88,7 +88,7 @@ void location::pickLock(short pc_num)
 {
 	unsigned char terrain;
 	short r1,which_item;
-	Boolean will_break = FALSE;
+	Boolean will_break = false;
 	short unlock_adjust;
 
 	terrain = t_d.terrain[x][y];
@@ -101,25 +101,25 @@ void location::pickLock(short pc_num)
 	r1 = get_ran(1,0,100) + adven[pc_num].items[which_item].ability_strength * 7;
 
 	if (r1 < 75)
-		will_break = TRUE;
+		will_break = true;
 
 	r1 = get_ran(1,0,100) - 5 * adven[pc_num].statAdj(SKILL_DEXTERITY) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[SKILL_LOCKPICKING] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?
-	if (adven[pc_num].traits[TRAIT_NIMBLE] == TRUE) r1 -= 8;
+	if (adven[pc_num].traits[TRAIT_NIMBLE] == true) r1 -= 8;
 
 	if (adven[pc_num].hasAbilEquip(ITEM_THIEVING) < 24)
 		r1 = r1 - 12;
 
-	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10)) {
+	if ((scenario.ter_types[terrain].special < TER_SPEC_UNLOCKABLE_TERRAIN) || (scenario.ter_types[terrain].special > TER_SPEC_UNLOCKABLE_BASHABLE)) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 		}
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 	if ((unlock_adjust >= 5) || (r1 > (90 - unlock_adjust * 15))) {
 					add_string_to_buf("  Didn't work.                ");
-					if (will_break == TRUE)
+					if (will_break == true)
 					{
 						add_string_to_buf("  Pick breaks.                ");
 						adven[pc_num].removeCharge(which_item);
@@ -130,8 +130,8 @@ void location::pickLock(short pc_num)
 						add_string_to_buf("  Door unlocked.                ");
 						play_sound(9);
 						t_d.terrain[x][y] = scenario.ter_types[terrain].flag1;
-						if(scenario.ter_types[scenario.ter_types[terrain].flag1].special >= 16 && scenario.ter_types[scenario.ter_types[terrain].flag1].special <=19)
-                            belt_present = TRUE;
+						if(scenario.ter_types[scenario.ter_types[terrain].flag1].special >= TER_SPEC_CONVEYOR_NORTH && scenario.ter_types[scenario.ter_types[terrain].flag1].special <= TER_SPEC_CONVEYOR_WEST)
+                            belt_present = true;
 					}
 }
 
@@ -142,9 +142,9 @@ void location::bashDoor(short pc_num)
 	short r1,unlock_adjust;
 
 	terrain = t_d.terrain[x][y];
-	r1 = get_ran(1,0,100) - 15 * adven[pc_num].statAdj(0) + c_town.difficulty * 4;
+	r1 = get_ran(1,0,100) - 15 * adven[pc_num].statAdj(SKILL_STRENGTH) + c_town.difficulty * 4;
 
-	if ((scenario.ter_types[terrain].special < 9) || (scenario.ter_types[terrain].special > 10))
+	if ((scenario.ter_types[terrain].special < TER_SPEC_UNLOCKABLE_TERRAIN) || (scenario.ter_types[terrain].special > TER_SPEC_UNLOCKABLE_BASHABLE))
 	{
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
@@ -152,7 +152,7 @@ void location::bashDoor(short pc_num)
 
 	unlock_adjust = scenario.ter_types[terrain].flag2;
 
-	if ((unlock_adjust >= 5) || (r1 > (100 - unlock_adjust * 15)) || (scenario.ter_types[terrain].special != 10))
+	if ((unlock_adjust >= 5) || (r1 > (100 - unlock_adjust * 15)) || (scenario.ter_types[terrain].special != TER_SPEC_UNLOCKABLE_BASHABLE))
 	{
 		add_string_to_buf("  Didn't work.                ");
 		adven[pc_num].damage(get_ran(1,1,4),4,-1);
@@ -162,7 +162,7 @@ void location::bashDoor(short pc_num)
 		add_string_to_buf("  Lock breaks.                ");
 		play_sound(9);
 		t_d.terrain[x][y] = scenario.ter_types[terrain].flag1;
-		if(scenario.ter_types[scenario.ter_types[terrain].flag1].special >= 16 && scenario.ter_types[scenario.ter_types[terrain].flag1].special <=19)
-            belt_present = TRUE;
+		if(scenario.ter_types[scenario.ter_types[terrain].flag1].special >= TER_SPEC_CONVEYOR_NORTH && scenario.ter_types[scenario.ter_types[terrain].flag1].special <= TER_SPEC_CONVEYOR_WEST)
+            belt_present = true;
 	}
 }

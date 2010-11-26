@@ -20,8 +20,8 @@ short text_pc_has_abil_equip(short pc_num, short abil)
 {
 	short i = 0;
 
-	while (((adven[pc_num].items[i].variety == 0) || (adven[pc_num].items[i].ability != abil)
-			|| (adven[pc_num].equip[i] == FALSE)) && (i < 24))
+	while (((adven[pc_num].items[i].variety == ITEM_TYPE_NO_ITEM) || (adven[pc_num].items[i].ability != abil)
+			|| (adven[pc_num].equip[i] == false)) && (i < 24))
 				i++;
 	return i;
 
@@ -41,12 +41,12 @@ void put_pc_screen()
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
 	HBITMAP store_bmp;
-	Boolean right_buttons_same = TRUE;
+	Boolean right_buttons_same = true;
 
 	for (i = 0; i < 6; i++)
 		if (((adven[i].main_status != MAIN_STATUS_ABSENT) && (pc_button_state[i] != 1)) ||
 			((adven[i].main_status == MAIN_STATUS_ABSENT) && (pc_button_state[i] != 0)))
-				right_buttons_same = FALSE;
+				right_buttons_same = false;
 
 	// First refresh gworld with the pc info
 	//rect_draw_some_item (orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
@@ -105,7 +105,7 @@ void put_pc_screen()
 			SelectObject(hdc,small_bold_font);
 			SetTextColor(hdc,colors[0]);
 
-			to_draw_rect = pc_buttons[i][1];      
+			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
 			switch (adven[i].main_status) {
 				case MAIN_STATUS_ALIVE:
@@ -163,7 +163,7 @@ void put_pc_screen()
 				SelectObject(hdc,store_bmp);
 				rect_draw_some_item(mixed_gworld,(RECT16)from_rect,pc_stats_gworld,(RECT16)to_draw_rect,1,0);
 				SelectObject(hdc,pc_stats_gworld);
-				
+
 			}
 			else {
 				for (j = 0; j < 5; j++)
@@ -256,7 +256,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 6; j++)
-			item_area_button_active[i][j] = FALSE;
+			item_area_button_active[i][j] = false;
 
 	switch (screen_num) {
 		case 6: // On special items page
@@ -290,43 +290,45 @@ void put_item_screen(short screen_num,short suppress_buttons)
 
 		default: // on an items page
 			pc = screen_num;
-			sprintf((char *) to_draw, "%s inventory:",
-				(char *) adven[pc].name);
+			sprintf(to_draw, "%s inventory:", adven[pc].name);
 			win_draw_string(hdc,upper_frame_rect,
 			  to_draw,0,10);
 
 		 	SetTextColor(hdc,colors[0]);
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				sprintf((char *) to_draw, "%d.",i_num + 1);
+				sprintf(to_draw, "%d.",i_num + 1);
 				win_draw_string(hdc,item_buttons[i][0],
 				  to_draw,0,10);
 
 				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
 
-				if (adven[pc].items[i_num].variety == 0) {
+				if (adven[pc].items[i_num].variety == ITEM_TYPE_NO_ITEM) {
 
 					}
 					else {
-						if (adven[pc].equip[i_num] == TRUE) {
+						if (adven[pc].equip[i_num] == true) {
 							SelectObject(hdc,italic_font);
-							if (adven[pc].items[i_num].variety < 3)
+							if (adven[pc].items[i_num].variety < ITEM_TYPE_GOLD)//weapons?
 								SetTextColor(hdc,colors[1]);
-								else if ((adven[pc].items[i_num].variety >= 12) && (adven[pc].items[i_num].variety <= 17))
-									SetTextColor(hdc,colors[3]);
-									else SetTextColor(hdc,colors[4]);
+                            else if ((adven[pc].items[i_num].variety >= ITEM_TYPE_SHIELD) && (adven[pc].items[i_num].variety <= ITEM_TYPE_BOOTS))//armor?
+								SetTextColor(hdc,colors[3]);
+							else
+                                SetTextColor(hdc,colors[4]);
 							}
-							else SetTextColor(hdc,colors[0]);
+                        else
+                            SetTextColor(hdc,colors[0]);
 					// Place object graphic here
-							if (adven[pc].items[i_num].isIdent() == false)
-								sprintf((char *) to_draw, "%s  ",adven[pc].items[i_num].name);
-								else { /// Don't place # of charges when Sell button up and space tight
-									if ((adven[pc].items[i_num].charges > 0) && (adven[pc].items[i_num].type != 2)
-										&& (stat_screen_mode <= 1))
-										sprintf((char *) to_draw, "%s (%d)",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
-										else sprintf((char *) to_draw, "%s",adven[pc].items[i_num].full_name);
-									}
+                        if (adven[pc].items[i_num].isIdent() == false)
+							sprintf(to_draw, "%s  ",adven[pc].items[i_num].name);
+						else { //Don't place # of charges when Sell button up and space tight
+							if ((adven[pc].items[i_num].charges > 0) /*&& (adven[pc].items[i_num].type != 2) //doesn't show charges for bashing weapons */
+								&& (stat_screen_mode <= 1))
+									sprintf(to_draw, "%s (%d)",adven[pc].items[i_num].full_name,adven[pc].items[i_num].charges);
+							else
+                                sprintf(to_draw, "%s",adven[pc].items[i_num].full_name);
+                            }
 						dest_rect.left -= 2;
 						win_draw_string(hdc,dest_rect,to_draw,0,10);
 
@@ -389,7 +391,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 
 	HBITMAP store_bmp;
 
-	if (adven[pc_num].items[item_num].variety == 0)
+	if (adven[pc_num].items[item_num].variety == ITEM_TYPE_NO_ITEM)
 		return;
 
 	dest_rect = item_buttons[position][5];
@@ -401,47 +403,47 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 
 	switch (stat_screen_mode) {
 		case 2:
-			if (adven[pc_num].items[item_num].isIdent() == false) { 
-				item_area_button_active[position][5] = TRUE;
+			if (adven[pc_num].items[item_num].isIdent() == false) {
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 				}
 			break;
-		case 3: // sell weapons 
-			if (((adven[pc_num].items[item_num].variety < 7) || (adven[pc_num].items[item_num].variety == 23) ||
-				(adven[pc_num].equip[item_num] == FALSE) &&
-				(adven[pc_num].items[item_num].variety == 24)) &&
+		case 3: // sell weapons
+			if (((adven[pc_num].items[item_num].variety < ITEM_TYPE_POTION) || (adven[pc_num].items[item_num].variety == ITEM_TYPE_CROSSBOW) ||
+				(adven[pc_num].equip[item_num] == false) &&
+				(adven[pc_num].items[item_num].variety == ITEM_TYPE_BOLTS)) &&
 				(adven[pc_num].items[item_num].isIdent()) && (val_to_place > 0) &&
 				 (adven[pc_num].items[item_num].isCursed() == false))
-				 { 
-				item_area_button_active[position][5] = TRUE;
+				 {
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 4: // sell armor
-			if ((adven[pc_num].items[item_num].variety >= 12) && 
-				(adven[pc_num].items[item_num].variety <= 17) &&
-				(adven[pc_num].equip[item_num] == FALSE) &&
+			if ((adven[pc_num].items[item_num].variety >= ITEM_TYPE_SHIELD) &&
+				(adven[pc_num].items[item_num].variety <= ITEM_TYPE_BOOTS) &&
+				(adven[pc_num].equip[item_num] == false) &&
 				(adven[pc_num].items[item_num].isIdent() && (val_to_place > 0) &&
-				 (adven[pc_num].items[item_num].isCursed() == false))) { 
-				item_area_button_active[position][5] = TRUE;
+				 (adven[pc_num].items[item_num].isCursed() == false))) {
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
 		case 5: // sell any
-			if ((val_to_place > 0) && (adven[pc_num].items[item_num].isIdent()) && 
-				(adven[pc_num].equip[item_num] == FALSE) &&
-				 (adven[pc_num].items[item_num].isCursed() == false)) { 
-				item_area_button_active[position][5] = TRUE;
+			if ((val_to_place > 0) && (adven[pc_num].items[item_num].isIdent()) &&
+				(adven[pc_num].equip[item_num] == false) &&
+				 (adven[pc_num].items[item_num].isCursed() == false)) {
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 				}
 			break;
-		case 6: // augment weapons 
-			if ((adven[pc_num].items[item_num].variety < 3) &&
+		case 6: // augment weapons
+			if ((adven[pc_num].items[item_num].variety < ITEM_TYPE_GOLD) && //weapons?
 				(adven[pc_num].items[item_num].isIdent()) &&
-				(adven[pc_num].items[item_num].ability == 0) &&
-				(adven[pc_num].items[item_num].isMagic() == false)) { 
-				item_area_button_active[position][5] = TRUE;
+				(adven[pc_num].items[item_num].ability == ITEM_NO_ABILITY) &&
+				(adven[pc_num].items[item_num].isMagic() == false)) {
+				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
                 if(adven[pc_num].items[item_num].value <=1400)
     				val_to_place = max(aug_cost[shop_identify_cost] * 100,adven[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));//original
@@ -450,7 +452,7 @@ void place_buy_button(short position,short pc_num,short item_num,HDC hdc)
 				}
 			break;
 		}
-	if (item_area_button_active[position][5] == TRUE) {
+	if (item_area_button_active[position][5] == true) {
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
@@ -472,7 +474,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 	RECT from_rect = {0,0,18,18},to_rect;
 
 	if (which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
-		item_area_button_active[which_slot][which_button_position] = TRUE;
+		item_area_button_active[which_slot][which_button_position] = true;
 		OffsetRect(&from_rect,(extra_val % 10) * 18,(extra_val / 10) * 18);
 		to_rect = item_buttons[which_slot][0];
 		to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
@@ -491,15 +493,15 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
-		item_area_button_active[which_slot][which_button_position] = TRUE;
+		item_area_button_active[which_slot][which_button_position] = true;
 		rect_draw_some_item (mixed_gworld, item_buttons_from[which_button_to_put],
 		  item_stats_gworld, item_buttons[which_slot][which_button_position], 1, 0);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
-		item_area_button_active[which_slot][1] = TRUE;
-		item_area_button_active[which_slot][2] = TRUE;
-		item_area_button_active[which_slot][3] = TRUE;
-		item_area_button_active[which_slot][4] = TRUE;
+		item_area_button_active[which_slot][1] = true;
+		item_area_button_active[which_slot][2] = true;
+		item_area_button_active[which_slot][3] = true;
+		item_area_button_active[which_slot][4] = true;
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
@@ -507,9 +509,9 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		  item_stats_gworld, to_rect, 1, 0);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
-		item_area_button_active[which_slot][2] = TRUE;
-		item_area_button_active[which_slot][3] = TRUE;
-		item_area_button_active[which_slot][4] = TRUE;
+		item_area_button_active[which_slot][2] = true;
+		item_area_button_active[which_slot][3] = true;
+		item_area_button_active[which_slot][4] = true;
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
@@ -533,7 +535,7 @@ void place_item_bottom_buttons()
 
 	for (i = 0; i < 6; i++) {
 		if (adven[i].isAlive()) {
-			item_bottom_button_active[i] = TRUE;
+			item_bottom_button_active[i] = true;
 			to_rect = item_screen_button_rects[i];
 			//if (current_item_button[i] != adven[i].which_graphic) {
 				current_item_button[i] = adven[i].which_graphic;
@@ -544,7 +546,7 @@ void place_item_bottom_buttons()
 			//	}
 
 			}
-			else item_bottom_button_active[i] = FALSE;
+			else item_bottom_button_active[i] = false;
 		}
 }
 
@@ -565,41 +567,41 @@ RECT get_party_template_rect(short pc_num,short mode)
 void set_stat_window(short new_stat)
 {
 	short i,array_pos = 0;
-	
+
 	stat_window = new_stat;
 
 	if ((stat_window < 6) && (adven[stat_window].isAlive() == false))
 		stat_window = first_active_pc();
-    lpsi.fMask = SIF_RANGE;		
+    lpsi.fMask = SIF_RANGE;
 	switch (stat_window) {
 		case 6:
 			for (i = 0; i < 60; i++)
 				spec_item_array[i] = -1;
 			for (i = 0; i < 50; i++) ////
 				if (party.spec_items[i] > 0) {
-					spec_item_array[array_pos] = i;	
+					spec_item_array[array_pos] = i;
 					array_pos++;
 					}
 			array_pos = max(0,array_pos - 8);
-//			SetScrollRange(item_sbar,SB_CTL,0,array_pos,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,array_pos,false);
             lpsi.nMax = array_pos;
-            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,false);
 			break;
 		case 7:
-//			SetScrollRange(item_sbar,SB_CTL,0,2,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,2,false);
             lpsi.nMax = 2;
-            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,false);
 			break;
 		default:
-//			SetScrollRange(item_sbar,SB_CTL,0,16,FALSE);
+//			SetScrollRange(item_sbar,SB_CTL,0,16,false);
             lpsi.nMax = 16;
-            SetScrollInfo(item_sbar,SB_CTL,&lpsi,FALSE);
+            SetScrollInfo(item_sbar,SB_CTL,&lpsi,false);
 			break;
 		}
-//	SetScrollPos(item_sbar,SB_CTL,0,TRUE);
+//	SetScrollPos(item_sbar,SB_CTL,0,true);
     lpsi.nPos = 0;
     lpsi.fMask = SIF_POS;
-    SetScrollInfo(item_sbar,SB_CTL,&lpsi,TRUE);
+    SetScrollInfo(item_sbar,SB_CTL,&lpsi,true);
 	put_item_screen(stat_window,0);
 
 }
@@ -609,7 +611,7 @@ short first_active_pc()
 	for (int i = 0; i < NUM_OF_PCS; i++)
 		if (adven[i].isAlive())
 			return i;
-			
+
 	return INVALID_PC;
 }
 
@@ -627,7 +629,7 @@ void refresh_stat_areas(short mode)
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], 
+		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i],
 		  item_stats_gworld, dest_rect, x, 1);
 		}
 	dest_rect = text_area_from;
@@ -640,9 +642,9 @@ void refresh_stat_areas(short mode)
 short total_encumberance(short pc_num)
 {
 	short store = 0,i,what_val;
-	
+
 	for (i = 0; i < 24; i++)
-		if (adven[pc_num].equip[i] == TRUE) {
+		if (adven[pc_num].equip[i] == true) {
 			what_val = adven[pc_num].items[i].awkward;
 			store += what_val;
 			}
@@ -654,21 +656,21 @@ short get_tnl(pc_record_type *pc)
 	short tnl = 100,i,store_per = 100;
 	short rp[3] = {0,12,20};
 	short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
-	
+
 	tnl = (tnl * (100 + rp[pc->race])) / 100;
 	for (i = 0; i < 15; i++)
-		if (pc->traits[i] == TRUE) 
+		if (pc->traits[i] == true)
 			store_per = store_per + ap[i];
 
-	tnl = (tnl * store_per) / 100;	
-	
+	tnl = (tnl * store_per) / 100;
+
 	return tnl;
 }
 
 
 
 void draw_pc_effects(short pc,HDC dest_dc)
-//short pc; // 10 + x -> draw for pc x, but on spell dialog  
+//short pc; // 10 + x -> draw for pc x, but on spell dialog
 {
 	RECT source_rects[18] = {{55,0,67,12},{55,12,67,24},{55,24,67,36},
 							{67,0,79,12},{67,12,79,24},{67,24,79,36},
@@ -687,7 +689,7 @@ void draw_pc_effects(short pc,HDC dest_dc)
 		alter_rect(&source_rects[i]);
 	alter_rect(&dest_rect);
 	alter_rect(&dlog_dest_rect);
-	
+
 	if (pc >= 10) {
 		pc -= 10;
 		right_limit = 490;
@@ -708,134 +710,134 @@ void draw_pc_effects(short pc,HDC dest_dc)
 			dest_rect.bottom += pc * 13;
 			dest_bmp = pc_stats_gworld;
 			}
-			
+
 	if (adven[pc].main_status % MAIN_STATUS_SPLIT != 1)	// if PC is alive
 		return;
-			
-	if ((adven[pc].status[0] > 0) && (dest_rect.right < right_limit)) { 
+
+	if ((adven[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item (mixed_gworld,source_rects[4],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] > 0) { 
+	if (adven[pc].status[STATUS_BLESS_CURSE] > 0) {
 		rect_draw_some_item (mixed_gworld,source_rects[2],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[1] < 0) { 
+	if (adven[pc].status[STATUS_BLESS_CURSE] < 0) {
 		rect_draw_some_item (mixed_gworld,source_rects[3],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[2] > 0) { 
-		rect_draw_some_item (mixed_gworld,source_rects[(adven[pc].status[2] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
+	if (adven[pc].status[STATUS_POISON] > 0) {
+		rect_draw_some_item (mixed_gworld,source_rects[(adven[pc].status[STATUS_POISON] > 4) ? 1 : 0],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[4] > 0) { 
+	if (adven[pc].status[STATUS_INVULNERABLE] > 0) {
 		rect_draw_some_item (mixed_gworld,source_rects[5],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] > 0) { 
+	if (adven[pc].status[STATUS_HASTE_SLOW] > 0) {
 		rect_draw_some_item (mixed_gworld,source_rects[6],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if (adven[pc].status[3] < 0) { 
+	if (adven[pc].status[STATUS_HASTE_SLOW] < 0) {
 		rect_draw_some_item (mixed_gworld,source_rects[8],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[5] > 0) && (dest_rect.right < right_limit)) { 
+	if ((adven[pc].status[STATUS_MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item (mixed_gworld,source_rects[9],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[6] > 0) && (dest_rect.right < right_limit)) { 
+	if ((adven[pc].status[STATUS_WEBS] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item (mixed_gworld,source_rects[10],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[7] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[STATUS_DISEASE] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[11],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[8] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[STATUS_INVISIBLE] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[12],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
-	if ((adven[pc].status[9] > 0) && (dest_rect.right < right_limit)){ 
+	if ((adven[pc].status[STATUS_DUMB] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[13],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
-	if ((adven[pc].status[10] > 0) && (dest_rect.right < right_limit)){ 
+		}
+	if ((adven[pc].status[STATUS_MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[14],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
-	if ((adven[pc].status[11] > 0) && (dest_rect.right < right_limit)){ 
+		}
+	if ((adven[pc].status[STATUS_ASLEEP] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[15],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
-	if ((adven[pc].status[12] > 0) && (dest_rect.right < right_limit)){ 
+		}
+	if ((adven[pc].status[STATUS_PARALYZED] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[16],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
-	if ((adven[pc].status[13] > 0) && (dest_rect.right < right_limit)){ 
+		}
+	if ((adven[pc].status[STATUS_ACID] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item (mixed_gworld,source_rects[17],dest_bmp,dest_rect,mode,dest);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
+		}
 }
 
 
 void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
-	sprintf((char *) store_string, "  Number of kills: %ld                   ", party.total_m_killed);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "  Number of kills: %ld                   ", party.total_m_killed);
+	add_string_to_buf(store_string);
 	if ((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		sprintf((char *) store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
-		add_string_to_buf((char *) store_string);
+		sprintf(store_string, "  Kills in this town: %d                   ", party.m_killed[c_town.town_num]);
+		add_string_to_buf(store_string);
 		}
-	sprintf((char *) store_string, "  Total experience: %ld                   ", party.total_xp_gained);
-	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage done: %ld                   ", party.total_dam_done);
-	add_string_to_buf((char *) store_string);
-	sprintf((char *) store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
-	add_string_to_buf((char *) store_string);
+	sprintf(store_string, "  Total experience: %ld                   ", party.total_xp_gained);
+	add_string_to_buf(store_string);
+	sprintf(store_string, "  Total damage done: %ld                   ", party.total_dam_done);
+	add_string_to_buf(store_string);
+	sprintf(store_string, "  Total damage taken: %ld                   ", party.total_dam_taken);
+	add_string_to_buf(store_string);
 	print_buf();
 }
 
 short do_look(location space)
 {
 	short i,j,num_items = 0;
-	Boolean gold_here = FALSE, food_here = FALSE, is_lit = TRUE;
+	Boolean gold_here = false, food_here = false, is_lit = true;
 	location from_where;
-		
+
 	from_where = get_cur_loc();
 	is_lit = pt_in_light(from_where,space);
 
-	if (((is_out()) && (same_point(space,party.p_loc) == TRUE)) ||
+	if (((is_out()) && (same_point(space,party.p_loc) == true)) ||
 		((is_town()) && (same_point(space,c_town.p_loc))))
 			add_string_to_buf("    Your party");
 	if (is_combat())
 		for (i = 0; i < 6; i++)
-			if ((same_point(space,pc_pos[i]) == TRUE) && (adven[i].isAlive())
-				&& (is_lit == TRUE) && (can_see(pc_pos[current_pc],space,0) < 5)) {
+			if ((same_point(space,pc_pos[i]) == true) && (adven[i].isAlive())
+				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				sprintf((char *) store_string, "    %s", (char *) adven[i].name);
 				add_string_to_buf((char *) store_string);
 				}
 
-	if (is_out() == FALSE) {
+	if (is_out() == false) {
 		for (i = 0; i < T_M; i++)
-			if ((c_town.monst.dudes[i].active != 0) && (is_lit == TRUE)
-				&& (monst_on_space(space,i) == TRUE) &&
+			if ((c_town.monst.dudes[i].active != 0) && (is_lit == true)
+				&& (monst_on_space(space,i) == true) &&
 				((is_town()) || (can_see(pc_pos[current_pc],space,0) < 5))
 				&& (c_town.monst.dudes[i].m_d.picture_num != 0)) {
 
@@ -858,8 +860,8 @@ short do_look(location space)
 		}
 	if (is_out()) {
 		for (i = 0; i < 10; i++) {
-			if ((party.out_c[i].exists == TRUE)
-				&& (same_point(space,party.out_c[i].m_loc) == TRUE)) {
+			if ((party.out_c[i].exists == true)
+				&& (same_point(space,party.out_c[i].m_loc) == true)) {
 					for (j = 0; j < 7; j++)
 						if (party.out_c[i].what_monst.monst[j] != 0) {
 							get_m_name(store_string2,party.out_c[i].what_monst.monst[j]);
@@ -878,7 +880,7 @@ short do_look(location space)
 			add_string_to_buf("    Horse                ");
 		}
 
-	if (is_out() == FALSE) {
+	if (is_out() == false) {
 		if (town_boat_there(space) < 30)
 			add_string_to_buf("    Boat               ");
 		if (town_horse_there(space) < 30)
@@ -927,24 +929,24 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((t_i.items[i].variety != 0) && (same_point(space,t_i.items[i].item_loc) == TRUE)
-				&& (is_lit == TRUE)) {
-				if (t_i.items[i].variety == 3)
-					gold_here = TRUE;
-				else if (t_i.items[i].variety == 11)
-					food_here = TRUE;
+			if ((t_i.items[i].variety != ITEM_TYPE_NO_ITEM) && (same_point(space,t_i.items[i].item_loc) == true)
+				&& (is_lit == true)) {
+				if (t_i.items[i].variety == ITEM_TYPE_GOLD)
+					gold_here = true;
+				else if (t_i.items[i].variety == ITEM_TYPE_FOOD)
+					food_here = true;
 					else num_items++;
 				}
 			}
-		if (gold_here == TRUE)
+		if (gold_here == true)
 			add_string_to_buf("    Gold");
-		if (food_here == TRUE)
+		if (food_here == true)
 			add_string_to_buf("    Food");
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
 			else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-				if ((t_i.items[i].variety != 0) && (t_i.items[i].variety != 3) &&(t_i.items[i].variety != 11) &&
-					 (same_point(space,t_i.items[i].item_loc) == TRUE) && (t_i.items[i].isContained() == false))
+				if ((t_i.items[i].variety != ITEM_TYPE_NO_ITEM) && (t_i.items[i].variety != ITEM_TYPE_GOLD) &&(t_i.items[i].variety != ITEM_TYPE_FOOD) &&
+					 (same_point(space,t_i.items[i].item_loc) == true) && (t_i.items[i].isContained() == false))
 					 {
 					if (t_i.items[i].isIdent())
 						sprintf((char *) store_string, "    %s",t_i.items[i].full_name);
@@ -954,7 +956,7 @@ short do_look(location space)
 				}
 		}
 
-	if (is_lit == FALSE) {
+	if (is_lit == false) {
 		add_string_to_buf("    Dark                ");
 		return 0;
 		}
@@ -968,17 +970,17 @@ short town_boat_there(location where)
 
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
-		if ((party.boats[i].exists == TRUE) && (party.boats[i].which_town == c_town.town_num)
-		 && (same_point(where,party.boats[i].boat_loc) == TRUE))
+		if ((party.boats[i].exists == true) && (party.boats[i].which_town == c_town.town_num)
+		 && (same_point(where,party.boats[i].boat_loc) == true))
 			return i;
 	return 30;
 }
 short out_boat_there(location where)
 {
 	short i;
-	
+
 	for (i = 0; i < 30; i++)
-		if ((party.boats[i].exists == TRUE) && (same_point(where,party.boats[i].boat_loc) == TRUE)
+		if ((party.boats[i].exists == true) && (same_point(where,party.boats[i].boat_loc) == true)
 			&& (party.boats[i].which_town == 200))
 			return i;
 	return 30;
@@ -987,47 +989,47 @@ short out_boat_there(location where)
 short town_horse_there(location where)
 {
 	short i;
-	
+
 	// Num boats stores highest # of boat in town
 	for (i = 0; i < 30; i++)
-		if ((party.horses[i].exists == TRUE) && (party.horses[i].which_town == c_town.town_num) 
-		 && (same_point(where,party.horses[i].horse_loc) == TRUE))
+		if ((party.horses[i].exists == true) && (party.horses[i].which_town == c_town.town_num)
+		 && (same_point(where,party.horses[i].horse_loc) == true))
 			return i;
 	return 30;
 }
 short out_horse_there(location where)
 {
 	short i;
-	
+
 	for (i = 0; i < 30; i++)
-		if ((party.horses[i].exists == TRUE) && (same_point(where,party.horses[i].horse_loc) == TRUE)
+		if ((party.horses[i].exists == true) && (same_point(where,party.horses[i].horse_loc) == true)
 			&& (party.horses[i].which_town == 200))
 			return i;
 	return 30;
 }
-void notify_out_combat_began(out_wandering_type encounter,short *nums) 
+void notify_out_combat_began(out_wandering_type encounter,short *nums)
 {
 	short i;
 
-	sprintf((char *) store_string, "COMBAT!                 ");				
-	add_string_to_buf((char *) store_string);	
+	sprintf((char *) store_string, "COMBAT!                 ");
+	add_string_to_buf((char *) store_string);
 
 	for (i = 0; i < 6; i++)
 		if (encounter.monst[i] != 0) {
 			switch (encounter.monst[i]) {
 				////
-				
+
 				default:
 				get_m_name(store_string2,encounter.monst[i]);
 				sprintf((char *) store_string, "  %d x %s        ",nums[i],store_string2);
-				break;		
-			}				
-			add_string_to_buf((char *) store_string);	
+				break;
+			}
+			add_string_to_buf((char *) store_string);
 			}
 	if (encounter.monst[6] != 0) {
 			get_m_name(store_string2,encounter.monst[6]);
 			sprintf((char *) store_string, "  %s        ",store_string2);
-			add_string_to_buf((char *) store_string);		
+			add_string_to_buf((char *) store_string);
 		}
 }
 
@@ -1038,7 +1040,7 @@ void get_m_name(char *str,unsigned char num)
 void get_ter_name(char *str,unsigned char num)
 {
 	char store_name[256];
-	
+
 	////
 	if ((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))))
 		sprintf((char *) store_name,"Pit");
@@ -1059,97 +1061,93 @@ void print_monst_attacks(unsigned char m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
 {
 	char store_string3[60];
-	
+
 	get_m_name(store_string2,m_type);
 	if (target < 100)
-		sprintf ((char *) store_string, "%s attacks %s",
-			store_string2,(char *) adven[target].name);
+		sprintf (store_string, "%s attacks %s", store_string2, adven[target].name);
 		else {
 			get_m_name(store_string3,c_town.monst.dudes[target - 100].number);
-			sprintf ((char *) store_string, "%s attacks %s",
-			store_string2,store_string3);
+			sprintf (store_string, "%s attacks %s", store_string2,store_string3);
 			}
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf(store_string);
 }
 
 void damaged_message(short damage,short type)
 {
 	char str[256];
-	
+
 	GetIndString(str,20,130 + type);
-	sprintf ((char *) store_string, "  %s for %d",
-			(char *) str,damage);
-	add_string_to_buf((char *) store_string);	
+	sprintf (store_string, "  %s for %d", str,damage);
+	add_string_to_buf(store_string);
 }
 
 // This prepares the monster's string for the text bar
 void print_monster_going(char *combat_str,unsigned char m_num,short ap)
 {
 	get_m_name(store_string2,m_num);
-	sprintf ((char *) combat_str, "%s (ap: %d)",
-		store_string2,ap);
+	sprintf (combat_str, "%s (ap: %d)", store_string2,ap);
 }
 
 void monst_spell_note(unsigned char number,short which_mess)
 {
 	get_m_name(store_string2,number);
 	switch (which_mess) {
-		case 1:	sprintf ((char *) store_string, "  %s scared. ",store_string2);break;	
-		case 2:	sprintf ((char *) store_string, "  %s slowed. ",store_string2);break;	
-		case 3:	sprintf ((char *) store_string, "  %s weakened.",store_string2);break;	
-		case 4:	sprintf ((char *) store_string, "  %s poisoned.",store_string2);break;	
-		case 5:	sprintf ((char *) store_string, "  %s cursed.",store_string2);break;
-		case 6:	sprintf ((char *) store_string, "  %s ravaged.",store_string2);break;
-		case 7:	sprintf ((char *) store_string, "  %s undamaged.",store_string2);break;
-		case 8:	sprintf ((char *) store_string, "  %s is stoned.",store_string2);break;
-		case 9:	sprintf ((char *) store_string, "  Gazes at %s.",store_string2);break;
-		case 10:	sprintf ((char *) store_string, "  %s resists.",store_string2);break;		
-		case 11:	sprintf ((char *) store_string, "  Drains %s.",store_string2);break;	
-		case 12:	sprintf ((char *) store_string, "  Shoots at %s.",store_string2);break;	
-		case 13:	sprintf ((char *) store_string, "  Throws spear at %s.", store_string2); break;	
-		case 14: 	sprintf ((char *) store_string, "  Throws rock at %s.",	store_string2);	break;	
-		case 15:	sprintf ((char *) store_string, "  Throws razordisk at %s.", store_string2);			break;
-		case 16:	sprintf ((char *) store_string, "  Hits %s.",	store_string2);	break;
-		case 17:	sprintf ((char *) store_string, "%s disappears.", store_string2);break;
-		case 18:	sprintf ((char *) store_string, "  Misses %s.",	store_string2);	break;
-		case 19:	sprintf ((char *) store_string, "  %s is webbed.",store_string2);break;
-		case 20:	sprintf ((char *) store_string, "  %s chokes.",store_string2);break;
-		case 21:	sprintf ((char *) store_string, "  %s summoned.",store_string2);break;
-		case 22:	sprintf ((char *) store_string, "  %s is dumbfounded.",store_string2);break;
-		case 23:	sprintf ((char *) store_string, "  %s is charmed.",store_string2);break;
-		case 24:	sprintf ((char *) store_string, "  %s is recorded.",store_string2);break;
-		case 25:	sprintf ((char *) store_string, "  %s is diseased.",store_string2);break;
-		case 26:	sprintf ((char *) store_string, "  %s is an avatar!",store_string2);break;
-		case 27:	sprintf ((char *) store_string, "  %s splits!",store_string2);break;
-		case 28:	sprintf ((char *) store_string, "  %s falls asleep.",store_string2);break;
-		case 29:	sprintf ((char *) store_string, "  %s wakes up.",store_string2);break;
-		case 30:	sprintf ((char *) store_string, "  %s paralyzed.",store_string2);break;
-		case 31:	sprintf ((char *) store_string, "  %s covered with acid.",store_string2);break;
-		case 32:	sprintf ((char *) store_string, "  Fires spines at %s.",store_string2);break;
+		case 1:	sprintf (store_string, "  %s scared. ",store_string2);break;
+		case 2:	sprintf (store_string, "  %s slowed. ",store_string2);break;
+		case 3:	sprintf (store_string, "  %s weakened.",store_string2);break;
+		case 4:	sprintf (store_string, "  %s poisoned.",store_string2);break;
+		case 5:	sprintf (store_string, "  %s cursed.",store_string2);break;
+		case 6:	sprintf (store_string, "  %s ravaged.",store_string2);break;
+		case 7:	sprintf (store_string, "  %s undamaged.",store_string2);break;
+		case 8:	sprintf (store_string, "  %s is stoned.",store_string2);break;
+		case 9:	sprintf (store_string, "  Gazes at %s.",store_string2);break;
+		case 10:	sprintf (store_string, "  %s resists.",store_string2);break;
+		case 11:	sprintf (store_string, "  Drains %s.",store_string2);break;
+		case 12:	sprintf (store_string, "  Shoots at %s.",store_string2);break;
+		case 13:	sprintf (store_string, "  Throws spear at %s.", store_string2); break;
+		case 14: 	sprintf (store_string, "  Throws rock at %s.",	store_string2);	break;
+		case 15:	sprintf (store_string, "  Throws razordisk at %s.", store_string2);			break;
+		case 16:	sprintf (store_string, "  Hits %s.",	store_string2);	break;
+		case 17:	sprintf (store_string, "%s disappears.", store_string2);break;
+		case 18:	sprintf (store_string, "  Misses %s.",	store_string2);	break;
+		case 19:	sprintf (store_string, "  %s is webbed.",store_string2);break;
+		case 20:	sprintf (store_string, "  %s chokes.",store_string2);break;
+		case 21:	sprintf (store_string, "  %s summoned.",store_string2);break;
+		case 22:	sprintf (store_string, "  %s is dumbfounded.",store_string2);break;
+		case 23:	sprintf (store_string, "  %s is charmed.",store_string2);break;
+		case 24:	sprintf (store_string, "  %s is recorded.",store_string2);break;
+		case 25:	sprintf (store_string, "  %s is diseased.",store_string2);break;
+		case 26:	sprintf (store_string, "  %s is an avatar!",store_string2);break;
+		case 27:	sprintf (store_string, "  %s splits!",store_string2);break;
+		case 28:	sprintf (store_string, "  %s falls asleep.",store_string2);break;
+		case 29:	sprintf (store_string, "  %s wakes up.",store_string2);break;
+		case 30:	sprintf (store_string, "  %s paralyzed.",store_string2);break;
+		case 31:	sprintf (store_string, "  %s covered with acid.",store_string2);break;
+		case 32:	sprintf (store_string, "  Fires spines at %s.",store_string2);break;
 		}
 
 	if (which_mess > 0)
-		add_string_to_buf((char *) store_string);
+		add_string_to_buf(store_string);
 }
 
 void monst_cast_spell_note(unsigned char number,short spell,short type)
 //short type; // 0 - mage 1- priest
 {
 	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s casts:",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
-	sprintf ((char *) store_string, "  %s",
-			(type == 1) ? (char *) m_priest_sp[spell - 1] : (char *) m_mage_sp[spell - 1]);
-	add_string_to_buf((char *) store_string);
+	sprintf (store_string, "%s casts:",
+			store_string2);
+	add_string_to_buf(store_string);
+	sprintf (store_string, "  %s",
+			(type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1]);
+	add_string_to_buf(store_string);
 }
 
 void monst_breathe_note(unsigned char number)
 {
 	get_m_name(store_string2,number);
-	sprintf ((char *) store_string, "%s breathes.",
-			(char *) store_string2);
-	add_string_to_buf((char *) store_string);
+	sprintf (store_string, "%s breathes.",
+			store_string2);
+	add_string_to_buf(store_string);
 }
 
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
@@ -1160,7 +1158,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 			store_string2, how_much,how_much_spec);
 		else sprintf ((char *) store_string, "  %s takes %d",
 			store_string2, how_much);
- 
+
 	add_string_to_buf((char *) store_string);
 }
 
@@ -1197,13 +1195,13 @@ void add_string_to_buf(char *string)
 {
     if(strcmp(string,"") == 0)
         return;
-//	SetScrollPos(text_sbar,SB_CTL,58,TRUE);
+//	SetScrollPos(text_sbar,SB_CTL,58,true);
     lpsi.nPos = 58;
     lpsi.fMask = SIF_POS;
-    SetScrollInfo(text_sbar,SB_CTL,&lpsi,TRUE);
-	string_added = TRUE;
+    SetScrollInfo(text_sbar,SB_CTL,&lpsi,true);
+	string_added = true;
 	if (buf_pointer == mark_where_printing_long) {
-		printing_long = TRUE;
+		printing_long = true;
 		print_buf();
 		through_sending();
 		}
@@ -1214,18 +1212,18 @@ void add_string_to_buf(char *string)
 		else buf_pointer++;
 }
 
-void print_buf () 
+void print_buf ()
 {
 	short num_lines_printed = 0,ctrl_val;
 	short line_to_print;
 	short start_print_point;
-	Boolean end_loop = FALSE;
+	Boolean end_loop = false;
 	RECT store_text_rect = {0,0,256,138},dest_rect,erase_rect = {1,1,255,137}; /**/
 	RECT from_rect,to_rect;
 	HDC hdc;
 	HBITMAP store_bmp;
 
-	if (string_added == TRUE) {
+	if (string_added == true) {
 	// First clean up gworld with pretty patterns
 	//FillCRECT(&erase_rect,bg[6]);
 	InsetRect(&erase_rect,1,1); ////
@@ -1256,7 +1254,7 @@ void print_buf ()
 	if (start_print_point< 0)
 		start_print_point= TEXT_BUF_LEN + start_print_point;
 	line_to_print= start_print_point;
-	
+
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		DrawString((char *) text_buffer[line_to_print].line,4,
 			 2 + 12 * num_lines_printed,hdc);
@@ -1265,14 +1263,14 @@ void print_buf ()
 		if (line_to_print== TEXT_BUF_LEN) {
 			line_to_print= 0;
 			}
-			
-		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == TRUE)) {
-			end_loop = FALSE;
+
+		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == true)) {
+			end_loop = false;
 			line_to_print= buf_pointer;
 			}
-	
+
 		}
-			
+
 
 	// Now put text on window.
 	SelectObject(hdc,store_bmp);
@@ -1284,7 +1282,7 @@ void print_buf ()
 	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
  	// Now put text on window.
 	rect_draw_some_item (text_area_gworld, store_text_rect, text_area_gworld, dest_rect, 0, 1);
-	string_added = FALSE;	
+	string_added = false;
 }
 
 void through_sending()
@@ -1292,30 +1290,30 @@ void through_sending()
 	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
 	if (mark_where_printing_long > TEXT_BUF_LEN - 1)
 		mark_where_printing_long -= TEXT_BUF_LEN;
-	printing_long = FALSE;
+	printing_long = false;
 }
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
 	object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item (HBITMAP src_gworld, RECT src_rect, HBITMAP targ_gworld, 
+void Draw_Some_Item (HBITMAP src_gworld, RECT src_rect, HBITMAP targ_gworld,
 location target, char masked, short main_win)
 {
 	RECT destrec = {0,0,28,36};
-	
+
 	if ((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
 		return;
 	if (src_gworld == NULL)
 		return;
-	if ((supressing_some_spaces == TRUE) && 
-		(same_point(target,ok_space[0]) == FALSE) &&
-		(same_point(target,ok_space[1]) == FALSE) &&
-		(same_point(target,ok_space[2]) == FALSE) &&
-		(same_point(target,ok_space[3]) == FALSE))
+	if ((supressing_some_spaces == true) &&
+		(same_point(target,ok_space[0]) == false) &&
+		(same_point(target,ok_space[1]) == false) &&
+		(same_point(target,ok_space[2]) == false) &&
+		(same_point(target,ok_space[3]) == false))
 			return;
 	terrain_there[target.x][target.y] = -1;
-	
+
 	destrec = coord_to_rect(target.x,target.y);
-	rect_draw_some_item ( src_gworld,  src_rect,   targ_gworld, 
+	rect_draw_some_item ( src_gworld,  src_rect,   targ_gworld,
 		destrec,   masked,  main_win);
 
 }
@@ -1323,11 +1321,11 @@ location target, char masked, short main_win)
 RECT coord_to_rect(short i, short j)
 {
 	RECT to_return;
-	
+
 	to_return.left = 13 + BITMAP_WIDTH * i;
 	to_return.right = to_return.left + BITMAP_WIDTH;
 	to_return.top = 13 + BITMAP_HEIGHT * j;
-	to_return.bottom = to_return.top + BITMAP_HEIGHT;		
+	to_return.bottom = to_return.top + BITMAP_HEIGHT;
 
 	return to_return;
 }
@@ -1337,10 +1335,10 @@ short string_length(char *str,HDC hdc)
 	short text_len[257];
 	short total_width = 0,i,len;
 	char p_str[256];
-	
+
 	for (i = 0; i < 257; i++)
 		text_len[i]= 0;
-	
+
 	strcpy((char *) p_str,str);
 	MeasureText(256,p_str,text_len,hdc);
 	len = strlen((char *)str);
@@ -1355,7 +1353,7 @@ short string_length(char *str,HDC hdc)
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
 {
 	char store_s[256];
-	
+
 	strcpy((char *) store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 }
@@ -1368,7 +1366,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode, short)
 	short i;
 
 	// this will need formatting for '|' line breaks
-	for (i = 0; i < 256; i++) 
+	for (i = 0; i < 256; i++)
 	{
 		if (str[i] == 0) i = 256;
 		else
@@ -1377,10 +1375,10 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode, short)
 			if (str[i] == '_') str[i] = 34;
 		}
 	}
-	
+
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc) OffsetRect(&dest_rect,ulx,uly);
-	
+
 	switch (mode)
 	{
 		case 0:
@@ -1405,25 +1403,25 @@ short calc_day()
 
 Boolean day_reached(unsigned char which_day, unsigned char which_event)
 // which_day is day event should happen
-// which_event is the party.key_times value to cross reference with. 
+// which_event is the party.key_times value to cross reference with.
 // if the key_time is reached before which_day, event won't happen
 // if it's 8, event always happens
 // which_day gets an extra 20 days to give party bonus time
 {
     short what_day;
-    if(party.stuff_done[309][0]==1)
+    if(party.stuff_done[SDF_COMPATIBILITY_LEGACY_DAY_REACHED]==1)
 	    what_day = (short) (which_day) + 20;
     else
         what_day = (short) (which_day);
-	
+
     if (which_event > 10)
-        return FALSE;
+        return false;
     if ((which_event > 0) && (party.key_times[which_event] < what_day))
-        return FALSE;
+        return false;
 	if (calc_day() >= what_day)
-		return TRUE;
-		else return FALSE;
-		
+		return true;
+		else return false;
+
 }
 
 // BEGIN EXTRA WINDOWS STUFF

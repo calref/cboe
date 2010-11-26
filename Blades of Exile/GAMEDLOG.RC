@@ -96,8 +96,8 @@ STYLE WS_POPUP | WS_DLGFRAME
 882 DIALOG 10, 10, 340, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_9", 1, 243, 35, 58, 20
-     LTEXT "0_69", 2, 177, 35, 58, 20
+     LTEXT "1_9", 1, 243, 37, 58, 20
+     LTEXT "0_69", 2, 177, 37, 58, 20
      LTEXT "5_719", 3, 8, 8, 36, 36
      LTEXT "The passageway you're walking down slopes sharply upward here.", 4, 50, 3, 251, 31
      }
@@ -105,8 +105,8 @@ STYLE WS_POPUP | WS_DLGFRAME
 883 DIALOG 10, 10, 340, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_9", 1, 243, 35, 58, 20
-     LTEXT "0_69", 2, 177, 35, 58, 20
+     LTEXT "1_9", 1, 243, 37, 58, 20
+     LTEXT "0_69", 2, 177, 37, 58, 20
      LTEXT "5_719", 3, 8, 8, 36, 36
      LTEXT "The passageway you're walking down slopes sharply downward here.", 4, 50, 3, 251, 31
      }
@@ -123,8 +123,8 @@ STYLE WS_POPUP | WS_DLGFRAME
 885 DIALOG 10, 10, 340, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_9", 1, 243, 45, 58, 20
-     LTEXT "0_69", 2, 177, 45, 58, 20
+     LTEXT "1_9", 1, 243, 49, 58, 20
+     LTEXT "0_69", 2, 177, 49, 58, 20
      LTEXT "5_719", 3, 8, 8, 36, 36
      LTEXT "You find a stairway heading down. You will have to be careful - the steps are covered with a thin layer of slick, unpleasant slime.", 4, 50, 3, 251, 40
      }
@@ -132,8 +132,8 @@ STYLE WS_POPUP | WS_DLGFRAME
 886 DIALOG 10, 10, 340, 64
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_9", 1, 243, 35, 58, 20
-     LTEXT "0_69", 2, 177, 35, 58, 20
+     LTEXT "1_9", 1, 243, 37, 58, 20
+     LTEXT "0_69", 2, 177, 37, 58, 20
      LTEXT "5_719", 3, 8, 8, 36, 36
      LTEXT "The passageway you're walking down slopes upward into darkness. ", 4, 50, 3, 251, 31
      }
@@ -538,7 +538,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "2_0", 64, 338, 272, 14, 10
      LTEXT "1_0", 65, 422, 310, 63, 23
      LTEXT "0_2", 66, 12, 310, 63, 23
-     LTEXT "0_3", 67, 79, 309, 64, 23
+     LTEXT "0_3", 67, 79, 310, 64, 23
      LTEXT "~Spells For:", 68, 53, 15, 83, 16
      LTEXT "+", 69, 146, 15, 186, 16
      }
@@ -836,12 +836,12 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "0_14", 6, 69, 106, 58, 20
      LTEXT "0_15", 7, 69, 131, 58, 20
      LTEXT "0_16", 8, 69, 156, 58, 20
-     LTEXT "+", 9, 138, 35, 139, 16
-     LTEXT "+", 10, 138, 60, 139, 16
-     LTEXT "+ ", 11, 138, 85, 139, 16
-     LTEXT "+", 12, 138, 110, 139, 16
-     LTEXT "+", 13, 138, 135, 139, 16
-     LTEXT "+", 14, 138, 160, 139, 16
+     LTEXT "+", 9, 138, 33, 139, 16
+     LTEXT "+", 10, 138, 58, 139, 16
+     LTEXT "+ ", 11, 138, 83, 139, 16
+     LTEXT "+", 12, 138, 108, 139, 16
+     LTEXT "+", 13, 138, 133, 139, 16
+     LTEXT "+", 14, 138, 158, 139, 16
      LTEXT "~Select a PC:", 15, 49, 10, 228, 16
      LTEXT "1_5", 16, 214, 187, 63, 25
      }
@@ -1168,7 +1168,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 {
  LTEXT "1_63", 1, 435, 295, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT  "Classic Blades of Exile build_27.09.2010 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT  "Classic Blades of Exile build_26.11.2010 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
  LTEXT "CONTRIBUTORS : Ormus, Ishad Nha, Celtic Minstrel, Niemand and all involved in the BoE community.", 4, 50, 227, 424, 33
  LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 271, 354, 32
  LTEXT "Blades of Exile was brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 154, 410, 51
@@ -1307,7 +1307,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 1082 DIALOG 10, 10, 504, 365
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63", 1, 405, 342, 58, 20
+     LTEXT "1_63", 1, 405, 344, 58, 20
      LTEXT "5_724", 2, 8, 8, 36, 36
      LTEXT "BLADES OF EXILE HELP: PARTY STATUS SCREEN", 3, 52, 12, 235, 16
      LTEXT "This area lists the names of your party members, their health and magic points, and two buttons:", 4, 61, 29, 394, 33
@@ -1367,22 +1367,22 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "Some people may provide valuable hints about what others know about. For example, if someone says _You should ask Tor about supplies,_ when you meet Tor 'supplies' should be one of the first things you ask about." 8, 60, 196, 424, 65
      LTEXT "You can figure out other things to ask the people about by picking words out of what they say. If JimBob says _I love killing Nephilim,_ 'killing' and 'Nephilim' are likely bets." 9, 60, 144, 436, 50
      LTEXT "Due to finite memory, people will generally not have more to say about everything they talk about, just the important things." 10, 60, 331, 436, 34
-     }
+     }*/
 
 1090 DIALOG 10, 10, 525, 418
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_63" 1, 435, 384, 58, 20
-     LTEXT "5_724" 2, 9, 9, 36, 36
-     LTEXT "During your adventures, you will come across mind-boggling quantities of stuff. To pick up some of it, move your party (or active PC) near it, and hit the get button (or 'g'). Then, on the Get Item window, click on the item to grab." 3, 63, 30, 423, 64
-     LTEXT "BLADES OF EXILE HELP: ITEM INFO SCREEN" 4, 53, 13, 235, 16
-     LTEXT "Once there, to equip (i.e. use) or unequip (take off) an item, click on its name. Other buttons will appear enabling you do to other things:" 5, 63, 131, 283, 57
-     LTEXT "Items from slain monsters normally appear unidentified. To identify them, take them to a sage. Also, buying Item Lore skill sometimes makes monster's treasure appear already identified." 6, 63, 274, 429, 50
-     LTEXT "Once obtained, items show up in this window. Type '1'-'6' or click on the numbered button to bring up a character's inventory. " 7, 63, 95, 424, 33
-     LTEXT "5_1100" 8, 350, 136, 129, 132
-     LTEXT "The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things. Many shopkeepers will buy your items, and certain sages can identify and even enchant them." 9, 63, 189, 281, 84
-     LTEXT "Finally, hitting the Jobs button (or typing '8') takes you to the jobs page, where you can see what jobs you currently have. Hitting the 'Spec' button (or typing '9') brings up whatever special items you have." 10, 63, 325, 427, 50
-     }*/
+     LTEXT "1_63", 1, 435, 384, 58, 20
+     LTEXT "5_724", 2, 9, 9, 36, 36
+     LTEXT "During your adventures, you will come across mind-boggling quantities of stuff. To pick up some of it, move your party (or active PC) near it, and hit the get button (or 'g'). Then, on the Get Item window, click on the item to grab.", 3, 63, 30, 423, 64
+     LTEXT "BLADES OF EXILE HELP: ITEM INFO SCREEN", 4, 53, 13, 235, 16
+     LTEXT "Once there, to equip (i.e. use) or unequip (take off) an item, click on its name. Other buttons will appear enabling you do to other things:", 5, 63, 131, 283, 57
+     LTEXT "Items from slain monsters normally appear unidentified. To identify them, take them to a sage. Also, buying Item Lore skill sometimes makes monster's treasure appear already identified.", 6, 63, 274, 429, 50
+     LTEXT "Once obtained, items show up in this window. Type '1'-'6' or click on the numbered button to bring up a character's inventory. ", 7, 63, 95, 424, 33
+     LTEXT "5_1100", 8, 350, 136, 129, 132
+     LTEXT "The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things. Many shopkeepers will buy your items, and certain sages can identify and even enchant them.", 9, 63, 189, 281, 84
+     LTEXT "Finally, hitting the Jobs button (or typing '8') takes you to the jobs page, where you can see what jobs you currently have. Hitting the 'Spec' button (or typing '9') brings up whatever special items you have.", 10, 63, 325, 427, 50
+     }
 
 1091 DIALOG 10, 10, 333, 74
      STYLE WS_POPUP | WS_DLGFRAME
@@ -1512,7 +1512,7 @@ STYLE WS_POPUP | WS_DLGFRAME
      LTEXT "", 33, 304, 156, 32, 16
      LTEXT "", 34, 304, 181, 32, 16
      LTEXT "", 35, 304, 205, 32, 16
-     LTEXT "+Pick spell to cast.", 36, 30, 400, 186, 16
+     LTEXT "+Pick spell to cast.", 36, 30, 396, 186, 16
      LTEXT "2_0", 37, 114, 247, 14, 10
      LTEXT "2_0", 38, 114, 261, 14, 10
      LTEXT "2_0", 39, 114, 275, 14, 10

@@ -218,6 +218,18 @@ typedef struct {
 	short picture_num;
 	} monster_record_type;
 
+/*  monster_record_type.immunities : */
+/*
+	0000 0001	Resist Magic
+	0000 0010	Immune To Magic
+	0000 0100	Resist Fire
+	0000 1000	Immune To Fire
+	0001 0000	Resist Cold
+	0010 0000	Immune To Cold
+	0100 0000	Resist Poison
+	1000 0000	Immune To Poison
+*/
+
 /* CREATURE_DATA_TYPE */
 class creature_data_type
 {
@@ -377,7 +389,7 @@ struct party_record_type
 	char scen_name[256];
 
 	/* functions */
-	bool isFlying() { return (bool) stuff_done[305][1]; }
+	bool isFlying() { return (bool) stuff_done[SDF_FLYING]; }
 
 	void giveGold(short amount, bool print_result);
 	bool takeGold(short amount, bool print_result);

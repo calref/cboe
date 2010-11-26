@@ -28,7 +28,7 @@ HGLOBAL sound_handles[NUM_SOUNDS];
 
 bool sound_going(short which_s) {
 	short i;
-	
+
 	for (i = 0; i < 4; i++)
 		if (snd_played[i] == which_s)
 			return true;
@@ -39,11 +39,11 @@ bool sound_going(short which_s) {
 pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand) {
 	long theA5;
 	short channel = -1,i,which_sound;
-	
+
 #ifndef EXILE_BIG_GUNS
 	theA5 = SetA5(theCommand->param2);
 #endif
-	
+
 	for (i = 0; i < 4; i++)
 		if (chan[i] == theChannel)
 			channel = i;
@@ -56,7 +56,7 @@ pascal void snd_channel_callback(SndChannelPtr theChannel,SndCommand* theCommand
 		//if (in_startup_mode == false)
 		//	print_num(99,snd_played[channel],channel);
 	}
-	
+
 #ifndef EXILE_BIG_GUNS
 	theA5 = SetA5(theA5);
 #endif
@@ -67,15 +67,15 @@ void init_snd_tool(){
 #ifdef __APPLE__
 	short i,t;
 	SndCallBackUPP callback;
-	
+
 	for (i = 0; i < NUM_SOUNDS; i++) {
 		if (!load_when_play[i]) {
 			sound_handles[i] = GetResource('snd ', 20000 + i);
-		}	
+		}
 	}
-	
+
 	callback = NewSndCallBackUPP(snd_channel_callback);
-	
+
 	for(t=0;t<4;t++){ //  set up 4 sound channels
 		SndNewChannel(&chan[t], sampledSynth, initMono + initNoDrop, callback);
 		chan[t]->qLength = 128;
@@ -90,30 +90,30 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	OSErr err;
 	SndCommand theCommand;
 	if (!play_sounds || how_many_times == 0) return;
-	
+
 	if (abs(which) > NUM_SOUNDS) {
 		//char msg[50];
 		/*s*/printf(/*msg,*/"Error: Sound #%i does not exist.\n",abs(which));
 		//give_error(msg,"",0);
 		return;
 	}
-	
+
 	channel++;
-	
+
 	if (channel > numchannel) channel = 0;
-	
-	if (!sound_going(abs(which)) && load_when_play[abs(which)]) 
+
+	if (!sound_going(abs(which)) && load_when_play[abs(which)])
 		sndhandle = GetResource('snd ',20000 + abs(which));
 	else sndhandle = sound_handles[abs(which)];
-	
+
 	if (which > 0)
  		if (always_asynch[which])
 			which *= -1;
-	
+
  	if (sndhandle != NULL)
 	{
 		HLock(sndhandle);
-		
+
 		if (which < 0) err = SndPlay(chan[channel],(SndListHandle) sndhandle,true); // Normal SndPlay
 		else {
 			err = SndPlay(chan[channel],(SndListHandle) sndhandle,false);
@@ -151,7 +151,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	HRSRC h;
 	if ((sounds_missing) || (!play_sounds) || (how_many_times == 0))
 		return;
-	
+
 	if (which < 0) {
 		asyn = true;
 		which = which * -1;
@@ -167,11 +167,11 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if ((always_asynch[which] == true) &&
 	((can_ignore[which] == 1) || (can_ignore[which] >= 3)))
 		asyn = true;
-	if ((can_ignore[which] > 0) && (can_ignore[which] < 5) && (party.stuff_done[305][5] == 1))
+	if ((can_ignore[which] > 0) && (can_ignore[which] < 5) && (party.stuff_done[SDF_LESS_SOUND] == 1))
 		return;
 	if ((can_ignore[which] != 1) && (can_ignore[which] < 3))
 		asyn = false;
-	if ((party.stuff_done[305][5] == 1) && (can_ignore[which] < 5))
+	if ((party.stuff_done[SDF_LESS_SOUND] == 1) && (can_ignore[which] < 5))
 		asyn = false;
 	if (not_asyn == true)
 		asyn = false;
@@ -250,9 +250,9 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 
 	store_last_sound_played = which;
 
-	if ((load_when_play[which] == true) && (asyn == false)) 
+	if ((load_when_play[which] == true) && (asyn == false))
 		sound_handles[which] = NULL;
-		
+
 	for (i = 0; i < NUM_SOUNDS; i++)
 		if ((load_when_play[which] == true) && (sound_handles[which] != NULL)
 			&& (a_sound_did_get_played == true) && (i != which))
@@ -304,7 +304,7 @@ void load_sounds(HMODULE handle)
 	HRSRC h;
 	char snd_name[20];
 	WAVEOUTCAPS wavecaps;
-	
+
 	hModule = handle;
 
 	t = waveOutGetNumDevs();
@@ -340,9 +340,9 @@ void load_sounds(HMODULE handle)
 			MessageBox(mainPtr,"Cannot initialize sounds - unidentified error. Game can still be played, but quietly.",
 		  "Sound Error",MB_OK | MB_ICONEXCLAMATION);
 			return;
-	
+
 		}
-	
+
 	}
 
 	for (i = 0; i < NUM_SOUNDS; i++) {
@@ -360,20 +360,20 @@ void load_sounds(HMODULE handle)
 void move_sound(unsigned char ter,short step)
 {
 	short spec;
-	
+
 	spec = scenario.ter_types[ter].special;
-	
-	if ((monsters_going == false) && (overall_mode < 10) && (party.in_boat >= 0)) {
-		if (spec == 21)
+
+	if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (party.in_boat >= 0)) {
+		if (spec == TER_SPEC_TOWN_ENTRANCE)
 			return;
 		play_sound(48);
 		}
-	else if ((monsters_going == false) && (overall_mode < 10) && (party.in_horse >= 0)) {////
+	else if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (party.in_horse >= 0)) {////
 		play_sound(85);
 		}
-	else if(spec == 5) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
+	else if(spec == TER_SPEC_POISON_LAND) //if poisoned land don't play squish sound : BoE legacy behavior, can be removed safely
 		  return;
-//  else if(spec == 6) //if diseased land do the same
+//  else if(spec == TER_SPEC_DISEASED_LAND) //if diseased land do the same
 //		  return;
 		else switch(scenario.ter_types[ter].step_sound){
             case 0:

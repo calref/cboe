@@ -274,7 +274,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 		default: SetWindowText(dlgs[free_slot],"Blades of Exile"); break;
 			}
 	ShowWindow(dlgs[free_slot],SW_SHOW);
-	DestroyWindow(dlg); //Necesary? Dunno.
+	DestroyWindow(dlg); //Necessary? Dunno.
 
 	if (dlg_parent[free_slot] != NULL) {
 		EnableWindow(dlg_parent[free_slot],FALSE);
@@ -478,17 +478,19 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
 							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 28);
+					win_height = max(win_height, item_rect[free_item].bottom + 35);
 					win_width = max(win_width, item_rect[free_item].right + 11);
-
 				}
-
 			}
-			MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
+
+            /*win_height += 8;
+			win_width += 3;*/
+
+			MoveWindow(dlgs[free_slot],0,0,win_width,win_height,false);
 			EndDialog(hDlg, 0);
-			return TRUE;
+			return true;
 		}
-		return TRUE;
+		return true;
 	}
 
 void cd_set_edit_focus()

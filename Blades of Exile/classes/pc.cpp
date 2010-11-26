@@ -33,9 +33,9 @@ void pc_record_type::kill(short type)
 
     if(no_save == false){
 	if (type != 4)
-		i = hasAbilEquip(48); //check if has life saving items
+		i = hasAbilEquip(ITEM_LIFE_SAVING); //check if has life saving items
     else
-	    i = hasAbilEquip(49); //check if has protection vs petrification items
+	    i = hasAbilEquip(ITEM_PROTECT_FROM_PETRIFY); //check if has protection vs petrification items
     }
 
 	short which_pc = getNum();
@@ -59,11 +59,11 @@ void pc_record_type::kill(short type)
 				else if (type == 3)
 					make_sfx(item_loc.x,item_loc.y,6);
 
-			if (overall_mode != 0)
+			if (overall_mode != MODE_OUTDOORS)
 				for (i = 0; i < 24; i++)
-					if (items[i].variety != 0) {
+					if (items[i].variety != ITEM_TYPE_NO_ITEM) {
 						dummy = place_item(items[i],item_loc,true);
-						items[i].variety = 0;
+						items[i].variety = ITEM_TYPE_NO_ITEM;
 						}
 				if ((type == 2) || (type == 3))
 					play_sound(21);
@@ -291,11 +291,11 @@ void pc_record_type::giveXP(short amt)
 		play_sound(7);
 		level++;
 
-		sprintf ((char *) c_line, "  %s is level %d!  ",(char *) name, level);
-		add_string_to_buf((char *) c_line);
+		sprintf (c_line, "  %s is level %d!  ", name, level);
+		add_string_to_buf(c_line);
 		skill_pts += (level < 20) ? 5 : 4;
-		add_hp = (level < 26) ? get_ran(1,2,6) + skill_bonus[skills[0]]
-		   : max (skill_bonus[skills[0]],0);
+		add_hp = (level < 26) ? get_ran(1,2,6) + skill_bonus[skills[SKILL_STRENGTH]]
+		   : max (skill_bonus[skills[SKILL_STRENGTH]],0);
 
 		if (add_hp < 0) add_hp = 0;
 		max_health += add_hp;
@@ -314,8 +314,8 @@ void pc_record_type::drainXP(short how_much)
 	if (!isAlive()) return;
 
 	experience = max(experience - how_much, 0);
-	sprintf ((char *) c_line, "  %s drained.",(char *) name);
-	add_string_to_buf((char *) c_line);
+	sprintf (c_line, "  %s drained.", name);
+	add_string_to_buf(c_line);
 }
 
 void pc_record_type::restoreSP(short amt)
@@ -343,8 +343,8 @@ void pc_record_type::curse(short how_much)
 	if (!isAlive()) return;
 
 	status[STATUS_BLESS_CURSE] = max(status[STATUS_BLESS_CURSE] - how_much, -8);
-	sprintf ((char *) c_line, "  %s cursed.",(char *) name);
-	add_string_to_buf((char *) c_line);
+	sprintf (c_line, "  %s cursed.", name);
+	add_string_to_buf(c_line);
 
 	put_pc_screen();
 	give_help(59,0,0);
@@ -358,7 +358,7 @@ void pc_record_type::dumbfound(short how_much)
 
 	r1 = get_ran(1,0,90);
 
-	if (hasAbilEquip(53) < 24) {
+	if (hasAbilEquip(ITEM_WILL) < 24) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 		}
@@ -367,14 +367,14 @@ void pc_record_type::dumbfound(short how_much)
 		how_much -= 2;
 
 	if (how_much <= 0) {
-		sprintf ((char *) c_line, "  %s saved.",(char *) name);
-		add_string_to_buf((char *) c_line);
+		sprintf (c_line, "  %s saved.", name);
+		add_string_to_buf(c_line);
 		return;
 		}
 
 	status[STATUS_DUMB] = min(status[STATUS_DUMB] + how_much, 8);
-	sprintf ((char *) c_line, "  %s dumbfounded.",(char *) name);
-	add_string_to_buf((char *) c_line);
+	sprintf (c_line, "  %s dumbfounded.", name);
+	add_string_to_buf(c_line);
 
 	one_sound(67);
 	put_pc_screen();
@@ -492,9 +492,9 @@ void pc_record_type::acid(short how_much)
 {
 	if (!isAlive()) return;
 
-	if (hasAbilEquip(36) < 24) {
-		sprintf ((char *) c_line, "  %s resists acid.",(char *) name);
-		add_string_to_buf((char *) c_line);
+	if (hasAbilEquip(ITEM_ACID_PROTECTION) < 24) {
+		sprintf (c_line, "  %s resists acid.", name);
+		add_string_to_buf(c_line);
 		return;
 		}
 
@@ -561,15 +561,15 @@ bool pc_record_type::giveToPC(item_record_type item, bool print_result)
 	short free_space;
 	char announce_string[60];
 
-	if (item.variety == 0)
+	if (item.variety == ITEM_TYPE_NO_ITEM)
 		return true;
 
-	if (item.variety == 3) {
+	if (item.variety == ITEM_TYPE_GOLD) {
 		party.gold += item.item_level;
 		ASB("You get some gold.");
 		return true;
 		}
-	if (item.variety == 11) {
+	if (item.variety == ITEM_TYPE_FOOD) {
 		party.food += item.item_level;
 		ASB("You get some food.");
 		return true;
@@ -608,30 +608,30 @@ bool pc_record_type::giveToPC(item_record_type item, bool print_result)
 	return false;
 }
 
-// returnes equipped protection level of specified abil, or -1 if no such abil is equipped
+// returns ability strength of equipped item with specified ability, or -1 if no such item is equipped
 short pc_record_type::getProtLevel(short abil)
 {
 	for (int i = 0; i < 24; i++)
-		if ((items[i].variety != 0) && (items[i].ability == abil) && (equip[i] == true))
+		if ((items[i].variety != ITEM_TYPE_NO_ITEM) && (items[i].ability == abil) && (equip[i] == true))
 				return items[i].ability_strength;
 	return (-1);
 }
 
-short pc_record_type::hasAbilEquip(short abil)
+short pc_record_type::hasAbilEquip(short abil)//returns the number of the equipped item with ability "abil" or 24 if none
 {
 	short i = 0;
 
-	while (((items[i].variety == 0) || (items[i].ability != abil)
+	while (((items[i].variety == ITEM_TYPE_NO_ITEM) || (items[i].ability != abil)
 			|| (equip[i] == false)) && (i < 24))
 				i++;
 	return i;
 }
 
-short pc_record_type::hasAbil(short abil)
+short pc_record_type::hasAbil(short abil)//returns the number of the item with ability "abil" or 24 if none
 {
 	short i = 0;
 
-	while (((items[i].variety == 0) || (items[i].ability != abil)) && (i < 24)) i++;
+	while (((items[i].variety == ITEM_TYPE_NO_ITEM) || (items[i].ability != abil)) && (i < 24)) i++;
 	return i;
 }
 
@@ -647,11 +647,11 @@ short pc_record_type::amountCarried()
 	bool airy = false, heavy = false;
 
 	for (i = 0; i < 24; i++)
-		if (items[i].variety > 0)
+		if (items[i].variety > ITEM_TYPE_NO_ITEM)
 		{
 			storage += item_weight(items[i]);
-			if (items[i].ability == 44) airy = true;
-			if (items[i].ability == 45)	heavy = true;
+			if (items[i].ability == ITEM_LIGHTER_OBJECT) airy = true;
+			if (items[i].ability == ITEM_HEAVIER_OBJECT)	heavy = true;
 		}
 
 	if (airy) storage -= 30;
@@ -667,7 +667,7 @@ short pc_record_type::hasSpace()
 
 	while (i < 24)
 	{
-	if (items[i].variety == 0)
+	if (items[i].variety == ITEM_TYPE_NO_ITEM)
 		return i;
 	i++;
 	}
@@ -680,9 +680,9 @@ short pc_record_type::okToBuy(short cost, item_record_type item)
 {
 	int i;
 
-	if ((item.variety != 3) && (item.variety != 11)) {
+	if ((item.variety != ITEM_TYPE_GOLD) && (item.variety != ITEM_TYPE_FOOD)) {
 		for (i = 0; i < 24; i++)
-			if ((items[i].variety > 0) && (items[i].type_flag == item.type_flag)
+			if ((items[i].variety > ITEM_TYPE_NO_ITEM) && (items[i].type_flag == item.type_flag)
 				&& (items[i].charges > 123))
 					return 5;
 
@@ -706,12 +706,12 @@ void pc_record_type::takeItem(short which_item)
 		which_item -= 30;
 		}
 
-	if ((weap_poisoned == which_item) && (status[0] > 0)) {
+	if ((weap_poisoned == which_item) && (status[STATUS_POISONED_WEAPON] > 0)) {
 			add_string_to_buf("  Poison lost.           ");
-			status[0] = 0;
+			status[STATUS_POISONED_WEAPON] = 0;
 		}
 
-	if ((weap_poisoned > which_item) && (status[0] > 0))
+	if ((weap_poisoned > which_item) && (status[STATUS_POISONED_WEAPON] > 0))
 		weap_poisoned--;
 
 	for (i = which_item; i < 23; i++) {
@@ -748,41 +748,41 @@ void pc_record_type::enchantWeapon(short item_hit, short enchant_type, short new
 
 	switch (enchant_type) {
 		case 0:
-			sprintf((char *)store_name,"%s (+1)", items[item_hit].full_name);
+			sprintf(store_name,"%s (+1)", items[item_hit].full_name);
 			items[item_hit].bonus++;
 			items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf((char *)store_name,"%s (+2)", items[item_hit].full_name);
+			sprintf(store_name,"%s (+2)", items[item_hit].full_name);
 			items[item_hit].bonus += 2;
 			items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf((char *)store_name,"%s (+3)", items[item_hit].full_name);
+			sprintf(store_name,"%s (+3)", items[item_hit].full_name);
 			items[item_hit].bonus += 3;
 			items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf((char *)store_name,"%s (F)", items[item_hit].full_name);
-			items[item_hit].ability = 110;
+			sprintf(store_name,"%s (F)", items[item_hit].full_name);
+			items[item_hit].ability = ITEM_SPELL_FLAME;
 			items[item_hit].ability_strength = 5;
 			items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf((char *)store_name,"%s (F!)", items[item_hit].full_name);
+			sprintf(store_name,"%s (F!)", items[item_hit].full_name);
 			items[item_hit].value = new_val;
-			items[item_hit].ability = 1;
+			items[item_hit].ability = ITEM_FLAMING_WEAPON;
 			items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf((char *)store_name,"%s (+5)", items[item_hit].full_name);
+			sprintf(store_name,"%s (+5)", items[item_hit].full_name);
 			items[item_hit].value = new_val;
 			items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf((char *)store_name,"%s (B)", items[item_hit].full_name);
+			sprintf(store_name,"%s (B)", items[item_hit].full_name);
 			items[item_hit].bonus++;
-			items[item_hit].ability = 71;
+			items[item_hit].ability = ITEM_BLESS_CURSE;
 			items[item_hit].ability_strength = 5;
 			items[item_hit].magic_use_type = 0;
 			items[item_hit].charges = 8;
@@ -805,9 +805,10 @@ void pc_record_type::equipItem(short item_num)
 	short i;
 	short equip_item_type = 0;
 
-	if ((overall_mode == MODE_COMBAT) && (items[item_num].variety == 11))
+    //the next check didn't allow food to be equipped in combat mode... leftover from Exile 1-2-3 ?
+	/*if ((overall_mode == MODE_COMBAT) && (items[item_num].variety == ITEM_TYPE_FOOD))
 		add_string_to_buf("Equip: Not in combat");
-	else {
+	else {*/
 		// unequip
 	if (equip[item_num] == true) {
 		if ((equip[item_num] == true) &&
@@ -816,9 +817,9 @@ void pc_record_type::equipItem(short item_num)
   			else {
 				equip[item_num] = false;
 				add_string_to_buf("Equip: Unequipped");
-				if ((weap_poisoned == item_num) && (status[0] > 0)) {
+				if ((weap_poisoned == item_num) && (status[STATUS_POISONED_WEAPON] > 0)) {
 						add_string_to_buf("  Poison lost.           ");
-						status[0] = 0;
+						status[STATUS_POISONED_WEAPON] = 0;
 					}
 			}
 		}
@@ -846,7 +847,7 @@ void pc_record_type::equipItem(short item_num)
 								}
 						}
 
-					if ((is_combat()) && (items[item_num].variety == 13))
+					if ((is_combat()) && (items[item_num].variety == ITEM_TYPE_ARMOR))
 						add_string_to_buf("Equip: Not armor in combat");
 						else if ((2 - num_hands_occupied) < num_hands_to_use[items[item_num].variety])
 							add_string_to_buf("Equip: Not enough free hands");
@@ -859,7 +860,7 @@ void pc_record_type::equipItem(short item_num)
 					}
 
 		}
-	}
+	//}
 
 	if (stat_window == getNum())
 		put_item_screen(stat_window,1);
@@ -966,10 +967,10 @@ void pc_record_type::combineThings()
 	int i,j,test;
 
 	for (i = 0; i < 24; i++) {
-		if ((items[i].variety > 0) && (items[i].type_flag > 0) && (items[i].isIdent()))
+		if ((items[i].variety > ITEM_TYPE_NO_ITEM) && (items[i].type_flag > 0) && (items[i].isIdent()))
 			{
 			for (j = i + 1; j < 24; j++)
-				if ((items[j].variety > 0) && (items[j].type_flag == items[i].type_flag) && (items[j].isIdent()))
+				if ((items[j].variety > ITEM_TYPE_NO_ITEM) && (items[j].type_flag == items[i].type_flag) && (items[j].isIdent()))
 				 {
 					add_string_to_buf("(items combined)");
 					test = items[i].charges + items[j].charges;
@@ -985,7 +986,7 @@ void pc_record_type::combineThings()
 					takeItem(30 + j);
 				}
 			}
-		if ((items[i].variety > 0) && (items[i].charges < 0))
+		if ((items[i].variety > ITEM_TYPE_NO_ITEM) && (items[i].charges < 0))
 			items[i].charges = 1;
 		}
 }

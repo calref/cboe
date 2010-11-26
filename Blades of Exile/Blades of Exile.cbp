@@ -26,6 +26,9 @@
 				<Option object_output="obj\Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="libwinmm.a" />
@@ -48,7 +51,6 @@
 		<Unit filename="boe.actions.h" />
 		<Unit filename="boe.combat.cpp" />
 		<Unit filename="boe.combat.h" />
-		<Unit filename="boe.consts.h" />
 		<Unit filename="boe.dlgutil.cpp" />
 		<Unit filename="boe.dlgutil.h" />
 		<Unit filename="boe.fields.cpp" />

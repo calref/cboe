@@ -164,7 +164,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		}
 
 		mainPtr = CreateWindow (szAppName,
-			"Classic BoE Scenario Editor build_27.09.2010",
+			"Classic BoE Scenario Editor build_26.11.2010",
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,
