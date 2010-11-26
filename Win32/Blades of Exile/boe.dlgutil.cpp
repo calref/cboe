@@ -42,7 +42,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 {
 	RECT area_rect;
 
-    if(PSD[307][1] == 1)
+    if(PSD[SDF_ASK_ABOUT_TEXT_BOX] == 1)
     	ShowWindow(talk_edit_box, SW_HIDE);
 
 	if (shop_max < shop_min)
@@ -62,7 +62,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 		 talk_gworld = CreateCompatibleBitmap(main_dc,area_rect.right,area_rect.bottom);
 
 	store_pre_shop_mode = overall_mode;
-	overall_mode = 21;
+	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = 1;
 	create_clip_region();
 
@@ -79,10 +79,10 @@ void end_shop_mode()
 {
 	RECT dummy_rect = {0,0,0,0};
 
-    if(PSD[307][1] == 1)
+    if(PSD[SDF_ASK_ABOUT_TEXT_BOX] == 1)
     	ShowWindow(talk_edit_box, SW_SHOW);
 
-	ShowScrollBar(shop_sbar,SB_CTL,FALSE);
+	ShowScrollBar(shop_sbar,SB_CTL,false);
 	if (store_pre_shop_mode == 20) {
 		sprintf((char *)old_str1,"You conclude your business.");
 		sprintf((char *)old_str2,"");
@@ -137,7 +137,7 @@ void handle_shop_event(POINT p)
 			handle_sale(store_shop_items[store_what_picked],store_shop_costs[store_what_picked]);
 			}
 		if ((PtInRect(&shopping_rects[i][6],p)) && (store_shop_items[store_what_picked] >= 0)
-			&& (store_shop_type != 3) && (store_shop_type != 4)){
+			&& (store_shop_type != SHOP_HEALER) && (store_shop_type != SHOP_FOOD)){
 			click_shop_rect(shopping_rects[i][6]);
 			handle_info_request(store_shop_items[store_what_picked]);
 			}
@@ -165,14 +165,14 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 5:
 			base_item = store_alchemy(what_chosen - 500);
-			if (party.alchemy[base_item.item_level] == TRUE)
+			if (party.alchemy[base_item.item_level] == true)
 				ASB("You already know that recipe.");
 				else if (party.takeGold(cost, false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy an alchemical recipe.");
-						party.alchemy[base_item.item_level] = TRUE;
+						party.alchemy[base_item.item_level] = true;
 						}
 			break;
 		case 7:
@@ -187,15 +187,15 @@ void handle_sale(short what_chosen,short cost)
 							adven[current_pc].cur_health = adven[current_pc].max_health;
 							break;
 						case 1:
-							adven[current_pc].status[2] = 0;
+							adven[current_pc].status[STATUS_POISON] = 0;
 							break;
 						case 2:
-							adven[current_pc].status[7] = 0; break;
+							adven[current_pc].status[STATUS_DISEASE] = 0; break;
 						case 3:
-							adven[current_pc].status[12] = 0; break;
+							adven[current_pc].status[STATUS_PARALYZED] = 0; break;
 						case 4:
 							for (i = 0; i < 24; i++)
-								if ((adven[current_pc].equip[i] == TRUE) &&
+								if ((adven[current_pc].equip[i] == true) &&
 									(adven[current_pc].items[i].isCursed()))
 										adven[current_pc].items[i].item_properties =
 											adven[current_pc].items[i].item_properties & 239;
@@ -203,7 +203,7 @@ void handle_sale(short what_chosen,short cost)
 						case 5: case 6: case 7:
 							adven[current_pc].main_status = MAIN_STATUS_ALIVE; break;
 						case 8:
-							adven[current_pc].status[9] = 0; break;
+							adven[current_pc].status[STATUS_DUMB] = 0; break;
 						}
 					}
 			break;
@@ -211,14 +211,14 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_mage_spells(what_chosen - 800 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				MessageBeep(MB_OK); ASB("Error 102: Report this!"); break;}
-			if (adven[current_pc].mage_spells[base_item.item_level] == TRUE)
+			if (adven[current_pc].mage_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 				else if (party.takeGold(cost, false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						adven[current_pc].mage_spells[base_item.item_level] = TRUE;
+						adven[current_pc].mage_spells[base_item.item_level] = true;
 						give_help(41,0,0);
 						}
 			break;
@@ -226,14 +226,14 @@ void handle_sale(short what_chosen,short cost)
 			base_item = store_priest_spells(what_chosen - 900 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				MessageBeep(MB_OK); ASB("Error 101: Report this!"); break;}
-			if (adven[current_pc].priest_spells[base_item.item_level] == TRUE)
+			if (adven[current_pc].priest_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 				else if (party.takeGold(cost, false) == false)
 					ASB("Not enough gold.");
 					else {
 						play_sound(62);
 						ASB("You buy a spell.");
-						adven[current_pc].priest_spells[base_item.item_level] = TRUE;
+						adven[current_pc].priest_spells[base_item.item_level] = true;
 						give_help(41,0,0);
 						}
 			break;
@@ -244,7 +244,7 @@ void handle_sale(short what_chosen,short cost)
 			base_item.item_properties = base_item.item_properties | 1;
 			switch (adven[current_pc].okToBuy(cost,base_item)) {
 				case 1: play_sound(-38); adven[current_pc].giveToPC(base_item,true);
-					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = 0;
+					party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = ITEM_TYPE_NO_ITEM;
 					break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -254,7 +254,7 @@ void handle_sale(short what_chosen,short cost)
 		}
 	set_up_shop_array();
 
-	if (overall_mode != 21) {
+	if (overall_mode != MODE_SHOPPING) {
 		MessageBeep(MB_OK);
 		ASB("Shop error 1. Report This!");
 		}
@@ -300,14 +300,14 @@ void handle_info_request(short what_chosen)
 void set_up_shop_array()
 {
 	short i,shop_pos = 0;
-	Boolean cursed_item = FALSE;
+	Boolean cursed_item = false;
 	item_record_type store_i;
 	long store_l;
 
 	for (i = 0; i < 30; i++)
 		store_shop_items[i] = -1;
 	switch (store_shop_type) {
-		case 0: case 1: case 2:
+		case SHOP_WEAPON_SHOP: case SHOP_ARMOR_SHOP: case SHOP_MISC_SHOP:
 			for (i = store_shop_min; i < store_shop_max + 1; i++) {
 				store_shop_items[shop_pos] = i;
 				store_i = get_stored_item(store_shop_items[shop_pos]);
@@ -316,35 +316,35 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			break;
-		case 3:
+		case SHOP_HEALER:
 			if (adven[current_pc].cur_health < adven[current_pc].max_health) {
 				store_shop_items[shop_pos] = 700;
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[2] > 0) {
+			if (adven[current_pc].status[STATUS_POISON] > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[7] > 0) {
+			if (adven[current_pc].status[STATUS_DISEASE] > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[12] > 0) {
+			if (adven[current_pc].status[STATUS_PARALYZED] > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 				}
-			if (adven[current_pc].status[9] > 0) {
+			if (adven[current_pc].status[STATUS_DUMB] > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;
 				}
 			for (i = 0; i < 24; i++)
-				if ((adven[current_pc].equip[i] == TRUE) && (adven[current_pc].items[i].isCursed()))
-					cursed_item = TRUE;
+				if ((adven[current_pc].equip[i] == true) && (adven[current_pc].items[i].isCursed()))
+					cursed_item = true;
   			if (cursed_item) {
 				store_shop_items[shop_pos] = 704;
 				store_shop_costs[shop_pos] = heal_costs[4];
@@ -366,11 +366,11 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			break;
-		case 4:
+		case SHOP_FOOD:
 			break;
-		case 5: case 6: case 7: case 8: case 9:
+		case SHOP_MAGIC_SHOP_1: case SHOP_MAGIC_SHOP_2: case SHOP_MAGIC_SHOP_3: case SHOP_MAGIC_SHOP_4: case SHOP_MAGIC_SHOP_5:
 			for (i = 0; i < 10; i++)
-				if (party.magic_store_items[store_shop_type - 5][i].variety != 0) {
+				if (party.magic_store_items[store_shop_type - 5][i].variety != ITEM_TYPE_NO_ITEM) {
 					store_shop_items[shop_pos] = (store_shop_type - 4) * 1000 + i;
 					store_i = party.magic_store_items[store_shop_type - 5][i];
 					store_shop_costs[shop_pos] = (store_i.charges == 0) ?
@@ -378,7 +378,7 @@ void set_up_shop_array()
 					shop_pos++;
 					}
 			break;
-		case 10:
+		case SHOP_MAGE_SPELLS:
 			for (i = store_shop_min; i < store_shop_max + 1; i++)
 				if (i == minmax(0,31,(int)i)) {
 				store_i = store_mage_spells(i);
@@ -387,7 +387,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			break;
-		case 11:
+		case SHOP_PRIEST_SPELLS:
 			for (i = store_shop_min; i < store_shop_max + 1; i++)
 				if (i == minmax(0,31,(int)i)) {
 				store_i = store_priest_spells(i);
@@ -396,7 +396,7 @@ void set_up_shop_array()
 				shop_pos++;
 				}
 			break;
-		case 12:
+		case SHOP_ALCHEMY:
 			for (i = store_shop_min; i < store_shop_max + 1; i++)
 				if (i == minmax(0,19,(int)i)) {
 				store_i = store_alchemy(i);
@@ -415,8 +415,8 @@ void set_up_shop_array()
   	i = max(0,shop_pos - 8);
     lpsi.nMax = i;
     lpsi.fMask = SIF_RANGE;
-    SetScrollInfo(shop_sbar,SB_CTL,&lpsi,FALSE);
-	//SetScrollRange(shop_sbar,SB_CTL,0,i,TRUE);
+    SetScrollInfo(shop_sbar,SB_CTL,&lpsi,false);
+	//SetScrollRange(shop_sbar,SB_CTL,0,i,true);
 
 }
 
@@ -435,7 +435,7 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
    	talk_gworld = CreateCompatibleBitmap(main_dc,area_rect.right,area_rect.bottom);
 
-    if(PSD[307][1] == 1){
+    if(PSD[SDF_ASK_ABOUT_TEXT_BOX] == 1){
         talk_edit_box_rect = preset_words[8].word_rect;
         OffsetRect(&talk_edit_box_rect,ulx,uly+3);
     	talk_edit_box = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE,
@@ -457,9 +457,9 @@ void start_talk_mode(short m_num,short personality,unsigned char monst_type,shor
 	sprintf((char *) title_string,"%s:",data_store3->talk_strs[personality % 10]);
 
 	store_pre_talk_mode = overall_mode;
-	overall_mode = 20;
+	overall_mode = MODE_TALKING;
 	create_clip_region();
-	talk_end_forced = FALSE;
+	talk_end_forced = false;
 	stat_screen_mode = 1;
 
 	// Bring up and place first strings.
@@ -482,7 +482,7 @@ void end_talk_mode()
 
 	DeleteObject(talk_gworld);
 	talk_gworld = NULL;
-    if((PSD [307][1] == 1) && (talk_edit_box != NULL)){
+    if((PSD [SDF_ASK_ABOUT_TEXT_BOX] == 1) && (talk_edit_box != NULL)){
         DestroyWindow(talk_edit_box);
 	    talk_edit_box = NULL;
     }
@@ -490,9 +490,9 @@ void end_talk_mode()
     overall_mode = store_pre_talk_mode;
 
 	create_clip_region();
-	if (overall_mode == 2)
-		overall_mode = 1;
-	if (overall_mode == 1) {
+	if (overall_mode == MODE_TALK_TOWN)
+		overall_mode = MODE_TOWN;
+	if (overall_mode == MODE_TOWN) {
 		center = c_town.p_loc;
 		update_explored(center);
 		}
@@ -519,14 +519,14 @@ void handle_talk_event(POINT p)
 	p.y -= 5;
 
 	if (PtInRect(&talk_help_rect,p)) {
-    	if (play_sounds == TRUE) play_sound(37);
+    	if (play_sounds == true) play_sound(37);
 		party.help_received[5] = 0;
 		give_help(205,6,0);
 		return;
 		}
 
 	for (i = 0; i < 9; i++)
-		if ((PtInRect(&preset_words[i].word_rect,p)) && ((talk_end_forced == FALSE) || (i == 6) || (i == 5))) {
+		if ((PtInRect(&preset_words[i].word_rect,p)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
 			click_talk_rect((char *) old_str1,(char *) old_str2,preset_words[i].word_rect);
 			switch (i) {
 				case 0: case 1: case 2: case 7: case 8:
@@ -570,20 +570,20 @@ void handle_talk_event(POINT p)
 					end_talk_mode();
 
                 	if(talk_end_forced == 10){ // party is in inn
-                        talk_end_forced = TRUE; // safety set
+                        talk_end_forced = true; // safety set
                         for(j=0; j < 700; j++){
                             party.age++;
                             // Specials countdowns
-                            if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (adven.hasAbil(52) == true)) {
+                            if ((party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (adven.hasAbil(ITEM_DISEASE_PARTY) == true)) {
                                 j = 900;
                                 adven.disease(2);
                              }
                              // Plants and magic shops
                              if (party.age % 4000 == 0) refresh_store_items();
 
-                             timed_special_happened = special_increase_age(0);
+                             timed_special_happened = special_increase_age(0);//don't delay the trigger of the special, if there's a special
 
-                             if(timed_special_happened && PSD[309][4] == 1){
+                             if(timed_special_happened && PSD[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST] == 1){
                                 j = 900;
                			        add_string_to_buf("  Rest interrupted.");
                			        print_buf();
@@ -601,7 +601,7 @@ void handle_talk_event(POINT p)
 			}
 	if (i < 100) {
 		for (i = 0; i < 50; i++)
-			if ((PtInRect(&store_words[i].word_rect,p)) && (talk_end_forced == FALSE)) {
+			if ((PtInRect(&store_words[i].word_rect,p)) && (talk_end_forced == false)) {
 				click_talk_rect((char *) old_str1,(char *) old_str2,store_words[i].word_rect);
 				for (j = 0; j < 4; j++)
 					asked[j] = store_words[i].word[j];
@@ -715,36 +715,36 @@ void handle_talk_event(POINT p)
 	c = talking.talk_nodes[which_talk_entry].extras[2];
 	d = talking.talk_nodes[which_talk_entry].extras[3];
 
-	sprintf((char *) place_string1,"%s",data_store3->talk_strs[40 + which_talk_entry * 2]);
-	sprintf((char *) place_string2,"%s",data_store3->talk_strs[40 + which_talk_entry * 2 + 1]);
+	sprintf(place_string1,"%s",data_store3->talk_strs[40 + which_talk_entry * 2]);
+	sprintf(place_string2,"%s",data_store3->talk_strs[40 + which_talk_entry * 2 + 1]);
 
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
 
 	switch(ttype) {
-		case 0:
+		case TALK_REGULAR:
 			break;
-		case 1:
+		case TALK_DEP_ON_SDF:
 			if (PSD[a][b] > c) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			strnum2 = 0;
 			break;
-		case 2:
+		case TALK_SET_SDF:
 			PSD[a][b] = 1;
 			break;
-		case 3:
+		case TALK_INN:
 			if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
-					talk_end_forced = TRUE;
+					talk_end_forced = true;
 					party.gold -= a;
 					put_pc_screen();
-                    if(PSD[309][6] == 1){
+                    if(PSD[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING] == 1){
                        talk_end_forced = 10;
                        adven.heal(30 * b);
 	                   adven.restoreSP(25 * b);
@@ -762,174 +762,174 @@ void handle_talk_event(POINT p)
                     }
 				}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			break;
-		case 4:
-			if (day_reached((unsigned char) a,0) == TRUE) {
+		case TALK_DEP_ON_TIME:
+			if (day_reached((unsigned char) a,0) == true) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			strnum2 = 0;
 			break;
-		case 5:
-			if (day_reached((unsigned char) a,(unsigned char) b) == TRUE) {
+		case TALK_DEP_ON_TIME_AND_EVENT:
+			if (day_reached((unsigned char) a,(unsigned char) b) == true) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			strnum2 = 0;
 			break;
-		case 6:
+		case TALK_DEP_ON_TOWN:
 			if (c_town.town_num != a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			strnum2 = 0;
 			break;
-		case 7:
+		case TALK_BUY_ITEMS:
 			c = minmax(1,30,(int)c);
-			start_shop_mode(2,b,
-				b + c - 1,a,(char *)place_string1);
+			start_shop_mode(SHOP_MISC_SHOP,b,
+				b + c - 1,a, place_string1);
 			strnum1 = -1;
 			return;
-		case 8:
+		case TALK_TRAINING:
 			if ((get_pc = char_select_pc(1,0,"Train who?")) < 6) {
 				strnum1 = -1;
 				spend_xp(get_pc,1, 0);
 				}
-			sprintf((char *) place_string1, "You conclude your training.");
+			sprintf(place_string1, "You conclude your training.");
             put_pc_screen();
 			return;
 
-		case 9: case 10: case 11:
+		case TALK_BUY_MAGE: case TALK_BUY_PRIEST: case TALK_BUY_ALCHEMY:
 			c = minmax(1,30,(int)c);
 			start_shop_mode(ttype + 1,b,
-				b + c - 1,a,(char *)place_string1);
+				b + c - 1,a, place_string1);
 			strnum1 = -1;
 			return;
-		case 12: //healer
-			start_shop_mode(3,0,0,a,(char *)place_string1);
+		case TALK_BUY_HEALING: //healer
+			start_shop_mode(SHOP_HEALER,0,0,a, place_string1);
 			strnum1 = -1;
 			return;
 			break;
-		case 13: // sell weap
+		case TALK_SELL_WEAPONS: // sell weap
 			strnum1 = -1;
 			stat_screen_mode = 3;
 			put_item_screen(stat_window,1);
 			give_help(42,43,0);
 			break;
-		case 14: // sell armor
+		case TALK_SELL_ARMOR: // sell armor
 			strnum1 = -1;
 			stat_screen_mode = 4;
 			put_item_screen(stat_window,1);
 			give_help(42,43,0);
 			break;
-		case 15: // sell misc
+		case TALK_SELL_ITEMS: // sell misc
 			strnum1 = -1;
 			stat_screen_mode = 5;
 			put_item_screen(stat_window,1);
 			give_help(42,43,0);
 			break;
-		case 16: case 17: // ident enchant
-				strnum1 = -1;
+		case TALK_IDENTIFY: case TALK_ENCHANT: // ident, enchant
+            strnum1 = -1;
 			stat_screen_mode = (ttype == 16) ? 2 : 6;
 			shop_identify_cost = a;
 			put_item_screen(stat_window,1);
 			give_help(ttype - 16 + 44,0,0);
 			break;
-		case 18:
+		case TALK_BUY_INFO:
 			if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
 					party.gold -= a;
 					put_pc_screen();
 
 					}
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			strnum2 = 0;
 			break;
-		case 19:
-			if ((sd_legit(b,c) == TRUE) && (PSD[b][c] == d)) {
-				sprintf((char *) place_string1, "You've already learned that.");
+		case TALK_BUY_SDF:
+			if ((sd_legit(b,c) == true) && (PSD[b][c] == d)) {
+				sprintf(place_string1, "You've already learned that.");
 				strnum1 = -1;
 				}
 			else if (party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				}
 				else {
 					party.gold -= a;
 					put_pc_screen();
-					if (sd_legit(b,c) == TRUE)
+					if (sd_legit(b,c) == true)
 						PSD[b][c] = d;
 						else give_error("Invalid Stuff Done flag called in conversation.","",0);
 					}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			break;
-		case 20:
+		case TALK_BUY_SHIP:
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
-				sprintf((char *) place_string2,"");
+				strcpy(place_string1, place_string2);
+				sprintf(place_string2,"");
 				break;
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (party.boats[i].property == TRUE)) {
+						if ((i >= 0) && (i < 30) && (party.boats[i].property == true)) {
 							party.gold -= a;
 							put_pc_screen();
-							party.boats[i].property = FALSE;
-							sprintf((char *) place_string2,"");
+							party.boats[i].property = false;
+							sprintf(place_string2,"");
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf((char *) place_string1, "There are no boats left.");
-			sprintf((char *) place_string2,"");
+			sprintf(place_string1, "There are no boats left.");
+			sprintf(place_string2,"");
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
-		case 21:
+		case TALK_BUY_HORSE:
 			if (party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
-				sprintf((char *) place_string2,"");
+				strcpy(place_string1, place_string2);
+				sprintf(place_string2,"");
 				break;
 				}
 				else {
 					for (i = b; i <= b + c; i++)
-						if ((i >= 0) && (i < 30) && (party.horses[i].property == TRUE)) {
+						if ((i >= 0) && (i < 30) && (party.horses[i].property == true)) {
 							party.gold -= a;
 							put_pc_screen();
-							party.horses[i].property = FALSE;
-							sprintf((char *) place_string2,"");
+							party.horses[i].property = false;
+							sprintf(place_string2,"");
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			sprintf((char *) place_string1, "There are no horses left.");
-			sprintf((char *) place_string2,"");
+			sprintf(place_string1, "There are no horses left.");
+			sprintf(place_string2,"");
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
-		case 22:
+		case TALK_BUY_SPEC_ITEM:
 			if (party.spec_items[a] > 0) {
-				sprintf((char *) place_string1, "You already have it.");
+				sprintf(place_string1, "You already have it.");
 				strnum1 = -1;
 				}
 			else if (party.gold < b) {
-				strcpy((char *) place_string1,(char *) place_string2);
+				strcpy(place_string1, place_string2);
 				strnum1 = strnum2;
 				}
 				else {
@@ -938,19 +938,19 @@ void handle_talk_event(POINT p)
 					party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			break;
-		case 23:
-			start_shop_mode(5 + b,0,
-				9,a,(char *)place_string1);
+		case TALK_BUY_JUNK:
+			start_shop_mode(SHOP_MAGIC_SHOP_1 + b,0,
+				9,a, place_string1);
 			strnum1 = -1;
 			return;
-		case 24:
+		case TALK_BUY_TOWN_LOC:
 			if (party.can_find_town[b] > 0) {
 				}
 				else if (party.gold < a) {
 					strnum1 = strnum2;
-					strcpy((char *) place_string1,(char *) place_string2);
+					strcpy(place_string1, place_string2);
 					}
 					else {
 						party.gold -= a;
@@ -958,52 +958,52 @@ void handle_talk_event(POINT p)
 						party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
-			sprintf((char *) place_string2,"");
+			sprintf(place_string2,"");
 			break;
-		case 25:
-			talk_end_forced = TRUE;
+		case TALK_END_FORCE:
+			talk_end_forced = true;
 			break;
-		case 26:
+		case TALK_END_FIGHT:
 			c_town.monst.dudes[store_m_num].attitude = 1;
 			c_town.monst.dudes[store_m_num].mobile = 1;
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;
-		case 27:
+		case TALK_END_ALARM:
 			set_town_status(0);
-			talk_end_forced = TRUE;
+			talk_end_forced = true;
 			break;
-		case 28:
+		case TALK_END_DIE:
 			c_town.monst.dudes[store_m_num].active = 0;
-	// Special killing effects
-	if (sd_legit(c_town.monst.dudes[store_m_num].monst_start.spec1,c_town.monst.dudes[store_m_num].monst_start.spec2) == TRUE)
-		party.stuff_done[c_town.monst.dudes[store_m_num].monst_start.spec1][c_town.monst.dudes[store_m_num].monst_start.spec2] = 1;
-			talk_end_forced = TRUE;
+            // Special killing effects
+            if (sd_legit(c_town.monst.dudes[store_m_num].monst_start.spec1,c_town.monst.dudes[store_m_num].monst_start.spec2) == true)
+                party.stuff_done[c_town.monst.dudes[store_m_num].monst_start.spec1][c_town.monst.dudes[store_m_num].monst_start.spec2] = 1;
+			talk_end_forced = true;
 			break;
-		case 29: // town special
-			 run_special(7,2,a,c_town.p_loc,&s1,&s2,&s3);
+		case TALK_CALL_TOWN_SPEC: // town special
+			 run_special(SPEC_TALK,2,a,c_town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf((char *) place_string1,"");
-				sprintf((char *) place_string2,"");
+				sprintf(place_string1,"");
+				sprintf(place_string2,"");
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,2,s1,s2);
+			 get_strs(place_string1, place_string2,2,s1,s2);
 			 if (s1 >= 0) strnum1 = 2000 + s1;
 			 if (s2 >= 0) strnum2 = 2000 + s2;
-			put_pc_screen();
-			put_item_screen(stat_window,0);
+			 put_pc_screen();
+			 put_item_screen(stat_window,0);
 			 break;
-		case 30: // scen special
-			 run_special(7,0,a,c_town.p_loc,&s1,&s2,&s3);
+		case TALK_CALL_SCEN_SPEC: // scen special
+			 run_special(SPEC_TALK,0,a,c_town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				sprintf((char *) place_string1,"");
-				sprintf((char *) place_string2,"");
+				sprintf(place_string1,"");
+				sprintf(place_string2,"");
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,0,s1,s2);
+			 get_strs(place_string1, place_string2,0,s1,s2);
 			 if (s1 >= 0) strnum1 = 3000 + s1;
 			 if (s2 >= 0) strnum2 = 3000 + s2;
 			put_pc_screen();
@@ -1011,11 +1011,11 @@ void handle_talk_event(POINT p)
 			break;
 		}
 
-	strcpy((char *) one_back1,(char *) old_str1);
-	strcpy((char *) one_back2,(char *) old_str2);
-	strcpy((char *) old_str1,(char *) place_string1);
-	strcpy((char *) old_str2,(char *) place_string2);
-	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
+	strcpy(one_back1, old_str1);
+	strcpy(one_back2, old_str2);
+	strcpy(old_str1, place_string1);
+	strcpy(old_str2, place_string2);
+	place_talk_str(old_str1, old_str2,0,dummy_rect);
 }
 
 void do_sign(short town_num, short which_sign, short sign_type)
@@ -1055,20 +1055,20 @@ void do_sign(short town_num, short which_sign, short sign_type)
 
 Boolean prefs_event_filter (short item_hit)
 {
-	Boolean done_yet = FALSE,did_cancel = FALSE;
+	Boolean done_yet = false,did_cancel = false;
 	short i;
 	 RECT windRECT;
 
 		switch (item_hit) {
 			case 1:
-				done_yet = TRUE;
-				dialog_not_toast = FALSE;
+				done_yet = true;
+				dialog_not_toast = false;
 				break;
 
 			case 2:
-				done_yet = TRUE;
-				dialog_not_toast = FALSE;
-				did_cancel = TRUE;
+				done_yet = true;
+				dialog_not_toast = false;
+				did_cancel = true;
 				break;
 
 			case 50: case 52: case 54: case 56: case 60: case 18: case 20: case 22: case 24: case 27: case 38: case 40: case 43: case 45:
@@ -1096,40 +1096,40 @@ Boolean prefs_event_filter (short item_hit)
 				cd_set_led(1099,4 + cur_display_mode,1);
 				break;
 			}
-	if (done_yet== TRUE) {
-		if (did_cancel == FALSE) {
+	if (done_yet== true) {
+		if (did_cancel == false) {
 			display_mode = cur_display_mode;
-			party.stuff_done[306][0] = cd_get_led(1099,18);
-			party.stuff_done[306][1] = cd_get_led(1099,20);
-			play_sounds = 1 - party.stuff_done[306][1];
-			party.stuff_done[306][2] = cd_get_led(1099,22);
-			party.stuff_done[306][3] = cd_get_led(1099,24);
-			party.stuff_done[306][4] = cd_get_led(1099,27);
-			party.stuff_done[306][7] = cd_get_led(1099,38);
-			party.stuff_done[306][8] = cd_get_led(1099,40);
-			party.stuff_done[306][9] = cd_get_led(1099,43);
-			party.stuff_done[306][5] = cd_get_led(1099,45);
-			party.stuff_done[305][6] = cd_get_led(1099,50);
-			party.stuff_done[305][5] = cd_get_led(1099,52);
+			party.stuff_done[SFD_NO_MAPS] = cd_get_led(1099,18);
+			party.stuff_done[SDF_NO_SOUNDS] = cd_get_led(1099,20);
+			play_sounds = 1 - party.stuff_done[SDF_NO_SOUNDS];
+			party.stuff_done[SDF_NO_FRILLS] = cd_get_led(1099,22);
+			party.stuff_done[SDF_ROOM_DESCS_AGAIN] = cd_get_led(1099,24);
+			party.stuff_done[SDF_NO_INSTANT_HELP] = cd_get_led(1099,27);
+			party.stuff_done[SDF_EASY_MODE] = cd_get_led(1099,38);
+			party.stuff_done[SDF_LESS_WANDER_ENC] = cd_get_led(1099,40);
+			party.stuff_done[SDF_NO_TER_ANIM] = cd_get_led(1099,43);
+			party.stuff_done[SDF_NO_SHORE_FRILLS] = cd_get_led(1099,45);
+			party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
+			party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
 			play_startup = cd_get_led(1099,54);
-			party.stuff_done[305][7] = cd_get_led(1099,56);
-			party.stuff_done[307][1] = cd_get_led(1099,60);
+			party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
+			party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
 
-			if(party.stuff_done[307][0] != cd_get_led(1099,58)){ //changed graphic mode (Mac vs Windows) ?
-			 party.stuff_done[307][0] = cd_get_led(1099,58);//adjust the graphic mode SDF
+			if(party.stuff_done[SDF_USE_DARKER_GRAPHICS] != cd_get_led(1099,58)){ //changed graphic mode (Mac vs Windows) ?
+			 party.stuff_done[SDF_USE_DARKER_GRAPHICS] = cd_get_led(1099,58);//adjust the graphic mode SDF
 			 swap_platform_graphics();//swap graphics
 		     redraw_screen(0);//redraw screen with new graphics
              clear_map();//redraw map with new graphics
              }
 
 			if (cd_get_led(1099,32) == 1)
-				PSD[306][6] = 0;
+				PSD[SDF_GAME_SPEED] = 0;
 			if (cd_get_led(1099,34) == 1)
-				PSD[306][6] = 1;
+				PSD[SDF_GAME_SPEED] = 1;
 			if (cd_get_led(1099,36) == 1)
-				PSD[306][6] = 2;
+				PSD[SDF_GAME_SPEED] = 2;
 			if (cd_get_led(1099,47) == 1)
-				PSD[306][6] = 3;
+				PSD[SDF_GAME_SPEED] = 3;
 			if (cd_get_led(1099,29) == 1)
 				for (i = 0; i < 120; i++)
 					party.help_received[i] = 0;
@@ -1140,15 +1140,15 @@ Boolean prefs_event_filter (short item_hit)
 					GetWindowRect(GetDesktopWindow(),&windRECT);
 					MoveWindow(mainPtr,(windRECT.right - (588 + 10)) / 2,
 					(windRECT.bottom - (425 + 52)) / 2 ,
-					588  + 10,425 + 52,TRUE);
+					588  + 10,425 + 52,true);
 					}
 			}
-		save_maps = 1 - party.stuff_done[306][0];
-		give_delays = party.stuff_done[306][2];
+		save_maps = 1 - party.stuff_done[SFD_NO_MAPS];
+		give_delays = party.stuff_done[SDF_NO_FRILLS];
 		build_data_file(2);
 		}
 
-	return FALSE;
+	return false;
 }
 
 void pick_preferences()
@@ -1162,25 +1162,25 @@ void pick_preferences()
 
 	cd_set_led(1099,4 + cur_display_mode,1);
 
-	cd_set_led(1099,18,(party.stuff_done[306][0] != 0) ? 1 : 0);
-	cd_set_led(1099,20,(play_sounds == FALSE) ? 1 : 0);
-	cd_set_led(1099,22,(party.stuff_done[306][2] != 0) ? 1 : 0);
-	cd_set_led(1099,24,(party.stuff_done[306][3] != 0) ? 1 : 0);
-	cd_set_led(1099,27,(party.stuff_done[306][4] != 0) ? 1 : 0);
-	cd_set_led(1099,38,(party.stuff_done[306][7] != 0) ? 1 : 0);
-	cd_set_led(1099,40,(party.stuff_done[306][8] != 0) ? 1 : 0);
-	cd_set_led(1099,43,(party.stuff_done[306][9] != 0) ? 1 : 0);
-	cd_set_led(1099,45,(party.stuff_done[306][5] != 0) ? 1 : 0);
-	cd_set_led(1099,50,(party.stuff_done[305][6] != 0) ? 1 : 0);
-	cd_set_led(1099,52,(party.stuff_done[305][5] != 0) ? 1 : 0);
-	cd_set_led(1099,54,(play_startup != FALSE) ? 1 : 0);
-	cd_set_led(1099,56,(party.stuff_done[305][7] != 0) ? 1 : 0);
-	cd_set_led(1099,58,(party.stuff_done[307][0] != 0) ? 1 : 0);
-	cd_set_led(1099,60,(party.stuff_done[307][1] != 0) ? 1 : 0);// talk edit box appearing ?
+	cd_set_led(1099,18,(party.stuff_done[SFD_NO_MAPS] != 0) ? 1 : 0);
+	cd_set_led(1099,20,(play_sounds == false) ? 1 : 0);
+	cd_set_led(1099,22,(party.stuff_done[SDF_NO_FRILLS] != 0) ? 1 : 0);
+	cd_set_led(1099,24,(party.stuff_done[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
+	cd_set_led(1099,27,(party.stuff_done[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
+	cd_set_led(1099,38,(party.stuff_done[SDF_EASY_MODE] != 0) ? 1 : 0);
+	cd_set_led(1099,40,(party.stuff_done[SDF_LESS_WANDER_ENC] != 0) ? 1 : 0);
+	cd_set_led(1099,43,(party.stuff_done[SDF_NO_TER_ANIM] != 0) ? 1 : 0);
+	cd_set_led(1099,45,(party.stuff_done[SDF_NO_SHORE_FRILLS] != 0) ? 1 : 0);
+	cd_set_led(1099,50,(party.stuff_done[SDF_NO_TARGET_LINE] != 0) ? 1 : 0);
+	cd_set_led(1099,52,(party.stuff_done[SDF_LESS_SOUND] != 0) ? 1 : 0);
+	cd_set_led(1099,54,(play_startup != false) ? 1 : 0);
+	cd_set_led(1099,56,(party.stuff_done[SDF_FASTER_BOOM_SPACES] != 0) ? 1 : 0);
+	cd_set_led(1099,58,(party.stuff_done[SDF_USE_DARKER_GRAPHICS] != 0) ? 1 : 0);
+	cd_set_led(1099,60,(party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] != 0) ? 1 : 0);// talk edit box appearing ?
 		cd_set_flag(1099,3,1);
-	if (PSD[306][6] == 3)
+	if (PSD[SDF_GAME_SPEED] == 3)
 		cd_set_led(1099,47,1);
-		else cd_set_led(1099,32 + PSD[306][6] * 2,1);
+		else cd_set_led(1099,32 + PSD[SDF_GAME_SPEED] * 2,1);
 
 	if (party.help_received[55] == 0) {
 		cd_initial_draw(1099);
@@ -1195,18 +1195,18 @@ void pick_preferences()
 
 Boolean compatibility_event_filter (short item_hit)
 {
-	Boolean done_yet = FALSE,did_cancel = FALSE;
+	Boolean done_yet = false,did_cancel = false;
 
 		switch (item_hit) {
 			case 1:
-				done_yet = TRUE;
-				dialog_not_toast = FALSE;
+				done_yet = true;
+				dialog_not_toast = false;
 				break;
 
 			case 2:
-				done_yet = TRUE;
-				dialog_not_toast = FALSE;
-				did_cancel = TRUE;
+				done_yet = true;
+				dialog_not_toast = false;
+				did_cancel = true;
 				break;
 
 
@@ -1215,20 +1215,20 @@ Boolean compatibility_event_filter (short item_hit)
 				break;
 			}
 
-	if (done_yet== TRUE) {
-		if (did_cancel == FALSE) {
-			party.stuff_done[309][0]=cd_get_led(1100,7);
-			party.stuff_done[309][1]=1-cd_get_led(1100,9);
-			party.stuff_done[309][2]=1-cd_get_led(1100,11);
-			party.stuff_done[309][3]=cd_get_led(1100,13);
-			party.stuff_done[309][4]=cd_get_led(1100,15);
-			party.stuff_done[309][5]=cd_get_led(1100,17);
-			party.stuff_done[309][6]=cd_get_led(1100,19);
+	if (done_yet== true) {
+		if (did_cancel == false) {
+			party.stuff_done[SDF_COMPATIBILITY_LEGACY_DAY_REACHED]=cd_get_led(1100,7);
+			party.stuff_done[SDF_COMPATIBILITY_LEGACY_KILL_NODE]=1-cd_get_led(1100,9);
+			party.stuff_done[SDF_COMPATIBILITY_WORKING_TOWN_WATERFALL]=1-cd_get_led(1100,11);
+			party.stuff_done[SDF_COMPATIBILITY_FULL_TRIMS]=cd_get_led(1100,13);
+			party.stuff_done[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST]=cd_get_led(1100,15);
+			party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES]=cd_get_led(1100,17);
+			party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING]=cd_get_led(1100,19);
 			}
 	build_data_file(1);
     }
 
-	return FALSE;
+	return false;
 }
 
 void pick_compatibility()
@@ -1238,13 +1238,13 @@ void pick_compatibility()
 
 	cd_create_dialog(1100,mainPtr);
 
-    cd_set_led(1100,7,(party.stuff_done[309][0]!= 0) ?  1: 0);// party.stuff_done[309][0] legacy_day_reached
-    cd_set_led(1100,9,(party.stuff_done[309][1] != 0) ? 0 : 1);// party.stuff_done[309][1] legacy_kill_node
-    cd_set_led(1100,11,(party.stuff_done[309][2] != 0) ? 0 : 1);// party.stuff_done[309][2] town_waterfalls
-    cd_set_led(1100,13,(party.stuff_done[309][3] != 0) ? 1 : 0);// party.stuff_done[309][3] display_grass_trims
-    cd_set_led(1100,15,(party.stuff_done[309][4] != 0) ? 1 : 0);// party.stuff_done[309][4] special_interrupt
-    cd_set_led(1100,17,(party.stuff_done[309][5] != 0) ? 1 : 0);// party.stuff_done[309][5] stairway_everywhere
-    cd_set_led(1100,19,(party.stuff_done[309][6] != 0) ? 1 : 0);// party.stuff_done[309][6] resting_checks_timers
+    cd_set_led(1100,7,(party.stuff_done[SDF_COMPATIBILITY_LEGACY_DAY_REACHED]!= 0) ?  1: 0);// party.stuff_done[309][0] legacy_day_reached
+    cd_set_led(1100,9,(party.stuff_done[SDF_COMPATIBILITY_LEGACY_KILL_NODE] != 0) ? 0 : 1);// party.stuff_done[309][1] legacy_kill_node
+    cd_set_led(1100,11,(party.stuff_done[SDF_COMPATIBILITY_WORKING_TOWN_WATERFALL] != 0) ? 0 : 1);// party.stuff_done[309][2] town_waterfalls
+    cd_set_led(1100,13,(party.stuff_done[SDF_COMPATIBILITY_FULL_TRIMS] != 0) ? 1 : 0);// party.stuff_done[309][3] display_grass_trims
+    cd_set_led(1100,15,(party.stuff_done[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST] != 0) ? 1 : 0);// party.stuff_done[309][4] special_interrupt
+    cd_set_led(1100,17,(party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES] != 0) ? 1 : 0);// party.stuff_done[309][5] stairway_everywhere
+    cd_set_led(1100,19,(party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING] != 0) ? 1 : 0);// party.stuff_done[309][6] resting_checks_timers
 
 	if (party.help_received[110] == 0) {
 		cd_initial_draw(1100);
@@ -1289,7 +1289,7 @@ void edit_party_event_filter (short item_hit)
 
 		switch (item_hit) {
 			case 1:
-				dialog_not_toast = FALSE;
+				dialog_not_toast = false;
 				break;
 
 			case 41:
@@ -1370,7 +1370,7 @@ void tip_of_day_event_filter (short item_hit)
 
 			switch (item_hit) {
 				case 1:
-					dialog_not_toast = FALSE;
+					dialog_not_toast = false;
 					break;
 
 				case 5:
@@ -1378,7 +1378,7 @@ void tip_of_day_event_filter (short item_hit)
 					if (store_tip_page_on == NUM_HINTS)
 						store_tip_page_on = 0;
 					GetIndString(place_str,12,50 + store_tip_page_on);
-					csit(958,3,(char *) place_str);
+					csit(958,3, place_str);
 					break;
 
 				case 7:
@@ -1400,7 +1400,7 @@ void tip_of_day()
 	cd_create_dialog_parent_num(958,0);
 
 	GetIndString(place_str,12,50 + store_tip_page_on);
-	csit(958,3,(char *) place_str);
+	csit(958,3, place_str);
 
 	cd_set_led(958,7,give_intro_hint);
 
@@ -1415,14 +1415,14 @@ void max_window(HWND window)
 	RECT main_rect,wind_rect;
 	short width,height;
 
-	cursor_shown = TRUE;
-	showcursor(TRUE);
+	cursor_shown = true;
+	showcursor(true);
 
 	GetWindowRect(GetDesktopWindow(),&main_rect);
 	GetWindowRect(window,&wind_rect);
 	width = main_rect.right - main_rect.left;
 	height = main_rect.bottom - main_rect.top;
-	MoveWindow(window,0,0,width,height,TRUE);
+	MoveWindow(window,0,0,width,height,true);
 }
 
 void put_scen_info()
@@ -1470,7 +1470,7 @@ void pick_a_scen_event_filter (short item_hit)
 			switch (item_hit) {
 				case 1:
 					dialog_answer = -1;
-					dialog_not_toast = FALSE;
+					dialog_not_toast = false;
 					break;
 
 				case 3: case 4:
@@ -1489,7 +1489,7 @@ void pick_a_scen_event_filter (short item_hit)
 
 				case 8: case 11: case 14:
 					dialog_answer = ((item_hit - 8) / 3) + store_scen_page_on * 3;
-					dialog_not_toast = FALSE;
+					dialog_not_toast = false;
 					break;
 				}
 
@@ -1528,12 +1528,12 @@ void pick_prefab_scen_event_filter (short item_hit)
 			switch (item_hit) {
 				case 1:
 					dialog_answer = -1;
-					dialog_not_toast = FALSE;
+					dialog_not_toast = false;
 					break;
 
 				case 6: case 9: case 12:
 					dialog_answer = ((item_hit - 6) / 3);
-					dialog_not_toast = FALSE;
+					dialog_not_toast = false;
 					break;
 				}
 }

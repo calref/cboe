@@ -92,8 +92,8 @@ void alter_rect(RECT16 *r)
 Boolean same_point(location p1,location p2)
 {
 	if ((p1.x == p2.x) && (p1.y == p2.y))
-		return TRUE;
-		else return FALSE;
+		return true;
+		else return false;
 }
 
 /*short s_pow(short x,short y) => already defined in mathutil.cpp
@@ -125,6 +125,6 @@ void pause(short length)
 Boolean sd_legit(short a, short b)
 {
 	if ((minmax(0,299,(int)a) == a) && (minmax(0,9,(int)b) == b))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

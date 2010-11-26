@@ -32,7 +32,7 @@ bool always_asynch[100] = {
 	false,true,false,false,false, // 90
 	false,false,false,false,false
 };
-bool load_when_play[100] = { 
+bool load_when_play[100] = {
 	0,0,1,1,1,1,0,1,1,1,
 	0,0,0,1,0,1,1,1,1,1,
 	1,1,1,1,1,1,1,0,1,1,
@@ -46,26 +46,26 @@ bool load_when_play[100] = {
 };
 #else
 bool always_asynch[100] = {
-	FALSE,FALSE,FALSE,FALSE,FALSE,
-	TRUE,TRUE,FALSE,FALSE,FALSE,
-	TRUE,FALSE,FALSE,FALSE,FALSE, // 10
-	FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,TRUE,FALSE,TRUE, // 20
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,TRUE,  // 30
-	FALSE,FALSE,TRUE,FALSE,TRUE,
-	FALSE,TRUE,TRUE,TRUE,TRUE, // 40
-	TRUE,TRUE,TRUE,TRUE,TRUE,
-	TRUE,FALSE,FALSE,TRUE,FALSE, // 50
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,TRUE,FALSE,FALSE,FALSE, // 60
-	FALSE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,FALSE,FALSE,FALSE,FALSE, // 70
-	FALSE,TRUE,TRUE,TRUE,TRUE,
-	TRUE,TRUE,TRUE,TRUE,FALSE, // 80
-	TRUE,FALSE,FALSE,FALSE,FALSE,
-	FALSE,TRUE,FALSE,FALSE,FALSE, // 90
-	FALSE,FALSE,FALSE,FALSE,FALSE};
+	false,false,false,false,false,
+	true,true,false,false,false,
+	true,false,false,false,false, // 10
+	false,false,false,false,false,
+	false,false,true,false,true, // 20
+	true,false,false,false,false,
+	false,false,false,false,true,  // 30
+	false,false,true,false,true,
+	false,true,true,true,true, // 40
+	true,true,true,true,true,
+	true,false,false,true,false, // 50
+	true,false,false,false,false,
+	false,true,false,false,false, // 60
+	false,false,false,false,false,
+	false,false,false,false,false, // 70
+	false,true,true,true,true,
+	true,true,true,true,false, // 80
+	true,false,false,false,false,
+	false,true,false,false,false, // 90
+	false,false,false,false,false};
 bool load_when_play[100] = {
 	0,0,1,1,1,0,0,1,1,1,
 	0,0,0,1,0,1,1,1,1,1,

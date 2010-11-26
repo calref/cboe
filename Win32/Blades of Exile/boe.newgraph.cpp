@@ -50,13 +50,13 @@ void apply_unseen_mask()
 {
 	RECT base_rect = {8,10,43,53}/*{9,9,43,53}*/,to_rect,big_to = {13,13,265,337}; /**/
 	short i,j,k,l;
-	Boolean need_bother = FALSE;
+	Boolean need_bother = false;
 	HDC hdc;
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
 	HPEN old_pen;
 
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	if ((is_combat()) && (which_combat_type == 0))
 		return;
@@ -66,8 +66,8 @@ void apply_unseen_mask()
 	for (i = 0; i < 11; i++)
 		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1)
-				need_bother = TRUE;
-	if (need_bother == FALSE)
+				need_bother = true;
+	if (need_bother == false)
 		return;
 
 	hdc = CreateCompatibleDC(main_dc);
@@ -106,13 +106,13 @@ void apply_light_mask()
 	RECT temp = {0,0,84,108},paint_rect,base_rect = {0,0,28,36};
 	RECT big_to = {13,13,265,337}; /**/
 	short i,j;
-	Boolean is_dark = FALSE,same_mask = TRUE;
+	Boolean is_dark = false,same_mask = true;
 
 	HDC hdc;
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
 
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	if (is_out())
 		return;
@@ -128,8 +128,8 @@ void apply_light_mask()
 	// Process the light array
 	for (i = 2; i < 11; i++)
 		for (j = 2; j < 11; j++)
-			if (light_area[i][j] == 0) is_dark = TRUE;
-	if (is_dark == FALSE) {
+			if (light_area[i][j] == 0) is_dark = true;
+	if (is_dark == false) {
 		for (i = 2; i < 11; i++)
 			for (j = 2; j < 11; j++)
 				last_light_mask[i][j] = 0;
@@ -165,9 +165,9 @@ void apply_light_mask()
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++)
 			if (last_light_mask[i][j] != light_area[i][j])
-				same_mask = FALSE;
+				same_mask = false;
 
-	if (same_mask == TRUE) {
+	if (same_mask == true) {
 		PaintRgn(hdc,dark_mask_region);
 		SelectObject(hdc,store_bmp);
 		if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 2");
@@ -210,9 +210,9 @@ void start_missile_anim()
 {
 	short i;
 
-	if (boom_anim_active == TRUE)
+	if (boom_anim_active == true)
 		return;
-	boom_anim_active = TRUE;
+	boom_anim_active = true;
 	for (i = 0; i < 30; i++) {
 		store_missiles[i].missile_type = -1;
 		store_booms[i].boom_type = -1;
@@ -221,30 +221,30 @@ void start_missile_anim()
 		pc_marked_damage[i] = 0;
 	for (i = 0; i < T_M; i++)
 		monst_marked_damage[i] = 0;
-	have_missile = FALSE;
-	have_boom = FALSE;
+	have_missile = false;
+	have_boom = false;
 }
 
 void end_missile_anim()
 {
-	boom_anim_active = FALSE;
+	boom_anim_active = false;
 }
 
 void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj)
 {
 	short i;
 
-	if (boom_anim_active == FALSE)
+	if (boom_anim_active == false)
 		return;
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
 	// lose redundant missiles
 	for (i = 0; i < 30; i++)
-		if ((store_missiles[i].missile_type >= 0) && (same_point(dest,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(dest,store_missiles[i].dest) == true))
 			return;
 	for (i = 0; i < 30; i++)
 		if (store_missiles[i].missile_type < 0) {
-			have_missile = TRUE;
+			have_missile = true;
 			store_missiles[i].dest = dest;
 			store_missiles[i].missile_type =missile_type;
 			store_missiles[i].path_type =path_type;
@@ -288,13 +288,13 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 {
 	short i;
 
-	if (PSD[306][2] > 0)
+	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
-	if (boom_anim_active == FALSE)
+	if (boom_anim_active == false)
 		return;
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
-		if ((store_booms[i].boom_type >= 0) && (same_point(dest,store_booms[i].dest) == TRUE)
+		if ((store_booms[i].boom_type >= 0) && (same_point(dest,store_booms[i].dest) == true)
 		 && (place_type == 0)) {
 			if (val_to_place > 0)
 				store_booms[i].val_to_place = val_to_place;
@@ -302,7 +302,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 			}
 	for (i = 0; i < 30; i++)
 		if (store_booms[i].boom_type < 0) {
-			have_boom = TRUE;
+			have_boom = true;
 			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
 			store_booms[i].dest = dest;
 			store_booms[i].val_to_place = val_to_place;
@@ -337,8 +337,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	if (sound_num == 53) pause_len = 1000;
 	if (sound_num == 64) pause_len = 500;
 
-	if ((have_missile == FALSE) || (boom_anim_active == FALSE)) {
-		boom_anim_active = FALSE;
+	if ((have_missile == false) || (boom_anim_active == false)) {
+		boom_anim_active = false;
 		return;
 		}
 
@@ -369,7 +369,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	// init missile paths
 	for (i = 0; i < 30; i++) {
 		SetRectEmpty(&store_erase_rect[i]);
-		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin,store_missiles[i].dest) == TRUE))
+		if ((store_missiles[i].missile_type >= 0) && (same_point(missile_origin,store_missiles[i].dest) == true))
 			store_missiles[i].missile_type = -1;
 		}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -444,7 +444,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				rect_draw_some_item(temp_gworld,missile_place_rect[i],
 					temp_gworld,to_rect,0,1);
 				}
-		if ((PSD[306][6] == 3) || ((PSD[306][6] == 1) && (t % 4 == 0)) || ((PSD[306][6] == 2) && (t % 3 == 0)))
+		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
 			Delay(1,&delay_dummy);
 
 		}
@@ -524,8 +524,8 @@ void do_explosion_anim(short, short special_draw)
 
 	t2 = t1 = (long) GetCurrentTime();
 
-	if ((have_boom == FALSE) || (boom_anim_active == FALSE)) {
-		boom_anim_active = FALSE;
+	if ((have_boom == false) || (boom_anim_active == false)) {
+		boom_anim_active = false;
 		return;
 		}
 
@@ -575,7 +575,7 @@ void do_explosion_anim(short, short special_draw)
 
 			// eliminate stuff that's too gone.
 			IntersectRect(&temp_rect,&explode_place_rect[i],&ter_scrn_rect);
-			if (EqualRect(&temp_rect,&explode_place_rect[i]) == FALSE) {
+			if (EqualRect(&temp_rect,&explode_place_rect[i]) == false) {
 				store_booms[i].boom_type = -1;
 				}
 
@@ -625,7 +625,7 @@ void do_explosion_anim(short, short special_draw)
 					temp_gworld,to_rect,0,1);
 				}
 
-			Delay(2 * (1 + PSD[306][6]),&delay_dummy);
+			Delay(2 * (1 + PSD[SDF_GAME_SPEED]),&delay_dummy);
 		}
 
 	// Exit gracefully, and clean up screen
@@ -661,7 +661,7 @@ void click_shop_rect(RECT area_rect)
 	long dum;
 
 	draw_shop_graphics(1,area_rect);
-	if (play_sounds == TRUE) play_sound(37);
+	if (play_sounds == true) play_sound(37);
 	else Delay(5,&dum);
 
 	draw_shop_graphics(0,area_rect);
@@ -732,7 +732,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	// Place store icon
 	if (draw_mode == 0) {
 		i = faces[store_shop_type];
-		draw_dialog_graphic((HWND) talk_gworld, face_rect, 1000 + i, FALSE,1);
+		draw_dialog_graphic((HWND) talk_gworld, face_rect, 1000 + i, false,1);
 		}
 	SelectObject(hdc,talk_gworld);
 
@@ -749,11 +749,11 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 
 	SetTextColor(hdc,colors[3]);
 	switch (store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",adven[current_pc].name); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",adven[current_pc].name);break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",adven[current_pc].name); break;
-		case 12: sprintf(cur_name,"Buying Alchemy.");break;
-		case 4: sprintf(cur_name,"Buying Food.");break;
+		case SHOP_HEALER: sprintf(cur_name,"Healing for %s.",adven[current_pc].name); break;
+		case SHOP_MAGE_SPELLS: sprintf(cur_name,"Mage Spells for %s.",adven[current_pc].name);break;
+		case SHOP_PRIEST_SPELLS: sprintf(cur_name,"Priest Spells for %s.",adven[current_pc].name); break;
+		case SHOP_ALCHEMY: sprintf(cur_name,"Buying Alchemy.");break;
+		case SHOP_FOOD: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",adven[current_pc].name); break;
 		}
 	char_win_draw_string(hdc,shopper_name,cur_name,2,18);
@@ -784,13 +784,13 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 			case 0: case 1: case 2: case 3: case 4:
 				base_item = get_stored_item(what_chosen);
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, false,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1853, FALSE,1);//// all graphic nums
+				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1853, false,1);//// all graphic nums
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -798,20 +798,20 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				break;
 			case 7:
 				what_chosen -= 700;
-				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1879, FALSE,1);
+				draw_dialog_graphic((HWND) talk_gworld, shopping_rects[i][2],1879, false,1);
 				strcpy(cur_name,heal_types[what_chosen]);
 				sprintf(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, false,1);
 
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1853, FALSE,1);
+				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1853, false,1);
 				strcpy(cur_name,base_item.full_name);
 				sprintf(cur_info_str,"");
 				break;
@@ -820,7 +820,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.item_properties = base_item.item_properties | 1;
-				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, FALSE,1);
+				draw_dialog_graphic((HWND)talk_gworld, shopping_rects[i][2],1800 + base_item.graphic_num, false,1);
 				strcpy(cur_name,base_item.full_name);
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
@@ -830,7 +830,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 		OffsetRect(&from_rect,0,1);
 		shopping_rects[i][6].bottom = shopping_rects[i][6].top +
 			(from_rect.bottom - from_rect.top);
-		if ((store_shop_type != 3) && (store_shop_type != 4))
+		if ((store_shop_type != SHOP_HEALER) && (store_shop_type != SHOP_FOOD))
 			rect_draw_some_item(mixed_gworld,item_info_from,talk_gworld,shopping_rects[i][6],1,0);
 		SelectObject(hdc,talk_gworld);
 		// Now draw item shopping_rects[i][7]
@@ -848,14 +848,14 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	char_win_draw_string(hdc,bottom_help_rects[0],cur_name,0,12);
 	char_win_draw_string(hdc,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
 	char_win_draw_string(hdc,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
-	if ((store_shop_type != 3) && (store_shop_type != 4))
+	if ((store_shop_type != SHOP_HEALER) && (store_shop_type != SHOP_FOOD))
 		char_win_draw_string(hdc,bottom_help_rects[3],"'I' button brings up description.",0,12);
 
 	SelectObject(hdc,store_bmp);
 	if (!DeleteDC(hdc)) DebugQuit("Cannot release DC 8");
 
 	refresh_shopping();
-	ShowScrollBar(shop_sbar,SB_CTL,TRUE);
+	ShowScrollBar(shop_sbar,SB_CTL,true);
 }
 
 void refresh_shopping()
@@ -877,7 +877,7 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 	long dum;
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
-	if (play_sounds == TRUE)
+	if (play_sounds == true)
 		play_sound(37);
 		else Delay(5,&dum);
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
@@ -956,25 +956,25 @@ void get_item_interesting_string(item_record_type item,char *message)
 		return;
 	}
 	switch (item.variety) {
-		case 1: case 2: case 5: case 6: case 24: case 25: ////
+		case ITEM_TYPE_ONE_HANDED: case ITEM_TYPE_TWO_HANDED: case ITEM_TYPE_ARROW: case ITEM_TYPE_THROWN_MISSILE: case ITEM_TYPE_BOLTS: case ITEM_TYPE_MISSILE_NO_AMMO: ////
 			if (item.bonus != 0)
 				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
 				else sprintf(message,"Damage: 1-%d.",item.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17:
+		case ITEM_TYPE_SHIELD: case ITEM_TYPE_ARMOR: case ITEM_TYPE_HELM: case ITEM_TYPE_GLOVES: case ITEM_TYPE_SHIELD_2: case ITEM_TYPE_BOOTS:
 			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
 				item.item_level + item.protection);
 			break;
-		case 4: case 23:
+		case ITEM_TYPE_BOW: case ITEM_TYPE_CROSSBOW:
 			sprintf(message,"Bonus : +%d to hit.",item.bonus);
 			break;
-		case 3:
+		case ITEM_TYPE_GOLD:
 			sprintf(message,"%d gold pieces.",item.item_level);
 			break;
-		case 11:
+		case ITEM_TYPE_FOOD:
 			sprintf(message,"%d food.",item.item_level);
 			break;
-		case 20:
+		case ITEM_TYPE_WEAPON_POISON:
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:
@@ -1001,7 +1001,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	char p_str[256],str[256],str_to_draw[256],str_to_draw2[256];
 	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
-	Boolean force_skip = FALSE;
+	Boolean force_skip = false;
 	short face_to_draw;
 
 	HDC hdc;
@@ -1045,14 +1045,14 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic((HWND)  talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, FALSE,1);
+			draw_dialog_graphic((HWND)  talk_gworld, face_rect, 2400 + store_talk_face_pic - 1000, false,1);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 
 				if (face_to_draw <= 0)
-					draw_dialog_graphic((HWND)  talk_gworld, face_rect, 400 + i, FALSE,1);
-					else draw_dialog_graphic((HWND)  talk_gworld, face_rect, 1000 + face_to_draw, FALSE,1);
+					draw_dialog_graphic((HWND)  talk_gworld, face_rect, 400 + i, false,1);
+					else draw_dialog_graphic((HWND)  talk_gworld, face_rect, 1000 + face_to_draw, false,1);
 				}
 		}
 	SelectObject(hdc,talk_gworld);
@@ -1070,10 +1070,10 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	if (color == 0)
 		SetTextColor(hdc,colors[5]);
 		else SetTextColor(hdc,colors[6]);
-    if((PSD[307][1] == 1) && (talk_end_forced))
+    if((PSD[SDF_ASK_ABOUT_TEXT_BOX] == 1) && (talk_end_forced))
     	ShowWindow(talk_edit_box, SW_HIDE);
 	for (i = 0; i < 9; i++)
-		if ((talk_end_forced == FALSE) || (i == 6) || (i == 5)) {
+		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			OffsetRect(&preset_words[i].word_rect,0,-2);
 			char_win_draw_string(hdc,preset_words[i].word_rect,preset_words[i].word,2,18);
 			OffsetRect(&preset_words[i].word_rect,0,2);
@@ -1106,7 +1106,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
-			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
+			 && (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
@@ -1140,7 +1140,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-		 		force_skip = TRUE;
+		 		force_skip = true;
 				}
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
@@ -1153,8 +1153,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == TRUE) {
-				force_skip = FALSE;
+			if (force_skip == true) {
+				force_skip = false;
 				i++;
 				last_line_break++;
 				last_word_break++;
@@ -1188,7 +1188,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
-			 && (i - last_stored_word_break >= 4) && (talk_end_forced == FALSE)) {
+			 && (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
 				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
 				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
@@ -1222,7 +1222,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-				force_skip = TRUE;
+				force_skip = true;
 				}
 			store_last_word_break = last_word_break;
 			if (i == str_len - 1)
@@ -1235,8 +1235,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_re
 			on_what_line++;
 			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == TRUE) {
-				force_skip = FALSE;
+			if (force_skip == true) {
+				force_skip = false;
 				i++;
 				last_line_break++;
 				last_word_break++;

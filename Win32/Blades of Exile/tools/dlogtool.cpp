@@ -64,7 +64,7 @@ void cd_init_dialogs()
 		dlg_highest_item[i] = 0;
 	}
 	for (i = 0; i < NI; i++) item_dlg[i] = -1;
-	for (i = 0; i < NL; i++) label_taken[i] = FALSE;
+	for (i = 0; i < NL; i++) label_taken[i] = false;
 
 	d_proc = dummy_dialog_proc;
 	edit_proc = fresh_edit_proc;
@@ -166,7 +166,7 @@ short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture)
 	dlg_keys[free_slot] = current_key;
 	dlg_types[free_slot] = 905;
 	dlg_highest_item[free_slot] = 1;
-	dlg_draw_ready[free_slot] = FALSE;
+	dlg_draw_ready[free_slot] = false;
 	dlgs[free_slot] = NULL;
 
 	// first, create dummy dlog
@@ -233,13 +233,13 @@ short cd_create_custom_pic_dialog(HWND parent, HBITMAP picture)
 	ShowWindow(dlgs[free_slot],SW_SHOW);
 
 	if (dlg_parent[free_slot] != NULL) {
-		EnableWindow(dlg_parent[free_slot],FALSE);
+		EnableWindow(dlg_parent[free_slot],false);
 		if (dlg_parent[free_slot] == mainPtr)
 			for (i = 0; i < 18; i++)
-				if (modeless_exists[i] == TRUE)
-					EnableWindow(modeless_dialogs[i],FALSE);
+				if (modeless_exists[i] == true)
+					EnableWindow(modeless_dialogs[i],false);
 		}
-	dialog_not_toast = TRUE;
+	dialog_not_toast = true;
 	return 0;
 }
 
@@ -292,7 +292,7 @@ short cd_create_custom_dialog(HWND parent,
 	dlg_keys[free_slot] = current_key;
 	dlg_types[free_slot] = 900;
 	dlg_highest_item[free_slot] = 1;
-	dlg_draw_ready[free_slot] = FALSE;
+	dlg_draw_ready[free_slot] = false;
 	dlgs[free_slot] = NULL;
 
 	// first, create dummy dlog
@@ -422,20 +422,21 @@ short cd_create_custom_dialog(HWND parent,
 				}
 			}
 
-	win_height += 18;
+	win_height += 28;
+	win_width += 3;
 
-	MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
+	MoveWindow(dlgs[free_slot],0,0,win_width,win_height,false);
 	center_window(dlgs[free_slot]);
 	ShowWindow(dlgs[free_slot],SW_SHOW);
 
 	if (dlg_parent[free_slot] != NULL) {
-		EnableWindow(dlg_parent[free_slot],FALSE);
+		EnableWindow(dlg_parent[free_slot],false);
 		if (dlg_parent[free_slot] == mainPtr)
 			for (i = 0; i < 18; i++)
-				if (modeless_exists[i] == TRUE)
-					EnableWindow(modeless_dialogs[i],FALSE);
+				if (modeless_exists[i] == true)
+					EnableWindow(modeless_dialogs[i],false);
 		}
-	dialog_not_toast = TRUE;
+	dialog_not_toast = true;
 	return 0;
 }
 
@@ -467,7 +468,7 @@ short cd_create_dialog(short dlog_num, HWND parent)
 	dlg_keys[free_slot] = current_key;
 	dlg_types[free_slot] = dlog_num;
 	dlg_highest_item[free_slot] = 1;
-	dlg_draw_ready[free_slot] = FALSE;
+	dlg_draw_ready[free_slot] = false;
 	dlgs[free_slot] = NULL;
 
 	// first, create dummy dlog
@@ -531,13 +532,13 @@ short cd_create_dialog(short dlog_num, HWND parent)
 
 	if (dlg_parent[free_slot] != NULL)
 	{
-		EnableWindow(dlg_parent[free_slot], FALSE);
+		EnableWindow(dlg_parent[free_slot], false);
 
 		if (dlg_parent[free_slot] == mainPtr)
 			for (i = 0; i < 18; i++)
-				if (modeless_exists[i] == TRUE) EnableWindow(modeless_dialogs[i],FALSE);
+				if (modeless_exists[i] == true) EnableWindow(modeless_dialogs[i],false);
 	}
-	dialog_not_toast = TRUE;
+	dialog_not_toast = true;
 	return 0;
 }
 
@@ -546,7 +547,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 	short i,j,k,free_slot = -1,free_item = -1;
 	int type, flag;
 	char item_str[256];
-	Boolean str_stored = FALSE;
+	Boolean str_stored = false;
 	RECT dlg_rect;
 	short win_height = 0, win_width = 0;
 	short str_offset = 1;
@@ -578,50 +579,50 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 				GetDlgItemText(hDlg,i,item_str,256);
 	      		str_offset = 1;
 				dlg_highest_item[free_slot] = i;
-				str_stored = FALSE;
+				str_stored = false;
 
 				if (strlen((char *)item_str) == 0)
 				{
 					sprintf((char *) item_str, "+");
 					type = 3;
 					flag = 0;
-		            str_stored = TRUE;
+		            str_stored = true;
 				}
 				else if (item_str[0] == '+') { // default is framed text
 					type = 3;
 					flag = 1;
-	            	str_stored = TRUE;
+	            	str_stored = true;
 					}
 				else if (item_str[0] == '*') {
 					type = 3;
 					flag = 0;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else if (item_str[0] == '~') {
 					type = 7;
 					flag = 0;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else if (item_str[0] == '!') {
 					type = 4;
 					flag = 0;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else if (item_str[0] == '=') {
 					type = 9;
 					flag = 1;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else if (((item_str[0] >= 65) && (item_str[0] <= 122)) || (item_str[0] == '"')) {
 					type = 9;
 					flag = 0;
 					str_offset = 0;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else if ((item_str[0] == '^') || (item_str[0] == '&')) {
 					type = (item_str[0] == '^') ? 10 : 11;
 					flag = 1;
-					str_stored = TRUE;
+					str_stored = true;
 					}
 				else sscanf(item_str,"%d_%d",&type,&flag);
 
@@ -637,7 +638,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 						break;
 					default:
 						if ((type == 9) ||
-						 ((str_stored == TRUE) && (strlen((char *) item_str) > 35))) {
+						 ((str_stored == true) && (strlen((char *) item_str) > 35))) {
 							for (j = 0; j < 10; j++)
 								if (item_dlg[j] < 0) {
 									free_item = j;
@@ -696,7 +697,7 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 								break;
 							case 3: case 4: case 7: case 8: case 9: case 10: case 11:
 								sprintf(((free_item < 10) ? text_long_str[free_item] : text_short_str[free_item - 10]),"");
-								if (str_stored == TRUE) {
+								if (str_stored == true) {
 									if (free_item < 10) {
 										sprintf(text_long_str[free_item],"%s",
 										  (char *) (item_str + str_offset));
@@ -731,16 +732,16 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 								SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
 								break;
 							}
-						win_height = max(win_height, item_rect[free_item].bottom + 28);
+						win_height = max(win_height, item_rect[free_item].bottom + 28 + 6);
 						win_width = max(win_width, item_rect[free_item].right + 11);
 					}
 				}
-				MoveWindow(dlgs[free_slot],0,0,win_width,win_height,FALSE);
+				MoveWindow(dlgs[free_slot],0,0,win_width,win_height,false);
 				EndDialog(hDlg, 0);
-				return TRUE;
+				return true;
 	} /* end of switch */
 
-	return TRUE;
+	return true;
 }
 
 short cd_kill_dialog(short dlog_num,short parent_message)
@@ -761,16 +762,16 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 				edit_box = NULL;
 				}
 			if (item_label[i] > 0)
-				label_taken[item_label_loc[i]] = FALSE;
+				label_taken[item_label_loc[i]] = false;
 			item_dlg[i] = -1;
 			}
 
 	if (dlg_parent[which_dlg] != NULL) {
-		EnableWindow(dlg_parent[which_dlg],TRUE);
+		EnableWindow(dlg_parent[which_dlg],true);
 		if (dlg_parent[which_dlg] == mainPtr)
 			for (i = 0; i < 18; i++)
-				if (modeless_exists[i] == TRUE)
-					EnableWindow(modeless_dialogs[i],TRUE);
+				if (modeless_exists[i] == true)
+					EnableWindow(modeless_dialogs[i],true);
 		SetFocus(dlg_parent[which_dlg]);
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
@@ -782,8 +783,8 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 
 	DestroyWindow(dlgs[which_dlg]);
 	dlg_keys[which_dlg] = -1;
-	dialog_not_toast = TRUE;
-	block_erase = TRUE;
+	dialog_not_toast = true;
+	block_erase = true;
 	return 0;
 }
 
@@ -1070,9 +1071,9 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 	if (item_label_loc[item_index] < 0) {
 		item_label[item_index] = label_flag;
 		for (i = 0; i < 100; i++)
-			if (label_taken[i] == FALSE) {
+			if (label_taken[i] == false) {
 				label_loc = i;
-				label_taken[i] = TRUE;
+				label_taken[i] = true;
 				i = 100;
 				}
 		if (label_loc < 0) {
@@ -1109,7 +1110,7 @@ void cd_draw_item(short dlog_num,short item_num)
 
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 		return;
-	if (dlg_draw_ready[dlg_index] == FALSE)
+	if (dlg_draw_ready[dlg_index] == false)
 		return;
 
 	win_dc = cd_get_dlog_dc(dlg_index);
@@ -1196,7 +1197,7 @@ void cd_draw_item(short dlog_num,short item_num)
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
 						else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
-							item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
+							item_flag[item_index],(item_flag[item_index] >= 2000) ? false : true,0);
 					break;
 				case 20: // display picture special case
 
@@ -1281,7 +1282,7 @@ void cd_initial_draw(short dlog_num)
 			which_dlg = i;
 	if (which_dlg < 0)
 		return;
-	dlg_draw_ready[which_dlg] = TRUE;
+	dlg_draw_ready[which_dlg] = true;
 
 	cd_erase_item(dlog_num, 0);
 	cd_draw(dlog_num);
@@ -1308,7 +1309,7 @@ void cd_redraw(HWND window)
 
 	if ((which_dlg = cd_find_dlog(window,&dlg_num,&dlg_key)) < 0)
 		return;
-	dlg_draw_ready[which_dlg] = TRUE;
+	dlg_draw_ready[which_dlg] = true;
 	cd_initial_draw(dlg_num);
 }
 
@@ -1328,11 +1329,11 @@ void cd_erase_item(short dlog_num, short item_num)
 	short i,dlg_index,item_index,store_label;
 	RECT to_fry;
 	HDC win_dc;
-	Boolean just_label = FALSE;
+	Boolean just_label = false;
 
 	if (item_num >= 100) {
 		item_num -= 100;
-		just_label = TRUE;
+		just_label = true;
 		}
 
 	if (item_num == 0) {
@@ -1346,7 +1347,7 @@ void cd_erase_item(short dlog_num, short item_num)
 		if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
 			return;
 		to_fry = item_rect[item_index];
-		if (just_label == TRUE) {
+		if (just_label == true) {
 			if (item_label[item_index] != 0) {
 				store_label = item_label[item_index];
 				if (store_label >= 1000)
@@ -1381,7 +1382,7 @@ void cd_erase_item(short dlog_num, short item_num)
 		InflateRect(&to_fry,1,1);
 
 		}
-	if (dlg_draw_ready[dlg_index] == FALSE)
+	if (dlg_draw_ready[dlg_index] == false)
 		return;
 	win_dc = cd_get_dlog_dc(dlg_index);
 	paint_pattern((HBITMAP) win_dc,2,to_fry,0);
@@ -1430,7 +1431,7 @@ void cd_press_button(short dlog_num, short item_num)
 	if (item_type[item_index] < 2)
 		OffsetRect(&item_rect[item_index],button_left_adj[item_flag[item_index]],0);
 
-	if (play_sounds == TRUE) {
+	if (play_sounds == true) {
 		play_sound(37);
 		Delay(6,&dummy);
 		}
@@ -1513,15 +1514,15 @@ void center_window(HWND window)
 	RECT main_rect,wind_rect;
 	short width,height;
 
-	cursor_shown = TRUE;
-	showcursor(TRUE);
+	cursor_shown = true;
+	showcursor(true);
 
 	GetWindowRect(GetDesktopWindow(),&main_rect);
 	GetWindowRect(window,&wind_rect);
 	width = wind_rect.right - wind_rect.left;
 	height = wind_rect.bottom - wind_rect.top;
 	MoveWindow(window,((main_rect.right - main_rect.left) - width) / 2,
-		((main_rect.bottom - main_rect.top) - height) / 2,width,height,TRUE);
+		((main_rect.bottom - main_rect.top) - height) / 2,width,height,true);
 
 }
 
@@ -1545,19 +1546,19 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	HDC hdc;
 	HPEN dpen,lpen,old_pen;
 	COLORREF x = RGB(0,204,255),y = RGB(0,204,255);//y = RGB(119,119,119);
-	Boolean keep_dc = FALSE;
+	Boolean keep_dc = false;
 
 	InflateRect(&rect,val,val);
 
 	if (hDlg == mainPtr)
 	{
-		keep_dc = TRUE;
+		keep_dc = true;
 		hdc = main_dc;
 	}
 	else if (dlg_force_dc != NULL)
 	{
 		hdc = dlg_force_dc;
-		keep_dc = TRUE;
+		keep_dc = true;
 	}
 	else hdc = GetDC(hDlg);
 
@@ -1578,7 +1579,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	SelectObject(hdc,dpen);
 	LineTo(hdc,rect.left,rect.top);
 	SelectObject(hdc,old_pen);
-	if (keep_dc == FALSE)
+	if (keep_dc == false)
 		fry_dc(hDlg,hdc);
 	DeleteObject(dpen);
 	DeleteObject(lpen);
@@ -1626,7 +1627,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 
 	if (win_or_gworld == 1)	draw_dest = 0;
 	if (which_g < 0) return;
-	if (which_g >= 3000) do_frame = FALSE;
+	if (which_g >= 3000) do_frame = false;
 	which_g %= 3000;
 
 	if (win_or_gworld == 0) {
@@ -1919,14 +1920,14 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 			rect.bottom = rect.top + 36;
 			from_gworld = spec_scen_g;
 			from_rect = get_custom_rect(which_g);
-			if ((win_or_gworld == 0) && (do_frame == TRUE)) {
+			if ((win_or_gworld == 0) && (do_frame == true)) {
 				old_brush = (HBRUSH)SelectObject(hdc,GetStockObject(BLACK_BRUSH));
 				Rectangle(hdc,rect.left,rect.top,rect.right,rect.bottom);
 				SelectObject(hdc,old_brush);
 				}
 
 			rect_draw_some_item(from_gworld,from_rect,(HBITMAP) ((win_or_gworld == 1) ? (HBITMAP) (hDlg): (HBITMAP)hdc)
-			  ,rect,(do_frame == FALSE) ? 1 : 0,draw_dest);
+			  ,rect,(do_frame == false) ? 1 : 0,draw_dest);
 			break;
 		case 24: case 25: case 26: case 27: // dialog
 			which_g -= 2400;
@@ -1952,7 +1953,7 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 
 	if ((win_or_gworld == 0) && (dlg_force_dc == NULL))
 		fry_dc(hDlg, hdc);
-	if ((win_or_gworld == 0) && (do_frame == TRUE)){
+	if ((win_or_gworld == 0) && (do_frame == true)){
 		rect.bottom--; rect.right--;
 		frame_dlog_rect(hDlg,rect,3);
 		}
@@ -1962,19 +1963,19 @@ void showcursor(Boolean a)
 {
 	short i;
 	i = ShowCursor(a);
-	if (a == FALSE)
+	if (a == false)
 		while (i >= 0)
-			i = ShowCursor(FALSE);
-	if (a == TRUE)
+			i = ShowCursor(false);
+	if (a == true)
 		while (i < 0)
-			i = ShowCursor(TRUE);
+			i = ShowCursor(true);
 	}
 
 void ModalDialog()
 {
 	MSG msg;
 
-	while ((dialog_not_toast == TRUE) && (GetMessage(&msg,NULL,0,0)))
+	while ((dialog_not_toast == true) && (GetMessage(&msg,NULL,0,0)))
 	{
 		if (!TranslateAccelerator(mainPtr, accel, &msg)) {
 			TranslateMessage(&msg);

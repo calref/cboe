@@ -1,6 +1,6 @@
 #ifndef _CONSTS_H
 	#define _CONSTS_H
-	
+
 /*
 	This file contain numerous constans in form of #defines.
 	Almost all of this constants cannot be changed because
@@ -43,11 +43,11 @@
  #define MODE_LOOK_COMBAT 37
  #define MODE_STARTUP 45
  #define MODE_REDRAW 50
- #define MODE_CUTSCENE 51 
+ #define MODE_CUTSCENE 51
 
 /* adven[i].main_status */ //complete
 #define MAIN_STATUS_ABSENT 0		// absent, empty slot
-#define MAIN_STATUS_ALIVE 1	
+#define MAIN_STATUS_ALIVE 1
 #define MAIN_STATUS_DEAD 2
 #define MAIN_STATUS_DUST 3
 #define MAIN_STATUS_STONE 4
@@ -55,7 +55,7 @@
 #define MAIN_STATUS_SURFACE 6		// fled to surface?
 #define MAIN_STATUS_WON 7
 /* main status modifiers */
-#define MAIN_STATUS_SPLIT 10		// split from party, added to previous status (e.g 11 is splitted and alive : waiting for the active pc to return). 
+#define MAIN_STATUS_SPLIT 10		// split from party, added to previous status (e.g 11 is splitted and alive : waiting for the active pc to return).
 
 
 /* adven[i].skills */     //complete
@@ -184,7 +184,7 @@
 /*      items[i].ability      */
 
 /* Weapons Ability */
-#define ITEM_NO_ABILITY 0        
+#define ITEM_NO_ABILITY 0
 #define ITEM_FLAMING_WEAPON 1
 #define ITEM_DEMON_SLAYER 2
 #define ITEM_UNDEAD_SLAYER 3
@@ -317,7 +317,7 @@
 #define ITEM_SPELL_MAKE_ICE_WALL 133
 #define ITEM_SPELL_CHARM_SPELL 134
 #define ITEM_SPELL_ANTIMAGIC_CLOUD 135
-			
+
 /* Reagents */
 #define ITEM_HOLLY 150 // Holly/Toadstool
 #define ITEM_COMFREY_ROOT 151
@@ -427,15 +427,15 @@
 #define MONSTER_RADIATE_ANTIMAGIC_FIELDS 4
 #define MONSTER_RADIATE_SLEEP_FIELDS 5
 #define MONSTER_RADIATE_STINKING_CLOUDS 6
-//as said 7,8 and 9 are unused
+//7,8 and 9 are unused
 #define MONSTER_SUMMON1 10    //5 percent chance
 #define MONSTER_SUMMON2 11    //20 percent chance
 #define MONSTER_SUMMON3 12    //50 percent chance
-//as said 13 and 14 are unused
+//13 and 14 are unused
 #define MONSTER_DEATH_TRIGGERS 15        //death triggers global special
 
 /* Terrains Specials Properties : scenario.ter_types[i].special */      //complete
-	
+
 #define TER_SPEC_NONE 0
 #define TER_SPEC_CHANGE_WHEN_STEP_ON 1
 #define TER_SPEC_DOES_FIRE_DAMAGE 2
@@ -461,14 +461,14 @@
 #define TER_SPEC_CAN_BE_USED 22
 #define TER_SPEC_CALL_SPECIAL_WHEN_USED 23
 
-//stuff used in actions.cpp  
+//stuff used in actions.cpp
 
 //Startup button rects (also used in blades.cpp)
 #define STARTBTN_LOAD 0
 #define STARTBTN_NEW 1
 #define STARTBTN_ORDER 2
 #define STARTBTN_JOIN 3
-#define STARTBTN_CUSTOM 4 
+#define STARTBTN_CUSTOM 4
 
 //Shop rects
 #define SHOPRECT_WHOLE_AREA 0
@@ -477,7 +477,7 @@
 #define SHOPRECT_ITEM_NAME 3
 #define SHOPRECT_ITEM_COST 4
 #define SHOPRECT_ITEM_EXTRA 5
-#define SHOPRECT_ITEM_HELP 6 
+#define SHOPRECT_ITEM_HELP 6
 
 // Item button rects
 #define ITEMBTN_NAME 0
@@ -506,26 +506,27 @@
 #define SPELL_FANCY_TARGET 3
 
 /* stuff done flags */
-#define SDF_IS_PARTY_SPLIT 304][0
+/*#define SDF_IS_PARTY_SPLIT 304][0
 #define SDF_PARTY_SPLIT_WHERE_PARTY_X 304][1
 #define SDF_PARTY_SPLIT_WHERE_PARTY_Y 304][2
 #define SDF_PARTY_SPLIT_PC      304][3
-#define SDF_PARTY_SPLIT_TOWN    304][4 // for future use, hopefully
-#define SDF_SKIP_STARTUP        305][4
+#define SDF_PARTY_SPLIT_TOWN    304][4 //for future use, hopefully
+//#define SDF_SKIP_STARTUP        305][4 //is now a boolean : play_startup
 #define SDF_LESS_SOUND          305][5
 #define SDF_NO_TARGET_LINE      305][6
 #define SFD_NO_MAPS             306][0
 #define SDF_NO_SOUNDS           306][1
 #define SDF_NO_FRILLS           306][2
-#define SDF_ROOM_DESCS_AGAIN    306][3
-#define SDF_NO_INSTANT_HELP     306][4 // boolean
+#define SDF_ROOM_DESCS_AGAIN    306][3 //not used in the code
+#define SDF_NO_INSTANT_HELP     306][4 //boolean
 #define SDF_NO_SHORE_FRILLS     306][5
 #define SDF_GAME_SPEED          306][6
 #define SDF_EASY_MODE           306][7
 #define SDF_LESS_WANDER_ENC     306][8
 #define SDF_NO_TER_ANIM         306][9
-#define SDF_HIDDEN_MAP          308][0 
+#define SDF_HIDDEN_MAP          308][0
 #define SDF_LEGACY_SCENARIO     305][8 //0 is new scenario, 1 is legacy
+*/
 
 /* Monsters Attitudes :
     0 - Friendly, Docile
@@ -707,7 +708,7 @@
 #define SPEC_OUT_STORE 229
 
 
-// eTalkNodeType 
+// eTalkNodeType
 
 #define    TALK_REGULAR 0
 #define    TALK_DEP_ON_SDF 1
@@ -746,5 +747,5 @@
 x : mage spells (x from 0 to 61)
 100 + x : priest spells (x from 0 to 61)
 */
-	
+
 #endif
