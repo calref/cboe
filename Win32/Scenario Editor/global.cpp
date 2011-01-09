@@ -11,7 +11,6 @@ extern char town_strs[180][256];
 extern Boolean give_delays;
 unsigned long anim_ticks = 0;
 BOOL do_choose_anim = FALSE;
-short custom_pic = 0;
 BOOL play_anim=FALSE;
 
 RECT RECT16::rect32()

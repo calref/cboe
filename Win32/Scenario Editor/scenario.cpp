@@ -30,7 +30,7 @@ extern char scen_strs2[110][256];
 extern char talk_strs[170][256];
 extern char town_strs[180][256];
 extern BOOL do_choose_anim;
-extern short custom_pic;
+extern short custom_type[500];
 
 extern location cur_out;
 extern scen_item_data_type scen_item_list;
@@ -927,27 +927,24 @@ void put_ter_info_in_dlog()
 	cd_set_led_range(813,28,31,store_ter.step_sound);
 	str[0] = store_ter.shortcut_key;
 	str[1] = 0;
-	CDST(813,3,(char *) str);
+	CDST(813,3, str);
 	CDSN(813,4,store_ter.trans_to_what);
 	CDSN(813,8,store_ter.light_radius);
 	cd_set_led_range(813,32,55,store_ter.special);
 	CDSN(813,6,store_ter.flag1);
 	CDSN(813,7,store_ter.flag2);
 	get_str(str,21,40 + store_ter.special);
-	csit(813,67,(char *) str);
+	csit(813,67, str);
 	get_str(str,21,80 + store_ter.special);
-	csit(813,68,(char *) str);
-	if (store_ter.picture >= 2000){
-        custom_pic = 5;
-		csp(813,14,store_ter.picture-2000);
-        }
-	else if (store_ter.picture >= 1000){
-        custom_pic = 1;
-		csp(813,14,store_ter.picture-1000);
-        }
+	csit(813,68, str);
+	if (store_ter.picture >= 2000)
+		csp(813,14,store_ter.picture-2000, 5);
+	else if (store_ter.picture >= 1000)
+		csp(813,14,store_ter.picture-1000, 1);
 	else if (store_ter.picture >= 400)
-		csp(813,14,store_ter.picture - 100);
-	else csp(813,14,store_ter.picture);
+		csp(813,14,store_ter.picture - 100, 0);
+	else
+        csp(813,14,store_ter.picture, 0);
 }
 
 
@@ -1048,27 +1045,24 @@ void edit_ter_type_event_filter (short item_hit)
                 i = choose_graphic(300,313,store_ter.picture,813); // Animated
                  }
 			if (i >= 0) {
-				if (i >= 300) i += 100;
-				store_ter.picture = i;
-				custom_pic = store_ter.picture / 1000;
+				if (i >= 300)
+                    i += 100;
+                store_ter.picture = i;
 				}
-			else {
-                custom_pic = store_ter.picture / 1000;
+			else
                 break;
-                }
+
 			CDSN(813,5,store_ter.picture);
 
-            if(store_ter.picture >= 2000){
-			csp(813,14,store_ter.picture-2000);
-            }
-			else if (store_ter.picture >= 1000) {
-            custom_pic = 1;
-			csp(813,14,store_ter.picture-1000);
- 			}
-			else {
+            if(store_ter.picture >= 2000)
+                csp(813,14,store_ter.picture-2000, 2);
+			else if (store_ter.picture >= 1000)
+                csp(813,14,store_ter.picture-1000, 1);
+ 			else {
                 if (store_ter.picture >= 400)
-		      		csp(813,14,store_ter.picture - 100);
-       			else csp(813,14,store_ter.picture);
+		      		csp(813,14,store_ter.picture - 100, 0);
+       			else
+                    csp(813,14,store_ter.picture, 0);
                 }
 			break;
 
@@ -1126,20 +1120,18 @@ void put_monst_info_in_dlog()
 {
 	char str[256];
 
-	if (store_monst.picture_num < 1000){
-		csp(814,34,400 + store_monst.picture_num);
-        }
-		else{
-            custom_pic = (store_monst.picture_num) / 1000;
-            csp(814,34,store_monst.picture_num - custom_pic * 1000);
-            }
+	if (store_monst.picture_num < 1000)
+		csp(814,34,400 + store_monst.picture_num, 0);
+    else
+        csp(814,34,store_monst.picture_num % 1000, store_monst.picture_num / 1000);
+
 	cdsin(814,33,store_which_monst);
 	CDST(814,2,scen_item_list.monst_names[store_which_monst]);
 	CDSN(814,3,store_monst.picture_num);
-	sprintf((char *) str,"Width = %d",store_monst.x_width);
-	csit(814,40,(char *) str);
-	sprintf((char *) str,"Height = %d",store_monst.y_width);
-	csit(814,41,(char *) str);
+	sprintf(str,"Width = %d",store_monst.x_width);
+	csit(814,40, str);
+	sprintf(str,"Height = %d",store_monst.y_width);
+	csit(814,41, str);
 	CDSN(814,4,store_monst.level);
 	CDSN(814,5,store_monst.health);
 	CDSN(814,6,store_monst.armor);
@@ -1159,11 +1151,11 @@ void put_monst_info_in_dlog()
 	cd_set_led_range(814,29,32,store_monst.default_attitude);
 
 	get_str(str,20,150 + store_monst.m_type);
-	csit(814,42,(char *) str);
+	csit(814,42, str);
 	get_str(str,20,130 + store_monst.a1_type);
-	csit(814,43,(char *) str);
+	csit(814,43, str);
 	get_str(str,20,130 + store_monst.a23_type);
-	csit(814,44,(char *) str);
+	csit(814,44, str);
 }
 
 Boolean save_monst_info()
@@ -1254,7 +1246,6 @@ void edit_monst_type_event_filter (short item_hit)
 			temp_monst = edit_monst_abil(store_monst,814);
 			store_monst = temp_monst;
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		case 21://previous monster
 			if (save_monst_info() == FALSE) break;
@@ -1262,7 +1253,6 @@ void edit_monst_type_event_filter (short item_hit)
 			store_which_monst--;
 			if (store_which_monst < 1) store_which_monst = 255;
 			store_monst = scenario.scen_monsters[store_which_monst];
-            custom_pic = (store_monst.picture_num) / 1000;
 			put_monst_info_in_dlog();
 			break;
 		case 22://next monster
@@ -1271,7 +1261,6 @@ void edit_monst_type_event_filter (short item_hit)
 			store_which_monst++;
 			if (store_which_monst > 255) store_which_monst = 1;
 			store_monst = scenario.scen_monsters[store_which_monst];
-            custom_pic = (store_monst.picture_num) / 1000;
 			put_monst_info_in_dlog();
 			break;
 		case 24: // picture
@@ -1282,13 +1271,11 @@ void edit_monst_type_event_filter (short item_hit)
 				}
 				else{
     			put_monst_info_in_dlog();
-                custom_pic = (store_monst.picture_num) / 1000;
                 break;
                 }
 			store_monst.x_width = m_pic_index_x[i-400];
 			store_monst.y_width = m_pic_index_y[i-400];
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		case 25: // m type
 			if (save_monst_info() == FALSE) break;
@@ -1297,7 +1284,6 @@ void edit_monst_type_event_filter (short item_hit)
 				store_monst.m_type = i - 150;
 				}
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		case 26: // att type 1
 			if (save_monst_info() == FALSE) break;
@@ -1306,7 +1292,6 @@ void edit_monst_type_event_filter (short item_hit)
 				store_monst.a1_type = i - 130;
 				}
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		case 27: // att type 23
 			if (save_monst_info() == FALSE) break;
@@ -1315,7 +1300,6 @@ void edit_monst_type_event_filter (short item_hit)
 				store_monst.a23_type = i - 130;
 				}
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		case 28: // talk pic
 			if (save_monst_info() == FALSE) break;
@@ -1325,11 +1309,9 @@ void edit_monst_type_event_filter (short item_hit)
 				}
 				else{
     			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
                 break;
                 }
 			put_monst_info_in_dlog();
-            custom_pic = (store_monst.picture_num) / 1000;
 			break;
 		default:
 			cd_hit_led_range(814,29,32,item_hit);
@@ -1505,13 +1487,10 @@ void put_item_info_in_dlog()
 	cdsin(818,52,store_which_item);
 	CDST(818,2,store_item.full_name);
 	CDST(818,3,store_item.name);
-	if (store_item.graphic_num >= 150){ //150 ?? should be 122 ...
-        custom_pic = 1;
-		csp(818,49,store_item.graphic_num - 150);
-        }
-	else{
-        csp(818,49,1800 + store_item.graphic_num);
-        }
+	if (store_item.graphic_num >= 150) //150 is too large if the base item bitmap is not expanded, should be 122 ...
+        csp(818,49, store_item.graphic_num - 150, 1);
+	else
+        csp(818,49,1800 + store_item.graphic_num, 0);
 	CDSN(818,4,store_item.graphic_num);
 	cd_set_led_range(818,18,45,store_item.variety);
 	CDSN(818,5,store_item.item_level);
@@ -1615,7 +1594,6 @@ void edit_item_type_event_filter (short item_hit)
 				store_item.graphic_num = i - 1800;
 				}
 			put_item_info_in_dlog();
-			custom_pic = (store_item.graphic_num >= 150) ? 1 : 0;
 			break;
 		case 69:
 			if (store_item.variety == 0) {
@@ -1631,7 +1609,6 @@ void edit_item_type_event_filter (short item_hit)
 			if (temp_item.variety != 0)
 				store_item = temp_item;
 			put_item_info_in_dlog();
-			custom_pic = (store_item.graphic_num >= 150) ? 1 : 0;
 			break;
 		default:
 			cd_hit_led_range(818,18,45,item_hit);
@@ -1728,13 +1705,21 @@ void edit_item_abil_event_filter (short item_hit)
 			break;
 		case 17:
 			if (save_item_abils() == FALSE) break;
-			if (store_item.variety > 2) {
-				give_error("You can only give an ability of this sort to a melee weapon.","",824);
-				break;
-				}
-			i = choose_text_res(23,1,15,store_item2.ability + 1,824,"Choose Weapon Ability (inherent)");
-			if (i >= 0) store_item2.ability = i - 1;
-				put_item_abils_in_dlog();
+			if((store_item.variety == 4) || (store_item.variety == 23)){//bow and crossbow special case
+			    i = choose_text_res(23,20,21,((store_item2.ability == 0) ? 20 : 21),824,"Choose Ranged Weapon Ability (inherent)");
+			    if(i >= 0)
+                    store_item2.ability = ((i==20) ? 0 : 11);
+			     put_item_abils_in_dlog();
+			}
+			else{
+                if (store_item.variety > 2) {
+                    give_error("You can only give an ability of this sort to a melee or ranged weapon.","",824);
+                    break;
+                    }
+                i = choose_text_res(23,1,15,store_item2.ability + 1,824,"Choose Weapon Ability (inherent)");
+                if (i >= 0) store_item2.ability = i - 1;
+                    put_item_abils_in_dlog();
+			}
 			break;
 		case 35:
 			if (save_item_abils() == FALSE) break;

@@ -30,8 +30,8 @@ short cur_viewing_mode = 0;
 extern unsigned long anim_ticks;
 extern terrain_type_type store_ter;
 extern BOOL do_choose_anim;
-extern BOOL custom_pic;
 extern BOOL play_anim;
+extern short custom_type[500];
 
 /* Mac stuff globals */
 Boolean All_Done = FALSE;
@@ -164,7 +164,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		}
 
 		mainPtr = CreateWindow (szAppName,
-			"Classic BoE Scenario Editor build_26.11.2010",
+			"Classic BoE Scenario Editor build_09.01.2011",
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 			0,
 			0,
@@ -341,15 +341,11 @@ RECT r;
         	    draw_terrain();
                 }
             if(overall_mode == 62){
-            if(store_ter.picture >= 2000){
-//                old_setting = custom_pic;
-                custom_pic = 5;
-                csp(813,14,store_ter.picture - 2000);
-//                custom_pic = old_setting;
-            }
-       	    else if (store_ter.picture >= 400 && store_ter.picture < 1000){
-			    csp(813,14,store_ter.picture - 100);
-                }
+            if(store_ter.picture >= 2000)
+                csp(813,14,store_ter.picture - 2000, 5);
+       	    else if (store_ter.picture >= 400 && store_ter.picture < 1000)
+			    csp(813,14,store_ter.picture - 100, 0);
+
             if(do_choose_anim == TRUE){
                 put_choice_pics();
 			    }

@@ -54,6 +54,7 @@
 #define SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST 309][4
 #define SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES 309][5
 #define SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING 309][6
+#define SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT 309][7
 
 #define INVALID_TOWN	200
 
@@ -1082,7 +1083,7 @@ enum eMonstersPriestSpells {
     SPELL_MONST_PRIEST_MAJOR_HEAL = 17,
     SPELL_MONST_PRIEST_FLAMESTRIKE = 18,
     SPELL_MONST_PRIEST_SUMMON_HOST = 19,
-    SPELL_MONST_PRIEST_HEAL_ALL = 20,// !!! this isn't a mass spell !!! it's the most reliable self-heal spell a monster can cast (heal 50 health each cast)
+    SPELL_MONST_PRIEST_REVIVE_SELF = 20,// renamed from heal all, to avoid confusion (this isn't a mass spell !)
     SPELL_MONST_PRIEST_UNHOLY_RAVAGING = 21,
     SPELL_MONST_PRIEST_SUMMON_GUARDIAN = 22,
     SPELL_MONST_PRIEST_PESTILENCE = 23,

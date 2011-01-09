@@ -349,24 +349,24 @@ void put_item_graphics()
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
 			item = t_i.items[item_array[i + first_item_shown]];
 
-					sprintf ((char *) message, "%s",
+					sprintf (message, "%s",
 					 (item.isIdent()) ? (char *) item.full_name : (char *) item.name);
 					csit(987,21 + i * 4,(char *) message);
 					if (item.graphic_num >= 150)//custom item graphic?
 						csp(987,20 + i * 4,3000 + 2000 + item.graphic_num - 150);
 						else csp(987,20 + i * 4,4800 + item.graphic_num);////
-					get_item_interesting_string(item,(char *) message);
-					csit(987,22 + i * 4,(char *) message);
+					get_item_interesting_string(item, message);
+					csit(987,22 + i * 4, message);
 					storage = item_weight(item);
-					sprintf ((char *) message, "Weight: %d",storage);
-					csit(987,53 + i,(char *) message);
+					sprintf (message, "Weight: %d",storage);
+					csit(987,53 + i, message);
 
 		  			}
 			else { // erase the spot
-				sprintf ((char *) message, "");
-				csit(987,21 + i * 4,(char *) message);
-				csit(987,22 + i * 4,(char *) message);
-				csit(987,53 + i,(char *) message);
+				sprintf (message, "");
+				csit(987,21 + i * 4, message);
+				csit(987,22 + i * 4, message);
+				csit(987,53 + i, message);
 				}
 		}
 

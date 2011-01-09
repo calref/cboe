@@ -347,6 +347,8 @@ STRINGTABLE
   6913, "Weak Weapon"
   6914, "Causes Fear"
   6915, "Poisoned Weapon"
+  6920, "No ability"
+  6921, "Drain Missiles"
   6931, "Protection"
   6932, "Full Protection"
   6933, "Fire Protection"

@@ -631,7 +631,7 @@ void display_alchemy()
 			"Knowledge Brew (19)",
 			"Strong Strength (10)",
 			"Bliss (16)",
-			"Strong Power (20)"
+			"Strong Energy Ptn. (20)"
 		};
 
 	SetCursor(sword_curs);
@@ -1203,7 +1203,7 @@ void display_strings_event_filter (short item_hit)
 		}
 }
 
-// str_label_1 & str_label_2 uysed for saving button for journal
+// str_label_1 & str_label_2 used for saving button for journal
 // 1000 + x scen 2000 + x out 3000 + x town
 void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
 	short str_label_2b,

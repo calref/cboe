@@ -1233,7 +1233,8 @@ void do_priest_spell(short pc_num,short spell_num)
 
 		case SPELL_PRIEST_LIGHT:
 			adven[pc_num].cur_sp -= spell_cost[1][spell_num];
-			party.light_level += 210;
+			//party.light_level += 210;
+			increase_light(210);
 			break;
 
 		case SPELL_PRIEST_SUMMON_SPIRIT:
@@ -1660,7 +1661,7 @@ void cast_town_spell(location where)
 				switch (scenario.ter_types[ter].special) { ////
 					case TER_SPEC_UNLOCKABLE_TERRAIN: case TER_SPEC_UNLOCKABLE_BASHABLE:
 						r1 = get_ran(1,0,100) - 5 * adven[who_cast].statAdj(SKILL_INTELLIGENCE) + 5 * c_town.difficulty;
-						r1 += scenario.ter_types[ter].flag2 * 7;
+						r1 += scenario.ter_types[ter].flag2 * 7; //unlock_adjust (door resistance)
 						if (scenario.ter_types[ter].flag2 == 10)
 							r1 = 10000;
 						if (r1 < (135 - combat_percent[min(19,adven[who_cast].level)])) {
@@ -2343,8 +2344,10 @@ void do_alchemy()
 	short pc_num;
 	item_record_type store_i = {7,0, 0,0,0,1,0,0, 50,0,0,0,0,0, 0, 8,0, location(),"Potion","Potion",0,5,0,0};
 
-	short potion_abils[20] = {72,87,70,73,70, 87,72,73,77,88,
-							79,70,87,70,160, 88,86,71,84,88};
+	short potion_abils[20] = {ITEM_AFFECT_POISON,ITEM_AFFECT_HEALTH,ITEM_POISON_WEAPON,ITEM_HASTE_SLOW,ITEM_POISON_WEAPON,
+                              ITEM_AFFECT_HEALTH,ITEM_AFFECT_POISON,ITEM_HASTE_SLOW,ITEM_AFFECT_DISEASE,ITEM_AFFECT_SPELL_POINTS,
+							  ITEM_AFFECT_DUMBFOUND,ITEM_POISON_WEAPON,ITEM_AFFECT_HEALTH,ITEM_POISON_WEAPON,ITEM_RESSURECTION_BALM,
+							  ITEM_AFFECT_SPELL_POINTS,ITEM_AFFECT_SKILL_POINTS,ITEM_BLESS_CURSE,ITEM_BLISS,ITEM_AFFECT_SPELL_POINTS};
 	short potion_strs[20] = {2,2,2,2,4, 5,8,5,4,2,
 							8,6,8,8,0, 5,2,8,5,8};
 	short potion_val[20] = {40,60,15,50,50, 180,200,100,150,100,
