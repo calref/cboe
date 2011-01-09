@@ -1289,7 +1289,8 @@ void fire_missile(location target)
 	if (adven[missile_firer].items[ammo_inv_slot].variety != ITEM_TYPE_MISSILE_NO_AMMO) {//in case someone has been killed and current_pc is not the firer anymore
 		if (adven[missile_firer].items[ammo_inv_slot].ability != ITEM_MISSILE_RETURNING)
 			adven[missile_firer].items[ammo_inv_slot].charges--;
-			else adven[missile_firer].items[ammo_inv_slot].charges = 1;
+        else
+            adven[missile_firer].items[ammo_inv_slot].charges = 1;
 		if ((adven[missile_firer].hasAbilEquip(ITEM_DRAIN_MISSILES) < 24) && (adven[missile_firer].items[ammo_inv_slot].ability != ITEM_MISSILE_RETURNING))
 			adven[missile_firer].items[ammo_inv_slot].charges--;
 		if (adven[missile_firer].items[ammo_inv_slot].charges <= 0)
@@ -1317,6 +1318,11 @@ Boolean combat_next_step()
 	while (pick_next_pc() == true) {
 		combat_run_monst();
 		set_pc_moves();
+		if((combat_active_pc < 6) && (pc_moves[combat_active_pc] == 0)){
+            combat_active_pc = 6;
+            ASB(">The active character is unable to act!");
+            ASB(">The whole party is now active.");
+            }
 		to_return = true;
 		// Safety valve
 		if (party_toast() == true)
@@ -1336,9 +1342,9 @@ Boolean combat_next_step()
 	adjust_spell_menus();
 
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
-			sprintf((char *)create_line, "Active:  %s (#%d, %d ap.)                     ",
+			sprintf(create_line, "Active:  %s (#%d, %d ap.)                     ",
 				adven[current_pc].name,current_pc + 1,pc_moves[current_pc]);
-			add_string_to_buf((char *)create_line);
+			add_string_to_buf(create_line);
 			print_buf();
 		}
 	if ((current_pc != store_pc) || (to_return == true)) {
@@ -2968,7 +2974,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 								//emergency spells level 5 (summon host, flamestrike, major heal)
 								{SPELL_MONST_PRIEST_NO_SPELL,SPELL_MONST_PRIEST_SUMMON_HOST,SPELL_MONST_PRIEST_FLAMESTRIKE,SPELL_MONST_PRIEST_MAJOR_HEAL},
 								//emergency spells level 6 (summon host, flamestrike, full heal)
-								{SPELL_MONST_PRIEST_NO_SPELL,SPELL_MONST_PRIEST_SUMMON_HOST,SPELL_MONST_PRIEST_FLAMESTRIKE,SPELL_MONST_PRIEST_HEAL_ALL},
+								{SPELL_MONST_PRIEST_NO_SPELL,SPELL_MONST_PRIEST_SUMMON_HOST,SPELL_MONST_PRIEST_FLAMESTRIKE,SPELL_MONST_PRIEST_REVIVE_SELF},
 								//emergency spells level 7 (avatar, divine thud, revive all)
 								{SPELL_MONST_PRIEST_AVATAR,SPELL_MONST_PRIEST_AVATAR,SPELL_MONST_PRIEST_DIVINE_THUD,SPELL_MONST_PRIEST_REVIVE_ALL}};
 
@@ -3023,7 +3029,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 
 	// snuff heals if unwounded
 	if ((caster->m_d.health == caster->m_d.m_health) &&
-	 ((spell == SPELL_MONST_PRIEST_MAJOR_HEAL) || (spell == SPELL_MONST_PRIEST_HEAL_ALL) || (spell = SPELL_MONST_PRIEST_LIGHT_HEAL) || (spell = SPELL_MONST_PRIEST_HEAL)))
+	 ((spell == SPELL_MONST_PRIEST_MAJOR_HEAL) || (spell == SPELL_MONST_PRIEST_REVIVE_SELF) || (spell = SPELL_MONST_PRIEST_LIGHT_HEAL) || (spell = SPELL_MONST_PRIEST_HEAL)))
 	 	spell--;
 
 	l = caster->m_loc;
@@ -3155,20 +3161,20 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 					}
 				break;
 
-			case SPELL_MONST_PRIEST_LIGHT_HEAL: case SPELL_MONST_PRIEST_HEAL: case SPELL_MONST_PRIEST_MAJOR_HEAL: case SPELL_MONST_PRIEST_HEAL_ALL: // heals
+			case SPELL_MONST_PRIEST_LIGHT_HEAL: case SPELL_MONST_PRIEST_HEAL: case SPELL_MONST_PRIEST_MAJOR_HEAL: case SPELL_MONST_PRIEST_REVIVE_SELF: // heals
 				play_sound(24);
 				switch(spell) {
 					case SPELL_MONST_PRIEST_LIGHT_HEAL: r1 = get_ran(2,1,4) + 2; break;
 					case SPELL_MONST_PRIEST_HEAL: r1 = get_ran(3,1,6); break;
 					case SPELL_MONST_PRIEST_MAJOR_HEAL: r1 = get_ran(5,1,6) + 3; break;
-					case SPELL_MONST_PRIEST_HEAL_ALL: r1 = 50; break;
+					case SPELL_MONST_PRIEST_REVIVE_SELF: r1 = 50; break;
 					}
 				caster->m_d.health = min(caster->m_d.health + r1, caster->m_d.m_health);
 				break;
 			case SPELL_MONST_PRIEST_BLESS_ALL: case SPELL_MONST_PRIEST_REVIVE_ALL:// bless all,revive all
 				play_sound(24);
 				r1 =  get_ran(2,1,4);
-				r2 = get_ran(3,1,6);
+				r2 = get_ran(3,1,6);// <= shouldn't it be the "revive all" roll ?
 				for (i = 0; i < T_M; i++)
 					if ((monst_near(i,caster->m_loc,8,0)) &&
 						(caster->attitude == c_town.monst.dudes[i].attitude)) {
@@ -3176,7 +3182,7 @@ Boolean monst_cast_priest(creature_data_type *caster,short targ)
 						if (spell == SPELL_MONST_PRIEST_BLESS_ALL)
 							affected->m_d.status[STATUS_BLESS_CURSE] = min(8,affected->m_d.status[STATUS_BLESS_CURSE] + r1);
 						if (spell == SPELL_MONST_PRIEST_REVIVE_ALL)
-							affected->m_d.health += r1;
+							affected->m_d.health += r1; //<= here
 						}
 				play_sound(4);
 				break;
@@ -4060,7 +4066,7 @@ Boolean combat_cast_priest_spell()
 							if (target < 6) {
 								store_sound = 4;
 								adven[current_pc].cur_sp -= s_cost[1][spell_num];
-								adven[target].status[STATUS_BLESS_CURSE ] += (spell_num == SPELL_PRIEST_MINOR_BLESS) ? 2 :
+								adven[target].status[STATUS_BLESS_CURSE] += (spell_num == SPELL_PRIEST_MINOR_BLESS) ? 2 :
 									max(2,(adven[current_pc].level * 3) / 4 + 1 + bonus);
 								sprintf (c_line, "  %s blessed.              ",
 									adven[target].name);
@@ -4073,7 +4079,7 @@ Boolean combat_cast_priest_spell()
 							adven[current_pc].cur_sp -= s_cost[1][spell_num];
 							for (i = 0; i < 6; i++)
 								if (adven[i].isAlive()) {
-									adven[i].status[STATUS_BLESS_CURSE ] += adven[current_pc].level / 3;
+									adven[i].status[STATUS_BLESS_CURSE] += adven[current_pc].level / 3;
 								add_missile(pc_pos[i],8,0,0,0);
 								}
 								sprintf (c_line, "  Party blessed.                    ");

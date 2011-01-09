@@ -236,7 +236,7 @@ void display_strings(char *text1, char *text2,
 		store_which_string_dlog++;
 	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
 
-	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
+	csp(store_which_string_dlog,store_which_string_dlog,graphic_num, 0);
 
 	csit(store_which_string_dlog,4,(char *) text1);
 	if (text2 != NULL) {
@@ -244,7 +244,7 @@ void display_strings(char *text1, char *text2,
 		}
 	if (strlen(title) > 0)
 		csit(store_which_string_dlog,6,title);
-	csp(store_which_string_dlog,3,graphic_num);
+	csp(store_which_string_dlog,3,graphic_num, 0);
 
 	while (dialog_not_toast)
 		ModalDialog();
@@ -293,11 +293,11 @@ void put_choice_pics()
 
 	for (i = 0; i < 36; i++) {
 		if (store_first_g + which_page * 36 + i > store_last_g) {
-			csp(819,41 + i,950);
+			csp(819,41 + i,950, 0);
 			cd_activate_item(819,5 + i,0);
 			}
 			else {
-				csp(819,41 + i,store_first_g + 36 * which_page + i);
+				csp(819,41 + i,store_first_g + 36 * which_page + i, 0);
 				cd_activate_item(819,5 + i,1);
 				}
 		if (which_page * 36 + i == store_cur_pic - store_first_g)
@@ -1237,7 +1237,7 @@ void edit_scen_intro_event_filter (short item_hit)
 			i = choose_graphic(1600,1629,1600 + i,804);
 			if (i >= 0) {
 				CDSN(804,8,i - 1600);
-				csp(804,11,i );
+				csp(804,11,i ,0);
 				}
 			break;
 		}
@@ -1252,7 +1252,7 @@ void edit_scen_intro()
 	CDSN(804,8,scenario.intro_pic);
 	for (i = 0; i < 6; i++)
 		CDST(804, 2 + i,scen_strs[4 + i]);
-	csp(804,11,scenario.intro_pic + 1600);
+	csp(804,11,scenario.intro_pic + 1600, 0);
 
 	while (dialog_not_toast)
 		ModalDialog();

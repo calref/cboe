@@ -33,7 +33,6 @@ extern unsigned char m_pic_index_x[200];
 extern unsigned char m_pic_index_y[200];
 extern unsigned long anim_ticks;
 extern terrain_type_type store_ter;
-extern short custom_pic;
 extern HBITMAP spec_scen_g;
 
 extern HACCEL accel;
@@ -55,6 +54,7 @@ char item_active[NI];
 char item_key[NI];
 short item_label[NI];
 short item_label_loc[NI];
+short custom_type[NI];//0 - not custom, 1 - 1x1, 2 - 2x1, 3 - 1x2, 4 - 2x2, 5 - animated custom
 
 char text_long_str[10][256];
 char text_short_str[140][40];
@@ -715,7 +715,7 @@ void cd_attach_key(short dlog_num,short item_num,char key)
 	item_key[item_index] = key;
 }
 
-void cd_set_pict(short dlog_num, short item_num, short pict_num)
+void cd_set_pict(short dlog_num, short item_num, short pict_num, short custom_pic_type)
 {
 	short dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -725,6 +725,7 @@ void cd_set_pict(short dlog_num, short item_num, short pict_num)
 		return;
 		}
 	item_flag[item_index] = pict_num;
+	custom_type[item_index] = custom_pic_type;
 	if (pict_num == -1)
 		cd_erase_item(dlog_num,item_num);
 		else cd_draw_item(dlog_num,item_num);
@@ -828,7 +829,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num, bool highli
 				&& (edit_box[i] != NULL)){
 					SetWindowText(edit_box[i],store_ptr);
 					if(highlight)
-					   SendMessage(edit_box[i],EM_SETSEL,0,-1);	
+					   SendMessage(edit_box[i],EM_SETSEL,0,-1);
                     }
 }
 
@@ -841,9 +842,9 @@ void csit(short dlog_num, short item_num, char *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
-void csp(short dlog_num, short item_num, short pict_num)
+void csp(short dlog_num, short item_num, short pict_num, short custom_pic_type)
 {
-	cd_set_pict( dlog_num,  item_num,  pict_num);
+	cd_set_pict( dlog_num,  item_num,  pict_num, custom_pic_type);
 }
 
 void cd_set_item_text(short dlog_num, short item_num, char *str)
@@ -990,7 +991,6 @@ void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
 		cd_draw_item(dlog_num,item_num);
 }
 
-
 void cd_draw_item(short dlog_num,short item_num)
 {
 	short dlg_index,item_index,store_label;
@@ -1086,9 +1086,9 @@ void cd_draw_item(short dlog_num,short item_num)
 				case 5:
 					if (item_flag[item_index] == -1)
 						cd_erase_item(dlog_num,item_num);
-					else if(custom_pic > 0){
-						draw_custom_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
-						item_flag[item_index], TRUE,0);
+					else if(custom_type[item_index] > 0){
+                        draw_custom_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
+						item_flag[item_index], TRUE,0, custom_type[item_index]);
                     }
                     else draw_dialog_graphic(dlgs[dlg_index], item_rect[item_index],
 						item_flag[item_index],(item_flag[item_index] >= 2000) ? FALSE : TRUE,0);
@@ -1479,7 +1479,7 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val)
 	DeleteObject(lpen);
 }
 
-void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld){
+void draw_custom_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld, short custom_pic){
 
 
 	RECT from_rect = {0,0,28, 36};
@@ -1633,7 +1633,6 @@ if ((win_or_gworld == 0) && (dlg_force_dc == NULL))
       rect.right--; rect.bottom--;
 		frame_dlog_rect(hDlg,rect,3);
 		}
-custom_pic = 0;
 }
 
 void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)

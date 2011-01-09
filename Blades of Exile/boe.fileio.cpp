@@ -597,6 +597,9 @@ void load_file()
 
 	party_in_memory = true;
 
+    if(overall_mode == MODE_SHOPPING)//if loading while shopping, clean the shop items scroll bar
+        ShowScrollBar(shop_sbar,SB_CTL,false);
+
 	// now if not in scen, this is it.
 	if (in_scen == false)
 	{
@@ -628,6 +631,10 @@ void load_file()
 	erase_out_specials();
 
     belt_present = false;
+    //turn off the debug mode...
+    in_scen_debug = false;
+    ghost_mode = false;
+    //...in case it was on
 
 	if (town_restore == false) {
 		center = party.p_loc;
@@ -1743,6 +1750,8 @@ void get_reg_data()
 	party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES] = atoi(buffer);
 	GetPrivateProfileString(section, "resting_checks_timers", "0", buffer, BUFFER_LEN, iniFile);
 	party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING] = atoi(buffer);
+    GetPrivateProfileString(section, "trigger_special_on_boat", "0", buffer, BUFFER_LEN, iniFile);
+	party.stuff_done[SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT] = atoi(buffer);
 
 }
 
@@ -1769,6 +1778,7 @@ void build_data_file(short which) // 1 - compatibility ; 2 - preferences
     WritePrivateProfileString(section, "special_interrupt", (party.stuff_done[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST] == 0)? "0" : "1", iniFile);
     WritePrivateProfileString(section, "stairway_everywhere", (party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES] == 0)? "0" : "1", iniFile);
     WritePrivateProfileString(section, "resting_checks_timers", (party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING] == 0)? "0" : "1", iniFile);
+    WritePrivateProfileString(section, "trigger_special_on_boat", (party.stuff_done[SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT] == 0)? "0" : "1", iniFile);
     }
 }
 

@@ -84,10 +84,10 @@ void end_shop_mode()
 
 	ShowScrollBar(shop_sbar,SB_CTL,false);
 	if (store_pre_shop_mode == 20) {
-		sprintf((char *)old_str1,"You conclude your business.");
-		sprintf((char *)old_str2,"");
-		sprintf((char *)one_back1,"You conclude your business.");
-		sprintf((char *)one_back2,"");
+		sprintf(old_str1,"You conclude your business.");
+		sprintf(old_str2,"");
+		sprintf(one_back1,"You conclude your business.");
+		sprintf(one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str((char *)old_str1,"",0,dummy_rect);
@@ -1210,9 +1210,10 @@ Boolean compatibility_event_filter (short item_hit)
 				break;
 
 
-			case 7: case 9: case 11: case 13: case 15: case 17: case 19:
+			case 7: case 9: case 11: case 13: case 15: case 17: case 19: case 21:
 				cd_set_led(1100,item_hit,1 - cd_get_led(1100,item_hit));
 				break;
+            break;
 			}
 
 	if (done_yet== true) {
@@ -1224,6 +1225,7 @@ Boolean compatibility_event_filter (short item_hit)
 			party.stuff_done[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST]=cd_get_led(1100,15);
 			party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES]=cd_get_led(1100,17);
 			party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING]=cd_get_led(1100,19);
+			party.stuff_done[SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT]=cd_get_led(1100,21);
 			}
 	build_data_file(1);
     }
@@ -1245,16 +1247,18 @@ void pick_compatibility()
     cd_set_led(1100,15,(party.stuff_done[SDF_COMPATIBILITY_SPECIALS_INTERRUPT_REST] != 0) ? 1 : 0);// party.stuff_done[309][4] special_interrupt
     cd_set_led(1100,17,(party.stuff_done[SDF_COMPATIBILITY_ANYTIME_STAIRWAY_NODES] != 0) ? 1 : 0);// party.stuff_done[309][5] stairway_everywhere
     cd_set_led(1100,19,(party.stuff_done[SDF_COMPATIBILITY_CHECK_TIMERS_WHILE_RESTING] != 0) ? 1 : 0);// party.stuff_done[309][6] resting_checks_timers
+    cd_set_led(1100,21,(party.stuff_done[SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT] != 0) ? 1 : 0);// party.stuff_done[309][7] trigger_special_on_boat
 
-	if (party.help_received[110] == 0) {
+	/*if (party.help_received[70] == 0) {
 		cd_initial_draw(1100);
-		give_help(110,111,1100);
-		}
+		give_help(70,71,1100);
+		}*/
 
 	while (dialog_not_toast)
 		ModalDialog();
+
 	cd_kill_dialog(1100,0);
-	adjust_window_mode();
+	//adjust_window_mode();
 }
 
 void put_party_stats()

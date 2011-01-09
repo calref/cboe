@@ -176,7 +176,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	short find_direction_from,ter_looked_at,button_hit = 12;
 	short store_sp[6];
 
-	char str[60];
+	char str[60], id_name[256];
 	POINT point_in_area;
 	Boolean right_button = false;
 	Boolean ctrl_key = false;
@@ -1039,6 +1039,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 								if ((overall_mode != MODE_TOWN_TARGET) && (overall_mode != MODE_SPELL_TARGET))
 									did_something = true;
 								take_ap(3);
+								need_redraw = true;
 								break;
 							case 2: // give
 								adven[stat_window].giveThing(item_hit);
@@ -1071,9 +1072,13 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 											ASB("Identify: You don't have the gold.");
 											else {
 												play_sound(68);
-												ASB("Your item is identified.");
+												sprintf(id_name, "Your item is identified. (%s)",adven[stat_window].items[item_hit].full_name);
+												ASB(id_name);
+												/*ASB("Your item is identified.");
+												ASB(adven[stat_window].items[item_hit].full_name);*/
 												adven[stat_window].items[item_hit].item_properties =
 													adven[stat_window].items[item_hit].item_properties | 1;
+                                                adven[stat_window].combineThings();
 												}
 										break;
 									case 3: case 4: case 5: // various selling
@@ -2416,40 +2421,51 @@ void switch_pc(short which)
 
 void handle_death()
 {
-	short choice;
+	short choice, i;
+	bool done = false;
 
-	in_startup_mode = true;
-
-	while (in_startup_mode == true)
+	while (done == false)
 	{
 
-	// Use death (or leave Exile) dialog
-	in_startup_mode = false;
-
+    // Use death (or leave Exile) dialog
 	choice = FCD(1069,0); //// FCD hates it when it gets called in startup mode
 				// and startup graphics aren't loaded.
 
-	in_startup_mode = true;
+	done = true;
 
-	if (choice == 1) {
-		in_startup_mode = false;
+	if (choice == 1) {//restore
 		load_file();
 		if (party_toast() == false) {
 			if (in_startup_mode == false)
 				post_load();
         	else return;
 			}
-			else in_startup_mode = true;
+        else
+            done = false;
 		}
 
-	if (choice == 2)
-        start_new_game();
+	if (choice == 2){//restart
 
-		if (choice == 3) {
-		in_startup_mode = false;
-		All_Done = true;
+	    i = FCD(1091,0);//"are you sure ?" dialog
+
+	    if(i == 1)//cancel button hit
+            done = false;
+	    else{
+            for (i = 0; i < 6; i++)
+                adven[i].main_status = MAIN_STATUS_ABSENT;
+            party_in_memory = false;
+            reload_startup();
+            in_startup_mode = true;
+            draw_startup(0);
+            start_new_game();
+            draw_startup(0);
+            }
+        }
+
+    if (choice == 3) {//quit
+        done = true;
+        All_Done = true;
 		}
-
 	}
 }
 
@@ -2537,7 +2553,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
 	if (check_f == true)	forced = true;
 	if (in_scen_debug && ghost_mode)	forced = true;
-	if (spec_num == 50)		forced = true;
+	/*if (spec_num == 50)		forced = true;*/ //if it's the number 50 special node, then force movement...
 
 	// If not blocked and not put in town by a special, process move
 	if ((keep_going == true) && (overall_mode == MODE_OUTDOORS)) {
@@ -2595,7 +2611,7 @@ Boolean outd_move_party(location destination,Boolean forced)
 				return false;
 			else if ((outd_is_blocked(real_dest) == false)
 				&& (scenario.ter_types[ter].boat_over == true)
-				&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) && ter != 75 && ter!=76) {//75-76=> lava is hardcoded... to change
+				&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) && (ter != 75) && (ter != 76)) {//75-76=> lava is hardcoded... to change
 				if ((fancy_choice_dialog(1086,0)) == 1)
 					forced = true;
 					else {
@@ -2755,9 +2771,12 @@ Boolean town_move_party(location destination,short forced)
 
 	if (in_scen_debug && ghost_mode) forced = true;
 
-	if (monst_there(destination) > T_M) keep_going = check_special_terrain(destination,1,0,&spec_num,&check_f);
-	if (check_f == true) forced = true;
-	if (spec_num == 50) forced = true;
+	if (monst_there(destination) > T_M)
+        keep_going = check_special_terrain(destination,1,0,&spec_num,&check_f);
+	if (check_f == true)
+        forced = true;
+	/*if (spec_num == 50) forced = true;*/ //if it's the number 50 special node, then force movement...
+
 	ter = t_d.terrain[destination.x][destination.y];
 
 	if (keep_going == true) {
@@ -2823,7 +2842,7 @@ Boolean town_move_party(location destination,short forced)
 
 			return true;
 		}
-		else if ((is_blocked(destination) == false) || (forced == 1)) {
+		else if ((is_blocked(destination) == false) || (forced == true)) {
 			if (party.in_horse >= 0) {
 				if ((scenario.ter_types[ter].special >= TER_SPEC_DOES_FIRE_DAMAGE) && (scenario.ter_types[ter].special <= TER_SPEC_DOES_MAGIC_DAMAGE)) {
 					ASB("Your horses quite sensibly refuse.");

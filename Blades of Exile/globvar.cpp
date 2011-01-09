@@ -784,7 +784,7 @@ char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak P
 	"Graymold Salve (7)","Weak Energy Potion (9)",
 	"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
 	"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
-	"Strong Strength (10)","Bliss (16)","Strong Power (20)"
+	"Strong Strength (10)","Bliss (16)","Strong Energy Ptn. (20)"
 };
 char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
 	"Weak Speed Potion","Medium Poison",
@@ -792,7 +792,7 @@ char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poi
 	"Graymold Salve","Weak Energy Potion",
 	"Potion of Clarity","Strong Poison","Strong Heal Potion","Killer Poison",
 	"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew",
-	"Strong Strength","Bliss","Strong Power"
+	"Strong Strength","Bliss","Strong Energy Ptn."
 };
 short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
 		1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
@@ -875,7 +875,7 @@ char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 char *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 	"Curse","Wound","Summon Spirit","Disease","Heal",
 	"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
-	"Bless All","Major Heal","Flamestrike","Summon Host","Full Heal",
+	"Bless All","Major Heal","Flamestrike","Summon Host","Revive Self",
 	"Unholy Ravaging","Summon Guardian","Pestilence","Revive All","Avatar",
 	"Divine Thud"};
 // extra devices for maps

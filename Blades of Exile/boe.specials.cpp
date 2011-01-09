@@ -82,6 +82,8 @@ Boolean handle_wandering_specials (short mode)
 	if ((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
 	run_special(SPEC_FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,null_loc,&s1,&s2,&s3);
 		}
+    if(s3 > 0)
+        initiate_redraw();
 return true;
 }
 
@@ -169,8 +171,9 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 						*forced = true;
 						}
 					*spec_num = c_town.town.spec_id[i];
-					if ((is_blocked(where_check) == false) || (ter_special == TER_SPEC_CHANGE_WHEN_STEP_ON)
-	 					|| (ter_special == TER_SPEC_CALL_LOCAL_SPECIAL) || (ter_special == TER_SPEC_CALL_SCENARIO_SPECIAL)) {
+					if ((is_blocked(where_check) == false) || (ter_special == TER_SPEC_CHANGE_WHEN_STEP_ON) //is_blocked doesn't check if aboard a boat...
+	 					|| (ter_special == TER_SPEC_CALL_LOCAL_SPECIAL) || (ter_special == TER_SPEC_CALL_SCENARIO_SPECIAL)
+	 					|| ((PSD[SDF_COMPATIBILITY_TRIGGER_SPECIALS_ON_BOAT] == true) && (party.in_boat >= 0) && (scenario.ter_types[ter].boat_over == true))) { //...so, check if in boat and terrain allows to boat over
 						give_help(54,0,0);
 						run_special(mode,2,c_town.town.spec_id[i],where_check,&s1,&s2,&s3);
 						if (s1 > 0)
@@ -350,6 +353,9 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 		update_explored(c_town.p_loc);
 	if (is_combat())
 		update_explored(pc_pos[current_pc]);
+
+    if (s3 > 0)
+        initiate_redraw();
 
 	return can_enter;
 }
@@ -986,8 +992,11 @@ Boolean adj_town_look(location where)
 				for (i = 0; i < 50; i++)
 					if (same_point(where,c_town.town.special_locs[i]) == true) {
 						run_special(SPEC_TOWN_LOOK,2,c_town.town.spec_id[i],where,&s1,&s2,&s3);
-						if (s1 > 0)	can_open = false;
+						if (s1 > 0)
+                            can_open = false;
 						got_special = true;
+                        if (s3 > 0)
+                            initiate_redraw();
 						}
 				put_item_screen(stat_window,0);
 				}
@@ -2041,7 +2050,7 @@ void oneshot_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
 						else j = adven[tmp].runTrap(spec.ex1a,spec.ex1b,spec.ex2a);
 					}
 
-					if (j == 0)
+					if (j == 0 || (party_toast() == true))//maybe party has been killed by the traps...
 					{
 						*a = 1;
 						set_sd = false;

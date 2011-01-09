@@ -69,16 +69,16 @@ void pc_record_type::kill(short type)
 					play_sound(21);
 				if(type == 4){
                     play_sound(43);
-                    sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) name);
-					add_string_to_buf((char *) create_line);
+                    sprintf (create_line, "  %s is turned to stone.                  ",(char *) name);
+					add_string_to_buf(create_line);
                     }
 				main_status = type;
 				pc_moves[which_pc] = 0;
 			}
 			else {
                 if (type == 4) {
-                  sprintf ((char *) create_line, "  %s is immune to petrification.                  ",(char *) name);
-                  add_string_to_buf((char*) create_line); //inform of what has happened
+                  sprintf (create_line, "  %s is immune to petrification.                  ",(char *) name);
+                  add_string_to_buf(create_line); //inform of what has happened
                                     }
                 else{
 				add_string_to_buf("  Life saved!              ");
@@ -499,8 +499,8 @@ void pc_record_type::acid(short how_much)
 		}
 
 	status[STATUS_ACID] += how_much;
-	sprintf ((char *) c_line, "  %s covered with acid!",(char *) name);
-	add_string_to_buf((char *) c_line);
+	sprintf (c_line, "  %s covered with acid!",(char *) name);
+	add_string_to_buf(c_line);
 	one_sound(42);
 
 	put_pc_screen();

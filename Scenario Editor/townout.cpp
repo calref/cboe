@@ -216,8 +216,8 @@ void put_placed_monst_in_dlog()
  	CDSN(837,2,store_placed_monst.personality);
  	CDSN(837,3,store_placed_monst.facial_pic);
  	if ((store_placed_monst.facial_pic < 1) || (store_placed_monst.facial_pic >= 1000))
-	 	csp(837,11,950);
-	 	else csp(837,11,store_placed_monst.facial_pic + 1000);
+	 	csp(837,11,950,0);
+	 	else csp(837,11,store_placed_monst.facial_pic + 1000,0);
 }
 Boolean get_placed_monst_in_dlog()
 {
@@ -401,8 +401,8 @@ void put_placed_item_in_dlog()
 	short i;
 
 	cdsin(836,17,store_which_placed_item);
-	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
-	csit(836,22,(char *) str);
+	sprintf(str,"X = %d, Y = %d",store_placed_item.item_loc.x,store_placed_item.item_loc.y);
+	csit(836,22, str);
 	csit(836,15,scen_item_list.scen_items[store_placed_item.item_code].full_name);
 	CDSN(836,2,store_placed_item.ability);
 	if (store_placed_item.always_there == TRUE)
@@ -416,9 +416,11 @@ void put_placed_item_in_dlog()
 		else cd_set_led(836,14,0);
 
 	i = scen_item_list.scen_items[store_placed_item.item_code].graphic_num;
-	if (i >= 1000)
-	 	csp(836,4,950);
-	 	else csp(836,4,1800 + i);
+	if (i >= 150)//custom icon
+	 	csp(836,4, i - 150, 1);
+ 	else
+        csp(836,4,1800 + i, 0);
+
 }
 Boolean get_placed_item_in_dlog()
 {
@@ -524,10 +526,10 @@ void edit_sign(short which_sign,short picture)
 	cd_create_dialog_parent_num(831,0);
 
 	if (picture >= 1000)
-		csp(831,6,950);
+		csp(831,6,950,0);
 	else if (picture >= 400)
-		csp(831,6,picture - 100);
-	else csp(831,6,picture);
+		csp(831,6,picture - 100,0);
+	else csp(831,6,picture,0);
 
 	cdsin(831,5,store_which_sign);
 	if (editing_town == FALSE)
