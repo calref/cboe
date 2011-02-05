@@ -325,7 +325,7 @@ void pc_attack(short who_att,short target)
 		sprintf (create_line, "%s punches.  ", adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf((char *) create_line);
 
-		r1 = get_ran(1,0,100) + hit_adj - 20;
+		r1 = get_ran(1,1,100) + hit_adj - 20;
 		r1 += 5 * (adven[current_pc].status[STATUS_WEBS] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 
@@ -351,7 +351,7 @@ void pc_attack(short who_att,short target)
 		sprintf (create_line, "%s swings. ",adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf(create_line);
 
-		r1 = get_ran(1,0,100) - 5 + hit_adj
+		r1 = get_ran(1,1,100) - 5 + hit_adj
 		 - 5 * adven[who_att].items[weap1].bonus;
 		r1 += 5 * (adven[current_pc].status[STATUS_WEBS] / 3);
 
@@ -371,7 +371,7 @@ void pc_attack(short who_att,short target)
 				adven[who_att].items[weap1].ability_strength,which_m);
 
 			// assassinate
-			r1 = get_ran(1,0,100);
+			r1 = get_ran(1,1,100);
 			if ((adven[who_att].level >= which_m->m_d.level - 1)
 				&& (adven[who_att].skills[SKILL_ASSASSINATION] >= which_m->m_d.level / 2)
 				&& (which_m->m_d.spec_skill != MONSTER_SPLITS)) // Can't assassinate splitters
@@ -433,7 +433,7 @@ void pc_attack(short who_att,short target)
 
 		sprintf (create_line, "%s swings.                    ", adven[who_att].name);//,hit_adj, dam_adj);
 		add_string_to_buf(create_line);
-		r1 = get_ran(1,0,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
+		r1 = get_ran(1,1,100) + hit_adj - 5 * adven[who_att].items[weap2].bonus;
 
 		// Ambidextrous?
 		if (adven[who_att].traits[TRAIT_AMBIDEXTROUS] == false)
