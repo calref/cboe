@@ -299,15 +299,15 @@ void start_town_mode(short which_town, short entry_dir)
 					c_town.monst.dudes[i].active -= 10;
 					else c_town.monst.dudes[i].active = 0;
 		}
-	if ((short) town_toast > 0){ //handle entering town special events
-		special_queue[queue_position].queued_special = c_town.town.spec_on_entry_if_dead; //there's always at last one free slot in the special queue for entering town special
+	if (((short) town_toast > 0) && (c_town.town.spec_on_entry_if_dead >= 0)){ //handle entering town special events
+		special_queue[queue_position].queued_special = c_town.town.spec_on_entry_if_dead; //there's always at last one free slot in the special queue for entering town special, if exists
         special_queue[queue_position].mode = SPEC_ENTER_TOWN;
-        queue_position++;
+        queue_position = min(19, queue_position + 1);//safety valve
         }
-    else{
-        special_queue[queue_position].queued_special = c_town.town.spec_on_entry; //there's always at last one free slot in the special queue for entering town special
+    else if (c_town.town.spec_on_entry >= 0){
+        special_queue[queue_position].queued_special = c_town.town.spec_on_entry; //there's always at last one free slot in the special queue for entering town special, if exists
         special_queue[queue_position].mode = SPEC_ENTER_TOWN;
-        queue_position++;
+        queue_position = min(19, queue_position + 1);//safety valve
         }
 	// Flush excess doomguards and viscous goos
 	for (i = 0; i < T_M; i++)
@@ -533,34 +533,45 @@ location end_town_mode(short switching_level,location destination)  // returns n
 					to_return = c_town.town.exit_locs[1].toGlobal();
 					else to_return.x--;
 				party.p_loc = to_return; party.p_loc.x++;
-				special_queue[queue_position].queued_special = c_town.town.exit_specs[1];
-				special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+				if(c_town.town.exit_specs[1] >= 0){//if there's a special "on exit" node to execute
+                    special_queue[queue_position].queued_special = c_town.town.exit_specs[1];
+                    special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+                    queue_position = min(19, queue_position + 1);//safety valve
+                    }
 				}
 			else if (destination.x >= c_town.town.in_town_rect.right) {
 				if (c_town.town.exit_locs[3].x > 0)
 					to_return = c_town.town.exit_locs[3].toGlobal();
 					else to_return.x++;
 				party.p_loc = to_return; party.p_loc.x--;
-				special_queue[queue_position].queued_special = c_town.town.exit_specs[3];
-				special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+				if(c_town.town.exit_specs[3] >= 0){//if there's a special "on exit" node to execute
+                    special_queue[queue_position].queued_special = c_town.town.exit_specs[3];
+                    special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+                    queue_position = min(19, queue_position + 1);//safety valve
+                    }
 				}
 			else if (destination.y <= c_town.town.in_town_rect.top) {
 				if (c_town.town.exit_locs[0].x > 0)
 					to_return = c_town.town.exit_locs[0].toGlobal();
 					else to_return.y--;
 				party.p_loc = to_return; party.p_loc.y++;
-				special_queue[queue_position].queued_special = c_town.town.exit_specs[0];
-				special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+				if(c_town.town.exit_specs[0] >= 0){//if there's a special "on exit" node to execute
+                    special_queue[queue_position].queued_special = c_town.town.exit_specs[0];
+                    special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+                    queue_position = min(19, queue_position + 1);//safety valve
+                    }
 				}
 			else if (destination.y >= c_town.town.in_town_rect.bottom) {
 				if (c_town.town.exit_locs[2].x > 0)
 					to_return = c_town.town.exit_locs[2].toGlobal();
 					else to_return.y++;
 				party.p_loc = to_return; party.p_loc.y--;
-				special_queue[queue_position].queued_special = c_town.town.exit_specs[2];
-				special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+				if(c_town.town.exit_specs[2] >= 0){//if there's a special "on exit node" to execute
+                    special_queue[queue_position].queued_special = c_town.town.exit_specs[2];
+                    special_queue[queue_position].mode = SPEC_LEAVE_TOWN;
+                    queue_position = min(19, queue_position + 1);//safety valve
+                    }
 				}
-                queue_position++;
 			}
 		}
 

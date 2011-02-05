@@ -98,12 +98,12 @@ void location::pickLock(short pc_num)
 		return;
 		}
 
-	r1 = get_ran(1,0,100) + adven[pc_num].items[which_item].ability_strength * 7;
+	r1 = get_ran(1,0,99) + adven[pc_num].items[which_item].ability_strength * 7;
 
 	if (r1 < 75)
 		will_break = true;
 
-	r1 = get_ran(1,0,100) - 5 * adven[pc_num].statAdj(SKILL_DEXTERITY) + c_town.difficulty * 7
+	r1 = get_ran(1,0,99) - 5 * adven[pc_num].statAdj(SKILL_DEXTERITY) + c_town.difficulty * 7
 	 - 5 * adven[pc_num].skills[SKILL_LOCKPICKING] - adven[pc_num].items[which_item].ability_strength * 7;
 
 	// Nimble?

@@ -1168,7 +1168,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 {
  LTEXT "1_63", 1, 435, 295, 61, 20
  LTEXT "5_716", 2, 6, 6, 36, 36
- LTEXT  "Classic Blades of Exile build 09.01.2011 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
+ LTEXT  "Classic Blades of Exile build 05.02.2011 |  Copyright 1997, Spiderweb Software, Inc., All rights reserved.||Blades of Exile is distributed for free under GNU General Public License version 2.", 3, 50, 6, 420, 33
  LTEXT "CONTRIBUTORS : Ormus, Ishad Nha, Celtic Minstrel, Niemand and all involved in the BoE community.", 4, 50, 227, 424, 33
  LTEXT "Comments? Questions? Bugs? Post them at the Blades section of the Irony Central Board: www.ironycentral.com/forum/", 5, 50, 271, 354, 32
  LTEXT "Blades of Exile was brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Blades of Exile_ and Spiderweb Software are trademarks of Spiderweb Software.", 7, 50, 154, 410, 51
