@@ -1,6 +1,6 @@
 #ifndef _TFILEIO_H
 	#define _TFILEIO_H
-	
+
 void Get_Path(char* path);
 void file_initialize();
 void save_scenario();
@@ -38,4 +38,7 @@ void flip_rect(RECT16 *s);
 void alter_rect(RECT16 *r);
 void object_scenario_data_dump();
 void start_outdoor_data_dump();
+
+// relics from the past--for temporary backwards compatibility with older scenario editor.
+short init_data(short flag);short town_s(short flag);short out_s(short flag);short str_size_1(short flag);short str_size_2(short flag);short str_size_3(short flag);
 #endif
