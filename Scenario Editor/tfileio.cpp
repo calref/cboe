@@ -231,6 +231,18 @@ void save_scenario()
 	scenario.flag3 = 60;
 	scenario.flag4 = 80; /// these mean made on PC
 
+    // now password flags -- these are for temporary compatibility with older scenario editors (like Super Editor).
+    // Just set the password to 0.
+	scenario.flag_a = sizeof(scenario_data_type) + get_ran(1,-1000,1000);
+	scenario.flag_b = town_s(0);
+	scenario.flag_c = out_s(0);
+	scenario.flag_e = str_size_1(0);
+	scenario.flag_f = str_size_2(0);
+	scenario.flag_h = str_size_3(0);
+	scenario.flag_g = 10000 + get_ran(1,0,5000);
+	scenario.flag_d = init_data(0);
+
+
     // scenario data
 	if(WriteFile(dummy_f, &scenario, sizeof(scenario_data_type), &dwByteRead, NULL) == FALSE){
         CloseHandle(file_id); CloseHandle(dummy_f);oops_error(15);
@@ -3320,6 +3332,132 @@ void alter_rect(RECT16 *r)
 	r->bottom = r->right;
 	r->right = a;
 }
+
+
+short init_data(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	k = k * k;
+	jl = jl * jl + 84 + k;
+	k = k + 51;
+		jl = jl * 2 + 1234 + k;
+k = k % 3000;
+	jl = jl * 54;
+	jl = jl * 2 + 1234 + k;
+	k = k * 82;
+	k = k % 10000;
+	k = k + 10000;
+
+	return (short) k;
+}
+
+short town_s(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	k = k * k * k;
+	jl = jl * 54;
+	jl = jl * 2 + 1234 + k;
+	k = k + 51;
+	k = k % 3000;
+	jl = jl * 2 + 1234 + k;
+	k = k * scenario.num_towns;
+	k = k % 10000;
+	jl = jl * jl + 84 + k;
+	k = k + 10000;
+
+	return (short) k;
+}
+
+short out_s(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	k = k * k * k;
+	jl = jl * jl + 84 + k;
+	k = k + scenario.out_data_size[0][1];
+	k = k % 3000;
+	k = k * 4;
+	jl = jl * 2 + 1234 + k;
+	jl = jl * 54;
+	jl = jl * 2 + 1234 + k;
+	k = k % 10000;
+	k = k + 4;
+
+	return (short) k;
+}
+
+short str_size_1(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	k = k * k;
+	jl = jl * 2 + 1234 + k;
+	jl = jl * jl + 84 + k;
+	k = k + scenario.scen_str_len[0] + scenario.scen_str_len[1] + scenario.scen_str_len[2];
+	jl = jl * 2 + 1234 + k;
+	k = k % 3000;
+	jl = jl * 54;
+	jl = jl * jl + 84 + k;
+	k = k * 4;
+	k = k % 5000;
+	k = k - 9099;
+
+	return (short) k;
+}
+
+short str_size_2(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	jl = jl * jl + 84 + k;
+	k = k * k * k * k;
+	jl = jl * 54;
+	k = k + 80;
+	k = k % 3000;
+	jl = jl * 2 + 1234 + k;
+	k = k * scenario.out_width * scenario.out_height;
+	jl = jl * jl + 84 + k;
+	k = k % 3124;
+	k = k - 5426;
+
+	return (short) k;
+}
+
+short str_size_3(short flag)
+{
+//  password hashing. Only used to write an "empty" password into the file.
+	long k = 0;
+
+	k = (long) flag;
+	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
+	k = k + 80;
+	jl = jl * jl + 84 + k;
+	k = k % 3000;
+	jl = jl * 2 + 1234 + k;
+	k = k * 45;
+	jl = jl * 54;
+	jl = jl * jl + 84 + k;
+	k = k % 887;
+	k = k + 9452;
+
+	return (short) k;
+}
+
+
+
+
 
 /*
 void import_outdoors(location which_out)
