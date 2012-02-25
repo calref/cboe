@@ -113,27 +113,27 @@ ACCELERATORS_1 ACCELERATORS
  "^N", 4, ASCII
 }
 
-89 CURSOR "resources/ul.cur"
-90 CURSOR "resources/u.cur"
-110 CURSOR "resources/d.cur"
-91 CURSOR "resources/ur.cur"
-99 CURSOR "resources/l.cur"
-100 CURSOR "resources/c.cur"
-101 CURSOR "resources/r.cur"
-109 CURSOR "resources/dl.cur"
-111 CURSOR "resources/dr.cur"
+89 CURSOR "Resources/ul.cur"
+90 CURSOR "Resources/u.cur"
+110 CURSOR "Resources/d.cur"
+91 CURSOR "Resources/ur.cur"
+99 CURSOR "Resources/l.cur"
+100 CURSOR "Resources/c.cur"
+101 CURSOR "Resources/r.cur"
+109 CURSOR "Resources/dl.cur"
+111 CURSOR "Resources/dr.cur"
 
-120 CURSOR "resources/sword.cur"
-
-
-126 CURSOR "resources/talk.cur"
+120 CURSOR "Resources/sword.cur"
 
 
-124 CURSOR "resources/target.cur"
+126 CURSOR "Resources/talk.cur"
 
 
-122 CURSOR "resources/key.cur"
+124 CURSOR "Resources/target.cur"
 
-129 CURSOR "resources/look.cur"
 
-10 ICON "resources/bladexil.ico"
+122 CURSOR "Resources/key.cur"
+
+129 CURSOR "Resources/look.cur"
+
+10 ICON "Resources/BLADEXIL.ICO"

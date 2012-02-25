@@ -573,7 +573,7 @@ short cd_kill_dialog(short dlog_num,short parent_message)
 		SetFocus(dlg_parent[which_dlg]);
 		SetWindowPos(dlg_parent[which_dlg],HWND_TOP,0,0,100,100,
 			SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW);
-		cd_set_edit_focus((short)dlg_parent[which_dlg]);
+		cd_set_edit_focus((size_t)dlg_parent[which_dlg]);
         }
 
 	if (parent_message > 0)
