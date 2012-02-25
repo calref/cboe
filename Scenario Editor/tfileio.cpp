@@ -3099,7 +3099,7 @@ void port_dummy_talk_nodes()
 
 void port_t_d()
 {
-	short i,;
+	short i;
 	if (cur_scen_is_win == TRUE)
 		return;
 

@@ -117,17 +117,17 @@ ACCELERATORS_1 ACCELERATORS
  "^Q", 4, ASCII
 }
 
-120 CURSOR "resources/sword.cur"
+120 CURSOR "Resources/sword.cur"
 
 
-10 ICON "resources/bladexil.ico"
+10 ICON "Resources/BLADEXIL.ICO"
 
 
-1 WAVE "resources/snd0.wav"
-2 WAVE "resources/snd1.wav"
-4 WAVE "resources/snd3.wav"
-35 WAVE "resources/snd34.wav"
-38 WAVE "resources/snd37.wav"
+1 WAVE "Resources/snd0.wav"
+2 WAVE "Resources/snd1.wav"
+4 WAVE "Resources/snd3.wav"
+35 WAVE "Resources/snd34.wav"
+38 WAVE "Resources/snd37.wav"
 
 STRINGTABLE
 {
