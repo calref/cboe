@@ -1,0 +1,3366 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "Blades of Exile Guide"
+\pdf_author "Spiderweb Software, Openexile Project"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+The Blades of Exile Guide
+\end_layout
+
+\begin_layout Author
+By Spiderweb Software and the Openexile Project
+\end_layout
+
+\begin_layout Date
+04/10/12
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Blades of Exile - The Game
+\end_layout
+
+\begin_layout Section
+About this copy
+\end_layout
+
+\begin_layout Standard
+This is Blades of Exile, a huge, highly-detailed Shareware fantasy role-playing
+ system for the Macintosh.
+ This remarkable set of programs contains nearly infinite possibilities
+ for adventure.
+ First, the game itself comes with three full, exciting scenarios, filled
+ with excitement, puzzles, and role-playing.
+ Then there is the Blades of Exile scenario editor, which you can use to
+ make your own role-playing adventures to play yourself or trade with friends.
+ Finally, you can obtain scenarios which other people have made with the
+ scenario editor and play through them yourself.
+ Even when you've finished the scenarios that come with Blades, you've only
+ started to tap the potential for fun this product offers you!
+\end_layout
+
+\begin_layout Standard
+In 2007, ten years after the original release of BoE, the source code of
+ the game was released, and the tedious process of updating the game to
+ modern standards began.
+\end_layout
+
+\begin_layout Subsection
+About Open Source
+\end_layout
+
+\begin_layout Standard
+This program is being distributed and licensed under the GNU General Public
+ license.
+ You should have received a copy of this license with the game – if you
+ haven't, it may be found online at this site.
+ This copy should, when you first receive it, contain a copy of the game,
+ data files, four scenarios, and documentation.
+\end_layout
+
+\begin_layout Standard
+The source code of this game is available at its Google Code project.
+ If you wish to contribute in any way, email one of the project owners or
+ post in the forum to express your interest.
+\end_layout
+
+\begin_layout Subsection
+Comments and Bugs
+\end_layout
+
+\begin_layout Standard
+Any comments and bug reports should be submitted using the form at the Issues
+ page.
+ Please do so.
+ We love to hear from you, and any comments can serve to make this game
+ better.
+ You may also submit suggestions for improvements there.
+\end_layout
+
+\begin_layout Subsection
+System Requirements
+\end_layout
+
+\begin_layout Standard
+Blades of Exile for Macintosh requires 3 MB of free memory, Mac OS X (10.4
+ and newer is supported; it may or may not work on older systems), 7 MB
+ of hard drive space, a 13" screen, and 256 colors.
+\end_layout
+
+\begin_layout Standard
+For Windows users, Blades of Exile will work with systems as old as Windows
+ 98 and 2000, and normally runs without a hitch on most versions of XP,
+ Vista, and Windows 7.
+ The specifications are the same as with Macintosh.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This section is out of date, Blades of Exile should run on any modern machine,
+ but this does need to be updated.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Playing Tips for Beginners
+\end_layout
+
+\begin_layout Standard
+Blades of Exile (Blades for short) is a computer fantasy role-playing game.
+ If you've never played a game of this sort before, much of what's going
+ on will be very unfamiliar to you.
+ This section provides an overview of how to do the most important things,
+ so you don't get too swamped with the details.
+ Don't worry - even though Blades of Exile is a complicated program, once
+ you can get around, you will be able to pick up other things very easily.
+ Also, don't worry if you've never played Exile I-III.
+ Experience with those games is not necessary to enjoy Blades of Exile.
+\end_layout
+
+\begin_layout Subsection
+Starting the game
+\end_layout
+
+\begin_layout Standard
+In Blades of Exile, you will control a group (or "party") of up to six adventure
+rs (often referred to as PCs, for "player characters").
+ You will take these six people on adventures, kill monsters, collect loot,
+ and try to save the world.
+ Each person has his or her own skills, abilities, and items.
+\end_layout
+
+\begin_layout Standard
+To start the game, you need to get a group of adventurers.
+ From the starting screen, press Create New Party, and watch the introduction.
+ When you hit the button, you will be at the party creation screen.
+\end_layout
+
+\begin_layout Standard
+Notice you have already been given six characters.
+ You can now, if you wish, drop, recreate, or edit these PCs.
+ For now, don't worry about this.
+ Just hit "Done," and save your party when given the chance.
+ You will now see your party displayed on the introduction screen.
+ Once you have your adventurers, you need to send them into an adventure
+ (called a scenario).
+ Click on Start Scenario and select "Valley of Dying Things".
+ You're now on an adventure!
+\end_layout
+
+\begin_layout Subsection
+What's going on?
+\end_layout
+
+\begin_layout Standard
+You start in Fort Talrus, an outpost at the entrance to Skylark Vale.
+ Skylark Vale is currently afflicted by a horrible plague, a plague only
+ you can cure.
+ Before you can save the world, however, you need to be able to walk around.
+ Many monsters and puzzles will inhibit your progress.
+ For now, however, it is enough of a problem just to get equipped and figure
+ out how to move around in this odd new world.
+\end_layout
+
+\begin_layout Subsection
+Moving around and getting stuff
+\end_layout
+
+\begin_layout Standard
+Once you've started the game, you will be in your room in Fort Talrus.
+ You can see yourself in bed in the window in the upper left corner of the
+ screen (the terrain screen).
+ You can move around by pressing the buttons on the keypad, or by moving
+ the mouse cursor into the terrain screen and pressing the mouse button.
+ Move around a bit.
+\end_layout
+
+\begin_layout Standard
+Your characters will start with weapons and armor already equipped (i.e.
+ worn).
+ However, there are more things to be gotten.
+ For example, you'll want the lamp on the table.
+ Click on the button with the hand on it in the lower left corner (or type
+ 'g', for Get).
+ The getting things window will come up.
+ Click on the lamp, and your first character will have it.
+\end_layout
+
+\begin_layout Standard
+You should now see the lamp in the item window at the right side of the
+ screen.
+ To the right of it will be four buttons: 'U' (for Use), 'G' (for Give),
+ 'D' (for Drop), and 'I' (for Item Info).
+ When you click on the 'U' button, you'll use the lamp and light will appear.
+ Don't do this yet - wait until you're in a dark place, like a dungeon.
+\end_layout
+
+\begin_layout Standard
+Now move next to one of the dressers.
+ Click on the 'D' button by the lamp to drop it.
+ You'll need to click where to drop the item.
+ Click on the dresser.
+\end_layout
+
+\begin_layout Standard
+It's gone! You just put the lamp in the dresser.
+ Maybe, in addition to the lamp, there's something else in the dresser.
+ You should search it.
+\end_layout
+
+\begin_layout Standard
+To search something, look at it while standing next to it.
+ Stand right under the dresser.
+ Press the Eye button (or type 'l'), and click on the dresser (or press
+ the '8' on the keypad, for 'up').
+ You search the dresser, and will see a list of everything inside.
+ Get everything, then search the other dresser.
+\end_layout
+
+\begin_layout Standard
+Many things, such as barrels, crates, dressers and chests can be searched
+ for interesting things.
+ If you think something useful is hidden somewhere, be sure to search.
+ Any sort of terrain can have something hidden in it.
+\end_layout
+
+\begin_layout Standard
+Now you need to get supplies.
+ Walk into the door to open it, and enter the room across the hallway.
+ There's plenty of items for you there.
+ Get them all (again using the get button or typing 'g').
+ Don't forget to also take the armor out of the chest.
+\end_layout
+
+\begin_layout Subsection
+Readying armor and weapons
+\end_layout
+
+\begin_layout Standard
+Now that you have some armor and weapons, it's time to put on your new gear.
+ The PC screen, listing your party, is to the upper right.
+ One of your characters' names will be in italics.
+ This is the active character.
+ This character's inventory is given in the item screen below it.
+ Click on another PC's name.
+ It will become the active character, and that PC's inventory will appear
+ below.
+ You can also type the PC's number to make him/her active, a very useful
+ shortcut.
+\end_layout
+
+\begin_layout Standard
+Go to one of your PCs inventory pages.
+ Click on the name of, say, a suit of armor.
+ The name of that item will now appear in italics.
+ That means you're wearing it! Click it again to take it off.
+\end_layout
+
+\begin_layout Standard
+Suppose one PC has two suits of armor, and you want another PC to be protected.
+ Go to the page of the PC with two suits of armor, and hit the 'G' button
+ by one of them.
+ This gives the item away.
+ A window will come up asking who to give the item to.
+ Click the button by the name of the PC to give the item to.
+\end_layout
+
+\begin_layout Standard
+Shift your new stuff around so that your fighters have the best armor and
+ weapons.
+ There! You're equipped.
+ Now, you can start meeting the people in the fort around you, or go out
+ and kill something.
+\end_layout
+
+\begin_layout Subsection
+Talking to people
+\end_layout
+
+\begin_layout Standard
+To get anywhere in Blades of Exile, you'll need to talk to many, many people.
+ Might as well try this now.
+ Hit 't' and then click on a person to talk to him/her/it.
+ The talking window will appear.
+\end_layout
+
+\begin_layout Standard
+Notice the buttons at the bottom of this area.
+ Click on Name and Job, and you'll get the basic information that character
+ has to say.
+\end_layout
+
+\begin_layout Standard
+To ask someone about something, click on the word after they say it.
+ If someone says "I really hate goblins," click on goblins to ask about
+ it.
+ If the person has something to say, the word will flash, and something
+ else will come up.
+ To see what the person said previously, click on Go Back.
+\end_layout
+
+\begin_layout Standard
+Talk to people in the fort.
+ You'll notice that the guards don't talk to you, but most everything else
+ has something to say.
+ Be especially sure to go to the southwest corner of Fort Talrus and see
+ Commander Terrance, who will tell you a lot of information about your mission.
+ Also be sure find a person named Avizo.
+ He won't tell you anything useful now, but you'll need to speak with him
+ later.
+\end_layout
+
+\begin_layout Standard
+Finally, talking to people is how you will buy food and equipment.
+ To see if someone has something to sell, press the Buy button.
+ If they do, click on the item name to buy it.
+\end_layout
+
+\begin_layout Subsection
+Killing Stuff
+\end_layout
+
+\begin_layout Standard
+Now it's time to go out and fight.
+ Might as well get used to combat - you're going to be doing a lot of it!
+\end_layout
+
+\begin_layout Standard
+You can find stuff to kill by either finding a dungeon or wandering around
+ outdoors.
+ When you get attacked, to strike back, simply move into the hostile monster.
+ You'll swing whatever weapon you have in your hand.
+ The text area in the lower right will tell you how your attack went.
+\end_layout
+
+\begin_layout Standard
+When you kill stuff, the dead monsters will often leave behind more items
+ for you to get.
+ Unfortunately, you won't always know what these items are, and you won't
+ be allowed to sell them until you do.
+ There are, fortunately, people in towns who (for a fee) will tell you what
+ they are.
+ One such person is Axel, in Sweetgrove.
+\end_layout
+
+\begin_layout Subsection
+Casting Spells
+\end_layout
+
+\begin_layout Standard
+The other necessary skill for playing Blades of Exile is casting spells:
+ magical incantations which do all sorts of stuff.
+ There are two sorts of spells: mage spells, which tend to do damage and
+ help in combat, and priest spells, which tend to heal and help the party.
+\end_layout
+
+\begin_layout Standard
+The easiest way to cast a spell is to use the Mage Spells or Priest spells
+ menus.
+ To have a PC cast a spell, click on his/her name to make the PC active.
+ The Mage Spells (or Priest Spells) menu will list all available spells.
+ Select the spell to cast it.
+ If it's a spell cast on another character, like Minor Heal, you'll be asked
+ whom to cast it on.
+\end_layout
+
+\begin_layout Standard
+You can also cast spells by using the Mage and Priest Spell windows, which
+ you bring up by clicking on the spell casting buttons in the lower left,
+ or by typing 'm' or 'p'.
+ Instructions for using these windows are given in the spell casting chapter.
+ They're a little more complicated to use, but have the advantage of being
+ usable entirely from the keyboard.
+\end_layout
+
+\begin_layout Standard
+There are seven levels of spells, each more draining and powerful than the
+ spells in the level before.
+ You start with characters able to cast all spells from levels 1 to 3.
+\end_layout
+
+\begin_layout Subsection
+Secret Doors
+\end_layout
+
+\begin_layout Standard
+Some doors (in all sorts of walls and in cave walls as well) are hidden.
+ To search the walls, walk into them.
+ If there is a secret door there, you'll pass through the wall.
+\end_layout
+
+\begin_layout Standard
+Go to the north side of the building you started in and walk along the wall
+ to the west (stand right next to the wall and don't go north, or you'll
+ leave town).
+ When you reach the mountains to the northwest of the building, walk west
+ through them.
+ You'll find an interesting (and hostile) surprise.
+\end_layout
+
+\begin_layout Subsection
+If you get stuck
+\end_layout
+
+\begin_layout Standard
+Of course, it's possible that you will still get stuck.
+ Maybe you always get killed, or you can't find any money, or something
+ else.
+ Should this happen, Blades of Exile comes with a character editor, which
+ can heal your characters and give them as much gold and food as they want.
+\end_layout
+
+\begin_layout Subsection
+Moving onward
+\end_layout
+
+\begin_layout Standard
+Finally, when you're through with Fort Talrus, walk out of the building
+ you started in, and walk north.
+ You'll eventually leave the town you're in and be outdoors.
+ You'll be standing by a road.
+ Follow it north, and you will eventually find a town called Sweetgrove.
+ Walk into it to enter it.
+ You're on your way!
+\end_layout
+
+\begin_layout Standard
+This is only a brief overview, of course.
+ It says nothing about training, or many important things about spellcasting.
+ It will, however, get you moving, and once you're getting around, you should
+ find the rest falls into place very quickly.
+\end_layout
+
+\begin_layout Standard
+So welcome to the wild world of Blades of Exile! And good luck! Who knows?
+ You may actually be able to make a difference!
+\end_layout
+
+\begin_layout Section
+Introduction to the World of Exile
+\end_layout
+
+\begin_layout Standard
+The world of Exile is a huge place.
+ Actually, it's two very different worlds in one.
+ First, there's the surface world.
+ The surface world is ruled by the Empire.
+ That's what its called.
+ The Empire.
+ Not the Empire of Something, or the Something Empire.
+ Just the Empire.
+ It's understandable.
+ There's no need for elaborate names when there's only one game in town.
+\end_layout
+
+\begin_layout Standard
+The second world is the underworld, the networks of thousands of miles of
+ caverns and tunnels, ever hidden from the sun, spiraling down to depths
+ unimagined, filled with bizarre races of creatures, some friendly, most
+ hostile.
+ For many years, the Empire, in its arrogance, banished everyone it felt
+ didn't fit in.
+ Eccentrics, petty criminals, malcontents, they were all regarded as undesirable
+ by the Empire.
+ And, for many years, these unwanted citizens were sent into this underworld.
+ There, against horrible odds, they formed their own nation.
+ They called it Exile.
+\end_layout
+
+\begin_layout Standard
+Exile is a network of hundreds of miles of caves and tunnels, forming an
+ enormous, weblike labyrinth of warrens under the surface of the world.
+ Kept lit by magic, fed by fungus, and populated by the unending stream
+ of humans (and humanoids) from the surface, the people of Exile struggled
+ by as best they could for many years.
+\end_layout
+
+\begin_layout Standard
+They were opposed by demons.
+ Many of these creatures, led by the demon lord Grah-Hoth, had been Exiled
+ from the infernal realms to the caves where the humans were sent.
+ There were the Nephilim, a barbarian race that once roamed the surface
+ and, like the Exiles, had been banished from the surface.
+ There were the slithzerikai, a subterranean lizard people, many of whom
+ considered humans to be foes at best, meat at worst.
+\end_layout
+
+\begin_layout Standard
+It seemed that there was no way for the humans to survive in this alien
+ environment, opposed as they were by so many hostile creatures.
+ When Exile was established, however, the Empire, complacent and arrogant,
+ made its greatest mistake and gave Exile the boon it needed to survive.
+ It sent down several mages, powerful mages, who were on the wrong side
+ of a political struggle.
+ The winners, Emperor Hawthorne and the archmage Garzahd, were confidant
+ that sending down these archmagi would not be a problem.
+ They even thought that maybe their skills could later be harnessed, once
+ they were beaten down by several years of rotting in the sunless lands.
+\end_layout
+
+\begin_layout Standard
+They could not have been more wrong.
+\end_layout
+
+\begin_layout Standard
+Some of the exiled wizards, like Rone, and Solberg, and Patrick, were content
+ simply building a better life for the Exiles.
+ They united the Exiles into one nation, raised an army, and beat back the
+ Nephilim and slithzerikai and, in one huge battle, imprisoned the demon
+ Grah-Hoth.
+ From there, the wizards tried to form a healthy, peaceful life, doing their
+ best to forget the humans who had sent them from the light of the sun.
+\end_layout
+
+\begin_layout Standard
+One of the wizards, however, was named Erika Redmark.
+ A harsh and vindictive incantatrix, she enlisted a band of adventurers,
+ made tough by their years below, in a wild, dangerous, and eventually successfu
+l scheme.
+ She wanted to assassinate Hawthorne, brilliant and evil Emperor of the
+ surface world.
+\end_layout
+
+\begin_layout Standard
+Five years later, Hawthorne was killed in his own throne room.
+\end_layout
+
+\begin_layout Standard
+The response was immediate, and vicious.
+ First, the portal into Exile was closed.
+ Nobody was to be sent through.
+ Second, other portals were created in remote areas of Exile.
+ Soldiers were sent there, the finest soldiers in the Empire's army.
+ They had one mission: Vengeance.
+ Not one citizen in this subterranean den of vipers was to escape alive.
+\end_layout
+
+\begin_layout Standard
+In launching this invasion, however, the Empire made their critical mistake.
+ They discovered a new, bizarre, humanoid race living even farther down
+ in the caves - the Vahnatai.
+ These creatures were highly intelligent and resourceful, and very skilled
+ in the use of crystals for magical deeds.
+ In fact, they had the ability to take the spirits of their ancestors, and
+ bring them back in crystalline form.
+ These revered forefathers, the Crystal Souls, were their spiritual guides,
+ and the beings most revered by their people.
+\end_layout
+
+\begin_layout Standard
+The Empire, seeing how strange and powerful the Crystal Souls were, kidnapped
+ three of them.
+ The Vahnatai, appalled by the magnitude of this crime but unsure of the
+ identity of the perpetrators, attacked Exile.
+\end_layout
+
+\begin_layout Standard
+Fortunately, aided by the peaceful Vahnatai Bon-Ihrno, a group of bold Exiles
+ were able to infiltrate the Empire lands, steal the Crystal Souls, and
+ return them to their rightful owners.
+ In return, the Vahnatai joined forces with the Exiles, and used their mighty
+ magic to slaughter the Empire troops.
+ The Empire War finally ended, bloodily and victoriously.
+\end_layout
+
+\begin_layout Standard
+Aided by Erika Redmark and their new Vahnatai allies, the Exiles built a
+ mighty teleporter, a magical machine able to send many people in an instant
+ from the caves to the surface.
+ The Exiles hoped to find a part of the world as yet uncrushed by the Empire.
+ Little did they know that the Vahnatai had plotted a savage revenge against
+ the Empire.
+ Their fury at the Empire for stealing their Crystal Souls was so great
+ that they tried to kill every person on the surface, by inflicting them
+ with plagues of vicious, lethal magical monsters.
+\end_layout
+
+\begin_layout Standard
+Fortunately, a band of Exiles, seeing the surface world they so longed to
+ rejoin threatened, opposed the Vahnatai and brought the plagues of monsters
+ to an end.
+ The leader of the Vahnatai, Rentar-Ihrno, was defeated.
+ She fled to the lowest depths of the underworld, but not before she slew
+ Erika.
+\end_layout
+
+\begin_layout Standard
+Empress Prazak, the leader of the Empire, who is a good deal wiser and kinder
+ than her predecessor, rewarded the Exiles with a corner of Valorim, the
+ wildest and most unsettled portion of the Empire.
+ Half of the people of Exile left the caves they loathed to return home.
+ They now live on the surface, and have an uneasy peace with the Empire.
+ The rest of the Exiles stay below, having come to regard Exile as their
+ home.
+ They have been joined by many friendly slithzerikai and Nephilim, although
+ the barbarian members of those races raid Exile settlements whenever possible.
+\end_layout
+
+\begin_layout Standard
+And, below everyone, ever lurk the Vahnatai.
+ The Vahnatai still nurse a constant fury against the humans that defied
+ them, and they are nervous about the other races that are constantly advancing
+ through the caves they consider theirs.
+ On the other hand, many of them, in their hearts, long for peace.
+ It is a constant political struggle in the Vahnatai homeland, and the few
+ contacts between them and other races tend to be very eccentric.
+\end_layout
+
+\begin_layout Standard
+There are many forces in these two worlds, above and below ground.
+ The people of Exile, above and below the surface, try to survive.
+ The Empire tries to hold control, even as forces of rebellion keep poking
+ up all around.
+ The Vahnatai want to be safe.
+ The Nephilim and slithzerikai fight to survive, often at the expense of
+ others.
+\end_layout
+
+\begin_layout Standard
+It's a tumultuous world, filled with combat and confusion.
+ What better environment for a group of adventurers (like you) to make their
+ fortunes?
+\end_layout
+
+\begin_layout Section
+The Blades of Exile Menu
+\end_layout
+
+\begin_layout Standard
+Once you run Blades of Exile and see the title screen, you have five options:
+\end_layout
+
+\begin_layout Subsubsection
+Load Saved Game
+\end_layout
+
+\begin_layout Standard
+Resumes a game you've already started.
+ Select the save file to resume.
+ If that party is already in a scenario, you will pick up in the scenario
+ where you left off.
+\end_layout
+
+\begin_layout Subsubsection
+Make New Party
+\end_layout
+
+\begin_layout Standard
+Creates a new band of adventures.
+ A window will come up, and you can edit them however you want.
+ When you're done, you will be given a chance to save your new party.
+\end_layout
+
+\begin_layout Subsubsection
+How to Order
+\end_layout
+
+\begin_layout Standard
+This screen gives the relevant information for when you decide to register
+ Blades of Exile.
+ This includes cost, address, and the registration code (or codes) you will
+ need to give when you register.
+ Since the game is now free, of course, this is obsolete.
+\end_layout
+
+\begin_layout Subsubsection
+Start Scenario
+\end_layout
+
+\begin_layout Standard
+Once you have a party loaded (by opening a save file or selecting Start
+ New Game), press this button and select a scenario.
+ This is how you load one of the four scenarios which comes with Blades
+ of Exile.
+ Click on the scenario to play.
+\end_layout
+
+\begin_layout Subsubsection
+Custom Scenario
+\end_layout
+
+\begin_layout Standard
+Lets you play a scenario besides the three which come with Blades of Exile.
+ Press the button by the scenario you want to enter it.
+\end_layout
+
+\begin_layout Subsection
+What is going on?
+\end_layout
+
+\begin_layout Standard
+Before you can do anything, you will need to create a band of adventurers
+ for yourself to control.
+ This group of adventurers, called a party, will be your agents in the strange
+ worlds you find yourself in.
+ You can control them, talk to people through them, and sometimes even get
+ them killed.
+ You have to have a party before you can start an adventure.
+ To make a party, select Make New Party on the title screen.
+\end_layout
+
+\begin_layout Section
+Creating a party
+\end_layout
+
+\begin_layout Standard
+A party is the group of up to 6 adventurers, called player characters (PCs
+ for short).
+ You can play a party of your own making, or get a prefabricated party provided
+ by the game.
+ When you first run the game, select 'Make New Party' from the opening screen.
+ You can then choose whether to play a prefab party or make one from scratch.
+\end_layout
+
+\begin_layout Standard
+When you hit Make New Party, you will be given the introduction to the game.
+ Click the mouse button when you're through watching it.
+ Then you will see the Party Creation window.
+ You will be given six prefabricated characters, each with preassigned skills
+ and abilities.
+ To get rid of a prefab PC, hit the Delete button by its name, and then
+ hit the Create button.
+ When your party is how you want it, press the Done button to start the
+ game.
+\end_layout
+
+\begin_layout Standard
+Using the party creation window, you can select each of your character's
+ names, graphics, race, advantages/disadvantages, and skills.
+\end_layout
+
+\begin_layout Subsection
+Race, PC Traits
+\end_layout
+
+\begin_layout Standard
+Each of your characters can be one of three different races, and have any
+ of several advantages or disadvantages.
+ These traits will help or hinder your character in various ways.
+ They will also affect how quickly your character gains strength.
+ If you take a character with lots of advantages, he or she will gain skills
+ at a much lower rate.
+ If there are lots of disadvantages, the character will gain skills faster.
+ These are the races and character traits.
+ Details on each race and trait are visible in the appendices.
+\end_layout
+
+\begin_layout Subsection
+Skills, Graphic, Name
+\end_layout
+
+\begin_layout Subsubsection
+Skills
+\end_layout
+
+\begin_layout Standard
+A PC created from scratch gets 60 skill points.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Note that the default starting PCs (Jenneke, Thissa, etc.) have more than
+ 60 skill points.
+ If creating a singleton, consider editing slot 3 (Frrrrrr), which comes
+ with 81 skill points.
+\end_layout
+
+\end_inset
+
+ Skill points are a sort of money you will spend on abilities.
+\end_layout
+
+\begin_layout Standard
+When you press the Skills button, you will see a window where you can increase
+ and decrease this PCs skills.
+ To spend skill points to increase an ability, press the '+' button next
+ to it.
+ Press the '-' button to undo the action.
+ The cost in skill points to increase your value in each skill is the number
+ before the slash in the 'Cost' column.
+ The number after the slash isn't relevant yet (it becomes important when
+ you train your characters).
+ A list of what each skill does is available in the appendices.
+\end_layout
+
+\begin_layout Standard
+Should you spend the points and be satisfied, press the 'Keep' button.
+ If you want to start again, press cancel.
+\end_layout
+
+\begin_layout Paragraph
+Level and Experience
+\end_layout
+
+\begin_layout Standard
+These two numbers (starting at 1 and 0 respectively) represent how much
+ stuff your character has done.
+ Your experience goes up when you kill stuff and complete missions.
+ For every 100 experience points you get (adjusted up or down for race and
+ PC traits), your level increases (up to a maximum of 50).
+ When your level increases, you gain some health points and skill points
+ (described below), and become a little better at everything you do.
+ Alas, the higher your level, the fewer skill points and health you gain.
+\end_layout
+
+\begin_layout Subsubsection
+PC Graphic
+\end_layout
+
+\begin_layout Standard
+To assign a PC's graphic, press the Graphic button.
+ Click on the button besides the graphic you want to use to represent your
+ PC, or press cancel to begin the whole process anew.
+\end_layout
+
+\begin_layout Standard
+If you have a Nephilim or Slith character, it is recommended (though not
+ necessary) that you pick a graphic from that race.
+ You won't be specifically asked whether your character is male or female.
+ If you want your warrior to be a woman, select a female graphic and appropriate
+ name.
+\end_layout
+
+\begin_layout Subsubsection
+PC Name
+\end_layout
+
+\begin_layout Standard
+To choose a name for your character, click on the existing name and enter
+ a new one.
+ It must begin with a non-space character.
+\end_layout
+
+\begin_layout Section
+The Blades of Exile Screen
+\end_layout
+
+\begin_layout Standard
+If you've just created a party, you will now be looking at the main Blades
+ of Exile screen.
+ This screen has six distinctive parts.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename img/screen.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The Blades of Exile screen, showing the six main parts (From top left, clockwise
+): Terrain Screen, PC Stat Screen, Inventory Screen, Text Screen, Button
+ Bin, and Text Bar
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Terrain Screen
+\end_layout
+
+\begin_layout Standard
+When outside or in town, the person in the middle represents your party.
+ Around you will be the flora, fauna, and miscellaneous stuff of the surface
+ or underworld.
+\end_layout
+
+\begin_layout Standard
+To move around, move the cursor into the terrain screen.
+ Move it around.
+ It will turn into an arrow.
+ Click the mouse button when the arrow points in the desired direction.
+ When looking, picking locks, etc.
+ (all described below), to select the item to look at (or whatever) click
+ on it.
+\end_layout
+
+\begin_layout Standard
+The border of the terrain screen is also something to click on.
+ When looking, aiming a missile, or targeting a spell, clicking on the terrain
+ screen border will shift the view of the terrain screen in the appropriate
+ direction.
+\end_layout
+
+\begin_layout Subsubsection
+Text Bar
+\end_layout
+
+\begin_layout Standard
+This bar contains information about what's going on.
+ When in combat, it tells you who is active and how many action points they
+ have remaining.
+ Outdoors or in town, it tells you where you are.
+ Buttons
+\end_layout
+
+\begin_layout Standard
+These change depending on your setting.
+ What the Outdoor/Town/Combat buttons do is described in the relevant sections.
+\end_layout
+
+\begin_layout Subsubsection
+PC Status Screen
+\end_layout
+
+\begin_layout Standard
+This lists the characters in your party, and tells you their current health
+ or status.
+ There are several things you can click on or find out about here.
+\end_layout
+
+\begin_layout Paragraph
+Character's Name
+\end_layout
+
+\begin_layout Standard
+When not in combat, clicking on a character's name makes that character
+ active.
+ The name of the active character appears in italics.
+ The Mage Spells and Priest Spells menus list the spells for the active
+ PC.
+\end_layout
+
+\begin_layout Paragraph
+Health and Spell Points
+\end_layout
+
+\begin_layout Standard
+Click on these numbers to be told the maximum number of health of spell
+ points the character can have.
+\end_layout
+
+\begin_layout Paragraph
+Trade Places Arrows
+\end_layout
+
+\begin_layout Standard
+To have two characters trade places in the roster, click on the arrow button
+ to the right of the first character, and then of the second.
+\end_layout
+
+\begin_layout Paragraph
+Character Info Button
+\end_layout
+
+\begin_layout Standard
+To see a window giving detailed information about the character's spell,
+ statistics, etc., click on the '?' button to the right of the character's
+ name.
+\end_layout
+
+\begin_layout Paragraph
+Gold/Food/Day
+\end_layout
+
+\begin_layout Standard
+At the bottom of this window, you can see your parties current gold and
+ food totals, as well as what day it is.
+\end_layout
+
+\begin_layout Paragraph
+Help Button
+\end_layout
+
+\begin_layout Standard
+Clicking the button with the '?' gives you help for this area.
+ By each PC's name will occasionally appear a symbol representing that character
+'s status.
+ To find out what these mean, click the '?' in the PC status area.
+\end_layout
+
+\begin_layout Subsubsection
+PC Inventory Screen
+\end_layout
+
+\begin_layout Standard
+This area lists the inventory for the current active character.
+ There are several things you can do here:
+\end_layout
+
+\begin_layout Paragraph
+Equip/Remove Item
+\end_layout
+
+\begin_layout Standard
+An equipped item's name appears in italics.
+ To wear an item, click on its name.
+ To remove it, click again.
+ Equipped weapons appear in red, armor in green, and everything else in
+ blue.
+ Use Item Click on the 'U' button to use an item.
+\end_layout
+
+\begin_layout Paragraph
+Drop Item
+\end_layout
+
+\begin_layout Standard
+To drop an item, click the 'D' button, and then click the space to drop
+ it in (if in town) or say you definitely want to drop it (when outdoors).
+ Items dropped outdoors are lost forever.
+\end_layout
+
+\begin_layout Paragraph
+Give Item
+\end_layout
+
+\begin_layout Standard
+To give an item, click the 'G' button, and select a recipient.
+\end_layout
+
+\begin_layout Paragraph
+Item Info
+\end_layout
+
+\begin_layout Standard
+Click on 'I' for a detailed description of an item.
+\end_layout
+
+\begin_layout Paragraph
+Identify Item
+\end_layout
+
+\begin_layout Standard
+When you visit a sage, this button will appear.
+ Click it to pay the sage to identify the item for you.
+\end_layout
+
+\begin_layout Paragraph
+Sell Item
+\end_layout
+
+\begin_layout Standard
+When you visit a shop, this button may appear.
+ Click it to sell the item for gold.
+\end_layout
+
+\begin_layout Paragraph
+Enchant Item
+\end_layout
+
+\begin_layout Standard
+Occasionally you may find someone willing to enchant your weapons.
+ When you do, this button will appear; click it to pay to enchant.
+\end_layout
+
+\begin_layout Paragraph
+PC Buttons
+\end_layout
+
+\begin_layout Standard
+Click on the numbered buttons at the bottom of this window to make this
+ character active (in town or outdoors) or see this character's inventory
+ (in combat).
+\end_layout
+
+\begin_layout Paragraph
+Spec Button
+\end_layout
+
+\begin_layout Standard
+Clicking this button brings up a list of the special items you've obtained.
+ Most of these (such as keys) are used automatically when needed.
+ Others, such as maps, are used by clicking the 'U' button to the right.
+\end_layout
+
+\begin_layout Paragraph
+Help Button
+\end_layout
+
+\begin_layout Standard
+As always, clicking the button with the '?' gives help for this area.
+\end_layout
+
+\begin_layout Paragraph
+Jobs Button
+\end_layout
+
+\begin_layout Standard
+Shows a list of jobs you've accepted and quests you've been assigned.
+\end_layout
+
+\begin_layout Subsubsection
+Text Screen
+\end_layout
+
+\begin_layout Standard
+This area gives you a running account of what's going on.
+ If you miss something, use the scroll bar.
+\end_layout
+
+\begin_layout Section
+The Blades of Exile Menus
+\end_layout
+
+\begin_layout Standard
+Blades of Exile's menus can perform many of the actions in the game, and
+ dispense help and information as well.
+\end_layout
+
+\begin_layout Subsection
+File Menu
+\end_layout
+
+\begin_layout Paragraph
+Open
+\end_layout
+
+\begin_layout Standard
+Selecting this has you load in one of your older games.
+ You can do this anytime.
+\end_layout
+
+\begin_layout Paragraph
+Save, Save As
+\end_layout
+
+\begin_layout Standard
+This option has Blades of Exile take a "snapshot" of your current position
+ in the game, so you can resume from this point later, should you mess up.
+ Blades of Exile will prompt you for the name of your save file.
+ You can only save the game in town or outdoors.
+ Making several back-up save files is recommended.
+\end_layout
+
+\begin_layout Paragraph
+New Game
+\end_layout
+
+\begin_layout Standard
+Should you get fed up, you can start over again.
+\end_layout
+
+\begin_layout Paragraph
+Preferences
+\end_layout
+
+\begin_layout Standard
+This option brings up the preferences dialog.
+ This is described below.
+\end_layout
+
+\begin_layout Paragraph
+Quit
+\end_layout
+
+\begin_layout Standard
+When you've just plain had enough.
+\end_layout
+
+\begin_layout Subsubsection
+The Preferences Window
+\end_layout
+
+\begin_layout Standard
+From here, you can change how the game plays.
+\end_layout
+
+\begin_layout Paragraph
+Display Alignment
+\end_layout
+
+\begin_layout Standard
+This option determines how the Blades of Exile window is drawn on the screen.
+ You can have the game take up the full screen, with the game information
+ drawn in a corner you choose, or you can play Blades of Exile in a window
+ you can drag around the screen.
+\end_layout
+
+\begin_layout Paragraph
+Game Speed (Fast/Medium/Slow)
+\end_layout
+
+\begin_layout Standard
+This option reduces or increases the speed at which things take place.
+\end_layout
+
+\begin_layout Paragraph
+No graphics frills
+\end_layout
+
+\begin_layout Standard
+When turned on, most of Blades of Exile's animation and graphics tricks
+ disappears, resulting in a dramatic increase in game speed.
+\end_layout
+
+\begin_layout Paragraph
+Turn off terrain animation
+\end_layout
+
+\begin_layout Standard
+When on, Blades of Exile's terrain will not be animated, making the game
+ go faster.
+\end_layout
+
+\begin_layout Paragraph
+Turn off frills on shore
+\end_layout
+
+\begin_layout Standard
+When on, the frilly edge at the edge of pits, water, and lava won't be drawn,
+ making the game go faster.
+\end_layout
+
+\begin_layout Paragraph
+Don't Save Maps
+\end_layout
+
+\begin_layout Standard
+Normally, the game stores maps you've found in your save files.
+ This makes the save files 60K larger.
+ Selecting this option keeps Blades of Exile from saving your maps, resulting
+ in smaller save files.
+\end_layout
+
+\begin_layout Paragraph
+No Sounds
+\end_layout
+
+\begin_layout Standard
+This option turns off the game's sounds.
+\end_layout
+
+\begin_layout Paragraph
+Show Room Descriptions More Than Once
+\end_layout
+
+\begin_layout Standard
+Often, you will find a special encounter which shows a description of what
+ you've just found.
+ Once found, most of these won't be printed again.
+ This option makes the messages kept around to be printed whenever you encounter
+ them.
+\end_layout
+
+\begin_layout Paragraph
+Never Show Instant Help
+\end_layout
+
+\begin_layout Standard
+When selected, the Instant Help windows will never appear.
+\end_layout
+
+\begin_layout Paragraph
+Reset Instant Help
+\end_layout
+
+\begin_layout Standard
+Click on this to make all Instant Help windows appear again.
+\end_layout
+
+\begin_layout Paragraph
+Make Game Easier
+\end_layout
+
+\begin_layout Standard
+When on, monsters will have fewer health points, and do less damage.
+\end_layout
+
+\begin_layout Paragraph
+Fewer Wandering Monsters
+\end_layout
+
+\begin_layout Standard
+When on, fewer monsters will randomly appear outdoors and in towns.
+\end_layout
+
+\begin_layout Paragraph
+No Targeting Line (Windows Only)
+\end_layout
+
+\begin_layout Standard
+If experiencing crashes when targeting a missile or spell, you may have
+ problems with your display driver.
+ Turn this on to remove the problem.
+\end_layout
+
+\begin_layout Paragraph
+Fewer Sounds (Windows Only)
+\end_layout
+
+\begin_layout Standard
+If you have an older sound card (or sound card driver), some sound effects
+ may cause crashes.
+ Turn this on to remove the problem.
+ 
+\end_layout
+
+\begin_layout Subsection
+Options Menu
+\end_layout
+
+\begin_layout Paragraph
+Pick New PC Graphic
+\end_layout
+
+\begin_layout Standard
+You can use this option to change the graphic of a PC.
+ You will be asked which PC.
+\end_layout
+
+\begin_layout Paragraph
+Pick New PC Name
+\end_layout
+
+\begin_layout Standard
+You can use this option to change the name of a PC.
+ You will be asked which PC.
+\end_layout
+
+\begin_layout Paragraph
+Create New PC
+\end_layout
+
+\begin_layout Standard
+When this is selected in the town you start the scenario in, you can create
+ a new PC.
+ Of course, this only works when you have less than 6 people in your party.
+\end_layout
+
+\begin_layout Paragraph
+Delete a PC
+\end_layout
+
+\begin_layout Standard
+This lets you select a character to delete permanently.
+\end_layout
+
+\begin_layout Paragraph
+See Talking Notes
+\end_layout
+
+\begin_layout Standard
+When you record something while talking to somebody in town, you can review
+ it here.
+\end_layout
+
+\begin_layout Paragraph
+See Encounter Notes
+\end_layout
+
+\begin_layout Standard
+When you record a message in a special encounter, you can review it here.
+\end_layout
+
+\begin_layout Paragraph
+See Overall Party Stats
+\end_layout
+
+\begin_layout Standard
+This brings up a tally of how many things you've killed, how much experience
+ you've gained, and other vital statistics.
+\end_layout
+
+\begin_layout Subsection
+Help Menu
+\end_layout
+
+\begin_layout Standard
+This menu brings up various reminders of the commands in the game.
+ As a shortcut, typing ? brings up the most relevant help screen for your
+ current situation.
+\end_layout
+
+\begin_layout Subsection
+Monsters Menu
+\end_layout
+
+\begin_layout Standard
+This menu provides a reference for monsters in the games, and their vital
+ statistics.
+ You can make a monster appear here by casting Scry Monster on it.
+\end_layout
+
+\begin_layout Subsection
+Library Menu
+\end_layout
+
+\begin_layout Standard
+These library menu options are extremely useful.
+ They are your best source for information about Blades of Exile: its spells
+ and monsters, handy tips for playing, and other useful things.
+\end_layout
+
+\begin_layout Paragraph
+Mage Spells
+\end_layout
+
+\begin_layout Standard
+This brings up a window which describes all of the mage spells in the game.
+\end_layout
+
+\begin_layout Paragraph
+Priest Spells
+\end_layout
+
+\begin_layout Standard
+This brings up a window which describes all of the priest spells in the
+ game.
+\end_layout
+
+\begin_layout Paragraph
+Skills
+\end_layout
+
+\begin_layout Standard
+This option brings up a window describing the different skills your characters
+ can attain, and giving hints for how much of them to buy and when.
+\end_layout
+
+\begin_layout Paragraph
+Alchemy & Poison
+\end_layout
+
+\begin_layout Standard
+This window describes the different alchemical concoctions and how to make
+ them, and tells how best to use poison.
+\end_layout
+
+\begin_layout Paragraph
+Tip of the Day
+\end_layout
+
+\begin_layout Standard
+This very useful option gives a host of hints for playing Blades of Exile.
+\end_layout
+
+\begin_layout Paragraph
+Show Introductory Dialog
+\end_layout
+
+\begin_layout Standard
+This option brings up the dialog you saw the first time you ran the game.
+\end_layout
+
+\begin_layout Subsection
+Actions Menu
+\end_layout
+
+\begin_layout Paragraph
+Do Alchemy
+\end_layout
+
+\begin_layout Standard
+When in town, select this option to try to make a potion.
+ There is more information on this in the next section.
+\end_layout
+
+\begin_layout Paragraph
+Wait 100 Moves
+\end_layout
+
+\begin_layout Standard
+When in town, you cannot make camp.
+ Selecting this option, however, has you wait for a long time in order to
+ regain health and spells points.
+ Beware - the monsters can use this time to get reinforcements.
+\end_layout
+
+\begin_layout Paragraph
+Display Automap
+\end_layout
+
+\begin_layout Standard
+This brings up a map of your current location.
+\end_layout
+
+\begin_layout Subsection
+Mage Spells, Priest Spells
+\end_layout
+
+\begin_layout Standard
+These menus constantly list the spells the active PC can currently cast.
+ Select a spell to cast it.
+\end_layout
+
+\begin_layout Section
+Getting Around Town
+\end_layout
+
+\begin_layout Standard
+When you begin the game, you will be in one of Exile's many towns and forts.
+ There are a variety of things you can and should do.
+\end_layout
+
+\begin_layout Subsection
+Moving around
+\end_layout
+
+\begin_layout Standard
+To move, place the cursor on the terrain screen in the direction you want
+ to move (it should turn into a little arrow) and click.
+ You will take a step in the direction the arrow points.
+ To move up, for example, move the cursor above the little person in the
+ middle (you).
+ The cursor should turn into an arrow pointing up.
+ Click.
+ You will move up a space.
+\end_layout
+
+\begin_layout Standard
+You can also move using the keypad.
+ Hitting 5 pauses your party, 8 makes you move up, 2 down, and so on.
+\end_layout
+
+\begin_layout Standard
+If you cannot move there, because of something in the way, the text screen
+ will tell you so.
+ If you've stepped on something unpleasant, like swamp, lava, or some sort
+ of trapped square, you will be informed.
+ There are several interesting things to know about moving around.
+\end_layout
+
+\begin_layout Subsection
+Leaving Town
+\end_layout
+
+\begin_layout Standard
+When you want to leave a town or dungeon, pick a direction and keep walking.
+ Eventually, when you walk off the edge of the map, you will be outdoors.
+ A handy way of telling how far you are from the edge of the map is to use
+ the Map button, described below.
+\end_layout
+
+\begin_layout Subsection
+Special Encounters
+\end_layout
+
+\begin_layout Standard
+You will occasionally see, both in town and outdoors, a white circle on
+ the the nearby floor/ground/whatever.
+ The white circle signifies a special encounter or occurrence of some sort.
+ Step on it to find out what it is.
+\end_layout
+
+\begin_layout Subsection
+Wall and Secret Doors
+\end_layout
+
+\begin_layout Standard
+Not all walls, man-made or otherwise, are as they appear.
+ Some walls (and trees, and pillars, and many other terrain types) have
+ secret doors and hidden tunnels.
+ When you walk into a wall with one of these, you will pass through it.
+ This may not always be a good thing.
+\end_layout
+
+\begin_layout Subsection
+Locked Doors
+\end_layout
+
+\begin_layout Standard
+When you walk into a door, you will try to open it.
+ However, some doors are guarded by locks, magical and non-magical.
+ To open a locked door, you can bash it or pick the lock.
+ Bashing only rarely works, and failed attempts are punished by damage.
+ Only strong characters should try to bash doors.
+\end_layout
+
+\begin_layout Standard
+Locks can be picked by a character who has a decent Pick Locks skill and
+ haslockpicks equipped.
+ When you fail, there is a chance that one of your picks will break.
+ It is rumored that you can find higher quality lockpicks.
+\end_layout
+
+\begin_layout Standard
+Finally, some doors are magically locked.
+ Bashing and lockpicking will not work - you will need to use the mage spell
+ Unlock Doors.
+ And, every great once in a while, you will find a door on which none of
+ these methods will work! You'll need to find a key or lever or something
+ else to open it.
+\end_layout
+
+\begin_layout Subsection
+Boats and Horses
+\end_layout
+
+\begin_layout Standard
+Both outdoors and in town, you can find boats.
+ To enter one, move onto it.
+ To leave it, steer it onto ground.
+ Boats are essential to get to certain interesting places, and may be able
+ to travel over more things than water...
+\end_layout
+
+\begin_layout Standard
+Horses, on the other hand, enable you to move over land much faster.
+ Monsters are easier to outrun, and the time it takes to travel outdoors
+ will be halved.
+ To mount horses you own, move onto them.
+ To dismount, pause (click on your party or press 5 on the keypad).
+\end_layout
+
+\begin_layout Standard
+When you find boats and horses you don't own, often you will be able to
+ find someone nearby to sell them to you.
+\end_layout
+
+\begin_layout Subsection
+Light
+\end_layout
+
+\begin_layout Standard
+Some areas are dark.
+ To see beyond your nose, you will need a light source, be it a torch or
+ spell.
+ In certain unpleasant areas, even a torch or spell won't get rid of the
+ darkness.
+\end_layout
+
+\begin_layout Subsection
+Pausing
+\end_layout
+
+\begin_layout Standard
+Sometimes, you'll just want to sit and watch the world go by.
+ Click on your party or hit 5 on the keypad to let a turn pass without action.
+\end_layout
+
+\begin_layout Subsection
+Alchemy
+\end_layout
+
+\begin_layout Standard
+One of the things you can do in town is use ingredients you've found in
+ your adventures to try to make potions.
+ Should you have the right ingredients, the right recipe, and a PC with
+ sufficient alchemy skill, select Do Alchemy from the Actions menu.
+ You will be asked who is going to make it, and then given a list of potions
+ you can make.
+ Certain potions cannot be made by a character with low alchemy skill.
+ The higher the alchemy skill, the better the odds of success.
+\end_layout
+
+\begin_layout Standard
+For more information on the things you can make with alchemy, inside the
+ game select Alchemy Info, under the Library menu.
+\end_layout
+
+\begin_layout Subsection
+The Town Guard
+\end_layout
+
+\begin_layout Standard
+Be careful! Damaging a friendly townsperson or stealing items can get the
+ town guard after you! If this happens, you best flee town, before they
+ destroy you.
+\end_layout
+
+\begin_layout Standard
+An angry town will generally forget that it's mad at you, if you stay away
+ for long enough.
+\end_layout
+
+\begin_layout Subsection
+The Buttons
+\end_layout
+
+\begin_layout Standard
+Each of the many buttons at the bottom left corner of the screen has you
+ do something.
+ Several of them have keyboard equivalents.
+ When they do, the key is given in the parentheses below:
+\end_layout
+
+\begin_layout Subsubsection
+Cast Mage
+\end_layout
+
+\begin_layout Standard
+(Fireball.
+ m) You will be asked to select one of your party members, who will then
+ be given a chance to cast any mage spells he or she knows.
+ Mage spells are described later.
+\end_layout
+
+\begin_layout Subsubsection
+Cast Priest
+\end_layout
+
+\begin_layout Standard
+(Black ankh.
+ p) Same as cast mage, but for priest spells.
+\end_layout
+
+\begin_layout Subsubsection
+Look
+\end_layout
+
+\begin_layout Standard
+(Eye.
+ l) Clicking on this button and then on a space in the Terrain Screen gives
+ you a list of everything in the space you click.
+ Terrain, monsters, and items will be listed.
+ 
+\end_layout
+
+\begin_layout Standard
+When you look, if you click on the terrain border, the terrain you're looking
+ at will scroll in the direction you click on, so you can see the monsters
+ before they're right on top of you.
+\end_layout
+
+\begin_layout Standard
+When your party is adjacent to a sign, you can read it by looking at it.
+\end_layout
+
+\begin_layout Standard
+When your party looks at something it is standing adjacent to that could
+ have stuff in it (crate/desk/bookshelf/body/whatever), you will search
+ it.
+ If there is something there, you will have a special encounter.
+ Some dungeons have very interesting things hidden in very mundane objects.
+\end_layout
+
+\begin_layout Subsubsection
+Get
+\end_layout
+
+\begin_layout Standard
+(Hand picking up scroll.
+ g) When you see items nearby, click on this button to get them.
+ If hostile monsters are in sight, you will only be able to get adjacent
+ items.
+ If not, you will be able to get all items nearby.
+\end_layout
+
+\begin_layout Standard
+When the item-getting window comes up, click on an item to get it.
+ To have a new PC get items, click the button by their picture.
+\end_layout
+
+\begin_layout Standard
+Finally, some items in towns are not your property.
+ Getting these items puts you in danger of being attacked by the town guard!
+\end_layout
+
+\begin_layout Subsubsection
+Use
+\end_layout
+
+\begin_layout Standard
+('Use', u) This all-purpose command has you do something to an adjacent
+ space.
+ Using an open door closes it, and vice versa.
+ Using a space with webs has you clear the webs away.
+ Perhaps this action has other uses...
+\end_layout
+
+\begin_layout Subsubsection
+Map
+\end_layout
+
+\begin_layout Standard
+(A Scroll, a) As you wander around the town or dungeon, you will automatically
+ keep track of the terrain you see.
+ When you click this button, you will see a map of the area you're in.
+\end_layout
+
+\begin_layout Standard
+Also, you can leave the map window up while you play.
+ It will keep updating itself as you travel.
+ Note that this will slow the game down.
+\end_layout
+
+\begin_layout Subsubsection
+Enter Combat Mode
+\end_layout
+
+\begin_layout Standard
+(Sword.
+ f) As you wander around, someone or something might decide to attack you.
+ When in town mode, you travel in a tight-knit, awkward group.
+ Thus, you can't fight back, and the monsters move and act faster than you.
+\end_layout
+
+\begin_layout Standard
+To deal with this unpleasant situation, click on this button to enter combat
+ mode.
+ Your group will split up into its individual members, and you will be able
+ to fight back.
+\end_layout
+
+\begin_layout Subsubsection
+Talk
+\end_layout
+
+\begin_layout Standard
+(Lips, t) You can talk to any living creature which is not actually trying
+ to kill you.
+ To do so, click on this button, and then the thing you want to talk to.
+ You will then be presented with a window with a description of the person.
+\end_layout
+
+\begin_layout Standard
+To ask someone about something, click on the word after they say it.
+ If someone says "I really hate goblins," click on 'goblins' to ask about
+ that.
+ If the person has something to say, the word will flash, and something
+ else will come up.
+ In addition, there are buttons at the button of the talk area:
+\end_layout
+
+\begin_layout Paragraph
+Look/Name/Job
+\end_layout
+
+\begin_layout Standard
+Clicking on these buttons always gets a response, and clicking on 'Name'
+ and 'Job' is the best way to begin a conversation.
+\end_layout
+
+\begin_layout Paragraph
+Ask About
+\end_layout
+
+\begin_layout Standard
+This extremely important button lets you ask characters about things beside
+ what they mention.
+ For example, if you're told to ask Honkblatt about swords, when you find
+ Honkblatt, click on Ask About, and enter 'swords,' and you may be pleasantly
+ surprised.
+\end_layout
+
+\begin_layout Paragraph
+Go Back
+\end_layout
+
+\begin_layout Standard
+Clicking on this brings up whatever the character said previously.
+ A useful time saver.
+\end_layout
+
+\begin_layout Paragraph
+Buy/Sell
+\end_layout
+
+\begin_layout Standard
+Many characters will buy, sell, or identify items, or otherwise do useful
+ things.
+ These buttons provide a useful shortcut to obtaining these services.
+ Clicking on the Buy button will bring up the shopping window.
+\end_layout
+
+\begin_layout Standard
+The items available will be listed, along with their prices, and, if weapons
+ or armor, their important statistics.
+ To get detailed information on an item, click on the 'I' button to the
+ item's right.
+ To buy it, click on the item's name.
+ To have a different character shop, make that character active (click on
+ his/her name, or type 1-6).
+\end_layout
+
+\begin_layout Standard
+There are some unusual sorts of shops:
+\end_layout
+
+\begin_layout Subparagraph
+Healers
+\end_layout
+
+\begin_layout Standard
+Visiting a healer brings up a list of bad conditions the active character
+ has, with the cost to heal that ailment.
+ You can, for example, pay to heal a character's dumbfounding, but leave
+ the character's damage unhealed.
+\end_layout
+
+\begin_layout Subparagraph
+Alchemists
+\end_layout
+
+\begin_layout Standard
+A few characters sell alchemical recipes.
+ You only need to buy each recipe once for the entire party.
+ The seller will usually explain what ingredients that recipe calls for.
+\end_layout
+
+\begin_layout Subparagraph
+Mage and Priest Spells
+\end_layout
+
+\begin_layout Standard
+Most spells can be bought from people in towns.
+ When you buy a spell for one character, only that PC knows it.
+ You need to buy it again for other PCs who want it.
+\end_layout
+
+\begin_layout Subparagraph
+Selling/ID'ing/Augmenting
+\end_layout
+
+\begin_layout Standard
+Some characters in town will attempt to buy your items.
+ When you hit the Sell button while talking, smaller Sell buttons appear
+ by your items.
+ Some people only buy armor, some only weapons, some everything.
+ Click the small Sell button to sell an item.
+\end_layout
+
+\begin_layout Standard
+People will only buy identified items.
+ To identify an item, go to a sage (such as Axel, in Sweetgrove, in "Valley
+ of Dying Things").
+ Ask about 'identify' (or, usually, click the Buy button), and ID buttons
+ will appear by your unidentified items.
+ Click this button to pay to have it identified.
+ You will now know exactly what it is.
+\end_layout
+
+\begin_layout Standard
+Finally, a very few people will cast magical spells to strengthen your identifie
+d, non-magical weapons.
+ When this is offered, small 'Augm' buttons will appear by items that can
+ be augmented.
+ Press them to buy the improvement.
+\end_layout
+
+\begin_layout Paragraph
+Record
+\end_layout
+
+\begin_layout Standard
+This has your characters write down what was just said.
+ You can review it later by selecting See Talking Notes from the Options
+ menu.
+\end_layout
+
+\begin_layout Paragraph
+Bye
+\end_layout
+
+\begin_layout Standard
+Ends the conversation.
+\end_layout
+
+\begin_layout Subsubsection
+Why Talking is a Good Thing
+\end_layout
+
+\begin_layout Paragraph
+Special Information
+\end_layout
+
+\begin_layout Standard
+Occasionally, someone will tell you something that will help you do something
+ else, such as a password or the location of a hidden item.
+ When this happens, you will be told something along the lines of "You take
+ note of this." This means your characters know something new.
+ If you die later without saving, be sure to go back to get this information
+ again.
+\end_layout
+
+\begin_layout Paragraph
+Stores
+\end_layout
+
+\begin_layout Standard
+Most of the towns have a store of some sort in them.
+ To buy something or sell something, you can generally press the appropriate
+ buttons.
+ How to buy, sell, and identify items is described later on.
+\end_layout
+
+\begin_layout Paragraph
+Training
+\end_layout
+
+\begin_layout Standard
+You can spend your experience to gain valuable skills at the occasional
+ training center.
+ This works exactly the same as when you created your character, but you
+ also have to pay gold.
+ Each level in a skill costs the amount after the slash in the cost column.
+ Should you buy some skills and then decide you don't want them, press the
+ Cancel button to restore your character.
+ Press the Keep button to keep the training.
+\end_layout
+
+\begin_layout Paragraph
+Boats and horses
+\end_layout
+
+\begin_layout Standard
+Some people will sell you boats and horses, both useful ways to get around.
+ When you buy one, a nearby boat or horse will become yours, and you will
+ be able to enter/mount it.
+\end_layout
+
+\begin_layout Subsection
+Selecting Spaces Shortcut
+\end_layout
+
+\begin_layout Standard
+When you hit the 'look' button (or the 'talk' button), click on the space
+ you want to look at to look at (talk to) it.
+ A quicker way to look at something is to hit 'l' on the keyboard, and then
+ the keypad key in the direction you want to look.
+ This has you look at (or talk to) whatever is in the next space in that
+ direction.
+\end_layout
+
+\begin_layout Section
+Getting Around The Outdoors
+\end_layout
+
+\begin_layout Standard
+When you leave town, you will be in the massive caverns that make up Exile
+ or the Empire, or the seemingly limitless expanses of the surface.
+ The things you can do out here are similar to what you can do indoors,
+ but slightly more restricted.
+\end_layout
+
+\begin_layout Standard
+Moving around and casting spells works the same as in town.
+ However, the spells you can cast are a bit more limited.
+ Looking works the same, although there will no longer be things to search
+ (there are still signs to read).
+\end_layout
+
+\begin_layout Standard
+The map button works the same.
+ You will keep track of what you've seen outside, and can call it back up.
+ However, if you move a long way away from an area and then return, you
+ may have forgotten what you saw the first time.
+\end_layout
+
+\begin_layout Standard
+When you see a town, tower, fort or dungeon, move onto it to enter it.
+\end_layout
+
+\begin_layout Standard
+As in town, you can find boats and horses to get around on.
+ Move onto a boat to board it, and steer the boat onto ground to disembark.
+\end_layout
+
+\begin_layout Standard
+Watch out for waterfalls! Not only will they suck you down them, but when
+ you fall down one you lose a bunch of food too.
+\end_layout
+
+\begin_layout Standard
+There will still be combats outdoors.
+ Occasionally, monsters will run up to attack you.
+ When this happens, you will find yourself on a battlefield where you will
+ fight the monsters, much as you would have fought them in town.
+ Finally, certain outdoor combats are automatic.
+ These special combats will happen even when you aren't adjacent to the
+ monsters.
+\end_layout
+
+\begin_layout Standard
+You can drop items outdoors, but when you do, they're gone forever.
+ Should a PC die (of starvation, for example), the PC's items will appear
+ on the ground the next time you enter a town or get in an outdoor combat.
+\end_layout
+
+\begin_layout Standard
+There are three new buttons outdoors:
+\end_layout
+
+\begin_layout Paragraph
+Rest
+\end_layout
+
+\begin_layout Standard
+(A tent, r) When you are far from a friendly town and a hospitable inn,
+ this is your best option for recovering strength.
+ When you press this button, you will settle down for a while and sleep.
+ You will wake up, however, if a group of monsters gets close to you, and
+ not get any rest in the bargain.
+ It is usually best to rest in secluded areas.
+\end_layout
+
+\begin_layout Standard
+You cannot rest if someone is poisoned, if you are on dangerous ground (such
+ as swamp or lava), or if you don't have enough food to get through the
+ night.
+\end_layout
+
+\begin_layout Paragraph
+Save and Restore
+\end_layout
+
+\begin_layout Standard
+(Disk with arrow pointing to it/out) These magical buttons enable you to
+ make a 'snapshot' of the current status of your game so that, should you
+ get killed, misplace the game-winning artifact, etc., you can return to
+ the spot you saved at.
+\end_layout
+
+\begin_layout Standard
+When you click on save, you can enter a name for the snapshot of your progress.
+ When you restore, double click on the file you saved.
+ You can also save from the pull-down File menu.
+ You can also save in town.
+\end_layout
+
+\begin_layout Section
+Killing Stuff
+\end_layout
+
+\begin_layout Standard
+Combat works much like being in town or outdoors, except that you move your
+ party one PC at a time instead of all at once.
+ You will get to move each of your PCs, and then all the other people/monsters
+ move (and maybe attack you).
+ Then the process repeats.
+\end_layout
+
+\begin_layout Standard
+The main difference between normal town and combat mode, of course, is that
+ you're probably trying to kill something.
+\end_layout
+
+\begin_layout Subsection
+Action Points
+\end_layout
+
+\begin_layout Standard
+Each turn, each character get a base 4 action points.
+ Wearing heavy armor reduces this amount; being hasted increases it.
+ Whenever you do something, this amount goes down.
+ It can go negative, and when your PC has 0 or less action points, your
+ turn ends.
+\end_layout
+
+\begin_layout Standard
+The actions you can perform in combat are listed below, with their action
+ point cost.
+\end_layout
+
+\begin_layout Subsection
+Line of Sight
+\end_layout
+
+\begin_layout Standard
+A character can only fire a missile or spell at a location he or she can
+ see.
+ Also, trees and other obstructions between the shooter and the target will
+ make the missile less effective.
+\end_layout
+
+\begin_layout Standard
+When targeting, a line will appear between the attacker and the target.
+ When the line disappears, you can't see the space you're aiming at.
+\end_layout
+
+\begin_layout Subsection
+Moving and Attacking
+\end_layout
+
+\begin_layout Standard
+You move by clicking on the terrain screen in the desired direction.
+ To attack something, move into that thing.
+ The result of your attack will appear to the lower right.
+\end_layout
+
+\begin_layout Standard
+If you attack someone who wasn't attacking you, you will be asked if you
+ really want to do that.
+ Attacking innocents will bring the town guard down on your head, and you
+ may have a serious problem.
+ Be careful! Merely causing damage to an innocent will also bring the cops
+ down on your head, and you may not get a warning before you do it.
+\end_layout
+
+\begin_layout Subsection
+Switching Places
+\end_layout
+
+\begin_layout Standard
+In combat, when one PC moves into another, they switch places.
+ This is very useful during combat in cramped quarters.
+\end_layout
+
+\begin_layout Subsection
+Stand Ready
+\end_layout
+
+\begin_layout Standard
+As before, when you click on the active character, that character will wait.
+ However, should a hostile creature then move into weapon range, that PC
+ will attack the enemy.
+\end_layout
+
+\begin_layout Subsection
+Targeting
+\end_layout
+
+\begin_layout Standard
+When you cast a magic spell or fire a missile, you select a creature to
+ fire at by clicking on it.
+ When you may want to aim at someone off screen, before selecting your target
+ you can scroll the view around by clicking on the border of the terrain
+ screen.
+\end_layout
+
+\begin_layout Subsection
+Look
+\end_layout
+
+\begin_layout Standard
+(Eye, 'l', 0 AP) Looking works much as it did before, with one major difference:
+ when you start looking, you can click on the border of the terrain screen
+ to move the view around, and see things that were off-screen before.
+ Note, however, you cannot see things by scrolling the screen around that
+ you haven't yet seen by being close to them.
+\end_layout
+
+\begin_layout Subsection
+Parry
+\end_layout
+
+\begin_layout Standard
+(Shield, 'd', all AP) Should a character be at risk, you can have that character
+ use his or her turn simply defending.
+ How effective this is depends heavily on the defense skill of the character,
+ although there will always be some benefit.
+\end_layout
+
+\begin_layout Subsection
+Get
+\end_layout
+
+\begin_layout Standard
+(Hand grabbing scroll, 'g', 4 AP) Works exactly as before, except you don't
+ get to choose who gets the item - the active character gets it.
+\end_layout
+
+\begin_layout Standard
+Hitting 'G' has your party grab all nearby items.
+ This only works when no monsters are visible.
+\end_layout
+
+\begin_layout Subsection
+Wait
+\end_layout
+
+\begin_layout Standard
+('Wait', 'w', 0 AP) Clicking this has the PC wait for the other PCs to attack.
+ Eventually, he or she will get another chance to act.
+\end_layout
+
+\begin_layout Subsection
+Shoot
+\end_layout
+
+\begin_layout Standard
+(Arrow, 's', bow - 3 AP, thrown missile - 2 AP) When you click on this and
+ the active PC has a thrown missile weapon or a bow and arrows equipped,
+ you will shoot a missile at the target you select.
+\end_layout
+
+\begin_layout Subsection
+End Combat
+\end_layout
+
+\begin_layout Standard
+('End', 'e') In town, when you are through fighting, click this button to
+ go back into town mode (whether or not any foes remain).
+ When in an encounter outdoors, you can resume traveling by clicking this
+ button (although it will only work if all the enemies are dead).
+\end_layout
+
+\begin_layout Subsection
+Active
+\end_layout
+
+\begin_layout Standard
+('Act', 'x') Clicking on this button makes the current PC the only active
+ PC.
+ None of the other PCs will do anything until the active PC dies, or you
+ click the 'Act' button again.
+\end_layout
+
+\begin_layout Subsection
+Other
+\end_layout
+
+\begin_layout Standard
+Other actions have an action point cost:
+\end_layout
+
+\begin_layout Itemize
+Using An Item (3 AP)
+\end_layout
+
+\begin_layout Itemize
+Equipping/Removing An Item (1 AP)
+\end_layout
+
+\begin_layout Itemize
+Giving An Item (1 AP)
+\end_layout
+
+\begin_layout Itemize
+Dropping An Item (1 AP)
+\end_layout
+
+\begin_layout Itemize
+Moving a Space (1 AP)
+\end_layout
+
+\begin_layout Subsection
+Getting Damaged, Armor
+\end_layout
+
+\begin_layout Standard
+Every time you get hit, your health goes down.
+ When you receive a blow that would take you to 0 or less health, you end
+ up at 0 health (this is signified by a coughing noise).
+ When you get damaged and have 0 health, you die.
+ When you take a lot of damage and have 0 health, you will be obliterated
+ (making this PC much harder to raise from the dead).
+\end_layout
+
+\begin_layout Standard
+Fortunately, there is a wide variety of armor in the game.
+ Armor will not reduce the number of blows you take, but will reduce the
+ amount of damage you take when those blows land.
+ However, the heavier the armor, the more it interferes with your ability
+ to attack and cast spells (although defense skill reduces this effect).
+\end_layout
+
+\begin_layout Standard
+Changing armor takes a while.
+ While you can change helms, gloves boots, and shields in the heat of combat,
+ you cannot change armor.
+\end_layout
+
+\begin_layout Subsection
+Dying
+\end_layout
+
+\begin_layout Standard
+This happens.
+ A lot.
+ When it does, all the newly deceased's possessions drop to the ground in
+ a pile.
+ Should this happen when you are in a boat, you may need to row back for
+ them.
+\end_layout
+
+\begin_layout Standard
+Items can't be dropped when outdoors.
+ Should someone die when wandering around outside, the items will stay with
+ you until you enter a town or get into combat, at which point they immediately
+ drop to the ground.
+\end_layout
+
+\begin_layout Standard
+Dead people can be brought back to life.
+ This can be done using certain priest spells, or at the healers you will
+ find in some of the towns.
+ If the killing blow does enough damage, it will turn the PC into dust.
+ It will then be much more difficult to raise him/her from the dead.
+\end_layout
+
+\begin_layout Subsection
+Killing Enemies
+\end_layout
+
+\begin_layout Standard
+Whenever you kill an enemy, the person dealing the death blow gets some
+ experience, and everyone else gets a much smaller amount.
+ Should this experience give you a level, the game will let you know in
+ the text screen.
+\end_layout
+
+\begin_layout Subsection
+Treasure
+\end_layout
+
+\begin_layout Standard
+Will appear when the monster is killed and you get lucky.
+ If you have decent Item Lore skill, the item may even appear fully identified.
+\end_layout
+
+\begin_layout Subsection
+Fleeing
+\end_layout
+
+\begin_layout Standard
+Of course, sometimes the enemy is just too tough.
+ When this happens, it is possible to escape.
+\end_layout
+
+\begin_layout Standard
+In town combat, you must move your party to the outskirts of town, leave
+ combat mode, and then walk out of town.
+ You cannot leave town when you're in combat,
+\end_layout
+
+\begin_layout Standard
+In outdoor combat, you flee by moving to the boundary of the battlefield
+ (which will look like a black nothingness) and walk off.
+ If you succeed, the character will have fled.
+ When your whole party is fled or dead, or you've killed all of the enemies
+ and pressed the End Combat button, combat will end and your party will
+ be reunited.
+\end_layout
+
+\begin_layout Standard
+If you are adjacent to a monster and move away from it, it will get a free
+ attack against you.
+ The same goes in reverse.
+\end_layout
+
+\begin_layout Subsection
+Poisoning a Weapon
+\end_layout
+
+\begin_layout Standard
+Using poison poisons your equipped weapon, which can be either a hand-to-hand
+ weapon or a quiver of arrows (not darts or throwing knives).
+ Hitting a monster with it then does a considerable amount of damage, spread
+ out over time.
+ The level of the poison decreases with every blow delivered and every blow
+ that lands.
+ The poison is lost should you change weapons or leave town.
+\end_layout
+
+\begin_layout Standard
+Using poison on an already poisoned weapon gives the weapon a strength of
+ poison equal to the maximum strength of the poison already there and the
+ poison you're putting on.
+\end_layout
+
+\begin_layout Subsection
+Enemy Resistances
+\end_layout
+
+\begin_layout Standard
+There are a wide variety of types of damage you can do.
+ Hand to hand weapons do physical damage.
+ Poison is another kind of damage, fire is another, non-fire magic (such
+ as ice bolts or kill spells) is yet another.
+ These sorts of damages affect different monsters differently.
+ Many monsters are resistant to fire.
+ Less are resistant to magic.
+ Very few are resistant to poison, however - keep this in mind when dealing
+ with that pesky enemy mage in the back.
+\end_layout
+
+\begin_layout Section
+Miscellaneous
+\end_layout
+
+\begin_layout Subsection
+Material Wealth
+\end_layout
+
+\begin_layout Standard
+There are three sorts of possessions you can come across:
+\end_layout
+
+\begin_layout Itemize
+Gold: Well, this isn't always literal chunks of gold.
+ It's gold nuggets or silver coins or trade goods or anything else you can
+ give people to get stuff.
+ You start with a small amount, and can get more.
+\end_layout
+
+\begin_layout Itemize
+Food: Preserved giant lizard steaks, dried mushrooms, yummy, tangy lichens,
+ and all the other rich bounty of Exile.
+ Every once in a while you will eat some of it, one unit for each active
+ PC.
+ Not having enough food results in starvation, damage, and bad things.
+\end_layout
+
+\begin_layout Itemize
+Items: Each PC can carry 24 objects, such as armor, helmets, tools, weapons,
+ etc.
+ You can do various things with these items.
+ These are described in Chapter 4.
+ You can only carry so much weight.
+ The amount of bulk you can carry depends on your strength.
+ Armor is very heavy, while potions and scrolls aren't.
+ When equipping items, you only have two hands, and some weapons take up
+ both of them.
+ You can only wear two rings, and one necklace (too many magic items interfere
+ with each other in bizarre ways).
+ Beware.
+ When you equip a cursed item, you will need to find a healer to take the
+ curse off.
+\end_layout
+
+\begin_layout Subsection
+Magic
+\end_layout
+
+\begin_layout Standard
+There are seven levels of spells.
+ Your characters begin the game knowing most spells up to third level.
+ They can cast a mage spell of a given level if they have enough spell points,
+ and Mage Spells skill of that level (and the same goes for priest spells).
+ Upon casting, the character loses the spell points, and something neat
+ happens.
+\end_layout
+
+\begin_layout Standard
+Spell effects are cumulative, and build up quickly.
+ For example, if you bless a character twice, the effect will be much more
+ than twice the effect of one bless.
+ When you poison a monster twice, it will do well over twice the damage
+ the first spell would have caused.
+ If one fear spell doesn't make a monster flee, the next one will have a
+ much better chance of working.
+ Casting two light spells makes the light last twice as long.
+\end_layout
+
+\begin_layout Standard
+Mage spells require great delicacy of movement to cast.
+ For this reason, they cannot be cast when when armor with total encumbrance
+ of more than 1 is being worn.
+ High defense skill can sometimes offset this effect, but it never will
+ when any single item has an encumbrance value of more than 2.
+\end_layout
+
+\begin_layout Subsubsection
+Mage Spells and Encumbrance
+\end_layout
+
+\begin_layout Standard
+If you are wearing armor with a total encumbrance of greater than one, you
+ cannot cast mage spells.
+ However, high defense skill can counteract this.
+ If your armor isn't too bulky, sometimes defense skill will enable you
+ to cast spells (though spells never, ever work when any single item has
+ an encumbrance value greater than 2).
+ If you fail, however, you lose your turn.
+ Priest spells, consisting mainly of prayers shouted very loudly, do not
+ have this limitation.
+\end_layout
+
+\begin_layout Subsubsection
+Multiple Target Spells
+\end_layout
+
+\begin_layout Standard
+Some spells, such as the Arrow spells, have more than one target.
+ When you cast such a spell, click on each target.
+ Click on a target again to untarget it.
+ Should you decide to cast the spell without using all your targets, hit
+ space.
+\end_layout
+
+\begin_layout Subsubsection
+Dumbfounding
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+Dumbfound
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Being dumbfounded reduces the number of spells you can cast.
+ Being a little dumbfounded prevents you from casting high level spells.
+ The more dumbfounded you are, the more spells you lose access to.
+ The priest spell Restore Mind, healers, and certain magic items can undo
+ the effects of dumbfounding.
+\end_layout
+
+\begin_layout Subsubsection
+Magical Walls
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+magical walls
+\end_layout
+
+\end_inset
+
+ and Barriers
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+barriers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both you and your foes have the capability to create a wide variety of magical
+ fields and barriers, each with different effects and durations.
+ Some spells create a two space wide barrier of some sort of magical wall.
+ You can rotate this before placing it.
+ Do so by hitting space.
+\end_layout
+
+\begin_layout Standard
+There are fire
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+fire walls
+\end_layout
+
+\end_inset
+
+, force
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+force walls
+\end_layout
+
+\end_inset
+
+, ice
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+ice walls
+\end_layout
+
+\end_inset
+
+, and blade walls
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+blade walls
+\end_layout
+
+\end_inset
+
+, which damage anyone entering and fade with time.
+ There are stinking clouds
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+stinking clouds
+\end_layout
+
+\end_inset
+
+, which curse
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+curse
+\end_layout
+
+\end_inset
+
+ anyone entering and fade quickly, sleep clouds
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+sleep clouds
+\end_layout
+
+\end_inset
+
+, which make beings fall asleep, and antimagic clouds
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+antimagic clouds
+\end_layout
+
+\end_inset
+
+, which prevent any spell casting or targeting inside them, and fade slowly.
+\end_layout
+
+\begin_layout Standard
+Webs cover anyone entering with goo, which slows the victim down.
+ Pausing
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+Pausing
+\end_layout
+
+\end_inset
+
+ cleans off the goo.
+\end_layout
+
+\begin_layout Paragraph
+Quickfire
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+Quickfire
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rarest and most deadly of the magical fields is quickfire.
+ Once quickfire is created, it begins to spread, expanding until it fills
+ the entire dungeon! Antimagic clouds
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+Antimagic clouds
+\end_layout
+
+\end_inset
+
+ slow it down, and dispel fields spells can hinder its progress, but once
+ quickfire is loose, running is your only real option.
+\end_layout
+
+\begin_layout Standard
+When a dungeon is overcome with quickfire, leave and return later.
+ The flames will have died down.
+\end_layout
+
+\begin_layout Paragraph
+Fire and Force Barriers
+\end_layout
+
+\begin_layout Standard
+These barriers last until they are dispelled.
+ The former damages anyone entering, and the latter prevents anyone from
+ entering at all.
+\end_layout
+
+\begin_layout Subsubsection
+Summoned Monsters
+\end_layout
+
+\begin_layout Standard
+Both you and your foes can magically bring forth creatures to aid you.
+ These summoned monsters fight for a short time, and then disappear.
+ If killed, they leave no treasure.
+\end_layout
+
+\begin_layout Standard
+The most (potentially) powerful summoning spells are Capture Soul and Simulacrum.
+ Casting Capture Soul on a monster stores a copy of it in your party's mind.
+ Later, you can cast Simulacrum to bring a copy of the monster forth.
+ Collect copies of the most powerful monsters and bring them to your aid!
+ You can only remember at most 4 monsters.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Beware - when you Capture Soul a monster, its copy is stored in a random
+ slot (out of the 4 available).
+ It may copy over a monster you already have.
+ 
+\end_layout
+
+\begin_layout Part
+Index
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset index_print
+LatexCommand printindex
+type "idx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Appendices
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Races
+\end_layout
+
+\begin_layout Standard
+The percentage following each trait is how much the race modifies experience
+ gain.
+ A negative number means the PC will gain experience faster.
+\end_layout
+
+\begin_layout Paragraph
+Human 
+\end_layout
+
+\begin_layout Standard
+(0%) The default race.
+ The vast majority of Exile citizens are human.
+ Being human conveys no notable advantages or disadvantages.
+\end_layout
+
+\begin_layout Paragraph
+Nephilim
+\end_layout
+
+\begin_layout Standard
+(12%) The Nephilim are a race of nimble, feline humanoids.
+ They get a bonus when using missile weapons.
+ Also, when character creation is completed, each Nephilim character gains
+ 2 bonus points of dexterity.
+\end_layout
+
+\begin_layout Paragraph
+Slithzerikai
+\end_layout
+
+\begin_layout Standard
+(20%) The Slithzerikai are an ancient race of reptilian humanoids.
+ There are two faction of Sliths in Exile.
+ Some of them are friendly and allied with your people, and some of them
+ are cruel and barbaric, and fight you whenever they get the chance.
+ Slithzerikai are trained from birth to use pole weapons, and get a sizable
+ bonus when attacking with them.
+ Also, when character creation is completed, each Slithzerikai character
+ gains 2 bonus points of strength and 1 bonus point of intelligence.
+ Finally, Slithzerikai are resistant to poison.
+\end_layout
+
+\begin_layout Section
+PC Traits
+\end_layout
+
+\begin_layout Standard
+The percentage following each trait is how much the trait modifies experience
+ gain.
+ A negative number means the PC will gain experience faster.
+\end_layout
+
+\begin_layout Paragraph
+Toughness
+\end_layout
+
+\begin_layout Standard
+(10%) A character with toughness is protected from damage.
+ Practically any sort of assault does less damage.
+\end_layout
+
+\begin_layout Paragraph
+Magically Apt
+\end_layout
+
+\begin_layout Standard
+(20%) This powerful trait makes most spells cast by the PC more effective.
+\end_layout
+
+\begin_layout Paragraph
+Ambidextrous
+\end_layout
+
+\begin_layout Standard
+(8%) When using a weapon in each hand, the second weapon is used with a
+ large penalty.
+ This trait removes that penalty.
+\end_layout
+
+\begin_layout Paragraph
+Nimble Fingers
+\end_layout
+
+\begin_layout Standard
+(12%) This trait makes the owner much better at picking locks and disarming
+ traps.
+\end_layout
+
+\begin_layout Paragraph
+Cave Lore
+\end_layout
+
+\begin_layout Standard
+(4%) The character with this trait is very familiar with the flora and fauna
+ of the caves.
+ When traveling, you will occasionally gain food from hunting.
+ Also, this trait has other, subtle effects.
+ Make sure at least one PC has it.
+\end_layout
+
+\begin_layout Paragraph
+Good Constitution
+\end_layout
+
+\begin_layout Standard
+(10%) This trait makes the character more resistant to poison and disease.
+\end_layout
+
+\begin_layout Paragraph
+Woodsman
+\end_layout
+
+\begin_layout Standard
+(6%) This trait is like Cave Lore, but comes in handy in the forests and
+ glades of the surface.
+ You will be able to hunt, move more stealthily, and occasionally notice
+ interesting details.
+\end_layout
+
+\begin_layout Paragraph
+Highly Alert
+\end_layout
+
+\begin_layout Standard
+(7%) Some of your foes will try to magically put you to sleep.
+ Having this advantage makes you more likely to resist this nefarious effect.
+\end_layout
+
+\begin_layout Paragraph
+Exceptional Strength
+\end_layout
+
+\begin_layout Standard
+(12%) This powerful advantage makes the lucky character be able to carry
+ more stuff and do more damage in hand to hand combat.
+\end_layout
+
+\begin_layout Paragraph
+Recuperation
+\end_layout
+
+\begin_layout Standard
+(15%) This is a powerful trait, indeed.
+ The PC with this trait has almost supernaturally good health, and will
+ heal damage at a much faster rate than normal.
+\end_layout
+
+\begin_layout Paragraph
+Sluggish
+\end_layout
+
+\begin_layout Standard
+(-10%) This character has much slower reactions.
+ He or she will get one less action point in combat.
+\end_layout
+
+\begin_layout Paragraph
+Magically Inept
+\end_layout
+
+\begin_layout Standard
+(-8%) This character never got the knack of using magical items.
+ For some reason, they just don't work on him or her.
+ The PC with this trait cannot use magic items.
+\end_layout
+
+\begin_layout Paragraph
+Frail
+\end_layout
+
+\begin_layout Standard
+(-8%) This PC is a natural target for colds and other illnesses.
+ They easily take advantage of the PC's weak constitution.
+ Poison and disease have a harsher effect.
+\end_layout
+
+\begin_layout Paragraph
+Chronic Disease
+\end_layout
+
+\begin_layout Standard
+(-20%) This poor character has been cursed with notoriously poor health.
+ Illness constantly nips at his or her heels.
+ This character will occasionally, spontaneously become diseased.
+\end_layout
+
+\begin_layout Paragraph
+Bad Back
+\end_layout
+
+\begin_layout Standard
+(-8%) Owning this trait makes the character unable to carry as much.
+\end_layout
+
+\begin_layout Section
+PC Skills
+\end_layout
+
+\begin_layout Standard
+The myriad skills you can buy for your characters are described below.
+ Each can attain a maximum level of 20, unless otherwise specified.
+ The cost for each skill in Skill Points is in parentheses after its name.
+ Note that, when training in these skills later, each point of increase
+ will cost gold, too.
+\end_layout
+
+\begin_layout Subsection
+The Big Three
+\end_layout
+
+\begin_layout Standard
+The below three skills are very important.
+ When high, they give many bonuses in the things you do.
+ On the other hand, when one of these three skills is below 4, the PC will
+ have penalties in any situation involving that skills.
+\end_layout
+
+\begin_layout Paragraph
+Strength
+\end_layout
+
+\begin_layout Standard
+(3) Measures how much brute strength the character possesses.
+ High strength increases damage done in combat, improves odds of kicking
+ down doors, and has other, more subtle effects.
+ IMPORTANT - Strength also affects how much health you gain when you attain
+ a level, and how many items you can carry.
+ Buy strength up to 3 as soon as possible.
+ Otherwise, you won't gain much health when you gain levels.
+\end_layout
+
+\begin_layout Paragraph
+Dexterity
+\end_layout
+
+\begin_layout Standard
+(3) Measures how nimble the character is.
+ High dexterity gives a better chance of hitting in combat (especially with
+ missile weapons) and makes the character harder to hit.
+ High dexterity also makes picking locks and disarming traps easier.
+ A PC in combat with a 1 dexterity will miss a lot.
+\end_layout
+
+\begin_layout Paragraph
+Intelligence
+\end_layout
+
+\begin_layout Standard
+(3) Measures mental strength and dexterity.
+ High intelligence also makes your spells more effective, sometimes very
+ much so.
+ Intelligence below 4 makes your spells work poorly.
+\end_layout
+
+\begin_layout Subsection
+Weapons Skills
+\end_layout
+
+\begin_layout Paragraph
+Edged
+\end_layout
+
+\begin_layout Standard
+(2) The higher the skill, the better the chance to hit with daggers, swords,
+ axes, and other bladed weapons.
+\end_layout
+
+\begin_layout Paragraph
+Bashing
+\end_layout
+
+\begin_layout Standard
+(2) The higher the skill, the better the chance to hit with clubs, maces,
+ flails, hammers, and other blunt weapons.
+\end_layout
+
+\begin_layout Paragraph
+Pole
+\end_layout
+
+\begin_layout Standard
+(2) The higher the skill, the better the chance to hit with spears, halberds,
+ bardiches, slith spears, and other pole weapons.
+\end_layout
+
+\begin_layout Standard
+Thrown Missile (1) The higher the skill, the better the chance to hit darts,
+ thrown daggers, and most other missile weapons.
+\end_layout
+
+\begin_layout Paragraph
+Bow
+\end_layout
+
+\begin_layout Standard
+(3) The higher the skill, the better the chance to hit with bows and crossbows
+\end_layout
+
+\begin_layout Paragraph
+Defense
+\end_layout
+
+\begin_layout Standard
+(2) This skill has three effects.
+ It determines how well a character does at parrying, decreases the penalty
+ in combat from bulky armor, and occasionally decreases the damage taken
+ from enemies' weapons.
+ Bulky armor prevents a character from casting mage spells.
+ However, when your armor is only a little too bulky, sometimes casting
+ a mage spell will sometimes work when the mage has high defense skill.
+\end_layout
+
+\begin_layout Subsection
+Magic
+\end_layout
+
+\begin_layout Paragraph
+Mage Spells
+\end_layout
+
+\begin_layout Standard
+(6) This skill is very expensive and very powerful.
+ It enables the owner to cast Mage spells of a level up to the level of
+ skill owned.
+ The maximum level is 7.
+ You automatically know most spells of level 3 and below.
+ It takes some time to find spells of level 4 and above.
+ Thus, getting these skills above level 4 at the beginning may not be a
+ good idea.
+\end_layout
+
+\begin_layout Paragraph
+Priest Spells
+\end_layout
+
+\begin_layout Standard
+(5) This skill is very expensive and very powerful.
+ It enables the owner to cast Priest spells of a level up to the level of
+ skill owned.
+ The maximum level is 7.
+ You automatically know most spells of level 3 and below.
+ It takes some time to find spells of level 4 and above.
+ Thus, getting these skills above level 4 at the beginning may not be a
+ good idea.
+\end_layout
+
+\begin_layout Paragraph
+Mage Lore
+\end_layout
+
+\begin_layout Standard
+(1) You will occasionally need to decipher strange magical readings.
+ This skill determines how good you are at this.
+ If your skill is high enough, you may gain a spell or a valuable piece
+ of information.
+ What is important when trying to decipher something is how much of this
+ skill is present in the party.
+ One character with 18 Mage Lore is equivalent to 6 characters with 3 Mage
+ Lore.
+\end_layout
+
+\begin_layout Paragraph
+Alchemy
+\end_layout
+
+\begin_layout Standard
+(2) You will eventually gain the ability to make magic potions.
+ To make a given potion, however, your Alchemy skill must be above a certain
+ level.
+ The higher it is above this level, the better the chance of succeeding.
+ When one PC is trying to make a potion, only that PC's Alchemy skill counts.
+ Thus, it is much, much better to have one PC with high Alchemy skill than
+ several PCs with low Alchemy skill.
+\end_layout
+
+\begin_layout Subsection
+Miscellaneous
+\end_layout
+
+\begin_layout Paragraph
+Item Lore
+\end_layout
+
+\begin_layout Standard
+(4) When you kill a monster, there will occasionally be items on its body.
+ Normally, you wouldn't know what they were.
+ However, Item Lore skill makes it possible that when you find the item,
+ you will know what it is.
+ Otherwise, you would have to take it to town and spend money to identify
+ it.
+ The higher the Item Lore, the better the chance of the item appearing identifie
+d.
+ In general, several PCs with low Item Lore is better than one PC with high
+ Item Lore.
+ Item Lore does not affect items already in town when you enter, or items
+ gained in special encounters.
+\end_layout
+
+\begin_layout Paragraph
+Traps
+\end_layout
+
+\begin_layout Standard
+(2) Many chests and some corridors will have traps on them, which can be
+ devastating.
+ You will, however, be given a chance to pick a PC to disarm it.
+ Chance of success depends on this skill.
+\end_layout
+
+\begin_layout Paragraph
+Pick Locks
+\end_layout
+
+\begin_layout Standard
+(2) Many towns and dungeons will have locked doors.
+ A PC with some of this skill and lock picks equipped can try to pick them.
+ The higher this skill, the better.
+ Beware.
+ Some locks are magical, and cannot be picked.
+ Try the spell Unlock Doors on these.
+\end_layout
+
+\begin_layout Paragraph
+Assassination
+\end_layout
+
+\begin_layout Standard
+(4) Sometimes, when a character attacks a much weaker monster, the blow
+ will do a good deal of extra damage.
+ The more of this skill you have, the better the chance of this happening,
+ and the stronger the monsters it can affect.
+\end_layout
+
+\begin_layout Paragraph
+Poison
+\end_layout
+
+\begin_layout Standard
+(2) You will find poisons, which you can put on your weapons for a little
+ extra punch.
+ Having a few levels in this skill will make it more likely you will put
+ the poison on at full strength, and the less likely you will nick yourself
+ with the poison accidentally.
+ Although you can buy a lot of this skill, 3-4 levels should be sufficient.
+\end_layout
+
+\begin_layout Paragraph
+Luck
+\end_layout
+
+\begin_layout Standard
+(5) This skill is expensive, but can be a bargain at twice the cost.
+ Its effects are pervasive, subtle, powerful, and sometimes irreplaceable.
+ 
+\end_layout
+
+\end_body
+\end_document
