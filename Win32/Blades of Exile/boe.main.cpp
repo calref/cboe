@@ -63,8 +63,9 @@ Boolean handle_startup_press(POINT the_point)
 					break;
 
 				case 2:
-					/* how to order button */
-					//draw_startup(0);
+				  // Not cross-platform.
+					ShellExecute(NULL, "open", "http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/", NULL, NULL, SW_SHOWNORMAL);
+					draw_startup(0);
 					break;
 
 				case 3:
