@@ -292,7 +292,7 @@ void draw_start_button(short which_position,short which_button)
 		{
 			"Load Game",
 			"Make New Party",
-			" < Unused > ",
+			"Support and Downloads",
 			"Start Scenario",
 			"Custom Scenario",
 			"Quit"
