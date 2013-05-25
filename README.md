@@ -2,8 +2,8 @@ Classic Blades of Exile
 =======================
 
 This project hosts the source code to the classic RPG creator Blades of Exile after it was released
-by Spiderweb Software under GPLv2. It is a svn-git transfer from the
-[Google Code Progect](http://code.google.com/p/openexile/); all issues and trunk code has been ported.
+by [Spiderweb Software](http://www.spiderwebsoftware.com/) under GPLv2. It is a svn-git transfer from the
+[Google Code Project](http://code.google.com/p/openexile/); all issues and trunk code has been ported.
 
 The primary purpose of this project is to provide bug fixes to Blades of Exile
 so that it can compile and run on modern operating systems. The secondary purpose is
@@ -21,3 +21,10 @@ Linux
 
 At last, there is a potential Linux version available in the downloads (though so far only the
 Character Editor is available). This should be treated as an alpha/beta release, so use with caution. 
+
+Helpful Links
+-------------
+* [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)
+* [Sylae's Blades Nightly Builder](https://calref.net/~sylae/blades/) - TODO: Update to use the Git codebase.
+* [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where it all began. Warning: Terrifying code.
+* [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for most, if not all, of the Win32 work.
