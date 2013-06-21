@@ -2949,3 +2949,40 @@ short get_outdoor_num()
 {
 	return (scenario.out_width * (party.outdoor_corner.y + party.i_w_c.y) + party.outdoor_corner.x + party.i_w_c.x);
 }
+
+void set_up_lights() {
+
+  short i, j, rad;
+  location where, l;
+  short num_lights = 0;
+  Boolean where_lit[64][64];
+  short max_dim[3] = {64, 48, 32}; // Town sizes from Scenario Editor blscened.cpp:82
+
+  // Find bonfires, braziers, etc.
+  num_lights = 0;
+  for(i = 0; i < 64; i++)
+    for(j = 0; j < 64; j++)
+      where_lit[i][j] = 0;
+
+  for(i = 0; i < max_dim[town_type]; i++)
+    for(j = 0; j < max_dim[town_type]; j++) {
+        l.x = i; l.y = j;
+        rad = scenario.ter_types[t_d.terrain[i][j]].light_radius;
+        if(rad > 0) {
+            for(where.x = max(0, i - rad); where.x < min(max_dim[town_type], i + rad + 1); where.x++)
+              for(where.y = max(0, j - rad); where.y < min(max_dim[town_type], j + rad + 1); where.y++)
+                if((where_lit[where.x][where.y] == 0) && (dist(where, l) <= rad) && (can_see(l, where, 0) < 5))
+                  where_lit[where.x][where.y] = 1;
+          }
+      }
+  for(i = 0; i < 8; i++)
+    for(j = 0; j < 64; j++)
+      t_d.lighting[i][j] = 0;
+  for(where.x = 0; where.x < max_dim[town_type]; where.x++)
+    for(where.y = 0; where.y < max_dim[town_type]; where.y++) {
+        if(where_lit[where.x][where.y] > 0) {
+            t_d.lighting[where.x / 8][where.y] = t_d.lighting[where.x / 8][where.y] | (char)(s_pow(2, where.x % 8));
+          }
+      }
+
+}
