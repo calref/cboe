@@ -3094,6 +3094,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
         case SPEC_TOWN_CHANGE_LIGHTNING:
             if(spec.ex1a >= 0 && spec.ex1a < 4)//change town lightning
                 c_town.town.lighting = spec.ex1a;
+                set_up_lights();
+                draw_terrain(0);
             if(spec.ex2b == 0)//give party light
                 party.light_level += spec.ex2a;
             else if(spec.ex2b == 1)//take party light

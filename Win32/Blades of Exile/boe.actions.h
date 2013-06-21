@@ -1,6 +1,6 @@
 #ifndef _ACTIONS_H
 	#define _ACTIONS_H
-	
+
 void init_screen_locs();
 Boolean prime_time();
 Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam );
@@ -30,5 +30,5 @@ void setup_outdoors(location where);
 short get_outdoor_num();
 Boolean is_sign(unsigned char ter);
 void check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
-
+void set_up_lights();
 #endif
