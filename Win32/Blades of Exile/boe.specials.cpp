@@ -3091,8 +3091,8 @@ void townmode_spec(short which_mode,special_node_type cur_node,short cur_spec_ty
 	 				i = 30;
 	 				}
 			break;
-        case SPEC_TOWN_CHANGE_LIGHTNING:
-            if(spec.ex1a >= 0 && spec.ex1a < 4)//change town lightning
+        case SPEC_TOWN_CHANGE_LIGHTING:
+            if(spec.ex1a >= 0 && spec.ex1a < 4)//change town lighting
                 c_town.town.lighting = spec.ex1a;
                 set_up_lights();
                 draw_terrain(0);

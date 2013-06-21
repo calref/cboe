@@ -829,7 +829,7 @@ enum eSpecNodeType {
 	SPEC_TOWN_SPLIT_PARTY = 193,
 	SPEC_TOWN_REUNITE_PARTY = 194,
 	SPEC_TOWN_TIMER_START = 195,
-	SPEC_TOWN_CHANGE_LIGHTNING = 196,//new (Classic Blades of Exile) special node
+	SPEC_TOWN_CHANGE_LIGHTING = 196,//new (Classic Blades of Exile) special node
 	SPEC_TOWN_CHANGE_ATTITUDE = 197,//new (Classic Blades of Exile) special node
 	SPEC_RECT_PLACE_FIRE = 200,
 	SPEC_RECT_PLACE_FORCE = 201,
