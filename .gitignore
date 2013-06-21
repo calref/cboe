@@ -16,3 +16,7 @@
 *.exe
 *.out
 *.app
+
+# Win32 Code::Blocks directories
+Win32/*/bin
+Win32/*/obj
