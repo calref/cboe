@@ -78,32 +78,35 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 
 void file_initialize()
 {
-static char *szFilter[] = {"Blades of Exile Save Files (*.SAV)","*.sav",
-		"Text Files (*.TXT)","*.txt",
-		"All Files (*.*)","*.*",
-		""};
-
-
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = mainPtr;
-		ofn.hInstance = NULL;
-		ofn.lpstrFilter = szFilter[0];
-		ofn.lpstrCustomFilter = NULL;
-		ofn.nMaxCustFilter = 0;
-		ofn.nFilterIndex = 0;
-		ofn.lpstrFile = NULL;
-		ofn.nMaxFile = 128;
-		ofn.lpstrFileTitle = NULL;
-		ofn.nMaxFileTitle = 128;
-		ofn.lpstrInitialDir = NULL;
-		ofn.lpstrTitle = NULL;
-		ofn.Flags = 0;
-		ofn.nFileOffset = 0;
-		ofn.nFileExtension = 0;
-		ofn.lpstrDefExt = "txt";
-		ofn.lCustData = 0L;
-		ofn.lpfnHook = NULL;
-		ofn.lpTemplateName = NULL;
+	static char * szFilter[] =
+	{
+		"Classic BoE Save Files (*.SAV)\0*.sav\0"
+		"Experimental BoE Save Files (*.savx)\0*.savx\0"
+		"All Files (*.*)\0*.*\0"
+		"\0\0"
+	};
+	
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = mainPtr;
+	ofn.hInstance = NULL;
+	ofn.lpstrFilter = szFilter[0];
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 0;
+	ofn.lpstrFile = NULL;
+	ofn.nMaxFile = 128;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 128;
+	ofn.lpstrInitialDir = NULL;
+	ofn.lpstrTitle = NULL;
+	ofn.Flags = 0;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = "sav";
+	ofn.lCustData = 0L;
+	ofn.lpfnHook = NULL;
+	ofn.lpTemplateName = NULL;
+	
 }
 
 void load_file()
