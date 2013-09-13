@@ -1613,7 +1613,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 			special_in_progress = false;
 			return;
 			}
-		if ((cur_node.type >= SPEC_NULL) && (cur_node.type <= SPEC_DISPLAY_PICTURE)) {
+		if ((cur_node.type >= SPEC_NULL) && (cur_node.type <= SPEC_RAND_SDF)) {
 			general_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 			}
 		if ((cur_node.type >= SPEC_ONCE_GIVE_ITEM) && (cur_node.type <= SPEC_ONCE_TRAP)) {
@@ -1885,6 +1885,22 @@ void general_spec(short which_mode,special_node_type cur_node,short cur_spec_typ
          DeleteObject(displayed_picture);
          displayed_picture = NULL;
          break;
+		case SPEC_RAND_SDF:
+			check_mess = true;
+
+        short rand;
+			// Automatically fix the range in case some idiot puts it in backwards, or the same (WHY)
+			if (cur_node.ex1a == cur_node.ex1b) {
+			  rand = cur_node.ex1b;
+      } else {
+        rand = get_ran(1,
+                min(cur_node.ex1a,cur_node.ex1b),
+                max(cur_node.ex1a,cur_node.ex1b)
+                );
+      }
+      setsd(cur_node.sd1,cur_node.sd2,rand);
+      //print_nums(rand, cur_node.ex1a, cur_node.ex1b);
+			break;
 		 }
 	if (check_mess == true) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
