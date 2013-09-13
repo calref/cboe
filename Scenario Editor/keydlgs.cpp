@@ -58,7 +58,7 @@ short ex2b_choose[20] = {19,50,55,56,57,58,59,60,130,134,135,136,139,144,154,-1,
 char edit_spec_stuff_done_mess[256] = {
 	0,1,1,0,0,0,1,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
-	0,0,3,1,0,0,0,0,0,0,
+	0,0,3,1,0,0,0,0,0,1,
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
 	1,1,1,1,1,1,1,1,1,1, // 50
@@ -786,7 +786,7 @@ void edit_spec_enc_event_filter (short item_hit)
 		case 37: // 1st spec type
 			if (save_spec_enc() == TRUE)
 				 dialog_not_toast = FALSE;
-			i = choose_text_res(22,1,29,store_spec_node.type + 1,822,"Choose General Use Special:");
+			i = choose_text_res(22,1,30,store_spec_node.type + 1,822,"Choose General Use Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
 				}
