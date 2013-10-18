@@ -18,6 +18,7 @@ short get_ran (short times,short  min,short  max){
 	if(max < min) max = min;
 
 	for (i = 1; i < times + 1; i++) {
+		srand(GetTickCount());
 		store = rand();
 		to_ret += min + (store % (max - min + 1));//min + (((store + 32767) * (max - min + 1)) / 65536);
 	}
