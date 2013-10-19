@@ -21,3 +21,5 @@
 Win32/*/bin
 Win32/*/obj
 *.layout
+*.depend
+*blades.ini
