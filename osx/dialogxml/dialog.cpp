@@ -5,9 +5,7 @@
  *  Created by Celtic Minstrel on 11/05/09.
  *
  */
-#define IN_FRONT	(WindowPtr)-1L
 
-#include <Carbon/Carbon.h>
 #include <cmath>
 #include <stdexcept>
 #include <boost/type_traits/is_pointer.hpp>
@@ -16,8 +14,17 @@
 #include "soundtool.h"
 using namespace std;
 using namespace ticpp;
+#include "pict.h"
+#include "button.h"
+#include "field.h"
+#include "message.h"
+#include "winutil.h"
+#include "mathutil.h"
 
-extern GWorldPtr bg_gworld;
+// TODO: Would be nice if I could avoid depending on mainPtr
+extern sf::RenderWindow mainPtr;
+
+extern sf::Texture bg_gworld;
 extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 
@@ -39,8 +46,9 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	std::string name;
 	bool wide = false, tall = false, custom = false;
 	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
+	RECT frame;
 	int width = 0, height = 0;
-	p.second = new cPict(this);
+	p.second = new cPict(*this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
 		if(name == "name")
@@ -49,46 +57,42 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			std::string val;
 			foundType = true;
 			attr->GetValue(&val);
+			pic_num_t wasPic = p.second->getPicNum();
 			if(val == "blank"){
-				p.second->picType = PIC_TER;
-				p.second->picNum = -1;
+				p.second->setPict(-1, PIC_TER);
 			}else if(val == "ter")
-				p.second->picType = PIC_TER;
+				p.second->setPict(wasPic, PIC_TER);
 			else if(val == "teranim")
-				p.second->picType = PIC_TER_ANIM;
+				p.second->setPict(wasPic, PIC_TER_ANIM);
 			else if(val == "monst")
-				p.second->picType = PIC_MONST;
+				p.second->setPict(wasPic, PIC_MONST);
 			else if(val == "dlog")
-				p.second->picType = PIC_DLOG;
+				p.second->setPict(wasPic, PIC_DLOG);
 			else if(val == "talk")
-				p.second->picType = PIC_TALK;
+				p.second->setPict(wasPic, PIC_TALK);
 			else if(val == "scen")
-				p.second->picType = PIC_SCEN;
+				p.second->setPict(wasPic, PIC_SCEN);
 			else if(val == "item")
-				p.second->picType = PIC_ITEM;
+				p.second->setPict(wasPic, PIC_ITEM);
 			else if(val == "pc")
-				p.second->picType = PIC_PC;
+				p.second->setPict(wasPic, PIC_PC);
 			else if(val == "field")
-				p.second->picType = PIC_FIELD;
+				p.second->setPict(wasPic, PIC_FIELD);
 			else if(val == "boom")
-				p.second->picType = PIC_BOOM;
+				p.second->setPict(wasPic, PIC_BOOM);
 			else if(val == "missile")
-				p.second->picType = PIC_MISSILE;
+				p.second->setPict(wasPic, PIC_MISSILE);
 			else if(val == "full")
-				p.second->picType = PIC_FULL;
+				p.second->setPict(wasPic, PIC_FULL);
 			else if(val == "map")
-				p.second->picType = PIC_TER_MAP;
+				p.second->setPict(wasPic, PIC_TER_MAP);
 			else if(val == "status")
-				p.second->picType = PIC_STATUS;
+				p.second->setPict(wasPic, PIC_STATUS);
 			else throw xBadVal("pict",name,val,attr->Row(),attr->Column());
 		}else if(name == "custom"){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "true") custom = true;
-		}else if(name == "clickable"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") p.second->clickable = true;
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
@@ -99,17 +103,20 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 		}else if(name == "def-key"){
 			std::string val;
 			attr->GetValue(&val);
+			// TODO: The modifiers are now in key-mod, so this needs to be updated
 			try{
-				p.second->key = parseKey(val);
+				p.second->attachKey(parseKey(val));
 			}catch(int){
 				throw xBadVal("pict",name,val,attr->Row(),attr->Column());
 			}
 		}else if(name == "num"){
-			attr->GetValue(&p.second->picNum), foundNum = true;
+			pic_num_t newPic;
+			attr->GetValue(&newPic), foundNum = true;
+			p.second->setPict(newPic);
 		}else if(name == "top"){
-			attr->GetValue(&p.second->frame.top), foundTop = true;
+			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
-			attr->GetValue(&p.second->frame.left), foundLeft = true;;
+			attr->GetValue(&frame.left), foundLeft = true;
 		}else if(name == "width"){
 			attr->GetValue(&width);
 		}else if(name == "height"){
@@ -120,54 +127,64 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	if(!foundNum) throw xMissingAttr("pict","num",who.Row(),who.Column());
 	if(!foundTop) throw xMissingAttr("pict","top",who.Row(),who.Column());
 	if(!foundLeft) throw xMissingAttr("pict","left",who.Row(),who.Column());
-	if(wide && !tall && p.second->picType == PIC_MONST) p.second->picType = PIC_MONST_WIDE;
-	else if(!wide && tall && p.second->picType == PIC_MONST) p.second->picType = PIC_MONST_TALL;
-	else if(wide && tall){
-		if(p.second->picType == PIC_MONST) p.second->picType = PIC_MONST_LG;
-		else if(p.second->picType == PIC_SCEN) p.second->picType = PIC_SCEN_LG;
-		else if(p.second->picType == PIC_DLOG) p.second->picType = PIC_DLOG_LG;
+	if(wide || tall) {
+		pic_num_t wasPic = p.second->getPicNum();
+		if(wide && !tall && p.second->getPicType() == PIC_MONST) p.second->setPict(wasPic, PIC_MONST_WIDE);
+		else if(!wide && tall && p.second->getPicType() == PIC_MONST) p.second->setPict(wasPic, PIC_MONST_TALL);
+		else if(wide && tall){
+			if(p.second->getPicType() == PIC_MONST) p.second->setPict(wasPic, PIC_MONST_LG);
+			else if(p.second->getPicType() == PIC_SCEN) p.second->setPict(wasPic, PIC_SCEN_LG);
+			else if(p.second->getPicType() == PIC_DLOG) p.second->setPict(wasPic, PIC_DLOG_LG);
+		}
 	}
-	p.second->frame.right = p.second->frame.left;
-	p.second->frame.bottom = p.second->frame.top;
-	if(width > 0 || height > 0 || p.second->picType == PIC_FULL){
-		p.second->frame.right = p.second->frame.left + width;
-		p.second->frame.bottom = p.second->frame.top + height;
-	}else switch(p.second->picType){
+	frame.right = frame.left;
+	frame.bottom = frame.top;
+	if(width > 0 || height > 0 || p.second->getPicType() == PIC_FULL){
+		frame.right = frame.left + width;
+		frame.bottom = frame.top + height;
+	}else switch(p.second->getPicType()){
 		case PIC_DLOG:
-			p.second->frame.right = p.second->frame.left + 36;
-			p.second->frame.bottom = p.second->frame.top + 36;
+			frame.right = frame.left + 36;
+			frame.bottom = frame.top + 36;
 			break;
 		case PIC_DLOG_LG:
-			p.second->frame.right = p.second->frame.left + 72;
-			p.second->frame.bottom = p.second->frame.top + 72;
+			frame.right = frame.left + 72;
+			frame.bottom = frame.top + 72;
 			break;
 		case PIC_SCEN:
 		case PIC_TALK:
-			p.second->frame.right = p.second->frame.left + 32;
-			p.second->frame.bottom = p.second->frame.top + 32;
+			frame.right = frame.left + 32;
+			frame.bottom = frame.top + 32;
 			break;
 		case PIC_SCEN_LG:
-			p.second->frame.right = p.second->frame.left + 64;
-			p.second->frame.bottom = p.second->frame.top + 64;
+			frame.right = frame.left + 64;
+			frame.bottom = frame.top + 64;
 			break;
 		case PIC_MISSILE:
-			p.second->frame.right = p.second->frame.left + 18;
-			p.second->frame.bottom = p.second->frame.top + 18;
+			frame.right = frame.left + 18;
+			frame.bottom = frame.top + 18;
 			break;
 		case PIC_TER_MAP:
-			p.second->frame.right = p.second->frame.left + 24;
-			p.second->frame.bottom = p.second->frame.top + 24;
+			frame.right = frame.left + 24;
+			frame.bottom = frame.top + 24;
 			break;
 		case PIC_STATUS:
-			p.second->frame.right = p.second->frame.left + 12;
-			p.second->frame.bottom = p.second->frame.top + 12;
+			frame.right = frame.left + 12;
+			frame.bottom = frame.top + 12;
+			break;
+		case PIC_FULL:
+			// TODO: Do some handling here to determine the sheet to use, and perhaps to load and set it.
 			break;
 		default:
-			p.second->frame.right = p.second->frame.left + 28;
-			p.second->frame.bottom = p.second->frame.top + 36;
+			frame.right = frame.left + 28;
+			frame.bottom = frame.top + 36;
 			break;
 	}
-	if(custom) p.second->picType += PIC_CUSTOM;
+	p.second->setBounds(frame);
+	if(custom) {
+		pic_num_t wasPic = p.second->getPicNum();
+		p.second->setPict(wasPic, p.second->getPicType() + PIC_CUSTOM);
+	}
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -183,7 +200,9 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // top and left are required attributes
+	RECT frame;
 	p.second = new cTextMsg(this);
+	if(bg == BG_DARK) p.second->setColour(sf::Color::White);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
 		if(name == "name")
@@ -191,70 +210,71 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		else if(name == "framed"){
 			std::string val;
 			attr->GetValue(&val);
-			if(val == "true") p.second->drawFramed = true;
-		}else if(name == "clickable"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") p.second->clickable = true;
+			if(val == "true") p.second->setFormat(TXT_FRAME, true);
 		}else if(name == "font"){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "dungeon")
-				p.second->textFont = DUNGEON;
+				p.second->setFormat(TXT_FONT, DUNGEON);
 			else if(val == "geneva")
-				p.second->textFont = GENEVA;
+				p.second->setFormat(TXT_FONT, GENEVA);
 			else if(val == "silom")
-				p.second->textFont = SILOM;
+				p.second->setFormat(TXT_FONT, SILOM);
 			else if(val == "maidenword")
-				p.second->textFont = MAIDENWORD;
+				p.second->setFormat(TXT_FONT, MAIDENWORD);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "large")
-				p.second->textSize = 12;
+				p.second->setFormat(TXT_SIZE, 12);
 			else if(val == "small")
-				p.second->textSize = 10;
+				p.second->setFormat(TXT_SIZE, 10);
+			else if(val == "title")
+				p.second->setFormat(TXT_SIZE, 18);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
 		}else if(name == "color" || name == "colour"){
 			std::string val;
 			attr->GetValue(&val);
-			RGBColor clr;
+			sf::Color clr;
 			try{
 				clr = parseColor(val);
 			}catch(int){
 				throw xBadVal("text",name,val,attr->Row(),attr->Column());
 			}
-			p.second->color = clr;
+			p.second->setColour(clr);
 		}else if(name == "def-key"){
 			std::string val;
 			attr->GetValue(&val);
 			try{
-				p.second->key = parseKey(val);
+				p.second->attachKey(parseKey(val));
 			}catch(int){
 				throw xBadVal("text",name,val,attr->Row(),attr->Column());
 			}
 		}else if(name == "top"){
-			attr->GetValue(&p.second->frame.top), foundTop = true;
+			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
-			attr->GetValue(&p.second->frame.left), foundLeft = true;
+			attr->GetValue(&frame.left), foundLeft = true;
 		}else if(name == "width"){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else if(name == "fromlist"){
-			attr->GetValue(&p.second->fromList);
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&p.second->fromList);
 		}else throw xBadAttr("pict",name,attr->Row(),attr->Column());
 	}
 	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column());
 	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column());
-	p.second->frame.right = p.second->frame.left + width;
-	p.second->frame.bottom = p.second->frame.top + height;
+	frame.right = frame.left + width;
+	frame.bottom = frame.top + height;
+	p.second->setBounds(frame);
 	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
 		string val;
 		int type = node->Type();
 		node->GetValue(&val);
+		// TODO: Strip out tabs and newlines
+		// TODO: De-magic the | character
 		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
 		else if(type == TiXmlNode::TEXT) content += val;
 		else{
@@ -262,7 +282,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			throw xBadVal("text","<content>",content + val,node->Row(),node->Column());
 		}
 	}
-	p.second->lbl = content;
+	p.second->setText(content);
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -274,50 +294,47 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 /**
  * Parses an HTML-style colour string, recognizing three-digit hex, six-digit hex, and HTML colour names.
  */
-RGBColor cDialog::parseColor(string what){
-	RGBColor clr;
+sf::Color cDialog::parseColor(string what){
+	sf::Color clr;
 	if(what[0] == '#'){
 		unsigned int r,g,b;
 		if(sscanf(what.c_str(),"#%2x%2x%2x",&r,&g,&b) < 3)
 			if(sscanf(what.c_str(),"#%1x%1x%1x",&r,&g,&b) < 3)
 				throw -1;
-		clr.red = r, clr.green = g, clr.blue = b;
+		clr.r = r, clr.g = g, clr.b = b;
 	}else if(what == "black")
-		clr.red = 0x00, clr.green = 0x00, clr.blue = 0x00;
+		clr.r = 0x00, clr.g = 0x00, clr.b = 0x00;
 	else if(what == "red")
-		clr.red = 0xFF, clr.green = 0x00, clr.blue = 0x00;
+		clr.r = 0xFF, clr.g = 0x00, clr.b = 0x00;
 	else if(what == "lime")
-		clr.red = 0x00, clr.green = 0xFF, clr.blue = 0x00;
+		clr.r = 0x00, clr.g = 0xFF, clr.b = 0x00;
 	else if(what == "blue")
-		clr.red = 0x00, clr.green = 0x00, clr.blue = 0xFF;
+		clr.r = 0x00, clr.g = 0x00, clr.b = 0xFF;
 	else if(what == "yellow")
-		clr.red = 0xFF, clr.green = 0xFF, clr.blue = 0x00;
+		clr.r = 0xFF, clr.g = 0xFF, clr.b = 0x00;
 	else if(what == "aqua")
-		clr.red = 0x00, clr.green = 0xFF, clr.blue = 0xFF;
+		clr.r = 0x00, clr.g = 0xFF, clr.b = 0xFF;
 	else if(what == "fuchsia")
-		clr.red = 0xFF, clr.green = 0x00, clr.blue = 0xFF;
+		clr.r = 0xFF, clr.g = 0x00, clr.b = 0xFF;
 	else if(what == "white")
-		clr.red = 0xFF, clr.green = 0xFF, clr.blue = 0xFF;
+		clr.r = 0xFF, clr.g = 0xFF, clr.b = 0xFF;
 	else if(what == "gray" || what == "grey")
-		clr.red = 0x80, clr.green = 0x80, clr.blue = 0x80;
+		clr.r = 0x80, clr.g = 0x80, clr.b = 0x80;
 	else if(what == "maroon")
-		clr.red = 0x80, clr.green = 0x00, clr.blue = 0x00;
+		clr.r = 0x80, clr.g = 0x00, clr.b = 0x00;
 	else if(what == "green")
-		clr.red = 0x00, clr.green = 0x80, clr.blue = 0x00;
+		clr.r = 0x00, clr.g = 0x80, clr.b = 0x00;
 	else if(what == "navy")
-		clr.red = 0x00, clr.green = 0x00, clr.blue = 0x80;
+		clr.r = 0x00, clr.g = 0x00, clr.b = 0x80;
 	else if(what == "olive")
-		clr.red = 0x80, clr.green = 0x80, clr.blue = 0x00;
+		clr.r = 0x80, clr.g = 0x80, clr.b = 0x00;
 	else if(what == "teal")
-		clr.red = 0x00, clr.green = 0x80, clr.blue = 0x80;
+		clr.r = 0x00, clr.g = 0x80, clr.b = 0x80;
 	else if(what == "purple")
-		clr.red = 0x80, clr.green = 0x00, clr.blue = 0x80;
+		clr.r = 0x80, clr.g = 0x00, clr.b = 0x80;
 	else if(what == "silver")
-		clr.red = 0xC0, clr.green = 0xC0, clr.blue = 0xC0;
+		clr.r = 0xC0, clr.g = 0xC0, clr.b = 0xC0;
 	else throw -1;
-	clr.red *= clr.red;
-	clr.green *= clr.green;
-	clr.blue *= clr.blue;
 	return clr;
 }
 
@@ -328,6 +345,10 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundType = false, foundTop = false, foundLeft = false; // required attributes
+	bool foundKey = false;
+	std::string keyMod, keyMain;
+	int keyModRow, keyModCol, keyMainRow, keyMainCol;
+	RECT frame;
 	p.second = new cButton(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -336,109 +357,129 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		else if(name == "wrap"){
 			std::string val;
 			attr->GetValue(&val);
-			if(val == "true") p.second->wrapLabel = true;
+			if(val == "true") p.second->setFormat(TXT_WRAP, true);
 		}else if(name == "type"){
 			std::string val;
 			foundType = true;
 			attr->GetValue(&val);
 			if(val == "small")
-				p.second->type = BTN_SM;
+				p.second->setBtnType(BTN_SM);
 			else if(val == "regular")
-				p.second->type = BTN_REG;
+				p.second->setBtnType(BTN_REG);
 			else if(val == "large")
-				p.second->type = BTN_LG;
+				p.second->setBtnType(BTN_LG);
 			else if(val == "help")
-				p.second->type = BTN_HELP;
+				p.second->setBtnType(BTN_HELP);
 			else if(val == "left")
-				p.second->type = BTN_LEFT;
+				p.second->setBtnType(BTN_LEFT);
 			else if(val == "right")
-				p.second->type = BTN_RIGHT;
+				p.second->setBtnType(BTN_RIGHT);
 			else if(val == "up")
-				p.second->type = BTN_UP;
+				p.second->setBtnType(BTN_UP);
 			else if(val == "down")
-				p.second->type = BTN_DOWN;
+				p.second->setBtnType(BTN_DOWN);
 			else if(val == "tiny")
-				p.second->type = BTN_TINY;
+				p.second->setBtnType(BTN_TINY);
 			else if(val == "done")
-				p.second->type = BTN_DONE;
+				p.second->setBtnType(BTN_DONE);
 			else if(val == "tall")
-				p.second->type = BTN_TALL;
+				p.second->setBtnType(BTN_TALL);
 			else if(val == "trait")
-				p.second->type = BTN_TRAIT;
+				p.second->setBtnType(BTN_TRAIT);
 			else if(val == "push")
-				p.second->type = BTN_PUSH;
+				p.second->setBtnType(BTN_PUSH);
 		}else if(name == "def-key"){
-			std::string val;
-			attr->GetValue(&val);
-			try{
-				p.second->key = parseKey(val);
-			}catch(int){
-				throw xBadVal("button",name,val,attr->Row(),attr->Column());
-			}
-		}else if(name == "fromlist")
-			attr->GetValue(&p.second->fromList);
-		else if(name == "top"){
-			attr->GetValue(&p.second->frame.top), foundTop = true;
+			attr->GetValue(&keyMain);
+			foundKey = true;
+			keyMainRow = attr->Row();
+			keyMainCol = attr->Column();
+		}else if(name == "key-mod"){
+			attr->GetValue(&keyMod);
+			foundKey = true;
+			keyModRow = attr->Row();
+			keyModCol = attr->Column();
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&p.second->fromList);
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
-			attr->GetValue(&p.second->frame.left), foundLeft = true;
+			attr->GetValue(&frame.left), foundLeft = true;
 		}else if(name == "width"){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
 		}else throw xBadAttr("button",name,attr->Row(),attr->Column());
 	}
+	if(bg == BG_DARK && p.second->getBtnType() == BTN_TINY) p.second->setColour(sf::Color::White);
 	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column());
 	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column());
 	if(!foundLeft) throw xMissingAttr("button","left",who.Row(),who.Column());
+	if(foundKey) {
+		cKey theKey;
+		try{
+			theKey = parseKey(keyMod + " " + keyMain);
+		}catch(int){
+			try {
+				theKey = parseKey(keyMain);
+			}catch(int){
+				throw xBadVal("button","def-key",keyMain,keyMainRow,keyMainCol);
+			}
+			throw xBadVal("button","key-mod",keyMod,keyModRow,keyModCol);
+		}
+		p.second->attachKey(theKey);
+	}
 	if(width > 0 || height > 0) {
-		p.second->frame.right = p.second->frame.left + width;
-		p.second->frame.bottom = p.second->frame.top + height;
-	}else switch(p.second->type){
+		// TODO: What if width is set but height isn't?
+		frame.right = frame.left + width;
+		frame.bottom = frame.top + height;
+	}else switch(p.second->getBtnType()){
 		case BTN_SM:
-			p.second->frame.right = p.second->frame.left + 23;
-			p.second->frame.bottom = p.second->frame.top + 23;
+			frame.right = frame.left + 23;
+			frame.bottom = frame.top + 23;
 			break;
 		case BTN_LG:
-			p.second->frame.right = p.second->frame.left + 102;
-			p.second->frame.bottom = p.second->frame.top + 23;
+			frame.right = frame.left + 102;
+			frame.bottom = frame.top + 23;
 			break;
 		case BTN_HELP:
-			p.second->frame.right = p.second->frame.left + 16;
-			p.second->frame.bottom = p.second->frame.top + 13;
+			frame.right = frame.left + 16;
+			frame.bottom = frame.top + 13;
 			break;
 		case BTN_TINY:
 		case BTN_LED: // this should never happen
-			p.second->frame.right = p.second->frame.left + 14;
-			p.second->frame.bottom = p.second->frame.top + 10;
+			frame.right = frame.left + 14;
+			frame.bottom = frame.top + 10;
 			break;
 		case BTN_TALL:
 		case BTN_TRAIT:
-			p.second->frame.right = p.second->frame.left + 63;
-			p.second->frame.bottom = p.second->frame.top + 40;
+			frame.right = frame.left + 63;
+			frame.bottom = frame.top + 40;
 			break;
 		case BTN_PUSH:
-			p.second->frame.right = p.second->frame.left + 30;
-			p.second->frame.bottom = p.second->frame.top + 30;
+			frame.right = frame.left + 30;
+			frame.bottom = frame.top + 30;
 			break;
 		default:
-			p.second->frame.right = p.second->frame.left + 63;
-			p.second->frame.bottom = p.second->frame.top + 23;
+			frame.right = frame.left + 63;
+			frame.bottom = frame.top + 23;
 	}
+	p.second->setBounds(frame);
 	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
 		string val;
 		int type = node->Type();
 		node->GetValue(&val);
 		if(type == TiXmlNode::ELEMENT && val == "key"){
+			// TODO: There's surely a better way to do this
 			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column());
-			p.second->labelWithKey = true;
+//			p.second->labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT) content += val;
 		else{
 			val = '<' + val + '>';
 			throw xBadVal("text","<content>",val,node->Row(),node->Column());
 		}
 	}
-	p.second->lbl = content;
+	p.second->setText(content);
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -510,8 +551,9 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // requireds
+	RECT frame;
 	p.second = new cLed(this);
-	p.second->type = BTN_LED;
+	if(bg == BG_DARK) p.second->setColour(sf::Color::White);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
 		if(name == "name")
@@ -519,46 +561,48 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		else if(name == "state"){
 			std::string val;
 			attr->GetValue(&val);
-			if(val == "red") p.second->state = led_red;
-			else if(val == "green") p.second->state = led_green;
-			else if(val == "off") p.second->state = led_off;
+			if(val == "red") p.second->setState(led_red);
+			else if(val == "green") p.second->setState(led_green);
+			else if(val == "off") p.second->setState(led_off);
 			else throw xBadVal("led",name,val,attr->Row(),attr->Column());
-		}else if(name == "fromlist")
-			attr->GetValue(&p.second->fromList);
-		else if(name == "font"){
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&p.second->fromList);
+		}else if(name == "font"){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "dungeon")
-				p.second->textFont = DUNGEON;
+				p.second->setFormat(TXT_FONT, DUNGEON);
 			else if(val == "geneva")
-				p.second->textFont = GENEVA;
+				p.second->setFormat(TXT_FONT, GENEVA);
 			else if(val == "silom")
-				p.second->textFont = SILOM;
+				p.second->setFormat(TXT_FONT, SILOM);
 			else if(val == "maidenword")
-				p.second->textFont = MAIDENWORD;
+				p.second->setFormat(TXT_FONT, MAIDENWORD);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "large")
-				p.second->textSize = 12;
+				p.second->setFormat(TXT_SIZE, 12);
 			else if(val == "small")
-				p.second->textSize = 10;
+				p.second->setFormat(TXT_SIZE, 10);
+			if(val == "title")
+				p.second->setFormat(TXT_SIZE, 18);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
 		}else if(name == "color" || name == "colour"){
 			std::string val;
 			attr->GetValue(&val);
-			RGBColor clr;
+			sf::Color clr;
 			try{
 				clr = parseColor(val);
 			}catch(int){
 				throw xBadVal("text",name,val,attr->Row(),attr->Column());
 			}
-			p.second->color = clr;
+			p.second->setColour(clr);
 		}else if(name == "top"){
-			attr->GetValue(&p.second->frame.top), foundTop = true;
+			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
-			attr->GetValue(&p.second->frame.left), foundLeft = true;
+			attr->GetValue(&frame.left), foundLeft = true;
 		}else if(name == "width"){
 			attr->GetValue(&width);
 		}else if(name == "height"){
@@ -567,13 +611,17 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	}
 	if(!foundTop) throw xMissingAttr("led","top",who.Row(),who.Column());
 	if(!foundLeft) throw xMissingAttr("led","left",who.Row(),who.Column());
-	if(width > 0 || height > 0) {
-		p.second->frame.right = p.second->frame.left + width;
-		p.second->frame.bottom = p.second->frame.top + height;
+	if(width > 0) {
+		frame.right = frame.left + width;
 	}else{
-		p.second->frame.right = p.second->frame.left + 14;
-		p.second->frame.bottom = p.second->frame.top + 10;
+		frame.right = frame.left + 14;
 	}
+	if(height > 0) {
+		frame.bottom = frame.top + height;
+	}else{
+		frame.bottom = frame.top + 10;
+	}
+	p.second->setBounds(frame);
 	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
 		string val;
@@ -585,7 +633,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			throw xBadVal("text","<content>",content + val,node->Row(),node->Column());
 		}
 	}
-	p.second->lbl = content;
+	p.second->setText(content);
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -604,8 +652,8 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 		attr->GetName(&name);
 		if(name == "name")
 			attr->GetValue(&p.first);
-		else if(name == "fromlist")
-			attr->GetValue(&p.second->fromList);
+//		else if(name == "fromlist")
+//			attr->GetValue(&p.second->fromList);
 		else throw xBadAttr("button",name,attr->Row(),attr->Column());
 	}
 	string content;
@@ -614,13 +662,14 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 		int type = node->Type();
 		node->GetValue(&val);
 		if(type == TiXmlNode::ELEMENT && val == "led"){
-			p.second->choices.insert(parse<cLed>(*node));
+			auto led = parse<cLed>(*node);
+			p.second->addChoice(led.second, led.first);
 		}else{
 			val = '<' + val + '>';
 			throw xBadVal("text","<content>", content + val,node->Row(),node->Column());
 		}
 	}
-	p.second->lbl = content;
+	p.second->setText(content);
 	p.second->recalcRect();
 	if(p.first == ""){
 		do{
@@ -637,6 +686,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // requireds
+	RECT frame;
 	p.second = new cTextField(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -646,14 +696,14 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "num")
-				p.second->isNumericField = true;
+				p.second->setInputType(FLD_NUM);
 			else if(val == "text")
-				p.second->isNumericField = false;
+				p.second->setInputType(FLD_TEXT);
 			else throw xBadVal("field",name,val,attr->Row(),attr->Column());
 		}else if(name == "top"){
-			attr->GetValue(&p.second->frame.top), foundTop = true;
+			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
-			attr->GetValue(&p.second->frame.left), foundLeft = true;
+			attr->GetValue(&frame.left), foundLeft = true;
 		}else if(name == "width"){
 			attr->GetValue(&width);
 		}else if(name == "height"){
@@ -662,8 +712,9 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	}
 	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column());
 	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column());
-	p.second->frame.right = p.second->frame.left + width;
-	p.second->frame.bottom = p.second->frame.top + height;
+	frame.right = frame.left + width;
+	frame.bottom = frame.top + height;
+	p.second->setBounds(frame);
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -672,32 +723,23 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	return p;
 }
 
-cDialog::cDialog(cDialog* p) : parent(p), win(NULL) {}
+cDialog::cDialog(cDialog* p) : parent(p) {}
 
-cDialog::cDialog(std::string path) : parent(NULL), win(NULL){
+cDialog::cDialog(std::string path) : parent(NULL) {
 	loadFromFile(path);
 }
 
-cDialog::cDialog(std::string path, cDialog* p) : parent(p), win(NULL){
+cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 	loadFromFile(path);
 }
 
+extern fs::path progDir;
 void cDialog::loadFromFile(std::string path){
-	char cPath[512];
-	UniChar* ucpath = new UniChar[path.length()];
-	for(unsigned int i = 0; i < path.length(); i++) ucpath[i] = path[i];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef url = CFBundleCopyResourceURL(
-		mainBundle,
-		CFStringCreateWithCharacters(NULL, ucpath, path.length()),
-		CFSTR(""), CFSTR("dialogs")
-	);
-	delete ucpath;
-	CFStringRef cfpath = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-	CFStringGetCString(cfpath, cPath, 512, kCFStringEncodingUTF8);
+	bg = BG_DARK; // default is dark background
+	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
-		printf("Loading dialog from: %s\n", cPath);
-		Document xml(cPath);
+		printf("Loading dialog from: %s\n", cPath.c_str());
+		Document xml(cPath.c_str());
 		xml.LoadFile();
 		
 		Iterator<Attribute> attr;
@@ -718,14 +760,15 @@ void cDialog::loadFromFile(std::string path){
 					if(sin.fail()) throw xBadVal(type,name,val,attr->Row(),attr->Column());
 				}
 			}else if(name == "fore"){
-				RGBColor clr;
+				sf::Color clr;
 				try{
 					clr = parseColor(val);
 				}catch(int){
 					throw xBadVal("text",name,val,attr->Row(),attr->Column());
 				}
 			defTextClr = clr;
-				
+			} else if(name == "defbtn") {
+				defaultButton = val;
 			}else if(name != "debug")
 				throw xBadAttr(type,name,attr->Row(),attr->Column());
 		}
@@ -750,25 +793,25 @@ void cDialog::loadFromFile(std::string path){
 			else throw xBadNode(type,node->Row(),node->Column());
 		}
 	} catch(Exception& x){ // XML processing exception
-		printf(x.what());
+		printf("%s",x.what());
 		exit(1);
 	} catch(xBadVal& x){ // Invalid value for an attribute
-		printf(x.what());
+		printf("%s",x.what());
 		exit(1);
 	} catch(xBadAttr& x){ // Invalid attribute for an element
-		printf(x.what());
+		printf("%s",x.what());
 		exit(1);
 	} catch(xBadNode& x){ // Invalid element
-		printf(x.what());
+		printf("%s",x.what());
 		exit(1);
 	} catch(xMissingAttr& x){ // Invalid element
-		printf(x.what());
+		printf("%s",x.what());
 		exit(1);
 	}
 	dialogNotToast = true;
-	bg = BG_DARK; // default is dark background
+	if(bg == BG_DARK) defTextClr = sf::Color::White;
 	// now calculate window rect
-	SetRect(&winRect,0,0,0,0);
+	winRect = RECT();
 	recalcRect();
 	ctrlIter iter = controls.begin();
 	currentFocus = NULL;
@@ -776,38 +819,31 @@ void cDialog::loadFromFile(std::string path){
 		if(typeid(iter->second) == typeid(cTextField*)){
 			cTextField* fld = (cTextField*) iter->second;
 			if(currentFocus == NULL) currentFocus = fld;
-			// TODO: Should probably create controls and put them in the window?
 		}
 		iter++;
 	}
-	// TODO: Set parent
 }
 
 void cDialog::recalcRect(){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		printf("%s \"%s\"\n",typeid(*(iter->second)).name(),iter->first.c_str());
-		if(iter->second->frame.right > winRect.right)
-			winRect.right = iter->second->frame.right;
-		if(iter->second->frame.bottom > winRect.bottom)
-			winRect.bottom = iter->second->frame.bottom;
+		RECT frame = iter->second->getBounds();
+		if(frame.right > winRect.right)
+			winRect.right = frame.right;
+		if(frame.bottom > winRect.bottom)
+			winRect.bottom = frame.bottom;
 		iter++;
 	}
 	winRect.right += 6;
 	winRect.bottom += 6;
 }
 
-cDialog::_init cDialog::init;
-
-cDialog::_init::_init(){
+void cDialog::init(){
 	cControl::init();
 	cButton::init();
 	cLed::init();
 	cPict::init();
-}
-
-cDialog::_init::~_init(){
-	cButton::finalize();
 }
 
 cDialog::~cDialog(){
@@ -816,14 +852,14 @@ cDialog::~cDialog(){
 		delete iter->second;
 		iter++;
 	}
-	DisposeWindow(win);
+	win.close();
 }
 
-bool cDialog::add(cControl* what, Rect ctrl_frame, std::string key){
+bool cDialog::add(cControl* what, RECT ctrl_frame, std::string key){
 	// First make sure the key is not already present.
 	// If it is, we can't add the control, so return false.
 	if(controls.find(key) != controls.end()) return false;
-	what->frame = ctrl_frame;
+	what->setBounds(ctrl_frame);
 	controls.insert(std::make_pair(key,what));
 	return true;
 }
@@ -836,94 +872,146 @@ bool cDialog::remove(std::string key){
 	return true;
 }
 
+extern char keyToChar(sf::Keyboard::Key key, bool isShift);
 void cDialog::run(){
-	char c, k;
+	using kb = sf::Keyboard;
+	kb::Key k;
 	cKey key;
-	EventRecord currentEvent;
-	GrafPtr old_port;
+	sf::Event currentEvent;
 	std::string itemHit = "";
 	dialogNotToast = true;
-	if(win == NULL) {
-		recalcRect();
-		win = NewCWindow(NULL, &winRect, (unsigned char*) "", false, dBoxProc, IN_FRONT, false, 0);
+	// Focus the first text field, if there is one
+	for(auto ctrl : controls) {
+		if(ctrl.second->getType() == CTRL_FIELD) {
+			ctrl.second->triggerFocusHandler(*this, ctrl.first, false);
+			break;
+		}
 	}
-	GetPort(&old_port);
-	SetPortWindowPort(win);
-	ShowWindow(win);
-	SelectWindow(win);
-	BeginAppModalStateForWindow(win);
+	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
+	win.setActive();
+	win.setVisible(true);
+	makeFrontWindow(win);
+	draw();
+	ModalSession dlog(win);
 	while(dialogNotToast){
-		if(!WaitNextEvent(everyEvent, &currentEvent, 0, NULL))continue;
-		switch(currentEvent.what){
-			case updateEvt:
-				BeginUpdate(win);
-				draw();
-				EndUpdate(win);
-				break;
-			case keyDown:
-			case autoKey:
-				c = currentEvent.message & charCodeMask;
-				k = (currentEvent.message & keyCodeMask) >> 8;
+		draw();
+		if(!win.pollEvent(currentEvent)) continue;
+		location where;
+		switch(currentEvent.type){
+			case sf::Event::KeyPressed:
+				k = currentEvent.key.code;
 				switch(k){
-					case 126:
+					case kb::Up:
 						key.spec = true;
 						key.k = key_up;
 						break;
-					case 124:
+					case kb::Right:
 						key.spec = true;
 						key.k = key_right;
 						break;
-					case 123:
+					case kb::Left:
 						key.spec = true;
 						key.k = key_left;
 						break;
-					case 125:
+					case kb::Down:
 						key.spec = true;
 						key.k = key_down;
 						break;
-					case 53:
+					case kb::Escape:
 						key.spec = true;
 						key.k = key_esc;
 						break;
-					case 36: case 76:
+					case kb::Return: // TODO: Also enter (keypad)
 						key.spec = true;
 						key.k = key_enter;
 						break;
-					// TODO: Add cases for key_tab and key_help
+					case kb::BackSpace:
+						key.spec = true;
+						key.k = key_bsp;
+						break;
+					case kb::Delete:
+						key.spec = true;
+						key.k = key_del;
+						break;
+					case kb::Tab:
+						key.spec = true;
+						key.k = key_tab;
+						break;
+					case kb::F1:
+						key.spec = true;
+						key.k = key_help;
+						break;
+					case kb::Home:
+						key.spec = true;
+						key.k = key_home;
+						break;
+					case kb::End:
+						key.spec = true;
+						key.k = key_end;
+						break;
+					case kb::PageUp:
+						key.spec = true;
+						key.k = key_pgup;
+						break;
+					case kb::PageDown:
+						key.spec = true;
+						key.k = key_pgdn;
+						break;
+					// TODO: Add cases for key_tab and key_help and others
+					case kb::LShift:
+					case kb::RShift:
+					case kb::LAlt:
+					case kb::RAlt:
+					case kb::LControl:
+					case kb::RControl:
+					case kb::LSystem:
+					case kb::RSystem:
+						continue;
 					default:
+						// TODO: Should probably only support system or control depending on OS
 						key.spec = false;
-						key.c = c;
+						if(currentEvent.key.system || currentEvent.key.control) {
+							if(k == kb::C) {
+								key.spec = true;
+								key.k = key_copy;
+							} else if(k == kb::X) {
+								key.spec = true;
+								key.k = key_cut;
+							} else if(k == kb::V) {
+								key.spec = true;
+								key.k = key_paste;
+							} else if(k == kb::A) {
+								key.spec = true;
+								key.k = key_selectall;
+							}
+							if(key.spec) break;
+						}
+						key.c = keyToChar(k, currentEvent.key.shift);
 						break;
 				}
 				key.mod = mod_none;
-				if(currentEvent.modifiers & cmdKey){
+				if(currentEvent.key.control || currentEvent.key.system) {
 					if(key.spec){
 						if(key.k == key_left) key.k = key_home;
 						else if(key.k == key_right) key.k = key_end;
 						else if(key.k == key_up) key.k = key_pgup;
 						else if(key.k == key_down) key.k = key_pgdn;
+						else if(key.k == key_copy || key.k == key_cut);
+						else if(key.k == key_paste || key.k == key_selectall);
 						else key.mod += mod_ctrl;
 					}else key.mod += mod_ctrl;
-				}if(currentEvent.modifiers & shiftKey) key.mod += mod_shift;
-				if(currentEvent.modifiers & alphaLock) key.mod += mod_shift;
-				if(currentEvent.modifiers & optionKey) key.mod += mod_alt;
-				if(currentEvent.modifiers & controlKey) key.mod += mod_ctrl;
-				if(currentEvent.modifiers & rightShiftKey) key.mod += mod_shift;
-				if(currentEvent.modifiers & rightOptionKey) key.mod += mod_alt;
-				if(currentEvent.modifiers & rightControlKey) key.mod += mod_ctrl;
+				}
+				if(currentEvent.key.shift) key.mod += mod_shift;
+				if(currentEvent.key.alt) key.mod += mod_alt;
 				itemHit = process_keystroke(key); // TODO: This should be a separate check from the fields thing?
-				if(typeid(controls[itemHit]) == typeid(cTextField*)){
-					if(!key.spec || key.k == key_bsp || key.k == key_del || key.k == key_home ||
-						key.k == key_end || key.k == key_pgup || key.k == key_pgdn ||
-						key.k == key_left || key.k == key_right || key.k == key_up || key.k == key_down){
-						// TODO: If the dialog contains a field, handle it here.
-						// Basically, we should end up here if the user is typing into the field.
-						itemHit = "";
-					}else if(key.spec && key.k == key_tab){
+				if(itemHit.empty()) break;
+				where = controls[itemHit]->getBounds().centre();
+				if(controls[itemHit]->getType() == CTRL_FIELD){
+					if(key.spec && key.k == key_tab){
 						// TODO: Tabbing through fields, and trigger focus events.
 						ctrlIter cur = controls.find(itemHit), iter;
 						if(!cur->second->triggerFocusHandler(*this,itemHit,true)) break;
-						iter = cur;
+						iter = std::next(cur);
 						while(iter != cur){
 							if(typeid(iter->second) == typeid(cTextField*)){
 								if(iter->second->triggerFocusHandler(*this,iter->first,false)){
@@ -937,37 +1025,47 @@ void cDialog::run(){
 						}
 						if(iter == cur) // no focus change occured!
 							; // TODO: Surely something should happen here?
+					} else if(!key.spec || key.k != key_enter || mod_contains(key.mod, mod_alt)) {
+						dynamic_cast<cTextField*>(controls[itemHit])->handleInput(key);
+						itemHit = "";
 					}
 				}
 				break;
-			case mouseDown:
-				if(!PtInRect(currentEvent.where,&winRect)) break; // may be superfluous?
+			case sf::Event::MouseButtonPressed:
 				key.mod = mod_none;
-				if(currentEvent.modifiers & cmdKey) key.mod += mod_ctrl;
-				if(currentEvent.modifiers & shiftKey) key.mod += mod_shift;
-				if(currentEvent.modifiers & alphaLock) key.mod += mod_shift;
-				if(currentEvent.modifiers & optionKey) key.mod += mod_alt;
-				if(currentEvent.modifiers & controlKey) key.mod += mod_ctrl;
-				if(currentEvent.modifiers & rightShiftKey) key.mod += mod_shift;
-				if(currentEvent.modifiers & rightOptionKey) key.mod += mod_alt;
-				if(currentEvent.modifiers & rightControlKey) key.mod += mod_ctrl;
-				itemHit = process_click(currentEvent.where,key.mod);
+				if(kb::isKeyPressed(kb::LControl)) key.mod += mod_ctrl;
+				if(kb::isKeyPressed(kb::RControl)) key.mod += mod_ctrl;
+				if(kb::isKeyPressed(kb::LSystem)) key.mod += mod_ctrl;
+				if(kb::isKeyPressed(kb::RSystem)) key.mod += mod_ctrl;
+				if(kb::isKeyPressed(kb::LAlt)) key.mod += mod_alt;
+				if(kb::isKeyPressed(kb::RAlt)) key.mod += mod_alt;
+				if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
+				if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
+				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
+				itemHit = process_click(where, key.mod);
 				break;
 		}
+		if(itemHit.empty()) continue;;
 		ctrlIter ctrl = controls.find(itemHit);
-		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod,currentEvent.where);
+		// TODO: Should it do something with the boolean return value?
+		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod,where);
+		itemHit.clear();
 	}
-	EndAppModalStateForWindow(win);
-	SetPort(old_port);
-	HideWindow(win);
+	win.setVisible(false);
+	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
+	while(parentWin->pollEvent(currentEvent));
 }
 
 void cDialog::setBg(short n){
 	bg = n;
 }
 
-void cDialog::setDefTextClr(RGBColor clr){
+void cDialog::setDefTextClr(sf::Color clr){
 	defTextClr = clr;
+}
+
+sf::Color cDialog::getDefTextClr() {
+	return defTextClr;
 }
 
 bool cDialog::toast(){
@@ -975,23 +1073,80 @@ bool cDialog::toast(){
 	return true;
 }
 
+void cDialog::attachClickHandlers(click_callback_t handler, std::vector<std::string> controls) {
+	cDialog& me = *this;
+	for(std::string control : controls) {
+		me[control].attachClickHandler(handler);
+	}
+}
+
+void cDialog::attachFocusHandlers(focus_callback_t handler, std::vector<std::string> controls) {
+	cDialog& me = *this;
+	for(std::string control : controls) {
+		me[control].attachFocusHandler(handler);
+	}
+}
+
+bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold) {
+	cControl& ctrl = this->getControl(key);
+	key += "-label";
+	RECT labelRect = ctrl.getBounds();
+	switch(where) {
+		case LABEL_LEFT:
+			labelRect.right = labelRect.left;
+			labelRect.left -= 2 * offset;
+			break;
+		case LABEL_ABOVE:
+			labelRect.bottom = labelRect.top;
+			labelRect.top -= 2 * offset;
+			break;
+		case LABEL_RIGHT:
+			labelRect.left = labelRect.right;
+			labelRect.right += 2 * offset;
+			break;
+		case LABEL_BELOW:
+			labelRect.top = labelRect.bottom;
+			labelRect.bottom += 2 * offset;
+			break;
+	}
+	if(labelRect.height() < 14){
+		int expand = (14 - labelRect.height()) / 2 + 1;
+		labelRect.inset(0, -expand);
+	} else labelRect.offset(0, labelRect.height() / 6);
+	cControl* labelCtrl;
+	try {
+		labelCtrl = &this->getControl(key);
+	} catch(std::invalid_argument x) {
+		labelCtrl = new cTextMsg(this);
+	}
+	labelCtrl->setText(label);
+	labelCtrl->setFormat(TXT_FONT, bold ? SILOM : GENEVA);
+	// TODO: Do we need to set colour to white if background is dark?
+	labelCtrl->setColour(ctrl.getColour());
+	add(labelCtrl, labelRect, key);
+}
+
 std::string cDialog::process_keystroke(cKey keyHit){
 	unsigned long dummy;
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
-		if(iter->second->visible && iter->second->isClickable() && iter->second->key == keyHit){
-			iter->second->depressed = true;
-			iter->second->draw();
+		if(iter->second->getType() == CTRL_FIELD && iter->second->isVisible() && dynamic_cast<cTextField*>(iter->second)->hasFocus()) {
+			if(!keyHit.spec || (keyHit.k != key_esc && keyHit.k != key_help))
+				return iter->first;
+		}
+		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
+			iter->second->setActive(true);
+			draw();
 			if (play_sounds) {
 				if(typeid(iter->second) == typeid(cLed*))
 					play_sound(34);
 				else play_sound(37);
-				Delay(6,&dummy);
+				sf::sleep(time_in_ticks(6));
 			}
-			else Delay(14,&dummy);
-			iter->second->depressed = false;
-			iter->second->draw();
-			Delay(8,&dummy);
+			else sf::sleep(time_in_ticks(14));
+			iter->second->setActive(false);
+			draw();
+			sf::sleep(sf::milliseconds(8));
 			return iter->first;
 		}
 		iter++;
@@ -1001,13 +1156,16 @@ std::string cDialog::process_keystroke(cKey keyHit){
 		keyHit.k = key_enter;
 		return process_keystroke(keyHit);
 	}
+	// If nothing was hit and the key was enter, return the default button (if any)
+	if(keyHit.spec && keyHit.k == key_enter)
+		return defaultButton;
 	return "";
 }
 
-std::string cDialog::process_click(Point where, eKeyMod mods){
+std::string cDialog::process_click(location where, eKeyMod mods){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
-		if(iter->second->visible && iter->second->isClickable() && PtInRect(where,&iter->second->frame)){
+		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){
 			if(iter->second->handleClick())
 				return iter->first;
 			else return "";
@@ -1114,10 +1272,8 @@ xBadVal::~xBadVal() throw(){
 }
 
 void cDialog::draw(){
-	GrafPtr old_port;
-	GetPort(&old_port);
-	SetPortWindowPort(win);
-	tileImage(winRect,bg_gworld,::bg[bg]);
+	win.setActive();
+	tileImage(win,winRect,bg_gworld,::bg[bg]);
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
@@ -1125,10 +1281,14 @@ void cDialog::draw(){
 		iter++;
 	}
 	
-	SetPort(old_port);
+	win.display();
 }
 
 cControl& cDialog::operator[](std::string id){
+	return getControl(id);
+}
+
+cControl& cDialog::getControl(std::string id) {
 	ctrlIter iter = controls.find(id);
 	if(iter != controls.end()) return *(iter->second);
 	

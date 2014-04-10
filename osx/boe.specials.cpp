@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 
@@ -26,13 +25,13 @@
 #include "boe.specials.h"
 #include "boe.newgraph.h"
 #include "boe.dlgutil.h"
-#include "dlgconsts.h"
 #include "mathutil.h"
 #include "boe.main.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
+#include <array>
 
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type	univ.town;
@@ -48,7 +47,7 @@ extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[60];
-extern DialogPtr modeless_dialogs[18];
+extern sf::RenderWindow mini_map;
 extern bool fast_bang,end_scenario;
 //extern short town_size[3];
 extern short town_type;
@@ -150,7 +149,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // sets forced to true if definitely can enter
 {
 	ter_num_t ter;
-	short r1,i,choice,door_pc,ter_special,pic_type = 0,ter_pic = 0;
+	short r1,i,door_pc,ter_special,pic_type = 0,ter_pic = 0;
+	std::string choice;
 	ter_flag_t ter_flag1,ter_flag2,ter_flag3;
 	eDamageType dam_type = DAMAGE_WEAPON;
 	bool can_enter = true;
@@ -230,7 +230,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				*spec_num = univ.town->spec_id[i];
 				if ((is_blocked(where_check) == false) || (ter_special == TER_SPEC_CHANGE_WHEN_STEP_ON)
 					|| (ter_special == TER_SPEC_CALL_SPECIAL)) {
-					give_help(54,0,0);
+					give_help(54,0);
 					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_enter = false;
@@ -294,7 +294,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (ter_flag2.u < 200) {
 				play_sound(-1 * ter_flag2.u);
 			}
-			give_help(47,65,0);
+			give_help(47,65);
 			if (scenario.ter_types[ter].blockage > 2)
 				can_enter = false;
 			break;
@@ -446,13 +446,13 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			}
 			
 			// See what party wants to do.
-			choice = fancy_choice_dialog(993,0);
+			choice = cChoiceDlog("locked-door-action.xml",{"leave","pick","bash"}).show();
 			
 			can_enter = false;
-			if (choice == 1)
+			if (choice == "leave")
 				break;
 			if ((door_pc = select_pc(1,0)) < 6) {
-				if (choice == 2)
+				if (choice == "pick")
 					pick_lock(where_check,door_pc);				
 				else bash_door(where_check,door_pc);
 			}		
@@ -1390,7 +1390,7 @@ void teleport_party(short x,short y,short mode)
 		do_explosion_anim(5,2);
 		end_missile_anim();
 	}	
-	draw_map(modeless_dialogs[5],5);
+	draw_map(mini_map,5);
 }
 
 
@@ -1415,7 +1415,7 @@ void change_level(short town_num,short x,short y)
 	location l(x,y);
 	
 	if ((town_num < 0) || (town_num >= scenario.num_towns)) {
-		give_error("The scenario special encounter tried to put you into a town that doesn't exist.","",0);
+		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
 	
@@ -1758,7 +1758,7 @@ void push_things()////
 			univ.town.p_loc = l;
 			update_explored(l);
 			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
-			draw_map(modeless_dialogs[5],5);
+			draw_map(mini_map,5);
 			if (univ.town.is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the barrel.");			
@@ -1796,7 +1796,7 @@ void push_things()////
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
-					draw_map(modeless_dialogs[5],5);
+					draw_map(mini_map,5);
 					if (univ.town.is_barrel(pc_pos[i].x,pc_pos[i].y)) {
 						univ.town.set_barrel(pc_pos[i].x,pc_pos[i].y,false);
 						ASB("You smash the barrel.");			
@@ -1898,7 +1898,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 	short num_nodes = 0;
 	
 	if (special_in_progress == true) {
-		give_error("The scenario called a special node while processing another special encounter. The second special will be ignored.","",0);
+		giveError("The scenario called a special node while processing another special encounter. The second special will be ignored.");
 		return;
 	}
 	special_in_progress = true;
@@ -1949,7 +1949,7 @@ void run_special(short which_mode,short which_type,short start_spec,location spe
 		num_nodes++;
 		
 		if(check_for_interrupt()){
-			give_error("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.","",0);
+			giveError("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.");
 			next_spec = -1;
 		}
 	}
@@ -1967,21 +1967,21 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 	dummy_node.type = -1;
 	if (cur_spec_type == 0) {
 		if (cur_spec != minmax(0,255,cur_spec)) {
-			give_error("The scenario called a scenario special node out of range.","",0);
+			giveError("The scenario called a scenario special node out of range.");
 			return dummy_node;
 		}
 		return scenario.scen_specials[cur_spec];
 	}
 	if (cur_spec_type == 1) {
 		if (cur_spec != minmax(0,59,cur_spec)) {
-			give_error("The scenario called an outdoor special node out of range.","",0);
+			giveError("The scenario called an outdoor special node out of range.");
 			return dummy_node;
 		}
 		return univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[cur_spec];
 	}
 	if (cur_spec_type == 2) {
 		if (cur_spec != minmax(0,99,cur_spec)) {
-			give_error("The scenario called a town special node out of range.","",0);
+			giveError("The scenario called a town special node out of range.");
 			return dummy_node;
 		}
 		return univ.town->specials[cur_spec];
@@ -1989,11 +1989,12 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 	return dummy_node;
 }
 
+// TODO: Make cur_spec_type an enum
 void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	bool check_mess = false;
-	Str255 str1 = "",str2 = "";
+	std::string str1,str2;
 	short store_val = 0,i;
 	cSpecial spec;
 	short mess_adj[3] = {160,10,0};
@@ -2015,12 +2016,12 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			break;	
 		case SPEC_DISPLAY_SM_MSG:
-			get_strs((char *) str1,(char *) str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
+			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
 					 cur_node.m2 + mess_adj[cur_spec_type]);
 			if (cur_node.m1 >= 0)
-				ASB((char *) str1);
+				ASB(str1.c_str());
 			if (cur_node.m2 >= 0)
-				ASB((char *) str2);
+				ASB(str2.c_str());
 			break;	
 		case SPEC_FLIP_SDF:
 			setsd(cur_node.sd1,cur_node.sd2,
@@ -2072,26 +2073,26 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_CHANGE_HORSE_OWNER:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Horse out of range.","",0);
+				giveError("Horse out of range.");
 			else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case SPEC_CHANGE_BOAT_OWNER:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,29,spec.ex1a))
-				give_error("Boat out of range.","",0);
+				giveError("Boat out of range.");
 			else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case SPEC_SET_TOWN_VISIBILITY:
 			check_mess = true;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
-				give_error("Town out of range.","",0);
+				giveError("Town out of range.");
 			else univ.party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
 			*redraw = true;
 			break;
 		case SPEC_MAJOR_EVENT_OCCURRED:
 			check_mess = true;
 			if (spec.ex1a != minmax(1,10,spec.ex1a))
-				give_error("Event code out of range.","",0);
+				giveError("Event code out of range.");
 			else if (univ.party.key_times[spec.ex1a] == 30000)
 				univ.party.key_times[spec.ex1a] = calc_day();
 			break;
@@ -2118,12 +2119,12 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_SET_SDF_ROW:
 			if (spec.sd1 != minmax(0,299,spec.sd1))
-				give_error("Stuff Done flag out of range.","",0);
+				giveError("Stuff Done flag out of range.");
 			else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case SPEC_COPY_SDF:
 			if ((sd_legit(spec.sd1,spec.sd2) == false) || (sd_legit(spec.ex1a,spec.ex1b) == false))
-				give_error("Stuff Done flag out of range.","",0);
+				giveError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
 		case SPEC_SANCTIFY:
@@ -2155,7 +2156,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
  {
  bool check_mess = false;
- Str255 str1 = "",str2 = "";
+ char str1[256] = "",str2 = "";
  short store_val = 0,i,j;
  special_node_type spec;
  
@@ -2176,11 +2177,13 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	bool check_mess = true,set_sd = true;
-	Str255 strs[6] = {"","","","","",""};
-	short i,j,buttons[3] = {-1,-1,-1},pic;
+	std::array<std::string, 6> strs;
+	short i,j,pic;
+	std::array<short, 3> buttons = {-1,-1,-1};
 	cSpecial spec;
 	cItemRec store_i;
 	location l;
+	std::string choice;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -2202,7 +2205,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_ONCE_GIVE_SPEC_ITEM:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is out of range.","",0);
+				giveError("Special item is out of range.");
 				set_sd = false;
 			}
 			else {
@@ -2226,27 +2229,26 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (spec.m1 < 0)
 				break;
 			for (i = 0; i < 3; i++)
-				get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 			if (spec.m2 > 0) 
 			{buttons[0] = 1; buttons[1] = spec.ex1a; buttons[2] = spec.ex2a;
 			if ((spec.ex1a >= 0) || (spec.ex2a >= 0)) buttons[0] = 20; }
 			if (spec.m2 <= 0) {buttons[0] = spec.ex1a;buttons[1] = spec.ex2a;}
 			if ((buttons[0] < 0) && (buttons[1] < 0)) {
-				give_error("Dialog box ended up with no buttons.","",0);
+				giveError("Dialog box ended up with no buttons.");
 				break;
 			}
-			// TODO: Specify graphic type rather than adding apparently arbitrary numbers
 			switch (cur_node.type) {
-				case 55:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2400,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic ,buttons) ; break;
-				case 56:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
-				case 57:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic ,buttons) ; break;
+				case SPEC_ONCE_DIALOG:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_DLOG,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic, PIC_DLOG,buttons) ; break;
+				case SPEC_ONCE_DIALOG_TERRAIN:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_TER,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
+				case SPEC_ONCE_DIALOG_MONSTER:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_MONST,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic, get_monst_pictype(spec.pic),buttons) ; break;
 			}
 			if (spec.m2 > 0) {
 				if (i == 1) {
@@ -2269,21 +2271,20 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if (spec.m1 < 0)
 				break;
 			for (i = 0; i < 3; i++)
-				get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1  + spec_str_offset[cur_spec_type]);
 			buttons[0] = 20; buttons[1] = 19;
 			//i = custom_choice_dialog(strs,spec.pic,buttons) ;
-			// TODO: Specify graphic type rather than adding apparently arbitrary numbers
 			switch (cur_node.type) {
-				case 58:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2400,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
-				case 59:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
-				case 60:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,(spec.pic % 1000) + 2000,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,buttons) ; break;
+				case SPEC_ONCE_GIVE_ITEM_DIALOG:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_DLOG,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,PIC_DLOG,buttons) ; break;
+				case SPEC_ONCE_GIVE_ITEM_TERRAIN:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_TER,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
+				case SPEC_ONCE_GIVE_ITEM_MONSTER:
+					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_MONST,buttons) ;
+					else i = custom_choice_dialog(strs,spec.pic,get_monst_pictype(spec.pic),buttons) ; break;
 			}
 			if (i == 1) {set_sd = false; *next_spec = -1;}
 			else {
@@ -2308,7 +2309,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_ONCE_OUT_ENCOUNTER:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
+				giveError("Special outdoor enc. is out of range. Must be 0-3.");
 				set_sd = false;
 			}
 			else {
@@ -2323,14 +2324,16 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_ONCE_TRAP:
 			check_mess = false;
 			if ((spec.m1 >= 0) || (spec.m2 >= 0)) {
-				get_strs((char *) strs[0],(char *) strs[1],
+				get_strs(strs[0],strs[1],
 						 cur_spec_type,
 						 spec.m1 + ((spec.m1 >= 0) ? spec_str_offset[cur_spec_type] : 0),
 						 spec.m2 + ((spec.m2 >= 0) ? spec_str_offset[cur_spec_type] : 0));
 				buttons[0] = 3; buttons[1] = 2;
-				i = custom_choice_dialog(strs,727,buttons);
+				// TODO: Why not allow a choice of dialog picture?
+				i = custom_choice_dialog(strs,27,PIC_DLOG,buttons);
+				// TODO: Make custom_choice_dialog return string?
 			}
-			else i = FCD(872,0); 
+			else i = cChoiceDlog("basic-trap.xml",{"yes","no"}).show() == "no";
 			if (i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
 			else {
 				if (is_combat() == true)
@@ -2511,7 +2514,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_AFFECT_STAT:
 			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
-				give_error("Skill is out of range.","",0);
+				giveError("Skill is out of range.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
@@ -2521,7 +2524,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_AFFECT_MAGE_SPELL:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Mage spell is out of range (0 - 31). See docs.","",0);
+				giveError("Mage spell is out of range (0 - 31). See docs.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
@@ -2530,7 +2533,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_AFFECT_PRIEST_SPELL:
 			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				give_error("Priest spell is out of range (0 - 31). See docs.","",0);
+				giveError("Priest spell is out of range (0 - 31). See docs.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
@@ -2553,7 +2556,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_AFFECT_ALCHEMY:
 			if (spec.ex1a != minmax(0,19,spec.ex1a)) {
-				give_error("Alchemy is out of range.","",0);
+				giveError("Alchemy is out of range.");
 				break;
 			}
 			univ.party.alchemy[spec.ex1a] = true;
@@ -2589,7 +2592,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	bool check_mess = false;
-	Str255 str1 = "",str2 = "",str3 = "";
+	std::string str1, str2, str3;
 	short i,j,k;
 	cSpecial spec;
 	location l;
@@ -2616,7 +2619,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_HAVE_SPECIAL_ITEM:
 			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
-				give_error("Special item is out of range.","",0);		
+				giveError("Special item is out of range.");
 			}
 			else if (univ.party.spec_items[spec.ex1a] > 0)
 				*next_spec = spec.ex1b;
@@ -2626,7 +2629,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				if (PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 			}
-			else give_error("A Stuff Done flag is out of range.","",0);	
+			else giveError("A Stuff Done flag is out of range.");
 			break;
 		case SPEC_IF_TOWN_TER_TYPE:
 			if (((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
@@ -2742,10 +2745,10 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_TEXT_RESPONSE: // text response
 			check_mess = false;
-			get_text_response(873,str3,0);
+			str3 = get_text_response(873,0);
 			j = 1; k = 1;
 			spec.pic = minmax(0,8,spec.pic);
-			get_strs((char *) str1,(char *) str2,0,spec.ex1a,spec.ex2a);
+			get_strs(str1,str2,0,spec.ex1a,spec.ex2a);
 			for (i = 0; i < spec.pic;i++) {
 				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
 					j = 0;
@@ -2772,9 +2775,16 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				   short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
+	static const char*const stairDlogs[8] = {
+		"basic-stair-up.xml", "basic-stair-down.xml",
+		"basic-slope-up.xml", "basic-slope-down.xml",
+		"slimy-stair-up.xml", "slimy-stair-down.xml",
+		"dark-slope-up.xml", "dark-slope-down.xml"
+	};
 	bool check_mess = true;
-	Str255 strs[6] = {"","","","","",""};
-	short i,buttons[3] = {-1,-1,-1},r1;
+	std::array<std::string, 6> strs;
+	short i,r1;
+	std::array<short,3> buttons = {-1,-1,-1};
 	cSpecial spec;
 	location l;
 	ter_num_t ter;
@@ -2796,7 +2806,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = true;
-			draw_map(modeless_dialogs[5],10);
+			draw_map(mini_map,10);
 			break;
 		case SPEC_TOWN_SWAP_TER:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
@@ -2810,7 +2820,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					belt_present = true;
 			}
 			*redraw = 1;
-			draw_map(modeless_dialogs[5],10);
+			draw_map(mini_map,10);
 			break;
 		case SPEC_TOWN_TRANS_TER:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
@@ -2818,7 +2828,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = 1;
-			draw_map(modeless_dialogs[5],10);
+			draw_map(mini_map,10);
 			break;
 		case SPEC_TOWN_MOVE_PARTY:
 			if (is_combat()) {
@@ -2918,7 +2928,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if (FCD(870,0) == 2) {			
+			else if(cChoiceDlog("basic-portal.xml",{"yes","no"}).show() == "yes") {
 				*a = 1;
 				if ((which_mode == 7) || (spec.ex2a == 0))
 					teleport_party(spec.ex1a,spec.ex1b,1);
@@ -2926,7 +2936,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case SPEC_TOWN_GENERIC_BUTTON:
-			if (FCD(871,0) == 2) 		
+			if(cChoiceDlog("basic-button.xml",{"yes","no"}).show() == "yes")
 				*next_spec = spec.ex1b;
 			break;
 		case SPEC_TOWN_GENERIC_STAIR:
@@ -2947,7 +2957,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			else {
 				*a = 1;
 				if (spec.ex2b < 0) spec.ex2b = 0;
-				if ((spec.ex2b >= 8) || (FCD(880 + spec.ex2b,0) == 2))
+				if ((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb"))
 					change_level(spec.ex2a,l.x,l.y);
 			}
 			break;
@@ -2962,10 +2972,11 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				for (i = 0; i < 3; i++)
-					get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 							 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 				buttons[0] = 9; buttons[1] = 35;
-				i = custom_choice_dialog(strs,spec.pic,buttons); 
+				// TODO: Handle custom pictures?
+				i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons);
 				if (i == 1) {*next_spec = -1;}
 				else {
 					ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
@@ -2994,10 +3005,11 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				for (i = 0; i < 3; i++)
-					get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1]
+					get_strs(strs[i * 2],strs[i * 2 + 1]
 							 ,cur_spec_type,spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 				buttons[0] = 9; buttons[1] = 8;
-				i = custom_choice_dialog(strs,722,buttons); 
+				// TODO: Wait, wait, aren't you supposed to be able to pick which picture to show?
+				i = custom_choice_dialog(strs,22,PIC_DLOG,buttons);
 				if (i == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
 				else {
 					*a = 1;
@@ -3028,13 +3040,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			else {
 				if (spec.m1 >= 0) {
 					for (i = 0; i < 3; i++)
-						get_strs((char *) strs[i * 2],(char *) strs[i * 2 + 1],cur_spec_type,
+						get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 								 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 					buttons[0] = 20; buttons[1] = 24;
 				}
 				if (spec.ex2b == 1)
 					i = 2;
-				else i = custom_choice_dialog(strs,719,buttons) ;
+				// TODO: Wait, wait, don't you get to choose the picture to show?
+				else i = custom_choice_dialog(strs,19,PIC_DLOG,buttons) ;
 				*a = 1;
 				if (i == 1) { *next_spec = -1;}
 				else {
@@ -3196,7 +3209,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(modeless_dialogs[5],10);
+						draw_map(mini_map,10);
 					}
 					break;
 				case SPEC_RECT_SWAP_TER:
@@ -3205,14 +3218,14 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[spec.sd2].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(modeless_dialogs[5],10);
+						draw_map(mini_map,10);
 					}
 					else if (coord_to_ter(i,j) == spec.sd2){
 						set_terrain(l,spec.sd1);
 						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(modeless_dialogs[5],10);
+						draw_map(mini_map,10);
 					}
 					break;
 				case SPEC_RECT_TRANS_TER:
@@ -3221,7 +3234,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 						belt_present = true;
 					*redraw = true;
-					draw_map(modeless_dialogs[5],10);
+					draw_map(mini_map,10);
 					break;
 				case SPEC_RECT_LOCK:
 					ter = coord_to_ter(i,j);
@@ -3230,7 +3243,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(modeless_dialogs[5],10);
+						draw_map(mini_map,10);
 					}
 					break;
 				case SPEC_RECT_UNLOCK:
@@ -3240,7 +3253,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(modeless_dialogs[5],10);
+						draw_map(mini_map,10);
 						break;
 					}
 			}
@@ -3253,7 +3266,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
 	bool check_mess = false;
-	Str255 str1 = "",str2 = "";
+	std::string str1, str2;
 	cSpecial spec;
 	location l;
 	
@@ -3278,7 +3291,7 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;		
 		case SPEC_OUT_PLACE_ENCOUNTER:
 			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
-				give_error("Special outdoor enc. is out of range. Must be 0-3.","",0);
+				giveError("Special outdoor enc. is out of range. Must be 0-3.");
 				//set_sd = false;
 			}
 			else {
@@ -3295,18 +3308,18 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			*a = 1;
 			break;		
 		case SPEC_OUT_STORE:
-			get_strs((char *) str1,(char *) str2,1,spec.m1 + 10,-1);
+			get_strs(str1,str2,1,spec.m1 + 10,-1);
 			if (spec.ex2a >= 40)
 				spec.ex2a = 39;
 			if (spec.ex2a < 1)
 				spec.ex2a = 1;
 			spec.ex2b = minmax(0,6,spec.ex2b);
 			switch (spec.ex1b) {
-				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,(char *) str1); break;
-				case 3: start_shop_mode(12,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
-				case 4: start_shop_mode(3,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,(char *) str1); break;
+				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
+				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
+				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,str1.c_str()); break;
+				case 3: start_shop_mode(12,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
+				case 4: start_shop_mode(3,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
 			}
 			*next_spec = -1;
 			break;		
@@ -3320,7 +3333,7 @@ void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 void setsd(short a,short b,short val)
 {
 	if (sd_legit(a,b) == false) {
-		give_error("The scenario attempted to change an out of range Stuff Done flag.","",0);
+		giveError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}
 	PSD[a][b] = val;
@@ -3328,7 +3341,19 @@ void setsd(short a,short b,short val)
 
 void handle_message(short which_mode,short cur_type,short mess1,short mess2,short *a,short *b)
 {
-	Str255 str1 = "",str2 = "";
+	eEncNoteType note_type;
+	switch(cur_type) {
+		case 0:
+			note_type = NOTE_SCEN;
+			break;
+		case 1:
+			note_type = NOTE_OUT;
+			break;
+		case 2:
+			note_type = NOTE_TOWN;
+			break;
+	}
+	std::string str1, str2;
 	short label1 = -1,label2 = -1,label1b = -1,label2b = -1;
 	short mess_adj[3] = {160,10,0};
 	
@@ -3339,51 +3364,56 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 		*b = mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0);
 		return;
 	}
-	get_strs((char *) str1,(char *) str2, cur_type, mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0), 
+	get_strs(str1,str2, cur_type, mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0), 
 			 mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
 	if (mess1 >= 0) {
-		label1 = 1000 * cur_type + mess1 + mess_adj[cur_type];
+		label1 = mess1 + mess_adj[cur_type];
 		label1b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
 		scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
 	}
 	if (mess2 >= 0) {
-		label2 = 1000 * cur_type + mess2 + mess_adj[cur_type];
+		label2 = mess2 + mess_adj[cur_type];
 		label2b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
 		scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
 	}
-	display_strings((char *) str1, (char *) str2,label1,label2, label1b,label2b, 
-					"",57,scenario.intro_pic,PICT_SCEN,0);
+	cStrDlog display_strings(str1.c_str(), str2.c_str(),"",scenario.intro_pic,PIC_SCEN,0);
+	display_strings.setSound(57);
+	display_strings.setRecordHandler(cStringRecorder()
+		.string1(note_type, label1, label1b)
+		.string2(note_type, label2, label2b)
+	);
+	display_strings.show();
 }
 
-void get_strs(char *str1,char *str2,short cur_type,short which_str1,short which_str2) 
+void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str1,short which_str2)
 {
 	short num_strs[3] = {260,108,135};
 	
 	if (((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
 		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
-		give_error("The scenario attempted to access a message out of range.","",0);
+		giveError("The scenario attempted to access a message out of range.");
 		return;
 	}
 	switch (cur_type) {
 		case 0:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,scenario.scen_strs(which_str1));
+				str1 = scenario.scen_strs(which_str1);
 			if (which_str2 >= 0)
-				strcpy((char *) str2,scenario.scen_strs(which_str2));
+				str2 = scenario.scen_strs(which_str2);
 			break;
 			case 1:
 			if (which_str1 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
-				strcpy((char*)str1,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str1));
+				str1 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str1);
 			if (which_str2 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
-				strcpy((char*)str2,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str2));
+				str2 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str2);
 			break;
 			case 2:
 			if (which_str1 >= 0)
-				strcpy((char *) str1,univ.town->spec_strs[which_str1]);
+				str1 = univ.town->spec_strs[which_str1];
 			if (which_str2 >= 0)
-				strcpy((char *) str2,univ.town->spec_strs[which_str2]);
+				str2 = univ.town->spec_strs[which_str2];
 			break;
 	}
 	

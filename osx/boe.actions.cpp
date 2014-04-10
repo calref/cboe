@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cmath>
 
 //#include "item.h"
@@ -29,32 +28,37 @@
 #include "boe.main.h"
 #include "mathutil.h"
 #include "fileio.h"
-#include "dlgutil.h"
-#include "dlgconsts.h"
+#include "dlogutil.h"
+#include "dialog.h"
+#include "scrollbar.h"
+#include "boe.menus.h"
+#include "winutil.h"
 
-Rect bottom_buttons[7];
-Rect town_buttons[10];
-Rect combat_buttons[9];
-Rect world_screen = {23, 23, 346, 274};
-Rect item_screen_button_rects[9] = {{126,11,140,28},{126,40,140,57},{126,69,140,86},{126,98,140,115},
-{126,127,140,144},{126,156,140,173},{126,176,141,211},
-{126,213,125,248},//// made rect disappear
-{127,251,139,267}};
+RECT bottom_buttons[7];
+RECT town_buttons[10];
+RECT combat_buttons[9];
+RECT world_screen = {23, 23, 346, 274};
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT item_screen_button_rects[9] = {RECT{126,11,140,28},RECT{126,40,140,57},RECT{126,69,140,86},RECT{126,98,140,115},
+RECT{126,127,140,144},RECT{126,156,140,173},RECT{126,176,141,211},
+RECT{126,213,125,248},//// made rect disappear
+RECT{127,251,139,267}};
 	
-Rect border_rect[4] = {{5, 5, 15, 283}, {5, 5, 355, 15},
-						{345, 5, 355, 283}, {5, 273, 355, 283}};
-Rect medium_buttons[4] = {{383,190,401,225}, {402, 190, 420, 225},
-							{383, 227, 401, 263}, {402, 227,420, 263}}; ; 
+RECT border_rect[4] = {RECT{5, 5, 15, 283}, RECT{5, 5, 355, 15},
+						RECT{345, 5, 355, 283}, RECT{5, 273, 355, 283}};
+RECT medium_buttons[4] = {RECT{383,190,401,225}, RECT{402, 190, 420, 225},
+							RECT{383, 227, 401, 263}, RECT{402, 227,420, 263}}; ;
 
-Rect item_buttons[8][6];
+RECT item_buttons[8][6];
  // name, use, give, drip, info, sell/id
-Rect pc_buttons[6][5];
+RECT pc_buttons[6][5];
  // name, hp, sp, info, trade
 short num_chirps_played = 0;
 
-extern Rect startup_button[6];
+extern RECT startup_button[6];
+extern bool flushingInput;
 bool ghost_mode;
-Rect startup_top;
+RECT startup_top;
 
 // For menu spell casting, some info needs to be stored up here.
 short refer_mage[62] = {0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1, 
@@ -68,17 +72,18 @@ short priest_need_select[62] = {1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,
 						0,0,0,1,0,1,1,0, 0,1,2,0,0,0,0,0, 0,1,0,2,0,0,0,0, 0,0,2,0,0,0,0,0};
 // 0 - no select  1 - active only  2 - any existing
 
-word_rect_type preset_words[9] = {{"Look",{366,4,386,54}},{"Name",{366,70,386,130}},{"Job",{366,136,386,186}},
-								{"Buy",{389,4,409,54}},{"Sell",{389,70,409,120}},{"Record",{389,121,409,186}},
-								{"Done",{389,210,409,270}},{"Go Back",{366,190,386,270}},
-								{"Ask About...",{343,4,363,134}}};
+// TODO: The duplication of RECT here shouldn't be necessary...
+word_rect_type preset_words[9] = {{"Look",RECT{366,4,386,54}},{"Name",RECT{366,70,386,130}},{"Job",RECT{366,136,386,186}},
+								{"Buy",RECT{389,4,409,54}},{"Sell",RECT{389,70,409,120}},{"Record",RECT{389,121,409,186}},
+								{"Done",RECT{389,210,409,270}},{"Go Back",RECT{366,190,386,270}},
+								{"Ask About...",RECT{343,4,363,134}}};
 cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
 bool unreg_party_in_scen_not_check = false;
 
-Rect pc_help_button,pc_area_rect,item_area_rect;
+RECT pc_help_button,pc_area_rect,item_area_rect;
 
 short current_terrain_type = 0,num_out_moves = 0;
 short door_pc,store_drop_item;
@@ -91,14 +96,14 @@ short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 
 extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
-extern Point	to_create;
+extern location	to_create;
 extern bool in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
 extern bool party_in_memory,in_scen_debug;
 
 // game info globals
 
 //extern stored_town_maps_type town_maps;
-extern WindowPtr	mainPtr;	
+extern sf::RenderWindow mainPtr;
 ////extern party_record_type	party;
 //extern cOutdoors outdoors[2][2];
 //extern current_town_type	c_town;
@@ -123,20 +128,17 @@ extern location pc_pos[6];
 extern short current_pc,town_type;
 extern short combat_active_pc,stat_screen_mode;
 
-extern bool modeless_exists[18],diff_depth_ok;
-extern short modeless_key[18];
-extern DialogPtr modeless_dialogs[18];
+extern bool map_visible,diff_depth_ok;
+extern sf::RenderWindow mini_map;
 
 //extern stored_items_list_type stored_items[3];
 //extern stored_outdoor_maps_type o_maps;
-extern Point ul;
-extern ControlHandle text_sbar,item_sbar,shop_sbar;
+extern location ul;
+extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost;
-extern KeyMap key_state;
-extern bool fry_startup;
 
 
-char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+const char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
 cCreature save_monster_type;
 
@@ -145,15 +147,15 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
-Rect shopping_rects[8][7];
+RECT shopping_rects[8][7];
 pending_special_type special_queue[20];
 bool end_scenario = false;
 
 void init_screen_locs() ////
 {
 	short i,j,k,l;
-	Rect startup_base = {279,5,327,306};
-	Rect shop_base = {63,12,99,267};
+	RECT startup_base = {279,5,327,306};
+	RECT shop_base = {63,12,99,267};
 	
 	for (i = 0; i < 7; i++)
 		shopping_rects[0][i] = shop_base;
@@ -172,13 +174,13 @@ void init_screen_locs() ////
 	for (i = 1; i < 8; i++)
 		for (j = 0; j < 7; j++) {
 			shopping_rects[i][j] = shopping_rects[0][j];
-			OffsetRect(&shopping_rects[i][j],0,i * 36);
+			shopping_rects[i][j].offset(0,i * 36);
 			}
 	
 
 	for (i = 0; i < 6; i++) {
 		startup_button[i] = startup_base;
-		OffsetRect(&startup_button[i],301 * (i / 3)  - 18,48 * (i % 3));
+		startup_button[i].offset(301 * (i / 3)  - 18,48 * (i % 3));
 		}
 	startup_top.top = 5;
 	startup_top.bottom = startup_button[STARTBTN_LOAD].top;
@@ -238,7 +240,7 @@ void init_screen_locs() ////
 	for (i = 1; i < 8; i++) 
 		for (j = 0; j < 6; j++) {  
 		item_buttons[i][j] = item_buttons[0][j];
-		OffsetRect(&item_buttons[i][j],0,13 * i);
+		item_buttons[i][j].offset(0,13 * i);
 		}
 	
 /*	for (i = 0; i < 8; i++) {
@@ -274,7 +276,7 @@ void init_screen_locs() ////
 	for (i = 1; i < 6; i++) 
 		for (j = 0; j < 5; j++) { 
 		pc_buttons[i][j] = pc_buttons[0][j];
-		OffsetRect(&pc_buttons[i][j],0,13 * i);
+		pc_buttons[i][j].offset(0,13 * i);
 		}
 	pc_help_button.top = 101;
 	pc_help_button.bottom = 114;
@@ -298,7 +300,7 @@ bool prime_time()
 	return false;
 }
 
-bool handle_action(EventRecord event)
+bool handle_action(sf::Event event)
 {
 	short i,j,k,item_hit,which_t,s1,s2,s3;
 	bool are_done = false;
@@ -312,14 +314,14 @@ bool handle_action(EventRecord event)
 	ter_num_t ter;
 	
 	char str[60];	
-	Point the_point,point_in_area;
+	location the_point,point_in_area;
 
 	
 	debug_storage = univ.party.spec_items[1];
 	
-	the_point = event.where;
-	the_point.h -= ul.h;
-	the_point.v -= ul.v;
+	the_point = location(event.mouseButton.x, event.mouseButton.y);
+	the_point.x -= ul.x;
+	the_point.y -= ul.y;
 	for (i = 0; i < 20; i++) // TODO: Does this cause problems by leaving some specials uncalled?
 		special_queue[i].spec = -1;
 	end_scenario = false;
@@ -348,12 +350,12 @@ bool handle_action(EventRecord event)
 		
 	num_chirps_played = 0;
 
-// First, figure out where party is
+// MARK: First, figure out where party is
 	switch (overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			cur_loc = univ.party.p_loc;
 			for (i = 0; i < 7; i++)
-				if (PtInRect (the_point, &bottom_buttons[i]) == true) {
+				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
 						main_button_click(overall_mode,bottom_buttons[i]);					
@@ -365,7 +367,7 @@ bool handle_action(EventRecord event)
 //			cur_loc = c_town.p_loc;
 			cur_loc = center;
 			for (i = 0; i < 8; i++)
-				if (PtInRect (the_point, &town_buttons[i]) == true) {
+				if(the_point.in(town_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
 					main_button_click(overall_mode,town_buttons[i]);					
@@ -378,7 +380,7 @@ bool handle_action(EventRecord event)
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
 			cur_loc = (overall_mode > MODE_COMBAT) ? center : pc_pos[current_pc];
 			for (i = 0; i < 9; i++)
-				if (PtInRect (the_point, &combat_buttons[i]) == true) {
+				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
 					main_button_click(overall_mode,combat_buttons[i]);					
@@ -390,7 +392,7 @@ bool handle_action(EventRecord event)
 			break;
 	}
 
-// Then, handle a button being hit.
+// MARK: Then, handle a button being hit.
 	if (button_hit != 12)
 			switch(button_hit)
 			{
@@ -535,7 +537,7 @@ bool handle_action(EventRecord event)
 					
 				case 4:
 					if (overall_mode == MODE_OUTDOORS) {
-						give_help(62,0,0);
+						give_help(62,0);
 						display_map();
 						make_cursor_sword();
 						}
@@ -592,7 +594,7 @@ bool handle_action(EventRecord event)
 						break;
 						}
 					if (overall_mode == MODE_TOWN) {
-						give_help(62,0,0);
+						give_help(62,0);
 						display_map();
 						make_cursor_sword();
 						}
@@ -638,7 +640,7 @@ bool handle_action(EventRecord event)
 								play_sound(93);
 								add_string_to_buf("End combat.               ");
 								handle_wandering_specials(0,1);
-								menu_activate(1);					
+								menu_activate();					
 								put_pc_screen();
 								set_stat_window(current_pc);
 							}
@@ -654,7 +656,7 @@ bool handle_action(EventRecord event)
 							need_reprint = true;
 							need_redraw = true;
 							did_something = true;
-							menu_activate(1);					
+							menu_activate();
 						}				
 						need_redraw = true;
 						}
@@ -683,10 +685,10 @@ bool handle_action(EventRecord event)
 			print_buf();
 			} */
 			
-// Begin : click in terrain
-	if ((PtInRect (the_point, &world_screen)) && ((is_out()) || (is_town()) || (is_combat())) ){		
-		i = (the_point.h - 23) / 28;
-		j = (the_point.v - 23) / 36;
+// MARK: Begin : click in terrain
+	if ((the_point.in(world_screen)) && ((is_out()) || (is_town()) || (is_combat())) ){
+		i = (the_point.x - 23) / 28;
+		j = (the_point.y - 23) / 36;
 
 		destination = cur_loc;
 
@@ -744,7 +746,7 @@ bool handle_action(EventRecord event)
 //			ASB("Error: Flag 1");
 //			}
 
-// Begin: Moving
+// MARK: Begin: Moving
 				if (overall_mode == MODE_COMBAT) {
 					if (pc_combat_move(destination) == true) {
 						center = pc_pos[current_pc];
@@ -752,7 +754,7 @@ bool handle_action(EventRecord event)
 						update_explored(destination);
 						}
 					need_redraw = true;
-					menu_activate(1);
+					menu_activate();
 					}					
 				if (overall_mode == MODE_TOWN) {
 					if (someone_awake() == false) {
@@ -773,12 +775,11 @@ bool handle_action(EventRecord event)
 
 
 								town_move_done = true;
-								FlushEvents(mDownMask,0);				
-								FlushEvents(keyDownMask,0);
-								} 
+								flushingInput = true;
+								}
 							}
 							else need_reprint = true;
-							menu_activate(1);
+							menu_activate();
 							}
 					}										
 				if (overall_mode == MODE_OUTDOORS)  {
@@ -788,7 +789,7 @@ bool handle_action(EventRecord event)
 						did_something = true;
 						update_explored(univ.party.p_loc);
 
-						menu_activate(1);
+						menu_activate();
 					}
 						else need_redraw = true;					
 					
@@ -818,9 +819,9 @@ bool handle_action(EventRecord event)
 					} // End if(overall_mode == MODE_OUTDOORS)
 
 				}	
-// End: Moving
+// MARK: End: Moving
 
-// Begin: Looking at something				
+// MARK: Begin: Looking at something
 		if ((overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
@@ -875,7 +876,7 @@ bool handle_action(EventRecord event)
 //			add_string_to_buf(store_str);
 
 			// If option not pressed, looking done, so restore center
-			if ((event.modifiers & 2048) == 0) {
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) {
 				if (overall_mode == MODE_LOOK_COMBAT) {
 					overall_mode = MODE_COMBAT;
 					center = pc_pos[current_pc];
@@ -893,9 +894,9 @@ bool handle_action(EventRecord event)
 				}
 			}
 				
-// End: looking at something
+// MARK: End: looking at something
 
-// Begin : talking to someone			
+// MARK: Begin : talking to someone			
 			if (overall_mode == MODE_TALK_TOWN) { 
 				destination.x = destination.x + i - 4;
 				destination.y = destination.y + j - 4;
@@ -935,9 +936,9 @@ bool handle_action(EventRecord event)
 				if (overall_mode != MODE_TALKING)
 					need_redraw = true;
 			}			
-// End : talking to someone
+// MARK: End : talking to someone
 
-// Begin : Targeting a space
+// MARK: Begin : Targeting a space
 			if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || 
 			 (overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROP_COMBAT)) {
 				destination.x = destination.x + i - 4;
@@ -992,55 +993,55 @@ bool handle_action(EventRecord event)
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		}
-// End : Targeting a space
+// MARK: End : Targeting a space
 
 		}
-//End: click in terrain		
+// MARK: End: click in terrain
 
-// Begin: Screen shift
+// MARK: Begin: Screen shift
 	if ((overall_mode == MODE_SPELL_TARGET) ||  (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| (overall_mode == MODE_LOOK_COMBAT) || (overall_mode == MODE_LOOK_TOWN)) {
-		if ((PtInRect (the_point, &border_rect[0])) && (center.y > univ.town->in_town_rect.top)
+		if ((the_point.in(border_rect[0])) && (center.y > univ.town->in_town_rect.top)
 		&& (center.y > 4)) {
 			center.y--;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[1])) && (center.x > univ.town->in_town_rect.left)
+		if ((the_point.in(border_rect[1])) && (center.x > univ.town->in_town_rect.left)
 		&& (center.x > 4)) {
 			center.x--;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[2])) && (center.y < univ.town->in_town_rect.bottom)
+		if ((the_point.in(border_rect[2])) && (center.y < univ.town->in_town_rect.bottom)
 		&& (center.y < univ.town->max_dim() - 5)) {
 			center.y++;
 			need_redraw = true;
 			}
-		if ((PtInRect (the_point, &border_rect[3])) && (center.x < univ.town->in_town_rect.right)
+		if ((the_point.in(border_rect[3])) && (center.x < univ.town->in_town_rect.right)
 		&& (center.x < univ.town->max_dim() - 5)) {
 			center.x++;
 			need_redraw = true;
 			}
 		} 
-// End: Screen shift 
+// MARK: End: Screen shift 
 
 
-	// Process clicks in PC stats area
-	if (PtInRect (the_point,&pc_area_rect)) { 
+	// MARK: Process clicks in PC stats area
+	if (the_point.in(pc_area_rect)) {
 		point_in_area = the_point;
-		point_in_area.h -= PC_WIN_UL_X;
-		point_in_area.v -= PC_WIN_UL_Y;
-		if (PtInRect (point_in_area,&pc_help_button)) {
-			OffsetRect(&pc_help_button,PC_WIN_UL_X,PC_WIN_UL_Y);
+		point_in_area.x -= PC_WIN_UL_X;
+		point_in_area.y -= PC_WIN_UL_Y;
+		if (point_in_area.in(pc_help_button)) {
+			pc_help_button.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 			arrow_button_click(pc_help_button);
-			OffsetRect(&pc_help_button,-1 * PC_WIN_UL_X,-1 * PC_WIN_UL_Y);
-			FCD(1082,0);
+			pc_help_button.offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
+			cChoiceDlog("help-party").show();
 			}
 		for (i = 0; i < 6; i++)
 			for (j = 0; j < 5; j++) 
-				if ((pc_area_button_active[i][j] > 0) && (PtInRect (point_in_area,&pc_buttons[i][j]))) {
-					OffsetRect(&pc_buttons[i][j],PC_WIN_UL_X,PC_WIN_UL_Y);
+				if((pc_area_button_active[i][j] > 0) && (point_in_area.in(pc_buttons[i][j]))) {
+					pc_buttons[i][j].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 					arrow_button_click(pc_buttons[i][j]);
-					OffsetRect(&pc_buttons[i][j],-1 * PC_WIN_UL_X,-1 * PC_WIN_UL_Y);
+					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
 					switch (j) {
 						case 0:
 							if ((prime_time() == false) && (overall_mode != MODE_SHOPPING)&& (overall_mode != MODE_TALKING))
@@ -1095,16 +1096,16 @@ bool handle_action(EventRecord event)
 
 
 	// Process clicks in item stats area
-	if (PtInRect (the_point,&item_area_rect)) { 
+	if (the_point.in(item_area_rect)) {
 		point_in_area = the_point;
-		point_in_area.h -= ITEM_WIN_UL_X;
-		point_in_area.v -= ITEM_WIN_UL_Y;
+		point_in_area.x -= ITEM_WIN_UL_X;
+		point_in_area.y -= ITEM_WIN_UL_Y;
 
 		for (i = 0; i < 9; i++)
-			if ((item_bottom_button_active[i] > 0) && (PtInRect (point_in_area,&item_screen_button_rects[i]))) {
-				OffsetRect(&item_screen_button_rects[i],ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+			if ((item_bottom_button_active[i] > 0) && (point_in_area.in(item_screen_button_rects[i]))) {
+				item_screen_button_rects[i].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 				arrow_button_click(item_screen_button_rects[i]);
-				OffsetRect(&item_screen_button_rects[i],-1 * ITEM_WIN_UL_X,-1 * ITEM_WIN_UL_Y);
+				item_screen_button_rects[i].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 				switch (i) {
 					case 0: case 1: case 2: case 3: case 4: case 5:
 						if ((prime_time() == false) && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING))
@@ -1129,23 +1130,23 @@ bool handle_action(EventRecord event)
 								}
 						break;
 					case 6: // special screen
-						give_help(50,0,0);
+						give_help(50,0);
 						set_stat_window(6);
 						break;
 					case 8: // help
-						FCD(1090,0);
+						cChoiceDlog("help-inventory.xml").show();
 						break;
 					}
 				}
 	if (stat_window < 7) {
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 6; j++) 
-				if ((item_area_button_active[i][j] > 0) && (PtInRect (point_in_area,&item_buttons[i][j]))) {
-					OffsetRect(&item_buttons[i][j],ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+				if((item_area_button_active[i][j] > 0) && (point_in_area.in(item_buttons[i][j]))) {
+					item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 					arrow_button_click(item_buttons[i][j]);
-					OffsetRect(&item_buttons[i][j],-1 * ITEM_WIN_UL_X,-1 * ITEM_WIN_UL_Y);
+					item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 
-					item_hit = GetControlValue(item_sbar) + i;
+					item_hit = item_sbar->getPosition() + i;
 					if ((prime_time() == false) && (j < 4)
 						&& ((j > 0) || (stat_screen_mode < 2)))
 						add_string_to_buf("Item action: Finish what you're doing first.");
@@ -1230,8 +1231,8 @@ bool handle_action(EventRecord event)
 	}
 
 
-	// Alchemy
-	if (the_point.h == 1000) {
+	// MARK: Alchemy
+	if (the_point.x == 1000) {
 		need_reprint = true;
 		need_redraw = true;
 		if (overall_mode == MODE_TOWN) {
@@ -1242,8 +1243,8 @@ bool handle_action(EventRecord event)
 
 
 		
-	// Wait 40 spaces (town only)
-	if (the_point.h == 1001) {
+	// MARK: Wait 40 spaces (town only)
+	if (the_point.x == 1001) {
 		need_reprint = true;
 		need_redraw = true;
 
@@ -1284,7 +1285,7 @@ bool handle_action(EventRecord event)
 		put_pc_screen();		
 		}
 
- 	// If in combat and pc delayed, jump forward a step
+ 	// MARK: If in combat and pc delayed, jump forward a step
  	if (pc_delayed == true) {
  		draw_terrain();
 		//pause(2);
@@ -1294,7 +1295,7 @@ bool handle_action(EventRecord event)
 		put_pc_screen();
  		}
  	
- 	// At this point, see if any specials have been queued up, and deal with them
+ 	// MARK: At this point, see if any specials have been queued up, and deal with them
  	for (i = 0; i < 20; i++)
 		if (special_queue[i].spec >= 0) {
 			long long store_time = univ.party.age;
@@ -1309,9 +1310,9 @@ bool handle_action(EventRecord event)
 				draw_terrain();
 			}
 				
-	// Handle non-PC stuff (like monsters) if the party actually did something	
+	// MARK: Handle non-PC stuff (like monsters) if the party actually did something	
 	if (did_something == true) {
-		draw_map(modeless_dialogs[5],5);
+		draw_map(mini_map,5);
 		play_ambient_sound();
 
 		if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
@@ -1364,8 +1365,7 @@ bool handle_action(EventRecord event)
 							univ.party.out_c[i].exists = false;
 							
 							// Get rid of excess keyclicks
-							FlushEvents(mDownMask,0);
-							FlushEvents(keyDownMask,0);				
+							flushingInput = true;
 
 							need_reprint = false; 
 							i = 20;
@@ -1395,11 +1395,11 @@ bool handle_action(EventRecord event)
 		reload_startup();
 		in_startup_mode = true;
 		draw_startup(0);
-		menu_activate(1);
+		menu_activate();
 		univ.party.scen_name = ".exs"; // should be harmless...
-		if (FCD(901,0) == 2){
+		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
 			try{
-				FSSpec file = nav_put_party();
+				fs::path file = nav_put_party();
 				save_party(file);
 			} catch(no_file_chosen){}
 		}
@@ -1427,7 +1427,7 @@ bool handle_action(EventRecord event)
 			}
 			center = univ.town.p_loc;
 		}
-		menu_activate(1);
+		menu_activate();
 		draw_terrain();
 		put_pc_screen();
 		put_item_screen(stat_window,0);
@@ -1454,41 +1454,11 @@ bool someone_awake()
 	return false;
 }
 
-void flash_rect(Rect to_flash)
-{
-	
-	InvertRect (&to_flash);
-	
-	FlushAndPause(5);
-	InvertRect (&to_flash);
-}
-
-void flash_round_rect(Rect to_flash,short radius)
-{
-	
-	InvertRoundRect (&to_flash,radius,radius);
-	if (play_sounds == true)
-		play_sound(37);
-		else FlushAndPause(5);
-	InvertRoundRect (&to_flash,radius,radius);
-
-}
-
-void button_flash_rect(Rect to_flash)
-{
-	InvertRect (&to_flash);
-	if (play_sounds == true)
-		play_sound(34);
-		else FlushAndPause(5);
-	InvertRect (&to_flash);
-
-}
-
 
 void handle_menu_spell(short spell_picked,short spell_type) 
 {
-	Point pass_point;
-	EventRecord event;
+	location pass_point;
+	sf::Event event;
 	
 	spell_forced = true;
 	pc_casting = current_pc;
@@ -1514,10 +1484,10 @@ void handle_menu_spell(short spell_picked,short spell_type)
 		}
 		else {
 			} */
-	pass_point.h = bottom_buttons[spell_type].left + 5;
-	pass_point.v = bottom_buttons[spell_type].top + 5;
-	AddPt(ul,&pass_point);
-	event.where = pass_point;
+	pass_point.x = bottom_buttons[spell_type].left + 5;
+	pass_point.y = bottom_buttons[spell_type].top + 5;
+	event.mouseButton.x = pass_point.x + ul.x;
+	event.mouseButton.y = pass_point.y + ul.y;
 	handle_action(event);
 }
 
@@ -1557,95 +1527,149 @@ void initiate_outdoor_combat(short i)
 	draw_terrain();
 }
 
-bool handle_keystroke(char chr,char chr2,EventRecord event){
+// TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
+char keyToChar(sf::Keyboard::Key key, bool isShift) {
+	using kb = sf::Keyboard;
+	switch(key) {
+		case kb::A: return isShift ? 'A' : 'a';
+		case kb::B: return isShift ? 'B' : 'b';
+		case kb::C: return isShift ? 'C' : 'c';
+		case kb::D: return isShift ? 'D' : 'd';
+		case kb::E: return isShift ? 'E' : 'e';
+		case kb::F: return isShift ? 'F' : 'f';
+		case kb::G: return isShift ? 'G' : 'g';
+		case kb::H: return isShift ? 'H' : 'h';
+		case kb::I: return isShift ? 'I' : 'i';
+		case kb::J: return isShift ? 'J' : 'j';
+		case kb::K: return isShift ? 'K' : 'k';
+		case kb::L: return isShift ? 'L' : 'l';
+		case kb::M: return isShift ? 'M' : 'm';
+		case kb::N: return isShift ? 'N' : 'n';
+		case kb::O: return isShift ? 'O' : 'o';
+		case kb::P: return isShift ? 'P' : 'p';
+		case kb::Q: return isShift ? 'Q' : 'q';
+		case kb::R: return isShift ? 'R' : 'r';
+		case kb::S: return isShift ? 'S' : 's';
+		case kb::T: return isShift ? 'T' : 't';
+		case kb::U: return isShift ? 'U' : 'u';
+		case kb::V: return isShift ? 'V' : 'v';
+		case kb::W: return isShift ? 'W' : 'w';
+		case kb::X: return isShift ? 'X' : 'x';
+		case kb::Y: return isShift ? 'Y' : 'y';
+		case kb::Z: return isShift ? 'Z' : 'z';
+		case kb::Num1: return isShift ? '!' : '1';
+		case kb::Num2: return isShift ? '@' : '2';
+		case kb::Num3: return isShift ? '#' : '3';
+		case kb::Num4: return isShift ? '$' : '4';
+		case kb::Num5: return isShift ? '%' : '5';
+		case kb::Num6: return isShift ? '^' : '6';
+		case kb::Num7: return isShift ? '&' : '7';
+		case kb::Num8: return isShift ? '*' : '8';
+		case kb::Num9: return isShift ? '(' : '9';
+		case kb::Num0: return isShift ? ')' : '0';
+		case kb::Tilde: return isShift ? '~' : '`';
+		case kb::Dash: return isShift ? '_' : '-';
+		case kb::Equal: return isShift ? '+' : '=';
+		case kb::LBracket: return isShift ? '{' : '[';
+		case kb::RBracket: return isShift ? '}' : ']';
+		case kb::SemiColon: return isShift ? ':' : ';';
+		case kb::Quote: return isShift ? '"' : '\'';
+		case kb::Comma: return isShift ? '<' : ',';
+		case kb::Period: return isShift ? '>' : '.';
+		case kb::Slash: return isShift ? '?' : '/';
+		case kb::BackSlash: return isShift ? '|' : '\\';
+		case kb::Tab: return '\t';
+		case kb::Space: return ' ';
+		case kb::Return: return '\n';
+		case kb::BackSpace: return '\b';
+		case kb::Delete: return '\x7f';
+	}
+}
+
+bool handle_keystroke(sf::Event& event){
 	bool are_done = false;
-	Point pass_point;
+	location pass_point; // TODO: This isn't needed
 	short i,j;
 	std::ostringstream sout;
-	char response[255];
+	using kb = sf::Keyboard;
+	using Key = sf::Keyboard::Key;
 	
-	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
-	Point terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
-		{120,185},{150,185},{180,185},
-		{120,155},{150,155},{180,135}};
-	char talk_chars[9] = {'l','n','j','b','s','r','d','g','a'};
-	bool dialog_grabbed_key = false;
+	// TODO: Make sure these are in the right order
+	char keypad[10] = {kb::Numpad7,kb::Numpad8,kb::Numpad9,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad0};
+	// TODO: The duplication of location here shouldn't be necessary...
+	location terrain_click[10] = {location{150,185},location{120,215},location{150,215},location{180,215},
+		location{120,185},location{150,185},location{180,185},
+		location{120,155},location{150,155},location{180,135}};
+	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
+	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 	
-	if (FrontWindow() != mainPtr) {
-		for (i = 0; i < 12; i++)
-			if (modeless_exists[i] == true)
-				if ((FrontWindow() == GetDialogWindow(modeless_dialogs[i])) && ((chr == 13) || (chr2 == 76)|| (chr2 == 53))
-					&& (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-					//GetDialogItem(modeless_dialogs[i], 1, &the_type, &the_handle, &the_rect);
-					//HiliteControl((ControlHandle)the_handle,inButton);
-					//Delay(8,&dummy);
-					//HiliteControl((ControlHandle)the_handle,0);						
-					HideWindow(GetDialogWindow(modeless_dialogs[i])); 
-					modeless_exists[i] = false;				
-					SelectWindow(mainPtr);
-					SetPort(GetWindowPort(mainPtr));
-					dialog_grabbed_key = true;
-				}
-		if (dialog_grabbed_key == true)
-			return false;
+	if(map_visible && isFrontWindow(mini_map) && event.key.code == kb::Escape
+			&& (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
+		mini_map.setVisible(false);
+		map_visible = false;
+		mainPtr.setActive();
+		return false;
 	}
 	
 	if (in_startup_mode == true)
 		return false;
 	
-	ObscureCursor();
-	SetPort(GetWindowPort(mainPtr));
+	mainPtr.setMouseCursorVisible(false);
 	
 	// DEBUG
 	//	sprintf((char *) debug, "%d    ",(short) chr2); 
 	//	add_string_to_buf((char *) debug);
 	//	print_buf();
+	Key chr2 = event.key.code;
+	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	if (overall_mode == MODE_TALKING) {
-		if (chr2 == 53) // escape
-			chr = 'd';
-		if (chr == ' ')
-			chr = 'g';
+		if (chr2 == kb::Escape)
+			chr2 = kb::D;
+		if (chr2 == kb::Space)
+			chr2 = kb::G;
 		for (i = 0; i < 9; i++)
-			if (chr == talk_chars[i]) {
-				pass_point.h = preset_words[i].word_rect.left + 9;
-				pass_point.v = preset_words[i].word_rect.top + 9;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);			
+			if (chr2 == talk_chars[i]) {
+				pass_point.x = preset_words[i].word_rect.left + 9 + ul.x;
+				pass_point.y = preset_words[i].word_rect.top + 9 + ul.y;
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
+				are_done = handle_action(pass_event);
 			}
 	}
 	else if (overall_mode == MODE_SHOPPING) { // shopping keystrokes
-		if (chr2 == 53) { // escape
-			pass_point.h = 222;
-			pass_point.v = 398;
-			AddPt(ul,&pass_point);
-			event.where = pass_point;
-			are_done = handle_action(event);			
+		if (chr2 == kb::Escape) {
+			pass_point.x = 222 + ul.x;
+			pass_point.y = 398 + ul.y;
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			are_done = handle_action(pass_event);
 		}
 		for (i = 0; i < 8; i++)
-			if (chr == 'a' + i) {
-				pass_point.h = shopping_rects[i][1].left + 9;
-				pass_point.v = shopping_rects[i][1].top + 9;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);			
+			if (chr2 == shop_chars[i]) {
+				pass_point.x = shopping_rects[i][1].left + 9 + ul.x;
+				pass_point.y = shopping_rects[i][1].top + 9 + ul.y;
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
+				are_done = handle_action(pass_event);
 			}
 	} else {
 		for (i = 0; i < 10; i++)
 			if (chr2 == keypad[i]) {
 				if (i == 0) {
-					chr = 'z';
+					chr2 = kb::Z;
 				}
 				else {
-					pass_point.h = terrain_click[i].v;
-					pass_point.v = terrain_click[i].h;
-					AddPt(ul,&pass_point);
-					event.where = pass_point;
-					are_done = handle_action(event);
+					pass_point.x = terrain_click[i].x + ul.x;
+					pass_point.y = terrain_click[i].y + ul.y;
+					pass_event.mouseButton.x = pass_point.x;
+					pass_event.mouseButton.y = pass_point.y;
+					are_done = handle_action(pass_event);
 					return are_done;
 				}
 			}
 	}
+	
+	char chr = keyToChar(chr2, event.key.shift);
 	
 	switch(chr)
 	{
@@ -1670,33 +1694,33 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 		case '?':
 			if (overall_mode == MODE_SHOPPING) {
 				univ.party.help_received[26] = 0;
-				give_help(226,27,0);
+				give_help(226,27);
 				break;
 			}
 			if (overall_mode == MODE_TALKING) {
 				univ.party.help_received[5] = 0;
-				give_help(205,6,0);
+				give_help(205,6);
 				break;
 			}
-			if (is_out()) FCD(1079,0);
-			if (is_town()) FCD(1080,0); 
-			if (is_combat()) FCD(1081,0);
+			if (is_out()) cChoiceDlog("help-outdoor.xml").show();
+			if (is_town()) cChoiceDlog("help-town.xml").show();
+			if (is_combat()) cChoiceDlog("help-combat.xml").show();
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point.h = pc_buttons[((short) chr) - 49][0].left + 1 + PC_WIN_UL_X;
-			pass_point.v = pc_buttons[((short) chr) - 49][0].top + PC_WIN_UL_Y;
-			AddPt(ul,&pass_point);
-			event.where = pass_point;
-			are_done = handle_action(event);
+			pass_point.x = pc_buttons[((short) chr) - 49][0].left + 1 + PC_WIN_UL_X + ul.x;
+			pass_point.y = pc_buttons[((short) chr) - 49][0].top + PC_WIN_UL_Y + ul.y;
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			are_done = handle_action(pass_event);
 			break;
 			
 		case '9':
-			pass_point.h = item_screen_button_rects[6].left + ITEM_WIN_UL_X;
-			pass_point.v = item_screen_button_rects[6].top + ITEM_WIN_UL_Y;
-			AddPt(ul,&pass_point);
-			event.where = pass_point;
-			are_done = handle_action(event);
+			pass_point.x = item_screen_button_rects[6].left + ITEM_WIN_UL_X + ul.x;
+			pass_point.y = item_screen_button_rects[6].top + ITEM_WIN_UL_Y + ul.y;
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			are_done = handle_action(pass_event);
 			break;
 			
 		case ' ':
@@ -1704,9 +1728,9 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 				// space clicked doesn't matter
 				num_targets_left = 0;
 				pass_point = terrain_click[5];
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);			
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
+				are_done = handle_action(pass_event);
 			}
 			if (overall_mode == MODE_SPELL_TARGET)
 				spell_cast_hit_return();
@@ -1924,18 +1948,15 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			break;
 			
 		case 'S': // TODO: Create a dedicated dialog for this.
-			if(!in_scen_debug) break;
-			display_strings("Enter Stuff Done Flag Part A (between 1 and 299)","","Which SDFa ?",-1,130,PICT_DLG,0);
-            get_text_response(873,(unsigned char*) response,0);
-            i = atoi(response);
+			if (!in_scen_debug) break;
+			cStrDlog("Enter Stuff Done Flag Part A (between 1 and 299)","","Which SDFa ?",130,PIC_DLOG).show();
+            i = atoi(get_text_response(873,0).c_str());
             if(i > 0 && i < 300){
-				display_strings("Enter Stuff Done Flag Part B (between 0 and 49)","","Which SDFb ?",-1,130,PICT_DLG,0);
-				get_text_response(873,(unsigned char*) response,0);
-				j = atoi(response);
+				cStrDlog("Enter Stuff Done Flag Part B (between 0 and 49)","","Which SDFb ?",130,PIC_DLOG).show();
+				j = atoi(get_text_response(873,0).c_str());
 				if(j >= 0 && j < 50){
-					display_strings("Enter Stuff Done Flag Value (up to 255)","","Which value ?",-1,130,PICT_DLG,0);
-					get_text_response(873,(unsigned char*) response,0);
-					int x = atoi(response);
+					cStrDlog("Enter Stuff Done Flag Value (up to 255)","","Which value ?",130,PIC_DLOG).show();
+					int x = atoi(get_text_response(873,0).c_str());
 					if(x < 256 && x >= 0)
 						PSD[i][j] = x;
 					else if(x == -1){
@@ -1947,12 +1968,12 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			break;
 			
 		case 'T':
+			// TODO: Create a dedicated dialog for this?
 			if(!in_scen_debug) break;
 			short find_direction_from;
 			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
-           	display_strings(sout.str().c_str(),"","Which Town ?",-1,130,PICT_DLG,0);
-            get_text_response(873,(unsigned char*) response,0);
-            i = atoi(response);
+           	cStrDlog(sout.str(),"","Which Town ?",130,PIC_DLOG).show();
+            i = atoi(get_text_response(873,0).c_str());
             if(i >= 0 && i < scenario.num_towns ){
             	if (univ.party.direction == 0) find_direction_from = 2;
 				else if (univ.party.direction == 4) find_direction_from = 0;
@@ -2016,21 +2037,21 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			break;
 		case 'a':
 			if (overall_mode < MODE_TALK_TOWN) {
-				pass_point.h = (overall_mode == MODE_OUTDOORS) ? 170 : 221;
-				pass_point.v = 405;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);
+				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 170 : 221;
+				pass_point.y = 405;
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
+				are_done = handle_action(pass_event);
 			}
 			break;
 			
 		case 'b': case 'u': case 'L':
 			if (overall_mode == MODE_TOWN) {
-				pass_point.h = (chr == 'u') ? 220 : 205;
-				pass_point.v = (chr == 'L') ? 405 : 388;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);
+				pass_point.x = (chr == 'u') ? 220 : 205;
+				pass_point.y = (chr == 'L') ? 405 : 388;
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
+				are_done = handle_action(pass_event);
 			}
 			break;
 			
@@ -2038,11 +2059,11 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 			if ((overall_mode == MODE_COMBAT) ||
 				((overall_mode == MODE_FIRING)  && (chr == 's')) ||
 				((overall_mode == MODE_THROWING)  && (chr == 's')) ) {
-				pass_point.h = (chr == 's') ? 205 : 240;
-				pass_point.v = (chr == 'e') ? 390 : 406;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
-				are_done = handle_action(event);
+				pass_point.x = (chr == 's') ? 205 : 240;
+				pass_point.y = (chr == 'e') ? 390 : 406;
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
+				are_done = handle_action(pass_event);
 			}
 			break;
 			
@@ -2069,9 +2090,11 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 						else return false;
 						break;
 						case 'A':if (overall_mode == MODE_TOWN) {
-							pass_point.h = 1000 + ul.h;
-							event.where = pass_point;
-							are_done = handle_action(event);								
+							// TODO: Uh, what about ul.y?
+							pass_point.x = 1000 + ul.x;
+							pass_event.mouseButton.x = pass_point.x;
+							pass_event.mouseButton.y = pass_point.y;
+							are_done = handle_action(pass_event);
 						}
 						else {
 							add_string_to_buf("Alchemy: In town only.");
@@ -2082,9 +2105,11 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 						case 'w':if (overall_mode == MODE_COMBAT)
 							j = 5;
 						else if (overall_mode == MODE_TOWN) {
-							pass_point.h = 1001 + ul.h;
-							event.where = pass_point;
-							are_done = handle_action(event);								
+							// TODO: Uh, what about ul.y?
+							pass_point.x = 1001 + ul.x;
+							pass_event.mouseButton.x = pass_point.x;
+							pass_event.mouseButton.y = pass_point.y;
+							are_done = handle_action(pass_event);
 						}
 						else {
 							add_string_to_buf("Wait: In town only.");
@@ -2104,10 +2129,10 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 				}
 			}
 			if (j < 50) {
-				pass_point.h = bottom_buttons[j].left + 5;
-				pass_point.v = bottom_buttons[j].top + 5;
-				AddPt(ul,&pass_point);
-				event.where = pass_point;
+				pass_point.x = bottom_buttons[j].left + 5;
+				pass_point.y = bottom_buttons[j].top + 5;
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(event);
 			}
 			break;  
@@ -2116,72 +2141,19 @@ bool handle_keystroke(char chr,char chr2,EventRecord event){
 	return are_done;
 }
 
-
-void menu_activate( short type)
-// type;  // 0 - save off alter off 1 - not all off
-{
-	MenuHandle cur_menu;
-	
-	if (in_startup_mode == true) {
-		cur_menu = GetMenuHandle(600);
-		DisableMenuItem(cur_menu,0);
-		cur_menu = GetMenuHandle(700);
-		DisableMenuItem(cur_menu,0);
-		cur_menu = GetMenuHandle(800);
-		DisableMenuItem(cur_menu,0);
-		cur_menu = GetMenuHandle(900);
-		DisableMenuItem(cur_menu,0);
-		cur_menu = GetMenuHandle(950);
-		DisableMenuItem(cur_menu,0);
-
-
-		cur_menu = GetMenuHandle(550);
-		if (party_in_memory == false) {
-			DisableMenuItem(cur_menu,2);
-			DisableMenuItem(cur_menu,3);
-			}
-			else {
-				DisableMenuItem(cur_menu,2);
-				EnableMenuItem(cur_menu,3);			
-				}
-		DrawMenuBar();
-		return;
-		}
-
-	cur_menu = GetMenuHandle(600);
-	EnableMenuItem(cur_menu,0);
-	cur_menu = GetMenuHandle(700);
-	EnableMenuItem(cur_menu,0);
-	cur_menu = GetMenuHandle(800);
-	EnableMenuItem(cur_menu,0);
-	cur_menu = GetMenuHandle(900);
-	EnableMenuItem(cur_menu,0);
-	cur_menu = GetMenuHandle(950);
-	EnableMenuItem(cur_menu,0);
-
-	cur_menu = GetMenuHandle(550);
-	EnableMenuItem(cur_menu,2);
-	EnableMenuItem(cur_menu,3);
-	DrawMenuBar();
-	
-}
-
 void do_load()
 {
 	try{
-		FSSpec file_to_load = nav_get_party();
+		fs::path file_to_load = nav_get_party();
 		load_party(file_to_load);
 	} catch(no_file_chosen){}
 	if (in_startup_mode == false)
 		post_load();
-	menu_activate(1);
+	menu_activate();
 }
 
 void post_load()
 {
-	
-	//SelectWindow(mainPtr);
-	SetPort(GetWindowPort(mainPtr));
 	current_switch = 6;
 
 	reset_item_max();
@@ -2193,11 +2165,10 @@ void post_load()
 //		}
 //	make_out_trim();
 	
-	ShowControl(text_sbar);
-	Draw1Control(text_sbar);
-	ShowControl(item_sbar);
-	Draw1Control(item_sbar);
-	HideControl(shop_sbar);
+	// TODO: Presumably need to call draw() as well, but maybe not here
+	text_sbar->show();
+	item_sbar->show();
+	shop_sbar->hide();
 	set_stat_window(0);
 	put_pc_screen();
 	draw_terrain();
@@ -2227,7 +2198,6 @@ void do_save(short mode)
 	} catch(no_file_chosen){}
 	
 	pause(6);
-	SetPort(GetWindowPort(mainPtr));
 //	initiate_redraw();
 //	put_pc_screen();
 //	put_item_screen(stat_window,0);
@@ -2301,9 +2271,13 @@ void increase_age()////
 
 
 	// Specials countdowns
-	if ((univ.party.age % 500 == 0) && (get_ran(1,0,5) == 3) && (party_has_abil(52) == true)) {
+	if ((univ.party.age % 500 == 0
+		 ) && (get_ran(1,0,5) == 3) && (party_has_abil(52) == true)) {
 			update_stat = true;
-			display_enc_string(52,39,3);
+		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
+		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
+		display_enc_string.setSound(3);
+		display_enc_string.show();
 			for (i = 0; i < 6; i++)
 				disease_pc(i,2);	
 		}
@@ -2534,16 +2508,16 @@ void switch_pc(short which)
 
 void drop_pc(short which)
 {
-	short choice,i;
+	std::string choice;
 	
-	choice = fancy_choice_dialog(1053,0);
-	if (choice == 1) {
+	choice = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
+	if (choice == "no") {
 		add_string_to_buf("Delete PC: Cancelled.           ");
 		return;
 		}
 	add_string_to_buf("Delete PC: OK.                  ");
 	kill_pc(which,MAIN_STATUS_ABSENT);
-	for (i = which; i < 5; i++)
+	for(short i = which; i < 5; i++)
 		univ.party[i] = univ.party[i + 1];
 	univ.party[5].main_status = MAIN_STATUS_ABSENT;
 	set_stat_window(0);
@@ -2552,25 +2526,25 @@ void drop_pc(short which)
 
 void handle_death()
 {
-	short choice;
+	std::string choice;
 
 	in_startup_mode = true;
 
 	while (in_startup_mode == true) {
 		// Use death (or leave Exile) dialog
 		in_startup_mode = false;
-		choice = FCD(1069,0); //// FCD hates it when it gets called in startup mode
+		choice = cChoiceDlog("party-death.xml",{"load","new","quit"}).show(); //// FCD hates it when it gets called in startup mode
 					// and startup graphiocs aren't loaded.
 		in_startup_mode = true;
 
-		if (choice == 3) {
+		if(choice == "quit") {
 			in_startup_mode = false;
 			All_Done = true;
 			}
-		if (choice == 1) {
+		else if(choice == "load") {
 			in_startup_mode = false;
 			try{
-				FSSpec file_to_load = nav_get_party();
+				fs::path file_to_load = nav_get_party();
 				load_party(file_to_load);
 			} catch(no_file_chosen){}
 			if (party_toast() == false) {
@@ -2580,7 +2554,7 @@ void handle_death()
 				}
 				else in_startup_mode = true;
 			}
-		if (choice == 2) {
+		else if(choice == "new") {
 			start_new_game();
 			}
 		}
@@ -2590,17 +2564,17 @@ void handle_death()
 void start_new_game()
 {
 	short i;
-	short choice;
+	std::string choice;
+	using kb = sf::Keyboard;
 
-	choice = FCD(1065,0);
-	if (choice == 2)
+	choice = cChoiceDlog("new-party.xml",{"okay","cancel"}).show();
+	if(choice == "cancel")
 		return;
 
 	//which = choice - 1;
 	
 //	display_intro();
-	long keys = GetCurrentKeyModifiers();
-	if(keys & 256) init_party(2); // if command key held down, create debug party
+	if(kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem)) init_party(2); // if command key held down, create debug party
 	else init_party(0);
 
 	//while (creation_done == false) {
@@ -2641,7 +2615,7 @@ void start_new_game()
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}
 	try{
-		FSSpec file = nav_put_party();
+		fs::path file = nav_put_party();
 		save_party(file);
 		party_in_memory = true;
 	} catch(no_file_chosen){}
@@ -2649,26 +2623,26 @@ void start_new_game()
 	party_in_memory = true;
 }
 
-location get_cur_direction(Point the_point)
+location get_cur_direction(location the_point)
 {
 	location store_dir;
 
 	// This is a kludgy adjustment to adjust for the screen shifting between Exile I & II
-	the_point.v += 5;
-	the_point.h += 5;
+	the_point.x += 5;
+	the_point.y += 5;
 
-	if ((the_point.h < 135) & (the_point.v >= ((the_point.h * 34) / 10) - 293)
-		& (the_point.v <= (-1 * ((the_point.h * 34) / 10) + 663)))
+	if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
+		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
 		store_dir.x--;
-	if ((the_point.h > 163) & (the_point.v <= ((the_point.h * 34) / 10) - 350)
-		& (the_point.v >= (-1 * ((the_point.h * 34) / 10) + 721)))
+	if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
+		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
 		store_dir.x++;
 		
-	if ((the_point.v < 167) & (the_point.v <= (the_point.h / 2) + 102)
-		& (the_point.v <= (-1 * (the_point.h / 2) + 249)))
+	if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
+		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
 		store_dir.y--;
-	if ((the_point.v > 203) & (the_point.v >= (the_point.h / 2) + 123)
-		& (the_point.v >= (-1 * (the_point.h / 2) + 268)))
+	if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
+		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
 		store_dir.y++;
 					
 	return store_dir;
@@ -2847,7 +2821,7 @@ bool outd_move_party(location destination,bool forced)
 			else if ((outd_is_blocked(real_dest) == false) 
 				&& (scenario.ter_types[ter].boat_over == true)
 				&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE)) {
-				if ((fancy_choice_dialog(1086,0)) == 1)
+				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 					else {
 						add_string_to_buf("You leave the boat.             ");
@@ -2863,7 +2837,7 @@ bool outd_move_party(location destination,bool forced)
 			add_string_to_buf("You land first.                 ");
 			PSD[SDF_PARTY_FLIGHT] = 0;
 			}
-			give_help(61,0,0);
+			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.           ");
 			univ.party.in_boat = boat_num;
 			univ.party.direction = set_direction(univ.party.p_loc, destination); 
@@ -2885,7 +2859,7 @@ bool outd_move_party(location destination,bool forced)
 			return false;
 			}
 			
-			give_help(60,0,0);
+			give_help(60,0);
 			add_string_to_buf("Move: You mount the horses.           ");
 			play_sound(84);
 			univ.party.in_horse = horse_num;
@@ -2998,7 +2972,7 @@ bool town_move_party(location destination,short forced)////
 				return false;	
 			// Crossing bridge: land or go through
 			else if ((!is_blocked(destination)) && (scenario.ter_types[ter].boat_over) && (scenario.ter_types[ter].special == TER_SPEC_BRIDGE)) {
-				if ((fancy_choice_dialog(1086,0)) == 1)
+				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 				else if (is_blocked(destination) == false) {
 					add_string_to_buf("You leave the boat.             ");
@@ -3020,7 +2994,7 @@ bool town_move_party(location destination,short forced)////
 				add_string_to_buf("  Not your boat.             ");
 				return false;			
 				}
-			give_help(61,0,0);
+			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.           ");
 			univ.party.in_boat = boat_there;
 			univ.party.direction = set_direction(univ.town.p_loc, destination); 
@@ -3035,7 +3009,7 @@ bool town_move_party(location destination,short forced)////
 				add_string_to_buf("  Not your horses.             ");
 				return false;			
 				}
-			give_help(60,0,0);
+			give_help(60,0);
 			add_string_to_buf("Move: You mount the horses.           ");
 			play_sound(84);
 			univ.party.in_horse = horse_there;
@@ -3155,14 +3129,12 @@ bool is_sign(ter_num_t ter)
 }
 
 bool check_for_interrupt(){
-	bool interrupt = false;
-	EventRecord evt;
-	if(WaitNextEvent(keyDownMask|autoKeyMask, &evt, 1, NULL)){
-		char c = evt.message & charCodeMask;
-		if((toupper(c) == 'C') && (evt.modifiers & controlKey))
-			interrupt = true;
-		if((c == '.') && (evt.modifiers & cmdKey))
-			interrupt = true;
-	}
-	return interrupt;
+	using kb = sf::Keyboard;
+#ifdef __APPLE__
+	if((kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem)) && kb::isKeyPressed(kb::Period))
+		return true;
+#endif
+	if((kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) && kb::isKeyPressed(kb::C))
+		return true;
+	return false;
 }

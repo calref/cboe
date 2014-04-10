@@ -7,6 +7,7 @@
  */
 
 #include <cmath>
+#include <SFML/System/Time.hpp>
 using std::abs;
 short get_ran (short times,short  min,short  max);
 short s_pow(short x,short y);
@@ -16,3 +17,4 @@ short min(short a,short b);
 short minmax(short min,short max,short k);
 short move_to_zero(short val);
 short gcd(short a, short b);
+sf::Time time_in_ticks(int ticks);

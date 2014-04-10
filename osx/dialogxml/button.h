@@ -9,9 +9,12 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <SFML/Graphics.hpp>
+
 #include <string>
 #include <map>
 #include <vector>
+#include "control.h"
 
 enum eBtnType {	// w x h
 	BTN_SM = 0,	// 23x23 (PICT id 2000 / 2001)
@@ -35,34 +38,34 @@ enum eLedState {led_green = 0, led_red, led_off};
 class cButton : public cControl {
 public:
 	static void init();
-	static void finalize();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
 	//virtual void setPict(short pict, short type) = 0;
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
+	void setColour(sf::Color clr) throw(xUnsupportedProp);
+	sf::Color getColour() throw(xUnsupportedProp);
+	void setBtnType(eBtnType type);
+	eBtnType getBtnType();
 	explicit cButton(cDialog* parent);
 	bool isClickable();
 	void setType(eBtnType newType);
 	eBtnType getType();
 	virtual ~cButton();
-protected:
-	//friend class cDialog;
 	void draw();
+protected:
 	eBtnType type;
 	click_callback_t onClick;
 	cButton(cDialog* parent,eControlType t);
 private:
-	friend class cDialog;
 	bool wrapLabel;
 	bool labelWithKey;
-	bool pressed;
 	std::string fromList;
-	static Rect btnRects[13][2];
+	static RECT btnRects[13][2];
 protected:
 	static size_t btnGW[14];
-	static GWorldPtr buttons[7];
+	static sf::Texture buttons[7];
 };
 
 class cLed : public cButton {
@@ -70,7 +73,7 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw();
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -78,16 +81,13 @@ public:
 	virtual ~cLed();
 	void setState(eLedState to);
 	eLedState getState();
-protected:
 	void draw();
 private:
-	friend class cDialog;
-	friend class cLedGroup;
 	eLedState state;
 	eTextFont textFont;
-	RGBColor color;
+	sf::Color color;
 	short textSize;
-	static Rect ledRects[3][2];
+	static RECT ledRects[3][2];
 	focus_callback_t onFocus;
 };
 
@@ -98,11 +98,13 @@ class cLedGroup : public cControl {
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;
+	std::string clicking;
 public:
 	void attachClickHandler(click_callback_t f) throw(); // activated whenever a click is received, even on the currently active LED
 	void attachFocusHandler(focus_callback_t f) throw(); // activated only when the selection changes
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
+	void addChoice(cLed* ctrl, std::string key);
 	void disable(std::string id);
 	void enable(std::string id);
 	using cControl::show;
@@ -111,8 +113,11 @@ public:
 	void show(std::string id);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
+	void setColour(sf::Color clr) throw(xUnsupportedProp);
+	sf::Color getColour() throw(xUnsupportedProp);
 	explicit cLedGroup(cDialog* parent);
 	bool isClickable();
+	bool handleClick();
 	virtual ~cLedGroup();
 	cLed& operator[](std::string id);
 	void setSelected(std::string id);
@@ -120,8 +125,6 @@ public:
 	std::string getPrevSelection(); // The id of the element that was last selected before the selection changed to the current selection.
 	void recalcRect();
 	typedef std::map<std::string,cLed*>::iterator ledIter;
-protected:
 	void draw();
-	friend class cDialog;
 };
 #endif

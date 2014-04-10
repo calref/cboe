@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='cancel'>
+	<button name='cancel' type='regular' def-key='esc' top='303' left='415'>Cancel</button>
+	<text size='large' top='8' left='53' width='71' height='16'>Alchemy:</text>
+	<text size='large' top='29' left='53' width='32' height='16'>For:</text>
+	<text name='mixer' framed='true' top='29' left='89' width='165' height='16'/>
+	<pict type='dlog' num='20' top='8' left='8'/>
+	<text top='307' left='5' width='259' height='17'>(Difficulty follows in parenthesis.)</text>
+	<text size='large' top='54' left='79' width='22' height='16'>#</text>
+	<text size='large' top='54' left='109' width='75' height='16'>Make:</text>
+	<button name='potion1' type='small' def-key='1' top='73' left='76'>1</button>
+	<text name='label1' framed='true' top='75' left='109' width='160' height='16'/>
+	<button name='potion2' type='small' def-key='2' top='96' left='76'>2</button>
+	<text name='label2' framed='true' top='98' left='109' width='160' height='16'/>
+	<button name='potion3' type='small' def-key='3' top='119' left='76'>3</button>
+	<text name='label3' framed='true' top='121' left='109' width='160' height='16'/>
+	<button name='potion4' type='small' def-key='4' top='142' left='76'>4</button>
+	<text name='label4' framed='true' top='144' left='109' width='160' height='16'/>
+	<button name='potion5' type='small' def-key='5' top='165' left='76'>5</button>
+	<text name='label5' framed='true' top='167' left='109' width='160' height='16'/>
+	<button name='potion6' type='small' def-key='6' top='188' left='76'>6</button>
+	<text name='label6' framed='true' top='190' left='109' width='160' height='16'/>
+	<button name='potion7' type='small' def-key='7' top='211' left='76'>7</button>
+	<text name='label7' framed='true' top='213' left='109' width='160' height='16'/>
+	<button name='potion8' type='small' def-key='8' top='234' left='76'>8</button>
+	<text name='label8' framed='true' top='236' left='109' width='160' height='16'/>
+	<button name='potion9' type='small' def-key='9' top='257' left='76'>9</button>
+	<text name='label9' framed='true' top='259' left='109' width='160' height='16'/>
+	<button name='potion10' type='small' def-key='a' top='280' left='76'>10</button>
+	<text name='label10' framed='true' top='282' left='109' width='160' height='16'/>
+	<button name='potion11' type='small' def-key='b' top='73' left='278'>11</button>
+	<text name='label11' framed='true' top='75' left='311' width='160' height='16'/>
+	<button name='potion12' type='small' def-key='c' top='96' left='278'>12</button>
+	<text name='label12' framed='true' top='98' left='311' width='160' height='16'/>
+	<button name='potion13' type='small' def-key='d' top='119' left='278'>13</button>
+	<text name='label13' framed='true' top='121' left='311' width='160' height='16'/>
+	<button name='potion14' type='small' def-key='e' top='142' left='278'>14</button>
+	<text name='label14' framed='true' top='144' left='311' width='160' height='16'/>
+	<button name='potion15' type='small' def-key='f' top='165' left='278'>15</button>
+	<text name='label15' framed='true' top='167' left='311' width='160' height='16'/>
+	<button name='potion16' type='small' def-key='g' top='188' left='278'>16</button>
+	<text name='label16' framed='true' top='190' left='311' width='160' height='16'/>
+	<!--
+	 TODO: Both 16 and 17 have the key shortcut 'g'; should I change 17 to 'h', or use '0' for 10 and move the rest up one?
+	 -->
+	<button name='potion17' type='small' def-key='g' top='211' left='278'>17</button>
+	<text name='label17' framed='true' top='213' left='311' width='160' height='16'/>
+	<!--
+	 TODO: Should 18, 19, 20 get key shortcuts?
+	 -->
+	<button name='potion18' type='small' top='234' left='278'>18</button>
+	<text name='label18' framed='true' top='236' left='311' width='160' height='16'/>
+	<button name='potion19' type='small' top='257' left='278'>19</button>
+	<text name='label19' framed='true' top='259' left='311' width='160' height='16'/>
+	<button name='potion20' type='small' top='280' left='278'>20</button>
+	<text name='label20' framed='true' top='282' left='311' width='160' height='16'/>
+	<button name='help' type='help' top='8' left='448'/>
+</dialog>

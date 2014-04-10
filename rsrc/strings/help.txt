@@ -1,0 +1,300 @@
+Welcome to Blades of Exile. These windows will pop up occasionally to explain what is going on. If they annoy you, they can be turned off in the Preferences screen (access from Options menu).
+In general, you can get help by clicking on the '?' buttons or typing '?'. For now, you should get equipment, explore this fort, and get your orders. Press the hand buttons (or type 'g') to pick up the nearby items.
+
+
+Everyone responds to 'Look', 'Name', and 'Job' (use the buttons at the bottom). To ask about something people mention, click on the word (click on 'Demon' to ask about demons). Certain people respond to 'Buy' and 'Sell', which puts you in shopping mode. 
+Shortcuts: To get previous response, press the Back button (or hit space). You can press any of the bottom buttons by typing the first letter in the word. Hit Record to write notes in journal, and hit Bye (or type Escape) to stop talking.
+To cast a spell, first click on the number of the person to cast (to the upper left). Then click on the button by the spell to cast (hit Space to see other spells). Finally, if it's a spell cast on a party member, click on the correct Target button.
+Shortcut: Typing the letter after a spell picks the spell, and typing '1'-'6' picks a caster. Option clicking a spell button brings up a spell description. Finally, you can often cast spells faster using the Mage Spells and Priest spells menus.
+This menu always contains all the spells an active PC can cast. Click on the name of a PC to make him/her active. Then select a spell from this menu to cast. Then, if you need to pick someone to cast the spell on, a window will come up for you to do so.
+This is where you improve a character's skills when creating or training him/her. Press the '+' button to buy a skill, and the '-' button to undo the choice. The Cancel button undoes your work, and Keep keeps your choices.
+Option-click the buttons by a skill to get a description of the skill and advice on how much to buy. When training a character, you need both gold and skill points (which you get by killing things and getting experience).
+This menu contains the monsters you have magically obtained information about. To make a monster appear here, cast Scry Monster on it.
+
+
+
+
+
+
+
+Sometimes, outdoors or in stores, you will find ingredients to make alchemical potions, using recipes you buy from sages in town. To make a potion, select an active PC by clicking on his/her name or typing '1'-'6'. Then access this window.
+To make a potion, click the appropriate button. The character needs a high enough alchemy skill and the right ingredient. For a full description of all potions, select Alchemy & Poison from the Library menu.
+Here is where you edit your party before beginning the game. You start with 6 pre-fabricated characters. To replace them with characters of your own, hit the delete button and then click on the 'Hit here to Create' button. 
+Press a PCs name to rename it, the Race button to edit his/her race and advantages/disadvantages, the Graphic button to pick a new graphic, and the Train button to adjust the character's starting skills. When ready to start the game, Press Done.
+You don't have enough gold on you to buy this skill. The cost to buy a level of a skill is the number after the slash in parentheses. Skills you can buy have the numbers given in red.
+You don't have enough skill points on you to buy this skill. The number of skill pts. to buy a level of a skill is the number before the slash in parentheses. To get skill points, kill enough monsters to gain a level.
+Here, you can spend your hard earned cash on miscellaneous goodies. To select a character to do the buying, click on the character's name (or type '1' - '6'). Click on the name of an item or type 'a'-'h' to buy something.
+To get info on an item (if available) click on the little 'I' button to the right of the item's name. Finally, when through shopping, hit Escape or click on the done button.
+One of your characters has just become dumbfounded. This takes your ability to cast spells. You lose higher level spells first, then lower level spells. To remove this, cast Restore Mind or visit a healer. Dumbfounding is permanent until cured.
+One of your characters has just become diseased. This slowly, gradually causes a wide variety of damaging effects. Healers and certain priest spells can cure disease, or it slowly fades over time.
+One of your characters has just magically made to fall asleep. He/she will eventually wake up, or an Awaken or Hyperactivity spell can hasten the process.
+One of your characters has just been covered with webs. This will slow the character down in combat and make his/her fighting much less effective. To clean off the webs, pause repeatedly (click on the PC or type '5' on the keypad).
+One of your characters has just been paralyzed. He/she will not be able to move for quite some time. This can be cured by the spell Cure Paralysis or by going to a healer. This is a pretty nasty effect.
+One of your characters has just been poisoned. This character will take damage every few moves until the poison wears off. Several priest spells cure poison.
+One of your characters has just been blessed. This PC will be better in combat, and he/she will be protected from the attacks of others. The effects of blessing are cumulative: blessing a PC twice is well over twice as affecting as blessing it once.
+One of your characters has just been slowed/hasted. A slowed PC loses one out of every two turns in combat. A hasted PC gets twice the action points in combat. Both effects wear off fairly quickly.
+From here, you can select which nearby items to pick up. Click an item (or type 'a'-'h') to pick it up. To have someone else pick stuff up, click the appropriate button at the bottom (or type '1'-'6').
+If no hostile monsters are near, you can pick up everything nearby. Otherwise, you can only grab adjacent items. Some items are not yours ... taking them may make the townsfolk miffed at you.
+Each character can only carry so many stones worth of stuff, and you are trying to pick up too much. Increasing a character's strength increases the weight you can carry.
+Some spells are cast on another character in your party. You tried to select a spell without also selecting someone to cast it on. Try again, but this time, after picking the spell, use the buttons to the right of the character's names to pick a target.
+Wearing armor with a total encumbrance of more that 1 spoils any mage spell you try to cast in combat. High defense skill sometimes prevents this from happening, but it will only go so far. If any single item has encumb. higher than 2, spells always fail.
+One of your characters just learned a new magical spell. Before you can cast it, however, you need to get enough spell points and a Mage (or Priest) Spells skill as high as the level of the spell.
+This person has looked over your items and maybe offered to buy some of them. Click on the 'Sell' button to sell it, for the amount to the right of the button. Some people only try to buy certain sorts of items.
+Merchants will only buy items that have been identified. If you want to sell something, you may need to find a sage to identify it (such as Habecker in Fort Emergence).
+This character will, for a fee, identify some of your items whose nature is, as yet, unknown to you. Click on the 'ID' button by the item to get it identified.
+This merchant has offered to magically improve one of your weapons. Click on the 'Ench' button by the weapon to pay for this service. You can only augment identified weapons that aren't magic already.
+
+You have just opened a door. To open any door, walk into it. Some walls have secret doors in them. To search a wall for secret doors, walk into it. Many special things are hidden in the dungeons.
+You have just entered combat mode! To start using a weapon, click on that weapon's name. Your characters will now move one at a time ... to attack a bad guy, walk into it. For more information on combat mechanics, type '?'.
+When fighting early in the game, when you're still weak, rely heavily on magical spells (make sure to have a character with Mage Spells skill of 3). Your melee people won't be strong for a while. Hit the 'End' button to leave combat.
+You've just brought up the list of your Special Items. Each has an 'Info' button. Some (such as maps) have a 'Use' button to activate them. Others (such as keys) are used automatically when you can use them (such as when you find the correct door).
+You can now get a regular job. Click the 'Take' button to accept it. Doing the job gets you a reward. Warning - if you don't do the job in time, this person won't give you any new jobs for a while. You can have a maximum of 4 jobs.
+This is the inventory page where you can see what jobs you currently have. You get jobs from people in the major surface cities; they're a good way to earn some easy money.
+You have just made this town angry at you, by stealing something or damaging a friendly person with a weapon or a damaging spell (like Shockwave). If you leave and visit other towns for a while, they'll stop being mad at you.
+You have just reached a special encounter. Many special encounters are marked by white spots. Others are invisible, and activated by stepping on them or by searching the right spot. Special stuff can be hidden in all terrain types.
+At the Preferences window, you can select options to speed up the game, change how the game window is positioned, turn the sound on and off, and make the game easier or harder.
+You are now creating a new character. First you can choose its race and advantages/disadvantages (choose carefully - these cannot be changed later). Then you can assign it skills, a graphic, and a name.
+You've just written what this person just said down in your talking journal. To review it later, select See Talking Notes from the Options menu.
+You've just written what this special encounter says down in your adventure journal. To review it later, select See Encounter Notes from the Options menu.
+One of your characters has just been cursed. That character will function worse in combat, be hit more easily, and take more damage from blows for a while. Curses wear off fairly quickly.
+You have mounted a horse.  A horse doubles your speed when moving outdoors: you'll spend much less time moving from town to town and will have an easier time evading monsters. To dismount, pause (by clicking on your party or hitting '5' on the keypad).
+You have just boarded a boat. Steer the boat onto land to get out. Certain boats can pass over lava. When using a boat outdoors, you can enter towns on the shore by steering the boat into them.
+This command bring up a map of the area you're in. Generally, maps of dungeons and the outdoors will be remembered. However, if a town undergoes some sort of major change, you'll lose your map for that town.
+Your health is a measure of how much punishment you can take before dying - the more the better. Whenever you get hit, you lose some health. Taking damage when your health is down to 0 will kill you.
+Your spell points are what you expend to cast spells. Each spell drains away some of your spell points. Time and rest restore them. When creating a character, you get 3 bonus spell points for every level of Mage and Priest Spells skill you buy.
+Some doors can’t be opened no matter what you try. For example, portcullises can almost never be opened by picking locks or bashing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

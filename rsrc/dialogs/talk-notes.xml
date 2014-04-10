@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<button name='done' type='done' top='285' left='250'/>
+	<pict type='dlog' num='8' top='9' left='9'/>
+	<text name='str1' framed='true' top='82' left='53' width='257' height='92'/>
+	<text size='large' top='9' left='53' width='257' height='19'>Conversation Journal:</text>
+	<text name='str2' framed='true' top='181' left='53' width='257' height='92'/>
+	<text top='36' left='53' width='105' height='16'>Speaking with:</text>
+	<text name='who' framed='true' top='26' left='165' width='146' height='16'/>
+	<text top='59' left='53' width='105' height='16'>Located in:</text>
+	<text name='loc' framed='true' top='59' left='165' width='146' height='16'/>
+	<button name='left' type='left' def-key='left' top='285' left='39'/>
+	<button name='right' type='right' def-key='right' top='285' left='102'/>
+	<!--
+	 TODO: I like the idea of assigning the delete key to this...
+	 -->
+	<button name='del' type='regular' top='285' left='173'>Delete</button>
+</dialog>

@@ -6,6 +6,9 @@
  *
  */
 
+#ifndef SIMPLE_TYPES_H
+#define SIMPLE_TYPES_H
+
 typedef unsigned short m_num_t;
 typedef unsigned short ter_num_t;
 typedef signed short spec_num_t;
@@ -709,3 +712,12 @@ enum eTalkNodeType {
 	TALK_CALL_TOWN_SPEC = 29,
 	TALK_CALL_SCEN_SPEC = 30,
 };
+
+enum eEncNoteType {
+	NOTE_SCEN,
+	NOTE_OUT,
+	NOTE_TOWN,
+	NOTE_MONST,
+};
+
+#endif

@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<button name='done' type='done' top='341' left='319'/>
+	<pict type='dlog' num='8' top='9' left='9'/>
+	<text name='str1' framed='true' top='37' left='121' width='257' height='92'/>
+	<text name='str2' framed='true' top='136' left='121' width='257' height='92'/>
+	<text name='str2' framed='true' top='235' left='121' width='257' height='92'/>
+	<text size='large' top='9' left='53' width='257' height='19'>Journal of your Travels:</text>
+	<button name='left' type='left' def-key='left' top='340' left='48'/>
+	<button name='right' type='right' def-key='right' top='340' left='111'/>
+	<text name='day1' top='37' left='52' width='55' height='15'/>
+	<text name='day2' top='136' left='52' width='55' height='15'/>
+	<text name='day3' top='234' left='52' width='55' height='15'/>
+</dialog>

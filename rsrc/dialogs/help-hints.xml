@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 TODO: This dialog contains out-of-date information
+	 -->
+	<pict type='dlog' num='24' top='6' left='6'/>
+	<text size='large' top='6' left='50' width='131' height='18'>Bugs and Stuff:</text>
+	<text top='69' left='50' width='84' height='13'>Need a Hint?</text>
+	<text top='139' left='50' width='473' height='28'>
+		To order Blades of Exile, click on How To Order on the title screen to get full ordering instructions.
+	</text>
+	<text top='174' left='50' width='480' height='65'>
+		COMMENTS:<br/>
+		We LOVE to hear what you have to say.
+		Comments, questions, complaints, etc. can be sent to the addresses on the About Blades of Exile page.
+		Also, be sure to visit Spiderweb Software's web site:<br/>
+		                        http://www.spidweb.com
+	</text>
+	<text top='26' left='50' width='475' height='41'>
+		Alas, though we tried, we probably didn't get all the bugs and typos out of Blades of Exile.
+		Should you find one, a bug report form is enclosed with the game.
+		Also, an E-mail address for comments is on the About Blades of Exile page.
+	</text>
+	<text top='84' left='50' width='474' height='54'>
+		Can't get into the School of Magery?
+		The Valley plague getting you down?
+		Can't get to the end of the Za-Khazi Run in time?
+		Help is available!
+		When you register, the documentation comes with a hint book
+		for the 3 Blades of Exile scenarios!
+	</text>
+	<button name='okay' type='regular' top='242' left='471' def-key='enter'>OK</button>
+</dialog>

@@ -147,10 +147,10 @@ void cParty::add_pc(cPlayer new_pc){
 		}
 }
 
-bool cParty::has_talk_save(short who, short str1, short str2){
-	for (unsigned int j = 0; j < talk_save.size(); j++)
-		if ((talk_save[j].personality == who) && (talk_save[j].str_num1 == str1) &&	(talk_save[j].str_num2 == str2))
-			return true;
+bool cParty::has_talk_save(short who, short where, short str1, short str2){
+	cConvers match = {who, where, str1, str2};
+	if(std::find(talk_save.begin(), talk_save.end(), match) != talk_save.end())
+		return true;
 	return false;
 }
 
@@ -161,8 +161,11 @@ bool cParty::save_talk(short who, unsigned char where, short str1, short str2){
 	talk.town_num = where;
 	talk.str_num1 = str1;
 	talk.str_num2 = str2;
+	talk.in_scen = scen_name;
 	// TODO: locate the strings and store them in the record.
-	talk_save.push_back(talk);
+	if(std::find(talk_save.begin(), talk_save.end(), talk) == talk_save.end()) {
+		talk_save.push_back(talk);
+	}
 	return true;
 }
 
@@ -171,18 +174,25 @@ bool cParty::add_to_journal(short event, short day){
 	cJournal entry;
 	entry.str_num = event;
 	entry.day = day;
+	entry.in_scen = scen_name;
 	// TODO: locate the strings and store them in the record.
-	journal.push_back(entry);
+	if(std::find(journal.begin(), journal.end(), entry) == journal.end()) {
+		journal.push_back(entry);
+	}
 	return true;
 }
 
-bool cParty::record(short what, short where){
+bool cParty::record(eEncNoteType type, short what, short where){
 	if(special_notes.size() == special_notes.max_size()) return false; // Never happen
 	cEncNote note;
+	note.type = type;
 	note.str_num = what;
 	note.where = where;
+	note.in_scen = scen_name;
 	// TODO: locate the strings and store them in the record.
-	special_notes.push_back(note);
+	if(std::find(special_notes.begin(), special_notes.end(), note) == special_notes.end()) {
+		special_notes.push_back(note);
+	}
 	return true;
 }
 
@@ -554,3 +564,28 @@ short cParty::pc_present(){
 	if(ret == 7) ret = 6;
 	return ret;
 }
+
+bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {
+	if(one.personality != two.personality) return false;
+	if(one.town_num != two.town_num) return false;
+	if(one.str_num1 != two.str_num1) return false;
+	if(one.str_num2 != two.str_num2) return false;
+	if(one.in_scen != two.in_scen) return false;
+	return true;
+}
+
+bool operator==(const cParty::cJournal& one, const cParty::cJournal& two) {
+	if(one.str_num != two.str_num) return false;
+	// TODO: Should I compare the day as well?
+	if(one.in_scen != two.in_scen) return false;
+	return true;
+}
+
+bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two) {
+	if(one.type != two.type) return false;
+	if(one.str_num != two.str_num) return false;
+	if(one.where != two.where) return false;
+	if(one.in_scen != two.in_scen) return false;
+	return true;
+}
+

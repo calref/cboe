@@ -5,7 +5,6 @@
 #include "boe.consts.h"
 
 #define DRAG_EDGE		15
-#define IN_FRONT	(WindowPtr)-1L
 
 #define NUM_TOWN_ITEMS	115
 
@@ -26,8 +25,6 @@
 #define	NUM_BUTTONS		15
 #define ASB	add_string_to_buf
 #define	PSD	univ.party.stuff_done
-#define	DES	display_enc_string
-#define	D2ES display_2_enc_string
 
 #define	NUM_MONST_G	173
 #define	NUM_TER_G	251

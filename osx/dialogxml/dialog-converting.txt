@@ -1,0 +1,99 @@
+
+The old dialogs are represented as DITL resource (technically a DLOG resource, but the DITL contains all the important stuff). All items in the DITL resource are either static text or editable text fields.
+
+The static text entries have magic characters in them to specify their purpose. An empty static text is equivalent to one consisting solely of the character "+".
+
+Actual text entries are anything that doesn't begin with a digit. (The original code actually requires them to begin with [A-z"] or a formatting character.) They may begin with any of the following characters to represent formatting:
+
+	type	flag	meaning
++	3		1		white Geneva bold 10pt framed
+*	3		0		white Geneva bold 10pt
+~	7		0		white Geneva bold 12pt
+!	4		0		white Geneva plain 10pt
+=	9		1		same as 3,1, but text wraps
+	9		0		same as 3,0, but text wraps
+^	10		1 or 2 -- note, this type would never be reached by the original code
+&	11		1 or 2
+
+For ^ or &, flag=2 if string_length > 55. I think string_length is pixel length, not character length. These are buttons, not text, so the upshot is that longer text is automatically put on a larger button.
+
+All other entries are of the form %d_%d, ie two numbers separated by an underscore. The first number is the type, and the second is the flag.
+
+Item types 0, 1, 10, 11 are buttons. I think 10 and 11 are buttons with arbitrary text, while 0 and 1 are predefined buttons. The flag is the button style. There seems to be no difference whatsoever between 0 and 1 or between 10 and 11, but I think the intention was that 1 and 11 function as the "default button", meaning pressing enter selects them. The button styles are:
+0 = small
+1 = regular
+2 = large
+3 = white help button with ? on it
+4 = left arrow
+5 = right arrow
+6 = up arrow
+7 = down arrow
+8 = LED indicator (probably unused?)
+9 = LED on (probably unused?)
+10 = LED off (probably unused?)
+11 = Done
+12 = tall
+13 = Race Good/Bad Traits
+14 = Round red push button (unused?)
+
+If a button has a flag of 143, no button graphic is drawn, but the label is, so this would make clickable text (ie hyperlinks).
+
+Item type 2 is an LED button. The flag specifies its state:
+0 = black (off)
+1 = red
+2 = green
+
+ for. If the flag is 0 it uses button type 10 (BTN_TALL), while if the flag is 1 or 2 it uses button type 9 (BTN_DONE). It looks like flag 1 always uses the pressed state. (Oh, maybe this is an LED?)
+
+Item types 3, 4, 7, 8, and 9 are text. They are formatted as follows:
+3 = Geneva bold 10pt, line height 12
+4 = Geneva plain 10pt, line height 12
+7 = Geneva bold 12pt, line height 14
+8 = Dungeon plain 18pt, line height 12? (only used for one dialog)
+9 = Geneva bold 10pt, line height 12
+(Note, I have substituted Silom for Geneva bold.)
+The flag is interpreted as follows:
+0 = White, no frame
+1 = White, framed
+10 = Red, no frame
+11 = Red, framed
+However, type 8 is never red; it appears to be clickable, and can even have a key equivalent. Also notice that 9 and 3 are in fact identical.
+
+Item type 6 is processed when creating a new window and then never again touched. I think it might be a clickable area.
+
+Item type 5 is a graphic. The flag specifies which graphic to draw, according to the following table:
+-1			solid black
+0 + x		number of terrain graphic
+300 + x		animated terrain graphic (grabs the first frame only)
+400 + x		monster graphic num
+700 + x		dlog graphic (large dlog graphics were done by using four of these arranged in the correct way)
+800 + x		pc graphic
+900 + x		B&W graphic - the PICT resource for this does not exist
+950			null item
+1000 + x	Talking face
+1100		item info help
+1200		pc screen help
+1300		combat ap
+1400-1402	button help
+1410-1412	large scen graphics
+1500		stat symbols help
+1600 + x	scen graphics
+1700 + x	anim graphic -- drawn from fields_gworld, so a boom or barrier icon?
+1800 + x	items
+2000 + x	custom graphics up to 2399
+2400 + x	custom graphics up to 2799, BUT it's a split graphic ...
+   it looks at the size of rect, and places a 32 x 32 or 36 x 36 graphic drawn
+   from the custom gworld, depending on the size of rect. half of graphic is
+   drawn from one custom slot, and half is drawn from next one.
++3000		suppress drawing a frame around the graphic
+
+Item types 12+ are unused.
+
+Dialog ID 1098 has some special stuff done by draw_pc_effects for item_nums 18...23. It looks like this is status effects in the spellcasting window.
+
+Hotkeys can be attached to buttons (types 0, 1, 2) and, for some reason, to type 8.
+
+Label flags for cd_add_label are of the form xyzz, where:
+- x is 0 for Geneva plain, 1 for bold
+- y is 0 for left, 1 for above, 2 for right, 3 for below
+- zz specifies the distance of the label from its control, in multiples of 2 pixels

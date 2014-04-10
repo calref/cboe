@@ -1,0 +1,300 @@
+No ability
+Flaming Weapon
+Demon Slayer
+Undead Slayer
+Lizard Slayer
+Giant Slayer
+Mage Slayer
+Priest Slayer
+Bug Slayer
+Acidic Weapon
+Soulsucker
+Drain Missiles
+Weak Weapon
+Causes Fear
+Poisoned Weapon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Protection
+Full Protection
+Fire Protection
+Cold Protection
+Poison Protection
+Magic Protection
+Acid Protection
+Skill
+Strength
+Dexterity
+Intelligence
+Accuracy
+Thieving
+Giant Strength
+Lighter Object
+Heavier Object
+Occasional Bless
+Occasional Haste
+Life Saving
+Prot. From Petrify
+Regenerate
+Poison Augment
+Disease Party
+Will
+Free Action
+Speed
+Slow Wearer
+Protection from Undead
+Protection from Demons
+Prot. from Humanoids
+Prot. from Reptiles
+Prot. from Giants
+Prot. from Disease
+
+
+
+
+
+
+
+Poison Weapon
+Curse/Bless User
+Cure/Cause Poison
+Speed/Slow User
+Add/Lose Invulnerability
+Add/Lose Magic Res.
+Add/Lose Web
+Cause/Cure Disease
+Add/Lose Sanctuary
+Cure/Cause Dumbfound
+Add/Lose Martyr's Shield
+Cure/Cause Sleep
+Cure/Cause Paralysis
+Cure/Cause Acid
+Bliss
+Add/Lose Experience
+Add/Lose Skill Pts.
+Add/Lose Health
+Add/Lose Spell Points
+Doom
+Light
+Stealth
+Firewalk
+Flying
+Major Healing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Flame
+Fireball
+Firestorm
+Kill
+Ice Bolt
+Slow
+Shockwave
+Dispel Undead
+Dispel Spirit
+Summoning
+Mass Summoning
+Acid Spray
+Stinking Cloud
+Sleep Field
+Venom
+Shockstorm
+Paralysis
+Web Spell
+Strengthen Target
+Quickfire
+Mass Charm
+Magic Map
+Dispel Barrier
+Make Ice Wall
+Charm Spell
+Antimagic Cloud
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Holly/Toadstool
+Comfrey Root
+Glowing Nettle
+Crypt Shroom/Wormgr.
+Asptongue Mold
+Ember Flowers
+Graymold
+Mandrake
+Sapphire
+Smoky Crystal
+Ressurection Balm
+Lockpicks
+
+
+
+
+
+
+
+
+Returning
+Lightning
+Exploding
+Acid
+Slay Undead
+Slay Demon
+Heal Target
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

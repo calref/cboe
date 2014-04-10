@@ -10,6 +10,12 @@
 #define FIELD_H
 
 #include <string>
+#include "control.h"
+
+enum eFldType {
+	FLD_NUM,
+	FLD_TEXT,
+};
 
 class cTextField : public cControl {
 public:
@@ -18,19 +24,24 @@ public:
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	std::string getText();
-	void setText(std::string what);
+	void setColour(sf::Color clr) throw(xUnsupportedProp);
+	eFldType getInputType();
+	void setInputType(eFldType newType);
+	sf::Color getColour() throw(xUnsupportedProp);
 	explicit cTextField(cDialog* parent);
 	bool isClickable();
 	virtual ~cTextField();
-	void show();
-	void hide();
-protected:
 	void draw();
+	bool hasFocus();
+	void handleInput(cKey key);
 private:
-	friend class cDialog;
 	bool isNumericField;
 	focus_callback_t onFocus;
-	ControlRef theField;
+	bool haveFocus;
+	int insertionPoint;
+	int selectionPoint;
+	sf::Color color;
+	bool ip_visible;
+	sf::Clock ip_timer;
 };
 #endif

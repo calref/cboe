@@ -12,6 +12,7 @@
 #include "location.h"
 #include <string>
 #include <iosfwd>
+#include "special.h"
 
 namespace legacy {
 	struct out_wandering_type;

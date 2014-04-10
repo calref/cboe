@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 -->
+	<pict type='dlog' num='24' top='6' left='6'/>
+	<text top='6' left='50' width='235' height='16'>BLADES OF EXILE HELP: MAGIC</text>
+	<text top='23' left='60' width='427' height='32'>
+		There are two sorts of magic spells:
+		mage spells and priest spells.
+		There are 62 spells of each type,
+		each with a level from one to seven.
+	</text>
+	<text top='52' left='60' width='420' height='28'>
+		You can only cast mage (or priest) spells of a level as high as your Mage (or Priest) Spells skill.
+		There are two ways to cast a spell:
+	</text>
+	<text top='277' left='60' width='438' height='54'>
+		Mage spells cannot be cast by someone wearing bulky armor
+		(although armor can be put on after you're through casting spells).
+		<br/>
+		WARNING: Spells cast by a PC with 1, 2 or 3 intelligence will be very weak!
+	</text>
+	<text top='235' left='60' width='438' height='41'>
+		You start automatically knowing most spells up to level 3.
+		Other spells you have to track down.
+		Some are known by sages who can teach them to you (for a price).
+		Others must be found in dungeons and ruins.
+	</text>
+	<text top='193' left='60' width='436' height='41'>
+		When you decide to cast a spell,
+		you will be a given a list of spells with green lights
+		next to the spells you are currently able to cast
+		(and not those that you are, say, too low a level to cast).
+	</text>
+	<text top='332' left='60' width='440' height='54'>
+		Note that spell effects are cumulative.
+		Two poison spells do more than twice the damage of one poison spell.
+		If a fear spell doesn't work, the next one will be more likely to.
+		Casting 3 bless spells on a PC will make him/her a powerhouse.
+	</text>
+	<text top='81' left='77' width='397' height='54'>
+		SPELL MENUS -
+		The Cast Mage and Cast Priest menus are automatically updated to contain the spells the active PC can cast.
+		To have a PC cast a spell, click on that PC's name to the upper right,
+		and select the spell to cast from these menus.
+	</text>
+	<text top='136' left='77' width='398' height='54'>
+		SPELL CASTING WINDOW -
+		Press the mage or priest spell button to the lower left (or type 'm' or 'p').
+		Press the number of the character to cast, the button by the spell,
+		and then the target button by the PC to cast the spell on (if needed).
+	</text>
+	<button name='okay' type='regular' top='391' left='441' def-key='enter'>OK</button>
+</dialog>

@@ -1,6 +1,5 @@
 
 
-#include <Carbon/Carbon.h>
 //#include "item.h"
 
 #include "boe.global.h"
@@ -19,7 +18,7 @@
 #include "boe.townspec.h"
 #include "soundtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 
 extern eGameMode overall_mode;
 //extern party_record_type univ.party;
@@ -31,10 +30,10 @@ extern short current_pc,stat_window;
 extern location pc_pos[6],center;
 //extern town_item_list	t_i;
 //extern big_tr_type t_d;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 extern cScenario scenario;
 extern cUniverse univ;
-Str255 answer;
+char answer[256];
 
 /*bool (which)
 short which;
@@ -61,72 +60,16 @@ short which;
 
 
 
-void activate_monster_enc(short enc_num,short str1,short str2,short strsnd,short *flip_bit)
+void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,short *flip_bit)
 {
 		if (*flip_bit == 0) {
-			display_enc_string(str1,str2,strsnd);
+			cStrDlog display_enc_string(get_str(list,str),"","",8,PIC_DLOG);
+			display_enc_string.setSound(strsnd);
+			display_enc_string.show();
 			activate_monsters(enc_num,1);
 			*flip_bit = 20;
 			}
 }
-
-
-// OTS = One Time Strings
-void OTS(short str1b,short str2b,short str12a,short sound,unsigned char *flip_bit)
-{
-	if (*flip_bit > 0)
-		return;
-		else *flip_bit = 20;
-	if (str2b == 0)
-		D2ES(str12a,str1b,0,0,sound);
-		else D2ES(str12a,str1b,str12a,str2b,sound);
-}
-
-// GFI go for it ... do simple dialog check
-bool GFI(short dialog_num)
-{
-	if (FCD(dialog_num,0) > 1)
-		return true;
-		else return false;
-}
-
-//DSG = Do Special Give
-void DSG(short item_num,unsigned char *flip_bit,short dialog_num,short what_spec,short amt_gold,short amt_food)
-//short special;  // 0 - nah  3** - Set spec item 1000 + * give food  2000 + * give cash
-{
-	short choice;
-	bool did_give;
-	cItemRec item;
-
-	item = get_stored_item(item_num);	
-	if (item_num == 0)
-		item.variety = ITEM_TYPE_NO_ITEM;
-	if (*flip_bit == 0) {
-			choice = fancy_choice_dialog(dialog_num,0);
-			if (choice == 1)
-				return;
-			
-			if (item.variety == 0)
-				did_give = true;
-			else did_give = give_to_party(item,0);
-			if (did_give == true) {
-				univ.party.food += amt_food;
-				univ.party.gold += amt_gold;
-				if (what_spec >= 0) {
-					if (univ.party.spec_items[what_spec] > 0) {
-						ASB("You already have this special item.");
-						return;
-						}
-					univ.party.spec_items[what_spec] += 1;
-					put_item_screen(stat_window,0);
-					}
-				*flip_bit = 20;
-				put_pc_screen();
-				}
-				else choice = fancy_choice_dialog(1049,0);
-		}
-}
-
 
 bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here
@@ -139,7 +82,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 							78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
 	if (pc_num > 7) { // Debug
-		SysBeep(50);
+		// TODO: Play an error sound here
 		ASB("TRAP ERROR! REPORT!");
 		return true;
 		}
@@ -278,7 +221,7 @@ location get_spec_loc(short which)
 // levers should always start to left.
 short handle_lever(location w)
 {
-	if (FCD(1020,0) == 1)
+	if(cChoiceDlog("basic-lever.xml",{"pull", "leave"}).show() == "leave")
 		return 0;
 	play_sound(94);
 	switch_lever(w);

@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstring>
 #include <cstdio>
 
@@ -11,7 +10,6 @@
 #include "boe.graphics.h"
 #include "boe.graphutil.h"
 #include "boe.monster.h"
-#include "dlgtool.h"
 #include "boe.newgraph.h"
 #include "boe.fileio.h"
 #include "boe.itemdata.h"
@@ -19,10 +17,11 @@
 #include "boe.fields.h"
 #include "boe.text.h"
 #include "soundtool.h"
-#include "dlglowlevel.h"
-#include "dlgconsts.h"
 #include "mathutil.h"
 #include "graphtool.h"
+#include "scrollbar.h"
+#include <memory>
+#include "location.h"
 
 short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							10,0,12,11,11,12,13,13,2,11,
@@ -43,19 +42,21 @@ short monsters_faces[190] = {0,1,2,3,4,5,6,7,8,9,
 							0,0,0,0,26,26,0,0,0,50,
 							23,0,0,0,0,0,0,0,23,23,
 							0,0,0,55,23,36,31,0,0,0};
-extern Point ul;
-extern Rect	windRect;
+extern location ul;
+extern RECT	windRect;
 extern long anim_ticks;
-extern Rect	bg[];
-extern WindowPtr mainPtr;
-extern short dungeon_font_num,geneva_font_num,town_type,which_combat_type;
+extern RECT	bg[];
+extern sf::RenderWindow mainPtr;
+extern short town_type,which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active,in_startup_mode;
-extern GWorldPtr fields_gworld,boom_gworld,dlg_buttons_gworld[NUM_BUTTONS][2],terrain_screen_gworld,missiles_gworld,invenbtn_gworld;
+extern sf::Texture fields_gworld,boom_gworld,missiles_gworld,invenbtn_gworld;
+extern sf::Texture tiny_obj_gworld, items_gworld, talkfaces_gworld;
+extern sf::RenderTexture terrain_screen_gworld;
 //extern party_record_type party;
-extern GWorldPtr bg_gworld;
-extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect;
-extern ControlHandle text_sbar,item_sbar,shop_sbar;
+extern sf::Texture bg_gworld;
+extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
+extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern location center;
 extern short pc_marked_damage[6],pc_dir[6];
 extern short monst_marked_damage[60];
@@ -65,28 +66,29 @@ extern location pc_pos[6];
 //extern town_item_list	t_i;
 extern ter_num_t combat_terrain[64][64];
 //extern unsigned char misc_i[64][64],sfx[64][64];
-extern Point store_anim_ul;
+extern location store_anim_ul;
 extern char light_area[13][13];
 extern short terrain_there[9][9];
 extern char unexplored_area[13][13];
-extern PatHandle bw_pats[15];
+extern RECT bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern talking_record_type talking;
 
-RgnHandle oval_region = NULL,dark_mask_region,temp_rect_rgn;
+// TODO: Arbitrary region support
+std::shared_ptr<Region> oval_region,dark_mask_region,temp_rect_rgn;
 
 // Talk vars
 extern word_rect_type store_words[50];
 extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic,current_pc;
-extern GWorldPtr talk_gworld;
+extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
-extern Str255 old_str1,old_str2,one_back1,one_back2;
+extern char old_str1[256],old_str2[256],one_back1[256],one_back2[256];
 extern word_rect_type preset_words[9];
-extern Rect talk_area_rect, word_place_rect,talk_help_rect;
+extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern char title_string[50];
 extern m_num_t store_monst_type;
 //extern hold_responses store_resp[83];
@@ -96,11 +98,11 @@ extern short store_shop_items[30],store_shop_costs[30];
 extern short store_shop_type,store_shop_min,store_shop_max,store_cost_mult;
 extern eGameMode store_pre_shop_mode;
 extern char store_store_name[256];
-extern Rect shopping_rects[8][7];
-extern Rect bottom_help_rects[4];
-extern Rect shop_name_str;
-extern Rect shop_frame ;
-extern Rect shop_done_rect;
+extern RECT shopping_rects[8][7];
+extern RECT bottom_help_rects[4];
+extern RECT shop_name_str;
+extern RECT shop_frame ;
+extern RECT shop_done_rect;
 //extern item_record_type food_types[15];
 extern char *heal_types[];
 extern short heal_costs[8];
@@ -122,7 +124,7 @@ typedef struct {
 store_missile_type store_missiles[30];
 store_boom_type store_booms[30];
 bool have_missile,have_boom;
-Rect explode_place_rect[30];
+RECT explode_place_rect[30];
 
 
 // Animation vars
@@ -145,10 +147,8 @@ char last_light_mask[13][13];
 
 void apply_unseen_mask()
 {
-	Rect base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
-	GrafPtr old_port;
+	RECT base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	short i,j,k,l;
-	ConstPatternParam c;
 	bool need_bother = false;
 	
 	if (PSD[SDF_NO_FRILLS] > 0)
@@ -165,23 +165,15 @@ void apply_unseen_mask()
 				need_bother = true;
 	if (need_bother == false)
 		return;
-				
-	GetPort(&old_port);
-	SetPort(terrain_screen_gworld);
-	//p = *bw_pats[3];
-	//c = p;
-	c = *bw_pats[3];
-	PenPat(c);
-	PenMode(notPatOr);
 	
 	for (i = 0; i < 11; i++)
 		for (j = 0; j < 11; j++) 
 			if (unexplored_area[i + 1][j + 1] == 1) {
 
 					to_rect = base_rect;
-					OffsetRect(&to_rect,-28 + i * 28,-36 + 36 * j);
-					SectRect(&to_rect,&big_to,&to_rect);
-					PaintRect(&to_rect);
+				to_rect.offset(-28 + i * 28,-36 + 36 * j);
+				to_rect |= big_to;
+				tileImage(mainPtr, to_rect, bg_gworld, bw_pats[3], sf::BlendAlpha);
 					//PaintRoundRect(&to_rect,4,4);
 					for (k = i - 2; k < i + 1; k++)
 						for (l = j - 2; l < j + 1; l++)
@@ -189,20 +181,12 @@ void apply_unseen_mask()
 								terrain_there[k][l] = -1;
 
 				}
-	
-	//p = *bw_pats[6];
-	//c = p;
-	c = *bw_pats[6];
-	PenPat(c);
-	PenMode(patCopy);
-	SetPort(old_port);
 }
  
 void apply_light_mask() 
 {
-	GrafPtr old_port;
-	Rect temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
-	Rect big_to = {13,13,337,265};
+	RECT temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
+	RECT big_to = {13,13,337,265};
 	short i,j;
 	bool is_dark = false,same_mask = true;
 	if (PSD[SDF_NO_FRILLS] > 0)
@@ -213,13 +197,11 @@ void apply_light_mask()
 		return;
 	
 	if (oval_region == NULL) {
-		temp_rect_rgn = NewRgn();
-		dark_mask_region = NewRgn();
-		oval_region = NewRgn();
-		OpenRgn();
-		FrameOval(&temp);
-		CloseRgn(oval_region);
-		}
+		temp_rect_rgn.reset(new Region);
+		dark_mask_region.reset(new Region);
+		oval_region.reset(new Region);
+		oval_region->addEllipse(temp);
+	}
 	
 	// Process the light array
 	for (i = 2; i < 11; i++)
@@ -247,9 +229,6 @@ void apply_light_mask()
 				(light_area[i][j - 1] >= 2) && (light_area[i][j + 1] >= 2)) {
 					light_area[i][j] = 3;
 					}
-		
-	GetPort(&old_port);
-	SetPort(terrain_screen_gworld);
 
 	for (i = 2; i < 11; i++)
 		for (j = 2; j < 11; j++) {
@@ -262,31 +241,29 @@ void apply_light_mask()
 				same_mask = false;
 	
 	if (same_mask == true) {
-		PaintRgn(dark_mask_region);
-		SetPort(old_port);
+		fill_region(terrain_screen_gworld, *dark_mask_region, sf::Color::Black);
+		mainPtr.setActive();
 		return;
 		}
-	SetRectRgn(dark_mask_region,big_to.left,big_to.top,big_to.right,big_to.bottom);
+	dark_mask_region->clear();
+	dark_mask_region->addRect(big_to);
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) 
 			last_light_mask[i][j] = light_area[i][j];
 	for (i = 1; i < 12; i++)
 		for (j = 1; j < 12; j++) {
 			if (light_area[i][j] == 2) {
-				
-				OffsetRgn(oval_region,13 + 28 * (i - 3), 13 + 36 * (j - 3));
-				
-				DiffRgn(dark_mask_region,oval_region,dark_mask_region);
-				
-				OffsetRgn(oval_region,-13 + -1 * (28 * (i - 3)),-13 + -1 * (36 * (j - 3)));
-				//PaintRect(&paint_rect);
+				int xOffset = 13 + 28 * (i - 3), yOffset = 13 + 36 * (j - 3);
+				oval_region->offset(xOffset, yOffset);
+				*dark_mask_region -= *oval_region;
+				oval_region->offset(-xOffset, -yOffset);
 				}
 			if (light_area[i][j] == 3) {
 				paint_rect = base_rect;
-				OffsetRect(&paint_rect,13 + 28 * (i - 2),13 + 36 * (j - 2));
-				SetRectRgn(temp_rect_rgn,paint_rect.left,paint_rect.top,
-					paint_rect.right + 28,paint_rect.bottom + 36);
-				DiffRgn(dark_mask_region,temp_rect_rgn,dark_mask_region);
+				paint_rect.offset(13 + 28 * (i - 2),13 + 36 * (j - 2));
+				temp_rect_rgn->clear();
+				temp_rect_rgn->addRect(paint_rect);
+				*dark_mask_region -= *temp_rect_rgn;
 				if (light_area[i + 1][j] == 3) light_area[i + 1][j] = 0;
 				if (light_area[i + 1][j + 1] == 3) light_area[i + 1][j + 1] = 0;
 				if (light_area[i][j + 1] == 3) light_area[i][j + 1] = 0;
@@ -294,8 +271,7 @@ void apply_light_mask()
 			}
 
 	//rect_draw_some_item(light_mask_gworld,big_from,terrain_screen_gworld,big_to,0,0);
-	PaintRgn(dark_mask_region);
-	SetPort(old_port);
+	fill_region(terrain_screen_gworld, *dark_mask_region, sf::Color::Black);
 
 }
 
@@ -412,18 +388,18 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 			}
 }		
 
-void do_missile_anim(short num_steps,location missile_origin,short sound_num) 
+void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 {
-	Rect temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
+	// TODO: Get rid of temp_rect, at least
+	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
 	short i,store_missile_dir;
-	Point start_point,finish_point[30];
+	location start_point,finish_point[30];
 	location screen_ul;
 	
 	short x1[30],x2[30],y1[30],y2[30],t; // for path paramaterization
-	Rect missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
-	Point current_terrain_ul; 
-	GWorldPtr temp_gworld;
-	GrafPtr old_port;
+	RECT missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
+	location current_terrain_ul;
+	sf::RenderTexture temp_gworld;
 	
 	if ((have_missile == false) || (boom_anim_active == false)) {
 		boom_anim_active = false;
@@ -438,61 +414,59 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 
 	// initialize general data
 	if (in_startup_mode) {
-		current_terrain_ul.h = 306;
-		current_terrain_ul.v = 5;
-	} else current_terrain_ul.h = current_terrain_ul.v = 5;
+		current_terrain_ul.x = 306;
+		current_terrain_ul.y = 5;
+	} else current_terrain_ul.x = current_terrain_ul.y = 5;
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	GetPortBounds(terrain_screen_gworld,&to_rect);
-	Rect oldBounds = to_rect;
-	OffsetRect(&to_rect,current_terrain_ul.h, current_terrain_ul.v);
-	rect_draw_some_item(terrain_screen_gworld,oldBounds,to_rect,ul);
-			
-	GetPort(&old_port);	
+	to_rect = RECT(terrain_screen_gworld);
+	RECT oldBounds = to_rect;
+	to_rect.offset(current_terrain_ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,to_rect,ul);
 				
-	// create and clip temporary anim template 
-	GetPortBounds(terrain_screen_gworld,&temp_rect);
-	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NULL, NULL, kNativeEndianPixMap);
-	SetPort(temp_gworld);
+	// create and clip temporary anim template
+	temp_rect = RECT(terrain_screen_gworld);
 	active_area_rect = temp_rect;
-	InsetRect(&active_area_rect,13,13);
-	ClipRect(&active_area_rect);
-	SetPort(GetWindowPort(mainPtr));
+	active_area_rect.inset(13,13);
+	temp_gworld.create(temp_rect.width(), temp_rect.height());
+	temp_gworld.setActive();
+	clip_rect(temp_gworld, active_area_rect);
+	mainPtr.setActive();
 	
 	
 	// init missile paths
 	for (i = 0; i < 30; i++) {
-		SetRect(&store_erase_rect[i],0,0,0,0);
+		store_erase_rect[i] = RECT();
 		if ((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 		}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
-	start_point.h = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
-	start_point.v = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
+	start_point.x = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
+	start_point.y = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
 	for (i = 0; i < 30; i++) 
 		if (store_missiles[i].missile_type >= 0) {
-			finish_point[i].h = 1 + 13 + 14 + store_missiles[i].x_adj + 28 * (short) (store_missiles[i].dest.x - screen_ul.x);
-			finish_point[i].v = 1 + 13 + 18 + store_missiles[i].y_adj + 36 * (short) (store_missiles[i].dest.y - screen_ul.y);
+			finish_point[i].x = 1 + 13 + 14 + store_missiles[i].x_adj + 28 * (short) (store_missiles[i].dest.x - screen_ul.x);
+			finish_point[i].y = 1 + 13 + 18 + store_missiles[i].y_adj + 36 * (short) (store_missiles[i].dest.y - screen_ul.y);
 			// note ... +1 at beginning is put in to prevent infinite slope
 			
 			if (store_missiles[i].missile_type < 7) {
 				store_missile_dir = get_missile_direction(start_point,finish_point[i]);
 				missile_origin_rect[i] = missile_origin_base;
-				OffsetRect(&missile_origin_rect[i],18 * store_missile_dir,18 * store_missiles[i].missile_type);
+				missile_origin_rect[i].offset(18 * store_missile_dir,18 * store_missiles[i].missile_type);
 				}
 				else {
 					missile_origin_rect[i] = missile_origin_base;
-					OffsetRect(&missile_origin_rect[i],0,18 * store_missiles[i].missile_type);
+					missile_origin_rect[i].offset(0,18 * store_missiles[i].missile_type);
 					}
 			
 			// x1 slope x2 start pt
-			x1[i] = finish_point[i].h - start_point.h;
-			x2[i] = start_point.h;
-			y1[i] = finish_point[i].v - start_point.v;
-			y2[i] = start_point.v;
+			x1[i] = finish_point[i].x - start_point.x;
+			x2[i] = start_point.x;
+			y1[i] = finish_point[i].y - start_point.y;
+			y2[i] = start_point.y;
 			}
-			else missile_place_rect[i].top =missile_place_rect[i].left =missile_place_rect[i].bottom =missile_place_rect[i].right = 0;
+			else missile_place_rect[i] = RECT();
 	
 	play_sound(-1 * sound_num);
 	
@@ -503,37 +477,36 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 			if (store_missiles[i].missile_type >= 0) {
 				// Where place?
 				temp_rect = missile_origin_base;
-				OffsetRect(&temp_rect,-8 + x2[i] + (x1[i] * t) / num_steps,
+				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 					-8 + y2[i] + (y1[i] * t) / num_steps);
 				
 				// now adjust for different paths
 				if (store_missiles[i].path_type == 1)
-				OffsetRect(&temp_rect,0,
-					-1 * (t * (num_steps - t)) / 100);
+				temp_rect.offset(0, -1 * (t * (num_steps - t)) / 100);
 				
-				SectRect(&temp_rect,&active_area_rect,&missile_place_rect[i]);
+				missile_place_rect[i] = temp_rect | active_area_rect;
 				
 				// Now put terrain in temporary;
-				rect_draw_some_item(terrain_screen_gworld,missile_place_rect[i],
+				rect_draw_some_item(terrain_screen_gworld.getTexture(),missile_place_rect[i],
 					temp_gworld,missile_place_rect[i]);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
 				if (store_missiles[i].missile_type >= 7) 
-					OffsetRect(&from_rect,18 * (t % 8),0);
+					from_rect.offset(18 * (t % 8),0);
 				rect_draw_some_item(missiles_gworld,from_rect,
-					temp_gworld,temp_rect,transparent);
+					temp_gworld,temp_rect,sf::BlendAlpha);
 				}
 		// Now draw all missiles to screen
 		for (i = 0; i < 30; i++) 
 			if (store_missiles[i].missile_type >= 0) {
 				to_rect = store_erase_rect[i];
-				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(terrain_screen_gworld,store_erase_rect[i],to_rect,ul);
+				to_rect.offset(current_terrain_ul);
+				rect_draw_some_item(terrain_screen_gworld.getTexture(),store_erase_rect[i],to_rect,ul);
 				
 				to_rect = missile_place_rect[i];
 				store_erase_rect[i] = to_rect;
-				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(temp_gworld,missile_place_rect[i],to_rect,ul);
+				to_rect.offset(current_terrain_ul);
+				rect_draw_some_item(temp_gworld.getTexture(),missile_place_rect[i],to_rect,ul);
 				}
 		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
 			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
@@ -543,36 +516,34 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	// Exit gracefully, and clean up screen
 	for (i = 0; i < 30; i++) 
 		store_missiles[i].missile_type = -1;
-	DisposeGWorld(temp_gworld);
-	SetPort(old_port);
 
-	GetPortBounds(terrain_screen_gworld,&to_rect);
-	Rect oldRect = to_rect;
-	OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-	rect_draw_some_item(terrain_screen_gworld,oldRect,to_rect,ul);
+	to_rect = RECT(terrain_screen_gworld);
+	RECT oldRect = to_rect;
+	to_rect.offset(current_terrain_ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 }
 
-short get_missile_direction(Point origin_point,Point the_point)
+short get_missile_direction(location origin_point,location the_point)
 {
 	location store_dir;
 	short dir = 0;
 	// To reuse legacy code, will renormalize the_point, which is missile destination,
 	// so that origin_point is moved to (149,185) and the_point is moved in proportion
-	the_point.h +=  149 - origin_point.h;
-	the_point.v +=  185 - origin_point.v;
+	the_point.x +=  149 - origin_point.x;
+	the_point.y +=  185 - origin_point.y;
 	
-				if ((the_point.h < 135) & (the_point.v >= ((the_point.h * 34) / 10) - 293)
-					& (the_point.v <= (-1 * ((the_point.h * 34) / 10) + 663)))
+				if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
+					& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
 					store_dir.x--;
-				if ((the_point.h > 163) & (the_point.v <= ((the_point.h * 34) / 10) - 350)
-					& (the_point.v >= (-1 * ((the_point.h * 34) / 10) + 721)))
+				if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
+					& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
 					store_dir.x++;
 					
-				if ((the_point.v < 167) & (the_point.v <= (the_point.h / 2) + 102)
-					& (the_point.v <= (-1 * (the_point.h / 2) + 249)))
+				if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
+					& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
 					store_dir.y--;
-				if ((the_point.v > 203) & (the_point.v >= (the_point.h / 2) + 123)
-					& (the_point.v >= (-1 * (the_point.h / 2) + 268)))
+				if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
+					& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
 					store_dir.y++;
 			
 	switch (store_dir.y) {
@@ -590,16 +561,15 @@ void do_explosion_anim(short sound_num,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 {
-	Rect temp_rect,active_area_rect,to_rect,from_rect;
-	Rect base_rect = {0,0,36,28},text_rect;
+	RECT temp_rect,active_area_rect,to_rect,from_rect;
+	RECT base_rect = {0,0,36,28},text_rect;
 	char str[60];
 	short i,temp_val,temp_val2;
 	location screen_ul;
 	
 	short t,cur_boom_type = 0; 
-	Point current_terrain_ul; 
-	GWorldPtr temp_gworld;
-	GrafPtr old_port;
+	location current_terrain_ul; 
+	sf::RenderTexture temp_gworld;
 	short boom_type_sound[3] = {5,10,53};
 	
 	if ((have_boom == false) || (boom_anim_active == false)) {
@@ -615,32 +585,30 @@ void do_explosion_anim(short sound_num,short special_draw)
 
 	// initialize general data
 	if (in_startup_mode) {
-		current_terrain_ul.h = 306;
-		current_terrain_ul.v = 5;
-	} else current_terrain_ul.h = current_terrain_ul.v = 5;
+		current_terrain_ul.x = 306;
+		current_terrain_ul.y = 5;
+	} else current_terrain_ul.x = current_terrain_ul.y = 5;
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if (special_draw != 2) {
-		GetPortBounds(terrain_screen_gworld,&to_rect);
-		Rect oldRect = to_rect;
-		OffsetRect(&to_rect,current_terrain_ul.h, current_terrain_ul.v);
-		rect_draw_some_item(terrain_screen_gworld,oldRect,to_rect,ul);
+		to_rect = RECT(terrain_screen_gworld);
+		RECT oldRect = to_rect;
+		to_rect.offset(current_terrain_ul);
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 		}
-		
-	GetPort(&old_port);	
-				
+	
 	// create and clip temporary anim template 
-	GetPortBounds(terrain_screen_gworld,&temp_rect);
-	NewGWorld(&temp_gworld,  0 /*8*/,&temp_rect, NULL, NULL, kNativeEndianPixMap);
-	SetPort(temp_gworld);
-	TextFont(geneva_font_num);
-	TextFace(bold);
-	TextSize(10);
+	temp_rect = RECT(terrain_screen_gworld);
 	active_area_rect = temp_rect;
-	InsetRect(&active_area_rect,13,13);
-	ClipRect(&active_area_rect);
-	SetPort(GetWindowPort(mainPtr));
+	active_area_rect.inset(13,13);
+	// TODO: Deglobalize this
+	TEXT.font = "Geneva";
+	TEXT.style = sf::Text::Bold;
+	TEXT.pointSize = 10;
+	temp_gworld.setActive();
+	clip_rect(temp_gworld, active_area_rect);
+	mainPtr.setActive();
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -648,26 +616,26 @@ void do_explosion_anim(short sound_num,short special_draw)
 		if ((store_booms[i].boom_type >= 0)  && (special_draw < 2)) {
 			cur_boom_type = store_booms[i].boom_type;
 			explode_place_rect[i] = base_rect;
-			OffsetRect(&explode_place_rect[i],13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
+			explode_place_rect[i].offset(13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 				13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
 				
 			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
 				temp_val = get_ran(1,0,50) - 25;
 				temp_val2 = get_ran(1,0,50) - 25;
-				OffsetRect(&explode_place_rect[i],temp_val,temp_val2);
+				explode_place_rect[i].offset(temp_val,temp_val2);
 				}
 			
 			// eliminate stuff that's too gone. 
-			Rect tempRect2;
-			GetPortBounds(terrain_screen_gworld,&tempRect2);
-			SectRect(&explode_place_rect[i],&tempRect2,&temp_rect);
-			if (EqualRect(&temp_rect,&explode_place_rect[i]) == false) {
+			RECT tempRect2;
+			tempRect2 = RECT(terrain_screen_gworld);
+			temp_rect = explode_place_rect[i] | tempRect2;
+			if (temp_rect == explode_place_rect[i]) {
 				store_booms[i].boom_type = -1;
 				}
 			
 			}
 			else if (special_draw < 2)
-				explode_place_rect[i].top =explode_place_rect[i].left =explode_place_rect[i].bottom =explode_place_rect[i].right = 0;
+				explode_place_rect[i] = RECT();
 	
 	//play_sound(-1 * sound_num);
 	if (special_draw < 2)
@@ -678,7 +646,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		// First, lay terrain in temporary graphic area;
 		for (i = 0; i < 30; i++) 
 			if (store_booms[i].boom_type >= 0) 
-				rect_draw_some_item(terrain_screen_gworld,explode_place_rect[i],
+				rect_draw_some_item(terrain_screen_gworld.getTexture(),explode_place_rect[i],
 					temp_gworld,explode_place_rect[i]);
 
 		// Now put in explosions
@@ -686,9 +654,9 @@ void do_explosion_anim(short sound_num,short special_draw)
 			if (store_booms[i].boom_type >= 0) {
 				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 						from_rect = base_rect;
-						OffsetRect(&from_rect,28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
+						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
 						rect_draw_some_item(boom_gworld,from_rect,
-							temp_gworld,explode_place_rect[i],transparent);
+							temp_gworld,explode_place_rect[i],sf::BlendAlpha);
 					
 					if (store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
@@ -697,11 +665,10 @@ void do_explosion_anim(short sound_num,short special_draw)
 						if (store_booms[i].val_to_place < 10)
 							text_rect.left += 8;
 						sprintf(str,"%d",store_booms[i].val_to_place);
-						SetPort(temp_gworld);
-						ForeColor(whiteColor);
-						char_port_draw_string(temp_gworld,text_rect,str,1,12);
-						ForeColor(blackColor);
-						SetPort(GetWindowPort(mainPtr));
+						TEXT.colour = sf::Color::White;
+						win_draw_string(temp_gworld,text_rect,str,1,12);
+						TEXT.colour = sf::Color::Black;
+						mainPtr.setActive();
 						}
 					}
 				}
@@ -709,8 +676,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 		for (i = 0; i < 30; i++) 
 			if (store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
-				OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-				rect_draw_some_item(temp_gworld,explode_place_rect[i],to_rect,ul);
+				to_rect.offset(current_terrain_ul);
+				rect_draw_some_item(temp_gworld.getTexture(),explode_place_rect[i],to_rect,ul);
 				}
 		//if (((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 			FlushAndPause(2 * (1 + PSD[SDF_GAME_SPEED]));
@@ -720,8 +687,6 @@ void do_explosion_anim(short sound_num,short special_draw)
 	for (i = 0; i < 30; i++) 
 		if (special_draw != 1)
 			store_booms[i].boom_type = -1;
-	DisposeGWorld(temp_gworld);
-	SetPort(old_port);
 
 	//to_rect = terrain_screen_gworld->portRect;
 	//OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
@@ -741,7 +706,7 @@ shop_type:
 11 - priest spells
 12 alchemy
 */
-void click_shop_rect(Rect area_rect)
+void click_shop_rect(RECT area_rect)
 { 
 	
 	draw_shop_graphics(1,area_rect);
@@ -751,75 +716,92 @@ void click_shop_rect(Rect area_rect)
 	draw_shop_graphics(0,area_rect);
 
 }
-void draw_shop_graphics(bool pressed,Rect clip_area_rect)
+
+std::pair<sf::Texture*,RECT> calc_item_rect(int num,RECT& to_rect) {
+	RECT from_rect = {0,0,18,18};
+	sf::Texture *from_gw = &tiny_obj_gworld;
+	if (num < 45) {
+		from_gw = &items_gworld;
+		from_rect = calc_rect(num % 5, num / 5);
+	}else{
+		to_rect.inset(5,9);
+		from_rect.offset(18 * (num % 10), 18 * (num / 10));
+	}
+	return std::make_pair(from_gw, from_rect);
+}
+
+void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
 {
-	Rect area_rect,item_info_from = {11,42,24,56};
+	RECT area_rect,item_info_from = {11,42,24,56};
 	
-	Rect face_rect = {6,6,38,38};
-	Rect title_rect = {15,48,42,260};
-	Rect dest_rect,help_from = {85,36,101,54};
+	RECT face_rect = {6,6,38,38};
+	RECT title_rect = {15,48,42,260};
+	RECT dest_rect,help_from = {85,36,101,54};
 	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
 	
 	short i,what_chosen;
-	RGBColor c[7] = {{0,0,0},{0,0,32767},{0,0,14535},{0,0,26623},{0,0,59391},
-	{0,40959,0},{0,24575,0}};
-	Rect shopper_name = {44,6,56,260};
+	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
+	// The green components on the second line were 40959 and 24575
+	// TODO: The duplication of sf::Color here shouldn't be necessary...
+	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
+		sf::Color{0,160,0},sf::Color{0,96,0}};
+	RECT shopper_name = {44,6,56,260};
 	short current_pos;
 	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[60];
 	char cur_info_str[60];
-char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
+	static const char*const cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
 	"Expensive","Exorbitant","Utterly Ridiculous"};
-	GrafPtr old_port;
 	cItemRec base_item;
 	
 	if (overall_mode != 21) {
 		return;
 		}
 	
-	
-	GetPort(&old_port);
-	SetPort(talk_gworld);
-	TextFont(dungeon_font_num);
-	TextSize(18);
-	TextFace(0);
+	talk_gworld.setActive();
+	TEXT.font = "Dungeon";
+	TEXT.pointSize = 18;
+	TEXT.style = sf::Text::Regular;
 
 	if (pressed) {
-		ClipRect(&clip_area_rect);	
+		talk_gworld.setActive();
+		clip_rect(talk_gworld, clip_area_rect);
 		}
+	
+	area_rect = RECT(talk_gworld);
+	frame_rect(talk_gworld, area_rect, sf::Color::Black);
+	area_rect.inset(1,1);
+	tileImage(talk_gworld, area_rect,bg_gworld,bg[12]);
 
-	GetPortBounds(talk_gworld,&area_rect);
-	FrameRect(&area_rect);
-	InsetRect(&area_rect,1,1);
-	tileImage(area_rect,bg_gworld,bg[12]);
-
-	FrameRect(&shop_frame);
+	frame_rect(talk_gworld, shop_frame, sf::Color::Black);
 	
 	// Place store icon
 	if (!pressed) { 
-		SetPort(GetWindowPort(mainPtr));
+		mainPtr.setActive();
 		i = faces[store_shop_type];
-		draw_dialog_graphic( talk_gworld, face_rect, i, PICT_TALK, false,1);
-		SetPort( talk_gworld);
+		RECT from_rect = {0,0,32,32};
+		from_rect.offset(32 * (i % 10),32 * (i / 10));
+		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
+		talk_gworld.setActive();
 	}
 
 
 	// Place name of store and shopper name
-	RGBForeColor(&c[3]);
+	TEXT.colour = c[3];
 	dest_rect = title_rect;
-	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string(talk_gworld,dest_rect,store_store_name,2,18);
-	OffsetRect(&dest_rect,-1,-1);
-	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,store_store_name,2,18);	
+	dest_rect.offset(1,1);
+	win_draw_string(talk_gworld,dest_rect,store_store_name,2,18);
+	dest_rect.offset(-1,-1);
+	TEXT.colour = c[4];
+	win_draw_string(talk_gworld,dest_rect,store_store_name,2,18);
 
-	TextFont(geneva_font_num);
-	TextSize(12);
-	TextFace(bold);
+	TEXT.font = "Geneva";
+	TEXT.pointSize = 12;;
+	TEXT.style = sf::Text::Bold;
 
-	RGBForeColor(&c[3]);
+	TEXT.colour = c[3];
 	switch (store_shop_type) {
 		case 3: sprintf(cur_name,"Healing for %s.",univ.party[current_pc].name.c_str()); break;
 		case 10: sprintf(cur_name,"Mage Spells for %s.",univ.party[current_pc].name.c_str());break;
@@ -828,41 +810,48 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		case 4: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",univ.party[current_pc].name.c_str()); break;
 		}
-	char_port_draw_string( talk_gworld,shopper_name,cur_name,2,18);	
+	win_draw_string(talk_gworld,shopper_name,cur_name,2,18);
 
 	// Place help and done buttons
-	ForeColor(blackColor);
-	GetPortBounds(dlg_buttons_gworld[3][0],&help_from);
+	TEXT.colour = sf::Color::Black;
+	// TODO: Reimplement these with a cButton
+#if 0
+	help_from = RECT(dlg_buttons_gworld[3][0]); // help
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[3][pressed],help_from,talk_gworld,talk_help_rect);
-	GetPortBounds(dlg_buttons_gworld[11][0],&help_from);
+	help_from = RECT(dlg_buttons_gworld[11][0]); // done
 	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[11][pressed],help_from,talk_gworld,shop_done_rect);
+#endif
 	
 	if (pressed)
-		RGBForeColor(&c[4]);
-	else ForeColor(blackColor);
+		TEXT.colour = c[4];
+	else TEXT.colour = sf::Color::Black;
 		
 	// Place all the items
 	for (i = 0; i < 8; i++) {
-		current_pos = i + GetControlValue(shop_sbar);
+		current_pos = i + shop_sbar->getPosition();
 		if (store_shop_items[current_pos] < 0)
 			break; // theoretically, this shouldn't happen
 		cur_cost = store_shop_costs[current_pos];
 		what_chosen = store_shop_items[current_pos];
+		RECT from_rect, to_rect = shopping_rects[i][2];
+		sf::Texture* from_gw;
 		switch (what_chosen / 100) {
 			case 0: case 1: case 2: case 3: case 4: 
 				base_item = get_stored_item(what_chosen);
 				base_item.ident = true;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],53,PICT_ITEM, false,1);//// all graphic nums
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(53,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				strcpy(cur_info_str,"");
 				break;
@@ -874,20 +863,23 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				break;
 			case 7:
 				what_chosen -= 700;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],99,PICT_ITEM, false,1);
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(99,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,heal_types[what_chosen]);
 				strcpy(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 
 				strcpy(cur_name,base_item.full_name.c_str());
 				strcpy(cur_info_str,"");		
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				strcpy(cur_info_str,"");
 				break;
@@ -896,7 +888,8 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.ident = true;
-				draw_dialog_graphic( talk_gworld, shopping_rects[i][2],base_item.graphic_num,PICT_ITEM, false,1);
+				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
@@ -905,51 +898,51 @@ char *cost_strs[] = {"Extremely Cheap","Very Reasonable","Pretty Average","Somew
 		// Now draw item shopping_rects[i][7]
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
 		// 4 - item cost 5 - item extra str  6 - item help button
-		TextSize(12);
-		char_port_draw_string( talk_gworld,shopping_rects[i][3],cur_name,0,12);
+		TEXT.pointSize = 12;
+		win_draw_string(talk_gworld,shopping_rects[i][3],cur_name,0,12);
 		sprintf(cur_name,"Cost: %d",cur_cost);
-		char_port_draw_string( talk_gworld,shopping_rects[i][4],cur_name,0,12);
-		TextSize(10);
-		char_port_draw_string( talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
+		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,0,12);
+		TEXT.pointSize = 10;
+		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,0,12);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
-			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? srcCopy : transparent);
+			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? sf::BlendNone : sf::BlendAlpha);
 
 		}
 
 	// Finally, cost info and help strs
-	TextSize(12);
+	TEXT.pointSize = 12;
 	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
-	TextSize(10);
-	char_port_draw_string( talk_gworld,bottom_help_rects[0],cur_name,0,12);
-	char_port_draw_string( talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
-	char_port_draw_string( talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
+	TEXT.pointSize = 10;
+	win_draw_string(talk_gworld,bottom_help_rects[0],cur_name,0,12);
+	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,12);
+	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,12);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		char_port_draw_string( talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
+		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,12);
 	
 	
-	ForeColor(blackColor);
-	GetPortBounds(talk_gworld,&area_rect);
-	ClipRect(&area_rect);
-	SetPort(old_port);
+	TEXT.colour = sf::Color::Black;
+	undo_clip(talk_gworld);
 
 	refresh_shopping();
-	ShowControl(shop_sbar);
-	Draw1Control(shop_sbar);
+	shop_sbar->show();
+	shop_sbar->draw();
 }
 
 void refresh_shopping()
 {
-	Rect from_rects[4] = {{0,0,62,279},{62,0,352,253},{62,269,352,279},{352,0,415,279}},to_rect;
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT from_rects[4] = {RECT{0,0,62,279},RECT{62,0,352,253},RECT{62,269,352,279},RECT{352,0,415,279}};
+	RECT to_rect;
 	short i;
 	
 	for (i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
-		OffsetRect(&to_rect,5,5);
-		rect_draw_some_item(talk_gworld,from_rects[i],to_rect,ul);
+		to_rect.offset(5,5);
+		rect_draw_some_item(talk_gworld.getTexture(),from_rects[i],to_rect,ul);
 		}
 }
 
-void click_talk_rect(char *str_to_place,char *str_to_place2,Rect c_rect)
+void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
@@ -971,14 +964,14 @@ cItemRec store_mage_spells(short which_s)
 		5000,3000,3500,4000,4000,4500,7000,5000
 	};
 
-	char str[255];
+	std::string str;
 	
 	if (which_s != minmax(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
-	get_str((unsigned char*)str,38,which_s + 1);
-	spell.full_name = str;
+	str = get_str("magic-names",which_s + 1);
+	spell.full_name = str.c_str();
 	return spell;
 }
 
@@ -992,14 +985,14 @@ cItemRec store_priest_spells(short which_s)
 		500,500,600,800, 1000,900,400,600,
 		2500,2000,4500,4500,3000,3000,2000,2000
 	};
-	char str[255];
+	std::string str;
 
 	if (which_s != minmax(0,31,which_s))
 		which_s = 0;
 	spell.item_level = which_s + 30;
 	spell.value = cost[which_s];
-	get_str((unsigned char*)str,38,which_s + 50);
-	spell.full_name = str;
+	str = get_str("magic-names",which_s + 50);
+	spell.full_name = str.c_str();
 	return spell;
 }
 cItemRec store_alchemy(short which_s)
@@ -1011,14 +1004,14 @@ cItemRec store_alchemy(short which_s)
 		300, 500,600,750,700,
 		1000,10000,5000,7000,12000
 	};
-	char str[255];
+	std::string str;
 	
 	if (which_s != minmax(0,19,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
-	get_str((unsigned char*)str,38,which_s + 100);
-	spell.full_name = str;
+	str = get_str("magic-names",which_s + 100);
+	spell.full_name = str.c_str();
 	return spell; 
 }
 
@@ -1069,93 +1062,100 @@ void get_item_interesting_string(cItemRec item,char *message)
 }
 
 
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_rect)
+void place_talk_str(const char *str_to_place,const char *str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
-	Rect area_rect;
+	RECT area_rect;
 	
-	Rect face_rect = {6,6,38,38};
-	Rect title_rect = {19,48,42,260};
-	Rect dest_rect,help_from = {85,36,101,54};
-	Str255 fn2 = "\pDungeon Bold";
-	Str255 fn3 = "\pPalatino";
+	RECT face_rect = {6,6,38,38};
+	RECT title_rect = {19,48,42,260};
+	RECT dest_rect,help_from = {85,36,101,54};
+	char str[356];
+	sf::Text str_to_draw;
+	static const char fn2[] = "Dungeon Bold";
+	static const char fn3[] = "Palatino";
 
 	short i,j,str_len,line_height = 17;
-	Str255 p_str,str,str_to_draw,str_to_draw2;
+//	Str255 p_str,str,str_to_draw,str_to_draw2;
 	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	bool force_skip = false;
 	short face_to_draw;
 	
-	RGBColor c[7] = {{0,0,0},{0,0,32767},{0,0,14535},{0,0,26623},{0,0,59391},
-	{0,40959,0},{0,24575,0}};
+	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
+	// The green components on the second line were 40959 and 24575
+	// TODO: The duplication of sf::Color here shouldn't be necessary...
+	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
+		sf::Color{0,160,0},sf::Color{0,96,0}};
 	
-	GrafPtr old_port;
-	
-	GetPort(&old_port);
-	SetPort( talk_gworld);
-
-	// This redundancy is to try to keep the font from disappearing
-	GetFNum(fn2,&dungeon_font_num);
-	if (dungeon_font_num == 0)
-		GetFNum(fn3,&dungeon_font_num);
+	talk_gworld.setActive();
 		
-	TextFont(dungeon_font_num);
-	//TextFont(geneva_font_num);
-	TextSize(18);
-	TextFace(0);
+	// TODO: All these TEXT.* things are used by win_draw_string, but this function is largely duplicating the functionality of that, so it won't work. Instead use setters on str_to_draw.
+	TEXT.font = "Dungeon";
+	TEXT.pointSize = 18;
+	TEXT.style = sf::Text::Regular;
 
 	if (c_rect.right > 0) {
-		ClipRect(&c_rect);	
+		mainPtr.setActive();
+		clip_rect(mainPtr, c_rect);
 		}
 
-	GetPortBounds(talk_gworld,&area_rect);
-	FrameRect(&area_rect);
-	InsetRect(&area_rect,1,1);
-	tileImage(area_rect,bg_gworld,bg[12]);
+	area_rect = RECT(talk_gworld);
+	frame_rect(talk_gworld, area_rect, sf::Color::Black);
+	area_rect.inset(1,1);
+	tileImage(talk_gworld, area_rect,bg_gworld,bg[12]);
 
 	// Put help button
-	GetPortBounds(dlg_buttons_gworld[3][0], &help_from);
+	// TODO: Reimplement this with a cButton
+#if 0
+	help_from = RECT(dlg_buttons_gworld[3][0]); // help
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[3][0],help_from,talk_gworld,talk_help_rect);
+#endif
 	
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) { 
 		////
-		SetPort(GetWindowPort(mainPtr));
+		mainPtr.setActive();
 		face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
 		if (store_talk_face_pic >= 0)
 			face_to_draw = store_talk_face_pic;
+#if 0 // Note: The "false" parameter means "no frame"
 		if (store_talk_face_pic >= 1000) {
-			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PICT_CUSTOM + PICT_TALK, false,1);
+			// TODO: Draw custom talk face graphic
+			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
 			}
 			else {
 				i = get_monst_picnum(store_monst_type);
 				if (face_to_draw <= 0)
-					draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), false,1);
-				else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PICT_MONST, false,1);
+					// TODO: draw monster graphic for talk face
+					draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), false);
+					;
+				// TODO: Draw preset talk face graphic
+				else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PIC_MONST, false);
 			}
-		SetPort( talk_gworld);
+#endif
+		talk_gworld.setActive();
 		}
 	// Place name oftalkee
-	RGBForeColor(&c[3]);
+	TEXT.colour = c[3];
 	dest_rect = title_rect;
-	OffsetRect(&dest_rect,1,1);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
-	OffsetRect(&dest_rect,-1,-1);
-	RGBForeColor(&c[4]);
-	char_port_draw_string( talk_gworld,dest_rect,title_string,2,18);
+	dest_rect.offset(1,1);
+	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
+	dest_rect.offset(-1,-1);
+	TEXT.colour = c[4];
+	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
 		
 	// Place buttons at bottom.
 	if (color == 0)
-		RGBForeColor(&c[5]);
-		else RGBForeColor(&c[6]);
+		TEXT.colour = c[5];
+		else TEXT.colour = c[6];
 	for (i = 0; i < 9; i++) 
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
-			OffsetRect(&preset_words[i].word_rect,0,8);
-			char_port_draw_string( talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
-			OffsetRect(&preset_words[i].word_rect,0,-8);
+			preset_words[i].word_rect.offset(0,8);
+			win_draw_string(talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,18);
+			preset_words[i].word_rect.offset(0,-8);
 			}
 	// Place bulk of what said. Save words.
 	//TextSize(14);
@@ -1166,22 +1166,25 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	str_len = (short) strlen((char *)str_to_place);
 	if (str_len == 0) {
 		sprintf((char *) str_to_place,".");
-		}	
-	strcpy((char *) str,str_to_place);
-	strcpy((char *) p_str,str_to_place);
-	c2pstr((char*)p_str);	
-	for (i = 0; i < 257; i++)
+		}
+	strcpy((char *) str,(char *) str_to_place);
+	for (i = 0; i < 257; i++) {
 		text_len[i]= 0;
-	MeasureText(256,p_str,text_len);
+		char c = str[i];
+		str[i] = 0;
+		str_to_draw.setString(str);
+		text_len[i] = str_to_draw.getLocalBounds().width;
+		str[i] = c;
+	}
 
 	dest_rect = word_place_rect;
 
 	current_rect = 0;
 	
 	if (color == 0)
-		RGBForeColor(&c[2]);
-		else RGBForeColor(&c[1]);
-	MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
+		TEXT.colour = c[2];
+	else TEXT.colour = c[1];
+	location moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
@@ -1233,13 +1236,15 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
-			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-			DrawString(str_to_draw2);
+			int end = last_word_break - last_line_break;
+			char c = str[end];
+			str[end] = 0;
+			str_to_draw.setString(str + last_line_break);
+			str_to_draw.setPosition(moveTo);
+			mainPtr.draw(str_to_draw);
+			str[end] = c;
 			on_what_line++;
-			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
+			moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
 			if (force_skip == true) {
 				force_skip = false;
@@ -1248,8 +1253,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 				last_word_break++;
 				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-				//SysBeep(2);
-	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);				
+				// TODO: Should we play an error sound here?
+	 			store_words[current_rect - 1].word_rect.offset(5 - store_words[current_rect - 1].word_rect.left,line_height);
 				}
 		}
 		if (str[i] == ' ') { // New word
@@ -1265,15 +1270,18 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	
 	if (str_len > 0) {
 		
-	strcpy((char *) str,str_to_place2);
-	strcpy((char *) p_str,str_to_place2);
-	c2pstr((char*)p_str);	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	MeasureText(256,p_str,text_len);
+		strcpy((char *) str,str_to_place2);
+		for (i = 0; i < 257; i++) {
+			text_len[i]= 0;
+			char c = str[i];
+			str[i] = 0;
+			str_to_draw.setString(str);
+			text_len[i] = str_to_draw.getLocalBounds().width;
+			str[i] = c;
+		}
 	
 	last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
-	MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
+	moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) 
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
@@ -1323,13 +1331,15 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 	 		store_last_word_break = last_word_break;
 	 		if (i == str_len - 1)
 	 			last_word_break = i + 2;
-			sprintf((char *)str_to_draw,"                                                         ");
-			strncpy ((char *) str_to_draw,(char *) str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
-			sprintf((char *)str_to_draw2," %s",str_to_draw);
-			str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-			DrawString(str_to_draw2);
+			int end = last_word_break - last_line_break;
+			char c = str[end];
+			str[end] = 0;
+			str_to_draw.setString(str + last_line_break);
+			str_to_draw.setPosition(moveTo);
+			mainPtr.draw(str_to_draw);
+			str[end] = c;
 			on_what_line++;
-			MoveTo(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
+			moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
 			if (force_skip == true) {
 				force_skip = false;
@@ -1338,7 +1348,7 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 				last_word_break++;
 				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-	 			OffsetRect(&store_words[current_rect - 1].word_rect,5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);				
+	 			store_words[current_rect - 1].word_rect.offset(5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
 				}
 		}
 		if (str[i] == ' ') { // New word
@@ -1349,15 +1359,13 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 		}
 	}
 	
-	ForeColor(blackColor);
-	GetPortBounds(talk_gworld,&area_rect);
-	Rect oldRect = area_rect;
-	ClipRect(&area_rect);
+	TEXT.colour = sf::Color::Black;
+	RECT oldRect(talk_gworld);
+	undo_clip(talk_gworld);
 	
 	// Finally place processed graphics
-	SetPort(GetWindowPort(mainPtr));
-	rect_draw_some_item(talk_gworld,oldRect,talk_area_rect,ul);
-	SetPort(old_port);
+	mainPtr.setActive();
+	rect_draw_some_item(talk_gworld.getTexture(),oldRect,talk_area_rect,ul);
 	
 	// Clean up strings
 	for (i = 0; i < 50; i++)
@@ -1369,9 +1377,8 @@ void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_re
 
 void refresh_talking()
 {
-	Rect tempRect;
-	GetPortBounds(talk_gworld,&tempRect);
-	rect_draw_some_item(talk_gworld,tempRect,talk_area_rect,ul);
+	RECT tempRect(talk_gworld);
+	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
 }
 
 short scan_for_response(char *str)

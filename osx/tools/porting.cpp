@@ -6,7 +6,6 @@
  *
  */
 
-#include <Carbon/Carbon.h>
 #include "porting.h"
 
 extern bool cur_scen_is_mac, mac_is_intel;
@@ -473,7 +472,8 @@ void flip_long(long *s)
 	
 }
 
-void alter_rect(Rect *r)
+// TODO: This was because Windows stored its rect members in a different order, but since we now have our own rect class, it shouldn't be needed.
+void alter_rect(legacy::Rect *r)
 {
 	short a;
 	
@@ -484,7 +484,7 @@ void alter_rect(Rect *r)
 	r->bottom = r->right;
 }
 
-void flip_rect(Rect *s)
+void flip_rect(legacy::Rect* s)
 {
 	flip_short((short *) &(s->top));
 	flip_short((short *) &(s->bottom));

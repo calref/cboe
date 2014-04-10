@@ -22,62 +22,67 @@
 #include "boe.items.h"
 #include "soundtool.h"
 #include <cstdio>
-#include "dlgtool.h"
-#include "dlgconsts.h"
 #include "boe.newgraph.h"
 #include "boe.infodlg.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
+#include "restypes.hpp"
+#include "scrollbar.h"
+#include "button.h"
+#include "pict.h"
+#include <boost/lexical_cast.hpp>
 #define	NUM_HINTS	30
+// TODO: This is used for plist preferences; maybe that should be changed
+#include <CoreFoundation/CFPreferences.h>
+#include <CoreFoundation/CFNumber.h>
 
 //extern big_tr_type t_d;
-extern short stat_window,dialog_answer;
+extern short stat_window;
 extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern party_record_type party;
 extern bool in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
-extern WindowPtr mainPtr;
-extern Rect d_rects[80];
+extern sf::RenderWindow mainPtr;
+extern RECT d_rects[80];
 extern short d_rect_index[80];
 extern short display_mode,stat_screen_mode,current_pc;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool save_maps,give_delays;
 extern location center;
-extern ControlHandle text_sbar,item_sbar,shop_sbar;
-extern bool modeless_exists[18];
-extern DialogPtr modeless_dialogs[18] ;
+extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
+extern bool map_visible;
+extern sf::RenderWindow mini_map;
 //extern town_item_list	t_i;
 extern bool game_run_before,skip_boom_delay;
-extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern talking_record_type talking;
-extern GWorldPtr pc_gworld;
+extern sf::Texture pc_gworld;
 
 extern cScenarioList scen_headers;
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
-Str255 null_string = "";
+char null_string[256] = "";
 short store_tip_page_on = 0;
 
 // Talking vars
 word_rect_type store_words[50];
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost;
-GWorldPtr talk_gworld = NULL;
+sf::RenderTexture talk_gworld;
 bool talk_end_forced;
-Str255 old_str1,old_str2,one_back1,one_back2; 
+char old_str1[256],old_str2[255],one_back1[255],one_back2[255];
 extern word_rect_type preset_words[9];
-Rect talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
+RECT talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 char title_string[50];
 m_num_t store_monst_type;
 short store_m_num;
-Rect dummy_rect = {0,0,0,0};
+RECT dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic;//,cur_town_talk_loaded = -1;
@@ -98,19 +103,19 @@ eGameMode store_pre_shop_mode;
 char store_store_name[256];
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
-extern Rect shopping_rects[8][7];
-Rect bottom_help_rects[4] = {{356,6,368,250},{374,6,386,270},{386,6,398,250},{398,6,410,250}};
-Rect shop_name_str = {44,6,56,200};
-Rect shop_frame = {62,10,352,269};
-Rect shop_done_rect = {388,212,411,275};
+extern RECT shopping_rects[8][7];
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT bottom_help_rects[4] = {RECT{356,6,368,250},RECT{374,6,386,270},RECT{386,6,398,250},RECT{398,6,410,250}};
+RECT shop_name_str = {44,6,56,200};
+RECT shop_frame = {62,10,352,269};
+RECT shop_done_rect = {388,212,411,275};
 
 extern short store_shop_type;
 
-char *heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
+const char* heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
-long cost_mult[7] = {5,7,10,13,16,20,25}; 
-short cur_display_mode;
+long cost_mult[7] = {5,7,10,13,16,20,25};
 
 short store_scen_page_on,store_num_scen;
 
@@ -126,9 +131,9 @@ shop_type:
 11 - priest spells
 12 alchemy
 */
-void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,char *store_name)
+void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name)
 {
-	Rect area_rect;
+	RECT area_rect;
 	
 	if (shop_max < shop_min)
 		shop_max = shop_min; ////
@@ -142,9 +147,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	area_rect = talk_area_rect;
 	strcpy((char *) store_store_name,store_name);
 
-	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
-	if (talk_gworld == NULL)
-		NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NULL, NULL, kNativeEndianPixMap);
+	talk_gworld.create(area_rect.width(), area_rect.height());
 	
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
@@ -157,14 +160,14 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	draw_shop_graphics(0,area_rect);
 	
 	put_item_screen(stat_window,0);
-	give_help(26,27,0);
+	give_help(26,27);
 }
 
 void end_shop_mode()
 {
-	Rect dummy_rect = {0,0,0,0};
+	RECT dummy_rect = {0,0,0,0};
 	
-	HideControl(shop_sbar);
+	shop_sbar->hide();
 	if (store_pre_shop_mode == 20) {
 		strcpy((char *)old_str1,"You conclude your business.");
 		strcpy((char *)old_str2,"");
@@ -174,10 +177,6 @@ void end_shop_mode()
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str((char *)old_str1,"",0,dummy_rect);
 		}
-		else {
-			DisposeGWorld(talk_gworld);
-			talk_gworld = NULL;
-			}
 			
 	overall_mode = store_pre_shop_mode;
 	create_clip_region();
@@ -194,32 +193,32 @@ void end_shop_mode()
 	redraw_screen();
 }
 
-void handle_shop_event(Point p)
+void handle_shop_event(location p)
 {
 	short i,store_what_picked;
 
-	p.h -= 5;
-	p.v -= 5;
+	p.x -= 5;
+	p.y -= 5;
 
-	if (PtInRect(p,&talk_help_rect)) {
+	if (p.in(talk_help_rect)) {
 		click_shop_rect(talk_help_rect);
 		univ.party.help_received[26] = 0;
-		give_help(26,27,0);
+		give_help(26,27);
 		return;
 		}
-	if (PtInRect(p,&shop_done_rect)) {
+	if (p.in(shop_done_rect)) {
 		click_shop_rect(shop_done_rect);
 		end_shop_mode();
 		return;
 		}
 
 	for (i = 0; i < 8; i++) {
-		store_what_picked = i + GetControlValue(shop_sbar);
-		if ((PtInRect(p,&shopping_rects[i][1])) && (store_shop_items[store_what_picked] >= 0)) {
+		store_what_picked = i;
+		if ((p.in(shopping_rects[i][1])) && (store_shop_items[store_what_picked] >= 0)) {
 			click_shop_rect(shopping_rects[i][1]);
 			handle_sale(store_shop_items[store_what_picked],store_shop_costs[store_what_picked]);
 			}
-		if ((PtInRect(p,&shopping_rects[i][6])) && (store_shop_items[store_what_picked] >= 0)
+		if ((p.in(shopping_rects[i][6])) && (store_shop_items[store_what_picked] >= 0)
 			&& (store_shop_type != 3) && (store_shop_type != 4)){
 			click_shop_rect(shopping_rects[i][6]);
 			handle_info_request(store_shop_items[store_what_picked]);
@@ -231,7 +230,7 @@ void handle_sale(short what_chosen,short cost)
 {
 	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item,i;
-	Rect dummy_rect = {0,0,0,0};
+	RECT dummy_rect = {0,0,0,0};
 
 	switch (what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4: 
@@ -301,7 +300,7 @@ void handle_sale(short what_chosen,short cost)
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
-				SysBeep(50); ASB("Error 102: Report this!"); break;}
+				ASB("Error 102: Report this!"); break;} // TODO: Play an error sound here
 			if (univ.party[current_pc].mage_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 				else if (take_gold(cost,false) == false)
@@ -310,13 +309,13 @@ void handle_sale(short what_chosen,short cost)
 						play_sound(62);
 						ASB("You buy a spell.");
 						univ.party[current_pc].mage_spells[base_item.item_level] = true;
-						give_help(41,0,0);
+						give_help(41,0);
 						}
 			break;
 		case 9:
 			base_item = store_priest_spells(what_chosen - 900 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
-				SysBeep(50); ASB("Error 101: Report this!"); break;}
+				ASB("Error 101: Report this!"); break;} // TODO: Play an error sound here
 			if (univ.party[current_pc].priest_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 				else if (take_gold(cost,false) == false)
@@ -325,7 +324,7 @@ void handle_sale(short what_chosen,short cost)
 						play_sound(62);
 						ASB("You buy a spell.");
 						univ.party[current_pc].priest_spells[base_item.item_level] = true;
-						give_help(41,0,0);
+						give_help(41,0);
 						}
 			break;
 		default:
@@ -346,7 +345,7 @@ void handle_sale(short what_chosen,short cost)
 	set_up_shop_array();
 	
 	if (overall_mode != MODE_SHOPPING) {
-		SysBeep(50);
+		// TODO: Play an error sound here
 		ASB("Shop error 1. Report This!");
 		}	
 	draw_shop_graphics(0,dummy_rect);
@@ -368,7 +367,8 @@ void handle_info_request(short what_chosen)
 			display_pc_item(6,0, base_item,0);
 			break;
 		case 5:
-			display_help(0,0);
+			// TODO: Create a dedicated dialog for alchemy info
+			display_alchemy(NULL);
 			break;
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);
@@ -509,14 +509,14 @@ void set_up_shop_array()
 			store_shop_costs[i] = (short) store_l;
 			}
 	i = max(0,shop_pos - 8);
-	SetControlMaximum(shop_sbar,i);
+	shop_sbar->setMaximum(i);
 }
 
 void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic)////
 {
-	Rect area_rect;
-	Str255 place_string1 = "";
-	Str255 place_string2 = "";
+	RECT area_rect;
+	char place_string1[256] = "";
+	char place_string2[256] = "";
 		
 	store_personality = personality;
 		
@@ -524,8 +524,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	OffsetRect(&area_rect, -1 * area_rect.left,-1 * area_rect.top);
-	NewGWorld(&talk_gworld,  0 /*8*/,&area_rect, NULL, NULL, kNativeEndianPixMap);
+	talk_gworld.create(area_rect.width(), area_rect.height());
 	
 	// first make sure relevant talk strs are loaded in
 	if (personality / 10 != univ.town.cur_talk_loaded){
@@ -558,15 +557,12 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
 	
 	put_item_screen(stat_window,0);
-	give_help(5,6,0);
+	give_help(5,6);
 
 }
 
 void end_talk_mode()
 {
-	DisposeGWorld(talk_gworld);
-	talk_gworld = NULL;
-	
 	overall_mode = store_pre_talk_mode;
 	create_clip_region();
 	if (overall_mode == MODE_TALK_TOWN)
@@ -582,26 +578,25 @@ void end_talk_mode()
 	redraw_screen();
 }
 
-void handle_talk_event(Point p)
+void handle_talk_event(location p)
 {
 	short i,j,force_special = 0,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
-	Str255 place_string1 = "";
-	Str255 place_string2 = "";
+	std::string place_string1, place_string2;
 
 	short a,b,c,d,ttype,which_talk_entry = -1;
 
-	p.h -= 5;
-	p.v -= 5;
+	p.x -= 5;
+	p.y -= 5;
 
-	if (PtInRect(p,&talk_help_rect)) {
+	if (p.in(talk_help_rect)) {
 		univ.party.help_received[5] = 0;
-		give_help(5,6,0);
+		give_help(5,6);
 		return;
 		}
 
 	for (i = 0; i < 9; i++)
-		if ((PtInRect(p,&preset_words[i].word_rect)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
+		if ((p.in(preset_words[i].word_rect)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
 			click_talk_rect((char *) old_str1,(char *) old_str2,preset_words[i].word_rect);
 			switch (i) {
 				case 0: case 1: case 2: case 7: case 8:
@@ -614,15 +609,15 @@ void handle_talk_event(Point p)
 					break;
 				case 5: // save
 					if (strnum1 <= 0) {
-						SysBeep(20);
+						// TODO: Play an error sound here
 						return;
 						}
-					if(univ.party.has_talk_save(store_personality, strnum1, strnum2)){
+					if(univ.party.has_talk_save(store_personality, univ.town.num, strnum1, strnum2)){
 					   ASB("This is already saved.");
 					   print_buf();
 					   return;
 					} else {
-						give_help(57,0,0);
+						give_help(57,0);
 						play_sound(0);
 						bool success = univ.party.save_talk(store_personality,univ.town.num,strnum1,strnum2);
 						if(success){
@@ -647,7 +642,7 @@ void handle_talk_event(Point p)
 			}
 	if (i < 100) {
 		for (i = 0; i < 50; i++) 
-			if ((PtInRect(p,&store_words[i].word_rect)) && (talk_end_forced == false)) {
+			if ((p.in(store_words[i].word_rect)) && (talk_end_forced == false)) {
 				click_talk_rect((char *) old_str1,(char *) old_str2,store_words[i].word_rect);
 				for (j = 0; j < 4; j++)
 					asked[j] = store_words[i].word[j];
@@ -658,7 +653,7 @@ void handle_talk_event(Point p)
 	if (i == 50) // no event
 		return;
 	if (force_special == 9) {
-		get_text_response(1017,place_string1,0);
+		place_string1 = get_text_response(1017,0);
 		asked[0] = place_string1[0];
 		asked[1] = place_string1[1];
 		asked[2] = place_string1[2];
@@ -685,18 +680,16 @@ void handle_talk_event(Point p)
 	if (force_special > 0) {
 		switch (force_special) {
 			case 1: case 2: case 3:
-				get_str(place_string1,120 + ((store_personality - 1) / 10),
-				 ((store_personality - 1) % 10) * 3 + 10 + force_special);
-				sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[store_personality % 10 + 10 * force_special]);
+				place_string1 = univ.town.cur_talk->talk_strs[store_personality % 10 + 10 * force_special];
 					
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
 				strnum2 = 0;
 				strcpy((char *) one_back1,(char *) old_str1);
 				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,(char *) place_string1);
-				strcpy((char *) old_str2,(char *) place_string2);
-				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+				strcpy((char *) old_str1,place_string1.c_str());
+				strcpy((char *) old_str2,place_string2.c_str());
+				place_talk_str(place_string1.c_str(),place_string2.c_str(),0,dummy_rect);
 				return;
 				break;
 			case 4: // buy button
@@ -723,13 +716,13 @@ void handle_talk_event(Point p)
 				break;
 			case 8: // back 1
 				strnum1 = oldstrnum1; strnum2 = oldstrnum2;
-				strcpy((char *) place_string1,(char *) one_back1);
-				strcpy((char *) place_string2,(char *) one_back2);
+				place_string1 = one_back1;
+				place_string2 = one_back2;
 				strcpy((char *) one_back1,(char *) old_str1);
 				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,(char *) place_string1);
-				strcpy((char *) old_str2,(char *) place_string2);
-				place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+				strcpy((char *) old_str1,place_string1.c_str());
+				strcpy((char *) old_str2,place_string2.c_str());
+				place_talk_str(place_string1.c_str(),place_string2.c_str(),0,dummy_rect);
 				return;
 				break;
 			}
@@ -754,8 +747,8 @@ void handle_talk_event(Point p)
 	c = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[2];
 	d = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[3];
 
-	sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2]);
-	sprintf((char *) place_string2,"%s",univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2 + 1]);
+	place_string1 = univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2];
+	place_string2 = univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2 + 1];
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -766,9 +759,9 @@ void handle_talk_event(Point p)
 		case 1:
 			if (PSD[a][b] > c) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			strnum2 = 0;
 			break;
 		case 2:
@@ -777,7 +770,7 @@ void handle_talk_event(Point p)
 		case 3:
 			if (univ.party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
 				else {
 					talk_end_forced = true;
@@ -791,55 +784,55 @@ void handle_talk_event(Point p)
 					center = univ.town.p_loc;
 					}
 			strnum2 = 0;
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			break;
 		case 4:
 			if (day_reached((unsigned char) a,0) == true) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			strnum2 = 0;
 			break;
 		case 5:
 			if (day_reached((unsigned char) a,(unsigned char) b) == true) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			strnum2 = 0;
 			break;
 		case 6:
 			if (univ.town.num != a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			strnum2 = 0;
 			break;
 		case 7: 
 			c = minmax(1,30,c);
 			start_shop_mode(2,b,
-				b + c - 1,a,(char *)place_string1);
+				b + c - 1,a,place_string1.c_str());
 			strnum1 = -1;
 			return;
 		case 8: 
 			if ((get_pc = char_select_pc(1,0,"Train who?")) < 6) {
 				strnum1 = -1;
-				spend_xp(get_pc,1, 0);
+				spend_xp(get_pc,1, NULL);
 				}
-			sprintf((char *) place_string1, "You conclude your training.");  
+			place_string1 = "You conclude your training.";
 			return;
 		
 		case 9: case 10: case 11: 
 			c = minmax(1,30,c);
 			start_shop_mode(ttype + 1,b,
-				b + c - 1,a,(char *)place_string1);
+				b + c - 1,a,place_string1.c_str());
 			strnum1 = -1;
 			return;
 		case 12: //healer
 			start_shop_mode(3,univ.town.monst[store_m_num].extra1,
-				univ.town.monst[store_m_num].extra2,a,(char *)place_string1);
+				univ.town.monst[store_m_num].extra2,a,place_string1.c_str());
 			strnum1 = -1;
 			return;
 			break;
@@ -847,65 +840,65 @@ void handle_talk_event(Point p)
 			strnum1 = -1;
 			stat_screen_mode = 3;
 			put_item_screen(stat_window,1);
-			give_help(42,43,0);
+			give_help(42,43);
 			break;
 		case 14: // sell armor
 			strnum1 = -1;
 			stat_screen_mode = 4;
 			put_item_screen(stat_window,1);
-			give_help(42,43,0);
+			give_help(42,43);
 			break;
 		case 15: // sell misc
 			strnum1 = -1;
 			stat_screen_mode = 5;
 			put_item_screen(stat_window,1);
-			give_help(42,43,0);
+			give_help(42,43);
 			break;
 		case 16: case 17: // ident enchant
 				strnum1 = -1;
 			stat_screen_mode = (ttype == 16) ? 2 : 6;
 			shop_identify_cost = a;
 			put_item_screen(stat_window,1);
-			give_help(ttype - 16 + 44,0,0);
+			give_help(ttype - 16 + 44,0);
 			break;
 		case 18:
 			if (univ.party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				}
 				else {
 					univ.party.gold -= a;
 					put_pc_screen();
 
 					}
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			strnum2 = 0;
 			break;
 		case 19:
 			if ((sd_legit(b,c) == true) && (PSD[b][c] == d)) {
-				sprintf((char *) place_string1, "You've already learned that.");  
+				place_string1 = "You've already learned that.";
 				strnum1 = -1;
 				}
 			else if (univ.party.gold < a) {
 				strnum1 = strnum2;
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 + place_string2;
 				}
 				else {
 					univ.party.gold -= a;
 					put_pc_screen();
 					if (sd_legit(b,c) == true)
 						PSD[b][c] = d;
-						else give_error("Invalid Stuff Done flag called in conversation.","",0);
+					else giveError("Invalid Stuff Done flag called in conversation.");
 					}
 			strnum2 = 0;
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			break;
 		case 20:
 			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
-				strcpy((char *) place_string2,"");					
+				place_string1 = place_string2;
+				place_string2 = "";
 				break;
 				}
 				else {
@@ -914,15 +907,15 @@ void handle_talk_event(Point p)
 							univ.party.gold -= a;
 							put_pc_screen();
 							univ.party.boats[i].property = false;
-							strcpy((char *) place_string2,"");					
+							place_string2 = "";
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			strcpy((char *) place_string1, "There are no boats left.");  
-			strcpy((char *) place_string2,"");					
+			place_string1 = "There are no boats left.";
+			place_string2 = "";
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -930,8 +923,8 @@ void handle_talk_event(Point p)
 			if (univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				strcpy((char *) place_string1,(char *) place_string2);
-				strcpy((char *) place_string2,"");					
+				place_string1 = place_string2;
+				place_string2 = "";
 				break;
 				}
 				else {
@@ -940,25 +933,25 @@ void handle_talk_event(Point p)
 							univ.party.gold -= a;
 							put_pc_screen();
 							univ.party.horses[i].property = false;
-							strcpy((char *) place_string2,"");					
+							place_string2 = "";
 							strnum2 = 0;
 							i = 1000;
 							}
 					if (i >= 1000)
 						break;
 					}
-			strcpy((char *) place_string1, "There are no horses left.");  
-			strcpy((char *) place_string2,"");					
+			place_string1 = "There are no horses left.";
+			place_string2 = "";
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
 		case 22:
 			if (univ.party.spec_items[a] > 0) {
-				sprintf((char *) place_string1, "You already have it.");  
+				place_string1 = "You already have it.";
 				strnum1 = -1;
 				}
 			else if (univ.party.gold < b) {
-				strcpy((char *) place_string1,(char *) place_string2);
+				place_string1 = place_string2;
 				strnum1 = strnum2;
 				}
 				else {
@@ -967,11 +960,11 @@ void handle_talk_event(Point p)
 					univ.party.spec_items[a] = 1;
 					}
 			strnum2 = 0;
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			break;
 		case 23:
 			start_shop_mode(5 + b,0,
-				9,a,(char *)place_string1);
+				9,a,place_string1.c_str());
 			strnum1 = -1;
 			return;
 		case 24:		
@@ -979,7 +972,7 @@ void handle_talk_event(Point p)
 				}
 				else if (univ.party.gold < a) {
 					strnum1 = strnum2;
-					strcpy((char *) place_string1,(char *) place_string2);
+					place_string1 = place_string2;
 					}
 					else {
 						univ.party.gold -= a;
@@ -987,7 +980,7 @@ void handle_talk_event(Point p)
 						univ.party.can_find_town[b] = 1;
 						}
 			strnum2 = 0;
-			strcpy((char *) place_string2,"");					
+			place_string2 = "";
 			break;
 		case 25:
 			talk_end_forced = true;
@@ -1014,10 +1007,10 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				strcpy((char *) place_string1,"");
-				strcpy((char *) place_string2,"");
+				place_string1 = "";
+				place_string2 = "";
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,2,s1,s2); 
+			 get_strs(place_string1,place_string2,2,s1,s2); 
 			 //strnum1 = -1;
 			 //strnum2 = -1;
 			 if (s1 >= 0) strnum1 = 2000 + s1;
@@ -1031,10 +1024,10 @@ void handle_talk_event(Point p)
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				strcpy((char *) place_string1,"");
-				strcpy((char *) place_string2,"");
+				place_string1 = "";
+				place_string2 = "";
 				}
-			 get_strs((char *) place_string1,(char *) place_string2,0,s1,s2); 
+			 get_strs(place_string1,place_string2,0,s1,s2); 
 			 //strnum1 = -1;
 			 //strnum2 = -1;
 			 if (s1 >= 0) strnum1 = 3000 + s1;
@@ -1049,72 +1042,15 @@ void handle_talk_event(Point p)
 
 	strcpy((char *) one_back1,(char *) old_str1);
 	strcpy((char *) one_back2,(char *) old_str2);
-	strcpy((char *) old_str1,(char *) place_string1);
-	strcpy((char *) old_str2,(char *) place_string2);
+	strcpy((char *) old_str1,place_string1.c_str());
+	strcpy((char *) old_str2,place_string2.c_str());
 	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
 	
 }
 
-void handle_talk_spec(short ttype,Str255 place_string1,Str255 place_string2) ////
-{
-	short s1 = 1, s2 = 0;
-	
-	//switch (ttype) {}
-	
-	strnum1 = 1000 + s1;
-	get_str(place_string1,15,s1);
-	if (s2 > 0) {
-		strnum2 = 1000 + s2;
-		get_str(place_string2,15,s2);
-		}
-	print_buf();
-	put_pc_screen();
-}
-
-
-
 void store_responses()
 {
 
-}
-
-
-void put_num_in_text(short num_to_put,DialogPtr the_dialog,short item_num)
-{
-	Str255		text_entry;
-	short	the_type;
-	Handle	the_handle = NULL;
-	Rect	the_rect;
-	
-	NumToString ((long) num_to_put , text_entry);
-	GetDialogItem( the_dialog, item_num, &the_type, &the_handle, &the_rect );
-	SetDialogItemText ( the_handle, text_entry);	
-}
-
-long get_text_item_num(short item_num,DialogPtr the_dialog)
-{
-	long storage;
-	long		number_given = 0;
-
-	short	the_type;
-	Handle	the_handle = NULL;
-	Rect	the_rect;
-	Str255 	the_string;	
-	
-	GetDialogItem( the_dialog, item_num, &the_type, &the_handle, &the_rect );
-	GetDialogItemText ( the_handle, the_string);
-					
-	StringToNum( the_string, &number_given);	
-	storage = number_given;
-
-	return storage;
-}
-
-
-
-void sign_event_filter (short item_hit)
-{
-	toast_dialog();
 }
 
 void do_sign(short town_num, short which_sign, short sign_type,location sign_loc)
@@ -1123,18 +1059,20 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 {
 
 	short item_hit;
-	Str255 sign_text;
+	char sign_text[256];
 	location view_loc;
 
 	view_loc = (is_out()) ? univ.party.p_loc : univ.town.p_loc;
 	make_cursor_sword();
 	
-	cd_create_dialog(1014,mainPtr);
+	cChoiceDlog sign("view-sign.xml");
+	cPict& pict = dynamic_cast<cPict&>(sign->getControl("ter"));
 	
 	store_sign_mode = sign_type;
+	// TODO: Uh, why is it always displaying pic 94 for signs with custom graphics?
 	if (scenario.ter_types[sign_type].picture < 1000)
-		csp(1014,3,scenario.ter_types[sign_type].picture,PICT_TER);
-	else csp(1014,3,94,PICT_TER);
+		pict.setPict(scenario.ter_types[sign_type].picture);
+	else pict.setPict(94);
 	
 	if (town_num >= 200) {
 		town_num -= 200;
@@ -1144,90 +1082,10 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 		else {
 			sprintf((char *) sign_text,"%s",univ.town->sign_strs[which_sign]);
 			}
-	csit(1014,2,(char *) sign_text);
+	sign->getControl("sign").setText(sign_text);
 	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(1014);
+	sign.show();
 }
-
-
-
-void give_reg_info_event_filter (short item_hit)
-{
-			switch (item_hit) {
-				case 1: 
-					toast_dialog();
-					break;
-				}
-}
-
-void give_reg_info()
-{
-
-	short item_hit;
-	
-
-	make_cursor_sword();
-
-	cd_create_dialog_parent_num(1073,0);
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(1073);
-
-}
-
-
-
-
-void do_registration_event_filter (short item_hit)
-{
-	Str255 get_text;
-	
-	//cd_retrieve_text_edit_str(1075,(char *) get_text);
-	dialog_answer = 0;
-#ifndef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%hd",&dialog_answer);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%d",&dummy);
-	dialog_answer = dummy;
-#endif		
-	toast_dialog();
-}
-
-//void do_registration()
-//{
-//
-//	short item_hit;
-//
-//	make_cursor_sword();
-//	
-//	cd_create_dialog(1075,mainPtr);
-//		
-//	cdsin(1075,7,(short) register_flag);	
-//	
-//	item_hit = cd_run_dialog();
-//	
-//	cd_kill_dialog(1075,0);
-//	
-//	if (dialog_answer == 1)
-//		SysBeep(30);
-//	
-//	if (dialog_answer == (short) init_data(register_flag)) {
-//		play_sound(40);
-//		//build_data_file(2);
-//		FCD(1078,0);
-//		registered = true;
-//		save_prefs();
-//		check_pref_file();
-//		}
-//		else {
-//			SysBeep(30);
-//			FCD(1077,0);
-//			}
-//	
-//	
-//}
 
 void load_prefs(){
 	Boolean b, valid;
@@ -1260,7 +1118,7 @@ void load_prefs(){
 	
 //long open_pref_file()
 //{
-//	Str255 pref_name;
+//	char pref_name[256];
 //	short vol_ref = 0;
 //	long dir_ID = 0,stored_key;
 //	FSSpec pref;
@@ -1329,7 +1187,7 @@ void load_prefs(){
 //	Handle app_handle;
 //	short res_ID;
 //	ResType res_type;
-//	Str255 res_name = "xxx";
+//	char res_name[256] = "xxx";
 //	short res_attributes;
 //
 //	
@@ -1412,7 +1270,7 @@ void save_prefs(){
 	
 	bool success = CFPreferencesAppSynchronize (CFSTR("com.spidweb.bladesofexile"));
 	if(!success){
-		give_error("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.",0);
+		giveError("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
 	}
 }
 
@@ -1424,11 +1282,11 @@ void save_prefs(){
 //	short res_ID;
 //	long dir_ID;
 //	ResType res_type = 'PRFN';
-//	Str255 res_name;
+//	char res_name[256];
 //	short res_attributes;
 //	FSSpec pref;
 //	short app_res_num;
-//	Str255 pref_name;
+//	char pref_name[256];
 //	
 //	app_res_num = CurResFile();
 //	
@@ -1482,68 +1340,53 @@ void save_prefs(){
 //	UseResFile(app_res_num);
 //}
 
-void prefs_event_filter (short item_hit)
+bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 {
+	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
 	bool done_yet = false,did_cancel = false;
 	short i;
 	
-		switch (item_hit) {
-			case 1:
-				done_yet = true;
-				toast_dialog();
-				break;
+	if(id == "okay") {
+		done_yet = true;
+		me.toast();
+	} else if(id == "cancel") {
+		done_yet = true;
+		me.toast();
+		did_cancel = true;
+	}
 
-			case 2:
-				done_yet = true;
-				toast_dialog();
-				did_cancel = true;
-				break;
-
-			case 18: case 20: case 22: case 24: case 27: case 38: case 40: case 43: case 45:
-				cd_set_led(1099,item_hit,1 - cd_get_led(1099,item_hit));
-				break;
-			
-			case 29:
-				cd_set_led(1099,29,1);
-				break;
-			
-			case 32: case 34: case 36: case 47:
-				cd_set_led(1099,32,(item_hit == 32) ? 1 : 0);
-				cd_set_led(1099,34,(item_hit == 34) ? 1 : 0);
-				cd_set_led(1099,36,(item_hit == 36) ? 1 : 0);
-				cd_set_led(1099,47,(item_hit == 47) ? 1 : 0);
-				break;
-				
-			
-			default:
-				cd_set_led(1099,4 + cur_display_mode,0);
-				cur_display_mode = item_hit - 4;
-				cd_set_led(1099,4 + cur_display_mode,1);
-				break;
-			}
 	if (done_yet== true) {
 		if (did_cancel == false) {
-			display_mode = cur_display_mode;
-			PSD[SDF_NO_MAPS] = cd_get_led(1099,18);
-			PSD[SDF_NO_SOUNDS] = cd_get_led(1099,20);
+			std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
+			// TODO: Make an enum for the display mode
+			if(cur_display_mode == "mid") display_mode = 0;
+			else if(cur_display_mode == "tl") display_mode = 1;
+			else if(cur_display_mode == "tr") display_mode = 2;
+			else if(cur_display_mode == "bl") display_mode = 3;
+			else if(cur_display_mode == "br") display_mode = 4;
+			else if(cur_display_mode == "win") display_mode = 5;
+			// TODO: Should probably make it more clear that getting an LED returns an enum...
+			PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState();
+			PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState();
 			play_sounds = 1 - PSD[SDF_NO_SOUNDS];
-			PSD[SDF_NO_FRILLS] = cd_get_led(1099,22);
-			PSD[SDF_ROOM_DESCS_AGAIN] = cd_get_led(1099,24);
-			PSD[SDF_NO_INSTANT_HELP] = cd_get_led(1099,27);
-			PSD[SDF_EASY_MODE] = cd_get_led(1099,38);
-			PSD[SDF_LESS_WANDER_ENC] = cd_get_led(1099,40);
-			PSD[SDF_NO_TER_ANIM] = cd_get_led(1099,43);
-			PSD[SDF_NO_SHORE_FRILLS] = cd_get_led(1099,45);
+			PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState();
+			PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState();
+			PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState();
+			PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState();
+			PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState();
+			PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState();
+			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState();
 			//PSD[SDF_SKIP_STARTUP] = cd_get_led(1099,46);
-			if (cd_get_led(1099,32) == 1)
+			std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
+			if(speed == "fast")
 				PSD[SDF_GAME_SPEED] = 0;
-			else if (cd_get_led(1099,34) == 1)
+			else if(speed == "med")
 				PSD[SDF_GAME_SPEED] = 1;
-			else if (cd_get_led(1099,36) == 1)
+			else if(speed == "slow")
 				PSD[SDF_GAME_SPEED] = 2;
-			else if (cd_get_led(1099,47) == 1)
+			else if(speed == "snail")
 				PSD[SDF_GAME_SPEED] = 3;
-			if (cd_get_led(1099,29) == 1)
+			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red)
 				for (i = 0; i < 120; i++)
 					univ.party.help_received[i] = 0;
 			/*if (display_mode < 5)
@@ -1566,130 +1409,151 @@ void pick_preferences()
 {
 	short item_hit;
 
-	cur_display_mode = display_mode;
-
 	make_cursor_sword();
 
-	cd_create_dialog(1099,mainPtr);
+	cDialog prefsDlog("preferences.xml");
+	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 
-	cd_set_led(1099,4 + cur_display_mode,1);
+	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
+	switch(display_mode) {
+		case 0:
+			displayMode.setSelected("mid");
+			break;
+		case 1:
+			displayMode.setSelected("tl");
+			break;
+		case 2:
+			displayMode.setSelected("tr");
+			break;
+		case 3:
+			displayMode.setSelected("bl");
+			break;
+		case 4:
+			displayMode.setSelected("br");
+			break;
+		case 5:
+			displayMode.setSelected("win");
+			break;
+	}
 
-	cd_set_led(1099,18,(PSD[SDF_NO_MAPS] != 0) ? 1 : 0);
-	cd_set_led(1099,20,(play_sounds == false) ? 1 : 0);
-	cd_set_led(1099,22,(PSD[SDF_NO_FRILLS] != 0) ? 1 : 0);
-	cd_set_led(1099,24,(PSD[SDF_ROOM_DESCS_AGAIN] != 0) ? 1 : 0);
-	cd_set_led(1099,27,(PSD[SDF_NO_INSTANT_HELP] != 0) ? 1 : 0);
-	cd_set_led(1099,38,(PSD[SDF_EASY_MODE] != 0) ? 1 : 0);
-	cd_set_led(1099,40,(PSD[SDF_LESS_WANDER_ENC] != 0) ? 1 : 0);
-	cd_set_led(1099,43,(PSD[SDF_NO_TER_ANIM] != 0) ? 1 : 0);
-	cd_set_led(1099,45,(PSD[SDF_NO_SHORE_FRILLS] != 0) ? 1 : 0);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_MAPS] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(!play_sounds ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_FRILLS] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_ROOM_DESCS_AGAIN] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_INSTANT_HELP] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_EASY_MODE] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_LESS_WANDER_ENC] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_TER_ANIM] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_SHORE_FRILLS] ? led_red : led_off);
 	//cd_set_led(1099,46,(PSD[SDF_SKIP_STARTUP] != 0) ? 1 : 0);
-	if (PSD[SDF_GAME_SPEED] == 3) 
-		cd_set_led(1099,47,1);
-	else cd_set_led(1099,32 + PSD[SDF_GAME_SPEED] * 2,1);
+	cLedGroup& gameSpeed = dynamic_cast<cLedGroup&>(prefsDlog["speed"]);
+	switch(PSD[SDF_GAME_SPEED]) {
+		case 0:
+			gameSpeed.setSelected("fast");
+			break;
+		case 1:
+			gameSpeed.setSelected("med");
+			break;
+		case 2:
+			gameSpeed.setSelected("slow");
+			break;
+		case 3:
+			gameSpeed.setSelected("snail");
+			break;
+	}
 
 	if (univ.party.help_received[55] == 0) {
-		cd_initial_draw(1099);
-		give_help(55,0,1099);
+		// TODO: Not sure if this bit is needed?
+//		cd_initial_draw(1099);
+		give_help(55,0,prefsDlog);
 	}
 	
-	item_hit = cd_run_dialog();
+	int store_display_mode = display_mode;
+	prefsDlog.run();
 
-	cd_kill_dialog(1099);
-	adjust_window_mode();
+	if(display_mode != store_display_mode)
+		adjust_window_mode();
 }
 
-void put_party_stats()
+void put_party_stats(cDialog& me)
 {
 	short i;
 
 
 	for (i = 0; i < 6; i++) {
+		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if (univ.party[i].main_status > 0) {
-			cd_set_item_text(989,5 + 5 * i,univ.party[i].name.c_str());
-			cd_activate_item(989,7 + 5 * i,1);
-			cd_activate_item(989,8 + 5 * i,1);
-			cd_set_flag(989,6 + 5 * i,96);
-			cd_activate_item(989,35 + i,1);
-			cd_activate_item(989,42 + i,1);
-			csp(989,42 + i,univ.party[i].which_graphic,PICT_PC);
+			me["name" + n].setText(univ.party[i].name);
+			me["trait" + n].show();
+			me["train" + n].show();
+			me["delete" + n].setText("Delete");
+			me["pic" + n].show();
+			me["pc" + n].show();
+			dynamic_cast<cPict&>(me["pc" + n]).setPict(univ.party[i].which_graphic);
 		}
 		else {
-			cd_set_item_text(989,5 + 5 * i,"Empty.");
-			cd_activate_item(989,7 + 5 * i,0);
-			cd_activate_item(989,8 + 5 * i,0);
-			cd_set_flag(989,6 + 5 * i,98);
-			cd_activate_item(989,35 + i,0);
-			cd_activate_item(989,42 + i,0);
+			me["name" + n].setText("Empty.");
+			me["trait" + n].hide();
+			me["train" + n].hide();
+			me["delete" + n].setText("Create");
+			me["pic" + n].hide();
+			me["pc" + n].hide();
 		}
 
 	}
 	draw_startup(0);
 }
 
-void edit_party_event_filter (short item_hit)
+bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	short which_pc;
-
-		switch (item_hit) {
-			case 1:
-				toast_dialog();
-				break;
-
-			case 41:
-				univ.party.help_received[22] = 0;
-				give_help(222,23,989);
-				return;
-
-			case 5: case 10: case 15: case 20: case 25: case 30:
-				which_pc = (item_hit - 5) / 5;
+	if(item_hit == "done") {
+		me.toast();
+	} else if(item_hit == "help") {
+		univ.party.help_received[22] = 0;
+		give_help(222,23,me);
+	} else {
+		short which_pc = item_hit[item_hit.length()-1] - '1';
+		item_hit = item_hit.substr(0, item_hit.length() - 1);
+		if(item_hit == "name") {
 				if (univ.party[which_pc].main_status == 0) {
+					// TODO: Clicking a blank field made a new PC? Something to consider reinstating!
 					//give_help(56,0,989);
 					//create_pc(which_pc,989);
 					//cd_initial_draw(989); // extra redraw, just in case
 					}
-					else pick_pc_name(which_pc,989);
-				put_party_stats();
-				break;
-			case 7: case 12: case 17: case 22: case 27: case 32:
-				which_pc = (item_hit - 7) / 5;
-				pick_race_abil(&univ.party[which_pc],0,989);
-				put_party_stats();
-				break;
-			case 8: case 13: case 18: case 23: case 28: case 33:
-				which_pc = (item_hit - 8) / 5;
-				spend_xp(which_pc,0,989);
-				put_party_stats();
-				break;
-			case 35: case 36: case 37: case 38: case 39: case 40:
-				which_pc = item_hit - 35;
-
+					else pick_pc_name(which_pc,&me);
+				put_party_stats(me);
+		} else if(item_hit == "trait") {
+				pick_race_abil(&univ.party[which_pc],0,&me);
+				put_party_stats(me);
+		} else if(item_hit == "train") {
+				spend_xp(which_pc,0,&me);
+				put_party_stats(me);
+		} else if(item_hit == "pic") {
 				if (univ.party[which_pc].main_status <= 0)
-					break;
+					return true;
 				if (univ.party[which_pc].main_status != 0)
-					pick_pc_graphic(which_pc,1,989);
-				put_party_stats();
-				break;
-			case 6: case 11: case 16: case 21: case 26: case 31:
-				which_pc = (item_hit - 6) / 5;
+					pick_pc_graphic(which_pc,1,&me);
+				put_party_stats(me);
+		} else if(item_hit == "delete") { // Note: This button is also used for "create new PC".
 				if (univ.party[which_pc].main_status != MAIN_STATUS_ABSENT) {
-					if (FCD(1053,989) == 2)
+					if(cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show() == "yes")
 						univ.party[which_pc].main_status = MAIN_STATUS_ABSENT;
-					put_party_stats();
+					put_party_stats(me);
 					}
 					else {
-						give_help(56,0,989);
-						create_pc(which_pc,989);
-						put_party_stats();
-						cd_initial_draw(989); // extra redraw, just in case
+						give_help(56,0,me);
+						create_pc(which_pc,&me);
+						put_party_stats(me);
+						// TODO: Not sure if this is needed
+//						cd_initial_draw(989); // extra redraw, just in case
 						}
-				break;
-//			case 7: case 12: case 17: case 22: case 27: case 32:
-
-			}
-
+		}
+	}
+	return true;
 }
 
+extern bool pc_gworld_loaded;
 void edit_party(short can_create,short can_cancel)
 {
 	short item_hit;
@@ -1697,27 +1561,32 @@ void edit_party(short can_create,short can_cancel)
 	
 	make_cursor_sword();
 
-	if (pc_gworld == NULL) {
+	if (!pc_gworld_loaded) {
 		munch_pc_graphic = true;
-		pc_gworld = load_pict(902);
+		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 		}	
 
-	cd_create_dialog(989,mainPtr);
-
-	put_party_stats();
-	if (univ.party.help_received[22] == 0) {
-		cd_initial_draw(989);
-		give_help(22,23,989);
+	cDialog pcDialog("edit-party.xml");
+	std::vector<std::string> buttons = {"done", "help"};
+	for(int i = 1; i <= 6; i++) {
+		std::string n = boost::lexical_cast<std::string>(i);
+		buttons.push_back("name" + n);
+		buttons.push_back("delete" + n);
+		buttons.push_back("trait" + n);
+		buttons.push_back("train" + n);
+		buttons.push_back("pic" + n);
 	}
 	
-	item_hit = cd_run_dialog();
+	pcDialog.attachClickHandlers(edit_party_event_filter, buttons);
 
-	cd_kill_dialog(989);
-
-	if (munch_pc_graphic == true) {
-		DisposeGWorld(pc_gworld);
-		pc_gworld = NULL;
-		}
+	put_party_stats(pcDialog);
+	if (univ.party.help_received[22] == 0) {
+		// TODO: Not sure if this is needed
+//		cd_initial_draw(989);
+		give_help(22,23,pcDialog);
+	}
+	
+	pcDialog.run();
 
 	if (univ.party[current_pc].main_status != 1)
 		current_pc = first_active_pc();
@@ -1725,64 +1594,60 @@ void edit_party(short can_create,short can_cancel)
 
 }
 
-void tip_of_day_event_filter (short item_hit)
+bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	Str255 place_str;
+	std::string place_str;
 	
-			switch (item_hit) {
-				case 1: 
-					toast_dialog();
-					break;
-				
-				case 5:
+	if(item_hit == "done") {
+		me.toast();
+	} else if(item_hit == "next") {
 					store_tip_page_on++;
 					if (store_tip_page_on == NUM_HINTS)
 						store_tip_page_on = 0;
-					get_str(place_str,12,50 + store_tip_page_on);
-					csit(958,3,(char *) place_str);
-					break;
-
-				case 7:
-					give_intro_hint = 1 - give_intro_hint;
-					cd_set_led(958,7,give_intro_hint);
-					break;
-			}
-
+					place_str = get_str("tips",50 + store_tip_page_on);
+		me["tip"].setText(place_str);
+	}
+	return true;
 }
 
 void tip_of_day()
 {
 
 	short item_hit;
-	Str255 place_str;
+	std::string place_str;
 	
 	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
 	
 	make_cursor_sword();
 
-	cd_create_dialog_parent_num(958,0);
+	cDialog tips("tip-of-day.xml");
+	tips.attachClickHandlers(&tip_of_day_event_filter,{"done","next"});
 
-	get_str(place_str,12,50 + store_tip_page_on);
-	csit(958,3,(char *) place_str);
-
-	cd_set_led(958,7,give_intro_hint);
+	place_str = get_str("tips",50 + store_tip_page_on);
+	tips["tip"].setText(place_str);
 	
-	item_hit = cd_run_dialog();	
-	cd_kill_dialog(958);
+	cLed& showAtStart = dynamic_cast<cLed&>(tips["onstart"]);
+	showAtStart.setState(give_intro_hint ? led_red : led_off);
+	
+	tips.run();
+	give_intro_hint = showAtStart.getState();
 	save_prefs();
 
 }
 
-void put_scen_info()
+void put_scen_info(cDialog& me)
 {
 	unsigned int i;
 	std::ostringstream sout;
-	char *ratings[] = {"G","PG","R","NC-17"};
-	char *difficulty[] = {"Low","Medium","High","Very High"};
+	const char *ratings[] = {"G","PG","R","NC-17"};
+	const char *difficulty[] = {"Low","Medium","High","Very High"};
 
-	for (i = 0; i < 3; i++)
+	for(i = 0; i < 3; i++) {
+		sout << i + 1;
+		std::string n = sout.str();
 		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
-			cd_set_pict(947, 6 + i * 3,scen_headers.data(store_scen_page_on * 3 + i).intro_pic,PICT_SCEN);
+			me["pict" + n].show();
+			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers.data(store_scen_page_on * 3 + i).intro_pic);
 			sout.str("");
 			sout << scen_headers.strs(store_scen_page_on * 3 + i).name;
 			sout << " v" << scen_headers.data(store_scen_page_on * 3 + i).ver[0];
@@ -1792,45 +1657,38 @@ void put_scen_info()
 			sout << ", Rating: " << ratings[scen_headers.data(store_scen_page_on * 3 + i).rating];
 			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who1;
 			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who2;
-			csit(947,7 + i * 3,(char *) sout.str().c_str());
-			cd_activate_item(947,8 + i * 3,1);			
+			me["desc" + n].setText(sout.str());
+			me["start" + n].show();
 			}
 			else {
-				cd_set_pict(947, 6 + i * 3,0,PICT_BLANK);
-				csit(947,7 + i * 3,"");
-				cd_activate_item(947,8 + i * 3,0);
+			me["pict" + n].hide();
+			me["desc" + n].setText("");
+			me["start" + n].hide();
 				}
+	}
 }
 
-void pick_a_scen_event_filter (short item_hit)
+bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	
-			switch (item_hit) {
-				case 1: 
-					dialog_answer = -1;
-					toast_dialog();
-					break;
-				
-				case 3: case 4:
-					if (item_hit == 3) {
+	if(item_hit == "cancel") {
+		me.setResult<short>(-1);
+		me.toast();
+	} else if(item_hit == "next") {
 						if (store_scen_page_on == 0)
 							store_scen_page_on = (store_num_scen - 1) / 3;
 							else store_scen_page_on--;
-						}
-						else {
+		put_scen_info(me);
+	} else if(item_hit == "prev") {
 							if (store_scen_page_on == (store_num_scen - 1) / 3)
 								store_scen_page_on = 0;
 								else store_scen_page_on++;
-							}					
-					put_scen_info();
-					break;
-				
-				case 8: case 11: case 14:
-					dialog_answer = ((item_hit - 8) / 3) + store_scen_page_on * 3;
-					toast_dialog();
-					break;
-				}
-
+					put_scen_info(me);
+	} else if(item_hit.substr(0,item_hit.length()-1) == "start") {
+		int scen_hit = item_hit[item_hit.length()-1] - '1';
+		me.setResult<short>(scen_hit + store_scen_page_on * 3);
+		me.toast();
+	}
+	return true;
 }
 
 short pick_a_scen()
@@ -1847,56 +1705,35 @@ short pick_a_scen()
 	store_scen_page_on = 0;
 	
 	if (store_num_scen == 0) {
-		FCD(868,0);
+		cChoiceDlog("no-scenarios.xml").show();
 		return -1;
 	}
 	make_cursor_sword();
 	
-	cd_create_dialog_parent_num(947,0);
+	cDialog pickScen("pick-scenario.xml");
+	pickScen.attachClickHandlers(pick_a_scen_event_filter, {"cancel", "next", "prev", "start1", "start2", "start3"});
 
-	put_scen_info();
+	put_scen_info(pickScen);
 	
 	if (store_num_scen <= 3) {
-		cd_activate_item(947,3,0);
-		cd_activate_item(947,4,0);
+		pickScen["next"].hide();
+		pickScen["prev"].hide();
 	}
 	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(947);
-	return dialog_answer;
-}
-
-
-void pick_prefab_scen_event_filter (short item_hit)
-{
-	
-			switch (item_hit) {
-				case 1: 
-					dialog_answer = -1;
-					toast_dialog();
-					break;
-				
-				case 6: case 9: case 12:
-					dialog_answer = ((item_hit - 6) / 3);
-					toast_dialog();
-					break;
-				}
-
+	pickScen.run();
+	return pickScen.getResult<short>();
 }
 
 short pick_prefab_scen()
 {
-
-	short item_hit;
 	
 	make_cursor_sword();
 
-	cd_create_dialog_parent_num(869,0);
-	cd_activate_item(869,2,0);
+	cChoiceDlog pickScenario("pick-prefab-scen.xml", {"cancel", "scen1", "scen2", "scen3"});
 	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(869);
-	return dialog_answer;
+	std::string item_hit = pickScenario.show();
+	if(item_hit == "cancel") return -1;
+	else return item_hit[4] - '1';
 }
 
 //void give_password_filter (short item_hit)
@@ -1915,7 +1752,7 @@ short pick_prefab_scen()
 //// ignore parent in Mac version
 //{
 //	short town_strs_hit,i;
-//	Str255 temp_str;
+//	char temp_str[256];
 //		
 //	cd_create_dialog_parent_num(823,0);
 //	

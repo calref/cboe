@@ -1,5 +1,6 @@
 
-#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -21,14 +22,14 @@
 #include "graphtool.h"
 #include "soundtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
 #include "porting.h" // only needed for one little flip_short call, though...
+#include <boost/filesystem.hpp>
+#include "restypes.hpp"
 
 #define	DONE_BUTTON_ITEM	1
-#define IN_FRONT	(WindowPtr)-1L
 
-DialogPtr	the_dialog;
 //extern party_record_type	party;
 //extern pc_record_type adven[6];
 //extern cOutdoors outdoors[2][2];
@@ -40,7 +41,7 @@ extern bool in_startup_mode,play_sounds,sys_7_avail,save_maps,party_in_memory,in
 //extern town_item_list	t_i;
 extern location center;
 extern long register_flag;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 //extern stored_items_list_type stored_items[3];
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
@@ -53,9 +54,9 @@ extern bool sleep_field;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 //extern unsigned char template_terrain[64][64];
 //extern tiny_tr_type anim_t_d;
-extern bool modeless_exists[18];
+extern bool map_visible;
 //extern location monster_targs[60];
-extern DialogPtr modeless_dialogs[18] ;
+extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
 extern cScenario scenario;
@@ -71,9 +72,9 @@ extern bool belt_present;
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false,ae_loading = false;
-Str63 last_load_file = "\pBlades of Exile Save";
-FSSpec file_to_load;
-FSSpec store_file_reply;
+char last_load_file[63] = "Blades of Exile Save";
+fs::path file_to_load;
+fs::path store_file_reply;
 short jl;
 
 bool cur_scen_is_mac = true;
@@ -83,10 +84,9 @@ void save_outdoor_maps();
 void add_outdoor_maps();
 
 short specials_res_id,data_dump_file_id;
-Str255 start_name;
+char start_name[256];
 short start_volume,data_volume;
-long start_dir,data_dir/*,scen_dir*/;
-std::string progDir;
+fs::path progDir;
 
 //outdoor_record_type dummy_out;////
 //town_record_type dummy_town;
@@ -96,29 +96,15 @@ std::string progDir;
 //	ave_tr_type ave_t;
 
 //template_town_type town_template;
-	CInfoPBRec myCPB;
-GWorldPtr spec_scen_g = NULL;
-ResFileRefNum mainRef, graphicsRef, soundRef;
+sf::Texture* spec_scen_g = NULL;
 
 std::ofstream flog("bladeslog.txt");
 void init_directories()
 {
 	short error;
-	//Str255 folder_name = "\p::::Blades of Exile Scenarios";
 	
 	char cPath[768];
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladesofexile.rsrc"),CFSTR(""),NULL);
-	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
-	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
-	FSRef gRef, sRef;
-	FSPathMakeRef((UInt8*)cPath, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
-	if (error != noErr) {
-		flog << "Error! Main resource file not found.\n";
-		flog << "\t(Error " << (long)error << " occurred.)\n";
-		ExitToShell();
-	}
 	
 	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
 	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
@@ -132,33 +118,14 @@ void init_directories()
 			exit(1);
 		}
 	}else progDir = tmp;
-	//progDir = cPath;
-	size_t last_slash = progDir.find_last_of('/');
-	progDir.erase(last_slash);
+	progDir = progDir.parent_path();
 	std::cout<<progDir<<'\n';
-	
-	std::string path = progDir + "/Scenario Editor/Blades of Exile Graphics";
-	flog << path << std::endl;
-	error = FSPathMakeRef((UInt8*) path.c_str(), &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		flog << "Error! File Blades of Exile Graphics not found.\n";
-		flog << "\t(Error " << (long)error << " occurred.)\n";
-		ExitToShell();
-	}
-	path = progDir + "/Scenario Editor/Blades of Exile Sounds";
-	flog << path << std::endl;
-	FSPathMakeRef((UInt8*) path.c_str(), &sRef, false);
-	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		char errmsg[100];
-		sprintf(errmsg,"\t(Error %i occurred.)\n",error);
-		flog << "Error! File Blades of Exile Sounds not found.\n";
-		flog << errmsg;
-		ExitToShell();
-	}
+	// Initialize the resource manager paths
+	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
+	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
+	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
+	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
+	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
 
 	// now I generate the directory ID of the folder which contains the scenarios
 	// code copied from Mac Prog FAQ book
@@ -253,7 +220,7 @@ void finish_load_party(){
 	loaded_yet = true;
 	
 	
-	strcpy ((char *) last_load_file, (char *) file_to_load.name);
+	strcpy ((char *) last_load_file, file_to_load.filename().c_str());
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.            ");
@@ -270,14 +237,6 @@ void finish_load_party(){
 	
 	in_startup_mode = false;
 	in_scen_debug = false;
-}
-
-void do_apple_event_open(FSSpec file_info)
-{
-	ae_loading = true;
-	load_party(file_info);
-	finish_load_party();
-	ae_loading = false;
 }
 
 //void port_save_file(party_record_type* party){
@@ -365,7 +324,7 @@ void change_val (unsigned char *val,short a,short b)
 //	short which_town;
 //	long len,len_to_jump = 0;
 //	OSErr error;
-//	Str255 file_name;
+//	char file_name[256];
 //	
 //	if (town_num != minmax(0,scenario.num_towns - 1,town_num)) {
 //		give_error("The scenario tried to place you into a non-existant town.","",0);
@@ -738,9 +697,9 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 
 	if ((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
 		(out_x != minmax(0,scenario.out_width - 1,out_x)) || (out_y != minmax(0,scenario.out_height - 1,out_y))) {
-			give_error("The scenario has tried to place you in an out of bounds outdoor location.","",0);
-			return;
-			}
+		giveError("The scenario has tried to place you in an out of bounds outdoor location.");
+		return;
+	}
 
 	save_outdoor_maps();
 	univ.party.p_loc.x = pc_pos_x;
@@ -911,7 +870,7 @@ void fix_boats()
 //	short file_id;
 //	short i,j;
 //	long len;
-//	Str255 file_name;
+//	char file_name[256];
 //	short out_sec_num;
 //	long len_to_jump = 0,store = 0;
 //	OSErr error;
@@ -982,64 +941,27 @@ void fix_boats()
 
 
 
-void start_data_dump()
-{
-	long i;
-	char get_text[280];
+void start_data_dump() {
+	fs::path path = progDir/"Data Dump.txt";
+	std::ofstream fout(path.c_str());
 	
-	OSErr error;
-	long len;
-
-
-	error = HOpen(start_volume,start_dir,"\pData dump",3,&data_dump_file_id);
-
-	if (error != 0) {
-		HCreate(start_volume,start_dir,"\pData dump",'ttxt','TEXT');
-		error = HOpen(start_volume,start_dir,"\pData dump",3,&data_dump_file_id);
-		}
-
-
-	SetFPos (data_dump_file_id, 2, 0);
-
-	sprintf((char *)get_text,"Begin data dump:\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"  Overall mode  %d\r",overall_mode);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"  Outdoor loc  %d %d  Ploc %d %d\r",univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,
-		univ.party.p_loc.x,univ.party.p_loc.y);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	fout << "Begin data dump:\n";
+	fout << "  Overall mode  " << overall_mode << "\n";
+	fout << "  Outdoor loc  " << univ.party.outdoor_corner.x << " " << univ.party.outdoor_corner.y;
+	fout << "  Ploc " << univ.party.p_loc.x << " " << univ.party.p_loc.y << "\n";
 	if ((is_town()) || (is_combat())) {
-		sprintf((char *)get_text,"  Town num %d  Town loc  %d %d \r",univ.town.num,
-			univ.town.p_loc.x,univ.town.p_loc.y);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		fout << "  Town num " << univ.town.num << "  Town loc  " << univ.town.p_loc.x << " " << univ.town.p_loc.y << " \n";
 		if (is_combat()) {
-			sprintf((char *)get_text,"  Combat type %d \r",which_combat_type);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-
-		for (i = 0; i < univ.town->max_monst(); i++) {
-			sprintf((char *)get_text,"  Monster %d   Status %d  Loc %d %d  Number %d  Att %d  Tf %d\r",
-				(short) i,(short) univ.town.monst[i].active,(short) univ.town.monst[i].cur_loc.x,
-				(short) univ.town.monst[i].cur_loc.y,(short) univ.town.monst[i].number,
-				(short) univ.town.monst[i].attitude,(short) univ.town.monst[i].time_flag);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);	
-			}
+			fout << "  Combat type " << which_combat_type << " \n";
 		}
-	
-	
-	
-}	
-
-void end_data_dump()
-{
-	FSClose(data_dump_file_id);
-	play_sound(1); // formerly force_play_sound
+		
+		for (long i = 0; i < univ.town->max_monst(); i++) {
+			fout << "  Monster " << i << "   Status " << univ.town.monst[i].active;
+			fout << "  Loc " << univ.town.monst[i].cur_loc.x << " " << univ.town.monst[i].cur_loc.y;
+			fout << "  Number " << univ.town.monst[i].number << "  Att " << univ.town.monst[i].attitude;
+			fout << "  Tf " << univ.town.monst[i].time_flag << "\n";
+		}
+	}
 }
 
 // expecting party record to contain name of proper scenario to load
@@ -1050,7 +972,7 @@ void end_data_dump()
 //	bool file_ok = false;
 //	OSErr error;
 //	long len;
-//	Str255 file_name;
+//	char file_name[256];
 //	
 //	build_scen_file_name(file_name);
 //	
@@ -1109,7 +1031,7 @@ void end_data_dump()
 //}
 //void oops_error(short error)
 //{
-//	Str255 error_str;
+//	char error_str[256];
 //	
 //		SysBeep(50);
 //		SysBeep(50);
@@ -1131,36 +1053,32 @@ void build_scen_headers()
 {
 	short index = 1;
 	unsigned short cur_entry = 0;
-	//Str255 scen_name;
 	OSErr err;
-	std::string scenDir = progDir;
+	fs::path scenDir = progDir;
 //	scenDir.erase(scenDir.find_last_of("/"));
-	scenDir += "/Blades of Exile Scenarios/";
+	scenDir /= "Blades of Exile Scenarios";
 	printf("%s\n%s\n",progDir.c_str(),scenDir.c_str());
 	scen_headers.clear();
 //	for (i = 0; i < 25; i++)
 //		scen_headers[i].flag1 = 0;
 //	FSOpenIterator(&folderRef,0,&files);
-	FSRef folderRef;
-	FSIterator iter;
-	err = FSPathMakeRef((UInt8*)scenDir.c_str(),&folderRef,NULL);
-	if(err != noErr){
-		printf("Directory not found!\n");
-		return;
-	}
+	fs::path folderRef(scenDir); // TODO: This variable is unnecessary
+	fs::directory_iterator iter(folderRef);
 	/**TESTING**/
 //	UniChar x[] = {0x0024, 0x0041, 0x0020, 0x0075, 0x0073, 0x0065, 0x006c, 0x0065, 0x0073, 0x0073, 0x0020, 0x0066, 0x0069, 0x006c, 0x0065};
 //	err = FSCreateFileUnicode (&ref, 15, x, NULL, NULL, NULL, NULL);
 //	if(err != noErr)printf("Error creating file.");
 	/**END TESTING**/
+	// TODO: Double-check that kFSIterateFlat is identical to the behaviour of Boost's directory_iterator
+#if 0
 	err = FSOpenIterator(&folderRef, kFSIterateFlat, &iter);
 	if(err != noErr){
 		printf("Error opening iterator!\n");
 		return;
 	}
+#endif
+	// TODO: What on earth is the ItemCount type?
 	ItemCount numScens = 0;
-	FSRef fileRefs[50];
-	FSSpec files[50];
 	
 	//myCPB.dirInfo.ioCompletion = NULL;
 	//myCPB.dirInfo.ioNamePtr = scen_name;
@@ -1170,65 +1088,42 @@ void build_scen_headers()
 	//	FSSpec locations[MAXSHEETS];
 	//	int numFound=0;
 	//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)	
-	do {
-		//myCPB.hFileInfo.ioFDirIndex = index;
-		//myCPB.hFileInfo.ioDirID = scen_dir;
-		//err = PBGetCatalogInfoSync(&myCPB);
-		if(cur_entry == numScens){
-			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
-//			err = FSGetCatalogInfoBulk(iter, 50, &numScens, NULL, kFSCatInfoNone, NULL, fileRefs, files, NULL);
-//			if(err == errFSNoMoreItems && cur_entry == 0){
-//				printf("No scenarios were found!");
-//				printf("\nnumScens = %d",numScens);
-//			}else if(err != noErr){
-//				printf("Error getting catalog list!");
-//			}
-			cur_entry = 0;
-		}
-		if (numScens > 0) {
-			if ( /*(myCPB.hFileInfo.ioFlAttrib & ioDirMask) != 0*/ false) {
-			
-			} // folder, so do nothing
-			else {
-				do{
-					load_scenario_header(fileRefs[cur_entry]);
+	while(iter != fs::directory_iterator()) {
+		fs::file_status stat = iter->status();
+		if(stat.type() == fs::regular_file) {
+			load_scenario_header(iter->path());
 					cur_entry++;
-					//entries_so_far++;
-				} while (cur_entry < numScens);
-			}
 		}
-		index++;
-	}while (err == noErr);
-	if (scen_headers.size() == 0) { // no scens present
 	}
-	FSCloseIterator(iter);
+	if (scen_headers.size() == 0) { // no scens present
+		// TODO: Should something be done here?
+	}
 }
 
 // This is only called at startup, when bringing headers of active scenarios.
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
-bool load_scenario_header(FSRef file/*,short header_entry*/){
-	short file_id;
+bool load_scenario_header(fs::path file/*,short header_entry*/){
 	bool file_ok = false;
 	OSErr error;
 	long len;
 	bool mac_header = true;
-		
-	//error = HOpen(start_volume,scen_dir,filename,3,&file_id);
-	error = FSOpenFork(&file, 0, NULL, fsRdPerm, &file_id);
-	if (error != 0) {
+	
+	// TODO: Rewrite using ifstream, or maybe ifstream_buf
+	FILE* file_id = fopen(file.c_str(), "rb");
+	if (file_id == NULL) {
 		return false;
 	}
 	scen_header_type curScen;
 	len = (long) sizeof(scen_header_type);
-	if ((error = FSRead(file_id, &len, (char *) &curScen)) != 0){
-		FSClose(file_id); return false;
+	if (fread(&curScen, len, 1, file_id) < 1){
+		fclose(file_id); return false;
 	}
 	if ((curScen.flag1 == 10) && (curScen.flag2 == 20)
 	 && (curScen.flag3 == 30)
 	  && (curScen.flag4 == 40)) {
 	  	file_ok = true;
 	  	mac_header = true;
-	}
+	} else
 	if ((curScen.flag1 == 20) && (curScen.flag2 == 40)
 	 && (curScen.flag3 == 60)
 	  && (curScen.flag4 == 80)) {
@@ -1238,7 +1133,7 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	if (file_ok == false) {
 		//scen_headers[header_entry].flag1 = 0;
 		//scen_headers.pop_back();
-		FSClose(file_id); 
+		fclose(file_id);
 		return false;
 	}
 
@@ -1262,18 +1157,14 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 //		return false;
 //	}
 	
-	FSClose(file_id);
-	FSSpec spec;
-	FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
-	load_scenario(spec);
+	fclose(file_id);
+	load_scenario(file);
 	
 	scen_header_str_type scen_strs;
 	scen_strs.name = scenario.scen_name;
 	scen_strs.who1 = scenario.who_wrote[0];
 	scen_strs.who2 = scenario.who_wrote[1];
-	p2cstr(spec.name);
-	std::string curScenarioName((char*)spec.name);
-	c2pstr((char*)spec.name);
+	std::string curScenarioName(file.filename().string());
 	scen_strs.file = curScenarioName;
 	
 	if(scen_strs.file == "valleydy.exs" ||
@@ -1299,29 +1190,11 @@ bool load_scenario_header(FSRef file/*,short header_entry*/){
 	return true;
 }
 
-GWorldPtr load_bmp_from_file(Str255 filename)
-{
-	short file_id;
-	long length;
-	if (HOpen(start_volume,start_dir,filename,1,&file_id) != 0) return NULL;
-	GetEOF(file_id,&length);
-	if (length < 54) {
-		FSClose(file_id);
-		return NULL;
-	}
-	unsigned char * data = new unsigned char[length];
-	FSRead(file_id,&length,data);
-	FSClose(file_id);
-	GWorldPtr ret = load_bmp(data,length);
-	delete data;
-	return ret;
-}
-
 //extern GWorldPtr spec_scen_g;
 //void load_spec_graphics()
 //{
 //	short i,file_num;
-//	Str255 file_name;
+//	char file_name[256];
 //	
 //	if (spec_scen_g != NULL) {
 //		DisposeGWorld(spec_scen_g);
@@ -1741,7 +1614,7 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 //	*s3 = store;
 //	
 //}
-//void alter_rect(Rect *r)
+//void alter_rect(RECT *r)
 //{
 //	short a;
 //
@@ -1753,7 +1626,7 @@ GWorldPtr load_bmp_from_file(Str255 filename)
 //	r->right = a;
 //}
 //
-//void flip_rect(Rect *s)
+//void flip_rect(RECT *s)
 //{
 //	flip_short(&(s->top));
 //	flip_short(&(s->bottom));

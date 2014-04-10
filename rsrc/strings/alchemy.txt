@@ -1,0 +1,32 @@
+Alchemy and Poison
+30
+Alchemy can be incredibly useful. Potions can give you the added boost you may need to get through a long grueling dungeon, and you cannot raise the dead without the right concoction.
+You need three things to make a potion:|1. High alchemy skill. When a character tries to make a potion, his/her alchemy skill must be above a certain level. The higher above that level, the better the chance for success.
+2. The right ingredient. Ingredients are usually found at special encounters outdoors, and regenerate themselves after a time. Generally, the person who teaches a recipe tells you what plant it needs.
+3. The recipe. These are usually bought in towns. You only need to buy each recipe once for the entire party.
+When you have all these things, go into a town and click on the blue bottle button. Pick the PC with the highest alchemy skill to make the potion. Hope.
+Here is a list of the alchemical concoctions, with min. skill to make: |Weak Curing |  Min. Skill - 1 |Need holly. Cures poison somewhat.
+Weak Healing |  Min. Skill - 1 |Need comfrey root. Provides mild healing.|
+Weak Poison |  Min. Skill - 1 |Need holly or spider glands. The lowest level poison.
+Weak Speed |  Min. Skill - 3 |Need comfrey root and wormgrass. Hastes drinker.
+Medium Poison |  Min. Skill - 3 |Need wormgrass or spider glands. A stronger poison.
+Medium Healing Potion |  Min. Skill - 4 |Need glowing nettle. Quality healing.
+Strong Curing Potion |  Min. Skill - 5 |Need glowing nettle. A decent antidote for poison.
+Medium Speed |  Min. Skill - 5 |Need glowing nettle and wormgrass. Hastes drinker a lot.
+Graymold Salve |  Min. Skill - 7 |Need graymold. Cures disease of all sorts.
+Weak Energy Potion |  Min. Skill - 9 |Need wormgrass and asptongue mold. Restores some of your spell points.
+Potion of Clarity |  Min. Skill - 9 |Need graymold and holly. Cures dumbfounding.
+Strong Poison |  Min. Skill - 10 |Need asptongue mold. Powerful stuff.
+Strong Healing Potion |  Min. Skill - 12 |Need graymold and comfrey root. Provides excellent healing.
+Killer Poison |  Min. Skill - 12 |Need mandrake root. The strongest poison.
+Resurrection Balm |  Min. Skill - 9 |Need ember flowers. Necessary to cast Raise Dead or Resurrection.
+Medium Power Potion |  Min. Skill - 14 |Need mandrake root and asptongue mold. Restores a fair amount of spell points.
+Knowledge Brew |  Min. Skill - 19 |This most powerful of potions requires Mandrake and Ember Flowers for its creation.
+Strength Potion |  Min. Skill - 10 |This brew is a great aid in combat. Making it requires ember flowers and graymold.
+Bliss |  Min. Skill - 16 |Combining the best elements of healing and strength potions, bliss potions contain asptongue mold and graymold.
+Strong Energy Potion |  Min. Skill - 20 |This is the hardest potion to make, and require ember flowers and mandrake. The energy boost it provides, however, can’t be matched.
+One of the most useful things you can make with alchemy is poison, a powerful weapon in the magic-poor world of Exile.
+Many monsters are immune to magic and fire. However, not many are poison-resistant. This makes poison an excellent mage-killer.
+To poison a weapon, use it during combat. Your hand-to-hand weapon (the first one, if two are equipped) or arrows will become poisoned. Each time you attack, the level of poison decreases.
+Don't poison a weapon too long before combat. It's effectiveness decreases with time. Also, switching weapons makes the poison disappear.
+Poisoning an already poisoned weapon doesn't do much good. The weapon gets the maximum poison level of the poison being added or the poison already there, no more.

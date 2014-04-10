@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<!--
+	 TODO: Why are all the percent signs backwards?
+	 -->
+	<text size='large' top='9' left='55' width='181' height='16'>Special Characteristics:</text>
+	<pict type='dlog' num='7' top='6' left='6'/>
+	<button name='done' type='done' top='349' left='423'/>
+	<!--
+	 TODO: Move the LED labels into the LED elements
+	 TODO: Originally these LED labels would've been bold
+	 NOTE: All LED widths had 18 added to the width of the label
+	 -->
+	<group name='race'>
+		<led name='race1' state='off' top='55' left='161' width='75'/>
+		<led name='race2' state='off' top='55' left='289' width='75'/>
+		<led name='race3' state='off' top='55' left='447' width='92'/>
+		<!--
+		 TODO: Add Vahnatai
+		 <led name='race4' state='off' top='55' left='605' width='92'/>
+		 -->
+	</group>
+	<led name='good1' state='off' top='97' left='215' width='75'/>
+	<led name='good2' state='off' top='112' left='215' width='75'/>
+	<led name='good3' state='off' top='127' left='215' width='116'/>
+	<led name='good4' state='off' top='142' left='215' width='75'/>
+	<led name='good5' state='off' top='157' left='215' width='75'/>
+	<led name='good6' state='off' top='97' left='416' width='126'/>
+	<led name='good7' state='off' top='112' left='416'/>
+	<led name='good8' state='off' top='127' left='416'/>
+	<led name='good9' state='off' top='142' left='416'/>
+	<led name='good10' state='off' top='157' left='416'/>
+	<text size='large' top='30' left='55' width='65' height='18'>Species:</text>
+	<text name='xp' framed='true' top='352' left='254' width='50' height='16'/>
+	<text name='info' framed='true' top='282' left='15' width='149' height='59'>Select species and traits.</text>
+	<!--
+	 TODO: If it looks wrong in-game, try reverting to original label widths.
+	 Original label widths were: 75 75 92 75 75 116 75 75 126 116 75 75 126
+	 -->
+	<text top='53' left='55' width='126' height='16'>Human (0%)</text>
+	<text top='53' left='186' width='126' height='16'>Nephilim (%12)</text>
+	<text top='53' left='316' width='126' height='16'>Slithzerikai (%20)</text>
+	<!--
+	 TODO: Add Vahnatai
+	 <text top='53' left='474' width='126' height='16'>Vahnatai (22%)</text>
+	 -->
+	<text top='95' left='55' width='126' height='16'>Toughness (%10)</text>
+	<text top='110' left='55' width='126' height='16'>Magically Apt. (%20)</text>
+	<text top='125' left='55' width='126' height='16'>Ambidextrous (%8)</text>
+	<text top='140' left='55' width='126' height='16'>Nimble Fingers (%10)</text>
+	<text top='155' left='55' width='126' height='16'>Cave Lore (%4)</text>
+	<text top='95' left='236' width='126' height='16'>Woodsman (%6)</text>
+	<text top='197' left='55' width='126' height='16'>Sluggish (%-10)</text>
+	<text top='212' left='55' width='126' height='16'>Magically Inept (%-8)</text>
+	<text top='227' left='55' width='126' height='16'>Frail (%-8)</text>
+	<text top='242' left='55' width='126' height='16'>Chronic Disease (%-20)</text>
+	<text top='352' left='19' width='216' height='16'>Experience needed to gain each level:</text>
+	<!-- Original widths were: 75 75 -->
+	<text size='large' top='74' left='55' width='126' height='16'>Advantages:</text>
+	<text size='large' top='178' left='55' width='126' height='16'>Disadvantages</text>
+	<led name='bad1' state='off' top='198' left='237'/>
+	<led name='bad2' state='off' top='213' left='237'/>
+	<led name='bad3' state='off' top='228' left='237'/>
+	<led name='bad4' state='off' top='243' left='237'/>
+	<led name='bad5' state='off' top='258' left='237'/>
+	<!--
+	 TODO: Add Pacifist
+	 <led name='bad6' state='off' top='273' left='237'/>
+	 -->
+	<!-- Original label widths were: 126 126 126 126 126 -->
+	<text top='110' left='236' width='136' height='16'>Good Constitution (%10)</text>
+	<text top='125' left='236' width='136' height='16'>Highly Alert (%7)</text>
+	<text top='140' left='236' width='200' height='16'>Exceptional Strength (%12)</text>
+	<text top='155' left='236' width='136' height='16'>Recuperation (%15)</text>
+	<text top='257' left='55' width='136' height='16'>Bad Back (%-8)</text>
+	<!--
+	 TODO: Add Pacifist
+	 <text top='272' left='55' width='136' height='16'>Pacifist (-40%)</text>
+	 -->
+	<text top='223' left='289' width='204' height='43'>Number in () is how much having that trait affects the experience you need to gain a level.</text>
+</dialog>

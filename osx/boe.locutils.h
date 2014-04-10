@@ -10,9 +10,9 @@ location local_to_global(location local);
 bool loc_off_world(location p1);
 bool loc_off_act_area(location p1);
 location get_cur_loc();
-short short_can_see(shortloc p1,shortloc p2);
 bool is_lava(short x,short y);
-short can_see(location p1,location p2,short mode);
+// TODO: Introduce enum for this mode
+short can_see(location p1,location p2,short mode = 0);
 short get_obscurity(short x,short y);
 ter_num_t coord_to_ter(short x,short y);
 bool is_container(location loc);

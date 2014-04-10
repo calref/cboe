@@ -1,14 +1,13 @@
+
+#include <SFML/System.hpp>
+
 void init_screen_locs();
 bool prime_time();
-bool handle_action(EventRecord event);
+bool handle_action(sf::Event event);
 bool someone_awake();
-void flash_rect(Rect to_flash);
-void flash_round_rect(Rect to_flash,short radius);
-void button_flash_rect(Rect to_flash);
 void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);
-bool handle_keystroke(char chr,char chr2,EventRecord event);
-void menu_activate( short type);
+bool handle_keystroke(sf::Event& event);
 void do_load();
 void post_load();
 void do_save(short mode);
@@ -18,7 +17,7 @@ void switch_pc(short which);
 void drop_pc(short which);
 void handle_death();
 void start_new_game();
-location get_cur_direction(Point the_point);
+location get_cur_direction(location the_point);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);
 bool someone_poisoned();

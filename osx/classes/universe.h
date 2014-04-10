@@ -10,6 +10,15 @@
 #define UNIVERSE_H
 
 #include <iosfwd>
+#include <boost/filesystem/path.hpp>
+#include "party.h"
+#include "creatlist.h"
+#include "item.h"
+#include "town.h"
+#include "talking.h"
+#include "simpletypes.h"
+
+namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
 namespace legacy {
 	struct out_info_type;
@@ -44,7 +53,7 @@ public:
 	void append(legacy::current_town_type& old,short which_size);
 	void append(legacy::town_item_list& old);
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
-	void cCurTown::append(legacy::big_tr_type& old);
+	void append(legacy::big_tr_type& old);
 	
 	unsigned char explored(char x,char y) const __attribute__((deprecated));
 	unsigned char misc_i(char x, char y) const __attribute__((deprecated));
@@ -147,7 +156,7 @@ public:
 	cCurOut out;
 	char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
 	snd_num_t out_sound;
-	FSSpec file;
+	fs::path file;
 	
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);

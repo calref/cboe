@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 
@@ -11,8 +10,6 @@
 
 #include "boe.graphics.h"
 #include "boe.text.h"
-#include "dlgtool.h"
-#include "dlgconsts.h"
 #include "boe.items.h"
 #include "boe.party.h"
 #include "boe.fields.h"
@@ -25,29 +22,31 @@
 #include "boe.main.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "restypes.hpp"
+#include "message.h"
+#include <array>
+#include <boost/lexical_cast.hpp>
+#include "cursors.h"
 
 extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type univ.town;
 //extern town_item_list	univ.town.items;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 extern bool in_startup_mode,boom_anim_active;
-extern Rect d_rects[80];
+extern RECT d_rects[80];
 extern short d_rect_index[80];
 //extern big_tr_type t_d;
 extern location pc_pos[6];
 
 //extern CursHandle sword_curs;
-extern bool modeless_exists[18],diff_depth_ok;
-extern short modeless_key[18];
-extern DialogPtr modeless_dialogs[18];
+extern bool map_visible,diff_depth_ok;
+extern sf::RenderWindow mini_map;
 //extern short town_size[3];
 extern short town_type;
-extern GWorldPtr pc_gworld;
-extern short dialog_answer;
-extern ModalFilterUPP main_dialog_UPP;
+extern sf::Texture pc_gworld;
 extern cScenario scenario;
 extern cUniverse univ;
 
@@ -66,9 +65,6 @@ short selected,item_max = 0;
 
 short first_item_shown,store_get_mode,current_getting_pc,store_pcnum,total_items_gettable; // these 5 used for get items dialog
 short item_array[130]; // NUM_TOWN_ITEMS + a bit
-
-char *store_str;
-short store_dnum;
 
 void sort_pc_items(short pc_num)
 {
@@ -130,7 +126,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 	if (item.item_weight() > 
 	  amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  	if (print_result == true) {
-		  	SysBeep(20);
+			// TODO: Play an error sound here
 			ASB("Item too heavy to carry.");
 			}
 		return false;
@@ -568,7 +564,8 @@ if ((overall_mode == MODE_COMBAT) && (univ.party[pc_num].items[item_num].variety
 
 void drop_item(short pc_num,short item_num,location where_drop)
 {
-	short choice,how_many = 0;
+	std::string choice;
+	short how_many = 0;
 	cItemRec item_store;
 	bool take_given_item = true;
 	location loc;
@@ -579,8 +576,8 @@ void drop_item(short pc_num,short item_num,location where_drop)
 			add_string_to_buf("Drop: Item is cursed.           ");	
 	else switch (overall_mode) {
 		case MODE_OUTDOORS:
-			choice = fancy_choice_dialog(1093,0);
-			if (choice == 1)
+			choice = cChoiceDlog("drop-item-confirm.xml",{"okay","cancel"}).show();
+			if (choice == "cancel")
 				return;
 			add_string_to_buf("Drop: OK");
 			if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
@@ -828,7 +825,7 @@ void make_town_hostile()
 	
 	if (which_combat_type == 0)
 		return;
-	give_help(53,0,0);
+	give_help(53,0);
 	univ.town.monst.friendly = 1;
 	////
 	for (i = 0; i < univ.town->max_monst(); i++) 
@@ -859,11 +856,11 @@ void make_town_hostile()
 }
 
 
-void put_item_graphics()
+void put_item_graphics(cDialog& me)
 {
 	short i,storage;
 	cItemRec item;
-	Str255 message;
+	char message[256];
 
 	// First make sure all arrays for who can get stuff are in order.
 	if ((current_getting_pc < 6) && ((univ.party[current_getting_pc].main_status != 1) 
@@ -872,157 +869,165 @@ void put_item_graphics()
 	 	
 	 	}
 	 	
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 6; i++) {
+		std::ostringstream sout("pc");
+		sout << i + 1;
+		std::string id = sout.str();
 		if ((univ.party[i].main_status == 1) && (pc_has_space(i) < 24)
 		 && ((!is_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
-			cd_activate_item(987,3 + i,1);
-			}
-			else {
-				cd_activate_item(987,3 + i,0);
-				cd_activate_item(987,11 + i,0);
-				}
-	for (i = 0; i < 6; i++)
-		if (current_getting_pc == i)
-			cd_add_label(987,3 + i,"*   ",1007);
-			else cd_add_label(987,3 + i,"    ",1007); 
+			me[id].show();
+		} else {
+			me[id].hide();
+			sout << "-g";
+			me[sout.str()].hide();
+		}
+		if(current_getting_pc == i)
+			me.addLabelFor(id, "*   ", LABEL_LEFT, 7, true);
+		else me.addLabelFor(id,"    ", LABEL_LEFT, 7, true);
+	}
 			
 	// darken arrows, as appropriate
 	if (first_item_shown == 0)
-		cd_activate_item(987,9,0);
-		else cd_activate_item(987,9,1);
+		me["up"].hide();
+	else me["up"].show();
 	if ((first_item_shown > total_items_gettable - 7) || 
 		(total_items_gettable <= 8) )
-		cd_activate_item(987,10,0);
-		else cd_activate_item(987,10,1); 
+		me["down"].hide();
+	else me["down"].show();
 
 	for (i = 0; i < 8; i++) {
-		// first, clear whatever item graphic is there
-		csp(987,20 + i * 4,0,PICT_BLANK);
+		std::ostringstream sout("item");
+		sout << i + 1;
+		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
+		std::string detail = sout.str() + "-detail", weight = sout.str() + "-weight";
 
 		if (item_array[i + first_item_shown] != 200) { // display an item in window
-			item = univ.town.items[item_array[i + first_item_shown]]; 
-					sprintf ((char *) message, "%s",
-					 (item.ident ? item.full_name : item.name).c_str());
-					csit(987,21 + i * 4,(char *) message);
+			me[pict].show();
+			item = univ.town.items[item_array[i + first_item_shown]];
+			me[name].setText(item.ident ? item.full_name : item.name);
+			// TODO: Party sheet items
+			cPict& pic = dynamic_cast<cPict&>(me[pict]);
+			if(item.graphic_num >= 1000)
+				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
+			else pic.setPict(item.graphic_num, PIC_ITEM);
+			// TODO: This code is currently kept here for reference to the changed numbers. It can be removed after verifying it works correctly.
+#if 0
 					if (item.graphic_num >= 1000) // was 150
 						csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
 					else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
-					get_item_interesting_string(item,(char *) message);
-					csit(987,22 + i * 4,(char *) message);			
-					storage = item.item_weight();		
-					sprintf ((char *) message, "Weight: %d",storage);
-					csit(987,53 + i,(char *) message);			
-
-			}
-			else { // erase the spot
-			 	//sprintf ((char *) message, "");
-				csit(987,21 + i * 4,"");
-				csit(987,22 + i * 4,"");
-				csit(987,53 + i,"");
-				}
+#endif
+			get_item_interesting_string(item,(char *) message);
+			me[detail].setText(message);
+			storage = item.item_weight();
+			sprintf ((char *) message, "Weight: %d",storage);
+			me[weight].setText(message);
+		} else { // erase the spot
+			me[pict].hide();
+			me[name].setText("");
+			me[detail].setText("");
+			me[weight].setText("");
 		}
+	}
 	
 	if (current_getting_pc < 6) {
 		i = amount_pc_can_carry(current_getting_pc);
 		storage = pc_carry_weight(current_getting_pc);
 		sprintf ((char *) message, "%s is carrying %d out of %d.",univ.party[current_getting_pc].name.c_str(),storage,i);
-		csit(987,52,(char *) message);
-		}
+		me["prompt"].setText(message);
+	}
 		
 	for (i = 0; i < 6; i++) 
 		if (univ.party[i].main_status == 1) {
-			csp(987,11 + i,univ.party[i].which_graphic,PICT_PC);
-			}
+			std::ostringstream sout("pc");
+			sout << i + 1 << "-g";
+			dynamic_cast<cPict&>(me[sout.str()]).setPict(univ.party[i].which_graphic);
+		}
 }
 
 
-void display_item_event_filter (short item_hit)
+bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
 {
 	cItemRec item;
 	short i;
 	
-		switch (item_hit) {
-			case 1:
-				toast_dialog();
-				break;
-			case 9:
-				if (first_item_shown > 0)
-					first_item_shown -= 8;
-				put_item_graphics();					
-				break;
-			case 10:
-				if (first_item_shown < 116)
-					first_item_shown += 8;
-				put_item_graphics();					
-				break;
-			case 3: case 4: case 5: case 6:case 7: case 8: 
-				current_getting_pc = item_hit - 3;
-				put_item_graphics();					
-				break;
-			default:
-				if (current_getting_pc == 6) {
-					break;
-					}
-				item_hit = (item_hit - 19) / 4;
-				item_hit += first_item_shown;
-				if (item_array[item_hit] >= NUM_TOWN_ITEMS) 
-					break;
-				item = univ.town.items[item_array[item_hit]];
-				if (item.property) {
-					i = (dialog_answer == 0) ? fancy_choice_dialog(1011,987) : 2;
-					if (i == 1) 
-						break;
-						else {
-							dialog_answer = 1;
-							item.property = false;
-							}
-					}
-
-				if (univ.town.items[item_array[item_hit]].variety == 3) {
-					if (univ.town.items[item_array[item_hit]].item_level > 3000)
-						univ.town.items[item_array[item_hit]].item_level = 3000;
-				set_item_flag(&item);
-					give_gold(univ.town.items[item_array[item_hit]].item_level,false);
-					play_sound(39); // formerly force_play_sound
-					}
-				else if (univ.town.items[item_array[item_hit]].variety == 11) {
-					give_food(univ.town.items[item_array[item_hit]].item_level,false);
-				set_item_flag(&item);
-					set_item_flag(&univ.town.items[item_array[item_hit]]);
-					play_sound(62); // formerly force_play_sound
-					}
-				else {
-					if (item.item_weight() > 
-					  amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
-					  	SysBeep(20);
-						csit(987,52,"It's too heavy to carry.");
-						give_help(38,0,987);
-						break;
-					  	}
-				
-				set_item_flag(&item);
-					play_sound(0); // formerly force_play_sound
-					 give_to_pc(current_getting_pc, item, 0);////
-					}
-				univ.town.items[item_array[item_hit]] = cItemRec();
-				for (i = item_hit; i < 125; i++)
-					item_array[i] = item_array[i + 1];
-				total_items_gettable--;
-				put_item_graphics();
-				break;
-				}
+	if(id == "done") {
+		me.toast();
+	} else if(id == "up") {
+		if(first_item_shown > 0) {
+			first_item_shown -= 8;
+			put_item_graphics(me);
+		}
+	} else if(id ==  "down") {
+		// TODO: This 116 is a magic number, and a limit to be removed
+		if (first_item_shown < 116) {
+			first_item_shown += 8;
+			put_item_graphics(me);
+		}
+	} else if(id.substr(0,2) == "pc") {
+		sscanf("pc%d", id.c_str(), &current_getting_pc);
+		current_getting_pc--;
+		put_item_graphics(me);
+	} else {
+		if(current_getting_pc == 6) return true;
+		short item_hit;
+		sscanf("item%d", id.c_str(), &item_hit);
+		item_hit--;
+		item_hit += first_item_shown;
+		if(item_array[item_hit] >= NUM_TOWN_ITEMS)
+			return true;
+		item = univ.town.items[item_array[item_hit]];
+		if(item.property) {
+			if(me.getResult<bool>()) {
+				std::string choice = cChoiceDlog("steal-item.xml",{"steal","leave"}).show();
+				if(choice == "leave") return true;
+				me.setResult(true);
+			}
+			item.property = false;
+		}
+		
+		if(univ.town.items[item_array[item_hit]].variety == 3) {
+			if(univ.town.items[item_array[item_hit]].item_level > 3000)
+				univ.town.items[item_array[item_hit]].item_level = 3000;
+			set_item_flag(&item);
+			give_gold(univ.town.items[item_array[item_hit]].item_level,false);
+			play_sound(39); // formerly force_play_sound
+		} else if(univ.town.items[item_array[item_hit]].variety == 11) {
+			give_food(univ.town.items[item_array[item_hit]].item_level,false);
+			set_item_flag(&item);
+			set_item_flag(&univ.town.items[item_array[item_hit]]);
+			play_sound(62); // formerly force_play_sound
+		} else {
+			if(item.item_weight() > amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
+				// TODO: Play an error sound here
+				me["prompt"].setText("It's too heavy to carry.");
+				give_help(38,0,me);
+				return true;
+			}
+			
+			set_item_flag(&item);
+			play_sound(0); // formerly force_play_sound
+			give_to_pc(current_getting_pc, item, 0);////
+		}
+		univ.town.items[item_array[item_hit]] = cItemRec();
+		for(short i = item_hit; i < 125; i++)
+			item_array[i] = item_array[i + 1];
+		total_items_gettable--;
+		put_item_graphics(me);
+	}
 		
 }
 
+// TODO: Move this to a more appropriate place
+bool pc_gworld_loaded = false;
 
 // Returns true is a theft committed
-short display_item(location from_loc,short pc_num,short mode, bool check_container)
+bool display_item(location from_loc,short pc_num,short mode, bool check_container)
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 {
-	short item_hit,i,array_position = 0;
+	short i,array_position = 0;
 	
 	make_cursor_sword();
 	
@@ -1049,38 +1054,41 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 			  		}
 			}
 
-	if (pc_gworld == NULL)
-		pc_gworld = load_pict(902);
-	cd_create_dialog(987,mainPtr);
+	if (!pc_gworld_loaded)
+		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(902));
+	
+	cDialog itemDialog("get-items.xml");
+	itemDialog.attachClickHandlers(display_item_event_filter, {"done", "up", "down"});
+	itemDialog.attachClickHandlers(display_item_event_filter, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
+	itemDialog.setResult(false);
+	cTextMsg& title = dynamic_cast<cTextMsg&>(itemDialog["title"]);
 
-	if (check_container == true)
-		csit(987,17,"Looking in container:");
-		else if (mode == 0)
-		csit(987,17,"Getting all adjacent items:");
-			else csit(987,17,"Getting all nearby items:");
-
-	cd_set_flag(987,51,0);
-	cd_set_flag(987,52,0);
-	for (i = 0; i < 8; i++)
-		cd_attach_key(987,19 + 4 * i,(char) (97 + i));
-	put_item_graphics();
+	if(check_container == true)
+		title.setText("Looking in container:");
+	else if(mode == 0)
+		title.setText("Getting all adjacent items:");
+	else title.setText("Getting all nearby items:");
+	
+	for(i = 1; i <= 8; i++) {
+		std::ostringstream sout("item");
+		sout << i << "-key";
+		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
+		itemDialog[sout.str()].attachClickHandler(display_item_event_filter);
+	}
+	put_item_graphics(itemDialog);
 
 	if (univ.party.help_received[36] == 0) {
-		cd_initial_draw(987);
-		give_help(36,37,987);
+		// TODO: Not sure if I need to an initial draw
+//		cd_initial_draw(987);
+		give_help(36,37,itemDialog);
 	}
 	
-	dialog_answer = 0;
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(987);
-
-	DisposeGWorld(pc_gworld);
-	pc_gworld = NULL;
+	itemDialog.run();
 	
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	
-	return dialog_answer;
+	return itemDialog.getResult<bool>();
 			
 
 }
@@ -1092,34 +1100,21 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 //	dialog_answer = item_hit;
 //}
 
-short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ////
 {
-
-	short item_hit,i,store_dialog_answer;
-	
-	store_dialog_answer = dialog_answer;
 	make_cursor_sword();
 	
-	cd_create_custom_dialog(mainPtr,strs,pic_num, buttons);
+	std::vector<std::string> vec;
+	std::copy(strs.begin(), strs.end(), std::inserter(vec, vec.begin()));
+	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	std::string item_hit = customDialog.show();
 	
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(900);
-
-	//if (parent < 2) {
-		SetPort(GetWindowPort(mainPtr));
-		BeginUpdate(mainPtr);
-//		if (in_startup_mode == false)
-//			refresh_screen(0);
-//			else draw_startup(0);
 	redraw_screen();
-		EndUpdate(mainPtr);
-	//	}
-	i = dialog_answer;
-	dialog_answer = store_dialog_answer;
 	
-	return i;
-
+	for(int i = 0; i < 3; i++) {
+		if(item_hit == basic_buttons[available_btns[i]]->label)
+			return i;
+	}
 	}
 
 //short fancy_choice_dialog(short which_dlog,short parent)
@@ -1157,50 +1152,51 @@ short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ////
 //	return i;
 //}
 
-void select_pc_event_filter (short item_hit)
+bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	toast_dialog();
-	if (item_hit == 16)
-		dialog_answer = 6;
-		else dialog_answer = item_hit - 3;
+	me.toast();
+	if(item_hit != "cancel") {
+		short which_pc = item_hit[item_hit.length() - 1] - '1';
+		me.setResult<short>(which_pc);
+	} else me.setResult<short>(6);
+	return true;
 }
 
-short char_select_pc(short active_only,short free_inv_only,char *title)
+short char_select_pc(short active_only,short free_inv_only,const char *title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap   
 {
 	short item_hit,i;
 
 	make_cursor_sword();
 	
-	cd_create_dialog(1018,mainPtr);
+	cDialog selectPc("select-pc.xml");
+	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
 	
-	if (active_only == 2)
-		csit(1018,15,"Select PC to disarm trap:");
-		else csit(	1018,15,title);
+	selectPc["title"].setText(title);
 	
 	for (i = 0; i < 6; i++) {
+		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if ((univ.party[i].main_status == 0) ||
 			((active_only == true) && (univ.party[i].main_status > 1)) ||
 			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (univ.party[i].main_status == 5)) {
-				cd_activate_item(1018, 3 + i, 0);
+			selectPc["pick" + n].hide();
 				}
+		// TODO: Wouldn't this lead to blank name fields for non-active characters if those characters are allowed?
 		if (univ.party[i].main_status != 0) {
-				csit(1018,9 + i,univ.party[i].name.c_str());		
+			selectPc["pc" + n].setText(univ.party[i].name);
 			}		
-			else cd_activate_item(1018, 9 + i, 0);
+		else selectPc["pc" + n].hide();
 	}
 	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(1018);
+	selectPc.run();
+	item_hit = selectPc.getResult<short>();
 
-	BeginUpdate(mainPtr);
 	if (in_startup_mode == false)
 		//refresh_screen(0); 
 		redraw_screen();
 		else draw_startup(0);
-	EndUpdate(mainPtr);
 
-	return dialog_answer;
+	return item_hit;
 }
 
 short select_pc(short active_only,short free_inv_only)
@@ -1211,20 +1207,10 @@ short select_pc(short active_only,short free_inv_only)
 		else return char_select_pc(active_only,free_inv_only,"Select a character:");
 }
 
-void get_num_of_items_event_filter (short item_hit)
+bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	Str255 get_text;
-	
-	cd_retrieve_text_edit_str(1012,2,(char *) get_text);
-	dialog_answer = 0;
-#ifndef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%hd",&dialog_answer);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	sscanf((char *) get_text,"%d",&dummy);
-	dialog_answer = dummy;
-#endif		
-	toast_dialog();
+	me.setResult<int>(me["number"].getTextAsNum());
+	return true;
 }
 
 short get_num_of_items(short max_num)
@@ -1233,128 +1219,32 @@ short get_num_of_items(short max_num)
 {
 
 	short item_hit;
-	Str255 sign_text;
+	char sign_text[256];
 
 	make_cursor_sword();
 	
-	cd_create_dialog(1012,mainPtr);
+	cDialog numPanel("get-num.xml");
+	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 		
 	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
-	csit(1012,4,(char *)sign_text);	
-	sprintf((char *) sign_text,"%d",max_num);
-	cd_set_text_edit_str(1012,2,(char *) sign_text);
+	numPanel["prompt"].setText(sign_text);
+	numPanel["number"].setTextToNum(max_num);
+	numPanel.run();
 	
-	item_hit = cd_run_dialog();		
-	
-	cd_kill_dialog(1012);
-	
-	dialog_answer = minmax(0,max_num,dialog_answer);
-	
-	return dialog_answer;
+	return minmax(0,max_num,numPanel.getResult<int>());
 }
 
-// only used at beginning of program
-short choice_dialog(short pic,short num)
-{
-	DialogPtr select_dialog = NULL;
-	short item_hit;
-
-
-	select_dialog = GetNewDialog (num, 0, IN_FRONT);
-	if (select_dialog == NULL) { 
-		SysBeep(50);
-		ExitToShell();
-		}
-
-	SetPort(GetDialogPort(select_dialog));	
-
-
-
-	ShowWindow(GetDialogWindow(select_dialog));
-
-	//if (pic > 0)
-	//	put_dialog_graphic(pic,0,the_rect);
-	ModalDialog(NULL, &item_hit);
-		
-	DisposeDialog(select_dialog);
-	
-//	SetPort(mainPtr);
-
-//	BeginUpdate(mainPtr);
-//	if (in_startup_mode == false)
-//		refresh_screen(0);
-//		else draw_startup(0);
-//	EndUpdate(mainPtr);
-
-	
-	return item_hit;
-
-}
-
-pascal void frame_box(DialogPtr the_dialog,short the_item)
-{
-	short the_type;
-	Handle the_handle = NULL;
-	Rect the_rect;
-	GrafPtr old_port;
-		
-	GetPort(&old_port);
-	SetPort(GetDialogPort(the_dialog));
-	
-	GetDialogItem(the_dialog, 1, &the_type, &the_handle, &the_rect);
-
-	PenSize(3,3);
-	InsetRect(&the_rect, -4, -4);
-	FrameRoundRect(&the_rect, 16, 16);
-	PenSize(1,1);
-	
-	SetPort(old_port);
-}
-
-
-void create_modeless_dialog(short which_dlog)
-{
-	short i,which_d;
-	GDHandle cur_device;
-
-	cur_device = GetGDevice();			
-	for (i = 0; i < 18; i++)
-		if (which_dlog == modeless_key[i]) {
-			which_d = i;
-			i = 50;
-			}
-	if (i == 18)
-		return;
- 	if (modeless_exists[which_d] == true) {
-		SelectWindow(GetDialogWindow(modeless_dialogs[which_d]));
-		return;
-		}
-	modeless_dialogs[which_d] = GetNewDialog(which_dlog, NULL, IN_FRONT);
-
+void init_mini_map() {
+	// TODO: I'm not sure if the bounds in the DLOG resource included the titlebar height; perhaps the actual height should be a little less
+	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	mini_map.setVisible(false);
+	mini_map.setPosition(sf::Vector2i(52,62));
 }
 
 void make_cursor_watch() 
 {
-	CursHandle watch_cursor;
-
-	watch_cursor = GetCursor(watchCursor);
-	HLock ((Handle) watch_cursor);
-	SetCursor (*watch_cursor);
-	HUnlock((Handle) watch_cursor);
-	ShowCursor();
-}
-
-DialogPtr other_make_dialog(short which)
-{
-	DialogPtr store;
-
-	store = GetNewDialog (which, NULL, IN_FRONT);
-	if (store == NULL) { 
-		SysBeep(50);
-		ExitToShell();
-		}
-	
-	return store;
+	// TODO: If this doesn't work, which I suspect it won't, add a "custom" watch cursor and use that. Or conclude this isn't even needed.
+	SetNSCursorWatch();
 }
 
 ////
@@ -1569,18 +1459,6 @@ cItemRec return_treasure(short loot,short level,short mode)
 
 }
 
-
-
-void frame_button(Rect button_rect)
-{
-	make_cursor_sword();
-
-	PenSize(3,3);
-	InsetRect(&button_rect, -4, -4);
-	FrameRoundRect(&button_rect, 16, 16);
-	PenSize(1,1);
-}
-
 void refresh_store_items()
 {
 	short i,j;
@@ -1598,54 +1476,33 @@ void refresh_store_items()
 }
 
 
-void get_text_response_event_filter (short item_hit)
+bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	
-	cd_retrieve_text_edit_str(store_dnum,2,(char *) store_str);
-	toast_dialog();
+	me.toast();
+	me.setResult(me["response"].getText());
+	return true;
 }
 
-void get_text_response(short dlg,Str255 str,short parent_num)
+std::string get_text_response(short dlg,short parent_num)
 {
 
 	short item_hit,i;
 
 	make_cursor_sword();
 	
-	store_str = (char *) str;
-	store_dnum = dlg;
+	cDialog strPanel("get-response.xml");
+	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
+	// FIXME: A sort of hack to change the prompt and graphic if the other text response dialog was requested.
+	if(dlg == 1017) {
+		dynamic_cast<cPict&>(strPanel["pic"]).setPict(8);
+		strPanel["prompt"].setText("Ask about what?");
+	}
 	
-	cd_create_dialog_parent_num(dlg,parent_num);
-	
-	item_hit = cd_run_dialog();
-	for (i = 0; i < 15; i++)
-		if ((str[i] > 64) && (str[i] < 91))
-			str[i] = str[i] + 32;
-	//ASB((char *) str);
-	//final_process_dialog(dlg);
-	cd_kill_dialog(dlg);
-		
+	strPanel.run();
+	// Note: Originally it only changed the first 15 characters.
+	std::string result = strPanel.getResult<std::string>();
+	std::transform(result.begin(), result.end(), result.begin(), tolower);
+	return result;
 }
 
-void put_num_in_dialog(DialogPtr dialog,short where,short value)
-{
-	Str255 get_text;
-	short the_type;
-	Handle the_handle = NULL;
-	Rect the_rect;
 
-	if (value < 0) {
-					sprintf((char *) get_text, " %d                                                  ", value);
-		}
-		else {
-					sprintf((char *) get_text, " %d                                                  ", value);
-			}
-					GetDialogItem (dialog, where, &the_type, &the_handle, &the_rect);
-					SetDialogItemText (the_handle, get_text);
-}
-
-void extract_keys(EventRecord *event,char *chr,char *chr2)
-{
-	*chr = event->message & charCodeMask;
-	*chr2 = (char) ((event->message & keyCodeMask) >> 8);
-}

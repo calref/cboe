@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 -->
+	<pict type='dlog' num='24' top='8' left='8'/>
+	<text top='11' left='52' width='292' height='16'>BLADES OF EXILE HELP: TOWN COMMANDS</text>
+	<text top='29' left='62' width='423' height='48'>
+		To move, click on the terrain screen in the direction you want to move, or use the keypad.
+		To wait, click on your party.
+		The action buttons (and the equivalent keys) are:
+	</text>
+	<text top='278' left='61' width='430' height='48'>
+		To read a sign, open a chest, or search a barrel/crate/etc.,
+		stand adjacent to it and look at it.
+		To leave town, keep moving towards the border of the map.
+		Move into a door to open it.
+	</text>
+	<text top='329' left='61' width='430' height='51'>
+		To board a boat, move onto it.
+		To leave it, steer it onto land.
+		You close a door by Using it.
+		Some doors are locked -
+		you can pick or bash open the lock when you move into them.
+	</text>
+	<text top='227' left='61' width='428' height='49'>
+		When talking, looking, or using, first click on the appropriate button,
+		and then click on the space to act on.
+		When looking, you can click on the terrain screen border to scroll the view.
+	</text>
+	<!--
+	 TODO: Originally had width=340 and height=100; if it doesn't work right in-game, try reverting to that.
+	 -->
+	<pict type='full' num='1402' top='87' left='107' width='320' height='125'/>
+	<button name='okay' type='regular' top='388' left='432' def-key='enter'>OK</button>
+</dialog>

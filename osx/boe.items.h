@@ -1,3 +1,7 @@
+
+#include "dialog.h"
+#include "pict.h"
+
 void sort_pc_items(short pc_num);
 bool give_to_pc(short pc_num,cItemRec  item,short  print_result);
 bool forced_give(short item_num,eItemAbil abil);
@@ -28,28 +32,20 @@ void combine_things(short pc_num);
 short dist_from_party(location where);
 void set_item_flag(cItemRec *item);
 short get_item(location place,short pc_num,bool check_container);
-void put_item_graphics();
 short get_prot_level(short pc_num,short abil);
 
 void make_town_hostile();
-void display_item_event_filter (short item_hit);
-short display_item(location from_loc,short pc_num,short mode, bool check_container);
-//void fancy_choice_dialog_event_filter (short item_hit);
-short custom_choice_dialog(Str255 strs[6],short pic_num,short buttons[3]) ;
+bool display_item(location from_loc,short pc_num,short mode, bool check_container);
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ;
 //short fancy_choice_dialog(short which_dlog,short parent);
-void select_pc_event_filter (short item_hit);
-short char_select_pc(short active_only,short free_inv_only,char *title);
+short char_select_pc(short active_only,short free_inv_only,const char *title);
 short select_pc(short active_only,short free_inv_only);
-void get_num_of_items_event_filter (short item_hit);
 short get_num_of_items(short max_num);
-short choice_dialog(short pic,short num);
-pascal void frame_box(DialogPtr the_dialog,short the_item);
-pascal void put_pc_effects_on_dialog(DialogPtr dialog,short item);
-pascal void draw_help_dialog_item_buttons(DialogPtr dialog,short item);
-pascal void draw_help_dialog_forcefields(DialogPtr dialog,short item);
-void create_modeless_dialog(short which_dlog);
+void init_mini_map();
+void put_pc_effects_on_dialog(cDialog& dialog,short item);
+void draw_help_dialog_item_buttons(cDialog& dialog,short item);
+void draw_help_dialog_forcefields(cDialog& dialog,short item);
 void make_cursor_watch() ;
-DialogPtr other_make_dialog(short which);
 void place_glands(location where,m_num_t m_type);
 short party_total_level() ;
 void reset_item_max();
@@ -58,9 +54,5 @@ bool give_to_party(cItemRec item, short print_result);
 void place_treasure(location where,short level,short loot,short mode);
 short luck_total();
 cItemRec return_treasure(short loot,short level,short mode);
-void frame_button(Rect button_rect);
 void refresh_store_items();
-void get_text_response_event_filter (short item_hit);
-void get_text_response(short dlg,Str255 str,short parent_num);
-void put_num_in_dialog(DialogPtr dialog,short where,short value);
-void extract_keys(EventRecord *event,char *chr,char *chr2);
+std::string get_text_response(short dlg,short parent_num);

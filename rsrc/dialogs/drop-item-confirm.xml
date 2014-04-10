@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='cancel'>
+	<pict type='dlog' num='2' top='8' left='8'/>
+	<text size='large' top='2' left='48' width='248' height='33'>
+		This item will be gone forever. Still drop it?
+	</text>
+	<button name='cancel' type='regular' def-key='esc' top='42' left='238'>Cancel</button>
+	<button name='okay' type='regular' def-key='enter' top='42' left='169'>OK</button>
+</dialog>

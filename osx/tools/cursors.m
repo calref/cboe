@@ -39,14 +39,20 @@ NSImage* ImageFromURL(CFURLRef url){
 	return newImage;
 }
 
-CursorRef CreateCursorFromFile(CFURLRef imgPath, float hotSpotX, float hotSpotY){
+CursorRef CreateCursorFromFile(const char* path, float hotSpotX, float hotSpotY){
+	FSRef ref;
+	OSStatus err = FSPathMakeRef((UInt8*)path, &ref, NULL);
+	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
+#if 0
 	static BOOL inited = NO;
 	if(!inited){
+		// TODO: Why is this here? Should I move it somewhere else?
 		NSApplicationLoad();
 		pool = [[NSAutoreleasePool alloc] init];
 		[[[NSWindow alloc] init] release];
 		inited = YES;
 	}
+#endif
 	
 	NSImage *img = ImageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
@@ -66,6 +72,10 @@ void SetNSCursor(CursorRef cursor){
 	[(NSCursor*)cursor->ptr set];
 }
 
+void SetNSCursorWatch() {
+	SetNSCursor([NSCursor watchCursor]);
+}
+
 void HideNSCursor(){
 	[NSCursor hide];
 }
@@ -75,5 +85,5 @@ void ShowNSCursor(){
 }
 
 void CleanUp(){
-	[pool release];
+//	[pool release];
 }

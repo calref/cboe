@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='under'>
+	<button name='under' type='regular' top='46' left='246'>Under</button>
+	<button name='land' type='regular' top='46' left='177'>Land</button>
+	<text top='3' left='50' width='254' height='32'>
+		You have come to a dock/bridge.
+		Pilot under it or land?
+	</text>
+	<pict type='teranim' num='2' top='6' left='6'/>
+</dialog>

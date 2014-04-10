@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 -->
+	<button name='okay' type='regular' top='342' left='405'>OK</button>
+	<pict type='dlog' num='24' top='8' left='8'/>
+	<text top='12' left='52' width='235' height='16'>BLADES OF EXILE HELP: PARTY STATUS SCREEN</text>
+	<text top='29' left='61' width='394' height='33'>
+		This area lists the names of your party members, their health and magic points, and two buttons:
+	</text>
+	<text top='151' left='61' width='379' height='16'>
+		After each PCs name are graphics to show its status:
+	</text>
+	<!--
+	 TODO: This originally had width=75 height=16; if it looks wrong in-game, try reverting to that
+	 -->
+	<pict type='full' num='1200' top='66' left='168' width='106' height='29'/>
+	<text top='102' left='61' width='401' height='46'>
+		To have two PCs switch places, click on their switch places buttons.
+		To get a full description of a character, click on the '?' button.
+	</text>
+	<pict type='full' num='1500' top='173' left='73' width='386' height='94'/>
+	<text top='276' left='61' width='401' height='65'>
+		Active PC:
+		The character whose name is in italics is the active character.
+		This is the PC who will cast spells selected from the cast spells menus,
+		and who is shopping in stores.
+		To make a PC active, click on its name or type '1'-'6'.
+	</text>
+</dialog>

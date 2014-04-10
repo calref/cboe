@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<button name='done' type='done' top='158' left='242'/>
+	<pict type='dlog' num='8' top='9' left='9'/>
+	<text name='tip' framed='true' top='37' left='53' width='257' height='92'/>
+	<text size='large' top='9' left='53' width='257' height='19'>Tip of the Day:</text>
+	<button name='next' type='large' top='158' left='54'>Next Tip</button>
+	<text top='138' left='53' width='136' height='16'>See tips upon startup:</text>
+	<led name='onstart' state='off' top='141' left='192'/>
+</dialog>

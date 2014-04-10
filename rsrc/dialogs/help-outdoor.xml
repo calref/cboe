@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 -->
+	<pict type='dlog' num='24' top='8' left='8'/>
+	<text top='10' left='52' width='292' height='16'>BLADES OF EXILE HELP: OUTDOOR COMMANDS</text>
+	<text top='31' left='65' width='456' height='34'>
+		To move, click on the terrain screen in the direction you want to move, or use the keypad.
+		To wait, click on your party.
+		The buttons on the bottom act as follows:
+	</text>
+	<text top='209' left='69' width='417' height='33'>
+		To read a sign or search something, stand adjacent to it and look at it.
+		To enter a town/dungeon/tower/pit. etc., move onto it.
+	</text>
+	<text top='292' left='69' width='417' height='50'>
+		To board a boat, move onto it.
+		To disembark, steer it onto land.
+		To investigate a special
+		(specials are marked with small white circles), move onto it.
+		Boats cannot move diagonally.
+	</text>
+	<text top='343' left='69' width='416' height='33'>
+		SECRET PASSAGES:
+		Some walls have secret passages.
+		To find them, walk into the wall.
+	</text>
+	<text top='243' left='69' width='416' height='48'>
+		TIME SAVER:
+		Hitting 'l' and then pressing a direction on the keypad has you look at thing right next to you in that direction.
+		This works in towns (and for talking, etc.) too.
+	</text>
+	<!-- TODO: Originally this had top=78 and height=360; if it doesn't work right in-game, try reverting to that.
+	 -->
+	<pict type='full' num='1400' top='68' left='118' width='320' height='125'/>
+	<button name='okay' type='regular' top='381' left='424' def-key='enter'>OK</button>
+</dialog>

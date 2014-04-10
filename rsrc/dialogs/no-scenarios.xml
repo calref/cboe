@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<button name='okay' type='regular' top='62' left='257'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='6' left='49' width='273' height='52'>
+		Blades of Exile currently has no scenarios installed.
+		To install a scenario, copy it (with extra graphics files, if any)
+		into the Blades of Exile Scenarios folder.
+	</text>
+</dialog>

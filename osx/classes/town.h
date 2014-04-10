@@ -11,6 +11,11 @@
 
 #include <vector>
 #include <iosfwd>
+#include "simpletypes.h"
+#include "location.h"
+#include "special.h"
+#include "monster.h"
+#include "talking.h"
 
 namespace legacy {
 	struct town_record_type;

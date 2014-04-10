@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 
 //#include "item.h"
@@ -22,16 +21,14 @@
 #include "soundtool.h"
 #include "boe.fields.h"
 #include "boe.locutils.h"
-#include "dlgtool.h"
 #include "boe.specials.h"
 #include "boe.infodlg.h"
-#include "dlglowlevel.h"
-#include "dlgconsts.h"
 #include "mathutil.h"
 #include "boe.main.h"
 #include "graphtool.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
+#include "winutil.h"
 
 //extern current_town_type univ.town;
 //extern party_record_type	party;
@@ -39,21 +36,19 @@
 extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern eGameMode overall_mode;
 extern location center;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern ter_num_t combat_terrain[64][64];
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern unsigned char univ.out.misc_i[64][64];
 extern short store_current_pc,current_ground;
 //extern pascal bool cd_event_filter();
-extern short dungeon_font_num,geneva_font_num;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 //extern location monster_targs[60];
 extern pending_special_type special_queue[20];
 
-extern bool modeless_exists[18],diff_depth_ok,belt_present;
-extern short modeless_key[18];
-extern DialogPtr modeless_dialogs[18];
+extern bool map_visible,diff_depth_ok,belt_present;
+extern sf::RenderWindow mini_map;
 //extern unsigned char univ.out[96][96],univ.out.out_e[96][96],univ.out.sfx[64][64];
 //extern stored_items_list_type stored_items[3];
 //extern stored_town_maps_type maps;
@@ -70,15 +65,15 @@ extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 extern location hor_vert_place[14];
 extern location diag_place[14];
 extern location golem_m_locs[16];
-extern ModalFilterUPP main_dialog_UPP;
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern GWorldPtr spec_scen_g;
+extern sf::Texture spec_scen_g,bg_gworld;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern GWorldPtr map_gworld,small_ter_gworld,bg_gworld;
-RGBColor parchment = {65535,65535,52428};
-extern Rect map_pat[];
+extern sf::RenderTexture map_gworld,small_ter_gworld;
+// In the 0..65535 range, this colour was {65535,65535,52428}
+sf::Color parchment = {255,255,205};
+extern RECT map_pat[];
 
 // TODO: Add blue cave graphics to these arrays?
 unsigned char map_pats[256] = {1,1,2,2,2,7,7,7,7,7, ////
@@ -116,11 +111,10 @@ short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_sel
 short sell_offset = 0;
 location town_force_loc;
 bool shop_button_active[12];
-	Rect map_title_rect = {8,50,20,300};
-//	Rect map_bar_rect = {285,47,301,218};
-	Rect map_bar_rect = {2,230,10,400};
+	RECT map_title_rect = {8,50,20,300};
+//	RECT map_bar_rect = {285,47,301,218};
+	RECT map_bar_rect = {2,230,10,400};
 unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
-UserItemUPP map_draw_UPP = NULL;
 
 void force_town_enter(short which_town,location where_start)
 {
@@ -134,17 +128,12 @@ void start_town_mode(short which_town, short entry_dir)
 {
 	short i,m,n;
 	char message[60];
-	GrafPtr old_port;
 	short j,k,town_number;
 	short at_which_save_slot,former_town;
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
-	unsigned char temp;
+	unsigned short temp;
 	//bool play_town_sound = false;
-	
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));
-	
 	
 	if (town_force < 200)
 		which_town = town_force;
@@ -155,8 +144,7 @@ void start_town_mode(short which_town, short entry_dir)
 	former_town = town_number = which_town;
 	
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
-		SetPort(GetWindowPort(mainPtr));
-		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
+		giveError("The scenario tried to put you into a town that doesn't exist.");
 		return;
 		}
 
@@ -179,8 +167,7 @@ void start_town_mode(short which_town, short entry_dir)
 		
 		
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
-		SetPort(GetWindowPort(mainPtr));
-		give_error("The scenario tried to put you into a town that doesn't exist.","",0);
+		giveError("The scenario tried to put you into a town that doesn't exist.");
 		return;
 		}
 					
@@ -588,7 +575,6 @@ void start_town_mode(short which_town, short entry_dir)
 	clear_map();
 	reset_item_max();
 	town_force = 200;
-	SetPort(old_port);		
 }
 
 
@@ -596,15 +582,11 @@ location end_town_mode(short switching_level,location destination)  // returns n
 {
 	location to_return;
 	bool data_saved = false,combat_end = false;
-	GrafPtr old_port;
 	short i,j,k;
 
 	if (is_combat())
 		combat_end = true;
 
-
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));
 	if (overall_mode == MODE_TOWN) {
 			for (i = 0; i < 4; i++)
 				if (univ.party.creature_save[i].which_town == univ.town.num) {
@@ -721,10 +703,6 @@ location end_town_mode(short switching_level,location destination)  // returns n
 
 		}
 
-
-		
-	SetPort(old_port);
-
 	if (combat_end == false)
 		clear_map();
 	
@@ -812,7 +790,7 @@ void start_town_combat(short direction)
 	draw_buttons(0);
 	put_pc_screen();
 	set_stat_window(current_pc);
-	give_help(48,49,0);
+	give_help(48,49);
 
 }
 
@@ -1262,7 +1240,7 @@ void erase_specials()////
 				where = univ.town->special_locs[k];
 				if ((where.x != 100) && ((where.x > univ.town->max_dim()) || (where.y > univ.town->max_dim())
 				 || (where.x < 0) || (where.y < 0))) {
-					SysBeep(2);
+					// TODO: Play an error sound here
 					add_string_to_buf("Town corrupt. Problem fixed.");
 					print_nums(where.x,where.y,k);
 					univ.town->special_locs[k].x = 0;
@@ -1329,7 +1307,7 @@ void erase_out_specials()
 					if (where.x != 100) {
 						if ((where.x > 48) || (where.y > 48)
 						 || (where.x < 0) || (where.y < 0)) {
-							SysBeep(2);
+							// TODO: Play an error sound here
 							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
 							//univ.out.outdoors[i][j].special_id[k] = -1;
 							univ.out.outdoors[i][j].special_locs[k].x = 100;
@@ -1362,26 +1340,22 @@ short get_town_spec_id(location where)
 
 void clear_map()
 {
-	Rect map_world_rect;
-	GrafPtr old_port;
+	RECT map_world_rect(map_gworld);
 
-	GetPortBounds(map_gworld, &map_world_rect);
-
-//	if (modeless_exists[5] == false) {
+//	if (map_visible == false) {
 //		return;
 //		}
-//	draw_map(modeless_dialogs[5],11);
+//	draw_map(mini_map,11);
 
-	GetPort(&old_port);
-	SetPort( map_gworld);
-	PaintRect(&map_world_rect);
-	SetPort(old_port);
-	draw_map(modeless_dialogs[5],10);
+	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
+	draw_map(mini_map,10);
 
 }
 
-
-pascal void draw_map (DialogPtr the_dialog, short the_item)
+// TODO: Eliminate need for this OR put it in a better place
+bool have_spec_scen_graphics = false;
+// TODO: Eliminate the flag, always do full redraw
+void draw_map (sf::RenderWindow& the_dialog, short the_item)
 //the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
 				// just update near party, if it gets 11, blank out middle and leave
 				// No redrawing in gworld
@@ -1390,23 +1364,22 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				// sure dialog exists before accessing it.
 {
 	short i,j,pic,pic2;
-	Rect the_rect,map_world_rect = {0,0,384,384};
-	GrafPtr old_port;
+	RECT the_rect,map_world_rect = {0,0,384,384};
 	location where;
 	location kludge;
-	Rect draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from;
-	Rect	dlogpicrect = {6,6,42,42};
+	RECT draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from;
+	RECT	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
-	Rect view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
+	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
 		redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
 
-	Rect area_to_draw_from,area_to_draw_on = {29,47,269,287};
+	RECT area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	short small_adj = 0;
 	ter_num_t what_ter,what_ter2;
 	bool draw_surroundings = false,expl,expl2;
 	short total_size = 48; // if full redraw, use this to figure out everything
-	Rect area_to_put_on_map_rect;
-	Rect custom_from;
+	RECT area_to_put_on_map_rect;
+	RECT custom_from;
 	
 	//if (forcing_map_button_redraw == true) {
 	//	forcing_map_button_redraw = false;
@@ -1418,13 +1391,13 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		the_item = 5;
 		}
 	
-	if ((modeless_exists[5] == false) && (the_item == 5) && (need_map_full_refresh == true))
+	if ((map_visible == false) && (the_item == 5) && (need_map_full_refresh == true))
 		return;
-	if ((modeless_exists[5] == false) && (the_item == 10)) {
+	if ((map_visible == false) && (the_item == 10)) {
 		need_map_full_refresh = true;
 		return;
 		}
-	if ((modeless_exists[5] == true) && (the_item != 11) && (need_map_full_refresh == true)) {
+	if ((map_visible == true) && (the_item != 11) && (need_map_full_refresh == true)) {
 		need_map_full_refresh = false;
 		the_item = 10;
 		}
@@ -1490,35 +1463,34 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			}
 			else {
 				area_to_draw_from = area_to_draw_on;
-				OffsetRect(&area_to_draw_from,-1 * area_to_draw_from.left,-1 * area_to_draw_from.top);
+				area_to_draw_from.offset(-area_to_draw_from.left,-area_to_draw_from.top);
 				small_adj = 0;
 				}
 			
 	if (is_combat())
 		draw_pcs = false;
 		
-	GetPort(&old_port);
-	SetPort( map_gworld);
-	TextFont(geneva_font_num);
+	map_gworld.setActive();
+	TEXT.font = "Geneva";
 
-	if (modeless_exists[5] == true) {
+	if(map_visible) {
 		//GetDialogItem(the_dialog, 5, &the_type, &the_handle, &the_rect);
 		//map_rect = the_rect;
 		}
 	
 	if (the_item == 11) {
-			PaintRect(&map_world_rect);
+		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 			draw_pcs = false;
 		}
 /*	else if ((is_combat()) && (which_combat_type == 0)) {
-		if (modeless_exists[5] == true) {
+		if (map_visible == true) {
 			PaintRect(&map_world_rect);
 
 			//GetDialogItem (the_dialog, 4, &the_type, &the_handle, &the_rect);
 			//SetDialogItemText (the_handle, comb_mess);
 			//FillCRect(&map_bar_rect,bg[4]);
 			
-			//char_win_draw_string( modeless_dialogs[5],
+			//char_win_draw_string( mini_map,
 			//	map_bar_rect,"No map in combat.",0,12);
 			draw_pcs = false;
 			}
@@ -1529,41 +1501,39 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		} */
 	else if ((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1)))
 		 {
-			if (modeless_exists[5] == true) {
-				SetPort(GetDialogPort(the_dialog));
-				tileImage(map_bar_rect,bg_gworld,bg[4]);
-				char_port_draw_string( GetDialogPort(modeless_dialogs[5]),map_bar_rect,"No map here.",0,12);
+			if(map_visible) {
+				tileImage(mini_map, map_bar_rect,bg_gworld,bg[4]);
+				win_draw_string(mini_map,map_bar_rect,"No map here.",0,12);
 				draw_pcs = false;
-				SetPort( map_gworld);
+				map_gworld.setActive();
 				}
 				else {
-				SetPort(old_port);
+				mainPtr.setActive();
 				return;
 				}
 		 }else if((is_town() && univ.town->defy_mapping)) {
-			 if (modeless_exists[5] == true) {
-				 SetPort(GetDialogPort(the_dialog));
-				 tileImage(map_bar_rect,bg_gworld,bg[4]);
-				 char_port_draw_string( GetDialogPort(modeless_dialogs[5]),map_bar_rect,"This place defies mapping.",0,12);
+			 if(map_visible) {
+				 tileImage(mini_map, map_bar_rect,bg_gworld,bg[4]);
+				 win_draw_string(mini_map,map_bar_rect,"This place defies mapping.",0,12);
 				 draw_pcs = false;
-				 SetPort( map_gworld);
+				 map_gworld.setActive();
 			 }
 			 else {
-				 SetPort(old_port);
+				 mainPtr.setActive();
 				 return;
 			 }
 		 }
 	else {
-	if (modeless_exists[5] == true) {
+	if(map_visible) {
 		//SetPort(the_dialog);
 		//FillCRect(&map_bar_rect,bg[4]);
-		SetPort( map_gworld);
-		//char_win_draw_string( modeless_dialogs[5],
+		map_gworld.setActive();
+		//char_win_draw_string( mini_map,
 		//	map_bar_rect,"Hit Escape to close.",0,12);
 		}
 
 	if (the_item == 10) {
-			PaintRect(&map_world_rect);
+		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 		}
 
 	// Now, if doing just partial restore, crop redraw_rect to save time.
@@ -1603,7 +1573,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 				if ((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0)
 				{
 					draw_rect = orig_draw_rect;
-					OffsetRect(&draw_rect,6 * where.x + small_adj, 6 * where.y + small_adj);
+					draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
 
 					if (out_mode == true)
 						what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
@@ -1620,22 +1590,22 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
 						pic = scenario.ter_types[what_ter].picture;
 						if (pic >= 1000) {
-							if (spec_scen_g != NULL) {
+							if (have_spec_scen_graphics) {
 								//print_nums(0,99,pic);
 								pic = pic % 1000;
 								custom_from = coord_to_rect(pic % 10, pic / 10);
-								OffsetRect(&custom_from,-13,-13);
+								custom_from.offset(-13,-13);
 								rect_draw_some_item(spec_scen_g,custom_from,map_gworld,draw_rect);								
 								}
 							}
 						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
 							case 0: case 10: case 11:
 								if (scenario.ter_types[what_ter].picture < 400)
-									OffsetRect(&ter_temp_from,
+									ter_temp_from.offset(
 										6 * (scenario.ter_types[what_ter].picture % 10),6 * (scenario.ter_types[what_ter].picture / 10));
-									else OffsetRect(&ter_temp_from,
+									else ter_temp_from.offset(
 										24 * ((scenario.ter_types[what_ter].picture - 400) / 5),6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
-								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
+								rect_draw_some_item(small_ter_gworld.getTexture(),ter_temp_from,map_gworld,draw_rect);
 								break;
 
 							default:
@@ -1657,7 +1627,7 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 												map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
 											}
 										}
-									tileImage(draw_rect,bg_gworld,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
+									tileImage(mini_map, draw_rect,bg_gworld,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
 									break;
 									}
 								//OffsetRect(&ter_temp_from,
@@ -1673,21 +1643,22 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 		}
 	
 	// Now place terrain map gworld
-	if (modeless_exists[5] == true) {
-		SetPort(GetDialogPort(the_dialog));
-		TextFont(geneva_font_num);
-		TextSize(10);
-		TextFace(bold);
+	if (map_visible == true) {
+		TEXT.font = "Geneva";
+		TEXT.pointSize = 10;;
+		TEXT.style = sf::Text::Bold;
 		
 		if ((draw_surroundings == true) || (the_item != 5)) { // redraw much stuff
-			GetPortBounds(GetDialogPort(the_dialog),&the_rect);
-			tileImage(the_rect,bg_gworld,bg[4]);
-			draw_dialog_graphic( GetDialogPort(the_dialog), dlogpicrect, 
- 				21, PICT_DLG, false,0);
- 			ForeColor(whiteColor);
-			char_port_draw_string( GetDialogPort(modeless_dialogs[5]),
-				map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
- 			ForeColor(blackColor);
+			the_rect = RECT(the_dialog);
+			tileImage(mini_map, the_rect,bg_gworld,bg[4]);
+			cPict theGraphic(the_dialog);
+			theGraphic.setBounds(dlogpicrect);
+			theGraphic.setPict(21, PIC_DLOG);
+			theGraphic.setFormat(TXT_FRAME, false);
+			theGraphic.draw();
+ 			TEXT.colour = sf::Color::White;
+			win_draw_string(mini_map, map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
+ 			TEXT.colour = sf::Color::Black;
 	
 			/*SetPort( the_dialog);
 			GetDialogItem(the_dialog, 1, &the_type, &the_handle, &the_rect);
@@ -1698,11 +1669,11 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 			PenSize(1,1); */
 			}
 	
-		rect_draw_some_item(map_gworld,area_to_draw_from,map_gworld,area_to_draw_on);
+		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,map_gworld,area_to_draw_on);
 		}
 							
 	// Now place PCs and monsters
-	if ((draw_pcs == true) && (modeless_exists[5] == true)) {
+	if ((draw_pcs == true) && (map_visible == true)) {
 		if ((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
 			for (i = 0; i < univ.town->max_monst(); i++) 
 				if (univ.town.monst[i].active > 0) {
@@ -1722,10 +1693,9 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 
 						map_graphic_placed[where.x / 8][where.y] = 
 							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-						ForeColor(greenColor);
-						PaintRect(&draw_rect);
-						ForeColor(blueColor);
-						FrameOval(&draw_rect);
+							// TODO: Where to draw this? On the_dialog? On map_gworld?
+							fill_rect(the_dialog, draw_rect, sf::Color::Green);
+							frame_circle(the_dialog, draw_rect, sf::Color::Blue);
 						}
 				}
 		if ((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
@@ -1741,17 +1711,16 @@ pascal void draw_map (DialogPtr the_dialog, short the_item)
 					draw_rect.bottom = draw_rect.top + 6;
 					map_graphic_placed[where.x / 8][where.y] = 
 						map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-					ForeColor(redColor);
-					PaintRect(&draw_rect);
-					ForeColor(blackColor);				
-					FrameOval(&draw_rect);				
+					// TODO: Where to draw this? On the_dialog? On map_gworld?
+					fill_rect(the_dialog, draw_rect, sf::Color::Red);
+					frame_circle(the_dialog, draw_rect, sf::Color::Black);
 
 			}	
 		}
 
-	ForeColor(blackColor);	
+	TEXT.colour = sf::Color::Black;
 	// Now exit gracefully
-	SetPort(old_port);
+	mainPtr.setActive();
 
 }
 
@@ -1769,25 +1738,25 @@ bool is_door(location destination)
 void display_map()
 {
 	short the_type;
-	Handle the_handle = NULL;
-	Rect the_rect;
+	RECT the_rect;
+	RECT	dlogpicrect = {6,6,42,42};
 
+	mini_map.setVisible(true);
+	map_visible = true;
+	makeFrontWindow(mini_map, false);
+	draw_map(mini_map,10);
+//	the_rect = mini_map->portRect;
+	//	FillCRect(&the_rect,bg[4]);
+	cPict theGraphic(mini_map);
+	theGraphic.setBounds(dlogpicrect);
+	theGraphic.setPict(21, PIC_DLOG);
+	theGraphic.setFormat(TXT_FRAME, true);
+	theGraphic.draw();
+	win_draw_string( mini_map,
+		map_title_rect,"Your map:",0,12);
 
-	//create_modeless_dialog(1046);
-	ShowWindow(GetDialogWindow(modeless_dialogs[5])); 
-	SetPort(GetDialogPort(modeless_dialogs[5]));	
-	modeless_exists[5] = true;
-	BringToFront(GetDialogWindow(modeless_dialogs[5]));
-	HiliteWindow(GetDialogWindow(modeless_dialogs[5]),true);
-//	draw_map(modeless_dialogs[5],10);
-//	the_rect = modeless_dialogs[5]->portRect;
-//	FillCRect(&the_rect,bg[4]);
-//	draw_dialog_graphic( modeless_dialogs[5], dlogpicrect, 
- //		721, true,0);
- //DrawDialog(modeless_dialogs[5]);
-//	char_win_draw_string( modeless_dialogs[5],
-//		map_title_rect,"Your map:",0,12);
-
+	// TODO: This looks... possibly important...
+#if 0
 #ifndef EXILE_BIG_GUNS
 	GetDialogItem( modeless_dialogs[5], 5, &the_type, &the_handle, &the_rect);
 	SetDialogItem( modeless_dialogs[5], 5, the_type, (Handle)draw_map, &the_rect);
@@ -1802,6 +1771,7 @@ void display_map()
 	GetDialogItem( modeless_dialogs[5], 4, &the_type, &the_handle, &the_rect);
 	SetDialogItem( modeless_dialogs[5], 4, the_type, (Handle)map_draw_UPP, &the_rect);
 #endif		
+#endif
 }
 
 void check_done() {

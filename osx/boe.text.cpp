@@ -1,7 +1,6 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 #include <cstring>
 
@@ -16,15 +15,16 @@
 #include "mathutil.h"
 #include "graphtool.h"
 //#include "soundtool.h"
-				
+#include "scrollbar.h"
+#include "restypes.hpp"				
 
-char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
+const char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 						"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
 						"Conflagration","Fireball","Weak Summoning","Web","Poison",
 						"Ice Bolt","Slow Group","Major Haste","Firestorm","Summoning",
 						"Shockstorm","Major Poison","Kill","Daemon","Major Blessing",
 						"Major Summoning","Shockwave"};
-char *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
+const char *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 						"Curse","Wound","Summon Spirit","Disease","Heal",
 						"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
 						"Bless All","Major Heal","Flamestrike","Summon Host","Heal All",
@@ -41,38 +41,40 @@ short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
 short start_print_point= 0;
 short mark_where_printing_long;
 bool printing_long = false;
-Str255 c_str = "";
+char c_str[256] = "";
 bool save_mess_given = false;
 
-Rect status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
+RECT status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
 
-Rect item_buttons_from[7] = {{11,0,24,14},{11,14,24,28},{11,28,24,42},{11,42,24,56},
-						{24,0,36,30},{24,30,36,60},{36,0,48,30}};
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT item_buttons_from[7] = {RECT{11,0,24,14},RECT{11,14,24,28},RECT{11,28,24,42},RECT{11,42,24,56},
+						RECT{24,0,36,30},RECT{24,30,36,60},RECT{36,0,48,30}};
 
 eGameMode store_mode;
 
 extern short had_text_freeze,stat_screen_mode;
 
 // graphics globals
-extern Rect status_panel_rect,status_panel_title_rect;
-extern Rect	text_panel_rect;
+extern RECT status_panel_rect,status_panel_title_rect;
+extern RECT	text_panel_rect;
 extern short which_combat_type,stat_window;
 extern eGameMode overall_mode;
-extern WindowPtr mainPtr;
-extern Rect more_info_button;
+extern sf::RenderWindow mainPtr;
+extern RECT more_info_button;
 extern short which_item_page[6];
 //extern CursHandle sword_curs;
-extern ControlHandle text_sbar,item_sbar;
-extern Point store_anim_ul;
-extern Rect	bg[];
+extern std::shared_ptr<cScrollbar> text_sbar,item_sbar;
+extern location store_anim_ul;
+extern RECT	bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 
-extern GWorldPtr spec_scen_g, pc_stats_gworld, item_stats_gworld, text_area_gworld,tiny_obj_gworld,invenbtn_gworld,status_gworld;
-extern GWorldPtr pc_gworld;
+extern sf::Texture spec_scen_g,tiny_obj_gworld,invenbtn_gworld,status_gworld;
+extern sf::Texture pc_gworld;
+extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern short terrain_there[9][9];
 
 // game globals
@@ -82,15 +84,15 @@ extern short terrain_there[9][9];
 //extern town_item_list	univ.town;
 //extern unsigned char out[96][96];
 //extern big_tr_type t_d;
-extern Point ul;
+extern location ul;
 extern bool play_sounds,suppress_stat_screen,in_startup_mode;
-extern Rect item_buttons[8][6];
+extern RECT item_buttons[8][6];
  // name, use, give, drip, info, sell/id
-extern Rect pc_buttons[6][5];
+extern RECT pc_buttons[6][5];
  // name, hp, sp, info, trade
 extern bool item_area_button_active[8][6];
 extern bool pc_area_button_active[6][5];
-extern Rect item_screen_button_rects[9];
+extern RECT item_screen_button_rects[9];
 extern short spec_item_array[60];
 extern short abil_chart[200];
 // combat globals
@@ -104,7 +106,7 @@ extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern bool supressing_some_spaces;
 extern location ok_space[4];
-extern GWorldPtr bg_gworld;
+extern sf::Texture bg_gworld;
 
 short text_pc_has_abil_equip(short pc_num,short abil)
 {
@@ -118,30 +120,26 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 }
 
 // Draws the pc area in upper right
-//void win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//void win_draw_string(WindowPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
 void put_pc_screen()
 {
-	Str255 to_draw;
+	char to_draw[256];
 	short i = 0,j;
-	Rect erase_rect = {17,2,98,269},to_draw_rect,from_rect; 
-	Rect small_erase_rects[3] = {{101,34,114,76},{101,106,114,147},{101,174,114,201}};
-	GrafPtr old_port;
-	RGBColor store_color;
-	Rect info_from = {0,1,12,13};
-
-	GetBackColor(&store_color);
+	RECT erase_rect = {17,2,98,269},to_draw_rect,from_rect;
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT small_erase_rects[3] = {RECT{101,34,114,76},RECT{101,106,114,147},RECT{101,174,114,201}};
+	RECT info_from = {0,1,12,13};
 
 	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
 	// who gives a shit?
-	GetPort(&old_port);	
-	SetPort( pc_stats_gworld);
+	pc_stats_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
-	tileImage(erase_rect,bg_gworld,bg[6]);
+	tileImage(pc_stats_gworld, erase_rect,bg_gworld,bg[6]);
 	for (i = 0; i < 3; i++)
-		tileImage(small_erase_rects[i],bg_gworld,bg[7]);
+		tileImage(pc_stats_gworld, small_erase_rects[i],bg_gworld,bg[7]);
 	
-	ForeColor(whiteColor);
+	TEXT.colour = sf::Color::White;
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) univ.party.gold);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,10);
@@ -150,38 +148,36 @@ void put_pc_screen()
 	i = calc_day();
 	sprintf((char *) to_draw, "%d", i);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,10);
-	ForeColor(blackColor);
 	
 	for (i = 0; i < 6; i++) {
 		if (univ.party[i].main_status != 0) {
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
-				TextFace(italic | bold);
-				ForeColor(blueColor);
+				TEXT.style = sf::Text::Bold | sf::Text::Italic;
+				TEXT.colour = sf::Color::Blue;
 				}
 
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());		
 			win_draw_string( pc_stats_gworld,pc_buttons[i][0],to_draw,0,10);
-			TextFace(0);
- 			TextFace(bold);
-			ForeColor(blackColor);
+			TEXT.style = sf::Text::Bold;
+			TEXT.colour = sf::Color::Black;
 	
 			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
 			switch (univ.party[i].main_status) {
 				case 1:
 					if (univ.party[i].cur_health == univ.party[i].max_health) 
-						ForeColor(greenColor);
-						else ForeColor(redColor);
+						TEXT.colour = sf::Color::Green;
+					else TEXT.colour = sf::Color::Red;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,0,10);
 					if (univ.party[i].cur_sp == univ.party[i].max_sp) 
-						ForeColor(blueColor);
-						else ForeColor(magentaColor);
+						TEXT.colour = sf::Color::Blue;
+					else TEXT.colour = sf::Color::Magenta;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
 					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,0,10);
-					ForeColor(blackColor);
+					TEXT.colour = sf::Color::Black;
 					draw_pc_effects(i);
 					break;
 				case 2:
@@ -217,7 +213,7 @@ void put_pc_screen()
 			to_draw_rect.right = pc_buttons[i][4].right + 1;
 			from_rect = info_from;
 			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
-			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,transparent);
+			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,sf::BlendAlpha);
 			}
 			else {
 				for (j = 0; j < 5; j++)
@@ -225,15 +221,12 @@ void put_pc_screen()
 				}
 		}
 	// Now put text on window.
-	SetPort(GetWindowPort(mainPtr));
-	BackColor(whiteColor);
-	GetPortBounds(pc_stats_gworld, &to_draw_rect);
-	Rect oldRect = to_draw_rect;
-	OffsetRect(&to_draw_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	rect_draw_some_item (pc_stats_gworld, oldRect, to_draw_rect,ul);
-	
-	SetPort(old_port);	
-	RGBBackColor(&store_color);
+	mainPtr.setActive();
+	to_draw_rect = RECT(pc_stats_gworld);
+	RECT oldRect = to_draw_rect;
+	to_draw_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
+	pc_stats_gworld.display(); // TODO: I think displaying is necessary before accessing the texture...?
+	rect_draw_some_item(pc_stats_gworld.getTexture(), oldRect, to_draw_rect,ul);
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
@@ -255,37 +248,32 @@ void put_pc_screen()
 void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
 {
-	Str255 to_draw;
+	std::ostringstream sout;
 	short i_num,item_offset;
 	short i = 0,j,pc;
-	Rect erase_rect = {17,2,122,255},dest_rect;
-	Rect upper_frame_rect = {3,3,15,268};
-	GrafPtr old_port;
-	RGBColor store_color;
-	Rect parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
-
-	
-	GetBackColor(&store_color);
+	RECT erase_rect = {17,2,122,255},dest_rect;
+	RECT upper_frame_rect = {3,3,15,268};
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT parts_of_area_to_draw[3] = {RECT{0,0,17,271},RECT{16,0,123,256},RECT{123,0,144,271}};
 
 	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
 	// who gives a shit?
-	GetPort(&old_port);	
-	SetPort( item_stats_gworld);
+	item_stats_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
-	tileImage(erase_rect,bg_gworld,bg[6]);
+	tileImage(item_stats_gworld, erase_rect,bg_gworld,bg[6]);
 	if (suppress_buttons == 0)
 		for (i = 0; i < 6; i++)
-			tileImage(item_screen_button_rects[i],bg_gworld,bg[7]);
-	tileImage(upper_frame_rect,bg_gworld,bg[7]);
+			tileImage(item_stats_gworld, item_screen_button_rects[i],bg_gworld,bg[7]);
+	tileImage(item_stats_gworld, upper_frame_rect,bg_gworld,bg[7]);
 
 	// Draw buttons at bottom
 	if (suppress_buttons == 0) {
 		for (i = 0; i < 6; i++)
-			tileImage(item_screen_button_rects[i],bg_gworld,bg[7]);
+			tileImage(item_stats_gworld, item_screen_button_rects[i],bg_gworld,bg[7]);
 		}
 
-	item_offset = GetControlValue(item_sbar);
+	item_offset = item_sbar->getPosition();
 
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 6; j++)
@@ -293,17 +281,15 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	
 	switch (screen_num) {
 		case 6: // On special items page
-			TextFace(bold);
-				ForeColor(whiteColor);
-			sprintf((char *) to_draw, "Special items:");
-			win_draw_string( item_stats_gworld,upper_frame_rect,to_draw,0,10);
-				ForeColor(blackColor);
+			TEXT.style = sf::Text::Bold;
+			TEXT.colour = sf::Color::White;
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",0,10);
+			TEXT.colour = sf::Color::Black;
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) { 
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					strcpy((char *) to_draw,scenario.scen_strs(60 + spec_item_array[i_num] * 2));
-					win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10);
+					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),0,10);
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
@@ -318,16 +304,17 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			
 		default: // on an items page
 			pc = screen_num; 
-				ForeColor(whiteColor);
-			sprintf((char *) to_draw, "%s inventory:",
-				(char *) univ.party[pc].name.c_str());
-			win_draw_string( item_stats_gworld,upper_frame_rect,to_draw,0,10);
-				ForeColor(blackColor);
+			TEXT.colour = sf::Color::White;
+			sout.str("");;
+			sout << univ.party[pc].name << " inventory:",
+			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str().c_str(),0,10);
+			TEXT.colour = sf::Color::Black;
 				
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				sprintf((char *) to_draw, "%d.",i_num + 1);
-				win_draw_string( item_stats_gworld,item_buttons[i][0],to_draw,0,10);
+				sout.str("");
+				sout << i_num + 1 << '.';
+				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str().c_str(),0,10);
  				  
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -337,29 +324,28 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					}
 					else {
 						if (univ.party[pc].equip[i_num] == true) {
-							TextFace(italic | bold);
+							TEXT.style = sf::Text::Italic | sf::Text::Bold;
 							if (univ.party[pc].items[i_num].variety < 3)
-								ForeColor(magentaColor);						
-								else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
-									ForeColor(greenColor);
-									else ForeColor(blueColor);
-							}
-							else ForeColor(blackColor);
+								TEXT.colour = sf::Color::Magenta;
+							else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
+								TEXT.colour = sf::Color::Green;
+							else TEXT.colour = sf::Color::Blue;
+						} else TEXT.colour = sf::Color::Black;
 
-							//// 
+							////
+						sout.str("");
 							if (!univ.party[pc].items[i_num].ident)
-								sprintf((char *) to_draw, "%s  ",univ.party[pc].items[i_num].name.c_str());
+								sout << univ.party[pc].items[i_num].name << "  ";
 								else { /// Don't place # of charges when Sell button up and space tight
+									sout << univ.party[pc].items[i_num].full_name << ' ';
 									if ((univ.party[pc].items[i_num].charges > 0) && (univ.party[pc].items[i_num].type != 2)
 										&& (stat_screen_mode <= 1))
-										sprintf((char *) to_draw, "%s (%d)",univ.party[pc].items[i_num].full_name.c_str(),univ.party[pc].items[i_num].charges);
-										else sprintf((char *) to_draw, "%s",univ.party[pc].items[i_num].full_name.c_str());
+										sout << '(' << univ.party[pc].items[i_num].charges << ')';
 									}
 						dest_rect.left -= 2;
-						win_draw_string( item_stats_gworld,dest_rect,to_draw,0,10);
-						TextFace(0);
-						TextFace(bold);
-						ForeColor(blackColor);	
+						win_draw_string(item_stats_gworld,dest_rect,sout.str().c_str(),0,10);
+						TEXT.style = sf::Text::Bold;
+						TEXT.colour = sf::Color::Black;
 
 						// this is kludgy, awkwark, and has redundant code. Done this way to 
 						// make go faster, and I got lazy.
@@ -394,23 +380,20 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	place_item_bottom_buttons();	
 	
 	// Now put text on window.
-	SetPort(GetWindowPort(mainPtr));
-	BackColor(whiteColor);
+	mainPtr.setActive();
 	
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
-		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], dest_rect,ul);
+		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul);
 		}
-		
-	SetPort(old_port);	
-	RGBBackColor(&store_color);
 }
 
 void place_buy_button(short position,short pc_num,short item_num)
 {
-	Rect dest_rect,source_rect;
-	Rect button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
+	RECT dest_rect,source_rect;
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT button_sources[3] = {RECT{24,0,36,30},RECT{36,0,48,30},RECT{48,0,60,30}};
 	short val_to_place;
 	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
@@ -475,12 +458,12 @@ void place_buy_button(short position,short pc_num,short item_num)
 		store_selling_values[position] = val_to_place;	
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
-		rect_draw_some_item (invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, transparent);
+		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, sf::BlendAlpha);
 		sprintf((char *) store_str,"        %d",val_to_place);
 		if (val_to_place >= 10000)
-			TextFace(0);
-		char_port_draw_string( item_stats_gworld,item_buttons[position][5],store_str,2,10);	
-		TextFace(bold);
+			TEXT.style = sf::Text::Regular;
+		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,2,10);
+		TEXT.style = sf::Text::Bold;
 		}
 }
 
@@ -490,26 +473,26 @@ void place_buy_button(short position,short pc_num,short item_num)
 //				if which_button_to_put is 11, just right 2
 void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
 {
-	Rect from_rect = {0,0,18,18},to_rect;
+	RECT from_rect = {0,0,18,18},to_rect;
 	
 	if (which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
 		item_area_button_active[which_slot][which_button_position] = true;
-		OffsetRect(&from_rect,(extra_val % 10) * 18,(extra_val / 10) * 18);
+		from_rect.offset((extra_val % 10) * 18,(extra_val / 10) * 18);
 		to_rect = item_buttons[which_slot][0];
 		to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
-		InsetRect(&to_rect,-1,-1);
-		OffsetRect(&to_rect,20,1);
-		InsetRect(&from_rect,2,2);
+		to_rect.inset(-1,-1);
+		to_rect.offset(20,1);
+		from_rect.inset(2,2);
 		if (extra_val >= 150) {
 			from_rect = get_custom_rect(extra_val - 150);
-			rect_draw_some_item (spec_scen_g, from_rect, item_stats_gworld, to_rect,transparent);
+			rect_draw_some_item(spec_scen_g, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 			}
-			else rect_draw_some_item (tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, transparent);
+		else rect_draw_some_item(tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		 return;
 		}
 	if (which_button_to_put < 4) { // this means put a regular item button
 		item_area_button_active[which_slot][which_button_position] = true;
-		rect_draw_some_item (invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], transparent);
+		rect_draw_some_item(invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], sf::BlendAlpha);
 		}
 	if (which_button_to_put == 10) { // this means put all 4
 		item_area_button_active[which_slot][1] = true;
@@ -519,7 +502,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, transparent);
+		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		}
 	if (which_button_to_put == 11) { // this means put right 3
 		item_area_button_active[which_slot][2] = true;
@@ -528,39 +511,39 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item (invenbtn_gworld, from_rect, item_stats_gworld, to_rect, transparent);
+		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		}
 }
-//Rect get_custom_rect (short which_rect) ////
+//RECT get_custom_rect (short which_rect) ////
 //{
-//	Rect store_rect = {0,0,36,28};
+//	RECT store_rect = {0,0,36,28};
 //
 //	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
 //	return store_rect;
 //}
 void place_item_bottom_buttons()
 {
-	Rect pc_from_rect = {0,0,36,28},but_from_rect = {60,30,78,46},to_rect;
-	Rect spec_from_rect = {0,30,15,65}, job_from_rect = {15,30,15,65}, help_from_rect = {78,30,91,44};
+	RECT pc_from_rect = {0,0,36,28},but_from_rect = {60,30,78,46},to_rect;
+	RECT spec_from_rect = {0,30,15,65}, job_from_rect = {15,30,15,65}, help_from_rect = {78,30,91,44};
 	short i;
 	
 	for (i = 0; i < 6; i++) {
 		if (univ.party[i].main_status == 1) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
-			rect_draw_some_item (invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, transparent);
+			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			pc_from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-			InsetRect(&to_rect,2,2);
-			rect_draw_some_item (pc_gworld, pc_from_rect, item_stats_gworld, to_rect, transparent);
+			to_rect.inset(2,2);
+			rect_draw_some_item(pc_gworld, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			}
 			else item_bottom_button_active[i] = false;
 	}
 	to_rect = item_screen_button_rects[6];
-	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, transparent);
+	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[7];
-	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, transparent);
+	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[8];
-	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, transparent);
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
 void set_stat_window(short new_stat)
@@ -580,16 +563,16 @@ void set_stat_window(short new_stat)
 					array_pos++;
 					}
 			array_pos = max(0,array_pos - 8);
-			SetControlMaximum(item_sbar,array_pos);
+			item_sbar->setMaximum(array_pos);
 			break;
 		case 7:
-			SetControlMaximum(item_sbar,2);
+			item_sbar->setMaximum(2);
 			break;
 		default:
-			SetControlMaximum(item_sbar,16);
+			item_sbar->setMaximum(16);
 			break;
 		}
-	SetControlValue(item_sbar,0);
+	item_sbar->setPosition(0);
 	put_item_screen(stat_window,0);
 
 }
@@ -607,25 +590,27 @@ short first_active_pc()
 
 void refresh_stat_areas(short mode)
 {
-	short i,x;
-	Rect dest_rect,parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
+	short i;
+	sf::BlendMode x;
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT dest_rect,parts_of_area_to_draw[3] = {RECT{0,0,17,271},RECT{16,0,123,256},RECT{123,0,144,271}};
 
 	//x = mode * 10;
-	GetPortBounds(pc_stats_gworld, &dest_rect);
-	Rect oldRect = dest_rect;
-	OffsetRect(&dest_rect,PC_WIN_UL_X,PC_WIN_UL_Y);
-	if(mode == 1) x = addOver;
-	else x = srcCopy;
-	rect_draw_some_item (pc_stats_gworld, oldRect, dest_rect,ul, x);
+	dest_rect = RECT(pc_stats_gworld);
+	RECT oldRect = dest_rect;
+	dest_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
+	if(mode == 1) x = sf::BlendAdd;
+	else x = sf::BlendNone;
+	rect_draw_some_item (pc_stats_gworld.getTexture(), oldRect, dest_rect,ul, x);
 	for (i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
-		OffsetRect(&dest_rect,ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item (item_stats_gworld, parts_of_area_to_draw[i], dest_rect,ul, x);
+		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul, x);
 		}
-	GetPortBounds(text_area_gworld, &dest_rect);
+	dest_rect = RECT(text_area_gworld);
 	oldRect = dest_rect;
-	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	rect_draw_some_item (text_area_gworld,oldRect, dest_rect,ul, x);
+	dest_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	rect_draw_some_item(text_area_gworld.getTexture(),oldRect, dest_rect,ul, x);
 }
 
 ////
@@ -664,23 +649,19 @@ short total_encumberance(short pc_num)
 void draw_pc_effects(short pc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
-	Rect source_rects[18] = {
-		{00,0,12,12},{00,12,12,24},{00,24,12,36},
-		{12,0,24,12},{12,12,24,24},{12,24,24,36},
-		{24,0,36,12},{24,12,36,24},{24,24,36,36},
-		{36,0,47,12},{36,12,47,24},{36,24,47,36},
-		{47,0,60,12},{47,12,60,24},{47,24,60,36},
-		{60,0,72,12},{60,12,72,24},{60,24,72,36}
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT source_rects[18] = {
+		RECT{00,0,12,12},RECT{00,12,12,24},RECT{00,24,12,36},
+		RECT{12,0,24,12},RECT{12,12,24,24},RECT{12,24,24,36},
+		RECT{24,0,36,12},RECT{24,12,36,24},RECT{24,24,36,36},
+		RECT{36,0,47,12},RECT{36,12,47,24},RECT{36,24,47,36},
+		RECT{47,0,60,12},RECT{47,12,60,24},RECT{47,24,60,36},
+		RECT{60,0,72,12},RECT{60,12,72,24},RECT{60,24,72,36}
 	};
-	Rect dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
+	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
 	short right_limit = 250;
 	short dest = 0; // 0 - in gworld  2 - on dialog
 	short name_width;
-	RGBColor	store_color;
-
-
-	GetBackColor(&store_color);	
-	BackColor(whiteColor);	
 	
 	if (pc >= 10) {return; // TODO: This is a temporary measure only!
 		pc -= 10;
@@ -704,95 +685,94 @@ void draw_pc_effects(short pc)
 		return;
 	// TODO: This used to draw the status icons in the spell dialog, but it no longer does. Fix that.
 	if ((univ.party[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[4],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[4],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_BLESS_CURSE] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[2],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[2],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	else if (univ.party[pc].status[STATUS_BLESS_CURSE] < 0) { 
-		rect_draw_some_item (status_gworld,source_rects[3],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[3],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_POISON] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_INVULNERABLE] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[5],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[5],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if (univ.party[pc].status[STATUS_HASTE_SLOW] > 0) { 
-		rect_draw_some_item (status_gworld,source_rects[6],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[6],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	else if (univ.party[pc].status[STATUS_HASTE_SLOW] < 0) { 
-		rect_draw_some_item (status_gworld,source_rects[8],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[8],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}else{ 
-		rect_draw_some_item (status_gworld,source_rects[7],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[7],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
 	if ((univ.party[pc].status[STATUS_MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[9],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[9],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_WEBS] > 0) && (dest_rect.right < right_limit)) { 
-		rect_draw_some_item (status_gworld,source_rects[10],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[10],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_DISEASE] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[11],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[11],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_INVISIBLE] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[12],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[12],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}
 	if ((univ.party[pc].status[STATUS_DUMB] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[13],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[13],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[14],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[14],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_ASLEEP] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[15],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[15],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_PARALYZED] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[16],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[16],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 		}	
 	if ((univ.party[pc].status[STATUS_ACID] > 0) && (dest_rect.right < right_limit)){ 
-		rect_draw_some_item (status_gworld,source_rects[17],pc_stats_gworld,dest_rect,transparent);
+		rect_draw_some_item(status_gworld,source_rects[17],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
-		}	
-	RGBBackColor(&store_color);
+	}
 }
 
 
 void print_party_stats() {
-	char store_string[255];
+	char store_string[256];
 	add_string_to_buf("PARTY STATS:");
 	sprintf((char *) store_string, "  Number of kills: %lld                   ", univ.party.total_m_killed);
 	add_string_to_buf(store_string);
@@ -1073,14 +1053,10 @@ void print_monst_attacks(m_num_t m_type,short target)
 ////
 void damaged_message(short damage,short type)
 {
-	std::string msg = "  ";
-	Str255 str;
-	get_str(str,20,130 + type);
-	msg += (char*)str; 
-	std::ostringstream sout(msg);
+	std::ostringstream sout("  ");
+	sout << get_str("monster-abilities",130 + type);
 	sout << " for " << damage;
-	msg = sout.str();
-	add_string_to_buf((char *) msg.c_str());	
+	add_string_to_buf(sout.str().c_str());
 }
 
 // This prepares the monster's string for the text bar
@@ -1281,7 +1257,7 @@ void add_string_to_buf(std::string str)
 	
 	if(str == "") return;
 	
-	SetControlValue(text_sbar,58);
+	text_sbar->setPosition(58); // TODO: This seems oddly specific
 	if (buf_pointer == mark_where_printing_long) {
 		printing_long = true;
 		print_buf();
@@ -1308,29 +1284,31 @@ void print_buf ()
 	short num_lines_printed = 0,ctrl_val;
 	short line_to_print;
 	short start_print_point;
-	GrafPtr old_port;
 	bool end_loop = false;
-	Rect store_text_rect,dest_rect,erase_rect = {1,1,137,255};
+	RECT store_text_rect,dest_rect,erase_rect = {1,1,137,255};
 
 	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
 	// who gives a shit?
-	GetPort(&old_port);	
-	SetPort( text_area_gworld);
+	text_area_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
-	InsetRect(&erase_rect,1,1); ////
+	erase_rect.inset(1,1); ////
 	erase_rect.right++;
-	tileImage(erase_rect,bg_gworld,bg[6]);
+	tileImage(mainPtr, erase_rect,bg_gworld,bg[6]);
 
-	ctrl_val = 58 - GetControlValue(text_sbar);
+	ctrl_val = 58 - text_sbar->getPosition();
 	start_print_point = buf_pointer - LINES_IN_TEXT_WIN - ctrl_val;
 	if (start_print_point< 0)
 		start_print_point= TEXT_BUF_LEN + start_print_point;
 	line_to_print= start_print_point;
 	
+	location moveTo;
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
-		MoveTo(4, 13 + 12 * num_lines_printed);
-		drawstring((char *) text_buffer[line_to_print].line);
+		moveTo = location(4, 13 + 12 * num_lines_printed);
+		// TODO: Determine correct parameters to this sf::Text (font, etc)
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("Geneva"));
+		text.setPosition(moveTo);
+		mainPtr.draw(text);
 		num_lines_printed++;
 		line_to_print++;
 		if (line_to_print== TEXT_BUF_LEN) {
@@ -1345,13 +1323,12 @@ void print_buf ()
 		}
 		
 	
-	GetPortBounds(text_area_gworld, &store_text_rect);
+	store_text_rect = RECT(text_area_gworld);
 	dest_rect = store_text_rect;
 
-	OffsetRect(&dest_rect,TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	SetPort(GetWindowPort(mainPtr));
-	rect_draw_some_item (text_area_gworld, store_text_rect, dest_rect,ul);
-	SetPort(old_port);		
+	dest_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	mainPtr.setActive();
+	rect_draw_some_item(text_area_gworld.getTexture(), store_text_rect, dest_rect,ul);
 }
 
 void restart_printing()
@@ -1373,89 +1350,36 @@ void through_sending()
 	printing_long = false;
 }
 
-void Display_String(Str255 str)
-{
-	Str255 str2;
-	
-	//c2pstr((char *) str);
-	sprintf((char *)str2," %s",str);
-	str2[0] = (char) strlen((char *)str);
-	DrawString(str2);
-}
-
-void drawstring(char * str)
-{
-	unsigned char pstr[256];
-	c2pstrcpy(pstr,str);
-	DrawString(pstr);
-}
-
-void display_string(char *str)
-{
-//	c2pstr(str);
-	drawstring(str);
-}
-
-
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
 	object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-// TODO: Might as well make this call rect_draw_some_item instead of directly calling CopyBits
-void Draw_Some_Item (GWorldPtr src_gworld, Rect src_rect, GWorldPtr targ_gworld, 
-location target, char masked, short main_win)
+void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win)
 {
-Rect	destrec = {0,0,36,28};
-PixMapHandle	test1, test2;
-const BitMap * store_dest;
+RECT	destrec = {0,0,36,28};
 	
 	if ((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
-		return;
-	if (src_gworld == NULL)
 		return;
 	if ((supressing_some_spaces == true) && (target != ok_space[0]) &&
 		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 			return;
 	terrain_there[target.x][target.y] = -1;
-	
-	store_dest = GetPortBitMapForCopyBits(GetWindowPort(mainPtr));	
-	
-	test1 = GetPortPixMap(src_gworld);
 
 	destrec = coord_to_rect(target.x,target.y);
-	if (main_win == 1) OffsetRect(&destrec,ul.h + 5,ul.v + 5);
+	if (main_win == 1) destrec.offset(ul.x + 5,ul.y + 5);
 		
-	LockPixels(test1);
 	if (main_win == 0) {
-		test2 = GetPortPixMap(targ_gworld); 
-		LockPixels(test2);
-		if (masked == 1) 
-			CopyBits ( (BitMap *) *test1 ,
-					(BitMap *) *test2 ,
-					&src_rect, &destrec, 
-					 transparent , NULL);	
-			else CopyBits ( (BitMap *) *test1 ,
-					(BitMap *) *test2 ,
-					&src_rect, &destrec, 
-					  srcCopy, NULL);
-		UnlockPixels(test2);
-		}  
-		else {
-
-		if (masked == 1) 
-			CopyBits ( (BitMap *) *test1 ,
-					store_dest ,
-					&src_rect, &destrec, 
-					 transparent , NULL);
-			else CopyBits ( (BitMap *) *test1 ,
-					store_dest ,
-					&src_rect, &destrec, 
-					  srcCopy , NULL);   
-			}
-	UnlockPixels(test1);
+		if(masked == 1)
+			rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendAlpha);
+		else rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendNone);
+	} else {
+		if(masked == 1)
+			rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendAlpha);
+		else rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendNone);
+	}
 }
 
 
-//void rect_draw_some_item (GWorldPtr src_gworld, Rect src_rect,  GWorldPtr targ_gworld, 
-//Rect targ_rect,  char masked, short main_win)
+//void rect_draw_some_item (GWorldPtr src_gworld, RECT src_rect,  GWorldPtr targ_gworld, 
+//RECT targ_rect,  char masked, short main_win)
 ////	 masked; // if 10 - make AddOver
 ////   main_win; // if 2, drawing onto dialog
 //{
@@ -1518,9 +1442,9 @@ const BitMap * store_dest;
 //	SetPort(cur_port);
 //}
 
-Rect coord_to_rect(short i,short j)
+RECT coord_to_rect(short i,short j)
 {
-	Rect to_return;
+	RECT to_return;
 	
 	to_return.left = 13 + BITMAP_WIDTH * i;
 	to_return.right = to_return.left + BITMAP_WIDTH;
@@ -1540,7 +1464,7 @@ void make_cursor_sword()
 //{
 //	short text_len[257];
 //	short total_width = 0,i,len;
-//	Str255 p_str;
+//	char p_str[256];
 //	
 //	for (i = 0; i < 257; i++)
 //		text_len[i]= 0;
@@ -1557,15 +1481,15 @@ void make_cursor_sword()
 //}
 
 
-//void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//void char_win_draw_string(WindowPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
 //{
 //	char_port_draw_string(GetWindowPort(dest_window), dest_rect, str, mode, line_height); 
 //}
 //
 //
-//void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//void char_port_draw_string(GrafPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
 //{
-//	Str255 store_s;
+//	char store_s[256];
 //	
 //	strcpy((char *) store_s,str);
 //	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
@@ -1575,11 +1499,11 @@ void make_cursor_sword()
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-//void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height)
+//void win_draw_string(GrafPtr dest_window,RECT dest_rect,Str255 str,short mode,short line_height)
 //{
 //	GrafPtr old_port;
-//	Str255 p_str,str_to_draw,str_to_draw2,c_str;
-//	Str255 null_s = "                                                                                                                                                                                                                                                              ";
+//	const char* p_str,str_to_draw,str_to_draw2,c_str;
+//	char null_s[256] = "                                                                                                                                                                                                                                                              ";
 //	short str_len,i;
 //	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 //	short text_len[257];

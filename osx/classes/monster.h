@@ -12,6 +12,8 @@
 #include <string>
 #include <iosfwd>
 #include "soundtool.h"
+#include "simpletypes.h"
+#include "graphtool.h"
 
 namespace legacy {
 	struct monster_record_type;

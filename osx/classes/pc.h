@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iosfwd>
+#include "simpletypes.h"
 
 namespace legacy { struct pc_record_type; };
 

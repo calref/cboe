@@ -1,0 +1,300 @@
+No special ability
+Throws darts (dam 1-6)
+Shoots arrows (dam 2-12)
+Throws spears (dam 3-18)
+Throws rocks (dam 4-24)
+Throws rocks (dam 5-30)
+Throws rocks (dam 6-36)
+Throws razordisks (4-24)
+Petrification ray
+Spell point drain ray
+Heat ray
+Invisible
+Splits when hit
+Mindless (resists fear)
+Breathes stinking clouds
+Icy touch
+Experience draining touch
+Icy and draining touch
+Slowing touch
+Shoots webs
+Good archer (dam 7-42)
+Steals food when hits
+Permanent martyr's shield
+Paralysis ray
+Dumbfounding touch
+Disease touch
+Absorb spells
+Web touch
+Sleep touch
+Paralysis touch
+Petrification touch
+Acid touch
+Breathe sleep clouds
+Acid spit
+Shoot spines (dam 7-42)
+Death touch (use with care)
+Invulnerable (use with care)
+Guard
+
+
+
+
+
+
+
+
+
+
+
+No ability
+Radiate fire fields
+Radiate ice fields
+Radiate shock fields
+Radiate antimagic fields
+Radiate sleep fields
+Radiate stink clouds
+Unused
+Unused
+Unused
+Summon (%5 chance)
+Summon (%20 chance)
+Summon (%50 chance)
+Unused
+Unused
+Death triggers global special
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+Percentage chance (1-100%)
+Percentage chance (1-100%)
+Percentage chance (1-100%)
+Percentage chance (1-100%)
+Percentage chance (1-100%)
+Percentage chance (1-100%)
+Unused
+Unused
+Unused
+Number of creature to summon
+Number of creature to summon
+Number of creature to summon
+Unused
+Unused
+Number of special to call
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hits
+Claws
+Bites
+Slimes
+Punches
+Stings
+Clubs
+Burns
+Harms
+Stabs
+
+
+
+
+
+
+
+
+
+
+Human
+Reptile
+Beast
+Important
+Mage
+Priest
+Humanoid
+Demon
+Undead
+Giant
+Slime
+Stone
+Bug
+Dragon
+Magical Creature
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

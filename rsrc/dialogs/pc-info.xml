@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<button name='done' type='done' top='339' left='339'/>
+	<button name='left' type='left' def-key='left' top='339' left='289'/>
+	<button name='right' type='right' def-key='right' top='339' left='352'/>
+	<button name='mage' type='large' top='310' left='144'>Mage Spells</button>
+	<button name='priest' type='large' top='310' left='257'>Priest Spells</button>
+	<button name='trait' type='large' top='310' left='370'>Advantages</button>
+	<pict name='pic' type='pc' num='0' top='10' left='9'/>
+	<text size='large' top='6' left='48' width='75' height='16'>Info on:</text>
+	<text name='name' size='large' top='6' left='127' width='174' height='16'/>
+	<text size='large' top='29' left='48' width='53' height='16'>Level:</text>
+	<text name='lvl' size='large' top='29' left='103' width='29' height='16'/>
+	<text size='large' top='29' left='134' width='78' height='16'>Experience:</text>
+	<text name='xp' size='large' top='29' left='215' width='38' height='16'/>
+	<text size='large' top='29' left='258' width='78' height='16'>Next level:</text>
+	<text name='progress' size='large' top='29' left='339' width='38' height='16'/>
+	<text size='large' top='51' left='10' width='95' height='16'>Statistics:</text>
+	<text name='lbl1' top='70' left='24' width='97' height='16'/>
+	<text name='str' top='70' left='128' width='38' height='16'/>
+	<text name='lbl2' top='88' left='24' width='97' height='16'/>
+	<text name='dex' top='88' left='128' width='38' height='16'/>
+	<text name='lbl3' top='106' left='24' width='97' height='16'/>
+	<text name='int' top='106' left='128' width='38' height='16'/>
+	<text name='lbl4' top='129' left='24' width='97' height='16'/>
+	<text name='edge' top='129' left='128' width='38' height='16'/>
+	<text name='lbl5' top='147' left='24' width='97' height='16'/>
+	<text name='bash' top='147' left='128' width='38' height='16'/>
+	<text name='lbl6' top='165' left='24' width='97' height='16'/>
+	<text name='pole' top='165' left='128' width='38' height='16'/>
+	<text name='lbl7' top='183' left='24' width='97' height='16'/>
+	<text name='thrown' top='183' left='128' width='38' height='16'/>
+	<text name='lbl8' top='201' left='24' width='97' height='16'/>
+	<text nane='bow' top='201' left='128' width='38' height='16'/>
+	<text name='lbl9' top='219' left='24' width='97' height='16'/>
+	<text name='def' top='219' left='128' width='38' height='16'/>
+	<text name='lbl10' top='70' left='171' width='92' height='16'/>
+	<text name='mage' top='70' left='266' width='38' height='16'/>
+	<text name='lbl11' top='88' left='171' width='92' height='16'/>
+	<text name='priest' top='88' left='266' width='38' height='16'/>
+	<text name='lbl12' top='106' left='171' width='92' height='16'/>
+	<text name='lore' top='106' left='266' width='38' height='16'/>
+	<text name='lbl13' top='124' left='171' width='92' height='16'/>
+	<text name='alch' top='124' left='266' width='38' height='16'/>
+	<text name='lbl14' top='142' left='171' width='92' height='16'/>
+	<text name='item' top='142' left='266' width='38' height='16'/>
+	<text name='lbl15' top='165' left='171' width='92' height='16'/>
+	<text name='trap' top='165' left='266' width='38' height='16'/>
+	<text name='lbl16' top='183' left='171' width='92' height='16'/>
+	<text name='lock' top='183' left='266' width='38' height='16'/>
+	<text name='lbl17' top='201' left='171' width='92' height='16'/>
+	<text name='assassin' top='201' left='266' width='38' height='16'/>
+	<text name='lbl18' top='219' left='171' width='92' height='16'/>
+	<text name='poison' top='219' left='266' width='38' height='16'/>
+	<text name='lbl19' top='242' left='24' width='97' height='16'/>
+	<text name='luck' top='242' left='128' width='38' height='16'/>
+	<text top='131' left='314' width='75' height='16'>Weapon 1:</text>
+	<text name='weap1a' top='150' left='325' width='155' height='18'/>
+	<text name='weap1b' top='170' left='325' width='155' height='18'/>
+	<text top='191' left='315' width='75' height='16'>Weapon 2:</text>
+	<text name='weap2a' top='210' left='326' width='154' height='18'/>
+	<text name='weap2b' top='230' left='326' width='154' height='18'/>
+	<text size='large' top='265' left='11' width='139' height='17'>Total encumbrance:</text>
+	<text name='encumb' top='265' left='156' width='38' height='16'/>
+	<text top='265' left='199' width='250' height='16'>Defense skill reduces this during combat.</text>
+	<text top='50' left='314' width='75' height='16'>Health</text>
+	<text name='hp' top='69' left='325' width='155' height='18'/>
+	<text top='89' left='314' width='75' height='19'>Spell Pts.</text>
+	<text name='sp' top='108' left='325' width='155' height='18'/>
+	<button name='alch' type='large' top='339' left='176'>Alchemy</button>
+	<text name='weight' framed='true' top='285' left='11' width='387' height='17'/>
+	<text size='large' top='29' left='382' width='62' height='16'>Skill Pts.:</text>
+	<text name='skp' size='large' top='29' left='445' width='32' height='16'/>
+</dialog>

@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 //#include "item.h"
 
 #include "mathutil.h"
@@ -11,7 +10,6 @@
 #include "boe.monster.h"
 #include "boe.fields.h"
 
-short short_can_see();
 bool combat_pt_in_light();
 //extern short town_size[3];
 location obs_sec;
@@ -142,17 +140,6 @@ location get_cur_loc()
 			return pc_pos[current_pc];
 			break;	
 		}
-}
-
-short short_can_see(shortloc p1,shortloc p2)
-{
-	location s1,s2;
-	
-	s1.x = (char) p1.x;
-	s1.y = (char) p1.y;
-	s2.x = (char) p2.x;
-	s2.y = (char) p2.y;
-	return (can_see(s1,s2,0));
 }
 
 bool is_lava(short x,short y)////
@@ -325,7 +312,7 @@ bool is_container(location loc)
 
 void update_explored(location dest)
 {
-	shortloc shortdest,look;
+	location shortdest,look;
 
 	location look2;
 
@@ -341,7 +328,7 @@ void update_explored(location dest)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 
 			if (univ.out.out_e[look.x][look.y] == 0)
-					if (short_can_see(shortdest, look) < 5)
+					if (can_see(shortdest, look) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
 			}	
 			

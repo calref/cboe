@@ -1,4 +1,6 @@
 
+#include <SFML/Graphics.hpp>
+
 void adjust_window_mode();
 void plop_fancy_startup();
 void fancy_startup_delay();
@@ -10,8 +12,8 @@ void draw_startup(short but_type);
 void draw_anim();
 void place_anim(); 
 void draw_start_button(short which_position,short which_button);
-void main_button_click(short mode,Rect button_rect);
-void arrow_button_click(Rect button_rect);
+void main_button_click(short mode,RECT button_rect);
+void arrow_button_click(RECT button_rect);
 void end_startup();
 void Set_up_win ();
 void load_main_screen();
@@ -37,21 +39,16 @@ void redraw_terrain();
 void draw_targets(location center);
 void frame_space(location where,short mode,short width,short height);
 void erase_spot(short i,short j);
-void undo_clip();
-void draw_targeting_line(Point where_curs);
+void draw_targeting_line(location where_curs);
 bool party_toast();
-void redraw_partial_terrain(Rect redraw_rect);
+void redraw_partial_terrain(RECT redraw_rect);
 bool is_nature(char i, char j, unsigned char ground_t);
-void put_dialog_graphic(short graphic_num,short spec_g,Rect draw_rect);
+void put_dialog_graphic(short graphic_num,short spec_g,RECT draw_rect);
 void draw_startup_stats();
-void HideMenuBar( void );
-void ShowMenuBar( void );
 void FlushAndPause(unsigned long ticks);
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);
 
 ter_num_t get_ground_from_ter(ter_num_t ter);
 ter_num_t get_ter_from_ground(unsigned char ground);
 
-void draw_startup_anim();
-short cd_create_custom_dialog(WindowPtr parent, Str255 strs[6],short pic_num,short buttons[3]);
-void init_dialogs();
+void draw_startup_anim(bool advance);

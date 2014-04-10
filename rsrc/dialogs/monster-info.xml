@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	1<text size='large' top='209' left='21' width='137' height='16'>Immunities:</text>
+	2<text size='large' top='7' left='54' width='106' height='16'>Monster Info:</text>
+	3<button name='done' type='done' top='319' left='249'/>
+	4<pict name='pic' type='monst' num='0' top='8' left='12'/>
+	5<text name='name' framed='true' top='32' left='104' width='195' height='16'/>
+	6<text name='lvl' framed='true' top='59' left='53' width='25' height='16'/>
+	7<text name='hp' framed='true' top='59' left='134' width='47' height='16'/>
+	8<text name='sp' framed='true' top='59' left='258' width='47' height='16'/>
+	9<text name='def' framed='true' top='85' left='57' width='25' height='16'/>
+	10<text name='skill' framed='true' top='85' left='127' width='25' height='16'/>
+	11<text name='morale' framed='true' top='85' left='205' width='32' height='16'/>
+	12<text name='ap' framed='true' top='85' left='280' width='25' height='16'/>
+	13<text name='attack1' framed='true' top='111' left='63' width='44' height='16'/>
+	14<text name='attack2' framed='true' top='111' left='160' width='44' height='16'/>
+	15<text name='attack3' framed='true' top='111' left='261' width='44' height='16'/>
+	16<text name='mage' framed='true' top='137' left='78' width='25' height='17'/>
+	17<text name='priest' framed='true' top='137' left='188' width='25' height='17'/>
+	18<text name='poison' framed='true' top='137' left='280' width='25' height='17'/>
+	19<text name='abil1' framed='true' top='165' left='67' width='238' height='16'/>
+	20<led name='immune1' state='off' top='227' left='118'/>
+	21<led name='immune2' state='off' top='242' left='118'/>
+	22<led name='immune3' state='off' top='257' left='118'/>
+	23<led name='immune4' state='off' top='272' left='118'/>
+	24<led name='immune5' state='off' top='227' left='241'/>
+	25<led name='immune6' state='off' top='242' left='241'/>
+	26<led name='immune7' state='off' top='257' left='241'/>
+	27<led name='immune8' state='off' top='272' left='241'/>
+	28<button name='left' type='left' def-key='left' top='319' left='11'/>
+	29<button name='right' type='right' def-key='right' top='319' left='74'/>
+	30<text top='288' left='10' width='305' height='28'>(To make monsters appear in roster menu, cast Scry Monster on them.)</text>
+	31<text name='abil2' framed='true' top='188' left='67' width='238' height='16'/>
+</dialog>

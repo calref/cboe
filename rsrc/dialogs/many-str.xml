@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog defbtn='done'>
+	<!-- Unexpected picture item -->
+	<pict name='pict' type='dlog' num='24' top='9' left='9'/>
+	<button name='done' type='done' top='202' left='199'/>
+	<button name='left' type='left' def-key='left' top='202' left='55'/>
+	<button name='right' type='right' def-key='right' top='202' left='124'/>
+	<text name='title' size='large' top='17' left='55' width='179' height='16'/>
+	<text name='str' framed='true' top='55' left='17' width='238' height='129'/>
+</dialog>

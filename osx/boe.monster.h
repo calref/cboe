@@ -1,3 +1,6 @@
+
+#include "pict.h"
+
 //cMonster return_monster_template(m_num_t store);
 //short difficulty_adjust();
 short out_enc_lev_tot(short which);
@@ -5,7 +8,7 @@ void create_wand_monst();
 void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced);
 location get_monst_head(short m_num);
 short get_monst_picnum(m_num_t monst);
-short get_monst_pictype(m_num_t monst);
+ePicType get_monst_pictype(m_num_t monst);
 void get_monst_dims(m_num_t monst,short *width, short *height);
 void set_up_monst(short mode,m_num_t m_num);
 void do_monsters();

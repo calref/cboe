@@ -12,6 +12,13 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
+#include "vehicle.h"
+#include "creatlist.h"
+#include "item.h"
+#include "pc.h"
+#include "outdoors.h"
+#include "monster.h"
 
 namespace legacy {
 	struct party_record_type;
@@ -42,6 +49,7 @@ public:
 	};
 	class cEncNote {
 	public:
+		eEncNoteType type;
 		unsigned short str_num, where;
 		std::string the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
 	};
@@ -113,10 +121,10 @@ public:
 	void add_pc(legacy::pc_record_type old);
 	void add_pc(cPlayer new_pc);
 	void void_pcs();
-	bool has_talk_save(short who, short str1, short str2);
+	bool has_talk_save(short who, short where, short str1, short str2);
 	bool save_talk(short who, unsigned char where, short str1, short str2);
 	bool add_to_journal(short event, short day);
-	bool record(short what, short where);
+	bool record(eEncNoteType type, short what, short where);
 	bool start_timer(short time, short node, short type);
 	cPlayer& operator[](unsigned short n);
 	void writeTo(std::ostream& file);
@@ -137,5 +145,9 @@ public:
 	typedef std::map<std::string,std::vector<signed short> >::iterator campIter;
 	typedef std::map<short,std::pair<unsigned short,unsigned char> >::iterator ptrIter;
 };
+
+bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);
+bool operator==(const cParty::cJournal& one, const cParty::cJournal& two);
+bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two);
 
 #endif

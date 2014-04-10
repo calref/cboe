@@ -6,7 +6,6 @@
  *
  */
 
-#include <Carbon/Carbon.h>
 #include <string>
 #include <vector>
 #include <map>
@@ -24,214 +23,20 @@
 #include "mathutil.h"
 #include "fileio.h"
 #include "porting.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "restypes.hpp"
 
 extern bool cur_scen_is_mac, mac_is_intel;
 extern cScenario scenario;
-extern GWorldPtr spec_scen_g,items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
-extern GWorldPtr dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
-extern GWorldPtr status_gworld, vehicle_gworld, small_ter_gworld;
+extern sf::Texture spec_scen_g,items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
+extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
+extern sf::Texture status_gworld, vehicle_gworld, small_ter_gworld;
 extern cUniverse univ;
 //extern unsigned char borders[4][50];
 //extern cOutdoors current_terrain;
 //extern cTown* town;
-extern std::string progDir;
+extern fs::path progDir;
 //extern short overall_mode;
-
-NavDialogRef dlg_get_scen,dlg_get_game,dlg_put_scen,dlg_put_game;
-
-Boolean scen_file_filter(AEDesc* item, void* info, void * dummy, NavFilterModes filterMode){
-	if(item->descriptorType == typeFSRef){
-		OSErr err;
-		FSRef the_file;
-		FSCatalogInfo cat_info;
-		FSSpec file_spec;
-		AEGetDescData(item,&the_file,AEGetDescDataSize(item));
-		err = FSGetCatalogInfo (&the_file,kFSCatInfoFinderInfo,&cat_info,NULL,&file_spec,NULL);
-		if(err != noErr) return false;
-		FileInfo* file_info = (FileInfo*) &cat_info.finderInfo;
-		if(file_info->fileType == 'BETM') return true;
-		for(int i = 0; i < 64; i++){
-			if(file_spec.name[i] == '.')
-				if(file_spec.name[i + 1] == 'e' || file_spec.name[i + 1] == 'E')
-					if(file_spec.name[i + 1] == 'x' || file_spec.name[i + 1] == 'X')
-						if(file_spec.name[i + 1] == 's' || file_spec.name[i + 1] == 'S')
-							return true;
-		}
-	}
-	return false;
-}
-
-Boolean party_file_filter(AEDesc* item, void* info, void * dummy, NavFilterModes filterMode){
-	if(item->descriptorType == typeFSRef){
-		OSErr err;
-		FSRef the_file;
-		FSCatalogInfo cat_info;
-		FSSpec file_spec;
-		AEGetDescData(item,&the_file,AEGetDescDataSize(item));
-		err = FSGetCatalogInfo (&the_file,kFSCatInfoFinderInfo,&cat_info,NULL,&file_spec,NULL);
-		if(err != noErr) return false;
-		FileInfo* file_info = (FileInfo*) &cat_info.finderInfo;
-		if(file_info->fileType == 'beSV') return true;
-		for(int i = 0; i < 64; i++){
-			if(file_spec.name[i] == '.')
-				if(file_spec.name[i + 1] == 'e' || file_spec.name[i + 1] == 'E')
-					if(file_spec.name[i + 1] == 'x' || file_spec.name[i + 1] == 'X')
-						if(file_spec.name[i + 1] == 'g' || file_spec.name[i + 1] == 'G')
-							return true;
-		}
-	}
-	return false;
-}
-
-void init_fileio(){
-	OSErr err;
-	static NavDialogCreationOptions opts = {
-		kNavDialogCreationOptionsVersion,
-		kNavNoTypePopup,
-		{-2,-2},
-		CFSTR("com.spidweb.boesceneditor"),
-		CFSTR("BoE Scenario Editor"),
-		NULL,
-		NULL,
-		NULL,//CFSTR("scenname.exs"),
-		NULL,//CFSTR("Select a location to save the scenario:"),
-		0,
-		NULL,
-		kWindowModalityAppModal,
-		NULL
-	};
-	err = NavCreatePutFileDialog (&opts, 'BETM', 'BlEd', NULL, NULL, &dlg_put_scen);
-	err = NavCreateGetFileDialog (&opts, NULL, NULL, NULL, scen_file_filter, NULL, &dlg_get_scen);
-	static NavDialogCreationOptions opts2 = opts;
-	opts2.clientName = CFSTR("com.spidweb.bladesofexile");
-	opts2.windowTitle = CFSTR("Blades of Exile");
-	opts2.modality = kWindowModalityAppModal;
-	err = NavCreatePutFileDialog (&opts2, 'beSV', 'blx!', NULL, NULL, &dlg_put_game);
-	err = NavCreateGetFileDialog (&opts2, NULL, NULL, NULL, party_file_filter, NULL, &dlg_get_game);
-}
-
-FSSpec nav_get_scenario() throw(no_file_chosen) {
-	NavReplyRecord s_reply;
-	AEKeyword keyword;
-	DescType descType;
-	Size actualSize;
-	FSSpec file_to_load;
-	
-	NavGetFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
-	if (s_reply.validRecord == false)
-		throw no_file_chosen();
-	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
-	
-	return file_to_load;
-}
-
-FSSpec nav_put_scenario() throw(no_file_chosen) {
-	/*NavReplyRecord s_reply;
-	AEKeyword keyword;
-	DescType descType;
-	Size actualSize;*/
-	FSSpec file_to_load;
-	
-	return file_to_load;
-}
-
-FSSpec nav_get_party() throw(no_file_chosen) {
-	NavReplyRecord reply;
-	NavTypeList type_list; // To be able to have more than one type, this wouldn't do.
-	FSSpec file_to_load;
-	
-	type_list.componentSignature = kNavGenericSignature;
-	type_list.osTypeCount = 1;
-	type_list.osType[0] = 'beSV';
-	
-	NavTypeListPtr type_list_p = &type_list;
-	
-	NavChooseFile(NULL,&reply,NULL,NULL,NULL,NULL,&type_list_p,NULL);
-	
-	if (!reply.validRecord)
-		throw no_file_chosen();
-	
-	AEKeyword keyword;
-	DescType descType;
-	Size actualSize;
-	
-	AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,&file_to_load,sizeof(FSSpec),&actualSize);
-	
-	NavDisposeReply(&reply);
-	
-	return file_to_load;
-}
-
-FSSpec nav_put_party() throw(no_file_chosen) {
-	NavReplyRecord s_reply;
-	AEKeyword keyword;
-	DescType actualType;
-	Size actualSize;
-	FSSpec file_to_save;
-	OSStatus error;
-	long descCount;
-	
-	error = NavDialogRun(dlg_put_game);
-	NavUserAction e = NavDialogGetUserAction(dlg_put_game);
-	if (e == kNavUserActionCancel || e == kNavUserActionNone)
-		throw no_file_chosen();
-	
-	NavDialogGetReply(dlg_put_game, &s_reply);
-	if (!s_reply.validRecord)
-		throw no_file_chosen();
-	
-	//  Deal with multiple file selection
-	error = AECountItems(&(s_reply.selection), &descCount);
-	// Set up index for file list
-	if (error == noErr){
-		long index = 1;
-		//for (index = 1; index <= 1; index++){
-		// Get a pointer to selected file
-		error = AEGetNthPtr(&(s_reply.selection), index,
-							typeFSS, &keyword,
-							&actualType,&file_to_save,
-							sizeof(file_to_save),
-							&actualSize);
-		if (error == noErr){
-			FSRef tempRef;
-			FSpMakeFSRef(&file_to_save,&tempRef);
-			UniChar uniname[256];
-			CFRange range = {0,255};
-			CFStringGetCharacters (s_reply.saveFileName,range,uniname);
-			uniname[(UniCharCount)CFStringGetLength (s_reply.saveFileName)]=0;
-			error=FSCreateFileUnicode(&tempRef, (UniCharCount)CFStringGetLength (s_reply.saveFileName), (UniChar *) uniname, kFSCatInfoNone, NULL, NULL, &file_to_save);
-			if(error==noErr){//file didn't exist and so we just created it
-				printf("created file\n");
-				//kludge to correctly set creator and file types so that we'll recognize the file when we go to open it later
-				FInfo fileInfo;
-				FSpGetFInfo(&file_to_save, &fileInfo);
-				fileInfo.fdCreator='blx!';
-				fileInfo.fdType='beSV';
-				FSpSetFInfo(&file_to_save, &fileInfo);
-			}
-			else{
-				if(error==dupFNErr){ //file already exists
-					UInt8 tempPath[512];
-					FSpMakeFSRef(&file_to_save, &tempRef);
-					FSRefMakePath (&tempRef,tempPath,512);
-					CFStringRef path = CFStringCreateWithFormat(NULL, NULL, CFSTR("%s/%S"),tempPath,uniname);
-					CFStringGetCString(path, (char*)tempPath, 512, kCFStringEncodingUTF8);
-					FSPathMakeRef(tempPath, &tempRef, NULL);
-					error=FSGetCatalogInfo(&tempRef, kFSCatInfoNone, NULL,NULL, &file_to_save, NULL);
-				}
-				else{ //something bad happened
-					printf("creation error was: %i\n",(int32_t)error);
-					throw no_file_chosen(); // TODO: This should probably be some other exception.
-				}
-			}
-		}
-		else
-			throw no_file_chosen(); // TODO: This should probably be some other exception.
-	}
-
-	return file_to_save;
-}
 
 struct header_posix_ustar {
 	char name[100];
@@ -292,26 +97,26 @@ header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long 
 	return(header);
 }
 
-bool load_scenario(FSSpec file_to_load){
-	short i,file_id;
+bool load_scenario(fs::path file_to_load){
+	short i,n;
 	bool file_ok = false;
-	OSErr error;
 	long len;
-//	FSSpec file_to_load;
 	legacy::scenario_data_type *temp_scenario = new legacy::scenario_data_type;
 	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
-	error = FSpOpenDF(&file_to_load,1,&file_id);
-	if (error != 0) {
-		oops_error(28);
-		SysBeep(2);
+	// TODO: Convert this (and all the others in this file) to use C++ streams
+	FILE* file_id = fopen(file_to_load.c_str(),"rb");
+	if(file_id == NULL) {
+		// TODO: The third parameter to oopsError is supposed to specify whether we're in the scenario editor or the game, but I don't think this code knows that.
+		// TODO: Alternatively, nuke oopsError and just use giveError. It's more informative, anyway.
+		oopsError(10, 0, 0);
 		return false;
 	}
 	
 	len = (long) sizeof(scenario_header_flags);
 	
-	if ((error = FSRead(file_id, &len, (char *) &scenario.format)) != 0){
-		FSClose(file_id);
-		oops_error(29);
+	if (fread(&scenario.format, len, 1, file_id) < 1){
+		fclose(file_id);
+		oopsError(11, 0, 0);
 		return false;
 	}
 	
@@ -322,29 +127,28 @@ bool load_scenario(FSSpec file_to_load){
 	}
 	else if ((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 		(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
-	  	SysBeep(20);
 	  	cur_scen_is_mac = false;
 	  	file_ok = true;
 	}
 	if (file_ok == false) {
-		FSClose(file_id); 
-		give_error("This is not a legitimate Blades of Exile scenario.","",0);
+		fclose(file_id);
+		giveError("This is not a legitimate Blades of Exile scenario.");
 		return false;
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
-	error = FSRead(file_id, &len, (char *) temp_scenario);
-	if (error != 0){
-		FSClose(file_id);
-		oops_error(29);
+	n = fread(temp_scenario, len, 1, file_id);
+	if(n < 1){
+		fclose(file_id);
+		oopsError(12, 0, 0);
 		return false;
 	}
 	port_scenario(temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
-	error = FSRead(file_id, &len, (char *) item_data);
-	if (error != 0){
-		FSClose(file_id);
-		oops_error(30);
+	n = fread(item_data, len, 1, file_id);
+	if(n < 1){
+		fclose(file_id);
+		oopsError(13, 0, 0);
 		return false;
 	}
 	port_item_list(item_data);
@@ -352,11 +156,11 @@ bool load_scenario(FSSpec file_to_load){
 	scenario.append(*item_data);
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
-		FSRead(file_id, &len, (char *) &(scenario.scen_strs(i)));
+		n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
 		scenario.scen_strs(i)[len] = 0;
 	}
 	
-	FSClose(file_id);
+	fclose(file_id);
 	
 	// code for master
 	/*
@@ -426,9 +230,8 @@ long get_town_offset(short which_town){
 }
 
 bool load_town(short which_town, cTown*& the_town){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump = 0;
-	OSErr error;
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
 	legacy::big_tr_type t_d;
@@ -441,39 +244,38 @@ bool load_town(short which_town, cTown*& the_town){
 	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
 		// because it does its own range checking before calling load_town.
-		give_error("The scenario tried to place you into a non-existant town.","",0);
+		giveError("The scenario tried to place you into a non-existant town.");
+		return false;
+	}
+	
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(14, 0, 0);
 		return false;
 	}
 	
 	len_to_jump = get_town_offset(which_town);
-	
-	if ((error = FSpOpenDF(&scenario.scen_file,1,&file_id)) != 0) {
-		oops_error(34);
-		return false;
-	}
-	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(35);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(15, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
-	
-	error = FSRead(file_id, &len , (char *) &store_town);
-	port_town(&store_town);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(36);
+	n = fread(&store_town, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(16, 0, 0);
 		return false;
 	}
+	port_town(&store_town);
 	
 	if(the_town != NULL) delete the_town;
 	switch (scenario.town_size[which_town]) {
 		case 0:
-			len =  sizeof(legacy::big_tr_type);
-			FSRead(file_id, &len, (char *) &t_d);
+			len = sizeof(legacy::big_tr_type);
+			n = fread(&t_d, len, 1, file_id);
 			port_t_d(&t_d);
 			the_town = new cBigTown;
 			*the_town = store_town;
@@ -482,7 +284,7 @@ bool load_town(short which_town, cTown*& the_town){
 			
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
-			FSRead(file_id, &len, (char *) &ave_t);
+			n = fread(&ave_t, len, 1, file_id);
 			port_ave_t(&ave_t);
 			the_town = new cMedTown;
 			*the_town = store_town;
@@ -491,7 +293,7 @@ bool load_town(short which_town, cTown*& the_town){
 			
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
-			FSRead(file_id,&len , (char *) &tiny_t);
+			n = fread(&tiny_t, len, 1, file_id);
 			port_tiny_t(&tiny_t);
 			the_town = new cTinyTown;
 			*the_town = store_town;
@@ -501,15 +303,15 @@ bool load_town(short which_town, cTown*& the_town){
 	
 	for (i = 0; i < 140; i++) {
 		len = (long) (the_town->strlens[i]);
-		FSRead(file_id, &len, (char *) &(the_town->town_strs(i)));
+		n = fread(&(the_town->town_strs(i)), len, 1, file_id);
 		the_town->town_strs(i)[len] = 0;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
-	error = FSRead(file_id, &len , (char *) &store_talk);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(37);
+	n = fread(&store_talk, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(17, 0, 0);
 		return false;
 	}
 	port_talk_nodes(&store_talk);
@@ -517,24 +319,22 @@ bool load_town(short which_town, cTown*& the_town){
 	
 	for (i = 0; i < 170; i++) {
 		len = (long) (the_town->talking.strlens[i]);
-		FSRead(file_id, &len, (char *) &(the_town->talking.talk_strs[i]));
+		n = fread(&(the_town->talking.talk_strs[i]), len, 1, file_id);
 		the_town->talking.talk_strs[i][len] = 0;
 	}
 	
 	//	town_type = scenario.town_size[which_town];
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(38);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(18, 0, 0);
 	}
 	
 	return true;
 }
 
 bool load_town(short which_town, cSpeech& the_talk){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump = 0;
-	OSErr error;
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
 	
@@ -544,33 +344,32 @@ bool load_town(short which_town, cSpeech& the_talk){
 	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
 		// because it does its own range checking before calling load_town.
-		give_error("The scenario tried to place you into a non-existant town.","",0);
+		giveError("The scenario tried to place you into a non-existant town.");
+		return false;
+	}
+	
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(19, 0, 0);
 		return false;
 	}
 	
 	len_to_jump = get_town_offset(which_town);
-	
-	if ((error = FSpOpenDF(&scenario.scen_file,1,&file_id)) != 0) {
-		oops_error(34);
-		return false;
-	}
-	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(35);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(20, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
-	
-	error = FSRead(file_id, &len , (char *) &store_town);
-	port_town(&store_town);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(36);
+	n = fread(&store_town, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(21, 0, 0);
 		return false;
 	}
+	port_town(&store_town);
 	
 	switch (scenario.town_size[which_town]) {
 		case 0:
@@ -583,18 +382,18 @@ bool load_town(short which_town, cSpeech& the_talk){
 			len = sizeof(legacy::tiny_tr_type);
 			break;
 	}
-	error = SetFPos (file_id, 3, len);
 	
+	n = fseek(file_id, len, SEEK_CUR);
 	for (i = 0; i < 140; i++) {
 		len = (long) (store_town.strlens[i]);
-		SetFPos (file_id, 3, len);
+		fseek(file_id, len, SEEK_CUR);
 	}
 	
 	len = sizeof(legacy::talking_record_type);
-	error = FSRead(file_id, &len , (char *) &store_talk);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(37);
+	n = fread(&store_talk, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(22, 0, 0);
 		return false;
 	}
 	port_talk_nodes(&store_talk);
@@ -602,52 +401,50 @@ bool load_town(short which_town, cSpeech& the_talk){
 	
 	for (i = 0; i < 170; i++) {
 		len = (long) (the_talk.strlens[i]);
-		FSRead(file_id, &len, (char *) &(the_talk.talk_strs[i]));
+		n = fread(&(the_talk.talk_strs[i]), len, 1, file_id);
 		the_talk.talk_strs[i][len] = 0;
 	}
 	
 	//	town_type = scenario.town_size[which_town];
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(38);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(23, 0, 0);
 	}
 	
 	return true;
 }
 
 bool load_town_str(short which_town, short which_str, char* str){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump = 0;
-	OSErr error;
 	legacy::town_record_type store_town;
 	
 	//	if (overall_mode == 61)
 	//		return;
-	
-	len_to_jump = get_town_offset(which_town);
-	
-	if ((error = FSpOpenDF(&scenario.scen_file,1,&file_id)) != 0) {
-		oops_error(34);
+
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(24, 0, 0);
 		return false;
 	}
 	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(35);
+	len_to_jump = get_town_offset(which_town);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(25, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
 	
-	error = FSRead(file_id, &len , (char *) &store_town);
-	port_town(&store_town);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(36);
+	n = fread(&store_town, len, 1, file_id);
+	if(len < 1) {
+		fclose(file_id);
+		oopsError(26, 0, 0);
 		return false;
 	}
+	port_town(&store_town);
 	
 	switch (scenario.town_size[which_town]) {
 		case 0:
@@ -660,59 +457,56 @@ bool load_town_str(short which_town, short which_str, char* str){
 			len = sizeof(legacy::tiny_tr_type);
 			break;
 	}
-	error = SetFPos (file_id, 3, len);
 	
+	n = fseek(file_id, len, SEEK_CUR);
 	for (i = 0; i < 140; i++) {
 		len = (long) (univ.town->strlens[i]);
 		if(i == which_str){
-			FSRead(file_id, &len, (char *) str);
+			n = fread(str, len, 1, file_id);
 			str[len] = 0;
 		}
-		else SetFPos (file_id, 3, len);
+		else fseek(file_id, len, SEEK_CUR);
 	}
 	
 	//	town_type = scenario.town_size[which_town];
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(38);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(27, 0, 0);
 	}
 	
 	return true;
 }
 
 bool load_town_str(short which_town, cTown*& t){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump = 0;
-	OSErr error;
 	legacy::town_record_type store_town;
 	
 	//	if (overall_mode == 61)
 	//		return;
 	
-	len_to_jump = get_town_offset(which_town);
-	
-	if ((error = FSpOpenDF(&scenario.scen_file,1,&file_id)) != 0) {
-		oops_error(34);
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(28, 0, 0);
 		return false;
 	}
 	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(35);
+	len_to_jump = get_town_offset(which_town);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(29, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
-	
-	error = FSRead(file_id, &len , (char *) &store_town);
-	port_town(&store_town);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(36);
+	n = fread(&store_town, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(30, 0, 0);
 		return false;
 	}
+	port_town(&store_town);
 	
 	switch (scenario.town_size[which_town]) {
 		case 0:
@@ -725,19 +519,18 @@ bool load_town_str(short which_town, cTown*& t){
 			len = sizeof(legacy::tiny_tr_type);
 			break;
 	}
-	error = SetFPos (file_id, 3, len);
 	
+	n = fseek(file_id, len, SEEK_CUR);
 	for (i = 0; i < 140; i++) {
 		len = (long) (t->strlens[i]);
-		FSRead(file_id, &len, (char *) &(t->town_strs(i)));
+		n = fread(&(t->town_strs(i)), len, 1, file_id);
 		t->town_strs(i)[len] = 0;
 	}
 	
 	//	town_type = scenario.town_size[which_town];
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(38);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(31, 0, 0);
 	}
 	
 	return true;
@@ -764,10 +557,9 @@ long get_outdoors_offset(location& which_out){
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
 bool load_outdoors(location which_out,cOutdoors& the_out){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
-	OSErr error;
 	
 //	if (overall_mode == 61)
 //		return;
@@ -778,26 +570,25 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 		return true;
 	}
 	
-	error = FSpOpenDF(&scenario.scen_file,1,&file_id);
-	if (error != 0) {
-		oops_error(31);
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(32, 0, 0);
 		return false;
 	}
 	
 	len_to_jump = get_outdoors_offset(which_out);
-	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(32);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(33, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::outdoor_record_type);
-	error = FSRead(file_id, &len, (char *) &store_out);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(33);
+	n = fread(&store_out, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(34, 0, 0);
 		return false;
 	}
 	
@@ -805,109 +596,107 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 	the_out = store_out;
 	for (i = 0; i < 108; i++) {
 		len = (long) (the_out.strlens[i]);
-		FSRead(file_id, &len, (char *) &(the_out.out_strs(i)));
+		n = fread(&(the_out.out_strs(i)), len, 1, file_id);
 		the_out.out_strs(i)[len] = 0;
 	}
 	
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(33);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(35, 0, 0);
 	}
 	return true;
 }
 
 bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
-	short j,file_id;
+	short j,n;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
-	OSErr error;
 	
-	error = FSpOpenDF(&scenario.scen_file,1,&file_id);
-	if (error != 0) {
-		oops_error(31);
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(36, 0, 0);
 		return false;
 	}
 	
 	len_to_jump = get_outdoors_offset(which_out);
 	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(32);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(37, 0, 0);
 		return false;
 	}
 	
 	len = sizeof(legacy::outdoor_record_type);
-	error = FSRead(file_id, &len, (char *) &store_out);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(33);
+	n = fread(&store_out, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		oopsError(38, 0, 0);
 		return false;
 	}
 	
-	if (mode == 1) 
+	switch(mode) {
+	case 1:
 		for (j = 0; j < 48; j++) {
 			borders[0][j] = store_out.terrain[j][47];
 		}
-	if (mode == 2) 
+		break;
+	case 2:
 		for (j = 0; j < 48; j++) {
 			borders[1][j] = store_out.terrain[0][j];
 		}
-	if (mode == 3) 
+		break;
+	case 3:
 		for (j = 0; j < 48; j++) {
 			borders[2][j] = store_out.terrain[j][0];
 		}
-	if (mode == 4) 
+		break;
+	case 4:
 		for (j = 0; j < 48; j++) {
 			borders[3][j] = store_out.terrain[47][j];
 		}
+		break;
+	}
 	
-	
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(33);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(39, 0, 0);
 	}
 	return true;
 }
 
 bool load_outdoor_str(location which_out, short which_str, char* str){
-	short i,file_id;
+	short i,n;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
-	OSErr error;
 	
-	error = FSpOpenDF(&scenario.scen_file,1,&file_id);
-	if (error != 0) {
-		oops_error(31);
+	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	if(file_id == NULL) {
+		oopsError(40, 0, 0);
 		return false;
 	}
 	
 	len_to_jump = get_outdoors_offset(which_out);
-	
-	error = SetFPos (file_id, 1, len_to_jump);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(32);
+	n = fseek(file_id, len_to_jump, SEEK_SET);
+	if(n != 0) {
+		fclose(file_id);
+		oopsError(41, 0, 0);
 		return false;
 	}
 	
-	error = FSRead(file_id, &len, (char *) &store_out);
-	
+	n = fread(&store_out, len, 1, file_id);
 	for (i = 0; i < 120; i++) {
 		len = (long) (store_out.strlens[i]);
 		if (i == which_str) {
-			FSRead(file_id, &len, (char *) str);
+			n = fread(str, len, 1, file_id);
 			str[len] = 0;
 		}
-		else SetFPos (file_id, 3, len);	
+		else fseek(file_id, len, SEEK_CUR);
 	}
 	
-	error = FSClose(file_id);
-	if (error != 0) {
-		FSClose(file_id);
-		oops_error(33);
+	n = fclose(file_id);
+	if(n != 0) {
+		oopsError(42, 0, 0);
 	}
 	return true;
 }
@@ -915,43 +704,17 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 void load_spec_graphics()
 {
 	short i;
-	Str255 file_name;
-	UInt8 path[256];
-	FSRef file;
-	ResFileRefNum custRef;
-	OSErr err;
-	if (spec_scen_g != NULL) {
-		DisposeGWorld(spec_scen_g);
-		spec_scen_g = NULL;
-	}
-	//build_scen_file_name(file_name);
-	err = FSpMakeFSRef(&scenario.scen_file, &file);
-	err = FSRefMakePath(&file, path, 255);
-	printf("Loading scenario graphics... (%s)\n",(char*)path);
-	for (i = 0; i < 250; i++) {
-		if (path[i] == '.') {
-			path[i + 1] = 'e';
-			path[i + 2] = 'x';
-			path[i + 3] = 'r';
-			//path[i + 4] = 0;
-			break;
-		}
-	}
-	err = FSPathMakeRef(path,&file,NULL);
+	fs::path path(scenario.scen_file);
+	printf("Loading scenario graphics... (%s)\n",path.c_str());
+	path.replace_extension("exr");
 	// TODO: Load new-style sheets
 	//if(err != noErr)
 	{
 		//	for (i = 0; i < 63; i++) 
 		//		file_name[i] = whatever[i];
-		for (i = 0; i < 250; i++) {
-			if (path[i] == '.') {
-				path[i + 1] = 'm';
-				path[i + 2] = 'e';
-				path[i + 3] = 'g';
-				//path[i + 4] = 0;
-				break;
-			}
-		}
+		path.replace_extension("meg");
+		// TODO: There's no way around it; I'll have to read resource files for this section.
+#if 0
 		err = FSPathMakeRef(path, &file, NULL);
 		err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm /*fsRdWrPerm*/, &custRef);
 		//file_num = HOpen(file_to_load.vRefNum,file_to_load.parID,file_name,1);
@@ -979,41 +742,41 @@ void load_spec_graphics()
 			spec_scen_g = load_pict(1);
 			CloseResFile(custRef);
 		}
+#endif
 	}//else{}
 	
 	// Now load regular graphics
-	items_gworld = load_pict("objects.png",univ.party.scen_name);
-	tiny_obj_gworld = load_pict("tinyobj.png",univ.party.scen_name);
-	fields_gworld = load_pict("fields.png",univ.party.scen_name);
-	roads_gworld = load_pict("trim.png",univ.party.scen_name);
-	boom_gworld = load_pict("booms.png",univ.party.scen_name);
-	missiles_gworld = load_pict("missiles.png",univ.party.scen_name);
-	dlogpics_gworld = load_pict("dlogpics.png",univ.party.scen_name);
-	status_gworld = load_pict("staticons.png",univ.party.scen_name);
+	items_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("objects"));
+	tiny_obj_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("tinyobj"));
+	fields_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("fields"));
+	roads_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("trim"));
+	boom_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("booms"));
+	missiles_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("missiles"));
+	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
+	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
 	
 	for (i = 0; i < NUM_MONST_SHEETS; i++){
 		std::ostringstream sout;
-		sout << "monst" << i + 1 << ".png";
-		monst_gworld[i] = load_pict(sout.str(),univ.party.scen_name);
+		sout << "monst" << i + 1;
+		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
 	for (i = 0; i < NUM_TER_SHEETS; i++){
 		std::ostringstream sout;
-		sout << "ter" << i + 1 << ".png";
-		terrain_gworld[i] = load_pict(sout.str(),univ.party.scen_name);
+		sout << "ter" << i + 1;
+		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
-	anim_gworld = load_pict("teranim.png",univ.party.scen_name);
-	talkfaces_gworld = load_pict("talkportraits.png",univ.party.scen_name);
-	pc_gworld = load_pict("pcs.png",univ.party.scen_name);
-	vehicle_gworld = load_pict("vehicle.png",univ.party.scen_name);
-	small_ter_gworld = load_pict("mapOLD.png",univ.party.scen_name); // TODO: Should use the new map graphics instead
+	anim_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("teranim"));
+	talkfaces_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("talkportraits"));
+	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
+	vehicle_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("vehicle"));
+	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("mapOLD")); // TODO: Should use the new map graphics instead
 	// TODO: Scenario icons ...
 }
 
 
-bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
-bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there);
-bool load_party(FSSpec file_to_load){
-	OSErr error;
+bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
+bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there);
+bool load_party(fs::path file_to_load){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -1023,9 +786,10 @@ bool load_party(FSSpec file_to_load){
 	long len;
 //	flag_type flag;
 //	flag_type *flag_ptr;
-	short vers,file_id;
+	short vers,n;
 	struct __attribute__((packed)) {ushort a; ushort b; ushort c; ushort d; ushort e;} flags;
 	
+	// TODO: Putting these flags in hex would make some things a bit clearer
 	static const unsigned short mac_flags[3][2] = {
 		{5790,1342}, // slot 0 ... 5790 - out,         1342 - town
 		{100,200},   // slot 1 ... 100  - in scenario, 200  - not in
@@ -1038,10 +802,9 @@ bool load_party(FSSpec file_to_load){
 	};
 	// but if the first flag is 0x0B0E, we have a new-format save
 	// the three flags still follow that.
-	error = FSpOpenDF(&file_to_load,1,&file_id);
-	if (error != 0) {
-		FCD(1064,0);
-		SysBeep(2);
+	FILE* file_id = fopen(file_to_load.c_str(), "rb");
+	if(file_id == NULL) {
+		cChoiceDlog("load-game-fail.xml").show();
 		return false;
 	}		
 	
@@ -1053,10 +816,10 @@ bool load_party(FSSpec file_to_load){
 	//	sprintf((char *) debug, "  Len %d               ", (short) len);
 	//	add_string_to_buf((char *) debug);
 	
-	error = FSRead(file_id, &len, (char*) &flags);
-	if(error != 0) {
-		FSClose(file_id);
-		FCD(1063,0);
+	n = fread(&flags, len, 1, file_id);
+	if(n < 1) {
+		fclose(file_id);
+		cChoiceDlog("not-save-game.xml").show();
 		return false;
 	}
 	
@@ -1126,7 +889,7 @@ bool load_party(FSSpec file_to_load){
 		}
 	}else format = unknown;
 	
-	FSClose(file_id);
+	fclose(file_id);
 	switch(format){
 		case old_mac:
 			return load_party_v1(file_to_load, town_restore, in_scen, maps_there, mac_is_intel);
@@ -1135,7 +898,7 @@ bool load_party(FSSpec file_to_load){
 		case new_oboe:
 			return load_party_v2(file_to_load, town_restore, in_scen, maps_there);
 		case unknown:
-			FCD(1063,0);
+			cChoiceDlog("not-save-game.xml").show();
 			return false;
 	}
 	
@@ -1171,12 +934,8 @@ bool load_party(FSSpec file_to_load){
 	return true;
 }
 
-bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port){
-	FSRef dest_ref;
-	char* path = new char[200];
-	FSpMakeFSRef(&file_to_load, &dest_ref);
-	FSRefMakePath(&dest_ref, (UInt8*) path, 200);
-	std::ifstream fin(path);
+bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port){
+	std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	//short flags[3];
 	//fin.read((char*)flags,3*sizeof(short));
@@ -1382,16 +1141,12 @@ bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 		univ.town.append(sfx, misc_i);
 	}
 	if(in_scen){
-		FSRef file_ref;
-		FSSpec file_spec;
-		std::string path;
-		path = progDir + "/Blades of Exile Scenarios/" + univ.party.scen_name;
+		fs::path path;
+		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
 		//std::cout<<path<<'\n';
-		FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
-		FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
-		if (!load_scenario(file_spec))
+		if(!load_scenario(path))
 			return false;
-		univ.file = file_spec;
+		univ.file = path;
 	}else{
 		univ.party.scen_name = "";
 	}
@@ -1406,15 +1161,9 @@ bool load_party_v1(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	return true;
 }
 
-#include <sstream>
-
-bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool maps_there){
-	FSRef dest_ref;
-	char* buf = new char[200];
-	FSpMakeFSRef(&file_to_load, &dest_ref);
-	FSRefMakePath(&dest_ref, (UInt8*)&buf, 200);
-	FILE* f = fopen(buf,"rb");
-	delete buf;
+bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there){
+	char* buf;
+	FILE* f = fopen(file_to_load.c_str(),"rb");
 	
 	// TODO: Write the parsers and stuff
 	/*   Skip header   */
@@ -1423,6 +1172,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	
 	/*   Initialize various variables   */
 	header_posix_ustar header;
+	// TODO: Don't call this sin; that's a trig function
 	std::istringstream sin;
 	std::string tar_name;
 	std::string tar_entry;
@@ -1444,7 +1194,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	
 	/*   Read the data from each file   */
 	if(party_archive.find("save/party.txt") == party_archive.end()){
-		FCD(1064,0);
+		cChoiceDlog("load-game-fail.xml").show();
 		return false;
 	}else{
 		sin.str(party_archive["save/party.txt"]);
@@ -1456,7 +1206,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 		std::string f_name = buf;
 		delete buf;
 		if(party_archive.find(f_name) == party_archive.end()){
-			FCD(1064,0);
+			cChoiceDlog("load-game-fail.xml").show();
 			return false;
 		}else{
 			sin.str(party_archive[f_name]);
@@ -1466,14 +1216,14 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	if(in_scen){
 		if(town_restore){
 			if(party_archive.find("save/town.txt") == party_archive.end()){
-				FCD(1064,0);
+				cChoiceDlog("load-game-fail.xml").show();
 				return false;
 			}else{
 				sin.str(party_archive["save/town.txt"]);
 				univ.town.readFrom(sin);
 			}
 			if(party_archive.find("save/townmaps.dat") == party_archive.end()){
-				FCD(1064,0);
+				cChoiceDlog("load-game-fail.xml").show();
 				return false;
 			}else{
 				sin.str(party_archive["save/townmaps.dat"]);
@@ -1484,14 +1234,14 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 			}
 		}
 		if(party_archive.find("save/out.txt") == party_archive.end()){
-			FCD(1064,0);
+			cChoiceDlog("load-game-fail.xml").show();
 			return false;
 		}else{
 			sin.str(party_archive["save/out.txt"]);
 			univ.out.readFrom(sin);
 		}
 		if(party_archive.find("save/outmaps.dat") == party_archive.end()){
-			FCD(1064,0);
+			cChoiceDlog("load-game-fail.xml").show();
 			return false;
 		}else{
 			sin.str(party_archive["save/outmaps.dat"]);
@@ -1504,7 +1254,7 @@ bool load_party_v2(FSSpec file_to_load, bool town_restore, bool in_scen, bool ma
 	return true;
 }
 
-bool save_party(FSSpec dest_file)
+bool save_party(fs::path dest_file)
 //mode;  // 0 - normal  1 - save as
 {
 	//printf("Saving is currently disabled.\n");
@@ -1512,19 +1262,14 @@ bool save_party(FSSpec dest_file)
 	bool in_town = univ.town.num < 200;
 	bool save_maps = !univ.party.stuff_done[306][0];
 	
+	// TODO: Strip off the header and save the remainder to a temporary file, then use gzip on that; this should fix the issue of the header being interpreted as compressed.
 	/*   Open the GZip file and write the (uncompressed) header   */
-	FSRef dest_ref;
-	char* path = new char[200];
-	FSpMakeFSRef(&dest_file, &dest_ref);
-	FSRefMakePath(&dest_ref, (UInt8*)path, 200);
-	//buf = new char[10000];
-	//FILE* f = fopen(path,"wb");
-	std::ofstream fout(path);
+	std::ofstream fout(dest_file.c_str(), std::ios_base::binary);
 	short flags[] = {
 		0x0B0E, // to indicate new format
-		in_town ? 1342 : 5790, // is the party in town?
-		in_scen ? 100 : 200, // is the party in a scenario?
-		save_maps ? 5567 : 3422, // is the save maps feature enabled?
+		static_cast<short>(in_town ? 1342 : 5790), // is the party in town?
+		static_cast<short>(in_scen ? 100 : 200), // is the party in a scenario?
+		static_cast<short>(save_maps ? 5567 : 3422), // is the save maps feature enabled?
 		0x0100, // current version number, major and minor revisions only
 		// Version 1 indicates a beta format that won't be supported in the final release
 	};
@@ -1537,7 +1282,6 @@ bool save_party(FSSpec dest_file)
 	//int q = gzflush(party_file, Z_FULL_FLUSH); // required in order to avoid the header getting compressed
 	//gzsetparams(party_file, Z_DEFAULT_COMPRESSION, Z_DEFAULT_STRATEGY);
 	fout.write((char*) flags, 5*sizeof(short));
-	delete path;
 	
 	/*   Initialize buffer and other variables   */
 	header_posix_ustar header;
@@ -1961,6 +1705,9 @@ bool save_party(FSSpec dest_file)
 }
 
 std::vector<std::string> load_strings(std::string which){
+	// TODO: Fix the bundle-ness
+	// TODO: Is this even used anywhere?
+#if 0
 	UniChar* strListName = new UniChar[which.length()];
 	for(int i = 0; i < which.length(); i++) strListName[i] = which[i];
 	char stringsPath[512];
@@ -1974,7 +1721,8 @@ std::vector<std::string> load_strings(std::string which){
 	delete strListName;
 	if(stringsURL == NULL) return std::vector<std::string>(); // if not found, return an empty list
 	CFStringGetCString(CFURLCopyFileSystemPath(stringsURL, kCFURLPOSIXPathStyle), stringsPath, 512, kCFStringEncodingUTF8);
-	path = stringsPath;// + '/' + which;
+#endif
+	fs::path path = progDir/which;
 	printf("Loading strings from: %s\n",path.c_str());
 	std::ifstream fin(path.c_str());
 	std::string s;

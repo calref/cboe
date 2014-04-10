@@ -9,9 +9,12 @@
 #ifndef PICT_H
 #define PICT_H
 
+#include <SFML/Graphics.hpp>
+
 #include <vector>
 #include <map>
 #include "graphtool.h" // for pic_num_t
+#include "control.h"
 
 enum ePicType {
 	PIC_TER = 1, // 28x36 terrain graphic from the preset sheets
@@ -94,69 +97,66 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	static void setSheet(eSheetType type, GWorldPtr sheet, short n = 0);
-	static bool isSheetSet(eSheetType type, size_t n = 0);
+	void setColour(sf::Color clr) throw(xUnsupportedProp);
+	sf::Color getColour() throw(xUnsupportedProp);
 	void setPict(pic_num_t num, ePicType type);
+	void setPict(pic_num_t num);
 	pic_num_t getPicNum();
 	ePicType getPicType();
-	explicit cPict(cDialog* parent);
+	explicit cPict(cDialog& parent);
+	explicit cPict(sf::RenderWindow& parent);
 	bool isClickable();
 	static void advanceAnim();
 	virtual ~cPict();
-protected:
 	void draw();
 private:
+	static std::shared_ptr<sf::Texture> getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
 	short picNum;
 	ePicType picType;
 	bool clickable, drawFramed;
-	friend class cDialog;
-	static GWorldPtr teranim, dlog, talk, scen, largeScen, item, tinyItem, pc, field, boom, missile, save, header, map, status;
-	static std::vector<GWorldPtr> ter, monst, customSheets;
-	static std::map<size_t,GWorldPtr> largeSheets; // map instead of vector because it'll be a sparse array
-	static void drawPresetTer(short num, Rect to_rect);
-	static void drawPresetTerAnim(short num, Rect to_rect);
-	static void drawPresetMonstSm(short num, Rect to_rect);
-	static void drawPresetMonstWide(short num, Rect to_rect);
-	static void drawPresetMonstTall(short num, Rect to_rect);
-	static void drawPresetMonstLg(short num, Rect to_rect);
-	static void drawPresetDlog(short num, Rect to_rect);
-	static void drawPresetDlogLg(short num, Rect to_rect);
-	static void drawPresetTalk(short num, Rect to_rect);
-	static void drawPresetScen(short num, Rect to_rect);
-	static void drawPresetScenLg(short num, Rect to_rect);
-	static void drawPresetItem(short num, Rect to_rect);
-	static void drawPresetPc(short num, Rect to_rect);
-	static void drawPresetField(short num, Rect to_rect);
-	static void drawPresetBoom(short num, Rect to_rect);
-	static void drawPresetMissile(short num, Rect to_rect);
-	static void drawPresetTerMap(short num, Rect to_rect);
-	static void drawStatusIcon(short num, Rect to_rect);
-	static void drawFullSheet(short num, Rect to_rect);
-	static void drawCustomTer(short num, Rect to_rect);
-	static void drawCustomTerAnim(short num, Rect to_rect);
-	static void drawCustomMonstSm(short num, Rect to_rect);
-	static void drawCustomMonstWide(short num, Rect to_rect);
-	static void drawCustomMonstTall(short num, Rect to_rect);
-	static void drawCustomMonstLg(short num, Rect to_rect);
-	static void drawCustomDlog(short num, Rect to_rect);
-	static void drawCustomDlogLg(short num, Rect to_rect);
-	static void drawCustomTalk(short num, Rect to_rect);
-	static void drawCustomItem(short num, Rect to_rect);
-	static void drawCustomMissile(short num, Rect to_rect);
-	static void drawCustomTerMap(short num, Rect to_rect);
-	static void drawPartyMonstSm(short num, Rect to_rect);
-	static void drawPartyMonstWide(short num, Rect to_rect);
-	static void drawPartyMonstTall(short num, Rect to_rect);
-	static void drawPartyMonstLg(short num, Rect to_rect);
-	static void drawPartyScen(short num, Rect to_rect);
-	static void drawPartyItem(short num, Rect to_rect);
-	static void drawPartyPc(short num, Rect to_rect);
-	static std::map<ePicType,void(*)(short,Rect)>& drawPict();
-	//static void(* drawPict[NUM_PIC_TYPES])(short,GWorldPtr,Rect);
+	void drawPresetTer(short num, RECT to_rect);
+	void drawPresetTerAnim(short num, RECT to_rect);
+	void drawPresetMonstSm(short num, RECT to_rect);
+	void drawPresetMonstWide(short num, RECT to_rect);
+	void drawPresetMonstTall(short num, RECT to_rect);
+	void drawPresetMonstLg(short num, RECT to_rect);
+	void drawPresetDlog(short num, RECT to_rect);
+	void drawPresetDlogLg(short num, RECT to_rect);
+	void drawPresetTalk(short num, RECT to_rect);
+	void drawPresetScen(short num, RECT to_rect);
+	void drawPresetScenLg(short num, RECT to_rect);
+	void drawPresetItem(short num, RECT to_rect);
+	void drawPresetPc(short num, RECT to_rect);
+	void drawPresetField(short num, RECT to_rect);
+	void drawPresetBoom(short num, RECT to_rect);
+	void drawPresetMissile(short num, RECT to_rect);
+	void drawPresetTerMap(short num, RECT to_rect);
+	void drawStatusIcon(short num, RECT to_rect);
+	void drawFullSheet(short num, RECT to_rect);
+	void drawCustomTer(short num, RECT to_rect);
+	void drawCustomTerAnim(short num, RECT to_rect);
+	void drawCustomMonstSm(short num, RECT to_rect);
+	void drawCustomMonstWide(short num, RECT to_rect);
+	void drawCustomMonstTall(short num, RECT to_rect);
+	void drawCustomMonstLg(short num, RECT to_rect);
+	void drawCustomDlog(short num, RECT to_rect);
+	void drawCustomDlogLg(short num, RECT to_rect);
+	void drawCustomTalk(short num, RECT to_rect);
+	void drawCustomItem(short num, RECT to_rect);
+	void drawCustomMissile(short num, RECT to_rect);
+	void drawCustomTerMap(short num, RECT to_rect);
+	void drawPartyMonstSm(short num, RECT to_rect);
+	void drawPartyMonstWide(short num, RECT to_rect);
+	void drawPartyMonstTall(short num, RECT to_rect);
+	void drawPartyMonstLg(short num, RECT to_rect);
+	void drawPartyScen(short num, RECT to_rect);
+	void drawPartyItem(short num, RECT to_rect);
+	void drawPartyPc(short num, RECT to_rect);
+	static std::map<ePicType,void(cPict::*)(short,RECT)>& drawPict();
 	click_callback_t onClick;
 };
 
@@ -166,15 +166,5 @@ ePicType operator + (ePicTypeMod lhs, ePicType rhs);
 ePicType operator - (ePicTypeMod lhs, ePicType rhs);
 ePicType&operator +=(ePicType&lhs, ePicTypeMod rhs);
 ePicType&operator -=(ePicType&lhs, ePicTypeMod rhs);
-
-class xMissingSheet : std::exception {
-	static const char*const messages[NUM_SHEET_TYPES+1];
-	eSheetType type;
-	size_t num;
-public:
-	explicit xMissingSheet(eSheetType t, size_t n = 0) throw();
-	~xMissingSheet() throw();
-	const char* what() throw();
-};
 
 #endif

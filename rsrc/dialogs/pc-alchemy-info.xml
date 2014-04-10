@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<text size='large' top='10' left='54' width='163' height='15'>Alchemy known:</text>
+	<pict type='dlog' num='20' top='6' left='6'/>
+	<button name='done' type='done' top='174' left='356'/>
+	<led name='potion' state='off' top='33' left='217'/>
+	<led name='potion' state='off' top='47' left='217'/>
+	<led name='potion' state='off' top='61' left='217'/>
+	<led name='potion' state='off' top='75' left='217'/>
+	<led name='potion' state='off' top='89' left='217'/>
+	<led name='potion' state='off' top='103' left='217'/>
+	<led name='potion' state='off' top='117' left='217'/>
+	<led name='potion' state='off' top='131' left='217'/>
+	<led name='potion' state='off' top='145' left='217'/>
+	<led name='potion' state='off' top='159' left='217'/>
+	<led name='potion' state='off' top='33' left='402'/>
+	<led name='potion' state='off' top='47' left='402'/>
+	<led name='potion' state='off' top='61' left='402'/>
+	<led name='potion' state='off' top='75' left='402'/>
+	<led name='potion' state='off' top='89' left='402'/>
+	<led name='potion' state='off' top='103' left='402'/>
+	<led name='potion' state='off' top='117' left='402'/>
+	<led name='potion' state='off' top='131' left='402'/>
+	<led name='potion' state='off' top='145' left='402'/>
+	<led name='potion' state='off' top='159' left='402'/>
+	<!--
+	 TODO: This originally had width=119; if it looks wrong in-game, try reverting to that
+	 -->
+	<text top='179' left='8' width='250' height='16'>Number in ( ) is minimum skill to make.</text>
+</dialog>

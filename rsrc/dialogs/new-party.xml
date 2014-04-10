@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<button name='okay' type='regular' top='161' left='248'>Create</button>
+	<button name='cancel' type='regular' def-key='esc' top='161' left='51'>Cancel</button>
+	<pict type='dlog' num='7' top='8' left='8'/>
+	<text top='3' left='50' width='253' height='76'>
+		CREATING A PARTY:<br/>
+		You are now going to the party creation screen.
+		You will be given a prefabricated party.
+		To create new characters from scratch, press the Delete button by the existing characters.
+	</text>
+	<text top='80' left='50' width='255' height='79'>
+		Slithzerikai and Nephilim get bonuses to their statistics,
+		and characters with Mage and Priest Spell skill get bonuses to their spell points.
+		These bonuses are added after character creation is completed.
+	</text>
+</dialog>

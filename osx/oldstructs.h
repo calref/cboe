@@ -10,6 +10,17 @@
 #define OLDSTRUCTS_H
 
 namespace legacy {
+	// These definitions are basically copied from MacTypes.h
+	extern "C" {
+		struct Rect {
+			short               top;
+			short               left;
+			short               bottom;
+			short               right;
+		};
+		typedef struct Rect                     Rect;
+		typedef unsigned char                   Boolean;
+	}
 //#define NLS	25
 //	// number of left slots for buttons
 //#define	NRS	400
@@ -342,7 +353,7 @@ namespace legacy {
 		char town_maps[200][8][64];
 	} __attribute__((packed));
 	
-	typedef struct stored_outdoor_maps_type {
+	struct stored_outdoor_maps_type {
 		char outdoor_maps[100][6][48];
 	} __attribute__((packed));
 	

@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstring>
 #include <cstdio>
 
@@ -12,15 +11,12 @@
 #include "boe.newgraph.h"
 #include "boe.graphutil.h"
 #include "boe.monster.h"
-#include "dlgtool.h"
 #include "boe.locutils.h"
 #include "boe.fields.h"
 #include "boe.text.h"
 #include "graphtool.h"
 #include "soundtool.h"
-#include "gamma.h"
 #include "mathutil.h"
-#include "dlgutil.h"
 
 #include "boe.party.h"
 #include "boe.town.h"
@@ -28,51 +24,52 @@
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
 
-extern WindowPtr mainPtr;
-extern Rect	windRect;
+#include "scrollbar.h"
+
+#include "restypes.hpp"
+#include "boe.menus.h"
+
+extern sf::RenderWindow mainPtr;
+extern RECT	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
 extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
+extern bool flushingInput;
 extern short anim_step;
 extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern Point ul;
+extern location ul;
 extern location pc_pos[6],pc_dir[6],center;
 extern short which_combat_type,current_pc;
 extern bool monsters_going,boom_anim_active,skip_boom_delay;
-extern 	PicHandle	spell_pict;
+extern sf::Image spell_pict;
 extern short current_ground;
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
-extern ControlHandle text_sbar,item_sbar,shop_sbar;
-extern GWorldPtr bg_gworld;
-extern Rect sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
-extern Rect talk_area_rect, word_place_rect;
-extern Rect map_pat[];
-extern Point store_anim_ul;
+extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
+extern sf::Texture bg_gworld;
+extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
+extern RECT talk_area_rect, word_place_rect;
+extern RECT map_pat[];
+extern location store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool fast_bang;
-extern Rect	bg[];
-extern KeyMap key_state;
-extern bool fry_startup;
+extern RECT	bg[];
 extern cScenario scenario;
 extern cUniverse univ;
-extern GWorldPtr spec_scen_g;
-extern DialogPtr modeless_dialogs[18];
-extern bool modeless_exists[18];
+extern sf::Texture spec_scen_g;
+extern sf::RenderWindow mini_map;
+bool map_visible = false;
 extern bool show_startup_splash;
 
-RgnHandle clip_region;
-
-PaletteHandle new_palette,old_palette,wank_palette;
 //***********************
-Rect		menuBarRect;
+RECT		menuBarRect;
 short		menuBarHeight;
-RgnHandle	originalGrayRgn, newGrayRgn, underBarRgn;
+Region originalGrayRgn, newGrayRgn, underBarRgn;
 
 short terrain_there[9][9]; // this is an optimization variabel. Keeps track of what terrain
 	// is in the terrain spot, so things don't get redrawn. 
@@ -84,17 +81,18 @@ long anim_ticks = 0;
 
 // 0 - terrain   1 - buttons   2 - pc stats 
 // 3 - item stats   4 - text bar   5 - text area (not right)
-Rect win_from_rects[6] = {{0,0,351,279},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
-Rect win_to_rects[6] = {{5,5,356,284},{383,5,420,263},{0,0,116,271},{0,0,144,271},{358,5,379,284},{0,0,138,256}};
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT win_from_rects[6] = {RECT{0,0,351,279},RECT{0,0,37,258},RECT{0,0,115,288},RECT{0,0,143,288},RECT{0,0,21,279},RECT{0,0,0,288}};
+RECT win_to_rects[6] = {RECT{5,5,356,284},RECT{383,5,420,263},RECT{0,0,116,271},RECT{0,0,144,271},RECT{358,5,379,284},RECT{0,0,138,256}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
-Rect startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}}; ////
-extern Rect startup_button[6];
+RECT startup_from[4] = {RECT{0,0,274,602},RECT{274,0,322,301},RECT{0,301,67,579},RECT{274,301,314,341}}; ////
+extern RECT startup_button[6];
 	
-//	Rect trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
+//	RECT trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
 //						{0,0,5,5},{0,24,5,28},{31,24,36,28},{31,0,36,5}};
 
-Rect	top_left_rec = {0,0,36,28};
+RECT	top_left_rec = {0,0,36,28};
 short which_graphic_index[6] = {50,50,50,50,50,50};
 
 char combat_graphics[5] = {28,29,36,79,2};
@@ -107,53 +105,54 @@ char light_area[13][13];
 char unexplored_area[13][13];
 
 // Declare the graphics
-GWorldPtr status_gworld = NULL;
-GWorldPtr invenbtn_gworld = NULL;
-GWorldPtr vehicle_gworld = NULL;
-GWorldPtr pc_stats_gworld = NULL;
-GWorldPtr item_stats_gworld = NULL;
-GWorldPtr text_area_gworld = NULL;
-GWorldPtr terrain_screen_gworld = NULL;
-GWorldPtr text_bar_gworld = NULL;
-GWorldPtr orig_text_bar_gworld = NULL;
-GWorldPtr buttons_gworld = NULL;
-GWorldPtr items_gworld = NULL;
-GWorldPtr tiny_obj_gworld = NULL;
-GWorldPtr fields_gworld = NULL;
-GWorldPtr boom_gworld = NULL;
-GWorldPtr roads_gworld = NULL;
-GWorldPtr map_gworld = NULL;
-GWorldPtr small_ter_gworld = NULL;
-GWorldPtr missiles_gworld = NULL;
-GWorldPtr dlogpics_gworld = NULL;
-GWorldPtr anim_gworld = NULL;
-GWorldPtr talkfaces_gworld = NULL;
-GWorldPtr pc_gworld = NULL;
-GWorldPtr monst_gworld[NUM_MONST_SHEETS] = {0};
-GWorldPtr terrain_gworld[NUM_TER_SHEETS] = {0};
+sf::Texture status_gworld;
+sf::Texture invenbtn_gworld;
+sf::Texture vehicle_gworld;
+sf::RenderTexture pc_stats_gworld;
+sf::RenderTexture item_stats_gworld;
+sf::RenderTexture text_area_gworld;
+sf::RenderTexture terrain_screen_gworld;
+sf::RenderTexture text_bar_gworld;
+sf::Texture orig_text_bar_gworld;
+sf::Texture buttons_gworld;
+sf::Texture items_gworld;
+sf::Texture tiny_obj_gworld;
+sf::Texture fields_gworld;
+sf::Texture boom_gworld;
+sf::Texture roads_gworld;
+sf::RenderTexture map_gworld;
+sf::Texture small_ter_gworld;
+sf::Texture missiles_gworld;
+sf::Texture dlogpics_gworld;
+sf::Texture anim_gworld;
+sf::Texture talkfaces_gworld;
+sf::Texture pc_gworld;
+sf::Texture monst_gworld[NUM_MONST_SHEETS];
+sf::Texture terrain_gworld[NUM_TER_SHEETS];
 
 // Startup graphics, will die when play starts
-GWorldPtr startup_gworld = NULL;
-GWorldPtr startup_button_orig = NULL;
-GWorldPtr startup_button_g = NULL;
-GWorldPtr anim_mess = NULL;
+// TODO: The way this is done now, they won't; fix this
+sf::Texture startup_gworld;
+sf::Texture startup_button_orig;
+sf::RenderTexture startup_button_g;
+sf::Texture anim_mess;
 
 bool has_run_anim = false,currently_loading_graphics = false;
 //short anim_step = 0;
 //short overall_anim_step = 0;
 
-Rect main_win_rect = {0,0,410,250};
-Rect main_win2_source_rect = {0,0,410,265};
-Rect main_win2_rect = {0,250,410,515};
+RECT main_win_rect = {0,0,410,250};
+RECT main_win2_source_rect = {0,0,410,265};
+RECT main_win2_rect = {0,250,410,515};
 
-Rect tiny_world_1_source_rect = {0,0,190,145},
+RECT tiny_world_1_source_rect = {0,0,190,145},
 	tiny_world_1_rect = {195,242,385,475};
 
-Rect share_mess_source_rect = {0,0,59,120},
+RECT share_mess_source_rect = {0,0,59,120},
 	share_mess_rect = {120,384,179,504};
-//Rect start_buttons_source_rect = {0,0,180,180},
+//RECT start_buttons_source_rect = {0,0,180,180},
 //	start_buttons_rect = {224,30,405,210};
-Rect start_buttons_source_rect = {0,0,186,190},
+RECT start_buttons_source_rect = {0,0,186,190},
 	start_buttons_rect = {214,30,400,220};
 
 // Array to store which spots have been seen. Time-saver for drawing fields
@@ -162,91 +161,41 @@ char spot_seen[9][9];
 char anim_str[60];
 location anim_str_loc;
 
-PatHandle bw_pats[15];
+extern RECT bw_pats[6];
 
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 bool supressing_some_spaces = false;
 location ok_space[4] = {loc(),loc(),loc(),loc()};
-	PicHandle	hold_pict;
-	PictInfo p,p2;
-
-
-
-void init_dialogs(){
-	cd_init_dialogs(
-		&anim_gworld,
-		&talkfaces_gworld,
-		&items_gworld,
-		&tiny_obj_gworld,
-		&pc_gworld,
-		&dlogpics_gworld,
-		monst_gworld,
-		terrain_gworld,
-		&small_ter_gworld,
-		&fields_gworld,
-		&pc_stats_gworld,
-		&item_stats_gworld,
-		NULL,
-		&spec_scen_g
-	);
-	cd_register_event_filter(869,pick_prefab_scen_event_filter);
-	cd_register_event_filter(947,pick_a_scen_event_filter);
-	cd_register_event_filter(958,tip_of_day_event_filter);
-	cd_register_event_filter(960,talk_notes_event_filter);
-	cd_register_event_filter(961,adventure_notes_event_filter);
-	cd_register_event_filter(962,journal_event_filter);
-	cd_register_event_filter(987,display_item_event_filter);
-	cd_register_event_filter(988,pick_trapped_monst_event_filter);
-	cd_register_event_filter(989,edit_party_event_filter);
-	cd_register_event_filter(991,display_pc_event_filter);
-	cd_register_event_filter(996,display_alchemy_event_filter);
-	cd_register_event_filter(997,display_help_event_filter);
-	cd_register_event_filter(998,display_pc_item_event_filter);
-	cd_register_event_filter(999,display_monst_event_filter);
-	cd_register_event_filter(1010,spend_xp_event_filter );
-	cd_register_event_filter(1012,get_num_of_items_event_filter );
-	cd_register_event_filter(1013,pick_race_abil_event_filter );
-	cd_register_event_filter(1014,sign_event_filter );
-	cd_register_event_filter(873,get_text_response_event_filter );
-	cd_register_event_filter(1017,get_text_response_event_filter );
-	cd_register_event_filter(1018,select_pc_event_filter );
-	cd_register_event_filter(1019,give_pc_info_event_filter);
-	cd_register_event_filter(1047,alch_choice_event_filter);
-	cd_register_event_filter(1050,pc_graphic_event_filter);
-	cd_register_event_filter(1051,pc_name_event_filter);
-	cd_register_event_filter(1073,give_reg_info_event_filter );
-	cd_register_event_filter(1075,do_registration_event_filter );
-	cd_register_event_filter(1096,display_spells_event_filter );
-	cd_register_event_filter(1097,display_skills_event_filter );
-	cd_register_event_filter(1098,pick_spell_event_filter );
-	cd_register_event_filter(1099,prefs_event_filter );
-	cd_register_default_event_filter(fancy_choice_dialog_event_filter);
-}
+sf::Image hold_pict;
 
 void adjust_window_mode()
 {
-	Rect r;
+	RECT r;
+	sf::ContextSettings winSettings;
+	winSettings.stencilBits = 1;
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
+	// TODO: Make display_mode an enum
 	if (display_mode == 5) {
-		ul.h = 14; ul.v = 2;
-		SizeWindow(mainPtr,605,430, true);
-		MoveWindow(mainPtr,(windRect.right - 573) / 2,(windRect.bottom - 430) / 2 + 20,true);
-		GetWindowPortBounds(mainPtr, &r);
+		ul.x = 14; ul.y = 2;
+		mainPtr.create(sf::VideoMode(605,430,32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
+		mainPtr.setPosition({(desktop.width - 605) / 2, (desktop.height - 430) / 2});
+		r = RECT(mainPtr);
 	}
 	else {
-			MoveWindow(mainPtr,-6,-6,true);	
-			SizeWindow(mainPtr,windRect.right + 12, windRect.bottom + 12, true);
+		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
+		mainPtr.setPosition({0,0});
 			switch (display_mode) {
-				case 0: ul.h = (windRect.right - 560) / 2; ul.v = (windRect.bottom - 422) / 2 + 14; break;
-				case 1:	ul.h = 10; ul.v = 28; break;
-				case 2: ul.h = windRect.right - 570 - 6; ul.v = 28;	break; // was 560. not 570
-				case 3: ul.h = 10; ul.v = windRect.bottom - 422	- 6; break;
-				case 4: ul.h = windRect.right - 570 - 6; ul.v = windRect.bottom - 422	- 6; break;
+				case 0: ul.x = (windRect.right - 560) / 2; ul.y = (windRect.bottom - 422) / 2 + 14; break;
+				case 1:	ul.x = 10; ul.y = 28; break;
+				case 2: ul.x = windRect.right - 570 - 6; ul.y = 28;	break; // was 560. not 570
+				case 3: ul.x = 10; ul.y = windRect.bottom - 422	- 6; break;
+				case 4: ul.x = windRect.right - 570 - 6; ul.y = windRect.bottom - 422	- 6; break;
 				}
 
 			}
-	create_clip_region();
-	undo_clip();
+	create_clip_region(); // TODO: Pretty sure this function can be deleted
+	undo_clip(mainPtr);
 	if (overall_mode != MODE_STARTUP) { // TODO: This is odd - fix it
 		if (in_startup_mode == true)
 			draw_startup(0);
@@ -255,75 +204,24 @@ void adjust_window_mode()
 			redraw_screen();
 		}
 	if (text_sbar != NULL) {
-		MoveControl(text_sbar,ul.h + 546,ul.v + 283);
-		MoveControl(item_sbar,ul.h + 546,ul.v + 146);
-		MoveControl(shop_sbar,ul.h + 258,ul.v + 67);
+		text_sbar->relocate({ul.x + 546,ul.y + 283});
+		item_sbar->relocate({ul.x + 546,ul.y + 146});
+		shop_sbar->relocate({ul.x + 258,ul.y + 67});
 		}
 }
 
-
+// TODO: Move to boe.startup.cpp
 void plop_fancy_startup()
 {
-	GWorldPtr	pict_to_draw;
+	sf::Texture pict_to_draw;
+	sf::Event event;
 	short i,j;
 	
-	GDHandle md;
+	RECT whole_window,from_rect;
+	RECT logo_from = {0,0,350,350};
+	RECT intro_from = {0,0,480,640};
 	
-	Rect whole_window,from_rect;
-	Rect logo_from = {0,0,350,350};
-	Rect intro_from = {0,0,483,643};
-	GDHandle	mainScreen;
-	
-	// store current gray region that displays
-	// menu bar and the current height of the menu bar
-//	originalGrayRgn 	= LMGetGrayRgn(); 		
-//	menuBarHeight	= LMGetMBarHeight(); 	
-
-	// calculate the rect of the menu bar to test 
-	// if mouse down is in if desired
-	mainScreen 			= GetMainDevice();
-	menuBarRect 			= (**mainScreen).gdRect;
-	menuBarRect.bottom 	= menuBarHeight;
-	
-	md = GetMainDevice();
-	
-	if (fry_startup == false)  { // TODO: What on earth is this for?
-		//color_pat = GetCTable(72);
-		//old_palette = NewPalette(256,color_pat,pmTolerant + pmExplicit,0x0000);
-		//GetPictInfo(pict_to_draw,&p2,1,256,0,0);
-		//old_palette = NewPalette(256,color_pat,pmTolerant + pmExplicit,0x0000);
-		//old_palette = NewPalette(256,p2.theColorTable,pmTolerant + pmExplicit,0x0000);
-		//NSetPalette(mainPtr,old_palette,pmAllUpdates);
-		//ActivatePalette(mainPtr);
-
-		/*HLock((Handle) md);
-		hPixMap = (*md)->gdPMap;
-		HLock((Handle)hPixMap);
-		hColorTable = (*hPixMap)->pmTable;
-		old_palette = NewPalette(256,hColorTable,pmTolerant + pmExplicit,0x0000);
-		HUnlock((Handle)hPixMap);
-		HUnlock((Handle) md); */
-		wank_palette = NewPalette(256,NULL,pmTolerant + pmExplicit,0x0000);
-
-		//HideMenuBar();
-		/*
-		GetPort(&oldPort);
-		GetDeskTopGrafPort(&wMgrPort);
-		SetPort(wMgrPort);
-		oldClip = NewRgn();
-		GetClip(oldClip);
-		ClipRect(&wMgrPort->portRect);
-		r = wMgrPort->portRect;
-		GetForeColor(&store_color);
-		ForeColor(blackColor);
-		r.bottom = LMGetMBarHeight();
-		PaintRect(&r);
-		RGBForeColor(&store_color);
-		SetClip(oldClip);
-		DisposeRgn(oldClip);
-		SetPort(oldPort);
-		*/
-		}
+	if(display_mode != 5) hideMenuBar();
 	
 //	for (i = 0;i < 8; i++)
 //		OffsetRect(&trim_rects[i],61,37);
@@ -331,37 +229,23 @@ void plop_fancy_startup()
 		for (j = 0; j < 9; j++)
 			terrain_there[i][j] = -1;
 			
-	OffsetRect(&win_to_rects[5],TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	OffsetRect(&win_to_rects[2],PC_WIN_UL_X,PC_WIN_UL_Y);
-	OffsetRect(&win_to_rects[3],ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
+	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 		
-	GetWindowPortBounds(mainPtr, &whole_window);
-//	whole_window = mainPtr->portRect;
-	ForeColor(blackColor);
-	PaintRect(&whole_window);
-	
-	OffsetRect(&logo_from,(whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-//	pict_to_draw = GetPicture(3001); // TODO: Read from file instead
-//	DrawPicture(pict_to_draw, &logo_from);
-//	ReleaseResource((Handle) pict_to_draw);
-	pict_to_draw = load_pict("spidlogo.png");
-	GetPortBounds(pict_to_draw,&from_rect);
-	rect_draw_some_item(pict_to_draw, from_rect, logo_from,ul);
-	DisposeGWorld(pict_to_draw);
-	
-	RgnHandle wholeRegion = NewRgn();
-	GetWindowRegion(mainPtr, kWindowContentRgn, wholeRegion);
-	QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
-	
-	
-	play_sound(-95);
-
-	//Delay(30,&dummy);
-
-//	for (i = 0; i < 14; i++) 
-//	    bg[i] = GetPixPat (128 + i);
-//	for (i = 0; i < 25; i++) 
-//	    map_pat[i] = GetPixPat (200 + i);
+	whole_window = RECT(mainPtr);
+	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
+	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("spidlogo"));
+	from_rect = RECT(pict_to_draw);
+	// TODO: Looping 10 times here is a bit of a hack; fix it
+	for(int k = 0; k < 10; k++) {
+		mainPtr.clear(sf::Color::Black);
+		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, logo_from);
+		
+		mainPtr.display();
+		mainPtr.pollEvent(event);
+	}
+	play_sound(95); // Was originally negative, meaning async
 
 	// Do bulk of graphics loading!!!
 
@@ -371,82 +255,28 @@ void plop_fancy_startup()
 	
 	int delay = 220;
 	if(show_startup_splash){
-		//init_anim(0);
-		//pict_to_draw = GetPicture(3000); // TODO: Read from file instead
-
-		if (fry_startup == false) {
-			//for(i=100; i >= 0; i-=2) DoOneGammaFade(md, i);
-		
-//			PaintRect(&whole_window);
-//			// load and switch to new palette
-//			GetPictInfo(pict_to_draw,&p,2,256,0,0);
-//			new_palette = p.thePalette;
-//			SetPalette(mainPtr,new_palette,false);
-//			ActivatePalette(mainPtr);
-// reerase menu
-/*	GetPort(&oldPort);
-	GetDeskTopGrafPort(&wMgrPort);
-	SetPort(wMgrPort);
-	oldClip = NewRgn();
-	GetClip(oldClip);
-	ClipRect(&wMgrPort->portRect);
-	r = wMgrPort->portRect;
-	GetForeColor(&store_color);
-	ForeColor(blackColor);
-	r.bottom = LMGetMBarHeight();
-	PaintRect(&r);
-	RGBForeColor(&store_color);
-	SetClip(oldClip);
-	DisposeRgn(oldClip);
-	SetPort(oldPort);	*/
-		}
-// menu erased
-	
-		PaintRect(&whole_window);
-		OffsetRect(&intro_from,(whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-//		DrawPicture(pict_to_draw, &intro_from);
-		//		ReleaseResource((Handle) pict_to_draw);	
-		pict_to_draw = load_pict("startsplash.png");
-		GetPortBounds(pict_to_draw,&from_rect);
-		rect_draw_some_item(pict_to_draw, from_rect, intro_from,ul);
-		DisposeGWorld(pict_to_draw);
-
-//	NSetPalette(mainPtr,old_palette,pmAllUpdates);
-//	ActivatePalette(mainPtr);
+		mainPtr.clear(sf::Color::Black);
+		intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
+		pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
+		from_rect = RECT(pict_to_draw);
+		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
 	} else delay = 60;
-	QDFlushPortBuffer(GetWindowPort(mainPtr), wholeRegion);
-	if (fry_startup == false) {
-		
+	delay = time_in_ticks(delay).asMilliseconds();
+	mainPtr.display();
+		sf::Clock timer;
 		play_sound(-22);
-		EventRecord event;
-		WaitNextEvent(mDownMask + keyDownMask + mUpMask,&event,delay,NULL);
-	}
-	
-	DisposeRgn(wholeRegion);
+
+		while(timer.getElapsedTime().asMilliseconds() < delay) {
+			if(mainPtr.pollEvent(event)) {
+				if(event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::KeyPressed)
+					break;
+			}
+		}
+	if(display_mode != 5) showMenuBar();
 }
 
 void fancy_startup_delay()
 {
-
-	GDHandle md;
-	PaletteHandle default_palette;
-	
-	md = GetMainDevice();
-	
-	if (fry_startup == false){
-		//ShowMenuBar();
-//		LMSetGrayRgn( originalGrayRgn );	
-		SetPalette(mainPtr,wank_palette,false);
-		ActivatePalette(mainPtr);
-		default_palette = GetPalette((WindowPtr) -1);
-		NSetPalette(mainPtr,default_palette,pmAllUpdates);
-		ActivatePalette(mainPtr);
-		RestoreDeviceClut(md);
-//		NSetPalette(mainPtr,old_palette,pmAllUpdates);
-//		ActivatePalette(mainPtr);
-//		DisposePalette(p.thePalette);
-		}
-	
 	// OK try this ... destroy and recreate window.
 	/*DisposeWindow(mainPtr);
 	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
@@ -457,22 +287,21 @@ void fancy_startup_delay()
 	adjust_window_mode();
 	RestoreDeviceClut(GetMainDevice()); */
 	
-	TextFace(0);
+	// TODO: This probably isn't needed here?
+	TEXT.style = sf::Text::Regular;
 	
 	draw_startup(0);
 
-	
-	FlushEvents(mDownMask,0);				
-	FlushEvents(keyDownMask,0);
+	flushingInput = true;
 }
 
 void init_startup()
 {
 	startup_loaded = true;
-	startup_gworld = load_pict("startup.png");
-	startup_button_orig = load_pict("startbut.png");
-	startup_button_g = load_pict("startbut.png");
-	anim_mess = load_pict("startanim.png");
+	startup_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("startup"));
+	startup_button_orig.loadFromImage(*ResMgr::get<ImageRsrc>("startbut"));
+	startup_button_g.draw(sf::Sprite(startup_button_orig));
+	anim_mess.loadFromImage(*ResMgr::get<ImageRsrc>("startanim"));
 }
 
 void init_animation()
@@ -484,109 +313,104 @@ void next_animation_step()
 
 void draw_startup(short but_type)
 {
-	Rect to_rect;
-	Rect r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
+	RECT to_rect;
+	RECT r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
 		r4 = {-1000,579,1000,2500};
 	short i;
-	GrafPtr old_port;
 	
 	if (startup_loaded == false)
 		return;
 	
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));
-	r1.bottom = ul.v + 5;
-	tileImage(r1,bg_gworld,bg[4]);
-	r2.right = ul.h - 13;
-	tileImage(r2,bg_gworld,bg[4]);
-	r3.top += ul.v + 5;
-	tileImage(r3,bg_gworld,bg[4]);
-	r4.left += ul.h - 13;
-	tileImage(r4,bg_gworld,bg[4]);
+//	r1.bottom = ul.x + 5;
+//	tileImage(mainPtr, r1,bg_gworld,bg[4]);
+//	r2.right = ul.y - 13;
+//	tileImage(mainPtr, r2,bg_gworld,bg[4]);
+//	r3.top += ul.x + 5;
+//	tileImage(mainPtr, r3,bg_gworld,bg[4]);
+//	r4.left += ul.y - 13;
+//	tileImage(mainPtr, r4,bg_gworld,bg[4]);
+	tileImage(mainPtr, windRect, bg_gworld, bg[4]);
 	to_rect = startup_from[0];
-	OffsetRect(&to_rect,-13,5);
+	to_rect.offset(-13,5);
 	rect_draw_some_item(startup_gworld,startup_from[0],to_rect,ul);
 	to_rect = startup_top;
-	OffsetRect(&to_rect,ul.h,ul.v);
+	to_rect.offset(ul);
 	//PaintRect(&to_rect);
 	
 	for (i = 0; i < 5; i++) {
 		rect_draw_some_item(startup_gworld,startup_from[1],startup_button[i],ul);
 		draw_start_button(i,but_type);
 		}
-	draw_startup_anim();
+	draw_startup_anim(false);
 	
 	draw_startup_stats();
-	SetPort(old_port);
 }
 
-void draw_startup_anim()
+void draw_startup_anim(bool advance)
 {
 	static short startup_anim_pos = 43; // was a global variable, but since it's only used in this function I moved it here
-	Rect anim_to = {4,1,44,276},anim_from;
-	Rect anim_size = {0,0,48,301};
+	RECT anim_to = {4,1,44,276},anim_from;
+	RECT anim_size = {0,0,48,301};
 	
 	anim_from = anim_to;
-	OffsetRect(&anim_from,-1,-4 + startup_anim_pos);
-	startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(startup_button_orig,anim_size,startup_button_g,anim_size);
-	rect_draw_some_item(anim_mess,anim_from,startup_button_g,anim_to,transparent);
-	rect_draw_some_item(startup_button_g,anim_size,startup_button[5],ul);
+	anim_from.offset(-1,-4 + startup_anim_pos);
+	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
+	rect_draw_some_item(startup_button_orig,anim_size,startup_button[5],ul);
+	anim_to.offset(startup_button[5].left, startup_button[5].top);
+	rect_draw_some_item(anim_mess,anim_from,anim_to,ul,sf::BlendAlpha);
 }
 
 void draw_startup_stats()
 {
-	Rect from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
+	RECT from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
 	short i;
-	Str255 str;
+	char str[256];
 	
-	TextFont(dungeon_font_num);
-	TextFace(0);
-	TextSize(24);
+	TEXT.font = "Dungeon";
+	TEXT.style = sf::Text::Regular;
+	TEXT.pointSize = 24;
 
 	to_rect = startup_top;
-	OffsetRect(&to_rect, 20 - 18, 35);
+	to_rect.offset(20 - 18, 35);
+	TEXT.colour = sf::Color::White;
 
-	ForeColor(whiteColor);
-
-	if (party_in_memory == false) {
-		TextSize(20);
-		OffsetRect(&to_rect,175,40);
-		char_win_draw_string(mainPtr,to_rect,"No Party in Memory",0,18,ul);
-		}
-	if (party_in_memory == true) {
+	if(!party_in_memory) {
+		TEXT.pointSize = 20;
+		to_rect.offset(175,40);
+		win_draw_string(mainPtr,to_rect,"No Party in Memory",0,18,ul);
+	} else {
 		frame_rect = startup_top;
-		InsetRect(&frame_rect,50,50);
+		frame_rect.inset(50,50);
 		frame_rect.top += 30;
-		ForeColor(whiteColor);
-		OffsetRect(&frame_rect,ul.h - 9,ul.v + 10);
-		FrameRect(&frame_rect);
+		frame_rect.offset(ul.x - 9,ul.y + 10);
+		// TODO: Maybe I should rename that variable
+		::frame_rect(mainPtr, frame_rect, sf::Color::White);
 
-		OffsetRect(&to_rect,203,37);
-		char_win_draw_string(mainPtr,to_rect,"Your party:",0,18,ul);
-		TextSize(12);	
-		TextFace(bold);
-		TextFont(geneva_font_num);
+		to_rect.offset(203,37);
+		win_draw_string(mainPtr,to_rect,"Your party:",0,18,ul);
+		TEXT.pointSize = 12;
+		TEXT.style = sf::Text::Bold;
+		TEXT.font = "Geneva";
 		for (i = 0; i < 6; i++) {
 			pc_rect = startup_top;
 			pc_rect.right = pc_rect.left + 300;
 			pc_rect.bottom = pc_rect.top + 79;
-			OffsetRect(&pc_rect,60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
+			pc_rect.offset(60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
 			
 			if (univ.party[i].main_status > 0) {
 				from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
 				to_rect = party_to,
-				OffsetRect(&to_rect,pc_rect.left,pc_rect.top);
-				rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,transparent);
+				to_rect.offset(pc_rect.left,pc_rect.top);
+				rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
 
-				TextSize(14);	
-				OffsetRect(&pc_rect,35,0);
-				char_win_draw_string(mainPtr,pc_rect,(char*)univ.party[i].name.c_str(),0,18,ul);
-				OffsetRect(&to_rect,pc_rect.left + 8,pc_rect.top + 8);
+				TEXT.pointSize = 14;
+				pc_rect.offset(35,0);
+				win_draw_string(mainPtr,pc_rect,(char*)univ.party[i].name.c_str(),0,18,ul);
+				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 				}
-			TextSize(12);	
-			OffsetRect(&pc_rect,12,16);
+			TEXT.pointSize = 12;
+			pc_rect.offset(12,16);
 			switch (univ.party[i].main_status) {
 				case MAIN_STATUS_ALIVE:
 					switch (univ.party[i].race) {
@@ -612,23 +436,23 @@ void draw_startup_stats()
 						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
 						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 						}
-					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
-					OffsetRect(&pc_rect,0,13);
+					win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
+					pc_rect.offset(0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
 						univ.party[i].max_health,univ.party[i].max_sp);
-					char_win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
+					win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
 					break;
 				case MAIN_STATUS_DEAD:
-					char_win_draw_string(mainPtr,pc_rect,"Dead",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Dead",0,18,ul);
 					break;
 				case MAIN_STATUS_DUST:
-					char_win_draw_string(mainPtr,pc_rect,"Dust",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Dust",0,18,ul);
 					break;
 				case MAIN_STATUS_STONE:
-					char_win_draw_string(mainPtr,pc_rect,"Stone",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Stone",0,18,ul);
 					break;
 				case MAIN_STATUS_FLED:
-					char_win_draw_string(mainPtr,pc_rect,"Fled",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Fled",0,18,ul);
 					break;
 				default: //absent, and all variations thereof; do nothing
 					break;
@@ -636,88 +460,85 @@ void draw_startup_stats()
 			}
 		}
 	
-	TextFont(geneva_font_num);
-	TextSize(10);	
-	TextFace(bold);
+	TEXT.font = "Geneva";
+	TEXT.pointSize = 10;
+	TEXT.style = sf::Text::Bold;
 	pc_rect = startup_from[0];
-	OffsetRect(&pc_rect,5,5);
+	pc_rect.offset(5,5);
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
-	char_win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18,ul);
+	// TODO: Should replace this with a more appropriate copyright string
+	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18,ul);
 		
-	ForeColor(blackColor);
+	TEXT.colour = sf::Color::Black;
 }
 
 
 
 void draw_start_button(short which_position,short which_button)
 {
-	Rect from_rect,to_rect;
-	char *button_labels[] = {"Load Game","Make New Party","How To Order",
+	RECT from_rect,to_rect;
+	const char *button_labels[] = {"Load Game","Make New Party","How To Order",
 		"Start Scenario","Custom Scenario","Quit"};
-	RGBColor base_color = {0,0,14472};
-	//RGBColor lit_color = {0,0,14472},base_color = {0,0,43144};
+	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
+	sf::Color base_color = {0,0,57};
+	//RGBColor lit_color = {0,0,57},base_color = {0,0,169};
 	
 	from_rect = startup_from[3];
-	OffsetRect(&from_rect, (which_button > 0) ? 40 : 0,0);
+	from_rect.offset((which_button > 0) ? 40 : 0,0);
 	to_rect = startup_button[which_position];
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
 	rect_draw_some_item(startup_gworld,from_rect,to_rect,ul);
 	
-	TextFont(dungeon_font_num);
-	TextFace(0);
-	TextSize(24);
+	TEXT.font = "Dungeon";
+	TEXT.style = sf::Text::Regular;
+	TEXT.pointSize = 24;
 	to_rect = startup_button[which_position];
 	//to_rect.left += 80;
-	OffsetRect(&to_rect, 10, 10);
+	to_rect.offset(10, 10);
 	if (which_button == 5)
 		which_button = 4;
-	base_color.blue = 14472 + (12288 * which_button);
-	RGBForeColor(&base_color);
+	// In the 0..65535 range, this was 14472 + (12288 * which_button)
+	base_color.b += (48 * which_button);
+	TEXT.colour = base_color;
 	if (which_position == 3)
-		OffsetRect(&to_rect,-7,0);
-	char_win_draw_string(mainPtr,to_rect,(char *) button_labels[which_position],1,18,ul);
-	ForeColor(blackColor);
-	TextFont(geneva_font_num);
-	TextFace(bold);
-	TextSize(10);
+		to_rect.offset(-7,0);
+	win_draw_string(mainPtr,to_rect,(char *) button_labels[which_position],1,18,ul);
+	TEXT.colour = sf::Color::Black;
+	TEXT.font = "Geneva";
+	TEXT.style = sf::Text::Bold;
+	TEXT.pointSize = 10;
 	
 }
 
-void main_button_click(short mode,Rect button_rect)
+void main_button_click(short mode,RECT button_rect)
 {
-	const BitMap *	store2;
-
-	store2 = GetPortBitMapForCopyBits(GetWindowPort(mainPtr));
-
-	OffsetRect(&button_rect,ul.h,ul.v);
-	ClipRect(&button_rect);
+	button_rect.offset(ul);
+	mainPtr.setActive();
+	clip_rect(mainPtr, button_rect);
 
 	draw_buttons(1);
 	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
-	draw_buttons(0);			
-	undo_clip();
+	draw_buttons(0);
+	undo_clip(mainPtr);
 }
 
-void arrow_button_click(Rect button_rect)
+void arrow_button_click(RECT button_rect)
 {
-	const BitMap *	store2;
-	
-	store2 = GetPortBitMapForCopyBits(GetWindowPort(mainPtr));
-
-	OffsetRect(&button_rect,ul.h,ul.v);
-	ClipRect(&button_rect);
+	button_rect.offset(ul);
+	mainPtr.setActive();
+	clip_rect(mainPtr, button_rect);
 	
 	refresh_stat_areas(1);
 	if (play_sounds == true)
 		play_sound(37);
 		else FlushAndPause(5);
 	refresh_stat_areas(0);
-	undo_clip();
+	undo_clip(mainPtr);
 }
 
 
@@ -726,10 +547,9 @@ void reload_startup()////
 	if (startup_loaded == true)
 		return;
 	
-	HideWindow(GetDialogWindow(modeless_dialogs[5])); 
-	modeless_exists[5] = false;				
-	SelectWindow(mainPtr);
-	SetPort(GetWindowPort(mainPtr));
+	mini_map.setVisible(false);
+	map_visible = false;				
+	mainPtr.setActive();
 	init_startup();
 
 	startup_loaded = true;
@@ -741,10 +561,10 @@ void end_startup()
 	if (startup_loaded == false)
 		return;
 
-	DisposeGWorld(startup_gworld);
-	DisposeGWorld(startup_button_orig);
-	DisposeGWorld(startup_button_g);
-	DisposeGWorld(anim_mess);
+	startup_gworld.create(0,0);
+	startup_button_orig.create(0,0);
+	startup_button_g.create(0,0);
+	anim_mess.create(0,0);
 
 	startup_loaded = false;
 	load_main_screen();
@@ -753,64 +573,51 @@ void end_startup()
 // This loads the graphics at the top of the game.
 void Set_up_win ()
 {
-	QDErr err;
-	Rect temp_rect = {0,0,0,280},map_world_rect;
-	Rect map_rect = {0,0,384,384};
-	Rect pc_rect = {0,0,216,113};
-	GrafPtr old_port;
-	GWorldPtr temp_gworld;
-	Str255 fn1 = "\pGeneva";
-	Str255 fn2 = "\pDungeon Bold";
-	Str255 fn3 = "\pPalatino";
+	RECT temp_rect = {0,0,0,280},map_world_rect;
+	RECT map_rect = {0,0,384,384};
+	RECT pc_rect = {0,0,216,113};
+	sf::Texture temp_gworld;
+	char fn1[] = "Geneva";
+	char fn2[] = "Dungeon Bold";
+	char fn3[] = "Palatino";
 	short i;
-	Rect r;
+	RECT r;
 	
-	
-	GetFNum(fn1,&geneva_font_num);
-	if (geneva_font_num == 0)
-		GetFNum(fn3,&geneva_font_num);
-	GetFNum(fn2,&dungeon_font_num);
-	if (dungeon_font_num == 0)
-		GetFNum(fn3,&dungeon_font_num);
-	
-	terrain_screen_gworld = load_pict("terscreen.png");
-
-	for (i = 0; i < 7; i++)
-		bw_pats[i] = GetPattern(128 + i * 2);
-
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("terscreen"));
+	terrain_screen_gworld.draw(sf::Sprite(temp_gworld));
 
 	// Create and initialize map gworld
-	err = NewGWorld(&map_gworld,  0 /*8*/,&map_rect, NULL, NULL, kNativeEndianPixMap);
-	if (err != 0) {
+	
+	if(!map_gworld.create(map_rect.width(), map_rect.height())) {
 		play_sound(2,3);
-		ExitToShell();		
-		}
-		else {		
-		GetPort(&old_port);
-		SetPort(map_gworld);
-		GetPortBounds(map_gworld,&map_world_rect);
-		ForeColor(whiteColor);
-		PaintRect(&map_world_rect);
-		ForeColor(blackColor);
-		SetPort(old_port);
-		}
+		exit(1);
+	} else {
+		map_world_rect = RECT(map_gworld);
+		fill_rect(map_gworld, map_world_rect, sf::Color::White);
+	}
 
 }
 
 void load_main_screen()
 {
-	if (invenbtn_gworld != NULL)
+	if (invenbtn_gworld.getSize().x > 0)
 		return;
+	sf::Texture temp_gworld;
 	
-	invenbtn_gworld = load_pict("invenbtns.png");
-	pc_stats_gworld = load_pict("statarea.png");
-	item_stats_gworld = load_pict("inventory.png");
-	text_area_gworld = load_pict("transcript.png");
-	text_bar_gworld = load_pict("textbar.png");
-	orig_text_bar_gworld = load_pict("textbar.png");
-	buttons_gworld = load_pict("buttons.png");
+	// TODO: Hopefully reusing a texture here won't cause issues...
+	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("statarea"));
+	pc_stats_gworld.draw(sf::Sprite(temp_gworld));
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("inventory"));
+	item_stats_gworld.draw(sf::Sprite(temp_gworld));
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("transcript"));
+	text_area_gworld.draw(sf::Sprite(temp_gworld));
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
+	text_bar_gworld.draw(sf::Sprite(temp_gworld));
+	orig_text_bar_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
+	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
    
-	set_gworld_fonts(geneva_font_num);
+//	set_gworld_fonts(geneva_font_num);
 	
 	create_clip_region();
 }
@@ -818,14 +625,17 @@ void load_main_screen()
 void create_clip_region()
 {
 	short i;
-	Rect store_rect;
-	Rect scrollbar_rect;
-
+	RECT store_rect;
+	RECT scrollbar_rect;
+	// TODO: Arbitrary clipping regions (use OpenGL stencil buffer?)
+	// Note: I get the impression that the purpose of this clip region is so that BoE does not draw on the scrollbars
+	// Since the scrollbars will be handled by BoE now, it's likely not necessary anymore
+#if 0
 	DisposeRgn(clip_region);
 	clip_region = NewRgn();
 	OpenRgn();
 
-	Rect tempRect;
+	RECT tempRect;
 	GetWindowPortBounds(mainPtr,&tempRect);
 	FrameRect(&tempRect);
 	for (i = 0; i < 6; i++) {
@@ -848,11 +658,13 @@ void create_clip_region()
 	FrameRect(&scrollbar_rect);
 
 	CloseRgn(clip_region);
-	
+#endif
 }
 
 void set_gworld_fonts(short font_num)
 {
+	// TODO: This doesn't even make sense since fonts aren't set for each surface in SFML
+#if 0
 	GrafPtr old_port;
 
 	GetPort(&old_port);	
@@ -877,6 +689,7 @@ void set_gworld_fonts(short font_num)
 	TextFace(bold);
 	TextSize(10);
 	SetPort(old_port);	
+#endif
 }
 
 void draw_main_screen()
@@ -885,7 +698,7 @@ void draw_main_screen()
 		put_background();
 		}
 		else {
-			rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], win_to_rects[0],ul);
+			rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], win_to_rects[0],ul);
  
 			draw_buttons(0);
 			if (overall_mode == MODE_COMBAT)
@@ -894,16 +707,15 @@ void draw_main_screen()
 				draw_targets(center);	
 			}	
 	draw_text_area(0);
-	ShowControl(text_sbar);
-	Draw1Control(text_sbar);
-	ShowControl(item_sbar);
-	Draw1Control(item_sbar);
+	text_sbar->show();
+	text_sbar->draw();
+	item_sbar->show();
+	item_sbar->draw();
 	if (overall_mode == MODE_SHOPPING) {
-		ShowControl(shop_sbar);
-		Draw1Control(shop_sbar);
+		shop_sbar->show();
+		shop_sbar->draw();
 		}
-		else HideControl(shop_sbar);
-
+	else shop_sbar->hide();
 }
 
 // redraw_screen does the very first redraw, and any full redraw
@@ -933,21 +745,21 @@ void redraw_screen(){
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		print_buf();
-		ShowControl(text_sbar);
-		Draw1Control(text_sbar);
-		ShowControl(item_sbar);
-		Draw1Control(item_sbar);
+		text_sbar->show();
+		text_sbar->draw();
+		item_sbar->show();
+		item_sbar->draw();
 		if (overall_mode == MODE_SHOPPING) {
-			ShowControl(shop_sbar);
-			Draw1Control(shop_sbar);
+			shop_sbar->show();
+			shop_sbar->draw();
 		}
-		else HideControl(shop_sbar);
+		else shop_sbar->hide();
 	}
 }
 
 void put_background()
 {
-	Rect bg_pict;
+	RECT bg_pict;
 
 	if (is_out()) {
 		if (univ.party.outdoor_corner.x >= 7)
@@ -969,36 +781,25 @@ void put_background()
 				bg_pict = bg[8]; 
 				else bg_pict = bg[13]; 
 		}
-	tileImage(clip_region,bg_gworld,bg_pict);
-	ShowControl(text_sbar);
-	Draw1Control(text_sbar);
-	ShowControl(item_sbar);
-	Draw1Control(item_sbar);
+	tileImage(mainPtr, RECT(mainPtr), bg_gworld, bg_pict);
+	text_sbar->show();
+	text_sbar->draw();
+	item_sbar->show();
+	item_sbar->draw();
 }
 
 void draw_buttons(short mode)
 //mode; // 0 - regular   1 - button action
 {
-	PixMapHandle store_source;
-	const BitMap * store_dest;
-	Rect	source_rect = {0,0,37,258}, dest_rec;
-	CGrafPtr	origPort;
-	GDHandle	origDev;
-	GWorldPtr	buttons_to_draw;
-	bool spec_draw = false;
+	RECT	source_rect = {0,0,37,258}, dest_rec;	bool spec_draw = false;
 	
 	if (mode == 1) {
 		spec_draw = true;
 		mode -= 100;
 		}
-		
-	GetGWorld (&origPort, &origDev);
-
-	store_dest = GetPortBitMapForCopyBits(GetWindowPort(mainPtr));
- 
-	buttons_to_draw = buttons_gworld;
-
-	store_source = GetPortPixMap(buttons_to_draw);
+	
+	sf::Texture& buttons_to_draw = buttons_gworld;
+	
 	if (is_combat()) { // TODO: Draw buttons one at a time instead of singly
 		source_rect.top += 37;
 		source_rect.bottom += 37;
@@ -1009,19 +810,16 @@ void draw_buttons(short mode)
 		}
 	
 	dest_rec = win_to_rects[1];
-	OffsetRect(&dest_rec,ul.h,ul.v);
-		
-	if (spec_draw == true)
-		ForeColor(blueColor);
-	CopyBits ( (BitMap *) *store_source ,
-				store_dest ,
-				&source_rect, &dest_rec, 
-				0, NULL);
-				//((spec_draw == false) ? 0 : addOver) , NULL);
-	if (spec_draw == true)
-		ForeColor(blackColor);
+	dest_rec.offset(ul);
+	
+	// TODO: I think this was supposed to tint it blue?
+//	if (spec_draw == true)
+//		ForeColor(blueColor);
+	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec);
+	// Maybe try sf::BlendAdd when spec_draw is true?
+//	if (spec_draw == true)
+//		ForeColor(blackColor);
 
-	SetGWorld (origPort, origDev);	
 	put_background();
 
 }
@@ -1047,7 +845,7 @@ void draw_text_bar(short mode)
 	//short num_rect[3] = {12,10,4}; // Why? Just... why?
 	short i;
 	location loc;
-	string combat_string;
+	std::string combat_string;
 	
 	loc = (is_out()) ? global_to_local(univ.party.p_loc) : univ.town.p_loc;
 
@@ -1105,50 +903,38 @@ void draw_text_bar(short mode)
 	   }
 }
 
-void put_text_bar(char *str)
-{
-	GrafPtr old_port;
-	char status_str[60];
-	short xpos = 205;
-	
-	
-	rect_draw_some_item (orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
-	GetPort(&old_port);	
-	SetPort(text_bar_gworld);
-	ForeColor(whiteColor);
-	MoveTo(5,14);
-	drawstring(str);
+void put_text_bar(char *str) {
+	text_bar_gworld.setActive();
+	rect_draw_some_item(orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
+	TEXT.colour = sf::Color::White;
+	RECT to_rect = RECT(text_bar_gworld);
+	// TODO: The 12 is the line height; not sure what it should be, so I just picked something
+	win_draw_string(text_bar_gworld, to_rect, str, 2, 12);
 
 	if (monsters_going == false) {
+		to_rect.left = 205;
+		to_rect.top = 14;
 		if (PSD[SDF_PARTY_STEALTHY] > 0) {
-			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Stealth");
-			drawstring(status_str);
-			xpos -= 60;
+			win_draw_string(text_bar_gworld, to_rect, "Stealth", 2, 12);
+			to_rect.left -= 60;
 			}
 		if (PSD[SDF_PARTY_FLIGHT] > 0) {
-			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Flying");
-			drawstring(status_str);
-			xpos -= 60;
+			win_draw_string(text_bar_gworld, to_rect, "Flying", 2, 12);
+			to_rect.left -= 60;
 			}
 		if (PSD[SDF_PARTY_DETECT_LIFE] > 0) {
-			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Detect Life");
-			drawstring(status_str);
-			xpos -= 60;
+			win_draw_string(text_bar_gworld, to_rect, "Detect Life", 2, 12);
+			to_rect.left -= 60;
 			}
 		if (PSD[SDF_PARTY_FIREWALK] > 0) {
-			MoveTo(xpos,14);
-			sprintf((char *) status_str,"Firewalk");
-			drawstring(status_str);
-			xpos -= 60;
+			win_draw_string(text_bar_gworld, to_rect, "Firewalk", 2, 12);
+			to_rect.left -= 60;
 			}
 		}
 
-	ForeColor(blackColor);
-	SetPort(old_port);
-	rect_draw_some_item (text_bar_gworld, win_from_rects[4], win_to_rects[4],ul);
+	TEXT.colour = sf::Color::Black;
+	mainPtr.setActive();
+	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[4], win_to_rects[4],ul);
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -1183,7 +969,6 @@ void draw_terrain(short	mode)
 	ter_num_t spec_terrain;
 	bool off_terrain = false,draw_frills = true;
 	short i,j;
-	GrafPtr old_port;
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
 		return;
@@ -1209,8 +994,7 @@ void draw_terrain(short	mode)
 		mode = 0;
 		}
 
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));
+	mainPtr.setActive();
 	
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) {
@@ -1407,7 +1191,6 @@ void draw_terrain(short	mode)
 		if (overall_mode == MODE_FANCY_TARGET)
 			draw_targets(center);
 	}
-	SetPort(old_port);
 	supressing_some_spaces = false;
 }
 
@@ -1553,39 +1336,40 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 	// 50 - walkway bl, 51 - walkway tl, 52 - walkway tr, 53 - walkway br
 	// 54 - walkway top, 55 - walkway right, 56 - walkway bottom, 57 - walkway left
 	// 58 - lone walkway
-	Rect from_rect = {0,0,36,28},to_rect,mask_rect;
-	GWorldPtr from_gworld;
-	static Rect trim_rects[] = {
-		{0,0,36,14}, {0,0,36,14},
-		{0,0,18,28}, {0,0,18,28},
-		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
-		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
+	RECT from_rect = {0,0,36,28},to_rect,mask_rect;
+	sf::Texture* from_gworld;
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	static RECT trim_rects[] = {
+		RECT{0,0,36,14}, RECT{0,0,36,14},
+		RECT{0,0,18,28}, RECT{0,0,18,28},
+		RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14},
+		RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14},
 	};
-	static Rect walkway_rects[] = {
-		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
-		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
-		{0,0,36,28},
+	static RECT walkway_rects[] = {
+		RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28},
+		RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28},
+		RECT{0,0,36,28},
 	};
 	static bool inited = false;
 	if(!inited){
 		inited = true;
-		OffsetRect(&trim_rects[1],14,0);
-		OffsetRect(&trim_rects[2],28,0);
-		OffsetRect(&trim_rects[3],28,18);
-		OffsetRect(&trim_rects[4],56,0);
-		OffsetRect(&trim_rects[5],70,0);
-		OffsetRect(&trim_rects[6],56,18);
-		OffsetRect(&trim_rects[7],70,18);
-		OffsetRect(&trim_rects[8],84,0);
-		OffsetRect(&trim_rects[9],98,0);
-		OffsetRect(&trim_rects[10],84,18);
-		OffsetRect(&trim_rects[11],98,18);
+		trim_rects[1].offset(14,0);
+		trim_rects[2].offset(28,0);
+		trim_rects[3].offset(28,18);
+		trim_rects[4].offset(56,0);
+		trim_rects[5].offset(70,0);
+		trim_rects[6].offset(56,18);
+		trim_rects[7].offset(70,18);
+		trim_rects[8].offset(84,0);
+		trim_rects[9].offset(98,0);
+		trim_rects[10].offset(84,18);
+		trim_rects[11].offset(98,18);
 		int i;
-		for(i = 0; i < 12; i++) OffsetRect(&trim_rects[i],112,36);
-		for(i = 0; i < 8 ; i++) OffsetRect(&walkway_rects[i],(i%4)*28,(i/4)*36);
-		OffsetRect(&walkway_rects[8],196,0);
+		for(i = 0; i < 12; i++) trim_rects[i].offset(112,36);
+		for(i = 0; i < 8 ; i++) walkway_rects[i].offset((i%4)*28,(i/4)*36);
+		walkway_rects[8].offset(196,0);
 	}
-	RGBColor	test_color = {0,0,0}, store_color;
+	sf::Color test_color = {0,0,0}, store_color;
 
 	if (frills_on == false)
 		return;
@@ -1595,8 +1379,6 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //		return; 
 
 	terrain_there[q][r] = -1;
-	GetBackColor(&store_color);
-	RGBBackColor(&test_color);
 		
 //	from_rect.left = 28 * which_trim + trim_rects[which_mode].left;
 //	from_rect.right = 28 * which_trim + trim_rects[which_mode].right;
@@ -1607,15 +1389,15 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //		OffsetRect(&from_rect,0,36);
 	unsigned short pic = scenario.ter_types[ground_ter].picture;
 	if(pic < 400){
-		from_gworld = terrain_gworld[pic / 50];
+		from_gworld = &terrain_gworld[pic / 50];
 		pic %= 50;
-		OffsetRect(&from_rect,28 * (pic % 10), 36 * (pic / 10));
+		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
-		from_gworld = anim_gworld;
+		from_gworld = &anim_gworld;
 		pic %= 400;
-		OffsetRect(&from_rect,112 * (pic / 5),36 * (pic % 5));
+		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
-		from_gworld = spec_scen_g;
+		from_gworld = &spec_scen_g;
 		pic %= 1000;
 		from_rect = get_custom_rect(pic);
 	}
@@ -1642,23 +1424,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 		to_rect.top += 18;
 	}
 
-	PixMapHandle from_bits = GetPortPixMap(from_gworld);
-	PixMapHandle mask_bits = GetPortPixMap(roads_gworld);
-	PixMapHandle to_bits = GetPortPixMap(terrain_screen_gworld);
-	LockPixels(to_bits);
-	LockPixels(mask_bits);
-	LockPixels(from_bits);
-	CopyDeepMask ((BitMap*) *from_bits,
-				  (BitMap*) *mask_bits,
-				  (BitMap*) *to_bits,
-				  &from_rect, &mask_rect, &to_rect,
-				  transparent, NULL
-	);
-	UnlockPixels(from_bits);
-	UnlockPixels(mask_bits);
-	UnlockPixels(to_bits);
-
-	RGBBackColor(&store_color);
+	rect_draw_some_item(*from_gworld, from_rect, terrain_screen_gworld, to_rect, sf::BlendAlpha);
 }
 
 
@@ -1698,22 +1464,23 @@ void place_road(short q,short r,location where, bool here)
 {
 	location draw_loc;
 	ter_num_t ter;
-	Rect to_rect;
-	//Rect road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
-	static const Rect road_rects[4] = {
-		{4,112,8,125},	// horizontal partial
-		{0,144,18,148},	// vertical partial
-		{0,112,4,140},	// horizontal full
-		{0,140,36,144},	// vertical full
+	RECT to_rect;
+	//RECT road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	static const RECT road_rects[4] = {
+		RECT{4,112,8,125},	// horizontal partial
+		RECT{0,144,18,148},	// vertical partial
+		RECT{0,112,4,140},	// horizontal full
+		RECT{0,140,36,144},	// vertical full
 	};
-	//Rect road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
-	static const Rect road_dest_rects[6] = {
-		{0,12,18,16},	// top
-		{16,15,20,28},	// right
-		{18,12,36,16},	// bottom
-		{16,0,20,13},	// left
-		{0,12,36,16},	// top + bottom
-		{16,0,20,28},	// right + left
+	//RECT road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
+	static const RECT road_dest_rects[6] = {
+		RECT{0,12,18,16},	// top
+		RECT{16,15,20,28},	// right
+		RECT{18,12,36,16},	// bottom
+		RECT{16,0,20,13},	// left
+		RECT{0,12,36,16},	// top + bottom
+		RECT{16,0,20,28},	// right + left
 	};
 	draw_loc.x = q;
 	draw_loc.y = r;
@@ -1725,7 +1492,7 @@ void place_road(short q,short r,location where, bool here)
 			ter = coord_to_ter(where.x,where.y - 1);
 		if ((where.y == 0) || extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[0];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
 		}
 		
@@ -1734,7 +1501,7 @@ void place_road(short q,short r,location where, bool here)
 		if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1)) 
 			|| extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[1];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 		
@@ -1743,7 +1510,7 @@ void place_road(short q,short r,location where, bool here)
 		if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1)) 
 			|| extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[2];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
 		}
 		
@@ -1751,7 +1518,7 @@ void place_road(short q,short r,location where, bool here)
 			ter = coord_to_ter(where.x - 1,where.y);
 		if ((where.x == 0) || extend_road_terrain(ter)) {
 			to_rect = road_dest_rects[3];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 	}else{
@@ -1786,12 +1553,12 @@ void place_road(short q,short r,location where, bool here)
 		
 		if(horz){
 			to_rect = road_dest_rects[5];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[2], terrain_screen_gworld, to_rect);
 		}
 		if(vert){
 			to_rect = road_dest_rects[4];
-			OffsetRect(&to_rect,13 + q * 28,13 + r * 36);
+			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld, to_rect);
 		}
 	}
@@ -1815,7 +1582,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
 	location where_draw(4,4);
-	Rect source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
+	RECT source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
 	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
@@ -1867,30 +1634,29 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		x_adj += 14 * (univ.town.monst[which_m].x_width - 1);
 		y_adj += 18 * (univ.town.monst[which_m].y_width - 1);
 		}
-	OffsetRect(&dest_rect,where_draw.x * 28,where_draw.y * 36);
+	dest_rect.offset(where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;
-	OffsetRect(&dest_rect,x_adj,y_adj);
-	SectRect(&dest_rect,&big_to,&dest_rect);
+	dest_rect.offset(x_adj,y_adj);
+	dest_rect |= big_to;
 
-	OffsetRect(&dest_rect,win_to_rects[0].left,win_to_rects[0].top);
+	dest_rect.offset(win_to_rects[0].left,win_to_rects[0].top);
 
-	OffsetRect(&source_rect,-1 * store_rect.left + 28 * type,-1 * store_rect.top);
-	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,transparent);
+	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
+	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,sf::BlendAlpha);
 	
 	if ((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
 		sprintf((char *) dam_str,"%d",damage);
-		TextSize(10);
-		TextFace(bold);
+		TEXT.pointSize = 10;
+		TEXT.style = sf::Text::Bold;
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
 		//OffsetRect(&text_rect,x_adj,y_adj);
 		text_rect = dest_rect;
 		text_rect.top += 10;
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
-		OffsetRect(&text_rect,-4,-5);
-		char_win_draw_string(mainPtr,text_rect,(char *) dam_str,1,10,ul);
-		TextSize(0);
-		TextFace(0);
+		text_rect.offset(-4,-5);
+		win_draw_string(mainPtr,text_rect,(char *) dam_str,1,10,ul);
+		TEXT.style = sf::Text::Regular;
 		}
 		play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
 		if ((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
@@ -1910,32 +1676,33 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 
 void draw_pointing_arrows() 
 {
-	//Rect sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
-	Rect sources[4] = {
-		{352,58,360,76}, // up
-		{352,20,360,38}, // left
-		{352,01,360,19}, // down
-		{352,39,360,57}  // right
+	//RECT sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
+	// TODO: The duplication of  here shouldn't be necessary...
+	RECT sources[4] = {
+		RECT{352,58,360,76}, // up
+		RECT{352,20,360,38}, // left
+		RECT{352,01,360,19}, // down
+		RECT{352,39,360,57}  // right
 	};
-	Rect dests[8] = {{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
-		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}};
+	RECT dests[8] = {RECT{7,100,15,108},RECT{7,170,15,178},RECT{140,7,148,15},RECT{212,7,220,15},
+		RECT{346,100,354,108},RECT{346,170,354,178},RECT{140,274,148,282},RECT{212,274,220,282}};
 	short i;
 	
 	if ((monsters_going == true) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
 		|| (overall_mode == MODE_LOOK_OUTDOORS)) 
 			return;
 	for (i = 0; i < 4; i++) {
-		rect_draw_some_item (terrain_screen_gworld,sources[i],dests[i * 2],ul,transparent);
-		rect_draw_some_item (terrain_screen_gworld,sources[i],dests[i * 2 + 1],ul,transparent);
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2],ul,sf::BlendAlpha);
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2 + 1],ul,sf::BlendAlpha);
 		}
 }
 
 void redraw_terrain()
 {
-	Rect to_rect;
+	RECT to_rect;
 	
 	to_rect = win_to_rects[0];
-	rect_draw_some_item (terrain_screen_gworld, win_from_rects[0], to_rect,ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], to_rect,ul);
 
 
 	// Now place arrows
@@ -1947,7 +1714,7 @@ void redraw_terrain()
 
 void draw_targets(location center)
 {
-	Rect source_rect = {74,36,85,47},dest_rect;
+	RECT source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 
 	if (party_toast() == true)
@@ -1958,7 +1725,7 @@ void draw_targets(location center)
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			//OffsetRect(&dest_rect,5,5);
 			//InsetRect(&dest_rect,8,12);
-			rect_draw_some_item (roads_gworld,calc_rect(6,0),dest_rect,ul,transparent);
+			rect_draw_some_item(roads_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
 			}
 }
 
@@ -1966,7 +1733,7 @@ void frame_space(location where,short mode,short width,short height)
 //mode;  // 0 - red   1 - green
 {
 	location where_put;
-	Rect to_frame;
+	RECT to_frame;
 	
 	if (point_onscreen(center,where) == false)
 		return;
@@ -1978,80 +1745,74 @@ void frame_space(location where,short mode,short width,short height)
 	to_frame.left = 18 + where_put.x * 28;
 	to_frame.bottom = 54 + where_put.y * 36 + 36 * (height - 1);
 	to_frame.right = 46 + where_put.x * 28 + 28 * (width - 1);				
-	OffsetRect(&to_frame, ul.h,ul.v);
-					
-	ForeColor((mode == 0) ? redColor : greenColor);
-	FrameRoundRect(&to_frame,8,8);
-	ForeColor(blackColor);	
-
+	to_frame.offset(ul);
+	
+	frame_roundrect(mainPtr, to_frame, 8, (mode == 0) ? sf::Color::Red : sf::Color::Green);
 }
 
 
 void erase_spot(short i,short j)
 {
-	Rect to_erase;
+	RECT to_erase;
 	
 	to_erase = coord_to_rect(i,j);
-	EraseRect(&to_erase);
+	fill_rect(mainPtr, to_erase, sf::Color::Black);
 	
 }
 
-
-void undo_clip()
-{
-	Rect overall_rect;
-	GrafPtr cur_port;
-
-	GetPort(&cur_port);	
-	GetPortBounds(cur_port,&overall_rect);
-	ClipRect(&overall_rect);
-}
-
-
-
-void draw_targeting_line(Point where_curs)
+void draw_targeting_line(location where_curs)
 {
 	location which_space,store_loc;
 	short i,j,k,l;
-	Rect redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
+	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
 	location from_loc;
-	Rect on_screen_terrain_area = {23, 23, 346, 274};
+	RECT on_screen_terrain_area = {23, 23, 346, 274};
 	
 	if (overall_mode >= MODE_COMBAT)
 		from_loc = pc_pos[current_pc];
 		else from_loc = univ.town.p_loc;
 	if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 	  || ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
-		GlobalToLocal(&where_curs);	
 		
-		OffsetRect(&on_screen_terrain_area,ul.h,ul.v);
-		if (PtInRect (where_curs, &on_screen_terrain_area) == true) {
+		on_screen_terrain_area.offset(ul);
+		if (where_curs.in(on_screen_terrain_area)) {
 		// && (point_onscreen(center,pc_pos[current_pc]) == true)){		
-			i = (where_curs.h - 23 - ul.h) / 28;
-			j = (where_curs.v - 23 - ul.v) / 36;
+			i = (where_curs.x - 23 - ul.x) / 28;
+			j = (where_curs.y - 23 - ul.y) / 36;
 			which_space.x = center.x + (short) i - 4;
 			which_space.y = center.y + (short) j - 4;
 			
 			k = (short) (from_loc.x - center.x + 4);
 			l = (short) (from_loc.y - center.y + 4);
-			k = (k * 28) + 32 + ul.h;
-			l = (l * 36) + 36 + ul.v;
+			k = (k * 28) + 32 + ul.x;
+			l = (l * 36) + 36 + ul.y;
 			
 			if ((can_see(from_loc,which_space,0) < 5) 
 			 && (dist(from_loc,which_space) <= current_spell_range)) {
-			 	InsetRect(&terrain_rect,13,13); 
-			 	OffsetRect(&terrain_rect,5 + ul.h,5 + ul.v);
-				ClipRect(&terrain_rect);
+			 	terrain_rect.inset(13,13);
+			 	terrain_rect.offset(5 + ul.x,5 + ul.y);
+				mainPtr.setActive();
+				clip_rect(mainPtr, terrain_rect);
+				// TODO: Not sure if this will even work
+				sf::ConvexShape line(3);
+				line.setPoint(0, where_curs);
+				line.setPoint(1, location(k, l));
+				line.setPoint(2, location(k - 1, l + 1));
+				line.setOutlineThickness(2);
+				line.setOutlineColor(sf::Color::Black);
+				mainPtr.draw(line, sf::RenderStates(sf::BlendAdd));
+#if 0
 				PenMode (patXor);
 				PenSize(2,2);
 				MoveTo(where_curs.h,where_curs.v);
 				LineTo(k,l);
+#endif
 				
-				redraw_rect.left = min(where_curs.h,k) - 4;
-				redraw_rect.right = max(where_curs.h,k) + 4;
-				redraw_rect.top = min(where_curs.v,l) - 4;
-				redraw_rect.bottom = max(where_curs.v,l) + 4;
-				SectRect(&redraw_rect,&terrain_rect,&redraw_rect2);
+				redraw_rect.left = min(where_curs.x,k) - 4;
+				redraw_rect.right = max(where_curs.x,k) + 4;
+				redraw_rect.top = min(where_curs.y,l) - 4;
+				redraw_rect.bottom = max(where_curs.y,l) + 4;
+				redraw_rect2 = redraw_rect | terrain_rect;
 				
 				// Now place targeting pattern
 				for (i = 0; i < 9; i++)
@@ -2061,33 +1822,34 @@ void draw_targeting_line(Point where_curs)
 						if ((abs(store_loc.x - which_space.x) <= 4) && 
 							(abs(store_loc.y - which_space.y) <= 4) && 
 							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
-								target_rect.left = 13 + BITMAP_WIDTH * i + 5 + ul.h;
+								target_rect.left = 13 + BITMAP_WIDTH * i + 5 + ul.x;
 								target_rect.right = target_rect.left + BITMAP_WIDTH;
-								target_rect.top = 13 + BITMAP_HEIGHT * j + 5 + ul.v;
+								target_rect.top = 13 + BITMAP_HEIGHT * j + 5 + ul.y;
 								target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
-								FrameRect(&target_rect);
-								InsetRect(&target_rect,-5,-5);
-								UnionRect(&target_rect,&redraw_rect2,&redraw_rect2);
+								// TODO: Not sure if black is the right colour here
+								frame_rect(mainPtr, target_rect, sf::Color::Black);
+								target_rect.inset(-5,-5);
+								target_rect = rectunion(redraw_rect2,redraw_rect2);
 								
 								// Now place number of shots left, if drawing center of target
 								if ((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
 								 && (store_loc.y - which_space.y + 4 == 4)) {
-									ForeColor(whiteColor);
-									MoveTo(((target_rect.left + target_rect.right) / 2) - 3,
-									 (target_rect.top + target_rect.bottom) / 2);
-									DrawChar((char) (num_targets_left + 48));
-									ForeColor(blackColor);
+									TEXT.colour = sf::Color::White;
+									const char chr[2] = {static_cast<char>(num_targets_left + '0')};
+									int x = ((target_rect.left + target_rect.right) / 2) - 3;
+									int y = (target_rect.top + target_rect.bottom) / 2;
+									win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, 1, 12);
+									TEXT.colour = sf::Color::Black;
 									}
 								
 								}
 						}
-											
+							
 				FlushAndPause(4);
 				
-				InsetRect(&redraw_rect2,-5,-5);	
+				redraw_rect2.inset(-5,-5);
 				redraw_partial_terrain(redraw_rect2);
-				PenNormal();
-				undo_clip();
+				undo_clip(mainPtr);
 				if (is_combat())
 					draw_pcs(center,1);
 					else draw_party_symbol(0,center);
@@ -2109,114 +1871,34 @@ bool party_toast()
 	return true;
 }
 
-void redraw_partial_terrain(Rect redraw_rect)
+void redraw_partial_terrain(RECT redraw_rect)
 {
-	Rect from_rect;
+	RECT from_rect;
 
 	from_rect = redraw_rect;
-	OffsetRect(&from_rect,-1 * ul.h,-1 * ul.v);
+	from_rect.offset(-ul.x,-ul.y);
 
 	// as rect_draw_some_item will shift redraw_rect before drawing, we need to compensate
-	OffsetRect(&redraw_rect,-1 * ul.h + 5,-1 * ul.v + 5);
+	redraw_rect.offset(-ul.x + 5,-ul.y + 5);
 	
-	rect_draw_some_item(terrain_screen_gworld,from_rect,redraw_rect,ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,redraw_rect,ul);
 
 }
 
 void FlushAndPause(unsigned long ticks)
 {
+	// TODO: Not quite sure what should be done here.
+#if 0
 	RgnHandle portRegion = NewRgn();
 	GrafPtr port;
 	GetPort(&port);
 	GetPortVisibleRegion(port,portRegion);
 	QDFlushPortBuffer(port,portRegion);
 	DisposeRgn(portRegion);
-	
-	unsigned long dummy;
-	Delay(ticks,&dummy);
+#endif
+	sf::sleep(time_in_ticks(ticks));
 }
 
-/*
-void HideMenuBar( void )
-{
-	GDHandle		mainScreen;
-	Rect			mainScreenBounds;
-	RgnHandle		mainScreenRgn;
-	GrafPtr			windowPort;
-	GrafPtr			oldPort;
-	WindowPtr		frontWindow;
-	
-	// get the gdhandle of the main screen which
-	// is the screen with the menubar
-	mainScreen = GetMainDevice();
-	mainScreenBounds = ( *mainScreen )->gdRect;
-	
-	// get new region encompassing entire screen
-	// including area under menu bar and corners
-	mainScreenRgn 	= NewRgn();
-	newGrayRgn 		= NewRgn();
-	underBarRgn 	= NewRgn();
-	RectRgn( mainScreenRgn, &mainScreenBounds );
-//	UnionRgn( mainScreenRgn, originalGrayRgn, newGrayRgn );
-	DiffRgn( newGrayRgn, originalGrayRgn, underBarRgn );
-	DisposeRgn( mainScreenRgn );
-	
-	// Set gray region to entire screen
-//	LMSetGrayRgn( newGrayRgn );
-	
-	GetPort( &oldPort );
-	GetWMgrPort( &windowPort );
-	SetPort( windowPort );
-	SetClip( newGrayRgn );
-	
-	// redraw the desktop to draw over the menu bar
-	PaintOne( nil, newGrayRgn );
-	
-	// in case any part of a window is covered
-	// redraw it and recalculate the visible region
-	frontWindow = FrontWindow();
-	PaintOne( ( WindowRef )frontWindow, underBarRgn );
-	PaintBehind( ( WindowRef )frontWindow, underBarRgn );
-	CalcVis( ( WindowRef )frontWindow );
-	CalcVisBehind( ( WindowRef )frontWindow, underBarRgn );
-	
-	// set menu bar height to 0
-	LMSetMBarHeight( 0 );
-	
-	// Restore the port
-	SetPort( oldPort );
-	
-}//HideMenuBar
-*/
-/*
-void ShowMenuBar( void )
-{
-	WindowPtr	frontWindow;
-	GrafPtr		windowPort;
-	GrafPtr		oldPort;
-	
-	// Reset the menu bar height
-//	LMSetMBarHeight( menuBarHeight );
-	
-	// Restore the original gray region
-//	LMSetGrayRgn( originalGrayRgn );
-	
-	frontWindow = FrontWindow();
-	CalcVis( frontWindow );
-	CalcVisBehind(frontWindow, newGrayRgn );
-	
-	// Reset the clipping regions of the window mgr port
-	GetPort( &oldPort );
-	GetWMgrPort( &windowPort );
-	SetPort( windowPort );
-	SetClip( newGrayRgn );
-	SetPort( oldPort );
-
-	// Redraw the menu bar
-	HiliteMenu( 0 );
-	DrawMenuBar();	
-}
-*/
 /*
 void HideShowMenuBar( )
 {

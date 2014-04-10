@@ -15,7 +15,7 @@ size_t available_btns[] = { // This array is a list of indices into the followin
 	135,136,137
 };
 
-cBasicButtonType basic_buttons[] = {
+bbtt basic_buttons[] = {
 	{BTN_DONE, " ", {false,0,mod_none}}, // Formerly DLG_BTN_REG with "Done " as the string
 	{BTN_REG, "Ask", {false,0,mod_none}},
 	{BTN_LEFT, " ", {true,key_left,mod_none}},
@@ -82,7 +82,7 @@ cBasicButtonType basic_buttons[] = {
 	{BTN_LG, "Bash Door", {false,0,mod_none}},
 	{BTN_LG, "Pick Lock", {false,0,mod_none}},
 	//60
-	{BTN_REG, "Leave", {false,0,mod_none}},
+	{BTN_REG, "Leave", {false,0,mod_none}}, // dupe
 	{BTN_REG, "Steal", {false,0,mod_none}},
 	{BTN_REG, "Attack", {false,0,mod_none}},
 	{BTN_REG, "OK", {false,0,mod_none}},

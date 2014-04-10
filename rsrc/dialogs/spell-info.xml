@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<!-- Unknown offscreen PICT element -->
+	<pict name='icon' type='dlog' num='24' top='8' left='8'/>
+	<text name='type' framed='true' top='27' left='55' width='182' height='16'/>
+	<text name='name' framed='true' top='55' left='70' width='167' height='16'/>
+	<text name='cost' framed='true' top='80' left='109' width='41' height='16'/>
+	<text name='range' framed='true' top='80' left='215' width='28' height='16'/>
+	<text name='desc' framed='true' top='151' left='21' width='241' height='93'/>
+	<button name='done' type='done' top='254' left='201'/>
+	<button name='left' type='left' def-key='left' top='254' left='22'/>
+	<button name='right' type='right' def-key='right' top='254' left='85'/>
+	<text name='when' framed='true' top='105' left='73' width='167' height='17'/>
+	<text top='6' left='55' width='83' height='16'>Spell Info:</text>
+	<text top='55' left='15' width='48' height='16'>Name:</text>
+	<text top='80' left='15' width='87' height='16'>Level/Cost:</text>
+	<text top='80' left='156' width='51' height='16'>Range:</text>
+	<text top='105' left='15' width='49' height='17'>When:</text>
+	<text top='128' left='15' width='119' height='16'>Description:</text>
+</dialog>

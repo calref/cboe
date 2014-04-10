@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='leave'>
+	<button name='leave' type='regular' top='50' left='246'>Leave</button>
+	<button name='climb' type='regular' top='50' left='180'>Climb</button>
+	<pict type='dlog' num='19' top='8' left='8'/>
+	<text top='3' left='50' width='254' height='45'>
+		The passageway you’re walking down slopes downward here,
+		descending steeply into total darkness.
+	</text>
+</dialog>

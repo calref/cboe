@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!-- Unexpected OK button -->
+	<field name='name' type='text' top='36' left='118' width='148' height='15'/>
+	<pict type='dlog' num='7' top='8' left='8'/>
+	<text size='large' top='6' left='53' width='222' height='20'>
+		Select a name for your PC:
+	</text>
+	<text size='large' top='36' left='53' width='58' height='16'>Name:</text>
+	<text name='error' framed='true' top='63' left='53' width='217' height='16'/>
+	<button name='okay' type='regular' top='88' left='209'>OK</button>
+</dialog>

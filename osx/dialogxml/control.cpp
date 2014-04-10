@@ -6,20 +6,35 @@
  *
  */
 
-#include <Carbon/Carbon.h>
+#include "control.h"
 #include <sstream>
 #include "dialog.h"
 #include "soundtool.h"
+#include "button.h"
+#include "graphtool.h"
+#include "restypes.hpp"
+#include "mathutil.h"
 
 extern bool play_sounds;
 
 void cControl::setText(std::string l){
 	lbl = l;
-	if(isVisible()) draw();
 }
 
 std::string cControl::getText(){
 	return lbl;
+}
+
+RECT cControl::getBounds() {
+	return frame;
+}
+
+void cControl::setBounds(RECT newFrame) {
+	frame = newFrame;
+}
+
+void cControl::relocate(location to) {
+	frame.offset(to.x - frame.left, to.y - frame.top);
 }
 
 const char* xHandlerNotSupported::focusMsg = "This control cannot handle focus events.\n";
@@ -45,9 +60,6 @@ const char* xUnsupportedProp::what() throw(){
 		msg = new char[60];
 		std::string s;
 		switch(whichProp){
-			case TXT_COLOR:
-				s = "TXT_COLOR";
-				break;
 			case TXT_FRAME:
 				s = "TXT_FRAME";
 				break;
@@ -61,6 +73,7 @@ const char* xUnsupportedProp::what() throw(){
 				s = "TXT_WRAP";
 				break;
 		}
+		// TODO: Support colour, which doesn't use the setFormat function
 		sprintf(msg,"Format property %s not valid for this control.\n",s.c_str());
 	}
 	return msg;
@@ -129,61 +142,74 @@ eKeyMod& operator -= (eKeyMod&lhs, eKeyMod rhs){
 	return lhs;
 }
 
-bool operator== (cKey& a, cKey& b){
+bool operator== (cKey a, cKey b){
 	if(a.spec != b.spec) return false;
 	if(a.mod != b.mod) return false;
 	return a.spec ? a.k == b.k : a.c == b.c;
 }
 
+bool mod_contains(eKeyMod mods, eKeyMod mod) {
+	if((mods & mod) != 0) return true;
+	return false;
+}
+
 void cControl::show(){
 	visible = true;
-	if(isVisible()) draw();
 }
 
 void cControl::hide(){
 	visible = false;
-	if(isVisible()) draw();
 }
 
 bool cControl::isVisible(){
-	if(parent->dialogNotToast)
+	if(!parent || parent->dialogNotToast)
 		return visible;
 	else return false;
 }
 
+cKey cControl::getAttachedKey() {
+	return key;
+}
+
+void cControl::setActive(bool active) {
+	depressed = active;
+}
+
 bool cControl::handleClick(){
-	EventRecord e;
+	sf::Event e;
 	unsigned long dummy;
 	bool done = false, clicked = false;
-	GrafPtr old_port;
-	GetPort(&old_port);
-	SetPortWindowPort(parent->win);
-	RgnHandle in_region = NewRgn(), out_region = NewRgn();
-	RectRgn(in_region,&frame);
-	RectRgn(out_region,&parent->winRect);
-	DiffRgn(out_region,in_region,out_region);
+	inWindow->setActive();
 	depressed = true;
-	draw();
 	while(!done){
-		WaitNextEvent(mUpMask,&e,0L,depressed ? in_region : out_region);
-		if(e.what == mouseUp){
-			done = true;
-			clicked = PtInRect(e.where, &frame);
-			depressed = false;
-		}else if(e.message >> 8 == mouseMovedMessage){
-			depressed = !depressed;
+		if(parent) parent->draw();
+		else {
+			// TODO: This only redraws this one control; should probably redraw the entire dialog? But what if there is no dialog?
 			draw();
+			inWindow->display();
+		}
+		if(!inWindow->pollEvent(e)) continue;
+		if(e.type == sf::Event::MouseButtonReleased){
+			done = true;
+			clicked = frame.contains(e.mouseButton.x, e.mouseButton.y);
+			depressed = false;
+		} else if(e.type == sf::Event::MouseMoved){
+			depressed = frame.contains(e.mouseMove.x, e.mouseMove.y);
 		}
 	}
 	if (play_sounds) {
 		if(typeid(this) == typeid(cLed*))
 			play_sound(34);
 		else play_sound(37);
-		Delay(6,&dummy);
+		sf::sleep(time_in_ticks(6));
 	}
-	else Delay(14,&dummy);
-	draw();
-	SetPort(old_port);
+	else sf::sleep(time_in_ticks(14));
+	if(parent) parent->draw();
+	else {
+		// TODO: This only redraws this one control; should probably redraw the entire dialog? But what if there is no dialog?
+		draw();
+		inWindow->display();
+	}
 	return clicked;
 }
 
@@ -233,14 +259,11 @@ void cControl::detachKey(){
 	this->key.c = 0;
 }
 
-cControl::cControl(cDialog* p, eControlType t) : parent(p), type(t), visible(true) {
-	// No key by default.
-	key.spec = false;
-	key.c = 0;
-	key.mod = mod_none;
-}
+cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}) {}
 
-bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), Point __attribute__((unused))){
+cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}) {}
+
+bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), location __attribute__((unused))){
 	return true;
 }
 
@@ -248,54 +271,42 @@ bool cControl::triggerFocusHandler(cDialog& me __attribute__((unused)), std::str
 	return true;
 }
 
-short cControl::font_nums[4];
+std::string cControl::font_nums[4] = {"Dungeon", "Geneva", "Silom", "MaidenWord"};
 
 void cControl::init(){
-	Str255 fnGeneva = "\pGeneva";
-	Str255 fnDungeon = "\pDungeon Bold";
-	Str255 fnMaiden = "\pMaidenWord";
-	Str255 fnSilom = "\pSilom";
-	Str255 fnPalatino = "\pPalatino";
-	Str255 fnChancery = "\pApple Chancery";
+	char fnGeneva[] = "Geneva";
+	char fnDungeon[] = "Dungeon Bold";
+	char fnMaiden[] = "MaidenWord";
+	char fnSilom[] = "Silom";
+	char fnPalatino[] = "Palatino";
+	char fnChancery[] = "Apple Chancery";
 	
-	GetFNum(fnGeneva,&font_nums[GENEVA]);
-	if(font_nums[GENEVA] == 0)
-		GetFNum(fnPalatino,&font_nums[GENEVA]);
-	GetFNum(fnDungeon,&font_nums[DUNGEON]);
-	if(font_nums[DUNGEON] == 0)
-		GetFNum(fnChancery,&font_nums[DUNGEON]);
-	GetFNum(fnSilom,&font_nums[SILOM]);
-	if(font_nums[SILOM] == 0){
-		GetFNum(fnPalatino,&font_nums[SILOM]);
+	// Check if Silom is available
+	// TODO: Ultimately, I'd like to distribute all needed fonts with the game, rendering this unnecessary
+	try {
+		ResMgr::get<FontRsrc>("Silom");
+		found_silom = true;
+	} catch(ResMgr::xResMgrErr) {
 		found_silom = false;
-	}else found_silom = true;
-	GetFNum(fnMaiden,&font_nums[MAIDENWORD]);
-	if(font_nums[MAIDENWORD] == 0)
-		GetFNum(fnChancery,&font_nums[MAIDENWORD]);
+	}
 }
 
-void cControl::drawFrame(short amt, short med_or_lt){
-	static RGBColor lt_gray = {57344,57344,57344},dk_gray = {12287,12287,12287},med_gray = {24574,24574,24574};
-	GrafPtr old_port;
-	Rect rect = frame;
+void cControl::drawFrame(short amt, bool med_or_lt){
+	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
+	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48},med_gray = {96,96,96};
+	RECT rect = frame, ul_rect;
 	
-	GetPort(&old_port);
-	SetPortWindowPort(parent->win);
+	inWindow->setActive();
 	
-	InsetRect(&rect,-1 * amt,-1 * amt);
+	rect.inset(-amt,-amt);
+	ul_rect = rect;
+	ul_rect.left -= 1;
+	ul_rect.top -= 1;
 	
-	RGBForeColor(&dk_gray);
-	MoveTo(rect.left,rect.top);
-	LineTo(rect.right,rect.top);
-	if (med_or_lt == 1) // hDlg == GetWindowPort(mainPtr) // ie for the pc editor only
-		RGBForeColor(&med_gray);
-	else RGBForeColor(&lt_gray);
-	LineTo(rect.right,rect.bottom);
-	LineTo(rect.left,rect.bottom);
-	RGBForeColor(&dk_gray);
-	LineTo(rect.left,rect.top);
-	ForeColor(blackColor);
-	SetPort(old_port);
+	frame_rect(*inWindow, rect, med_or_lt ? med_gray : lt_gray);
+	clip_rect(*inWindow, ul_rect);
+	frame_rect(*inWindow, rect, dk_gray);
+	undo_clip(*inWindow);
 }
 
 bool cControl::found_silom;

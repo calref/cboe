@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='done'>
+	<pict type='dlog' num='24' top='8' left='8'/>
+	<text name='name' framed='true' top='30' left='106' width='156' height='16'/>
+	<text name='skp' framed='true' top='57' left='133' width='29' height='15'/>
+	<text name='gold' framed='true' top='57' left='218' width='45' height='15'/>
+	<text name='max' framed='true' top='83' left='96' width='28' height='15'/>
+	<text name='desc' framed='true' top='130' left='21' width='241' height='88'/>
+	<text name='tips' framed='true' top='250' left='21' width='241' height='74'/>
+	<button name='left' type='left' def-key='left' top='332' left='19'/>
+	<button name='right' type='right' def-key='right' top='332' left='82'/>
+	<button name='done' type='done' top='332' left='202'/>
+	<text size='large' top='6' left='53' width='134' height='16'>Skill Info:</text>
+	<text size='large' top='57' left='15' width='41' height='16'>Cost:</text>
+	<text top='57' left='59' width='66' height='16'>Skill Pts.:</text>
+	<text top='57' left='172' width='39' height='15'>Gold:</text>
+	<text top='83' left='15' width='73' height='16'>Max. Level:</text>
+	<text size='large' top='106' left='15' width='75' height='16'>Description</text>
+	<text size='large' top='229' left='16' width='75' height='16'>Tips:</text>
+	<text top='30' left='53' width='46' height='16'>Name:</text>
+</dialog>

@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 
 //#include "item.h"
@@ -23,7 +22,8 @@
 #include "boe.graphutil.h"
 #include "boe.main.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "boe.menus.h"
 
 //extern party_record_type party;
 //extern current_town_type univ.town;
@@ -39,7 +39,8 @@ extern short current_pc;
 extern short pc_last_cast[2][6];
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
-extern WindowPtr mainPtr;
+extern bool flushingInput;
+extern sf::RenderWindow mainPtr;
 extern short store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
@@ -110,7 +111,7 @@ short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0
 
 extern short boom_gr[8];								
 
-char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+const char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 
 short pc_marked_damage[6];
 short monst_marked_damage[60];
@@ -285,7 +286,6 @@ bool center_on_monst;
 void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls)
 {
 	short i,j,how_many,num_tries = 0;
-	GrafPtr old_port;
 //	short low[10] = {15,7,3,3,1,1,1,7,2,1};
 //	short high[10] = {30,10,5,5,3,2,1,10,4,1};
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
@@ -300,10 +300,9 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	notify_out_combat_began(encounter.what_monst,nums);
 	print_buf();
 	play_sound(23);
-
-	GetPort(&old_port);	
-	SetPort(GetWindowPort(mainPtr));
-	which_combat_type = 0;	
+	
+	mainPtr.setActive();
+	which_combat_type = 0;
 	town_type = 1;
 	overall_mode = MODE_COMBAT;
 
@@ -402,12 +401,11 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	draw_buttons(0);
 	put_pc_screen();
 	set_stat_window(current_pc);
-	SetPort(old_port);
 
 	adjust_spell_menus();
 	
 	//clear_map();
-	give_help(48,49,0);
+	give_help(48,49);
 
 }
 
@@ -451,8 +449,15 @@ bool pc_combat_move(location destination) ////
 			return true;		
 		}
 		else if ((monst_hit = monst_there(destination)) <= univ.town->max_monst()) {
+			// s2 = 2 here appears to mean "go ahead and attack", while s2 = 1 means "cancel attack".
+			// Then s1 % 2 == 1 means the monster is hostile to the party.
 			s1 = univ.town.monst[monst_hit].attitude;
-			s2 = (s1 % 2 == 1) ? 2 : fancy_choice_dialog(1045,0);
+			if(s1 % 2 == 1) s2 = 2;
+			else {
+				std::string result = cChoiceDlog("attack-friendly.xml",{"cancel","attack"}).show();
+				if(result == "cancel") s2 = 1;
+				else if(result == "attack") s2 = 2;
+			}
 			if ((s2 == 2) && (s1 % 2 != 1)) 
 				make_town_hostile();
 			if (s2 == 2) {
@@ -2038,8 +2043,7 @@ void do_monster_turn()
 							print_buf();
 							if (j == 0)
 								pause(8);
-							FlushEvents(mDownMask,0);
-							FlushEvents(keyDownMask,0);							
+							flushingInput = true;
 						}
 					
 					if (overall_mode == MODE_COMBAT) {
@@ -4067,7 +4071,7 @@ bool combat_cast_mage_spell()
 	else if (get_encumberance(current_pc) > 1) { 
 		add_string_to_buf("Cast: Too encumbered.        ");
 		take_ap(6);
-		give_help(40,0,0);
+		give_help(40,0);
 		return true;
 		}	
 		else {	

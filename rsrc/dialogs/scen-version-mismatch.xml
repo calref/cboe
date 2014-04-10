@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog contains out-of-date information - the current version number, as well as how to upgrade.
+	 -->
+	<button name='okay' type='regular' top='69' left='263'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text top='3' left='50' width='271' height='63'>
+		This scenario was created by Blades of Exile v2.0 or later,
+		and can’t be run using this copy.
+		You can find an upgrade at www.spidweb.com,
+		or get one from Spiderweb Software.
+	</text>
+</dialog>

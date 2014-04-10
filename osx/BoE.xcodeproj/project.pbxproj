@@ -12,9 +12,13 @@
 			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
 			buildPhases = (
 				912CF3560FE4494C0063B614 /* Copy Scenarios */,
-				912CF36C0FE44A2A0063B614 /* Copy Old Data Files */,
 				912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */,
 				912CF36E0FE44A2A0063B614 /* Copy Mac Cursors */,
+				914B2B3118E80030007B6799 /* Copy Mac Sounds */,
+				9192C13918F32E6E0088A580 /* Copy Strings */,
+				914701A618F62A52008A6DC9 /* Copy Fonts */,
+				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
+				914B2B9518E8008A007B6799 /* Copy Dialog Definitions */,
 			);
 			dependencies = (
 			);
@@ -55,7 +59,9 @@
 		2BF04B2C0BF51924006C0831 /* boe.startup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B050BF51924006C0831 /* boe.startup.cpp */; };
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
-		2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
+		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		912286F90FD330EA00B21642 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
@@ -106,8 +112,6 @@
 		912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
 		912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
 		912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
-		912CF3680FE449B70063B614 /* Blades of Exile Graphics in Copy Old Data Files */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
-		912CF3690FE449C10063B614 /* Blades of Exile Sounds in Copy Old Data Files */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
 		912CF4140FE44AAF0063B614 /* actionhelp.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF37F0FE44A9B0063B614 /* actionhelp.png */; };
 		912CF4150FE44AAF0063B614 /* bigscenpics.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3800FE44A9B0063B614 /* bigscenpics.png */; };
 		912CF4160FE44AAF0063B614 /* booms.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 912CF3810FE44A9B0063B614 /* booms.png */; };
@@ -198,15 +202,85 @@
 		912CF46B0FE44AC20063B614 /* W.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF3990FE44A9B0063B614 /* W.gif */; };
 		912CF46C0FE44AC20063B614 /* wait.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF39A0FE44A9B0063B614 /* wait.gif */; };
 		912CF46D0FE44AC20063B614 /* wand.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 912CF39B0FE44A9B0063B614 /* wand.gif */; };
+		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
+		91364F1418F092EE0033B58E /* 1str-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EC918F0914F0033B58E /* 1str-lg.xml */; };
+		91364F1518F092EE0033B58E /* 1str-title-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECA18F0914F0033B58E /* 1str-title-lg.xml */; };
+		91364F1618F092EE0033B58E /* 1str-title.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECB18F0914F0033B58E /* 1str-title.xml */; };
+		91364F1718F092EE0033B58E /* 1str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECC18F0914F0033B58E /* 1str.xml */; };
+		91364F1818F092EE0033B58E /* 2str-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECD18F0914F0033B58E /* 2str-lg.xml */; };
+		91364F1918F092EE0033B58E /* 2str-title-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECE18F0914F0033B58E /* 2str-title-lg.xml */; };
+		91364F1A18F092EE0033B58E /* 2str-title.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECF18F0914F0033B58E /* 2str-title.xml */; };
+		91364F1B18F092EE0033B58E /* 2str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED018F0914F0033B58E /* 2str.xml */; };
+		91364F1C18F092EE0033B58E /* choose-pict.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDD18F0914F0033B58E /* choose-pict.xml */; };
+		91364F1D18F092EE0033B58E /* choose-string.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDE18F0914F0033B58E /* choose-string.xml */; };
+		91364F1E18F092EE0033B58E /* edit-terrain.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE518F0914F0033B58E /* edit-terrain.xml */; };
+		91364F1F18F092EE0033B58E /* inventory-full.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF118F0914F0033B58E /* inventory-full.xml */; };
+		91364F2018F092EE0033B58E /* basic-lever.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED418F0914F0033B58E /* basic-lever.xml */; };
+		91364F2118F092EE0033B58E /* welcome.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1318F0914F0033B58E /* welcome.xml */; };
+		91364F2218F092EE0033B58E /* attack-friendly.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED218F0914F0033B58E /* attack-friendly.xml */; };
+		91364F2318F092EE0033B58E /* about-boe.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED118F0914F0033B58E /* about-boe.xml */; };
+		91364F2418F092EE0033B58E /* restart-game.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0718F0914F0033B58E /* restart-game.xml */; };
+		91364F2518F092EE0033B58E /* quit-confirm-save.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0518F0914F0033B58E /* quit-confirm-save.xml */; };
+		91364F2618F092EE0033B58E /* quit-confirm-nosave.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */; };
+		91364F2718F092EE0033B58E /* delete-pc-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE218F0914F0033B58E /* delete-pc-confirm.xml */; };
+		91364F2818F092EE0033B58E /* help-fields.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEA18F0914F0033B58E /* help-fields.xml */; };
+		91364F2918F092EE0033B58E /* help-magic.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EED18F0914F0033B58E /* help-magic.xml */; };
+		91364F2A18F092EE0033B58E /* help-hints.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEB18F0914F0033B58E /* help-hints.xml */; };
+		91364F2B18F092EE0033B58E /* help-outdoor.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEE18F0914F0033B58E /* help-outdoor.xml */; };
+		91364F2C18F092EE0033B58E /* help-town.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF018F0914F0033B58E /* help-town.xml */; };
+		91364F2D18F092EE0033B58E /* help-combat.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE918F0914F0033B58E /* help-combat.xml */; };
+		91364F2E18F092EE0033B58E /* drop-item-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE318F0914F0033B58E /* drop-item-confirm.xml */; };
+		91364F2F18F092EE0033B58E /* get-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE618F0914F0033B58E /* get-items.xml */; };
+		91364F3018F092EE0033B58E /* steal-item.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1018F0914F0033B58E /* steal-item.xml */; };
+		91364F3118F092EE0033B58E /* view-sign.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1218F0914F0033B58E /* view-sign.xml */; };
+		91364F3218F092EE0033B58E /* preferences.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0318F0914F0033B58E /* preferences.xml */; };
+		91364F3318F092EE0033B58E /* edit-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE418F0914F0033B58E /* edit-party.xml */; };
+		91364F3418F092EE0033B58E /* tip-of-day.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1118F0914F0033B58E /* tip-of-day.xml */; };
+		91364F3518F092EE0033B58E /* no-scenarios.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF918F0914F0033B58E /* no-scenarios.xml */; };
+		91364F3618F092EE0033B58E /* pick-scenario.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0218F0914F0033B58E /* pick-scenario.xml */; };
+		91364F3718F092EE0033B58E /* pick-prefab-scen.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0018F0914F0033B58E /* pick-prefab-scen.xml */; };
+		91364F3818F092EE0033B58E /* select-pc.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0918F0914F0033B58E /* select-pc.xml */; };
+		91364F3918F092EE0033B58E /* get-num.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE718F0914F0033B58E /* get-num.xml */; };
+		91364F3A18F092EE0033B58E /* get-response.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE818F0914F0033B58E /* get-response.xml */; };
+		91364F3B18F092EE0033B58E /* keep-stored-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF318F0914F0033B58E /* keep-stored-items.xml */; };
+		91364F3C18F092EE0033B58E /* locked-door-action.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF518F0914F0033B58E /* locked-door-action.xml */; };
+		91364F3D18F092EE0033B58E /* basic-trap.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDA18F0914F0033B58E /* basic-trap.xml */; };
+		91364F3E18F092EE0033B58E /* basic-portal.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED518F0914F0033B58E /* basic-portal.xml */; };
+		91364F3F18F092EE0033B58E /* basic-button.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED318F0914F0033B58E /* basic-button.xml */; };
+		91364F4018F092EE0033B58E /* basic-stair-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED918F0914F0033B58E /* basic-stair-up.xml */; };
+		91364F4118F092EE0033B58E /* basic-stair-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED818F0914F0033B58E /* basic-stair-down.xml */; };
+		91364F4218F092EE0033B58E /* basic-slope-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED718F0914F0033B58E /* basic-slope-up.xml */; };
+		91364F4318F092EE0033B58E /* basic-slope-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED618F0914F0033B58E /* basic-slope-down.xml */; };
+		91364F4418F092EE0033B58E /* slimy-stair-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0C18F0914F0033B58E /* slimy-stair-up.xml */; };
+		91364F4518F092EE0033B58E /* slimy-stair-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0B18F0914F0033B58E /* slimy-stair-down.xml */; };
+		91364F4618F092EE0033B58E /* dark-slope-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE118F0914F0033B58E /* dark-slope-up.xml */; };
+		91364F4718F092EE0033B58E /* dark-slope-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE018F0914F0033B58E /* dark-slope-down.xml */; };
+		91364F4818F092EE0033B58E /* need-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF718F0914F0033B58E /* need-party.xml */; };
+		91364F4918F092EE0033B58E /* scen-version-mismatch.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0818F0914F0033B58E /* scen-version-mismatch.xml */; };
+		91364F4A18F092EE0033B58E /* help-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEF18F0914F0033B58E /* help-party.xml */; };
+		91364F4B18F092EE0033B58E /* help-inventory.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEC18F0914F0033B58E /* help-inventory.xml */; };
+		91364F4C18F092EE0033B58E /* congrats-save.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDF18F0914F0033B58E /* congrats-save.xml */; };
+		91364F4D18F092EE0033B58E /* boat-bridge.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDB18F0914F0033B58E /* boat-bridge.xml */; };
+		91364F4E18F092EE0033B58E /* party-death.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFB18F0914F0033B58E /* party-death.xml */; };
+		91364F4F18F092EE0033B58E /* new-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF818F0914F0033B58E /* new-party.xml */; };
+		91364F5018F092EE0033B58E /* removed-special-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0618F0914F0033B58E /* removed-special-items.xml */; };
+		91364F5118F092EE0033B58E /* spell-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0E18F0914F0033B58E /* spell-info.xml */; };
+		91364F5218F092EE0033B58E /* load-game-fail.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF418F0914F0033B58E /* load-game-fail.xml */; };
+		91364F5318F092EE0033B58E /* not-save-game.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFA18F0914F0033B58E /* not-save-game.xml */; };
+		91364F5418F092EE0033B58E /* spend-xp.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0F18F0914F0033B58E /* spend-xp.xml */; };
+		91364F5518F092EE0033B58E /* skill-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0A18F0914F0033B58E /* skill-info.xml */; };
+		91364F5618F092EE0033B58E /* pc-spell-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFD18F0914F0033B58E /* pc-spell-info.xml */; };
+		91364F5718F092EE0033B58E /* cast-spell.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDC18F0914F0033B58E /* cast-spell.xml */; };
+		91364F5818F092EE0033B58E /* item-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF218F0914F0033B58E /* item-info.xml */; };
+		91364F5918F092EE0033B58E /* pick-potion.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFF18F0914F0033B58E /* pick-potion.xml */; };
+		91364F5A18F092EE0033B58E /* pick-pc-name.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFE18F0914F0033B58E /* pick-pc-name.xml */; };
+		91364F5B18F092EE0033B58E /* soul-crystal.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0D18F0914F0033B58E /* soul-crystal.xml */; };
+		91364F5C18F092EE0033B58E /* monster-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF618F0914F0033B58E /* monster-info.xml */; };
+		91364F5D18F092EE0033B58E /* pc-alchemy-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */; };
+		91364F5E18F092EE0033B58E /* pick-race-abil.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0118F0914F0033B58E /* pick-race-abil.xml */; };
 		913D005B0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
 		913D005C0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
 		913D005D0F9FEEC300184C18 /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
-		913D00860FA0021400184C18 /* dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D00850FA0021400184C18 /* dlgutil.cpp */; };
-		913D00870FA0021400184C18 /* dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D00850FA0021400184C18 /* dlgutil.cpp */; };
-		913D00880FA0021400184C18 /* dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D00850FA0021400184C18 /* dlgutil.cpp */; };
-		913D02690FA0EB0300184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
-		913D026A0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
-		913D026B0FA0EB0500184C18 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D02680FA0EB0300184C18 /* QuickTime.framework */; };
 		913D05B60FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
 		913D05B70FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
 		913D05B80FA1E9E300184C18 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
@@ -214,9 +288,146 @@
 		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
-		91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B670FDB5F1000C4E957 /* choose-pict.xml */; };
-		91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B680FDB5F1000C4E957 /* choose-string.xml */; };
-		91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */ = {isa = PBXBuildFile; fileRef = 91A32B690FDB5F1000C4E957 /* edit-terrain.xml */; };
+		914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A418F629D4008A6DC9 /* dungeon.ttf */; };
+		914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A518F629D4008A6DC9 /* maidenword.ttf */; };
+		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
+		914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
+		914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
+		914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
+		914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
+		914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
+		914B2AB018E7E52F007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
+		914B2AB118E7E530007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
+		914B2AB218E7E531007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
+		914B2AB318E7E535007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
+		914B2AB418E7E536007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
+		914B2AB518E7E536007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
+		914B2AB618E7E539007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
+		914B2AB718E7E539007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
+		914B2AB818E7E53A007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
+		914B2AB918E7E53C007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
+		914B2ABA18E7E53D007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
+		914B2ABB18E7E53D007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
+		914B2ABC18E7E540007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
+		914B2ABD18E7E540007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
+		914B2ABE18E7E541007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
+		914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
+		914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
+		914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
+		914B2AC618E7E6EB007B6799 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
+		914B2B3218E8005B007B6799 /* SND1.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ACC18E7FFEF007B6799 /* SND1.WAV */; };
+		914B2B3318E8005B007B6799 /* SND10.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ACD18E7FFEF007B6799 /* SND10.WAV */; };
+		914B2B3418E8005B007B6799 /* SND11.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ACE18E7FFEF007B6799 /* SND11.WAV */; };
+		914B2B3518E8005B007B6799 /* SND12.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ACF18E7FFEF007B6799 /* SND12.WAV */; };
+		914B2B3618E8005B007B6799 /* SND13.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD018E7FFEF007B6799 /* SND13.WAV */; };
+		914B2B3718E8005B007B6799 /* SND14.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD118E7FFEF007B6799 /* SND14.WAV */; };
+		914B2B3818E8005B007B6799 /* SND15.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD218E7FFEF007B6799 /* SND15.WAV */; };
+		914B2B3918E8005B007B6799 /* SND16.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD318E7FFEF007B6799 /* SND16.WAV */; };
+		914B2B3A18E8005B007B6799 /* SND17.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD418E7FFEF007B6799 /* SND17.WAV */; };
+		914B2B3B18E8005B007B6799 /* SND18.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD518E7FFEF007B6799 /* SND18.WAV */; };
+		914B2B3C18E8005B007B6799 /* SND19.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD618E7FFEF007B6799 /* SND19.WAV */; };
+		914B2B3D18E8005B007B6799 /* SND2.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD718E7FFEF007B6799 /* SND2.WAV */; };
+		914B2B3E18E8005B007B6799 /* SND20.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD818E7FFEF007B6799 /* SND20.WAV */; };
+		914B2B3F18E8005B007B6799 /* SND21.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AD918E7FFEF007B6799 /* SND21.WAV */; };
+		914B2B4018E8005B007B6799 /* SND22.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADA18E7FFEF007B6799 /* SND22.WAV */; };
+		914B2B4118E8005B007B6799 /* SND23.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADB18E7FFEF007B6799 /* SND23.WAV */; };
+		914B2B4218E8005B007B6799 /* SND24.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADC18E7FFEF007B6799 /* SND24.WAV */; };
+		914B2B4318E8005B007B6799 /* SND25.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADD18E7FFEF007B6799 /* SND25.WAV */; };
+		914B2B4418E8005B007B6799 /* SND26.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADE18E7FFEF007B6799 /* SND26.WAV */; };
+		914B2B4518E8005B007B6799 /* SND27.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2ADF18E7FFEF007B6799 /* SND27.WAV */; };
+		914B2B4618E8005B007B6799 /* SND28.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE018E7FFEF007B6799 /* SND28.WAV */; };
+		914B2B4718E8005B007B6799 /* SND29.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE118E7FFEF007B6799 /* SND29.WAV */; };
+		914B2B4818E8005B007B6799 /* SND3.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE218E7FFEF007B6799 /* SND3.WAV */; };
+		914B2B4918E8005B007B6799 /* SND30.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE318E7FFEF007B6799 /* SND30.WAV */; };
+		914B2B4A18E8005B007B6799 /* SND31.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE418E7FFEF007B6799 /* SND31.WAV */; };
+		914B2B4B18E8005B007B6799 /* SND32.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE518E7FFEF007B6799 /* SND32.WAV */; };
+		914B2B4C18E8005B007B6799 /* SND33.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE618E7FFEF007B6799 /* SND33.WAV */; };
+		914B2B4D18E8005B007B6799 /* SND34.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE718E7FFEF007B6799 /* SND34.WAV */; };
+		914B2B4E18E8005B007B6799 /* SND35.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE818E7FFEF007B6799 /* SND35.WAV */; };
+		914B2B4F18E8005B007B6799 /* SND36.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AE918E7FFEF007B6799 /* SND36.WAV */; };
+		914B2B5018E8005B007B6799 /* SND37.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AEA18E7FFEF007B6799 /* SND37.WAV */; };
+		914B2B5118E8005B007B6799 /* SND38.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AEB18E7FFEF007B6799 /* SND38.WAV */; };
+		914B2B5218E8005B007B6799 /* SND39.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AEC18E7FFEF007B6799 /* SND39.WAV */; };
+		914B2B5318E8005B007B6799 /* SND4.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AED18E7FFEF007B6799 /* SND4.WAV */; };
+		914B2B5418E8005B007B6799 /* SND40.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AEE18E7FFEF007B6799 /* SND40.WAV */; };
+		914B2B5518E8005B007B6799 /* SND41.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AEF18E7FFEF007B6799 /* SND41.WAV */; };
+		914B2B5618E8005B007B6799 /* SND42.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF018E7FFEF007B6799 /* SND42.WAV */; };
+		914B2B5718E8005B007B6799 /* SND43.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF118E7FFEF007B6799 /* SND43.WAV */; };
+		914B2B5818E8005B007B6799 /* SND44.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF218E7FFEF007B6799 /* SND44.WAV */; };
+		914B2B5918E8005B007B6799 /* SND45.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF318E7FFEF007B6799 /* SND45.WAV */; };
+		914B2B5A18E8005B007B6799 /* SND46.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF418E7FFEF007B6799 /* SND46.WAV */; };
+		914B2B5B18E8005B007B6799 /* SND47.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF518E7FFEF007B6799 /* SND47.WAV */; };
+		914B2B5C18E8005B007B6799 /* SND48.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF618E7FFEF007B6799 /* SND48.WAV */; };
+		914B2B5D18E8005B007B6799 /* SND49.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF718E7FFEF007B6799 /* SND49.WAV */; };
+		914B2B5E18E8005B007B6799 /* SND5.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF818E7FFEF007B6799 /* SND5.WAV */; };
+		914B2B5F18E8005B007B6799 /* SND50.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AF918E7FFEF007B6799 /* SND50.WAV */; };
+		914B2B6018E8005B007B6799 /* SND51.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFA18E7FFEF007B6799 /* SND51.WAV */; };
+		914B2B6118E8005B007B6799 /* SND52.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFB18E7FFEF007B6799 /* SND52.WAV */; };
+		914B2B6218E8005B007B6799 /* SND53.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFC18E7FFEF007B6799 /* SND53.WAV */; };
+		914B2B6318E8005B007B6799 /* SND54.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFD18E7FFEF007B6799 /* SND54.WAV */; };
+		914B2B6418E8005B007B6799 /* SND55.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFE18E7FFEF007B6799 /* SND55.WAV */; };
+		914B2B6518E8005B007B6799 /* SND56.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2AFF18E7FFEF007B6799 /* SND56.WAV */; };
+		914B2B6618E8005B007B6799 /* SND57.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0018E7FFEF007B6799 /* SND57.WAV */; };
+		914B2B6718E8005B007B6799 /* SND58.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0118E7FFEF007B6799 /* SND58.WAV */; };
+		914B2B6818E8005B007B6799 /* SND59.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0218E7FFEF007B6799 /* SND59.WAV */; };
+		914B2B6918E8005B007B6799 /* SND6.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0318E7FFEF007B6799 /* SND6.WAV */; };
+		914B2B6A18E8005B007B6799 /* SND60.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0418E7FFEF007B6799 /* SND60.WAV */; };
+		914B2B6B18E8005B007B6799 /* SND61.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0518E7FFEF007B6799 /* SND61.WAV */; };
+		914B2B6C18E8005B007B6799 /* SND62.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0618E7FFEF007B6799 /* SND62.WAV */; };
+		914B2B6D18E8005B007B6799 /* SND63.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0718E7FFEF007B6799 /* SND63.WAV */; };
+		914B2B6E18E8005B007B6799 /* SND64.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0818E7FFEF007B6799 /* SND64.WAV */; };
+		914B2B6F18E8005B007B6799 /* SND65.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0918E7FFEF007B6799 /* SND65.WAV */; };
+		914B2B7018E8005B007B6799 /* SND66.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0A18E7FFEF007B6799 /* SND66.WAV */; };
+		914B2B7118E8005B007B6799 /* SND67.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0B18E7FFEF007B6799 /* SND67.WAV */; };
+		914B2B7218E8005B007B6799 /* SND68.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0C18E7FFEF007B6799 /* SND68.WAV */; };
+		914B2B7318E8005B007B6799 /* SND69.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0D18E7FFEF007B6799 /* SND69.WAV */; };
+		914B2B7418E8005B007B6799 /* SND7.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0E18E7FFEF007B6799 /* SND7.WAV */; };
+		914B2B7518E8005B007B6799 /* SND70.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B0F18E7FFEF007B6799 /* SND70.WAV */; };
+		914B2B7618E8005B007B6799 /* SND71.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1018E7FFEF007B6799 /* SND71.WAV */; };
+		914B2B7718E8005B007B6799 /* SND72.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1118E7FFEF007B6799 /* SND72.WAV */; };
+		914B2B7818E8005B007B6799 /* SND73.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1218E7FFEF007B6799 /* SND73.WAV */; };
+		914B2B7918E8005B007B6799 /* SND74.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1318E7FFEF007B6799 /* SND74.WAV */; };
+		914B2B7A18E8005B007B6799 /* SND75.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1418E7FFEF007B6799 /* SND75.WAV */; };
+		914B2B7B18E8005B007B6799 /* SND76.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1518E7FFEF007B6799 /* SND76.WAV */; };
+		914B2B7C18E8005B007B6799 /* SND77.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1618E7FFEF007B6799 /* SND77.WAV */; };
+		914B2B7D18E8005B007B6799 /* SND78.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1718E7FFEF007B6799 /* SND78.WAV */; };
+		914B2B7E18E8005B007B6799 /* SND79.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1818E7FFEF007B6799 /* SND79.WAV */; };
+		914B2B7F18E8005B007B6799 /* SND8.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1918E7FFEF007B6799 /* SND8.WAV */; };
+		914B2B8018E8005B007B6799 /* SND80.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1A18E7FFEF007B6799 /* SND80.WAV */; };
+		914B2B8118E8005B007B6799 /* SND81.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1B18E7FFEF007B6799 /* SND81.WAV */; };
+		914B2B8218E8005B007B6799 /* SND82.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1C18E7FFEF007B6799 /* SND82.WAV */; };
+		914B2B8318E8005B007B6799 /* SND83.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1D18E7FFEF007B6799 /* SND83.WAV */; };
+		914B2B8418E8005B007B6799 /* SND84.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1E18E7FFEF007B6799 /* SND84.WAV */; };
+		914B2B8518E8005B007B6799 /* SND85.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B1F18E7FFEF007B6799 /* SND85.WAV */; };
+		914B2B8618E8005B007B6799 /* SND86.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2018E7FFEF007B6799 /* SND86.WAV */; };
+		914B2B8718E8005B007B6799 /* SND87.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2118E7FFEF007B6799 /* SND87.WAV */; };
+		914B2B8818E8005B007B6799 /* SND88.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2218E7FFEF007B6799 /* SND88.WAV */; };
+		914B2B8918E8005B007B6799 /* SND89.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2318E7FFEF007B6799 /* SND89.WAV */; };
+		914B2B8A18E8005B007B6799 /* SND9.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2418E7FFEF007B6799 /* SND9.WAV */; };
+		914B2B8B18E8005B007B6799 /* SND90.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2518E7FFEF007B6799 /* SND90.WAV */; };
+		914B2B8C18E8005B007B6799 /* SND91.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2618E7FFEF007B6799 /* SND91.WAV */; };
+		914B2B8D18E8005B007B6799 /* SND92.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2718E7FFEF007B6799 /* SND92.WAV */; };
+		914B2B8E18E8005B007B6799 /* SND93.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2818E7FFEF007B6799 /* SND93.WAV */; };
+		914B2B8F18E8005B007B6799 /* SND94.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2918E7FFEF007B6799 /* SND94.WAV */; };
+		914B2B9018E8005B007B6799 /* SND95.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2A18E7FFEF007B6799 /* SND95.WAV */; };
+		914B2B9118E8005B007B6799 /* SND96.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2B18E7FFEF007B6799 /* SND96.WAV */; };
+		914B2B9218E8005B007B6799 /* SND97.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2C18E7FFEF007B6799 /* SND97.WAV */; };
+		914B2B9318E8005B007B6799 /* SND98.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2D18E7FFEF007B6799 /* SND98.WAV */; };
+		914B2B9418E8005B007B6799 /* SND99.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2E18E7FFEF007B6799 /* SND99.WAV */; };
+		9156039018F4810200A50C51 /* many-str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9156038F18F43C8D00A50C51 /* many-str.xml */; };
+		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
+		9192C12018F2745C0088A580 /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* menu.xib */; };
+		9192C13A18F32E8D0088A580 /* alchemy.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12118F327230088A580 /* alchemy.txt */; };
+		9192C13C18F32E8D0088A580 /* help.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12318F327230088A580 /* help.txt */; };
+		9192C13D18F32E8D0088A580 /* item-abilities.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12418F327230088A580 /* item-abilities.txt */; };
+		9192C13E18F32E8D0088A580 /* mage-spells.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12518F327230088A580 /* mage-spells.txt */; };
+		9192C13F18F32E8D0088A580 /* monster-abilities.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12618F327230088A580 /* monster-abilities.txt */; };
+		9192C14318F32E8D0088A580 /* priest-spells.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12A18F327230088A580 /* priest-spells.txt */; };
+		9192C14518F32E8D0088A580 /* tips.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12C18F327230088A580 /* tips.txt */; };
+		9192C14618F32E8D0088A580 /* skills.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12D18F327230088A580 /* skills.txt */; };
+		9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13218F327230088A580 /* spell-times.txt */; };
+		9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13318F327230088A580 /* magic-names.txt */; };
+		9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13818F327230088A580 /* traits.txt */; };
 		91A32B770FDB5F6800C4E957 /* arena-names.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B720FDB5F6800C4E957 /* arena-names.txt */; };
 		91A32B780FDB5F6800C4E957 /* ter-flag1.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B730FDB5F6800C4E957 /* ter-flag1.txt */; };
 		91A32B790FDB5F6800C4E957 /* ter-flag2.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B740FDB5F6800C4E957 /* ter-flag2.txt */; };
@@ -237,7 +448,6 @@
 		91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
 		91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
 		91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
-		91A79DC70FA797BF00A6A41F /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91A79DC60FA797BF00A6A41F /* menu.xib */; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -250,11 +460,8 @@
 		91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
-		91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
-		91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */; };
-		91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */; };
 		91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */; };
@@ -271,7 +478,6 @@
 		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
-		91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BF04DE80BF7A6FE006C0831 /* Carbon.framework */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
 		91C1FCA60FCB6F7000EBAA65 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
 		91C1FCA70FCB6F7100EBAA65 /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
@@ -288,21 +494,12 @@
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		91E5C1F50F9E489B00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
-		91E5C1F60F9E489B00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
-		91E5C1F70F9E489B00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
-		91E5C1F80F9E489B00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91E5C1F90F9E48AF00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1FA0F9E48AF00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		91E5C1FB0F9E48AF00C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
-		91E5C1FC0F9E48AF00C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
-		91E5C1FD0F9E48AF00C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
-		91E5C1FE0F9E48AF00C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91E5C2050F9E48D900C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C2060F9E48D900C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		91E5C2070F9E48D900C21460 /* mathutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F11E0F97801F00BF5B67 /* mathutil.cpp */; };
-		91E5C2080F9E48D900C21460 /* dlgtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F0620F96D25200BF5B67 /* dlgtool.cpp */; };
-		91E5C2090F9E48D900C21460 /* dlglowlevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */; };
-		91E5C20A0F9E48D900C21460 /* dlgbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912798AE0F9CA636007B0D52 /* dlgbtns.cpp */; };
 		91E5C7990F9F60EC00C21460 /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7980F9F60EC00C21460 /* town.cpp */; };
 		91E5C79A0F9F60EC00C21460 /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7980F9F60EC00C21460 /* town.cpp */; };
 		91E5C79B0F9F60EC00C21460 /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7980F9F60EC00C21460 /* town.cpp */; };
@@ -398,18 +595,6 @@
 				912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */,
 			);
 			name = "Copy Scenarios";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912CF36C0FE44A2A0063B614 /* Copy Old Data Files */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Scenario Editor";
-			dstSubfolderSpec = 16;
-			files = (
-				912CF3690FE449C10063B614 /* Blades of Exile Sounds in Copy Old Data Files */,
-				912CF3680FE449B70063B614 /* Blades of Exile Graphics in Copy Old Data Files */,
-			);
-			name = "Copy Old Data Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */ = {
@@ -542,15 +727,240 @@
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		914701A618F62A52008A6DC9 /* Copy Fonts */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/fonts;
+			dstSubfolderSpec = 16;
+			files = (
+				914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */,
+				914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */,
+			);
+			name = "Copy Fonts";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		914B2B3118E80030007B6799 /* Copy Mac Sounds */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scenario Editor/sounds.exa";
+			dstSubfolderSpec = 16;
+			files = (
+				914B2B3218E8005B007B6799 /* SND1.WAV in Copy Mac Sounds */,
+				914B2B3318E8005B007B6799 /* SND10.WAV in Copy Mac Sounds */,
+				914B2B3418E8005B007B6799 /* SND11.WAV in Copy Mac Sounds */,
+				914B2B3518E8005B007B6799 /* SND12.WAV in Copy Mac Sounds */,
+				914B2B3618E8005B007B6799 /* SND13.WAV in Copy Mac Sounds */,
+				914B2B3718E8005B007B6799 /* SND14.WAV in Copy Mac Sounds */,
+				914B2B3818E8005B007B6799 /* SND15.WAV in Copy Mac Sounds */,
+				914B2B3918E8005B007B6799 /* SND16.WAV in Copy Mac Sounds */,
+				914B2B3A18E8005B007B6799 /* SND17.WAV in Copy Mac Sounds */,
+				914B2B3B18E8005B007B6799 /* SND18.WAV in Copy Mac Sounds */,
+				914B2B3C18E8005B007B6799 /* SND19.WAV in Copy Mac Sounds */,
+				914B2B3D18E8005B007B6799 /* SND2.WAV in Copy Mac Sounds */,
+				914B2B3E18E8005B007B6799 /* SND20.WAV in Copy Mac Sounds */,
+				914B2B3F18E8005B007B6799 /* SND21.WAV in Copy Mac Sounds */,
+				914B2B4018E8005B007B6799 /* SND22.WAV in Copy Mac Sounds */,
+				914B2B4118E8005B007B6799 /* SND23.WAV in Copy Mac Sounds */,
+				914B2B4218E8005B007B6799 /* SND24.WAV in Copy Mac Sounds */,
+				914B2B4318E8005B007B6799 /* SND25.WAV in Copy Mac Sounds */,
+				914B2B4418E8005B007B6799 /* SND26.WAV in Copy Mac Sounds */,
+				914B2B4518E8005B007B6799 /* SND27.WAV in Copy Mac Sounds */,
+				914B2B4618E8005B007B6799 /* SND28.WAV in Copy Mac Sounds */,
+				914B2B4718E8005B007B6799 /* SND29.WAV in Copy Mac Sounds */,
+				914B2B4818E8005B007B6799 /* SND3.WAV in Copy Mac Sounds */,
+				914B2B4918E8005B007B6799 /* SND30.WAV in Copy Mac Sounds */,
+				914B2B4A18E8005B007B6799 /* SND31.WAV in Copy Mac Sounds */,
+				914B2B4B18E8005B007B6799 /* SND32.WAV in Copy Mac Sounds */,
+				914B2B4C18E8005B007B6799 /* SND33.WAV in Copy Mac Sounds */,
+				914B2B4D18E8005B007B6799 /* SND34.WAV in Copy Mac Sounds */,
+				914B2B4E18E8005B007B6799 /* SND35.WAV in Copy Mac Sounds */,
+				914B2B4F18E8005B007B6799 /* SND36.WAV in Copy Mac Sounds */,
+				914B2B5018E8005B007B6799 /* SND37.WAV in Copy Mac Sounds */,
+				914B2B5118E8005B007B6799 /* SND38.WAV in Copy Mac Sounds */,
+				914B2B5218E8005B007B6799 /* SND39.WAV in Copy Mac Sounds */,
+				914B2B5318E8005B007B6799 /* SND4.WAV in Copy Mac Sounds */,
+				914B2B5418E8005B007B6799 /* SND40.WAV in Copy Mac Sounds */,
+				914B2B5518E8005B007B6799 /* SND41.WAV in Copy Mac Sounds */,
+				914B2B5618E8005B007B6799 /* SND42.WAV in Copy Mac Sounds */,
+				914B2B5718E8005B007B6799 /* SND43.WAV in Copy Mac Sounds */,
+				914B2B5818E8005B007B6799 /* SND44.WAV in Copy Mac Sounds */,
+				914B2B5918E8005B007B6799 /* SND45.WAV in Copy Mac Sounds */,
+				914B2B5A18E8005B007B6799 /* SND46.WAV in Copy Mac Sounds */,
+				914B2B5B18E8005B007B6799 /* SND47.WAV in Copy Mac Sounds */,
+				914B2B5C18E8005B007B6799 /* SND48.WAV in Copy Mac Sounds */,
+				914B2B5D18E8005B007B6799 /* SND49.WAV in Copy Mac Sounds */,
+				914B2B5E18E8005B007B6799 /* SND5.WAV in Copy Mac Sounds */,
+				914B2B5F18E8005B007B6799 /* SND50.WAV in Copy Mac Sounds */,
+				914B2B6018E8005B007B6799 /* SND51.WAV in Copy Mac Sounds */,
+				914B2B6118E8005B007B6799 /* SND52.WAV in Copy Mac Sounds */,
+				914B2B6218E8005B007B6799 /* SND53.WAV in Copy Mac Sounds */,
+				914B2B6318E8005B007B6799 /* SND54.WAV in Copy Mac Sounds */,
+				914B2B6418E8005B007B6799 /* SND55.WAV in Copy Mac Sounds */,
+				914B2B6518E8005B007B6799 /* SND56.WAV in Copy Mac Sounds */,
+				914B2B6618E8005B007B6799 /* SND57.WAV in Copy Mac Sounds */,
+				914B2B6718E8005B007B6799 /* SND58.WAV in Copy Mac Sounds */,
+				914B2B6818E8005B007B6799 /* SND59.WAV in Copy Mac Sounds */,
+				914B2B6918E8005B007B6799 /* SND6.WAV in Copy Mac Sounds */,
+				914B2B6A18E8005B007B6799 /* SND60.WAV in Copy Mac Sounds */,
+				914B2B6B18E8005B007B6799 /* SND61.WAV in Copy Mac Sounds */,
+				914B2B6C18E8005B007B6799 /* SND62.WAV in Copy Mac Sounds */,
+				914B2B6D18E8005B007B6799 /* SND63.WAV in Copy Mac Sounds */,
+				914B2B6E18E8005B007B6799 /* SND64.WAV in Copy Mac Sounds */,
+				914B2B6F18E8005B007B6799 /* SND65.WAV in Copy Mac Sounds */,
+				914B2B7018E8005B007B6799 /* SND66.WAV in Copy Mac Sounds */,
+				914B2B7118E8005B007B6799 /* SND67.WAV in Copy Mac Sounds */,
+				914B2B7218E8005B007B6799 /* SND68.WAV in Copy Mac Sounds */,
+				914B2B7318E8005B007B6799 /* SND69.WAV in Copy Mac Sounds */,
+				914B2B7418E8005B007B6799 /* SND7.WAV in Copy Mac Sounds */,
+				914B2B7518E8005B007B6799 /* SND70.WAV in Copy Mac Sounds */,
+				914B2B7618E8005B007B6799 /* SND71.WAV in Copy Mac Sounds */,
+				914B2B7718E8005B007B6799 /* SND72.WAV in Copy Mac Sounds */,
+				914B2B7818E8005B007B6799 /* SND73.WAV in Copy Mac Sounds */,
+				914B2B7918E8005B007B6799 /* SND74.WAV in Copy Mac Sounds */,
+				914B2B7A18E8005B007B6799 /* SND75.WAV in Copy Mac Sounds */,
+				914B2B7B18E8005B007B6799 /* SND76.WAV in Copy Mac Sounds */,
+				914B2B7C18E8005B007B6799 /* SND77.WAV in Copy Mac Sounds */,
+				914B2B7D18E8005B007B6799 /* SND78.WAV in Copy Mac Sounds */,
+				914B2B7E18E8005B007B6799 /* SND79.WAV in Copy Mac Sounds */,
+				914B2B7F18E8005B007B6799 /* SND8.WAV in Copy Mac Sounds */,
+				914B2B8018E8005B007B6799 /* SND80.WAV in Copy Mac Sounds */,
+				914B2B8118E8005B007B6799 /* SND81.WAV in Copy Mac Sounds */,
+				914B2B8218E8005B007B6799 /* SND82.WAV in Copy Mac Sounds */,
+				914B2B8318E8005B007B6799 /* SND83.WAV in Copy Mac Sounds */,
+				914B2B8418E8005B007B6799 /* SND84.WAV in Copy Mac Sounds */,
+				914B2B8518E8005B007B6799 /* SND85.WAV in Copy Mac Sounds */,
+				914B2B8618E8005B007B6799 /* SND86.WAV in Copy Mac Sounds */,
+				914B2B8718E8005B007B6799 /* SND87.WAV in Copy Mac Sounds */,
+				914B2B8818E8005B007B6799 /* SND88.WAV in Copy Mac Sounds */,
+				914B2B8918E8005B007B6799 /* SND89.WAV in Copy Mac Sounds */,
+				914B2B8A18E8005B007B6799 /* SND9.WAV in Copy Mac Sounds */,
+				914B2B8B18E8005B007B6799 /* SND90.WAV in Copy Mac Sounds */,
+				914B2B8C18E8005B007B6799 /* SND91.WAV in Copy Mac Sounds */,
+				914B2B8D18E8005B007B6799 /* SND92.WAV in Copy Mac Sounds */,
+				914B2B8E18E8005B007B6799 /* SND93.WAV in Copy Mac Sounds */,
+				914B2B8F18E8005B007B6799 /* SND94.WAV in Copy Mac Sounds */,
+				914B2B9018E8005B007B6799 /* SND95.WAV in Copy Mac Sounds */,
+				914B2B9118E8005B007B6799 /* SND96.WAV in Copy Mac Sounds */,
+				914B2B9218E8005B007B6799 /* SND97.WAV in Copy Mac Sounds */,
+				914B2B9318E8005B007B6799 /* SND98.WAV in Copy Mac Sounds */,
+				914B2B9418E8005B007B6799 /* SND99.WAV in Copy Mac Sounds */,
+			);
+			name = "Copy Mac Sounds";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		914B2B9518E8008A007B6799 /* Copy Dialog Definitions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/dialogs;
+			dstSubfolderSpec = 16;
+			files = (
+				91364F1418F092EE0033B58E /* 1str-lg.xml in Copy Dialog Definitions */,
+				91364F1518F092EE0033B58E /* 1str-title-lg.xml in Copy Dialog Definitions */,
+				91364F1618F092EE0033B58E /* 1str-title.xml in Copy Dialog Definitions */,
+				91364F1718F092EE0033B58E /* 1str.xml in Copy Dialog Definitions */,
+				91364F1818F092EE0033B58E /* 2str-lg.xml in Copy Dialog Definitions */,
+				91364F1918F092EE0033B58E /* 2str-title-lg.xml in Copy Dialog Definitions */,
+				91364F1A18F092EE0033B58E /* 2str-title.xml in Copy Dialog Definitions */,
+				91364F1B18F092EE0033B58E /* 2str.xml in Copy Dialog Definitions */,
+				91364F1C18F092EE0033B58E /* choose-pict.xml in Copy Dialog Definitions */,
+				91364F1D18F092EE0033B58E /* choose-string.xml in Copy Dialog Definitions */,
+				91364F1E18F092EE0033B58E /* edit-terrain.xml in Copy Dialog Definitions */,
+				91364F1F18F092EE0033B58E /* inventory-full.xml in Copy Dialog Definitions */,
+				91364F2018F092EE0033B58E /* basic-lever.xml in Copy Dialog Definitions */,
+				91364F2118F092EE0033B58E /* welcome.xml in Copy Dialog Definitions */,
+				91364F2218F092EE0033B58E /* attack-friendly.xml in Copy Dialog Definitions */,
+				91364F2318F092EE0033B58E /* about-boe.xml in Copy Dialog Definitions */,
+				91364F2418F092EE0033B58E /* restart-game.xml in Copy Dialog Definitions */,
+				91364F2518F092EE0033B58E /* quit-confirm-save.xml in Copy Dialog Definitions */,
+				91364F2618F092EE0033B58E /* quit-confirm-nosave.xml in Copy Dialog Definitions */,
+				91364F2718F092EE0033B58E /* delete-pc-confirm.xml in Copy Dialog Definitions */,
+				91364F2818F092EE0033B58E /* help-fields.xml in Copy Dialog Definitions */,
+				91364F2918F092EE0033B58E /* help-magic.xml in Copy Dialog Definitions */,
+				91364F2A18F092EE0033B58E /* help-hints.xml in Copy Dialog Definitions */,
+				91364F2B18F092EE0033B58E /* help-outdoor.xml in Copy Dialog Definitions */,
+				91364F2C18F092EE0033B58E /* help-town.xml in Copy Dialog Definitions */,
+				91364F2D18F092EE0033B58E /* help-combat.xml in Copy Dialog Definitions */,
+				91364F2E18F092EE0033B58E /* drop-item-confirm.xml in Copy Dialog Definitions */,
+				91364F2F18F092EE0033B58E /* get-items.xml in Copy Dialog Definitions */,
+				91364F3018F092EE0033B58E /* steal-item.xml in Copy Dialog Definitions */,
+				91364F3118F092EE0033B58E /* view-sign.xml in Copy Dialog Definitions */,
+				91364F3218F092EE0033B58E /* preferences.xml in Copy Dialog Definitions */,
+				91364F3318F092EE0033B58E /* edit-party.xml in Copy Dialog Definitions */,
+				91364F3418F092EE0033B58E /* tip-of-day.xml in Copy Dialog Definitions */,
+				91364F3518F092EE0033B58E /* no-scenarios.xml in Copy Dialog Definitions */,
+				91364F3618F092EE0033B58E /* pick-scenario.xml in Copy Dialog Definitions */,
+				91364F3718F092EE0033B58E /* pick-prefab-scen.xml in Copy Dialog Definitions */,
+				91364F3818F092EE0033B58E /* select-pc.xml in Copy Dialog Definitions */,
+				91364F3918F092EE0033B58E /* get-num.xml in Copy Dialog Definitions */,
+				91364F3A18F092EE0033B58E /* get-response.xml in Copy Dialog Definitions */,
+				91364F3B18F092EE0033B58E /* keep-stored-items.xml in Copy Dialog Definitions */,
+				91364F3C18F092EE0033B58E /* locked-door-action.xml in Copy Dialog Definitions */,
+				91364F3D18F092EE0033B58E /* basic-trap.xml in Copy Dialog Definitions */,
+				91364F3E18F092EE0033B58E /* basic-portal.xml in Copy Dialog Definitions */,
+				91364F3F18F092EE0033B58E /* basic-button.xml in Copy Dialog Definitions */,
+				91364F4018F092EE0033B58E /* basic-stair-up.xml in Copy Dialog Definitions */,
+				91364F4118F092EE0033B58E /* basic-stair-down.xml in Copy Dialog Definitions */,
+				91364F4218F092EE0033B58E /* basic-slope-up.xml in Copy Dialog Definitions */,
+				91364F4318F092EE0033B58E /* basic-slope-down.xml in Copy Dialog Definitions */,
+				91364F4418F092EE0033B58E /* slimy-stair-up.xml in Copy Dialog Definitions */,
+				91364F4518F092EE0033B58E /* slimy-stair-down.xml in Copy Dialog Definitions */,
+				91364F4618F092EE0033B58E /* dark-slope-up.xml in Copy Dialog Definitions */,
+				91364F4718F092EE0033B58E /* dark-slope-down.xml in Copy Dialog Definitions */,
+				91364F4818F092EE0033B58E /* need-party.xml in Copy Dialog Definitions */,
+				91364F4918F092EE0033B58E /* scen-version-mismatch.xml in Copy Dialog Definitions */,
+				91364F4A18F092EE0033B58E /* help-party.xml in Copy Dialog Definitions */,
+				91364F4B18F092EE0033B58E /* help-inventory.xml in Copy Dialog Definitions */,
+				91364F4C18F092EE0033B58E /* congrats-save.xml in Copy Dialog Definitions */,
+				91364F4D18F092EE0033B58E /* boat-bridge.xml in Copy Dialog Definitions */,
+				91364F4E18F092EE0033B58E /* party-death.xml in Copy Dialog Definitions */,
+				91364F4F18F092EE0033B58E /* new-party.xml in Copy Dialog Definitions */,
+				91364F5018F092EE0033B58E /* removed-special-items.xml in Copy Dialog Definitions */,
+				91364F5118F092EE0033B58E /* spell-info.xml in Copy Dialog Definitions */,
+				91364F5218F092EE0033B58E /* load-game-fail.xml in Copy Dialog Definitions */,
+				91364F5318F092EE0033B58E /* not-save-game.xml in Copy Dialog Definitions */,
+				91364F5418F092EE0033B58E /* spend-xp.xml in Copy Dialog Definitions */,
+				91364F5518F092EE0033B58E /* skill-info.xml in Copy Dialog Definitions */,
+				91364F5618F092EE0033B58E /* pc-spell-info.xml in Copy Dialog Definitions */,
+				91364F5718F092EE0033B58E /* cast-spell.xml in Copy Dialog Definitions */,
+				91364F5818F092EE0033B58E /* item-info.xml in Copy Dialog Definitions */,
+				91364F5918F092EE0033B58E /* pick-potion.xml in Copy Dialog Definitions */,
+				9156039018F4810200A50C51 /* many-str.xml in Copy Dialog Definitions */,
+				91364F5A18F092EE0033B58E /* pick-pc-name.xml in Copy Dialog Definitions */,
+				91364F5B18F092EE0033B58E /* soul-crystal.xml in Copy Dialog Definitions */,
+				91364F5C18F092EE0033B58E /* monster-info.xml in Copy Dialog Definitions */,
+				91364F5D18F092EE0033B58E /* pc-alchemy-info.xml in Copy Dialog Definitions */,
+				91364F5E18F092EE0033B58E /* pick-race-abil.xml in Copy Dialog Definitions */,
+			);
+			name = "Copy Dialog Definitions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9192C13918F32E6E0088A580 /* Copy Strings */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/strings;
+			dstSubfolderSpec = 16;
+			files = (
+				9192C13A18F32E8D0088A580 /* alchemy.txt in Copy Strings */,
+				9192C13C18F32E8D0088A580 /* help.txt in Copy Strings */,
+				9192C13D18F32E8D0088A580 /* item-abilities.txt in Copy Strings */,
+				9192C13E18F32E8D0088A580 /* mage-spells.txt in Copy Strings */,
+				9192C13F18F32E8D0088A580 /* monster-abilities.txt in Copy Strings */,
+				9192C14318F32E8D0088A580 /* priest-spells.txt in Copy Strings */,
+				9192C14518F32E8D0088A580 /* tips.txt in Copy Strings */,
+				9192C14618F32E8D0088A580 /* skills.txt in Copy Strings */,
+				9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */,
+				9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */,
+				9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */,
+			);
+			name = "Copy Strings";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91A32B660FDB5EF100C4E957 /* Copy Dialogs */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Dialogs;
 			dstSubfolderSpec = 7;
 			files = (
-				91A32B6A0FDB5F1000C4E957 /* choose-pict.xml in Copy Dialogs */,
-				91A32B6B0FDB5F1000C4E957 /* choose-string.xml in Copy Dialogs */,
-				91A32B6C0FDB5F1000C4E957 /* edit-terrain.xml in Copy Dialogs */,
 			);
 			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -576,8 +986,6 @@
 			dstPath = "Scenario Editor";
 			dstSubfolderSpec = 16;
 			files = (
-				91B3EF2E0F969D7200BF5B67 /* Blades of Exile Graphics in CopyFiles */,
-				91B3EF2F0F969D7200BF5B67 /* Blades of Exile Sounds in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -595,7 +1003,7 @@
 /* Begin PBXFileReference section */
 		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoE.icns; sourceTree = "<group>"; };
 		2BF04AC10BF518D4006C0831 /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Blades of Exile-Info.plist"; sourceTree = "<group>"; };
+		2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Blades of Exile-Info.plist"; sourceTree = "<group>"; };
 		2BF04ACB0BF51923006C0831 /* boe.main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.main.cpp; sourceTree = "<group>"; };
 		2BF04ACC0BF51923006C0831 /* boe.main.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = boe.main.h; sourceTree = "<group>"; };
 		2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.graphutil.cpp; sourceTree = "<group>"; };
@@ -614,8 +1022,6 @@
 		2BF04AE90BF51924006C0831 /* boe.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.dlgutil.h; sourceTree = "<group>"; };
 		2BF04AEE0BF51924006C0831 /* boe.fields.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.fields.cpp; sourceTree = "<group>"; };
 		2BF04AEF0BF51924006C0831 /* boe.fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.fields.h; sourceTree = "<group>"; };
-		2BF04AF00BF51924006C0831 /* gamma.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gamma.c; sourceTree = "<group>"; };
-		2BF04AF10BF51924006C0831 /* gamma.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = gamma.h; sourceTree = "<group>"; };
 		2BF04AF30BF51924006C0831 /* boe.global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.global.h; sourceTree = "<group>"; };
 		2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.infodlg.cpp; sourceTree = "<group>"; };
 		2BF04AF50BF51924006C0831 /* boe.infodlg.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.infodlg.h; sourceTree = "<group>"; };
@@ -631,7 +1037,6 @@
 		2BF04AFF0BF51924006C0831 /* boe.newgraph.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.newgraph.h; sourceTree = "<group>"; };
 		2BF04B000BF51924006C0831 /* boe.party.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.party.cpp; sourceTree = "<group>"; };
 		2BF04B010BF51924006C0831 /* boe.party.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.party.h; sourceTree = "<group>"; };
-		2BF04B020BF51924006C0831 /* powerpc.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = powerpc.c; sourceTree = "<group>"; };
 		2BF04B030BF51924006C0831 /* boe.specials.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.specials.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B040BF51924006C0831 /* boe.specials.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.specials.h; sourceTree = "<group>"; };
 		2BF04B050BF51924006C0831 /* boe.startup.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.startup.cpp; sourceTree = "<group>"; };
@@ -640,7 +1045,10 @@
 		2BF04B080BF51924006C0831 /* boe.text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.text.h; sourceTree = "<group>"; };
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.town.h; sourceTree = "<group>"; };
-		2BF04DE80BF7A6FE006C0831 /* Carbon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Carbon.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		9107074818F0F5F000F7BD7F /* event-journal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "event-journal.xml"; sourceTree = "<group>"; };
+		9107074918F0F84E00F7BD7F /* talk-notes.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "talk-notes.xml"; sourceTree = "<group>"; };
+		9107074A18F0FC1300F7BD7F /* adventure-notes.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "adventure-notes.xml"; sourceTree = "<group>"; };
+		9107074B18F0FE3F00F7BD7F /* pc-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-info.xml"; sourceTree = "<group>"; };
 		910BBA170FB8BECA001E34EA /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.h; sourceTree = "<group>"; };
 		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialog.cpp; sourceTree = "<group>"; };
 		910BBA270FB8C459001E34EA /* ticpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ticpp.cpp; sourceTree = "<group>"; };
@@ -667,7 +1075,6 @@
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simpletypes.h; sourceTree = "<group>"; };
-		912798AE0F9CA636007B0D52 /* dlgbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgbtns.cpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = SOURCE_ROOT; };
 		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesave.icns; sourceTree = "<group>"; };
 		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesounds.icns; sourceTree = "<group>"; };
@@ -776,20 +1183,225 @@
 		912CF3D70FE44A9B0063B614 /* transcript.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transcript.png; sourceTree = "<group>"; };
 		912CF3D80FE44A9B0063B614 /* trim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trim.png; sourceTree = "<group>"; };
 		912CF3D90FE44A9B0063B614 /* vehicle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vehicle.png; sourceTree = "<group>"; };
+		912DFE8918E24B4C00B00D75 /* resmgr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = resmgr.hpp; sourceTree = "<group>"; };
+		912DFE8A18E24B4C00B00D75 /* restypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = restypes.hpp; sourceTree = "<group>"; };
+		912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.menus.mac.mm; sourceTree = "<group>"; };
+		91364EC918F0914F0033B58E /* 1str-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-lg.xml"; sourceTree = "<group>"; };
+		91364ECA18F0914F0033B58E /* 1str-title-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-title-lg.xml"; sourceTree = "<group>"; };
+		91364ECB18F0914F0033B58E /* 1str-title.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-title.xml"; sourceTree = "<group>"; };
+		91364ECC18F0914F0033B58E /* 1str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 1str.xml; sourceTree = "<group>"; };
+		91364ECD18F0914F0033B58E /* 2str-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-lg.xml"; sourceTree = "<group>"; };
+		91364ECE18F0914F0033B58E /* 2str-title-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-title-lg.xml"; sourceTree = "<group>"; };
+		91364ECF18F0914F0033B58E /* 2str-title.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-title.xml"; sourceTree = "<group>"; };
+		91364ED018F0914F0033B58E /* 2str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2str.xml; sourceTree = "<group>"; };
+		91364ED118F0914F0033B58E /* about-boe.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "about-boe.xml"; sourceTree = "<group>"; };
+		91364ED218F0914F0033B58E /* attack-friendly.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "attack-friendly.xml"; sourceTree = "<group>"; };
+		91364ED318F0914F0033B58E /* basic-button.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-button.xml"; sourceTree = "<group>"; };
+		91364ED418F0914F0033B58E /* basic-lever.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-lever.xml"; sourceTree = "<group>"; };
+		91364ED518F0914F0033B58E /* basic-portal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-portal.xml"; sourceTree = "<group>"; };
+		91364ED618F0914F0033B58E /* basic-slope-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-slope-down.xml"; sourceTree = "<group>"; };
+		91364ED718F0914F0033B58E /* basic-slope-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-slope-up.xml"; sourceTree = "<group>"; };
+		91364ED818F0914F0033B58E /* basic-stair-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-stair-down.xml"; sourceTree = "<group>"; };
+		91364ED918F0914F0033B58E /* basic-stair-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-stair-up.xml"; sourceTree = "<group>"; };
+		91364EDA18F0914F0033B58E /* basic-trap.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-trap.xml"; sourceTree = "<group>"; };
+		91364EDB18F0914F0033B58E /* boat-bridge.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "boat-bridge.xml"; sourceTree = "<group>"; };
+		91364EDC18F0914F0033B58E /* cast-spell.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "cast-spell.xml"; sourceTree = "<group>"; };
+		91364EDD18F0914F0033B58E /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "choose-pict.xml"; sourceTree = "<group>"; };
+		91364EDE18F0914F0033B58E /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "choose-string.xml"; sourceTree = "<group>"; };
+		91364EDF18F0914F0033B58E /* congrats-save.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "congrats-save.xml"; sourceTree = "<group>"; };
+		91364EE018F0914F0033B58E /* dark-slope-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "dark-slope-down.xml"; sourceTree = "<group>"; };
+		91364EE118F0914F0033B58E /* dark-slope-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "dark-slope-up.xml"; sourceTree = "<group>"; };
+		91364EE218F0914F0033B58E /* delete-pc-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "delete-pc-confirm.xml"; sourceTree = "<group>"; };
+		91364EE318F0914F0033B58E /* drop-item-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "drop-item-confirm.xml"; sourceTree = "<group>"; };
+		91364EE418F0914F0033B58E /* edit-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-party.xml"; sourceTree = "<group>"; };
+		91364EE518F0914F0033B58E /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-terrain.xml"; sourceTree = "<group>"; };
+		91364EE618F0914F0033B58E /* get-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-items.xml"; sourceTree = "<group>"; };
+		91364EE718F0914F0033B58E /* get-num.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-num.xml"; sourceTree = "<group>"; };
+		91364EE818F0914F0033B58E /* get-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-response.xml"; sourceTree = "<group>"; };
+		91364EE918F0914F0033B58E /* help-combat.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-combat.xml"; sourceTree = "<group>"; };
+		91364EEA18F0914F0033B58E /* help-fields.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-fields.xml"; sourceTree = "<group>"; };
+		91364EEB18F0914F0033B58E /* help-hints.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-hints.xml"; sourceTree = "<group>"; };
+		91364EEC18F0914F0033B58E /* help-inventory.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-inventory.xml"; sourceTree = "<group>"; };
+		91364EED18F0914F0033B58E /* help-magic.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-magic.xml"; sourceTree = "<group>"; };
+		91364EEE18F0914F0033B58E /* help-outdoor.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-outdoor.xml"; sourceTree = "<group>"; };
+		91364EEF18F0914F0033B58E /* help-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-party.xml"; sourceTree = "<group>"; };
+		91364EF018F0914F0033B58E /* help-town.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-town.xml"; sourceTree = "<group>"; };
+		91364EF118F0914F0033B58E /* inventory-full.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "inventory-full.xml"; sourceTree = "<group>"; };
+		91364EF218F0914F0033B58E /* item-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "item-info.xml"; sourceTree = "<group>"; };
+		91364EF318F0914F0033B58E /* keep-stored-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "keep-stored-items.xml"; sourceTree = "<group>"; };
+		91364EF418F0914F0033B58E /* load-game-fail.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "load-game-fail.xml"; sourceTree = "<group>"; };
+		91364EF518F0914F0033B58E /* locked-door-action.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "locked-door-action.xml"; sourceTree = "<group>"; };
+		91364EF618F0914F0033B58E /* monster-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "monster-info.xml"; sourceTree = "<group>"; };
+		91364EF718F0914F0033B58E /* need-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "need-party.xml"; sourceTree = "<group>"; };
+		91364EF818F0914F0033B58E /* new-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "new-party.xml"; sourceTree = "<group>"; };
+		91364EF918F0914F0033B58E /* no-scenarios.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "no-scenarios.xml"; sourceTree = "<group>"; };
+		91364EFA18F0914F0033B58E /* not-save-game.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "not-save-game.xml"; sourceTree = "<group>"; };
+		91364EFB18F0914F0033B58E /* party-death.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "party-death.xml"; sourceTree = "<group>"; };
+		91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-alchemy-info.xml"; sourceTree = "<group>"; };
+		91364EFD18F0914F0033B58E /* pc-spell-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-spell-info.xml"; sourceTree = "<group>"; };
+		91364EFE18F0914F0033B58E /* pick-pc-name.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-pc-name.xml"; sourceTree = "<group>"; };
+		91364EFF18F0914F0033B58E /* pick-potion.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-potion.xml"; sourceTree = "<group>"; };
+		91364F0018F0914F0033B58E /* pick-prefab-scen.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-prefab-scen.xml"; sourceTree = "<group>"; };
+		91364F0118F0914F0033B58E /* pick-race-abil.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-race-abil.xml"; sourceTree = "<group>"; };
+		91364F0218F0914F0033B58E /* pick-scenario.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-scenario.xml"; sourceTree = "<group>"; };
+		91364F0318F0914F0033B58E /* preferences.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = preferences.xml; sourceTree = "<group>"; };
+		91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "quit-confirm-nosave.xml"; sourceTree = "<group>"; };
+		91364F0518F0914F0033B58E /* quit-confirm-save.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "quit-confirm-save.xml"; sourceTree = "<group>"; };
+		91364F0618F0914F0033B58E /* removed-special-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "removed-special-items.xml"; sourceTree = "<group>"; };
+		91364F0718F0914F0033B58E /* restart-game.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "restart-game.xml"; sourceTree = "<group>"; };
+		91364F0818F0914F0033B58E /* scen-version-mismatch.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "scen-version-mismatch.xml"; sourceTree = "<group>"; };
+		91364F0918F0914F0033B58E /* select-pc.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "select-pc.xml"; sourceTree = "<group>"; };
+		91364F0A18F0914F0033B58E /* skill-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "skill-info.xml"; sourceTree = "<group>"; };
+		91364F0B18F0914F0033B58E /* slimy-stair-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "slimy-stair-down.xml"; sourceTree = "<group>"; };
+		91364F0C18F0914F0033B58E /* slimy-stair-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "slimy-stair-up.xml"; sourceTree = "<group>"; };
+		91364F0D18F0914F0033B58E /* soul-crystal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "soul-crystal.xml"; sourceTree = "<group>"; };
+		91364F0E18F0914F0033B58E /* spell-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "spell-info.xml"; sourceTree = "<group>"; };
+		91364F0F18F0914F0033B58E /* spend-xp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "spend-xp.xml"; sourceTree = "<group>"; };
+		91364F1018F0914F0033B58E /* steal-item.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "steal-item.xml"; sourceTree = "<group>"; };
+		91364F1118F0914F0033B58E /* tip-of-day.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "tip-of-day.xml"; sourceTree = "<group>"; };
+		91364F1218F0914F0033B58E /* view-sign.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "view-sign.xml"; sourceTree = "<group>"; };
+		91364F1318F0914F0033B58E /* welcome.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = welcome.xml; sourceTree = "<group>"; };
+		91364F5F18F093E80033B58E /* dialog.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = dialog.css; path = "../../Blades Of Exile/rsrc/dialogs/dialog.css"; sourceTree = "<group>"; };
+		91364F6018F093E80033B58E /* dialog.dtd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.dtd; path = "../../Blades Of Exile/rsrc/dialogs/dialog.dtd"; sourceTree = "<group>"; };
+		91364F6118F093E80033B58E /* dialog.xsl */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsl; path = "../../Blades Of Exile/rsrc/dialogs/dialog.xsl"; sourceTree = "<group>"; };
 		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = porting.h; sourceTree = "<group>"; };
 		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = porting.cpp; sourceTree = "<group>"; };
-		913D00840FA0021400184C18 /* dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgutil.h; sourceTree = "<group>"; };
-		913D00850FA0021400184C18 /* dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgutil.cpp; sourceTree = "<group>"; };
-		913D02680FA0EB0300184C18 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
 		913D05B40FA1E9E200184C18 /* party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
 		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
 		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.h; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
+		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
+		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
+		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
+		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
+		914B2AA918E7E529007B6799 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
+		914B2AAA18E7E529007B6799 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "../../../../../../Library/Frameworks/sfml-graphics.framework"; sourceTree = "<group>"; };
+		914B2AAB18E7E529007B6799 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../../../../../../Library/Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
+		914B2AAC18E7E529007B6799 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../../../../../../Library/Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
+		914B2AAD18E7E529007B6799 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = ../../../../../../Library/Frameworks/SFML.framework; sourceTree = "<group>"; };
+		914B2AAE18E7E529007B6799 /* sndfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sndfile.framework; path = ../../../../../../Library/Frameworks/sndfile.framework; sourceTree = "<group>"; };
+		914B2ACC18E7FFEF007B6799 /* SND1.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND1.WAV; sourceTree = "<group>"; };
+		914B2ACD18E7FFEF007B6799 /* SND10.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND10.WAV; sourceTree = "<group>"; };
+		914B2ACE18E7FFEF007B6799 /* SND11.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND11.WAV; sourceTree = "<group>"; };
+		914B2ACF18E7FFEF007B6799 /* SND12.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND12.WAV; sourceTree = "<group>"; };
+		914B2AD018E7FFEF007B6799 /* SND13.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND13.WAV; sourceTree = "<group>"; };
+		914B2AD118E7FFEF007B6799 /* SND14.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND14.WAV; sourceTree = "<group>"; };
+		914B2AD218E7FFEF007B6799 /* SND15.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND15.WAV; sourceTree = "<group>"; };
+		914B2AD318E7FFEF007B6799 /* SND16.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND16.WAV; sourceTree = "<group>"; };
+		914B2AD418E7FFEF007B6799 /* SND17.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND17.WAV; sourceTree = "<group>"; };
+		914B2AD518E7FFEF007B6799 /* SND18.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND18.WAV; sourceTree = "<group>"; };
+		914B2AD618E7FFEF007B6799 /* SND19.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND19.WAV; sourceTree = "<group>"; };
+		914B2AD718E7FFEF007B6799 /* SND2.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND2.WAV; sourceTree = "<group>"; };
+		914B2AD818E7FFEF007B6799 /* SND20.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND20.WAV; sourceTree = "<group>"; };
+		914B2AD918E7FFEF007B6799 /* SND21.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND21.WAV; sourceTree = "<group>"; };
+		914B2ADA18E7FFEF007B6799 /* SND22.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND22.WAV; sourceTree = "<group>"; };
+		914B2ADB18E7FFEF007B6799 /* SND23.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND23.WAV; sourceTree = "<group>"; };
+		914B2ADC18E7FFEF007B6799 /* SND24.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND24.WAV; sourceTree = "<group>"; };
+		914B2ADD18E7FFEF007B6799 /* SND25.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND25.WAV; sourceTree = "<group>"; };
+		914B2ADE18E7FFEF007B6799 /* SND26.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND26.WAV; sourceTree = "<group>"; };
+		914B2ADF18E7FFEF007B6799 /* SND27.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND27.WAV; sourceTree = "<group>"; };
+		914B2AE018E7FFEF007B6799 /* SND28.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND28.WAV; sourceTree = "<group>"; };
+		914B2AE118E7FFEF007B6799 /* SND29.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND29.WAV; sourceTree = "<group>"; };
+		914B2AE218E7FFEF007B6799 /* SND3.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND3.WAV; sourceTree = "<group>"; };
+		914B2AE318E7FFEF007B6799 /* SND30.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND30.WAV; sourceTree = "<group>"; };
+		914B2AE418E7FFEF007B6799 /* SND31.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND31.WAV; sourceTree = "<group>"; };
+		914B2AE518E7FFEF007B6799 /* SND32.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND32.WAV; sourceTree = "<group>"; };
+		914B2AE618E7FFEF007B6799 /* SND33.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND33.WAV; sourceTree = "<group>"; };
+		914B2AE718E7FFEF007B6799 /* SND34.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND34.WAV; sourceTree = "<group>"; };
+		914B2AE818E7FFEF007B6799 /* SND35.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND35.WAV; sourceTree = "<group>"; };
+		914B2AE918E7FFEF007B6799 /* SND36.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND36.WAV; sourceTree = "<group>"; };
+		914B2AEA18E7FFEF007B6799 /* SND37.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND37.WAV; sourceTree = "<group>"; };
+		914B2AEB18E7FFEF007B6799 /* SND38.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND38.WAV; sourceTree = "<group>"; };
+		914B2AEC18E7FFEF007B6799 /* SND39.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND39.WAV; sourceTree = "<group>"; };
+		914B2AED18E7FFEF007B6799 /* SND4.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND4.WAV; sourceTree = "<group>"; };
+		914B2AEE18E7FFEF007B6799 /* SND40.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND40.WAV; sourceTree = "<group>"; };
+		914B2AEF18E7FFEF007B6799 /* SND41.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND41.WAV; sourceTree = "<group>"; };
+		914B2AF018E7FFEF007B6799 /* SND42.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND42.WAV; sourceTree = "<group>"; };
+		914B2AF118E7FFEF007B6799 /* SND43.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND43.WAV; sourceTree = "<group>"; };
+		914B2AF218E7FFEF007B6799 /* SND44.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND44.WAV; sourceTree = "<group>"; };
+		914B2AF318E7FFEF007B6799 /* SND45.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND45.WAV; sourceTree = "<group>"; };
+		914B2AF418E7FFEF007B6799 /* SND46.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND46.WAV; sourceTree = "<group>"; };
+		914B2AF518E7FFEF007B6799 /* SND47.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND47.WAV; sourceTree = "<group>"; };
+		914B2AF618E7FFEF007B6799 /* SND48.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND48.WAV; sourceTree = "<group>"; };
+		914B2AF718E7FFEF007B6799 /* SND49.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND49.WAV; sourceTree = "<group>"; };
+		914B2AF818E7FFEF007B6799 /* SND5.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND5.WAV; sourceTree = "<group>"; };
+		914B2AF918E7FFEF007B6799 /* SND50.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND50.WAV; sourceTree = "<group>"; };
+		914B2AFA18E7FFEF007B6799 /* SND51.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND51.WAV; sourceTree = "<group>"; };
+		914B2AFB18E7FFEF007B6799 /* SND52.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND52.WAV; sourceTree = "<group>"; };
+		914B2AFC18E7FFEF007B6799 /* SND53.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND53.WAV; sourceTree = "<group>"; };
+		914B2AFD18E7FFEF007B6799 /* SND54.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND54.WAV; sourceTree = "<group>"; };
+		914B2AFE18E7FFEF007B6799 /* SND55.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND55.WAV; sourceTree = "<group>"; };
+		914B2AFF18E7FFEF007B6799 /* SND56.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND56.WAV; sourceTree = "<group>"; };
+		914B2B0018E7FFEF007B6799 /* SND57.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND57.WAV; sourceTree = "<group>"; };
+		914B2B0118E7FFEF007B6799 /* SND58.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND58.WAV; sourceTree = "<group>"; };
+		914B2B0218E7FFEF007B6799 /* SND59.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND59.WAV; sourceTree = "<group>"; };
+		914B2B0318E7FFEF007B6799 /* SND6.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND6.WAV; sourceTree = "<group>"; };
+		914B2B0418E7FFEF007B6799 /* SND60.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND60.WAV; sourceTree = "<group>"; };
+		914B2B0518E7FFEF007B6799 /* SND61.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND61.WAV; sourceTree = "<group>"; };
+		914B2B0618E7FFEF007B6799 /* SND62.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND62.WAV; sourceTree = "<group>"; };
+		914B2B0718E7FFEF007B6799 /* SND63.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND63.WAV; sourceTree = "<group>"; };
+		914B2B0818E7FFEF007B6799 /* SND64.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND64.WAV; sourceTree = "<group>"; };
+		914B2B0918E7FFEF007B6799 /* SND65.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND65.WAV; sourceTree = "<group>"; };
+		914B2B0A18E7FFEF007B6799 /* SND66.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND66.WAV; sourceTree = "<group>"; };
+		914B2B0B18E7FFEF007B6799 /* SND67.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND67.WAV; sourceTree = "<group>"; };
+		914B2B0C18E7FFEF007B6799 /* SND68.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND68.WAV; sourceTree = "<group>"; };
+		914B2B0D18E7FFEF007B6799 /* SND69.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND69.WAV; sourceTree = "<group>"; };
+		914B2B0E18E7FFEF007B6799 /* SND7.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND7.WAV; sourceTree = "<group>"; };
+		914B2B0F18E7FFEF007B6799 /* SND70.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND70.WAV; sourceTree = "<group>"; };
+		914B2B1018E7FFEF007B6799 /* SND71.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND71.WAV; sourceTree = "<group>"; };
+		914B2B1118E7FFEF007B6799 /* SND72.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND72.WAV; sourceTree = "<group>"; };
+		914B2B1218E7FFEF007B6799 /* SND73.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND73.WAV; sourceTree = "<group>"; };
+		914B2B1318E7FFEF007B6799 /* SND74.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND74.WAV; sourceTree = "<group>"; };
+		914B2B1418E7FFEF007B6799 /* SND75.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND75.WAV; sourceTree = "<group>"; };
+		914B2B1518E7FFEF007B6799 /* SND76.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND76.WAV; sourceTree = "<group>"; };
+		914B2B1618E7FFEF007B6799 /* SND77.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND77.WAV; sourceTree = "<group>"; };
+		914B2B1718E7FFEF007B6799 /* SND78.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND78.WAV; sourceTree = "<group>"; };
+		914B2B1818E7FFEF007B6799 /* SND79.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND79.WAV; sourceTree = "<group>"; };
+		914B2B1918E7FFEF007B6799 /* SND8.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND8.WAV; sourceTree = "<group>"; };
+		914B2B1A18E7FFEF007B6799 /* SND80.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND80.WAV; sourceTree = "<group>"; };
+		914B2B1B18E7FFEF007B6799 /* SND81.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND81.WAV; sourceTree = "<group>"; };
+		914B2B1C18E7FFEF007B6799 /* SND82.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND82.WAV; sourceTree = "<group>"; };
+		914B2B1D18E7FFEF007B6799 /* SND83.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND83.WAV; sourceTree = "<group>"; };
+		914B2B1E18E7FFEF007B6799 /* SND84.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND84.WAV; sourceTree = "<group>"; };
+		914B2B1F18E7FFEF007B6799 /* SND85.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND85.WAV; sourceTree = "<group>"; };
+		914B2B2018E7FFEF007B6799 /* SND86.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND86.WAV; sourceTree = "<group>"; };
+		914B2B2118E7FFEF007B6799 /* SND87.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND87.WAV; sourceTree = "<group>"; };
+		914B2B2218E7FFEF007B6799 /* SND88.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND88.WAV; sourceTree = "<group>"; };
+		914B2B2318E7FFEF007B6799 /* SND89.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND89.WAV; sourceTree = "<group>"; };
+		914B2B2418E7FFEF007B6799 /* SND9.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND9.WAV; sourceTree = "<group>"; };
+		914B2B2518E7FFEF007B6799 /* SND90.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND90.WAV; sourceTree = "<group>"; };
+		914B2B2618E7FFEF007B6799 /* SND91.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND91.WAV; sourceTree = "<group>"; };
+		914B2B2718E7FFEF007B6799 /* SND92.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND92.WAV; sourceTree = "<group>"; };
+		914B2B2818E7FFEF007B6799 /* SND93.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND93.WAV; sourceTree = "<group>"; };
+		914B2B2918E7FFEF007B6799 /* SND94.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND94.WAV; sourceTree = "<group>"; };
+		914B2B2A18E7FFEF007B6799 /* SND95.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND95.WAV; sourceTree = "<group>"; };
+		914B2B2B18E7FFEF007B6799 /* SND96.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND96.WAV; sourceTree = "<group>"; };
+		914B2B2C18E7FFEF007B6799 /* SND97.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND97.WAV; sourceTree = "<group>"; };
+		914B2B2D18E7FFEF007B6799 /* SND98.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND98.WAV; sourceTree = "<group>"; };
+		914B2B2E18E7FFEF007B6799 /* SND99.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND99.WAV; sourceTree = "<group>"; };
+		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
+		9156038F18F43C8D00A50C51 /* many-str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "many-str.xml"; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
-		91A32B670FDB5F1000C4E957 /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-pict.xml"; path = "dialogxml/choose-pict.xml"; sourceTree = SOURCE_ROOT; };
-		91A32B680FDB5F1000C4E957 /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "choose-string.xml"; path = "dialogxml/choose-string.xml"; sourceTree = SOURCE_ROOT; };
-		91A32B690FDB5F1000C4E957 /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "edit-terrain.xml"; path = "dialogxml/edit-terrain.xml"; sourceTree = SOURCE_ROOT; };
+		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
+		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
+		919145FD18E3C750005CF3A4 /* scrollbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scrollbar.h; sourceTree = "<group>"; };
+		919145FE18E63B41005CF3A4 /* winutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = winutil.h; sourceTree = "<group>"; };
+		919145FF18E63B70005CF3A4 /* winutil.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = winutil.mac.mm; sourceTree = "<group>"; };
+		9191460018E63D8E005CF3A4 /* scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollbar.cpp; sourceTree = "<group>"; };
+		9191460118E6591F005CF3A4 /* boe.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boe.menus.h; sourceTree = "<group>"; };
+		9192C11E18F271920088A580 /* menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
+		9192C12118F327230088A580 /* alchemy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = alchemy.txt; path = strings/alchemy.txt; sourceTree = "<group>"; };
+		9192C12318F327230088A580 /* help.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = help.txt; path = strings/help.txt; sourceTree = "<group>"; };
+		9192C12418F327230088A580 /* item-abilities.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "item-abilities.txt"; path = "strings/item-abilities.txt"; sourceTree = "<group>"; };
+		9192C12518F327230088A580 /* mage-spells.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "mage-spells.txt"; path = "strings/mage-spells.txt"; sourceTree = "<group>"; };
+		9192C12618F327230088A580 /* monster-abilities.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "monster-abilities.txt"; path = "strings/monster-abilities.txt"; sourceTree = "<group>"; };
+		9192C12A18F327230088A580 /* priest-spells.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "priest-spells.txt"; path = "strings/priest-spells.txt"; sourceTree = "<group>"; };
+		9192C12C18F327230088A580 /* tips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tips.txt; path = strings/tips.txt; sourceTree = "<group>"; };
+		9192C12D18F327230088A580 /* skills.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = skills.txt; path = strings/skills.txt; sourceTree = "<group>"; };
+		9192C13218F327230088A580 /* spell-times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spell-times.txt"; path = "strings/spell-times.txt"; sourceTree = "<group>"; };
+		9192C13318F327230088A580 /* magic-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "magic-names.txt"; path = "strings/magic-names.txt"; sourceTree = "<group>"; };
+		9192C13818F327230088A580 /* traits.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = traits.txt; path = strings/traits.txt; sourceTree = "<group>"; };
 		91A32B720FDB5F6800C4E957 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "arena-names.txt"; sourceTree = "<group>"; };
 		91A32B730FDB5F6800C4E957 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag1.txt"; sourceTree = "<group>"; };
 		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag2.txt"; sourceTree = "<group>"; };
@@ -797,8 +1409,6 @@
 		91A32B760FDB5F6800C4E957 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "trim-names.txt"; sourceTree = "<group>"; };
 		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
-		91A79DC60FA797BF00A6A41F /* menu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
-		91A79DDD0FA79DEE00A6A41F /* dialogs.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = dialogs.xib; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regtown.h; sourceTree = "<group>"; };
 		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
 		91AC60A60FA26C1B00EEAE67 /* tmpltown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tmpltown.h; sourceTree = "<group>"; };
@@ -845,14 +1455,7 @@
 		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "../rsrc/Blades of Exile Bases/Blades of Exile Base"; sourceTree = "<group>"; };
-		91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Graphics"; path = "scenedit/Blades of Exile Graphics"; sourceTree = SOURCE_ROOT; };
-		91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Sounds"; path = "scenedit/Blades of Exile Sounds"; sourceTree = SOURCE_ROOT; };
 		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		91B3F0610F96D25200BF5B67 /* dlgtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgtool.h; sourceTree = "<group>"; };
-		91B3F0620F96D25200BF5B67 /* dlgtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlgtool.cpp; sourceTree = "<group>"; };
-		91B3F0840F975D0E00BF5B67 /* dlgconsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgconsts.h; sourceTree = "<group>"; };
-		91B3F09A0F97672700BF5B67 /* dlglowlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlglowlevel.h; sourceTree = "<group>"; };
-		91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlglowlevel.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphtool.h; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtool.cpp; sourceTree = "<group>"; };
 		91B3F10E0F9779D000BF5B67 /* soundtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundtool.h; sourceTree = "<group>"; };
@@ -884,8 +1487,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BF04DE90BF7A6FE006C0831 /* Carbon.framework in Frameworks */,
-				913D02690FA0EB0300184C18 /* QuickTime.framework in Frameworks */,
+				914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */,
+				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
+				914B2AB218E7E531007B6799 /* sfml-audio.framework in Frameworks */,
+				914B2AB318E7E535007B6799 /* sfml-graphics.framework in Frameworks */,
+				914B2AB618E7E539007B6799 /* sfml-system.framework in Frameworks */,
+				914B2AB918E7E53C007B6799 /* sfml-window.framework in Frameworks */,
+				914B2ABC18E7E540007B6799 /* SFML.framework in Frameworks */,
+				914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,8 +1502,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B3EF1E0F969C4B00BF5B67 /* Carbon.framework in Frameworks */,
-				913D026B0FA0EB0500184C18 /* QuickTime.framework in Frameworks */,
+				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
+				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
+				914B2AB018E7E52F007B6799 /* sfml-audio.framework in Frameworks */,
+				914B2AB418E7E536007B6799 /* sfml-graphics.framework in Frameworks */,
+				914B2AB718E7E539007B6799 /* sfml-system.framework in Frameworks */,
+				914B2ABA18E7E53D007B6799 /* sfml-window.framework in Frameworks */,
+				914B2ABD18E7E540007B6799 /* SFML.framework in Frameworks */,
+				914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,8 +1517,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B3EF5D0F969F3500BF5B67 /* Carbon.framework in Frameworks */,
-				913D026A0FA0EB0500184C18 /* QuickTime.framework in Frameworks */,
+				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
+				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
+				914B2AB118E7E530007B6799 /* sfml-audio.framework in Frameworks */,
+				914B2AB518E7E536007B6799 /* sfml-graphics.framework in Frameworks */,
+				914B2AB818E7E53A007B6799 /* sfml-system.framework in Frameworks */,
+				914B2ABB18E7E53D007B6799 /* sfml-window.framework in Frameworks */,
+				914B2ABE18E7E541007B6799 /* SFML.framework in Frameworks */,
+				914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -919,8 +1540,7 @@
 				91B3EEF90F969BBD00BF5B67 /* CharEd */,
 				91B3EECD0F969B7000BF5B67 /* ScenEd */,
 				91B3EF220F969CA300BF5B67 /* rsrc */,
-				2BF04DE80BF7A6FE006C0831 /* Carbon.framework */,
-				913D02680FA0EB0300184C18 /* QuickTime.framework */,
+				914B2AA018E7E4A3007B6799 /* Linked Frameworks */,
 				2BF04AB30BF5187A006C0831 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -941,7 +1561,6 @@
 				910BBA190FB8C43E001E34EA /* xml-parser */,
 				910BBA140FB8BE7D001E34EA /* headers */,
 				910BBA150FB8BE88001E34EA /* src */,
-				910BBA160FB8BE98001E34EA /* common */,
 			);
 			path = dialogxml;
 			sourceTree = SOURCE_ROOT;
@@ -958,6 +1577,8 @@
 				910BBAD90FB91D2A001E34EA /* dlogutil.h */,
 				91A32BBA0FDB657800C4E957 /* dialog.results.h */,
 				91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */,
+				918D59A718EA513900735B66 /* dialog.keys.h */,
+				919145FD18E3C750005CF3A4 /* scrollbar.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -972,15 +1593,9 @@
 				910BBAB50FB91A26001E34EA /* field.cpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBADA0FB91D2A001E34EA /* dlogutil.cpp */,
+				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
 			);
 			name = src;
-			sourceTree = "<group>";
-		};
-		910BBA160FB8BE98001E34EA /* common */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = common;
 			sourceTree = "<group>";
 		};
 		910BBA190FB8C43E001E34EA /* xml-parser */ = {
@@ -1131,6 +1746,120 @@
 			path = win;
 			sourceTree = "<group>";
 		};
+		912DFE8718E24B0B00B00D75 /* resmgr */ = {
+			isa = PBXGroup;
+			children = (
+				912DFE8918E24B4C00B00D75 /* resmgr.hpp */,
+				912DFE8A18E24B4C00B00D75 /* restypes.hpp */,
+			);
+			path = resmgr;
+			sourceTree = "<group>";
+		};
+		91364EC718F091290033B58E /* strings */ = {
+			isa = PBXGroup;
+			children = (
+				9192C12118F327230088A580 /* alchemy.txt */,
+				9192C12318F327230088A580 /* help.txt */,
+				9192C12418F327230088A580 /* item-abilities.txt */,
+				9192C12518F327230088A580 /* mage-spells.txt */,
+				9192C12618F327230088A580 /* monster-abilities.txt */,
+				9192C12A18F327230088A580 /* priest-spells.txt */,
+				9192C12C18F327230088A580 /* tips.txt */,
+				9192C12D18F327230088A580 /* skills.txt */,
+				9192C13218F327230088A580 /* spell-times.txt */,
+				9192C13318F327230088A580 /* magic-names.txt */,
+				9192C13818F327230088A580 /* traits.txt */,
+			);
+			name = strings;
+			sourceTree = "<group>";
+		};
+		91364EC818F091300033B58E /* dialogs */ = {
+			isa = PBXGroup;
+			children = (
+				91364EC918F0914F0033B58E /* 1str-lg.xml */,
+				91364ECA18F0914F0033B58E /* 1str-title-lg.xml */,
+				91364ECB18F0914F0033B58E /* 1str-title.xml */,
+				91364ECC18F0914F0033B58E /* 1str.xml */,
+				91364ECD18F0914F0033B58E /* 2str-lg.xml */,
+				91364ECE18F0914F0033B58E /* 2str-title-lg.xml */,
+				91364ECF18F0914F0033B58E /* 2str-title.xml */,
+				91364ED018F0914F0033B58E /* 2str.xml */,
+				91364EDD18F0914F0033B58E /* choose-pict.xml */,
+				91364EDE18F0914F0033B58E /* choose-string.xml */,
+				91364EE518F0914F0033B58E /* edit-terrain.xml */,
+				91364EF118F0914F0033B58E /* inventory-full.xml */,
+				91364ED418F0914F0033B58E /* basic-lever.xml */,
+				91364F1318F0914F0033B58E /* welcome.xml */,
+				91364ED218F0914F0033B58E /* attack-friendly.xml */,
+				91364ED118F0914F0033B58E /* about-boe.xml */,
+				91364F0718F0914F0033B58E /* restart-game.xml */,
+				91364F0518F0914F0033B58E /* quit-confirm-save.xml */,
+				91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */,
+				91364EE218F0914F0033B58E /* delete-pc-confirm.xml */,
+				91364EEA18F0914F0033B58E /* help-fields.xml */,
+				91364EED18F0914F0033B58E /* help-magic.xml */,
+				91364EEB18F0914F0033B58E /* help-hints.xml */,
+				91364EEE18F0914F0033B58E /* help-outdoor.xml */,
+				91364EF018F0914F0033B58E /* help-town.xml */,
+				91364EE918F0914F0033B58E /* help-combat.xml */,
+				91364EE318F0914F0033B58E /* drop-item-confirm.xml */,
+				91364EE618F0914F0033B58E /* get-items.xml */,
+				91364F1018F0914F0033B58E /* steal-item.xml */,
+				91364F1218F0914F0033B58E /* view-sign.xml */,
+				91364F0318F0914F0033B58E /* preferences.xml */,
+				91364EE418F0914F0033B58E /* edit-party.xml */,
+				91364F1118F0914F0033B58E /* tip-of-day.xml */,
+				91364EF918F0914F0033B58E /* no-scenarios.xml */,
+				91364F0218F0914F0033B58E /* pick-scenario.xml */,
+				91364F0018F0914F0033B58E /* pick-prefab-scen.xml */,
+				91364F0918F0914F0033B58E /* select-pc.xml */,
+				91364EE718F0914F0033B58E /* get-num.xml */,
+				91364EE818F0914F0033B58E /* get-response.xml */,
+				91364EF318F0914F0033B58E /* keep-stored-items.xml */,
+				91364EF518F0914F0033B58E /* locked-door-action.xml */,
+				91364EDA18F0914F0033B58E /* basic-trap.xml */,
+				91364ED518F0914F0033B58E /* basic-portal.xml */,
+				91364ED318F0914F0033B58E /* basic-button.xml */,
+				91364ED918F0914F0033B58E /* basic-stair-up.xml */,
+				91364ED818F0914F0033B58E /* basic-stair-down.xml */,
+				91364ED718F0914F0033B58E /* basic-slope-up.xml */,
+				91364ED618F0914F0033B58E /* basic-slope-down.xml */,
+				91364F0C18F0914F0033B58E /* slimy-stair-up.xml */,
+				91364F0B18F0914F0033B58E /* slimy-stair-down.xml */,
+				91364EE118F0914F0033B58E /* dark-slope-up.xml */,
+				91364EE018F0914F0033B58E /* dark-slope-down.xml */,
+				91364EF718F0914F0033B58E /* need-party.xml */,
+				91364F0818F0914F0033B58E /* scen-version-mismatch.xml */,
+				91364EEF18F0914F0033B58E /* help-party.xml */,
+				91364EEC18F0914F0033B58E /* help-inventory.xml */,
+				91364EDF18F0914F0033B58E /* congrats-save.xml */,
+				91364EDB18F0914F0033B58E /* boat-bridge.xml */,
+				91364EFB18F0914F0033B58E /* party-death.xml */,
+				91364EF818F0914F0033B58E /* new-party.xml */,
+				91364F0618F0914F0033B58E /* removed-special-items.xml */,
+				91364F0E18F0914F0033B58E /* spell-info.xml */,
+				91364EF418F0914F0033B58E /* load-game-fail.xml */,
+				91364EFA18F0914F0033B58E /* not-save-game.xml */,
+				91364F0F18F0914F0033B58E /* spend-xp.xml */,
+				91364F0A18F0914F0033B58E /* skill-info.xml */,
+				91364EFD18F0914F0033B58E /* pc-spell-info.xml */,
+				91364EDC18F0914F0033B58E /* cast-spell.xml */,
+				91364EF218F0914F0033B58E /* item-info.xml */,
+				91364EFF18F0914F0033B58E /* pick-potion.xml */,
+				91364EFE18F0914F0033B58E /* pick-pc-name.xml */,
+				91364F0D18F0914F0033B58E /* soul-crystal.xml */,
+				91364EF618F0914F0033B58E /* monster-info.xml */,
+				91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */,
+				91364F0118F0914F0033B58E /* pick-race-abil.xml */,
+				9107074818F0F5F000F7BD7F /* event-journal.xml */,
+				9107074918F0F84E00F7BD7F /* talk-notes.xml */,
+				9107074A18F0FC1300F7BD7F /* adventure-notes.xml */,
+				9107074B18F0FE3F00F7BD7F /* pc-info.xml */,
+				9156038F18F43C8D00A50C51 /* many-str.xml */,
+			);
+			path = dialogs;
+			sourceTree = "<group>";
+		};
 		913D03320FA0FFE700184C18 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -1184,14 +1913,11 @@
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
 				91B3F10F0F9779D000BF5B67 /* soundtool.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
-				91B3F0620F96D25200BF5B67 /* dlgtool.cpp */,
-				91B3F09B0F97672700BF5B67 /* dlglowlevel.cpp */,
-				912798AE0F9CA636007B0D52 /* dlgbtns.cpp */,
 				91E5C7A60F9F615400C21460 /* fileio.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
-				913D00850FA0021400184C18 /* dlgutil.cpp */,
 				91C688E70FD702B9000F6D01 /* cursors.m */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
+				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1204,24 +1930,151 @@
 				91B3F1090F9779C300BF5B67 /* graphtool.h */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.h */,
-				91B3F0610F96D25200BF5B67 /* dlgtool.h */,
-				91B3F0840F975D0E00BF5B67 /* dlgconsts.h */,
-				91B3F09A0F97672700BF5B67 /* dlglowlevel.h */,
 				91E5C7A50F9F615400C21460 /* fileio.h */,
 				913D00590F9FEEC200184C18 /* porting.h */,
-				913D00840FA0021400184C18 /* dlgutil.h */,
+				919145FE18E63B41005CF3A4 /* winutil.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
 		};
-		91A32AFD0FDAC35D00C4E957 /* dialogs */ = {
+		914701A318F629D4008A6DC9 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				914701A418F629D4008A6DC9 /* dungeon.ttf */,
+				914701A518F629D4008A6DC9 /* maidenword.ttf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				914B2AA918E7E529007B6799 /* sfml-audio.framework */,
+				914B2AAA18E7E529007B6799 /* sfml-graphics.framework */,
+				914B2AAB18E7E529007B6799 /* sfml-system.framework */,
+				914B2AAC18E7E529007B6799 /* sfml-window.framework */,
+				914B2AAD18E7E529007B6799 /* SFML.framework */,
+				914B2AAE18E7E529007B6799 /* sndfile.framework */,
+				914B2AA118E7E500007B6799 /* Cocoa.framework */,
+				914B2AA218E7E500007B6799 /* OpenGL.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		914B2ACB18E7FFEF007B6799 /* sounds.exa */ = {
+			isa = PBXGroup;
+			children = (
+				914B2ACC18E7FFEF007B6799 /* SND1.WAV */,
+				914B2ACD18E7FFEF007B6799 /* SND10.WAV */,
+				914B2ACE18E7FFEF007B6799 /* SND11.WAV */,
+				914B2ACF18E7FFEF007B6799 /* SND12.WAV */,
+				914B2AD018E7FFEF007B6799 /* SND13.WAV */,
+				914B2AD118E7FFEF007B6799 /* SND14.WAV */,
+				914B2AD218E7FFEF007B6799 /* SND15.WAV */,
+				914B2AD318E7FFEF007B6799 /* SND16.WAV */,
+				914B2AD418E7FFEF007B6799 /* SND17.WAV */,
+				914B2AD518E7FFEF007B6799 /* SND18.WAV */,
+				914B2AD618E7FFEF007B6799 /* SND19.WAV */,
+				914B2AD718E7FFEF007B6799 /* SND2.WAV */,
+				914B2AD818E7FFEF007B6799 /* SND20.WAV */,
+				914B2AD918E7FFEF007B6799 /* SND21.WAV */,
+				914B2ADA18E7FFEF007B6799 /* SND22.WAV */,
+				914B2ADB18E7FFEF007B6799 /* SND23.WAV */,
+				914B2ADC18E7FFEF007B6799 /* SND24.WAV */,
+				914B2ADD18E7FFEF007B6799 /* SND25.WAV */,
+				914B2ADE18E7FFEF007B6799 /* SND26.WAV */,
+				914B2ADF18E7FFEF007B6799 /* SND27.WAV */,
+				914B2AE018E7FFEF007B6799 /* SND28.WAV */,
+				914B2AE118E7FFEF007B6799 /* SND29.WAV */,
+				914B2AE218E7FFEF007B6799 /* SND3.WAV */,
+				914B2AE318E7FFEF007B6799 /* SND30.WAV */,
+				914B2AE418E7FFEF007B6799 /* SND31.WAV */,
+				914B2AE518E7FFEF007B6799 /* SND32.WAV */,
+				914B2AE618E7FFEF007B6799 /* SND33.WAV */,
+				914B2AE718E7FFEF007B6799 /* SND34.WAV */,
+				914B2AE818E7FFEF007B6799 /* SND35.WAV */,
+				914B2AE918E7FFEF007B6799 /* SND36.WAV */,
+				914B2AEA18E7FFEF007B6799 /* SND37.WAV */,
+				914B2AEB18E7FFEF007B6799 /* SND38.WAV */,
+				914B2AEC18E7FFEF007B6799 /* SND39.WAV */,
+				914B2AED18E7FFEF007B6799 /* SND4.WAV */,
+				914B2AEE18E7FFEF007B6799 /* SND40.WAV */,
+				914B2AEF18E7FFEF007B6799 /* SND41.WAV */,
+				914B2AF018E7FFEF007B6799 /* SND42.WAV */,
+				914B2AF118E7FFEF007B6799 /* SND43.WAV */,
+				914B2AF218E7FFEF007B6799 /* SND44.WAV */,
+				914B2AF318E7FFEF007B6799 /* SND45.WAV */,
+				914B2AF418E7FFEF007B6799 /* SND46.WAV */,
+				914B2AF518E7FFEF007B6799 /* SND47.WAV */,
+				914B2AF618E7FFEF007B6799 /* SND48.WAV */,
+				914B2AF718E7FFEF007B6799 /* SND49.WAV */,
+				914B2AF818E7FFEF007B6799 /* SND5.WAV */,
+				914B2AF918E7FFEF007B6799 /* SND50.WAV */,
+				914B2AFA18E7FFEF007B6799 /* SND51.WAV */,
+				914B2AFB18E7FFEF007B6799 /* SND52.WAV */,
+				914B2AFC18E7FFEF007B6799 /* SND53.WAV */,
+				914B2AFD18E7FFEF007B6799 /* SND54.WAV */,
+				914B2AFE18E7FFEF007B6799 /* SND55.WAV */,
+				914B2AFF18E7FFEF007B6799 /* SND56.WAV */,
+				914B2B0018E7FFEF007B6799 /* SND57.WAV */,
+				914B2B0118E7FFEF007B6799 /* SND58.WAV */,
+				914B2B0218E7FFEF007B6799 /* SND59.WAV */,
+				914B2B0318E7FFEF007B6799 /* SND6.WAV */,
+				914B2B0418E7FFEF007B6799 /* SND60.WAV */,
+				914B2B0518E7FFEF007B6799 /* SND61.WAV */,
+				914B2B0618E7FFEF007B6799 /* SND62.WAV */,
+				914B2B0718E7FFEF007B6799 /* SND63.WAV */,
+				914B2B0818E7FFEF007B6799 /* SND64.WAV */,
+				914B2B0918E7FFEF007B6799 /* SND65.WAV */,
+				914B2B0A18E7FFEF007B6799 /* SND66.WAV */,
+				914B2B0B18E7FFEF007B6799 /* SND67.WAV */,
+				914B2B0C18E7FFEF007B6799 /* SND68.WAV */,
+				914B2B0D18E7FFEF007B6799 /* SND69.WAV */,
+				914B2B0E18E7FFEF007B6799 /* SND7.WAV */,
+				914B2B0F18E7FFEF007B6799 /* SND70.WAV */,
+				914B2B1018E7FFEF007B6799 /* SND71.WAV */,
+				914B2B1118E7FFEF007B6799 /* SND72.WAV */,
+				914B2B1218E7FFEF007B6799 /* SND73.WAV */,
+				914B2B1318E7FFEF007B6799 /* SND74.WAV */,
+				914B2B1418E7FFEF007B6799 /* SND75.WAV */,
+				914B2B1518E7FFEF007B6799 /* SND76.WAV */,
+				914B2B1618E7FFEF007B6799 /* SND77.WAV */,
+				914B2B1718E7FFEF007B6799 /* SND78.WAV */,
+				914B2B1818E7FFEF007B6799 /* SND79.WAV */,
+				914B2B1918E7FFEF007B6799 /* SND8.WAV */,
+				914B2B1A18E7FFEF007B6799 /* SND80.WAV */,
+				914B2B1B18E7FFEF007B6799 /* SND81.WAV */,
+				914B2B1C18E7FFEF007B6799 /* SND82.WAV */,
+				914B2B1D18E7FFEF007B6799 /* SND83.WAV */,
+				914B2B1E18E7FFEF007B6799 /* SND84.WAV */,
+				914B2B1F18E7FFEF007B6799 /* SND85.WAV */,
+				914B2B2018E7FFEF007B6799 /* SND86.WAV */,
+				914B2B2118E7FFEF007B6799 /* SND87.WAV */,
+				914B2B2218E7FFEF007B6799 /* SND88.WAV */,
+				914B2B2318E7FFEF007B6799 /* SND89.WAV */,
+				914B2B2418E7FFEF007B6799 /* SND9.WAV */,
+				914B2B2518E7FFEF007B6799 /* SND90.WAV */,
+				914B2B2618E7FFEF007B6799 /* SND91.WAV */,
+				914B2B2718E7FFEF007B6799 /* SND92.WAV */,
+				914B2B2818E7FFEF007B6799 /* SND93.WAV */,
+				914B2B2918E7FFEF007B6799 /* SND94.WAV */,
+				914B2B2A18E7FFEF007B6799 /* SND95.WAV */,
+				914B2B2B18E7FFEF007B6799 /* SND96.WAV */,
+				914B2B2C18E7FFEF007B6799 /* SND97.WAV */,
+				914B2B2D18E7FFEF007B6799 /* SND98.WAV */,
+				914B2B2E18E7FFEF007B6799 /* SND99.WAV */,
+			);
+			path = sounds.exa;
+			sourceTree = "<group>";
+		};
+		914B2BAE18E801E4007B6799 /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = dialogs;
 			sourceTree = "<group>";
 		};
-		91A32AFE0FDAC36300C4E957 /* strings */ = {
+		914B2BAF18E801F3007B6799 /* strings */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -1231,9 +2084,6 @@
 		91A32AFF0FDAC37400C4E957 /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
-				91A32B670FDB5F1000C4E957 /* choose-pict.xml */,
-				91A32B680FDB5F1000C4E957 /* choose-string.xml */,
-				91A32B690FDB5F1000C4E957 /* edit-terrain.xml */,
 			);
 			path = dialogs;
 			sourceTree = "<group>";
@@ -1370,11 +2220,17 @@
 		91B3EF220F969CA300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				91364F5F18F093E80033B58E /* dialog.css */,
+				91364F6018F093E80033B58E /* dialog.dtd */,
+				91364F6118F093E80033B58E /* dialog.xsl */,
+				91364EC718F091290033B58E /* strings */,
+				91364EC818F091300033B58E /* dialogs */,
+				914701A318F629D4008A6DC9 /* fonts */,
+				914B2ACB18E7FFEF007B6799 /* sounds.exa */,
 				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
-				91B3EF260F969CE300BF5B67 /* Blades of Exile Graphics */,
-				91B3EF270F969CE300BF5B67 /* Blades of Exile Sounds */,
 				912CF37D0FE44A9B0063B614 /* graphics.exd */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
+				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
 			);
 			name = rsrc;
 			path = ../rsrc;
@@ -1393,6 +2249,7 @@
 		91B3F0FF0F97797200BF5B67 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				912DFE8718E24B0B00B00D75 /* resmgr */,
 				910BBA130FB8BE66001E34EA /* dialogxml */,
 				913D03350FA1000200184C18 /* headers */,
 				913D03340FA0FFFF00184C18 /* src */,
@@ -1409,18 +2266,18 @@
 				2BF04AD10BF51923006C0831 /* boe.fileio.cpp */,
 				2BF04AD30BF51923006C0831 /* boe.graphics.cpp */,
 				2BF04AD50BF51923006C0831 /* boe.townspec.cpp */,
+				919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */,
 				2BF04AE60BF51924006C0831 /* boe.combat.cpp */,
 				2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */,
 				2BF04AEE0BF51924006C0831 /* boe.fields.cpp */,
-				2BF04AF00BF51924006C0831 /* gamma.c */,
 				2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */,
 				2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */,
 				2BF04AF80BF51924006C0831 /* boe.items.cpp */,
 				2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */,
+				912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */,
 				2BF04AFC0BF51924006C0831 /* boe.monster.cpp */,
 				2BF04AFE0BF51924006C0831 /* boe.newgraph.cpp */,
 				2BF04B000BF51924006C0831 /* boe.party.cpp */,
-				2BF04B020BF51924006C0831 /* powerpc.c */,
 				2BF04B030BF51924006C0831 /* boe.specials.cpp */,
 				2BF04B050BF51924006C0831 /* boe.startup.cpp */,
 				2BF04B070BF51924006C0831 /* boe.text.cpp */,
@@ -1440,12 +2297,12 @@
 				2BF04AE70BF51924006C0831 /* boe.combat.h */,
 				2BF04AE90BF51924006C0831 /* boe.dlgutil.h */,
 				2BF04AEF0BF51924006C0831 /* boe.fields.h */,
-				2BF04AF10BF51924006C0831 /* gamma.h */,
 				2BF04AF30BF51924006C0831 /* boe.global.h */,
 				2BF04AF50BF51924006C0831 /* boe.infodlg.h */,
 				2BF04AF70BF51924006C0831 /* boe.itemdata.h */,
 				2BF04AF90BF51924006C0831 /* boe.items.h */,
 				2BF04AFB0BF51924006C0831 /* boe.locutils.h */,
+				9191460118E6591F005CF3A4 /* boe.menus.h */,
 				2BF04AFD0BF51924006C0831 /* boe.monster.h */,
 				2BF04AFF0BF51924006C0831 /* boe.newgraph.h */,
 				2BF04B010BF51924006C0831 /* boe.party.h */,
@@ -1462,8 +2319,8 @@
 		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				91A32AFE0FDAC36300C4E957 /* strings */,
-				91A32AFD0FDAC35D00C4E957 /* dialogs */,
+				914B2BAF18E801F3007B6799 /* strings */,
+				914B2BAE18E801E4007B6799 /* dialogs */,
 				91279BB30F9D03B6007B0D52 /* boesave.icns */,
 				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
 				913D6C040FC57A8E00E12527 /* boeresources.icns */,
@@ -1471,8 +2328,7 @@
 				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
 				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
-				91A79DC60FA797BF00A6A41F /* menu.xib */,
-				91A79DDD0FA79DEE00A6A41F /* dialogs.xib */,
+				9192C11E18F271920088A580 /* menu.xib */,
 			);
 			name = rsrc;
 			sourceTree = "<group>";
@@ -1563,10 +2419,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 2BF04A9F0BF51845006C0831;
 			productRefGroup = 2BF04AB30BF5187A006C0831 /* Products */;
 			projectDirPath = "";
@@ -1591,8 +2452,8 @@
 				91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */,
 				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
 				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
-				91A79DC70FA797BF00A6A41F /* menu.xib in Resources */,
 				913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */,
+				9192C12018F2745C0088A580 /* menu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1619,6 +2480,23 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Validate Dialog Definitions";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/bin/bash -v";
+			shellScript = "\ncd ../rsrc/dialogs/\nxmllint --nonet --noout --stream --load-trace --loaddtd --dtdvalid \"$SOURCE_ROOT/../rsrc/dialogs/dialog.dtd\" \"$SOURCE_ROOT/../rsrc/dialogs\"/*.xml\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2BF04ABE0BF518D4006C0831 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1627,9 +2505,6 @@
 				91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */,
 				91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */,
 				91E5C1F50F9E489B00C21460 /* mathutil.cpp in Sources */,
-				91E5C1F60F9E489B00C21460 /* dlgtool.cpp in Sources */,
-				91E5C1F70F9E489B00C21460 /* dlglowlevel.cpp in Sources */,
-				91E5C1F80F9E489B00C21460 /* dlgbtns.cpp in Sources */,
 				2BF04B0B0BF51924006C0831 /* boe.main.cpp in Sources */,
 				2BF04B0C0BF51924006C0831 /* boe.graphutil.cpp in Sources */,
 				2BF04B0E0BF51924006C0831 /* boe.fileio.cpp in Sources */,
@@ -1662,7 +2537,6 @@
 				91E5C7A80F9F615400C21460 /* fileio.cpp in Sources */,
 				91E5C7B90F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005B0F9FEEC300184C18 /* porting.cpp in Sources */,
-				913D00860FA0021400184C18 /* dlgutil.cpp in Sources */,
 				913D05B60FA1E9E300184C18 /* party.cpp in Sources */,
 				913D05BC0FA1EA0A00184C18 /* pc.cpp in Sources */,
 				91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */,
@@ -1682,6 +2556,10 @@
 				91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */,
 				91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */,
+				912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */,
+				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
+				914B2AC618E7E6EB007B6799 /* winutil.mac.mm in Sources */,
+				9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1692,9 +2570,6 @@
 				91E5C1F90F9E48AF00C21460 /* graphtool.cpp in Sources */,
 				91E5C1FA0F9E48AF00C21460 /* soundtool.cpp in Sources */,
 				91E5C1FB0F9E48AF00C21460 /* mathutil.cpp in Sources */,
-				91E5C1FC0F9E48AF00C21460 /* dlgtool.cpp in Sources */,
-				91E5C1FD0F9E48AF00C21460 /* dlglowlevel.cpp in Sources */,
-				91E5C1FE0F9E48AF00C21460 /* dlgbtns.cpp in Sources */,
 				91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */,
 				91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */,
 				91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */,
@@ -1711,7 +2586,6 @@
 				91E5C7A90F9F615400C21460 /* fileio.cpp in Sources */,
 				91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005D0F9FEEC300184C18 /* porting.cpp in Sources */,
-				913D00880FA0021400184C18 /* dlgutil.cpp in Sources */,
 				913D05B80FA1E9E300184C18 /* party.cpp in Sources */,
 				913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */,
 				91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */,
@@ -1732,6 +2606,7 @@
 				91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */,
 				91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */,
+				9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1742,9 +2617,6 @@
 				91E5C2050F9E48D900C21460 /* graphtool.cpp in Sources */,
 				91E5C2060F9E48D900C21460 /* soundtool.cpp in Sources */,
 				91E5C2070F9E48D900C21460 /* mathutil.cpp in Sources */,
-				91E5C2080F9E48D900C21460 /* dlgtool.cpp in Sources */,
-				91E5C2090F9E48D900C21460 /* dlglowlevel.cpp in Sources */,
-				91E5C20A0F9E48D900C21460 /* dlgbtns.cpp in Sources */,
 				91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */,
 				91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */,
 				91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */,
@@ -1766,7 +2638,6 @@
 				91E5C7A70F9F615400C21460 /* fileio.cpp in Sources */,
 				91E5C7B80F9F619D00C21460 /* talking.cpp in Sources */,
 				913D005C0F9FEEC300184C18 /* porting.cpp in Sources */,
-				913D00870FA0021400184C18 /* dlgutil.cpp in Sources */,
 				913D05B70FA1E9E300184C18 /* party.cpp in Sources */,
 				913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */,
 				91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */,
@@ -1787,6 +2658,7 @@
 				91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */,
 				91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */,
+				9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1829,15 +2701,14 @@
 		2BF04AA30BF51845006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INPUT_FILETYPE = automatic;
-				GCC_MODEL_TUNING = G4;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
@@ -1855,19 +2726,17 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ferror-limit=0",
+					"-Werror=format",
+				);
 				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-framework",
-					Cocoa,
+					"-lboost_filesystem",
+					"-lboost_system",
 					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
@@ -1882,10 +2751,14 @@
 				ARCHS = (
 					i386,
 					ppc,
+					x86_64,
 				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
@@ -1904,19 +2777,17 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ferror-limit=0",
+					"-Werror=format",
+				);
 				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-					"-framework",
-					Cocoa,
+					"-lboost_filesystem",
+					"-lboost_system",
 					"-lz",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
 					"-Wno-long-long",
@@ -1928,24 +2799,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Blades of Exile-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -1956,22 +2820,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "Blades of Exile-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
@@ -1993,7 +2850,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = "Common Data Files";
 				ZERO_LINK = NO;
 			};
@@ -2003,15 +2859,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
@@ -2019,9 +2867,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile Character Editor";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -2033,23 +2881,15 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "Blades of Exile Character Editor";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
@@ -2061,15 +2901,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
@@ -2077,15 +2909,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
-				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -2097,29 +2926,18 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/opt/local/lib,
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				OTHER_CFLAGS = "-fpack-struct=2";
 				OTHER_CPLUSPLUSFLAGS = "-fpack-struct=2";
-				PREBINDING = NO;
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -2140,7 +2958,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = All;
 				ZERO_LINK = NO;
 			};

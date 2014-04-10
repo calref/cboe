@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog defbtn='done' debug='true'>
+	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
+	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Select a graphic:</text>
+	<group name='group'>
+		<led name='led1' state='off' top='29' left='55' width='16'/>
+		<led name='led2' state='off' top='74' left='55' width='16'/>
+		<led name='led3' state='off' top='119' left='55' width='16'/>
+		<led name='led4' state='off' top='164' left='55' width='16'/>
+		<led name='led5' state='off' top='209' left='55' width='16'/>
+		<led name='led6' state='off' top='254' left='55' width='16'/>
+		<led name='led7' state='off' top='29' left='119' width='16'/>
+		<led name='led8' state='off' top='74' left='119' width='16'/>
+		<led name='led9' state='off' top='119' left='119' width='16'/>
+		<led name='led10' state='off' top='164' left='119' width='16'/>
+		<led name='led11' state='off' top='209' left='119' width='16'/>
+		<led name='led12' state='off' top='254' left='119' width='16'/>
+		<led name='led13' state='off' top='29' left='183' width='16'/>
+		<led name='led14' state='off' top='74' left='183' width='16'/>
+		<led name='led15' state='off' top='119' left='183' width='16'/>
+		<led name='led16' state='off' top='164' left='183' width='16'/>
+		<led name='led17' state='off' top='209' left='183' width='16'/>
+		<led name='led18' state='off' top='254' left='183' width='16'/>
+		<led name='led19' state='off' top='29' left='251' width='16'/>
+		<led name='led20' state='off' top='74' left='251' width='16'/>
+		<led name='led21' state='off' top='119' left='251' width='16'/>
+		<led name='led22' state='off' top='164' left='251' width='16'/>
+		<led name='led23' state='off' top='209' left='251' width='16'/>
+		<led name='led24' state='off' top='254' left='251' width='16'/>
+		<led name='led25' state='off' top='29' left='320' width='16'/>
+		<led name='led26' state='off' top='74' left='320' width='16'/>
+		<led name='led27' state='off' top='119' left='320' width='16'/>
+		<led name='led28' state='off' top='164' left='320' width='16'/>
+		<led name='led29' state='off' top='209' left='320' width='16'/>
+		<led name='led30' state='off' top='254' left='320' width='16'/>
+		<led name='led31' state='off' top='29' left='388' width='16'/>
+		<led name='led32' state='off' top='74' left='388' width='16'/>
+		<led name='led33' state='off' top='119' left='388' width='16'/>
+		<led name='led34' state='off' top='164' left='388' width='16'/>
+		<led name='led35' state='off' top='209' left='388' width='16'/>
+		<led name='led36' state='off' top='254' left='388' width='16'/>
+	</group>
+	<pict name='pic1' type='ter' num='0' top='29' left='76'/>
+	<pict name='pic2' type='ter' num='1' top='74' left='76'/>
+	<pict name='pic3' type='ter' num='2' top='119' left='76'/>
+	<pict name='pic4' type='ter' num='3' top='164' left='76'/>
+	<pict name='pic5' type='ter' num='4' top='209' left='76'/>
+	<pict name='pic6' type='ter' num='5' top='254' left='76'/>
+	<pict name='pic7' type='ter' num='6' top='29' left='140'/>
+	<pict name='pic8' type='ter' num='7' top='74' left='140'/>
+	<pict name='pic9' type='ter' num='8' top='119' left='140'/>
+	<pict name='pic10' type='ter' num='9' top='164' left='140'/>
+	<pict name='pic11' type='ter' num='10' top='209' left='140'/>
+	<pict name='pic12' type='ter' num='11' top='254' left='140'/>
+	<pict name='pic13' type='ter' num='12' top='29' left='204'/>
+	<pict name='pic14' type='ter' num='13' top='74' left='204'/>
+	<pict name='pic15' type='ter' num='14' top='119' left='204'/>
+	<pict name='pic16' type='ter' num='15' top='164' left='204'/>
+	<pict name='pic17' type='ter' num='16' top='209' left='204'/>
+	<pict name='pic18' type='ter' num='17' top='254' left='204'/>
+	<pict name='pic19' type='ter' num='18' top='29' left='272'/>
+	<pict name='pic20' type='ter' num='19' top='74' left='272'/>
+	<pict name='pic21' type='ter' num='20' top='119' left='272'/>
+	<pict name='pic22' type='ter' num='21' top='164' left='272'/>
+	<pict name='pic23' type='ter' num='22' top='209' left='272'/>
+	<pict name='pic24' type='ter' num='23' top='254' left='272'/>
+	<pict name='pic25' type='ter' num='24' top='29' left='341'/>
+	<pict name='pic26' type='ter' num='25' top='74' left='341'/>
+	<pict name='pic27' type='ter' num='26' top='119' left='341'/>
+	<pict name='pic28' type='ter' num='27' top='164' left='341'/>
+	<pict name='pic29' type='ter' num='28' top='209' left='341'/>
+	<pict name='pic30' type='ter' num='29' top='254' left='341'/>
+	<pict name='pic31' type='ter' num='30' top='29' left='409'/>
+	<pict name='pic32' type='ter' num='31' top='74' left='409'/>
+	<pict name='pic33' type='ter' num='32' top='119' left='409'/>
+	<pict name='pic34' type='ter' num='33' top='164' left='409'/>
+	<pict name='pic35' type='ter' num='34' top='209' left='409'/>
+	<pict name='pic36' type='ter' num='35' top='254' left='409'/>
+	<text name='help' top='294' left='6' width='422' height='16'>Click button to left of graphic to select. Use arrows to change pages.</text>
+	<button name='left' type='left' top='314' left='6' def-key='left'/>
+	<button name='right' type='right' top='314' left='69' def-key='right'/>
+	<button name='done' type='done' top='314' left='393'/>
+	<button name='cancel' type='regular' top='314' left='322' def-key='esc'>Cancel</button>
+</dialog>

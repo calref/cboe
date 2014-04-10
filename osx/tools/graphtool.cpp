@@ -7,10 +7,13 @@
  */
 
 #define GRAPHTOOL_CPP
-#include <Carbon/Carbon.h>
-#include <Quicktime/Quicktime.h>
 #include "graphtool.h"
 #include "cursors.h"
+#include "restypes.hpp"
+#include <boost/filesystem.hpp>
+#include <OpenGl/GL.h>
+#include <boost/math/constants/constants.hpp>
+using boost::math::constants::pi;
 
 cursor_type arrow_curs[3][3] = {
 	{NW_curs, N_curs, NE_curs},
@@ -24,12 +27,15 @@ CursorRef cursors[24] = {
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 };
 void (*redraw_screen)();
-Rect bg[21];
-Rect map_pat[30];
-GWorldPtr bg_gworld;
-short geneva_font_num, dungeon_font_num;
+RECT bg[21];
+RECT map_pat[30];
+RECT bw_pats[6];
+sf::Texture bg_gworld;
+TextStyle TEXT;
 bool use_win_graphics = false;
-CursorRef GetCursorFromPath(std::string filename, Point hotspot);
+CursorRef GetCursorFromPath(std::string filename, location hotspot);
+// TODO: Shouldn't need this
+extern sf::RenderWindow mainPtr;
 
 void clean_up_graphtool(){
 	for(int i = 0; i < 24; i++)
@@ -40,18 +46,20 @@ void clean_up_graphtool(){
 void init_graph_tool(void (*redraw_callback)()){
 	redraw_screen = redraw_callback;
 	int i,j;
-	static const Point cursor_hs[24] = {
-		{ 1, 4}, {14, 1}, {13, 5}, {8,8}, {8,8}, {8,8}, {8,8}, {0,14},
-		{ 3,12}, { 7,13}, { 3,12},
-		{ 3, 9}, { 8, 8}, { 8, 3},
-		{ 3,12}, { 7,13}, { 3,12},
-		{ 1, 1}, { 7, 3}, { 0,14}, {8,8}, {6,7}, {3,2}, {7,6}
+	// TODO: The duplication of location here shouldn't be necessary
+	// TODO: Store the hotspots on disk instead of hardcoded here
+	static const location cursor_hs[24] = {
+		location{ 1, 4}, location{14, 1}, location{13, 5}, location{8,8}, location{8,8}, location{8,8}, location{8,8}, location{0,14},
+		location{ 3,12}, location{ 7,13}, location{ 3,12},
+		location{ 3, 9}, location{ 8, 8}, location{ 8, 3},
+		location{ 3,12}, location{ 7,13}, location{ 3,12},
+		location{ 1, 1}, location{ 7, 3}, location{ 0,14}, location{8,8}, location{6,7}, location{3,2}, location{7,6}
 	};
-	static const Point pat_offs[17] = {
-		{3,0}, {1,1}, {1,2}, {0,2},
-		{0,3}, {1,3}, {3,1}, {0,0},
-		{2,0}, {2,1}, {1,0}, {2,2},
-		{3,2}, {2,3}, {0,1}, {0,4}, {3,3}
+	static const location pat_offs[17] = {
+		location{0,3}, location{1,1}, location{2,1}, location{2,0},
+		location{3,0}, location{3,1}, location{1,3}, location{0,0},
+		location{0,2}, location{1,2}, location{0,1}, location{2,2},
+		location{2,3}, location{3,2}, location{1,0}, location{4,0}, location{3,3}
 	};
 	static const int pat_i[17] = {
 		2, 3, 4, 5, 6, 8, 9, 10,
@@ -88,11 +96,11 @@ void init_graph_tool(void (*redraw_callback)()){
 //	for (i = 0; i < 21; i++) 
 //	    bg[i] = GetPixPat(128 + i);
 	for(i = 0; i < 17; i++){
-		SetRect(&bg[pat_i[i]],0,0,64,64);
-		OffsetRect(&bg[pat_i[i]],64 * pat_offs[i].h,64 * pat_offs[i].v);
+		bg[pat_i[i]] = {0,0,64,64};
+		bg[pat_i[i]].offset(64 * pat_offs[i].x,64 * pat_offs[i].y);
 	}
-	Rect tmp_rect = bg[19];
-	OffsetRect(&tmp_rect, 0, 64);
+	RECT tmp_rect = bg[19];
+	tmp_rect.offset(0, 64);
 	bg[0] = bg[1] = bg[18] = map_pat[7] = tmp_rect;
 	bg[0].right -= 32;
 	bg[0].bottom -= 32;
@@ -102,7 +110,7 @@ void init_graph_tool(void (*redraw_callback)()){
 	bg[18].top -= 32;
 	map_pat[7].left -= 32;
 	map_pat[7].top -= 32;
-	OffsetRect(&tmp_rect, 0, 64);
+	tmp_rect.offset(0, 64);
 	map_pat[8] = map_pat[23] = map_pat[26] = tmp_rect;
 	map_pat[8].right -= 32;
 	map_pat[8].bottom -= 32;
@@ -111,190 +119,23 @@ void init_graph_tool(void (*redraw_callback)()){
 	map_pat[23].bottom -= 32;
 	map_pat[26].left -= 32 + 16;
 	map_pat[26].bottom -= 32;
-	OffsetRect(&tmp_rect, 0, 64);
+	tmp_rect.offset(0, 64);
 	bg[7] = tmp_rect;
 	bg[7].bottom = bg[7].top + 16;
-	OffsetRect(&tmp_rect, 0, -32);
+	tmp_rect.offset(0, -32);
 	tmp_rect.right = tmp_rect.left + 8;
 	tmp_rect.bottom = tmp_rect.top + 8;
 	for(i = 0; i < 26; i++){
 		map_pat[map_i[i]] = tmp_rect;
-		OffsetRect(&map_pat[map_i[i]],8 * (i % 8),8 * (i / 8));
+		map_pat[map_i[i]].offset(8 * (i % 8),8 * (i / 8));
 		// Note: 8 * (i / 8) != i, despite appearances, due to integer rounding
 	}
-	bg_gworld = load_pict("pixpats.png");
-	// TODO: Try to deprecate these font things
-	Str255 fn1 = "\pGeneva";
-	Str255 fn2 = "\pDungeon Bold";
-	Str255 fn3 = "\pPalatino";
-	GetFNum(fn1,&geneva_font_num);
-	if (geneva_font_num == 0)
-		GetFNum(fn3,&geneva_font_num);
-	GetFNum(fn2,&dungeon_font_num);
-	if (dungeon_font_num == 0)
-		GetFNum(fn3,&dungeon_font_num);
-}
-
-unsigned short readUShort(unsigned char ** ptr){
-	unsigned short ret = CFSwapInt16LittleToHost(*(unsigned short*)*ptr);
-	*ptr += 2;
-	return ret;
-}
-
-unsigned int readUInt(unsigned char **ptr){
-	unsigned int ret = CFSwapInt32LittleToHost(*(unsigned int*)*ptr);
-	*ptr += 4;
-	return ret;
-}
-
-extern std::string progDir;
-GWorldPtr load_pict(std::string picture_to_get, std::string scen_name){
-	std::string filePath;
-	FSRef ref;
-	FSSpec spec;
-	if(scen_name != ""){
-		filePath = progDir + "/Blades of Exile Scenarios/" + scen_name;
-		filePath.replace(filePath.find_last_of('.'),filePath.size(),".exr");
-		filePath += '/' + picture_to_get;
-		printf(filePath.c_str());
-		printf("\n\n");
-		FSPathMakeRef((UInt8*)filePath.c_str(), &ref, NULL);
-		if(FSGetCatalogInfo(&ref, kFSCatInfoNone, NULL, NULL, &spec, NULL) != fnfErr)
-			return importPictureFileToGWorld(&spec);
+	tmp_rect = map_pat[29];
+	for(i = 0; i < 6; i++) {
+		tmp_rect.offset(8, 0);
+		bw_pats[i] = tmp_rect;
 	}
-	filePath = progDir + "/Scenario Editor/graphics.exd/";
-	if(use_win_graphics) filePath += "win/";
-	else filePath += "mac/";
-	filePath += picture_to_get;
-	printf("Loading graphics sheet from: %s\n\n",filePath.c_str());
-	FSPathMakeRef((UInt8*)filePath.c_str(), &ref, NULL);
-	if(FSGetCatalogInfo(&ref, kFSCatInfoNone, NULL, NULL, &spec, NULL) != fnfErr)
-		return importPictureFileToGWorld(&spec);
-	throw std::string("Graphic ") + picture_to_get + std::string(" not found."); // TODO: Create an exception class for this
-}
-
-GWorldPtr load_pict(int picture_to_get)
-{
-	PicHandle	current_pic_handle;
-	Rect	pic_rect;
-	short	pic_wd,pic_hgt;
-	GWorldPtr	myGWorld;
-	CGrafPtr	origPort;
-	GDHandle	origDev;
-	QDErr		check_error;
-	PixMapHandle	offPMHandle;
-	char good;
-	//printf("Loading PICT id %i...\n",picture_to_get);
-    current_pic_handle = GetPicture (picture_to_get);
-	if(ResError() != noErr){
-		SysBeep(50);
-		exit(1);
-	}
-	QDGetPictureBounds(current_pic_handle, &pic_rect);
-	pic_wd = pic_rect.right - pic_rect.left;
-	pic_hgt = pic_rect.bottom - pic_rect.top;  
-	//printf("%i\t%i\n",pic_wd,pic_hgt);
-	GetGWorld (&origPort, &origDev);
-	check_error = NewGWorld (&myGWorld, 0, &pic_rect, NULL, NULL, kNativeEndianPixMap);
-	if (check_error != noErr)  {
-		SysBeep(50);
-		printf("Error %i in load_pict()\n",check_error);
-		ExitToShell();
-	}
-	
-	SetGWorld(myGWorld, NULL);
-	
-	offPMHandle = GetGWorldPixMap (myGWorld);
-	good = LockPixels (offPMHandle);
-	if (good == false)  {
-		SysBeep(50);
-	}
-	SetRect (&pic_rect, 0, 0, pic_wd, pic_hgt);
-	DrawPicture (current_pic_handle, &pic_rect);
-	SetGWorld (origPort, origDev);
-	UnlockPixels (offPMHandle);
-	ReleaseResource ((Handle) current_pic_handle);
-	
-	return myGWorld;
-}
-
-GWorldPtr load_bmp(unsigned char *data, unsigned long length){
-	
-	if (length < 54) {
-		return NULL; // Too short for headers
-	}
-	unsigned char * cur = data + 10;
-	unsigned int offset = readUInt(&cur);
-	cur+=4;
-	unsigned int width = readUInt(&cur);
-	unsigned int height = readUInt(&cur);
-	cur += 2;
-	unsigned short bitCount = readUShort(&cur);
-	cur+=24;
-	int indexed;
-	unsigned int colourTable[256];
-	unsigned int i;
-	if (bitCount == 8) {
-		if (length < 54 + 256 * 4) {
-			return NULL;
-		}
-		for (i = 0; i<256; ++i) {
-			unsigned char blue = *cur++;
-			unsigned char green = *cur++;
-			unsigned char red = *cur++;
-			cur++;
-			colourTable[i] = (red << 16) + (green << 8) + blue;
-		}
-		indexed = true;
-	}
-	else if (bitCount == 24) {
-		indexed = false;
-	}
-	else {
-		return NULL;
-	}
-	
-	int bmppadding = (width * bitCount / 8) % 4;
-	if (bmppadding != 0) {
-		bmppadding = 4 - bmppadding;
-	}
-	
-	if (length < offset + height * (bmppadding + width * bitCount / 8)) {
-		return NULL;
-	}
-	
-	cur = data + offset;
-	
-	GWorldPtr newGWorld;
-	Rect picRext = {0, 0, height, width};
-	NewGWorld(&newGWorld,32,&picRext,NULL,NULL,kNativeEndianPixMap);
-	if (newGWorld == NULL) {
-		return NULL;
-	}
-	
-	PixMapHandle pixMap = GetGWorldPixMap(newGWorld);
-	LockPixels(pixMap);
-	unsigned int * picBuf = (unsigned int*) GetPixBaseAddr(pixMap);
-	int pixrow = ((*pixMap)->rowBytes & 0x3FFF) / 4;
-	
-	unsigned int j;
-	for (i = height - 1; i>= 0 ; --i) {
-		for (j=0; j<width; ++j) {
-			if (indexed) {
-				picBuf[i * pixrow + j] = colourTable[*cur++];
-			}
-			else {
-				unsigned char red = *cur++;
-				unsigned char green = *cur++;
-				unsigned char blue = *cur++;
-				picBuf[i * pixrow + j]  = (red << 16) + (green << 8) + blue;
-			}
-			
-		}
-		cur+= bmppadding;
-	}
-	UnlockPixels(pixMap);
-	return newGWorld;
+	bg_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pixpats"));
 }
 
 void set_cursor(cursor_type which_c) {
@@ -306,96 +147,43 @@ void restore_cursor(){
 	set_cursor(current_cursor);
 }
 
-/*
-void set_cursor(CursHandle which_curs){
-	HLock ((Handle) which_curs);
-	SetCursor (*which_curs);
-	HUnlock((Handle) which_curs);
-}
-*/
-//	 masked; // if 10 - make AddOver
-void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,GWorldPtr targ_gworld,Rect targ_rect,char mode){
-	PixMapHandle pix1, pix2;
-	GrafPtr cur_port;
-	RGBColor store_color;
-	
-	GetBackColor(&store_color);
-	BackColor(whiteColor);
-	GetPort(&cur_port);
-	
-	if (src_gworld == NULL) {
-		SetPort ( targ_gworld);
-		PaintRect(&targ_rect);
-		SetPort (cur_port);
-		return;
-	}
-	
-	pix1 = GetPortPixMap(src_gworld);
-	
-	LockPixels(pix1);
-	pix2 = GetPortPixMap(targ_gworld); 
-	LockPixels(pix2);
-	CopyBits((BitMap*)*pix1, (BitMap*)*pix2, &src_rect, &targ_rect, mode, NULL);
-	UnlockPixels(pix2);
-	UnlockPixels(pix1);
-	
-	RGBBackColor(&store_color);
-	SetPort(cur_port);
+void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect) {
+	fill_rect(targ_gworld, targ_rect, sf::Color::Black);
 }
 
-void rect_draw_some_item (GWorldPtr src_gworld,Rect src_rect,Rect targ_rect,Point offset,char mode){
-	PixMapHandle pix1;
-	const BitMap* pix2;
-	GrafPtr cur_port;
-	RGBColor	store_color;
-	
-	GetBackColor(&store_color);
-	BackColor(whiteColor);
-	GetPort(&cur_port);
-	
-	if (src_gworld == NULL) {
-		PaintRect(&targ_rect);
-		return;
-	}
-	
-	OffsetRect(&targ_rect,offset.h,offset.v);
-	
-	pix2 = GetPortBitMapForCopyBits(cur_port);
-	pix1 = GetPortPixMap(src_gworld);
-	
-	LockPixels(pix1);
-	CopyBits((BitMap*)*pix1, pix2, &src_rect, &targ_rect, mode, NULL);
-	UnlockPixels(pix1);
-	
-	RGBBackColor(&store_color);
-	SetPort(cur_port);
+void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode){
+	setActiveRenderTarget(targ_gworld);
+	sf::Sprite tile(src_gworld, src_rect);
+	tile.setPosition(targ_rect.left, targ_rect.top);
+	double xScale = targ_rect.width(), yScale = targ_rect.height();
+	xScale /= src_rect.width();
+	yScale /= src_rect.height();
+	tile.setScale(xScale, yScale);
+	targ_gworld.draw(tile, mode);
 }
 
-void char_win_draw_string(WindowPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset){
-	char_port_draw_string(GetWindowPort(dest_window),dest_rect,str,mode,line_height, offset);
+void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset, sf::BlendMode mode) {
+	targ_rect.offset(offset);
+	rect_draw_some_item(src_gworld,src_rect,mainPtr,targ_rect,mode);
 }
 
-void char_port_draw_string(GrafPtr dest_window,Rect dest_rect,const char *str,short mode,short line_height,Point offset){
-	Str255 store_s;
-	
-	strcpy((char*) store_s,str);
-	win_draw_string(dest_window, dest_rect,store_s, mode, line_height, offset);
-	
+void TextStyle::applyTo(sf::Text& text) {
+	text.setFont(*ResMgr::get<FontRsrc>(font));
+	text.setCharacterSize(pointSize);
+	text.setStyle(style);
+	text.setColor(colour);
 }
 
 // mode: 0 - align up and left, 1 - center on one line
 // str is a c string, 256 characters
 // uses current font
-void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height,Point offset){
-	GrafPtr old_port;
-	Str255 p_str,str_to_draw/*,str_to_draw2*/,c_str;
-	static Str255 null_s = "8";
-	if(null_s[0] == '8'){
-		for(int i = 0;i < 256; i++)
-			null_s[i] = ' ';
-	}
+// TODO: Make an enum for the mode parameter
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* str,short mode,short line_height,location offset){
+	char c_str[256];
+	sf::Text str_to_draw;
+	TEXT.applyTo(str_to_draw);
 	short str_len,i;
-	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
+	short last_line_break = 0,last_word_break = 0;
 	short text_len[257];
 	short total_width = 0;
 	//bool /*end_loop,*/force_skip = false;
@@ -403,58 +191,64 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
-	adjust_x = offset.h;
-	adjust_y = offset.v;
+	adjust_x = offset.x;
+	adjust_y = offset.y;
+	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
+	adjust_y -= str_to_draw.getLocalBounds().height;
 	
-	strcpy((char *) p_str,(char *) str);
+	// TODO: The contents of this array can be obtained by str_to_draw.findCharacterPos(i)
 	strcpy((char *) c_str,(char *) str);
-	c2pstr((char*) p_str);	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	MeasureText(256,p_str,text_len);
+	for (i = 0; i < 257; i++) {
+		text_len[i] = 0;
+		char c = c_str[i];
+		c_str[i] = 0;
+		str_to_draw.setString(c_str);
+		text_len[i] = str_to_draw.getLocalBounds().width;
+		c_str[i] = c;
+	}
 	str_len = (short) strlen((char *)str);
 	if (str_len == 0) {
 		return;
 	}
 	
-	GetPort(&old_port);	
-	SetPort( dest_window);
-	
 	//current_clip = NewRgn();
 	//GetClip(current_clip);
-	
-	dest_rect.bottom += 5;
-	dest_rect.bottom -= 5;
 	
 	for (i = 0; i < 257; i++)
 		if ((text_len[i] > total_width) && (i <= str_len))
 			total_width = text_len[i];
-	if ((mode == 0) && (total_width < dest_rect.right - dest_rect.left))
+	if ((mode == 0) && (total_width < dest_rect.width()))
 		mode = 2;
 	for (i = 0; i < 257; i++)
 		if ((i <= str_len) && (c_str[i] == '|') && (mode == 2))
 			mode = 0;
 	
+	location moveTo;
+	line_height -= 2;
+	
 	switch (mode) {
-		case 0: 
-			MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
+		case 0: // Wrapped
+			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
 			for (i = 0;text_len[i] != text_len[i + 1] && i < str_len;i++) {
-				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6)) 
+				if (((text_len[i] - text_len[last_line_break] > (dest_rect.width() - 6))
 					 && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
 				  	if (c_str[i] == '|') {
 				  		c_str[i] = ' ';
 				  		//force_skip = true;
 						last_word_break = i + 1;
 					}
-					sprintf((char *)str_to_draw,"%s",(char *)null_s);
-					strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (last_word_break - last_line_break - 1));
+					size_t amount = last_word_break - last_line_break - 1;
+					size_t end = amount + last_line_break + 1;
+					char c = c_str[end];
+					c_str[end] = 0;
+					str_to_draw.setString(c_str + last_line_break);
+					c_str[end] = c;
 					//sprintf((char *)str_to_draw2," %s",str_to_draw);
 					//str_to_draw2[0] = (char) strlen((char *)str_to_draw);
 					//DrawString(str_to_draw2);
-					c2pstr((char*)str_to_draw);
-					DrawString(str_to_draw);
-					on_what_line++;
-					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
+					str_to_draw.setPosition(moveTo);
+					dest_window.draw(str_to_draw);
+					moveTo.y += line_height;
 					last_line_break = last_word_break;
 					//if (force_skip) {
 						//force_skip = false;
@@ -470,56 +264,49 @@ void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,sh
 			}
 			
 			if (i - last_line_break > 1) {
-				strcpy((char *)str_to_draw,(char *)null_s);
-				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
+				size_t amount = i - last_line_break - 1;
+				size_t end = amount + last_line_break + 1;
+				str_to_draw.setPosition(moveTo);
+				str_to_draw.setString(c_str + last_line_break);
 				//sprintf((char *)str_to_draw2," %s",str_to_draw);
 				//if (strlen((char *) str_to_draw2) > 3) {
 				//	str_to_draw2[0] = (char) strlen((char *)str_to_draw);
 				//	DrawString(str_to_draw2);
 				//}
-				if(strlen((char*)str_to_draw) > 2){
-					c2pstr((char*)str_to_draw);
-					DrawString(str_to_draw);
+				if(str_to_draw.getString().getSize() > 2){
+					dest_window.draw(str_to_draw);
 				}
 			}	
 			break;
-		case 1:
-			MoveTo((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x, 
-				   (dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);	
-			DrawString(p_str);
+		case 1: // Centred?
+			moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x,
+					(dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);
+			str_to_draw.setPosition(moveTo);
+			dest_window.draw(str_to_draw);
 			break;
-		case 2:
-			MoveTo(dest_rect.left + 1 + adjust_x, 
-				   dest_rect.top + 1 + adjust_y + 9);
-			DrawString(p_str);					
+		case 2: // Align left and top?
+			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
+			str_to_draw.setPosition(moveTo);
+			dest_window.draw(str_to_draw);
 			break;
-		case 3:
-			MoveTo(dest_rect.left + 1 + adjust_x, 
-				   dest_rect.top + 1 + adjust_y + 9 + (dest_rect.bottom - dest_rect.top) / 6);
-			DrawString(p_str);					
+		case 3: // Align left and bottom?
+			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9 + dest_rect.height() / 6);
+			str_to_draw.setPosition(moveTo);
+			dest_window.draw(str_to_draw);
 			break;
 	}
 	//SetClip(current_clip);
 	//DisposeRgn(current_clip);
-	SetPort(old_port);//printf("String drawn.\n");
+	//printf("String drawn.\n");
 }
 
 short string_length(const char *str){ // Why not just use strlen?
-	short text_len[257];
 	short total_width = 0,i,len;
-	Str255 p_str;
 	
-	for (i = 0; i < 257; i++)
-		text_len[i]= 0;
-	
-	strcpy((char *) p_str,str);
-	c2pstr((char*) p_str);
-	MeasureText(256,p_str,text_len);
-	len = strlen((char *)str);
-	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= len))
-			total_width = text_len[i];
+	sf::Text text;
+	TEXT.applyTo(text);
+	text.setString(str);
+	total_width = text.getLocalBounds().width;
 	return total_width;
 }
 
@@ -527,10 +314,10 @@ short string_length(const char *str){ // Why not just use strlen?
 void draw_terrain(){
 	short q,r,x,y,i,small_i;
 	location which_pt,where_draw;
-	Rect draw_rect,clipping_rect = {8,8,332,260};	
+	RECT draw_rect,clipping_rect = {8,8,332,260};	
 	unsigned char t_to_draw;
-	Rect source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
-	Rect boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
+	RECT source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
+	RECT boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 	
 	if (overall_mode >= 60)
 		return;
@@ -779,68 +566,45 @@ void draw_terrain(){
 	rect_draw_some_item(ter_draw_gworld,terrain_rect,ter_draw_gworld,world_screen,0,1);
 }*/
 
-Rect calc_rect(short i, short j){
-	Rect base_rect = {0,0,36,28};
+RECT calc_rect(short i, short j){
+	RECT base_rect = {0,0,36,28};
 	
-	OffsetRect(&base_rect,i * 28, j * 36);
+	base_rect.offset(i * 28, j * 36);
 	return base_rect;
 }
 
-Rect get_custom_rect (short which_rect){
-	Rect store_rect = {0,0,36,28};
+RECT get_custom_rect (short which_rect){
+	RECT store_rect = {0,0,36,28};
 	
-	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
+	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	return store_rect;
 }
 
-short get_custom_rect (short which_rect, Rect& store_rect){ // returns the number of the sheet to use
+short get_custom_rect (short which_rect, RECT& store_rect){ // returns the number of the sheet to use
 	short sheet = which_rect / 100;
 	which_rect %= 100;
-	SetRect(&store_rect,0,0,28,36);
+	store_rect = {0,0,28,36};
 	
-	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
+	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	return sheet;
 }
 
-void get_str(Str255 str,short i, short j){
-	GetIndString(str, i, j);
-	p2cstr(str);
+// TODO: This doesn't belong in this file
+std::string get_str(std::string list, short j){
+	if(j == 0) return list;
+	StringRsrc& strings = *ResMgr::get<StringRsrc>(list);
+	return strings[j - 1];
 }
 
-void writeGWorldToPNGFile(GWorldPtr gw, const FSSpec *fileSpec){
-    GraphicsExportComponent ge = 0; 
-    OpenADefaultComponent(GraphicsExporterComponentType, kQTFileTypePNG, &ge ); 
-    GraphicsExportSetInputGWorld(ge, gw); 
-    GraphicsExportSetOutputFile(ge, fileSpec); 
-    GraphicsExportDoExport(ge,nil); 
-    CloseComponent(ge); 
-}
-
-GWorldPtr importPictureFileToGWorld(const FSSpec *fileSpec){
-	GraphicsImportComponent gi;
-	GetGraphicsImporterForFile (fileSpec, &gi );
-	Rect naturalBounds;
-	GraphicsImportGetNaturalBounds (gi, &naturalBounds);
-	GWorldPtr temp;
-	NewGWorld(&temp,0,&naturalBounds,NULL,NULL,kNativeEndianPixMap);
-	GraphicsImportSetGWorld (gi, temp, nil);
-	GraphicsImportDraw (gi);
-	CloseComponent(gi);
-	return(temp);
-}
-
-extern std::string progDir;
-CursorRef GetCursorFromPath(std::string filename, Point hotspot){
-	std::string fullpath = progDir + "/Scenario Editor/graphics.exd/";
-	if(use_win_graphics) fullpath += "win";
-	else fullpath += "mac";
-	fullpath += "/cursors/";
-	fullpath += filename;
+extern fs::path progDir;
+CursorRef GetCursorFromPath(std::string filename, location hotspot){
+	fs::path fullpath = progDir/"Scenario Editor"/"graphics.exd";
+	if(use_win_graphics) fullpath /= "win";
+	else fullpath /= "mac";
+	fullpath /= "cursors";
+	fullpath /= filename;
 	printf("Loading cursor from: %s\n\n",fullpath.c_str());
-	FSRef ref;
-	OSStatus err = FSPathMakeRef((UInt8*)fullpath.c_str(), &ref, NULL);
-	CFURLRef url = CFURLCreateFromFSRef(NULL, &ref);
-	return CreateCursorFromFile(url, hotspot.h, hotspot.v);
+	return CreateCursorFromFile(fullpath.c_str(), hotspot.x, hotspot.y);
 }
 
 m_pic_index_t m_pic_index[] = {
@@ -1066,40 +830,244 @@ m_pic_index_t m_pic_index[] = {
 	//200
 };
 
-void tileImage(Rect area, GWorldPtr img, short mode){
-	RgnHandle clip= NewRgn();
-	RectRgn(clip,&area);
+// TODO: Put these classes in a header?
+class Ellipse : public sf::Shape {
+	float divSz;
+	int points;
+	float a, b;
+public:
+	explicit Ellipse(sf::Vector2f size, unsigned int points = 30) : points(points) {
+		a = size.x / 2.0f;
+		b = size.y / 2.0f;
+		divSz = 2 * pi<float>() / points;
+		update();
+	}
 	
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
+	unsigned int getPointCount() const override {
+		return points;
+	}
 	
-	Rect imgRect;
-	GetPortBounds(img, &imgRect);
+	sf::Vector2f getPoint(unsigned int i) const override {
+		int t = i * divSz;
+		return sf::Vector2f(a*sin(t), b*cos(t));
+	}
 	
-	int imgWidth=imgRect.right-imgRect.left;
-	int imgHeight=imgRect.bottom-imgRect.top;
-	area.left -= area.left % imgWidth;
-	area.top -= area.top % imgHeight;
-	int x,y;
-	unsigned int hrep = (int)((double(area.right-area.left)/imgWidth)+0.5);
-	unsigned int vrep = (int)((double(area.bottom-area.top)/imgHeight)+0.5);
-	for(unsigned int i=0; i<=hrep; i++){
-		for(unsigned int j=0; j<=vrep; j++){
-			x=area.left+i*imgWidth;
-			y=area.top+j*imgHeight;
-			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,clip);
+	// TODO: Additional functions?
+};
+
+class RoundRect : public sf::Shape {
+	float divSz;
+	int points;
+	float w,h,r;
+public:
+	RoundRect(sf::Vector2f size, float cornerRadius, unsigned int points = 32) : points(points / 4) {
+		w = size.x;
+		h = size.y;
+		r = cornerRadius;
+		divSz = 0.5 * pi<float>() / points;
+		update();
+	}
+	
+	unsigned int getPointCount() const override {
+		return points * 4;
+	}
+	
+	sf::Vector2f getPoint(unsigned int i) const override {
+		int t = i * divSz;
+		switch(i / points) {
+			case 0:
+				return sf::Vector2f(r*sin(t), r*cos(t));
+			case 1:
+				return sf::Vector2f(w + r*sin(t), r*cos(t));
+			case 2:
+				return sf::Vector2f(w + r*sin(t), h + r*cos(t));
+			case 3:
+				return sf::Vector2f(r*sin(t), h + r*cos(t));
 		}
 	}
-	DisposeRgn(clip);
+	
+	// TODO: Additional functions?
+};
+
+void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
+	shape.setPosition(x, y);
+	shape.setFillColor(colour);
+	target.draw(shape);
+	
 }
 
-void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
-	RgnHandle clip= NewRgn();
-	RectRgn(clip,&area);
+void frame_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
+	shape.setPosition(x, y);
+	shape.setOutlineColor(colour);
+	shape.setFillColor(sf::Color::Transparent);
+	// TODO: Determine the correct outline value; should be one pixel, not sure if it should be negative
+	shape.setOutlineThickness(1.0);
+	target.draw(shape);
+}
+
+void fill_rect(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+	sf::RectangleShape fill(sf::Vector2f(rect.width(), rect.height()));
+	fill_shape(target, fill, rect.left, rect.top, colour);
+}
+
+void frame_rect(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+	sf::RectangleShape frame(sf::Vector2f(rect.width(), rect.height()));
+	frame_shape(target, frame, rect.left, rect.top, colour);
+}
+
+void fill_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour) {
+	RoundRect fill(sf::Vector2f(rect.width(), rect.height()), rad);
+	fill_shape(target, fill, rect.left, rect.top, colour);
+}
+
+void frame_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour) {
+	RoundRect frame(sf::Vector2f(rect.width(), rect.height()), rad);
+	frame_shape(target, frame, rect.left, rect.top, colour);
+}
+
+void fill_circle(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+	Ellipse fill(sf::Vector2f(rect.width(), rect.height()));
+	fill_shape(target, fill, rect.left, rect.top, colour);
+}
+
+void frame_circle(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+	Ellipse frame(sf::Vector2f(rect.width(), rect.height()));
+	frame_shape(target, frame, rect.left, rect.top, colour);
+}
+
+void fill_region(sf::RenderTarget& target, Region& region, sf::Color colour) {
+	clip_region(target, region);
+	fill_rect(target, RECT(target), colour);
+	undo_clip(target);
+}
+
+void frame_region(sf::RenderTarget& target, Region& region, sf::Color colour) {
+	clip_region(target, region);
+	frame_rect(target, RECT(target), colour);
+	undo_clip(target);
+}
+
+void Region::addEllipse(RECT frame) {
+	Ellipse* ellipse = new Ellipse(sf::Vector2f(frame.width(), frame.height()));
+	ellipse->setFillColor(sf::Color::Black);
+	shapes.push_back(std::shared_ptr<sf::Shape>(ellipse));
+}
+
+void Region::addRect(RECT rect){
+	sf::RectangleShape* frame = new sf::RectangleShape(sf::Vector2f(rect.width(), rect.height()));
+	frame->setPosition(rect.left, rect.top);
+	frame->setFillColor(sf::Color::Black);
+	shapes.push_back(std::shared_ptr<sf::Shape>(frame));
+}
+
+void Region::clear() {
+	shapes.clear();
+}
+
+void Region::offset(int x, int y) {
+	for(auto shape : shapes) {
+		shape->move(x,y);
+	}
+}
+
+void Region::setStencil(sf::RenderTarget& where) {
+	setActiveRenderTarget(where);
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	for(auto shape : shapes) {
+		if(shape->getFillColor() == sf::Color::Black)
+			glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+		else glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+		where.draw(*shape);
+	}
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+}
+
+void clip_rect(sf::RenderTarget& where, RECT rect) {
+	// TODO: Make sure this works for the scissor test...
+	setActiveRenderTarget(where);
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(rect.left, RECT(where).height() - rect.bottom, rect.width(), rect.height());
+}
+
+void clip_region(sf::RenderTarget& where, Region& region) {
+	region.setStencil(where);
+}
+
+void undo_clip(sf::RenderTarget& where) {
+	setActiveRenderTarget(where);
+	glDisable(GL_SCISSOR_TEST);
+	glDisable(GL_STENCIL_TEST);
+}
+
+void setActiveRenderTarget(sf::RenderTarget& where) {
+	try {
+		dynamic_cast<sf::RenderWindow&>(where).setActive();
+	} catch(std::bad_cast) {
+		try {
+			dynamic_cast<sf::RenderTexture&>(where).setActive();
+		} catch(std::bad_cast) {}
+	}
+}
+
+Region& Region::operator-=(Region& other) {
+	for(auto shape : other.shapes) {
+		// TODO: Shouldn't this be done to a copy of the shape instead?
+		if(shape->getFillColor() == sf::Color::Black)
+			shape->setFillColor(sf::Color::White);
+		else shape->setFillColor(sf::Color::Black);
+		shapes.push_back(shape);
+	}
+}
+
+void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendMode mode){
+	bool saveRep = img.isRepeated();
+	img.setRepeated(true);
+	sf::Vector2u imgSz = img.getSize();
+	area.left -= area.left % imgSz.x;
+	area.top -= area.top % imgSz.y;
+
+	unsigned int hrep = int((double(area.width())/imgSz.x)+0.5);
+	unsigned int vrep = int((double(area.height())/imgSz.y)+0.5);
+	sf::RectangleShape tessel(sf::Vector2f(hrep*imgSz.x,vrep*imgSz.y));
+	tessel.setTexture(&img);
+	tessel.setPosition(area.left, area.top);
+	sf::RenderStates renderMode(mode);
+	setActiveRenderTarget(target);
+	clip_rect(target, area);
+	target.draw(tessel, renderMode);
+	undo_clip(target);
+	img.setRepeated(saveRep);
+}
+
+void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRect, sf::BlendMode mode){
+	sf::RenderTexture temp;
+	temp.create(srcRect.width(), srcRect.height());
+	temp.setRepeated(true);
+	RECT tesselRect(temp);
+	temp.setActive();
+	rect_draw_some_item(img, srcRect, temp, tesselRect);
+	area.left -= area.left % tesselRect.width();
+	area.top -= area.top % tesselRect.height();
 	
+	sf::RectangleShape tessel(sf::Vector2f(area.width(),area.height()));
+	tessel.setTexture(&temp.getTexture());
+	tessel.setTextureRect(area);
+	tessel.setPosition(area.left, area.top);
+	sf::RenderStates renderMode(mode);
+	setActiveRenderTarget(target);
+	clip_rect(target, area);
+	target.draw(tessel, renderMode);
+	undo_clip(target);
+	glDisable(GL_SCISSOR_TEST);
+}
+
+#if 0
+
+void tileImage(RgnHandle area, GWorldPtr img, RECT srcRect, short mode){
 	GrafPtr cur_port;
 	GetPort(&cur_port);
 	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
@@ -1107,60 +1075,8 @@ void tileImage(Rect area, GWorldPtr img, Rect srcRect, short mode){
 	
 	int srcWidth=srcRect.right-srcRect.left;
 	int srcHeight=srcRect.bottom-srcRect.top;
-	area.left -= area.left % srcWidth;
-	area.top -= area.top % srcHeight;
 	int x,y;
-	unsigned int hrep = (int)((double(area.right-area.left)/srcWidth)+0.5);
-	unsigned int vrep = (int)((double(area.bottom-area.top)/srcHeight)+0.5);
-	for(unsigned int i=0; i<=hrep; i++){
-		for(unsigned int j=0; j<=vrep; j++){
-			x=area.left+i*srcWidth;
-			y=area.top+j*srcHeight;
-			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,clip);
-		}
-	}
-	DisposeRgn(clip);
-}
-
-void tileImage(RgnHandle area, GWorldPtr img, short mode){
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
-	
-	Rect imgRect;
-	GetPortBounds(img, &imgRect);
-	
-	int imgWidth=imgRect.right-imgRect.left;
-	int imgHeight=imgRect.bottom-imgRect.top;
-	int x,y;
-	Rect bounds;
-	GetRegionBounds(area, &bounds);
-	bounds.left -= bounds.left % imgWidth;
-	bounds.top -= bounds.top % imgHeight;
-	unsigned int hrep = (int)((double(bounds.right-bounds.left)/imgWidth)+0.5);
-	unsigned int vrep = (int)((double(bounds.bottom-bounds.top)/imgHeight)+0.5);
-	for(unsigned int i=0; i<=hrep; i++){
-		for(unsigned int j=0; j<=vrep; j++){
-			x=bounds.left+i*imgWidth;
-			y=bounds.top+j*imgHeight;
-			Rect targetRect={y,x,y+imgHeight,x+imgWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&imgRect,&targetRect,mode,area);
-		}
-	}
-}
-
-void tileImage(RgnHandle area, GWorldPtr img, Rect srcRect, short mode){
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
-	
-	int srcWidth=srcRect.right-srcRect.left;
-	int srcHeight=srcRect.bottom-srcRect.top;
-	int x,y;
-	Rect bounds;
+	RECT bounds;
 	GetRegionBounds(area, &bounds);
 	bounds.left -= bounds.left % srcWidth;
 	bounds.top -= bounds.top % srcHeight;
@@ -1170,8 +1086,9 @@ void tileImage(RgnHandle area, GWorldPtr img, Rect srcRect, short mode){
 		for(unsigned int j=0; j<=vrep; j++){
 			x=bounds.left+i*srcWidth;
 			y=bounds.top+j*srcHeight;
-			Rect targetRect={y,x,y+srcHeight,x+srcWidth};
+			RECT targetRect={y,x,y+srcHeight,x+srcWidth};
 			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,area);
 		}
 	}
 }
+#endif

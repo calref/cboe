@@ -9,6 +9,8 @@
 #ifndef CREATLIST_H
 #define CREATLIST_H
 
+#include "monster.h"
+
 namespace legacy {
 	struct creature_list_type;
 	struct creature_data_type;

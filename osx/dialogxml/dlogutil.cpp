@@ -7,24 +7,23 @@
  */
 #define BTNS_DEFINED
 
-#include <Carbon/Carbon.h>
 #include <sstream>
 #include <algorithm>
 
-#include <boost/bind.hpp>
+#include <functional>
 #include "dialog.h"
 #include "dlogutil.h"
 #include "mathutil.h"
+#include <array>
+#include "message.h"
 
+// TODO: This should probably be a source file instead of a header
 #include "dlogutil.buttons.h" // must be included here and only here
 
 const size_t cPictChoice::per_page = 36;
 
 cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : dlg("choose-pict.xml",parent), type(t) {
-	dlg["left"].attachClickHandler(boost::bind(&cPictChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(boost::bind(&cPictChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(boost::bind(&cPictChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(boost::bind(&cPictChoice::onCancel,this,_1,_2));
+	attachClickHandlers();
 	picts = pics;
 	sort(picts.begin(),picts.end());
 }
@@ -35,18 +34,35 @@ cPictChoice::cPictChoice(
 		ePicType t,
 		cDialog* parent
 	) : dlg("choose-pict.xml",parent), type(t) {
-	dlg["left"].attachClickHandler(boost::bind(&cPictChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(boost::bind(&cPictChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(boost::bind(&cPictChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(boost::bind(&cPictChoice::onCancel,this,_1,_2));
+	attachClickHandlers();
 	copy(begin,end,picts.begin());
 	sort(picts.begin(),picts.end());
 }
-	
+
+cPictChoice::cPictChoice(pic_num_t begin, pic_num_t end, ePicType t, cDialog* parent) : dlg("choose-pict.xml",parent), type(t) {
+	attachClickHandlers();
+	for(pic_num_t i = begin; i < end; i++) {
+		picts.push_back(i);
+	}
+}
+
+void cPictChoice::attachClickHandlers() {
+	using namespace std::placeholders;
+	dlg["left"].attachClickHandler(std::bind(&cPictChoice::onLeft,this,_1,_2));
+	dlg["right"].attachClickHandler(std::bind(&cPictChoice::onRight,this,_1,_2));
+	dlg["done"].attachClickHandler(std::bind(&cPictChoice::onOkay,this,_1,_2));
+	dlg["cancel"].attachClickHandler(std::bind(&cPictChoice::onCancel,this,_1,_2));
+}
+
+cDialog* cPictChoice::operator->() {
+	return &dlg;
+}
+
 pic_num_t cPictChoice::show(pic_num_t fallback, pic_num_t cur_sel){
 	dlg.setResult(fallback);
 	cur = cur_sel;
 	page = cur / per_page;
+	// TODO: Hide left/right buttons if only one page?
 	fillPage();
 	dlg.run();
 	return dlg.getResult<pic_num_t>();
@@ -76,14 +92,14 @@ void cPictChoice::fillPage(){
 }
 
 bool cPictChoice::onLeft(cDialog& m, std::string ide){
-	if(page == 0) page = picts.size() / per_page;
+	if(page == 0) page = (picts.size() - 1) / per_page;
 	else page--;
 	fillPage();
 	return true;
 }
 
 bool cPictChoice::onRight(cDialog& me, std::string id){
-	if(page == picts.size() / per_page) page = 0;
+	if(page == (picts.size() - 1) / per_page) page = 0;
 	else page++;
 	fillPage();
 	return true;
@@ -106,10 +122,11 @@ cStringChoice::cStringChoice(
 		std::vector<std::string>& strs,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
-	dlg["left"].attachClickHandler(boost::bind(&cStringChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(boost::bind(&cStringChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(boost::bind(&cStringChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(boost::bind(&cStringChoice::onCancel,this,_1,_2));
+	using namespace std::placeholders;
+	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this,_1,_2));
+	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this,_1,_2));
+	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1,_2));
+	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1,_2));
 	strings = strs;
 }
 
@@ -118,10 +135,11 @@ cStringChoice::cStringChoice(
 		std::vector<std::string>::iterator end,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
-	dlg["left"].attachClickHandler(boost::bind(&cStringChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(boost::bind(&cStringChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(boost::bind(&cStringChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(boost::bind(&cStringChoice::onCancel,this,_1,_2));
+	using namespace std::placeholders;
+	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this,_1,_2));
+	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this,_1,_2));
+	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1,_2));
+	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1,_2));
 	copy(begin,end,strings.begin());
 }
 
@@ -181,20 +199,18 @@ bool cStringChoice::onOkay(cDialog& me, std::string id __attribute__((unused))){
 }
 
 cChoiceDlog::cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p) : dlg(file, p) {
+	using namespace std::placeholders;
 	std::vector<std::string>::iterator iter = buttons.begin();
 	while(iter != buttons.end()){
-		dlg[*iter].attachClickHandler(boost::bind(&cChoiceDlog::onClick,this,_1,_2));
+		dlg[*iter].attachClickHandler(std::bind(&cChoiceDlog::onClick,this,_1,_2));
 		iter++;
 	}
 }
 
-cChoiceDlog::cChoiceDlog(std::vector<std::string> buttons, cDialog* p) : dlg(p) {
-	std::vector<std::string>::iterator iter = buttons.begin();
-	while(iter != buttons.end()){
-		dlg[*iter].attachClickHandler(boost::bind(&cChoiceDlog::onClick,this,_1,_2));
-		iter++;
-	}
-}
+cChoiceDlog::cChoiceDlog(cDialog* p) : dlg(p) {}
+
+cChoiceDlog::cChoiceDlog(std::string file, cDialog* p)
+	: cChoiceDlog(file, {"okay"}, p) {}
 
 // so that the caller can set up aspects of the dialog if necessary
 cDialog* cChoiceDlog::operator->(){
@@ -212,49 +228,38 @@ bool cChoiceDlog::onClick(cDialog& me, std::string id){
 	return true;
 }
 
-template<bool b> bbtt<b>::operator bool(){
-	return b;
-}
-
-template<bool b> bbtt<b>& bbtt<b>::operator=(bbtt<!b>&){
-	return *this;
-}
-
 cThreeChoice::cThreeChoice
-  (std::vector<std::string> strings,short btn1,short btn2,short btn3,pic_num_t pic,ePicType t,cDialog* parent)
-  : cChoiceDlog(/*cThreeChoice<type>::getFileName(strings.size()),*/ std::vector<std::string>(), parent), type(t){
+  (std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent)
+  : cChoiceDlog(parent), type(t){
 	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
 		init_strings(strings,50);
-	if(btn1 < 0){
-		if(btn2 < 0){
-			if(btn3 < 0)
-				init_buttons(basic_buttons[available_btns[63]],null_btn,null_btn);
-			else init_buttons(null_btn,null_btn,basic_buttons[available_btns[btn3]]);
-		}else{
-			if(btn3 < 0)
-				init_buttons(null_btn,basic_buttons[available_btns[btn2]],null_btn);
-			else init_buttons(null_btn,basic_buttons[available_btns[btn2]],basic_buttons[available_btns[btn3]]);
-		}
-	}else{
-		if(btn2 < 0){
-			if(btn3 < 0)
-				init_buttons(basic_buttons[available_btns[btn1]],null_btn,null_btn);
-			else init_buttons(basic_buttons[available_btns[btn1]],null_btn,basic_buttons[available_btns[btn3]]);
-		}else{
-			if(btn3 < 0)
-				init_buttons(basic_buttons[available_btns[btn1]],basic_buttons[available_btns[btn2]],null_btn);
-			else init_buttons(basic_buttons[available_btns[btn1]],basic_buttons[available_btns[btn2]],
-							  basic_buttons[available_btns[btn3]]);
-		}
+	init_buttons(buttons[1], buttons[2], buttons[3]);
+	init_pict(pic);
+	operator->()->recalcRect();
+}
+
+cThreeChoice::cThreeChoice
+  (std::vector<std::string>& strings,std::array<short, 3>& buttons,pic_num_t pic,ePicType t,cDialog* parent)
+  : cChoiceDlog(parent), type(t){
+	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
+		init_strings(strings,86);
+	else
+		init_strings(strings,50);
+	std::array<cBasicButtonType, 3> buttonDefs;
+	int i = 0;
+	for(short j : buttons) {
+		if(j < 0) buttonDefs[i++] = null_btn;
+		else buttonDefs[i++] = basic_buttons[available_btns[j]];
 	}
+	init_buttons(buttonDefs[0], buttonDefs[1], buttonDefs[2]);
 	init_pict(pic);
 	operator->()->recalcRect();
 }
 
 void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned short left){
-	Rect cur_text_rect = {2, left, 0, 0};
+	RECT cur_text_rect = {2, left, 0, 0};
 	size_t total_len, str_width, str_height;
 	for (unsigned int i = 0; i < strings.size(); i++) 
 		total_len += string_length(strings[i].c_str());
@@ -279,22 +284,22 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 	buttons_top = cur_text_rect.top;
 }
 
-template<bool a, bool b, bool c> void cThreeChoice::init_buttons(bbtt<a> btn1,bbtt<b> btn2,bbtt<c> btn3){
-	Rect cur_btn_rect = {buttons_top,0,0,buttons_right};
-	// The assignments in the if statements are intentional here.
-	if(btn_used[0] = a) btns[0] = btn1;
-	if(btn_used[1] = b) btns[1] = btn2;
-	if(btn_used[2] = c) btns[2] = btn3;
+void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cBasicButtonType btn3){
+	using namespace std::placeholders;
+	RECT cur_btn_rect = {buttons_top,0,0,buttons_right};
+	if(btn1) btns[0] = btn1;
+	if(btn2) btns[1] = btn2;
+	if(btn3) btns[2] = btn3;
 	cDialog* me = operator->();
 	for(int i = 0; i < 3; i++){
-		if(!btn_used[i]) continue;
+		if(!btns[i]) continue;
 		std::ostringstream sout;
 		sout << "btn" << i + 1;
 		cButton* btn = new cButton(me);
-		btn->attachKey(btns[i].defaultKey);
-		btn->setText(btns[i].label);
-		btn->setType(btns[i].type);
-		btn->attachClickHandler(boost::bind(&cChoiceDlog::onClick,this,_1,_2));
+		btn->attachKey(btns[i]->defaultKey);
+		btn->setText(btns[i]->label);
+		btn->setType(btns[i]->type);
+		btn->attachClickHandler(std::bind(&cChoiceDlog::onClick,this,_1,_2));
 		switch(type){
 			case BTN_HELP:
 				cur_btn_rect.bottom = cur_btn_rect.top + 13;
@@ -339,50 +344,50 @@ template<bool a, bool b, bool c> void cThreeChoice::init_buttons(bbtt<a> btn1,bb
 }
 
 void cThreeChoice::init_pict(pic_num_t pic){
-	Rect pic_rect;
+	RECT pic_rect;
 	switch(type){
 		case PIC_DLOG:
 		case PIC_CUSTOM_DLOG:
-			SetRect(&pic_rect,0,0,36,36);
+			pic_rect = {0,0,36,36};
 			break;
 		case PIC_TALK:
 		case PIC_CUSTOM_TALK:
 		case PIC_SCEN:
 		case PIC_CUSTOM_SCEN:
-			SetRect(&pic_rect,0,0,32,32);
+			pic_rect = {0,0,32,32};
 			break;
 		case PIC_MISSILE:
 		case PIC_CUSTOM_MISSILE:
-			SetRect(&pic_rect,0,0,18,18);
+			pic_rect = {0,0,18,18};
 			break;
 		case PIC_DLOG_LG:
 		case PIC_CUSTOM_DLOG_LG:
-			SetRect(&pic_rect,0,0,72,72);
+			pic_rect = {0,0,72,72};
 			break;
 		case PIC_SCEN_LG:
-			SetRect(&pic_rect,0,0,64,64);
+			pic_rect = {0,0,64,64};
 			break;
 		case PIC_TER_MAP:
 		case PIC_CUSTOM_TER_MAP:
-			SetRect(&pic_rect,0,0,24,24);
+			pic_rect = {0,0,24,24};
 			break;
 		case PIC_STATUS:
-			SetRect(&pic_rect,0,0,12,12);
+			pic_rect = {0,0,12,12};
 		default:
-			SetRect(&pic_rect,0,0,28,36);
+			pic_rect = {0,0,28,36};
 	}
-	OffsetRect(&pic_rect,8,8);
+	pic_rect.offset(8,8);
 	cDialog* me = operator->();
-	cPict* pic_ctrl = new cPict(me);
+	cPict* pic_ctrl = new cPict(*me);
 	pic_ctrl->setPict(pic,type);
 	me->add(pic_ctrl, pic_rect, "pict");
 }
 
 std::string cThreeChoice::show(){
 	std::string result = cChoiceDlog::show();
-	if(result == "btn1") return btns[0].label;
-	else if(result == "btn2") return btns[1].label;
-	else if(result == "btn3") return btns[2].label;
+	if(result == "btn1") return btns[0]->label;
+	else if(result == "btn2") return btns[1]->label;
+	else if(result == "btn3") return btns[2]->label;
 	return "**ERROR**"; // shouldn't be reached
 }
 
@@ -398,6 +403,7 @@ std::string cStrDlog::getFileName(short n_strs, ePicType type, bool hasTitle){
 
 cStrDlog::cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent)
 	  : dlg(cStrDlog::getFileName((str1 != "") + (str2 != ""), t, title != ""), parent), type(t) {
+	using namespace std::placeholders;
 	cPict& pic_ctrl = dynamic_cast<cPict&>(dlg["pict"]);
 	pic_ctrl.setPict(pic, type);
 	if(str1 != "") {
@@ -406,14 +412,12 @@ cStrDlog::cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t
 	}else if(str2 != "") dlg["str1"].setText(str2);
 	if(title != "") dlg["title"].setText(title);
 	dlg["record"].hide();
-	dlg["record"].attachClickHandler(boost::bind(&cStrDlog::onRecord, this, _1, _2));
-	dlg["okay"].attachClickHandler(boost::bind(&cStrDlog::onDismiss, this, _1, _2));
-	this->str1 = str1;
-	this->str2 = str2;
+	dlg["record"].attachClickHandler(std::bind(&cStrDlog::onRecord, this, _1, _2));
+	dlg["done"].attachClickHandler(std::bind(&cStrDlog::onDismiss, this, _1, _2));
 }
 
 bool cStrDlog::onRecord(cDialog& me, std::string id){
-	if(hasRecord) rec_f(str1, str2);
+	if(hasRecord) rec_f(me);
 	else me[id].hide();
 	return hasRecord;
 }
@@ -445,10 +449,21 @@ void cStrDlog::show(){
 	dlg.run();
 }
 
-void giveError(std::string str1, std::string str2, short err, cDialog* parent){
-	// TODO: ...
+void giveError(std::string str1, std::string str2, cDialog* parent){
+	cStrDlog error(str1,str2,"Error!!!",25,PIC_DLOG,parent);
+	error.show();
 }
 
-void oopsError(short error, short code, short mode){
-	// TODO: ...
+void oopsError(short error, short code, short mode){ // mode is 0 for scened, 1 for game, 2 for pced
+	char error_str1[256], error_str2[256];
+	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};
+	static const char* filetname[3] = {"scenario", "game", "game"};
+	
+	sprintf(error_str1,"The program encountered an error while loading/saving/creating the %s. To prevent future problems, the program will now terminate. Trying again may solve the problem.", filetname[mode]);
+	// TODO: Update this error message - giving more memory is no longer an option in OSX.
+	sprintf(error_str2,"Giving %s more memory might also help. Be sure to back your %s up often. Error number: %d.",progname[mode],filetname[mode],error);
+	if(code != 0)
+		sprintf(error_str2,"%s Result code: %i.",error_str2,code);
+	giveError(error_str1,error_str2,0);
+	exit(1);
 }

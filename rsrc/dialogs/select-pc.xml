@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='cancel'>
+	<text top='190' left='11' width='184' height='18'>Hit a button or type '1'-'6'.</text>
+	<pict type='dlog' num='6' top='8' left='8'/>
+	<button name='pick1' type='regular' def-key='1' top='31' left='69'>1</button>
+	<button name='pick2' type='regular' def-key='2' top='56' left='69'>2</button>
+	<button name='pick3' type='regular' def-key='3' top='81' left='69'>3</button>
+	<button name='pick4' type='regular' def-key='4' top='106' left='69'>4</button>
+	<button name='pick5' type='regular' def-key='5' top='131' left='69'>5</button>
+	<button name='pick6' type='regular' def-key='6' top='156' left='69'>6</button>
+	<text name='pc1' framed='true' top='35' left='138' width='139' height='16'/>
+	<text name='pc2' framed='true' top='60' left='138' width='139' height='16'/>
+	<text name='pc3' framed='true' top='85' left='138' width='139' height='16'/>
+	<text name='pc4' framed='true' top='110' left='138' width='139' height='16'/>
+	<text name='pc5' framed='true' top='135' left='138' width='139' height='16'/>
+	<text name='pc6' framed='true' top='160' left='138' width='139' height='16'/>
+	<text name='title' size='large' top='10' left='49' width='228' height='16'>Select a PC:</text>
+	<button name='cancel' type='regular' top='187' left='214'>Cancel</button>
+</dialog>

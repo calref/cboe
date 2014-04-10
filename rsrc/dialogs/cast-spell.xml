@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='cast' debug='true'>
+	<!-- Unexpected button control -->
+	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
+	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
+	<button name='caster1' type='regular' def-key='1' top='81' left='10'>1</button>
+	<button name='caster2' type='regular' def-key='2' top='105' left='10'>2</button>
+	<button name='caster3' type='regular' def-key='3' top='129' left='10'>3</button>
+	<button name='caster4' type='regular' def-key='4' top='153' left='10'>4</button>
+	<button name='caster5' type='regular' def-key='5' top='177' left='10'>5</button>
+	<button name='caster6' type='regular' def-key='6' top='201' left='10'>6</button>
+	<button name='target1' type='small' def-key='1' key-mod='shift' top='82' left='235'>!</button>
+	<button name='target2' type='small' def-key='2' key-mod='shift' top='106' left='235'>@</button>
+	<button name='target3' type='small' def-key='3' key-mod='shift' top='130' left='235'>#</button>
+	<button name='target4' type='small' def-key='4' key-mod='shift' top='154' left='235'>$</button>
+	<button name='target5' type='small' def-key='5' key-mod='shift' top='178' left='235'>%</button>
+	<button name='target6' type='small' def-key='6' key-mod='shift' top='202' left='235'>^</button>
+	<button name='cancel' type='regular' def-key='esc' top='394' left='389'>Cancel</button>
+	<button name='cast' type='regular' top='394' left='459'>Cast</button>
+	<text name='pc1' top='84' left='88' width='122' height='16'/>
+	<text name='pc2' top='108' left='88' width='122' height='16'/>
+	<text name='pc3' top='132' left='88' width='122' height='16'/>
+	<text name='pc4' top='156' left='88' width='122' height='16'/>
+	<text name='pc5' top='180' left='88' width='122' height='16'/>
+	<text name='pc6' top='204' left='88' width='122' height='16'/>
+	<text name='hp1' top='85' left='265' width='32' height='16'/>
+	<text name='hp2' top='109' left='265' width='32' height='16'/>
+	<text name='hp3' top='133' left='265' width='32' height='16'/>
+	<text name='hp4' top='156' left='265' width='32' height='16'/>
+	<text name='hp5' top='181' left='265' width='32' height='16'/>
+	<text name='hp6' top='205' left='265' width='32' height='16'/>
+	<text name='sp1' top='85' left='304' width='32' height='16'/>
+	<text name='sp2' top='109' left='304' width='32' height='16'/>
+	<text name='sp3' top='133' left='304' width='32' height='16'/>
+	<text name='sp4' top='156' left='304' width='32' height='16'/>
+	<text name='sp5' top='181' left='304' width='32' height='16'/>
+	<text name='sp6' top='205' left='304' width='32' height='16'/>
+	<text name='feedback' framed='true' top='400' left='30' width='186' height='16'>Pick spell to cast.</text>
+	<!--
+	 TODO: Add width attributes to these LEDs
+	 -->
+	<led name='spell1' state='off' top='247' left='114'/>
+	<led name='spell2' state='off' top='261' left='114'/>
+	<led name='spell3' state='off' top='275' left='114'/>
+	<led name='spell4' state='off' top='289' left='114'/>
+	<led name='spell5' state='off' top='303' left='114'/>
+	<led name='spell6' state='off' top='317' left='114'/>
+	<led name='spell7' state='off' top='331' left='114'/>
+	<led name='spell8' state='off' top='345' left='114'/>
+	<led name='spell9' state='off' top='359' left='114'/>
+	<led name='spell10' state='off' top='373' left='114'/>
+	<led name='spell11' state='off' top='247' left='247'/>
+	<led name='spell12' state='off' top='261' left='247'/>
+	<led name='spell13' state='off' top='275' left='247'/>
+	<led name='spell14' state='off' top='289' left='247'/>
+	<led name='spell15' state='off' top='303' left='247'/>
+	<led name='spell16' state='off' top='317' left='247'/>
+	<led name='spell17' state='off' top='331' left='247'/>
+	<led name='spell18' state='off' top='345' left='247'/>
+	<led name='spell19' state='off' top='259' left='247'/>
+	<led name='spell20' state='off' top='373' left='247'/>
+	<led name='spell21' state='off' top='247' left='379'/>
+	<led name='spell22' state='off' top='261' left='379'/>
+	<led name='spell23' state='off' top='275' left='379'/>
+	<led name='spell24' state='off' top='289' left='379'/>
+	<led name='spell25' state='off' top='303' left='379'/>
+	<led name='spell26' state='off' top='317' left='379'/>
+	<led name='spell27' state='off' top='331' left='379'/>
+	<led name='spell28' state='off' top='345' left='379'/>
+	<led name='spell29' state='off' top='359' left='379'/>
+	<led name='spell30' state='off' top='373' left='379'/>
+	<led name='spell31' state='off' top='247' left='508'/>
+	<led name='spell32' state='off' top='261' left='508'/>
+	<led name='spell33' state='off' top='275' left='508'/>
+	<led name='spell34' state='off' top='289' left='508'/>
+	<led name='spell35' state='off' top='303' left='508'/>
+	<led name='spell36' state='off' top='317' left='508'/>
+	<led name='spell37' state='off' top='331' left='508'/>
+	<led name='spell38' state='off' top='345' left='508'/>
+	<button name='other' type='large' def-key='space' top='394' left='281'>Other Spells</button>
+	<text size='large' top='60' left='9' width='75' height='16'>Caster:</text>
+	<text size='large' top='60' left='209' width='223' height='16'>Target:  HP:   SP:    Status:</text>
+	<!--
+	 TODO: Change this from option to alt
+	 -->
+	<text top='0' left='202' width='290' height='57'>
+		Keyboard:
+		Type '1'-'6' to pick caster,
+		Shift-'1' - '6' to select target,
+		'space' for Other Spells,
+		key by spell to cast spell.
+		Option-click spell name for description.
+	</text>
+	<button name='help' type='help' def-key='/' key-mod='shift' top='6' left='506'/>
+	<text name='col1' top='227' left='10' width='100' height='16'/>
+	<text name='col2' top='227' left='132' width='100' height='16'/>
+	<text name='col3' top='227' left='266' width='100' height='16'/>
+	<text name='col4' top='227' left='396' width='100' height='16'/>
+</dialog>

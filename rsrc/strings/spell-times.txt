@@ -1,0 +1,38 @@
+Can cast everywhere.
+Combat only.
+Town only.
+Town and outdoor only.
+Town & combat only.
+Outdoor only.
+                                                                                                                                                      
+Mage Spells
+Priest Spells
+Exile III was created on a PowerMac 6100 using CodeWarrior, development system of the Gods. It is written in C. Plain, ordinary C.
+Many thanks to Comedy Central, for providing many hours of bliss during those late night programming binges. The Daily Show added meaning to my lame life.
+This fine program was brought to you by coffee. "Coffee - it's what's for dinner."
+No Vahnatai were harmed during the making of Exile III: Ruined World.
+Exile III: Ruined World is a work of fiction. Any similarity between its characters and persons living or dead is coincidental. Unless, of course, it isn't.
+Thirty Helens Agree: Honesty is the best policy.
+This will be the last Exile game for a long, long time. Please don't be mad.
+Over 200 double tall iced lattes were consumed during the making of Exile III: Ruined World. Chemical dependence can be your friend too!
+Many thanks to all the fine role-playing games that preceded the Exile series, for providing many wonderful ideas to steal.
+Some groups listened to while coding Exile III: Silly Wizard, Patti Rothberg, The Chieftains, Pearl Jam, Nirvana, Indigo Girls, Nine Inch Nails, Tori Amos, Everclear, REM, Smashing Pumpkins, Enya, Green Day, Sheryl Crow, Jethro Tull, and Janis.
+Some other things listened to while coding Exile III: Lots of They Might Be Giants, the Rent Cast Album, Oasis, Uncle Bonsai and the Electric Bonsai Band, Joan Osborne, more Joan Osborne, and even more Joan Osborne.
+A friendly warning. If you leave a message on Spiderweb Software, Inc's answering machine, don't leave a phone number or E-mail address, and mumble your name, please don't be surprised if I don't get back to you.
+Tips for aspiring programmers: Buy Macintosh Programming Techniques, by Dan Parks Sydow, and Tricks of the Mac Game Programming Gurus, by several people. You can't go wrong.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

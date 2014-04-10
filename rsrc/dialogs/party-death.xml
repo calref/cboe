@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='load'>
+	<!--
+	 TODO: This dialog should use a pict of type=dlog and size=large
+	 -->
+	<button name='load' type='regular' top='125' left='278'>Restore</button>
+	<button name='new' type='regular' top='125' left='210'>Restart</button>
+	<button name='quit' type='regular' top='125' left='141'>Quit</button>
+	<pict framed='false' type='dlog' num='32' top='6' left='6'/>
+	<text top='77' left='85' width='252' height='44'>
+		Unfortunately, the latter fate is the one that just befell you.
+		Easy come, easy go.
+		Care to make another attempt?
+	</text>
+	<text top='6' left='85' width='260' height='68'>
+		Being an adventurer is unpredictable work.
+		Sometimes, you becomes heroes, wealthy as Croesus and famous beyond words.
+		And, sometimes your gnawed bones are left to dry out in some shadowy, forgotten hole.
+	</text>
+	<pict framed='false' type='dlog' num='33' top='6' left='42'/>
+	<!--
+	 TODO: For some reason these were num=34 and num=35; if it looks wrong in-game, try reverting to that
+	 -->
+	<pict framed='false' type='dlog' num='36' top='42' left='6'/>
+	<pict framed='false' type='dlog' num='37' top='42' left='42'/>
+</dialog>

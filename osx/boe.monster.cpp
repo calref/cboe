@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <cstdio>
 
 //#include "item.h"
@@ -16,7 +15,6 @@
 #include "soundtool.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
-#include "dlgconsts.h"
 #include "boe.main.h"
 #include "mathutil.h"
 #include "graphtool.h"
@@ -192,26 +190,27 @@ short get_monst_picnum(m_num_t monst)
 	return scenario.scen_monsters[monst].picture_num;
 }
 
-short get_monst_pictype(m_num_t monst)
+ePicType get_monst_pictype(m_num_t monst)
 {
-	short type = PICT_MONST;
+	ePicType type = PIC_MONST;
 	short n = scenario.scen_monsters[monst].picture_num;
 	if (n >= 1000){
-		type += PICT_CUSTOM;
+		type += PIC_CUSTOM;
 		switch(n / 1000){
 			case 2:
-				type += PICT_WIDE_MONSTER;
+				type += PIC_WIDE;
 				break;
 			case 3:
-				type += PICT_TALL_MONSTER;
+				type += PIC_TALL;
 				break;
 			case 4:
-				type += PICT_WIDE_MONSTER + PICT_TALL_MONSTER;
+				type += PIC_WIDE;
+				type += PIC_TALL;
 				break;
 		}
 	}else{
-		if(m_pic_index[n].x == 2) type += PICT_WIDE_MONSTER;
-		if(m_pic_index[n].y == 2) type += PICT_TALL_MONSTER;
+		if(m_pic_index[n].x == 2) type += PIC_WIDE;
+		if(m_pic_index[n].y == 2) type += PIC_TALL;
 	}
 	return type;
 }

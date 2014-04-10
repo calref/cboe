@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog is very disorganized; clean it up
+	 TODO: This dialog contains out-of-date information (the recommendation of a sage in Fort Emergence, and the jobs button, though the latter is likely to be reinstated)
+	 -->
+	<button name='okay' type='regular' top='384' left='435'>OK</button>
+	<pict type='dlog' num='24' top='9' left='9'/>
+	<text top='30' left='63' width='423' height='64'>
+		During your adventures, you will come across mind-boggling quantities of stuff.
+		To pick up some of it, move your party (or active PC) near it, and hit the get button (or 'g').
+		Then, on the Get Item window, click on the item to grab.
+	</text>
+	<text top='13' left='53' width='235' height='16'>BLADES OF EXILE HELP: ITEM INFO SCREEN</text>
+	<text top='131' left='63' width='283' height='57'>
+		Once there, to equip (i.e. use) or unequip (take off) an item, click on its name.
+		Other buttons will appear enabling you do to other things:
+	</text>
+	<text top='274' left='63' width='429' height='50'>
+		Items from slain monsters normally appear unidentified.
+		To identify them, take them to a sage (such as Habecker in Fort Emergence).
+		Also, buying Item Lore skill sometimes makes monster's treasure appear already identified.
+	</text>
+	<text top='95' left='63' width='424' height='33'>
+		Once obtained, items show up in this window.
+		Type '1'-'6' or click on the numbered button to bring up a character's inventory.
+	</text>
+	<!--
+	 TODO: This originally had width=129 height=132; if it looks wrong in-game, try reverting to that
+	 -->
+	<pict type='full' num='1100' top='136' left='350' width='138' height='112'/>
+	<text top='189' left='63' width='281' height='84'>
+		The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things.
+		Many shopkeepers will buy your items, and certain sages can identify and even enchant them.
+	</text>
+	<text top='325' left='63' width='427' height='50'>
+		Finally, hitting the Jobs button (or typing '8') takes you to the jobs page,
+		where you can see what jobs you currently have.
+		Hitting the 'Spec' button (or typing '9') brings up whatever special items you have.
+	</text>
+</dialog>

@@ -1,4 +1,6 @@
 
+#include <SFML/Graphics.hpp>
+
 #include <cstdio>
 
 //#include "item.h"
@@ -14,14 +16,13 @@
 #include "boe.infodlg.h"
 #include "boe.monster.h"
 #include "boe.specials.h"
-#include "dlgtool.h"
 #include "soundtool.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 
-extern WindowPtr	mainPtr;
-extern Rect	windRect;
+extern sf::RenderWindow mainPtr;
+extern RECT	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
@@ -40,21 +41,21 @@ extern effect_pat_type current_pat;
 extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern bool sleep_field;
 //extern unsigned char misc_i[64][64],sfx[64][64];
-extern short on_monst_menu[256];
-extern DialogPtr modeless_dialogs[18];
+extern sf::RenderWindow mini_map;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
 //extern piles_of_stuff_dumping_type *data_store; TODO: Abolish storage_gworld
-extern GWorldPtr terrain_screen_gworld,items_gworld,tiny_obj_gworld,pc_gworld,monst_gworld[NUM_MONST_SHEETS];
-extern GWorldPtr fields_gworld,anim_gworld,vehicle_gworld,terrain_gworld[NUM_TER_SHEETS];
+extern sf::RenderTexture terrain_screen_gworld;
+extern sf::Texture items_gworld,tiny_obj_gworld,pc_gworld,monst_gworld[NUM_MONST_SHEETS];
+extern sf::Texture fields_gworld,anim_gworld,vehicle_gworld,terrain_gworld[NUM_TER_SHEETS];
 //extern short which_g_stored[STORED_GRAPHICS];
 //extern short wish_list[STORED_GRAPHICS];
 //extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 extern short terrain_there[9][9];
 extern pending_special_type special_queue[20];
 
-extern Point ul;
+extern location ul;
 extern location pc_pos[6],center;
 extern short which_combat_type,pc_dir[6],current_pc;
 extern bool monsters_going,anim_onscreen;
@@ -74,9 +75,10 @@ extern bool supressing_some_spaces;
 extern location ok_space[4];
 extern bool can_draw_pcs;
 extern cScenario scenario;
-extern GWorldPtr spec_scen_g;
+extern sf::Texture spec_scen_g;
 
-Rect boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT boat_rects[4] = {RECT{0,0,36,28}, RECT{0,28,36,56},RECT{0,56,36,84},RECT{0,84,36,112}};
 bool gave_no_g_error = false;
 eAmbientSound ambient_sound;
 
@@ -85,11 +87,10 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 1000, force to draw graphic which is terrain_to_draw - 1000
 {
-	Rect where_draw;
-	Rect source_rect;
-	GWorldPtr source_gworld;
+	RECT where_draw;
+	RECT source_rect;
+	sf::Texture source_gworld;
 	short anim_type = 0;
-	GrafPtr old_port;
 	location l;
 	
 	l.x = i; l.y = j;
@@ -97,16 +98,13 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		return;
 	
 	where_draw = calc_rect(i,j);
- 	OffsetRect(&where_draw,13,13);
+ 	where_draw.offset(13,13);
  	if (terrain_to_draw == -1) {
  		if (terrain_there[i][j] == 300) {
  			return;
 		}
  		terrain_there[i][j] = 300;
- 		GetPort(&old_port);
- 		SetPort(terrain_screen_gworld);
- 		PaintRect(&where_draw);
-  		SetPort(old_port);
+		fill_rect(terrain_screen_gworld, where_draw, sf::Color::White);
 		return;
 	}
  	////
@@ -162,15 +160,16 @@ void draw_monsters() ////
 {
 	short i,j = 0,k;
 	short width,height;
-	Rect source_rect,to_rect;
+	RECT source_rect,to_rect;
 	location where_draw,store_loc;
 	short picture_wanted;
 	ter_num_t ter;
-	Rect monst_rects[4][4] = {
-		{{0,0,36,28},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
-		{{0,7,18,21},{18,7,36,21},{0,0,0,0},{0,0,0,0}},
-		{{9,0,27,14},{9,14,27,28},{0,0,0,0},{0,0,0,0}},
-		{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
+	// TODO: The duplication of RECT here shouldn't be necessary...
+	RECT monst_rects[4][4] = {
+		{RECT{0,0,36,28}},
+		{RECT{0,7,18,21},RECT{18,7,36,21}},
+		{RECT{9,0,27,14},RECT{9,14,27,28}},
+		{RECT{0,0,18,14},RECT{0,14,18,28},RECT{18,0,36,14},RECT{18,14,36,28}}
 	};
 	
 	if (is_out())
@@ -196,8 +195,8 @@ void draw_monsters() ////
 								source_rect = get_custom_rect(picture_wanted % 1000 +
 															  ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(spec_scen_g, source_rect, terrain_screen_gworld,to_rect, transparent); 			
+								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
+								rect_draw_some_item(spec_scen_g, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 							}					
 						}
 						if (picture_wanted < 1000) {
@@ -205,8 +204,8 @@ void draw_monsters() ////
 								pic_num_t this_monst = univ.party.out_c[i].what_monst.get(j,true,&cMonster::picture_num);
 								source_rect = get_monster_template_rect(this_monst,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								OffsetRect(&to_rect,13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld,to_rect, transparent);
+								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
+								rect_draw_some_item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 							}
 						}
 					}
@@ -309,7 +308,8 @@ void draw_monsters() ////
 }
 
 void play_see_monster_str(unsigned short m){
-	short str1, str2, pic, type, snd, spec, s1 = 0, s2 = 0, s3 = 0;
+	short str1, str2, pic, snd, spec, s1 = 0, s2 = 0, s3 = 0;
+	ePicType type;
 	str1 = scenario.scen_monsters[m].see_str1;
 	str2 = scenario.scen_monsters[m].see_str2;
 	pic = scenario.scen_monsters[m].picture_num;
@@ -317,7 +317,13 @@ void play_see_monster_str(unsigned short m){
 	snd = scenario.scen_monsters[m].see_sound;
 	spec = scenario.scen_monsters[m].see_spec;
 	// First display strings, if any
-	display_strings(str1 ? scenario.monst_strs[str1] : NULL, str2 ? scenario.monst_strs[str2] : NULL, "", snd, pic,type, 0);
+	cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
+	display_strings.setSound(snd);
+	display_strings.setRecordHandler(cStringRecorder()
+		.string1(NOTE_MONST, m, 0)
+		.string2(NOTE_MONST, m, 1)
+	);
+	display_strings.show();
 	// Then run the special, if any
 	if(spec > -1){
 		for(int i = 2; i < 20; i++){
@@ -337,7 +343,7 @@ void draw_pcs(location center,short mode)
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
 {
 	short i;
-	Rect source_rect,active_pc_rect;
+	RECT source_rect,active_pc_rect;
 	location where_draw;
 	
 	if (party_toast() == true)
@@ -380,9 +386,9 @@ void draw_pcs(location center,short mode)
 		where_draw.y = pc_pos[current_pc].y - center.y + 4;
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
 		if(pc_dir[current_pc] >= 4)
-			OffsetRect(&source_rect,28,0);
+			source_rect.offset(28,0);
 		if (combat_posing_monster == current_pc)
-			OffsetRect(&source_rect,0,288);
+			source_rect.offset(0,288);
 				
 		if (mode == 0)
 			Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
@@ -392,7 +398,7 @@ void draw_pcs(location center,short mode)
 void draw_items(location where){
 	if(!point_onscreen(center,where)) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
-	Rect from_rect, to_rect;
+	RECT from_rect, to_rect;
 	if(supressing_some_spaces && (where != ok_space[0]) && (where != ok_space[1]) && (where != ok_space[2]) && (where != ok_space[3]))
 		return;
 	for (int i = 0; i < NUM_TOWN_ITEMS; i++) {
@@ -403,16 +409,16 @@ void draw_items(location where){
 				from_rect = get_custom_rect(univ.town.items[i].graphic_num - 1000);
 				to_rect = coord_to_rect(where.x,where.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
-				rect_draw_some_item(spec_scen_g,from_rect,terrain_screen_gworld,to_rect,transparent);
+				rect_draw_some_item(spec_scen_g,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
 			}else{
 				from_rect = get_item_template_rect(univ.town.items[i].graphic_num);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
 				if(univ.town.items[i].graphic_num >= 45) {
-					InsetRect(&to_rect,5,9);
-					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect,transparent);
+					to_rect.inset(5,9);
+					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect,sf::BlendAlpha);
 				}else
-					rect_draw_some_item(items_gworld, from_rect, terrain_screen_gworld, to_rect,transparent);
+					rect_draw_some_item(items_gworld, from_rect, terrain_screen_gworld, to_rect,sf::BlendAlpha);
 			}
 		}
 	}
@@ -421,7 +427,7 @@ void draw_items(location where){
 void draw_outd_boats(location center)
 {
 	location where_draw;
-	Rect source_rect;
+	RECT source_rect;
 	short i;
 	
 	for (i = 0; i < 30; i++)
@@ -451,7 +457,7 @@ void draw_outd_boats(location center)
 void draw_town_boat(location center) 
 {
 	location where_draw;
-	Rect source_rect;
+	RECT source_rect;
 	short i;
 	
 	for (i = 0; i < 30; i++)
@@ -540,7 +546,7 @@ void draw_fields(location where){
 void draw_party_symbol(short mode,location center)
 // mode currently unused
 {
-	Rect source_rect;
+	RECT source_rect;
 	location target(4,4);
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
@@ -560,7 +566,7 @@ void draw_party_symbol(short mode,location center)
 		i = first_active_pc();
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
 		if(pc_dir[current_pc] >= 4)
-			OffsetRect(&source_rect,28,0);	
+			source_rect.offset(28,0);
 		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
@@ -583,10 +589,10 @@ void draw_party_symbol(short mode,location center)
 
 // Give the position of the monster graphic in the picture resource
 // Will store monsters the same in Exile's II and III
-Rect get_monster_rect (unsigned short type_wanted,short mode) ////
+RECT get_monster_rect (unsigned short type_wanted,short mode) ////
 //short mode; // 0 - left  1 - right  2 - both
 {
-	Rect store_rect;
+	RECT store_rect;
 	short i;
 	
 	i = (short) type_wanted;
@@ -600,10 +606,10 @@ Rect get_monster_rect (unsigned short type_wanted,short mode) ////
 }
 
 // Give the position of the monster graphic in the template in memory
-Rect get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) ////
+RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) ////
 //mode; // 0 - left  1 - right  +10 - combat mode
 {
-	Rect store_rect = {0,0,36,28};
+	RECT store_rect = {0,0,36,28};
 	short adj;
 	
 	if (mode >= 10) {
@@ -618,9 +624,9 @@ Rect get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-Rect get_item_template_rect (short type_wanted)////
+RECT get_item_template_rect (short type_wanted)////
 {
-	Rect store_rect;
+	RECT store_rect;
 	
 	if (type_wanted < 45) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
@@ -804,32 +810,4 @@ void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sound
 	}
 }
 
-void adjust_monst_menu()
-{
-	short i,monst_pos = 0;
-	MenuHandle monst_menu;
-	Str255 monst_name;
-
-	if (in_startup_mode == true)
-		return;
-	monst_menu = GetMenuHandle(700);
-	for (i = 0; i < 256; i++) {
-		on_monst_menu[i] = -1; 
-		}
-	for (i = 1; i < 256; i++) 
-		if ((i == 1) || (univ.party.m_noted[i] > 0)) {
-			on_monst_menu[monst_pos] = i;
-			monst_pos++;
-			}
-
-	for (i = 0; i < 256; i++) {
-		DeleteMenuItem(monst_menu,1); 
-		}
-	for (i = 0; i < 256; i++) 	
-		if (on_monst_menu[i] >= 0) {
-			//GetIndString(monst_name, 2,on_monst_menu[i]);
-			sprintf((char *) monst_name,"%s",scenario.scen_monsters[on_monst_menu[i]].m_name.c_str());
-			c2pstr((char*)monst_name);
-			AppendMenu(monst_menu,monst_name);
-			}
-}	
+	

@@ -1,6 +1,6 @@
 typedef	struct {
 	char word[15];
-	Rect word_rect;
+	RECT word_rect;
 	} word_rect_type;
 typedef struct {
 	short per1,per2;
@@ -27,7 +27,7 @@ bool try_monst_anim_move(short i,location start,short x,short y);
 void run_anim_monsts();
 bool try_pc_anim_move(short i,location start,short x,short y);
 void start_missile_anim();
-short get_missile_direction(Point origin_point,Point the_point);
+short get_missile_direction(location origin_point,location the_point);
 void end_missile_anim() ;
 void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len);
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj);
@@ -36,14 +36,15 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj);
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand);
-void click_shop_rect(Rect area_rect);
-void draw_shop_graphics(bool pressed,Rect clip_area_rect);
+void click_shop_rect(RECT area_rect);
+void draw_shop_graphics(bool pressed,RECT clip_area_rect);
 void refresh_shopping();
 cItemRec store_mage_spells(short which_s) ;
 cItemRec store_priest_spells(short which_s);
 cItemRec store_alchemy(short which_s);
 void get_item_interesting_string(cItemRec item,char *message);
-void click_talk_rect(char *str_to_place,char *str_to_place2,Rect c_rect);
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,Rect c_rect);
+void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect);
+void place_talk_str(const char *str_to_place,const char *str_to_place2,short color,RECT c_rect);
 short scan_for_response(char *str);
 void refresh_talking();
+void draw_dialog_graphic(sf::RenderTarget& target, RECT rect, short which_g, short type_g, bool do_frame);

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--DOCTYPE dialog SYSTEM	"dialog.dtd"-->
+<dialog skin='dark' defbtn='leave'>
+	<!--
+	 TODO: The defbtn value about should be 'leave'; I left it like this to see if xmllint could catch it.
+	 -->
+	<pict type='monst' num='12' top='6' left='6'/>
+	<text top='6' left='48' width='246' height='35'>
+		This item is clearly someone's property.
+		Do you steal it?
+	</text>
+	<button name='leave' type='regular' top='48' left='236'>Leave</button>
+	<button name='steal' type='regular' top='48' left='168'>Steal</button>
+</dialog>

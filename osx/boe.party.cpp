@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 #include <iostream>
 
 //#include "item.h"
@@ -19,8 +18,6 @@
 #include <cstring>
 #include "boe.party.h"
 #include "boe.monster.h"
-#include "dlgtool.h"
-#include "dlgconsts.h"
 #include "boe.town.h"
 #include "boe.combat.h"
 #include "boe.locutils.h"
@@ -30,8 +27,13 @@
 #include "boe.main.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
+#include "boe.menus.h"
+#include "restypes.hpp"
+#include <array>
+#include <boost/lexical_cast.hpp>
+#include "button.h"
 
 short skill_cost[20] = {3,3,3,2,2,2, 1,2,2,6,
 						5, 1,2,4,2,1, 4,2,5,0};
@@ -47,7 +49,7 @@ short spell_cost[2][62] = {{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3
 							4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
 							{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
 							 5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
-char *mage_s_name[] = {"Light","Spark","Minor Haste","Strength","Scare",
+const char *mage_s_name[62] = {"Light","Spark","Minor Haste","Strength","Scare",
 							"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
 						"Minor Poison","Flame","Slow","Dumbfound","Envenom",
 							"Stinking Cloud","Summon Beast","Conflagration","Dispel Field","Sleep Cloud",
@@ -61,7 +63,7 @@ char *mage_s_name[] = {"Light","Spark","Minor Haste","Strength","Scare",
 							"Daemon","Antimagic Cloud","MindDuel","Flight",
 						"Shockwave","M. Blessing","Mass Paralysis","Protection",
 							"Major Summon","Force Barrier","Quickfire","Death Arrows"};
-char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
+const char *priest_s_name[62] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
 							"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
 						"Bless","Cure Poison","Curse","Light","Wound",
 							"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
@@ -75,7 +77,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 							"Guardian","Mass Charm","Protective Circle","Pestilence",
 						"Revive All","Ravage Spirit","Resurrect","Divine Thud",
 							"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+const char *alch_names[20] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
 		"Graymold Salve (7)","Weak Energy Potion (9)",
@@ -83,7 +85,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 		"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
 		"Strong Strength (10)","Bliss (16)","Strong Power (20)"
 		};
-	char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
+const char *alch_names_short[20] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
 	"Weak Speed Potion","Medium Poison",
 		"Medium Heal Potion","Strong Curing","Medium Speed Potion",
 		"Graymold Salve","Weak Energy Potion",
@@ -91,6 +93,13 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 		"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 		"Strong Strength","Bliss","Strong Power"
 		};
+// These are the IDs used to refer to the skills in the dialog
+const char* skill_ids[19] = {
+	"str","dex","int",
+	"edge","bash","pole","thrown","bow","def",
+	"mage","priest","lore","alch","item",
+	"trap","lock","assassin","poison","luck"
+};
 	short spell_w_cast[2][62] = {{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
 							1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
 							{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
@@ -105,19 +114,20 @@ short town_spell,who_cast,which_pc_displayed;
 bool spell_button_active[90];
 extern cItemRec start_items[6];
 
-Str255 empty_string = "                                           ";
+char empty_string[256] = "                                           ";
 
 //extern stored_town_maps_type town_maps;
 extern bool fast_bang;
+extern bool flushingInput;
 //extern party_record_type	party;
 extern short stat_window,current_pc/*,town_size[3]*/,town_type;
 extern eGameMode overall_mode;
 //extern current_town_type	univ.town;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
-extern std::string progDir;
+extern fs::path progDir;
 extern location pc_pos[6],center;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 extern bool in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 //extern stored_items_list_type stored_items[3];
 //extern CursHandle sword_curs;
@@ -138,8 +148,7 @@ extern short boom_gr[8];
 //extern	unsigned char m3[16];
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
-extern short current_ground,dialog_answer;
-extern short on_spell_menu[2][62];
+extern short current_ground;
 extern short mage_need_select[62];
 extern short priest_need_select[62];
 extern short pc_marked_damage[6];
@@ -149,7 +158,7 @@ extern location golem_m_locs[16];
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern GWorldPtr pc_gworld;
+extern sf::Texture pc_gworld;
 char c_line[60];
 
 // Variables for spell selection
@@ -169,8 +178,6 @@ char c_line[60];
 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 	long store_g;
 	short store_train_mode,store_train_pc;
-
-extern ModalFilterUPP main_dialog_UPP;
 
 // Dialog vars
 short store_mage_store ;
@@ -417,7 +424,8 @@ void init_party_scen_data()
 			if (univ.party.stored_items[i][j].variety != 0)
 				stored_item = true;
 	if (stored_item == true)
-		if (FCD(911,0) == 1) {
+		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
+			// TODO: Consider allowing them to pick and choose the items to take, using the get items dialog
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++) 
 					if (univ.party.stored_items[i][j].variety != 0)
@@ -445,11 +453,11 @@ void init_party_scen_data()
 // When the party is placed into a scen from the startinbg screen, this is called to put the game into game 
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(string scen_name)
+void put_party_in_scen(std::string scen_name)
 {
 	short i,j;
-	Str255 strs[6] = {"","","","","",""};
-	short buttons[3] = {-1,-1,-1};
+	std::array<std::string, 6> strs;
+	std::array<short, 3> buttons = {-1,-1,-1};
 	bool item_took = false;
 	
 	for (j = 0; j < 6; j++)
@@ -464,6 +472,7 @@ void put_party_in_scen(string scen_name)
 	for (j = 0; j < 6; j++)
 	 	for (i = 23; i >= 0; i--) {
 			univ.party[j].items[i].special_class = 0;
+			// TODO: Don't take items just because they have a special graphic
 			if (univ.party[j].items[i].graphic_num >= 150) {
 				take_item(j,i + 30); // strip away special items
 				item_took = true;
@@ -478,7 +487,7 @@ void put_party_in_scen(string scen_name)
 				}
 			}
 	if (item_took == true)
-		FCD(910,0);
+		cChoiceDlog("removed-special-items.xml").show();
 	univ.party.age = 0;
 	for (i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
@@ -486,17 +495,12 @@ void put_party_in_scen(string scen_name)
 //	 	univ.party.party_event_timers[i] = 0;
 	univ.party.party_event_timers.clear();
 	
-	
-	FSRef file_ref;
-	FSSpec file_spec;
-	std::string path;
+	fs::path path;
 	//std::cout << progDir;
-	path = progDir + "/Blades of Exile Scenarios/";
-	path += scen_name;
+	path = progDir/"Blades of Exile Scenarios";
+	path /= scen_name;
 	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
-	FSPathMakeRef((UInt8*) path.c_str(), &file_ref, NULL);
-	FSGetCatalogInfo(&file_ref, kFSCatInfoNone, NULL, NULL, &file_spec, NULL);
-	if (!load_scenario(file_spec))
+	if (!load_scenario(path))
 		return;
 	
 	init_party_scen_data();
@@ -531,12 +535,12 @@ void put_party_in_scen(string scen_name)
 	buttons[0] = 1;
 	for (j = 0; j < 6; j++)
 		if (strlen(	scenario.scen_strs(4 + j)) > 0) {
-			for (i = 0; i < 6; i++)	
-				strcpy((char *) strs[i],scenario.scen_strs(4 + i));
-			custom_choice_dialog(strs,-1 * (1600 + scenario.intro_pic),buttons) ;
+			for (i = 0; i < 6; i++)
+				strs[i] = scenario.scen_strs(4 + i);
+			custom_choice_dialog(strs,scenario.intro_pic,PIC_SCEN,buttons) ;
 			j = 6;
 		}
-	give_help(1,2,0);
+	give_help(1,2);
 	
 	// this is kludgy, put here to prevent problems
 	for (i = 0; i < 50; i++)
@@ -550,7 +554,7 @@ void put_party_in_scen(string scen_name)
 	}
 }
 
-bool create_pc(short spot,short parent_num)
+bool create_pc(short spot,cDialog* parent)
 //spot; // if spot is 6, find one
 {
 	bool still_ok = true;
@@ -565,24 +569,25 @@ bool create_pc(short spot,short parent_num)
 
 	univ.party[spot] = cPlayer();
 
-	pick_race_abil(&univ.party[spot],0,parent_num);
+	pick_race_abil(&univ.party[spot],0,parent);
 	
-	if (parent_num != 0)
-		cd_initial_draw(989);
+	// TODO: Not sure if these initial draws are needed
+//	if (parent != NULL)
+//		cd_initial_draw(989);
 	
-	still_ok = spend_xp(spot,0,parent_num);
+	still_ok = spend_xp(spot,0,parent);
 	if (still_ok == false)
 		return false;
 	univ.party[spot].cur_health = univ.party[spot].max_health;
 	univ.party[spot].cur_sp = univ.party[spot].max_sp;
-	if (parent_num != 0)
-		cd_initial_draw(989);
+//	if (parent != NULL)
+//		cd_initial_draw(989);
 	
-	pick_pc_graphic(spot,0,parent_num);
+	pick_pc_graphic(spot,0,parent);
 
-	if (parent_num != 0)
-		cd_initial_draw(989);
-	pick_pc_name(spot,parent_num);
+//	if (parent != NULL)
+//		cd_initial_draw(989);
+	pick_pc_name(spot,parent);
 
 	univ.party[spot].main_status = MAIN_STATUS_ALIVE;
 	
@@ -672,7 +677,7 @@ void curse_pc(short which_pc,short how_much)
 		}
 	put_pc_screen();
 	if (how_much < 0)
-		give_help(59,0,0);
+		give_help(59,0);
 }
 
 void dumbfound_pc(short which_pc,short how_much)
@@ -701,7 +706,7 @@ void dumbfound_pc(short which_pc,short how_much)
 	one_sound(67);
 	put_pc_screen();
 	adjust_spell_menus();
-	give_help(28,0,0);
+	give_help(28,0);
 }
 void disease_pc(short which_pc,short how_much)
 {
@@ -732,7 +737,7 @@ void disease_pc(short which_pc,short how_much)
 		}
 	one_sound(66);
 		put_pc_screen();
-	give_help(29,0,0);
+	give_help(29,0);
 }
 
 void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
@@ -774,8 +779,8 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 		}
 	put_pc_screen();
 	if (what_type == 11)
-		give_help(30,0,0);
-		else give_help(32,0,0);
+		give_help(30,0);
+		else give_help(32,0);
 
 }
 
@@ -794,7 +799,7 @@ void slow_pc(short which_pc,short how_much)////
 		}
 	put_pc_screen();
 	if (how_much < 0)
-		give_help(35,0,0);
+		give_help(35,0);
 }
 
 void web_pc(short which_pc,short how_much)
@@ -808,7 +813,7 @@ void web_pc(short which_pc,short how_much)
 		one_sound(17);
 		}
 		put_pc_screen();
-	give_help(31,0,0);
+	give_help(31,0);
 }
 
 void acid_pc(short which_pc,short how_much)
@@ -886,13 +891,13 @@ void award_xp(short pc_num,short amt)
 		return;
 		}
 	if (amt > 200) { // debug
-		SysBeep(50); SysBeep(50);
+		// TODO: Play an error sound here
 		ASB("Oops! Too much xp!");
 		ASB("Report this!");
 		return;
 		}
 	if (amt < 0) { // debug
-		SysBeep(50); SysBeep(50);
+		// TODO: Play an error sound here
 		ASB("Oops! Negative xp!");
 		ASB("Report this!");
 		return;
@@ -961,8 +966,8 @@ void drain_pc(short which_pc,short how_much)
 		}
 }
 
-
-
+// TODO: This dialog needs some kind of context system really badly to avoid the rampant globals
+// MARK: Start spend XP dialog
 void do_xp_keep(short pc_num,short mode)
 {
 					for (i = 0; i < 20; i++)
@@ -977,28 +982,37 @@ void do_xp_keep(short pc_num,short mode)
 
 }
 
-void draw_xp_skills()
+void draw_xp_skills(cDialog& me)
 {
 	short i;
+	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for (i = 0; i < 19; i++) {
+		cControl& cur = me[skill_ids[i]];
 		if ((store_skp >= skill_cost[i]) && (store_g >= skill_g_cost[i]))
-			cd_text_frame(1010,54 + i,11);
-			else cd_text_frame(1010,54 + i,1);
-		cd_set_item_num(1010,54 + i,store_skills[i]);
+			cur.setColour(sf::Color::Red);
+		else cur.setColour(me.getDefTextClr());
+		cur.setTextToNum(store_skills[i]);
 		}
 
+	cControl& sp = me["sp"];
+	cControl& hp = me["hp"];
 		if ((store_skp >= 1) && (store_g >= 10))
-			cd_text_frame(1010,52,11);
-			else cd_text_frame(1010,52,1);
-	cd_set_item_num(1010,52,store_h);
+			hp.setColour(sf::Color::Red);
+		else hp.setColour(me.getDefTextClr());
+	hp.setTextToNum(store_h);
 		if ((store_skp >= 1) && (store_g >= 15))
-			cd_text_frame(1010,53,11);
-			else cd_text_frame(1010,53,1);
-	cd_set_item_num(1010,53,store_sp);
+			sp.setColour(sf::Color::Red);
+		else sp.setColour(me.getDefTextClr());
+	sp.setTextToNum(store_sp);
+}
+
+void update_gold_skills(cDialog& me) {
+	me["gold"].setTextToNum(((store_train_mode == 0) ? 0 : store_g));
+	me["skp"].setTextToNum(store_skp);
 }
 
 
-void do_xp_draw()
+void do_xp_draw(cDialog& me)
 
 {
 
@@ -1014,7 +1028,7 @@ void do_xp_draw()
 		}
 		else sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 
-	cd_set_item_text (1010, 51,get_text);
+	me["recipient"].setText(get_text);
 
 	for (i = 0; i < 20; i++)
 		store_skills[i] = univ.party[pc_num].skills[i];
@@ -1023,13 +1037,13 @@ void do_xp_draw()
 	store_g = (mode == 0) ? 20000 : univ.party.gold;
 	store_skp = univ.party[pc_num].skill_pts;
 
-	draw_xp_skills();
+	draw_xp_skills(me);
 
 
-	update_gold_skills();
+	update_gold_skills(me);
 }
 
-void spend_xp_event_filter (short item_hit)
+bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short mode,pc_num;
 	bool talk_done = false;
@@ -1037,26 +1051,57 @@ void spend_xp_event_filter (short item_hit)
 	mode = store_train_mode;
 	pc_num = store_train_pc;
 
-		switch (item_hit) {
-			case 73:
+	if(item_hit == "cancel") {
 				if ((mode == 0) && (univ.party[pc_num].main_status < MAIN_STATUS_ABSENT))
 					univ.party[pc_num].main_status = MAIN_STATUS_ABSENT;
-				dialog_answer = 0;
+				me.setResult(false);
 				talk_done = true;
-				break;
-	
-			case 82:
+	} else if(item_hit == "help") {
 				univ.party.help_received[10] = 0;
-				give_help(210,11,1010);
-				break;
+				give_help(210,11,me);
+	} else if(item_hit == "keep") {
+		do_xp_keep(pc_num,mode);
+		me.setResult(true);
+		talk_done = true;
+	} else if(item_hit == "left") {
+		// TODO: Try not forcing a commit when using the arrows?
+		if (mode != 0) {
+			do_xp_keep(pc_num,mode);
+			do {
+				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
+			} while (univ.party[pc_num].main_status != 1);
+			store_train_pc = pc_num;
+			do_xp_draw(me);
+		} // else TODO: Play an error sound here
+	} else if(item_hit == "right") {
+		// TODO: If they don't work in mode 0, why are they visible?
+		if (mode != 0) {
+			do_xp_keep(pc_num,mode);
+			do {
+				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
+			} while (univ.party[pc_num].main_status != 1);
+			store_train_pc = pc_num;
+			do_xp_draw(me);
+		} // else TODO: Play an error sound here
+	}
+	store_train_pc = pc_num;
+	if (talk_done == true) {
+		me.toast();
+	}
+}
 
-			case 3: case 4:
-					if (((store_h >= 250) && (item_hit == 4)) ||
-						((store_h == univ.party[pc_num].max_health) && (item_hit == 3) && (mode == 1)) ||
-						((store_h == 6) && (item_hit == 3) && (mode == 0)))
-							SysBeep(2);
-						else {
-							if (item_hit == 3) {
+bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+	short mode = store_train_mode, pc_num = store_train_pc;
+	if(item_hit.substr(0,2) == "hp") {
+		if(mod_contains(mods, mod_alt)) {
+			cStrDlog aboutHP(get_str("help",63),"","About Health",24,PIC_DLOG,&me);
+			aboutHP.setSound(57);
+			aboutHP.show();
+		} else if (((store_h >= 250) && (item_hit[3] == 'p')) ||
+			((store_h == univ.party[pc_num].max_health) && (item_hit[3] == 'm') && (mode == 1)) ||
+			((store_h == 6) && (item_hit[3] == 'm') && (mode == 0)))
+			; // TODO: Play an error sound here
+		else if(item_hit == "hp-m") {
 								store_g += 10;
 								store_h -= 2;
 								store_skp += 1;
@@ -1064,9 +1109,8 @@ void spend_xp_event_filter (short item_hit)
 								else {
 									if ((store_g < 10) || (store_skp < 1)) {
 										if (store_g < 10)
-											give_help(24,0,1010);
-											else give_help(25,0,1010);
-										SysBeep(2);
+											give_help(24,0,me);
+											else give_help(25,0,me);
 										}
 										else {
 											store_g -= 10;
@@ -1075,20 +1119,20 @@ void spend_xp_event_filter (short item_hit)
 											}
 								}
 
-							update_gold_skills();
-							cd_set_item_num(1010,52,store_h);
-                     	draw_xp_skills();
+							update_gold_skills(me);
+							me["hp"].setTextToNum(store_h);
+                     	draw_xp_skills(me);
 
-						}
-				break;
-
-			case 5: case 6:
-					if (((store_sp >= 150) && (item_hit == 6)) ||
-						((store_sp == univ.party[pc_num].max_sp) && (item_hit == 5) && (mode == 1)) ||
-						((store_sp == 0) && (item_hit == 5) && (mode == 0)))
-							SysBeep(2);
-						else {
-							if (item_hit == 5) {
+	} else if(item_hit.substr(0,2) == "sp") {
+		if(mod_contains(mods, mod_alt)) {
+			cStrDlog aboutSP(get_str("help",64),"","About Spell Points",24,PIC_DLOG,&me);
+			aboutSP.setSound(57);
+			aboutSP.show();
+		} else if (((store_sp >= 150) && (item_hit[3] == 'p')) ||
+			((store_sp == univ.party[pc_num].max_sp) && (item_hit[3] == 'm') && (mode == 1)) ||
+			((store_sp == 0) && (item_hit[3] == 'm') && (mode == 0)))
+			; // TODO: Play an error sound here
+		else if(item_hit == "sp-m") {
 								store_g += 15;
 								store_sp -= 1;
 								store_skp += 1;
@@ -1096,9 +1140,8 @@ void spend_xp_event_filter (short item_hit)
 								else {
 									if ((store_g < 15) || (store_skp < 1)) {
 										if (store_g < 15)
-											give_help(24,0,1010);
-											else give_help(25,0,1010);
-										SysBeep(2);
+											give_help(24,0,me);
+											else give_help(25,0,me);
 										}
 										else {
 											store_sp += 1;
@@ -1107,75 +1150,29 @@ void spend_xp_event_filter (short item_hit)
 											}
 								}
 
-							update_gold_skills();
-							cd_set_item_num(1010,53,store_sp);
-							draw_xp_skills();
-						}
+							update_gold_skills(me);
+							me["sp"].setTextToNum(store_sp);
+							draw_xp_skills(me);
+	} else {
+		for(int i = 0; i < 19; i++) {
+			int n = strlen(skill_ids[i]);
+			if(item_hit.length() < n + 2) continue;
+			if(item_hit.substr(0, item_hit.length() - 2) == skill_ids[i]) {
+				which_skill = i;
 				break;
-
-			case 48:
-					do_xp_keep(pc_num,mode);
-					dialog_answer = 1;
-					talk_done = true;
-				break;
-
-			case 49:
-				if (mode == 0) {
-					SysBeep(2);
-					break;
-					}
+			}
+		}
+		if(mod_contains(mods, mod_alt)) display_skills(which_skill,&me);
+		else {
+			char dir = item_hit[item_hit.length() - 1];
+			
+			if (((store_skills[which_skill] >= skill_max[which_skill]) && (dir == 'p')) ||
+				((store_skills[which_skill] == univ.party[pc_num].skills[which_skill]) && (dir == 'm') && (mode == 1)) ||
+				((store_skills[which_skill] == 0) && (dir == 'm') && (mode == 0) && (which_skill > 2)) ||
+				((store_skills[which_skill] == 1) && (dir == 'm') && (mode == 0) && (which_skill <= 2)))
+					; // TODO: Play an error sound here
 					else {
-						do_xp_keep(pc_num,mode);
-						do {
-							pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-						} while (univ.party[pc_num].main_status != 1);
-						store_train_pc = pc_num;
-						do_xp_draw();
-						}
-				break;
-
-			case 50:
-				if (mode == 0) {
-					SysBeep(2);
-					break;
-					}
-					else {
-						do_xp_keep(pc_num,mode);
-						do {
-							pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-						} while (univ.party[pc_num].main_status != 1);
-						store_train_pc = pc_num;
-						do_xp_draw();
-						}
-				break;
-
-			case 100:
-				break;
-
-			default:
-				if (item_hit >= 100) {
-					item_hit -= 100;
-					if ((item_hit == 3) || (item_hit == 4)) {
-						display_strings(10,63,0,0,"About Health",57,24,PICT_DLG,1010);
-					}
-					else if ((item_hit == 5) || (item_hit == 6)){
-						display_strings(10,64,0,0,"About Spell Points",57,24,PICT_DLG,1010);
-					}
-					else {
-						which_skill = (item_hit - 7) / 2;
-						display_skills(which_skill,1010);
-						}
-				}
-				else {
-				which_skill = (item_hit - 7) / 2;
-				
-				if (((store_skills[which_skill] >= skill_max[which_skill]) && ((item_hit - 7) % 2 == 1)) ||
-					((store_skills[which_skill] == univ.party[pc_num].skills[which_skill]) && ((item_hit - 7) % 2 == 0) && (mode == 1)) ||
-					((store_skills[which_skill] == 0) && ((item_hit - 7) % 2 == 0) && (mode == 0) && (which_skill > 2)) ||
-					((store_skills[which_skill] == 1) && ((item_hit - 7) % 2 == 0) && (mode == 0) && (which_skill <= 2)))
-						SysBeep(2);
-					else {
-						if ((item_hit - 7) % 2 == 0) {
+						if(dir == 'm') {
 							store_g += skill_g_cost[which_skill];
 							store_skills[which_skill] -= 1;
 							store_skp += skill_cost[which_skill];
@@ -1183,9 +1180,8 @@ void spend_xp_event_filter (short item_hit)
 							else {
 								if ((store_g < skill_g_cost[which_skill]) || (store_skp < skill_cost[which_skill])) {
 									if (store_g < skill_g_cost[which_skill])
-										give_help(24,0,1010);
-										else give_help(25,0,1010);
-									SysBeep(2);
+										give_help(24,0,me);
+										else give_help(25,0,me);
 									}
 									else {
 										store_skills[which_skill] += 1;
@@ -1194,61 +1190,49 @@ void spend_xp_event_filter (short item_hit)
 										}
 							}
 
-							update_gold_skills();
-							cd_set_item_num(1010,54 + which_skill,store_skills[which_skill]);
-							draw_xp_skills();
+							update_gold_skills(me);
+						me[skill_ids[which_skill]].setTextToNum(store_skills[which_skill]);
+							draw_xp_skills(me);
 						}
-				}	
-				break;
+				}
 			}
-			
-	store_train_pc = pc_num;
-	if (talk_done == true) {
-		toast_dialog();
-		}
 }
-void update_gold_skills()
-{
-	cd_set_item_num(1010,47,((store_train_mode == 0) ? 0 : (short) store_g));
-	cd_set_item_num(1010,46,(short) store_skp);
-}
-bool spend_xp(short pc_num, short mode, short parent)
+
+bool spend_xp(short pc_num, short mode, cDialog* parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
-	Str255 get_text,text2;
-	short item_hit;
-
 	store_train_pc = pc_num;
 	store_train_mode = mode;
 
 	make_cursor_sword();
 
-	cd_create_dialog_parent_num(1010,parent);
-	sprintf((char *) get_text,"Health (%d/%d)",1,10);
-	cd_add_label(1010,52,(char *) get_text,1075);
-	sprintf((char *) get_text,"Spell Pts. (%d/%d)",1,15);
-	//cd_add_label(1010,5,get_text,1040);
-	cd_add_label(1010,53,(char *) get_text,1075);
+	cDialog xpDlog("spend-xp.xml",parent);
+	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
+	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
+	std::string minus = "-m", plus = "-p";
 	for (i = 54; i < 73; i++) {
-		get_str(text2,9,1 + 2 * (i - 54));
-		sprintf((char *) get_text,"%s (%d/%d)",text2,skill_cost[i - 54],skill_g_cost[i - 54]);
-		cd_add_label(1010,i,(char *) get_text,(i < 63) ? 1075 : 1069);
+		std::ostringstream sout;
+		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
+		sout << skill_cost[i - 54] << '/' << skill_g_cost[i - 54] << ')';
+		xpDlog.addLabelFor(skill_ids[i - 54],sout.str(),LABEL_LEFT,(i < 63) ? 75 : 69,true);
+		xpDlog[skill_ids[i - 54] + minus].attachClickHandler(spend_xp_event_filter);
+		xpDlog[skill_ids[i - 54] + plus].attachClickHandler(spend_xp_event_filter);
 		}
-	do_xp_draw();
+	do_xp_draw(xpDlog);
 	
-	dialog_answer = 0;
+	xpDlog.attachClickHandlers(spend_xp_navigate_filter,{"keep","cancel","left","right","help"});
+	xpDlog.attachClickHandlers(spend_xp_event_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
 	if (univ.party.help_received[10] == 0) {
-		cd_initial_draw(1010);
-		give_help(10,11,1010);
+		// TODO: Is an initial draw even needed?
+//		cd_initial_draw(1010);
+		give_help(10,11,xpDlog);
 	}
 	
-	item_hit = cd_run_dialog();
+	xpDlog.run();
 
-	cd_kill_dialog(1010);
-
-	return dialog_answer;
+	return xpDlog.getResult<bool>();
 }
 
 
@@ -1394,7 +1378,7 @@ void give_party_spell(short which) ////
 	char str[60];
 	
 	if ((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
-		give_error("The scenario has tried to give you a non-existant spell.","",0);
+		giveError("The scenario has tried to give you a non-existant spell.");
 		 return;}
 
 	if (which < 100)
@@ -1403,7 +1387,7 @@ void give_party_spell(short which) ////
 				univ.party[i].mage_spells[which] = true;
 				if (univ.party[i].main_status == 1)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
-				give_help(41,0,0);
+				give_help(41,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
 	if (which >= 100)
@@ -1412,7 +1396,7 @@ void give_party_spell(short which) ////
 				univ.party[i].priest_spells[which - 100] = true;
 				if (univ.party[i].main_status == 1)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
-				give_help(41,0,0);
+				give_help(41,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
 				}
 }
@@ -2287,159 +2271,166 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 	return true;
 }
 
+// MARK: Begin spellcasting dialog
 
-
-void draw_caster_buttons()
+void draw_caster_buttons(cDialog& me)
 {
 	short i;
 	
-	if (can_choose_caster == false) {
-		for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
+		std::string id = "caster" + boost::lexical_cast<std::string>(i + 1);
+		if(!can_choose_caster) {
 			if (i == pc_casting) {
-				cd_activate_item(1098,4 + i,1);
+				me[id].show();
 				}
 				else {
-					cd_activate_item(1098,4 + i,0);
+					me[id].hide();
 					}
 			}
-		}
 		else {
-			for (i = 0; i < 6; i++) {
-				if (pc_can_cast_spell(i,store_situation,store_situation) == true) {
-					cd_activate_item(1098,4 + i,1);
+			if(pc_can_cast_spell(i,store_situation,store_situation)) {
+				me[id].show();
 					}
 					else {
-						cd_activate_item(1098,4 + i,0);
+						me[id].hide();
 						}
 				}
 			}
-
-
 }
 
-void draw_spell_info()
+void draw_spell_info(cDialog& me)
 {
 
 
 	if (((store_situation == 0) && (store_mage == 70)) ||
 		((store_situation == 1) && (store_priest == 70))) {	 // No spell selected
 			for (i = 0; i < 6; i++) {
-				cd_activate_item(1098,10 + i,0);
+				std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+				me[id].hide();
 				}
 				
 			}
 			else { // Spell selected
 
 				for (i = 0; i < 6; i++) {
+					std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+					// TODO: Make this thing an enum
 					switch (((store_situation == 0) ?
 						mage_need_select[store_mage] : priest_need_select[store_priest])) {
 					case 0:
-						cd_activate_item(1098,10 + i,0);
+						me[id].hide();
 						break;
 					case 1:
 						if (univ.party[i].main_status != 1) {
-							cd_activate_item(1098,10 + i,0);
+							me[id].hide();
 							}
 							else {
-								cd_activate_item(1098,10 + i,1);
+								me[id].show();
 								}
 						break;
 					case 2:
 						if (univ.party[i].main_status > 0) {
-							cd_activate_item(1098,10 + i,1);
+							me[id].show();
 							}
 							else {
-								cd_activate_item(1098,10 + i,0);
+								me[id].hide();
 								}
 						break;
 								 
 					}
-								 	
 			 		}
 				}
 }
 
-void draw_spell_pc_info()
+void draw_spell_pc_info(cDialog& me)
 {
 	short i;
 
 	for (i = 0; i < 6; i++) {
+		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if (univ.party[i].main_status != 0) {
-				cd_set_item_text(1098,18 + i,univ.party[i].name.c_str());
+			me["pc" + n].setText(univ.party[i].name);
 				//if (pc_casting == i)
 				//	cd_text_frame(1098,24 + store_spell_target,11);
 				//	else cd_text_frame(1098,24 + store_spell_target,1);
 
 				if (univ.party[i].main_status == 1) {
-					cd_set_item_num(1098,24 + i, univ.party[i].cur_health);
-					cd_set_item_num(1098,30 + i, univ.party[i].cur_sp);			
+					me["hp" + n].setTextToNum(univ.party[i].cur_health);
+					me["sp" + n].setTextToNum(univ.party[i].cur_sp);			
 					}
 			}		
 		}
 }
 
 
-void put_pc_caster_buttons()
+void put_pc_caster_buttons(cDialog& me)
 {
 
 	short i;
 
-	for (i = 0; i < 6; i++) 
-		if (cd_get_active(1098,i + 4) > 0) {
+	for(i = 0; i < 6; i++) {
+		std::string n = boost::lexical_cast<std::string>(i + 1);
+		if(me["caster" + n].isVisible()) {
 		if (i == pc_casting)
-			cd_text_frame(1098,i + 18,11);
-			else cd_text_frame(1098,i + 18,1);
+			me["pc" + n].setColour(sf::Color::Red);
+		else me["pc" + n].setColour(me.getDefTextClr());
 		}
+	}
 }
-void put_pc_target_buttons()
+void put_pc_target_buttons(cDialog& me)
 {
 
 	if (store_spell_target < 6) {
-		cd_text_frame(1098,24 + store_spell_target,11);
-		cd_text_frame(1098,30 + store_spell_target,11);
+		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
+		me["hp" + n].setColour(sf::Color::Red);
+		me["sp" + n].setColour(sf::Color::Red);
 		}
 	if ((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
-		cd_text_frame(1098,24 + store_last_target_darkened,1);
-		cd_text_frame(1098,30 + store_last_target_darkened,1);
+		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
+		me["hp" + n].setColour(me.getDefTextClr());
+		me["sp" + n].setColour(me.getDefTextClr());
 		}
 	store_last_target_darkened = store_spell_target;
 }
 
-void put_spell_led_buttons()
+// TODO: This stuff may be better handled by using an LED group with a custom focus handler
+void put_spell_led_buttons(cDialog& me)
 {
 	short i,spell_for_this_button;
 
 	for (i = 0; i < 38; i++) {
 		spell_for_this_button = (on_which_spell_page == 0) ? i : spell_index[i];
+		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		cLed& led = dynamic_cast<cLed&>(me[id]);
 	
 		if (spell_for_this_button < 90) {
 			if (((store_situation == 0) && (store_mage == spell_for_this_button)) ||
 			 ((store_situation == 1) && (store_priest == spell_for_this_button))) {
-				cd_set_led(1098,i + 37,2);
+				led.setState(led_green);
 			 }
 			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button) == true) {
-				cd_set_led(1098,i + 37,1);
+				led.setState(led_red);
 				}
 				else {
-					cd_set_led(1098,i + 37,0);
+					led.setState(led_off);
 					}
 			}
 		}
-
 }
 
-void put_spell_list()
+void put_spell_list(cDialog& me)
 {
 
 	short i;
-	Str255 add_text;
+	char add_text[256];
 
 	if (on_which_spell_page == 0) {
-		csit(1098,80,"Level 1:");
-		csit(1098,81,"Level 2:");
-		csit(1098,82,"Level 3:");
-		csit(1098,83,"Level 4:");
+		me["col1"].setText("Level 1:");
+		me["col2"].setText("Level 2:");
+		me["col3"].setText("Level 3:");
+		me["col4"].setText("Level 4:");
 		for (i = 0; i < 38; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			if (store_situation == 0) {
 				if (i == 35)
 					sprintf((char *) add_text,"%s %c ?",mage_s_name[i],
@@ -2452,57 +2443,51 @@ void put_spell_list()
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
-			cd_add_label(1098,37 + i,(char *) add_text,53);
+			me[id].setText(add_text);
 			if (spell_index[i] == 90)
-				cd_activate_item(1098,37 + i,1);
+				me[id].show();
 			}
 		}
 		else {
-			csit(1098,80,"Level 5:");
-			csit(1098,81,"Level 6:");
-			csit(1098,82,"Level 7:");
-			csit(1098,83,"");
-			for (i = 0; i < 38; i++) 
+			me["col1"].setText("Level 5:");
+			me["col2"].setText("Level 6:");
+			me["col3"].setText("Level 7:");
+			me["col4"].setText("");
+			for (i = 0; i < 38; i++) {
+				std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 				if (spell_index[i] < 90) {
 					if (store_situation == 0)
 						sprintf((char *) add_text,"%s %c %d",mage_s_name[spell_index[i]],
 						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][spell_index[i]]);
 						else sprintf((char *) add_text,"%s %c %d",priest_s_name[spell_index[i]],
 						(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][spell_index[i]]);
-					cd_add_label(1098,37 + i,(char *) add_text,53);
+					me[id].setText(add_text);
 					}
-					else cd_activate_item(1098,37 + i,0);
+				else me[id].hide();
 			}
+		}
 }
 
 
-void put_pick_spell_graphics()
+void put_pick_spell_graphics(cDialog& me)
 {
 	short i;
 
 
-	put_spell_list();
-	put_pc_caster_buttons();
-	put_pc_target_buttons();
-	put_spell_led_buttons();
+	put_spell_list(me);
+	put_pc_caster_buttons(me);
+	put_pc_target_buttons(me);
+	put_spell_led_buttons(me);
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == 1)
-			draw_pc_effects(10 + i);
+			draw_pc_effects(10 + i); // TODO: This line might mean that the "kludge" from the old code is already handled here; verify?
 }
 
-void pick_spell_event_filter (short item_hit)
-{
-	char *choose_target = " Now pick a target.";
-	char *no_target = " No target needed.";
-	char *bad_target = " Can't cast on him/her.";
-	char *got_target = " Target selected.";
-	char *bad_spell = " Spell not available.";
-	bool spell_toast = false,dialog_done = false;
-	
-		switch (item_hit) {
-			case 4: case 5: case 6: case 7: case 8: case 9: // pick caster
-			if (cd_get_active(1098,item_hit) == 1) {
-				pc_casting = item_hit - 4;
+bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
+	short item_hit = id[id.length() - 1] - '1';
+	// TODO: This visibility check is probably not needed; wouldn't the dialog framework only trigger on visible elements?
+	if(me[id].isVisible()) {
+				pc_casting = item_hit;
 				if (pc_can_cast_spell(pc_casting,store_situation,
 					((store_situation == 0) ? store_mage : store_priest)) == false) {
 						if (store_situation == 0)
@@ -2510,90 +2495,95 @@ void pick_spell_event_filter (short item_hit)
 							else store_priest = 70;
 						store_spell_target = 6;
 					}
-					draw_spell_info();
-               draw_spell_pc_info();
-					put_spell_led_buttons();
-					put_pc_caster_buttons();
-					put_pc_target_buttons();
+	draw_spell_info(me);
+	draw_spell_pc_info(me);
+	put_spell_led_buttons(me);
+	put_pc_caster_buttons(me);
+	put_pc_target_buttons(me);
 					}
-				break;
-			case 10: case 11: case 12: case 13: case 14: case 15:  // pick target
-				if (cd_get_active(1098,10 + pc_casting) == false) {
-					cd_set_item_text(1098,36,no_target);				
-					}
-					else if (cd_get_active(1098,item_hit) == false) {
-					cd_set_item_text(1098,36,bad_target);				
-					}
-					else {
-				
-						cd_set_item_text(1098,36,got_target);				
-						store_spell_target = item_hit - 10;
-						draw_spell_info();		
-						put_pc_target_buttons();
-						}		
-				break;
+}
 
-			case 16: // cancel
+bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
+	static const char*const no_target = " No target needed.";
+	static const char*const bad_target = " Can't cast on him/her.";
+	static const char*const got_target = " Target selected.";
+	short item_hit = id[id.length() - 1] - '1';
+	std::string casting = id;
+	casting[casting.length() - 1] = pc_casting + '1';
+	if(!me[casting].isVisible()) {
+		me["feedback"].setText(no_target);
+	} else if(!me[id].isVisible()) {
+		me["feedback"].setText(bad_target);
+	} else {
+		me["feedback"].setText(got_target);
+		store_spell_target = item_hit;
+		draw_spell_info(me);
+		put_pc_target_buttons(me);
+	}
+}
+
+void finish_pick_spell(cDialog& me, bool spell_toast);
+
+bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+	bool spell_toast = false,dialog_done = false;
+	if(item_hit == "cancel") {
 				spell_toast = true;
 				dialog_done = true;
-				break;
-			case 1: case 17:  // cast!
+	} else if(item_hit == "cast") {
 				dialog_done = true;
-				break;
-				
-			case 75: // other spells
+	} else if(item_hit == "other") {
 				on_which_spell_page = 1 - on_which_spell_page;
-				put_spell_list();
-				put_spell_led_buttons();
-				break;
-			
-			case 79: // help
+		put_spell_list(me);
+		put_spell_led_buttons(me);
+	} else if(item_hit == "help") {
 				univ.party.help_received[7] = 0;
-				give_help(207,8,1098);
-				break;
-			
-			case 100:
-				break;
+		give_help(207,8,me);
+	}
+	if(dialog_done) finish_pick_spell(me, spell_toast);
+}
 
-			default:
-				if (item_hit >= 100) {
-					item_hit -= 100;
-					i = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
-					display_spells(store_situation,i,1098);
+bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
+	static const char*const choose_target = " Now pick a target.";
+	static const char*const bad_spell = " Spell not available.";
+	short item_hit = id[id.length() - 1] - '1';
+	if(mod_contains(mods, mod_alt)) {
+					i = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+					display_spells(store_situation,i,&me);
 					}
-				else if (cd_get_led(1098,item_hit) == 0) {
-							cd_set_item_text(1098,36,bad_spell);				
+				else if(dynamic_cast<cLed&>(me[id]).getState() == led_off) {
+					me["feedback"].setText(bad_spell);
 				}
 					else {
-
 						if (store_situation == 0)
 							store_mage = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
-							else store_priest = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];				
-							draw_spell_info();	
-							put_spell_led_buttons();
+							else store_priest = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
+						draw_spell_info(me);
+						put_spell_led_buttons(me);
 	
 							if (store_spell_target < 6) {
-								if (cd_get_active(1098,10 + store_spell_target) == false) {
+								std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
+								if(!me[targ].isVisible()) {
 									store_spell_target = 6;
-									draw_spell_info();
-									put_pc_target_buttons();
+									draw_spell_info(me);
+									put_pc_target_buttons(me);
 									}
 								}
 						// Cute trick now... if a target is needed, caster can always be picked
-						if ((store_spell_target == 6) && (cd_get_active(1098,10 + pc_casting) == 1)) {
-							cd_set_item_text(1098,36,choose_target);				
-							draw_spell_info();
+						std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
+						if ((store_spell_target == 6) && me[targ].isVisible()) {
+							me["feedback"].setText(choose_target);
+							draw_spell_info(me);
 							play_sound(45); // formerly force_play_sound
 							}
-							else if (cd_get_active(1098,10 + pc_casting) == 0) {
+							else if(!me[targ].isVisible()) {
 								store_spell_target = 6;
-								put_pc_target_buttons();
+								put_pc_target_buttons(me);
 								}
 
-						}			
-				break;
-			}
-	if (dialog_done == true) {
+						}
+}
+
+void finish_pick_spell(cDialog& me, bool spell_toast) {
 	if (spell_toast == true) {
 			store_mage = store_mage_store;
 			store_priest = store_priest_store;
@@ -2601,8 +2591,8 @@ void pick_spell_event_filter (short item_hit)
 			if (store_situation == 0)
 				store_last_cast_mage = pc_casting;
 				else store_last_cast_priest = pc_casting;
-			toast_dialog();
-			dialog_answer = 70;
+			me.toast();
+		me.setResult<short>(70);
 			return;
 		}
 
@@ -2612,22 +2602,22 @@ void pick_spell_event_filter (short item_hit)
 			store_mage = store_mage_store;
 			store_priest = store_priest_store;
 			store_spell_target = store_store_target ;
-			toast_dialog();
-			dialog_answer = 70;
+			me.toast();
+		me.setResult<short>(70);
 			return;
 			}
 	if ((store_situation == 0) && (mage_need_select[store_mage] == 0)) {
 			store_last_cast_mage = pc_casting;
 			pc_last_cast[store_situation][pc_casting] = store_mage;
-			toast_dialog();
-			dialog_answer = store_mage;
+			me.toast();
+		me.setResult<short>(store_mage);
 			return;
 		}
 	if ((store_situation == 1) && (priest_need_select[store_priest] == 0)) {
 			store_last_cast_priest = pc_casting;
 			pc_last_cast[store_situation][pc_casting] = store_priest;
-			toast_dialog();
-			dialog_answer = store_priest;
+			me.toast();
+		me.setResult<short>(store_priest);
 			return;
 		}
 	if (store_spell_target == 6) {
@@ -2635,20 +2625,17 @@ void pick_spell_event_filter (short item_hit)
 		store_mage = store_mage_store;
 		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
-		toast_dialog();
-		give_help(39,0,1098);
-		dialog_answer = 70;
+		me.toast();
+		give_help(39,0,me);
+		me.setResult<short>(70);
 			return;
 		}
-	item_hit = ((store_situation == 0) ? store_mage : store_priest);
+	me.setResult<short>((store_situation == 0) ? store_mage : store_priest);
 	if (store_situation == 0)
 		store_last_cast_mage = pc_casting;
 		else store_last_cast_priest = pc_casting;
 	pc_last_cast[store_situation][pc_casting] = ((store_situation == 0) ? store_mage : store_priest);
-	toast_dialog();
-	dialog_answer = item_hit;
-   }
-	
+	me.toast();
 }
 
 short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW spell num
@@ -2739,46 +2726,40 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 
 	make_cursor_sword();
 
-	cd_create_dialog(1098,mainPtr);
-	cd_set_pict(1098,2,14 + type,PICT_DLG);
-	for (i = 37; i < 75; i++) {
-		cd_add_label(1098,i,"",55);
-		if (i > 62)
-			cd_attach_key(1098,i,(char ) (65 + i - 63));
-			else cd_attach_key(1098,i,(char) (97 + i - 37));
-		cd_set_led(1098,i,( pc_can_cast_spell(pc_casting,type,
-		 (on_which_spell_page == 0) ? i - 37 : spell_index[i - 37]) == true) ? 1 : 0);
+	cDialog castSpell("cast-spell.xml");
+	
+	castSpell.attachClickHandlers(pick_spell_caster, {"caster1","caster2","caster3","caster4","caster5","caster6"});
+	castSpell.attachClickHandlers(pick_spell_target, {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(pick_spell_event_filter, {"cancel", "cast", "other", "help"});
+	
+	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + type,PIC_DLOG);
+	for(i = 0; i < 38; i++) {
+		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		if (i > 25)
+			castSpell[id].attachKey({false, static_cast<unsigned char>('a' + i - 26), mod_shift});
+		else castSpell[id].attachKey({false, static_cast<unsigned char>('a' + i), mod_none});
+		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
+		led.setState((pc_can_cast_spell(pc_casting,type, (on_which_spell_page == 0) ? i : spell_index[i]))
+			? led_red : led_green);
+		led.attachClickHandler(pick_spell_select_led);
 		}
-	cd_attach_key(1098,10,'!');
-	cd_attach_key(1098,11,'@');
-	cd_attach_key(1098,12,'#');
-	cd_attach_key(1098,13,'$');
-	cd_attach_key(1098,14,'%');
-	cd_attach_key(1098,15,'^');
-	for (i = 0; i < 6; i++)
-   		cd_key_label(1098,10 + i,0);
-   		
-  	cd_set_flag(1098,78,0);
-
-	put_spell_list();
-	draw_spell_info();
-   put_pc_caster_buttons();
-	draw_spell_pc_info();
-	draw_caster_buttons();
-   put_spell_led_buttons();
+	
+	put_spell_list(castSpell);
+	draw_spell_info(castSpell);
+	put_pc_caster_buttons(castSpell);
+	draw_spell_pc_info(castSpell);
+	draw_caster_buttons(castSpell);
+	put_spell_led_buttons(castSpell);
    
 	if (univ.party.help_received[7] == 0) {
-		cd_initial_draw(1098);
-		give_help(7,8,1098);
+		// TODO: Not sure if this initial draw is needed
+//		cd_initial_draw(1098);
+		give_help(7,8,castSpell);
 	}
 	
-	item_hit = cd_run_dialog();	
+	castSpell.run();
 
-	//final_process_dialog(1098);
-	cd_kill_dialog(1098);
-	
-
-	return dialog_answer;
+	return castSpell.getResult<short>();
 }
 
 
@@ -2921,21 +2902,19 @@ void do_alchemy() ////
 
 }
 
-void alch_choice_event_filter (short item_hit)
+bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	if (item_hit == 49) {
+	if(item_hit == "help") {
 		univ.party.help_received[20] = 0;
-		give_help(20,21,1047);
-		return;
+		give_help(20,21,me);
+		return true;
 		}
-	if (item_hit == 1)
-		dialog_answer = 20;
+	if(item_hit == "cancel")
+		me.setResult<short>(20);
 		else {
-		item_hit = (item_hit - 9) / 2;
-		dialog_answer = item_hit;
+			me.setResult<short>(item_hit[6] - '1');
 		}
-	toast_dialog();
-
+	me.toast();
 }
 
 short alch_choice(short pc_num)
@@ -2948,63 +2927,30 @@ short alch_choice(short pc_num)
 
 	store_alchemy_pc = pc_num;
 
-	cd_create_dialog(1047,mainPtr);
+	cDialog chooseAlchemy("pick-potion.xml");
+	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for (i = 0; i < 20; i++) {
-		cd_set_item_text(1047,10 + i * 2,alch_names[i]);
+		std::string n = boost::lexical_cast<std::string>(i + 1);
+		chooseAlchemy["label" + n].setText(alch_names[i]);
+		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
 		if ((univ.party[pc_num].skills[12] < difficulty[i]) || (univ.party.alchemy[i] == 0))
-			cd_activate_item(1047,9 + i * 2,0);
+			chooseAlchemy["potion" + n].hide();
 		}
 	sprintf((char *) get_text, "%s (skill %d)", 
 		univ.party[pc_num].name.c_str(),univ.party[pc_num].skills[12]);
-	cd_set_item_text(1047,4,get_text);
+	chooseAlchemy["mixer"].setText(get_text);
 	if (univ.party.help_received[20] == 0) {
-		cd_initial_draw(1047);
-		give_help(20,21,1047);
+		// TODO: I'm not sure if the initial draw is needed
+//		cd_initial_draw(1047);
+		give_help(20,21,chooseAlchemy);
 	}
 	
-	item_hit = cd_run_dialog();	
-
-	//final_process_dialog(1047);
-	cd_kill_dialog(1047);
-	return dialog_answer;
+	chooseAlchemy.run();
+	return chooseAlchemy.getResult<short>();
 }
 
-void pc_graphic_event_filter (short item_hit)
-{
-	switch (item_hit) {
-		case 1:
-			univ.party[store_graphic_pc_num].which_graphic = store_pc_graphic;
-			if (store_graphic_mode == 0)
-					toast_dialog();
-				else {
-					toast_dialog();
-					dialog_answer = true;
-					}
-			break;
-
-		case 4:
-			if (store_graphic_mode == 0) {
-				if (univ.party[store_graphic_pc_num].main_status < MAIN_STATUS_ABSENT)
-				   univ.party[store_graphic_pc_num].main_status = MAIN_STATUS_ABSENT;
-					toast_dialog();
-				}
-				else {
-					toast_dialog();
-					dialog_answer =  true;
-					}
-			break;
-
-		default:
-			cd_set_led(1050,store_pc_graphic + 5,0);
-			store_pc_graphic = item_hit - 5;
-			cd_set_led(1050,item_hit,1);
-			break;
-		}
-
-	dialog_answer =  false;
-}
-
-bool pick_pc_graphic(short pc_num,short mode,short parent_num)
+extern bool pc_gworld_loaded;
+bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 // mode ... 0 - create  1 - created
 {
 	short i,item_hit;
@@ -3012,50 +2958,44 @@ bool pick_pc_graphic(short pc_num,short mode,short parent_num)
 	
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
-	store_pc_graphic = univ.party[pc_num].which_graphic;
 
 	make_cursor_sword();
 
-	if (pc_gworld == NULL) {
+	if (!pc_gworld_loaded) {
 		munch_pc_graphic = true;
-		pc_gworld = load_pict(902);
+		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 		}
-	cd_create_dialog_parent_num(1050,parent_num);
-
-	for (i = 41; i < 77; i++) 
-		csp(1050,i, i - 41, PICT_PC);
-	for (i = 5; i < 41; i++) {
-		if (store_pc_graphic + 5 == i)
-			cd_set_led(1050,i,1);
-			else cd_set_led(1050,i,0);
-	}
+	cPictChoice pcPic(0,36,PIC_PC,parent);
+	// Customize it for this special case of choosing a PC graphic
+	dynamic_cast<cPict&>(pcPic->getControl("mainpic")).setPict(7);
+	pcPic->getControl("prompt").setText("Select a graphic for your PC:");
+	pcPic->getControl("help").setText("Click button to left of graphic to select.");
 	
-	item_hit = cd_run_dialog();	
-	cd_kill_dialog(1050);
+	pic_num_t choice = pcPic.show(36, univ.party[pc_num].which_graphic);
+	if(mode == 0 && choice == 36 && univ.party[pc_num].main_status < MAIN_STATUS_ABSENT)
+		univ.party[pc_num].main_status = MAIN_STATUS_ABSENT;
+	else if(choice != 36)
+		univ.party[pc_num].which_graphic = choice;
 
-	if (munch_pc_graphic == true) {
-		DisposeGWorld(pc_gworld);
-		pc_gworld = NULL;
-		}
-	return dialog_answer;
+	return choice != 36;
 }
 
-void pc_name_event_filter (short item_hit)
+bool pc_name_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
-	Str255 get_text;
+	std::string pcName = me["name"].getText();
 	
-	cd_retrieve_text_edit_str(1051,2,(char *) get_text);
-	if ((get_text[0] < 33) || (get_text[0] > 126)) {
-		csit(1051,6,"Must begin with a letter.");
+	if(!isalpha(pcName[0])) {
+		me["error"].setText("Must begin with a letter.");
 		}
 		else {
-			univ.party[store_train_pc].name = string(get_text,get_text+18); // ???: Truncate to 18 characters... but is it necessary?
-			toast_dialog();
+			// TODO: This was originally truncated to 18 characters; is that really necessary?
+			univ.party[store_train_pc].name = pcName;
+			me.toast();
 			}
 
 }
 
-bool pick_pc_name(short pc_num,short parent_num)  
+bool pick_pc_name(short pc_num,cDialog* parent)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
@@ -3066,51 +3006,45 @@ bool pick_pc_name(short pc_num,short parent_num)
 
 	make_cursor_sword();
 	
-	cd_create_dialog_parent_num(1051,parent_num);
+	cDialog pcPickName("pick-pc-name.xml", parent);
+	pcPickName["name"].setText(univ.party[store_train_pc].name);
+	pcPickName["okay"].attachClickHandler(pc_name_event_filter);
 	
-	
-	item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(1051);
+	pcPickName.run();
 	
 	return 1;
-}
-
-void pick_trapped_monst_event_filter (short item_hit)
-{
-	toast_dialog();
-	dialog_answer = item_hit;
 }
 
 m_num_t pick_trapped_monst()  
 // ignore parent in Mac version
 {
 	short item_hit,i;
-	string sp;
+	std::string sp;
 	cMonster get_monst;
 	
 	make_cursor_sword();
 	
-	cd_create_dialog_parent_num(988,0);
+	cChoiceDlog soulCrystal("soul-crystal.xml",{"cancel","pick1","pick2","pick3","pick4"});
 	
-	for (i = 0; i < 4; i++) 
+	for (i = 0; i < 4; i++) {
+		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if (univ.party.imprisoned_monst[i] == 0) {
-			cd_activate_item(988, 2 + 3 * i, 0);
+			soulCrystal->getControl("pick" + n).hide();
 			}
 			else {
 				sp = get_m_name(univ.party.imprisoned_monst[i]);
-				csit(988,3 + 3 * i, sp.c_str());
+				soulCrystal->getControl("slot" + n).setText(sp);
 				get_monst = scenario.scen_monsters[univ.party.imprisoned_monst[i]];
-				cdsin(988,4 + 3 * i,get_monst.level);
+				soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 				}
+	}
 	
 	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(988);
+	std::string result = soulCrystal.show();
 
-	if (dialog_answer == 1)
+	if(result == "cancel")
 		return 0;
-		else return (univ.party.imprisoned_monst[(dialog_answer - 2) / 3]);	
+	else return univ.party.imprisoned_monst[result[4] - '1'];
 }
 
 
@@ -3144,7 +3078,7 @@ void poison_pc(short which_pc,short how_much)
 					(char *) univ.party[which_pc].name.c_str());
 				add_string_to_buf((char *) c_line);
 				one_sound(17);
-				give_help(33,0,0);
+				give_help(33,0);
 				}
 		}
 	put_pc_screen(); 
@@ -3367,9 +3301,8 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 						boom_space(univ.town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
 						else boom_space(univ.town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
 				}
-				if (overall_mode != MODE_OUTDOORS)
-					FlushEvents(mDownMask,0);				
-				FlushEvents(keyDownMask,0);				
+			// TODO: When outdoors it flushed only key events, not mouse events. Why?
+			flushingInput = true;
 		}
 
 	univ.party.total_dam_taken += how_much;
@@ -3509,98 +3442,4 @@ short woodsman_present()
 		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0))
 			ret += 1;
 	return ret;
-}
-
-void init_spell_menus()
-{
-	short i,j;
-	
-	for (i = 0; i < 2; i++)
-		for (j = 0; j < 62; j++)
-			on_spell_menu[i][j] = -1;
-
-}
-
-
-
-void adjust_spell_menus()
-{
-	short i,j,spell_pos = 0;
-	MenuHandle spell_menu;
-	Str255 spell_name;
-	short old_on_spell_menu[2][62];
-	bool need_menu_change = false;
-	
-	if (in_startup_mode == true || current_pc == 6)
-		return;
-		
-	for (i = 0; i < 2; i++)
-		for (j = 0; j < 62; j++)
-			old_on_spell_menu[i][j] = on_spell_menu[i][j];
-			
-	spell_menu = GetMenuHandle(900);
-	
-	for (i = 0; i < 62; i++) {
-		on_spell_menu[0][i] = -1; 
-		}
-	for (i = 0; i < 62; i++) 
-		if (pc_can_cast_spell(current_pc,0,i)) {
-			on_spell_menu[0][spell_pos] = i;
-			spell_pos++;
-			}
-	for (i = 0; i < 62; i++) 
-		if (on_spell_menu[0][i] != old_on_spell_menu[0][i])
-			need_menu_change = true;
-	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			DeleteMenuItem(spell_menu,3); 
-			}
-		for (i = 0; i < 62; i++) 
-			if (on_spell_menu[0][i] >= 0) {
-				if (spell_cost[0][on_spell_menu[0][i]] > 0)
-					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[on_spell_menu[0][i]],
-						(char *) mage_s_name[on_spell_menu[0][i]],spell_cost[0][on_spell_menu[0][i]]);
-					else sprintf((char *)spell_name," L%d - %s, C ?",spell_level[on_spell_menu[0][i]],
-						(char *) mage_s_name[on_spell_menu[0][i]]);
-				spell_name[0] = strlen((char *) spell_name);
-				//strcpy((char *) (spell_name + 1),mage_s_name[on_spell_menu[0][i]]);
-				AppendMenu(spell_menu,spell_name);
-				}
-		}
-		
-	need_menu_change = false;
-	spell_pos = 0;
-		
-		spell_menu = GetMenuHandle(950);
-	
-	for (i = 0; i < 62; i++) {
-		on_spell_menu[1][i] = -1; 
-		}
-	for (i = 0; i < 62; i++) 
-		if (pc_can_cast_spell(current_pc,1,i)) {
-			on_spell_menu[1][spell_pos] = i;
-			spell_pos++;
-			}
-	for (i = 0; i < 62; i++) 
-		if (on_spell_menu[1][i] != old_on_spell_menu[1][i])
-			need_menu_change = true;
-	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			DeleteMenuItem(spell_menu,3); 
-			}
-		for (i = 0; i < 62; i++) 
-			if (on_spell_menu[1][i] >= 0) {
-				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
-				//strcpy((char *) (spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
-				if (spell_cost[1][on_spell_menu[1][i]] > 0)
-					sprintf((char *)spell_name," L%d - %s, C %d",spell_level[on_spell_menu[1][i]],
-						(char *) priest_s_name[on_spell_menu[1][i]],spell_cost[1][on_spell_menu[1][i]]);
-					else sprintf((char *)spell_name," L%d - %s, C ?",spell_level[i],
-						(char *) mage_s_name[on_spell_menu[1][i]]);
-				spell_name[0] = strlen((char *) spell_name);
-				AppendMenu(spell_menu,spell_name);
-				}
-		}
-	
-
 }

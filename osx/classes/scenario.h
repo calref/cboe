@@ -10,6 +10,10 @@
 #define SCENARIO_H
 
 #include <iosfwd>
+#include <boost/filesystem/path.hpp>
+#include "terrain.h"
+
+namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
 namespace legacy{
 	struct scenario_data_type;
@@ -90,7 +94,7 @@ public:
 	char monst_strs[100][256];
 	bool adjust_diff : 1;
 	char : 7;
-	FSSpec scen_file; // transient
+	fs::path scen_file; // transient
 	cOutdoors* outdoors;
 	cTown* towns;
 	

@@ -7,11 +7,12 @@
  */
 
 #include "oldstructs.h"
+#include "location.h"
 
 void flip_long(long *s);
 void flip_spec_node(legacy::special_node_type *spec);
 void flip_short(short *s);
-void flip_rect(Rect *s);
+void flip_rect(legacy::Rect* s);
 
 void port_t_d(legacy::big_tr_type* old);
 void port_ave_t(legacy::ave_tr_type* old);

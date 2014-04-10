@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='yes'>
+	<button name='yes' type='regular' def-key='y' top='64' left='246'>Yes</button>
+	<button name='no' type='regular' def-key='n' top='64' left='180'>No</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text top='3' left='50' width='255' height='54'>
+		You still have some items stored in the last scenario.
+		Do you want them put into your inventory?
+		You can take as many items as you can carry.
+	</text>
+</dialog>

@@ -1,3 +1,4 @@
+
 /*
  *  button.cpp
  *  BoE
@@ -6,7 +7,7 @@
  *
  */
 
-#include <Carbon/Carbon.h>
+#include "button.h"
 #include <vector>
 #include <map>
 #include <stdexcept>
@@ -16,7 +17,9 @@
 
 #include <cmath>
 
-extern GWorldPtr bg_gworld;
+#include "restypes.hpp"
+
+extern sf::Texture bg_gworld;
 
 void cButton::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
@@ -26,18 +29,19 @@ void cButton::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
 }
 
-bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
-	if(onClick != NULL) return onClick(me,id,mods);
+bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+	if(onClick) return onClick(me,id,mods);
 	return false;
 }
 
 cButton::cButton(cDialog* parent) :
-	cControl(parent,CTRL_BTN),
+	cControl(CTRL_BTN,*parent),
 	wrapLabel(false),
+	type(BTN_REG),
 	fromList("none") {}
 
 cButton::cButton(cDialog* parent,eControlType t) :
-	cControl(parent,t),
+	cControl(t,*parent),
 	fromList("none"),
 	wrapLabel("true") {/* This constructor is only called for LEDs. TODO: Should wrapLabel be true for LEDs? */}
 
@@ -46,48 +50,68 @@ bool cButton::isClickable(){
 }
 
 void cButton::draw(){
-	GrafPtr old_port;
-	Rect from_rect, to_rect;
-	GWorldPtr from_gw, to_gw;
+	RECT from_rect, to_rect;
 	
-	GetPort(&old_port);
-	SetPortWindowPort(parent->win);
+	inWindow->setActive();
 	
 	if(visible){
-		TextFont(font_nums[GENEVA]);
-		if(foundSilom())TextFace(normal);
-		else TextFace(bold);
-		if(type == BTN_TINY) TextSize(9);
-		else if(type == BTN_PUSH) TextSize(10);
-		else TextSize(12);
-		from_gw = buttons[btnGW[type]];
-		from_rect = btnRects[btnGW[type]][depressed];
+		TEXT.font = "Geneva";
+		if(foundSilom()) {
+			TEXT.style = sf::Text::Regular;
+			TEXT.font = "Silom";
+		} else TEXT.style = sf::Text::Bold;
+		if(type == BTN_TINY) TEXT.pointSize = 9;
+		else if(type == BTN_PUSH) TEXT.pointSize = 10;
+		else TEXT.pointSize = 12;
+		from_rect = btnRects[type][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_rect,(Point){0,0}); // TODO: This originally drew to dest 2 (dialog window); does it still?
-		RGBForeColor(&parent->defTextClr);
-		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
+		rect_draw_some_item(buttons[btnGW[type]],from_rect,*inWindow,to_rect,sf::BlendAlpha);
+		TEXT.colour = sf::Color::Black;
+		int textMode = 1;
+		if(type == BTN_TINY) {
+			textMode = 2;
+			to_rect.left += 18;
+		} else if(type == BTN_PUSH) {
+			to_rect.top += 34;
+		}
+		win_draw_string(*inWindow,to_rect,lbl.c_str(),textMode,8);
 		// TODO: Adjust string location as appropriate
 		// Tiny button string location should be shifted right 20 pixels (or possibly 18)
 		// Push button string should be centred below the button
 		// Others may need adjustments too, not sure
-		ForeColor(blackColor);
+		TEXT.colour = sf::Color::Black;
+		// TODO: When should we pass 1 as the second parameter?
+		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
 		if(key.spec && key.k == key_enter) drawFrame(2,0); // frame default button, to provide a visual cue that it's the default
 	}else{
-		tileImage(frame,bg_gworld,bg[parent->bg]);
+		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
 	}
-	
-	SetPort(old_port);
 }
 
 void cButton::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_WRAP) wrapLabel = val;
 	else throw xUnsupportedProp(prop);
-	if(isVisible()) draw();
 }
 
 short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_WRAP) return wrapLabel;
 	else throw xUnsupportedProp(prop);
+}
+
+void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
+	// TODO: Colour is not supported
+}
+
+sf::Color cButton::getColour() throw(xUnsupportedProp) {
+	// TODO: Colour is not supported
+}
+
+void cButton::setBtnType(eBtnType newType) {
+	type = newType;
+}
+
+eBtnType cButton::getBtnType() {
+	return type;
 }
 
 // Indices within the buttons array.
@@ -108,64 +132,59 @@ size_t cButton::btnGW[14] = {
 	5, // BTN_LED
 };
 
-GWorldPtr cButton::buttons[7] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-Rect cButton::btnRects[13][2];
+sf::Texture cButton::buttons[7];
+RECT cButton::btnRects[13][2];
 
 void cButton::init(){
 	static const char*const buttonFiles[7] = {
-		"dlogbtnsm.png",
-		"dlogbtnmed.png",
-		"dlogbtnlg.png",
-		"dlogbtntall.png",
-		"dlogbtnhelp.png",
-		"dlogbtnled.png",
-		"dlogbtnred.png"
+		"dlogbtnsm",
+		"dlogbtnmed",
+		"dlogbtnlg",
+		"dlogbtntall",
+		"dlogbtnhelp",
+		"dlogbtnled",
+		"dlgbtnred"
 	};
 	for(int i = 0; i < 7; i++)
-		buttons[i] = load_pict(buttonFiles[i]);
-	SetRect(&btnRects[BTN_SM][0],0,0,23,23);
-	SetRect(&btnRects[BTN_REG][0],0,0,63,23);
-	SetRect(&btnRects[BTN_LEFT][0],0,23,63,46);
-	SetRect(&btnRects[BTN_RIGHT][0],0,46,63,69);
-	SetRect(&btnRects[BTN_UP][0],0,69,63,92);
-	SetRect(&btnRects[BTN_DOWN][0],0,92,63,115);
-	SetRect(&btnRects[BTN_DONE][0],0,115,63,138);
-	SetRect(&btnRects[BTN_LG][0],0,0,104,23);
-	SetRect(&btnRects[BTN_HELP][0],0,0,16,13);
-	SetRect(&btnRects[BTN_TINY][0],42,0,56,10);
-	SetRect(&btnRects[BTN_TALL][0],0,0,63,40);
-	SetRect(&btnRects[BTN_TRAIT][0],0,40,63,80);
-	SetRect(&btnRects[BTN_PUSH][0],0,0,30,30);
+		buttons[i].loadFromImage(*ResMgr::get<ImageRsrc>(buttonFiles[i]));
+	btnRects[BTN_SM][0] = {0,0,23,23};
+	btnRects[BTN_REG][0] = {0,0,23,63};
+	btnRects[BTN_LEFT][0] = {23,0,46,63};
+	btnRects[BTN_RIGHT][0] = {46,0,69,63};
+	btnRects[BTN_UP][0] = {69,0,92,63};
+	btnRects[BTN_DOWN][0] = {92,0,115,63};
+	btnRects[BTN_DONE][0] = {115,0,138,63};
+	btnRects[BTN_LG][0] = {0,0,23,102};
+	btnRects[BTN_HELP][0] = {0,0,13,16};
+	btnRects[BTN_TINY][0] = {0,42,10,56};
+	btnRects[BTN_TALL][0] = {0,0,40,63};
+	btnRects[BTN_TRAIT][0] = {40,0,80,63};
+	btnRects[BTN_PUSH][0] = {0,0,30,30};
 	for(int j = 0; j < 12; j++)
 		btnRects[j][1] = btnRects[j][0];
-	OffsetRect(&btnRects[BTN_SM][1],23,0);
-	OffsetRect(&btnRects[BTN_REG][1],63,0);
-	OffsetRect(&btnRects[BTN_LEFT][1],63,0);
-	OffsetRect(&btnRects[BTN_RIGHT][1],63,0);
-	OffsetRect(&btnRects[BTN_UP][1],63,0);
-	OffsetRect(&btnRects[BTN_DOWN][1],63,0);
-	OffsetRect(&btnRects[BTN_DONE][1],63,0);
-	OffsetRect(&btnRects[BTN_LG][1],104,0);
-	OffsetRect(&btnRects[BTN_HELP][1],16,0);
-	OffsetRect(&btnRects[BTN_TINY][1],0,10);
-	OffsetRect(&btnRects[BTN_TALL][1],63,0);
-	OffsetRect(&btnRects[BTN_TRAIT][1],63,0);
-	OffsetRect(&btnRects[BTN_PUSH][1],30,0);
+	btnRects[BTN_SM][1].offset(23,0);
+	btnRects[BTN_REG][1].offset(63,0);
+	btnRects[BTN_LEFT][1].offset(63,0);
+	btnRects[BTN_RIGHT][1].offset(63,0);
+	btnRects[BTN_UP][1].offset(63,0);
+	btnRects[BTN_DOWN][1].offset(63,0);
+	btnRects[BTN_DONE][1].offset(63,0);
+	btnRects[BTN_LG][1].offset(102,0);
+	btnRects[BTN_HELP][1].offset(16,0);
+	btnRects[BTN_TINY][1].offset(0,10);
+	btnRects[BTN_TALL][1].offset(63,0);
+	btnRects[BTN_TRAIT][1].offset(63,0);
+	btnRects[BTN_PUSH][1].offset(30,0);
 }
 
-void cButton::finalize(){
-	for(int i = 0; i < 7; i++)
-		DisposeGWorld(buttons[i]);
-}
-
-Rect cLed::ledRects[3][2];
+RECT cLed::ledRects[3][2];
 
 void cLed::init(){
-	Rect baseLed = {0,0,10,14};
+	RECT baseLed = {0,0,10,14};
 	for(int i = 0; i < 3; i++)
 		for(int j = 0; j < 2; j++){
 			ledRects[i][j] = baseLed;
-			OffsetRect(&ledRects[i][j],i * 14, j * 10);
+			ledRects[i][j].offset(i * 14, j * 10);
 		}
 }
 
@@ -174,7 +193,9 @@ cLed::cLed(cDialog* parent) :
 	state(led_off),
 	textFont(SILOM),
 	textSize(10),
-	color(parent->defTextClr) {}
+	color(parent->defTextClr) {
+	setBtnType(BTN_LED);
+}
 
 void cLed::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
@@ -189,7 +210,7 @@ bool cLed::triggerFocusHandler(cDialog& me, std::string id, bool losing){
 	return true;
 }
 
-bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
+bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
 	bool result;
 	eLedState oldState = state;
 	if(onClick != NULL) result = onClick(me,id,mods);
@@ -220,36 +241,31 @@ short cLed::getFormat(eFormat prop __attribute__((unused))) throw(xUnsupportedPr
 }
 
 void cLed::draw(){
-	GrafPtr old_port;
-	Rect from_rect, to_rect;
-	GWorldPtr from_gw, to_gw;
+	RECT from_rect, to_rect;
 	
-	GetPort(&old_port);
-	SetPortWindowPort(parent->win);
+	inWindow->setActive();
 	
 	if(visible){
-		TextFont(font_nums[GENEVA]);
-		if(foundSilom())TextFace(normal);
-		else TextFace(bold);
-		TextSize(9);
-		from_gw = buttons[btnGW[BTN_LED]];
+		TEXT.font = "Geneva";
+		if(foundSilom()) TEXT.style = sf::Text::Regular;
+		else TEXT.style = sf::Text::Bold;
+		TEXT.pointSize = 9;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
-		rect_draw_some_item(from_gw,from_rect,to_rect,(Point){0,0});
-		RGBForeColor(&parent->defTextClr);
-		char_win_draw_string(parent->win,to_rect,lbl.c_str(),1,8);
-		// TODO: Adjust string location as appropriate
-		// String location should be shifted right 20 pixels (or possibly 18)
-		ForeColor(blackColor);
+		to_rect.right = to_rect.left + 14;
+		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
+		TEXT.colour = parent->defTextClr;
+		to_rect.right = frame.right;
+		to_rect.left = frame.left + 18; // Possibly could be 20
+		win_draw_string(*inWindow,to_rect,lbl.c_str(),2,8);
+		TEXT.colour = sf::Color::Black;
 	}else{
-		tileImage(frame,bg_gworld,bg[parent->bg]);
+		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
 	}
-	
-	SetPort(old_port);
 }
 
 cLedGroup::cLedGroup(cDialog* parent) :
-	cControl(parent,CTRL_GROUP),
+	cControl(CTRL_GROUP,*parent),
 	fromList("none") {}
 
 cButton::~cButton() {}
@@ -267,10 +283,11 @@ cLedGroup::~cLedGroup(){
 void cLedGroup::recalcRect(){
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
-		if(iter->second->frame.right > frame.right)
-			frame.right = iter->second->frame.right;
-		if(iter->second->frame.bottom > frame.bottom)
-			frame.bottom = iter->second->frame.bottom;
+		RECT otherFrame = iter->second->getBounds();
+		if(otherFrame.right > frame.right)
+			frame.right = otherFrame.right;
+		if(otherFrame.bottom > frame.bottom)
+			frame.bottom = otherFrame.bottom;
 		iter++;
 	}
 	frame.right += 6;
@@ -295,18 +312,33 @@ eLedState cLed::getState(){
 	return state;
 }
 
-bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, Point where){
+void cLedGroup::addChoice(cLed* ctrl, std::string key) {
+	choices[key] = ctrl;
+}
+
+bool cLedGroup::handleClick() {
+	location where = sf::Mouse::getPosition(*inWindow);
 	std::string which_clicked;
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
-		if(iter->second->visible && PtInRect(where,&iter->second->frame)){
-			if(iter->second->handleClick())
+		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
+			if(iter->second->handleClick()) {
 				which_clicked = iter->first;
+				break;
+			}
 		}
 		iter++;
 	}
 	
 	if(which_clicked == "") return false;
+	
+	clicking = which_clicked;
+	return true;
+}
+
+bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+	std::string which_clicked = clicking;
+	clicking = "";
 	
 	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods,where)){
 		eLedState a, b;
@@ -359,6 +391,14 @@ short cLedGroup::getFormat(eFormat prop __attribute__((unused))) throw(xUnsuppor
 	throw xUnsupportedProp(prop);
 }
 
+void cLedGroup::setColour(sf::Color clr) throw(xUnsupportedProp) {
+	// TODO: Colour is not supported
+}
+
+sf::Color cLedGroup::getColour() throw(xUnsupportedProp) {
+	// TODO: Colour is not supported
+}
+
 bool cLedGroup::isClickable(){
 	return true;
 }
@@ -371,6 +411,7 @@ cLed& cLedGroup::operator[](std::string id){
 
 void cLedGroup::setSelected(std::string id){
 	if(id == "") { // deselect all
+		if(curSelect == "") return;
 		eLedState was = choices[curSelect]->getState();
 		choices[curSelect]->setState(led_off);
 		if(choices[curSelect]->triggerFocusHandler(*parent,curSelect,true))

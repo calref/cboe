@@ -1,8 +1,12 @@
+
+#include <boost/filesystem/path.hpp>
+
+namespace fs = boost::filesystem; // TODO: Centralize this alias!
+
 void init_directories();
-void do_apple_event_open(FSSpec file_info);
 //void load_file();
 //void save_file(short mode);
-void change_rect_terrain(Rect r,ter_num_t terrain_type,short probability,bool hollow);
+void change_rect_terrain(RECT r,ter_num_t terrain_type,short probability,bool hollow);
 void swap_val(unsigned char *val,short a,short b);
 void change_val_4 (unsigned char *val,short a,short b,short c,short d);
 void change_val (unsigned char *val,short a,short b);
@@ -31,7 +35,7 @@ void set_terrain(location l, ter_num_t terrain_type);
 //bool load_scenario();
 short onm(char x_sector,char y_sector);
 void build_scen_headers();
-bool load_scenario_header(FSRef filename/*,short header_entry*/);
+bool load_scenario_header(fs::path filename/*,short header_entry*/);
 //void load_spec_graphics();
 //bool check_p (short pword);
 //void build_scen_file_name (Str255 file_n);
@@ -53,7 +57,7 @@ void init_town() __attribute__((deprecated));
 //void port_out(outdoor_record_type *out);
 //void flip_spec_node(cSpecial *spec);
 //void flip_short(short *s);
-//void flip_rect(Rect *s);
+//void flip_rect(RECT *s);
 
-  void alter_rect(Rect *r);
+  void alter_rect(RECT *r);
 

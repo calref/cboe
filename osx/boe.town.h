@@ -1,3 +1,6 @@
+
+#include <SFML/Graphics.hpp>
+
 void force_town_enter(short which_town,location where_start);
 void start_town_mode(short which_town, short entry_dir);
 void terrain_under_rentar();
@@ -13,7 +16,7 @@ void create_town_combat_terrain();
 void create_out_combat_terrain(short type,short num_walls,short spec_code);
 void elim_monst(ter_num_t which,short spec_a,short spec_b);
 void do_shop(short which,short min,short max,char *store_name);
-void buy_food(short cost,short per,Str255 food_name);
+void buy_food(short cost,short per,const char* food_name);
 void healing_shop();
 void do_sell(short which);
 void dump_gold(short print_mes);
@@ -23,7 +26,7 @@ void erase_specials();
 void erase_out_specials();
 short get_town_spec_id(location where);
 void clear_map();
-pascal void draw_map (DialogPtr the_dialog, short the_item);
+void draw_map (sf::RenderWindow& the_dialog, short the_item);
 bool is_door(location destination);
 void display_map();
 void check_done();

@@ -1,0 +1,38 @@
+Strength
+Measures how much brute strength the character possesses. High strength increases damage done in combat, improves odds of kicking down doors, and has other, more subtle effects.
+Dexterity
+Measure how nimble the character is. High dexterity gives a better chance of hitting in combat (esp. with missile weapons) and makes the character harder to hit. High dexterity also makes picking locks and disarming traps easier.
+Intelligence
+Measures mental strength and dexterity. High intelligence also makes your spells more effective, sometimes very much so. Intelligence below 4 makes your spells works poorly.
+Edged Weapons
+Makes you better at using daggers, swords, axes, etc.
+Bashing Weapons
+Makes you better at using clubs, maces, hammers, flails, etc.
+Pole Weapons
+Makes you better at using spears of all sorts, halberds, etc.
+Thrown Missiles
+Makes you better at using darts, javelins, and throwing axes.
+Archery
+Makes you better at using a bow and arrows.
+Defense
+This skill has three effects. It determines how well a character does at parrying, decreases the penalty in combat from bulky armor, and occasionally decreases the damage taken from enemies weapons.
+Mage Spells
+Having a certain level of this skill enables you to cast mage spells of up to that level.
+Priest Spells
+Having a certain level of this skill enables you to cast priest spells of up to that level.
+Mage Lore
+You will occasionally need to decipher strange magical readings. This skill determines how good you are at this. If your skill is high enough, you may gain a spell or a valuable piece of information.
+Alchemy
+You will eventually gain the ability to make magic potions. To make a given potion, however, your Alchemy skill much be above a certain level. The higher it is above this level, the better the chance of succeeding.
+Item Lore
+Having Item Lore skill gives you a chance of having the items from slain monsters be identified when you find them. The more of this skill that is present, the higher the chance of this happening.
+Disarm Traps
+Many chests and some corridors will have traps on them, which can be devastating. The higher this skill, the better your chance of disarming them.
+Lockpicking
+Many towns and dungeons will have locked doors. A PC with some of this skill and lock picks equipped can try to pick them. The higher this skill, the better.
+Assassination
+Sometimes, when a character attacks a much weaker monster, the blow will do a good deal of extra damage. The more of this skill you have, the better the chance of this happening, and the stronger the monsters it can happen to.
+Poison
+You will find poisons, which you can put on your weapons for a extra damage. Having a few levels in this skill will make it more likely you will put the poison on at full strength, and the less likely you will nick yourself with the poison accidentally.
+Luck
+This skill is expensive, but can be a bargain at twice the cost. Its effects are pervasive, subtle, powerful, and sometimes irreplaceable.

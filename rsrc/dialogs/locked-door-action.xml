@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='leave'>
+	<button name='leave' type='regular' top='36' left='271'>Leave</button>
+	<button name='pick' type='large' top='36' left='161'>Pick Lock</button>
+	<button name='bash' type='large' top='36' left='50'>Bash Door</button>
+	<text top='8' left='50' width='252' height='19'>
+		This door is locked.
+		What do you do?
+	</text>
+	<pict type='ter' num='112' top='8' left='8'/>
+</dialog>

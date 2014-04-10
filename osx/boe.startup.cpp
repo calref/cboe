@@ -1,5 +1,4 @@
 
-#include <Carbon/Carbon.h>
 //#include "item.h"
 
 #include "boe.global.h"
@@ -18,7 +17,9 @@
 #include "boe.party.h"
 #include "soundtool.h"
 #include "fileio.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "winutil.h"
+#include "boe.menus.h"
 
 #include <vector>
 using std::vector;
@@ -27,8 +28,8 @@ using std::vector;
 //extern pc_record_type adven[6];
 extern bool in_startup_mode,play_sounds,party_in_memory;
 extern long register_flag;
-extern WindowPtr	mainPtr;	
-extern Point ul;
+extern sf::RenderWindow mainPtr;
+extern location ul;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenarioList scen_headers;;
 extern bool unreg_party_in_scen_not_check;
@@ -38,18 +39,18 @@ extern eGameMode overall_mode;
 
 //void start_game();
 
-Rect startup_button[6];
+RECT startup_button[6];
 
-bool handle_startup_press(Point the_point)
+bool handle_startup_press(location the_point)
 {
 	std::string scen_name;
 	short i,scen;
 
-	the_point.h -= ul.h;
-	the_point.v -= ul.v;
+	the_point.x -= ul.x;
+	the_point.y -= ul.y;
 	
 	for (i = 0; i < 5; i++) 
-		if (PtInRect(the_point,&startup_button[i]) == true) {
+		if (the_point.in(startup_button[i]) == true) {
 			draw_start_button(i,5);
 			if (play_sounds == true)
 				play_sound(37);
@@ -68,13 +69,14 @@ bool handle_startup_press(Point the_point)
 				break;
 		
 			case STARTBTN_ORDER:
-				give_reg_info();
-				draw_startup(0);
+				// TODO: Figure out something to put here.
+//				give_reg_info();
+//				draw_startup(0);
 				break;
 
 			case STARTBTN_JOIN: // regular scen
 				if (party_in_memory == false) {
-					FCD(867,0);
+					cChoiceDlog("need-party.xml").show();
 					break;
 				}
 				scen = pick_prefab_scen();
@@ -93,7 +95,7 @@ bool handle_startup_press(Point the_point)
 		
 			case STARTBTN_CUSTOM: // custom
 				if (party_in_memory == false) {
-					FCD(867,0);
+					cChoiceDlog("need-party.xml").show();
 					break;
 				}
 				// if not reg, rub out
@@ -101,7 +103,7 @@ bool handle_startup_press(Point the_point)
 				scen = pick_a_scen();
 				if(scen < 0) break;
 				if (scen_headers.data(scen).prog_make_ver[0] >= 2) {
-					FCD(912,0);
+					cChoiceDlog("scen-version-mismatch.xml").show();
 					break;
 				}
 				scen_name = scen_headers.strs(scen).file;
@@ -121,7 +123,7 @@ bool handle_startup_press(Point the_point)
 void startup_load()////
 {
 	try{
-		FSSpec file_to_load = nav_get_party();
+		fs::path file_to_load = nav_get_party();
 		if(load_party(file_to_load)){
 			party_in_memory = true;
 			if(univ.party.scen_name.length() > 0)
@@ -129,13 +131,14 @@ void startup_load()////
 			else in_startup_mode = true;
 		}
 	} catch(no_file_chosen){}
+	makeFrontWindow(mainPtr);
 	if (!in_startup_mode) {
 		//end_anim();
 		end_startup();
 		post_load();
 	}
 	else {
-		menu_activate(0);
+		menu_activate();
 		draw_startup(0);
 		overall_mode = MODE_STARTUP;
 	}

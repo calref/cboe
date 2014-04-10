@@ -1,0 +1,300 @@
+Poison
+Ice Bolt
+Slow Group
+Magic Map
+Capture Soul
+Simulacrum
+Venom Arrows
+Wall of Ice
+Stealth
+Major Haste
+Firestorm
+Dispel Barrier
+Fire Barrier
+Summoning
+Shockstorm
+Spray Fields
+Major Poison
+Group Fear
+Kill
+Paralyze
+Daemon
+Antimagic Cloud
+Mindduel
+Flight
+Shockwave
+Major Blessing
+Mass Paralysis
+Protection
+Major Summoning
+Force Barrier
+Quickfire
+Death Arrows
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cure All Poison
+Curse All
+Dispel Undead
+Remove Curse
+Sticks to Snakes
+Martyr's Shield
+Cleanse
+Firewalk
+Bless Party
+Major Heal
+Raise Dead
+Flamestrike
+Mass Sanctuary
+Summon Host
+Shatter
+Dispel Fields
+Heal All
+Revive
+Hyperactivity
+Destone
+Summon Guardian
+Mass Charm
+Protective Circle
+Pestilence
+Revive All
+Ravage Spirit
+Resurrect
+Divine Thud
+Avatar
+Wall of Blades
+Word of Recall
+Major Cleansing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Weak Curing
+Weak Healing
+Weak Poison
+Weak Speed
+Medium Poison
+Medium Healing
+Strong Curing
+Medium Speed
+Graymold Salve
+Weak Power
+Potion of Clarity
+Strong Poison
+Strong Healing
+Killer Poison
+Resurrection Balm
+Medium Power
+Knowledge Brew
+Strong Strength
+Bliss
+Strong Power
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='dark' defbtn='okay'>
+	<button name='okay' type='regular' top='50' left='246'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text top='3' left='50' width='254' height='45'>
+		Some of your items are special, and can’t be carried from scenario to scenario.
+		These have been taken away.
+	</text>
+</dialog>
