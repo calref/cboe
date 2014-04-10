@@ -1262,7 +1262,6 @@
 		91364F1218F0914F0033B58E /* view-sign.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "view-sign.xml"; sourceTree = "<group>"; };
 		91364F1318F0914F0033B58E /* welcome.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = welcome.xml; sourceTree = "<group>"; };
 		91364F5F18F093E80033B58E /* dialog.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = dialog.css; path = "../../Blades Of Exile/rsrc/dialogs/dialog.css"; sourceTree = "<group>"; };
-		91364F6018F093E80033B58E /* dialog.dtd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.dtd; path = "../../Blades Of Exile/rsrc/dialogs/dialog.dtd"; sourceTree = "<group>"; };
 		91364F6118F093E80033B58E /* dialog.xsl */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsl; path = "../../Blades Of Exile/rsrc/dialogs/dialog.xsl"; sourceTree = "<group>"; };
 		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = porting.h; sourceTree = "<group>"; };
 		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = porting.cpp; sourceTree = "<group>"; };
@@ -1273,6 +1272,7 @@
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
 		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
 		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
+		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = dialogs/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		914B2AA918E7E529007B6799 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
@@ -2221,7 +2221,7 @@
 			isa = PBXGroup;
 			children = (
 				91364F5F18F093E80033B58E /* dialog.css */,
-				91364F6018F093E80033B58E /* dialog.dtd */,
+				914701A918F64A85008A6DC9 /* dialog.xsd */,
 				91364F6118F093E80033B58E /* dialog.xsl */,
 				91364EC718F091290033B58E /* strings */,
 				91364EC818F091300033B58E /* dialogs */,

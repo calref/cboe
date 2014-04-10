@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="bool">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="picttype">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="blank"/>
+      <xs:enumeration value="ter"/>
+      <xs:enumeration value="teranim"/>
+      <xs:enumeration value="monst"/>
+      <xs:enumeration value="dlog"/>
+      <xs:enumeration value="talk"/>
+      <xs:enumeration value="scen"/>
+      <xs:enumeration value="item"/>
+      <xs:enumeration value="pc"/>
+      <xs:enumeration value="field"/>
+      <xs:enumeration value="boom"/>
+      <xs:enumeration value="missile"/>
+      <xs:enumeration value="full"/>
+      <xs:enumeration value="map"/>
+      <xs:enumeration value="status"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="btntype">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="small"/>
+      <xs:enumeration value="regular"/>
+      <xs:enumeration value="large"/>
+      <xs:enumeration value="help"/>
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="up"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="tiny"/>
+      <xs:enumeration value="done"/>
+      <xs:enumeration value="tall"/>
+      <xs:enumeration value="trait"/>
+      <xs:enumeration value="push"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="key">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0"/>
+          <xs:enumeration value="1"/>
+          <xs:enumeration value="2"/>
+          <xs:enumeration value="3"/>
+          <xs:enumeration value="4"/>
+          <xs:enumeration value="5"/>
+          <xs:enumeration value="6"/>
+          <xs:enumeration value="7"/>
+          <xs:enumeration value="8"/>
+          <xs:enumeration value="9"/>
+          <xs:enumeration value="a"/>
+          <xs:enumeration value="b"/>
+          <xs:enumeration value="c"/>
+          <xs:enumeration value="d"/>
+          <xs:enumeration value="e"/>
+          <xs:enumeration value="f"/>
+          <xs:enumeration value="g"/>
+          <xs:enumeration value="h"/>
+          <xs:enumeration value="i"/>
+          <xs:enumeration value="j"/>
+          <xs:enumeration value="k"/>
+          <xs:enumeration value="l"/>
+          <xs:enumeration value="m"/>
+          <xs:enumeration value="n"/>
+          <xs:enumeration value="o"/>
+          <xs:enumeration value="p"/>
+          <xs:enumeration value="q"/>
+          <xs:enumeration value="r"/>
+          <xs:enumeration value="s"/>
+          <xs:enumeration value="t"/>
+          <xs:enumeration value="u"/>
+          <xs:enumeration value="v"/>
+          <xs:enumeration value="w"/>
+          <xs:enumeration value="x"/>
+          <xs:enumeration value="y"/>
+          <xs:enumeration value="z"/>
+          <xs:enumeration value="`"/>
+          <xs:enumeration value="-"/>
+          <xs:enumeration value="="/>
+          <xs:enumeration value="["/>
+          <xs:enumeration value="]"/>
+          <xs:enumeration value="\"/>
+          <xs:enumeration value=";"/>
+          <xs:enumeration value="'"/>
+          <xs:enumeration value=","/>
+          <xs:enumeration value="."/>
+          <xs:enumeration value="/"/>
+          <xs:enumeration value="left"/>
+          <xs:enumeration value="right"/>
+	      <xs:enumeration value="up"/>
+          <xs:enumeration value="down"/>
+          <xs:enumeration value="esc"/>
+          <xs:enumeration value="enter"/>
+          <xs:enumeration value="return"/>
+          <xs:enumeration value="tab"/>
+          <xs:enumeration value="help"/>
+          <xs:enumeration value="space"/>
+          <xs:enumeration value="none"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="mod">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="ctrl"/>
+          <xs:enumeration value="shift"/>
+          <xs:enumeration value="alt"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:attributeGroup name="rect">
+    <xs:attribute name="top" use="required" type="xs:integer"/>
+    <xs:attribute name="left" use="required" type="xs:integer"/>
+    <xs:attribute name="width" type="xs:integer"/>
+    <xs:attribute name="height" type="xs:integer"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="keys">
+    <xs:attribute name="def-key" type="key"/>
+    <xs:attribute name="key-mod" type="mod"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="font">
+    <xs:attribute name="font" default="silom">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="dungeon"/>
+          <xs:enumeration value="geneva"/>
+          <xs:enumeration value="silom"/>
+          <xs:enumeration value="maidenword"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="size" default="small">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="small"/>
+          <xs:enumeration value="large"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="color"/>
+    <xs:attribute name="colour"/>
+  </xs:attributeGroup>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="type" default="text">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="num"/>
+            <xs:enumeration value="text"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attributeGroup ref="rect"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="text">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element name="br" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType/>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attributeGroup ref="font"/>
+      <xs:attributeGroup ref="keys"/>
+      <xs:attribute name="clickable" default="false" type="bool"/>
+      <xs:attribute name="fromlist" default="none" type="xs:string"/>
+      <xs:attributeGroup ref="rect"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pict">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="type" use="required" type="picttype"/>
+      <xs:attribute name="custom" default="false" type="bool"/>
+      <xs:attribute name="size">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="small"/>
+            <xs:enumeration value="wide"/>
+            <xs:enumeration value="tall"/>
+            <xs:enumeration value="large"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attributeGroup ref="keys"/>
+      <xs:attribute name="clickable" default="false" type="bool"/>
+      <xs:attribute name="num" use="required" type="xs:integer"/>
+      <xs:attributeGroup ref="rect"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="button">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element name="key" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType/>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="type" use="required" type="btntype"/>
+      <xs:attribute name="wrap" default="false" type="bool"/>
+      <xs:attributeGroup ref="keys"/>
+      <xs:attribute name="fromlist" default="none" type="xs:string"/>
+      <xs:attributeGroup ref="rect"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="led">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="state" default="off">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="red"/>
+            <xs:enumeration value="green"/>
+            <xs:enumeration value="off"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attributeGroup ref="rect"/>
+      <xs:attributeGroup ref="font"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="led"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="fromlist" default="none" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stack">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="field"/>
+        <xs:element ref="text"/>
+        <xs:element ref="pict"/>
+        <xs:element ref="button"/>
+        <xs:element ref="led"/>
+        <xs:element ref="group"/>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:ID"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dialog">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="field"/>
+        <xs:element ref="text"/>
+        <xs:element ref="pict"/>
+        <xs:element ref="button"/>
+        <xs:element ref="led"/>
+        <xs:element ref="group"/>
+        <xs:element ref="stack"/>
+      </xs:choice>
+      <xs:attribute name="skin" default="dark">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="light"/>
+            <xs:enumeration value="dark"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="debug" default="false" type="bool"/>
+      <xs:attribute name="fore" default="black"/>
+      <xs:attribute name="defbtn" type="xs:IDREF"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
