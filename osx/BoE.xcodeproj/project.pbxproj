@@ -2487,13 +2487,16 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/../rsrc/dialogs/*.xml",
 			);
 			name = "Validate Dialog Definitions";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/data/dialogs/*.xml",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/bin/bash -v";
-			shellScript = "\ncd ../rsrc/dialogs/\nxmllint --nonet --noout --stream --load-trace --loaddtd --dtdvalid \"$SOURCE_ROOT/../rsrc/dialogs/dialog.dtd\" \"$SOURCE_ROOT/../rsrc/dialogs\"/*.xml\n";
+			shellScript = "\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/dialogs/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g'\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

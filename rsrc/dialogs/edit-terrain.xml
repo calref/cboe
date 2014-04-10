@@ -49,30 +49,30 @@
 	
 	<text size='large' top='238' left='8' height='14' width='175'>Special properties:</text>
 	<group name="prop">
-		<led name='0' top='254' left='8' state='off' width='116'>None</led>
-		<led name='1' top='269' left='8' state='off' width='116'>Change when step on</led>
-		<led name='2' top='284' left='8' state='off' width='116'>Damaging terrain</led>
-		<led name='3' top='299' left='8' state='off' width='116'>Is a bridge</led>
-		<led name='4' top='314' left='8' state='off' width='116'>Change while occupied</led>
-		<led name='5' top='329' left='8' state='off' width='116'>Dangerous terrain</led>
-		<led name='6' top='344' left='8' state='off' width='116'>Reserved</led>
-		<led name='7' top='359' left='8' state='off' width='116'>Crumbling terrain</led>
-		<led name='8' top='254' left='146' state='off' width='116'>Lockable terrain</led>
-		<led name='9' top='269' left='146' state='off' width='116'>Unlockable terrain</led>
-		<led name='10' top='284' left='146' state='off' width='116'>Reserved</led>
-		<led name='11' top='299' left='146' state='off' width='116'>Is a sign</led>
-		<led name='12' top='314' left='146' state='off' width='116'>Call special when step</led>
-		<led name='13' top='329' left='146' state='off' width='116'>Reserved</led>
-		<led name='14' top='344' left='146' state='off' width='116'>Is a container</led>
-		<led name='15' top='359' left='146' state='off' width='116'>Waterfall</led>
-		<led name='16' top='254' left='285' state='off' width='116'>Conveyor belt</led>
-		<led name='17' top='269' left='285' state='off' width='116'>Reserved</led>
-		<led name='18' top='284' left='285' state='off' width='116'>Reserved</led>
-		<led name='19' top='299' left='285' state='off' width='116'>Reserved</led>
-		<led name='20' top='314' left='285' state='off' width='116'>Blocked to monsters</led>
-		<led name='21' top='329' left='285' state='off' width='116'>Town entrance</led>
-		<led name='22' top='344' left='285' state='off' width='116'>Change when used</led>
-		<led name='23' top='359' left='285' state='off' width='116'>Call special when used</led>
+		<led name='prop0' top='254' left='8' state='off' width='116'>None</led>
+		<led name='prop1' top='269' left='8' state='off' width='116'>Change when step on</led>
+		<led name='prop2' top='284' left='8' state='off' width='116'>Damaging terrain</led>
+		<led name='prop3' top='299' left='8' state='off' width='116'>Is a bridge</led>
+		<led name='prop4' top='314' left='8' state='off' width='116'>Change while occupied</led>
+		<led name='prop5' top='329' left='8' state='off' width='116'>Dangerous terrain</led>
+		<led name='prop6' top='344' left='8' state='off' width='116'>Reserved</led>
+		<led name='prop7' top='359' left='8' state='off' width='116'>Crumbling terrain</led>
+		<led name='prop8' top='254' left='146' state='off' width='116'>Lockable terrain</led>
+		<led name='prop9' top='269' left='146' state='off' width='116'>Unlockable terrain</led>
+		<led name='prop10' top='284' left='146' state='off' width='116'>Reserved</led>
+		<led name='prop11' top='299' left='146' state='off' width='116'>Is a sign</led>
+		<led name='prop12' top='314' left='146' state='off' width='116'>Call special when step</led>
+		<led name='prop13' top='329' left='146' state='off' width='116'>Reserved</led>
+		<led name='prop14' top='344' left='146' state='off' width='116'>Is a container</led>
+		<led name='prop15' top='359' left='146' state='off' width='116'>Waterfall</led>
+		<led name='prop16' top='254' left='285' state='off' width='116'>Conveyor belt</led>
+		<led name='prop17' top='269' left='285' state='off' width='116'>Reserved</led>
+		<led name='prop18' top='284' left='285' state='off' width='116'>Reserved</led>
+		<led name='prop19' top='299' left='285' state='off' width='116'>Reserved</led>
+		<led name='prop20' top='314' left='285' state='off' width='116'>Blocked to monsters</led>
+		<led name='prop21' top='329' left='285' state='off' width='116'>Town entrance</led>
+		<led name='prop22' top='344' left='285' state='off' width='116'>Change when used</led>
+		<led name='prop23' top='359' left='285' state='off' width='116'>Call special when used</led>
 	</group>
 	<text top='385' left='9' height='14' width='91'>Extra values:</text>
 	<text name='flag1text' framed='true' top='385' left='109' height='14' width='209'>*flag1</text>

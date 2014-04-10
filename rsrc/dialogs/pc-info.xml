@@ -33,7 +33,7 @@
 	<text name='lbl7' top='183' left='24' width='97' height='16'/>
 	<text name='thrown' top='183' left='128' width='38' height='16'/>
 	<text name='lbl8' top='201' left='24' width='97' height='16'/>
-	<text nane='bow' top='201' left='128' width='38' height='16'/>
+	<text name='bow' top='201' left='128' width='38' height='16'/>
 	<text name='lbl9' top='219' left='24' width='97' height='16'/>
 	<text name='def' top='219' left='128' width='38' height='16'/>
 	<text name='lbl10' top='70' left='171' width='92' height='16'/>

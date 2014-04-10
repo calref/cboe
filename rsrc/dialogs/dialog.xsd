@@ -145,6 +145,7 @@
         <xs:restriction base="xs:token">
           <xs:enumeration value="small"/>
           <xs:enumeration value="large"/>
+          <xs:enumeration value="title"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
@@ -173,7 +174,7 @@
         </xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:ID"/>
-      <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attribute name="framed" default="false" type="bool"/>
       <xs:attributeGroup ref="font"/>
       <xs:attributeGroup ref="keys"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
@@ -186,6 +187,7 @@
       <xs:attribute name="name" type="xs:ID"/>
       <xs:attribute name="type" use="required" type="picttype"/>
       <xs:attribute name="custom" default="false" type="bool"/>
+      <xs:attribute name="framed" default="true" type="bool"/>
       <xs:attribute name="size">
         <xs:simpleType>
           <xs:restriction base="xs:token">
@@ -219,18 +221,22 @@
   </xs:element>
   <xs:element name="led">
     <xs:complexType>
-      <xs:attribute name="name" use="required" type="xs:ID"/>
-      <xs:attribute name="state" default="off">
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="red"/>
-            <xs:enumeration value="green"/>
-            <xs:enumeration value="off"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attributeGroup ref="rect"/>
-      <xs:attributeGroup ref="font"/>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="name" use="required" type="xs:ID"/>
+          <xs:attribute name="state" default="off">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="red"/>
+                <xs:enumeration value="green"/>
+                <xs:enumeration value="off"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attributeGroup ref="rect"/>
+          <xs:attributeGroup ref="font"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
   <xs:element name="group">
