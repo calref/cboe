@@ -8,10 +8,11 @@
 
 #include "oldstructs.h"
 #include "location.h"
+#include <cstdint>
 
-void flip_long(long *s);
+void flip_long(int32_t *s);
 void flip_spec_node(legacy::special_node_type *spec);
-void flip_short(short *s);
+void flip_short(int16_t *s);
 void flip_rect(legacy::Rect* s);
 
 void port_t_d(legacy::big_tr_type* old);
@@ -21,7 +22,7 @@ void port_scenario(legacy::scenario_data_type* old);
 void port_item_list(legacy::scen_item_data_type* old);
 void port_out(legacy::outdoor_record_type* out);
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr);
-void port_dummy_t_d(short size,char *buffer);
+//void port_dummy_t_d(short size,char *buffer);
 void port_town(legacy::town_record_type* dummy_town_ptr);
 void port_party(legacy::party_record_type* old);
 void port_pc(legacy::pc_record_type* old);

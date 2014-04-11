@@ -443,7 +443,7 @@ void flip_spec_node(legacy::special_node_type *spec)
 	flip_short(&(spec->jumpto));
 }
 
-void flip_short(short *s)
+void flip_short(int16_t *s)
 {
 	char store,*s1, *s2;
 	
@@ -455,7 +455,7 @@ void flip_short(short *s)
 	
 }
 
-void flip_long(long *s)
+void flip_long(int32_t *s)
 {
 	char store,*s1, *s2, *s3, *s4;
 	
@@ -486,9 +486,9 @@ void alter_rect(legacy::Rect *r)
 
 void flip_rect(legacy::Rect* s)
 {
-	flip_short((short *) &(s->top));
-	flip_short((short *) &(s->bottom));
-	flip_short((short *) &(s->left));
-	flip_short((short *) &(s->right));
+	flip_short((int16_t *) &(s->top));
+	flip_short((int16_t *) &(s->bottom));
+	flip_short((int16_t *) &(s->left));
+	flip_short((int16_t *) &(s->right));
 	if(!cur_scen_is_mac) alter_rect(s);
 }
