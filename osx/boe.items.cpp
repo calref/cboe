@@ -1112,7 +1112,8 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	redraw_screen();
 	
 	for(int i = 0; i < 3; i++) {
-		if(item_hit == basic_buttons[available_btns[i]]->label)
+		cBasicButtonType& btn = basic_buttons[available_btns[i]];
+		if(btn && item_hit == btn->label)
 			return i;
 	}
 	}
