@@ -508,9 +508,10 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				to_rect.offset(current_terrain_ul);
 				rect_draw_some_item(temp_gworld.getTexture(),missile_place_rect[i],to_rect,ul);
 				}
+		mainPtr.display();
 		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
 			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
-			FlushAndPause(1);
+			sf::sleep(time_in_ticks(1));
 		}
 		
 	// Exit gracefully, and clean up screen
@@ -680,7 +681,8 @@ void do_explosion_anim(short sound_num,short special_draw)
 				rect_draw_some_item(temp_gworld.getTexture(),explode_place_rect[i],to_rect,ul);
 				}
 		//if (((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
-			FlushAndPause(2 * (1 + PSD[SDF_GAME_SPEED]));
+		mainPtr.display();
+		sf::sleep(time_in_ticks(2 * (1 + PSD[SDF_GAME_SPEED])));
 		}
 		
 	// Exit gracefully, and clean up screen
@@ -710,9 +712,10 @@ void click_shop_rect(RECT area_rect)
 { 
 	
 	draw_shop_graphics(1,area_rect);
+	mainPtr.display();
 	if (play_sounds == true)
 		play_sound(37);
-		else FlushAndPause(5);
+	else sf::sleep(time_in_ticks(5));
 	draw_shop_graphics(0,area_rect);
 
 }
@@ -946,9 +949,10 @@ void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
 {
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
+	mainPtr.display();
 	if (play_sounds == true)
 		play_sound(37);
-		else FlushAndPause(5);
+	else sf::sleep(time_in_ticks(5));
 	place_talk_str(str_to_place,str_to_place2,0,c_rect);
 }
 

@@ -20,6 +20,7 @@
 #include "dlogutil.h"
 #include "winutil.h"
 #include "boe.menus.h"
+#include "mathutil.h"
 
 #include <vector>
 using std::vector;
@@ -41,6 +42,7 @@ extern eGameMode overall_mode;
 
 RECT startup_button[6];
 
+// TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point)
 {
 	std::string scen_name;
@@ -52,9 +54,10 @@ bool handle_startup_press(location the_point)
 	for (i = 0; i < 5; i++) 
 		if (the_point.in(startup_button[i]) == true) {
 			draw_start_button(i,5);
+			mainPtr.display(); // TODO: I suspect this won't work
 			if (play_sounds == true)
 				play_sound(37);
-			else FlushAndPause(5);
+			else sf::sleep(time_in_ticks(5));
 			draw_start_button(i,0);			
 			switch (i) {
 			case STARTBTN_LOAD:
@@ -109,12 +112,6 @@ bool handle_startup_press(location the_point)
 				scen_name = scen_headers.strs(scen).file;
 				put_party_in_scen(scen_name);
 				break;
-		
-			case 5:
-				FlushAndPause(50);
-				return true;
-				break;
-		
 			}
 		}
 	return false;

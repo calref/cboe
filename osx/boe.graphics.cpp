@@ -520,7 +520,7 @@ void main_button_click(short mode,RECT button_rect)
 	draw_buttons(1);
 	if (play_sounds == true)
 		play_sound(37);
-		else FlushAndPause(5);
+	else sf::sleep(time_in_ticks(5));
 	draw_buttons(0);
 	undo_clip(mainPtr);
 }
@@ -532,11 +532,12 @@ void arrow_button_click(RECT button_rect)
 	clip_rect(mainPtr, button_rect);
 	
 	refresh_stat_areas(1);
+	mainPtr.display();
 	if (play_sounds == true)
 		play_sound(37);
-		else FlushAndPause(5);
-	refresh_stat_areas(0);
+	else sf::sleep(time_in_ticks(5));
 	undo_clip(mainPtr);
+	refresh_stat_areas(0);
 }
 
 
@@ -1615,14 +1616,15 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		TEXT.style = sf::Text::Regular;
 		}
 		play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
+	mainPtr.display();
 		if ((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
-			FlushAndPause(12);
+			sf::sleep(time_in_ticks(12));
 
 	
 	if (fast_bang == 0 && !skip_boom_delay) {
 		del_len = PSD[SDF_GAME_SPEED] * 3 + 4;
 		if (play_sounds == false)
-			FlushAndPause(del_len);
+			sf::sleep(time_in_ticks(del_len));
 		}
 	redraw_terrain();
 	if ((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
@@ -1801,7 +1803,8 @@ void draw_targeting_line(location where_curs)
 								}
 						}
 							
-				FlushAndPause(4);
+				mainPtr.display();
+				sf::sleep(time_in_ticks(4));
 				
 				redraw_rect2.inset(-5,-5);
 				redraw_partial_terrain(redraw_rect2);
@@ -1839,20 +1842,6 @@ void redraw_partial_terrain(RECT redraw_rect)
 	
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,redraw_rect,ul);
 
-}
-
-void FlushAndPause(unsigned long ticks)
-{
-	// TODO: Not quite sure what should be done here.
-#if 0
-	RgnHandle portRegion = NewRgn();
-	GrafPtr port;
-	GetPort(&port);
-	GetPortVisibleRegion(port,portRegion);
-	QDFlushPortBuffer(port,portRegion);
-	DisposeRgn(portRegion);
-#endif
-	sf::sleep(time_in_ticks(ticks));
 }
 
 /*

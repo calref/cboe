@@ -44,7 +44,6 @@ void redraw_partial_terrain(RECT redraw_rect);
 bool is_nature(char i, char j, unsigned char ground_t);
 void put_dialog_graphic(short graphic_num,short spec_g,RECT draw_rect);
 void draw_startup_stats();
-void FlushAndPause(unsigned long ticks);
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);
 
 ter_num_t get_ground_from_ter(ter_num_t ter);

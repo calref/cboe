@@ -3047,7 +3047,8 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 						break;
 					j = get_ran(1,2,3);
 					}
-				FlushAndPause(12); // gives sound time to end
+				mainPtr.display(); // TODO: Needed?
+				sf::sleep(time_in_ticks(12)); // gives sound time to end
 				x = get_ran(4,1,4);
 				for (i = 0; i < j; i++){
 					play_sound(-61);
@@ -3131,7 +3132,8 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				x = get_ran(3,1,4);
 				play_sound(25);
 				play_sound(-61);
-				FlushAndPause(12); // gives sound time to end
+				mainPtr.display(); // TODO: Needed?
+				sf::sleep(time_in_ticks(12)); // gives sound time to end
 				summon_monster(85,caster->cur_loc,
 				 ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
