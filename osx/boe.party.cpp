@@ -526,7 +526,6 @@ void put_party_in_scen(std::string scen_name)
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
 	overall_mode = MODE_TOWN;
-	create_clip_region();
 	redraw_screen();
 	set_stat_window(0);
 	adjust_spell_menus();

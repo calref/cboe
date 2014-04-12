@@ -152,7 +152,6 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = 1;
-	create_clip_region();
 	
 	set_up_shop_array();
 	put_background();
@@ -179,7 +178,6 @@ void end_shop_mode()
 		}
 			
 	overall_mode = store_pre_shop_mode;
-	create_clip_region();
 	if (overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if (overall_mode == MODE_TOWN) {
@@ -541,7 +539,6 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
-	create_clip_region();
 	talk_end_forced = false;
 	stat_screen_mode = 1;
 	
@@ -564,7 +561,6 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 void end_talk_mode()
 {
 	overall_mode = store_pre_talk_mode;
-	create_clip_region();
 	if (overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if (overall_mode == MODE_TOWN) {

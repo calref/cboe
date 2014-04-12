@@ -194,8 +194,6 @@ void adjust_window_mode()
 				}
 
 			}
-	create_clip_region(); // TODO: Pretty sure this function can be deleted
-	undo_clip(mainPtr);
 	if (overall_mode != MODE_STARTUP) { // TODO: This is odd - fix it
 		if (in_startup_mode == true)
 			draw_startup(0);
@@ -618,47 +616,6 @@ void load_main_screen()
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
    
 //	set_gworld_fonts(geneva_font_num);
-	
-	create_clip_region();
-}
-
-void create_clip_region()
-{
-	short i;
-	RECT store_rect;
-	RECT scrollbar_rect;
-	// TODO: Arbitrary clipping regions (use OpenGL stencil buffer?)
-	// Note: I get the impression that the purpose of this clip region is so that BoE does not draw on the scrollbars
-	// Since the scrollbars will be handled by BoE now, it's likely not necessary anymore
-#if 0
-	DisposeRgn(clip_region);
-	clip_region = NewRgn();
-	OpenRgn();
-
-	RECT tempRect;
-	GetWindowPortBounds(mainPtr,&tempRect);
-	FrameRect(&tempRect);
-	for (i = 0; i < 6; i++) {
-		store_rect = win_to_rects[i];
-		OffsetRect(&store_rect,ul.h,ul.v);
-		if ((is_out()) || (is_town()) || (is_combat()) ||
-			(i == 2) || (i == 3) || (i == 5))
-				FrameRect(&store_rect);
-		}
-	if ((overall_mode == MODE_TALKING) || (overall_mode == MODE_SHOPPING) ){
-		store_rect = talk_area_rect;
-		OffsetRect(&store_rect,ul.h,ul.v);
-		FrameRect(&store_rect);
-		}
-	scrollbar_rect = sbar_rect;
-	OffsetRect(&scrollbar_rect,ul.h ,ul.v);
-	FrameRect(&scrollbar_rect);
-	scrollbar_rect = item_sbar_rect;
-	OffsetRect(&scrollbar_rect,ul.h ,ul.v);
-	FrameRect(&scrollbar_rect);
-
-	CloseRgn(clip_region);
-#endif
 }
 
 void set_gworld_fonts(short font_num)
