@@ -134,7 +134,6 @@ sf::Texture terrain_gworld[NUM_TER_SHEETS];
 // TODO: The way this is done now, they won't; fix this
 sf::Texture startup_gworld;
 sf::Texture startup_button_orig;
-sf::RenderTexture startup_button_g;
 sf::Texture anim_mess;
 
 bool has_run_anim = false,currently_loading_graphics = false;
@@ -298,7 +297,6 @@ void init_startup()
 	startup_loaded = true;
 	startup_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("startup"));
 	startup_button_orig.loadFromImage(*ResMgr::get<ImageRsrc>("startbut"));
-	startup_button_g.draw(sf::Sprite(startup_button_orig));
 	anim_mess.loadFromImage(*ResMgr::get<ImageRsrc>("startanim"));
 }
 
@@ -562,11 +560,18 @@ void end_startup()
 
 	startup_gworld.create(1,1);
 	startup_button_orig.create(1,1);
-	startup_button_g.create(1,1);
 	anim_mess.create(1,1);
 
 	startup_loaded = false;
 	load_main_screen();
+}
+
+void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
+	sf::Texture temp_gworld;
+	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(imgName));
+	RECT texrect(temp_gworld);
+	tex.create(texrect.width(), texrect.height());
+	tex.draw(sf::Sprite(temp_gworld));
 }
 
 // This loads the graphics at the top of the game.
@@ -575,15 +580,13 @@ void Set_up_win ()
 	RECT temp_rect = {0,0,0,280},map_world_rect;
 	RECT map_rect = {0,0,384,384};
 	RECT pc_rect = {0,0,216,113};
-	sf::Texture temp_gworld;
 	char fn1[] = "Geneva";
 	char fn2[] = "Dungeon Bold";
 	char fn3[] = "Palatino";
 	short i;
 	RECT r;
 	
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("terscreen"));
-	terrain_screen_gworld.draw(sf::Sprite(temp_gworld));
+	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 
 	// Create and initialize map gworld
 	
@@ -601,18 +604,13 @@ void load_main_screen()
 {
 	if (invenbtn_gworld.getSize().x > 0)
 		return;
-	sf::Texture temp_gworld;
 	
 	// TODO: Hopefully reusing a texture here won't cause issues...
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("statarea"));
-	pc_stats_gworld.draw(sf::Sprite(temp_gworld));
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("inventory"));
-	item_stats_gworld.draw(sf::Sprite(temp_gworld));
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("transcript"));
-	text_area_gworld.draw(sf::Sprite(temp_gworld));
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
-	text_bar_gworld.draw(sf::Sprite(temp_gworld));
+	loadImageToRenderTexture(pc_stats_gworld, "statarea");
+	loadImageToRenderTexture(item_stats_gworld, "inventory");
+	loadImageToRenderTexture(text_area_gworld, "transcript");
+	loadImageToRenderTexture(text_bar_gworld, "textbar");
 	orig_text_bar_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
    
@@ -777,9 +775,6 @@ void draw_buttons(short mode)
 	// Maybe try sf::BlendAdd when spec_draw is true?
 //	if (spec_draw == true)
 //		ForeColor(blackColor);
-
-	put_background();
-
 }
 
 // In general, refreshes any area that has text in it, the stat areas, the text bar
@@ -1787,7 +1782,7 @@ void draw_targeting_line(location where_curs)
 								// TODO: Not sure if black is the right colour here
 								frame_rect(mainPtr, target_rect, sf::Color::Black);
 								target_rect.inset(-5,-5);
-								target_rect = rectunion(redraw_rect2,redraw_rect2);
+								redraw_rect2 = rectunion(target_rect,redraw_rect2);
 								
 								// Now place number of shots left, if drawing center of target
 								if ((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)

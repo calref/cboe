@@ -245,6 +245,7 @@ void apply_light_mask()
 		mainPtr.setActive();
 		return;
 		}
+	// TODO: Are these regions even used outside this function? If not, they should be local variables.
 	dark_mask_region->clear();
 	dark_mask_region->addRect(big_to);
 	for (i = 0; i < 13; i++)
@@ -586,6 +587,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 
 	// initialize general data
 	if (in_startup_mode) {
+		// TODO: I think this is a relic of the "demo" on the main screen of Exile III
 		current_terrain_ul.x = 306;
 		current_terrain_ul.y = 5;
 	} else current_terrain_ul.x = current_terrain_ul.y = 5;
@@ -607,6 +609,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 	TEXT.font = "Geneva";
 	TEXT.style = sf::Text::Bold;
 	TEXT.pointSize = 10;
+	temp_gworld.create(temp_rect.width(), temp_rect.height());
 	temp_gworld.setActive();
 	clip_rect(temp_gworld, active_area_rect);
 	mainPtr.setActive();
