@@ -68,7 +68,8 @@ extern location golem_m_locs[16];
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern sf::Texture spec_scen_g,bg_gworld;
+extern sf::Texture bg_gworld;
+extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
 extern sf::RenderTexture map_gworld,small_ter_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
@@ -1352,8 +1353,6 @@ void clear_map()
 
 }
 
-// TODO: Eliminate need for this OR put it in a better place
-bool have_spec_scen_graphics = false;
 // TODO: Eliminate the flag, always do full redraw
 void draw_map (sf::RenderWindow& the_dialog, short the_item)
 //the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
@@ -1590,12 +1589,13 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
 						pic = scenario.ter_types[what_ter].picture;
 						if (pic >= 1000) {
-							if (have_spec_scen_graphics) {
+							if (spec_scen_g) {
 								//print_nums(0,99,pic);
 								pic = pic % 1000;
-								custom_from = coord_to_rect(pic % 10, pic / 10);
+								sf::Texture* src_gw;
+								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
 								custom_from.offset(-13,-13);
-								rect_draw_some_item(spec_scen_g,custom_from,map_gworld,draw_rect);								
+								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
 								}
 							}
 						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {

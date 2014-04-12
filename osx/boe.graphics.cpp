@@ -61,7 +61,7 @@ extern bool fast_bang;
 extern RECT	bg[];
 extern cScenario scenario;
 extern cUniverse univ;
-extern sf::Texture spec_scen_g;
+extern cCustomGraphics spec_scen_g;
 extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern bool show_startup_splash;
@@ -1397,9 +1397,8 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 		pic %= 400;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
-		from_gworld = &spec_scen_g;
 		pic %= 1000;
-		from_rect = get_custom_rect(pic);
+		graf_pos_ref(from_gworld, from_rect) = spec_scen_g.find_graphic(pic);
 	}
 	if(which_trim < 50) mask_rect = trim_rects[which_trim];
 	else mask_rect = walkway_rects[which_trim - 50];

@@ -455,15 +455,16 @@ void giveError(std::string str1, std::string str2, cDialog* parent){
 }
 
 void oopsError(short error, short code, short mode){ // mode is 0 for scened, 1 for game, 2 for pced
-	char error_str1[256], error_str2[256];
+	std::ostringstream error_str1, error_str2;
 	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};
 	static const char* filetname[3] = {"scenario", "game", "game"};
 	
-	sprintf(error_str1,"The program encountered an error while loading/saving/creating the %s. To prevent future problems, the program will now terminate. Trying again may solve the problem.", filetname[mode]);
+	error_str1 << "The program encountered an error while loading/saving/creating the " << filetname[mode]
+		<< ". To prevent future problems, the program will now terminate. Trying again may solve the problem.";
 	// TODO: Update this error message - giving more memory is no longer an option in OSX.
-	sprintf(error_str2,"Giving %s more memory might also help. Be sure to back your %s up often. Error number: %d.",progname[mode],filetname[mode],error);
+	error_str2 << "Giving " << progname[mode] << " more memory might also help. Be sure to back your " << filetname[mode] << " up often. Error number: " << error << ".";
 	if(code != 0)
-		sprintf(error_str2,"%s Result code: %i.",error_str2,code);
-	giveError(error_str1,error_str2,0);
+		error_str2 << " Result code: " << code << ".";
+	giveError(error_str1.str(),error_str2.str(),NULL);
 	exit(1);
 }

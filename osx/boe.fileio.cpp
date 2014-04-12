@@ -96,7 +96,7 @@ fs::path progDir;
 //	ave_tr_type ave_t;
 
 //template_town_type town_template;
-sf::Texture* spec_scen_g = NULL;
+cCustomGraphics spec_scen_g;
 
 std::ofstream flog("bladeslog.txt");
 void init_directories()

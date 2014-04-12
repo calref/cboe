@@ -72,7 +72,8 @@ extern location dest_locs[40] ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 
-extern sf::Texture spec_scen_g,tiny_obj_gworld,invenbtn_gworld,status_gworld;
+extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
+extern cCustomGraphics spec_scen_g;
 extern sf::Texture pc_gworld;
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern short terrain_there[9][9];
@@ -484,8 +485,9 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		to_rect.offset(20,1);
 		from_rect.inset(2,2);
 		if (extra_val >= 150) {
-			from_rect = get_custom_rect(extra_val - 150);
-			rect_draw_some_item(spec_scen_g, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+			sf::Texture* src_gw;
+			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 150);
+			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 			}
 		else rect_draw_some_item(tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		 return;
@@ -1442,6 +1444,7 @@ RECT	destrec = {0,0,36,28};
 //	SetPort(cur_port);
 //}
 
+// TODO: This seems to duplicate logic found in graphtool to get a rect from a picture index
 RECT coord_to_rect(short i,short j)
 {
 	RECT to_return;

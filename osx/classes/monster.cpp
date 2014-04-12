@@ -27,6 +27,7 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	armor = old.armor;
 	skill = old.skill;
 	for(i = 0; i < 3; i++) a[i] = old.a[i];
+	// TODO: These two bits of data belong in a[]
 	a1_type = old.a1_type;
 	a23_type = old.a23_type;
 	m_type = (eMonsterType) old.m_type;

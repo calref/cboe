@@ -717,7 +717,7 @@ void click_shop_rect(RECT area_rect)
 
 }
 
-std::pair<sf::Texture*,RECT> calc_item_rect(int num,RECT& to_rect) {
+graf_pos calc_item_rect(int num,RECT& to_rect) {
 	RECT from_rect = {0,0,18,18};
 	sf::Texture *from_gw = &tiny_obj_gworld;
 	if (num < 45) {
@@ -843,14 +843,14 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 			case 0: case 1: case 2: case 3: case 4: 
 				base_item = get_stored_item(what_chosen);
 				base_item.ident = true;
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);
 				break;
 			case 5:
 				base_item = store_alchemy(what_chosen - 500);
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(53,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(53,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				strcpy(cur_info_str,"");
@@ -863,14 +863,14 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 				break;
 			case 7:
 				what_chosen -= 700;
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(99,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(99,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,heal_types[what_chosen]);
 				strcpy(cur_info_str,"");
 				break;
 			case 8:
 				base_item = store_mage_spells(what_chosen - 800 - 30);
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 
 				strcpy(cur_name,base_item.full_name.c_str());
@@ -878,7 +878,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 				break;
 			case 9:
 				base_item = store_priest_spells(what_chosen - 900 - 30);
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				strcpy(cur_info_str,"");
@@ -888,7 +888,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 				what_magic_shop_item = what_chosen % 1000;
 				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 				base_item.ident = true;
-				std::pair<sf::Texture*&,RECT&>(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 				strcpy(cur_name,base_item.full_name.c_str());
 				get_item_interesting_string(base_item,cur_info_str);

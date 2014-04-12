@@ -28,9 +28,10 @@
 
 extern bool cur_scen_is_mac, mac_is_intel;
 extern cScenario scenario;
-extern sf::Texture spec_scen_g,items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
+extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
 extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
 extern sf::Texture status_gworld, vehicle_gworld, small_ter_gworld;
+extern cCustomGraphics spec_scen_g;
 extern cUniverse univ;
 //extern unsigned char borders[4][50];
 //extern cOutdoors current_terrain;
@@ -154,6 +155,7 @@ bool load_scenario(fs::path file_to_load){
 	port_item_list(item_data);
 	scenario = *temp_scenario;
 	scenario.append(*item_data);
+	// TODO: Consider skipping the fread and assignment when len is 0
 	for (i = 0; i < 270; i++) {
 		len = (long) (scenario.scen_str_len[i]);
 		n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
@@ -701,48 +703,47 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 	return true;
 }
 
+#ifdef __APPLE__
+bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
+#endif
+
 void load_spec_graphics()
 {
+	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
 	short i;
 	fs::path path(scenario.scen_file);
 	printf("Loading scenario graphics... (%s)\n",path.c_str());
-	path.replace_extension("exr");
+	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
+	std::string filename = path.stem().string();
+	path = path.parent_path();
+	if(spec_scen_g) spec_scen_g.clear();
 	// TODO: Load new-style sheets
-	//if(err != noErr)
 	{
-		//	for (i = 0; i < 63; i++) 
-		//		file_name[i] = whatever[i];
-		path.replace_extension("meg");
-		// TODO: There's no way around it; I'll have to read resource files for this section.
-#if 0
-		err = FSPathMakeRef(path, &file, NULL);
-		err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm /*fsRdWrPerm*/, &custRef);
-		//file_num = HOpen(file_to_load.vRefNum,file_to_load.parID,file_name,1);
-		//if (file_num < 0){
-		if(err != noErr){
-			//whatever = (char *) file_to_load.name;
-			printf("First attempt failed... (%s)\n",(char*)path);
-			for (i = 0; i < 250; i++) {
-				if (path[i] == '.') {
-					path[i + 1] = 'b';
-					path[i + 2] = 'm';
-					path[i + 3] = 'p';
-					//path[i + 4] = 0;
-					break;
-				}
-			}
-			err = FSPathMakeRef(path, &file, NULL);
-			FSSpec spec;
-			FSGetCatalogInfo(&file, kFSCatInfoNone, NULL, NULL, &spec, NULL);
-			err = FSpOpenDF(&spec, fsRdPerm, &custRef);
-			//spec_scen_g = load_bmp_from_file(file_name);
-			spec_scen_g = importPictureFileToGWorld(&spec);
-			if(spec_scen_g == NULL)printf("Scenario graphics not found (%s).\n",file_name);
-		}else{
-			spec_scen_g = load_pict(1);
-			CloseResFile(custRef);
-		}
+		static sf::Image graphics_store;
+		bool foundGraphics = false;
+#ifdef __APPLE__
+		fs::path gpath = path/(filename + ".meg");
+		if(fs::exists(gpath))
+			foundGraphics = tryLoadPictFromResourceFile(gpath, graphics_store);
 #endif
+		if(!foundGraphics) {
+			fs::path gpath = path/(filename + ".bmp");
+			if(fs::exists(gpath)) {
+				if(graphics_store.loadFromFile(gpath.string()))
+					foundGraphics = true;
+				else giveError("An old-style .bmp graphics file was found, but there was an error reading from the file.",noGraphics);
+			}
+		}
+		if(foundGraphics) {
+			// If we're here, we found old-style graphics.
+			// This means they need an alpha channel
+			graphics_store.createMaskFromColor(sf::Color::White);
+			spec_scen_g.is_old = true;
+			spec_scen_g.sheets = new sf::Texture[1];
+			spec_scen_g.sheets[0].loadFromImage(graphics_store);
+		} else {
+			// Check for new-style graphics
+		}
 	}//else{}
 	
 	// Now load regular graphics

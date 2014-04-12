@@ -296,21 +296,6 @@
 		914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
-		914B2AB018E7E52F007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
-		914B2AB118E7E530007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
-		914B2AB218E7E531007B6799 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA918E7E529007B6799 /* sfml-audio.framework */; };
-		914B2AB318E7E535007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
-		914B2AB418E7E536007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
-		914B2AB518E7E536007B6799 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAA18E7E529007B6799 /* sfml-graphics.framework */; };
-		914B2AB618E7E539007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
-		914B2AB718E7E539007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
-		914B2AB818E7E53A007B6799 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAB18E7E529007B6799 /* sfml-system.framework */; };
-		914B2AB918E7E53C007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
-		914B2ABA18E7E53D007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
-		914B2ABB18E7E53D007B6799 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAC18E7E529007B6799 /* sfml-window.framework */; };
-		914B2ABC18E7E540007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
-		914B2ABD18E7E540007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
-		914B2ABE18E7E541007B6799 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAD18E7E529007B6799 /* SFML.framework */; };
 		914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
@@ -512,6 +497,27 @@
 		91E5C7B80F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91E5C7B90F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
+		91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
+		91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
+		91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
+		91F6F8E618F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
+		91F6F8E718F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
+		91F6F8E818F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
+		91F6F8E918F87F3700E3EA15 /* sfml-network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */; };
+		91F6F8EA18F87F3700E3EA15 /* sfml-network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */; };
+		91F6F8EB18F87F3700E3EA15 /* sfml-network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */; };
+		91F6F8EC18F87F3700E3EA15 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
+		91F6F8ED18F87F3700E3EA15 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
+		91F6F8EE18F87F3700E3EA15 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
+		91F6F8EF18F87F3700E3EA15 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91F6F8F018F87F3700E3EA15 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91F6F8F118F87F3700E3EA15 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91F6F8F218F87F3700E3EA15 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		91F6F8F318F87F3700E3EA15 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		91F6F8F418F87F3700E3EA15 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
+		91F6F8F718F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
+		91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1275,11 +1281,6 @@
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = dialogs/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
-		914B2AA918E7E529007B6799 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
-		914B2AAA18E7E529007B6799 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "../../../../../../Library/Frameworks/sfml-graphics.framework"; sourceTree = "<group>"; };
-		914B2AAB18E7E529007B6799 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../../../../../../Library/Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
-		914B2AAC18E7E529007B6799 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../../../../../../Library/Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
-		914B2AAD18E7E529007B6799 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = ../../../../../../Library/Frameworks/SFML.framework; sourceTree = "<group>"; };
 		914B2AAE18E7E529007B6799 /* sndfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sndfile.framework; path = ../../../../../../Library/Frameworks/sndfile.framework; sourceTree = "<group>"; };
 		914B2ACC18E7FFEF007B6799 /* SND1.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND1.WAV; sourceTree = "<group>"; };
 		914B2ACD18E7FFEF007B6799 /* SND10.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND10.WAV; sourceTree = "<group>"; };
@@ -1480,6 +1481,13 @@
 		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileio.cpp; sourceTree = "<group>"; };
 		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = talking.h; sourceTree = "<group>"; };
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
+		91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
+		91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "../../../../../../Library/Frameworks/sfml-graphics.framework"; sourceTree = "<group>"; };
+		91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-network.framework"; path = "../../../../../../Library/Frameworks/sfml-network.framework"; sourceTree = "<group>"; };
+		91F6F8E018F87F3700E3EA15 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../../../../../../Library/Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
+		91F6F8E118F87F3700E3EA15 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../../../../../../Library/Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
+		91F6F8E218F87F3700E3EA15 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = ../../../../../../Library/Frameworks/SFML.framework; sourceTree = "<group>"; };
+		91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qdpict.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1489,12 +1497,13 @@
 			files = (
 				914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
-				914B2AB218E7E531007B6799 /* sfml-audio.framework in Frameworks */,
-				914B2AB318E7E535007B6799 /* sfml-graphics.framework in Frameworks */,
-				914B2AB618E7E539007B6799 /* sfml-system.framework in Frameworks */,
-				914B2AB918E7E53C007B6799 /* sfml-window.framework in Frameworks */,
-				914B2ABC18E7E540007B6799 /* SFML.framework in Frameworks */,
 				914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */,
+				91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
+				91F6F8E618F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
+				91F6F8E918F87F3700E3EA15 /* sfml-network.framework in Frameworks */,
+				91F6F8EC18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
+				91F6F8EF18F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
+				91F6F8F218F87F3700E3EA15 /* SFML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1504,12 +1513,13 @@
 			files = (
 				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
-				914B2AB018E7E52F007B6799 /* sfml-audio.framework in Frameworks */,
-				914B2AB418E7E536007B6799 /* sfml-graphics.framework in Frameworks */,
-				914B2AB718E7E539007B6799 /* sfml-system.framework in Frameworks */,
-				914B2ABA18E7E53D007B6799 /* sfml-window.framework in Frameworks */,
-				914B2ABD18E7E540007B6799 /* SFML.framework in Frameworks */,
 				914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */,
+				91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
+				91F6F8E718F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
+				91F6F8EA18F87F3700E3EA15 /* sfml-network.framework in Frameworks */,
+				91F6F8ED18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
+				91F6F8F018F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
+				91F6F8F318F87F3700E3EA15 /* SFML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1519,12 +1529,13 @@
 			files = (
 				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
-				914B2AB118E7E530007B6799 /* sfml-audio.framework in Frameworks */,
-				914B2AB518E7E536007B6799 /* sfml-graphics.framework in Frameworks */,
-				914B2AB818E7E53A007B6799 /* sfml-system.framework in Frameworks */,
-				914B2ABB18E7E53D007B6799 /* sfml-window.framework in Frameworks */,
-				914B2ABE18E7E541007B6799 /* SFML.framework in Frameworks */,
 				914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */,
+				91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
+				91F6F8E818F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
+				91F6F8EB18F87F3700E3EA15 /* sfml-network.framework in Frameworks */,
+				91F6F8EE18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
+				91F6F8F118F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
+				91F6F8F418F87F3700E3EA15 /* SFML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1918,6 +1929,7 @@
 				91C688E70FD702B9000F6D01 /* cursors.m */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
+				91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1949,11 +1961,12 @@
 		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				914B2AA918E7E529007B6799 /* sfml-audio.framework */,
-				914B2AAA18E7E529007B6799 /* sfml-graphics.framework */,
-				914B2AAB18E7E529007B6799 /* sfml-system.framework */,
-				914B2AAC18E7E529007B6799 /* sfml-window.framework */,
-				914B2AAD18E7E529007B6799 /* SFML.framework */,
+				91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */,
+				91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */,
+				91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */,
+				91F6F8E018F87F3700E3EA15 /* sfml-system.framework */,
+				91F6F8E118F87F3700E3EA15 /* sfml-window.framework */,
+				91F6F8E218F87F3700E3EA15 /* SFML.framework */,
 				914B2AAE18E7E529007B6799 /* sndfile.framework */,
 				914B2AA118E7E500007B6799 /* Cocoa.framework */,
 				914B2AA218E7E500007B6799 /* OpenGL.framework */,
@@ -2563,6 +2576,7 @@
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				914B2AC618E7E6EB007B6799 /* winutil.mac.mm in Sources */,
 				9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
+				91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2610,6 +2624,7 @@
 				91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */,
 				9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
+				91F6F8F718F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2662,6 +2677,7 @@
 				91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */,
 				91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */,
 				9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */,
+				91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

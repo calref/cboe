@@ -75,7 +75,7 @@ extern bool supressing_some_spaces;
 extern location ok_space[4];
 extern bool can_draw_pcs;
 extern cScenario scenario;
-extern sf::Texture spec_scen_g;
+extern cCustomGraphics spec_scen_g;
 
 // TODO: The duplication of RECT here shouldn't be necessary...
 RECT boat_rects[4] = {RECT{0,0,36,28}, RECT{0,28,36,56},RECT{0,56,36,84},RECT{0,84,36,112}};
@@ -89,7 +89,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 {
 	RECT where_draw;
 	RECT source_rect;
-	sf::Texture source_gworld;
+	sf::Texture* source_gworld;
 	short anim_type = 0;
 	location l;
 	
@@ -112,25 +112,23 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		terrain_to_draw -= 10000;
  		if (terrain_there[i][j] == terrain_to_draw)
  			return;
-		source_gworld = terrain_gworld[terrain_to_draw / 50];
+		source_gworld = &terrain_gworld[terrain_to_draw / 50];
  		terrain_there[i][j] = terrain_to_draw;
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 		anim_type = -1;
 	}
 	else if (scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
-		source_gworld = spec_scen_g;
-		source_rect = get_custom_rect(scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
 		anim_type = 0;
 		terrain_there[i][j] = -1;
 	}
 	else if (scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
-		source_gworld = spec_scen_g;
-		source_rect = get_custom_rect(scenario.ter_types[terrain_to_draw].picture - 1000);
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(scenario.ter_types[terrain_to_draw].picture - 1000);
 		terrain_there[i][j] = -1;
 	}
 	else if (scenario.ter_types[terrain_to_draw].picture >= 400) { // animated
-		source_gworld = anim_gworld;
+		source_gworld = &anim_gworld;
 		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
 		source_rect = calc_rect(4 * ((terrain_to_draw - 400) / 5) + (anim_ticks % 4),(terrain_to_draw - 400) % 5);
 		terrain_there[i][j] = -1;
@@ -140,7 +138,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		if (terrain_there[i][j] == scenario.ter_types[terrain_to_draw].picture) return;
 		terrain_there[i][j] = scenario.ter_types[terrain_to_draw].picture;
 		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
-		source_gworld = terrain_gworld[terrain_to_draw / 50];
+		source_gworld = &terrain_gworld[terrain_to_draw / 50];
  		terrain_there[i][j] = terrain_to_draw;
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
@@ -153,7 +151,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 			anim_onscreen = true;
 	}
 	
-	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw);
+	rect_draw_some_item(*source_gworld, source_rect, terrain_screen_gworld, where_draw);
 }
 
 void draw_monsters() ////
@@ -192,11 +190,12 @@ void draw_monsters() ////
 						get_monst_dims(univ.party.out_c[i].what_monst.monst[j],&width,&height);
 						if (picture_wanted >= 1000) {
 							for (k = 0; k < width * height; k++) {
-								source_rect = get_custom_rect(picture_wanted % 1000 +
+								sf::Texture* src_gw;
+								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
 															  ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(spec_scen_g, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
+								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 							}					
 						}
 						if (picture_wanted < 1000) {
@@ -228,7 +227,8 @@ void draw_monsters() ////
 						store_loc.y += k / width;
 						// customize?
 						if (univ.town.monst[i].picture_num >= 1000) {
-							source_rect = get_custom_rect((univ.town.monst[i].picture_num % 1000) +
+							sf::Texture* src_gw;
+							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
 														  k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
 														  + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
@@ -240,7 +240,7 @@ void draw_monsters() ////
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 						if (univ.town.monst[i].picture_num < 1000) {
 							pic_num_t this_monst = univ.town.monst[i].picture_num;
@@ -274,7 +274,8 @@ void draw_monsters() ////
 						store_loc.y += k / width;
 						// customize?
 						if (univ.town.monst[i].picture_num >= 1000) {
-							source_rect = get_custom_rect((univ.town.monst[i].picture_num % 1000) +
+							sf::Texture* src_gw;
+							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
 														  k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
 														  + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
@@ -285,7 +286,7 @@ void draw_monsters() ////
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
-							else Draw_Some_Item(spec_scen_g, source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 						if (univ.town.monst[i].picture_num < 1000) {
 							pic_num_t this_monst = univ.town.monst[i].picture_num;
@@ -406,10 +407,11 @@ void draw_items(location where){
 			if(univ.town.items[i].contained) continue;
 			if(party_can_see(where) >= 6) continue;
 			if(univ.town.items[i].graphic_num >= 1000){
-				from_rect = get_custom_rect(univ.town.items[i].graphic_num - 1000);
+				sf::Texture* src_gw;
+				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 1000);
 				to_rect = coord_to_rect(where.x,where.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
-				rect_draw_some_item(spec_scen_g,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
+				rect_draw_some_item(*src_gw,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
 			}else{
 				from_rect = get_item_template_rect(univ.town.items[i].graphic_num);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);

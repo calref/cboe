@@ -573,20 +573,14 @@ RECT calc_rect(short i, short j){
 	return base_rect;
 }
 
-RECT get_custom_rect (short which_rect){
-	RECT store_rect = {0,0,36,28};
-	
-	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	return store_rect;
-}
-
-short get_custom_rect (short which_rect, RECT& store_rect){ // returns the number of the sheet to use
+graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	short sheet = which_rect / 100;
-	which_rect %= 100;
-	store_rect = {0,0,28,36};
+	if(is_old) sheet = 0;
+	else which_rect %= 100;
+	RECT store_rect = {0,0,28,36};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	return sheet;
+	return std::make_pair(party ? this->party : &sheets[sheet],store_rect);
 }
 
 // TODO: This doesn't belong in this file

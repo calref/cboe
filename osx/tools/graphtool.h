@@ -72,6 +72,27 @@ public:
 };
 
 typedef unsigned short pic_num_t;
+using graf_pos = std::pair<sf::Texture*,RECT>;
+using graf_pos_ref = std::pair<sf::Texture*&,RECT&>;
+
+struct cCustomGraphics {
+	sf::Texture* sheets = NULL;
+	sf::Texture* party = NULL;
+	bool is_old = false;
+	void clear() {
+		if(sheets != NULL) delete[] sheets;
+	}
+	~cCustomGraphics() {
+		if(party != NULL) delete party;
+	}
+	explicit operator bool() {
+		return sheets;
+	}
+	graf_pos find_graphic(pic_num_t pic, bool party = false);
+};
+
+
+
 void init_graph_tool(void (*redraw_callback)());
 void clean_up_graphtool();
 void set_cursor(cursor_type which_curs);
@@ -84,8 +105,6 @@ short string_length(const char *str);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();
 RECT calc_rect(short i, short j);
-RECT get_custom_rect (short which_rect);
-short get_custom_rect (short which_rect, RECT& store_rect);
 void setActiveRenderTarget(sf::RenderTarget& where);
 void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendMode mode = sf::BlendNone);
 void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRect, sf::BlendMode mode = sf::BlendNone);

@@ -35,6 +35,7 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground;
+	// TODO: One or both of these should probably be moved to cTown
 	for(i = 0; i < 200; i++) town_size[i] = old.town_size[i];
 	for(i = 0; i < 200; i++) town_hidden[i] = old.town_hidden[i];
 	flag_a = old.flag_a;
@@ -48,6 +49,7 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	out_start.y = old.out_start.y;
 	which_town_start = old.which_town_start;
 	flag_b = old.flag_b;
+	// TODO: Town data size doesn't even need to be stored at all; its only purpose is for locating the offset of a town within the old scenario format; same with out data size
 	for(i = 0; i < 200; i++)
 		for(j = 0; j < 5; j++)
 			town_data_size[i][j] = old.town_data_size[i][j];
@@ -60,6 +62,7 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 		out_data_size[i][0] = old.out_data_size[i][0];
 		out_data_size[i][1] = old.out_data_size[i][1];
 	}
+	// TODO: Combine store_item_rects and store_item_towns into a structure
 	for(i = 0; i < 3; i++) {
 		store_item_rects[i].top = old.store_item_rects[i].top;
 		store_item_rects[i].left = old.store_item_rects[i].left;
@@ -68,9 +71,11 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	}
 	for(i = 0; i < 3; i++) store_item_towns[i] = old.store_item_towns[i];
 	flag_e = old.flag_e;
+	// TODO: Combine these two into a structure
 	for(i = 0; i < 50; i++) special_items[i] = old.special_items[i];
 	for(i = 0; i < 50; i++) special_item_special[i] = old.special_item_special[i];
 	rating = old.rating;
+	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
 	flag_f = old.flag_f;
 	for(i = 0; i < 256; i++) scen_monsters[i] = old.scen_monsters[i];
@@ -125,6 +130,6 @@ char(& cScenario::scen_strs(short i))[256]{
 		if(i % 2 == 0) return spec_item_names[(i - 60) / 2];
 		else return spec_item_strs[(i - 60) / 2];
 	}
-	if(i >= 160 && i < 260) return spec_strs[i - 100];
+	if(i >= 160 && i < 260) return spec_strs[i - 160];
 	return journal_strs[6]; // random unused slot
 }

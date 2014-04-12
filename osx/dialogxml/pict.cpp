@@ -16,6 +16,7 @@
 #include "restypes.hpp"
 
 extern sf::Texture bg_gworld;
+extern cCustomGraphics spec_scen_g;
 
 void cPict::init(){
 	drawPict()[PIC_TER] = &cPict::drawPresetTer;
@@ -744,8 +745,8 @@ void cPict::drawCustomTer(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }
 
@@ -755,8 +756,8 @@ void cPict::drawCustomTerAnim(short num, RECT to_rect){
 	to_rect.bottom = to_rect.top + 32;
 	num += animFrame;
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }
 
@@ -769,8 +770,8 @@ void cPict::drawCustomMonstSm(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -783,13 +784,12 @@ void cPict::drawCustomMonstWide(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
@@ -803,13 +803,12 @@ void cPict::drawCustomMonstTall(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(0,18);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
@@ -823,39 +822,35 @@ void cPict::drawCustomMonstLg(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+2);
 	small_monst_rect.offset(-14,18);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+3);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomDlog(short num, RECT to_rect){
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 36;
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
 	to_rect.offset(18,0);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
@@ -874,16 +869,15 @@ void cPict::drawCustomDlogLg(short num, RECT to_rect){
 
 void cPict::drawCustomTalk(short num, RECT to_rect){
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	to_rect.right = to_rect.left + 16;
 	to_rect.bottom = to_rect.top + 32;
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 	
-	n = get_custom_rect(num,from_rect);
-	from_gw = getSheet(SHEET_CUSTOM, n);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
 	to_rect.offset(16,0);
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
@@ -895,8 +889,8 @@ void cPict::drawCustomItem(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -904,8 +898,8 @@ void cPict::drawCustomItem(short num, RECT to_rect){
 void cPict::drawCustomMissile(short num, RECT to_rect){
 	num += animFrame % 4;
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 18;
 	if(animFrame >= 4) from_rect.offset(0, 18);
@@ -916,8 +910,8 @@ void cPict::drawCustomMissile(short num, RECT to_rect){
 
 void cPict::drawCustomTerMap(short num, RECT to_rect){
 	RECT from_rect;
-	short n = get_custom_rect(num,from_rect);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_CUSTOM, n);
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
 	from_rect.right = from_rect.left + 12;
 	from_rect.bottom = from_rect.top + 12;
 	num /= 1000; num--;
@@ -931,8 +925,10 @@ void cPict::drawPartyMonstSm(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
-	RECT from_rect = get_custom_rect(num);
+	sf::Texture* from_gw;
+	RECT from_rect;
+	
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -942,13 +938,14 @@ void cPict::drawPartyMonstWide(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
+	sf::Texture* from_gw;
+	RECT from_rect;
 	
-	RECT from_rect = get_custom_rect(num);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	from_rect = get_custom_rect(num+1);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
@@ -958,14 +955,15 @@ void cPict::drawPartyMonstTall(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
+	sf::Texture* from_gw;
+	RECT from_rect;
 	
-	RECT from_rect = get_custom_rect(num);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(0,18);
-	from_rect = get_custom_rect(num+1);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
@@ -974,22 +972,23 @@ void cPict::drawPartyMonstLg(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
+	sf::Texture* from_gw;
+	RECT from_rect;
 	
-	RECT from_rect = get_custom_rect(num);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(14,0);
-	from_rect = get_custom_rect(num+1);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(-14,18);
-	from_rect = get_custom_rect(num+2);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+2, true);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(14,0);
-	from_rect = get_custom_rect(num+3);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+3, true);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
@@ -1006,8 +1005,10 @@ void cPict::drawPartyItem(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
-	RECT from_rect = get_custom_rect(num);
+	sf::Texture* from_gw;
+	RECT from_rect;
+	
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -1016,8 +1017,10 @@ void cPict::drawPartyPc(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 32;
-	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PARTY);
-	RECT from_rect = get_custom_rect(num);
+	sf::Texture* from_gw;
+	RECT from_rect;
+	
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }

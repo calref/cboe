@@ -389,6 +389,7 @@ void init_party_scen_data()
 //	 	univ.party.special_notes_str[i][j] = 0;	 
 //	for (i = 0; i < 120; i++)
 	//		 univ.party.talk_save[i].personality = -1;
+	// TODO: The journal at least should persist across scenarios; the other two, maybe, maybe not
 	univ.party.journal.clear();
 	univ.party.special_notes.clear();
 	univ.party.talk_save.clear();
