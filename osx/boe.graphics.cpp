@@ -561,10 +561,10 @@ void end_startup()
 	if (startup_loaded == false)
 		return;
 
-	startup_gworld.create(0,0);
-	startup_button_orig.create(0,0);
-	startup_button_g.create(0,0);
-	anim_mess.create(0,0);
+	startup_gworld.create(1,1);
+	startup_button_orig.create(1,1);
+	startup_button_g.create(1,1);
+	anim_mess.create(1,1);
 
 	startup_loaded = false;
 	load_main_screen();
