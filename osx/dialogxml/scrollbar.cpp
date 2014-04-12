@@ -10,7 +10,7 @@
 
 cScrollbar::cScrollbar(cDialog& parent) : cControl(CTRL_SCROLL, parent) {}
 
-cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent) {}
+cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent), pos(0), max(0) {}
 
 bool cScrollbar::isClickable(){
 	return true;
