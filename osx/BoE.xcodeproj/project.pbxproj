@@ -2507,8 +2507,8 @@
 				"$(DERIVED_FILE_DIR)/data/dialogs/*.xml",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = "/bin/bash -v";
-			shellScript = "\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/dialogs/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g'\n";
+			shellPath = /bin/bash;
+			shellScript = "\nfunction filter() {\n\tgrep -v 'validates' -\n\treturn 0\n}\n\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/dialogs/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g' | filter\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
