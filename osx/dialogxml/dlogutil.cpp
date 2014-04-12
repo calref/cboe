@@ -231,18 +231,24 @@ bool cChoiceDlog::onClick(cDialog& me, std::string id){
 cThreeChoice::cThreeChoice
   (std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent)
   : cChoiceDlog(parent), type(t){
+	cDialog& parentDlog = *operator->();
+	parentDlog.setBg(cDialog::BG_DARK);
+	parentDlog.setDefTextClr(sf::Color::White);
 	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
 		init_strings(strings,50);
 	init_buttons(buttons[1], buttons[2], buttons[3]);
 	init_pict(pic);
-	operator->()->recalcRect();
+	parentDlog.recalcRect();
 }
 
 cThreeChoice::cThreeChoice
   (std::vector<std::string>& strings,std::array<short, 3>& buttons,pic_num_t pic,ePicType t,cDialog* parent)
   : cChoiceDlog(parent), type(t){
+	cDialog& parentDlog = *operator->();
+	parentDlog.setBg(cDialog::BG_DARK);
+	parentDlog.setDefTextClr(sf::Color::White);
 	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
@@ -255,7 +261,7 @@ cThreeChoice::cThreeChoice
 	}
 	init_buttons(buttonDefs[0], buttonDefs[1], buttonDefs[2]);
 	init_pict(pic);
-	operator->()->recalcRect();
+	parentDlog.recalcRect();
 }
 
 void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned short left){
