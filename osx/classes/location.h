@@ -57,6 +57,10 @@ struct rectangle {
 	rectangle_size_delegate width();
 	rectangle_size_delegate height();
 	location centre();
+	location topLeft();
+	location topRight();
+	location bottomLeft();
+	location bottomRight();
 	bool contains(location p);
 	bool contains(int x, int y);
 	void offset(int h, int v);

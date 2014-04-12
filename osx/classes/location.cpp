@@ -129,6 +129,22 @@ location rectangle::centre() {
 	return location((left + right) / 2, (top + bottom) / 2);
 }
 
+location rectangle::topLeft() {
+	return location(left, top);
+}
+
+location rectangle::topRight() {
+	return location(right, top);
+}
+
+location rectangle::bottomLeft() {
+	return location(left, bottom);
+}
+
+location rectangle::bottomRight() {
+	return location(right, bottom);
+}
+
 void rectangle::offset(int h, int v) {
 	left += h; right += h;
 	top += v; bottom += v;
