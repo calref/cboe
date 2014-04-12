@@ -964,6 +964,10 @@ void Region::offset(int x, int y) {
 	}
 }
 
+void Region::offset(location off) {
+	offset(off.x, off.y);
+}
+
 void Region::setStencil(sf::RenderTarget& where) {
 	setActiveRenderTarget(where);
 	glClearStencil(0);

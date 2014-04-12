@@ -68,6 +68,7 @@ public:
 	void addRect(RECT rect);
 	void clear();
 	void offset(int x, int y);
+	void offset(location off);
 	Region& operator-=(Region& other);
 };
 
