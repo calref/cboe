@@ -526,9 +526,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	
 	// first make sure relevant talk strs are loaded in
 	if (personality / 10 != univ.town.cur_talk_loaded){
-		if(personality / 10 == univ.town.num) univ.town.cur_talk = &univ.town->talking;
-		else load_town(personality / 10,*univ.town.cur_talk);
-		univ.town.cur_talk_loaded = personality / 10;
+		load_town(personality / 10,univ.town.cur_talk);
 	}
 
 	// load all possible responses
