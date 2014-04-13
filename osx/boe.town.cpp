@@ -567,11 +567,7 @@ void start_town_mode(short which_town, short entry_dir)
 				univ.party.horses[i].exists = true;
 				}
 			}
-		}
-		
-	// Place correct graphics
-	redraw_screen();
-							
+		}		
 
 	clear_map();
 	reset_item_max();

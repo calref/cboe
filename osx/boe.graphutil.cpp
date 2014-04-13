@@ -104,7 +104,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
  			return;
 		}
  		terrain_there[i][j] = 300;
-		fill_rect(terrain_screen_gworld, where_draw, sf::Color::White);
+		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Black);
 		return;
 	}
  	////

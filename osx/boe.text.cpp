@@ -129,10 +129,9 @@ void put_pc_screen()
 	RECT erase_rect = {17,2,98,269},to_draw_rect,from_rect;
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT small_erase_rects[3] = {RECT{101,34,114,76},RECT{101,106,114,147},RECT{101,174,114,201}};
+	RECT bottom_bar_rect = {99,0,116,271};
 	RECT info_from = {0,1,12,13};
-
-	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
-	// who gives a shit?
+	
 	pc_stats_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
@@ -140,7 +139,10 @@ void put_pc_screen()
 	for (i = 0; i < 3; i++)
 		tileImage(pc_stats_gworld, small_erase_rects[i],bg_gworld,bg[7]);
 	
+	TEXT.font = "Silom";
+	TEXT.pointSize = 12;
 	TEXT.colour = sf::Color::White;
+	TEXT.style = sf::Text::Regular;
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) univ.party.gold);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,10);
@@ -155,13 +157,13 @@ void put_pc_screen()
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
-				TEXT.style = sf::Text::Bold | sf::Text::Italic;
+				TEXT.style = sf::Text::Italic;
 				TEXT.colour = sf::Color::Blue;
 				}
 
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());		
 			win_draw_string( pc_stats_gworld,pc_buttons[i][0],to_draw,0,10);
-			TEXT.style = sf::Text::Bold;
+			TEXT.style = sf::Text::Regular;
 			TEXT.colour = sf::Color::Black;
 	
 			to_draw_rect = pc_buttons[i][1];
@@ -257,8 +259,6 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT parts_of_area_to_draw[3] = {RECT{0,0,17,271},RECT{16,0,123,256},RECT{123,0,144,271}};
 
-	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
-	// who gives a shit?
 	item_stats_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
@@ -282,7 +282,8 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	
 	switch (screen_num) {
 		case 6: // On special items page
-			TEXT.style = sf::Text::Bold;
+			TEXT.style = sf::Text::Regular;
+			TEXT.font = "Silom";
 			TEXT.colour = sf::Color::White;
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",0,10);
 			TEXT.colour = sf::Color::Black;
@@ -306,10 +307,12 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		default: // on an items page
 			pc = screen_num; 
 			TEXT.colour = sf::Color::White;
+			TEXT.style = sf::Text::Regular;
 			sout.str("");;
 			sout << univ.party[pc].name << " inventory:",
 			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str().c_str(),0,10);
 			TEXT.colour = sf::Color::Black;
+			TEXT.font = "Silom";
 				
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
@@ -324,8 +327,9 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					
 					}
 					else {
+						TEXT.style = sf::Text::Regular;
 						if (univ.party[pc].equip[i_num] == true) {
-							TEXT.style = sf::Text::Italic | sf::Text::Bold;
+							TEXT.style = sf::Text::Italic;
 							if (univ.party[pc].items[i_num].variety < 3)
 								TEXT.colour = sf::Color::Magenta;
 							else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
@@ -345,7 +349,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 									}
 						dest_rect.left -= 2;
 						win_draw_string(item_stats_gworld,dest_rect,sout.str().c_str(),0,10);
-						TEXT.style = sf::Text::Bold;
+						TEXT.style = sf::Text::Regular;
 						TEXT.colour = sf::Color::Black;
 
 						// this is kludgy, awkwark, and has redundant code. Done this way to 
@@ -378,7 +382,8 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			break;
 			}
 			
-	place_item_bottom_buttons();	
+	place_item_bottom_buttons();
+	item_stats_gworld.display();
 	
 	// Now put text on window.
 	mainPtr.setActive();
@@ -484,6 +489,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		to_rect.inset(-1,-1);
 		to_rect.offset(20,1);
 		from_rect.inset(2,2);
+		// TODO: Custom item graphics now start at 1000 instead of 150
 		if (extra_val >= 150) {
 			sf::Texture* src_gw;
 			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 150);
@@ -525,8 +531,9 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 //}
 void place_item_bottom_buttons()
 {
-	RECT pc_from_rect = {0,0,36,28},but_from_rect = {60,30,78,46},to_rect;
-	RECT spec_from_rect = {0,30,15,65}, job_from_rect = {15,30,15,65}, help_from_rect = {78,30,91,44};
+	RECT pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
+	RECT spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
+	// TODO: What about when the buttons are pressed?
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -651,6 +658,7 @@ short total_encumberance(short pc_num)
 void draw_pc_effects(short pc)
 //short pc; // 10 + x -> draw for pc x, but on spell dialog  
 {
+	// TODO: This won't work anymore on the spell dialog!
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT source_rects[18] = {
 		RECT{00,0,12,12},RECT{00,12,12,24},RECT{00,24,12,36},
@@ -1287,16 +1295,12 @@ void print_buf ()
 	short line_to_print;
 	short start_print_point;
 	bool end_loop = false;
-	RECT store_text_rect,dest_rect,erase_rect = {1,1,137,255};
-
-	// Now place new stuff. Just draw it all there naively. It's in a gworld, and fast, so
-	// who gives a shit?
+	RECT store_text_rect,dest_rect,erase_rect = {2,2,136,255};
+	
 	text_area_gworld.setActive();
 
 	// First clean up gworld with pretty patterns
-	erase_rect.inset(1,1); ////
-	erase_rect.right++;
-	tileImage(mainPtr, erase_rect,bg_gworld,bg[6]);
+	tileImage(text_area_gworld, erase_rect,bg_gworld,bg[6]);
 
 	ctrl_val = 58 - text_sbar->getPosition();
 	start_print_point = buf_pointer - LINES_IN_TEXT_WIN - ctrl_val;
@@ -1306,11 +1310,11 @@ void print_buf ()
 	
 	location moveTo;
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
-		moveTo = location(4, 13 + 12 * num_lines_printed);
-		// TODO: Determine correct parameters to this sf::Text (font, etc)
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("Geneva"));
+		moveTo = location(4, 1 + 12 * num_lines_printed);
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("Geneva"), 12);
+		text.setColor(sf::Color::Black);
 		text.setPosition(moveTo);
-		mainPtr.draw(text);
+		text_area_gworld.draw(text);
 		num_lines_printed++;
 		line_to_print++;
 		if (line_to_print== TEXT_BUF_LEN) {
@@ -1324,6 +1328,7 @@ void print_buf ()
 	
 		}
 		
+	text_area_gworld.display();
 	
 	store_text_rect = RECT(text_area_gworld);
 	dest_rect = store_text_rect;

@@ -1025,6 +1025,7 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendM
 	bool saveRep = img.isRepeated();
 	img.setRepeated(true);
 	sf::Vector2u imgSz = img.getSize();
+	RECT clipArea = area;
 	area.left -= area.left % imgSz.x;
 	area.top -= area.top % imgSz.y;
 
@@ -1035,7 +1036,7 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendM
 	tessel.setPosition(area.left, area.top);
 	sf::RenderStates renderMode(mode);
 	setActiveRenderTarget(target);
-	clip_rect(target, area);
+	clip_rect(target, clipArea);
 	target.draw(tessel, renderMode);
 	undo_clip(target);
 	img.setRepeated(saveRep);
@@ -1048,6 +1049,8 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRe
 	RECT tesselRect(temp);
 	temp.setActive();
 	rect_draw_some_item(img, srcRect, temp, tesselRect);
+	temp.display();
+	RECT clipArea = area;
 	area.left -= area.left % tesselRect.width();
 	area.top -= area.top % tesselRect.height();
 	
@@ -1057,7 +1060,7 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRe
 	tessel.setPosition(area.left, area.top);
 	sf::RenderStates renderMode(mode);
 	setActiveRenderTarget(target);
-	clip_rect(target, area);
+	clip_rect(target, clipArea);
 	target.draw(tessel, renderMode);
 	undo_clip(target);
 	glDisable(GL_SCISSOR_TEST);

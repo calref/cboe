@@ -39,10 +39,10 @@ RECT town_buttons[10];
 RECT combat_buttons[9];
 RECT world_screen = {23, 23, 346, 274};
 // TODO: The duplication of RECT here shouldn't be necessary...
-RECT item_screen_button_rects[9] = {RECT{126,11,140,28},RECT{126,40,140,57},RECT{126,69,140,86},RECT{126,98,140,115},
-RECT{126,127,140,144},RECT{126,156,140,173},RECT{126,176,141,211},
-RECT{126,213,125,248},//// made rect disappear
-RECT{127,251,139,267}};
+RECT item_screen_button_rects[9] = {RECT{125,10,141,28},RECT{125,40,141,58},RECT{125,68,141,86},RECT{125,98,141,116},
+RECT{125,126,141,144},RECT{125,156,141,174},RECT{126,176,141,211},
+RECT{126,213,141,248},
+RECT{127,251,140,267}};
 	
 RECT border_rect[4] = {RECT{5, 5, 15, 283}, RECT{5, 5, 355, 15},
 						RECT{345, 5, 355, 283}, RECT{5, 273, 355, 283}};

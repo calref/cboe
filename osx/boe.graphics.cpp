@@ -571,7 +571,7 @@ void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
 	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(imgName));
 	RECT texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
-	tex.draw(sf::Sprite(temp_gworld));
+	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
 }
 
 // This loads the graphics at the top of the game.
@@ -586,6 +586,7 @@ void Set_up_win ()
 	short i;
 	RECT r;
 	
+	// TODO: I think this is a relic of the Exile III demo screen at the main menu; we don't actually need to load it until the function below
 	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 
 	// Create and initialize map gworld
@@ -650,11 +651,12 @@ void set_gworld_fonts(short font_num)
 
 void draw_main_screen()
 {
+	// TODO: If this is called during MODE_TALKING, it's done from the wrong place. It's not called from redraw_screen during MODE_TALKING.
 	if (overall_mode == MODE_TALKING) {
 		put_background();
 		}
 		else {
-			rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], win_to_rects[0],ul);
+//			rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], win_to_rects[0],ul);
  
 			draw_buttons(0);
 			if (overall_mode == MODE_COMBAT)
@@ -676,16 +678,15 @@ void draw_main_screen()
 
 // redraw_screen does the very first redraw, and any full redraw
 void redraw_screen(){
+	put_background();
 	if(in_startup_mode)
 		draw_startup(0);
 	else{
 		switch (overall_mode) {
 			case MODE_TALKING:
-				put_background();
 				refresh_talking();
 				break;
 			case MODE_SHOPPING:
-				put_background();
 				refresh_shopping();
 				break;
 			default:
@@ -854,12 +855,15 @@ void draw_text_bar(short mode)
 			remember_tiny_text = 500;
 			i = 400;	   
 	   }
+	text_bar_gworld.display();
 }
 
 void put_text_bar(char *str) {
 	text_bar_gworld.setActive();
 	rect_draw_some_item(orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
 	TEXT.colour = sf::Color::White;
+	TEXT.font = "Silom";
+	TEXT.pointSize = 12;
 	RECT to_rect = RECT(text_bar_gworld);
 	// TODO: The 12 is the line height; not sure what it should be, so I just picked something
 	win_draw_string(text_bar_gworld, to_rect, str, 2, 12);
@@ -886,6 +890,7 @@ void put_text_bar(char *str) {
 		}
 
 	TEXT.colour = sf::Color::Black;
+	text_bar_gworld.display();
 	mainPtr.setActive();
 	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[4], win_to_rects[4],ul);
 }
@@ -1135,6 +1140,8 @@ void draw_terrain(short	mode)
 	// Now do the light mask thing
 	apply_light_mask();
 	apply_unseen_mask();
+	
+	terrain_screen_gworld.display();
 	
 	if (mode == 0) {
 		redraw_terrain();
