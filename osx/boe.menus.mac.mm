@@ -85,8 +85,8 @@ void adjust_monst_menu() {
 		}
 	}
 	
-	for(i = 0; i < 256; i++) {
-		[monst_menu removeItemAtIndex: 1]; // TODO: I suspect it should be 2, not 1
+	while([monst_menu numberOfItems] > 2) {
+		[monst_menu removeItemAtIndex: 2];
 	}
 	for(i = 0; i < 256; i++) {
 		if(on_monst_menu[i] >= 0) {
@@ -193,8 +193,8 @@ void adjust_spell_menus()
 		if (on_spell_menu[0][i] != old_on_spell_menu[0][i])
 			need_menu_change = true;
 	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			[spell_menu removeItemAtIndex: 3];
+		while([spell_menu numberOfItems] > 2) {
+			[spell_menu removeItemAtIndex: 2];
 		}
 		for (i = 0; i < 62; i++)
 			if (on_spell_menu[0][i] >= 0) {
@@ -229,8 +229,8 @@ void adjust_spell_menus()
 		if (on_spell_menu[1][i] != old_on_spell_menu[1][i])
 			need_menu_change = true;
 	if (need_menu_change) {
-		for (i = 0; i < 62; i++) {
-			[spell_menu removeItemAtIndex: 3];
+		while([spell_menu numberOfItems] > 2) {
+			[spell_menu removeItemAtIndex: 2];
 		}
 		for (i = 0; i < 62; i++)
 			if (on_spell_menu[1][i] >= 0) {
