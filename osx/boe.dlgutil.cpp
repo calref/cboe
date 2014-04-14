@@ -33,10 +33,8 @@
 #include "button.h"
 #include "pict.h"
 #include <boost/lexical_cast.hpp>
+#include "prefs.hpp"
 #define	NUM_HINTS	30
-// TODO: This is used for plist preferences; maybe that should be changed
-#include <CoreFoundation/CFPreferences.h>
-#include <CoreFoundation/CFNumber.h>
 
 //extern big_tr_type t_d;
 extern short stat_window;
@@ -1082,257 +1080,27 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 }
 
 void load_prefs(){
-	Boolean b, valid;
-	CFIndex x;
-	b = CFPreferencesGetAppBooleanValue(CFSTR("GiveIntroHint"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) give_intro_hint = b;
-	x = CFPreferencesGetAppIntegerValue(CFSTR("DisplayMode"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) display_mode = x;
-	b = CFPreferencesGetAppBooleanValue(CFSTR("PlaySounds"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) play_sounds = b;
-	b = CFPreferencesGetAppBooleanValue(CFSTR("ShowStartupSplash"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) show_startup_splash = b;
-	b = CFPreferencesGetAppBooleanValue(CFSTR("GameRunBefore"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) game_run_before = b;
-	b = CFPreferencesGetAppBooleanValue(CFSTR("SkipBoomDelay"), CFSTR("com.spidweb.bladesofexile"), &valid);
-	if(valid) skip_boom_delay = b;
+	give_intro_hint = get_bool_pref("GiveIntroHint");
+	display_mode = get_int_pref("DisplayMode");
+	play_sounds = get_bool_pref("PlaySounds");
+	show_startup_splash = get_bool_pref("ShowStartupSplash");
+	game_run_before = get_bool_pref("GameRunBefore");
+	skip_boom_delay = get_bool_pref("SkipBoomDelay");
 }
 
-//void check_pref_file() {
-//	short num_tries = 0;
-//	
-//	while ((num_tries < 300) && (open_pref_file() == -100))
-//		num_tries++;
-//		
-//	if (num_tries == 300) {
-//		Alert(983,NULL);		
-//		ExitToShell();
-//		}	
-//	}
-	
-//long open_pref_file()
-//{
-//	char pref_name[256];
-//	short vol_ref = 0;
-//	long dir_ID = 0,stored_key;
-//	FSSpec pref;
-//	short file_ref_num;
-//	PrefHandle data_handle;
-//	
-//	GetIndString(pref_name,5,19);
-//	FindFolder(kOnSystemDisk,kPreferencesFolderType,
-//			kDontCreateFolder,&vol_ref,&dir_ID);
-//	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
-//	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-//	if (file_ref_num == -1) {
-//		game_run_before = false;
-//		save_prefs();
-//		//make_pref_file(pref);
-//		return -1;
-//		}
-//		
-//	UseResFile(file_ref_num);
-//	data_handle = (PrefHandle) Get1Resource('PRFN',128);
-//	
-//	if ((**data_handle).l[1] != 0)
-//		ask_to_change_color = true;
-//		else ask_to_change_color = false;
-//	if ((**data_handle).l[2] != 0)
-//		give_intro_hint = true;
-//		else give_intro_hint = false;
-//	display_mode = (short) ((**data_handle).l[3]);
-//	play_sounds = (short) ((**data_handle).l[4]);
-//	register_flag = (long) (800000) - (**data_handle).l[5];
-//	stored_key = (long) (700000) - (**data_handle).l[7];
-//	ed_flag = (long) (800000) - (**data_handle).l[6];
-//	ed_key = (long) (700000) - (**data_handle).l[8];
-//	
-//	if ((registered == true) && (stored_key != init_data(register_flag))) {
-//		display_mode = 0;
-//		CloseResFile(file_ref_num);
-//		save_prefs();
-//		return -100;	
-//		}
-//	if ((stored_key != init_data(register_flag)) && ((register_flag < 10000) || (register_flag > 30000)
-//		|| (display_mode < 0) || (display_mode > 5) || (ed_flag < 0) || (ed_flag > 10000)) ) {
-//		registered = false;
-//		if  ((register_flag < 10000) || (register_flag > 30000))
-//			register_flag = get_ran(1,10000,30000);
-//		if ((ed_flag < 0) || (ed_flag > 10000))
-//			ed_flag = 10000;
-//		
-//		stored_key = 0;
-//		display_mode = 0;
-//		CloseResFile(file_ref_num);
-//		save_prefs();
-//		return -100;
-//		}
-//
-//
-//	CloseResFile(file_ref_num);
-//	
-//	return stored_key;
-//	
-//}
-
-//void make_pref_file(FSSpec pref)
-//{
-//	short file_ref_num;
-//	Handle app_handle;
-//	short res_ID;
-//	ResType res_type;
-//	char res_name[256] = "xxx";
-//	short res_attributes;
-//
-//	
-////	rf = CurResFile();
-////	UseResFile(rf);
-////	app_handle = Get1Resource('PRFN',128);
-//	
-////	for (i = 0; i < 10; i++)
-////		(**(PrefHandle)app_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
-////	(**(PrefHandle)app_handle).l[2] = (long) (give_intro_hint);
-////	(**(PrefHandle)app_handle).l[3] = (long) (display_mode);
-////	(**(PrefHandle)app_handle).l[4] = (long) (play_sounds);
-//
-////	if (register_flag == 0) {
-////		register_flag = (long) get_ran(1,10000,20000);
-////		ed_flag = get_ran(1,5000,9999);
-////		}
-//
-//	// Amputating this code, cause it's broken, while save prefs code works OK
-//	
-////	(**(PrefHandle)app_handle).l[5] = (long) (800000) - register_flag;
-////	if (registered == true)
-////		(**(PrefHandle)app_handle).l[7] = (long) (700000) - init_data(register_flag);
-//
-////	(**(PrefHandle)app_handle).l[6] = (long) (800000) - ed_flag;
-////	if (ed_reg == true)
-////		(**(PrefHandle)app_handle).l[8] = (long) (700000) - init_data(ed_flag);
-//
-////	GetResInfo((Handle) app_handle,&res_ID,&res_type,res_name);
-////	res_attributes = GetResAttrs(app_handle);
-////	DetachResource(app_handle);
-//	FSpCreateResFile(&pref,'blx!','BLPR',smSystemScript);
-////	save_prefs();
-//	return;
-//
-////	FSpCreateResFile(&pref,'RSED','rsrc',smSystemScript);
-//	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-//
-//	UseResFile(file_ref_num);
-//	AddResource(app_handle,res_type,res_ID,res_name);
-//	SetResAttrs(app_handle,res_attributes);
-//	ChangedResource(app_handle);		
-//	WriteResource(app_handle);		
-//	ReleaseResource(app_handle);		
-//	CloseResFile(file_ref_num);
-//	
-//}
-
 void save_prefs(){
-	CFPreferencesSetAppValue(
-		CFSTR("GiveIntroHint"),
-		give_intro_hint ? kCFBooleanTrue : kCFBooleanFalse,
-		CFSTR("com.spidweb.bladesofexile")
-	);
-	CFPreferencesSetAppValue(
-		CFSTR("DisplayMode"),
-		CFNumberCreate(NULL, kCFNumberShortType, &display_mode),
-		CFSTR("com.spidweb.bladesofexile")
-	);
-	CFPreferencesSetAppValue(
-		CFSTR("PlaySounds"),
-		play_sounds ? kCFBooleanTrue : kCFBooleanFalse,
-		CFSTR("com.spidweb.bladesofexile")
-	);
-	CFPreferencesSetAppValue(
-		CFSTR("ShowStartupSplash"),
-		show_startup_splash ? kCFBooleanTrue : kCFBooleanFalse,
-		CFSTR("com.spidweb.bladesofexile")
-	);
-	CFPreferencesSetAppValue(
-		CFSTR("GameRunBefore"),
-		game_run_before ? kCFBooleanTrue : kCFBooleanFalse,
-		CFSTR("com.spidweb.bladesofexile")
-	);
-	CFPreferencesSetAppValue(
-		CFSTR("SkipBoomDelay"),
-		skip_boom_delay ? kCFBooleanTrue : kCFBooleanFalse,
-		CFSTR("com.spidweb.bladesofexile")
-	);
+	set_pref("GiveIntroHint", give_intro_hint);
+	set_pref("DisplayMode", display_mode);
+	set_pref("PlaySounds", play_sounds);
+	set_pref("ShowStartupSplash", show_startup_splash);
+	set_pref("GameRunBefore", game_run_before);
+	set_pref("SkipBoomDelay", skip_boom_delay);
 	
-	bool success = CFPreferencesAppSynchronize (CFSTR("com.spidweb.bladesofexile"));
+	bool success = sync_prefs();
 	if(!success){
 		giveError("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
 	}
 }
-
-//void save_prefs()
-//{
-//	short file_ref_num;
-//	Handle old_handle,data_handle;
-//	short vol_ref,i;
-//	short res_ID;
-//	long dir_ID;
-//	ResType res_type = 'PRFN';
-//	char res_name[256];
-//	short res_attributes;
-//	FSSpec pref;
-//	short app_res_num;
-//	char pref_name[256];
-//	
-//	app_res_num = CurResFile();
-//	
-//	GetIndString(pref_name,5,19);
-//	if (sys_7_avail == true)
-//		FindFolder(kOnSystemDisk,kPreferencesFolderType,
-//			kDontCreateFolder,&vol_ref,&dir_ID);
-//	FSMakeFSSpec(vol_ref,dir_ID,pref_name,&pref);
-//	file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-//	if (file_ref_num == -1) {
-//		make_pref_file(pref);
-//		file_ref_num = FSpOpenResFile(&pref,fsCurPerm);
-////		return;
-//		}
-//		
-//	UseResFile(file_ref_num);
-//
-//	data_handle = NewHandleClear(sizeof(PrefRecord));
-//	HLock(data_handle);
-//
-//	for (i = 0; i < 10; i++)
-//		(**(PrefHandle)data_handle).l[i] = (long) (get_ran(1,-20000,20000)) * (i + 2);
-//	(**(PrefHandle)data_handle).l[1] = (long) (ask_to_change_color);
-//	(**(PrefHandle)data_handle).l[2] = (long) (give_intro_hint);
-//	(**(PrefHandle)data_handle).l[3] = (long) (display_mode);
-//	(**(PrefHandle)data_handle).l[4] = (long) (play_sounds);
-//	
-//
-//	if (register_flag == 0) {
-//		register_flag = (long) get_ran(1,10000,20000);
-//		ed_flag = get_ran(1,5000,9999);
-//		}
-//	(**(PrefHandle)data_handle).l[5] = (long) (800000) - register_flag;
-//	(**(PrefHandle)data_handle).l[6] = (long) (800000) - ed_flag;
-//	if (registered == true)
-//		(**(PrefHandle)data_handle).l[7] = (long) (700000) - init_data(register_flag);
-//	if (ed_reg == true)
-//		(**(PrefHandle)data_handle).l[8] = (long) (700000) - init_data(ed_flag);
-//	
-//	old_handle = Get1Resource('PRFN',128);
-//	GetResInfo(old_handle,&res_ID,&res_type,res_name);
-//	res_attributes = GetResAttrs(old_handle);
-//	RemoveResource(old_handle);
-//	
-//	AddResource(data_handle,'PRFN',128,res_name);
-//	WriteResource(data_handle);
-//	HUnlock(data_handle);
-//	ReleaseResource(data_handle);
-//
-//	CloseResFile(file_ref_num);
-//	UseResFile(app_res_num);
-//}
 
 bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 {

@@ -497,6 +497,7 @@
 		91E5C7B80F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91E5C7B90F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
+		91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91EC481018FBABB100BB1E86 /* prefs.mac.mm */; };
 		91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
@@ -1481,6 +1482,8 @@
 		91E5C7A60F9F615400C21460 /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileio.cpp; sourceTree = "<group>"; };
 		91E5C7B60F9F619D00C21460 /* talking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = talking.h; sourceTree = "<group>"; };
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
+		91EC480E18FBAA8700BB1E86 /* prefs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = prefs.hpp; sourceTree = "<group>"; };
+		91EC481018FBABB100BB1E86 /* prefs.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = prefs.mac.mm; sourceTree = "<group>"; };
 		91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
 		91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "../../../../../../Library/Frameworks/sfml-graphics.framework"; sourceTree = "<group>"; };
 		91F6F8DF18F87F3700E3EA15 /* sfml-network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-network.framework"; path = "../../../../../../Library/Frameworks/sfml-network.framework"; sourceTree = "<group>"; };
@@ -1930,6 +1933,7 @@
 				91B3F10F0F9779D000BF5B67 /* soundtool.cpp */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
+				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1945,6 +1949,7 @@
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
 				917B573F100B956C0096C978 /* undo.h */,
 				919145FE18E63B41005CF3A4 /* winutil.h */,
+				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -2577,6 +2582,7 @@
 				914B2AC618E7E6EB007B6799 /* winutil.mac.mm in Sources */,
 				9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
 				91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */,
+				91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
