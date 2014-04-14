@@ -268,9 +268,6 @@ void init_party(short mode)
 	univ.party.party_event_timers.clear();
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = 0;
-	for (i = 0; i < 120; i++) {
-		univ.party.help_received[i] = 0;
-	}
 	for (i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
 	univ.party.scen_name = "";

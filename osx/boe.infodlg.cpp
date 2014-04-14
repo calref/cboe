@@ -25,6 +25,7 @@
 #include "fileio.h"
 #include "restypes.hpp"
 #include <boost/lexical_cast.hpp>
+#include "prefs.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 cPlayer *store_pc;
@@ -1219,6 +1220,7 @@ void give_help(short help1,short help2,cDialog* parent)
 		return;
 	//if (help1 >= 20)
 		univ.party.help_received[help1] = 1;
+	append_iarray_pref("ReceivedHelp", help1);
 	str1 = get_str("help",help1);
 	if (help2 > 0)
 		str2 = get_str("help",help2);

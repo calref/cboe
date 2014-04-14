@@ -1096,9 +1096,14 @@ void load_prefs(){
 	PSD[SDF_EASY_MODE] = get_bool_pref("EasyMode");
 	PSD[SDF_LESS_WANDER_ENC] = get_bool_pref("LessWanderingMonsters");
 	PSD[SDF_GAME_SPEED] = get_int_pref("GameSpeed");
+	
+	std::vector<int> help = get_iarray_pref("ReceivedHelp");
+	for(int i : help)
+		if(i < 120)
+			univ.party.help_received[i] = 1;
 }
 
-void save_prefs(){
+void save_prefs(bool resetHelp){
 	set_pref("GiveIntroHint", give_intro_hint);
 	set_pref("DisplayMode", display_mode);
 	set_pref("PlaySounds", play_sounds);
@@ -1118,6 +1123,8 @@ void save_prefs(){
 		set_pref("GameSpeed", PSD[SDF_GAME_SPEED]);
 	}
 	
+	if(resetHelp) clear_pref("ReceivedHelp");
+	
 	bool success = sync_prefs();
 	if(!success){
 		giveError("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
@@ -1127,7 +1134,7 @@ void save_prefs(){
 bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 {
 	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
-	bool done_yet = false,did_cancel = false;
+	bool done_yet = false,did_cancel = false,reset_help = false;
 	short i;
 	
 	if(id == "okay") {
@@ -1169,13 +1176,15 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 				PSD[SDF_GAME_SPEED] = 2;
 			else if(speed == "snail")
 				PSD[SDF_GAME_SPEED] = 3;
-			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red)
+			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
 				for (i = 0; i < 120; i++)
 					univ.party.help_received[i] = 0;
+				reset_help = true;
+			}
 			}
 		save_maps = 1 - PSD[SDF_NO_MAPS];
 		give_delays = PSD[SDF_NO_FRILLS];
-		save_prefs();
+		save_prefs(reset_help);
 		}
 }
 

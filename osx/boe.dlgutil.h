@@ -20,7 +20,7 @@ void pick_preferences()  ;
 //void check_pref_file() ;
 //long open_pref_file();
 //void make_pref_file(FSSpec pref);
-void save_prefs();
+void save_prefs(bool resetHelp = false);
 void load_prefs();
 void tip_of_day();
 short pick_a_scen();
