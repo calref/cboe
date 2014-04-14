@@ -25,7 +25,7 @@ typedef std::function<void(cDialog&)> record_callback_t;
 class cStrDlog {
 	static std::string getFileName(short n_strs, ePicType type, bool hasTitle);
 	cDialog dlg;
-	short sound;
+	short sound = -1;
 	record_callback_t rec_f;
 	bool hasRecord;
 	const ePicType type;

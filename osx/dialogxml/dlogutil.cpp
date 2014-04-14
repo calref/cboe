@@ -459,7 +459,7 @@ cStrDlog& cStrDlog::setRecordHandler(record_callback_t rec){
 }
 
 void cStrDlog::show(){
-	play_sound(sound);
+	if(sound > 0) play_sound(sound);
 	dlg.run();
 }
 
