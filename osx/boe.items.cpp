@@ -870,8 +870,8 @@ void put_item_graphics(cDialog& me)
 	 	}
 	 	
 	for (i = 0; i < 6; i++) {
-		std::ostringstream sout("pc");
-		sout << i + 1;
+		std::ostringstream sout;
+		sout << "pc" << i + 1;
 		std::string id = sout.str();
 		if ((univ.party[i].main_status == 1) && (pc_has_space(i) < 24)
 		 && ((!is_combat()) || (current_pc == i))) {
@@ -898,8 +898,8 @@ void put_item_graphics(cDialog& me)
 	else me["down"].show();
 
 	for (i = 0; i < 8; i++) {
-		std::ostringstream sout("item");
-		sout << i + 1;
+		std::ostringstream sout;
+		sout << "item" << i + 1;
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
 		std::string detail = sout.str() + "-detail", weight = sout.str() + "-weight";
 
@@ -940,8 +940,8 @@ void put_item_graphics(cDialog& me)
 		
 	for (i = 0; i < 6; i++) 
 		if (univ.party[i].main_status == 1) {
-			std::ostringstream sout("pc");
-			sout << i + 1 << "-g";
+			std::ostringstream sout;
+			sout << "pc" << i + 1 << "-g";
 			dynamic_cast<cPict&>(me[sout.str()]).setPict(univ.party[i].which_graphic);
 		}
 }
@@ -966,14 +966,12 @@ bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
 			put_item_graphics(me);
 		}
 	} else if(id.substr(0,2) == "pc") {
-		sscanf("pc%d", id.c_str(), &current_getting_pc);
-		current_getting_pc--;
+		current_getting_pc = id[2] - '1';
 		put_item_graphics(me);
 	} else {
 		if(current_getting_pc == 6) return true;
 		short item_hit;
-		sscanf("item%d", id.c_str(), &item_hit);
-		item_hit--;
+		item_hit = id[4] - '1';
 		item_hit += first_item_shown;
 		if(item_array[item_hit] >= NUM_TOWN_ITEMS)
 			return true;
@@ -1055,7 +1053,7 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 			}
 
 	if (!pc_gworld_loaded)
-		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(902));
+		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	
 	cDialog itemDialog("get-items.xml");
 	itemDialog.attachClickHandlers(display_item_event_filter, {"done", "up", "down"});
@@ -1070,8 +1068,8 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 	else title.setText("Getting all nearby items:");
 	
 	for(i = 1; i <= 8; i++) {
-		std::ostringstream sout("item");
-		sout << i << "-key";
+		std::ostringstream sout;
+		sout << "item" << i << "-key";
 		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
 		itemDialog[sout.str()].attachClickHandler(display_item_event_filter);
 	}
