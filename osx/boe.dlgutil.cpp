@@ -1614,7 +1614,7 @@ void tip_of_day()
 	showAtStart.setState(give_intro_hint ? led_red : led_off);
 	
 	tips.run();
-	give_intro_hint = showAtStart.getState();
+	give_intro_hint = showAtStart.getState() != led_off;
 	save_prefs();
 
 }
