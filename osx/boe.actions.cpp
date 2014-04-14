@@ -1614,7 +1614,10 @@ bool handle_keystroke(sf::Event& event){
 	if (in_startup_mode == true)
 		return false;
 	
-	mainPtr.setMouseCursorVisible(false);
+	// Only hide the cursor if it's in the window.
+	// This is because we want to show it as soon as the mouse moves, but we don't receive mouse move events if it's outside the window.
+	if(sf::IntRect(mainPtr.getPosition(), sf::Vector2i(mainPtr.getSize())).contains(sf::Mouse::getPosition()))
+		mainPtr.setMouseCursorVisible(false);
 	
 	// DEBUG
 	//	sprintf((char *) debug, "%d    ",(short) chr2); 
