@@ -1359,17 +1359,16 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 			else if(cur_display_mode == "bl") display_mode = 3;
 			else if(cur_display_mode == "br") display_mode = 4;
 			else if(cur_display_mode == "win") display_mode = 5;
-			// TODO: Should probably make it more clear that getting an LED returns an enum...
-			PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState();
-			PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState();
-			play_sounds = 1 - PSD[SDF_NO_SOUNDS];
-			PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState();
-			PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState();
-			PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState();
-			PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState();
-			PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState();
-			PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState();
-			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState();
+			PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState() != led_off;
+			PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState() != led_off;
+			play_sounds = !PSD[SDF_NO_SOUNDS];
+			PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState() != led_off;
+			PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off;
+			PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState() != led_off;
+			PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
+			PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
+			PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState() != led_off;
+			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState() != led_off;
 			show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
 			std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 			if(speed == "fast")
@@ -1383,16 +1382,7 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red)
 				for (i = 0; i < 120; i++)
 					univ.party.help_received[i] = 0;
-			/*if (display_mode < 5)
-				max_window(mainPtr);
-				else {
-					GetWindowRect(GetDesktopWindow(),&windRECT);
-					MoveWindow(mainPtr,(windRECT.right - (563 + 10)) / 2,
-					(windRECT.bottom - (425 + 40)) / 2 ,
-					563 + 10,425 + 40,true);
-					}*/
 			}
-		//play_sounds = 1 - PSD[SDF_NO_SOUNDS];
 		save_maps = 1 - PSD[SDF_NO_MAPS];
 		give_delays = PSD[SDF_NO_FRILLS];
 		save_prefs();
@@ -1431,14 +1421,14 @@ void pick_preferences()
 	}
 
 	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_MAPS] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(!play_sounds ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_FRILLS] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_ROOM_DESCS_AGAIN] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_INSTANT_HELP] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_EASY_MODE] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_LESS_WANDER_ENC] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_TER_ANIM] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_SHORE_FRILLS] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(!play_sounds ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nofrills"]).setState(PSD[SDF_NO_FRILLS] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(PSD[SDF_ROOM_DESCS_AGAIN] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(PSD[SDF_NO_INSTANT_HELP] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["easier"]).setState(PSD[SDF_EASY_MODE] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(PSD[SDF_LESS_WANDER_ENC] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(PSD[SDF_NO_TER_ANIM] ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(PSD[SDF_NO_SHORE_FRILLS] ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["skipsplash"]).setState(show_startup_splash ? led_off : led_red);
 	cLedGroup& gameSpeed = dynamic_cast<cLedGroup&>(prefsDlog["speed"]);
 	switch(PSD[SDF_GAME_SPEED]) {
