@@ -1584,6 +1584,7 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 		case kb::BackSpace: return '\b';
 		case kb::Delete: return '\x7f';
 	}
+	return 0;
 }
 
 bool handle_keystroke(sf::Event& event){

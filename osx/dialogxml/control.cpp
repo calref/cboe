@@ -145,7 +145,7 @@ eKeyMod& operator -= (eKeyMod&lhs, eKeyMod rhs){
 bool operator== (cKey a, cKey b){
 	if(a.spec != b.spec) return false;
 	if(a.mod != b.mod) return false;
-	return a.spec ? a.k == b.k : a.c == b.c;
+	return a.spec ? a.k == b.k : (a.c == 0 ? false : a.c == b.c);
 }
 
 bool mod_contains(eKeyMod mods, eKeyMod mod) {
