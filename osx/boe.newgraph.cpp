@@ -930,6 +930,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	
 	TEXT.colour = sf::Color::Black;
 	undo_clip(talk_gworld);
+	talk_gworld.display();
 
 	refresh_shopping();
 	shop_sbar->show();
@@ -1193,8 +1194,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	if (color == 0)
 		TEXT.colour = c[2];
 	else TEXT.colour = c[1];
-	location moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
-	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
+	// TODO: The clickable text doesn't work, and the entire text flashes when clicking anything
+	win_draw_string(talk_gworld, dest_rect, str.c_str(), 0, line_height);
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
@@ -1231,7 +1232,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 						if (current_rect < 49)
 							current_rect++;
 					
-						//FrameRect(&store_words[current_rect].word_rect);
+						// TODO: Debug line, remove
+						frame_rect(talk_gworld, store_words[current_rect].word_rect, sf::Color::Red);
 						}
 				last_stored_word_break = i + 1;
 				}
@@ -1240,27 +1242,10 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-		 		force_skip = true;
+		 		last_word_break = i + 1;
 	 			}
 	 		store_last_word_break = last_word_break;
-	 		if (i == str_len - 1)
-	 			last_word_break = i + 2;
-			int end = last_word_break - last_line_break;
-			char c = str[end];
-			str[end] = 0;
-			str_to_draw.setString(str.substr(last_line_break));
-			str_to_draw.setPosition(moveTo);
-			mainPtr.draw(str_to_draw);
-			str[end] = c;
-			on_what_line++;
-			moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == true) {
-				force_skip = false;
-				i++;
-				last_line_break++;
-				last_word_break++;
-				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
 				// TODO: Should we play an error sound here?
 	 			store_words[current_rect - 1].word_rect.offset(5 - store_words[current_rect - 1].word_rect.left,line_height);
@@ -1269,8 +1254,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		if (str[i] == ' ') { // New word
 			store_last_word_break = last_word_break = i + 1;
 			}
-		if (on_what_line == 17)
-			i = 10000;
 		}
 		
 	// Now for string 2
@@ -1290,8 +1273,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	
 	last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
-	moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
-	//for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) 
+	win_draw_string(talk_gworld, dest_rect, str.c_str(), 0, line_height);
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1)) 
@@ -1335,27 +1317,10 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		  && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
-		 		force_skip = true;
+		 		last_word_break = i + 1;
 	 			}
 	 		store_last_word_break = last_word_break;
-	 		if (i == str_len - 1)
-	 			last_word_break = i + 2;
-			int end = last_word_break - last_line_break;
-			char c = str[end];
-			str[end] = 0;
-			str_to_draw.setString(str.substr(last_line_break));
-			str_to_draw.setPosition(moveTo);
-			mainPtr.draw(str_to_draw);
-			str[end] = c;
-			on_what_line++;
-			moveTo = location(dest_rect.left + 1 , dest_rect.top + 1 + line_height * on_what_line + 9);
 			last_line_break = last_word_break;
-			if (force_skip == true) {
-				force_skip = false;
-				i++;
-				last_line_break++;
-				last_word_break++;
-				}
 			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
 	 			store_words[current_rect - 1].word_rect.offset(5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
 				}
@@ -1363,14 +1328,13 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		if (str[i] == ' ') { // New word
 			store_last_word_break = last_word_break = i + 1;
 			}
-		if (on_what_line == 17)
-			i = 10000;
 		}
 	}
 	
 	TEXT.colour = sf::Color::Black;
 	RECT oldRect(talk_gworld);
 	undo_clip(talk_gworld);
+	talk_gworld.display();
 	
 	// Finally place processed graphics
 	mainPtr.setActive();
