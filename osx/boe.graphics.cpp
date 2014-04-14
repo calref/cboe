@@ -261,7 +261,7 @@ void plop_fancy_startup()
 	delay = time_in_ticks(delay).asMilliseconds();
 	mainPtr.display();
 		sf::Clock timer;
-		play_sound(-22);
+	if(show_startup_splash) play_sound(-22);
 
 		while(timer.getElapsedTime().asMilliseconds() < delay) {
 			if(mainPtr.pollEvent(event)) {
