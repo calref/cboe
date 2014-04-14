@@ -5,8 +5,8 @@
 	<button name='done' type='done' top='339' left='339'/>
 	<button name='left' type='left' def-key='left' top='339' left='289'/>
 	<button name='right' type='right' def-key='right' top='339' left='352'/>
-	<button name='mage' type='large' top='310' left='144'>Mage Spells</button>
-	<button name='priest' type='large' top='310' left='257'>Priest Spells</button>
+	<button name='seemage' type='large' top='310' left='144'>Mage Spells</button>
+	<button name='seepriest' type='large' top='310' left='257'>Priest Spells</button>
 	<button name='trait' type='large' top='310' left='370'>Advantages</button>
 	<pict name='pic' type='pc' num='0' top='10' left='9'/>
 	<text size='large' top='6' left='48' width='75' height='16'>Info on:</text>

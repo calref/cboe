@@ -893,8 +893,8 @@ bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 
 bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
 	short pc = store_pc_num;
-	if(item_hit == "mage") display_pc(pc,0,1019);
-	else if(item_hit == "priest") display_pc(pc,1,1019);
+	if(item_hit == "seemage") display_pc(pc,0,&me);
+	else if(item_hit == "seepriest") display_pc(pc,1,&me);
 	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
 	else if(item_hit == "alch") display_alchemy();
 }
@@ -909,7 +909,7 @@ void give_pc_info(short pc_num)
 
 	cDialog pcInfo("pc-info.xml");
 	pcInfo.attachClickHandlers(give_pc_info_event_filter, {"done", "left", "right"});
-	pcInfo.attachClickHandlers(give_pc_extra_info, {"mage", "priest", "trait", "alch"});
+	pcInfo.attachClickHandlers(give_pc_extra_info, {"seemage", "seepriest", "trait", "alch"});
 
 	for (i = 0; i < 19; i++) {
 		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
