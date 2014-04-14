@@ -208,11 +208,11 @@ void put_pc_spells(cDialog& me)
 {
 	short i;
 
-	for (i = 3; i < 65; i++) {
+	for (i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
-		if (((store_trait_mode == 0) && (univ.party[which_pc_displayed].mage_spells[i - 3] == true)) ||
-		 ((store_trait_mode == 1) && (univ.party[which_pc_displayed].priest_spells[i - 3] == true)))
+		if (((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
+		 ((store_trait_mode == 1) && univ.party[which_pc_displayed].priest_spells[i]))
 			cur.setState(led_red);
 		else cur.setState(led_off);
 		}
@@ -242,7 +242,7 @@ bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 				}
 }
 
-void display_pc(short pc_num,short mode,short parent)
+void display_pc(short pc_num,short mode,cDialog* parent)
 {
 	short i,item_hit;
 	std::string label_str;
@@ -257,12 +257,12 @@ void display_pc(short pc_num,short mode,short parent)
 
 	make_cursor_sword();
 
-	cDialog pcInfo("pc-spell-info.xml");
+	cDialog pcInfo("pc-spell-info.xml", parent);
 	pcInfo.attachClickHandlers(display_pc_event_filter,{"done","left","right"});
 
-	for (i = 3; i < 65; i++) {
+	for (i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-		label_str = get_str((mode == 0) ? "mage-spells" : "priest-spells",(i - 3) * 2 + 1);
+		label_str = get_str((mode == 0) ? "mage-spells" : "priest-spells",i * 2 + 1);
 		pcInfo[id].setText(label_str);
 		}
 	put_pc_spells(pcInfo);
