@@ -24,7 +24,7 @@ Medium Power Potion |  Min. Skill - 14 |Need mandrake root and asptongue mold. R
 Knowledge Brew |  Min. Skill - 19 |This most powerful of potions requires Mandrake and Ember Flowers for its creation.
 Strength Potion |  Min. Skill - 10 |This brew is a great aid in combat. Making it requires ember flowers and graymold.
 Bliss |  Min. Skill - 16 |Combining the best elements of healing and strength potions, bliss potions contain asptongue mold and graymold.
-Strong Energy Potion |  Min. Skill - 20 |This is the hardest potion to make, and require ember flowers and mandrake. The energy boost it provides, however, can’t be matched.
+Strong Energy Potion |  Min. Skill - 20 |This is the hardest potion to make, and require ember flowers and mandrake. The energy boost it provides, however, can't be matched.
 One of the most useful things you can make with alchemy is poison, a powerful weapon in the magic-poor world of Exile.
 Many monsters are immune to magic and fire. However, not many are poison-resistant. This makes poison an excellent mage-killer.
 To poison a weapon, use it during combat. Your hand-to-hand weapon (the first one, if two are equipped) or arrows will become poisoned. Each time you attack, the level of poison decreases.

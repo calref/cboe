@@ -5,7 +5,7 @@ Fires a weak bolt of electricity at an enemy.
 Minor Haste
 Makes the selected PC move faster for a while. All haste spells take effect at the beginning of the next round.
 Strength
-Makes the selected PC more skilled for a short time. Works like the priest spell ‘Bless.’
+Makes the selected PC more skilled for a short time. Works like the priest spell 'Bless.'
 Scare
 Decreases the morale of the victim. Casting this on a weak foe will make the foe flee. Even if the monster doesn't flee, later castings have a higher chance of success.
 Flame Cloud
@@ -39,7 +39,7 @@ This spell dispels magical fields in the selected area. It removes blade walls, 
 Sleep Cloud
 This spell creates a small cloud of sleep gas. There is a chance that anyone passing through the cloud will fall asleep (note that some creatures, like slimes, never sleep).
 Unlock Doors
-Some doors are magically locked, and others are just hard to open. This spell can unlock them. However, it isn’t guaranteed to succeed, and won’t work on all doors.
+Some doors are magically locked, and others are just hard to open. This spell can unlock them. However, it isn't guaranteed to succeed, and won't work on all doors.
 Haste 
 Makes the selected PC get twice the usual number of actions for a long time. All haste spells take effect at the beginning of the next round.
 Fireball
@@ -107,13 +107,13 @@ When cast on a magic-using enemy, the two creatures get in a mental battle, abso
 Flight
 When cast outdoors, the party can fly for a short time.
 Shockwave
-This spell sends a wave of force out from the caster, damaging 	everyone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. Don’t cast in towns.
+This spell sends a wave of force out from the caster, damaging 	everyone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. Don't cast in towns.
 Major Blessing
 When cast, the entire party is blessed and hasted, and has their weapons	mildly poisoned.
 Mass Paralysis
 When cast, every monsters within a small radius of the caster will become paralyzed for quite some time. There is a chance they might resist the spell.
 Protection
-One of the most powerful spells in the mage’s repertoire. It makes the whole party temporarily magic resistant, and makes one PC you select immune to ALL damage for a short time.
+One of the most powerful spells in the mage's repertoire. It makes the whole party temporarily magic resistant, and makes one PC you select immune to ALL damage for a short time.
 Major Summoning
 This spell works like Summoning, but brings forth much more powerful creatures.
 Force Barrier

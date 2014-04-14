@@ -7,7 +7,7 @@ Reduces the amount of poison running around in the veins of the	selected PC.
 Turn Undead
 When cast on an undead creature, it usually does a reasonable	amount of damage to it. It has no effect on non-undead.
 Location
-Displays the party’s x-y location in the town.
+Displays the party's x-y location in the town.
 Sanctuary
 The target of this spell becomes magically shielded. For a time, monsters probably won't be able to attack him/her. The effects disappear when the PC attacks someone.
 Symbiosis
