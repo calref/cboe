@@ -149,8 +149,9 @@ void put_pc_screen()
 	sprintf((char *) to_draw, "%d", (short) univ.party.food);		
 	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,0,10);
 	i = calc_day();
-	sprintf((char *) to_draw, "%d", i);		
+	sprintf((char *) to_draw, "%d", i);
 	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,10);
+	TEXT.colour = sf::Color::Black;
 	
 	for (i = 0; i < 6; i++) {
 		if (univ.party[i].main_status != 0) {
@@ -345,7 +346,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 									sout << univ.party[pc].items[i_num].full_name << ' ';
 									if ((univ.party[pc].items[i_num].charges > 0) && (univ.party[pc].items[i_num].type != 2)
 										&& (stat_screen_mode <= 1))
-										sout << '(' << univ.party[pc].items[i_num].charges << ')';
+										sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 									}
 						dest_rect.left -= 2;
 						win_draw_string(item_stats_gworld,dest_rect,sout.str().c_str(),0,10);
