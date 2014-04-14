@@ -156,61 +156,59 @@ bool sleep_field;
 void check_for_intel();
 bool mac_is_intel;
 
-
-
 int main(void)
 {
-	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
-	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
-	Initialize();
-	init_fileio();
-	init_graph_tool(redraw_screen);
-
-	Set_Window_Drag_Bdry();
-
-	init_buf();
-	
-	set_up_apple_events();
-	//import_template_terrain();
-	//import_anim_terrain(0);
-	plop_fancy_startup();
-
-	//PSD[SDF_NO_FRILLS] = 0;
-	//PSD[SDF_NO_SOUNDS] = 0;
-
-	init_screen_locs();
-	
-	init_snd_tool();
-	cDialog::init();
-	
-	//init_party(0);
-	//PSD[SDF_GAME_SPEED] = 1;
-	//init_anim(0);
-
-	fancy_startup_delay();
-
-	init_spell_menus();
-
-//	if (overall_mode == MODE_STARTUP)
-//		overall_mode = MODE_OUTDOORS;
-	mainPtr.display();
-
-	if (!game_run_before)
-		cChoiceDlog("welcome.xml").show();
-	else if (give_intro_hint)
-		tip_of_day();
-	game_run_before = true;
-	
-	check_for_intel();
-
-	init_mini_map();
-	menu_activate();
-
-	while (All_Done == false) 
-		Handle_One_Event();
-	
-	close_program();
-      return 0;
+		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
+		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
+		Initialize();
+		init_fileio();
+		init_graph_tool(redraw_screen);
+		
+		Set_Window_Drag_Bdry();
+		
+		init_buf();
+		
+		set_up_apple_events();
+		//import_template_terrain();
+		//import_anim_terrain(0);
+		plop_fancy_startup();
+		
+		//PSD[SDF_NO_FRILLS] = 0;
+		//PSD[SDF_NO_SOUNDS] = 0;
+		
+		init_screen_locs();
+		
+		init_snd_tool();
+		cDialog::init();
+		
+		//init_party(0);
+		//PSD[SDF_GAME_SPEED] = 1;
+		//init_anim(0);
+		
+		fancy_startup_delay();
+		
+		init_spell_menus();
+		
+		//	if (overall_mode == MODE_STARTUP)
+		//		overall_mode = MODE_OUTDOORS;
+		mainPtr.display();
+		
+		if (!game_run_before)
+			cChoiceDlog("welcome.xml").show();
+		else if (give_intro_hint)
+			tip_of_day();
+		game_run_before = true;
+		
+		check_for_intel();
+		
+		init_mini_map();
+		menu_activate();
+		
+		while (All_Done == false)
+			Handle_One_Event();
+		
+		close_program();
+		return 0;
 }
 
 void check_for_intel(){
