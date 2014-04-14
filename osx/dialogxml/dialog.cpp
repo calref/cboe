@@ -1060,6 +1060,10 @@ void cDialog::setBg(short n){
 	bg = n;
 }
 
+void cDialog::setDefBtn(std::string defBtn) {
+	defaultButton = defBtn;
+}
+
 void cDialog::setDefTextClr(sf::Color clr){
 	defTextClr = clr;
 }

@@ -297,6 +297,8 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 	if(btn2) btns[1] = btn2;
 	if(btn3) btns[2] = btn3;
 	cDialog* me = operator->();
+	// TODO: Is it correct for the first button to always be the default?
+	bool haveDefault = false;
 	for(int i = 0; i < 3; i++){
 		if(!btns[i]) continue;
 		std::ostringstream sout;
@@ -346,6 +348,12 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 		}
 		me->add(btn, cur_btn_rect, sout.str());
 		cur_btn_rect.right = cur_btn_rect.left - 4;
+		if(!haveDefault) {
+			me->setDefBtn(sout.str());
+			haveDefault = true;
+		} else if(btns[i]->label == "OK") {
+			me->setDefBtn(sout.str());
+		}
 	}
 }
 

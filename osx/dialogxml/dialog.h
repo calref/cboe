@@ -55,6 +55,7 @@ public:
 	template<class type> void setResult(const type& val);
 	void setBg(short n);
 	void setDefTextClr(sf::Color clr);
+	void setDefBtn(std::string defBtn);
 	sf::Color getDefTextClr();
 	bool toast();
 	cControl& getControl(std::string id);
