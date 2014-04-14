@@ -88,7 +88,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 				p.second->setPict(wasPic, PIC_TER_MAP);
 			else if(val == "status")
 				p.second->setPict(wasPic, PIC_STATUS);
-			else throw xBadVal("pict",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "custom"){
 			std::string val;
 			attr->GetValue(&val);
@@ -99,7 +99,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			if(val == "wide") wide = true;
 			else if(val == "tall") tall = true;
 			else if(val == "large") wide = tall = true;
-			else throw xBadVal("pict",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "def-key"){
 			std::string val;
 			attr->GetValue(&val);
@@ -107,7 +107,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			try{
 				p.second->attachKey(parseKey(val));
 			}catch(int){
-				throw xBadVal("pict",name,val,attr->Row(),attr->Column());
+				throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
 			}
 		}else if(name == "num"){
 			pic_num_t newPic;
@@ -121,12 +121,12 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else throw xBadAttr("pict",name,attr->Row(),attr->Column());
+		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
 	}
-	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column());
-	if(!foundNum) throw xMissingAttr("pict","num",who.Row(),who.Column());
-	if(!foundTop) throw xMissingAttr("pict","top",who.Row(),who.Column());
-	if(!foundLeft) throw xMissingAttr("pict","left",who.Row(),who.Column());
+	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column(),fname);
+	if(!foundNum) throw xMissingAttr("pict","num",who.Row(),who.Column(),fname);
+	if(!foundTop) throw xMissingAttr("pict","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("pict","left",who.Row(),who.Column(),fname);
 	if(wide || tall) {
 		pic_num_t wasPic = p.second->getPicNum();
 		if(wide && !tall && p.second->getPicType() == PIC_MONST) p.second->setPict(wasPic, PIC_MONST_WIDE);
@@ -222,7 +222,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 				p.second->setFormat(TXT_FONT, SILOM);
 			else if(val == "maidenword")
 				p.second->setFormat(TXT_FONT, MAIDENWORD);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
@@ -232,7 +232,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 				p.second->setFormat(TXT_SIZE, 10);
 			else if(val == "title")
 				p.second->setFormat(TXT_SIZE, 18);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "color" || name == "colour"){
 			std::string val;
 			attr->GetValue(&val);
@@ -240,7 +240,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			try{
 				clr = parseColor(val);
 			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column());
+				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 			}
 			p.second->setColour(clr);
 		}else if(name == "def-key"){
@@ -249,7 +249,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			try{
 				p.second->attachKey(parseKey(val));
 			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column());
+				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 			}
 		}else if(name == "top"){
 			attr->GetValue(&frame.top), foundTop = true;
@@ -261,10 +261,10 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			attr->GetValue(&height);
 //		}else if(name == "fromlist"){
 //			attr->GetValue(&p.second->fromList);
-		}else throw xBadAttr("pict",name,attr->Row(),attr->Column());
+		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
 	}
-	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column());
-	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column());
+	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column(),fname);
 	frame.right = frame.left + width;
 	frame.bottom = frame.top + height;
 	p.second->setBounds(frame);
@@ -279,7 +279,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		else if(type == TiXmlNode::TEXT) content += val;
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",content + val,node->Row(),node->Column());
+			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -408,12 +408,12 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else throw xBadAttr("button",name,attr->Row(),attr->Column());
+		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
 	if(bg == BG_DARK && p.second->getBtnType() == BTN_TINY) p.second->setColour(sf::Color::White);
-	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column());
-	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column());
-	if(!foundLeft) throw xMissingAttr("button","left",who.Row(),who.Column());
+	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column(),fname);
+	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("button","left",who.Row(),who.Column(),fname);
 	if(foundKey) {
 		cKey theKey;
 		try{
@@ -422,9 +422,9 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			try {
 				theKey = parseKey(keyMain);
 			}catch(int){
-				throw xBadVal("button","def-key",keyMain,keyMainRow,keyMainCol);
+				throw xBadVal("button","def-key",keyMain,keyMainRow,keyMainCol,fname);
 			}
-			throw xBadVal("button","key-mod",keyMod,keyModRow,keyModCol);
+			throw xBadVal("button","key-mod",keyMod,keyModRow,keyModCol,fname);
 		}
 		p.second->attachKey(theKey);
 	}
@@ -471,12 +471,12 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		node->GetValue(&val);
 		if(type == TiXmlNode::ELEMENT && val == "key"){
 			// TODO: There's surely a better way to do this
-			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column());
+			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column(),fname);
 //			p.second->labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT) content += val;
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",val,node->Row(),node->Column());
+			throw xBadVal("text","<content>",val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -564,7 +564,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			if(val == "red") p.second->setState(led_red);
 			else if(val == "green") p.second->setState(led_green);
 			else if(val == "off") p.second->setState(led_off);
-			else throw xBadVal("led",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
 //		}else if(name == "fromlist"){
 //			attr->GetValue(&p.second->fromList);
 		}else if(name == "font"){
@@ -578,7 +578,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->setFormat(TXT_FONT, SILOM);
 			else if(val == "maidenword")
 				p.second->setFormat(TXT_FONT, MAIDENWORD);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
@@ -588,7 +588,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->setFormat(TXT_SIZE, 10);
 			if(val == "title")
 				p.second->setFormat(TXT_SIZE, 18);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "color" || name == "colour"){
 			std::string val;
 			attr->GetValue(&val);
@@ -596,7 +596,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			try{
 				clr = parseColor(val);
 			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column());
+				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 			}
 			p.second->setColour(clr);
 		}else if(name == "top"){
@@ -607,10 +607,10 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else throw xBadAttr("button",name,attr->Row(),attr->Column());
+		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
-	if(!foundTop) throw xMissingAttr("led","top",who.Row(),who.Column());
-	if(!foundLeft) throw xMissingAttr("led","left",who.Row(),who.Column());
+	if(!foundTop) throw xMissingAttr("led","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("led","left",who.Row(),who.Column(),fname);
 	if(width > 0) {
 		frame.right = frame.left + width;
 	}else{
@@ -630,7 +630,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		if(type == TiXmlNode::TEXT) content += val;
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",content + val,node->Row(),node->Column());
+			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -654,7 +654,7 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 			attr->GetValue(&p.first);
 //		else if(name == "fromlist")
 //			attr->GetValue(&p.second->fromList);
-		else throw xBadAttr("button",name,attr->Row(),attr->Column());
+		else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
 	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
@@ -666,7 +666,7 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 			p.second->addChoice(led.second, led.first);
 		}else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>", content + val,node->Row(),node->Column());
+			throw xBadVal("text","<content>", content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -699,7 +699,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 				p.second->setInputType(FLD_NUM);
 			else if(val == "text")
 				p.second->setInputType(FLD_TEXT);
-			else throw xBadVal("field",name,val,attr->Row(),attr->Column());
+			else throw xBadVal("field",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "top"){
 			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
@@ -708,10 +708,10 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else throw xBadAttr("button",name,attr->Row(),attr->Column());
+		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
-	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column());
-	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column());
+	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column(),fname);
+	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column(),fname);
 	frame.right = frame.left + width;
 	frame.bottom = frame.top + height;
 	p.second->setBounds(frame);
@@ -736,6 +736,7 @@ cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 extern fs::path progDir;
 void cDialog::loadFromFile(std::string path){
 	bg = BG_DARK; // default is dark background
+	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
 		printf("Loading dialog from: %s\n", cPath.c_str());
@@ -747,7 +748,7 @@ void cDialog::loadFromFile(std::string path){
 		string type, name, val;
 		
 		xml.FirstChildElement()->GetValue(&type);
-		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column());
+		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column(),fname);
 		for(attr = attr.begin(xml.FirstChildElement()); attr != attr.end(); attr++){
 			attr->GetName(&name);
 			attr->GetValue(&val);
@@ -757,20 +758,20 @@ void cDialog::loadFromFile(std::string path){
 				else{
 					istringstream sin(val);
 					sin >> bg;
-					if(sin.fail()) throw xBadVal(type,name,val,attr->Row(),attr->Column());
+					if(sin.fail()) throw xBadVal(type,name,val,attr->Row(),attr->Column(),fname);
 				}
 			}else if(name == "fore"){
 				sf::Color clr;
 				try{
 					clr = parseColor(val);
 				}catch(int){
-					throw xBadVal("text",name,val,attr->Row(),attr->Column());
+					throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 				}
 			defTextClr = clr;
 			} else if(name == "defbtn") {
 				defaultButton = val;
 			}else if(name != "debug")
-				throw xBadAttr(type,name,attr->Row(),attr->Column());
+				throw xBadAttr(type,name,attr->Row(),attr->Column(),fname);
 		}
 		
 		for(node = node.begin(xml.FirstChildElement()); node != node.end(); node++){
@@ -790,7 +791,7 @@ void cDialog::loadFromFile(std::string path){
 				controls.insert(parse<cLed>(*node));
 			else if(type == "group")
 				controls.insert(parse<cLedGroup>(*node));
-			else throw xBadNode(type,node->Row(),node->Column());
+			else throw xBadNode(type,node->Row(),node->Column(),fname);
 		}
 	} catch(Exception& x){ // XML processing exception
 		printf("%s",x.what());
@@ -1179,20 +1180,21 @@ std::string cDialog::process_click(location where, eKeyMod mods){
 	return "";
 }
 
-xBadNode::xBadNode(std::string t, int r, int c) throw() :
+xBadNode::xBadNode(std::string t, int r, int c, std::string dlg) throw() :
 	type(t),
 	row(r),
 	col(c),
-	msg(NULL) {}
+	msg(NULL),
+	dlg(dlg) {}
 
 const char* xBadNode::what() throw() {
 	if(msg == NULL){
-		char* s = new (nothrow) char[100];
+		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			printf("Allocation of memory for error message failed, bailing out...");
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Unknown element %s encountered (line %d, column %d).",type.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Unknown element %s encountered (dialog %s, line %d, column %d).",type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
@@ -1202,21 +1204,22 @@ xBadNode::~xBadNode() throw(){
 	if(msg != NULL) delete msg;
 }
 
-xBadAttr::xBadAttr(std::string t, std::string n, int r, int c) throw() :
+xBadAttr::xBadAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
 	type(t),
 	name(n),
 	row(r),
 	col(c),
-	msg(NULL) {}
+	msg(NULL),
+	dlg(dlg) {}
 
 const char* xBadAttr::what() throw() {
 	if(msg == NULL){
-		char* s = new (nothrow) char[100];
+		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			printf("Allocation of memory for error message failed, bailing out...");
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Unknown attribute %s encountered on element %s (line %d, column %d).",name.c_str(),type.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Unknown attribute %s encountered on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
@@ -1226,21 +1229,22 @@ xBadAttr::~xBadAttr() throw(){
 	if(msg != NULL) delete msg;
 }
 
-xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c) throw() :
+xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
 	type(t),
 	name(n),
 	row(r),
 	col(c),
-	msg(NULL) {}
+	msg(NULL),
+	dlg(dlg) {}
 
 const char* xMissingAttr::what() throw() {
 	if(msg == NULL){
-		char* s = new (nothrow) char[100];
+		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			printf("Allocation of memory for error message failed, bailing out...");
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Required attribute %s missing on element %s (line %d, column %d).",name.c_str(),type.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Required attribute %s missing on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
@@ -1250,22 +1254,23 @@ xMissingAttr::~xMissingAttr() throw(){
 	if(msg != NULL) delete msg;
 }
 
-xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c) throw() :
+xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c, std::string dlg) throw() :
 	type(t),
 	name(n),
 	val(v),
 	row(r),
 	col(c),
-	msg(NULL) {}
+	msg(NULL),
+	dlg(dlg) {}
 
 const char* xBadVal::what() throw() {
 	if(msg == NULL){
-		char* s = new (nothrow) char[100];
+		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			printf("Allocation of memory for error message failed, bailing out...");
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Invalid value %s for attribute %s encountered on element %s (line %d, column %d).",val.c_str(),name.c_str(),type.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Invalid value %s for attribute %s encountered on element %s (dialog %s, line %d, column %d).",val.c_str(),name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
@@ -1311,5 +1316,5 @@ cControl& cDialog::getControl(std::string id) {
 		}
 		iter++;
 	}
-	throw std::invalid_argument(id + " does not exist in the dialog.");
+	throw std::invalid_argument(id + " does not exist in dialog " + fname);
 }

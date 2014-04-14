@@ -73,6 +73,7 @@ private:
 	RECT winRect;
 	std::string defaultButton;
 	boost::any result;
+	std::string fname;
 	friend class cControl;
 	friend class cButton;
 	friend class cLed;
@@ -85,41 +86,41 @@ private:
 };
 
 class xBadNode : std::exception {
-	std::string type;
+	std::string type, dlg;
 	int row, col;
 	const char* msg;
 public:
-	xBadNode(std::string t, int r, int c) throw();
+	xBadNode(std::string t, int r, int c, std::string dlg) throw();
 	~xBadNode() throw();
 	const char* what() throw();
 };
 
 class xBadAttr : std::exception {
-	std::string type, name;
+	std::string type, name, dlg;
 	int row, col;
 	const char* msg;
 public:
-	xBadAttr(std::string t,std::string n, int r, int c) throw();
+	xBadAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xBadAttr() throw();
 	const char* what() throw();
 };
 
 class xMissingAttr : std::exception {
-	std::string type, name;
+	std::string type, name, dlg;
 	int row, col;
 	const char* msg;
 public:
-	xMissingAttr(std::string t,std::string n, int r, int c) throw();
+	xMissingAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xMissingAttr() throw();
 	const char* what() throw();
 };
 
 class xBadVal : std::exception {
-	std::string type, name, val;
+	std::string type, name, val, dlg;
 	int row, col;
 	const char* msg;
 public:
-	xBadVal(std::string t,std::string n,std::string v, int r, int c) throw();
+	xBadVal(std::string t,std::string n,std::string v, int r, int c, std::string dlg) throw();
 	~xBadVal() throw();
 	const char* what() throw();
 };
