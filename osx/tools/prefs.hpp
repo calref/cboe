@@ -13,10 +13,10 @@
 #include <vector>
 
 void set_pref(std::string keypath, bool value);
-bool get_bool_pref(std::string keypath);
+bool get_bool_pref(std::string keypath, bool fallback = false);
 
 void set_pref(std::string keypath, int value);
-int get_int_pref(std::string keypath);
+int get_int_pref(std::string keypath, int fallback = 0);
 
 void append_iarray_pref(std::string keypath, int value);
 std::vector<int> get_iarray_pref(std::string keypath);

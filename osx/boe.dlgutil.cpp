@@ -1080,12 +1080,22 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 }
 
 void load_prefs(){
-	give_intro_hint = get_bool_pref("GiveIntroHint");
+	give_intro_hint = get_bool_pref("GiveIntroHint", true);
 	display_mode = get_int_pref("DisplayMode");
-	play_sounds = get_bool_pref("PlaySounds");
-	show_startup_splash = get_bool_pref("ShowStartupSplash");
+	play_sounds = get_bool_pref("PlaySounds", true);
+	show_startup_splash = get_bool_pref("ShowStartupSplash", true);
 	game_run_before = get_bool_pref("GameRunBefore");
 	skip_boom_delay = get_bool_pref("SkipBoomDelay");
+	
+	PSD[SDF_NO_MAPS] = !get_bool_pref("SaveAutoMap", true);
+	PSD[SDF_NO_FRILLS] = !get_bool_pref("DrawTerrainFrills", true);
+	PSD[SDF_NO_INSTANT_HELP] = !get_bool_pref("ShowInstantHelp", true);
+	PSD[SDF_NO_TER_ANIM] = !get_bool_pref("DrawTerrainAnimation", true);
+	PSD[SDF_NO_SHORE_FRILLS] = !get_bool_pref("DrawTerrainShoreFrills", true);
+	PSD[SDF_ROOM_DESCS_AGAIN] = get_bool_pref("RepeatRoomDescriptions");
+	PSD[SDF_EASY_MODE] = get_bool_pref("EasyMode");
+	PSD[SDF_LESS_WANDER_ENC] = get_bool_pref("LessWanderingMonsters");
+	PSD[SDF_GAME_SPEED] = get_int_pref("GameSpeed");
 }
 
 void save_prefs(){
@@ -1095,6 +1105,18 @@ void save_prefs(){
 	set_pref("ShowStartupSplash", show_startup_splash);
 	set_pref("GameRunBefore", game_run_before);
 	set_pref("SkipBoomDelay", skip_boom_delay);
+	
+	if(overall_mode == MODE_STARTUP) {
+		set_pref("SaveAutoMap", !PSD[SDF_NO_MAPS]);
+		set_pref("DrawTerrainFrills", !PSD[SDF_NO_FRILLS]);
+		set_pref("ShowInstantHelp", !PSD[SDF_NO_INSTANT_HELP]);
+		set_pref("DrawTerrainAnimation", !PSD[SDF_NO_TER_ANIM]);
+		set_pref("DrawTerrainShoreFrills", !PSD[SDF_NO_SHORE_FRILLS]);
+		set_pref("RepeatRoomDescriptions", bool(PSD[SDF_ROOM_DESCS_AGAIN]));
+		set_pref("EasyMode", bool(PSD[SDF_EASY_MODE]));
+		set_pref("LessWanderingMonsters", bool(PSD[SDF_LESS_WANDER_ENC]));
+		set_pref("GameSpeed", PSD[SDF_GAME_SPEED]);
+	}
 	
 	bool success = sync_prefs();
 	if(!success){

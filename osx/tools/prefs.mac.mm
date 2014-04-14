@@ -14,23 +14,27 @@
 
 NSString* convertKey(std::string keypath) {
 	NSString* key = [NSString stringWithCString: keypath.c_str() encoding: NSASCIIStringEncoding];
-	return [key autorelease];
+	return key;
 }
 
 void set_pref(std::string keypath, bool value) {
 	[[NSUserDefaults standardUserDefaults] setBool: value forKey: convertKey(keypath)];
 }
 
-bool get_bool_pref(std::string keypath) {
-	return [[NSUserDefaults standardUserDefaults] boolForKey: convertKey(keypath)];
+bool get_bool_pref(std::string keypath, bool fallback) {
+	id val = [[NSUserDefaults standardUserDefaults] objectForKey: convertKey(keypath)];
+	if([val isKindOfClass: [NSNumber class]]) return [val boolValue];
+	return fallback;
 }
 
 void set_pref(std::string keypath, int value) {
 	[[NSUserDefaults standardUserDefaults] setInteger: value forKey: convertKey(keypath)];
 }
 
-int get_int_pref(std::string keypath) {
-	return [[NSUserDefaults standardUserDefaults] integerForKey: convertKey(keypath)];
+int get_int_pref(std::string keypath, int fallback) {
+	id val = [[NSUserDefaults standardUserDefaults] objectForKey: convertKey(keypath)];
+	if([val isKindOfClass: [NSNumber class]]) return [val intValue];
+	return fallback;
 }
 
 void append_iarray_pref(std::string keypath, int value) {
