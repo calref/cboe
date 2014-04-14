@@ -318,13 +318,15 @@ void play_see_monster_str(unsigned short m){
 	snd = scenario.scen_monsters[m].see_sound;
 	spec = scenario.scen_monsters[m].see_spec;
 	// First display strings, if any
-	cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
-	display_strings.setSound(snd);
-	display_strings.setRecordHandler(cStringRecorder()
-		.string1(NOTE_MONST, m, 0)
-		.string2(NOTE_MONST, m, 1)
-	);
-	display_strings.show();
+	if(str1 || str2) {
+		cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
+		display_strings.setSound(snd);
+		display_strings.setRecordHandler(cStringRecorder()
+			.string1(NOTE_MONST, m, 0)
+			.string2(NOTE_MONST, m, 1)
+		);
+		display_strings.show();
+	}
 	// Then run the special, if any
 	if(spec > -1){
 		for(int i = 2; i < 20; i++){
