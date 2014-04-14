@@ -74,10 +74,10 @@ eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
-char old_str1[256],old_str2[255],one_back1[255],one_back2[255];
+std::string old_str1, old_str2, one_back1, one_back2;
 extern word_rect_type preset_words[9];
 RECT talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
-char title_string[50];
+std::string title_string;
 m_num_t store_monst_type;
 short store_m_num;
 RECT dummy_rect = {0,0,0,0};
@@ -166,13 +166,13 @@ void end_shop_mode()
 	
 	shop_sbar->hide();
 	if (store_pre_shop_mode == 20) {
-		strcpy((char *)old_str1,"You conclude your business.");
-		strcpy((char *)old_str2,"");
-		strcpy((char *)one_back1,"You conclude your business.");
-		strcpy((char *)one_back2,"");
+		old_str1 = "You conclude your business.";
+		old_str2 = "";
+		one_back1 = "You conclude your business.";
+		one_back2 = "";
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
-		place_talk_str((char *)old_str1,"",0,dummy_rect);
+		place_talk_str(old_str1, "", 0, dummy_rect);
 		}
 			
 	overall_mode = store_pre_shop_mode;
@@ -511,8 +511,7 @@ void set_up_shop_array()
 void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic)////
 {
 	RECT area_rect;
-	char place_string1[256] = "";
-	char place_string2[256] = "";
+	std::string place_string1;
 		
 	store_personality = personality;
 		
@@ -523,15 +522,13 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	talk_gworld.create(area_rect.width(), area_rect.height());
 	
 	// first make sure relevant talk strs are loaded in
-	if (personality / 10 != univ.town.cur_talk_loaded){
-		load_town(personality / 10,univ.town.cur_talk);
-	}
+	load_town(personality / 10,univ.town.cur_talk);
 
 	// load all possible responses
 	store_responses();
 
 	// Dredge up critter's name
-	sprintf((char *) title_string,"%s:",univ.town.cur_talk->talk_strs[personality % 10]);
+	title_string = std::string(univ.town.cur_talk->talk_strs[personality % 10]) + ":";
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
@@ -539,15 +536,15 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	sprintf((char *) place_string1,"%s",univ.town.cur_talk->talk_strs[personality % 10 + 10]);
+	place_string1 = univ.town.cur_talk->talk_strs[personality % 10 + 10];
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
-	strcpy((char *) old_str1,(char *) place_string1);
-	strcpy((char *) old_str2,(char *) place_string2);
-	strcpy((char *) one_back1,(char *) place_string1);
-	strcpy((char *) one_back2,(char *) place_string2);
-	place_talk_str((char *) place_string1,(char *) place_string2,0,dummy_rect);
+	old_str1 = place_string1;
+	old_str2 = "";
+	one_back1 = place_string1;
+	one_back2 = "";
+	place_talk_str(place_string1, "", 0, dummy_rect);
 	
 	put_item_screen(stat_window,0);
 	give_help(5,6);
@@ -589,7 +586,7 @@ void handle_talk_event(location p)
 
 	for (i = 0; i < 9; i++)
 		if ((p.in(preset_words[i].word_rect)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
-			click_talk_rect((char *) old_str1,(char *) old_str2,preset_words[i].word_rect);
+			click_talk_rect(old_str1,old_str2,preset_words[i].word_rect);
 			switch (i) {
 				case 0: case 1: case 2: case 7: case 8:
 					force_special = i + 1;
@@ -635,7 +632,7 @@ void handle_talk_event(location p)
 	if (i < 100) {
 		for (i = 0; i < 50; i++) 
 			if ((p.in(store_words[i].word_rect)) && (talk_end_forced == false)) {
-				click_talk_rect((char *) old_str1,(char *) old_str2,store_words[i].word_rect);
+				click_talk_rect(old_str1,old_str2,store_words[i].word_rect);
 				for (j = 0; j < 4; j++)
 					asked[j] = store_words[i].word[j];
 			
@@ -677,11 +674,11 @@ void handle_talk_event(location p)
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
 				strnum2 = 0;
-				strcpy((char *) one_back1,(char *) old_str1);
-				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,place_string1.c_str());
-				strcpy((char *) old_str2,place_string2.c_str());
-				place_talk_str(place_string1.c_str(),place_string2.c_str(),0,dummy_rect);
+				one_back1 = old_str1;
+				one_back2 = old_str2;
+				old_str1 = place_string1;
+				old_str2 = place_string2;
+				place_talk_str(place_string1,place_string2,0,dummy_rect);
 				return;
 				break;
 			case 4: // buy button
@@ -710,11 +707,11 @@ void handle_talk_event(location p)
 				strnum1 = oldstrnum1; strnum2 = oldstrnum2;
 				place_string1 = one_back1;
 				place_string2 = one_back2;
-				strcpy((char *) one_back1,(char *) old_str1);
-				strcpy((char *) one_back2,(char *) old_str2);
-				strcpy((char *) old_str1,place_string1.c_str());
-				strcpy((char *) old_str2,place_string2.c_str());
-				place_talk_str(place_string1.c_str(),place_string2.c_str(),0,dummy_rect);
+				one_back1 = old_str1;
+				one_back2 = old_str2;
+				old_str1 = place_string1;
+				old_str2 = place_string2;
+				place_talk_str(place_string1,place_string2,0,dummy_rect);
 				return;
 				break;
 			}
@@ -722,13 +719,13 @@ void handle_talk_event(location p)
 	
 	which_talk_entry = scan_for_response(asked);
 	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
-		strcpy((char *) one_back1,(char *) old_str1);
-		strcpy((char *) one_back2,(char *) old_str2);
-		strcpy((char *) old_str2,"");
-		sprintf((char *) old_str1,"%s",univ.town.cur_talk->talk_strs[store_personality % 10 + 160]);
-		if (strlen((char *) old_str1) < 2)
-			strcpy((char *) old_str1,"You get no response.");
-		place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
+		one_back1 = old_str1;
+		one_back2 = old_str2;
+		old_str2 = "";
+		old_str1 = univ.town.cur_talk->talk_strs[store_personality % 10 + 160];
+		if(old_str1.length() < 2)
+			old_str1 = "You get no response.";
+		place_talk_str(old_str1,old_str2,0,dummy_rect);
 		strnum1 = -1;
 		return;	
 		}
@@ -1032,11 +1029,11 @@ void handle_talk_event(location p)
 			
 		}
 
-	strcpy((char *) one_back1,(char *) old_str1);
-	strcpy((char *) one_back2,(char *) old_str2);
-	strcpy((char *) old_str1,place_string1.c_str());
-	strcpy((char *) old_str2,place_string2.c_str());
-	place_talk_str((char *) old_str1,(char *) old_str2,0,dummy_rect);
+	one_back1 = old_str1;
+	one_back2 = old_str2;
+	old_str1 = place_string1;
+	old_str2 = place_string2;
+	place_talk_str(old_str1,old_str2,0,dummy_rect);
 	
 }
 

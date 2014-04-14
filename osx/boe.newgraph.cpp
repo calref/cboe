@@ -86,10 +86,10 @@ extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic,current_pc;
 extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
-extern char old_str1[256],old_str2[256],one_back1[256],one_back2[256];
+extern std::string old_str1,old_str2,one_back1,one_back2;
 extern word_rect_type preset_words[9];
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
-extern char title_string[50];
+extern std::string title_string;
 extern m_num_t store_monst_type;
 //extern hold_responses store_resp[83];
 
@@ -950,7 +950,7 @@ void refresh_shopping()
 		}
 }
 
-void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
+void click_talk_rect(std::string str_to_place,std::string str_to_place2,RECT c_rect)
 {
 
 	place_talk_str(str_to_place,str_to_place2,1,c_rect);
@@ -1071,7 +1071,7 @@ void get_item_interesting_string(cItemRec item,char *message)
 }
 
 
-void place_talk_str(const char *str_to_place,const char *str_to_place2,short color,RECT c_rect)
+void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;
@@ -1079,7 +1079,7 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {19,48,42,260};
 	RECT dest_rect,help_from = {85,36,101,54};
-	char str[356];
+	std::string str;
 	sf::Text str_to_draw;
 	static const char fn2[] = "Dungeon Bold";
 	static const char fn3[] = "Palatino";
@@ -1151,10 +1151,10 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 	TEXT.colour = c[3];
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
+	win_draw_string(talk_gworld,dest_rect,title_string.c_str(),2,18);
 	dest_rect.offset(-1,-1);
 	TEXT.colour = c[4];
-	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
+	win_draw_string(talk_gworld,dest_rect,title_string.c_str(),2,18);
 		
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1172,11 +1172,11 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 		for (i = 0; i < 50; i++)
 			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
 			
-	str_len = (short) strlen((char *)str_to_place);
+	str_len = str_to_place.length();
 	if (str_len == 0) {
-		sprintf((char *) str_to_place,".");
+		str_to_place = ".";
 		}
-	strcpy((char *) str,(char *) str_to_place);
+	str = str_to_place;
 	for (i = 0; i < 257; i++) {
 		text_len[i]= 0;
 		char c = str[i];
@@ -1248,7 +1248,7 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 			int end = last_word_break - last_line_break;
 			char c = str[end];
 			str[end] = 0;
-			str_to_draw.setString(str + last_line_break);
+			str_to_draw.setString(str.substr(last_line_break));
 			str_to_draw.setPosition(moveTo);
 			mainPtr.draw(str_to_draw);
 			str[end] = c;
@@ -1274,12 +1274,12 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 		}
 		
 	// Now for string 2
-	str_len = (short) strlen((char *)str_to_place2);
+	str_len = str_to_place2.length();
 	start_of_last_kept_word = -1;
 	
 	if (str_len > 0) {
 		
-		strcpy((char *) str,str_to_place2);
+		str = str_to_place2;
 		for (i = 0; i < 257; i++) {
 			text_len[i]= 0;
 			char c = str[i];
@@ -1343,7 +1343,7 @@ void place_talk_str(const char *str_to_place,const char *str_to_place2,short col
 			int end = last_word_break - last_line_break;
 			char c = str[end];
 			str[end] = 0;
-			str_to_draw.setString(str + last_line_break);
+			str_to_draw.setString(str.substr(last_line_break));
 			str_to_draw.setPosition(moveTo);
 			mainPtr.draw(str_to_draw);
 			str[end] = c;
