@@ -107,7 +107,9 @@ background-image: url('img/bg/<xsl:value-of select='/dialog/@skin'/>.png');
 			<xsl:when test='@font = "bold"'>Silom</xsl:when>
 			<xsl:otherwise><xsl:value-of select='./@font'/></xsl:otherwise>
 		</xsl:choose>;
-		background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
+		<xsl:if test='./@state'>
+			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
+		</xsl:if>
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
 		width: <xsl:value-of select='./@width'/>px;
 	</xsl:attribute>
@@ -135,7 +137,9 @@ background-image: url('img/bg/<xsl:value-of select='/dialog/@skin'/>.png');
 			<xsl:otherwise><xsl:value-of select='./@font'/></xsl:otherwise>
 		</xsl:choose>;
 		border-color: red;
-		background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
+		<xsl:if test='./@state'>
+			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
+		</xsl:if>
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
 		width: <xsl:value-of select='./@width'/>px;
 	</xsl:attribute>

@@ -125,6 +125,7 @@ title {
 	min-width: 14px;
 	height: 10px;
 	text-align: left;
+	background-image: url('img/button/led-off.png');
 	background-position: left center;
 	padding-left: 18px;
 	padding-top: 0px;
