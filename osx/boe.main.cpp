@@ -305,14 +305,6 @@ void Handle_One_Event()
 	
 	through_sending();
 	Handle_Update();
-	if (!gInBackground && event.type == sf::Event::MouseMoved &&
-		(isFrontWindow(mainPtr) || isFrontWindow(mini_map))) {
-			location where(event.mouseMove.x, event.mouseMove.y);
-		change_cursor(where);
-		// TODO: Probably don't actually need the conditional here?
-		if(animTimer.getElapsedTime().asMilliseconds() % fiveTicks <= 60)
-			draw_targeting_line(where);
-	}
 
 	//(cur_time - last_anim_time > 42)
 	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (in_startup_mode == false) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
@@ -331,7 +323,8 @@ void Handle_One_Event()
 	event_in_dialog = handle_dialog_event();
 	
 	if (event_in_dialog == false)
-		if(!mainPtr.pollEvent(event)) {
+		if(!mainPtr.waitEvent(event)) {
+			// TODO: Actually, this is probably an error, so maybe it should be handled as such.
 			flushingInput = false;
 			mainPtr.display();
 			return;
@@ -350,11 +343,25 @@ void Handle_One_Event()
 			Mouse_Pressed();
 			break;
 			
+		case sf::Event::MouseLeft:
+			// Make sure we don't have an invisible or arrow cursor when it's outside the window
+			// TODO: Would probably be better to reset the cursor to normal rather than making it a sword
+			mainPtr.setMouseCursorVisible(true);
+			make_cursor_sword();
+			break;
+			
 		case sf::Event::MouseMoved:
 			// The original game called ObscureCursor in the handle_keystroke function,
 			// which hides the mouse cursor until it's moved.
 			// SFML's hide cursor function is always permanent, so this is here to balance that out.
 			mainPtr.setMouseCursorVisible(true);
+			if(!gInBackground && (isFrontWindow(mainPtr) || isFrontWindow(mini_map))) {
+				location where(event.mouseMove.x, event.mouseMove.y);
+				change_cursor(where);
+				// TODO: Probably don't actually need the conditional here?
+				if(animTimer.getElapsedTime().asMilliseconds() % fiveTicks <= 60)
+					draw_targeting_line(where);
+			}
 			break;
 		
 		case sf::Event::GainedFocus:
@@ -394,6 +401,7 @@ void Handle_One_Event()
 			}
 #endif
 		}
+	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
 	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
 }
 
@@ -444,8 +452,6 @@ void Handle_Update()
 {
 	// TODO: What about updating other windows? Particularly the minimap
 	sf::RenderWindow& the_window = mainPtr;
-	
-	reset_text_bar(); // Guarantees text bar gets refreshed
 	
 	if (&the_window == &mainPtr) {
 		if (in_startup_mode == true) {

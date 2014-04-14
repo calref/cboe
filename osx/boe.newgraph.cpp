@@ -147,6 +147,8 @@ char last_light_mask[13][13];
 
 void apply_unseen_mask()
 {
+	// TODO: This is causing major lag and not even working properly
+	return;
 	RECT base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	short i,j,k,l;
 	bool need_bother = false;
