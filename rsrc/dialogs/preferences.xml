@@ -4,32 +4,21 @@
 <dialog skin='dark' defbtn='okay'>
 	<!--
 	 TODO: All the LEDs here should have bold labels according to the original DITL; do they get that by default? The XSL transformation with CSS stylesheet doesn't give them bold labels.
-	 TODO: This dialog is very disorganized; rearrange stuff to be in order
 	 -->
-	<button name='okay' type='regular' top='426' left='354'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='426' left='281'>Cancel</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='49' width='218' height='16'>
+		Blades of Exile Preferences:
+	</text>
+	<text size='large' top='25' left='59' width='182' height='17'>Display alignment:</text>
 	<text framed='true' top='48' left='64' width='277' height='102'/>
 	<group name='display'>
-		<led name='mid' top='88' left='147' width='75'>Center</led>
 		<led name='tl' top='55' left='72' width='54'>Top Left</led>
 		<led name='tr' top='55' left='213' width='62'>Top Right</led>
+		<led name='mid' top='88' left='147' width='75'>Center</led>
 		<led name='bl' top='126' left='72' width='104'>Bottom Left</led>
 		<led name='br' top='126' left='213' width='104'>Bottom Right</led>
 		<led name='win' top='159' left='66' width='228'>Small Window (not full screen)</led>
 	</group>
-	<text size='large' top='25' left='59' width='182' height='17'>Display alignment:</text>
-	<text size='large' top='6' left='49' width='218' height='16'>
-		Blades of Exile Preferences:
-	</text>
-	<led name='nomaps' top='309' left='53' width='120'>Don't Save Maps</led>
-	<led name='nosound' top='307' left='228' width='117'>No Sounds</led>
-	<led name='nofrills' top='244' left='53' width='335'>No graphics frills (lose special effects)</led>
-	<led name='repeatdesc' top='329' left='53' width='287'>Show room descriptions more than once</led>
-	<pict type='dlog' num='16' top='8' left='8'/>
-	<led name='nohelp' top='349' left='53' width='306'>Never show instant help</led>
-	<led name='resethelp' top='369' left='53' width='340'>
-		Reset instant help (all help windows will reappear)
-	</led>
 	<text size='large' top='181' left='54' width='182' height='17'>Game speed:</text>
 	<group name='speed'>
 		<led name='fast' top='202' left='69' width='53'>Fast</led>
@@ -37,9 +26,19 @@
 		<led name='slow' top='202' left='244' width='53'>Slow</led>
 		<led name='snail' top='202' left='328' width='70'>Quite Slow</led>
 	</group>
-	<led name='easier' top='389' left='53' width='352'>Make game easier (monsters much weaker)</led>
-	<led name='lesswm' top='409' left='53' width='340'>Fewer wandering monsters</led>
 	<text size='large' top='221' left='54' width='182' height='17'>For older machines:</text>
+	<led name='nofrills' top='244' left='53' width='335'>No graphics frills (lose special effects)</led>
 	<led name='noanim' top='264' left='53' width='335'>Turn off terrain animation</led>
 	<led name='noshore' top='284' left='53' width='335'>Turn of frills on shore</led>
+	<led name='nomaps' top='309' left='53' width='120'>Don't Save Maps</led>
+	<led name='nosound' top='307' left='228' width='117'>No Sounds</led>
+	<led name='repeatdesc' top='329' left='53' width='287'>Show room descriptions more than once</led>
+	<led name='nohelp' top='349' left='53' width='306'>Never show instant help</led>
+	<led name='resethelp' top='369' left='53' width='340'>
+		Reset instant help (all help windows will reappear)
+	</led>
+	<led name='easier' top='389' left='53' width='352'>Make game easier (monsters much weaker)</led>
+	<led name='lesswm' top='409' left='53' width='340'>Fewer wandering monsters</led>
+	<button name='okay' type='regular' top='426' left='354'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='426' left='281'>Cancel</button>
 </dialog>
