@@ -1370,7 +1370,7 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 			PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState();
 			PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState();
 			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState();
-			//PSD[SDF_SKIP_STARTUP] = cd_get_led(1099,46);
+			show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
 			std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 			if(speed == "fast")
 				PSD[SDF_GAME_SPEED] = 0;
@@ -1439,7 +1439,7 @@ void pick_preferences()
 	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_LESS_WANDER_ENC] ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_TER_ANIM] ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_SHORE_FRILLS] ? led_red : led_off);
-	//cd_set_led(1099,46,(PSD[SDF_SKIP_STARTUP] != 0) ? 1 : 0);
+	dynamic_cast<cLed&>(prefsDlog["skipsplash"]).setState(show_startup_splash ? led_off : led_red);
 	cLedGroup& gameSpeed = dynamic_cast<cLedGroup&>(prefsDlog["speed"]);
 	switch(PSD[SDF_GAME_SPEED]) {
 		case 0:

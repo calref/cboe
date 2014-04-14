@@ -58,7 +58,6 @@
 #define SDF_NO_TER_ANIM			306][9
 /*
  [305]
- [4] will be Skip startup screen
  [6] is No targeting line (use if getting crashes)
  [5] is Fewer sounds (use if getting crashes)
  */
