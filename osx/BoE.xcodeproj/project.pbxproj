@@ -498,6 +498,7 @@
 		91E5C7B90F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91EC481018FBABB100BB1E86 /* prefs.mac.mm */; };
+		91EC485518FC6C4400BB1E86 /* pc-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074B18F0FE3F00F7BD7F /* pc-info.xml */; };
 		91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
@@ -932,6 +933,7 @@
 				91364F5818F092EE0033B58E /* item-info.xml in Copy Dialog Definitions */,
 				91364F5918F092EE0033B58E /* pick-potion.xml in Copy Dialog Definitions */,
 				9156039018F4810200A50C51 /* many-str.xml in Copy Dialog Definitions */,
+				91EC485518FC6C4400BB1E86 /* pc-info.xml in Copy Dialog Definitions */,
 				91364F5A18F092EE0033B58E /* pick-pc-name.xml in Copy Dialog Definitions */,
 				91364F5B18F092EE0033B58E /* soul-crystal.xml in Copy Dialog Definitions */,
 				91364F5C18F092EE0033B58E /* monster-info.xml in Copy Dialog Definitions */,
