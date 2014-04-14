@@ -26,12 +26,12 @@
 		<led name='slow' top='202' left='244' width='53'>Slow</led>
 		<led name='snail' top='202' left='328' width='70'>Quite Slow</led>
 	</group>
-	<text size='large' top='221' left='54' width='182' height='17'>For older machines:</text>
+	<text size='large' top='221' left='53' width='182' height='17'>For older machines:</text>
 	<led name='nofrills' top='244' left='53' width='335'>No graphics frills (lose special effects)</led>
 	<led name='noanim' top='264' left='53' width='335'>Turn off terrain animation</led>
 	<led name='noshore' top='284' left='53' width='335'>Turn of frills on shore</led>
 	<led name='nomaps' top='309' left='53' width='120'>Don't Save Maps</led>
-	<led name='nosound' top='307' left='228' width='117'>No Sounds</led>
+	<led name='nosound' top='309' left='228' width='117'>No Sounds</led>
 	<led name='repeatdesc' top='329' left='53' width='287'>Show room descriptions more than once</led>
 	<led name='nohelp' top='349' left='53' width='306'>Never show instant help</led>
 	<led name='resethelp' top='369' left='53' width='340'>
