@@ -1594,8 +1594,7 @@ bool handle_keystroke(sf::Event& event){
 	using kb = sf::Keyboard;
 	using Key = sf::Keyboard::Key;
 	
-	// TODO: Make sure these are in the right order
-	char keypad[10] = {kb::Numpad7,kb::Numpad8,kb::Numpad9,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad0};
+	Key keypad[10] = {kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad7,kb::Numpad8,kb::Numpad9};
 	// TODO: The duplication of location here shouldn't be necessary...
 	location terrain_click[10] = {location{150,185},location{120,215},location{150,215},location{180,215},
 		location{120,185},location{150,185},location{180,185},
@@ -2136,7 +2135,7 @@ bool handle_keystroke(sf::Event& event){
 				pass_point.y = bottom_buttons[j].top + 5;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
-				are_done = handle_action(event);
+				are_done = handle_action(pass_event);
 			}
 			break;  
 	}
