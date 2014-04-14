@@ -158,6 +158,7 @@ bool mac_is_intel;
 
 int main(void)
 {
+	try{
 		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		Initialize();
@@ -209,6 +210,16 @@ int main(void)
 		
 		close_program();
 		return 0;
+	} catch(std::exception& x) {
+		giveError(x.what());
+		throw;
+	} catch(std::string& x) {
+		giveError(x);
+		throw;
+	} catch(...) {
+		giveError("An unknown error occurred!");
+		throw;
+	}
 }
 
 void check_for_intel(){
