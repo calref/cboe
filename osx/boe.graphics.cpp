@@ -1636,13 +1636,12 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 
 void draw_pointing_arrows() 
 {
-	//RECT sources[4] = {{65,46,73,54},{56,46,64,54},{56,37,64,45},{65,37,73,45}};
-	// TODO: The duplication of  here shouldn't be necessary...
+	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT sources[4] = {
-		RECT{352,58,360,76}, // up
-		RECT{352,20,360,38}, // left
-		RECT{352,01,360,19}, // down
-		RECT{352,39,360,57}  // right
+		RECT{352,28,360,36}, // up
+		RECT{352,10,360,18}, // left
+		RECT{352,01,360,9}, // down
+		RECT{352,19,360,27}  // right
 	};
 	RECT dests[8] = {RECT{7,100,15,108},RECT{7,170,15,178},RECT{140,7,148,15},RECT{212,7,220,15},
 		RECT{346,100,354,108},RECT{346,170,354,178},RECT{140,274,148,282},RECT{212,274,220,282}};
