@@ -522,9 +522,7 @@ void put_party_in_scen(std::string scen_name)
 	center = scenario.where_start;
 	update_explored(scenario.where_start);
 	overall_mode = MODE_TOWN;
-	redraw_screen();
-	// TODO: Maybe I should just be calling mainPtr.display() in redraw_screen()...
-	mainPtr.display();
+	redraw_screen(REFRESH_ALL);
 	set_stat_window(0);
 	adjust_spell_menus();
 	adjust_monst_menu();
@@ -1725,7 +1723,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 //			overall_mode = MODE_OUTDOORS;
 //			center = univ.party.p_loc;
 //			update_explored(univ.party.p_loc);
-			redraw_screen();
+			redraw_screen(REFRESH_ALL);
 			break;
 			
 		case 1: case 20: case 39:  case 2: case 11: case 27: case 28: case 36: case 19: case 24:

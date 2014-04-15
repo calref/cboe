@@ -224,13 +224,7 @@ void put_pc_screen()
 					pc_area_button_active[i][j] = 0;
 				}
 		}
-	// Now put text on window.
-	mainPtr.setActive();
-	to_draw_rect = RECT(pc_stats_gworld);
-	RECT oldRect = to_draw_rect;
-	to_draw_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-	pc_stats_gworld.display(); // TODO: I think displaying is necessary before accessing the texture...?
-	rect_draw_some_item(pc_stats_gworld.getTexture(), oldRect, to_draw_rect,ul);
+	pc_stats_gworld.display();
 
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
@@ -385,15 +379,6 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			
 	place_item_bottom_buttons();
 	item_stats_gworld.display();
-	
-	// Now put text on window.
-	mainPtr.setActive();
-	
-	for (i = 0; i < 3; i++) {
-		dest_rect = parts_of_area_to_draw[i];
-		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul);
-		}
 }
 
 void place_buy_button(short position,short pc_num,short item_num)

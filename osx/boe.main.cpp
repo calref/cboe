@@ -161,7 +161,7 @@ int main(void)
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		Initialize();
 		init_fileio();
-		init_graph_tool(redraw_screen);
+		init_graph_tool();
 		
 		Set_Window_Drag_Bdry();
 		
@@ -184,7 +184,7 @@ int main(void)
 		//PSD[SDF_GAME_SPEED] = 1;
 		//init_anim(0);
 		
-		fancy_startup_delay();
+		flushingInput = true;
 		
 		init_spell_menus();
 		
@@ -456,27 +456,7 @@ bool handle_dialog_event()
 
 void Handle_Update()
 {
-		if(overall_mode == MODE_STARTUP) {
-			/*if (first_startup_update == true) 
-				first_startup_update = false;
-				else*/ draw_startup(0);
-/*			if (first_sound_played == false) {
-				play_sound(22);
-				first_sound_played = true;
-				}  */
-			}
-		else {
-			if (first_update == true) {
-				first_update = false;
-				if (overall_mode == MODE_OUTDOORS) 
-					redraw_screen();
-				if ((overall_mode > MODE_OUTDOORS) & (overall_mode < MODE_COMBAT))
-					redraw_screen();
-			// 1st update never combat
-				}
-			else //refresh_screen(0); 
-				redraw_screen();
-			}
+	redraw_screen(REFRESH_NONE);
 	
 	if(map_visible) draw_map(false);
 	else mini_map.setVisible(false);

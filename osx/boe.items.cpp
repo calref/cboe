@@ -1108,8 +1108,6 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
 	std::string item_hit = customDialog.show();
 	
-	redraw_screen();
-	
 	for(int i = 0; i < 3; i++) {
 		cBasicButtonType& btn = basic_buttons[available_btns[i]];
 		if(btn && item_hit == btn->label)
@@ -1190,11 +1188,6 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	
 	selectPc.run();
 	item_hit = selectPc.getResult<short>();
-
-	if(overall_mode != MODE_STARTUP)
-		//refresh_screen(0); 
-		redraw_screen();
-		else draw_startup(0);
 
 	return item_hit;
 }

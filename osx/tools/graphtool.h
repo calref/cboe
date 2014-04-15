@@ -94,7 +94,7 @@ struct cCustomGraphics {
 
 
 
-void init_graph_tool(void (*redraw_callback)());
+void init_graph_tool();
 void clean_up_graphtool();
 void set_cursor(cursor_type which_curs);
 void restore_cursor();

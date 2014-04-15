@@ -193,7 +193,6 @@ void adjust_window_mode()
 				}
 
 			}
-			redraw_screen();
 	if (text_sbar != NULL) {
 		text_sbar->relocate({ul.x + 546,ul.y + 283});
 		item_sbar->relocate({ul.x + 546,ul.y + 146});
@@ -266,26 +265,6 @@ void plop_fancy_startup()
 	if(display_mode != 5) showMenuBar();
 }
 
-void fancy_startup_delay()
-{
-	// OK try this ... destroy and recreate window.
-	/*DisposeWindow(mainPtr);
-	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
-	SetPort(mainPtr);						/* set window to current graf port 
-	text_sbar = NewControl(mainPtr,&sbar_rect,tit,false,58,0,58,scrollBarProc,1);
-	item_sbar = NewControl(mainPtr,&item_sbar_rect,tit,false,0,0,16,scrollBarProc,2);
-	shop_sbar = NewControl(mainPtr,&shop_sbar_rect,tit,false,0,0,16,scrollBarProc,3);
-	adjust_window_mode();
-	RestoreDeviceClut(GetMainDevice()); */
-	
-	// TODO: This probably isn't needed here?
-	TEXT.style = sf::Text::Regular;
-	
-	draw_startup(0);
-
-	flushingInput = true;
-}
-
 void init_startup()
 {
 	startup_loaded = true;
@@ -311,15 +290,6 @@ void draw_startup(short but_type)
 	if (startup_loaded == false)
 		return;
 	
-//	r1.bottom = ul.x + 5;
-//	tileImage(mainPtr, r1,bg_gworld,bg[4]);
-//	r2.right = ul.y - 13;
-//	tileImage(mainPtr, r2,bg_gworld,bg[4]);
-//	r3.top += ul.x + 5;
-//	tileImage(mainPtr, r3,bg_gworld,bg[4]);
-//	r4.left += ul.y - 13;
-//	tileImage(mainPtr, r4,bg_gworld,bg[4]);
-	tileImage(mainPtr, windRect, bg_gworld, bg[4]);
 	to_rect = startup_from[0];
 	to_rect.offset(-13,5);
 	rect_draw_some_item(startup_gworld,startup_from[0],to_rect,ul);
@@ -643,68 +613,39 @@ void set_gworld_fonts(short font_num)
 #endif
 }
 
-void draw_main_screen()
-{
-	// TODO: If this is called during MODE_TALKING, it's done from the wrong place. It's not called from redraw_screen during MODE_TALKING.
-	if (overall_mode == MODE_TALKING) {
-		put_background();
-		}
-		else {
-//			rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], win_to_rects[0],ul);
- 
-			draw_buttons(0);
-			if (overall_mode == MODE_COMBAT)
-				draw_pcs(pc_pos[current_pc],1);
-			if (overall_mode == MODE_FANCY_TARGET)
-				draw_targets(center);	
-			}	
-	draw_text_area(0);
-	text_sbar->show();
-	text_sbar->draw();
-	item_sbar->show();
-	item_sbar->draw();
-	if (overall_mode == MODE_SHOPPING) {
-		shop_sbar->show();
-		shop_sbar->draw();
-		}
-	else shop_sbar->hide();
-}
-
-// redraw_screen does the very first redraw, and any full redraw
-void redraw_screen(){
+void redraw_screen(int refresh) {
+	// We may need to update some of the offscreen textures
+	if(refresh & REFRESH_TERRAIN) draw_terrain(1);
+	if(refresh & REFRESH_STATS) put_pc_screen();
+	if(refresh & REFRESH_INVEN) put_item_screen(stat_window, 0);
+	if(refresh & REFRESH_TRANS) print_buf();
+	
 	put_background();
-	if(overall_mode == MODE_STARTUP)
-		draw_startup(0);
-	else{
-		switch (overall_mode) {
-			case MODE_TALKING:
-				refresh_talking();
-				break;
-			case MODE_SHOPPING:
-				refresh_shopping();
-				break;
-			default:
-				draw_main_screen();
-				draw_terrain(0);
-				draw_text_bar(1);
-				if (overall_mode == MODE_COMBAT)
-					draw_pcs(pc_pos[current_pc],1);
-				if (overall_mode == MODE_FANCY_TARGET)
-					draw_targets(center);
-				break;
-		}
-		put_pc_screen();
-		put_item_screen(stat_window,0);
-		print_buf();
-		text_sbar->show();
+	switch(overall_mode) {
+		case MODE_STARTUP:
+			draw_startup(0);
+			break;
+		case MODE_TALKING:
+			refresh_talking();
+			break;
+		case MODE_SHOPPING:
+			refresh_shopping();
+			break;
+		default:
+			redraw_terrain();
+			draw_text_bar(bool(refresh & REFRESH_BAR));
+			draw_buttons(0);
+			break;
+	}
+	if(overall_mode == MODE_COMBAT)
+		draw_pcs(pc_pos[current_pc],1);
+	if(overall_mode == MODE_FANCY_TARGET)
+		draw_targets(center);
+	if(overall_mode != MODE_STARTUP) {
+		refresh_stat_areas(0);
 		text_sbar->draw();
-		item_sbar->show();
 		item_sbar->draw();
-		if (overall_mode == MODE_SHOPPING) {
-			shop_sbar->show();
-			shop_sbar->draw();
-		}
-		else shop_sbar->hide();
+		shop_sbar->draw();
 	}
 }
 
@@ -712,7 +653,9 @@ void put_background()
 {
 	RECT bg_pict;
 
-	if (is_out()) {
+	if(overall_mode == MODE_STARTUP)
+		bg_pict = bg[4];
+	else if(is_out()) {
 		if (univ.party.outdoor_corner.x >= 7)
 			bg_pict = bg[0]; 
 			else bg_pict = bg[10];
@@ -733,10 +676,6 @@ void put_background()
 				else bg_pict = bg[13]; 
 		}
 	tileImage(mainPtr, RECT(mainPtr), bg_gworld, bg_pict);
-	text_sbar->show();
-	text_sbar->draw();
-	item_sbar->show();
-	item_sbar->draw();
 }
 
 void draw_buttons(short mode)
@@ -770,15 +709,6 @@ void draw_buttons(short mode)
 	// Maybe try sf::BlendAdd when spec_draw is true?
 //	if (spec_draw == true)
 //		ForeColor(blackColor);
-}
-
-// In general, refreshes any area that has text in it, the stat areas, the text bar
-void draw_text_area(short mode)
-//short mode unused
-{
-	refresh_stat_areas(0);
-
-	draw_text_bar(0);
 }
 
 void reset_text_bar()

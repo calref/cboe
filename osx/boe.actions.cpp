@@ -651,7 +651,7 @@ bool handle_action(sf::Event event)
 							center = univ.town.p_loc;
 							//put_pc_screen();
 							set_stat_window(current_pc);
-							redraw_screen();
+							redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
 							play_sound(93);
 							need_reprint = true;
 							need_redraw = true;
@@ -1794,7 +1794,7 @@ bool handle_keystroke(sf::Event& event){
 			clear_map();			
 			add_string_to_buf("Debug: Reunite party and leave town.");	
 			print_buf();
-			redraw_screen();
+			redraw_screen(REFRESH_ALL);
 			break;
 			
 		case 'C':
@@ -1943,7 +1943,7 @@ bool handle_keystroke(sf::Event& event){
 			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
 						   scenario.out_start.x,scenario.out_start.y);
 			center = univ.town.p_loc = scenario.where_start;
-			redraw_screen();
+			redraw_screen(REFRESH_ALL);
 			add_string_to_buf("Debug:  You return to the start.");
 			print_buf();
 			break;
@@ -2199,11 +2199,7 @@ void do_save(short mode)
 	
 	
 	pause(6);
-//	initiate_redraw();
-//	put_pc_screen();
-//	put_item_screen(stat_window,0);
-//	print_buf();
-	redraw_screen();
+	redraw_screen(REFRESH_TEXT);
 }
 			
 void increase_age()////

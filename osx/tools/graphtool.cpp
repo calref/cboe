@@ -27,7 +27,6 @@ CursorRef cursors[24] = {
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 };
-void (*redraw_screen)();
 RECT bg[21];
 RECT map_pat[30];
 RECT bw_pats[6];
@@ -44,8 +43,7 @@ void clean_up_graphtool(){
 	CleanUp();
 }
 
-void init_graph_tool(void (*redraw_callback)()){
-	redraw_screen = redraw_callback;
+void init_graph_tool(){
 	int i,j;
 	// TODO: The duplication of location here shouldn't be necessary
 	// TODO: Store the hotspots on disk instead of hardcoded here

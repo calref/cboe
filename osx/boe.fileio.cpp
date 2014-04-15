@@ -214,7 +214,7 @@ void finish_load_party(){
 		center = univ.town.p_loc;
 	}
 	
-	redraw_screen();
+	redraw_screen(REFRESH_ALL);
 	current_pc = first_active_pc();
 	loaded_yet = true;
 	

@@ -185,8 +185,9 @@ void end_shop_mode()
 	stat_screen_mode = 0;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	//refresh_screen(0); 
-	redraw_screen();
+	//refresh_screen(0);
+	// TODO: I suspect REFRESH_NONE will suffice here
+	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
 
 void handle_shop_event(location p)
@@ -564,7 +565,8 @@ void end_talk_mode()
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	//refresh_screen(0);
-	redraw_screen();
+	// TODO: I suspect REFRESH_NONE will suffice here
+	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
 
 void handle_talk_event(location p)

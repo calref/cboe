@@ -1,9 +1,19 @@
 
 #include <SFML/Graphics.hpp>
 
+enum {
+	REFRESH_NONE = 0,
+	REFRESH_TERRAIN = 1 << 0,
+	REFRESH_STATS = 1 << 1,
+	REFRESH_INVEN = 1 << 2,
+	REFRESH_TRANS = 1 << 3,
+	REFRESH_BAR = 1 << 4,
+	REFRESH_TEXT = REFRESH_BAR | REFRESH_TRANS,
+	REFRESH_ALL = 0x1f
+};
+
 void adjust_window_mode();
 void plop_fancy_startup();
-void fancy_startup_delay();
 void init_startup();
 void reload_startup();
 void init_animation();
@@ -18,11 +28,9 @@ void end_startup();
 void Set_up_win ();
 void load_main_screen();
 void set_gworld_fonts(short font_num);
-void redraw_screen();
+void redraw_screen(int refresh);
 void put_background();
-void draw_main_screen();
 void draw_buttons(short mode);
-void draw_text_area(short mode);
 void reset_text_bar();
 void draw_text_bar(short mode);
 void put_text_bar(char *str);

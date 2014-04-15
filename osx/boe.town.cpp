@@ -695,7 +695,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 	
 
 		update_explored(to_return);
-			redraw_screen();
+			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
 
 		}
 
