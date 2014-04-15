@@ -145,8 +145,8 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		anim_type = -1;
 	}
 	
-	if (anim_type >= 0) 
-	{  
+	if (anim_type >= 0)
+	{
 		if ((is_town()) || (is_out()))
 			anim_onscreen = true;
 	}
@@ -171,7 +171,7 @@ void draw_monsters() ////
 	};
 	
 	if (is_out())
-		for (i = 0; i < 10; i++) 
+		for (i = 0; i < 10; i++)
 			if (univ.party.out_c[i].exists == true) {
 				if ((point_onscreen(univ.party.p_loc, univ.party.out_c[i].m_loc) == true) &&
 					(can_see(univ.party.p_loc, univ.party.out_c[i].m_loc,0) < 5)) {
@@ -192,11 +192,11 @@ void draw_monsters() ////
 							for (k = 0; k < width * height; k++) {
 								sf::Texture* src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-															  ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
+																							 ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
-							}					
+							}
 						}
 						if (picture_wanted < 1000) {
 							for (k = 0; k < width * height; k++) {
@@ -229,13 +229,13 @@ void draw_monsters() ////
 						if (univ.town.monst[i].picture_num >= 1000) {
 							sf::Texture* src_gw;
 							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
-														  k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
-														  + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
+																						 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
+																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7) 
+								((univ.town.monst[i].m_type < 7)
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
@@ -250,16 +250,16 @@ void draw_monsters() ////
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7) 
+								((univ.town.monst[i].m_type < 7)
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
 				}
-	if (is_combat()) {	
+	if (is_combat()) {
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
 				if (point_onscreen(center,univ.town.monst[i].cur_loc) || party_can_see_monst(i)) {
@@ -276,12 +276,12 @@ void draw_monsters() ////
 						if (univ.town.monst[i].picture_num >= 1000) {
 							sf::Texture* src_gw;
 							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
-														  k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
-														  + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
+																						 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
+																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) && 
-								((univ.town.monst[i].m_type < 7) 
+								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								((univ.town.monst[i].m_type < 7)
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
@@ -295,13 +295,13 @@ void draw_monsters() ////
 																	,k);
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) && 
-								((univ.town.monst[i].m_type < 7) 
+								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								((univ.town.monst[i].m_type < 7)
 								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
-							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0); 
+							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
 				}
@@ -322,9 +322,9 @@ void play_see_monster_str(unsigned short m){
 		cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
 		display_strings.setSound(snd);
 		display_strings.setRecordHandler(cStringRecorder()
-			.string1(NOTE_MONST, m, 0)
-			.string2(NOTE_MONST, m, 1)
-		);
+										 .string1(NOTE_MONST, m, 0)
+										 .string2(NOTE_MONST, m, 1)
+										 );
 		display_strings.show();
 	}
 	// Then run the special, if any
@@ -353,10 +353,10 @@ void draw_pcs(location center,short mode)
 		return;
 	if (can_draw_pcs == false)
 		return;
-		
+	
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == 1)
-//			if (((point_onscreen(center, pc_pos[i])) == true) && 
+//			if (((point_onscreen(center, pc_pos[i])) == true) &&
 //				((cartoon_happening == true) || (party_can_see(pc_pos[i]) < 6))){
 //				where_draw.x = pc_pos[i].x - center.x + 4;
 //				where_draw.y = pc_pos[i].y - center.y + 4;
@@ -365,37 +365,37 @@ void draw_pcs(location center,short mode)
 //					OffsetRect(&source_rect,28,0);
 //				if (combat_posing_monster == i)
 //					OffsetRect(&source_rect,0,288);
-//					
+//				
 //				if (mode == 0) {
-//					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
-//					}
-//					
+//					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+//				}
+//				
 //				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
 //					active_pc_rect.top = 18 + where_draw.y * 36;
 //					active_pc_rect.left = 18 + where_draw.x * 28;
 //					active_pc_rect.bottom = 54 + where_draw.y * 36;
 //					active_pc_rect.right = 46 + where_draw.x * 28;
 //					OffsetRect(&active_pc_rect,ul.h,ul.v);
-//				
+//					
 //					ForeColor(magentaColor);
 //					FrameRoundRect(&active_pc_rect,8,8);
 //					ForeColor(blackColor);
-//					}
+//				}
 //			}
-
-	// Draw current pc on top
-	if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
-		where_draw.x = pc_pos[current_pc].x - center.x + 4;
-		where_draw.y = pc_pos[current_pc].y - center.y + 4;
-		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
-		if(pc_dir[current_pc] >= 4)
-			source_rect.offset(28,0);
-		if (combat_posing_monster == current_pc)
-			source_rect.offset(0,288);
+			
+			// Draw current pc on top
+			if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
+				where_draw.x = pc_pos[current_pc].x - center.x + 4;
+				where_draw.y = pc_pos[current_pc].y - center.y + 4;
+				source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
+				if(pc_dir[current_pc] >= 4)
+					source_rect.offset(28,0);
+				if (combat_posing_monster == current_pc)
+					source_rect.offset(0,288);
 				
-		if (mode == 0)
-			Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0); 			
-		}
+				if (mode == 0)
+					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+			}
 }
 
 void draw_items(location where){
@@ -442,7 +442,7 @@ void draw_outd_boats(location center)
 			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 			//source_rect = boat_rects[0];
 			//OffsetRect(&source_rect,61,0);
-			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0); 
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
 	for (i = 0; i < 30; i++)
 		if ((point_onscreen(center, univ.party.horses[i].loc) == true) && (univ.party.horses[i].exists == true) &&
@@ -454,11 +454,11 @@ void draw_outd_boats(location center)
 			//OffsetRect(&source_rect,61,0);
 			//OffsetRect(&source_rect,0,74);
 			//OffsetRect(&source_rect,56,36);
-			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0); 
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0);
 		}
 }
 
-void draw_town_boat(location center) 
+void draw_town_boat(location center)
 {
 	location where_draw;
 	RECT source_rect;
@@ -466,28 +466,28 @@ void draw_town_boat(location center)
 	
 	for (i = 0; i < 30; i++)
 		if ((univ.party.boats[i].which_town == univ.town.num) &&
-		((point_onscreen(center, univ.party.boats[i].loc) == true) && 
-		(can_see(center, univ.party.boats[i].loc,0) < 5) && (univ.party.in_boat != i)
-		 && (pt_in_light(center,univ.party.boats[i].loc) == true))) {
-		where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
-		where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-		//source_rect = boat_rects[0];
-		//OffsetRect(&source_rect,61,0);
-		Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0); 
-		}
-	for (i = 0; i < 30; i++)	
+			((point_onscreen(center, univ.party.boats[i].loc) == true) &&
+			 (can_see(center, univ.party.boats[i].loc,0) < 5) && (univ.party.in_boat != i)
+			 && (pt_in_light(center,univ.party.boats[i].loc) == true))) {
+				where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
+				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
+				//source_rect = boat_rects[0];
+				//OffsetRect(&source_rect,61,0);
+				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
+			}
+	for (i = 0; i < 30; i++)
 		if ((univ.party.horses[i].which_town == univ.town.num) &&
-		((point_onscreen(center, univ.party.horses[i].loc) == true) && 
-		(can_see(center, univ.party.horses[i].loc,0) < 5) && (univ.party.in_horse != i)
-		 && (pt_in_light(center,univ.party.horses[i].loc) == true))) {
-		where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
-		where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-		//source_rect = boat_rects[0];
-		//OffsetRect(&source_rect,61,0);
-		//OffsetRect(&source_rect,0,74);
-		//OffsetRect(&source_rect,56,36);
-		Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0); 
-		}
+			((point_onscreen(center, univ.party.horses[i].loc) == true) &&
+			 (can_see(center, univ.party.horses[i].loc,0) < 5) && (univ.party.in_horse != i)
+			 && (pt_in_light(center,univ.party.horses[i].loc) == true))) {
+				where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
+				where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
+				//source_rect = boat_rects[0];
+				//OffsetRect(&source_rect,61,0);
+				//OffsetRect(&source_rect,0,74);
+				//OffsetRect(&source_rect,56,36);
+				Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0);
+			}
 }
 
 void draw_fields(location where){
@@ -546,7 +546,7 @@ void draw_fields(location where){
 	if(univ.town.is_force_cage(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,where_draw,1,0);
 }
-							
+
 void draw_party_symbol(short mode,location center)
 // mode currently unused
 {
@@ -554,7 +554,7 @@ void draw_party_symbol(short mode,location center)
 	location target(4,4);
 	short i = 0;
 	short dir_array[8] = {0,3,3,3,2,1,1,1};
-
+	
 	if (can_draw_pcs == false)
 		return;
 	if (party_toast() == true)
@@ -565,7 +565,7 @@ void draw_party_symbol(short mode,location center)
 		target.x += univ.town.p_loc.x - center.x;
 		target.y += univ.town.p_loc.y - center.y;
 	}
-
+	
 	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
@@ -576,13 +576,13 @@ void draw_party_symbol(short mode,location center)
 		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u);
 		else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
-		}
+	}
 	else if (univ.party.in_boat >= 0) {
 		//source_rect = boat_rects[dir_array[univ.party.direction]];
 		//OffsetRect(&source_rect,61,0);
 		if(univ.party.direction == 0 || univ.party.direction > 4) i = 4;
 		else i = 3;
-		Draw_Some_Item(vehicle_gworld, calc_rect(i,0), terrain_screen_gworld, target, 1, 0); 
+		Draw_Some_Item(vehicle_gworld, calc_rect(i,0), terrain_screen_gworld, target, 1, 0);
 	}else {
 		//source_rect = boat_rects[(univ.party.direction < 4) ? 0 : 1];
 		//OffsetRect(&source_rect,61,0);
@@ -637,13 +637,13 @@ RECT get_item_template_rect (short type_wanted)////
 		store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
 		store_rect.left = (type_wanted % 5) * BITMAP_WIDTH;
 		store_rect.right = store_rect.left + BITMAP_WIDTH;
-		}
-		else {
-			store_rect.top = (type_wanted / 10) * 18;
-			store_rect.bottom = store_rect.top + 18;
-			store_rect.left = (type_wanted % 10) * 18;
-			store_rect.right = store_rect.left + 18;		
-			}
+	}
+	else {
+		store_rect.top = (type_wanted / 10) * 18;
+		store_rect.bottom = store_rect.top + 18;
+		store_rect.left = (type_wanted % 10) * 18;
+		store_rect.right = store_rect.left + 18;
+	}
 	
 	return store_rect;
 }
@@ -684,10 +684,10 @@ bool is_wall(ter_num_t ter_type)////
 //	short pic;
 //
 //	pic = scenario.ter_types[ter_type].picture;
-//	
+//
 //	if ((pic >= 88) && (pic <= 120))
 //		return true;
-//	
+//
 //	return false;
 }
 bool is_ground(ter_num_t ter_type)
@@ -716,66 +716,66 @@ char get_fluid_trim(location where,ter_num_t ter_type)
 			at_right = true;
 		if (where.y == 95)
 			at_bot = true;
-		}
-		else {
+	}
+	else {
 		if (where.x == univ.town->max_dim() - 1)
 			at_right = true;
 		if (where.y == univ.town->max_dim() - 1)
 			at_bot = true;
-		}
-		
+	}
+	
 	// Set up trim for fluids
 	if (is_fluid(ter_type) == true) {
 		if (at_left == false) {
 			store = coord_to_ter(where.x - 1,where.y);
 			if (is_shore(store) == true)
 				to_return |= 64;
-			}
+		}
 		if (at_right == false) {
 			store = coord_to_ter(where.x + 1,where.y);
 			if (is_shore(store) == true)
 				to_return |= 4;
-			}
+		}
 		if (at_top == false) {
 			store = coord_to_ter(where.x,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 1;
-			}	
+		}
 		if (at_bot == false) {
 			store = coord_to_ter(where.x,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 16;
-			}
+		}
 		if ((at_left == false) && (at_top == false)) {
 			store = coord_to_ter(where.x - 1,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 128;
-			}
+		}
 		if ((at_right == false) && (at_bot == false)) {
 			store = coord_to_ter(where.x + 1,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 8;
-			}
+		}
 		if ((at_right == false) && (at_top == false)) {
 			store = coord_to_ter(where.x + 1,where.y - 1);
 			if (is_shore(store) == true)
 				to_return |= 2;
-			}
+		}
 		if ((at_left == false) && (at_bot == false)) {
 			store = coord_to_ter(where.x - 1,where.y + 1);
 			if (is_shore(store) == true)
 				to_return |= 32;
-			}
+		}
 	}
 	if (to_return & 1)
 		to_return &= 125;
 	if (to_return & 4)
 		to_return &= 245;
 	if (to_return & 10)
-		to_return &= 215;	
+		to_return &= 215;
 	if (to_return & 64)
-		to_return &= 95;	
-
+		to_return &= 95;
+	
 	return to_return;
 }
 
@@ -814,4 +814,4 @@ void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sound
 	}
 }
 
-	
+

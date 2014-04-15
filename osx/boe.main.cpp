@@ -107,7 +107,7 @@ long stored_key;
 short pixel_depth,old_depth = 8;
 short current_ground = 0,stat_screen_mode = 0;
 short anim_step = -1;
- 
+
 // Spell casting globals
 short store_mage = 0, store_priest = 0;
 short store_mage_lev = 0, store_priest_lev = 0;
@@ -115,7 +115,7 @@ short store_spell_target = 6,pc_casting;
 short pc_last_cast[2][6] = {{1,1,1,1,1,1},{1,1,1,1,1,1}};
 short num_targets_left = 0;
 location spell_targets[8];
-					
+
 /* Combat globals */
 short which_combat_type,town_type;
 location center;
@@ -148,7 +148,7 @@ sf::Clock animTimer;
 bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 bool sleep_field;
 
-// 
+//
 //	Main body of program Exile
 //
 void check_for_intel();
@@ -188,8 +188,8 @@ int main(void)
 		
 		init_spell_menus();
 		
-		//	if (overall_mode == MODE_STARTUP)
-		//		overall_mode = MODE_OUTDOORS;
+//		if (overall_mode == MODE_STARTUP)
+//			overall_mode = MODE_OUTDOORS;
 		mainPtr.display();
 		
 		if (!game_run_before)
@@ -230,7 +230,7 @@ void check_for_intel(){
 	else mac_is_intel = false;
 }
 
-// 
+//
 //	Initialize everything for the program, make sure we can run
 //
 
@@ -254,9 +254,9 @@ void Initialize(void)
 	//GetDateTime(&time);
 	//SetQDGlobalsRandomSeed(time);
 	srand(time(NULL));
-
+	
 	//
-	//	Make a new window for drawing in, and it must be a color window.  
+	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	sf::VideoMode screen = sf::VideoMode::getDesktopMode();
@@ -265,13 +265,13 @@ void Initialize(void)
 	windRect.height() = screen.height;
 	
 	init_directories();
-
+	
 //	stored_key = open_pref_file();
 //	if (stored_key == -100) {
 //		stored_key = open_pref_file();
 //		if (stored_key == -100) {
 //			Alert(983,NULL);
-//			ExitToShell();	
+//			ExitToShell();
 //		}
 //	}
 	load_prefs();
@@ -311,19 +311,19 @@ void Handle_One_Event()
 	
 	through_sending();
 	Handle_Update();
-
+	
 	//(cur_time - last_anim_time > 42)
 	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
-		&& (isFrontWindow(mainPtr) || isFrontWindow(mini_map)) && (!gInBackground)) {
+	   && (isFrontWindow(mainPtr) || isFrontWindow(mini_map)) && (!gInBackground)) {
 		animTimer.restart();
 		draw_terrain();
 	}
 	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (overall_mode == MODE_STARTUP)
-		&& app_started_normally && isFrontWindow(mainPtr)) {
+	   && app_started_normally && isFrontWindow(mainPtr)) {
 		animTimer.restart();
 		draw_startup_anim(true);
 	}
-
+	
 	clear_sound_memory();
 	
 	event_in_dialog = handle_dialog_event();
@@ -336,20 +336,20 @@ void Handle_One_Event()
 			} else if(event.type == sf::Event::GainedFocus)
 				makeFrontWindow(mainPtr);
 		}
-		if(!mainPtr.pollEvent(event)) {
-			flushingInput = false;
-			mainPtr.display();
-			return;
-		}
+	if(!mainPtr.pollEvent(event)) {
+		flushingInput = false;
+		mainPtr.display();
+		return;
+	}
 	switch (event.type)
 	{
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-				if (!(event.key.*systemKey))
-						handle_keystroke(event);
-						
+			if (!(event.key.*systemKey))
+				handle_keystroke(event);
+			
 			break;
-		
+			
 		case sf::Event::MouseButtonPressed:
 			if(flushingInput) return;
 			Mouse_Pressed();
@@ -375,7 +375,7 @@ void Handle_One_Event()
 					draw_targeting_line(where);
 			}
 			break;
-		
+			
 		case sf::Event::GainedFocus:
 			Handle_Update();
 			makeFrontWindow(mainPtr);
@@ -412,13 +412,13 @@ void Handle_One_Event()
 					}
 			}
 #endif
-		}
+	}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
 	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
 }
 
 // TODO: Not sure what to do here
-bool handle_dialog_event() 
+bool handle_dialog_event()
 {
 	bool event_was_dlog = false;
 #if 0
@@ -431,18 +431,18 @@ bool handle_dialog_event()
 				for (i = 0; i < 18; i++)
 					if (event_d == modeless_dialogs[i])	{
 						/*CloseDialog(modeless_dialogs[i]);
-						modeless_exists[i] = false;
-
-						event_was_dlog = true;
-						
-						SetPort(mainPtr);
-						SelectWindow(mainPtr);
-						SetPort(mainPtr); */
-						}
+						 modeless_exists[i] = false;
+						 
+						 event_was_dlog = true;
+						 
+						 SetPort(mainPtr);
+						 SelectWindow(mainPtr);
+						 SetPort(mainPtr); */
+					}
 			
-			}
-	
 		}
+		
+	}
 	
 //	if ((event.what == keyDown) && (FrontWindow() != mainPtr))
 	
@@ -459,7 +459,7 @@ void Handle_Update()
 	
 	if(map_visible) draw_map(false);
 	else mini_map.setVisible(false);
-		
+	
 }
 
 // TODO: These three functions should probably be inside the cScrollbar class (the three are almost identical)
@@ -479,7 +479,7 @@ void sbar_action(cScrollbar& bar, short part)
 		case 1/*kControlDownButtonPart*/: new_setting++; break;
 		case 2/*kControlPageUpPart*/: new_setting -= 11; break;
 		case 3/*kControlPageDownPart*/: new_setting += 11; break;
-		}
+	}
 	new_setting = minmax(0,max,new_setting);
 	bar.setPosition(new_setting);
 	if (new_setting != old_setting)
@@ -503,7 +503,7 @@ void item_sbar_action(cScrollbar& bar, short part)
 		case 1/*kControlDownButtonPart*/: new_setting++; break;
 		case 2/*kControlPageUpPart*/: new_setting -= (stat_window == 7) ? 2 : 8; break;
 		case 3/*kControlPageDownPart*/: new_setting += (stat_window == 7) ? 2 : 8; break;
-		}
+	}
 	new_setting = minmax(0,max,new_setting);
 	bar.setPosition(new_setting);
 	if (new_setting != old_setting)
@@ -527,11 +527,11 @@ void shop_sbar_action(cScrollbar bar, short part)
 		case 1/*kControlDownButtonPart*/: new_setting++; break;
 		case 2/*kControlPageUpPart*/: new_setting -= 8; break;
 		case 3/*kControlPageDownPart*/: new_setting += 8; break;
-		}
+	}
 	new_setting = minmax(0,max,new_setting);
 	bar.setPosition(new_setting);
 	if (new_setting != old_setting)
-		draw_shop_graphics(0,shop_sbar_rect);			
+		draw_shop_graphics(0,shop_sbar_rect);
 }
 
 // TODO: Pass the event object around instead of keeping a global one
@@ -542,60 +542,60 @@ void Mouse_Pressed()
 	if (had_text_freeze > 0) {
 		had_text_freeze--;
 		return;
-		}
+	}
 	
 	//ding();
 	// TODO: Most of this should be handled automatically by Cocoa, but make sure nothing important was missed (like the code under inGoAway, that looks important)
 #if 0
 	// TODO: Honestly, I'm not quite sure how to track the scrollbars right now
-//					if (the_window == mainPtr) {
-						SetPortWindowPort(mainPtr);
-						GlobalToLocal(&event.where);
-						content_part = FindControl(event.where,the_window,&control_hit); // hit sbar?
-						if (content_part != 0) {
-							switch (content_part) {
-								case kControlIndicatorPart:
-									content_part = TrackControl(control_hit,event.where,NULL);
-									if (control_hit == text_sbar)
-										if (content_part == kControlIndicatorPart)
-											print_buf();
-									if (control_hit == item_sbar)
-										if (content_part == kControlIndicatorPart)
-											put_item_screen(stat_window,0);
-									if (control_hit == shop_sbar)
-										if (content_part == kControlIndicatorPart)
-											draw_shop_graphics(0,shop_sbar_rect);			
-									break;
-								case kControlUpButtonPart: case kControlPageUpPart: case kControlDownButtonPart: case kControlPageDownPart:
+//	if (the_window == mainPtr) {
+	SetPortWindowPort(mainPtr);
+	GlobalToLocal(&event.where);
+	content_part = FindControl(event.where,the_window,&control_hit); // hit sbar?
+	if (content_part != 0) {
+		switch (content_part) {
+			case kControlIndicatorPart:
+				content_part = TrackControl(control_hit,event.where,NULL);
+				if (control_hit == text_sbar)
+					if (content_part == kControlIndicatorPart)
+						print_buf();
+				if (control_hit == item_sbar)
+					if (content_part == kControlIndicatorPart)
+						put_item_screen(stat_window,0);
+				if (control_hit == shop_sbar)
+					if (content_part == kControlIndicatorPart)
+						draw_shop_graphics(0,shop_sbar_rect);
+				break;
+			case kControlUpButtonPart: case kControlPageUpPart: case kControlDownButtonPart: case kControlPageDownPart:
 #ifndef EXILE_BIG_GUNS
-									if (control_hit == text_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)sbar_action);
-									if (control_hit == item_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_action);
-									if (control_hit == shop_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_action);
+				if (control_hit == text_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)sbar_action);
+				if (control_hit == item_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_action);
+				if (control_hit == shop_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_action);
 #endif
 #ifdef EXILE_BIG_GUNS
-									if (control_hit == text_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)text_sbar_UPP);
-									if (control_hit == item_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_UPP);
-									if (control_hit == shop_sbar)
-										content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_UPP);
+				if (control_hit == text_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)text_sbar_UPP);
+				if (control_hit == item_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_UPP);
+				if (control_hit == shop_sbar)
+					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_UPP);
 #endif
-									break;
-
-								}
-								
-							} // a control hit
-//					 		else { // ordinary click
+				break;
+				
+		}
+		
+	} // a control hit
+//	else { // ordinary click
 #endif // end commented-out code section
-								if(overall_mode != MODE_STARTUP)
-									All_Done = handle_action(event);
-								else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
-
+	if(overall_mode != MODE_STARTUP)
+		All_Done = handle_action(event);
+	else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
+	
 	menu_activate();
-
+	
 }
 
 void close_program()
@@ -619,25 +619,25 @@ void handle_apple_menu(int item_hit)
 //			GetItem (apple_menu,item_hit,desk_acc_name);
 //			desk_acc_num = OpenDeskAcc(desk_acc_name);
 			break;
-		}
+	}
 }
 
 void handle_file_menu(int item_hit)
 {
 	std::string choice;
 	short i;
-
+	
 	switch (item_hit) {
 		case 1:
 			if(overall_mode == MODE_STARTUP)
 				startup_load();
-				else do_load();
+			else do_load();
 			break;
 		case 2:
 			do_save(0);
 			break;
 		case 3:
-					do_save(1);
+			do_save(1);
 			break;
 		case 4:
 			if(overall_mode != MODE_STARTUP) {
@@ -650,7 +650,7 @@ void handle_file_menu(int item_hit)
 				reload_startup();
 				overall_mode = MODE_STARTUP;
 				draw_startup(0);
-				}
+			}
 			start_new_game();
 			draw_startup(0);
 			menu_activate();
@@ -659,32 +659,32 @@ void handle_file_menu(int item_hit)
 			pick_preferences();
 			break;
 		case 8:
-
+			
 			if(overall_mode == MODE_STARTUP) {
 				All_Done = true;
 				break;
-				}
+			}
 			if (overall_mode > MODE_TOWN) {
 				choice = cChoiceDlog("quit-confirm-nosave.xml",{"quit","cancel"}).show();
 				if (choice == "cancel")
 					return;
-				}
-				else {
-					choice = cChoiceDlog("quit-confirm-save.xml",{"quit","save","cancel"}).show();
-					if (choice == "cancel")
-						break;
-					if (choice == "save")
-						save_party(univ.file);
-					}
+			}
+			else {
+				choice = cChoiceDlog("quit-confirm-save.xml",{"quit","save","cancel"}).show();
+				if (choice == "cancel")
+					break;
+				if (choice == "save")
+					save_party(univ.file);
+			}
 			All_Done = true;
 			break;
-		}
+	}
 }
 
 void handle_options_menu(int item_hit)
 {
 	short choice,i;
-
+	
 	switch (item_hit) {
 		case 1:
 			choice = char_select_pc(0,0,"New graphic for who?");
@@ -697,16 +697,16 @@ void handle_options_menu(int item_hit)
 			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
+			}
+			else {
+				choice = char_select_pc(0,0,"Delete who?");
+				if (choice < 6) {
+					std::string confirm = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
+					if (confirm == "yes")
+						kill_pc(choice,MAIN_STATUS_ABSENT);
 				}
-				else {
-					choice = char_select_pc(0,0,"Delete who?");
-					if (choice < 6) {
-						std::string confirm = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
-						if (confirm == "yes")
-							kill_pc(choice,MAIN_STATUS_ABSENT);
-						}
-					draw_terrain();
-					}
+				draw_terrain();
+			}
 			break;
 			
 			
@@ -724,37 +724,37 @@ void handle_options_menu(int item_hit)
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
 				break;
-				}
+			}
 			for (i = 0; i < 6; i++)
 				if (univ.party[i].main_status == 0)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
-				}
+			}
 			if (univ.town.num == scenario.which_town_start) {
 				give_help(56,0);
 				create_pc(6,NULL);
-				}
-				else {
-					add_string_to_buf("Add PC: You can only make new");
-					add_string_to_buf("  characters in the town you ");
-					add_string_to_buf("  started in.");
-					}
+			}
+			else {
+				add_string_to_buf("Add PC: You can only make new");
+				add_string_to_buf("  characters in the town you ");
+				add_string_to_buf("  started in.");
+			}
 			print_buf();
 			put_pc_screen();
 			put_item_screen(stat_window,0);
-			break;	
+			break;
 			
 		//case 6:
 		//	journal();
 		//	break;////
-		case 6:	
+		case 6:
 			if (overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
 				return;
-				}
+			}
 			talk_notes();
 			break;
 		case 7:
@@ -764,7 +764,7 @@ void handle_options_menu(int item_hit)
 			if(overall_mode != MODE_STARTUP)
 				print_party_stats();
 			break;
-		}
+	}
 }
 
 void handle_help_menu(int item_hit)
@@ -777,7 +777,7 @@ void handle_help_menu(int item_hit)
 		case 4: dialogToShow = "help-fields.xml"; break;
 		case 6: dialogToShow = "help-hints.xml"; break;
 		case 7: dialogToShow = "help-magic.xml"; break;
-		}
+	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();
 }
@@ -785,21 +785,21 @@ void handle_library_menu(int item_hit)
 {
 	switch (item_hit) {
 		case 1: display_spells(0,100,0);
-				break;
+			break;
 		case 2: display_spells(1,100,0);
-				break;
+			break;
 		case 3: display_skills(100,0);
-			    break;
+			break;
 		case 4:
 			// TODO: Create a dedicated dialog for alchemy info
-				display_alchemy(NULL);
-				break;
+			display_alchemy(NULL);
+			break;
 		case 5:
 			tip_of_day(); break;
 		case 7:
 			cChoiceDlog("welcome.xml").show();
-				break;
-		}
+			break;
+	}
 }
 
 void handle_actions_menu(int item_hit)
@@ -815,15 +815,15 @@ void handle_actions_menu(int item_hit)
 			dummyEvent.key.code = sf::Keyboard::W;
 			handle_keystroke(dummyEvent);
 			break;
-		case 3:	
+		case 3:
 			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-				}
-				else {
-					give_help(62,0);
-					display_map();
-					}
+			}
+			else {
+				give_help(62,0);
+				display_map();
+			}
 			make_cursor_sword();
 			break;
 	}
@@ -840,8 +840,8 @@ void handle_mage_spells_menu(int item_hit)
 			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-				}
-				else handle_menu_spell(on_spell_menu[0][item_hit - 3],0);
+			}
+			else handle_menu_spell(on_spell_menu[0][item_hit - 3],0);
 			break;
 	}
 }
@@ -855,8 +855,8 @@ void handle_priest_spells_menu(int item_hit)
 			if (prime_time() == false) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-				}
-				else handle_menu_spell(on_spell_menu[1][item_hit - 3],1);
+			}
+			else handle_menu_spell(on_spell_menu[1][item_hit - 3],1);
 			break;
 	}
 }
@@ -884,10 +884,10 @@ void handle_monster_info_menu(int item_hit)
 //	target_curs = GetCursor(124);
 //	talk_curs = GetCursor(126);
 //	look_curs = GetCursor(129);
-//	
+//
 //	set_cursor(sword_curs);
 //	current_cursor = 124;
-//	
+//
 //}
 
 //void set_cursor(CursHandle which_curs)
@@ -943,7 +943,7 @@ void change_cursor(location where_curs)
 		cursor_direction = get_cur_direction(where_curs);
 		cursor_needed = arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1];// 100 + (cursor_direction.x) + 10 * ( cursor_direction.y);
 	}
-
+	
 	if (cursor_needed != current_cursor)
 		set_cursor(cursor_needed);
 }

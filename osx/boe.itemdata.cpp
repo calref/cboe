@@ -31,13 +31,13 @@ short loot_max[5] = {3,8,40,800,4000};
 cItemRec get_stored_item(short which)
 {
 	cItemRec s_item;
-
+	
 	if ((which >= 400) || (which < 0)) {
 		s_item = cItemRec();
 		return s_item;
-		}
+	}
 	
-	s_item = scenario.scen_items[which]; 
+	s_item = scenario.scen_items[which];
 	return s_item;
 }
 
@@ -68,7 +68,7 @@ cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, 
 	if (get_ran(1,0,160) == 80) {
 		loot_max += 2;
 		max_val += 2000;
-		}
+	}
 	for (i = 0; i < 80; i++) {
 		j = get_ran(1,0,399);
 		temp_i = get_stored_item(j);
@@ -77,8 +77,8 @@ cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, 
 			if ((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0) &&
 				(temp_i.treas_class <= loot_max))
 				return temp_i;
-			}
 		}
+	}
 	temp_i = cItemRec();
 	return temp_i;
 }
@@ -86,50 +86,50 @@ cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, 
 cItemRec get_weapon(short loot,short level)
 {
 	cItemRec weapon;
-
+	
 	if (loot == 0)
 		return cItemRec();
-	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1); 
-
+	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],1,2,-1);
+	
 	return weapon;
-
+	
 }
 
 cItemRec get_armor(short loot,short level)
 {
 	short r1;
 	cItemRec armor;
-
+	
 	if (loot == 0)
 		return cItemRec();
 	r1 = get_ran(1,(loot - 1) * 5 + 124,142);
 	
-	armor = pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1); 
-
+	armor = pull_item_of_type(loot,loot_min[loot],loot_max[loot],13,-1,-1);
+	
 	return armor;
 }
 
 cItemRec get_helm(short loot)
 {
-
-	return  pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1); 
+	
+	return  pull_item_of_type(loot,loot_min[loot],loot_max[loot],14,-1,-1);
 }
 
 cItemRec get_gloves(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],15,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],15,-1,-1);
 }
 
 
 
 cItemRec get_boots(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],17,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],17,-1,-1);
 }
 
 cItemRec	get_shield(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],12,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],12,-1,-1);
 }
 
 cItemRec get_potion(short loot)
@@ -137,43 +137,43 @@ cItemRec get_potion(short loot)
 	cItemRec p;
 	
 	if (get_ran(1,0,80) < 20 * (4 - loot))
-		p = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1); 
-		else p = pull_item_of_type(loot,loot_min[loot],loot_max[loot],7,-1,-1); 
+		p = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,7,-1,-1);
+	else p = pull_item_of_type(loot,loot_min[loot],loot_max[loot],7,-1,-1);
 	
 	return p;
 }
 
 cItemRec get_scroll(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],8,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],8,-1,-1);
 }
 
 cItemRec get_missile(short loot)
 {
 	if (get_ran(1,0,2) < 2)
-		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],5,6,4); 
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],23,24,25); 
-
+		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],5,6,4);
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],23,24,25);
+	
 }
 
 cItemRec get_poison(short loot,short level)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],20,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],20,-1,-1);
 }
 
 cItemRec get_wand(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],9,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],9,-1,-1);
 }
 
 cItemRec get_ring(short loot)
 {
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],18,-1,-1); 
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],18,-1,-1);
 }
 
 cItemRec get_necklace(short loot)
 {
-
-	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],19,-1,-1); 
-
+	
+	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],19,-1,-1);
+	
 } 

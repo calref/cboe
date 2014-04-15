@@ -52,19 +52,19 @@ bool is_out()
 {
 	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		return true;
-		else return false;
+	else return false;
 }
 bool is_town()
 {
 	if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
 		return true;
-		else return false;
+	else return false;
 }
 bool is_combat()
 {
 	if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT))
 		return true;
-		else return false;
+	else return false;
 }
 
 
@@ -259,7 +259,7 @@ void make_antimagic(short i,short j)
 		return;
 //	if (univ.out.misc_i[i][j] & 224)
 //		return;
-//	
+//
 //	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 //	univ.town.explored[i][j] = univ.town.explored[i][j] | 8;
 	antimagic = univ.town.set_antimagic(i,j,true);
@@ -278,7 +278,7 @@ void make_scloud(short i,short j)
 /**/{
 	if (spot_impassable(i,j) == true)
 		return;
-//		
+//
 //	if ((univ.town.explored[i][j] & 238) || (univ.out.misc_i[i][j] & 224))
 //		return;
 //	univ.town.explored[i][j] = univ.town.explored[i][j] | 16;
@@ -394,7 +394,7 @@ void make_sfx(short i,short j, short type)
 	if (scenario.ter_types[ter].blockage != 0)
 		return;
 	switch (type) {
-//		case 1: case 2: 
+//		case 1: case 2:
 //			if (univ.out.sfx[i][j] == 4)
 //				return;
 //			if (univ.out.sfx[i][j] < 4)
@@ -441,5 +441,5 @@ void spread_sfx(short type,short prob)
 		for (j = 0; j < univ.town->max_dim(); j++)
 			if ((univ.town->terrain(i,j) < 5) && (get_ran(1,1,100) <= prob))
 				make_sfx(i,j,type);
-				
+	
 }

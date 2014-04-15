@@ -124,7 +124,7 @@ void init_directories()
 	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
 	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
 	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
-
+	
 	// now I generate the directory ID of the folder which contains the scenarios
 	// code copied from Mac Prog FAQ book
 //	myCPB.dirInfo.ioNamePtr = folder_name;
@@ -132,7 +132,7 @@ void init_directories()
 //	myCPB.dirInfo.ioFDirIndex = 0;
 //	myCPB.dirInfo.ioDrDirID = start_dir;
 //	error = PBGetCatalogInfoSync(&myCPB); // false means not async
-//	
+//
 //	scen_dir = myCPB.dirInfo.ioDrDirID;
 }
 
@@ -148,7 +148,7 @@ void finish_load_party(){
 		if(overall_mode != MODE_STARTUP) {
 			reload_startup();
 			overall_mode = MODE_STARTUP;
-			draw_startup(0);		
+			draw_startup(0);
 		}
 		return;
 	}
@@ -172,7 +172,7 @@ void finish_load_party(){
 	if (!town_restore) {
 		center = univ.party.p_loc;
 	}
-	else {	
+	else {
 		load_town_str(univ.town.num,univ.town.record);
 		load_town(univ.town.num,univ.town.record);
 		univ.town.cur_talk_loaded = -1;
@@ -227,7 +227,7 @@ void finish_load_party(){
 		((play_sounds == false) && (PSD[SDF_NO_SOUNDS] == 0))) {
 		flip_sound();
 	}
-	give_delays = PSD[SDF_NO_FRILLS]; 
+	give_delays = PSD[SDF_NO_FRILLS];
 	if (PSD[SDF_NO_MAPS] == 0)
 		save_maps = true;
 	else save_maps = false;
@@ -281,19 +281,19 @@ void swap_val(unsigned char *val,short a,short b)
 {
 	if (*val == a)
 		*val = b;
-		else if (*val == b)
-			*val = a;
+	else if (*val == b)
+		*val = a;
 }
 void change_val_4 (unsigned char *val,short a,short b,short c,short d)
 {
 	if (*val == a)
 		*val = b;
-		else if (*val == b)
-			*val = c;
-			else if (*val == c)
-			*val = d;
-			else if (*val == d)
-				*val = a;
+	else if (*val == b)
+		*val = c;
+	else if (*val == c)
+		*val = d;
+	else if (*val == d)
+		*val = a;
 }
 void change_val (unsigned char *val,short a,short b)
 {
@@ -321,18 +321,18 @@ void change_val (unsigned char *val,short a,short b)
 //	long len,len_to_jump = 0;
 //	OSErr error;
 //	char file_name[256];
-//	
+//
 //	if (town_num != minmax(0,scenario.num_towns - 1,town_num)) {
 //		give_error("The scenario tried to place you into a non-existant town.","",0);
 //		return;
 //		}
-//	
+//
 //	which_town = town_num;
-//		
+//
 //	//HGetVol((StringPtr) start_name,&start_volume,&start_dir);
 //	build_scen_file_name(file_name);
-//	
-//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);	
+//
+//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);
 //	if (error != 0) {
 //		//FCD(949,0);
 //		SysBeep(50);
@@ -350,12 +350,12 @@ void change_val (unsigned char *val,short a,short b)
 //		for (j = 0; j < 5; j++)
 //			store += (long) (scenario.town_data_size[i][j]);
 //	len_to_jump += store;
-//	
+//
 //	error = SetFPos (file_id, 1, len_to_jump);
 //	if (error != 0) {FSClose(file_id);oops_error(35);}
-//		
+//
 //	len = sizeof(town_record_type);
-//	
+//
 //	if (mode == 0) {
 //		error = FSRead(file_id, &len , (char *) &univ.town.town);
 //		port_town();
@@ -371,9 +371,9 @@ void change_val (unsigned char *val,short a,short b)
 //				port_t_d();
 //				}
 //				else error = SetFPos (file_id, 3, len);
-//			
+//
 //			break;
-//			
+//
 //		case 1:
 //				len = sizeof(ave_tr_type);
 //				if (mode == 0) {
@@ -381,7 +381,7 @@ void change_val (unsigned char *val,short a,short b)
 //					for (i = 0; i < 48; i++)
 //						for (j = 0; j < 48; j++) {
 //							t_d.terrain[i][j] = ave_t.terrain[i][j];
-//							t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];					
+//							t_d.lighting[i / 8][j] = ave_t.lighting[i / 8][j];
 //							}
 //					//print_nums(5555,5555,5555);
 //					//for (i = 0; i < 8; i++)
@@ -389,7 +389,7 @@ void change_val (unsigned char *val,short a,short b)
 //					//		if (t_d.lighting[i][j] != 0) {
 //					//			print_nums(i,j,t_d.lighting[i][j]);
 //					//			}
-//							
+//
 //					for (i = 0; i < 16; i++) {
 //						t_d.room_rect[i] = ave_t.room_rect[i];
 //						}
@@ -404,7 +404,7 @@ void change_val (unsigned char *val,short a,short b)
 //					else error = SetFPos (file_id, 3, len);
 //
 //			break;
-//			
+//
 //		case 2:
 //			len = sizeof(tiny_tr_type);
 //			if (mode == 0) {
@@ -412,7 +412,7 @@ void change_val (unsigned char *val,short a,short b)
 //				for (i = 0; i < 32; i++)
 //					for (j = 0; j < 32; j++) {
 //						t_d.terrain[i][j] = tiny_t.terrain[i][j];
-//						t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];					
+//						t_d.lighting[i / 8][j] = tiny_t.lighting[i / 8][j];
 //						}
 //				for (i = 0; i < 16; i++) {
 //					t_d.room_rect[i] = tiny_t.room_rect[i];
@@ -428,7 +428,7 @@ void change_val (unsigned char *val,short a,short b)
 //				else error = SetFPos (file_id, 3, len);
 //			break;
 //		}
-//		
+//
 //	for (i = 0; i < 140; i++) {
 //		len = (mode == 0) ? (long) (univ.town.town.strlens[i]) : (long) (dummy_town.strlens[i]);
 //		switch (mode) {
@@ -458,7 +458,7 @@ void change_val (unsigned char *val,short a,short b)
 //		error = FSRead(file_id, &len , (char *) &talking);
 //		port_talk_nodes();
 //		if (error != 0) {FSClose(file_id);oops_error(37);}
-//	
+//
 //		for (i = 0; i < 170; i++) {
 //			len = (long) (talking.strlens[i]);
 //			FSRead(file_id, &len, (char *) &(talk_strs[i]));
@@ -470,76 +470,76 @@ void change_val (unsigned char *val,short a,short b)
 //		town_type = scenario.town_size[which_town];
 //	error = FSClose(file_id);
 //	if (error != 0) {FSClose(file_id);oops_error(38);}
-//	
+//
 //	// Now more initialization is needed. First need to properly create the misc_i array.
-//	
+//
 void init_town(){ // formerly part of load_town
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 //	if (mode == 0) {
 	unsigned int i,j;
-		for (i = 0; i < 64; i++)
-			for (j = 0; j < 64; j++) {
-				univ.town.fields[i][j] = 0;
-				//univ.out.sfx[i][j] = 0;
-			}
-		for (i = 0; i < 50; i++)
-			if (univ.town->special_locs[i].x < 100){
-				univ.town.set_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
-			}
-		for (i = 0; i < univ.town->preset_fields.size(); i++) {
-			switch(univ.town->preset_fields[i].type){
-				case 1: // currently unused
-					univ.town.set_block(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 2:
-					univ.town.set_spot(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 3:
-					univ.town.set_web(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 4:
-					univ.town.set_crate(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 5:
-					univ.town.set_barrel(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 6:
-					univ.town.set_fire_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 7:
-					univ.town.set_force_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 8:
-					univ.town.set_quickfire(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 14:
-					univ.town.set_sm_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 15:
-					univ.town.set_med_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 16:
-					univ.town.set_lg_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 17:
-					univ.town.set_sm_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 18:
-					univ.town.set_lg_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 19:
-					univ.town.set_ash(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 20:
-					univ.town.set_bones(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-				case 21:
-					univ.town.set_rubble(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
-					break;
-			}
-			
+	for (i = 0; i < 64; i++)
+		for (j = 0; j < 64; j++) {
+			univ.town.fields[i][j] = 0;
+			//univ.out.sfx[i][j] = 0;
 		}
-		univ.town.cur_talk_loaded = -1;
+	for (i = 0; i < 50; i++)
+		if (univ.town->special_locs[i].x < 100){
+			univ.town.set_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
+		}
+	for (i = 0; i < univ.town->preset_fields.size(); i++) {
+		switch(univ.town->preset_fields[i].type){
+			case 1: // currently unused
+				univ.town.set_block(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 2:
+				univ.town.set_spot(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 3:
+				univ.town.set_web(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 4:
+				univ.town.set_crate(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 5:
+				univ.town.set_barrel(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 6:
+				univ.town.set_fire_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 7:
+				univ.town.set_force_barr(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 8:
+				univ.town.set_quickfire(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 14:
+				univ.town.set_sm_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 15:
+				univ.town.set_med_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 16:
+				univ.town.set_lg_blood(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 17:
+				univ.town.set_sm_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 18:
+				univ.town.set_lg_slime(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 19:
+				univ.town.set_ash(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 20:
+				univ.town.set_bones(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+			case 21:
+				univ.town.set_rubble(univ.town->preset_fields[i].loc.x,univ.town->preset_fields[i].loc.y,true);
+				break;
+		}
+		
+	}
+	univ.town.cur_talk_loaded = -1;
 //	}
 }
 
@@ -558,27 +558,27 @@ void shift_universe_left()
 	univ.out.outdoors[1][1] = univ.out.outdoors[0][1];
 //	outdoor_text[1][0] = outdoor_text[0][0];
 //	outdoor_text[1][1] = outdoor_text[0][1];
-
+	
 	for (i = 48; i < 96; i++)
 		for (j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i - 48][j];
-
+	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
-
+	
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x > 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true) 
+		if (univ.party.out_c[i].exists == true)
 			univ.party.out_c[i].m_loc.x += 48;
-		}
-
+	}
+	
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	build_outdoors();
 	make_cursor_sword();
-
+	
 }
 
 void shift_universe_right()
@@ -600,19 +600,19 @@ void shift_universe_right()
 	for (i = 48; i < 96; i++)
 		for (j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
-
-
+	
+	
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x < 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true) 
+		if (univ.party.out_c[i].exists == true)
 			univ.party.out_c[i].m_loc.x -= 48;
-		}
+	}
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	build_outdoors();
 	make_cursor_sword();
-
+	
 }
 
 void shift_universe_up()
@@ -626,34 +626,34 @@ void shift_universe_up()
 	univ.party.p_loc.y += 48;
 	univ.out.outdoors[0][1] = univ.out.outdoors[0][0];
 	univ.out.outdoors[1][1] = univ.out.outdoors[1][0];
-
+	
 //	outdoor_text[0][1] = outdoor_text[0][0];
 //	outdoor_text[1][1] = outdoor_text[1][0];
-		for (i = 0; i < 96; i++)
-			for (j = 48; j < 96; j++)
-				univ.out.out_e[i][j] = univ.out.out_e[i][j - 48];
-		for (i = 0; i < 96; i++)
-			for (j = 0; j < 48; j++)
-				univ.out.out_e[i][j] = 0;	 
-
+	for (i = 0; i < 96; i++)
+		for (j = 48; j < 96; j++)
+			univ.out.out_e[i][j] = univ.out.out_e[i][j - 48];
+	for (i = 0; i < 96; i++)
+		for (j = 0; j < 48; j++)
+			univ.out.out_e[i][j] = 0;
+	
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y > 48)
 			univ.party.out_c[i].exists = false;
 		if (univ.party.out_c[i].exists == true)
-			univ.party.out_c[i].m_loc.y += 48; 
-		}
+			univ.party.out_c[i].m_loc.y += 48;
+	}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
-
+	
 	build_outdoors();
 	make_cursor_sword();
-
+	
 }
 
 void shift_universe_down()
 {
 	short i,j;
-
+	
 	make_cursor_watch();
 	
 	save_outdoor_maps();
@@ -662,41 +662,41 @@ void shift_universe_down()
 	univ.party.p_loc.y = univ.party.p_loc.y - 48;
 	univ.out.outdoors[0][0] = univ.out.outdoors[0][1];
 	univ.out.outdoors[1][0] = univ.out.outdoors[1][1];
-
+	
 //	outdoor_text[0][0] = outdoor_text[0][1];
 //	outdoor_text[1][0] = outdoor_text[1][1];
-		for (i = 0; i < 96; i++)
-			for (j = 0; j < 48; j++)
-				univ.out.out_e[i][j] = univ.out.out_e[i][j + 48];
-		for (i = 0; i < 96; i++)
-			for (j = 48; j < 96; j++)
-				univ.out.out_e[i][j] = 0;	
-
+	for (i = 0; i < 96; i++)
+		for (j = 0; j < 48; j++)
+			univ.out.out_e[i][j] = univ.out.out_e[i][j + 48];
+	for (i = 0; i < 96; i++)
+		for (j = 48; j < 96; j++)
+			univ.out.out_e[i][j] = 0;
+	
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y < 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true) 
+		if (univ.party.out_c[i].exists == true)
 			univ.party.out_c[i].m_loc.y = univ.party.out_c[i].m_loc.y - 48;
-		}
+	}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	
 	build_outdoors();
 	make_cursor_sword();
-
+	
 }
 
 
 void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 {
 	short i,j;
-
+	
 	if ((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
 		(out_x != minmax(0,scenario.out_width - 1,out_x)) || (out_y != minmax(0,scenario.out_height - 1,out_y))) {
 		giveError("The scenario has tried to place you in an out of bounds outdoor location.");
 		return;
 	}
-
+	
 	save_outdoor_maps();
 	univ.party.p_loc.x = pc_pos_x;
 	univ.party.p_loc.y = pc_pos_y;
@@ -704,42 +704,42 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 	
 	if ((univ.party.outdoor_corner.x != out_x) || (univ.party.outdoor_corner.y != out_y)) {
 		univ.party.outdoor_corner.x = out_x;
-		univ.party.outdoor_corner.y = out_y;	
+		univ.party.outdoor_corner.y = out_y;
 		load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 		load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 		load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 		load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
-		}
+	}
 	univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
 	univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
 	for (i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
 	for (i = 0; i < 96; i++)
-		for (j = 0; j < 96; j++) 	
+		for (j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
-	build_outdoors();	
+	build_outdoors();
 }
 
 
 void build_outdoors()
 {
 	short i,j;
-		for (i = 0; i < 48; i++)
-			for (j = 0; j < 48; j++) {
-				univ.out[i][j] = univ.out.outdoors[0][0].terrain[i][j];
-				univ.out[48 + i][j] = univ.out.outdoors[1][0].terrain[i][j];
-				univ.out[i][48 + j] = univ.out.outdoors[0][1].terrain[i][j];
-				univ.out[48 + i][48 + j] = univ.out.outdoors[1][1].terrain[i][j];	
-			}
-			
+	for (i = 0; i < 48; i++)
+		for (j = 0; j < 48; j++) {
+			univ.out[i][j] = univ.out.outdoors[0][0].terrain[i][j];
+			univ.out[48 + i][j] = univ.out.outdoors[1][0].terrain[i][j];
+			univ.out[i][48 + j] = univ.out.outdoors[0][1].terrain[i][j];
+			univ.out[48 + i][48 + j] = univ.out.outdoors[1][1].terrain[i][j];
+		}
+	
 	fix_boats();
-	add_outdoor_maps(); 
+	add_outdoor_maps();
 //	make_out_trim();
 	// TODO: This might be another relic of the "demo" mode
 	if(overall_mode != MODE_STARTUP)
 		erase_out_specials();
 	
-for (i = 0; i < 10; i++)
+	for (i = 0; i < 10; i++)
 		if (univ.party.out_c[i].exists == true)
 			if ((univ.party.out_c[i].m_loc.x < 0) || (univ.party.out_c[i].m_loc.y < 0) ||
 				(univ.party.out_c[i].m_loc.x > 95) || (univ.party.out_c[i].m_loc.y > 95))
@@ -750,7 +750,7 @@ for (i = 0; i < 10; i++)
 short onm(char x_sector,char y_sector)
 {
 	short i;
-
+	
 	i = y_sector * scenario.out_width + x_sector;
 	return i;
 }
@@ -764,97 +764,97 @@ void save_outdoor_maps()
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			if (univ.out.out_e[i][j] > 0) 
+			if (univ.out.out_e[i][j] > 0)
 				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
-				 univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
-				 (char) (s_pow(2,i % 8));	
+				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
+				(char) (s_pow(2,i % 8));
 			if (univ.party.outdoor_corner.x + 1 < scenario.out_width) {
-				if (univ.out.out_e[i + 48][j] > 0) 
+				if (univ.out.out_e[i + 48][j] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] =
-					 univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
-					 (char) (s_pow(2,i % 8));
-				}
+					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
+					(char) (s_pow(2,i % 8));
+			}
 			if (univ.party.outdoor_corner.y + 1 < scenario.out_height) {
-				if (univ.out.out_e[i][j + 48] > 0) 
+				if (univ.out.out_e[i][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-					 univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-					 (char) (s_pow(2,i % 8));
-				}
+					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
+					(char) (s_pow(2,i % 8));
+			}
 			if ((univ.party.outdoor_corner.y + 1 < scenario.out_height) &&
 				(univ.party.outdoor_corner.x + 1 < scenario.out_width)) {
-				if (univ.out.out_e[i + 48][j + 48] > 0) 
+				if (univ.out.out_e[i + 48][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-					 univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-					 (char) (s_pow(2,i % 8));
-				}
+					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
+					(char) (s_pow(2,i % 8));
 			}
+		}
 }
 
 void add_outdoor_maps()  // This takes the existing outdoor map info and supplements it
-						// with the saved map info
+// with the saved map info
 {
 	short i,j;
 	
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
-			if ((univ.out.out_e[i][j] == 0) && 
-			 ((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
-			  (char) (s_pow(2,i % 8))) != 0))
+			if ((univ.out.out_e[i][j] == 0) &&
+				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
+				  (char) (s_pow(2,i % 8))) != 0))
 			 	univ.out.out_e[i][j] = 1;
 			if (univ.party.outdoor_corner.x + 1 < scenario.out_width) {
-				if ((univ.out.out_e[i + 48][j] == 0) && 
-				 ((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
-				  (char) (s_pow(2,i % 8))) != 0))
-				 	univ.out.out_e[i + 48][j] = 1;		
-			 		}	 	
+				if ((univ.out.out_e[i + 48][j] == 0) &&
+					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
+					  (char) (s_pow(2,i % 8))) != 0))
+				 	univ.out.out_e[i + 48][j] = 1;
+			}
 			if (univ.party.outdoor_corner.y + 1 < scenario.out_height) {
-				if ((univ.out.out_e[i][j + 48] == 0) && 
-				 ((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-				  (char) (s_pow(2,i % 8))) != 0))
+				if ((univ.out.out_e[i][j + 48] == 0) &&
+					((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
+					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i][j + 48] = 1;
-				}
+			}
 			if ((univ.party.outdoor_corner.y + 1 < scenario.out_height) &&
 				(univ.party.outdoor_corner.x + 1 < scenario.out_width)) {
-				if ((univ.out.out_e[i + 48][j + 48] == 0) && 
-				 ((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-				  (char) (s_pow(2,i % 8))) != 0))
+				if ((univ.out.out_e[i + 48][j + 48] == 0) &&
+					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
+					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i + 48][j + 48] = 1;
-			 	}
-			 }
-} 
+			}
+		}
+}
 
 
 
 void fix_boats()
 {
 	short i;
-
+	
 	for (i = 0; i < 30; i++)
 		if ((univ.party.boats[i].exists == true) && (univ.party.boats[i].which_town == 200)) {
 			if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
-				else if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x + 1)
+			else if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x + 1)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x + 48;
-					else univ.party.boats[i].loc.x = 500;
-			if (univ.party.boats[i].sector.y == univ.party.outdoor_corner.y) 
+			else univ.party.boats[i].loc.x = 500;
+			if (univ.party.boats[i].sector.y == univ.party.outdoor_corner.y)
 				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y;
-				else if (univ.party.boats[i].sector.y == univ.party.outdoor_corner.y + 1)
+			else if (univ.party.boats[i].sector.y == univ.party.outdoor_corner.y + 1)
 				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y + 48;
-					else univ.party.boats[i].loc.y = 500;
-			}
+			else univ.party.boats[i].loc.y = 500;
+		}
 	for (i = 0; i < 30; i++)
 		if ((univ.party.horses[i].exists == true) && (univ.party.horses[i].which_town == 200)) {
 			if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;
-				else if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x + 1)
+			else if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x + 1)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x + 48;
-					else univ.party.horses[i].loc.x = 500;
-			if (univ.party.horses[i].sector.y == univ.party.outdoor_corner.y) 
+			else univ.party.horses[i].loc.x = 500;
+			if (univ.party.horses[i].sector.y == univ.party.outdoor_corner.y)
 				univ.party.horses[i].loc.y = univ.party.horses[i].loc_in_sec.y;
-				else if (univ.party.horses[i].sector.y == univ.party.outdoor_corner.y + 1)
+			else if (univ.party.horses[i].sector.y == univ.party.outdoor_corner.y + 1)
 				univ.party.horses[i].loc.y = univ.party.horses[i].loc_in_sec.y + 48;
-					else univ.party.horses[i].loc.y = 500;
-			}
+			else univ.party.horses[i].loc.y = 500;
+		}
 }
 
 
@@ -871,7 +871,7 @@ void fix_boats()
 //	short out_sec_num;
 //	long len_to_jump = 0,store = 0;
 //	OSErr error;
-//	
+//
 //	if ((to_create_x != minmax(0,scenario.out_width - 1,to_create_x)) ||
 //		(to_create_y != minmax(0,scenario.out_height - 1,to_create_y))) { // not exist
 //			for (i = 0; i < 48; i++)
@@ -885,11 +885,11 @@ void fix_boats()
 //			}
 //
 //	build_scen_file_name(file_name);
-//	
-//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);	
-//	
+//
+//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);
+//
 //	out_sec_num = scenario.out_width * to_create_y + to_create_x;
-//	
+//
 //	len_to_jump = sizeof(scenario_data_type);
 //	len_to_jump += sizeof(scen_item_data_type);
 //	for (i = 0; i < 300; i++)
@@ -899,8 +899,8 @@ void fix_boats()
 //		for (j = 0; j < 2; j++)
 //			store += (long) (scenario.out_data_size[i][j]);
 //	len_to_jump += store;
-//	
-//	error = SetFPos (file_id, 1, len_to_jump);	
+//
+//	error = SetFPos (file_id, 1, len_to_jump);
 //	if (error != 0) {FSClose(file_id);oops_error(32);}
 //
 //	len = sizeof(outdoor_record_type);
@@ -910,7 +910,7 @@ void fix_boats()
 //		if (error != 0) {FSClose(file_id);oops_error(33);}
 //		}
 //		else error = FSRead(file_id, &len, (char *) &dummy_out);
-//		
+//
 //	if (mode == 0) {
 //		for (i = 0; i < 9; i++) {
 //			len = (long) (univ.out.outdoors[targ_x][targ_y].strlens[i]);
@@ -925,9 +925,9 @@ void fix_boats()
 //				FSRead(file_id, &len, (char *) str);
 //				str[len] = 0;
 //				}
-//				else SetFPos (file_id, 3, len);	
+//				else SetFPos (file_id, 3, len);
 //			}
-//	
+//
 //		}
 //
 //	error = FSClose(file_id);
@@ -970,15 +970,15 @@ void start_data_dump() {
 //	OSErr error;
 //	long len;
 //	char file_name[256];
-//	
+//
 //	build_scen_file_name(file_name);
-//	
-//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);	
+//
+//	error = HOpen(start_volume,start_dir,file_name,3,&file_id);
 //	if (error != 0) {
 //		oops_error(10000 + error);
 //		SysBeep(2);	return false;
-//		}	
-//		
+//		}
+//
 //	len = (long) sizeof(scenario_data_type);
 //	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 //		FSClose(file_id); oops_error(29); return false;
@@ -996,9 +996,9 @@ void start_data_dump() {
 //	  	cur_scen_is_mac = false;
 //	  	}
 //	 if (file_ok == false) {
-//		FSClose(file_id); 
+//		FSClose(file_id);
 //		give_error("This is not a legitimate Blades of Exile scenario.","",0);
-//		return false;	 
+//		return false;
 //	 	}
 //	port_scenario();
 //	len = sizeof(scen_item_data_type); // item data
@@ -1011,7 +1011,7 @@ void start_data_dump() {
 //		FSRead(file_id, &len, (char *) &(scen_strs[i]));
 //		scen_strs[i][len] = 0;
 //		}
-//	
+//
 //	FSClose(file_id);
 //	load_spec_graphics();
 //	set_up_ter_pics();
@@ -1021,7 +1021,7 @@ void start_data_dump() {
 //void set_up_ter_pics()
 //{
 //	short i;
-//	
+//
 //	set_terrain_blocked();
 //	for (i = 0; i < 256; i++)
 //		terrain_pic[i] = scenario.ter_types[i].picture;
@@ -1029,7 +1029,7 @@ void start_data_dump() {
 //void oops_error(short error)
 //{
 //	char error_str[256];
-//	
+//
 //		SysBeep(50);
 //		SysBeep(50);
 //		SysBeep(50);
@@ -1044,7 +1044,7 @@ typedef struct {
 	unsigned char flag1, flag2, flag3, flag4;
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
-	} scen_header_type;
+} scen_header_type;
 */
 void build_scen_headers()
 {
@@ -1076,15 +1076,15 @@ void build_scen_headers()
 	//myCPB.dirInfo.ioNamePtr = scen_name;
 	//myCPB.dirInfo.ioVRefNum = start_volume;
 	
-	//	HFSUniStr255 names[MAXSHEETS];
-	//	FSSpec locations[MAXSHEETS];
-	//	int numFound=0;
-	//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)	
+//	HFSUniStr255 names[MAXSHEETS];
+//	FSSpec locations[MAXSHEETS];
+//	int numFound=0;
+//	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)
 	while(iter != fs::directory_iterator()) {
 		fs::file_status stat = iter->status();
 		if(stat.type() == fs::regular_file) {
 			load_scenario_header(iter->path());
-					cur_entry++;
+			cur_entry++;
 		}
 	}
 	if (scen_headers.size() == 0) { // no scens present
@@ -1110,24 +1110,24 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 		fclose(file_id); return false;
 	}
 	if ((curScen.flag1 == 10) && (curScen.flag2 == 20)
-	 && (curScen.flag3 == 30)
-	  && (curScen.flag4 == 40)) {
+		&& (curScen.flag3 == 30)
+		&& (curScen.flag4 == 40)) {
 	  	file_ok = true;
 	  	mac_header = true;
 	} else
-	if ((curScen.flag1 == 20) && (curScen.flag2 == 40)
-	 && (curScen.flag3 == 60)
-	  && (curScen.flag4 == 80)) {
-	  	file_ok = true;
-	  	mac_header = false;
-	}
+		if ((curScen.flag1 == 20) && (curScen.flag2 == 40)
+			&& (curScen.flag3 == 60)
+			&& (curScen.flag4 == 80)) {
+			file_ok = true;
+			mac_header = false;
+		}
 	if (file_ok == false) {
 		//scen_headers[header_entry].flag1 = 0;
 		//scen_headers.pop_back();
 		fclose(file_id);
 		return false;
 	}
-
+	
 	// So file is OK, so load in string data and close it.
 //	SetFPos(file_id,1,0);
 //	len = 41942;//(long) sizeof(scenario_data_type);
@@ -1141,7 +1141,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	if (mac_header == false)
 //		flip_short(&store);
 //	curScen.default_ground = store;
-//	
+//
 //	len = 39200;//sizeof(scen_item_data_type);
 //	if (SetFPos(file_id,3,len) != 0){
 //		FSClose(file_id);
@@ -1177,7 +1177,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	}
 	
 	//FSClose(file_id);
-
+	
 	return true;
 }
 
@@ -1186,7 +1186,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //{
 //	short i,file_num;
 //	char file_name[256];
-//	
+//
 //	if (spec_scen_g != NULL) {
 //		DisposeGWorld(spec_scen_g);
 //		spec_scen_g = NULL;
@@ -1222,7 +1222,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //short init_data(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	k = k * k;
 //	jl = jl * jl + 84 + k;
@@ -1234,14 +1234,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	k = k * 82;
 //	k = k % 10000;
 //	k = k + 10000;
-//	
+//
 //	return (short) k;
 //}
 //
 //short town_s(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	k = k * k * k;
 //	jl = jl * 54;
@@ -1253,14 +1253,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	k = k % 10000;
 //	jl = jl * jl + 84 + k;
 //	k = k + 10000;
-//	
+//
 //	return (short) k;
 //}
 //
 //short out_s(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	k = k * k * k;
 //	jl = jl * jl + 84 + k;
@@ -1272,14 +1272,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	jl = jl * 2 + 1234 + k;
 //	k = k % 10000;
 //	k = k + 4;
-//	
+//
 //	return (short) k;
 //}
 //
 //short str_size_1(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	k = k * k;
 //	jl = jl * 2 + 1234 + k;
@@ -1292,14 +1292,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	k = k * 4;
 //	k = k % 5000;
 //	k = k - 9099;
-//	
+//
 //	return (short) k;
 //}
 //
 //short str_size_2(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	jl = jl * jl + 84 + k;
 //	k = k * k * k * k;
@@ -1311,14 +1311,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	jl = jl * jl + 84 + k;
 //	k = k % 3124;
 //	k = k - 5426;
-//	
+//
 //	return (short) k;
 //}
 //
 //short str_size_3(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	k = k * (scenario.town_data_size[0][0] +  scenario.town_data_size[0][1] +  scenario.town_data_size[0][2] +  scenario.town_data_size[0][3]);
 //	k = k + 80;
@@ -1330,14 +1330,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	jl = jl * jl + 84 + k;
 //	k = k % 887;
 //	k = k + 9452;
-//	
+//
 //	return (short) k;
 //}
 //
 //short get_buf_ptr(short flag)
 //{
 //	long k = 0;
-//		
+//
 //	k = (long) flag;
 //	jl = jl * jl + 84 + k;
 //	k = k * (scenario.out_width +  scenario.out_width +  scenario.out_height +  scenario.town_data_size[0][3]);
@@ -1350,7 +1350,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	k = k % 2542;
 //	jl = jl * jl + 84 + k;
 //	k = k + 234;
-//	
+//
 //	return (short) k;
 //}
 //
@@ -1375,7 +1375,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //void port_talk_nodes()
 //{
 //	short i;
-//	
+//
 //	if (cur_scen_is_mac != mac_is_intel)
 //		return;
 //	for (i = 0; i < 60; i++) {
@@ -1410,14 +1410,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	flip_short(&univ.town.town.max_num_monst);
 //	flip_short(&univ.town.town.spec_on_entry);
 //	flip_short(&univ.town.town.spec_on_entry_if_dead);
-//	for (i =0 ; i < 8; i++) 
+//	for (i =0 ; i < 8; i++)
 //		flip_short(&univ.town.town.timer_spec_times[i]);
-//	for (i =0 ; i < 8; i++) 
+//	for (i =0 ; i < 8; i++)
 //		flip_short(&univ.town.town.timer_specs[i]);
 //	flip_short(&univ.town.town.difficulty);
-//	for (i =0 ; i < 100; i++) 
+//	for (i =0 ; i < 100; i++)
 //		flip_spec_node(&univ.town.town.specials[i]);
-//	
+//
 //}
 //
 //void port_t_d()
@@ -1426,7 +1426,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	if (cur_scen_is_mac != mac_is_intel)
 //		return;
 //
-//	for (i =0 ; i < 16; i++) 
+//	for (i =0 ; i < 16; i++)
 //		flip_rect(&t_d.room_rect[i]);
 //	for (i =0 ; i < 60; i++) {
 //		flip_short(&t_d.creatures[i].spec1);
@@ -1435,14 +1435,14 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //		flip_short(&t_d.creatures[i].personality);
 //		flip_short(&t_d.creatures[i].special_on_kill);
 //		flip_short(&t_d.creatures[i].facial_pic);
-//	
-//		} 
+//
+//		}
 //}
 //
 //void port_scenario()
 //{
 //	short i,j;
-//	
+//
 //	if (cur_scen_is_mac != mac_is_intel)
 //		return;
 //	flip_short(&scenario.flag_a);
@@ -1502,9 +1502,9 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	for (i = 0; i < 30; i++) {
 //		flip_short(&scenario.horses[i].which_town);
 //		}
-//	for (i = 0; i < 20; i++) 
+//	for (i = 0; i < 20; i++)
 //		flip_short(&scenario.scenario_timer_times[i]);
-//	for (i = 0; i < 20; i++) 
+//	for (i = 0; i < 20; i++)
 //		flip_short(&scenario.scenario_timer_specs[i]);
 //	for (i = 0; i < 256; i++) {
 //		flip_spec_node(&scenario.scen_specials[i]);
@@ -1524,10 +1524,10 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //void port_item_list()
 //{
 //	short i;
-//	
+//
 //	if (cur_scen_is_mac != mac_is_intel)
 //		return;
-//	
+//
 //	for (i = 0; i < 400; i++) {
 //		flip_short(&(scenario.scen_items[i].variety));
 //		flip_short(&(scenario.scen_items[i].item_level));
@@ -1538,10 +1538,10 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //void port_out(outdoor_record_type *out)
 //{
 //	short i;
-//	
+//
 //	if (cur_scen_is_mac != mac_is_intel)
 //		return;
-//		
+//
 //	for (i = 0; i < 4; i++) {
 //		flip_short(&(out->wandering[i].spec_on_meet));
 //		flip_short(&(out->wandering[i].spec_on_win));
@@ -1554,11 +1554,11 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //		flip_short(&(out->special_enc[i].spec_on_flee));
 //		flip_short(&(out->special_enc[i].cant_flee));
 //		flip_short(&(out->special_enc[i].end_spec1));
-//		flip_short(&(out->special_enc[i].end_spec2));	
+//		flip_short(&(out->special_enc[i].end_spec2));
 //		}
-//	for (i = 0; i < 8; i++) 
+//	for (i = 0; i < 8; i++)
 //		flip_rect(&(out->info_rect[i]));
-//	for (i = 0; i < 60; i++) 
+//	for (i = 0; i < 60; i++)
 //		flip_spec_node(&(out->specials[i]));
 //}
 //
@@ -1580,19 +1580,19 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //void flip_short(short *s)
 //{
 //	char store,*s1, *s2;
-//	
+//
 //	s1 = (char *) s;
 //	s2 = s1 + 1;
 //	store = *s1;
 //	*s1 = *s2;
 //	*s2 = store;
-//	
+//
 //}
 //
 //void flip_long(long *s)
 //{
 //	char store,*s1, *s2, *s3, *s4;
-//	
+//
 //	s1 = (char *) s;
 //	s2 = s1 + 1;
 //	s3 = s1 + 2;
@@ -1603,7 +1603,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 //	store = *s2;
 //	*s2 = *s3;
 //	*s3 = store;
-//	
+//
 //}
 //void alter_rect(RECT *r)
 //{
