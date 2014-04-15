@@ -71,7 +71,8 @@ extern cUniverse univ;
 extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern sf::RenderTexture map_gworld,small_ter_gworld;
+extern sf::RenderTexture map_gworld;
+extern sf::Texture small_ter_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 extern RECT map_pat[];
@@ -1509,7 +1510,7 @@ void draw_map(bool need_refresh) {
 														 6 * (scenario.ter_types[what_ter].picture / 10));
 								else ter_temp_from.offset(24 * ((scenario.ter_types[what_ter].picture - 400) / 5),
 														  6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
-								rect_draw_some_item(small_ter_gworld.getTexture(),ter_temp_from,map_gworld,draw_rect);
+								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
 								break;
 								
 							default:
