@@ -523,6 +523,7 @@ void put_party_in_scen(std::string scen_name)
 	update_explored(scenario.where_start);
 	overall_mode = MODE_TOWN;
 	redraw_screen(REFRESH_ALL);
+	mainPtr.display(); // TODO: Maybe display() should be called in redraw_screen()?
 	set_stat_window(0);
 	adjust_spell_menus();
 	adjust_monst_menu();
