@@ -544,10 +544,6 @@ void Set_up_win ()
 	RECT temp_rect = {0,0,0,280},map_world_rect;
 	RECT map_rect = {0,0,384,384};
 	RECT pc_rect = {0,0,216,113};
-	char fn1[] = "Geneva";
-	char fn2[] = "Dungeon Bold";
-	char fn3[] = "Palatino";
-	short i;
 	RECT r;
 	
 	// TODO: I think this is a relic of the Exile III demo screen at the main menu; we don't actually need to load it until the function below
@@ -687,8 +683,6 @@ void draw_buttons(short mode)
 		spec_draw = true;
 		mode -= 100;
 		}
-	
-	sf::Texture& buttons_to_draw = buttons_gworld;
 	
 	if (is_combat()) { // TODO: Draw buttons one at a time instead of singly
 		source_rect.top += 37;

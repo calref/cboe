@@ -18,12 +18,6 @@
 // TODO: Don't use the resource manager
 #include <CoreServices/CoreServices.h>
 
-static int32_t extract_long(char* ptr) {
-	int32_t l = *(int32_t*) ptr;
-	flip_long(&l);
-	return l;
-}
-
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;
 	flip_short(&s);
@@ -200,7 +194,6 @@ rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelStore) {
 	ptr_guard<unsigned char> pixels(pixelStore, pixelStore + picDataSize);
 	// Then 4 reserved bytes
 	picData += 4;
-	int pixMapType = 0;
 	legacy::Rect bounds;
 	// Now we need to skip any superfluous opcodes until we get to pixel data - opcode 90, 91, 98, or 99
 	// We're assuming it's stored as pixel data, so any other opcodes will just be ignored

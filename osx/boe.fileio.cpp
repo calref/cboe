@@ -101,8 +101,6 @@ cCustomGraphics spec_scen_g;
 std::ofstream flog("bladeslog.txt");
 void init_directories()
 {
-	short error;
-	
 	char cPath[768];
 	CFBundleRef mainBundle=CFBundleGetMainBundle();
 	
@@ -1050,9 +1048,7 @@ typedef struct {
 */
 void build_scen_headers()
 {
-	short index = 1;
 	unsigned short cur_entry = 0;
-	OSErr err;
 	fs::path scenDir = progDir;
 //	scenDir.erase(scenDir.find_last_of("/"));
 	scenDir /= "Blades of Exile Scenarios";
@@ -1076,9 +1072,6 @@ void build_scen_headers()
 		return;
 	}
 #endif
-	// TODO: What on earth is the ItemCount type?
-	ItemCount numScens = 0;
-	
 	//myCPB.dirInfo.ioCompletion = NULL;
 	//myCPB.dirInfo.ioNamePtr = scen_name;
 	//myCPB.dirInfo.ioVRefNum = start_volume;
@@ -1103,7 +1096,6 @@ void build_scen_headers()
 // This wipes out the scenario record, so be sure not to call it while in an active scenario.
 bool load_scenario_header(fs::path file/*,short header_entry*/){
 	bool file_ok = false;
-	OSErr error;
 	long len;
 	bool mac_header = true;
 	

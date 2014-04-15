@@ -1134,7 +1134,6 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 }
 
 std::string cDialog::process_keystroke(cKey keyHit){
-	unsigned long dummy;
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->getType() == CTRL_FIELD && iter->second->isVisible() && dynamic_cast<cTextField*>(iter->second)->hasFocus()) {

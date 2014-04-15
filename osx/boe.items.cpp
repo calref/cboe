@@ -951,7 +951,6 @@ void put_item_graphics(cDialog& me)
 bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
 {
 	cItemRec item;
-	short i;
 	
 	if(id == "done") {
 		me.toast();
@@ -1210,8 +1209,6 @@ short get_num_of_items(short max_num)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	short item_hit;
 	char sign_text[256];
 
 	make_cursor_sword();
@@ -1480,9 +1477,6 @@ bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 
 std::string get_text_response(short dlg,short parent_num)
 {
-
-	short item_hit,i;
-
 	make_cursor_sword();
 	
 	cDialog strPanel("get-response.xml");

@@ -307,7 +307,6 @@ void Handle_One_Event()
 	static const long fiveTicks = time_in_ticks(5).asMilliseconds();
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
-	long menu_choice;
 	bool event_in_dialog = false;
 	
 	through_sending();
@@ -540,8 +539,6 @@ void Mouse_Pressed()
 {
 	// TODO: What about other windows?
 //	sf::Window&	the_window = mainPtr;
-	short	the_part,choice,i,content_part;
-	long menu_choice;
 	if (had_text_freeze > 0) {
 		had_text_freeze--;
 		return;
@@ -1032,7 +1029,6 @@ void incidental_noises(bool on_surface){
 void pause(short length)
 {
 	long len;
-	unsigned long dummy;
 	
 	len = (long) length;
 	

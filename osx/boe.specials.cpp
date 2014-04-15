@@ -2178,7 +2178,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 {
 	bool check_mess = true,set_sd = true;
 	std::array<std::string, 6> strs;
-	short i,j,pic;
+	short i,j;
 	std::array<short, 3> buttons = {-1,-1,-1};
 	cSpecial spec;
 	cItemRec store_i;

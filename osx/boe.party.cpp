@@ -2640,8 +2640,6 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
 {
-	short item_hit;
-	
 	store_mage_store = store_mage;
 	store_priest_store = store_priest;
 	store_store_target = store_spell_target;
@@ -2917,7 +2915,7 @@ bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 short alch_choice(short pc_num)
 {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short i,item_hit,store_alchemy_pc;
+	short i,store_alchemy_pc;
 	char get_text[256];
 
 	make_cursor_sword();
@@ -2950,7 +2948,6 @@ extern bool pc_gworld_loaded;
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 // mode ... 0 - create  1 - created
 {
-	short i,item_hit;
 	bool munch_pc_graphic = false;
 	
 	store_graphic_pc_num = pc_num;
@@ -2996,9 +2993,6 @@ bool pick_pc_name(short pc_num,cDialog* parent)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	short item_hit;
-
 	store_train_pc = pc_num;
 
 	make_cursor_sword();
@@ -3015,7 +3009,7 @@ bool pick_pc_name(short pc_num,cDialog* parent)
 m_num_t pick_trapped_monst()  
 // ignore parent in Mac version
 {
-	short item_hit,i;
+	short i;
 	std::string sp;
 	cMonster get_monst;
 	

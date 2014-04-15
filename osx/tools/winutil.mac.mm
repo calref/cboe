@@ -15,7 +15,6 @@ bool isFrontWindow(sf::Window& win) {
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]]) {
 		BOOL main = [nsHandle isMainWindow];
-		BOOL key = [nsHandle isKeyWindow];
 		return main;
 	}
 	return false;

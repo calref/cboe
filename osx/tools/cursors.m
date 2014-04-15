@@ -41,7 +41,7 @@ NSImage* ImageFromURL(CFURLRef url){
 
 CursorRef CreateCursorFromFile(const char* path, float hotSpotX, float hotSpotY){
 	FSRef ref;
-	OSStatus err = FSPathMakeRef((UInt8*)path, &ref, NULL);
+	FSPathMakeRef((UInt8*)path, &ref, NULL);
 	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
 #if 0
 	static BOOL inited = NO;

@@ -88,7 +88,7 @@ std::string sound_to_fname_map(int snd_num) {
 }
 
 void init_snd_tool(){
-	short i,t;
+	short i;
 	
 	// TODO: Might need sound 0, not sure
 	for (i = 1; i < NUM_SOUNDS; i++) {

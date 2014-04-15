@@ -71,7 +71,6 @@ void showMenuBar() {
 void adjust_monst_menu() {
 	short i,monst_pos = 0;
 	NSMenu* monst_menu;
-	char monst_name[256];
 	
 	if(overall_mode == MODE_STARTUP) return;
 	
@@ -109,7 +108,7 @@ void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 
 void init_menubar() {
 	NSApplication* app = [NSApplication sharedApplication];
-	BOOL loaded = [NSBundle loadNibNamed: @"menu" owner: app];
+	[NSBundle loadNibNamed: @"menu" owner: app];
 	menu_bar_handle = [app mainMenu];
 	
 	apple_menu = [[menu_bar_handle itemWithTitle: @"Blades of Exile"] submenu];

@@ -300,7 +300,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 }
 
 short string_length(const char *str){ // Why not just use strlen?
-	short total_width = 0,i,len;
+	short total_width = 0;
 	
 	sf::Text text;
 	TEXT.applyTo(text);

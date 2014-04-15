@@ -177,7 +177,6 @@ void cControl::setActive(bool active) {
 
 bool cControl::handleClick(){
 	sf::Event e;
-	unsigned long dummy;
 	bool done = false, clicked = false;
 	inWindow->setActive();
 	depressed = true;
@@ -274,13 +273,6 @@ bool cControl::triggerFocusHandler(cDialog& me __attribute__((unused)), std::str
 std::string cControl::font_nums[4] = {"Dungeon", "Geneva", "Silom", "MaidenWord"};
 
 void cControl::init(){
-	char fnGeneva[] = "Geneva";
-	char fnDungeon[] = "Dungeon Bold";
-	char fnMaiden[] = "MaidenWord";
-	char fnSilom[] = "Silom";
-	char fnPalatino[] = "Palatino";
-	char fnChancery[] = "Apple Chancery";
-	
 	// Check if Silom is available
 	// TODO: Ultimately, I'd like to distribute all needed fonts with the game, rendering this unnecessary
 	try {

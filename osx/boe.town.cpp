@@ -1647,7 +1647,6 @@ void display_map()
 {
 	// Show the automap if it's not already visible
 	if(map_visible) return;
-	short the_type;
 	RECT the_rect;
 	RECT	dlogpicrect = {6,6,42,42};
 

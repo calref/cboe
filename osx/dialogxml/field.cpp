@@ -107,6 +107,7 @@ void cTextField::draw(){
 			selectRect.left += sel_start;
 			selectRect.right = selectRect.left + sel_width;
 			fill_rect(*inWindow, selectRect, ipClr);
+			// TODO: I forget whether this was supposed to be = or -=
 			selectRect.right - 1;
 			fill_rect(*inWindow, selectRect, hiliteClr);
 		} else if(ip_timer.getElapsedTime().asMilliseconds() < 500) {

@@ -72,10 +72,10 @@ short gcd(short a, short b){ // Grabbed from Wikipedia and translated to C code
 // According to Macintosh Toolbox Essentials, a tick is about 1/60ths of a second.
 sf::Time time_in_ticks(int ticks) {
 	unsigned long long micro = ticks;
-	ticks *= 1000;
-	ticks *= 1000;
-	ticks /= 60;
-	return sf::microseconds(ticks);
+	micro *= 1000;
+	micro *= 1000;
+	micro /= 60;
+	return sf::microseconds(micro);
 }
 
 	

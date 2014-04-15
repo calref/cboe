@@ -1083,14 +1083,11 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	RECT dest_rect,help_from = {85,36,101,54};
 	std::string str;
 	sf::Text str_to_draw;
-	static const char fn2[] = "Dungeon Bold";
-	static const char fn3[] = "Palatino";
 
 	short i,j,str_len,line_height = 17;
 //	Str255 p_str,str,str_to_draw,str_to_draw2;
 	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
-	bool force_skip = false;
 	short face_to_draw;
 	
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391

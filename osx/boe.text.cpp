@@ -251,8 +251,6 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	short i = 0,j,pc;
 	RECT erase_rect = {17,2,122,255},dest_rect;
 	RECT upper_frame_rect = {3,3,15,268};
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT parts_of_area_to_draw[3] = {RECT{0,0,17,271},RECT{16,0,123,256},RECT{123,0,144,271}};
 
 	item_stats_gworld.setActive();
 

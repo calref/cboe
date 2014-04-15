@@ -127,8 +127,6 @@ void display_spells(short mode,short force_spell,cDialog* parent)
 //short force_spell; // if 100, ignore
 {
 	using namespace std::placeholders;
-	short item_hit;
-
 	if (force_spell < 100) {
 		if (mode == 0)
 			mage_spell_pos = force_spell;
@@ -186,9 +184,6 @@ bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod mods
 
 void display_skills(short force_skill,cDialog* parent)
 {
-
-	short item_hit;
-
 	if (force_skill < 100)
 		skill_pos = force_skill;
 	if (skill_pos < 0)
@@ -244,7 +239,7 @@ bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 
 void display_pc(short pc_num,short mode,cDialog* parent)
 {
-	short i,item_hit;
+	short i;
 	std::string label_str;
 	
 	if (univ.party[pc_num].main_status == 0) {
@@ -276,7 +271,6 @@ void put_item_info(cDialog& me,short pc,short item)////
 {
 	char store_text[256];
 	std::string desc_str;
-	short i;	
 	cItemRec s_i;
 	const char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
@@ -423,8 +417,6 @@ bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 
 void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 {
-	short item_hit;
-
 		store_item_pc = pc_num;
 		if (pc_num == 6)
 			store_i = si;
@@ -569,9 +561,6 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from storwhich_me_m
 {
-	
-	short item_hit;
-	
 	position = array_pos;
 	full_roster = false;
 	if (mode == 1) {
@@ -648,8 +637,6 @@ bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 void display_alchemy(cDialog* parent)
 {
 	std::string get_text;
-   long get_val;
-   short item_hit;
 	
 	cur_entry = 3;
 
@@ -670,7 +657,7 @@ void display_alchemy(cDialog* parent)
 
 void display_alchemy()
 {
-	short i,item_hit;
+	short i;
 
 	make_cursor_sword();
 
@@ -756,7 +743,6 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent)
 {
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
-	short item_hit;
 	
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -901,7 +887,7 @@ bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
 
 void give_pc_info(short pc_num)
 {
-	short item_hit ,i;
+	short i;
 	std::string str;
 	
 	store_pc_num = pc_num;
@@ -998,7 +984,6 @@ void adventure_notes()
 {
 
 	unsigned short i;
-	short item_hit;
 	char place_str[256];
 	
 	store_num_i = 0;
@@ -1107,7 +1092,7 @@ bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 void talk_notes()
 {
 
-	short i,item_hit;
+	short i;
 	
 	store_num_i = 0;
 	for (i = 0; i < 120; i++)
@@ -1168,7 +1153,6 @@ void journal()
 {
 
 	unsigned short i;
-	short item_hit;
 	char place_str[256];
 	
 	store_num_i = 0;

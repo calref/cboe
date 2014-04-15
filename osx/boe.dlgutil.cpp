@@ -1048,8 +1048,6 @@ void do_sign(short town_num, short which_sign, short sign_type,location sign_loc
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
-
-	short item_hit;
 	char sign_text[256];
 	location view_loc;
 
@@ -1189,8 +1187,6 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 
 void pick_preferences()
 {
-	short item_hit;
-
 	make_cursor_sword();
 
 	cDialog prefsDlog("preferences.xml");
@@ -1338,7 +1334,6 @@ bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 extern bool pc_gworld_loaded;
 void edit_party(short can_create,short can_cancel)
 {
-	short item_hit;
 	bool munch_pc_graphic = false;
 	
 	make_cursor_sword();
@@ -1394,8 +1389,6 @@ bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 
 void tip_of_day()
 {
-
-	short item_hit;
 	std::string place_str;
 	
 	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
@@ -1475,8 +1468,6 @@ bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 
 short pick_a_scen()
 {
-
-	short item_hit;
 	
 	build_scen_headers();
 	

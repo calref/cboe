@@ -309,7 +309,7 @@ void draw_monsters() ////
 }
 
 void play_see_monster_str(unsigned short m){
-	short str1, str2, pic, snd, spec, s1 = 0, s2 = 0, s3 = 0;
+	short str1, str2, pic, snd, spec;
 	ePicType type;
 	str1 = scenario.scen_monsters[m].see_str1;
 	str2 = scenario.scen_monsters[m].see_str2;
