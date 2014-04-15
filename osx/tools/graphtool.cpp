@@ -877,6 +877,9 @@ public:
 			case 3:
 				return sf::Vector2f(r*sin(t), h + r*cos(t));
 		}
+		// Unreachable
+		printf("Whoops, rounded rectangle had bad point!");
+		return sf::Vector2f();
 	}
 	
 	// TODO: Additional functions?
@@ -1017,6 +1020,7 @@ Region& Region::operator-=(Region& other) {
 		else shape->setFillColor(sf::Color::Black);
 		shapes.push_back(shape);
 	}
+	return *this;
 }
 
 void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendMode mode){

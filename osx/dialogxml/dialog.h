@@ -41,7 +41,7 @@ class cDialog {
 	void loadFromFile(std::string path);
 public:
 	static void init();
-	static bool noAction(cDialog&,std::string,eKeyMod) {}
+	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	static const short BG_LIGHT, BG_DARK;
 	explicit cDialog(cDialog* p = NULL); // dialog with no items
 	explicit cDialog(std::string path); // cd_create_dialog

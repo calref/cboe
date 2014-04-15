@@ -104,6 +104,7 @@ void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
 
 sf::Color cButton::getColour() throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
+	return sf::Color();
 }
 
 void cButton::setBtnType(eBtnType newType) {
@@ -397,6 +398,7 @@ void cLedGroup::setColour(sf::Color clr) throw(xUnsupportedProp) {
 
 sf::Color cLedGroup::getColour() throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
+	return sf::Color();
 }
 
 bool cLedGroup::isClickable(){

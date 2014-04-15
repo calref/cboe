@@ -61,6 +61,7 @@ void cScrollbar::setColour(sf::Color clr) throw(xUnsupportedProp) {
 
 sf::Color cScrollbar::getColour() throw(xUnsupportedProp) {
 	// TODO: Colour is unsupported
+	return sf::Color();
 }
 
 void cScrollbar::draw() {

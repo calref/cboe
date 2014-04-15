@@ -1183,6 +1183,7 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 		give_delays = PSD[SDF_NO_FRILLS];
 		save_prefs(reset_help);
 		}
+	return true;
 }
 
 void pick_preferences()

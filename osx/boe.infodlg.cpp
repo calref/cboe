@@ -121,6 +121,7 @@ bool display_spells_event_filter(cDialog& me, std::string item_hit, eKeyMod mods
 						else priest_spell_pos = store;
 					put_spell_info(me, display_mode);
 				}
+	return true;
 }
 void display_spells(short mode,short force_spell,cDialog* parent)
 //short mode; // 0 - mage  1 - priest
@@ -180,6 +181,7 @@ bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod mods
 							}
 					put_skill_info(me);
 				}
+	return true;
 }
 
 void display_skills(short force_skill,cDialog* parent)
@@ -235,6 +237,7 @@ bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 					which_pc_displayed = pc_num;
 					put_pc_spells(me);
 				}
+	return true;
 }
 
 void display_pc(short pc_num,short mode,cDialog* parent)
@@ -413,6 +416,7 @@ bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					store_i = univ.party[pc_num].items[item];
 					put_item_info(me,pc_num,item);
 	}
+	return true;
 }
 
 void display_pc_item(short pc_num,short item,cItemRec si,short parent)
@@ -555,6 +559,7 @@ bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 		// TODO: It may not be redudndant, but it looks pretty stupid; change it
 		put_monst_info(me);
 				}
+	return true;
 }
 
 void display_monst(short array_pos,cCreature *which_m,short mode)
@@ -632,6 +637,7 @@ bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 	}
 	get_text = get_str("alchemy", cur_entry);
 	me["str"].setText(get_text);
+	return true;
 }
 
 void display_alchemy(cDialog* parent)
@@ -875,6 +881,7 @@ bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 				while (univ.party[store_pc_num].main_status != 1);
 			display_pc_info(me);
 	}
+	return true;
 }
 
 bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
@@ -883,6 +890,7 @@ bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
 	else if(item_hit == "seepriest") display_pc(pc,1,&me);
 	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
 	else if(item_hit == "alch") display_alchemy();
+	return true;
 }
 
 void give_pc_info(short pc_num)
@@ -978,6 +986,7 @@ bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				me["del" + n].hide();
 				}
 		}
+	return true;
 }
 
 void adventure_notes()
@@ -1087,6 +1096,7 @@ bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 					univ.party.talk_save[store_page_on].personality = -1;
 				}
 	put_talk(me);
+	return true;
 }
 
 void talk_notes()
@@ -1146,7 +1156,7 @@ bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 			me["day" + n].setText("");
 		}
 	}
-
+	return true;
 }
 
 void journal()

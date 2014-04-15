@@ -2758,6 +2758,7 @@
 					"-ferror-limit=0",
 					"-Werror=format",
 					"-ftemplate-backtrace-limit=0",
+					"-Werror=return-type",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
@@ -2810,6 +2811,7 @@
 					"-ferror-limit=0",
 					"-Werror=format",
 					"-ftemplate-backtrace-limit=0",
+					"-Werror=return-type",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",

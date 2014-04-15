@@ -1014,7 +1014,7 @@ bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
 		total_items_gettable--;
 		put_item_graphics(me);
 	}
-		
+	return true;
 }
 
 // TODO: Move this to a more appropriate place
@@ -1112,6 +1112,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 		if(btn && item_hit == btn->label)
 			return i;
 	}
+	return -1;
 	}
 
 //short fancy_choice_dialog(short which_dlog,short parent)

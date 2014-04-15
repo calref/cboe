@@ -1130,7 +1130,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	labelCtrl->setFormat(TXT_FONT, bold ? SILOM : GENEVA);
 	// TODO: Do we need to set colour to white if background is dark?
 	labelCtrl->setColour(ctrl.getColour());
-	add(labelCtrl, labelRect, key);
+	return add(labelCtrl, labelRect, key);
 }
 
 std::string cDialog::process_keystroke(cKey keyHit){

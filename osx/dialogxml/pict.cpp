@@ -101,6 +101,7 @@ void cPict::setColour(sf::Color clr) throw(xUnsupportedProp) {
 
 sf::Color cPict::getColour() throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
+	return sf::Color();
 }
 
 void cPict::setPict(pic_num_t num, ePicType type){

@@ -1085,6 +1085,7 @@ bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 	if (talk_done == true) {
 		me.toast();
 	}
+	return true;
 }
 
 bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
@@ -1193,6 +1194,7 @@ bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 						}
 				}
 			}
+	return true;
 }
 
 bool spend_xp(short pc_num, short mode, cDialog* parent)
@@ -2498,6 +2500,7 @@ bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
 	put_pc_caster_buttons(me);
 	put_pc_target_buttons(me);
 					}
+	return true;
 }
 
 bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
@@ -2517,6 +2520,7 @@ bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
 		draw_spell_info(me);
 		put_pc_target_buttons(me);
 	}
+	return true;
 }
 
 void finish_pick_spell(cDialog& me, bool spell_toast);
@@ -2537,6 +2541,7 @@ bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 		give_help(207,8,me);
 	}
 	if(dialog_done) finish_pick_spell(me, spell_toast);
+	return true;
 }
 
 bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
@@ -2578,6 +2583,7 @@ bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
 								}
 
 						}
+	return true;
 }
 
 void finish_pick_spell(cDialog& me, bool spell_toast) {
@@ -2910,6 +2916,7 @@ bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 			me.setResult<short>(item_hit[6] - '1');
 		}
 	me.toast();
+	return true;
 }
 
 short alch_choice(short pc_num)
@@ -2986,7 +2993,7 @@ bool pc_name_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 			univ.party[store_train_pc].name = pcName;
 			me.toast();
 			}
-
+	return true;
 }
 
 bool pick_pc_name(short pc_num,cDialog* parent)
