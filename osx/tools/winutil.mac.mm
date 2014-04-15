@@ -26,7 +26,6 @@ void makeFrontWindow(sf::Window& win) {
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]]) {
 		[nsHandle orderFrontRegardless];
-		[nsHandle makeMainWindow];
 		[nsHandle makeKeyWindow];
 	}
 }

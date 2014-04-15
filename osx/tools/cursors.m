@@ -73,7 +73,6 @@ void SetNSCursor(CursorRef cursor){
 }
 
 void SetNSCursorWatch() {
-	SetNSCursor([NSCursor watchCursor]);
 }
 
 void HideNSCursor(){
