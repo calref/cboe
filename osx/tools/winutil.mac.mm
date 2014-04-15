@@ -8,6 +8,7 @@
 
 #include "winutil.h"
 #include <Cocoa/Cocoa.h>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 bool isFrontWindow(sf::Window& win) {
 	sf::WindowHandle handle = win.getSystemHandle();
@@ -53,6 +54,7 @@ NSOpenPanel* dlg_get_scen;
 NSOpenPanel* dlg_get_game;
 NSSavePanel* dlg_put_scen;
 NSSavePanel* dlg_put_game;
+extern sf::RenderWindow mainPtr;
 
 // TODO: I'm not sure if I'll need delegates to enable selection of files with no file extension that have file creator types?
 //Boolean scen_file_filter(AEDesc* item, void* info, void * dummy, NavFilterModes filterMode){
@@ -125,27 +127,34 @@ void init_fileio(){
 	[dlg_put_game retain];
 }
 
-fs::path nav_get_scenario() throw(no_file_chosen) {
-	// TODO: Not quite sure if runModal is right; I want to display it as a dialog, not as a sheet.
-	if([dlg_get_scen runModal] == NSFileHandlingPanelCancelButton)
-		throw no_file_chosen();
-	return fs::path([[[dlg_get_scen URL] absoluteString] UTF8String]);
+fs::path nav_get_scenario() {
+	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
+	makeFrontWindow(mainPtr);
+	if(gotFile)
+		return fs::path([[[dlg_get_scen URL] absoluteString] UTF8String]);
+	return "";
 }
 
-fs::path nav_put_scenario() throw(no_file_chosen) {
-	if([dlg_put_scen runModal] == NSFileHandlingPanelCancelButton)
-		throw no_file_chosen();
-	return [[[dlg_put_scen URL] absoluteString] UTF8String];
+fs::path nav_put_scenario() {
+	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
+	makeFrontWindow(mainPtr);
+	if(gotFile)
+		return [[[dlg_put_scen URL] absoluteString] UTF8String];
+	return "";
 }
 
-fs::path nav_get_party() throw(no_file_chosen) {
-	if([dlg_get_game runModal] == NSFileHandlingPanelCancelButton)
-		throw no_file_chosen();
-	return fs::path([[[dlg_get_game URL] absoluteString] UTF8String]);
+fs::path nav_get_party() {
+	bool gotFile = [dlg_get_game runModal] != NSFileHandlingPanelCancelButton;
+	makeFrontWindow(mainPtr);
+	if(gotFile)
+		return fs::path([[[dlg_get_game URL] absoluteString] UTF8String]);
+	return "";
 }
 
-fs::path nav_put_party() throw(no_file_chosen) {
-	if([dlg_put_game runModal] == NSFileHandlingPanelCancelButton)
-		throw no_file_chosen();
-	return fs::path([[[dlg_put_game URL] absoluteString] UTF8String]);
+fs::path nav_put_party() {
+	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
+	makeFrontWindow(mainPtr);
+	if(gotFile)
+		return fs::path([[[dlg_put_game URL] absoluteString] UTF8String]);
+	return "";
 }

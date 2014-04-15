@@ -1398,10 +1398,8 @@ bool handle_action(sf::Event event)
 		menu_activate();
 		univ.party.scen_name = ".exs"; // should be harmless...
 		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
-			try{
-				fs::path file = nav_put_party();
-				save_party(file);
-			} catch(no_file_chosen){}
+			fs::path file = nav_put_party();
+			if(!file.empty()) save_party(file);
 		}
 	}
 	else if (party_toast() == true) {
@@ -2146,10 +2144,8 @@ bool handle_keystroke(sf::Event& event){
 
 void do_load()
 {
-	try{
-		fs::path file_to_load = nav_get_party();
-		load_party(file_to_load);
-	} catch(no_file_chosen){}
+	fs::path file_to_load = nav_get_party();
+	if(!file_to_load.empty()) load_party(file_to_load);
 	if (in_startup_mode == false)
 		post_load();
 	menu_activate();
@@ -2188,17 +2184,19 @@ void post_load()
 void do_save(short mode)
 //mode; // 0 - normal  1 - save as
 {
-//	SelectWindow(mainPtr);
 	if (overall_mode > MODE_TOWN) {
 		add_string_to_buf("Save: Only while outdoors, or in         ");
 		add_string_to_buf("  town and not looking/casting.          ");
 		print_buf();
 		return;
 		}
-	try{
-		if(mode == 1) univ.file = nav_put_party();
+	fs::path file = univ.file;
+	if(mode == 1) file = nav_put_party();
+	if(!file.empty()) {
+		univ.file = file;
 		save_party(univ.file);
-	} catch(no_file_chosen){}
+	}
+	
 	
 	pause(6);
 //	initiate_redraw();
@@ -2546,10 +2544,8 @@ void handle_death()
 			}
 		else if(choice == "load") {
 			in_startup_mode = false;
-			try{
-				fs::path file_to_load = nav_get_party();
-				load_party(file_to_load);
-			} catch(no_file_chosen){}
+			fs::path file_to_load = nav_get_party();
+			if(!file_to_load.empty()) load_party(file_to_load);
 			if (party_toast() == false) {
 				if (in_startup_mode == false)
 					post_load();
@@ -2617,11 +2613,9 @@ void start_new_game()
 			univ.party[i].max_sp += univ.party[i].skills[9] * 3 + univ.party[i].skills[10] * 3;
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}
-	try{
-		fs::path file = nav_put_party();
-		save_party(file);
-		party_in_memory = true;
-	} catch(no_file_chosen){}
+	fs::path file = nav_put_party();
+	if(!file.empty()) save_party(file);
+	party_in_memory = true;
 	
 	party_in_memory = true;
 }

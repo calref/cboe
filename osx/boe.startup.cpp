@@ -119,16 +119,13 @@ bool handle_startup_press(location the_point)
 
 void startup_load()////
 {
-	try{
 		fs::path file_to_load = nav_get_party();
-		if(load_party(file_to_load)){
+		if(!file_to_load.empty() && load_party(file_to_load)){
 			party_in_memory = true;
 			if(univ.party.scen_name.length() > 0)
 				in_startup_mode = false;
 			else in_startup_mode = true;
 		}
-	} catch(no_file_chosen){}
-	makeFrontWindow(mainPtr);
 	if (!in_startup_mode) {
 		//end_anim();
 		end_startup();
