@@ -630,6 +630,7 @@ void redraw_screen(int refresh) {
 		default:
 			redraw_terrain();
 			draw_text_bar(bool(refresh & REFRESH_BAR));
+			refresh_text_bar();
 			draw_buttons(0);
 			break;
 	}
@@ -809,6 +810,9 @@ void put_text_bar(char *str) {
 	
 	TEXT.colour = sf::Color::Black;
 	text_bar_gworld.display();
+}
+
+void refresh_text_bar() {
 	mainPtr.setActive();
 	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[4], win_to_rects[4],ul);
 }

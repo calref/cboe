@@ -1316,13 +1316,6 @@ void print_buf ()
 	}
 	
 	text_area_gworld.display();
-	
-	store_text_rect = RECT(text_area_gworld);
-	dest_rect = store_text_rect;
-	
-	dest_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	mainPtr.setActive();
-	rect_draw_some_item(text_area_gworld.getTexture(), store_text_rect, dest_rect,ul);
 }
 
 void restart_printing()
