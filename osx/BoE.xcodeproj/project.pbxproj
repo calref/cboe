@@ -2757,6 +2757,7 @@
 					"$(OTHER_CFLAGS)",
 					"-ferror-limit=0",
 					"-Werror=format",
+					"-ftemplate-backtrace-limit=0",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
@@ -2808,6 +2809,7 @@
 					"$(OTHER_CFLAGS)",
 					"-ferror-limit=0",
 					"-Werror=format",
+					"-ftemplate-backtrace-limit=0",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
