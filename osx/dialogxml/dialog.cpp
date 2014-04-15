@@ -193,6 +193,14 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	return p;
 }
 
+// A predicate for stripping out whitespace other than spaces
+static bool isAllowableCharacter(char c) {
+	if(c == '\n') return false;
+	if(c == '\r') return false;
+	if(c == '\t') return false;
+	return true;
+}
+
 template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	pair<string,cTextMsg*> p;
 	Iterator<Attribute> attr;
@@ -273,10 +281,10 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		string val;
 		int type = node->Type();
 		node->GetValue(&val);
-		// TODO: Strip out tabs and newlines
 		// TODO: De-magic the | character
 		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
-		else if(type == TiXmlNode::TEXT) content += val;
+		else if(type == TiXmlNode::TEXT)
+			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
 			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
@@ -473,7 +481,8 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			// TODO: There's surely a better way to do this
 			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column(),fname);
 //			p.second->labelWithKey = true;
-		}else if(type == TiXmlNode::TEXT) content += val;
+		}else if(type == TiXmlNode::TEXT)
+			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
 			throw xBadVal("text","<content>",val,node->Row(),node->Column(),fname);
@@ -627,7 +636,8 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		string val;
 		int type = node->Type();
 		node->GetValue(&val);
-		if(type == TiXmlNode::TEXT) content += val;
+		if(type == TiXmlNode::TEXT)
+			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
 			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
@@ -740,6 +750,7 @@ void cDialog::loadFromFile(std::string path){
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
 		printf("Loading dialog from: %s\n", cPath.c_str());
+		TiXmlBase::SetCondenseWhiteSpace(false);
 		Document xml(cPath.c_str());
 		xml.LoadFile();
 		
