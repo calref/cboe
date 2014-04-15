@@ -1312,7 +1312,7 @@ bool handle_action(sf::Event event)
 				
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something	
 	if (did_something == true) {
-		draw_map(mini_map,5);
+		draw_map(true); // TODO: Might be possible to only do this in certain circumstances?
 		play_ambient_sound();
 
 		if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {

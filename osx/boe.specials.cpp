@@ -1390,7 +1390,7 @@ void teleport_party(short x,short y,short mode)
 		do_explosion_anim(5,2);
 		end_missile_anim();
 	}	
-	draw_map(mini_map,5);
+	draw_map(true);
 }
 
 
@@ -1758,7 +1758,7 @@ void push_things()////
 			univ.town.p_loc = l;
 			update_explored(l);
 			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
-			draw_map(mini_map,5);
+			draw_map(true);
 			if (univ.town.is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the barrel.");			
@@ -1796,7 +1796,7 @@ void push_things()////
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
-					draw_map(mini_map,5);
+					draw_map(true);
 					if (univ.town.is_barrel(pc_pos[i].x,pc_pos[i].y)) {
 						univ.town.set_barrel(pc_pos[i].x,pc_pos[i].y,false);
 						ASB("You smash the barrel.");			
@@ -2806,7 +2806,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = true;
-			draw_map(mini_map,10);
+			draw_map(true);
 			break;
 		case SPEC_TOWN_SWAP_TER:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
@@ -2820,7 +2820,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					belt_present = true;
 			}
 			*redraw = 1;
-			draw_map(mini_map,10);
+			draw_map(true);
 			break;
 		case SPEC_TOWN_TRANS_TER:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
@@ -2828,7 +2828,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
 				belt_present = true;
 			*redraw = 1;
-			draw_map(mini_map,10);
+			draw_map(true);
 			break;
 		case SPEC_TOWN_MOVE_PARTY:
 			if (is_combat()) {
@@ -3209,7 +3209,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(mini_map,10);
+						draw_map(true);
 					}
 					break;
 				case SPEC_RECT_SWAP_TER:
@@ -3218,14 +3218,14 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[spec.sd2].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(mini_map,10);
+						draw_map(true);
 					}
 					else if (coord_to_ter(i,j) == spec.sd2){
 						set_terrain(l,spec.sd1);
 						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(mini_map,10);
+						draw_map(true);
 					}
 					break;
 				case SPEC_RECT_TRANS_TER:
@@ -3234,7 +3234,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 						belt_present = true;
 					*redraw = true;
-					draw_map(mini_map,10);
+					draw_map(true);
 					break;
 				case SPEC_RECT_LOCK:
 					ter = coord_to_ter(i,j);
@@ -3243,7 +3243,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(mini_map,10);
+						draw_map(true);
 					}
 					break;
 				case SPEC_RECT_UNLOCK:
@@ -3253,7 +3253,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
 							belt_present = true;
 						*redraw = true;
-						draw_map(mini_map,10);
+						draw_map(true);
 						break;
 					}
 			}

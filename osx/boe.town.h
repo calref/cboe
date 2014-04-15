@@ -26,7 +26,7 @@ void erase_specials();
 void erase_out_specials();
 short get_town_spec_id(location where);
 void clear_map();
-void draw_map (sf::RenderWindow& the_dialog, short the_item);
+void draw_map(bool need_refresh);
 bool is_door(location destination);
 void display_map();
 void check_done();

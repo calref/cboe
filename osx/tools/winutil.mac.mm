@@ -21,15 +21,21 @@ bool isFrontWindow(sf::Window& win) {
 	return false;
 }
 
-void makeFrontWindow(sf::Window& win, bool acceptKeyInput) {
+void makeFrontWindow(sf::Window& win) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]]) {
 		[nsHandle orderFrontRegardless];
-		if(acceptKeyInput) {
-			[nsHandle makeMainWindow];
-			[nsHandle makeKeyWindow];
-		}
+		[nsHandle makeMainWindow];
+		[nsHandle makeKeyWindow];
+	}
+}
+
+void setWindowFloating(sf::Window& win, bool floating) {
+	sf::WindowHandle handle = win.getSystemHandle();
+	id nsHandle = id(handle);
+	if([nsHandle isKindOfClass: [NSWindow class]]) {
+		[nsHandle setLevel: floating ? NSFloatingWindowLevel : NSNormalWindowLevel];
 	}
 }
 

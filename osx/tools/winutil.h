@@ -17,6 +17,8 @@ namespace fs = boost::filesystem; // TODO: Centralize this alias
 bool isFrontWindow(sf::Window& win);
 void makeFrontWindow(sf::Window& win);
 
+void setWindowFloating(sf::Window& win, bool floating);
+
 void init_fileio();
 
 fs::path nav_get_party();

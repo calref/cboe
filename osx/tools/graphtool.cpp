@@ -843,7 +843,7 @@ public:
 	
 	sf::Vector2f getPoint(unsigned int i) const override {
 		int t = i * divSz;
-		return sf::Vector2f(a*sin(t), b*cos(t));
+		return sf::Vector2f(a + a*sin(t), b + b*cos(t));
 	}
 	
 	// TODO: Additional functions?

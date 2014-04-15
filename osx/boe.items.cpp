@@ -28,6 +28,7 @@
 #include <array>
 #include <boost/lexical_cast.hpp>
 #include "cursors.h"
+#include "winutil.h"
 
 extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
@@ -1236,8 +1237,10 @@ short get_num_of_items(short max_num)
 void init_mini_map() {
 	// TODO: I'm not sure if the bounds in the DLOG resource included the titlebar height; perhaps the actual height should be a little less
 	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map.setVisible(false);
 	mini_map.setPosition(sf::Vector2i(52,62));
+	mini_map.setVisible(false);
+	setWindowFloating(mini_map, true);
+	makeFrontWindow(mainPtr);
 }
 
 void make_cursor_watch() 

@@ -76,6 +76,7 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 	for(i = 0; i < 100; i++)
 		specials[i] = old.specials[i];
 	difficulty = old.difficulty;
+	strong_barriers = defy_scrying = defy_mapping = false;
 	return *this;
 }
 
@@ -137,6 +138,7 @@ cTown::cTown(short size){
 		specials[i] = cSpecial();
 	}
 	difficulty = 0;
+	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
 char(& cTown::town_strs(short i))[256]{

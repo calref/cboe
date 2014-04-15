@@ -64,6 +64,7 @@ short on_monst_menu[256];
 signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
 signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
+extern bool map_visible;
 bool game_run_before = false;
 bool give_intro_hint = true;
 bool in_scen_debug = false;
@@ -94,9 +95,6 @@ bool first_update = true,anim_onscreen = false,frills_on = true,sys_7_avail,supp
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
 short give_delays = 0;
-bool modeless_exists[18] = {false,false,false,false,false,false,
-								false,false,false,false,false,false,
-								false,false,false,false,false,false};
 
 sf::RenderWindow mini_map;
 //RECT d_rects[80];
@@ -332,8 +330,14 @@ void Handle_One_Event()
 	event_in_dialog = handle_dialog_event();
 	
 	if (event_in_dialog == false)
-		if(!mainPtr.waitEvent(event)) {
-			// TODO: Actually, this is probably an error, so maybe it should be handled as such.
+		if(map_visible && mini_map.pollEvent(event)){
+			if(event.type == sf::Event::Closed) {
+				mini_map.setVisible(false);
+				map_visible = false;
+			} else if(event.type == sf::Event::GainedFocus)
+				makeFrontWindow(mainPtr);
+		}
+		if(!mainPtr.pollEvent(event)) {
 			flushingInput = false;
 			mainPtr.display();
 			return;
@@ -374,8 +378,8 @@ void Handle_One_Event()
 			break;
 		
 		case sf::Event::GainedFocus:
-			Handle_Activate();
 			Handle_Update();
+			makeFrontWindow(mainPtr);
 			break;
 			
 		case sf::Event::Closed:
@@ -412,13 +416,6 @@ void Handle_One_Event()
 		}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
 	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
-}
-
-
-void Handle_Activate()
-{				
-	if (isFrontWindow(mainPtr))
-		mainPtr.setActive();
 }
 
 // TODO: Not sure what to do here
@@ -459,10 +456,6 @@ bool handle_dialog_event()
 
 void Handle_Update()
 {
-	// TODO: What about updating other windows? Particularly the minimap
-	sf::RenderWindow& the_window = mainPtr;
-	
-	if (&the_window == &mainPtr) {
 		if (in_startup_mode == true) {
 			/*if (first_startup_update == true) 
 				first_startup_update = false;
@@ -484,7 +477,9 @@ void Handle_Update()
 			else //refresh_screen(0); 
 				redraw_screen();
 			}
-		}
+	
+	if(map_visible) draw_map(false);
+	else mini_map.setVisible(false);
 		
 }
 

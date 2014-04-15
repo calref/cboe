@@ -112,9 +112,8 @@ short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_sel
 short sell_offset = 0;
 location town_force_loc;
 bool shop_button_active[12];
-	RECT map_title_rect = {8,50,20,300};
-//	RECT map_bar_rect = {285,47,301,218};
-	RECT map_bar_rect = {2,230,10,400};
+RECT map_title_rect = {3,50,15,300};
+RECT map_bar_rect = {15,50,27,300};
 unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 
 void force_town_enter(short which_town,location where_start)
@@ -1334,6 +1333,7 @@ short get_town_spec_id(location where)
 	return i;
 }
 
+// TODO: I don't think we need this
 void clear_map()
 {
 	RECT map_world_rect(map_gworld);
@@ -1344,19 +1344,12 @@ void clear_map()
 //	draw_map(mini_map,11);
 
 	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-	draw_map(mini_map,10);
 
 }
 
-// TODO: Eliminate the flag, always do full redraw
-void draw_map (sf::RenderWindow& the_dialog, short the_item)
-//the_item; // Being sneaky - if this gets value of 5, this is not a full restore -
-				// just update near party, if it gets 11, blank out middle and leave
-				// No redrawing in gworld
-				// If a 10, do a regular full restore
-				// Also, can get a 5 even when the window is not up, so have to make
-				// sure dialog exists before accessing it.
+void draw_map(bool need_refresh)
 {
+	if(!map_visible) return;
 	short i,j,pic,pic2;
 	RECT the_rect,map_world_rect = {0,0,384,384};
 	location where;
@@ -1375,31 +1368,13 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 	RECT area_to_put_on_map_rect;
 	RECT custom_from;
 	
-	//if (forcing_map_button_redraw == true) {
-	//	forcing_map_button_redraw = false;
-	//	return;
-	//	}
-	
-	if (the_item == 4) {
 		draw_surroundings = true;
-		the_item = 5;
-		}
 	
-	if ((map_visible == false) && (the_item == 5) && (need_map_full_refresh == true))
-		return;
-	if ((map_visible == false) && (the_item == 10)) {
-		need_map_full_refresh = true;
-		return;
-		}
-	if ((map_visible == true) && (the_item != 11) && (need_map_full_refresh == true)) {
-		need_map_full_refresh = false;
-		the_item = 10;
-		}
-	
-	if (the_item == 10) {
+	if(need_refresh) {
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 64; j++)
 				map_graphic_placed[i][j] = 0;
+		// TODO: I suspect we don't need to save this info
 		}
 		
 	town_map_adj.x = 0;
@@ -1425,9 +1400,7 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 					view_rect.right = view_rect.left + 40;
 					view_rect.top = minmax(0,24,univ.town.p_loc.y - 20);
 					view_rect.bottom = view_rect.top + 40;
-					if (the_item == 5)
-						redraw_rect = view_rect;
-						else redraw_rect = big_rect;
+					redraw_rect = big_rect;
 					total_size = 64;
 					break;
 				case 1:
@@ -1463,87 +1436,26 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 			
 	if (is_combat())
 		draw_pcs = false;
-		
-	map_gworld.setActive();
-	TEXT.font = "Geneva";
-
-	if(map_visible) {
-		//GetDialogItem(the_dialog, 5, &the_type, &the_handle, &the_rect);
-		//map_rect = the_rect;
-		}
 	
-	if (the_item == 11) {
-		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-			draw_pcs = false;
+	const char* title_string = "Your map:";
+	bool canMap = true;
+	
+	if ((is_combat()) && (which_combat_type == 0)) {
+			title_string = "No map in combat.";
+			canMap = false;
 		}
-/*	else if ((is_combat()) && (which_combat_type == 0)) {
-		if (map_visible == true) {
-			PaintRect(&map_world_rect);
-
-			//GetDialogItem (the_dialog, 4, &the_type, &the_handle, &the_rect);
-			//SetDialogItemText (the_handle, comb_mess);
-			//FillCRect(&map_bar_rect,bg[4]);
-			
-			//char_win_draw_string( mini_map,
-			//	map_bar_rect,"No map in combat.",0,12);
-			draw_pcs = false;
-			}
-			else {
-				SetPort(old_port);
-				return;
-				}
-		} */
 	else if ((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1)))
 		 {
-			if(map_visible) {
-				tileImage(mini_map, map_bar_rect,bg_gworld,bg[4]);
-				win_draw_string(mini_map,map_bar_rect,"No map here.",0,12);
-				draw_pcs = false;
-				map_gworld.setActive();
-				}
-				else {
-				mainPtr.setActive();
-				return;
-				}
+				title_string = "No map here.";
+				canMap = false;
 		 }else if((is_town() && univ.town->defy_mapping)) {
-			 if(map_visible) {
-				 tileImage(mini_map, map_bar_rect,bg_gworld,bg[4]);
-				 win_draw_string(mini_map,map_bar_rect,"This place defies mapping.",0,12);
-				 draw_pcs = false;
-				 map_gworld.setActive();
-			 }
-			 else {
-				 mainPtr.setActive();
-				 return;
-			 }
+				 title_string = "This place defies mapping.";
+				 canMap = false;
 		 }
-	else {
-	if(map_visible) {
-		//SetPort(the_dialog);
-		//FillCRect(&map_bar_rect,bg[4]);
+	else if(need_refresh) {
 		map_gworld.setActive();
-		//char_win_draw_string( mini_map,
-		//	map_bar_rect,"Hit Escape to close.",0,12);
-		}
 
-	if (the_item == 10) {
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-		}
-
-	// Now, if doing just partial restore, crop redraw_rect to save time.
-	if (the_item == 5) {
-		if ((is_out())  || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))
-			kludge = global_to_local(univ.party.p_loc);
-		else if (is_combat())
-			kludge = pc_pos[current_pc];
-		else kludge = univ.town.p_loc;
-		redraw_rect.left = max(0,kludge.x - 4);
-		redraw_rect.right = min(view_rect.right,kludge.x + 5);
-		redraw_rect.top = max(0,kludge.y - 4);
-		redraw_rect.bottom = min(view_rect.bottom,kludge.y + 5);
-		} 
 
 	// Now, if shopping or talking, just don't touch anything.
 	if ((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
@@ -1557,10 +1469,8 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 		else out_mode = false;
 
 	area_to_put_on_map_rect = redraw_rect;
-	if (the_item == 10) {
 		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0; 
-		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size; 
-		}
+		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
 		
 		for (where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
 			for (where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
@@ -1635,40 +1545,40 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 						}
 				}
 
+		map_gworld.display();
 		}
 	
+		mini_map.setActive();
+	
 	// Now place terrain map gworld
-	if (map_visible == true) {
-		TEXT.font = "Geneva";
+		TEXT.font = "Silom";
 		TEXT.pointSize = 10;;
-		TEXT.style = sf::Text::Bold;
+		TEXT.style = sf::Text::Regular;
 		
-		if ((draw_surroundings == true) || (the_item != 5)) { // redraw much stuff
-			the_rect = RECT(the_dialog);
+			the_rect = RECT(mini_map);
 			tileImage(mini_map, the_rect,bg_gworld,bg[4]);
-			cPict theGraphic(the_dialog);
+			cPict theGraphic(mini_map);
 			theGraphic.setBounds(dlogpicrect);
 			theGraphic.setPict(21, PIC_DLOG);
 			theGraphic.setFormat(TXT_FRAME, false);
 			theGraphic.draw();
  			TEXT.colour = sf::Color::White;
-			win_draw_string(mini_map, map_title_rect,"Your map:      (Hit Escape to close.)",0,12);
+			win_draw_string(mini_map, map_title_rect,title_string,0,12);
+			win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,12);
  			TEXT.colour = sf::Color::Black;
 	
-			/*SetPort( the_dialog);
-			GetDialogItem(the_dialog, 1, &the_type, &the_handle, &the_rect);
+			/*SetPort( mini_map);
+			GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);
 
 			PenSize(3,3);
 			InsetRect(&the_rect, -4, -4);
 			FrameRoundRect(&the_rect, 16, 16);
 			PenSize(1,1); */
-			}
-	
-		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,map_gworld,area_to_draw_on);
-		}
+	if(canMap) {
+		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
 							
 	// Now place PCs and monsters
-	if ((draw_pcs == true) && (map_visible == true)) {
+	if(draw_pcs) {
 		if ((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
 			for (i = 0; i < univ.town->max_monst(); i++) 
 				if (univ.town.monst[i].active > 0) {
@@ -1688,9 +1598,8 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 
 						map_graphic_placed[where.x / 8][where.y] = 
 							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-							// TODO: Where to draw this? On the_dialog? On map_gworld?
-							fill_rect(the_dialog, draw_rect, sf::Color::Green);
-							frame_circle(the_dialog, draw_rect, sf::Color::Blue);
+							fill_rect(mini_map, draw_rect, sf::Color::Green);
+							frame_circle(mini_map, draw_rect, sf::Color::Blue);
 						}
 				}
 		if ((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
@@ -1706,14 +1615,17 @@ void draw_map (sf::RenderWindow& the_dialog, short the_item)
 					draw_rect.bottom = draw_rect.top + 6;
 					map_graphic_placed[where.x / 8][where.y] = 
 						map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-					// TODO: Where to draw this? On the_dialog? On map_gworld?
-					fill_rect(the_dialog, draw_rect, sf::Color::Red);
-					frame_circle(the_dialog, draw_rect, sf::Color::Black);
+					fill_rect(mini_map, draw_rect, sf::Color::Red);
+					frame_circle(mini_map, draw_rect, sf::Color::Black);
 
 			}	
 		}
+	}
 
 	TEXT.colour = sf::Color::Black;
+	
+	mini_map.display();
+	
 	// Now exit gracefully
 	mainPtr.setActive();
 
@@ -1732,41 +1644,16 @@ bool is_door(location destination)
 
 void display_map()
 {
+	// Show the automap if it's not already visible
+	if(map_visible) return;
 	short the_type;
 	RECT the_rect;
 	RECT	dlogpicrect = {6,6,42,42};
 
 	mini_map.setVisible(true);
 	map_visible = true;
-	makeFrontWindow(mini_map, false);
-	draw_map(mini_map,10);
-//	the_rect = mini_map->portRect;
-	//	FillCRect(&the_rect,bg[4]);
-	cPict theGraphic(mini_map);
-	theGraphic.setBounds(dlogpicrect);
-	theGraphic.setPict(21, PIC_DLOG);
-	theGraphic.setFormat(TXT_FRAME, true);
-	theGraphic.draw();
-	win_draw_string( mini_map,
-		map_title_rect,"Your map:",0,12);
-
-	// TODO: This looks... possibly important...
-#if 0
-#ifndef EXILE_BIG_GUNS
-	GetDialogItem( modeless_dialogs[5], 5, &the_type, &the_handle, &the_rect);
-	SetDialogItem( modeless_dialogs[5], 5, the_type, (Handle)draw_map, &the_rect);
-	GetDialogItem( modeless_dialogs[5], 4, &the_type, &the_handle, &the_rect);
-	SetDialogItem( modeless_dialogs[5], 4, the_type, (Handle)draw_map, &the_rect);
-#endif		
-#ifdef EXILE_BIG_GUNS
-	if (map_draw_UPP == NULL)
-		map_draw_UPP = NewUserItemProc(draw_map);
-	GetDialogItem( modeless_dialogs[5], 5, &the_type, &the_handle, &the_rect);
-	SetDialogItem( modeless_dialogs[5], 5, the_type, (Handle)map_draw_UPP, &the_rect);
-	GetDialogItem( modeless_dialogs[5], 4, &the_type, &the_handle, &the_rect);
-	SetDialogItem( modeless_dialogs[5], 4, the_type, (Handle)map_draw_UPP, &the_rect);
-#endif		
-#endif
+	draw_map(true);
+	makeFrontWindow(mainPtr);
 }
 
 void check_done() {
