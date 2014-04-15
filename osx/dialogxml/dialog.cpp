@@ -875,6 +875,8 @@ bool cDialog::remove(std::string key){
 
 extern char keyToChar(sf::Keyboard::Key key, bool isShift);
 void cDialog::run(){
+	// We always need the cursor when we're in a dialog
+	mainPtr.setMouseCursorVisible(true);
 	using kb = sf::Keyboard;
 	kb::Key k;
 	cKey key;
