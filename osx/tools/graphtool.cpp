@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <OpenGl/GL.h>
 #include <boost/math/constants/constants.hpp>
+#include <typeinfo>
 using boost::math::constants::pi;
 
 cursor_type arrow_curs[3][3] = {
@@ -1002,13 +1003,12 @@ void undo_clip(sf::RenderTarget& where) {
 }
 
 void setActiveRenderTarget(sf::RenderTarget& where) {
-	try {
+	const std::type_info& type = typeid(where);
+	if(type == typeid(sf::RenderWindow&))
 		dynamic_cast<sf::RenderWindow&>(where).setActive();
-	} catch(std::bad_cast) {
-		try {
-			dynamic_cast<sf::RenderTexture&>(where).setActive();
-		} catch(std::bad_cast) {}
-	}
+	else if(type == typeid(sf::RenderTexture&))
+		dynamic_cast<sf::RenderTexture&>(where).setActive();
+	else throw std::bad_cast();
 }
 
 Region& Region::operator-=(Region& other) {
