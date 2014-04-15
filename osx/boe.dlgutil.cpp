@@ -1128,7 +1128,7 @@ void save_prefs(bool resetHelp){
 	}
 }
 
-bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
+static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
 {
 	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
 	bool done_yet = false,did_cancel = false,reset_help = false;
@@ -1254,7 +1254,7 @@ void pick_preferences()
 		adjust_window_mode();
 }
 
-void put_party_stats(cDialog& me)
+static void put_party_stats(cDialog& me)
 {
 	short i;
 
@@ -1283,7 +1283,7 @@ void put_party_stats(cDialog& me)
 	draw_startup(0);
 }
 
-bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	if(item_hit == "done") {
 		me.toast();
@@ -1372,7 +1372,7 @@ void edit_party(short can_create,short can_cancel)
 
 }
 
-bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	std::string place_str;
 	
@@ -1411,7 +1411,7 @@ void tip_of_day()
 
 }
 
-void put_scen_info(cDialog& me)
+static void put_scen_info(cDialog& me)
 {
 	unsigned int i;
 	std::ostringstream sout;
@@ -1444,7 +1444,7 @@ void put_scen_info(cDialog& me)
 	}
 }
 
-bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);

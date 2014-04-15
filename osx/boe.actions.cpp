@@ -2637,7 +2637,7 @@ location get_cur_direction(location the_point)
 	return store_dir;
 }
 
-eDirection find_waterfall(short x, short y, short mode){
+static eDirection find_waterfall(short x, short y, short mode){
 	// If more than one waterfall adjacent, randomly selects
 	bool to_dir[8];
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
@@ -2664,7 +2664,7 @@ eDirection find_waterfall(short x, short y, short mode){
 	return DIR_HERE; // just in case something wonky happens
 }
 
-void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
+static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 	short x,y;
 	if(mode == 0){
 		x = univ.town.p_loc.x;

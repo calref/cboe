@@ -72,7 +72,7 @@ short sound_delay[100] = {
 };
 short store_last_sound_played;
 
-bool sound_going(short which_s) {
+static bool sound_going(snd_num_t which_s) {
 	short i;
 	
 	for (i = 0; i < 4; i++)
@@ -81,7 +81,7 @@ bool sound_going(short which_s) {
 	return false;
 }
 
-std::string sound_to_fname_map(int snd_num) {
+static std::string sound_to_fname_map(snd_num_t snd_num) {
 	std::ostringstream sout;
 	sout << "SND" << snd_num;
 	return sout.str();

@@ -857,7 +857,7 @@ void make_town_hostile()
 }
 
 
-void put_item_graphics(cDialog& me)
+static void put_item_graphics(cDialog& me)
 {
 	short i,storage;
 	cItemRec item;
@@ -948,7 +948,7 @@ void put_item_graphics(cDialog& me)
 }
 
 
-bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
+static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
 {
 	cItemRec item;
 	
@@ -1150,7 +1150,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 //	return i;
 //}
 
-bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod mods)
+static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	me.toast();
 	if(item_hit != "cancel") {
@@ -1200,7 +1200,7 @@ short select_pc(short active_only,short free_inv_only)
 		else return char_select_pc(active_only,free_inv_only,"Select a character:");
 }
 
-bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	me.setResult<int>(me["number"].getTextAsNum());
 	return true;
@@ -1469,7 +1469,7 @@ void refresh_store_items()
 }
 
 
-bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	me.toast();
 	me.setResult(me["response"].getText());

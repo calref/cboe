@@ -10,7 +10,7 @@
 #import "cursors.h"
 NSAutoreleasePool *pool;
 
-NSImage* ImageFromURL(CFURLRef url){
+static NSImage* ImageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
 	CGImageRef theImage = nil;
 	
@@ -73,14 +73,6 @@ void SetNSCursor(CursorRef cursor){
 }
 
 void SetNSCursorWatch() {
-}
-
-void HideNSCursor(){
-	[NSCursor hide];
-}
-
-void ShowNSCursor(){
-	[NSCursor unhide];
 }
 
 void CleanUp(){

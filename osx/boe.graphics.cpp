@@ -530,7 +530,7 @@ void end_startup()
 	load_main_screen();
 }
 
-void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
+static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
 	sf::Texture temp_gworld;
 	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(imgName));
 	RECT texrect(temp_gworld);
@@ -1073,7 +1073,7 @@ void draw_terrain(short	mode)
 }
 
 
-ter_num_t get_ground_for_shore(ter_num_t ter){
+static ter_num_t get_ground_for_shore(ter_num_t ter){
 	if(scenario.ter_types[ter].block_horse) return current_ground;
 	else if(scenario.ter_types[ter].blockage > 2) return current_ground;
 	else return ter;
@@ -1327,7 +1327,7 @@ bool extend_road_terrain(ter_num_t ter)
 	return false;
 }
 
-bool connect_roads(ter_num_t ter){
+static bool connect_roads(ter_num_t ter){
 	eTrimType trim = scenario.ter_types[ter].trim_type;
 	eTerSpec spec = scenario.ter_types[ter].special;
 	if(trim == TRIM_ROAD || trim == TRIM_CITY)

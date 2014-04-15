@@ -885,14 +885,14 @@ public:
 	// TODO: Additional functions?
 };
 
-void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
+static void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
 	shape.setPosition(x, y);
 	shape.setFillColor(colour);
 	target.draw(shape);
 	
 }
 
-void frame_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
+static void frame_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
 	shape.setPosition(x, y);
 	shape.setOutlineColor(colour);
 	shape.setFillColor(sf::Color::Transparent);

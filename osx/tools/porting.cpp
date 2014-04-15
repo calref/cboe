@@ -41,7 +41,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 	
 }
 
-void port_dummy_t_d(short size,char *buffer)
+static void port_dummy_t_d(short size,char *buffer)
 {
 	short i;
 	legacy::big_tr_type *d1;
@@ -473,7 +473,7 @@ void flip_long(int32_t *s)
 }
 
 // TODO: This was because Windows stored its rect members in a different order, but since we now have our own rect class, it shouldn't be needed.
-void alter_rect(legacy::Rect *r)
+static void alter_rect(legacy::Rect *r)
 {
 	short a;
 	

@@ -61,7 +61,7 @@ struct header_posix_ustar {
 
 #include <stdexcept>
 
-header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize,bool directory=false){
+static header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize,bool directory=false){
 	if(fileSize>077777777777LL)
 		throw std::length_error("Specified file size >= 8 GB");
 	if(fileName.length()>=100)
@@ -210,7 +210,7 @@ bool load_scenario(fs::path file_to_load){
 	return true;
 }
 
-long get_town_offset(short which_town){
+static long get_town_offset(short which_town){
 	int i,j;
 	long len_to_jump,store;
 	
@@ -547,7 +547,7 @@ bool load_town_str(short which_town, cTown*& t){
 	return true;
 }
 
-long get_outdoors_offset(location& which_out){
+static long get_outdoors_offset(location& which_out){
 	int i,j,out_sec_num;
 	long len_to_jump,store;
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;

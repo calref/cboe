@@ -76,7 +76,7 @@ short store_displayed_item,position,num_entries;
 unsigned short cur_entry;
 cCreature hold_m;
 
-void put_spell_info(cDialog& me, short display_mode)
+static void put_spell_info(cDialog& me, short display_mode)
 {
 	std::ostringstream store_text;
 	short pos,ran;
@@ -103,7 +103,7 @@ void put_spell_info(cDialog& me, short display_mode)
 }
 
 
-bool display_spells_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short display_mode)
+static bool display_spells_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short display_mode)
 {
 	short store;
 	if(item_hit == "done") {
@@ -148,7 +148,7 @@ void display_spells(short mode,short force_spell,cDialog* parent)
 	spellInfo.run();
 }
 
-void put_skill_info(cDialog& me)
+static void put_skill_info(cDialog& me)
 {
 	std::string store_text;
 	short pos;
@@ -168,7 +168,7 @@ void put_skill_info(cDialog& me)
 }
 
 
-bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	if(item_hit == "done") {
 		me.toast();
@@ -201,7 +201,7 @@ void display_skills(short force_skill,cDialog* parent)
 	skillDlog.run();
 }
 
-void put_pc_spells(cDialog& me)
+static void put_pc_spells(cDialog& me)
 {
 	short i;
 
@@ -217,7 +217,7 @@ void put_pc_spells(cDialog& me)
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
 }
 
-bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short pc_num;
 
@@ -270,7 +270,7 @@ void display_pc(short pc_num,short mode,cDialog* parent)
 	pcInfo.run();
 }
 
-void put_item_info(cDialog& me,short pc,short item)////
+static void put_item_info(cDialog& me,short pc,short item)////
 {
 	char store_text[256];
 	std::string desc_str;
@@ -392,7 +392,7 @@ void put_item_info(cDialog& me,short pc,short item)////
 
 }
 
-bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short item,pc_num;
 	
@@ -419,7 +419,7 @@ bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 	return true;
 }
 
-void display_pc_item(short pc_num,short item,cItemRec si,short parent)
+void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
 {
 		store_item_pc = pc_num;
 		if (pc_num == 6)
@@ -428,7 +428,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 	store_displayed_item = item;
 	make_cursor_sword();
 
-	cDialog itemInfo("item-info.xml");
+	cDialog itemInfo("item-info.xml",parent);
 	// By attaching the click handler to "id" and "magic", we suppress normal LED behaviour
 	itemInfo.attachClickHandlers(display_pc_item_event_filter, {"done","left","right","id","magic"});
 
@@ -458,7 +458,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,short parent)
 }
 
 
-void put_monst_info(cDialog& me)
+static void put_monst_info(cDialog& me)
 {
 	std::string store_text;
 	std::string str;
@@ -531,7 +531,7 @@ void put_monst_info(cDialog& me)
 	}
 
 
-bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short i,dummy = 0;
 	
@@ -623,7 +623,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 }
 
 // TODO: Create a dedicated dialog for alchemy info
-bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	std::string get_text;
 	
@@ -661,7 +661,7 @@ void display_alchemy(cDialog* parent)
 	alchemy.run();
 }
 
-void display_alchemy()
+static void display_alchemy()
 {
 	short i;
 
@@ -683,7 +683,7 @@ void display_alchemy()
 }
 
 
-void display_traits_graphics(cDialog& me)
+static void display_traits_graphics(cDialog& me)
 {
 	short i,store;
 
@@ -702,12 +702,12 @@ void display_traits_graphics(cDialog& me)
 	me["xp"].setTextToNum(store);
 }
 
-bool pick_race_abil_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool pick_race_abil_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 	me.toast();
 	return true;
 }
 
-bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing)
+static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing)
 {
 	std::string abil_str;
 	cPlayer *pc;
@@ -768,7 +768,7 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent)
 	pickAbil.run();
 }
 
-void display_pc_info(cDialog& me)
+static void display_pc_info(cDialog& me)
 {
 	short i,store;
 	char str[256];
@@ -863,7 +863,7 @@ void display_pc_info(cDialog& me)
 			}
 }
 
-bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short pc;
 
@@ -884,7 +884,7 @@ bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 	return true;
 }
 
-bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
 	short pc = store_pc_num;
 	if(item_hit == "seemage") display_pc(pc,0,&me);
 	else if(item_hit == "seepriest") display_pc(pc,1,&me);
@@ -915,7 +915,7 @@ void give_pc_info(short pc_num)
 	pcInfo.run();
 }
 
-bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	unsigned short i;
 	std::string place_str;
@@ -1038,7 +1038,7 @@ void adventure_notes()
 	encNotes.run();
 }
 
-void put_talk(cDialog& me)
+static void put_talk(cDialog& me)
 {
 	short personality;
 	char place_str[256];
@@ -1080,7 +1080,7 @@ void put_talk(cDialog& me)
 	}
 }
 
-bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	if(item_hit == "done") me.toast();
 	else if(item_hit == "left") {
@@ -1129,7 +1129,7 @@ void talk_notes()
 	talkNotes.run();
 }
 
-bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short i;
 	char place_str[256];
@@ -1199,7 +1199,7 @@ void add_to_journal(short event)
 }
 
 // Call call this anywhere, but don't forget parent!!!
-void give_help(short help1,short help2,cDialog* parent)
+static void give_help(short help1,short help2,cDialog* parent)
 {
 	bool help_forced = false;
 	std::string str1,str2;

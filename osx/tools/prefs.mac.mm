@@ -12,7 +12,7 @@
 
 //static const CFStringRef prefsID = CFSTR("com.spidweb.bladesofexile");
 
-NSString* convertKey(std::string keypath) {
+static NSString* convertKey(std::string keypath) {
 	NSString* key = [NSString stringWithCString: keypath.c_str() encoding: NSASCIIStringEncoding];
 	return key;
 }

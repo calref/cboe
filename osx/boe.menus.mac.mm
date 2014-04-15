@@ -100,7 +100,7 @@ void adjust_monst_menu() {
 	}
 }
 
-void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
+static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 	[item setTarget: targ];
 	[item setAction: selector];
 	[item setRepresentedObject: [[NSNumber numberWithInt: num] retain]];

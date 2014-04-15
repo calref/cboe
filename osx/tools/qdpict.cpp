@@ -64,7 +64,7 @@ public:
 	T* operator->() {return the_ptr;}
 };
 
-void loadColourTable(ptr_guard<char>& picData, sf::Color(& clut)[256], int numColours) {
+static void loadColourTable(ptr_guard<char>& picData, sf::Color(& clut)[256], int numColours) {
 	while(numColours >= 0) {
 		int i = extract_word(picData);
 		if(i > 256) oopsError(5);
@@ -80,7 +80,7 @@ void loadColourTable(ptr_guard<char>& picData, sf::Color(& clut)[256], int numCo
 	}
 }
 
-void loadUnpackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixels,sf::Color(& clut)[256],legacy::Rect& bounds,int rowBytes) {
+static void loadUnpackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixels,sf::Color(& clut)[256],legacy::Rect& bounds,int rowBytes) {
 	for(int i = 0; i < bounds.bottom - bounds.top; i++) {
 		for(int j = 0; j < bounds.right - bounds.left; j++) {
 			size_t pixel = i * rowBytes + j;
@@ -93,7 +93,7 @@ void loadUnpackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixel
 	}
 }
 
-void loadPackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixels,sf::Color(& clut)[256],legacy::Rect& bounds,int rowBytes) {
+static void loadPackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixels,sf::Color(& clut)[256],legacy::Rect& bounds,int rowBytes) {
 	// Packed data
 	int countSize = rowBytes > 250 ? 2 : 1;
 	for(int i = 0; i < bounds.bottom - bounds.top; i++) {
@@ -133,7 +133,7 @@ void loadPackedPixels(ptr_guard<char>& picData,ptr_guard<unsigned char>& pixels,
 	}
 }
 
-legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned char>& pixels, int pixMapType) {
+static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned char>& pixels, int pixMapType) {
 	int rowBytes = extract_word(picData) & 0x7fff;
 	picData += 2; // Skip rowBytes; assume we have a v2 (colour) bitmap
 	legacy::Rect bounds = *(legacy::Rect*)picData;
@@ -166,7 +166,7 @@ legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned char>& 
 	return bounds;
 }
 
-rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelStore) {
+static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelStore) {
 	HLock(resHandle);
 	// TODO: Use picSize to ensure I don't go out of bounds
 	size_t picSize = GetHandleSize(resHandle);

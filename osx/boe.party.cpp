@@ -965,7 +965,7 @@ void drain_pc(short which_pc,short how_much)
 
 // TODO: This dialog needs some kind of context system really badly to avoid the rampant globals
 // MARK: Start spend XP dialog
-void do_xp_keep(short pc_num,short mode)
+static void do_xp_keep(short pc_num,short mode)
 {
 					for (i = 0; i < 20; i++)
 						univ.party[pc_num].skills[i] = store_skills[i];
@@ -979,7 +979,7 @@ void do_xp_keep(short pc_num,short mode)
 
 }
 
-void draw_xp_skills(cDialog& me)
+static void draw_xp_skills(cDialog& me)
 {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
@@ -1003,13 +1003,13 @@ void draw_xp_skills(cDialog& me)
 	sp.setTextToNum(store_sp);
 }
 
-void update_gold_skills(cDialog& me) {
+static void update_gold_skills(cDialog& me) {
 	me["gold"].setTextToNum(((store_train_mode == 0) ? 0 : store_g));
 	me["skp"].setTextToNum(store_skp);
 }
 
 
-void do_xp_draw(cDialog& me)
+static void do_xp_draw(cDialog& me)
 
 {
 
@@ -1040,7 +1040,7 @@ void do_xp_draw(cDialog& me)
 	update_gold_skills(me);
 }
 
-bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	short mode,pc_num;
 	bool talk_done = false;
@@ -1088,7 +1088,7 @@ bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 	return true;
 }
 
-bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 	short mode = store_train_mode, pc_num = store_train_pc;
 	if(item_hit.substr(0,2) == "hp") {
 		if(mod_contains(mods, mod_alt)) {
@@ -2272,7 +2272,7 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 
 // MARK: Begin spellcasting dialog
 
-void draw_caster_buttons(cDialog& me)
+static void draw_caster_buttons(cDialog& me)
 {
 	short i;
 	
@@ -2297,7 +2297,7 @@ void draw_caster_buttons(cDialog& me)
 			}
 }
 
-void draw_spell_info(cDialog& me)
+static void draw_spell_info(cDialog& me)
 {
 
 
@@ -2341,7 +2341,7 @@ void draw_spell_info(cDialog& me)
 				}
 }
 
-void draw_spell_pc_info(cDialog& me)
+static void draw_spell_pc_info(cDialog& me)
 {
 	short i;
 
@@ -2362,7 +2362,7 @@ void draw_spell_pc_info(cDialog& me)
 }
 
 
-void put_pc_caster_buttons(cDialog& me)
+static void put_pc_caster_buttons(cDialog& me)
 {
 
 	short i;
@@ -2376,7 +2376,7 @@ void put_pc_caster_buttons(cDialog& me)
 		}
 	}
 }
-void put_pc_target_buttons(cDialog& me)
+static void put_pc_target_buttons(cDialog& me)
 {
 
 	if (store_spell_target < 6) {
@@ -2393,7 +2393,7 @@ void put_pc_target_buttons(cDialog& me)
 }
 
 // TODO: This stuff may be better handled by using an LED group with a custom focus handler
-void put_spell_led_buttons(cDialog& me)
+static void put_spell_led_buttons(cDialog& me)
 {
 	short i,spell_for_this_button;
 
@@ -2417,7 +2417,7 @@ void put_spell_led_buttons(cDialog& me)
 		}
 }
 
-void put_spell_list(cDialog& me)
+static void put_spell_list(cDialog& me)
 {
 
 	short i;
@@ -2468,7 +2468,7 @@ void put_spell_list(cDialog& me)
 }
 
 
-void put_pick_spell_graphics(cDialog& me)
+static void put_pick_spell_graphics(cDialog& me)
 {
 	short i;
 
@@ -2482,7 +2482,7 @@ void put_pick_spell_graphics(cDialog& me)
 			draw_pc_effects(10 + i); // TODO: This line might mean that the "kludge" from the old code is already handled here; verify?
 }
 
-bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
 	short item_hit = id[id.length() - 1] - '1';
 	// TODO: This visibility check is probably not needed; wouldn't the dialog framework only trigger on visible elements?
 	if(me[id].isVisible()) {
@@ -2503,7 +2503,7 @@ bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
 	return true;
 }
 
-bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on him/her.";
 	static const char*const got_target = " Target selected.";
@@ -2525,7 +2525,7 @@ bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
 
 void finish_pick_spell(cDialog& me, bool spell_toast);
 
-bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 	bool spell_toast = false,dialog_done = false;
 	if(item_hit == "cancel") {
 				spell_toast = true;
@@ -2544,7 +2544,7 @@ bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
 	return true;
 }
 
-bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
 	static const char*const choose_target = " Now pick a target.";
 	static const char*const bad_spell = " Spell not available.";
 	short item_hit = id[id.length() - 1] - '1';
@@ -2903,7 +2903,7 @@ void do_alchemy() ////
 
 }
 
-bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	if(item_hit == "help") {
 		univ.party.help_received[20] = 0;
@@ -2981,7 +2981,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 	return choice != 36;
 }
 
-bool pc_name_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool pc_name_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	std::string pcName = me["name"].getText();
 	

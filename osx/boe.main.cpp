@@ -897,7 +897,7 @@ void handle_monster_info_menu(int item_hit)
 //	HUnlock((Handle) which_curs);
 //}
 
-cursor_type get_mode_cursor(){
+static cursor_type get_mode_cursor(){
 	switch(overall_mode){
 		case MODE_TOWN_TARGET:
 		case MODE_SPELL_TARGET:

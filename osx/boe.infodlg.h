@@ -5,7 +5,7 @@ class cDialog;
 void display_spells(short mode,short force_spell,cDialog* parent);
 void display_skills(short force_skill,cDialog* parent);
 void display_pc(short pc_num,short mode,cDialog* parent_num);
-void display_pc_item(short pc_num,short item,cItemRec si,short parent);
+void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent);
 void display_monst(short array_pos,cCreature *which_m,short mode);
 void display_alchemy(cDialog* parent);
 void pick_race_abil(cPlayer *pc,short mode,cDialog* parent);
