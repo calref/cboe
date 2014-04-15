@@ -31,7 +31,7 @@ typedef NSAppleEventDescriptor AEDescr;
 @end
 
 void set_up_apple_events() {
-	AppleEventHandler* aeHandler = [[[AppleEventHandler alloc] init] autorelease];
+	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
 	NSAppleEventManager* AEmgr = [NSAppleEventManager sharedAppleEventManager];
 	[AEmgr setEventHandler: aeHandler andSelector: @selector(handleOpenApp:withReply:)
 		forEventClass: kCoreEventClass andEventID: kAEOpenApplication];
