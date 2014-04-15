@@ -1347,8 +1347,7 @@ void clear_map()
 
 }
 
-void draw_map(bool need_refresh)
-{
+void draw_map(bool need_refresh) {
 	if(!map_visible) return;
 	short i,j,pic,pic2;
 	RECT the_rect,map_world_rect = {0,0,384,384};
@@ -1358,8 +1357,8 @@ void draw_map(bool need_refresh)
 	RECT	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
 	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-		redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
-
+	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
+	
 	RECT area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	short small_adj = 0;
 	ter_num_t what_ter,what_ter2;
@@ -1368,15 +1367,15 @@ void draw_map(bool need_refresh)
 	RECT area_to_put_on_map_rect;
 	RECT custom_from;
 	
-		draw_surroundings = true;
+	draw_surroundings = true;
 	
 	if(need_refresh) {
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 64; j++)
 				map_graphic_placed[i][j] = 0;
 		// TODO: I suspect we don't need to save this info
-		}
-		
+	}
+	
 	town_map_adj.x = 0;
 	town_map_adj.y = 0;
 	
@@ -1392,48 +1391,48 @@ void draw_map(bool need_refresh)
 		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
 		view_rect.bottom = view_rect.top + 40;
 		redraw_rect = view_rect;
+	}
+	else {
+		switch (town_type) {
+			case 0:
+				view_rect.left = minmax(0,24,univ.town.p_loc.x - 20);
+				view_rect.right = view_rect.left + 40;
+				view_rect.top = minmax(0,24,univ.town.p_loc.y - 20);
+				view_rect.bottom = view_rect.top + 40;
+				redraw_rect = big_rect;
+				total_size = 64;
+				break;
+			case 1:
+				view_rect.left = minmax(0,8,univ.town.p_loc.x - 20);
+				view_rect.right = view_rect.left + 40;
+				view_rect.top = minmax(0,8,univ.town.p_loc.y - 20);
+				view_rect.bottom = view_rect.top + 40;
+				redraw_rect = view_rect;
+				break;
+			case 2:
+				view_rect = tiny_rect;
+				redraw_rect = view_rect;
+				//InsetRect(&area_to_draw_to,48,48);
+				total_size = 32;
+				break;
 		}
-		else {
-			switch (town_type) {
-				case 0:
-					view_rect.left = minmax(0,24,univ.town.p_loc.x - 20);
-					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,24,univ.town.p_loc.y - 20);
-					view_rect.bottom = view_rect.top + 40;
-					redraw_rect = big_rect;
-					total_size = 64;
-					break;
-				case 1:
-					view_rect.left = minmax(0,8,univ.town.p_loc.x - 20);
-					view_rect.right = view_rect.left + 40;
-					view_rect.top = minmax(0,8,univ.town.p_loc.y - 20);
-					view_rect.bottom = view_rect.top + 40;
-					redraw_rect = view_rect;
-					break;
-				case 2:
-					view_rect = tiny_rect;
-					redraw_rect = view_rect;
-					//InsetRect(&area_to_draw_to,48,48);
-					total_size = 32;
-					break;
-				}
-			}
+	}
 	if ((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)) ||
 		(((is_town()) || (is_combat())) && (town_type != 2))) {
-			area_to_draw_from = view_rect;	
-			area_to_draw_from.left *= 6;
-			area_to_draw_from.right *= 6;
-			area_to_draw_from.top *= 6;
-			area_to_draw_from.bottom *= 6;
-			}
-			else {
-				area_to_draw_from = area_to_draw_on;
-				area_to_draw_from.offset(-area_to_draw_from.left,-area_to_draw_from.top);
-				small_adj = 0;
-				}
-			
+		area_to_draw_from = view_rect;
+		area_to_draw_from.left *= 6;
+		area_to_draw_from.right *= 6;
+		area_to_draw_from.top *= 6;
+		area_to_draw_from.bottom *= 6;
+	}
+	else {
+		area_to_draw_from = area_to_draw_on;
+		area_to_draw_from.offset(-area_to_draw_from.left,-area_to_draw_from.top);
+		small_adj = 0;
+	}
+	
 	if (is_combat())
 		draw_pcs = false;
 	
@@ -1441,35 +1440,35 @@ void draw_map(bool need_refresh)
 	bool canMap = true;
 	
 	if ((is_combat()) && (which_combat_type == 0)) {
-			title_string = "No map in combat.";
-			canMap = false;
-		}
+		title_string = "No map in combat.";
+		canMap = false;
+	}
 	else if ((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1)))
-		 {
-				title_string = "No map here.";
-				canMap = false;
-		 }else if((is_town() && univ.town->defy_mapping)) {
-				 title_string = "This place defies mapping.";
-				 canMap = false;
-		 }
+	{
+		title_string = "No map here.";
+		canMap = false;
+	}else if((is_town() && univ.town->defy_mapping)) {
+		title_string = "This place defies mapping.";
+		canMap = false;
+	}
 	else if(need_refresh) {
 		map_gworld.setActive();
-
+		
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-
-	// Now, if shopping or talking, just don't touch anything.
-	if ((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
-		redraw_rect.right = -1;
-	
-	if ((is_out()) ||
-		((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))	
-		out_mode = true;
+		
+		// Now, if shopping or talking, just don't touch anything.
+		if ((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
+			redraw_rect.right = -1;
+		
+		if ((is_out()) ||
+			((is_combat()) && (which_combat_type == 0)) ||
+			((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
+			((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))
+			out_mode = true;
 		else out_mode = false;
-
-	area_to_put_on_map_rect = redraw_rect;
-		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0; 
+		
+		area_to_put_on_map_rect = redraw_rect;
+		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0;
 		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
 		
 		for (where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
@@ -1478,20 +1477,20 @@ void draw_map(bool need_refresh)
 				{
 					draw_rect = orig_draw_rect;
 					draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
-
+					
 					if (out_mode == true)
 						what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-						else what_ter = univ.town->terrain(where.x,where.y);
+					else what_ter = univ.town->terrain(where.x,where.y);
 					
 					ter_temp_from = orig_draw_rect;
 					
 					if (out_mode == true)
 						expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-						else expl = is_explored(where.x,where.y);
-						
+					else expl = is_explored(where.x,where.y);
+					
 					if (expl != 0) {
-						map_graphic_placed[where.x / 8][where.y] = 
-							map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
+						map_graphic_placed[where.x / 8][where.y] =
+						map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
 						pic = scenario.ter_types[what_ter].picture;
 						if (pic >= 1000) {
 							if (spec_scen_g) {
@@ -1501,135 +1500,136 @@ void draw_map(bool need_refresh)
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
 								custom_from.offset(-13,-13);
 								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
-								}
 							}
+						}
 						else switch ((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
 							case 0: case 10: case 11:
 								if (scenario.ter_types[what_ter].picture < 400)
-									ter_temp_from.offset(
-										6 * (scenario.ter_types[what_ter].picture % 10),6 * (scenario.ter_types[what_ter].picture / 10));
-									else ter_temp_from.offset(
-										24 * ((scenario.ter_types[what_ter].picture - 400) / 5),6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
+									ter_temp_from.offset(6 * (scenario.ter_types[what_ter].picture % 10),
+														 6 * (scenario.ter_types[what_ter].picture / 10));
+								else ter_temp_from.offset(24 * ((scenario.ter_types[what_ter].picture - 400) / 5),
+														  6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
 								rect_draw_some_item(small_ter_gworld.getTexture(),ter_temp_from,map_gworld,draw_rect);
 								break;
-
+								
 							default:
 								if (((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30) {
 									// Try a little optimization
 									if ((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
 										if (out_mode == true)
 											what_ter2 = univ.out[(where.x + 1)+ 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-											else what_ter2 = univ.town->terrain(where.x + 1,where.y);	
+										else what_ter2 = univ.town->terrain(where.x + 1,where.y);
 										if (out_mode == true)
 											expl2 = univ.out.out_e[(where.x + 1) + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-											else expl2 = is_explored(where.x + 1,where.y);									
+										else expl2 = is_explored(where.x + 1,where.y);
 										pic2 = scenario.ter_types[what_ter2].picture;
 										if ((map_pats[pic2] == map_pats[pic]) && (expl2 != 0)) {
 											draw_rect.right += 6;
-											kludge = where; kludge.x++; // I don't know why I need to 
-												// do this, but it seems I do
-											map_graphic_placed[kludge.x / 8][kludge.y] = 
-												map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
-											}
+											kludge = where; kludge.x++; // I don't know why I need to
+											// do this, but it seems I do
+											map_graphic_placed[kludge.x / 8][kludge.y] =
+											map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
 										}
+									}
 									tileImage(mini_map, draw_rect,bg_gworld,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
 									break;
-									}
+								}
 								//OffsetRect(&ter_temp_from,
 								//	24 * ((map_pats[pic] - 30) / 5),
 								//	138 + 6 * ((map_pats[pic] - 30) % 5));
 								//rect_draw_some_item(small_ter_gworld,ter_temp_from,
 								//	map_gworld,draw_rect,0,0);
-								break;																
-							}
+								break;
 						}
+					}
 				}
-
+		
 		map_gworld.display();
-		}
+	}
 	
-		mini_map.setActive();
+	mini_map.setActive();
 	
 	// Now place terrain map gworld
-		TEXT.font = "Silom";
-		TEXT.pointSize = 10;;
-		TEXT.style = sf::Text::Regular;
-		
-			the_rect = RECT(mini_map);
-			tileImage(mini_map, the_rect,bg_gworld,bg[4]);
-			cPict theGraphic(mini_map);
-			theGraphic.setBounds(dlogpicrect);
-			theGraphic.setPict(21, PIC_DLOG);
-			theGraphic.setFormat(TXT_FRAME, false);
-			theGraphic.draw();
- 			TEXT.colour = sf::Color::White;
-			win_draw_string(mini_map, map_title_rect,title_string,0,12);
-			win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,12);
- 			TEXT.colour = sf::Color::Black;
+	TEXT.font = "Silom";
+	TEXT.pointSize = 10;;
+	TEXT.style = sf::Text::Regular;
 	
-			/*SetPort( mini_map);
-			GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);
-
-			PenSize(3,3);
-			InsetRect(&the_rect, -4, -4);
-			FrameRoundRect(&the_rect, 16, 16);
-			PenSize(1,1); */
+	the_rect = RECT(mini_map);
+	tileImage(mini_map, the_rect,bg_gworld,bg[4]);
+	cPict theGraphic(mini_map);
+	theGraphic.setBounds(dlogpicrect);
+	theGraphic.setPict(21, PIC_DLOG);
+	theGraphic.setFormat(TXT_FRAME, false);
+	theGraphic.draw();
+	TEXT.colour = sf::Color::White;
+	win_draw_string(mini_map, map_title_rect,title_string,0,12);
+	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,12);
+	TEXT.colour = sf::Color::Black;
+	
+	/*SetPort( mini_map);
+	 GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);
+	 
+	 PenSize(3,3);
+	 InsetRect(&the_rect, -4, -4);
+	 FrameRoundRect(&the_rect, 16, 16);
+	 PenSize(1,1); */
 	if(canMap) {
 		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
-							
-	// Now place PCs and monsters
-	if(draw_pcs) {
-		if ((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
-			for (i = 0; i < univ.town->max_monst(); i++) 
-				if (univ.town.monst[i].active > 0) {
-					where = univ.town.monst[i].cur_loc;
-					if ((is_explored(where.x,where.y)) && 
-						((where.x >= view_rect.left) && (where.x < view_rect.right) 
-						&& (where.y >= view_rect.top) && (where.x < view_rect.bottom))){
-
-						draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-						draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-						//if ((!is_out()) && (town_type == 2)) {
-						//	draw_rect.left += 48;
-						//	draw_rect.top += 48;
-						//	}
-						draw_rect.right = draw_rect.left + 6;
-						draw_rect.bottom = draw_rect.top + 6;
-
-						map_graphic_placed[where.x / 8][where.y] = 
-							map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-							fill_rect(mini_map, draw_rect, sf::Color::Green);
-							frame_circle(mini_map, draw_rect, sf::Color::Blue);
-						}
-				}
-		if ((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
-			where = (is_town()) ? univ.town.p_loc : global_to_local(univ.party.p_loc);
-
-					draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-					draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-					//if ((!is_out()) && (town_type == 2)) {
-					//	draw_rect.left += 48;
-					//	draw_rect.top += 48;
-					//	}
-					draw_rect.right = draw_rect.left + 6;
-					draw_rect.bottom = draw_rect.top + 6;
-					map_graphic_placed[where.x / 8][where.y] = 
-						map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
-					fill_rect(mini_map, draw_rect, sf::Color::Red);
-					frame_circle(mini_map, draw_rect, sf::Color::Black);
-
-			}	
+		
+		// Now place PCs and monsters
+		if(draw_pcs) {
+			if ((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
+				for (i = 0; i < univ.town->max_monst(); i++)
+					if (univ.town.monst[i].active > 0) {
+						where = univ.town.monst[i].cur_loc;
+						if ((is_explored(where.x,where.y)) &&
+							((where.x >= view_rect.left) && (where.x < view_rect.right)
+							 && (where.y >= view_rect.top) && (where.x < view_rect.bottom))){
+								
+								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
+								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
+								//if ((!is_out()) && (town_type == 2)) {
+								//	draw_rect.left += 48;
+								//	draw_rect.top += 48;
+								//	}
+								draw_rect.right = draw_rect.left + 6;
+								draw_rect.bottom = draw_rect.top + 6;
+								
+								map_graphic_placed[where.x / 8][where.y] =
+								map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
+								fill_rect(mini_map, draw_rect, sf::Color::Green);
+								frame_circle(mini_map, draw_rect, sf::Color::Blue);
+							}
+					}
+			if ((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
+				where = (is_town()) ? univ.town.p_loc : global_to_local(univ.party.p_loc);
+				
+				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
+				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
+				//if ((!is_out()) && (town_type == 2)) {
+				//	draw_rect.left += 48;
+				//	draw_rect.top += 48;
+				//	}
+				draw_rect.right = draw_rect.left + 6;
+				draw_rect.bottom = draw_rect.top + 6;
+				map_graphic_placed[where.x / 8][where.y] =
+				map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
+				fill_rect(mini_map, draw_rect, sf::Color::Red);
+				frame_circle(mini_map, draw_rect, sf::Color::Black);
+				
+			}
 		}
 	}
-
+	
 	TEXT.colour = sf::Color::Black;
 	
 	mini_map.display();
 	
 	// Now exit gracefully
 	mainPtr.setActive();
-
+	
 }
+
 
 
 bool is_door(location destination)
