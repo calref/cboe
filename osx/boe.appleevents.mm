@@ -18,7 +18,7 @@ extern void finish_load_party();
 extern void end_startup();
 extern void post_load();
 
-extern bool app_started_normally, ae_loading, in_startup_mode, startup_loaded, All_Done;
+extern bool app_started_normally, ae_loading, startup_loaded, All_Done;
 extern eGameMode overall_mode;
 extern cUniverse univ;
 
@@ -75,15 +75,15 @@ void set_up_apple_events() {
 	finish_load_party();
 	ae_loading = false;
 	
-	if(!in_startup_mode && startup_loaded)
+	if(overall_mode != MODE_STARTUP && startup_loaded)
 		end_startup();
-	if(!in_startup_mode) {
+	if(overall_mode != MODE_STARTUP) {
 		post_load();
 	}
 }
 
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
-	if((overall_mode == MODE_STARTUP/*40*/) || (in_startup_mode)) {
+	if(overall_mode == MODE_STARTUP) {
 		All_Done = true;
 		return;
 	}

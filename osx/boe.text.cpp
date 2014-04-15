@@ -86,7 +86,7 @@ extern short terrain_there[9][9];
 //extern unsigned char out[96][96];
 //extern big_tr_type t_d;
 extern location ul;
-extern bool play_sounds,suppress_stat_screen,in_startup_mode;
+extern bool play_sounds,suppress_stat_screen;
 extern RECT item_buttons[8][6];
  // name, use, give, drip, info, sell/id
 extern RECT pc_buttons[6][5];
@@ -1263,7 +1263,7 @@ short print_terrain(location space)
 
 void add_string_to_buf(std::string str)
 {
-	if (in_startup_mode == true)
+	if(overall_mode == MODE_STARTUP)
 		return;
 	
 	if(str == "") return;

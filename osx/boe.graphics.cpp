@@ -34,7 +34,7 @@ extern RECT	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
-extern bool in_startup_mode,anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
+extern bool anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern bool flushingInput;
 extern short anim_step;
 extern ter_num_t combat_terrain[64][64];
@@ -193,13 +193,7 @@ void adjust_window_mode()
 				}
 
 			}
-	if (overall_mode != MODE_STARTUP) { // TODO: This is odd - fix it
-		if (in_startup_mode == true)
-			draw_startup(0);
-		if (in_startup_mode == false)
-			//refresh_screen(0); 
 			redraw_screen();
-		}
 	if (text_sbar != NULL) {
 		text_sbar->relocate({ul.x + 546,ul.y + 283});
 		item_sbar->relocate({ul.x + 546,ul.y + 146});
@@ -679,7 +673,7 @@ void draw_main_screen()
 // redraw_screen does the very first redraw, and any full redraw
 void redraw_screen(){
 	put_background();
-	if(in_startup_mode)
+	if(overall_mode == MODE_STARTUP)
 		draw_startup(0);
 	else{
 		switch (overall_mode) {

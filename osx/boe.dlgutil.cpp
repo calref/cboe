@@ -41,7 +41,7 @@ extern short stat_window;
 extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern party_record_type party;
-extern bool in_startup_mode,play_sounds,give_intro_hint,show_startup_splash;
+extern bool play_sounds,give_intro_hint,show_startup_splash;
 extern sf::RenderWindow mainPtr;
 extern RECT d_rects[80];
 extern short d_rect_index[80];

@@ -36,7 +36,7 @@ extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern town_item_list	univ.town.items;
 extern sf::RenderWindow mainPtr;
-extern bool in_startup_mode,boom_anim_active;
+extern bool boom_anim_active;
 extern RECT d_rects[80];
 extern short d_rect_index[80];
 //extern big_tr_type t_d;
@@ -144,7 +144,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 				if (stat_window == pc_num)
 					put_item_screen(stat_window,0);
 			}
-			if (in_startup_mode == false) {
+			if(overall_mode != MODE_STARTUP) {
 				if (!item.ident)
 					sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.name.c_str());
 					else sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.full_name.c_str());
@@ -1191,7 +1191,7 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	selectPc.run();
 	item_hit = selectPc.getResult<short>();
 
-	if (in_startup_mode == false)
+	if(overall_mode != MODE_STARTUP)
 		//refresh_screen(0); 
 		redraw_screen();
 		else draw_startup(0);

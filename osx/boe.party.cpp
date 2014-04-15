@@ -128,7 +128,7 @@ extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location pc_pos[6],center;
 extern sf::RenderWindow mainPtr;
-extern bool in_startup_mode,spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
+extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 //extern stored_items_list_type stored_items[3];
 //extern CursHandle sword_curs;
 //extern setup_save_type setup_save;
@@ -507,7 +507,6 @@ void put_party_in_scen(std::string scen_name)
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();
-	in_startup_mode = false;
 		
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
@@ -590,7 +589,7 @@ bool create_pc(short spot,cDialog* parent)
 
 	univ.party[spot].main_status = MAIN_STATUS_ALIVE;
 	
-	if (in_startup_mode == false) {
+	if(overall_mode != MODE_STARTUP) {
 			univ.party[spot].items[0] = start_items[univ.party[spot].race * 2];
 			univ.party[spot].equip[0] = true;
 			univ.party[spot].items[1] = start_items[univ.party[spot].race * 2 + 1];

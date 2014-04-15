@@ -44,7 +44,7 @@ extern short which_pc_displayed;
 extern short mage_range[66],priest_range[66];
 extern short spell_cost[2][62],cur_town_talk_loaded;
 //extern current_town_type univ.town;
-extern bool in_startup_mode,give_intro_hint;
+extern bool give_intro_hint;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
 //extern big_tr_type t_d;

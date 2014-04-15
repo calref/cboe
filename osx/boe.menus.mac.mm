@@ -13,6 +13,7 @@
 #include "scenario.h"
 #include "boe.party.h"
 #include "boe.infodlg.h"
+#include "boe.consts.h"
 
 extern short on_spell_menu[2][62];
 extern short spell_level[62];
@@ -20,10 +21,11 @@ extern short spell_cost[2][62];
 extern short on_monst_menu[256];
 extern const char* mage_s_name[62];
 extern const char* priest_s_name[62];
-extern bool in_startup_mode, party_in_memory;
+extern bool party_in_memory;
 extern short current_pc;
 extern cUniverse univ;
 extern cScenario scenario;
+extern eGameMode overall_mode;
 
 #ifndef __APPLE__
 #error boe.menus.mm is Mac-specific code; try compiling boe.menus.win.cpp instead
@@ -71,7 +73,7 @@ void adjust_monst_menu() {
 	NSMenu* monst_menu;
 	char monst_name[256];
 	
-	if(in_startup_mode == true) return;
+	if(overall_mode == MODE_STARTUP) return;
 	
 	monst_menu = [[menu_bar_handle itemWithTitle: @"Monsters"] submenu];
 	id targ = [[monst_menu itemAtIndex: 0] target];
@@ -171,7 +173,7 @@ void adjust_spell_menus()
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
 	
-	if (in_startup_mode || current_pc == 6)
+	if(overall_mode == MODE_STARTUP || current_pc == 6)
 		return;
 	
 	for (i = 0; i < 2; i++)
@@ -255,7 +257,7 @@ void adjust_spell_menus()
 
 
 void menu_activate() {
-	if(in_startup_mode) {
+	if(overall_mode == MODE_STARTUP) {
 		[[menu_bar_handle itemWithTitle: @"Options"] setEnabled: NO];
 		[[menu_bar_handle itemWithTitle: @"Monsters"] setEnabled: NO];
 		[[menu_bar_handle itemWithTitle: @"Actions"] setEnabled: NO];

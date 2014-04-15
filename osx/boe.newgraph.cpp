@@ -49,7 +49,7 @@ extern RECT	bg[];
 extern sf::RenderWindow mainPtr;
 extern short town_type,which_combat_type;
 extern eGameMode overall_mode;
-extern bool play_sounds,boom_anim_active,in_startup_mode;
+extern bool play_sounds,boom_anim_active;
 extern sf::Texture fields_gworld,boom_gworld,missiles_gworld,invenbtn_gworld;
 extern sf::Texture tiny_obj_gworld, items_gworld, talkfaces_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
@@ -416,7 +416,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 		return;
 
 	// initialize general data
-	if (in_startup_mode) {
+	// TODO: This is probably yet another relic of the Exile III demo
+	if(overall_mode == MODE_STARTUP) {
 		current_terrain_ul.x = 306;
 		current_terrain_ul.y = 5;
 	} else current_terrain_ul.x = current_terrain_ul.y = 5;
@@ -588,7 +589,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 		return;
 
 	// initialize general data
-	if (in_startup_mode) {
+	if(overall_mode == MODE_STARTUP) {
 		// TODO: I think this is a relic of the "demo" on the main screen of Exile III
 		current_terrain_ul.x = 306;
 		current_terrain_ul.y = 5;

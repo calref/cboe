@@ -27,7 +27,7 @@ using std::vector;
 
 //extern party_record_type party;
 //extern pc_record_type adven[6];
-extern bool in_startup_mode,play_sounds,party_in_memory;
+extern bool play_sounds,party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern location ul;
@@ -119,6 +119,7 @@ bool handle_startup_press(location the_point)
 
 void startup_load()////
 {
+	bool in_startup_mode = true;
 		fs::path file_to_load = nav_get_party();
 		if(!file_to_load.empty() && load_party(file_to_load)){
 			party_in_memory = true;

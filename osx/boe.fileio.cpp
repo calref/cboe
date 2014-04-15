@@ -36,7 +36,7 @@
 //extern unsigned char out[96][96],out_e[96][96];
 extern short give_delays,stat_screen_mode;
 extern eGameMode overall_mode;
-extern bool in_startup_mode,play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
+extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
 //extern current_town_type	c_town;
 //extern town_item_list	t_i;
 extern location center;
@@ -147,9 +147,9 @@ void finish_load_party(){
 	
 	// now if not in scen, this is it.
 	if (!in_scen) {
-		if (!in_startup_mode) {
+		if(overall_mode != MODE_STARTUP) {
 			reload_startup();
-			in_startup_mode = true;
+			overall_mode = MODE_STARTUP;
 			draw_startup(0);		
 		}
 		return;
@@ -234,7 +234,6 @@ void finish_load_party(){
 		save_maps = true;
 	else save_maps = false;
 	
-	in_startup_mode = false;
 	in_scen_debug = false;
 }
 
@@ -738,7 +737,8 @@ void build_outdoors()
 	fix_boats();
 	add_outdoor_maps(); 
 //	make_out_trim();
-	if (in_startup_mode == false)
+	// TODO: This might be another relic of the "demo" mode
+	if(overall_mode != MODE_STARTUP)
 		erase_out_specials();
 	
 for (i = 0; i < 10; i++)

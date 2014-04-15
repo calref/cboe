@@ -39,7 +39,7 @@ bool  All_Done = false;
 sf::Event	event;
 sf::RenderWindow	mainPtr;
 short had_text_freeze = 0,num_fonts;
-bool in_startup_mode = true,app_started_normally = false, skip_boom_delay = false;
+bool app_started_normally = false, skip_boom_delay = false;
 bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
 bool save_maps = true,party_in_memory = false;
@@ -314,12 +314,12 @@ void Handle_One_Event()
 	Handle_Update();
 
 	//(cur_time - last_anim_time > 42)
-	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (in_startup_mode == false) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
+	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
 		&& (isFrontWindow(mainPtr) || isFrontWindow(mini_map)) && (!gInBackground)) {
 		animTimer.restart();
 		draw_terrain();
 	}
-	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (in_startup_mode == true)
+	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (overall_mode == MODE_STARTUP)
 		&& app_started_normally && isFrontWindow(mainPtr)) {
 		animTimer.restart();
 		draw_startup_anim(true);
@@ -383,7 +383,7 @@ void Handle_One_Event()
 			break;
 			
 		case sf::Event::Closed:
-			if (in_startup_mode == true) {
+			if(overall_mode == MODE_STARTUP) {
 				All_Done = true;
 				break;
 			}
@@ -456,7 +456,7 @@ bool handle_dialog_event()
 
 void Handle_Update()
 {
-		if (in_startup_mode == true) {
+		if(overall_mode == MODE_STARTUP) {
 			/*if (first_startup_update == true) 
 				first_startup_update = false;
 				else*/ draw_startup(0);
@@ -613,7 +613,7 @@ void Mouse_Pressed()
 							} // a control hit
 //					 		else { // ordinary click
 #endif // end commented-out code section
-								if (in_startup_mode == false)
+								if(overall_mode != MODE_STARTUP)
 									All_Done = handle_action(event);
 								else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
 
@@ -652,7 +652,7 @@ void handle_file_menu(int item_hit)
 
 	switch (item_hit) {
 		case 1:
-			if (in_startup_mode == true)
+			if(overall_mode == MODE_STARTUP)
 				startup_load();
 				else do_load();
 			break;
@@ -663,7 +663,7 @@ void handle_file_menu(int item_hit)
 					do_save(1);
 			break;
 		case 4:
-			if (in_startup_mode == false) {
+			if(overall_mode != MODE_STARTUP) {
 				choice = cChoiceDlog("restart-game.xml",{"okay","cancel"}).show();
 				if (choice == "cancel")
 					return;
@@ -671,7 +671,7 @@ void handle_file_menu(int item_hit)
 					univ.party[i].main_status = MAIN_STATUS_ABSENT;
 				party_in_memory = false;
 				reload_startup();
-				in_startup_mode = true;
+				overall_mode = MODE_STARTUP;
 				draw_startup(0);
 				}
 			start_new_game();
@@ -683,7 +683,7 @@ void handle_file_menu(int item_hit)
 			break;
 		case 8:
 
-			if (in_startup_mode == true) {
+			if(overall_mode == MODE_STARTUP) {
 				All_Done = true;
 				break;
 				}
@@ -784,7 +784,7 @@ void handle_options_menu(int item_hit)
 			adventure_notes();
 			break;
 		case 8:
-			if (in_startup_mode == false)
+			if(overall_mode != MODE_STARTUP)
 				print_party_stats();
 			break;
 		}

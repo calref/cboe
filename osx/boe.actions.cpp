@@ -97,7 +97,7 @@ short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern location	to_create;
-extern bool in_startup_mode,All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
+extern bool All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
 extern bool party_in_memory,in_scen_debug;
 
 // game info globals
@@ -1393,7 +1393,7 @@ bool handle_action(sf::Event event)
 		
 	if (end_scenario) {
 		reload_startup();
-		in_startup_mode = true;
+		overall_mode = MODE_STARTUP;
 		draw_startup(0);
 		menu_activate();
 		univ.party.scen_name = ".exs"; // should be harmless...
@@ -1609,7 +1609,7 @@ bool handle_keystroke(sf::Event& event){
 		return false;
 	}
 	
-	if (in_startup_mode == true)
+	if(overall_mode == MODE_STARTUP)
 		return false;
 	
 	// Only hide the cursor if it's in the window.
@@ -2146,7 +2146,7 @@ void do_load()
 {
 	fs::path file_to_load = nav_get_party();
 	if(!file_to_load.empty()) load_party(file_to_load);
-	if (in_startup_mode == false)
+	if(overall_mode != MODE_STARTUP)
 		post_load();
 	menu_activate();
 }
@@ -2529,32 +2529,28 @@ void handle_death()
 {
 	std::string choice;
 
-	in_startup_mode = true;
+	overall_mode = MODE_STARTUP;
 
-	while (in_startup_mode == true) {
+	while(true) {
 		// Use death (or leave Exile) dialog
-		in_startup_mode = false;
-		choice = cChoiceDlog("party-death.xml",{"load","new","quit"}).show(); //// FCD hates it when it gets called in startup mode
-					// and startup graphiocs aren't loaded.
-		in_startup_mode = true;
+		choice = cChoiceDlog("party-death.xml",{"load","new","quit"}).show();
 
 		if(choice == "quit") {
-			in_startup_mode = false;
 			All_Done = true;
+			return;
 			}
 		else if(choice == "load") {
-			in_startup_mode = false;
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load);
 			if (party_toast() == false) {
-				if (in_startup_mode == false)
+				if(overall_mode != MODE_STARTUP)
 					post_load();
-            	else return;
+            	return;
 				}
-				else in_startup_mode = true;
 			}
 		else if(choice == "new") {
 			start_new_game();
+			return;
 			}
 		}
 	
