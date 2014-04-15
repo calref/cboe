@@ -356,32 +356,30 @@ void draw_pcs(location center,short mode)
 	
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == 1)
-//			if (((point_onscreen(center, pc_pos[i])) == true) &&
-//				((cartoon_happening == true) || (party_can_see(pc_pos[i]) < 6))){
-//				where_draw.x = pc_pos[i].x - center.x + 4;
-//				where_draw.y = pc_pos[i].y - center.y + 4;
-//				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-//				if(pc_dir[i] >= 4)
-//					OffsetRect(&source_rect,28,0);
-//				if (combat_posing_monster == i)
-//					OffsetRect(&source_rect,0,288);
-//				
-//				if (mode == 0) {
-//					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
-//				}
-//				
-//				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
-//					active_pc_rect.top = 18 + where_draw.y * 36;
-//					active_pc_rect.left = 18 + where_draw.x * 28;
-//					active_pc_rect.bottom = 54 + where_draw.y * 36;
-//					active_pc_rect.right = 46 + where_draw.x * 28;
-//					OffsetRect(&active_pc_rect,ul.h,ul.v);
-//					
-//					ForeColor(magentaColor);
-//					FrameRoundRect(&active_pc_rect,8,8);
-//					ForeColor(blackColor);
-//				}
-//			}
+			if (((point_onscreen(center, pc_pos[i])) == true) &&
+				(/*cartoon_happening ||*/ (party_can_see(pc_pos[i]) < 6))){
+				where_draw.x = pc_pos[i].x - center.x + 4;
+				where_draw.y = pc_pos[i].y - center.y + 4;
+				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
+				if(pc_dir[i] >= 4)
+					source_rect.offset(28,0);
+				if (combat_posing_monster == i)
+					source_rect.offset(0,288);
+				
+				if (mode == 0) {
+					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+				}
+				
+				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
+					active_pc_rect.top = 18 + where_draw.y * 36;
+					active_pc_rect.left = 18 + where_draw.x * 28;
+					active_pc_rect.bottom = 54 + where_draw.y * 36;
+					active_pc_rect.right = 46 + where_draw.x * 28;
+					active_pc_rect.offset(ul);
+					
+					frame_roundrect(mainPtr, active_pc_rect, 8, sf::Color::Magenta);
+				}
+			}
 			
 			// Draw current pc on top
 			if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
