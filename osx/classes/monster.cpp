@@ -66,8 +66,8 @@ cMonster::cMonster(){
 }
 
 cCreature::cCreature(){
-	//		short personality;
-	//		short special_on_kill,facial_pic;
+//	short personality;
+//	short special_on_kill,facial_pic;
 	//{-1,-1,-1}
 	id = number = active = attitude = start_attitude = 0;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;

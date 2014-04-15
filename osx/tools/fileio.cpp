@@ -240,8 +240,8 @@ bool load_town(short which_town, cTown*& the_town){
 	legacy::ave_tr_type ave_t;
 	legacy::tiny_tr_type tiny_t;
 	
-	//	if (overall_mode == 61)
-	//		return;
+//	if (overall_mode == 61)
+//		return;
 	
 	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
@@ -325,7 +325,7 @@ bool load_town(short which_town, cTown*& the_town){
 		the_town->talking.talk_strs[i][len] = 0;
 	}
 	
-	//	town_type = scenario.town_size[which_town];
+//	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(18, 0, 0);
@@ -349,8 +349,8 @@ bool load_town(short which_town, cSpeech*& the_talk){
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
 	
-	//	if (overall_mode == 61)
-	//		return;
+//	if (overall_mode == 61)
+//		return;
 	
 	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
@@ -416,7 +416,7 @@ bool load_town(short which_town, cSpeech*& the_talk){
 		the_talk->talk_strs[i][len] = 0;
 	}
 	
-	//	town_type = scenario.town_size[which_town];
+//	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(23, 0, 0);
@@ -430,8 +430,8 @@ bool load_town_str(short which_town, short which_str, char* str){
 	long len,len_to_jump = 0;
 	legacy::town_record_type store_town;
 	
-	//	if (overall_mode == 61)
-	//		return;
+//	if (overall_mode == 61)
+//		return;
 
 	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
 	if(file_id == NULL) {
@@ -479,7 +479,7 @@ bool load_town_str(short which_town, short which_str, char* str){
 		else fseek(file_id, len, SEEK_CUR);
 	}
 	
-	//	town_type = scenario.town_size[which_town];
+//	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(27, 0, 0);
@@ -493,8 +493,8 @@ bool load_town_str(short which_town, cTown*& t){
 	long len,len_to_jump = 0;
 	legacy::town_record_type store_town;
 	
-	//	if (overall_mode == 61)
-	//		return;
+//	if (overall_mode == 61)
+//		return;
 	
 	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
 	if(file_id == NULL) {
@@ -538,7 +538,7 @@ bool load_town_str(short which_town, cTown*& t){
 		t->town_strs(i)[len] = 0;
 	}
 	
-	//	town_type = scenario.town_size[which_town];
+//	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(31, 0, 0);
@@ -823,8 +823,8 @@ bool load_party(fs::path file_to_load){
 	
 	len = sizeof(flags); // 10
 	
-	//	sprintf((char *) debug, "  Len %d               ", (short) len);
-	//	add_string_to_buf((char *) debug);
+//	sprintf((char *) debug, "  Len %d               ", (short) len);
+//	add_string_to_buf((char *) debug);
 	
 	n = fread(&flags, len, 1, file_id);
 	if(n < 1) {

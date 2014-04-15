@@ -38,22 +38,22 @@ void cTinyTown::append(legacy::tiny_tr_type& old){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for (i = 0; i < 30; i++) {
-		//		_creatures[i].number = old.creatures[i].number;
-		//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-		//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-		//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-		//		_creatures[i].mobile = old.creatures[i].mobile;
-		//		_creatures[i].time_flag = old.creatures[i].time_flag;
-		//		_creatures[i].extra1 = old.creatures[i].extra1;
-		//		_creatures[i].extra2 = old.creatures[i].extra2;
-		//		_creatures[i].spec1 = old.creatures[i].spec1;
-		//		_creatures[i].spec2 = old.creatures[i].spec2;
-		//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-		//		_creatures[i].time_code = old.creatures[i].time_code;
-		//		_creatures[i].monster_time = old.creatures[i].monster_time;
-		//		_creatures[i].personality = old.creatures[i].personality;
-		//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-		//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
+//		_creatures[i].number = old.creatures[i].number;
+//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
+//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
+//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
+//		_creatures[i].mobile = old.creatures[i].mobile;
+//		_creatures[i].time_flag = old.creatures[i].time_flag;
+//		_creatures[i].extra1 = old.creatures[i].extra1;
+//		_creatures[i].extra2 = old.creatures[i].extra2;
+//		_creatures[i].spec1 = old.creatures[i].spec1;
+//		_creatures[i].spec2 = old.creatures[i].spec2;
+//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
+//		_creatures[i].time_code = old.creatures[i].time_code;
+//		_creatures[i].monster_time = old.creatures[i].monster_time;
+//		_creatures[i].personality = old.creatures[i].personality;
+//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
+//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
 		_creatures[i] = old.creatures[i];
 	}
 }
@@ -79,22 +79,22 @@ void cMedTown::append(legacy::ave_tr_type& old){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for (i = 0; i < 40; i++) {
-		//		_creatures[i].number = old.creatures[i].number;
-		//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-		//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-		//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-		//		_creatures[i].mobile = old.creatures[i].mobile;
-		//		_creatures[i].time_flag = old.creatures[i].time_flag;
-		//		_creatures[i].extra1 = old.creatures[i].extra1;
-		//		_creatures[i].extra2 = old.creatures[i].extra2;
-		//		_creatures[i].spec1 = old.creatures[i].spec1;
-		//		_creatures[i].spec2 = old.creatures[i].spec2;
-		//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-		//		_creatures[i].time_code = old.creatures[i].time_code;
-		//		_creatures[i].monster_time = old.creatures[i].monster_time;
-		//		_creatures[i].personality = old.creatures[i].personality;
-		//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-		//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
+//		_creatures[i].number = old.creatures[i].number;
+//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
+//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
+//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
+//		_creatures[i].mobile = old.creatures[i].mobile;
+//		_creatures[i].time_flag = old.creatures[i].time_flag;
+//		_creatures[i].extra1 = old.creatures[i].extra1;
+//		_creatures[i].extra2 = old.creatures[i].extra2;
+//		_creatures[i].spec1 = old.creatures[i].spec1;
+//		_creatures[i].spec2 = old.creatures[i].spec2;
+//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
+//		_creatures[i].time_code = old.creatures[i].time_code;
+//		_creatures[i].monster_time = old.creatures[i].monster_time;
+//		_creatures[i].personality = old.creatures[i].personality;
+//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
+//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
 		_creatures[i] = old.creatures[i];
 	}
 }
@@ -120,22 +120,22 @@ void cBigTown::append(legacy::big_tr_type& old){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for (i = 0; i < 60; i++) {
-		//		_creatures[i].number = old.creatures[i].number;
-		//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-		//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-		//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-		//		_creatures[i].mobile = old.creatures[i].mobile;
-		//		_creatures[i].time_flag = old.creatures[i].time_flag;
-		//		_creatures[i].extra1 = old.creatures[i].extra1;
-		//		_creatures[i].extra2 = old.creatures[i].extra2;
-		//		_creatures[i].spec1 = old.creatures[i].spec1;
-		//		_creatures[i].spec2 = old.creatures[i].spec2;
-		//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-		//		_creatures[i].time_code = old.creatures[i].time_code;
-		//		_creatures[i].monster_time = old.creatures[i].monster_time;
-		//		_creatures[i].personality = old.creatures[i].personality;
-		//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-		//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
+//		_creatures[i].number = old.creatures[i].number;
+//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
+//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
+//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
+//		_creatures[i].mobile = old.creatures[i].mobile;
+//		_creatures[i].time_flag = old.creatures[i].time_flag;
+//		_creatures[i].extra1 = old.creatures[i].extra1;
+//		_creatures[i].extra2 = old.creatures[i].extra2;
+//		_creatures[i].spec1 = old.creatures[i].spec1;
+//		_creatures[i].spec2 = old.creatures[i].spec2;
+//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
+//		_creatures[i].time_code = old.creatures[i].time_code;
+//		_creatures[i].monster_time = old.creatures[i].monster_time;
+//		_creatures[i].personality = old.creatures[i].personality;
+//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
+//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
 		_creatures[i] = old.creatures[i];
 	}
 }
