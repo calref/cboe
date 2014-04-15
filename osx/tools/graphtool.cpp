@@ -841,7 +841,7 @@ public:
 	}
 	
 	sf::Vector2f getPoint(unsigned int i) const override {
-		int t = i * divSz;
+		float t = i * divSz;
 		return sf::Vector2f(a + a*sin(t), b + b*cos(t));
 	}
 	
@@ -857,7 +857,7 @@ public:
 		w = size.x;
 		h = size.y;
 		r = cornerRadius;
-		divSz = 0.5 * pi<float>() / points;
+		divSz = 2 * pi<float>() / points;
 		update();
 	}
 	
@@ -866,20 +866,22 @@ public:
 	}
 	
 	sf::Vector2f getPoint(unsigned int i) const override {
-		int t = i * divSz;
+		const float pi = ::pi<float>();
+		const float half_pi = 0.5 * pi;
+		float t = i * divSz;
 		switch(i / points) {
-			case 0:
-				return sf::Vector2f(r*sin(t), r*cos(t));
-			case 1:
-				return sf::Vector2f(w + r*sin(t), r*cos(t));
-			case 2:
-				return sf::Vector2f(w + r*sin(t), h + r*cos(t));
-			case 3:
-				return sf::Vector2f(r*sin(t), h + r*cos(t));
+			case 0: // top left corner
+				return {r + r*sin(t + pi), r + r*cos(t + pi)};
+			case 1: // bottom left corner
+				return {r + r*cos(t + half_pi), h - r + r*sin(t - half_pi)};
+			case 2: // bottom right corner
+				return {w - r + r*cos(t + half_pi), h - r - r*sin(t + half_pi)};
+			case 3: // top right corner
+				return {w - r - r*cos(t - half_pi), r + r*sin(t - half_pi)};
 		}
 		// Unreachable
 		printf("Whoops, rounded rectangle had bad point!");
-		return sf::Vector2f();
+		return {0,0};
 	}
 	
 	// TODO: Additional functions?
