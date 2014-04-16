@@ -177,13 +177,11 @@ void TextStyle::applyTo(sf::Text& text) {
 // str is a c string, 256 characters
 // uses current font
 // TODO: Make an enum for the mode parameter
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* str,short mode,short line_height,location offset){
-	char c_str[256];
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,short line_height,location offset){
 	sf::Text str_to_draw;
 	TEXT.applyTo(str_to_draw);
 	short str_len,i;
 	short last_line_break = 0,last_word_break = 0;
-	short text_len[257];
 	short total_width = 0;
 	//bool /*end_loop,*/force_skip = false;
 	//KeyMap key_state;
@@ -195,17 +193,8 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
-	// TODO: The contents of this array can be obtained by str_to_draw.findCharacterPos(i)
-	strcpy((char *) c_str,(char *) str);
-	for (i = 0; i < 257; i++) {
-		text_len[i] = 0;
-		char c = c_str[i];
-		c_str[i] = 0;
-		str_to_draw.setString(c_str);
-		text_len[i] = str_to_draw.getLocalBounds().width;
-		c_str[i] = c;
-	}
-	str_len = (short) strlen((char *)str);
+	str_to_draw.setString(str);
+	str_len = str.length();
 	if (str_len == 0) {
 		return;
 	}
@@ -213,14 +202,15 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 	//current_clip = NewRgn();
 	//GetClip(current_clip);
 	
-	for (i = 0; i < 257; i++)
-		if ((text_len[i] > total_width) && (i <= str_len))
-			total_width = text_len[i];
+	total_width = str_to_draw.getLocalBounds().width;
 	if ((mode == 0) && (total_width < dest_rect.width()))
 		mode = 2;
-	for (i = 0; i < 257; i++)
-		if ((i <= str_len) && (c_str[i] == '|') && (mode == 2))
-			mode = 0;
+	if(mode == 2 && str.find('|') != std::string::npos)
+		mode = 0;
+	
+	auto text_len = [&str_to_draw](size_t i) -> int {
+		return str_to_draw.findCharacterPos(i).x;
+	};
 	
 	location moveTo;
 	line_height -= 2;
@@ -228,25 +218,22 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 	switch (mode) {
 		case 0: // Wrapped
 			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
-			for (i = 0;text_len[i] != text_len[i + 1] && i < str_len;i++) {
-				if (((text_len[i] - text_len[last_line_break] > (dest_rect.width() - 6))
-					 && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
-				  	if (c_str[i] == '|') {
-				  		c_str[i] = ' ';
+			for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
+				if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
+					 && (last_word_break > last_line_break)) || (str[i] == '|')) {
+				  	if(str[i] == '|') {
+				  		str[i] = ' ';
 				  		//force_skip = true;
 						last_word_break = i + 1;
 					}
 					size_t amount = last_word_break - last_line_break - 1;
-					size_t end = amount + last_line_break + 1;
-					char c = c_str[end];
-					c_str[end] = 0;
-					str_to_draw.setString(c_str + last_line_break);
-					c_str[end] = c;
+					sf::Text line_to_draw(str_to_draw);
+					line_to_draw.setString(str.substr(last_line_break,amount));
 					//sprintf((char *)str_to_draw2," %s",str_to_draw);
 					//str_to_draw2[0] = (char) strlen((char *)str_to_draw);
 					//DrawString(str_to_draw2);
-					str_to_draw.setPosition(moveTo);
-					dest_window.draw(str_to_draw);
+					line_to_draw.setPosition(moveTo);
+					dest_window.draw(line_to_draw);
 					moveTo.y += line_height;
 					last_line_break = last_word_break;
 					//if (force_skip) {
@@ -256,17 +243,15 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 						//last_word_break++;
 					//}
 				}
-				if (c_str[i] == ' ')
+				if(str[i] == ' ')
 					last_word_break = i + 1;
 //				if (on_what_line == LINES_IN_TEXT_WIN - 1)
 //					i = 10000;
 			}
 			
 			if (i - last_line_break > 1) {
-				size_t amount = i - last_line_break - 1;
-				size_t end = amount + last_line_break + 1;
 				str_to_draw.setPosition(moveTo);
-				str_to_draw.setString(c_str + last_line_break);
+				str_to_draw.setString(str.substr(last_line_break));
 				//sprintf((char *)str_to_draw2," %s",str_to_draw);
 				//if (strlen((char *) str_to_draw2) > 3) {
 				//	str_to_draw2[0] = (char) strlen((char *)str_to_draw);
@@ -299,7 +284,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,const char* st
 	//printf("String drawn.\n");
 }
 
-short string_length(const char *str){ // Why not just use strlen?
+short string_length(std::string str){
 	short total_width = 0;
 	
 	sf::Text text;
