@@ -11,15 +11,21 @@
 
 <html> <!-- xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" -->
 <head>
-<title>Dialog Preview</title>
+<title>Dialog Preview -
+</title>
+<script type='text/javascript'>
+	document.querySelector('title').innerHTML += window.location.pathname.split("/").pop();
+</script>
 <link rel='stylesheet' type='text/css' href='dialog.css'/>
 </head>
 
 <body>
-<xsl:attribute name='style'>
-background-image: url('img/bg/<xsl:value-of select='/dialog/@skin'/>.png');
-</xsl:attribute>
-<xsl:if test='/dialog/@skin = "dark"'>
+<xsl:if test='/dialog/@skin'>
+	<xsl:attribute name='style'>
+	background-image: url('img/bg/<xsl:value-of select='/dialog/@skin'/>.png');
+	</xsl:attribute>
+</xsl:if>
+<xsl:if test='/dialog/@skin = "dark" or not(/dialog/@skin)'>
 	<xsl:attribute name='class'>dark</xsl:attribute>
 </xsl:if>
 <div class='dialog'>
