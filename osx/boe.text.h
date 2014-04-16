@@ -42,7 +42,6 @@ void through_sending();
 RECT coord_to_rect(short i,short j);
 void make_cursor_sword() ;
 std::string get_str(std::string list, short j);
-short string_length(char *str);
 short calc_day();
 bool day_reached(unsigned char which_day, unsigned char which_event);
 void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& targ_gworld, location target, char masked, short main_win);

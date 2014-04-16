@@ -74,7 +74,7 @@ void cButton::draw(){
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 34;
 		}
-		win_draw_string(*inWindow,to_rect,lbl.c_str(),textMode,8);
+		win_draw_string(*inWindow,to_rect,lbl,textMode,8);
 		// TODO: Adjust string location as appropriate
 		// Tiny button string location should be shifted right 20 pixels (or possibly 18)
 		// Push button string should be centred below the button
@@ -258,7 +258,7 @@ void cLed::draw(){
 		TEXT.colour = parent->defTextClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
-		win_draw_string(*inWindow,to_rect,lbl.c_str(),2,8);
+		win_draw_string(*inWindow,to_rect,lbl,2,8);
 		TEXT.colour = sf::Color::Black;
 	}else{
 		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);

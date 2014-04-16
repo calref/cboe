@@ -97,10 +97,10 @@ void cTextField::draw(){
 	if(haveFocus) {
 		std::string pre_ip = contents.substr(0, insertionPoint);
 		// TODO: Update string_length to take a std::string
-		ip_offset = string_length(pre_ip.c_str());
+		ip_offset = string_length(pre_ip);
 		if(insertionPoint != selectionPoint) {
 			std::string pre_sel = contents.substr(0, selectionPoint);
-			sel_offset = string_length(pre_sel.c_str());
+			sel_offset = string_length(pre_sel);
 			int sel_start = std::min(ip_offset, sel_offset) + 1;
 			int sel_width = abs(ip_offset - sel_offset) + 3;
 			RECT selectRect = frame;
@@ -122,7 +122,7 @@ void cTextField::draw(){
 		}
 	}
 	// TODO: Update win_draw_string to take a std::string
-	win_draw_string(*inWindow, rect, contents.c_str(), 0, 14);
+	win_draw_string(*inWindow, rect, contents, 0, 14);
 }
 
 void cTextField::handleInput(cKey key) {

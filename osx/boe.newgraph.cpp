@@ -1152,10 +1152,10 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	TEXT.colour = c[3];
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,title_string.c_str(),2,18);
+	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
 	dest_rect.offset(-1,-1);
 	TEXT.colour = c[4];
-	win_draw_string(talk_gworld,dest_rect,title_string.c_str(),2,18);
+	win_draw_string(talk_gworld,dest_rect,title_string,2,18);
 	
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1195,7 +1195,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		TEXT.colour = c[2];
 	else TEXT.colour = c[1];
 	// TODO: The clickable text doesn't work, and the entire text flashes when clicking anything
-	win_draw_string(talk_gworld, dest_rect, str.c_str(), 0, line_height);
+	win_draw_string(talk_gworld, dest_rect, str, 0, line_height);
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
@@ -1273,7 +1273,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 		
 		last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
-		win_draw_string(talk_gworld, dest_rect, str.c_str(), 0, line_height);
+		win_draw_string(talk_gworld, dest_rect, str, 0, line_height);
 		for (i = 0;i < str_len;i++) {
 			if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 				if (((i - store_last_word_break >= 4) || (i >= str_len - 1))

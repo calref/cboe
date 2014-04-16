@@ -102,10 +102,10 @@ void cTextMsg::draw(){
 		TEXT.colour = draw_color;
 		if (to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
 			to_rect.left += 3;
-			win_draw_string(*inWindow,to_rect,lbl.c_str(),3,12);
+			win_draw_string(*inWindow,to_rect,lbl,3,12);
 		}else {
 			to_rect.inset(4,4);
-			win_draw_string(*inWindow,to_rect,lbl.c_str(),0,textSize + 2);
+			win_draw_string(*inWindow,to_rect,lbl,0,textSize + 2);
 		}
 	}
 }

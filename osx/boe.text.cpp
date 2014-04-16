@@ -306,7 +306,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			TEXT.style = sf::Text::Regular;
 			sout.str("");;
 			sout << univ.party[pc].name << " inventory:",
-			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str().c_str(),0,10);
+			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),0,10);
 			TEXT.colour = sf::Color::Black;
 			TEXT.font = "Silom";
 			
@@ -314,7 +314,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str().c_str(),0,10);
+				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),0,10);
 				
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -344,7 +344,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
 					dest_rect.left -= 2;
-					win_draw_string(item_stats_gworld,dest_rect,sout.str().c_str(),0,10);
+					win_draw_string(item_stats_gworld,dest_rect,sout.str(),0,10);
 					TEXT.style = sf::Text::Regular;
 					TEXT.colour = sf::Color::Black;
 					
@@ -669,7 +669,7 @@ void draw_pc_effects(short pc)
 		dest_rect.bottom += pc * 25 + 18;
 	}
 	else {
-		name_width = string_length(univ.party[pc].name.c_str());
+		name_width = string_length(univ.party[pc].name);
 		right_limit = pc_buttons[0][1].left - 5;
 		//dest_rect.left = pc_buttons[i][1].left - 16;
 		dest_rect.left = name_width + 33;

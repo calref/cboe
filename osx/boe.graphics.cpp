@@ -365,7 +365,7 @@ void draw_startup_stats()
 				
 				TEXT.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr,pc_rect,(char*)univ.party[i].name.c_str(),0,18,ul);
+				win_draw_string(mainPtr,pc_rect,univ.party[i].name,0,18,ul);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
@@ -396,11 +396,11 @@ void draw_startup_stats()
 						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
 						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 					}
-					win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
+					win_draw_string(mainPtr,pc_rect,str,0,18,ul);
 					pc_rect.offset(0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
 							univ.party[i].max_health,univ.party[i].max_sp);
-					win_draw_string(mainPtr,pc_rect,(char *) str,0,18,ul);
+					win_draw_string(mainPtr,pc_rect,str,0,18,ul);
 					break;
 				case MAIN_STATUS_DEAD:
 					win_draw_string(mainPtr,pc_rect,"Dead",0,18,ul);
@@ -465,7 +465,7 @@ void draw_start_button(short which_position,short which_button)
 	TEXT.colour = base_color;
 	if (which_position == 3)
 		to_rect.offset(-7,0);
-	win_draw_string(mainPtr,to_rect,(char *) button_labels[which_position],1,18,ul);
+	win_draw_string(mainPtr,to_rect,button_labels[which_position],1,18,ul);
 	TEXT.colour = sf::Color::Black;
 	TEXT.font = "Geneva";
 	TEXT.style = sf::Text::Bold;
@@ -1537,7 +1537,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		text_rect.offset(-4,-5);
-		win_draw_string(mainPtr,text_rect,(char *) dam_str,1,10,ul);
+		win_draw_string(mainPtr,text_rect,dam_str,1,10,ul);
 		TEXT.style = sf::Text::Regular;
 	}
 	play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);

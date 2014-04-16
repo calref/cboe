@@ -268,7 +268,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 	RECT cur_text_rect = {2, left, 0, 0};
 	size_t total_len, str_width, str_height;
 	for (unsigned int i = 0; i < strings.size(); i++) 
-		total_len += string_length(strings[i].c_str());
+		total_len += string_length(strings[i]);
 	total_len = total_len * 12;
 	str_width = s_sqrt(total_len) + 20;
 	//print_nums(0,total_len,str_width);
@@ -279,7 +279,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 	for(unsigned int j = 0; j < strings.size(); j++){
 		std::ostringstream sout;
 		sout << "str" << j + 1;
-		str_height = ((string_length(strings[j].c_str()) + 60) / str_width) * 12 + 16;
+		str_height = ((string_length(strings[j]) + 60) / str_width) * 12 + 16;
 		cur_text_rect.bottom = cur_text_rect.top + str_height;
 		cTextMsg* str = new cTextMsg(me);
 		str->setText(strings[j]);
