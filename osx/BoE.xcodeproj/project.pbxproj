@@ -446,10 +446,8 @@
 		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
-		91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF120F969BD300BF5B67 /* bladespced.rsrc */; };
 		91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
-		91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */; };
 		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
 		91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* pc.action.cpp */; };
@@ -474,7 +472,6 @@
 		91C688E80FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91C688E90FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
 		91C688EA0FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
-		91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = 91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
@@ -2467,7 +2464,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91D62F340F8EB84800674AB3 /* bladesofexile.rsrc in Resources */,
 				91D634560F8FD77800674AB3 /* BoE.icns in Resources */,
 				91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */,
 				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
@@ -2482,7 +2478,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */,
-				91B3EF200F969C9C00BF5B67 /* bladespced.rsrc in Resources */,
 				91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2492,7 +2487,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */,
-				91B3EF460F969F1700BF5B67 /* BOEScen.rsrc in Resources */,
 				91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */,
 				91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */,
 			);
