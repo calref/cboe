@@ -572,6 +572,8 @@ void start_town_mode(short which_town, short entry_dir)
 	clear_map();
 	reset_item_max();
 	town_force = 200;
+	// TODO: One problem with this - it paints the terrain after the town entry dialog is dismissed
+	draw_terrain(1);
 }
 
 
