@@ -776,8 +776,8 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	TEXT.pointSize = 18;
 	TEXT.style = sf::Text::Regular;
 	
+	talk_gworld.setActive();
 	if (pressed) {
-		talk_gworld.setActive();
 		clip_rect(talk_gworld, clip_area_rect);
 	}
 	
@@ -790,12 +790,10 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	
 	// Place store icon
 	if (!pressed) {
-		mainPtr.setActive();
 		i = faces[store_shop_type];
 		RECT from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
 		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
-		talk_gworld.setActive();
 	}
 	
 	
@@ -1087,8 +1085,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	sf::Text str_to_draw;
 	
 	short i,j,str_len,line_height = 17;
-//	Str255 p_str,str,str_to_draw,str_to_draw2;
-	short text_len[257],current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
+	short current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
 	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
 	short face_to_draw;
 	
@@ -1100,7 +1097,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	talk_gworld.setActive();
 	
-	// TODO: All these TEXT.* things are used by win_draw_string, but this function is largely duplicating the functionality of that, so it won't work. Instead use setters on str_to_draw.
 	TEXT.font = "Dungeon";
 	TEXT.pointSize = 18;
 	TEXT.style = sf::Text::Regular;
@@ -1173,19 +1169,16 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		for (i = 0; i < 50; i++)
 			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
 	
+	auto text_len = [&str_to_draw](size_t i) -> int {
+		return str_to_draw.findCharacterPos(i).x;
+	};
+	
 	str_len = str_to_place.length();
 	if (str_len == 0) {
 		str_to_place = ".";
 	}
 	str = str_to_place;
-	for (i = 0; i < 257; i++) {
-		text_len[i]= 0;
-		char c = str[i];
-		str[i] = 0;
-		str_to_draw.setString(str);
-		text_len[i] = str_to_draw.getLocalBounds().width;
-		str[i] = c;
-	}
+	str_to_draw.setString(str);
 	
 	dest_rect = word_place_rect;
 	
@@ -1194,14 +1187,15 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	if (color == 0)
 		TEXT.colour = c[2];
 	else TEXT.colour = c[1];
-	// TODO: The clickable text doesn't work, and the entire text flashes when clicking anything
+	TEXT.applyTo(str_to_draw);
+	// TODO: The entire text flashes when clicking anything
 	win_draw_string(talk_gworld, dest_rect, str, 0, line_height);
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
 				&& (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
-				store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
-				store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
+				store_words[current_rect].word_rect.left = dest_rect.left + (text_len(store_last_word_break) - text_len(last_line_break)) - 2;
+				store_words[current_rect].word_rect.right = dest_rect.left + (text_len(i + 1) - text_len(last_line_break)) - 1;
 				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
 				store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
 				
@@ -1238,7 +1232,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 				last_stored_word_break = i + 1;
 			}
 		}
-		if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
+		if (((text_len(i) - text_len(last_line_break) > (dest_rect.right - dest_rect.left - 6))
 			 && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 			if (str[i] == '|') {
 				str[i] = ' ';
@@ -1263,14 +1257,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	if (str_len > 0) {
 		
 		str = str_to_place2;
-		for (i = 0; i < 257; i++) {
-			text_len[i]= 0;
-			char c = str[i];
-			str[i] = 0;
-			str_to_draw.setString(str);
-			text_len[i] = str_to_draw.getLocalBounds().width;
-			str[i] = c;
-		}
+		str_to_draw.setString(str);
 		
 		last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
 		win_draw_string(talk_gworld, dest_rect, str, 0, line_height);
@@ -1278,8 +1265,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 			if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 				if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
 					&& (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
-					store_words[current_rect].word_rect.left = dest_rect.left + (text_len[store_last_word_break] - text_len[last_line_break]) - 2;
-					store_words[current_rect].word_rect.right = dest_rect.left + (text_len[i + 1] - text_len[last_line_break]) - 1;
+					store_words[current_rect].word_rect.left = dest_rect.left + (text_len(store_last_word_break) - text_len(last_line_break)) - 2;
+					store_words[current_rect].word_rect.right = dest_rect.left + (text_len(i + 1) - text_len(last_line_break)) - 1;
 					store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
 					store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
 					
@@ -1313,7 +1300,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 					last_stored_word_break = i + 1;
 				}
 			}
-			if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
+			if (((text_len(i) - text_len(last_line_break) > (dest_rect.right - dest_rect.left - 6))
 				 && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
 				if (str[i] == '|') {
 					str[i] = ' ';
