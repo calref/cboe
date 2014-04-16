@@ -19,7 +19,7 @@
 
 std::shared_ptr<sf::SoundBuffer> sound_handles[NUM_SOUNDS];
 sf::Sound chan[4];
-char numchannel;
+const char numchannel = 4;
 char channel;
 short snd_played[4];
 
@@ -117,7 +117,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	
 	channel++;
 	
-	if (channel > numchannel) channel = 0;
+	if (channel >= numchannel) channel = 0;
 	
 	if (!sound_going(abs(which)) && load_when_play[abs(which)]) 
 		sndhandle = ResMgr::get<SoundRsrc>(abs(which));
