@@ -80,9 +80,8 @@ void cButton::draw(){
 		// Push button string should be centred below the button
 		// Others may need adjustments too, not sure
 		TEXT.colour = sf::Color::Black;
-		// TODO: When should we pass 1 as the second parameter?
 		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
-		if(key.spec && key.k == key_enter) drawFrame(2,0); // frame default button, to provide a visual cue that it's the default
+		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle); // frame default button, to provide a visual cue that it's the default
 	}else{
 		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
 	}
@@ -90,6 +89,7 @@ void cButton::draw(){
 
 void cButton::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_WRAP) wrapLabel = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
 	else throw xUnsupportedProp(prop);
 }
 

@@ -89,6 +89,7 @@ static std::string sound_to_fname_map(snd_num_t snd_num) {
 
 void init_snd_tool(){
 	short i;
+	ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
 	
 	// TODO: Might need sound 0, not sure
 	for (i = 1; i < NUM_SOUNDS; i++) {

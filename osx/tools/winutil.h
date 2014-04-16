@@ -14,6 +14,8 @@
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias
 
+char keyToChar(sf::Keyboard::Key key, bool isShift);
+
 bool isFrontWindow(sf::Window& win);
 void makeFrontWindow(sf::Window& win);
 

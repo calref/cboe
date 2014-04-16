@@ -23,7 +23,8 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
-	explicit cTextMsg(cDialog* parent);
+	explicit cTextMsg(cDialog& parent);
+	explicit cTextMsg(sf::RenderWindow& parent);
 	bool isClickable();
 	virtual ~cTextMsg();
 	void draw();

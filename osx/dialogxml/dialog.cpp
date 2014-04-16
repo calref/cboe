@@ -27,6 +27,7 @@ extern sf::RenderWindow mainPtr;
 extern sf::Texture bg_gworld;
 extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
+short cDialog::defaultBackground = cDialog::BG_DARK;
 
 static std::string generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -209,7 +210,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // top and left are required attributes
 	RECT frame;
-	p.second = new cTextMsg(this);
+	p.second = new cTextMsg(*this);
 	if(bg == BG_DARK) p.second->setColour(sf::Color::White);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -745,7 +746,7 @@ cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 
 extern fs::path progDir;
 void cDialog::loadFromFile(std::string path){
-	bg = BG_DARK; // default is dark background
+	bg = defaultBackground;
 	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
@@ -884,7 +885,6 @@ bool cDialog::remove(std::string key){
 	return true;
 }
 
-extern char keyToChar(sf::Keyboard::Key key, bool isShift);
 void cDialog::run(){
 	// We always need the cursor when we're in a dialog
 	mainPtr.setMouseCursorVisible(true);
@@ -1135,7 +1135,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	try {
 		labelCtrl = &this->getControl(key);
 	} catch(std::invalid_argument x) {
-		labelCtrl = new cTextMsg(this);
+		labelCtrl = new cTextMsg(*this);
 	}
 	labelCtrl->setText(label);
 	labelCtrl->setFormat(TXT_FONT, bold ? SILOM : GENEVA);

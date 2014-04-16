@@ -1,0 +1,27 @@
+All of your character's damage has now been healed. Dead characters are still dead.
+All of your characters (even dead ones) now have their maximum number of spell points.
+All of your characters who were dead (or dust, or stoned) are now alive and intact. You may wish to select Heal Party now.
+All negative conditions (poison, dumbfounding, disease, paralysis, etc.) have been removed from your characters (even dead ones).
+Before you can do this, you need to load in an Blades of Exile save file. Select Open from the file menu.
+All boats and horses are now your property.
+Any major NPCs you may have slain, such as Erika or the dragons, are now alive again. You should now use the Leave Town and then Reset Towns menu items to make sure the characters appear.
+You are now considered a member of the Anama church. You can no longer cast Mage spells. To get the full effect of this, add Anama Rings above.
+If you own Erika Amulets, they are now active.  To get the full effect of this, add Erika Amulets above.
+If a job dispatcher is angry at you for making a late delivery, he/she has just forgiven you.
+If you belong to the Anama, you are no longer a member. If you robbed the Anama temple in Shayder, the people there will no longer attack you on sight.
+If you slew the vampire Vahkohs but did not destroy the crystal containing his soul, he is now totally dead and will torment you no longer.
+Your party now has the complete maps for the outdoors of your current scenario.
+Your party now has the complete maps for the towns in your current scenario.
+Your party now has the complete maps for outdoors southern Valorim. If your Save Maps preference is not set, this will have no effect.
+Your party now has the complete maps for large (64x64) dungeons, and for Valorim's 5 large cities. If your Save Maps preference is not set, this will have no effect.
+Your party now has the complete maps for medium (64x64) dungeons, and for medium size cities. If your Save Maps preference is not set, this will have no effect.
+Your party now has the complete maps for small (32x32) dungeons, and for small huts, etc. across the Valorim countryside. If your Save Maps preference is not set, this will have no effect.
+Your party now has the complete maps for thge small towns dotting the Valorim countryside. If your Save Maps preference is not set, this will have no effect.
+Your save file no longer contains information on the towns you've visited. Monsters have reappeared, angry guards have forgotten you, etc. Note, if you are in town now, the game will still remember what happened in this town.
+The Tower of Magi timer is not currently running, so this will have no effect.
+You now have a bit more time before the Tower of Magi timer runs out. This time can be used to accumulate potions, train, and do other things to help you survive. Note that the Tower of Magi messages will eventually repeat themselves.
+If your characters became addicted to Skribbane herb, the addiction is now cured.
+You are now able to see all dungeons and towns, whether or not someone has told you about them.
+You can only use this feature if the current party is in a scenario.
+
+

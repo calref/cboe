@@ -366,7 +366,7 @@ void handle_info_request(short what_chosen)
 			break;
 		case 5:
 			// TODO: Create a dedicated dialog for alchemy info
-			display_alchemy(NULL);
+			display_alchemy();
 			break;
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);

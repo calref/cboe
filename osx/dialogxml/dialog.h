@@ -43,6 +43,7 @@ public:
 	static void init();
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	static const short BG_LIGHT, BG_DARK;
+	static short defaultBackground;
 	explicit cDialog(cDialog* p = NULL); // dialog with no items
 	explicit cDialog(std::string path); // cd_create_dialog
 	cDialog(std::string path,cDialog* p); // cd_create_dialog_parent_num

@@ -281,7 +281,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 		sout << "str" << j + 1;
 		str_height = ((string_length(strings[j]) + 60) / str_width) * 12 + 16;
 		cur_text_rect.bottom = cur_text_rect.top + str_height;
-		cTextMsg* str = new cTextMsg(me);
+		cTextMsg* str = new cTextMsg(*me);
 		str->setText(strings[j]);
 		me->add(str, cur_text_rect, sout.str());
 		cur_text_rect.top = cur_text_rect.bottom + 8;

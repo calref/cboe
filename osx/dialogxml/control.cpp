@@ -57,11 +57,14 @@ xUnsupportedProp::~xUnsupportedProp() throw(){
 }
 const char* xUnsupportedProp::what() throw(){
 	if(msg == NULL){
-		msg = new char[60];
+		msg = new char[62];
 		std::string s;
 		switch(whichProp){
 			case TXT_FRAME:
 				s = "TXT_FRAME";
+				break;
+			case TXT_FRAMESTYLE:
+				s = "TXT_FRAMESTYLE";
 				break;
 			case TXT_FONT:
 				s = "TXT_FONT";
@@ -258,9 +261,9 @@ void cControl::detachKey(){
 	this->key.c = 0;
 }
 
-cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}) {}
+cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
-cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}) {}
+cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
 bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), location __attribute__((unused))){
 	return true;

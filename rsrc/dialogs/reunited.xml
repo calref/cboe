@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<button name='okay' type='regular' top='86' left='261'>OK</button>
+	<pict top='8' left='8' type='dlog' num='8'/>
+	<text top='3' left='52' width='266' height='80'>
+		Your party is now reunited.
+		You are located where you were when you split up.
+		Warning -
+		doing this can trap your party if you didn't do something you needed to do while split up.
+		Be sure to back up your save file before saving this change.
+	</text>
+</dialog>

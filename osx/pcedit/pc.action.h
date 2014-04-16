@@ -1,23 +1,12 @@
-bool handle_action(EventRecord event,short mode);
-void flash_rect(Rect to_flash);
-void edit_gold_or_food_event_filter (short item_hit);
+
+#include <SFML/Window/Event.hpp>
+#include "dialog.h"
+
+bool handle_action(sf::Event event,short mode);
+void flash_rect(RECT to_flash);
 void edit_gold_or_food(short which_to_edit);
-void put_pc_graphics();
-void display_pc_event_filter (short item_hit);
-void display_pc(short pc_num,short mode,short parent);
-void display_alchemy_event_filter (short item_hit);
-void display_alchemy();
-void do_xp_keep(short pc_num,short mode);
-void draw_xp_skills();
-void do_xp_draw();
-void spend_xp_event_filter (short item_hit);
-void update_gold_skills();
-bool spend_xp(short pc_num, short mode, short parent);
-void give_reg_info_event_filter (short item_hit);
-void give_reg_info();
-void do_registration_event_filter (short item_hit);
-void do_registration();
+void display_pc(short pc_num,short mode,cDialog* parent);
+void display_alchemy(bool allowEdit);
+bool spend_xp(short pc_num, short mode, cDialog* parent);
 void edit_day();
-void edit_day_event_filter (short item_hit);
-void edit_xp_event_filter (short item_hit);
 void edit_xp(cPlayer *pc);

@@ -1,22 +1,14 @@
+
+
 bool give_to_pc(short pc_num,cItemRec  item, short print_result);
 bool give_to_party(cItemRec item,short print_result);
 void give_gold(short amount,bool print_result);
 bool take_gold(short amount,bool print_result);
 short pc_has_space(short pc_num);
 void take_item(short pc_num,short which_item);
-//void fancy_choice_dialog_event_filter (short item_hit);
-//short fancy_choice_dialog(short which_dlog,short parent);
-void select_pc_event_filter (short item_hit);
 short char_select_pc(short active_only,short free_inv_only,char *title);
 short select_pc(short active_only,short free_inv_only);
-short choice_dialog(short pic,short num);
-bool give_spec_items_event_filter (short item_hit);
 void give_spec_items();
-short party_total_level(); 
-short luck_total();
-void display_traits_graphics();
-void pick_race_abil_event_filter(short item_hit);
-void pick_race_abil(cPlayer *pc,short mode,short parent_num);
-//short get_tnl(pc_record_type *pc);
+void pick_race_abil(cPlayer *pc,short mode,class cDialog* parent_num);
 void reset_boats();
 void combine_things(short pc_num);

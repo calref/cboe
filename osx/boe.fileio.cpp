@@ -99,6 +99,7 @@ fs::path progDir;
 cCustomGraphics spec_scen_g;
 
 std::ofstream flog("bladeslog.txt");
+// TODO: Move this to the common fileio.cpp
 void init_directories()
 {
 	char cPath[768];

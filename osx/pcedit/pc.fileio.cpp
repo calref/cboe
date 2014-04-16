@@ -10,12 +10,12 @@
 #include "soundtool.h"
 #include "pc.editors.h"
 #include "mathutil.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "restypes.hpp"
+#include <CoreFoundation/CoreFoundation.h>
+#include "fileio.h"
 
 #define	DONE_BUTTON_ITEM	1
-#define IN_FRONT	(WindowPtr)-1L
-
-DialogPtr	the_dialog;
 
 /* Adventure globals */
 //extern party_record_type party;
@@ -31,10 +31,10 @@ DialogPtr	the_dialog;
 //extern stored_town_maps_type town_maps;
 //extern stored_outdoor_maps_type o_maps;
 
-extern bool play_sounds,save_blocked;
+extern bool play_sounds;
 extern short current_active_pc;
 extern long stored_key;
-extern WindowPtr mainPtr;
+extern sf::RenderWindow mainPtr;
 
 extern cItemRec item_list[400];
 extern cUniverse univ;
@@ -49,25 +49,55 @@ typedef struct {
 
 char *party_encryptor;	
 
-Str63 last_load_file = "\pBlades of Exile Save";
+std::string last_load_file = "Blades of Exile Save";
 
 extern void update_item_menu();
 
 extern short store_flags[3];
-FSSpec store_file_reply;
+fs::path store_file_reply;
 
 short give_intro_hint,display_mode;
 short jl;
-FSSpec file_to_load;
+fs::path file_to_load;
 
 void load_base_item_defs();
 bool load_scen_item_defs(char scen_name[256]);
+
+fs::path progDir;
+
+void init_directories()
+{
+	char cPath[768];
+	CFBundleRef mainBundle=CFBundleGetMainBundle();
+	
+	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
+	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
+	if(tmp == NULL){
+		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
+		if(success) {
+			progDir = cPath;
+			std::cout << cPath << "\n\n" << progDir << "\n\n";
+		} else {
+			std::cout << "Couldn't retrieve application path.\n";
+			exit(1);
+		}
+	}else progDir = tmp;
+	progDir = progDir.parent_path();
+	std::cout<<progDir<<'\n';
+	// Initialize the resource manager paths
+	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
+	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
+	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
+	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
+	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
+	
+}
 
 //bool select_save_location(FSSpec* to_save_ptr){
 //	if(to_save_ptr==NULL)
 //		return(false);
 //	OSErr error;
-//	Str255 message = "\pSelect saved game:                                     ";
+//	char message[256] = "Select saved game:                                     ";
 //	NavTypeListHandle type_list;
 //	NavDialogCreationOptions dialogOptions;
 //	NavDialogRef theDialog;
@@ -187,65 +217,11 @@ short init_data(short flag)
 }
 
 void load_base_item_defs(){
-	OSErr err;
-	char cPath[512];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef baseScenURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladbase"),CFSTR("exs"),NULL);
-	CFStringRef baseScenPath = CFURLCopyFileSystemPath(baseScenURL, kCFURLPOSIXPathStyle);
-	CFStringGetCString(baseScenPath, cPath, 512, kCFStringEncodingUTF8);
-	FSRef bSRef;
-	FSPathMakeRef((UInt8*)cPath, &bSRef, false);
-	short forkRef;
-	HFSUniStr255 forkName;
-	FSGetDataForkName(&forkName);
-	err=FSOpenFork(&bSRef, forkName.length, forkName.unicode, fsRdPerm, &forkRef);
-	if(err!=noErr){
-		printf("Unable to open base scenario data\n");
-		ExitToShell();
-	}
-	err=FSReadFork(forkRef, fsFromStart, 41942, 26400, &(item_list[0]), NULL);
-	if(err!=noErr){
-		printf("Unable to read base scenario data\n");
-		ExitToShell();
-	}
-	err=FSCloseFork(forkRef);
-	if(err!=noErr){
-		printf("Unable to close base scenario data\n");
-		ExitToShell();
-	}
+	fs::path basePath = progDir/"Scenario Editor"/"BoE Bases"/"bladbase.exs";
+	load_scenario(basePath, true);
 }
 
-bool load_scen_item_defs(char scen_name[256]){
-	OSErr err;
-	char cPath[768];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef progURL = CFBundleCopyBundleURL(mainBundle);
-	CFStringRef progDir = CFURLCopyFileSystemPath(progURL, kCFURLPOSIXPathStyle);
-	CFRange findRes;
-	if(!CFStringFindWithOptions(progDir, CFSTR("/"), CFRangeMake(0, CFStringGetLength(progDir)), kCFCompareBackwards, &findRes)){
-		printf("Error: Unable to find scenario directory\n");
-		return(false);
-	}
-	CFStringRef scenPath = CFStringCreateWithFormat(NULL,NULL,CFSTR("%@/Blades of Exile Scenarios/%s"),CFStringCreateWithSubstring(NULL, progDir, CFRangeMake(0,findRes.location)),scen_name);
-	CFStringGetCString(scenPath, cPath, 768, kCFStringEncodingUTF8);
-	FSRef scenRef;
-	FSPathMakeRef((UInt8*)cPath, &scenRef, false);
-	short forkRef;
-	HFSUniStr255 forkName;
-	FSGetDataForkName(&forkName);
-	err=FSOpenFork(&scenRef, forkName.length, forkName.unicode, fsRdPerm, &forkRef);
-	if(err!=noErr){
-		printf("Unable to open scenario data\n");
-		return(false);
-	}
-	err=FSReadFork(forkRef, fsFromStart, 41942, 26400, &(item_list[0]), NULL);
-	if(err!=noErr){
-		printf("Unable to read scenario data\n");
-		return(false);
-	}
-	err=FSCloseFork(forkRef);
-	if(err!=noErr){
-		printf("Unable to close scenario data\n");
-	}
-	return(true);
+bool load_scen_item_defs(std::string scen_name){
+	fs::path scenPath = progDir/"Blades of Exile Scenarios"/(scen_name + ".exs");
+	return load_scenario(scenPath, true);
 }

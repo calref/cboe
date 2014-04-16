@@ -10,6 +10,66 @@
 #include <Cocoa/Cocoa.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+// TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
+char keyToChar(sf::Keyboard::Key key, bool isShift) {
+	using kb = sf::Keyboard;
+	switch(key) {
+		case kb::A: return isShift ? 'A' : 'a';
+		case kb::B: return isShift ? 'B' : 'b';
+		case kb::C: return isShift ? 'C' : 'c';
+		case kb::D: return isShift ? 'D' : 'd';
+		case kb::E: return isShift ? 'E' : 'e';
+		case kb::F: return isShift ? 'F' : 'f';
+		case kb::G: return isShift ? 'G' : 'g';
+		case kb::H: return isShift ? 'H' : 'h';
+		case kb::I: return isShift ? 'I' : 'i';
+		case kb::J: return isShift ? 'J' : 'j';
+		case kb::K: return isShift ? 'K' : 'k';
+		case kb::L: return isShift ? 'L' : 'l';
+		case kb::M: return isShift ? 'M' : 'm';
+		case kb::N: return isShift ? 'N' : 'n';
+		case kb::O: return isShift ? 'O' : 'o';
+		case kb::P: return isShift ? 'P' : 'p';
+		case kb::Q: return isShift ? 'Q' : 'q';
+		case kb::R: return isShift ? 'R' : 'r';
+		case kb::S: return isShift ? 'S' : 's';
+		case kb::T: return isShift ? 'T' : 't';
+		case kb::U: return isShift ? 'U' : 'u';
+		case kb::V: return isShift ? 'V' : 'v';
+		case kb::W: return isShift ? 'W' : 'w';
+		case kb::X: return isShift ? 'X' : 'x';
+		case kb::Y: return isShift ? 'Y' : 'y';
+		case kb::Z: return isShift ? 'Z' : 'z';
+		case kb::Num1: return isShift ? '!' : '1';
+		case kb::Num2: return isShift ? '@' : '2';
+		case kb::Num3: return isShift ? '#' : '3';
+		case kb::Num4: return isShift ? '$' : '4';
+		case kb::Num5: return isShift ? '%' : '5';
+		case kb::Num6: return isShift ? '^' : '6';
+		case kb::Num7: return isShift ? '&' : '7';
+		case kb::Num8: return isShift ? '*' : '8';
+		case kb::Num9: return isShift ? '(' : '9';
+		case kb::Num0: return isShift ? ')' : '0';
+		case kb::Tilde: return isShift ? '~' : '`';
+		case kb::Dash: return isShift ? '_' : '-';
+		case kb::Equal: return isShift ? '+' : '=';
+		case kb::LBracket: return isShift ? '{' : '[';
+		case kb::RBracket: return isShift ? '}' : ']';
+		case kb::SemiColon: return isShift ? ':' : ';';
+		case kb::Quote: return isShift ? '"' : '\'';
+		case kb::Comma: return isShift ? '<' : ',';
+		case kb::Period: return isShift ? '>' : '.';
+		case kb::Slash: return isShift ? '?' : '/';
+		case kb::BackSlash: return isShift ? '|' : '\\';
+		case kb::Tab: return '\t';
+		case kb::Space: return ' ';
+		case kb::Return: return '\n';
+		case kb::BackSpace: return '\b';
+		case kb::Delete: return '\x7f';
+	}
+	return 0;
+}
+
 bool isFrontWindow(sf::Window& win) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);

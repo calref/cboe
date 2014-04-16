@@ -792,7 +792,7 @@ void handle_library_menu(int item_hit)
 			break;
 		case 4:
 			// TODO: Create a dedicated dialog for alchemy info
-			display_alchemy(NULL);
+			display_alchemy();
 			break;
 		case 5:
 			tip_of_day(); break;

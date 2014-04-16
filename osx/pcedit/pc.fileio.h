@@ -8,3 +8,4 @@ short init_data(short flag);
 //void make_pref_file(FSSpec pref);
 //void save_prefs();
 void remove_party_from_scen();
+void init_directories();

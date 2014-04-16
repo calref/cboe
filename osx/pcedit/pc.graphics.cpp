@@ -8,43 +8,47 @@
 #include "pc.action.h"
 #include "soundtool.h"
 #include "graphtool.h"
-#include "dlgtool.h"
-#include "dlglowlevel.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
+#include "restypes.hpp"
+#include "message.h"
+#include "mathutil.h"
+
+extern std::string get_str(std::string, short);
 
 extern cUniverse univ;
 
-extern WindowPtr	mainPtr;
-extern bool play_sounds,file_in_mem,party_in_scen,scen_items_loaded;
+extern sf::RenderWindow mainPtr;
+extern bool play_sounds,party_in_scen,scen_items_loaded;
+extern fs::path file_in_mem;
 
 extern short store_flags[3];
-extern GWorldPtr button_num_gworld,bg_gworld;
+extern sf::Texture button_num_gworld,bg_gworld;
 extern short current_active_pc;
 //extern bool ed_reg;
 
 //extern long register_flag,stored_key;
 //extern long ed_flag,ed_key;
 
-GWorldPtr title_gworld,pc_gworld,dlogpics_gworld;
-GWorldPtr buttons_gworld,invenbtn_gworld,status_gworld;
+sf::Texture title_gworld,pc_gworld,dlogpics_gworld;
+sf::Texture buttons_gworld,invenbtn_gworld,status_gworld;
 //GWorldPtr race_dark,train_dark,items_dark,spells_dark;
 //GWorldPtr race_light,train_light,items_light,spells_light;
-Rect whole_win_rect = {0,0,440,590};
-Rect title_from = {0,0,70,380};
-extern Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-extern Rect pc_info_rect; // Frame that holds a pc's basic info and items
-extern Rect name_rect;
-extern Rect pc_race_rect;
-extern Rect info_area_rect;
-extern Rect hp_sp_rect;
-extern Rect skill_rect;
-extern Rect pc_skills_rect[19];
-extern Rect status_rect; 
-extern Rect pc_status_rect[10]; 
-extern Rect traits_rect;
-extern Rect pc_traits_rect[16]; 
-extern Rect edit_rect[5][2]; 
+RECT whole_win_rect = {0,0,440,590};
+RECT title_from = {0,0,70,380};
+extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+extern RECT pc_info_rect; // Frame that holds a pc's basic info and items
+extern RECT name_rect;
+extern RECT pc_race_rect;
+extern RECT info_area_rect;
+extern RECT hp_sp_rect;
+extern RECT skill_rect;
+extern RECT pc_skills_rect[19];
+extern RECT status_rect; 
+extern RECT pc_status_rect[10]; 
+extern RECT traits_rect;
+extern RECT pc_traits_rect[16]; 
+extern RECT edit_rect[5][2]; 
 
 short store_str1a;
 short store_str1b;
@@ -52,62 +56,34 @@ short store_str2a;
 short store_str2b;
 short store_which_string_dlog;
 short store_page_on,store_num_i;
-Rect ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
+// TODO: The duplication of RECT here shouldn't be necessary...
+RECT ed_buttons_from[2] = {RECT{0,0,57,57},RECT{0,57,57,114}};
 short current_pressed_button = -1;
 bool init_once = false;
-GWorldPtr spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
+sf::Texture spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 // (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
-GWorldPtr items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
-GWorldPtr monst_gworld[NUM_MONST_SHEETS],terrain_gworld[NUM_TER_SHEETS],anim_gworld,talkfaces_gworld;
-GWorldPtr vehicle_gworld, small_ter_gworld;
-
-void init_dialogs(){
-	cd_init_dialogs(NULL,NULL,NULL,NULL,NULL,&dlogpics_gworld,NULL,NULL,NULL,NULL,NULL,NULL/*,NULL,NULL,NULL,NULL,NULL,NULL,NULL*/,NULL,NULL);
-	cd_register_event_filter(917,edit_day_event_filter);
-	cd_register_event_filter(970,display_strings_event_filter);
-	cd_register_event_filter(971,display_strings_event_filter);
-	cd_register_event_filter(972,display_strings_event_filter);
-	cd_register_event_filter(973,display_strings_event_filter);
-	cd_register_event_filter(991,display_pc_event_filter);
-	cd_register_event_filter(996,display_alchemy_event_filter);
-	cd_register_event_filter(1010,spend_xp_event_filter);
-	cd_register_event_filter(947,edit_gold_or_food_event_filter);
-	cd_register_event_filter(1012,edit_gold_or_food_event_filter);
-	cd_register_event_filter(1013,pick_race_abil_event_filter);
-	cd_register_event_filter(1018,select_pc_event_filter);
-	cd_register_event_filter(1024,edit_xp_event_filter);
-	cd_register_event_filter(1073,give_reg_info_event_filter);
-	cd_register_default_event_filter(fancy_choice_dialog_event_filter);
-}
+sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
+sf::Texture monst_gworld[NUM_MONST_SHEETS],terrain_gworld[NUM_TER_SHEETS],anim_gworld,talkfaces_gworld;
+sf::Texture vehicle_gworld, small_ter_gworld;
 
 void init_main_buttons()
 {
 
 	short i;
 	int	indent = 0, indent2 = 0;
-	GrafPtr old_port;
 	
-	Str255 fn1 = "\pGeneva";
-	Str255 fn3 = "\pPalatino";
-	Rect base_rect;
+	RECT base_rect;
 	
 	if (init_once == false) {
 		init_once = true;
-		GetFNum(fn1,&geneva_font_num);
-		if (geneva_font_num == 0)
-			GetFNum(fn3,&geneva_font_num);
-
-		GetPort(&old_port);	
-		SetPort(GetWindowPort(mainPtr));
-		TextFont(geneva_font_num);
-		TextFace(bold);
-		TextSize(10);
-		SetPort(old_port);
+		TEXT.font = "Silom";
+		TEXT.style = sf::Text::Regular;
+		TEXT.pointSize = 10;
 		}
 	//whole_win_rect = mainPtr->portRect;
 	//Initialize pc_info_rect in center
 	pc_info_rect= whole_win_rect;
-	InsetRect(&pc_info_rect,100,100);
+	pc_info_rect.inset(100,100);
 	pc_info_rect.bottom+=52;
 	pc_info_rect.top-=25;
 	pc_info_rect.right+=5;
@@ -138,8 +114,8 @@ void init_main_buttons()
 		pc_area_buttons[i][1].bottom = pc_area_buttons[i][2].top = pc_area_buttons[i][0].bottom - 18;
 		pc_area_buttons[i][2].bottom = pc_area_buttons[i][3].top = pc_area_buttons[i][0].bottom - 9;
 		pc_area_buttons[i][3].bottom = pc_area_buttons[i][0].bottom;
-		OffsetRect(&pc_area_buttons[i][2],0,-1);
-		OffsetRect(&pc_area_buttons[i][3],0,-2);
+		pc_area_buttons[i][2].offset(0,-1);
+		pc_area_buttons[i][3].offset(0,-2);
 	}	
 	//Initialize the edit_rect buttons
 	edit_rect[0][0].top = pc_info_rect.top;
@@ -207,7 +183,7 @@ void init_main_buttons()
 	
 	for (i = 0; i < 19; i++) {
 		pc_skills_rect[i] = base_rect;
-		OffsetRect(&pc_skills_rect[i], (i / 10) * ((name_rect.right)-(name_rect.left)), (i % 10) * (pc_info_rect.bottom - name_rect.bottom)/30);
+		pc_skills_rect[i].offset((i / 10) * ((name_rect.right)-(name_rect.left)), (i % 10) * (pc_info_rect.bottom - name_rect.bottom)/30);
 	}
 	
 	//Initialize status_rect
@@ -222,7 +198,7 @@ void init_main_buttons()
 	base_rect.bottom = base_rect.top + (pc_info_rect.bottom - status_rect.bottom)/15;
 	for (i = 0; i < 10; i++) {
 		pc_status_rect[i] = base_rect;
-		OffsetRect(&pc_status_rect[i], (i / 5) * ((name_rect.right)-(name_rect.left)), (i % 5) * (pc_info_rect.bottom - status_rect.bottom)/15);
+		pc_status_rect[i].offset((i / 5) * ((name_rect.right)-(name_rect.left)), (i % 5) * (pc_info_rect.bottom - status_rect.bottom)/15);
 	}
 	//Initialize traits_rect
 	traits_rect.top = pc_status_rect[4].bottom + 5;
@@ -236,7 +212,7 @@ void init_main_buttons()
 	base_rect.bottom = base_rect.top + 10;
 	for (i = 0; i < 16; i++) {
 		pc_traits_rect[i] = base_rect;
-		OffsetRect(&pc_traits_rect[i], (i / 8) * ((name_rect.right)-(name_rect.left)), (i % 8) * 9);
+		pc_traits_rect[i].offset((i / 8) * ((name_rect.right)-(name_rect.left)), (i % 8) * 9);
 	}
 
 
@@ -246,7 +222,7 @@ void init_main_buttons()
 	item_string_rects[0][0].bottom = item_string_rects[0][0].top + 12;
 	for (i = 1; i < 24; i++) {
 		item_string_rects[i][0] = item_string_rects[0][0];
-		OffsetRect(&item_string_rects[i][0],0,13 * i);
+		item_string_rects[i][0].offset(0,13 * i);
 	}
 	for (i = 0; i < 24; i++) {
 		item_string_rects[i][1] = item_string_rects[i][0];
@@ -261,20 +237,11 @@ void init_main_buttons()
 void Set_up_win ()
 {
 	short i;
-//	title_gworld = load_pict(5000);	
-//	pc_gworld = load_pict(902);
-//	mixed_gworld = load_pict(903);
-//	dlogpics_gworld = load_pict(850);
-//	buttons_gworld = load_pict(5001);
-	title_gworld = load_pict("pcedtitle.png");
-	invenbtn_gworld = load_pict("invenbtns.png");
-	status_gworld = load_pict("staticons.png");
-	dlogpics_gworld = load_pict("dlogpics.png");
-	buttons_gworld = load_pict("pcedbuttons.png");
-
-//	for (i = 0; i < 14; i++){
-//	    bg[i] = GetPixPat (128 + i);
-//	}
+	title_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedtitle"));
+	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
+	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
+	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
+	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedbuttons"));
 }
 
 
@@ -283,77 +250,77 @@ void redraw_screen()
 	draw_main_screen();
 	display_party(6,1);
 	draw_items(1);
+	mainPtr.display();
+}
+
+static void frame_dlog_rect(sf::RenderWindow& target, RECT rect) {
+	cTextMsg text(target);
+	text.setFormat(TXT_FRAME, true);
+	text.setFormat(TXT_FRAMESTYLE, 1);
+	text.setBounds(rect);
+	text.draw();
 }
 
 void draw_main_screen()
 {
-	Rect	source_rect, dest_rec,dest_rect;
-	Rect reg_rect;
+	RECT	source_rect, dest_rec,dest_rect;
+	RECT reg_rect;
 
-	SetPort(GetWindowPort(mainPtr));
-	tileImage(whole_win_rect,bg_gworld,bg[12]); // fill whole window with background texture
+	tileImage(mainPtr,whole_win_rect,bg_gworld,bg[12]); // fill whole window with background texture
 	dest_rec = source_rect = title_from; // initializes, to draw title 
-		 // title_from is a Rect constant
-	OffsetRect(&dest_rec,20,0);
+		 // title_from is a RECT constant
+	dest_rec.offset(20,0);
 	
-	rect_draw_some_item (title_gworld,source_rect,dest_rec,(Point){0,0},transparent);
-		// The first title_gworld is the from, the gworld to draw from
-		// and source_rect is the rectangle in that gworld to draw
-		// The 1,1 at the end means ...
-		// the 1st 1 means transparent, if the first 1 was a 0, not transparent
-		// The second 1 means on the main window, not into another gworld
-		// dest_rec is where it's drawn to
-		// Finally, the second title_gworld. This would be the gworld you were drawing into if
-		// you were drawing into a gworld. You aren't so this doesn't matter, so just put the earlier
-		// gworld in as a place holder.
+	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
 	
 	dest_rect = dest_rec;
 	dest_rect.top = dest_rect.bottom;
 	dest_rect.bottom = dest_rect.top + 50;
 		// initialize rectangle to draw text into
-	TextSize(12);
-	TextFace(bold + underline);
+	// TODO: Is this needed?
+#if 0
+	TEXT.pointSize = 12;
+	TEXT.style = sf::Text::Underlined;
 		// set the pen
-	//char_win_draw_string(GetWindowPort(mainPtr),dest_rect,"Characters",0,10);
+	win_draw_string(mainPtr,dest_rect,"Characters",0,10);
 		// This draws a chunk of text on the screen
-	TextSize(10); /// reset text size
-	TextFace(0); // reset text pen
-	TextFace(bold);
+#endif
+	TEXT.pointSize = 10;
+	TEXT.style = sf::Text::Regular;
 	
-	frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // draw the frame
+	frame_dlog_rect(mainPtr,pc_info_rect); // draw the frame
 	//i = pc_info_rect.left-pc_info_rect.right;
 	//sprintf((char *)temp_str,"Width of pc_info_rect %d ",
 				//(short) i);
 	//win_draw_string(mainPtr,pc_info_rect,temp_str,0,12);
 
-	
+	TEXT.colour = sf::Color::Black;
 	dest_rect = pc_area_buttons[5][0]; 
 	dest_rect.right = whole_win_rect.right - 30; //What is this for? Commenting it out has no effect.
 	dest_rect.left += 60;
 	//Off0setRect(&dest_rect,0,45);
-	OffsetRect(&dest_rect,0,21);
-	if (file_in_mem == true)
-		char_win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10);
+	dest_rect.offset(0,21);
+	if(!file_in_mem.empty())
+		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10);
 	else
-		char_win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10);
-	if(file_in_mem == true && party_in_scen==true && scen_items_loaded==false){
-		OffsetRect(&dest_rect,200,0);
-		char_win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,10);
-		OffsetRect(&dest_rect,-200,0);
+		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10);
+	if(!file_in_mem.empty() && party_in_scen && !scen_items_loaded){
+		dest_rect.offset(200,0);
+		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,10);
+		dest_rect.offset(-200,0);
 	}
-	OffsetRect(&dest_rect,0,12);
-	if (file_in_mem == true)
-		char_win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
-	TextSize(12);
-	OffsetRect(&dest_rect,0,16);
-	if (file_in_mem == true)
-		char_win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10);
-	TextSize(10);
-	TextFace(0);
-	OffsetRect(&dest_rect,280,0);
-	char_win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,10);
-	TextFace(bold);
-	
+	dest_rect.offset(0,12);
+	if(!file_in_mem.empty())
+		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
+	TEXT.pointSize = 12;
+	dest_rect.offset(0,16);
+	if(!file_in_mem.empty())
+		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10);
+	TEXT.pointSize = 10;
+	TEXT.font = "Geneva";
+	dest_rect.offset(280,0);
+	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,10);
+	TEXT.font = "Silom";
 	
 	reg_rect = whole_win_rect;
 	reg_rect.left = reg_rect.right - 170;
@@ -369,32 +336,32 @@ void do_button_action(short which_pc,short which_button)
 	current_pressed_button = which_button;
 	display_party(6,0);
 	play_sound(34);
-	Delay(10,&dummy);
+	sf::sleep(time_in_ticks(10));
 	current_pressed_button = -1;
 	display_party(6,0);
 }
 
-//extern Rect pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+//extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+//extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
 void draw_items(short clear_first)
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
-	Str255 to_draw;
-	Rect d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
+	char to_draw[256];
+	RECT d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 
-	if (file_in_mem == false)  // save file loaded
+	if(file_in_mem.empty())  // save file loaded
 		return;
 
 	dest_rect = item_string_rects[0][0];
 	dest_rect.bottom += 3;
-	OffsetRect(&dest_rect,0,-14);
+	dest_rect.offset(0,-14);
 
 	// First erase crap there already by painting background texture over it
 	if (clear_first == 1) {
 		for (i = 0; i < 24; i++)
-			tileImage(item_string_rects[i][0],bg_gworld,bg[12]);	
-		tileImage(dest_rect,bg_gworld,bg[12]);	
+			tileImage(mainPtr,item_string_rects[i][0],bg_gworld,bg[12]);
+		tileImage(mainPtr,dest_rect,bg_gworld,bg[12]);
 		}
 	
 	// First, draw "Fred's Items:"
@@ -406,9 +373,9 @@ void draw_items(short clear_first)
 	//TextSize(10);
 
 	if (univ.party[current_active_pc].main_status != 1){
-		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re draw entire frame 
-		frame_dlog_rect(GetWindowPort(mainPtr),info_area_rect,1); // draw the frame
-		frame_dlog_rect(GetWindowPort(mainPtr),pc_race_rect,1); // draw the frame	
+		frame_dlog_rect(mainPtr,pc_info_rect); // re draw entire frame 
+		frame_dlog_rect(mainPtr,info_area_rect); // draw the frame
+		frame_dlog_rect(mainPtr,pc_race_rect); // draw the frame	
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
@@ -427,16 +394,16 @@ void draw_items(short clear_first)
 			//	else sprintf((char *) to_draw, "%d %d %d %d",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
-			char_win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
+			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
 
 			//Draw id/drop buttons
-			rect_draw_some_item(invenbtn_gworld,d_from,item_string_rects[i][1],(Point){0,0},transparent);
-			rect_draw_some_item(invenbtn_gworld,i_from,item_string_rects[i][2],(Point){0,0},transparent);
+			rect_draw_some_item(invenbtn_gworld,d_from,mainPtr,item_string_rects[i][1],sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,i_from,mainPtr,item_string_rects[i][2],sf::BlendAlpha);
 			}
-	frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re draw entire frame 
-	frame_dlog_rect(GetWindowPort(mainPtr),name_rect,1); // draw the frame
-	frame_dlog_rect(GetWindowPort(mainPtr),pc_race_rect,1); // draw the frame
-	frame_dlog_rect(GetWindowPort(mainPtr),info_area_rect,1); // draw the frame
+	frame_dlog_rect(mainPtr,pc_info_rect); // re draw entire frame 
+	frame_dlog_rect(mainPtr,name_rect); // draw the frame
+	frame_dlog_rect(mainPtr,pc_race_rect); // draw the frame
+	frame_dlog_rect(mainPtr,info_area_rect); // draw the frame
 
 }
 
@@ -445,77 +412,83 @@ void display_party(short mode,short clear_first)
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 {
 	short i,k,string_num, cur_rect=0;
-	Str255 to_draw, skill_value;	
-	Rect from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
+	const char* to_draw;
+	const char* skill_value;
+	RECT from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
 	
+	// TODO: Is this needed?
+#if 0
 	// lots of stuff is global. Like ...
 	// bool file_in_mem
 	// short current_active_pc
 	if (clear_first == 1) { // first erase what's already there
 		for (i = 0; i < 6; i++)
-			tileImage(pc_area_buttons[i][0],bg_gworld,bg[12]);
-		tileImage(name_rect,bg_gworld,bg[12]);
-		tileImage(pc_race_rect,bg_gworld,bg[12]);
-		tileImage(info_area_rect,bg_gworld,bg[12]);
-		frame_dlog_rect(GetWindowPort(mainPtr),pc_info_rect,1); // re-draw the frame
+			tileImage(mainPtr,pc_area_buttons[i][0],bg_gworld,bg[12]);
+		tileImage(mainPtr,name_rect,bg_gworld,bg[12]);
+		tileImage(mainPtr,pc_race_rect,bg_gworld,bg[12]);
+		tileImage(mainPtr,info_area_rect,bg_gworld,bg[12]);
+		frame_dlog_rect(mainPtr,pc_info_rect); // re-draw the frame
 	}
+#endif
 	
-	if (file_in_mem == false) { // what if no party loaded?
+	if(file_in_mem.empty()) { // what if no party loaded?
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
-		char_win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,10);
+		win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,10);
 	}
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
 		if (party_in_scen == false)
-			char_win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10);
+			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10);
 		else
-			char_win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10);
+			win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10);
 		for (i = 0; i < 6; i++) {
+			// TODO: This appears to be expecting a tint?
 			if (i == current_active_pc) // active pc is drawn in blue
-				ForeColor(blueColor);
-			else ForeColor(blackColor);
+				TEXT.colour = sf::Color::Blue;
+			else TEXT.colour = sf::Color::Black;
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
 			
 			if ((current_pressed_button < 0) || (current_pressed_button == i))
-				rect_draw_some_item(buttons_gworld,from_rect,pc_area_buttons[i][0],(Point){0,0});
-			ForeColor(blackColor);
+				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0]);
+			TEXT.colour = sf::Color::Black;
 			
 			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
 			if (univ.party[i].main_status != 0) { // PC exists?
 				from_rect = from_base;
 				// draw PC graphic
-				OffsetRect(&from_rect,56 * (univ.party[i].which_graphic / 8),36 * (univ.party[i].which_graphic % 8));
-				rect_draw_some_item(pc_gworld,from_rect,pc_area_buttons[i][1],(Point){0,0},transparent);
+				from_rect.offset(56 * (univ.party[i].which_graphic / 8),36 * (univ.party[i].which_graphic % 8));
+				rect_draw_some_item(pc_gworld,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0); 
 				// draw name
-				TextSize(9);
+				TEXT.pointSize = 9;
 				if( (univ.party[i].name.length()) >= 10) {
-					TextFace(0);
-					sprintf((char *) to_draw, "%-s  ", (char *) univ.party[i].name.c_str());	
-					TextSize(6);
+					TEXT.font = "Geneva";
+					TEXT.pointSize = 6;
+					sprintf((char *) to_draw, "%-s  ", (char *) univ.party[i].name.c_str());
 				}
 				else {
 					sprintf((char *) to_draw, "%-s ", (char *) univ.party[i].name.c_str());	
 				}
 				
-				ForeColor(whiteColor);
-				win_draw_string(GetWindowPort(mainPtr),pc_area_buttons[i][2],to_draw,1,10);
-				TextFace(bold);
-				TextSize(10);
+				TEXT.colour = sf::Color::White;
+				win_draw_string(mainPtr,pc_area_buttons[i][2],to_draw,1,10);
+				TEXT.font = "Silom";
+				TEXT.pointSize = 10;
 				
 				if (i == current_active_pc){
 					sprintf((char *) to_draw, "%-.18s  ", (char *) univ.party[i].name.c_str());
 					if( (univ.party[i].name.length()) > 12)
-						TextSize(8);
-					ForeColor(blackColor);
-					win_draw_string(GetWindowPort(mainPtr),name_rect,to_draw,1,10);
-					TextSize(10);
+						TEXT.pointSize = 8;
+					TEXT.colour = sf::Color::Black;
+					win_draw_string(mainPtr,name_rect,to_draw,1,10);
+					TEXT.pointSize = 10;
+					
 				}
 				if ((current_pressed_button < 0) || (current_pressed_button == i))
 					switch (univ.party[i].main_status) {
@@ -524,274 +497,277 @@ void display_party(short mode,short clear_first)
 							if (i == current_active_pc) {
 								//Draw in race
 								if (univ.party[i].race == 0)
-									char_win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10);
 								if (univ.party[i].race == 1)
-									char_win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10);
 								if (univ.party[i].race == 2)
-									char_win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");
-								win_draw_string(GetWindowPort(mainPtr),skill_rect,to_draw,0,10);
+								win_draw_string(mainPtr,skill_rect,to_draw,0,10);
 								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",univ.party[i].cur_health,univ.party[i].max_health,univ.party[i].cur_sp,
 										univ.party[i].max_sp);
-								win_draw_string(GetWindowPort(mainPtr),hp_sp_rect,to_draw,0,10);
+								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,10);
 								
 								
-								TextSize(9);
-								TextFace(0);
+								TEXT.pointSize = 9;
+								TEXT.font = "Geneva";
 								string_num=1;
 								for( k = 0; k < 19 ; ++k)
 								{
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + 80;
 									
-									get_str(to_draw,9,string_num);
-									win_draw_string(GetWindowPort(mainPtr),pc_skills_rect[k],to_draw,0,9);
+									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),0,9);
 									
 									sprintf((char *) skill_value,"%d",univ.party[i].skills[k]);
-									win_draw_string(GetWindowPort(mainPtr),temp_rect,skill_value,0,9);	
+									win_draw_string(mainPtr,temp_rect,skill_value,0,9);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;
 								}
 								//end skills
 								
 								//Write in pc Status
-								TextSize(10);
-								TextFace(bold);	
+								TEXT.pointSize = 10;
+								TEXT.font = "Silom";
 								sprintf((char *) to_draw, "Status:");
-								win_draw_string(GetWindowPort(mainPtr),status_rect,to_draw,0,10);
+								win_draw_string(mainPtr,status_rect,to_draw,0,10);
 								
-								TextSize(9);
-								TextFace(0);
+								TEXT.pointSize = 9;
+								TEXT.font = "Geneva";
+								
+								
+								
 								//for(k = 0 ; k < 10; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
 								if (univ.party[i].status[0] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[1] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[1] < 0)
 										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9);
 											cur_rect++;
 										}
 								if (univ.party[i].status[2] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9);
 										cur_rect++;
 									}	
 								if (univ.party[i].status[3] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[3] < 0)
 										if(cur_rect <= 9) {
-											char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9);
 											cur_rect++;
 										}
 								if (univ.party[i].status[4] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[5] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[6] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[7] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[8] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[9] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[10] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[11] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[12] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].status[13] > 0) 
 									if(cur_rect <= 9) {
-										char_win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9);
 										cur_rect++;
 									}
 								//end pc status section
 								
 								//Write in Traits
-								TextSize(10);
-								TextFace(bold);	
+								TEXT.pointSize = 10;
+								TEXT.font = "Silom";
 								sprintf((char *) to_draw, "Traits:");
-								win_draw_string(GetWindowPort(mainPtr),traits_rect,to_draw,0,10);
+								win_draw_string(mainPtr,traits_rect,to_draw,0,10);
 								//for(k = 0 ; k < 16; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_traits_rect[k],0);
-								TextSize(9);
-								TextFace(0);	
+								TEXT.pointSize = 9;
+								TEXT.font = "Geneva";
+								
 								cur_rect=0;
 								if (univ.party[i].traits[0] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[1] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[2] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[3] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[4] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9);
 										cur_rect++;
 									}
 								
 								if (univ.party[i].traits[5] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[6] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[7] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[8] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[9] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[10] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[11] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[12] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[13] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[14] == 1) 
 									if(cur_rect <= 15) {
-										char_win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9);
 										cur_rect++;
 									}
 								
 								//end traits
 							}
 							
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							case 2:
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							case 3:
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							case 4:
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							case 5:
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							case 6:
-							ForeColor(whiteColor);
-							TextSize(9);
-							TextFace(0); 
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 							default:
-							ForeColor(whiteColor);
-							TextFace(0);
-							TextSize(9);
-							char_win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,10);
-							TextFace(bold);
-							TextSize(10);
+							TEXT.colour = sf::Color::White;
+							TEXT.pointSize = 9;
+							TEXT.font = "Geneva";
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,10);
+							TEXT.font = "Silom";
+							TEXT.pointSize = 10;
 							break;
 					}
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][0],0); 
@@ -800,38 +776,40 @@ void display_party(short mode,short clear_first)
 			}
 			
 		} // Closes the for i=6 loop
-		ForeColor(blackColor);			
+		TEXT.colour = sf::Color::Black;
+		
+		
 		
 		for(i = 0; i < 5; i++) 
 			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
 				if (clear_first == 1) { // first erase what's already there
-					tileImage(edit_rect[i][0],bg_gworld,bg[12]);
+					tileImage(mainPtr,edit_rect[i][0],bg_gworld,bg[12]);
 				}		
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][0],0);
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][1],0);
 				from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
-				rect_draw_some_item(buttons_gworld,from_rect,edit_rect[i][0],(Point){0,0});
-				ForeColor(whiteColor);			
+				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,edit_rect[i][0]);
+				TEXT.colour = sf::Color::White;
 				switch(i) {
 					case 0:
-						char_win_draw_string(mainPtr,edit_rect[0][1],"  Add  Mage Spells ",0,10);
+						win_draw_string(mainPtr,edit_rect[0][1],"  Add  Mage Spells ",0,10);
 						break;
 					case 1:
-						char_win_draw_string(mainPtr,edit_rect[1][1],"  Add Priest Spells ",0,10);
+						win_draw_string(mainPtr,edit_rect[1][1],"  Add Priest Spells ",0,10);
 						break;
 					case 2: 
-						char_win_draw_string(mainPtr,edit_rect[2][1]," Edit  Traits",0,10);
+						win_draw_string(mainPtr,edit_rect[2][1]," Edit  Traits",0,10);
 						break;
 					case 3:
-						char_win_draw_string(mainPtr,edit_rect[3][1]," Edit  Skills",0,10);
+						win_draw_string(mainPtr,edit_rect[3][1]," Edit  Skills",0,10);
 						break;
 					case 4:
-						char_win_draw_string(mainPtr,edit_rect[4][1]," Edit   XP",0,10);
+						win_draw_string(mainPtr,edit_rect[4][1]," Edit   XP",0,10);
 						break;
 					default:
 						break;	
 				}		
-				ForeColor(blackColor);			
+				TEXT.colour = sf::Color::Black;
 				
 			}
 		//			MoveTo(start_h + 10, start_v + 127);	
@@ -840,24 +818,15 @@ void display_party(short mode,short clear_first)
 	}
 	
 	
-	ForeColor(blackColor);
+	TEXT.colour = sf::Color::Black;
 }
-
-void undo_clip()
-{
-	ClipRect(&whole_win_rect);
-}
-
-void add_string_to_buf(char *str) {
-
-	}
 	
-//void rect_draw_some_item (GWorldPtr	src_gworld, Rect	src_rect, GWorldPtr	targ_gworld,Rect targ_rect, 
+//void rect_draw_some_item (GWorldPtr	src_gworld, RECT	src_rect, GWorldPtr	targ_gworld,RECT targ_rect, 
 //char masked,short main_win)
 ////char	 masked; // if 10 - make AddOver
 ////short   main_win; // if 2, drawing onto dialog
 //{
-//	Rect	destrec;
+//	RECT	destrec;
 //	PixMapHandle	test1, test2;
 //	const BitMap *store_dest;
 //	GrafPtr cur_port;
@@ -909,7 +878,7 @@ void add_string_to_buf(char *str) {
 //{
 //	short text_len[257];
 //	short total_width = 0,i,len;
-//	Str255 p_str;
+//	char p_str[256];
 //	
 //	for (i = 0; i < 257; i++)
 //		text_len[i]= 0;
@@ -925,9 +894,9 @@ void add_string_to_buf(char *str) {
 //	return total_width;
 //}
 
-//void char_win_draw_string(GrafPtr dest_window,Rect dest_rect,char *str,short mode,short line_height)
+//void char_win_draw_string(GrafPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
 //{
-//	Str255 store_s;
+//	char store_s[256];
 //	strcpy((char *) store_s,str);
 //	win_draw_string( dest_window, dest_rect,store_s, mode, line_height);
 //}
@@ -935,11 +904,11 @@ void add_string_to_buf(char *str) {
 //// mode: 0 - align up and left, 1 - center on one line
 //// str is a c string, 256 characters
 //// uses current font
-//void win_draw_string(GrafPtr dest_window,Rect dest_rect,Str255 str,short mode,short line_height)
+//void win_draw_string(GrafPtr dest_window,RECT dest_rect,Str255 str,short mode,short line_height)
 //{
 //	GrafPtr old_port;
-//	Str255 p_str,str_to_draw,str_to_draw2,c_str;
-//	Str255 null_s = "                                                                                                                                                                                                                                                              ";
+//	const char* p_str,str_to_draw,str_to_draw2,c_str;
+//	char null_s[256] = "                                                                                                                                                                                                                                                              ";
 //	short str_len,i;
 //	short last_line_break = 0,last_word_break = 0,on_what_line = 0;
 //	short text_len[257];
@@ -1058,7 +1027,7 @@ void record_display_strings(){}
 //	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num)
 //{
 //	short item_hit;
-//	Str255 text;
+//	char text[256];
 //	location view_loc;
 //	bool sound_done = false;
 //
@@ -1098,7 +1067,7 @@ void record_display_strings(){}
 //	cd_kill_dialog(store_which_string_dlog,0);
 //}
 
-//void get_str(Str255 str,short i, short j)
+//void get_str(const char* str,short i, short j)
 //{
 //	GetIndString(str, i, j);
 //	p2cstr(str);

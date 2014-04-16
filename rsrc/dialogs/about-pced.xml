@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='dark' defbtn='okay'>
+	<!--
+	 TODO: This dialog contains out-of-date information
+	 -->
+	<button name='okay' type='regular' top='260' left='431'>OK</button>
+	<pict top='6' left='6' type='dlog' num='16'/>
+	<text top='6' left='50' width='338' height='34'>
+		Blades of Exile Character Editor v1.0.1 <br/>
+		  Copyright 1997 Jeff Vogel, All rights reserved.
+	</text>
+	<text top='154' left='50' width='439' height='45'>
+		Blades of Exile (with the editor, hint book, and fully usable scenario editor) is $30.
+		For information on how to order, select 'How To Order' from the File menu.
+	</text>
+	<text top='200' left='50' width='368' height='32'>
+		Comments and questions?
+		The creators of Exile want to hear them.
+		Send them to:
+	</text>
+	<text top='233' left='60' width='354' height='53'>
+		Internet: SpidWeb@spidweb.com <br/>
+		America Online: SpidWeb <br/>
+		Compuserve: 76463,1521 <br/>
+		WWW: http://www.spidweb.com
+	</text>
+	<text top='102' left='50' width='439' height='51'>
+		The Blades of Exile Editor is brought to you by Spiderweb Software - <br/>
+		   "Where our aberrations become your reality." <br/>
+		"Blades of Exile" and Spiderweb Software are trademarks of Spiderweb Software.
+	</text>
+	<text top='42' left='50' width='438' height='59'>
+		CREDITS: <br/>
+		   Concept, Design, Programming: Jeff Vogel <br/>
+		   Graphics: Andrew Hunter (Wormius@aol.com) <br/>
+		   Other Programming: Mariann Krizsan
+	</text>
+</dialog>

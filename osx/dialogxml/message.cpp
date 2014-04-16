@@ -36,6 +36,9 @@ void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 		case TXT_FRAME:
 			drawFramed = val;
 			break;
+		case TXT_FRAMESTYLE:
+			frameStyle = val;
+			break;
 		case TXT_SIZE:
 			textSize = val;
 			break;
@@ -68,12 +71,21 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 	return 0;
 }
 
-cTextMsg::cTextMsg(cDialog* parent) :
-	cControl(CTRL_TEXT,*parent),
+cTextMsg::cTextMsg(cDialog& parent) :
+	cControl(CTRL_TEXT,parent),
 	drawFramed(false),
 	textFont(SILOM),
 	textSize(10),
-	color(parent->defTextClr),
+	color(parent.defTextClr),
+	clickable(false),
+	fromList("none") {}
+
+cTextMsg::cTextMsg(sf::RenderWindow& parent) :
+	cControl(CTRL_TEXT,parent),
+	drawFramed(false),
+	textFont(SILOM),
+	textSize(10),
+	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
 	clickable(false),
 	fromList("none") {}
 
@@ -91,8 +103,7 @@ void cTextMsg::draw(){
 		if(textFont == SILOM && !foundSilom()) TEXT.style = sf::Text::Bold;
 		else TEXT.style = sf::Text::Regular;
 		TEXT.pointSize = textSize;
-		// TODO: When should we pass 1 as the second parameter?
-		if(drawFramed) drawFrame(2,0);
+		if(drawFramed) drawFrame(2,frameStyle);
 		sf::Color draw_color = color;
 		if(clickable && depressed){
 			draw_color.r = 256 - draw_color.r;

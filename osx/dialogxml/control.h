@@ -28,6 +28,7 @@ enum eFormat {
 	TXT_FONT,
 	TXT_SIZE,
 	TXT_WRAP,
+	TXT_FRAMESTYLE,
 };
 
 enum eControlType {
@@ -108,6 +109,7 @@ protected:
 	std::string lbl;
 	bool visible, depressed = false; // depressed is only applicable for clickable controls
 	RECT frame;
+	int frameStyle;
 	cKey key;
 	static bool foundSilom();
 	static std::string font_nums[4];

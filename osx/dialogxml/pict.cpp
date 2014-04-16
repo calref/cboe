@@ -87,6 +87,7 @@ bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, locat
 
 void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) drawFramed = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
 	else throw xUnsupportedProp(prop);
 }
 
@@ -484,8 +485,7 @@ void cPict::draw(){
 	}
 	
 	(this->*drawPict()[picType])(picNum,rect);
-	// TODO: When should we pass 1 as the second parameter?
-	if(drawFramed) drawFrame(2,0);
+	if(drawFramed) drawFrame(2,frameStyle);
 }
 
 void cPict::drawPresetTer(short num, RECT to_rect){

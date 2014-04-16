@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='dark' defbtn='okay'>
+	<field name="number" type='num' top='127' left='216' width='75' height='16'/>
+	<pict type='dlog' num='2' top='8' left='8'/>
+	<text size='large' top='8' left='49' width='209' height='16'>Changing experience:</text>
+	<text top='27' left='49' width='288' height='67'>
+		Enter how much experience you want this character to have.
+		Note that the character will not gain any more levels until the character earns at least 1 point more point of experience in the game.
+		The most you can give is 10000.
+	</text>
+	<text name='perlevel' top='99' left='72' width='164' height='16'>Experience for each level:</text>
+	<text framed='true' top='99' left='238' width='76' height='16'/>
+	<text top='127' left='72' width='138' height='14'>Amount of experience:</text>
+	<button name='okay' type='regular' top='154' left='270'>OK</button>
+</dialog>

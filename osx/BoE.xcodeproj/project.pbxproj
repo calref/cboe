@@ -62,6 +62,13 @@
 		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		9111513518FF144F001282A1 /* leave-town.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E918FED338007026CE /* leave-town.xml */; };
+		9111513618FF144F001282A1 /* reunite-first.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EA18FED4F2007026CE /* reunite-first.xml */; };
+		9111513718FF144F001282A1 /* reunited.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EB18FEDAA5007026CE /* reunited.xml */; };
+		9111513818FF144F001282A1 /* not-split.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EC18FEDB7F007026CE /* not-split.xml */; };
+		9111513918FF144F001282A1 /* leave-scenario.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8ED18FEDC25007026CE /* leave-scenario.xml */; };
+		9111513A18FF144F001282A1 /* save-quit.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EE18FEDED1007026CE /* save-quit.xml */; };
+		9111513B18FF144F001282A1 /* save-open.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EF18FEE014007026CE /* save-open.xml */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		912286F90FD330EA00B21642 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
@@ -446,7 +453,6 @@
 		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
-		91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -517,6 +523,18 @@
 		91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 		91F6F8F718F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 		91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
+		91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8D718FE28CC007026CE /* pc.menu.xib */; };
+		91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */; };
+		91FCC8DF18FE4708007026CE /* edit-day.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8DE18FE4708007026CE /* edit-day.xml */; };
+		91FCC8E118FE4734007026CE /* edit-xp.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8E018FE4734007026CE /* edit-xp.xml */; };
+		91FCC8E318FE4993007026CE /* about-pced.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8E218FE4993007026CE /* about-pced.xml */; };
+		91FCC8E518FE5606007026CE /* pcedit.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91FCC8E418FE55F2007026CE /* pcedit.txt */; };
+		91FCC8E618FE5617007026CE /* about-pced.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E218FE4993007026CE /* about-pced.xml */; };
+		91FCC8E718FE5617007026CE /* edit-day.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8DE18FE4708007026CE /* edit-day.xml */; };
+		91FCC8E818FE5617007026CE /* edit-xp.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E018FE4734007026CE /* edit-xp.xml */; };
+		91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
+		91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
+		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -936,6 +954,16 @@
 				91364F5C18F092EE0033B58E /* monster-info.xml in Copy Dialog Definitions */,
 				91364F5D18F092EE0033B58E /* pc-alchemy-info.xml in Copy Dialog Definitions */,
 				91364F5E18F092EE0033B58E /* pick-race-abil.xml in Copy Dialog Definitions */,
+				91FCC8E618FE5617007026CE /* about-pced.xml in Copy Dialog Definitions */,
+				91FCC8E718FE5617007026CE /* edit-day.xml in Copy Dialog Definitions */,
+				91FCC8E818FE5617007026CE /* edit-xp.xml in Copy Dialog Definitions */,
+				9111513518FF144F001282A1 /* leave-town.xml in Copy Dialog Definitions */,
+				9111513618FF144F001282A1 /* reunite-first.xml in Copy Dialog Definitions */,
+				9111513718FF144F001282A1 /* reunited.xml in Copy Dialog Definitions */,
+				9111513818FF144F001282A1 /* not-split.xml in Copy Dialog Definitions */,
+				9111513918FF144F001282A1 /* leave-scenario.xml in Copy Dialog Definitions */,
+				9111513A18FF144F001282A1 /* save-quit.xml in Copy Dialog Definitions */,
+				9111513B18FF144F001282A1 /* save-open.xml in Copy Dialog Definitions */,
 			);
 			name = "Copy Dialog Definitions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -957,6 +985,7 @@
 				9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */,
 				9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */,
 				9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */,
+				91FCC8E518FE5606007026CE /* pcedit.txt in Copy Strings */,
 			);
 			name = "Copy Strings";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1490,6 +1519,21 @@
 		91F6F8E118F87F3700E3EA15 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../../../../../../Library/Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
 		91F6F8E218F87F3700E3EA15 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = ../../../../../../Library/Frameworks/SFML.framework; sourceTree = "<group>"; };
 		91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qdpict.cpp; sourceTree = "<group>"; };
+		91FCC8D718FE28CC007026CE /* pc.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = pc.menu.xib; sourceTree = "<group>"; };
+		91FCC8DA18FE2CCA007026CE /* pc.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pc.menus.h; sourceTree = "<group>"; };
+		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
+		91FCC8DE18FE4708007026CE /* edit-day.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-day.xml"; sourceTree = "<group>"; };
+		91FCC8E018FE4734007026CE /* edit-xp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-xp.xml"; sourceTree = "<group>"; };
+		91FCC8E218FE4993007026CE /* about-pced.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "about-pced.xml"; sourceTree = "<group>"; };
+		91FCC8E418FE55F2007026CE /* pcedit.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pcedit.txt; path = strings/pcedit.txt; sourceTree = "<group>"; };
+		91FCC8E918FED338007026CE /* leave-town.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "leave-town.xml"; sourceTree = "<group>"; };
+		91FCC8EA18FED4F2007026CE /* reunite-first.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "reunite-first.xml"; sourceTree = "<group>"; };
+		91FCC8EB18FEDAA5007026CE /* reunited.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = reunited.xml; sourceTree = "<group>"; };
+		91FCC8EC18FEDB7F007026CE /* not-split.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "not-split.xml"; sourceTree = "<group>"; };
+		91FCC8ED18FEDC25007026CE /* leave-scenario.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "leave-scenario.xml"; sourceTree = "<group>"; };
+		91FCC8EE18FEDED1007026CE /* save-quit.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-quit.xml"; sourceTree = "<group>"; };
+		91FCC8EF18FEE014007026CE /* save-open.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-open.xml"; sourceTree = "<group>"; };
+		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1777,6 +1821,7 @@
 				9192C12518F327230088A580 /* mage-spells.txt */,
 				9192C13318F327230088A580 /* magic-names.txt */,
 				9192C12618F327230088A580 /* monster-abilities.txt */,
+				91FCC8E418FE55F2007026CE /* pcedit.txt */,
 				9192C12A18F327230088A580 /* priest-spells.txt */,
 				9192C12D18F327230088A580 /* skills.txt */,
 				9192C13218F327230088A580 /* spell-times.txt */,
@@ -1798,6 +1843,7 @@
 				91364ECF18F0914F0033B58E /* 2str-title.xml */,
 				91364ED018F0914F0033B58E /* 2str.xml */,
 				91364ED118F0914F0033B58E /* about-boe.xml */,
+				91FCC8E218FE4993007026CE /* about-pced.xml */,
 				9107074A18F0FC1300F7BD7F /* adventure-notes.xml */,
 				91364ED218F0914F0033B58E /* attack-friendly.xml */,
 				91364ED318F0914F0033B58E /* basic-button.xml */,
@@ -1817,8 +1863,10 @@
 				91364EE118F0914F0033B58E /* dark-slope-up.xml */,
 				91364EE218F0914F0033B58E /* delete-pc-confirm.xml */,
 				91364EE318F0914F0033B58E /* drop-item-confirm.xml */,
+				91FCC8DE18FE4708007026CE /* edit-day.xml */,
 				91364EE418F0914F0033B58E /* edit-party.xml */,
 				91364EE518F0914F0033B58E /* edit-terrain.xml */,
+				91FCC8E018FE4734007026CE /* edit-xp.xml */,
 				9107074818F0F5F000F7BD7F /* event-journal.xml */,
 				91364EE618F0914F0033B58E /* get-items.xml */,
 				91364EE718F0914F0033B58E /* get-num.xml */,
@@ -1834,6 +1882,8 @@
 				91364EF118F0914F0033B58E /* inventory-full.xml */,
 				91364EF218F0914F0033B58E /* item-info.xml */,
 				91364EF318F0914F0033B58E /* keep-stored-items.xml */,
+				91FCC8ED18FEDC25007026CE /* leave-scenario.xml */,
+				91FCC8E918FED338007026CE /* leave-town.xml */,
 				91364EF418F0914F0033B58E /* load-game-fail.xml */,
 				91364EF518F0914F0033B58E /* locked-door-action.xml */,
 				9156038F18F43C8D00A50C51 /* many-str.xml */,
@@ -1842,6 +1892,7 @@
 				91364EF818F0914F0033B58E /* new-party.xml */,
 				91364EF918F0914F0033B58E /* no-scenarios.xml */,
 				91364EFA18F0914F0033B58E /* not-save-game.xml */,
+				91FCC8EC18FEDB7F007026CE /* not-split.xml */,
 				91364EFB18F0914F0033B58E /* party-death.xml */,
 				91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */,
 				9107074B18F0FE3F00F7BD7F /* pc-info.xml */,
@@ -1856,6 +1907,10 @@
 				91364F0518F0914F0033B58E /* quit-confirm-save.xml */,
 				91364F0618F0914F0033B58E /* removed-special-items.xml */,
 				91364F0718F0914F0033B58E /* restart-game.xml */,
+				91FCC8EA18FED4F2007026CE /* reunite-first.xml */,
+				91FCC8EB18FEDAA5007026CE /* reunited.xml */,
+				91FCC8EF18FEE014007026CE /* save-open.xml */,
+				91FCC8EE18FEDED1007026CE /* save-quit.xml */,
 				91364F0818F0914F0033B58E /* scen-version-mismatch.xml */,
 				91364F0918F0914F0033B58E /* select-pc.xml */,
 				91364F0A18F0914F0033B58E /* skill-info.xml */,
@@ -2206,6 +2261,7 @@
 				91B3EEFE0F969BD300BF5B67 /* pc.fileio.h */,
 				91B3EEFF0F969BD300BF5B67 /* pc.global.h */,
 				91B3EF000F969BD300BF5B67 /* pc.graphics.h */,
+				91FCC8DA18FE2CCA007026CE /* pc.menus.h */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -2214,10 +2270,12 @@
 			isa = PBXGroup;
 			children = (
 				91B3EF060F969BD300BF5B67 /* pc.action.cpp */,
+				91FCC8F318FF069A007026CE /* pc.appleevents.mm */,
 				91B3EF070F969BD300BF5B67 /* pc.editors.cpp */,
 				91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */,
 				91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */,
 				91B3EF050F969BD300BF5B67 /* pc.main.cpp */,
+				91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -2230,6 +2288,7 @@
 				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
 				91B3EF120F969BD300BF5B67 /* bladespced.rsrc */,
 				91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */,
+				91FCC8D718FE28CC007026CE /* pc.menu.xib */,
 			);
 			name = rsrc;
 			sourceTree = "<group>";
@@ -2478,7 +2537,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */,
-				91B3EF390F969E8600BF5B67 /* Blades of Exile Character Editor-Info.plist in Resources */,
+				91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */,
+				91FCC8DF18FE4708007026CE /* edit-day.xml in Resources */,
+				91FCC8E118FE4734007026CE /* edit-xp.xml in Resources */,
+				91FCC8E318FE4993007026CE /* about-pced.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2579,6 +2641,7 @@
 				9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
 				91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 				91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */,
+				91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2627,6 +2690,9 @@
 				91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */,
 				9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */,
 				91F6F8F718F8DE6300E3EA15 /* qdpict.cpp in Sources */,
+				91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */,
+				91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */,
+				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

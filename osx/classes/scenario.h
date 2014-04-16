@@ -12,6 +12,12 @@
 #include <iosfwd>
 #include <boost/filesystem/path.hpp>
 #include "terrain.h"
+#include "monster.h"
+#include "vehicle.h"
+#include "item.h"
+#include "special.h"
+#include "outdoors.h"
+#include "town.h"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 

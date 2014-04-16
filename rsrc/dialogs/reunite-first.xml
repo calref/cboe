@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<button name='okay' type='regular' top='49' left='251'>OK</button>
+	<pict top='8' left='8' type='dlog' num='8'/>
+	<text top='3' left='52' width='256' height='44'>
+		You cannot use this option while the party is split up.
+		Select Reunite party from this menu.
+	</text>
+</dialog>

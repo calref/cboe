@@ -9,42 +9,44 @@
 #include "pc.action.h" 
 #include "pc.fileio.h" 
 #include "soundtool.h" 
-#include "dlgtool.h"
-#include "dlgconsts.h"
 #include "graphtool.h"
 #include "boe.consts.h"
-#include "dlgutil.h"
+#include "dlogutil.h"
 #include "fileio.h"
+#include "pc.menus.h"
+#include "winutil.h"
+#ifdef __APPLE__
+#include <CoreFoundation/CFByteOrder.h>
+#endif
+
+extern std::string get_str(std::string, short);
 
 cUniverse univ;
 
-Rect pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-Rect item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-Rect pc_info_rect; // Frame that holds a pc's basic info and items
-Rect name_rect; //Holds pc name inside pc_info_rect
-Rect info_area_rect;
-Rect hp_sp_rect;   // Holds hit points and spells points for pc
-Rect skill_rect;	// Holds "Skills:" string
-Rect pc_skills_rect[19]; //Holds current pc's  skill levels
-Rect status_rect;  //Holds the string "Status:"
-Rect pc_status_rect[10]; //Holds first 8 effects on pc
-Rect traits_rect; //Holds the string "Traits:"
-Rect pc_traits_rect[16]; //Holds pc traits
-Rect pc_race_rect; //Holds current pc's race
-Rect edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
+RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+RECT pc_info_rect; // Frame that holds a pc's basic info and items
+RECT name_rect; //Holds pc name inside pc_info_rect
+RECT info_area_rect;
+RECT hp_sp_rect;   // Holds hit points and spells points for pc
+RECT skill_rect;	// Holds "Skills:" string
+RECT pc_skills_rect[19]; //Holds current pc's  skill levels
+RECT status_rect;  //Holds the string "Status:"
+RECT pc_status_rect[10]; //Holds first 8 effects on pc
+RECT traits_rect; //Holds the string "Traits:"
+RECT pc_traits_rect[16]; //Holds pc traits
+RECT pc_race_rect; //Holds current pc's race
+RECT edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
 short current_active_pc = 0;
 //short dialog_answer;
 
 /* Mac stuff globals */
-Rect	windRect, Drag_Rect;
-bool Multifinder_Present, All_Done = false,diff_depth_ok = false;
-EventRecord	event;
-WindowPtr	mainPtr;	
-Handle menu_bar_handle;
-MenuHandle apple_menu,file_menu,reg_menu,extra_menu,edit_menu,items_menu[4];
-bool gInBackground = false,file_in_mem = false,save_blocked = false;
-long start_time;
+bool All_Done = false,diff_depth_ok = false;
+sf::Event event;
+sf::RenderWindow mainPtr;
+bool gInBackground = false;
+fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
 
@@ -69,46 +71,32 @@ short store_flags[3];
 //stored_town_maps_type town_maps;
 //stored_outdoor_maps_type o_maps;
 
-short old_depth = 16;
-extern FSSpec file_to_load;
-
 /* Display globals */
-bool sys_7_avail;
 short give_delays = 0; /* XXX this wasn't defined anywhere, is this right? -jmr */
 
 /* Prototypes */
 int main(void);
 void Initialize(void);
-void Set_Window_Drag_Bdry();
 void Handle_One_Event();
 void Handle_Activate();
 bool handle_dialog_event() ;
 void Handle_Update();
 void Mouse_Pressed();
-void handle_menu_choice(long choice);
 void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
 void handle_reg_menu(int item_hit);
 void handle_extra_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void update_item_menu();
-void find_quickdraw();
-void check_sys_7();
-pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon);
-bool verify_restore_quit(short mode);
+bool verify_restore_quit(bool mode);
 void set_up_apple_events();
-void set_pixel_depth();
-void restore_depth();
 void handle_item_menu(int item_hit);
 //item_record_type convert_item (short_item_record_type s_item);
 bool cur_scen_is_mac, mac_is_intel;
-std::string progDir;
+extern fs::path progDir;
 // File io
 short specials_res_id;
-Str255 start_name;
-ResFileRefNum graphicsRef, soundRef, mainRef;
+char start_name[256];
 
 //#include "pc.itemdata.h" 
 cItemRec item_list[400];
@@ -121,55 +109,21 @@ cScenario scenario;
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(void)
 {
-	start_time = TickCount();
-	
+	init_menubar();
 	Initialize();
 	init_fileio();
 	init_main_buttons();
 	Set_up_win();
-	init_graph_tool(redraw_screen);
+	init_graph_tool();
 	init_snd_tool();
-	find_quickdraw();
-	set_pixel_depth();
-	Set_Window_Drag_Bdry();
 	
-//	init_buf();
-
-//	register_flag = get_reg_data();
 	set_up_apple_events();
-
-	menu_bar_handle = GetNewMBar(128);
-	if (menu_bar_handle == NULL) {
-		SysBeep(2); 
-		ExitToShell();
-	}
-	SetMenuBar(menu_bar_handle);
-	DisposeHandle(menu_bar_handle);
-
-	apple_menu = GetMenuHandle(500);
-	file_menu = GetMenuHandle(550);
-	reg_menu = GetMenuHandle(600);
-	extra_menu = GetMenuHandle(650);
-	edit_menu = GetMenuHandle(700);
-	items_menu[0] = GetMenuHandle(750);
-	items_menu[1] = GetMenuHandle(751);
-	items_menu[2] = GetMenuHandle(752);
-	items_menu[3] = GetMenuHandle(753);
-
-	//init_fonts();
-
-	DrawMenuBar();
 		
-	init_dialogs();
+	cDialog::init();
+	redraw_screen();
 	
-	/* Multifinder_Present = (NGetTrapAddress(_WaitNextEvent, ToolTrap) != 
-		NGetTrapAddress(_Unimplemented, ToolTrap)); */
-      /* no need to check this with Carbon -jmr */
-	Multifinder_Present = true;
-	
-	while (All_Done == false) 
+	while(!All_Done)
 		Handle_One_Event();
-	restore_depth();
 	clean_up_graphtool();
       return 0;
 }
@@ -184,80 +138,9 @@ int main(void)
 void check_for_intel();
 void Initialize(void)
 {
-
-	OSErr		error;
-	//SysEnvRec	theWorld;
-    //  unsigned long randSeed;
-      BitMap screenBits;
 	
 	check_for_intel();
-	//Open the resource files we'll be needing
-	char cPath[768];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("bladespced.rsrc"),CFSTR(""),NULL);
-	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
-	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
-	FSRef gRef, sRef;
-	FSPathMakeRef((UInt8*)cPath, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
-	if (error != noErr) {
-		printf("Error! Main resource file not found.\n");
-		ExitToShell();
-	}
-	char *path = "Scenario Editor/Blades of Exile Graphics";
-	error = FSPathMakeRef((UInt8*) path, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Graphics not found.\n");
-		ExitToShell();
-	}
-	path = "Scenario Editor/Blades of Exile Sounds";
-	FSPathMakeRef((UInt8*) path, &sRef, false);
-	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Sounds not found.\n");
-		ExitToShell();
-	}
-	
-	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
-	if(tmp == NULL){
-		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
-		if(success) {
-			progDir = cPath;
-			std::cout << cPath << "\n\n" << progDir << "\n\n";
-		} else {
-			std::cout << "Couldn't retrieve application path.\n";
-			exit(1);
-		}
-	}else progDir = tmp;
-	//progDir = cPath;
-	size_t last_slash = progDir.find_last_of('/');
-	progDir.erase(last_slash);
-	std::cout<<progDir<<'\n';
-	//
-	//	Test the computer to be sure we can do color.  
-	//	If not we would crash, which would be bad.  
-	//	If we can’t run, just beep and exit.
-	//
-
-      // not needed in Carbon
-	//error = SysEnvirons(1, &theWorld);
-	//if (theWorld.hasColorQD == false) {
-	//	SysBeep(50);
-	//	ExitToShell();					/* If no color QD, we must leave. */
-	//}
-	
-	/* Initialize all the needed managers. */
-	/*InitGraf(&qd.thePort);*/ /* not needed in Carbon -jmr */
-	//InitFonts();
-	//InitWindows();
-	//InitMenus();
-	//TEInit();
-	//InitDialogs(nil);
-	InitCursor();
+	init_directories();
 
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
@@ -274,242 +157,52 @@ void Initialize(void)
 	//	Make a new window for drawing in, and it must be a color window.  
 	//	The window is full screen size, made smaller to make it more visible.
 	//
-      GetQDGlobalsScreenBits(&screenBits);
-	windRect = screenBits.bounds;
-	InsetRect(&windRect, 63, 34);
-	windRect.top = windRect.top + 15;
-	windRect.bottom = windRect.bottom + 15;
-		
-//	mainPtr = NewCWindow(nil, &windRect, "\pExile", true, zoomDocProc, 
-//						(WindowPtr) -1, false, 0);
-	//error = CreateWindowFromResource(128, &mainPtr);
-	//Rect winBounds={38,53,478,643};
-	//error = CreateNewWindow(kDocumentWindowClass, kWindowCloseBoxAttribute, &windRect, &mainPtr);
-	mainPtr = GetNewCWindow(128,NULL,IN_FRONT);
-	ActivateWindow(mainPtr,true);
-//	DrawGrowIcon(mainPtr);	
-	SetPort(GetWindowPort(mainPtr));						/* set window to current graf port */
-	/*stored_key = open_pref_file();
-	if (stored_key == -100) {
-		stored_key = open_pref_file();
-		if (stored_key == -100) {
-			Alert(983,NULL);
-			ExitToShell();	
-			}
-		}*/	
-}
-
-void Set_Window_Drag_Bdry()
-{
-      BitMap screenBits;
-      GetQDGlobalsScreenBits(&screenBits);
-	Drag_Rect = screenBits.bounds;
-//	Drag_Rect = (**(GrayRgn)).rgnBBox;
-	Drag_Rect.left += DRAG_EDGE;
-	Drag_Rect.right -= DRAG_EDGE;
-	Drag_Rect.bottom -= DRAG_EDGE;
+	// Size and style obtained from WIND resource #128
+	mainPtr.create(sf::VideoMode(590, 440), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 }
 
 void Handle_One_Event()
 {
-	short chr,chr2;
-	long menu_choice,cur_time;
-	GrafPtr old_port;
-	
-	//ed_reg = false;
-	
-	if (Multifinder_Present == true) {
-		WaitNextEvent(everyEvent, &event, 0, NULL);
-		cur_time = TickCount();
-
-		GetPort(&old_port);		
-	}
-	else{
-                  //not reached with Carbon
-//			through_sending();
-			//SystemTask();
-			//GetNextEvent( everyEvent, &event);
-	}
+	if(!mainPtr.pollEvent(event)) return;
 	
 	init_main_buttons();
+	redraw_screen();
 
-	switch (event.what){
-		case keyDown: case autoKey:
-			chr = event.message & charCodeMask;
-			chr2 = (char) ((event.message & keyCodeMask) >> 8);
-			if ((event.modifiers & cmdKey) != 0) {
-				if (event.what != autoKey) {
-					BringToFront(mainPtr);
-					SetPort(GetWindowPort(mainPtr));
-					menu_choice = MenuKey(chr);
-					//kludge to prevent stupid system from messing up the shortcut for 'Save As'
-					if(HiWord(menu_choice)==550 && LoWord(menu_choice)==1 && (event.modifiers & shiftKey)!=0)
-						menu_choice = (550<<16) + 2;
-					handle_menu_choice(menu_choice);
-				}
-			}		
+	switch(event.type){
+		case sf::Event::KeyPressed:
 			break;
 		
-		case mouseDown:
+		case sf::Event::MouseButtonPressed:
 			Mouse_Pressed();
 			break;
 		
-		case activateEvt:
-			Handle_Activate();
+		case sf::Event::GainedFocus:
+			set_cursor(sword_curs);
 			break;
-		
-		case updateEvt:
-			set_pixel_depth();
-			Handle_Update();
-			break;
-
-		case kHighLevelEvent: 
-			AEProcessAppleEvent(&event);
-			break;
-
-		case osEvt:
-		/*	1.02 - must BitAND with 0x0FF to get only low byte */
-			switch ((event.message >> 24) & 0x0FF) {		/* high byte of message */
-				case suspendResumeMessage:		/* suspend/resume is also an activate/deactivate */
-					gInBackground = (event.message & 1) == 0;  // 1 is Resume Mask
-//					DoActivate(FrontWindow(), !gInBackground);
-//					current_cursor = 300;
-					break;
-			}
+			
+		case sf::Event::Closed:
+			All_Done = verify_restore_quit(false);
 			break;
 		}
 }
-
-
-void Handle_Activate()
-{
-	GrafPtr old_port;
-	
-	GetPort(&old_port);				
-	if (FrontWindow() == mainPtr)
-		SetPort(GetWindowPort(mainPtr));
-	set_cursor(sword_curs);	
-}
-
-
-void Handle_Update()
-{
-	WindowPtr the_window;
-	GrafPtr		old_port;
-	
-	the_window = (WindowPtr) event.message;
-	
-	GetPort (&old_port);
-	SetPort (GetWindowPort(the_window));
-	
-	BeginUpdate(the_window);
-		
-	redraw_screen();
-		
-	EndUpdate(the_window);
-	
-	SetPort(old_port);
-}
-
 
 void Mouse_Pressed()
 {
-	WindowPtr	the_window;
-      BitMap screenBits;
-	short	the_part;
-	long menu_choice;
 	bool try_to_end;
 		
-	the_part = FindWindow( event.where, &the_window);
-		
-	switch (the_part)
-	{
-	
-		case inMenuBar:
-			menu_choice = MenuSelect(event.where);
-			handle_menu_choice(menu_choice);
-			break;
-		
-		case inSysWindow:
-			break;
-		
-		case inDrag:
-                  GetQDGlobalsScreenBits(&screenBits);
-			DragWindow(the_window, event.where, &(screenBits.bounds));
-			break;
-		
-		case inGoAway:
-			if (the_window == mainPtr) {
-
-				All_Done = verify_restore_quit(0);
-			}
-			else {
-			/*	for (i = 0; i < 12; i++)
-					if ((the_window == modeless_dialogs[i]) && (modeless_exists[i] == true)) {
-						CloseDialog(modeless_dialogs[i]);
-						modeless_exists[i] = false;
-						SelectWindow(mainPtr);
-						SetPort(mainPtr);		
-						}*/
-			}
-			break;
-		
-		case inContent:
-			if ((the_window != NULL) && (FrontWindow() != the_window)) {
-				SetPort(GetWindowPort(the_window));
-				SelectWindow(the_window);
-				SetPort(GetWindowPort(the_window));
-			}
-			else{ 
-				if (the_window == mainPtr) {
 					try_to_end = handle_action(event,0);
 					if (try_to_end == true)
-						All_Done = verify_restore_quit(0);
-				}
-			}
-			break;
-	}
-}
-
-
-void handle_menu_choice(long choice)
-{
-	int menu,menu_item;
-
-	if (choice != 0) {
-		menu = HiWord(choice);
-		menu_item = LoWord(choice);
-
-		switch (menu) {
-			case 500:
-				handle_apple_menu(menu_item);
-				break;
-			case 550:
-				handle_file_menu(menu_item);
-				break;
-			case 650:
-				handle_extra_menu(menu_item);
-				break;			
-			case 700:
-				handle_edit_menu(menu_item);
-				break;			
-			case 750: case 751:case 752:case 753:
-				handle_item_menu(menu_item + 100 * (menu - 750) - 1);
-				break;			
-			}
-		}
- 
-	HiliteMenu(0);
+						All_Done = verify_restore_quit(false);
 }
 
 void handle_apple_menu(int item_hit)
 {
-	//Str255 desk_acc_name;
+	//char desk_acc_name[256];
 	//short desk_acc_num;
 	
 	switch (item_hit) {
 		case 1:
-			FCD(1062,0);
+			cChoiceDlog("about-pced.xml").show();
 			break;
 		default:
 			//GetItem (apple_menu,item_hit,desk_acc_name);
@@ -520,45 +213,46 @@ void handle_apple_menu(int item_hit)
 
 void handle_file_menu(int item_hit)
 {
-	FSSpec file;
+	fs::path file;
 	
 	switch (item_hit) {
 		case 1://save
-			save_party(file_to_load);
+			save_party(file_in_mem);
 			break;
 		case 2://save as
-			try{
 				file = nav_put_party();
-				save_party(file);
-			} catch(no_file_chosen){}
+			if(!file.empty()) save_party(file);
 			break;
 		case 3://open
-			if (verify_restore_quit(1) == true){
-				try{
-					file_to_load = nav_get_party();
-					load_party(file_to_load);
-				} catch(no_file_chosen){}
+			if(verify_restore_quit(true)){
+				file = nav_get_party();
+				if(!file.empty()) {
+					load_party(file);
+					file_in_mem = file;
+				}
+				menu_activate();
 			}
 			break;
-		case 5://how to order
-			give_reg_info();
-			break;
 		case 7://quit
-			All_Done = verify_restore_quit(0);
+			All_Done = verify_restore_quit(false);
 			break;
 		}
 }
 
 void check_for_intel(){
-	SInt32 response;
-	OSErr err;
-	err = Gestalt(gestaltSysArchitecture,&response);
-	if(err != noErr){
-		printf("Gestalt error %i\n",err);
+	int response = CFByteOrderGetCurrent();
+	if(response == CFByteOrderUnknown){
+		printf("Gestalt error\n");
 		exit(1);
 	}
-	if(response == gestaltIntel) mac_is_intel = true;
+	if(response == CFByteOrderLittleEndian) mac_is_intel = true;
 	else mac_is_intel = false;
+}
+
+static void display_strings(short nstr, pic_num_t pic) {
+	cStrDlog display_strings(get_str("pcedit", nstr), "", "Editing party", pic, PIC_DLOG);
+	display_strings.setSound(57);
+	display_strings.show();
 }
 
 void handle_extra_menu(int item_hit)
@@ -566,8 +260,8 @@ void handle_extra_menu(int item_hit)
 	short i;
 	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,true,false};
 	
-	if (file_in_mem == false) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
+	if(file_in_mem.empty()) {
+		display_strings(5, 7);
 		return;
 	}
 	switch(item_hit) {
@@ -580,19 +274,19 @@ void handle_extra_menu(int item_hit)
 		
 		case 4:
 			if (univ.party.is_split() > 0) {
-				FCD(909,0);
+				cChoiceDlog("reunite-first.xml").show();
 				break;
 				}
-			FCD(901,0);
+			cChoiceDlog("leave-town.xml").show();
 			leave_town();
 			break;
 	
 		case 5:
 			if (univ.party.is_split() == 0) {
-				FCD(911,0);
+				cChoiceDlog("not-split.xml").show();
 				break;
 				}
-			FCD(910,0);
+			cChoiceDlog("reunited.xml").show();
 			univ.town.p_loc = univ.party.left_at();
 			for (i = 0; i < 6; i++)
 				if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
@@ -601,29 +295,29 @@ void handle_extra_menu(int item_hit)
 			
 
 		case 6:
-			display_strings(20,20,0,0,"Editing party",57,7,PICT_DLG,0);
+			display_strings(20,7);
 			for (i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
 			break;
 		case 8: // damage
-			display_strings(20,1,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(1,15);
 			for (i = 0; i < 6; i++)
 				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
 		case 9: // spell pts
-			display_strings(20,2,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(2,15);
 			for (i = 0; i < 6; i++)
 				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
 		case 10: // raise dead
-			display_strings(20,3,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(3,15);
 			for (i = 0; i < 6; i++)
 				if ((univ.party[i].main_status == MAIN_STATUS_DEAD) || (univ.party[i].main_status == MAIN_STATUS_DUST) ||
 					(univ.party[i].main_status == MAIN_STATUS_STONE))
 						univ.party[i].main_status = MAIN_STATUS_ALIVE;
 			break;
 		case 11: // conditions
-			display_strings(20,4,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(4,15);
 			for (i = 0; i < 6; i++) {
 				univ.party[i].status[2] = 0;
 				if (univ.party[i].status[3] < 0)
@@ -639,10 +333,10 @@ void handle_extra_menu(int item_hit)
 			
 		case 13:
 			if (party_in_scen == false) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
+				display_strings(25,15);
 				break;
 			}
-			if (FCD(912,0) != 1)
+			if(cChoiceDlog("leave-scenario.xml",{"okay","cancel"}).show() != "okay")
 				break;
 			remove_party_from_scen();
 			break;
@@ -654,20 +348,16 @@ void handle_edit_menu(int item_hit)
 {
 	short choice,i,j,k;
 
-	if (file_in_mem == false) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
+	if(file_in_mem.empty()) {
+		display_strings(5,7);
 		return;
 		}
-	if (save_blocked == false)
-		if ((choice = FCD(904,0)) == 1)
-			return;
-			else save_blocked = true;
 	switch(item_hit) {
 		case 1:
-			 display_alchemy();
+			 display_alchemy(true);
 			break;
 		case 2: // all property
-			display_strings(20,6,0,0,"Editing party",57,7,PICT_DLG,0);
+			display_strings(6,7);
 			for (i = 0; i < 30; i++) {
 				univ.party.boats[i].property = false;
 				univ.party.horses[i].property = false;
@@ -678,10 +368,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 6: // ouit maps
 			if (party_in_scen == false) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
+				display_strings(25,15);
 				break;
 				}
-			display_strings(20,13,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(13,15);
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
 					for (k = 0; k < 48; k++)
@@ -689,10 +379,10 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 7: // town maps
 			if (party_in_scen == false) {
-				display_strings(20,25,0,0,"Editing party",57,15,PICT_DLG,0);
+				display_strings(25,15);
 				break;
 				}
-			display_strings(20,14,0,0,"Editing party",57,15,PICT_DLG,0);
+			display_strings(14,15);
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
@@ -773,36 +463,14 @@ void handle_item_menu(int item_hit)
 	short choice;
 	cItemRec store_i;
 	
-	if (file_in_mem == false) {
-		display_strings(20,5,0,0,"Editing party",57,7,PICT_DLG,0);
+	if(file_in_mem.empty()) {
+		display_strings(5,7);
 		return;
 		}
-	if (save_blocked == false)
-		if ((choice = FCD(904,0)) == 1)
-			return;
-			else save_blocked = true;
 	store_i = item_list[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
 	draw_items(1);
-}
-
-void update_item_menu()
-{
-	short i,j;
-	MenuHandle item_menu[4];
-	Str255 item_name;
-	
-	for (i = 0; i < 4; i++)
-		item_menu[i] = GetMenuHandle(750 + i);
-	for (j = 0; j < 4; j++){
-		DeleteMenuItems(item_menu[j],1,100);
-		for (i = 0; i < 100; i++) {
-			sprintf((char *) item_name, " %s",item_list[i + j * 100].full_name.c_str());
-			c2pstr((char *) item_name);
-			AppendMenu(item_menu[j],item_name);
-		} 
-	}
 }
 
 //void set_cursor(CursHandle which_curs)
@@ -812,165 +480,21 @@ void update_item_menu()
 //	HUnlock((Handle) which_curs);
 //}
 
-void find_quickdraw() {
-	OSErr err;
-	SInt32 response;
-	short choice;
-	err = Gestalt(gestaltQuickdrawVersion, &response);
-	if (err == noErr) {
-		if (response == 0x0000) {
-			choice = choice_dialog(0,1070);
-			if (choice == 2)
-				ExitToShell();
-			else
-				diff_depth_ok = true;
-		}
-	}
-	else  {
-		SysBeep(2);
-		ExitToShell();
-	}
-}
-
-void set_pixel_depth() {
-	GDHandle cur_device;
-	PixMapHandle screen_pixmap_handle;
-	OSErr err;
-	short choice;
-	static bool diff_depth_ok = false;
-	short pixel_depth;
-	
-	cur_device = GetGDevice();	
-	
-	screen_pixmap_handle = (**(cur_device)).gdPMap;
-	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
-	
-	if ((diff_depth_ok == false) && ((pixel_depth <= 16) && (HasDepth(cur_device,16,1,1)) == 0)) {
-		choice = choice_dialog(0,1070);
-		if (choice == 1)
-			ExitToShell();
-		if (choice == 2)
-			diff_depth_ok = true;
-	}
-	
-	if ((pixel_depth != 16) && (diff_depth_ok == true))
-		return;
-	
-	if (pixel_depth < 16) {
-		choice = choice_dialog(0,1071);
-		if (choice == 3)
-			diff_depth_ok = true;
-		if (choice == 2)
-			ExitToShell();
-		if (choice == 1) {
-			err = SetDepth(cur_device,16,1,1);
-			old_depth = pixel_depth;
-		}
-	}
-}
-
-void restore_depth(){
-	GDHandle cur_device;
-	PixMapHandle screen_pixmap_handle;
-	OSErr err;
-	cur_device = GetGDevice();	
-	screen_pixmap_handle = (**(cur_device)).gdPMap;
-	if(old_depth!=16)
-		err=SetDepth(cur_device,old_depth,1,1);
-}
-
-void check_sys_7()
-{
-	OSErr err;
-	long response;
-	err = Gestalt(gestaltSystemVersion, &response);
-	if ((err == noErr) && (response >= 0x0700))
-		sys_7_avail = true;
-	else 
-		sys_7_avail = false;
-}
-
-pascal OSErr handle_open_app(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
-{
-	return noErr;
-}
-
-pascal OSErr handle_open_doc(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
-{
-//	FSSpec myFSS;
-//	AEDescList docList;
-//	OSErr myErr, ignoreErr;
-//	long index, itemsInList;
-//	Size actualSize;
-//	AEKeyword keywd;
-//	DescType returnedType;
-
-/*	myErr = AEGetParamDesc(theAppleEvent,keyDirectObject, typeAEList, &docList);
-	if (myErr == noErr) {
-		myErr == AECountItems(&docList,&itemsInList);
-		if (myErr == noErr) {	
-			myErr = AEGetNthPtr(&docList,1,typeFSS, 
-						&keywd,&returnedType,&myFSS,
-						sizeof(myFSS),&actualSize);
-			if (myErr == noErr) {
-				do_apple_event_open(myFSS);
-				if ((in_startup_mode == false) && (startup_loaded == true)) 
-					end_startup();
-				if (in_startup_mode == false) {
-					post_load();
-					}
-				}
-			}
-		}*/
-	
-	
-	return noErr;
-}
-
-pascal OSErr handle_quit(AppleEvent *theAppleEvent,AppleEvent *reply,long handlerRefcon)
-{
-			
-	All_Done = verify_restore_quit(0);
-	return noErr;
-}
-
-bool verify_restore_quit(short mode)
+bool verify_restore_quit(bool mode)
 //short mode; // 0 - quit  1- restore
 {
-	short choice;
+	std::string choice;
 
-	if (file_in_mem == false)
+	if(file_in_mem.empty())
 		return true;
-	choice = FCD(1066 + mode,0);
-	if (choice == 3)
+	cChoiceDlog verify(mode ? "save-open.xml" : "save-quit.xml", {"save", "quit", "cancel"});
+	choice = verify.show();
+	if (choice == "cancel")
 		return false;
-	if (choice == 2)
+	if (choice == "quit")
 		return true;
-	save_party(file_to_load);
+	save_party(file_in_mem);
 	return true;
-}
-
-void set_up_apple_events()
-{
-	OSErr myErr;
-
-	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenApplication,
-		(AEEventHandlerProcPtr) handle_open_app, 0, false);
-			
-	if (myErr != noErr)
-		SysBeep(2);
-
-	myErr = AEInstallEventHandler(kCoreEventClass,kAEOpenDocuments,
-		(AEEventHandlerProcPtr) handle_open_doc, 0, false);
-			
-	if (myErr != noErr)
-		SysBeep(2);
-
-	myErr = AEInstallEventHandler(kCoreEventClass,kAEQuitApplication,
-		(AEEventHandlerProcPtr) handle_quit, 0, false);
-			
-	if (myErr != noErr)
-		SysBeep(2);
 }
  
 //pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
@@ -978,8 +502,8 @@ void set_up_apple_events()
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
 //	Handle the_handle = NULL;
-//	Rect the_rect,button_rect;
-//	Point the_point;
+//	RECT the_rect,button_rect;
+//	location the_point;
 //	CWindowPtr w;
 //	RgnHandle updateRgn;
 //	

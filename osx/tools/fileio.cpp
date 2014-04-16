@@ -98,7 +98,7 @@ static header_posix_ustar generateTarHeader(const std::string& fileName, unsigne
 	return(header);
 }
 
-bool load_scenario(fs::path file_to_load){
+bool load_scenario(fs::path file_to_load, bool skip_strings){
 	short i,n;
 	bool file_ok = false;
 	long len;
@@ -155,11 +155,14 @@ bool load_scenario(fs::path file_to_load){
 	port_item_list(item_data);
 	scenario = *temp_scenario;
 	scenario.append(*item_data);
-	// TODO: Consider skipping the fread and assignment when len is 0
-	for (i = 0; i < 270; i++) {
-		len = (long) (scenario.scen_str_len[i]);
-		n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
-		scenario.scen_strs(i)[len] = 0;
+	
+	if(!skip_strings) {
+		// TODO: Consider skipping the fread and assignment when len is 0
+		for (i = 0; i < 270; i++) {
+			len = (long) (scenario.scen_str_len[i]);
+			n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
+			scenario.scen_strs(i)[len] = 0;
+		}
 	}
 	
 	fclose(file_id);

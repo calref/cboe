@@ -20,7 +20,6 @@ void restore_sp_party(short amt);
 void award_party_xp(short amt);
 void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);
-bool spend_xp(short pc_num, short mode, cDialog* parent);
 short mage_lore_total();
 bool poison_weapon( short pc_num, short how_much,short safe);
 bool is_weapon(short pc_num,short item);
@@ -61,3 +60,5 @@ short woodsman_present();
 void print_spell_cast(short spell_num,short which);
 void put_party_in_scen(std::string scen_name);
 
+// This is defined in pc.editors.cpp since it is also used by the character editor
+bool spend_xp(short pc_num, short mode, cDialog* parent);

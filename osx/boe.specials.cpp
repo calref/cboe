@@ -62,9 +62,7 @@ short store_item_spell_level = 10;
 
 // global vbalues for when processing special encounters
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
-short skill_max[20] = {
-	20,20,20,20,20,20,20,20,20,7,
-	7,20,20,10,20,20,20,20,20};
+extern short skill_max[20];;
 location store_special_loc;
 bool special_in_progress = false;
 short spec_str_offset[3] = {160,10,0};
