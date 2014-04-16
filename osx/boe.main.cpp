@@ -34,7 +34,6 @@
 //extern short talk_curs, key_curs, look_curs, current_cursor;
 
 /* Mac stuff globals */
-RECT	windRect, Drag_Rect;
 bool  All_Done = false;
 sf::Event	event;
 sf::RenderWindow	mainPtr;
@@ -163,8 +162,6 @@ int main(void)
 		init_fileio();
 		init_graph_tool();
 		
-		Set_Window_Drag_Bdry();
-		
 		init_buf();
 		
 		set_up_apple_events();
@@ -255,15 +252,6 @@ void Initialize(void)
 	//SetQDGlobalsRandomSeed(time);
 	srand(time(NULL));
 	
-	//
-	//	Make a new window for drawing in, and it must be a color window.
-	//	The window is full screen size, made smaller to make it more visible.
-	//
-	sf::VideoMode screen = sf::VideoMode::getDesktopMode();
-	windRect.left = windRect.top = 0;
-	windRect.width() = screen.width;
-	windRect.height() = screen.height;
-	
 	init_directories();
 	
 //	stored_key = open_pref_file();
@@ -287,19 +275,6 @@ void Initialize(void)
 	shop_sbar->setMaximum(16);
 	adjust_window_mode();
 	
-}
-
-// TODO: This may be unneeded?
-void Set_Window_Drag_Bdry()
-{
-	sf::VideoMode screen = sf::VideoMode::getDesktopMode();
-	Drag_Rect.left = Drag_Rect.top = 0;
-	Drag_Rect.width() = screen.width;
-	Drag_Rect.height() = screen.height;
-//	Drag_Rect = (**(GrayRgn)).rgnBBox;
-	Drag_Rect.left += DRAG_EDGE;
-	Drag_Rect.right -= DRAG_EDGE;
-	Drag_Rect.bottom -= DRAG_EDGE;
 }
 
 void Handle_One_Event()

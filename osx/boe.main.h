@@ -3,7 +3,6 @@
 
 int main(void);
 void Initialize(void);
-void Set_Window_Drag_Bdry();
 void Handle_One_Event();
 bool handle_dialog_event() ;
 void Handle_Update();

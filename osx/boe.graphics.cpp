@@ -30,7 +30,6 @@
 #include "boe.menus.h"
 
 extern sf::RenderWindow mainPtr;
-extern RECT	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range,town_type;
@@ -184,6 +183,7 @@ void adjust_window_mode()
 	else {
 		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr.setPosition({0,0});
+		RECT windRect(mainPtr);
 		switch (display_mode) {
 			case 0: ul.x = (windRect.right - 560) / 2; ul.y = (windRect.bottom - 422) / 2 + 14; break;
 			case 1:	ul.x = 10; ul.y = 28; break;

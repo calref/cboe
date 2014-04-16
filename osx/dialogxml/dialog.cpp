@@ -285,6 +285,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		// TODO: De-magic the | character
 		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
 		else if(type == TiXmlNode::TEXT)
+			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
@@ -483,6 +484,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column(),fname);
 //			p.second->labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT)
+			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
@@ -638,6 +640,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		int type = node->Type();
 		node->GetValue(&val);
 		if(type == TiXmlNode::TEXT)
+			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
