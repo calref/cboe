@@ -762,12 +762,13 @@ short dist_from_party(location where)
 	return store;
 }
 
+// TODO: I have no idea what is going on here, other than that it seems to have something to do items being picked up in town
 void set_item_flag(cItemRec *item)
 {
 	if ((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
 		univ.party.item_taken[univ.town.num][item->is_special / 8] =
-		univ.party.item_taken[univ.town.num][item->is_special / 8] | s_pow(2,item->is_special % 8);
+			univ.party.item_taken[univ.town.num][item->is_special / 8] | s_pow(2,item->is_special % 8);
 		item->is_special = 0;
 	}
 }

@@ -459,7 +459,7 @@ void start_town_mode(short which_town, short entry_dir)
 				(univ.town->preset_items[i].always_there == true))) {
 				for (j = 0; j < NUM_TOWN_ITEMS; j++)
 					
-					// place the preset item, if univ.party hasn't gotten it already
+					// place the preset item, if party hasn't gotten it already
 					if (univ.town.items[j].variety == 0) {
 						univ.town.items[j] = get_stored_item(univ.town->preset_items[i].code);
 						univ.town.items[j].item_loc = univ.town->preset_items[i].loc;

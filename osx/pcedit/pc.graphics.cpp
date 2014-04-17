@@ -242,6 +242,7 @@ void Set_up_win ()
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedbuttons"));
+	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 }
 
 

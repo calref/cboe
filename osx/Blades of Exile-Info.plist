@@ -152,6 +152,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>.exs</string>
+				<string>.boes</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boescenario</string>

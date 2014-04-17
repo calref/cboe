@@ -163,7 +163,6 @@
 								</object>
 							</array>
 							<string key="NSName">_NSAppleMenu</string>
-							<bool key="NSNoAutoenable">YES</bool>
 						</object>
 					</object>
 					<object class="NSMenuItem" id="379814623">
