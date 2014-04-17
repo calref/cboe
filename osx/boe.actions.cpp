@@ -1567,6 +1567,24 @@ bool handle_keystroke(sf::Event& event){
 //	add_string_to_buf((char *) debug);
 //	print_buf();
 	Key chr2 = event.key.code;
+	if(chr2 == kb::Up && !kb::isKeyPressed(kb::Down)) {
+		if(kb::isKeyPressed(kb::Left)) chr2 = kb::Numpad7;
+		else if(kb::isKeyPressed(kb::Right)) chr2 = kb::Numpad9;
+		else chr2 = kb::Numpad8;
+	} else if(chr2 == kb::Down && !kb::isKeyPressed(kb::Up)) {
+		if(kb::isKeyPressed(kb::Left)) chr2 = kb::Numpad1;
+		else if(kb::isKeyPressed(kb::Right)) chr2 = kb::Numpad3;
+		else chr2 = kb::Numpad2;
+	} else if(chr2 == kb::Left && !kb::isKeyPressed(kb::Right)) {
+		if(kb::isKeyPressed(kb::Up)) chr2 = kb::Numpad7;
+		else if(kb::isKeyPressed(kb::Down)) chr2 = kb::Numpad1;
+		else chr2 = kb::Numpad4;
+	} else if(chr2 == kb::Right && !kb::isKeyPressed(kb::Left)) {
+		if(kb::isKeyPressed(kb::Up)) chr2 = kb::Numpad9;
+		else if(kb::isKeyPressed(kb::Down)) chr2 = kb::Numpad3;
+		else chr2 = kb::Numpad6;
+	}
+	
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	if (overall_mode == MODE_TALKING) {
 		if (chr2 == kb::Escape)
