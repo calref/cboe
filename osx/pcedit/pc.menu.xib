@@ -372,7 +372,7 @@
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="35616607">
 									<reference key="NSMenu" ref="779223651"/>
-									<string key="NSTitle">Item 1</string>
+									<string key="NSTitle">Add Alchemy</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -380,7 +380,7 @@
 								</object>
 								<object class="NSMenuItem" id="807827245">
 									<reference key="NSMenu" ref="779223651"/>
-									<string key="NSTitle">Item 2</string>
+									<string key="NSTitle">Own All Boats/Horses</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>

@@ -316,15 +316,15 @@ eControlType cControl::getType(){
 	return type;
 }
 
-void cControl::setTextToNum(long what){
+void cControl::setTextToNum(long long what){
 	std::ostringstream sout;
 	sout << what;
 	setText(sout.str());
 }
 
-long cControl::getTextAsNum(){
+long long cControl::getTextAsNum(){
 	std::istringstream sin(getText());
-	long n;
+	long long n;
 	sin >> n;
 	return n;
 }

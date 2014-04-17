@@ -9,8 +9,8 @@
 		Note that the character will not gain any more levels until the character earns at least 1 point more point of experience in the game.
 		The most you can give is 10000.
 	</text>
-	<text name='perlevel' top='99' left='72' width='164' height='16'>Experience for each level:</text>
-	<text framed='true' top='99' left='238' width='76' height='16'/>
+	<text top='99' left='72' width='164' height='16'>Experience for each level:</text>
+	<text name='perlevel' framed='true' top='99' left='238' width='76' height='16'/>
 	<text top='127' left='72' width='138' height='14'>Amount of experience:</text>
 	<button name='okay' type='regular' top='154' left='270'>OK</button>
 </dialog>

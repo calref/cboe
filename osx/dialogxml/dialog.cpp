@@ -1135,6 +1135,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 		labelRect.inset(0, -expand);
 	} else labelRect.offset(0, labelRect.height() / 6);
 	cControl* labelCtrl;
+	// TODO: Refactor this to do without exceptions
 	try {
 		labelCtrl = &this->getControl(key);
 	} catch(std::invalid_argument x) {
@@ -1142,8 +1143,9 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	}
 	labelCtrl->setText(label);
 	labelCtrl->setFormat(TXT_FONT, bold ? SILOM : GENEVA);
-	// TODO: Do we need to set colour to white if background is dark?
-	labelCtrl->setColour(ctrl.getColour());
+	if(bg == BG_DARK && dynamic_cast<cButton*>(&ctrl) != NULL)
+		labelCtrl->setColour(defTextClr);
+	else labelCtrl->setColour(ctrl.getColour());
 	return add(labelCtrl, labelRect, key);
 }
 

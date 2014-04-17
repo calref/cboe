@@ -91,8 +91,8 @@ public:
 	RECT getBounds();
 	void setBounds(RECT newBounds);
 	void relocate(location to);
-	long getTextAsNum();
-	void setTextToNum(long what);
+	long long getTextAsNum();
+	void setTextToNum(long long what);
 	virtual void setFormat(eFormat prop, short val) throw(xUnsupportedProp) = 0;
 	virtual short getFormat(eFormat prop) throw(xUnsupportedProp) = 0;
 	virtual void setColour(sf::Color clr) throw(xUnsupportedProp) = 0;

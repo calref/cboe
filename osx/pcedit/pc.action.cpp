@@ -74,8 +74,7 @@ bool handle_action(sf::Event event,short mode)
 			(univ.party[i].main_status > 0)) {
 			do_button_action(0,i);
 			current_active_pc = i;
-			display_party(6,1);
-			draw_items(1);
+			redraw_screen();
 			}
 	for (i = 0; i < 5; i++)
 		if((the_point.in(edit_rect[i][0])) &&
@@ -105,14 +104,12 @@ bool handle_action(sf::Event event,short mode)
 			(univ.party[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
-				draw_items(1);
 				}
 	for (i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
 			(univ.party[current_active_pc].items[i].variety > 0)) {
 				flash_rect(item_string_rects[i][2]);
 				univ.party[current_active_pc].items[i].ident = true;
-				draw_items(1);
 				}
 	
 	return to_return;
@@ -131,7 +128,7 @@ void flash_rect(RECT to_flash)
 static bool get_num_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
 {
 	me.toast();
-	me.setResult(me["number"].getTextAsNum());
+	me.setResult<long long>(me["number"].getTextAsNum());
 	return true;
 }
 
@@ -154,7 +151,7 @@ void edit_gold_or_food(short which_to_edit)
 	dlog["number"].setTextToNum((which_to_edit == 0) ? univ.party.gold : univ.party.food);
 	
 	dlog.run();
-	int dialog_answer = minmax(0,25000,dlog.getResult<int>());
+	int dialog_answer = minmax(0,25000,dlog.getResult<long long>());
 	if (which_to_edit == 0)
 		univ.party.gold = dialog_answer;
 	else
@@ -301,7 +298,7 @@ void edit_xp(cPlayer *pc)
 	
 	dlog.run();
 	
-	int dialog_answer = minmax(0,10000,abs(dlog.getResult<int>()));
+	int dialog_answer = minmax(0,10000,abs(dlog.getResult<long long>()));
 	
 	pc->experience = dialog_answer;
 }

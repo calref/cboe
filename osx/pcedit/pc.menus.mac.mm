@@ -71,9 +71,9 @@ void init_menubar() {
 	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 3);
 	
 	for(int i = 0; i < [reg_menu numberOfItems]; i++)
-		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(freeMenu:), i);
+		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(freeMenu:), i + 1);
 	for(int i = 0; i < [extra_menu numberOfItems]; i++)
-		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(specMenu:), i);
+		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(specMenu:), i + 1);
 	
 	menu_activate();
 }

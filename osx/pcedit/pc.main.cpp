@@ -470,7 +470,6 @@ void handle_item_menu(int item_hit)
 	store_i = item_list[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
-	draw_items(1);
 }
 
 //void set_cursor(CursHandle which_curs)

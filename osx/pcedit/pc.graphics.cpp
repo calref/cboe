@@ -245,12 +245,16 @@ void Set_up_win ()
 	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 }
 
+static void draw_main_screen();
+static void display_party();
+static void draw_items();
+
 
 void redraw_screen()
 {
 	draw_main_screen();
-	display_party(6,1);
-	draw_items(1);
+	display_party();
+	draw_items();
 	mainPtr.display();
 }
 
@@ -335,16 +339,16 @@ void do_button_action(short which_pc,short which_button)
 	unsigned long dummy;
 
 	current_pressed_button = which_button;
-	display_party(6,0);
+	redraw_screen();
 	play_sound(34);
 	sf::sleep(time_in_ticks(10));
 	current_pressed_button = -1;
-	display_party(6,0);
+	redraw_screen();
 }
 
 //extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-void draw_items(short clear_first)
+void draw_items()
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 {
 	short i;
@@ -357,13 +361,6 @@ void draw_items(short clear_first)
 	dest_rect = item_string_rects[0][0];
 	dest_rect.bottom += 3;
 	dest_rect.offset(0,-14);
-
-	// First erase crap there already by painting background texture over it
-	if (clear_first == 1) {
-		for (i = 0; i < 24; i++)
-			tileImage(mainPtr,item_string_rects[i][0],bg_gworld,bg[12]);
-		tileImage(mainPtr,dest_rect,bg_gworld,bg[12]);
-		}
 	
 	// First, draw "Fred's Items:"
 	//sprintf((char *)to_draw,"%s items:",univ.party[current_active_pc].name);
@@ -408,29 +405,13 @@ void draw_items(short clear_first)
 
 }
 
-void display_party(short mode,short clear_first)
+void display_party()
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 {
 	short i,k,string_num, cur_rect=0;
-	const char* to_draw;
-	const char* skill_value;
+	char to_draw[256], skill_value[256];
 	RECT from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
-	
-	// TODO: Is this needed?
-#if 0
-	// lots of stuff is global. Like ...
-	// bool file_in_mem
-	// short current_active_pc
-	if (clear_first == 1) { // first erase what's already there
-		for (i = 0; i < 6; i++)
-			tileImage(mainPtr,pc_area_buttons[i][0],bg_gworld,bg[12]);
-		tileImage(mainPtr,name_rect,bg_gworld,bg[12]);
-		tileImage(mainPtr,pc_race_rect,bg_gworld,bg[12]);
-		tileImage(mainPtr,info_area_rect,bg_gworld,bg[12]);
-		frame_dlog_rect(mainPtr,pc_info_rect); // re-draw the frame
-	}
-#endif
 	
 	if(file_in_mem.empty()) { // what if no party loaded?
 		no_party_rect=pc_info_rect;
@@ -453,7 +434,6 @@ void display_party(short mode,short clear_first)
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
 			
-			if ((current_pressed_button < 0) || (current_pressed_button == i))
 				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0]);
 			TEXT.colour = sf::Color::Black;
 			
@@ -491,7 +471,6 @@ void display_party(short mode,short clear_first)
 					TEXT.pointSize = 10;
 					
 				}
-				if ((current_pressed_button < 0) || (current_pressed_button == i))
 					switch (univ.party[i].main_status) {
 							// draw statistics
 						case 1:
@@ -781,11 +760,7 @@ void display_party(short mode,short clear_first)
 		
 		
 		
-		for(i = 0; i < 5; i++) 
-			if ((current_pressed_button < 0) || (current_pressed_button == i + 10)) {	
-				if (clear_first == 1) { // first erase what's already there
-					tileImage(mainPtr,edit_rect[i][0],bg_gworld,bg[12]);
-				}		
+		for(i = 0; i < 5; i++) {
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][0],0);
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][1],0);
 				from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
@@ -793,19 +768,19 @@ void display_party(short mode,short clear_first)
 				TEXT.colour = sf::Color::White;
 				switch(i) {
 					case 0:
-						win_draw_string(mainPtr,edit_rect[0][1],"  Add  Mage Spells ",0,10);
+						win_draw_string(mainPtr,edit_rect[0][1],"  Add|Mage|Spells",0,10);
 						break;
 					case 1:
-						win_draw_string(mainPtr,edit_rect[1][1],"  Add Priest Spells ",0,10);
+						win_draw_string(mainPtr,edit_rect[1][1],"  Add|Priest|Spells",0,10);
 						break;
 					case 2: 
-						win_draw_string(mainPtr,edit_rect[2][1]," Edit  Traits",0,10);
+						win_draw_string(mainPtr,edit_rect[2][1]," Edit|Traits",0,10);
 						break;
 					case 3:
-						win_draw_string(mainPtr,edit_rect[3][1]," Edit  Skills",0,10);
+						win_draw_string(mainPtr,edit_rect[3][1]," Edit|Skills",0,10);
 						break;
 					case 4:
-						win_draw_string(mainPtr,edit_rect[4][1]," Edit   XP",0,10);
+						win_draw_string(mainPtr,edit_rect[4][1]," Edit|   XP",0,10);
 						break;
 					default:
 						break;	
