@@ -227,8 +227,8 @@ void handle_file_menu(int item_hit)
 			if(verify_restore_quit(true)){
 				file = nav_get_party();
 				if(!file.empty()) {
-					load_party(file);
-					file_in_mem = file;
+					if(load_party(file))
+						file_in_mem = file;
 				}
 				menu_activate();
 			}
