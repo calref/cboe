@@ -14,13 +14,7 @@ or one of the other people on the owners list. This is an open project, with no 
 for getting commit access. With that in mind, please be careful of what you check into the repository.
 Please do not commit any binaries, junk files, or anything that doesn't compile.
 
-The current task at hand is to merge the Mac and Windows code into the unified wxWidgets code base.
-
-Linux
------
-
-At last, there is a potential Linux version available in the downloads (though so far only the
-Character Editor is available). This should be treated as an alpha/beta release, so use with caution. 
+The current task at hand is to merge the Windows code into the current Mac codebase, which no longer uses platform-specific APIs for most things (a few files would need to be rewritten for Windows).
 
 Helpful Links
 -------------
@@ -28,3 +22,4 @@ Helpful Links
 * [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)
 * [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where it all began. Warning: Terrifying code.
 * [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for most, if not all, of the Win32 work.
+* [Experimental Builds](http://celmin.pwcsite.com/oboe/) - will be put up whenever Celtic Minstrel feels like it.
