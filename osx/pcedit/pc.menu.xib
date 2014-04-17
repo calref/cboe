@@ -527,6 +527,7 @@
 						<object class="NSMenu" key="NSSubmenu" id="13814608">
 							<string key="NSTitle">Items 2</string>
 							<array class="NSMutableArray" key="NSMenuItems"/>
+							<bool key="NSNoAutoenable">YES</bool>
 						</object>
 					</object>
 					<object class="NSMenuItem" id="978930519">
@@ -540,6 +541,7 @@
 						<object class="NSMenu" key="NSSubmenu" id="31045861">
 							<string key="NSTitle">Items 3</string>
 							<array class="NSMutableArray" key="NSMenuItems"/>
+							<bool key="NSNoAutoenable">YES</bool>
 						</object>
 					</object>
 					<object class="NSMenuItem" id="1010608296">
@@ -553,6 +555,7 @@
 						<object class="NSMenu" key="NSSubmenu" id="188992829">
 							<string key="NSTitle">Items 4</string>
 							<array class="NSMutableArray" key="NSMenuItems"/>
+							<bool key="NSNoAutoenable">YES</bool>
 						</object>
 					</object>
 					<object class="NSMenuItem" id="391199113">

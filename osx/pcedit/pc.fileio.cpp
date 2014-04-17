@@ -217,11 +217,11 @@ short init_data(short flag)
 }
 
 void load_base_item_defs(){
-	fs::path basePath = progDir/"Scenario Editor"/"BoE Bases"/"bladbase.exs";
-	load_scenario(basePath, true);
+	fs::path basePath = progDir/"data"/"BoE Bases"/"bladbase.exs";
+	scen_items_loaded = load_scenario(basePath, true);
 }
 
 bool load_scen_item_defs(std::string scen_name){
-	fs::path scenPath = progDir/"Blades of Exile Scenarios"/(scen_name + ".exs");
+	fs::path scenPath = progDir/"Blades of Exile Scenarios"/scen_name;
 	return load_scenario(scenPath, true);
 }

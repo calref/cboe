@@ -25,6 +25,7 @@ extern void handle_item_menu(int item_hit);
 
 extern cScenario scenario;
 extern fs::path file_in_mem;
+extern bool scen_items_loaded;
 MenuHandle menu_bar_handle;
 MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
@@ -75,6 +76,7 @@ void init_menubar() {
 	for(int i = 0; i < [extra_menu numberOfItems]; i++)
 		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(specMenu:), i + 1);
 	
+	update_item_menu();
 	menu_activate();
 }
 
@@ -91,11 +93,15 @@ void update_item_menu() {
 	cItemRec(& item_list)[400] = scenario.scen_items;
 	for(int j = 0; j < 4; j++){
 		[items_menu[j] removeAllItems];
-		for(int i = 0; i < 100; i++) {
+		if(!scen_items_loaded) {
+			[[items_menu[j] addItemWithTitle: @"Items Not Loaded" action: @selector(itemMenu:) keyEquivalent: @""] setEnabled: NO];
+		} else for(int i = 0; i < 100; i++) {
 			ItemWrapper* item = [ItemWrapper withItem: i + 100 * j];
 			NSString* item_name = [NSString stringWithCString: item_list[i + j * 100].full_name.c_str() encoding: NSASCIIStringEncoding];
-			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: nil];
+			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: @""];
 			[choice setTarget: targ];
+			// TODO: Also disable gold or food
+			[choice setEnabled: [item item].variety > 0];
 			[choice setRepresentedObject: item];
 		}
 	}

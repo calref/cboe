@@ -227,8 +227,14 @@ void handle_file_menu(int item_hit)
 			if(verify_restore_quit(true)){
 				file = nav_get_party();
 				if(!file.empty()) {
-					if(load_party(file))
+					if(load_party(file)) {
 						file_in_mem = file;
+						party_in_scen = !univ.party.scen_name.empty();
+						if(party_in_scen && load_scen_item_defs(univ.party.scen_name))
+							scen_items_loaded = true;
+						else load_base_item_defs();
+						update_item_menu();
+					}
 				}
 				menu_activate();
 			}

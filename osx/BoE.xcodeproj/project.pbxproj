@@ -12,6 +12,7 @@
 			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
 			buildPhases = (
 				912CF3560FE4494C0063B614 /* Copy Scenarios */,
+				91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */,
 				912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */,
 				912CF36E0FE44A2A0063B614 /* Copy Mac Cursors */,
 				914B2B3118E80030007B6799 /* Copy Mac Sounds */,
@@ -452,6 +453,7 @@
 		91AC620D0FA2853700EEAE67 /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
+		91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */ = {isa = PBXBuildFile; fileRef = 91B3EF250F969CE300BF5B67 /* bladbase.exs */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
@@ -1015,6 +1017,17 @@
 			name = "Copy String Lists";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "data/BoE Bases";
+			dstSubfolderSpec = 16;
+			files = (
+				91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */,
+			);
+			name = "Copy Base Scenarios";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91B3EF320F969D9900BF5B67 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1484,7 +1497,7 @@
 		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladespced.rsrc; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		91B3EF250F969CE300BF5B67 /* Blades of Exile Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Blades of Exile Base"; path = "../rsrc/Blades of Exile Bases/Blades of Exile Base"; sourceTree = "<group>"; };
+		91B3EF250F969CE300BF5B67 /* bladbase.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = bladbase.exs; path = "../rsrc/Blades of Exile Bases/bladbase.exs"; sourceTree = "<group>"; };
 		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3F1090F9779C300BF5B67 /* graphtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphtool.h; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtool.cpp; sourceTree = "<group>"; };
@@ -2303,7 +2316,7 @@
 				91364EC818F091300033B58E /* dialogs */,
 				914701A318F629D4008A6DC9 /* fonts */,
 				914B2ACB18E7FFEF007B6799 /* sounds.exa */,
-				91B3EF250F969CE300BF5B67 /* Blades of Exile Base */,
+				91B3EF250F969CE300BF5B67 /* bladbase.exs */,
 				912CF37D0FE44A9B0063B614 /* graphics.exd */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
