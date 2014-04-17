@@ -236,8 +236,8 @@ namespace legacy {
 	
 	struct creature_data_type {
 		int16_t active,attitude;
-		uint8_t number;
-		location m_loc;
+		uint8_t number; // TODO: I think there should be a byte of padding near here, but where exactly??
+		location m_loc __attribute__((aligned(2)));
 		monster_record_type m_d;
 		int16_t mobile;
 		int16_t summoned;
@@ -251,8 +251,8 @@ namespace legacy {
 	} __attribute__((packed));
 	
 	struct outdoor_creature_type {
-		Boolean exists;
-		int16_t direction;
+		Boolean exists; // TODO: I think there should be a byte of padding near here, but where exactly??
+		int16_t direction __attribute__((aligned(2)));
 		out_wandering_type what_monst;
 		location which_sector,m_loc;	
 	} __attribute__((packed));

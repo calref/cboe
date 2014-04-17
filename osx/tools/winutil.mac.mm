@@ -194,8 +194,9 @@ void init_fileio(){
 fs::path nav_get_scenario() {
 	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
-	if(gotFile)
-		return fs::path([[[dlg_get_scen URL] absoluteString] UTF8String]);
+	if(gotFile) {
+		return fs::path([[[[dlg_get_scen URL] absoluteURL] path] UTF8String]);
+	}
 	return "";
 }
 
@@ -203,7 +204,7 @@ fs::path nav_put_scenario() {
 	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return [[[dlg_put_scen URL] absoluteString] UTF8String];
+		return fs::path([[[[dlg_put_scen URL] absoluteURL] path] UTF8String]);
 	return "";
 }
 
@@ -211,7 +212,7 @@ fs::path nav_get_party() {
 	bool gotFile = [dlg_get_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[dlg_get_game URL] absoluteString] UTF8String]);
+		return fs::path([[[[dlg_get_game URL] absoluteURL] path] UTF8String]);
 	return "";
 }
 
@@ -219,6 +220,6 @@ fs::path nav_put_party() {
 	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[dlg_put_game URL] absoluteString] UTF8String]);
+		return fs::path([[[[dlg_put_game URL] absoluteURL] path] UTF8String]);
 	return "";
 }

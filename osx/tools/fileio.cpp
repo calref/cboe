@@ -975,7 +975,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	long len,store_len,count;
 	
 	// LOAD PARTY	
-	len = (long) sizeof(legacy::party_record_type); // 45368
+	len = (long) sizeof(legacy::party_record_type); // should be 46398
 	store_len = len;
 	fin.read((char*)&store_party, len);
 //	error = FSRead(file_id, &len, (char *) &store_party)
