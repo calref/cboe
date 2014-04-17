@@ -98,7 +98,7 @@ public:
 	virtual void setColour(sf::Color clr) throw(xUnsupportedProp) = 0;
 	virtual sf::Color getColour() throw(xUnsupportedProp) = 0;
 	virtual bool isClickable() = 0;
-	virtual bool handleClick();
+	virtual bool handleClick(location where);
 	cControl(eControlType t, sf::RenderWindow& p);
 	cControl(eControlType t, cDialog& p);
 	virtual ~cControl();

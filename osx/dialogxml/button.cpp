@@ -317,13 +317,12 @@ void cLedGroup::addChoice(cLed* ctrl, std::string key) {
 	choices[key] = ctrl;
 }
 
-bool cLedGroup::handleClick() {
-	location where = sf::Mouse::getPosition(*inWindow);
+bool cLedGroup::handleClick(location where) {
 	std::string which_clicked;
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
 		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
-			if(iter->second->handleClick()) {
+			if(iter->second->handleClick(where)) {
 				which_clicked = iter->first;
 				break;
 			}

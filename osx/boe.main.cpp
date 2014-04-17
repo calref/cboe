@@ -5,6 +5,7 @@
 #include "boe.global.h"
 #include "classes.h"
 
+#include <thread>
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 #include "boe.fileio.h"
@@ -267,12 +268,16 @@ void Initialize(void)
 	text_sbar->setBounds(sbar_rect);
 	text_sbar->setMaximum(58);
 	text_sbar->setPosition(58);
+	text_sbar->setPageSize(11);
 	item_sbar.reset(new cScrollbar(mainPtr));
 	item_sbar->setBounds(item_sbar_rect);
 	item_sbar->setMaximum(16);
+	item_sbar->setPageSize(8);
 	shop_sbar.reset(new cScrollbar(mainPtr));
 	shop_sbar->setBounds(shop_sbar_rect);
 	shop_sbar->setMaximum(16);
+	shop_sbar->setPageSize(8);
+	shop_sbar->hide();
 	adjust_window_mode();
 	
 }
@@ -437,137 +442,45 @@ void Handle_Update()
 	
 }
 
-// TODO: These three functions should probably be inside the cScrollbar class (the three are almost identical)
-void sbar_action(cScrollbar& bar, short part)
-{
-	short old_setting,new_setting,max;
-	
-	if (part == 0)
-		return;
-	
-	old_setting = bar.getPosition();
-	new_setting = old_setting;
-	max = bar.getMaximum();
-	
-	switch (part) {
-		case 0/*kControlUpButtonPart*/: new_setting--; break;
-		case 1/*kControlDownButtonPart*/: new_setting++; break;
-		case 2/*kControlPageUpPart*/: new_setting -= 11; break;
-		case 3/*kControlPageDownPart*/: new_setting += 11; break;
+void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh) {
+	while(!doneScrolling) {
+		sf::sleep(sf::milliseconds(10));
+		redraw_screen(refresh);
+		mainPtr.display();
 	}
-	new_setting = minmax(0,max,new_setting);
-	bar.setPosition(new_setting);
-	if (new_setting != old_setting)
-		print_buf();
-}
-
-void item_sbar_action(cScrollbar& bar, short part)
-{
-	short old_setting,new_setting;
-	short max;
-	
-	if (part == 0)
-		return;
-	
-	old_setting = bar.getPosition();
-	new_setting = old_setting;
-	max = bar.getMaximum();
-	
-	switch (part) {
-		case 0/*kControlUpButtonPart*/: new_setting--; break;
-		case 1/*kControlDownButtonPart*/: new_setting++; break;
-		case 2/*kControlPageUpPart*/: new_setting -= (stat_window == 7) ? 2 : 8; break;
-		case 3/*kControlPageDownPart*/: new_setting += (stat_window == 7) ? 2 : 8; break;
-	}
-	new_setting = minmax(0,max,new_setting);
-	bar.setPosition(new_setting);
-	if (new_setting != old_setting)
-		put_item_screen(stat_window,1);
-}
-
-void shop_sbar_action(cScrollbar bar, short part)
-{
-	short old_setting,new_setting;
-	short max;
-	
-	if (part == 0)
-		return;
-	
-	old_setting = bar.getPosition();
-	new_setting = old_setting;
-	max = bar.getMaximum();
-	
-	switch (part) {
-		case 0/*kControlUpButtonPart*/: new_setting--; break;
-		case 1/*kControlDownButtonPart*/: new_setting++; break;
-		case 2/*kControlPageUpPart*/: new_setting -= 8; break;
-		case 3/*kControlPageDownPart*/: new_setting += 8; break;
-	}
-	new_setting = minmax(0,max,new_setting);
-	bar.setPosition(new_setting);
-	if (new_setting != old_setting)
-		draw_shop_graphics(0,shop_sbar_rect);
 }
 
 // TODO: Pass the event object around instead of keeping a global one
 void Mouse_Pressed()
 {
-	// TODO: What about other windows?
-//	sf::Window&	the_window = mainPtr;
 	if (had_text_freeze > 0) {
 		had_text_freeze--;
 		return;
 	}
 	
-	//ding();
-	// TODO: Most of this should be handled automatically by Cocoa, but make sure nothing important was missed (like the code under inGoAway, that looks important)
-#if 0
-	// TODO: Honestly, I'm not quite sure how to track the scrollbars right now
-//	if (the_window == mainPtr) {
-	SetPortWindowPort(mainPtr);
-	GlobalToLocal(&event.where);
-	content_part = FindControl(event.where,the_window,&control_hit); // hit sbar?
-	if (content_part != 0) {
-		switch (content_part) {
-			case kControlIndicatorPart:
-				content_part = TrackControl(control_hit,event.where,NULL);
-				if (control_hit == text_sbar)
-					if (content_part == kControlIndicatorPart)
-						print_buf();
-				if (control_hit == item_sbar)
-					if (content_part == kControlIndicatorPart)
-						put_item_screen(stat_window,0);
-				if (control_hit == shop_sbar)
-					if (content_part == kControlIndicatorPart)
-						draw_shop_graphics(0,shop_sbar_rect);
-				break;
-			case kControlUpButtonPart: case kControlPageUpPart: case kControlDownButtonPart: case kControlPageDownPart:
-#ifndef EXILE_BIG_GUNS
-				if (control_hit == text_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)sbar_action);
-				if (control_hit == item_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_action);
-				if (control_hit == shop_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_action);
-#endif
-#ifdef EXILE_BIG_GUNS
-				if (control_hit == text_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)text_sbar_UPP);
-				if (control_hit == item_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)item_sbar_UPP);
-				if (control_hit == shop_sbar)
-					content_part = TrackControl(control_hit,event.where,(ControlActionUPP)shop_sbar_UPP);
-#endif
-				break;
-				
-		}
-		
-	} // a control hit
-//	else { // ordinary click
-#endif // end commented-out code section
-	if(overall_mode != MODE_STARTUP)
-		All_Done = handle_action(event);
-	else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
+	if(overall_mode != MODE_STARTUP) {
+		location mousePos(event.mouseButton.x, event.mouseButton.y);
+		volatile bool doneScrolling = false;
+		if(mousePos.in(text_sbar->getBounds())) {
+			std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_TRANS));
+			text_sbar->handleClick(mousePos);
+			doneScrolling = true;
+			updater.join();
+			redraw_screen(REFRESH_TRANS);
+		} else if(mousePos.in(item_sbar->getBounds())) {
+			std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_INVEN));
+			item_sbar->handleClick(mousePos);
+			doneScrolling = true;
+			updater.join();
+			redraw_screen(REFRESH_INVEN);
+		} else if(overall_mode == MODE_SHOPPING && mousePos.in(shop_sbar->getBounds())) {
+			std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_DLOG));
+			shop_sbar->handleClick(mousePos);
+			doneScrolling = true;
+			updater.join();
+			redraw_screen(REFRESH_DLOG);
+		} else All_Done = handle_action(event);
+	} else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
 	
 	menu_activate();
 	

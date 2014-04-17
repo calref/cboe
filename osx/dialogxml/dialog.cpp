@@ -18,6 +18,7 @@ using namespace ticpp;
 #include "button.h"
 #include "field.h"
 #include "message.h"
+#include "scrollbar.h"
 #include "winutil.h"
 #include "mathutil.h"
 
@@ -860,6 +861,7 @@ void cDialog::init(){
 	cButton::init();
 	cLed::init();
 	cPict::init();
+	cScrollbar::init();
 }
 
 cDialog::~cDialog(){
@@ -1188,7 +1190,7 @@ std::string cDialog::process_click(location where, eKeyMod mods){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){
-			if(iter->second->handleClick())
+			if(iter->second->handleClick(where))
 				return iter->first;
 			else return "";
 		}

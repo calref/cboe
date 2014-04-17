@@ -178,18 +178,14 @@ void cControl::setActive(bool active) {
 	depressed = active;
 }
 
-bool cControl::handleClick(){
+bool cControl::handleClick(location where){
 	sf::Event e;
 	bool done = false, clicked = false;
 	inWindow->setActive();
 	depressed = true;
 	while(!done){
+		// If there's no parent dialog, we're not responsible for redrawing
 		if(parent) parent->draw();
-		else {
-			// TODO: This only redraws this one control; should probably redraw the entire dialog? But what if there is no dialog?
-			draw();
-			inWindow->display();
-		}
 		if(!inWindow->pollEvent(e)) continue;
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
@@ -207,11 +203,6 @@ bool cControl::handleClick(){
 	}
 	else sf::sleep(time_in_ticks(14));
 	if(parent) parent->draw();
-	else {
-		// TODO: This only redraws this one control; should probably redraw the entire dialog? But what if there is no dialog?
-		draw();
-		inWindow->display();
-	}
 	return clicked;
 }
 

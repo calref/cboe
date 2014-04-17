@@ -454,6 +454,7 @@
 		91AC65520FA3441B00EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91AC65AD0FA34AC600EEAE67 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */ = {isa = PBXBuildFile; fileRef = 91B3EF250F969CE300BF5B67 /* bladbase.exs */; };
+		91ACCE66190004F000FAEF8B /* dlogscroll.png in Copy Mac Graphics */ = {isa = PBXBuildFile; fileRef = 91ACCE65190004D300FAEF8B /* dlogscroll.png */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF450F969F1700BF5B67 /* BoE Scenario Editor-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */; };
 		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
@@ -640,6 +641,7 @@
 				912CF41D0FE44AAF0063B614 /* dlogbtnsm.png in Copy Mac Graphics */,
 				912CF41E0FE44AAF0063B614 /* dlogbtntall.png in Copy Mac Graphics */,
 				912CF41F0FE44AAF0063B614 /* dlogpics.png in Copy Mac Graphics */,
+				91ACCE66190004F000FAEF8B /* dlogscroll.png in Copy Mac Graphics */,
 				912CF4200FE44AAF0063B614 /* edbuttons.png in Copy Mac Graphics */,
 				912CF4210FE44AAF0063B614 /* edsplash.png in Copy Mac Graphics */,
 				912CF4220FE44AAF0063B614 /* fields.png in Copy Mac Graphics */,
@@ -1461,6 +1463,7 @@
 		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = universe.cpp; sourceTree = "<group>"; };
 		91AC62090FA2853700EEAE67 /* creatlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = creatlist.h; sourceTree = "<group>"; };
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
+		91ACCE65190004D300FAEF8B /* dlogscroll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dlogscroll.png; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = BOEScen.rsrc; sourceTree = "<group>"; };
@@ -1720,6 +1723,7 @@
 				912CF3A10FE44A9B0063B614 /* dlogbtnsm.png */,
 				912CF3A20FE44A9B0063B614 /* dlogbtntall.png */,
 				912CF3A30FE44A9B0063B614 /* dlogpics.png */,
+				91ACCE65190004D300FAEF8B /* dlogscroll.png */,
 				912CF3A40FE44A9B0063B614 /* edbuttons.png */,
 				912CF3A50FE44A9B0063B614 /* edsplash.png */,
 				912CF3A60FE44A9B0063B614 /* fields.png */,
@@ -1730,8 +1734,6 @@
 				912CF3AB0FE44A9B0063B614 /* mapOLD.png */,
 				912CF3AC0FE44A9B0063B614 /* missiles.png */,
 				912CF3AD0FE44A9B0063B614 /* monst1.png */,
-				912CF3AE0FE44A9B0063B614 /* monst10.png */,
-				912CF3AF0FE44A9B0063B614 /* monst11.png */,
 				912CF3B00FE44A9B0063B614 /* monst2.png */,
 				912CF3B10FE44A9B0063B614 /* monst3.png */,
 				912CF3B20FE44A9B0063B614 /* monst4.png */,
@@ -1740,6 +1742,8 @@
 				912CF3B50FE44A9B0063B614 /* monst7.png */,
 				912CF3B60FE44A9B0063B614 /* monst8.png */,
 				912CF3B70FE44A9B0063B614 /* monst9.png */,
+				912CF3AE0FE44A9B0063B614 /* monst10.png */,
+				912CF3AF0FE44A9B0063B614 /* monst11.png */,
 				912CF3B80FE44A9B0063B614 /* objects.png */,
 				912CF3B90FE44A9B0063B614 /* outhelp.png */,
 				912CF3BA0FE44A9B0063B614 /* pcedbuttons.png */,

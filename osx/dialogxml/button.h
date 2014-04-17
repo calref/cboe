@@ -117,7 +117,7 @@ public:
 	sf::Color getColour() throw(xUnsupportedProp);
 	explicit cLedGroup(cDialog* parent);
 	bool isClickable();
-	bool handleClick();
+	bool handleClick(location where);
 	virtual ~cLedGroup();
 	cLed& operator[](std::string id);
 	void setSelected(std::string id);

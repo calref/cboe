@@ -61,6 +61,8 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 	switch(prop){
 		case TXT_FRAME:
 			return drawFramed;
+		case TXT_FRAMESTYLE:
+			return frameStyle;
 		case TXT_SIZE:
 			return textSize;
 		case TXT_FONT:

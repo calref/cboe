@@ -8,8 +8,9 @@ enum {
 	REFRESH_INVEN = 1 << 2,
 	REFRESH_TRANS = 1 << 3,
 	REFRESH_BAR = 1 << 4,
+	REFRESH_DLOG = 1 << 5,
 	REFRESH_TEXT = REFRESH_BAR | REFRESH_TRANS,
-	REFRESH_ALL = 0x1f
+	REFRESH_ALL = 0x3f
 };
 
 void adjust_window_mode();

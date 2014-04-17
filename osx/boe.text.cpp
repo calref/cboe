@@ -549,6 +549,7 @@ void set_stat_window(short new_stat)
 	stat_window = new_stat;
 	if ((stat_window < 6) && (univ.party[stat_window].main_status != 1))
 		stat_window = first_active_pc();
+	item_sbar->setPageSize(8);
 	switch (stat_window) {
 		case 6:
 			for (i = 0; i < 60; i++)
@@ -563,6 +564,7 @@ void set_stat_window(short new_stat)
 			break;
 		case 7:
 			item_sbar->setMaximum(2);
+			item_sbar->setPageSize(2);
 			break;
 		default:
 			item_sbar->setMaximum(16);
