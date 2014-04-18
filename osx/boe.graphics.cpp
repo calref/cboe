@@ -1062,7 +1062,7 @@ void draw_terrain(short	mode)
 		draw_pcs(center,0);
 	
 	// Now do the light mask thing
-	apply_light_mask();
+	apply_light_mask(false);
 	apply_unseen_mask();
 	
 	terrain_screen_gworld.display();
@@ -1587,6 +1587,7 @@ void redraw_terrain()
 	
 	to_rect = win_to_rects[0];
 	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], to_rect,ul);
+	apply_light_mask(true);
 	
 	
 	// Now place arrows

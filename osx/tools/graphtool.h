@@ -61,8 +61,8 @@ struct TextStyle {
 
 class Region {
 	std::vector<std::shared_ptr<sf::Shape>> shapes;
-	void setStencil(sf::RenderTarget& where);
-	friend void clip_region(sf::RenderTarget& where, Region& region);
+	void setStencil(sf::RenderWindow& where);
+	friend void clip_region(sf::RenderWindow& where, Region& region);
 public:
 	void addEllipse(RECT frame);
 	void addRect(RECT rect);
@@ -115,11 +115,11 @@ void fill_circle(sf::RenderTarget& target, RECT rect, sf::Color colour);
 void frame_circle(sf::RenderTarget& target, RECT rect, sf::Color colour);
 void fill_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour);
 void frame_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour);
-void fill_region(sf::RenderTarget& target, Region& region, sf::Color colour);
-void frame_region(sf::RenderTarget& target, Region& region, sf::Color colour);
+void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour);
+void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour);
 
 void clip_rect(sf::RenderTarget& where, RECT rect);
-void clip_region(sf::RenderTarget& where, Region& region);
+void clip_region(sf::RenderWindow& where, Region& region);
 void undo_clip(sf::RenderTarget& where);
 
 #ifndef GRAPHTOOL_CPP

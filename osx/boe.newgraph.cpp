@@ -78,9 +78,6 @@ extern cScenario scenario;
 extern cUniverse univ;
 //extern talking_record_type talking;
 
-// TODO: Arbitrary region support
-std::shared_ptr<Region> oval_region,dark_mask_region,temp_rect_rgn;
-
 // Talk vars
 extern word_rect_type store_words[50];
 extern eGameMode store_pre_talk_mode;
@@ -186,8 +183,9 @@ void apply_unseen_mask()
 			}
 }
 
-void apply_light_mask()
+void apply_light_mask(bool onWindow)
 {
+	static Region dark_mask_region;
 	RECT temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	RECT big_to = {13,13,337,265};
 	short i,j;
@@ -199,11 +197,10 @@ void apply_light_mask()
 	if (univ.town->lighting_type == 0)
 		return;
 	
-	if (oval_region == NULL) {
-		temp_rect_rgn.reset(new Region);
-		dark_mask_region.reset(new Region);
-		oval_region.reset(new Region);
-		oval_region->addEllipse(temp);
+	if(onWindow) {
+		mainPtr.setActive();
+		fill_region(mainPtr, dark_mask_region, sf::Color::Black);
+		return;
 	}
 	
 	// Process the light array
@@ -244,13 +241,10 @@ void apply_light_mask()
 				same_mask = false;
 	
 	if (same_mask == true) {
-		fill_region(terrain_screen_gworld, *dark_mask_region, sf::Color::Black);
-		mainPtr.setActive();
 		return;
 	}
-	// TODO: Are these regions even used outside this function? If not, they should be local variables.
-	dark_mask_region->clear();
-	dark_mask_region->addRect(big_to);
+	dark_mask_region.clear();
+	dark_mask_region.addRect(big_to);
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++)
 			last_light_mask[i][j] = light_area[i][j];
@@ -258,25 +252,25 @@ void apply_light_mask()
 		for (j = 1; j < 12; j++) {
 			if (light_area[i][j] == 2) {
 				int xOffset = 13 + 28 * (i - 3), yOffset = 13 + 36 * (j - 3);
-				oval_region->offset(xOffset, yOffset);
-				*dark_mask_region -= *oval_region;
-				oval_region->offset(-xOffset, -yOffset);
+				Region oval_region;
+				oval_region.addEllipse(temp);
+				oval_region.offset(xOffset, yOffset);
+				dark_mask_region -= oval_region;
 			}
 			if (light_area[i][j] == 3) {
 				paint_rect = base_rect;
 				paint_rect.offset(13 + 28 * (i - 2),13 + 36 * (j - 2));
-				temp_rect_rgn->clear();
-				temp_rect_rgn->addRect(paint_rect);
-				*dark_mask_region -= *temp_rect_rgn;
+				Region temp_rect_rgn;
+				temp_rect_rgn.addRect(paint_rect);
+				dark_mask_region -= temp_rect_rgn;
 				if (light_area[i + 1][j] == 3) light_area[i + 1][j] = 0;
 				if (light_area[i + 1][j + 1] == 3) light_area[i + 1][j + 1] = 0;
 				if (light_area[i][j + 1] == 3) light_area[i][j + 1] = 0;
 			}
 		}
 	
-	//rect_draw_some_item(light_mask_gworld,big_from,terrain_screen_gworld,big_to,0,0);
-	fill_region(terrain_screen_gworld, *dark_mask_region, sf::Color::Black);
-	
+	dark_mask_region.offset(5,5);
+	dark_mask_region.offset(ul);
 }
 
 void start_missile_anim()

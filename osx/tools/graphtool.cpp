@@ -918,13 +918,14 @@ void frame_circle(sf::RenderTarget& target, RECT rect, sf::Color colour) {
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
-void fill_region(sf::RenderTarget& target, Region& region, sf::Color colour) {
+void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
 	clip_region(target, region);
 	fill_rect(target, RECT(target), colour);
 	undo_clip(target);
 }
 
-void frame_region(sf::RenderTarget& target, Region& region, sf::Color colour) {
+void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
+	// TODO: Uh, actually, this won't do what it says. Eh, I'll fix it if I ever use it.
 	clip_region(target, region);
 	frame_rect(target, RECT(target), colour);
 	undo_clip(target);
@@ -957,17 +958,25 @@ void Region::offset(location off) {
 	offset(off.x, off.y);
 }
 
-void Region::setStencil(sf::RenderTarget& where) {
-	setActiveRenderTarget(where);
+// We can only use stencil buffer in the main window
+// Could request it in dialogs, but currently don't
+// SFML does not appear to allow requesting it for render textures
+void Region::setStencil(sf::RenderWindow& where) {
+	where.setActive();
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 1);
 	for(auto shape : shapes) {
-		if(shape->getFillColor() == sf::Color::Black)
+		// Save the colour in case we need to reuse this region
+		sf::Color colour = shape->getFillColor();
+		if(colour == sf::Color::Black)
 			glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 		else glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+		// Make transparent so we don't overwrite important stuff
+		shape->setFillColor(sf::Color::Transparent);
 		where.draw(*shape);
+		shape->setFillColor(colour);
 	}
 	glStencilFunc(GL_EQUAL, 1, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -980,7 +989,7 @@ void clip_rect(sf::RenderTarget& where, RECT rect) {
 	glScissor(rect.left, RECT(where).height() - rect.bottom, rect.width(), rect.height());
 }
 
-void clip_region(sf::RenderTarget& where, Region& region) {
+void clip_region(sf::RenderWindow& where, Region& region) {
 	region.setStencil(where);
 }
 

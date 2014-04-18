@@ -9,7 +9,7 @@ typedef struct {
 	} hold_responses;
 	
 void apply_unseen_mask();
-void apply_light_mask();
+void apply_light_mask(bool onWindow);
 void end_anim();
 void init_anim(short which_anim);
 void run_anim();
