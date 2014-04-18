@@ -1307,7 +1307,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 		to_rect.top += 18;
 	}
 	
-	rect_draw_some_item(*from_gworld, from_rect, terrain_screen_gworld, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(*from_gworld, from_rect, roads_gworld, mask_rect, terrain_screen_gworld, to_rect);
 }
 
 

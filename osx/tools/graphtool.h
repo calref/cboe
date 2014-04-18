@@ -101,6 +101,7 @@ void restore_cursor();
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
+void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,short line_height,location offset = {0,0});
 short string_length(std::string str);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);

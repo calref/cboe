@@ -11,6 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
 			buildPhases = (
+				91A0B15F1900FFDA00EF438F /* Copy Shaders */,
 				912CF3560FE4494C0063B614 /* Copy Scenarios */,
 				91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */,
 				912CF36D0FE44A2A0063B614 /* Copy Mac Graphics */,
@@ -433,6 +434,7 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
 		91A32B770FDB5F6800C4E957 /* arena-names.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B720FDB5F6800C4E957 /* arena-names.txt */; };
 		91A32B780FDB5F6800C4E957 /* ter-flag1.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B730FDB5F6800C4E957 /* ter-flag1.txt */; };
 		91A32B790FDB5F6800C4E957 /* ter-flag2.txt in Copy String Lists */ = {isa = PBXBuildFile; fileRef = 91A32B740FDB5F6800C4E957 /* ter-flag2.txt */; };
@@ -498,6 +500,7 @@
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
+		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91C1FCA60FCB6F7000EBAA65 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
 		91C1FCA70FCB6F7100EBAA65 /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
 		91C1FCA80FCB6F7100EBAA65 /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA180FB8BECA001E34EA /* dialog.cpp */; };
@@ -1015,6 +1018,18 @@
 			name = "Copy Strings";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91A0B15F1900FFDA00EF438F /* Copy Shaders */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data/shaders;
+			dstSubfolderSpec = 16;
+			files = (
+				91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */,
+				91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */,
+			);
+			name = "Copy Shaders";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91A32B660FDB5EF100C4E957 /* Copy Dialogs */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1525,6 +1540,7 @@
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
+		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32B720FDB5F6800C4E957 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "arena-names.txt"; sourceTree = "<group>"; };
 		91A32B730FDB5F6800C4E957 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag1.txt"; sourceTree = "<group>"; };
 		91A32B740FDB5F6800C4E957 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ter-flag2.txt"; sourceTree = "<group>"; };
@@ -1587,6 +1603,7 @@
 		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundtool.cpp; sourceTree = "<group>"; };
 		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathutil.h; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
+		91BFA3D61901B024001686E4 /* mask.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.vert; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cursors.m; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
@@ -2080,6 +2097,8 @@
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
+				91A0B15A1900F73E00EF438F /* mask.frag */,
+				91BFA3D61901B024001686E4 /* mask.vert */,
 			);
 			name = src;
 			sourceTree = "<group>";

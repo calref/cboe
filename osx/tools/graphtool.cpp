@@ -34,6 +34,8 @@ sf::Texture bg_gworld;
 TextStyle TEXT;
 bool use_win_graphics = false;
 CursorRef GetCursorFromPath(std::string filename, location hotspot);
+sf::Shader maskShader;
+extern fs::path progDir;
 // TODO: Shouldn't need this
 extern sf::RenderWindow mainPtr;
 
@@ -44,6 +46,34 @@ void clean_up_graphtool(){
 }
 
 void init_graph_tool(){
+	fs::path shaderPath = progDir/"data"/"shaders";
+	fs::path fragPath = shaderPath/"mask.frag", vertPath = shaderPath/"mask.vert";
+	std::ifstream fin;
+	
+	fin.open(fragPath.c_str());
+	if(!fin.good()) perror("Error loading fragment shader");
+	fin.seekg(0, std::ios::end);
+	int size = fin.tellg();
+	fin.seekg(0);
+	char* fbuf = new char[size + 1];
+	fbuf[size] = 0;
+	fin.read(fbuf, size);
+	fin.close();
+	
+	fin.open(vertPath.c_str());
+	if(!fin.good()) perror("Error loading vertex shader");
+	fin.seekg(0, std::ios::end);
+	size = fin.tellg();
+	fin.seekg(0);
+	char* vbuf = new char[size + 1];
+	vbuf[size] = 0;
+	fin.read(vbuf, size);
+	
+	if(!maskShader.loadFromMemory(vbuf, fbuf)) {
+		fprintf(stderr,"Error: Failed to load shaders from %s\nVertex:\n%s\nFragment:\n%s",shaderPath.c_str(),vbuf,fbuf);
+	}
+	delete[] fbuf;
+	delete[] vbuf;
 	int i,j;
 	// TODO: The duplication of location here shouldn't be necessary
 	// TODO: Store the hotspots on disk instead of hardcoded here
@@ -146,11 +176,17 @@ void restore_cursor(){
 	set_cursor(current_cursor);
 }
 
+static void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode);
+
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect) {
 	fill_rect(targ_gworld, targ_rect, sf::Color::Black);
 }
 
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode){
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
+}
+
+void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode) {
 	setActiveRenderTarget(targ_gworld);
 	sf::Sprite tile(src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);
@@ -164,6 +200,25 @@ void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderT
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset, sf::BlendMode mode) {
 	targ_rect.offset(offset);
 	rect_draw_some_item(src_gworld,src_rect,mainPtr,targ_rect,mode);
+}
+
+void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect) {
+	sf::RenderTexture src;
+	src.create(src_rect.width(), src_rect.height());
+	RECT dest_rect = src_rect;
+	dest_rect.offset(-dest_rect.left,-dest_rect.top);
+	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
+	src.display();
+	sf::RenderTexture mask;
+	mask.create(mask_rect.width(), mask_rect.height());
+	dest_rect = mask_rect;
+	dest_rect.offset(-dest_rect.left,-dest_rect.top);
+	rect_draw_some_item(mask_gworld, mask_rect, mask, dest_rect);
+	mask.display();
+	
+	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
+	maskShader.setParameter("mask", mask.getTexture());
+	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
 }
 
 void TextStyle::applyTo(sf::Text& text) {
