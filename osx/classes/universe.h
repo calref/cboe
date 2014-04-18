@@ -30,6 +30,9 @@ namespace legacy {
 };
 
 class cCurTown {
+	cSpeech* curTalk = NULL;
+	bool talkNeedsDeleting = false;
+	short cur_talk_loaded = -1;
 public:
 	cTown* record;
 	// formerly current_town_type
@@ -40,8 +43,6 @@ public:
 	cPopulation monst;
 	bool in_boat; // is this really needed?
 	location p_loc;
-	cSpeech* cur_talk; // my addition
-	short cur_talk_loaded; // my addition
 	
 	cItemRec items[115]; // formerly town_item_list type
 	
@@ -64,6 +65,8 @@ public:
 	bool loaded() const;
 	void unload();
 	short countMonsters();
+	cSpeech& cur_talk(); // Get the currently loaded speech
+	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
 	
 	bool is_explored(char x, char y) const;
 	bool is_force_wall(char x, char y) const;
@@ -121,6 +124,8 @@ public:
 //	bool set_trim(char x, char y, char t, bool b);
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);
+	
+	~cCurTown();
 };
 
 class cCurOut {

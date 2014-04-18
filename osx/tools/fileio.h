@@ -16,7 +16,7 @@ namespace fs = boost::filesystem; // TODO: Centralize this alias!
 
 bool load_scenario(fs::path file_to_load, bool skip_strings = false);
 bool load_town(short which_town, cTown*& the_town);
-bool load_town(short which_town, cSpeech*& the_talk);
+bool load_town_talk(short which_town);
 bool load_town_str(short which_town, short which_str, char* str);
 bool load_town_str(short which_town, cTown*& the_town);
 bool load_outdoors(location which_out,cOutdoors& the_out);

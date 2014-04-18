@@ -337,15 +337,8 @@ bool load_town(short which_town, cTown*& the_town){
 	return true;
 }
 
-bool load_town(short which_town, cSpeech*& the_talk){
-	if(which_town == univ.town.cur_talk_loaded) return true;
-	if(univ.town.num != univ.town.cur_talk_loaded) delete the_talk;
-	univ.town.cur_talk_loaded = which_town;
-	if(which_town == univ.town.num) {
-		the_talk = &univ.town->talking;
-		return true;
-	}
-	the_talk = new cSpeech;
+bool load_town_talk(short which_town){
+	if(univ.town.prep_talk(which_town)) return true;
 	
 	short i,n;
 	long len,len_to_jump = 0;
@@ -411,12 +404,13 @@ bool load_town(short which_town, cSpeech*& the_talk){
 		return false;
 	}
 	port_talk_nodes(&store_talk);
-	*the_talk = store_talk;
+	cSpeech& the_talk = univ.town.cur_talk();
+	the_talk = store_talk;
 	
 	for (i = 0; i < 170; i++) {
-		len = (long) (the_talk->strlens[i]);
-		n = fread(&(the_talk->talk_strs[i]), len, 1, file_id);
-		the_talk->talk_strs[i][len] = 0;
+		len = (long) (the_talk.strlens[i]);
+		n = fread(&(the_talk.talk_strs[i]), len, 1, file_id);
+		the_talk.talk_strs[i][len] = 0;
 	}
 	
 //	town_type = scenario.town_size[which_town];

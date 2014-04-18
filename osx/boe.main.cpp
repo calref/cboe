@@ -491,8 +491,6 @@ void close_program()
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	//end_music();
 	if(univ.town.loaded()) univ.town.unload();
-	if(univ.town.cur_talk_loaded != univ.town.num)
-		delete univ.town.cur_talk;
 	clean_up_graphtool();
 }
 

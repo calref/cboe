@@ -46,7 +46,8 @@ void cCurTown::append(legacy::current_town_type& old,short which_size){
 	in_boat = old.in_boat;
 	p_loc.x = old.p_loc.x;
 	p_loc.y = old.p_loc.y;
-	cur_talk = &record->talking;
+	curTalk = &record->talking;
+	talkNeedsDeleting = false;
 	cur_talk_loaded = num;
 }
 
@@ -111,6 +112,32 @@ bool cCurTown::loaded() const{
 void cCurTown::unload(){
 	delete record;
 	record = NULL;
+}
+
+
+cSpeech& cCurTown::cur_talk() {
+	// Make sure we actually have a valid speech stored
+	if(curTalk == NULL) prep_talk(num);
+	return *curTalk;
+}
+
+bool cCurTown::prep_talk(short which) {
+	if(which == cur_talk_loaded) return true;
+	if(talkNeedsDeleting && curTalk != NULL) delete curTalk;
+	cur_talk_loaded = which;
+	if(which == num) {
+		curTalk = &record->talking;
+		talkNeedsDeleting = false;
+		return true;
+	} else {
+		curTalk = new cSpeech;
+		talkNeedsDeleting = true;
+		return false;
+	}
+}
+
+cCurTown::~cCurTown() {
+	if(talkNeedsDeleting && curTalk != NULL) delete curTalk;
 }
 
 bool cCurTown::is_explored(char x, char y) const{

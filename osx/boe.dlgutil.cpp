@@ -524,13 +524,13 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	talk_gworld.create(area_rect.width(), area_rect.height());
 	
 	// first make sure relevant talk strs are loaded in
-	load_town(personality / 10,univ.town.cur_talk);
+	load_town_talk(personality / 10);
 	
 	// load all possible responses
 	store_responses();
 	
 	// Dredge up critter's name
-	title_string = std::string(univ.town.cur_talk->talk_strs[personality % 10]) + ":";
+	title_string = std::string(univ.town.cur_talk().talk_strs[personality % 10]) + ":";
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
@@ -538,7 +538,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	stat_screen_mode = 1;
 	
 	// Bring up and place first strings.
-	place_string1 = univ.town.cur_talk->talk_strs[personality % 10 + 10];
+	place_string1 = univ.town.cur_talk().talk_strs[personality % 10 + 10];
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
@@ -672,7 +672,7 @@ void handle_talk_event(location p)
 	if (force_special > 0) {
 		switch (force_special) {
 			case 1: case 2: case 3:
-				place_string1 = univ.town.cur_talk->talk_strs[store_personality % 10 + 10 * force_special];
+				place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 10 * force_special];
 				
 				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 				strnum1 =  store_personality % 10 + 10 * force_special;
@@ -725,7 +725,7 @@ void handle_talk_event(location p)
 		one_back1 = old_str1;
 		one_back2 = old_str2;
 		old_str2 = "";
-		old_str1 = univ.town.cur_talk->talk_strs[store_personality % 10 + 160];
+		old_str1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 160];
 		if(old_str1.length() < 2)
 			old_str1 = "You get no response.";
 		place_talk_str(old_str1,old_str2,0,dummy_rect);
@@ -733,14 +733,14 @@ void handle_talk_event(location p)
 		return;
 	}
 	
-	ttype = univ.town.cur_talk->talk_nodes[which_talk_entry].type;
-	a = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[0];
-	b = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[1];
-	c = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[2];
-	d = univ.town.cur_talk->talk_nodes[which_talk_entry].extras[3];
+	ttype = univ.town.cur_talk().talk_nodes[which_talk_entry].type;
+	a = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[0];
+	b = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[1];
+	c = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[2];
+	d = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[3];
 	
-	place_string1 = univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2];
-	place_string2 = univ.town.cur_talk->talk_strs[40 + which_talk_entry * 2 + 1];
+	place_string1 = univ.town.cur_talk().talk_strs[40 + which_talk_entry * 2];
+	place_string2 = univ.town.cur_talk().talk_strs[40 + which_talk_entry * 2 + 1];
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;

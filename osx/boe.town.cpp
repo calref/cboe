@@ -179,7 +179,7 @@ void start_town_mode(short which_town, short entry_dir)
 	load_town(town_number,univ.town.record);
 	
 	univ.town.num = town_number;
-	load_town(town_number,univ.town.cur_talk);
+	load_town_talk(town_number);
 	init_town();
 	
 //	if (play_town_sound == true) {

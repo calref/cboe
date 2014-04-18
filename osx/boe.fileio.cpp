@@ -176,7 +176,6 @@ void finish_load_party(){
 	else {
 		load_town_str(univ.town.num,univ.town.record);
 		load_town(univ.town.num,univ.town.record);
-		univ.town.cur_talk_loaded = -1;
 		
 		for (int i = 0; i < univ.town->max_monst(); i++){
 			univ.town.monst[i].targ_loc.x = 0;
@@ -540,7 +539,6 @@ void init_town(){ // formerly part of load_town
 		}
 		
 	}
-	univ.town.cur_talk_loaded = -1;
 //	}
 }
 

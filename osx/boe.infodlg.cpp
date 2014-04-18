@@ -867,15 +867,13 @@ static void put_talk(cDialog& me)
 	char place_str[256];
 	
 	if ((personality = univ.party.talk_save[store_page_on].personality) >= 0) {
-		if (personality / 10 != univ.town.cur_talk_loaded){
-			load_town(personality / 10,univ.town.cur_talk);
-		}
+		load_town_talk(personality / 10);
 		
 		// TODO: Use cached strings instead of loading them
 		load_town_str(univ.party.talk_save[store_page_on].town_num,0,(char *) place_str);
 		me["loc"].setText(place_str);
 		
-		me["who"].setText(univ.town.cur_talk->talk_strs[personality % 10]);
+		me["who"].setText(univ.town.cur_talk().talk_strs[personality % 10]);
 		
 		if (univ.party.talk_save[store_page_on].str_num1 >= 1000) {
 			if (univ.party.talk_save[store_page_on].str_num1 >= 3000)
@@ -887,7 +885,7 @@ static void put_talk(cDialog& me)
 			}
 		}
 		else if (univ.party.talk_save[store_page_on].str_num1 > 0)
-			me["str1"].setText(univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str_num1]);
+			me["str1"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num1]);
 		
 		if (univ.party.talk_save[store_page_on].str_num2 >= 1000) {
 			if (univ.party.talk_save[store_page_on].str_num2 >= 3000)
@@ -899,7 +897,7 @@ static void put_talk(cDialog& me)
 			}
 		}
 		else if (univ.party.talk_save[store_page_on].str_num2 > 0)
-			me["str2"].setText(univ.town.cur_talk->talk_strs[univ.party.talk_save[store_page_on].str_num2]);
+			me["str2"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num2]);
 	}
 }
 
