@@ -1328,8 +1328,42 @@ bool extend_road_terrain(ter_num_t ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == TER_SPEC_LOCKABLE)
 		return true; // open portcullis (most likely)
-	if(trim == TRIM_N || trim == TRIM_S || trim == TRIM_W || trim == TRIM_E)
-		return true; // connect roads to trim boundaries
+	return false;
+}
+
+bool can_build_roads_on(ter_num_t ter) {
+	if(impassable(ter)) return false;
+	if(scenario.ter_types[ter].special == TER_SPEC_BRIDGE) return false;
+	return true;
+}
+
+static bool superextend_road_terrain(int x, int y) {
+	// Connect road to trim?
+	ter_num_t ter = coord_to_ter(x,y);
+	eTrimType trim = scenario.ter_types[ter].trim_type;
+	if(trim == TRIM_N || trim == TRIM_S) {
+		ter_num_t up = coord_to_ter(x,y-1);
+		ter_num_t down = coord_to_ter(x,y+1);
+		eTrimType trimUp = scenario.ter_types[up].trim_type;
+		eTrimType trimDn = scenario.ter_types[down].trim_type;
+		if((trimUp == TRIM_ROAD || trimUp == TRIM_CITY) && (trimDn == TRIM_ROAD || trimDn == TRIM_CITY))
+			return can_build_roads_on(ter);
+		if((trimUp == TRIM_ROAD || trimUp == TRIM_CITY) && trim == TRIM_N && trimDn == TRIM_S)
+			return can_build_roads_on(ter);
+		if((trimDn == TRIM_ROAD || trimDn == TRIM_CITY) && trim == TRIM_S && trimUp == TRIM_N)
+			return can_build_roads_on(ter);
+	} else if(trim == TRIM_E || trim == TRIM_W) {
+		ter_num_t left = coord_to_ter(x-1,y);
+		ter_num_t right = coord_to_ter(x+1,y);
+		eTrimType trimLeft = scenario.ter_types[left].trim_type;
+		eTrimType trimRight = scenario.ter_types[right].trim_type;
+		if((trimLeft == TRIM_ROAD || trimLeft == TRIM_CITY) && (trimRight == TRIM_ROAD || trimRight == TRIM_CITY))
+			return can_build_roads_on(ter);
+		if((trimLeft == TRIM_ROAD || trimLeft == TRIM_CITY) && trim == TRIM_W && trimRight == TRIM_E)
+			return can_build_roads_on(ter);
+		if((trimRight == TRIM_ROAD || trimRight == TRIM_CITY) && trim == TRIM_E && trimLeft == TRIM_W)
+			return can_build_roads_on(ter);
+	}
 	return false;
 }
 
@@ -1373,7 +1407,7 @@ void place_road(short q,short r,location where, bool here)
 	if(here){
 		if (where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
-		if ((where.y == 0) || extend_road_terrain(ter)) {
+		if ((where.y == 0) || extend_road_terrain(ter) || superextend_road_terrain(where.x, where.y - 1)) {
 			to_rect = road_dest_rects[0];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
@@ -1382,7 +1416,7 @@ void place_road(short q,short r,location where, bool here)
 		if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
 		if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
-			|| extend_road_terrain(ter)) {
+			|| extend_road_terrain(ter) || superextend_road_terrain(where.x + 1, where.y)) {
 			to_rect = road_dest_rects[1];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
@@ -1391,7 +1425,7 @@ void place_road(short q,short r,location where, bool here)
 		if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
 			ter = coord_to_ter(where.x,where.y + 1);
 		if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
-			|| extend_road_terrain(ter)) {
+			|| extend_road_terrain(ter) || superextend_road_terrain(where.x, where.y + 1)) {
 			to_rect = road_dest_rects[2];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
@@ -1399,38 +1433,52 @@ void place_road(short q,short r,location where, bool here)
 		
 		if (where.x > 0)
 			ter = coord_to_ter(where.x - 1,where.y);
-		if ((where.x == 0) || extend_road_terrain(ter)) {
+		if ((where.x == 0) || extend_road_terrain(ter) || superextend_road_terrain(where.x - 1, where.y)) {
 			to_rect = road_dest_rects[3];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 	}else{
+		ter_num_t ref = coord_to_ter(where.x,where.y);
 		bool horz = false, vert = false;
+		eTrimType trim = scenario.ter_types[ref].trim_type;
 		if (where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
+		eTrimType vertTrim = scenario.ter_types[ter].trim_type;
 		if ((where.y == 0) || connect_roads(ter))
-			vert = true;
+			vert = can_build_roads_on(ref);
+		else if((vertTrim == TRIM_S && trim == TRIM_N) || (vertTrim == TRIM_N && trim == TRIM_S))
+			vert = can_build_roads_on(ref);
 		
 		if (((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
+		eTrimType horzTrim = scenario.ter_types[ter].trim_type;
 		if (((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
 			|| connect_roads(ter))
-			horz = true;
+			horz = can_build_roads_on(ref);
+		else if((horzTrim == TRIM_W && trim == TRIM_E) || (horzTrim == TRIM_E && trim == TRIM_W))
+			horz = can_build_roads_on(ref);
 		
 		if(vert){
 			if (((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
+			eTrimType vertTrim = scenario.ter_types[ter].trim_type;
 			if (((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
 				|| connect_roads(ter))
-				vert = true;
+				vert = can_build_roads_on(ref);
+			else if((vertTrim == TRIM_S && trim == TRIM_N) || (vertTrim == TRIM_N && trim == TRIM_S))
+				vert = can_build_roads_on(ref);
 			else vert = false;
 		}
 		
 		if(horz){
 			if (where.x > 0)
 				ter = coord_to_ter(where.x - 1,where.y);
+			eTrimType horzTrim = scenario.ter_types[ter].trim_type;
 			if ((where.x == 0) || connect_roads(ter))
-				horz = true;
+				horz = can_build_roads_on(ref);
+			else if((horzTrim == TRIM_W && trim == TRIM_E) || (horzTrim == TRIM_E && trim == TRIM_W))
+				horz = can_build_roads_on(ref);
 			else horz = false;
 		}
 		

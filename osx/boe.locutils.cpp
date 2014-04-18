@@ -561,6 +561,7 @@ bool impassable(ter_num_t terrain_to_check)
 	else return false;
 }
 
+// TODO: What on earth is this and why does it mangle the blockage?
 short get_blockage(ter_num_t terrain_type)
 {
 	// little kludgy in here for pits
@@ -701,7 +702,7 @@ location push_loc(location from_where,location to_where)
 }
 
 
-
+// TODO: This seems to be wrong; aren't 3 and 4 also impassable?
 bool spot_impassable(short i,short  j)
 {
 	ter_num_t ter;

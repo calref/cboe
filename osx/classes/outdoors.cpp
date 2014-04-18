@@ -25,6 +25,33 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 			if(scenario.ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
 				special_spot[i][j] = true;
 			else special_spot[i][j] = false;
+			// Convert roads that crossed grass/hill boundaries
+			// It won't catch ones that sit exactly at the edge, though; in that case they'd need manual fixing
+			// For simplicity we assume the non-hill space is either a city or a grass road
+			// Terrain types used here:
+			// 80 - grass road    81 - hill road
+			// 38 - hill/grass    40 - hill|grass    42 - grass/hill    44 - grass|hill
+			// where / means "over" and | means "beside"
+			// Not going to do it for town since roads in town are uncommon. Maybe later.
+			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
+				if(old.terrain[i+1][j] == 81) {
+					ter_num_t connect = old.terrain[i-1][j];
+					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+						terrain[i][j] = 44;
+				} else if(old.terrain[i-1][j] == 81) {
+					ter_num_t connect = old.terrain[i+1][j];
+					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+						terrain[i][j] = 40;
+				} else if(old.terrain[i][j+1] == 81) {
+					ter_num_t connect = old.terrain[i][j-1];
+					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+						terrain[i][j] = 42;
+				} else if(old.terrain[i][j-1] == 81) {
+					ter_num_t connect = old.terrain[i][j+1];
+					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+						terrain[i][j] = 38;
+				}
+			}
 		}
 	for(i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
