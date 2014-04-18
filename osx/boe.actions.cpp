@@ -1567,6 +1567,10 @@ bool handle_keystroke(sf::Event& event){
 //	add_string_to_buf((char *) debug);
 //	print_buf();
 	Key chr2 = event.key.code;
+	
+	if(chr2 == kb::LShift || chr2 == kb::LAlt || chr2 == kb::LControl || chr2 == kb::LSystem) return false;
+	if(chr2 == kb::RShift || chr2 == kb::RAlt || chr2 == kb::RControl || chr2 == kb::RSystem) return false;
+	
 	if(chr2 == kb::Up && !kb::isKeyPressed(kb::Down)) {
 		if(kb::isKeyPressed(kb::Left)) chr2 = kb::Numpad7;
 		else if(kb::isKeyPressed(kb::Right)) chr2 = kb::Numpad9;
