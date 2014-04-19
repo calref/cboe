@@ -87,7 +87,6 @@ cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cI
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
-bool unreg_party_in_scen_not_check = false;
 
 RECT pc_help_button,pc_area_rect,item_area_rect;
 
@@ -332,16 +331,6 @@ bool handle_action(sf::Event event)
 		special_queue[i].spec = -1;
 	end_scenario = false;
 	
-	if (unreg_party_in_scen_not_check == true) {
-		if (/*enter_password() == */false) {
-			end_scenario = true;
-		}
-		else {
-			in_scen_debug = true;
-			ASB("Debug mode ON.");
-		}
-		unreg_party_in_scen_not_check = false;
-	}
 	// Now split off the extra stuff, like talking and shopping.
 	if (overall_mode == MODE_TALKING) {
 		handle_talk_event(the_point);

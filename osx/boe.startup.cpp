@@ -33,7 +33,6 @@ extern sf::RenderWindow mainPtr;
 extern location ul;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenarioList scen_headers;;
-extern bool unreg_party_in_scen_not_check;
 //extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
 extern eGameMode overall_mode;
