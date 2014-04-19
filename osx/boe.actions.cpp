@@ -1546,7 +1546,7 @@ bool handle_keystroke(sf::Event& event){
 	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
 	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 	
-	if(map_visible && isFrontWindow(mini_map) && event.key.code == kb::Escape
+	if(map_visible && event.key.code == kb::Escape
 	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
 		mini_map.setVisible(false);
 		map_visible = false;
