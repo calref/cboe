@@ -501,6 +501,9 @@
 		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
+		91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
+		91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
+		91BFA3EB19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
 		91C1FCA60FCB6F7000EBAA65 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
 		91C1FCA70FCB6F7100EBAA65 /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
 		91C1FCA80FCB6F7100EBAA65 /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA180FB8BECA001E34EA /* dialog.cpp */; };
@@ -1604,6 +1607,8 @@
 		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathutil.h; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
 		91BFA3D61901B024001686E4 /* mask.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.vert; sourceTree = "<group>"; };
+		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
+		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cursors.m; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
@@ -2439,12 +2444,22 @@
 		91B3F0FF0F97797200BF5B67 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				91BFA3DC19033E00001686E4 /* gzstream */,
 				912DFE8718E24B0B00B00D75 /* resmgr */,
 				910BBA130FB8BE66001E34EA /* dialogxml */,
 				913D03350FA1000200184C18 /* headers */,
 				913D03340FA0FFFF00184C18 /* src */,
 			);
 			path = tools;
+			sourceTree = "<group>";
+		};
+		91BFA3DC19033E00001686E4 /* gzstream */ = {
+			isa = PBXGroup;
+			children = (
+				91BFA3DE19033E01001686E4 /* gzstream.cpp */,
+				91BFA3DF19033E01001686E4 /* gzstream.h */,
+			);
+			path = gzstream;
 			sourceTree = "<group>";
 		};
 		91D62F2C0F8EB7AB00674AB3 /* src */ = {
@@ -2805,6 +2820,7 @@
 				91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 				91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */,
 				91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */,
+				91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2856,6 +2872,7 @@
 				91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */,
 				91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */,
 				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
+				91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2909,6 +2926,7 @@
 				91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */,
 				9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */,
 				91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */,
+				91BFA3EB19033E01001686E4 /* gzstream.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
