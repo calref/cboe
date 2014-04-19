@@ -11,7 +11,11 @@
 #include "cursors.h"
 #include "restypes.hpp"
 #include <boost/filesystem.hpp>
+#ifdef __APPLE__
 #include <OpenGl/GL.h>
+#else
+#include <GL/GL.h>
+#endif
 #include <boost/math/constants/constants.hpp>
 #include <typeinfo>
 using boost::math::constants::pi;
@@ -1116,7 +1120,6 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRe
 	clip_rect(target, clipArea);
 	target.draw(tessel, renderMode);
 	undo_clip(target);
-	glDisable(GL_SCISSOR_TEST);
 }
 
 #if 0
