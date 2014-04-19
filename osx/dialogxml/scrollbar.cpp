@@ -26,7 +26,7 @@ bool cScrollbar::isClickable(){
 }
 
 void cScrollbar::setPosition(long newPos) {
-	pos = minmax(0,max,pos);
+	pos = minmax(0,max,newPos);
 }
 
 void cScrollbar::setMaximum(long newMax) {
