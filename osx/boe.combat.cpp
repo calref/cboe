@@ -2335,7 +2335,7 @@ void monster_attack_pc(short who_att,short target)
 							  attacker->m_type,sound_type) &&
 					(store_hp - univ.party[target].cur_health > 0)) {
 					damaged_message(store_hp - univ.party[target].cur_health,
-									(i > 0) ? attacker->a23_type : attacker->a1_type);
+									attacker->a[i].type);
 					
 					if (univ.party[target].status[10] > 0) {
 						add_string_to_buf("  Shares damage!                 ");
@@ -2507,7 +2507,7 @@ void monster_attack_monster(short who_att,short attackee)
 				dam_type += DAMAGE_MARKED;
 				if (damage_monst(attackee,7,r2,0,dam_type,sound_type) == true) {
 					damaged_message(store_hp - target->health,
-									(i > 0) ? attacker->a23_type : attacker->a1_type);
+									attacker->a[i].type);
 					
 					if ((attacker->poison > 0) && (i == 0)) {
 						poison_monst(target,attacker->poison);
@@ -4795,7 +4795,7 @@ void add_new_action(short pc_num)
 short get_monst_sound(cCreature *attacker,short which_att) {
 	short type,strength;
 	
-	type = (which_att == 0) ? attacker->a1_type :  attacker->a23_type;
+	type = attacker->a[which_att].type;
 	strength = attacker->a[which_att];
 	
 	switch (type) {

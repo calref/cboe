@@ -103,7 +103,6 @@ public:
 		unsigned char extra1, extra2;
 		operator std::string();
 	};
-	m_num_t m_num; // TODO: This probably shouldn't be necessary. Consider why it is, and determine if it can be removed
 	unsigned char level;
 	std::string m_name;
 	short health; // TODO: Move health, mp and max_mp to cCreature
@@ -113,7 +112,6 @@ public:
 	unsigned char armor;
 	unsigned char skill;
 	cAttack a[3];
-	unsigned char a1_type,a23_type; // TODO: Delete in favour of type field of cAttack
 	eMonsterType m_type;
 	unsigned char speed;
 	unsigned char ap; // TODO: Move ap to cCreature
@@ -172,6 +170,7 @@ public:
 	location targ_loc;
 	
 	cCreature();
+	cCreature(int num);
 	
 	cCreature& operator = (legacy::creature_data_type old);
 	cCreature& operator = (legacy::creature_start_type old);

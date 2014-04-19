@@ -230,8 +230,7 @@ void set_up_monst(short mode,m_num_t m_num)
 	
 	for (which = 0; which < univ.town->max_monst(); which++)
 		if (univ.town.monst[which].active == 0) {
-			univ.town.monst[which].number = m_num;
-			univ.town.monst[which] = cCreature();
+			univ.town.monst[which] = cCreature(m_num);
 			univ.town.monst[which].active = 2;
 			univ.town.monst[which].summoned = 0;
 			univ.town.monst[which].attitude = mode + 1;

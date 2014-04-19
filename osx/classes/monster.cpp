@@ -17,7 +17,6 @@
 
 cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	int i;
-	m_num = old.m_num;
 	level = old.level;
 	//m_name = old.m_name;
 	health = old.health;
@@ -28,8 +27,8 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	skill = old.skill;
 	for(i = 0; i < 3; i++) a[i] = old.a[i];
 	// TODO: These two bits of data belong in a[]
-	a1_type = old.a1_type;
-	a23_type = old.a23_type;
+	a[0].type = old.a1_type;
+	a[1].type = a[2].type = old.a23_type;
 	m_type = (eMonsterType) old.m_type;
 	speed = old.speed;
 	ap = old.ap;
@@ -76,6 +75,10 @@ cCreature::cCreature(){
 	spec1 = spec2 = spec_enc_code = time_code = monster_time = 0;
 	personality = special_on_kill = facial_pic = -1;
 	target = 6;
+}
+
+cCreature::cCreature(int num) : cCreature() {
+	number = num;
 }
 
 cCreature& cCreature::operator = (legacy::creature_start_type old){
