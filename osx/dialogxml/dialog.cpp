@@ -914,6 +914,7 @@ void cDialog::run(){
 	ModalSession dlog(win);
 	while(dialogNotToast){
 		draw();
+		dlog.pumpEvents();
 		if(!win.pollEvent(currentEvent)) continue;
 		location where;
 		switch(currentEvent.type){
