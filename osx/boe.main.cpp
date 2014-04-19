@@ -294,12 +294,12 @@ void Handle_One_Event()
 	
 	//(cur_time - last_anim_time > 42)
 	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
-	   && (isFrontWindow(mainPtr) || isFrontWindow(mini_map)) && (!gInBackground)) {
+	   && (!gInBackground)) {
 		animTimer.restart();
 		draw_terrain();
 	}
 	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (overall_mode == MODE_STARTUP)
-	   && app_started_normally && isFrontWindow(mainPtr)) {
+	   && app_started_normally) {
 		animTimer.restart();
 		draw_startup_anim(true);
 	}
@@ -347,7 +347,7 @@ void Handle_One_Event()
 			// which hides the mouse cursor until it's moved.
 			// SFML's hide cursor function is always permanent, so this is here to balance that out.
 			mainPtr.setMouseCursorVisible(true);
-			if(!gInBackground && (isFrontWindow(mainPtr) || isFrontWindow(mini_map))) {
+			if(!gInBackground) {
 				location where(event.mouseMove.x, event.mouseMove.y);
 				change_cursor(where);
 				// TODO: Probably don't actually need the conditional here?

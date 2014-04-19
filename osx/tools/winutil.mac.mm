@@ -70,16 +70,6 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 	return 0;
 }
 
-bool isFrontWindow(sf::Window& win) {
-	sf::WindowHandle handle = win.getSystemHandle();
-	id nsHandle = id(handle);
-	if([nsHandle isKindOfClass: [NSWindow class]]) {
-		BOOL main = [nsHandle isMainWindow];
-		return main;
-	}
-	return false;
-}
-
 void makeFrontWindow(sf::Window& win) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);
