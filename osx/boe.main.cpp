@@ -363,6 +363,15 @@ void Handle_One_Event()
 			
 		case sf::Event::Closed:
 			if(overall_mode == MODE_STARTUP) {
+				if(party_in_memory) {
+					std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save","quit","cancel"}).show();
+					if(choice == "cancel") break;
+					if(choice == "save") {
+						fs::path file = nav_put_party();
+						if(!file.empty()) break;
+						save_party(file);
+					}
+				}
 				All_Done = true;
 				break;
 			}
@@ -547,6 +556,15 @@ void handle_file_menu(int item_hit)
 		case 8:
 			
 			if(overall_mode == MODE_STARTUP) {
+				if(party_in_memory) {
+					std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save","quit","cancel"}).show();
+					if(choice == "cancel") break;
+					if(choice == "save") {
+						fs::path file = nav_put_party();
+						if(!file.empty()) break;
+						save_party(file);
+					}
+				}
 				All_Done = true;
 				break;
 			}
