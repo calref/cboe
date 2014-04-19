@@ -1291,6 +1291,7 @@ void erase_out_specials()
 							
 						}
 					}
+				// TODO: Next four lines aren't needed, but first would need to change loop variables
 			}
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 2; j++)
@@ -1312,16 +1313,9 @@ void erase_out_specials()
 								univ.out.outdoors[i][j].special_locs[k].x = 100;
 							}
 							
-//							switch (scenario.ter_types[univ.out.outdoors[i][j].terrain[where.x][where.y]].picture) {
-//								case 207: univ.out[48 * i + where.x][48 * j + where.y] = 0; break;
-//								case 208: univ.out[48 * i + where.x][48 * j + where.y] = 170; break;
-//								case 209: univ.out[48 * i + where.x][48 * j + where.y] = 210; break;
-//								case 210: univ.out[48 * i + where.x][48 * j + where.y] = 217; break;
-//								case 211: univ.out[48 * i + where.x][48 * j + where.y] = 2; break;
-//								case 212: univ.out[48 * i + where.x][48 * j + where.y] = 36; break;
-//							}
+							// TODO: I'm not quite sure if this should be within this block
+							univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
 						}
-						univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
 					}
 				}
 			}

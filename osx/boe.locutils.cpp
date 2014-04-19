@@ -93,12 +93,13 @@ location global_to_local(location global)
 	location local;
 	
 	local = global;
-	if (univ.party.i_w_c.x == 1)
+	if(global.x >= 48)
 		local.x = local.x - 48;
-	if (univ.party.i_w_c.y == 1)
+	if(global.y >= 48)
 		local.y = local.y - 48;
 	return local;
 }
+// TODO: I fixed the above function, but it's impossible to fix this one without adding a parameter (which would be i_w_c)
 location local_to_global(location local)
 {
 	location global;
