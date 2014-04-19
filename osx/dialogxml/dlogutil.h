@@ -60,7 +60,7 @@ typedef boost::optional<bbtt> cBasicButtonType;
 
 namespace {cBasicButtonType null_btn = boost::none;}
 #ifndef BTNS_DEFINED
-extern cBasicButtonType basic_buttons[];
+extern bbtt basic_buttons[];
 extern size_t available_btns[];
 #endif
 

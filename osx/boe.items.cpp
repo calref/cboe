@@ -1110,9 +1110,9 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	std::string item_hit = customDialog.show();
 	
 	for(int i = 0; i < 3; i++) {
-		cBasicButtonType& btn = basic_buttons[available_btns[i]];
-		if(btn && item_hit == btn->label)
-			return i;
+		auto& btn = basic_buttons[available_btns[buttons[i]]];
+		if(item_hit == btn.label)
+			return i + 1;
 	}
 	return -1;
 }
