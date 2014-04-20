@@ -14,6 +14,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 #include "mathutil.h"
+#include "fileio.h"
 
 void cCurOut::append(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
@@ -705,29 +706,9 @@ ter_num_t& cCurOut::operator [] (location loc) {
 }
 
 void cCurOut::writeTo(std::ostream& file){
-	for(int i = 0; i < 96; i++){
-		file << expl[i][0];
-		for(int j = 1; j < 96; j++){
-			file << '\t' << int(expl[i][j]);
-		}
-		file << std::endl;
-	}
-	file << '\f';
-	for(int i = 9; i < 96; i++){
-		file << out[i][0];
-		for(int j = 1; j < 96; j++){
-			file << '\t' << out[i][j];
-		}
-		file << std::endl;
-	}
-	file << '\f';
-	for(int i = 0; i < 96; i++){
-		file << out_e[i][0];
-		for(int j = 1; j < 96; j++){
-			file << '\t' << unsigned(out_e[i][j]);
-		}
-		file << std::endl;
-	}
+	writeArray(file, expl, 96, 96);
+	writeArray(file, out, 96, 96);
+	writeArray(file, out_e, 96, 96);
 //	file << "OUTDOORS 0 0" << std::endl;
 //	outdoors[0][0].writeTo(file);
 //	file << "OUTDOORS 0 1" << std::endl;
@@ -737,6 +718,12 @@ void cCurOut::writeTo(std::ostream& file){
 //	file << "OUTDOORS 1 1" << std::endl;
 //	outdoors[1][1].writeTo(file);
 //	file << std::endl;
+}
+
+void cCurOut::readFrom(std::istream& file) {
+	readArray(file, expl, 96, 96);
+	readArray(file, out, 96, 96);
+	readArray(file, out_e, 96, 96);
 }
 
 void cCurTown::writeTo(std::ostream& file){
@@ -750,29 +737,21 @@ void cCurTown::writeTo(std::ostream& file){
 		if(items[i].variety > ITEM_TYPE_NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);
+			file << '\f';
 		}
 	file << '\f';
 	for(int i = 0; i < 60; i++) {
 		if(monst[i].active > 0) {
 			file << "CREATURE " << i << '\n';
 			monst[i].writeTo(file);
+			file << '\f';
 		}
 	}
 	file << '\f';
-	for(int i = 0; i < 64; i++){
-		file << fields[i][0];
-		for(int j = 1; j < 64; j++)
-			file << '\t' << fields[i][j];
-		file << std::endl;
-	}
-	file << '\f';
+	file << "FIELDS\n";
+	writeArray(file, fields, 64, 46);
 	file << "SIZE " << record->max_dim() << "\n";
-	for(int i = 0; i < record->max_dim(); i++){
-		file << record->terrain(i,0);
-		for(int j = 1; j < record->max_dim(); j++)
-			file << '\t' << record->terrain(i,j);
-		file << '\n';
-	}
+	record->writeTerrainTo(file);
 	// TODO: Do we need to save special_spot?
 }
 
@@ -795,44 +774,40 @@ void cCurTown::readFrom(std::istream& file){
 			sin >> in_boat;
 		else if(cur == "AT")
 			sin >> p_loc.x >> p_loc.y;
-		else if(cur == "ITEM"){
+	}
+	while(file) {
+		getline(file, cur, '\f');
+		bin.str(cur);
+		bin >> cur;
+		if(cur == "FIELDS")
+			readArray(bin, fields, 64, 64);
+		else if(cur == "ITEM") {
 			int i;
-			sin >> i >> cur;
-			items[i].readAttrFrom(cur, sin);
+			bin >> i;
+			items[i].readFrom(bin);
+		} else if(cur == "CREATURE") {
+			int i;
+			bin >> i;
+			monst[i].active = true;
+			monst[i].readFrom(bin);
+		} else if(cur == "SIZE") {
+			int dim;
+			bin >> dim;
+			if(record != NULL) delete record;
+			switch(dim){
+				case 32:
+					record = new cTinyTown;
+					break;
+				case 48:
+					record = new cMedTown;
+					break;
+				case 64:
+					record = new cBigTown;
+					break;
+			}
+			record->readTerrainFrom(bin);
 		}
 	}
-	getline(file, cur, '\f');
-	bin.str(cur);
-	for(int i = 0; i < 64; i++)
-		for(int j = 1; j < 64; j++)
-			bin >> fields[i][j];
-	getline(file, cur, '\f');
-	bin.str(cur);
-	int dim;
-	bin >> dim;
-	if(record != NULL) delete record;
-	switch(dim){
-		case 32:
-			record = new cTinyTown;
-			break;
-		case 48:
-			record = new cMedTown;
-			break;
-		case 64:
-			record = new cBigTown;
-			break;
-	}
-	for(int i = 0; i < dim; i++)
-		for(int j = 1; j < dim; j++)
-			bin >> record->terrain(i,j);
-	// TODO: Read population
-}
-
-
-void cCurOut::readFrom(std::istream& file){
-	for(int i = 0; i < 96; i++)
-		for(int j = 1; j < 96; j++)
-			file >> out_e[i][j];
 }
 
 cCurTown::cCurTown(){

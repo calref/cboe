@@ -13,6 +13,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
+#include "fileio.h"
 
 extern cScenario scenario;
 
@@ -143,6 +144,14 @@ ter_num_t& cTinyTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
 }
 
+void cTinyTown::writeTerrainTo(std::ostream& file) {
+	writeArray(file, _terrain, 32, 32);
+}
+
+void cTinyTown::readTerrainFrom(std::istream& file) {
+	readArray(file, _terrain, 32, 32);
+}
+
 rectangle& cTinyTown::room_rect(size_t i){
 	return _room_rect[i];
 }
@@ -159,6 +168,14 @@ ter_num_t& cMedTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
 }
 
+void cMedTown::writeTerrainTo(std::ostream& file) {
+	writeArray(file, _terrain, 48, 48);
+}
+
+void cMedTown::readTerrainFrom(std::istream& file) {
+	readArray(file, _terrain, 48, 48);
+}
+
 rectangle& cMedTown::room_rect(size_t i){
 	return _room_rect[i];
 }
@@ -173,6 +190,14 @@ unsigned char& cMedTown::lighting(size_t i, size_t r){
 
 ter_num_t& cBigTown::terrain(size_t x, size_t y){
 	return _terrain[x][y];
+}
+
+void cBigTown::writeTerrainTo(std::ostream& file) {
+	writeArray(file, _terrain, 64, 64);
+}
+
+void cBigTown::readTerrainFrom(std::istream& file) {
+	readArray(file, _terrain, 64, 64);
 }
 
 rectangle& cBigTown::room_rect(size_t i){

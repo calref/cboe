@@ -74,7 +74,7 @@ public:
 	cItemRec(long preset);
 	cItemRec& operator = (legacy::item_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix = "");
-	void readAttrFrom(std::string cur, std::istream& sin);
+	void readFrom(std::istream& sin);
 };
 
 std::ostream& operator << (std::ostream& out, eWeapType& e);

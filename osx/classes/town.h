@@ -117,7 +117,8 @@ public:
 	cTown();
 	cTown(short size);
 	cTown& operator = (legacy::town_record_type& old);
-	void writeTo(std::ostream& file);
+	virtual void writeTerrainTo(std::ostream& file) = 0;
+	virtual void readTerrainFrom(std::istream& file) = 0;
 };
 
 #endif

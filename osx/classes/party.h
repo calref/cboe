@@ -150,4 +150,7 @@ bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);
 bool operator==(const cParty::cJournal& one, const cParty::cJournal& two);
 bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two);
 
+std::istream& operator>>(std::istream& in, eEncNoteType& type);
+std::ostream& operator<<(std::ostream& out, eEncNoteType type);
+
 #endif

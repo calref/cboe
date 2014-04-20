@@ -334,70 +334,74 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 }
 
 void cItemRec::writeTo(std::ostream& file, std::string prefix){
-	file << prefix << "VARIETY " << variety << std::endl;
-	file << prefix << "LEVEL " << item_level << std::endl;
-	file << prefix << "AWKWARD " << awkward << std::endl;
-	file << prefix << "BONUS " << bonus << std::endl;
-	file << prefix << "PROT " << protection << std::endl;
-	file << prefix << "CHARGES " << charges << std::endl;
-	file << prefix << "WEAPON " << type << std::endl;
-	file << prefix << "USE " << magic_use_type << std::endl;
-	file << prefix << "ICON " << graphic_num << std::endl;
-	file << prefix << "ABILITY " << ability << std::endl;
-	file << prefix << "ABILSTR " << ability_strength << std::endl;
-	file << prefix << "TYPE " << type_flag << std::endl;
-	file << prefix << "ISSPEC " << is_special << std::endl;
-	file << prefix << "VALUE " << value << std::endl;
-	file << prefix << "WEIGHT " << weight << std::endl;
-	file << prefix << "SPEC " << special_class << std::endl;
-	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << std::endl;
-	file << prefix << "FULLNAME " << full_name << std::endl;
-	file << prefix << "NAME " << name << std::endl;
-	file << prefix << "TREASURE " << treas_class << std::endl;
-	if(ident) file << prefix << "IDENTIFIED" << std::endl;
-	if(property) file << prefix << "PROPERTY" << std::endl;
-	if(magic) file << prefix << "MAGIC" << std::endl;
-	if(contained) file << prefix << "CONTAINED" << std::endl;
-	if(cursed) file << prefix << "CURSED" << std::endl;
-	if(concealed) file << prefix << "CONCEALED" << std::endl;
-	if(enchanted) file << prefix << "ENCHANTED" << std::endl;
-	if(unsellable) file << prefix << "UNSELLABLE" << std::endl;
+	file << prefix << "VARIETY " << variety << '\n';
+	file << prefix << "LEVEL " << item_level << '\n';
+	file << prefix << "AWKWARD " << awkward << '\n';
+	file << prefix << "BONUS " << bonus << '\n';
+	file << prefix << "PROT " << protection << '\n';
+	file << prefix << "CHARGES " << charges << '\n';
+	file << prefix << "WEAPON " << type << '\n';
+	file << prefix << "USE " << magic_use_type << '\n';
+	file << prefix << "ICON " << graphic_num << '\n';
+	file << prefix << "ABILITY " << ability << '\n';
+	file << prefix << "ABILSTR " << ability_strength << '\n';
+	file << prefix << "TYPE " << type_flag << '\n';
+	file << prefix << "ISSPEC " << is_special << '\n';
+	file << prefix << "VALUE " << value << '\n';
+	file << prefix << "WEIGHT " << weight << '\n';
+	file << prefix << "SPEC " << special_class << '\n';
+	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << '\n';
+	file << prefix << "FULLNAME " << full_name << '\n';
+	file << prefix << "NAME " << name << '\n';
+	file << prefix << "TREASURE " << treas_class << '\n';
+	if(ident) file << prefix << "IDENTIFIED\n";
+	if(property) file << prefix << "PROPERTY\n";
+	if(magic) file << prefix << "MAGIC\n";
+	if(contained) file << prefix << "CONTAINED\n";
+	if(cursed) file << prefix << "CURSED\n";
+	if(concealed) file << prefix << "CONCEALED\n";
+	if(enchanted) file << prefix << "ENCHANTED\n";
+	if(unsellable) file << prefix << "UNSELLABLE\n";
 }
 
-void cItemRec::readAttrFrom(std::string cur, std::istream& sin){
-	if(cur == "VARIETY") sin >> variety;
-	else if(cur == "LEVEL") sin >> item_level;
-	else if(cur == "AWKWARD") sin >> awkward;
-	else if(cur == "BONUS") sin >> bonus;
-	else if(cur == "PROT") sin >> protection;
-	else if(cur == "CHARGES") sin >> charges;
-	else if(cur == "WEAPON") sin >> type;
-	else if(cur == "USE") sin >> magic_use_type;
-	else if(cur == "ICON") sin >> graphic_num;
-	else if(cur == "ABILITY") sin >> ability;
-	else if(cur == "ABILSTR") sin >> ability_strength;
-	else if(cur == "TYPE") sin >> type_flag;
-	else if(cur == "ISSPEC") sin >> is_special;
-	else if(cur == "VALUE") sin >> value;
-	else if(cur == "WEIGHT") sin >> weight;
-	else if(cur == "SPEC") sin >> special_class;
-	else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
-	else if(cur == "FULLNAME"){
-		getline(sin,cur);
-		full_name = cur;
-	}else if(cur == "NAME"){
-		getline(sin,cur);
-		name = cur;
+void cItemRec::readFrom(std::istream& sin){
+	while(sin) {
+		std::string cur;
+		getline(sin, cur);
+		if(cur == "VARIETY") sin >> variety;
+		else if(cur == "LEVEL") sin >> item_level;
+		else if(cur == "AWKWARD") sin >> awkward;
+		else if(cur == "BONUS") sin >> bonus;
+		else if(cur == "PROT") sin >> protection;
+		else if(cur == "CHARGES") sin >> charges;
+		else if(cur == "WEAPON") sin >> type;
+		else if(cur == "USE") sin >> magic_use_type;
+		else if(cur == "ICON") sin >> graphic_num;
+		else if(cur == "ABILITY") sin >> ability;
+		else if(cur == "ABILSTR") sin >> ability_strength;
+		else if(cur == "TYPE") sin >> type_flag;
+		else if(cur == "ISSPEC") sin >> is_special;
+		else if(cur == "VALUE") sin >> value;
+		else if(cur == "WEIGHT") sin >> weight;
+		else if(cur == "SPEC") sin >> special_class;
+		else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
+		else if(cur == "FULLNAME"){
+			getline(sin,cur);
+			full_name = cur;
+		}else if(cur == "NAME"){
+			getline(sin,cur);
+			name = cur;
+		}
+		else if(cur == "TREASURE") sin >> treas_class;
+		else if(cur == "IDENTIFIED") ident = true;
+		else if(cur == "PROPERTY") property = true;
+		else if(cur == "MAGIC") magic = true;
+		else if(cur == "CONTAINED") contained = true;
+		else if(cur == "CURSED") cursed = true;
+		else if(cur == "CONCEALED") concealed = true;
+		else if(cur == "ENCHANTED") enchanted = true;
+		else if(cur == "UNSELLABLE") unsellable = true;
 	}
-	else if(cur == "TREASURE") sin >> treas_class;
-	else if(cur == "IDENTIFIED") ident = true;
-	else if(cur == "PROPERTY") property = true;
-	else if(cur == "MAGIC") magic = true;
-	else if(cur == "CONTAINED") contained = true;
-	else if(cur == "CURSED") cursed = true;
-	else if(cur == "CONCEALED") concealed = true;
-	else if(cur == "ENCHANTED") enchanted = true;
-	else if(cur == "UNSELLABLE") unsellable = true;
 }
 
 std::ostream& operator << (std::ostream& out, eWeapType& e){

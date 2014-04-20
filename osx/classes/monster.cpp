@@ -492,6 +492,10 @@ void cMonster::writeTo(std::ostream& file) {
 	// TODO: Implement this (low priority since only used for exported summons)
 }
 
+void cMonster::readFrom(std::istream& file) {
+	// TODO: Implement this (low priority since only used for exported summons)
+}
+
 void cCreature::writeTo(std::ostream& file) {
 	file << "MONSTER " << number << '\n';
 	file << "ATTITUDE " << attitude << '\n';
@@ -519,4 +523,76 @@ void cCreature::writeTo(std::ostream& file) {
 	file << "CURSP " << mp << '\n';
 	file << "MORALE " << morale << '\n';
 	file << "DIRECTION " << direction << '\n';
+}
+
+void cCreature::readFrom(std::istream& file) {
+	while(file) {
+		std::string cur;
+		getline(file, cur);
+		std::istringstream line(cur);
+		line >> cur;
+		if(cur == "MONSTER")
+			line >> number;
+		else if(cur == "ATTITUDE")
+			line >> attitude;
+		else if(cur == "STARTATT") {
+			unsigned int i;
+			line >> i;
+			start_attitude = i;
+		} else if(cur == "STARTLOC")
+			line >> start_loc.x >> start_loc.y;
+		else if(cur == "LOCATION")
+			line >> cur_loc.x >> cur_loc.y;
+		else if(cur == "MOBILITY") {
+			unsigned int i;
+			line >> i;
+			mobility = i;
+		} else if(cur == "TIMEFLAG") {
+			unsigned int i;
+			line >> i;
+			time_flag = i;
+		} else if(cur == "SUMMONED")
+			line >> summoned;
+		else if(cur == "EXTRA") {
+			unsigned int i,j;
+			line >> i >> j;
+			extra1 = i;
+			extra2 = j;
+		} else if(cur == "SPEC")
+			line >> spec1 >> spec2;
+		else if(cur == "SPECCODE") {
+			int i;
+			line >> i;
+			spec_enc_code = i;
+		} else if(cur == "TIMECODE") {
+			int i;
+			line >> i;
+			time_code = i;
+		} else if(cur == "TIME")
+			line >> monster_time;
+		else if(cur == "TALK")
+			line >> personality;
+		else if(cur == "DEATH")
+			line >> special_on_kill;
+		else if(cur == "FACE")
+			line >> facial_pic;
+		else if(cur == "TARGET")
+			line >> target;
+		else if(cur == "TARGLOC")
+			line >> targ_loc.x >> targ_loc.y;
+		else if(cur == "CURHP")
+			line >> health;
+		else if(cur == "CURSP")
+			line >> mp;
+		else if(cur == "MORALE")
+			line >> morale;
+		else if(cur == "DIRECTION")
+			line >> direction;
+		else if(cur == "STATUS") {
+			int i;
+			line >> i;
+			if(i >= 0 && i < 15)
+				line >> status[i];
+		}
+	}
 }

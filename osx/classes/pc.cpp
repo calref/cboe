@@ -281,6 +281,7 @@ void cPlayer::writeTo(std::ostream& file){
 		if(items[i].variety > ITEM_TYPE_NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);
+			file << '\f';
 		}
 }
 
@@ -327,10 +328,6 @@ void cPlayer::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			sin >> status[i];
-		}else if(cur == "ITEM"){
-			int i;
-			sin >> i >> cur;
-			items[i].readAttrFrom(cur, sin);
 		}else if(cur == "EQUIP"){
 			int i;
 			sin >> i;
@@ -355,6 +352,20 @@ void cPlayer::readFrom(std::istream& file){
 			sin >> race;
 		else if(cur == "POISON")
 			sin >> weap_poisoned;
+	}
+	while(file) {
+		getline(file, cur, '\f');
+		bin.str(cur);
+		while(bin) {
+			getline(bin, cur);
+			sin.str(cur);
+			sin >> cur;
+			if(cur == "ITEM") {
+				int i;
+				sin >> i >> cur;
+				items[i].readFrom(sin);
+			}
+		}
 	}
 }
 

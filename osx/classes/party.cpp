@@ -14,6 +14,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
+#include "fileio.h"
 
 cParty& cParty::operator = (legacy::party_record_type& old){
 	int i,j;
@@ -285,7 +286,7 @@ void cParty::writeTo(std::ostream& file){
 	}
 	file << '\f';
 	for(int i = 0; i < 5; i++)
-		for(int j = 0; j < 50; j++)
+		for(int j = 0; j < 10; j++)
 			if(magic_store_items[i][j].variety > ITEM_TYPE_NO_ITEM){
 				file << "MAGICSTORE " << i << ' ' << j << '\n';
 				magic_store_items[i][j].writeTo(file);
@@ -298,6 +299,7 @@ void cParty::writeTo(std::ostream& file){
 			file << "SECTOR " << out_c[i].which_sector.x << ' ' << out_c[i].which_sector.y << '\n';
 			file << "LOCINSECTOR " << out_c[i].m_loc.x << ' ' << out_c[i].m_loc.y << '\n';
 			file << "HOME " << out_c[i].home_sector.x << ' ' << out_c[i].home_sector.y << '\n';
+			file << "-\n";
 			out_c[i].what_monst.writeTo(file);
 		}
 	file << '\f';
@@ -310,16 +312,6 @@ void cParty::writeTo(std::ostream& file){
 	for(unsigned int i = 0; i < party_event_timers.size(); i++)
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].global_or_town
 			 << ' ' << party_event_timers[i].node_to_call << '\n';
-	file << '\f';
-	for(int i = 0; i < 4; i++){
-		for(int j = 0; j < 64; j++){
-			file << setup[i][j][0];
-			for(int k = 1; k < 64; k++)
-				file << '\t' << setup[i][j][k];
-			file << std::endl;
-		}
-		file << '\f';
-	}
 	file << '\f';
 	for(int i = 0; i < 4; i++)
 		for(int j = 0; j < 60; j++) {
@@ -337,13 +329,14 @@ void cParty::writeTo(std::ostream& file){
 			}
 	if(summons.size() > 0) {
 		file << '\f';
+		file << "SUMMON" << '\n';
 		for(cMonster& monst : summons)
 			monst.writeTo(file);
 	}
 	if(journal.size() > 0) {
 		file << '\f';
 		for(cJournal& entry : journal) {
-			file << "JOURNAL " << entry.str_num << ' ' << entry.day << ' ' << entry.in_scen << '\n';
+			file << "JOURNAL " << entry.str_num << ' ' << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n';
 			// TODO: Save the actual string, if the player has asked us to
 		}
 	}
@@ -360,6 +353,7 @@ void cParty::writeTo(std::ostream& file){
 			file << "TALKNOTE " << note.str_num1 << ' ' << note.str_num2 << '\n';
 			file << "WHO " << note.personality << '\n';
 			file << "WHERE " << note.town_num << ' ' << note.in_scen << '\n';
+			file << "-\n";
 			// TODO: Save the actual strings and names, if the player has asked us to
 		}
 	}
@@ -367,13 +361,14 @@ void cParty::writeTo(std::ostream& file){
 
 void cParty::readFrom(std::istream& file){
 	// TODO: Error-check input
-	std::istringstream bin, sin;
+	// TODO: Don't call this sin, it's a trig function
+	std::istringstream bin;
 	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
-		sin.str(cur);
+		std::istringstream sin(cur);
 		sin >> cur;
 		if(cur == "AGE")
 			sin >> age;
@@ -383,13 +378,21 @@ void cParty::readFrom(std::istream& file){
 			sin >> food;
 		else if(cur == "SDF"){
 			int i,j;
-			sin >> i >> j;
-			sin >> stuff_done[i][j];
+			unsigned int n;
+			sin >> i >> j >> n;
+			stuff_done[i][j] = n;
+		} else if(cur == "POINTER") {
+			int i,j,k;
+			sin >> i >> j >> k;
+			pointers[i] = std::make_pair(j,k);
 		}else if(cur == "ITEMTAKEN"){
 			int i;
 			sin >> i;
-			sin >> item_taken[i][0] >> item_taken[i][1] >> item_taken[i][2] >> item_taken[i][3]
-				>> item_taken[i][4] >> item_taken[i][5] >> item_taken[i][6] >> item_taken[i][7];
+			for(int j = 0; j < 8; j++) {
+				unsigned int n;
+				sin >> n;
+				item_taken[i][j] = n;
+			}
 		}else if(cur == "LIGHT")
 			sin >> light_level;
 		else if(cur == "OUTCORNER")
@@ -400,24 +403,12 @@ void cParty::readFrom(std::istream& file){
 			sin >> p_loc.x >> p_loc.y;
 		else if(cur == "LOCINSECTOR")
 			sin >> loc_in_sec.x >> loc_in_sec.y;
-		else if(cur == "BOAT"){
-			int i;
-			sin >> i;
-			sin >> boats[i].loc.x >> boats[i].loc.y >> boats[i].loc_in_sec.x >> boats[i].loc_in_sec.y
-				>> boats[i].sector.x >> boats[i].sector.y >> boats[i].which_town >> boats[i].property;
-			boats[i].exists = true;
-		}else if(cur == "HORSE"){
-			int i;
-			sin >> i;
-			sin >> horses[i].loc.x >> horses[i].loc.y >> horses[i].loc_in_sec.x >> horses[i].loc_in_sec.y
-				>> horses[i].sector.x >> horses[i].sector.y >> horses[i].which_town >> horses[i].property;
-			horses[i].exists = true;
-		}else if(cur == "IN")
+		else if(cur == "IN")
 			sin >> in_boat >> in_horse;
 		else if(cur == "MAGICSTORE"){
 			int i,j;
 			sin >> i >> j >> cur;
-			magic_store_items[i][j].readAttrFrom(cur,sin);
+			magic_store_items[i][j].readFrom(sin);
 		}else if(cur == "ROSTER"){
 			int i;
 			sin >> i;
@@ -426,18 +417,6 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			m_seen[i] = true;
-		}else if(cur == "ENCOUNTER"){
-			int i;
-			sin >> i >> cur;
-			if(cur == "DIRECTION")
-				sin >> out_c[i].direction;
-			else if(cur == "SECTOR")
-				sin >> out_c[i].which_sector.x >> out_c[i].which_sector.y;
-			else if(cur == "LOCINSECTOR")
-				sin >> out_c[i].m_loc.x >> out_c[i].m_loc.y;
-			else if(cur == "HOME")
-				sin >> out_c[i].home_sector.x >> out_c[i].home_sector.y;
-			else out_c[i].what_monst.readAttrFrom(cur,sin);
 		}else if(cur == "SOULCRYSTAL"){
 			int i;
 			sin >> i;
@@ -450,7 +429,7 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			alchemy[i] = true;
-		}else if(cur == "TOWN"){
+		} else if(cur == "TOWNVISIBLE") {
 			int i;
 			sin >> i;
 			can_find_town[i] = true;
@@ -484,32 +463,107 @@ void cParty::readFrom(std::istream& file){
 			sin >> scen_won;
 		else if(cur == "PLAYED")
 			sin >> scen_played;
-		else if(cur == "CAMPAIGN"){
-			unsigned int i;
-			int j;
-			if(sin.peek() == '"'){
-				sin.get();
-				getline(sin, cur, '"');
-			}else sin >> cur;
-			sin >> i >> j;
-			while(campaign_flags[cur].size() < i) campaign_flags[cur].push_back(0);
-			campaign_flags[cur][i] = j;
-		}else if(cur == "GRAPHIC"){
+		else if(cur == "GRAPHIC") {
 			int i;
 			sin >> i;
 			graphicUsed[i] = true;
-		}else if(cur == "TIMER"){
-			int i;
-			sin >> i;
-			sin >> party_event_timers[i].time >> party_event_timers[i].global_or_town >> party_event_timers[i].node_to_call;
 		}
 	}
-	getline(file, cur, '\f');
-	bin.str(cur);
-	for(int i = 0; i < 4; i++)
-		for(int j = 0; j < 64; j++)
-			for(int k = 0; k < 64; k++)
-				bin >> setup[i][j][k];
+	while(file) {
+		getline(file, cur, '\f');
+		bin.str(cur);
+		bin >> cur;
+		if(cur == "BOAT") {
+			int i;
+			bin >> i;
+			boats[i].exists = true;
+			boats[i].readFrom(bin);
+		} else if(cur == "HORSE") {
+			int i;
+			bin >> i;
+			horses[i].exists = true;
+			horses[i].readFrom(bin);
+
+		} else if(cur == "MAGICSTORE") {
+			int i,j;
+			bin >> i >> j;
+			magic_store_items[i][j].readFrom(bin);
+		} else if(cur == "ENCOUNTER") {
+			int i;
+			bin >> i >> cur;
+			while(bin) {
+				getline(bin, cur);
+				std::istringstream sin(cur);
+				sin >> cur;
+				if(cur == "DIRECTION")
+					sin >> out_c[i].direction;
+				else if(cur == "SECTOR")
+					sin >> out_c[i].which_sector.x >> out_c[i].which_sector.y;
+				else if(cur == "LOCINSECTOR")
+					sin >> out_c[i].m_loc.x >> out_c[i].m_loc.y;
+				else if(cur == "HOME")
+					sin >> out_c[i].home_sector.x >> out_c[i].home_sector.y;
+				else if(cur == "-") break;
+			}
+			out_c[i].what_monst.readFrom(bin);
+		}else if(cur == "CAMPAIGN") {
+			unsigned int i;
+			int j;
+			cur = read_maybe_quoted_string(bin);
+			bin >> i >> j;
+			// TODO: value_type of campaign_flags is a vector, but maybe a map would be better?
+			while(campaign_flags[cur].size() < i) campaign_flags[cur].push_back(0);
+			campaign_flags[cur][i] = j;
+		} else if(cur == "TIMER") {
+			int i;
+			bin >> i;
+			bin >> party_event_timers[i].time >> party_event_timers[i].global_or_town >> party_event_timers[i].node_to_call;
+		} else if(cur == "CREATURE") {
+			int i, j;
+			bin >> i >> j;
+			creature_save[i][j].active = true;
+			creature_save[i][j].readFrom(bin);
+		} else if(cur == "STORED") {
+			int i, j;
+			bin >> i >> j;
+			stored_items[i][j].readFrom(bin);
+		} else if(cur == "SUMMON") {
+			int i;
+			bin >> i;
+			cMonster monst;
+			monst.readFrom(bin);
+			summons.push_back(monst);
+		} else if(cur == "JOURNAL") {
+			cJournal entry;
+			bin >> entry.str_num >> entry.day;
+			entry.in_scen = read_maybe_quoted_string(bin);
+			getline(bin, entry.the_str);
+		} else if(cur == "ENCNOTE") {
+			cEncNote note;
+			bin >> note.type >> note.str_num >> note.where;
+			getline(bin, note.the_str1);
+			getline(bin, note.the_str2);
+		} else if(cur == "TALKNOTE") {
+			cConvers note;
+			bin >> note.str_num1 >> note.str_num2;
+			while(bin) {
+				getline(bin, cur);
+				std::istringstream sin(cur);
+				sin >> cur;
+				if(cur == "WHO")
+					sin >> note.personality;
+				else if(cur == "WHERE") {
+					sin >> note.town_num;
+					note.in_scen = read_maybe_quoted_string(sin);
+				} else if(cur == "NAMES") {
+					note.in_town = read_maybe_quoted_string(sin);
+					note.who_said = read_maybe_quoted_string(sin);
+				} else if(cur == "-") break;
+			}
+			getline(bin, note.the_str1);
+			getline(bin, note.the_str2);
+		}
+	}
 }
 
 cPlayer& cParty::operator[](unsigned short n){
@@ -630,4 +684,34 @@ bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two) {
 	if(one.in_scen != two.in_scen) return false;
 	return true;
 }
+
+std::istream& operator>>(std::istream& in, eEncNoteType& type) {
+	std::string name;
+	in >> name;
+	if(name == "SCEN") type = NOTE_SCEN;
+	else if(name == "OUT") type = NOTE_OUT;
+	else if(name == "TOWN") type = NOTE_TOWN;
+	else if(name == "MONST") type = NOTE_MONST;
+	else in.setstate(std::ios_base::failbit);
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& out, eEncNoteType type) {
+	switch(type) {
+		case NOTE_SCEN:
+			out << "SCEN";
+			break;
+		case NOTE_OUT:
+			out << "OUT";
+			break;
+		case NOTE_TOWN:
+			out << "TOWN";
+			break;
+		case NOTE_MONST:
+			out << "MONST";
+			break;
+	}
+	return out;
+}
+
 

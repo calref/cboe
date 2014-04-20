@@ -35,7 +35,7 @@ public:
 		bool isNull();
 		cWandering& operator = (legacy::out_wandering_type old);
 		void writeTo(std::ostream& file, std::string prefix = "");
-		void readAttrFrom(std::string cur, std::istream& sin);
+		void readFrom(std::istream& sin);
 		template<class type> type get(m_num_t who,bool hostile,type cMonster::* what);
 	};
 	class cCreature { // formerly outdoor_creature_type
@@ -69,7 +69,6 @@ public:
 	char(& out_strs(short i))[256] __attribute__((deprecated));
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
-	void writeTo(std::ostream& file);
 };
 
 #endif

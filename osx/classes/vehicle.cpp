@@ -60,3 +60,22 @@ void cVehicle::writeTo(std::ostream& file) {
 	file << "IN " << which_town << '\n';
 	if(property) file << "OWNED\n";
 }
+
+void cVehicle::readFrom(std::istream& file) {
+	while(file) {
+		std::string cur;
+		getline(file, cur);
+		std::istringstream lineIn(cur);
+		lineIn >> cur;
+		if(cur == "LOCATION")
+			lineIn >> loc.x >> loc.y;
+		else if(cur == "LOCINSECTOR")
+			lineIn >> loc_in_sec.x >> loc_in_sec.y;
+		else if(cur == "SECTOR")
+			lineIn >> sector.x >> sector.y;
+		else if(cur == "IN")
+			lineIn >> which_town;
+		else if(cur == "OWNED")
+			property = true;
+	}
+}

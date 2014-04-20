@@ -34,7 +34,6 @@ public:
 	};
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
-	void writeTo(std::ostream& file);
 };
 
 class cBigTemplTown : public cBigTown, cTemplTown {
@@ -51,7 +50,8 @@ public:
 	short max_dim();
 	short max_monst();
 	short max_items();
-	void writeTo(std::ostream& file);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 class cMedTemplTown : public cMedTown, cTemplTown {
@@ -68,7 +68,8 @@ public:
 	short max_dim();
 	short max_monst();
 	short max_items();
-	void writeTo(std::ostream& file);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {
@@ -85,6 +86,8 @@ public:
 	short max_dim();
 	short max_monst();
 	short max_items();
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 // City blocks - I want to figure out how to use these sometime.

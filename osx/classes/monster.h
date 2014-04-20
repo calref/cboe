@@ -149,6 +149,7 @@ public:
 	cMonster& operator = (legacy::monster_record_type& old);
 	cMonster();
 	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
 
 class cCreature : public cMonster {
@@ -178,6 +179,7 @@ public:
 	cCreature& operator = (const cCreature& other);
 	//cCreature& operator = (const cMonster& other);
 	void writeTo(std::ostream& file);
+	void readFrom(std::istream& file);
 };
 
 std::ostream& operator << (std::ostream& out, eStatus& e);

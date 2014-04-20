@@ -39,7 +39,8 @@ public:
 	short max_items();
 	
 	cBigTown();
-	void writeTo(std::ostream& file);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
@@ -59,7 +60,8 @@ public:
 	short max_items();
 	
 	cMedTown();
-	void writeTo(std::ostream& file);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
@@ -79,7 +81,8 @@ public:
 	short max_items();
 	
 	cTinyTown();
-	void writeTo(std::ostream& file);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 #endif

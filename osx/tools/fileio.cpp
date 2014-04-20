@@ -1357,3 +1357,38 @@ std::vector<std::string> load_strings(std::string which){
 		v.push_back(s);
 	return v;
 }
+
+std::string read_maybe_quoted_string(std::istream& from) {
+	std::string result;
+	if(from.peek() == '"' ||  from.peek() == '\'') {
+		char delim = from.get();
+		getline(from, result, delim);
+		if(result.empty()) return result;
+		while(result[result.length() - 1] == '\\') {
+			result += delim;
+			std::string nextPart;
+			getline(from, nextPart, delim);
+			result += nextPart;
+		}
+	} else from >> result;
+	return result;
+}
+
+std::string maybe_quote_string(std::string which) {
+	if(which.find(' ') == std::string::npos && which.find('\t') == std::string::npos)
+		return which;
+	if(which.find('\'') == std::string::npos)
+		return '\'' + which + '\'';
+	if(which.find('"') == std::string::npos)
+		return '"' + which + '"';
+	std::ostringstream fmt;
+	std::string part;
+	fmt << '"';
+	for(char c : which) {
+		if(c == '"') fmt << R"(\")";
+		else fmt.put(c);
+	}
+	fmt << '"';
+	return fmt.str();
+}
+

@@ -169,47 +169,43 @@ cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature
 	return *this;
 }
 
-void cOutdoors::writeTo(std::ostream& file){
-//	for(int i = 0; i < 48; i++){
-//		file << expl[i][0];
-//		for(int j = 1; j < 48; j++){
-//			file << '\t' << expl[i][j];
-//		}
-//		file << std::endl;
-//	}
-}
-
 void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix){
 	for(int i = 0; i < 7; i++)
-		file << prefix << "HOSTILE " << i << ' ' << monst[i] << std::endl;
+		file << prefix << "HOSTILE " << i << ' ' << monst[i] << '\n';
 	for(int i = 0; i < 3; i++)
-		file << prefix << "FRIEND " << i << ' ' << friendly[i] << std::endl;
-	file << prefix << "MEET " << spec_on_meet << std::endl;
-	file << prefix << "WIN " << spec_on_win << std::endl;
-	file << prefix << "FLEE " << spec_on_flee << std::endl;
-	file << prefix << "FLAGS " << cant_flee << std::endl;
-	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << std::endl;
+		file << prefix << "FRIEND " << i << ' ' << friendly[i] << '\n';
+	file << prefix << "MEET " << spec_on_meet << '\n';
+	file << prefix << "WIN " << spec_on_win << '\n';
+	file << prefix << "FLEE " << spec_on_flee << '\n';
+	file << prefix << "FLAGS " << cant_flee << '\n';
+	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << '\n';
 }
 
-void cOutdoors::cWandering::readAttrFrom(std::string cur, std::istream& sin){
-	if(cur == "HOSTILE"){
-		int i;
-		sin >> i;
-		sin >> monst[i];
-	}else if(cur == "FRIEND"){
-		int i;
-		sin >> i;
-		sin >> friendly[i];
-	}else if(cur == "MEET")
-		sin >> spec_on_meet;
-	else if(cur == "WIN")
-		sin >> spec_on_win;
-	else if(cur == "FLEE")
-		sin >> spec_on_flee;
-	else if(cur == "FLAGS")
-		sin >> cant_flee;
-	else if(cur == "SDF")
-		sin >> end_spec1 >> end_spec2;
+void cOutdoors::cWandering::readFrom(std::istream& file){
+	while(file) {
+		std::string cur;
+		getline(file, cur);
+		std::istringstream sin(cur);
+		sin >> cur;
+		if(cur == "HOSTILE"){
+			int i;
+			sin >> i;
+			sin >> monst[i];
+		}else if(cur == "FRIEND"){
+			int i;
+			sin >> i;
+			sin >> friendly[i];
+		}else if(cur == "MEET")
+			sin >> spec_on_meet;
+		else if(cur == "WIN")
+			sin >> spec_on_win;
+		else if(cur == "FLEE")
+			sin >> spec_on_flee;
+		else if(cur == "FLAGS")
+			sin >> cant_flee;
+		else if(cur == "SDF")
+			sin >> end_spec1 >> end_spec2;
+	}
 }
 
 bool cOutdoors::cWandering::isNull(){
