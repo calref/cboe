@@ -11,7 +11,6 @@
 #include <map>
 #include <sstream>
 
-
 #include "classes.h"
 #include "oldstructs.h"
 #include "boe.consts.h" // TODO: Put these constants in a global file

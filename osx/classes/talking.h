@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef TALKING_H
-#define TALKING_H
+#ifndef BOE_DATA_TALKING_H
+#define BOE_DATA_TALKING_H
 
 #include <iosfwd>
 

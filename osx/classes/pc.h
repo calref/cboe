@@ -6,14 +6,18 @@
  *
  */
 
-#ifndef PC_H
-#define PC_H
+#ifndef BOE_DATA_PC_H
+#define BOE_DATA_PC_H
 
 #include <string>
 #include <iosfwd>
+
 #include "simpletypes.h"
+#include "item.h"
 
 namespace legacy { struct pc_record_type; };
+
+typedef unsigned short pic_num_t; // TODO: This is now defined in multiple places...
 
 class cPlayer {
 public:

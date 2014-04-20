@@ -6,12 +6,13 @@
  *
  */
 
-#ifndef ITEM_H
-#define ITEM_H
+#ifndef BOE_DATA_ITEM_H
+#define BOE_DATA_ITEM_H
 
-#include "location.h"
 #include <string>
 #include <iosfwd>
+
+#include "location.h"
 #include "simpletypes.h"
 
 namespace legacy { struct item_record_type; };

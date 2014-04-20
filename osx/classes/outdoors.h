@@ -6,13 +6,16 @@
  *
  */
 
-#ifndef OUTDOORS_H
-#define OUTDOORS_H
+#ifndef BOE_DATA_OUTDOORS_H
+#define BOE_DATA_OUTDOORS_H
 
-#include "location.h"
 #include <string>
 #include <iosfwd>
+
+#include "location.h"
 #include "special.h"
+#include "simpletypes.h"
+#include "monster.h"
 
 namespace legacy {
 	struct out_wandering_type;

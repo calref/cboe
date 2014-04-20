@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef LOCATION_H
-#define LOCATION_H
+#ifndef BOE_LOCATION_H
+#define BOE_LOCATION_H
 
 #include <SFML/Graphics.hpp>
 

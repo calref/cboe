@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef UNIVERSE_H
-#define UNIVERSE_H
+#ifndef BOE_DATA_UNIVERSE_H
+#define BOE_DATA_UNIVERSE_H
 
 #include <iosfwd>
 #include <boost/filesystem/path.hpp>

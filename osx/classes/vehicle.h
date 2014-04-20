@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#ifndef BOE_DATA_VEHICLE_H
+#define BOE_DATA_VEHICLE_H
 
 #include <iosfwd>
 #include "location.h"

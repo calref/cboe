@@ -11,9 +11,8 @@
 #include <map>
 #include <sstream>
 
-
 #include "classes.h"
-#include "boe.consts.h"
+#include "boe.consts.h" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
 #include "oldstructs.h"
 
 cItemRec k;

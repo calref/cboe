@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef PARTY_H
-#define PARTY_H
+#ifndef BOE_DATA_PARTY_H
+#define BOE_DATA_PARTY_H
 
 #include <string>
 #include <vector>

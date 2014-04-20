@@ -6,10 +6,15 @@
  *
  */
 
-#ifndef REGTOWN_H
-#define REGTOWN_H
+#ifndef BOE_DATA_REGTOWN_H
+#define BOE_DATA_REGTOWN_H
 
 #include <iosfwd>
+
+#include "town.h"
+#include "simpletypes.h"
+#include "location.h"
+#include "monster.h"
 
 namespace legacy {
 	struct big_tr_type;

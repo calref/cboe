@@ -8,6 +8,8 @@
  *
  */
 
+// TODO: Delete this file, and move the function defined here to a more appropriate place.
+
 #include "simpletypes.h"
 #include "location.h"
 #include "terrain.h"

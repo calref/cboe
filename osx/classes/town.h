@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef TOWN_H
-#define TOWN_H
+#ifndef BOE_DATA_TOWN_H
+#define BOE_DATA_TOWN_H
 
 #include <vector>
 #include <iosfwd>

@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef SCENARIO_H
-#define SCENARIO_H
+#ifndef BOE_DATA_SCENARIO_H
+#define BOE_DATA_SCENARIO_H
 
 #include <iosfwd>
 #include <boost/filesystem/path.hpp>

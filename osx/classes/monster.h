@@ -6,11 +6,12 @@
  *
  */
 
-#ifndef MONSTER_H
-#define MONSTER_H
+#ifndef BOE_DATA_MONSTER_H
+#define BOE_DATA_MONSTER_H
 
 #include <string>
 #include <iosfwd>
+
 #include "soundtool.h"
 #include "simpletypes.h"
 #include "graphtool.h"

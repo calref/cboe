@@ -6,10 +6,15 @@
  *
  */
 
-#ifndef TMPLTOWN_H
-#define TMPLTOWN_H
+#ifndef BOE_DATA_TMPLTOWN_H
+#define BOE_DATA_TMPLTOWN_H
 
 #include <iosfwd>
+
+#include "location.h"
+#include "monster.h"
+#include "simpletypes.h"
+#include "regtown.h"
 
 class cTemplTown {
 public:

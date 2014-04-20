@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef SIMPLE_TYPES_H
-#define SIMPLE_TYPES_H
+#ifndef BOE_DATA_SIMPLETYPES_H
+#define BOE_DATA_SIMPLETYPES_H
 
 typedef unsigned short m_num_t;
 typedef unsigned short ter_num_t;

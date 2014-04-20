@@ -6,10 +6,12 @@
  *
  */
 
-#ifndef SPECIAL_H
-#define SPECIAL_H
+#ifndef BOE_DATA_SPECIAL_H
+#define BOE_DATA_SPECIAL_H
 
 #include <iosfwd>
+#include "simpletypes.h"
+#include "location.h"
 
 namespace legacy { struct special_node_type; };
 

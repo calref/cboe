@@ -6,11 +6,13 @@
  *
  */
 
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#ifndef BOE_DATA_TERRAIN_H
+#define BOE_DATA_TERRAIN_H
 
 #include <string>
 #include <iosfwd>
+
+#include "simpletypes.h"
 #include "graphtool.h" // for pic_num_t
 
 namespace legacy { struct terrain_type_type; };
