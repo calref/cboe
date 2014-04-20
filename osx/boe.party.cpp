@@ -473,7 +473,6 @@ void put_party_in_scen(std::string scen_name)
 	univ.party.party_event_timers.clear();
 	
 	fs::path path;
-	//std::cout << progDir;
 	path = progDir/"Blades of Exile Scenarios";
 	path /= scen_name;
 	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
@@ -481,7 +480,7 @@ void put_party_in_scen(std::string scen_name)
 		return;
 	
 	init_party_scen_data();
-	
+	univ.party.scen_name = scen_name;
 	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise

@@ -245,10 +245,10 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 }
 
 void cPlayer::writeTo(std::ostream& file){
-	file << "STATUS main " << main_status << '\n';
+	file << "STATUS -1 " << main_status << '\n';
 	file << "NAME " << name << '\n';
-	file << "SKILL hp " << max_health << '\n';
-	file << "SKILL sp " << max_sp << '\n';
+	file << "SKILL -2 " << max_health << '\n';
+	file << "SKILL -1 " << max_sp << '\n';
 	for(int i = 0; i < 30; i++)
 		if(skills[i] > 0)
 			file << "SKILL " << i << ' ' << skills[i] << '\n';
@@ -292,6 +292,7 @@ void cPlayer::readFrom(std::istream& file){
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
+		printf("Parsing line in pcN.txt: %s\n", cur.c_str());
 		sin.str(cur);
 		sin >> cur;
 		if(cur == "STATUS"){
@@ -352,7 +353,9 @@ void cPlayer::readFrom(std::istream& file){
 			sin >> race;
 		else if(cur == "POISON")
 			sin >> weap_poisoned;
+		sin.clear();
 	}
+	bin.clear();
 	while(file) {
 		getline(file, cur, '\f');
 		bin.str(cur);
@@ -365,7 +368,9 @@ void cPlayer::readFrom(std::istream& file){
 				sin >> i >> cur;
 				items[i].readFrom(sin);
 			}
+			sin.clear();
 		}
+		bin.clear();
 	}
 }
 

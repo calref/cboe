@@ -1829,14 +1829,16 @@ void special_increase_age()
 	bool redraw = false,stat_area = false;
 	location null_loc;
 	
-	for (i = 0; i < 8; i++)
-		if ((univ.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town->timer_spec_times[i] == 0)
-			&& ((is_town() == true) || ((is_combat() == true) && (which_combat_type == 1)))) {
-			run_special(9,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
-			stat_area = true;
-			if (s3 > 0)
-				redraw = true;
-		}
+	if(is_town()) {
+		for(i = 0; i < 8; i++)
+			if((univ.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town->timer_spec_times[i] == 0)
+				&& ((is_town() == true) || ((is_combat() == true) && (which_combat_type == 1)))) {
+				run_special(9,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+				stat_area = true;
+				if(s3 > 0)
+					redraw = true;
+			}
+	}
 	for (i = 0; i < 20; i++)
 		if ((scenario.scenario_timer_times[i] > 0) && (univ.party.age % scenario.scenario_timer_times[i] == 0)) {
 			run_special(10,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);

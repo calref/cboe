@@ -7,7 +7,7 @@
 //
 
 #include "tarball.hpp"
-#include <boost/lexical_cast.hpp>
+#include <algorithm>
 
 tarball::header_posix_ustar tarball::generateTarHeader(const std::string& fileName, unsigned long long fileSize, bool directory){
 	static_assert(sizeof(header_posix_ustar) == 512, "Uh-oh! Padding in the tarball header!");
@@ -69,11 +69,19 @@ void tarball::readFrom(std::istream& in) {
 		header_posix_ustar& header = files.back().header;
 		in.read((char*)&header, sizeof(header_posix_ustar));
 		files.back().filename = header.name;
-		unsigned long long size = boost::lexical_cast<unsigned long long>(header.size);
+		unsigned long long size;
+		sscanf(header.size, "%llo", &size);
 		unsigned long long padLength = 512 - size % 512;
-		in.read(buf, size);
-		files.back().contents.write(buf, size);
-		in.seekg(padLength, std::ios_base::cur);
+		while(size > 0) {
+			unsigned long long chunkSz = std::min(size, 512ull);
+			in.read(buf, chunkSz);
+			files.back().contents.write(buf, chunkSz);
+			size -= chunkSz;
+		}
+		// Skip past the padding without using seekg.
+		// This is because the gzstreams don't support seekg.
+		// We're done with the data in this buffer, anyway, so just dump the padding here.
+		in.read(buf, padLength);
 	}
 }
 

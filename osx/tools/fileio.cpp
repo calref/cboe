@@ -1179,7 +1179,7 @@ bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 			return false;
 		}
 		uint16_t magic;
-		fin.read((char*)magic, 2);
+		fin.read((char*)&magic, 2);
 		fin.read((char*)&univ.party.setup, sizeof(cParty::setup));
 		if(magic == 0x0E0B) // should be 0x0B0E!
 			for(auto& i : univ.party.setup)

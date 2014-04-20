@@ -1390,7 +1390,7 @@ bool handle_action(sf::Event event)
 		overall_mode = MODE_STARTUP;
 		draw_startup(0);
 		menu_activate();
-		univ.party.scen_name = ".exs"; // should be harmless...
+		univ.party.scen_name = ""; // should be harmless...
 		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
 			fs::path file = nav_put_party();
 			if(!file.empty()) save_party(file);
@@ -2101,7 +2101,10 @@ bool handle_keystroke(sf::Event& event){
 void do_load()
 {
 	fs::path file_to_load = nav_get_party();
-	if(!file_to_load.empty()) load_party(file_to_load);
+	if(!file_to_load.empty())
+		if(!load_party(file_to_load))
+			return;
+	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
 	menu_activate();
@@ -2214,14 +2217,14 @@ void increase_age()////
 	
 	PSD[SDF_PARTY_FLIGHT] = move_to_zero(PSD[SDF_PARTY_FLIGHT]);
 	
-	if ((overall_mode > MODE_OUTDOORS) && (univ.town->lighting_type == 2))
+	if ((overall_mode > MODE_OUTDOORS) && (univ.town->lighting_type == 2)) {
 		univ.party.light_level = max (0,univ.party.light_level - 9);
-	if (univ.town->lighting_type == 3) {
-		if (univ.party.light_level > 0)
-			ASB("Your light is drained.");
-		univ.party.light_level = 0;
+		if (univ.town->lighting_type == 3) {
+			if (univ.party.light_level > 0)
+				ASB("Your light is drained.");
+			univ.party.light_level = 0;
+		}
 	}
-	
 	
 	// Specials countdowns
 	if ((univ.party.age % 500 == 0

@@ -774,7 +774,9 @@ void cCurTown::readFrom(std::istream& file){
 			sin >> in_boat;
 		else if(cur == "AT")
 			sin >> p_loc.x >> p_loc.y;
+		sin.clear();
 	}
+	bin.clear();
 	while(file) {
 		getline(file, cur, '\f');
 		bin.str(cur);
@@ -807,6 +809,7 @@ void cCurTown::readFrom(std::istream& file){
 			}
 			record->readTerrainFrom(bin);
 		}
+		bin.clear();
 	}
 }
 

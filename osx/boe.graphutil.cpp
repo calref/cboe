@@ -570,7 +570,7 @@ void draw_party_symbol(short mode,location center)
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
 		if(pc_dir[current_pc] >= 4)
 			source_rect.offset(28,0);
-		ter_num_t ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u);

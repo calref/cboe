@@ -797,7 +797,7 @@ short do_look(location space)
 	std::string msg;
 	
 	from_where = get_cur_loc();
-	is_lit = pt_in_light(from_where,space);
+	is_lit = is_out() || pt_in_light(from_where,space);
 	
 	if (((overall_mode == MODE_LOOK_OUTDOORS) && (space == univ.party.p_loc)) ||
 		((overall_mode == MODE_LOOK_TOWN) && (space == univ.town.p_loc)))

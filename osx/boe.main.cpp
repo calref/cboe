@@ -483,9 +483,7 @@ void handle_file_menu(int item_hit)
 	
 	switch (item_hit) {
 		case 1:
-			if(overall_mode == MODE_STARTUP)
-				startup_load();
-			else do_load();
+			do_load();
 			break;
 		case 2:
 			do_save(0);

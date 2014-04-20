@@ -165,7 +165,7 @@ short can_see(location p1,location p2,short mode)
 			return 6;
 		}
 	}
-	else {
+	else if(is_town()) {
 		if ((mode != 2) && (pt_in_light(p1,p2) == false)) {
 			return 6;
 		}

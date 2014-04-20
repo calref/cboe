@@ -98,11 +98,14 @@ extern fs::path progDir;
 //template_town_type town_template;
 cCustomGraphics spec_scen_g;
 
+extern bool pc_gworld_loaded;
+extern sf::Texture pc_gworld;
+
 std::ofstream flog("bladeslog.txt");
 
 void finish_load_party(){
-	bool town_restore = (univ.town.num < 200) ? true : false;
-	bool in_scen = (univ.party.scen_name[0] = '.') ? false : true;
+	bool town_restore = univ.town.num < 200;
+	bool in_scen = univ.party.scen_name.length() > 0;
 	
 	party_in_memory = true;
 	
@@ -110,11 +113,22 @@ void finish_load_party(){
 	if (!in_scen) {
 		if(overall_mode != MODE_STARTUP) {
 			reload_startup();
-			overall_mode = MODE_STARTUP;
 			draw_startup(0);
 		}
+		if(!pc_gworld_loaded) {
+			pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
+			pc_gworld_loaded = true;
+		}
+		overall_mode = MODE_STARTUP;
 		return;
 	}
+	
+	fs::path path;
+	path = progDir/"Blades of Exile Scenarios";
+	path /= univ.party.scen_name;
+	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
+	if (!load_scenario(path))
+		return;
 	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
@@ -136,8 +150,8 @@ void finish_load_party(){
 		center = univ.party.p_loc;
 	}
 	else {
-		load_town_str(univ.town.num,univ.town.record);
 		load_town(univ.town.num,univ.town.record);
+		load_town_str(univ.town.num,univ.town.record);
 		
 		for (int i = 0; i < univ.town->max_monst(); i++){
 			univ.town.monst[i].targ_loc.x = 0;

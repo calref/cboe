@@ -60,7 +60,7 @@ bool handle_startup_press(location the_point)
 			draw_start_button(i,0);
 			switch (i) {
 				case STARTBTN_LOAD:
-					startup_load();
+					do_load();
 					break;
 					
 				case STARTBTN_NEW:
@@ -116,28 +116,6 @@ bool handle_startup_press(location the_point)
 	return false;
 }
 
-void startup_load()////
-{
-	bool in_startup_mode = true;
-	fs::path file_to_load = nav_get_party();
-	if(!file_to_load.empty() && load_party(file_to_load)){
-		party_in_memory = true;
-		if(univ.party.scen_name.length() > 0)
-			in_startup_mode = false;
-		else in_startup_mode = true;
-	}
-	if (!in_startup_mode) {
-		//end_anim();
-		end_startup();
-		post_load();
-	}
-	else {
-		menu_activate();
-		draw_startup(0);
-		overall_mode = MODE_STARTUP;
-	}
-	
-}
 /*
 void start_game ()
 {

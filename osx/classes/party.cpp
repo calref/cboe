@@ -368,6 +368,7 @@ void cParty::readFrom(std::istream& file){
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
+		printf("Parsing line in party.txt: %s\n", cur.c_str());
 		std::istringstream sin(cur);
 		sin >> cur;
 		if(cur == "AGE")
@@ -468,7 +469,9 @@ void cParty::readFrom(std::istream& file){
 			sin >> i;
 			graphicUsed[i] = true;
 		}
+		sin.clear();
 	}
+	bin.clear();
 	while(file) {
 		getline(file, cur, '\f');
 		bin.str(cur);
@@ -483,7 +486,6 @@ void cParty::readFrom(std::istream& file){
 			bin >> i;
 			horses[i].exists = true;
 			horses[i].readFrom(bin);
-
 		} else if(cur == "MAGICSTORE") {
 			int i,j;
 			bin >> i >> j;
@@ -563,6 +565,7 @@ void cParty::readFrom(std::istream& file){
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
 		}
+		bin.clear();
 	}
 }
 
