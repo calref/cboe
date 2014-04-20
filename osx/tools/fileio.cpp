@@ -1146,95 +1146,102 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 }
 
 bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there){
-	char* buf;
-	FILE* f = fopen(file_to_load.c_str(),"rb");
+	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
+	fs::path tempPath = tempDir/"loadtemp.exg";
 	
-	// TODO: Write the parsers and stuff
-	/*   Skip header   */
-	fseek(f, sizeof(short) * 5, SEEK_SET);
-	gzFile party_file = gzdopen(fileno(f), "rb");
-	
-	/*   Initialize various variables   */
-	header_posix_ustar header;
-	// TODO: Don't call this sin; that's a trig function
-	std::istringstream sin;
-	std::string tar_name;
-	std::string tar_entry;
-	size_t tar_size;
-	std::map<std::string,std::string> party_archive;
-	
-	/*   Split the tar archive into its component files   */
-	while(!gzeof(party_file)){
-		gzread(party_file, &header, sizeof(header));
-		sscanf(header.size, "%lo", &tar_size);
-		tar_name = header.name;
-		buf = new char[tar_size];
-		gzread(party_file, buf, tar_size);
-		tar_entry = buf;
-		delete buf;
-		party_archive[tar_name] = tar_entry;
-		gzseek(party_file, sizeof(header) * 2, SEEK_CUR);
+	{ // First, strip off the header and save to a temporary location.
+		std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
+		std::ofstream fout(tempPath.c_str(), std::ios_base::binary);
+		fin.seekg(10);
+		fout << fin.rdbuf();
+		fin.close();
+		fout.close();
 	}
 	
-	/*   Read the data from each file   */
-	if(party_archive.find("save/party.txt") == party_archive.end()){
-		cChoiceDlog("load-game-fail.xml").show();
-		return false;
-	}else{
-		sin.str(party_archive["save/party.txt"]);
-		univ.party.readFrom(sin);
-	}
-	for(int i = 0; i < 6; i++){
-		buf = new char[20];
-		sprintf(buf,"save/pc%i.txt",i);
-		std::string f_name = buf;
-		delete buf;
-		if(party_archive.find(f_name) == party_archive.end()){
+	igzstream zin(tempPath.c_str());
+	tarball partyIn;
+	partyIn.readFrom(zin);
+	zin.close();
+	
+	{ // Load main party data first
+		std::istream& fin = partyIn.getFile("save/party.txt");
+		if(!fin) {
 			cChoiceDlog("load-game-fail.xml").show();
 			return false;
-		}else{
-			sin.str(party_archive[f_name]);
-			univ.party[i].readFrom(sin);
 		}
+		univ.party.readFrom(fin);
 	}
-	if(in_scen){
-		if(town_restore){
-			if(party_archive.find("save/town.txt") == party_archive.end()){
+	
+	{ // Then the "setup" array
+		std::istream& fin = partyIn.getFile("save/setup.dat");
+		if(!fin) {
+			cChoiceDlog("load-game-fail.xml").show();
+			return false;
+		}
+		uint16_t magic;
+		fin.read((char*)magic, 2);
+		fin.read((char*)&univ.party.setup, sizeof(cParty::setup));
+		if(magic == 0x0E0B) // should be 0x0B0E!
+			for(auto& i : univ.party.setup)
+				for(auto& j : i)
+					for(auto& k : j)
+						flip_short(reinterpret_cast<int16_t*>(&k));
+	}
+	
+	// Next load the PCs
+	for(int i = 0; i < 6; i++) {
+		static char fname[] = "save/pc1.txt";
+		fname[7] = i + '1';
+		std::istream& fin = partyIn.getFile(fname);
+		if(!fin) {
+			cChoiceDlog("load-game-fail.xml").show();
+			return false;
+		}
+		univ.party[i].readFrom(fin);
+	}
+	
+	if(in_scen) {
+		if(town_restore) {
+			// Load town data
+			std::istream& fin = partyIn.getFile("save/town.txt");
+			if(!fin) {
 				cChoiceDlog("load-game-fail.xml").show();
 				return false;
-			}else{
-				sin.str(party_archive["save/town.txt"]);
-				univ.town.readFrom(sin);
 			}
-			if(party_archive.find("save/townmaps.dat") == party_archive.end()){
-				cChoiceDlog("load-game-fail.xml").show();
-				return false;
-			}else{
-				sin.str(party_archive["save/townmaps.dat"]);
+			univ.town.readFrom(fin);
+			
+			if(maps_there) {
+				// Read town maps
+				std::istream& fin = partyIn.getFile("save/townmaps.dat");
+				// TODO: Warn if maps missing
 				for(int i = 0; i < 200; i++)
 					for(int j = 0; j < 8; j++)
 						for(int k = 0; k < 64; k++)
-							univ.town_maps[i][j][k] = sin.get();
+							univ.town_maps[i][j][k] = fin.get();
 			}
 		}
-		if(party_archive.find("save/out.txt") == party_archive.end()){
+		
+		// Load outdoors data
+		std::istream& fin = partyIn.getFile("save/out.txt");
+		if(!fin) {
 			cChoiceDlog("load-game-fail.xml").show();
 			return false;
-		}else{
-			sin.str(party_archive["save/out.txt"]);
-			univ.out.readFrom(sin);
 		}
-		if(party_archive.find("save/outmaps.dat") == party_archive.end()){
-			cChoiceDlog("load-game-fail.xml").show();
-			return false;
-		}else{
-			sin.str(party_archive["save/outmaps.dat"]);
+		univ.out.readFrom(fin);
+		
+		if(maps_there) {
+			// Read outdoor maps
+			std::istream& fin = partyIn.getFile("save/outmaps.dat");
+			// TODO: Warn if maps missing
 			for(int i = 0; i < 100; i++)
 				for(int j = 0; j < 6; j++)
 					for(int k = 0; k < 48; k++)
-						univ.out_maps[i][j][k] = sin.get();
+						univ.out_maps[i][j][k] = fin.get();
 		}
 	}
+	
+	// TODO: Also get the party custom graphics sheet
+	
 	return true;
 }
 
@@ -1302,7 +1309,7 @@ bool save_party(fs::path dest_file)
 	zout.close();
 	
 	// Now add the header. We use the temporary file because we want the header to be uncompressed.
-	short flags[] = {
+	int16_t flags[] = {
 		0x0B0E, // to indicate new format
 		static_cast<short>(in_town ? 1342 : 5790), // is the party in town?
 		static_cast<short>(in_scen ? 100 : 200), // is the party in a scenario?
@@ -1316,7 +1323,7 @@ bool save_party(fs::path dest_file)
 	
 	std::ifstream fin(tempPath.c_str(), std::ios_base::binary);
 	std::ofstream fout(dest_file.c_str(), std::ios_base::binary);
-	fout.write((char*) flags, 5*sizeof(short));
+	fout.write((char*) flags, 10);
 	fout << fin.rdbuf();
 	fin.close();
 	fout.close();

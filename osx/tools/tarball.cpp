@@ -92,7 +92,7 @@ std::istream& tarball::getFile(std::string fname) {
 	}
 	// If the file doesn't exist, return an empty stream
 	static std::istringstream empty;
-	empty.clear();
+	empty.clear(std::ios_base::badbit);
 	empty.seekg(0);
 	return empty;
 }
