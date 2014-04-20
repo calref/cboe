@@ -488,3 +488,36 @@ bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
 	}
 	return false;
 }
+
+void cMonster::writeTo(std::ostream& file) {
+	// TODO: Implement this (low priority since only used for exported summons)
+}
+
+void cCreature::writeTo(std::ostream& file) {
+	file << "MONSTER " << number << '\n';
+	file << "ATTITUDE " << attitude << '\n';
+	file << "STARTATT " << unsigned(start_attitude) << '\n';
+	file << "STARTLOC " << start_loc.x << ' ' << start_loc.y << '\n';
+	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
+	file << "MOBILIY " << unsigned(mobility) << '\n';
+	file << "TIMEFLAG " << unsigned(time_flag) << '\n';
+	file << "SUMMONED " << summoned << '\n';
+	// TODO: Don't remember what these do
+	file << "EXTRA " << unsigned(extra1) << ' ' << unsigned(extra2) << '\n';
+	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
+	file << "SPECCODE " << int(spec_enc_code) << '\n';
+	file << "TIMECODE " << int(time_code) << '\n';
+	file << "TIME " << monster_time << '\n';
+	file << "TALK " << personality << '\n';
+	file << "DEATH " << special_on_kill << '\n';
+	file << "FACE " << facial_pic << '\n';
+	file << "TARGET " << target << '\n';
+	file << "TARGLOC " << targ_loc.x << ' ' << targ_loc.y << '\n';
+	for(int i = 0; i < 15; i++)
+		if(status[i] != 0)
+			file << "STATUS " << i << ' ' << status[i] << '\n';
+	file << "CURHP " << health << '\n';
+	file << "CURSP " << mp << '\n';
+	file << "MORALE " << morale << '\n';
+	file << "DIRECTION " << direction << '\n';
+}

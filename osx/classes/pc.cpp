@@ -246,43 +246,43 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 }
 
 void cPlayer::writeTo(std::ostream& file){
-	file << "STATUS -1 " << main_status << std::endl;
-	file << "NAME " << name << std::endl;
-	file << "SKILL -2 " << max_health << std::endl;
-	file << "SKILL -1 " << max_sp << std::endl;
+	file << "STATUS main " << main_status << '\n';
+	file << "NAME " << name << '\n';
+	file << "SKILL hp " << max_health << '\n';
+	file << "SKILL sp " << max_sp << '\n';
 	for(int i = 0; i < 30; i++)
 		if(skills[i] > 0)
-			file << "SKILL " << i << ' ' << skills[i] << std::endl;
-	file << "HEALTH " << cur_health << std::endl;
-	file << "MANA " << cur_sp << std::endl;
-	file << "EXPERIENCE " << experience << std::endl;
-	file << "SKILLPTS " << skill_pts << std::endl;
-	file << "LEVEL " << level << std::endl;
+			file << "SKILL " << i << ' ' << skills[i] << '\n';
+	file << "HEALTH " << cur_health << '\n';
+	file << "MANA " << cur_sp << '\n';
+	file << "EXPERIENCE " << experience << '\n';
+	file << "SKILLPTS " << skill_pts << '\n';
+	file << "LEVEL " << level << '\n';
 	for(int i = 0; i < 15; i++)
 		if(status[i] != 0)
-			file << "STATUS " << i << ' ' << status[i] << std::endl;
-	for(int i; i < 24; i++)
-		if(items[i].variety > ITEM_TYPE_NO_ITEM){
-			std::ostringstream sout;
-			sout << "ITEM " << i << ' ';
-			items[i].writeTo(file, sout.str());
-		}
+			file << "STATUS " << i << ' ' << status[i] << '\n';
 	for(int i = 0; i < 24; i++)
 		if(equip[i])
-			file << "EQUIP " << i << std::endl;
+			file << "EQUIP " << i << '\n';
 	for(int i = 0; i < 62; i++)
 		if(mage_spells[i])
-			file << "MAGE " << i << std::endl;
+			file << "MAGE " << i << '\n';
 	for(int i = 0; i < 62; i++)
 		if(priest_spells[i])
-			file << "PRIEST " << i << std::endl;
+			file << "PRIEST " << i << '\n';
 	for(int i = 0; i < 62; i++)
 		if(traits[i])
-			file << "TRAIT " << i << std::endl;
-	file << "ICON " <<  which_graphic << std::endl;
-	file << "RACE " << race << std::endl;
-	file << "DIRECTION " << direction << std::endl;
-	file << "POISON " << weap_poisoned << std::endl;
+			file << "TRAIT " << i << '\n';
+	file << "ICON " <<  which_graphic << '\n';
+	file << "RACE " << race << '\n';
+	file << "DIRECTION " << direction << '\n';
+	file << "POISON " << weap_poisoned << '\n';
+	file << '\f';
+	for(int i; i < 24; i++)
+		if(items[i].variety > ITEM_TYPE_NO_ITEM){
+			file << "ITEM " << i << '\n';
+			items[i].writeTo(file);
+		}
 }
 
 void cPlayer::readFrom(std::istream& file){

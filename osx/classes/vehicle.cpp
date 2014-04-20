@@ -53,3 +53,11 @@ cVehicle& cVehicle::operator = (legacy::boat_record_type& old){
 	sector.y = old.boat_sector.y;
 	return *this;
 }
+
+void cVehicle::writeTo(std::ostream& file) {
+	file << "LOCATION " << loc.x << ' ' << loc.y << '\n';
+	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
+	file << "SECTOR " << sector.x << ' ' << sector.y << '\n';
+	file << "IN " << which_town << '\n';
+	if(property) file << "OWNED\n";
+}

@@ -103,7 +103,7 @@ public:
 	cItemRec stored_items[3][115]; // formerly stored_items_list_type
 	
 	//string graphicsFile; // the name of the png file holding this party's custom item, pc, and summonable monster graphics
-	cMonster summons; // an array of monsters which can be summoned by the parties items yet don't originate from this scenario
+	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	bool graphicUsed[250]; // whether each custom graphics slot on the party's sheet is actually used; needed to place new custom graphics on the sheet.
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
 	std::map<std::string,std::vector<signed short> > campaign_flags;

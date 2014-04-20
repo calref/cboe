@@ -147,7 +147,7 @@ public:
 	bool hasAbil(eMonstAbil what, unsigned char* x1 = NULL, unsigned char* x2 = NULL);
 	cMonster& operator = (legacy::monster_record_type& old);
 	cMonster();
-	void writeTo(std::ostream& file, std::string prefix);
+	void writeTo(std::ostream& file);
 };
 
 class cCreature : public cMonster {
@@ -176,6 +176,7 @@ public:
 	cCreature& operator = (legacy::creature_start_type old);
 	cCreature& operator = (const cCreature& other);
 	//cCreature& operator = (const cMonster& other);
+	void writeTo(std::ostream& file);
 };
 
 std::ostream& operator << (std::ostream& out, eStatus& e);

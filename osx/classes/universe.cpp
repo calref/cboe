@@ -706,26 +706,26 @@ ter_num_t& cCurOut::operator [] (location loc) {
 }
 
 void cCurOut::writeTo(std::ostream& file){
-//	for(int i = 0; i < 96; i++){
-//		file << expl[i][0];
-//		for(int j = 1; j < 96; j++){
-//			file << '\t' << expl[i][j];
-//		}
-//		file << std::endl;
-//	}
-//	file << '\f';
-//	for(int i = 9; i < 96; i++){
-//		file << out[i][0];
-//		for(int j = 1; j < 96; j++){
-//			file << '\t' << out[i][j];
-//		}
-//		file << std::endl;
-//	}
-//	file << '\f';
+	for(int i = 0; i < 96; i++){
+		file << expl[i][0];
+		for(int j = 1; j < 96; j++){
+			file << '\t' << int(expl[i][j]);
+		}
+		file << std::endl;
+	}
+	file << '\f';
+	for(int i = 9; i < 96; i++){
+		file << out[i][0];
+		for(int j = 1; j < 96; j++){
+			file << '\t' << out[i][j];
+		}
+		file << std::endl;
+	}
+	file << '\f';
 	for(int i = 0; i < 96; i++){
 		file << out_e[i][0];
 		for(int j = 1; j < 96; j++){
-			file << '\t' << out_e[i][j];
+			file << '\t' << unsigned(out_e[i][j]);
 		}
 		file << std::endl;
 	}
@@ -741,17 +741,24 @@ void cCurOut::writeTo(std::ostream& file){
 }
 
 void cCurTown::writeTo(std::ostream& file){
-	file << "TOWN " << num << std::endl;
-	file << "DIFFICULTY " << difficulty << std::endl;
-	if(hostile) file << "HOSTILE" << std::endl;
-	file << "INBOAT " << in_boat << std::endl;
-	file << "AT " << p_loc.x << ' ' << p_loc.y << std::endl;
+	file << "TOWN " << num << '\n';
+	file << "DIFFICULTY " << difficulty << '\n';
+	if(hostile) file << "HOSTILE" << '\n';
+	file << "INBOAT " << in_boat << '\n';
+	file << "AT " << p_loc.x << ' ' << p_loc.y << '\n';
+	file << '\f';
 	for(int i; i < 115; i++)
 		if(items[i].variety > ITEM_TYPE_NO_ITEM){
-			std::ostringstream sout;
-			sout << "ITEM " << i << ' ';
-			items[i].writeTo(file, sout.str());
+			file << "ITEM " << i << '\n';
+			items[i].writeTo(file);
 		}
+	file << '\f';
+	for(int i = 0; i < 60; i++) {
+		if(monst[i].active > 0) {
+			file << "CREATURE " << i << '\n';
+			monst[i].writeTo(file);
+		}
+	}
 	file << '\f';
 	for(int i = 0; i < 64; i++){
 		file << fields[i][0];
@@ -759,15 +766,15 @@ void cCurTown::writeTo(std::ostream& file){
 			file << '\t' << fields[i][j];
 		file << std::endl;
 	}
-	file << '\f' << record->max_dim() << std::endl;
+	file << '\f';
+	file << "SIZE " << record->max_dim() << "\n";
 	for(int i = 0; i < record->max_dim(); i++){
 		file << record->terrain(i,0);
 		for(int j = 1; j < record->max_dim(); j++)
 			file << '\t' << record->terrain(i,j);
-		file << std::endl;
+		file << '\n';
 	}
-	file << '\f';
-	// TODO: Write population
+	// TODO: Do we need to save special_spot?
 }
 
 void cCurTown::readFrom(std::istream& file){
