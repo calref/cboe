@@ -79,7 +79,6 @@ int main(int argc, char* argv[]);
 void Initialize(void);
 void Handle_One_Event();
 void Handle_Activate();
-bool handle_dialog_event() ;
 void Handle_Update();
 void Mouse_Pressed();
 void handle_apple_menu(int item_hit);

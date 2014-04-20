@@ -4,7 +4,6 @@
 int main(int argc, char* argv[]);
 void Initialize(void);
 void Handle_One_Event();
-bool handle_dialog_event() ;
 void Handle_Update();
 void Mouse_Pressed();
 void close_program();

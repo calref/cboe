@@ -285,7 +285,6 @@ void Handle_One_Event()
 	static const long fiveTicks = time_in_ticks(5).asMilliseconds();
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
-	bool event_in_dialog = false;
 	
 	through_sending();
 	Handle_Update();
@@ -304,9 +303,6 @@ void Handle_One_Event()
 	
 	clear_sound_memory();
 	
-	event_in_dialog = handle_dialog_event();
-	
-	if (event_in_dialog == false)
 		if(map_visible && mini_map.pollEvent(event)){
 			if(event.type == sf::Event::Closed) {
 				mini_map.setVisible(false);
@@ -402,41 +398,6 @@ void Handle_One_Event()
 	}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
 	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
-}
-
-// TODO: Not sure what to do here
-bool handle_dialog_event()
-{
-	bool event_was_dlog = false;
-#if 0
-	short i,item_hit;
-	cDialog* event_d;
-	
-	if (FrontWindow() != NULL) {
-		if (IsDialogEvent(&event)) {
-			if (DialogSelect(&event, &event_d, &item_hit))
-				for (i = 0; i < 18; i++)
-					if (event_d == modeless_dialogs[i])	{
-						/*CloseDialog(modeless_dialogs[i]);
-						 modeless_exists[i] = false;
-						 
-						 event_was_dlog = true;
-						 
-						 SetPort(mainPtr);
-						 SelectWindow(mainPtr);
-						 SetPort(mainPtr); */
-					}
-			
-		}
-		
-	}
-	
-//	if ((event.what == keyDown) && (FrontWindow() != mainPtr))
-	
-//		}
-	
-#endif
-	return event_was_dlog;
 }
 
 
