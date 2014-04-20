@@ -41,27 +41,16 @@ fs::path progDir, tempDir;
 //extern short overall_mode;
 
 #include <stdexcept>
-// TODO: Try to find a way to get our path without using CoreFoundation, and also replace cout with printf
-#include <CoreFoundation/CoreFoundation.h>
 
-void init_directories() {
-	char cPath[768];
-	CFBundleRef mainBundle = CFBundleGetMainBundle();
-	
-	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);
-	if(tmp == NULL){
-		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
-		if(success) {
-			progDir = cPath;
-			std::cout << cPath << "\n\n" << progDir << "\n\n";
-		} else {
-			std::cout << "Couldn't retrieve application path.\n";
-			exit(1);
-		}
-	} else progDir = tmp;
+void init_directories(const char* exec_path) {
+	progDir = fs::canonical(exec_path);
+#ifdef __APPLE__
+	// Need to back up out of the application package
+	// We're pointing at .app/Contents/MacOS/exec_name, so back out three steps
+	progDir = progDir.parent_path().parent_path().parent_path();
+#endif
 	progDir = progDir.parent_path();
-	// TODO: If this places us in the "Scenario Editor" folder, back out one more directory
+	if(progDir.filename() == "Scenario Editor") progDir = progDir.parent_path();
 	std::cout << progDir << '\n';
 	// Initialize the resource manager paths
 	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");

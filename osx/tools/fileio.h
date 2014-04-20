@@ -28,4 +28,4 @@ std::vector<std::string> load_strings(std::string which);
 bool load_party(fs::path file_to_load);
 bool save_party(fs::path dest_file);
 
-void init_directories();
+void init_directories(const char* exec_path);

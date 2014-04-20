@@ -154,9 +154,9 @@ bool sleep_field;
 void check_for_intel();
 bool mac_is_intel;
 
-int main(void)
-{
+int main(int argc, char* argv[]) {
 	try{
+		init_directories(argv[0]);
 		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		Initialize();
@@ -252,8 +252,6 @@ void Initialize(void)
 	//GetDateTime(&time);
 	//SetQDGlobalsRandomSeed(time);
 	srand(time(NULL));
-	
-	init_directories();
 	
 //	stored_key = open_pref_file();
 //	if (stored_key == -100) {

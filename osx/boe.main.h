@@ -1,7 +1,7 @@
 
 #include <SFML/Graphics.hpp>
 
-int main(void);
+int main(int argc, char* argv[]);
 void Initialize(void);
 void Handle_One_Event();
 bool handle_dialog_event() ;

@@ -75,7 +75,7 @@ short store_flags[3];
 short give_delays = 0; /* XXX this wasn't defined anywhere, is this right? -jmr */
 
 /* Prototypes */
-int main(void);
+int main(int argc, char* argv[]);
 void Initialize(void);
 void Handle_One_Event();
 void Handle_Activate();
@@ -107,9 +107,9 @@ cScenario scenario;
 //
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
-int main(void)
-{
+int main(int argc, char* argv[]) {
 	init_menubar();
+	init_directories(argv[0]);
 	Initialize();
 	init_fileio();
 	init_main_buttons();
@@ -140,7 +140,6 @@ void Initialize(void)
 {
 	
 	check_for_intel();
-	init_directories();
 
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
