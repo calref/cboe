@@ -3,7 +3,6 @@
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias!
 
-void init_directories();
 //void load_file();
 //void save_file(short mode);
 void change_rect_terrain(RECT r,ter_num_t terrain_type,short probability,bool hollow);

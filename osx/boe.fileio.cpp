@@ -86,7 +86,7 @@ void add_outdoor_maps();
 short specials_res_id,data_dump_file_id;
 char start_name[256];
 short start_volume,data_volume;
-fs::path progDir;
+extern fs::path progDir;
 
 //outdoor_record_type dummy_out;////
 //town_record_type dummy_town;
@@ -99,44 +99,6 @@ fs::path progDir;
 cCustomGraphics spec_scen_g;
 
 std::ofstream flog("bladeslog.txt");
-// TODO: Move this to the common fileio.cpp
-void init_directories()
-{
-	char cPath[768];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	
-	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
-	if(tmp == NULL){
-		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
-		if(success) {
-			progDir = cPath;
-			std::cout << cPath << "\n\n" << progDir << "\n\n";
-		} else {
-			std::cout << "Couldn't retrieve application path.\n";
-			exit(1);
-		}
-	}else progDir = tmp;
-	progDir = progDir.parent_path();
-	std::cout<<progDir<<'\n';
-	// Initialize the resource manager paths
-	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
-	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
-	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
-	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
-	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
-	
-	// now I generate the directory ID of the folder which contains the scenarios
-	// code copied from Mac Prog FAQ book
-//	myCPB.dirInfo.ioNamePtr = folder_name;
-//	myCPB.dirInfo.ioVRefNum = start_volume;
-//	myCPB.dirInfo.ioFDirIndex = 0;
-//	myCPB.dirInfo.ioDrDirID = start_dir;
-//	error = PBGetCatalogInfoSync(&myCPB); // false means not async
-//
-//	scen_dir = myCPB.dirInfo.ioDrDirID;
-}
-
 
 void finish_load_party(){
 	bool town_restore = (univ.town.num < 200) ? true : false;

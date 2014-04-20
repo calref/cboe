@@ -11,7 +11,6 @@
 #include <map>
 #include <sstream>
 
-#include <zlib.h>
 //#include "scen.global.h"
 #include <fstream>
 #include "classes.h"
@@ -25,6 +24,8 @@
 #include "porting.h"
 #include "dlogutil.h"
 #include "restypes.hpp"
+#include "tarball.hpp"
+#include "gzstream.h"
 
 extern bool cur_scen_is_mac, mac_is_intel;
 extern cScenario scenario;
@@ -36,66 +37,53 @@ extern cUniverse univ;
 //extern unsigned char borders[4][50];
 //extern cOutdoors current_terrain;
 //extern cTown* town;
-extern fs::path progDir;
+fs::path progDir, tempDir;
 //extern short overall_mode;
 
-struct header_posix_ustar {
-	char name[100];
-	char mode[8];
-	char uid[8];
-	char gid[8];
-	char size[12];
-	char mtime[12];
-	char checksum[8];
-	char typeflag[1];
-	char linkname[100];
-	char magic[6];
-	char version[2];
-	char uname[32];
-	char gname[32];
-	char devmajor[8];
-	char devminor[8];
-	char prefix[155];
-	char pad[12];
-};
-
 #include <stdexcept>
+// TODO: Try to find a way to get our path without using CoreFoundation, and also replace cout with printf
+#include <CoreFoundation/CoreFoundation.h>
 
-static header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize,bool directory=false){
-	if(fileSize>077777777777LL)
-		throw std::length_error("Specified file size >= 8 GB");
-	if(fileName.length()>=100)
-		throw std::length_error("Specified file name longer than 99 characters.");
-	header_posix_ustar header;
-	char* init = (char*) &header;
-	for(unsigned int i = 0; i < sizeof(header); i++) init[i] = 0;
+void init_directories() {
+	char cPath[768];
+	CFBundleRef mainBundle = CFBundleGetMainBundle();
 	
-	sprintf(header.name,"%s",fileName.c_str());
-	sprintf(header.mode,"%07o",0600);
-	//leave uid filled with NULs
-	//leave gid filled with NULs
-	sprintf(header.size,"%011llo",fileSize);
-	sprintf(header.mtime,"%011lo",time(NULL));
-	memset(header.checksum,' ',8);
-	header.typeflag[0]=directory?'5':'0';
-	//leave linkname filled with NULs
-	sprintf(header.magic,"ustar  "); //overwrites header with " \0"
-	//leave uname filled with NULs
-	//leave gname filled with NULs
-	//leave devmajor filled with NULs
-	//leave devminor filled with NULs
-	//leave prefix filled with NULs
-	//leave pad filled with NULs
+	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
+	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);
+	if(tmp == NULL){
+		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
+		if(success) {
+			progDir = cPath;
+			std::cout << cPath << "\n\n" << progDir << "\n\n";
+		} else {
+			std::cout << "Couldn't retrieve application path.\n";
+			exit(1);
+		}
+	} else progDir = tmp;
+	progDir = progDir.parent_path();
+	// TODO: If this places us in the "Scenario Editor" folder, back out one more directory
+	std::cout << progDir << '\n';
+	// Initialize the resource manager paths
+	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
+	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
+	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
+	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
+	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
 	
-	unsigned int sum=0;
-	unsigned char* ptr=reinterpret_cast<unsigned char*>(&header);
-	for(unsigned int i=0; i<sizeof(header); i++){
-		sum+=ptr[i];
-	}
-	if(sum>0777777)
-		throw std::runtime_error("Checksum overflow");
-	sprintf(header.checksum,"%o",sum);
-	return(header);
+	// We need a location for temporary files, primarily for loading and saving operations
+	// The scenario editor may also use this location as "scratch space"
+#if defined(_WIN32) || defined(_WIN64)
+	tempDir = getenv("APPDATA");
+	tempDir /= "Blades of Exile";
+#else
+	tempDir = getenv("HOME");
+#ifdef __APPLE__
+	tempDir /= "Library/Application Support/Blades of Exile";
+#else
+	tempDir /= ".oboe/blades";
+#endif // __APPLE__
+#endif // _Win32||_Win64
+	tempDir /= "Temporary Files";
 }
 
 bool load_scenario(fs::path file_to_load, bool skip_strings){
@@ -1264,450 +1252,85 @@ bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 bool save_party(fs::path dest_file)
 //mode;  // 0 - normal  1 - save as
 {
-	//printf("Saving is currently disabled.\n");
+	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
+	
 	bool in_scen = univ.party.scen_name != "";
 	bool in_town = univ.town.num < 200;
 	bool save_maps = !univ.party.stuff_done[306][0];
 	
-	// TODO: Strip off the header and save the remainder to a temporary file, then use gzip on that; this should fix the issue of the header being interpreted as compressed.
-	/*   Open the GZip file and write the (uncompressed) header   */
-	std::ofstream fout(dest_file.c_str(), std::ios_base::binary);
+	tarball partyOut;
+	
+	// First, write the main party data
+	univ.party.writeTo(partyOut.newFile("save/party.txt"));
+	{
+		std::ostream& fout = partyOut.newFile("save/setup.dat");
+		static uint16_t magic = 0x0B0E;
+		fout.write((char*)&magic, 2);
+		fout.write((char*)&univ.party.setup, sizeof(cParty::setup));
+	}
+	
+	// Then write the data for each of the party members
+	for(int i = 0; i < 6; i++) {
+		static char fname[] = "save/pc1.txt";
+		fname[7] = i + '1';
+		univ.party[i].writeTo(partyOut.newFile(fname));
+	}
+	
+	if(in_scen) {
+		if(in_town) {
+			// Write the current town data
+			univ.town.writeTo(partyOut.newFile("save/town.txt"));
+			
+			if(save_maps) {
+				// Write the town map data
+				std::ostream& fout = partyOut.newFile("save/townmaps.dat");
+				for(int i = 0; i < 200; i++)
+					for(int j = 0; j < 8; j++)
+						for(int k = 0; k < 64; k++)
+							fout.put(univ.town_maps[i][j][k]);
+			}
+		}
+		
+		// Write the current outdoors data
+		univ.out.writeTo(partyOut.newFile("save/out.txt"));
+		
+		if(save_maps) {
+			// Write the outdoors map data
+			std::ostream& fout = partyOut.newFile("save/outmaps.dat");
+			for(int i = 0; i < 100; i++)
+				for(int j = 0; j < 6; j++)
+					for(int k = 0; k < 48; k++)
+						fout.put(univ.out_maps[i][j][k]);
+		}
+	}
+	
+	// TODO: Add the party graphics sheet
+	
+	// Write out the compressed data
+	fs::path tempPath = tempDir/"savetemp.exg";
+	ogzstream zout(tempPath.c_str());
+	partyOut.writeTo(zout);
+	zout.close();
+	
+	// Now add the header. We use the temporary file because we want the header to be uncompressed.
 	short flags[] = {
 		0x0B0E, // to indicate new format
 		static_cast<short>(in_town ? 1342 : 5790), // is the party in town?
 		static_cast<short>(in_scen ? 100 : 200), // is the party in a scenario?
 		static_cast<short>(save_maps ? 5567 : 3422), // is the save maps feature enabled?
 		0x0100, // current version number, major and minor revisions only
-		// Version 1 indicates a beta format that won't be supported in the final release
+		// Version 1 indicates a beta format that may not be supported in the final release
 	};
 	if(!mac_is_intel) // must flip all the flags to little-endian
 		for(int i = 0; i < 5; i++)
 			flip_short(&flags[i]);
-	//fwrite(flags, sizeof(short), 5, f);
-	//gzFile party_file = gzdopen(fileno(f),"wb0"); // 0 indicates no compression; this is temporary
-	//gzwrite(party_file, flags, sizeof(short)*5);
-	//int q = gzflush(party_file, Z_FULL_FLUSH); // required in order to avoid the header getting compressed
-	//gzsetparams(party_file, Z_DEFAULT_COMPRESSION, Z_DEFAULT_STRATEGY);
+	
+	std::ifstream fin(tempPath.c_str(), std::ios_base::binary);
+	std::ofstream fout(dest_file.c_str(), std::ios_base::binary);
 	fout.write((char*) flags, 5*sizeof(short));
-	
-	/*   Initialize buffer and other variables   */
-	header_posix_ustar header;
-	static char footer[2*sizeof(header_posix_ustar)] = {0};
-	std::ostringstream sout("");
-	std::ostringstream bout("",std::ios_base::binary);
-	std::string tar_entry;
-	size_t tar_size, y;
-	int x;
-	sout << x;
-	/*   Write main party data to a buffer, and then to the file   */
-	univ.party.writeTo(sout);
-	//write the footer to end the file
-//	for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//		sout.put('\0');
-	tar_entry = sout.str();
-	y = tar_size = tar_entry.length();
-	while(y % 512){
-		y++;
-		tar_entry += '\0';
-	}
-	header = generateTarHeader("save/party.txt",tar_size);
-	bout.write((char*) &header, sizeof(header));
-	bout.write(tar_entry.c_str(), y);
-//	x = gzwrite(party_file, (char*) &header, sizeof(header));
-//	x = gzwrite(party_file, tar_entry.c_str(), y);
-//	//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//	if(x == 0) { // error
-//		gzerror(party_file, &x);
-//		oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//		gzclose(party_file);
-//		return false;
-//	}
-	sout.str(""); // clear the stream (I think)
-	
-	/*   Write player character data to a buffer, and then to the file   */
-	for(int i = 0; i < 6; i++){
-		char f_name[20];
-		univ.party[i].writeTo(sout);
-		//write the footer to end the file
-//		for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//			sout.put('\0');
-		tar_entry = sout.str();
-		y = tar_size = tar_entry.length();
-		while(y % 512){
-			y++;
-			tar_entry += '\0';
-		}
-		sprintf(f_name,"save/pc%i.txt",i+1);
-		header = generateTarHeader(f_name,tar_size);
-		bout.write((char*) &header, sizeof(header));
-		bout.write(tar_entry.c_str(), y);
-//		x = gzwrite(party_file, (char*) &header, sizeof(header));
-//		x = gzwrite(party_file, tar_entry.c_str(), y);
-//		//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//		if(x == 0) { // error
-//			gzerror(party_file, &x);
-//			oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//			gzclose(party_file);
-//			return false;
-//		}
-		sout.str(""); // clear the stream (I think)
-	}
-	
-	if(in_scen){
-		if(in_town){
-			/*   Write current town data to a buffer, and then to the file   */
-			univ.town.writeTo(sout);
-			//write the footer to end the file
-//			for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//				sout.put('\0');
-			tar_entry = sout.str();
-			y = tar_size = tar_entry.length();
-			while(y % 512){
-				y++;
-				tar_entry += '\0';
-			}
-			header = generateTarHeader("save/town.txt",tar_size);
-			bout.write((char*) &header, sizeof(header));
-			bout.write(tar_entry.c_str(), y);
-//			x = gzwrite(party_file, (char*) &header, sizeof(header));
-//			x = gzwrite(party_file, tar_entry.c_str(), y);
-//			//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//			if(x == 0) { // error
-//				gzerror(party_file, &x);
-//				oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//				gzclose(party_file);
-//				return false;
-//			}
-			sout.str(""); // clear the stream (I think)
-			
-			if(save_maps){
-				/*   Write town maps data to a buffer, and then to the file   */
-				for(int i = 0; i < 200; i++)
-					for(int j = 0; j < 8; j++)
-						for(int k = 0; k < 64; k++)
-							sout.put(univ.town_maps[i][j][k]);
-				//write the footer to end the file
-//				for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//					sout.put('\0');
-				tar_entry = sout.str();
-				y = tar_size = tar_entry.length();
-				while(y % 512){
-					y++;
-					tar_entry += '\0';
-				}
-				header = generateTarHeader("save/townmaps.dat",tar_size);
-				bout.write((char*) &header, sizeof(header));
-				bout.write(tar_entry.c_str(), y);
-//				x = gzwrite(party_file, (char*) &header, sizeof(header));
-//				x = gzwrite(party_file, tar_entry.c_str(), y);
-//				//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//				if(x == 0) { // error
-//					gzerror(party_file, &x);
-//					oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//					gzclose(party_file);
-//					return false;
-//				}
-				sout.str(""); // clear the stream (I think)
-			}
-		}
-		
-		/*   Write current outdoors data to a buffer, and then to the file   */
-		univ.out.writeTo(sout);
-		//write the footer to end the file
-//		for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//			sout.put('\0');
-		tar_entry = sout.str();
-		y = tar_size = tar_entry.length();
-		while(y % 512){
-			y++;
-			tar_entry += '\0';
-		}
-		header = generateTarHeader("save/out.txt",tar_size);
-		bout.write((char*) &header, sizeof(header));
-		bout.write(tar_entry.c_str(), y);
-//		x = gzwrite(party_file, (char*) &header, sizeof(header));
-//		x = gzwrite(party_file, tar_entry.c_str(), y);
-//		//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//		if(x == 0) { // error
-//			gzerror(party_file, &x);
-//			oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//			gzclose(party_file);
-//			return false;
-//		}
-		sout.str(""); // clear the stream (I think)
-		
-		if(save_maps){
-			/*   Write outdoor maps data to a buffer, and then to the file   */
-			for(int i = 0; i < 100; i++)
-				for(int j = 0; j < 6; j++)
-					for(int k = 0; k < 48; k++)
-						sout.put(univ.out_maps[i][j][k]);
-			//write the footer to end the file
-//			for(unsigned int j=0; j<2*sizeof(header_posix_ustar); j++)
-//				sout.put('\0');
-			tar_entry = sout.str();
-			y = tar_size = tar_entry.length();
-			while(y % 512){
-				y++;
-				tar_entry += '\0';
-			}
-			header = generateTarHeader("save/outmaps.dat",tar_size);
-			bout.write((char*) &header, sizeof(header));
-			bout.write(tar_entry.c_str(), y);
-//			x = gzwrite(party_file, (char*) &header, sizeof(header));
-//			x = gzwrite(party_file, tar_entry.c_str(), y);
-//			//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-//			if(x == 0) { // error
-//				gzerror(party_file, &x);
-//				oops_error((x == Z_ERRNO) ? Z_ERRNO + 1000 : 1, (x == Z_ERRNO) ? errno : x, 1);
-//				gzclose(party_file);
-//				return false;
-//			}
-//			sout.str(""); // clear the stream (I think)
-		}
-	}
-	//x = gzwrite(party_file, footer, 2*sizeof(header_posix_ustar));
-	//gzclose(party_file);
-	bout.write(footer, 2*sizeof(header_posix_ustar));
-	tar_entry = bout.str();
-	tar_size = tar_entry.length();
-	unsigned char* buf = new unsigned char[tar_size];
-	compress(buf, &tar_size, (unsigned char*) tar_entry.data(), tar_size);
-	fout.write((char*)buf, tar_size);
-	delete buf;
+	fout << fin.rdbuf();
+	fin.close();
 	fout.close();
-//	NavReplyRecord reply;
-//	OSErr error;
-//	short file_id;
-//	bool town_save = false;
-//	Str63 store_name;
-//	FSSpec to_load;
-//	
-//	short i;
-//	
-//	long len,store_len,count;
-//	flag_type flag;
-//	flag_type *store;
-//	party_record_type *party_ptr;
-//	setup_save_type	*setup_ptr;
-//	pc_record_type *pc_ptr;
-//	//	out_info_type store_explored;
-//	current_town_type *town_ptr;
-//	big_tr_type *town_data_ptr;
-//	town_item_list *item_ptr;
-//	stored_items_list_type *items_ptr;
-//	stored_town_maps_type *maps_ptr; 
-//	stored_outdoor_maps_type *o_maps_ptr; 
-//	
-//	char *party_encryptor;	
-//	
-//	if ((in_startup_mode == false) && (is_town()))
-//		town_save = true;
-//	
-//	strcpy ((char *) store_name, (char *) last_load_file);
-//	
-//	
-//	if ((mode == 1) || (loaded_yet == false)) {
-//		NavPutFile(NULL,&reply,NULL,NULL,'beSV','blx!',NULL);
-//		if (reply.validRecord == false)
-//			return;
-//		
-//		AEKeyword keyword;
-//		DescType descType;
-//		Size actualSize;
-//		
-//		AEGetNthPtr(&reply.selection,1,typeFSS,&keyword,&descType,&to_load,sizeof(FSSpec),&actualSize);
-//		loaded_yet = true;
-//	}
-//	else to_load = store_file_reply;
-//	
-//	error = FSpCreate(&to_load,'blx!','beSV',reply.keyScript);
-//	if ((error != 0) && (error != dupFNErr)) {
-//		add_string_to_buf("Save: Couldn't create file.         ");
-//		SysBeep(2);
-//		return;
-//	}
-//	if ((error = FSpOpenDF(&to_load,3,&file_id)) != 0) {
-//		add_string_to_buf("Save: Couldn't open file.         ");
-//		SysBeep(2);
-//		return;
-//	}			
-//	strcpy ((char *) last_load_file, (char *) to_load.name);
-//	store_file_reply = to_load;
-//	
-//	
-//	store = &flag;	
-//	
-//	len = sizeof(flag_type);
-//	
-//	flag.i = (town_save == true) ? 1342 : 5790;
-//	if ((error = FSWrite(file_id, &len, (char *) store))  != 0){
-//		add_string_to_buf("Save: Couldn't write to file.         ");
-//		FSClose(file_id);
-//		SysBeep(2);
-//	}
-//	flag.i = (in_startup_mode == false) ? 100 : 200;
-//	if ((error = FSWrite(file_id, &len, (char *) store)) != 0) {
-//		add_string_to_buf("Save: Couldn't write to file.         ");
-//		FSClose(file_id);
-//		SysBeep(2);
-//		return;
-//	}
-//	flag.i = (save_maps == true) ? 5567 : 3422;
-//	if ((error = FSWrite(file_id, &len, (char *) store))  != 0){
-//		add_string_to_buf("Save: Couldn't write to file.         ");
-//		FSClose(file_id);
-//		SysBeep(2); 
-//		return;
-//	}
-//	
-//	// SAVE PARTY
-//	party_ptr = &party;	
-//	len = sizeof(party_record_type);
-//	
-//	store_len = len;
-//	party_encryptor = (char *) party_ptr;
-//	for (count = 0; count < store_len; count++)
-//		party_encryptor[count] ^= 0x5C;
-//	if ((error = FSWrite(file_id, &len, (char *) party_ptr)) != 0) {
-//		add_string_to_buf("Save: Couldn't write to file.         ");
-//		FSClose(file_id);
-//		for (count = 0; count < store_len; count++)
-//			party_encryptor[count] ^= 0x5C;
-//		SysBeep(2); 
-//		return;
-//	}
-//	for (count = 0; count < store_len; count++)
-//		party_encryptor[count] ^= 0x5C;
-//	
-//	// SAVE SETUP
-//	setup_ptr = &setup_save;	
-//	len = sizeof(setup_save_type);
-//	if ((error = FSWrite(file_id, &len, (char *) setup_ptr))  != 0){
-//		add_string_to_buf("Save: Couldn't write to file.         ");
-//		FSClose(file_id);
-//		SysBeep(2); 
-//		return;
-//	}
-//	
-//	// SAVE PCS	
-//	store_len = sizeof(pc_record_type);
-//	for (i = 0; i < 6; i++) {
-//		pc_ptr = &adven[i];	
-//		
-//		len = store_len;
-//		party_encryptor = (char *) pc_ptr;
-//		for (count = 0; count < store_len; count++)
-//			party_encryptor[count] ^= 0x6B;
-//		if ((error = FSWrite(file_id, &len, (char *) pc_ptr))  != 0){
-//			add_string_to_buf("Save: Couldn't write to file.         ");
-//			FSClose(file_id);
-//			for (count = 0; count < store_len; count++)
-//				party_encryptor[count] ^= 0x6B;
-//			SysBeep(2); 
-//			return;
-//		}
-//		for (count = 0; count < store_len; count++)
-//			party_encryptor[count] ^= 0x6B;
-//	}
-//	
-//	if (in_startup_mode == false) {
-//		
-//		// SAVE OUT DATA
-//		len = sizeof(out_info_type);
-//		if ((error = FSWrite(file_id, &len, (char *) out_e)) != 0) {
-//			add_string_to_buf("Save: Couldn't write to file.         ");
-//			FSClose(file_id);
-//			SysBeep(2); 
-//			return;
-//		}
-//		
-//		if (town_save == true) {	
-//			town_ptr = &c_town;	
-//			len = sizeof(current_town_type);
-//			if ((error = FSWrite(file_id, &len, (char *) town_ptr)) != 0) {
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}
-//			town_data_ptr = &t_d;	
-//			len = sizeof(big_tr_type);
-//			if ((error = FSWrite(file_id, &len, (char *) town_data_ptr)) != 0) {
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}
-//			item_ptr = &t_i;	
-//			len = sizeof(town_item_list);
-//			if ((error = FSWrite(file_id, &len, (char *) item_ptr)) != 0) {
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}	
-//		}
-//		
-//		// Save stored items 
-//		for (i = 0; i < 3; i++) {
-//			items_ptr = &stored_items[i];
-//			len = (long) sizeof(stored_items_list_type);
-//			if ((error = FSWrite(file_id, &len, (char *) items_ptr))  != 0){
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}
-//		}
-//		
-//		// If saving maps, save maps
-//		if (save_maps == true) {
-//			maps_ptr = &(town_maps);
-//			len = (long) sizeof(stored_town_maps_type);
-//			if ((error = FSWrite(file_id, &len, (char *) maps_ptr))  != 0){
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}	
-//			
-//			o_maps_ptr = &o_maps;
-//			len = (long) sizeof(stored_outdoor_maps_type);
-//			if ((error = FSWrite(file_id, &len, (char *) o_maps_ptr)) != 0) {
-//				add_string_to_buf("Save: Couldn't write to file.         ");
-//				FSClose(file_id);
-//				SysBeep(2); 
-//				return;
-//			}
-//		} 
-//		
-//		// SAVE SFX and MISC_I
-//		len = (long) (64 * 64);
-//		if ((error = FSWrite(file_id, &len, (char *) sfx))  != 0){
-//			add_string_to_buf("Save: Couldn't write to file.         ");
-//			FSClose(file_id);
-//			SysBeep(2); 
-//			return;
-//		}
-//		if ((error = FSWrite(file_id, &len, (char *) misc_i))  != 0){
-//			add_string_to_buf("Save: Couldn't write to file.         ");
-//			FSClose(file_id);
-//			SysBeep(2); 
-//			return;
-//		}
-//		
-//		
-//		
-//	}
-//	
-//	if ((error = FSClose(file_id)) != 0) {
-//		add_string_to_buf("Save: Couldn't close file.         ");
-//		SysBeep(2);
-//		return;
-//	}
-//	if (in_startup_mode == false)
-//		add_string_to_buf("Save: Game saved.              ");
 	return true;
 }
 

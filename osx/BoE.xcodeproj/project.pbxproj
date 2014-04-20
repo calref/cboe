@@ -501,6 +501,8 @@
 		91B3EF5B0F969F3000BF5B67 /* scen.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF60F969BA700BF5B67 /* scen.dlgutil.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
+		91BFA3DA1902B13D001686E4 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
+		91BFA3DB1902B13F001686E4 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
 		91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
 		91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
 		91BFA3EB19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
@@ -1607,6 +1609,8 @@
 		91B3F11D0F97801F00BF5B67 /* mathutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathutil.h; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
 		91BFA3D61901B024001686E4 /* mask.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.vert; sourceTree = "<group>"; };
+		91BFA3D81902AD78001686E4 /* tarball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tarball.cpp; sourceTree = "<group>"; };
+		91BFA3D91902ADD5001686E4 /* tarball.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tarball.hpp; sourceTree = "<group>"; };
 		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
@@ -2097,11 +2101,12 @@
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
+				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */,
 				91B3F10F0F9779D000BF5B67 /* soundtool.cpp */,
+				91BFA3D81902AD78001686E4 /* tarball.cpp */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
-				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				91A0B15A1900F73E00EF438F /* mask.frag */,
 				91BFA3D61901B024001686E4 /* mask.vert */,
 			);
@@ -2116,10 +2121,11 @@
 				91B3F1090F9779C300BF5B67 /* graphtool.h */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.h */,
 				913D00590F9FEEC200184C18 /* porting.h */,
+				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
+				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
 				917B573F100B956C0096C978 /* undo.h */,
 				919145FE18E63B41005CF3A4 /* winutil.h */,
-				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -2820,6 +2826,7 @@
 				91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */,
 				91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */,
 				91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */,
+				91BFA3DA1902B13D001686E4 /* tarball.cpp in Sources */,
 				91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2872,6 +2879,7 @@
 				91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */,
 				91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */,
 				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
+				91BFA3DB1902B13F001686E4 /* tarball.cpp in Sources */,
 				91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
