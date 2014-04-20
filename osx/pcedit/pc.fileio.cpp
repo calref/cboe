@@ -12,7 +12,6 @@
 #include "mathutil.h"
 #include "dlogutil.h"
 #include "restypes.hpp"
-#include <CoreFoundation/CoreFoundation.h>
 #include "fileio.h"
 
 #define	DONE_BUTTON_ITEM	1
@@ -63,35 +62,7 @@ fs::path file_to_load;
 void load_base_item_defs();
 bool load_scen_item_defs(char scen_name[256]);
 
-fs::path progDir;
-
-void init_directories()
-{
-	char cPath[768];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	
-	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
-	if(tmp == NULL){
-		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
-		if(success) {
-			progDir = cPath;
-			std::cout << cPath << "\n\n" << progDir << "\n\n";
-		} else {
-			std::cout << "Couldn't retrieve application path.\n";
-			exit(1);
-		}
-	}else progDir = tmp;
-	progDir = progDir.parent_path();
-	std::cout<<progDir<<'\n';
-	// Initialize the resource manager paths
-	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
-	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
-	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
-	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
-	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
-	
-}
+extern fs::path progDir;
 
 //bool select_save_location(FSSpec* to_save_ptr){
 //	if(to_save_ptr==NULL)

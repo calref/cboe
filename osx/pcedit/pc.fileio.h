@@ -8,6 +8,5 @@ short init_data(short flag);
 //void make_pref_file(FSSpec pref);
 //void save_prefs();
 void remove_party_from_scen();
-void init_directories();
 void load_base_item_defs();
 bool load_scen_item_defs(std::string scen_name);
