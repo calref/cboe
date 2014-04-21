@@ -88,19 +88,20 @@ void cTextField::draw(){
 	std::string contents = getText();
 	RECT rect = frame;
 	rect.inset(2,6);
-	TEXT.font = "Geneva";
-	TEXT.style = sf::Text::Regular;
-	TEXT.pointSize = 12;
-	TEXT.colour = sf::Color::Black;
+	TextStyle style;
+	style.font = FONT_PLAIN;
+	style.pointSize = 12;
+	style.colour = sf::Color::Black;
+	style.lineHeight = 14;
 	// TODO: Proper support for multiline fields
 	int ip_offset, sel_offset;
 	if(haveFocus) {
 		std::string pre_ip = contents.substr(0, insertionPoint);
 		// TODO: Update string_length to take a std::string
-		ip_offset = string_length(pre_ip);
+		ip_offset = string_length(pre_ip, style);
 		if(insertionPoint != selectionPoint) {
 			std::string pre_sel = contents.substr(0, selectionPoint);
-			sel_offset = string_length(pre_sel);
+			sel_offset = string_length(pre_sel, style);
 			int sel_start = std::min(ip_offset, sel_offset) + 1;
 			int sel_width = abs(ip_offset - sel_offset) + 3;
 			RECT selectRect = frame;
@@ -122,7 +123,7 @@ void cTextField::draw(){
 		}
 	}
 	// TODO: Update win_draw_string to take a std::string
-	win_draw_string(*inWindow, rect, contents, 0, 14);
+	win_draw_string(*inWindow, rect, contents, 0, style);
 }
 
 void cTextField::handleInput(cKey key) {

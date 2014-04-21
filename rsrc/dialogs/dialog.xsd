@@ -130,12 +130,12 @@
     <xs:attribute name="key-mod" type="mod"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="font">
-    <xs:attribute name="font" default="silom">
+    <xs:attribute name="font" default="bold">
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="dungeon"/>
-          <xs:enumeration value="geneva"/>
-          <xs:enumeration value="silom"/>
+          <xs:enumeration value="plain"/>
+          <xs:enumeration value="bold"/>
           <xs:enumeration value="maidenword"/>
         </xs:restriction>
       </xs:simpleType>

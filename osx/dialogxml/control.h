@@ -43,8 +43,6 @@ enum eControlType {
 	CTRL_SCROLL,// A scrollbar (not implemented yet)
 };
 
-enum eTextFont {DUNGEON, GENEVA, SILOM, MAIDENWORD};
-
 //typedef bool (*click_callback_t)(cDialog&/*me*/,std::string/*id*/, eKeyMod/*mods*/);
 //typedef bool (*focus_callback_t)(cDialog&/*me*/,std::string/*id*/,bool/*losing*/); // losing is true if losing focus, false if gaining focus.
 typedef std::function<bool(cDialog&,std::string,eKeyMod)> click_callback_t;
@@ -70,7 +68,6 @@ public:
 
 class cControl {
 public:
-	static void init();
 	void attachKey(cKey key);
 	void detachKey();
 	void setTextToKey();
@@ -111,12 +108,9 @@ protected:
 	RECT frame;
 	int frameStyle;
 	cKey key;
-	static bool foundSilom();
-	static std::string font_nums[4];
 	void drawFrame(short amt, bool med_or_lt);
 private:
 	eControlType type;
-	static bool found_silom;
 };
 
 #endif

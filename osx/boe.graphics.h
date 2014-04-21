@@ -28,7 +28,6 @@ void arrow_button_click(RECT button_rect);
 void end_startup();
 void Set_up_win ();
 void load_main_screen();
-void set_gworld_fonts(short font_num);
 void redraw_screen(int refresh);
 void put_background();
 void draw_buttons(short mode);

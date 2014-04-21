@@ -18,13 +18,6 @@
 #include <fstream>
 #include <boost/filesystem/path.hpp>
 
-// The four default fonts, defined here for convenience
-// It's likely they'll be moved to another file eventually.
-#define fontGeneva "Geneva,Tahoma,Liberation Sans,Futura,Arial"
-#define fontSilom "Silom,Arial Rounded MT Bold,Impact"
-#define fontDungeon "Dungeon,MS Serif,New York,Georgia,URW Bookman L"
-#define fontMaidword "MaidenWord,Apple Chancery,Monotype Corsiva,URW Chancery L,Gabriola,Segoe Print,Comic Sans MS"
-
 struct cCursor {
 	sf::Image img;
 	int xHot, yHot;

@@ -264,19 +264,6 @@ bool cControl::triggerFocusHandler(cDialog& me __attribute__((unused)), std::str
 	return true;
 }
 
-std::string cControl::font_nums[4] = {"Dungeon", "Geneva", "Silom", "MaidenWord"};
-
-void cControl::init(){
-	// Check if Silom is available
-	// TODO: Ultimately, I'd like to distribute all needed fonts with the game, rendering this unnecessary
-	try {
-		ResMgr::get<FontRsrc>("Silom");
-		found_silom = true;
-	} catch(ResMgr::xResMgrErr) {
-		found_silom = false;
-	}
-}
-
 void cControl::drawFrame(short amt, bool med_or_lt){
 	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
 	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48},med_gray = {96,96,96};
@@ -293,12 +280,6 @@ void cControl::drawFrame(short amt, bool med_or_lt){
 	clip_rect(*inWindow, ul_rect);
 	frame_rect(*inWindow, rect, dk_gray);
 	undo_clip(*inWindow);
-}
-
-bool cControl::found_silom;
-
-bool cControl::foundSilom(){
-	return found_silom;
 }
 
 cControl::~cControl() {}

@@ -142,49 +142,49 @@ void put_pc_screen()
 	for (i = 0; i < 3; i++)
 		tileImage(pc_stats_gworld, small_erase_rects[i],bg_gworld,bg[7]);
 	
-	TEXT.font = "Silom";
-	TEXT.pointSize = 12;
-	TEXT.colour = sf::Color::White;
-	TEXT.style = sf::Text::Regular;
+	TextStyle style;
+	style.font = FONT_BOLD;
+	style.pointSize = 12;
+	style.colour = sf::Color::White;
+	style.lineHeight = 10;
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) univ.party.gold);
-	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,10);
+	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,style);
 	sprintf((char *) to_draw, "%d", (short) univ.party.food);
-	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,0,10);
+	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,0,style);
 	i = calc_day();
 	sprintf((char *) to_draw, "%d", i);
-	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,10);
-	TEXT.colour = sf::Color::Black;
+	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,style);
+	style.colour = sf::Color::Black;
 	
 	for (i = 0; i < 6; i++) {
 		if (univ.party[i].main_status != 0) {
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
-				TEXT.style = sf::Text::Italic;
-				TEXT.colour = sf::Color::Blue;
+				style.italic = true;
+				style.colour = sf::Color::Blue;
 			}
 			
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());
-			win_draw_string( pc_stats_gworld,pc_buttons[i][0],to_draw,0,10);
-			TEXT.style = sf::Text::Regular;
-			TEXT.colour = sf::Color::Black;
+			win_draw_string(pc_stats_gworld,pc_buttons[i][0],to_draw,0,style);
+			style.italic = false;
+			style.colour = sf::Color::Black;
 			
 			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
 			switch (univ.party[i].main_status) {
 				case 1:
 					if (univ.party[i].cur_health == univ.party[i].max_health)
-						TEXT.colour = sf::Color::Green;
-					else TEXT.colour = sf::Color::Red;
+						style.colour = sf::Color::Green;
+					else style.colour = sf::Color::Red;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,0,10);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,0,style);
 					if (univ.party[i].cur_sp == univ.party[i].max_sp)
-						TEXT.colour = sf::Color::Blue;
-					else TEXT.colour = sf::Color::Magenta;
+						style.colour = sf::Color::Blue;
+					else style.colour = sf::Color::Magenta;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,0,10);
-					TEXT.colour = sf::Color::Black;
+					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,0,style);
 					draw_pc_effects(i);
 					break;
 				case 2:
@@ -210,7 +210,8 @@ void put_pc_screen()
 					break;
 			}
 			if (univ.party[i].main_status != 1)
-				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,0,10);
+				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,0,style);
+			style.colour = sf::Color::Black;
 			
 			// Now put trade and info buttons
 			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
@@ -276,18 +277,19 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		for (j = 0; j < 6; j++)
 			item_area_button_active[i][j] = false;
 	
+	TextStyle style;
+	style.lineHeight = 10;
 	switch (screen_num) {
 		case 6: // On special items page
-			TEXT.style = sf::Text::Regular;
-			TEXT.font = "Silom";
-			TEXT.colour = sf::Color::White;
-			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",0,10);
-			TEXT.colour = sf::Color::Black;
+			style.font = FONT_BOLD;
+			style.colour = sf::Color::White;
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",0,style);
+			style.colour = sf::Color::Black;
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) {
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),0,10);
+					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),0,style);
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
@@ -302,19 +304,19 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			
 		default: // on an items page
 			pc = screen_num;
-			TEXT.colour = sf::Color::White;
-			TEXT.style = sf::Text::Regular;
+			style.colour = sf::Color::White;
+			style.font = FONT_PLAIN;
 			sout.str("");;
 			sout << univ.party[pc].name << " inventory:",
-			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),0,10);
-			TEXT.colour = sf::Color::Black;
-			TEXT.font = "Silom";
+			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),0,style);
+			style.colour = sf::Color::Black;
+			style.font = FONT_BOLD;
 			
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),0,10);
+				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),0,style);
 				
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -323,15 +325,15 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					
 				}
 				else {
-					TEXT.style = sf::Text::Regular;
+					style.font = FONT_PLAIN;
 					if (univ.party[pc].equip[i_num] == true) {
-						TEXT.style = sf::Text::Italic;
+						style.italic = true;
 						if (univ.party[pc].items[i_num].variety < 3)
-							TEXT.colour = sf::Color::Magenta;
+							style.colour = sf::Color::Magenta;
 						else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
-							TEXT.colour = sf::Color::Green;
-						else TEXT.colour = sf::Color::Blue;
-					} else TEXT.colour = sf::Color::Black;
+							style.colour = sf::Color::Green;
+						else style.colour = sf::Color::Blue;
+					} else style.colour = sf::Color::Black;
 					
 					////
 					sout.str("");
@@ -344,9 +346,9 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
 					dest_rect.left -= 2;
-					win_draw_string(item_stats_gworld,dest_rect,sout.str(),0,10);
-					TEXT.style = sf::Text::Regular;
-					TEXT.colour = sf::Color::Black;
+					win_draw_string(item_stats_gworld,dest_rect,sout.str(),0,style);
+					style.italic = false;
+					style.colour = sf::Color::Black;
 					
 					// this is kludgy, awkwark, and has redundant code. Done this way to
 					// make go faster, and I got lazy.
@@ -453,10 +455,11 @@ void place_buy_button(short position,short pc_num,short item_num)
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, sf::BlendAlpha);
 		sprintf((char *) store_str,"        %d",val_to_place);
+		TextStyle style;
 		if (val_to_place >= 10000)
-			TEXT.style = sf::Text::Regular;
-		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,2,10);
-		TEXT.style = sf::Text::Bold;
+			style.font = FONT_PLAIN;
+		style.lineHeight = 10;
+		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,2,style);
 	}
 }
 
@@ -671,7 +674,8 @@ void draw_pc_effects(short pc)
 		dest_rect.bottom += pc * 25 + 18;
 	}
 	else {
-		name_width = string_length(univ.party[pc].name);
+		TextStyle style;
+		name_width = string_length(univ.party[pc].name, style);
 		right_limit = pc_buttons[0][1].left - 5;
 		//dest_rect.left = pc_buttons[i][1].left - 16;
 		dest_rect.left = name_width + 33;
@@ -1300,7 +1304,7 @@ void print_buf ()
 	location moveTo;
 	while ((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		moveTo = location(4, 1 + 12 * num_lines_printed);
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("Geneva"), 12);
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("plain"), 12);
 		text.setColor(sf::Color::Black);
 		text.setPosition(moveTo);
 		text_area_gworld.draw(text);

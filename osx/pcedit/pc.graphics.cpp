@@ -59,7 +59,6 @@ short store_page_on,store_num_i;
 // TODO: The duplication of RECT here shouldn't be necessary...
 RECT ed_buttons_from[2] = {RECT{0,0,57,57},RECT{0,57,57,114}};
 short current_pressed_button = -1;
-bool init_once = false;
 sf::Texture spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 // (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
 sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
@@ -74,12 +73,6 @@ void init_main_buttons()
 	
 	RECT base_rect;
 	
-	if (init_once == false) {
-		init_once = true;
-		TEXT.font = "Silom";
-		TEXT.style = sf::Text::Regular;
-		TEXT.pointSize = 10;
-		}
 	//whole_win_rect = mainPtr->portRect;
 	//Initialize pc_info_rect in center
 	pc_info_rect= whole_win_rect;
@@ -282,16 +275,17 @@ void draw_main_screen()
 	dest_rect.top = dest_rect.bottom;
 	dest_rect.bottom = dest_rect.top + 50;
 		// initialize rectangle to draw text into
+	TextStyle style;
+	style.lineHeight = 10;
 	// TODO: Is this needed?
 #if 0
-	TEXT.pointSize = 12;
-	TEXT.style = sf::Text::Underlined;
+	style.pointSize = 12;
+	style.underline = true;
 		// set the pen
-	win_draw_string(mainPtr,dest_rect,"Characters",0,10);
+	win_draw_string(mainPtr,dest_rect,"Characters",0,style);
 		// This draws a chunk of text on the screen
 #endif
-	TEXT.pointSize = 10;
-	TEXT.style = sf::Text::Regular;
+	style.pointSize = 10;
 	
 	frame_dlog_rect(mainPtr,pc_info_rect); // draw the frame
 	//i = pc_info_rect.left-pc_info_rect.right;
@@ -299,33 +293,33 @@ void draw_main_screen()
 				//(short) i);
 	//win_draw_string(mainPtr,pc_info_rect,temp_str,0,12);
 
-	TEXT.colour = sf::Color::Black;
+	style.colour = sf::Color::Black;
 	dest_rect = pc_area_buttons[5][0]; 
 	dest_rect.right = whole_win_rect.right - 30; //What is this for? Commenting it out has no effect.
 	dest_rect.left += 60;
 	//Off0setRect(&dest_rect,0,45);
 	dest_rect.offset(0,21);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,10);
+		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,style);
 	else
-		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,10);
+		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,style);
 	if(!file_in_mem.empty() && party_in_scen && !scen_items_loaded){
 		dest_rect.offset(200,0);
-		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,10);
+		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,style);
 		dest_rect.offset(-200,0);
 	}
 	dest_rect.offset(0,12);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,10);
-	TEXT.pointSize = 12;
+		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,style);
+	style.pointSize = 12;
 	dest_rect.offset(0,16);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,10);
-	TEXT.pointSize = 10;
-	TEXT.font = "Geneva";
+		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,style);
+	style.pointSize = 10;
+	style.font = FONT_PLAIN;
 	dest_rect.offset(280,0);
-	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,10);
-	TEXT.font = "Silom";
+	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,style);
+
 	
 	reg_rect = whole_win_rect;
 	reg_rect.left = reg_rect.right - 170;
@@ -392,7 +386,9 @@ void draw_items()
 			//	else sprintf((char *) to_draw, "%d %d %d %d",
 			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
 
-			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,10);
+			TextStyle style;
+			style.lineHeight = 10;
+			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,style);
 
 			//Draw id/drop buttons
 			rect_draw_some_item(invenbtn_gworld,d_from,mainPtr,item_string_rects[i][1],sf::BlendAlpha);
@@ -413,29 +409,31 @@ void display_party()
 	char to_draw[256], skill_value[256];
 	RECT from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
 	
+	TextStyle style;
+	style.lineHeight = 10;
 	if(file_in_mem.empty()) { // what if no party loaded?
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
-		win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,10);
+		win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,style);
 	}
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
 		if (party_in_scen == false)
-			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,10);
+			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,style);
 		else
-			win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,10);
+			win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,style);
 		for (i = 0; i < 6; i++) {
 			// TODO: This appears to be expecting a tint?
 			if (i == current_active_pc) // active pc is drawn in blue
-				TEXT.colour = sf::Color::Blue;
-			else TEXT.colour = sf::Color::Black;
+				style.colour = sf::Color::Blue;
+			else style.colour = sf::Color::Black;
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
 			
 				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0]);
-			TEXT.colour = sf::Color::Black;
+			style.colour = sf::Color::Black;
 			
 			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
@@ -447,28 +445,28 @@ void display_party()
 				
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0); 
 				// draw name
-				TEXT.pointSize = 9;
+				style.pointSize = 9;
 				if( (univ.party[i].name.length()) >= 10) {
-					TEXT.font = "Geneva";
-					TEXT.pointSize = 6;
+					style.font = FONT_PLAIN;
+					style.pointSize = 6;
 					sprintf((char *) to_draw, "%-s  ", (char *) univ.party[i].name.c_str());
 				}
 				else {
 					sprintf((char *) to_draw, "%-s ", (char *) univ.party[i].name.c_str());	
 				}
 				
-				TEXT.colour = sf::Color::White;
-				win_draw_string(mainPtr,pc_area_buttons[i][2],to_draw,1,10);
-				TEXT.font = "Silom";
-				TEXT.pointSize = 10;
+				style.colour = sf::Color::White;
+				win_draw_string(mainPtr,pc_area_buttons[i][2],to_draw,1,style);
+				style.font = FONT_BOLD;
+				style.pointSize = 10;
 				
 				if (i == current_active_pc){
 					sprintf((char *) to_draw, "%-.18s  ", (char *) univ.party[i].name.c_str());
 					if( (univ.party[i].name.length()) > 12)
-						TEXT.pointSize = 8;
-					TEXT.colour = sf::Color::Black;
-					win_draw_string(mainPtr,name_rect,to_draw,1,10);
-					TEXT.pointSize = 10;
+						style.pointSize = 8;
+					style.colour = sf::Color::Black;
+					win_draw_string(mainPtr,name_rect,to_draw,1,style);
+					style.pointSize = 10;
 					
 				}
 					switch (univ.party[i].main_status) {
@@ -477,277 +475,281 @@ void display_party()
 							if (i == current_active_pc) {
 								//Draw in race
 								if (univ.party[i].race == 0)
-									win_draw_string(mainPtr,pc_race_rect,"Human   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Human   ",1,style);
 								if (univ.party[i].race == 1)
-									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,style);
 								if (univ.party[i].race == 2)
-									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,10);
+									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,style);
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");
-								win_draw_string(mainPtr,skill_rect,to_draw,0,10);
+								win_draw_string(mainPtr,skill_rect,to_draw,0,style);
 								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",univ.party[i].cur_health,univ.party[i].max_health,univ.party[i].cur_sp,
 										univ.party[i].max_sp);
-								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,10);
+								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,style);
 								
 								
-								TEXT.pointSize = 9;
-								TEXT.font = "Geneva";
+								style.pointSize = 9;
+								style.font = FONT_PLAIN;
+								style.lineHeight = 9;
 								string_num=1;
 								for( k = 0; k < 19 ; ++k)
 								{
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + 80;
 									
-									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),0,9);
+									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),0,style);
 									
 									sprintf((char *) skill_value,"%d",univ.party[i].skills[k]);
-									win_draw_string(mainPtr,temp_rect,skill_value,0,9);	
+									win_draw_string(mainPtr,temp_rect,skill_value,0,style);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;
 								}
+								style.lineHeight = 10;
 								//end skills
 								
 								//Write in pc Status
-								TEXT.pointSize = 10;
-								TEXT.font = "Silom";
+								style.pointSize = 10;
+								style.font = FONT_BOLD;
 								sprintf((char *) to_draw, "Status:");
-								win_draw_string(mainPtr,status_rect,to_draw,0,10);
+								win_draw_string(mainPtr,status_rect,to_draw,0,style);
 								
-								TEXT.pointSize = 9;
-								TEXT.font = "Geneva";
-								
+								style.pointSize = 9;
+								style.font = FONT_PLAIN;
+								style.lineHeight = 9;
 								
 								
 								//for(k = 0 ; k < 10; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
 								if (univ.party[i].status[0] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[1] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,style);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[1] < 0)
 										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,9);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,style);
 											cur_rect++;
 										}
 								if (univ.party[i].status[2] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,style);
 										cur_rect++;
 									}	
 								if (univ.party[i].status[3] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,style);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[3] < 0)
 										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,9);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,style);
 											cur_rect++;
 										}
 								if (univ.party[i].status[4] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[5] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[6] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[7] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[8] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[9] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[10] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[11] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[12] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[13] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,9);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,style);
 										cur_rect++;
 									}
+								style.lineHeight = 10;
 								//end pc status section
 								
 								//Write in Traits
-								TEXT.pointSize = 10;
-								TEXT.font = "Silom";
+								style.pointSize = 10;
+								style.font = FONT_BOLD;
 								sprintf((char *) to_draw, "Traits:");
-								win_draw_string(mainPtr,traits_rect,to_draw,0,10);
+								win_draw_string(mainPtr,traits_rect,to_draw,0,style);
 								//for(k = 0 ; k < 16; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_traits_rect[k],0);
-								TEXT.pointSize = 9;
-								TEXT.font = "Geneva";
+								style.pointSize = 9;
+								style.font = FONT_PLAIN;
+								style.lineHeight = 9;
 								
 								cur_rect=0;
 								if (univ.party[i].traits[0] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[1] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[2] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[3] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[4] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,style);
 										cur_rect++;
 									}
 								
 								if (univ.party[i].traits[5] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[6] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[7] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[8] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[9] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[10] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[11] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[12] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[13] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[14] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,9);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,style);
 										cur_rect++;
 									}
-								
+								style.lineHeight = 10;
 								//end traits
 							}
 							
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							case 2:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							case 3:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							case 4:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							case 5:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							case 6:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 							default:
-							TEXT.colour = sf::Color::White;
-							TEXT.pointSize = 9;
-							TEXT.font = "Geneva";
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,10);
-							TEXT.font = "Silom";
-							TEXT.pointSize = 10;
+							style.colour = sf::Color::White;
+							style.pointSize = 9;
+							style.font = FONT_PLAIN;
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,style);
+							style.font = FONT_BOLD;
+							style.pointSize = 10;
 							break;
 					}
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][0],0); 
@@ -756,45 +758,37 @@ void display_party()
 			}
 			
 		} // Closes the for i=6 loop
-		TEXT.colour = sf::Color::Black;
-		
-		
 		
 		for(i = 0; i < 5; i++) {
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][0],0);
 				//frame_dlog_rect(GetWindowPort(mainPtr),edit_rect[i][1],0);
 				from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
 				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,edit_rect[i][0]);
-				TEXT.colour = sf::Color::White;
+				style.colour = sf::Color::White;
 				switch(i) {
 					case 0:
-						win_draw_string(mainPtr,edit_rect[0][1],"  Add|Mage|Spells",0,10);
+						win_draw_string(mainPtr,edit_rect[0][1],"  Add|Mage|Spells",0,style);
 						break;
 					case 1:
-						win_draw_string(mainPtr,edit_rect[1][1],"  Add|Priest|Spells",0,10);
+						win_draw_string(mainPtr,edit_rect[1][1],"  Add|Priest|Spells",0,style);
 						break;
 					case 2: 
-						win_draw_string(mainPtr,edit_rect[2][1]," Edit|Traits",0,10);
+						win_draw_string(mainPtr,edit_rect[2][1]," Edit|Traits",0,style);
 						break;
 					case 3:
-						win_draw_string(mainPtr,edit_rect[3][1]," Edit|Skills",0,10);
+						win_draw_string(mainPtr,edit_rect[3][1]," Edit|Skills",0,style);
 						break;
 					case 4:
-						win_draw_string(mainPtr,edit_rect[4][1]," Edit|   XP",0,10);
+						win_draw_string(mainPtr,edit_rect[4][1]," Edit|   XP",0,style);
 						break;
 					default:
 						break;	
-				}		
-				TEXT.colour = sf::Color::Black;
-				
+				}
 			}
 		//			MoveTo(start_h + 10, start_v + 127);	
 		//			sprintf((char *) to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
 		//			DrawString(to_draw);
 	}
-	
-	
-	TEXT.colour = sf::Color::Black;
 }
 	
 //void rect_draw_some_item (GWorldPtr	src_gworld, RECT	src_rect, GWorldPtr	targ_gworld,RECT targ_rect, 

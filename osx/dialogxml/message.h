@@ -13,6 +13,7 @@
 
 #include <string>
 #include "control.h"
+#include "graphtool.h" // for eFont
 
 class cTextMsg : public cControl {
 public:
@@ -31,7 +32,7 @@ public:
 private:
 	bool drawFramed, clickable;
 	short textSize;
-	eTextFont textFont;
+	eFont textFont;
 	sf::Color color;
 	std::string fromList;
 	click_callback_t onClick;

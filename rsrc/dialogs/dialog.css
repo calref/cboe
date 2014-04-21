@@ -96,7 +96,7 @@ title {
 	background-position: center;
 	text-align: center;
 	font-size: 12px;
-	font-family: Silom;
+	font-family: Capriola, Silom;
 	vertical-align: middle;
 	padding-top: 6px;
 }
@@ -135,7 +135,7 @@ title {
 	padding-left: 18px;
 	padding-top: 0px;
 	padding-bottom: 5px;
-	font-family: Geneva;
+	font-family: 'DejaVu Sans', Geneva;
 	font-size: 10px;
 }
 
@@ -163,7 +163,7 @@ title {
 
 .text {
 	font-size: 10px;
-	font-family: Silom;
+	font-family: Capriola, Silom;
 	line-height: 12px;
 }
 
@@ -183,5 +183,5 @@ title {
 }
 
 .text.plain {
-	font-family: Geneva;
+	font-family: 'DejaVu Sans', Geneva;
 }

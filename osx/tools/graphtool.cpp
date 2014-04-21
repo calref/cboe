@@ -39,7 +39,6 @@ RECT bg[21];
 RECT map_pat[30];
 RECT bw_pats[6];
 sf::Texture bg_gworld;
-TextStyle TEXT;
 bool use_win_graphics = false;
 CursorRef GetCursorFromPath(std::string filename, location hotspot);
 sf::Shader maskShader;
@@ -230,8 +229,24 @@ void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::T
 }
 
 void TextStyle::applyTo(sf::Text& text) {
-	text.setFont(*ResMgr::get<FontRsrc>(font));
+	switch(font) {
+		case FONT_PLAIN:
+			text.setFont(*ResMgr::get<FontRsrc>("plain"));
+			break;
+		case FONT_BOLD:
+			text.setFont(*ResMgr::get<FontRsrc>("bold"));
+			break;
+		case FONT_DUNGEON:
+			text.setFont(*ResMgr::get<FontRsrc>("dungeon"));
+			break;
+		case FONT_MAIDWORD:
+			text.setFont(*ResMgr::get<FontRsrc>("maidenword"));
+			break;
+	}
 	text.setCharacterSize(pointSize);
+	int style = sf::Text::Regular;
+	if(italic) style |= sf::Text::Italic;
+	if(underline) style |= sf::Text::Underlined;
 	text.setStyle(style);
 	text.setColor(colour);
 }
@@ -240,9 +255,10 @@ void TextStyle::applyTo(sf::Text& text) {
 // str is a c string, 256 characters
 // uses current font
 // TODO: Make an enum for the mode parameter
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,short line_height,location offset){
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,TextStyle style,location offset){
+	short line_height = style.lineHeight;
 	sf::Text str_to_draw;
-	TEXT.applyTo(str_to_draw);
+	style.applyTo(str_to_draw);
 	short str_len,i;
 	short last_line_break = 0,last_word_break = 0;
 	short total_width = 0;
@@ -347,11 +363,11 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	//printf("String drawn.\n");
 }
 
-short string_length(std::string str){
+short string_length(std::string str, TextStyle style){
 	short total_width = 0;
 	
 	sf::Text text;
-	TEXT.applyTo(text);
+	style.applyTo(text);
 	text.setString(str);
 	total_width = text.getLocalBounds().width;
 	return total_width;

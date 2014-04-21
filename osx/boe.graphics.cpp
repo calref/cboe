@@ -326,18 +326,19 @@ void draw_startup_stats()
 	short i;
 	char str[256];
 	
-	TEXT.font = "Dungeon";
-	TEXT.style = sf::Text::Regular;
-	TEXT.pointSize = 24;
+	TextStyle style;
+	style.font = FONT_DUNGEON;
+	style.pointSize = 24;
 	
 	to_rect = startup_top;
 	to_rect.offset(20 - 18, 35);
-	TEXT.colour = sf::Color::White;
+	style.colour = sf::Color::White;
+	style.lineHeight = 18;
 	
 	if(!party_in_memory) {
-		TEXT.pointSize = 20;
+		style.pointSize = 20;
 		to_rect.offset(175,40);
-		win_draw_string(mainPtr,to_rect,"No Party in Memory",0,18,ul);
+		win_draw_string(mainPtr,to_rect,"No Party in Memory",0,style,ul);
 	} else {
 		frame_rect = startup_top;
 		frame_rect.inset(50,50);
@@ -347,10 +348,9 @@ void draw_startup_stats()
 		::frame_rect(mainPtr, frame_rect, sf::Color::White);
 		
 		to_rect.offset(203,37);
-		win_draw_string(mainPtr,to_rect,"Your party:",0,18,ul);
-		TEXT.pointSize = 12;
-		TEXT.style = sf::Text::Bold;
-		TEXT.font = "Geneva";
+		win_draw_string(mainPtr,to_rect,"Your party:",0,style,ul);
+		style.pointSize = 12;
+		style.font = FONT_BOLD;
 		for (i = 0; i < 6; i++) {
 			pc_rect = startup_top;
 			pc_rect.right = pc_rect.left + 300;
@@ -363,13 +363,13 @@ void draw_startup_stats()
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
 				
-				TEXT.pointSize = 14;
+				style.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr,pc_rect,univ.party[i].name,0,18,ul);
+				win_draw_string(mainPtr,pc_rect,univ.party[i].name,0,style,ul);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
-			TEXT.pointSize = 12;
+			style.pointSize = 12;
 			pc_rect.offset(12,16);
 			switch (univ.party[i].main_status) {
 				case MAIN_STATUS_ALIVE:
@@ -396,23 +396,23 @@ void draw_startup_stats()
 						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
 						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 					}
-					win_draw_string(mainPtr,pc_rect,str,0,18,ul);
+					win_draw_string(mainPtr,pc_rect,str,0,style,ul);
 					pc_rect.offset(0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
 							univ.party[i].max_health,univ.party[i].max_sp);
-					win_draw_string(mainPtr,pc_rect,str,0,18,ul);
+					win_draw_string(mainPtr,pc_rect,str,0,style,ul);
 					break;
 				case MAIN_STATUS_DEAD:
-					win_draw_string(mainPtr,pc_rect,"Dead",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Dead",0,style,ul);
 					break;
 				case MAIN_STATUS_DUST:
-					win_draw_string(mainPtr,pc_rect,"Dust",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Dust",0,style,ul);
 					break;
 				case MAIN_STATUS_STONE:
-					win_draw_string(mainPtr,pc_rect,"Stone",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Stone",0,style,ul);
 					break;
 				case MAIN_STATUS_FLED:
-					win_draw_string(mainPtr,pc_rect,"Fled",0,18,ul);
+					win_draw_string(mainPtr,pc_rect,"Fled",0,style,ul);
 					break;
 				default: //absent, and all variations thereof; do nothing
 					break;
@@ -420,17 +420,14 @@ void draw_startup_stats()
 		}
 	}
 	
-	TEXT.font = "Geneva";
-	TEXT.pointSize = 10;
-	TEXT.style = sf::Text::Bold;
+	style.font = FONT_BOLD;
+	style.pointSize = 10;
 	pc_rect = startup_from[0];
 	pc_rect.offset(5,5);
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
 	// TODO: Should replace this with a more appropriate copyright string
-	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,18,ul);
-	
-	TEXT.colour = sf::Color::Black;
+	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,style,ul);
 }
 
 
@@ -452,9 +449,9 @@ void draw_start_button(short which_position,short which_button)
 	to_rect.bottom = to_rect.top + 40;
 	rect_draw_some_item(startup_gworld,from_rect,to_rect,ul);
 	
-	TEXT.font = "Dungeon";
-	TEXT.style = sf::Text::Regular;
-	TEXT.pointSize = 24;
+	TextStyle style;
+	style.font = FONT_DUNGEON;
+	style.pointSize = 24;
 	to_rect = startup_button[which_position];
 	//to_rect.left += 80;
 	to_rect.offset(10, 10);
@@ -462,15 +459,11 @@ void draw_start_button(short which_position,short which_button)
 		which_button = 4;
 	// In the 0..65535 range, this was 14472 + (12288 * which_button)
 	base_color.b += (48 * which_button);
-	TEXT.colour = base_color;
+	style.colour = base_color;
+	style.lineHeight = 18;
 	if (which_position == 3)
 		to_rect.offset(-7,0);
-	win_draw_string(mainPtr,to_rect,button_labels[which_position],1,18,ul);
-	TEXT.colour = sf::Color::Black;
-	TEXT.font = "Geneva";
-	TEXT.style = sf::Text::Bold;
-	TEXT.pointSize = 10;
-	
+	win_draw_string(mainPtr,to_rect,button_labels[which_position],1,style,ul);
 }
 
 void main_button_click(short mode,RECT button_rect)
@@ -574,39 +567,6 @@ void load_main_screen()
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
 	orig_text_bar_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
-	
-//	set_gworld_fonts(geneva_font_num);
-}
-
-void set_gworld_fonts(short font_num)
-{
-	// TODO: This doesn't even make sense since fonts aren't set for each surface in SFML
-#if 0
-	GrafPtr old_port;
-	
-	GetPort(&old_port);
-	SetPort(GetWindowPort(mainPtr));
-	TextFont(font_num);
-	TextFace(bold);
-	TextSize(10);
-	SetPort(pc_stats_gworld);
-	TextFont(font_num);
-	TextFace(bold);
-	TextSize(10);
-	SetPort(item_stats_gworld);
-	TextFont(font_num);
-	TextFace(bold);
-	TextSize(10);
-	SetPort(text_area_gworld);
-	TextFont(font_num);
-	TextFace(bold);
-	TextSize(10);
-	SetPort(text_bar_gworld);
-	TextFont(font_num);
-	TextFace(bold);
-	TextSize(10);
-	SetPort(old_port);
-#endif
 }
 
 void redraw_screen(int refresh) {
@@ -782,35 +742,36 @@ void draw_text_bar(short mode)
 void put_text_bar(char *str) {
 	text_bar_gworld.setActive();
 	rect_draw_some_item(orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
-	TEXT.colour = sf::Color::White;
-	TEXT.font = "Silom";
-	TEXT.pointSize = 12;
+	TextStyle style;
+	style.colour = sf::Color::White;
+	style.font = FONT_BOLD;
+	style.pointSize = 12;
+	style.lineHeight = 12;
 	RECT to_rect = RECT(text_bar_gworld);
-	// TODO: The 12 is the line height; not sure what it should be, so I just picked something
-	win_draw_string(text_bar_gworld, to_rect, str, 2, 12);
+	// TODO: Not sure what the line height should be, so I just picked something
+	win_draw_string(text_bar_gworld, to_rect, str, 2, style);
 	
 	if (monsters_going == false) {
 		to_rect.left = 205;
 		to_rect.top = 14;
 		if (PSD[SDF_PARTY_STEALTHY] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Stealth", 2, 12);
+			win_draw_string(text_bar_gworld, to_rect, "Stealth", 2, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_FLIGHT] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Flying", 2, 12);
+			win_draw_string(text_bar_gworld, to_rect, "Flying", 2, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_DETECT_LIFE] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Detect Life", 2, 12);
+			win_draw_string(text_bar_gworld, to_rect, "Detect Life", 2, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_FIREWALK] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Firewalk", 2, 12);
+			win_draw_string(text_bar_gworld, to_rect, "Firewalk", 2, style);
 			to_rect.left -= 60;
 		}
 	}
 	
-	TEXT.colour = sf::Color::Black;
 	text_bar_gworld.display();
 }
 
@@ -1578,8 +1539,8 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	
 	if ((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
 		sprintf((char *) dam_str,"%d",damage);
-		TEXT.pointSize = 10;
-		TEXT.style = sf::Text::Bold;
+		TextStyle style;
+		style.lineHeight = 10;
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
 		//OffsetRect(&text_rect,x_adj,y_adj);
 		text_rect = dest_rect;
@@ -1587,8 +1548,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		text_rect.offset(-4,-5);
-		win_draw_string(mainPtr,text_rect,dam_str,1,10,ul);
-		TEXT.style = sf::Text::Regular;
+		win_draw_string(mainPtr,text_rect,dam_str,1,style,ul);
 	}
 	play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
 	mainPtr.display();
@@ -1767,12 +1727,13 @@ void draw_targeting_line(location where_curs)
 							// Now place number of shots left, if drawing center of target
 							if ((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
 								&& (store_loc.y - which_space.y + 4 == 4)) {
-								TEXT.colour = sf::Color::White;
+								TextStyle style;
+								style.colour = sf::Color::White;
+								style.lineHeight = 12;
 								const char chr[2] = {static_cast<char>(num_targets_left + '0')};
 								int x = ((target_rect.left + target_rect.right) / 2) - 3;
 								int y = (target_rect.top + target_rect.bottom) / 2;
-								win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, 1, 12);
-								TEXT.colour = sf::Color::Black;
+								win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, 1, style);
 							}
 							
 						}

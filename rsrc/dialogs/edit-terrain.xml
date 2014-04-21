@@ -21,9 +21,9 @@
 		<led name='obstructed' top='107' left='293' state='off' width='120'>Blocked, obstructed</led>
 		<led name='opaque' top='124' left='293' state='off' width='120'>Blocked, opaque</led>
 	</group>
-	<led name='flight' top='150' left='26' state='off' width='120' font='silom'>Can fly over?</led>
-	<led name='boat' top='150' left='154' state='off' width='120' font='silom'>Can boat over?</led>
-	<led name='horse' top='150' left='307' state='off' width='120' font='silom'>Blocked to horses?</led>
+	<led name='flight' top='150' left='26' state='off' width='120' font='bold'>Can fly over?</led>
+	<led name='boat' top='150' left='154' state='off' width='120' font='bold'>Can boat over?</led>
+	<led name='horse' top='150' left='307' state='off' width='120' font='bold'>Blocked to horses?</led>
 	<text top='165' left='8' height='14' width='91'>Step sound:</text>
 	<group name='sound'>
 		<led name="step" top='167' left='102' state='off' width='60'>Footstep</led>

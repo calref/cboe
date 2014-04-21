@@ -55,18 +55,15 @@ void cButton::draw(){
 	inWindow->setActive();
 	
 	if(visible){
-		TEXT.font = "Geneva";
-		if(foundSilom()) {
-			TEXT.style = sf::Text::Regular;
-			TEXT.font = "Silom";
-		} else TEXT.style = sf::Text::Bold;
-		if(type == BTN_TINY) TEXT.pointSize = 9;
-		else if(type == BTN_PUSH) TEXT.pointSize = 10;
-		else TEXT.pointSize = 12;
+		TextStyle style;
+		if(type == BTN_TINY) style.pointSize = 9;
+		else if(type == BTN_PUSH) style.pointSize = 10;
+		else style.pointSize = 12;
 		from_rect = btnRects[type][depressed];
 		to_rect = frame;
 		rect_draw_some_item(buttons[btnGW[type]],from_rect,*inWindow,to_rect,sf::BlendAlpha);
-		TEXT.colour = sf::Color::Black;
+		style.colour = sf::Color::Black;
+		style.lineHeight = 8;
 		int textMode = 1;
 		if(type == BTN_TINY) {
 			textMode = 2;
@@ -74,12 +71,11 @@ void cButton::draw(){
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 34;
 		}
-		win_draw_string(*inWindow,to_rect,lbl,textMode,8);
+		win_draw_string(*inWindow,to_rect,lbl,textMode,style);
 		// TODO: Adjust string location as appropriate
 		// Tiny button string location should be shifted right 20 pixels (or possibly 18)
 		// Push button string should be centred below the button
 		// Others may need adjustments too, not sure
-		TEXT.colour = sf::Color::Black;
 		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle); // frame default button, to provide a visual cue that it's the default
 	}else{
@@ -192,7 +188,7 @@ void cLed::init(){
 cLed::cLed(cDialog* parent) :
 	cButton(parent,CTRL_LED),
 	state(led_off),
-	textFont(SILOM),
+	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent->defTextClr) {
 	setBtnType(BTN_LED);
@@ -247,19 +243,17 @@ void cLed::draw(){
 	inWindow->setActive();
 	
 	if(visible){
-		TEXT.font = "Geneva";
-		if(foundSilom()) TEXT.style = sf::Text::Regular;
-		else TEXT.style = sf::Text::Bold;
-		TEXT.pointSize = 9;
+		TextStyle style;
+		style.pointSize = 9;
+		style.lineHeight = 8;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
 		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
-		TEXT.colour = parent->defTextClr;
+		style.colour = parent->defTextClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
-		win_draw_string(*inWindow,to_rect,lbl,2,8);
-		TEXT.colour = sf::Color::Black;
+		win_draw_string(*inWindow,to_rect,lbl,2,style);
 	}else{
 		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
 	}

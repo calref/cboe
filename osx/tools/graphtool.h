@@ -51,11 +51,19 @@ struct m_pic_index_t {
 	unsigned char i, x, y;
 };
 
+enum eFont {
+	FONT_PLAIN,
+	FONT_BOLD,
+	FONT_DUNGEON,
+	FONT_MAIDWORD
+};
+
 struct TextStyle {
-	int style;
-	std::string font;
-	int pointSize;
+	bool italic = false, underline = false;
+	eFont font = FONT_BOLD;
+	int pointSize = 10, lineHeight;
 	sf::Color colour;
+	TextStyle() : colour(sf::Color::Black) {}
 	void applyTo(sf::Text& text);
 };
 
@@ -93,8 +101,6 @@ struct cCustomGraphics {
 	graf_pos find_graphic(pic_num_t pic, bool party = false);
 };
 
-
-
 void init_graph_tool();
 void clean_up_graphtool();
 void set_cursor(cursor_type which_curs);
@@ -103,8 +109,8 @@ void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,short line_height,location offset = {0,0});
-short string_length(std::string str);
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,TextStyle style,location offset = {0,0});
+short string_length(std::string str, TextStyle style);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();
 RECT calc_rect(short i, short j);
@@ -129,7 +135,6 @@ extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
 extern m_pic_index_t m_pic_index[200];
 extern RECT bg[];
-extern TextStyle TEXT;
 #endif
 
 #endif

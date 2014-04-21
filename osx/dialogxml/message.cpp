@@ -43,10 +43,10 @@ void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 			textSize = val;
 			break;
 		case TXT_FONT:
-			if(val == DUNGEON) textFont = DUNGEON;
-			else if(val == GENEVA) textFont = GENEVA;
-			else if(val == MAIDENWORD) textFont = MAIDENWORD;
-			else textFont = SILOM; // Defaults to Silom if an invalid value is provided.
+			if(val == FONT_DUNGEON) textFont = FONT_DUNGEON;
+			else if(val == FONT_PLAIN) textFont = FONT_PLAIN;
+			else if(val == FONT_MAIDWORD) textFont = FONT_MAIDWORD;
+			else textFont = FONT_BOLD; // Defaults to bold if an invalid value is provided.
 			break;
 		case TXT_WRAP:
 			throw xUnsupportedProp(prop);
@@ -76,7 +76,7 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 cTextMsg::cTextMsg(cDialog& parent) :
 	cControl(CTRL_TEXT,parent),
 	drawFramed(false),
-	textFont(SILOM),
+	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent.defTextClr),
 	clickable(false),
@@ -85,7 +85,7 @@ cTextMsg::cTextMsg(cDialog& parent) :
 cTextMsg::cTextMsg(sf::RenderWindow& parent) :
 	cControl(CTRL_TEXT,parent),
 	drawFramed(false),
-	textFont(SILOM),
+	textFont(FONT_BOLD),
 	textSize(10),
 	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
 	clickable(false),
@@ -101,10 +101,9 @@ void cTextMsg::draw(){
 	inWindow->setActive();
 	
 	if(visible){
-		TEXT.font = font_nums[textFont];
-		if(textFont == SILOM && !foundSilom()) TEXT.style = sf::Text::Bold;
-		else TEXT.style = sf::Text::Regular;
-		TEXT.pointSize = textSize;
+		TextStyle style;
+		style.font = textFont;
+		style.pointSize = textSize;
 		if(drawFramed) drawFrame(2,frameStyle);
 		sf::Color draw_color = color;
 		if(clickable && depressed){
@@ -112,13 +111,15 @@ void cTextMsg::draw(){
 			draw_color.g = 256 - draw_color.g;
 			draw_color.b = 256 - draw_color.b;
 		}
-		TEXT.colour = draw_color;
+		style.colour = draw_color;
 		if (to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
+			style.lineHeight = 12;
 			to_rect.left += 3;
-			win_draw_string(*inWindow,to_rect,lbl,3,12);
+			win_draw_string(*inWindow,to_rect,lbl,3,style);
 		}else {
+			style.lineHeight = textSize + 2;
 			to_rect.inset(4,4);
-			win_draw_string(*inWindow,to_rect,lbl,0,textSize + 2);
+			win_draw_string(*inWindow,to_rect,lbl,0,style);
 		}
 	}
 }

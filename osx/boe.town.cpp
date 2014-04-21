@@ -1548,9 +1548,9 @@ void draw_map(bool need_refresh) {
 	mini_map.setActive();
 	
 	// Now place terrain map gworld
-	TEXT.font = "Silom";
-	TEXT.pointSize = 10;;
-	TEXT.style = sf::Text::Regular;
+	TextStyle style;
+	style.font = FONT_BOLD;
+	style.pointSize = 10;;
 	
 	the_rect = RECT(mini_map);
 	tileImage(mini_map, the_rect,bg_gworld,bg[4]);
@@ -1559,10 +1559,10 @@ void draw_map(bool need_refresh) {
 	theGraphic.setPict(21, PIC_DLOG);
 	theGraphic.setFormat(TXT_FRAME, false);
 	theGraphic.draw();
-	TEXT.colour = sf::Color::White;
-	win_draw_string(mini_map, map_title_rect,title_string,0,12);
-	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,12);
-	TEXT.colour = sf::Color::Black;
+	style.colour = sf::Color::White;
+	style.lineHeight = 12;
+	win_draw_string(mini_map, map_title_rect,title_string,0,style);
+	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,style);
 	
 	/*SetPort( mini_map);
 	 GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);
@@ -1618,8 +1618,6 @@ void draw_map(bool need_refresh) {
 			}
 		}
 	}
-	
-	TEXT.colour = sf::Color::Black;
 	
 	mini_map.display();
 	

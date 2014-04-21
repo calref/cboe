@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include "control.h"
+#include "graphtool.h" // for eFont
 
 enum eBtnType {	// w x h
 	BTN_SM = 0,	// 23x23 (PICT id 2000 / 2001)
@@ -84,7 +85,7 @@ public:
 	void draw();
 private:
 	eLedState state;
-	eTextFont textFont;
+	eFont textFont;
 	sf::Color color;
 	short textSize;
 	static RECT ledRects[3][2];

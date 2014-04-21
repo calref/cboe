@@ -109,8 +109,8 @@
 		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family:
 		<xsl:choose>
-			<xsl:when test='@font = "plain"'>Geneva</xsl:when>
-			<xsl:when test='@font = "bold"'>Silom</xsl:when>
+			<xsl:when test='@font = "plain"'>'DejaVu Sans', Geneva</xsl:when>
+			<xsl:when test='@font = "bold"'>Capriola, Silom</xsl:when>
 			<xsl:otherwise><xsl:value-of select='./@font'/></xsl:otherwise>
 		</xsl:choose>;
 		<xsl:if test='./@state'>
@@ -138,8 +138,8 @@
 		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family:
 		<xsl:choose>
-			<xsl:when test='@font = "plain"'>Geneva</xsl:when>
-			<xsl:when test='@font = "bold"'>Silom</xsl:when>
+			<xsl:when test='@font = "plain"'>'DejaVu Sans', Geneva</xsl:when>
+			<xsl:when test='@font = "bold"'>Capriola, Silom</xsl:when>
 			<xsl:otherwise><xsl:value-of select='./@font'/></xsl:otherwise>
 		</xsl:choose>;
 		border-color: red;
@@ -195,7 +195,7 @@
 	<div class='tfield-inner'>
 	<xsl:attribute name='style'>
 		width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;
-		font-family: Geneva;
+		font-family: 'DejaVu Sans', Geneva;
 		font-size: 12px;
 	</xsl:attribute>
 	(<xsl:value-of select='@name'/>)

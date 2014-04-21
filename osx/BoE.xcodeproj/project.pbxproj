@@ -540,6 +540,8 @@
 		91E5C7BA0F9F619D00C21460 /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		91EC483B18FBAD8000BB1E86 /* prefs.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91EC481018FBABB100BB1E86 /* prefs.mac.mm */; };
 		91EC485518FC6C4400BB1E86 /* pc-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074B18F0FE3F00F7BD7F /* pc-info.xml */; };
+		91EF052C1904D099001BEF85 /* bold.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF05291904D082001BEF85 /* bold.ttf */; };
+		91EF052D1904D099001BEF85 /* plain.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF052A1904D082001BEF85 /* plain.ttf */; };
 		91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
@@ -791,6 +793,8 @@
 			files = (
 				914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */,
 				914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */,
+				91EF052C1904D099001BEF85 /* bold.ttf in Copy Fonts */,
+				91EF052D1904D099001BEF85 /* plain.ttf in Copy Fonts */,
 			);
 			name = "Copy Fonts";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1633,6 +1637,8 @@
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
 		91EC480E18FBAA8700BB1E86 /* prefs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = prefs.hpp; sourceTree = "<group>"; };
 		91EC481018FBABB100BB1E86 /* prefs.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = prefs.mac.mm; sourceTree = "<group>"; };
+		91EF05291904D082001BEF85 /* bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bold.ttf; sourceTree = "<group>"; };
+		91EF052A1904D082001BEF85 /* plain.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = plain.ttf; sourceTree = "<group>"; };
 		91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "/Library/Frameworks/sfml-audio.framework"; sourceTree = "<absolute>"; };
 		91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "/Library/Frameworks/sfml-graphics.framework"; sourceTree = "<absolute>"; };
 		91F6F8E018F87F3700E3EA15 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "/Library/Frameworks/sfml-system.framework"; sourceTree = "<absolute>"; };
@@ -2133,8 +2139,10 @@
 		914701A318F629D4008A6DC9 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				91EF05291904D082001BEF85 /* bold.ttf */,
 				914701A418F629D4008A6DC9 /* dungeon.ttf */,
 				914701A518F629D4008A6DC9 /* maidenword.ttf */,
+				91EF052A1904D082001BEF85 /* plain.ttf */,
 			);
 			path = fonts;
 			sourceTree = "<group>";

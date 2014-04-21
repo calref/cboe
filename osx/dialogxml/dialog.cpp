@@ -225,13 +225,13 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "dungeon")
-				p.second->setFormat(TXT_FONT, DUNGEON);
-			else if(val == "geneva")
-				p.second->setFormat(TXT_FONT, GENEVA);
-			else if(val == "silom")
-				p.second->setFormat(TXT_FONT, SILOM);
+				p.second->setFormat(TXT_FONT, FONT_DUNGEON);
+			else if(val == "plain")
+				p.second->setFormat(TXT_FONT, FONT_PLAIN);
+			else if(val == "bold")
+				p.second->setFormat(TXT_FONT, FONT_BOLD);
 			else if(val == "maidenword")
-				p.second->setFormat(TXT_FONT, MAIDENWORD);
+				p.second->setFormat(TXT_FONT, FONT_MAIDWORD);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "size"){
 			std::string val;
@@ -584,13 +584,13 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "dungeon")
-				p.second->setFormat(TXT_FONT, DUNGEON);
-			else if(val == "geneva")
-				p.second->setFormat(TXT_FONT, GENEVA);
-			else if(val == "silom")
-				p.second->setFormat(TXT_FONT, SILOM);
+				p.second->setFormat(TXT_FONT, FONT_DUNGEON);
+			else if(val == "plain")
+				p.second->setFormat(TXT_FONT, FONT_PLAIN);
+			else if(val == "bold")
+				p.second->setFormat(TXT_FONT, FONT_BOLD);
 			else if(val == "maidenword")
-				p.second->setFormat(TXT_FONT, MAIDENWORD);
+				p.second->setFormat(TXT_FONT, FONT_MAIDWORD);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "size"){
 			std::string val;
@@ -857,7 +857,6 @@ void cDialog::recalcRect(){
 }
 
 void cDialog::init(){
-	cControl::init();
 	cButton::init();
 	cLed::init();
 	cPict::init();
@@ -1145,7 +1144,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 		labelCtrl = new cTextMsg(*this);
 	}
 	labelCtrl->setText(label);
-	labelCtrl->setFormat(TXT_FONT, bold ? SILOM : GENEVA);
+	labelCtrl->setFormat(TXT_FONT, bold ? FONT_BOLD : FONT_PLAIN);
 	if(bg == BG_DARK && dynamic_cast<cButton*>(&ctrl) != NULL)
 		labelCtrl->setColour(defTextClr);
 	else labelCtrl->setColour(ctrl.getColour());
