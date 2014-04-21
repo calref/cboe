@@ -1149,10 +1149,10 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 		labelRect.inset(0, -expand);
 	} else labelRect.offset(0, labelRect.height() / 6);
 	cControl* labelCtrl;
-	// TODO: Refactor this to do without exceptions
-	try {
-		labelCtrl = &this->getControl(key);
-	} catch(std::invalid_argument x) {
+	auto iter = controls.find(key);
+	if(iter != controls.end()) {
+		labelCtrl = iter->second;
+	} else {
 		labelCtrl = new cTextMsg(*this);
 	}
 	labelCtrl->setText(label);
