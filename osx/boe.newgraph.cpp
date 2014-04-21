@@ -1095,6 +1095,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	if (c_rect.right > 0) {
 		mainPtr.setActive();
+		c_rect.offset(talk_area_rect.topLeft());
+		c_rect.offset(ul);
 		clip_rect(mainPtr, c_rect);
 	}
 	
