@@ -11,6 +11,8 @@
 #include <cstdio>
 #include <sstream>
 #include <memory>
+#include <unordered_set>
+#include <unordered_map>
 
 #include "restypes.hpp"
 #include "mathutil.h"
@@ -23,50 +25,25 @@ short snd_played[4];
 
 bool play_sounds = true;
 short last_played;
-bool always_async[100] = {false,false,false,false,false,
-	false,true,false,false,false,
-	false,false,false,false,false, // 10
-	false,false,false,false,false,
-	false,false,false,false,true, // 20
-	true,false,false,false,false,
-	false,false,false,false,true,  // 30
-	false,false,true,false,true,
-	false,true,true,true,true, // 40
-	true,true,true,true,true,
-	true,false,false,false,false, // 50
-	true,false,false,false,false,
-	false,true,false,false,false, // 60
-	false,false,false,false,false,
-	false,false,false,false,false, // 70
-	false,true,true,true,true,
-	true,true,true,true,false, // 80
-	true,false,false,false,false,
-	false,true,false,false,false, // 90
-	false,false,false,false,false
+std::unordered_set<int> always_async = {
+	6,24,25,34,37,
+	39,41,42,43,44,
+	45,46,47,48,49,
+	50,55,61,76,77,
+	78,79,80,81,82,
+	83,85,91
 };
-bool load_when_play[100] = {
-	false,false,true,true,true,true,false,true,true,true,
-	false,false,false,true,false,true,true,true,true,true,
-	true,true,true,true,true,true,true,false,true,true,
-	true,true,true,true,false,true,true,false,true,true,
-	true,true,true,true,true,true,true,false,false,false,
-	false,true,true,true,true,false,true,true,true,true,
-	true,false,true,true,true,true,true,true,true,false,
-	false,false,false,false,false,false,true,true,true,true,
-	true,true,true,true,true,false,false,false,false,false,
-	true,true,true,true,true,true,true,true,true,false
+std::unordered_set<int> load_on_init = {
+	0,1,6,10,11,
+	12,14,27,34,37,
+	47,48,49,50,55,
+	61,69,70,71,72,
+	73,74,75,85,86,
+	87,88,89,99
 };
-short sound_delay[100] = {
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,25,25,0,0,0,0,
-	0,0,0,0,8,0,0,8,0,0,
-	0,0,0,10,20,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,13,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0
+std::unordered_map<int,int> sound_delay = {
+	{24,25},{25,25},{34,8},{37,8},{43,10},
+	{44,20},{61,13}
 };
 short store_last_sound_played;
 
@@ -86,14 +63,12 @@ static std::string sound_to_fname_map(snd_num_t snd_num) {
 }
 
 void init_snd_tool(){
-	short i;
 	ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
 	
 	// TODO: Might need sound 0, not sure
-	for (i = 1; i < NUM_SOUNDS; i++) {
-		if (!load_when_play[i]) {
-			sound_handles[i] = ResMgr::get<SoundRsrc>(i);
-		}	
+	for(int i : load_on_init) {
+		if(i == 0) continue;
+		sound_handles[i] = ResMgr::get<SoundRsrc>(i);
 	}
 }
 
@@ -118,12 +93,12 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	
 	if (channel >= numchannel) channel = 0;
 	
-	if (!sound_going(abs(which)) && load_when_play[abs(which)]) 
+	if (!sound_going(abs(which)) && load_on_init.find(abs(which)) == load_on_init.end())
 		sndhandle = ResMgr::get<SoundRsrc>(abs(which));
 	else sndhandle = sound_handles[abs(which)];
 	
 	if (which > 0)
- 		if (always_async[which])
+ 		if(always_async.find(which) != always_async.end())
 			which *= -1;
 	
  	if (sndhandle)
