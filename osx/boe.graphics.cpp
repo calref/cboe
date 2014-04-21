@@ -473,6 +473,7 @@ void main_button_click(short mode,RECT button_rect)
 	clip_rect(mainPtr, button_rect);
 	
 	draw_buttons(1);
+	mainPtr.display();
 	if (play_sounds == true)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
@@ -659,13 +660,10 @@ void draw_buttons(short mode)
 	dest_rec = win_to_rects[1];
 	dest_rec.offset(ul);
 	
-	// TODO: I think this was supposed to tint it blue?
-//	if (spec_draw == true)
-//		ForeColor(blueColor);
-	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec);
-	// Maybe try sf::BlendAdd when spec_draw is true?
-//	if (spec_draw == true)
-//		ForeColor(blackColor);
+	if(spec_draw)
+		fill_rect(mainPtr, dest_rec, sf::Color::Blue);
+	else fill_rect(mainPtr, dest_rec, sf::Color::Black);
+	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec, sf::BlendAdd);
 }
 
 void reset_text_bar()
