@@ -8,16 +8,20 @@
 
 #define GRAPHTOOL_CPP
 #include "graphtool.h"
-#include "cursors.h"
-#include "restypes.hpp"
-#include <boost/filesystem.hpp>
+
 #ifdef __APPLE__
 #include <OpenGl/GL.h>
 #else
 #include <GL/GL.h>
 #endif
-#include <boost/math/constants/constants.hpp>
+
 #include <typeinfo>
+#include <boost/filesystem.hpp>
+#include <boost/math/constants/constants.hpp>
+
+#include "cursors.h"
+#include "restypes.hpp"
+
 using boost::math::constants::pi;
 
 cursor_type arrow_curs[3][3] = {

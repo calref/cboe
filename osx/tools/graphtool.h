@@ -9,9 +9,9 @@
 #ifndef GRAPHTOOL_H
 #define GRAPHTOOL_H
 
-#include <SFML/Graphics.hpp>
-#include <boost/filesystem/path.hpp>
 #include <string>
+#include <boost/filesystem/path.hpp>
+#include <SFML/Graphics.hpp>
 #include "location.h"
 
 namespace fs = boost::filesystem;

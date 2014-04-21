@@ -8,8 +8,8 @@
 
 #include <string>
 #include <vector>
-#include <boost/filesystem/path.hpp>
 #include <sstream>
+#include <boost/filesystem/path.hpp>
 
 #include "town.h"
 #include "outdoors.h"

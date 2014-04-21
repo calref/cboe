@@ -6,26 +6,21 @@
  *
  */
 
-#include <string>
-#include <vector>
-#include <map>
-#include <sstream>
-
-//#include "scen.global.h"
-#include <fstream>
-#include "classes.h"
-//#include "scen.fileio.h"
-//#include "scen.keydlgs.h"
-#include "graphtool.h"
-//#include "scen.core.h"
-//#include "soundtool.h"
-#include "mathutil.h"
 #include "fileio.h"
-#include "porting.h"
+
+#include <fstream>
+#include <boost/filesystem/operations.hpp>
+
 #include "dlogutil.h"
+#include "gzstream.h"
+
+#include "classes.h"
+#include "graphtool.h"
+#include "mathutil.h"
+
+#include "porting.h"
 #include "restypes.hpp"
 #include "tarball.hpp"
-#include "gzstream.h"
 
 extern bool cur_scen_is_mac, mac_is_intel;
 extern cScenario scenario;

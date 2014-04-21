@@ -10,7 +10,6 @@
 #define _SOUNDTOOL_H
 
 #include <SFML/Audio.hpp>
-#include <memory>
 
 const int NUM_SOUNDS = 100;
 

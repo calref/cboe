@@ -5,16 +5,14 @@
  *  Created by Celtic Minstrel on 16/04/09.
  *
  */
-#include <cmath>
-
-#include "restypes.hpp"
-
-#include <cstdio>
-
 #include "soundtool.h"
 
+#include <cmath>
+#include <cstdio>
 #include <sstream>
+#include <memory>
 
+#include "restypes.hpp"
 #include "mathutil.h"
 
 std::shared_ptr<sf::SoundBuffer> sound_handles[NUM_SOUNDS];

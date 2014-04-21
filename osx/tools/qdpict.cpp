@@ -10,13 +10,15 @@
 #error qdpict.cpp uses Apple APIs at the moment; try omitting it from the build
 #endif
 
-#include <cstdint>
-#include <memory>
-#include "porting.h"
-#include "location.h"
-#include "dlogutil.h"
 // TODO: Don't use the resource manager
 #include <CoreServices/CoreServices.h>
+
+#include <cstdint>
+#include <memory>
+
+#include "dlogutil.h"
+#include "porting.h"
+#include "location.h"
 
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;

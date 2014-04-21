@@ -9,8 +9,8 @@
 #ifndef BoE_boe_windows_h
 #define BoE_boe_windows_h
 
-#include <SFML/Window.hpp>
 #include <boost/filesystem/path.hpp>
+#include <SFML/Window.hpp>
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias
 
