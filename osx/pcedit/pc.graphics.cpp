@@ -271,21 +271,19 @@ void draw_main_screen()
 	
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
 	
-	dest_rect = dest_rec;
-	dest_rect.top = dest_rect.bottom;
-	dest_rect.bottom = dest_rect.top + 50;
-		// initialize rectangle to draw text into
 	TextStyle style;
 	style.lineHeight = 10;
 	// TODO: Is this needed?
-#if 0
-	style.pointSize = 12;
-	style.underline = true;
-		// set the pen
-	win_draw_string(mainPtr,dest_rect,"Characters",0,style);
-		// This draws a chunk of text on the screen
-#endif
-	style.pointSize = 10;
+	if(!file_in_mem.empty()) {
+		dest_rect = dest_rec;
+		dest_rect.top = dest_rect.bottom - 10;
+		dest_rect.bottom = dest_rect.top + 12;
+		style.pointSize = 12;
+		style.underline = true;
+		win_draw_string(mainPtr,dest_rect,"Characters",0,style);
+		style.underline = false;
+		style.pointSize = 10;
+	}
 	
 	frame_dlog_rect(mainPtr,pc_info_rect); // draw the frame
 	//i = pc_info_rect.left-pc_info_rect.right;
@@ -423,17 +421,15 @@ void display_party()
 		if (party_in_scen == false)
 			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,style);
 		else
-			win_draw_string(mainPtr,from_rect,"Party is in a scenario.",0,style);
+			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",0,style);
 		for (i = 0; i < 6; i++) {
-			// TODO: This appears to be expecting a tint?
 			if (i == current_active_pc) // active pc is drawn in blue
-				style.colour = sf::Color::Blue;
-			else style.colour = sf::Color::Black;
+				fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Blue);
+			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
 			
-				rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0]);
-			style.colour = sf::Color::Black;
+			rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0], sf::BlendAdd);
 			
 			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
@@ -785,9 +781,13 @@ void display_party()
 						break;	
 				}
 			}
-		//			MoveTo(start_h + 10, start_v + 127);	
-		//			sprintf((char *) to_draw, " Gold: %d       Food: %d ",(short) party.gold, (short) party.food);
-		//			DrawString(to_draw);
+		style.colour = sf::Color::Black;
+		
+		// TODO: Maybe find a better place to print this
+		RECT dest_rect = title_from;
+		dest_rect.offset(100,60);
+		sprintf(to_draw, " Gold: %d       Food: %d ",(short) univ.party.gold, (short) univ.party.food);
+		win_draw_string(mainPtr,dest_rect,to_draw,0,style);
 	}
 }
 	
