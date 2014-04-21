@@ -21,9 +21,11 @@ using namespace ticpp;
 #include "scrollbar.h"
 #include "winutil.h"
 #include "mathutil.h"
+#include "cursors.h"
 
 // TODO: Would be nice if I could avoid depending on mainPtr
 extern sf::RenderWindow mainPtr;
+extern cursor_type current_cursor;
 
 extern sf::Texture bg_gworld;
 extern bool play_sounds;
@@ -890,8 +892,8 @@ bool cDialog::remove(std::string key){
 }
 
 void cDialog::run(){
-	// We always need the cursor when we're in a dialog
-	mainPtr.setMouseCursorVisible(true);
+	cursor_type former_curs = current_cursor;
+	set_cursor(sword_curs);
 	using kb = sf::Keyboard;
 	kb::Key k;
 	cKey key;
@@ -1063,6 +1065,15 @@ void cDialog::run(){
 				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
 				itemHit = process_click(where, key.mod);
 				break;
+			case sf::Event::MouseMoved:
+				set_cursor(sword_curs);
+				for(auto& ctrl : controls) {
+					if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
+						set_cursor(text_curs);
+						break;
+					}
+				}
+				break;
 		}
 		if(itemHit.empty()) continue;;
 		ctrlIter ctrl = controls.find(itemHit);
@@ -1073,6 +1084,7 @@ void cDialog::run(){
 	win.setVisible(false);
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	while(parentWin->pollEvent(currentEvent));
+	set_cursor(former_curs);
 }
 
 void cDialog::setBg(short n){

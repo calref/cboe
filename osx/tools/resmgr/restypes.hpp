@@ -45,7 +45,7 @@ namespace ResMgr {
 			{"W", {3, 9}}, {"wait", {8, 8}}, {"E", {8, 3}},
 			{"SW", {3, 12}}, {"S", {7, 13}}, {"SE", {3, 12}},
 			{"sword", {1, 1}}, {"boot", {7, 3}}, {"drop", {0, 14}}, {"target", {8, 8}},
-			{"talk", {6, 7}}, {"key", {3, 2}}, {"look", {7, 6}}
+			{"talk", {6, 7}}, {"key", {3, 2}}, {"look", {7, 6}}, {"watch", {7,8}},
 		};
 		fs::path fpath = resPool<CursorRsrc>::rel2abs(fname + ".gif");
 		fs::path hotpath = resPool<CursorRsrc>::rel2abs(fname + ".hot");
@@ -57,9 +57,9 @@ namespace ResMgr {
 		} else {
 			auto entry = cursor_hs.find(fname);
 			if(entry == cursor_hs.end())
-				fprintf(stderr,"Cursor hotspot missing: %s",fname.c_str());
+				fprintf(stderr,"Cursor hotspot missing: %s\n",fname.c_str());
 			else {
-				fprintf(stderr,"Cursor hotspot missing (using fallback value): %s",fname.c_str());
+				fprintf(stderr,"Cursor hotspot missing (using fallback value): %s\n",fname.c_str());
 				location hs = entry->second;
 				x = hs.x; y = hs.y;
 			}

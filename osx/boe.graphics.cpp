@@ -211,7 +211,10 @@ void plop_fancy_startup()
 	RECT logo_from = {0,0,350,350};
 	RECT intro_from = {0,0,480,640};
 	
-	if(display_mode != 5) hideMenuBar();
+	if(display_mode != 5) {
+		hideMenuBar();
+		mainPtr.setMouseCursorVisible(false);
+	}
 	
 //	for (i = 0;i < 8; i++)
 //		OffsetRect(&trim_rects[i],61,37);
@@ -229,6 +232,7 @@ void plop_fancy_startup()
 	from_rect = RECT(pict_to_draw);
 	// TODO: Looping 10 times here is a bit of a hack; fix it
 	for(int k = 0; k < 10; k++) {
+		make_cursor_watch();
 		mainPtr.clear(sf::Color::Black);
 		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, logo_from);
 		
@@ -262,7 +266,10 @@ void plop_fancy_startup()
 				break;
 		}
 	}
-	if(display_mode != 5) showMenuBar();
+	if(display_mode != 5) {
+		showMenuBar();
+		mainPtr.setMouseCursorVisible(true);
+	}
 }
 
 void init_startup()

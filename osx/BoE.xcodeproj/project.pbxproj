@@ -408,6 +408,7 @@
 		914B2B9218E8005B007B6799 /* SND97.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2C18E7FFEF007B6799 /* SND97.WAV */; };
 		914B2B9318E8005B007B6799 /* SND98.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2D18E7FFEF007B6799 /* SND98.WAV */; };
 		914B2B9418E8005B007B6799 /* SND99.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2E18E7FFEF007B6799 /* SND99.WAV */; };
+		914CA4441905789C00B6ADD1 /* watch.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 914CA4431905788F00B6ADD1 /* watch.gif */; };
 		9156039018F4810200A50C51 /* many-str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9156038F18F43C8D00A50C51 /* many-str.xml */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
 		9192C12018F2745C0088A580 /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* menu.xib */; };
@@ -513,9 +514,9 @@
 		91C1FCAA0FCB6F7200EBAA65 /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
 		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
-		91C688E80FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
-		91C688E90FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
-		91C688EA0FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
+		91C688E80FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
+		91C688E90FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
+		91C688EA0FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
@@ -761,6 +762,7 @@
 				912CF46B0FE44AC20063B614 /* W.gif in Copy Mac Cursors */,
 				912CF46C0FE44AC20063B614 /* wait.gif in Copy Mac Cursors */,
 				912CF46D0FE44AC20063B614 /* wand.gif in Copy Mac Cursors */,
+				914CA4441905789C00B6ADD1 /* watch.gif in Copy Mac Cursors */,
 			);
 			name = "Copy Mac Cursors";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1525,6 +1527,7 @@
 		914B2B2D18E7FFEF007B6799 /* SND98.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND98.WAV; sourceTree = "<group>"; };
 		914B2B2E18E7FFEF007B6799 /* SND99.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND99.WAV; sourceTree = "<group>"; };
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
+		914CA4431905788F00B6ADD1 /* watch.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = watch.gif; sourceTree = "<group>"; };
 		9156038F18F43C8D00A50C51 /* many-str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "many-str.xml"; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
@@ -1618,7 +1621,7 @@
 		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
-		91C688E70FD702B9000F6D01 /* cursors.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mm; sourceTree = "<group>"; };
+		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -1916,6 +1919,7 @@
 				912CF3990FE44A9B0063B614 /* W.gif */,
 				912CF39A0FE44A9B0063B614 /* wait.gif */,
 				912CF39B0FE44A9B0063B614 /* wand.gif */,
+				914CA4431905788F00B6ADD1 /* watch.gif */,
 			);
 			path = cursors;
 			sourceTree = "<group>";
@@ -2102,7 +2106,7 @@
 		913D03340FA0FFFF00184C18 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				91C688E70FD702B9000F6D01 /* cursors.mm */,
+				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91E5C7A60F9F615400C21460 /* fileio.cpp */,
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
@@ -2821,7 +2825,7 @@
 				912287040FD330F300B21642 /* field.cpp in Sources */,
 				912287050FD330F300B21642 /* message.cpp in Sources */,
 				912287060FD330F300B21642 /* pict.cpp in Sources */,
-				91C688E80FD702B9000F6D01 /* cursors.mm in Sources */,
+				91C688E80FD702B9000F6D01 /* cursors.mac.mm in Sources */,
 				91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */,
 				91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */,
 				91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */,
@@ -2876,7 +2880,7 @@
 				912286FE0FD330EC00B21642 /* message.cpp in Sources */,
 				912286FF0FD330ED00B21642 /* pict.cpp in Sources */,
 				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
-				91C688E90FD702B9000F6D01 /* cursors.mm in Sources */,
+				91C688E90FD702B9000F6D01 /* cursors.mac.mm in Sources */,
 				91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */,
 				91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */,
 				91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */,
@@ -2934,7 +2938,7 @@
 				91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */,
 				912283C90FD0E16C00B21642 /* undo.cpp in Sources */,
 				912286F80FD330E500B21642 /* dlogutil.cpp in Sources */,
-				91C688EA0FD702B9000F6D01 /* cursors.mm in Sources */,
+				91C688EA0FD702B9000F6D01 /* cursors.mac.mm in Sources */,
 				91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */,
 				91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */,
 				91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */,

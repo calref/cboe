@@ -15,6 +15,7 @@
 #include "fileio.h"
 #include "pc.menus.h"
 #include "winutil.h"
+#include "cursors.h"
 #ifdef __APPLE__
 #include <CoreFoundation/CFByteOrder.h>
 #endif

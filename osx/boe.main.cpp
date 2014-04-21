@@ -27,12 +27,12 @@
 #include "dlogutil.h"
 #include "scrollbar.h"
 #include "boe.menus.h"
+#include "cursors.h"
 
 #include <CoreFoundation/CFByteOrder.h>
 
-//extern short arrow_curs[3][3];
-//extern short sword_curs, boot_curs, drop_curs, target_curs;
-//extern short talk_curs, key_curs, look_curs, current_cursor;
+extern cursor_type arrow_curs[3][3];
+extern cursor_type current_cursor;
 
 /* Mac stuff globals */
 bool  All_Done = false;
@@ -168,6 +168,7 @@ int main(int argc, char* argv[]) {
 		set_up_apple_events();
 		//import_template_terrain();
 		//import_anim_terrain(0);
+		make_cursor_watch();
 		plop_fancy_startup();
 		
 		//PSD[SDF_NO_FRILLS] = 0;
@@ -201,6 +202,7 @@ int main(int argc, char* argv[]) {
 		init_mini_map();
 		menu_activate();
 		
+		restore_cursor();
 		while (All_Done == false)
 			Handle_One_Event();
 		
@@ -330,9 +332,7 @@ void Handle_One_Event()
 			break;
 			
 		case sf::Event::MouseLeft:
-			// Make sure we don't have an invisible or arrow cursor when it's outside the window
-			// TODO: Would probably be better to reset the cursor to normal rather than making it a sword
-			mainPtr.setMouseCursorVisible(true);
+			// Make sure we don't have an arrow cursor when it's outside the window
 			make_cursor_sword();
 			break;
 			

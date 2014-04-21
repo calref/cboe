@@ -8,8 +8,27 @@
 
 #include "cursors.h"
 #include <Cocoa/Cocoa.h>
+#include <string>
+#include "restypes.hpp"
 
-static NSImage* ImageFromURL(CFURLRef url){
+cursor_type current_cursor = sword_curs;
+cursor_type arrow_curs[3][3] = {
+	{NW_curs, N_curs, NE_curs},
+	{W_curs,wait_curs,E_curs},
+	{SW_curs, S_curs, SE_curs},
+};
+
+const std::string cursors[25] = {
+	"wand", "eyedropper", "brush", "spraycan",
+	"eraser", "topleft", "bottomright", "hand",
+	"NW", "N", "NE",
+	"W", "wait", "E",
+	"SW", "S", "SE",
+	"sword", "boot", "drop", "target",
+	"talk", "key", "look", "watch",
+};
+
+static NSImage* imageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
 	CGImageRef theImage = nil;
 	
@@ -43,7 +62,7 @@ Cursor::Cursor(const char* path, float hotSpotX, float hotSpotY){
 	FSPathMakeRef((UInt8*)path, &ref, NULL);
 	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
 	
-	NSImage *img = ImageFromURL(imgPath);
+	NSImage *img = imageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
 	[img release];
 	
@@ -58,9 +77,21 @@ void Cursor::apply(){
 	[(NSCursor*)ptr set];
 }
 
-void setCursorWatch() {
-}
-
 void obscureCursor() {
 	[NSCursor setHiddenUntilMouseMoves: YES];
+}
+
+void set_cursor(cursor_type which_c) {
+	if(which_c != watch_curs)
+		current_cursor = which_c;
+	if(which_c == text_curs) {
+		[[NSCursor IBeamCursor] set];
+	} else {
+		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		curs.apply();
+	}
+}
+
+void restore_cursor(){
+	set_cursor(current_cursor);
 }

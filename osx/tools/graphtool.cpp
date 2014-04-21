@@ -23,21 +23,6 @@
 
 using boost::math::constants::pi;
 
-cursor_type arrow_curs[3][3] = {
-	{NW_curs, N_curs, NE_curs},
-	{W_curs,wait_curs,E_curs},
-	{SW_curs, S_curs, SE_curs},
-};
-cursor_type current_cursor = sword_curs;
-const std::string cursors[24] = {
-	"wand", "eyedropper", "brush", "spraycan",
-	"eraser", "topleft", "bottomright", "hand",
-	"NW", "N", "NE",
-	"W", "wait", "E",
-	"SW", "S", "SE",
-	"sword", "boot", "drop", "target",
-	"talk", "key", "look",
-};
 RECT bg[21];
 RECT map_pat[30];
 RECT bw_pats[6];
@@ -138,16 +123,6 @@ void init_graph_tool(){
 		bw_pats[i] = tmp_rect;
 	}
 	bg_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pixpats"));
-}
-
-void set_cursor(cursor_type which_c) {
-	current_cursor = which_c;
-	Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[current_cursor]);
-	curs.apply();
-}
-
-void restore_cursor(){
-	set_cursor(current_cursor);
 }
 
 static void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode);

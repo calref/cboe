@@ -552,7 +552,7 @@ void shift_universe_left()
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	build_outdoors();
-	make_cursor_sword();
+	restore_cursor();
 	
 }
 
@@ -586,7 +586,7 @@ void shift_universe_right()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	build_outdoors();
-	make_cursor_sword();
+	restore_cursor();
 	
 }
 
@@ -621,7 +621,7 @@ void shift_universe_up()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 	
 	build_outdoors();
-	make_cursor_sword();
+	restore_cursor();
 	
 }
 
@@ -657,7 +657,7 @@ void shift_universe_down()
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	
 	build_outdoors();
-	make_cursor_sword();
+	restore_cursor();
 	
 }
 
