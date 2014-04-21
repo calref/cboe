@@ -19,7 +19,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 
-#include "cursors.h"
 #include "restypes.hpp"
 
 using boost::math::constants::pi;
@@ -30,27 +29,24 @@ cursor_type arrow_curs[3][3] = {
 	{SW_curs, S_curs, SE_curs},
 };
 cursor_type current_cursor = sword_curs;
-CursorRef cursors[24] = {
-	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
-	NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+const std::string cursors[24] = {
+	"wand", "eyedropper", "brush", "spraycan",
+	"eraser", "topleft", "bottomright", "hand",
+	"NW", "N", "NE",
+	"W", "wait", "E",
+	"SW", "S", "SE",
+	"sword", "boot", "drop", "target",
+	"talk", "key", "look",
 };
 RECT bg[21];
 RECT map_pat[30];
 RECT bw_pats[6];
 sf::Texture bg_gworld;
 bool use_win_graphics = false;
-CursorRef GetCursorFromPath(std::string filename, location hotspot);
 sf::Shader maskShader;
 extern fs::path progDir;
 // TODO: Shouldn't need this
 extern sf::RenderWindow mainPtr;
-
-void clean_up_graphtool(){
-	for(int i = 0; i < 24; i++)
-		DisposeNSCursor(cursors[i]);
-	CleanUp();
-}
 
 void init_graph_tool(){
 	fs::path shaderPath = progDir/"data"/"shaders";
@@ -83,14 +79,6 @@ void init_graph_tool(){
 	delete[] vbuf;
 	int i,j;
 	// TODO: The duplication of location here shouldn't be necessary
-	// TODO: Store the hotspots on disk instead of hardcoded here
-	static const location cursor_hs[24] = {
-		location{ 1, 4}, location{14, 1}, location{13, 5}, location{8,8}, location{8,8}, location{8,8}, location{8,8}, location{0,14},
-		location{ 3,12}, location{ 7,13}, location{ 3,12},
-		location{ 3, 9}, location{ 8, 8}, location{ 8, 3},
-		location{ 3,12}, location{ 7,13}, location{ 3,12},
-		location{ 1, 1}, location{ 7, 3}, location{ 0,14}, location{8,8}, location{6,7}, location{3,2}, location{7,6}
-	};
 	static const location pat_offs[17] = {
 		location{0,3}, location{1,1}, location{2,1}, location{2,0},
 		location{3,0}, location{3,1}, location{1,3}, location{0,0},
@@ -107,28 +95,6 @@ void init_graph_tool(){
 		18,19,20,21,22,24,25,27,
 		28,29
 	};
-	static const char*const edit_cursor_files[8] = {
-		"wand.gif","eyedropper.gif","brush.gif","spraycan.gif",
-		"eraser.gif","topleft.gif","bottomright.gif","hand.gif"
-	};
-	static const char*const arrow_files[3][3] = {
-		{"NW.gif","W.gif","SW.gif"},
-		{"N.gif","wait.gif","S.gif"},
-		{"NE.gif","E.gif","SE.gif"}
-	};
-	static const char*const game_cursor_files[7] = {
-		"sword.gif","boot.gif","drop.gif","target.gif",
-		"talk.gif","key.gif","look.gif"
-	};
-	if (cursors[0] == NULL) {
-		for (i = 0; i < 8; i++)
-			cursors[i] = GetCursorFromPath(edit_cursor_files[i],cursor_hs[i]);
-		for (i = 0; i < 3; i++)
-			for (j = 0; j < 3; j++)
-				cursors[arrow_curs[i][j]] = GetCursorFromPath(arrow_files[i][j],cursor_hs[arrow_curs[i][j]]);
-		for (i = 17; i < 24; i++)
-			cursors[i] = GetCursorFromPath(game_cursor_files[i - 17],cursor_hs[i]);
-	}
 //	for (i = 0; i < 21; i++) 
 //	    bg[i] = GetPixPat(128 + i);
 	for(i = 0; i < 17; i++){
@@ -176,7 +142,8 @@ void init_graph_tool(){
 
 void set_cursor(cursor_type which_c) {
 	current_cursor = which_c;
-	SetNSCursor(cursors[current_cursor]);
+	Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[current_cursor]);
+	curs.apply();
 }
 
 void restore_cursor(){
@@ -651,17 +618,6 @@ std::string get_str(std::string list, short j){
 	if(j == 0) return list;
 	StringRsrc& strings = *ResMgr::get<StringRsrc>(list);
 	return strings[j - 1];
-}
-
-extern fs::path progDir;
-CursorRef GetCursorFromPath(std::string filename, location hotspot){
-	fs::path fullpath = progDir/"Scenario Editor"/"graphics.exd";
-	if(use_win_graphics) fullpath /= "win";
-	else fullpath /= "mac";
-	fullpath /= "cursors";
-	fullpath /= filename;
-	printf("Loading cursor from: %s\n\n",fullpath.c_str());
-	return CreateCursorFromFile(fullpath.c_str(), hotspot.x, hotspot.y);
 }
 
 m_pic_index_t m_pic_index[] = {

@@ -337,10 +337,6 @@ void Handle_One_Event()
 			break;
 			
 		case sf::Event::MouseMoved:
-			// The original game called ObscureCursor in the handle_keystroke function,
-			// which hides the mouse cursor until it's moved.
-			// SFML's hide cursor function is always permanent, so this is here to balance that out.
-			mainPtr.setMouseCursorVisible(true);
 			if(!gInBackground) {
 				location where(event.mouseMove.x, event.mouseMove.y);
 				change_cursor(where);
@@ -459,7 +455,6 @@ void close_program()
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	//end_music();
 	if(univ.town.loaded()) univ.town.unload();
-	clean_up_graphtool();
 }
 
 void handle_apple_menu(int item_hit)
@@ -802,7 +797,7 @@ void change_cursor(location where_curs)
 	
 	if ((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && world_screen.contains(where_curs)){
 		cursor_direction = get_cur_direction(where_curs);
-		cursor_needed = arrow_curs[cursor_direction.x + 1][cursor_direction.y + 1];// 100 + (cursor_direction.x) + 10 * ( cursor_direction.y);
+		cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
 	}
 	
 	if (cursor_needed != current_cursor)

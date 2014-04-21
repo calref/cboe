@@ -16,25 +16,19 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <map>
 #include <boost/filesystem/path.hpp>
-
-struct cCursor {
-	sf::Image img;
-	int xHot, yHot;
-};
+#include "cursors.h"
+#include "location.h"
 
 using ImageRsrc = sf::Image;
-using CursorRsrc = cCursor;
+using CursorRsrc = Cursor;
 using FontRsrc = sf::Font;
 using StringRsrc = std::vector<std::string>;
 using SoundRsrc = sf::SoundBuffer;
 
 namespace ResMgr {
 	template<> inline ImageRsrc* resLoader<ImageRsrc>::operator() (std::string fname) {
-//		static bool inited = false;
-//		if(!inited) {
-//			wxImage::AddHandler(new wxPNGHandler());
-//		}
 		fs::path fpath = resPool<ImageRsrc>::rel2abs(fname + ".png");
 		ImageRsrc* img = new ImageRsrc();
 		if(img->loadFromFile(fpath.string())) return img;
@@ -43,10 +37,16 @@ namespace ResMgr {
 	}
 	
 	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (std::string fname) {
-//		static bool inited = false;
-//		if(!inited) {
-//			wxImage::AddHandler(new wxGIFHandler());
-//		}
+		// TODO: Store the hotspots on disk instead of hardcoded here
+		static const std::map<std::string,location> cursor_hs = {
+			{"wand", {1, 4}}, {"eyedropper", {14, 1}}, {"brush", {13, 5}}, {"spraycan", {8, 8}},
+			{"eraser", {8, 8}}, {"topleft", {8, 8}}, {"bottomright", {8, 8}}, {"hand", {0, 14}},
+			{"NW", {3, 12}}, {"N", {7, 13}}, {"NE", {3, 12}},
+			{"W", {3, 9}}, {"wait", {8, 8}}, {"E", {8, 3}},
+			{"SW", {3, 12}}, {"S", {7, 13}}, {"SE", {3, 12}},
+			{"sword", {1, 1}}, {"boot", {7, 3}}, {"drop", {0, 14}}, {"target", {8, 8}},
+			{"talk", {6, 7}}, {"key", {3, 2}}, {"look", {7, 6}}
+		};
 		fs::path fpath = resPool<CursorRsrc>::rel2abs(fname + ".gif");
 		fs::path hotpath = resPool<CursorRsrc>::rel2abs(fname + ".hot");
 		int x = 0, y = 0;
@@ -54,12 +54,19 @@ namespace ResMgr {
 			std::ifstream fin(hotpath.c_str());
 			fin >> x >> y;
 			fin.close();
-		} else fprintf(stderr,"Cursor hotspot missing: %s",fname.c_str());
-		sf::Image img;
-		if(img.loadFromFile(fpath.string())) {
-			CursorRsrc* cur = new CursorRsrc{img,x,y};
-			return cur;
+		} else {
+			auto entry = cursor_hs.find(fname);
+			if(entry == cursor_hs.end())
+				fprintf(stderr,"Cursor hotspot missing: %s",fname.c_str());
+			else {
+				fprintf(stderr,"Cursor hotspot missing (using fallback value): %s",fname.c_str());
+				location hs = entry->second;
+				x = hs.x; y = hs.y;
+			}
 		}
+		// TODO: Handle errors?
+		CursorRsrc* cur = new Cursor(fpath.c_str(),x,y);
+		return cur;
 		throw xResMgrErr("Failed to load GIF cursor: " + fname);
 	}
 	

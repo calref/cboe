@@ -33,6 +33,7 @@
 #include "scrollbar.h"
 #include "boe.menus.h"
 #include "winutil.h"
+#include "cursors.h"
 
 RECT bottom_buttons[7];
 RECT town_buttons[10];
@@ -1545,11 +1546,8 @@ bool handle_keystroke(sf::Event& event){
 	
 	if(overall_mode == MODE_STARTUP)
 		return false;
-	
-	// Only hide the cursor if it's in the window.
-	// This is because we want to show it as soon as the mouse moves, but we don't receive mouse move events if it's outside the window.
-	if(sf::IntRect(mainPtr.getPosition(), sf::Vector2i(mainPtr.getSize())).contains(sf::Mouse::getPosition()))
-		mainPtr.setMouseCursorVisible(false);
+
+	obscureCursor();
 	
 	// DEBUG
 //	sprintf((char *) debug, "%d    ",(short) chr2);

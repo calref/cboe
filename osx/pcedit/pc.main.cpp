@@ -123,7 +123,6 @@ int main(int argc, char* argv[]) {
 	
 	while(!All_Done)
 		Handle_One_Event();
-	clean_up_graphtool();
       return 0;
 }
 

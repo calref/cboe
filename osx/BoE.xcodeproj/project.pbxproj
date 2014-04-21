@@ -513,9 +513,9 @@
 		91C1FCAA0FCB6F7200EBAA65 /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
 		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
-		91C688E80FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
-		91C688E90FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
-		91C688EA0FD702B9000F6D01 /* cursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.m */; };
+		91C688E80FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
+		91C688E90FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
+		91C688EA0FD702B9000F6D01 /* cursors.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mm */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
@@ -1618,7 +1618,7 @@
 		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
-		91C688E70FD702B9000F6D01 /* cursors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cursors.m; sourceTree = "<group>"; };
+		91C688E70FD702B9000F6D01 /* cursors.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mm; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -2102,7 +2102,7 @@
 		913D03340FA0FFFF00184C18 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				91C688E70FD702B9000F6D01 /* cursors.m */,
+				91C688E70FD702B9000F6D01 /* cursors.mm */,
 				91E5C7A60F9F615400C21460 /* fileio.cpp */,
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
@@ -2821,7 +2821,7 @@
 				912287040FD330F300B21642 /* field.cpp in Sources */,
 				912287050FD330F300B21642 /* message.cpp in Sources */,
 				912287060FD330F300B21642 /* pict.cpp in Sources */,
-				91C688E80FD702B9000F6D01 /* cursors.m in Sources */,
+				91C688E80FD702B9000F6D01 /* cursors.mm in Sources */,
 				91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */,
 				91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */,
 				91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */,
@@ -2876,7 +2876,7 @@
 				912286FE0FD330EC00B21642 /* message.cpp in Sources */,
 				912286FF0FD330ED00B21642 /* pict.cpp in Sources */,
 				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
-				91C688E90FD702B9000F6D01 /* cursors.m in Sources */,
+				91C688E90FD702B9000F6D01 /* cursors.mm in Sources */,
 				91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */,
 				91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */,
 				91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */,
@@ -2934,7 +2934,7 @@
 				91C1FCAB0FCB6F7300EBAA65 /* pict.cpp in Sources */,
 				912283C90FD0E16C00B21642 /* undo.cpp in Sources */,
 				912286F80FD330E500B21642 /* dlogutil.cpp in Sources */,
-				91C688EA0FD702B9000F6D01 /* cursors.m in Sources */,
+				91C688EA0FD702B9000F6D01 /* cursors.mm in Sources */,
 				91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */,
 				91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */,
 				91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */,

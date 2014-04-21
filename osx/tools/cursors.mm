@@ -6,9 +6,8 @@
 //  Wrappers for NSCursor, based on an Apple example
 //
 
-#import <Cocoa/Cocoa.h>
-#import "cursors.h"
-NSAutoreleasePool *pool;
+#include "cursors.h"
+#include <Cocoa/Cocoa.h>
 
 static NSImage* ImageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
@@ -39,42 +38,29 @@ static NSImage* ImageFromURL(CFURLRef url){
 	return newImage;
 }
 
-CursorRef CreateCursorFromFile(const char* path, float hotSpotX, float hotSpotY){
+Cursor::Cursor(const char* path, float hotSpotX, float hotSpotY){
 	FSRef ref;
 	FSPathMakeRef((UInt8*)path, &ref, NULL);
 	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
-#if 0
-	static BOOL inited = NO;
-	if(!inited){
-		// TODO: Why is this here? Should I move it somewhere else?
-		NSApplicationLoad();
-		pool = [[NSAutoreleasePool alloc] init];
-		[[[NSWindow alloc] init] release];
-		inited = YES;
-	}
-#endif
 	
 	NSImage *img = ImageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
 	[img release];
 	
-	CursorRef theCursor = malloc(sizeof(CocoaCursor));
-	theCursor->ptr = cursor;
-	return theCursor;
+	ptr = cursor;
 }
 
-void DisposeNSCursor(CursorRef cursor){
-	[(NSCursor*)cursor->ptr release];
-	free(cursor);
+Cursor::~Cursor(){
+	[(NSCursor*)ptr release];
 }
 
-void SetNSCursor(CursorRef cursor){
-	[(NSCursor*)cursor->ptr set];
+void Cursor::apply(){
+	[(NSCursor*)ptr set];
 }
 
-void SetNSCursorWatch() {
+void setCursorWatch() {
 }
 
-void CleanUp(){
-//	[pool release];
+void obscureCursor() {
+	[NSCursor setHiddenUntilMouseMoves: YES];
 }

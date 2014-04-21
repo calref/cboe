@@ -6,23 +6,19 @@
 //  Wrappers for NSCursor, based on an Apple example
 //
 
-#ifdef __cplusplus
-#define C_DECL extern "C"
-#else
-#define C_DECL
-#endif
+#ifndef BOE_CURSORS_H
+#define BOE_CURSORS_H
 
-struct CocoaCursor {
+class Cursor {
 	void* ptr;
+public:
+	Cursor(const char* imgPath, float hotSpotX, float hotSpotY);
+	~Cursor();
+	void apply();
 };
-typedef struct CocoaCursor CocoaCursor, *CursorRef; // including the struct keyword for Objective-C's sake
 
-C_DECL CursorRef CreateCursorFromFile(const char* imgPath, float hotSpotX, float hotSpotY);
-C_DECL void DisposeNSCursor(CursorRef cursor);
-C_DECL void SetNSCursor(CursorRef cursor);
-C_DECL void SetNSCursorWatch();
-C_DECL void HideNSCursor();
-C_DECL void ShowNSCursor();
-C_DECL void CleanUp();
+void setCursorWatch();
+// This hides the cursor until it moves
+void obscureCursor();
 
-#undef C_DECL
+#endif

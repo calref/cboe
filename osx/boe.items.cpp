@@ -27,7 +27,6 @@
 #include "message.h"
 #include <array>
 #include <boost/lexical_cast.hpp>
-#include "cursors.h"
 #include "winutil.h"
 
 extern short stat_window,which_combat_type,current_pc;
@@ -1189,7 +1188,7 @@ void init_mini_map() {
 void make_cursor_watch()
 {
 	// TODO: If this doesn't work, which I suspect it won't, add a "custom" watch cursor and use that. Or conclude this isn't even needed.
-	SetNSCursorWatch();
+	setCursorWatch();
 }
 
 ////

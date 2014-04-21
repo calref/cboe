@@ -102,7 +102,6 @@ struct cCustomGraphics {
 };
 
 void init_graph_tool();
-void clean_up_graphtool();
 void set_cursor(cursor_type which_curs);
 void restore_cursor();
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
