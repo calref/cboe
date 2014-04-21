@@ -91,7 +91,7 @@ bool fast_bang = false;
 short spec_item_array[60];
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
-bool first_update = true,anim_onscreen = false,frills_on = true,sys_7_avail,suppress_stat_screen = false;
+bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false,suppress_stat_screen = false;
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
 short give_delays = 0;
@@ -159,9 +159,9 @@ int main(int argc, char* argv[]) {
 		init_directories(argv[0]);
 		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
+		init_graph_tool();
 		Initialize();
 		init_fileio();
-		init_graph_tool();
 		
 		init_buf();
 		
@@ -313,6 +313,10 @@ void Handle_One_Event()
 				makeFrontWindow(mainPtr);
 		}
 	if(!mainPtr.pollEvent(event)) {
+		if(changed_display_mode) {
+			changed_display_mode = false;
+			adjust_window_mode();
+		}
 		flushingInput = false;
 		mainPtr.display();
 		return;

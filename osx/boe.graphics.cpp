@@ -193,6 +193,7 @@ void adjust_window_mode()
 		}
 		
 	}
+	redraw_screen(REFRESH_NONE);
 	if (text_sbar != NULL) {
 		text_sbar->relocate({ul.x + 546,ul.y + 283});
 		item_sbar->relocate({ul.x + 546,ul.y + 146});

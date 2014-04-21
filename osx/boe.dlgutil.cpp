@@ -41,7 +41,7 @@ extern short stat_window;
 extern eGameMode overall_mode;
 //extern current_town_type univ.town;
 //extern party_record_type party;
-extern bool play_sounds,give_intro_hint,show_startup_splash;
+extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode;
 extern sf::RenderWindow mainPtr;
 extern RECT d_rects[80];
 extern short d_rect_index[80];
@@ -1252,7 +1252,7 @@ void pick_preferences()
 	prefsDlog.run();
 	
 	if(display_mode != store_display_mode)
-		adjust_window_mode();
+		changed_display_mode = true;
 }
 
 static void put_party_stats(cDialog& me)
