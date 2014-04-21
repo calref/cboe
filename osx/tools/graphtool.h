@@ -82,6 +82,7 @@ struct cCustomGraphics {
 	bool is_old = false;
 	void clear() {
 		if(sheets != NULL) delete[] sheets;
+		sheets = NULL;
 	}
 	~cCustomGraphics() {
 		if(party != NULL) delete party;

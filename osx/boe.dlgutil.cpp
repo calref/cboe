@@ -1420,16 +1420,18 @@ static void put_scen_info(cDialog& me)
 	const char *difficulty[] = {"Low","Medium","High","Very High"};
 	
 	for(i = 0; i < 3; i++) {
+		sout.clear();
+		sout.str("");
 		sout << i + 1;
 		std::string n = sout.str();
 		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
-			me["pict" + n].show();
+			me["pic" + n].show();
 			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers.data(store_scen_page_on * 3 + i).intro_pic);
 			sout.str("");
 			sout << scen_headers.strs(store_scen_page_on * 3 + i).name;
-			sout << " v" << scen_headers.data(store_scen_page_on * 3 + i).ver[0];
-			sout << '.' << scen_headers.data(store_scen_page_on * 3 + i).ver[1];
-			sout << '.' << scen_headers.data(store_scen_page_on * 3 + i).ver[2];
+			sout << " v" << int(scen_headers.data(store_scen_page_on * 3 + i).ver[0]);
+			sout << '.' << int(scen_headers.data(store_scen_page_on * 3 + i).ver[1]);
+			sout << '.' << int(scen_headers.data(store_scen_page_on * 3 + i).ver[2]);
 			sout << " - |  Difficulty: " << difficulty[scen_headers.data(store_scen_page_on * 3 + i).difficulty];
 			sout << ", Rating: " << ratings[scen_headers.data(store_scen_page_on * 3 + i).rating];
 			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who1;
@@ -1438,7 +1440,7 @@ static void put_scen_info(cDialog& me)
 			me["start" + n].show();
 		}
 		else {
-			me["pict" + n].hide();
+			me["pic" + n].hide();
 			me["desc" + n].setText("");
 			me["start" + n].hide();
 		}

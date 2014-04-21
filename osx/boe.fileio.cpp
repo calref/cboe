@@ -1023,7 +1023,6 @@ typedef struct {
 */
 void build_scen_headers()
 {
-	unsigned short cur_entry = 0;
 	fs::path scenDir = progDir;
 //	scenDir.erase(scenDir.find_last_of("/"));
 	scenDir /= "Blades of Exile Scenarios";
@@ -1057,10 +1056,9 @@ void build_scen_headers()
 //	FSGetCatalogInfoBulk (files,(ItemCount)MAXSHEETS,(ItemCount*)&numFound,NULL,kFSCatInfoNone,NULL,NULL,locations, names)
 	while(iter != fs::directory_iterator()) {
 		fs::file_status stat = iter->status();
-		if(stat.type() == fs::regular_file) {
+		if(stat.type() == fs::regular_file)
 			load_scenario_header(iter->path());
-			cur_entry++;
-		}
+		iter++;
 	}
 	if (scen_headers.size() == 0) { // no scens present
 		// TODO: Should something be done here?
