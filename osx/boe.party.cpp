@@ -2255,7 +2255,7 @@ static bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
 	static const char*const choose_target = " Now pick a target.";
 	static const char*const bad_spell = " Spell not available.";
-	short item_hit = id[id.length() - 1] - '1';
+	short item_hit = boost::lexical_cast<short>(id.substr(5)) - 1;
 	if(mod_contains(mods, mod_alt)) {
 		int i = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
 		display_spells(store_situation,i,&me);
@@ -2265,8 +2265,8 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
 	}
 	else {
 		if (store_situation == 0)
-			store_mage = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
-		else store_priest = (on_which_spell_page == 0) ? item_hit - 37 : spell_index[item_hit - 37];
+			store_mage = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+		else store_priest = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
 		draw_spell_info(me);
 		put_spell_led_buttons(me);
 		

@@ -429,8 +429,9 @@ static void put_monst_info(cDialog& me)
 	
 	for(i = 0; i < 3; i++) {
 		if (store_m->a[i] > 0) {
-			std::ostringstream sout(store_text);
-			sout << store_m->a[i] / 100 + 1 << 'd' << store_m->a[i] % 100;
+			if(store_m->a[i].sides == 0) continue;
+			std::ostringstream sout(std::ios_base::ate);
+			sout << store_m->a[i];
 			store_text = sout.str();
 			sout.str("attack");
 			sout << i + 1;
@@ -494,7 +495,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMo
 
 void display_monst(short array_pos,cCreature *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
-//short mode; // if 1, full roster, else use monster from storwhich_me_m
+//short mode; // if 1, full roster, else use monster from store_m
 {
 	position = array_pos;
 	full_roster = false;

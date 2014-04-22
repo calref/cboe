@@ -882,9 +882,24 @@ public:
 	// TODO: Additional functions?
 };
 
+void draw_line(sf::RenderTarget& target, location from, location to, int thickness, sf::Color colour, sf::BlendMode mode) {
+	sf::VertexArray line(sf::LinesStrip, 2);
+	line[0].position = from;
+	line[0].color = colour;
+	line[1].position = to;
+	line[1].color = colour;
+	setActiveRenderTarget(target);
+	float saveThickness;
+	glGetFloatv(GL_LINE_WIDTH, &saveThickness);
+	glLineWidth(thickness);
+	target.draw(line, mode);
+	glLineWidth(saveThickness);
+}
+
 static void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
 	shape.setPosition(x, y);
 	shape.setFillColor(colour);
+	setActiveRenderTarget(target);
 	target.draw(shape);
 	
 }

@@ -386,13 +386,13 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	switch(type) {
 		case SHEET_TER:
-			sout << "ter" << n;
+			sout << "ter" << n + 1;
 			break;
 		case SHEET_TER_ANIM:
 			sout << "teranim";
 			break;
 		case SHEET_MONST:
-			sout << "monst" << n;
+			sout << "monst" << n + 1;
 			break;
 		case SHEET_DLOG:
 			sout << "dlogpics";

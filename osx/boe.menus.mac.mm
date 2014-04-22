@@ -117,6 +117,9 @@ void init_menubar() {
 	help_menu = [[menu_bar_handle itemWithTitle: @"Help"] submenu];
 	library_menu = [[menu_bar_handle itemWithTitle: @"Library"] submenu];
 	actions_menu = [[menu_bar_handle itemWithTitle: @"Actions"] submenu];
+	mage_spells_menu = [[menu_bar_handle itemWithTitle: @"Cast Mage"] submenu];
+	priest_spells_menu = [[menu_bar_handle itemWithTitle: @"Cast Priest"] submenu];
+	monster_info_menu = [[menu_bar_handle itemWithTitle: @"Monsters"] submenu];
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([help_menu itemAtIndex: 0], handler, @selector(onlineHelp:), 0);
@@ -141,13 +144,10 @@ void init_menubar() {
 		setMenuCallback([library_menu itemAtIndex: i], handler, @selector(libMenu:), i + 1);
 	for(int i = 0; i < [actions_menu numberOfItems]; i++)
 		setMenuCallback([actions_menu itemAtIndex: i], handler, @selector(actMenu:), i + 1);
-	// TODO: Spell menus and monster menu
-	NSMenu* mage_menu = [[menu_bar_handle itemWithTitle: @"Mage Spells"] submenu];
-	setMenuCallback([mage_menu itemAtIndex: 0], handler, @selector(menuHelp:), 0);
-	NSMenu* priest_menu = [[menu_bar_handle itemWithTitle: @"Priest Spells"] submenu];
-	setMenuCallback([priest_menu itemAtIndex: 0], handler, @selector(menuHelp:), 1);
-	NSMenu* monst_menu = [[menu_bar_handle itemWithTitle: @"Monsters"] submenu];
-	setMenuCallback([monst_menu itemAtIndex: 0], handler, @selector(menuHelp:), 2);
+	
+	setMenuCallback([mage_spells_menu itemAtIndex: 0], handler, @selector(menuHelp:), 0);
+	setMenuCallback([priest_spells_menu itemAtIndex: 0], handler, @selector(menuHelp:), 1);
+	setMenuCallback([monster_info_menu itemAtIndex: 0], handler, @selector(menuHelp:), 2);
 	
 	menu_activate();
 }
@@ -209,7 +209,7 @@ void adjust_spell_menus()
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
-				[newItem setRepresentedObject: [SpellWrapper withSpell: i ofType: 0]];
+				[newItem setRepresentedObject: [SpellWrapper withSpell: on_spell_menu[0][i] ofType: 0]];
 			}
 	}
 	
@@ -243,11 +243,10 @@ void adjust_spell_menus()
 				else sprintf(spell_name," L%d - %s, C ?",spell_level[i],
 							 priest_s_name[on_spell_menu[1][i]]);
 				spell_name[0] = strlen((char *) spell_name);
-				// TODO: Figure out what to put for the action (which should be an Objective-C selector)
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
-				[newItem setRepresentedObject: [SpellWrapper withSpell: i ofType: 1]];
+				[newItem setRepresentedObject: [SpellWrapper withSpell: on_spell_menu[1][i] ofType: 1]];
 			}
 	}
 	
@@ -289,8 +288,7 @@ void handle_help_menu(int item_hit);
 void handle_library_menu(int item_hit);
 void handle_actions_menu(int item_hit);
 void handle_monster_info_menu(int item_hit);
-void handle_mage_spells_menu(int item_hit);
-void handle_priest_spells_menu(int item_hit);
+void handle_menu_spell(short spell_picked,short spell_type);
 
 @implementation MenuHandler
 -(void) appMenu:(id) sender {
@@ -310,13 +308,13 @@ void handle_priest_spells_menu(int item_hit);
 }
 
 -(void) monstMenu:(id) sender {
-	handle_monster_info_menu(1);
+	cMonster* monst = [[sender representedObject] monst];
+	handle_monster_info_menu([monster_info_menu indexOfItem: sender] - 1);
 }
 
 -(void) spellMenu:(id) sender {
 	SpellWrapper* spell = [sender representedObject];
-	if([spell type] == 0) handle_mage_spells_menu([spell num]);
-	else if([spell type] == 1) handle_priest_spells_menu([spell num]);
+	handle_menu_spell([spell num], [spell type]);
 }
 
 -(void) libMenu:(id) sender {

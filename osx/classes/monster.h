@@ -188,4 +188,5 @@ std::ostream& operator << (std::ostream& out, eRace& e);
 std::istream& operator >> (std::istream& in, eRace& e);
 std::ostream& operator << (std::ostream& out, eMonstAbil& e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
+std::ostream& operator<<(std::ostream& out, cMonster::cAttack& att);
 #endif

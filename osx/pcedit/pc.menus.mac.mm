@@ -89,7 +89,7 @@ void menu_activate() {
 }
 
 void update_item_menu() {
-	id targ = [[apple_menu itemAtIndex: 1] target];
+	id targ = [[file_menu itemAtIndex: 0] target];
 	cItemRec(& item_list)[400] = scenario.scen_items;
 	for(int j = 0; j < 4; j++){
 		[items_menu[j] removeAllItems];
@@ -123,6 +123,11 @@ void update_item_menu() {
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];
 	cItemRec& theItem = [item item];
+	for(int i = 0; i < 4; i++) {
+		int whichItem = [items_menu[i] indexOfItem: sender];
+		if(whichItem >= 0)
+			handle_item_menu(whichItem + 100 * i);
+	}
 }
 
 -(void) helpMenu:(id) sender {

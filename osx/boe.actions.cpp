@@ -374,7 +374,7 @@ bool handle_action(sf::Event event)
 			
 		case MODE_TOWN_TARGET: case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
-			cur_loc = (overall_mode > MODE_COMBAT) ? center : pc_pos[current_pc];
+			cur_loc = (overall_mode < MODE_COMBAT) ? center : pc_pos[current_pc];
 			for (i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
@@ -1450,6 +1450,11 @@ bool someone_awake()
 
 void handle_menu_spell(short spell_picked,short spell_type)
 {
+	if(!prime_time()) {
+		ASB("Finish what you're doing first.");
+		print_buf();
+		return;
+	}
 	location pass_point;
 	sf::Event event;
 	

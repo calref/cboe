@@ -413,7 +413,6 @@
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="313433515">
 									<reference key="NSMenu" ref="633756543"/>
-									<bool key="NSIsDisabled">YES</bool>
 									<string key="NSTitle">About this menu</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -447,7 +446,6 @@
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="364052514">
 									<reference key="NSMenu" ref="248471372"/>
-									<bool key="NSIsDisabled">YES</bool>
 									<string key="NSTitle">About this menu</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>

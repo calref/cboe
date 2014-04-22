@@ -305,13 +305,13 @@ void Handle_One_Event()
 	
 	clear_sound_memory();
 	
-		if(map_visible && mini_map.pollEvent(event)){
-			if(event.type == sf::Event::Closed) {
-				mini_map.setVisible(false);
-				map_visible = false;
-			} else if(event.type == sf::Event::GainedFocus)
-				makeFrontWindow(mainPtr);
-		}
+	if(map_visible && mini_map.pollEvent(event)){
+		if(event.type == sf::Event::Closed) {
+			mini_map.setVisible(false);
+			map_visible = false;
+		} else if(event.type == sf::Event::GainedFocus)
+			makeFrontWindow(mainPtr);
+	}
 	if(!mainPtr.pollEvent(event)) {
 		if(changed_display_mode) {
 			changed_display_mode = false;
@@ -344,9 +344,6 @@ void Handle_One_Event()
 			if(!gInBackground) {
 				location where(event.mouseMove.x, event.mouseMove.y);
 				change_cursor(where);
-				// TODO: Probably don't actually need the conditional here?
-				if(animTimer.getElapsedTime().asMilliseconds() % fiveTicks <= 60)
-					draw_targeting_line(where);
 			}
 			break;
 			
@@ -685,38 +682,6 @@ void handle_actions_menu(int item_hit)
 				display_map();
 			}
 			make_cursor_sword();
-			break;
-	}
-}
-
-// TODO: Maybe just use handle_menu_spell instead
-void handle_mage_spells_menu(int item_hit)
-{
-	switch (item_hit) {
-		case 1:
-			give_help(209,0);
-			break;
-		default:
-			if (prime_time() == false) {
-				ASB("Finish what you're doing first.");
-				print_buf();
-			}
-			else handle_menu_spell(on_spell_menu[0][item_hit - 3],0);
-			break;
-	}
-}
-void handle_priest_spells_menu(int item_hit)
-{
-	switch (item_hit) {
-		case 1:
-			give_help(209,0);
-			break;
-		default:
-			if (prime_time() == false) {
-				ASB("Finish what you're doing first.");
-				print_buf();
-			}
-			else handle_menu_spell(on_spell_menu[1][item_hit - 3],1);
 			break;
 	}
 }

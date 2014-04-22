@@ -610,6 +610,8 @@ void redraw_screen(int refresh) {
 	if(overall_mode == MODE_FANCY_TARGET)
 		draw_targets(center);
 	if(overall_mode != MODE_STARTUP) {
+		if(!is_out())
+			draw_targeting_line(sf::Mouse::getPosition(mainPtr));
 		refresh_stat_areas(0);
 		text_sbar->draw();
 		item_sbar->draw();
@@ -1692,21 +1694,7 @@ void draw_targeting_line(location where_curs)
 			 	terrain_rect.offset(5 + ul.x,5 + ul.y);
 				mainPtr.setActive();
 				clip_rect(mainPtr, terrain_rect);
-				// TODO: Not sure if this will even work
-				sf::ConvexShape line(3);
-				line.setPoint(0, where_curs);
-				line.setPoint(1, location(k, l));
-				line.setPoint(2, location(k - 1, l + 1));
-				line.setOutlineThickness(2);
-				line.setOutlineColor(sf::Color::Black);
-				mainPtr.draw(line, sf::RenderStates(sf::BlendAdd));
-#if 0
-				PenMode (patXor);
-				PenSize(2,2);
-				MoveTo(where_curs.h,where_curs.v);
-				LineTo(k,l);
-#endif
-				
+				draw_line(mainPtr, where_curs, location(k, l), 2, {128,128,128}, sf::BlendAdd);
 				redraw_rect.left = min(where_curs.x,k) - 4;
 				redraw_rect.right = max(where_curs.x,k) + 4;
 				redraw_rect.top = min(where_curs.y,l) - 4;
@@ -1725,8 +1713,7 @@ void draw_targeting_line(location where_curs)
 							target_rect.right = target_rect.left + BITMAP_WIDTH;
 							target_rect.top = 13 + BITMAP_HEIGHT * j + 5 + ul.y;
 							target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
-							// TODO: Not sure if black is the right colour here
-							frame_rect(mainPtr, target_rect, sf::Color::Black);
+							frame_rect(mainPtr, target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
 							redraw_rect2 = rectunion(target_rect,redraw_rect2);
 							
@@ -1745,17 +1732,8 @@ void draw_targeting_line(location where_curs)
 						}
 					}
 				
-				mainPtr.display();
-				sf::sleep(time_in_ticks(4));
-				
 				redraw_rect2.inset(-5,-5);
-				redraw_partial_terrain(redraw_rect2);
 				undo_clip(mainPtr);
-				if (is_combat())
-					draw_pcs(center,1);
-				else draw_party_symbol(0,center);
-				if (overall_mode == MODE_FANCY_TARGET)
-					draw_targets(center);
 			}
 		}
 	}

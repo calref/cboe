@@ -98,8 +98,6 @@ extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
-//#include "pc.itemdata.h" 
-cItemRec item_list[400];
 cScenario scenario;
 
 // 
@@ -462,6 +460,7 @@ void handle_edit_menu(int item_hit)
 //	return i;
 //}
 
+// TODO: Let this take the item directly instead of the index
 void handle_item_menu(int item_hit)
 {
 	short choice;
@@ -471,7 +470,7 @@ void handle_item_menu(int item_hit)
 		display_strings(5,7);
 		return;
 		}
-	store_i = item_list[item_hit];
+	store_i = scenario.scen_items[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
 }

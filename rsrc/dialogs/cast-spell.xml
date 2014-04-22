@@ -59,7 +59,7 @@
 	<led name='spell16' state='off' top='317' left='247'/>
 	<led name='spell17' state='off' top='331' left='247'/>
 	<led name='spell18' state='off' top='345' left='247'/>
-	<led name='spell19' state='off' top='259' left='247'/>
+	<led name='spell19' state='off' top='359' left='247'/>
 	<led name='spell20' state='off' top='373' left='247'/>
 	<led name='spell21' state='off' top='247' left='379'/>
 	<led name='spell22' state='off' top='261' left='379'/>
