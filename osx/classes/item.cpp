@@ -368,6 +368,8 @@ void cItemRec::readFrom(std::istream& sin){
 	while(sin) {
 		std::string cur;
 		getline(sin, cur);
+		std::istringstream sin(cur);
+		sin >> cur;
 		if(cur == "VARIETY") sin >> variety;
 		else if(cur == "LEVEL") sin >> item_level;
 		else if(cur == "AWKWARD") sin >> awkward;

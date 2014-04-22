@@ -106,16 +106,12 @@ public:
 	};
 	unsigned char level;
 	std::string m_name;
-	short health; // TODO: Move health, mp and max_mp to cCreature
 	short m_health;
-	short mp;
-	short max_mp;
 	unsigned char armor;
 	unsigned char skill;
 	cAttack a[3];
 	eMonsterType m_type;
 	unsigned char speed;
-	unsigned char ap; // TODO: Move ap to cCreature
 	unsigned char mu;
 	unsigned char cl;
 	unsigned char breath;
@@ -123,11 +119,8 @@ public:
 	unsigned char treasure;
 	unsigned char spec_skill; // TODO: Delete in favour of cAbility
 	unsigned char poison;
-	short morale,m_morale; // TODO: Move to cCreature (since these are calculated in-game based on the level)
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	short status[15]; // TODO: Move to cCreature
-	unsigned char direction; // TODO: Move direction to cCreature
 	unsigned char immunities;
 	unsigned char x_width,y_width;
 	unsigned char radiate_1; // TODO: Delete in favour of cAbility
@@ -156,7 +149,7 @@ class cCreature : public cMonster {
 public:
 	using cMonster::operator=;
 	unsigned long id;
-	m_num_t number; // TODO: This appears to be a duplicate of cMonster::m_num (ie it's used for the same thing)
+	m_num_t number;
 	short active, attitude;
 	unsigned char start_attitude;
 	location start_loc, cur_loc;
@@ -170,6 +163,13 @@ public:
 	short special_on_kill, facial_pic;
 	short target;
 	location targ_loc;
+	short health;
+	short mp;
+	short max_mp;
+	unsigned char ap;
+	short morale,m_morale; // these are calculated in-game based on the level
+	short status[15];
+	unsigned char direction;
 	
 	cCreature();
 	cCreature(int num);

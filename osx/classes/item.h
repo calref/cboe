@@ -21,24 +21,24 @@ class cItemRec {
 public:
 	eItemType variety;
 	short item_level;
-	char awkward;
-	char bonus;
-	char protection;
-	char charges;
+	int awkward;
+	int bonus;
+	int protection;
+	int charges;
 	eWeapType type;
-	char magic_use_type;
+	int magic_use_type;
 	unsigned short graphic_num;
 	eItemAbil ability;
-	unsigned char ability_strength;
+	unsigned int ability_strength;
 	unsigned short type_flag;
-	unsigned char is_special;
+	unsigned int is_special;
 	short value;
-	unsigned char weight;
-	unsigned char special_class;
+	unsigned int weight;
+	unsigned int special_class;
 	location item_loc;
 	std::string full_name;
 	std::string name;
-	unsigned char treas_class;
+	unsigned int treas_class;
 	//unsigned char item_properties;
 	bool ident : 1;
 	bool property : 1;
@@ -49,8 +49,8 @@ public:
 	bool enchanted : 1;
 	bool unsellable : 1;
 private:
-	unsigned char reserved1;
-	unsigned char reserved2;
+	unsigned int reserved1;
+	unsigned int reserved2;
 public:
 	//string desc; // for future use
 	unsigned char rec_treas_class() const;

@@ -270,11 +270,17 @@ void cParty::writeTo(std::ostream& file){
 	for(unsigned int i = 0; i < 250; i++)
 		if(graphicUsed[i])
 			file << "GRAPHIC " << i << '\n';
+	for(campIter iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
+		for(unsigned int i = 0; i < iter->second.size(); i++)
+			if(iter->second[i] > 0)
+				file << "CAMPAIGN \"" << iter->first << "\" " << i << ' ' << iter->second[i] << '\n';
+	}
 	file << '\f';
 	for(int i = 0; i < 30; i++){
 		if(boats[i].exists) {
 			file << "BOAT " << i << '\n';
 			boats[i].writeTo(file);
+			file << '\f';
 		}
 	}
 	file << '\f';
@@ -282,6 +288,7 @@ void cParty::writeTo(std::ostream& file){
 		if(horses[i].exists) {
 			file << "HORSE " << i << '\n';
 			horses[i].writeTo(file);
+			file << '\f';
 		}
 	}
 	file << '\f';
@@ -290,6 +297,7 @@ void cParty::writeTo(std::ostream& file){
 			if(magic_store_items[i][j].variety > ITEM_TYPE_NO_ITEM){
 				file << "MAGICSTORE " << i << ' ' << j << '\n';
 				magic_store_items[i][j].writeTo(file);
+				file << '\f';
 			}
 	file << '\f';
 	for(int i = 0; i < 10; i++)
@@ -301,13 +309,9 @@ void cParty::writeTo(std::ostream& file){
 			file << "HOME " << out_c[i].home_sector.x << ' ' << out_c[i].home_sector.y << '\n';
 			file << "-\n";
 			out_c[i].what_monst.writeTo(file);
+			file << '\f';
 		}
 	file << '\f';
-	for(campIter iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
-		for(unsigned int i = 0; i < iter->second.size(); i++)
-			if(iter->second[i] > 0)
-				file << "CAMPAIGN \"" << iter->first << "\" " << i << ' ' << iter->second[i] << '\n';
-	}
 	file << '\f';
 	for(unsigned int i = 0; i < party_event_timers.size(); i++)
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].global_or_town
@@ -318,6 +322,7 @@ void cParty::writeTo(std::ostream& file){
 			if(creature_save[i][j].active > 0) {
 				file << "CREATURE " << i << ' ' << j << '\n';
 				creature_save[i][j].writeTo(file);
+				file << '\f';
 			}
 		}
 	file << '\f';
@@ -326,18 +331,22 @@ void cParty::writeTo(std::ostream& file){
 			if(stored_items[i][j].variety > ITEM_TYPE_NO_ITEM){
 				file << "STORED " << i << ' ' << j << '\n';
 				stored_items[i][j].writeTo(file);
+				file << '\f';
 			}
 	if(summons.size() > 0) {
 		file << '\f';
 		file << "SUMMON" << '\n';
-		for(cMonster& monst : summons)
+		for(cMonster& monst : summons) {
 			monst.writeTo(file);
+			file << '\f';
+		}
 	}
 	if(journal.size() > 0) {
 		file << '\f';
 		for(cJournal& entry : journal) {
 			file << "JOURNAL " << entry.str_num << ' ' << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n';
 			// TODO: Save the actual string, if the player has asked us to
+			file << '\f';
 		}
 	}
 	if(special_notes.size() > 0) {
@@ -345,6 +354,7 @@ void cParty::writeTo(std::ostream& file){
 		for(cEncNote& note : special_notes) {
 			file << "ENCNOTE " << note.type << ' ' << note.str_num << ' ' << note.where << '\n';
 			// TODO: Save the actual strings, if the player has asked us to
+			file << '\f';
 		}
 	}
 	if(talk_save.size() > 0) {
@@ -355,6 +365,7 @@ void cParty::writeTo(std::ostream& file){
 			file << "WHERE " << note.town_num << ' ' << note.in_scen << '\n';
 			file << "-\n";
 			// TODO: Save the actual strings and names, if the player has asked us to
+			file << '\f';
 		}
 	}
 }
@@ -406,11 +417,7 @@ void cParty::readFrom(std::istream& file){
 			sin >> loc_in_sec.x >> loc_in_sec.y;
 		else if(cur == "IN")
 			sin >> in_boat >> in_horse;
-		else if(cur == "MAGICSTORE"){
-			int i,j;
-			sin >> i >> j >> cur;
-			magic_store_items[i][j].readFrom(sin);
-		}else if(cur == "ROSTER"){
+		else if(cur == "ROSTER"){
 			int i;
 			sin >> i;
 			m_noted[i] = true;
@@ -492,7 +499,7 @@ void cParty::readFrom(std::istream& file){
 			magic_store_items[i][j].readFrom(bin);
 		} else if(cur == "ENCOUNTER") {
 			int i;
-			bin >> i >> cur;
+			bin >> i;
 			while(bin) {
 				getline(bin, cur);
 				std::istringstream sin(cur);
@@ -508,6 +515,7 @@ void cParty::readFrom(std::istream& file){
 				else if(cur == "-") break;
 			}
 			out_c[i].what_monst.readFrom(bin);
+			out_c[i].exists = true;
 		}else if(cur == "CAMPAIGN") {
 			unsigned int i;
 			int j;

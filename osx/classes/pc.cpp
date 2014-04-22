@@ -359,16 +359,11 @@ void cPlayer::readFrom(std::istream& file){
 	while(file) {
 		getline(file, cur, '\f');
 		bin.str(cur);
-		while(bin) {
-			getline(bin, cur);
-			sin.str(cur);
-			sin >> cur;
-			if(cur == "ITEM") {
-				int i;
-				sin >> i >> cur;
-				items[i].readFrom(sin);
-			}
-			sin.clear();
+		bin >> cur;
+		if(cur == "ITEM") {
+			int i;
+			bin >> i;
+			items[i].readFrom(bin);
 		}
 		bin.clear();
 	}

@@ -130,6 +130,22 @@ void finish_load_party(){
 	if (!load_scenario(path))
 		return;
 	
+	// Saved creatures may not have had their monster attributes saved
+	// Make sure that they know what they are!
+	// Cast to cMonster base class and assign, to avoid clobbering other attributes
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 60; j++) {
+			int number = univ.party.creature_save[i][j].number;
+			cMonster& monst = univ.party.creature_save[i][j];
+			monst = scenario.scen_monsters[number];
+		}
+	}
+	for(int j = 0; j < 60; j++) {
+		int number = univ.town.monst[j].number;
+		cMonster& monst = univ.town.monst[j];
+		monst = scenario.scen_monsters[number];
+	}
+	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();

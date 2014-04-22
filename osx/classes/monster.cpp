@@ -15,22 +15,16 @@
 #include "oldstructs.h"
 
 cMonster& cMonster::operator = (legacy::monster_record_type& old){
-	int i;
 	level = old.level;
 	//m_name = old.m_name;
-	health = old.health;
 	m_health = old.m_health;
-	mp = old.mp;
-	max_mp = old.max_mp;
 	armor = old.armor;
 	skill = old.skill;
-	for(i = 0; i < 3; i++) a[i] = old.a[i];
-	// TODO: These two bits of data belong in a[]
+	for(int i = 0; i < 3; i++) a[i] = old.a[i];
 	a[0].type = old.a1_type;
 	a[1].type = a[2].type = old.a23_type;
 	m_type = (eMonsterType) old.m_type;
 	speed = old.speed;
-	ap = old.ap;
 	mu = old.mu;
 	cl = old.cl;
 	breath = old.breath;
@@ -38,12 +32,8 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	treasure = old.treasure;
 	spec_skill = old.spec_skill;
 	poison = old.poison;
-	morale = old.morale;
-	m_morale = old.m_morale;
 	corpse_item = old.corpse_item;
 	corpse_item_chance = old.corpse_item_chance;
-	for(i = 0; i < 15; i++) status[i] = old.status[i];
-	direction = old.direction;
 	immunities = old.immunities;
 	x_width = old.x_width;
 	y_width = old.y_width;
@@ -125,6 +115,14 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	personality = old.monst_start.personality;
 	special_on_kill = old.monst_start.special_on_kill;
 	facial_pic = old.monst_start.facial_pic;
+	health = old.m_d.health;
+	mp = old.m_d.mp;
+	max_mp = old.m_d.max_mp;
+	ap = old.m_d.ap;
+	morale = old.m_d.morale;
+	m_morale = old.m_d.m_morale;
+	for(int i = 0; i < 15; i++) status[i] = old.m_d.status[i];
+	direction = old.m_d.direction;
 	return *this;
 }
 
@@ -502,7 +500,7 @@ void cCreature::writeTo(std::ostream& file) {
 	file << "STARTATT " << unsigned(start_attitude) << '\n';
 	file << "STARTLOC " << start_loc.x << ' ' << start_loc.y << '\n';
 	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
-	file << "MOBILIY " << unsigned(mobility) << '\n';
+	file << "MOBILITY " << unsigned(mobility) << '\n';
 	file << "TIMEFLAG " << unsigned(time_flag) << '\n';
 	file << "SUMMONED " << summoned << '\n';
 	// TODO: Don't remember what these do
@@ -522,18 +520,20 @@ void cCreature::writeTo(std::ostream& file) {
 	file << "CURHP " << health << '\n';
 	file << "CURSP " << mp << '\n';
 	file << "MORALE " << morale << '\n';
-	file << "DIRECTION " << direction << '\n';
+	file << "DIRECTION " << unsigned(direction) << '\n';
 }
 
 void cCreature::readFrom(std::istream& file) {
 	while(file) {
 		std::string cur;
 		getline(file, cur);
+		printf("Parsing line in town.txt: %s\n", cur.c_str());
 		std::istringstream line(cur);
 		line >> cur;
-		if(cur == "MONSTER")
+		if(cur == "MONSTER") {
 			line >> number;
-		else if(cur == "ATTITUDE")
+			*this = cCreature(number);
+		} else if(cur == "ATTITUDE")
 			line >> attitude;
 		else if(cur == "STARTATT") {
 			unsigned int i;

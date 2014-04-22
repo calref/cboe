@@ -67,6 +67,7 @@ public:
 	short countMonsters();
 	cSpeech& cur_talk(); // Get the currently loaded speech
 	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
+	void prep_arena(); // Set up for a combat arena
 	
 	bool is_explored(char x, char y) const;
 	bool is_force_wall(char x, char y) const;

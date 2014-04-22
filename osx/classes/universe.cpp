@@ -136,6 +136,11 @@ bool cCurTown::prep_talk(short which) {
 	}
 }
 
+void cCurTown::prep_arena() {
+	if(loaded()) delete record;
+	record = new cMedTown();
+}
+
 cCurTown::~cCurTown() {
 	if(talkNeedsDeleting && curTalk != NULL) delete curTalk;
 }
