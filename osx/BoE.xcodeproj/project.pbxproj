@@ -1069,7 +1069,7 @@
 		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "data/BoE Bases";
+			dstPath = "Scenario Editor/Blades of Exile Base";
 			dstSubfolderSpec = 16;
 			files = (
 				91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */,

@@ -188,7 +188,7 @@ short init_data(short flag)
 }
 
 void load_base_item_defs(){
-	fs::path basePath = progDir/"data"/"BoE Bases"/"bladbase.exs";
+	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
 	scen_items_loaded = load_scenario(basePath, true);
 }
 
