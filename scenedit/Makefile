@@ -1,8 +1,8 @@
 include ../.config.vars
 
-CPP  = $(PREFIX)g++.exe
-CC   = $(PREFIX)gcc.exe
-WINDRES = $(PREFIX)windres.exe
+CPP  = $(PREFIX)g++
+CC   = $(PREFIX)gcc
+WINDRES = $(PREFIX)windres
 RES  = Blades_of_Exile_Scenario_Editor_private.res
 OBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
 LINKOBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
