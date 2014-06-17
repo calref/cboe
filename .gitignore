@@ -2,10 +2,12 @@
 *.slo
 *.lo
 *.o
+*.res
 
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
 
 # Compiled Static libraries
 *.lai
@@ -23,3 +25,5 @@ Win32/*/obj
 *.layout
 *.depend
 *blades.ini
+
+.config.vars

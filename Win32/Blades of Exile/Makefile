@@ -1,17 +1,16 @@
-# Project: Blades of Exile Win32
-# Makefile created by Dev-C++ 4.9.9.2
+include ../.config.vars
 
-CPP  = amd64-mingw32msvc-g++
-CC   = amd64-mingw32msvc-gcc
-WINDRES = amd64-mingw32msvc-windres
+CPP  = $(PREFIX)g++
+CC   = $(PREFIX)gcc
+WINDRES = $(PREFIX)windres
 RES  = Blades_of_Exile_private.res
 OBJ  = boe.actions.o boe.main.o boe.combat.o boe.dlgutil.o boe.fields.o boe.fileio.o global.o boe.graphics.o boe.graphutil.o boe.infodlg.o boe.itemdata.o boe.items.o boe.locutils.o boe.monster.o boe.newgraph.o boe.party.o boe.specials.o boe.text.o boe.town.o globvar.o tools/soundtool.o tools/soundvars.o tools/dlogtool.o tools/mathutil.o classes/item.o classes/location.o classes/pc.o $(RES)
 LINKOBJ  = boe.actions.o boe.main.o boe.combat.o boe.dlgutil.o boe.fields.o boe.fileio.o global.o boe.graphics.o boe.graphutil.o boe.infodlg.o boe.itemdata.o boe.items.o boe.locutils.o boe.monster.o boe.newgraph.o boe.party.o boe.specials.o boe.text.o boe.town.o globvar.o tools/soundtool.o tools/soundvars.o tools/dlogtool.o tools/mathutil.o classes/item.o classes/location.o classes/pc.o $(RES)
-LIBS = -mwindows -lwinmm  
+LIBS = -mwindows -lwinmm -static-libgcc -static-libstdc++
 INCS =  -I"include" 
 CXXINCS = 
 BIN  = "Blades of Exile.exe"
-CXXFLAGS = $(CXXINCS) -Wall    -O2
+CXXFLAGS = $(CXXINCS) -Wall -O2 -v
 CFLAGS = $(INCS)   -O2
 RM = rm -f
 

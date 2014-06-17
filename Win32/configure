@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import argparse
+import os
+import shutil
+import subprocess
+
+def main():
+    args = parser().parse_args()
+    src_path = os.path.dirname(__file__) or '.'
+
+#    shutil.copy(os.path.realpath(src_path) + '/Makefile.in', os.getcwd() + '/Makefile')
+
+    open('.config.vars', 'w+').write(
+'''PREFIX={prefix}
+'''.format(**vars(args)))
+
+
+def parser():
+    parser = argparse.ArgumentParser(
+      prog='configure',
+      description='''Configure cboe automated build system.
+'''
+      )
+    parser.add_argument(
+      '-c', '--compiler', type=str,
+      help='Compiler prefix, such as i686-w64-mingw32-', dest='prefix', metavar='PREFIX', default=''
+      )
+    return parser
+
+main()
