@@ -1933,7 +1933,7 @@ void build_scen_headers()
 		 0,0,0,0,	// 7
 		mainPtr, // 8
 		(HMENU) 1, // 9
-		(HINSTANCE) GetWindowLong(mainPtr, GWL_HINSTANCE), // 10
+		(HINSTANCE) GetWindowLongPtr(mainPtr, GWLP_HINSTANCE), // 10
 		NULL); // 11
 
     ListFiles("", listbox);//First list the scenarios under the scenarios folder
@@ -1965,7 +1965,7 @@ void build_scen_headers()
 
 	for (i = 0; i < count; i++)
 	{
-		SendMessage(listbox,LB_GETTEXT,i,(LONG) (LPSTR) filename2);
+		SendMessage(listbox,LB_GETTEXT,i,(LONG_PTR) (LPSTR) filename2);
 
 		sprintf(filename,"scenarios/%s",filename2);
 

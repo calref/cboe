@@ -10,6 +10,6 @@ void load_cursors();
 void change_cursor(POINT where_curs);
 void cursor_go();
 void cursor_stay();
-long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 
 #endif
