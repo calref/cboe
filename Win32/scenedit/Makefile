@@ -1,13 +1,12 @@
-# Project: Blades of Exile Scenario Editor
-# Makefile created by Dev-C++ 4.9.9.2
+include ../.config.vars
 
-CPP  = i586-mingw32msvc-g++
-CC   = i586-mingw32msvc-gcc
-WINDRES = i586-mingw32msvc-windres
+CPP  = $(PREFIX)g++.exe
+CC   = $(PREFIX)gcc.exe
+WINDRES = $(PREFIX)windres.exe
 RES  = Blades_of_Exile_Scenario_Editor_private.res
 OBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
 LINKOBJ  = buttonmg.o dlogtool.o global.o graphutl.o keydlgs.o tfileio.o townout.o edsound.o graphics.o scenario.o blscened.o tactions.o $(RES)
-LIBS =  -mwindows -lwinmm --strip-all  
+LIBS =  -mwindows -lwinmm --strip-all -static-libgcc -static-libstdc++
 INCS =  -I"include" 
 CXXINCS = 
 BIN  = "Blades of Exile Scenario Editor.exe"

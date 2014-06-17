@@ -1,13 +1,12 @@
-# Project: Blades of Exile Character Editor
-# Makefile created by Dev-C++ 4.9.9.2
+include ../.config.vars
 
-CPP  = amd64-mingw32msvc-g++
-CC   = amd64-mingw32msvc-gcc
-WINDRES = amd64-mingw32msvc-windres
+CPP  = $(PREFIX)g++
+CC   = $(PREFIX)gcc
+WINDRES = $(PREFIX)windres
 RES  = Blades_of_Exile_Character_Editor_private.res
 OBJ  = graphutl.o bladpced.o dlogtool.o edaction.o edfileio.o editors.o edsound.o global.o graphics.o $(RES)
 LINKOBJ  = graphutl.o bladpced.o dlogtool.o edaction.o edfileio.o editors.o edsound.o global.o graphics.o $(RES)
-LIBS =  -lwinmm -mwindows -lwinmm  
+LIBS =  -lwinmm -mwindows -lwinmm -static-libgcc -static-libstdc++
 INCS =  -I"include" 
 CXXINCS =  
 BIN  = "Blades of Exile Character Editor.exe"
