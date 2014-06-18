@@ -47,7 +47,12 @@ short item_label_loc[NI];
 
 inline void cd_kill_dc(short which_slot,HDC hdc) { fry_dc(dlgs[which_slot],hdc); }
 
-LRESULT CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+#ifdef ENVIRONMENT64
+LRESULT
+#else
+BOOL
+#endif
+CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
@@ -542,7 +547,12 @@ short cd_create_dialog(short dlog_num, HWND parent)
 	return 0;
 }
 
-LRESULT CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
+#ifdef ENVIRONMENT64
+LRESULT
+#else
+BOOL
+#endif
+CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 {
 	short i,j,k,free_slot = -1,free_item = -1;
 	int type, flag;
