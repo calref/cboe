@@ -7,11 +7,14 @@ import subprocess
 def main():
     args = parser().parse_args()
     src_path = os.path.dirname(__file__) or '.'
-
-#    shutil.copy(os.path.realpath(src_path) + '/Makefile.in', os.getcwd() + '/Makefile')
-
+    
+    args.flags = ''
+    if args.sixfour:
+        args.flags = '-DENVIRONMENT64'
+    
     open('.config.vars', 'w+').write(
 '''PREFIX={prefix}
+FLAGS={flags}
 '''.format(**vars(args)))
 
 
@@ -24,6 +27,10 @@ def parser():
     parser.add_argument(
       '-c', '--compiler', type=str,
       help='Compiler prefix, such as i686-w64-mingw32-', dest='prefix', metavar='PREFIX', default=''
+      )
+    parser.add_argument(
+      '--64', action='store_const',
+      help='Sets flag for 64-bit compiliation', dest='sixfour', const=True, default=False
       )
     return parser
 

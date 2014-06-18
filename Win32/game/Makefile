@@ -10,7 +10,7 @@ LIBS = -mwindows -lwinmm -static-libgcc -static-libstdc++
 INCS =  -I"include" 
 CXXINCS = 
 BIN  = "Blades of Exile.exe"
-CXXFLAGS = $(CXXINCS) -Wall -O2
+CXXFLAGS = $(CXXINCS) -Wall -O2 $(FLAGS)
 CFLAGS = $(INCS)   -O2
 RM = rm -f
 
