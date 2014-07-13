@@ -1,0 +1,300 @@
+Unused
+Value to change to
+Increase/Decrease by
+Unused
+Unused
+Unused
+Unused
+0 - can enter, 1 - no enter
+0 - can enter, 1 - no enter
+0 - can enter, 1 - no enter
+Unused
+0 - can enter, 1 - no enter
+Number of moves to set forward
+Number of moves to set the timer
+Which sound
+Horse to set (0 .. 29)
+Boat to set (0 .. 29)
+Town to show/hide
+Number of Special Event (0 .. 9)
+Item To Give
+Item Class to Take Away
+Usused
+Value to change the 10 flags to
+Flag to change to Part A
+Unused
+Number of moves that pass
+0 - no attack, 1 - attack
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Item to give
+Num. of spec. item to give (0 .. 49)
+Unused
+Unused
+Unused
+Label of 2nd button (-1 - no button)
+Label of 2nd button (-1 - no button)
+Label of 2nd button (-1 - no button)
+Item to give
+Item to give
+Item to give
+Special outdoor enc. to place (0 .. 3)
+Spec. enc. code to activate (0 .. 10)
+Type of trap (see docs. for list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0 - only living, 1 - any PC
+Number of dice
+Amount
+Amount
+Amount (0 .. 100)
+Amount (0 .. 10)
+0 - dead, 1 - dust,  2- stoned
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 8)
+Amount (0 .. 7)
+Amount (0 .. 8)
+Amount (0 .. 5000)
+Amount (0 .. 10)
+Which Spell (0 .. 31, see docs)
+Which Spell (0 .. 31, see docs)
+Amount (0 .. 25000)
+Amount (0 .. 25000)
+Which Recipe (0 .. 19)
+Amount (0 .. 250)
+Amount (0 .. 250)
+Amount (0 .. 250)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If at least this value ...
+If in this town ...
+If random # (1 - 100) less than ...
+If has spec. item ...
+Stuff Done flag 2 Part A
+X coordinate of space
+X coordinate of space
+If party has this much gold ...
+If party has this much food ...
+X coordinate of space
+If has item of this special class ...
+If has equipped item of this special ...
+If party has this much gold ...
+If party has this much food ...
+X coordinate of space
+If has item of this special class ...
+If has equipped item of this class ...
+If this day has been reached ...
+Unused
+Unused
+If this day has been reached ...
+Unused
+Unused
+If the party has this much Mage Lore ...
+Number of a SCENARIO special message
+If flag has this value ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+X coordinate of space
+Unused
+X coordinate of space to place
+Type of creature to remove
+0 - all, 1 - friendly, 2 - hostile
+Unused
+X coordinate to telep. to
+Unused
+X coordinate to go to 
+Unused
+X coordinate to telep. to
+X coordinate to place at
+X coordinate of outdoor section
+X coordinate to place at
+X coordinate to place lone PC at
+0 - no sound, 1 - teleport sound
+Number of moves until event
+
+
+
+
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+Top of rectangle
+
+
+
+
+
+
+Unused
+X coordinate of space
+Number of special encounter (0 .. 3)
+X coordinate of space
+Number of first item in store
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

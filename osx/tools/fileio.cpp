@@ -1325,34 +1325,6 @@ bool save_party(fs::path dest_file)
 	return true;
 }
 
-std::vector<std::string> load_strings(std::string which){
-	// TODO: Fix the bundle-ness
-	// TODO: Is this even used anywhere?
-#if 0
-	UniChar* strListName = new UniChar[which.length()];
-	for(int i = 0; i < which.length(); i++) strListName[i] = which[i];
-	char stringsPath[512];
-	std::string path;
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef stringsURL = CFBundleCopyResourceURL(
-		mainBundle,
-		CFStringCreateWithCharacters(NULL, strListName, which.length()),
-		CFSTR(""), CFSTR("strings")
-	);
-	delete strListName;
-	if(stringsURL == NULL) return std::vector<std::string>(); // if not found, return an empty list
-	CFStringGetCString(CFURLCopyFileSystemPath(stringsURL, kCFURLPOSIXPathStyle), stringsPath, 512, kCFStringEncodingUTF8);
-#endif
-	fs::path path = progDir/which;
-	printf("Loading strings from: %s\n",path.c_str());
-	std::ifstream fin(path.c_str());
-	std::string s;
-	std::vector<std::string> v;
-	while(getline(fin,s))
-		v.push_back(s);
-	return v;
-}
-
 std::string read_maybe_quoted_string(std::istream& from) {
 	std::string result;
 	if(from.peek() == '"' ||  from.peek() == '\'') {

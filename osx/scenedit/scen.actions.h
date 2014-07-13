@@ -1,13 +1,12 @@
 void init_current_terrain();
 void init_screen_locs();
-bool handle_action(Point the_point,EventRecord event);
-void flash_rect(Rect to_flash);
+bool handle_action(location the_point,sf::Event event);
+void flash_rect(RECT to_flash);
 void swap_terrain();
 void set_new_terrain(ter_num_t selected_terrain);
-void handle_keystroke(char chr,char chr2,EventRecord event);
+void handle_keystroke(char chr,char chr2,sf::Event event);
 void get_wandering_monst();
 void get_town_info();
-void edit_monst(short mode,short x,short y);
 void get_sign_resource();
 void set_info_strings();
 cTown::cItem edit_item(cTown::cItem item);
@@ -64,7 +63,7 @@ bool is_erasable_water(short i,short j);
 bool monst_on_space(location loc,short m_num);
 void place_edit_special(location loc);
 void set_special(location spot_hit);
-bool save_check(short which_dlog);
+bool save_check(std::string which_dlog);
 void update_item_menu();
 
 ter_num_t get_ground_from_ter(ter_num_t ter);

@@ -54,10 +54,12 @@ public:
 };
 
 typedef unsigned short pic_num_t;
+static const pic_num_t NO_PIC = std::numeric_limits<pic_num_t>::max();
 using graf_pos = std::pair<sf::Texture*,RECT>;
 using graf_pos_ref = std::pair<sf::Texture*&,RECT&>;
 
 struct cCustomGraphics {
+	size_t numSheets;
 	sf::Texture* sheets = NULL;
 	sf::Texture* party = NULL;
 	bool is_old = false;
@@ -72,6 +74,7 @@ struct cCustomGraphics {
 		return sheets;
 	}
 	graf_pos find_graphic(pic_num_t pic, bool party = false);
+	size_t count();
 };
 
 void init_graph_tool();

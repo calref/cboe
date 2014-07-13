@@ -34,4 +34,11 @@ public:
 	~ModalSession();
 };
 
+// System key
+#ifdef __APPLE__
+bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::system;
+#else
+bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::control;
+#endif
+
 #endif

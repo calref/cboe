@@ -6,7 +6,7 @@
  *
  */
 
-size_t available_btns[] = { // This array is a list of indices into the following array.
+size_t available_btns[53] = { // This array is a list of indices into the following array.
 	0,  63, 64, 65, 1,  4,  5,  8,  128,9,
 	10, 11, 12, 13,	14, 15, 16, 17, 29, 51,
 	60, 61, 62,	66, 69, 70, 71, 72, 73, 74,

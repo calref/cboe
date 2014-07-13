@@ -1,0 +1,300 @@
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special if item not given
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Special if item not given
+Unused
+Unused
+Unused
+Unused
+Special if button 3 pressed
+Special if button 3 pressed
+Special if button 3 pressed
+Special if item IS taken
+Special if item IS taken
+Special if item IS taken
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+Type of damage (for list, see docs.)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Call this special ...
+Unused
+Unused
+Unused
+Call this special is 2nd flag lower ...
+Call this special ...
+Call this special ...
+Unused
+Unused
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Unused
+Call this special ...
+Unused
+Unused
+Unused
+If answer matches, call this special ...
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+Unused
+With this terrain ...
+Unused
+Unused
+Unused
+Type of damage (for list, see docs.)
+Unused
+Unused
+Unused
+Unused
+0 - don't force, 1 - force
+Unused
+Unused
+Unused
+Unused
+Unused
+What text? (see docs, 0 - up, 1 - down)
+Unused
+Unused
+If 1, always change level.
+Y coordinate inside section 
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+Right of rectangle
+
+
+
+
+
+
+Unused
+Unused
+Unused
+Unused
+Cost adjust (0 .. 6, lower = cheaper)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

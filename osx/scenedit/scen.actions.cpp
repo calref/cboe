@@ -5,7 +5,6 @@
 #include "classes.h"
 #include "graphtool.h"
 #include "scen.graphics.h"
-#include "scen.dlgutil.h"
 #include "scen.actions.h"
 #include "soundtool.h"
 #include "scen.core.h"
@@ -15,13 +14,17 @@
 #include "mathutil.h"
 #include "fileio.h"
 //#include "scen.locutils.h"
+#include "winutil.h"
+#include "cursors.h"
+#include "scrollbar.h"
+#include "dlogutil.h"
 
 #include "scen.btnmg.h"
 
-extern Str255 current_string;
-Rect world_screen;
+extern char current_string[256];
+RECT world_screen;
 // border rects order: top, left, bottom, right //
-Rect border_rect[4];
+RECT border_rect[4];
 short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
@@ -52,7 +55,7 @@ cTown::cItem store_place_item = {loc(),-1,0,0,0,0,0};
 
 short flood_count = 0;
 
-Rect terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
+RECT terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
 
 
 extern short cen_x, cen_y, cur_town;
@@ -66,20 +69,21 @@ extern short /*max_dim[3],*/mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
-extern ControlHandle right_sbar;
+extern std::shared_ptr<cScrollbar> right_sbar;
 extern cOutdoors current_terrain;
 extern location cur_out;
+extern sf::RenderWindow mainPtr;
 //extern piles_of_stuff_dumping_type *data_store;
 bool small_any_drawn = false;
 //extern cSpeech talking;
 extern bool change_made;
 
-Rect left_buttons[NLS][2]; // 0 - whole, 1 - blue button
+RECT left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 short right_button_status[NRS];
-Rect right_buttons[NRSONPAGE];
-Rect palette_buttons_from[71];
-Rect palette_buttons[10][6];
+RECT right_buttons[NRSONPAGE];
+RECT palette_buttons_from[71];
+RECT palette_buttons[10][6];
 short current_rs_top = 0;
 
 short out_buttons[6][10] = {
@@ -111,14 +115,14 @@ ter_num_t current_ground = 0;
 
 short special_to_paste = -1;
 
-
+extern std::string get_str(std::string list, short j);
 bool monst_on_space(location loc,short m_num);
 short can_see(location p1,location p2,short mode);
 
 void init_current_terrain() {
 //	short i,j;
 //	location d_loc(0,0);
-//	Rect d_rect = {0,0,0,0};
+//	RECT d_rect = {0,0,0,0};
 //	cTown::cWandering d_wan = {0,0,0,0};
 //	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
 //	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
@@ -136,35 +140,41 @@ void init_screen_locs() {
 	
 	for (i = 0; i < 256; i++) {
 		terrain_rects[i] = terrain_rect_base;
-		OffsetRect(&terrain_rects[i],3 + (i % 17) * (terrain_rect_base.right + 1),
+		terrain_rects[i].offset(3 + (i % 17) * (terrain_rect_base.right + 1),
 				   3 + (i / 17) * (terrain_rect_base.bottom + 1));
 	}
 }
 
-bool handle_action(Point the_point,EventRecord event) {
+bool handle_action(location the_point,sf::Event event) {
+	using kb = sf::Keyboard;
 	short i,j, x;
 	bool are_done = false;
-	Str255 s2;
+	std::string s2;
 	
-	bool need_redraw = false,option_hit = false;
+	bool need_redraw = false,option_hit = false,ctrl_hit = false;
 	location spot_hit;
-	Point cur_point,cur_point2;
+	location cur_point,cur_point2;
 	short right_top,right_hit;
 	eScenMode old_mode;
-	Rect temp_rect;
+	RECT temp_rect;
 	unsigned long dummy;
 	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
 	//GlobalToLocal(&the_point);
-	if ((event.modifiers & cmdKey) != 0) 
+	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
 		option_hit = true;
+	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
+		ctrl_hit = true;
 	
 	for (i = 0; i < NLS; i++)
-		if ((mouse_button_held == false) && (PtInRect (the_point, &left_buttons[i][0]) )
+		if(!mouse_button_held && the_point.in(left_buttons[i][0])
 			&& (left_button_status[i] >= 10))  {
 			draw_lb_slot(i,1);
 			play_sound(37);
-			Delay(10,&dummy);
+			mainPtr.display();
+			// TODO: Proper button handling
+			sf::sleep(time_in_ticks(10));
 			draw_lb_slot(i,0);
+			mainPtr.display();
 			if (overall_mode == MODE_INTRO_SCREEN) {
 				switch(i)
 				{
@@ -176,9 +186,8 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 						
 					case 4: // edit
-						try{
-							FSSpec file_to_load = nav_get_scenario();
-							if (load_scenario(file_to_load)) {
+							fs::path file_to_load = nav_get_scenario();
+							if(!file_to_load.empty() && load_scenario(file_to_load)) {
 								if(load_town(scenario.last_town_edited,town))
 									cur_town = scenario.last_town_edited;
 								if(load_outdoors(scenario.last_out_edited,current_terrain)){
@@ -189,7 +198,6 @@ bool handle_action(Point the_point,EventRecord event) {
 								set_up_main_screen();
 								update_item_menu();
 							}
-						} catch(no_file_chosen){}
 						break;
 				}
 			}
@@ -212,20 +220,18 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 5: // new town
 						if (change_made == true) {
-							give_error("You need to save the changes made to your scenario before you can add a new town.",
-									   "",0);
+							giveError("You need to save the changes made to your scenario before you can add a new town.");
 							return are_done;
 						}
 						if (scenario.num_towns >= 200) {
-							give_error("You have reached the limit of 200 towns you can have in one scenario.",
-									   "",0);
+							giveError("You have reached the limit of 200 towns you can have in one scenario.");
 							return are_done;
 						}
 						if (new_town(scenario.num_towns) == true)
 							set_up_main_screen();
 						break;
 					case 6:
-						SetControlValue(right_sbar,0);
+						right_sbar->setPosition(0);
 						start_string_editing(0,0);
 						break;
 					case 7: 
@@ -233,7 +239,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 11: // pick out
 						if (change_made == true) {
-							if (save_check(859) == false)
+							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
 						x = pick_out(cur_out);
@@ -253,7 +259,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 16: // pick town
 						if (change_made == true) {
-							if (save_check(859) == false)
+							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
 						x = pick_town_num(855,cur_town);
@@ -281,18 +287,21 @@ bool handle_action(Point the_point,EventRecord event) {
 		}
 	
 	if (overall_mode == MODE_MAIN_SCREEN) {
-		right_top = GetControlValue(right_sbar);
+		right_top = right_sbar->getPosition();
 		for (i = 0; i < NRSONPAGE; i++)
-			if ((mouse_button_held == false) && (PtInRect (the_point, &right_buttons[i]) )
+			if(!mouse_button_held && (the_point.in(right_buttons[i]) )
 				&& (right_button_status[i + right_top] > 0))  {
 				
 				right_hit = right_button_status[i + right_top];
 				j = right_hit % 1000;
 				//flash_rect(left_buttons[i][0]);
 				draw_rb_slot(i + right_top,1);
+				mainPtr.display();
+				// TODO: Proper button handling
 				play_sound(37);
-				Delay(10,&dummy);
+				sf::sleep(time_in_ticks(10));
 				draw_rb_slot(i + right_top,0);
+				mainPtr.display();
 				change_made = true;
 				switch(right_hit / 1000)
 				{
@@ -346,8 +355,8 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 7:
 						if (option_hit == true) {
-							get_str(s2,35,j + 1);
-							strcpy(scenario.scen_strs(j),(char *) s2);
+							s2 = get_str("scen-default", j + 1);
+							strcpy(scenario.scen_strs(j),s2.c_str());
 						} 
 						else edit_text_str(j,0);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *)data_store->scen_strs[j]);
@@ -357,9 +366,9 @@ bool handle_action(Point the_point,EventRecord event) {
 						
 					case 8:
 						if (option_hit == true) {
-							get_str(s2,37,j + 1);
-							strcpy(current_terrain.out_strs(j),(char *) s2);
-						} 
+							s2 = get_str("outdoor-default", j + 1);
+							strcpy(current_terrain.out_strs(j),s2.c_str());
+						}
 						else edit_text_str(j,1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
 						//set_rb(j,8000 + j,(char *) str,0);
@@ -367,8 +376,8 @@ bool handle_action(Point the_point,EventRecord event) {
 						break;
 					case 9:
 						if (option_hit == true) {
-							get_str(s2,36,j + 1);
-							strcpy(town->town_strs(j),(char *) s2);
+							s2 = get_str("town-default", j + 1);
+							strcpy(town->town_strs(j),s2.c_str());
 						} 
 						else edit_text_str(j,2);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->town_strs[j]);
@@ -395,11 +404,11 @@ bool handle_action(Point the_point,EventRecord event) {
 			}
 	}
 	if ((overall_mode < MODE_MAIN_SCREEN) //&& (PtInRect (the_point, &world_screen))
-		&& (the_point.h > world_screen.left + 8) && (the_point.h < world_screen.right - 8)
-		&& (the_point.v > world_screen.top + 8) && (the_point.v < world_screen.bottom - 8) ) {
+		&& (the_point.x > world_screen.left + 8) && (the_point.x < world_screen.right - 8)
+		&& (the_point.y > world_screen.top + 8) && (the_point.y < world_screen.bottom - 8) ) {
 		if (cur_viewing_mode == 0) {
-			i = (the_point.h - TER_RECT_UL_X - 8) / 28;
-			j = (the_point.v - TER_RECT_UL_Y - 8) / 36;
+			i = (the_point.x - TER_RECT_UL_X - 8) / 28;
+			j = (the_point.y - TER_RECT_UL_Y - 8) / 36;
 			
 			spot_hit.x = cen_x + i - 4;
 			spot_hit.y = cen_y + j - 4;
@@ -408,8 +417,8 @@ bool handle_action(Point the_point,EventRecord event) {
 		}
 		else {
 			
-			i = (the_point.h - TER_RECT_UL_X - 8) / 4;
-			j = (the_point.v - TER_RECT_UL_Y - 8) / 4;
+			i = (the_point.x - TER_RECT_UL_X - 8) / 4;
+			j = (the_point.y - TER_RECT_UL_Y - 8) / 4;
 			spot_hit.x = i;
 			spot_hit.y = j;
 		}
@@ -489,7 +498,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						
 					}
 					if (x < 500)
-						give_error("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).","",0);
+						giveError("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).");
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -571,7 +580,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						x = 70;
 					}
 				if (x == 64) 
-					give_error("You can only have 64 preset items in each town.","",0);
+					giveError("You can only have 64 preset items in each town.");
 				
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -594,7 +603,7 @@ bool handle_action(Point the_point,EventRecord event) {
 //				break;
 			case MODE_PLACE_SAME_CREATURE:
 				if (last_placed_monst.number == 0) {
-					give_error("Either no monster has been placed, or the last time you tried to place a monster the operation failed.","",0);
+					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 					break;
 				}
 				for (i = 0; i < 60; i++)
@@ -602,11 +611,11 @@ bool handle_action(Point the_point,EventRecord event) {
 						town->creatures(i) = last_placed_monst;
 						town->creatures(i).start_loc = spot_hit;
 						if ((i >= 30) && (scenario.town_size[cur_town] == 2)) {
-							give_error("Small towns can have at most 30 preset monsters.","",0); // error
+							giveError("Small towns can have at most 30 preset monsters."); // error
 							town->creatures(i).number = 0;
 						}
 						else if ((i >= 40) && (scenario.town_size[cur_town] == 1)) {
-							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
+							giveError("Medium towns can have at most 40 preset monsters."); // error
 							town->creatures(i).number = 0;
 						}
 						i = 60;
@@ -634,11 +643,11 @@ bool handle_action(Point the_point,EventRecord event) {
 						town->creatures(i).special_on_kill = -1;
 						town->creatures(i).facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
 						if ((i >= 30) && (scenario.town_size[cur_town] == 2)) {
-							give_error("Small towns can have at most 30 preset monsters.","",0); // error
+							giveError("Small towns can have at most 30 preset monsters."); // error
 							town->creatures(i).number = 0;
 						}
 						else if ((i >= 40) && (scenario.town_size[cur_town] == 1)) {
-							give_error("Medium towns can have at most 40 preset monsters.","",0); // error
+							giveError("Medium towns can have at most 40 preset monsters."); // error
 							town->creatures(i).number = 0;
 						}
 						last_placed_monst = town->creatures(i);
@@ -646,7 +655,7 @@ bool handle_action(Point the_point,EventRecord event) {
 						i = 70;
 					}
 				if ((i < 70) && (scenario.town_size[cur_town] == 0)) {
-					give_error("Large towns can have at most 60 preset monsters.","",0); // error
+					giveError("Large towns can have at most 60 preset monsters."); // error
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -718,7 +727,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				break;
 			case MODE_PLACE_SAME_ITEM:
 				if (store_place_item.code < 0) {
-					give_error("Either no item has been placed, or the last time you tried to place an item the operation failed.","",0);
+					giveError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
 					break;
 				}
 				for (x = 0; x < 64; x++) 
@@ -741,8 +750,7 @@ bool handle_action(Point the_point,EventRecord event) {
 							x = 30;
 						}
 					if (x == 15) {
-						give_error("Either this space is not a sign, or you have already placed too many signs on this level.",
-								   "",0);
+						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
 					}	
 				}
 				if (editing_town == false) {
@@ -752,8 +760,7 @@ bool handle_action(Point the_point,EventRecord event) {
 							x = 30;
 						}
 					if (x == 8) {
-						give_error("Either this space is not a sign, or you have already placed too many signs on this level.",
-								   "",0);
+						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
 					}	
 				}
 				set_cursor(wand_curs);
@@ -789,13 +796,13 @@ bool handle_action(Point the_point,EventRecord event) {
 						}
 				}
 				if (x < 500)
-					give_error("There wasn't a special on that spot.","",0);
+					giveError("There wasn't a special on that spot.");
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PASTE_SPECIAL: //paste special
 				if (copied_spec < 0) {
-					give_error("You need to select a special to copy first.","",0);
+					giveError("You need to select a special to copy first.");
 					break;
 				}
 				if (editing_town == true) {
@@ -808,7 +815,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				}
 				if (editing_town == false) {
 					if ((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
-						fancy_choice_dialog(870,0);
+						cChoiceDlog("not-at-edge.xml").show();
 						break;
 					}
 					for (x = 0; x < 18; x++)
@@ -820,7 +827,7 @@ bool handle_action(Point the_point,EventRecord event) {
 				}
 				
 				if (x < 500)
-					give_error("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.","",0);
+					giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
 				
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
@@ -854,11 +861,11 @@ bool handle_action(Point the_point,EventRecord event) {
 				set_cursor(wand_curs);
 				break;
 			case MODE_SET_OUT_START: //edit out start loc
-				if (fancy_choice_dialog(864,0) == 2)
+				if(cChoiceDlog("set-out-start-confirm.xml", {"okay", "cancel"}).show() == "cancel")
 					break;
 				if ((spot_hit.x != minmax(4,43,spot_hit.x)) ||
 					(spot_hit.y != minmax(4,43,spot_hit.y))) {
-					give_error("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.","",0);
+					giveError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 					break;
 				}
 				scenario.out_sec_start.x = cur_out.x;
@@ -891,30 +898,30 @@ bool handle_action(Point the_point,EventRecord event) {
 		
 	}
 	if (overall_mode < MODE_MAIN_SCREEN) {
-		if ((PtInRect (the_point, &border_rect[0])) & (cen_y > ((editing_town == true) ? 4 : 3))) {
+		if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
 			cen_y--;
-			if ((event.modifiers & controlKey) != 0) 
+			if(ctrl_hit)
 				cen_y = ((editing_town == true) ? 4 : 3);
 			need_redraw = true;
 			mouse_button_held = true;
 		}
-		if ((PtInRect (the_point, &border_rect[1])) & (cen_x > ((editing_town == true) ? 4 : 3))) {
+		if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
 			cen_x--;
-			if ((event.modifiers & controlKey) != 0) 
+			if(ctrl_hit)
 				cen_x = ((editing_town == true) ? 4 : 3);
 			need_redraw = true;
 			mouse_button_held = true;
 		}
-		if ((PtInRect (the_point, &border_rect[2])) & (cen_y < ((editing_town == true) ? town->max_dim() - 5 : 44))) {
+		if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim() - 5 : 44))) {
 			cen_y++;
-			if ((event.modifiers & controlKey) != 0) 
+			if(ctrl_hit)
 				cen_y = (editing_town == true) ? town->max_dim() - 5 : 44;
 			need_redraw = true;
 			mouse_button_held = true;
 		}
-		if ((PtInRect (the_point, &border_rect[3])) & (cen_x < ((editing_town == true) ? town->max_dim() - 5 : 44))) {
+		if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim() - 5 : 44))) {
 			cen_x++;
-			if ((event.modifiers & controlKey) != 0) 
+			if(ctrl_hit)
 				cen_x = (editing_town == true) ? town->max_dim() - 5 : 44;
 			need_redraw = true;
 			mouse_button_held = true;
@@ -928,13 +935,13 @@ bool handle_action(Point the_point,EventRecord event) {
 	
 	if ((mouse_button_held == false) && ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES))) {
 		cur_point = the_point;
-		cur_point.h -= RIGHT_AREA_UL_X;
-		cur_point.v -= RIGHT_AREA_UL_Y;
+		cur_point.x -= RIGHT_AREA_UL_X;
+		cur_point.y -= RIGHT_AREA_UL_Y;
 		
 		for (i = 0; i < 256; i++)
-			if (PtInRect(cur_point,&terrain_rects[i])) {
+			if(cur_point.in(terrain_rects[i])) {
 				temp_rect = terrain_rects[i];
-				OffsetRect(&temp_rect,RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y );
+				temp_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y );
 				flash_rect(temp_rect);
 				if (overall_mode < MODE_MAIN_SCREEN) {
 					set_new_terrain(i);
@@ -946,14 +953,14 @@ bool handle_action(Point the_point,EventRecord event) {
 				place_location();
 			}
 		cur_point2 = cur_point;
-		cur_point2.h -= 5;
-		cur_point2.v -= terrain_rects[255].bottom + 5;
+		cur_point2.x -= 5;
+		cur_point2.y -= terrain_rects[255].bottom + 5;
 		for (i = 0; i < 10; i++)
 			for (j = 0; j < 6; j++) {
-				if ((good_palette_buttons[editing_town][j][i] > 0) && (mouse_button_held == false) && (PtInRect(cur_point2,&palette_buttons[i][j]))
+				if ((good_palette_buttons[editing_town][j][i] > 0) && (mouse_button_held == false) && (cur_point2.in(palette_buttons[i][j]))
 					&& /*((j < 3) || (editing_town == true)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
 					temp_rect = palette_buttons[i][j];
-					OffsetRect(&temp_rect,RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
+					temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
 					flash_rect(temp_rect);
 					switch (i + 100 * j) {
 						case 0:
@@ -1238,13 +1245,12 @@ bool handle_action(Point the_point,EventRecord event) {
 }
 
 
-void flash_rect(Rect to_flash) {
+void flash_rect(RECT to_flash) {
 	unsigned long dummy;
-	
-	InvertRect (&to_flash);
+	// TODO: Determine a good way to do this
+//	InvertRect (&to_flash);
 	play_sound(37);
-	Delay(10,&dummy);
-	InvertRect (&to_flash);
+	sf::sleep(time_in_ticks(10));
 	
 }
 
@@ -1278,21 +1284,21 @@ void set_new_terrain(ter_num_t selected_terrain) {
 //	else if (selected_terrain < 5)
 //		current_ground = 2;
 	current_ground = get_ground_from_ter(selected_terrain);
-	p2cstr(current_string);
 	set_string((char*)current_string,(char*)scenario.ter_types[current_terrain_type].name.c_str());
 }
 
-void handle_keystroke(char chr,char chr2,EventRecord event) {
+void handle_keystroke(char chr,char chr2,sf::Event event) {
 	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
-	//	Point terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
+	//	location terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
 	//							{120,185},{150,185},{180,185},
 	//								{120,155},{150,155},{180,155}};
-	Point terrain_click[10] = {{0,0},		// 0
-		{353,10},{353,150},{353,270},	// 1 2 3
-		{190,10},{190,150},{190,270},	// 4 5 6
-		{21, 10},{21, 150},{21,270},	// 7 8 9
+	// TODO: The repetition of location shouldn't be needed here!
+	location terrain_click[10] = {location{0,0},		// 0
+		location{353,10},location{353,150},location{353,270},	// 1 2 3
+		location{190,10},location{190,150},location{190,270},	// 4 5 6
+		location{21, 10},location{21, 150},location{21,270},	// 7 8 9
 	};
-	Point pass_point;
+	location pass_point;
 	short i,j,store_ter;
 	bool are_done;
 	
@@ -1374,23 +1380,23 @@ void handle_keystroke(char chr,char chr2,EventRecord event) {
 			 overall_mode = 8;
 			 break;*/
 		case 'D':
-			pass_point.h = RIGHT_AREA_UL_X + 6 + palette_buttons[0][0].left;
-			pass_point.v = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[0][0].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[0][0].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[0][0].top;
 			handle_action(pass_point,event);
 			break;
 		case 'R':
-			pass_point.h = RIGHT_AREA_UL_X + 6 + palette_buttons[7][0].left;
-			pass_point.v = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[7][0].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[7][0].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[7][0].top;
 			handle_action(pass_point,event);
 			break;
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point.h = RIGHT_AREA_UL_X + 6 + palette_buttons[chr - 49][4].left;
-			pass_point.v = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[chr - 48][4].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[chr - 49][4].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[chr - 48][4].top;
 			handle_action(pass_point,event);
 			break;
 		case '0':
-			pass_point.h = RIGHT_AREA_UL_X + 6 + palette_buttons[7][4].left;
-			pass_point.v = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[7][4].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[7][4].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[7][4].top;
 			handle_action(pass_point,event);
 			break;
 		case 'I':
@@ -1970,7 +1976,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		else {
 			town->terrain(l.x,l.y) = current_ground;
 			if (sign_error_received == false) {
-				give_error("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.","",0);
+				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
 				sign_error_received = true;
 			}
 		}
@@ -1978,7 +1984,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	}
 	if ((scenario.ter_types[terrain_type].special == TER_SPEC_IS_A_SIGN) && (editing_town == false)) { /// it's a sign
 		if ((l.x == 0) || (l.x == 47) || (l.y == 0) || (l.y == 47)) {
-			fancy_choice_dialog(870,0);
+			cChoiceDlog("not-at-edge.xml").show();
 			mouse_button_held = false;
 			return;
 		}
@@ -2005,7 +2011,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		else {
 			current_terrain.terrain[l.x][l.y] = current_ground;
 			if (sign_error_received == false) {
-				give_error("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.","",0);
+				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
 				sign_error_received = true;
 			}
 		}
@@ -2941,7 +2947,7 @@ void place_items_in_town() {
 				}
 		}
 	if (place_failed == true)
-		give_error("Not all of the random items could be placed. The preset item per town limit of 64 was reached.","",0);
+		giveError("Not all of the random items could be placed. The preset item per town limit of 64 was reached.");
 	draw_terrain();
 }
 
@@ -2957,7 +2963,7 @@ void place_edit_special(location loc) {
 		if (i < 500) { // new special
 			spec = get_fresh_spec(2);
 			if (spec < 0) {
-				give_error("You are out of special nodes in this town. Select Edit Special Nodes from the Town menu to clear out some of the special nodes.","",0);
+				giveError("You are out of special nodes in this town. Select Edit Special Nodes from the Town menu to clear out some of the special nodes.");
 				return;
 			}
 			for (i = 0; i < 50; i++)
@@ -2971,7 +2977,7 @@ void place_edit_special(location loc) {
 					i = 500;
 				}
 			if (i < 500) {
-				give_error("Each town can have at most 50 locations with special encounters. You'll need to erase some special spaces before you can place more.","",0);
+				giveError("Each town can have at most 50 locations with special encounters. You'll need to erase some special spaces before you can place more.");
 				return;
 			}
 		}
@@ -2979,7 +2985,7 @@ void place_edit_special(location loc) {
 	
 	if (editing_town == false) {
 		if ((loc.x == 0) || (loc.x == 47) || (loc.y == 0) || (loc.y == 47)) {
-			fancy_choice_dialog(870,0);
+			cChoiceDlog("not-at-edge.xml").show();
 			return;
 		}
 		for (i = 0; i < 18; i++)
@@ -2990,7 +2996,7 @@ void place_edit_special(location loc) {
 		if (i < 500) { // new special
 			spec = get_fresh_spec(1);
 			if (spec < 0) {
-				give_error("You are out of special nodes in this outdoor section. Select Edit Special Nodes from the Outdoor menu to clear out some of the special nodes.","",0);
+				giveError("You are out of special nodes in this outdoor section. Select Edit Special Nodes from the Outdoor menu to clear out some of the special nodes.");
 				return;
 			}
 			for (i = 0; i < 18; i++)
@@ -3004,7 +3010,7 @@ void place_edit_special(location loc) {
 					i = 500;
 				}
 			if (i < 500) {
-				give_error("Each outdoor can have at most 18 locations with special encounters. You'll need to erase some special spaces before you can place more.","",0);
+				giveError("Each outdoor can have at most 18 locations with special encounters. You'll need to erase some special spaces before you can place more.");
 				return;
 			}
 		}
@@ -3033,12 +3039,12 @@ void set_special(location spot_hit) {
 					x = 500;
 				}
 			if (x < 500)
-				give_error("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.","",0);
+				giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
 		}
 	}
 	if (editing_town == false) {
 		if ((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
-			fancy_choice_dialog(870,0);
+			cChoiceDlog("not-at-edge.xml").show();
 			return;
 		}
 		for (x = 0; x < 18; x++)
@@ -3058,7 +3064,7 @@ void set_special(location spot_hit) {
 					x = 500;
 				}
 			if (x < 500)
-				give_error("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.","",0);
+				giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
 		}
 	}
 	
@@ -3070,7 +3076,7 @@ void town_entry(location spot_hit) {
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
 	if (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) {
-		give_error("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.","",0);
+		giveError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
 	// clean up old town entrys
@@ -3097,7 +3103,7 @@ void town_entry(location spot_hit) {
 				x = 500;
 			}
 		if (y == -2)
-			give_error("You can't set more than 8 town entrances in any outdoor section.","",0);
+			giveError("You can't set more than 8 town entrances in any outdoor section.");
 	}
 }
 
@@ -3150,10 +3156,9 @@ void set_up_main_screen() {
 	//set_lb(NLS - 2,1,"Copyright 1997",0);
 	set_lb(NLS - 1,1,"Copyright 1997, All rights reserved.",0);
 	overall_mode = MODE_MAIN_SCREEN;
-	ShowControl(right_sbar);
+	right_sbar->show();
 	shut_down_menus(4);
 	shut_down_menus(3);
-	DrawMenuBar();
 	redraw_screen();
 	//draw_main_screen();
 }
@@ -3175,9 +3180,7 @@ void start_town_edit() {
 	set_up_terrain_buttons();
 	shut_down_menus(4);
 	shut_down_menus(2);
-	DrawMenuBar();
-	HideControl(right_sbar);
-	redraw_screen();
+	right_sbar->hide();
 	set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 	place_location();
 	copied_spec = -1;
@@ -3204,10 +3207,9 @@ void start_out_edit() {
 	overall_mode = MODE_DRAWING;
 	editing_town = false;
 	set_up_terrain_buttons();
-	HideControl(right_sbar);
+	right_sbar->hide();
 	shut_down_menus(4);
 	shut_down_menus(1);
-	DrawMenuBar();
 	redraw_screen();
 	set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 	place_location();
@@ -3220,71 +3222,8 @@ void start_out_edit() {
 				current_ground = 2;
 }
 
-// mode 0 - initial shut down, 1 - no town, 2 - no out, 3 - no town or out 4 - all menus on
-void shut_down_menus(short mode) {
-	MenuHandle cur_menu;
-	short i;
-	
-	if (mode == 0) {
-		cur_menu = GetMenuHandle(600);
-		DisableMenuItem(cur_menu,mode );
-		cur_menu = GetMenuHandle(650);
-		DisableMenuItem(cur_menu,mode );
-		cur_menu = GetMenuHandle(651);
-		DisableMenuItem(cur_menu,mode );
-		for (i = 0; i < 5; i++) {
-			cur_menu = GetMenuHandle(700 + i);
-			DisableMenuItem(cur_menu,mode );
-		}
-		for (i = 0; i < 4; i++) {
-			cur_menu = GetMenuHandle(750 + i);
-			DisableMenuItem(cur_menu,mode);
-		}
-	}
-	if  (mode == 4) {
-		cur_menu = GetMenuHandle(550);
-		EnableMenuItem(cur_menu,2 );
-		cur_menu = GetMenuHandle(600);
-		EnableMenuItem(cur_menu,0 );
-		cur_menu = GetMenuHandle(650);
-		EnableMenuItem(cur_menu,0 );
-		for (i = 1; i < 12; i++)
-			EnableMenuItem(cur_menu,i);
-		cur_menu = GetMenuHandle(651);
-		EnableMenuItem(cur_menu,0 );
-		for (i = 1; i < 9; i++)
-			EnableMenuItem(cur_menu,i);
-		for (i = 0; i < 5; i++) {
-			cur_menu = GetMenuHandle(700 + i);
-			EnableMenuItem(cur_menu,0 );
-		}
-		for (i = 0; i < 4; i++) {
-			cur_menu = GetMenuHandle(750 + i);
-			EnableMenuItem(cur_menu,0);
-		}
-	}
-	if ((mode == 1) || (mode == 3)) {
-		cur_menu = GetMenuHandle(650); //DisableMenuItem(cur_menu,0);
-		for (i = 1; i < 12; i++)
-			DisableMenuItem(cur_menu,i);
-		for (i = 0; i < 5; i++) {
-			cur_menu = GetMenuHandle(700 + i);
-			DisableMenuItem(cur_menu,0);
-		}
-		for (i = 0; i < 4; i++) {
-			cur_menu = GetMenuHandle(750 + i);
-			DisableMenuItem(cur_menu,0);
-		}
-	}
-	if ((mode == 2) || (mode == 3)) {
-		cur_menu = GetMenuHandle(651); //DisableMenuItem(cur_menu,0);
-		for (i = 1; i < 9; i++)
-			DisableMenuItem(cur_menu,i);
-	}
-}
-
 void start_terrain_editing() {
-	HideControl(right_sbar);
+	right_sbar->hide();
 	overall_mode = MODE_EDIT_TYPES;
 	set_up_terrain_buttons();
 	place_location();
@@ -3304,18 +3243,18 @@ void start_terrain_editing() {
 
 void start_monster_editing(short just_redo_text) {
 	short i;
-	Str255 str;
+	char str[256];
 	bool draw_full = false;
 	
 	if (overall_mode == MODE_EDIT_TYPES)
 		draw_full = true;
 	if (just_redo_text == 0) {
 		overall_mode = MODE_MAIN_SCREEN;
-		ShowControl(right_sbar);
-		SetControlValue(right_sbar,0);
+		right_sbar->show();
+		right_sbar->setPosition(0);
 		
 		reset_rb();
-		SetControlMaximum(right_sbar,255 - NRSONPAGE);
+		right_sbar->setMaximum(255 - NRSONPAGE);
 	}
 	for (i = 1; i < 256; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_monsters[i].m_name.c_str());
@@ -3330,7 +3269,7 @@ void start_monster_editing(short just_redo_text) {
 
 void start_item_editing(short just_redo_text) {
 	short i;
-	Str255 str;
+	char str[256];
 	bool draw_full = false;
 	
 	if (just_redo_text == 0) {
@@ -3339,11 +3278,11 @@ void start_item_editing(short just_redo_text) {
 		if (overall_mode == MODE_EDIT_TYPES)
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
-		ShowControl(right_sbar);
+		right_sbar->show();
 		
-		SetControlValue(right_sbar,0);
+		right_sbar->setPosition(0);
 		reset_rb();
-		SetControlMaximum(right_sbar,400 - NRSONPAGE);
+		right_sbar->setMaximum(400 - NRSONPAGE);
 	}
 	for (i = 0; i < 400; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_items[i].full_name.c_str());
@@ -3358,7 +3297,7 @@ void start_item_editing(short just_redo_text) {
 
 void start_special_item_editing() {
 	short i;
-	Str255 str;
+	char str[256];
 	bool draw_full = false;
 	
 	if (overall_mode < MODE_MAIN_SCREEN)
@@ -3366,11 +3305,11 @@ void start_special_item_editing() {
 	if (overall_mode == MODE_EDIT_TYPES)
 		draw_full = true;
 	overall_mode = MODE_MAIN_SCREEN;
-	ShowControl(right_sbar);
+	right_sbar->show();
 	
-	SetControlValue(right_sbar,0);
+	right_sbar->setPosition(0);
 	reset_rb();
-	SetControlMaximum(right_sbar,50 - NRSONPAGE);
+	right_sbar->setMaximum(50 - NRSONPAGE);
 	for (i = 0; i < 50; i++) {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_strs(60 + i * 2));
 		set_rb(i,10000 + i,(char *) str,0);
@@ -3386,7 +3325,7 @@ void start_special_item_editing() {
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(short mode,short just_redo_text) {
 	short i,pos;
-	Str255 str;
+	char str[256];
 	short num_strs[3] = {260,108,140};
 	bool draw_full = false;
 	
@@ -3396,10 +3335,10 @@ void start_string_editing(short mode,short just_redo_text) {
 		if (overall_mode == MODE_EDIT_TYPES)
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
-		ShowControl(right_sbar);
+		right_sbar->show();
 		
 		reset_rb();
-		SetControlMaximum(right_sbar,num_strs[mode] - NRSONPAGE);
+		right_sbar->setMaximum(num_strs[mode] - NRSONPAGE);
 	}
 	for (i = 0; i < num_strs[mode]; i++) {
 		switch (mode) {
@@ -3418,7 +3357,7 @@ void start_string_editing(short mode,short just_redo_text) {
 		}
 	}
 	
-	pos = GetControlValue(right_sbar);
+	pos = right_sbar->getPosition();
 	if (draw_full == true)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
@@ -3430,7 +3369,8 @@ void start_string_editing(short mode,short just_redo_text) {
 // if just_redo_text not 0, simply need to update text portions
 void start_special_editing(short mode,short just_redo_text) {
 	short i;
-	Str255 str,s2;
+	char str[256];
+	std::string s2;
 	short num_specs[3] = {256,60,100};
 	bool draw_full = false;
 	
@@ -3440,27 +3380,27 @@ void start_special_editing(short mode,short just_redo_text) {
 		if (overall_mode == MODE_EDIT_TYPES)
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
-		ShowControl(right_sbar);
+		right_sbar->show();
 		
 		reset_rb();
-		SetControlMaximum(right_sbar,num_specs[mode] - NRSONPAGE);
+		right_sbar->setMaximum(num_specs[mode] - NRSONPAGE);
 	}
 	
 	for (i = 0; i < num_specs[mode]; i++) {
 		switch (mode) {
 			case 0:
-				get_str(s2,22,scenario.scen_specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				s2 = get_str("special-node-names",scenario.scen_specials[i].type + 1);
+				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,4000 + i,(char *) str,0);
 				break;
 			case 1:
-				get_str(s2,22,current_terrain.specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				s2 = get_str("special-node-names",current_terrain.specials[i].type + 1);
+				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,5000 + i,(char *) str,0);
 				break;
 			case 2:
-				get_str(s2,22,town->specials[i].type + 1);
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) s2);
+				s2 = get_str("special-node-names",town->specials[i].type + 1);
+				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,6000 + i,(char *) str,0);
 				break;
 		}
@@ -3475,7 +3415,7 @@ void start_special_editing(short mode,short just_redo_text) {
 // if restoring is 1, this is just a redraw, so don't move scroll bar position
 void start_dialogue_editing(short restoring) {
 	short i,j;
-	Str255 str;
+	char str[256];
 	char s[15] = "    ,      ";
 	bool draw_full = false;
 	
@@ -3484,12 +3424,12 @@ void start_dialogue_editing(short restoring) {
 	if (overall_mode == MODE_EDIT_TYPES)
 		draw_full = true;
 	overall_mode = MODE_MAIN_SCREEN;
-	ShowControl(right_sbar);
+	right_sbar->show();
 	
 	if (restoring == 0) {
-		SetControlValue(right_sbar,0);
+		right_sbar->setPosition(0);
 		reset_rb();
-		SetControlMaximum(right_sbar,70 - NRSONPAGE);
+		right_sbar->setMaximum(70 - NRSONPAGE);
 	}
 	for (i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
@@ -3512,54 +3452,22 @@ void start_dialogue_editing(short restoring) {
 	set_lb(NLS - 3,0,"",1);
 }
 
-bool save_check(short which_dlog) {
-	short choice;
+bool save_check(std::string which_dlog) {
+	std::string choice;
 	
 	if (change_made == false)
 		return true;
 	change_made = false;
-	choice = fancy_choice_dialog(which_dlog,0);
-	if (choice == 3)
+	choice = cChoiceDlog(which_dlog, {"save","revert","cancel"}).show();
+	if (choice == "okay")
 		return true;
-	if (choice == 2) {
+	if (choice == "cancel") {
 		change_made = false;
 		return false;
 	}
 	modify_lists();
 	save_scenario();
 	return true;
-}
-
-void update_item_menu() {
-	short i,j;
-	MenuHandle item_menu[5],mon_menu[4];
-	Str255 item_name;
-	
-	for (i = 0; i < 5; i++)
-		item_menu[i] = GetMenuHandle(700 + i);
-	for (j = 0; j < 5; j++) {
-		for (i = 0; i < 80; i++) {
-			DeleteMenuItem(item_menu[j],1);
-		}
-		for (i = 0; i < 80; i++) {
-			sprintf((char *) item_name, "%s",scenario.scen_items[i + j * 80].full_name.c_str());
-			c2pstr((char*) item_name);
-			AppendMenu(item_menu[j],item_name);
-		} 
-	}
-	for (i = 0; i < 4; i++)
-		mon_menu[i] = GetMenuHandle(750 + i);
-	for (j = 0; j < 4; j++) {
-		for (i = 0; i < 64; i++) {
-			DeleteMenuItem(mon_menu[j],1);
-		}
-		for (i = 0; i < 64; i++) {
-			sprintf((char *) item_name, "%s",scenario.scen_monsters[i + j * 64].m_name.c_str());
-			c2pstr((char*) item_name);
-			AppendMenu(mon_menu[j],item_name);
-		} 
-	}
-	
 }
 
 bool is_lava(short x,short y) {

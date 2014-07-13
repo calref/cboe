@@ -9,6 +9,10 @@ body {
 	margin: 0px;
 }
 
+script {
+	display: none;
+}
+
 .debug {
 	border: dotted black thin;
 }

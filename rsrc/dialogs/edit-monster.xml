@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='name' top='30' left='180' width='186' height='16'/>
+	<field name='pic' top='57' left='140' width='52' height='16'/>
+	<field name='level' top='82' left='206' width='52' height='16'/>
+	<field name='health' top='106' left='206' width='52' height='16'/>
+	<field name='armor' top='130' left='206' width='52' height='16'/>
+	<field name='skill' top='154' left='206' width='52' height='16'/>
+	<field name='speed' top='178' left='206' width='52' height='16'/>
+	<field name='mage' top='202' left='206' width='51' height='16'/>
+	<field name='priest' top='226' left='206' width='51' height='16'/>
+	<field name='dice1' top='101' left='501' width='52' height='16'/>
+	<field name='sides1' top='125' left='501' width='52' height='16'/>
+	<field name='dice2' top='149' left='501' width='52' height='16'/>
+	<field name='sides2' top='173' left='501' width='52' height='16'/>
+	<field name='dice3' top='197' left='501' width='52' height='16'/>
+	<field name='sides3' top='221' left='501' width='52' height='16'/>
+	<field name='talk' top='327' left='168' width='77' height='16'/>
+	<field name='treas' top='273' left='513' width='55' height='16'/>
+	<button name='okay' type='regular' top='418' left='512'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='418' left='439'>Cancel</button>
+	<button name='left' type='left' def-key='left' top='388' left='335'/>
+	<button name='right' type='right' def-key='right' top='388' left='398'/>
+	<button name='abils' type='large' top='388' left='473'>Abilities</button>
+	<button name='pickicon' type='large' top='53' left='201'>Select Icon</button>
+	<button name='picktype' type='regular' top='250' left='264'>Choose</button>
+	<button name='picktype1' type='regular' top='275' left='264'>Choose</button>
+	<button name='picktype2' type='regular' top='300' left='264'>Choose</button>
+	<button name='picktalk' type='regular' top='326' left='264'>Choose</button>
+	<group name='attitude'>
+		<led name='docile' top='355' left='358' width='100'>Friendly, Docile</led>
+		<led name='A' top='370' left='358' width='100'>Hostile, Type A</led>
+		<led name='friendly' top='355' left='490' width='100'>Friendly, Will Fight</led>
+		<led name='B' top='370' left='490' width='100'>Hostile, Type B</led>
+	</group>
+	<text name='num' top='8' left='334' width='37' height='14'/>
+	<pict name='icon' type='monst' num='0' top='8' left='8'/>
+	<text size='large' top='6' left='44' width='158' height='16'>Edit Monster Statistics</text>
+	<text top='8' left='216' width='111' height='16'>Monster number:</text>
+	<text top='390' left='4' width='294' height='54'>
+		Enter properties for this monster type.
+		For a detailed description of the fields, see the documentation.
+		To edit monster’s special abilities, press the Edit Abilities button.
+	</text>
+	<text top='31' left='44' width='120' height='14'>Monster type name:</text>
+	<text top='58' left='8' width='120' height='14'>Monster picture:</text>
+	<text name='w' top='59' left='334' width='86' height='14'>Width = </text>
+	<text name='h' top='59' left='426' width='86' height='14'>Height = </text>
+	<text name='type' top='253' left='134' width='120' height='14'/>
+	<text name='type1' top='278' left='134' width='120' height='14'/>
+	<text name='type2' top='303' left='134' width='120' height='14'/>
+	<text top='253' left='8' width='120' height='14'>Monster type:</text>
+	<text top='278' left='8' width='120' height='14'>Attack 1 type:</text>
+	<text top='303' left='8' width='120' height='14'>Attack #2,3 type:</text>
+	<text top='329' left='8' width='152' height='14'>Default talking picture:</text>
+	<!-- Note: This originally had width=202 -->
+	<text top='352' left='8' width='302' height='14'>Default attitude:
+		(attitude creature has when you place it)
+	</text>
+	<text size='large' top='250' left='343' width='158' height='16'>Treasure:</text>
+	<text top='275' left='343' width='162' height='14'>Monster treasure: (0-4)</text>
+	<text top='83' left='8' width='179' height='14'>Monster level: (0 - 40)</text>
+	<text top='107' left='8' width='179' height='14'>Monster health: (0 - 2500)</text>
+	<text top='131' left='8' width='179' height='14'>Monster armor: (0 - 50)</text>
+	<text top='155' left='8' width='179' height='14'>Monster skill: (0 - 40)</text>
+	<text top='179' left='8' width='179' height='14'>Monster speed: (1-12)</text>
+	<text top='203' left='8' width='179' height='14'>Monster magic spells: (0 - 7)</text>
+	<text top='227' left='8' width='179' height='14'>Monster priest spells: (0 - 7)</text>
+	<text size='large' top='82' left='273' width='158' height='16'>Hand to hand combat:</text>
+	<text top='102' left='283' width='214' height='14'>Attack 1 number of dice: (0 - 20)</text>
+	<text top='126' left='283' width='214' height='14'>Attack 1 number of sides: (1-50)</text>
+	<text top='150' left='283' width='214' height='14'>Attack 2 number of dice: (0 - 20)</text>
+	<text top='174' left='283' width='214' height='14'>Attack 2 number of sides: (1-50)</text>
+	<text top='198' left='283' width='214' height='14'>Attack 3 number of dice (0 - 20)</text>
+	<text top='222' left='283' width='214' height='14'>Attack 3 number of sides: (1-50)</text>
+</dialog>

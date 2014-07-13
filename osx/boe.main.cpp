@@ -135,13 +135,6 @@ short store_current_pc = 0;
 //stored_items_list_type stored_items[3];
 //stored_outdoor_maps_type o_maps;
 
-// System key
-#ifdef __APPLE__
-bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::system;
-#else
-bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::control;
-#endif
-
 sf::Clock animTimer;
 
 // Special stuff booleans

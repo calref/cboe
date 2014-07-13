@@ -3,7 +3,6 @@
 //#include "scen.consts.h"
 
 #define DRAG_EDGE		15
-#define IN_FRONT	(WindowPtr)-1L
 
 #define	DISPLAY_LEFT	23
 #define	DISPLAY_TOP		23
@@ -27,11 +26,6 @@
 
 #define	TER_RECT_UL_X	6
 #define	TER_RECT_UL_Y	19 // Formerly 25
-
-#define	CDGT	cd_retrieve_text_edit_str
-#define	CDGN	cd_retrieve_text_edit_num
-#define	CDST	cd_set_text_edit_str
-#define	CDSN	cd_set_text_edit_num
 
 enum eScenMode {
 	MODE_DRAWING = 0,
@@ -119,7 +113,7 @@ enum eDrawMode {
 //	location	sign_locs[8];
 //	out_wandering_type	wandering[4],special_enc[4];
 //	location	wandering_locs[4];
-//	Rect info_rect[8];
+//	RECT info_rect[8];
 //	unsigned char strlens[180];
 //	cSpecial specials[60];
 //	} outdoor_record_type;
@@ -160,7 +154,7 @@ enum eDrawMode {
 //	location start_locs[4];
 //	location exit_locs[4];
 //	short exit_specs[4];
-//	Rect in_town_rect;
+//	RECT in_town_rect;
 //	preset_item_type preset_items[64];
 //	short max_num_monst;
 //	preset_field_type preset_fields[50];
@@ -175,21 +169,21 @@ enum eDrawMode {
 //
 //typedef struct {
 //	unsigned char terrain[64][64];
-//	Rect room_rect[16];
+//	RECT room_rect[16];
 //	creature_start_type creatures[60];
 //	unsigned char lighting[8][64];
 //	} big_tr_type;
 //
 //typedef struct {
 //	unsigned char terrain[48][48];
-//	Rect room_rect[16];
+//	RECT room_rect[16];
 //	creature_start_type creatures[40];
 //	unsigned char lighting[6][48];
 //	} ave_tr_type;
 //	
 //typedef struct {
 //	unsigned char terrain[32][32];
-//	Rect room_rect[16];
+//	RECT room_rect[16];
 //	creature_start_type creatures[30];
 //	unsigned char lighting[4][32];
 //	} tiny_tr_type;	
@@ -203,7 +197,7 @@ enum eDrawMode {
 //	} city_block_type;
 //	
 //typedef struct {
-//	Rect what_rect;
+//	RECT what_rect;
 //	unsigned char ter_type;
 //	unsigned char hollow;
 //	} city_ter_rect_type;

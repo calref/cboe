@@ -16,6 +16,7 @@
 #include "graphtool.h"
 
 #include <cmath>
+#include <climits>
 
 #include "restypes.hpp"
 
@@ -229,12 +230,14 @@ bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, locati
 	return result;
 }
 
-void cLed::setFormat(eFormat prop __attribute__((unused)), short val __attribute__((unused))) throw(xUnsupportedProp){
-	throw xUnsupportedProp(prop);
+void cLed::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+	if(prop == TXT_FONT) textFont = (eFont) val;
+	else throw xUnsupportedProp(prop);
 }
 
-short cLed::getFormat(eFormat prop __attribute__((unused))) throw(xUnsupportedProp){
-	throw xUnsupportedProp(prop);
+short cLed::getFormat(eFormat prop) throw(xUnsupportedProp){
+	if(prop == TXT_FONT) return textFont;
+	else throw xUnsupportedProp(prop);
 }
 
 void cLed::draw(){
@@ -277,16 +280,20 @@ cLedGroup::~cLedGroup(){
 
 void cLedGroup::recalcRect(){
 	ledIter iter = choices.begin();
+	frame = {INT_MAX, INT_MAX, 0, 0};
 	while(iter != choices.end()){
 		RECT otherFrame = iter->second->getBounds();
 		if(otherFrame.right > frame.right)
 			frame.right = otherFrame.right;
 		if(otherFrame.bottom > frame.bottom)
 			frame.bottom = otherFrame.bottom;
+		if(otherFrame.left < frame.left)
+			frame.left = otherFrame.left;
+		if(otherFrame.top < frame.top)
+			frame.top = otherFrame.top;
 		iter++;
 	}
-	frame.right += 6;
-	frame.bottom += 6;
+	frame.inset(-6,-6);
 }
 
 /** A click handler is called whenever a click is received, even on the currently selected element. */
@@ -336,17 +343,21 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, l
 	
 	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods,where)){
 		eLedState a, b;
-		a = choices[curSelect]->getState();
-		b = choices[which_clicked]->getState();
-		choices[curSelect]->setState(led_off);
-		choices[which_clicked]->setState(led_red);
-		if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
-			choices[curSelect]->setState(a);
-			choices[which_clicked]->setState(b);
-			return false;
+		if(curSelect.empty()) a = led_off;
+		else {
+			a = choices[curSelect]->getState();
+			choices[curSelect]->setState(led_off);
+			if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
+				choices[curSelect]->setState(a);
+				choices[which_clicked]->setState(b);
+				return false;
+			}
 		}
+		b = choices[which_clicked]->getState();
+		choices[which_clicked]->setState(led_red);
 		if(!choices[which_clicked]->triggerFocusHandler(me,which_clicked,false)){
-			choices[curSelect]->setState(a);
+			if(!curSelect.empty())
+				choices[curSelect]->setState(a);
 			choices[which_clicked]->setState(b);
 			return false;
 		}

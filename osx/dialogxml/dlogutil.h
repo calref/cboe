@@ -61,7 +61,7 @@ typedef boost::optional<bbtt> cBasicButtonType;
 namespace {cBasicButtonType null_btn = boost::none;}
 #ifndef BTNS_DEFINED
 extern bbtt basic_buttons[];
-extern size_t available_btns[];
+extern size_t available_btns[53];
 #endif
 
 class cThreeChoice : public cChoiceDlog {
@@ -73,6 +73,7 @@ class cThreeChoice : public cChoiceDlog {
 	void init_pict(pic_num_t pic);
 	const ePicType type;
 public:
+	cThreeChoice(std::vector<std::string>& strings, cBasicButtonType button, pic_num_t pic, ePicType t, cDialog* parent = NULL);
 	cThreeChoice(std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = NULL);
 	cThreeChoice(std::vector<std::string>& strings, std::array<short, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = NULL);
 	std::string show();
@@ -89,9 +90,10 @@ class cStringChoice {
 	std::vector<std::string> strings;
 	size_t page, cur;
 public:
-	explicit cStringChoice(std::vector<std::string>& strs, cDialog* parent = NULL);
-	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, cDialog* parent = NULL);
+	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = NULL);
+	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);
 	size_t show(std::string select); // returns the _index_ of the chosen string, relative to begin
+	size_t show(size_t selectedIndex);
 	// returns strs.size() if the user cancels
 };
 
@@ -104,13 +106,13 @@ class cPictChoice {
 	bool onCancel(cDialog& me, std::string id);
 	bool onOkay(cDialog& me, std::string id);
 	void fillPage();
-	std::vector<pic_num_t> picts;
-	const ePicType type;
+	std::vector<std::pair<pic_num_t,ePicType>> picts;
 	size_t page, cur;
 public:
 	cPictChoice(std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = NULL);
+	cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = NULL);
 	cPictChoice(std::vector<pic_num_t>::iterator begin, std::vector<pic_num_t>::iterator end, ePicType t, cDialog* parent = NULL);
-	cPictChoice(pic_num_t begin, pic_num_t end, ePicType t, cDialog* parent = NULL);
+	cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent = NULL);
 	cDialog* operator->();
 	pic_num_t show(pic_num_t fallback, pic_num_t cur_sel); // returns the _number_ of the chosen picture, _not_ the index; there's no way to distinguish between duplicates
 	// returns fallback if the user cancels

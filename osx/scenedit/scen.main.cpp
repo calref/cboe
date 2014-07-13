@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <thread>
 
 #include "scen.global.h"
 #include "classes.h"
@@ -7,7 +8,6 @@
 #include "scen.graphics.h"
 #include "scen.actions.h"
 #include "scen.fileio.h"
-#include "dlgtool.h"
 #include "scen.btnmg.h"
 #include "soundtool.h"
 #include "scen.townout.h"
@@ -15,14 +15,20 @@
 #include "scen.keydlgs.h"
 #include "mathutil.h"
 #include "fileio.h"
+#include "scrollbar.h"
+#include "winutil.h"
+#include "cursors.h"
+#include "dlogutil.h"
+#include "scen.menus.h"
+
+#include <CoreFoundation/CFByteOrder.h>
 
 cUniverse univ; // not needed; just to silence the compiler
 
 /* Globals */
-Rect	windRect, Drag_Rect;
 bool  All_Done = false; // delete play_sounds
-EventRecord	event;
-WindowPtr	mainPtr;
+sf::Event event;
+sf::RenderWindow mainPtr;
 cTown* town = NULL;
 //big_tr_type t_d;
 bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
@@ -31,10 +37,8 @@ short cur_viewing_mode = 0;
 //short max_dim[3] = {64,48,32};
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
-Handle menu_bar_handle;
-ControlHandle right_sbar;
+std::shared_ptr<cScrollbar> right_sbar;
 short mode_count = 0;
-MenuHandle apple_menu;
 cOutdoors current_terrain;
 //cSpeech talking;
 //short given_password;
@@ -51,9 +55,7 @@ short cur_town;
 location cur_out;
 
 /* Prototypes */
-int main(void);
 void Initialize(void);
-void Set_Window_Drag_Bdry();
 void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
@@ -66,17 +68,13 @@ void handle_outdoor_menu(int item_hit);
 void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_help_menu(int item_hit);
-pascal void right_sbar_action(ControlHandle bar, short part);
 void Mouse_Pressed();
 void close_program();
 void ding();
-void set_pixel_depth();
-void restore_depth();
-void find_quickdraw() ;
 
 cScenario scenario;
 //piles_of_stuff_dumping_type *data_store;
-Rect right_sbar_rect;
+RECT right_sbar_rect;
 void check_for_intel();
 bool mac_is_intel;
 
@@ -85,7 +83,8 @@ bool mac_is_intel;
 //
 
 //Changed to ISO C specified argument and return type.
-int main() {
+int main(int argc, char* argv[]) {
+	init_menubar();
 	//outdoor_record_type dummy_outdoor, *store2;
 	
 	
@@ -94,14 +93,15 @@ int main() {
 	//create_file();
 	//ExitToShell();
 	
-	init_directories();
+	init_directories(argv[0]);
 	Initialize();
 	init_fileio();
 	init_snd_tool();
 	load_graphics();
 	
-	init_dialogs();
-	init_graph_tool(redraw_screen);
+	cDialog::init();
+	cDialog::defaultBackground = cDialog::BG_LIGHT;
+	init_graph_tool();
 	
 	cen_x = 18;
 	cen_y = 18;
@@ -115,32 +115,11 @@ int main() {
 	
 	make_cursor_sword();
 	
-	Set_Window_Drag_Bdry();
-	
 	Set_up_win();
 	init_screen_locs();
 	
 	//create_basic_scenario();
-	
-	menu_bar_handle = GetNewMBar(128);
-	if (menu_bar_handle == NULL) {
-		SysBeep(50);
-		SysBeep(50);
-		SysBeep(50);
-		ExitToShell();
-	}
-	SetMenuBar(menu_bar_handle);
-	DisposeHandle(menu_bar_handle);
-	
-	apple_menu = GetMenuHandle(500);
-	/*file_menu = GetMenuHandle(550);
-	 options_menu = GetMenuHandle(600);
-	 create_menu = GetMenuHandle(650);
-	 items_menu = GetMenuHandle(700);*/
-	
-	AppendResMenu(apple_menu, 'DRVR');
 	shut_down_menus(0);
-	DrawMenuBar();
 	
 	//update_item_menu();
 	
@@ -151,7 +130,6 @@ int main() {
 	//	modify_lists();
 	set_up_start_screen();
 	
-	TextFace(bold);
 	check_for_intel();
 	redraw_screen();
 	
@@ -169,11 +147,7 @@ int main() {
 //MW specified argument and return type.
 void Initialize(void) {
 	
-	Str255 tit = "  ";
-	
-	
-	/* Initialize all the needed managers. */
-	InitCursor();
+	char tit[256] = "  ";
 	
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
@@ -191,165 +165,114 @@ void Initialize(void) {
 	//	Make a new window for drawing in, and it must be a color window.  
 	//	The window is full screen size, made smaller to make it more visible.
 	//
-	BitMap bmap;
-	GetQDGlobalsScreenBits(&bmap);
-	windRect = bmap.bounds;
+	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
+	RECT windRect;
+	windRect.width() = mode.width;
+	windRect.height() = mode.height;
 	
-	find_quickdraw();
-	set_pixel_depth();
-	
-	//InsetRect(&windRect, 5, 34);
-	InsetRect(&windRect,(windRect.right - 584) / 2,(windRect.bottom - 420) / 2);
-	OffsetRect(&windRect,0,18);
-	mainPtr = NewCWindow(nil, &windRect, "\pBlades of Exile Scenario Editor", true, noGrowDocProc, 
-						 (WindowPtr) -1, false, 0);
-	GetWindowPortBounds(mainPtr,&windRect);
-	SetPortWindowPort(mainPtr);						/* set window to current graf port */
-	right_sbar_rect.top = RIGHT_AREA_UL_Y;
+	windRect.inset((windRect.right - 584) / 2,(windRect.bottom - 420) / 2);
+	windRect.offset(0,18);
+	// TODO: I think it should have a close button as well
+	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar);
+	mainPtr.setPosition(windRect.topLeft());
+	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT;
+	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
 	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-	right_sbar = NewControl(mainPtr,&right_sbar_rect,tit,true,0,0,0,scrollBarProc,1);
-	
+	right_sbar.reset(new cScrollbar(mainPtr));
+	right_sbar->setBounds(right_sbar_rect);
+	right_sbar->setPageSize(NRSONPAGE - 1);
+	right_sbar->hide();
 }
 
 void check_for_intel(){
-	long response;
-	OSErr err;
-	err = Gestalt(gestaltSysArchitecture,&response);
-	if(err != noErr){
-		printf("Gestalt error %i\n",err);
+	int response = CFByteOrderGetCurrent();
+	if(response == CFByteOrderUnknown){
+		printf("Gestalt error\n");
 		exit(1);
 	}
-	if(response == gestaltIntel) mac_is_intel = true;
+	if(response == CFByteOrderLittleEndian) mac_is_intel = true;
 	else mac_is_intel = false;
-}
-
-void Set_Window_Drag_Bdry() {
-	BitMap bmap;
-	GetQDGlobalsScreenBits(&bmap);
-	Drag_Rect = bmap.bounds;
-	//	Drag_Rect = (**(GrayRgn)).rgnBBox;
-	Drag_Rect.left += DRAG_EDGE;
-	Drag_Rect.right -= DRAG_EDGE;
-	Drag_Rect.bottom -= DRAG_EDGE;
 }
 
 void Handle_One_Event() {
 	short chr,chr2;
 	long menu_choice;
 	
+	Handle_Update();
 	
-	WaitNextEvent(everyEvent, &event, 0, NULL);
-	if ((mouse_button_held == true) && (event.what != 23) && (FrontWindow() == mainPtr)) {
-		GlobalToLocal(&event.where);
-		handle_action(event.where,event);
-	}
+	if(!mainPtr.waitEvent(event)) return;
 	
-	
-	switch (event.what)
+	switch (event.type)
 	{
-		case keyDown: case autoKey:
-			chr = event.message & charCodeMask;
-			chr2 = (char) ((event.message & keyCodeMask) >> 8);
-			if ((event.modifiers & cmdKey) != 0) {
-				if (event.what != autoKey) {
-					BringToFront(mainPtr);
-					SetPortWindowPort(mainPtr);
-					menu_choice = MenuKey(chr);
-					handle_menu_choice(menu_choice);
-				}
-			}
-			else if (chr == 'Q')
-				All_Done = true;
-			else handle_keystroke(chr,chr2,event);
+		case sf::Event::KeyPressed:
+			if(!(event.key.*systemKey))
+				handle_keystroke(chr,chr2,event);
 			break;
 			
-		case mouseDown:
+		case sf::Event::MouseButtonPressed:
 			Mouse_Pressed();
 			break;
 			
+		case sf::Event::MouseMoved:
+			if(mouse_button_held)
+				handle_action(loc(event.mouseMove.x,event.mouseMove.y),event);
+			break;
 			
-		case mouseUp:
+		case sf::Event::MouseButtonReleased:
 			mouse_button_held = false;
 			break;
-			
-		case activateEvt:
-			Handle_Activate();
-			break;
-			
-		case updateEvt:
-			Handle_Update();
-			break;
 	} 
-}
-
-
-void Handle_Activate() {
-	restore_cursor();
 }
 
 void Handle_Update() {
-	WindowPtr the_window;
-	GrafPtr		old_port;
-	
-	the_window = (WindowPtr) event.message;
-	
-	GetPort (&old_port);
-	SetPortWindowPort(the_window);
-	
-	BeginUpdate(the_window);
-	
 	redraw_screen();
-	EndUpdate(the_window);
-	
-	SetPort(old_port);
 	restore_cursor();
 }
 
-void handle_menu_choice(long choice) {
-	int menu,menu_item;
-	
-	if (choice != 0) {
-		menu = HiWord(choice);
-		menu_item = LoWord(choice);
-		
-		set_cursor(wand_curs);
-		switch (menu) {
-			case 500:
-				handle_apple_menu(menu_item);
-				break;
-			case 550:
-				handle_file_menu(menu_item);
-				break;
-			case 600: 
-				handle_scenario_menu(menu_item);
-				break;
-			case 650:
-				handle_town_menu(menu_item);
-				break;
-			case 651:
-				handle_outdoor_menu(menu_item);
-				break;
-			case 675:
-				handle_help_menu(menu_item);
-				break;
-			case 700: case 701: case 702: case 703: case 704:
-				handle_item_menu(menu_item + 80 * (menu - 700) - 1);
-				break;
-			case 750: case 751: case 752: case 753: 
-				handle_monst_menu(menu_item + 64 * (menu - 750) - 1);
-				break;
-				
-		}
-	} 
-	HiliteMenu(0);
-}
+//void handle_menu_choice(long choice) {
+//	int menu,menu_item;
+//	
+//	if (choice != 0) {
+//		menu = HiWord(choice);
+//		menu_item = LoWord(choice);
+//		
+//		set_cursor(wand_curs);
+//		switch (menu) {
+//			case 500:
+//				handle_apple_menu(menu_item);
+//				break;
+//			case 550:
+//				handle_file_menu(menu_item);
+//				break;
+//			case 600: 
+//				handle_scenario_menu(menu_item);
+//				break;
+//			case 650:
+//				handle_town_menu(menu_item);
+//				break;
+//			case 651:
+//				handle_outdoor_menu(menu_item);
+//				break;
+//			case 675:
+//				handle_help_menu(menu_item);
+//				break;
+//			case 700: case 701: case 702: case 703: case 704:
+//				handle_item_menu(menu_item + 80 * (menu - 700) - 1);
+//				break;
+//			case 750: case 751: case 752: case 753: 
+//				handle_monst_menu(menu_item + 64 * (menu - 750) - 1);
+//				break;
+//				
+//		}
+//	} 
+//	HiliteMenu(0);
+//}
 
 void handle_apple_menu(int item_hit) {
 	switch (item_hit) {
 		case 1:
-			fancy_choice_dialog(1062,0);
+			cChoiceDlog("about-scened.xml").show();
 			break;
 		default:
 			//			GetItem (apple_menu,item_hit,desk_acc_name);
@@ -360,11 +283,11 @@ void handle_apple_menu(int item_hit) {
 
 
 void handle_file_menu(int item_hit) {
+	fs::path file_to_load;
 	switch (item_hit) {
 		case 1: // open
-			try{
-				FSSpec file_to_load = nav_get_scenario();
-				if (load_scenario(file_to_load)) {
+				file_to_load = nav_get_scenario();
+				if(!file_to_load.empty() && load_scenario(file_to_load)) {
 					if(load_town(scenario.last_town_edited,town))
 						cur_town = scenario.last_town_edited;
 					if(load_outdoors(scenario.last_out_edited,current_terrain)){
@@ -376,7 +299,6 @@ void handle_file_menu(int item_hit) {
 					update_item_menu();
 					set_up_main_screen();
 				}
-			} catch(no_file_chosen){}
 			break;
 		case 2: // save
 			modify_lists();
@@ -389,26 +311,25 @@ void handle_file_menu(int item_hit) {
 			break;
 			
 		case 5: // quit
-			if (save_check(869) == false)
+			if(!save_check("save-before-quit"))
 				break;
-			ExitToShell();
+			All_Done = true;
 			break;
 	}
 }
 
 void handle_scenario_menu(int item_hit) {
 	short i;
+	fs::path file;
 	
 	switch (item_hit) {
 		case 1: // Create new town
 			if (change_made == true) {
-				give_error("You need to save the changes made to your scenario before you can add a new town.",
-						   "",0);
+				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
 			if (scenario.num_towns >= 200) {
-				give_error("You have reached the limit of 200 towns you can have in one scenario.",
-						   "",0);
+				giveError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
 			if (new_town(scenario.num_towns) == true)
@@ -428,24 +349,22 @@ void handle_scenario_menu(int item_hit) {
 //				user_given_password = get_password();
 //				given_password = true;
 //			}
-			give_error("Passwords have been disabled; they are no longer necessary.","",0);
+			giveError("Passwords have been disabled; they are no longer necessary.");
 			break;
 		case 9: // Edit Special Nodes
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_special_editing(0,0);
 			break;
 		case 10: // Edit Scenario Text
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_string_editing(0,0);
 			break;
 		case 11: // Import Town
 			if (change_made == true) {
-				give_error("You need to save the changes made to your scenario before you can add a new town.",
-						   "",0);
+				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
-			FSSpec file;
-			i = pick_import_town(0,&file);
+			i = pick_import_town(0,file);
 			if (i >= 0) {
 				import_town(i,file);
 				change_made = true;
@@ -472,34 +391,30 @@ void handle_scenario_menu(int item_hit) {
 			break;
 		case 18: // Delete Last Town
 			if (change_made == true) {
-				give_error("You need to save the changes made to your scenario before you can delete a town.",
-						   "",0);
+				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
 			}
 			if (scenario.num_towns == 1) {
-				give_error("You can't delete the last town in a scenario. All scenarios must have at least 1 town.",
-						   "",0);
+				giveError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
 			if (scenario.num_towns - 1 == cur_town) {
-				give_error("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.",
-						   "",0);
+				giveError("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.");
 				return;
 			}
 			if (scenario.num_towns - 1 == scenario.which_town_start) {
-				give_error("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.",
-						   "",0);
+				giveError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
 				return;
 			}
-			if (fancy_choice_dialog(865,0) == 1)
+			if(cChoiceDlog("delete-town-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				delete_last_town();
 			break;
 		case 19: // Write Data to Text File
-			if (fancy_choice_dialog(866,0) == 1)
+			if(cChoiceDlog("data-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				start_data_dump();
 			break;
 		case 20: // Do Full Text Dump
-			if (fancy_choice_dialog(871,0) == 1)
+			if(cChoiceDlog("text-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				scen_text_dump();
 			redraw_screen();
 			break;
@@ -535,29 +450,29 @@ void handle_town_menu(int item_hit) {
 			edit_town_strs();
 			break;
 		case 8:
-			if (fancy_choice_dialog(863,0) == 2)
+			if(cChoiceDlog("add-random-items.xml", {"okay", "cancel"}).show() == "cancel")
 				break;
 			place_items_in_town();
 			break; // add random
 		case 9:
 			for (i = 0; i < 64; i++)
 				town->preset_items[i].property = 0;
-			fancy_choice_dialog(861,0);
+			cChoiceDlog("set-not-owned.xml").show();
 			draw_terrain();
 			break; // set not prop
 		case 10:
-			if (fancy_choice_dialog(862,0) == 2)
+			if(cChoiceDlog("clear-items-confirm.xml", {"okay", "cancel"}).show() == "cancel")
 				break;
 			for (i = 0; i < 64; i++)
 				town->preset_items[i].code = -1;
 			draw_terrain();
 			break; // clear all items
 		case 13:
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_special_editing(2,0);
 			break;
 		case 14:
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_string_editing(2,0);
 			break;
 		case 15:
@@ -594,11 +509,11 @@ void handle_outdoor_menu(int item_hit) {
 			set_string("Select party starting location.","");
 			break;
 		case 11:
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_special_editing(1,0);
 			break;
 		case 12:
-			SetControlValue(right_sbar,0);
+			right_sbar->setPosition(0);
 			start_string_editing(1,0);
 			break;
 	}
@@ -607,23 +522,23 @@ void handle_outdoor_menu(int item_hit) {
 void handle_help_menu(int item_hit) {
 	switch (item_hit) {
 		case 1:
-			fancy_choice_dialog(986,0);
+			cChoiceDlog("help-editing.xml").show();
 			break; // started
 		case 2:
-			fancy_choice_dialog(1000,0);
+			cChoiceDlog("help-testing.xml").show();
 			break; // testing
 		case 3:
-			fancy_choice_dialog(1001,0);
+			cChoiceDlog("help-distributing.xml").show();
 			break; // distributing
 		case 5:
-			fancy_choice_dialog(1002,0);
+			cChoiceDlog("help-contest.xml").show();
 			break; // contest
 	}
 }
 
 void handle_item_menu(int item_hit) {
 	if (scenario.scen_items[item_hit].variety == 0) {
-		give_error("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.","",0);
+		giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 		return;
 	}
 	overall_mode = MODE_PLACE_ITEM;
@@ -637,274 +552,36 @@ void handle_monst_menu(int item_hit) {
 	mode_count = item_hit;
 }
 
-
-
-pascal void right_sbar_action(ControlHandle bar, short part) {
-	short old_setting,new_setting,max;
-	
-	if (part == 0)
-		return;
-	
-	old_setting = GetControlValue(bar);
-	new_setting = old_setting;
-	max = GetControlMaximum(bar);
-	
-	switch (part) {
-		case kControlUpButtonPart:
-			new_setting--;
-			break;
-		case kControlDownButtonPart:
-			new_setting++;
-			break;
-		case kControlPageUpPart:
-			new_setting -= NRSONPAGE - 1;
-			break;
-		case kControlPageDownPart:
-			new_setting += NRSONPAGE - 1;
-			break;
+void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
+	while(!doneScrolling) {
+		sf::sleep(sf::milliseconds(10));
+		// TODO: redraw_screen should probably take the argument specifying what to update
+		redraw_screen(/*REFRESH_RIGHT_BAR*/);
+		mainPtr.display();
 	}
-	new_setting = minmax(0,max,new_setting);
-	SetControlValue(bar,new_setting);
-	if (new_setting != old_setting)
-		draw_rb();
 }
 
 void Mouse_Pressed() {
-	WindowPtr	the_window;
 	short	the_part,content_part;
 	long menu_choice;
-	BitMap bmap;
-	ControlHandle control_hit;
 	
-	the_part = FindWindow( event.where, &the_window);
-	
-	switch (the_part)
-	{
-		case inMenuBar:
-			menu_choice = MenuSelect(event.where);
-			handle_menu_choice(menu_choice);
-			break;
-			
-		case inSysWindow:
-			break;
-			
-		case inDrag:
-			GetQDGlobalsScreenBits(&bmap);
-			DragWindow(the_window, event.where, &(bmap.bounds));
-			break;
-			
-		case inGoAway:
-			All_Done = true;
-			break;
-			
-		case inContent:
-			SetPortWindowPort(mainPtr);
-			GlobalToLocal(&event.where);
-			content_part = FindControl(event.where,the_window,&control_hit); // hit sbar?
-			if (content_part != 0) {
-				switch (content_part) {
-					case kControlIndicatorPart:
-						content_part = TrackControl(control_hit,event.where,NULL);
-						if (control_hit == right_sbar)
-							if (content_part == kControlIndicatorPart) {
-								draw_rb();
-							}
-						
-						break;
-					case kControlUpButtonPart: case kControlPageUpPart:
-					case kControlDownButtonPart: case kControlPageDownPart:
-						if (control_hit == right_sbar)
-							content_part = TrackControl(control_hit,event.where,(ControlActionUPP)right_sbar_action);
-						break;
-						
-				}
-				
-			} // a control hit
-			else  // ordinary click
-				All_Done = handle_action(event.where,event);
-			break;
+	location mousePos(event.mouseButton.x, event.mouseButton.y);
+	volatile bool doneScrolling = false;
+	if(right_sbar->isVisible() && mousePos.in(right_sbar->getBounds())) {
+		std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
+		right_sbar->handleClick(mousePos);
+		doneScrolling = true;
+		updater.join();
+		redraw_screen(/*REFRESH_RIGHT_BAR*/);
 	}
+	else  // ordinary click
+		All_Done = handle_action(loc(event.mouseButton.x,event.mouseButton.y),event);
 }
 
 void close_program() {
-	restore_depth();
 	if(town != NULL) delete town;
-	clean_up_graphtool();
 }
 
 void ding() {
-	SysBeep(1);
-}
-
-//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-//{
-//	char chr,chr2;
-//	short the_type,wind_hit,item_hit;
-//	Handle the_handle = NULL;
-//	Rect the_rect,button_rect;
-//	Point the_point;
-//	WindowRef w;
-//	RgnHandle rgn;
-//	
-//	dummy_item_hit = 0;
-//	
-//	switch (event->what) {
-//		case updateEvt:
-//		w = GetDialogWindow(hDlg);
-//		rgn = NewRgn();
-//		GetWindowRegion(w,kWindowUpdateRgn,rgn);
-//		if (EmptyRgn(rgn) == true) {
-//			DisposeRgn(rgn);
-//			return true;
-//		}
-//		DisposeRgn(rgn);
-//		BeginUpdate(w);
-//		cd_redraw(w);
-//		EndUpdate(w);
-//		DrawDialog(hDlg);
-//		return false;
-//		break;
-//		
-//		case keyDown:
-//		chr = event->message & charCodeMask;
-//		chr2 = (char) ((event->message & keyCodeMask) >> 8);
-//		switch (chr2) {
-//			case 126: chr = 22; break;
-//			case 124: chr = 21; break;
-//			case 123: chr = 20; break;
-//			case 125: chr = 23; break;
-//			case 53: chr = 24; break;
-//			case 36: chr = 31; break;
-//			case 76: chr = 31; break;
-//		}
-//					// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-//					// 25-30  ctrl 1-6  31 - return
-//
-//		wind_hit = cd_process_keystroke(GetDialogWindow(hDlg),chr,&item_hit);
-//			break;
-//			
-//		case mouseDown:
-//			the_point = event->where;
-//			GlobalToLocal(&the_point);	
-//			cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
-//			wind_hit = -1;
-//			break;
-//			
-//		case mouseUp:
-//			the_point = event->where;
-//			GlobalToLocal(&the_point);	
-//			wind_hit = cd_process_click(GetDialogWindow(hDlg),the_point, event->modifiers,&item_hit);
-//			break;
-//
-//		default: wind_hit = -1; break;
-//	}
-////	switch (wind_hit) {
-////		case -1: break;
-////		//case 958: _event_filter(item_hit); break;
-////		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-////		case 800: edit_make_scen_1_event_filter(item_hit); break;
-////		case 801: edit_make_scen_2_event_filter(item_hit); break;
-////		case 802: user_password_filter(item_hit); break;
-////		case 803: edit_scen_details_event_filter(item_hit); break;
-////		case 804: edit_scen_intro_event_filter(item_hit); break;
-////		case 805: set_starting_loc_filter(item_hit); break;
-////		case 806: edit_spec_item_event_filter(item_hit); break;
-////		case 807: edit_save_rects_event_filter(item_hit); break;
-////		case 808: edit_horses_event_filter(item_hit); break;
-////		case 809: edit_boats_event_filter(item_hit); break;
-////		case 810: edit_add_town_event_filter(item_hit); break;
-////		case 811: edit_scenario_events_event_filter(item_hit); break;
-////		case 812: edit_item_placement_event_filter(item_hit); break;
-////		case 813: edit_ter_type_event_filter(item_hit); break;
-////		case 814: edit_monst_type_event_filter(item_hit); break;
-////		case 815: edit_monst_abil_event_filter(item_hit); break;
-////		case 816: edit_text_event_filter(item_hit); break;
-////		case 817: edit_talk_node_event_filter(item_hit); break;
-////		case 818: edit_item_type_event_filter(item_hit); break;
-////		case 819: choose_graphic_event_filter(item_hit); break;
-////		case 820: choose_text_res_event_filter(item_hit); break;
-////		case 821: edit_basic_dlog_event_filter(item_hit); break;
-////		case 822: edit_spec_enc_event_filter(item_hit); break;
-////		case 823: give_password_filter(item_hit); break;
-////		case 824: edit_item_abil_event_filter(item_hit); break;
-////		case 825: edit_special_num_event_filter(item_hit); break;
-////		case 826: edit_spec_text_event_filter(item_hit); break;
-////		case 830: new_town_event_filter(item_hit); break;
-////		case 831: edit_sign_event_filter(item_hit); break;
-////		case 832: edit_town_details_event_filter(item_hit); break;
-////		case 833: edit_town_events_event_filter(item_hit); break;
-////		case 834: edit_advanced_town_event_filter(item_hit); break;
-////		case 835: edit_town_wand_event_filter(item_hit); break;
-////		case 836: edit_placed_item_event_filter(item_hit); break;
-////		case 837: edit_placed_monst_event_filter(item_hit); break;
-////		case 838: edit_placed_monst_adv_event_filter(item_hit); break;
-////		case 839: edit_town_strs_event_filter(item_hit); break;
-////		case 840: edit_area_rect_event_filter(item_hit); break;
-////		case 841: pick_import_town_event_filter(item_hit); break;
-////		case 842: edit_dialog_text_event_filter(item_hit); break;
-////		case 850: edit_out_strs_event_filter(item_hit); break;
-////		case 851: outdoor_details_event_filter(item_hit); break;
-////		case 852: edit_out_wand_event_filter(item_hit); break;
-////		case 854: pick_out_event_filter(item_hit); break;
-////		case 855: case 856: pick_town_num_event_filter(item_hit); break;
-////		case 857: change_ter_event_filter(item_hit); break;
-////		default: fancy_choice_dialog_event_filter (item_hit); break;
-////	}
-//
-//	if (wind_hit == -1)
-//		return false;
-//	else return true;
-//}
-
-void set_pixel_depth() {
-	GDHandle cur_device;
-	PixMapHandle screen_pixmap_handle;
-	cur_device = GetGDevice();
-	
-	
-	screen_pixmap_handle = (**(cur_device)).gdPMap;
-	pixel_depth = (**(screen_pixmap_handle)).pixelSize;
-	
-	if ((pixel_depth <= 8) && (diff_depth_ok == true))
-		return;
-	
-	
-	diff_depth_ok = true;
-	old_depth = pixel_depth;
-}
-
-void restore_depth() {
-	GDHandle cur_device;
-	PixMapHandle screen_pixmap_handle;
-	OSErr err;
-	cur_device = GetGDevice();
-	
-	screen_pixmap_handle = (**(cur_device)).gdPMap;
-	
-	if (old_depth != 8) {
-		
-		err = SetDepth(cur_device,old_depth,1,1);
-		
-	}
-	
-}
-
-void find_quickdraw() {
-	OSErr err;
-	long response;
-	short choice;
-	
-	err = Gestalt(gestaltQuickdrawVersion, &response);
-	if (err == noErr) {
-		if (response == 0x000) {
-			choice = choice_dialog(0,1070);
-			if (choice == 2)
-				ExitToShell();
-			else diff_depth_ok = true;
-		}
-	}
-	else  {
-		SysBeep(2);
-		ExitToShell();
-	}
+	// TODO: Play an error sound here
 }

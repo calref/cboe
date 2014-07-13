@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<!--
+	 TODO: This dialog has out-of-date information in it
+	 -->
+	<button name='okay' type='regular' top='247' left='403'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='22' left='50' width='413' height='44'>
+		The Blades of Exile Scenario Editor can be a tricky program to use.
+		It has lots of options and a lot of features.
+		Fortunately, it also comes with very comprehensive online documentation.
+	</text>
+	<text top='67' left='50' width='412' height='40'>
+		To get to this documentation, run the program Blades Editor Documentation.
+		This file contains the full instructions for the editor, ready to be printed out.
+	</text>
+	<text top='108' left='50' width='412' height='53'>
+		Of special importance is the section "How to Make a Simple Scenario."
+		It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure.
+		This section will give you a quick, easy start.
+	</text>
+	<text top='162' left='50' width='418' height='40'>
+		Once you’ve mastered the basics, using this section, skim through the documentation.
+		Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.
+	</text>
+	<text top='203' left='50' width='418' height='41'>
+		Finally, if you’re stuck and need ideas, go to http://www.spidweb.com.
+		There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.
+	</text>
+	<text top='4' left='50' width='265' height='16'>BLADES OF EXILE - GETTING STARTED</text>
+</dialog>

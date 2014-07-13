@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<field name='str1' top='83' left='57' width='540' height='39'/>
+	<field name='str2' top='129' left='57' width='540' height='39'/>
+	<field name='str3' top='175' left='57' width='540' height='39'/>
+	<field name='str4' top='221' left='57' width='540' height='39'/>
+	<field name='str5' top='267' left='57' width='540' height='39'/>
+	<field name='str6' top='313' left='57' width='540' height='39'/>
+	<field name='picnum' top='19' left='523' width='70' height='16'/>
+	<button name='okay' type='regular' top='358' left='541'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='358' left='475'>Cancel</button>
+	<pict name='pic' type='scen' num='0' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='156' height='17'>Scenario Details</text>
+	<text top='22' left='50' width='300' height='40'>
+		This is where you can write the text that is displayed to the player upon starting the scenario.
+		You can also pick your scenario’s icon.
+	</text>
+	<text size='large' top='63' left='50' width='120' height='14'>Introductory text:</text>
+	<text top='22' left='360' width='149' height='14'>Scenario icon number:</text>
+	<button name='choose' type='large' top='45' left='404'>Select Icon</button>
+</dialog>

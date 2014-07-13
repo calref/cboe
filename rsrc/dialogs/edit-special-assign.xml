@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<field name='num' top='64' left='209' width='75' height='16'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<button name='okay' type='regular' top='87' left='311'>OK</button>
+	<text size='large' top='6' left='50' width='256' height='17'>Set Special Number:</text>
+	<text top='25' left='50' width='323' height='27'>
+		Which special node should be called when this space is entered/examined?
+	</text>
+	<text top='64' left='120' width='84' height='16'>Special node:</text>
+	<button name='cancel' type='regular' def-key='esc' top='87' left='246'>Cancel</button>
+</dialog>

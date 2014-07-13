@@ -1,13 +1,13 @@
-void init_directories();
+
 void save_scenario();
 //void load_scenario();
 void augment_terrain(location to_create);
 //void load_outdoors(location which_out,short mode);
 //void load_town(short which_town);
-void import_town(short which_town,FSSpec temp_file_to_load);
+void import_town(short which_town,fs::path temp_file_to_load);
 void create_basic_scenario();
-void make_new_scenario(Str255 file_name,short out_width,short out_height,short making_warriors_grove,
-	short use_grass);
+void make_new_scenario(std::string file_name,short out_width,short out_height,bool making_warriors_grove,
+	bool use_grass);
 
 void oops_error(short error);
 //short init_data(short flag);

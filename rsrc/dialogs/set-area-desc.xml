@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<field name='area' top='34' left='55' width='332' height='16'/>
+	<button name='cancel' type='regular' def-key='esc' top='86' left='263'>Cancel</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='184' height='17'>Enter this area's description:</text>
+	<button name='okay' type='regular' top='86' left='328'>OK</button>
+	<text top='60' left='3' width='242' height='42'>
+		Max. length: 30 characters.
+		To edit this later, select Edit Area Descriptions from Town/Outdoor menu.
+	</text>
+</dialog>

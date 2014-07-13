@@ -65,6 +65,7 @@ enum ePicTypeMod {
 	PIC_PRESET = 0, // just for good measure
 	PIC_WIDE = 20, // if applied to any derivative of PIC_MONST, makes the x-dimension 2 instead of 1
 	PIC_TALL = 40, // if applied to any derivative of PIC_MONST, makes the y-dimension 2 instead of 1
+	PIC_LARGE = PIC_WIDE + PIC_TALL,
 	PIC_CUSTOM = 100, // if applied to any customizable graphic, makes it custom instead of preset
 	PIC_PARTY = 200, // similar to above
 };
