@@ -47,10 +47,15 @@ short item_label_loc[NI];
 
 inline void cd_kill_dc(short which_slot,HDC hdc) { fry_dc(dlgs[which_slot],hdc); }
 
-BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+#ifdef ENVIRONMENT64
+LRESULT
+#else
+BOOL
+#endif
+CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 
 void cd_init_dialogs()
 {
@@ -70,7 +75,7 @@ void cd_init_dialogs()
 	edit_proc = fresh_edit_proc;
 }
 
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if(hwnd == talk_edit_box){
     switch (message) {
@@ -542,7 +547,12 @@ short cd_create_dialog(short dlog_num, HWND parent)
 	return 0;
 }
 
-BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
+#ifdef ENVIRONMENT64
+LRESULT
+#else
+BOOL
+#endif
+CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 {
 	short i,j,k,free_slot = -1,free_item = -1;
 	int type, flag;
@@ -728,8 +738,8 @@ BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM, LPARAM)
 									item_rect[free_item].bottom - item_rect[free_item].top,
 									dlgs[free_slot],(HMENU) 150,(HINSTANCE) store_hInstance,NULL);
 								store_edit_parent =  dlgs[free_slot];
-								old_edit_proc = (WNDPROC) (GetWindowLong(edit_box,GWL_WNDPROC));
-								SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
+								old_edit_proc = (WNDPROC) (GetWindowLongPtr(edit_box,GWLP_WNDPROC));
+								SetWindowLongPtr(edit_box,GWLP_WNDPROC,(LONG_PTR) edit_proc);
 								break;
 							}
 						win_height = max(win_height, item_rect[free_item].bottom + 28 + 6);
