@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<!--
+	 TODO: This dialog contains out-of-date information
+	 -->
+	<button name='okay' type='regular' top='270' left='430'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='6' left='50' width='420' height='33'>
+		Blades of Exile Scenario Editor v1.0.4 <br/>
+		  Copyright 1997, Spiderweb Software, Inc., All rights reserved.
+	</text>
+	<text top='147' left='50' width='425' height='47'>
+		Blades of Exile is $30 shareware.
+		For information on how to register, run Blades of Exile and select 'How To Order' from the game opening screen.
+	</text>
+	<text top='191' left='50' width='354' height='32'>
+		Comments and questions?
+		The creators of Exile want to hear them.
+		Send them to:
+	</text>
+	<text top='224' left='60' width='353' height='66'>
+		Internet: SpidWeb@spidweb.com <br/>
+		America Online: SpidWeb <br/>
+		Compuserve: 76463,1521 <br/>
+		WWW: http://www.spidweb.com
+	</text>
+	<text top='94' left='50' width='410' height='51'>
+		Blades of Exile is brought to you by Spiderweb Software - <br/>
+		   "Where our aberrations become your reality." <br/>
+		"Blades of Exile" and Spiderweb Software are trademarks of Spiderweb Software.
+	</text>
+	<text top='42' left='50' width='415' height='51'>
+		CREDITS: <br/>
+		   Concept, Design, Programming: Jeff Vogel <br/>
+		   Graphics: Andrew Hunter (Wormius@aol.com) <br/>
+		   Title Screen: James Ernest (ernest@speakeasy.org)
+	</text>
+</dialog>

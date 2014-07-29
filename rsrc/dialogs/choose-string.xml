@@ -3,7 +3,7 @@
 <!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog defbtn='done'>
 	<pict type='dlog' num='16' top='8' left='8'/>
-	<text size='large' top='6' left='50' width='256' height='14'>Select:</text>
+	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
 	<group name='strings'>
 		<led name='led1' state='off' top='54' left='8' width='180'/>
 		<led name='led2' state='off' top='69' left='8' width='180'/>

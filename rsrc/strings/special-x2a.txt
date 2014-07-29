@@ -1,0 +1,300 @@
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+0 - not property, 1 - becomes property
+0 - not property, 1 - becomes property
+Unused
+Unused
+Unused
+Amount to pay for each item
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Amount of food to give
+Unused
+Unused
+Unused
+Unused
+Label of 3rd button (-1 - no button)
+Label of 3rd button (-1 - no button)
+Label of 3rd button (-1 - no button)
+Amount of food to give
+Amount of food to give
+Amount of food to give
+Unused
+Unused
+Penalty (0 .. 100, higher is harder)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+Amount of extra damage
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Stat. to adjust (see docs. for list)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If less than this ...
+Unused
+Unused
+Unused
+Unused
+If space is this terrain type ...
+If space is this terrain type ...
+Unused
+Unused
+If item of this class on space ...
+Unused
+Unused
+Unused
+Unused
+If item of this class on space ...
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Number of a SCENARIO special message
+Unused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unused
+Terrain to change to
+Swap this terrain ...
+Unused
+0 - Just move, 1 - Teleport
+Damage to inflict (0 .. 1000)
+Damage to inflict (0 .. 1000)
+Unused
+Unused
+0 - fire, 1 - elec., 2 - telep.
+Unused
+Number of creature to place
+Unused
+Unused
+Unused
+Unused
+Unused
+Number of town to place party in
+Unused
+Unused
+Number of town to place party in
+X coordinate inside section 
+Item to place
+0 - no telep. noise, 1 - play telep. noise
+Unused
+Unused
+
+
+
+
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+Bottom of rectangle
+
+
+
+
+
+
+Unused
+Terrain to change to
+Unused
+Unused
+Number of items in store (1 .. 40)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

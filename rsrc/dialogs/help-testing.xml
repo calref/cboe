@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<!--
+	 TODO: This dialog may contain out-of-date information
+	 -->
+	<button name='okay' type='regular' top='288' left='403'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='22' left='50' width='413' height='52'>
+		If you want other people to play your scenario, it is vitally important that you test it.
+		Otherwise, lots of people might waste lots of hours playing a scenairo that is unwinnable or otherwise doesn’t work.
+	</text>
+	<text top='75' left='50' width='414' height='54'>
+		To run your scenario, copy it into the Blades of Exile Scenarios folder and start it using the Custom Scenario button on the game title screen.
+		Play from your scenario from start to finish, and, if possible, have friends play it too.
+	</text>
+	<text top='130' left='50' width='412' height='53'>
+		When testing your scenario, one useful feature is debug mode.
+		While playing the game, type ‘D’.
+		This will put you in Debug Mode.
+		Monsters will no longer move or attack you, and you will be able to play much faster.
+	</text>
+	<text top='184' left='50' width='417' height='54'>
+		When you make a change in a town, before testing it, be sure to leave the town and type ‘>’.
+		This causes the game to forget everything you’ve done in that town.
+		If you don’t do this, your corrections may not be remembered properly.
+	</text>
+	<text top='239' left='50' width='418' height='41'>
+		Finally, if you edit your scenario while playing in it, whenever you save a change go back to the game and reload your save file.
+		Otherwise, the game may not read the scenario data properly and crash.
+	</text>
+	<text top='4' left='50' width='312' height='16'>BLADES OF EXILE - TESTING YOUR SCENARIO</text>
+</dialog>

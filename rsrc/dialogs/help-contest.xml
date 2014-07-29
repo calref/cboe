@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<!--
+	 TODO: This dialog has out-of-date information
+	 -->
+	<button name='okay' type='regular' top='205' left='401'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='22' left='50' width='413' height='56'>
+		Anyone can make a scenario.
+		But, do you have what it takes to make a REAL scenario?
+		An edge of your seat, top of the line, major suspense blockbuster?
+		If you think so, prove it!
+		Enter the Blades of Exile Scenario Design Contest!
+	</text>
+	<text top='79' left='50' width='411' height='41'>
+		Why enter?
+		Well, look at the prizes!
+		First prize - $500.
+		Second Prize - $300.
+		Third prize - $200.
+		Fourth through Tenth Place -
+		Free copies of Spiderweb Software’s games.
+	</text>
+	<text top='121' left='50' width='412' height='40'>
+		To get the full facts (and solid advice) on the contest, read the file “Scenario Design Contest”.
+		The deadline for entries is November 1, 1998 (good scenario design takes time).
+	</text>
+	<text top='162' left='50' width='417' height='40'>
+		Finally, if you’re reading this too late to take part, be sure to drop by www.spidweb.com.
+		If this contest gets good entries, we’ll be sure to immediately hold another one right afterwards.
+	</text>
+	<text top='4' left='50' width='312' height='16'>THE BLADES OF EXILE SCENARIO DESIGN CONTEST!</text>
+</dialog>

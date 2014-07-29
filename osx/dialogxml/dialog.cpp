@@ -146,49 +146,13 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	if(width > 0 || height > 0 || p.second->getPicType() == PIC_FULL){
 		frame.right = frame.left + width;
 		frame.bottom = frame.top + height;
-	}else switch(p.second->getPicType()){
-		case PIC_DLOG:
-			frame.right = frame.left + 36;
-			frame.bottom = frame.top + 36;
-			break;
-		case PIC_DLOG_LG:
-			frame.right = frame.left + 72;
-			frame.bottom = frame.top + 72;
-			break;
-		case PIC_SCEN:
-		case PIC_TALK:
-			frame.right = frame.left + 32;
-			frame.bottom = frame.top + 32;
-			break;
-		case PIC_SCEN_LG:
-			frame.right = frame.left + 64;
-			frame.bottom = frame.top + 64;
-			break;
-		case PIC_MISSILE:
-			frame.right = frame.left + 18;
-			frame.bottom = frame.top + 18;
-			break;
-		case PIC_TER_MAP:
-			frame.right = frame.left + 24;
-			frame.bottom = frame.top + 24;
-			break;
-		case PIC_STATUS:
-			frame.right = frame.left + 12;
-			frame.bottom = frame.top + 12;
-			break;
-		case PIC_FULL:
-			// TODO: Do some handling here to determine the sheet to use, and perhaps to load and set it.
-			break;
-		default:
-			frame.right = frame.left + 28;
-			frame.bottom = frame.top + 36;
-			break;
 	}
 	p.second->setBounds(frame);
+	pic_num_t wasPic = p.second->getPicNum();
 	if(custom) {
-		pic_num_t wasPic = p.second->getPicNum();
 		p.second->setPict(wasPic, p.second->getPicType() + PIC_CUSTOM);
-	}
+	} else p.second->setPict(wasPic, p.second->getPicType());
+	// The above line also sets the graphic's bounding rect, if necessary
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();
@@ -1032,20 +996,20 @@ void cDialog::run(){
 						// TODO: Tabbing through fields, and trigger focus events.
 						ctrlIter cur = controls.find(itemHit), iter;
 						if(!cur->second->triggerFocusHandler(*this,itemHit,true)) break;
+						cTextField* wasFocus = currentFocus;
 						iter = std::next(cur);
 						while(iter != cur){
-							if(typeid(iter->second) == typeid(cTextField*)){
-								if(iter->second->triggerFocusHandler(*this,iter->first,false)){
-									currentFocus = (cTextField*) iter->second;
+							if((currentFocus = dynamic_cast<cTextField*>(iter->second))){
+								if(currentFocus->triggerFocusHandler(*this,iter->first,false)){
 									itemHit = "";
 									break;
 								}
 							}
-							iter++;
 							if(iter == controls.end()) iter = controls.begin();
+							else iter++;
 						}
 						if(iter == cur) // no focus change occured!
-							; // TODO: Surely something should happen here?
+							currentFocus = wasFocus; // TODO: Surely something should happen here?
 					} else if(!key.spec || key.k != key_enter || mod_contains(key.mod, mod_alt)) {
 						dynamic_cast<cTextField*>(controls[itemHit])->handleInput(key);
 						itemHit = "";

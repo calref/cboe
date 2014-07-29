@@ -1,0 +1,300 @@
+No Special
+Set Flag
+Increment Flag
+Display Message
+Secret Passage
+Display Small Message
+Flip Flag
+Out Block
+Town Block
+Combat Block
+Looking Block
+Can't Enter
+Change Time
+Start General Timer
+Play a Sound
+Change Horse Possession
+Change Boat Possession
+Show/Hide Town
+Major Event Has Occured
+Forced Give
+Buy Items of Type
+Call Global Special
+Set Many Flags
+Copy Flag
+Ritual of Sanct. Block
+Have a Rest
+Wandering will fight
+End Scenario
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Give Item
+Give Special Item
+One-Time Do Nothing
+One-Time and Set
+One-Time Text Message
+Display Dialog (Dialog pic)
+Display Dialog (Terrain pic)
+Display Dialog (Monster pic)
+Give Item (Dialog pic)
+Give Item (Terrain pic)
+Give Item (Monster pic)
+One-Time Place Outdoor Enc.
+One-Time Place Town Enc.
+Trap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Select a PC
+Do Damage
+Affect Health
+Affect Spell Points
+Affect Experience
+Affect Skill Points
+Kill/Raise Dead
+Affect Poison
+Affect Slow/Haste
+Affect Invulnerability
+Affect Magic Resistance
+Affect Webs
+Affect Disease
+Affect Sanctuary
+Affect Curse/Bless
+Affect Dumbfounding
+Affect Sleep
+Affect Paralysis
+Affect Statistic
+Give Mage Spell
+Give Priest Spell
+Affect Gold
+Affect Food
+Affect Alchemy
+Affect Stealth
+Affect Firewalk
+Affect Flying
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stuff Done Flag?
+Town Number?
+Random Number?
+Have Special Item?
+Stuff Done Compare?
+Terrain this type? (town)
+Terrain this type? (out)
+Has gold?
+Has food?
+Item Class on Space?
+Have Item With Class?
+Equipped Item With Class?
+Has Gold? (+ take)
+Has Food? (+ take)
+Item Class on Space? (+ take)
+Have Item W. Class? (+ take)
+Equip Item W. Class? (+ take)
+Day Reached?
+Any Barrels?
+Any Crates?
+Special Thing Happened?
+Has Cave Lore?
+Has Woodsman?
+Has Enough Mage Lore?
+Text Response?
+Stuff Done Equal?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Town Hostile
+Change Terrain
+Swap Terrain
+Transform Terrain
+Move Party
+Hit Space
+Explosion on Space
+Lock Space
+Unlock Space
+Do sfx Burst
+Make Wandering Monster
+Place a Monster
+Destroy Monster
+Destroy All Monsters
+Generic Lever
+Generic Portal
+Generic Button
+Generic Stairway
+Lever
+Portal
+Stairway
+Relocate Outdoors
+Place Item
+Split Party
+Reunite Party
+Start General Timer
+Unused
+Unused
+Unused
+Unused
+Place Fire Wall
+Place Force Wall
+Place Ice Wall
+Place Blade Wall
+Place Stinking Cloud
+Place Sleep Field
+Place Quickfire
+Place Fire Barrier
+Place Force Barrier
+Cleanse Rectangle
+Place SFX
+Place Barrels, Etc.
+Move Items
+Destroy Items
+Change Rectange Terrain
+Swap Rectangle Terrain
+Transform Rectangle Terrain
+Lock Rectangle
+Unlock Rectangle
+
+
+
+
+
+
+Make Outdoor Wandering
+Change Out Terrain
+Place Outdoor Encounter
+Outdoor Move Party
+Outdoor Store
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

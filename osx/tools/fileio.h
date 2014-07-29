@@ -25,7 +25,6 @@ bool load_outdoors(location which_out,cOutdoors& the_out);
 bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]);
 bool load_outdoor_str(location which_out, short which_str, char* str);
 void load_spec_graphics();
-std::vector<std::string> load_strings(std::string which);
 
 bool load_party(fs::path file_to_load);
 bool save_party(fs::path dest_file);

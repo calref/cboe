@@ -10,16 +10,15 @@
 #include "mathutil.h"
 #include "oldstructs.h"
 #include "fileio.h"
+#include "dlogutil.h"
 
 #import <fstream>
 using std::endl;
 
 #define	DONE_BUTTON_ITEM	1
-#define IN_FRONT	(WindowPtr)-1L
 
 extern cScenario scenario;
 
-DialogPtr	the_dialog;
 extern cTown* town;
 //extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
 extern short cur_town;//overall_mode,given_password,user_given_password;
@@ -29,99 +28,20 @@ extern location cur_out;
 extern cOutdoors current_terrain;
 extern ter_num_t borders[4][50];
 extern bool change_made;
-extern GWorldPtr spec_scen_g;
+extern cCustomGraphics spec_scen_g;
 extern bool mac_is_intel;
 
 short specials_res_id,data_dump_file_id;
-Str255 start_name;
+char start_name[256];
 short start_volume,data_volume,jl = 0;
-long start_dir,data_dir;
 
-FSSpec temp_file_to_load;
-Str63 last_load_file = "\pBlades of Exile Scenario";
-std::string progDir;
+fs::path temp_file_to_load;
+std::string last_load_file = "Blades of Exile Scenario";
+extern fs::path progDir;
 bool cur_scen_is_mac = true;
-
-ResFileRefNum mainRef, graphicsRef, soundRef;
 
 void print_write_position ();
 void load_spec_graphics();
-
-void init_directories() {
-	short error;
-	//	Str255 data_name = "\pExile III data";
-	//
-	//	HGetVol((StringPtr) start_name,&start_volume,&start_dir);
-	//	HGetVol((StringPtr) data_name,&data_volume,&data_dir);
-	//
-	//	error = HOpenResFile(start_volume,start_dir,"\p::::boescen.rsrc",1);
-	//	OSErr re = ResError();
-	//	if (re != 0) {
-	//		return;
-	//	}
-	//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Graphics",1);
-	//	if (ResError() != 0) {
-	//		Alert(984,NULL);
-	//		ExitToShell();
-	//		}
-	//	error = HOpenResFile(start_volume,start_dir,"\p::::Blades of Exile Sounds",1);
-	//	if (ResError() != 0) {
-	//		Alert(984,NULL);
-	//		ExitToShell();
-	//		}
-	
-	//error = CoreEndianInstallFlipper ('rsrc', 'PICT', flip_pict, NULL);
-	
-	char cPath[768];
-	CFBundleRef mainBundle=CFBundleGetMainBundle();
-	CFURLRef graphicsURL = CFBundleCopyResourceURL(mainBundle,CFSTR("BOEScen.rsrc"),CFSTR(""),NULL);
-	CFStringRef graphicsPath = CFURLCopyFileSystemPath(graphicsURL, kCFURLPOSIXPathStyle);
-	CFStringGetCString(graphicsPath, cPath, 512, kCFStringEncodingUTF8);
-	FSRef gRef, sRef;
-	FSPathMakeRef((UInt8*)cPath, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &mainRef);
-	if (error != noErr) {
-		printf("Error! Main resource file not found.\n");
-		ExitToShell();
-	}
-	char *path = "Blades of Exile Graphics";
-	error = FSPathMakeRef((UInt8*) path, &gRef, false);
-	error = FSOpenResourceFile(&gRef, 0, NULL, fsRdPerm, &graphicsRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Graphics not found.\n");
-		ExitToShell();
-	}
-	path = "Blades of Exile Sounds";
-	FSPathMakeRef((UInt8*) path, &sRef, false);
-	error = FSOpenResourceFile(&sRef, 0, NULL, fsRdPerm, &soundRef);
-	if (error != noErr) {
-		//SysBeep(1);
-		printf("Error! File Blades of Exile Sounds not found.\n");
-		ExitToShell();
-	}
-	
-	CFStringRef progURL = CFURLCopyFileSystemPath(CFBundleCopyBundleURL(mainBundle), kCFURLPOSIXPathStyle);
-	const char* tmp = CFStringGetCStringPtr(progURL, kCFStringEncodingASCII);//kCFStringEncodingUTF8);
-	if(tmp == NULL){
-		bool success = CFStringGetCString(progURL, cPath, sizeof(cPath), kCFStringEncodingUTF8);
-		if(success) {
-			progDir = cPath;
-			std::cout << cPath << "\n\n" << progDir << "\n\n";
-		} else {
-			std::cout << "Couldn't retrieve application path.\n";
-			exit(1);
-		}
-	}else progDir = tmp;
-	//progDir = cPath;
-	size_t last_slash = progDir.find_last_of('/');
-	progDir.erase(last_slash);
-	// Since the scenario editor is in a subdirectory, and progDir
-	// must hold the path to the game directory, we do this twice.
-	last_slash = progDir.find_last_of('/');
-	progDir.erase(last_slash);
-	std::cout<<progDir<<'\n';
-}
 
 // Here we go. this is going to hurt.
 // Note no save as is available for scenarios.
@@ -155,7 +75,7 @@ void save_scenario() {
 	//	//OK. FIrst find out what file name we're working with, and make the dummy file 
 	//	// which we'll build the new scenario in
 	//	to_load = file_to_load;
-	//	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"\pBlades scenario temp",&dummy_file);
+	//	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"Blades scenario temp",&dummy_file);
 	//	FSpDelete(&dummy_file);
 	//	error = FSpCreate(&dummy_file,'blx!','BETM',reply.keyScript);
 	//	if ((error != 0) && (error != dupFNErr)) {
@@ -423,26 +343,10 @@ void save_scenario() {
 	//	error = FSpExchangeFiles(&to_load,&dummy_file);
 	//	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(27);}
 	//	DisposePtr(buffer);
-	//	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"\pBlades scenario temp",&dummy_file);
+	//	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"Blades scenario temp",&dummy_file);
 	//	FSpDelete(&dummy_file);
-	//	
-}
-
-GWorldPtr load_bmp_from_file(Str255 filename) {
-	short file_id;
-	long length;
-	if (HOpen(start_volume,start_dir,filename,1,&file_id) != 0) return NULL;
-	GetEOF(file_id,&length);
-	if (length < 54) {
-		FSClose(file_id);
-		return NULL;
-	}
-	unsigned char * data = new unsigned char[length];
-	FSRead(file_id,&length,data);
-	FSClose(file_id);
-	GWorldPtr ret = load_bmp(data,length);
-	delete [] data;
-	return ret;
+	//
+	giveError("Sorry, scenario saving is currently disabled.");
 }
 
 void augment_terrain(location to_create) {
@@ -488,19 +392,19 @@ void create_basic_scenario() {
 	//	OSErr error;
 	//	short out_num;
 	//	long len;
-	//	Str255 message = "\pSelect saved game:                                     ";
+	//	char message[256] = "Select saved game:                                     ";
 	//	legacy::big_tr_type t_d;
 	//	legacy::ave_tr_type ave_t;
 	//	legacy::tiny_tr_type tiny_t;
 	//	
-	//	//FSMakeFSSpec(start_volume,start_dir,"\pBlades of Exile Base",&new_file);
+	//	//FSMakeFSSpec(start_volume,start_dir,"Blades of Exile Base",&new_file);
 	//
 	//	//FSpDelete(&new_file);
 	//	//error = FSpCreate(&new_file,'blx!','BETM',smSystemScript);
 	//	//OK. FIrst find out what file name we're working with, and make the dummy file 
 	//	// which we'll build the new scenario in
 	//	//to_load = store_file_reply;
-	//	FSMakeFSSpec(start_volume,start_dir,"\p::::Blades of Exile Base",&dummy_file);
+	//	FSMakeFSSpec(start_volume,start_dir,"::::Blades of Exile Base",&dummy_file);
 	//	FSpDelete(&dummy_file);
 	//	error = FSpCreate(&dummy_file,'blx!','BETM',reply.keyScript);
 	//	if ((error != 0) && (error != dupFNErr)) {
@@ -677,12 +581,12 @@ void create_basic_scenario() {
 	//	// now, everything is moved over. Delete the original, and rename the dummy
 	//	 FSClose(dummy_f);		
 	//	DisposePtr(buffer);
-	printf("Scenario not created; creation currently disabled.\n");
+	giveError("Scenario not created; creation currently disabled.");
 }
 
 // if which_town is -1, load town from base
-void import_town(short which_town,FSSpec temp_file_to_load) {
-	printf("Town import currently disabled.\n");
+void import_town(short which_town,fs::path temp_file_to_load) {
+	giveError("Town import currently disabled.");
 	//	short i,j,k,l,file_id;
 	//	bool file_ok = false;
 	//	OSErr error;
@@ -839,7 +743,7 @@ void import_town(short which_town,FSSpec temp_file_to_load) {
 }
 
 // When this is called, the current town is the town to make town 0. 
-void make_new_scenario(Str255 file_name,short out_width,short out_height,short making_warriors_grove,
+void make_new_scenario(const char* file_name,short out_width,short out_height,short making_warriors_grove,
 					   short use_grass) {
 	//	short i,j,k,num_outdoors;
 	//	FSSpec dummy_file;
@@ -857,7 +761,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	//	
 	//	// Step 1 - load scenario file from scenario base. It contains all the monsters and
 	//	// items done up properly!
-	//	error = FSMakeFSSpec(start_volume,start_dir,"\p::::Blades of Exile Base",&temp_file_to_load);
+	//	error = FSMakeFSSpec(start_volume,start_dir,"::::Blades of Exile Base",&temp_file_to_load);
 	//	if (error != 0) {oops_error(80);}
 	//
 	//	if ((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
@@ -881,7 +785,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	//		}
 	//	FSClose(file_id);
 	//
-	//	Str255 newname = "::::";
+	//	char newname[256] = "::::";
 	//	strcat((char*)newname,(char*)file_name);
 	//		
 	//	// now write scenario
@@ -1115,7 +1019,7 @@ void make_new_scenario(Str255 file_name,short out_width,short out_height,short m
 	//	error = FSClose(dummy_f);		
 	//	if (error != 0) {FSClose(dummy_f);oops_error(10);}
 	//	file_to_load = dummy_file;
-	printf("Scenario not created; creation is currently disabled.\n");
+	giveError("Scenario not created; creation is currently disabled.");
 }
 
 //bool check_p (short pword) {
@@ -1386,14 +1290,14 @@ void scen_text_dump(){
 //	long val_store,to_return = 0;
 //	short the_type,data_dump_file_id;
 //	Handle the_handle = NULL;
-//	Rect the_rect;
-//	Str255 the_string,store_name;
+//	RECT the_rect;
+//	char the_string[256],store_name[256];
 //	char get_text[280];
 //	FSSpec dump_file;
 //	OSErr error;
 //	long len,empty_len;
 //
-//	FSMakeFSSpec(start_volume,start_dir,"\pScenario data",&dump_file);
+//	FSMakeFSSpec(start_volume,start_dir,"Scenario data",&dump_file);
 //	FSpDelete(&dump_file);
 //	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
 //	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {
@@ -1466,15 +1370,15 @@ void scen_text_dump(){
 //	long val_store,to_return = 0;
 //	short the_type,data_dump_file_id;
 //	Handle the_handle = NULL;
-//	Rect the_rect;
-//	Str255 the_string,store_name;
+//	RECT the_rect;
+//	char the_string[256],store_name[256];
 //	char get_text[300];
 //	FSSpec dump_file;
 //	OSErr error;
 //	long len,empty_len;
 //	location out_sec;
 //	
-//	FSMakeFSSpec(start_volume,start_dir,"\pScenario text",&dump_file);
+//	FSMakeFSSpec(start_volume,start_dir,"Scenario text",&dump_file);
 //	FSpDelete(&dump_file);
 //	error = FSpCreate(&dump_file,'ttxt','TEXT',smSystemScript);
 //	if ((error = FSpOpenDF(&dump_file,3,&data_dump_file_id)) != 0) {

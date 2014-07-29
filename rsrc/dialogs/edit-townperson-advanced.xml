@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' debug='true'>
+	<field name='extra1' top='126' left='221' width='67' height='16'/>
+	<field name='extra2' top='153' left='221' width='67' height='16'/>
+	<field name='death' top='298' left='285' width='67' height='16'/>
+	<field name='sdfx' top='334' left='262' width='39' height='16'/>
+	<field name='sdfy' top='334' left='310' width='39' height='16'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Townsperson/monster advanced</text>
+	<text top='28' left='62' width='97' height='15'>Creature type:</text>
+	<text name='type' top='28' left='162' width='195' height='15'/>
+	<text top='72' left='20' width='150' height='14'>When is creature here?</text>
+	<text name='extra1-lbl' framed='true' top='127' left='57' width='154' height='15'/>
+	<text name='extra2-lbl' framed='true' top='153' left='57' width='154' height='15'/>
+	<text top='293' left='25' width='247' height='27'>
+		Number of town special node to call when creature is killed:
+		(-1 for none)
+	</text>
+	<text top='322' left='25' width='230' height='40'>
+		Stuff done flag creature’s life is linked to:
+		(0 - alive,
+		1 - dead),
+		if either is -1, this is ignored.
+	</text>
+	<text size='large' top='182' left='9' width='205' height='17'>Creature and special encs.</text>
+	<button name='okay' type='regular' top='336' left='492'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='336' left='411'>Cancel</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text top='7' left='317' width='126' height='15'>Creature number:</text>
+	<text name='num' top='7' left='454' width='50' height='15'/>
+	<text size='large' top='49' left='9' width='130' height='17'>Creature timing:</text>
+	<group name='time'>
+		<!-- It appears time flag 3 is unused, thus there is no time4 element -->
+		<led name='time1' top='74' left='290' width='100'>Always here</led>
+		<led name='time2' top='90' left='290' width='110'>Appear on given day</led>
+		<led name='time3' top='106' left='290' width='100'>Disappear on day</led>
+		<led name='time5' top='74' left='420' width='100'>Sometimes here A</led>
+		<led name='time6' top='90' left='420' width='100'>Sometimes here B</led>
+		<led name='time7' top='106' left='420' width='100'>Sometimes here C</led>
+		<led name='time8' top='74' left='549' width='100'>Appear when event</led>
+		<led name='time9' top='90' left='549' width='120'>Disappear when event</led>
+	</group>
+	<group name='group'>
+		<led name='group0' top='220' left='77'>None</led>
+		<led name='group1' top='236' left='77'>1</led>
+		<led name='group2' top='252' left='77'>2</led>
+		<led name='group3' top='220' left='165'>3</led>
+		<led name='group4' top='236' left='165'>4</led>
+		<led name='group5' top='252' left='165'>5</led>
+		<led name='group6' top='220' left='254'>6</led>
+		<led name='group7' top='236' left='254'>7</led>
+		<led name='group8' top='252' left='254'>8</led>
+		<led name='group9' top='220' left='346'>9</led>
+		<led name='group10' top='236' left='346'>10</led>
+	</group>
+	<text top='203' left='372' width='195' height='78'>
+		A creature which is part of a special group does not exist until it’s created by a special encounter
+		(like special node type One-Time Place Town Encounter).
+	</text>
+	<text top='203' left='25' width='343' height='15'>What special encounter group is this creature a part of?</text>
+	<text top='133' left='301' width='222' height='44'>
+		For an explanation on how event codes work,
+		see the chapter in the instructions on the passing of time.
+	</text>
+</dialog>

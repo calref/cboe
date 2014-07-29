@@ -8,16 +8,17 @@
 #include "scen.graphics.h"
 #include <cmath>
 #include "scen.btnmg.h"
+#include "scrollbar.h"
 
 //extern piles_of_stuff_dumping_type *data_store;
-extern Rect right_sbar_rect;
+extern RECT right_sbar_rect;
 
 
 
-Rect left_button[NLS];
-extern Rect right_buttons[NRSONPAGE];
-Rect right_scrollbar_rect;
-Rect right_area_rect;
+RECT left_button[NLS];
+extern RECT right_buttons[NRSONPAGE];
+RECT right_scrollbar_rect;
+RECT right_area_rect;
 extern short current_rs_top;
 char strings_ls[NLS][40];
 char strings_rs[NRS][40];
@@ -25,7 +26,7 @@ char strings_rs[NRS][40];
 bool left_buttons_active = 1,right_buttons_active = 0;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
 extern short right_button_status[NRS];
-extern ControlHandle right_sbar;
+extern std::shared_ptr<cScrollbar> right_sbar;
 // 0 - clear
 // 1000 + x - terrain type x
 // 2000 + x - monster type x
@@ -62,7 +63,7 @@ void reset_lb() {
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_lb(short slot, short mode, char *label, short do_draw)  {
+void set_lb(short slot, short mode, const char *label, short do_draw)  {
 	short i;
 	
 	if (slot < 0) {
@@ -88,8 +89,7 @@ void set_lb(short slot, short mode, char *label, short do_draw)  {
 void init_rb() {
 	short i;
 	
-	SetControlMinimum(right_sbar,0);
-	SetControlValue(right_sbar,0);
+	right_sbar->setPosition(0);
 	for (i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 		strcpy((char *) strings_rs[i], "");
@@ -103,13 +103,13 @@ void reset_rb() {
 		right_button_status[i] = 0;
 	}
 	draw_rb();
-	SetControlMaximum(right_sbar,0);
-	SetControlValue(right_sbar,0);
+	right_sbar->setMaximum(0);
+	right_sbar->setPosition(0);
 }
 
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
-void set_rb(short slot, short mode, char *label, short do_draw) {
+void set_rb(short slot, short mode, const char *label, short do_draw) {
 	short i;
 	
 	if (slot < 0) {

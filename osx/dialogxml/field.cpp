@@ -21,11 +21,12 @@ void cTextField::attachFocusHandler(focus_callback_t f __attribute__((unused))) 
 
 bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
 	// TODO: If isNumericField, verify that the contents are in fact a number.
-	if(onFocus != NULL) onFocus(me,id,losingFocus);
-	haveFocus = !losingFocus;
+	bool passed = true;
+	if(onFocus != NULL) passed = onFocus(me,id,losingFocus);
+	if(passed) haveFocus = !losingFocus;
 	if(haveFocus && insertionPoint < 0)
 		insertionPoint = getText().length();
-	return true;
+	return passed;
 }
 
 void cTextField::setFormat(eFormat prop, short val __attribute__((unused))) throw(xUnsupportedProp){
@@ -61,8 +62,7 @@ void cTextField::setInputType(eFldType type) {
 }
 
 bool cTextField::isClickable(){
-	// TODO: Should be clickable in order to handle text selection
-	return false;
+	return true;
 }
 
 bool cTextField::hasFocus() {
@@ -74,6 +74,7 @@ cTextField::cTextField(cDialog* parent) :
 		color(sf::Color::Black),
 		insertionPoint(-1),
 		selectionPoint(0),
+		haveFocus(false),
 		isNumericField(false) {}
 
 cTextField::~cTextField(){}

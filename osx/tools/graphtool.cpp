@@ -588,6 +588,21 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	return std::make_pair(party ? this->party : &sheets[sheet],store_rect);
 }
 
+size_t cCustomGraphics::count() {
+	if(sheets == NULL) return 0;
+	else if(is_old) {
+		RECT bounds(sheets[0]);
+		if(bounds.width() < 280) return bounds.width() / 28;
+		return bounds.height() / 36;
+	} else {
+		size_t count = 100 * (numSheets - 1);
+		RECT bounds(sheets[numSheets - 1]);
+		if(bounds.width() < 280) count += bounds.width() / 28;
+		else count += bounds.height() / 36;
+		return count;
+	}
+}
+
 // TODO: This doesn't belong in this file
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
