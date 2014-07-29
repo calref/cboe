@@ -10,7 +10,7 @@ LIBS =  -mwindows -lwinmm --strip-all -static-libgcc -static-libstdc++
 INCS =  -I"include" 
 CXXINCS = 
 BIN  = "Blades of Exile Scenario Editor.exe"
-CXXFLAGS = $(CXXINCS) -fno-exceptions -fno-rtti -std=c++0x
+CXXFLAGS = $(CXXINCS) -fno-exceptions -fno-rtti -std=c++0x -DWIN32
 CFLAGS = $(INCS)  
 RM = rm -f
 
