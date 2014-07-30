@@ -1,16 +1,16 @@
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
 void display_strings_event_filter (short item_hit);
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) ;
-void give_error(char *text1, char *text2,short parent_num);
+Boolean cre(short val,short min,short max,char const *text1, char const *text2,short parent_num) ;
+void give_error(char const *text1, char const *text2,short parent_num);
 
-void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short parent_num);
+void display_strings(char const *text1, char const *text2,
+	char const *title,short sound_num,short graphic_num,short parent_num);
 void choose_graphic_event_filter (short item_hit);
 void put_choice_pics();
 short choose_graphic(short first_g,short last_g,short cur_choice,short parent_num);
 void put_text_res();
-short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title);
+short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char const *title);
 void choose_text_res_event_filter (short item_hit);
 void edit_text_event_filter (short item_hit);
 void edit_text_str(short which_str,short mode);

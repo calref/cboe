@@ -42,9 +42,9 @@ short a,b,c;
 short store_which_out_wand,store_out_wand_mode;
 out_wandering_type store_out_wand;
 
-char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
+char const *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 		"Unused","Unused","Unused","Unused","Unused"};
-char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no event)",
+char const *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no event)",
 					"Unused","Unused","Unused",
 					"Event code (0 - no event)","Event code (0 - no event)"};
 
@@ -279,7 +279,7 @@ void edit_placed_monst(short which_m)
 {
 
 	short i;
-	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
+	char const *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 
 	store_placed_monst = t_d.creatures[which_m];
 	store_which_placed_monst = which_m;
@@ -370,7 +370,7 @@ creature_start_type edit_placed_monst_adv(creature_start_type monst_record)
 
 	short i;
 	char temp_str[256];
-	char *time_labels[] = {"Always here","Appear on given day","Disappear on day",
+	char const *time_labels[] = {"Always here","Appear on given day","Disappear on day",
 						"Sometimes here A","Sometimes here B","Sometimes here C",
 						"Appear when event","Disappear when event"};
 

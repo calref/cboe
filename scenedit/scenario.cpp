@@ -49,7 +49,7 @@ RECT source_rect,draw_rect;
 extern GWorldPtr terrain_buttons_gworld;
 
 
-	char *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
+	char const *item_types[] = {"No Item","1-Handed weapon","2-Handed weapon","Gold","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","Food","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Non-Use Object","Pants","Crossbow","Bolts","Missile (no ammo)","Unused","Unused"};
@@ -1089,9 +1089,9 @@ short edit_ter_type(short which_ter)
 {
 	short i;
 	char temp_str[256];
-	char *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
+	char const *blocked_strs[6] = {"Clear","Walk through, Opaque","Clear, Special","Clear, Blocked","Blocked, Obstructed",
 		"Blocked, Opaque"};
-	char *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
+	char const *sound_strs[4] = {"Footstep","Squish","Crunch","Silence"};
 
 	store_which_ter = which_ter;
 	store_ter = scenario.ter_types[which_ter];
@@ -1324,7 +1324,7 @@ short edit_monst_type(short which_monst)
 // ignore parent in Mac version
 {
 	short i;
-	char *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
+	char const *attitude[4] = {"Friendly, Docile","Hostile, Type A","Friendly, Will Fight","Hostile, Type B"};
 
 	store_which_monst = which_monst;
 	store_monst = scenario.scen_monsters[which_monst];
