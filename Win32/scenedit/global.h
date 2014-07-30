@@ -39,7 +39,7 @@ struct RECT16
 	short top;
 	short right;
 	short bottom;
-	
+
 	RECT rect32();
 	RECT16 () {}
 	RECT16 (const RECT & );
@@ -48,12 +48,12 @@ struct RECT16
 
 extern POINT MAKEPOINT(LONG lparam);
 
-typedef unsigned char BYTE; 
+typedef unsigned char BYTE;
 
 typedef char Boolean;
 
 typedef struct {
-	char x,y;
+	unsigned char x,y;
 	} location;
 
 typedef struct {
@@ -76,7 +76,7 @@ typedef struct {
 	unsigned char blockage,flag1,flag2,special,trans_to_what,fly_over,boat_over;
 	unsigned char block_horse,light_radius,step_sound,shortcut_key,res1,res2,res3;
 	} terrain_type_type;
-	
+
 typedef	struct {
 	unsigned char monst[4];
 	} wandering_type;
@@ -113,7 +113,7 @@ typedef struct {
 	char spec_enc_code,time_code;
 	short monster_time,personality;
 	short special_on_kill,facial_pic;
-	
+
 	} creature_start_type;
 
 
@@ -146,12 +146,12 @@ typedef struct {
 	short item_code,ability;
 	unsigned char charges,always_there,property,contained;
 	} preset_item_type;
-	
+
 typedef struct {
 	location field_loc;
 	short field_type;
 	} preset_field_type;
-	
+
 typedef struct {
 	short town_chop_time,town_chop_key;
 	wandering_type	wandering[4];
@@ -190,13 +190,13 @@ typedef struct {
 	creature_start_type creatures[40];
 	unsigned char lighting[6][48];
 	} ave_tr_type;
-	
+
 typedef struct {
 	unsigned char terrain[32][32];
 	RECT16 room_rect[16];
 	creature_start_type creatures[30];
 	unsigned char lighting[4][32];
-	} tiny_tr_type;	
+	} tiny_tr_type;
 
 typedef struct {
 	short block_type;
@@ -205,13 +205,13 @@ typedef struct {
 	char block_key_time;
 	location block_loc;
 	} city_block_type;
-	
+
 typedef struct {
 	RECT16 what_rect;
 	unsigned char ter_type;
 	unsigned char hollow;
 	} city_ter_rect_type;
-	
+
 typedef struct {
 	creature_start_type creatures[30];
 	city_block_type city_block[15];
@@ -240,9 +240,9 @@ typedef struct {
 	unsigned char direction,immunities,x_width,y_width,radiate_1,radiate_2;
 	unsigned char default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 	short picture_num;
-	
+
 	} monster_record_type;
-	
+
 typedef struct {
 	location horse_loc,horse_loc_in_sec,horse_sector;
 	short which_town;
@@ -322,7 +322,7 @@ typedef struct {
 	Boolean exists;
 	short direction;
 	out_wandering_type what_monst;
-	location which_sector,m_loc;	
+	location which_sector,m_loc;
 	} outdoor_creature_type;
 
 typedef struct {
@@ -331,7 +331,7 @@ typedef struct {
 	char out_strs[120][256];
 
 	} piles_of_stuff_dumping_type;
-	
+
 short get_ran (short times,short  min,short  max);
 short s_pow(short x,short y);
 short dist(location p1,location p2);

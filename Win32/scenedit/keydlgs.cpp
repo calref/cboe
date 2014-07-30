@@ -197,7 +197,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 
 
 //cre = check range error
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num)
+Boolean cre(short val,short min,short max,char const *text1, char const *text2,short parent_num)
 {
 	if ((val < min) || (val > max)) {
 		give_error(text1,text2,parent_num);
@@ -206,7 +206,7 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 	return FALSE;
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(char const *text1, char const *text2,short parent_num)
 {
 	display_strings(text1,text2,"Error!",57,716,parent_num);
 }
@@ -221,8 +221,8 @@ void display_strings_event_filter (short item_hit)
 		}
 }
 
-void display_strings(char *text1, char *text2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+void display_strings(char const *text1, char const *text2,
+	char const *title,short sound_num,short graphic_num,short parent_num)
 {
 
 	//make_cursor_sword();
@@ -394,7 +394,7 @@ void put_text_res()
 
 }
 
-short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title)
+short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char const *title)
 {
 
 	//make_cursor_sword();

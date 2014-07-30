@@ -23,7 +23,7 @@ RECT get_template_rect (unsigned char type_wanted);
 void draw_frames();
 void place_location();
 void place_just_location();
-void set_string(char *string,char *string2);
+void set_string(char const *string,char const *string2);
 void undo_clip();
 Boolean is_special(short i,short j);
 Boolean is_field_type(short i,short j,short field_type);

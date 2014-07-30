@@ -1207,7 +1207,7 @@ void place_just_location()
 	DeleteObject(hdc);
 }
 
-void set_string(char *string,char *string2)
+void set_string(char const *string,char const *string2)
 {
 	strcpy((char *)current_string,string);
 	strcpy((char *)current_string2,string2);

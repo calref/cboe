@@ -65,7 +65,7 @@ SCROLLINFO lpsi;
 OFSTRUCT store;
 Boolean suppress_load_file_name = FALSE;
 
-char *field_names[22] = {"Blank","Unknown","Unknown","Web","Crate","Barrel","Fire Barrier","Force Barrier","Quickfire","Unknown","Unknown","Unknown","Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain","Small Slime Pool","Large Slime Pool","Ash","Bones","Rocks"};
+char const *field_names[22] = {"Blank","Unknown","Unknown","Web","Crate","Barrel","Fire Barrier","Force Barrier","Quickfire","Unknown","Unknown","Unknown","Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain","Small Slime Pool","Large Slime Pool","Ash","Bones","Rocks"};
 
 void print_write_position ();
 
@@ -93,7 +93,7 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 void file_initialize()
 {
 
-static char *szFilter[] = {"Blades of Exile Scenarios (*.EXS)","*.exs",
+static char const *szFilter[] = {"Blades of Exile Scenarios (*.EXS)","*.exs",
 		"Text Files (*.TXT)","*.txt","All Files (*.*)","*.*",""};
 
 
