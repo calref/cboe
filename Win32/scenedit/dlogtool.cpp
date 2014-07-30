@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include <algorithm>
 
 #define ND	15
 #define	NI	500
@@ -494,12 +495,12 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 									edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_AUTOVSCROLL,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
-										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
+										std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 										dlgs[free_slot],(HMENU)150,store_hInstance,NULL);
 									else edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
-										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
+										std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 										dlgs[free_slot],(HMENU)150,store_hInstance,NULL);
 									num_text_boxes++;
 									store_edit_parent[l] =  dlgs[free_slot];
@@ -516,8 +517,8 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 								}
 							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 28);
-					win_width = max(win_width, item_rect[free_item].right + 11);
+					win_height = std::max<short>(win_height, item_rect[free_item].bottom + 28);
+					win_width = std::max<short>(win_width, item_rect[free_item].right + 11);
 
 				}
 

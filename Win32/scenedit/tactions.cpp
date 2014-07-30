@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -1540,8 +1541,8 @@ Boolean where_lit[64][64];
 			l.x = i; l.y = j;
 			rad = scenario.ter_types[t_d.terrain[i][j]].light_radius;
 			if (rad > 0) {
-				for (where.x = max(0,i - rad); where.x < min(max_dim[town_type],i + rad + 1); where.x++)
-					for (where.y = max(0,j - rad); where.y < min(max_dim[town_type],j + rad + 1); where.y++)
+				for (where.x = std::max<short>(0,i - rad); where.x < std::min<short>(max_dim[town_type],i + rad + 1); where.x++)
+					for (where.y = std::max<short>(0,j - rad); where.y < std::min<short>(max_dim[town_type],j + rad + 1); where.y++)
 						if ((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,0) < 5))
 							where_lit[where.x][where.y] = 1;
 				}
