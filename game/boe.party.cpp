@@ -1574,7 +1574,7 @@ void do_priest_spell(short pc_num,short spell_num)
 //priest spells : 100 + spell number
 void cast_town_spell(location where)
 {
-	short adjust,r1,targ,store;
+	short adjust,r1,targ;
 	location loc;
 	unsigned char ter;
 
@@ -1697,7 +1697,6 @@ void cast_town_spell(location where)
 							update_explored(c_town.p_loc);
 							}
 							else {
-								store = get_ran(1,0,1);
 								play_sound(41);
 								add_string_to_buf("  Didn't work.                  ");
 								}

@@ -17,7 +17,7 @@
 void pc_record_type::kill(short type)
 {
 	short i = 24;
-	bool dummy, no_save = false, no_luck = false;
+	bool no_save = false, no_luck = false;
 	location item_loc;
 
 	if (type >= 20)
@@ -62,7 +62,6 @@ void pc_record_type::kill(short type)
 			if (overall_mode != MODE_OUTDOORS)
 				for (i = 0; i < 24; i++)
 					if (items[i].variety != ITEM_TYPE_NO_ITEM) {
-						dummy = place_item(items[i],item_loc,true);
 						items[i].variety = ITEM_TYPE_NO_ITEM;
 						}
 				if ((type == 2) || (type == 3))
