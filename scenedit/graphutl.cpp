@@ -59,9 +59,6 @@ short current_pattern = -1;
 HBITMAP load_pict(short pict_num)
 {
 	HBITMAP got_bitmap;
-	HDC model_hdc;
-
-	model_hdc = main_dc;
 
 	switch(pict_num) {
 		case 700: got_bitmap = ReadBMP("Images/STATAREA.BMP"); break;

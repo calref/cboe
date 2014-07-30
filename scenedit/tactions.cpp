@@ -1526,12 +1526,10 @@ void set_up_lights()
 
 	short i,j,rad;
 	location where,l;
-short num_lights = 0;
 Boolean where_lit[64][64];
 
 
 	// Find bonfires, braziers, etc.
-	num_lights = 0;
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++)
 			where_lit[i][j] = 0;
@@ -1673,11 +1671,9 @@ Boolean is_erasable_water(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short pic;
 	unsigned char ter;
 
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1710,11 +1706,9 @@ Boolean is_water(short i,short j)
 Boolean is_correctable_water(short i,short j)
 {
 	Boolean answer = FALSE;
-	short pic;
 	unsigned char ter;
 
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
