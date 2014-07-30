@@ -1,6 +1,6 @@
 #ifndef _TEXT_H
 	#define _TEXT_H
-	
+
 #include <windows.h>	// RECT, HDC etc.
 #include "classes/location.h"	// location
 #include "classes/pc.h"			// pc_record_type
@@ -42,7 +42,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(char *string);
+void add_string_to_buf(char const *string);
 void print_buf () ;
 void through_sending();
 void Display_String(char *str);

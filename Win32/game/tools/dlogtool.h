@@ -1,6 +1,6 @@
 #ifndef _DLOGTOOL_H
 	#define _DLOGTOOL_H
-	
+
 #include "../globvar.h"
 //#include "boe.graphutil.h"
 
@@ -20,7 +20,7 @@ short cd_process_keystroke(HWND window,WPARAM wparam, LPARAM lparam,short *item)
 void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void cd_set_item_text(short dlog_num, short item_num, char const *str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_text_frame(short dlog_num,short item_num,short frame);
@@ -50,7 +50,7 @@ inline void cd_set_text_edit_str(short, char *str)
 	{ if (edit_box != NULL) SetWindowText(edit_box,str); }
 inline void cdsin(short dlog_num, short item_num, short num)
 	{ cd_set_item_num(dlog_num, item_num, num); }
-inline void csit(short dlog_num, short item_num, char *str)
+inline void csit(short dlog_num, short item_num, char const *str)
 	{ cd_set_item_text( dlog_num,  item_num, str); }
 inline void csp(short dlog_num, short item_num, short pict_num)
 	{ cd_set_pict( dlog_num, item_num, pict_num); }
