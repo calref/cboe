@@ -255,7 +255,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 
 long CALLBACK WndProc (HWND hwnd, UINT message,WPARAM wParam, LPARAM lParam)
 {
-HDC hdc;
 PAINTSTRUCT ps;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
 POINT press;
@@ -382,7 +381,7 @@ RECT r;
 		return 0;
 
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd,&ps);
+		BeginPaint(hwnd,&ps);
 		EndPaint(hwnd,&ps);
 		if (hwnd != mainPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
@@ -469,7 +468,6 @@ Boolean handle_menu (short item, HMENU menu)
 	short i;
 	Boolean to_return = FALSE;
 	short item_hit;
-	Boolean need_redraw = FALSE;
 	item_hit = item;
 
 	switch (item) {
