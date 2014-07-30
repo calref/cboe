@@ -20,7 +20,7 @@ typedef unsigned char BYTE;
 
 POINT MAKEPOINT(LONG lparam);
 extern HINSTANCE store_hInstance;
-void DebugQuit(char * msg);
+void DebugQuit(char const * msg);
 
 struct RECT16
 {
@@ -102,13 +102,13 @@ struct out_wandering_type
 struct outdoor_record_type
 {
 	unsigned char	terrain[48][48];
-	location	special_locs[18];
-	unsigned char		special_id[18];
-	location	exit_locs[8];
-	char		exit_dests[8];
-	location	sign_locs[8];
+	location	    special_locs[18];
+	unsigned char	special_id[18];
+	location	    exit_locs[8];
+	unsigned char	exit_dests[8];
+	location	    sign_locs[8];
 	out_wandering_type	wandering[4],special_enc[4];
-	location	wandering_locs[4];
+	location	    wandering_locs[4];
 	RECT16 info_rect[8];
 	unsigned char strlens[180];
 	special_node_type specials[60];
@@ -124,7 +124,7 @@ typedef struct {
 	unsigned char  time_flag;
 	unsigned char  extra1,extra2;
 	short spec1, spec2;
-	char spec_enc_code, time_code;
+	unsigned char spec_enc_code, time_code;
 	short monster_time,personality;
 	short special_on_kill,facial_pic;
 	} creature_start_type;

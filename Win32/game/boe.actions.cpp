@@ -2954,12 +2954,10 @@ void set_up_lights() {
 
   short i, j, rad;
   location where, l;
-  short num_lights = 0;
   Boolean where_lit[64][64];
   short max_dim[3] = {64, 48, 32}; // Town sizes from Scenario Editor blscened.cpp:82
 
   // Find bonfires, braziers, etc.
-  num_lights = 0;
   for(i = 0; i < 64; i++)
     for(j = 0; j < 64; j++)
       where_lit[i][j] = 0;

@@ -90,7 +90,7 @@ void end_shop_mode()
 		sprintf(one_back2,"");
 
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
-		place_talk_str((char *)old_str1,"",0,dummy_rect);
+		place_talk_str(old_str1,"",0,dummy_rect);
 		}
 		else {
 			DeleteObject(talk_gworld);
@@ -1433,8 +1433,8 @@ void put_scen_info()
 {
 	short i;
 	char place_str[256];
-	char *ratings[] = {"G","PG","R","NC-17"};
-	char *difficulty[] = {"Low","Medium","High","Very High"};
+	char const *ratings[] = {"G","PG","R","NC-17"};
+	char const *difficulty[] = {"Low","Medium","High","Very High"};
 
 	for (i = 0; i < 3; i++)
 	   if(store_scen_page_on * 3 + i < store_num_scen){
