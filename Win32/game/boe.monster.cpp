@@ -334,15 +334,15 @@ Boolean monst_hate_spot(short which_m,location *good_loc)
 	if ((misc_i[loc.x][loc.y] & 224)
 	|| (c_town.explored[loc.x][loc.y] & 64) // hate regular fields
 	|| ((c_town.explored[loc.x][loc.y] & 32) && (c_town.monst.dudes[which_m].m_d.radiate_1 != MONSTER_RADIATE_ICE_FIELDS)
-		&& (c_town.monst.dudes[which_m].m_d.immunities & (32 == 0))) // hate ice wall?
+		&& ((c_town.monst.dudes[which_m].m_d.immunities & 32) == 0)) // hate ice wall?
 	|| ((c_town.explored[loc.x][loc.y] & 4) && (c_town.monst.dudes[which_m].m_d.radiate_1 != MONSTER_RADIATE_FIRE_FIELDS)
-		&& (c_town.monst.dudes[which_m].m_d.immunities & (8 == 0))) // hate fire wall?
+		&& ((c_town.monst.dudes[which_m].m_d.immunities & 8) == 0)) // hate fire wall?
 	|| ((c_town.explored[loc.x][loc.y] & 16) && (c_town.monst.dudes[which_m].m_d.radiate_1 != MONSTER_RADIATE_STINKING_CLOUDS)
-		&& (c_town.monst.dudes[which_m].m_d.immunities & (3 == 0))) // hate stink cloud?
+		&& ((c_town.monst.dudes[which_m].m_d.immunities & 3) == 0)) // hate stink cloud?
 	|| ((c_town.explored[loc.x][loc.y] & 128) && (c_town.monst.dudes[which_m].m_d.radiate_1 != MONSTER_RADIATE_SLEEP_FIELDS)
-		&& (c_town.monst.dudes[which_m].m_d.immunities & (3 == 0))) // hate sleep cloud?
+		&& ((c_town.monst.dudes[which_m].m_d.immunities & 3) == 0)) // hate sleep cloud?
 	|| ((c_town.explored[loc.x][loc.y] & 2) && (c_town.monst.dudes[which_m].m_d.radiate_1 != MONSTER_RADIATE_SHOCK_FIELDS)
-		&& (c_town.monst.dudes[which_m].m_d.immunities & (3 == 0))) // hate shock cloud?
+		&& ((c_town.monst.dudes[which_m].m_d.immunities & 3) == 0)) // hate shock cloud?
 	|| (((c_town.monst.dudes[which_m].m_d.mu > 0) || (c_town.monst.dudes[which_m].m_d.cl > 0))
 		 && (c_town.explored[loc.x][loc.y] & 8))) // hate antimagic?
 		 {
