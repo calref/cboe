@@ -968,7 +968,7 @@ void cd_get_text_edit_str(short, char *str)
 		else str[0] = 0;
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, char const *str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -1067,7 +1067,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

@@ -288,7 +288,7 @@ void draw_startup_anim()
 void draw_start_button(short which_position,short which_button)
 {
 	RECT from_rect,to_rect;
-	char *button_labels[] =
+	char const *button_labels[] =
 		{
 			"Load Game",
 			"Make New Party",
@@ -734,15 +734,12 @@ void draw_buttons(short mode)
 //mode; // 0 - regular   1 - button action
 {
 	RECT	source_rect = {0,0,258,37}, dest_rec; /**/
-	HBITMAP	buttons_to_draw;
 	Boolean spec_draw = false;
 
 	if (mode == 1) {
 		spec_draw = true;
 		mode -= 100;
 		}
-
-	buttons_to_draw = buttons_gworld;
 
 	source_rect = win_to_rects[1];
 	OffsetRect(&source_rect,-1 * source_rect.left, -1 * source_rect.top);
@@ -960,7 +957,7 @@ void draw_terrain(short	mode)
 	location sector_p_in,view_loc;
 	char can_draw;
 	unsigned char spec_terrain;
-	Boolean off_terrain = false,draw_trim = true;
+	Boolean draw_trim = true;
 	short i,j,short_spec_terrain;
 
 	if (mode == 2) {
@@ -1020,7 +1017,6 @@ void draw_terrain(short	mode)
 				where_draw = (is_out()) ? party.p_loc : center;
 				where_draw.x += q - 4;
 				where_draw.y += r - 4;
-				off_terrain = false;
 
 				draw_trim = true;
 				if ((is_out() == false) && ((where_draw.x < 0) || (where_draw.x > town_size[town_type] - 1)
@@ -1555,11 +1551,9 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	// 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
 	// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 {
-	short sound_key;
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
 			87,88,89,98,0, 0,0,0,0,0};
 
-	sound_key = type / 10;
 	type = type % 10;
 
 	if ((mode != 100) && (party_can_see(where) == 6))
@@ -1602,7 +1596,7 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	/**/
 	RECT terrain_from;
 	long dummy;
-	short del_len,sound_key;
+	short del_len;
 	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
 //	RECT mixed_square = {353,169,381,205};
@@ -1610,7 +1604,6 @@ void pre_boom_space(location where,short mode,short type,short damage,short soun
 	short sound_to_play[20] = {97,69,70,71,72, 73,55,75,42,86,
 			87,88,89,98,0, 0,0,0,0,0};
 
- 	sound_key = type / 10;
 	type = type % 10;
 
 	where_draw.x = where.x - center.x + 4;

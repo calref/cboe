@@ -76,7 +76,7 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 
 void file_initialize()
 {
-static char * szFilter[] =
+static char const * szFilter[] =
 	{
 		"Classic BoE Save Files (*.SAV)\0*.sav\0"
 		"Experimental BoE Save Files (*.savx)\0*.savx\0"
@@ -702,7 +702,6 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	party_record_type *party_ptr;
 	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
-	current_town_type *town_ptr;
 
 	char *party_encryptor;
 
@@ -1004,14 +1003,6 @@ void save_file(short mode) //mode 0 - normal  1 - save as
 	}
 
 	if (town_save == true) {
-			town_ptr = &c_town;
-			/*
-			len = sizeof(current_town_type);
-			if (WriteFile(file_id, town_ptr, sizeof(current_town_type), &bytes, NULL) == false)
-			{
-				CloseHandle(file_id);
-				return;
-			}*/
 
 /** saving c_town **/
 
@@ -1888,7 +1879,7 @@ void oops_error(short error)
 }
 
 //called recursively if a sub-directory is founded
-void ListFiles(char *path, HWND listbox){
+void ListFiles(char const *path, HWND listbox){
 
     short len;
 	HANDLE find_file_id;

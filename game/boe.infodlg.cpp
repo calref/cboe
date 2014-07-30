@@ -236,7 +236,7 @@ void put_item_info()
 	char desc_str[256];
 	short i;
 	item_record_type s_i;
-	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
+	char const *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon"};
@@ -610,7 +610,7 @@ Boolean display_alchemy_event_filter (short item_hit)
 void display_alchemy()
 {
 	short i;
-	char *alch_names[] =
+	char const *alch_names[] =
 		{
 			"Weak Curing Potion (1)",
 			"Weak Healing Potion (1)",
@@ -710,8 +710,8 @@ void pick_race_abil_event_filter(short item_hit)
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
-	char *start_str1 = "Click on button by name for description.";
-	char *start_str2 = "Click on advantage button to add/remove.";
+	char const *start_str1 = "Click on button by name for description.";
+	char const *start_str2 = "Click on advantage button to add/remove.";
 
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -1205,9 +1205,9 @@ void display_strings_event_filter (short item_hit)
 
 // str_label_1 & str_label_2 used for saving button for journal
 // 1000 + x scen 2000 + x out 3000 + x town
-void display_strings(char *text1, char *text2,short str_label_1,short str_label_2,short str_label_1b,
+void display_strings(char const *text1, char const *text2,short str_label_1,short str_label_2,short str_label_1b,
 	short str_label_2b,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	char const *title,short sound_num,short graphic_num,short parent_num)
 {
 
 	SetCursor(sword_curs);
@@ -1226,9 +1226,9 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 
 	csp(store_which_string_dlog,store_which_string_dlog,graphic_num);
 
-	csit(store_which_string_dlog,4,(char *) text1);
+	csit(store_which_string_dlog,4,text1);
 	if (text2 != NULL) {
-		csit(store_which_string_dlog,5,(char *) text2);
+		csit(store_which_string_dlog,5,text2);
 		}
 	if (strlen(title) > 0)
 		csit(store_which_string_dlog,6,title);
@@ -1243,13 +1243,13 @@ void display_strings(char *text1, char *text2,short str_label_1,short str_label_
 	final_process_dialog(store_which_string_dlog);
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(char const *text1, char const *text2,short parent_num)
 {
 	display_strings(text1,text2,-1,-1,-1,-1,"Error!",57,716,parent_num);
 }
 
 void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	char const *title,short sound_num,short graphic_num,short parent_num)
 {
 	char str1[256] = "", str2[256] = "";
 
@@ -1257,6 +1257,6 @@ void display_strings_with_nums(short a1,short a2, short b1, short b2,
 		GetIndString(str1,a1,a2);
 	if ((b1 > 0) && (b2 > 0))
 		GetIndString(str2,b1,b2);
-	display_strings((char *) str1,(char *) str2,-1,-1,-1,-1,
+	display_strings(str1, str2,-1,-1,-1,-1,
 		title, sound_num, graphic_num, parent_num);
 }

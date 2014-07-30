@@ -20,7 +20,7 @@ short display_item(location from_loc,short pc_num,short mode, bool check_contain
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
 void select_pc_event_filter (short item_hit);
-short char_select_pc(short active_only,short free_inv_only,char *title);
+short char_select_pc(short active_only,short free_inv_only,char const *title);
 short select_pc(short active_only,short free_inv_only);
 void get_num_of_items_event_filter (short item_hit);
 short get_num_of_items(short max_num);

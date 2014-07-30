@@ -1574,7 +1574,7 @@ void do_priest_spell(short pc_num,short spell_num)
 //priest spells : 100 + spell number
 void cast_town_spell(location where)
 {
-	short adjust,r1,targ,store;
+	short adjust,r1,targ;
 	location loc;
 	unsigned char ter;
 
@@ -1697,7 +1697,6 @@ void cast_town_spell(location where)
 							update_explored(c_town.p_loc);
 							}
 							else {
-								store = get_ran(1,0,1);
 								play_sound(41);
 								add_string_to_buf("  Didn't work.                  ");
 								}
@@ -2029,11 +2028,11 @@ void put_spell_list()
 
 void pick_spell_event_filter (short item_hit)
 {
-	char *choose_target = " Now pick a target.";
-	char *no_target = " No target needed.";
-	char *bad_target = " Can't cast on him/her.";
-	char *got_target = " Target selected.";
-	char *bad_spell = " Spell not available.";
+	char const *choose_target = " Now pick a target.";
+	char const *no_target = " No target needed.";
+	char const *bad_target = " Can't cast on him/her.";
+	char const *got_target = " Target selected.";
+	char const *bad_spell = " Spell not available.";
 	Boolean spell_toast = false,dialog_done = false;
 
 		switch (item_hit) {
@@ -2423,12 +2422,10 @@ void alch_choice_event_filter (short item_hit)
 short alch_choice(short pc_num)
 {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short store_alchemy_pc;
 	char get_text[256];
 
 	SetCursor(sword_curs);
 
-	store_alchemy_pc = pc_num;
 
 	cd_create_dialog(1047,mainPtr);
 	for (i = 0; i < 20; i++) {

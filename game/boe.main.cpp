@@ -308,7 +308,6 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR, int	nCmd
 
 LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HDC hdc;
 	PAINTSTRUCT ps;
 	POINT press;
 	HMENU menu;
@@ -455,7 +454,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if ((block_erase == true) && (hwnd == mainPtr)) {
 			block_erase = false;
 			}
-		hdc = BeginPaint(hwnd,&ps);
+		BeginPaint(hwnd,&ps);
 		EndPaint(hwnd,&ps);
 
 		if (hwnd != mainPtr)

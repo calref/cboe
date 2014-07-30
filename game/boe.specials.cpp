@@ -93,7 +93,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 //short mode; // 0 - out 1 - town 2 - combat
 {
 	unsigned char ter;
-	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,dam_type = 0,pic_type = 0,ter_pic = 0;
+	short r1,i,choice,door_pc,ter_special,ter_flag1,ter_flag2,dam_type = 0,ter_pic = 0;
 	Boolean can_enter = true;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -253,7 +253,7 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				break;
 			if (ter_special == TER_SPEC_DOES_FIRE_DAMAGE) {
 				add_string_to_buf("  It's hot!");
-				dam_type = DAMAGE_FIRE; pic_type = 0;
+				dam_type = DAMAGE_FIRE;
 				if (party.stuff_done[SDF_LAVAWALK] > 0) {
 					add_string_to_buf("  It doesn't affect you.");
 					break;
@@ -261,11 +261,11 @@ Boolean check_special_terrain(location where_check,short mode,short which_pc,sho
 				}
 			if (ter_special == TER_SPEC_DOES_COLD_DAMAGE) {
 				add_string_to_buf("  You feel cold!");
-				dam_type = DAMAGE_COLD; pic_type = 4;
+				dam_type = DAMAGE_COLD;
 				}
 			if (ter_special == TER_SPEC_DOES_MAGIC_DAMAGE) {
 				add_string_to_buf("  Something shocks you!");
-				dam_type = DAMAGE_MAGIC; pic_type = 1;
+				dam_type = DAMAGE_MAGIC;
 				}
 			r1 = get_ran(ter_flag2,dam_type,ter_flag1);
 			if (mode < 2)
@@ -449,7 +449,7 @@ void check_fields(location where_check,short mode,short which_pc)
 void use_item(short pc,short item)
 {
 	Boolean take_charge = true,inept_ok = false;
-	short abil,level,i,j,item_use_code,str,type,which_stat,r1;
+	short abil,i,j,item_use_code,str,type,which_stat,r1;
 	char to_draw[60];
 	location user_loc;
 //creature_data_type *which_m;
@@ -463,7 +463,6 @@ effect_pat_type s = {{{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0}}};
 	abil = adven[pc].items[item].ability;
-	level = adven[pc].items[item].item_level;
 
 	item_use_code = abil_chart[abil];
 	if (item_use_code >= 10) {
