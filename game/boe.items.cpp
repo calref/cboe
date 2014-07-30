@@ -602,7 +602,7 @@ void select_pc_event_filter (short item_hit)
 		else dialog_answer = item_hit - 3;
 }
 
-short char_select_pc(short active_only,short free_inv_only,char *title)
+short char_select_pc(short active_only,short free_inv_only,char const *title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap
 {
 	short i;
