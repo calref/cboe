@@ -236,7 +236,6 @@ void do_monsters()
 {
 	short i,j,r1,target;
 	location l1,l2;
-	Boolean acted_yet = false;
 
 	if (overall_mode == MODE_TOWN)
 		for (i = 0; i < T_M; i++)
@@ -260,14 +259,13 @@ void do_monsters()
 
 			if ((c_town.monst.dudes[i].active == 2)
 				 || ((c_town.monst.dudes[i].active != 0) && (c_town.monst.dudes[i].attitude % 2 != 1))) {
-				acted_yet = false;
 				if (((c_town.monst.dudes[i].attitude == 0) || (monst_target[i] == 6)) && (c_town.hostile == 0)) {
 					if (c_town.monst.dudes[i].mobile == true) { // OK, it doesn't see the party or
 					    // isn't nasty, and the town isn't totally hostile.
 					    if ((c_town.monst.dudes[i].attitude % 2 != 1) || (get_ran(1,0,1) == 0)) {
-							acted_yet = rand_move(i);
+							rand_move(i);
 							}
-							else acted_yet = seek_party(i,c_town.monst.dudes[i].m_loc,c_town.p_loc);
+							else seek_party(i,c_town.monst.dudes[i].m_loc,c_town.p_loc);
 						}
 					}
 				if ((c_town.monst.dudes[i].attitude > 0) || (c_town.hostile == 1)) {
@@ -277,15 +275,15 @@ void do_monsters()
 
 					if ((c_town.monst.dudes[i].m_d.morale < 0) && (c_town.monst.dudes[i].m_d.spec_skill != MONSTER_MINDLESS)
 						&&  (c_town.monst.dudes[i].m_d.m_type != MONSTER_TYPE_UNDEAD))  {
-						acted_yet = flee_party(i,l1,l2);
+						flee_party(i,l1,l2);
 						if (get_ran(1,0,10) < 6)
 							c_town.monst.dudes[i].m_d.morale++;
 						}
 						else if (monst_hate_spot(i,&l2) == true)
-							acted_yet = seek_party(i,l1,l2);
+							seek_party(i,l1,l2);
 						else if (((c_town.monst.dudes[i].m_d.mu == 0) && (c_town.monst.dudes[i].m_d.mu == 0))
 							|| (can_see(l1,l2,0) > 3))
-							acted_yet = seek_party(i,l1,l2);
+							seek_party(i,l1,l2);
 					}
 				}
 			}
@@ -317,14 +315,13 @@ void do_monsters()
 		if (overall_mode == MODE_OUTDOORS) {
 			for (i = 0; i < 10; i++)
 				if (party.out_c[i].exists == true) {
-						acted_yet = false;
 						l1 = party.out_c[i].m_loc;
 						l2 = party.p_loc;
 
 						r1 = get_ran(1,1,6);
 						if (r1 == 3)
-							acted_yet = rand_move(i);
-							else acted_yet = seek_party(i,l1,l2);
+							rand_move(i);
+							else seek_party(i,l1,l2);
 					}
 			}
 }
