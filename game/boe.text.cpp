@@ -1185,13 +1185,13 @@ short print_terrain(location space)
 	if (is_combat()) which_terrain = combat_terrain[space.x][space.y];
 	get_ter_name(store_string2,which_terrain);
 	sprintf((char *) store_string, "    %s", store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 
 	return (short) which_terrain;
 }
 
 
-void add_string_to_buf(char *string)
+void add_string_to_buf(char const *string)
 {
     if(strcmp(string,"") == 0)
         return;

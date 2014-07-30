@@ -89,7 +89,6 @@ item_record_type	get_weapon(short loot)
 
 item_record_type	get_armor(short loot)
 {
-	short r1;
 	item_record_type armor;
 
 	if (loot == 0)
