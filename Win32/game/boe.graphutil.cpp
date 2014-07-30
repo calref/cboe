@@ -359,12 +359,12 @@ HBITMAP load_pict(short pict_num,HDC)
 
 /* GK */
 
-HBITMAP ReadBMP(char * fileName)
+HBITMAP ReadBMP(char const * fileName)
 {
 	return (HBITMAP) LoadImage(0, fileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }
 
-HBITMAP ReadScenFile(char* filename){ //like ReadBMP but in the current scenario folder only.
+HBITMAP ReadScenFile(char const* filename){ //like ReadBMP but in the current scenario folder only.
 
         short store_val;
         char str[256]= "scenarios/";

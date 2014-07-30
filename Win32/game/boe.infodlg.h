@@ -43,6 +43,6 @@ void display_strings(char const *text1, char const *text2,short str_label_1,shor
 	char const *title,short sound_num,short graphic_num,short parent_num);
 void give_error(char const *text1, char const *text2,short parent_num);
 void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num);
+	char const *title,short sound_num,short graphic_num,short parent_num);
 
 #endif

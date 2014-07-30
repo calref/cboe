@@ -1,6 +1,6 @@
 #ifndef _GLOBVAR_H
 	#define _GLOBVAR_H
-	
+
 #include <windows.h>
 #include "global.h"
 #include "boe.newgraph.h"
@@ -37,7 +37,7 @@ extern short store_shop_type;
 extern short debug_ok;
 extern short store_selling_values[8];
 
-extern char *dir_string[8];
+extern char const *dir_string[8];
 extern char get_new_terrain();
 extern creature_start_type	save_monster_type;
 
@@ -177,7 +177,7 @@ extern short hit_chance[51];
 extern short abil_range[40];
 extern short abil_odds[40];
 extern short s_cost[2][62] ;
-							 
+
 extern short mage_range[80];
 extern short priest_range[62];
 extern short monst_mage_spell[55];
@@ -187,7 +187,7 @@ extern short monst_mage_area_effect[27];
 extern short monst_priest_cost[26];
 extern short monst_priest_area_effect[26];
 
-extern char *d_string[8];
+extern char const *d_string[8];
 
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[T_M];
@@ -209,7 +209,7 @@ extern effect_pat_type single;
 extern effect_pat_type t;
 extern effect_pat_type small_square;
 extern effect_pat_type square;
-						
+
 extern effect_pat_type open_square;
 extern effect_pat_type radius2;
 extern effect_pat_type radius3;
@@ -228,7 +228,7 @@ extern Boolean talk_end_forced;
 extern char old_str1[256];
 extern char old_str2[256];
 extern char one_back1[256];
-extern char one_back2[256]; 
+extern char one_back2[256];
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 /**/
 extern char title_string[50];
@@ -246,12 +246,12 @@ extern RECT bottom_help_rects[4];
 extern RECT shop_frame;
 extern RECT shop_done_rect; /**/
 
-extern char *heal_types[9];
+extern char const *heal_types[9];
 extern short heal_costs[9];
 extern long cost_mult[7];
 extern short cur_display_mode;
 
-extern short terrain_pic[256]; 
+extern short terrain_pic[256];
 
 extern short store_scen_page_on,store_num_scen;
 
@@ -275,7 +275,7 @@ extern HWND store_parent;
 
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern short button_type[150];
-extern char *button_strs[150];
+extern char const *button_strs[150];
 
 extern short button_left_adj[150];
 extern char button_def_key[150];
@@ -337,7 +337,7 @@ extern HBITMAP startup_button_orig,startup_button_g,anim_mess ;
 
 extern Boolean done_fancy_startup_once ;
 
-extern short terrain_there[9][9]; 
+extern short terrain_there[9][9];
 extern RECT win_from_rects[6];
 extern RECT win_to_rects[6];
 
@@ -472,7 +472,7 @@ extern location light_locs[40];
 extern short num_lights;
 extern char d_s[60];
 
-extern short charm_odds[20];	
+extern short charm_odds[20];
 
 extern creature_start_type null_start_type;
 
@@ -487,10 +487,10 @@ extern short skill_bonus[21];
 extern short spell_level[62];
 extern short spell_cost[2][62];
 extern const char *mage_s_name[];
-		
-extern char *priest_s_name[];
-extern 	char *alch_names[];
-extern 	char *alch_names_short[];
+
+extern char const *priest_s_name[];
+extern 	char const *alch_names[];
+extern 	char const *alch_names_short[];
 extern short spell_w_cast[2][62];
 // 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
 extern Boolean get_mage[30];
@@ -520,7 +520,7 @@ extern 	Boolean keep_change ;
 extern 	short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 extern 	long store_g;
 extern 	short store_train_mode,store_train_pc;
-	
+
 extern HBITMAP pcs_gworld;
 
 // Dialog vars
@@ -545,7 +545,7 @@ extern 	short boom_gr[8] ;
 extern  short skill_max[20];
 
 extern 	short abil_chart[200];
-							
+
 extern RECT startup_button[6];
 
 extern short buf_pointer , lines_to_print, num_added_since_stop ;
@@ -568,8 +568,8 @@ extern short store_text_x , store_text_y ;
 extern short current_item_button[6];
 extern short pc_button_state[6];
 
-extern char *m_mage_sp[];
-extern char *m_priest_sp[];
+extern char const *m_mage_sp[];
+extern char const *m_priest_sp[];
 
 // extra devices for maps
 extern 	HBRUSH hbrush[6];
@@ -585,7 +585,7 @@ extern HBITMAP map_bitmap[25];
 
 extern unsigned char map_pats[256];// 250
 extern unsigned char anim_map_pats[18];
-						
+
 extern location town_map_adj ;
 extern short town_force,store_min,store_max,store_shop;
 extern location town_force_loc;

@@ -1284,11 +1284,10 @@ Boolean summon_monster(unsigned char which,location where,short duration,short g
 					// to put monster
 {
 	location loc;
-	short which_m,spot;
+	short spot;
 
 	if ((is_town()) || (monsters_going)) {
 		// Ooooh ... mondo kludge. Need to find caster's attitude to give it to monst.
-		which_m = monst_there(where);
 		loc = find_clear_spot(where,0);
 		if (loc.x == 0)
 			return false;

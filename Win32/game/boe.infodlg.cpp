@@ -236,7 +236,7 @@ void put_item_info()
 	char desc_str[256];
 	short i;
 	item_record_type s_i;
-	char *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
+	char const *item_types[] = {"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
 			"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
 			"Gloves","Shield","Boots","Ring","Necklace",
 			"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon"};
@@ -610,7 +610,7 @@ Boolean display_alchemy_event_filter (short item_hit)
 void display_alchemy()
 {
 	short i;
-	char *alch_names[] =
+	char const *alch_names[] =
 		{
 			"Weak Curing Potion (1)",
 			"Weak Healing Potion (1)",
@@ -710,8 +710,8 @@ void pick_race_abil_event_filter(short item_hit)
 void pick_race_abil(pc_record_type *pc,short mode,short parent_num)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
-	char *start_str1 = "Click on button by name for description.";
-	char *start_str2 = "Click on advantage button to add/remove.";
+	char const *start_str1 = "Click on button by name for description.";
+	char const *start_str2 = "Click on advantage button to add/remove.";
 
 	store_trait_mode = mode;
 	store_pc = pc;
@@ -1249,7 +1249,7 @@ void give_error(char const *text1, char const *text2,short parent_num)
 }
 
 void display_strings_with_nums(short a1,short a2, short b1, short b2,
-	char *title,short sound_num,short graphic_num,short parent_num)
+	char const *title,short sound_num,short graphic_num,short parent_num)
 {
 	char str1[256] = "", str2[256] = "";
 

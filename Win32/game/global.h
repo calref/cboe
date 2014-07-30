@@ -20,7 +20,7 @@ typedef unsigned char BYTE;
 
 POINT MAKEPOINT(LONG lparam);
 extern HINSTANCE store_hInstance;
-void DebugQuit(char * msg);
+void DebugQuit(char const * msg);
 
 struct RECT16
 {

@@ -24,7 +24,7 @@ void cd_set_item_text(short dlog_num, short item_num, char const *str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_text_frame(short dlog_num,short item_num,short frame);
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag);
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag);
 void cd_key_label(short dlog_num, short item_num,short loc);
 void cd_draw_item(short dlog_num,short item_num);
 void cd_initial_draw(short dlog_num);
