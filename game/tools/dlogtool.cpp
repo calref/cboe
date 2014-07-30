@@ -1067,7 +1067,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

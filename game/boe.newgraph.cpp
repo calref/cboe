@@ -110,7 +110,6 @@ void apply_light_mask()
 
 	HDC hdc;
 	HBITMAP store_bmp;
-	HBRUSH old_brush;
 
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
@@ -155,7 +154,6 @@ void apply_light_mask()
 	hdc = CreateCompatibleDC(main_dc);
 	SetBkMode(hdc,TRANSPARENT);
 	store_bmp = (HBITMAP) SelectObject(hdc,terrain_screen_gworld);
-	old_brush = (HBRUSH) SelectObject(hdc,GetStockObject(BLACK_BRUSH));
 
 	for (i = 2; i < 11; i++)
 		for (j = 2; j < 11; j++) {
@@ -684,7 +682,7 @@ void draw_shop_graphics(short draw_mode,RECT clip_area_rect)
 	short cur_cost,what_magic_shop,what_magic_shop_item;
 	char cur_name[256];
 	char cur_info_str[256];
-	char *cost_strs[] =
+	char const *cost_strs[] =
 		{	"Extremely Cheap",
 			"Very Reasonable",
 			"Pretty Average",
@@ -871,7 +869,7 @@ void refresh_shopping()
 		}
 }
 
-void click_talk_rect(char *str_to_place,char *str_to_place2,RECT c_rect)
+void click_talk_rect(char const *str_to_place,char const *str_to_place2,RECT c_rect)
 {
 
 	long dum;
@@ -988,7 +986,7 @@ void get_item_interesting_string(item_record_type item,char *message)
 		}
 
 
-void place_talk_str(char *str_to_place,char *str_to_place2,short color,RECT c_rect)
+void place_talk_str(char const *str_to_place,char const *str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;

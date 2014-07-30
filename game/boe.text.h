@@ -50,7 +50,7 @@ RECT coord_to_rect(short i,short j);
 void c2p(char *str) ;
 void p2c(char *str);
 short string_length(char *str,HDC hdc);
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
+void char_win_draw_string(HDC dest_window,RECT dest_rect,char const *str,short mode,short line_height);
 void win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
 short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);

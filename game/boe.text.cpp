@@ -282,7 +282,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			break;
 		case 7: // On jobs page
 			SelectObject(hdc,bold_font);
-            win_draw_string(hdc,upper_frame_rect,"Your current jobs:",0,10);
+            win_draw_string(hdc,upper_frame_rect,(char *)"Your current jobs:",0,10);
 /*			SelectObject(hdc,font);
  		 	SetTextColor(hdc,colors[0]);
 			win_draw_string(hdc,item_buttons[0][0],"Test",0,10);*/
@@ -1350,7 +1350,7 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect,char const *str,short mode,short line_height)
 {
 	char store_s[256];
 
