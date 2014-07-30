@@ -53,7 +53,7 @@ typedef unsigned char BYTE;
 typedef char Boolean;
 
 typedef struct {
-	unsigned char x,y;
+	signed char x,y;
 	} location;
 
 typedef struct {
