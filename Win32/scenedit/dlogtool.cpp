@@ -182,7 +182,7 @@ void cd_init_dialogs()
 	edit_proc = (FARPROC) fresh_edit_proc;
 }
 
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	short i,cur_box = -1,cur_item_num,item_for_focus = -1,first_edit_box = -1;
 
