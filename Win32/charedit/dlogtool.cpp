@@ -284,7 +284,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
+INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 {
 	short i,j,k,free_slot = -1,free_item = -1;
 	int type,flag;
