@@ -506,8 +506,8 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 									store_edit_parent[l] =  dlgs[free_slot];
  									store_edit_parent_num[l] = store_dlog_num;
 									store_edit_item[l] = i;
-									old_edit_proc[l] = (FARPROC) GetWindowLong(edit_box[l],GWL_WNDPROC);
-									SetWindowLong(edit_box[l],GWL_WNDPROC,(LONG) edit_proc);
+									old_edit_proc[l] = (FARPROC) GetWindowLongPtr(edit_box[l],GWL_WNDPROC);
+									SetWindowLongPtr(edit_box[l],GWL_WNDPROC,(LONG_PTR) edit_proc);
 									if (focus_set == FALSE)
 									{
 										SetFocus(edit_box[l]);
