@@ -185,7 +185,7 @@ void cd_init_dialogs()
 	edit_proc = fresh_edit_proc;
 }
 
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (message) {
@@ -475,8 +475,8 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 								std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 								dlgs[free_slot],(HMENU) 150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
-							old_edit_proc = (WNDPROC) GetWindowLong(edit_box,GWL_WNDPROC);
-							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
+							old_edit_proc = (WNDPROC) GetWindowLongPtr(edit_box,GWLP_WNDPROC);
+							SetWindowLongPtr(edit_box,GWLP_WNDPROC,(LRESULT) edit_proc);
 							break;
 						}
 					win_height = std::max<short>(win_height, item_rect[free_item].bottom + 35);
