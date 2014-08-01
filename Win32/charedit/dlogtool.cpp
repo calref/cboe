@@ -157,7 +157,7 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 DLGPROC d_proc;
@@ -185,7 +185,7 @@ void cd_init_dialogs()
 	edit_proc = fresh_edit_proc;
 }
 
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (message) {
@@ -284,7 +284,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
+INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 {
 	short i,j,k,free_slot = -1,free_item = -1;
 	int type,flag;
@@ -475,8 +475,8 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 								std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 								dlgs[free_slot],(HMENU) 150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
-							old_edit_proc = (WNDPROC) GetWindowLong(edit_box,GWL_WNDPROC);
-							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
+							old_edit_proc = (WNDPROC) GetWindowLongPtr(edit_box,GWLP_WNDPROC);
+							SetWindowLongPtr(edit_box,GWLP_WNDPROC,(LRESULT) edit_proc);
 							break;
 						}
 					win_height = std::max<short>(win_height, item_rect[free_item].bottom + 35);

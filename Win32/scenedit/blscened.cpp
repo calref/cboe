@@ -125,7 +125,7 @@ Boolean block_erase = FALSE;
 
 RECT windRect;
 
-long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 Boolean handle_menu (short, HMENU);
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmdShow)
@@ -253,7 +253,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR, int nCmd
 		return msg.wParam;
 }
 
-long CALLBACK WndProc (HWND hwnd, UINT message,WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message,WPARAM wParam, LPARAM lParam)
 {
 PAINTSTRUCT ps;
 //RECT s_rect = {0,0,30,30},d_rect = {0,0,30,30},d2 = {0,0,420,216},s2 = {0,0,420,216};
