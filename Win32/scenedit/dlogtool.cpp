@@ -149,7 +149,6 @@ short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
 LRESULT CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM wparam, LPARAM lparam);
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 FARPROC d_proc;
 
