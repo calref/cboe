@@ -12,7 +12,7 @@ short cd_create_dialog(short dlog_num,HWND parent) ;
 short cd_kill_dialog(short dlog_num,short parent_message);
 short cd_process_click(HWND window,POINT the_point, WPARAM wparam, LPARAM lparam,short *item);
 short cd_process_syskeystroke(HWND window,WPARAM wparam, LPARAM lparam,short *item);
-short cd_process_keystroke(HWND window,UINT wparam, LPARAM lparam,short *item);
+short cd_process_keystroke(HWND window,WPARAM wparam, LPARAM lparam,short *item);
 void cd_init_button(short dlog_num,short item_num, short button_num, short status);
 void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
