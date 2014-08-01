@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <algorithm>
 
 #define ND	15
 #define	NI	500
@@ -471,15 +472,15 @@ BOOL CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM, LPARAM)
 							edit_box = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE,
 								item_rect[free_item].left,item_rect[free_item].top,
 								item_rect[free_item].right - item_rect[free_item].left,
-								max(22,item_rect[free_item].bottom - item_rect[free_item].top),
+								std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 								dlgs[free_slot],(HMENU) 150,store_hInstance,NULL);
 							store_edit_parent =  dlgs[free_slot];
 							old_edit_proc = (WNDPROC) GetWindowLong(edit_box,GWL_WNDPROC);
 							SetWindowLong(edit_box,GWL_WNDPROC,(LONG) edit_proc);
 							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 35);
-					win_width = max(win_width, item_rect[free_item].right + 11);
+					win_height = std::max<short>(win_height, item_rect[free_item].bottom + 35);
+					win_width = std::max<short>(win_width, item_rect[free_item].right + 11);
 				}
 			}
 
