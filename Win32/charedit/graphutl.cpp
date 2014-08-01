@@ -327,7 +327,7 @@ void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_patt
 
 /* GK */
 
-HBITMAP ReadBMP(char * fileName)
+HBITMAP ReadBMP(char const * fileName)
 {
 	return (HBITMAP) LoadImage(0, fileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }

@@ -17,12 +17,12 @@ void cd_init_button(short dlog_num,short item_num, short button_num, short statu
 void cd_attach_key(short dlog_num,short item_num,char key);
 void cd_set_pict(short dlog_num, short item_num, short pict_num);
 void cd_activate_item(short dlog_num, short item_num, short status);
-void cd_get_item_text(short dlog_num, short item_num, char *str);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void cd_get_item_text(short dlog_num, short item_num, char const *str);
+void cd_set_item_text(short dlog_num, short item_num, char const *str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 void cd_set_led(short dlog_num,short item_num,short state);
 void cd_text_frame(short dlog_num,short item_num,short frame);
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag);
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag);
 void cd_take_label(short dlog_num, short item_num);
 void cd_key_label(short dlog_num, short item_num,short loc);
 void cd_draw_item(short dlog_num,short item_num);
@@ -43,9 +43,9 @@ void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,s
 void showcursor(Boolean a);
 
 void cd_get_text_edit_str(short dlog_num, char *str);
-void cd_set_text_edit_str(short dlog_num, char *str);
+void cd_set_text_edit_str(short dlog_num, char const *str);
 void cdsin(short dlog_num, short item_num, short num);
-void csit(short dlog_num, short item_num, char *str);
+void csit(short dlog_num, short item_num, char const *str);
 void csp(short dlog_num, short item_num, short pict_num);
 void ModalDialog();
 

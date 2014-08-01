@@ -78,14 +78,14 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 
 void file_initialize()
 {
-	static char * szFilter[] =
+	static char const * szFilter[] =
 	{
 		"Classic BoE Save Files (*.SAV)\0*.sav\0"
 		"Experimental BoE Save Files (*.savx)\0*.savx\0"
 		"All Files (*.*)\0*.*\0"
 		"\0\0"
 	};
-	
+
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = mainPtr;
 	ofn.hInstance = NULL;
@@ -106,7 +106,7 @@ void file_initialize()
 	ofn.lCustData = 0L;
 	ofn.lpfnHook = NULL;
 	ofn.lpTemplateName = NULL;
-	
+
 }
 
 void load_file()

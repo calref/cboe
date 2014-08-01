@@ -102,7 +102,7 @@ short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 						 2,2,2,2,2,2,2,2,1,1,
 						 1,1,1,1,1,1,1,1,0,0,
 						 0,0,0,0,0,0,0,0,0,0};
-char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
+char const *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
 						"Get","1","2","3","4","5","6","Cast"," "," ",
 						" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
 						"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
@@ -747,7 +747,7 @@ void cd_get_text_edit_str(short, char *str)
 			else str[0] = 0;
 }
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short, char *str)
+void cd_set_text_edit_str(short, char const *str)
 {
 		if (edit_box != NULL)
 			SetWindowText(edit_box,str);
@@ -756,7 +756,7 @@ void cdsin(short dlog_num, short item_num, short num)
 {
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, char const *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -766,7 +766,7 @@ void csp(short dlog_num, short item_num, short pict_num)
 }
 
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, char const *str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -865,7 +865,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 	cd_draw_item(dlog_num,item_num);
 }
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;
