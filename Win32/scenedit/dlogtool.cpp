@@ -148,7 +148,7 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM wparam, LPARAM lparam);
 long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 FARPROC d_proc;
@@ -301,7 +301,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	short i,j,k,l,free_slot = -1,free_item = -1,type,flag;
 	char item_str[256];
@@ -506,8 +506,8 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 									store_edit_parent[l] =  dlgs[free_slot];
  									store_edit_parent_num[l] = store_dlog_num;
 									store_edit_item[l] = i;
-									old_edit_proc[l] = (FARPROC) GetWindowLongPtr(edit_box[l],GWL_WNDPROC);
-									SetWindowLongPtr(edit_box[l],GWL_WNDPROC,(LONG_PTR) edit_proc);
+									old_edit_proc[l] = (FARPROC) GetWindowLongPtr(edit_box[l],GWLP_WNDPROC);
+									SetWindowLongPtr(edit_box[l],GWLP_WNDPROC,(LONG_PTR) edit_proc);
 									if (focus_set == FALSE)
 									{
 										SetFocus(edit_box[l]);
