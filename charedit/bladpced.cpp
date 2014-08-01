@@ -27,7 +27,7 @@ void cursor_stay();
 Boolean verify_restore_quit(short mode);
 void max_window(HWND window);
 void update_item_menu(short mode);
-void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam);
+void check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 
 scen_item_data_type scen_item_list;
 short item_menus_lock=1;
