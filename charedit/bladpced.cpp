@@ -137,7 +137,7 @@ char file_path_name[256];
 
 Boolean block_erase = FALSE;
 
-long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 Boolean handle_menu (short, HMENU);
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCmdShow)
@@ -239,7 +239,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		return msg.wParam;
 }
 
-long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 HDC hdc;
 PAINTSTRUCT ps;
