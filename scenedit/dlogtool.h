@@ -46,6 +46,8 @@ void frame_dlog_rect(HWND hDlg, RECT rect, short val);
 void draw_dialog_graphic(HWND hDlg, RECT rect, short which_g, Boolean do_frame,short win_or_gworld)   ;
 void showcursor(Boolean a);
 
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 void cd_get_text_edit_str(short dlog_num, char *str);
 void cdsin(short dlog_num, short item_num, short num);
 void csit(short dlog_num, short item_num, char const *str);
