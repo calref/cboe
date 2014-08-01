@@ -72,17 +72,12 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	short i;
 
 	Boolean to_return = FALSE;
-	Boolean ctrl_key = FALSE;
-	Boolean right_button = FALSE;
 
 	if (lparam != -1) {
 		the_point.x -= ulx;
 		the_point.y -= uly;
 		}
-	if (lparam == -2)
-		right_button = TRUE;
 	if (MK_CONTROL & wparam)
-		ctrl_key = TRUE;
 
 	if (file_in_mem == FALSE)
 		return FALSE;

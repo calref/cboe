@@ -241,7 +241,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 
 LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-HDC hdc;
 PAINTSTRUCT ps;
 POINT press;
 HMENU menu;
@@ -298,7 +297,7 @@ HMENU menu;
       return 0;
 
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd,&ps);
+		BeginPaint(hwnd,&ps);
 		EndPaint(hwnd,&ps);
 		if (hwnd != mainPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
