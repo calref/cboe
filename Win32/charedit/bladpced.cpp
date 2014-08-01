@@ -137,7 +137,7 @@ char file_path_name[256];
 
 Boolean block_erase = FALSE;
 
-long CALLBACK _export WndProc (HWND, UINT, WPARAM, LPARAM);
+long CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 Boolean handle_menu (short, HMENU);
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCmdShow)
