@@ -1,0 +1,47 @@
+<dialogue boes="1.0">
+	<!-- Basic personalities -->
+	<personality id="0">
+		<look>You see a small, strange creature.</look>
+		<name>"I'm Bill!"</name>
+		<job>"Job? What's that?"</job>
+		<!-- Can also add <unknown> -->
+	</personality>
+	<!-- A shop -->
+	<node for="0">
+		<keyword>purchase</keyword>
+		<shop type="items">
+			<cost>0</cost>
+			<first>5</first>
+			<count>12</count>
+			<title>Bill's Cheap Items</title>
+		</shop>
+	</node>
+	<!-- Selling items -->
+	<node for="0">
+		<keyword>sell</keyword>
+		<sell type="any">
+			<cost>0</cost>
+			<text>"Yay! Give me all your stuff!"</text>
+		</sell>
+	</node>
+	<!-- Force conversation end -->
+	<node for="0">
+		<keyword>secrets</keyword>
+		<!-- Can add a second keyword if desired -->
+		<talk>
+			<text>"I don't like talking about secrets."</text>
+		</talk>
+		<end>force</end>
+	</node>
+	<!-- An inn -->
+	<node for="0">
+		<keyword>sleep</keyword>
+		<inn>
+			<cost>10</cost>
+			<quality>0</quality>
+			<bed x="12" y="32"/>
+			<text>"Ah, you want one of my cheap rooms? Sleep well!"</text>
+			<text>"Sorry, that'll be 10 gold."</text>
+		</inn>
+	</node>
+</dialogue>
