@@ -23,8 +23,6 @@ extern std::string get_str(std::string, short);
 //extern stored_items_list_type stored_items[3];
 extern cUniverse univ;
 
-extern short dialog_answer;
-
 extern short store_flags[3];
 
 extern short current_active_pc;
