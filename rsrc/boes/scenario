@@ -1,62 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario boes="1.0">
+
   <!-- boes == blades of exile scenario -->
 
+
   <title>The File Test Scenario</title>
+
   <!-- Human-readable -->
+
   
+
   <id>1359072240-14121234</id>
+
   <!-- Unix time of creation, plus random number.
+
        used to help sort stuff. Doesn't change after creation.
+
        -->
+
        
   <version>1.0.0-a</version>
+
   
+
   <language>en_US</language>
+
   <!-- For any future i18n support, maybe -->
+
   
+
   <author id="5482">
+
   <!-- global author ID for sort stuff.
+
        For a current standard, we could use SW member number.
+
        just to make any server-browser stuff easier
+
        -->
+
     <name>Sylae Jiendra Corell</name><!-- Human-readable -->
+
     <mail>sylae@calref.net</mail><!-- Human-readable -->
+
   </author>
+
   <text>
+
     <teaser1>Who wrote 1</teaser1><!-- Human-readable -->
+
     <teaser2>Who wrote 2</teaser2><!-- Human-readable -->
+
   </text>
+
   
+
   <ratings>
+
     <user>
+
       <content>g</content>
+
       <!-- g,pg,r,nc17 -->
+
       <difficulty>1</difficulty>
+
       <!-- 1,2,3,4
+
            low,medium,high,very high, repectively
+
       -->      
+
     </user>
+
   </ratings>
+
   
+
   <flags>
+
     <adjust_difficulty>true</adjust_difficulty>
+
     <legacy>none</legacy>
+
     <!-- Options:
+
          spidweb: original boe
+
          none:    goes off of cboe version
+
     -->
+
   </flags>
+
   
+
   <creator>
+
     <type>cboe</type>
+
     <version>1.2.0a</version>
+
     <os>win7-x64</os>
+
   </creator>
+
   
+
   <icon>8</icon>
+
   <!-- For a custom icon, use
+
   <icon custom="true" x="0" y="0">scenicon.png</icon>
+
   where x and y are offsets to the TL corner of the icon
+
   -->
 </scenario>
