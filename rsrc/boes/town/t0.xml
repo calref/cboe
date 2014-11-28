@@ -47,4 +47,7 @@
     <mobility>1</mobility>
   </creature>
   
+  <!-- town description rects -->
+  <description top="32" left="32" bottom="36" right="36">This is an area description!</description>
+  
 </town>

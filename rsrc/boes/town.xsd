@@ -179,6 +179,15 @@
 							<xs:attributeGroup ref="point"/>
 						</xs:complexType>
 					</xs:element>
+					<xs:element name="description">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attributeGroup ref="rect"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
 				</xs:choice>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string"/>
