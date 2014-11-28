@@ -141,6 +141,21 @@
 				</xs:element>
 				<xs:element name="last-town" type="xs:integer"/>
 				<xs:element name="storage" minOccurs="0" maxOccurs="10">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="on-terrain" type="xs:integer"/>
+							<xs:element name="is-property" type="bool"/>
+							<xs:element name="item" minOccurs="0" maxOccurs="10">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:integer">
+											<xs:attribute name="chance" type="xs:integer"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
@@ -152,7 +167,7 @@
 				<xs:element ref="icon"/>
 				<xs:element name="id" type="xs:string"/>
 				<xs:element ref="version"/>
-				<xs:element name="language" type="xs:string"/>
+				<xs:element name="language" type="xs:language"/>
 				<xs:element ref="author"/>
 				<xs:element ref="text"/>
 				<xs:element ref="ratings"/>
