@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:attributeGroup name="rect">
+		<xs:attribute name="top" use="required" type="xs:integer"/>
+		<xs:attribute name="left" use="required" type="xs:integer"/>
+		<xs:attribute name="bottom" use="required" type="xs:integer"/>
+		<xs:attribute name="right" use="required" type="xs:integer"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="point">
+		<xs:attribute name="x" use="required" type="xs:integer"/>
+		<xs:attribute name="y" use="required" type="xs:integer"/>
+	</xs:attributeGroup>
+	<xs:complexType name="encounter">
+		<xs:sequence>
+			<xs:element name="monster" minOccurs="1" maxOccurs="10">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:integer">
+							<xs:attribute name="friendly" type="bool" default="false"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="onmeet" type="xs:integer" minOccurs="0"/>
+			<xs:element name="onwin" type="xs:integer" minOccurs="0"/>
+			<xs:element name="onflee" type="xs:integer" minOccurs="0"/>
+			<xs:element name="sdf" minOccurs="0">
+				<xs:complexType>
+					<xs:attributeGroup ref="point"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="can-flee" type="bool" default="true"/>
+	</xs:complexType>
+	<xs:element name="sector">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="encounter" type="encounter" minOccurs="0" maxOccurs="4"/>
+				<xs:element name="wandering" type="encounter" minOccurs="0" maxOccurs="4"/>
+				<xs:choice maxOccurs="unbounded">
+					<xs:element name="sign">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attribute name="id" type="xs:integer"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="description">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attributeGroup ref="rect"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="boes" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
