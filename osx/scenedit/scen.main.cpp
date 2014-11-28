@@ -311,7 +311,7 @@ void handle_file_menu(int item_hit) {
 			break;
 			
 		case 5: // quit
-			if(!save_check("save-before-quit"))
+			if(!save_check("save-before-quit.xml"))
 				break;
 			All_Done = true;
 			break;
