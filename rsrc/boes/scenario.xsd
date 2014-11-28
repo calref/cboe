@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:attributeGroup name="rect">
+		<xs:attribute name="top" use="required" type="xs:integer"/>
+		<xs:attribute name="left" use="required" type="xs:integer"/>
+		<xs:attribute name="width" type="xs:integer"/>
+		<xs:attribute name="height" type="xs:integer"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="point">
+		<xs:attribute name="x" use="required" type="xs:integer"/>
+		<xs:attribute name="y" use="required" type="xs:integer"/>
+	</xs:attributeGroup>
+	<xs:element name="icon">
+		<xs:complexType mixed="true">
+			<xs:attribute name="custom" type="bool" default="false"/>
+			<xs:attribute name="split" type="bool" default="false"/>
+			<xs:attribute name="row" type="xs:integer" default="0"/>
+			<xs:attribute name="col" type="xs:integer" default="0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="version" type="xs:string"/>
+	<xs:element name="author">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="email" type="xs:string"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="text">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="teaser" minOccurs="0" maxOccurs="2" type="xs:string"/>
+				<xs:element ref="icon" minOccurs="0"/>
+				<xs:element name="intro-msg" minOccurs="0" maxOccurs="6" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ratings">
+	</xs:element>
+	<xs:element name="flags">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="adjust-difficulty" type="bool"/>
+				<xs:element name="legacy" type="xs:string"/>
+				<xs:element name="custom-graphics" type="bool"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="creator">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="type" type="xs:string"/>
+				<xs:element ref="version"/>
+				<xs:element name="os" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="game">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="num-towns" type="xs:integer"/>
+				<xs:element name="out-width" type="xs:integer"/>
+				<xs:element name="out-height" type="xs:integer"/>
+				<xs:element name="start-town" type="xs:integer"/>
+				<xs:element name="town-start">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="outdoor-start">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="sector-start">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="store-items" minOccurs="0" maxOccurs="3">
+					<xs:complexType>
+						<xs:attributeGroup ref="rect"/>
+						<xs:attribute name="town" type="xs:integer" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="town-flags" minOccurs="0" maxOccurs="10">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="town-flag">
+								<xs:complexType>
+									<xs:attribute name="town" type="xs:integer"/>
+									<xs:attribute name="add" type="xs:integer"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="specials">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="item" minOccurs="0" maxOccurs="50">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="name" type="xs:string"/>
+										<xs:element name="description" type="xs:string"/>
+									</xs:sequence>
+									<xs:attribute name="special" type="bool"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="timer" minOccurs="0" maxOccurs="20">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="time" type="xs:integer"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="editor">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="default-ground" type="xs:integer"/>
+				<xs:element name="last-out-section">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="last-town" type="xs:integer"/>
+				<xs:element name="storage" minOccurs="0" maxOccurs="10">
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scenario">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" type="xs:string"/>
+				<xs:element ref="icon"/>
+				<xs:element name="id" type="xs:string"/>
+				<xs:element ref="version"/>
+				<xs:element name="language" type="xs:string"/>
+				<xs:element ref="author"/>
+				<xs:element ref="text"/>
+				<xs:element ref="ratings"/>
+				<xs:element ref="flags"/>
+				<xs:element ref="creator"/>
+				<xs:element ref="game"/>
+				<xs:element ref="editor"/>
+			</xs:sequence>
+			<xs:attribute name="boes" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -10,6 +10,24 @@
 
   
 
+  <icon>8</icon>
+
+  <!-- For a custom icon, use
+
+  <icon custom="true" col="0" row="0">scenicon.png</icon>
+
+  where col=x and row=y are tile offsets to the TL corner of the icon
+  
+  The icon is assumed to be 32x32 pixels on a graphics sheet containing
+  only 32x32 icons, and the row and col count tiles, not pixels.
+  Set split="true" if you want to put the scenario icon on your main
+  graphics sheet (of 28x36 icons), where it would need to be split in half
+  and take two slots like a talking graphics.
+
+  -->
+
+  
+
   <id>1359072240-14121234</id>
 
   <!-- Unix time of creation, plus random number.
@@ -41,15 +59,15 @@
 
     <name>Sylae Jiendra Corell</name><!-- Human-readable -->
 
-    <mail>sylae@calref.net</mail><!-- Human-readable -->
+    <email>sylae@calref.net</email><!-- Human-readable -->
 
   </author>
 
   <text>
 
-    <teaser1>Who wrote 1</teaser1><!-- Human-readable -->
+    <teaser>Who wrote 1</teaser><!-- Human-readable -->
 
-    <teaser2>Who wrote 2</teaser2><!-- Human-readable -->
+    <teaser>Who wrote 2</teaser><!-- Human-readable -->
 
   </text>
 
@@ -79,7 +97,7 @@
 
   <flags>
 
-    <adjust_difficulty>true</adjust_difficulty>
+    <adjust-difficulty>true</adjust-difficulty>
 
     <legacy>none</legacy>
 
@@ -90,6 +108,8 @@
          none:    goes off of cboe version
 
     -->
+    
+    <custom-graphics>false</custom-graphics>
 
   </flags>
 
@@ -104,16 +124,31 @@
     <os>win7-x64</os>
 
   </creator>
-
   
-
-  <icon>8</icon>
-
-  <!-- For a custom icon, use
-
-  <icon custom="true" x="0" y="0">scenicon.png</icon>
-
-  where x and y are offsets to the TL corner of the icon
-
-  -->
+  <game>
+    <!-- Number of towns in the scenario -->
+    <num-towns>1</num-towns>
+    <!-- Number of outdoor sections in the scenario -->
+    <out-width>1</out-width>
+    <out-height>1</out-height>
+    <!-- Number of the starting town -->
+    <start-town>0</start-town>
+    <!-- Where in town you start -->
+    <town-start x="20" y="20"/>
+    <!-- Which outdoor section you start in -->
+    <outdoor-start x="0" y="0"/>
+    <!-- Where in that outdoor section you start -->
+    <sector-start x="20" y="20"/>
+    <!-- Definitions of special items, if any -->
+    <specials/>
+  </game>
+  
+  <editor>
+    <!-- Default ground terrain used by the editor for new towns -->
+    <default-ground>0</default-ground>
+    <!-- Last outdoor section edited -->
+    <last-out-section x="0" y="0"/>
+    <!-- Last town edited -->
+    <last-town>0</last-town>
+  </editor>
 </scenario>
