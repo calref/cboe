@@ -230,57 +230,13 @@ void Handle_Update() {
 	restore_cursor();
 }
 
-//void handle_menu_choice(long choice) {
-//	int menu,menu_item;
-//	
-//	if (choice != 0) {
-//		menu = HiWord(choice);
-//		menu_item = LoWord(choice);
-//		
-//		set_cursor(wand_curs);
-//		switch (menu) {
-//			case 500:
-//				handle_apple_menu(menu_item);
-//				break;
-//			case 550:
-//				handle_file_menu(menu_item);
-//				break;
-//			case 600: 
-//				handle_scenario_menu(menu_item);
-//				break;
-//			case 650:
-//				handle_town_menu(menu_item);
-//				break;
-//			case 651:
-//				handle_outdoor_menu(menu_item);
-//				break;
-//			case 675:
-//				handle_help_menu(menu_item);
-//				break;
-//			case 700: case 701: case 702: case 703: case 704:
-//				handle_item_menu(menu_item + 80 * (menu - 700) - 1);
-//				break;
-//			case 750: case 751: case 752: case 753: 
-//				handle_monst_menu(menu_item + 64 * (menu - 750) - 1);
-//				break;
-//				
-//		}
-//	} 
-//	HiliteMenu(0);
-//}
-
 void handle_apple_menu(int item_hit) {
 	switch (item_hit) {
 		case 1:
 			cChoiceDlog("about-scened.xml").show();
 			break;
-		default:
-			//			GetItem (apple_menu,item_hit,desk_acc_name);
-			//			desk_acc_num = OpenDeskAcc(desk_acc_name);
-			break;
 	}
 }
-
 
 void handle_file_menu(int item_hit) {
 	fs::path file_to_load;
