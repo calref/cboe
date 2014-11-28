@@ -10,12 +10,6 @@
   <!-- Town's lighting type -->
   <lighting>0</lighting>
   
-  <!-- Town entry locations -->
-  <enter dir="n" x="22" y="4"/>
-  <enter dir="s" x="22" y="44"/>
-  <enter dir="w" x="4" y="22"/>
-  <enter dir="e" x="22" y="22"/>
-  
   <!-- Entry specials; omitting condition is equivalent to ="alive" -->
   <onenter>12</onenter>
   <onenter condition="dead">13</onenter>
@@ -28,14 +22,8 @@
     
   </flags>
   
-  <!-- Wandering locs and monsters -->
+  <!-- Wandering monsters; optional -->
   <wandering>
-    <!-- Need exactly four locs -->
-    <loc x="5" y="12"/>
-    <loc x="5" y="12"/>
-    <loc x="5" y="12"/>
-    <loc x="5" y="12"/>
-    <!-- Monsters are optional -->
     <monster group="0">21</monster>
   </wandering>
 

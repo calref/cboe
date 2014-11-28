@@ -45,12 +45,6 @@
 				</xs:element>
 				<xs:element name="difficulty" type="xs:integer"/>
 				<xs:element name="lighting" type="xs:integer"/>
-				<xs:element name="enter" minOccurs="4" maxOccurs="4">
-					<xs:complexType>
-						<xs:attributeGroup ref="point"/>
-						<xs:attribute name="dir" type="dir" use="required"/>
-					</xs:complexType>
-				</xs:element>
 				<xs:element name="onenter" minOccurs="0" maxOccurs="2">
 					<xs:complexType>
 						<xs:simpleContent>
@@ -108,15 +102,10 @@
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="wandering">
+				<xs:element name="wandering" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="loc" minOccurs="4" maxOccurs="4">
-								<xs:complexType>
-									<xs:attributeGroup ref="point"/>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="monster" minOccurs="0" maxOccurs="4">
+							<xs:element name="monster" maxOccurs="4">
 								<xs:complexType>
 									<xs:simpleContent>
 										<xs:extension base="xs:integer">
