@@ -9,8 +9,8 @@
 	<xs:attributeGroup name="rect">
 		<xs:attribute name="top" use="required" type="xs:integer"/>
 		<xs:attribute name="left" use="required" type="xs:integer"/>
-		<xs:attribute name="width" type="xs:integer"/>
-		<xs:attribute name="height" type="xs:integer"/>
+		<xs:attribute name="bottom" use="required" type="xs:integer"/>
+		<xs:attribute name="right" use="required" type="xs:integer"/>
 	</xs:attributeGroup>
 	<xs:attributeGroup name="point">
 		<xs:attribute name="x" use="required" type="xs:integer"/>
