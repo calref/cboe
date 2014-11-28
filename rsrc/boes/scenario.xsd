@@ -58,10 +58,8 @@
 				<xs:element name="difficulty">
 					<xs:simpleType>
 						<xs:restriction base="xs:integer">
-							<xs:enumeration value="1"/>
-							<xs:enumeration value="2"/>
-							<xs:enumeration value="3"/>
-							<xs:enumeration value="4"/>
+							<xs:minInclusive value="1"/>
+							<xs:maxInclusive value="4"/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
