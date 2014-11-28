@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dir">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="n"/>
+			<xs:enumeration value="s"/>
+			<xs:enumeration value="e"/>
+			<xs:enumeration value="w"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:attributeGroup name="rect">
+		<xs:attribute name="top" use="required" type="xs:integer"/>
+		<xs:attribute name="left" use="required" type="xs:integer"/>
+		<xs:attribute name="bottom" use="required" type="xs:integer"/>
+		<xs:attribute name="right" use="required" type="xs:integer"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="point">
+		<xs:attribute name="x" use="required" type="xs:integer"/>
+		<xs:attribute name="y" use="required" type="xs:integer"/>
+	</xs:attributeGroup>
+	
+	<xs:element name="town">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="size">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:enumeration value="32"/>
+							<xs:enumeration value="48"/>
+							<xs:enumeration value="64"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="bounds">
+					<xs:complexType>
+						<xs:attributeGroup ref="rect"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="difficulty" type="xs:integer"/>
+				<xs:element name="lighting" type="xs:integer"/>
+				<xs:element name="enter" minOccurs="4" maxOccurs="4">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+						<xs:attribute name="dir" type="dir" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="onenter" minOccurs="0" maxOccurs="2">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="condition" default="alive">
+									<xs:simpleType>
+										<xs:restriction base="xs:token">
+											<xs:enumeration value="alive"/>
+											<xs:enumeration value="dead"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="exit" minOccurs="0" maxOccurs="4">
+					<xs:complexType>
+						<xs:attributeGroup ref="point"/>
+						<xs:attribute name="dir" type="dir" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="onexit" minOccurs="0" maxOccurs="4">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="dir" type="dir" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="onoffend" minOccurs="0" type="xs:integer"/>
+				<xs:element name="timer" minOccurs="0" maxOccurs="8">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="at" type="xs:integer" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="flags">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="chop" minOccurs="0">
+								<xs:complexType>
+									<xs:attribute name="day" type="xs:integer"/>
+									<xs:attribute name="event" type="xs:integer"/>
+									<xs:attribute name="kills" type="xs:integer"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="strong-barriers" minOccurs="0" type="bool"/>
+							<xs:element name="defy-mapping" minOccurs="0" type="bool"/>
+							<xs:element name="defy-scrying" minOccurs="0" type="bool"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="wandering">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="loc" minOccurs="4" maxOccurs="4">
+								<xs:complexType>
+									<xs:attributeGroup ref="point"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="monster" minOccurs="0" maxOccurs="4">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:integer">
+											<xs:attribute name="group" type="xs:integer"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:choice maxOccurs="unbounded">
+					<xs:element name="sign">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attribute name="id" type="xs:integer"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="fields">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:integer">
+									<xs:attributeGroup ref="point"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="item">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="id" type="xs:integer"/>
+								<xs:element name="charges" type="xs:integer" minOccurs="0"/>
+								<xs:element name="always" type="bool" minOccurs="0"/>
+								<xs:element name="property" type="bool" minOccurs="0"/>
+								<xs:element name="contained" type="bool" minOccurs="0"/>
+							</xs:all>
+							<xs:attributeGroup ref="point"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="creature">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="id" type="xs:integer"/>
+								<xs:element name="attitude" type="xs:integer"/>
+								<xs:element name="mobility" type="xs:integer"/>
+								<xs:element name="sdf" minOccurs="0">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:integer">
+												<xs:attributeGroup ref="point"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="encounter" type="xs:integer" minOccurs="0"/>
+								<xs:element name="time" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="param" maxOccurs="2" type="xs:integer"/>
+										</xs:sequence>
+										<xs:attribute name="type" type="xs:integer"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="face" type="xs:integer" minOccurs="0"/>
+								<xs:element name="personality" type="xs:integer" minOccurs="0"/>
+								<xs:element name="onkill" type="xs:integer" minOccurs="0"/>
+							</xs:all>
+							<xs:attributeGroup ref="point"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="boes" type="xs:string"/>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="normal"/>
+						<xs:enumeration value="template"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
