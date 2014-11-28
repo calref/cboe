@@ -476,6 +476,7 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		91A073581A285293002F7E72 /* edit-monster-abils.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91A073561A2828C6002F7E72 /* edit-monster-abils.xml */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
 		91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
 		91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
@@ -1063,6 +1064,7 @@
 				914CA49D190C47D000B6ADD1 /* edit-special-assign.xml in Copy Dialog Definitions */,
 				914CA49E190C47D000B6ADD1 /* edit-intro.xml in Copy Dialog Definitions */,
 				91C9C97D19116446001E14EB /* edit-monster.xml in Copy Dialog Definitions */,
+				91A073581A285293002F7E72 /* edit-monster-abils.xml in Copy Dialog Definitions */,
 			);
 			name = "Copy Dialog Definitions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1660,6 +1662,7 @@
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
+		91A073561A2828C6002F7E72 /* edit-monster-abils.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-monster-abils.xml"; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
@@ -2192,6 +2195,7 @@
 				91364F1118F0914F0033B58E /* tip-of-day.xml */,
 				91364F1218F0914F0033B58E /* view-sign.xml */,
 				91364F1318F0914F0033B58E /* welcome.xml */,
+				91A073561A2828C6002F7E72 /* edit-monster-abils.xml */,
 			);
 			path = dialogs;
 			sourceTree = "<group>";

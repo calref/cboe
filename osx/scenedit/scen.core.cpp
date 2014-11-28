@@ -591,7 +591,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		}
 	} else if(item_hit == "abils") {
 			if(!save_monst_info(me,store_monst)) return false;
-			temp_monst = edit_monst_abil(store_monst,814);
+			temp_monst = edit_monst_abil(store_monst,which_monst);
 			if (temp_monst.level < 255)
 				store_monst = temp_monst;
 			put_monst_info_in_dlog(me,which_monst);
@@ -670,148 +670,123 @@ short edit_monst_type(short which_monst) {
 	return 0;
 }
 
-void put_monst_abils_in_dlog() {
-#if 0
-	char str[256];
-	short i;
+static const std::string resist_field_names[8] = {
+	"magic-res", "fire-res", "cold-res", "poison-res",
+	"magic-imm", "fire-imm", "cold-imm", "poison-imm",
+};
+
+void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
+	me["num"].setTextToNum(which_monst);
 	
-	cdsin(815,24,store_which_monst);
+	me["poison"].setTextToNum(store_monst.poison);
+	me["breath-str"].setTextToNum(store_monst.breath);
 	
+	me["abil-name"].setText(get_str("monster-abilities", store_monst.spec_skill + 1));
+	me["radiate-name"].setText(get_str("monster-abilities", store_monst.radiate_1 + 50));
+	me["radiate-param"].setText(get_str("monster-abilities", store_monst.radiate_1 + 80));
+	me["abil-xtra"].setTextToNum(store_monst.radiate_2);
+	me["loot-item"].setTextToNum(store_monst.corpse_item);
+	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
 	
-	CDSN(815,2,store_monst2.poison);
-	CDSN(815,3,store_monst2.breath);
+	cLedGroup& breathType = dynamic_cast<cLedGroup&>(me["breath-type"]);
+	switch(store_monst.breath_type) {
+		case 0:
+			breathType.setSelected("fire");
+			break;
+		case 1:
+			breathType.setSelected("cold");
+			break;
+		case 2:
+			breathType.setSelected("shock");
+			break;
+		case 3:
+			breathType.setSelected("dark");
+			break;
+	}
 	
-	get_str(str,20,store_monst2.spec_skill + 1);
-	csit(815,30,(char *) str);
-	get_str(str,20,store_monst2.radiate_1 + 50);
-	csit(815,33,(char *) str);
-	get_str(str,20,store_monst2.radiate_1 + 80);
-	csit(815,36,(char *) str);
-	CDSN(815,4,store_monst2.radiate_2);
-	CDSN(815,5,store_monst2.corpse_item);
-	CDSN(815,6,store_monst2.corpse_item_chance);
- 	cd_set_led_range(815,9,12,store_monst2.breath_type);
- 	cd_set_led_range(815,41,44,store_monst2.summon_type);
- 	for (i = 0; i < 8; i++)
- 		cd_set_led(815,13 + i,0);
- 	if (store_monst2.immunities & 1 ) cd_set_led(815,13,1);
- 	if (store_monst2.immunities & 2 ) cd_set_led(815,14,1);
- 	if (store_monst2.immunities & 4 ) cd_set_led(815,15,1);
- 	if (store_monst2.immunities & 8 ) cd_set_led(815,16,1);
- 	if (store_monst2.immunities & 16 ) cd_set_led(815,17,1);
- 	if (store_monst2.immunities & 32 ) cd_set_led(815,18,1);
- 	if (store_monst2.immunities & 64 ) cd_set_led(815,19,1);
- 	if (store_monst2.immunities & 128 ) cd_set_led(815,20,1);
-#endif
+	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
+	
+ 	for(short i = 0; i < 8; i++) {
+		cLed& resistLed = dynamic_cast<cLed&>(me[resist_field_names[i]]);
+		if(store_monst.immunities & (1 << i))
+			resistLed.setState(led_red);
+		else resistLed.setState(led_off);
+	}
 }
 
-bool save_monst_abils() {
-#if 0
- 	store_monst2.poison = CDGN(815,2);
- 	if (cre(store_monst2.poison,0,8,"Poison must be from 0 to 8.","",815) > 0) return false;
-	store_monst2.breath = CDGN(815,3);
-  	if (cre(store_monst2.poison,0,40,"Breath Damage must be from 0 to 4.","",815) > 0) return false;
-	store_monst2.breath_type = cd_get_led_range(815,9,12);
-	store_monst2.summon_type = cd_get_led_range(815,41,44);
- 	store_monst2.radiate_2 = CDGN(815,4);
- 	if ((store_monst2.radiate_1 >= 1) && (store_monst2.radiate_1 <= 6))
-   		if (cre(store_monst2.radiate_2,0,100,"Radiation Chance must be from 0 to 100.","",815) > 0) return false;
- 	if ((store_monst2.radiate_1 >= 10) && (store_monst2.radiate_1 <= 12))
-   		if (cre(store_monst2.radiate_2,0,255,"Summoned Monster must be from 0 to 255.","",815) > 0) return false;
+bool save_monst_abils(cDialog& me, cMonster& store_monst) {
+ 	store_monst.poison = me["poison"].getTextAsNum();
+	store_monst.breath = me["breath-str"].getTextAsNum();
+	std::string breathType = dynamic_cast<cLedGroup&>(me["breath-type"]).getSelected();
+	if(breathType == "fire")
+		store_monst.breath_type = 0;
+	else if(breathType == "cold")
+		store_monst.breath_type = 1;
+	else if(breathType == "shock")
+		store_monst.breath_type = 2;
+	else if(breathType == "dark")
+		store_monst.breath_type = 3;
+	store_monst.summon_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["summon"]).getSelected().substr(1));
+ 	store_monst.radiate_2 = me["abil-xtra"].getTextAsNum();
 	
- 	store_monst2.corpse_item = CDGN(815,5);
-  	if (cre(store_monst2.corpse_item,-1,399,"Item To Drop must be from 0 to 399 (or -1 for no item).","",815) > 0) return false;
-	store_monst2.corpse_item_chance = CDGN(815,6);
-  	if (cre(store_monst2.corpse_item_chance,-1,100,"Dropping Chance must be from 0 to 100 (or -1 for no item).","",815) > 0) return false;
-	store_monst2.immunities = 0;
-	if (cd_get_led(815,13) == 1) store_monst2.immunities = store_monst2.immunities | 1;
-	if (cd_get_led(815,14) == 1) store_monst2.immunities = store_monst2.immunities | 2;
-	if (cd_get_led(815,15) == 1) store_monst2.immunities = store_monst2.immunities | 4;
-	if (cd_get_led(815,16) == 1) store_monst2.immunities = store_monst2.immunities | 8;
-	if (cd_get_led(815,17) == 1) store_monst2.immunities = store_monst2.immunities | 16;
-	if (cd_get_led(815,18) == 1) store_monst2.immunities = store_monst2.immunities | 32;
-	if (cd_get_led(815,19) == 1) store_monst2.immunities = store_monst2.immunities | 64;
-	if (cd_get_led(815,20) == 1) store_monst2.immunities = store_monst2.immunities | 128;
-#endif
+ 	store_monst.corpse_item = me["loot-item"].getTextAsNum();
+	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
+	store_monst.immunities = 0;
+	for(short i = 0; i < 8; i++) {
+		if(dynamic_cast<cLed&>(me[resist_field_names[i]]).getState() != led_off)
+			store_monst.immunities |= 1 << i;
+	}
 	return true;
 }
 
-void edit_monst_abil_event_filter (short item_hit) {
-#if 0
+static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short which_monst) {
+	using namespace std::placeholders;
 	short i;
 	
-	switch (item_hit) {
-		case 8:
-			store_monst2.level = 255;
-			toast_dialog();
-			break;
-		case 7:
-			if (save_monst_abils() == true)
-				toast_dialog();
-			break;
-		case 31: // abils
-			if (save_monst_abils() == false) break;
-			i = choose_text_res(20,1,38,store_monst2.spec_skill + 1,815,"Choose Monster Ability:");
+	if(item_hit == "cancel") {
+		store_monst.level = 255;
+		me.toast();
+	} else if(item_hit == "okay") {
+		if(save_monst_abils(me, store_monst))
+			me.toast();
+	} else if(item_hit == "abils") {
+		if(!save_monst_abils(me, store_monst)) return true;
+		i = choose_text_res("monster-abilities", 1, 38, store_monst.spec_skill + 1, &me, "Choose Monster Ability:");
 			if (i >= 0) {
-				store_monst2.spec_skill = i - 1;
-				put_monst_abils_in_dlog();
+				store_monst.spec_skill = i - 1;
+				put_monst_abils_in_dlog(me, store_monst, which_monst);
 			}	
-			break;
-		case 34: // radiate
-			if (save_monst_abils() == false) break;
-			i = choose_text_res(20,50,65,store_monst2.radiate_1 + 50,815,"Choose Radiation Ability:");
+	} else if(item_hit == "radiate") {
+		if(!save_monst_abils(me, store_monst)) return true;
+		i = choose_text_res("monster-abilities", 50, 65, store_monst.radiate_1 + 50, &me, "Choose Radiation Ability:");
 			if (i >= 0) {
-				store_monst2.radiate_1 = i - 50;
-				put_monst_abils_in_dlog();
-			}	
-			break;
-		default:
-			cd_hit_led_range(815,9,12,item_hit);
-			cd_hit_led_range(815,41,44,item_hit);
-			for (i = 13; i < 21; i++)
-				cd_flip_led(815,i,item_hit);
-			break;
-			
+				store_monst.radiate_1 = i - 50;
+				put_monst_abils_in_dlog(me, store_monst, which_monst);
+			}
+		if(i >= 1 && i <= 6)
+			me["abil-xtra"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Radiation Chance"));
+		else if(i >= 10 && i <= 12)
+			me["abil-xtra"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 255, "Summoned Monster"));
+		else me["abil-xtra"].attachFocusHandler(nullptr);
 	}
-#endif
+	return true;
 }
 
-cMonster edit_monst_abil(cMonster starting_record,short parent_num) {
-	cMonster store_monst2 = starting_record;
-#if 0
-	// ignore parent in Mac version
-	short item_hit;
+cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
+	using namespace std::placeholders;
+	cMonster store_monst = starting_record;
 	
-	//store_which_monst = which_monst;
-	store_monst2 = starting_record;
-	//make_cursor_sword();
+	cDialog monst_dlg("edit-monster-abils.xml");
+	monst_dlg["poison"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 8, "Poison"));
+	monst_dlg["breath-str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "Breath Damage"));
+	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
+	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst),which_monst), {"okay", "cancel", "abils", "radiate"});
 	
-	cd_create_dialog_parent_num(815,parent_num);
+	put_monst_abils_in_dlog(monst_dlg, store_monst, which_monst);
 	
-	put_monst_abils_in_dlog();
-	
-	cd_add_label(815,9,"Fire",35);
-	cd_add_label(815,10,"Cold",35);
-	cd_add_label(815,11,"Electricity",35);
-	cd_add_label(815,12,"Darkness",35);
-	cd_add_label(815,41,"No Summon",35);
-	cd_add_label(815,42,"Type 1",35);
-	cd_add_label(815,43,"Type 2",35);
-	cd_add_label(815,44,"Type 3",35);
-	
-	cd_add_label(815,13,"Resist Magic",55);
-	cd_add_label(815,15,"Resist Fire",55);
-	cd_add_label(815,17,"Resist Cold",55);
-	cd_add_label(815,19,"Resist Poison",55);
-	cd_add_label(815,14,"Immune To Magic",55);
-	cd_add_label(815,16,"Immune To Fire",55);
-	cd_add_label(815,18,"Immune To Cold",55);
-	cd_add_label(815,20,"Immune To Poison",55);
-	
-	item_hit = cd_run_dialog();
-	cd_kill_dialog(815);
-#endif
-	return store_monst2;
+	monst_dlg.run();
+	return store_monst;
 }
 
 void put_item_info_in_dlog() {
