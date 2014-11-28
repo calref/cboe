@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -1525,12 +1526,10 @@ void set_up_lights()
 
 	short i,j,rad;
 	location where,l;
-short num_lights = 0;
 Boolean where_lit[64][64];
 
 
 	// Find bonfires, braziers, etc.
-	num_lights = 0;
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++)
 			where_lit[i][j] = 0;
@@ -1540,8 +1539,8 @@ Boolean where_lit[64][64];
 			l.x = i; l.y = j;
 			rad = scenario.ter_types[t_d.terrain[i][j]].light_radius;
 			if (rad > 0) {
-				for (where.x = max(0,i - rad); where.x < min(max_dim[town_type],i + rad + 1); where.x++)
-					for (where.y = max(0,j - rad); where.y < min(max_dim[town_type],j + rad + 1); where.y++)
+				for (where.x = std::max<short>(0,i - rad); where.x < std::min<short>(max_dim[town_type],i + rad + 1); where.x++)
+					for (where.y = std::max<short>(0,j - rad); where.y < std::min<short>(max_dim[town_type],j + rad + 1); where.y++)
 						if ((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,0) < 5))
 							where_lit[where.x][where.y] = 1;
 				}
@@ -1672,11 +1671,9 @@ Boolean is_erasable_water(short i,short j)
 {
 
 	Boolean answer = FALSE;
-	short pic;
 	unsigned char ter;
 
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1709,11 +1706,9 @@ Boolean is_water(short i,short j)
 Boolean is_correctable_water(short i,short j)
 {
 	Boolean answer = FALSE;
-	short pic;
 	unsigned char ter;
 
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	pic = scenario.ter_types[ter].picture;
 	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
 		return FALSE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))

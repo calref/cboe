@@ -34,7 +34,7 @@ void start_town_mode(short which_town, short entry_dir)
 
 	char message[60];
 	short j,k,town_number;
-	short at_which_save_slot,former_town;
+	short former_town;
 	location loc;
 	unsigned char temp;
 	Boolean monsters_loaded = false, town_toast = false;
@@ -109,8 +109,6 @@ void start_town_mode(short which_town, short entry_dir)
 	c_town.hostile = 0;
 	c_town.monst.which_town = town_number;
 	c_town.monst.friendly = 0;
-
-	at_which_save_slot = party.at_which_save_slot;
 
 	for (i = 0; i < 4; i++)
 		if (town_number == party.creature_save[i].which_town) {
@@ -1022,7 +1020,7 @@ void erase_specials()
 
 void erase_out_specials()
 {
-	short i,j,k,l,m,out_num;
+	short i,j,k,l,m;
 
 	special_node_type sn;
 	short sd1,sd2;
@@ -1062,7 +1060,6 @@ void erase_out_specials()
 			for (k = 0; k < 18; k++)
 				//GK if (outdoors[i][j].special_id[k] >= 0)
 				{
-				out_num = scenario.out_width * (party.outdoor_corner.y + j) + party.outdoor_corner.x + i;
 
 				sn = outdoors[i][j].specials[outdoors[i][j].special_id[k]];
 				sd1 = sn.sd1; sd2 = sn.sd2;

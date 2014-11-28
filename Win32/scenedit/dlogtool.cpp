@@ -1,5 +1,6 @@
 
 #include <windows.h>
+#include <algorithm>
 
 #define ND	15
 #define	NI	500
@@ -94,7 +95,7 @@ short button_type[140] = {1,1,4,5,1,1,0,0,1,1,
 						 2,2,2,2,2,2,2,2,2,2,
 						 2,2,2,2,2,2,2,2,0,0,
 						 1,1,1,1,1,1,0,0,0,0};
-char *button_strs[140] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
+char const *button_strs[140] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
 						"Get","1","2","3","4","5","6","Cast"," "," ",
 						" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
 						"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
@@ -147,8 +148,8 @@ short button_ul_y[15] = {0,0,132,23,46, 69,46,69,36,36, 36,23,92,92,0};
 short button_width[15] = {23,63,102,16,63, 63,63,63,6,14, 14,63,63,63,30};
 short button_height[15] = {23,23,23,13,23, 23,23,23,6,10,10,23,40,40,30};
 
-BOOL CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM wparam, LPARAM lparam);
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK dummy_dialog_proc (HWND hDlg, UINT message, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 FARPROC d_proc;
 
@@ -181,7 +182,7 @@ void cd_init_dialogs()
 	edit_proc = (FARPROC) fresh_edit_proc;
 }
 
-long CALLBACK fresh_edit_proc(HWND hwnd, UINT message, UINT wParam, LONG lParam)
+LRESULT CALLBACK fresh_edit_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	short i,cur_box = -1,cur_item_num,item_for_focus = -1,first_edit_box = -1;
 
@@ -300,7 +301,7 @@ short cd_create_dialog(short dlog_num,HWND parent)
 	return 0;
 }
 
-BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	short i,j,k,l,free_slot = -1,free_item = -1,type,flag;
 	char item_str[256];
@@ -494,19 +495,19 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 									edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_AUTOVSCROLL,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
-										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
+										std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 										dlgs[free_slot],(HMENU)150,store_hInstance,NULL);
 									else edit_box[l] = CreateWindow("edit",NULL,WS_CHILD | WS_BORDER | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL,
 										item_rect[free_item].left,item_rect[free_item].top,
 										item_rect[free_item].right - item_rect[free_item].left,
-										max(22,item_rect[free_item].bottom - item_rect[free_item].top),
+										std::max<short>(22,item_rect[free_item].bottom - item_rect[free_item].top),
 										dlgs[free_slot],(HMENU)150,store_hInstance,NULL);
 									num_text_boxes++;
 									store_edit_parent[l] =  dlgs[free_slot];
  									store_edit_parent_num[l] = store_dlog_num;
 									store_edit_item[l] = i;
-									old_edit_proc[l] = (FARPROC) GetWindowLong(edit_box[l],GWL_WNDPROC);
-									SetWindowLong(edit_box[l],GWL_WNDPROC,(LONG) edit_proc);
+									old_edit_proc[l] = (FARPROC) GetWindowLongPtr(edit_box[l],GWLP_WNDPROC);
+									SetWindowLongPtr(edit_box[l],GWLP_WNDPROC,(LONG_PTR) edit_proc);
 									if (focus_set == FALSE)
 									{
 										SetFocus(edit_box[l]);
@@ -516,8 +517,8 @@ BOOL CALLBACK dummy_dialog_proc	(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 								}
 							break;
 						}
-					win_height = max(win_height, item_rect[free_item].bottom + 28);
-					win_width = max(win_width, item_rect[free_item].right + 11);
+					win_height = std::max<short>(win_height, item_rect[free_item].bottom + 28);
+					win_width = std::max<short>(win_width, item_rect[free_item].right + 11);
 
 				}
 
@@ -806,7 +807,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
+void cd_set_text_edit_str(short dlog_num, short item_num, char const *str)
 {
 	short i;
 		for (i = 0; i < 80; i++)
@@ -838,7 +839,7 @@ void cdsin(short dlog_num, short item_num, short num)
 	cd_set_item_num( dlog_num,  item_num,  num);
 }
 
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, char const *str)
 {
 cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -847,7 +848,7 @@ void csp(short dlog_num, short item_num, short pict_num, short custom_pic_type)
 	cd_set_pict( dlog_num,  item_num,  pict_num, custom_pic_type);
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, char const *str)
 {
 	short dlg_index,item_index,i;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -962,7 +963,7 @@ short cd_get_led_range(short dlog_num,short first_led,short last_led)
 }
 
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, char const *label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

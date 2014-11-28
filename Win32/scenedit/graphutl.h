@@ -4,4 +4,4 @@ void rect_draw_some_item(HBITMAP src,RECT src_rect,HBITMAP dest,RECT dest_rect,
 void fry_dc(HWND hwnd,HDC dc);
 HBITMAP load_pict(short pict_num,HDC model_hdc);
 void paint_pattern(HBITMAP dest,short which_mode,RECT dest_rect,short which_pattern);
-HBITMAP ReadBMP(char * fileName);
+HBITMAP ReadBMP(char const * fileName);

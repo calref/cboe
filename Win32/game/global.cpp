@@ -41,7 +41,7 @@ POINT MAKEPOINT(LONG lParam)
 	return point;
 }
 
-void DebugQuit(char * msg)
+void DebugQuit(char const * msg)
 {
 	MessageBox(0, msg, "DebugQuit", MB_OK);
 	PostQuitMessage(EXIT_FAILURE);

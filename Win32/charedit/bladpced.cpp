@@ -27,7 +27,7 @@ void cursor_stay();
 Boolean verify_restore_quit(short mode);
 void max_window(HWND window);
 void update_item_menu(short mode);
-void check_cd_event(HWND hwnd,UINT message,UINT wparam,LONG lparam);
+void check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 
 scen_item_data_type scen_item_list;
 short item_menus_lock=1;
@@ -137,7 +137,7 @@ char file_path_name[256];
 
 Boolean block_erase = FALSE;
 
-long CALLBACK _export WndProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 Boolean handle_menu (short, HMENU);
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCmdShow)
@@ -239,9 +239,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCm
 		return msg.wParam;
 }
 
-long CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-HDC hdc;
 PAINTSTRUCT ps;
 POINT press;
 HMENU menu;
@@ -298,7 +297,7 @@ HMENU menu;
       return 0;
 
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd,&ps);
+		BeginPaint(hwnd,&ps);
 		EndPaint(hwnd,&ps);
 		if (hwnd != mainPtr)
 			check_cd_event(hwnd,message,wParam,lParam);

@@ -1,6 +1,6 @@
 #ifndef _TEXT_H
 	#define _TEXT_H
-	
+
 #include <windows.h>	// RECT, HDC etc.
 #include "classes/location.h"	// location
 #include "classes/pc.h"			// pc_record_type
@@ -42,7 +42,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(char *string);
+void add_string_to_buf(char const *string);
 void print_buf () ;
 void through_sending();
 void Display_String(char *str);
@@ -50,7 +50,7 @@ RECT coord_to_rect(short i,short j);
 void c2p(char *str) ;
 void p2c(char *str);
 short string_length(char *str,HDC hdc);
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
+void char_win_draw_string(HDC dest_window,RECT dest_rect,char const *str,short mode,short line_height);
 void win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
 short calc_day();
 Boolean day_reached(unsigned char which_day, unsigned char which_event);

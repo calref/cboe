@@ -475,7 +475,7 @@ void set_up_terrain_buttons()
 void draw_terrain()
 {
 	short q,r,x,i,small_i;
-	location which_pt,where_draw;
+	location where_draw;
 	RECT draw_rect,clipping_rect = {8,8,260,332};
 	unsigned char t_to_draw;
 	RECT tiny_to,tiny_to_base = {29,37,36,44},tiny_from,from_rect,to_rect;
@@ -527,8 +527,6 @@ void draw_terrain()
 					else t_to_draw = current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];
 					}
 			draw_one_terrain_spot(q,r,t_to_draw);
-			which_pt.x = cen_x + q - 4;
-			which_pt.y =cen_y + r - 4;
 
 			tiny_to = tiny_to_base;
 			OffsetRect(&tiny_to,28 * q, 36 * r);
@@ -892,17 +890,13 @@ void draw_one_terrain_spot (short i,short j,unsigned char terrain_to_draw)
 void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,HDC hdc)
 {
 
-	location where_draw;
 	RECT dest_rect = {0,0,5,5},from_rect = {0,0,4,4},orig_draw_rect = {0,0,4,4};
 	short picture_wanted;
-	GWorldPtr source_gworld;
 	HBITMAP store_bmp;
 	HBRUSH old_brush;
 
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
 
-	where_draw.x = (char) i;
-	where_draw.y = (char) j;
 	OffsetRect(&dest_rect,8 + 4 * i,8 + 4 * j);
 
 	store_bmp = (HBITMAP)SelectObject(hdc,ter_draw_gworld);
@@ -932,7 +926,6 @@ void draw_one_tiny_terrain_spot (short i,short j,unsigned char terrain_to_draw,H
 			}
 
 		else if (picture_wanted >= 400)	{
-				source_gworld = anim_gworld;
 				picture_wanted -= 400;
 				if (picture_wanted == 0) {
 			SelectObject(hdc,map_brush[13]);
@@ -1207,7 +1200,7 @@ void place_just_location()
 	DeleteObject(hdc);
 }
 
-void set_string(char *string,char *string2)
+void set_string(char const *string,char const *string2)
 {
 	strcpy((char *)current_string,string);
 	strcpy((char *)current_string2,string2);

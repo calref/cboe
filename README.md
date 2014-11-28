@@ -18,8 +18,9 @@ The current task at hand is to merge the Windows code into the current Mac codeb
 
 Helpful Links
 -------------
-* [Jenkins Server](http://cd.calref.net:8080/) - Runs a build after every push
+* [Jenkins Server](http://te.calref.net:8080/) - Runs a build after every push
 * [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)
 * [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where it all began. Warning: Terrifying code.
 * [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for most, if not all, of the Win32 work.
 * [Experimental Builds](http://celmin.pwcsite.com/oboe/) - will be put up whenever Celtic Minstrel feels like it.
+* [Blades File Dump](http://blades.calref.net/) - A spot to quickly add project files; mostly contains older binaries from the Google Code page.

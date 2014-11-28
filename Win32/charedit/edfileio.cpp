@@ -78,14 +78,14 @@ path[i+1]='\0';                  // close the argument string after the last '\'
 
 void file_initialize()
 {
-	static char * szFilter[] =
+	static char const * szFilter[] =
 	{
 		"Classic BoE Save Files (*.SAV)\0*.sav\0"
 		"Experimental BoE Save Files (*.savx)\0*.savx\0"
 		"All Files (*.*)\0*.*\0"
 		"\0\0"
 	};
-	
+
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = mainPtr;
 	ofn.hInstance = NULL;
@@ -106,12 +106,11 @@ void file_initialize()
 	ofn.lCustData = 0L;
 	ofn.lpfnHook = NULL;
 	ofn.lpTemplateName = NULL;
-	
+
 }
 
 void load_file()
 {
-	long file_size;
 	HANDLE file_id;
 	short i, j;
 	Boolean town_restore = FALSE;
@@ -145,7 +144,6 @@ void load_file()
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_id == INVALID_HANDLE_VALUE) return;
 
-	file_size = sizeof(party_record_type);
 
 
 	for (i = 0; i < 3; i++)
@@ -731,7 +729,6 @@ void save_file(short mode)
 	short flag;
 	short *store;
 	party_record_type *party_ptr;
-	setup_save_type	*setup_ptr;
 	pc_record_type *pc_ptr;
 
 	char *party_encryptor;
@@ -996,7 +993,6 @@ void save_file(short mode)
 		party_encryptor[count] ^= 0x5C;
 
 	// SAVE SETUP
-	setup_ptr = &setup_save;
 	if (WriteFile(file_id, &setup_save, sizeof(setup_save_type), &bytes, NULL) == FALSE)
 	{
 		CloseHandle(file_id);

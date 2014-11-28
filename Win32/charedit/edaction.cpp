@@ -72,17 +72,12 @@ Boolean handle_action(POINT the_point, UINT wparam, LONG lparam )
 	short i;
 
 	Boolean to_return = FALSE;
-	Boolean ctrl_key = FALSE;
-	Boolean right_button = FALSE;
 
 	if (lparam != -1) {
 		the_point.x -= ulx;
 		the_point.y -= uly;
 		}
-	if (lparam == -2)
-		right_button = TRUE;
 	if (MK_CONTROL & wparam)
-		ctrl_key = TRUE;
 
 	if (file_in_mem == FALSE)
 		return FALSE;
@@ -341,7 +336,7 @@ Boolean display_alchemy_event_filter (short item_hit)
 void display_alchemy()
 {
 	short i;
-	char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+	char const *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 		"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
 		"Graymold Salve (7)","Weak Power Potion (9)",

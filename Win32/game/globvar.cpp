@@ -42,7 +42,7 @@ out_wandering_type store_wandering_special;
 short store_shop_type;
 short debug_ok = 0;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
-char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
+char const *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
 item_record_type start_items[6] =
 {
@@ -182,7 +182,7 @@ short monst_mage_cost[27] = {1,1,1,1,2, 2,2,2,2,4, 2,4,4,3,4, 4,4,5,5,5, 5,6,6,6
 short monst_mage_area_effect[27] = {0,0,0,0,0, 0,0,0,1,0, 1,1,0,1,0, 0,0,0,1,0, 1,0,0,0,0, 0,0};
 short monst_priest_cost[26] = {1,1,1,1,2, 2,2,4,2,3, 3,3,4,4,4, 5,5,5,10,6, 6,10,8,8,8, 8};
 short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0, 1};
-char *d_string[] =
+char const *d_string[] =
 {
 	"North",
 	"NorthEast",
@@ -372,7 +372,7 @@ char store_store_name[256];
 RECT bottom_help_rects[4] = {{6,356,250,368},{6,374,270,386},{6,386,250,398},{6,398,250,410}};
 RECT shop_frame = {10,62,269,352};
 RECT shop_done_rect = {212,388,275,411}; /**/
-char *heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
+char const *heal_types[] = {"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
 	"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"};
 short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
 long cost_mult[7] = {5,7,10,13,16,20,25};
@@ -417,7 +417,7 @@ short button_type[150] = {1,1,4,5,1,1,0,0,1,1,
 	2,2,2,2,2,2,2,2,1,1,
 	1,1,1,1,1,1,1,1,0,0,
 	0,0,0,0,0,0,0,0,0,0};
-char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
+char const *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
 	"Get","1","2","3","4","5","6","Cast"," "," ",
 	" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
 	"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
@@ -764,7 +764,7 @@ const char *mage_s_name[] =
 	"Force Barrier",
 	"Quickfire",
 	"Death Arrows"};
-char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
+char const *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
 	"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
 	"Bless","Cure Poison","Curse","Light","Wound",
 	"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
@@ -778,7 +778,7 @@ char *priest_s_name[] = {"Minor Bless","Minor Heal","Weaken Poison","Turn Undead
 	"Guardian","Mass Charm","Protective Circle","Pestilence",
 	"Revive All","Ravage Spirit","Resurrect","Divine Thud",
 	"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
+char const *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
 	"Weak Speed Potion (3)","Medium Poison (3)",
 	"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
 	"Graymold Salve (7)","Weak Energy Potion (9)",
@@ -786,7 +786,7 @@ char *alch_names[] = {"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak P
 	"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
 	"Strong Strength (10)","Bliss (16)","Strong Energy Ptn. (20)"
 };
-char *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
+char const *alch_names_short[] = {"Weak Curing Potion","Weak Healing Potion","Weak Poison",
 	"Weak Speed Potion","Medium Poison",
 	"Medium Heal Potion","Strong Curing","Medium Speed Potion",
 	"Graymold Salve","Weak Energy Potion",
@@ -866,13 +866,13 @@ Boolean string_added = false;
 short store_text_x = 0, store_text_y = 0;
 short current_item_button[6] = {-1,-1,-1,-1,-1,-1};
 short pc_button_state[6] = {-1,-1,-1,-1,-1,-1};
-char *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
+char const *m_mage_sp[] = {"Spark","Minor Haste","Strength","Flame Cloud","Flame",
 	"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
 	"Conflagration","Fireball","Weak Summoning","Web","Poison",
 	"Ice Bolt","Slow Group","Major Haste","Firestorm","Summoning",
 	"Shockstorm","Major Poison","Kill","Daemon","Major Blessing",
 	"Major Summoning","Shockwave"};
-char *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
+char const *m_priest_sp[] = {"Minor Bless","Light Heal","Wrack","Stumble","Bless",
 	"Curse","Wound","Summon Spirit","Disease","Heal",
 	"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
 	"Bless All","Major Heal","Flamestrike","Summon Host","Revive Self",

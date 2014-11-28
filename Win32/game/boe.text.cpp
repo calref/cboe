@@ -41,12 +41,10 @@ void put_pc_screen()
 	HDC hdc;
 	COLORREF colors[6] = {RGB(0,0,0),RGB(255,0,0),RGB(128,0,0),RGB(0,160,0),RGB(0,0,255),RGB(255,255,255)};
 	HBITMAP store_bmp;
-	Boolean right_buttons_same = true;
 
 	for (i = 0; i < 6; i++)
 		if (((adven[i].main_status != MAIN_STATUS_ABSENT) && (pc_button_state[i] != 1)) ||
 			((adven[i].main_status == MAIN_STATUS_ABSENT) && (pc_button_state[i] != 0)))
-				right_buttons_same = false;
 
 	// First refresh gworld with the pc info
 	//rect_draw_some_item (orig_pc_info_screen_gworld, erase_rect, pc_info_screen_gworld, erase_rect, 0, 0);
@@ -282,7 +280,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			break;
 		case 7: // On jobs page
 			SelectObject(hdc,bold_font);
-            win_draw_string(hdc,upper_frame_rect,"Your current jobs:",0,10);
+            win_draw_string(hdc,upper_frame_rect,(char *)"Your current jobs:",0,10);
 /*			SelectObject(hdc,font);
  		 	SetTextColor(hdc,colors[0]);
 			win_draw_string(hdc,item_buttons[0][0],"Test",0,10);*/
@@ -1185,13 +1183,13 @@ short print_terrain(location space)
 	if (is_combat()) which_terrain = combat_terrain[space.x][space.y];
 	get_ter_name(store_string2,which_terrain);
 	sprintf((char *) store_string, "    %s", store_string2);
-	add_string_to_buf((char *) store_string);
+	add_string_to_buf( store_string);
 
 	return (short) which_terrain;
 }
 
 
-void add_string_to_buf(char *string)
+void add_string_to_buf(char const *string)
 {
     if(strcmp(string,"") == 0)
         return;
@@ -1217,7 +1215,6 @@ void print_buf ()
 	short num_lines_printed = 0,ctrl_val;
 	short line_to_print;
 	short start_print_point;
-	Boolean end_loop = false;
 	RECT store_text_rect = {0,0,256,138},dest_rect,erase_rect = {1,1,255,137}; /**/
 	RECT from_rect,to_rect;
 	HDC hdc;
@@ -1265,7 +1262,6 @@ void print_buf ()
 			}
 
 		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == true)) {
-			end_loop = false;
 			line_to_print= buf_pointer;
 			}
 
@@ -1350,7 +1346,7 @@ short string_length(char *str,HDC hdc)
 }
 
 
-void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height)
+void char_win_draw_string(HDC dest_window,RECT dest_rect,char const *str,short mode,short line_height)
 {
 	char store_s[256];
 
