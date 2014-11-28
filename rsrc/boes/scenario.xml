@@ -47,15 +47,7 @@
 
   
 
-  <author id="5482">
-
-  <!-- global author ID for sort stuff.
-
-       For a current standard, we could use SW member number.
-
-       just to make any server-browser stuff easier
-
-       -->
+  <author>
 
     <name>Sylae Jiendra Corell</name><!-- Human-readable -->
 
@@ -75,8 +67,6 @@
 
   <ratings>
 
-    <user>
-
       <content>g</content>
 
       <!-- g,pg,r,nc17 -->
@@ -88,8 +78,6 @@
            low,medium,high,very high, repectively
 
       -->      
-
-    </user>
 
   </ratings>
 

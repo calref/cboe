@@ -31,7 +31,6 @@
 				<xs:element name="name" type="xs:string"/>
 				<xs:element name="email" type="xs:string"/>
 			</xs:sequence>
-			<xs:attribute name="id" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="text">
@@ -44,6 +43,30 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="ratings">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="content">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:enumeration value="g"/>
+							<xs:enumeration value="pg"/>
+							<xs:enumeration value="r"/>
+							<xs:enumeration value="nc17"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="difficulty">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:enumeration value="1"/>
+							<xs:enumeration value="2"/>
+							<xs:enumeration value="3"/>
+							<xs:enumeration value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="flags">
 		<xs:complexType>
