@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="point">
+		<xs:attribute name="x" use="required" type="xs:integer"/>
+		<xs:attribute name="y" use="required" type="xs:integer"/>
+	</xs:complexType>
+	<xs:simpleType name="key">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0"/>
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+					<xs:enumeration value="4"/>
+					<xs:enumeration value="5"/>
+					<xs:enumeration value="6"/>
+					<xs:enumeration value="7"/>
+					<xs:enumeration value="8"/>
+					<xs:enumeration value="9"/>
+					<xs:enumeration value="a"/>
+					<xs:enumeration value="b"/>
+					<xs:enumeration value="c"/>
+					<xs:enumeration value="d"/>
+					<xs:enumeration value="e"/>
+					<xs:enumeration value="f"/>
+					<xs:enumeration value="g"/>
+					<xs:enumeration value="h"/>
+					<xs:enumeration value="i"/>
+					<xs:enumeration value="j"/>
+					<xs:enumeration value="k"/>
+					<xs:enumeration value="l"/>
+					<xs:enumeration value="m"/>
+					<xs:enumeration value="n"/>
+					<xs:enumeration value="o"/>
+					<xs:enumeration value="p"/>
+					<xs:enumeration value="q"/>
+					<xs:enumeration value="r"/>
+					<xs:enumeration value="s"/>
+					<xs:enumeration value="t"/>
+					<xs:enumeration value="u"/>
+					<xs:enumeration value="v"/>
+					<xs:enumeration value="w"/>
+					<xs:enumeration value="x"/>
+					<xs:enumeration value="y"/>
+					<xs:enumeration value="z"/>
+					<xs:enumeration value="`"/>
+					<xs:enumeration value="-"/>
+					<xs:enumeration value="="/>
+					<xs:enumeration value="["/>
+					<xs:enumeration value="]"/>
+					<xs:enumeration value="\"/>
+					<xs:enumeration value=";"/>
+					<xs:enumeration value="'"/>
+					<xs:enumeration value=","/>
+					<xs:enumeration value="."/>
+					<xs:enumeration value="/"/>
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="right"/>
+					<xs:enumeration value="up"/>
+					<xs:enumeration value="down"/>
+					<xs:enumeration value="esc"/>
+					<xs:enumeration value="enter"/>
+					<xs:enumeration value="return"/>
+					<xs:enumeration value="tab"/>
+					<xs:enumeration value="help"/>
+					<xs:enumeration value="space"/>
+					<xs:enumeration value="none"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="editor">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="shortcut" minOccurs="0" type="key"/>
+				<xs:element name="object" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="num" type="xs:integer"/>
+							<xs:element name="pos" type="point"/>
+							<xs:element name="size" type="point"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ground" minOccurs="0" type="xs:integer"/>
+				<xs:element name="trim-for" minOccurs="0" type="xs:integer"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="terrain">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="pic" type="xs:integer"/>
+				<xs:element name="map" type="xs:integer"/>
+				<xs:element name="blockage" type="xs:integer"/>
+				<xs:element name="special">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="type" type="xs:integer"/>
+							<xs:element name="flag" minOccurs="0" maxOccurs="3" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="transform" minOccurs="0" type="xs:integer"/>
+				<xs:element name="fly" minOccurs="0" type="bool"/>
+				<xs:element name="boat" minOccurs="0"  type="bool"/>
+				<xs:element name="ride" minOccurs="0" type="bool"/>
+				<xs:element name="light" minOccurs="0" type="xs:integer"/>
+				<xs:element name="step-sound" minOccurs="0" type="xs:integer"/>
+				<xs:element name="trim" type="xs:integer"/>
+				<xs:element name="arena" type="xs:integer"/>
+				<xs:element ref="editor" minOccurs="0"/>
+			</xs:all>
+			<xs:attribute name="id" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="terrains">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="terrain" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="boes" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

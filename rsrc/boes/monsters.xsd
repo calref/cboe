@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name='dice'>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d*d\d+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ability">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="2"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="attack">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="dice">
+					<xs:attribute name="type" type="xs:integer" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="monster">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="level" type="xs:integer"/>
+				<xs:element name="armor" type="xs:integer"/>
+				<xs:element name="skill" type="xs:integer"/>
+				<xs:element name="hp" type="xs:integer"/>
+				<xs:element name="speed" type="xs:integer"/>
+				<xs:element name="treasure" minOccurs="0" type="xs:integer"/>
+				<xs:element name="mage" minOccurs="0" type="xs:integer"/>
+				<xs:element name="priest" minOccurs="0" type="xs:integer"/>
+				<xs:element name="breath" minOccurs="0">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="type" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:token">
+											<xs:enumeration value="fire"/>
+											<xs:enumeration value="cold"/>
+											<xs:enumeration value="shock"/>
+											<xs:enumeration value="dark"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="poison" minOccurs="0" type="xs:integer"/>
+				<xs:element name="abilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ability" maxOccurs="2"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="attacks">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="attack" maxOccurs="3"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="pic">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="w" type="xs:integer" use="required"/>
+								<xs:attribute name="h" type="xs:integer" use="required"/>
+								<xs:attribute name="custom" type="bool" default="false"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="default-face" minOccurs="0" type="xs:integer"/>
+				<xs:element name="onsight" minOccurs="0">
+					<xs:complexType>
+						<xs:all minOccurs="1">
+							<xs:element name="sound" minOccurs="0" type="xs:integer"/>
+							<xs:element name="special" minOccurs="0" type="xs:integer"/>
+							<xs:element name="message" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="text" maxOccurs="2" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="voice" minOccurs="0" type="xs:integer"/>
+				<xs:element name="summon" minOccurs="0" type="xs:integer"/>
+				<xs:element name="attitude" type="xs:integer"/>
+				<xs:element name="immunity" type="xs:integer"/>
+				<xs:element name="loot" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="type" type="xs:integer"/>
+							<xs:element name="chance" type="xs:integer"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="id" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="monsters">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="monster" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

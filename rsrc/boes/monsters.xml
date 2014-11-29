@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monsters>
+	<monster id="7">
+		<!-- The monster's name -->
+		<name>Cave Cow</name>
+		<!-- Monster picture -->
+		<pic w='1' h='1'>5</pic>
+		<!-- Experience level -->
+		<level>1</level>
+		<!-- Essential stats -->
+		<armor>0</armor>
+		<skill>1</skill>
+		<hp>5</hp>
+		<speed>4</speed>
+		<!-- Treasure class -->
+		<treasure>0</treasure>
+		<!-- Attacks -->
+		<attacks>
+			<attack type='0'>1d4</attack>
+		</attacks>
+		<!-- Breath weapon -->
+		<breath type='dark'>1</breath>
+		<!-- Special abilities -->
+		<abilities>
+			<ability>
+				<type>0</type>
+				<param>4</param>
+			</ability>
+		</abilities>
+		<!-- Actions on sighting -->
+		<onsight/>
+		<!-- Ambient sound (eg cow mooing) -->
+		<voice>17</voice>
+		<!-- Summon class -->
+		<summon>0</summon>
+		<!-- Default attitude -->
+		<attitude>2</attitude>
+		<!-- Immunities (bit field) -->
+		<immunity>0</immunity>
+	</monster>
+</monsters>

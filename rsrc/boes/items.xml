@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+	<item>
+		<variety>12</variety>
+		<level>3</level>
+		<pic>12</pic>
+		<name>Test Item</name>
+		<full-name>Test Item</full-name>
+		<value>3</value>
+		<weight>10</weight>
+		<properties/>
+	</item>
+</items>
