@@ -40,6 +40,7 @@ class cDialog {
 	cTextField* currentFocus;
 	cDialog* parent;
 	void loadFromFile(std::string path);
+	template<typename Iter> void handleTabOrder(std::string itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 public:
 	static void init();

@@ -1033,29 +1033,10 @@ void cDialog::run(){
 				where = controls[itemHit]->getBounds().centre();
 				if(controls[itemHit]->getType() == CTRL_FIELD){
 					if(key.spec && key.k == key_tab){
-						// TODO: Tabbing through fields, and trigger focus events.
-						auto cur = find_if(tabOrder.begin(), tabOrder.end(), [&itemHit](pair<string,cTextField*>& a) {
-							return a.first == itemHit;
-						});
-						if(cur == tabOrder.end()) break; // Unlikely, but let's be safe
-						if(!cur->second->triggerFocusHandler(*this,itemHit,true)) break;
-						cTextField* wasFocus = currentFocus;
-						auto iter = std::next(cur);
-						if(iter == tabOrder.end()) iter = tabOrder.begin();
-						while(iter != cur){
-							// If tab order is explicitly specified for all fields, gaps are possible
-							if(iter->second == nullptr) continue;
-							if((currentFocus = dynamic_cast<cTextField*>(iter->second))){
-								if(currentFocus->triggerFocusHandler(*this,iter->first,false)){
-									itemHit = "";
-									break;
-								}
-							}
-							iter++;
-							if(iter == tabOrder.end()) iter = tabOrder.begin();
-						}
-						if(iter == cur) // no focus change occured!
-							currentFocus = wasFocus; // TODO: Surely something should happen here?
+						// Could use key.mod, but this is slightly easier.
+						if(currentEvent.key.shift)
+							handleTabOrder(itemHit, tabOrder.rbegin(), tabOrder.rend());
+						else handleTabOrder(itemHit, tabOrder.begin(), tabOrder.end());
 					} else if(!key.spec || key.k != key_enter || mod_contains(key.mod, mod_alt)) {
 						dynamic_cast<cTextField*>(controls[itemHit])->handleInput(key);
 						itemHit = "";
@@ -1095,6 +1076,31 @@ void cDialog::run(){
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	while(parentWin->pollEvent(currentEvent));
 	set_cursor(former_curs);
+}
+
+template<typename Iter> void cDialog::handleTabOrder(string itemHit, Iter begin, Iter end) {
+	auto cur = find_if(begin, end, [&itemHit](pair<string,cTextField*>& a) {
+		return a.first == itemHit;
+	});
+	if(cur == end) return; // Unlikely, but let's be safe
+	if(!cur->second->triggerFocusHandler(*this,itemHit,true)) return;
+	cTextField* wasFocus = currentFocus;
+	auto iter = std::next(cur);
+	if(iter == end) iter = begin;
+	while(iter != cur){
+		// If tab order is explicitly specified for all fields, gaps are possible
+		if(iter->second == nullptr) continue;
+		if((currentFocus = dynamic_cast<cTextField*>(iter->second))){
+			if(currentFocus->triggerFocusHandler(*this,iter->first,false)){
+				itemHit = "";
+				break;
+			}
+		}
+		iter++;
+		if(iter == end) iter = begin;
+	}
+	if(iter == cur) // no focus change occured!
+		currentFocus = wasFocus; // TODO: Surely something should happen here?
 }
 
 void cDialog::setBg(short n){
