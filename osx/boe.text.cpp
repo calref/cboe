@@ -292,7 +292,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),0,style);
 					
 					place_item_button(3,i,4,0);
-					if ((scenario.special_items[spec_item_array[i_num]] % 10 == 1)
+					if ((scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat())))
 						place_item_button(0,i,3,0);
 				}

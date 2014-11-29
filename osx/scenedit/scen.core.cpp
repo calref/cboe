@@ -89,8 +89,8 @@ void init_scenario() {
 		scenario.store_item_towns[i] = -1;
 	}
 	for (i = 0; i < 50; i++) {
-		scenario.special_items[i] = 0;
-		scenario.special_item_special[i] = -1;
+		scenario.special_items[i].flags = 0;
+		scenario.special_items[i].special = -1;
 	}
 	scenario.rating = 0;
 	scenario.uses_custom_graphics = 0;

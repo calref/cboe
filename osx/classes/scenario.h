@@ -62,8 +62,7 @@ public:
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
 	short flag_e;
-	short special_items[50];
-	short special_item_special[50];
+	cSpecItem special_items[50];
 	short rating,uses_custom_graphics;
 	short flag_f;
 	cMonster scen_monsters[256];
@@ -93,9 +92,6 @@ public:
 	char contact_info[256];
 	char intro_strs[6][256];
 	char journal_strs[50][256];
-	//char spec_item_strs[100][256];
-	char spec_item_names[50][256];
-	char spec_item_strs[50][256];
 	char spec_strs[100][256];
 	char monst_strs[100][256];
 	bool adjust_diff : 1;

@@ -70,9 +70,8 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	}
 	for(i = 0; i < 3; i++) store_item_towns[i] = old.store_item_towns[i];
 	flag_e = old.flag_e;
-	// TODO: Combine these two into a structure
-	for(i = 0; i < 50; i++) special_items[i] = old.special_items[i];
-	for(i = 0; i < 50; i++) special_item_special[i] = old.special_item_special[i];
+	for(i = 0; i < 50; i++) special_items[i].flags = old.special_items[i];
+	for(i = 0; i < 50; i++) special_items[i].special = old.special_item_special[i];
 	rating = old.rating;
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
@@ -126,8 +125,8 @@ char(& cScenario::scen_strs(short i))[256]{
 	if(i >= 4   && i < 10 ) return intro_strs[i - 4];
 	if(i >= 10  && i < 60 ) return journal_strs[i - 10];
 	if(i >= 60  && i < 160){
-		if(i % 2 == 0) return spec_item_names[(i - 60) / 2];
-		else return spec_item_strs[(i - 60) / 2];
+		if(i % 2 == 0) return special_items[(i - 60) / 2].name;
+		else return special_items[(i - 60) / 2].descr;
 	}
 	if(i >= 160 && i < 260) return spec_strs[i - 160];
 	return journal_strs[6]; // random unused slot

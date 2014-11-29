@@ -571,7 +571,7 @@ void use_spec_item(short item)
 	short i,j,k;
 	location null_loc;
 	
-	run_special(8,0,scenario.special_item_special[item],loc(),&i,&j,&k);
+	run_special(8,0,scenario.special_items[item].special,loc(),&i,&j,&k);
 	
 }
 

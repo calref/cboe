@@ -84,6 +84,15 @@ std::istream& operator >> (std::istream& in, eWeapType& e);
 std::istream& operator >> (std::istream& in, eItemType& e);
 std::istream& operator >> (std::istream& in, eItemAbil& e);
 
+class cSpecItem {
+public:
+	short flags;
+	short special;
+	// TODO: Change to std::string
+	char name[256];
+	char descr[256];
+};
+
 /*
  typedef struct {
  short variety, item_level;
