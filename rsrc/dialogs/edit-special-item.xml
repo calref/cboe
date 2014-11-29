@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='name' top='57' left='195' width='252' height='16'/>
+	<field name='descr' top='84' left='195' width='252' height='104'/>
+	<field name='spec' top='249' left='268' width='87' height='16'/>
+	<button name='okay' type='regular' top='288' left='397'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Edit Special Items</text>
+	<text top='58' left='50' width='132' height='14'>Name of Special Item:</text>
+	<text top='85' left='50' width='118' height='27'>Special Item Description:</text>
+	<text top='243' left='51' width='208' height='28'>Scenario special node to be called when item is used:</text>
+	<button name='cancel' type='regular' top='288' left='332' def-key='esc'>Cancel</button>
+	<button name='clear' type='large' top='15' left='329'>Clear Special</button>
+	<button name='edit-spec' type='large' top='246' left='363'>Create/Edit</button>
+	<text top='199' left='50' width='179' height='14'>Party starts scen. with item</text>
+	<led name='start-with' state='off' top='198' left='233'/>
+	<text top='219' left='50' width='179' height='14'>Special item can be used</text>
+	<led name='usable' state='off' top='218' left='233'/>
+	<text top='29' left='50' width='136' height='14'>Editing special item:</text>
+	<text name='num' top='29' left='190' width='39' height='14'/>
+	<button name='left' type='left' top='288' left='9'/>
+	<button name='right' type='right' top='288' left='72'/>
+</dialog>

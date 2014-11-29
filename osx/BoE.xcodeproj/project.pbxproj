@@ -464,6 +464,7 @@
 		9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13218F327230088A580 /* spell-times.txt */; };
 		9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13318F327230088A580 /* magic-names.txt */; };
 		9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13818F327230088A580 /* traits.txt */; };
+		919C6D8D1A2A32CE00FD761F /* edit-special-item.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */; };
 		919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
 		919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
 		919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
@@ -1070,6 +1071,7 @@
 				91A073581A285293002F7E72 /* edit-monster-abils.xml in Copy Dialog Definitions */,
 				91A0735D1A297C4D002F7E72 /* edit-item.xml in Copy Dialog Definitions */,
 				91A0735E1A297C4D002F7E72 /* edit-item-abils.xml in Copy Dialog Definitions */,
+				919C6D8D1A2A32CE00FD761F /* edit-special-item.xml in Copy Dialog Definitions */,
 			);
 			name = "Copy Dialog Definitions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1665,6 +1667,7 @@
 		9192C13218F327230088A580 /* spell-times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spell-times.txt"; path = "strings/spell-times.txt"; sourceTree = "<group>"; };
 		9192C13318F327230088A580 /* magic-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "magic-names.txt"; path = "strings/magic-names.txt"; sourceTree = "<group>"; };
 		9192C13818F327230088A580 /* traits.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = traits.txt; path = strings/traits.txt; sourceTree = "<group>"; };
+		919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-special-item.xml"; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
@@ -2208,6 +2211,7 @@
 				91A073561A2828C6002F7E72 /* edit-monster-abils.xml */,
 				91A073591A29202E002F7E72 /* edit-item.xml */,
 				91A0735A1A2928B4002F7E72 /* edit-item-abils.xml */,
+				919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */,
 			);
 			path = dialogs;
 			sourceTree = "<group>";

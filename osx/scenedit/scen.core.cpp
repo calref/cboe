@@ -34,7 +34,6 @@ extern cSpeech null_talk_node;
 extern location cur_out;
 extern short start_volume, start_dir;
 
-short spec_item_spec,store_horse_page,store_boat_page ;
 short cur_shortcut;
 
 void init_scenario() {
@@ -1175,117 +1174,80 @@ cItemRec edit_item_abil(cItemRec starting_record,short which_item) {
 	return store_item;
 }
 
-void put_spec_item_in_dlog() {
-#if 0
-	cdsin(806,19,store_which_spec_item);
-	CDST(806,2,scenario.scen_strs(60 + store_which_spec_item * 2));
-	CDST(806,3,scenario.scen_strs(60 + store_which_spec_item * 2 + 1));
-	CDSN(806,4,scenario.special_item_special[store_which_spec_item]);
-	if (scenario.special_items[store_which_spec_item] >= 10)
-		cd_set_led(806,15,1);
-	else cd_set_led(806,15,0);
-	if (scenario.special_items[store_which_spec_item] % 10 > 0)
-		cd_set_led(806,17,1);
-	else cd_set_led(806,17,0);
-#endif
+void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short which_item) {
+	me["num"].setTextToNum(which_item);
+	me["name"].setText(store_item.name);
+	me["descr"].setText(store_item.descr);
+	me["spec"].setTextToNum(store_item.special);
+	dynamic_cast<cLed&>(me["start-with"]).setState(store_item.flags >= 10 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["usable"]).setState(store_item.flags % 10 > 0 ? led_red : led_off);
 }
 
-bool save_spec_item() {
-#if 0
-	char str[256];
-	
-	CDGT(806,2,(char *) str);
-	str[25] = 0;
-	sprintf(scenario.scen_strs(60 + store_which_spec_item * 2 + 0),"%s",str);
-	CDGT(806,3,scenario.scen_strs(60 + store_which_spec_item * 2 + 1));
-	spec_item_spec = CDGN(806,4);
-	if (cre(scenario.special_item_special[store_which_spec_item],
-			-1,255,"Scenario special node called must be from 0 to 255 (or -1 for no special).","",806) > 0) return false;
-	scenario.special_item_special[store_which_spec_item] = spec_item_spec;
-	scenario.special_items[store_which_spec_item] = 0;
-	if (cd_get_led(806,15) == 1)
-		scenario.special_items[store_which_spec_item] += 10;
-	if (cd_get_led(806,17) == 1)
-		scenario.special_items[store_which_spec_item] += 1;
-#endif
+bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
+	strncpy(store_item.name, me["name"].getText().c_str(),25);
+	store_item.name[25] = 0;
+	strncpy(store_item.descr, me["descr"].getText().c_str(),255);
+	store_item.descr[255] = 0;
+	store_item.special = me["spec"].getTextAsNum();
+	store_item.flags = 0;
+	if(dynamic_cast<cLed&>(me["start-with"]).getState() != led_off)
+		store_item.flags += 10;
+	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
+		store_item.flags += 1;
+	scenario.special_items[which_item] = store_item;
 	return true;
 }
 
-void edit_spec_item_event_filter (short spec_item_hit) {
-#if 0
-	short spec;
-	
-	switch (spec_item_hit) {
-		case 11:
-			toast_dialog();
-			break;
-		case 5:
-			if (save_spec_item() == true)
-				toast_dialog();
-			break;
-			
-		case 20:
-			if (save_spec_item() == false) break;
-			store_which_spec_item--;
-			if (store_which_spec_item < 0) store_which_spec_item = 49;
-			spec_item_spec = scenario.special_item_special[store_which_spec_item];
-			put_spec_item_in_dlog();
-			break;
-		case 21:
-			if (save_spec_item() == false) break;
-			store_which_spec_item++;
-			if (store_which_spec_item > 49) store_which_spec_item = 0;
-			spec_item_spec = scenario.special_item_special[store_which_spec_item];
-			put_spec_item_in_dlog();
-			break;
-		case 13: //choose edit
-			if (save_spec_item() == false)
-				break;
-			spec = CDGN(806,4);
-			if ((spec < 0) || (spec >= 256)) {
-				spec = get_fresh_spec(0);
-				if (spec < 0) {
-					give_error("You can't create a new special encounter because there are no more free scenario special nodes.",
-							   "To free a special node, set its type to No Special and set its Jump To special to -1.",806);
-					break;
-				}
-				CDSN(806,4,spec);
-			}	
-			edit_spec_enc(spec,0,806);
-			if ((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
-				CDSN(806,4,-1);
-			if (save_spec_item() == false)
-				break;
-			break;
-		default:
-			cd_flip_led(806,15,spec_item_hit);
-			cd_flip_led(806,17,spec_item_hit);
-			break;
+bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& store_item, short which_item) {
+	if(item_hit == "cancel") {
+		me.toast();
+	} else if(item_hit == "okay") {
+		if(save_spec_item(me, store_item, which_item)) me.toast();
+	} else if(item_hit == "left") {
+		if(!save_spec_item(me, store_item, which_item)) return true;
+		which_item--;
+		if(which_item < 0) which_item = 49;
+		store_item = scenario.special_items[which_item];
+		put_spec_item_in_dlog(me, store_item, which_item);
+	} else if(item_hit == "right") {
+		if(!save_spec_item(me, store_item, which_item)) return true;
+		which_item++;
+		if(which_item > 49) which_item = 0;
+		store_item = scenario.special_items[which_item];
+		put_spec_item_in_dlog(me, store_item, which_item);
+	} else if(item_hit == "edit-spec") {
+		if(!save_spec_item(me, store_item, which_item)) return true;
+		short spec = me["spec"].getTextAsNum();
+		if((spec < 0) || (spec >= 256)) {
+			spec = get_fresh_spec(0);
+			if(spec < 0) {
+				giveError("You can't create a new special encounter because there are no more free scenario special nodes.",
+						   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
+				return true;
+			}
+			me["spec"].setTextToNum(spec);
+		}	
+		edit_spec_enc(spec,0,&me);
+		if(spec >= 0 && spec < 256 && scenario.scen_specials[spec].pic < 0)
+			me["spec"].setTextToNum(-1);
+		save_spec_item(me, store_item, which_item);
 			
 	}
-#endif
+	return true;
 }
 
 void edit_spec_item(short which_item) {
-#if 0
-	// ignore parent in Mac version
-	short spec_item_hit;
+	using namespace std::placeholders;
+	cSpecItem store_item = scenario.special_items[which_item];
 	
-	//store_which_spec_item = which_spec_item;
-	store_which_spec_item = which_item;
-	spec_item_spec = scenario.special_item_special[store_which_spec_item];
+	cDialog item_dlg("edit-special-item.xml");
+	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(store_item), which_item), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
-	cd_create_dialog_parent_num(806,0);
+	put_spec_item_in_dlog(item_dlg, store_item, which_item);
+	item_dlg["clear"].hide();
 	
-	put_spec_item_in_dlog();
-	cd_attach_key(806,20,0);
-	cd_attach_key(806,21,0);
-	cd_activate_item(806,12,0);
-	
-	spec_item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(806);
-#endif
+	item_dlg.run();
 }
 
 void put_save_rects_in_dlog() {
