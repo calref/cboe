@@ -3459,12 +3459,10 @@ bool save_check(std::string which_dlog) {
 		return true;
 	change_made = false;
 	choice = cChoiceDlog(which_dlog, {"save","revert","cancel"}).show();
-	if (choice == "okay")
+	if(choice == "revert")
 		return true;
-	if (choice == "cancel") {
-		change_made = false;
+	else if(choice == "cancel")
 		return false;
-	}
 	modify_lists();
 	save_scenario();
 	return true;

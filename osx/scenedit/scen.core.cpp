@@ -540,7 +540,7 @@ bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_m
 			
 		}
 	}
-	return false;
+	return true;
 }
 
 bool save_monst_info(cDialog& me, cMonster& store_monst) {

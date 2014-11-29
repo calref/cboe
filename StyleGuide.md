@@ -106,7 +106,8 @@ Never use a using namespace declaration in a header file. It's
 acceptable in a source file, but discouraged. Using declarations are
 fine in source files, but not in header files unless they're in an
 inline function or class declaration. Namespace aliases are encouraged
-for long namespaces.
+for long namespaces. When using std::bind within a function, always put
+a `using namespace std::placeholders;` line somewhere in the function.
 
 Don't use nested classes.
 
