@@ -66,6 +66,8 @@ public:
 	void attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::vector<std::string> controls);
 	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls);
 	RECT getBounds() {return winRect;}
+	cDialog& operator=(cDialog& other) = delete;
+	cDialog(cDialog& other) = delete;
 private:
 	void draw();
 	std::string process_keystroke(cKey keyHit);

@@ -34,6 +34,8 @@ public:
 	void draw();
 	bool hasFocus();
 	void handleInput(cKey key);
+	cTextField& operator=(cTextField& other) = delete;
+	cTextField(cTextField& other) = delete;
 private:
 	bool isNumericField;
 	focus_callback_t onFocus;

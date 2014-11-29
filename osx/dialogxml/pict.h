@@ -113,6 +113,8 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw();
+	cPict& operator=(cPict& other) = delete;
+	cPict(cPict& other) = delete;
 private:
 	static std::shared_ptr<sf::Texture> getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;

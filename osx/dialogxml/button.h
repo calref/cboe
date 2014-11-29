@@ -55,6 +55,8 @@ public:
 	eBtnType getType();
 	virtual ~cButton();
 	void draw();
+	cButton& operator=(cButton& other) = delete;
+	cButton(cButton& other) = delete;
 protected:
 	eBtnType type;
 	click_callback_t onClick;
@@ -83,6 +85,8 @@ public:
 	void setState(eLedState to);
 	eLedState getState();
 	void draw();
+	cLed& operator=(cLed& other) = delete;
+	cLed(cLed& other) = delete;
 private:
 	eLedState state;
 	eFont textFont;
@@ -100,6 +104,8 @@ class cLedGroup : public cControl {
 	std::string fromList;
 	std::string curSelect, prevSelect;
 	std::string clicking;
+	cLedGroup& operator=(cLedGroup& other) = delete;
+	cLedGroup(cLedGroup& other) = delete;
 public:
 	void attachClickHandler(click_callback_t f) throw(); // activated whenever a click is received, even on the currently active LED
 	void attachFocusHandler(focus_callback_t f) throw(); // activated only when the selection changes

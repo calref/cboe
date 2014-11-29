@@ -29,6 +29,8 @@ public:
 	bool isClickable();
 	virtual ~cTextMsg();
 	void draw();
+	cTextMsg& operator=(cTextMsg& other) = delete;
+	cTextMsg(cTextMsg& other) = delete;
 private:
 	bool drawFramed, clickable;
 	short textSize;

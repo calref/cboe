@@ -100,6 +100,8 @@ public:
 	cControl(eControlType t, cDialog& p);
 	virtual ~cControl();
 	virtual void draw() = 0;
+	cControl& operator=(cControl& other) = delete;
+	cControl(cControl& other) = delete;
 protected:
 	cDialog* parent;
 	sf::RenderWindow* inWindow;

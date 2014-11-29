@@ -42,6 +42,8 @@ public:
 	void setMaximum(long to);
 	void setPageSize(long to);
 	void draw();
+	cScrollbar& operator=(cScrollbar& other) = delete;
+	cScrollbar(cScrollbar& other) = delete;
 };
 
 #endif
