@@ -8,7 +8,7 @@
 	<field name='loot-item' top='246' left='194' width='64' height='16'/>
 	<field name='loot-chance' top='247' left='464' width='64' height='16'/>
 	<button name='okay' type='regular' top='325' left='572'>OK</button>
-	<button name='cancel' type='regular' top='325' left='506'>Cancel</button>
+	<button name='cancel' type='regular' top='325' left='506' def-key='esc'>Cancel</button>
 	<!--
 	 TODO: Originally these LED labels would've been bold, I think
 	 Note: These LEDs were shifted left 100 pixels to account for the labels swapping sides
