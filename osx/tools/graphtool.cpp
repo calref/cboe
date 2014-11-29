@@ -1023,6 +1023,7 @@ void Region::setStencil(sf::RenderWindow& where) {
 }
 
 void clip_rect(sf::RenderTarget& where, RECT rect) {
+	rect |= RECT(where); // Make sure we don't draw out of bounds
 	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
 	glEnable(GL_SCISSOR_TEST);
@@ -1066,6 +1067,7 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendM
 	RECT clipArea = area;
 	area.left -= area.left % imgSz.x;
 	area.top -= area.top % imgSz.y;
+	area |= RECT(target); // Make sure we don't draw out of bounds
 
 	unsigned int hrep = int((double(area.width())/imgSz.x)+0.5);
 	unsigned int vrep = int((double(area.height())/imgSz.y)+0.5);
@@ -1091,6 +1093,7 @@ void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRe
 	RECT clipArea = area;
 	area.left -= area.left % tesselRect.width();
 	area.top -= area.top % tesselRect.height();
+	area |= RECT(target); // Make sure we don't draw out of bounds
 	
 	sf::RectangleShape tessel(sf::Vector2f(area.width(),area.height()));
 	tessel.setTexture(&temp.getTexture());

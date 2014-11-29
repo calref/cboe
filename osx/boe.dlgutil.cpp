@@ -823,6 +823,7 @@ void handle_talk_event(location p)
 			strnum1 = -1;
 			return;
 		case 12: //healer
+			// TODO: extra1 and extra2 are actually never used! So remove them.
 			start_shop_mode(3,univ.town.monst[store_m_num].extra1,
 							univ.town.monst[store_m_num].extra2,a,place_string1.c_str());
 			strnum1 = -1;

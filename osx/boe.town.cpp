@@ -467,6 +467,7 @@ void start_town_mode(short which_town, short entry_dir)
 						// Not use the items data flags, starting with forcing an ability
 						if (univ.town->preset_items[i].ability >= 0) {
 							switch (univ.town.items[j].variety) {
+									// TODO: It looks like this will never be reached?
 								case 3: case 11: // If gold or food, this value is amount
 									if (univ.town->preset_items[i].ability > 0)
 										univ.town.items[j].item_level = univ.town->preset_items[i].ability;
