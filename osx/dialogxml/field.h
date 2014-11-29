@@ -36,6 +36,7 @@ public:
 	void handleInput(cKey key);
 	cTextField& operator=(cTextField& other) = delete;
 	cTextField(cTextField& other) = delete;
+	long tabOrder = 0;
 private:
 	bool isNumericField;
 	focus_callback_t onFocus;

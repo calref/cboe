@@ -13,6 +13,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include <exception>
 
 #include "ticpp.h"
@@ -39,6 +40,7 @@ class cDialog {
 	cTextField* currentFocus;
 	cDialog* parent;
 	void loadFromFile(std::string path);
+	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 public:
 	static void init();
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}

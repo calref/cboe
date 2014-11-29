@@ -163,6 +163,7 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="tab-order" type="xs:integer"/>
       <xs:attributeGroup ref="rect"/>
     </xs:complexType>
   </xs:element>
@@ -284,5 +285,9 @@
       <xs:attribute name="fore" default="black"/>
       <xs:attribute name="defbtn" type="xs:IDREF"/>
     </xs:complexType>
+    <xs:unique name="FieldTabOrder">
+      <xs:selector xpath="*" />
+      <xs:field xpath="@tab-order" />
+    </xs:unique>
   </xs:element>
 </xs:schema>

@@ -689,6 +689,8 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
+		}else if(name == "tab-order"){
+			attr->GetValue(&p.second->tabOrder);
 		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column(),fname);
@@ -756,14 +758,21 @@ void cDialog::loadFromFile(std::string path){
 				throw xBadAttr(type,name,attr->Row(),attr->Column(),fname);
 		}
 		
+		vector<int> specificTabs, reverseTabs;
 		for(node = node.begin(xml.FirstChildElement()); node != node.end(); node++){
 			node->GetValue(&type);
 			// Yes, I'm using insert instead of [] to add elements to the map.
 			// In this situation, it's actually easier that way; the reason being, the
 			// map key is obtained from the name attribute of each element.
-			if(type == "field")
-				controls.insert(parse<cTextField>(*node));
-			else if(type == "text")
+			if(type == "field") {
+				auto field = parse<cTextField>(*node);
+				controls.insert(field);
+				tabOrder.push_back(field);
+				if(field.second->tabOrder > 0)
+					specificTabs.push_back(field.second->tabOrder);
+				else if(field.second->tabOrder < 0)
+					reverseTabs.push_back(field.second->tabOrder);
+			} else if(type == "text")
 				controls.insert(parse<cTextMsg>(*node));
 			else if(type == "pict")
 				controls.insert(parse<cPict>(*node));
@@ -775,6 +784,41 @@ void cDialog::loadFromFile(std::string path){
 				controls.insert(parse<cLedGroup>(*node));
 			else throw xBadNode(type,node->Row(),node->Column(),fname);
 		}
+		// Sort by tab order
+		// First, fill any gaps that might have been left, using ones that had no specific tab order
+		// Of course, if there are not enough without a specific tab order, there could still be gaps
+		using fld_t = decltype(tabOrder)::value_type;
+		auto noTabOrder = [](fld_t x) {return x.second->tabOrder == 0;};
+		if(!specificTabs.empty()) {
+			int max = *max_element(specificTabs.begin(), specificTabs.end());
+			for(int i = 1; i < max; i++) {
+				auto check = find(specificTabs.begin(), specificTabs.end(), i);
+				if(check != specificTabs.end()) continue;
+				auto change = find_if(tabOrder.begin(), tabOrder.end(), noTabOrder);
+				if(change == tabOrder.end()) break;
+				change->second->tabOrder = i;
+			}
+		}
+		if(!reverseTabs.empty()) {
+			int max = -*min_element(reverseTabs.begin(), reverseTabs.end());
+			for(int i = 1; i < max; i++) {
+				auto check = find(reverseTabs.begin(), reverseTabs.end(), -i);
+				if(check != reverseTabs.end()) continue;
+				auto change = find_if(tabOrder.begin(), tabOrder.end(), noTabOrder);
+				if(change == tabOrder.end()) break;
+				change->second->tabOrder = -i;
+			}
+		}
+		// Then, sort - first, positive tab order ascending; then zeros; then negative tab order descending.
+		stable_sort(tabOrder.begin(), tabOrder.end(), [](fld_t a, fld_t b) -> bool {
+			bool a_neg = a.second->tabOrder < 0, b_neg = b.second->tabOrder < 0;
+			if(a_neg && !b_neg) return false;
+			else if(!a_neg && b_neg) return true;
+			bool a_pos = a.second->tabOrder > 0, b_pos = b.second->tabOrder > 0;
+			if(a_pos && !b_pos) return true;
+			else if(!a_pos && b_pos) return false;
+			return a.second->tabOrder < b.second->tabOrder;
+		});
 	} catch(Exception& x){ // XML processing exception
 		printf("%s",x.what());
 		exit(1);
@@ -865,12 +909,8 @@ void cDialog::run(){
 	std::string itemHit = "";
 	dialogNotToast = true;
 	// Focus the first text field, if there is one
-	for(auto ctrl : controls) {
-		if(ctrl.second->getType() == CTRL_FIELD) {
-			ctrl.second->triggerFocusHandler(*this, ctrl.first, false);
-			break;
-		}
-	}
+	if(!tabOrder.empty())
+		tabOrder[0].second->triggerFocusHandler(*this, tabOrder[0].first, false);
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	win.setActive();
 	win.setVisible(true);
@@ -994,19 +1034,25 @@ void cDialog::run(){
 				if(controls[itemHit]->getType() == CTRL_FIELD){
 					if(key.spec && key.k == key_tab){
 						// TODO: Tabbing through fields, and trigger focus events.
-						ctrlIter cur = controls.find(itemHit), iter;
+						auto cur = find_if(tabOrder.begin(), tabOrder.end(), [&itemHit](pair<string,cTextField*>& a) {
+							return a.first == itemHit;
+						});
+						if(cur == tabOrder.end()) break; // Unlikely, but let's be safe
 						if(!cur->second->triggerFocusHandler(*this,itemHit,true)) break;
 						cTextField* wasFocus = currentFocus;
-						iter = std::next(cur);
+						auto iter = std::next(cur);
+						if(iter == tabOrder.end()) iter = tabOrder.begin();
 						while(iter != cur){
+							// If tab order is explicitly specified for all fields, gaps are possible
+							if(iter->second == nullptr) continue;
 							if((currentFocus = dynamic_cast<cTextField*>(iter->second))){
 								if(currentFocus->triggerFocusHandler(*this,iter->first,false)){
 									itemHit = "";
 									break;
 								}
 							}
-							if(iter == controls.end()) iter = controls.begin();
-							else iter++;
+							iter++;
+							if(iter == tabOrder.end()) iter = tabOrder.begin();
 						}
 						if(iter == cur) // no focus change occured!
 							currentFocus = wasFocus; // TODO: Surely something should happen here?
