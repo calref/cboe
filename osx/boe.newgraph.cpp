@@ -1336,13 +1336,10 @@ void refresh_talking()
 	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
 }
 
-short scan_for_response(char *str)
-// returns -1 if no go
-{
-	short i;
-	
-	for (i = 0; i < 60; i++) { // 60 response in each bunch
-		cSpeech::cNode node = univ.town.cur_talk().talk_nodes[i];
+short scan_for_response(char *str) {
+	cSpeech talk = univ.town.cur_talk();
+	for(short i = 0; i < 60; i++) { // 60 response in each bunch
+		cSpeech::cNode node = talk.talk_nodes[i];
 		short personality = node.personality;
 		if(personality == -1) continue;
 		if(personality != store_personality && personality != -2)
