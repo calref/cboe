@@ -668,7 +668,7 @@ void do_explosion_anim(short sound_num,short special_draw)
 						sprintf(str,"%d",store_booms[i].val_to_place);
 						style.colour = sf::Color::White;
 						style.lineHeight = 12;
-						win_draw_string(temp_gworld,text_rect,str,1,style);
+						win_draw_string(temp_gworld,text_rect,str,eTextMode::CENTRE,style);
 						style.colour = sf::Color::Black;
 						mainPtr.setActive();
 					}
@@ -796,10 +796,10 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,store_store_name,2,style);
+	win_draw_string(talk_gworld,dest_rect,store_store_name,eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
 	style.colour = c[4];
-	win_draw_string(talk_gworld,dest_rect,store_store_name,2,style);
+	win_draw_string(talk_gworld,dest_rect,store_store_name,eTextMode::LEFT_TOP,style);
 	
 	style.font = FONT_BOLD;
 	style.pointSize = 12;
@@ -813,7 +813,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 		case 4: sprintf(cur_name,"Buying Food.");break;
 		default:sprintf(cur_name,"Shopping for %s.",univ.party[current_pc].name.c_str()); break;
 	}
-	win_draw_string(talk_gworld,shopper_name,cur_name,2,style);
+	win_draw_string(talk_gworld,shopper_name,cur_name,eTextMode::LEFT_TOP,style);
 	
 	// Place help and done buttons
 	// TODO: Reimplement these with a cButton
@@ -902,11 +902,11 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 		// 4 - item cost 5 - item extra str  6 - item help button
 		style.pointSize = 12;
 		style.lineHeight = 12;
-		win_draw_string(talk_gworld,shopping_rects[i][3],cur_name,0,style);
+		win_draw_string(talk_gworld,shopping_rects[i][3],cur_name,eTextMode::WRAP,style);
 		sprintf(cur_name,"Cost: %d",cur_cost);
-		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,0,style);
+		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,eTextMode::WRAP,style);
 		style.pointSize = 10;
-		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,0,style);
+		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,eTextMode::WRAP,style);
 		if ((store_shop_type != 3) && (store_shop_type != 4))
 			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? sf::BlendNone : sf::BlendAlpha);
 		
@@ -916,11 +916,11 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
 	style.pointSize = 10;
 	style.lineHeight = 12;
-	win_draw_string(talk_gworld,bottom_help_rects[0],cur_name,0,style);
-	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",0,style);
-	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",0,style);
+	win_draw_string(talk_gworld,bottom_help_rects[0],cur_name,eTextMode::WRAP,style);
+	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
+	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
 	if ((store_shop_type != 3) && (store_shop_type != 4))
-		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",0,style);
+		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
 	talk_gworld.display();
@@ -1143,10 +1143,10 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,title_string,2,style);
+	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
 	style.colour = c[4];
-	win_draw_string(talk_gworld,dest_rect,title_string,2,style);
+	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
 	// Place buttons at bottom.
 	if (color == 0)
@@ -1155,7 +1155,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	for (i = 0; i < 9; i++)
 		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
 			preset_words[i].word_rect.offset(0,8);
-			win_draw_string(talk_gworld,preset_words[i].word_rect,preset_words[i].word,2,style);
+			win_draw_string(talk_gworld,preset_words[i].word_rect,preset_words[i].word,eTextMode::LEFT_TOP,style);
 			preset_words[i].word_rect.offset(0,-8);
 		}
 	// Place bulk of what said. Save words.
@@ -1185,7 +1185,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	style.lineHeight = line_height;
 	style.applyTo(str_to_draw);
 	// TODO: The entire text flashes when clicking anything
-	win_draw_string(talk_gworld, dest_rect, str, 0, style);
+	win_draw_string(talk_gworld, dest_rect, str, eTextMode::WRAP, style);
 	for (i = 0;i < str_len;i++) {
 		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
 			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
@@ -1256,7 +1256,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		str_to_draw.setString(str);
 		
 		last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
-		win_draw_string(talk_gworld, dest_rect, str, 0, style);
+		win_draw_string(talk_gworld, dest_rect, str, eTextMode::WRAP, style);
 		for (i = 0;i < str_len;i++) {
 			if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
 				if (((i - store_last_word_break >= 4) || (i >= str_len - 1))

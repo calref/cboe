@@ -1562,8 +1562,8 @@ void draw_map(bool need_refresh) {
 	theGraphic.draw();
 	style.colour = sf::Color::White;
 	style.lineHeight = 12;
-	win_draw_string(mini_map, map_title_rect,title_string,0,style);
-	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",0,style);
+	win_draw_string(mini_map, map_title_rect,title_string,eTextMode::WRAP,style);
+	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
 	/*SetPort( mini_map);
 	 GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);

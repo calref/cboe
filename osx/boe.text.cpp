@@ -149,12 +149,12 @@ void put_pc_screen()
 	style.lineHeight = 10;
 	// Put food, gold, day
 	sprintf((char *) to_draw, "%d", (short) univ.party.gold);
-	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,0,style);
+	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,eTextMode::WRAP,style);
 	sprintf((char *) to_draw, "%d", (short) univ.party.food);
-	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,0,style);
+	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,eTextMode::WRAP,style);
 	i = calc_day();
 	sprintf((char *) to_draw, "%d", i);
-	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,0,style);
+	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
 	for (i = 0; i < 6; i++) {
@@ -167,7 +167,7 @@ void put_pc_screen()
 			}
 			
 			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());
-			win_draw_string(pc_stats_gworld,pc_buttons[i][0],to_draw,0,style);
+			win_draw_string(pc_stats_gworld,pc_buttons[i][0],to_draw,eTextMode::WRAP,style);
 			style.italic = false;
 			style.colour = sf::Color::Black;
 			
@@ -179,12 +179,12 @@ void put_pc_screen()
 						style.colour = sf::Color::Green;
 					else style.colour = sf::Color::Red;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,0,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,eTextMode::WRAP,style);
 					if (univ.party[i].cur_sp == univ.party[i].max_sp)
 						style.colour = sf::Color::Blue;
 					else style.colour = sf::Color::Magenta;
 					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,0,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
 				case 2:
@@ -210,7 +210,7 @@ void put_pc_screen()
 					break;
 			}
 			if (univ.party[i].main_status != 1)
-				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,0,style);
+				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			
 			// Now put trade and info buttons
@@ -283,13 +283,13 @@ void put_item_screen(short screen_num,short suppress_buttons)
 		case 6: // On special items page
 			style.font = FONT_BOLD;
 			style.colour = sf::Color::White;
-			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",0,style);
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			for (i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if (spec_item_array[i_num] >= 0) {
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),0,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
 					if ((scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
@@ -308,7 +308,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 			style.font = FONT_PLAIN;
 			sout.str("");;
 			sout << univ.party[pc].name << " inventory:",
-			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),0,style);
+			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			style.font = FONT_BOLD;
 			
@@ -316,7 +316,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),0,style);
+				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),eTextMode::WRAP,style);
 				
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
@@ -346,7 +346,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
 					dest_rect.left -= 2;
-					win_draw_string(item_stats_gworld,dest_rect,sout.str(),0,style);
+					win_draw_string(item_stats_gworld,dest_rect,sout.str(),eTextMode::WRAP,style);
 					style.italic = false;
 					style.colour = sf::Color::Black;
 					
@@ -459,7 +459,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		if (val_to_place >= 10000)
 			style.font = FONT_PLAIN;
 		style.lineHeight = 10;
-		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,2,style);
+		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,eTextMode::LEFT_TOP,style);
 	}
 }
 

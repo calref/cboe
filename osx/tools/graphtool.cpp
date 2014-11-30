@@ -193,24 +193,33 @@ void TextStyle::applyTo(sf::Text& text) {
 	text.setColor(colour);
 }
 
-// mode: 0 - align up and left, 1 - center on one line
-// str is a c string, 256 characters
-// uses current font
-// TODO: Make an enum for the mode parameter
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,TextStyle style,location offset){
-	short line_height = style.lineHeight;
+struct text_params_t {
+	TextStyle style;
+	eTextMode mode;
+	location offset = {0,0};
+};
+
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t options);
+
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset) {
+	text_params_t params;
+	params.mode = mode;
+	params.style = style;
+	params.offset = offset;
+	win_draw_string(dest_window, dest_rect, str, params);
+}
+
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t options) {
+	short line_height = options.style.lineHeight;
 	sf::Text str_to_draw;
-	style.applyTo(str_to_draw);
+	options.style.applyTo(str_to_draw);
 	short str_len,i;
 	short last_line_break = 0,last_word_break = 0;
 	short total_width = 0;
-	//bool /*end_loop,*/force_skip = false;
-	//KeyMap key_state;
-	//RgnHandle current_clip;
 	short adjust_x = 0,adjust_y = 0;
 	
-	adjust_x = offset.x;
-	adjust_y = offset.y;
+	adjust_x = options.offset.x;
+	adjust_y = options.offset.y;
 	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
@@ -220,14 +229,12 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 		return;
 	}
 	
-	//current_clip = NewRgn();
-	//GetClip(current_clip);
-	
+	eTextMode mode = options.mode;
 	total_width = str_to_draw.getLocalBounds().width;
-	if ((mode == 0) && (total_width < dest_rect.width()))
-		mode = 2;
-	if(mode == 2 && str.find('|') != std::string::npos)
-		mode = 0;
+	if(mode == eTextMode::WRAP && total_width < dest_rect.width())
+		mode = eTextMode::LEFT_TOP;
+	if(mode == eTextMode::LEFT_TOP && str.find('|') != std::string::npos)
+		mode = eTextMode::WRAP;
 	
 	auto text_len = [&str_to_draw](size_t i) -> int {
 		return str_to_draw.findCharacterPos(i).x;
@@ -237,72 +244,52 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	line_height -= 2;
 	
 	switch (mode) {
-		case 0: // Wrapped
+		case eTextMode::WRAP:
 			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
 			for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
 				if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
 					 && (last_word_break > last_line_break)) || (str[i] == '|')) {
 				  	if(str[i] == '|') {
 				  		str[i] = ' ';
-				  		//force_skip = true;
 						last_word_break = i + 1;
 					}
 					size_t amount = last_word_break - last_line_break - 1;
 					sf::Text line_to_draw(str_to_draw);
 					line_to_draw.setString(str.substr(last_line_break,amount));
-					//sprintf((char *)str_to_draw2," %s",str_to_draw);
-					//str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-					//DrawString(str_to_draw2);
 					line_to_draw.setPosition(moveTo);
 					dest_window.draw(line_to_draw);
 					moveTo.y += line_height;
 					last_line_break = last_word_break;
-					//if (force_skip) {
-						//force_skip = false;
-						//i++;
-						//last_line_break++;
-						//last_word_break++;
-					//}
 				}
 				if(str[i] == ' ')
 					last_word_break = i + 1;
-//				if (on_what_line == LINES_IN_TEXT_WIN - 1)
-//					i = 10000;
 			}
 			
 			if (i - last_line_break > 1) {
 				str_to_draw.setPosition(moveTo);
 				str_to_draw.setString(str.substr(last_line_break));
-				//sprintf((char *)str_to_draw2," %s",str_to_draw);
-				//if (strlen((char *) str_to_draw2) > 3) {
-				//	str_to_draw2[0] = (char) strlen((char *)str_to_draw);
-				//	DrawString(str_to_draw2);
-				//}
 				if(str_to_draw.getString().getSize() > 2){
 					dest_window.draw(str_to_draw);
 				}
 			}	
 			break;
-		case 1: // Centred?
+		case eTextMode::CENTRE:
 			moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x,
 					(dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);
 			str_to_draw.setPosition(moveTo);
 			dest_window.draw(str_to_draw);
 			break;
-		case 2: // Align left and top?
+		case eTextMode::LEFT_TOP:
 			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
 			str_to_draw.setPosition(moveTo);
 			dest_window.draw(str_to_draw);
 			break;
-		case 3: // Align left and bottom?
+		case eTextMode::LEFT_BOTTOM:
 			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9 + dest_rect.height() / 6);
 			str_to_draw.setPosition(moveTo);
 			dest_window.draw(str_to_draw);
 			break;
 	}
-	//SetClip(current_clip);
-	//DisposeRgn(current_clip);
-	//printf("String drawn.\n");
 }
 
 short string_length(std::string str, TextStyle style){

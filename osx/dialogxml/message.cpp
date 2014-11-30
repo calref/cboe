@@ -115,11 +115,11 @@ void cTextMsg::draw(){
 		if (to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
 			style.lineHeight = 12;
 			to_rect.left += 3;
-			win_draw_string(*inWindow,to_rect,lbl,3,style);
+			win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_BOTTOM,style);
 		}else {
 			style.lineHeight = textSize + 2;
 			to_rect.inset(4,4);
-			win_draw_string(*inWindow,to_rect,lbl,0,style);
+			win_draw_string(*inWindow,to_rect,lbl,eTextMode::WRAP,style);
 		}
 	}
 }

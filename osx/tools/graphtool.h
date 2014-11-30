@@ -77,12 +77,19 @@ struct cCustomGraphics {
 	size_t count();
 };
 
+enum class eTextMode {
+	WRAP,
+	CENTRE,
+	LEFT_TOP,
+	LEFT_BOTTOM,
+};
+
 void init_graph_tool();
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,short mode,TextStyle style,location offset = {0,0});
+void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
 short string_length(std::string str, TextStyle style);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();

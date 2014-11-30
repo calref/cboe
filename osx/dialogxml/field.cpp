@@ -123,8 +123,7 @@ void cTextField::draw(){
 			ip_timer.restart();
 		}
 	}
-	// TODO: Update win_draw_string to take a std::string
-	win_draw_string(*inWindow, rect, contents, 0, style);
+	win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
 }
 
 void cTextField::handleInput(cKey key) {

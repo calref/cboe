@@ -346,7 +346,7 @@ void draw_startup_stats()
 	if(!party_in_memory) {
 		style.pointSize = 20;
 		to_rect.offset(175,40);
-		win_draw_string(mainPtr,to_rect,"No Party in Memory",0,style,ul);
+		win_draw_string(mainPtr,to_rect,"No Party in Memory",eTextMode::WRAP,style,ul);
 	} else {
 		frame_rect = startup_top;
 		frame_rect.inset(50,50);
@@ -356,7 +356,7 @@ void draw_startup_stats()
 		::frame_rect(mainPtr, frame_rect, sf::Color::White);
 		
 		to_rect.offset(203,37);
-		win_draw_string(mainPtr,to_rect,"Your party:",0,style,ul);
+		win_draw_string(mainPtr,to_rect,"Your party:",eTextMode::WRAP,style,ul);
 		style.pointSize = 12;
 		style.font = FONT_BOLD;
 		for (i = 0; i < 6; i++) {
@@ -373,7 +373,7 @@ void draw_startup_stats()
 				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr,pc_rect,univ.party[i].name,0,style,ul);
+				win_draw_string(mainPtr,pc_rect,univ.party[i].name,eTextMode::WRAP,style,ul);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
@@ -404,23 +404,23 @@ void draw_startup_stats()
 						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
 						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 					}
-					win_draw_string(mainPtr,pc_rect,str,0,style,ul);
+					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);
 					pc_rect.offset(0,13);
 					sprintf((char *) str,"Health %d, Spell pts. %d",
 							univ.party[i].max_health,univ.party[i].max_sp);
-					win_draw_string(mainPtr,pc_rect,str,0,style,ul);
+					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);
 					break;
 				case MAIN_STATUS_DEAD:
-					win_draw_string(mainPtr,pc_rect,"Dead",0,style,ul);
+					win_draw_string(mainPtr,pc_rect,"Dead",eTextMode::WRAP,style,ul);
 					break;
 				case MAIN_STATUS_DUST:
-					win_draw_string(mainPtr,pc_rect,"Dust",0,style,ul);
+					win_draw_string(mainPtr,pc_rect,"Dust",eTextMode::WRAP,style,ul);
 					break;
 				case MAIN_STATUS_STONE:
-					win_draw_string(mainPtr,pc_rect,"Stone",0,style,ul);
+					win_draw_string(mainPtr,pc_rect,"Stone",eTextMode::WRAP,style,ul);
 					break;
 				case MAIN_STATUS_FLED:
-					win_draw_string(mainPtr,pc_rect,"Fled",0,style,ul);
+					win_draw_string(mainPtr,pc_rect,"Fled",eTextMode::WRAP,style,ul);
 					break;
 				default: //absent, and all variations thereof; do nothing
 					break;
@@ -435,7 +435,7 @@ void draw_startup_stats()
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
 	// TODO: Should replace this with a more appropriate copyright string
-	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",0,style,ul);
+	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",eTextMode::WRAP,style,ul);
 }
 
 
@@ -471,7 +471,7 @@ void draw_start_button(short which_position,short which_button)
 	style.lineHeight = 18;
 	if (which_position == 3)
 		to_rect.offset(-7,0);
-	win_draw_string(mainPtr,to_rect,button_labels[which_position],1,style,ul);
+	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
 void main_button_click(short mode,RECT button_rect)
@@ -757,25 +757,25 @@ void put_text_bar(char *str) {
 	style.lineHeight = 12;
 	RECT to_rect = RECT(text_bar_gworld);
 	// TODO: Not sure what the line height should be, so I just picked something
-	win_draw_string(text_bar_gworld, to_rect, str, 2, style);
+	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if (monsters_going == false) {
 		to_rect.left = 205;
 		to_rect.top = 14;
 		if (PSD[SDF_PARTY_STEALTHY] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Stealth", 2, style);
+			win_draw_string(text_bar_gworld, to_rect, "Stealth", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_FLIGHT] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Flying", 2, style);
+			win_draw_string(text_bar_gworld, to_rect, "Flying", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_DETECT_LIFE] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Detect Life", 2, style);
+			win_draw_string(text_bar_gworld, to_rect, "Detect Life", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
 		if (PSD[SDF_PARTY_FIREWALK] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Firewalk", 2, style);
+			win_draw_string(text_bar_gworld, to_rect, "Firewalk", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
 	}
@@ -1556,7 +1556,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		if ((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		text_rect.offset(-4,-5);
-		win_draw_string(mainPtr,text_rect,dam_str,1,style,ul);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
 	}
 	play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
 	mainPtr.display();
@@ -1726,7 +1726,7 @@ void draw_targeting_line(location where_curs)
 								const char chr[2] = {static_cast<char>(num_targets_left + '0')};
 								int x = ((target_rect.left + target_rect.right) / 2) - 3;
 								int y = (target_rect.top + target_rect.bottom) / 2;
-								win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, 1, style);
+								win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, eTextMode::CENTRE, style);
 							}
 							
 						}

@@ -280,7 +280,7 @@ void draw_main_screen()
 		dest_rect.bottom = dest_rect.top + 12;
 		style.pointSize = 12;
 		style.underline = true;
-		win_draw_string(mainPtr,dest_rect,"Characters",0,style);
+		win_draw_string(mainPtr,dest_rect,"Characters",eTextMode::WRAP,style);
 		style.underline = false;
 		style.pointSize = 10;
 	}
@@ -298,25 +298,25 @@ void draw_main_screen()
 	//Off0setRect(&dest_rect,0,45);
 	dest_rect.offset(0,21);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",0,style);
+		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",eTextMode::WRAP,style);
 	else
-		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",0,style);
+		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",eTextMode::WRAP,style);
 	if(!file_in_mem.empty() && party_in_scen && !scen_items_loaded){
 		dest_rect.offset(200,0);
-		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",0,style);
+		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",eTextMode::WRAP,style);
 		dest_rect.offset(-200,0);
 	}
 	dest_rect.offset(0,12);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",0,style);
+		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",eTextMode::WRAP,style);
 	style.pointSize = 12;
 	dest_rect.offset(0,16);
 	if(!file_in_mem.empty())
-		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",0,style);
+		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",eTextMode::WRAP,style);
 	style.pointSize = 10;
 	style.font = FONT_PLAIN;
 	dest_rect.offset(280,0);
-	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",0,style);
+	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",eTextMode::WRAP,style);
 
 	
 	reg_rect = whole_win_rect;
@@ -386,7 +386,7 @@ void draw_items()
 
 			TextStyle style;
 			style.lineHeight = 10;
-			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,0,style);
+			win_draw_string(mainPtr,item_string_rects[i][0],(char *) to_draw,eTextMode::WRAP,style);
 
 			//Draw id/drop buttons
 			rect_draw_some_item(invenbtn_gworld,d_from,mainPtr,item_string_rects[i][1],sf::BlendAlpha);
@@ -413,15 +413,15 @@ void display_party()
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;
-		win_draw_string(mainPtr,no_party_rect,"No party loaded.",0,style);
+		win_draw_string(mainPtr,no_party_rect,"No party loaded.",eTextMode::WRAP,style);
 	}
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
 		if (party_in_scen == false)
-			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",0,style);
+			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",eTextMode::WRAP,style);
 		else
-			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",0,style);
+			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",eTextMode::WRAP,style);
 		for (i = 0; i < 6; i++) {
 			if (i == current_active_pc) // active pc is drawn in blue
 				fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Blue);
@@ -452,7 +452,7 @@ void display_party()
 				}
 				
 				style.colour = sf::Color::White;
-				win_draw_string(mainPtr,pc_area_buttons[i][2],to_draw,1,style);
+				win_draw_string(mainPtr,pc_area_buttons[i][2],to_draw,eTextMode::CENTRE,style);
 				style.font = FONT_BOLD;
 				style.pointSize = 10;
 				
@@ -461,7 +461,7 @@ void display_party()
 					if( (univ.party[i].name.length()) > 12)
 						style.pointSize = 8;
 					style.colour = sf::Color::Black;
-					win_draw_string(mainPtr,name_rect,to_draw,1,style);
+					win_draw_string(mainPtr,name_rect,to_draw,eTextMode::CENTRE,style);
 					style.pointSize = 10;
 					
 				}
@@ -471,18 +471,18 @@ void display_party()
 							if (i == current_active_pc) {
 								//Draw in race
 								if (univ.party[i].race == 0)
-									win_draw_string(mainPtr,pc_race_rect,"Human   ",1,style);
+									win_draw_string(mainPtr,pc_race_rect,"Human   ",eTextMode::CENTRE,style);
 								if (univ.party[i].race == 1)
-									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",1,style);
+									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",eTextMode::CENTRE,style);
 								if (univ.party[i].race == 2)
-									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",1,style);
+									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",eTextMode::CENTRE,style);
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");
-								win_draw_string(mainPtr,skill_rect,to_draw,0,style);
+								win_draw_string(mainPtr,skill_rect,to_draw,eTextMode::WRAP,style);
 								sprintf((char *) to_draw, "Hp: %d/%d  Sp: %d/%d",univ.party[i].cur_health,univ.party[i].max_health,univ.party[i].cur_sp,
 										univ.party[i].max_sp);
-								win_draw_string(mainPtr,hp_sp_rect,to_draw,0,style);
+								win_draw_string(mainPtr,hp_sp_rect,to_draw,eTextMode::WRAP,style);
 								
 								
 								style.pointSize = 9;
@@ -494,10 +494,10 @@ void display_party()
 									temp_rect = pc_skills_rect[k];
 									temp_rect.left = pc_skills_rect[k].left + 80;
 									
-									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),0,style);
+									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),eTextMode::WRAP,style);
 									
 									sprintf((char *) skill_value,"%d",univ.party[i].skills[k]);
-									win_draw_string(mainPtr,temp_rect,skill_value,0,style);	
+									win_draw_string(mainPtr,temp_rect,skill_value,eTextMode::WRAP,style);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;
 								}
@@ -508,7 +508,7 @@ void display_party()
 								style.pointSize = 10;
 								style.font = FONT_BOLD;
 								sprintf((char *) to_draw, "Status:");
-								win_draw_string(mainPtr,status_rect,to_draw,0,style);
+								win_draw_string(mainPtr,status_rect,to_draw,eTextMode::WRAP,style);
 								
 								style.pointSize = 9;
 								style.font = FONT_PLAIN;
@@ -519,82 +519,82 @@ void display_party()
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
 								if (univ.party[i].status[0] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[1] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[1] < 0)
 										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",0,style);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",eTextMode::WRAP,style);
 											cur_rect++;
 										}
 								if (univ.party[i].status[2] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",eTextMode::WRAP,style);
 										cur_rect++;
 									}	
 								if (univ.party[i].status[3] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 									else if(univ.party[i].status[3] < 0)
 										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",0,style);
+											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",eTextMode::WRAP,style);
 											cur_rect++;
 										}
 								if (univ.party[i].status[4] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[5] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[6] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[7] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[8] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[9] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[10] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[11] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[12] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].status[13] > 0) 
 									if(cur_rect <= 9) {
-										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",0,style);
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								style.lineHeight = 10;
@@ -604,7 +604,7 @@ void display_party()
 								style.pointSize = 10;
 								style.font = FONT_BOLD;
 								sprintf((char *) to_draw, "Traits:");
-								win_draw_string(mainPtr,traits_rect,to_draw,0,style);
+								win_draw_string(mainPtr,traits_rect,to_draw,eTextMode::WRAP,style);
 								//for(k = 0 ; k < 16; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_traits_rect[k],0);
 								style.pointSize = 9;
@@ -614,78 +614,78 @@ void display_party()
 								cur_rect=0;
 								if (univ.party[i].traits[0] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[1] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[2] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[3] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[4] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								
 								if (univ.party[i].traits[5] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[6] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[7] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[8] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[9] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[10] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[11] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
 								if (univ.party[i].traits[12] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[13] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								if (univ.party[i].traits[14] == 1) 
 									if(cur_rect <= 15) {
-										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",0,style);
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								style.lineHeight = 10;
@@ -695,7 +695,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Alive ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -703,7 +703,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dead ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -711,7 +711,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Dust ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -719,7 +719,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Stone ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -727,7 +727,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Fled ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -735,7 +735,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Surface ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -743,7 +743,7 @@ void display_party()
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
-							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",1,style);
+							win_draw_string(mainPtr,pc_area_buttons[i][3],"Absent ",eTextMode::CENTRE,style);
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
@@ -763,19 +763,19 @@ void display_party()
 				style.colour = sf::Color::White;
 				switch(i) {
 					case 0:
-						win_draw_string(mainPtr,edit_rect[0][1],"  Add|Mage|Spells",0,style);
+						win_draw_string(mainPtr,edit_rect[0][1],"  Add|Mage|Spells",eTextMode::WRAP,style);
 						break;
 					case 1:
-						win_draw_string(mainPtr,edit_rect[1][1],"  Add|Priest|Spells",0,style);
+						win_draw_string(mainPtr,edit_rect[1][1],"  Add|Priest|Spells",eTextMode::WRAP,style);
 						break;
 					case 2: 
-						win_draw_string(mainPtr,edit_rect[2][1]," Edit|Traits",0,style);
+						win_draw_string(mainPtr,edit_rect[2][1]," Edit|Traits",eTextMode::WRAP,style);
 						break;
 					case 3:
-						win_draw_string(mainPtr,edit_rect[3][1]," Edit|Skills",0,style);
+						win_draw_string(mainPtr,edit_rect[3][1]," Edit|Skills",eTextMode::WRAP,style);
 						break;
 					case 4:
-						win_draw_string(mainPtr,edit_rect[4][1]," Edit|   XP",0,style);
+						win_draw_string(mainPtr,edit_rect[4][1]," Edit|   XP",eTextMode::WRAP,style);
 						break;
 					default:
 						break;	
@@ -787,7 +787,7 @@ void display_party()
 		RECT dest_rect = title_from;
 		dest_rect.offset(100,60);
 		sprintf(to_draw, " Gold: %d       Food: %d ",(short) univ.party.gold, (short) univ.party.food);
-		win_draw_string(mainPtr,dest_rect,to_draw,0,style);
+		win_draw_string(mainPtr,dest_rect,to_draw,eTextMode::WRAP,style);
 	}
 }
 	

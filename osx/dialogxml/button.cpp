@@ -65,9 +65,9 @@ void cButton::draw(){
 		rect_draw_some_item(buttons[btnGW[type]],from_rect,*inWindow,to_rect,sf::BlendAlpha);
 		style.colour = sf::Color::Black;
 		style.lineHeight = 8;
-		int textMode = 1;
+		eTextMode textMode = eTextMode::CENTRE;
 		if(type == BTN_TINY) {
-			textMode = 2;
+			textMode = eTextMode::LEFT_TOP;
 			to_rect.left += 18;
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 34;
@@ -256,7 +256,7 @@ void cLed::draw(){
 		style.colour = parent->defTextClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
-		win_draw_string(*inWindow,to_rect,lbl,2,style);
+		win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_TOP,style);
 	}else{
 		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
 	}

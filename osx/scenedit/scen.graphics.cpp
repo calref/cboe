@@ -465,7 +465,7 @@ void draw_lb_slot (short which,short mode)  {
 	if (mode > 0)
 		style.colour = sf::Color::Blue;
 	style.lineHeight = 12;
-	win_draw_string(mainPtr,text_rect,strings_ls[which],0,style);
+	win_draw_string(mainPtr,text_rect,strings_ls[which],eTextMode::WRAP,style);
 }
 
 void draw_rb() {
@@ -494,7 +494,7 @@ void draw_rb_slot (short which,short mode)  {
 	if (mode > 0)
 		style.colour = sf::Color::Red;
 	style.lineHeight = 12;
-	win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],0,style);
+	win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],eTextMode::WRAP,style);
 }
 
 void set_up_terrain_buttons() {
@@ -1142,13 +1142,13 @@ void place_location() {
 	}
 	TextStyle style;
 	style.lineHeight = 12;
-	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, 2, style);
+	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, eTextMode::LEFT_TOP, style);
 	
 	moveTo = location(260 ,terrain_rects[255].top + 26);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	sprintf((char*)draw_str,"%i",current_terrain_type);
-	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, 2, style);
+	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, eTextMode::LEFT_TOP, style);
 	
 	erase_rect.left = 2;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
@@ -1160,11 +1160,11 @@ void place_location() {
 		moveTo = location(5,terrain_rects[255].bottom + 129);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
-		win_draw_string(terrain_buttons_gworld, draw_rect, current_string, 2, style);
+		win_draw_string(terrain_buttons_gworld, draw_rect, current_string, eTextMode::LEFT_TOP, style);
 		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 129);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
-		win_draw_string(terrain_buttons_gworld, draw_rect, current_string2, 2, style);
+		win_draw_string(terrain_buttons_gworld, draw_rect, current_string2, eTextMode::LEFT_TOP, style);
 	}
 	
 	draw_rect.top = palette_buttons[0][0].top + terrain_rects[255].bottom + 5;
@@ -1232,7 +1232,7 @@ void place_just_location() {
 	}
 	TextStyle style;
 	style.lineHeight = 12;
-	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, 2, style);
+	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, eTextMode::LEFT_TOP, style);
 	
 	from_rect = terrain_buttons_rect;
 	from_rect.top = erase_rect.top;
