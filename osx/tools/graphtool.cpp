@@ -199,6 +199,11 @@ struct text_params_t {
 	location offset = {0,0};
 };
 
+struct snippet_t {
+	std::string text;
+	location at;
+};
+
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t options);
 
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset) {
@@ -241,6 +246,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	};
 	
 	location moveTo;
+	std::vector<snippet_t> snippets;
 	line_height -= 2;
 	
 	if(mode == eTextMode::WRAP) {
@@ -253,10 +259,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 					last_word_break = i + 1;
 				}
 				size_t amount = last_word_break - last_line_break - 1;
-				sf::Text line_to_draw(str_to_draw);
-				line_to_draw.setString(str.substr(last_line_break,amount));
-				line_to_draw.setPosition(moveTo);
-				dest_window.draw(line_to_draw);
+				snippets.push_back({str.substr(last_line_break,amount), moveTo});
 				moveTo.y += line_height;
 				last_line_break = last_word_break;
 			}
@@ -264,12 +267,10 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 				last_word_break = i + 1;
 		}
 		
-		if (i - last_line_break > 1) {
-			str_to_draw.setPosition(moveTo);
-			str_to_draw.setString(str.substr(last_line_break));
-			if(str_to_draw.getString().getSize() > 2){
-				dest_window.draw(str_to_draw);
-			}
+		if(i - last_line_break > 1) {
+			std::string snippet = str.substr(last_line_break);
+			if(snippet.size() > 2)
+				snippets.push_back({snippet, moveTo});
 		}
 	} else {
 		switch(mode) {
@@ -286,7 +287,12 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 			case eTextMode::WRAP:
 				break; // Never happens, but put this here to silence warning
 		}
-		str_to_draw.setPosition(moveTo);
+		snippets.push_back({str, moveTo});
+	}
+	
+	for(auto& snippet : snippets) {
+		str_to_draw.setString(snippet.text);
+		str_to_draw.setPosition(snippet.at);
 		dest_window.draw(str_to_draw);
 	}
 }
