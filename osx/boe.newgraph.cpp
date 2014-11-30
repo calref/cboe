@@ -1342,14 +1342,13 @@ short scan_for_response(char *str)
 	short i;
 	
 	for (i = 0; i < 60; i++) { // 60 response in each bunch
-		if((univ.town.cur_talk().talk_nodes[i].personality != -1) &&
-			((univ.town.cur_talk().talk_nodes[i].personality == store_personality)
-			 || (univ.town.cur_talk().talk_nodes[i].personality == -2)) &&
-			(((str[0] == univ.town.cur_talk().talk_nodes[i].link1[0]) && (str[1] == univ.town.cur_talk().talk_nodes[i].link1[1])
-			  && (str[2] == univ.town.cur_talk().talk_nodes[i].link1[2]) && (str[3] == univ.town.cur_talk().talk_nodes[i].link1[3]))
-			 || ((str[0] == univ.town.cur_talk().talk_nodes[i].link2[0]) && (str[1] == univ.town.cur_talk().talk_nodes[i].link2[1])
-				 && (str[2] == univ.town.cur_talk().talk_nodes[i].link2[2]) && (str[3] == univ.town.cur_talk().talk_nodes[i].link2[3]))))
-			return i;
+		cSpeech::cNode node = univ.town.cur_talk().talk_nodes[i];
+		short personality = node.personality;
+		if(personality == -1) continue;
+		if(personality != store_personality && personality != -2)
+			continue;
+		if(strncmp(str, node.link1, 4) == 0) return i;
+		if(strncmp(str, node.link2, 4) == 0) return i;
 	}
 	return -1;
 }
