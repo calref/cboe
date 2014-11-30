@@ -243,52 +243,51 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	location moveTo;
 	line_height -= 2;
 	
-	switch (mode) {
-		case eTextMode::WRAP:
-			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
-			for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
-				if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
-					 && (last_word_break > last_line_break)) || (str[i] == '|')) {
-				  	if(str[i] == '|') {
-				  		str[i] = ' ';
-						last_word_break = i + 1;
-					}
-					size_t amount = last_word_break - last_line_break - 1;
-					sf::Text line_to_draw(str_to_draw);
-					line_to_draw.setString(str.substr(last_line_break,amount));
-					line_to_draw.setPosition(moveTo);
-					dest_window.draw(line_to_draw);
-					moveTo.y += line_height;
-					last_line_break = last_word_break;
-				}
-				if(str[i] == ' ')
+	if(mode == eTextMode::WRAP) {
+		moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
+		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
+			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
+				 && (last_word_break > last_line_break)) || (str[i] == '|')) {
+				if(str[i] == '|') {
+					str[i] = ' ';
 					last_word_break = i + 1;
-			}
-			
-			if (i - last_line_break > 1) {
-				str_to_draw.setPosition(moveTo);
-				str_to_draw.setString(str.substr(last_line_break));
-				if(str_to_draw.getString().getSize() > 2){
-					dest_window.draw(str_to_draw);
 				}
-			}	
-			break;
-		case eTextMode::CENTRE:
-			moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x,
-					(dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);
+				size_t amount = last_word_break - last_line_break - 1;
+				sf::Text line_to_draw(str_to_draw);
+				line_to_draw.setString(str.substr(last_line_break,amount));
+				line_to_draw.setPosition(moveTo);
+				dest_window.draw(line_to_draw);
+				moveTo.y += line_height;
+				last_line_break = last_word_break;
+			}
+			if(str[i] == ' ')
+				last_word_break = i + 1;
+		}
+		
+		if (i - last_line_break > 1) {
 			str_to_draw.setPosition(moveTo);
-			dest_window.draw(str_to_draw);
-			break;
-		case eTextMode::LEFT_TOP:
-			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
-			str_to_draw.setPosition(moveTo);
-			dest_window.draw(str_to_draw);
-			break;
-		case eTextMode::LEFT_BOTTOM:
-			moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9 + dest_rect.height() / 6);
-			str_to_draw.setPosition(moveTo);
-			dest_window.draw(str_to_draw);
-			break;
+			str_to_draw.setString(str.substr(last_line_break));
+			if(str_to_draw.getString().getSize() > 2){
+				dest_window.draw(str_to_draw);
+			}
+		}
+	} else {
+		switch(mode) {
+			case eTextMode::CENTRE:
+				moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x,
+						(dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);
+				break;
+			case eTextMode::LEFT_TOP:
+				moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
+				break;
+			case eTextMode::LEFT_BOTTOM:
+				moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9 + dest_rect.height() / 6);
+				break;
+			case eTextMode::WRAP:
+				break; // Never happens, but put this here to silence warning
+		}
+		str_to_draw.setPosition(moveTo);
+		dest_window.draw(str_to_draw);
 	}
 }
 
