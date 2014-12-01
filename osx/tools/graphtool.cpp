@@ -230,6 +230,7 @@ std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rec
 std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
 	text_params_t params;
 	params.mode = eTextMode::WRAP;
+	params.showBreaks = true;
 	params.hilite_ranges = hilites;
 	params.style = style;
 	params.hilite_fg = style.colour;
