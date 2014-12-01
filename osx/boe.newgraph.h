@@ -1,13 +1,32 @@
-typedef	struct {
-	char word[15];
-	RECT word_rect;
-	} word_rect_type;
-typedef struct {
-	short per1,per2;
-	char stra[5],strb[5];
-	short ttype,a,b,c,d;
-	} hold_responses;
-	
+
+#include <string>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include "location.h"
+#include "item.h"
+
+struct word_rect_t {
+	std::string word;
+	RECT rect;
+	int node = -1;
+	sf::Color on, off;
+	word_rect_t(std::string w, RECT r) : word(w), rect(r) {}
+	word_rect_t() {}
+};
+
+enum {
+	TALK_DUNNO = -1,
+	TALK_BUY = -2,
+	TALK_SELL = -3,
+	TALK_BUSINESS = -4,
+	TALK_LOOK = -10,
+	TALK_NAME = -11,
+	TALK_JOB = -12,
+	TALK_RECORD = -13,
+	TALK_DONE = -14,
+	TALK_BACK = -15,
+	TALK_ASK = -16,
+};
+
 void apply_unseen_mask();
 void apply_light_mask(bool onWindow);
 void end_anim();
@@ -43,8 +62,8 @@ cItemRec store_mage_spells(short which_s) ;
 cItemRec store_priest_spells(short which_s);
 cItemRec store_alchemy(short which_s);
 void get_item_interesting_string(cItemRec item,char *message);
-void click_talk_rect(std::string str_to_place,std::string str_to_place2,RECT c_rect);
+void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect);
-short scan_for_response(char *str);
+short scan_for_response(const char *str);
 void refresh_talking();
 void draw_dialog_graphic(sf::RenderTarget& target, RECT rect, short which_g, short type_g, bool do_frame);

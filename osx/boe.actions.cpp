@@ -79,11 +79,6 @@ short priest_need_select[62] = {
 // 0 - no select  1 - active only  2 - any existing
 
 // TODO: The duplication of RECT here shouldn't be necessary...
-word_rect_type preset_words[9] = {
-	{"Look",RECT{366,4,386,54}},{"Name",RECT{366,70,386,130}},{"Job",RECT{366,136,386,186}},
-	{"Buy",RECT{389,4,409,54}},{"Sell",RECT{389,70,409,120}},{"Record",RECT{389,121,409,186}},
-	{"Done",RECT{389,210,409,270}},{"Go Back",RECT{366,190,386,270}},
-	{"Ask About...",RECT{343,4,363,134}}};
 cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
@@ -123,6 +118,8 @@ extern short spec_item_array[60];
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
+extern std::vector<word_rect_t> talk_words;
+extern bool talk_end_forced;
 
 // combat globals
 
@@ -1588,9 +1585,10 @@ bool handle_keystroke(sf::Event& event){
 		if (chr2 == kb::Space)
 			chr2 = kb::G;
 		for (i = 0; i < 9; i++)
-			if (chr2 == talk_chars[i]) {
-				pass_point.x = preset_words[i].word_rect.left + 9 + ul.x;
-				pass_point.y = preset_words[i].word_rect.top + 9 + ul.y;
+			if (chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
+				int j = talk_end_forced ? i - 5 : i;
+				pass_point.x = talk_words[i].rect.left + 9 + ul.x;
+				pass_point.y = talk_words[i].rect.top + 9 + ul.y;
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);

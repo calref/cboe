@@ -1,6 +1,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <vector>
 
 //#include "item.h"
 
@@ -79,17 +80,15 @@ extern cUniverse univ;
 //extern talking_record_type talking;
 
 // Talk vars
-extern word_rect_type store_words[50];
 extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic,current_pc;
 extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
-extern word_rect_type preset_words[9];
 extern RECT talk_area_rect, word_place_rect,talk_help_rect;
 extern std::string title_string;
 extern m_num_t store_monst_type;
-//extern hold_responses store_resp[83];
+std::vector<word_rect_t> talk_words;
 
 // Shop vars
 extern short store_shop_items[30],store_shop_costs[30];
@@ -944,15 +943,22 @@ void refresh_shopping()
 	}
 }
 
-void click_talk_rect(std::string str_to_place,std::string str_to_place2,RECT c_rect)
-{
-	
-	place_talk_str(str_to_place,str_to_place2,1,c_rect);
+void click_talk_rect(word_rect_t word) {
+	RECT talkRect(talk_gworld), wordRect(word.rect);
+	mainPtr.setActive();
+	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
+	wordRect.offset(talk_area_rect.topLeft());
+	wordRect.offset(ul);
+	TextStyle style;
+	style.font = FONT_DUNGEON;
+	style.pointSize = 18;
+	style.lineHeight = 18;
+	style.colour = word.on;
+	win_draw_string(mainPtr, wordRect, word.word, eTextMode::LEFT_TOP, style);
 	mainPtr.display();
-	if (play_sounds == true)
-		play_sound(37);
+	if(play_sounds) play_sound(37);
 	else sf::sleep(time_in_ticks(5));
-	place_talk_str(str_to_place,str_to_place2,0,c_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
 }
 
 ////
@@ -1073,7 +1079,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {19,48,42,260};
 	RECT dest_rect,help_from = {85,36,101,54};
-	std::string str;
 	sf::Text str_to_draw;
 	
 	short i,j,str_len,line_height = 17;
@@ -1084,8 +1089,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
 	// The green components on the second line were 40959 and 24575
 	// TODO: The duplication of sf::Color here shouldn't be necessary...
-	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
-		sf::Color{0,160,0},sf::Color{0,96,0}};
+	sf::Color c[8] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
+		sf::Color{0,160,0},sf::Color{0,96,0},sf::Color(160,0,20)};
 	
 	talk_gworld.setActive();
 	
@@ -1148,169 +1153,81 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	style.colour = c[4];
 	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
+	talk_words.clear();
+	static const RECT preset_rects[9] = {
+		RECT{366,4,386,54}, RECT{366,70,386,130}, RECT{366,136,386,186},
+		RECT{389,4,409,54}, RECT{389,70,409,120}, RECT{389,121,409,186},
+		RECT{389,210,409,270}, RECT{366,190,386,270},
+		RECT{343,4,363,134},
+	};
+	static const char*const preset_words[9] = {
+		"Look", "Name", "Job",
+		"Buy", "Sell", "Record",
+		"Done", "Go Back",
+		"Ask About...",
+	};
+	
 	// Place buttons at bottom.
 	if (color == 0)
 		style.colour = c[5];
 	else style.colour = c[6];
-	for (i = 0; i < 9; i++)
-		if ((talk_end_forced == false) || (i == 6) || (i == 5)) {
-			preset_words[i].word_rect.offset(0,8);
-			win_draw_string(talk_gworld,preset_words[i].word_rect,preset_words[i].word,eTextMode::LEFT_TOP,style);
-			preset_words[i].word_rect.offset(0,-8);
+	for(i = 0; i < 9; i++) {
+		if(!talk_end_forced || i == 6 || i == 5) {
+			word_rect_t preset_word(preset_words[i], preset_rects[i]);
+			preset_word.on = c[5];
+			preset_word.off = c[6];
+			switch(i) {
+				case 0: preset_word.node = TALK_LOOK; break;
+				case 1: preset_word.node = TALK_NAME; break;
+				case 2: preset_word.node = TALK_JOB; break;
+				case 3: preset_word.node = TALK_BUY; break;
+				case 4: preset_word.node = TALK_SELL; break;
+				case 5: preset_word.node = TALK_RECORD; break;
+				case 6: preset_word.node = TALK_DONE; break;
+				case 7: preset_word.node = TALK_BACK; break;
+				case 8: preset_word.node = TALK_ASK; break;
+			}
+			talk_words.push_back(preset_word);
+			RECT draw_rect = preset_word.rect;
+			win_draw_string(talk_gworld,draw_rect,preset_word.word,eTextMode::LEFT_TOP,style);
 		}
-	// Place bulk of what said. Save words.
-	//TextSize(14);
-	if (color == 0)
-		for (i = 0; i < 50; i++)
-			store_words[i].word_rect.left = store_words[i].word_rect.right = 0;
-	
-	auto text_len = [&str_to_draw](size_t i) -> int {
-		return str_to_draw.findCharacterPos(i).x;
-	};
-	
-	str_len = str_to_place.length();
-	if (str_len == 0) {
-		str_to_place = ".";
 	}
-	str = str_to_place;
-	str_to_draw.setString(str);
 	
 	dest_rect = word_place_rect;
-	
-	current_rect = 0;
-	
-	if (color == 0)
-		style.colour = c[2];
-	else style.colour = c[1];
-	style.lineHeight = line_height;
-	style.applyTo(str_to_draw);
-	// TODO: The entire text flashes when clicking anything
-	win_draw_string(talk_gworld, dest_rect, str, eTextMode::WRAP, style);
-	for (i = 0;i < str_len;i++) {
-		if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0)) { // New word, so set up a rect
-			if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
-				&& (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
-				store_words[current_rect].word_rect.left = dest_rect.left + (text_len(store_last_word_break) - text_len(last_line_break)) - 2;
-				store_words[current_rect].word_rect.right = dest_rect.left + (text_len(i + 1) - text_len(last_line_break)) - 1;
-				store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
-				store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
-				
-				if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96)
-					|| (str[store_last_word_break] > 122)
-					|| ((str[store_last_word_break] >= 58) && (str[store_last_word_break] <= 64)))
-					store_last_word_break++;
-				
-				// adjust for if this word will be scrolled down
-				//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
-		  		//	&& (last_word_break > last_line_break)) || (str[i] == '|')) {
-		  		//	OffsetRect(&store_words[current_rect].word_rect,5 + -1 * store_words[current_rect].word_rect.left,line_height);
-		  		//}
-				
-				store_words[current_rect].word[0] = str[store_last_word_break];
-				store_words[current_rect].word[1] = str[store_last_word_break + 1];
-				store_words[current_rect].word[2] = str[store_last_word_break + 2];
-				store_words[current_rect].word[3] = str[store_last_word_break + 3];
-				store_words[current_rect].word[4] = 0;
-				for (j = 0; j < 4; j++)
-					if ((store_words[current_rect].word[j] >= 65) && (store_words[current_rect].word[j] <= 90))
-						store_words[current_rect].word[j] += 32;
-				if (scan_for_response(store_words[current_rect].word) < 0) {
-					store_words[current_rect].word_rect.left = store_words[current_rect].word_rect.right = 0;
-				}
-				else {
-					start_of_last_kept_word = store_last_word_break;
-					if (current_rect < 49)
-						current_rect++;
-					
-					// TODO: Debug line, remove
-					frame_rect(talk_gworld, store_words[current_rect].word_rect, sf::Color::Red);
-				}
-				last_stored_word_break = i + 1;
+	style.colour = c[2];
+	// First determine the offsets of clickable words.
+	// The added spaces ensure that end-of-word boundaries are found
+	std::string str = str_to_place + " |" + str_to_place2 + " ";
+	std::vector<hilite_t> hilites;
+	std::vector<int> nodes;
+	int wordStart = 0, wordEnd = 0;
+	bool inClickable = false;
+	for(size_t i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if(isalpha(c) || c == '-' || c == '\'') {
+			if(wordStart <= wordEnd) wordStart = i;
+		} else if(wordEnd <= wordStart) {
+			wordEnd = i;
+			short node = scan_for_response(str.c_str() + wordStart);
+			if(node >= 0) {
+				nodes.push_back(node);
+				hilites.push_back({wordStart, wordEnd});
 			}
-		}
-		if (((text_len(i) - text_len(last_line_break) > (dest_rect.right - dest_rect.left - 6))
-			 && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
-			if (str[i] == '|') {
-				str[i] = ' ';
-		 		last_word_break = i + 1;
-			}
-	 		store_last_word_break = last_word_break;
-			last_line_break = last_word_break;
-			if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-				// TODO: Should we play an error sound here?
-	 			store_words[current_rect - 1].word_rect.offset(5 - store_words[current_rect - 1].word_rect.left,line_height);
-			}
-		}
-		if (str[i] == ' ') { // New word
-			store_last_word_break = last_word_break = i + 1;
 		}
 	}
 	
-	// Now for string 2
-	str_len = str_to_place2.length();
-	start_of_last_kept_word = -1;
+	std::vector<RECT> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? c[1] : c[7]);
 	
-	if (str_len > 0) {
-		
-		str = str_to_place2;
-		str_to_draw.setString(str);
-		
-		last_line_break = store_last_word_break = last_word_break = last_stored_word_break = 0;
-		win_draw_string(talk_gworld, dest_rect, str, eTextMode::WRAP, style);
-		for (i = 0;i < str_len;i++) {
-			if (((str[i] != 39) && ((str[i] < 65) || (str[i] > 122)) && ((str[i] < 48) || (str[i] > 57))) && (color == 0))  { // New word, so set up a rect
-				if (((i - store_last_word_break >= 4) || (i >= str_len - 1))
-					&& (i - last_stored_word_break >= 4) && (talk_end_forced == false)) {
-					store_words[current_rect].word_rect.left = dest_rect.left + (text_len(store_last_word_break) - text_len(last_line_break)) - 2;
-					store_words[current_rect].word_rect.right = dest_rect.left + (text_len(i + 1) - text_len(last_line_break)) - 1;
-					store_words[current_rect].word_rect.top = dest_rect.top + 1 + line_height * on_what_line - 5;
-					store_words[current_rect].word_rect.bottom = dest_rect.top + 1 + line_height * on_what_line + 13;
-					
-					if ((str[store_last_word_break] < 48) || (str[store_last_word_break] == 96)
-						|| (str[store_last_word_break] > 122)
-						|| ((str[store_last_word_break] >= 58) && (str[store_last_word_break] <= 64)))
-						store_last_word_break++;
-					
-					// adjust for if this word will be scrolled down
-					//if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))
-					//	&& (last_word_break > last_line_break)) || (str[i] == '|')) {
-					//	OffsetRect(&store_words[current_rect].word_rect,5 + -1 * store_words[current_rect].word_rect.left,line_height);
-					//}
-					store_words[current_rect].word[0] = str[store_last_word_break];
-					store_words[current_rect].word[1] = str[store_last_word_break + 1];
-					store_words[current_rect].word[2] = str[store_last_word_break + 2];
-					store_words[current_rect].word[3] = str[store_last_word_break + 3];
-					store_words[current_rect].word[4] = 0;
-					for (j = 0; j < 4; j++)
-						if ((store_words[current_rect].word[j] >= 65) && (store_words[current_rect].word[j] <= 90))
-							store_words[current_rect].word[j] += 32;
-					if (scan_for_response(store_words[current_rect].word) < 0)
-						store_words[current_rect].word_rect.left = store_words[current_rect].word_rect.right = 0;
-					else {
-						start_of_last_kept_word = store_last_word_break;
-						if (current_rect < 49)
-							current_rect++;
-						
-						//FrameRect(&store_words[current_rect].word_rect);
-					}
-					last_stored_word_break = i + 1;
-				}
-			}
-			if (((text_len(i) - text_len(last_line_break) > (dest_rect.right - dest_rect.left - 6))
-				 && (last_word_break > last_line_break)) || (str[i] == '|') || (i == str_len - 1)) {
-				if (str[i] == '|') {
-					str[i] = ' ';
-					last_word_break = i + 1;
-	 			}
-				store_last_word_break = last_word_break;
-				last_line_break = last_word_break;
-				if ((start_of_last_kept_word >= last_line_break) && (current_rect > 0)) {
-					store_words[current_rect - 1].word_rect.offset(5 + -1 * store_words[current_rect - 1].word_rect.left,line_height);
-				}
-			}
-			if (str[i] == ' ') { // New word
-				store_last_word_break = last_word_break = i + 1;
-			}
+	if(!talk_end_forced) {
+		// Now build the list of word rects
+		for(size_t i = 0; i < hilites.size(); i++) {
+			word_rect_t thisRect;
+			thisRect.word = str.substr(hilites[i].first, hilites[i].second - hilites[i].first);
+			thisRect.rect = word_rects[i];
+			thisRect.node = nodes[i];
+			thisRect.on = c[1];
+			thisRect.off = c[2]; // Note: "off" is never used
+			talk_words.push_back(thisRect);
 		}
 	}
 	
@@ -1321,13 +1238,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	// Finally place processed graphics
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),oldRect,talk_area_rect,ul);
-	
-	// Clean up strings
-	for (i = 0; i < 50; i++)
-		for (j = 0; j < 4; j++)
-			if ((store_words[current_rect].word[j] >= 65) && (store_words[current_rect].word[j] <= 90))
-				store_words[current_rect].word[j] += 32;
-	
 }
 
 void refresh_talking()
@@ -1336,7 +1246,7 @@ void refresh_talking()
 	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
 }
 
-short scan_for_response(char *str) {
+short scan_for_response(const char *str) {
 	cSpeech talk = univ.town.cur_talk();
 	for(short i = 0; i < 60; i++) { // 60 response in each bunch
 		cSpeech::cNode node = talk.talk_nodes[i];

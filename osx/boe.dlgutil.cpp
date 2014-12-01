@@ -69,13 +69,10 @@ char null_string[256] = "";
 short store_tip_page_on = 0;
 
 // Talking vars
-word_rect_type store_words[50];
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
-std::string old_str1, old_str2, one_back1, one_back2;
-extern word_rect_type preset_words[9];
 RECT talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 std::string title_string;
 m_num_t store_monst_type;
@@ -84,6 +81,8 @@ RECT dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic;//,cur_town_talk_loaded = -1;
+int current_talk_node;
+extern std::vector<word_rect_t> talk_words;
 
 // Shopping vars
 
@@ -161,19 +160,25 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	give_help(26,27);
 }
 
+void update_last_talk(int new_node) {
+	// Store last node in the Go Back button
+	for(word_rect_t& word : talk_words) {
+		if(word.word != "Go Back") continue;
+		word.node = current_talk_node;
+		current_talk_node = new_node;
+		break;
+	}
+}
+
 void end_shop_mode()
 {
 	RECT dummy_rect = {0,0,0,0};
 	
 	shop_sbar->hide();
 	if (store_pre_shop_mode == 20) {
-		old_str1 = "You conclude your business.";
-		old_str2 = "";
-		one_back1 = "You conclude your business.";
-		one_back2 = "";
-		
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
-		place_talk_str(old_str1, "", 0, dummy_rect);
+		place_talk_str("You conclude your business.", "", 0, dummy_rect);
+		update_last_talk(TALK_BUSINESS);
 	}
 	
 	overall_mode = store_pre_shop_mode;
@@ -536,16 +541,13 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	overall_mode = MODE_TALKING;
 	talk_end_forced = false;
 	stat_screen_mode = 1;
+	current_talk_node = TALK_LOOK;
 	
 	// Bring up and place first strings.
 	place_string1 = univ.town.cur_talk().talk_strs[personality % 10 + 10];
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
-	old_str1 = place_string1;
-	old_str2 = "";
-	one_back1 = place_string1;
-	one_back2 = "";
 	place_talk_str(place_string1, "", 0, dummy_rect);
 	
 	put_item_screen(stat_window,0);
@@ -572,11 +574,11 @@ void end_talk_mode()
 
 void handle_talk_event(location p)
 {
-	short i,j,force_special = 0,get_pc,s1 = -1,s2 = -1,s3 = -1;
+	short i,j,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
 	std::string place_string1, place_string2;
 	
-	short a,b,c,d,ttype,which_talk_entry = -1;
+	short a,b,c,d,ttype;
 	
 	p.x -= 5;
 	p.y -= 5;
@@ -587,151 +589,103 @@ void handle_talk_event(location p)
 		return;
 	}
 	
-	for (i = 0; i < 9; i++)
-		if ((p.in(preset_words[i].word_rect)) && ((talk_end_forced == false) || (i == 6) || (i == 5))) {
-			click_talk_rect(old_str1,old_str2,preset_words[i].word_rect);
-			switch (i) {
-				case 0: case 1: case 2: case 7: case 8:
-					force_special = i + 1;
-					break;
-				case 3: case 4:
-					force_special = i + 1;
-					
-					//asked[0] = 'p';asked[1] = 'u';asked[2] = 'r';asked[3] = 'c';
-					break;
-				case 5: // save
-					if (strnum1 <= 0) {
-						// TODO: Play an error sound here
-						return;
-					}
-					if(univ.party.has_talk_save(store_personality, univ.town.num, strnum1, strnum2)){
-						ASB("This is already saved.");
-						print_buf();
-						return;
-					} else {
-						give_help(57,0);
-						play_sound(0);
-						bool success = univ.party.save_talk(store_personality,univ.town.num,strnum1,strnum2);
-						if(success){
-							ASB("Noted in journal.");
-						} else {
-							ASB("No more room in talking journal.");
-						}
-					}
-					print_buf();
-					return;
-					break;
-				case 6: // quit
-					end_talk_mode();
-					return;
-					break;
-				default:
-					for (j = 0; j < 4; j++)
-						asked[j] = preset_words[i].word[j];
-					break;
-			}
-			i = 100;
-		}
-	if (i < 100) {
-		for (i = 0; i < 50; i++)
-			if ((p.in(store_words[i].word_rect)) && (talk_end_forced == false)) {
-				click_talk_rect(old_str1,old_str2,store_words[i].word_rect);
-				for (j = 0; j < 4; j++)
-					asked[j] = store_words[i].word[j];
-				
-				i = 100;
-			}
+	int which_talk_entry = TALK_DUNNO;
+	for(word_rect_t& word : talk_words) {
+		if(word.node == -1) continue;
+		if(!p.in(word.rect)) continue;
+		click_talk_rect(word);
+		which_talk_entry = word.node;
+		break;
 	}
-	if (i == 50) // no event
+	if(which_talk_entry == TALK_DUNNO)
 		return;
-	if (force_special == 9) {
-		place_string1 = get_text_response(1017,0);
-		asked[0] = place_string1[0];
-		asked[1] = place_string1[1];
-		asked[2] = place_string1[2];
-		asked[3] = place_string1[3];
-	}
 	
-	if ((asked[0] == 'n') && (asked[1] == 'a') &&(asked[2] == 'm') &&(asked[3] == 'e')) {
-		force_special = 2;
-	}
-	else if ((asked[0] == 'l') && (asked[1] == 'o') &&(asked[2] == 'o') &&(asked[3] == 'k')) {
-		force_special = 1;
-	}
-	else if (((asked[0] == 'j') && (asked[1] == 'o') &&(asked[2] == 'b')) ||
-			 ((asked[0] == 'w') && (asked[1] == 'o') &&(asked[2] == 'r')&&(asked[3] == 'k')) ) {
-		force_special = 3;
-	}
-	else if (((asked[0] == 'b') && (asked[1] == 'u') &&(asked[2] == 'y'))) {
-		force_special = 3;
-	}
-	else if (((asked[0] == 'b') && (asked[1] == 'y') &&(asked[2] == 'e'))) {
-		end_talk_mode();
-	}
-	
-	if (force_special > 0) {
-		switch (force_special) {
-			case 1: case 2: case 3:
-				place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 10 * force_special];
-				
-				oldstrnum1 = strnum1; oldstrnum2 = strnum2;
-				strnum1 =  store_personality % 10 + 10 * force_special;
-				strnum2 = 0;
-				one_back1 = old_str1;
-				one_back2 = old_str2;
-				old_str1 = place_string1;
-				old_str2 = place_string2;
-				place_talk_str(place_string1,place_string2,0,dummy_rect);
+	switch(which_talk_entry) {
+		case TALK_DUNNO:
+		SPECIAL_DUNNO:
+			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 160];
+			if(place_string1.length() < 2) place_string1 = "You get no response.";
+			place_talk_str(place_string1, "", 0, dummy_rect);
+			update_last_talk(TALK_DUNNO);
+			return;
+		case TALK_BUSINESS: // This one only reachable via "go back".
+			place_talk_str("You conclude your business.", "", 0, dummy_rect);
+			update_last_talk(TALK_BUSINESS);
+			return;
+		case TALK_LOOK:
+		SPECIAL_LOOK:
+			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 10];
+			place_talk_str(place_string1, "", 0, dummy_rect);
+			update_last_talk(TALK_LOOK);
+			return;
+		case TALK_NAME:
+		SPECIAL_NAME:
+			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 20];
+			place_talk_str(place_string1, "", 0, dummy_rect);
+			update_last_talk(TALK_NAME);
+			return;
+		case TALK_JOB:
+		SPECIAL_JOB:
+			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 30];
+			place_talk_str(place_string1, "", 0, dummy_rect);
+			update_last_talk(TALK_JOB);
+			return;
+		case TALK_BUY:
+		SPECIAL_BUY:
+			which_talk_entry = scan_for_response("purc");
+			if(which_talk_entry < 0) which_talk_entry = scan_for_response("sale");
+			if(which_talk_entry < 0) which_talk_entry = scan_for_response("heal");
+			if(which_talk_entry < 0) which_talk_entry = scan_for_response("iden");
+			if(which_talk_entry < 0) which_talk_entry = scan_for_response("trai");
+			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
+			break;
+		case TALK_SELL:
+		SPECIAL_SELL:
+			which_talk_entry = scan_for_response("sell");
+			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
+			break;
+		case TALK_RECORD:
+			if (strnum1 <= 0) {
+				// TODO: Play an error sound here
 				return;
-				break;
-			case 4: // buy button
-				asked[0] = 'p';asked[1] = 'u';asked[2] = 'r';asked[3] = 'c';
-				if (scan_for_response(asked) >= 0)
-					break;
-				asked[0] = 's';asked[1] = 'a';asked[2] = 'l';asked[3] = 'e';
-				if (scan_for_response(asked) >= 0)
-					break;
-				asked[0] = 'h';asked[1] = 'e';asked[2] = 'a';asked[3] = 'l';
-				if (scan_for_response(asked) >= 0)
-					break;
-				asked[0] = 'i';asked[1] = 'd';asked[2] = 'e';asked[3] = 'n';
-				if (scan_for_response(asked) >= 0)
-					break;
-				asked[0] = 't';asked[1] = 'r';asked[2] = 'a';asked[3] = 'i';
-				if (scan_for_response(asked) >= 0)
-					break;
-				break;
-			case 5: // sell button
-				asked[0] = 's';asked[1] = 'e';asked[2] = 'l';asked[3] = 'l';
-				if (scan_for_response(asked) >= 0)
-					break;
-				break;
-			case 8: // back 1
-				strnum1 = oldstrnum1; strnum2 = oldstrnum2;
-				place_string1 = one_back1;
-				place_string2 = one_back2;
-				one_back1 = old_str1;
-				one_back2 = old_str2;
-				old_str1 = place_string1;
-				old_str2 = place_string2;
-				place_talk_str(place_string1,place_string2,0,dummy_rect);
+			}
+			if(univ.party.has_talk_save(store_personality, univ.town.num, strnum1, strnum2)){
+				ASB("This is already saved.");
+				print_buf();
 				return;
-				break;
-		}
+			} else {
+				give_help(57,0);
+				play_sound(0);
+				bool success = univ.party.save_talk(store_personality,univ.town.num,strnum1,strnum2);
+				if(success){
+					ASB("Noted in journal.");
+				} else {
+					ASB("No more room in talking journal.");
+				}
+			}
+			print_buf();
+			return;
+		case TALK_DONE:
+		SPECIAL_DONE:
+			end_talk_mode();
+			return;
+		case TALK_BACK: // only if there's nothing to go back to
+			return; // so, there's nothing to do here
+		case TALK_ASK: // ask about
+			place_string1 = get_text_response(1017,0);
+			strncpy(asked, place_string1.c_str(), 4);
+			if(strncmp(asked, "name", 4) == 0) goto SPECIAL_NAME;
+			if(strncmp(asked, "look", 4) == 0) goto SPECIAL_LOOK;
+			if(strncmp(asked, "job", 3) == 0)  goto SPECIAL_JOB;
+			if(strncmp(asked, "work", 4) == 0) goto SPECIAL_JOB;
+			if(strncmp(asked, "bye", 3) == 0)  goto SPECIAL_DONE;
+			if(strncmp(asked, "buy", 3) == 0)  goto SPECIAL_BUY;
+			if(strncmp(asked, "sell", 4) == 0) goto SPECIAL_SELL;
+			which_talk_entry = scan_for_response(asked);
+			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
+			break;
 	}
-	
-	which_talk_entry = scan_for_response(asked);
-	if ((which_talk_entry < 0) || (which_talk_entry > 59)) {
-		one_back1 = old_str1;
-		one_back2 = old_str2;
-		old_str2 = "";
-		old_str1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 160];
-		if(old_str1.length() < 2)
-			old_str1 = "You get no response.";
-		place_talk_str(old_str1,old_str2,0,dummy_rect);
-		strnum1 = -1;
-		return;
-	}
+	update_last_talk(which_talk_entry);
 	
 	ttype = univ.town.cur_talk().talk_nodes[which_talk_entry].type;
 	a = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[0];
@@ -994,6 +948,7 @@ void handle_talk_event(location p)
 				PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
 			talk_end_forced = true;
 			break;
+			// TODO: Strings resulting from this don't seem to be recordable; whyever not?
 		case 29: // town special
 			run_special(7,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
@@ -1004,8 +959,6 @@ void handle_talk_event(location p)
 				place_string2 = "";
 			}
 			get_strs(place_string1,place_string2,2,s1,s2);
-			//strnum1 = -1;
-			//strnum2 = -1;
 			if (s1 >= 0) strnum1 = 2000 + s1;
 			if (s2 >= 0) strnum2 = 2000 + s2;
 			put_pc_screen();
@@ -1021,24 +974,14 @@ void handle_talk_event(location p)
 				place_string2 = "";
 			}
 			get_strs(place_string1,place_string2,0,s1,s2);
-			//strnum1 = -1;
-			//strnum2 = -1;
 			if (s1 >= 0) strnum1 = 3000 + s1;
 			if (s2 >= 0) strnum2 = 3000 + s2;
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
-			
-			
-			
 	}
 	
-	one_back1 = old_str1;
-	one_back2 = old_str2;
-	old_str1 = place_string1;
-	old_str2 = place_string2;
-	place_talk_str(old_str1,old_str2,0,dummy_rect);
-	
+	place_talk_str(place_string1,place_string2,0,dummy_rect);
 }
 
 void store_responses()

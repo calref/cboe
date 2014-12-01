@@ -57,6 +57,7 @@ typedef unsigned short pic_num_t;
 static const pic_num_t NO_PIC = std::numeric_limits<pic_num_t>::max();
 using graf_pos = std::pair<sf::Texture*,RECT>;
 using graf_pos_ref = std::pair<sf::Texture*&,RECT&>;
+using hilite_t = std::pair<size_t,size_t>;
 
 struct cCustomGraphics {
 	size_t numSheets;
@@ -89,6 +90,8 @@ void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
+
+std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
 short string_length(std::string str, TextStyle style);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
