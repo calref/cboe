@@ -943,6 +943,25 @@ void refresh_shopping()
 	}
 }
 
+void place_talk_face() {
+	RECT face_rect = {6,6,38,38};
+	face_rect.offset(talk_area_rect.topLeft());
+	face_rect.offset(ul);
+	mainPtr.setActive();
+	short face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
+	if (store_talk_face_pic >= 0)
+		face_to_draw = store_talk_face_pic;
+	if (store_talk_face_pic >= 1000) {
+		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
+	}
+	else {
+		short i = get_monst_picnum(store_monst_type);
+		if (face_to_draw <= 0)
+			cPict::drawAt(mainPtr, face_rect, i, get_monst_pictype(store_monst_type), false);
+		else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
+	}
+}
+
 void click_talk_rect(word_rect_t word) {
 	RECT talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
@@ -955,10 +974,12 @@ void click_talk_rect(word_rect_t word) {
 	style.lineHeight = 18;
 	style.colour = word.on;
 	win_draw_string(mainPtr, wordRect, word.word, eTextMode::LEFT_TOP, style);
+	place_talk_face();
 	mainPtr.display();
 	if(play_sounds) play_sound(37);
 	else sf::sleep(time_in_ticks(5));
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
+	place_talk_face();
 }
 
 ////
@@ -1070,21 +1091,16 @@ void get_item_interesting_string(cItemRec item,char *message)
 		sprintf(message,"Uses: %d",item.charges);
 }
 
-
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
 {
 	RECT area_rect;
 	
-	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {19,48,42,260};
 	RECT dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
-	short i,j,str_len,line_height = 17;
-	short current_rect,store_last_word_break = 0,start_of_last_kept_word = -1;
-	short last_line_break = 0,last_word_break = 0,on_what_line = 0,last_stored_word_break = 0;
-	short face_to_draw;
+	short i;
 	
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
 	// The green components on the second line were 40959 and 24575
@@ -1116,30 +1132,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(invenbtn_gworld, help_from, talk_gworld, talk_help_rect, sf::BlendAlpha);
 	
-	// Place face of talkee
-	if ((color == 0) && (c_rect.right == 0)) {
-		////
-		mainPtr.setActive();
-		face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
-		if (store_talk_face_pic >= 0)
-			face_to_draw = store_talk_face_pic;
-#if 0 // Note: The "false" parameter means "no frame"
-		if (store_talk_face_pic >= 1000) {
-			// TODO: Draw custom talk face graphic
-			draw_dialog_graphic(  talk_gworld, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
-		}
-		else {
-			i = get_monst_picnum(store_monst_type);
-			if (face_to_draw <= 0)
-				// TODO: draw monster graphic for talk face
-				draw_dialog_graphic(talk_gworld, face_rect, i, get_monst_pictype(store_monst_type), false);
-			;
-			// TODO: Draw preset talk face graphic
-			else draw_dialog_graphic(talk_gworld, face_rect, face_to_draw, PIC_MONST, false);
-		}
-#endif
-		talk_gworld.setActive();
-	}
 	// Place name oftalkee
 	style.colour = c[3];
 	style.lineHeight = 18;
@@ -1235,12 +1227,15 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	// Finally place processed graphics
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),oldRect,talk_area_rect,ul);
+	// I have no idea what this check is for; I'm jsut preserving it in case it was important
+	if(c_rect.right == 0) place_talk_face();
 }
 
 void refresh_talking()
 {
 	RECT tempRect(talk_gworld);
 	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
+	place_talk_face();
 }
 
 short scan_for_response(const char *str) {

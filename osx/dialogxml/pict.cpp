@@ -1058,3 +1058,11 @@ void cPict::drawPartyPc(short num, RECT to_rect){
 }
 
 cPict::~cPict() {}
+
+void cPict::drawAt(sf::RenderWindow& win, RECT dest, pic_num_t which_g, ePicType type_g, bool framed) {
+	cPict pic(win);
+	pic.frame = dest;
+	pic.setPict(which_g, type_g);
+	pic.setFormat(TXT_FRAME, framed);
+	pic.draw();
+}

@@ -66,4 +66,3 @@ void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect);
 short scan_for_response(const char *str);
 void refresh_talking();
-void draw_dialog_graphic(sf::RenderTarget& target, RECT rect, short which_g, short type_g, bool do_frame);

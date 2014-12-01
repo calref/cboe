@@ -113,6 +113,7 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw();
+	static void drawAt(sf::RenderWindow& win, RECT dest, pic_num_t which_g, ePicType type_g, bool framed);
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
