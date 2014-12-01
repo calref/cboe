@@ -88,42 +88,42 @@ void cTextField::draw(){
 	frame_rect(*inWindow, outline, sf::Color::Black);
 	std::string contents = getText();
 	RECT rect = frame;
-	rect.inset(2,6);
+	rect.inset(2,2);
 	TextStyle style;
 	style.font = FONT_PLAIN;
 	style.pointSize = 12;
 	style.colour = sf::Color::Black;
-	style.lineHeight = 14;
-	// TODO: Proper support for multiline fields
-	int ip_offset, sel_offset;
+	style.lineHeight = 16;
+	size_t ip_offset = 0;
 	if(haveFocus) {
-		std::string pre_ip = contents.substr(0, insertionPoint);
-		// TODO: Update string_length to take a std::string
+		hilite_t hilite = {insertionPoint, selectionPoint};
+		if(selectionPoint < insertionPoint) std::swap(hilite.first,hilite.second);
+		std::vector<snippet_t> snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
+		int iSnippet = -1, sum = 0;
+		ip_offset = insertionPoint;
+		for(size_t i = 0; i < snippets.size(); i++) {
+			size_t snippet_len = snippets[i].text.length();
+			sum += snippet_len;
+			if(sum >= insertionPoint) {
+				iSnippet = i;
+				break;
+			}
+			ip_offset -= snippet_len;
+		}
+		std::string pre_ip = iSnippet >= 0 ? snippets[iSnippet].text.substr(0, ip_offset) : "";
 		ip_offset = string_length(pre_ip, style);
-		if(insertionPoint != selectionPoint) {
-			std::string pre_sel = contents.substr(0, selectionPoint);
-			sel_offset = string_length(pre_sel, style);
-			int sel_start = std::min(ip_offset, sel_offset) + 1;
-			int sel_width = abs(ip_offset - sel_offset) + 3;
-			RECT selectRect = frame;
-			selectRect.left += sel_start;
-			selectRect.right = selectRect.left + sel_width;
-			fill_rect(*inWindow, selectRect, ipClr);
-			// TODO: I forget whether this was supposed to be = or -=
-			selectRect.right - 1;
-			fill_rect(*inWindow, selectRect, hiliteClr);
-		} else if(ip_timer.getElapsedTime().asMilliseconds() < 500) {
+		if(ip_timer.getElapsedTime().asMilliseconds() < 500) {
 //			printf("Blink on (%d); ", ip_timer.getElapsedTime().asMilliseconds());
-			RECT ipRect = frame;
-			ipRect.left += ip_offset + 2;
-			ipRect.right = ipRect.left + 1;
+			RECT ipRect = {0, 0, 15, 1};
+			if(iSnippet >= 0)
+				ipRect.offset(snippets[iSnippet].at.x + ip_offset, snippets[iSnippet].at.y + 1);
+			else ipRect.offset(frame.topLeft()), ipRect.offset(3,2);
 			fill_rect(*inWindow, ipRect, ipClr);
 		} else if(ip_timer.getElapsedTime().asMilliseconds() > 1000) {
 //			printf("Blink off (%d); ", ip_timer.getElapsedTime().asMilliseconds());
 			ip_timer.restart();
 		}
-	}
-	win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
+	} else win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
 }
 
 void cTextField::handleInput(cKey key) {

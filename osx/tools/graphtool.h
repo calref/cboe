@@ -78,6 +78,12 @@ struct cCustomGraphics {
 	size_t count();
 };
 
+struct snippet_t {
+	std::string text;
+	location at;
+	bool hilited;
+};
+
 enum class eTextMode {
 	WRAP,
 	CENTRE,
@@ -92,6 +98,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_r
 void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
 
 std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
+std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
 short string_length(std::string str, TextStyle style);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);

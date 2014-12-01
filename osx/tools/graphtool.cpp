@@ -196,18 +196,14 @@ void TextStyle::applyTo(sf::Text& text) {
 struct text_params_t {
 	TextStyle style;
 	eTextMode mode;
+	bool showBreaks = false;
 	location offset = {0,0};
 	// Hilite ranges are, like the STL, of the form [first, last).
 	std::vector<hilite_t> hilite_ranges;
 	sf::Color hilite_fg, hilite_bg = sf::Color::Transparent;
-	enum {RECTS} returnType;
+	enum {RECTS, SNIPPETS} returnType;
 	std::vector<RECT> returnRects;
-};
-
-struct snippet_t {
-	std::string text;
-	location at;
-	bool hilited;
+	std::vector<snippet_t> snippets;
 };
 
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t& options);
@@ -231,14 +227,30 @@ std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rec
 	return params.returnRects;
 }
 
-void push_snippets(size_t start, size_t end, text_params_t& options, std::vector<snippet_t>& snippets, size_t& iHilite, const std::string& str, location loc) {
+std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
+	text_params_t params;
+	params.mode = eTextMode::WRAP;
+	params.hilite_ranges = hilites;
+	params.style = style;
+	params.hilite_fg = style.colour;
+	params.hilite_bg = hiliteClr;
+	params.returnType = text_params_t::RECTS;
+	win_draw_string(dest_window, dest_rect, str, params);
+	return params.snippets;
+}
+
+void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
 	std::vector<hilite_t>& hilites = options.hilite_ranges;
+	std::vector<snippet_t>& snippets = options.snippets;
 	// Check if we have any hilites on this line.
 	// We assume the list of hilites is sorted, so we just need to
 	// check the current entry.
 	size_t upper_bound = end;
 	do {
 		bool hilited = false;
+		// Skip any hilite rules that have start = end
+		while(iHilite < hilites.size() && hilites[iHilite].first == hilites[iHilite].second)
+			iHilite++;
 		if(iHilite < hilites.size()) {
 			// Possibilities: (vertical bars indicate line boundaries, parentheses for hilite boundaries, dots are data)
 			// 1.  |...|...(...) --> no hilite on this line
@@ -266,6 +278,7 @@ void push_snippets(size_t start, size_t end, text_params_t& options, std::vector
 }
 
 void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t& options) {
+	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
 	sf::Text str_to_draw;
 	options.style.applyTo(str_to_draw);
@@ -300,7 +313,6 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	size_t iHilite = 0;
 	
 	location moveTo;
-	std::vector<snippet_t> snippets;
 	line_height -= 2; // TODO: ...why are we arbitrarily reducing the line height from the requested value?
 	
 	if(mode == eTextMode::WRAP) {
@@ -309,10 +321,10 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
 				 && (last_word_break > last_line_break)) || (str[i] == '|')) {
 				if(str[i] == '|') {
-					str[i] = ' ';
+					if(!options.showBreaks) str[i] = ' ';
 					last_word_break = i + 1;
 				}
-				push_snippets(last_line_break, last_word_break, options, snippets, iHilite, str, moveTo);
+				push_snippets(last_line_break, last_word_break, options, iHilite, str, moveTo);
 				moveTo.y += line_height;
 				last_line_break = last_word_break;
 			}
@@ -320,10 +332,10 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 				last_word_break = i + 1;
 		}
 		
-		if(i - last_line_break > 1) {
+		if(i - last_line_break > 0) {
 			std::string snippet = str.substr(last_line_break);
-			if(snippet.size() > 2)
-				push_snippets(last_line_break, str.length() + 1, options, snippets, iHilite, str, moveTo);
+			if(!snippet.empty())
+				push_snippets(last_line_break, str.length() + 1, options, iHilite, str, moveTo);
 		}
 	} else {
 		switch(mode) {
@@ -340,10 +352,10 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 			case eTextMode::WRAP:
 				break; // Never happens, but put this here to silence warning
 		}
-		push_snippets(0, str.length() + 1, options, snippets, iHilite, str, moveTo);
+		push_snippets(0, str.length() + 1, options, iHilite, str, moveTo);
 	}
 	
-	for(auto& snippet : snippets) {
+	for(auto& snippet : options.snippets) {
 		str_to_draw.setString(snippet.text);
 		str_to_draw.setPosition(snippet.at);
 		if(snippet.hilited) {
@@ -355,6 +367,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 			if(options.returnType == text_params_t::RECTS)
 				options.returnRects.push_back(bounds);
 			str_to_draw.setColor(options.hilite_fg);
+			bounds.inset(0,-4);
 			fill_rect(dest_window, bounds, options.hilite_bg);
 		} else str_to_draw.setColor(options.style.colour);
 		dest_window.draw(str_to_draw);
