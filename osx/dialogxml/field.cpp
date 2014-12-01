@@ -95,9 +95,40 @@ void cTextField::draw(){
 	style.colour = sf::Color::Black;
 	style.lineHeight = 16;
 	size_t ip_offset = 0;
+	hilite_t hilite = {insertionPoint, selectionPoint};
+	if(selectionPoint < insertionPoint) std::swap(hilite.first,hilite.second);
+	if(haveFocus && contents.length() > 1) {
+		// Determine which line the insertion and selection points are on
+		clip_rect(*inWindow, {0,0,0,0}); // To prevent drawing
+		hilite_t tmp_hilite = hilite;
+		// Manipulate this to ensure that there is a hilited area
+		std::string dummy_str = contents + "  ";
+		if(tmp_hilite.first >= tmp_hilite.second)
+			tmp_hilite.second = tmp_hilite.first + 1;
+		std::vector<RECT> rects = draw_string_hilite(*inWindow, rect, dummy_str, style, {tmp_hilite}, {0,0,0});
+		if(!rects.empty()) {
+			// We only care about the first and last rects. Furthermore, we only really need one point
+			location ip_pos = rects[0].centre(), sp_pos = rects[rects.size() - 1].centre();
+			if(selectionPoint < insertionPoint) std::swap(ip_pos, sp_pos);
+			// Prioritize selection point being visible. If possible, also keep insertion point visible.
+			// We do this by first ensuring the insertion point is visible, then doing the same
+			// for the selection point.
+			while(!ip_pos.in(frame)) {
+				rect.offset(0,-14);
+				ip_pos.y -= 14;
+				sp_pos.y -= 14;
+			}
+			while(!sp_pos.in(frame)) {
+				int shift = selectionPoint < insertionPoint ? 14 : -14;
+				rect.offset(0,shift);
+				ip_pos.y += shift;
+				sp_pos.y += shift;
+			}
+		}
+		undo_clip(*inWindow);
+	}
+	clip_rect(*inWindow, frame);
 	if(haveFocus) {
-		hilite_t hilite = {insertionPoint, selectionPoint};
-		if(selectionPoint < insertionPoint) std::swap(hilite.first,hilite.second);
 		std::vector<snippet_t> snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
 		int iSnippet = -1, sum = 0;
 		ip_offset = insertionPoint;
@@ -124,6 +155,7 @@ void cTextField::draw(){
 			ip_timer.restart();
 		}
 	} else win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
+	undo_clip(*inWindow);
 }
 
 void cTextField::handleInput(cKey key) {
