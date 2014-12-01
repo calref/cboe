@@ -413,8 +413,8 @@ void place_buy_button(short position,short pc_num,short item_num)
 			break;
 		case 3: // sell weapons
 			if (((univ.party[pc_num].items[item_num].variety < 7) || (univ.party[pc_num].items[item_num].variety == 23) ||
-				 (!univ.party[pc_num].equip[item_num]) &&
 				 (univ.party[pc_num].items[item_num].variety == 24)) &&
+				 (!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
 				item_area_button_active[position][5] = true;
