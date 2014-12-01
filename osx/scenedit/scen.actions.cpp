@@ -569,8 +569,8 @@ bool handle_action(location the_point,sf::Event event) {
 						town->preset_items[x].loc.y = spot_hit.y;
 						town->preset_items[x].code = mode_count;
 						town->preset_items[x].ability = -1;
-						if ((scenario.scen_items[mode_count].variety == 3) ||
-							(scenario.scen_items[mode_count].variety == 11))
+						if ((scenario.scen_items[mode_count].variety == eItemType::GOLD) ||
+							(scenario.scen_items[mode_count].variety == eItemType::FOOD))
 							town->preset_items[x].ability = get_ran(1,4,6);
 						//town.preset_items[x].charges = 0;
 						town->preset_items[x].always_there = 0;
@@ -2904,7 +2904,7 @@ bool place_item(location spot_hit,short which_item,short property,short always,s
 	
 	if ((which_item < 0) || (which_item > 399))
 		return true;
-	if (scenario.scen_items[which_item].variety == 0)
+	if (scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
 		return true;
 	if (get_ran(1,1,100) > odds)
 		return false;
@@ -2914,8 +2914,8 @@ bool place_item(location spot_hit,short which_item,short property,short always,s
 			town->preset_items[x].loc.y = spot_hit.y;
 			town->preset_items[x].code = which_item;
 			town->preset_items[x].ability = -1;
-			if ((scenario.scen_items[which_item].variety == 3) ||
-				(scenario.scen_items[which_item].variety == 11))
+			if ((scenario.scen_items[which_item].variety == eItemType::GOLD) ||
+				(scenario.scen_items[which_item].variety == eItemType::FOOD))
 				town->preset_items[x].ability = get_ran(1,4,6);
 			
 			//town.preset_items[x].charges = 0;

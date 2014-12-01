@@ -101,13 +101,13 @@ bool handle_action(sf::Event event,short mode)
 		}
 	for (i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][1])) && // drop item
-			(univ.party[current_active_pc].items[i].variety > 0)) { // variety = 0 no item in slot/ non 0 item exists
+			univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 				flash_rect(item_string_rects[i][1]);
 				take_item(current_active_pc,i);
 				}
 	for (i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
-			(univ.party[current_active_pc].items[i].variety > 0)) {
+			univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 				flash_rect(item_string_rects[i][2]);
 				univ.party[current_active_pc].items[i].ident = true;
 				}
@@ -185,10 +185,10 @@ void combine_things(short pc_num)
 	short i,j,test;
 	
 	for (i = 0; i < 24; i++) {
-		if ((univ.party[pc_num].items[i].variety > 0) &&
+		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM &&
 			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
 			for (j = i + 1; j < 24; j++)
-				if ((univ.party[pc_num].items[j].variety > 0) &&
+				if(univ.party[pc_num].items[j].variety != eItemType::NO_ITEM &&
 					(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
 					&& (univ.party[pc_num].items[j].ident)) {
 					//					add_string_to_buf("(items combined)");
@@ -205,7 +205,7 @@ void combine_things(short pc_num)
 					take_item(pc_num,j);
 				}
 		}
-		if ((univ.party[pc_num].items[i].variety > 0) && (univ.party[pc_num].items[i].charges < 0))
+		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && univ.party[pc_num].items[i].charges < 0)
 			univ.party[pc_num].items[i].charges = 1;
 	}
 }
@@ -214,7 +214,7 @@ bool give_to_pc(short pc_num,cItemRec item, short print_result)
 {
 	short free_space;
 	
-	if (item.variety == 0)
+	if (item.variety == eItemType::NO_ITEM)
 		return true;
 	if (((free_space = pc_has_space(pc_num)) == 24 ) || (univ.party[pc_num].main_status != 1))
 		return false;
@@ -256,7 +256,7 @@ short pc_has_space(short pc_num)
 	short i = 0;
 	
 	while (i < 24) {
-		if (univ.party[pc_num].items[i].variety == 0)
+		if (univ.party[pc_num].items[i].variety == eItemType::NO_ITEM)
 			return i;
 		i++;
 	}
@@ -279,7 +279,7 @@ void take_item(short pc_num,short which_item)
 		univ.party[pc_num].items[i] = univ.party[pc_num].items[i + 1];
 		univ.party[pc_num].equip[i] = univ.party[pc_num].equip[i + 1];
 	}
-	univ.party[pc_num].items[23].variety = ITEM_TYPE_NO_ITEM;
+	univ.party[pc_num].items[23].variety = eItemType::NO_ITEM;
 	univ.party[pc_num].equip[23] = false;
 	
 }

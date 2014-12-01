@@ -1512,9 +1512,9 @@ void initiate_outdoor_combat(short i)
 			to_place = pc_pos[m];
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((univ.party[m].main_status != 1) && (univ.party[m].items[n].variety != 0)) {
+			if(univ.party[m].main_status != 1 && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],to_place,true);
-				univ.party[m].items[n].variety = ITEM_TYPE_NO_ITEM;
+				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	
 	overall_mode = MODE_COMBAT;

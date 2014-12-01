@@ -204,12 +204,6 @@ static void put_item_info(cDialog& me,short pc,short item)////
 	char store_text[256];
 	std::string desc_str;
 	cItemRec s_i;
-	const char *item_types[] = {
-		"","1-Handed weapon","2-Handed weapon","","Bow","Arrows","Thrown missile",
-		"Potion/Magic Item","Scroll/Magic Item","Wand","Tool","","Shield","Armor","Helm",
-		"Gloves","Shield","Boots","Ring","Necklace",
-		"Weapon Poison","Gem, Stone, Etc.","Pants","Crossbow","Bolts","Missile Weapon"};
-	
 	
 	s_i = store_i;
 	
@@ -227,7 +221,7 @@ static void put_item_info(cDialog& me,short pc,short item)////
 	if (store_i.ident)
 		magic.setState(led_red);
 	else magic.setState(led_off);
-	me["type"].setText(item_types[s_i.variety]);
+	me["type"].setText(get_str("item-types-display", (int)s_i.variety));
 	
 	// Clear fields
 	me["val"].setText("");
@@ -265,8 +259,8 @@ static void put_item_info(cDialog& me,short pc,short item)////
 		me["def"].setTextToNum(s_i.protection);
 	
 	switch (s_i.variety) {
-		case ITEM_TYPE_ONE_HANDED:
-		case ITEM_TYPE_TWO_HANDED:
+		case eItemType::ONE_HANDED:
+		case eItemType::TWO_HANDED:
 			switch (s_i.type) {
 				case ITEM_EDGED:
 					sprintf((char *) store_text, "Edged weapon");
@@ -284,35 +278,35 @@ static void put_item_info(cDialog& me,short pc,short item)////
 			// TODO: I wonder if this would fit better in the Item Type box?
 			if (s_i.ability == 0)
 				me["abil"].setText(store_text);
-		case ITEM_TYPE_BOW:
-		case ITEM_TYPE_CROSSBOW:
-		case ITEM_TYPE_ARROW:
-		case ITEM_TYPE_THROWN_MISSILE:
-		case ITEM_TYPE_BOLTS:
-		case ITEM_TYPE_MISSILE_NO_AMMO:
+		case eItemType::BOW:
+		case eItemType::CROSSBOW:
+		case eItemType::ARROW:
+		case eItemType::THROWN_MISSILE:
+		case eItemType::BOLTS:
+		case eItemType::MISSILE_NO_AMMO:
 			me["dmg"].setTextToNum(s_i.item_level);
 			me["bonus"].setTextToNum(s_i.bonus);
 			break;
-		case ITEM_TYPE_POTION:
-		case ITEM_TYPE_RING:
-		case ITEM_TYPE_SCROLL: // TODO: Does this make sense for a scroll, though?
-		case ITEM_TYPE_TOOL: // and what about for a tool?
-		case ITEM_TYPE_WAND: // and a wand? Maybe showing ability strength would be better...
-		case ITEM_TYPE_NECKLACE: // TODO: This doesn't seem right for a necklace...
+		case eItemType::POTION:
+		case eItemType::RING:
+		case eItemType::SCROLL: // TODO: Does this make sense for a scroll, though?
+		case eItemType::TOOL: // and what about for a tool?
+		case eItemType::WAND: // and a wand? Maybe showing ability strength would be better...
+		case eItemType::NECKLACE: // TODO: This doesn't seem right for a necklace...
 			me["lvl"].setTextToNum(s_i.item_level);
 			break;
-		case ITEM_TYPE_SHIELD:
-		case ITEM_TYPE_ARMOR:
-		case ITEM_TYPE_HELM:
-		case ITEM_TYPE_GLOVES:
-		case ITEM_TYPE_SHIELD_2:
-		case ITEM_TYPE_BOOTS: // TODO: Should this also check ITEM_TYPE_PANTS?
+		case eItemType::SHIELD:
+		case eItemType::ARMOR:
+		case eItemType::HELM:
+		case eItemType::GLOVES:
+		case eItemType::SHIELD_2:
+		case eItemType::BOOTS: // TODO: Should this also check ITEM_TYPE_PANTS?
 			// TODO: Why is bonus and protection combined into "bonus"? Why not use the "defense" field?
 			me["bonus"].setTextToNum(s_i.bonus + s_i.protection);
 			me["def"].setTextToNum(s_i.item_level);
 			me["enc"].setTextToNum(s_i.awkward);
 			break;
-		case ITEM_TYPE_WEAPON_POISON:
+		case eItemType::WEAPON_POISON:
 			me["lvl"].setTextToNum(s_i.item_level);
 			break;
 		default:
@@ -334,14 +328,14 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKey
 	} else if(item_hit == "left") {
 		do {
 			item = (item == 0) ? 23 : item - 1;
-		} while (univ.party[pc_num].items[item].variety == 0);
+		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_displayed_item = item;
 		store_i = univ.party[pc_num].items[item];
 		put_item_info(me,pc_num,item);
 	} else if(item_hit == "right") {
 		do {
 			item = (item == 23) ? 0 : item + 1;
-		} while (univ.party[pc_num].items[item].variety == 0);
+		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_displayed_item = item;
 		store_i = univ.party[pc_num].items[item];
 		put_item_info(me,pc_num,item);
@@ -630,7 +624,7 @@ static void display_pc_info(cDialog& me)
 	
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
-		if (((univ.party[pc].items[i].variety == 1) || (univ.party[pc].items[i].variety == 2)) &&
+		if ((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
 			(univ.party[pc].equip[i] == true)) {
 			if (weap1 == 24)
 				weap1 = i;

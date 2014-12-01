@@ -101,7 +101,7 @@ void update_item_menu() {
 			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: @""];
 			[choice setTarget: targ];
 			// TODO: Also disable gold or food
-			[choice setEnabled: [item item].variety > 0];
+			[choice setEnabled: [item item].variety != eItemType::NO_ITEM];
 			[choice setRepresentedObject: item];
 		}
 	}

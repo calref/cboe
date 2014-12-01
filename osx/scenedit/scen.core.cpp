@@ -794,88 +794,88 @@ void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) 
 	
 	cLedGroup& variety = dynamic_cast<cLedGroup&>(me["variety"]);
 	switch(store_item.variety) {
-		case ITEM_TYPE_NO_ITEM:
+		case eItemType::NO_ITEM:
 			variety.setSelected("none");
 			break;
-		case ITEM_TYPE_ONE_HANDED:
+		case eItemType::ONE_HANDED:
 			variety.setSelected("weap1");
 			break;
-		case ITEM_TYPE_TWO_HANDED:
+		case eItemType::TWO_HANDED:
 			variety.setSelected("weap2");
 			break;
-		case ITEM_TYPE_GOLD:
+		case eItemType::GOLD:
 			variety.setSelected("gold");
 			break;
-		case ITEM_TYPE_BOW:
+		case eItemType::BOW:
 			variety.setSelected("bow");
 			break;
-		case ITEM_TYPE_ARROW:
+		case eItemType::ARROW:
 			variety.setSelected("arrow");
 			break;
-		case ITEM_TYPE_THROWN_MISSILE:
+		case eItemType::THROWN_MISSILE:
 			variety.setSelected("thrown");
 			break;
-		case ITEM_TYPE_POTION:
+		case eItemType::POTION:
 			variety.setSelected("potion");
 			break;
-		case ITEM_TYPE_SCROLL:
+		case eItemType::SCROLL:
 			variety.setSelected("scroll");
 			break;
-		case ITEM_TYPE_WAND:
+		case eItemType::WAND:
 			variety.setSelected("wand");
 			break;
-		case ITEM_TYPE_TOOL:
+		case eItemType::TOOL:
 			variety.setSelected("tool");
 			break;
-		case ITEM_TYPE_FOOD:
+		case eItemType::FOOD:
 			variety.setSelected("food");
 			break;
-		case ITEM_TYPE_SHIELD:
+		case eItemType::SHIELD:
 			variety.setSelected("shield");
 			break;
-		case ITEM_TYPE_ARMOR:
+		case eItemType::ARMOR:
 			variety.setSelected("armor");
 			break;
-		case ITEM_TYPE_HELM:
+		case eItemType::HELM:
 			variety.setSelected("helm");
 			break;
-		case ITEM_TYPE_GLOVES:
+		case eItemType::GLOVES:
 			variety.setSelected("gloves");
 			break;
-		case ITEM_TYPE_SHIELD_2:
+		case eItemType::SHIELD_2:
 			variety.setSelected("shield2");
 			break;
-		case ITEM_TYPE_BOOTS:
+		case eItemType::BOOTS:
 			variety.setSelected("boots");
 			break;
-		case ITEM_TYPE_RING:
+		case eItemType::RING:
 			variety.setSelected("ring");
 			break;
-		case ITEM_TYPE_NECKLACE:
+		case eItemType::NECKLACE:
 			variety.setSelected("necklace");
 			break;
-		case ITEM_TYPE_WEAPON_POISON:
+		case eItemType::WEAPON_POISON:
 			variety.setSelected("poison");
 			break;
-		case ITEM_TYPE_NON_USE_OBJECT:
+		case eItemType::NON_USE_OBJECT:
 			variety.setSelected("nonuse");
 			break;
-		case ITEM_TYPE_PANTS:
+		case eItemType::PANTS:
 			variety.setSelected("pants");
 			break;
-		case ITEM_TYPE_CROSSBOW:
+		case eItemType::CROSSBOW:
 			variety.setSelected("xbow");
 			break;
-		case ITEM_TYPE_BOLTS:
+		case eItemType::BOLTS:
 			variety.setSelected("bolt");
 			break;
-		case ITEM_TYPE_MISSILE_NO_AMMO:
+		case eItemType::MISSILE_NO_AMMO:
 			variety.setSelected("missile");
 			break;
-		case ITEM_TYPE_UNUSED1:
+		case eItemType::UNUSED1:
 			variety.setSelected("unused1");
 			break;
-		case ITEM_TYPE_UNUSED2:
+		case eItemType::UNUSED2:
 			variety.setSelected("unused2");
 			break;
 	}
@@ -911,36 +911,36 @@ bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 	store_item.graphic_num = me["picnum"].getTextAsNum();
 	
 	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
-	if(variety == "none") store_item.variety = ITEM_TYPE_NO_ITEM;
-	else if(variety == "weap1") store_item.variety = ITEM_TYPE_ONE_HANDED;
-	else if(variety == "weap2") store_item.variety = ITEM_TYPE_TWO_HANDED;
-	else if(variety == "gold") store_item.variety = ITEM_TYPE_GOLD;
-	else if(variety == "bow") store_item.variety = ITEM_TYPE_BOW;
-	else if(variety == "arrow") store_item.variety = ITEM_TYPE_ARROW;
-	else if(variety == "thrown") store_item.variety = ITEM_TYPE_THROWN_MISSILE;
-	else if(variety == "potion") store_item.variety = ITEM_TYPE_POTION;
-	else if(variety == "scroll") store_item.variety = ITEM_TYPE_SCROLL;
-	else if(variety == "wand") store_item.variety = ITEM_TYPE_WAND;
-	else if(variety == "tool") store_item.variety = ITEM_TYPE_TOOL;
-	else if(variety == "food") store_item.variety = ITEM_TYPE_FOOD;
-	else if(variety == "shield") store_item.variety = ITEM_TYPE_SHIELD;
-	else if(variety == "armor") store_item.variety = ITEM_TYPE_ARMOR;
-	else if(variety == "helm") store_item.variety = ITEM_TYPE_HELM;
-	else if(variety == "gloves") store_item.variety = ITEM_TYPE_GLOVES;
-	else if(variety == "shield2") store_item.variety = ITEM_TYPE_SHIELD_2;
-	else if(variety == "boots") store_item.variety = ITEM_TYPE_BOOTS;
-	else if(variety == "ring") store_item.variety = ITEM_TYPE_RING;
-	else if(variety == "necklace") store_item.variety = ITEM_TYPE_NECKLACE;
-	else if(variety == "poison") store_item.variety = ITEM_TYPE_WEAPON_POISON;
-	else if(variety == "nonuse") store_item.variety = ITEM_TYPE_NON_USE_OBJECT;
-	else if(variety == "pants") store_item.variety = ITEM_TYPE_PANTS;
-	else if(variety == "xbow") store_item.variety = ITEM_TYPE_CROSSBOW;
-	else if(variety == "bolt") store_item.variety = ITEM_TYPE_BOLTS;
-	else if(variety == "missile") store_item.variety = ITEM_TYPE_MISSILE_NO_AMMO;
-	else if(variety == "unused1") store_item.variety = ITEM_TYPE_UNUSED1;
-	else if(variety == "unused2") store_item.variety = ITEM_TYPE_UNUSED2;
+	if(variety == "none") store_item.variety = eItemType::NO_ITEM;
+	else if(variety == "weap1") store_item.variety = eItemType::ONE_HANDED;
+	else if(variety == "weap2") store_item.variety = eItemType::TWO_HANDED;
+	else if(variety == "gold") store_item.variety = eItemType::GOLD;
+	else if(variety == "bow") store_item.variety = eItemType::BOW;
+	else if(variety == "arrow") store_item.variety = eItemType::ARROW;
+	else if(variety == "thrown") store_item.variety = eItemType::THROWN_MISSILE;
+	else if(variety == "potion") store_item.variety = eItemType::POTION;
+	else if(variety == "scroll") store_item.variety = eItemType::SCROLL;
+	else if(variety == "wand") store_item.variety = eItemType::WAND;
+	else if(variety == "tool") store_item.variety = eItemType::TOOL;
+	else if(variety == "food") store_item.variety = eItemType::FOOD;
+	else if(variety == "shield") store_item.variety = eItemType::SHIELD;
+	else if(variety == "armor") store_item.variety = eItemType::ARMOR;
+	else if(variety == "helm") store_item.variety = eItemType::HELM;
+	else if(variety == "gloves") store_item.variety = eItemType::GLOVES;
+	else if(variety == "shield2") store_item.variety = eItemType::SHIELD_2;
+	else if(variety == "boots") store_item.variety = eItemType::BOOTS;
+	else if(variety == "ring") store_item.variety = eItemType::RING;
+	else if(variety == "necklace") store_item.variety = eItemType::NECKLACE;
+	else if(variety == "poison") store_item.variety = eItemType::WEAPON_POISON;
+	else if(variety == "nonuse") store_item.variety = eItemType::NON_USE_OBJECT;
+	else if(variety == "pants") store_item.variety = eItemType::PANTS;
+	else if(variety == "xbow") store_item.variety = eItemType::CROSSBOW;
+	else if(variety == "bolt") store_item.variety = eItemType::BOLTS;
+	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
+	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
+	else if(variety == "unused2") store_item.variety = eItemType::UNUSED2;
 	store_item.type = ITEM_NOT_MELEE;
-	if(store_item.variety == ITEM_TYPE_ONE_HANDED || store_item.variety == ITEM_TYPE_TWO_HANDED) {
+	if(store_item.variety == eItemType::ONE_HANDED || store_item.variety == eItemType::TWO_HANDED) {
 		std::string weapType = dynamic_cast<cLedGroup&>(me["melee-type"]).getSelected();
 		if(weapType == "edge") store_item.type = ITEM_EDGED;
 		else if(weapType == "bash") store_item.type = ITEM_BASHING;
@@ -948,7 +948,7 @@ bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 	}
 	
 	store_item.item_level = me["level"].getTextAsNum();
-	if((store_item.variety == 3 || store_item.variety == 11) && store_item.item_level == 0)
+	if((store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD) && store_item.item_level == 0)
 		store_item.item_level = 1;
 	
 	store_item.awkward = me["awkward"].getTextAsNum();
@@ -964,7 +964,7 @@ bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 		giveError("If the Type Flag is greater than 0, the Charges must also be greater than 0.","",&me);
 		return false;
 	}
-	if (store_item.variety > 25) {
+	if (store_item.variety == eItemType::UNUSED1 || store_item.variety == eItemType::UNUSED2) {
 		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
 		return false;
 	}
@@ -1002,16 +1002,16 @@ bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		if(i < 0) return true;
 			store_item.graphic_num = i;
 	} else if(item_hit == "abils") {
-		if(store_item.variety == 0) {
+		if(store_item.variety == eItemType::NO_ITEM) {
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
 		}
-		if((store_item.variety == 3) || (store_item.variety == 11)) {
+		if(store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD) {
 			giveError("Gold and Food cannot be given special abilities.","",&me);
 			return true;
 		}
 		temp_item = edit_item_abil(store_item,store_which_item);
-			if (temp_item.variety != 0)
+		if(temp_item.variety != eItemType::NO_ITEM)
 				store_item = temp_item;
 	}
 	return true;
@@ -1044,7 +1044,7 @@ void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short which_item)
 	
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.full_name.c_str());
-	me["variety"].setText(get_str("item-types", store_item.variety));
+	me["variety"].setText(get_str("item-types", (int)store_item.variety));
 	me["abilname"].setText(get_str("item-abilities", store_item.ability + 1));
 	
 	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(store_item.magic_use_type));
@@ -1084,7 +1084,7 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		}
 	} else if(item_hit == "weapon") {
 		if(!save_item_abils(me, store_item)) return true;
-		if(store_item.variety > 2) {
+		if(store_item.variety != eItemType::ONE_HANDED && store_item.variety != eItemType::TWO_HANDED) {
 			giveError("You can only give an ability of this sort to a melee weapon.","",&me);
 			return true;
 		}
@@ -1094,9 +1094,9 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "general") {
 		if(save_item_abils(me, store_item)) return true;
-		if((store_item.variety == 5) || (store_item.variety == 6)|| (store_item.variety == 7) || (store_item.variety == 8) ||
-			(store_item.variety == 9) || (store_item.variety == 10) || (store_item.variety == 20) ||
-			(store_item.variety == 21) || (store_item.variety == 24)){
+		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE)|| (store_item.variety == eItemType::POTION) || (store_item.variety == eItemType::SCROLL) ||
+			(store_item.variety == eItemType::WAND) || (store_item.variety == eItemType::TOOL) || (store_item.variety == eItemType::WEAPON_POISON) ||
+			(store_item.variety == eItemType::NON_USE_OBJECT) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).","",&me);
 			return true;
 		}
@@ -1106,7 +1106,7 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "usable") {
 		if(save_item_abils(me, store_item)) return true;
-		if((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
+		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
@@ -1116,7 +1116,7 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "spell") {
 		if(!save_item_abils(me,store_item)) return true;
-		if((store_item.variety == 5) || (store_item.variety == 6) || (store_item.variety == 24)){
+		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
@@ -1126,7 +1126,8 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "reagent") {
 		if(!save_item_abils(me, store_item)) return true;
-		if(store_item.variety != 21){
+		// TODO: Some of these should also be applicable to tools, as I recall?
+		if(store_item.variety != eItemType::NON_USE_OBJECT){
 			giveError("You can only give an ability of this sort to an item of type Non-Use Object.","",&me);
 			return true;
 		}
@@ -1136,7 +1137,7 @@ bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& st
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "missile") {
 		if(!save_item_abils(me,store_item)) return true;
-		if((store_item.variety != 5) && (store_item.variety != 6) && (store_item.variety != 24)){
+		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}

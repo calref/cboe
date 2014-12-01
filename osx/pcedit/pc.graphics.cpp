@@ -369,7 +369,7 @@ void draw_items()
 		return; // If PC is dead, it has no items
 	}
 	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (univ.party[current_active_pc].items[i].variety > 0) { // i.e. does item exist
+		if (univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			strcpy((char *) to_draw, "");
 			if (!univ.party[current_active_pc].items[i].ident)
 				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name.c_str());

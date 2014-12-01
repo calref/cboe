@@ -116,7 +116,7 @@ short text_pc_has_abil_equip(short pc_num,short abil)
 {
 	short i = 0;
 	
-	while (((univ.party[pc_num].items[i].variety == 0) || (univ.party[pc_num].items[i].ability != abil)
+	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
 			|| (univ.party[pc_num].equip[i] == false)) && (i < 24))
 		i++;
 	return i;
@@ -321,16 +321,16 @@ void put_item_screen(short screen_num,short suppress_buttons)
  				dest_rect = item_buttons[i][0];
 				dest_rect.left += 36;
 				
-				if (univ.party[pc].items[i_num].variety == 0) {
+				if(univ.party[pc].items[i_num].variety == eItemType::NO_ITEM) {
 					
 				}
 				else {
 					style.font = FONT_PLAIN;
 					if (univ.party[pc].equip[i_num] == true) {
 						style.italic = true;
-						if (univ.party[pc].items[i_num].variety < 3)
+						if(univ.party[pc].items[i_num].variety == eItemType::ONE_HANDED || univ.party[pc].items[i_num].variety == eItemType::TWO_HANDED)
 							style.colour = sf::Color::Magenta;
-						else if ((univ.party[pc].items[i_num].variety >= 12) && (univ.party[pc].items[i_num].variety <= 17))
+						else if(isArmourType(univ.party[pc].items[i_num].variety))
 							style.colour = sf::Color::Green;
 						else style.colour = sf::Color::Blue;
 					} else style.colour = sf::Color::Black;
@@ -393,7 +393,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
-	if (univ.party[pc_num].items[item_num].variety == 0)
+	if(univ.party[pc_num].items[item_num].variety == eItemType::NO_ITEM)
 		return;
 	
 	dest_rect = item_buttons[position][5];
@@ -412,8 +412,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 			}
 			break;
 		case 3: // sell weapons
-			if (((univ.party[pc_num].items[item_num].variety < 7) || (univ.party[pc_num].items[item_num].variety == 23) ||
-				 (univ.party[pc_num].items[item_num].variety == 24)) &&
+			if (isWeaponType(univ.party[pc_num].items[item_num].variety) &&
 				 (!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
@@ -422,7 +421,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 			}
 			break;
 		case 4: // sell armor
-			if ((univ.party[pc_num].items[item_num].variety >= 12) && (univ.party[pc_num].items[item_num].variety <= 17) &&
+			if(isArmourType(univ.party[pc_num].items[item_num].variety) &&
 				(!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
@@ -439,7 +438,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 			}
 			break;
 		case 6: // augment weapons
-			if ((univ.party[pc_num].items[item_num].variety < 3) &&
+			if ((univ.party[pc_num].items[item_num].variety == eItemType::ONE_HANDED || univ.party[pc_num].items[item_num].variety == eItemType::TWO_HANDED) &&
 				(univ.party[pc_num].items[item_num].ident) &&
 				(univ.party[pc_num].items[item_num].ability == 0) &&
 				(!univ.party[pc_num].items[item_num].magic)) {
@@ -909,11 +908,11 @@ short do_look(location space)
 			add_string_to_buf("    Rubble               ");
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((univ.town.items[i].variety != 0) && (space == univ.town.items[i].item_loc)
+			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
 				&& (is_lit == true)) {
-				if (univ.town.items[i].variety == 3)
+				if(univ.town.items[i].variety == eItemType::GOLD)
 					gold_here = true;
-				else if (univ.town.items[i].variety == 11)
+				else if(univ.town.items[i].variety == eItemType::FOOD)
 					food_here = true;
 				else num_items++;
 			}
@@ -925,7 +924,7 @@ short do_look(location space)
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
 		else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
-			if ((univ.town.items[i].variety != 0) && (univ.town.items[i].variety != 3) &&(univ.town.items[i].variety != 11) &&
+			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].variety != eItemType::GOLD && univ.town.items[i].variety != eItemType::FOOD &&
 				(space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {
 				if (univ.town.items[i].ident)
 					msg = "    " + univ.town.items[i].full_name;

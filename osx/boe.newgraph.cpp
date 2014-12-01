@@ -1060,25 +1060,36 @@ void get_item_interesting_string(cItemRec item,char *message)
 		return;
 	}
 	switch (item.variety) {
-		case 1: case 2: case 5: case 6: case 24: case 25: ////
+		case eItemType::ONE_HANDED:
+		case eItemType::TWO_HANDED:
+		case eItemType::ARROW:
+		case eItemType::THROWN_MISSILE:
+		case eItemType::BOLTS:
+		case eItemType::MISSILE_NO_AMMO:
 			if (item.bonus != 0)
 				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
 			else sprintf(message,"Damage: 1-%d.",item.item_level);
 			break;
-		case 12: case 13: case 14: case 15: case 16: case 17:
+		case eItemType::SHIELD:
+		case eItemType::ARMOR:
+		case eItemType::HELM:
+		case eItemType::GLOVES:
+		case eItemType::SHIELD_2:
+		case eItemType::BOOTS:
 			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
 					item.item_level + item.protection);
 			break;
-		case 4: case 23:
+		case eItemType::BOW:
+		case eItemType::CROSSBOW:
 			sprintf(message,"Bonus : +%d to hit.",item.bonus);
 			break;
-		case 3:
+		case eItemType::GOLD:
 			sprintf(message,"%d gold pieces.",item.item_level);
 			break;
-		case 11:
+		case eItemType::FOOD:
 			sprintf(message,"%d food.",item.item_level);
 			break;
-		case 20:
+		case eItemType::WEAPON_POISON:
 			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
 			break;
 		default:

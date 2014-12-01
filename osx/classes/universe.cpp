@@ -739,7 +739,7 @@ void cCurTown::writeTo(std::ostream& file){
 	file << "AT " << p_loc.x << ' ' << p_loc.y << '\n';
 	file << '\f';
 	for(int i; i < 115; i++)
-		if(items[i].variety > ITEM_TYPE_NO_ITEM){
+		if(items[i].variety != eItemType::NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);
 			file << '\f';

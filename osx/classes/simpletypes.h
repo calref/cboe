@@ -250,40 +250,52 @@ enum eWeapType {
 };
 
 /*      items[i].variety    a.k.a item type (in editor)      */
-enum eItemType {
-	ITEM_TYPE_NO_ITEM = 0,
-	ITEM_TYPE_ONE_HANDED = 1,
-	ITEM_TYPE_TWO_HANDED = 2,
-	ITEM_TYPE_GOLD = 3,
-	ITEM_TYPE_BOW = 4,
-	ITEM_TYPE_ARROW = 5,
-	ITEM_TYPE_THROWN_MISSILE = 6,
-	ITEM_TYPE_POTION = 7, // potion/magic item
-	ITEM_TYPE_SCROLL = 8, // scroll/magic item
-	ITEM_TYPE_WAND = 9,
-	ITEM_TYPE_TOOL = 10,
-	ITEM_TYPE_FOOD = 11,
-	ITEM_TYPE_SHIELD = 12,
-	ITEM_TYPE_ARMOR = 13,
-	ITEM_TYPE_HELM = 14,
-	ITEM_TYPE_GLOVES = 15,
-	ITEM_TYPE_SHIELD_2 = 16,
+enum class eItemType {
+	NO_ITEM = 0,
+	ONE_HANDED = 1,
+	TWO_HANDED = 2,
+	GOLD = 3,
+	BOW = 4,
+	ARROW = 5,
+	THROWN_MISSILE = 6,
+	POTION = 7, // potion/magic item
+	SCROLL = 8, // scroll/magic item
+	WAND = 9,
+	TOOL = 10,
+	FOOD = 11,
+	SHIELD = 12,
+	ARMOR = 13,
+	HELM = 14,
+	GLOVES = 15,
+	SHIELD_2 = 16,
 	// don't know why a second type of shield is used ; it is actually checked
-	// in the armor code (item >= 12 and <= 17)
+	// in the armor code -- see below
 	// and you can't equip another (12) shield while wearing it ... I didn't
 	// find a single item with this property in the bladbase.exs ...
-	ITEM_TYPE_BOOTS = 17,
-	ITEM_TYPE_RING = 18,
-	ITEM_TYPE_NECKLACE = 19,
-	ITEM_TYPE_WEAPON_POISON = 20,
-	ITEM_TYPE_NON_USE_OBJECT = 21,
-	ITEM_TYPE_PANTS = 22,
-	ITEM_TYPE_CROSSBOW = 23,
-	ITEM_TYPE_BOLTS = 24,
-	ITEM_TYPE_MISSILE_NO_AMMO = 25, //e.g slings
-	ITEM_TYPE_UNUSED1 = 26, // these are here solely because they are options in the editor
-	ITEM_TYPE_UNUSED2 = 27,
+	BOOTS = 17,
+	RING = 18,
+	NECKLACE = 19,
+	WEAPON_POISON = 20,
+	NON_USE_OBJECT = 21,
+	PANTS = 22,
+	CROSSBOW = 23,
+	BOLTS = 24,
+	MISSILE_NO_AMMO = 25, //e.g slings
+	UNUSED1 = 26, // these are here solely because they are options in the editor
+	UNUSED2 = 27,
 };
+
+inline bool isArmourType(eItemType type) {
+	int code = (int) type;
+	return code >= 12 && code <= 17;
+}
+
+inline bool isWeaponType(eItemType type) {
+	if(type == eItemType::CROSSBOW || type == eItemType::BOLTS)
+		return true;
+	int code = (int) type;
+	return code >= 1 && code <= 6 && code != 3;
+}
 
 /*      items[i].ability      */
 enum eItemAbil {

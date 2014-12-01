@@ -493,7 +493,7 @@ void handle_help_menu(int item_hit) {
 }
 
 void handle_item_menu(int item_hit) {
-	if (scenario.scen_items[item_hit].variety == 0) {
+	if (scenario.scen_items[item_hit].variety == eItemType::NO_ITEM) {
 		giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 		return;
 	}

@@ -278,7 +278,7 @@ void cPlayer::writeTo(std::ostream& file){
 	file << "POISON " << weap_poisoned << '\n';
 	file << '\f';
 	for(int i; i < 24; i++)
-		if(items[i].variety > ITEM_TYPE_NO_ITEM){
+		if(items[i].variety != eItemType::NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);
 			file << '\f';

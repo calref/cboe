@@ -214,7 +214,7 @@ void init_party(short mode)
 		univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			univ.party.magic_store_items[i][j].variety = ITEM_TYPE_NO_ITEM;
+			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
 	for (i = 0; i < 4; i++)
 		univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -353,7 +353,7 @@ void init_party_scen_data()
 		univ.party.out_c[i].exists = false;
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++)
-			univ.party.magic_store_items[i][j].variety = ITEM_TYPE_NO_ITEM;
+			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
 	for (i = 0; i < 4; i++)
 		univ.party.imprisoned_monst[i] = 0;
 	for (i = 0; i < 256; i++)
@@ -398,14 +398,14 @@ void init_party_scen_data()
 	
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++)
-			if (univ.party.stored_items[i][j].variety != 0)
+			if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 				stored_item = true;
 	if (stored_item == true)
 		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
 			// TODO: Consider allowing them to pick and choose the items to take, using the get items dialog
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++)
-					if (univ.party.stored_items[i][j].variety != 0)
+					if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 						if (!give_to_party(univ.party.stored_items[i][j],false)) {
 							i = 20; j = NUM_TOWN_ITEMS + 1;
 						}
@@ -999,10 +999,11 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 
 bool is_weapon(short pc_num,short item)
 {
-	if ((univ.party[pc_num].items[item].variety  == 1) ||
-		(univ.party[pc_num].items[item].variety  == 2) ||
-		(univ.party[pc_num].items[item].variety  == 5) ||
-		(univ.party[pc_num].items[item].variety  == 24))
+	// TODO: Uh, why aren't bows, crossbows, thrown missiles, no-ammo missiles included? (There's probably a reason though.)
+	if ((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
+		(univ.party[pc_num].items[item].variety  == eItemType::TWO_HANDED) ||
+		(univ.party[pc_num].items[item].variety  == eItemType::ARROW) ||
+		(univ.party[pc_num].items[item].variety  == eItemType::BOLTS))
 		return true;
 	else return false;
 	
@@ -2598,7 +2599,7 @@ void do_alchemy() ////
 				store_i.charges++;
 			if (univ.party[pc_num].skills[12] - difficulty[which_p] >= 11)
 				store_i.charges++;
-			if (store_i.variety == 7)
+			if (store_i.variety == eItemType::POTION)
 				store_i.graphic_num += get_ran(1,0,2);
 			if (give_to_pc(pc_num,store_i,0) == false) {
 				ASB("No room in inventory.");
@@ -2886,8 +2887,8 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
 		how_much -= minmax(-5,5,univ.party[which_pc].status[1]);
 		for (i = 0; i < 24; i++)
-			if ((univ.party[which_pc].items[i].variety != 0) && (univ.party[which_pc].equip[i] == true)) {
-				if ((univ.party[which_pc].items[i].variety >= 12) && (univ.party[which_pc].items[i].variety <= 17)) {
+			if ((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i] == true)) {
+				if(isArmourType(univ.party[which_pc].items[i].variety)) {
 					r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
 					how_much -= r1;
 					
@@ -3069,9 +3070,9 @@ void kill_pc(short which_pc,eMainStatus type)
 		
 		if (overall_mode != MODE_OUTDOORS)
 			for (i = 0; i < 24; i++)
-				if (univ.party[which_pc].items[i].variety != 0) {
+				if (univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) {
 					dummy = place_item(univ.party[which_pc].items[i],item_loc,true);
-					univ.party[which_pc].items[i].variety = ITEM_TYPE_NO_ITEM;
+					univ.party[which_pc].items[i].variety = eItemType::NO_ITEM;
 				}
 		if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
 			play_sound(21);

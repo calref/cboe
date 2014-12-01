@@ -270,7 +270,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (to_loc.x > 0)
 				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 					&& (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
@@ -281,7 +281,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if (to_loc.x > 0)
 				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where_check)
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 					&& (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
@@ -646,7 +646,7 @@ void use_item(short pc,short item)
 		else sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].full_name.c_str());
 		add_string_to_buf((char *) to_draw);
 		
-		if (univ.party[pc].items[item].variety == ITEM_TYPE_POTION)
+		if(univ.party[pc].items[item].variety == eItemType::POTION)
 			play_sound(56);
 		
 		str = univ.party[pc].items[item].ability_strength;
@@ -1195,7 +1195,7 @@ bool use_space(location where)
 		univ.town.set_crate((short) where.x,(short) where.y,false);
 		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
+			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 				&& (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
@@ -1209,7 +1209,7 @@ bool use_space(location where)
 		univ.town.set_barrel((short) where.x,(short) where.y,false);
 		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
-			if ((univ.town.items[i].variety > 0) && (univ.town.items[i].item_loc == where)
+			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 				&& (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
@@ -1259,7 +1259,7 @@ bool adj_town_look(location where)
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if ((univ.town.items[i].variety > 0) && (univ.town.items[i].contained) &&
+		if(univ.town.items[i].variety != eItemType::NO_ITEM && (univ.town.items[i].contained) &&
 			(where == univ.town.items[i].item_loc))
 			item_there = true;
 	
@@ -1723,7 +1723,7 @@ void push_things()////
 			}
 		}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		if (univ.town.items[i].variety > 0) {
+		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
 			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
@@ -1771,7 +1771,7 @@ void push_things()////
 				hit_party(get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE);
 			}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
-				if ((univ.town.items[k].variety > 0) && (univ.town.items[k].contained)
+				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 					&& (univ.town.items[k].item_loc == univ.town.p_loc))
 					univ.town.items[k].contained = false;
 			redraw = true;
@@ -1809,7 +1809,7 @@ void push_things()////
 						damage_pc(i,get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((univ.town.items[k].variety > 0) && (univ.town.items[k].contained)
+						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 							&& (univ.town.items[k].item_loc == pc_pos[i]))
 							univ.town.items[k].contained = false;
 					redraw = true;
@@ -2655,7 +2655,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].special_class == spec.ex2a)
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == spec.ex2a
 					&& (l == univ.town.items[i].item_loc))
 					*next_spec = spec.ex2b;
 			break;
@@ -2667,7 +2667,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if (univ.party[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((univ.party[i].items[j].variety > 0) && (univ.party[i].items[j].special_class == spec.ex1a)
+						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
 							&& (univ.party[i].equip[j] == true))
 							*next_spec = spec.ex1b;
 			break;
@@ -2688,11 +2688,11 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if ((univ.town.items[i].variety > 0) && (univ.town.items[i].special_class == spec.ex2a)
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == spec.ex2a
 					&& (l == univ.town.items[i].item_loc)) {
 					*next_spec = spec.ex2b;
 					*redraw = 1;
-					univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
+					univ.town.items[i].variety = eItemType::NO_ITEM;
 				}
 			break;
 		case SPEC_IF_HAVE_ITEM_CLASS_AND_TAKE:
@@ -2703,7 +2703,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if (univ.party[i].main_status == 1)
 					for (j = 0; j < 24; j++)
-						if ((univ.party[i].items[j].variety > 0) && (univ.party[i].items[j].special_class == spec.ex1a)
+						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
 							&& (univ.party[i].equip[j] == true)) {
 							*next_spec = spec.ex1b;
 							*redraw = 1;
@@ -3193,15 +3193,15 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case SPEC_RECT_MOVE_ITEMS:
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((univ.town.items[k].variety > ITEM_TYPE_NO_ITEM) && (univ.town.items[k].item_loc == l)) {
+						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
 						}
 					break;
 				case SPEC_RECT_DESTROY_ITEMS:
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
-						if ((univ.town.items[k].variety > ITEM_TYPE_NO_ITEM) && (univ.town.items[k].item_loc == l)) {
-							univ.town.items[k].variety = ITEM_TYPE_NO_ITEM;
+						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
+							univ.town.items[k].variety = eItemType::NO_ITEM;
 						}
 					break;
 				case SPEC_RECT_CHANGE_TER:

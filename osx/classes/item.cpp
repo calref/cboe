@@ -95,17 +95,17 @@ unsigned char cItemRec::rec_treas_class() const {
 
 short cItemRec::item_weight() const {
 	short n = charges, w = weight;
-	if (variety == 0)
+	if (variety == eItemType::NO_ITEM)
 		return 0;
 	if(charges > 0){
-		if((variety == 5) || (variety == 6) || (variety == 7) || (variety == 24))
+		if((variety == eItemType::ARROW) || (variety == eItemType::THROWN_MISSILE) || (variety == eItemType::POTION) || (variety == eItemType::BOLTS))
 			return n * w;
 	}
 	return w;
 }
 
 cItemRec::cItemRec(){
-	variety = ITEM_TYPE_NO_ITEM;
+	variety = eItemType::NO_ITEM;
 	item_level = 0;
 	awkward = 0;
 	bonus = 0;
@@ -147,7 +147,7 @@ cItemRec::cItemRec(long preset){
 	reserved2 = 0;
 	switch(preset){
 		case 'nife':
-			variety = ITEM_TYPE_ONE_HANDED;
+			variety = eItemType::ONE_HANDED;
 			item_level = 4;
 			awkward = 0;
 			bonus = 1;
@@ -163,7 +163,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'buck':
-			variety = ITEM_TYPE_SHIELD;
+			variety = eItemType::SHIELD;
 			item_level = 1;
 			awkward = 1;
 			bonus = 0;
@@ -179,7 +179,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'bow ':
-			variety = ITEM_TYPE_BOW;
+			variety = eItemType::BOW;
 			item_level = 0;
 			awkward = 0;
 			bonus = 0;
@@ -195,7 +195,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'arrw':
-			variety = ITEM_TYPE_ARROW;
+			variety = eItemType::ARROW;
 			item_level = 12;
 			awkward = 0;
 			bonus = 0;
@@ -211,7 +211,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'pole':
-			variety = ITEM_TYPE_TWO_HANDED;
+			variety = eItemType::TWO_HANDED;
 			item_level = 9;
 			awkward = 0;
 			bonus = 0;
@@ -227,7 +227,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'helm':
-			variety = ITEM_TYPE_HELM;
+			variety = eItemType::HELM;
 			item_level = 1;
 			awkward = 0;
 			bonus = 0;
@@ -243,7 +243,7 @@ cItemRec::cItemRec(long preset){
 			ident = true;
 			break;
 		case 'food':
-			variety = ITEM_TYPE_FOOD;
+			variety = eItemType::FOOD;
 			item_level = 0;
 			awkward = 0;
 			bonus = 0;
@@ -259,7 +259,7 @@ cItemRec::cItemRec(long preset){
 			ident = false;
 			break;
 		case 'spel':
-			variety = ITEM_TYPE_NON_USE_OBJECT;
+			variety = eItemType::NON_USE_OBJECT;
 			item_level = 0;
 			awkward = 0;
 			bonus = 0;
@@ -275,7 +275,7 @@ cItemRec::cItemRec(long preset){
 			ident = false;
 			break;
 		case 'alch':
-			variety = ITEM_TYPE_POTION;
+			variety = eItemType::POTION;
 			item_level = 0;
 			awkward = 0;
 			bonus = 0;
@@ -427,12 +427,13 @@ std::istream& operator >> (std::istream& in, eWeapType& e){
 	return in;
 }
 
+// TODO: Perhaps this should understand symbolic names as well?
 std::istream& operator >> (std::istream& in, eItemType& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 28)
 		e = (eItemType) i;
-	else e = ITEM_TYPE_NO_ITEM;
+	else e = eItemType::NO_ITEM;
 	return in;
 }
 

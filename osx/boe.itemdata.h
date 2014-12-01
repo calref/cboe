@@ -14,4 +14,4 @@ cItemRec get_wand(short loot);
 cItemRec get_ring(short loot);
 cItemRec get_necklace(short loot);
 //item_record_type convert_item (short_item_record_type s_item);
-cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,short t1, short t2, short t3);
+cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,eItemType t1, eItemType t2 = eItemType::NO_ITEM, eItemType t3 = eItemType::NO_ITEM);

@@ -294,7 +294,7 @@ void cParty::writeTo(std::ostream& file){
 	file << '\f';
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 10; j++)
-			if(magic_store_items[i][j].variety > ITEM_TYPE_NO_ITEM){
+			if(magic_store_items[i][j].variety != eItemType::NO_ITEM){
 				file << "MAGICSTORE " << i << ' ' << j << '\n';
 				magic_store_items[i][j].writeTo(file);
 				file << '\f';
@@ -328,7 +328,7 @@ void cParty::writeTo(std::ostream& file){
 	file << '\f';
 	for(int i = 0; i < 3; i++)
 		for(int j = 0; j < 115; j++)
-			if(stored_items[i][j].variety > ITEM_TYPE_NO_ITEM){
+			if(stored_items[i][j].variety != eItemType::NO_ITEM){
 				file << "STORED " << i << ' ' << j << '\n';
 				stored_items[i][j].writeTo(file);
 				file << '\f';

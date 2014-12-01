@@ -460,7 +460,7 @@ void start_town_mode(short which_town, short entry_dir)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++)
 					
 					// place the preset item, if party hasn't gotten it already
-					if (univ.town.items[j].variety == 0) {
+					if(univ.town.items[j].variety == eItemType::NO_ITEM) {
 						univ.town.items[j] = get_stored_item(univ.town->preset_items[i].code);
 						univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
 						
@@ -468,7 +468,8 @@ void start_town_mode(short which_town, short entry_dir)
 						if (univ.town->preset_items[i].ability >= 0) {
 							switch (univ.town.items[j].variety) {
 									// TODO: It looks like this will never be reached?
-								case 3: case 11: // If gold or food, this value is amount
+								case eItemType::GOLD:
+								case eItemType::FOOD: // If gold or food, this value is amount
 									if (univ.town->preset_items[i].ability > 0)
 										univ.town.items[j].item_level = univ.town->preset_items[i].ability;
 									break;
@@ -494,7 +495,7 @@ void start_town_mode(short which_town, short entry_dir)
 			univ.town.monst[i].active = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if (loc_off_act_area(univ.town.items[i].item_loc) == true)
-			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
+			univ.town.items[i].variety = eItemType::NO_ITEM;
 	
 	// Clean out unwanted monsters
 	for (i = 0; i < univ.town->max_monst(); i++)
@@ -546,9 +547,9 @@ void start_town_mode(short which_town, short entry_dir)
 	// If a PC dead, drop his items
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if ((univ.party[m].main_status != 1) && (univ.party[m].items[n].variety != 0)) {
+			if(univ.party[m].main_status != 1 && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],univ.town.p_loc,true);
-				univ.party[m].items[n].variety = ITEM_TYPE_NO_ITEM;
+				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
@@ -608,14 +609,14 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		for (j = 0; j < 3; j++)
 			if (scenario.store_item_towns[j] == univ.town.num) {
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
-					if ((univ.town.items[i].variety != 0) && (univ.town.items[i].is_special == 0) &&
+					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
 						((univ.town.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
 						 (univ.town.items[i].item_loc.x <= scenario.store_item_rects[j].right) &&
 						 (univ.town.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
 						 (univ.town.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
 							univ.party.stored_items[j][i] = univ.town.items[i];
 						}
-				 	else univ.party.stored_items[j][i].variety = ITEM_TYPE_NO_ITEM;
+				 	else univ.party.stored_items[j][i].variety = eItemType::NO_ITEM;
 			}
 		
 		
@@ -744,11 +745,11 @@ bool abil_exists(short abil) // use when univ.out.outdoors
 	
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((univ.party[i].items[j].variety != 0) && (univ.party[i].items[j].ability == abil))
+			if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].ability == abil)
 				return true;
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++)
-			if ((univ.party.stored_items[i][j].variety != 0) && (univ.party.stored_items[i][j].ability == abil))
+			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM && univ.party.stored_items[i][j].ability == abil)
 				return true;
 	
 	return false;

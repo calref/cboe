@@ -564,6 +564,7 @@
 		91C688E80FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
 		91C688E90FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
 		91C688EA0FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
+		91C749B61A2CF58C008E0E10 /* item-types-display.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B41A2CF4F9008E0E10 /* item-types-display.txt */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
@@ -1114,6 +1115,7 @@
 				914CA479190C47BD00B6ADD1 /* scen-default.txt in Copy Strings */,
 				914CA47A190C47BD00B6ADD1 /* town-default.txt in Copy Strings */,
 				91A0735C1A297C3F002F7E72 /* item-types.txt in Copy Strings */,
+				91C749B61A2CF58C008E0E10 /* item-types-display.txt in Copy Strings */,
 			);
 			name = "Copy Strings";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1744,6 +1746,7 @@
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
+		91C749B41A2CF4F9008E0E10 /* item-types-display.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "item-types-display.txt"; path = "strings/item-types-display.txt"; sourceTree = "<group>"; };
 		91C9C97B19114F31001E14EB /* edit-monster.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-monster.xml"; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
@@ -2092,6 +2095,7 @@
 				9192C13818F327230088A580 /* traits.txt */,
 				914CA46D190C478400B6ADD1 /* trim-names.txt */,
 				91A0735B1A2975AD002F7E72 /* item-types.txt */,
+				91C749B41A2CF4F9008E0E10 /* item-types-display.txt */,
 			);
 			name = strings;
 			sourceTree = "<group>";

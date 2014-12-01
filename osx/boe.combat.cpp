@@ -419,7 +419,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	}
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
-		univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
+		univ.town.items[i].variety = eItemType::NO_ITEM;
 	store_current_pc = current_pc;
 	current_pc = 0;
 	set_pc_moves();
@@ -585,7 +585,7 @@ void pc_attack(short who_att,short target)////
 	which_m = &univ.town.monst[target];
 	
 	for (i = 0; i < 24; i++)
-		if (((univ.party[who_att].items[i].variety == 1) || (univ.party[who_att].items[i].variety == 2)) &&
+		if (((univ.party[who_att].items[i].variety == eItemType::ONE_HANDED) || (univ.party[who_att].items[i].variety == eItemType::TWO_HANDED)) &&
 			(univ.party[who_att].equip[i] == true))
 			if (weap1 == 24)
 				weap1 = i;
@@ -1414,22 +1414,22 @@ void load_missile() ////
 	
 	for (i = 0; i < 24; i++) {
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 6))
+			(univ.party[current_pc].items[i].variety == eItemType::THROWN_MISSILE))
 			thrown = i;
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 4))
+			(univ.party[current_pc].items[i].variety == eItemType::BOW))
 			bow = i;
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 5))
+			(univ.party[current_pc].items[i].variety == eItemType::ARROW))
 			arrow = i;
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 23))
+			(univ.party[current_pc].items[i].variety == eItemType::CROSSBOW))
 			crossbow = i;
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 24))
+			(univ.party[current_pc].items[i].variety == eItemType::BOLTS))
 			bolts = i;
 		if ((univ.party[current_pc].equip[i] == true) &&
-			(univ.party[current_pc].items[i].variety == 25))
+			(univ.party[current_pc].items[i].variety == eItemType::MISSILE_NO_AMMO))
 			no_ammo = i;
 	}
 	
@@ -1589,7 +1589,7 @@ void fire_missile(location target) {
 			
 		}
 		
-		if (univ.party[missile_firer].items[ammo_inv_slot].variety != 25) {
+		if (univ.party[missile_firer].items[ammo_inv_slot].variety != eItemType::MISSILE_NO_AMMO) {
 			if (univ.party[missile_firer].items[ammo_inv_slot].ability != 170)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			else univ.party[missile_firer].items[ammo_inv_slot].charges = 1;
