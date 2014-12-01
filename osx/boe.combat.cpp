@@ -640,7 +640,8 @@ void pc_attack(short who_att,short target)////
 	
 	// Don't forget awkward and stat adj.
 	if (weap1 < 24) {
-		what_skill1 = 2 + univ.party[who_att].items[weap1].type;
+		// TODO: Find a way to remove this cast
+		what_skill1 = 2 + (int)univ.party[who_att].items[weap1].type;
 		
 		// safety valve
 		if (what_skill1 == 2)
@@ -657,7 +658,7 @@ void pc_attack(short who_att,short target)////
 			r1 += 25;
 		
 		// race adj.
-		if ((univ.party[who_att].race == 2) && (univ.party[who_att].items[weap1].type == 3))
+		if ((univ.party[who_att].race == 2) && (univ.party[who_att].items[weap1].type == eWeapType::POLE))
 			r1 -= 10;
 		
 		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
@@ -722,7 +723,8 @@ void pc_attack(short who_att,short target)////
 		}
 	}
 	if ((weap2 < 24) && (which_m->active > 0)) {
-		what_skill2 = 2 + univ.party[who_att].items[weap2].type;
+		// TODO: Find a way to remove this cast
+		what_skill2 = 2 + (int)univ.party[who_att].items[weap2].type;
 		
 		// safety valve
 		if (what_skill2 == 2)

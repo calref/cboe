@@ -262,16 +262,16 @@ static void put_item_info(cDialog& me,short pc,short item)////
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
 			switch (s_i.type) {
-				case ITEM_EDGED:
+				case eWeapType::EDGED:
 					sprintf((char *) store_text, "Edged weapon");
 					break;
-				case ITEM_BASHING:
+				case eWeapType::BASHING:
 					sprintf((char *) store_text, "Bashing weapon");
 					break;
-				case ITEM_POLE:
+				case eWeapType::POLE:
 					sprintf((char *) store_text, "Pole weapon");
 					break;
-				case ITEM_NOT_MELEE:
+				case eWeapType::NOT_MELEE:
 				default:
 					sprintf((char*)store_text, "Error weapon"); // should never be reached
 			}

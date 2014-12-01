@@ -242,11 +242,11 @@ enum eTrimType {
 
 
 /*      items[i].type    a.k.a type of weapon         */
-enum eWeapType {
-	ITEM_NOT_MELEE = 0,
-	ITEM_EDGED = 1,
-	ITEM_BASHING = 2,
-	ITEM_POLE = 3,
+enum class eWeapType {
+	NOT_MELEE = 0,
+	EDGED = 1,
+	BASHING = 2,
+	POLE = 3,
 };
 
 /*      items[i].variety    a.k.a item type (in editor)      */

@@ -882,14 +882,14 @@ void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) 
 	
 	cLedGroup& weapType = dynamic_cast<cLedGroup&>(me["melee-type"]);
 	switch(store_item.type) {
-		case ITEM_NOT_MELEE:
-		case ITEM_EDGED:
+		case eWeapType::NOT_MELEE:
+		case eWeapType::EDGED:
 			weapType.setSelected("edge");
 			break;
-		case ITEM_BASHING:
+		case eWeapType::BASHING:
 			weapType.setSelected("bash");
 			break;
-		case ITEM_POLE:
+		case eWeapType::POLE:
 			weapType.setSelected("pole");
 			break;
 	}
@@ -939,12 +939,12 @@ bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
 	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
 	else if(variety == "unused2") store_item.variety = eItemType::UNUSED2;
-	store_item.type = ITEM_NOT_MELEE;
+	store_item.type = eWeapType::NOT_MELEE;
 	if(store_item.variety == eItemType::ONE_HANDED || store_item.variety == eItemType::TWO_HANDED) {
 		std::string weapType = dynamic_cast<cLedGroup&>(me["melee-type"]).getSelected();
-		if(weapType == "edge") store_item.type = ITEM_EDGED;
-		else if(weapType == "bash") store_item.type = ITEM_BASHING;
-		else if(weapType == "pole") store_item.type = ITEM_POLE;
+		if(weapType == "edge") store_item.type = eWeapType::EDGED;
+		else if(weapType == "bash") store_item.type = eWeapType::BASHING;
+		else if(weapType == "pole") store_item.type = eWeapType::POLE;
 	}
 	
 	store_item.item_level = me["level"].getTextAsNum();

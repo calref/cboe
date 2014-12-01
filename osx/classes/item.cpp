@@ -111,7 +111,7 @@ cItemRec::cItemRec(){
 	bonus = 0;
 	protection = 0;
 	charges = 0;
-	type = ITEM_NOT_MELEE;
+	type = eWeapType::NOT_MELEE;
 	magic_use_type = 0;
 	graphic_num = 0;
 	ability = ITEM_NO_ABILITY;
@@ -153,7 +153,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 1;
 			protection = 0;
 			charges = 0;
-			type = ITEM_EDGED;
+			type = eWeapType::EDGED;
 			magic_use_type = 0;
 			graphic_num = 45;
 			value = 2;
@@ -169,7 +169,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 65;
 			value = 2;
@@ -185,7 +185,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
@@ -201,7 +201,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 12;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 47;
 			value = 1;
@@ -217,7 +217,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_POLE;
+			type = eWeapType::POLE;
 			magic_use_type = 0;
 			graphic_num = 4;
 			value = 10;
@@ -233,7 +233,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 66;
 			value = 6;
@@ -249,7 +249,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 62;
 			value = 0;
@@ -265,7 +265,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 53;
 			value = 0;
@@ -281,7 +281,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 1;
-			type = ITEM_NOT_MELEE;
+			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
 			graphic_num = 50;
 			value = 0;
@@ -418,12 +418,13 @@ std::ostream& operator << (std::ostream& out, eItemAbil& e){
 	return out << (int) e;
 }
 
+// TODO: Perhaps this should understand symbolic names as well?
 std::istream& operator >> (std::istream& in, eWeapType& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 4)
 		e = (eWeapType) i;
-	else e = ITEM_NOT_MELEE;
+	else e = eWeapType::NOT_MELEE;
 	return in;
 }
 
