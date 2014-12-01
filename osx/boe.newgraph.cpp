@@ -1078,7 +1078,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	RECT face_rect = {6,6,38,38};
 	RECT title_rect = {19,48,42,260};
-	RECT dest_rect,help_from = {85,36,101,54};
+	RECT dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
 	short i,j,str_len,line_height = 17;
@@ -1112,12 +1112,9 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Put help button
 	// TODO: Reimplement this with a cButton
-#if 0
-	help_from = RECT(dlg_buttons_gworld[3][0]); // help
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[3][0],help_from,talk_gworld,talk_help_rect);
-#endif
+	rect_draw_some_item(invenbtn_gworld, help_from, talk_gworld, talk_help_rect, sf::BlendAlpha);
 	
 	// Place face of talkee
 	if ((color == 0) && (c_rect.right == 0)) {
