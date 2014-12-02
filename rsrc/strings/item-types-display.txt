@@ -1,0 +1,28 @@
+No Item
+1-Handed weapon
+2-Handed weapon
+Gold
+Bow
+Arrows
+Thrown missile
+Potion/Magic Item
+Scroll/Magic Item
+Wand
+Tool
+Food
+Shield
+Armor
+Helm
+Gloves
+Shield
+Boots
+Ring
+Necklace
+Weapon Poison
+Gem, Stone, Etc.
+Pants
+Crossbow
+Bolts
+Missile Weapon
+Unused
+Unused
