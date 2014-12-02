@@ -11,9 +11,12 @@
 using namespace boost::spirit::qi;
 
 std::string temp_symbol;
+int cur_node;
 symbols<char, int> defn;
+void init() {cur_node = 0; temp_symbol.clear();}
 void prep_add_symbol(char c) {temp_symbol += c;}
 void add_symbol(int i) {defn.add(temp_symbol, i); temp_symbol.clear();}
+void skip_to(int i) {cur_node = i;}
 
 auto ws = char_(" \t");
 auto comment = char_('#') >> *(print | char_('\t'));
@@ -44,8 +47,8 @@ auto command = datcode >> ws >> *ws >> val >> (eps | *ws >> char_(',') >> *ws >>
 
 auto def_line = *ws >> lit("def") >> ws >> *ws >> symbol >> *ws >> char_('=') >> *ws >> uint_[add_symbol] >> (comment | eps) >> eol;
 auto cmd_line = *ws >> (command | eps) >> *ws >> (comment | eps) >> eol;
-auto op_line = *ws >> char_('@') >> opcode >> (eps | *ws >> char_('=') >> *ws >> val) >> (comment | eps) >> eol;
+auto op_line = *ws >> char_('@') >> opcode >> (eps | *ws >> char_('=') >> *ws >> val[skip_to]) >> (comment | eps) >> eol;
 
 auto command_block = op_line >> *(cmd_line | def_line);
 
-auto nodes_file = *def_line >> *command_block;
+auto nodes_file = eps[init] >> *def_line >> *command_block;
