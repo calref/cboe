@@ -860,7 +860,7 @@ void place_target(location target)
 			add_string_to_buf("  Space not in town.           ");
 			return;
 		}
-		if (can_see(pc_pos[current_pc],target,0) > 4) {
+		if (can_see_light(pc_pos[current_pc],target,sight_obscurity) > 4) {
 			add_string_to_buf("  Can't see target.           ");
 			return;
 		}
@@ -980,7 +980,7 @@ void do_combat_cast(location target)////
 				cost_taken = true;
 			}
 			
-			if ((adjust = can_see(pc_pos[current_pc],target,0)) > 4) {
+			if ((adjust = can_see_light(pc_pos[current_pc],target,sight_obscurity)) > 4) {
 				add_string_to_buf("  Can't see target.           ");
 			}
 			else if (loc_off_act_area(target) == true) {
@@ -1494,7 +1494,7 @@ void fire_missile(location target) {
 	dam = univ.party[missile_firer].items[ammo_inv_slot].item_level;
 	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[1]);
 	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
-	hit_bonus += stat_adj(missile_firer,1) - can_see(pc_pos[missile_firer],target,0)
+	hit_bonus += stat_adj(missile_firer,1) - can_see_light(pc_pos[missile_firer],target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[1]);
 	if ((skill_item = pc_has_abil_equip(missile_firer,41)) < 24) {
 		hit_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
@@ -1510,7 +1510,7 @@ void fire_missile(location target) {
 	
 	if (dist(pc_pos[missile_firer],target) > range)
 		add_string_to_buf("  Out of range.");
-	else if (can_see(pc_pos[missile_firer],target,0) >= 5)
+	else if (can_see_light(pc_pos[missile_firer],target,sight_obscurity) >= 5)
 		add_string_to_buf("  Can't see target.             ");
 	else {
 		// First, some missiles do special things
@@ -1809,7 +1809,7 @@ void do_monster_turn()
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 45 : 0;
-			r1 += can_see(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),0) * 10;
+			r1 += can_see_light(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),sight_obscurity) * 10;
 			if (r1 < 50)
 				cur_monst->active = 2;
 			
@@ -1825,7 +1825,7 @@ void do_monster_turn()
 				if ((univ.town.monst[j].active > 0) &&
 					(univ.town.monst[j].attitude % 2 != 1) &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6) &&
-					(can_see(cur_monst->cur_loc,univ.town.monst[j].cur_loc,0) < 5))
+					(can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5))
 					cur_monst->active = 2;
 		}
 		
@@ -1835,7 +1835,7 @@ void do_monster_turn()
 			for (j = 0; j < univ.town->max_monst(); j++)
 				if ((univ.town.monst[j].active > 0) && (univ.town.monst[j].attitude % 2 == 1) &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6)
-					&& (can_see(cur_monst->cur_loc,univ.town.monst[j].cur_loc,0) < 5)) {
+					&& (can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5)) {
 					cur_monst->active = 2;
 					cur_monst->mobility = 1;
 				}
@@ -2138,7 +2138,7 @@ void do_monster_turn()
 					}
 			
 			// Place fields for monsters that create them. Only done when monst sees foe
-			if ((target != 6) && (can_see(cur_monst->cur_loc,targ_space,0) < 5)) { ////
+			if ((target != 6) && (can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5)) { ////
 				if ((cur_monst->radiate_1 == 1) && (get_ran(1,1,100) < cur_monst->radiate_2))
 					place_spell_pattern(square,cur_monst->cur_loc,5,false,7);
 				if ((cur_monst->radiate_1 == 2) && (get_ran(1,1,100) < cur_monst->radiate_2))
@@ -2700,7 +2700,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				for (i = 0; i < 8; i++) {
 					j = get_ran(1,0,5);
 					if(univ.party[j].main_status == eMainStatus::ALIVE && univ.party[j].cur_sp > 4 &&
-						(can_see(source,pc_pos[j],0) < 5) && (dist(source,pc_pos[j]) <= 8)) {
+						(can_see_light(source,pc_pos[j],sight_obscurity) < 5) && (dist(source,pc_pos[j]) <= 8)) {
 						target = j;
 						i = 8;
 						targ_space = pc_pos[target];
@@ -2790,7 +2790,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		}
 		
 		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * univ.party[target].status[1]
-			- 5 * (can_see(source, pc_pos[target],0));
+			- 5 * (can_see_light(source, pc_pos[target],sight_obscurity));
 		if (pc_parry[target] < 100)
 			r1 += 5 * pc_parry[target];
 		r2 = get_ran(dam[level],1,7) + min(10,bless);
@@ -2832,7 +2832,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				break;
 		}
 		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->status[1]
-			- 5 * (can_see(source, m_target->cur_loc,0));
+			- 5 * (can_see_light(source, m_target->cur_loc,sight_obscurity));
 		r2 = get_ran(dam[level],1,7) + min(10,bless);
 		
 		if (r1 <= hit_chance[dam[level] * 2]) {
@@ -3636,7 +3636,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 		for (j = minmax(active.top + 1,active.bottom - 1,center.y - 4);
 			 j <= minmax(active.top + 1,active.bottom - 1,center.y + 4); j++) {
 			s_loc.x = i; s_loc.y = j;
-			if (can_see(center,s_loc,0) == 5)
+			if (can_see_light(center,s_loc,sight_obscurity) == 5)
 				pat.pattern[i - center.x + 4][j - center.y + 4] = 0;
 		}
 	
@@ -3817,7 +3817,7 @@ void do_shockwave(location target)
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
-			&& (can_see(target,univ.town.monst[i].cur_loc,0) < 5))
+			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2 , 1, 6), 0, DAMAGE_UNBLOCKABLE,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
@@ -3836,7 +3836,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
-				&& (can_see(target,univ.town.monst[i].cur_loc,0) < 5))
+				&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 				damage_monst(i, current_pc, dam, 0, type,0);
 		return;
 	}
@@ -3849,7 +3849,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
-			&& (can_see(target,univ.town.monst[i].cur_loc,0) < 5))
+			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			damage_monst(i, current_pc, dam, 0, type,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
@@ -4250,7 +4250,7 @@ bool combat_cast_mage_spell()
 						for (i = 0; i < univ.town->max_monst(); i++) {
 							if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 								&& (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= mage_range[spell_num])
-								&& (can_see(pc_pos[current_pc],univ.town.monst[i].cur_loc,0) < 5)) {
+								&& (can_see_light(pc_pos[current_pc],univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 								which_m = &univ.town.monst[i];
 								switch (spell_num) {
 									case 47:

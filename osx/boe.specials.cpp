@@ -1110,7 +1110,7 @@ void use_item(short pc,short item)
 				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 						&& (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= 8)
-						&& (can_see(pc_pos[current_pc],univ.town.monst[i].cur_loc,0) < 5)) {
+						&& (can_see_light(pc_pos[current_pc],univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 						which_m = &univ.town.monst[i];
 						charm_monst(which_m,0,0,8);
 					}

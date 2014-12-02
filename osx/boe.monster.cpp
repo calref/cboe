@@ -293,7 +293,7 @@ void do_monsters()
 							else if (monst_hate_spot(i,&l2) == true)
 								acted_yet = seek_party(i,l1,l2);
 							else if (((univ.town.monst[i].mu == 0) && (univ.town.monst[i].mu == 0))
-									 || (can_see(l1,l2,0) > 3))
+									 || (can_see_light(l1,l2,sight_obscurity) > 3))
 								acted_yet = seek_party(i,l1,l2);
 						}
 					}
@@ -305,7 +305,7 @@ void do_monsters()
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 8)) {
 					r1 = get_ran(1,1,100);
 					r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 46 : 0;
-					r1 += can_see(univ.town.monst[i].cur_loc,univ.town.p_loc,0) * 10;
+					r1 += can_see_light(univ.town.monst[i].cur_loc,univ.town.p_loc,sight_obscurity) * 10;
 					if (r1 < 50) {
 						univ.town.monst[i].active = 2;
 						add_string_to_buf("Monster saw you!");
@@ -405,7 +405,7 @@ short monst_pick_target(short which_m)
 	}
 	
 //	if (monst_target[which_m] >= 100) {
-//		if ((can_see(cur_monst->m_loc,univ.town.monst[monst_target[which_m] - 100].m_loc,0) < 4)
+//		if ((can_see_light(cur_monst->m_loc,univ.town.monst[monst_target[which_m] - 100].m_loc,sight_obscurity) < 4)
 //			&& (univ.town.monst[monst_target[which_m] - 100].active > 0))
 //				return monst_target[which_m];
 //		}
@@ -632,7 +632,7 @@ bool rand_move(char i)
 			store_loc = univ.town.monst[i].cur_loc;
 			store_loc.x += get_ran(1,0,24) - 12;
 			store_loc.y += get_ran(1,0,24) - 12;
-			if ((loc_off_act_area(store_loc) == false) && (can_see(univ.town.monst[i].cur_loc,store_loc,0) < 5)) {
+			if ((loc_off_act_area(store_loc) == false) && (can_see_light(univ.town.monst[i].cur_loc,store_loc,sight_obscurity) < 5)) {
 				univ.town.monst[i].targ_loc = store_loc; j = 3;
 			}
 		}

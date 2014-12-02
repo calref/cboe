@@ -795,7 +795,7 @@ short get_item(location place,short pc_num,bool check_container)
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude == 1)
-			&& (can_see(place,univ.town.monst[i].cur_loc,0) < 5))
+			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -803,7 +803,7 @@ short get_item(location place,short pc_num,bool check_container)
 			if (((adjacent(place,univ.town.items[i].item_loc) == true) ||
 				 ((mass_get == 1) && (check_container == false) &&
 				  ((dist(place,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
-				  && (can_see(place,univ.town.items[i].item_loc,0) < 5)))
+				  && (can_see_light(place,univ.town.items[i].item_loc,sight_obscurity) < 5)))
 				&& ((!univ.town.items[i].contained) || (check_container == true))) {
 				taken = 1;
 				
@@ -815,7 +815,7 @@ short get_item(location place,short pc_num,bool check_container)
 		if (display_item(place,pc_num,mass_get,check_container) > 0) { // if true, there was a theft
 			for (i = 0; i < univ.town->max_monst(); i++)
 				if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 != 1)
-					&& (can_see(place,univ.town.monst[i].cur_loc,0) < 5)) {
+					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					make_town_hostile();
 					i = univ.town->max_monst();
 					add_string_to_buf("Your crime was seen!");
@@ -1058,7 +1058,7 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 			if (((adjacent(from_loc,univ.town.items[i].item_loc) == true) ||
 				 ((mode == 1) && (check_container == false) &&
 				  ((dist(from_loc,univ.town.items[i].item_loc) <= 4) || ((is_combat()) && (which_combat_type == 0)))
-				  && (can_see(from_loc,univ.town.items[i].item_loc,0) < 5))) &&
+				  && (can_see_light(from_loc,univ.town.items[i].item_loc,sight_obscurity) < 5))) &&
 				(univ.town.items[i].contained == check_container) &&
 				((!check_container) || (univ.town.items[i].item_loc == from_loc))) {
 				item_array[array_position] = i;

@@ -250,7 +250,7 @@ void update_explored(location dest)
 		for (look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim(),dest.x + 5); look2.x++)
 			for (look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim(),dest.y + 5); look2.y++)
 				if (is_explored(look2.x,look2.y) == false)
-					if ((can_see(dest, look2,0) < 5) && (pt_in_light(dest,look2) == true))
+					if ((can_see_light(dest, look2,sight_obscurity) < 5) && (pt_in_light(dest,look2) == true))
 						make_explored(look2.x,look2.y);
 	}
 }
@@ -380,7 +380,7 @@ bool monst_can_see(short m_num,location l)
 		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
-			if (can_see(destination,l,0) < 5)
+			if (can_see_light(destination,l,sight_obscurity) < 5)
 				return true;
 		}
 	return false;
@@ -410,7 +410,7 @@ bool can_see_monst(location l,short m_num)
 		for (j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
-			if (can_see(l,destination,0) < 5)
+			if (can_see_light(l,destination,sight_obscurity) < 5)
 				return true;
 		}
 	return false;
@@ -565,13 +565,13 @@ short party_can_see(location where)
 	short i;
 	
 	if (is_out()) {
-		if ((point_onscreen(univ.party.p_loc,where) == true) && (can_see(univ.party.p_loc,where,0) < 5))
+		if ((point_onscreen(univ.party.p_loc,where) == true) && (can_see_light(univ.party.p_loc,where,sight_obscurity) < 5))
 			return 1;
 		else return 6;
 	}
 	if (is_town()) {
 		if ( ((point_onscreen(univ.town.p_loc,where) == true) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.town.p_loc,where)  == true)
-			&& (can_see(univ.town.p_loc,where,0) < 5))
+			&& (can_see_light(univ.town.p_loc,where,sight_obscurity) < 5))
 			return 1;
 		else return 6;
 	}
@@ -583,7 +583,7 @@ short party_can_see(location where)
 	
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if (can_see(pc_pos[i],where,0) < 5)
+			if (can_see_light(pc_pos[i],where,sight_obscurity) < 5)
 				return i;
 		}
 	

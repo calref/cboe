@@ -898,7 +898,7 @@ void draw_terrain(short	mode)
 					where_draw.y = -1;
 				if (where_draw.y > univ.town->max_dim() - 1)
 					where_draw.y = univ.town->max_dim();
-				if (can_see(view_loc,where_draw,0) < 5)
+				if (can_see_light(view_loc,where_draw,sight_obscurity) < 5)
 					can_draw = 1;
 				else can_draw = 0;
 				spec_terrain = 0;
@@ -1688,7 +1688,7 @@ void draw_targeting_line(location where_curs)
 			k = (k * 28) + 32 + ul.x;
 			l = (l * 36) + 36 + ul.y;
 			
-			if ((can_see(from_loc,which_space,0) < 5)
+			if ((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
 			 	terrain_rect.inset(13,13);
 			 	terrain_rect.offset(5 + ul.x,5 + ul.y);

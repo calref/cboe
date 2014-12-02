@@ -1488,7 +1488,7 @@ void set_up_lights() {
 			if (rad > 0) {
 				for (where.x = max(0,i - rad); where.x < min(town->max_dim(),i + rad + 1); where.x++)
 					for (where.y = max(0,j - rad); where.y < min(town->max_dim(),j + rad + 1); where.y++)
-						if ((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,0) < 5))
+						if ((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,light_obscurity) < 5))
 							where_lit[where.x][where.y] = 1;
 			}
 		}

@@ -1689,7 +1689,7 @@ void cast_town_spell(location where) ////
 		return;
 	}
 	
-	adjust = can_see(univ.town.p_loc,where,0);
+	adjust = can_see_light(univ.town.p_loc,where,sight_obscurity);
 	if (town_spell < 1000)
 		univ.party[who_cast].cur_sp -= spell_cost[town_spell / 100][town_spell % 100];
 	else town_spell -= 1000;

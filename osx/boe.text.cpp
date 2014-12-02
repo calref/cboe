@@ -809,7 +809,7 @@ short do_look(location space)
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
 			if(space == pc_pos[i] && univ.party[i].main_status == eMainStatus::ALIVE
-				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
+				&& (is_lit == true) && (can_see_light(pc_pos[current_pc],space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);
 			}
@@ -818,7 +818,7 @@ short do_look(location space)
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (is_lit == true)
 				&& (monst_on_space(space,i) == true) &&
-				((overall_mode == MODE_LOOK_TOWN) || (can_see(pc_pos[current_pc],space,0) < 5))
+				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(pc_pos[current_pc],space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
 				

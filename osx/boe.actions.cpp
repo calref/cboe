@@ -823,7 +823,7 @@ bool handle_action(sf::Event event)
 //			if ((can_see(cur_loc,destination) >= 4) || ((overall_mode != 35) && (loc_off_world(destination) == true)))
 			if ((overall_mode != MODE_LOOK_COMBAT) && (party_can_see(destination) == 6))
 				add_string_to_buf("  Can't see space.         ");
-			else if ((overall_mode == MODE_LOOK_COMBAT) && (can_see(pc_pos[current_pc],destination,0) >= 4))
+			else if ((overall_mode == MODE_LOOK_COMBAT) && (can_see_light(pc_pos[current_pc],destination,sight_obscurity) >= 4))
 				add_string_to_buf("  Can't see space.         ");
 			else {
 				add_string_to_buf("You see...               ");
@@ -893,7 +893,7 @@ bool handle_action(sf::Event event)
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
 			
-			if ((can_see(cur_loc,destination,0) >= 4) || (loc_off_world(destination) == true)) {
+			if ((can_see_light(cur_loc,destination,sight_obscurity) >= 4) || (loc_off_world(destination) == true)) {
 				add_string_to_buf("  Can't see space              ");
 				need_reprint = true;
 			}
