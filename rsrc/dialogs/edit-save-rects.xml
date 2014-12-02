@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='town1' top='161' left='214' width='67' height='16'/>
+	<field name='top1' top='161' left='293' width='39' height='16'/>
+	<field name='left1' top='161' left='343' width='39' height='16'/>
+	<field name='bottom1' top='161' left='393' width='39' height='16'/>
+	<field name='right1' top='161' left='443' width='39' height='16'/>
+	<field name='town2' top='189' left='214' width='67' height='16'/>
+	<field name='top2' top='189' left='293' width='39' height='16'/>
+	<field name='left2' top='189' left='343' width='39' height='16'/>
+	<field name='bottom2' top='189' left='393' width='39' height='16'/>
+	<field name='right2' top='189' left='443' width='39' height='16'/>
+	<field name='town3' top='217' left='214' width='67' height='16'/>
+	<field name='top3' top='217' left='293' width='39' height='16'/>
+	<field name='left3' top='217' left='343' width='39' height='16'/>
+	<field name='bottom3' top='217' left='393' width='39' height='16'/>
+	<field name='right3' top='217' left='443' width='39' height='16'/>
+	<button name='okay' type='regular' top='248' left='413'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='44'>Save Items Rectangles</text>
+	<text top='25' left='50' width='438' height='53'>
+		There can be areas in towns where items left there are remembered,
+		even after the party leaves town.
+		Enter the numbers of the towns where items are saved (-1 means no area),
+		and the rectangles where the items left are remembered.
+	</text>
+	<text top='79' left='50' width='438' height='54'>
+		if the party leaves the given town with an item on the ground inside the given rectangle,
+		the item will still be there when they get back.
+		If the item is not inside the rectangle, it is lost.
+		Note that the three towns must be different.
+	</text>
+	<text top='164' left='50' width='153' height='14'>Items save rectangle 1</text>
+	<text top='192' left='50' width='153' height='14'>Items save rectangle 2</text>
+	<text top='220' left='50' width='153' height='14'>Items save rectangle 3</text>
+	<text top='139' left='211' width='70' height='14'>Town num.</text>
+	<text top='139' left='290' width='38' height='14'>Top</text>
+	<text top='139' left='344' width='38' height='14'>Left</text>
+	<text top='139' left='389' width='47' height='14'>Bottom</text>
+	<text top='139' left='441' width='40' height='14'>Right</text>
+</dialog>

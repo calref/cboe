@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include <functional>
+#include <boost/lexical_cast.hpp>
 #include "dialog.h"
 #include "dlogutil.h"
 #include "mathutil.h"
@@ -131,11 +132,7 @@ cStringChoice::cStringChoice(
 		std::string title,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
-	using namespace std::placeholders;
-	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1,_2));
+	attachHandlers();
 	if(!title.empty()) dlg["title"].setText(title);
 	strings = strs;
 }
@@ -146,13 +143,19 @@ cStringChoice::cStringChoice(
 		std::string title,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
+	attachHandlers();
+	if(!title.empty()) dlg["title"].setText(title);
+	copy(begin,end,std::inserter(strings, strings.begin()));
+}
+
+void cStringChoice::attachHandlers() {
 	using namespace std::placeholders;
 	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this,_1,_2));
 	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this,_1,_2));
 	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1,_2));
 	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1,_2));
-	if(!title.empty()) dlg["title"].setText(title);
-	copy(begin,end,std::inserter(strings, strings.begin()));
+	leds = &dynamic_cast<cLedGroup&>(dlg["strings"]);
+	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_1,_3));
 }
 
 size_t cStringChoice::show(std::string select){
@@ -212,6 +215,13 @@ bool cStringChoice::onCancel(cDialog& me, std::string id __attribute__((unused))
 bool cStringChoice::onOkay(cDialog& me, std::string id __attribute__((unused))){
 	dlg.setResult(cur);
 	me.toast();
+	return true;
+}
+
+bool cStringChoice::onSelect(cDialog& me, bool losing) {
+	if(losing) return true;
+	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
+	cur = page * 40 + i - 1;
 	return true;
 }
 

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='town1' top='130' left='146' width='67' height='16'/>
+	<field name='town2' top='158' left='146' width='67' height='16'/>
+	<field name='town3' top='186' left='146' width='67' height='16'/>
+	<field name='town4' top='214' left='146' width='67' height='16'/>
+	<field name='town5' top='242' left='146' width='67' height='16'/>
+	<field name='town6' top='270' left='146' width='67' height='16'/>
+	<field name='town7' top='298' left='146' width='67' height='16'/>
+	<field name='town8' top='326' left='146' width='67' height='16'/>
+	<field name='town9' top='354' left='146' width='67' height='16'/>
+	<field name='town10' top='382' left='146' width='67' height='16'/>
+	<field name='flag1-x' top='130' left='258' width='40' height='16'/>
+	<field name='flag2-x' top='158' left='258' width='40' height='16'/>
+	<field name='flag3-x' top='186' left='258' width='40' height='16'/>
+	<field name='flag4-x' top='214' left='258' width='40' height='16'/>
+	<field name='flag5-x' top='242' left='258' width='40' height='16'/>
+	<field name='flag6-x' top='270' left='258' width='40' height='16'/>
+	<field name='flag7-x' top='298' left='258' width='40' height='16'/>
+	<field name='flag8-x' top='326' left='258' width='40' height='16'/>
+	<field name='flag9-x' top='354' left='258' width='40' height='16'/>
+	<field name='flag10-x' top='382' left='258' width='40' height='16'/>
+	<field name='flag1-y' top='130' left='344' width='40' height='16'/>
+	<field name='flag2-y' top='158' left='344' width='40' height='16'/>
+	<field name='flag3-y' top='186' left='344' width='40' height='16'/>
+	<field name='flag4-y' top='214' left='344' width='40' height='16'/>
+	<field name='flag5-y' top='242' left='344' width='40' height='16'/>
+	<field name='flag6-y' top='270' left='344' width='40' height='16'/>
+	<field name='flag7-y' top='298' left='344' width='40' height='16'/>
+	<field name='flag8-y' top='326' left='344' width='40' height='16'/>
+	<field name='flag9-y' top='354' left='344' width='40' height='16'/>
+	<field name='flag10-y' top='382' left='344' width='40' height='16'/>
+	<button name='okay' type='regular' top='379' left='419'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='44'>Variable Town Entry</text>
+	<text top='25' left='50' width='439' height='40'>
+		When the party enters a town,
+		you can have the exact town entered vary,
+		depending on circumstances.
+		To do this, specify a town number below,
+		and the Stuff Done flag to add to the town number when that town is entered.
+	</text>
+	<text top='68' left='50' width='439' height='27'>
+		Leave the town at -1 for this to have no effect.
+		For more information on how this works, see the documentation.
+	</text>
+	<text top='102' left='131' width='100' height='14'>Town entered</text>
+	<text top='96' left='235' width='96' height='25'>Stuff Done Flag to add X</text>
+	<text top='96' left='329' width='96' height='25'>Stuff Done Flag to add Y</text>
+</dialog>

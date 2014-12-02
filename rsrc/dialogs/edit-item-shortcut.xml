@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='item1' top='188' left='73' width='39' height='16'/>
+	<field name='item2' top='216' left='73' width='39' height='16'/>
+	<field name='item3' top='244' left='73' width='39' height='16'/>
+	<field name='item4' top='272' left='73' width='39' height='16'/>
+	<field name='item5' top='300' left='73' width='39' height='16'/>
+	<field name='item6' top='188' left='309' width='39' height='16'/>
+	<field name='item7' top='216' left='309' width='39' height='16'/>
+	<field name='item8' top='244' left='309' width='39' height='16'/>
+	<field name='item9' top='272' left='309' width='39' height='16'/>
+	<field name='item10' top='300' left='309' width='39' height='16'/>
+	<field name='odds1' top='188' left='192' width='39' height='16'/>
+	<field name='odds2' top='216' left='192' width='39' height='16'/>
+	<field name='odds3' top='244' left='192' width='39' height='16'/>
+	<field name='odds4' top='272' left='192' width='39' height='16'/>
+	<field name='odds5' top='300' left='192' width='39' height='16'/>
+	<field name='odds6' top='188' left='428' width='39' height='16'/>
+	<field name='odds7' top='216' left='428' width='39' height='16'/>
+	<field name='odds8' top='244' left='428' width='39' height='16'/>
+	<field name='odds9' top='272' left='428' width='39' height='16'/>
+	<field name='odds10' top='300' left='428' width='39' height='16'/>
+	<field name='ter' top='113' left='410' width='42' height='17'/>
+	<button name='okay' type='regular' top='334' left='462'>OK</button>
+	<button name='cancel' type='regular' top='334' left='396' def-key='esc'>Cancel</button>
+	<button name='right' type='right' top='334' left='73' def-key='right'/>
+	<button name='left' type='left' top='334' left='10' def-key='left'/>
+	<text name='num' top='115' left='211' width=' 46' height='14'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='20'>Item Placement Shortcuts</text>
+	<text top='25' left='50' width='439' height='40'>
+		You can design shortcuts for automatic placement of items in towns.
+		When editing towns, if you select the Place Automatic Items menu item,
+		the edit will randomly place items you specify in terrain types you specify.
+	</text>
+	<text top='66' left='50' width='439' height='41'>
+		Enter the terrain type to get the items,
+		the numbers of the items to place,
+		and the percentage chance (0-100) that the item is places there.
+		For more details, see the documentation.
+	</text>
+	<text top='115' left='50' width='155' height='14'>Item shortcut number:</text>
+	<text top='115' left='269' width='136' height='14'>Terrain type number:</text>
+	<text top='154' left='50' width='98' height='26'>Number of item to place:</text>
+	<text top='154' left='159' width='119' height='26'>Chance of placing: (0-100%)</text>
+	<text top='154' left='286' width='99' height='36'>Number of item to place:</text>
+	<text top='154' left='395' width='119' height='26'>Chance of placing: (0-100%)</text>
+	<led name='owned' state='off' top='138' left='215'/>
+	<text top='134' left=' 50' width='155' height='14'>Items are always property:</text>
+	<text top='134' left='277' width='297' height='14'>(Leave this at -1 for no shortcut.)</text>
+	<button name='choose-ter' type='regular' top='110' left='458'>Choose</button>
+	<button name='choose-item1' type='regular' top='185' left='118'>Choose</button>
+	<button name='choose-item2' type='regular' top='213' left='118'>Choose</button>
+	<button name='choose-item3' type='regular' top='241' left='118'>Choose</button>
+	<button name='choose-item4' type='regular' top='270' left='118'>Choose</button>
+	<button name='choose-item5' type='regular' top='298' left='118'>Choose</button>
+	<button name='choose-item6' type='regular' top='185' left='354'>Choose</button>
+	<button name='choose-item7' type='regular' top='213' left='354'>Choose</button>
+	<button name='choose-item8' type='regular' top='241' left='354'>Choose</button>
+	<button name='choose-item9' type='regular' top='270' left='354'>Choose</button>
+	<button name='choose-item10' type='regular' top='298' left='354'>Choose</button>
+</dialog>

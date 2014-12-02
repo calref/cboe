@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='town1' top='143' left='214' width='67' height='16'/>
+	<field name='town2' top='171' left='214' width='67' height='16'/>
+	<field name='town3' top='199' left='214' width='67' height='16'/>
+	<field name='town4' top='227' left='214' width='67' height='16'/>
+	<field name='town5' top='255' left='214' width='67' height='16'/>
+	<field name='town6' top='283' left='214' width='67' height='16'/>
+	<field name='x1' top='143' left='329' width='39' height='16'/>
+	<field name='x2' top='171' left='329' width='39' height='16'/>
+	<field name='x3' top='199' left='329' width='39' height='16'/>
+	<field name='x4' top='227' left='329' width='39' height='16'/>
+	<field name='x5' top='255' left='329' width='39' height='16'/>
+	<field name='x6' top='283' left='329' width='39' height='16'/>
+	<field name='y1' top='143' left='410' width='39' height='16'/>
+	<field name='y2' top='171' left='410' width='39' height='16'/>
+	<field name='y3' top='199' left='410' width='39' height='16'/>
+	<field name='y4' top='227' left='410' width='39' height='16'/>
+	<field name='y5' top='255' left='410' width='39' height='16'/>
+	<field name='y6' top='283' left='410' width='39' height='16'/>
+	<button name='okay' type='regular' top='309' left='463'>OK</button>
+	<button name='left' type='left' top='309' left='52'/>
+	<button name='right' type='right' top='309' left='115'/>
+	<text name='num1' top='143' left='152' width='46' height='14'/>
+	<text name='num2' top='171' left='152' width='46' height='14'/>
+	<text name='num3' top='199' left='153' width='46' height='14'/>
+	<text name='num4' top='227' left='153' width='46' height='14'/>
+	<text name='num5' top='254' left='153' width='46' height='14'/>
+	<text name='num6' top='282' left='153' width='46' height='14'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Edit Horses</text>
+	<text top='25' left='50' width='439' height='39'>
+		There can be up to 24 horses in your scenario,
+		each of which must start in some town.
+		The horses can start as the parties property, if you want.
+		Leave the town at -1 to make the horse not exist.
+	</text>
+	<text top='65' left='50' width='439' height='41'>
+		Note that horses can’t walk over certain terrain types (like floors).
+		Be careful not to place horses where they’re stuck and can’t get out.
+		This makes them sad.
+	</text>
+	<text top='113' left='199' width='106' height='14'>Town to start in</text>
+	<text top='107' left='310' width='76' height='25'>X Location in town</text>
+	<text top='107' left='392' width='81' height='26'>Y Location in town</text>
+	<text top='143' left='50' width='97' height='14'>Horse number</text>
+	<text top='171' left='50' width='97' height='14'>Horse number</text>
+	<text top='199' left='51' width='97' height='14'>Horse number</text>
+	<text top='227' left='51' width='97' height='14'>Horse number</text>
+	<text top='254' left='51' width='97' height='14'>Horse number</text>
+	<text top='282' left='51' width='97' height='14'>Horse number</text>
+	<text top='107' left='477' width='70' height='26'>Not Party Property</text>
+	<led name='owned1' state='off' top='143' left='488'/>
+	<led name='owned2' state='off' top='171' left='488'/>
+	<led name='owned3' state='off' top='199' left='488'/>
+	<led name='owned4' state='off' top='227' left='488'/>
+	<led name='owned5' state='off' top='254' left='488'/>
+	<led name='owned6' state='off' top='282' left='488'/>
+</dialog>

@@ -86,9 +86,12 @@ class cStringChoice {
 	bool onRight(cDialog& me, std::string id);
 	bool onCancel(cDialog& me, std::string id);
 	bool onOkay(cDialog& me, std::string id);
+	bool onSelect(cDialog& me, bool losing);
+	void attachHandlers();
 	void fillPage();
 	std::vector<std::string> strings;
 	size_t page, cur;
+	cLedGroup* leds;
 public:
 	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = NULL);
 	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);

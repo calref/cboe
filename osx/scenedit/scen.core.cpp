@@ -34,8 +34,6 @@ extern cSpeech null_talk_node;
 extern location cur_out;
 extern short start_volume, start_dir;
 
-short cur_shortcut;
-
 void init_scenario() {
 	short i;
 	rectangle dummy_rect;
@@ -1252,33 +1250,32 @@ void edit_spec_item(short which_item) {
 	item_dlg.run();
 }
 
-void put_save_rects_in_dlog() {
-#if 0
+void put_save_rects_in_dlog(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 3; i++) {
-		CDSN(807,3 + 5 * i,scenario.store_item_rects[i].top);
-		CDSN(807,4 + 5 * i,scenario.store_item_rects[i].left);
-		CDSN(807,5 + 5 * i,scenario.store_item_rects[i].bottom);
-		CDSN(807,6 + 5 * i,scenario.store_item_rects[i].right);
-		CDSN(807,2 + 5 * i,scenario.store_item_towns[i]);
+		std::string id = std::to_string(i + 1);
+		me["top" + id].setTextToNum(scenario.store_item_rects[i].top);
+		me["left" + id].setTextToNum(scenario.store_item_rects[i].left);
+		me["bottom" + id].setTextToNum(scenario.store_item_rects[i].bottom);
+		me["right" + id].setTextToNum(scenario.store_item_rects[i].right);
+		me["town" + id].setTextToNum(scenario.store_item_towns[i]);
 		
 	}
-#endif
 }
 
-bool save_save_rects() {
-#if 0
+bool save_save_rects(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 3; i++) {
-		scenario.store_item_rects[i].top = CDGN(807,3 + 5 * i);
-		scenario.store_item_rects[i].left = CDGN(807,4 + 5 * i);
-		scenario.store_item_rects[i].bottom = CDGN(807,5 + 5 * i);
-		scenario.store_item_rects[i].right = CDGN(807,6 + 5 * i);
-		scenario.store_item_towns[i] = CDGN(807,2 + 5 * i);
+		std::string id = std::to_string(i + 1);
+		scenario.store_item_rects[i].top = me["top" + id].getTextAsNum();
+		scenario.store_item_rects[i].left = me["left" + id].getTextAsNum();
+		scenario.store_item_rects[i].bottom = me["bottom" + id].getTextAsNum();
+		scenario.store_item_rects[i].right = me["right" + id].getTextAsNum();
+		scenario.store_item_towns[i] = me["town" + id].getTextAsNum();
 		if ((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
-			give_error("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",807);
+			giveError("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",&me);
 			return false;
 		}
 	}
@@ -1291,353 +1288,249 @@ bool save_save_rects() {
 		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) && 
 		 (scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
 		) {
-		give_error("The three towns towns with saved item rectangles must be different.","",807);
+		giveError("The three towns towns with saved item rectangles must be different.","",&me);
 		return false;
 	}
-#endif
 	return true;
 }
 
-void edit_save_rects_event_filter (short save_rects_hit) {
-#if 0
-	switch (save_rects_hit) {
-		case 18:
-			toast_dialog();
-			break;
-		case 17:
-			if (save_save_rects() == true)
-				toast_dialog();
-			break;
-			
+bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
+	if(item_hit == "cancel") {
+		me.toast();
+	} else if(item_hit == "okay") {
+		if(save_save_rects(me))
+			me.toast();
 	}
-#endif
+	return true;
 }
 
 void edit_save_rects() {
-#if 0
-	// ignore parent in Mac version
-	short save_rects_hit;
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(807,0);
+	cDialog save_dlg("edit-save-rects.xml");
+	save_dlg.attachClickHandlers(std::bind(edit_save_rects_event_filter, _1, _2), {"okay"});
 	
-	put_save_rects_in_dlog();
+	put_save_rects_in_dlog(save_dlg);
 	
-	save_rects_hit = cd_run_dialog();
-	cd_kill_dialog(807);
-#endif
+	save_dlg.run();
 }
 
-bool save_horses() {
-#if 0
+bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		scenario.horses[6 * store_horse_page + i].which_town = CDGN(808,2 + i);
-		if (cre(scenario.horses[6 * store_horse_page + i].which_town,
-				-1,199,"Town number must be from 0 to 199 (or -1 for horse to not exist).","",808) == true) return false;
-		scenario.horses[6 * store_horse_page + i].loc.x = CDGN(808,8 + i);
-		if (cre(scenario.horses[6 * store_horse_page + i].loc.x,
-				0,63,"Horse location coordinates must be from 0 to 63.","",808) == true) return false;
-		scenario.horses[6 * store_horse_page + i].loc.y = CDGN(808,14 + i);
-		if (cre(scenario.horses[6 * store_horse_page + i].loc.y,
-				0,63,"Horse location coordinates must be from 0 to 63.","",808) == true) return false;
-		scenario.horses[6 * store_horse_page + i].property = cd_get_led(808,43 + i);
+		std::string id = std::to_string(i + 1);
+		vehicles[6 * page + i].which_town = me["town" + id].getTextAsNum();
+		if(cre(vehicles[6 * page + i].which_town,
+				-1,199,"Town number must be from 0 to 199 (or -1 for it to not exist).","",&me)) return false;
+		vehicles[6 * page + i].loc.x = me["x" + id].getTextAsNum();
+		if(cre(vehicles[6 * page + i].loc.x,
+				0,63,"coordinates must be from 0 to 63.","",&me)) return false;
+		vehicles[6 * page + i].loc.y = me["y" + id].getTextAsNum();
+		if(cre(vehicles[6 * page + i].loc.y,
+				0,63,"coordinates must be from 0 to 63.","",&me)) return false;
+		vehicles[6 * page + i].property = dynamic_cast<cLed&>(me["owned" + id]).getState() != led_off;
 	}
-#endif
 	return true;
 }
 
-void put_horses_in_dlog() {
-#if 0
+void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		cdsin(808,23 + i,6 * store_horse_page + i);
-		CDSN(808,2 + i,scenario.horses[6 * store_horse_page + i].which_town);
-		CDSN(808,8 + i,scenario.horses[6 * store_horse_page + i].loc.x);
-		CDSN(808,14 + i,scenario.horses[6 * store_horse_page + i].loc.y);
-		cd_set_led(808,43 + i,scenario.horses[6 * store_horse_page + i].property);
+		std::string id = std::to_string(i + 1);
+		me["num" + id].setTextToNum(6 * page + i);
+		me["town" + id].setTextToNum(vehicles[6 * page + i].which_town);
+		me["x" + id].setTextToNum(vehicles[6 * page + i].loc.x);
+		me["y" + id].setTextToNum(vehicles[6 * page + i].loc.y);
+		dynamic_cast<cLed&>(me["owned" + id]).setState(vehicles[6 * page + i].property ? led_red : led_off);
 	}
-#endif
 }
 
-void edit_horses_event_filter (short item_hit) {
-#if 0
+bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehicle* vehicles, size_t nVehicles, short& page) {
 	short i;
 	
-	switch (item_hit) {
-		case 20:
-			if (save_horses() == true)
-				toast_dialog();
-			break;
-		case 21:
-			if (save_horses() == false) break;
-			store_horse_page--;
-			if (store_horse_page < 0) store_horse_page = 4;
-			put_horses_in_dlog();
-			break;
-		case 22:
-			if (save_horses() == false) break;
-			store_horse_page++;
-			if (store_horse_page > 4) store_horse_page = 0;
-			put_horses_in_dlog();
-			break;
-		default:
-			for (i = 0; i < 6; i++)
-				cd_flip_led(808,43 + i,item_hit);
-			break;
+	if(item_hit == "okay") {
+		if(save_vehicles(me, vehicles, page))
+			me.toast();
+	} else if(item_hit == "left") {
+		if(!save_vehicles(me, vehicles, page)) return true;
+		page--;
+		if(page < 0) page = (nVehicles - 1) / 6;
+		put_vehicles_in_dlog(me, vehicles, page);
+	} else if(item_hit == "right") {
+		if(!save_vehicles(me, vehicles, page)) return true;
+		page++;
+		if(page > (nVehicles - 1) / 6) page = 0;
+		put_vehicles_in_dlog(me, vehicles, page);
 	}
-#endif
+	return true;
 }
 
 void edit_horses() {
-#if 0
-	// ignore parent in Mac version
-	short horses_hit;
+	using namespace std::placeholders;
+	short page = 0;
 	
-	store_horse_page = 0;
+	cDialog horse_dlg("edit-horses.xml");
+	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses, 30, std::ref(page)), {"okay", "left", "right"});
 	
-	cd_create_dialog_parent_num(808,0);
+	put_vehicles_in_dlog(horse_dlg, scenario.horses, page);
 	
-	put_horses_in_dlog();
-	
-	horses_hit = cd_run_dialog();
-	cd_kill_dialog(808);
-#endif
-}
-
-bool save_boats() {
-#if 0
-	short i;
-	
-	for (i = 0; i < 6; i++) {
-		scenario.boats[6 * store_boat_page + i].which_town = CDGN(809,2 + i);
-		if (cre(scenario.boats[6 * store_boat_page + i].which_town,
-				-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == true) return false;
-		scenario.boats[6 * store_boat_page + i].loc.x = CDGN(809,8 + i);
-		if (cre(scenario.boats[6 * store_boat_page + i].loc.x,
-				0,63,"boat location coordinates must be from 0 to 63.","",809) == true) return false;
-		scenario.boats[6 * store_boat_page + i].loc.y = CDGN(809,14 + i);
-		if (cre(scenario.boats[6 * store_boat_page + i].loc.y,
-				0,63,"boat location coordinates must be from 0 to 63.","",809) == true) return false;
-		scenario.boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
-	}
-#endif
-	return true;
-}
-
-void put_boats_in_dlog() {
-#if 0
-	short i;
-	
-	for (i = 0; i < 6; i++) {
-		cdsin(809,24 + i,6 * store_boat_page + i);
-		CDSN(809,2 + i,scenario.boats[6 * store_boat_page + i].which_town);
-		CDSN(809,8 + i,scenario.boats[6 * store_boat_page + i].loc.x);
-		CDSN(809,14 + i,scenario.boats[6 * store_boat_page + i].loc.y);
-		cd_set_led(809,43 + i,scenario.boats[6 * store_boat_page + i].property);
-	}
-#endif
-}
-
-void edit_boats_event_filter (short item_hit) {
-#if 0
-	short i;
-	
-	switch (item_hit) {
-		case 20:
-			if (save_boats() == true)
-				toast_dialog();
-			break;
-		case 22:
-			if (save_boats() == false) break;
-			store_boat_page--;
-			if (store_boat_page < 0) store_boat_page = 4;
-			put_boats_in_dlog();
-			break;
-		case 23:
-			if (save_boats() == false) break;
-			store_boat_page++;
-			if (store_boat_page > 4) store_boat_page = 0;
-			put_boats_in_dlog();
-			break;
-		default:
-			for (i = 0; i < 6; i++)
-				cd_flip_led(809,43 + i,item_hit);
-			break;
-	}
-#endif
+	horse_dlg.run();
 }
 
 void edit_boats() {
-#if 0
-	// ignore parent in Mac version
-	short boats_hit;
+	using namespace std::placeholders;
+	short page = 0;
 	
-	store_boat_page = 0;
+	cDialog boat_dlg("edit-boats.xml");
+	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats, 30, std::ref(page)), {"okay", "left", "right"});
 	
-	cd_create_dialog_parent_num(809,0);
+	put_vehicles_in_dlog(boat_dlg, scenario.boats, page);
 	
-	put_boats_in_dlog();
-	
-	boats_hit = cd_run_dialog();
-	cd_kill_dialog(809);
-#endif
+	boat_dlg.run();
 }
 
-bool save_add_town() {
-#if 0
+bool save_add_town(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		scenario.town_to_add_to[i] = CDGN(810,2 + i);
+		std::string id = std::to_string(i + 1);
+		scenario.town_to_add_to[i] = me["town" + id].getTextAsNum();
 		if (cre(scenario.town_to_add_to[i],
-				-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == true) return false;
-		scenario.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
+				-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",&me)) return false;
+		scenario.flag_to_add_to_town[i][0] = me["flag" + id + "-x"].getTextAsNum();
 		if (cre(scenario.flag_to_add_to_town[i][0],
-				0,299,"First part of flag must be from 0 to 299.","",810) == true) return false;
-		scenario.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
+				0,299,"First part of flag must be from 0 to 299.","",&me)) return false;
+		scenario.flag_to_add_to_town[i][1] = me["flag" + id + "-y"].getTextAsNum();
 		if (cre(scenario.flag_to_add_to_town[i][1],
-				0,9,"Second part of flag must be from 0 to 9.","",810) == true) return false;
+				0,9,"Second part of flag must be from 0 to 9.","",&me)) return false;
 	}
-#endif
 	return true;
 }
 
-void put_add_town_in_dlog() {
-#if 0
+void put_add_town_in_dlog(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 10; i++) {
-		CDSN(810,2 + i,scenario.town_to_add_to[i]);
-		CDSN(810,12 + i,scenario.flag_to_add_to_town[i][0]);
-		CDSN(810,22 + i,scenario.flag_to_add_to_town[i][1]);
+		std::string id = std::to_string(i + 1);
+		me["town" + id].setTextToNum(scenario.town_to_add_to[i]);
+		me["flag" + id + "-x"].setTextToNum(scenario.flag_to_add_to_town[i][0]);
+		me["flag" + id + "-y"].setTextToNum(scenario.flag_to_add_to_town[i][1]);
 	}
-#endif
 }
 
-void edit_add_town_event_filter (short item_hit) {
-#if 0
-	switch (item_hit) {
-		case 32:
-			if (save_add_town() == true)
-				toast_dialog();
-			break;
-			
+bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
+	if(item_hit == "okay") {
+		if(save_add_town(me))
+			me.toast();
 	}
-#endif
+	return true;
 }
 
 void edit_add_town() {
-#if 0
-	// ignore parent in Mac version
-	short add_town_hit;
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(810,0);
+	cDialog vary_dlg("edit-town-varying.xml");
+	vary_dlg.attachClickHandlers(std::bind(edit_add_town_event_filter, _1, _2), {"okay"});
 	
-	put_add_town_in_dlog();
+	put_add_town_in_dlog(vary_dlg);
 	
-	add_town_hit = cd_run_dialog();
-	cd_kill_dialog(810);
-#endif
+	vary_dlg.run();
 }
 
-bool save_item_placement() {
-#if 0
+bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_storage, short cur_shortcut) {
 	short i;
 	
-	store_storage.property = cd_get_led(812,38);
-	store_storage.ter_type = CDGN(812,22);
+	store_storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	store_storage.ter_type = me["ter"].getTextAsNum();
 	if (cre(store_storage.ter_type,
-			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",812) == true) return false;
+			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",&me)) return false;
 	for (i = 0; i < 10; i++) {
-		store_storage.item_num[i] = CDGN(812,2 + i);
-		if (cre(store_storage.item_num[i],
-				-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",812) == true) return false;
-		store_storage.item_odds[i] = CDGN(812,12 + i);
-		if (cre(store_storage.item_odds[i],
-				0,100,"All item chances must bve from 0 to 100.","",812) == true) return false;
+		std::string id = std::to_string(i + 1);
+		store_storage.item_num[i] = me["item" + id].getTextAsNum();
+		if(cre(store_storage.item_num[i],
+				-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",&me) == true) return false;
+		store_storage.item_odds[i] = me["odds" + id].getTextAsNum();
+		if(cre(store_storage.item_odds[i],
+				0,100,"All item chances must bve from 0 to 100.","",&me) == true) return false;
 	}
 	scenario.storage_shortcuts[cur_shortcut] = store_storage;
-#endif
 	return true;
 }
 
-void put_item_placement_in_dlog() {
-#if 0
+void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& store_storage, short cur_shortcut) {
 	short i;
 	
-	cdsin(812,27,cur_shortcut);
-	cd_set_led(812,38,store_storage.property);
-	CDSN(812,22,store_storage.ter_type);
+	me["num"].setTextToNum(cur_shortcut);
+	dynamic_cast<cLed&>(me["owned"]).setState(store_storage.property ? led_red : led_off);
+	me["ter"].setTextToNum(store_storage.ter_type);
 	for (i = 0; i < 10; i++) {
-		CDSN(812,2 + i,store_storage.item_num[i]);
-		CDSN(812,12 + i,store_storage.item_odds[i]);
+		std::string id = std::to_string(i + 1);
+		me["item" + id].setTextToNum(store_storage.item_num[i]);
+		me["odds" + id].setTextToNum(store_storage.item_odds[i]);
 	}
-#endif
 }
 
-void edit_item_placement_event_filter (short item_hit) {
-#if 0
+bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, cScenario::cItemStorage& store_storage, short& cur_shortcut) {
 	short i;
 	
-	switch (item_hit) {
-		case 23:
-			if (save_item_placement() == true)
-				toast_dialog();
-			break;
-		case 24:
-			toast_dialog();
-			break;
-		case 26:
-			if (save_item_placement() == false) break;
+	if(item_hit == "okay") {
+		if(save_item_placement(me, store_storage, cur_shortcut))
+			me.toast();
+	} else if(item_hit == "cancel") {
+		me.toast();
+	} else if(item_hit == "left") {
+		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
 			cur_shortcut--;
 			if (cur_shortcut < 0) cur_shortcut = 9;
 			store_storage = scenario.storage_shortcuts[cur_shortcut];
-			put_item_placement_in_dlog();
-			break;
-		case 25:
-			if (save_item_placement() == false) break;
+		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
+	} else if(item_hit == "right") {
+		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
 			cur_shortcut++;
 			if (cur_shortcut > 9) cur_shortcut = 0;
 			store_storage = scenario.storage_shortcuts[cur_shortcut];
-			put_item_placement_in_dlog();
-			break;
-		case 41:
-			store_storage.ter_type = CDGN(812,22);
-			i = choose_text_res(-4,0,255,store_storage.ter_type,812,"Which Terrain?");
+		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
+	} else if(item_hit == "choose-ter") {
+		i = me["ter"].getTextAsNum();
+		store_storage.ter_type = i;
+		i = choose_text(STRT_TER,i,&me,"Which Terrain?");
+		if(i >= 0){
+			me["ter"].setTextToNum(i);
 			store_storage.ter_type = i;
-			CDSN(812,22,i);
-			break;
-		default:
-			if ((item_hit >= 42) && (item_hit <= 51)) {
-				i = CDGN(812,2 + item_hit - 42);
-				i = choose_text_res(-2,0,399,i,812,"Place which item?");
-				if (i >= 0)
-					CDSN(812,2 + item_hit - 42,i);
-				break;
-			}
-			cd_flip_led(812,38,item_hit);
-			break;
+		}
 	}
-#endif
+	return true;
+}
+
+bool edit_item_placement_select_item(cDialog& me, cScenario::cItemStorage& store_storage, short item_hit) {
+	std::string id = "item" + std::to_string(item_hit);
+	short i = me[id].getTextAsNum();
+	store_storage.item_num[item_hit - 1] = i;
+	i = choose_text(STRT_ITEM,i,&me,"Place which item?");
+	if(i >= 0) {
+		me[id].setTextToNum(i);
+		store_storage.item_num[item_hit - 1] = i;
+	}
+	return true;
 }
 
 void edit_item_placement() {
-#if 0
-	// ignore parent in Mac version
-	short item_placement_hit;
+	using namespace std::placeholders;
+	cScenario::cItemStorage store_storage = scenario.storage_shortcuts[0];
+	short cur_shortcut = 0;
 	
-	store_storage = scenario.storage_shortcuts[0];
-	cur_shortcut = 0;
+	cDialog shortcut_dlg("edit-item-shortcut.xml");
+	shortcut_dlg.attachClickHandlers(std::bind(edit_item_placement_event_filter, _1, _2, std::ref(store_storage), std::ref(cur_shortcut)), {"okay", "cancel", "left", "right", "choose-ter"});
+	for(int i = 0; i < 10; i++) {
+		std::string id = "choose-item" + std::to_string(i + 1);
+		shortcut_dlg[id].attachClickHandler(std::bind(edit_item_placement_select_item, _1, std::ref(store_storage), i + 1));
+	}
 	
-	cd_create_dialog_parent_num(812,0);
+	put_item_placement_in_dlog(shortcut_dlg, store_storage, cur_shortcut);
 	
-	put_item_placement_in_dlog();
-	
-	item_placement_hit = cd_run_dialog();
-	cd_kill_dialog(812);
-#endif
+	shortcut_dlg.run();
 }
 
 bool save_scen_details() {
