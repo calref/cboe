@@ -34,7 +34,7 @@ auto command = datcode >> ws >> *ws >> val >> (eps | *ws >> char_(',') >> *ws >>
 
 auto def_line = *ws >> lit("def") >> ws >> *ws >> symbol >> *ws >> char_('=') >> *ws >> uint_[add_symbol] >> (comment | eps) >> eol;
 auto cmd_line = *ws >> (command | eps) >> *ws >> (comment | eps) >> eol;
-auto op_line = *ws >> char_('@') >> opcode >> (eps | *ws >> char_('=') >> *ws >> val[skip_to]) >> (comment | eps) >> eol;
+auto op_line = *ws >> char_('@') >> opcode >> (eps | *ws >> char_('=') >> *ws >> int_[skip_to]) >> (comment | eps) >> eol;
 
 auto command_block = op_line >> *(cmd_line | def_line);
 
