@@ -64,125 +64,6 @@
 		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
-		9121D8271A2C0997001E2F10 /* 1str-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EC918F0914F0033B58E /* 1str-lg.xml */; };
-		9121D8281A2C0997001E2F10 /* 1str-title-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECA18F0914F0033B58E /* 1str-title-lg.xml */; };
-		9121D8291A2C0997001E2F10 /* 1str-title.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECB18F0914F0033B58E /* 1str-title.xml */; };
-		9121D82A1A2C0997001E2F10 /* 1str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECC18F0914F0033B58E /* 1str.xml */; };
-		9121D82B1A2C0997001E2F10 /* 2str-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECD18F0914F0033B58E /* 2str-lg.xml */; };
-		9121D82C1A2C0997001E2F10 /* 2str-title-lg.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECE18F0914F0033B58E /* 2str-title-lg.xml */; };
-		9121D82D1A2C0997001E2F10 /* 2str-title.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ECF18F0914F0033B58E /* 2str-title.xml */; };
-		9121D82E1A2C0997001E2F10 /* 2str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED018F0914F0033B58E /* 2str.xml */; };
-		9121D82F1A2C0997001E2F10 /* about-boe.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED118F0914F0033B58E /* about-boe.xml */; };
-		9121D8301A2C0997001E2F10 /* about-pced.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E218FE4993007026CE /* about-pced.xml */; };
-		9121D8311A2C0997001E2F10 /* about-scened.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA4471906DEEF00B6ADD1 /* about-scened.xml */; };
-		9121D8321A2C0997001E2F10 /* add-random-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44B190731D600B6ADD1 /* add-random-items.xml */; };
-		9121D8331A2C0997001E2F10 /* adventure-notes.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074A18F0FC1300F7BD7F /* adventure-notes.xml */; };
-		9121D8341A2C0997001E2F10 /* attack-friendly.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED218F0914F0033B58E /* attack-friendly.xml */; };
-		9121D8351A2C0997001E2F10 /* basic-button.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED318F0914F0033B58E /* basic-button.xml */; };
-		9121D8361A2C0997001E2F10 /* basic-lever.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED418F0914F0033B58E /* basic-lever.xml */; };
-		9121D8371A2C0997001E2F10 /* basic-portal.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED518F0914F0033B58E /* basic-portal.xml */; };
-		9121D8381A2C0997001E2F10 /* basic-slope-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED618F0914F0033B58E /* basic-slope-down.xml */; };
-		9121D8391A2C0997001E2F10 /* basic-slope-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED718F0914F0033B58E /* basic-slope-up.xml */; };
-		9121D83A1A2C0997001E2F10 /* basic-stair-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED818F0914F0033B58E /* basic-stair-down.xml */; };
-		9121D83B1A2C0997001E2F10 /* basic-stair-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364ED918F0914F0033B58E /* basic-stair-up.xml */; };
-		9121D83C1A2C0998001E2F10 /* basic-trap.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDA18F0914F0033B58E /* basic-trap.xml */; };
-		9121D83D1A2C0998001E2F10 /* boat-bridge.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDB18F0914F0033B58E /* boat-bridge.xml */; };
-		9121D83E1A2C0998001E2F10 /* cast-spell.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDC18F0914F0033B58E /* cast-spell.xml */; };
-		9121D83F1A2C0998001E2F10 /* choose-pict.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDD18F0914F0033B58E /* choose-pict.xml */; };
-		9121D8401A2C0998001E2F10 /* choose-string.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDE18F0914F0033B58E /* choose-string.xml */; };
-		9121D8411A2C0998001E2F10 /* clear-items-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44D190733E800B6ADD1 /* clear-items-confirm.xml */; };
-		9121D8421A2C0998001E2F10 /* congrats-save.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EDF18F0914F0033B58E /* congrats-save.xml */; };
-		9121D8431A2C0998001E2F10 /* dark-slope-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE018F0914F0033B58E /* dark-slope-down.xml */; };
-		9121D8441A2C0998001E2F10 /* dark-slope-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE118F0914F0033B58E /* dark-slope-up.xml */; };
-		9121D8451A2C0998001E2F10 /* data-dump-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44919072AD100B6ADD1 /* data-dump-confirm.xml */; };
-		9121D8461A2C0998001E2F10 /* delete-pc-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE218F0914F0033B58E /* delete-pc-confirm.xml */; };
-		9121D8471A2C0998001E2F10 /* delete-town-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA4481907108100B6ADD1 /* delete-town-confirm.xml */; };
-		9121D8481A2C0998001E2F10 /* drop-item-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE318F0914F0033B58E /* drop-item-confirm.xml */; };
-		9121D8491A2C0998001E2F10 /* edit-day.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8DE18FE4708007026CE /* edit-day.xml */; };
-		9121D84A1A2C0998001E2F10 /* edit-dialog-text.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA466190B5F8800B6ADD1 /* edit-dialog-text.xml */; };
-		9121D84B1A2C0998001E2F10 /* edit-intro.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA468190C396A00B6ADD1 /* edit-intro.xml */; };
-		9121D84C1A2C0998001E2F10 /* edit-monster.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91C9C97B19114F31001E14EB /* edit-monster.xml */; };
-		9121D84D1A2C0998001E2F10 /* edit-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE418F0914F0033B58E /* edit-party.xml */; };
-		9121D84E1A2C0998001E2F10 /* edit-special-assign.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA467190C08BB00B6ADD1 /* edit-special-assign.xml */; };
-		9121D84F1A2C0998001E2F10 /* edit-special-node.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45D1908233A00B6ADD1 /* edit-special-node.xml */; };
-		9121D8501A2C0998001E2F10 /* edit-special-text.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA465190B4DB500B6ADD1 /* edit-special-text.xml */; };
-		9121D8511A2C0998001E2F10 /* edit-terrain.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE518F0914F0033B58E /* edit-terrain.xml */; };
-		9121D8521A2C0998001E2F10 /* edit-text.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA4451906BC4F00B6ADD1 /* edit-text.xml */; };
-		9121D8531A2C0998001E2F10 /* edit-townperson-advanced.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA4631909998E00B6ADD1 /* edit-townperson-advanced.xml */; };
-		9121D8541A2C0998001E2F10 /* edit-townperson.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA4621909817700B6ADD1 /* edit-townperson.xml */; };
-		9121D8551A2C0998001E2F10 /* edit-xp.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E018FE4734007026CE /* edit-xp.xml */; };
-		9121D8561A2C0998001E2F10 /* event-journal.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074818F0F5F000F7BD7F /* event-journal.xml */; };
-		9121D8571A2C0998001E2F10 /* get-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE618F0914F0033B58E /* get-items.xml */; };
-		9121D8581A2C0998001E2F10 /* get-num.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE718F0914F0033B58E /* get-num.xml */; };
-		9121D8591A2C0998001E2F10 /* get-response.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE818F0914F0033B58E /* get-response.xml */; };
-		9121D85A1A2C0998001E2F10 /* help-combat.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EE918F0914F0033B58E /* help-combat.xml */; };
-		9121D85B1A2C0998001E2F10 /* help-contest.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45119073D6300B6ADD1 /* help-contest.xml */; };
-		9121D85C1A2C0998001E2F10 /* help-distributing.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45019073BB500B6ADD1 /* help-distributing.xml */; };
-		9121D85D1A2C0998001E2F10 /* help-editing.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44E1907372700B6ADD1 /* help-editing.xml */; };
-		9121D85E1A2C0998001E2F10 /* help-fields.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEA18F0914F0033B58E /* help-fields.xml */; };
-		9121D85F1A2C0998001E2F10 /* help-hints.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEB18F0914F0033B58E /* help-hints.xml */; };
-		9121D8601A2C0998001E2F10 /* help-inventory.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEC18F0914F0033B58E /* help-inventory.xml */; };
-		9121D8611A2C0998001E2F10 /* help-magic.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EED18F0914F0033B58E /* help-magic.xml */; };
-		9121D8621A2C0998001E2F10 /* help-outdoor.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEE18F0914F0033B58E /* help-outdoor.xml */; };
-		9121D8631A2C0998001E2F10 /* help-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EEF18F0914F0033B58E /* help-party.xml */; };
-		9121D8641A2C0998001E2F10 /* help-testing.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44F1907389900B6ADD1 /* help-testing.xml */; };
-		9121D8651A2C0998001E2F10 /* help-town.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF018F0914F0033B58E /* help-town.xml */; };
-		9121D8661A2C0998001E2F10 /* inventory-full.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF118F0914F0033B58E /* inventory-full.xml */; };
-		9121D8671A2C0998001E2F10 /* item-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF218F0914F0033B58E /* item-info.xml */; };
-		9121D8681A2C0998001E2F10 /* keep-stored-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF318F0914F0033B58E /* keep-stored-items.xml */; };
-		9121D8691A2C0998001E2F10 /* leave-scenario.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8ED18FEDC25007026CE /* leave-scenario.xml */; };
-		9121D86A1A2C0998001E2F10 /* leave-town.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8E918FED338007026CE /* leave-town.xml */; };
-		9121D86B1A2C0998001E2F10 /* load-game-fail.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF418F0914F0033B58E /* load-game-fail.xml */; };
-		9121D86C1A2C0998001E2F10 /* locked-door-action.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF518F0914F0033B58E /* locked-door-action.xml */; };
-		9121D86D1A2C0998001E2F10 /* many-str.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9156038F18F43C8D00A50C51 /* many-str.xml */; };
-		9121D86E1A2C0998001E2F10 /* monster-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF618F0914F0033B58E /* monster-info.xml */; };
-		9121D86F1A2C0998001E2F10 /* need-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF718F0914F0033B58E /* need-party.xml */; };
-		9121D8701A2C0998001E2F10 /* new-party.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF818F0914F0033B58E /* new-party.xml */; };
-		9121D8711A2C0998001E2F10 /* no-scenarios.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EF918F0914F0033B58E /* no-scenarios.xml */; };
-		9121D8721A2C0998001E2F10 /* not-at-edge.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA452190742B500B6ADD1 /* not-at-edge.xml */; };
-		9121D8731A2C0998001E2F10 /* not-save-game.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFA18F0914F0033B58E /* not-save-game.xml */; };
-		9121D8741A2C0998001E2F10 /* not-split.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EC18FEDB7F007026CE /* not-split.xml */; };
-		9121D8751A2C0998001E2F10 /* party-death.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFB18F0914F0033B58E /* party-death.xml */; };
-		9121D8761A2C0998001E2F10 /* pc-alchemy-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */; };
-		9121D8771A2C0998001E2F10 /* pc-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074B18F0FE3F00F7BD7F /* pc-info.xml */; };
-		9121D8781A2C0998001E2F10 /* pc-spell-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFD18F0914F0033B58E /* pc-spell-info.xml */; };
-		9121D8791A2C0998001E2F10 /* pick-pc-name.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFE18F0914F0033B58E /* pick-pc-name.xml */; };
-		9121D87A1A2C0998001E2F10 /* pick-potion.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364EFF18F0914F0033B58E /* pick-potion.xml */; };
-		9121D87B1A2C0998001E2F10 /* pick-prefab-scen.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0018F0914F0033B58E /* pick-prefab-scen.xml */; };
-		9121D87C1A2C0998001E2F10 /* pick-race-abil.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0118F0914F0033B58E /* pick-race-abil.xml */; };
-		9121D87D1A2C0998001E2F10 /* pick-scenario.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0218F0914F0033B58E /* pick-scenario.xml */; };
-		9121D87E1A2C0998001E2F10 /* preferences.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0318F0914F0033B58E /* preferences.xml */; };
-		9121D87F1A2C0998001E2F10 /* quit-confirm-nosave.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */; };
-		9121D8801A2C0998001E2F10 /* quit-confirm-save.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0518F0914F0033B58E /* quit-confirm-save.xml */; };
-		9121D8811A2C0998001E2F10 /* removed-special-items.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0618F0914F0033B58E /* removed-special-items.xml */; };
-		9121D8821A2C0998001E2F10 /* restart-game.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0718F0914F0033B58E /* restart-game.xml */; };
-		9121D8831A2C0998001E2F10 /* reunite-first.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EA18FED4F2007026CE /* reunite-first.xml */; };
-		9121D8841A2C0998001E2F10 /* reunited.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EB18FEDAA5007026CE /* reunited.xml */; };
-		9121D8851A2C0998001E2F10 /* save-before-quit.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45B1907573300B6ADD1 /* save-before-quit.xml */; };
-		9121D8861A2C0998001E2F10 /* save-open.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EF18FEE014007026CE /* save-open.xml */; };
-		9121D8871A2C0998001E2F10 /* save-quit.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91FCC8EE18FEDED1007026CE /* save-quit.xml */; };
-		9121D8881A2C0998001E2F10 /* save-section-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45A1907552A00B6ADD1 /* save-section-confirm.xml */; };
-		9121D8891A2C0998001E2F10 /* scen-version-mismatch.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0818F0914F0033B58E /* scen-version-mismatch.xml */; };
-		9121D88A1A2C0998001E2F10 /* select-pc.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0918F0914F0033B58E /* select-pc.xml */; };
-		9121D88B1A2C0998001E2F10 /* set-area-desc.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA45C19081E2E00B6ADD1 /* set-area-desc.xml */; };
-		9121D88C1A2C0998001E2F10 /* set-not-owned.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44C1907334F00B6ADD1 /* set-not-owned.xml */; };
-		9121D88D1A2C0998001E2F10 /* set-out-start-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA453190744FF00B6ADD1 /* set-out-start-confirm.xml */; };
-		9121D88E1A2C0998001E2F10 /* skill-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0A18F0914F0033B58E /* skill-info.xml */; };
-		9121D88F1A2C0998001E2F10 /* slimy-stair-down.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0B18F0914F0033B58E /* slimy-stair-down.xml */; };
-		9121D8901A2C0998001E2F10 /* slimy-stair-up.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0C18F0914F0033B58E /* slimy-stair-up.xml */; };
-		9121D8911A2C0998001E2F10 /* soul-crystal.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0D18F0914F0033B58E /* soul-crystal.xml */; };
-		9121D8921A2C0998001E2F10 /* spell-info.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0E18F0914F0033B58E /* spell-info.xml */; };
-		9121D8931A2C0998001E2F10 /* spend-xp.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F0F18F0914F0033B58E /* spend-xp.xml */; };
-		9121D8941A2C0998001E2F10 /* steal-item.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1018F0914F0033B58E /* steal-item.xml */; };
-		9121D8951A2C0998001E2F10 /* talk-notes.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 9107074918F0F84E00F7BD7F /* talk-notes.xml */; };
-		9121D8961A2C0998001E2F10 /* text-dump-confirm.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 914CA44A19072D7200B6ADD1 /* text-dump-confirm.xml */; };
-		9121D8971A2C0998001E2F10 /* tip-of-day.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1118F0914F0033B58E /* tip-of-day.xml */; };
-		9121D8981A2C0998001E2F10 /* view-sign.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1218F0914F0033B58E /* view-sign.xml */; };
-		9121D8991A2C0998001E2F10 /* welcome.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91364F1318F0914F0033B58E /* welcome.xml */; };
-		9121D89A1A2C0998001E2F10 /* edit-monster-abils.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91A073561A2828C6002F7E72 /* edit-monster-abils.xml */; };
-		9121D89B1A2C0998001E2F10 /* edit-item.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91A073591A29202E002F7E72 /* edit-item.xml */; };
-		9121D89C1A2C0998001E2F10 /* edit-item-abils.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91A0735A1A2928B4002F7E72 /* edit-item-abils.xml */; };
-		9121D89D1A2C0998001E2F10 /* edit-special-item.xml in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		912286F90FD330EA00B21642 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
@@ -447,35 +328,11 @@
 		914B2B9418E8005B007B6799 /* SND99.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2E18E7FFEF007B6799 /* SND99.WAV */; };
 		914CA4441905789C00B6ADD1 /* watch.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 914CA4431905788F00B6ADD1 /* watch.gif */; };
 		914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */; };
-		914CA46E190C47BD00B6ADD1 /* arena-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA469190C478300B6ADD1 /* arena-names.txt */; };
-		914CA46F190C47BD00B6ADD1 /* ter-flag1.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA46A190C478300B6ADD1 /* ter-flag1.txt */; };
-		914CA470190C47BD00B6ADD1 /* ter-flag2.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA46B190C478400B6ADD1 /* ter-flag2.txt */; };
-		914CA471190C47BD00B6ADD1 /* ter-flag3.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA46C190C478400B6ADD1 /* ter-flag3.txt */; };
-		914CA472190C47BD00B6ADD1 /* trim-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA46D190C478400B6ADD1 /* trim-names.txt */; };
-		914CA473190C47BD00B6ADD1 /* special-x1a.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA45E190841FC00B6ADD1 /* special-x1a.txt */; };
-		914CA474190C47BD00B6ADD1 /* special-x1b.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA45F190841FC00B6ADD1 /* special-x1b.txt */; };
-		914CA475190C47BD00B6ADD1 /* special-x2a.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA460190841FC00B6ADD1 /* special-x2a.txt */; };
-		914CA476190C47BD00B6ADD1 /* special-x2b.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA461190841FC00B6ADD1 /* special-x2b.txt */; };
-		914CA477190C47BD00B6ADD1 /* special-node-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA459190750D500B6ADD1 /* special-node-names.txt */; };
-		914CA478190C47BD00B6ADD1 /* outdoor-default.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA454190749E100B6ADD1 /* outdoor-default.txt */; };
-		914CA479190C47BD00B6ADD1 /* scen-default.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA455190749E100B6ADD1 /* scen-default.txt */; };
-		914CA47A190C47BD00B6ADD1 /* town-default.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 914CA456190749E100B6ADD1 /* town-default.txt */; };
 		91870F81190C8C1C0081C150 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91870F83190C8C1F0081C150 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
 		91870F84190C90980081C150 /* scen.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scen.menu.xib */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
 		9192C12018F2745C0088A580 /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* menu.xib */; };
-		9192C13A18F32E8D0088A580 /* alchemy.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12118F327230088A580 /* alchemy.txt */; };
-		9192C13C18F32E8D0088A580 /* help.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12318F327230088A580 /* help.txt */; };
-		9192C13D18F32E8D0088A580 /* item-abilities.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12418F327230088A580 /* item-abilities.txt */; };
-		9192C13E18F32E8D0088A580 /* mage-spells.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12518F327230088A580 /* mage-spells.txt */; };
-		9192C13F18F32E8D0088A580 /* monster-abilities.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12618F327230088A580 /* monster-abilities.txt */; };
-		9192C14318F32E8D0088A580 /* priest-spells.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12A18F327230088A580 /* priest-spells.txt */; };
-		9192C14518F32E8D0088A580 /* tips.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12C18F327230088A580 /* tips.txt */; };
-		9192C14618F32E8D0088A580 /* skills.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C12D18F327230088A580 /* skills.txt */; };
-		9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13218F327230088A580 /* spell-times.txt */; };
-		9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13318F327230088A580 /* magic-names.txt */; };
-		9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 9192C13818F327230088A580 /* traits.txt */; };
 		919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
 		919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
 		919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
@@ -488,7 +345,6 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		91A0735C1A297C3F002F7E72 /* item-types.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91A0735B1A2975AD002F7E72 /* item-types.txt */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
 		91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
 		91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
@@ -564,7 +420,8 @@
 		91C688E80FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
 		91C688E90FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
 		91C688EA0FD702B9000F6D01 /* cursors.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91C688E70FD702B9000F6D01 /* cursors.mac.mm */; };
-		91C749B61A2CF58C008E0E10 /* item-types-display.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B41A2CF4F9008E0E10 /* item-types-display.txt */; };
+		91C749B81A2D6670008E0E10 /* strings in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B71A2D6432008E0E10 /* strings */; };
+		91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91C749B91A2D66F7008E0E10 /* dialogs */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E5C1F30F9E489B00C21460 /* graphtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10A0F9779C300BF5B67 /* graphtool.cpp */; };
 		91E5C1F40F9E489B00C21460 /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
@@ -607,10 +464,6 @@
 		91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 		91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8D718FE28CC007026CE /* pc.menu.xib */; };
 		91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */; };
-		91FCC8DF18FE4708007026CE /* edit-day.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8DE18FE4708007026CE /* edit-day.xml */; };
-		91FCC8E118FE4734007026CE /* edit-xp.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8E018FE4734007026CE /* edit-xp.xml */; };
-		91FCC8E318FE4993007026CE /* about-pced.xml in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8E218FE4993007026CE /* about-pced.xml */; };
-		91FCC8E518FE5606007026CE /* pcedit.txt in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91FCC8E418FE55F2007026CE /* pcedit.txt */; };
 		91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
@@ -957,128 +810,10 @@
 		914B2B9518E8008A007B6799 /* Copy Dialog Definitions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = data/dialogs;
+			dstPath = data;
 			dstSubfolderSpec = 16;
 			files = (
-				9121D8271A2C0997001E2F10 /* 1str-lg.xml in Copy Dialog Definitions */,
-				9121D8281A2C0997001E2F10 /* 1str-title-lg.xml in Copy Dialog Definitions */,
-				9121D8291A2C0997001E2F10 /* 1str-title.xml in Copy Dialog Definitions */,
-				9121D82A1A2C0997001E2F10 /* 1str.xml in Copy Dialog Definitions */,
-				9121D82B1A2C0997001E2F10 /* 2str-lg.xml in Copy Dialog Definitions */,
-				9121D82C1A2C0997001E2F10 /* 2str-title-lg.xml in Copy Dialog Definitions */,
-				9121D82D1A2C0997001E2F10 /* 2str-title.xml in Copy Dialog Definitions */,
-				9121D82E1A2C0997001E2F10 /* 2str.xml in Copy Dialog Definitions */,
-				9121D82F1A2C0997001E2F10 /* about-boe.xml in Copy Dialog Definitions */,
-				9121D8301A2C0997001E2F10 /* about-pced.xml in Copy Dialog Definitions */,
-				9121D8311A2C0997001E2F10 /* about-scened.xml in Copy Dialog Definitions */,
-				9121D8321A2C0997001E2F10 /* add-random-items.xml in Copy Dialog Definitions */,
-				9121D8331A2C0997001E2F10 /* adventure-notes.xml in Copy Dialog Definitions */,
-				9121D8341A2C0997001E2F10 /* attack-friendly.xml in Copy Dialog Definitions */,
-				9121D8351A2C0997001E2F10 /* basic-button.xml in Copy Dialog Definitions */,
-				9121D8361A2C0997001E2F10 /* basic-lever.xml in Copy Dialog Definitions */,
-				9121D8371A2C0997001E2F10 /* basic-portal.xml in Copy Dialog Definitions */,
-				9121D8381A2C0997001E2F10 /* basic-slope-down.xml in Copy Dialog Definitions */,
-				9121D8391A2C0997001E2F10 /* basic-slope-up.xml in Copy Dialog Definitions */,
-				9121D83A1A2C0997001E2F10 /* basic-stair-down.xml in Copy Dialog Definitions */,
-				9121D83B1A2C0997001E2F10 /* basic-stair-up.xml in Copy Dialog Definitions */,
-				9121D83C1A2C0998001E2F10 /* basic-trap.xml in Copy Dialog Definitions */,
-				9121D83D1A2C0998001E2F10 /* boat-bridge.xml in Copy Dialog Definitions */,
-				9121D83E1A2C0998001E2F10 /* cast-spell.xml in Copy Dialog Definitions */,
-				9121D83F1A2C0998001E2F10 /* choose-pict.xml in Copy Dialog Definitions */,
-				9121D8401A2C0998001E2F10 /* choose-string.xml in Copy Dialog Definitions */,
-				9121D8411A2C0998001E2F10 /* clear-items-confirm.xml in Copy Dialog Definitions */,
-				9121D8421A2C0998001E2F10 /* congrats-save.xml in Copy Dialog Definitions */,
-				9121D8431A2C0998001E2F10 /* dark-slope-down.xml in Copy Dialog Definitions */,
-				9121D8441A2C0998001E2F10 /* dark-slope-up.xml in Copy Dialog Definitions */,
-				9121D8451A2C0998001E2F10 /* data-dump-confirm.xml in Copy Dialog Definitions */,
-				9121D8461A2C0998001E2F10 /* delete-pc-confirm.xml in Copy Dialog Definitions */,
-				9121D8471A2C0998001E2F10 /* delete-town-confirm.xml in Copy Dialog Definitions */,
-				9121D8481A2C0998001E2F10 /* drop-item-confirm.xml in Copy Dialog Definitions */,
-				9121D8491A2C0998001E2F10 /* edit-day.xml in Copy Dialog Definitions */,
-				9121D84A1A2C0998001E2F10 /* edit-dialog-text.xml in Copy Dialog Definitions */,
-				9121D84B1A2C0998001E2F10 /* edit-intro.xml in Copy Dialog Definitions */,
-				9121D84C1A2C0998001E2F10 /* edit-monster.xml in Copy Dialog Definitions */,
-				9121D84D1A2C0998001E2F10 /* edit-party.xml in Copy Dialog Definitions */,
-				9121D84E1A2C0998001E2F10 /* edit-special-assign.xml in Copy Dialog Definitions */,
-				9121D84F1A2C0998001E2F10 /* edit-special-node.xml in Copy Dialog Definitions */,
-				9121D8501A2C0998001E2F10 /* edit-special-text.xml in Copy Dialog Definitions */,
-				9121D8511A2C0998001E2F10 /* edit-terrain.xml in Copy Dialog Definitions */,
-				9121D8521A2C0998001E2F10 /* edit-text.xml in Copy Dialog Definitions */,
-				9121D8531A2C0998001E2F10 /* edit-townperson-advanced.xml in Copy Dialog Definitions */,
-				9121D8541A2C0998001E2F10 /* edit-townperson.xml in Copy Dialog Definitions */,
-				9121D8551A2C0998001E2F10 /* edit-xp.xml in Copy Dialog Definitions */,
-				9121D8561A2C0998001E2F10 /* event-journal.xml in Copy Dialog Definitions */,
-				9121D8571A2C0998001E2F10 /* get-items.xml in Copy Dialog Definitions */,
-				9121D8581A2C0998001E2F10 /* get-num.xml in Copy Dialog Definitions */,
-				9121D8591A2C0998001E2F10 /* get-response.xml in Copy Dialog Definitions */,
-				9121D85A1A2C0998001E2F10 /* help-combat.xml in Copy Dialog Definitions */,
-				9121D85B1A2C0998001E2F10 /* help-contest.xml in Copy Dialog Definitions */,
-				9121D85C1A2C0998001E2F10 /* help-distributing.xml in Copy Dialog Definitions */,
-				9121D85D1A2C0998001E2F10 /* help-editing.xml in Copy Dialog Definitions */,
-				9121D85E1A2C0998001E2F10 /* help-fields.xml in Copy Dialog Definitions */,
-				9121D85F1A2C0998001E2F10 /* help-hints.xml in Copy Dialog Definitions */,
-				9121D8601A2C0998001E2F10 /* help-inventory.xml in Copy Dialog Definitions */,
-				9121D8611A2C0998001E2F10 /* help-magic.xml in Copy Dialog Definitions */,
-				9121D8621A2C0998001E2F10 /* help-outdoor.xml in Copy Dialog Definitions */,
-				9121D8631A2C0998001E2F10 /* help-party.xml in Copy Dialog Definitions */,
-				9121D8641A2C0998001E2F10 /* help-testing.xml in Copy Dialog Definitions */,
-				9121D8651A2C0998001E2F10 /* help-town.xml in Copy Dialog Definitions */,
-				9121D8661A2C0998001E2F10 /* inventory-full.xml in Copy Dialog Definitions */,
-				9121D8671A2C0998001E2F10 /* item-info.xml in Copy Dialog Definitions */,
-				9121D8681A2C0998001E2F10 /* keep-stored-items.xml in Copy Dialog Definitions */,
-				9121D8691A2C0998001E2F10 /* leave-scenario.xml in Copy Dialog Definitions */,
-				9121D86A1A2C0998001E2F10 /* leave-town.xml in Copy Dialog Definitions */,
-				9121D86B1A2C0998001E2F10 /* load-game-fail.xml in Copy Dialog Definitions */,
-				9121D86C1A2C0998001E2F10 /* locked-door-action.xml in Copy Dialog Definitions */,
-				9121D86D1A2C0998001E2F10 /* many-str.xml in Copy Dialog Definitions */,
-				9121D86E1A2C0998001E2F10 /* monster-info.xml in Copy Dialog Definitions */,
-				9121D86F1A2C0998001E2F10 /* need-party.xml in Copy Dialog Definitions */,
-				9121D8701A2C0998001E2F10 /* new-party.xml in Copy Dialog Definitions */,
-				9121D8711A2C0998001E2F10 /* no-scenarios.xml in Copy Dialog Definitions */,
-				9121D8721A2C0998001E2F10 /* not-at-edge.xml in Copy Dialog Definitions */,
-				9121D8731A2C0998001E2F10 /* not-save-game.xml in Copy Dialog Definitions */,
-				9121D8741A2C0998001E2F10 /* not-split.xml in Copy Dialog Definitions */,
-				9121D8751A2C0998001E2F10 /* party-death.xml in Copy Dialog Definitions */,
-				9121D8761A2C0998001E2F10 /* pc-alchemy-info.xml in Copy Dialog Definitions */,
-				9121D8771A2C0998001E2F10 /* pc-info.xml in Copy Dialog Definitions */,
-				9121D8781A2C0998001E2F10 /* pc-spell-info.xml in Copy Dialog Definitions */,
-				9121D8791A2C0998001E2F10 /* pick-pc-name.xml in Copy Dialog Definitions */,
-				9121D87A1A2C0998001E2F10 /* pick-potion.xml in Copy Dialog Definitions */,
-				9121D87B1A2C0998001E2F10 /* pick-prefab-scen.xml in Copy Dialog Definitions */,
-				9121D87C1A2C0998001E2F10 /* pick-race-abil.xml in Copy Dialog Definitions */,
-				9121D87D1A2C0998001E2F10 /* pick-scenario.xml in Copy Dialog Definitions */,
-				9121D87E1A2C0998001E2F10 /* preferences.xml in Copy Dialog Definitions */,
-				9121D87F1A2C0998001E2F10 /* quit-confirm-nosave.xml in Copy Dialog Definitions */,
-				9121D8801A2C0998001E2F10 /* quit-confirm-save.xml in Copy Dialog Definitions */,
-				9121D8811A2C0998001E2F10 /* removed-special-items.xml in Copy Dialog Definitions */,
-				9121D8821A2C0998001E2F10 /* restart-game.xml in Copy Dialog Definitions */,
-				9121D8831A2C0998001E2F10 /* reunite-first.xml in Copy Dialog Definitions */,
-				9121D8841A2C0998001E2F10 /* reunited.xml in Copy Dialog Definitions */,
-				9121D8851A2C0998001E2F10 /* save-before-quit.xml in Copy Dialog Definitions */,
-				9121D8861A2C0998001E2F10 /* save-open.xml in Copy Dialog Definitions */,
-				9121D8871A2C0998001E2F10 /* save-quit.xml in Copy Dialog Definitions */,
-				9121D8881A2C0998001E2F10 /* save-section-confirm.xml in Copy Dialog Definitions */,
-				9121D8891A2C0998001E2F10 /* scen-version-mismatch.xml in Copy Dialog Definitions */,
-				9121D88A1A2C0998001E2F10 /* select-pc.xml in Copy Dialog Definitions */,
-				9121D88B1A2C0998001E2F10 /* set-area-desc.xml in Copy Dialog Definitions */,
-				9121D88C1A2C0998001E2F10 /* set-not-owned.xml in Copy Dialog Definitions */,
-				9121D88D1A2C0998001E2F10 /* set-out-start-confirm.xml in Copy Dialog Definitions */,
-				9121D88E1A2C0998001E2F10 /* skill-info.xml in Copy Dialog Definitions */,
-				9121D88F1A2C0998001E2F10 /* slimy-stair-down.xml in Copy Dialog Definitions */,
-				9121D8901A2C0998001E2F10 /* slimy-stair-up.xml in Copy Dialog Definitions */,
-				9121D8911A2C0998001E2F10 /* soul-crystal.xml in Copy Dialog Definitions */,
-				9121D8921A2C0998001E2F10 /* spell-info.xml in Copy Dialog Definitions */,
-				9121D8931A2C0998001E2F10 /* spend-xp.xml in Copy Dialog Definitions */,
-				9121D8941A2C0998001E2F10 /* steal-item.xml in Copy Dialog Definitions */,
-				9121D8951A2C0998001E2F10 /* talk-notes.xml in Copy Dialog Definitions */,
-				9121D8961A2C0998001E2F10 /* text-dump-confirm.xml in Copy Dialog Definitions */,
-				9121D8971A2C0998001E2F10 /* tip-of-day.xml in Copy Dialog Definitions */,
-				9121D8981A2C0998001E2F10 /* view-sign.xml in Copy Dialog Definitions */,
-				9121D8991A2C0998001E2F10 /* welcome.xml in Copy Dialog Definitions */,
-				9121D89A1A2C0998001E2F10 /* edit-monster-abils.xml in Copy Dialog Definitions */,
-				9121D89B1A2C0998001E2F10 /* edit-item.xml in Copy Dialog Definitions */,
-				9121D89C1A2C0998001E2F10 /* edit-item-abils.xml in Copy Dialog Definitions */,
-				9121D89D1A2C0998001E2F10 /* edit-special-item.xml in Copy Dialog Definitions */,
+				91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */,
 			);
 			name = "Copy Dialog Definitions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1086,36 +821,10 @@
 		9192C13918F32E6E0088A580 /* Copy Strings */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = data/strings;
+			dstPath = data;
 			dstSubfolderSpec = 16;
 			files = (
-				9192C13A18F32E8D0088A580 /* alchemy.txt in Copy Strings */,
-				9192C13C18F32E8D0088A580 /* help.txt in Copy Strings */,
-				9192C13D18F32E8D0088A580 /* item-abilities.txt in Copy Strings */,
-				9192C13E18F32E8D0088A580 /* mage-spells.txt in Copy Strings */,
-				9192C13F18F32E8D0088A580 /* monster-abilities.txt in Copy Strings */,
-				9192C14318F32E8D0088A580 /* priest-spells.txt in Copy Strings */,
-				9192C14518F32E8D0088A580 /* tips.txt in Copy Strings */,
-				9192C14618F32E8D0088A580 /* skills.txt in Copy Strings */,
-				9192C14B18F32E8D0088A580 /* spell-times.txt in Copy Strings */,
-				9192C14C18F32E8D0088A580 /* magic-names.txt in Copy Strings */,
-				9192C15118F32E8D0088A580 /* traits.txt in Copy Strings */,
-				91FCC8E518FE5606007026CE /* pcedit.txt in Copy Strings */,
-				914CA46E190C47BD00B6ADD1 /* arena-names.txt in Copy Strings */,
-				914CA46F190C47BD00B6ADD1 /* ter-flag1.txt in Copy Strings */,
-				914CA470190C47BD00B6ADD1 /* ter-flag2.txt in Copy Strings */,
-				914CA471190C47BD00B6ADD1 /* ter-flag3.txt in Copy Strings */,
-				914CA472190C47BD00B6ADD1 /* trim-names.txt in Copy Strings */,
-				914CA473190C47BD00B6ADD1 /* special-x1a.txt in Copy Strings */,
-				914CA474190C47BD00B6ADD1 /* special-x1b.txt in Copy Strings */,
-				914CA475190C47BD00B6ADD1 /* special-x2a.txt in Copy Strings */,
-				914CA476190C47BD00B6ADD1 /* special-x2b.txt in Copy Strings */,
-				914CA477190C47BD00B6ADD1 /* special-node-names.txt in Copy Strings */,
-				914CA478190C47BD00B6ADD1 /* outdoor-default.txt in Copy Strings */,
-				914CA479190C47BD00B6ADD1 /* scen-default.txt in Copy Strings */,
-				914CA47A190C47BD00B6ADD1 /* town-default.txt in Copy Strings */,
-				91A0735C1A297C3F002F7E72 /* item-types.txt in Copy Strings */,
-				91C749B61A2CF58C008E0E10 /* item-types-display.txt in Copy Strings */,
+				91C749B81A2D6670008E0E10 /* strings in Copy Strings */,
 			);
 			name = "Copy Strings";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1282,10 +991,6 @@
 		2BF04B080BF51924006C0831 /* boe.text.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.text.h; sourceTree = "<group>"; };
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.town.h; sourceTree = "<group>"; };
-		9107074818F0F5F000F7BD7F /* event-journal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "event-journal.xml"; sourceTree = "<group>"; };
-		9107074918F0F84E00F7BD7F /* talk-notes.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "talk-notes.xml"; sourceTree = "<group>"; };
-		9107074A18F0FC1300F7BD7F /* adventure-notes.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "adventure-notes.xml"; sourceTree = "<group>"; };
-		9107074B18F0FE3F00F7BD7F /* pc-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-info.xml"; sourceTree = "<group>"; };
 		910BBA170FB8BECA001E34EA /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.h; sourceTree = "<group>"; };
 		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialog.cpp; sourceTree = "<group>"; };
 		910BBA270FB8C459001E34EA /* ticpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ticpp.cpp; sourceTree = "<group>"; };
@@ -1423,83 +1128,6 @@
 		912DFE8918E24B4C00B00D75 /* resmgr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = resmgr.hpp; sourceTree = "<group>"; };
 		912DFE8A18E24B4C00B00D75 /* restypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = restypes.hpp; sourceTree = "<group>"; };
 		912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.menus.mac.mm; sourceTree = "<group>"; };
-		91364EC918F0914F0033B58E /* 1str-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-lg.xml"; sourceTree = "<group>"; };
-		91364ECA18F0914F0033B58E /* 1str-title-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-title-lg.xml"; sourceTree = "<group>"; };
-		91364ECB18F0914F0033B58E /* 1str-title.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1str-title.xml"; sourceTree = "<group>"; };
-		91364ECC18F0914F0033B58E /* 1str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 1str.xml; sourceTree = "<group>"; };
-		91364ECD18F0914F0033B58E /* 2str-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-lg.xml"; sourceTree = "<group>"; };
-		91364ECE18F0914F0033B58E /* 2str-title-lg.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-title-lg.xml"; sourceTree = "<group>"; };
-		91364ECF18F0914F0033B58E /* 2str-title.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "2str-title.xml"; sourceTree = "<group>"; };
-		91364ED018F0914F0033B58E /* 2str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2str.xml; sourceTree = "<group>"; };
-		91364ED118F0914F0033B58E /* about-boe.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "about-boe.xml"; sourceTree = "<group>"; };
-		91364ED218F0914F0033B58E /* attack-friendly.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "attack-friendly.xml"; sourceTree = "<group>"; };
-		91364ED318F0914F0033B58E /* basic-button.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-button.xml"; sourceTree = "<group>"; };
-		91364ED418F0914F0033B58E /* basic-lever.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-lever.xml"; sourceTree = "<group>"; };
-		91364ED518F0914F0033B58E /* basic-portal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-portal.xml"; sourceTree = "<group>"; };
-		91364ED618F0914F0033B58E /* basic-slope-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-slope-down.xml"; sourceTree = "<group>"; };
-		91364ED718F0914F0033B58E /* basic-slope-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-slope-up.xml"; sourceTree = "<group>"; };
-		91364ED818F0914F0033B58E /* basic-stair-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-stair-down.xml"; sourceTree = "<group>"; };
-		91364ED918F0914F0033B58E /* basic-stair-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-stair-up.xml"; sourceTree = "<group>"; };
-		91364EDA18F0914F0033B58E /* basic-trap.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "basic-trap.xml"; sourceTree = "<group>"; };
-		91364EDB18F0914F0033B58E /* boat-bridge.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "boat-bridge.xml"; sourceTree = "<group>"; };
-		91364EDC18F0914F0033B58E /* cast-spell.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "cast-spell.xml"; sourceTree = "<group>"; };
-		91364EDD18F0914F0033B58E /* choose-pict.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "choose-pict.xml"; sourceTree = "<group>"; };
-		91364EDE18F0914F0033B58E /* choose-string.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "choose-string.xml"; sourceTree = "<group>"; };
-		91364EDF18F0914F0033B58E /* congrats-save.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "congrats-save.xml"; sourceTree = "<group>"; };
-		91364EE018F0914F0033B58E /* dark-slope-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "dark-slope-down.xml"; sourceTree = "<group>"; };
-		91364EE118F0914F0033B58E /* dark-slope-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "dark-slope-up.xml"; sourceTree = "<group>"; };
-		91364EE218F0914F0033B58E /* delete-pc-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "delete-pc-confirm.xml"; sourceTree = "<group>"; };
-		91364EE318F0914F0033B58E /* drop-item-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "drop-item-confirm.xml"; sourceTree = "<group>"; };
-		91364EE418F0914F0033B58E /* edit-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-party.xml"; sourceTree = "<group>"; };
-		91364EE518F0914F0033B58E /* edit-terrain.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-terrain.xml"; sourceTree = "<group>"; };
-		91364EE618F0914F0033B58E /* get-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-items.xml"; sourceTree = "<group>"; };
-		91364EE718F0914F0033B58E /* get-num.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-num.xml"; sourceTree = "<group>"; };
-		91364EE818F0914F0033B58E /* get-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "get-response.xml"; sourceTree = "<group>"; };
-		91364EE918F0914F0033B58E /* help-combat.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-combat.xml"; sourceTree = "<group>"; };
-		91364EEA18F0914F0033B58E /* help-fields.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-fields.xml"; sourceTree = "<group>"; };
-		91364EEB18F0914F0033B58E /* help-hints.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-hints.xml"; sourceTree = "<group>"; };
-		91364EEC18F0914F0033B58E /* help-inventory.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-inventory.xml"; sourceTree = "<group>"; };
-		91364EED18F0914F0033B58E /* help-magic.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-magic.xml"; sourceTree = "<group>"; };
-		91364EEE18F0914F0033B58E /* help-outdoor.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-outdoor.xml"; sourceTree = "<group>"; };
-		91364EEF18F0914F0033B58E /* help-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-party.xml"; sourceTree = "<group>"; };
-		91364EF018F0914F0033B58E /* help-town.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-town.xml"; sourceTree = "<group>"; };
-		91364EF118F0914F0033B58E /* inventory-full.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "inventory-full.xml"; sourceTree = "<group>"; };
-		91364EF218F0914F0033B58E /* item-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "item-info.xml"; sourceTree = "<group>"; };
-		91364EF318F0914F0033B58E /* keep-stored-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "keep-stored-items.xml"; sourceTree = "<group>"; };
-		91364EF418F0914F0033B58E /* load-game-fail.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "load-game-fail.xml"; sourceTree = "<group>"; };
-		91364EF518F0914F0033B58E /* locked-door-action.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "locked-door-action.xml"; sourceTree = "<group>"; };
-		91364EF618F0914F0033B58E /* monster-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "monster-info.xml"; sourceTree = "<group>"; };
-		91364EF718F0914F0033B58E /* need-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "need-party.xml"; sourceTree = "<group>"; };
-		91364EF818F0914F0033B58E /* new-party.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "new-party.xml"; sourceTree = "<group>"; };
-		91364EF918F0914F0033B58E /* no-scenarios.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "no-scenarios.xml"; sourceTree = "<group>"; };
-		91364EFA18F0914F0033B58E /* not-save-game.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "not-save-game.xml"; sourceTree = "<group>"; };
-		91364EFB18F0914F0033B58E /* party-death.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "party-death.xml"; sourceTree = "<group>"; };
-		91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-alchemy-info.xml"; sourceTree = "<group>"; };
-		91364EFD18F0914F0033B58E /* pc-spell-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pc-spell-info.xml"; sourceTree = "<group>"; };
-		91364EFE18F0914F0033B58E /* pick-pc-name.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-pc-name.xml"; sourceTree = "<group>"; };
-		91364EFF18F0914F0033B58E /* pick-potion.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-potion.xml"; sourceTree = "<group>"; };
-		91364F0018F0914F0033B58E /* pick-prefab-scen.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-prefab-scen.xml"; sourceTree = "<group>"; };
-		91364F0118F0914F0033B58E /* pick-race-abil.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-race-abil.xml"; sourceTree = "<group>"; };
-		91364F0218F0914F0033B58E /* pick-scenario.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "pick-scenario.xml"; sourceTree = "<group>"; };
-		91364F0318F0914F0033B58E /* preferences.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = preferences.xml; sourceTree = "<group>"; };
-		91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "quit-confirm-nosave.xml"; sourceTree = "<group>"; };
-		91364F0518F0914F0033B58E /* quit-confirm-save.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "quit-confirm-save.xml"; sourceTree = "<group>"; };
-		91364F0618F0914F0033B58E /* removed-special-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "removed-special-items.xml"; sourceTree = "<group>"; };
-		91364F0718F0914F0033B58E /* restart-game.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "restart-game.xml"; sourceTree = "<group>"; };
-		91364F0818F0914F0033B58E /* scen-version-mismatch.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "scen-version-mismatch.xml"; sourceTree = "<group>"; };
-		91364F0918F0914F0033B58E /* select-pc.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "select-pc.xml"; sourceTree = "<group>"; };
-		91364F0A18F0914F0033B58E /* skill-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "skill-info.xml"; sourceTree = "<group>"; };
-		91364F0B18F0914F0033B58E /* slimy-stair-down.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "slimy-stair-down.xml"; sourceTree = "<group>"; };
-		91364F0C18F0914F0033B58E /* slimy-stair-up.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "slimy-stair-up.xml"; sourceTree = "<group>"; };
-		91364F0D18F0914F0033B58E /* soul-crystal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "soul-crystal.xml"; sourceTree = "<group>"; };
-		91364F0E18F0914F0033B58E /* spell-info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "spell-info.xml"; sourceTree = "<group>"; };
-		91364F0F18F0914F0033B58E /* spend-xp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "spend-xp.xml"; sourceTree = "<group>"; };
-		91364F1018F0914F0033B58E /* steal-item.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "steal-item.xml"; sourceTree = "<group>"; };
-		91364F1118F0914F0033B58E /* tip-of-day.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "tip-of-day.xml"; sourceTree = "<group>"; };
-		91364F1218F0914F0033B58E /* view-sign.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "view-sign.xml"; sourceTree = "<group>"; };
-		91364F1318F0914F0033B58E /* welcome.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = welcome.xml; sourceTree = "<group>"; };
-		91364F5F18F093E80033B58E /* dialog.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = dialog.css; path = "../../Blades Of Exile/rsrc/dialogs/dialog.css"; sourceTree = "<group>"; };
-		91364F6118F093E80033B58E /* dialog.xsl */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsl; path = "../../Blades Of Exile/rsrc/dialogs/dialog.xsl"; sourceTree = "<group>"; };
 		913D00590F9FEEC200184C18 /* porting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = porting.h; sourceTree = "<group>"; };
 		913D005A0F9FEEC200184C18 /* porting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = porting.cpp; sourceTree = "<group>"; };
 		913D05B40FA1E9E200184C18 /* party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = party.h; sourceTree = "<group>"; };
@@ -1509,7 +1137,7 @@
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
 		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
 		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
-		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = dialogs/dialog.xsd; sourceTree = "<group>"; };
+		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		914B2AAE18E7E529007B6799 /* sndfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sndfile.framework; path = /Library/Frameworks/sndfile.framework; sourceTree = "<absolute>"; };
@@ -1614,47 +1242,9 @@
 		914B2B2E18E7FFEF007B6799 /* SND99.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SND99.WAV; sourceTree = "<group>"; };
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
 		914CA4431905788F00B6ADD1 /* watch.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = watch.gif; sourceTree = "<group>"; };
-		914CA4451906BC4F00B6ADD1 /* edit-text.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-text.xml"; sourceTree = "<group>"; };
-		914CA4471906DEEF00B6ADD1 /* about-scened.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "about-scened.xml"; sourceTree = "<group>"; };
-		914CA4481907108100B6ADD1 /* delete-town-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "delete-town-confirm.xml"; sourceTree = "<group>"; };
-		914CA44919072AD100B6ADD1 /* data-dump-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "data-dump-confirm.xml"; sourceTree = "<group>"; };
-		914CA44A19072D7200B6ADD1 /* text-dump-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "text-dump-confirm.xml"; sourceTree = "<group>"; };
-		914CA44B190731D600B6ADD1 /* add-random-items.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "add-random-items.xml"; sourceTree = "<group>"; };
-		914CA44C1907334F00B6ADD1 /* set-not-owned.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "set-not-owned.xml"; sourceTree = "<group>"; };
-		914CA44D190733E800B6ADD1 /* clear-items-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "clear-items-confirm.xml"; sourceTree = "<group>"; };
-		914CA44E1907372700B6ADD1 /* help-editing.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-editing.xml"; sourceTree = "<group>"; };
-		914CA44F1907389900B6ADD1 /* help-testing.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-testing.xml"; sourceTree = "<group>"; };
-		914CA45019073BB500B6ADD1 /* help-distributing.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-distributing.xml"; sourceTree = "<group>"; };
-		914CA45119073D6300B6ADD1 /* help-contest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "help-contest.xml"; sourceTree = "<group>"; };
-		914CA452190742B500B6ADD1 /* not-at-edge.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "not-at-edge.xml"; sourceTree = "<group>"; };
-		914CA453190744FF00B6ADD1 /* set-out-start-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "set-out-start-confirm.xml"; sourceTree = "<group>"; };
-		914CA454190749E100B6ADD1 /* outdoor-default.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "outdoor-default.txt"; path = "strings/outdoor-default.txt"; sourceTree = "<group>"; };
-		914CA455190749E100B6ADD1 /* scen-default.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "scen-default.txt"; path = "strings/scen-default.txt"; sourceTree = "<group>"; };
-		914CA456190749E100B6ADD1 /* town-default.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "town-default.txt"; path = "strings/town-default.txt"; sourceTree = "<group>"; };
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
-		914CA459190750D500B6ADD1 /* special-node-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "special-node-names.txt"; path = "strings/special-node-names.txt"; sourceTree = "<group>"; };
-		914CA45A1907552A00B6ADD1 /* save-section-confirm.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-section-confirm.xml"; sourceTree = "<group>"; };
-		914CA45B1907573300B6ADD1 /* save-before-quit.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-before-quit.xml"; sourceTree = "<group>"; };
-		914CA45C19081E2E00B6ADD1 /* set-area-desc.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "set-area-desc.xml"; sourceTree = "<group>"; };
-		914CA45D1908233A00B6ADD1 /* edit-special-node.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-special-node.xml"; sourceTree = "<group>"; };
-		914CA45E190841FC00B6ADD1 /* special-x1a.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "special-x1a.txt"; path = "strings/special-x1a.txt"; sourceTree = "<group>"; };
-		914CA45F190841FC00B6ADD1 /* special-x1b.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "special-x1b.txt"; path = "strings/special-x1b.txt"; sourceTree = "<group>"; };
-		914CA460190841FC00B6ADD1 /* special-x2a.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "special-x2a.txt"; path = "strings/special-x2a.txt"; sourceTree = "<group>"; };
-		914CA461190841FC00B6ADD1 /* special-x2b.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "special-x2b.txt"; path = "strings/special-x2b.txt"; sourceTree = "<group>"; };
-		914CA4621909817700B6ADD1 /* edit-townperson.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-townperson.xml"; sourceTree = "<group>"; };
-		914CA4631909998E00B6ADD1 /* edit-townperson-advanced.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-townperson-advanced.xml"; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scen.menus.h; sourceTree = "<group>"; };
-		914CA465190B4DB500B6ADD1 /* edit-special-text.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-special-text.xml"; sourceTree = "<group>"; };
-		914CA466190B5F8800B6ADD1 /* edit-dialog-text.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-dialog-text.xml"; sourceTree = "<group>"; };
-		914CA467190C08BB00B6ADD1 /* edit-special-assign.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-special-assign.xml"; sourceTree = "<group>"; };
-		914CA468190C396A00B6ADD1 /* edit-intro.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-intro.xml"; sourceTree = "<group>"; };
-		914CA469190C478300B6ADD1 /* arena-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "arena-names.txt"; path = "strings/arena-names.txt"; sourceTree = "<group>"; };
-		914CA46A190C478300B6ADD1 /* ter-flag1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag1.txt"; path = "strings/ter-flag1.txt"; sourceTree = "<group>"; };
-		914CA46B190C478400B6ADD1 /* ter-flag2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag2.txt"; path = "strings/ter-flag2.txt"; sourceTree = "<group>"; };
-		914CA46C190C478400B6ADD1 /* ter-flag3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ter-flag3.txt"; path = "strings/ter-flag3.txt"; sourceTree = "<group>"; };
-		914CA46D190C478400B6ADD1 /* trim-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "trim-names.txt"; path = "strings/trim-names.txt"; sourceTree = "<group>"; };
 		914CA49F190C4E9200B6ADD1 /* scen.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scen.menu.xib; sourceTree = "<group>"; };
-		9156038F18F43C8D00A50C51 /* many-str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "many-str.xml"; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -1664,25 +1254,9 @@
 		9191460018E63D8E005CF3A4 /* scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollbar.cpp; sourceTree = "<group>"; };
 		9191460118E6591F005CF3A4 /* boe.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boe.menus.h; sourceTree = "<group>"; };
 		9192C11E18F271920088A580 /* menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
-		9192C12118F327230088A580 /* alchemy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = alchemy.txt; path = strings/alchemy.txt; sourceTree = "<group>"; };
-		9192C12318F327230088A580 /* help.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = help.txt; path = strings/help.txt; sourceTree = "<group>"; };
-		9192C12418F327230088A580 /* item-abilities.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "item-abilities.txt"; path = "strings/item-abilities.txt"; sourceTree = "<group>"; };
-		9192C12518F327230088A580 /* mage-spells.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "mage-spells.txt"; path = "strings/mage-spells.txt"; sourceTree = "<group>"; };
-		9192C12618F327230088A580 /* monster-abilities.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "monster-abilities.txt"; path = "strings/monster-abilities.txt"; sourceTree = "<group>"; };
-		9192C12A18F327230088A580 /* priest-spells.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "priest-spells.txt"; path = "strings/priest-spells.txt"; sourceTree = "<group>"; };
-		9192C12C18F327230088A580 /* tips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tips.txt; path = strings/tips.txt; sourceTree = "<group>"; };
-		9192C12D18F327230088A580 /* skills.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = skills.txt; path = strings/skills.txt; sourceTree = "<group>"; };
-		9192C13218F327230088A580 /* spell-times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spell-times.txt"; path = "strings/spell-times.txt"; sourceTree = "<group>"; };
-		9192C13318F327230088A580 /* magic-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "magic-names.txt"; path = "strings/magic-names.txt"; sourceTree = "<group>"; };
-		9192C13818F327230088A580 /* traits.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = traits.txt; path = strings/traits.txt; sourceTree = "<group>"; };
-		919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-special-item.xml"; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
-		91A073561A2828C6002F7E72 /* edit-monster-abils.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-monster-abils.xml"; sourceTree = "<group>"; };
-		91A073591A29202E002F7E72 /* edit-item.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-item.xml"; sourceTree = "<group>"; };
-		91A0735A1A2928B4002F7E72 /* edit-item-abils.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-item-abils.xml"; sourceTree = "<group>"; };
-		91A0735B1A2975AD002F7E72 /* item-types.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "item-types.txt"; path = "strings/item-types.txt"; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
@@ -1746,8 +1320,8 @@
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursors.h; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
-		91C749B41A2CF4F9008E0E10 /* item-types-display.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "item-types-display.txt"; path = "strings/item-types-display.txt"; sourceTree = "<group>"; };
-		91C9C97B19114F31001E14EB /* edit-monster.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-monster.xml"; sourceTree = "<group>"; };
+		91C749B71A2D6432008E0E10 /* strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = strings; sourceTree = "<group>"; };
+		91C749B91A2D66F7008E0E10 /* dialogs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialogs; sourceTree = "<group>"; };
 		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
@@ -1777,17 +1351,6 @@
 		91FCC8D718FE28CC007026CE /* pc.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = pc.menu.xib; sourceTree = "<group>"; };
 		91FCC8DA18FE2CCA007026CE /* pc.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pc.menus.h; sourceTree = "<group>"; };
 		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
-		91FCC8DE18FE4708007026CE /* edit-day.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-day.xml"; sourceTree = "<group>"; };
-		91FCC8E018FE4734007026CE /* edit-xp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "edit-xp.xml"; sourceTree = "<group>"; };
-		91FCC8E218FE4993007026CE /* about-pced.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "about-pced.xml"; sourceTree = "<group>"; };
-		91FCC8E418FE55F2007026CE /* pcedit.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pcedit.txt; path = strings/pcedit.txt; sourceTree = "<group>"; };
-		91FCC8E918FED338007026CE /* leave-town.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "leave-town.xml"; sourceTree = "<group>"; };
-		91FCC8EA18FED4F2007026CE /* reunite-first.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "reunite-first.xml"; sourceTree = "<group>"; };
-		91FCC8EB18FEDAA5007026CE /* reunited.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = reunited.xml; sourceTree = "<group>"; };
-		91FCC8EC18FEDB7F007026CE /* not-split.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "not-split.xml"; sourceTree = "<group>"; };
-		91FCC8ED18FEDC25007026CE /* leave-scenario.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "leave-scenario.xml"; sourceTree = "<group>"; };
-		91FCC8EE18FEDED1007026CE /* save-quit.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-quit.xml"; sourceTree = "<group>"; };
-		91FCC8EF18FEE014007026CE /* save-open.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "save-open.xml"; sourceTree = "<group>"; };
 		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2064,166 +1627,6 @@
 				912DFE8A18E24B4C00B00D75 /* restypes.hpp */,
 			);
 			path = resmgr;
-			sourceTree = "<group>";
-		};
-		91364EC718F091290033B58E /* strings */ = {
-			isa = PBXGroup;
-			children = (
-				9192C12118F327230088A580 /* alchemy.txt */,
-				914CA469190C478300B6ADD1 /* arena-names.txt */,
-				9192C12318F327230088A580 /* help.txt */,
-				9192C12418F327230088A580 /* item-abilities.txt */,
-				9192C12518F327230088A580 /* mage-spells.txt */,
-				9192C13318F327230088A580 /* magic-names.txt */,
-				9192C12618F327230088A580 /* monster-abilities.txt */,
-				914CA454190749E100B6ADD1 /* outdoor-default.txt */,
-				91FCC8E418FE55F2007026CE /* pcedit.txt */,
-				9192C12A18F327230088A580 /* priest-spells.txt */,
-				914CA455190749E100B6ADD1 /* scen-default.txt */,
-				9192C12D18F327230088A580 /* skills.txt */,
-				914CA459190750D500B6ADD1 /* special-node-names.txt */,
-				914CA45E190841FC00B6ADD1 /* special-x1a.txt */,
-				914CA45F190841FC00B6ADD1 /* special-x1b.txt */,
-				914CA460190841FC00B6ADD1 /* special-x2a.txt */,
-				914CA461190841FC00B6ADD1 /* special-x2b.txt */,
-				9192C13218F327230088A580 /* spell-times.txt */,
-				914CA46A190C478300B6ADD1 /* ter-flag1.txt */,
-				914CA46B190C478400B6ADD1 /* ter-flag2.txt */,
-				914CA46C190C478400B6ADD1 /* ter-flag3.txt */,
-				9192C12C18F327230088A580 /* tips.txt */,
-				914CA456190749E100B6ADD1 /* town-default.txt */,
-				9192C13818F327230088A580 /* traits.txt */,
-				914CA46D190C478400B6ADD1 /* trim-names.txt */,
-				91A0735B1A2975AD002F7E72 /* item-types.txt */,
-				91C749B41A2CF4F9008E0E10 /* item-types-display.txt */,
-			);
-			name = strings;
-			sourceTree = "<group>";
-		};
-		91364EC818F091300033B58E /* dialogs */ = {
-			isa = PBXGroup;
-			children = (
-				91364EC918F0914F0033B58E /* 1str-lg.xml */,
-				91364ECA18F0914F0033B58E /* 1str-title-lg.xml */,
-				91364ECB18F0914F0033B58E /* 1str-title.xml */,
-				91364ECC18F0914F0033B58E /* 1str.xml */,
-				91364ECD18F0914F0033B58E /* 2str-lg.xml */,
-				91364ECE18F0914F0033B58E /* 2str-title-lg.xml */,
-				91364ECF18F0914F0033B58E /* 2str-title.xml */,
-				91364ED018F0914F0033B58E /* 2str.xml */,
-				91364ED118F0914F0033B58E /* about-boe.xml */,
-				91FCC8E218FE4993007026CE /* about-pced.xml */,
-				914CA4471906DEEF00B6ADD1 /* about-scened.xml */,
-				914CA44B190731D600B6ADD1 /* add-random-items.xml */,
-				9107074A18F0FC1300F7BD7F /* adventure-notes.xml */,
-				91364ED218F0914F0033B58E /* attack-friendly.xml */,
-				91364ED318F0914F0033B58E /* basic-button.xml */,
-				91364ED418F0914F0033B58E /* basic-lever.xml */,
-				91364ED518F0914F0033B58E /* basic-portal.xml */,
-				91364ED618F0914F0033B58E /* basic-slope-down.xml */,
-				91364ED718F0914F0033B58E /* basic-slope-up.xml */,
-				91364ED818F0914F0033B58E /* basic-stair-down.xml */,
-				91364ED918F0914F0033B58E /* basic-stair-up.xml */,
-				91364EDA18F0914F0033B58E /* basic-trap.xml */,
-				91364EDB18F0914F0033B58E /* boat-bridge.xml */,
-				91364EDC18F0914F0033B58E /* cast-spell.xml */,
-				91364EDD18F0914F0033B58E /* choose-pict.xml */,
-				91364EDE18F0914F0033B58E /* choose-string.xml */,
-				914CA44D190733E800B6ADD1 /* clear-items-confirm.xml */,
-				91364EDF18F0914F0033B58E /* congrats-save.xml */,
-				91364EE018F0914F0033B58E /* dark-slope-down.xml */,
-				91364EE118F0914F0033B58E /* dark-slope-up.xml */,
-				914CA44919072AD100B6ADD1 /* data-dump-confirm.xml */,
-				91364EE218F0914F0033B58E /* delete-pc-confirm.xml */,
-				914CA4481907108100B6ADD1 /* delete-town-confirm.xml */,
-				91364EE318F0914F0033B58E /* drop-item-confirm.xml */,
-				91FCC8DE18FE4708007026CE /* edit-day.xml */,
-				914CA466190B5F8800B6ADD1 /* edit-dialog-text.xml */,
-				914CA468190C396A00B6ADD1 /* edit-intro.xml */,
-				91C9C97B19114F31001E14EB /* edit-monster.xml */,
-				91364EE418F0914F0033B58E /* edit-party.xml */,
-				914CA467190C08BB00B6ADD1 /* edit-special-assign.xml */,
-				914CA45D1908233A00B6ADD1 /* edit-special-node.xml */,
-				914CA465190B4DB500B6ADD1 /* edit-special-text.xml */,
-				91364EE518F0914F0033B58E /* edit-terrain.xml */,
-				914CA4451906BC4F00B6ADD1 /* edit-text.xml */,
-				914CA4631909998E00B6ADD1 /* edit-townperson-advanced.xml */,
-				914CA4621909817700B6ADD1 /* edit-townperson.xml */,
-				91FCC8E018FE4734007026CE /* edit-xp.xml */,
-				9107074818F0F5F000F7BD7F /* event-journal.xml */,
-				91364EE618F0914F0033B58E /* get-items.xml */,
-				91364EE718F0914F0033B58E /* get-num.xml */,
-				91364EE818F0914F0033B58E /* get-response.xml */,
-				91364EE918F0914F0033B58E /* help-combat.xml */,
-				914CA45119073D6300B6ADD1 /* help-contest.xml */,
-				914CA45019073BB500B6ADD1 /* help-distributing.xml */,
-				914CA44E1907372700B6ADD1 /* help-editing.xml */,
-				91364EEA18F0914F0033B58E /* help-fields.xml */,
-				91364EEB18F0914F0033B58E /* help-hints.xml */,
-				91364EEC18F0914F0033B58E /* help-inventory.xml */,
-				91364EED18F0914F0033B58E /* help-magic.xml */,
-				91364EEE18F0914F0033B58E /* help-outdoor.xml */,
-				91364EEF18F0914F0033B58E /* help-party.xml */,
-				914CA44F1907389900B6ADD1 /* help-testing.xml */,
-				91364EF018F0914F0033B58E /* help-town.xml */,
-				91364EF118F0914F0033B58E /* inventory-full.xml */,
-				91364EF218F0914F0033B58E /* item-info.xml */,
-				91364EF318F0914F0033B58E /* keep-stored-items.xml */,
-				91FCC8ED18FEDC25007026CE /* leave-scenario.xml */,
-				91FCC8E918FED338007026CE /* leave-town.xml */,
-				91364EF418F0914F0033B58E /* load-game-fail.xml */,
-				91364EF518F0914F0033B58E /* locked-door-action.xml */,
-				9156038F18F43C8D00A50C51 /* many-str.xml */,
-				91364EF618F0914F0033B58E /* monster-info.xml */,
-				91364EF718F0914F0033B58E /* need-party.xml */,
-				91364EF818F0914F0033B58E /* new-party.xml */,
-				91364EF918F0914F0033B58E /* no-scenarios.xml */,
-				914CA452190742B500B6ADD1 /* not-at-edge.xml */,
-				91364EFA18F0914F0033B58E /* not-save-game.xml */,
-				91FCC8EC18FEDB7F007026CE /* not-split.xml */,
-				91364EFB18F0914F0033B58E /* party-death.xml */,
-				91364EFC18F0914F0033B58E /* pc-alchemy-info.xml */,
-				9107074B18F0FE3F00F7BD7F /* pc-info.xml */,
-				91364EFD18F0914F0033B58E /* pc-spell-info.xml */,
-				91364EFE18F0914F0033B58E /* pick-pc-name.xml */,
-				91364EFF18F0914F0033B58E /* pick-potion.xml */,
-				91364F0018F0914F0033B58E /* pick-prefab-scen.xml */,
-				91364F0118F0914F0033B58E /* pick-race-abil.xml */,
-				91364F0218F0914F0033B58E /* pick-scenario.xml */,
-				91364F0318F0914F0033B58E /* preferences.xml */,
-				91364F0418F0914F0033B58E /* quit-confirm-nosave.xml */,
-				91364F0518F0914F0033B58E /* quit-confirm-save.xml */,
-				91364F0618F0914F0033B58E /* removed-special-items.xml */,
-				91364F0718F0914F0033B58E /* restart-game.xml */,
-				91FCC8EA18FED4F2007026CE /* reunite-first.xml */,
-				91FCC8EB18FEDAA5007026CE /* reunited.xml */,
-				914CA45B1907573300B6ADD1 /* save-before-quit.xml */,
-				91FCC8EF18FEE014007026CE /* save-open.xml */,
-				91FCC8EE18FEDED1007026CE /* save-quit.xml */,
-				914CA45A1907552A00B6ADD1 /* save-section-confirm.xml */,
-				91364F0818F0914F0033B58E /* scen-version-mismatch.xml */,
-				91364F0918F0914F0033B58E /* select-pc.xml */,
-				914CA45C19081E2E00B6ADD1 /* set-area-desc.xml */,
-				914CA44C1907334F00B6ADD1 /* set-not-owned.xml */,
-				914CA453190744FF00B6ADD1 /* set-out-start-confirm.xml */,
-				91364F0A18F0914F0033B58E /* skill-info.xml */,
-				91364F0B18F0914F0033B58E /* slimy-stair-down.xml */,
-				91364F0C18F0914F0033B58E /* slimy-stair-up.xml */,
-				91364F0D18F0914F0033B58E /* soul-crystal.xml */,
-				91364F0E18F0914F0033B58E /* spell-info.xml */,
-				91364F0F18F0914F0033B58E /* spend-xp.xml */,
-				91364F1018F0914F0033B58E /* steal-item.xml */,
-				9107074918F0F84E00F7BD7F /* talk-notes.xml */,
-				914CA44A19072D7200B6ADD1 /* text-dump-confirm.xml */,
-				91364F1118F0914F0033B58E /* tip-of-day.xml */,
-				91364F1218F0914F0033B58E /* view-sign.xml */,
-				91364F1318F0914F0033B58E /* welcome.xml */,
-				91A073561A2828C6002F7E72 /* edit-monster-abils.xml */,
-				91A073591A29202E002F7E72 /* edit-item.xml */,
-				91A0735A1A2928B4002F7E72 /* edit-item-abils.xml */,
-				919C6D8B1A2A22FC00FD761F /* edit-special-item.xml */,
-			);
-			path = dialogs;
 			sourceTree = "<group>";
 		};
 		913D03320FA0FFE700184C18 /* src */ = {
@@ -2591,11 +1994,9 @@
 		91B3EF220F969CA300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				91364F5F18F093E80033B58E /* dialog.css */,
 				914701A918F64A85008A6DC9 /* dialog.xsd */,
-				91364F6118F093E80033B58E /* dialog.xsl */,
-				91364EC718F091290033B58E /* strings */,
-				91364EC818F091300033B58E /* dialogs */,
+				91C749B71A2D6432008E0E10 /* strings */,
+				91C749B91A2D66F7008E0E10 /* dialogs */,
 				914701A318F629D4008A6DC9 /* fonts */,
 				914B2ACB18E7FFEF007B6799 /* sounds.exa */,
 				91B3EF250F969CE300BF5B67 /* bladbase.exs */,
@@ -2849,9 +2250,6 @@
 			files = (
 				91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */,
 				91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */,
-				91FCC8DF18FE4708007026CE /* edit-day.xml in Resources */,
-				91FCC8E118FE4734007026CE /* edit-xp.xml in Resources */,
-				91FCC8E318FE4993007026CE /* about-pced.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2882,7 +2280,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "\nfunction filter() {\n\tgrep -v 'validates' -\n\treturn 0\n}\n\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/dialogs/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g' | filter\n";
+			shellScript = "\nfunction filter() {\n\tgrep -v 'validates' -\n\treturn 0\n}\n\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/schemas/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g' | filter\n";
 			showEnvVarsInLog = 0;
 		};
 		91ACCE801900302D00FAEF8B /* Fix dylib install names */ = {

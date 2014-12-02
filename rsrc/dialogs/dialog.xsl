@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <?xml-stylesheet href="http://www.w3.org/StyleSheets/TR/W3C-REC.css" type="text/css"?>
-<?xml-stylesheet href="" type="text/css"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> -->
-
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
 
 <xsl:template match='/'>
 
-<html> <!-- xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" -->
+<html>
 <head>
 <title>Dialog Preview -
 </title>
