@@ -35,7 +35,9 @@
 		<summon>0</summon>
 		<!-- Default attitude -->
 		<attitude>2</attitude>
-		<!-- Immunities (bit field) -->
-		<immunity>0</immunity>
+		<!-- Immunities (empty element for none) -->
+		<immunity>
+			<fire resist='true'/>
+		</immunity>
 	</monster>
 </monsters>

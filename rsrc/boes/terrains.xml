@@ -6,12 +6,12 @@
 		<pic>2</pic>
 		<map>2</map>
 		<!-- Blockage information -->
-		<blockage>0</blockage>
+		<blockage>none</blockage>
 		<fly>true</fly>
 		<boat>false</boat>
 		<ride>true</ride>
 		<!-- Trim type, if it's a trim; this isn't -->
-		<trim>0</trim>
+		<trim>none</trim>
 		<!-- Combat arena to use -->
 		<arena>2</arena>
 		<!-- Special terrain property -->

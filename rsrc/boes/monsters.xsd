@@ -11,6 +11,10 @@
 			<xs:pattern value="\d*d\d+"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="immunity">
+		<xs:attribute name="immune" type="bool"/>
+		<xs:attribute name="resist" type="bool"/>
+	</xs:complexType>
 	<xs:element name="ability">
 		<xs:complexType>
 			<xs:sequence>
@@ -103,7 +107,16 @@
 				<xs:element name="voice" minOccurs="0" type="xs:integer"/>
 				<xs:element name="summon" minOccurs="0" type="xs:integer"/>
 				<xs:element name="attitude" type="xs:integer"/>
-				<xs:element name="immunity" type="xs:integer"/>
+				<xs:element name="immunity">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="fire" type="immunity" minOccurs="0"/>
+							<xs:element name="cold" type="immunity" minOccurs="0"/>
+							<xs:element name="poison" type="immunity" minOccurs="0"/>
+							<xs:element name="magic" type="immunity" minOccurs="0"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="loot" minOccurs="0">
 					<xs:complexType>
 						<xs:all>

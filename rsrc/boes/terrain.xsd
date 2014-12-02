@@ -76,6 +76,39 @@
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
+	<xs:simpleType name="blockage">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="move"/>
+			<xs:enumeration value="monsters"/>
+			<xs:enumeration value="sight"/>
+			<xs:enumeration value="move-and-shoot"/>
+			<xs:enumeration value="move-and-sight"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="terTrim">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="wall"/>
+			<xs:enumeration value="s"/>
+			<xs:enumeration value="n"/>
+			<xs:enumeration value="e"/>
+			<xs:enumeration value="w"/>
+			<xs:enumeration value="sw"/>
+			<xs:enumeration value="ne"/>
+			<xs:enumeration value="se"/>
+			<xs:enumeration value="nw"/>
+			<xs:enumeration value="sw-inner"/>
+			<xs:enumeration value="ne-inner"/>
+			<xs:enumeration value="se-inner"/>
+			<xs:enumeration value="nw-inner"/>
+			<xs:enumeration value="frills"/>
+			<xs:enumeration value="road"/>
+			<xs:enumeration value="walkway"/>
+			<xs:enumeration value="waterfall"/>
+			<xs:enumeration value="city"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:element name="editor">
 		<xs:complexType>
 			<xs:all>
@@ -100,7 +133,7 @@
 				<xs:element name="name" type="xs:string"/>
 				<xs:element name="pic" type="xs:integer"/>
 				<xs:element name="map" type="xs:integer"/>
-				<xs:element name="blockage" type="xs:integer"/>
+				<xs:element name="blockage" type="blockage"/>
 				<xs:element name="special">
 					<xs:complexType>
 						<xs:sequence>
@@ -115,7 +148,7 @@
 				<xs:element name="ride" minOccurs="0" type="bool"/>
 				<xs:element name="light" minOccurs="0" type="xs:integer"/>
 				<xs:element name="step-sound" minOccurs="0" type="xs:integer"/>
-				<xs:element name="trim" type="xs:integer"/>
+				<xs:element name="trim" type="terTrim"/>
 				<xs:element name="arena" type="xs:integer"/>
 				<xs:element ref="editor" minOccurs="0"/>
 			</xs:all>

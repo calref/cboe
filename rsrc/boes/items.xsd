@@ -6,16 +6,67 @@
 			<xs:enumeration value="false"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="itemVariety">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="weapon-1hand"/>
+			<xs:enumeration value="weapon-2hand"/>
+			<xs:enumeration value="gold"/>
+			<xs:enumeration value="bow"/>
+			<xs:enumeration value="arrow"/>
+			<xs:enumeration value="thrown-missile"/>
+			<xs:enumeration value="potion"/>
+			<xs:enumeration value="scroll"/>
+			<xs:enumeration value="wand"/>
+			<xs:enumeration value="tool"/>
+			<xs:enumeration value="food"/>
+			<xs:enumeration value="shield"/>
+			<xs:enumeration value="armor"/>
+			<xs:enumeration value="helm"/>
+			<xs:enumeration value="gloves"/>
+			<xs:enumeration value="boots"/>
+			<xs:enumeration value="ring"/>
+			<xs:enumeration value="necklace"/>
+			<xs:enumeration value="poison"/>
+			<xs:enumeration value="non-usable"/>
+			<xs:enumeration value="pants"/>
+			<xs:enumeration value="crossbow"/>
+			<xs:enumeration value="bolts"/>
+			<xs:enumeration value="missile"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="weaponType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="edged"/>
+			<xs:enumeration value="bashing"/>
+			<xs:enumeration value="pole"/>
+			<!-- The rest of these values are for potential expansion -->
+			<!-- Each corresponds to a skill/stat -->
+			<xs:enumeration value="thrown"/>
+			<xs:enumeration value="archery"/>
+			<xs:enumeration value="defense"/>
+			<xs:enumeration value="mage"/>
+			<xs:enumeration value="priest"/>
+			<xs:enumeration value="mage-lore"/>
+			<xs:enumeration value="alchemy"/>
+			<xs:enumeration value="item-lore"/>
+			<xs:enumeration value="traps"/>
+			<xs:enumeration value="lockpick"/>
+			<xs:enumeration value="assassin"/>
+			<xs:enumeration value="poison"/>
+			<xs:enumeration value="luck"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:element name="item">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="variety" type="xs:integer"/>
+				<xs:element name="variety" type="itemVariety"/>
 				<xs:element name="level" type="xs:integer"/>
 				<xs:element name="awkward" type="xs:integer" minOccurs="0"/>
 				<xs:element name="bonus" type="xs:integer" minOccurs="0"/>
 				<xs:element name="protection" type="xs:integer" minOccurs="0"/>
 				<xs:element name="charges" type="xs:integer" minOccurs="0"/>
-				<xs:element name="melee-type" type="xs:integer" minOccurs="0"/>
+				<xs:element name="melee-type" type="weaponType" minOccurs="0"/>
 				<xs:element name="pic" type="xs:integer"/>
 				<xs:element name="flag" type="xs:integer" minOccurs="0"/>
 				<xs:element name="value" type="xs:integer"/>
