@@ -117,7 +117,6 @@ short special_to_paste = -1;
 
 extern std::string get_str(std::string list, short j);
 bool monst_on_space(location loc,short m_num);
-short can_see(location p1,location p2,short mode);
 
 void init_current_terrain() {
 //	short i,j;
@@ -1466,52 +1465,6 @@ void handle_keystroke(char chr,char chr2,sf::Event event) {
 //
 //void set_info_strings() {
 //}
-
-
-
-
-void modify_lists() {
-	/*	unsigned char terrain_to_do;
-	 char i,j, k;
-	 short sign_count = 0, exit_count = 0, special_count = 0;
-	 unsigned char specials[10] = {237,238,239,240,241, 242,243,244,78,78};
-	 unsigned char signs[6] = {110,127,142,213,214,252};
-	 bool	is_this_type = false;
-	 location null_point = {0,0};
-	 
-	 for (i = 0; i < town->max_dim(); i++)
-	 for (j = 0; j < town->max_dim(); j++) {
-	 is_this_type = false;
-	 
-	 terrain_to_do = (unsigned char) town->terrain(i,j);
-	 for (k = 0; k < 10; k++)
-	 if (terrain_to_do == specials[k])
-	 is_this_type = true;
-	 if ((is_this_type == true) && (special_count < 40)) {
-	 make_special(i,j);
-	 special_count++;
-	 is_this_type = true;
-	 }
-	 
-	 if (is_this_type == false) {
-	 for (k = 0; k < 6; k++)
-	 if (terrain_to_do == signs[k])
-	 is_this_type = true;
-	 if ((is_this_type == true) && (sign_count < 12)) {
-	 town.sign_locs[sign_count].x = i;
-	 town.sign_locs[sign_count].y = j;
-	 sign_count++;
-	 }
-	 }
-	 
-	 }
-	 
-	 for (i = sign_count; i < 12; i++)
-	 town.sign_locs[i] = null_point;
-	 */		
-	set_up_lights();
-	
-}
 
 void set_up_lights() {
 	short i,j,rad;
@@ -3463,7 +3416,7 @@ bool save_check(std::string which_dlog) {
 		return true;
 	else if(choice == "cancel")
 		return false;
-	modify_lists();
+	set_up_lights();
 	save_scenario();
 	return true;
 }
@@ -3474,16 +3427,16 @@ bool is_lava(short x,short y) {
 	else return false;
 }
 
-short get_obscurity(short x,short y) {
+short light_obscurity(short x,short y) {
 	ter_num_t what_terrain;
-	short store;
+	eTerObstruct store;
 	
 	what_terrain = coord_to_ter(x,y);
 	
 	store = scenario.ter_types[what_terrain].blockage;
-	if ((store == 1) || (store == 5))
+	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return 5;
-	if (store == 4)
+	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	return 0;
 }
@@ -3496,98 +3449,6 @@ ter_num_t coord_to_ter(short x,short y) {
 	else what_terrain = current_terrain.terrain[x][y];
 	
 	return what_terrain;
-}
-
-
-short can_see(location p1,location p2,short mode) {
-	//mode; // 0 - normal  1 - counts 1 for blocked spaces or lava (used for party placement in
-	//				   town combat)
-	// 2 - no light check
-	short dx,dy,count,storage = 0;
-	
-	if (p1.y == p2.y) {
-		if (p1.x > p2.x) {
-			for (count = p2.x + 1; count < p1.x; count++) {
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = p1.x + 1; count < p2.x; count++) {
-				
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	if (p1.x == p2.x) {
-		if (p1.y > p2.y) {
-			for (count = p1.y - 1; count > p2.y; count--) {
-				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = p1.y + 1; count < p2.y; count++) {
-				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true))  && (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	dx = p2.x - p1.x;
-	dy = p2.y - p1.y;
-	
-	if (abs(dy) > abs(dx)) {
-		if (p2.y > p1.y) {
-			for (count = 1; count < dy; count++) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)].blockage > 2) ||
-					  (is_lava(p1.x + (count * dx) / dy,p1.y + count) == true))
-					&& (mode == 1))
-					return 5;
-			}			
-		}
-		else {
-			for (count = -1; count > dy; count--) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)].blockage > 2) ||
-					  (is_lava(p1.x + (count * dx) / dy, p1.y + count) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	} 
-	if (abs(dy) <= abs(dx)) {
-		if (p2.x > p1.x) {
-			for (count = 1; count < dx; count++) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if (((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					 (is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = -1; count > dx; count--) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					  (is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	} 
-	if (storage > 5)
-		return 5;
-	else return storage;
 }
 
 bool monst_on_space(location loc,short m_num) {

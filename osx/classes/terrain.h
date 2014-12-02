@@ -24,7 +24,7 @@ class cTerrain {
 public:
 	std::string name;
 	pic_num_t picture;
-	unsigned char blockage;
+	eTerObstruct blockage;
 	ter_flag_t flag1;
 	ter_flag_t flag2;
 	ter_flag_t flag3; // new additional flag for special properties
@@ -52,5 +52,7 @@ public:
 
 std::ostream& operator << (std::ostream& out, eTerSpec& e);
 std::istream& operator >> (std::istream& in, eTerSpec& e);
+std::ostream& operator << (std::ostream& out, eTerObstruct& e);
+std::istream& operator >> (std::istream& in, eTerObstruct& e);
 
 #endif

@@ -976,7 +976,7 @@ bool handle_action(sf::Event event)
 			}else if(overall_mode == MODE_DROP_TOWN) {
 				if (adjacent(univ.town.p_loc,destination) == false)
 					add_string_to_buf("Drop: must be adjacent.");
-				else if (get_obscurity(destination.x,destination.y) == 5)
+				else if(sight_obscurity(destination.x,destination.y) == 5)
 					ASB("Drop: Space is blocked.");
 				else drop_item(current_pc,store_drop_item,destination);
 			}
@@ -2206,7 +2206,7 @@ void increase_age()////
 	if (PSD[SDF_PARTY_FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
 	if (PSD[SDF_PARTY_FLIGHT] == 1) {
-		if (scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage > 2) {
+		if(blocksMove(scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.                  ");
 			slay_party(MAIN_STATUS_DEAD);
 			print_buf();

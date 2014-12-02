@@ -10,6 +10,7 @@
 #define GRAPHTOOL_H
 
 #include <string>
+#include <functional>
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
 #include "location.h"
@@ -120,6 +121,9 @@ void draw_line(sf::RenderTarget& target, location from, location to, int thickne
 void clip_rect(sf::RenderTarget& where, RECT rect);
 void clip_region(sf::RenderWindow& where, Region& region);
 void undo_clip(sf::RenderTarget& where);
+
+// This probably doesn't quite fit here, but it fits worse pretty much everywhere else in the common sources
+short can_see(location p1,location p2,std::function<short(short,short)> get_obscurity);
 
 #ifndef GRAPHTOOL_CPP
 extern m_pic_index_t m_pic_index[200];

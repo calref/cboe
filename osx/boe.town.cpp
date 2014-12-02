@@ -839,8 +839,8 @@ void place_party(short direction)
 		
 		check_loc.y -= y_adj;
 		pos_locs[i] = check_loc;
-		if ((is_blocked(check_loc) == false) && (is_special(check_loc) == false) && (get_obscurity(check_loc.x,check_loc.y) == 0)
-			&& (can_see(univ.town.p_loc,check_loc,1) < 1) && (loc_off_act_area(check_loc) == false)) {
+		if(!is_blocked(check_loc) && !is_special(check_loc) && sight_obscurity(check_loc.x,check_loc.y) == 0
+			&& can_see_light(univ.town.p_loc,check_loc,combat_obscurity) < 1 && !loc_off_act_area(check_loc)) {
 			spot_ok[i] = true;
 			how_many_ok += (i > 1) ? 1 : 0;
 		}

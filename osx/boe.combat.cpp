@@ -868,7 +868,7 @@ void place_target(location target)
 			add_string_to_buf("  Target out of range.");
 			return;
 		}
-		if ((get_obscurity(target.x,target.y) == 5) && (spell_being_cast != 41)) {
+		if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != 41) {
 			add_string_to_buf("  Target space obstructed.           ");
 			return;
 		}
@@ -988,7 +988,7 @@ void do_combat_cast(location target)////
 			}
 			else if (dist(pc_pos[current_pc],target) > ((spell_being_cast >= 100) ? priest_range[spell_being_cast - 100] : mage_range[spell_being_cast]))
 				add_string_to_buf("  Target out of range.");
-			else if ((get_obscurity(target.x,target.y) == 5) && (spell_being_cast != 41))
+			else if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != 41)
 				add_string_to_buf("  Target space obstructed.           ");
 			else if (univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
@@ -3515,7 +3515,7 @@ location find_fireball_loc(location where,short radius,short mode,short *m)
 	
 	for (check_loc.x = 1; check_loc.x < univ.town->max_dim() - 1; check_loc.x ++)
 		for (check_loc.y = 1; check_loc.y < univ.town->max_dim() - 1; check_loc.y ++)
-			if ((dist(where,check_loc) <= 8) && (can_see(where,check_loc,2) < 5) && (get_obscurity(check_loc.x,check_loc.y) < 5)) {
+			if(dist(where,check_loc) <= 8 && can_see(where,check_loc,sight_obscurity) < 5 && sight_obscurity(check_loc.x,check_loc.y) < 5) {
 				{
 					cur_lev = count_levels(check_loc,radius);
 					if (mode == 1)
@@ -3560,7 +3560,7 @@ short count_levels(location where,short radius)
 				store = store + 10;
 	}
 	if (is_town())
-		if ((vdist(where,univ.town.p_loc) <= radius) && (can_see(where,univ.town.p_loc,2) < 5))
+		if(vdist(where,univ.town.p_loc) <= radius && can_see(where,univ.town.p_loc,sight_obscurity) < 5)
 			store += 20;
 	
 	return store;
@@ -3641,7 +3641,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 	// First actually make barriers, then draw them, then inflict damaging effects.
 	for (i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
 		for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++)
-			if (get_obscurity(i,j) < 5) {
+			if(sight_obscurity(i,j) < 5) {
 				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 				switch (effect) {
 					case 1: web_space(i,j); break;
@@ -3673,7 +3673,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 			for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
-				if ((get_obscurity(i,j) < 5) && (univ.party[k].main_status == 1)
+				if(sight_obscurity(i,j) < 5 && univ.party[k].main_status == 1
 					&& (((is_combat()) && (pc_pos[k] == spot_hit)) ||
 						((is_town()) && (univ.town.p_loc == spot_hit)))) {
 						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
@@ -3724,7 +3724,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 					spot_hit.x = i;
 					spot_hit.y = j;
 					
-					if ((monster_hit == false) && (get_obscurity(i,j) < 5) && (monst_on_space(spot_hit,k) > 0)) {
+					if(!monster_hit && sight_obscurity(i,j) < 5 && monst_on_space(spot_hit,k) > 0) {
 						
 						if (pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
 							monster_hit = true;

@@ -1050,7 +1050,7 @@ void draw_terrain(short	mode)
 
 static ter_num_t get_ground_for_shore(ter_num_t ter){
 	if(scenario.ter_types[ter].block_horse) return current_ground;
-	else if(scenario.ter_types[ter].blockage > 2) return current_ground;
+	else if(blocksMove(scenario.ter_types[ter].blockage)) return current_ground;
 	else return ter;
 }
 

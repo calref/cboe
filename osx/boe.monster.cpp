@@ -781,7 +781,7 @@ location find_clear_spot(location from_where,short mode)
 		r1 = get_ran(1,-2,2);
 		loc.y = loc.y + r1;
 		if ((loc_off_act_area(loc) == false) && (is_blocked(loc) == false)
-			&& (can_see(from_where,loc,1) == 0)
+			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!(is_combat()) || (pc_there(loc) == 6))
 			&& (!(is_town()) || (loc != univ.town.p_loc))
 			&& (!(univ.town.misc_i(loc.x,loc.y) & 248)) && // check for crate, barrel, barrier, quickfire

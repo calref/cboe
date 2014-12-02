@@ -133,12 +133,12 @@ bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	// TODO: Should somehow verify the pict number is valid
 	
 	std::string blockage = dynamic_cast<cLedGroup&>(me["blockage"]).getSelected();
-	if(blockage == "clear") store_ter.blockage = 0;
-	else if(blockage == "curtain") store_ter.blockage = 1;
-	else if(blockage == "special") store_ter.blockage = 2;
-	else if(blockage == "window") store_ter.blockage = 3;
-	else if(blockage == "obstructed") store_ter.blockage = 4;
-	else if(blockage == "opaque") store_ter.blockage = 5;
+	if(blockage == "clear") store_ter.blockage = eTerObstruct::CLEAR;
+	else if(blockage == "curtain") store_ter.blockage = eTerObstruct::BLOCK_SIGHT;
+	else if(blockage == "special") store_ter.blockage = eTerObstruct::BLOCK_MONSTERS;
+	else if(blockage == "window") store_ter.blockage = eTerObstruct::BLOCK_MOVE;
+	else if(blockage == "obstructed") store_ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SHOOT;
+	else if(blockage == "opaque") store_ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SIGHT;
 	store_ter.special = (eTerSpec) boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4));
 	/*
 	i = CDGN(813,6);
@@ -335,22 +335,22 @@ void fill_ter_info(cDialog& me, short ter){
 	{
 		cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me["blockage"]);
 		switch(ter_type.blockage){
-			case 0:
+			case eTerObstruct::CLEAR:
 				led_ctrl.setSelected("clear");
 				break;
-			case 1:
+			case eTerObstruct::BLOCK_SIGHT:
 				led_ctrl.setSelected("curtain");
 				break;
-			case 2:
+			case eTerObstruct::BLOCK_MONSTERS:
 				led_ctrl.setSelected("special");
 				break;
-			case 3:
+			case eTerObstruct::BLOCK_MOVE:
 				led_ctrl.setSelected("window");
 				break;
-			case 4:
+			case eTerObstruct::BLOCK_MOVE_AND_SHOOT:
 				led_ctrl.setSelected("obstructed");
 				break;
-			case 5:
+			case eTerObstruct::BLOCK_MOVE_AND_SIGHT:
 				led_ctrl.setSelected("opaque");
 				break;
 		}

@@ -294,7 +294,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				play_sound(-1 * ter_flag2.u);
 			}
 			give_help(47,65);
-			if (scenario.ter_types[ter].blockage > 2)
+			if(blocksMove(scenario.ter_types[ter].blockage))
 				can_enter = false;
 			break;
 		case TER_SPEC_DAMAGING:

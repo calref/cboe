@@ -240,6 +240,20 @@ enum eTrimType {
 	TRIM_CITY = 18, // the game will join roads up to this space but not draw roads on the space
 };
 
+/*      terrain type blockage          */
+enum class eTerObstruct {
+	CLEAR = 0,
+	BLOCK_SIGHT = 1,
+	BLOCK_MONSTERS = 2,
+	BLOCK_MOVE = 3,
+	BLOCK_MOVE_AND_SHOOT = 4,
+	BLOCK_MOVE_AND_SIGHT = 5,
+};
+
+inline bool blocksMove(eTerObstruct block) {
+	int code = (int) block;
+	return code > 2;
+}
 
 /*      items[i].type    a.k.a type of weapon         */
 enum class eWeapType {

@@ -192,9 +192,10 @@ void make_quickfire(short i,short j)
 //	if ((is_force_barrier(i,j)) || (is_fire_barrier(i,j)))
 //		return;
 	ter = coord_to_ter(i,j);
-	if (scenario.ter_types[ter].blockage == 1)
+	if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_SIGHT)
 		return;
-	if (scenario.ter_types[ter].blockage == 5)
+	// TODO: Isn't it a little odd that BLOCK_MOVE_AND_SHOOT isn't included here?
+	if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return;
 //	univ.town.explored[i][j] = univ.town.explored[i][j] & 1;
 //	univ.out.misc_i[i][j] = univ.out.misc_i[i][j] & 3;
@@ -388,10 +389,10 @@ void make_sfx(short i,short j, short type)
 {
 	ter_num_t ter;
 	
-	if (get_obscurity(i,j) > 0)
+	if(sight_obscurity(i,j) > 0)
 		return;
 	ter = coord_to_ter(i,j);
-	if (scenario.ter_types[ter].blockage != 0)
+	if(scenario.ter_types[ter].blockage != eTerObstruct::CLEAR)
 		return;
 	switch (type) {
 //		case 1: case 2:

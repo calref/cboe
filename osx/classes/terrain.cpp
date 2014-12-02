@@ -95,7 +95,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		99,99,99,99,99,2, 99,99,99,99,  99,99,99,99,
 	};
 	picture = old.picture;
-	blockage = old.blockage;
+	blockage = (eTerObstruct) old.blockage;
 	if(picture < 260){
 		combat_arena = arenas[picture];
 		ground_type = ground[picture];
@@ -363,5 +363,18 @@ std::istream& operator >> (std::istream& in, eTerSpec& e){
 	if(i > 0 && i < 24)
 		e = (eTerSpec) i;
 	else e = TER_SPEC_NONE;
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, eTerObstruct& e){
+	return out << (int) e;
+}
+
+std::istream& operator >> (std::istream& in, eTerObstruct& e){
+	int i;
+	in >> i;
+	if(i > 0 && i < 6)
+		e = (eTerObstruct) i;
+	else e = eTerObstruct::CLEAR;
 	return in;
 }

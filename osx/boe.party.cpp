@@ -1722,7 +1722,7 @@ void cast_town_spell(location where) ////
 			update_explored(univ.town.p_loc);
 			break;
 		case 42:
-			if ((get_obscurity(where.x,where.y) == 5) || (monst_there(where) < 90)) {
+			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
 			}
@@ -1732,7 +1732,7 @@ void cast_town_spell(location where) ////
 			else add_string_to_buf("  Failed.");
 			break;
 		case 59:
-			if ((get_obscurity(where.x,where.y) == 5) || (monst_there(where) < 90)) {
+			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
 			}
@@ -1752,7 +1752,7 @@ void cast_town_spell(location where) ////
 			add_string_to_buf("  You create an antimagic cloud.              ");
 			for (loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
 				for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
-					if ((dist(where,loc) <= 2) && (can_see(where,loc,2) < 5) &&
+					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
 						((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 						make_antimagic(loc.x,loc.y);
 			break;

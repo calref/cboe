@@ -153,116 +153,19 @@ bool is_lava(short x,short y)////
 	else return false;
 }
 
-short can_see(location p1,location p2,short mode)
-//short mode; // 0 - normal  1 - counts 1 for blocked spaces or lava (used for party placement in
-//				   town combat)
-// 2 - no light check
-{
-	short dx,dy,count,storage = 0;
-	
-	if (is_combat()) { // Light check
-		if ((mode != 2) && (combat_pt_in_light(p2) == false)) {
-			return 6;
-		}
-	}
-	else if(is_town()) {
-		if ((mode != 2) && (pt_in_light(p1,p2) == false)) {
-			return 6;
-		}
-	}
-	
-	if (p1.y == p2.y) {
-		if (p1.x > p2.x) {
-			for (count = p2.x + 1; count < p1.x; count++) {
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = p1.x + 1; count < p2.x; count++) {
-				
-				storage = storage + get_obscurity(count, p1.y);
-				if (((scenario.ter_types[coord_to_ter(count,p1.y)].blockage > 2) || (is_lava(count,p1.y) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	if (p1.x == p2.x) {
-		if (p1.y > p2.y) {
-			for (count = p1.y - 1; count > p2.y; count--) {
-				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true)) && (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = p1.y + 1; count < p2.y; count++) {
-				storage = storage + get_obscurity(p1.x, count);
-				if (((scenario.ter_types[coord_to_ter(p1.x,count)].blockage > 2) || (is_lava(p1.x,count) == true))  && (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	dx = p2.x - p1.x;
-	dy = p2.y - p1.y;
-	
-	if (abs(dy) > abs(dx)) {
-		if (p2.y > p1.y) {
-			for (count = 1; count < dy; count++) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy,p1.y + count)].blockage > 2) ||
-					  (is_lava(p1.x + (count * dx) / dy,p1.y + count) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = -1; count > dy; count--) {
-				storage = storage + get_obscurity(p1.x + (count * dx) / dy, p1.y + count);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + (count * dx) / dy, p1.y + count)].blockage > 2) ||
-					  (is_lava(p1.x + (count * dx) / dy, p1.y + count) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	if (abs(dy) <= abs(dx)) {
-		if (p2.x > p1.x) {
-			for (count = 1; count < dx; count++) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if (((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					 (is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		else {
-			for (count = -1; count > dx; count--) {
-				storage = storage + get_obscurity(p1.x + count, p1.y + (count * dy) / dx);
-				if ( ((scenario.ter_types[coord_to_ter(p1.x + count,p1.y + (count * dy) / dx)].blockage > 2) ||
-					  (is_lava(p1.x + count,p1.y + (count * dy) / dx) == true))
-					&& (mode == 1))
-					return 5;
-			}
-		}
-		return storage;
-	}
-	if (storage > 5)
-		return 5;
-	else return storage;
+short can_see_light(location p1, location p2, std::function<short(short,short)> get_obscurity) {
+	if(is_combat() && !combat_pt_in_light(p2)) return 6;
+	else if(is_town() && !pt_in_light(p1,p2)) return 6;
+	return can_see(p1, p2, get_obscurity);
 }
 
-short get_obscurity(short x,short y)
-{
+short sight_obscurity(short x,short y) {
 	ter_num_t what_terrain;
 	short store;
 	
 	what_terrain = coord_to_ter(x,y);
 	
+	// TODO: This should not be hard-coded!
 	if ((what_terrain >= 237) && (what_terrain <= 242))
 		return 1;
 	
@@ -283,6 +186,12 @@ short get_obscurity(short x,short y)
 		
 	}
 	return store;
+}
+
+short combat_obscurity(short x, short y) {
+	if(blocksMove(scenario.ter_types[coord_to_ter(x,y)].blockage)) return 5;
+	if(is_lava(x,y)) return 5;
+	return sight_obscurity(x,y);
 }
 
 ter_num_t coord_to_ter(short x,short y)
@@ -329,7 +238,7 @@ void update_explored(location dest)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 				
 				if (univ.out.out_e[look.x][look.y] == 0)
-					if (can_see(shortdest, look) < 5)
+					if(can_see_light(shortdest, look, sight_obscurity) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
 			}
 		
@@ -526,7 +435,7 @@ bool outd_is_blocked(location to_check)
 
 bool special_which_blocks_monst(location to_check)
 {
-	if (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].blockage == 2)
+	if(scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].blockage == eTerObstruct::BLOCK_MONSTERS)
 		return true;
 	else return false;
 }
@@ -539,7 +448,7 @@ bool is_special(location to_check)
 	if (special_which_blocks_monst(to_check) == false)
 		return false;
 	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if (scenario.ter_types[which_ter].blockage == 2)
+	if(scenario.ter_types[which_ter].blockage == eTerObstruct::BLOCK_MONSTERS)
 		return true;
 	else return false;
 }
@@ -547,7 +456,7 @@ bool is_special(location to_check)
 bool outd_is_special(location to_check)
 {
 	if (overall_mode == MODE_OUTDOORS) {
-		if (scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == 2) {
+		if(scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == eTerObstruct::BLOCK_MONSTERS) {
 			return true;
 		}
 		else return false;
@@ -557,20 +466,23 @@ bool outd_is_special(location to_check)
 
 bool impassable(ter_num_t terrain_to_check)
 {
-	if (scenario.ter_types[terrain_to_check].blockage > 2)
+	if(blocksMove(scenario.ter_types[terrain_to_check].blockage))
 		return true;
 	else return false;
 }
 
 // TODO: What on earth is this and why does it mangle the blockage?
+// NOTE: Seems to return 5 for "blocks sight", 1 for "obstructs missiles", 0 otherwise
+// So it should probably be called something like "get_opacity" instead.
 short get_blockage(ter_num_t terrain_type)
 {
 	// little kludgy in here for pits
 	if ((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
-	if ((scenario.ter_types[terrain_type].blockage == 5) || (scenario.ter_types[terrain_type].blockage == 1))
+	if(scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT ||
+	   scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_SIGHT)
 		return 5;
-	else if (scenario.ter_types[terrain_type].blockage > 3)
+	else if(scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	else {
 		return 0;
@@ -693,8 +605,8 @@ location push_loc(location from_where,location to_where)
 		loc_to_try.x = 0;
 		return loc_to_try;
 	}
-	if ((get_obscurity((short) loc_to_try.x,(short) loc_to_try.y) > 0) ||
-	    (scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage > 0) ||
+	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
+	    scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
 		(loc_off_act_area(loc_to_try) == true) ||
 		(monst_there(loc_to_try) < 90) ||
 		(pc_there(loc_to_try) < 6))
@@ -703,13 +615,13 @@ location push_loc(location from_where,location to_where)
 }
 
 
-// TODO: This seems to be wrong; aren't 3 and 4 also impassable?
+// TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool spot_impassable(short i,short  j)
 {
 	ter_num_t ter;
 	
 	ter = coord_to_ter(i,j);
-	if (scenario.ter_types[ter].blockage == 5)
+	if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return true;
 	else return false;
 }
