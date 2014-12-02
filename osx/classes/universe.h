@@ -56,9 +56,9 @@ public:
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void append(legacy::big_tr_type& old);
 	
-	unsigned char explored(char x,char y) const __attribute__((deprecated));
-	unsigned char misc_i(char x, char y) const __attribute__((deprecated));
-	unsigned char sfx(char x, char y) const __attribute__((deprecated));
+	__declspec(deprecated) unsigned char explored(char x,char y) const;
+	__declspec(deprecated) unsigned char misc_i(char x, char y) const;
+	__declspec(deprecated) unsigned char sfx(char x, char y) const;
 	
 	cTown* operator -> ();
 	cCurTown();

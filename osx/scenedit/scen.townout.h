@@ -1,5 +1,5 @@
-void init_town(short size) __attribute__((deprecated));
-void init_out() __attribute__((deprecated));
+__declspec(deprecated) void init_town(short size);
+__declspec(deprecated) void init_out();
 void edit_placed_monst(short which_m);
 cCreature edit_placed_monst_adv(cCreature monst_record, class cDialog& parent);
 void edit_sign(short which_sign,short picture);

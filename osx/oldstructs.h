@@ -22,6 +22,7 @@ namespace legacy {
 		typedef struct Rect                     Rect;
 		typedef uint8_t                   Boolean;
 	}
+	using pad_t = uint8_t; // To make the padding bytes super-explicit
 //#define NLS	25
 //	// number of left slots for buttons
 //#define	NRS	400
@@ -29,41 +30,42 @@ namespace legacy {
 //#define NRSONPAGE	33
 //	// number of right slots for scrolling list on page at 1 time
 	
+#pragma pack(push,1)
 	struct location {
 		int8_t x,y;
-	} __attribute__((packed));
+	};
 	
 	struct special_node_type {
 		int16_t type,sd1,sd2,pic,m1,m2,ex1a,ex1b,ex2a,ex2b,jumpto;
-	} __attribute__((packed));
+	};
 	
 	struct talking_node_type {
 		int16_t personality,type;
 		int8_t link1[4],link2[4];
 		int16_t extras[4];
-	} __attribute__((packed));
+	};
 	
 	struct talking_record_type {
 		uint8_t strlens[200];
 		talking_node_type talk_nodes[60];
-	} __attribute__((packed));
+	};
 	
 	struct terrain_type_type {
 		int16_t picture;
 		uint8_t blockage,flag1,flag2,special,trans_to_what,fly_over,boat_over;
 		uint8_t block_horse,light_radius,step_sound,shortcut_key,res1,res2,res3;
-	} __attribute__((packed));
+	};
 	
 	struct wandering_type {
 		uint8_t monst[4];
-	} __attribute__((packed));
+	};
 	
 	struct out_wandering_type {
 		uint8_t monst[7];
 		uint8_t friendly[3];
 		int16_t spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		int16_t end_spec1,end_spec2;
-	} __attribute__((packed));
+	};
 	
 	struct outdoor_record_type {
 		uint8_t	terrain[48][48];
@@ -77,7 +79,7 @@ namespace legacy {
 		Rect info_rect[8];
 		uint8_t strlens[180];
 		special_node_type specials[60];
-	} __attribute__((packed));
+	};
 	
 	struct creature_start_type {
 		uint8_t number;
@@ -90,7 +92,7 @@ namespace legacy {
 		int8_t spec_enc_code,time_code;
 		int16_t monster_time,personality;
 		int16_t special_on_kill,facial_pic;
-	} __attribute__((packed));
+	};
 	
 	struct short_item_record_type {
 		int16_t variety, item_level;
@@ -102,29 +104,30 @@ namespace legacy {
 		char full_name[25], name[15];
 		uint8_t reserved1,reserved2;
 		uint8_t magic_use_type, ability_strength, treas_class, real_abil;
-	} __attribute__((packed));
+	};
 	
 	struct item_record_type {
 		int16_t variety, item_level;
 		int8_t awkward, bonus, protection, charges, type, magic_use_type;
 		uint8_t graphic_num,ability, ability_strength,type_flag, is_special;
-		int16_t value __attribute__((aligned(2)));
+		pad_t xxx;
+		int16_t value;
 		uint8_t weight, special_class;
 		location item_loc;
 		char full_name[25], name[15];
 		uint8_t treas_class,item_properties,reserved1,reserved2;
-	} __attribute__((packed));
+	};
 	
 	struct preset_item_type {
 		location item_loc;
 		int16_t item_code,ability;
 		uint8_t charges,always_there,property,contained;
-	} __attribute__((packed));
+	};
 	
 	struct preset_field_type {
 		location field_loc;
 		int16_t field_type;
-	} __attribute__((packed));
+	};
 	
 	struct town_record_type {
 		int16_t town_chop_time,town_chop_key;
@@ -148,28 +151,28 @@ namespace legacy {
 		special_node_type specials[100];
 		uint8_t specials1,specials2,res1,res2;
 		int16_t difficulty;
-	} __attribute__((packed));
+	};
 	
 	struct big_tr_type {
 		uint8_t terrain[64][64];
 		Rect room_rect[16];
 		creature_start_type creatures[60];
 		uint8_t lighting[8][64];
-	} __attribute__((packed));
+	};
 	
 	struct ave_tr_type {
 		uint8_t terrain[48][48];
 		Rect room_rect[16];
 		creature_start_type creatures[40];
 		uint8_t lighting[6][48];
-	} __attribute__((packed));
+	};
 	
 	struct tiny_tr_type {
 		uint8_t terrain[32][32];
 		Rect room_rect[16];
 		creature_start_type creatures[30];
 		uint8_t lighting[4][32];
-	} __attribute__((packed));
+	};
 	
 	struct city_block_type {
 		int16_t block_type;
@@ -177,29 +180,29 @@ namespace legacy {
 		int8_t block_alignment;
 		int8_t block_key_time;
 		location block_loc;
-	} __attribute__((packed));
+	};
 	
 	struct city_ter_rect_type {
 		Rect what_rect;
 		uint8_t ter_type;
 		uint8_t hollow;
-	} __attribute__((packed));
+	};
 	
 	struct template_town_type {
 		creature_start_type creatures[30];
 		city_block_type city_block[15];
 		city_ter_rect_type city_ter_rect[10];
-	} __attribute__((packed));
+	};
 	
 	struct scen_item_data_type {
 		item_record_type scen_items[400];
 		char monst_names[256][20];
 		char ter_names[256][30];
-	} __attribute__((packed));
+	};
 	
 	struct item_storage_shortcut_type {
 		int16_t ter_type,item_num[10],item_odds[10],property;
-	} __attribute__((packed));
+	};
 	
 	struct monster_record_type {
 		uint8_t m_num,level,m_name[26];
@@ -214,48 +217,50 @@ namespace legacy {
 		uint8_t default_attitude,summon_type,default_facial_pic,res1,res2,res3;
 		int16_t picture_num;
 		
-	} __attribute__((packed));
+	};
 	
 	struct horse_record_type {
 		location horse_loc,horse_loc_in_sec,horse_sector;
 		int16_t which_town;
 		Boolean exists,property;
-	} __attribute__((packed));
+	};
 	
 	struct boat_record_type {
 		location boat_loc,boat_loc_in_sec,boat_sector;
 		int16_t which_town;
 		Boolean exists,property;
-	} __attribute__((packed));
+	};
 	
 	struct talk_save_type {
 		int16_t personality;
 		int16_t town_num;
 		int16_t str1,str2;
-	} __attribute__((packed));
+	};
 	
 	struct creature_data_type {
 		int16_t active,attitude;
-		uint8_t number; // TODO: I think there should be a byte of padding near here, but where exactly??
-		location m_loc __attribute__((aligned(2)));
+		uint8_t number;
+		pad_t xxx;
+		location m_loc;
 		monster_record_type m_d;
 		int16_t mobile;
 		int16_t summoned;
 		creature_start_type monst_start;
-	} __attribute__((packed));
+	};
 	
 	struct creature_list_type {
 		creature_data_type dudes[60];
 		int16_t which_town;
 		int16_t friendly;
-	} __attribute__((packed));
+	};
 	
 	struct outdoor_creature_type {
-		Boolean exists; // TODO: I think there should be a byte of padding near here, but where exactly??
-		int16_t direction __attribute__((aligned(2)));
+		Boolean exists;
+		pad_t xxx;
+		int16_t direction;
 		out_wandering_type what_monst;
 		location which_sector,m_loc;	
-	} __attribute__((packed));
+	};
 	
 	struct party_record_type {
 		int32_t age;
@@ -287,7 +292,7 @@ namespace legacy {
 		int16_t m_killed[200];
 		int32_t total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
 		char scen_name[256];
-	} __attribute__((packed));
+	};
 	
 	struct scenario_data_type {
 		uint8_t out_width,out_height,difficulty,intro_pic,default_ground;
@@ -295,7 +300,8 @@ namespace legacy {
 		uint8_t town_hidden[200];
 		int16_t flag_a;
 		int16_t intro_mess_pic,intro_mess_len;
-		location where_start __attribute__((aligned(2)));
+		pad_t xxx;
+		location where_start;
 		location out_sec_start,out_start;
 		int16_t which_town_start;
 		int16_t flag_b;
@@ -326,11 +332,11 @@ namespace legacy {
 		int16_t flag_i;
 		location last_out_edited;
 		int16_t last_town_edited;
-	} __attribute__((packed));
+	};
 	
 	struct setup_save_type {
 		uint8_t setup[4][64][64];
-	} __attribute__((packed));
+	};
 	
 	struct pc_record_type {
 		int16_t main_status;
@@ -344,23 +350,23 @@ namespace legacy {
 		int16_t which_graphic,weap_poisoned;
 		Boolean advan[15],traits[15];
 		int16_t race,exp_adj,direction;
-	} __attribute__((packed));
+	};
 	
 	struct town_item_list {
 		item_record_type items[115];
-	} __attribute__((packed));
+	};
 	
 	struct stored_town_maps_type {
 		int8_t town_maps[200][8][64];
-	} __attribute__((packed));
+	};
 	
 	struct stored_outdoor_maps_type {
 		int8_t outdoor_maps[100][6][48];
-	} __attribute__((packed));
+	};
 	
 	struct stored_items_list_type {
 		item_record_type items[115];
-	} __attribute__((packed));
+	};
 	
 	struct current_town_type {
 		int16_t town_num, difficulty;
@@ -370,11 +376,11 @@ namespace legacy {
 		creature_list_type	monst;
 		Boolean in_boat;
 		location p_loc;
-	} __attribute__((packed));
+	};
 	
 	struct out_info_type {
 		int8_t expl[96][96];
-	} __attribute__((packed));
+	};
 	
 //	struct piles_of_stuff_dumping_type {
 //		int8_t strings_ls[NLS][40];
@@ -385,6 +391,7 @@ namespace legacy {
 //		int8_t talk_strs[170][256];
 //		scen_item_data_type scen_item_list;
 //	};
+#pragma pack(pop)
 };
 
 #endif

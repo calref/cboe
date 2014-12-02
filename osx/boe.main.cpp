@@ -148,6 +148,10 @@ void check_for_intel();
 bool mac_is_intel;
 
 int main(int argc, char* argv[]) {
+#if 0
+	void debug_oldstructs();
+	debug_oldstructs();
+#endif
 	try{
 		init_directories(argv[0]);
 		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));

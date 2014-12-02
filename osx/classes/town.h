@@ -99,7 +99,7 @@ public:
 	char comment[3][256];
 	char spec_strs[100][256];
 	char sign_strs[20][256];
-	char(& town_strs(short i))[256] __attribute__((deprecated));
+	__declspec(deprecated) char(& town_strs(short i))[256];
 	cSpeech talking;
 	
 	virtual ~cTown(){}

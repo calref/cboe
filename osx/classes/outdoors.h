@@ -66,7 +66,7 @@ public:
 	char sign_strs[8][256];
 	bool special_spot[48][48];
 	
-	char(& out_strs(short i))[256] __attribute__((deprecated));
+	__declspec(deprecated) char(& out_strs(short i))[256];
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
 };

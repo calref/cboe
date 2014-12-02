@@ -256,11 +256,11 @@ cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), t
 
 cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
-bool cControl::triggerClickHandler(cDialog& __attribute__((unused)), std::string __attribute__((unused)), eKeyMod __attribute__((unused)), location __attribute__((unused))){
+bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod, location){
 	return true;
 }
 
-bool cControl::triggerFocusHandler(cDialog& me __attribute__((unused)), std::string id __attribute__((unused)), bool losingFocus __attribute__((unused))){
+bool cControl::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
 	return true;
 }
 

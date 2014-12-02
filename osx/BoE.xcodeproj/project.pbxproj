@@ -328,6 +328,7 @@
 		914B2B9418E8005B007B6799 /* SND99.WAV in Copy Mac Sounds */ = {isa = PBXBuildFile; fileRef = 914B2B2E18E7FFEF007B6799 /* SND99.WAV */; };
 		914CA4441905789C00B6ADD1 /* watch.gif in Copy Mac Cursors */ = {isa = PBXBuildFile; fileRef = 914CA4431905788F00B6ADD1 /* watch.gif */; };
 		914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */; };
+		915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325161A2E1DA8000A9A1C /* oldstructs.cpp */; };
 		91870F81190C8C1C0081C150 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91870F83190C8C1F0081C150 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
 		91870F84190C90980081C150 /* scen.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scen.menu.xib */; };
@@ -1245,6 +1246,7 @@
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scen.menus.h; sourceTree = "<group>"; };
 		914CA49F190C4E9200B6ADD1 /* scen.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scen.menu.xib; sourceTree = "<group>"; };
+		915325161A2E1DA8000A9A1C /* oldstructs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oldstructs.cpp; path = ../oldstructs.cpp; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -1493,6 +1495,7 @@
 				913D03320FA0FFE700184C18 /* src */,
 				91AC61300FA270B300EEAE67 /* classes.h */,
 				91E5C5A10F9EACE200C21460 /* oldstructs.h */,
+				915325161A2E1DA8000A9A1C /* oldstructs.cpp */,
 			);
 			path = classes;
 			sourceTree = "<group>";
@@ -2396,6 +2399,7 @@
 				91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */,
 				91BFA3DA1902B13D001686E4 /* tarball.cpp in Sources */,
 				91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */,
+				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

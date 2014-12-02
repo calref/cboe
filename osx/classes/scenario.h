@@ -100,7 +100,7 @@ public:
 	cOutdoors* outdoors;
 	cTown* towns;
 	
-	char(& scen_strs(short i))[256] __attribute__((deprecated));
+	__declspec(deprecated) char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file);

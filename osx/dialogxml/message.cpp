@@ -18,7 +18,7 @@ void cTextMsg::attachClickHandler(click_callback_t f) throw(){
 	clickable = onClick != NULL;
 }
 
-void cTextMsg::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
+void cTextMsg::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 

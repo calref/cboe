@@ -766,7 +766,7 @@ bool load_party(fs::path file_to_load){
 //	flag_type flag;
 //	flag_type *flag_ptr;
 	short vers,n;
-	struct __attribute__((packed)) {ushort a; ushort b; ushort c; ushort d; ushort e;} flags;
+	struct {ushort a; ushort b; ushort c; ushort d; ushort e;} flags;
 	
 	// TODO: Putting these flags in hex would make some things a bit clearer
 	static const unsigned short mac_flags[3][2] = {

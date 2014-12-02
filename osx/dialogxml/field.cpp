@@ -11,11 +11,11 @@
 #include "dialog.h"
 #include "graphtool.h"
 
-void cTextField::attachClickHandler(click_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
+void cTextField::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(false);
 }
 
-void cTextField::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(){
+void cTextField::attachFocusHandler(focus_callback_t f) throw(){
 	onFocus = f;
 }
 
@@ -29,7 +29,7 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 	return passed;
 }
 
-void cTextField::setFormat(eFormat prop, short val __attribute__((unused))) throw(xUnsupportedProp){
+void cTextField::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	throw xUnsupportedProp(prop);
 }
 

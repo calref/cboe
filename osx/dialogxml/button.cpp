@@ -22,7 +22,7 @@
 
 extern sf::Texture bg_gworld;
 
-void cButton::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
+void cButton::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 
@@ -388,11 +388,11 @@ void cLedGroup::hide(std::string id){
 	choices[id]->hide();
 }
 
-void cLedGroup::setFormat(eFormat prop __attribute__((unused)), short val __attribute__((unused))) throw(xUnsupportedProp) {
+void cLedGroup::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 
-short cLedGroup::getFormat(eFormat prop __attribute__((unused))) throw(xUnsupportedProp) {
+short cLedGroup::getFormat(eFormat prop) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 

@@ -76,7 +76,7 @@ void cPict::attachClickHandler(click_callback_t f) throw(){
 	}
 }
 
-void cPict::attachFocusHandler(focus_callback_t f __attribute__((unused))) throw(xHandlerNotSupported){
+void cPict::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 

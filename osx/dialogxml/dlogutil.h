@@ -82,11 +82,11 @@ public:
 class cStringChoice {
 	static const size_t per_page;
 	cDialog dlg;
-	bool onLeft(cDialog& me, std::string id);
-	bool onRight(cDialog& me, std::string id);
-	bool onCancel(cDialog& me, std::string id);
-	bool onOkay(cDialog& me, std::string id);
-	bool onSelect(cDialog& me, bool losing);
+	bool onLeft();
+	bool onRight();
+	bool onCancel(cDialog& me);
+	bool onOkay(cDialog& me);
+	bool onSelect(bool losing);
 	void attachHandlers();
 	void fillPage();
 	std::vector<std::string> strings;

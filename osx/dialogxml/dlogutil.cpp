@@ -150,12 +150,12 @@ cStringChoice::cStringChoice(
 
 void cStringChoice::attachHandlers() {
 	using namespace std::placeholders;
-	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1,_2));
+	dlg["left"].attachClickHandler(std::bind(&cStringChoice::onLeft,this));
+	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this));
+	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1));
+	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1));
 	leds = &dynamic_cast<cLedGroup&>(dlg["strings"]);
-	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_1,_3));
+	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_3));
 }
 
 size_t cStringChoice::show(std::string select){
@@ -193,32 +193,32 @@ void cStringChoice::fillPage(){
 	}
 }
 
-bool cStringChoice::onLeft(cDialog& me __attribute__((unused)), std::string id __attribute__((unused))){
+bool cStringChoice::onLeft(){
 	if(page == 0) page = strings.size() / per_page;
 	else page--;
 	fillPage();
 	return true;
 }
 
-bool cStringChoice::onRight(cDialog& me __attribute__((unused)), std::string id __attribute__((unused))){
+bool cStringChoice::onRight(){
 	if(page == strings.size() / per_page) page = 0;
 	else page++;
 	fillPage();
 	return true;
 }
 
-bool cStringChoice::onCancel(cDialog& me, std::string id __attribute__((unused))){
+bool cStringChoice::onCancel(cDialog& me){
 	me.toast();
 	return true;
 }
 
-bool cStringChoice::onOkay(cDialog& me, std::string id __attribute__((unused))){
+bool cStringChoice::onOkay(cDialog& me){
 	dlg.setResult(cur);
 	me.toast();
 	return true;
 }
 
-bool cStringChoice::onSelect(cDialog& me, bool losing) {
+bool cStringChoice::onSelect(bool losing) {
 	if(losing) return true;
 	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
 	cur = page * 40 + i - 1;
