@@ -181,7 +181,7 @@ short sight_obscurity(short x,short y) {
 			store += 2;
 		if ((univ.town.is_fire_barr(x,y)) || (univ.town.is_force_barr(x,y)))
 			return 5;
-		if ((univ.town.is_crate(x,y)) || (univ.town.is_barrel(x,y)))
+		if(univ.town.is_crate(x,y) || univ.town.is_barrel(x,y) || univ.town.is_block(x,y))
 			store++;
 		
 	}

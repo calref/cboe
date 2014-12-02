@@ -1449,6 +1449,9 @@ void load_missile() ////
 	else if ((arrow == 24) && (bow < 24)) {
 		add_string_to_buf("Fire: Equip some arrows.       ");
 	}
+	else if(crossbow == 24 && bolts < 24) {
+		add_string_to_buf("Fire: Equip some bolts.        ");
+	}
 	else if ((arrow < 24) && (bow < 24)) {
 		missile_inv_slot = bow;
 		ammo_inv_slot = arrow;

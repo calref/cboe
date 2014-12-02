@@ -872,6 +872,8 @@ short do_look(location space)
 			add_string_to_buf("    Crate               ");
 		if (univ.town.is_barrel(space.x,space.y))
 			add_string_to_buf("    Barrel               ");
+		if(univ.town.is_block(space.x,space.y))
+			add_string_to_buf("    Stone Block               ");
 		if (univ.town.is_fire_barr(space.x,space.y))
 			add_string_to_buf("    Magic Barrier               ");
 		if (univ.town.is_force_barr(space.x,space.y))
