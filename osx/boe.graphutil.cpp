@@ -653,7 +653,7 @@ bool is_fluid(ter_num_t ter_type)////
 //	if (((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 //		return true;
 //	return false;
-	return scenario.ter_types[ter_type].trim_type == TRIM_FRILLS;
+	return scenario.ter_types[ter_type].trim_type == eTrimType::FRILLS;
 }
 
 // Is this a beach that gets shore plopped down next to it?
@@ -661,7 +661,7 @@ bool is_shore(ter_num_t ter_type)////
 {
 	if (is_fluid(ter_type) == true)
 		return false;
-	if(scenario.ter_types[ter_type].trim_type == TRIM_WATERFALL)
+	if(scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
 		return false;
 //	if (ter_type == 77)
 //		return false;
@@ -679,7 +679,7 @@ bool is_shore(ter_num_t ter_type)////
 // These two functions used to determine wall round-cornering
 bool is_wall(ter_num_t ter_type)////
 {
-	return scenario.ter_types[ter_type].trim_type == TRIM_WALL;
+	return scenario.ter_types[ter_type].trim_type == eTrimType::WALL;
 //	short pic;
 //
 //	pic = scenario.ter_types[ter_type].picture;
@@ -691,11 +691,11 @@ bool is_wall(ter_num_t ter_type)////
 }
 bool is_ground(ter_num_t ter_type)
 {
-	if(scenario.ter_types[ter_type].trim_type == TRIM_WALL)
+	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALL)
 		return false;
 	if(scenario.ter_types[ter_type].block_horse)
 		return false;
-//	if(scenario.ter_types[ter_type].trim_type == TRIM_WALKWAY)
+//	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALKWAY)
 //		return false;
 	return true;
 }

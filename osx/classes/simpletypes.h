@@ -228,16 +228,16 @@ enum eTerSpec {
 	//	24. Bridge - if the party boats over it, they get the option to land. (Unused, Unused, Unused)
 };
 
-enum eTrimType {
-	TRIM_NONE = 0,
-	TRIM_WALL = 1, // not a trim, but trims will conform to it as if it's the same ground type (eg stone wall)
-	TRIM_S, TRIM_SE, TRIM_E, TRIM_NE, TRIM_N, TRIM_NW, TRIM_W, TRIM_SW,
-	TRIM_NE_INNER, TRIM_SE_INNER, TRIM_SW_INNER, TRIM_NW_INNER,
-	TRIM_FRILLS = 14, // like on lava and underground water; no trim_ter required
-	TRIM_ROAD = 15, // the game will treat it like a road space and draw roads; no trim_ter required
-	TRIM_WALKWAY = 16, // the game will draw walkway corners; trim_ter is base terrain to draw on
-	TRIM_WATERFALL = 17, // special case for waterfalls
-	TRIM_CITY = 18, // the game will join roads up to this space but not draw roads on the space
+enum class eTrimType {
+	NONE = 0,
+	WALL = 1, // not a trim, but trims will conform to it as if it's the same ground type (eg stone wall)
+	S, SE, E, NE, N, NW, W, SW,
+	NE_INNER, SE_INNER, SW_INNER, NW_INNER,
+	FRILLS = 14, // like on lava and underground water; no trim_ter required
+	ROAD = 15, // the game will treat it like a road space and draw roads; no trim_ter required
+	WALKWAY = 16, // the game will draw walkway corners; trim_ter is base terrain to draw on
+	WATERFALL = 17, // special case for waterfalls
+	CITY = 18, // the game will join roads up to this space but not draw roads on the space
 };
 
 /*      terrain type blockage          */

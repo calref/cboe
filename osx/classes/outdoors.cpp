@@ -35,19 +35,19 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
 				if(old.terrain[i+1][j] == 81) {
 					ter_num_t connect = old.terrain[i-1][j];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 44;
 				} else if(old.terrain[i-1][j] == 81) {
 					ter_num_t connect = old.terrain[i+1][j];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 40;
 				} else if(old.terrain[i][j+1] == 81) {
 					ter_num_t connect = old.terrain[i][j-1];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 42;
 				} else if(old.terrain[i][j-1] == 81) {
 					ter_num_t connect = old.terrain[i][j+1];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == TRIM_CITY)
+					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
 				}
 			}

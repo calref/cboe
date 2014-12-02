@@ -210,9 +210,9 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	}
 	
 	if ((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) ||
-						  (scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == TRIM_CITY))) {
+						  (scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == eTrimType::CITY))) {
 		ASB("Move: Can't trigger this special in combat.");
-		return false; // TODO: Maybe replace TRIM_CITY check with a blockage == clear/special && is_special() check?
+		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
 	
 	if (((mode == 1) || ((mode == 2) && (which_combat_type == 1)))

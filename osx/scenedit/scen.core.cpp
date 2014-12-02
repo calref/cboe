@@ -328,7 +328,8 @@ void fill_ter_info(cDialog& me, short ter){
 	me["trans"].setTextToNum(ter_type.trans_to_what);
 	me["ground"].setTextToNum(ter_type.ground_type);
 	me["trimter"].setTextToNum(ter_type.trim_ter);
-	me["trim"].setTextToNum(ter_type.trim_type);
+	// TODO: Replace edit text box for trim with a framed name and Select button
+	me["trim"].setTextToNum((int)ter_type.trim_type);
 	std::string propid = "prop" + std::to_string(ter_type.special);
 	dynamic_cast<cLedGroup&>(me["prop"]).setSelected(propid);
 	fill_ter_flag_info(me, "prop", false);

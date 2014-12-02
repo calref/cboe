@@ -1795,18 +1795,18 @@ bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter){
 	if(ter2 == ter) return true;
 	if(scenario.ter_types[ter2].ground_type != scenario.ter_types[ter].ground_type)
 		return false;
-	if(scenario.ter_types[ter].trim_type == TRIM_NONE &&
-	   scenario.ter_types[ter2].trim_type >= TRIM_S &&
-	   scenario.ter_types[ter2].trim_type <= TRIM_NW_INNER)
+	if(scenario.ter_types[ter].trim_type == eTrimType::NONE &&
+	   scenario.ter_types[ter2].trim_type >= eTrimType::S &&
+	   scenario.ter_types[ter2].trim_type <= eTrimType::NW_INNER)
 		return ter == get_ground_from_ter(ter);
-	if(scenario.ter_types[ter2].trim_type == TRIM_NONE &&
-	   scenario.ter_types[ter].trim_type >= TRIM_S &&
-	   scenario.ter_types[ter].trim_type <= TRIM_NW_INNER)
+	if(scenario.ter_types[ter2].trim_type == eTrimType::NONE &&
+	   scenario.ter_types[ter].trim_type >= eTrimType::S &&
+	   scenario.ter_types[ter].trim_type <= eTrimType::NW_INNER)
 		return ter2 == get_ground_from_ter(ter2);
-	if(scenario.ter_types[ter2].trim_type >= TRIM_S &&
-	   scenario.ter_types[ter2].trim_type <= TRIM_NW_INNER &&
-	   scenario.ter_types[ter].trim_type >= TRIM_S &&
-	   scenario.ter_types[ter].trim_type <= TRIM_NW_INNER)
+	if(scenario.ter_types[ter2].trim_type >= eTrimType::S &&
+	   scenario.ter_types[ter2].trim_type <= eTrimType::NW_INNER &&
+	   scenario.ter_types[ter].trim_type >= eTrimType::S &&
+	   scenario.ter_types[ter].trim_type <= eTrimType::NW_INNER)
 		return true;
 	return false;
 }

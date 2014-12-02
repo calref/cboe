@@ -109,7 +109,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	}else{
 		combat_arena = 1;
 		ground_type = 255;
-		trim_type = TRIM_NONE;
+		trim_type = eTrimType::NONE;
 		trim_ter = 0;
 	}
 	if(trim_ter == 99) trim_ter = 0;

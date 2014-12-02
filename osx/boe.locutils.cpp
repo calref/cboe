@@ -288,8 +288,8 @@ bool is_blocked(location to_check)
 		// Keep away from marked specials during combat
 		if ((is_combat()) && univ.town.is_spot(to_check.x, to_check.y))
 			return true;
-		if ((is_combat()) && (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == TRIM_CITY))
-			return true; // TODO: Maybe replace TRIM_CITY with a blockage == clear/special && is_special() check
+		if ((is_combat()) && (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY))
+			return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
 		
 		// Party there?
 		if (is_town())
