@@ -833,7 +833,7 @@ short cUniverse::difficulty_adjust() {
 	if(!scenario.adjust_diff) return 1;
 	
 	for (short i = 0; i < 6; i++)
-		if (party[i].main_status == 1)
+		if(party[i].main_status == eMainStatus::ALIVE)
 			party_level += party[i].level;
 	
 	if ((scenario.difficulty <= 0) && (party_level >= 60))

@@ -15,26 +15,44 @@ typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
 
-enum eMainStatus {
-	MAIN_STATUS_ABSENT = 0, // absent, empty slot
-	MAIN_STATUS_ALIVE = 1,
-	MAIN_STATUS_DEAD = 2,
-	MAIN_STATUS_DUST = 3,
-	MAIN_STATUS_STONE = 4,
-	MAIN_STATUS_FLED = 5,
-	MAIN_STATUS_SURFACE = 6, // fled to surface?
-	MAIN_STATUS_WON = 7,
-	MAIN_STATUS_SPLIT = 10,
-	// The rest are not really necessary, but are here for completeness so that all valid values have a name.
-	MAIN_STATUS_SPLIT_ABSENT = MAIN_STATUS_SPLIT + MAIN_STATUS_ABSENT,
-	MAIN_STATUS_SPLIT_ALIVE = MAIN_STATUS_SPLIT + MAIN_STATUS_ALIVE,
-	MAIN_STATUS_SPLIT_DEAD = MAIN_STATUS_SPLIT + MAIN_STATUS_DEAD,
-	MAIN_STATUS_SPLIT_DUST = MAIN_STATUS_SPLIT + MAIN_STATUS_DUST,
-	MAIN_STATUS_SPLIT_STONE = MAIN_STATUS_SPLIT + MAIN_STATUS_STONE,
-	MAIN_STATUS_SPLIT_FLED = MAIN_STATUS_SPLIT + MAIN_STATUS_FLED,
-	MAIN_STATUS_SPLIT_SURFACE = MAIN_STATUS_SPLIT + MAIN_STATUS_SURFACE,
-	MAIN_STATUS_SPLIT_WON = MAIN_STATUS_SPLIT + MAIN_STATUS_WON,
+enum class eMainStatus {
+	ABSENT = 0, // absent, empty slot
+	ALIVE = 1,
+	DEAD = 2,
+	DUST = 3,
+	STONE = 4,
+	FLED = 5,
+	SURFACE = 6, // fled to surface?
+	WON = 7,
+	SPLIT = 10,
+	SPLIT_ABSENT = SPLIT + ABSENT,
+	SPLIT_ALIVE = SPLIT + ALIVE,
+	SPLIT_DEAD = SPLIT + DEAD,
+	SPLIT_DUST = SPLIT + DUST,
+	SPLIT_STONE = SPLIT + STONE,
+	SPLIT_FLED = SPLIT + FLED,
+	SPLIT_SURFACE = SPLIT + SURFACE,
+	SPLIT_WON = SPLIT + WON,
 };
+
+inline eMainStatus exceptSplit(eMainStatus stat) {
+	if(int(stat) >= 10)
+		return (eMainStatus) (-10 + (int)stat);
+	return stat;
+}
+
+inline bool isSplit(eMainStatus stat) {
+	return int(stat) >= 10;
+}
+
+inline bool isAbsent(eMainStatus stat) {
+	return stat == eMainStatus::ABSENT || int(stat) > 4;
+}
+
+inline bool isDead(eMainStatus stat) {
+	int code = (int) stat;
+	return code > 1 && code < 5;
+}
 
 /* adven[i].race */ //complete
 enum eRace {

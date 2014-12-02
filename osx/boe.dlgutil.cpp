@@ -294,7 +294,7 @@ void handle_sale(short what_chosen,short cost)
 								univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
 						break;
 					case 5: case 6: case 7:
-						univ.party[current_pc].main_status = MAIN_STATUS_ALIVE; break;
+						univ.party[current_pc].main_status = eMainStatus::ALIVE; break;
 					case 8:
 						univ.party[current_pc].status[9] = 0; break;
 				}
@@ -444,17 +444,17 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[4];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].main_status == 4) {
+			if(univ.party[current_pc].main_status == eMainStatus::STONE) {
 				store_shop_items[shop_pos] = 705;
 				store_shop_costs[shop_pos] = heal_costs[5];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].main_status == 2){
+			if(univ.party[current_pc].main_status == eMainStatus::DEAD){
 				store_shop_items[shop_pos] = 706;
 				store_shop_costs[shop_pos] = heal_costs[6];
 				shop_pos++;
 			}
-			if  (univ.party[current_pc].main_status == 3){
+			if (univ.party[current_pc].main_status == eMainStatus::DUST){
 				store_shop_items[shop_pos] = 707;
 				store_shop_costs[shop_pos] = heal_costs[7];
 				shop_pos++;
@@ -1206,7 +1206,7 @@ static void put_party_stats(cDialog& me)
 	
 	for (i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party[i].main_status > 0) {
+		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["name" + n].setText(univ.party[i].name);
 			me["trait" + n].show();
 			me["train" + n].show();
@@ -1239,7 +1239,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 		short which_pc = item_hit[item_hit.length()-1] - '1';
 		item_hit = item_hit.substr(0, item_hit.length() - 1);
 		if(item_hit == "name") {
-			if (univ.party[which_pc].main_status == 0) {
+			if(univ.party[which_pc].main_status == eMainStatus::ABSENT) {
 				// TODO: Clicking a blank field made a new PC? Something to consider reinstating!
 				//give_help(56,0,989);
 				//create_pc(which_pc,989);
@@ -1254,15 +1254,16 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 			spend_xp(which_pc,0,&me);
 			put_party_stats(me);
 		} else if(item_hit == "pic") {
-			if (univ.party[which_pc].main_status <= 0)
+			if(univ.party[which_pc].main_status == eMainStatus::ABSENT)
 				return true;
-			if (univ.party[which_pc].main_status != 0)
+			// TODO: Uhh, why did he check this twice...
+			if(univ.party[which_pc].main_status != eMainStatus::ABSENT)
 				pick_pc_graphic(which_pc,1,&me);
 			put_party_stats(me);
 		} else if(item_hit == "delete") { // Note: This button is also used for "create new PC".
-			if (univ.party[which_pc].main_status != MAIN_STATUS_ABSENT) {
+			if(univ.party[which_pc].main_status != eMainStatus::ABSENT) {
 				if(cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show() == "yes")
-					univ.party[which_pc].main_status = MAIN_STATUS_ABSENT;
+					univ.party[which_pc].main_status = eMainStatus::ABSENT;
 				put_party_stats(me);
 			}
 			else {
@@ -1311,7 +1312,7 @@ void edit_party(short can_create,short can_cancel)
 	
 	pcDialog.run();
 	
-	if (univ.party[current_pc].main_status != 1)
+	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
 	
 	

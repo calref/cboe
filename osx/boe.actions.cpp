@@ -700,7 +700,7 @@ bool handle_action(sf::Event event)
 				else {
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
-						if ((univ.party[k].main_status == 1) && (univ.party[k].status[6] > 0)) {
+						if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[6] > 0) {
 							sprintf((char *) str,"%s cleans webs.",univ.party[k].name.c_str());
 							add_string_to_buf((char *) str);
 							univ.party[k].status[6] = move_to_zero(univ.party[k].status[6]);
@@ -1040,7 +1040,7 @@ bool handle_action(sf::Event event)
 								add_string_to_buf("Set active: Finish what you're doing first.");
 							else if (is_combat())
 								add_string_to_buf("Set active: Can't set this in combat.");
-							else if ((univ.party[i].main_status != 1) &&
+							else if(univ.party[i].main_status != eMainStatus::ALIVE &&
 									 ((overall_mode != MODE_SHOPPING) || (store_shop_type != 3)))
 								add_string_to_buf("Set active: PC must be here & active.");
 							else {
@@ -1104,7 +1104,7 @@ bool handle_action(sf::Event event)
 							add_string_to_buf("Set active: Finish what you're doing first.");
 						else {
 							if (!(is_combat())) {
-								if ((univ.party[i].main_status != 1) &&
+								if(univ.party[i].main_status != eMainStatus::ALIVE &&
 									((overall_mode != MODE_SHOPPING) || (store_shop_type != 12)))
 									add_string_to_buf("Set active: PC must be here & active.");
 								else {
@@ -1396,8 +1396,8 @@ bool handle_action(sf::Event event)
 	}
 	else if (party_toast() == true) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == MAIN_STATUS_FLED) {
-				univ.party[i].main_status = MAIN_STATUS_ALIVE;
+			if(univ.party[i].main_status == eMainStatus::FLED) {
+				univ.party[i].main_status = eMainStatus::ALIVE;
 				if (is_combat()) {
 					end_town_mode(0,univ.town.p_loc);
 					add_string_to_buf("End combat.               ");
@@ -1439,7 +1439,7 @@ bool someone_awake()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((univ.party[i].main_status == 1) && (univ.party[i].status[11] <= 0) && (univ.party[i].status[12] <= 0))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].status[11] <= 0 && univ.party[i].status[12] <= 0)
 			return true;
 	return false;
 }
@@ -1508,11 +1508,11 @@ void initiate_outdoor_combat(short i)
 	univ.party.out_c[i].exists = false;
 	
 	for (m = 0; m < 6; m++)
-		if (univ.party[m].main_status == 1)
+		if(univ.party[m].main_status == eMainStatus::ALIVE)
 			to_place = pc_pos[m];
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
-			if(univ.party[m].main_status != 1 && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
+			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],to_place,true);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
@@ -1720,7 +1720,7 @@ bool handle_keystroke(sf::Event& event){
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for (i = 0; i < 6; i++) {
-				univ.party[i].main_status = MAIN_STATUS_ALIVE;
+				univ.party[i].main_status = eMainStatus::ALIVE;
 				univ.party[i].cur_health = univ.party[i].max_health;
 				univ.party[i].cur_sp = 100;
 			}
@@ -1739,8 +1739,8 @@ bool handle_keystroke(sf::Event& event){
 		case 'B':
 			if(!in_scen_debug) break;
 			for(i=0;i<6;i++)
-                if(univ.party[i].main_status >= MAIN_STATUS_SPLIT)
-                    univ.party[i].main_status -= MAIN_STATUS_SPLIT;
+                if(isSplit(univ.party[i].main_status))
+                    univ.party[i].main_status -= eMainStatus::SPLIT;
 			if(overall_mode == MODE_OUTDOORS){
 				add_string_to_buf("Debug - Leave Town: You're not in town!");
 				print_buf();
@@ -1813,8 +1813,8 @@ bool handle_keystroke(sf::Event& event){
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for (i = 0; i < 6; i++) {
-				if ((univ.party[i].main_status > MAIN_STATUS_ALIVE) && (univ.party[i].main_status < MAIN_STATUS_FLED))
-					univ.party[i].main_status = MAIN_STATUS_ALIVE;
+				if(isDead(univ.party[i].main_status))
+					univ.party[i].main_status = eMainStatus::ALIVE;
 			}
 			heal_party(250);
 			restore_sp_party(100);
@@ -2208,7 +2208,7 @@ void increase_age()////
 	if (PSD[SDF_PARTY_FLIGHT] == 1) {
 		if(blocksMove(scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.                  ");
-			slay_party(MAIN_STATUS_DEAD);
+			slay_party(eMainStatus::DEAD);
 			print_buf();
 			pause(150);
 		}
@@ -2275,7 +2275,7 @@ void increase_age()////
 	// Food
 	if ((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				how_many_short++;
 		how_many_short = take_food (how_many_short,false);
 		if (how_many_short > 0) {
@@ -2322,7 +2322,7 @@ void increase_age()////
 	if (is_out()) {
 		if (univ.party.age % 100 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_health < univ.party[i].max_health))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
 			heal_party(2);
 		}
@@ -2330,7 +2330,7 @@ void increase_age()////
 	else {
 		if (univ.party.age % 50 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_health < univ.party[i].max_health))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
 			heal_party(1);
 		}
@@ -2338,7 +2338,7 @@ void increase_age()////
 	if (is_out()) {
 		if (univ.party.age % 80 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_sp < univ.party[i].max_sp))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
 			restore_sp_party(2);
 		}
@@ -2346,7 +2346,7 @@ void increase_age()////
 	else {
 		if (univ.party.age % 40 == 0) {
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].cur_sp < univ.party[i].max_sp))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
 			restore_sp_party(1);
 		}
@@ -2354,7 +2354,7 @@ void increase_age()////
 	
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if ((univ.party[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (univ.party[i].cur_health < univ.party[i].max_health)) {
 				heal_pc(i,2);
 				update_stat = true;
@@ -2419,7 +2419,7 @@ void handle_cave_lore()////
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
-		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0) && (get_ran(1,0,12) == 5)
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0 && get_ran(1,0,12) == 5
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
@@ -2428,7 +2428,7 @@ void handle_cave_lore()////
 		}
 	for (i = 0; i < 6; i++)
 		if (
-			(univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0) && (get_ran(1,0,12) == 5)
+			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0 && get_ran(1,0,12) == 5
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
@@ -2473,10 +2473,10 @@ void drop_pc(short which)
 		return;
 	}
 	add_string_to_buf("Delete PC: OK.                  ");
-	kill_pc(which,MAIN_STATUS_ABSENT);
+	kill_pc(which,eMainStatus::ABSENT);
 	for(short i = which; i < 5; i++)
 		univ.party[i] = univ.party[i + 1];
-	univ.party[5].main_status = MAIN_STATUS_ABSENT;
+	univ.party[5].main_status = eMainStatus::ABSENT;
 	set_stat_window(0);
 	put_pc_screen();
 }
@@ -2538,7 +2538,7 @@ void start_new_game()
 
 	// if no PCs left, forget it
 	for (i = 0 ; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			i = 100;
 	if (i == 6)
 		return;
@@ -2546,7 +2546,7 @@ void start_new_game()
 	
 	// everyone gets a weapon
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			univ.party[i].items[0] = start_items[univ.party[i].race * 2];
 			univ.party[i].equip[0] = true;
 			univ.party[i].items[1] = start_items[univ.party[i].race * 2 + 1];
@@ -2554,7 +2554,7 @@ void start_new_game()
 		}
 	// PCs get adjustments
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			// Do stat adjs for selected race.
 			if (univ.party[i].race == 1)
 				univ.party[i].skills[1] += 2;
@@ -3024,7 +3024,7 @@ bool someone_poisoned()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if ((univ.party[i].main_status == 1) && (univ.party[i].status[2] > 0))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[2] > 0))
 			return true;
 	return false;
 }

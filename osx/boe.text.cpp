@@ -158,7 +158,7 @@ void put_pc_screen()
 	style.colour = sf::Color::Black;
 	
 	for (i = 0; i < 6; i++) {
-		if (univ.party[i].main_status != 0) {
+		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			for (j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if (i == current_pc) {
@@ -174,7 +174,7 @@ void put_pc_screen()
 			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
 			switch (univ.party[i].main_status) {
-				case 1:
+				case eMainStatus::ALIVE:
 					if (univ.party[i].cur_health == univ.party[i].max_health)
 						style.colour = sf::Color::Green;
 					else style.colour = sf::Color::Red;
@@ -187,29 +187,29 @@ void put_pc_screen()
 					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
-				case 2:
+				case eMainStatus::DEAD:
 					sprintf((char *) to_draw, "Dead");
 					break;
-				case 3:
+				case eMainStatus::DUST:
 					sprintf((char *) to_draw, "Dust");
 					break;
-				case 4:
+				case eMainStatus::STONE:
 					sprintf((char *) to_draw, "Stone");
 					break;
-				case 5:
+				case eMainStatus::FLED:
 					sprintf((char *) to_draw, "Fled");
 					break;
-				case 6:
+				case eMainStatus::SURFACE:
 					sprintf((char *) to_draw, "Surface");
 					break;
-				case 7:
+				case eMainStatus::WON:
 					sprintf((char *) to_draw, "Won");
 					break;
 				default:
 					sprintf((char *) to_draw, "Absent");
 					break;
 			}
-			if (univ.party[i].main_status != 1)
+			if(univ.party[i].main_status != eMainStatus::ALIVE)
 				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			
@@ -232,7 +232,7 @@ void put_pc_screen()
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if ((current_pc < 6) && (univ.party[current_pc].main_status != 1) && (stat_window == current_pc)) {
+	if(current_pc < 6 && univ.party[current_pc].main_status != eMainStatus::ALIVE && stat_window == current_pc) {
 		set_stat_window(current_pc);
 	}
 }
@@ -527,7 +527,7 @@ void place_item_bottom_buttons()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
@@ -550,7 +550,7 @@ void set_stat_window(short new_stat)
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
-	if ((stat_window < 6) && (univ.party[stat_window].main_status != 1))
+	if(stat_window < 6 && univ.party[stat_window].main_status != eMainStatus::ALIVE)
 		stat_window = first_active_pc();
 	item_sbar->setPageSize(8);
 	switch (stat_window) {
@@ -583,7 +583,7 @@ short first_active_pc()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			return i;
 	return 6;
 }
@@ -684,7 +684,7 @@ void draw_pc_effects(short pc)
 		dest_rect.bottom += pc * 13;
 	}
 	
-	if (univ.party[pc].main_status % 10 != 1)
+	if(exceptSplit(univ.party[pc].main_status) != eMainStatus::ALIVE)
 		return;
 	// TODO: This used to draw the status icons in the spell dialog, but it no longer does. Fix that.
 	if ((univ.party[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) {
@@ -808,7 +808,7 @@ short do_look(location space)
 		add_string_to_buf("    Your party");
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
-			if ((space == pc_pos[i]) && (univ.party[i].main_status == 1)
+			if(space == pc_pos[i] && univ.party[i].main_status == eMainStatus::ALIVE
 				&& (is_lit == true) && (can_see(pc_pos[current_pc],space,0) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);

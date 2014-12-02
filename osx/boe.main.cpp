@@ -486,7 +486,7 @@ void handle_file_menu(int item_hit)
 				if (choice == "cancel")
 					return;
 				for (i = 0; i < 6; i++)
-					univ.party[i].main_status = MAIN_STATUS_ABSENT;
+					univ.party[i].main_status = eMainStatus::ABSENT;
 				party_in_memory = false;
 				reload_startup();
 				overall_mode = MODE_STARTUP;
@@ -553,7 +553,7 @@ void handle_options_menu(int item_hit)
 				if (choice < 6) {
 					std::string confirm = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
 					if (confirm == "yes")
-						kill_pc(choice,MAIN_STATUS_ABSENT);
+						kill_pc(choice,eMainStatus::ABSENT);
 				}
 				draw_terrain();
 			}
@@ -576,7 +576,7 @@ void handle_options_menu(int item_hit)
 				break;
 			}
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status == 0)
+				if(univ.party[i].main_status == eMainStatus::ABSENT)
 					i = 20;
 			if (i == 6) {
 				ASB("Add PC: You already have 6 PCs.");

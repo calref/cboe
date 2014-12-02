@@ -441,8 +441,8 @@ void put_party_in_scen(std::string scen_name)
 	 	for (i = 0; i < 15; i++)
  			univ.party[j].status[i] = 0;
 	for (j = 0; j < 6; j++) {
-		if (univ.party[j].main_status >= MAIN_STATUS_SPLIT)
-			univ.party[j].main_status -= MAIN_STATUS_SPLIT;
+		if(isSplit(univ.party[j].main_status))
+			univ.party[j].main_status -= eMainStatus::SPLIT;
 		univ.party[j].cur_health = univ.party[j].max_health;
  		univ.party[j].cur_sp = univ.party[j].max_sp;
 	}
@@ -536,7 +536,7 @@ bool create_pc(short spot,cDialog* parent)
 	
 	if (spot == 6) {
 		for (spot = 0; spot < 6; spot++)
-			if (univ.party[spot].main_status == 0)
+			if(univ.party[spot].main_status == eMainStatus::ABSENT)
 				break;
 	}
 	if (spot == 6)
@@ -564,7 +564,7 @@ bool create_pc(short spot,cDialog* parent)
 //		cd_initial_draw(989);
 	pick_pc_name(spot,parent);
 	
-	univ.party[spot].main_status = MAIN_STATUS_ALIVE;
+	univ.party[spot].main_status = eMainStatus::ALIVE;
 	
 	if(overall_mode != MODE_STARTUP) {
 		univ.party[spot].items[0] = start_items[univ.party[spot].race * 2];
@@ -601,7 +601,7 @@ void heal_pc(short pc_num,short amt)
 {
 	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
 		return;
-	if (univ.party[pc_num].main_status != MAIN_STATUS_ALIVE)
+	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	univ.party[pc_num].cur_health += amt;
 	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
@@ -614,13 +614,13 @@ void heal_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == MAIN_STATUS_ALIVE )
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			heal_pc(i,amt);
 }
 
 void cure_pc(short pc_num,short amt)
 {
-	if (univ.party[pc_num].main_status != 1)
+	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	if (univ.party[pc_num].status[2] <= amt)
 		univ.party[pc_num].status[2] = 0;
@@ -633,7 +633,7 @@ void cure_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			cure_pc(i,amt);
 	
 }
@@ -641,9 +641,9 @@ void cure_party(short amt)
 // if how_much < 0, bless
 void curse_pc(short which_pc,short how_much)
 {
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[1] = minmax(-8,8,univ.party[which_pc].status[1] - how_much);
 		if(how_much < 0)
 			sprintf ((char *) c_line, "  %s blessed.",(char *) univ.party[which_pc].name.c_str());
@@ -659,7 +659,7 @@ void dumbfound_pc(short which_pc,short how_much)
 {
 	short r1;
 	
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	r1 = get_ran(1,0,90);
 	if (pc_has_abil_equip(which_pc,53) < 24) {////
@@ -673,7 +673,7 @@ void dumbfound_pc(short which_pc,short how_much)
 		add_string_to_buf((char *) c_line);
 		return;
 	}
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[9] = min(univ.party[which_pc].status[9] + how_much,8);
 		sprintf ((char *) c_line, "  %s dumbfounded.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
@@ -687,7 +687,7 @@ void disease_pc(short which_pc,short how_much)
 {
 	short r1,level;
 	
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	r1 = get_ran(1,1,100);
 	if (r1 < univ.party[which_pc].level * 2)
@@ -705,7 +705,7 @@ void disease_pc(short which_pc,short how_much)
 	if ((univ.party[which_pc].traits[12] == true) &&
 		(how_much == 1) && (get_ran(1,0,1) == 0))
 		how_much++;
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[7] = min(univ.party[which_pc].status[7] + how_much,8);
 		sprintf ((char *) c_line, "  %s diseased.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
@@ -719,7 +719,7 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // higher adjust, less chance of saving
 {
 	short r1,level;
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if (how_much == 0)
 		return;
@@ -741,7 +741,7 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 		add_string_to_buf((char *) c_line);
 		return;
 	}
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[what_type] = how_much;
 		if (what_type == 11)
 			sprintf ((char *) c_line, "  %s falls asleep.",(char *) univ.party[which_pc].name.c_str());
@@ -762,9 +762,9 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // if how_much < 0, haste
 void slow_pc(short which_pc,short how_much)////
 {
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		
 		univ.party[which_pc].status[3] = minmax(-8,8,univ.party[which_pc].status[3] - how_much);
 		if (how_much < 0)
@@ -779,9 +779,9 @@ void slow_pc(short which_pc,short how_much)////
 
 void web_pc(short which_pc,short how_much)
 {
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[6] = min(univ.party[which_pc].status[6] + how_much,8);
 		sprintf ((char *) c_line, "  %s webbed.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
@@ -793,14 +793,14 @@ void web_pc(short which_pc,short how_much)
 
 void acid_pc(short which_pc,short how_much)
 {
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if (pc_has_abil_equip(which_pc,36) < 24) {
 		sprintf ((char *) c_line, "  %s resists acid.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 	}
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[13] += how_much;
 		sprintf ((char *) c_line, "  %s covered with acid!",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
@@ -817,7 +817,7 @@ void increase_light(short amt)
 	univ.party.light_level += amt;
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1) {
+			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				update_explored(pc_pos[i]);
 			}
 	}
@@ -842,7 +842,7 @@ void restore_sp_party(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			restore_sp_pc(i,amt);
 }
 
@@ -851,7 +851,7 @@ void award_party_xp(short amt)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			award_xp(i,amt);
 }
 
@@ -878,7 +878,7 @@ void award_xp(short pc_num,short amt)
 		ASB("Report this!");
 		return;
 	}
-	if (univ.party[pc_num].main_status != 1)
+	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	
 	if (univ.party[pc_num].level >= 40)
@@ -935,7 +935,7 @@ void award_xp(short pc_num,short amt)
 
 void drain_pc(short which_pc,short how_much)
 {
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].experience = max(univ.party[which_pc].experience - how_much,0);
 		sprintf ((char *) c_line, "  %s drained.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
@@ -947,7 +947,7 @@ short mage_lore_total()
 	short total = 0,i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			total += univ.party[i].skills[11];
 	
 	return total;
@@ -1063,13 +1063,12 @@ bool repeat_cast_ok(short type)
 		return false;
 	}
 	if ((store_select == 2) &&
-		((univ.party[store_spell_target].main_status == 0) ||
-		 (univ.party[store_spell_target].main_status > 4))) {
+		isAbsent(univ.party[store_spell_target].main_status)) {
 			add_string_to_buf("Repeat cast: No target stored.");
 			return false;
 		}
 	if ((store_select == 1) &&
-		(univ.party[store_spell_target].main_status != 1)) {
+		univ.party[store_spell_target].main_status != eMainStatus::ALIVE) {
 		add_string_to_buf("Repeat cast: No target stored.");
 		return false;
 	}
@@ -1093,7 +1092,7 @@ void give_party_spell(short which) ////
 		for (i = 0; i < 6; i++)
 			if (univ.party[i].mage_spells[which] == false) {
 				univ.party[i].mage_spells[which] = true;
-				if (univ.party[i].main_status == 1)
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
@@ -1102,7 +1101,7 @@ void give_party_spell(short which) ////
 		for (i = 0; i < 6; i++)
 			if (univ.party[i].priest_spells[which - 100] == false) {
 				univ.party[i].priest_spells[which - 100] = true;
-				if (univ.party[i].main_status == 1)
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
 				if (sound_done == false) {sound_done = true; play_sound(62);};
@@ -1272,7 +1271,7 @@ void do_mage_spell(short pc_num,short spell_num)
 			if ((spell_num == 57) && (target < 6)) {
 				univ.party[target].status[4] += 2 + stat_adj(pc_num,2) + get_ran(2,1,2);
 				for (i = 0; i < 6; i++)
-					if (univ.party[i].main_status == 1) {
+					if(univ.party[i].main_status == eMainStatus::ALIVE) {
 						univ.party[i].status[5] += 4 + univ.party[pc_num].level / 3 + stat_adj(pc_num,2);
 					}
 				sprintf ((char *) c_line, "  Party protected.                         ");
@@ -1556,8 +1555,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					one_sound(-53); one_sound(52);
 				}
 				if (spell_num == 49) {
-					if (univ.party[target].main_status == MAIN_STATUS_STONE) {
-						univ.party[target].main_status = MAIN_STATUS_ALIVE;
+					if(univ.party[target].main_status == eMainStatus::STONE) {
+						univ.party[target].main_status = eMainStatus::ALIVE;
 						sprintf ((char *) c_line, "  %s destoned.                                  ",
 								 (char *) univ.party[target].name.c_str());
 						play_sound(53);
@@ -1583,15 +1582,15 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 					else take_item(pc_num,item);
 				if (spell_num == 40) {
-					if (univ.party[target].main_status == 2)
+					if(univ.party[target].main_status == eMainStatus::DEAD)
 						if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
 							sprintf ((char *) c_line, "  %s now dust.                          ",
 									 (char *) univ.party[target].name.c_str());
 							play_sound(5);
-							univ.party[target].main_status = MAIN_STATUS_DUST;
+							univ.party[target].main_status = eMainStatus::DUST;
 						}
 						else {
-							univ.party[target].main_status = MAIN_STATUS_ALIVE;
+							univ.party[target].main_status = eMainStatus::ALIVE;
 							for (i = 0; i < 3; i++)
 								if (get_ran(1,0,2) < 2)
 									univ.party[target].skills[i] -= (univ.party[target].skills[i] > 1) ? 1 : 0;
@@ -1604,8 +1603,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					
 				}
 				if (spell_num == 56) {
-					if (univ.party[target].main_status != MAIN_STATUS_ALIVE) {
-						univ.party[target].main_status = MAIN_STATUS_ALIVE;
+					if (univ.party[target].main_status != eMainStatus::ALIVE) {
+						univ.party[target].main_status = eMainStatus::ALIVE;
 						for (i = 0; i < 3; i++)
 							if (get_ran(1,0,2) < 1)
 								univ.party[target].skills[i] -= (univ.party[target].skills[i] > 1) ? 1 : 0;
@@ -1657,7 +1656,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			}
 			
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status == 1) {
+				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if (spell_num == 42) {
 						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + stat_adj(pc_num,2);
 						r1 = max(0,store);
@@ -1849,7 +1848,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 	monst->attitude = 1;
 	
 	add_string_to_buf("Mindduel!");
-	while ((univ.party[pc_num].main_status == 1) && (monst->active > 0) && (i < 10)) {
+	while(univ.party[pc_num].main_status == eMainStatus::ALIVE && monst->active > 0 && i < 10) {
 		play_sound(1);
 		r1 = get_ran(1,1,100) + adjust;
 		r1 += 5 * (monst->status[9] - univ.party[pc_num].status[9]);
@@ -1867,7 +1866,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 				if (univ.party[pc_num].status[9] > 7) {
 					sprintf((char *) c_line,"  %s is killed!",univ.party[pc_num].name.c_str());
 					add_string_to_buf((char *) c_line);
-					kill_pc(pc_num,MAIN_STATUS_DEAD);
+					kill_pc(pc_num,eMainStatus::DEAD);
 				}
 				
 			}
@@ -1944,7 +1943,7 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 		return false;
 	if (univ.party[pc_num].skills[9 + type] < level)
 		return false;
-	if (univ.party[pc_num].main_status != 1)
+	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
 	if (univ.party[pc_num].cur_sp < spell_cost[type][spell_num])
 		return false;
@@ -2029,7 +2028,7 @@ static void draw_spell_info(cDialog& me)
 					me[id].hide();
 					break;
 				case 1:
-					if (univ.party[i].main_status != 1) {
+					if(univ.party[i].main_status != eMainStatus::ALIVE) {
 						me[id].hide();
 					}
 					else {
@@ -2037,7 +2036,7 @@ static void draw_spell_info(cDialog& me)
 					}
 					break;
 				case 2:
-					if (univ.party[i].main_status > 0) {
+					if(univ.party[i].main_status != eMainStatus::ABSENT) {
 						me[id].show();
 					}
 					else {
@@ -2056,13 +2055,13 @@ static void draw_spell_pc_info(cDialog& me)
 	
 	for (i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party[i].main_status != 0) {
+		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
 			//if (pc_casting == i)
 			//	cd_text_frame(1098,24 + store_spell_target,11);
 			//else cd_text_frame(1098,24 + store_spell_target,1);
 			
-			if (univ.party[i].main_status == 1) {
+			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
 			}
@@ -2187,7 +2186,7 @@ static void put_pick_spell_graphics(cDialog& me)
 	put_pc_target_buttons(me);
 	put_spell_led_buttons(me);
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			draw_pc_effects(10 + i); // TODO: This line might mean that the "kludge" from the old code is already handled here; verify?
 }
 
@@ -2424,7 +2423,7 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	// If a target is needed, keep the same target if that PC still targetable
 	if (((type == 0) && (mage_need_select[store_mage] > 0)) ||
 		((type == 1) && (priest_need_select[store_priest] > 0))) {
-		if (univ.party[store_spell_target].main_status != 1)
+		if(univ.party[store_spell_target].main_status != eMainStatus::ALIVE)
 			store_spell_target = 6;
 	}
 	else store_spell_target = 6;
@@ -2683,8 +2682,8 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 	pcPic->getControl("help").setText("Click button to left of graphic to select.");
 	
 	pic_num_t choice = pcPic.show(36, univ.party[pc_num].which_graphic);
-	if(mode == 0 && choice == 36 && univ.party[pc_num].main_status < MAIN_STATUS_ABSENT)
-		univ.party[pc_num].main_status = MAIN_STATUS_ABSENT;
+	if(mode == 0 && choice == 36 && univ.party[pc_num].main_status < eMainStatus::ABSENT)
+		univ.party[pc_num].main_status = eMainStatus::ABSENT;
 	else if(choice != 36)
 		univ.party[pc_num].which_graphic = choice;
 	
@@ -2766,7 +2765,7 @@ void poison_pc(short which_pc,short how_much)
 {
 	short level;
 	
-	if (univ.party[which_pc].main_status == 1) {
+	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		if ((level = get_prot_level(which_pc,34)) > 0)////
 			how_much -= level / 2;
 		if ((level = get_prot_level(which_pc,31)) > 0)////
@@ -2802,7 +2801,7 @@ void affect_pc(short which_pc,eStatus type,short how_much)////
 //type; // which status to affect
 {
 	
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	univ.party[which_pc].status[type] = minmax (-8,8,univ.party[which_pc].status[type] + how_much);
 	if (((type >= 4) && (type <= 10)) || (type == 12) || (type == 13))
@@ -2815,7 +2814,7 @@ void affect_party(eStatus type,short how_much)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			univ.party[i].status[type] = minmax (-8,8,univ.party[i].status[type] + how_much);
 	put_pc_screen();
 }
@@ -2834,7 +2833,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	bool dummy;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == MAIN_STATUS_ALIVE)
+		if (univ.party[i].main_status == eMainStatus::ALIVE)
 			dummy = damage_pc(i,how_much,damage_type,MONSTER_TYPE_UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen();
@@ -2846,7 +2845,7 @@ void slay_party(eMainStatus mode)
 	
 	boom_anim_active = false;
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == MAIN_STATUS_ALIVE)
+		if (univ.party[i].main_status == eMainStatus::ALIVE)
 			univ.party[i].main_status = mode;
 	put_pc_screen();
 }
@@ -2861,7 +2860,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 	short i, r1,level;
 	bool do_print = true;
 	
-	if (univ.party[which_pc].main_status != 1)
+	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return false;
 	
 	//sound_type = damage_type / 100;
@@ -3022,14 +3021,14 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		if (how_much > 25) {
 			sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) univ.party[which_pc].name.c_str());
 			add_string_to_buf((char *) c_line);
-			kill_pc(which_pc, MAIN_STATUS_DUST);
+			kill_pc(which_pc, eMainStatus::DUST);
 		}
 		else {
 			sprintf ((char *) c_line, "  %s is killed.",(char *) univ.party[which_pc].name.c_str());
 			add_string_to_buf((char *) c_line);
-			kill_pc(which_pc,MAIN_STATUS_DEAD);
+			kill_pc(which_pc,eMainStatus::DEAD);
 		}
-	if ((univ.party[which_pc].cur_health == 0) && (univ.party[which_pc].main_status == 1))
+	if(univ.party[which_pc].cur_health == 0 && univ.party[which_pc].main_status == eMainStatus::ALIVE)
 		play_sound(3);
 	put_pc_screen();
 	return true;
@@ -3041,20 +3040,20 @@ void kill_pc(short which_pc,eMainStatus type)
 	bool dummy,no_save = false;
 	location item_loc;
 	
-	if (type >= MAIN_STATUS_SPLIT) {
-		type -= MAIN_STATUS_SPLIT;
+	if(isSplit(type)) {
+		type -= eMainStatus::SPLIT;
 		no_save = true;
 	}
 	
-	if (type != MAIN_STATUS_STONE)
+	if(type != eMainStatus::STONE)
 		i = pc_has_abil_equip(which_pc,48);
 	
-	if ((no_save == false) && (type != MAIN_STATUS_ABSENT) && (univ.party[which_pc].skills[18] > 0) &&
+	if(!no_save && type != eMainStatus::ABSENT && univ.party[which_pc].skills[18] > 0 &&
 		(get_ran(1,1,100) < hit_chance[univ.party[which_pc].skills[18]])) {
 		add_string_to_buf("  But you luck out!          ");
 		univ.party[which_pc].cur_health = 0;
 	}
-	else if ((i == 24) || (type == MAIN_STATUS_ABSENT)) {
+	else if(i == 24 || type == eMainStatus::ABSENT) {
 		if (combat_active_pc == which_pc)
 			combat_active_pc = 6;
 		
@@ -3063,9 +3062,9 @@ void kill_pc(short which_pc,eMainStatus type)
 		
 		item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
 		
-		if (type == MAIN_STATUS_DEAD)
+		if(type == eMainStatus::DEAD)
 			make_sfx(item_loc.x,item_loc.y,3);
-		else if (type == 3)
+		else if(type == eMainStatus::DUST)
 			make_sfx(item_loc.x,item_loc.y,6);
 		
 		if (overall_mode != MODE_OUTDOORS)
@@ -3074,7 +3073,7 @@ void kill_pc(short which_pc,eMainStatus type)
 					dummy = place_item(univ.party[which_pc].items[i],item_loc,true);
 					univ.party[which_pc].items[i].variety = eItemType::NO_ITEM;
 				}
-		if ((type == MAIN_STATUS_DEAD) || (type == MAIN_STATUS_DUST))
+		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)
 			play_sound(21);
 		univ.party[which_pc].main_status = type;
 		univ.party[which_pc].ap = 0;
@@ -3084,7 +3083,7 @@ void kill_pc(short which_pc,eMainStatus type)
 		take_item(which_pc,i);
 		heal_pc(which_pc,200);
 	}
-	if (univ.party[current_pc].main_status != MAIN_STATUS_ALIVE)
+	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
 	put_pc_screen();
 	set_stat_window(current_pc);
@@ -3095,7 +3094,7 @@ void set_pc_moves()
 	short i,r,i_level;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status != 1)
+		if(univ.party[i].main_status != eMainStatus::ALIVE)
 			univ.party[i].ap = 0;
 		else {
 			univ.party[i].ap = (univ.party[i].traits[10] == true) ? 3 : 4;
@@ -3137,7 +3136,7 @@ short cave_lore_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0)
 			ret += 1;
 	return ret;
 }
@@ -3146,7 +3145,7 @@ short woodsman_present()
 {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if ((univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0)
 			ret += 1;
 	return ret;
 }

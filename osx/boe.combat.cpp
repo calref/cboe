@@ -462,7 +462,7 @@ bool pc_combat_move(location destination) ////
 		}
 		else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
 			if (get_ran(1,1,10) < 3) {
-				univ.party[current_pc].main_status = MAIN_STATUS_FLED;
+				univ.party[current_pc].main_status = eMainStatus::FLED;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
 				sprintf ((char *) create_line, "Moved: Fled.                    ");
@@ -534,7 +534,7 @@ bool pc_combat_move(location destination) ////
 			}
 			
 			// move if still alive
-			if (univ.party[current_pc].main_status == 1) {
+			if(univ.party[current_pc].main_status == eMainStatus::ALIVE) {
 				pc_dir[current_pc] = set_direction(pc_pos[current_pc],destination);
 				pc_pos[current_pc] = destination;
 				univ.party[current_pc].direction = dir;
@@ -576,7 +576,7 @@ void pc_attack(short who_att,short target)////
 	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
 	
 	// slice out bad attacks
-	if (univ.party[who_att].main_status != 1)
+	if(univ.party[who_att].main_status != eMainStatus::ALIVE)
 		return;
 	if ((univ.party[who_att].status[11] > 0) || (univ.party[who_att].status[12] > 0))
 		return;
@@ -1735,7 +1735,7 @@ void combat_run_monst()
 			}
 		}
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if ((univ.party[i].status[4] != 0) || (univ.party[i].status[5] != 0)
 				|| (univ.party[i].status[8] != 0)|| (univ.party[i].status[10] != 0)
 				|| (univ.party[i].status[11] != 0)|| (univ.party[i].status[12] != 0))
@@ -1892,7 +1892,7 @@ void do_monster_turn()
 		
 		
 		for (j = 0; j < 6; j++)
-			if ((univ.party[j].main_status == 1) && (monst_adjacent(pc_pos[j],i) == true))
+			if(univ.party[j].main_status == eMainStatus::ALIVE && monst_adjacent(pc_pos[j],i))
 				pc_adj[j] = true;
 			else pc_adj[j] = false;
 		
@@ -1981,7 +1981,7 @@ void do_monster_turn()
 				if (r1 == 3)
 					cur_monst->morale++;
 				short targ = univ.town.monst[i].target;
-				if (targ < 6 && (univ.party[targ].main_status == 1)	&& (cur_monst->mobility == 1)) {
+				if(targ < 6 && univ.party[targ].main_status == eMainStatus::ALIVE && cur_monst->mobility == 1) {
 					acted_yet = flee_party (i,cur_monst->cur_loc,targ_space);
 					if (acted_yet == true) take_m_ap(1,cur_monst);
 				}
@@ -2055,7 +2055,7 @@ void do_monster_turn()
 			} // Special attacks
 			
 			// Attack pc
-			if ((univ.town.monst[i].target < 6) && (univ.party[univ.town.monst[i].target].main_status == 1)
+			if(univ.town.monst[i].target < 6 && univ.party[univ.town.monst[i].target].main_status == eMainStatus::ALIVE
 				&& (monst_adjacent(targ_space,i) == true)  && (cur_monst->attitude % 2 == 1)
 				&& (acted_yet == false)) {
 				monster_attack_pc(i,univ.town.monst[i].target);
@@ -2087,7 +2087,7 @@ void do_monster_turn()
 						seek_party (i,cur_monst->cur_loc,move_targ);
 					else { // spot is OK, so go nuts
 						if ((cur_monst->attitude % 2 == 1) && (move_target < 6)) // Monsters seeking party do so
-							if (univ.party[move_target].main_status == 1) {
+							if(univ.party[move_target].main_status == eMainStatus::ALIVE) {
 								seek_party (i,cur_monst->cur_loc,pc_pos[move_target]);
 								for (k = 0; k < 6; k++)
 									if ((pc_parry[k] > 99) && (monst_adjacent(pc_pos[k],i) == true)
@@ -2128,7 +2128,7 @@ void do_monster_turn()
 			// pcs attack any fleeing monsters
 			if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING))
 				for (k = 0; k < 6; k++)
-					if ((univ.party[k].main_status == 1) && (monst_adjacent(pc_pos[k],i) == false)
+					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(pc_pos[k],i)
 						&& (pc_adj[k] == true) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
 						(univ.party[k].status[8] == 0)) {
 						combat_posing_monster = current_working_monster = k;
@@ -2302,7 +2302,7 @@ void monster_attack_pc(short who_att,short target)
 	}
 	
 	for (i = 0; i < 3; i++) {
-		if ((attacker->a[i] > 0) && (univ.party[target].main_status == 1)) {
+		if(attacker->a[i] > 0 && univ.party[target].main_status == eMainStatus::ALIVE) {
 //			sprintf ((char *) create_line, "  Attacks %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
 			
@@ -2376,7 +2376,7 @@ void monster_attack_pc(short who_att,short target)
 					{
 						add_string_to_buf("  Petrifying touch!");
 						print_buf();
-						kill_pc(target,MAIN_STATUS_STONE); // 4 being the stoned (petrified, duh!) status
+						kill_pc(target,eMainStatus::STONE); // petrified, duh!
 					}
 					
 					// Undead xp drain
@@ -2451,7 +2451,7 @@ void monster_attack_pc(short who_att,short target)
 			
 			
 		}
-		if (univ.party[target].main_status != 1)
+		if(univ.party[target].main_status != eMainStatus::ALIVE)
 			i = 3;
 	}
 	
@@ -2602,7 +2602,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	}
 	else {
 		targ_space = (is_combat()) ? pc_pos[target] : univ.town.p_loc;
-		if (univ.party[target].main_status != 1)
+		if(univ.party[target].main_status != eMainStatus::ALIVE)
 			return;
 	}
 	
@@ -2679,7 +2679,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			else {
 				sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) univ.party[target].name.c_str());
 				add_string_to_buf((char *) create_line);
-				kill_pc(target,MAIN_STATUS_STONE);
+				kill_pc(target,eMainStatus::STONE);
 			}
 		}
 		else {
@@ -2699,7 +2699,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			if (univ.party[target].cur_sp < 4) {
 				for (i = 0; i < 8; i++) {
 					j = get_ran(1,0,5);
-					if ((univ.party[j].main_status == 1) && (univ.party[j].cur_sp > 4) &&
+					if(univ.party[j].main_status == eMainStatus::ALIVE && univ.party[j].cur_sp > 4 &&
 						(can_see(source,pc_pos[j],0) < 5) && (dist(source,pc_pos[j]) <= 8)) {
 						target = j;
 						i = 8;
@@ -2913,7 +2913,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 		return false;
 	}
 	// is target dead?
-	if ((targ < 6) && (univ.party[targ].main_status != 1))
+	if(targ < 6 && univ.party[targ].main_status != eMainStatus::ALIVE)
 		return false;
 	if ((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
 		return false;
@@ -3231,7 +3231,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 	location ashes_loc;
 	
 	
-	if ((targ < 6) && (univ.party[targ].main_status != 1))
+	if(targ < 6 && univ.party[targ].main_status != eMainStatus::ALIVE)
 		return false;
 	if ((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
 		return false;
@@ -3541,7 +3541,7 @@ location closest_pc_loc(location where)
 	location pc_where(120,120);
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if ((dist(where,pc_pos[i])) < (dist(where,pc_where)))
 				pc_where = pc_pos[i];
 	return pc_where;
@@ -3573,11 +3573,11 @@ bool pc_near(short pc_num,location where,short radius)
 {
 	// Assuming not looking
 	if (overall_mode >= MODE_COMBAT) {
-		if ((univ.party[pc_num].main_status == 1) && (vdist(pc_pos[pc_num],where) <= radius))
+		if(univ.party[pc_num].main_status == eMainStatus::ALIVE && vdist(pc_pos[pc_num],where) <= radius)
 			return true;
 		else return false;
 	}
-	if ((univ.party[pc_num].main_status == 1) && (vdist(univ.town.p_loc,where) <= radius))
+	if(univ.party[pc_num].main_status == eMainStatus::ALIVE && vdist(univ.town.p_loc,where) <= radius)
 		return true;
 	else return false;
 }
@@ -3676,7 +3676,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 			for (j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
-				if(sight_obscurity(i,j) < 5 && univ.party[k].main_status == 1
+				if(sight_obscurity(i,j) < 5 && univ.party[k].main_status == eMainStatus::ALIVE
 					&& (((is_combat()) && (pc_pos[k] == spot_hit)) ||
 						((is_town()) && (univ.town.p_loc == spot_hit)))) {
 						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
@@ -3812,7 +3812,7 @@ void do_shockwave(location target)
 	start_missile_anim();
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) < 11)
-			&& (univ.party[i].main_status == 1))
+			&& univ.party[i].main_status == eMainStatus::ALIVE)
 			damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
@@ -3831,7 +3831,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 	if (is_town()) {
 		for (i = 0; i < 6; i++)
 			if ((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
-				&& (univ.party[i].main_status == 1))
+				&& univ.party[i].main_status == eMainStatus::ALIVE)
 				damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
@@ -3844,7 +3844,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 	start_missile_anim();
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) <= radius)
-			&& (univ.party[i].main_status == 1))
+			&& univ.party[i].main_status == eMainStatus::ALIVE)
 			damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
@@ -3908,7 +3908,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
-			if ((univ.party[i].main_status == 1) && (stop_hitting == false))
+			if(univ.party[i].main_status == eMainStatus::ALIVE && !stop_hitting)
 				if (pc_pos[i] == target) {
 					damage_pc(i,dam,type,MONSTER_TYPE_UNKNOWN,0);
 					stop_hitting = (hit_all == 1) ? false : true;
@@ -3934,13 +3934,13 @@ void do_poison()
 	bool some_poison = false;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if (univ.party[i].status[2] > 0)
 				some_poison = true;
 	if (some_poison == true) {
 		add_string_to_buf("Poison:                        ");
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (univ.party[i].status[2] > 0) {
 					r1 = get_ran(univ.party[i].status[2],1,6);
 					damage_pc(i,r1,DAMAGE_POISON,MONSTER_TYPE_UNKNOWN,0);
@@ -3963,14 +3963,14 @@ void handle_disease()
 	bool disease = false;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if (univ.party[i].status[7] > 0)
 				disease = true;
 	
 	if (disease == true) {
 		add_string_to_buf("Disease:                        ");
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (univ.party[i].status[7] > 0) {
 					r1 = get_ran(1,1,10);
 					switch (r1) {
@@ -4011,14 +4011,14 @@ void handle_acid()
 	bool some_acid = false;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if (univ.party[i].status[13] > 0)
 				some_acid = true;
 	
 	if (some_acid == true) {
 		add_string_to_buf("Acid:                        ");
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (univ.party[i].status[13] > 0) {
 					r1 = get_ran(univ.party[i].status[13],1,6);
 					damage_pc(i,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
@@ -4034,7 +4034,7 @@ bool no_pcs_left()
 	short i = 0;
 	
 	while (i < 6) {
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			return false;
 		i++;
 	}
@@ -4075,8 +4075,8 @@ void end_combat()
 	short i;
 	
 	for (i = 0; i < 6; i++) {
-		if (univ.party[i].main_status == MAIN_STATUS_FLED)
-			univ.party[i].main_status = MAIN_STATUS_ALIVE;
+		if(univ.party[i].main_status == eMainStatus::FLED)
+			univ.party[i].main_status = eMainStatus::ALIVE;
 		univ.party[i].status[0] = 0;
 		univ.party[i].status[1] = 0;
 		univ.party[i].status[3] = 0;
@@ -4086,7 +4086,7 @@ void end_combat()
 	}
 	combat_active_pc = 6;
 	current_pc = store_current_pc;
-	if (univ.party[current_pc].main_status != 1)
+	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
 	put_item_screen(stat_window,0);
 	draw_buttons(0);
@@ -4214,7 +4214,7 @@ bool combat_cast_mage_spell()
 						
 						
 						for (i = 0; i < 6; i++)
-							if (univ.party[i].main_status == 1) {
+							if(univ.party[i].main_status == eMainStatus::ALIVE) {
 								univ.party[i].status[3] = min(8,
 															  univ.party[i].status[3] + ((spell_num == 39) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
 								if (spell_num == 55) {
@@ -4370,7 +4370,7 @@ bool combat_cast_priest_spell()
 				case 38:
 					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
 					for (i = 0; i < 6; i++)
-						if (univ.party[i].main_status == 1) {
+						if(univ.party[i].main_status == eMainStatus::ALIVE) {
 							univ.party[i].status[1] += univ.party[current_pc].level / 3;
 							add_missile(pc_pos[i],8,0,0,0);
 						}
@@ -4729,14 +4729,14 @@ void scloud_space(short m,short n)
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (pc_pos[i] == target) {
 					curse_pc(i,get_ran(1,1,2));
 				}
 	if (overall_mode < MODE_COMBAT)
 		if (target == univ.town.p_loc) {
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status == 1)
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					curse_pc(i,get_ran(1,1,2));
 		}
 }
@@ -4753,7 +4753,7 @@ void web_space(short m,short n)
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (pc_pos[i] == target) {
 					web_pc(i,3);
 				}
@@ -4775,7 +4775,7 @@ void sleep_cloud_space(short m,short n)
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (pc_pos[i] == target) {
 					sleep_pc(i,3,STATUS_ASLEEP,0);
 				}

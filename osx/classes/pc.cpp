@@ -65,7 +65,7 @@ short cPlayer::get_tnl(){
 
 cPlayer::cPlayer(){
 	short i;
-	main_status = MAIN_STATUS_ABSENT;
+	main_status = eMainStatus::ABSENT;
 	name = "\n";
 	
 	for (i = 0; i < 30; i++)
@@ -102,7 +102,7 @@ cPlayer::cPlayer(){
 
 cPlayer::cPlayer(long key,short slot){
 	short i;
-	main_status = MAIN_STATUS_ALIVE;
+	main_status = eMainStatus::ALIVE;
 	if(key == 'dbug'){
 		switch (slot) {
 			case 0:
@@ -178,7 +178,7 @@ cPlayer::cPlayer(long key,short slot){
 			{0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0}
 		};
 		
-		main_status = MAIN_STATUS_ALIVE;
+		main_status = eMainStatus::ALIVE;
 		switch (slot) {
 			case 0:
 				name = "Jenneke";
@@ -235,13 +235,17 @@ cPlayer::cPlayer(long key,short slot){
 }
 
 void operator += (eMainStatus& stat, eMainStatus othr){
-	if(othr == MAIN_STATUS_SPLIT)
-		stat = (eMainStatus) (10 + stat);
+	if(othr == eMainStatus::SPLIT)
+		stat = (eMainStatus) (10 + (int)stat);
+	else if(stat == eMainStatus::SPLIT)
+		stat = (eMainStatus) (10 + (int)othr);
 }
 
 void operator -= (eMainStatus& stat, eMainStatus othr){
-	if(othr == MAIN_STATUS_SPLIT)
-		stat = (eMainStatus) (-10 + stat);
+	if(othr == eMainStatus::SPLIT)
+		stat = (eMainStatus) (-10 + (int)stat);
+	else if(stat == eMainStatus::SPLIT)
+		stat = (eMainStatus) (-10 + (int)othr);
 }
 
 void cPlayer::writeTo(std::ostream& file){
@@ -373,11 +377,12 @@ std::ostream& operator << (std::ostream& out, eMainStatus& e){
 	return out << (int) e;
 }
 
+// TODO: This should probably understand symbolic names as well as the numbers?
 std::istream& operator >> (std::istream& in, eMainStatus& e){
 	int i;
 	in >> i;
 	if(i > 0 && i < 18 && i !=8 && i != 9)
 		e = (eMainStatus) i;
-	else e = MAIN_STATUS_ABSENT;
+	else e = eMainStatus::ABSENT;
 	return in;
 }

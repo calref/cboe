@@ -356,7 +356,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			//one_sound(17);
 			if (mode == 2) i = which_pc; else i = 0;
 			for ( ; i < 6; i++)
-				if (univ.party[i].main_status == 1) {
+				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if (get_ran(1,1,100) <= ter_flag2.u) {
 						switch(ter_flag3.u){
 							case STATUS_POISONED_WEAPON: // TODO: Do something here
@@ -1779,7 +1779,7 @@ void push_things()////
 	}
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1) {
+			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
 				l = pc_pos[i];
 				switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
@@ -2427,17 +2427,17 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						if ((univ.party[i].main_status > MAIN_STATUS_ABSENT) && (univ.party[i].main_status < MAIN_STATUS_SPLIT))
-							univ.party[i].main_status = MAIN_STATUS_ALIVE;
+						if ((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
+							univ.party[i].main_status = eMainStatus::ALIVE;
 					}
 					else switch(spec.ex1a){
 							// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
 						case 0:
-							kill_pc(i,MAIN_STATUS_SPLIT_DEAD);
+							kill_pc(i,eMainStatus::SPLIT_DEAD);
 						case 1:
-							kill_pc(i,MAIN_STATUS_SPLIT_DUST);
+							kill_pc(i,eMainStatus::SPLIT_DUST);
 						case 2:
-							kill_pc(i,MAIN_STATUS_SPLIT_STONE);
+							kill_pc(i,eMainStatus::SPLIT_STONE);
 					}
 				}
 			*redraw = 1;
@@ -2665,7 +2665,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_EQUIP_ITEM_CLASS:
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status == 1)
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
 							&& (univ.party[i].equip[j] == true))
@@ -2701,7 +2701,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_EQUIP_ITEM_CLASS_AND_TAKE:
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status == 1)
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
 							&& (univ.party[i].equip[j] == true)) {
@@ -2732,12 +2732,12 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_HAS_CAVE_LORE:
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].traits[4] > 0))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0)
 					*next_spec = spec.ex1b;
 			break;
 		case SPEC_IF_HAS_WOODSMAN:
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (univ.party[i].traits[5] > 0))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0)
 					*next_spec = spec.ex1b;
 			break;
 		case SPEC_IF_ENOUGH_MAGE_LORE:

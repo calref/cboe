@@ -362,7 +362,7 @@ void draw_items()
 	//undo_clip();
 	//TextSize(10);
 
-	if (univ.party[current_active_pc].main_status != 1){
+	if(univ.party[current_active_pc].main_status != eMainStatus::ALIVE){
 		frame_dlog_rect(mainPtr,pc_info_rect); // re draw entire frame 
 		frame_dlog_rect(mainPtr,info_area_rect); // draw the frame
 		frame_dlog_rect(mainPtr,pc_race_rect); // draw the frame	
@@ -433,7 +433,7 @@ void display_party()
 			
 			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
-			if (univ.party[i].main_status != 0) { // PC exists?
+			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
 				from_rect = from_base;
 				// draw PC graphic
 				from_rect.offset(56 * (univ.party[i].which_graphic / 8),36 * (univ.party[i].which_graphic % 8));
@@ -467,7 +467,7 @@ void display_party()
 				}
 					switch (univ.party[i].main_status) {
 							// draw statistics
-						case 1:
+						case eMainStatus::ALIVE:
 							if (i == current_active_pc) {
 								//Draw in race
 								if (univ.party[i].race == 0)
@@ -699,7 +699,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							case 2:
+						case eMainStatus::DEAD:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -707,7 +707,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							case 3:
+						case eMainStatus::DUST:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -715,7 +715,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							case 4:
+						case eMainStatus::STONE:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -723,7 +723,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							case 5:
+						case eMainStatus::FLED:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -731,7 +731,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							case 6:
+						case eMainStatus::SURFACE:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -739,7 +739,7 @@ void display_party()
 							style.font = FONT_BOLD;
 							style.pointSize = 10;
 							break;
-							default:
+						default:
 							style.colour = sf::Color::White;
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;

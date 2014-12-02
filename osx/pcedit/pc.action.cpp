@@ -71,14 +71,14 @@ bool handle_action(sf::Event event,short mode)
 		
 	for (i = 0; i < 6; i++)
 		if((the_point.in(pc_area_buttons[i][0])) &&
-			(univ.party[i].main_status > 0)) {
+			(univ.party[i].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			redraw_screen();
 			}
 	for (i = 0; i < 5; i++)
 		if((the_point.in(edit_rect[i][0])) &&
-			(univ.party[current_active_pc].main_status > 0)) {
+			(univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i + 10);
 			switch(i) {
 				case 0:
@@ -216,7 +216,7 @@ bool give_to_pc(short pc_num,cItemRec item, short print_result)
 	
 	if (item.variety == eItemType::NO_ITEM)
 		return true;
-	if (((free_space = pc_has_space(pc_num)) == 24 ) || (univ.party[pc_num].main_status != 1))
+	if ((free_space = pc_has_space(pc_num)) == 24  || univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
 	else {
 		univ.party[pc_num].items[free_space] = item;

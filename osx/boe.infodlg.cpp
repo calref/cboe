@@ -691,12 +691,12 @@ static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod
 		// TODO: Put braces on these do-whiles... o.O
 		do
 			store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
-		while (univ.party[store_pc_num].main_status != 1);
+		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
 		display_pc_info(me);
 	} else if(item_hit == "right") {
 		do
 			store_pc_num = (store_pc_num + 1) % 6;
-		while (univ.party[store_pc_num].main_status != 1);
+		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
 		display_pc_info(me);
 	}
 	return true;

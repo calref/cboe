@@ -297,7 +297,7 @@ bool is_blocked(location to_check)
 				return true;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == 1) && (to_check == pc_pos[i]))
+				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == pc_pos[i])
 					return true;
 		
 		// Monster there?
@@ -536,7 +536,7 @@ bool combat_pt_in_light(location to_where)
 	
 	rad = light_radius();
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if (dist(pc_pos[i],to_where) <= rad)
 				return true;
 		}
@@ -582,7 +582,7 @@ short party_can_see(location where)
 		return 6;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if (can_see(pc_pos[i],where,0) < 5)
 				return i;
 		}

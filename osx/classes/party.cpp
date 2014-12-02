@@ -129,7 +129,7 @@ cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 
 void cParty::add_pc(legacy::pc_record_type old){
 	for(int i = 0; i < 6; i++)
-		if(adven[i].main_status == 0){
+		if(adven[i].main_status == eMainStatus::ABSENT){
 			adven[i] = old;
 			break;
 		}
@@ -137,12 +137,12 @@ void cParty::add_pc(legacy::pc_record_type old){
 
 void cParty::void_pcs(){
 	for(int i = 0; i < 6; i++)
-		adven[i].main_status = MAIN_STATUS_ABSENT;
+		adven[i].main_status = eMainStatus::ABSENT;
 }
 
 void cParty::add_pc(cPlayer new_pc){
 	for(int i = 0; i < 6; i++)
-		if(adven[i].main_status == MAIN_STATUS_ABSENT){
+		if(adven[i].main_status == eMainStatus::ABSENT){
 			adven[i] = new_pc;
 			break;
 		}
@@ -637,7 +637,7 @@ std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
 	univ.town.p_loc.y = b;
 	for (i = 0; i < 6; i++)
 		if (!stuff_done[304][who])
-			adven[i].main_status += MAIN_STATUS_SPLIT;
+			adven[i].main_status += eMainStatus::SPLIT;
 	if (noise > 0)
 		play_sound(10);
 	return "";
@@ -651,8 +651,8 @@ std::string cParty::end_split(snd_num_t noise) {
 	univ.town.p_loc = left_at();
 	univ.town.num = left_in();
 	for (i = 0; i < 6; i++){
-		if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
-			univ.party[i].main_status -= MAIN_STATUS_SPLIT;
+		if(isSplit(univ.party[i].main_status))
+			univ.party[i].main_status -= eMainStatus::SPLIT;
 		stuff_done[304][i] = true;
 	}
 	if (noise > 0)

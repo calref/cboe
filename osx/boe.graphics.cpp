@@ -365,7 +365,7 @@ void draw_startup_stats()
 			pc_rect.bottom = pc_rect.top + 79;
 			pc_rect.offset(60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
 			
-			if (univ.party[i].main_status > 0) {
+			if(univ.party[i].main_status != eMainStatus::ABSENT) {
 				from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
 				to_rect = party_to,
 				to_rect.offset(pc_rect.left,pc_rect.top);
@@ -380,7 +380,7 @@ void draw_startup_stats()
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
 			switch (univ.party[i].main_status) {
-				case MAIN_STATUS_ALIVE:
+				case eMainStatus::ALIVE:
 					switch (univ.party[i].race) {
 						case RACE_HUMAN: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
 						case RACE_NEPHIL: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
@@ -410,16 +410,16 @@ void draw_startup_stats()
 							univ.party[i].max_health,univ.party[i].max_sp);
 					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);
 					break;
-				case MAIN_STATUS_DEAD:
+				case eMainStatus::DEAD:
 					win_draw_string(mainPtr,pc_rect,"Dead",eTextMode::WRAP,style,ul);
 					break;
-				case MAIN_STATUS_DUST:
+				case eMainStatus::DUST:
 					win_draw_string(mainPtr,pc_rect,"Dust",eTextMode::WRAP,style,ul);
 					break;
-				case MAIN_STATUS_STONE:
+				case eMainStatus::STONE:
 					win_draw_string(mainPtr,pc_rect,"Stone",eTextMode::WRAP,style,ul);
 					break;
-				case MAIN_STATUS_FLED:
+				case eMainStatus::FLED:
 					win_draw_string(mainPtr,pc_rect,"Fled",eTextMode::WRAP,style,ul);
 					break;
 				default: //absent, and all variations thereof; do nothing
@@ -1745,7 +1745,7 @@ bool party_toast()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			return false;
 	return true;
 }

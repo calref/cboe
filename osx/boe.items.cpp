@@ -147,7 +147,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 		return false;
 	}
 	free_space = pc_has_space(pc_num);
-	if ((free_space == 24) || (univ.party[pc_num].main_status != 1))
+	if(free_space == 24 || univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
 	else {
 		item.property = false;
@@ -187,7 +187,7 @@ bool forced_give(short item_num,eItemAbil abil) ////
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
-			if ((univ.party[i].main_status == 1) && univ.party[i].items[j].variety == eItemType::NO_ITEM) {
+			if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].items[j].variety == eItemType::NO_ITEM) {
 				univ.party[i].items[j] = item;
 				
 				if (!item.ident)
@@ -272,7 +272,7 @@ bool party_has_abil(short abil)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if (pc_has_abil(i,abil) < 24)
 				return true;
 	return false;
@@ -283,7 +283,7 @@ bool party_take_abil(short abil)
 	short i,item;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if ((item = pc_has_abil(i,abil)) < 24) {
 				if (univ.party[i].items[item].charges > 1)
 					univ.party[i].items[item].charges--;
@@ -302,7 +302,7 @@ bool party_check_class(short item_class,short mode) ////
 	if (item_class == 0)
 		return false;
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			for (j = 23; j >= 0; j--)
 				if(univ.party[i].items[j].variety != eItemType::NO_ITEM && (univ.party[i].items[j].special_class == item_class)) {
 					if (mode == 0) {
@@ -767,7 +767,7 @@ short dist_from_party(location where)
 	
 	if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status == 1)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				store = min(store,dist(pc_pos[i],where));
 	}
 	else store = dist(univ.town.p_loc,where);
@@ -864,8 +864,8 @@ void make_town_hostile()
 	
 	if (fry_party == true) {
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].main_status > MAIN_STATUS_ABSENT)
-				univ.party[i].main_status = MAIN_STATUS_ABSENT;
+			if(univ.party[i].main_status > eMainStatus::ABSENT)
+				univ.party[i].main_status = eMainStatus::ABSENT;
 		stat_window = 6;
 		boom_anim_active = false;
 	}
@@ -879,7 +879,7 @@ static void put_item_graphics(cDialog& me)
 	char message[256];
 	
 	// First make sure all arrays for who can get stuff are in order.
-	if ((current_getting_pc < 6) && ((univ.party[current_getting_pc].main_status != 1)
+	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
 									 || (pc_has_space(current_getting_pc) == 24))) {
 	 	current_getting_pc = 6;
 	 	
@@ -889,7 +889,7 @@ static void put_item_graphics(cDialog& me)
 		std::ostringstream sout;
 		sout << "pc" << i + 1;
 		std::string id = sout.str();
-		if ((univ.party[i].main_status == 1) && (pc_has_space(i) < 24)
+		if(univ.party[i].main_status == eMainStatus::ALIVE && pc_has_space(i) < 24
 			&& ((!is_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
@@ -955,7 +955,7 @@ static void put_item_graphics(cDialog& me)
 	}
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			std::ostringstream sout;
 			sout << "pc" << i + 1 << "-g";
 			dynamic_cast<cPict&>(me[sout.str()]).setPict(univ.party[i].which_graphic);
@@ -1223,7 +1223,7 @@ short party_total_level()
 	short i,j = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			j += univ.party[i].level;
 	return j;
 }
@@ -1356,7 +1356,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			
 			if (new_item.variety != eItemType::NO_ITEM) {
 				for (i = 0; i < 6; i++)
-					if ((univ.party[i].main_status == 1)
+					if((univ.party[i].main_status == eMainStatus::ALIVE)
 						&& (get_ran(1,1,100) < id_odds[univ.party[i].skills[13]]))
 						new_item.ident = true;
 				place_item(new_item,where,false);
@@ -1370,7 +1370,7 @@ short luck_total()
 	short i = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			i += univ.party[i].skills[18];
 	return i;
 }

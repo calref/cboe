@@ -291,8 +291,8 @@ void handle_extra_menu(int item_hit)
 			cChoiceDlog("reunited.xml").show();
 			univ.town.p_loc = univ.party.left_at();
 			for (i = 0; i < 6; i++)
-				if (univ.party[i].main_status >= MAIN_STATUS_SPLIT)
-					univ.party[i].main_status -= MAIN_STATUS_SPLIT;
+				if(univ.party[i].main_status >= eMainStatus::SPLIT)
+					univ.party[i].main_status -= eMainStatus::SPLIT;
 			break;
 			
 
@@ -314,9 +314,9 @@ void handle_extra_menu(int item_hit)
 		case 10: // raise dead
 			display_strings(3,15);
 			for (i = 0; i < 6; i++)
-				if ((univ.party[i].main_status == MAIN_STATUS_DEAD) || (univ.party[i].main_status == MAIN_STATUS_DUST) ||
-					(univ.party[i].main_status == MAIN_STATUS_STONE))
-						univ.party[i].main_status = MAIN_STATUS_ALIVE;
+				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
+					univ.party[i].main_status == eMainStatus::STONE)
+						univ.party[i].main_status = eMainStatus::ALIVE;
 			break;
 		case 11: // conditions
 			display_strings(4,15);

@@ -92,13 +92,13 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	
 	for (i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if ((univ.party[i].main_status == 0) ||
-			((active_only == true) && (univ.party[i].main_status > 1)) ||
-			((free_inv_only == 1) && (pc_has_space(i) == 24)) || (univ.party[i].main_status == 5)) {
+		if(univ.party[i].main_status == eMainStatus::ABSENT ||
+			(active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
+			(free_inv_only == 1 && pc_has_space(i) == 24) || univ.party[i].main_status == eMainStatus::FLED) {
 			selectPc["pick" + n].hide();
 		}
 		// TODO: Wouldn't this lead to blank name fields for non-active characters if those characters are allowed?
-		if (univ.party[i].main_status != 0) {
+		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			selectPc["pc" + n].setText(univ.party[i].name);
 		}
 		else selectPc["pc" + n].hide();
@@ -123,7 +123,7 @@ static short party_total_level()
 	short i,j = 0;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			j += univ.party[i].level;
 	return j;
 }
@@ -154,13 +154,13 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 	} else if(item_hit == "left") {
 		do {
 			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-		} while (univ.party[pc_num].main_status == 0);
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
 		which_pc_displayed = pc_num;
 		put_pc_spells(me);
 	} else if(item_hit == "right") {
 		do {
 			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-		} while (univ.party[pc_num].main_status == 0);
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
 		which_pc_displayed = pc_num;
 		put_pc_spells(me);
 	}
@@ -172,9 +172,9 @@ void display_pc(short pc_num,short mode,cDialog* parent)
 	short i;
 	std::string label_str;
 	
-	if (univ.party[pc_num].main_status == 0) {
+	if(univ.party[pc_num].main_status == eMainStatus::ABSENT) {
 		for (pc_num = 0; pc_num < 6; pc_num++)
-			if (univ.party[pc_num].main_status == 1)
+			if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
 				break;
 	}
 	which_pc_displayed = pc_num;
@@ -378,7 +378,7 @@ static void do_xp_draw(cDialog& me)
 	mode = store_train_mode;
 	pc_num = store_train_pc;
 	if (mode == 0) {
-		if (univ.party[pc_num].main_status == 1)
+		if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
 			sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 		else sprintf((char *) get_text, "New PC");
 	}
@@ -408,8 +408,9 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod 
 	pc_num = store_train_pc;
 	
 	if(item_hit == "cancel") {
-		if ((mode == 0) && (univ.party[pc_num].main_status < MAIN_STATUS_ABSENT))
-			univ.party[pc_num].main_status = MAIN_STATUS_ABSENT;
+		// TODO: Um, I'm pretty sure this can never happen.
+		if(mode == 0 && univ.party[pc_num].main_status < eMainStatus::ABSENT)
+			univ.party[pc_num].main_status = eMainStatus::ABSENT;
 		me.setResult(false);
 		talk_done = true;
 	} else if(item_hit == "help") {
@@ -425,7 +426,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod 
 			do_xp_keep(pc_num,mode);
 			do {
 				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-			} while (univ.party[pc_num].main_status != 1);
+			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me);
 		} // else TODO: Play an error sound here
@@ -435,7 +436,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod 
 			do_xp_keep(pc_num,mode);
 			do {
 				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-			} while (univ.party[pc_num].main_status != 1);
+			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me);
 		} // else TODO: Play an error sound here

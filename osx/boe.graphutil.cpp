@@ -355,7 +355,7 @@ void draw_pcs(location center,short mode)
 		return;
 	
 	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == 1)
+		if (univ.party[i].main_status == eMainStatus::ALIVE)
 			if (((point_onscreen(center, pc_pos[i])) == true) &&
 				(/*cartoon_happening ||*/ (party_can_see(pc_pos[i]) < 6))){
 				where_draw.x = pc_pos[i].x - center.x + 4;
@@ -382,7 +382,7 @@ void draw_pcs(location center,short mode)
 			}
 			
 			// Draw current pc on top
-			if ( ((point_onscreen(center, pc_pos[current_pc])) == true) && (univ.party[current_pc].main_status == 1)) {
+			if(point_onscreen(center, pc_pos[current_pc]) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
 				where_draw.x = pc_pos[current_pc].x - center.x + 4;
 				where_draw.y = pc_pos[current_pc].y - center.y + 4;
 				source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
