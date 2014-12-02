@@ -18,10 +18,10 @@ int cur_node;
 symbols<char, eSpecNodeType> opcode;
 symbols<char, int> defn;
 
-void init() {cur_node = 0; temp_symbol.clear();}
-void prep_add_symbol(char c) {temp_symbol += c;}
-void add_symbol(int i) {defn.add(temp_symbol, i); temp_symbol.clear();}
-void skip_to(int i) {cur_node = i;}
+void init();
+void prep_add_symbol(char c);
+void add_symbol(int i);
+void skip_to(int i);
 
 auto ws = char_(" \t");
 auto comment = char_('#') >> *(print | char_('\t'));
@@ -155,4 +155,22 @@ struct initer {
 };
 
 static struct initer initer;
+
+void init() {
+	cur_node = 0;
+	temp_symbol.clear();
+}
+
+void prep_add_symbol(char c) {
+	temp_symbol += c;
+}
+
+void add_symbol(int i) {
+	defn.add(temp_symbol, i);
+	temp_symbol.clear();
+}
+
+void skip_to(int i) {
+	cur_node = i;
+}
 
