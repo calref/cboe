@@ -36,20 +36,20 @@ void set_first(int i, ph_t, bool& pass), set_second(int i, ph_t, bool& pass), se
 typedef rule<std::string::iterator> Rule;
 
 auto ws = char_(" \t");
-auto comment = char_('#') >> *(print | char_('\t'));
-auto symbol = char_("A-Za-z$_-")[prep_add_symbol] >> *char_("A-Za-z0-9$_-")[prep_add_symbol];
+auto comment = char_('#') >> *(print | ws);
+auto symbol = lexeme[char_("A-Za-z$_-")[prep_add_symbol] >> *char_("A-Za-z0-9$_-")[prep_add_symbol]];
 auto val = int_ | defn;
 
 Rule datcode = lit("sdf")[for_sdf] | lit("pic")[for_pic] | lit("msg")[for_msg] |
 	lit("ex1")[for_ex1] | lit("ex2")[for_ex2] | lit("goto")[for_goto];
 
-Rule command = datcode >> ws >> *ws >> val[set_first] >>
-	(eps | *ws >> char_(',') >> *ws >> val[set_second] >>
- 	(eps | *ws >> char_(',') >> *ws >> val[set_third]));
+Rule command = datcode >> ws >> val[set_first] >>
+		(eps | char_(',') >> val[set_second] >>
+ 		(eps | char_(',') >> val[set_third]));
 
-Rule def_line = *ws >> lit("def") >> ws >> *ws >> symbol >> *ws >> char_('=') >> *ws >> uint_[add_symbol] >> (comment | eps) >> eol;
-Rule cmd_line = *ws >> (command | eps) >> *ws >> (comment | eps) >> eol;
-Rule op_line = *ws >> char_('@') >> opcode[set_type] >> (eps | *ws >> char_('=') >> *ws >> int_[skip_to]) >> (comment | eps) >> eol;
+Rule def_line = lit("def") >> ws >> symbol >> char_('=') >> uint_[add_symbol] >> (comment | eps) >> eol;
+Rule cmd_line = (command | eps) >> (comment | eps) >> eol;
+Rule op_line = lexeme[char_('@') >> opcode[set_type]] >> (eps | char_('=') >> int_[skip_to]) >> (comment | eps) >> eol;
 
 Rule command_block = eps[init_block] >> op_line >> *(cmd_line | def_line);
 
@@ -274,7 +274,7 @@ void set_third(int i, ph_t, bool& pass) {
 }
 
 std::map<size_t,cSpecial> parse(std::string code) {
-	parse(code.begin(), code.end(), nodes_file);
+	parse(code.begin(), code.end(), nodes_file, ws);
 	return specials;
 }
 
