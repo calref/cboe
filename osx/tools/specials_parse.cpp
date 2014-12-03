@@ -6,39 +6,54 @@
 //
 //
 
+#include <fstream>
+#include <sstream>
+#include <iterator>
 #include <boost/spirit/include/qi.hpp>
 
 #include "special.h"
 
 using namespace boost::spirit::qi;
+typedef boost::spirit::context<boost::fusion::cons<boost::spirit::unused_type &, boost::fusion::nil_>, boost::fusion::vector0<void>>& ph_t;
 
 std::string temp_symbol;
-int cur_node;
+int cur_node, cur_fld;
+cSpecial curSpec;
+std::map<size_t, cSpecial> specials;
 
 symbols<char, eSpecNodeType> opcode;
 symbols<char, int> defn;
 
-void init();
+void init_file(), init_block();
 void prep_add_symbol(char c);
 void add_symbol(int i);
+void add_command();
+void set_type(eSpecNodeType type);
 void skip_to(int i);
+void for_sdf(), for_pic(), for_msg(), for_ex1(), for_ex2(), for_goto();
+void set_first(int i, ph_t, bool& pass), set_second(int i, ph_t, bool& pass), set_third(int i, ph_t, bool& pass);
+
+typedef rule<std::string::iterator> Rule;
 
 auto ws = char_(" \t");
 auto comment = char_('#') >> *(print | char_('\t'));
 auto symbol = char_("A-Za-z$_-")[prep_add_symbol] >> *char_("A-Za-z0-9$_-")[prep_add_symbol];
 auto val = int_ | defn;
 
-auto datcode = lit("sdf") | lit("pic") | lit("msg") | lit("ex1") | lit("ex2") | lit("goto");
+Rule datcode = lit("sdf")[for_sdf] | lit("pic")[for_pic] | lit("msg")[for_msg] |
+	lit("ex1")[for_ex1] | lit("ex2")[for_ex2] | lit("goto")[for_goto];
 
-auto command = datcode >> ws >> *ws >> val >> (eps | *ws >> char_(',') >> *ws >> val >> (eps | *ws >> char_(',') >> *ws >> val));
+Rule command = datcode >> ws >> *ws >> val[set_first] >>
+	(eps | *ws >> char_(',') >> *ws >> val[set_second] >>
+ 	(eps | *ws >> char_(',') >> *ws >> val[set_third]));
 
-auto def_line = *ws >> lit("def") >> ws >> *ws >> symbol >> *ws >> char_('=') >> *ws >> uint_[add_symbol] >> (comment | eps) >> eol;
-auto cmd_line = *ws >> (command | eps) >> *ws >> (comment | eps) >> eol;
-auto op_line = *ws >> char_('@') >> opcode >> (eps | *ws >> char_('=') >> *ws >> int_[skip_to]) >> (comment | eps) >> eol;
+Rule def_line = *ws >> lit("def") >> ws >> *ws >> symbol >> *ws >> char_('=') >> *ws >> uint_[add_symbol] >> (comment | eps) >> eol;
+Rule cmd_line = *ws >> (command | eps) >> *ws >> (comment | eps) >> eol;
+Rule op_line = *ws >> char_('@') >> opcode[set_type] >> (eps | *ws >> char_('=') >> *ws >> int_[skip_to]) >> (comment | eps) >> eol;
 
-auto command_block = op_line >> *(cmd_line | def_line);
+Rule command_block = eps[init_block] >> op_line >> *(cmd_line | def_line);
 
-auto nodes_file = eps[init] >> *def_line >> *command_block;
+Rule nodes_file = eps[init_file] >> *def_line >> *command_block[add_command];
 
 struct initer {
 	initer() {
@@ -156,9 +171,29 @@ struct initer {
 
 static struct initer initer;
 
-void init() {
+void init_file() {
+	specials.clear();
+	init_block();
+}
+
+void init_block() {
 	cur_node = 0;
 	temp_symbol.clear();
+	curSpec.type = SPEC_NULL;
+	curSpec.sd1 = -1;
+	curSpec.sd2 = -1;
+	curSpec.m1 = -1;
+	curSpec.m2 = -1;
+	curSpec.m3 = -1;
+	curSpec.pic = -1;
+	curSpec.pictype = 4; // PIC_DLOG
+	curSpec.ex1a = -1;
+	curSpec.ex1b = -1;
+	curSpec.ex1c = -1;
+	curSpec.ex2a = -1;
+	curSpec.ex2b = -1;
+	curSpec.ex2c = -1;
+	curSpec.jumpto = -1;
 }
 
 void prep_add_symbol(char c) {
@@ -170,7 +205,106 @@ void add_symbol(int i) {
 	temp_symbol.clear();
 }
 
+void add_command() {
+	specials[cur_node] = curSpec;
+}
+
+void set_type(eSpecNodeType type) {
+	curSpec.type = type;
+}
+
 void skip_to(int i) {
 	cur_node = i;
 }
 
+void for_sdf() {
+	cur_fld = 0;
+}
+
+void for_pic() {
+	cur_fld = 1;
+}
+
+void for_msg() {
+	cur_fld = 2;
+}
+
+void for_ex1() {
+	cur_fld = 3;
+}
+
+void for_ex2() {
+	cur_fld = 4;
+}
+
+void for_goto() {
+	cur_fld = 5;
+}
+
+void set_first(int i, ph_t, bool& pass) {
+	switch(cur_fld) {
+		case 0: curSpec.sd1 = i; break;
+		case 1: curSpec.pic = i; break;
+		case 2: curSpec.m1 = i; break;
+		case 3: curSpec.ex1a = i; break;
+		case 4: curSpec.ex2a = i; break;
+		case 5: curSpec.jumpto = i; break;
+		default: pass = false; break;
+	}
+}
+
+void set_second(int i, ph_t, bool& pass) {
+	switch(cur_fld) {
+		case 0: curSpec.sd2 = i; break;
+		case 1: curSpec.pictype = i; break;
+		case 2: curSpec.m2 = i; break;
+		case 3: curSpec.ex1b = i; break;
+		case 4: curSpec.ex2b = i; break;
+		default: pass = false; break;
+	}
+}
+
+void set_third(int i, ph_t, bool& pass) {
+	switch(cur_fld) {
+		case 2: curSpec.m3 = i; break;
+		case 3: curSpec.ex1c = i; break;
+		case 4: curSpec.ex2c = i; break;
+		default: pass = false; break;
+	}
+}
+
+std::map<size_t,cSpecial> parse(std::string code) {
+	parse(code.begin(), code.end(), nodes_file);
+	return specials;
+}
+
+void test_special_parse(std::string file) {
+	std::ostringstream code;
+	std::ifstream fin(file);
+	code << fin.rdbuf();
+	fin.close();
+//	BOOST_SPIRIT_DEBUG_NODE(defn);
+//	BOOST_SPIRIT_DEBUG_NODE(datcode);
+//	BOOST_SPIRIT_DEBUG_NODE(command);
+//	BOOST_SPIRIT_DEBUG_NODE(def_line);
+//	BOOST_SPIRIT_DEBUG_NODE(cmd_line);
+//	BOOST_SPIRIT_DEBUG_NODE(op_line);
+//	BOOST_SPIRIT_DEBUG_NODE(command_block);
+//	BOOST_SPIRIT_DEBUG_NODE(nodes_file);
+	parse(code.str());
+	std::ofstream fout(file + ".out");
+	for(auto p : specials) {
+		fout << "Special node ID " << p.first << ":\b";
+		fout << "  SDF: (" << p.second.sd1 << ',' << p.second.sd2 << ")\n";
+		fout << "  Message: (" << p.second.m1 << ',' << p.second.m2 << ',' << p.second.m3 << ")\n";
+		fout << "  Pic: " << p.second.pic << '@' << p.second.pictype << '\n';
+		fout << "  Extra 1a: " << p.second.ex1a << '\n';
+		fout << "  Extra 1b: " << p.second.ex1b << '\n';
+		fout << "  Extra 1c: " << p.second.ex1c << '\n';
+		fout << "  Extra 2a: " << p.second.ex2a << '\n';
+		fout << "  Extra 2b: " << p.second.ex2b << '\n';
+		fout << "  Extra 2c: " << p.second.ex2c << '\n';
+		fout << "  Jump To: " << p.second.jumpto << "\n\n";
+	}
+	fout.close();
+}
