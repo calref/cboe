@@ -21,8 +21,6 @@
 #include "dlogutil.h"
 #include "scen.menus.h"
 
-#include <CoreFoundation/CFByteOrder.h>
-
 cUniverse univ; // not needed; just to silence the compiler
 
 /* Globals */
@@ -75,8 +73,6 @@ void ding();
 cScenario scenario;
 //piles_of_stuff_dumping_type *data_store;
 RECT right_sbar_rect;
-void check_for_intel();
-bool mac_is_intel;
 
 // 
 //	Main body of program Exileedit
@@ -183,16 +179,6 @@ void Initialize(void) {
 	right_sbar->setBounds(right_sbar_rect);
 	right_sbar->setPageSize(NRSONPAGE - 1);
 	right_sbar->hide();
-}
-
-void check_for_intel(){
-	int response = CFByteOrderGetCurrent();
-	if(response == CFByteOrderUnknown){
-		printf("Gestalt error\n");
-		exit(1);
-	}
-	if(response == CFByteOrderLittleEndian) mac_is_intel = true;
-	else mac_is_intel = false;
 }
 
 void Handle_One_Event() {

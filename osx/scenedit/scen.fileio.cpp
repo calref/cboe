@@ -38,7 +38,7 @@ short start_volume,data_volume,jl = 0;
 fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
 extern fs::path progDir;
-bool cur_scen_is_mac = true;
+extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void load_spec_graphics();

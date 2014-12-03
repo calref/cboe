@@ -29,8 +29,6 @@
 #include "boe.menus.h"
 #include "cursors.h"
 
-#include <CoreFoundation/CFByteOrder.h>
-
 extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
 
@@ -144,8 +142,6 @@ bool sleep_field;
 //
 //	Main body of program Exile
 //
-void check_for_intel();
-bool mac_is_intel;
 
 int main(int argc, char* argv[]) {
 #if 0
@@ -215,16 +211,6 @@ int main(int argc, char* argv[]) {
 		giveError("An unknown error occurred!");
 		throw;
 	}
-}
-
-void check_for_intel(){
-	int response = CFByteOrderGetCurrent();
-	if(response == CFByteOrderUnknown){
-		printf("Gestalt error\n");
-		exit(1);
-	}
-	if(response == CFByteOrderLittleEndian) mac_is_intel = true;
-	else mac_is_intel = false;
 }
 
 //

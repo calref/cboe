@@ -16,9 +16,6 @@
 #include "pc.menus.h"
 #include "winutil.h"
 #include "cursors.h"
-#ifdef __APPLE__
-#include <CoreFoundation/CFByteOrder.h>
-#endif
 
 extern std::string get_str(std::string, short);
 
@@ -92,7 +89,7 @@ bool verify_restore_quit(bool mode);
 void set_up_apple_events();
 void handle_item_menu(int item_hit);
 //item_record_type convert_item (short_item_record_type s_item);
-bool cur_scen_is_mac, mac_is_intel;
+extern bool cur_scen_is_mac;
 extern fs::path progDir;
 // File io
 short specials_res_id;
@@ -132,7 +129,6 @@ int main(int argc, char* argv[]) {
 //
 
 //MW specified argument and return type.
-void check_for_intel();
 void Initialize(void)
 {
 	
@@ -239,16 +235,6 @@ void handle_file_menu(int item_hit)
 			All_Done = verify_restore_quit(false);
 			break;
 		}
-}
-
-void check_for_intel(){
-	int response = CFByteOrderGetCurrent();
-	if(response == CFByteOrderUnknown){
-		printf("Gestalt error\n");
-		exit(1);
-	}
-	if(response == CFByteOrderLittleEndian) mac_is_intel = true;
-	else mac_is_intel = false;
 }
 
 static void display_strings(short nstr, pic_num_t pic) {

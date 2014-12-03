@@ -22,7 +22,7 @@
 #include "restypes.hpp"
 #include "tarball.hpp"
 
-extern bool cur_scen_is_mac, mac_is_intel;
+bool cur_scen_is_mac =  true, mac_is_intel;
 extern cScenario scenario;
 extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
 extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
@@ -68,6 +68,12 @@ void init_directories(const char* exec_path) {
 #endif // __APPLE__
 #endif // _Win32||_Win64
 	tempDir /= "Temporary Files";
+}
+
+void check_for_intel() {
+	union {uint16_t x; uint8_t c;} endian;
+	endian.x = 1;
+	mac_is_intel = endian.c;
 }
 
 bool load_scenario(fs::path file_to_load, bool skip_strings){

@@ -1,6 +1,4 @@
 
-#include <CoreFoundation/CoreFoundation.h>
-
 #include <iostream>
 #include <fstream>
 
@@ -77,7 +75,7 @@ fs::path file_to_load;
 fs::path store_file_reply;
 short jl;
 
-bool cur_scen_is_mac = true;
+extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void save_outdoor_maps();
