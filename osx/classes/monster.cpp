@@ -23,7 +23,10 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	for(int i = 0; i < 3; i++) a[i] = old.a[i];
 	a[0].type = old.a1_type;
 	a[1].type = a[2].type = old.a23_type;
-	m_type = (eMonsterType) old.m_type;
+	// Unless human, add 3 to the monster's type to get its race
+	// This is because nephil, slith, and vahnatai were inserted
+	if(old.m_type) m_type = eRace(old.m_type + 3);
+	else m_type = RACE_HUMAN;
 	speed = old.speed;
 	mu = old.mu;
 	cl = old.cl;

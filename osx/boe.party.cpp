@@ -2834,7 +2834,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == eMainStatus::ALIVE)
-			dummy = damage_pc(i,how_much,damage_type,MONSTER_TYPE_UNKNOWN,0);
+			dummy = damage_pc(i,how_much,damage_type,RACE_UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen();
 }
@@ -2850,7 +2850,7 @@ void slay_party(eMainStatus mode)
 	put_pc_screen();
 }
 
-bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterType type_of_attacker, short sound_type)
+bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type)
 //short damage_type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 // 5 - cold  6 - undead attack  7 - demon attack
 // 10 - marked damage, from during anim mode ... no boom, and totally unblockable
@@ -2937,11 +2937,11 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eMonsterTyp
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	if ((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,58)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == MONSTER_TYPE_HUMANOID) && ((level = get_prot_level(which_pc,59)) > 0))
+	if ((type_of_attacker == RACE_HUMANOID) && ((level = get_prot_level(which_pc,59)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == MONSTER_TYPE_REPTILE) && ((level = get_prot_level(which_pc,60)) > 0))
+	if ((type_of_attacker == RACE_REPTILE) && ((level = get_prot_level(which_pc,60)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == MONSTER_TYPE_GIANT) && ((level = get_prot_level(which_pc,61)) > 0))
+	if ((type_of_attacker == RACE_GIANT) && ((level = get_prot_level(which_pc,61)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	

@@ -605,10 +605,10 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 			put_monst_info_in_dlog(me,which_monst);
 	} else if(item_hit == "picktype") {
 			if(!save_monst_info(me,store_monst)) return false;
-			i = choose_text_res("monster-abilities",150,164,store_monst.m_type + 150,&me,"Choose Monster Type:");
+			i = choose_text_res("monster-abilities",150,167,store_monst.m_type + 150,&me,"Choose Monster Type:");
 			if (i >= 0) {
 				i -= 150;
-				store_monst.m_type = (eMonsterType) i;
+				store_monst.m_type = (eRace) i;
 				put_monst_info_in_dlog(me,which_monst);
 			}
 	} else if(item_hit == "picktype1") {

@@ -110,7 +110,7 @@ public:
 	unsigned char armor;
 	unsigned char skill;
 	cAttack a[3];
-	eMonsterType m_type;
+	eRace m_type;
 	unsigned char speed;
 	unsigned char mu;
 	unsigned char cl;

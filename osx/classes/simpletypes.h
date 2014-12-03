@@ -77,7 +77,7 @@ enum eRace {
 	RACE_MAGICAL = 17,
 	RACE_PLANT = 18,
 	RACE_BIRD = 19,
-}; // TODO: Expand and merge with eMonsterType
+};
 
 /* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
 enum eStatus {
@@ -96,27 +96,6 @@ enum eStatus {
 	STATUS_PARALYZED = 12,
 	STATUS_ACID = 13,
 };
-
-/* Monster Type */
-enum eMonsterType {
-	MONSTER_TYPE_UNKNOWN = -1, // for parameters to some functions; not valid in the class
-	MONSTER_TYPE_HUMAN = 0,
-	MONSTER_TYPE_REPTILE = 1,
-	MONSTER_TYPE_BEAST = 2,
-	MONSTER_TYPE_IMPORTANT = 3,
-	MONSTER_TYPE_MAGE = 4,
-	MONSTER_TYPE_PRIEST = 5,
-	MONSTER_TYPE_HUMANOID = 6,
-	MONSTER_TYPE_DEMON = 7,
-	MONSTER_TYPE_UNDEAD = 8,
-	MONSTER_TYPE_GIANT = 9,
-	MONSTER_TYPE_SLIME = 10,
-	MONSTER_TYPE_STONE = 11,
-	MONSTER_TYPE_BUG = 12,
-	MONSTER_TYPE_DRAGON = 13,
-	MONSTER_TYPE_MAGICAL = 14,
-};
-
 
 /* Special Ability a.k.a spec_skill */
 

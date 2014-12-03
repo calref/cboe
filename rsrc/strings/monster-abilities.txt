@@ -148,6 +148,9 @@ Stabs
 
 
 Human
+Nephil
+Slith
+Vahnatai
 Reptile
 Beast
 Important
@@ -162,9 +165,6 @@ Stone
 Bug
 Dragon
 Magical Creature
-
-
-
 
 
 

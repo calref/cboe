@@ -790,7 +790,7 @@ void pc_attack(short who_att,short target)////
 	if (((univ.town.monst[target].status[10] > 0) || (univ.town.monst[target].spec_skill == 22))
 		&& (store_hp - univ.town.monst[target].health > 0)) {
 		add_string_to_buf("  Shares damage!   ");
-		damage_pc(who_att, store_hp - univ.town.monst[target].health, DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+		damage_pc(who_att, store_hp - univ.town.monst[target].health, DAMAGE_MAGIC,RACE_UNKNOWN,0);
 	}
 	combat_posing_monster = current_working_monster = -1;
 	
@@ -1398,7 +1398,7 @@ void handle_marked_damage()
 	for (i = 0; i < 6; i++)
 		if (pc_marked_damage[i] > 0)
 		{
-			damage_pc(i,pc_marked_damage[i],DAMAGE_MARKED,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(i,pc_marked_damage[i],DAMAGE_MARKED,RACE_UNKNOWN,0);
 			pc_marked_damage[i] = 0;
 		}
 	for (i = 0; i < univ.town->max_monst(); i++)
@@ -2329,9 +2329,9 @@ void monster_attack_pc(short who_att,short target)
 			draw_terrain(2);
 			// Check if hit, and do effects
 			if (r1 <= hit_chance[(attacker->skill + 4) / 2]) {
-				if (attacker->m_type == MONSTER_TYPE_UNDEAD)
+				if(attacker->m_type == RACE_UNDEAD)
 					dam_type = DAMAGE_UNDEAD;
-				if (attacker->m_type == MONSTER_TYPE_DEMON)
+				if(attacker->m_type == RACE_DEMON)
 					dam_type = DAMAGE_DEMON;
 				
 				store_hp = univ.party[target].cur_health;
@@ -2429,14 +2429,14 @@ void monster_attack_pc(short who_att,short target)
 						&& (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
 						add_string_to_buf("  Freezing touch!");
 						r1 = get_ran(3,1,10);
-						damage_pc(target,r1,DAMAGE_COLD,MONSTER_TYPE_UNKNOWN,0);
+						damage_pc(target,r1,DAMAGE_COLD,RACE_UNKNOWN,0);
 					}
 					// Killing touch
 					if (attacker->spec_skill == 35)
 					{
 						add_string_to_buf("  Killing touch!");
 						r1 = get_ran(20,1,10);
-						damage_pc(target,r1,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
+						damage_pc(target,r1,DAMAGE_UNBLOCKABLE,RACE_UNKNOWN,0);
 					}
 				}
 			}
@@ -2503,9 +2503,9 @@ void monster_attack_monster(short who_att,short attackee)
 			draw_terrain(2);
 			// Check if hit, and do effects
 			if (r1 <= hit_chance[(attacker->skill + 4) / 2]) {
-				if (attacker->m_type == MONSTER_TYPE_DEMON)
+				if(attacker->m_type == RACE_DEMON)
 					dam_type = DAMAGE_DEMON;
-				if (attacker->m_type == MONSTER_TYPE_UNDEAD)
+				if(attacker->m_type == RACE_UNDEAD)
 					dam_type = DAMAGE_UNDEAD;
 				store_hp = target->health;
 				
@@ -2729,7 +2729,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if (target < 100) { // pc
 			sprintf ((char *) create_line, "  Hits %s with heat ray.",(char *) univ.party[target].name.c_str());
 			add_string_to_buf((char *) create_line);
-			damage_pc(target,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(target,r1,DAMAGE_FIRE,RACE_UNKNOWN,0);
 		}
 		else { // on monst
 			add_string_to_buf("  Fires heat ray.");
@@ -2799,7 +2799,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 //			sprintf ((char *) create_line, "  Hits %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
 			
-			if (damage_pc(target,r2,DAMAGE_WEAPON,MONSTER_TYPE_UNKNOWN,13) == true) {
+			if(damage_pc(target,r2,DAMAGE_WEAPON,RACE_UNKNOWN,13)) {
+				// TODO: Uh, is something supposed to happen here!?
 			}
 		}
 		else {
@@ -3503,7 +3504,7 @@ void damage_target(short target,short dam,eDamageType type)
 {
 	if (target == 6) return;
 	if (target < 6)
-		damage_pc(target,dam,type,MONSTER_TYPE_UNKNOWN,0);
+		damage_pc(target,dam,type,RACE_UNKNOWN,0);
 	else damage_monst(target - 100, 7, dam, 0, type,0);
 }
 
@@ -3683,32 +3684,32 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 						switch (effect) {
 							case 4:
 								r1 = get_ran(2,1,6);
-								damage_pc(k,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+								damage_pc(k,r1,DAMAGE_MAGIC,RACE_UNKNOWN,0);
 								break;
 							case 5:
 								r1 = get_ran(1,1,6) + 1;
-								damage_pc(k,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
+								damage_pc(k,r1,DAMAGE_FIRE,RACE_UNKNOWN,0);
 								break;
 							case 8:
 								r1 = get_ran(2,1,6);
-								damage_pc(k,r1,DAMAGE_COLD,MONSTER_TYPE_UNKNOWN,0);
+								damage_pc(k,r1,DAMAGE_COLD,RACE_UNKNOWN,0);
 								break;
 							case 9:
 								r1 = get_ran(4,1,8);
-								damage_pc(k,r1,DAMAGE_WEAPON,MONSTER_TYPE_UNKNOWN,0);
+								damage_pc(k,r1,DAMAGE_WEAPON,RACE_UNKNOWN,0);
 								break;
 							default:
 								if ((effect >= 50) && (effect < 80)) {
 									r1 = get_ran(effect - 50,1,6);
-									damage_pc(k,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
+									damage_pc(k,r1,DAMAGE_FIRE,RACE_UNKNOWN,0);
 								}
 								if ((effect >= 90) && (effect < 120)) {
 									r1 = get_ran(effect - 90,1,6);
-									damage_pc(k,r1,DAMAGE_COLD,MONSTER_TYPE_UNKNOWN,0);
+									damage_pc(k,r1,DAMAGE_COLD,RACE_UNKNOWN,0);
 								}
 								if ((effect >= 130) && (effect < 160)) {
 									r1 = get_ran(effect - 130,1,6);
-									damage_pc(k,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+									damage_pc(k,r1,DAMAGE_MAGIC,RACE_UNKNOWN,0);
 								}
 								break;
 						}
@@ -3813,7 +3814,7 @@ void do_shockwave(location target)
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) < 11)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(i, get_ran(2 + dist(target,pc_pos[i]) / 2, 1, 6), DAMAGE_UNBLOCKABLE,RACE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
@@ -3832,7 +3833,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 		for (i = 0; i < 6; i++)
 			if ((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
 				&& univ.party[i].main_status == eMainStatus::ALIVE)
-				damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
+				damage_pc(i, dam, type,RACE_UNKNOWN,0);
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
@@ -3845,7 +3846,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 	for (i = 0; i < 6; i++)
 		if ((dist(target,pc_pos[i]) > 0) && (dist(target,pc_pos[i]) <= radius)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(i, dam, type,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(i, dam, type,RACE_UNKNOWN,0);
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
@@ -3910,7 +3911,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && !stop_hitting)
 				if (pc_pos[i] == target) {
-					damage_pc(i,dam,type,MONSTER_TYPE_UNKNOWN,0);
+					damage_pc(i,dam,type,RACE_UNKNOWN,0);
 					stop_hitting = (hit_all == 1) ? false : true;
 				}
 	if (overall_mode < MODE_COMBAT)
@@ -3943,7 +3944,7 @@ void do_poison()
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (univ.party[i].status[2] > 0) {
 					r1 = get_ran(univ.party[i].status[2],1,6);
-					damage_pc(i,r1,DAMAGE_POISON,MONSTER_TYPE_UNKNOWN,0);
+					damage_pc(i,r1,DAMAGE_POISON,RACE_UNKNOWN,0);
 					if (get_ran(1,0,8) < 6)
 						univ.party[i].status[2] = move_to_zero(univ.party[i].status[2]);
 					if (get_ran(1,0,8) < 6)
@@ -4021,7 +4022,7 @@ void handle_acid()
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (univ.party[i].status[13] > 0) {
 					r1 = get_ran(univ.party[i].status[13],1,6);
-					damage_pc(i,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+					damage_pc(i,r1,DAMAGE_MAGIC,RACE_UNKNOWN,0);
 					univ.party[i].status[13] = move_to_zero(univ.party[i].status[13]);
 				}
 		if (overall_mode < MODE_COMBAT)

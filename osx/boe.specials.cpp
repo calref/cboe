@@ -344,7 +344,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				hit_party(r1,dam_type);
 			fast_bang = 1;
 			if (mode == 2)
-				damage_pc(which_pc,r1,dam_type,MONSTER_TYPE_UNKNOWN,0);
+				damage_pc(which_pc,r1,dam_type,RACE_UNKNOWN,0);
 			if (overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -484,7 +484,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //		if (mode < 2)
 //			hit_party(r1,1);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_FIRE,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -494,7 +494,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //		if (mode < 2)
 //			hit_party(r1,3);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_MAGIC,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
@@ -504,7 +504,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //		if (mode < 2)
 //			hit_party(r1,5);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_COLD,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_COLD,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
@@ -514,7 +514,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //		if (mode < 2)
 //			hit_party(r1,0);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_WEAPON,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_WEAPON,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
 	}
@@ -524,7 +524,7 @@ void check_fields(location where_check,short mode,short which_pc)
 //		if (mode < 2)
 //			hit_party(r1,1);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_FIRE,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_FIRE,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -559,7 +559,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2)
 			hit_party(r1,DAMAGE_MAGIC);
 		if (mode == 2)
-			damage_pc(which_pc,r1,DAMAGE_MAGIC,MONSTER_TYPE_UNKNOWN,0);
+			damage_pc(which_pc,r1,DAMAGE_MAGIC,RACE_UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
@@ -928,7 +928,7 @@ void use_item(short pc,short item)
 						break;
 					case 1:
 						ASB("  You feel sick.");
-						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0);
+						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,RACE_HUMAN,0);
 						break;
 					case 2:
 						ASB("  You all feel better.");
@@ -966,7 +966,7 @@ void use_item(short pc,short item)
 					case 0: case 1:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
-						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0);
+						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,RACE_HUMAN,0);
 						disease_pc(pc,2 * str);
 						dumbfound_pc(pc,2 * str);
 						break;
@@ -974,7 +974,7 @@ void use_item(short pc,short item)
 						ASB("  You all feel terrible.");
 						for (i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
-							damage_pc(i,20 * str,DAMAGE_UNBLOCKABLE,MONSTER_TYPE_HUMAN,0);
+							damage_pc(i,20 * str,DAMAGE_UNBLOCKABLE,RACE_HUMAN,0);
 							disease_pc(i,2 * str);
 							dumbfound_pc(i,2 * str);
 						}
@@ -1806,7 +1806,7 @@ void push_things()////
 					}
 					if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 						ASB("You crash into the block.");
-						damage_pc(i,get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE,MONSTER_TYPE_UNKNOWN,0);
+						damage_pc(i,get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE,RACE_UNKNOWN,0);
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
@@ -2393,10 +2393,10 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			eDamageType dam_type = (eDamageType) spec.ex2b;
 			if (pc < 0) {
 				if(spec.pic == 1 && overall_mode == MODE_COMBAT)
-					damage_pc(current_pc,r1,dam_type,MONSTER_TYPE_UNKNOWN,0); // was HUMAN
+					damage_pc(current_pc,r1,dam_type,RACE_UNKNOWN,0); // was HUMAN
 				else hit_party(r1,dam_type);
 			}
-			else damage_pc(pc,r1,dam_type,MONSTER_TYPE_UNKNOWN,0);
+			else damage_pc(pc,r1,dam_type,RACE_UNKNOWN,0);
 			break;
 		}
 		case SPEC_AFFECT_HP:
