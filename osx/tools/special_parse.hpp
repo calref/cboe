@@ -40,12 +40,12 @@ class SpecialParser {
 	static std::map<size_t, cSpecial> specials;
 	static qi::symbols<char, int> defn;
 	static Rule ws, comment, symbol, val;
-	static Rule datcode, command, def_line, cmd_line, op_line, cmd_block, nodes_file;
+	static Rule datcode, command, init_line, null_line, def_line, cmd_line, op_line, cmd_block, nodes_file;
 	static bool grammar_built;
 public:
 	SpecialParser();
 	std::map<size_t,cSpecial> parse(std::string code);
-	void debug();
+	void init_debug();
 };
 
 #endif
