@@ -6,52 +6,55 @@
 //
 //
 
+#include "special_parse.hpp"
+
 #include <fstream>
 #include <sstream>
 #include <iterator>
-#include <boost/spirit/include/qi.hpp>
+#include <boost/phoenix/bind.hpp>
 
 #include "special.h"
 
-using namespace boost::spirit::qi;
-typedef boost::spirit::context<boost::fusion::cons<boost::spirit::unused_type &, boost::fusion::nil_>, boost::fusion::vector0<void>>& ph_t;
+namespace ph = boost::phoenix;
+qi::symbols<char, eSpecNodeType> opcode;
 
-std::string temp_symbol;
-int cur_node, cur_fld;
-cSpecial curSpec;
-std::map<size_t, cSpecial> specials;
+#define _(fcn) SpecialParser::fcn
 
-symbols<char, eSpecNodeType> opcode;
-symbols<char, int> defn;
+bool SpecialParser::grammar_built = false;
+std::string SpecialParser::temp_symbol;
+int SpecialParser::cur_node, SpecialParser::cur_fld;
+cSpecial SpecialParser::curSpec;
+std::map<size_t, cSpecial> SpecialParser::specials;
+qi::symbols<char, int> SpecialParser::defn;
+Rule SpecialParser::ws, SpecialParser::comment, SpecialParser::symbol, SpecialParser::val;
+Rule SpecialParser::datcode, SpecialParser::command, SpecialParser::def_line, SpecialParser::cmd_line;
+Rule SpecialParser::op_line, SpecialParser::cmd_block, SpecialParser::nodes_file;
 
-void init_file(), init_block();
-void prep_add_symbol(char c);
-void add_symbol(int i);
-void add_command();
-void set_type(eSpecNodeType type);
-void skip_to(int i);
-void for_sdf(), for_pic(), for_msg(), for_ex1(), for_ex2(), for_goto();
-void set_first(int i, ph_t, bool& pass), set_second(int i, ph_t, bool& pass), set_third(int i, ph_t, bool& pass);
+SpecialParser::SpecialParser() {
+	if(grammar_built) return;
+	using namespace qi;
+	ws = char_(" \t");
+	comment = char_('#') >> *(print | ws);
+	symbol = lexeme[char_("A-Za-z$_-")[_(prep_add_symbol)] >> *char_("A-Za-z0-9$_-")[_(prep_add_symbol)]];
+	val = int_ | defn;
 
-typedef rule<std::string::iterator> Rule;
+	datcode = lit("sdf")[_(for_sdf)] | lit("pic")[_(for_pic)] | lit("msg")[_(for_msg)] |
+		lit("ex1")[_(for_ex1)] | lit("ex2")[_(for_ex2)] | lit("goto")[_(for_goto)];
 
-auto ws = char_(" \t");
-auto comment = char_('#') >> *(print | ws);
-auto symbol = lexeme[char_("A-Za-z$_-")[prep_add_symbol] >> *char_("A-Za-z0-9$_-")[prep_add_symbol]];
-auto val = int_ | defn;
+	command = datcode >> ws >> val[_(set_first)] >> -(char_(',') >> val[_(set_second)] >> -(char_(',') >> val[_(set_third)]));
 
-Rule datcode = lit("sdf")[for_sdf] | lit("pic")[for_pic] | lit("msg")[for_msg] |
-	lit("ex1")[for_ex1] | lit("ex2")[for_ex2] | lit("goto")[for_goto];
+	def_line = lit("def") >> ws >> symbol >> char_('=') >> uint_[_(add_symbol)] >> -comment >> eol;
+	cmd_line = (command | eps) >> (comment | eps) >> eol;
+	op_line = lexeme[char_('@') >> opcode[_(set_type)]] >> -(char_('=') >> int_[_(skip_to)]) >> -comment >> eol;
 
-Rule command = datcode >> ws >> val[set_first] >> -(char_(',') >> val[set_second] >> -(char_(',') >> val[set_third]));
+	cmd_block = eps[_(init_block)] >> op_line >> *(cmd_line | def_line);
 
-Rule def_line = lit("def") >> ws >> symbol >> char_('=') >> uint_[add_symbol] >> -comment >> eol;
-Rule cmd_line = (command | eps) >> (comment | eps) >> eol;
-Rule op_line = lexeme[char_('@') >> opcode[set_type]] >> -(char_('=') >> int_[skip_to]) >> -comment >> eol;
-
-Rule command_block = eps[init_block] >> op_line >> *(cmd_line | def_line);
-
-Rule nodes_file = eps[init_file] >> *def_line >> *command_block[add_command];
+	nodes_file = eps[_(init_file)] >> *(-comment >> eol | def_line) >> *cmd_block[_(add_command)];
+	
+	grammar_built = true;
+}
+						   
+#undef A
 
 struct initer {
 	initer() {
@@ -169,12 +172,12 @@ struct initer {
 
 static struct initer initer;
 
-void init_file() {
+void SpecialParser::init_file() {
 	specials.clear();
 	init_block();
 }
 
-void init_block() {
+void SpecialParser::init_block() {
 	cur_node = 0;
 	temp_symbol.clear();
 	curSpec.type = SPEC_NULL;
@@ -194,52 +197,52 @@ void init_block() {
 	curSpec.jumpto = -1;
 }
 
-void prep_add_symbol(char c) {
+void SpecialParser::prep_add_symbol(char c) {
 	temp_symbol += c;
 }
 
-void add_symbol(int i) {
+void SpecialParser::add_symbol(int i) {
 	defn.add(temp_symbol, i);
 	temp_symbol.clear();
 }
 
-void add_command() {
+void SpecialParser::add_command() {
 	specials[cur_node] = curSpec;
 }
 
-void set_type(eSpecNodeType type) {
+void SpecialParser::set_type(eSpecNodeType type) {
 	curSpec.type = type;
 }
 
-void skip_to(int i) {
+void SpecialParser::skip_to(int i) {
 	cur_node = i;
 }
 
-void for_sdf() {
+void SpecialParser::for_sdf() {
 	cur_fld = 0;
 }
 
-void for_pic() {
+void SpecialParser::for_pic() {
 	cur_fld = 1;
 }
 
-void for_msg() {
+void SpecialParser::for_msg() {
 	cur_fld = 2;
 }
 
-void for_ex1() {
+void SpecialParser::for_ex1() {
 	cur_fld = 3;
 }
 
-void for_ex2() {
+void SpecialParser::for_ex2() {
 	cur_fld = 4;
 }
 
-void for_goto() {
+void SpecialParser::for_goto() {
 	cur_fld = 5;
 }
 
-void set_first(int i, ph_t, bool& pass) {
+void SpecialParser::set_first(int i, ph_t, bool& pass) {
 	switch(cur_fld) {
 		case 0: curSpec.sd1 = i; break;
 		case 1: curSpec.pic = i; break;
@@ -251,7 +254,7 @@ void set_first(int i, ph_t, bool& pass) {
 	}
 }
 
-void set_second(int i, ph_t, bool& pass) {
+void SpecialParser::set_second(int i, ph_t, bool& pass) {
 	switch(cur_fld) {
 		case 0: curSpec.sd2 = i; break;
 		case 1: curSpec.pictype = i; break;
@@ -262,7 +265,7 @@ void set_second(int i, ph_t, bool& pass) {
 	}
 }
 
-void set_third(int i, ph_t, bool& pass) {
+void SpecialParser::set_third(int i, ph_t, bool& pass) {
 	switch(cur_fld) {
 		case 2: curSpec.m3 = i; break;
 		case 3: curSpec.ex1c = i; break;
@@ -271,9 +274,20 @@ void set_third(int i, ph_t, bool& pass) {
 	}
 }
 
-std::map<size_t,cSpecial> parse(std::string code) {
-	parse(code.begin(), code.end(), nodes_file, ws);
+std::map<size_t,cSpecial> SpecialParser::parse(std::string code) {
+	bool success = qi::phrase_parse(code.begin(), code.end(), nodes_file, ws);
 	return specials;
+}
+
+void SpecialParser::debug() {
+//	BOOST_SPIRIT_DEBUG_NODE(defn);
+//	BOOST_SPIRIT_DEBUG_NODE(datcode);
+//	BOOST_SPIRIT_DEBUG_NODE(command);
+//	BOOST_SPIRIT_DEBUG_NODE(def_line);
+//	BOOST_SPIRIT_DEBUG_NODE(cmd_line);
+//	BOOST_SPIRIT_DEBUG_NODE(op_line);
+//	BOOST_SPIRIT_DEBUG_NODE(cmd_block);
+//	BOOST_SPIRIT_DEBUG_NODE(nodes_file);
 }
 
 void test_special_parse(std::string file) {
@@ -281,15 +295,9 @@ void test_special_parse(std::string file) {
 	std::ifstream fin(file);
 	code << fin.rdbuf();
 	fin.close();
-//	BOOST_SPIRIT_DEBUG_NODE(defn);
-//	BOOST_SPIRIT_DEBUG_NODE(datcode);
-//	BOOST_SPIRIT_DEBUG_NODE(command);
-//	BOOST_SPIRIT_DEBUG_NODE(def_line);
-//	BOOST_SPIRIT_DEBUG_NODE(cmd_line);
-//	BOOST_SPIRIT_DEBUG_NODE(op_line);
-//	BOOST_SPIRIT_DEBUG_NODE(command_block);
-//	BOOST_SPIRIT_DEBUG_NODE(nodes_file);
-	parse(code.str());
+	SpecialParser parser;
+	parser.debug();
+	auto specials = parser.parse(code.str());
 	std::ofstream fout(file + ".out");
 	for(auto p : specials) {
 		fout << "Special node ID " << p.first << ":\b";
