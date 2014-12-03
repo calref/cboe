@@ -43,13 +43,11 @@ auto val = int_ | defn;
 Rule datcode = lit("sdf")[for_sdf] | lit("pic")[for_pic] | lit("msg")[for_msg] |
 	lit("ex1")[for_ex1] | lit("ex2")[for_ex2] | lit("goto")[for_goto];
 
-Rule command = datcode >> ws >> val[set_first] >>
-		(eps | char_(',') >> val[set_second] >>
- 		(eps | char_(',') >> val[set_third]));
+Rule command = datcode >> ws >> val[set_first] >> -(char_(',') >> val[set_second] >> -(char_(',') >> val[set_third]));
 
-Rule def_line = lit("def") >> ws >> symbol >> char_('=') >> uint_[add_symbol] >> (comment | eps) >> eol;
+Rule def_line = lit("def") >> ws >> symbol >> char_('=') >> uint_[add_symbol] >> -comment >> eol;
 Rule cmd_line = (command | eps) >> (comment | eps) >> eol;
-Rule op_line = lexeme[char_('@') >> opcode[set_type]] >> (eps | char_('=') >> int_[skip_to]) >> (comment | eps) >> eol;
+Rule op_line = lexeme[char_('@') >> opcode[set_type]] >> -(char_('=') >> int_[skip_to]) >> -comment >> eol;
 
 Rule command_block = eps[init_block] >> op_line >> *(cmd_line | def_line);
 
