@@ -528,12 +528,12 @@ void display_party()
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-									else if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
-										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",eTextMode::WRAP,style);
-											cur_rect++;
-										}
-								if(univ.party[i].status[eStatus::POISON] > 0) 
+								if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
+									if(cur_rect <= 9) {
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",eTextMode::WRAP,style);
+										cur_rect++;
+									}
+								if(univ.party[i].status[eStatus::POISON] > 0)
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",eTextMode::WRAP,style);
 										cur_rect++;
@@ -543,12 +543,12 @@ void display_party()
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-									else if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
-										if(cur_rect <= 9) {
-											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",eTextMode::WRAP,style);
-											cur_rect++;
-										}
-								if(univ.party[i].status[eStatus::INVULNERABLE] > 0) 
+								if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
+									if(cur_rect <= 9) {
+										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",eTextMode::WRAP,style);
+										cur_rect++;
+									}
+								if(univ.party[i].status[eStatus::INVULNERABLE] > 0)
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",eTextMode::WRAP,style);
 										cur_rect++;
