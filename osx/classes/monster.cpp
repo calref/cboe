@@ -124,7 +124,8 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	ap = old.m_d.ap;
 	morale = old.m_d.morale;
 	m_morale = old.m_d.m_morale;
-	for(int i = 0; i < 15; i++) status[i] = old.m_d.status[i];
+	for(int i = 0; i < 15; i++)
+		status[(eStatus) i] = old.m_d.status[i];
 	direction = old.m_d.direction;
 	return *this;
 }
@@ -148,12 +149,13 @@ std::ostream& operator << (std::ostream& out, eStatus& e){
 	return out << (int) e;
 }
 
+// TODO: This should probably understand symbolic names as well as the numbers?
 std::istream& operator >> (std::istream& in, eStatus& e){
 	int i;
 	in >> i;
-	if(i > 0 && i < 14)
+	if(i >= 0 && i < 14)
 		e = (eStatus) i;
-	else e = STATUS_POISONED_WEAPON;
+	else e = eStatus::MAIN;
 	return in;
 }
 
@@ -203,7 +205,7 @@ cCreature& cCreature::operator = (const cCreature& other){ // replaces return_mo
 	if(level >= 20) m_morale += 10 * (level - 20);
 	morale = m_morale;
 	direction = 0;
-	for(int i = 0; i < 15; i++) status[i] = 0;
+	status.clear();
 	attitude = start_attitude; // TODO: Is this right?
 	cur_loc = start_loc;
 	target = 6; // No target
@@ -276,35 +278,35 @@ cMonster::cAbility::operator std::string(){
 			break;
 		case MONST_STATUS_RAY:
 		case MONST_STATUS_TOUCH:
-			switch(extra1){
-				case STATUS_BLESS_CURSE:
+			switch((eStatus)extra1){
+				case eStatus::BLESS_CURSE:
 					sout << "Curse";
 					break;
-				case STATUS_POISON:
+				case eStatus::POISON:
 					sout << "Poison";
 					i = 1;
 					break;
-				case STATUS_HASTE_SLOW:
+				case eStatus::HASTE_SLOW:
 					sout << "Slowing";
 					break;
-				case STATUS_WEBS:
+				case eStatus::WEBS:
 					sout << "Glue";
 					i = 1;
 					break;
-				case STATUS_DISEASE:
+				case eStatus::DISEASE:
 					sout << "Infectious";
 					i = 1;
 					break;
-				case STATUS_DUMB:
+				case eStatus::DUMB:
 					sout << "Dumbfounding";
 					break;
-				case STATUS_ASLEEP:
+				case eStatus::ASLEEP:
 					sout << "Sleep";
 					break;
-				case STATUS_PARALYZED:
+				case eStatus::PARALYZED:
 					sout << "Paralysis";
 					break;
-				case STATUS_ACID:
+				case eStatus::ACID:
 					sout << "Acid";
 					i = 1;
 					break;
@@ -522,9 +524,11 @@ void cCreature::writeTo(std::ostream& file) {
 	file << "FACE " << facial_pic << '\n';
 	file << "TARGET " << target << '\n';
 	file << "TARGLOC " << targ_loc.x << ' ' << targ_loc.y << '\n';
-	for(int i = 0; i < 15; i++)
-		if(status[i] != 0)
-			file << "STATUS " << i << ' ' << status[i] << '\n';
+	for(int i = 0; i < 15; i++) {
+		eStatus stat = (eStatus) i;
+		if(status[stat] != 0)
+			file << "STATUS " << i << ' ' << status[stat] << '\n';
+	}
 	file << "CURHP " << health << '\n';
 	file << "CURSP " << mp << '\n';
 	file << "MORALE " << morale << '\n';
@@ -597,10 +601,8 @@ void cCreature::readFrom(std::istream& file) {
 		else if(cur == "DIRECTION")
 			line >> direction;
 		else if(cur == "STATUS") {
-			int i;
-			line >> i;
-			if(i >= 0 && i < 15)
-				line >> status[i];
+			eStatus i;
+			line >> i >> status[i];
 		}
 	}
 }

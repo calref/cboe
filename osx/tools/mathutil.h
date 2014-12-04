@@ -16,6 +16,23 @@ short s_sqrt(short val);
 short max(short a,short b);
 short min(short a,short b);
 short minmax(short min,short max,short k);
-short move_to_zero(short val);
 short gcd(short a, short b);
 sf::Time time_in_ticks(int ticks);
+
+template<typename T>
+inline void move_to_zero(T& val){
+	if (val < 0)
+		val++;
+	if (val > 0)
+		val--;
+}
+
+// Not quite mathutil... perhaps I need a more general util file.
+// This is from <http://stackoverflow.com/a/16597048>.
+template<typename ContainerT, typename PredicateT >
+void erase_if(ContainerT& items, const PredicateT& predicate) {
+    for(auto it = items.begin(); it != items.end();) {
+		if(predicate(*it)) it = items.erase(it);
+		else ++it;
+    }
+};

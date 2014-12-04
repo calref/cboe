@@ -181,37 +181,37 @@ short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case TER_SPEC_DANGEROUS:
-			switch(scenario.ter_types[ter].flag3.u){
-				case STATUS_POISONED_WEAPON: // TODO: Do something here
+			switch((eStatus)scenario.ter_types[ter].flag3.u){
+				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
-				case STATUS_BLESS_CURSE: // TODO: Do something here (check flag1 to determine whether bless or curse)
+				case eStatus::BLESS_CURSE: // TODO: Do something here (check flag1 to determine whether bless or curse)
 					break;
-				case STATUS_POISON:
+				case eStatus::POISON:
 					icon = 35;
 					break;
-				case STATUS_HASTE_SLOW: // TODO: Do something here (check flag1 to determine whether haste or slow)
+				case eStatus::HASTE_SLOW: // TODO: Do something here (check flag1 to determine whether haste or slow)
 					break;
-				case STATUS_INVULNERABLE: // TODO: Do something here
+				case eStatus::INVULNERABLE: // TODO: Do something here
 					break;
-				case STATUS_MAGIC_RESISTANCE: // TODO: Do something here
+				case eStatus::MAGIC_RESISTANCE: // TODO: Do something here
 					break;
-				case STATUS_WEBS: // TODO: Do something here
+				case eStatus::WEBS: // TODO: Do something here
 					break;
-				case STATUS_DISEASE:
+				case eStatus::DISEASE:
 					icon = 33;
 					break;
-				case STATUS_INVISIBLE: // TODO: Do something here
+				case eStatus::INVISIBLE: // TODO: Do something here
 					break;
-				case STATUS_DUMB: // TODO: Do something here
+				case eStatus::DUMB: // TODO: Do something here
 					break;
-				case STATUS_MARTYRS_SHIELD: // TODO: Do something here
+				case eStatus::MARTYRS_SHIELD: // TODO: Do something here
 					break;
-				case STATUS_ASLEEP:
+				case eStatus::ASLEEP:
 					icon = 44;
 					break;
-				case STATUS_PARALYZED: // TODO: Do something here
+				case eStatus::PARALYZED: // TODO: Do something here
 					break;
-				case STATUS_ACID:
+				case eStatus::ACID:
 					icon = 41;
 					break;
 			}

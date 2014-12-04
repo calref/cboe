@@ -416,11 +416,11 @@ void take_item(short pc_num,short which_item)
 		which_item -= 30;
 	}
 	
-	if ((univ.party[pc_num].weap_poisoned == which_item) && (univ.party[pc_num].status[0] > 0)) {
+	if(univ.party[pc_num].weap_poisoned == which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
 		add_string_to_buf("  Poison lost.           ");
-		univ.party[pc_num].status[0] = 0;
+		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
 	}
-	if ((univ.party[pc_num].weap_poisoned > which_item) && (univ.party[pc_num].status[0] > 0))
+	if(univ.party[pc_num].weap_poisoned > which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0)
 		univ.party[pc_num].weap_poisoned--;
 	
 	for (i = which_item; i < 23; i++) {
@@ -528,9 +528,9 @@ void equip_item(short pc_num,short item_num)
 			else {
 				univ.party[pc_num].equip[item_num] = false;
 				add_string_to_buf("Equip: Unequipped");
-				if ((univ.party[pc_num].weap_poisoned == item_num) && (univ.party[pc_num].status[0] > 0)) {
+				if(univ.party[pc_num].weap_poisoned == item_num && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
 					add_string_to_buf("  Poison lost.           ");
-					univ.party[pc_num].status[0] = 0;
+					univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
 				}
 			}
 		}
@@ -854,13 +854,14 @@ void make_town_hostile()
 				
 				// If a town, give pwoer boost
 				univ.town.monst[i].health *= 3;
-				univ.town.monst[i].status[3] = 8;
-				univ.town.monst[i].status[1] = 8;
+				univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
+				univ.town.monst[i].status[eStatus::BLESS_CURSE] = 8;
 			}
 		}
 	
 	// In some towns, doin' this'll getcha' killed.
 	//// wedge in special
+	// TODO: Resupport this!
 	
 	if (fry_party == true) {
 		for (i = 0; i < 6; i++)

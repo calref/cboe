@@ -518,82 +518,82 @@ void display_party()
 								
 								//for(k = 0 ; k < 10; k++)
 								//frame_dlog_rect(GetWindowPort(mainPtr),pc_status_rect[k],0);
-								if (univ.party[i].status[0] > 0) 
+								if(univ.party[i].status[eStatus::POISONED_WEAPON] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned Weap.",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[1] > 0) 
+								if(univ.party[i].status[eStatus::BLESS_CURSE] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Blessed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-									else if(univ.party[i].status[1] < 0)
+									else if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
 										if(cur_rect <= 9) {
 											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Cursed",eTextMode::WRAP,style);
 											cur_rect++;
 										}
-								if (univ.party[i].status[2] > 0) 
+								if(univ.party[i].status[eStatus::POISON] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Poisoned",eTextMode::WRAP,style);
 										cur_rect++;
 									}	
-								if (univ.party[i].status[3] > 0) 
+								if(univ.party[i].status[eStatus::HASTE_SLOW] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hasted",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-									else if(univ.party[i].status[3] < 0)
+									else if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
 										if(cur_rect <= 9) {
 											win_draw_string(mainPtr,pc_status_rect[cur_rect],"Slowed",eTextMode::WRAP,style);
 											cur_rect++;
 										}
-								if (univ.party[i].status[4] > 0) 
+								if(univ.party[i].status[eStatus::INVULNERABLE] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Invulnerable",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[5] > 0) 
+								if(univ.party[i].status[eStatus::MAGIC_RESISTANCE] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[6] > 0) 
+								if(univ.party[i].status[eStatus::WEBS] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[7] > 0) 
+								if(univ.party[i].status[eStatus::DISEASE] > 0)
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Diseased",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[8] > 0) 
+								if(univ.party[i].status[eStatus::INVISIBLE] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Sanctury",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[9] > 0) 
+								if(univ.party[i].status[eStatus::DUMB] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[10] > 0) 
+								if(univ.party[i].status[eStatus::MARTYRS_SHIELD] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[11] > 0) 
+								if(univ.party[i].status[eStatus::ASLEEP] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[12] > 0) 
+								if(univ.party[i].status[eStatus::PARALYZED] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Paralyzed",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].status[13] > 0) 
+								if(univ.party[i].status[eStatus::ACID] > 0) 
 									if(cur_rect <= 9) {
 										win_draw_string(mainPtr,pc_status_rect[cur_rect],"Acid",eTextMode::WRAP,style);
 										cur_rect++;

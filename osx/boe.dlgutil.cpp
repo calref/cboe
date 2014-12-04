@@ -281,12 +281,14 @@ void handle_sale(short what_chosen,short cost)
 						univ.party[current_pc].cur_health = univ.party[current_pc].max_health;
 						break;
 					case 1:
-						univ.party[current_pc].status[2] = 0;
+						univ.party[current_pc].status[eStatus::POISON] = 0;
 						break;
 					case 2:
-						univ.party[current_pc].status[7] = 0; break;
+						univ.party[current_pc].status[eStatus::DISEASE] = 0;
+						break;
 					case 3:
-						univ.party[current_pc].status[12] = 0; break;
+						univ.party[current_pc].status[eStatus::PARALYZED] = 0;
+						break;
 					case 4:
 						for (i = 0; i < 24; i++)
 							if ((univ.party[current_pc].equip[i] == true) &&
@@ -294,9 +296,11 @@ void handle_sale(short what_chosen,short cost)
 								univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
 						break;
 					case 5: case 6: case 7:
-						univ.party[current_pc].main_status = eMainStatus::ALIVE; break;
+						univ.party[current_pc].main_status = eMainStatus::ALIVE;
+						break;
 					case 8:
-						univ.party[current_pc].status[9] = 0; break;
+						univ.party[current_pc].status[eStatus::DUMB] = 0;
+						break;
 				}
 			}
 			break;
@@ -416,22 +420,22 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[2] > 0) {
+			if (univ.party[current_pc].status[eStatus::POISON] > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[7] > 0) {
+			if (univ.party[current_pc].status[eStatus::DISEASE] > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[12] > 0) {
+			if (univ.party[current_pc].status[eStatus::PARALYZED] > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[9] > 0) {
+			if (univ.party[current_pc].status[eStatus::DUMB] > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;

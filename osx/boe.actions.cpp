@@ -689,10 +689,10 @@ bool handle_action(sf::Event event)
 				if (overall_mode == MODE_COMBAT) {
 					char_stand_ready();
 					add_string_to_buf("Stand ready.  ");
-					if (univ.party[current_pc].status[6] > 0) {
+					if(univ.party[current_pc].status[eStatus::WEBS] > 0) {
 						add_string_to_buf("You clean webs.  ");
-						univ.party[current_pc].status[6] = move_to_zero(univ.party[current_pc].status[6]);
-						univ.party[current_pc].status[6] = move_to_zero(univ.party[current_pc].status[6]);
+						move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
+						move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 						put_pc_screen();
 					}
 					check_fields(pc_pos[current_pc],2,current_pc);
@@ -700,11 +700,11 @@ bool handle_action(sf::Event event)
 				else {
 					add_string_to_buf("Pause.");
 					for (k = 0; k < 6; k++)
-						if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[6] > 0) {
+						if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[eStatus::WEBS] > 0) {
 							sprintf((char *) str,"%s cleans webs.",univ.party[k].name.c_str());
 							add_string_to_buf((char *) str);
-							univ.party[k].status[6] = move_to_zero(univ.party[k].status[6]);
-							univ.party[k].status[6] = move_to_zero(univ.party[k].status[6]);
+							move_to_zero(univ.party[k].status[eStatus::WEBS]);
+							move_to_zero(univ.party[k].status[eStatus::WEBS]);
 						}
 					if (univ.party.in_horse >= 0) {
 						if (overall_mode == MODE_OUTDOORS) {
@@ -1250,7 +1250,7 @@ bool handle_action(sf::Event event)
 			pause(10);
 			for (i = 0; i < 6; i++) {
 				store_sp[i] = univ.party[i].cur_health;
-				univ.party[i].status[6] = 0;
+				univ.party[i].status[eStatus::WEBS] = 0;
 			}
 		}
 		i = 0;
@@ -1439,7 +1439,8 @@ bool someone_awake()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].status[11] <= 0 && univ.party[i].status[12] <= 0)
+		if(univ.party[i].main_status == eMainStatus::ALIVE &&
+		   univ.party[i].status[eStatus::ASLEEP] <= 0 && univ.party[i].status[eStatus::PARALYZED] <= 0)
 			return true;
 	return false;
 }
@@ -1757,17 +1758,17 @@ bool handle_keystroke(sf::Event& event){
 		case 'C':
 			if(!in_scen_debug) break;
 			for (i = 0; i < 6; i++) {
-				univ.party[i].status[STATUS_POISON] = 0;
-				if(univ.party[i].status[STATUS_BLESS_CURSE] < 0)
-					univ.party[i].status[STATUS_BLESS_CURSE] = 0;
-				if (univ.party[i].status[STATUS_HASTE_SLOW] < 0)
-					univ.party[i].status[STATUS_HASTE_SLOW] = 0;
-				univ.party[i].status[STATUS_WEBS] = 0;
-				univ.party[i].status[STATUS_DISEASE] = 0;
-				univ.party[i].status[STATUS_DUMB] = 0;
-				univ.party[i].status[STATUS_ASLEEP] = 0;
-				univ.party[i].status[STATUS_PARALYZED] = 0;
-				univ.party[i].status[STATUS_ACID] = 0;
+				univ.party[i].status[eStatus::POISON] = 0;
+				if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
+					univ.party[i].status[eStatus::BLESS_CURSE] = 0;
+				if (univ.party[i].status[eStatus::HASTE_SLOW] < 0)
+					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
+				univ.party[i].status[eStatus::WEBS] = 0;
+				univ.party[i].status[eStatus::DISEASE] = 0;
+				univ.party[i].status[eStatus::DUMB] = 0;
+				univ.party[i].status[eStatus::ASLEEP] = 0;
+				univ.party[i].status[eStatus::PARALYZED] = 0;
+				univ.party[i].status[eStatus::ACID] = 0;
 			}
 			add_string_to_buf("Debug: You get cleaned up!");
 			print_buf();
@@ -2184,24 +2185,24 @@ void increase_age()////
 		update_stat = true;
 	}
 	
-	univ.party.light_level = move_to_zero(univ.party.light_level);
+	move_to_zero(univ.party.light_level);
 	
 //	if (PSD[128][9] == 1)
 //		clear_map();
 	
 	// decrease monster present counter
-	PSD[SDF_HOSTILES_PRESENT] = move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
+	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
 	
 	// Party spell effects
 	if (PSD[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
 		add_string_to_buf("Your footsteps grow louder.      "); }
-	PSD[SDF_PARTY_STEALTHY] = move_to_zero(PSD[SDF_PARTY_STEALTHY]);
+	move_to_zero(PSD[SDF_PARTY_STEALTHY]);
 	if (PSD[SDF_PARTY_DETECT_LIFE] == 1) {reset_text_bar();
 		add_string_to_buf("You stop detecting monsters.      ");}
-	PSD[SDF_PARTY_DETECT_LIFE] = move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
+	move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
 	if (PSD[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
 		add_string_to_buf("Your feet stop glowing.      ");}
-	PSD[SDF_PARTY_FIREWALK] = move_to_zero(PSD[SDF_PARTY_FIREWALK]);
+	move_to_zero(PSD[SDF_PARTY_FIREWALK]);
 	
 	if (PSD[SDF_PARTY_FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
@@ -2216,7 +2217,7 @@ void increase_age()////
 		reset_text_bar();
 	}
 	
-	PSD[SDF_PARTY_FLIGHT] = move_to_zero(PSD[SDF_PARTY_FLIGHT]);
+	move_to_zero(PSD[SDF_PARTY_FLIGHT]);
 	
 	if ((overall_mode > MODE_OUTDOORS) && (univ.town->lighting_type == 2)) {
 		univ.party.light_level = max (0,univ.party.light_level - 9);
@@ -2256,18 +2257,19 @@ void increase_age()////
 	// Protection, etc.
 	for (i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 		
-		if ((univ.party[i].status[4] == 1) || (univ.party[i].status[5] == 1) || (univ.party[i].status[8] == 1)
-			|| (univ.party[i].status[11] == 1)|| (univ.party[i].status[12] == 1))
+		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] == 1
+			|| univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
+			|| univ.party[i].status[eStatus::ASLEEP] == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
 			update_stat = true;
-		univ.party[i].status[4] = move_to_zero(univ.party[i].status[4]);
-		univ.party[i].status[5] = move_to_zero(univ.party[i].status[5]);
-		univ.party[i].status[8] = move_to_zero(univ.party[i].status[8]);
-		univ.party[i].status[10] = move_to_zero(univ.party[i].status[10]);
-		univ.party[i].status[11] = move_to_zero(univ.party[i].status[11]);
-		univ.party[i].status[12] = move_to_zero(univ.party[i].status[12]);
-		if ((univ.party.age % 40 == 0) && (univ.party[i].status[0] > 0)) {
+		move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
+		move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
+		move_to_zero(univ.party[i].status[eStatus::INVISIBLE]);
+		move_to_zero(univ.party[i].status[eStatus::MARTYRS_SHIELD]);
+		move_to_zero(univ.party[i].status[eStatus::ASLEEP]);
+		move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
+		if(univ.party.age % 40 == 0 && univ.party[i].status[eStatus::POISONED_WEAPON] > 0) {
 			update_stat = true;
-			univ.party[i].status[0] = move_to_zero(univ.party[i].status[0]);
+			move_to_zero(univ.party[i].status[eStatus::POISONED_WEAPON]);
 		}
 		
 	}
@@ -2296,7 +2298,7 @@ void increase_age()////
 	
 	// Poison, acid, disease damage
 	for (i = 0; i < 6; i++) // Poison
-		if (univ.party[i].status[2] > 0) {
+		if(univ.party[i].status[eStatus::POISON] > 0) {
 			i = 6;
 			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
 				update_stat = true;
@@ -2304,7 +2306,7 @@ void increase_age()////
 			}
 		}
 	for (i = 0; i < 6; i++) // Disease
-		if (univ.party[i].status[7] > 0) {
+		if(univ.party[i].status[eStatus::DISEASE] > 0) {
 			i = 6;
 			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
 				update_stat = true;
@@ -2312,7 +2314,7 @@ void increase_age()////
 			}
 		}
 	for (i = 0; i < 6; i++) // Acid
-		if (univ.party[i].status[13] > 0) {
+		if(univ.party[i].status[eStatus::ACID] > 0) {
 			i = 6;
 			update_stat = true;
 			handle_acid();
@@ -2370,10 +2372,10 @@ void increase_age()////
 	// Blessing, slowed,etc.
 	if (univ.party.age % 4 == 0)
 		for (i = 0; i < 6; i++) {
-			if ((univ.party[i].status[1] != 0) || (univ.party[i].status[3] != 0))
+			if(univ.party[i].status[eStatus::BLESS_CURSE] != 0 || univ.party[i].status[eStatus::HASTE_SLOW] != 0)
 				update_stat = true;
-			univ.party[i].status[1] = move_to_zero(univ.party[i].status[1]);
-			univ.party[i].status[3] = move_to_zero(univ.party[i].status[3]);
+			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
+			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			if (((item = pc_has_abil_equip(i,50)) < 24)
 				&& (univ.party[i].cur_health < univ.party[i].max_health)
 				&& ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
@@ -3026,7 +3028,7 @@ bool someone_poisoned()
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[2] > 0))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[eStatus::POISON] > 0))
 			return true;
 	return false;
 }

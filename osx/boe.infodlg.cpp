@@ -632,11 +632,11 @@ static void display_pc_info(cDialog& me)
 		}
 	
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5
-		+ 5 * minmax(-8,8,univ.party[pc].status[1]);
+		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if ((univ.party[pc].traits[2] == false) && (weap2 < 24))
 		hit_adj -= 25;
 	
-	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[1]);
+	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].item_level / 2;

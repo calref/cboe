@@ -358,49 +358,49 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			for ( ; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if (get_ran(1,1,100) <= ter_flag2.u) {
-						switch(ter_flag3.u){
-							case STATUS_POISONED_WEAPON: // TODO: Do something here
+						switch((eStatus)ter_flag3.u){
+							case eStatus::POISONED_WEAPON: // TODO: Do something here
 								if(get_ran(1,1,100) > 60) add_string_to_buf("It's eerie here...");
 								break;
-							case STATUS_BLESS_CURSE: // Should say "You feel awkward." / "You feel blessed."?
+							case eStatus::BLESS_CURSE: // Should say "You feel awkward." / "You feel blessed."?
 								curse_pc(i,ter_flag1.s);
 								break;
-							case STATUS_POISON:
+							case eStatus::POISON:
 								poison_pc(i,ter_flag1.u);
 								break;
-							case STATUS_HASTE_SLOW: // Should say "You feel sluggish." / "You feel speedy."?
+							case eStatus::HASTE_SLOW: // Should say "You feel sluggish." / "You feel speedy."?
 								slow_pc(i,ter_flag1.s);
 								break;
-							case STATUS_INVULNERABLE: // Should say "You feel odd." / "You feel protected."?
-								affect_pc(i,STATUS_INVULNERABLE,ter_flag1.u);
+							case eStatus::INVULNERABLE: // Should say "You feel odd." / "You feel protected."?
+								affect_pc(i,eStatus::INVULNERABLE,ter_flag1.u);
 								break;
-							case STATUS_MAGIC_RESISTANCE: // Should say "You feel odd." / "You feel protected."?
-								affect_pc(i,STATUS_MAGIC_RESISTANCE,ter_flag1.u);
+							case eStatus::MAGIC_RESISTANCE: // Should say "You feel odd." / "You feel protected."?
+								affect_pc(i,eStatus::MAGIC_RESISTANCE,ter_flag1.u);
 								break;
-							case STATUS_WEBS: // Should say "You feel sticky." / "Your skin tingles."?
+							case eStatus::WEBS: // Should say "You feel sticky." / "Your skin tingles."?
 								web_pc(i,ter_flag1.u);
 								break;
-							case STATUS_DISEASE: // Should say "You feel healthy." / "You feel sick."?
+							case eStatus::DISEASE: // Should say "You feel healthy." / "You feel sick."?
 								disease_pc(i,ter_flag1.u);
 								break;
-							case STATUS_INVISIBLE:
+							case eStatus::INVISIBLE:
 								if(ter_flag1.s < 0) add_string_to_buf("You feel obscure.");
 								else add_string_to_buf("You feel exposed.");
-								affect_pc(i,STATUS_INVISIBLE,ter_flag1.s);
+								affect_pc(i,eStatus::INVISIBLE,ter_flag1.s);
 								break;
-							case STATUS_DUMB: // Should say "You feel clearheaded." / "You feel confused."?
+							case eStatus::DUMB: // Should say "You feel clearheaded." / "You feel confused."?
 								dumbfound_pc(i,ter_flag1.u);
 								break;
-							case STATUS_MARTYRS_SHIELD: // Should say "You feel dull." / "You start to glow slightly."?
-								affect_pc(i,STATUS_MARTYRS_SHIELD,ter_flag1.u);
+							case eStatus::MARTYRS_SHIELD: // Should say "You feel dull." / "You start to glow slightly."?
+								affect_pc(i,eStatus::MARTYRS_SHIELD,ter_flag1.u);
 								break;
-							case STATUS_ASLEEP: // Should say "You feel alert." / "You feel very tired."?
-								sleep_pc(i,ter_flag1.u,STATUS_ASLEEP,ter_flag1.u / 2);
+							case eStatus::ASLEEP: // Should say "You feel alert." / "You feel very tired."?
+								sleep_pc(i,ter_flag1.u,eStatus::ASLEEP,ter_flag1.u / 2);
 								break;
-							case STATUS_PARALYZED: // Should say "You find it easier to move." / "You feel very stiff."?
-								sleep_pc(i,ter_flag1.u,STATUS_PARALYZED,ter_flag1.u / 2);
+							case eStatus::PARALYZED: // Should say "You find it easier to move." / "You feel very stiff."?
+								sleep_pc(i,ter_flag1.u,eStatus::PARALYZED,ter_flag1.u / 2);
 								break;
-							case STATUS_ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
+							case eStatus::ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
 								acid_pc(i,ter_flag1.u);
 								break;
 						}
@@ -546,12 +546,12 @@ void check_fields(location where_check,short mode,short which_pc)
 		if (mode < 2) {
 			suppress_stat_screen = true;
 			for (i = 0; i < 6; i++) {
-				sleep_pc(i,3,STATUS_ASLEEP,0);
+				sleep_pc(i,3,eStatus::ASLEEP,0);
 			}
 			suppress_stat_screen = false;
 			put_pc_screen();
 		}
-		else sleep_pc(current_pc,3,STATUS_ASLEEP,0);
+		else sleep_pc(current_pc,3,eStatus::ASLEEP,0);
 	}
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");
@@ -659,7 +659,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_BLESS_CURSE:
 				play_sound(4);
-				which_stat = STATUS_BLESS_CURSE;
+				which_stat = eStatus::BLESS_CURSE;
 				if (type % 2 == 1) {
 					ASB("  You feel awkward.");
 					str = str * -1;
@@ -670,7 +670,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_HASTE_SLOW:
 				play_sound(75);
-				which_stat = STATUS_HASTE_SLOW;
+				which_stat = eStatus::HASTE_SLOW;
 				if (type % 2 == 1) {
 					ASB("  You feel sluggish.");
 					str = str * -1;
@@ -681,7 +681,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_AFFECT_INVULN:
 				play_sound(68);
-				which_stat = STATUS_INVULNERABLE;
+				which_stat = eStatus::INVULNERABLE;
 				if (type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
@@ -692,7 +692,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_AFFECT_MAGIC_RES:
 				play_sound(51);
-				which_stat = STATUS_MAGIC_RESISTANCE;
+				which_stat = eStatus::MAGIC_RESISTANCE;
 				if (type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
@@ -702,7 +702,7 @@ void use_item(short pc,short item)
 				else affect_pc(pc,which_stat,str);
 				break;
 			case ITEM_AFFECT_WEB:
-				which_stat = STATUS_WEBS;
+				which_stat = eStatus::WEBS;
 				if (type % 2 == 1)
 					ASB("  You feel sticky.");
 				else {
@@ -715,7 +715,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_AFFECT_SANCTUARY:
 				play_sound(43);
-				which_stat = STATUS_INVISIBLE;
+				which_stat = eStatus::INVISIBLE;
 				if (type % 2 == 1) {
 					ASB("  You feel exposed.");
 					str = str * -1;
@@ -726,7 +726,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_AFFECT_MARTYRS_SHIELD:
 				play_sound(43);
-				which_stat = STATUS_MARTYRS_SHIELD;
+				which_stat = eStatus::MARTYRS_SHIELD;
 				if (type % 2 == 1) {
 					ASB("  You feel dull.");
 					str = str * -1;
@@ -759,7 +759,7 @@ void use_item(short pc,short item)
 				switch (type) {
 					case 0:
 						ASB("  You feel healthy.");
-						affect_pc(pc,STATUS_DISEASE,-1 * str);
+						affect_pc(pc,eStatus::DISEASE,-1 * str);
 						break;
 					case 1:
 						ASB("  You feel sick.");
@@ -767,7 +767,7 @@ void use_item(short pc,short item)
 						break;
 					case 2:
 						ASB("  You all feel healthy.");
-						affect_party(STATUS_DISEASE,-1 * str);
+						affect_party(eStatus::DISEASE,-1 * str);
 						break;
 					case 3:
 						ASB("  You all feel sick.");
@@ -780,7 +780,7 @@ void use_item(short pc,short item)
 				switch (type) {
 					case 0:
 						ASB("  You feel clear headed.");
-						affect_pc(pc,STATUS_DUMB,-1 * str);
+						affect_pc(pc,eStatus::DUMB,-1 * str);
 						break;
 					case 1:
 						ASB("  You feel confused.");
@@ -788,7 +788,7 @@ void use_item(short pc,short item)
 						break;
 					case 2:
 						ASB("  You all feel clear headed.");
-						affect_party(STATUS_DUMB,-1 * str);
+						affect_party(eStatus::DUMB,-1 * str);
 						break;
 					case 3:
 						ASB("  You all feel confused.");
@@ -801,20 +801,20 @@ void use_item(short pc,short item)
 				switch (type) {
 					case 0:
 						ASB("  You feel alert.");
-						affect_pc(pc,STATUS_ASLEEP,-1 * str);
+						affect_pc(pc,eStatus::ASLEEP,-1 * str);
 						break;
 					case 1:
 						ASB("  You feel very tired.");
-						sleep_pc(pc,str + 1,STATUS_ASLEEP,200);
+						sleep_pc(pc,str + 1,eStatus::ASLEEP,200);
 						break;
 					case 2:
 						ASB("  You all feel alert.");
-						affect_party(STATUS_ASLEEP,-1 * str);
+						affect_party(eStatus::ASLEEP,-1 * str);
 						break;
 					case 3:
 						ASB("  You all feel very tired.");
 						for (i = 0; i < 6; i++)
-							sleep_pc(i,str + 1,STATUS_ASLEEP,200);
+							sleep_pc(i,str + 1,eStatus::ASLEEP,200);
 						break;
 				}
 				break;
@@ -822,20 +822,20 @@ void use_item(short pc,short item)
 				switch (type) {
 					case 0:
 						ASB("  You find it easier to move.");
-						affect_pc(pc,STATUS_PARALYZED,-1 * str * 100);
+						affect_pc(pc,eStatus::PARALYZED,-1 * str * 100);
 						break;
 					case 1:
 						ASB("  You feel very stiff.");
-						sleep_pc(pc,str * 20 + 10,STATUS_PARALYZED,200);
+						sleep_pc(pc,str * 20 + 10,eStatus::PARALYZED,200);
 						break;
 					case 2:
 						ASB("  You all find it easier to move.");
-						affect_party(STATUS_PARALYZED,-1 * str * 100);
+						affect_party(eStatus::PARALYZED,-1 * str * 100);
 						break;
 					case 3:
 						ASB("  You all feel very stiff.");
 						for (i = 0; i < 6; i++)
-							sleep_pc(i,str * 20 + 10,STATUS_PARALYZED,200);
+							sleep_pc(i,str * 20 + 10,eStatus::PARALYZED,200);
 						break;
 				}
 				break;
@@ -843,7 +843,7 @@ void use_item(short pc,short item)
 				switch (type) {
 					case 0:
 						ASB("  Your skin tingles pleasantly.");
-						affect_pc(pc,STATUS_ACID,-1 * str);
+						affect_pc(pc,eStatus::ACID,-1 * str);
 						break;
 					case 1:
 						ASB("  Your skin burns!");
@@ -851,7 +851,7 @@ void use_item(short pc,short item)
 						break;
 					case 2:
 						ASB("  You all tingle pleasantly.");
-						affect_party(STATUS_ACID,-1 * str);
+						affect_party(eStatus::ACID,-1 * str);
 						break;
 					case 3:
 						ASB("  Everyone's skin burns!");
@@ -865,13 +865,13 @@ void use_item(short pc,short item)
 					case 0: case 1:
 						ASB("  You feel wonderful!");
 						heal_pc(pc,str * 20);
-						affect_pc(pc,STATUS_BLESS_CURSE,str);
+						affect_pc(pc,eStatus::BLESS_CURSE,str);
 						break;
 					case 2: case 3:
 						ASB("  Everyone feels wonderful!");
 						for (i = 0; i < 6; i++) {
 							heal_pc(i,str * 20);
-							affect_pc(i,STATUS_BLESS_CURSE,str);
+							affect_pc(i,eStatus::BLESS_CURSE,str);
 						}
 						break;
 				}
@@ -1112,7 +1112,7 @@ void use_item(short pc,short item)
 						&& (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= 8)
 						&& (can_see_light(pc_pos[current_pc],univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 						which_m = &univ.town.monst[i];
-						charm_monst(which_m,0,0,8);
+						charm_monst(which_m,0,eStatus::CHARM,8);
 					}
 				}
 				break;
@@ -2476,54 +2476,54 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_AFFECT_INVULN:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_MAGIC_RES:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_WEBS:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_DISEASE:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+					affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			break;
 		case SPEC_AFFECT_SANCTUARY:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_CURSE_BLESS:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_DUMBFOUND:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					affect_pc(i,STATUS_DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+					affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			break;
 		case SPEC_AFFECT_SLEEP:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,STATUS_ASLEEP,-1 * spec.ex1a);
+						affect_pc(i,eStatus::ASLEEP,-1 * spec.ex1a);
 					}
-					else sleep_pc(i,spec.ex1a,STATUS_ASLEEP,10);
+					else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
 				}
 			break;
 		case SPEC_AFFECT_PARALYSIS:
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
-						affect_pc(i,STATUS_PARALYZED,-1 * spec.ex1a);
+						affect_pc(i,eStatus::PARALYZED,-1 * spec.ex1a);
 					}
-					else sleep_pc(i,spec.ex1a,STATUS_PARALYZED,10);
+					else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
 				}
 			break;
 		case SPEC_AFFECT_STAT:

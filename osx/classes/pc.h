@@ -10,6 +10,7 @@
 #define BOE_DATA_PC_H
 
 #include <string>
+#include <map>
 #include <iosfwd>
 
 #include "simpletypes.h"
@@ -31,7 +32,7 @@ public:
 	unsigned short experience;
 	short skill_pts;
 	short level;
-	short status[15];
+	std::map<eStatus,short> status;
 	cItemRec items[24];
 	bool equip[24];
 	bool priest_spells[62];

@@ -27,8 +27,9 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	experience = old.experience;
 	skill_pts = old.skill_pts;
 	level = old.level;
+	// TODO: Why are advan and exp_adj commented out?
 	for(i = 0; i < 15; i++){
-		status[i] = old.status[i];
+		status[(eStatus) i] = old.status[i];
 		//advan[i] = old.advan[i];
 		traits[i] = old.traits[i];
 	}
@@ -79,8 +80,6 @@ cPlayer::cPlayer(){
  	experience = 0; 
 	skill_pts = 60; 
 	level = 1;
- 	for (i = 0; i < 15; i++)
- 		status[i] = 0;
 	for (i = 0; i < 24; i++)
 		items[i] = cItemRec();
 	for (i = 0; i < 24; i++)
@@ -135,8 +134,6 @@ cPlayer::cPlayer(long key,short slot){
 		experience = 0; 
 		skill_pts = 60; 
 		level = 1;
-		for (i = 0; i < 15; i++)
-			status[i] = 0;
 		for (i = 0; i < 24; i++)
 			items[i] = cItemRec();
 		for (i = 0; i < 24; i++)
@@ -211,8 +208,6 @@ cPlayer::cPlayer(long key,short slot){
 		skill_pts = 0; 
 		level = 1;
 		
-		for (i = 0; i < 15; i++)
-			status[i] = 0;
 		for (i = 0; i < 24; i++)
 			items[i] = cItemRec();
 		for (i = 0; i < 24; i++)
@@ -263,9 +258,11 @@ void cPlayer::writeTo(std::ostream& file){
 	file << "EXPERIENCE " << experience << '\n';
 	file << "SKILLPTS " << skill_pts << '\n';
 	file << "LEVEL " << level << '\n';
-	for(int i = 0; i < 15; i++)
-		if(status[i] != 0)
-			file << "STATUS " << i << ' ' << status[i] << '\n';
+	for(int i = 0; i < 15; i++) {
+		eStatus stat = (eStatus) i;
+		if(status[stat] != 0)
+			file << "STATUS " << i << ' ' << status[stat] << '\n';
+	}
 	for(int i = 0; i < 24; i++)
 		if(equip[i])
 			file << "EQUIP " << i << '\n';
@@ -302,9 +299,9 @@ void cPlayer::readFrom(std::istream& file){
 		sin.str(cur);
 		sin >> cur;
 		if(cur == "STATUS"){
-			int i;
+			eStatus i;
 			sin >> i;
-			if(i < 0) sin >> main_status;
+			if(i == eStatus::MAIN) sin >> main_status;
 			else sin >> status[i];
 		}else if(cur == "NAME")
 			sin >> name;
@@ -332,7 +329,7 @@ void cPlayer::readFrom(std::istream& file){
 		else if(cur == "LEVEL")
 			sin >> level;
 		else if(cur == "STATUS"){
-			int i;
+			eStatus i;
 			sin >> i;
 			sin >> status[i];
 		}else if(cur == "EQUIP"){

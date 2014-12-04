@@ -157,7 +157,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			add_string_to_buf("  A purple ray flies out.          ");
 			r1 = 200 + univ.town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
-			sleep_pc(pc_num,r1,STATUS_PARALYZED,50);
+			sleep_pc(pc_num,r1,eStatus::PARALYZED,50);
 			break;
 		case TRAP_DRAIN_XP:
 			add_string_to_buf("  You feel weak.            ");

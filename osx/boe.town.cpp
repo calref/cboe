@@ -228,8 +228,7 @@ void start_town_mode(short which_town, short entry_dir)
 				univ.town.monst[j].health = univ.town.monst[j].m_health;
 				univ.town.monst[j].mp = univ.town.monst[j].max_mp;
 				univ.town.monst[j].morale = univ.town.monst[j].m_morale;
-				for (k = 0; k < 15; k++)
-					univ.town.monst[j].status[k] = 0;
+				univ.town.monst[j].status.clear();
 				if (univ.town.monst[j].summoned > 0)
 					univ.town.monst[j].active = 0;
 				univ.town.monst[j].target = 6;
@@ -692,11 +691,15 @@ location end_town_mode(short switching_level,location destination)  // returns n
 		erase_out_specials();
 		
 		PSD[SDF_PARTY_STEALTHY] = 0;
-		//PSD[SDF_PARTY_DETECT_LIFE] = 0; //Yes? No? Maybe?
+		//PSD[SDF_PARTY_DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
 		for (i = 0; i < 6; i++)
-			for (j = 0; j < 15; j++)
-				if ((j != 2) && (j != 7) && (j != 9))
-					univ.party[i].status[j] = 0;
+			erase_if(univ.party[i].status, [](std::pair<const eStatus, short> kv) -> bool {
+				// TODO: These were the only statuses kept in the original code, but what about acid? Should it be kept too?
+				if(kv.first == eStatus::POISON) return false;
+				if(kv.first == eStatus::DISEASE) return false;
+				if(kv.first == eStatus::DUMB) return false;
+				return true;
+			});
 		
 		
 		update_explored(to_return);

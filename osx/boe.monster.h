@@ -43,7 +43,7 @@ void web_monst(cCreature *which_m,short how_much);
 void scare_monst(cCreature *which_m,short how_much);
 void disease_monst(cCreature *which_m,short how_much);
 void dumbfound_monst(cCreature *which_m,short how_much);
-void charm_monst(cCreature *which_m,short penalty,short which_status,short amount);
+void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount);
 void record_monst(cCreature *which_m);
 short place_monster(m_num_t which,location where);
 bool summon_monster(m_num_t which,location where,short duration,short given_attitude);

@@ -163,11 +163,11 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 			break;
 		case 5:
 			special = TER_SPEC_DANGEROUS;
-			flag3.u = STATUS_POISON;
+			flag3.u = (int)eStatus::POISON;
 			break;
 		case 6:
 			special = TER_SPEC_DANGEROUS;
-			flag3.u = STATUS_DISEASE;
+			flag3.u = (int)eStatus::DISEASE;
 			break;
 		case 7:
 			special = TER_SPEC_CRUMBLING;

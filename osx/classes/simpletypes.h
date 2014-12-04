@@ -87,21 +87,26 @@ inline bool isHumanoid(eRace race) {
 }
 
 /* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
-enum eStatus {
-	STATUS_POISONED_WEAPON = 0,
-	STATUS_BLESS_CURSE = 1,
-	STATUS_POISON = 2,
-	STATUS_HASTE_SLOW = 3,
-	STATUS_INVULNERABLE = 4,
-	STATUS_MAGIC_RESISTANCE = 5,
-	STATUS_WEBS = 6,
-	STATUS_DISEASE = 7,
-	STATUS_INVISIBLE = 8, //sanctuary
-	STATUS_DUMB = 9,
-	STATUS_MARTYRS_SHIELD = 10,
-	STATUS_ASLEEP = 11,
-	STATUS_PARALYZED = 12,
-	STATUS_ACID = 13,
+enum class eStatus {
+	MAIN = -1, // For saved games only
+	POISONED_WEAPON = 0,
+	BLESS_CURSE = 1,
+	POISON = 2,
+	HASTE_SLOW = 3,
+	INVULNERABLE = 4,
+	MAGIC_RESISTANCE = 5,
+	WEBS = 6,
+	DISEASE = 7,
+	INVISIBLE = 8, //sanctuary
+	DUMB = 9,
+	MARTYRS_SHIELD = 10,
+	ASLEEP = 11,
+	PARALYZED = 12,
+	ACID = 13,
+	// This one is new
+	// It's not quite a real status effect since it doesn't expire
+	// We use 15 because 14 was technically a "reserved/unused" status, though I don't think it was ever used for anything
+	CHARM = 15,
 };
 
 /* Special Ability a.k.a spec_skill */

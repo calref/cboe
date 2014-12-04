@@ -268,11 +268,11 @@ void take_item(short pc_num,short which_item)
 {
 	short i;
 	
-	if ((univ.party[pc_num].weap_poisoned == which_item) && (univ.party[pc_num].status[0] > 0)) {
+	if(univ.party[pc_num].weap_poisoned == which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
 		//			add_string_to_buf("  Poison lost.           ");
-		univ.party[pc_num].status[0] = 0;
+		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
 	}
-	if ((univ.party[pc_num].weap_poisoned > which_item) && (univ.party[pc_num].status[0] > 0))
+	if(univ.party[pc_num].weap_poisoned > which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0)
 		univ.party[pc_num].weap_poisoned--;
 	
 	for (i = which_item; i < 23; i++) {

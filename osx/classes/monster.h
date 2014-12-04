@@ -10,6 +10,7 @@
 #define BOE_DATA_MONSTER_H
 
 #include <string>
+#include <map>
 #include <iosfwd>
 
 #include "soundtool.h"
@@ -168,7 +169,7 @@ public:
 	short max_mp;
 	unsigned char ap;
 	short morale,m_morale; // these are calculated in-game based on the level
-	short status[15];
+	std::map<eStatus,short> status;
 	unsigned char direction;
 	
 	cCreature();

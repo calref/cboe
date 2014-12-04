@@ -375,9 +375,11 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 			combat_terrain[pc_pos[i].x][pc_pos[i].y] = combat_terrain[0][0];
 		update_explored(pc_pos[i]);
 		
-		for (j = 0; j < 6; j++)
-			if (j != 2)
-				univ.party[i].status[j] = 0;
+		univ.party[i].status[eStatus::POISONED_WEAPON] = 0;
+		univ.party[i].status[eStatus::BLESS_CURSE] = 0;
+		univ.party[i].status[eStatus::HASTE_SLOW] = 0;
+		univ.party[i].status[eStatus::INVULNERABLE] = 0;
+		univ.party[i].status[eStatus::MAGIC_RESISTANCE] = 0;
 	}
 	
 	// place monsters, w. friendly monsts landing near PCs
@@ -522,8 +524,8 @@ bool pc_combat_move(location destination) ////
 				if ((monst_exist > 0) && (monst_adjacent(pc_pos[current_pc],i) == true)
 					&& (monst_adjacent(destination,i) == false) &&
 					(univ.town.monst[i].attitude % 2 == 1) &&
-					(univ.town.monst[i].status[11] <= 0) &&
-					(univ.town.monst[i].status[12] <= 0)) {
+					univ.town.monst[i].status[eStatus::ASLEEP] <= 0 &&
+					univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 					combat_posing_monster = current_working_monster = 100 + i;
 					monster_attack_pc(i,current_pc);
 					combat_posing_monster = current_working_monster = -1;
@@ -578,7 +580,7 @@ void pc_attack(short who_att,short target)////
 	// slice out bad attacks
 	if(univ.party[who_att].main_status != eMainStatus::ALIVE)
 		return;
-	if ((univ.party[who_att].status[11] > 0) || (univ.party[who_att].status[12] > 0))
+	if(univ.party[who_att].status[eStatus::ASLEEP] > 0 || univ.party[who_att].status[eStatus::PARALYZED] > 0)
 		return;
 	
 	last_attacked[who_att] = target;
@@ -591,13 +593,13 @@ void pc_attack(short who_att,short target)////
 				weap1 = i;
 			else weap2 = i;
 	
-	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[1])) + 5 * minmax(-8,8,which_m->status[1])
+	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
 		- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
 	
-	dam_adj = minmax(-8,8,univ.party[who_att].status[1]) - minmax(-8,8,which_m->status[1])
+	dam_adj = minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE]) - minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
 		+ stat_adj(who_att,0);
 	
-	if ((which_m->status[11] > 0) || (which_m->status[12] > 0)) {
+	if(which_m->status[eStatus::ASLEEP] > 0 || which_m->status[eStatus::PARALYZED] > 0) {
 		hit_adj -= 80;
 		dam_adj += 10;
 	}
@@ -624,7 +626,7 @@ void pc_attack(short who_att,short target)////
 		add_string_to_buf((char *) create_line);
 		
 		r1 = get_ran(1,1,100) + hit_adj - 20;
-		r1 += 5 * (univ.party[current_pc].status[6] / 3);
+		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 		
 		if (r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
@@ -652,7 +654,7 @@ void pc_attack(short who_att,short target)////
 		
 		r1 = get_ran(1,1,100) - 5 + hit_adj
 			- 5 * univ.party[who_att].items[weap1].bonus;
-		r1 += 5 * (univ.party[current_pc].status[6] / 3);
+		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		
 		if ((weap2 < 24) && (univ.party[who_att].traits[2] == false))
 			r1 += 25;
@@ -693,12 +695,12 @@ void pc_attack(short who_att,short target)////
 					break;
 			}
 			// poison
-			if ((univ.party[who_att].status[0] > 0) && (univ.party[who_att].weap_poisoned == weap1)) {
-				poison_amt = univ.party[who_att].status[0];
+			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0 && univ.party[who_att].weap_poisoned == weap1) {
+				poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
 				if (pc_has_abil_equip(who_att,51) < 24)
 					poison_amt += 2;
 				poison_monst(which_m,poison_amt);
-				univ.party[who_att].status[0] = move_to_zero(univ.party[who_att].status[0]);
+				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 			}
 			if ((univ.party[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
@@ -739,7 +741,7 @@ void pc_attack(short who_att,short target)////
 		if (univ.party[who_att].traits[2] == false)
 			r1 += 25;
 		
-		r1 += 5 * (univ.party[current_pc].status[6] / 3);
+		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,univ.party[who_att].items[weap2].item_level) + dam_adj - 1 + univ.party[who_att].items[weap2].bonus;
 		if (univ.party[who_att].items[weap2].ability == 12)
 			r2 = (r2 * (10 - univ.party[who_att].items[weap2].ability_strength)) / 10;
@@ -784,10 +786,10 @@ void pc_attack(short who_att,short target)////
 			else play_sound(2);
 		}
 	}
-	univ.party[who_att].status[0] = move_to_zero(univ.party[who_att].status[0]);
+	move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
-	if (((univ.town.monst[target].status[10] > 0) || (univ.town.monst[target].spec_skill == 22))
+	if((univ.town.monst[target].status[eStatus::MARTYRS_SHIELD] > 0 || univ.town.monst[target].spec_skill == 22)
 		&& (store_hp - univ.town.monst[target].health > 0)) {
 		add_string_to_buf("  Shares damage!   ");
 		damage_pc(who_att, store_hp - univ.town.monst[target].health, DAMAGE_MAGIC,eRace::UNKNOWN,0);
@@ -1219,7 +1221,7 @@ void do_combat_cast(location target)////
 											break;
 										case 69: // paralyze
 											store_m_type = 9;
-											charm_monst(cur_monst,0,12,500);
+											charm_monst(cur_monst,0,eStatus::PARALYZED,500);
 											break;
 											
 										case 7: // monster info
@@ -1251,7 +1253,7 @@ void do_combat_cast(location target)////
 											
 										case 117: // charm
 											store_m_type = 14;
-											charm_monst(cur_monst,-1 * (bonus + univ.party[current_pc].level / 8),0,0);
+											charm_monst(cur_monst,-1 * (bonus + univ.party[current_pc].level / 8),eStatus::CHARM,0);
 											break;
 											
 										case 118: // disease
@@ -1297,7 +1299,7 @@ void do_combat_cast(location target)////
 											break;
 										case 49: // Paralysis
 											store_m_type = 9;
-											charm_monst(cur_monst,-10,12,1000);
+											charm_monst(cur_monst,-10,eStatus::PARALYZED,1000);
 											break;
 										case 30:
 											store_m_type = 11;
@@ -1492,10 +1494,10 @@ void fire_missile(location target) {
 	skill = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].skills[7] : univ.party[missile_firer].skills[6];
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = univ.party[missile_firer].items[ammo_inv_slot].item_level;
-	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[1]);
+	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(missile_firer,1) - can_see_light(pc_pos[missile_firer],target,sight_obscurity)
-		+ minmax(-8,8,univ.party[missile_firer].status[1]);
+		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	if ((skill_item = pc_has_abil_equip(missile_firer,41)) < 24) {
 		hit_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
 		dam_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
@@ -1536,7 +1538,7 @@ void fire_missile(location target) {
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			missile_firer = missile_firer;
 			r1 = get_ran(1,1,100) - 5 * hit_bonus - 10;
-			r1 += 5 * (univ.party[missile_firer].status[6] / 3);
+			r1 += 5 * (univ.party[missile_firer].status[eStatus::WEBS] / 3);
 			r2 = get_ran(1,1,dam) + dam_bonus;
 			sprintf ((char *) create_line, "%s fires.",(char *) univ.party[missile_firer].name.c_str()); // debug
 			add_string_to_buf((char *) create_line);
@@ -1580,8 +1582,8 @@ void fire_missile(location target) {
 				//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
 				
 				// poison
-				if ((univ.party[missile_firer].status[0] > 0) && (univ.party[missile_firer].weap_poisoned == ammo_inv_slot)) {
-					poison_amt = univ.party[missile_firer].status[0];
+				if(univ.party[missile_firer].status[eStatus::POISONED_WEAPON] > 0 && univ.party[missile_firer].weap_poisoned == ammo_inv_slot) {
+					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
 					if (pc_has_abil_equip(missile_firer,51) < 24)
 						poison_amt++;
 					poison_monst(cur_monst,poison_amt);
@@ -1608,7 +1610,7 @@ void fire_missile(location target) {
 	
 	if(!exploding){
 		combat_posing_monster = current_working_monster = -1;
-		univ.party[missile_firer].status[0] = move_to_zero(univ.party[missile_firer].status[0]);
+		move_to_zero(univ.party[missile_firer].status[eStatus::POISONED_WEAPON]);
 	}
 	print_buf();
 }
@@ -1708,28 +1710,28 @@ void combat_run_monst()
 	monsters_going = false;
 	
 	process_fields();
-	univ.party.light_level = move_to_zero(univ.party.light_level);
+	move_to_zero(univ.party.light_level);
 	if ((which_combat_type == 1) && (univ.town->lighting_type == 2))
 		univ.party.light_level = max (0,univ.party.light_level - 9);
 	if (univ.town->lighting_type == 3)
 		univ.party.light_level = 0;
 	
-	PSD[SDF_PARTY_DETECT_LIFE] = move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
-	PSD[SDF_PARTY_FIREWALK] = move_to_zero(PSD[SDF_PARTY_FIREWALK]);
+	move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
+	move_to_zero(PSD[SDF_PARTY_FIREWALK]);
 	
 	// decrease monster present counter
-	PSD[SDF_HOSTILES_PRESENT] = move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
+	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
 	
 	dump_gold(1);
 	
 	univ.party.age++;
 	if (univ.party.age % 4 == 0)
 		for (i = 0; i < 6; i++) {
-			if ((univ.party[i].status[1] != 0) || (univ.party[i].status[3] != 0))
+			if(univ.party[i].status[eStatus::BLESS_CURSE] != 0 || univ.party[i].status[eStatus::HASTE_SLOW] != 0)
 				update_stat = true;
-			univ.party[i].status[1] = move_to_zero(univ.party[i].status[1]);
-			univ.party[i].status[3] = move_to_zero(univ.party[i].status[3]);
-			PSD[SDF_PARTY_STEALTHY] = move_to_zero(PSD[SDF_PARTY_STEALTHY]);
+			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
+			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
+			move_to_zero(PSD[SDF_PARTY_STEALTHY]);
 			if ((item = pc_has_abil_equip(i,50)) < 24) {
 				update_stat = true;
 				heal_pc(i,get_ran(1,0,univ.party[i].items[item].item_level + 1));
@@ -1737,29 +1739,29 @@ void combat_run_monst()
 		}
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if ((univ.party[i].status[4] != 0) || (univ.party[i].status[5] != 0)
-				|| (univ.party[i].status[8] != 0)|| (univ.party[i].status[10] != 0)
-				|| (univ.party[i].status[11] != 0)|| (univ.party[i].status[12] != 0))
+			if(univ.party[i].status[eStatus::INVULNERABLE] != 0 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] != 0
+				|| univ.party[i].status[eStatus::INVISIBLE] != 0 || univ.party[i].status[eStatus::MARTYRS_SHIELD] != 0
+				|| univ.party[i].status[eStatus::ASLEEP] != 0 || univ.party[i].status[eStatus::PARALYZED] != 0)
 				update_stat = true;
 			
-			univ.party[i].status[4] = move_to_zero(univ.party[i].status[4]);
-			univ.party[i].status[5] = move_to_zero(univ.party[i].status[5]);
-			univ.party[i].status[8] = move_to_zero(univ.party[i].status[8]);
-			univ.party[i].status[10] = move_to_zero(univ.party[i].status[10]);
-			univ.party[i].status[11] = move_to_zero(univ.party[i].status[11]);
-			univ.party[i].status[12] = move_to_zero(univ.party[i].status[12]);
+			move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
+			move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
+			move_to_zero(univ.party[i].status[eStatus::INVISIBLE]);
+			move_to_zero(univ.party[i].status[eStatus::MARTYRS_SHIELD]);
+			move_to_zero(univ.party[i].status[eStatus::ASLEEP]);
+			move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
 			
 			// Do special items
 			if (((item_level = get_prot_level(i,47)) > 0)
 				&& (get_ran(1,0,10) == 5)) {
 				update_stat = true;
-				univ.party[i].status[3] += item_level / 2;
+				univ.party[i].status[eStatus::HASTE_SLOW] += item_level / 2;
 				add_string_to_buf("An item hastes you!");
 			}
 			if ((item_level = get_prot_level(i,46)) > 0) {
 				if (get_ran(1,0,10) == 5) {
 					update_stat = true;
-					univ.party[i].status[1] += item_level / 2;
+					univ.party[i].status[eStatus::BLESS_CURSE] += item_level / 2;
 					add_string_to_buf("An item blesses you!");
 				}
 			}
@@ -1854,17 +1856,17 @@ void do_monster_turn()
 			if (is_town())
 				cur_monst->ap = max(1,cur_monst->ap / 3);
 			if (univ.party.age % 2 == 0)
-				if (cur_monst->status[3] < 0)
+				if(cur_monst->status[eStatus::HASTE_SLOW] < 0)
 					cur_monst->ap = 0;
 			if (cur_monst->ap > 0) { // adjust for webs
-				cur_monst->ap = max(0,cur_monst->ap - cur_monst->status[6] / 2);
+				cur_monst->ap = max(0,cur_monst->ap - cur_monst->status[eStatus::WEBS] / 2);
 				if (cur_monst->ap == 0)
-					cur_monst->status[6] = max(0,cur_monst->status[6] - 2);
+					cur_monst->status[eStatus::WEBS] = max(0,cur_monst->status[eStatus::WEBS] - 2);
 			}
-			if (cur_monst->status[3] > 0)
+			if(cur_monst->status[eStatus::HASTE_SLOW] > 0)
 				cur_monst->ap *= 2;
 		}
-		if ((cur_monst->status[11] > 0) || (cur_monst->status[12] > 0))
+		if(cur_monst->status[eStatus::ASLEEP] > 0 || cur_monst->status[eStatus::PARALYZED] > 0)
 			cur_monst->ap = 0;
 		if (in_scen_debug == true)
 			cur_monst->ap = 0;
@@ -1877,7 +1879,7 @@ void do_monster_turn()
 				cur_monst->ap = 0;
 				monst_spell_note(cur_monst->number,17);
 			}
-			cur_monst->summoned = move_to_zero(cur_monst->summoned);
+			move_to_zero(cur_monst->summoned);
 		}
 		
 	}
@@ -2039,7 +2041,7 @@ void do_monster_turn()
 						// missile range
 						&& (dist(cur_monst->cur_loc,targ_space) <= abil_range[cur_monst->spec_skill])) {
 						print_monst_name(cur_monst->number);
-						monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[1],
+						monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[eStatus::BLESS_CURSE],
 										   cur_monst->spec_skill,cur_monst->cur_loc,target);
 						
 						// Vapors don't count as action
@@ -2131,7 +2133,7 @@ void do_monster_turn()
 				for (k = 0; k < 6; k++)
 					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(pc_pos[k],i)
 						&& (pc_adj[k] == true) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
-						(univ.party[k].status[8] == 0)) {
+						univ.party[k].status[eStatus::INVISIBLE] == 0) {
 						combat_posing_monster = current_working_monster = k;
 						pc_attack(k,i);
 						combat_posing_monster = current_working_monster = 100 + i;
@@ -2201,36 +2203,36 @@ void do_monster_turn()
 		if ((cur_monst->active < 0) || (cur_monst->active > 2))
 			cur_monst->active = 0; // clean up
 		if (cur_monst->active != 0) { // Take care of monster effects
-			if (cur_monst->status[13] > 0) {  // Acid
+			if(cur_monst->status[eStatus::ACID] > 0) {  // Acid
 				if (printed_acid == false) {
 					add_string_to_buf("Acid:              ");
 					printed_acid = true;
 				}
-				r1 = get_ran(cur_monst->status[13],1,6);
+				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
 				damage_monst(i, 6,r1, 0, DAMAGE_MAGIC,0);
-				cur_monst->status[13]--;
+				cur_monst->status[eStatus::ACID]--;
 			}
 			
-			if (cur_monst->status[11] == 1)
+			if (cur_monst->status[eStatus::ASLEEP] == 1)
 				monst_spell_note(cur_monst->number,29);
-			cur_monst->status[11] = move_to_zero(cur_monst->status[11]);
-			cur_monst->status[12] = move_to_zero(cur_monst->status[12]);
+			move_to_zero(cur_monst->status[eStatus::ASLEEP]);
+			move_to_zero(cur_monst->status[eStatus::PARALYZED]);
 			
 			if (univ.party.age % 2 == 0) {
-				cur_monst->status[1] = move_to_zero(cur_monst->status[1]);
-				cur_monst->status[3] = move_to_zero(cur_monst->status[3]);
-				cur_monst->status[6] = move_to_zero(cur_monst->status[6]);
+				move_to_zero(cur_monst->status[eStatus::BLESS_CURSE]);
+				move_to_zero(cur_monst->status[eStatus::HASTE_SLOW]);
+				move_to_zero(cur_monst->status[eStatus::WEBS]);
 				
-				if (cur_monst->status[2] > 0) {  // Poison
+				if(cur_monst->status[eStatus::POISON] > 0) {  // Poison
 					if (printed_poison == false) {
 						add_string_to_buf("Poisoned monsters:              ");
 						printed_poison = true;
 					}
-					r1 = get_ran(cur_monst->status[2],1,6);
+					r1 = get_ran(cur_monst->status[eStatus::POISON],1,6);
 					damage_monst(i, 6, r1, 0, DAMAGE_POISON,0);
-					cur_monst->status[2]--;
+					cur_monst->status[eStatus::POISON]--;
 				}
-				if (cur_monst->status[7] > 0) {  // Disease
+				if(cur_monst->status[eStatus::DISEASE] > 0) {  // Disease
 					if (printed_disease == false) {
 						add_string_to_buf("Diseased monsters:              ");
 						printed_disease = true;
@@ -2243,7 +2245,7 @@ void do_monster_turn()
 						case 5: scare_monst(cur_monst,10); break;
 					}
 					if (get_ran(1,1,6) < 4)
-						cur_monst->status[7]--;
+						cur_monst->status[eStatus::DISEASE]--;
 				}
 				
 			}
@@ -2251,7 +2253,7 @@ void do_monster_turn()
 			if (univ.party.age % 4 == 0) {
 				if (cur_monst->mp < cur_monst->max_mp)
 					cur_monst->mp += 2;
-				cur_monst->status[9] = move_to_zero(cur_monst->status[9]);
+				move_to_zero(cur_monst->status[eStatus::DUMB]);
 			}
 		} // end take care of monsters
 	}
@@ -2294,7 +2296,7 @@ void monster_attack_pc(short who_att,short target)
 		print_monst_attacks(attacker->number,target);
 	
 	// Check sanctuary
-	if (univ.party[target].status[8] > 0) {
+	if(univ.party[target].status[eStatus::INVISIBLE] > 0) {
 		r1 = get_ran(1,1,100);
 		if (r1 > hit_chance[attacker->level / 2]) {
 			add_string_to_buf("  Can't find target!                 ");
@@ -2308,21 +2310,21 @@ void monster_attack_pc(short who_att,short target)
 //			add_string_to_buf((char *) create_line);
 			
 			// Attack roll
-			r1 = get_ran(1,1,100) - 5 * min(8,attacker->status[1]) + 5 * univ.party[target].status[1]
+			r1 = get_ran(1,1,100) - 5 * min(8,attacker->status[eStatus::BLESS_CURSE]) + 5 * univ.party[target].status[eStatus::BLESS_CURSE]
 				+ 5 * stat_adj(target,1) - 15;
-			r1 += 5 * (attacker->status[6] / 3);
+			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
 			
 			// Damage roll
 			r2 = get_ran(attacker->a[i] / 100 + 1,1,attacker->a[i] % 100)
-				+ min(8,attacker->status[1]) - univ.party[target].status[1] + 1;
+				+ min(8,attacker->status[eStatus::BLESS_CURSE]) - univ.party[target].status[eStatus::BLESS_CURSE] + 1;
 			if (univ.difficulty_adjust() > 2)
 				r2 = r2 * 2;
 			if (univ.difficulty_adjust() == 2)
 				r2 = (r2 * 3) / 2;
 			
-			if ((univ.party[target].status[11] > 0) || (univ.party[target].status[12] > 0)) {
+			if ((univ.party[target].status[eStatus::ASLEEP] > 0) || (univ.party[target].status[eStatus::PARALYZED] > 0)) {
 				r1 -= 80;
 				r2 = r2 * 2;
 			}
@@ -2344,7 +2346,7 @@ void monster_attack_pc(short who_att,short target)
 					damaged_message(store_hp - univ.party[target].cur_health,
 									attacker->a[i].type);
 					
-					if (univ.party[target].status[10] > 0) {
+					if(univ.party[target].status[eStatus::MARTYRS_SHIELD] > 0) {
 						add_string_to_buf("  Shares damage!                 ");
 						damage_monst(who_att, 6, store_hp - univ.party[target].cur_health, 0, DAMAGE_MAGIC,0);
 					}
@@ -2373,7 +2375,7 @@ void monster_attack_pc(short who_att,short target)
 					// Petrification touch
 					if ((attacker->spec_skill == 30)
 						&& (pc_has_abil_equip(target,49) == 24)
-						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[1]) <= 14)
+						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE]) <= 14)
 					{
 						add_string_to_buf("  Petrifying touch!");
 						print_buf();
@@ -2410,13 +2412,13 @@ void monster_attack_pc(short who_att,short target)
 					// Sleep target
 					if (attacker->spec_skill == 28) {
 						add_string_to_buf("  Sleeps!                    ");
-						sleep_pc(target,6,STATUS_ASLEEP,-15);
+						sleep_pc(target,6,eStatus::ASLEEP,-15);
 						put_pc_screen();
 					}
 					// Paralyze target
 					if (attacker->spec_skill == 29) {
 						add_string_to_buf("  Paralysis touch!                    ");
-						sleep_pc(target,500,STATUS_PARALYZED,-5);
+						sleep_pc(target,500,eStatus::PARALYZED,-5);
 						put_pc_screen();
 					}
 					// Acid touch
@@ -2488,15 +2490,15 @@ void monster_attack_monster(short who_att,short attackee)
 				target->attitude = 2;
 			
 			// Attack roll
-			r1 = get_ran(1,1,100) - 5 * min(10,attacker->status[1])
-				+ 5 * target->status[1] - 15;
-			r1 += 5 * (attacker->status[6] / 3);
+			r1 = get_ran(1,1,100) - 5 * min(10,attacker->status[eStatus::BLESS_CURSE])
+				+ 5 * target->status[eStatus::BLESS_CURSE] - 15;
+			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			
 			// Damage roll
 			r2 = get_ran(attacker->a[i] / 100 + 1,1,attacker->a[i] % 100)
-				+ min(10,attacker->status[1]) - target->status[1] + 2;
+				+ min(10,attacker->status[eStatus::BLESS_CURSE]) - target->status[eStatus::BLESS_CURSE] + 2;
 			
-			if ((target->status[11] > 0) || (target->status[12] > 0)) {
+			if(target->status[eStatus::ASLEEP] > 0 || target->status[eStatus::PARALYZED] > 0) {
 				r1 -= 80;
 				r2 = r2 * 2;
 			}
@@ -2534,7 +2536,7 @@ void monster_attack_monster(short who_att,short attackee)
 					// Sleep target
 					if (attacker->spec_skill == 28)  {
 						add_string_to_buf("  Sleeps!      ");
-						charm_monst(target,-15,11,6);
+						charm_monst(target,-15,eStatus::ASLEEP,6);
 					}
 					// Dumbfound target
 					if (attacker->spec_skill == 24)  {
@@ -2544,7 +2546,7 @@ void monster_attack_monster(short who_att,short attackee)
 					// Paralyze target
 					if (attacker->spec_skill == 29)  {
 						add_string_to_buf("  Paralysis touch!      ");
-						charm_monst(target,-5,12,500);
+						charm_monst(target,-5,eStatus::PARALYZED,500);
 					}
 					// Acid touch
 					if (attacker->spec_skill == 31)  {
@@ -2654,11 +2656,11 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if (target < 100) { // on PC
 			sprintf ((char *) create_line, "  Fires ray at %s.                  ",(char *) univ.party[target].name.c_str());
 			add_string_to_buf((char *) create_line);
-			sleep_pc(target,100,STATUS_PARALYZED,0);
+			sleep_pc(target,100,eStatus::PARALYZED,0);
 		}
 		else {  // on monst
 			add_string_to_buf("  Shoots a ray.");
-			charm_monst(m_target,0,12,100);
+			charm_monst(m_target,0,eStatus::PARALYZED,100);
 		}
 		//run_a_missile(source,targ_space,8,0,14,
 		//	0,0,100);
@@ -2670,7 +2672,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if (target < 100) { // on PC
 			sprintf ((char *) create_line, "  Gazes at %s.                  ",(char *) univ.party[target].name.c_str());
 			add_string_to_buf((char *) create_line);
-			r1 = get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[1];
+			r1 = get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE];
 			if (pc_has_abil_equip(target,49) < 24)
 				r1 = 20;
 			if (r1 > 14) {
@@ -2685,7 +2687,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		}
 		else {
 			monst_spell_note(m_target->number,9);
-			r1 = get_ran(1,0,20) + m_target->level / 4 + m_target->status[1];
+			r1 = get_ran(1,0,20) + m_target->level / 4 + m_target->status[eStatus::BLESS_CURSE];
 			if ((r1 > 14) || (m_target->immunities & 2))
 				monst_spell_note(m_target->number,10);
 			else {
@@ -2782,7 +2784,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		add_string_to_buf((char *) create_line);
 		
 		// Check sanctuary
-		if (univ.party[target].status[8] > 0) {
+		if(univ.party[target].status[eStatus::INVISIBLE] > 0) {
 			r1 = get_ran(1,1,100);
 			if (r1 > hit_chance[level]) {
 				add_string_to_buf("  Can't find target!                 ");
@@ -2790,7 +2792,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			return;
 		}
 		
-		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * univ.party[target].status[1]
+		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * univ.party[target].status[eStatus::BLESS_CURSE]
 			- 5 * (can_see_light(source, pc_pos[target],sight_obscurity));
 		if (pc_parry[target] < 100)
 			r1 += 5 * pc_parry[target];
@@ -2833,7 +2835,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				monst_spell_note(m_target->number,14);
 				break;
 		}
-		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->status[1]
+		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->status[eStatus::BLESS_CURSE]
 			- 5 * (can_see_light(source, m_target->cur_loc,sight_obscurity));
 		r2 = get_ran(dam[level],1,7) + min(10,bless);
 		
@@ -2920,15 +2922,15 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 	if ((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
 		return false;
 	
-	level = max(1,caster->mu - caster->status[9]) - 1;
+	level = max(1,caster->mu - caster->status[eStatus::DUMB]) - 1;
 	
 	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 	
 	if ((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
-	else if ((((caster->status[3] < 0) && (get_ran(1,0,10) < 7)) ||
-			  ((caster->status[3] == 0) && (get_ran(1,0,10) < 5))) && (emer_spells[level][0] != 0))
+	else if(((caster->status[eStatus::HASTE_SLOW] < 0 && get_ran(1,0,10) < 7) ||
+			  (caster->status[eStatus::HASTE_SLOW] == 0 && get_ran(1,0,10) < 5)) && emer_spells[level][0] != 0)
 		spell = emer_spells[level][0];
 	else if ((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
 		spell = emer_spells[level][1];
@@ -2940,7 +2942,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 	}
 	
 	// Hastes happen often now, but don't cast them redundantly
-	if ((caster->status[3] > 0) && ((spell == 2) || (spell == 18)))
+	if(caster->status[eStatus::HASTE_SLOW] > 0 && (spell == 2 || spell == 18))
 		spell = emer_spells[level][3];
 	
 	
@@ -3005,11 +3007,11 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 2: // minor haste
 				play_sound(25);
-				caster->status[3] += 2;
+				caster->status[eStatus::HASTE_SLOW] += 2;
 				break;
 			case 3: // strength
 				play_sound(25);
-				caster->status[1] += 3;
+				caster->status[eStatus::BLESS_CURSE] += 3;
 				break;
 			case 4: // flame cloud
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3134,7 +3136,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 					if ((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						affected->status[3] += 3;
+						affected->status[eStatus::HASTE_SLOW] += 3;
 					}
 				play_sound(4);
 				break;
@@ -3184,10 +3186,10 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 						affected = &univ.town.monst[i];
 						affected->health += get_ran(2,1,10);
 						r1 = get_ran(3,1,4);
-						affected->status[1] = min(8,affected->status[1] + r1);
-						affected->status[6] = 0;
-						if (affected->status[3] < 0)
-							affected->status[3] = 0;
+						affected->status[eStatus::BLESS_CURSE] = min(8,affected->status[eStatus::BLESS_CURSE] + r1);
+						affected->status[eStatus::WEBS] = 0;
+						if (affected->status[eStatus::HASTE_SLOW] < 0)
+							affected->status[eStatus::HASTE_SLOW] = 0;
 						affected->morale += get_ran(3,1,10);
 					}
 				play_sound(4);
@@ -3240,14 +3242,14 @@ bool monst_cast_priest(cCreature *caster,short targ)
 	if (univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
 	}
-	level = max(1,caster->cl - caster->status[9]) - 1;
+	level = max(1,caster->cl - caster->status[eStatus::DUMB]) - 1;
 	
 	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 	
 	if ((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
-	else if ((caster->status[3] < 0) && (get_ran(1,0,10) < 7) && (emer_spells[level][0] != 0))
+	else if(caster->status[eStatus::HASTE_SLOW] < 0 && get_ran(1,0,10) < 7 && emer_spells[level][0] != 0)
 		spell = emer_spells[level][0];
 	else if ((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
 		spell = emer_spells[level][1];
@@ -3313,7 +3315,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				break;
 			case 1: case 5: // Blesses
 				play_sound(24);
-				caster->status[1] = min(8,caster->status[1] + (spell == 1) ? 3 : 5);
+				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + (spell == 1) ? 3 : 5);
 				play_sound(4);
 				break;
 			case 6: // curse
@@ -3378,7 +3380,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				break;
 			case 15: // martyr's shield
 				play_sound(24);
-				caster->status[10] = min(10,caster->status[10] + 5);
+				caster->status[eStatus::MARTYRS_SHIELD] = min(10,caster->status[eStatus::MARTYRS_SHIELD] + 5);
 				break;
 			case 19: // summon host
 				play_sound(24);
@@ -3438,7 +3440,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
 						if (spell == 16)
-							affected->status[1] = min(8,affected->status[1] + r1);
+							affected->status[eStatus::BLESS_CURSE] = min(8,affected->status[eStatus::BLESS_CURSE] + r1);
 						if (spell == 24)
 							affected->health += r1;
 					}
@@ -3471,13 +3473,13 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				play_sound(24);
 				monst_spell_note(caster->number,26);
 				caster->health = caster->m_health;
-				caster->status[1] = 8;
-				caster->status[2] = 0;
-				caster->status[3] = 8;
-				caster->status[6] = 0;
-				caster->status[7] = 0;
-				caster->status[9] = 0;
-				caster->status[10] = 8;
+				caster->status[eStatus::MARTYRS_SHIELD] = 8;
+				caster->status[eStatus::POISON] = 0;
+				caster->status[eStatus::HASTE_SLOW] = 8;
+				caster->status[eStatus::WEBS] = 0;
+				caster->status[eStatus::DISEASE] = 0;
+				caster->status[eStatus::DUMB] = 0;
+				caster->status[eStatus::MARTYRS_SHIELD] = 8;
 				break;
 			case 26: // divine thud
 				run_a_missile(l,target,9,0,11,0,0,80);
@@ -3767,7 +3769,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 								break;
 							case 12:
 								which_m = &univ.town.monst[k];
-								charm_monst(which_m,0,11,3);
+								charm_monst(which_m,0,eStatus::ASLEEP,3);
 								break;
 							default:
 								if ((effect >= 50) && (effect < 80)) {
@@ -3937,20 +3939,21 @@ void do_poison()
 	
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if (univ.party[i].status[2] > 0)
+			if(univ.party[i].status[eStatus::POISON] > 0)
 				some_poison = true;
 	if (some_poison == true) {
 		add_string_to_buf("Poison:                        ");
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
-				if (univ.party[i].status[2] > 0) {
-					r1 = get_ran(univ.party[i].status[2],1,6);
+				if(univ.party[i].status[eStatus::POISON] > 0) {
+					r1 = get_ran(univ.party[i].status[eStatus::POISON],1,6);
 					damage_pc(i,r1,DAMAGE_POISON,eRace::UNKNOWN,0);
 					if (get_ran(1,0,8) < 6)
-						univ.party[i].status[2] = move_to_zero(univ.party[i].status[2]);
+						move_to_zero(univ.party[i].status[eStatus::POISON]);
 					if (get_ran(1,0,8) < 6)
 						if (univ.party[i].traits[6] == true)
-							univ.party[i].status[2] = move_to_zero(univ.party[i].status[2]);
+							move_to_zero(univ.party[i].status[eStatus::POISON]);
+					// TODO: Shouldn't the above two conditionals be swapped?
 				}
 		put_pc_screen();
 		//if (overall_mode < 10)
@@ -3966,14 +3969,14 @@ void handle_disease()
 	
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if (univ.party[i].status[7] > 0)
+			if(univ.party[i].status[eStatus::DISEASE] > 0)
 				disease = true;
 	
 	if (disease == true) {
 		add_string_to_buf("Disease:                        ");
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
-				if (univ.party[i].status[7] > 0) {
+				if(univ.party[i].status[eStatus::DISEASE] > 0) {
 					r1 = get_ran(1,1,10);
 					switch (r1) {
 						case 1: case 2:
@@ -4001,7 +4004,7 @@ void handle_disease()
 					if (univ.party[i].traits[6] == true)
 						r1 -= 2;
 					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,ITEM_PROTECT_FROM_DISEASE) < 24))
-						univ.party[i].status[7] = move_to_zero(univ.party[i].status[7]);
+						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
 				}
 		put_pc_screen();
 	}
@@ -4014,17 +4017,17 @@ void handle_acid()
 	
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if (univ.party[i].status[13] > 0)
+			if(univ.party[i].status[eStatus::ACID] > 0)
 				some_acid = true;
 	
 	if (some_acid == true) {
 		add_string_to_buf("Acid:                        ");
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
-				if (univ.party[i].status[13] > 0) {
-					r1 = get_ran(univ.party[i].status[13],1,6);
+				if(univ.party[i].status[eStatus::ACID] > 0) {
+					r1 = get_ran(univ.party[i].status[eStatus::ACID],1,6);
 					damage_pc(i,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
-					univ.party[i].status[13] = move_to_zero(univ.party[i].status[13]);
+					move_to_zero(univ.party[i].status[eStatus::ACID]);
 				}
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,8);
@@ -4079,9 +4082,9 @@ void end_combat()
 	for (i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::FLED)
 			univ.party[i].main_status = eMainStatus::ALIVE;
-		univ.party[i].status[0] = 0;
-		univ.party[i].status[1] = 0;
-		univ.party[i].status[3] = 0;
+		univ.party[i].status[eStatus::POISONED_WEAPON] = 0;
+		univ.party[i].status[eStatus::BLESS_CURSE] = 0;
+		univ.party[i].status[eStatus::HASTE_SLOW] = 0;
 	}
 	if (which_combat_type == 0) {
 		overall_mode = MODE_OUTDOORS;
@@ -4186,20 +4189,19 @@ bool combat_cast_mage_spell()
 								case  3:
 									sprintf ((char *) c_line, "  %s stronger.                     ",
 											 (char *) univ.party[target].name.c_str());
-									univ.party[target].status[1] = univ.party[target].status[1] + 3;
+									univ.party[target].status[eStatus::BLESS_CURSE] = univ.party[target].status[eStatus::BLESS_CURSE] + 3;
 									store_m_type = 8;
 									break;
 								case 29:
 									sprintf ((char *) c_line, "  %s resistant.                     ",
 											 (char *) univ.party[target].name.c_str());
-									univ.party[target].status[5] = univ.party[target].status[5] + 5 + bonus;
+									univ.party[target].status[eStatus::MAGIC_RESISTANCE] = univ.party[target].status[eStatus::MAGIC_RESISTANCE] + 5 + bonus;
 									store_m_type = 15;
 									break;
 									
 								default:
 									i = (spell_num == 2) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
-									univ.party[target].status[3] = min(8,
-																	   univ.party[target].status[3] + i);
+									univ.party[target].status[eStatus::HASTE_SLOW] = min(8, univ.party[target].status[eStatus::HASTE_SLOW] + i);
 									sprintf ((char *) c_line, "  %s hasted.                       ",
 											 (char *) univ.party[target].name.c_str());
 									store_m_type = 8;
@@ -4217,11 +4219,10 @@ bool combat_cast_mage_spell()
 						
 						for (i = 0; i < 6; i++)
 							if(univ.party[i].main_status == eMainStatus::ALIVE) {
-								univ.party[i].status[3] = min(8,
-															  univ.party[i].status[3] + ((spell_num == 39) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
+								univ.party[i].status[eStatus::HASTE_SLOW] = min(8, univ.party[i].status[eStatus::HASTE_SLOW] + ((spell_num == 39) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
 								if (spell_num == 55) {
 									poison_weapon(i,2,1);
-									univ.party[i].status[1] += 4;
+									univ.party[i].status[eStatus::BLESS_CURSE] += 4;
 									add_missile(pc_pos[i],14,0,0,0);
 								}
 								else add_missile(pc_pos[i],8,0,0,0);
@@ -4267,7 +4268,7 @@ bool combat_cast_mage_spell()
 										store_m_type = 8;
 										break;
 									case 56:
-										charm_monst(which_m,15,12,1000);
+										charm_monst(which_m,15,eStatus::PARALYZED,1000);
 										store_m_type = 15;
 										break;
 								}
@@ -4360,7 +4361,7 @@ bool combat_cast_priest_spell()
 					if (target < 6) {
 						store_sound = 4;
 						univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
-						univ.party[target].status[1] += (spell_num == 0) ? 2 :
+						univ.party[target].status[eStatus::BLESS_CURSE] += (spell_num == 0) ? 2 :
 						max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus);
 						sprintf ((char *) c_line, "  %s blessed.              ",
 								 (char *) univ.party[target].name.c_str());
@@ -4373,7 +4374,7 @@ bool combat_cast_priest_spell()
 					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
 					for (i = 0; i < 6; i++)
 						if(univ.party[i].main_status == eMainStatus::ALIVE) {
-							univ.party[i].status[1] += univ.party[current_pc].level / 3;
+							univ.party[i].status[eStatus::BLESS_CURSE] += univ.party[current_pc].level / 3;
 							add_missile(pc_pos[i],8,0,0,0);
 						}
 					sprintf ((char *) c_line, "  Party blessed.                    ");
@@ -4388,14 +4389,14 @@ bool combat_cast_priest_spell()
 					add_string_to_buf((char *) c_line);
 					heal_pc(current_pc,200);
 					cure_pc(current_pc,8);
-					univ.party[current_pc].status[1] = 8;
-					univ.party[current_pc].status[3] = 8;
-					univ.party[current_pc].status[4] = 3;
-					univ.party[current_pc].status[5] = 8;
-					univ.party[current_pc].status[6] = 0;
-					univ.party[current_pc].status[7] = 0;
-					univ.party[current_pc].status[9] = 0;
-					univ.party[current_pc].status[10] = 8;
+					univ.party[current_pc].status[eStatus::BLESS_CURSE] = 8;
+					univ.party[current_pc].status[eStatus::HASTE_SLOW] = 8;
+					univ.party[current_pc].status[eStatus::INVULNERABLE] = 3;
+					univ.party[current_pc].status[eStatus::MAGIC_RESISTANCE] = 8;
+					univ.party[current_pc].status[eStatus::WEBS] = 0;
+					univ.party[current_pc].status[eStatus::DISEASE] = 0;
+					univ.party[current_pc].status[eStatus::DUMB] = 0;
+					univ.party[current_pc].status[eStatus::MARTYRS_SHIELD] = 8;
 					break;
 					
 				case 31: case 51: case 53:
@@ -4411,7 +4412,7 @@ bool combat_cast_priest_spell()
 									store_m_type = 8;
 									break;
 								case 51:
-									charm_monst(which_m,28 - bonus,0,0);
+									charm_monst(which_m,28 - bonus,eStatus::CHARM,0);
 									store_m_type = 14;
 									break;
 								case 53:
@@ -4779,12 +4780,12 @@ void sleep_cloud_space(short m,short n)
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if (pc_pos[i] == target) {
-					sleep_pc(i,3,STATUS_ASLEEP,0);
+					sleep_pc(i,3,eStatus::ASLEEP,0);
 				}
 	if (overall_mode < MODE_COMBAT)
 		if (target == univ.town.p_loc) {
 			for (i = 0; i < 6; i++)
-				sleep_pc(i,3,STATUS_ASLEEP,0);
+				sleep_pc(i,3,eStatus::ASLEEP,0);
 		}
 }
 

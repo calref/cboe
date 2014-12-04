@@ -687,37 +687,37 @@ void draw_pc_effects(short pc)
 	if(exceptSplit(univ.party[pc].main_status) != eMainStatus::ALIVE)
 		return;
 	// TODO: This used to draw the status icons in the spell dialog, but it no longer does. Fix that.
-	if ((univ.party[pc].status[STATUS_POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) {
+	if ((univ.party[pc].status[eStatus::POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(status_gworld,source_rects[4],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if (univ.party[pc].status[STATUS_BLESS_CURSE] > 0) {
+	if (univ.party[pc].status[eStatus::BLESS_CURSE] > 0) {
 		rect_draw_some_item(status_gworld,source_rects[2],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	else if (univ.party[pc].status[STATUS_BLESS_CURSE] < 0) {
+	else if (univ.party[pc].status[eStatus::BLESS_CURSE] < 0) {
 		rect_draw_some_item(status_gworld,source_rects[3],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if (univ.party[pc].status[STATUS_POISON] > 0) {
-		rect_draw_some_item(status_gworld,source_rects[(univ.party[pc].status[STATUS_POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,sf::BlendAlpha);
+	if (univ.party[pc].status[eStatus::POISON] > 0) {
+		rect_draw_some_item(status_gworld,source_rects[(univ.party[pc].status[eStatus::POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if (univ.party[pc].status[STATUS_INVULNERABLE] > 0) {
+	if (univ.party[pc].status[eStatus::INVULNERABLE] > 0) {
 		rect_draw_some_item(status_gworld,source_rects[5],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if (univ.party[pc].status[STATUS_HASTE_SLOW] > 0) {
+	if (univ.party[pc].status[eStatus::HASTE_SLOW] > 0) {
 		rect_draw_some_item(status_gworld,source_rects[6],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	else if (univ.party[pc].status[STATUS_HASTE_SLOW] < 0) {
+	else if (univ.party[pc].status[eStatus::HASTE_SLOW] < 0) {
 		rect_draw_some_item(status_gworld,source_rects[8],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
@@ -726,47 +726,47 @@ void draw_pc_effects(short pc)
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) {
+	if ((univ.party[pc].status[eStatus::MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(status_gworld,source_rects[9],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_WEBS] > 0) && (dest_rect.right < right_limit)) {
+	if ((univ.party[pc].status[eStatus::WEBS] > 0) && (dest_rect.right < right_limit)) {
 		rect_draw_some_item(status_gworld,source_rects[10],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_DISEASE] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::DISEASE] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[11],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_INVISIBLE] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::INVISIBLE] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[12],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_DUMB] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::DUMB] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[13],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[14],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_ASLEEP] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::ASLEEP] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[15],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_PARALYZED] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::PARALYZED] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[16],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;
 	}
-	if ((univ.party[pc].status[STATUS_ACID] > 0) && (dest_rect.right < right_limit)){
+	if ((univ.party[pc].status[eStatus::ACID] > 0) && (dest_rect.right < right_limit)){
 		rect_draw_some_item(status_gworld,source_rects[17],pc_stats_gworld,dest_rect,sf::BlendAlpha);
 		dest_rect.left += 13;
 		dest_rect.right += 13;

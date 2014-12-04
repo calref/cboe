@@ -247,8 +247,8 @@ void do_monsters()
 	
 	if (overall_mode == MODE_TOWN)
 		for (i = 0; i < univ.town->max_monst(); i++)
-			if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].status[11] <= 0)
-				&& (univ.town.monst[i].status[12] <= 0)) {
+			if(univ.town.monst[i].active != 0 && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
+				&& univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 				// have to pick targets
 				if (univ.town.monst[i].active == 1)
 					target = 6;
@@ -883,7 +883,7 @@ void monst_inflict_fields(short which_monst)
 					break;
 				}
 				if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
-					charm_monst(which_m,0,11,3);
+					charm_monst(which_m,0,eStatus::ASLEEP,3);
 					break;
 				}
 				if (univ.town.is_ice_wall(where_check.x,where_check.y)) {
@@ -1152,14 +1152,14 @@ void poison_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,10);
 		return;
 	}
-	which_m->status[2] = min(8, which_m->status[2] + how_much);
+	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
 	
 }
 void acid_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[13] = minmax(-8,8, which_m->status[13] + how_much);
+	which_m->status[eStatus::ACID] = minmax(-8,8, which_m->status[eStatus::ACID] + how_much);
 	monst_spell_note(which_m->number,31);
 	
 }
@@ -1167,21 +1167,21 @@ void acid_monst(cCreature *which_m,short how_much)
 void slow_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[3] = minmax(-8,8, which_m->status[3] - how_much);
+	which_m->status[eStatus::HASTE_SLOW] = minmax(-8,8, which_m->status[eStatus::HASTE_SLOW] - how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 	
 }
 void curse_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[1] = minmax(-8,8, which_m->status[1] - how_much);
+	which_m->status[eStatus::BLESS_CURSE] = minmax(-8,8, which_m->status[eStatus::BLESS_CURSE] - how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 	
 }
 void web_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[6] = minmax(-8,8, which_m->status[6] + how_much);
+	which_m->status[eStatus::WEBS] = minmax(-8,8, which_m->status[eStatus::WEBS] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 	
 }
@@ -1195,7 +1195,7 @@ void scare_monst(cCreature *which_m,short how_much)
 void disease_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[7] = minmax(-8,8, which_m->status[7] + how_much);
+	which_m->status[eStatus::DISEASE] = minmax(-8,8, which_m->status[eStatus::DISEASE] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 	
 }
@@ -1203,18 +1203,18 @@ void disease_monst(cCreature *which_m,short how_much)
 void dumbfound_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
-	which_m->status[9] = minmax(-8,8, which_m->status[9] + how_much);
+	which_m->status[eStatus::DUMB] = minmax(-8,8, which_m->status[eStatus::DUMB] + how_much);
 	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 	
 }
 
-void charm_monst(cCreature *which_m,short penalty,short which_status,short amount)
+void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount)
 // Also used for sleep and paralyze, which_statys is 0 means charm
 {
 	short r1;
 	
 	
-	if ((which_status == 11) &&
+	if ((which_status == eStatus::ASLEEP) &&
 		(which_m->m_type == eRace::UNDEAD || which_m->m_type == eRace::SLIME ||
 		 which_m->m_type == eRace::STONE || which_m->m_type == eRace::PLANT))
 		return;
@@ -1224,11 +1224,11 @@ void charm_monst(cCreature *which_m,short penalty,short which_status,short amoun
 	if (which_m->immunities & 2)
 		r1 = 200;
 	r1 += penalty;
-	if (which_status == 11)
+	if (which_status == eStatus::ASLEEP)
 		r1 -= 25;
-	if (which_status == 12)
+	if (which_status == eStatus::PARALYZED)
 		r1 -= 15;
-	if ((which_status == 11) && (which_m->spec_skill == 32))
+	if ((which_status == eStatus::ASLEEP) && (which_m->spec_skill == 32))
 		return;
 	
 	if (r1 > charm_odds[which_m->level / 2]) {
@@ -1236,15 +1236,15 @@ void charm_monst(cCreature *which_m,short penalty,short which_status,short amoun
 		monst_spell_note(which_m->number,10);
 	}
 	else {
-		if (which_status == 0) {
+		if (which_status == eStatus::CHARM) {
 			which_m->attitude = 2;
 			monst_spell_note(which_m->number,23);
 		}
 		else {
 			which_m->status[which_status] = amount;
-			if (which_status == 11)
+			if (which_status == eStatus::ASLEEP)
 				monst_spell_note(which_m->number,28);
-			if (which_status == 12)
+			if (which_status == eStatus::PARALYZED)
 				monst_spell_note(which_m->number,30);
 		}
 		//one_sound(53);

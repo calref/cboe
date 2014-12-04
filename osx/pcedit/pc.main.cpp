@@ -307,15 +307,15 @@ void handle_extra_menu(int item_hit)
 		case 11: // conditions
 			display_strings(4,15);
 			for (i = 0; i < 6; i++) {
-				univ.party[i].status[2] = 0;
-				if (univ.party[i].status[3] < 0)
-					univ.party[i].status[3] = 0;
-				univ.party[i].status[6] = 0;
-				univ.party[i].status[7] = 0;
-				univ.party[i].status[9] = 0;
-				univ.party[i].status[11] = 0;
-				univ.party[i].status[12] = 0;
-				univ.party[i].status[13] = 0;
+				univ.party[i].status[eStatus::POISON] = 0;
+				if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
+					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
+				univ.party[i].status[eStatus::WEBS] = 0;
+				univ.party[i].status[eStatus::DISEASE] = 0;
+				univ.party[i].status[eStatus::DUMB] = 0;
+				univ.party[i].status[eStatus::ASLEEP] = 0;
+				univ.party[i].status[eStatus::PARALYZED] = 0;
+				univ.party[i].status[eStatus::ACID] = 0;
 			}
 			break;
 			
