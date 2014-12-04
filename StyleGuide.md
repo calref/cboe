@@ -26,16 +26,16 @@ Include Guards
 --------------
 
 All headers should have an include guard. The preferred format of the
-include guard #define is BOE_COMPONENT_FILENAME.
+include guard `#define` is `BOE_COMPONENT_FILENAME`.
 
 Possible components are:
 
-* game - files specific to the game
-* data - files defining the game's data (currently kept in the classes
+* `game` - files specific to the game
+* `data` - files defining the game's data (currently kept in the classes
 folder)
-* pced - files specific to the player character editor
-* scened - files specific to the scenario editor
-* dlog - files that are part of the DialogXML framework
+* `pced` - files specific to the player character editor
+* `scened` - files specific to the scenario editor
+* `dlog` - files that are part of the DialogXML framework
 
 The COMPONENT can be omitted if none of the above apply.
 
@@ -106,14 +106,14 @@ Never use a using namespace declaration in a header file. It's
 acceptable in a source file, but discouraged. Using declarations are
 fine in source files, but not in header files unless they're in an
 inline function or class declaration. Namespace aliases are encouraged
-for long namespaces. When using std::bind within a function, always put
+for long namespaces. When using `std::bind` within a function, always put
 a `using namespace std::placeholders;` line somewhere in the function.
 
 Don't use nested classes.
 
 Only put absolutely necessary functions in header files; if a function
 only needs to be used in one file, it shouldn't be in a header. In this
-case, it should be declared static. (Don't use an anonymous namespace
+case, it should be declared `static`. (Don't use an anonymous namespace
 for this purpose.)
 
 Local variables should be declared as close to the point of use as
@@ -122,8 +122,8 @@ the top of the function, since this was required in C at that time;
 don't do this in new code.
 
 Whenever possible, eliminate global variables. It's accepted that some
-global variables can;t be helped, such as the global cUniverse and the
-global cScenario, but if a global is just being used to pass information
+global variables can't be helped, such as the global `cUniverse` and the
+global `cScenario`, but if a global is just being used to pass information
 between disparate functions, find another way. There are such variables
 in the code currently which we would like to eliminate.
 
@@ -135,7 +135,7 @@ non-defaultable argument, unless you actually intend to define an
 implicit conversion. An operator bool should usually be declared
 explicit as well.
 
-Generally, you should use the class keyword (rather than the struct
+Generally, you should use the `class` keyword (rather than the `struct`
 keyword) to declare anything with member functions or non-public
 members.
 
@@ -161,78 +161,77 @@ Functions
 If a function takes a parameter by reference or pointer and doesn't
 modify it, the parameter should be const. Don't declare parameters const
 if they are passed by value. Don't use const pointers for parameters (eg
-int*const).
+`int*const`).
 
 Overloading functions is encouraged.
 
 Default arguments are encouraged.
 
-Don't use throw() specifications
+Don't use `throw()` specifications.
 
 General Coding Style
 ====================
 
-Use of exceptions is encouraged, though you should ensure that they get
-caught somewhere before main().
+Use of exceptions is encouraged, provided it makes sense, though you
+should ensure that they get caught somewhere before `main()`.
 
 Prefer C++-style casts to C-style casts.
 
-Do not use cout, clog, or cin. Do not include <iostream>. To write log
-messages, use printf. All other C++ streams are permitted and in fact
-encouraged. Do not use sprintf for anything.
+Do not use `cout`, `clog`, `cerr`, or `cin`. Do not include `<iostream>`.
+To write log messages, use `printf`. All other C++ streams are permitted
+and in fact encouraged. Do not use `sprintf` for anything.
 
 Use const whenever it makes sense. In particular, declare string
-constants as const char*const.
+constants as `const char*const`.
 
 Never use simple macros for constants. Create an enum instead. Macros
 that take arguments may be acceptable, depending.
 
-Don't use 0 where a pointer is expected; use NULL or nullptr instead.
+Don't use 0 where a pointer is expected; use `NULL` or `nullptr` instead.
 
-Feel free to use auto if it simplifies the code, but generally only for
+Feel free to use `auto` if it simplifies the code, but generally only for
 local variables.
 
-Don't use lambda expressions. Use of std::function and std::bind is
-encouraged.
+Use of lambda functions, `std::function`, and `std::bind` is encouraged.
 
 Use of Boost libraries is encouraged.
 
 Naming Rules
 ============
 
-Header files should have a .hpp extension. C++ source files should have
-a .cpp extension, and Objective-C++ files should have a .mm extension.
+Header files should have a "_.hpp_" extension. C++ source files should have
+a "_.cpp_" extension, and Objective-C++ files should have a "_.mm_" extension.
 
 Files specific to one component should be named with one of the prefixes
-"boe.", "pc.", "scen.".
+"_boe._", "_pc._", "_scen._".
 
 Sometimes, a header will define an interface that has to be implemented
 differently depending on the platform. In this case, the naming should
 be as follows:
 
-* file.hpp
-* file.win.cpp
-* file.mac.mm (or file.mac.cpp)
-* file.linux.cpp
+* _file.hpp_
+* _file.win.cpp_
+* _file.mac.mm_ (or _file.mac.cpp_ if it doesn't include Objective-C code)
+* _file.linux.cpp_
 
 If the Mac and Linux implementation happen to be the same due to only
-using POSIX headers, use "file.posix.cpp".
+using POSIX headers, use "_file.posix.cpp_".
 
 For files containing inline template definitions, an extension of
-.tpl.hpp is preferred.
+"_.tpl.hpp_" is preferred.
 
 In general, functions and variables should always start with a lowercase
-letter. Both underscore_separated and camelCase names are acceptable.
+letter. Both `underscore_separated` and `camelCase` names are acceptable.
 
-Enums should be named with a lowercase e followed by an uppercase
+Enums should be named with a lowercase `e` followed by an uppercase
 letter.
 
-Classes should either start with an uppercase letter or a lowercase c
+Classes should either start with an uppercase letter or a lowercase `c`
 followed by an uppercase letter.
 
-Typedef or using declarations should usually end with _t.
+Typedef or using declarations should usually end with `_t`.
 
-Do not use a trailing underscore or m_ prefix for member variables.
+Do not use a trailing underscore or `m_` prefix for member variables.
 
 Names of constants (both enum constants and other constants) should
 either be all uppercase and separated by underscores, or camelCase
@@ -241,23 +240,30 @@ starting with a lowercase k followed by an uppercase letter.
 Macros, when present, should be all uppercase and separated by
 underscores.
 
-Comments
-========
+Comments and Annotations
+========================
 
 Generally, C++-style comments are preferred, but feel free to use
 C-style comments for longer comments.
 
 If we ever introduce Doxygen comments, they will be in the Javadoc style
-- block comments start with /**, line comments start with ///, and
-directives start with @.
+- block comments start with `/**`, line comments start with `///`, and
+directives start with `@`.
 
 Comment whenever something's purpose may be unclear. If you're uncertain
-of something's purpose, feel free to add a TODO: comment. Use TODO for
+of something's purpose, feel free to add a `TODO:` comment. Use `TODO:` for
 anything that is temporary or not perfect, or in places where there
 needs to be code that hasn't been written yet.
 
-For organizing the function popup menu, use MARK: comments rather than
-#pragma mark.
+For organizing the function popup menu, use `MARK:` comments rather than
+`#pragma mark`.
+
+To mark parameters as unused, omit the name or surround it in block
+comment syntax. Other unused entities should be removed or commented out
+if you want to avoid warnings, though if you think it might have a use
+in the future, it's reasonable to leave it in with a comment. Do not use
+any kind of attributes, including `__attribute__`, `__declspec`, and
+C++11 attributes.
 
 Formatting
 ==========
@@ -285,7 +291,8 @@ In declarations of pointers and references, the pointer or reference
 operator should bind to the type, not the variable. Never declare
 another type in the same declaration as a pointer or reference.
 
-Do not put parentheses around return values.
+Do not put parentheses around return values. Do not put redundant
+parentheses around comparisons mixed in with logical operators.
 
 If a constructor initializer must be wrapped, put the colon on the first
 line and one variable per line thereafter.
