@@ -133,9 +133,9 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eK
 	
 	if(item_hit == "okay") {
 		if(!get_placed_monst_in_dlog(me)) return true;
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "type-edit") {
 		if(!get_placed_monst_in_dlog(me)) return true;
 		i = choose_text(STRT_MONST,store_placed_monst.number,&me,"Choose Which Monster:");
@@ -210,10 +210,10 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me) {
 static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
 		if(!get_placed_monst_adv_in_dlog(me)) return true;
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "cancel") {
 			store_placed_monst2.number = 0;
-		me.toast();
+		me.toast(false);
 	}
 	return true;
 }

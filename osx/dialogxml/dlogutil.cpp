@@ -114,13 +114,13 @@ bool cPictChoice::onRight(){
 }
 
 bool cPictChoice::onCancel(){
-	dlg.toast();
+	dlg.toast(false);
 	return true;
 }
 
 bool cPictChoice::onOkay(){
 	dlg.setResult(picts[cur].first);
-	dlg.toast();
+	dlg.toast(true);
 	return true;
 }
 
@@ -207,13 +207,13 @@ bool cStringChoice::onRight(){
 }
 
 bool cStringChoice::onCancel(cDialog& me){
-	me.toast();
+	me.toast(false);
 	return true;
 }
 
 bool cStringChoice::onOkay(cDialog& me){
 	dlg.setResult(cur);
-	me.toast();
+	me.toast(true);
 	return true;
 }
 
@@ -250,7 +250,7 @@ std::string cChoiceDlog::show(){
 
 bool cChoiceDlog::onClick(cDialog& me, std::string id){
 	me.setResult(id);
-	me.toast();
+	me.toast(true);
 	return true;
 }
 
@@ -479,7 +479,7 @@ bool cStrDlog::onRecord(std::string id){
 }
 
 bool cStrDlog::onDismiss(){
-	dlg.toast();
+	dlg.toast(true);
 	return true;
 }
 

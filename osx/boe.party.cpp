@@ -2287,7 +2287,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		if (store_situation == 0)
 			store_last_cast_mage = pc_casting;
 		else store_last_cast_priest = pc_casting;
-		me.toast();
+		me.toast(false);
 		me.setResult<short>(70);
 		return true;
 	}
@@ -2298,21 +2298,21 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_mage = store_mage_store;
 		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
-		me.toast();
+		me.toast(false);
 		me.setResult<short>(70);
 		return true;
 	}
 	if ((store_situation == 0) && (mage_need_select[store_mage] == 0)) {
 		store_last_cast_mage = pc_casting;
 		pc_last_cast[store_situation][pc_casting] = store_mage;
-		me.toast();
+		me.toast(false);
 		me.setResult<short>(store_mage);
 		return true;
 	}
 	if ((store_situation == 1) && (priest_need_select[store_priest] == 0)) {
 		store_last_cast_priest = pc_casting;
 		pc_last_cast[store_situation][pc_casting] = store_priest;
-		me.toast();
+		me.toast(false);
 		me.setResult<short>(store_priest);
 		return true;
 	}
@@ -2321,7 +2321,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_mage = store_mage_store;
 		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
-		me.toast();
+		me.toast(false);
 		give_help(39,0,me);
 		me.setResult<short>(70);
 		return true;
@@ -2331,7 +2331,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_last_cast_mage = pc_casting;
 	else store_last_cast_priest = pc_casting;
 	pc_last_cast[store_situation][pc_casting] = ((store_situation == 0) ? store_mage : store_priest);
-	me.toast();
+	me.toast(true);
 	return true;
 }
 
@@ -2612,7 +2612,7 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 	else {
 		me.setResult<short>(item_hit[6] - '1');
 	}
-	me.toast();
+	me.toast(true);
 	return true;
 }
 
@@ -2687,7 +2687,7 @@ static bool pc_name_event_filter(cDialog& me, short store_train_pc) {
 	else {
 		// TODO: This was originally truncated to 18 characters; is that really necessary?
 		univ.party[store_train_pc].name = pcName;
-		me.toast();
+		me.toast(true);
 	}
 	return true;
 }

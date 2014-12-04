@@ -122,9 +122,9 @@ void flash_rect(RECT /*to_flash*/)
 	sf::sleep(time_in_ticks(5));
 }
 
-static bool get_num_event_filter(cDialog& me, std::string, eKeyMod)
+static bool get_num_event_filter(cDialog& me, std::string id, eKeyMod)
 {
-	me.toast();
+	me.toast(id == "okay");
 	me.setResult<long long>(me["number"].getTextAsNum());
 	return true;
 }

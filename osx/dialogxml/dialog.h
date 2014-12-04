@@ -37,10 +37,10 @@ class cDialog {
 	sf::Color parseColor(std::string what);
 	cKey parseKey(std::string what);
 	sf::RenderWindow win;
-	cTextField* currentFocus;
+	std::string currentFocus;
 	cDialog* parent;
 	void loadFromFile(std::string path);
-	template<typename Iter> void handleTabOrder(std::string itemHit, Iter begin, Iter end);
+	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 public:
 	static void init();
@@ -61,7 +61,7 @@ public:
 	void setDefTextClr(sf::Color clr);
 	void setDefBtn(std::string defBtn);
 	sf::Color getDefTextClr();
-	bool toast();
+	bool toast(bool triggerFocus);
 	cControl& getControl(std::string id);
 	cControl& operator[](std::string id);
 	void recalcRect();

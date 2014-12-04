@@ -967,7 +967,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
 	cItemRec item;
 	
 	if(id == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(id == "up") {
 		if(first_item_shown > 0) {
 			first_item_shown -= 8;
@@ -1430,7 +1430,7 @@ void refresh_store_items()
 
 
 static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
-	me.toast();
+	me.toast(true);
 	me.setResult(me["response"].getText());
 	return true;
 }

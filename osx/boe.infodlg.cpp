@@ -100,7 +100,7 @@ static void put_spell_info(cDialog& me, short display_mode)
 static bool display_spells_event_filter(cDialog& me, std::string item_hit, short display_mode) {
 	short store;
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else {
 		store = (display_mode == 0) ? mage_spell_pos : priest_spell_pos;
 		if(item_hit == "left") {
@@ -163,7 +163,7 @@ static void put_skill_info(cDialog& me)
 
 static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else {
 		if(item_hit == "left") {
 			skill_pos = (skill_pos == 0) ? 18 : skill_pos - 1;
@@ -309,7 +309,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cItemRec& store_i, short& item, const short pc_num) {
 	
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "left") {
 		do {
 			item = (item == 0) ? 23 : item - 1;
@@ -443,7 +443,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	short i,dummy = 0;
 	
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "left") {
 		if (position == 0) {
 			for (i = 255; on_monst_menu[i] < 0 && i > 0; i--)
@@ -536,7 +536,7 @@ static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKey
 	std::string get_text;
 	
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 		return true;
 	} else if(item_hit == "left") {
 		cur_entry = (cur_entry == 3) ? num_entries + 2 : cur_entry - 1;
@@ -661,7 +661,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 }
 
 static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, short& store_pc_num) {
-	if(item_hit == "done") me.toast();
+	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		// TODO: Put braces on these do-whiles... o.O
 		do
@@ -713,7 +713,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	std::string place_str;
 	char temp_str[256];
 	
-	if(item_hit == "done") me.toast();
+	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		if (store_page_on == 0)
 			store_page_on = (store_num_i - 1) / 3;
@@ -871,7 +871,7 @@ static void put_talk(cDialog& me)
 }
 
 static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	if(item_hit == "done") me.toast();
+	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		if (store_page_on == 0)
 			store_page_on = store_num_i - 1;
@@ -922,7 +922,7 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short i;
 	char place_str[256];
 	
-	if(item_hit == "done") me.toast();
+	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		if (store_page_on == 0)
 			store_page_on = (store_num_i - 1) / 3;

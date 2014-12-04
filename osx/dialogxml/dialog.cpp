@@ -841,11 +841,11 @@ void cDialog::loadFromFile(std::string path){
 	winRect = RECT();
 	recalcRect();
 	ctrlIter iter = controls.begin();
-	currentFocus = NULL;
+	currentFocus = "";
 	while(iter != controls.end()){
 		if(typeid(iter->second) == typeid(cTextField*)){
-			cTextField* fld = (cTextField*) iter->second;
-			if(currentFocus == NULL) currentFocus = fld;
+			if(currentFocus.empty()) currentFocus = iter->first;
+			break;
 		}
 		iter++;
 	}
@@ -1080,23 +1080,25 @@ void cDialog::run(){
 	set_cursor(former_curs);
 }
 
-template<typename Iter> void cDialog::handleTabOrder(string itemHit, Iter begin, Iter end) {
+template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin, Iter end) {
 	auto cur = find_if(begin, end, [&itemHit](pair<string,cTextField*>& a) {
 		return a.first == itemHit;
 	});
 	if(cur == end) return; // Unlikely, but let's be safe
 	if(!cur->second->triggerFocusHandler(*this,itemHit,true)) return;
-	cTextField* wasFocus = currentFocus;
+	string wasFocus = currentFocus;
 	auto iter = std::next(cur);
 	if(iter == end) iter = begin;
 	while(iter != cur){
 		// If tab order is explicitly specified for all fields, gaps are possible
 		if(iter->second == nullptr) continue;
-		if((currentFocus = dynamic_cast<cTextField*>(iter->second))){
-			if(currentFocus->triggerFocusHandler(*this,iter->first,false)){
+		if(iter->second->getType() == CTRL_FIELD){
+			if(iter->second->triggerFocusHandler(*this,iter->first,false)){
+				currentFocus = iter->first;
+			} else {
 				itemHit = "";
-				break;
 			}
+			break;
 		}
 		iter++;
 		if(iter == end) iter = begin;
@@ -1121,7 +1123,10 @@ sf::Color cDialog::getDefTextClr() {
 	return defTextClr;
 }
 
-bool cDialog::toast(){
+bool cDialog::toast(bool triggerFocus){
+	if(triggerFocus && !currentFocus.empty()) {
+		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
+	}
 	dialogNotToast = false;
 	return true;
 }

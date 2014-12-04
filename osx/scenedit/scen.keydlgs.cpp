@@ -240,7 +240,7 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 		strcpy(current_terrain.out_strs(which_str), newVal.c_str());
 	if (str_mode == 2)
 		strcpy(town->town_strs(which_str), newVal.c_str());
-	if(item_hit == "okay") me.toast();
+	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 			if(item_hit[0] == 'l')
 				which_str--;
@@ -279,14 +279,14 @@ void edit_text_str(short which_str,short mode) {
 static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short which_str, short str_mode) {
 	if(item_hit == "okay") {
 		me.setResult(true);
-		me.toast();
+		me.toast(true);
 		std::string str = me["area"].getText();
 			if(str_mode == 0)
 				sprintf(current_terrain.out_strs(which_str + 1),"%-29.29s",str.c_str());
 			else sprintf(town->town_strs(which_str + 1),"%-29.29s",str.c_str());
 	} else if(item_hit == "cancel") {
 			me.setResult(false);
-			me.toast();
+			me.toast(false);
 	}
 	return true;
 }
@@ -517,7 +517,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 	
 	if(item_hit == "okay") {
 		if(save_spec_enc(me, which_mode, which_node))
-			me.toast();
+			me.toast(true);
 	} else if(item_hit == "back") {
 		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
@@ -531,7 +531,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 						   "Press the Go Back button until it disappears.",&me);
 			return true;
 			}
-		me.toast();
+		me.toast(false);
 	} else if(me[item_hit].getText() == "Create/Edit") {
 			if(!save_spec_enc(me, which_mode, which_node))
 				return true;
@@ -614,7 +614,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		me["x2a"].setTextToNum(store_spec_node.ex2a);
 	} else if(item_hit == "msg2-edit") { // TODO: What about msg1-edit?
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			if ((edit_spec_mess_mess[store_spec_node.type] == 2) ||
 				(edit_spec_mess_mess[store_spec_node.type] == 4) ||
 				(edit_spec_mess_mess[store_spec_node.type] == 5)) {
@@ -629,7 +629,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			}
 	} else if(item_hit == "pict-edit") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = -1;
 			switch (edit_pict_mess[store_spec_node.type]) {
 				case 1:
@@ -648,7 +648,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			}
 	} else if(item_hit == "general") {
 			if(save_spec_enc(me, which_mode, which_node) == true)
-				me.toast();
+				return true;
 		i = choose_text_res("special-node-names",1,28,store_spec_node.type + 1,&me,"Choose General Use Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -656,7 +656,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "oneshot") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = choose_text_res("special-node-names",51,64,store_spec_node.type + 1,&me,"Choose One-Shot Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -668,13 +668,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "affectpc") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = choose_text_res("special-node-names",81,107,store_spec_node.type + 1,&me,"Choose Affect Party Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "ifthen") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = choose_text_res("special-node-names",131,156,store_spec_node.type + 1,&me,"Choose If-Then Special:");
 			if (i >= 0) {
 				store_spec_node.type = i - 1;
@@ -682,13 +682,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "town") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = choose_text_res("special-node-names",171,219,store_spec_node.type + 1,&me,"Choose Town Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "out") {
 			if(save_spec_enc(me, which_mode, which_node))
-				me.toast();
+				return true;
 			i = choose_text_res("special-node-names",226,230,store_spec_node.type + 1,&me,"Choose Outdoor Special:");
 			if (i >= 0) store_spec_node.type = i - 1;
 			put_spec_enc_in_dlog(me, which_node);
@@ -766,8 +766,6 @@ short get_fresh_spec(short which_mode) {
 static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1, short* str2) {
 	std::string str;
 	short i;
-	
-	me.toast();
 	
 	if(item_hit == "okay") {
 		str = me["str1"].getText();
@@ -865,7 +863,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 		}
-	}
+		me.toast(true);
+	} else me.toast(false);
 	return true;
 }
 
@@ -904,8 +903,6 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 	std::string str;
 	short i;
 	
-	me.toast();
-	
 	if(item_hit == "okay") {
 			for (i = 0; i < 6; i++) {
 				std::string id = "str" + std::to_string(i + 1);
@@ -923,7 +920,8 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 						break;
 				}
 			}
-	}
+		me.toast(true);
+	} else me.toast(false);
 	return true;
 }
 
@@ -1017,8 +1015,6 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
 	short i;
 	
-	me.toast();
-	
 	if(item_hit == "cancel") me.setResult<short>(-1);
 	else if(item_hit == "okay") {
 		i = me["num"].getTextAsNum();
@@ -1026,7 +1022,8 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 			giveError("There is no special node with that number. Legal ranges are 0 to 255 for scenario specials, 0 to 59 for outdoor specials, and 0 to 99 for town specials.","",&me);
 		}
 		me.setResult(i);
-	}
+		me.toast(true);
+	} me.toast(false);
 	return true;
 }
 
@@ -1056,9 +1053,9 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 			std::string id = "str" + std::to_string(i + 1);
 			strcpy(scenario.scen_strs(4 + i), me[id].getText().c_str());
 		}
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "choose") {
 			i = me["picnum"].getTextAsNum();
 			i = choose_graphic(i,PIC_SCEN,&me);

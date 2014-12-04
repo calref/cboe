@@ -1086,10 +1086,10 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 	
 	if(id == "okay") {
 		done_yet = true;
-		me.toast();
+		me.toast(true);
 	} else if(id == "cancel") {
 		done_yet = true;
-		me.toast();
+		me.toast(false);
 		did_cancel = true;
 	}
 	
@@ -1236,7 +1236,7 @@ static void put_party_stats(cDialog& me)
 static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 {
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "help") {
 		univ.party.help_received[22] = 0;
 		give_help(222,23,me);
@@ -1328,7 +1328,7 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 	std::string place_str;
 	
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "next") {
 		store_tip_page_on++;
 		if (store_tip_page_on == NUM_HINTS)
@@ -1401,7 +1401,7 @@ static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, e
 {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "next") {
 		if (store_scen_page_on == 0)
 			store_scen_page_on = (store_num_scen - 1) / 3;
@@ -1415,7 +1415,7 @@ static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, e
 	} else if(item_hit.substr(0,item_hit.length()-1) == "start") {
 		int scen_hit = item_hit[item_hit.length()-1] - '1';
 		me.setResult<short>(scen_hit + store_scen_page_on * 3);
-		me.toast();
+		me.toast(true);
 	}
 	return true;
 }

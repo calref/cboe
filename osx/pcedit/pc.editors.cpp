@@ -81,7 +81,7 @@ long store_g;
 short store_train_mode,store_train_pc;
 
 static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
-	me.toast();
+	me.toast(true);
 	if(item_hit != "cancel") {
 		short which_pc = item_hit[item_hit.length() - 1] - '1';
 		me.setResult<short>(which_pc);
@@ -159,7 +159,7 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, const sho
 	
 	pc_num = which_pc_displayed;
 	if(item_hit == "done") {
-		me.toast();
+		me.toast(true);
 	} else if(item_hit == "left") {
 		do {
 			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
@@ -224,11 +224,6 @@ static void display_traits_graphics(cDialog& me)
 	me["xp"].setTextToNum(store);
 }
 
-static bool pick_race_abil_event_filter(cDialog& me, std::string, eKeyMod) {
-	me.toast();
-	return true;
-}
-
 static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing, const short store_trait_mode) {
 	if(losing) return true;
 	std::string abil_str;
@@ -277,7 +272,7 @@ void pick_race_abil(cPlayer *pc,short mode)
 	make_cursor_sword();
 	
 	cDialog pickAbil("pick-race-abil.xml");
-	pickAbil["done"].attachClickHandler(pick_race_abil_event_filter);
+	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
@@ -451,7 +446,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod)
 	}
 	store_train_pc = pc_num;
 	if (talk_done == true) {
-		me.toast();
+		me.toast(item_hit == "keep");
 	}
 	return true;
 }

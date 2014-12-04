@@ -396,7 +396,7 @@ static void fill_ter_info(cDialog& me, short ter){
 static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter) {
 	if(!save_ter_info(me, scenario.ter_types[which_ter])) return true;
 	
-	if(id == "done") me.toast();
+	if(id == "done") me.toast(true);
 	else if(id == "left") {
 		// TODO: Use size() once ter_types becomes a vector
 		if(which_ter == 0) which_ter = 255;
@@ -423,7 +423,7 @@ short edit_ter_type(ter_num_t which_ter) {
 	ter_dlg["trimter"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"trim terrain"));
 	ter_dlg["trim"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,18,"trim type"));
 	ter_dlg["prop"].attachFocusHandler(fill_ter_flag_info);
-	ter_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &ter_dlg));
+	ter_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &ter_dlg, false));
 	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,299,"ground type"));
 	// TODO: Add focus handler for key
 	// TODO: Add click handler for object
@@ -574,7 +574,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 	if(item_hit == "okay") {
 		if(save_monst_info(me,store_monst)) {
 			scenario.scen_monsters[which_monst] = store_monst;
-			me.toast();
+			me.toast(true);
 		}
 	} else if(item_hit == "abils") {
 			if(!save_monst_info(me,store_monst)) return false;
@@ -637,7 +637,7 @@ short edit_monst_type(short which_monst) {
 	cDialog monst_dlg("edit-monster.xml");
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_picture,PIC_MONST,_1,"pic","icon",0));
 	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","",0));
-	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg));
+	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
 	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(store_monst)));
 	monst_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 40, "level"));
 	monst_dlg["health"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 2500, "health"));
@@ -732,10 +732,10 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 	
 	if(item_hit == "cancel") {
 		store_monst.level = 255;
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "okay") {
 		if(save_monst_abils(me, store_monst))
-			me.toast();
+			me.toast(true);
 	} else if(item_hit == "abils") {
 		if(!save_monst_abils(me, store_monst)) return true;
 		i = choose_text_res("monster-abilities", 1, 38, store_monst.spec_skill + 1, &me, "Choose Monster Ability:");
@@ -974,9 +974,9 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 	cItemRec temp_item;
 	
 	if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "okay") {
-		if(save_item_info(me, store_item, store_which_item)) me.toast();
+		if(save_item_info(me, store_item, store_which_item)) me.toast(true);
 	} else if(item_hit == "prev") {
 		if(!save_item_info(me, store_item, store_which_item)) return true;
 			store_which_item--;
@@ -1067,11 +1067,11 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 	
 	if(item_hit == "cancel") {
 		store_item.ability = ITEM_NO_ABILITY;
-		me.toast();
+		me.toast(false);
 		return true;
 	} else if(item_hit == "okay") {
 		if(save_item_abils(me, store_item)) {
-			me.toast();
+			me.toast(true);
 			return true;
 		}
 	} else if(item_hit == "weapon") {
@@ -1193,9 +1193,9 @@ static bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item)
 
 static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& store_item, short which_item) {
 	if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "okay") {
-		if(save_spec_item(me, store_item, which_item)) me.toast();
+		if(save_spec_item(me, store_item, which_item)) me.toast(true);
 	} else if(item_hit == "left") {
 		if(!save_spec_item(me, store_item, which_item)) return true;
 		which_item--;
@@ -1289,10 +1289,10 @@ static bool save_save_rects(cDialog& me) {
 
 static bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
 	if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "okay") {
 		if(save_save_rects(me))
-			me.toast();
+			me.toast(true);
 	}
 	return true;
 }
@@ -1344,7 +1344,7 @@ static bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehic
 	
 	if(item_hit == "okay") {
 		if(save_vehicles(me, vehicles, page))
-			me.toast();
+			me.toast(true);
 	} else if(item_hit == "left") {
 		if(!save_vehicles(me, vehicles, page)) return true;
 		page--;
@@ -1415,7 +1415,7 @@ static void put_add_town_in_dlog(cDialog& me) {
 static bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
 	if(item_hit == "okay") {
 		if(save_add_town(me))
-			me.toast();
+			me.toast(true);
 	}
 	return true;
 }
@@ -1469,9 +1469,9 @@ static bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, 
 	
 	if(item_hit == "okay") {
 		if(save_item_placement(me, store_storage, cur_shortcut))
-			me.toast();
+			me.toast(true);
 	} else if(item_hit == "cancel") {
-		me.toast();
+		me.toast(false);
 	} else if(item_hit == "left") {
 		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
 			cur_shortcut--;
