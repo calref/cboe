@@ -716,8 +716,7 @@ location end_town_mode(short switching_level,location destination)  // returns n
 }
 
 // actually, entry_dir is non zero is town is dead - kludge!
-void handle_town_specials(short town_number, short entry_dir,location start_loc)
-{
+void handle_town_specials(short /*town_number*/, short entry_dir,location /*start_loc*/) {
 	
 	//if (entry_dir > 0)
 	//	run_special(5,2,univ.town.town.spec_on_entry_if_dead,start_loc,&s1,&s2,&s3);
@@ -731,8 +730,7 @@ void handle_town_specials(short town_number, short entry_dir,location start_loc)
 	special_queue[0].trigger_time = univ.party.age; // TODO: Simply pushing into slot 0 seems like a bad idea
 }
 
-void handle_leave_town_specials(short town_number, short which_spec,location start_loc)
-{
+void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
 	
 	//run_special(6,2,which_spec,start_loc,&s1,&s2,&s3);
 	special_queue[1].spec = which_spec;
@@ -883,7 +881,7 @@ void create_town_combat_terrain()
 			combat_terrain[where.x][where.y] = univ.town->terrain(where.x,where.y);
 }
 
-void create_out_combat_terrain(short type,short num_walls,short spec_code)
+void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/)
 // spec_code is encounter's spec_code
 {
 	short i,j,k,r1,ter_type;

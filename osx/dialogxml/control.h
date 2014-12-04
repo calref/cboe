@@ -75,7 +75,7 @@ public:
 	cKey getAttachedKey();
 	virtual void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) = 0;
 	virtual void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) = 0;
-	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	virtual bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	//virtual void setPict(short pict, short type) = 0;
 	virtual void show(); // cd_activate_item true

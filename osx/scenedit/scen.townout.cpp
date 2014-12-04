@@ -10,7 +10,6 @@
 #include "mathutil.h"
 #include "button.h"
 
-extern std::string get_str(std::string list, short j);
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;
@@ -128,7 +127,7 @@ static bool get_placed_monst_in_dlog(cDialog& me) {
 	return true;
 }
 
-bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short i;
 	cCreature store_m;
 	
@@ -174,7 +173,6 @@ void edit_placed_monst(short which_m) {
 }
 
 static void put_placed_monst_adv_in_dlog(cDialog& me) {
-	short i;
 	
 	me["num"].setTextToNum(store_which_placed_monst);
 	me["type"].setText(scenario.scen_monsters[store_placed_monst2.number].m_name);
@@ -209,7 +207,7 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me) {
 	return true;
 }
 
-static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
 		if(!get_placed_monst_adv_in_dlog(me)) return true;
 		me.toast();

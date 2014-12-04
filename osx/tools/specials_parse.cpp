@@ -283,6 +283,7 @@ void SpecialParser::set_third(int i, ph_t, bool& pass) {
 
 std::map<size_t,cSpecial> SpecialParser::parse(std::string code) {
 	bool success = qi::parse(code.begin(), code.end(), nodes_file);
+	(void) success; // Suppress "unused parameter" warning
 	return specials;
 }
 
@@ -297,6 +298,7 @@ void SpecialParser::init_debug() {
 //	BOOST_SPIRIT_DEBUG_NODE(nodes_file);
 }
 
+void test_special_parse(std::string file); // Suppress "no prototype" warning
 void test_special_parse(std::string file) {
 	std::ostringstream code;
 	std::ifstream fin(file);

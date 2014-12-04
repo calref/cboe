@@ -50,17 +50,15 @@ extern RECT pc_race_rect;
 extern RECT edit_rect[5][2]; 
 
 
-short store_trait_mode;
 
 //extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
-bool handle_action(sf::Event event,short mode)
+bool handle_action(sf::Event event)
 //short mode; // ignore,
 {
 	short i;
 	
 	location the_point;
-	short choice = 4;
 	
 	bool to_return = false;
 
@@ -88,7 +86,7 @@ bool handle_action(sf::Event event,short mode)
 			 		display_pc(current_active_pc,1,NULL);
 					break;
 				case 2: 
-					pick_race_abil(&univ.party[current_active_pc],0,NULL);
+					pick_race_abil(&univ.party[current_active_pc],0);
 					break;
 				case 3: 
 					spend_xp(current_active_pc,1,NULL);
@@ -115,9 +113,8 @@ bool handle_action(sf::Event event,short mode)
 	return to_return;
 }
 
-void flash_rect(RECT to_flash)
+void flash_rect(RECT /*to_flash*/)
 {
-	unsigned long dummy;
 	
 	// TODO: Think of a good way to do this
 	//InvertRect (&to_flash);
@@ -125,7 +122,7 @@ void flash_rect(RECT to_flash)
 	sf::sleep(time_in_ticks(5));
 }
 
-static bool get_num_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool get_num_event_filter(cDialog& me, std::string, eKeyMod)
 {
 	me.toast();
 	me.setResult<long long>(me["number"].getTextAsNum());
@@ -136,8 +133,6 @@ void edit_gold_or_food(short which_to_edit)
 //0 - gold 1 - food
 {
 
-	short item_hit;
-	char sign_text[256];
 	location view_loc;
 
 	store_which_to_edit = which_to_edit;
@@ -161,8 +156,6 @@ void edit_gold_or_food(short which_to_edit)
 void edit_day()
 {
 
-	short item_hit;
-	char sign_text[256];
 	location view_loc;
 
 
@@ -210,7 +203,7 @@ void combine_things(short pc_num)
 	}
 }
 
-bool give_to_pc(short pc_num,cItemRec item, short print_result)
+bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/)
 {
 	short free_space;
 	
@@ -238,12 +231,12 @@ bool give_to_party(cItemRec item,short print_result)
 	return false;
 }
 
-void give_gold(short amount,bool print_result)
+void give_gold(short amount,bool /*print_result*/)
 {
 	univ.party.gold = univ.party.gold + amount;
 }
 
-bool take_gold(short amount,bool print_result)
+bool take_gold(short amount,bool /*print_result*/)
 {
 	if (univ.party.gold < amount)
 		return false;

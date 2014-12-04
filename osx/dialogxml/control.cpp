@@ -178,7 +178,7 @@ void cControl::setActive(bool active) {
 	depressed = active;
 }
 
-bool cControl::handleClick(location where){
+bool cControl::handleClick(location){
 	sf::Event e;
 	bool done = false, clicked = false;
 	inWindow->setActive();
@@ -256,11 +256,11 @@ cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), t
 
 cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
-bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod, location){
+bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod){
 	return true;
 }
 
-bool cControl::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
+bool cControl::triggerFocusHandler(cDialog&, std::string, bool){
 	return true;
 }
 

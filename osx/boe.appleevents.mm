@@ -30,6 +30,7 @@ typedef NSAppleEventDescriptor AEDescr;
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply;
 @end
 
+void set_up_apple_events(); // Suppress "no prototype" warning
 void set_up_apple_events() {
 	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
 	NSAppleEventManager* AEmgr = [NSAppleEventManager sharedAppleEventManager];
@@ -44,10 +45,14 @@ void set_up_apple_events() {
 // TODO: Not sure, do I need to do anything with the reply event?
 @implementation AppleEventHandler
 -(void)handleOpenApp:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
+	(void) theAppleEvent; // Suppress "unused parameter" warning
+	(void) reply;
 	app_started_normally = true;
 }
 
 -(void)handleOpenDoc:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
+	(void) theAppleEvent; // Suppress "unused parameter" warning
+	(void) reply;
 	NSAppleEventDescriptor* docList = [theAppleEvent paramDescriptorForKeyword: keyDirectObject];
 	if(docList == nil) return;
 	
@@ -83,6 +88,8 @@ void set_up_apple_events() {
 }
 
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
+	(void) theAppleEvent; // Suppress "unused parameter" warning
+	(void) reply;
 	if(overall_mode == MODE_STARTUP) {
 		All_Done = true;
 		return;

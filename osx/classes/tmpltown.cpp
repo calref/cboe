@@ -13,15 +13,15 @@
 
 #include "classes.h"
 
-ter_num_t& cBigTemplTown::terrain(size_t x, size_t y){
+ter_num_t& cBigTemplTown::terrain(size_t /*x*/, size_t /*y*/){
 	return  _terrain[0][0]; // TODO: will need to calculate the terrain somehow
 }
 
-void cBigTemplTown::writeTerrainTo(std::ostream& file) {
+void cBigTemplTown::writeTerrainTo(std::ostream& /*file*/) {
 	// TODO: Write out the terrain somehow;
 }
 
-void cBigTemplTown::readTerrainFrom(std::istream& file) {
+void cBigTemplTown::readTerrainFrom(std::istream& /*file*/) {
 	// TODO: Read in the terrain somehow
 }
 

@@ -10,7 +10,20 @@
 #include "dlogutil.h"
 #include <boost/lexical_cast.hpp>
 
-extern std::string get_str(std::string, short);
+/* 
+ * These three are not declared in any included header.
+ * Instead they are declared in pc.actions.h, which is not
+ * included here because it contains additional functions that
+ * should not be available to the game (which also includes
+ * this file).
+ *
+ * For the game's purposes, these are declared in
+ * boe.infodlg.h and boe.party.h.
+ */
+void display_pc(short pc_num,short mode,cDialog* parent);
+void display_alchemy(bool allowEdit);
+bool spend_xp(short pc_num, short mode, cDialog* parent);
+// TODO: There's probably a more logical way of arranging this
 
 /* Adventure globals */
 //extern party_record_type party;
@@ -34,7 +47,6 @@ extern short d_rect_index[80];
 extern bool diff_depth_ok,current_file_has_maps;
 bool choice_active[6];
 
-extern short store_trait_mode;
 extern short which_pc_displayed;
 cPlayer *store_pc;
 sf::Texture button_num_gworld;
@@ -68,8 +80,7 @@ short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
 long store_g;
 short store_train_mode,store_train_pc;
 
-static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast();
 	if(item_hit != "cancel") {
 		short which_pc = item_hit[item_hit.length() - 1] - '1';
@@ -128,8 +139,7 @@ static short party_total_level()
 	return j;
 }
 
-static void put_pc_spells(cDialog& me)
-{
+static void put_pc_spells(cDialog& me, const short store_trait_mode) {
 	short i;
 	
 	for (i = 0; i < 62; i++) {
@@ -144,8 +154,7 @@ static void put_pc_spells(cDialog& me)
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
 }
 
-static bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool display_pc_event_filter(cDialog& me, std::string item_hit, const short trait_mode) {
 	short pc_num;
 	
 	pc_num = which_pc_displayed;
@@ -156,19 +165,19 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
 		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
 		which_pc_displayed = pc_num;
-		put_pc_spells(me);
+		put_pc_spells(me, trait_mode);
 	} else if(item_hit == "right") {
 		do {
 			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
 		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
 		which_pc_displayed = pc_num;
-		put_pc_spells(me);
+		put_pc_spells(me, trait_mode);
 	}
 	return true;
 }
 
-void display_pc(short pc_num,short mode,cDialog* parent)
-{
+void display_pc(short pc_num,short mode, cDialog* parent) {
+	using namespace std::placeholders;
 	short i;
 	std::string label_str;
 	
@@ -178,19 +187,18 @@ void display_pc(short pc_num,short mode,cDialog* parent)
 				break;
 	}
 	which_pc_displayed = pc_num;
-	store_trait_mode = mode;
 	
 	make_cursor_sword();
 	
 	cDialog pcInfo("pc-spell-info.xml", parent);
-	pcInfo.attachClickHandlers(display_pc_event_filter,{"done","left","right"});
+	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
 	for (i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		label_str = get_str((mode == 0) ? "mage-spells" : "priest-spells",i * 2 + 1);
 		pcInfo[id].setText(label_str);
 	}
-	put_pc_spells(pcInfo);
+	put_pc_spells(pcInfo, mode);
 	
 	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
 	
@@ -216,13 +224,13 @@ static void display_traits_graphics(cDialog& me)
 	me["xp"].setTextToNum(store);
 }
 
-static bool pick_race_abil_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool pick_race_abil_event_filter(cDialog& me, std::string, eKeyMod) {
 	me.toast();
 	return true;
 }
 
-static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing)
-{
+static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing, const short store_trait_mode) {
+	if(losing) return true;
 	std::string abil_str;
 	cPlayer *pc;
 	
@@ -258,21 +266,22 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing)
 	return store_trait_mode == 0;
 }
 
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent)
+void pick_race_abil(cPlayer *pc,short mode)
 //mode; // 0 - edit  1 - just display  2 - can't change race
 {
+	using namespace std::placeholders;
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
 	
-	store_trait_mode = mode;
 	store_pc = pc;
 	make_cursor_sword();
 	
 	cDialog pickAbil("pick-race-abil.xml");
 	pickAbil["done"].attachClickHandler(pick_race_abil_event_filter);
-	pickAbil.attachFocusHandlers(pick_race_select_led, {"race", "bad1", "bad2", "bad3", "bad4", "bad5"});
-	pickAbil.attachFocusHandlers(pick_race_select_led, {"good1", "good2", "good3", "good4", "good5"});
-	pickAbil.attachFocusHandlers(pick_race_select_led, {"good6", "good7", "good8", "good9", "good10"});
+	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
+	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5"});
+	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
+	pickAbil.attachFocusHandlers(led_selector, {"good6", "good7", "good8", "good9", "good10"});
 	
 	display_traits_graphics(pickAbil);
 	if (mode == 1)
@@ -399,8 +408,7 @@ static void do_xp_draw(cDialog& me)
 	update_gold_skills(me);
 }
 
-static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short mode,pc_num;
 	bool talk_done = false;
 	
@@ -513,7 +521,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		draw_xp_skills(me);
 	} else {
 		for(int i = 0; i < 19; i++) {
-			int n = strlen(skill_ids[i]);
+			size_t n = strlen(skill_ids[i]);
 			if(item_hit.length() < n + 2) continue;
 			if(item_hit.substr(0, item_hit.length() - 2) == skill_ids[i]) {
 				which_skill = i;

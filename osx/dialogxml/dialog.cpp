@@ -1054,7 +1054,7 @@ void cDialog::run(){
 				if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
 				if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
 				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
-				itemHit = process_click(where, key.mod);
+				itemHit = process_click(where);
 				break;
 			case sf::Event::MouseMoved:
 				set_cursor(sword_curs);
@@ -1065,11 +1065,13 @@ void cDialog::run(){
 					}
 				}
 				break;
+			default: // To silence warning of unhandled enum values
+				break;
 		}
 		if(itemHit.empty()) continue;;
 		ctrlIter ctrl = controls.find(itemHit);
 		// TODO: Should it do something with the boolean return value?
-		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod,where);
+		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod);
 		itemHit.clear();
 	}
 	win.setVisible(false);
@@ -1214,7 +1216,7 @@ std::string cDialog::process_keystroke(cKey keyHit){
 	return "";
 }
 
-std::string cDialog::process_click(location where, eKeyMod mods){
+std::string cDialog::process_click(location where){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){

@@ -102,7 +102,7 @@ void create_wand_monst()
 	location p_loc;
 	
 	r1 = get_ran(1,0,3);
-	if (overall_mode == MODE_OUTDOORS)
+	if(overall_mode == MODE_OUTDOORS) {
 		if (!univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1].isNull()) {
 			r2 = get_ran(1,0,3);
 			while ((point_onscreen(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
@@ -112,29 +112,29 @@ void create_wand_monst()
 				place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
 									  univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1],0);
 		}
-		else // won't place wandering is more than 50 monsters
-			if ((!univ.town->wandering[r1].isNull()) && (univ.town.countMonsters() <= 50)
-				&& (univ.party.m_killed[univ.town.num] < univ.town->max_num_monst)) {
-				r2 = get_ran(1,0,3);
-				while (point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
-					   !loc_off_act_area(univ.town->wandering_locs[r2]) && (num_tries++ < 100))
-					r2 = get_ran(1,0,3);
-				for (i = 0; i < 4; i++) {
-					if (univ.town->wandering[r1].monst[i] != 0) { // place a monster
-						p_loc = univ.town->wandering_locs[r2];
-						p_loc.x += get_ran(1,0,4) - 2;
-						p_loc.y += get_ran(1,0,4) - 2;
-						if (!is_blocked(p_loc))
-							place_monster(univ.town->wandering[r1].monst[i],p_loc);
-					}
-					p_loc = univ.town->wandering_locs[r2];
-					p_loc.x += get_ran(1,0,4) - 2;
-					p_loc.y += get_ran(1,0,4) - 2;
-					r3 = get_ran(1,0,3);
-					if ((r3 >= 2) && (!is_blocked(p_loc))) // place extra monsters?
-						place_monster(univ.town->wandering[r1].monst[3],p_loc);
-				}
+	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
+		&& univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
+		// won't place wandering if more than 50 monsters
+		r2 = get_ran(1,0,3);
+		while(point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
+			   !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
+			r2 = get_ran(1,0,3);
+		for(i = 0; i < 4; i++) {
+			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
+				p_loc = univ.town->wandering_locs[r2];
+				p_loc.x += get_ran(1,0,4) - 2;
+				p_loc.y += get_ran(1,0,4) - 2;
+				if(!is_blocked(p_loc))
+					place_monster(univ.town->wandering[r1].monst[i],p_loc);
 			}
+			p_loc = univ.town->wandering_locs[r2];
+			p_loc.x += get_ran(1,0,4) - 2;
+			p_loc.y += get_ran(1,0,4) - 2;
+			r3 = get_ran(1,0,3);
+			if(r3 >= 2 && !is_blocked(p_loc)) // place extra monsters?
+				place_monster(univ.town->wandering[r1].monst[3],p_loc);
+		}
+	}
 }
 
 void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced)
@@ -345,15 +345,15 @@ bool monst_hate_spot(short which_m,location *good_loc)
 	if (univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y) || univ.town.is_quickfire(loc.x,loc.y)
 		|| univ.town.is_blade_wall(loc.x,loc.y) // hate regular fields
 		|| (univ.town.is_ice_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 2)
-			&& (univ.town.monst[which_m].immunities & 32 == 0)) // hate ice wall?
+			&& ((univ.town.monst[which_m].immunities & 32) == 0)) // hate ice wall?
 		|| (univ.town.is_fire_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 1)
-			&& (univ.town.monst[which_m].immunities & 8 == 0)) // hate fire wall?
+			&& ((univ.town.monst[which_m].immunities & 8) == 0)) // hate fire wall?
 		|| (univ.town.is_scloud(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 6)
-			&& (univ.town.monst[which_m].immunities & 3 == 0)) // hate stink cloud?
+			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate stink cloud?
 		|| (univ.town.is_sleep_cloud(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 5)
-			&& (univ.town.monst[which_m].immunities & 3 == 0)) // hate sleep cloud?
+			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate sleep cloud?
 		|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 3)
-			&& (univ.town.monst[which_m].immunities & 3 == 0)) // hate shock cloud?
+			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate shock cloud?
 		|| (((univ.town.monst[which_m].mu > 0) || (univ.town.monst[which_m].cl > 0))
 			&& univ.town.is_antimagic(loc.x,loc.y))) // hate antimagic
 	{
@@ -1366,7 +1366,7 @@ bool summon_monster(m_num_t which,location where,short duration,short given_atti
 	return true;
 }
 
-void activate_monsters(short code,short attitude)
+void activate_monsters(short code,short /*attitude*/)
 {
 	short i;
 	

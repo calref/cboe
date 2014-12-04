@@ -74,7 +74,7 @@ public:
 private:
 	void draw();
 	std::string process_keystroke(cKey keyHit);
-	std::string process_click(location where, eKeyMod mods);
+	std::string process_click(location where);
 	bool dialogNotToast;
 	RECT winRect;
 	std::string defaultButton;

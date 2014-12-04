@@ -147,7 +147,6 @@ void shut_down_menus(short mode) {
 void update_item_menu() {
 	MenuHandler* targ = [[file_menu itemAtIndex: 0] target];
 	short i,j;
-	char item_name[256];
 	
 	for(j = 0; j < 5; j++) {
 		[item_menu[j] removeAllItems];
@@ -188,6 +187,7 @@ void handle_monst_menu(int item_hit);
 
 // TODO: Implement edit menu (much work to be done here!)
 -(void) editMenu:(id) sender {
+	(void) sender; // Suppress "unused parameter" warning
 }
 
 -(void) scenMenu:(id) sender {
@@ -204,9 +204,11 @@ void handle_monst_menu(int item_hit);
 
 // TODO: Monster and item menus
 -(void) itemMenu:(id) sender {
+	(void) sender; // Suppress "unused parameter" warning
 }
 
 -(void) monstMenu:(id) sender {
+	(void) sender; // Suppress "unused parameter" warning
 }
 
 -(void) helpMenu:(id) sender {
@@ -214,6 +216,7 @@ void handle_monst_menu(int item_hit);
 }
 
 -(void) onlineHelp:(id) sender {
+	(void) sender;
 	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://calref.net/~sylae/boe-doc/editor/About.html"]];
 }
 @end

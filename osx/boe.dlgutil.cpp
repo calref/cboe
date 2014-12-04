@@ -160,7 +160,7 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	give_help(26,27);
 }
 
-void update_last_talk(int new_node) {
+static void update_last_talk(int new_node) {
 	// Store last node in the Go Back button
 	for(word_rect_t& word : talk_words) {
 		if(word.word != "Go Back") continue;
@@ -578,7 +578,7 @@ void end_talk_mode()
 
 void handle_talk_event(location p)
 {
-	short i,j,get_pc,s1 = -1,s2 = -1,s3 = -1;
+	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
 	std::string place_string1, place_string2;
 	
@@ -676,7 +676,7 @@ void handle_talk_event(location p)
 		case TALK_BACK: // only if there's nothing to go back to
 			return; // so, there's nothing to do here
 		case TALK_ASK: // ask about
-			place_string1 = get_text_response(1017,0);
+			place_string1 = get_text_response("Ask about what?", 8);
 			strncpy(asked, place_string1.c_str(), 4);
 			if(strncmp(asked, "name", 4) == 0) goto SPECIAL_NAME;
 			if(strncmp(asked, "look", 4) == 0) goto SPECIAL_LOOK;
@@ -993,13 +993,14 @@ void store_responses()
 	
 }
 
-void do_sign(short town_num, short which_sign, short sign_type,location sign_loc)
+void do_sign(short town_num, short which_sign, short sign_type)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 {
 	char sign_text[256];
 	location view_loc;
 	
+	// TODO: Why is this line here? The location isn't used anywhere.
 	view_loc = (is_out()) ? univ.party.p_loc : univ.town.p_loc;
 	make_cursor_sword();
 	
@@ -1077,7 +1078,7 @@ void save_prefs(bool resetHelp){
 	}
 }
 
-static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod mods)
+static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 {
 	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
 	bool done_yet = false,did_cancel = false,reset_help = false;
@@ -1232,7 +1233,7 @@ static void put_party_stats(cDialog& me)
 	draw_startup(0);
 }
 
-static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 {
 	if(item_hit == "done") {
 		me.toast();
@@ -1252,7 +1253,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 			else pick_pc_name(which_pc,&me);
 			put_party_stats(me);
 		} else if(item_hit == "trait") {
-			pick_race_abil(&univ.party[which_pc],0,&me);
+			pick_race_abil(&univ.party[which_pc],0);
 			put_party_stats(me);
 		} else if(item_hit == "train") {
 			spend_xp(which_pc,0,&me);
@@ -1283,7 +1284,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod m
 }
 
 extern bool pc_gworld_loaded;
-void edit_party(short can_create,short can_cancel)
+void edit_party()
 {
 	bool munch_pc_graphic = false;
 	
@@ -1322,7 +1323,7 @@ void edit_party(short can_create,short can_cancel)
 	
 }
 
-static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 {
 	std::string place_str;
 	
@@ -1396,7 +1397,7 @@ static void put_scen_info(cDialog& me)
 	}
 }
 
-static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);

@@ -18,6 +18,7 @@ typedef NSAppleEventDescriptor AEDescr;
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply;
 @end
 
+void set_up_apple_events(); // Suppress "no prototype" warning
 void set_up_apple_events() {
 	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
 	NSAppleEventManager* AEmgr = [NSAppleEventManager sharedAppleEventManager];
@@ -29,9 +30,13 @@ void set_up_apple_events() {
 
 @implementation AppleEventHandler
 -(void)handleOpenDoc:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
+	(void) theAppleEvent; // Suppress "unused parameter" warning
+	(void) reply;
 	// TODO: Handle this
 }
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
+	(void) theAppleEvent; // Suppress "unused parameter" warning
+	(void) reply;
 	All_Done = verify_restore_quit(0);
 }
 @end

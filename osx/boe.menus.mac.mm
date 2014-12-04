@@ -326,6 +326,7 @@ void handle_menu_spell(short spell_picked,short spell_type);
 }
 
 -(void) onlineHelp:(id) sender {
+	(void) sender; // Suppress "unused parameter" warning
 	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://calref.net/~sylae/boe-doc/game/Contents.html"]];
 }
 

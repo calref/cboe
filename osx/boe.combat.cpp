@@ -588,10 +588,11 @@ void pc_attack(short who_att,short target)////
 	
 	for (i = 0; i < 24; i++)
 		if (((univ.party[who_att].items[i].variety == eItemType::ONE_HANDED) || (univ.party[who_att].items[i].variety == eItemType::TWO_HANDED)) &&
-			(univ.party[who_att].equip[i] == true))
+			univ.party[who_att].equip[i]) {
 			if (weap1 == 24)
 				weap1 = i;
 			else weap2 = i;
+		}
 	
 	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
 		- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
@@ -1005,38 +1006,38 @@ void do_combat_cast(location target)////
 				switch (spell_being_cast) {
 						
 					case 8: case 28: case 65: // web spells
-						place_spell_pattern(current_pat,target,1,false,current_pc);
+						place_spell_pattern(current_pat,target,1,current_pc);
 						break;
 					case 5: case 17: // fire wall spells
-						place_spell_pattern(current_pat,target,5,false,current_pc);
+						place_spell_pattern(current_pat,target,5,current_pc);
 						break;
 					case 15: case 66: // stink cloud
-						place_spell_pattern(current_pat,target,7,false,current_pc);
+						place_spell_pattern(current_pat,target,7,current_pc);
 						break;
 					case 25: case 44: case 126: // force walls
-						place_spell_pattern(current_pat,target,4,false,current_pc);
+						place_spell_pattern(current_pat,target,4,current_pc);
 						break;
 					case 37: case 64: // ice walls
-						place_spell_pattern(current_pat,target,8,false,current_pc);
+						place_spell_pattern(current_pat,target,8,current_pc);
 						break;
 					case 51: // antimagic
-						place_spell_pattern(current_pat,target,6,false,current_pc);
+						place_spell_pattern(current_pat,target,6,current_pc);
 						break;
 					case 19: case 67: // sleep clouds
-						place_spell_pattern(current_pat,target,12,false,current_pc);
+						place_spell_pattern(current_pat,target,12,current_pc);
 						break;
 					case 60:
 						make_quickfire(target.x,target.y);
 						break;
 					case 45: // spray fields
 						r1 = get_ran(1,0,14);
-						place_spell_pattern(current_pat,target,spray_type_array[r1],false,current_pc);
+						place_spell_pattern(current_pat,target,spray_type_array[r1],current_pc);
 						break;
 					case 159:  // wall of blades
-						place_spell_pattern(current_pat,target,9,false,current_pc);
+						place_spell_pattern(current_pat,target,9,current_pc);
 						break;
 					case 145: case 119: case 18: // wall dispelling
-						place_spell_pattern(current_pat,target,11,false,current_pc);
+						place_spell_pattern(current_pat,target,11,current_pc);
 						break;
 					case 42: // Fire barrier
 						play_sound(68);
@@ -1065,7 +1066,7 @@ void do_combat_cast(location target)////
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(rad2,target,130 + r1,true,current_pc);
+								place_spell_pattern(rad2,target,130 + r1,current_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1110,7 +1111,7 @@ void do_combat_cast(location target)////
 									r1 = (r1 * 14) / 10;
 								else if (r1 > 10) r1 = (r1 * 8) / 10;
 								if (r1 <= 0) r1 = 1;
-								place_spell_pattern(square,target,50 + r1,true,current_pc);
+								place_spell_pattern(square,target,50 + r1,current_pc);
 								ashes_loc = target;
 								break;
 							case 40:
@@ -1120,7 +1121,7 @@ void do_combat_cast(location target)////
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if (r1 > 20)
 									r1 = (r1 * 8) / 10;
-								place_spell_pattern(rad2,target,50 + r1,true,current_pc);
+								place_spell_pattern(rad2,target,50 + r1,current_pc);
 								ashes_loc = target;
 								break;
 							case 48:  // kill
@@ -1525,8 +1526,7 @@ void fire_missile(location target) {
 			//start_missile_anim();
 			//add_missile(target,2,1, 0, 0);
 			//do_missile_anim(100,pc_pos[missile_firer], 5);
-			place_spell_pattern(rad2,target,
-								50 + univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,true,missile_firer);
+			place_spell_pattern(rad2,target, 50 + univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
 			do_explosion_anim(5,0);
 			//end_missile_anim();
 			handle_marked_damage();
@@ -2143,17 +2143,17 @@ void do_monster_turn()
 			// Place fields for monsters that create them. Only done when monst sees foe
 			if ((target != 6) && (can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5)) { ////
 				if ((cur_monst->radiate_1 == 1) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,5,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,5,7);
 				if ((cur_monst->radiate_1 == 2) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,8,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,8,7);
 				if ((cur_monst->radiate_1 == 3) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,4,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,4,7);
 				if ((cur_monst->radiate_1 == 4) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,6,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,6,7);
 				if ((cur_monst->radiate_1 == 5) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,12,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,12,7);
 				if ((cur_monst->radiate_1 == 6) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,7,false,7);
+					place_spell_pattern(square,cur_monst->cur_loc,7,7);
 				if ((cur_monst->radiate_1 == 10) && (get_ran(1,1,100) < 5)){
 					if (summon_monster(cur_monst->radiate_2,
 									   cur_monst->cur_loc,130,cur_monst->attitude) == true)
@@ -2623,7 +2623,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		ASB("Creature breathes.");
 		run_a_missile(source,targ_space,0,0,44,
 					  0,0,100);
-		place_spell_pattern(rad2,targ_space,12,false,7);
+		place_spell_pattern(rad2,targ_space,12,7);
 	}
 	else if (level == 14) { // vapors
 		//play_sound(44);
@@ -3015,7 +3015,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 4: // flame cloud
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
-				place_spell_pattern(single,vict_loc,5,false,7);
+				place_spell_pattern(single,vict_loc,5,7);
 				break;
 			case 5: // flame
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3043,7 +3043,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 9: // scloud
 				run_a_missile(l,target,0,0,25,0,0,80);
-				place_spell_pattern(square,target,7,false,7);
+				place_spell_pattern(square,target,7,7);
 				break;
 			case 10: // summon beast
 				r1 = get_summon_monster(1);
@@ -3058,14 +3058,14 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 11: // conflagration
 				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(rad2,target,5,false,7);
+				place_spell_pattern(rad2,target,5,7);
 				break;
 			case 12: // fireball
 				r1 = 1 + (caster->level * 3) / 4;
 				if (r1 > 29) r1 = 29;
 				run_a_missile(l,target,2,1,11,0,0,80);
 				start_missile_anim();
-				place_spell_pattern(square,target,50 + r1,true,7);
+				place_spell_pattern(square,target,50 + r1,7);
 				ashes_loc = target;
 				break;
 			case 13: case 20: case 26:// summon
@@ -3100,7 +3100,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 14: // web
 				play_sound(25);
-				place_spell_pattern(rad2,target,1,false,7);
+				place_spell_pattern(rad2,target,1,7);
 				break;
 			case 15: // poison
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3145,7 +3145,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,50 + r1,true,7);
+				place_spell_pattern(rad2,target,50 + r1,7);
 				ashes_loc = target;
 				break;
 				
@@ -3154,7 +3154,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				
 			case 21: // shockstorm
 				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(rad2,target,4,false,7);
+				place_spell_pattern(rad2,target,4,7);
 				break;
 			case 22: // m. poison
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
@@ -3311,11 +3311,11 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				break;
 			case 4: // stumble
 				play_sound(24);
-				place_spell_pattern(single,vict_loc,1,false,7);
+				place_spell_pattern(single,vict_loc,1,7);
 				break;
 			case 1: case 5: // Blesses
 				play_sound(24);
-				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + (spell == 1) ? 3 : 5);
+				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + ((spell == 1) ? 3 : 5));
 				play_sound(4);
 				break;
 			case 6: // curse
@@ -3450,7 +3450,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				run_a_missile(l,target,2,0,11,0,0,80);
 				r1 = 2 + caster->level / 2 + 2;
 				start_missile_anim();
-				place_spell_pattern(square,target,50 + r1,true,7);
+				place_spell_pattern(square,target,50 + r1,7);
 				ashes_loc = target;
 				break;
 				
@@ -3486,7 +3486,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				r1 = (caster->level * 3) / 4 + 5;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,130 + r1,true,7 );
+				place_spell_pattern(rad2,target,130 + r1,7 );
 				ashes_loc = target;
 				break;
 		}
@@ -3608,10 +3608,10 @@ bool monst_near(short m_num,location where,short radius,short active)
 
 void fireball_space(location loc,short dam)
 {
-	place_spell_pattern(square,loc,50 + dam,false,7);
+	place_spell_pattern(square,loc,50 + dam,7);
 }
 
-void place_spell_pattern(effect_pat_type pat,location center,short type,bool prep_for_anim,short who_hit)
+void place_spell_pattern(effect_pat_type pat,location center,short type,short who_hit)
 //type;  // 0 - take codes in pattern, OW make all nonzero this type
 // Types  0 - Null  1 - web  2 - fire barrier  3 - force barrier  4 - force wall  5 - fire wall
 //   6 - anti-magic field  7 - stink cloud  8 - ice wall  9 - blade wall  10 - quickfire
@@ -3791,11 +3791,12 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,bool pre
 }
 void handle_item_spell(location loc,short num)
 {
-//	switch (num) {
-//		case 82: // Pyhrrus
-//			place_spell_pattern(rad2,loc,9,false,6);
-//			break;
-//	}
+	// TODO: This function is currently unused
+	switch (num) {
+		case 82: // Pyhrrus
+			place_spell_pattern(rad2,loc,9,6);
+			break;
+	}
 	
 }
 
@@ -4124,7 +4125,7 @@ bool combat_cast_mage_spell()
 		
 		
 		if (spell_forced == false)
-			spell_num = pick_spell(current_pc,0,2);
+			spell_num = pick_spell(current_pc,0);
 		else {
 			if (repeat_cast_ok(0) == false)
 				return false;
@@ -4320,7 +4321,7 @@ bool combat_cast_priest_spell()
 		return false;
 	}
 	if (spell_forced == false)
-		spell_num = pick_spell(current_pc,1,2);
+		spell_num = pick_spell(current_pc,1);
 	else {
 		if (repeat_cast_ok(1) == false)
 			return false;
@@ -4432,7 +4433,7 @@ bool combat_cast_priest_spell()
 					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
 					play_sound(24);
 					add_string_to_buf("  Protective field created.");
-					place_spell_pattern(protect_pat,pc_pos[current_pc],0,false,6);
+					place_spell_pattern(protect_pat,pc_pos[current_pc],0,6);
 					break;
 			}
 		}

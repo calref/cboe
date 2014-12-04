@@ -175,7 +175,7 @@ rectangle rect(location tl, location br){
 	return rectangle(tl,br);
 }
 
-rectangle rect(char top, char left, char bottom, char right){
+rectangle rect(int top, int left, int bottom, int right) {
 	return rectangle(top, left, bottom, right);
 }
 

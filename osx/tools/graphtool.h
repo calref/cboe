@@ -124,6 +124,7 @@ void undo_clip(sf::RenderTarget& where);
 
 // This probably doesn't quite fit here, but it fits worse pretty much everywhere else in the common sources
 short can_see(location p1,location p2,std::function<short(short,short)> get_obscurity);
+std::string get_str(std::string list, short j);
 
 #ifndef GRAPHTOOL_CPP
 extern m_pic_index_t m_pic_index[200];

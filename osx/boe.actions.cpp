@@ -351,7 +351,7 @@ bool handle_action(sf::Event event)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
-						main_button_click(overall_mode,bottom_buttons[i]);
+						main_button_click(bottom_buttons[i]);
 				}
 			break;
 			
@@ -363,7 +363,7 @@ bool handle_action(sf::Event event)
 				if(the_point.in(town_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
-						main_button_click(overall_mode,town_buttons[i]);
+						main_button_click(town_buttons[i]);
 				}
 			break;
 			
@@ -376,7 +376,7 @@ bool handle_action(sf::Event event)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
-						main_button_click(overall_mode,combat_buttons[i]);
+						main_button_click(combat_buttons[i]);
 				}
 			break;
 		default:
@@ -395,7 +395,7 @@ bool handle_action(sf::Event event)
 					need_redraw = true;
 				}
 				if (overall_mode == MODE_OUTDOORS) {
-					cast_spell(button_hit,0);
+					cast_spell(button_hit);
 					spell_forced = false;
 					need_reprint = true;
 					need_redraw = true;
@@ -403,7 +403,7 @@ bool handle_action(sf::Event event)
 				else if (overall_mode == MODE_TOWN) {
 					for (i = 0; i < 6; i++)
 						store_sp[i] = univ.party[i].cur_sp;
-					cast_spell(button_hit,1);
+					cast_spell(button_hit);
 					spell_forced = false;
 					need_reprint = true;
 					need_redraw = true;
@@ -684,7 +684,7 @@ bool handle_action(sf::Event event)
 		
 		destination = cur_loc;
 		
-		if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT))
+		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 			if ((i == 4) & (j == 4)) { // Pausing
 				if (overall_mode == MODE_COMBAT) {
 					char_stand_ready();
@@ -812,6 +812,7 @@ bool handle_action(sf::Event event)
 				
 			}
 		// MARK: End: Moving
+		}
 		
 		// MARK: Begin: Looking at something
 		if ((overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
@@ -841,7 +842,7 @@ bool handle_action(sf::Event event)
 							if (destination == univ.town->sign_locs[k]) {
 								need_reprint = true;
 								if (adjacent(univ.town->sign_locs[k],univ.town.p_loc)==true)
-									do_sign(univ.town.num,k,(short) ter_looked_at,destination);
+									do_sign(univ.town.num,k,ter_looked_at);
 								else add_string_to_buf("  Too far away to read sign.      ");
 							}
 							k++;
@@ -855,7 +856,7 @@ bool handle_action(sf::Event event)
 							if (loc_in_sec == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k]) {
 								need_reprint = true;
 								if (adjacent(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k],univ.party.loc_in_sec)==true)
-									do_sign((short) (200 + get_outdoor_num()),k,(short) ter_looked_at,destination);
+									do_sign((short) (200 + get_outdoor_num()),k,(short) ter_looked_at);
 								else add_string_to_buf("  Too far away to read sign.      ");
 							}
 							k++;
@@ -1588,8 +1589,8 @@ bool handle_keystroke(sf::Event& event){
 		for (i = 0; i < 9; i++)
 			if (chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
-				pass_point.x = talk_words[i].rect.left + 9 + ul.x;
-				pass_point.y = talk_words[i].rect.top + 9 + ul.y;
+				pass_point.x = talk_words[j].rect.left + 9 + ul.x;
+				pass_point.y = talk_words[j].rect.top + 9 + ul.y;
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -1909,13 +1910,13 @@ bool handle_keystroke(sf::Event& event){
 		case 'S': // TODO: Create a dedicated dialog for this.
 			if (!in_scen_debug) break;
 			cStrDlog("Enter Stuff Done Flag Part A (between 1 and 299)","","Which SDFa ?",130,PIC_DLOG).show();
-            i = atoi(get_text_response(873,0).c_str());
+            i = atoi(get_text_response().c_str());
             if(i > 0 && i < 300){
 				cStrDlog("Enter Stuff Done Flag Part B (between 0 and 49)","","Which SDFb ?",130,PIC_DLOG).show();
-				j = atoi(get_text_response(873,0).c_str());
+				j = atoi(get_text_response().c_str());
 				if(j >= 0 && j < 50){
 					cStrDlog("Enter Stuff Done Flag Value (up to 255)","","Which value ?",130,PIC_DLOG).show();
-					int x = atoi(get_text_response(873,0).c_str());
+					int x = atoi(get_text_response().c_str());
 					if(x < 256 && x >= 0)
 						PSD[i][j] = x;
 					else if(x == -1){
@@ -1927,12 +1928,9 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'T':
-			// TODO: Create a dedicated dialog for this?
 			if(!in_scen_debug) break;
 			short find_direction_from;
-			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
-           	cStrDlog(sout.str(),"","Which Town ?",130,PIC_DLOG).show();
-            i = atoi(get_text_response(873,0).c_str());
+            i = atoi(get_text_response(sout.str(), 130).c_str());
             if(i >= 0 && i < scenario.num_towns ){
             	if (univ.party.direction == 0) find_direction_from = 2;
 				else if (univ.party.direction == 4) find_direction_from = 0;
@@ -2531,7 +2529,7 @@ void start_new_game()
 	else init_party(0);
 	
 	//while (creation_done == false) {
-	edit_party(1,0);
+	edit_party();
 	/*	if ((i > 0) || (in_startup_mode == false))
 			creation_done = true;
 		if ((i == 0) && (in_startup_mode == false))

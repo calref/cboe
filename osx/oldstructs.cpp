@@ -19,6 +19,7 @@ using namespace legacy;
 		<< offsetof(what,member) << std::endl
 
 // This is just a function to output all known information about each struct and its members.
+void debug_oldstructs(); // Suppress "no prototype" warning
 void debug_oldstructs() {
 	char cwd[256];
 	getcwd(cwd, 256);

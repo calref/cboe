@@ -23,7 +23,7 @@ void put_spec_item_info (short which_i);
 //void display_strings_with_nums(short a1,short a2, short b1, short b2,	char *title,short sound_num,short graphic_num,short graphic_type,short parent_num);
 
 // These are defined in pc.editors.cpp since they are also used by the character editor
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent);
+void pick_race_abil(cPlayer *pc,short mode);
 void display_pc(short pc_num,short mode,cDialog* parent_num);
 void display_alchemy(bool allowEdit);
 

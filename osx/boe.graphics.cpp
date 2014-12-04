@@ -474,7 +474,7 @@ void draw_start_button(short which_position,short which_button)
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
-void main_button_click(short mode,RECT button_rect)
+void main_button_click(RECT button_rect)
 {
 	button_rect.offset(ul);
 	mainPtr.setActive();
@@ -699,7 +699,7 @@ void draw_text_bar(short mode)
 		remember_tiny_text = 500;
 	if (is_out()) {
 		for (i = 0; i < 8; i++)
-			if (loc.in(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].info_rect[i]))
+			if(loc.in(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].info_rect[i])) {
 				if ((remember_tiny_text == i) && (mode == 0))
 					return;
 				else {
@@ -707,6 +707,7 @@ void draw_text_bar(short mode)
 					remember_tiny_text = i;
 					return;
 				}
+			} // TODO: I'm pretty sure this brace location is correct, but must verify it
 		if (remember_tiny_text != 50 + univ.party.i_w_c.x + univ.party.i_w_c.y) {
 			put_text_bar((char *) univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(0));
 			remember_tiny_text = 50 + univ.party.i_w_c.x + univ.party.i_w_c.y;
@@ -714,7 +715,7 @@ void draw_text_bar(short mode)
 	}
 	if (is_town()) {
 		for (i = 0; i < 16; i++)
-			if (loc.in(univ.town->room_rect(i)))
+			if(loc.in(univ.town->room_rect(i))) {
 				if ((remember_tiny_text == 200 + i) && (mode == 0))
 					return;
 				else {
@@ -722,6 +723,7 @@ void draw_text_bar(short mode)
 					remember_tiny_text = 200 + i;
 					return;
 				}
+			} // TODO: I'm pretty sure this brace location is correct, but must verify it
 		if (remember_tiny_text != 250) {
 			put_text_bar((char *) univ.town->town_name); ////
 			remember_tiny_text = 250;
@@ -1026,7 +1028,7 @@ void draw_terrain(short	mode)
 	
 	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center) == true))
 		|| (overall_mode == MODE_RESTING))
-		draw_party_symbol(mode,center);
+		draw_party_symbol(center);
 	else if (overall_mode != MODE_LOOK_TOWN)
 		draw_pcs(center,0);
 	
@@ -1300,7 +1302,7 @@ bool extend_road_terrain(ter_num_t ter)
 	return false;
 }
 
-bool can_build_roads_on(ter_num_t ter) {
+static bool can_build_roads_on(ter_num_t ter) {
 	if(impassable(ter)) return false;
 	if(scenario.ter_types[ter].special == TER_SPEC_BRIDGE) return false;
 	return true;

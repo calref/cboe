@@ -4,7 +4,7 @@ void play_see_monster_str(unsigned short m);
 void draw_pcs(location center,short mode);
 void draw_outd_boats(location center);
 void draw_town_boat(location center) ;
-void draw_party_symbol(short mode,location center);
+void draw_party_symbol(location center);
 RECT get_monster_rect (pic_num_t type_wanted,short mode) ;
 RECT get_monster_template_rect (pic_num_t type_wanted,short mode,short which_part) ;
 RECT get_item_template_rect (short type_wanted);

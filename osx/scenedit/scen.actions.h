@@ -47,7 +47,6 @@ void set_up_start_screen();
 void set_up_main_screen();
 void start_town_edit();
 void start_out_edit();
-void shut_down_menus(short mode);
 void start_terrain_editing();
 void start_monster_editing(short just_redo_text);
 void start_item_editing(short just_redo_text);
@@ -62,7 +61,6 @@ bool monst_on_space(location loc,short m_num);
 void place_edit_special(location loc);
 void set_special(location spot_hit);
 bool save_check(std::string which_dlog);
-void update_item_menu();
 
 ter_num_t get_ground_from_ter(ter_num_t ter);
 bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);

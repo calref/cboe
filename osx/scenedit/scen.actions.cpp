@@ -11,6 +11,7 @@
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
 #include "scen.townout.h"
+#include "scen.menus.h"
 #include "mathutil.h"
 #include "fileio.h"
 //#include "scen.locutils.h"
@@ -115,7 +116,6 @@ ter_num_t current_ground = 0;
 
 short special_to_paste = -1;
 
-extern std::string get_str(std::string list, short j);
 bool monst_on_space(location loc,short m_num);
 
 void init_current_terrain() {
@@ -144,7 +144,7 @@ void init_screen_locs() {
 	}
 }
 
-bool handle_action(location the_point,sf::Event event) {
+bool handle_action(location the_point,sf::Event /*event*/) {
 	using kb = sf::Keyboard;
 	short i,j, x;
 	bool are_done = false;
@@ -156,7 +156,6 @@ bool handle_action(location the_point,sf::Event event) {
 	short right_top,right_hit;
 	eScenMode old_mode;
 	RECT temp_rect;
-	unsigned long dummy;
 	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
 	//GlobalToLocal(&the_point);
 	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
@@ -326,7 +325,7 @@ bool handle_action(location the_point,sf::Event event) {
 						if (option_hit == true) {
 							scenario.scen_specials[j] = null_spec_node;
 						} 
-						else edit_spec_enc(j,0,0);
+						else edit_spec_enc(j,0);
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,4000 + j,(char *) str,0);
@@ -336,7 +335,7 @@ bool handle_action(location the_point,sf::Event event) {
 						if (option_hit == true) {
 							current_terrain.specials[j] = null_spec_node;
 						} 
-						else edit_spec_enc(j,1,0);
+						else edit_spec_enc(j,1);
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,5000 + j,(char *) str,0);
@@ -346,7 +345,7 @@ bool handle_action(location the_point,sf::Event event) {
 						if (option_hit == true) {
 							town->specials[j] = null_spec_node;
 						} 
-						else edit_spec_enc(j,2,0);
+						else edit_spec_enc(j,2);
 						//get_str(s2,22,town.specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,6000 + j,(char *) str,0);
@@ -890,6 +889,14 @@ bool handle_action(location the_point,sf::Event event) {
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
+			case MODE_SET_TOWN_START: // TODO: Implement this
+				break;
+			case MODE_PLACE_STONE_BLOCK: // TODO: Implement this
+				break;
+			case MODE_INTRO_SCREEN:
+			case MODE_EDIT_TYPES:
+			case MODE_MAIN_SCREEN:
+				break; // Nothing to do here, of course.
 		}
 		if ((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
 			set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
@@ -1244,8 +1251,7 @@ bool handle_action(location the_point,sf::Event event) {
 }
 
 
-void flash_rect(RECT to_flash) {
-	unsigned long dummy;
+void flash_rect(RECT /*to_flash*/) {
 	// TODO: Determine a good way to do this
 //	InvertRect (&to_flash);
 	play_sound(37);
@@ -1771,7 +1777,7 @@ void unfrill_terrain() {
 	draw_terrain();
 }
 
-ter_num_t find_object_part(unsigned char num, unsigned char x, unsigned char y, ter_num_t fallback){
+static ter_num_t find_object_part(unsigned char num, unsigned char x, unsigned char y, ter_num_t fallback){
 	for(int i = 0; i < 256; i++){
 		if(scenario.ter_types[i].obj_num == num &&
 		   scenario.ter_types[i].obj_pos.x == x &&
@@ -2910,7 +2916,7 @@ void place_edit_special(location loc) {
 	if (editing_town == true) {
 		for (i = 0; i < 50; i++)
 			if ((town->special_locs[i].x == loc.x) && (town->special_locs[i].y == loc.y)) {
-				edit_spec_enc(town->spec_id[i],2,0);
+				edit_spec_enc(town->spec_id[i],2);
 				i = 500;
 			}
 		if (i < 500) { // new special
@@ -2923,7 +2929,7 @@ void place_edit_special(location loc) {
 				if (town->special_locs[i].x == 100) {
 					town->special_locs[i] = loc;
 					town->spec_id[i] = spec;
-					edit_spec_enc(spec,2,0);
+					edit_spec_enc(spec,2);
 					
 					if (town->specials[spec].pic < 0)
 						town->special_locs[i].x = 100;
@@ -2943,7 +2949,7 @@ void place_edit_special(location loc) {
 		}
 		for (i = 0; i < 18; i++)
 			if ((current_terrain.special_locs[i].x == loc.x) && (current_terrain.special_locs[i].y == loc.y)) {
-				edit_spec_enc(current_terrain.special_id[i],1,0);
+				edit_spec_enc(current_terrain.special_id[i],1);
 				i = 500;
 			}
 		if (i < 500) { // new special
@@ -2956,7 +2962,7 @@ void place_edit_special(location loc) {
 				if (current_terrain.special_locs[i].x == 100) {
 					current_terrain.special_locs[i] = loc;
 					current_terrain.special_id[i] = spec;
-					edit_spec_enc(spec,1,0);
+					edit_spec_enc(spec,1);
 					
 					if (current_terrain.specials[spec].pic < 0)
 						current_terrain.special_locs[i].x = 100;

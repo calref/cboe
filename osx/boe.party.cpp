@@ -149,7 +149,7 @@ extern sf::Texture pc_gworld;
 char c_line[60];
 
 // Variables for spell selection
-short store_situation,store_last_target_darkened,on_which_spell_page = 0;
+short on_which_spell_page = 0;
 short store_last_cast_mage = 6,store_last_cast_priest = 6;
 short buttons_on[38] = {1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0};
 // buttons_on determines which buttons can be hit when on the second spell page
@@ -159,9 +159,6 @@ short spell_index[38] = {38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,9
 bool can_choose_caster;
 
 // Dialog vars
-short store_mage_store ;
-short store_priest_store ;
-short store_store_target;
 short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
@@ -542,7 +539,7 @@ bool create_pc(short spot,cDialog* parent)
 	
 	univ.party[spot] = cPlayer();
 	
-	pick_race_abil(&univ.party[spot],0,parent);
+	pick_race_abil(&univ.party[spot],0);
 	
 	// TODO: Not sure if these initial draws are needed
 //	if (parent != NULL)
@@ -1010,9 +1007,8 @@ bool is_weapon(short pc_num,short item)
 	
 }
 
-void cast_spell(short type,short situation)
+void cast_spell(short type)
 //short type; // 0 - mage  1 - priest
-//short situation; // 0 - out  1 - town
 {
 	short spell;
 	
@@ -1022,7 +1018,7 @@ void cast_spell(short type,short situation)
 	}
 	
 	if (spell_forced == false)
-		spell = pick_spell(6, type, situation);
+		spell = pick_spell(6, type);
 	else {
 		if (repeat_cast_ok(type) == false)
 			return;
@@ -1576,12 +1572,13 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					sprintf ((char *) c_line,"  Your items glow.     ");
 				}
 				
-				if (!PSD[SDF_RESURRECT_NO_BALM] && ((spell_num == 40) || (spell_num == 56)))
+				if(!PSD[SDF_RESURRECT_NO_BALM] && (spell_num == 40 || spell_num == 56)) {
 					if ((item = pc_has_abil(pc_num,160)) == 24) {
 						add_string_to_buf("  Need resurrection balm.        ");
 						spell_num = 500;
 					}
 					else take_item(pc_num,item);
+				}
 				if (spell_num == 40) {
 					if(univ.party[target].main_status == eMainStatus::DEAD)
 						if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
@@ -1714,7 +1711,7 @@ void cast_town_spell(location where) ////
 			
 		case 119: case 145: case 18:
 			add_string_to_buf("  You attempt to dispel.              ");
-			place_spell_pattern(current_pat,where,11,false,7);
+			place_spell_pattern(current_pat,where,11,7);
 			break;
 		case 116: // Move M.
 			add_string_to_buf("  You blast the area.              ");
@@ -1982,8 +1979,7 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 
 // MARK: Begin spellcasting dialog
 
-static void draw_caster_buttons(cDialog& me)
-{
+static void draw_caster_buttons(cDialog& me, const short store_situation) {
 	short i;
 	
 	for(i = 0; i < 6; i++) {
@@ -2007,8 +2003,7 @@ static void draw_caster_buttons(cDialog& me)
 	}
 }
 
-static void draw_spell_info(cDialog& me)
-{
+static void draw_spell_info(cDialog& me, const short store_situation) {
 	
 	
 	if (((store_situation == 0) && (store_mage == 70)) ||
@@ -2086,8 +2081,8 @@ static void put_pc_caster_buttons(cDialog& me)
 		}
 	}
 }
-static void put_pc_target_buttons(cDialog& me)
-{
+
+static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened) {
 	
 	if (store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
@@ -2103,8 +2098,7 @@ static void put_pc_target_buttons(cDialog& me)
 }
 
 // TODO: This stuff may be better handled by using an LED group with a custom focus handler
-static void put_spell_led_buttons(cDialog& me)
-{
+static void put_spell_led_buttons(cDialog& me, const short store_situation) {
 	short i,spell_for_this_button;
 	
 	for (i = 0; i < 38; i++) {
@@ -2127,8 +2121,7 @@ static void put_spell_led_buttons(cDialog& me)
 	}
 }
 
-static void put_spell_list(cDialog& me)
-{
+static void put_spell_list(cDialog& me, const short store_situation) {
 	
 	short i;
 	char add_text[256];
@@ -2178,21 +2171,20 @@ static void put_spell_list(cDialog& me)
 }
 
 
-static void put_pick_spell_graphics(cDialog& me)
-{
+static void put_pick_spell_graphics(cDialog& me, const short store_situation, short& last_darkened) {
 	short i;
 	
 	
-	put_spell_list(me);
+	put_spell_list(me, store_situation);
 	put_pc_caster_buttons(me);
-	put_pc_target_buttons(me);
-	put_spell_led_buttons(me);
+	put_pc_target_buttons(me, last_darkened);
+	put_spell_led_buttons(me, store_situation);
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			draw_pc_effects(10 + i); // TODO: This line might mean that the "kludge" from the old code is already handled here; verify?
 }
 
-static bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_caster(cDialog& me, std::string id, const short store_situation, short& last_darkened) {
 	short item_hit = id[id.length() - 1] - '1';
 	// TODO: This visibility check is probably not needed; wouldn't the dialog framework only trigger on visible elements?
 	if(me[id].isVisible()) {
@@ -2204,16 +2196,16 @@ static bool pick_spell_caster(cDialog& me, std::string id, eKeyMod mods) {
 			else store_priest = 70;
 			store_spell_target = 6;
 		}
-		draw_spell_info(me);
+		draw_spell_info(me, store_situation);
 		draw_spell_pc_info(me);
-		put_spell_led_buttons(me);
+		put_spell_led_buttons(me, store_situation);
 		put_pc_caster_buttons(me);
-		put_pc_target_buttons(me);
+		put_pc_target_buttons(me, last_darkened);
 	}
 	return true;
 }
 
-static bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_target(cDialog& me, std::string id, const short store_situation, short& last_darkened) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on him/her.";
 	static const char*const got_target = " Target selected.";
@@ -2227,34 +2219,25 @@ static bool pick_spell_target(cDialog& me, std::string id, eKeyMod mods) {
 	} else {
 		me["feedback"].setText(got_target);
 		store_spell_target = item_hit;
-		draw_spell_info(me);
-		put_pc_target_buttons(me);
+		draw_spell_info(me, store_situation);
+		put_pc_target_buttons(me, last_darkened);
 	}
 	return true;
 }
 
-void finish_pick_spell(cDialog& me, bool spell_toast);
-
-static bool pick_spell_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
-	bool spell_toast = false,dialog_done = false;
-	if(item_hit == "cancel") {
-		spell_toast = true;
-		dialog_done = true;
-	} else if(item_hit == "cast") {
-		dialog_done = true;
-	} else if(item_hit == "other") {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const short store_situation) {
+	if(item_hit == "other") {
 		on_which_spell_page = 1 - on_which_spell_page;
-		put_spell_list(me);
-		put_spell_led_buttons(me);
+		put_spell_list(me, store_situation);
+		put_spell_led_buttons(me, store_situation);
 	} else if(item_hit == "help") {
 		univ.party.help_received[7] = 0;
 		give_help(207,8,me);
 	}
-	if(dialog_done) finish_pick_spell(me, spell_toast);
 	return true;
 }
 
-static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
+static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, const short store_situation, short& last_darkened) {
 	static const char*const choose_target = " Now pick a target.";
 	static const char*const bad_spell = " Spell not available.";
 	short item_hit = boost::lexical_cast<short>(id.substr(5)) - 1;
@@ -2269,34 +2252,34 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods) {
 		if (store_situation == 0)
 			store_mage = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
 		else store_priest = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
-		draw_spell_info(me);
-		put_spell_led_buttons(me);
+		draw_spell_info(me, store_situation);
+		put_spell_led_buttons(me, store_situation);
 		
 		if (store_spell_target < 6) {
 			std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
 			if(!me[targ].isVisible()) {
 				store_spell_target = 6;
-				draw_spell_info(me);
-				put_pc_target_buttons(me);
+				draw_spell_info(me, store_situation);
+				put_pc_target_buttons(me, last_darkened);
 			}
 		}
 		// Cute trick now... if a target is needed, caster can always be picked
 		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
 		if ((store_spell_target == 6) && me[targ].isVisible()) {
 			me["feedback"].setText(choose_target);
-			draw_spell_info(me);
+			draw_spell_info(me, store_situation);
 			play_sound(45); // formerly force_play_sound
 		}
 		else if(!me[targ].isVisible()) {
 			store_spell_target = 6;
-			put_pc_target_buttons(me);
+			put_pc_target_buttons(me, last_darkened);
 		}
 		
 	}
 	return true;
 }
 
-void finish_pick_spell(cDialog& me, bool spell_toast) {
+static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_store_target, const short store_mage_store, const short store_priest_store, const short store_situation) {
 	if (spell_toast == true) {
 		store_mage = store_mage_store;
 		store_priest = store_priest_store;
@@ -2306,7 +2289,7 @@ void finish_pick_spell(cDialog& me, bool spell_toast) {
 		else store_last_cast_priest = pc_casting;
 		me.toast();
 		me.setResult<short>(70);
-		return;
+		return true;
 	}
 	
 	if (((store_situation == 0) && (store_mage == 70)) ||
@@ -2317,21 +2300,21 @@ void finish_pick_spell(cDialog& me, bool spell_toast) {
 		store_spell_target = store_store_target ;
 		me.toast();
 		me.setResult<short>(70);
-		return;
+		return true;
 	}
 	if ((store_situation == 0) && (mage_need_select[store_mage] == 0)) {
 		store_last_cast_mage = pc_casting;
 		pc_last_cast[store_situation][pc_casting] = store_mage;
 		me.toast();
 		me.setResult<short>(store_mage);
-		return;
+		return true;
 	}
 	if ((store_situation == 1) && (priest_need_select[store_priest] == 0)) {
 		store_last_cast_priest = pc_casting;
 		pc_last_cast[store_situation][pc_casting] = store_priest;
 		me.toast();
 		me.setResult<short>(store_priest);
-		return;
+		return true;
 	}
 	if (store_spell_target == 6) {
 		add_string_to_buf("Cast: Need to select target.");
@@ -2341,7 +2324,7 @@ void finish_pick_spell(cDialog& me, bool spell_toast) {
 		me.toast();
 		give_help(39,0,me);
 		me.setResult<short>(70);
-		return;
+		return true;
 	}
 	me.setResult<short>((store_situation == 0) ? store_mage : store_priest);
 	if (store_situation == 0)
@@ -2349,18 +2332,20 @@ void finish_pick_spell(cDialog& me, bool spell_toast) {
 	else store_last_cast_priest = pc_casting;
 	pc_last_cast[store_situation][pc_casting] = ((store_situation == 0) ? store_mage : store_priest);
 	me.toast();
+	return true;
 }
 
-short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW spell num
+short pick_spell(short pc_num,short type)  // 70 - no spell OW spell num
 //short pc_num; // if 6, anyone
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
 {
-	store_mage_store = store_mage;
-	store_priest_store = store_priest;
-	store_store_target = store_spell_target;
-	store_situation = type;
-	store_last_target_darkened = 6;
+	using namespace std::placeholders;
+	short former_mage = store_mage;
+	short former_priest = store_priest;
+	short former_target = store_spell_target;
+//	store_situation = type;
+	short dark = 6;
 	can_choose_caster = (pc_num < 6) ? false : true;
 	
 	pc_casting = (type == 0) ? store_last_cast_mage : store_last_cast_priest;
@@ -2440,9 +2425,11 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 	
 	cDialog castSpell("cast-spell.xml");
 	
-	castSpell.attachClickHandlers(pick_spell_caster, {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(pick_spell_target, {"target1","target2","target3","target4","target5","target6"});
-	castSpell.attachClickHandlers(pick_spell_event_filter, {"cancel", "cast", "other", "help"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type), {"other", "help"});
+	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, former_mage, former_priest, type));
+	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, former_mage, former_priest, type));
 	
 	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + type,PIC_DLOG);
 	for(int i = 0; i < 38; i++) {
@@ -2453,15 +2440,15 @@ short pick_spell(short pc_num,short type,short situation)  // 70 - no spell OW s
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
 		led.setState((pc_can_cast_spell(pc_casting,type, (on_which_spell_page == 0) ? i : spell_index[i]))
 					 ? led_red : led_green);
-		led.attachClickHandler(pick_spell_select_led);
+		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, dark));
 	}
 	
-	put_spell_list(castSpell);
-	draw_spell_info(castSpell);
+	put_spell_list(castSpell, type);
+	draw_spell_info(castSpell, type);
 	put_pc_caster_buttons(castSpell);
 	draw_spell_pc_info(castSpell);
-	draw_caster_buttons(castSpell);
-	put_spell_led_buttons(castSpell);
+	draw_caster_buttons(castSpell, type);
+	put_spell_led_buttons(castSpell, type);
 	
 	if (univ.party.help_received[7] == 0) {
 		// TODO: Not sure if this initial draw is needed
@@ -2614,8 +2601,7 @@ void do_alchemy() ////
 	
 }
 
-static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "help") {
 		univ.party.help_received[20] = 0;
 		give_help(20,21,me);
@@ -2692,8 +2678,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 	return choice != 36;
 }
 
-static bool pc_name_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short store_train_pc)
-{
+static bool pc_name_event_filter(cDialog& me, short store_train_pc) {
 	std::string pcName = me["name"].getText();
 	
 	if(!isalpha(pcName[0])) {
@@ -2716,7 +2701,7 @@ bool pick_pc_name(short pc_num,cDialog* parent)
 	
 	cDialog pcPickName("pick-pc-name.xml", parent);
 	pcPickName["name"].setText(univ.party[pc_num].name);
-	pcPickName["okay"].attachClickHandler(std::bind(pc_name_event_filter, _1, _2, _3, pc_num));
+	pcPickName["okay"].attachClickHandler(std::bind(pc_name_event_filter, _1, pc_num));
 	
 	pcPickName.run();
 	

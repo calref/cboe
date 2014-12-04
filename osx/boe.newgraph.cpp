@@ -556,7 +556,7 @@ short get_missile_direction(location origin_point,location the_point)
 	return dir;
 }
 
-void do_explosion_anim(short sound_num,short special_draw)
+void do_explosion_anim(short /*sound_num*/,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 {
@@ -943,7 +943,7 @@ void refresh_shopping()
 	}
 }
 
-void place_talk_face() {
+static void place_talk_face() {
 	RECT face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
 	face_rect.offset(ul);
@@ -1075,8 +1075,8 @@ void get_item_interesting_string(cItemRec item,char *message)
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS:
-			sprintf(message,"Blocks %d-%d damage.",item.item_level + (item.protection > 0) ? 1 : 0,
+		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
+			sprintf(message,"Blocks %d-%d damage.",item.item_level + ((item.protection > 0) ? 1 : 0),
 					item.item_level + item.protection);
 			break;
 		case eItemType::BOW:
@@ -1201,7 +1201,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	std::vector<hilite_t> hilites;
 	std::vector<int> nodes;
 	int wordStart = 0, wordEnd = 0;
-	bool inClickable = false;
 	for(size_t i = 0; i < str.length(); i++) {
 		char c = str[i];
 		if(isalpha(c) || c == '-' || c == '\'') {

@@ -22,7 +22,7 @@
 
 extern sf::Texture bg_gworld;
 
-void cButton::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
+void cButton::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 
@@ -30,7 +30,7 @@ void cButton::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
 }
 
-bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	if(onClick) return onClick(me,id,mods);
 	return false;
 }
@@ -95,7 +95,7 @@ short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
 	else throw xUnsupportedProp(prop);
 }
 
-void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cButton::setColour(sf::Color) throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
 }
 
@@ -208,7 +208,7 @@ bool cLed::triggerFocusHandler(cDialog& me, std::string id, bool losing){
 	return true;
 }
 
-bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	bool result;
 	eLedState oldState = state;
 	if(onClick != NULL) result = onClick(me,id,mods);
@@ -337,11 +337,11 @@ bool cLedGroup::handleClick(location where) {
 	return true;
 }
 
-bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	std::string which_clicked = clicking;
 	clicking = "";
 	
-	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods,where)){
+	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods)){
 		eLedState a, b;
 		if(curSelect.empty()) a = led_off;
 		else {
@@ -372,11 +372,11 @@ bool cLedGroup::triggerFocusHandler(cDialog& me, std::string id, bool losingFocu
 	return true;
 }
 
-void cLedGroup::disable(std::string id) {
+void cLedGroup::disable(std::string /*id*/) {
 	// TODO: Implement this
 }
 
-void cLedGroup::enable(std::string id) {
+void cLedGroup::enable(std::string /*id*/) {
 	// TODO: Implement this
 }
 
@@ -388,7 +388,7 @@ void cLedGroup::hide(std::string id){
 	choices[id]->hide();
 }
 
-void cLedGroup::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+void cLedGroup::setFormat(eFormat prop, short) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 
@@ -396,7 +396,7 @@ short cLedGroup::getFormat(eFormat prop) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 
-void cLedGroup::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cLedGroup::setColour(sf::Color) throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
 }
 

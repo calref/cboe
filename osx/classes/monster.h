@@ -97,7 +97,7 @@ public:
 	struct cAttack{
 		unsigned char dice, sides, type;
 		// TODO: Remove the need for these operators by changing the code that uses them
-		operator int();
+		operator int() const;
 		cAttack& operator=(int n);
 	};
 	struct cAbility{
@@ -189,5 +189,5 @@ std::ostream& operator << (std::ostream& out, eRace& e);
 std::istream& operator >> (std::istream& in, eRace& e);
 std::ostream& operator << (std::ostream& out, eMonstAbil& e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
-std::ostream& operator<<(std::ostream& out, cMonster::cAttack& att);
+std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

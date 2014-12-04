@@ -542,13 +542,10 @@ void draw_fields(location where){
 		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,where_draw,1,0);
 }
 
-void draw_party_symbol(short mode,location center)
-// mode currently unused
-{
+void draw_party_symbol(location center) {
 	RECT source_rect;
 	location target(4,4);
 	short i = 0;
-	short dir_array[8] = {0,3,3,3,2,1,1,1};
 	
 	if (can_draw_pcs == false)
 		return;

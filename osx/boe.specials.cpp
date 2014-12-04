@@ -97,7 +97,7 @@ short abil_chart[200] = {
 
 
 
-bool town_specials(short which,short t_num)
+bool town_specials(short which,short /*t_num*/)
 //short which; // number, 0 - 49, of special
 {
 	bool can_enter = true;
@@ -117,7 +117,7 @@ bool town_specials(short which,short t_num)
 	return can_enter;
 }
 
-bool handle_wandering_specials (short which,short mode)
+bool handle_wandering_specials (short /*which*/,short mode)
 // which is unused
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
 // wanderin spec 99 -> generic spec
@@ -402,6 +402,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 								break;
 							case eStatus::ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
 								acid_pc(i,ter_flag1.u);
+								break;
+							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
 						}
 						if(mode == 2) break; // only damage once in combat!
@@ -1299,8 +1301,7 @@ bool adj_town_look(location where)
 }
 
 // PSOE - place_special_outdoor_encounter
-void PSOE(short str1a,short str1b,short str2a,short str2b,
-		  short which_special,unsigned char *stuff_done_val,short where_put)
+void PSOE(short which_special,unsigned char *stuff_done_val,short where_put)
 // if always, stuff_done_val is NULL
 {
 	short i,j,graphic_num = 0;
@@ -2187,8 +2188,9 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
  }
  */
 
+// TODO: What was next_spec_type for? Is it still needed?
 void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
+				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = true,set_sd = true;
 	std::array<std::string, 6> strs;
@@ -2367,8 +2369,9 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	
 }
 
+// TODO: What was next_spec_type for? Is it still needed?
 void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
+				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = true;
 	short i,pc = 6,r1;
@@ -2602,8 +2605,9 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+// TODO: What was next_spec_type for? Is it still needed?
 void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
+				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = false;
 	std::string str1, str2, str3;
@@ -2668,7 +2672,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == spec.ex2a
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 					&& (l == univ.town.items[i].item_loc))
 					*next_spec = spec.ex2b;
 			break;
@@ -2680,7 +2684,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
-						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
+						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
 							&& (univ.party[i].equip[j] == true))
 							*next_spec = spec.ex1b;
 			break;
@@ -2701,7 +2705,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == spec.ex2a
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 					&& (l == univ.town.items[i].item_loc)) {
 					*next_spec = spec.ex2b;
 					*redraw = 1;
@@ -2716,7 +2720,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
-						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == spec.ex1a
+						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
 							&& (univ.party[i].equip[j] == true)) {
 							*next_spec = spec.ex1b;
 							*redraw = 1;
@@ -2759,7 +2763,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_IF_TEXT_RESPONSE: // text response
 			check_mess = false;
-			str3 = get_text_response(873,0);
+			str3 = get_text_response();
 			j = 1; k = 1;
 			spec.pic = minmax(0,8,spec.pic);
 			get_strs(str1,str2,0,spec.ex1a,spec.ex2a);
@@ -2786,8 +2790,9 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+// TODO: What was next_spec_type for? Is it still needed?
 void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-				   short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
+				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	static const char*const stairDlogs[8] = {
 		"basic-stair-up.xml", "basic-stair-down.xml",
@@ -3130,8 +3135,9 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+// TODO: What was next_spec_type for? Is it still needed?
 void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-			   short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
+			   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = true;
 	short i,j,k;
 	cSpecial spec;
@@ -3277,8 +3283,9 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+// TODO: What was next_spec_type for? Is it still needed?
 void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw){
+				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = false;
 	std::string str1, str2;
 	cSpecial spec;

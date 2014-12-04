@@ -11,6 +11,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
+// The proper way would involve use of the TextEntered event
 char keyToChar(sf::Keyboard::Key key, bool isShift) {
 	using kb = sf::Keyboard;
 	switch(key) {
@@ -66,6 +67,7 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 		case kb::Return: return '\n';
 		case kb::BackSpace: return '\b';
 		case kb::Delete: return '\x7f';
+		default: break;
 	}
 	return 0;
 }

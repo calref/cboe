@@ -13,7 +13,7 @@ short pc_has_abil_equip(short pc_num,short abil);
 short pc_has_abil(short pc_num,short abil);
 bool party_has_abil(short abil);
 bool party_take_abil(short abil);
-bool party_check_class(short item_class,short mode);
+bool party_check_class(unsigned int item_class,short mode);
 short pc_carry_weight(short pc_num);
 short amount_pc_can_carry(short pc_num);
 void give_food(short amount,bool print_result);
@@ -51,9 +51,9 @@ short item_val(cItemRec item);
 bool give_to_party(cItemRec item, short print_result);
 void place_treasure(location where,short level,short loot,short mode);
 short luck_total();
-cItemRec return_treasure(short loot,short level,short mode);
+cItemRec return_treasure(short loot);
 void refresh_store_items();
-std::string get_text_response(short dlg,short parent_num);
+std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
 
 // These are defined in pc.editors.cpp since they are also used by the character editor
 short char_select_pc(short active_only,short free_inv_only,const char *title);

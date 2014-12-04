@@ -18,7 +18,6 @@
 #include "field.h"
 #include "restypes.hpp"
 
-extern std::string get_str(std::string list, short j);
 extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
@@ -41,7 +40,6 @@ void init_scenario() {
 	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,false,false};
 	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,false,false};
 	cScenario::cItemStorage null_item_s;// ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
-	short j;
 	
 	scenario.format.ver[0] = 1;
 	scenario.format.ver[1] = 0;
@@ -123,9 +121,7 @@ void init_scenario() {
 	}
 }	
 
-bool save_ter_info(cDialog& me, cTerrain& store_ter) {
-	char str[256];
-	short i;
+static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	
 	store_ter.picture = me["pict"].getTextAsNum();
 	// TODO: Should somehow verify the pict number is valid
@@ -205,7 +201,7 @@ bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 }
 
 // TODO: It would probably be good to use these for other dialogs, instead of the monolithic event filters
-bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra){
+static bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra){
 	if(!losing) return true;
 	cTextField& fld_ctrl = dynamic_cast<cTextField&>(me[id]);
 	long n = fld_ctrl.getTextAsNum();
@@ -219,11 +215,11 @@ bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long ma
 	return true;
 }
 
-bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name) {
+static bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name) {
 	return check_range_msg(me, id, losing, min_val, max_val, fld_name, "");
 }
 
-bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
+static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
 	pic_num_t cur_sel = 0;
 	if(result_fld != ""){
 		cControl& fld_ctrl = parent[result_fld];
@@ -248,7 +244,7 @@ bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::s
 	return true;
 }
 
-bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld){
+static bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld){
 	size_t cur_sel = 0;
 	if(result_fld != ""){
 		cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
@@ -270,14 +266,14 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 	return true;
 }
 
-bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
+static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
 	StringRsrc strings = *ResMgr::get<StringRsrc>(from_file);
 	cThreeChoice help(strings,basic_buttons[63],pic,PIC_DLOG,&parent);
 	help.show();
 	return true;
 }
 
-bool fill_ter_flag_info(cDialog& me, std::string id, bool dummy){
+static bool fill_ter_flag_info(cDialog& me, std::string id, bool){
 	eTerSpec prop;
 	cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me[id]);
 	std::istringstream sel(led_ctrl.getSelected().substr(4));
@@ -297,7 +293,7 @@ bool fill_ter_flag_info(cDialog& me, std::string id, bool dummy){
 	return true;
 }
 
-void fill_ter_info(cDialog& me, short ter){
+static void fill_ter_info(cDialog& me, short ter){
 	cTerrain& ter_type = scenario.ter_types[ter];
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
@@ -397,7 +393,7 @@ void fill_ter_info(cDialog& me, short ter){
 	me["arena"].setTextToNum(ter_type.combat_arena);
 }
 
-bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter) {
+static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter) {
 	if(!save_ter_info(me, scenario.ter_types[which_ter])) return true;
 	
 	if(id == "done") me.toast();
@@ -441,7 +437,7 @@ short edit_ter_type(ter_num_t which_ter) {
 	return 0;
 }
 
-void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
+static void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
 	char str[256];
 	cMonster& store_monst = scenario.scen_monsters[which_monst];
 	
@@ -509,7 +505,7 @@ void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
 //	me["type3"].setText(get_str("monster-abilities",130 + store_monst.a[2].type));
 }
 
-bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_monst) {
+static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_monst) {
 	if(!losing) return true;
 	if(check_range(me, id, losing, 0, 4999, "Monster pic")) {
 		// later check pic num for error, and assign widths if custom
@@ -542,9 +538,7 @@ bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_m
 	return true;
 }
 
-bool save_monst_info(cDialog& me, cMonster& store_monst) {
-	char str[256];
-	short i;
+static bool save_monst_info(cDialog& me, cMonster& store_monst) {
 	
 	store_monst.m_name = me["name"].getText();
 	store_monst.picture_num = me["pic"].getTextAsNum();
@@ -668,7 +662,7 @@ static const std::string resist_field_names[8] = {
 	"magic-imm", "fire-imm", "cold-imm", "poison-imm",
 };
 
-void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
+static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
 	me["num"].setTextToNum(which_monst);
 	
 	me["poison"].setTextToNum(store_monst.poison);
@@ -707,7 +701,7 @@ void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_mon
 	}
 }
 
-bool save_monst_abils(cDialog& me, cMonster& store_monst) {
+static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
  	store_monst.poison = me["poison"].getTextAsNum();
 	store_monst.breath = me["breath-str"].getTextAsNum();
 	std::string breathType = dynamic_cast<cLedGroup&>(me["breath-type"]).getSelected();
@@ -782,7 +776,7 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
 	return store_monst;
 }
 
-void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
+static void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
 	me["num"].setTextToNum(which_item);
 	me["full"].setText(store_item.full_name);
 	me["short"].setText(store_item.name);
@@ -904,7 +898,7 @@ void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) 
 	me["class"].setTextToNum(store_item.special_class);
 }
 
-bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
+static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 	store_item.full_name = me["full"].getText();
 	store_item.name = me["short"].getText();
 	store_item.graphic_num = me["picnum"].getTextAsNum();
@@ -975,7 +969,7 @@ bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
 	return true;
 }
 
-bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short store_which_item) {
+static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short store_which_item) {
 	short i;
 	cItemRec temp_item;
 	
@@ -1038,8 +1032,7 @@ short edit_item_type(short which_item) {
 	return 0;
 }
 
-void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
-	char str[256];
+static void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
 	
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.full_name.c_str());
@@ -1056,7 +1049,7 @@ void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short which_item)
 	dynamic_cast<cLed&>(me["conceal"]).setState(store_item.concealed ? led_red : led_off);
 }
 
-bool save_item_abils(cDialog& me, cItemRec& store_item) {
+static bool save_item_abils(cDialog& me, cItemRec& store_item) {
 	store_item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
 	store_item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
 	store_item.ability_strength = me["str"].getTextAsNum();
@@ -1069,7 +1062,7 @@ bool save_item_abils(cDialog& me, cItemRec& store_item) {
 	return true;
 }
 
-bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short which_item) {
+static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short which_item) {
 	short i;
 	
 	if(item_hit == "cancel") {
@@ -1174,7 +1167,7 @@ cItemRec edit_item_abil(cItemRec starting_record,short which_item) {
 	return store_item;
 }
 
-void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short which_item) {
+static void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short which_item) {
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.name);
 	me["descr"].setText(store_item.descr);
@@ -1183,7 +1176,7 @@ void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short which_item)
 	dynamic_cast<cLed&>(me["usable"]).setState(store_item.flags % 10 > 0 ? led_red : led_off);
 }
 
-bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
+static bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
 	strncpy(store_item.name, me["name"].getText().c_str(),25);
 	store_item.name[25] = 0;
 	strncpy(store_item.descr, me["descr"].getText().c_str(),255);
@@ -1198,7 +1191,7 @@ bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
 	return true;
 }
 
-bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& store_item, short which_item) {
+static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& store_item, short which_item) {
 	if(item_hit == "cancel") {
 		me.toast();
 	} else if(item_hit == "okay") {
@@ -1227,7 +1220,7 @@ bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& s
 			}
 			me["spec"].setTextToNum(spec);
 		}	
-		edit_spec_enc(spec,0,&me);
+		edit_spec_enc(spec,0);
 		if(spec >= 0 && spec < 256 && scenario.scen_specials[spec].pic < 0)
 			me["spec"].setTextToNum(-1);
 		save_spec_item(me, store_item, which_item);
@@ -1250,7 +1243,7 @@ void edit_spec_item(short which_item) {
 	item_dlg.run();
 }
 
-void put_save_rects_in_dlog(cDialog& me) {
+static void put_save_rects_in_dlog(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 3; i++) {
@@ -1264,7 +1257,7 @@ void put_save_rects_in_dlog(cDialog& me) {
 	}
 }
 
-bool save_save_rects(cDialog& me) {
+static bool save_save_rects(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 3; i++) {
@@ -1294,7 +1287,7 @@ bool save_save_rects(cDialog& me) {
 	return true;
 }
 
-bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
+static bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
 	if(item_hit == "cancel") {
 		me.toast();
 	} else if(item_hit == "okay") {
@@ -1315,7 +1308,7 @@ void edit_save_rects() {
 	save_dlg.run();
 }
 
-bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
+static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -1334,7 +1327,7 @@ bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 	return true;
 }
 
-void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
+static void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
 	for (i = 0; i < 6; i++) {
@@ -1347,8 +1340,7 @@ void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
 	}
 }
 
-bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehicle* vehicles, size_t nVehicles, short& page) {
-	short i;
+static bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehicle* vehicles, size_t nVehicles, size_t& page) {
 	
 	if(item_hit == "okay") {
 		if(save_vehicles(me, vehicles, page))
@@ -1369,7 +1361,7 @@ bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehicle* veh
 
 void edit_horses() {
 	using namespace std::placeholders;
-	short page = 0;
+	size_t page = 0;
 	
 	cDialog horse_dlg("edit-horses.xml");
 	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses, 30, std::ref(page)), {"okay", "left", "right"});
@@ -1381,7 +1373,7 @@ void edit_horses() {
 
 void edit_boats() {
 	using namespace std::placeholders;
-	short page = 0;
+	size_t page = 0;
 	
 	cDialog boat_dlg("edit-boats.xml");
 	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats, 30, std::ref(page)), {"okay", "left", "right"});
@@ -1391,7 +1383,7 @@ void edit_boats() {
 	boat_dlg.run();
 }
 
-bool save_add_town(cDialog& me) {
+static bool save_add_town(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -1409,7 +1401,7 @@ bool save_add_town(cDialog& me) {
 	return true;
 }
 
-void put_add_town_in_dlog(cDialog& me) {
+static void put_add_town_in_dlog(cDialog& me) {
 	short i;
 	
 	for (i = 0; i < 10; i++) {
@@ -1420,7 +1412,7 @@ void put_add_town_in_dlog(cDialog& me) {
 	}
 }
 
-bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
+static bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
 	if(item_hit == "okay") {
 		if(save_add_town(me))
 			me.toast();
@@ -1439,7 +1431,7 @@ void edit_add_town() {
 	vary_dlg.run();
 }
 
-bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_storage, short cur_shortcut) {
+static bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_storage, short cur_shortcut) {
 	short i;
 	
 	store_storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
@@ -1459,7 +1451,7 @@ bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_storage, sh
 	return true;
 }
 
-void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& store_storage, short cur_shortcut) {
+static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& store_storage, short cur_shortcut) {
 	short i;
 	
 	me["num"].setTextToNum(cur_shortcut);
@@ -1472,7 +1464,7 @@ void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& stor
 	}
 }
 
-bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, cScenario::cItemStorage& store_storage, short& cur_shortcut) {
+static bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, cScenario::cItemStorage& store_storage, short& cur_shortcut) {
 	short i;
 	
 	if(item_hit == "okay") {
@@ -1504,7 +1496,7 @@ bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, cScenar
 	return true;
 }
 
-bool edit_item_placement_select_item(cDialog& me, cScenario::cItemStorage& store_storage, short item_hit) {
+static bool edit_item_placement_select_item(cDialog& me, cScenario::cItemStorage& store_storage, short item_hit) {
 	std::string id = "item" + std::to_string(item_hit);
 	short i = me[id].getTextAsNum();
 	store_storage.item_num[item_hit - 1] = i;

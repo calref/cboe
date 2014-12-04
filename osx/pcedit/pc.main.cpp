@@ -17,8 +17,6 @@
 #include "winutil.h"
 #include "cursors.h"
 
-extern std::string get_str(std::string, short);
-
 cUniverse univ;
 
 RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
@@ -102,7 +100,7 @@ cScenario scenario;
 //
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
-int main(int argc, char* argv[]) {
+int main(int /*argc*/, char* argv[]) {
 	init_menubar();
 	init_directories(argv[0]);
 	Initialize();
@@ -175,6 +173,9 @@ void Handle_One_Event()
 		case sf::Event::Closed:
 			All_Done = verify_restore_quit(false);
 			break;
+			
+		default:
+			break;
 		}
 }
 
@@ -182,7 +183,7 @@ void Mouse_Pressed()
 {
 	bool try_to_end;
 		
-					try_to_end = handle_action(event,0);
+	try_to_end = handle_action(event);
 					if (try_to_end == true)
 						All_Done = verify_restore_quit(false);
 }
@@ -334,7 +335,7 @@ void handle_extra_menu(int item_hit)
 
 void handle_edit_menu(int item_hit)
 {
-	short choice,i,j,k;
+	short i,j,k;
 
 	if(file_in_mem.empty()) {
 		display_strings(5,7);
@@ -383,7 +384,7 @@ void handle_edit_menu(int item_hit)
 			 		display_pc(current_active_pc,1,0);
 					break;
 				case 11: 
-					pick_race_abil(&univ.party[current_active_pc],0,0);
+					pick_race_abil(&univ.party[current_active_pc],0);
 					break;
 				case 12: 
 					spend_xp(current_active_pc,1,0);
@@ -449,7 +450,6 @@ void handle_edit_menu(int item_hit)
 // TODO: Let this take the item directly instead of the index
 void handle_item_menu(int item_hit)
 {
-	short choice;
 	cItemRec store_i;
 	
 	if(file_in_mem.empty()) {

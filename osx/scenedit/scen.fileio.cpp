@@ -585,7 +585,7 @@ void create_basic_scenario() {
 }
 
 // if which_town is -1, load town from base
-void import_town(short which_town,fs::path temp_file_to_load) {
+void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 	giveError("Town import currently disabled.");
 	//	short i,j,k,l,file_id;
 	//	bool file_ok = false;
@@ -743,8 +743,8 @@ void import_town(short which_town,fs::path temp_file_to_load) {
 }
 
 // When this is called, the current town is the town to make town 0. 
-void make_new_scenario(const char* file_name,short out_width,short out_height,short making_warriors_grove,
-					   short use_grass) {
+void make_new_scenario(const char* /*file_name*/,short /*out_width*/,short /*out_height*/,short /*making_warriors_grove*/,
+					   short /*use_grass*/) {
 	//	short i,j,k,num_outdoors;
 	//	FSSpec dummy_file;
 	//	NavReplyRecord reply;

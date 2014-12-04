@@ -98,7 +98,7 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
@@ -170,5 +170,6 @@ ePicType operator + (ePicTypeMod lhs, ePicType rhs);
 ePicType operator - (ePicTypeMod lhs, ePicType rhs);
 ePicType&operator +=(ePicType&lhs, ePicTypeMod rhs);
 ePicType&operator -=(ePicType&lhs, ePicTypeMod rhs);
+bool operator& (ePicType lhs, ePicTypeMod rhs);
 
 #endif

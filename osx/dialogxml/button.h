@@ -41,7 +41,7 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	//virtual void setPict(short pict, short type) = 0;
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -76,7 +76,7 @@ public:
 	static void init();
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw();
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -109,7 +109,7 @@ class cLedGroup : public cControl {
 public:
 	void attachClickHandler(click_callback_t f) throw(); // activated whenever a click is received, even on the currently active LED
 	void attachFocusHandler(focus_callback_t f) throw(); // activated only when the selection changes
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void addChoice(cLed* ctrl, std::string key);
 	void disable(std::string id);

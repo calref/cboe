@@ -143,7 +143,7 @@ bool sleep_field;
 //	Main body of program Exile
 //
 
-int main(int argc, char* argv[]) {
+int main(int /*argc*/, char* argv[]) {
 #if 0
 	void debug_oldstructs();
 	debug_oldstructs();
@@ -267,7 +267,6 @@ void Initialize(void)
 
 void Handle_One_Event()
 {
-	static const long fiveTicks = time_in_ticks(5).asMilliseconds();
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 	
@@ -375,6 +374,8 @@ void Handle_One_Event()
 					}
 			}
 #endif
+		default:
+			break; // There's several events we don't need to handle at all
 	}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
 	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
@@ -390,7 +391,7 @@ void Handle_Update()
 	
 }
 
-void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh) {
+static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh) {
 	while(!doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
 		redraw_screen(refresh);

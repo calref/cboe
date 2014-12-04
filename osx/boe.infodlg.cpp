@@ -28,9 +28,6 @@
 #include "prefs.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
-cCreature *store_m;
-short store_trait_mode,store_item_pc,store_pc_num;
-cItemRec store_i;
 
 extern short spell_w_cast[2][62];
 extern short spell_level[62];
@@ -70,9 +67,8 @@ short store_str2b;
 short store_page_on,store_num_i;
 
 // Misc dialog vars
-short store_displayed_item,position,num_entries;
+short position,num_entries;
 unsigned short cur_entry;
-cCreature hold_m;
 
 static void put_spell_info(cDialog& me, short display_mode)
 {
@@ -101,8 +97,7 @@ static void put_spell_info(cDialog& me, short display_mode)
 }
 
 
-static bool display_spells_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short display_mode)
-{
+static bool display_spells_event_filter(cDialog& me, std::string item_hit, short display_mode) {
 	short store;
 	if(item_hit == "done") {
 		me.toast();
@@ -135,7 +130,7 @@ void display_spells(short mode,short force_spell,cDialog* parent)
 	make_cursor_sword();
 	
 	cDialog spellInfo("spell-info.xml", parent);
-	spellInfo.attachClickHandlers(std::bind(display_spells_event_filter,_1,_2,_3,mode), {"done","left","right"});
+	spellInfo.attachClickHandlers(std::bind(display_spells_event_filter,_1,_2,mode), {"done","left","right"});
 	
 	dynamic_cast<cPict&>(spellInfo["icon"]).setPict(14 + mode);
 	put_spell_info(spellInfo, mode);
@@ -166,8 +161,7 @@ static void put_skill_info(cDialog& me)
 }
 
 
-static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "done") {
 		me.toast();
 	} else {
@@ -199,13 +193,9 @@ void display_skills(short force_skill,cDialog* parent)
 	skillDlog.run();
 }
 
-static void put_item_info(cDialog& me,short pc,short item)////
-{
+static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	char store_text[256];
 	std::string desc_str;
-	cItemRec s_i;
-	
-	s_i = store_i;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
 	if (s_i.graphic_num >= 1000) // was 150
@@ -214,11 +204,11 @@ static void put_item_info(cDialog& me,short pc,short item)////
 	
 	// id? magic?
 	cLed& id = dynamic_cast<cLed&>(me["id"]);
-	if (store_i.magic && store_i.ident)
+	if(s_i.magic && s_i.ident)
 		id.setState(led_red);
 	else id.setState(led_off);
 	cLed& magic = dynamic_cast<cLed&>(me["magic"]);
-	if (store_i.ident)
+	if(s_i.ident)
 		magic.setState(led_red);
 	else magic.setState(led_off);
 	me["type"].setText(get_str("item-types-display", (int)s_i.variety));
@@ -316,12 +306,7 @@ static void put_item_info(cDialog& me,short pc,short item)////
 	
 }
 
-static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
-	short item,pc_num;
-	
-	item = store_displayed_item;
-	pc_num = store_item_pc;
+static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cItemRec& store_i, short& item, const short pc_num) {
 	
 	if(item_hit == "done") {
 		me.toast();
@@ -329,34 +314,32 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, eKey
 		do {
 			item = (item == 0) ? 23 : item - 1;
 		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
-		store_displayed_item = item;
 		store_i = univ.party[pc_num].items[item];
-		put_item_info(me,pc_num,item);
+		put_item_info(me,item);
 	} else if(item_hit == "right") {
 		do {
 			item = (item == 23) ? 0 : item + 1;
 		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
-		store_displayed_item = item;
 		store_i = univ.party[pc_num].items[item];
-		put_item_info(me,pc_num,item);
+		put_item_info(me,item);
 	}
 	return true;
 }
 
 void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
 {
-	store_item_pc = pc_num;
+	using namespace std::placeholders;
+	cItemRec store_i;
 	if (pc_num == 6)
 		store_i = si;
 	else store_i = univ.party[pc_num].items[item];
-	store_displayed_item = item;
 	make_cursor_sword();
 	
 	cDialog itemInfo("item-info.xml",parent);
 	// By attaching the click handler to "id" and "magic", we suppress normal LED behaviour
-	itemInfo.attachClickHandlers(display_pc_item_event_filter, {"done","left","right","id","magic"});
+	itemInfo.attachClickHandlers(std::bind(display_pc_item_event_filter, _1, _2, std::ref(store_i), std::ref(item), pc_num), {"done","left","right","id","magic"});
 	
-	if (store_item_pc >= 6) {
+	if(pc_num >= 6) {
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 	}
@@ -376,26 +359,26 @@ void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
 	
 	itemInfo["desc"].hide();
 	
-	put_item_info(itemInfo,pc_num,item);
+	put_item_info(itemInfo,si);
 	
 	itemInfo.run();
 }
 
 
-static void put_monst_info(cDialog& me)
+static void put_monst_info(cDialog& me, const cCreature& store_m)
 {
 	std::string store_text;
 	std::string str;
 	short abil,i;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
-	if ( store_m->spec_skill == MONSTER_INVISIBLE)
+	if(store_m.spec_skill == MONSTER_INVISIBLE)
 		pic.setPict(400,PIC_MONST);// TODO: should probably be PICT_BLANK?
-	else if (store_m->picture_num < 1000)
-		pic.setPict(store_m->picture_num,PIC_MONST);
+	else if(store_m.picture_num < 1000)
+		pic.setPict(store_m.picture_num,PIC_MONST);
 	else {
 		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = store_m->picture_num / 1000;
+		short size_g = store_m.picture_num / 1000;
 		switch(size_g){
 			case 2:
 				type_g += PIC_WIDE;
@@ -408,47 +391,47 @@ static void put_monst_info(cDialog& me)
 				type_g += PIC_TALL;
 				break;
 		}
-		pic.setPict(store_m->picture_num % 1000, type_g);
+		pic.setPict(store_m.picture_num % 1000, type_g);
 	}
 	
-	store_text = get_m_name(store_m->number);
+	store_text = get_m_name(store_m.number);
 	me["name"].setText(store_text);
 	
 	// TODO: More descriptive ability descriptions, taking into account potential variation
-	abil = store_m->spec_skill;
+	abil = store_m.spec_skill;
 	str = get_str("monster-abilities",abil + 1);
 	me["abil1"].setText(str);
-	str = get_str("monster-abilities",store_m->radiate_1 + 50);
+	str = get_str("monster-abilities",store_m.radiate_1 + 50);
 	me["abil2"].setText(str);
 	
 	for(i = 0; i < 3; i++) {
-		if (store_m->a[i] > 0) {
-			if(store_m->a[i].sides == 0) continue;
+		if(store_m.a[i] > 0) {
+			if(store_m.a[i].sides == 0) continue;
 			std::ostringstream sout(std::ios_base::ate);
-			sout << store_m->a[i];
+			sout << store_m.a[i];
 			store_text = sout.str();
 			sout.str("attack");
 			sout << i + 1;
 			me[sout.str()].setText(store_text);
 		}
 	}
-	me["lvl"].setTextToNum(store_m->level);
-	me["hp"].setTextToNum(store_m->health);
-	me["sp"].setTextToNum(store_m->mp);
-	me["def"].setTextToNum(store_m->armor);
-	me["skill"].setTextToNum(store_m->skill);
-	me["morale"].setTextToNum(store_m->morale);
-	me["ap"].setTextToNum(store_m->speed);
-	me["mage"].setTextToNum(store_m->mu);
-	me["priest"].setTextToNum(store_m->cl);
-	me["poison"].setTextToNum(store_m->poison);
+	me["lvl"].setTextToNum(store_m.level);
+	me["hp"].setTextToNum(store_m.health);
+	me["sp"].setTextToNum(store_m.mp);
+	me["def"].setTextToNum(store_m.armor);
+	me["skill"].setTextToNum(store_m.skill);
+	me["morale"].setTextToNum(store_m.morale);
+	me["ap"].setTextToNum(store_m.speed);
+	me["mage"].setTextToNum(store_m.mu);
+	me["priest"].setTextToNum(store_m.cl);
+	me["poison"].setTextToNum(store_m.poison);
 	// 2140 - lit  2141 - dark
 	// immunities
 	for(i = 0; i < 8; i++) {
 		std::string id = "immune" + boost::lexical_cast<std::string>(i + 1);
 		cLed& led = dynamic_cast<cLed&>(me[id]);
 		// TODO: What's this s_pow nonsense? Isn't this just 1 << i? Also, why not make it a C++ bitfield?
-		if (store_m->immunities & (char)(s_pow(2,i)))
+		if(store_m.immunities & (char)(s_pow(2,i)))
 			led.setState(led_red);
 		else led.setState(led_off);
 	}
@@ -456,8 +439,7 @@ static void put_monst_info(cDialog& me)
 }
 
 
-static bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreature& store_m) {
 	short i,dummy = 0;
 	
 	if(item_hit == "done") {
@@ -472,17 +454,17 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, eKeyMo
 		
 		if (on_monst_menu[position] < 0)
 			position = 0;
-		store_m->number = on_monst_menu[position];
-		*store_m = *store_m; // to fill in fields that wouldn't otherwise be filled in; replaces return_monster_template
-		put_monst_info(me);
+		store_m.number = on_monst_menu[position];
+		store_m = store_m; // to fill in fields that wouldn't otherwise be filled in; replaces return_monster_template
+		put_monst_info(me, store_m);
 	} else if(item_hit == "right") {
 		position++;
 		if (on_monst_menu[position] < 0)
 			position = 0;
-		store_m->number = on_monst_menu[position];
-		*store_m = *store_m; // no, this is not redundant
+		store_m.number = on_monst_menu[position];
+		store_m = store_m; // no, this is not redundant
 		// TODO: It may not be redudndant, but it looks pretty stupid; change it
-		put_monst_info(me);
+		put_monst_info(me, store_m);
 	}
 	return true;
 }
@@ -491,26 +473,28 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from store_m
 {
+	using namespace std::placeholders;
 	position = array_pos;
 	full_roster = false;
+	cCreature store_m;
 	if (mode == 1) {
 		full_roster = true;
-		store_m = &hold_m;
-		store_m->number = on_monst_menu[array_pos];
-		*store_m = *store_m; // yes, this DOES do something
+		store_m = cCreature();
+		store_m.number = on_monst_menu[array_pos];
+		store_m = store_m; // yes, this DOES do something
 	}
 	else {
-		hold_m = *which_m;
-		store_m = which_m;
+		store_m = *which_m;
 	}
 	
 	make_cursor_sword();
 	
 	cDialog monstInfo("monster-info.xml");
-	monstInfo.attachClickHandlers(display_monst_event_filter, {"done", "left", "right"});
+	auto event_filter = std::bind(display_monst_event_filter, _1, _2,std::ref(store_m));
+	monstInfo.attachClickHandlers(event_filter, {"done", "left", "right"});
 	// Also add the click handler to the LEDs to suppress normal LED behaviour
-	monstInfo.attachClickHandlers(display_monst_event_filter, {"immune1", "immune2", "immune3", "immune4"});
-	monstInfo.attachClickHandlers(display_monst_event_filter, {"immune5", "immune6", "immune7", "immune8"});
+	monstInfo.attachClickHandlers(event_filter, {"immune1", "immune2", "immune3", "immune4"});
+	monstInfo.attachClickHandlers(event_filter, {"immune5", "immune6", "immune7", "immune8"});
 	
 	if (full_roster == false) {
 		monstInfo["left"].hide();
@@ -542,14 +526,13 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 	monstInfo.addLabelFor("immune6", "Immune To Cold", LABEL_LEFT, 45, false);
 	monstInfo.addLabelFor("immune7", "Poison Resistant", LABEL_LEFT, 45, false);
 	monstInfo.addLabelFor("immune8", "Immune To Poison", LABEL_LEFT, 45, false);
-	put_monst_info(monstInfo);
+	put_monst_info(monstInfo, store_m);
 	
 	monstInfo.run();
 }
 
 // TODO: Create a dedicated dialog for alchemy info
-static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	std::string get_text;
 	
 	if(item_hit == "done") {
@@ -586,16 +569,12 @@ void display_alchemy()
 	alchemy.run();
 }
 
-static void display_pc_info(cDialog& me)
-{
+static void display_pc_info(cDialog& me, const short pc) {
 	short i,store;
 	char str[256];
-	short pc;
 	char to_draw[60];
 	
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
-	
-	pc = store_pc_num;
 	
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
@@ -681,46 +660,41 @@ static void display_pc_info(cDialog& me)
 	}
 }
 
-static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
-	short pc;
-	
-	pc = store_pc_num;
+static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, short& store_pc_num) {
 	if(item_hit == "done") me.toast();
 	else if(item_hit == "left") {
 		// TODO: Put braces on these do-whiles... o.O
 		do
 			store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
 		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
-		display_pc_info(me);
+		display_pc_info(me, store_pc_num);
 	} else if(item_hit == "right") {
 		do
 			store_pc_num = (store_pc_num + 1) % 6;
 		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
-		display_pc_info(me);
+		display_pc_info(me, store_pc_num);
 	}
 	return true;
 }
 
-static bool give_pc_extra_info(cDialog& me, std::string item_hit, eKeyMod mods) {
-	short pc = store_pc_num;
+static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc) {
 	if(item_hit == "seemage") display_pc(pc,0,&me);
 	else if(item_hit == "seepriest") display_pc(pc,1,&me);
-	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
+	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1);
 	else if(item_hit == "alch") display_alchemy(false);
 	return true;
 }
 
 void give_pc_info(short pc_num)
 {
+	using namespace std::placeholders;
 	short i;
 	std::string str;
 	
-	store_pc_num = pc_num;
 	make_cursor_sword();
 	
 	cDialog pcInfo("pc-info.xml");
-	pcInfo.attachClickHandlers(give_pc_info_event_filter, {"done", "left", "right"});
+	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
 	pcInfo.attachClickHandlers(give_pc_extra_info, {"seemage", "seepriest", "trait", "alch"});
 	
 	for (i = 0; i < 19; i++) {
@@ -728,12 +702,12 @@ void give_pc_info(short pc_num)
 		str = get_str("skills",1 + i * 2);
 		pcInfo[lbl].setText(str);
 	}
-	display_pc_info(pcInfo);
+	display_pc_info(pcInfo, pc_num);
 	
 	pcInfo.run();
 }
 
-static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
+static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 {
 	unsigned short i;
 	std::string place_str;
@@ -896,8 +870,7 @@ static void put_talk(cDialog& me)
 	}
 }
 
-static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "done") me.toast();
 	else if(item_hit == "left") {
 		if (store_page_on == 0)
@@ -945,8 +918,7 @@ void talk_notes()
 	talkNotes.run();
 }
 
-static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short i;
 	char place_str[256];
 	

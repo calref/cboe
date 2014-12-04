@@ -26,7 +26,7 @@ short count_levels(location where,short radius);
 bool pc_near(short pc_num,location where,short radius);
 bool monst_near(short m_num,location where,short radius,short active);
 void fireball_space(location loc,short dam);
-void place_spell_pattern(effect_pat_type pat,location center,short type,bool prep_for_anim,short who_hit);
+void place_spell_pattern(effect_pat_type pat,location center,short type,short who_hit);
 void handle_item_spell(location loc,short num);
 void modify_pattern(effect_pat_type *pat,short type);
 void do_shockwave(location target);

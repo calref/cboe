@@ -11,7 +11,7 @@
 #include "dialog.h"
 #include "graphtool.h"
 
-void cTextField::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported){
+void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(false);
 }
 
@@ -29,7 +29,7 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 	return passed;
 }
 
-void cTextField::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+void cTextField::setFormat(eFormat prop, short) throw(xUnsupportedProp){
 	throw xUnsupportedProp(prop);
 }
 
@@ -162,7 +162,7 @@ void cTextField::handleInput(cKey key) {
 	bool select = mod_contains(key.mod, mod_shift);
 	bool word = mod_contains(key.mod, mod_alt) || mod_contains(key.mod, mod_ctrl);
 	bool haveSelection = insertionPoint != selectionPoint;
-	int new_ip;
+	size_t new_ip;
 	std::string contents = getText();
 	if(!key.spec) {
 		if(haveSelection) {

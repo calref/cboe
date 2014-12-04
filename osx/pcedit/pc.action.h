@@ -2,7 +2,7 @@
 #include <SFML/Window/Event.hpp>
 #include "dialog.h"
 
-bool handle_action(sf::Event event,short mode);
+bool handle_action(sf::Event event);
 void flash_rect(RECT to_flash);
 void edit_gold_or_food(short which_to_edit);
 void display_pc(short pc_num,short mode,cDialog* parent);

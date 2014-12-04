@@ -295,8 +295,7 @@ bool party_take_abil(short abil)
 
 // returns true is party has item of given item class
 // mode - 0 - take one of them, 1 - don't take
-bool party_check_class(short item_class,short mode) ////
-{
+bool party_check_class(unsigned int item_class,short mode) {
 	short i,j;
 	
 	if (item_class == 0)
@@ -512,8 +511,8 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 
 void equip_item(short pc_num,short item_num)
 {
-	short num_equipped_of_this_type = 0;
-	short num_hands_occupied = 0;
+	unsigned short num_equipped_of_this_type = 0;
+	unsigned short num_hands_occupied = 0;
 	short i;
 	short equip_item_type = 0;
 	
@@ -964,8 +963,7 @@ static void put_item_graphics(cDialog& me)
 }
 
 
-static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod mods)
-{
+static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
 	cItemRec item;
 	
 	if(id == "done") {
@@ -1166,8 +1164,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 //	return i;
 //}
 
-static bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
 	me.setResult<int>(me["number"].getTextAsNum());
 	return true;
 }
@@ -1325,11 +1322,11 @@ void place_treasure(location where,short level,short loot,short mode)
 				max = 200;
 			
 			
-			new_item = return_treasure(treas_chart[loot][j],level,mode);
+			new_item = return_treasure(treas_chart[loot][j]);
 			if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-				new_item = return_treasure(treas_chart[loot][j],level,mode);
+				new_item = return_treasure(treas_chart[loot][j]);
 				if ((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = return_treasure(treas_chart[loot][j],level,mode);
+					new_item = return_treasure(treas_chart[loot][j]);
 					if (item_val(new_item) > max)
 						new_item.variety = eItemType::NO_ITEM;
 				}
@@ -1347,7 +1344,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			
 			// if forced, keep dipping until a treasure comes up
 			if ((mode == 1)	&& (max >= 20)) {
-				do new_item = return_treasure(treas_chart[loot][j],level,mode);
+				do new_item = return_treasure(treas_chart[loot][j]);
 				while(new_item.variety == eItemType::NO_ITEM || item_val(new_item) > max);
 			}
 			
@@ -1376,9 +1373,7 @@ short luck_total()
 	return i;
 }
 
-cItemRec return_treasure(short loot,short level,short mode)
-//short mode; // 0 - normal  1 - force
-{
+cItemRec return_treasure(short loot) {
 	cItemRec treas;
 	static const short which_treas_chart[48] = {
 		1,1,1,1,1,2,2,2,2,2,
@@ -1397,8 +1392,8 @@ cItemRec return_treasure(short loot,short level,short mode)
 		r1 += 3;
 	switch (which_treas_chart[r1]) {
 		case 1: treas = get_food(); break;
-		case 2: treas = get_weapon(loot,level);	break;
-		case 3: treas = get_armor(loot,level); break;
+		case 2: treas = get_weapon(loot);	break;
+		case 3: treas = get_armor(loot); break;
 		case 4: treas = get_shield(loot); break;
 		case 5: treas = get_helm(loot); break;
 		case 6: treas = get_missile(loot); break;
@@ -1407,7 +1402,7 @@ cItemRec return_treasure(short loot,short level,short mode)
 		case 9: treas = get_wand(loot); break;
 		case 10: treas = get_ring(loot); break;
 		case 11: treas = get_necklace(loot); break;
-		case 12: treas = get_poison(loot,level); break;
+		case 12: treas = get_poison(loot); break;
 		case 13: treas = get_gloves(loot); break;
 		case 14: treas = get_boots(loot); break;
 	}
@@ -1424,7 +1419,7 @@ void refresh_store_items()
 	
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 10; j++) {
-			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j],7,1);
+			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j]);
 			if(univ.party.magic_store_items[i][j].variety == eItemType::GOLD ||
 				univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
 				univ.party.magic_store_items[i][j] = cItemRec();
@@ -1434,23 +1429,20 @@ void refresh_store_items()
 }
 
 
-static bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod mods)
-{
+static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
 	me.toast();
 	me.setResult(me["response"].getText());
 	return true;
 }
 
-std::string get_text_response(short dlg,short parent_num)
-{
+std::string get_text_response(std::string prompt, pic_num_t pic) {
 	make_cursor_sword();
 	
 	cDialog strPanel("get-response.xml");
 	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
-	// FIXME: A sort of hack to change the prompt and graphic if the other text response dialog was requested.
-	if(dlg == 1017) {
-		dynamic_cast<cPict&>(strPanel["pic"]).setPict(8);
-		strPanel["prompt"].setText("Ask about what?");
+	if(!prompt.empty()) {
+		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
+		strPanel["prompt"].setText(prompt);
 	}
 	
 	strPanel.run();

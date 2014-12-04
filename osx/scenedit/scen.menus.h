@@ -10,5 +10,7 @@
 #define BoE_scen_menus_h
 
 void init_menubar();
+void update_item_menu();
+void shut_down_menus(short mode);
 
 #endif

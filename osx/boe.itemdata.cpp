@@ -59,8 +59,7 @@ cItemRec get_food()
 }
 
 
-cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,eItemType t1, eItemType t2, eItemType t3)
-{
+cItemRec pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemType t1, eItemType t2, eItemType t3) {
 	short i,j,val;
 	cItemRec temp_i;
 	
@@ -84,8 +83,7 @@ cItemRec pull_item_of_type(short loot_max,short min_val,short max_val,eItemType 
 	return temp_i;
 }
 
-cItemRec get_weapon(short loot,short level)
-{
+cItemRec get_weapon(short loot) {
 	cItemRec weapon;
 	
 	if (loot == 0)
@@ -96,8 +94,7 @@ cItemRec get_weapon(short loot,short level)
 	
 }
 
-cItemRec get_armor(short loot,short level)
-{
+cItemRec get_armor(short loot) {
 	short r1;
 	cItemRec armor;
 	
@@ -157,8 +154,7 @@ cItemRec get_missile(short loot)
 	
 }
 
-cItemRec get_poison(short loot,short level)
-{
+cItemRec get_poison(short loot) {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::WEAPON_POISON);
 }
 

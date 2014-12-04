@@ -53,11 +53,11 @@ void cScrollbar::attachClickHandler(click_callback_t f) throw(xHandlerNotSupport
 	onClick = f;
 }
 
-void cScrollbar::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) {
+void cScrollbar::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
 	throw xHandlerNotSupported(true);
 }
 
-bool cScrollbar::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where) {
+bool cScrollbar::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) {
 	// TODO: Implement detection of scrolling stuff, maybe even dragging the thumb
 	if(onClick != NULL) return onClick(me,id,mods);
 	return false;
@@ -131,7 +131,7 @@ bool cScrollbar::handleClick(location where) {
 	return clicked;
 }
 
-void cScrollbar::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+void cScrollbar::setFormat(eFormat prop, short) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 
@@ -139,7 +139,7 @@ short cScrollbar::getFormat(eFormat prop) throw(xUnsupportedProp) {
 	throw xUnsupportedProp(prop);
 }
 
-void cScrollbar::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cScrollbar::setColour(sf::Color) throw(xUnsupportedProp) {
 	// TODO: Colour is unsupported
 }
 

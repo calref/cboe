@@ -349,21 +349,21 @@
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
-		91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
-		91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
-		91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
-		91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
-		91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
-		91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
-		91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
-		91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
-		91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
-		91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
-		91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; };
-		91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; };
-		91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; };
-		91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; };
-		91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; };
+		91A32D160FDE049900C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D170FDE049900C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D180FDE049900C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D190FDE049A00C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1A0FDE049A00C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = "-Wno-error=parentheses -w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1B0FDE049F00C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1C0FDE049F00C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1D0FDE04A000C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1E0FDE04A000C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D1F0FDE04A100C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = "-Wno-error=parentheses -w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D200FDE04A500C4E957 /* ticpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA270FB8C459001E34EA /* ticpp.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D210FDE04A500C4E957 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2E0FB8C459001E34EA /* tinystr.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D220FDE04A600C4E957 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2A0FB8C459001E34EA /* tinyxml.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D230FDE04A600C4E957 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91A32D240FDE04A600C4E957 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = "-Wno-error=parentheses -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		91AC60800FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60810FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		91AC60820FA26A3B00EEAE67 /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
@@ -410,9 +410,9 @@
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91BFA3DA1902B13D001686E4 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
 		91BFA3DB1902B13F001686E4 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
-		91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
-		91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
-		91BFA3EB19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; };
+		91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91BFA3EB19033E01001686E4 /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3DE19033E01001686E4 /* gzstream.cpp */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		91C1FCA60FCB6F7000EBAA65 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
 		91C1FCA70FCB6F7100EBAA65 /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
 		91C1FCA80FCB6F7100EBAA65 /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA180FB8BECA001E34EA /* dialog.cpp */; };
@@ -2590,6 +2590,8 @@
 					"-Werror=format",
 					"-ftemplate-backtrace-limit=0",
 					"-Werror=return-type",
+					"-Werror=parentheses",
+					"-Werror=dangling-else",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
@@ -2643,6 +2645,8 @@
 					"-Werror=format",
 					"-ftemplate-backtrace-limit=0",
 					"-Werror=return-type",
+					"-Werror=parentheses",
+					"-Werror=dangling-else",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",

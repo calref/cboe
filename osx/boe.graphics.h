@@ -23,7 +23,7 @@ void draw_startup(short but_type);
 void draw_anim();
 void place_anim(); 
 void draw_start_button(short which_position,short which_button);
-void main_button_click(short mode,RECT button_rect);
+void main_button_click(RECT button_rect);
 void arrow_button_click(RECT button_rect);
 void end_startup();
 void Set_up_win ();

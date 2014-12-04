@@ -7,8 +7,7 @@ void use_spec_item(short item);
 void use_item(short pc,short item);
 bool use_space(location where);
 bool adj_town_look(location where);
-void PSOE(short str1a,short str1b,short str2a,short str2b,
-	short which_special,unsigned char *stuff_done_val,short where_put);
+void PSOE(short which_special,unsigned char *stuff_done_val,short where_put);
 bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type);
 void kill_monst(cCreature *which_m,short who_killed);
 void special_increase_age();

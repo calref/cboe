@@ -130,7 +130,7 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	return *this;
 }
 
-cMonster::cAttack::operator int(){
+cMonster::cAttack::operator int() const {
 	return dice * 100 + sides;
 }
 
@@ -140,7 +140,7 @@ cMonster::cAttack& cMonster::cAttack::operator=(int n){
 	return *this;
 }
 
-std::ostream& operator<<(std::ostream& out, cMonster::cAttack& att) {
+std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {
 	out << int(att.dice) << 'd' << int(att.sides);
 	return out;
 }
@@ -174,6 +174,7 @@ std::istream& operator >> (std::istream& in, eRace& e){
 
 extern cUniverse univ;
 extern cScenario scenario;
+// TODO: Any setup where "x = x" does something is probably a bad idea...
 cCreature& cCreature::operator = (const cCreature& other){ // replaces return_monster_template() from boe.monsters.cpp
 	id = other.id;
 	number = other.number;
@@ -216,6 +217,8 @@ cMonster::cAbility::operator std::string(){
 	std::ostringstream sout;
 	short i = 0;
 	switch(abil){
+		case MONST_NO_ABIL:
+			break;
 		case MONST_THROWS_DARTS:
 			sout << "Throws darts (" << extra1 << 'd' << extra2 << ')';
 			break;
@@ -472,7 +475,7 @@ cMonster::cAbility::operator std::string(){
 			sout << "Unusual ability";
 			break;
 	}
-	return "*ERROR INVALID ABILITY*";
+	return sout.str();
 }
 
 std::string cMonster::getAbil1Name() {
@@ -496,11 +499,11 @@ bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
 	return false;
 }
 
-void cMonster::writeTo(std::ostream& file) {
+void cMonster::writeTo(std::ostream& /*file*/) {
 	// TODO: Implement this (low priority since only used for exported summons)
 }
 
-void cMonster::readFrom(std::istream& file) {
+void cMonster::readFrom(std::istream& /*file*/) {
 	// TODO: Implement this (low priority since only used for exported summons)
 }
 

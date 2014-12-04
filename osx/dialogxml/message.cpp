@@ -18,16 +18,16 @@ void cTextMsg::attachClickHandler(click_callback_t f) throw(){
 	clickable = onClick != NULL;
 }
 
-void cTextMsg::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
+void cTextMsg::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 
-bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	if(onClick != NULL) return onClick(me,id,mods);
 	return false;
 }
 
-void cTextMsg::setColour(sf::Color clr) {
+void cTextMsg::setColour(sf::Color clr) throw(xUnsupportedProp) {
 	color = clr;
 }
 
@@ -53,7 +53,7 @@ void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	}
 }
 
-sf::Color cTextMsg::getColour() {
+sf::Color cTextMsg::getColour() throw(xUnsupportedProp) {
 	return color;
 }
 

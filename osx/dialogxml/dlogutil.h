@@ -29,8 +29,8 @@ class cStrDlog {
 	record_callback_t rec_f;
 	bool hasRecord;
 	const ePicType type;
-	bool onRecord(cDialog& me, std::string id);
-	bool onDismiss(cDialog& me, std::string id);
+	bool onRecord(std::string id);
+	bool onDismiss();
 public:
 	cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent = NULL);
 	cStrDlog& setSound(snd_num_t num);
@@ -104,10 +104,10 @@ class cPictChoice {
 	static const size_t per_page;
 	cDialog dlg;
 	void attachClickHandlers();
-	bool onLeft(cDialog& me, std::string id);
-	bool onRight(cDialog& me, std::string id);
-	bool onCancel(cDialog& me, std::string id);
-	bool onOkay(cDialog& me, std::string id);
+	bool onLeft();
+	bool onRight();
+	bool onCancel();
+	bool onOkay();
 	void fillPage();
 	std::vector<std::pair<pic_num_t,ePicType>> picts;
 	size_t page, cur;

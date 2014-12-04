@@ -123,6 +123,7 @@ void update_item_menu() {
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];
 	cItemRec& theItem = [item item];
+	(void) theItem; // Suppress "unused parameter" warning
 	for(int i = 0; i < 4; i++) {
 		int whichItem = [items_menu[i] indexOfItem: sender];
 		if(whichItem >= 0)

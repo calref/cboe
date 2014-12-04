@@ -62,7 +62,7 @@ void init_graph_tool(){
 	}
 	delete[] fbuf;
 	delete[] vbuf;
-	int i,j;
+	int i;
 	// TODO: The duplication of location here shouldn't be necessary
 	static const location pat_offs[17] = {
 		location{0,3}, location{1,1}, location{2,1}, location{2,0},
@@ -240,7 +240,7 @@ std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_r
 	return params.snippets;
 }
 
-void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
+static void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
 	std::vector<hilite_t>& hilites = options.hilite_ranges;
 	std::vector<snippet_t>& snippets = options.snippets;
 	// Check if we have any hilites on this line.

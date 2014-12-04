@@ -14,9 +14,9 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-void cTown::append(legacy::big_tr_type& old){}
-void cTown::append(legacy::ave_tr_type& old){}
-void cTown::append(legacy::tiny_tr_type& old){}
+void cTown::append(legacy::big_tr_type&){}
+void cTown::append(legacy::ave_tr_type&){}
+void cTown::append(legacy::tiny_tr_type&){}
 
 cTown& cTown::operator = (legacy::town_record_type& old){
 	int i;
@@ -82,7 +82,7 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 cTown::cTown(){}
 
 short max_dim[3] = {64,48,32};
-cTown::cTown(short size){
+cTown::cTown(short){
 	short i,s;
 	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};

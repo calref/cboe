@@ -28,7 +28,7 @@ public:
 	explicit cScrollbar(cDialog& parent);
 	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where);
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);

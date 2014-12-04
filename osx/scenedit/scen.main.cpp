@@ -79,7 +79,7 @@ RECT right_sbar_rect;
 //
 
 //Changed to ISO C specified argument and return type.
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
 	init_menubar();
 	//outdoor_record_type dummy_outdoor, *store2;
 	
@@ -143,7 +143,6 @@ int main(int argc, char* argv[]) {
 //MW specified argument and return type.
 void Initialize(void) {
 	
-	char tit[256] = "  ";
 	
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
@@ -183,7 +182,6 @@ void Initialize(void) {
 
 void Handle_One_Event() {
 	short chr,chr2;
-	long menu_choice;
 	
 	Handle_Update();
 	
@@ -208,7 +206,10 @@ void Handle_One_Event() {
 		case sf::Event::MouseButtonReleased:
 			mouse_button_held = false;
 			break;
-	} 
+			
+		default:
+			break;
+	}
 }
 
 void Handle_Update() {
@@ -494,7 +495,7 @@ void handle_monst_menu(int item_hit) {
 	mode_count = item_hit;
 }
 
-void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
+static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 	while(!doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
 		// TODO: redraw_screen should probably take the argument specifying what to update
@@ -504,8 +505,6 @@ void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 }
 
 void Mouse_Pressed() {
-	short	the_part,content_part;
-	long menu_choice;
 	
 	location mousePos(event.mouseButton.x, event.mouseButton.y);
 	volatile bool doneScrolling = false;

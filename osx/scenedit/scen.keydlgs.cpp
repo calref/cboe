@@ -11,7 +11,6 @@
 #include "dlogutil.h"
 #include "restypes.hpp"
 
-extern std::string get_str(std::string list, short j);
 extern short cen_x, cen_y/*, overall_mode*/;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
@@ -170,7 +169,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 			item_hit = cPictChoice(0, 418, PIC_TER_MAP, parent).show(NO_PIC, cur_choice);
 			break;
 		default: // Custom or party; assume custom, since this is the scenario editor and the party sheet isn't available
-			if(g_type > PIC_PARTY) return NO_PIC;
+			if(g_type & PIC_PARTY) return NO_PIC;
 			ePicType g_base_type = g_type - PIC_CUSTOM;
 			pic_num_t totalPics = spec_scen_g.count();
 			pic_num_t last;
@@ -188,8 +187,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	return item_hit;
 }
 
-short choose_text_res(std::string res_list,short first_t,short last_t,short cur_choice,cDialog* parent,const char *title) {
-	short item_hit;
+short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title) {
 	location view_loc;
 	if((cur_choice < first_t) || (cur_choice > last_t))
 		cur_choice = first_t;
@@ -200,8 +198,7 @@ short choose_text_res(std::string res_list,short first_t,short last_t,short cur_
 	return dlog.show(cur_choice);
 }
 
-short choose_text(eStrType list, short cur_choice, cDialog* parent, const char* title) {
-	short item_hit;
+short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, const char* title) {
 	location view_loc;
 	
 	std::vector<std::string> strings;
@@ -233,7 +230,7 @@ short choose_text(eStrType list, short cur_choice, cDialog* parent, const char* 
 	return dlog.show(cur_choice);
 }
 
-bool edit_text_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short& which_str, short str_mode) {
+static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, short str_mode) {
 	short num_strs[3] = {260,108,140};
 	
 	std::string newVal = me["text"].getText();
@@ -264,11 +261,9 @@ bool edit_text_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, sho
 // mode 0 - scen 1 - out 2 - town
 void edit_text_str(short which_str,short mode) {
 	using namespace std::placeholders;
-// ignore parent in Mac version
-	short item_hit;
 	
 	cDialog dlog("edit-text.xml");
-	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, _3, std::ref(which_str), mode), {"okay", "left", "right"});
+	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode), {"okay", "left", "right"});
 	
 	dlog["num"].setTextToNum(which_str);
 	if(mode == 0)
@@ -281,7 +276,7 @@ void edit_text_str(short which_str,short mode) {
 	dlog.run();
 }
 
-bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short which_str, short str_mode) {
+static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short which_str, short str_mode) {
 	if(item_hit == "okay") {
 		me.setResult(true);
 		me.toast();
@@ -298,10 +293,10 @@ bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, eKeyMod mods
 
 // mode 0 - out 1 - town
 bool edit_area_rect_str(short which_str,short mode) {
-// ignore parent in Mac version
-	short item_hit;
+	using namespace std::placeholders;
 	
 	cDialog dlog("set-area-desc.xml");
+	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, which_str, mode), {"okay", "cancel"});
 	
 	if(mode == 0)
 		dlog["area"].setText(current_terrain.out_strs(which_str + 1));
@@ -314,7 +309,7 @@ bool edit_area_rect_str(short which_str,short mode) {
 
 // MARK: Special node dialog
 
-bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
+static bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
 	store_spec_node.sd1 = me["sdf1"].getTextAsNum();
 	store_spec_node.sd2 = me["sdf2"].getTextAsNum();
 	store_spec_node.m1 = me["msg1"].getTextAsNum();
@@ -346,7 +341,6 @@ bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
 
 static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
 	std::string str;
-	short i;
 	
 	me["num"].setTextToNum(which_node);
 	str = get_str("special-node-names",store_spec_node.type + 1);
@@ -518,7 +512,7 @@ static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
 	}
 }
 
-static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short& which_mode, short& which_node) {
+static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short& which_mode, short& which_node) {
 	short i,node_to_change_to = -1,spec;
 	
 	if(item_hit == "okay") {
@@ -722,10 +716,9 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, eKeyMo
 }
 
 // mode - 0 scen 1 - out 2 - town
-void edit_spec_enc(short which_node,short mode,cDialog* parent) {
+void edit_spec_enc(short which_node,short mode) {
 // ignore parent in Mac version
 	using namespace std::placeholders;
-	short spec_enc_hit,i;
 	
 	// Clear the "nodes edited" stack; should already be clear, but just make sure
 	while(!last_node.empty()) last_node.pop();
@@ -740,7 +733,7 @@ void edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		store_spec_node.pic = 0;
 	
 	cDialog special("edit-special-node.xml");
-	auto callback = std::bind(edit_spec_enc_event_filter, _1, _2, _3, std::ref(mode), std::ref(which_node));
+	auto callback = std::bind(edit_spec_enc_event_filter, _1, _2, std::ref(mode), std::ref(which_node));
 	special.attachClickHandlers(callback, {"okay", "cancel", "back"});
 	special.attachClickHandlers(callback, {"general", "oneshot", "affectpc", "ifthen", "town", "out"});
 	special.attachClickHandlers(callback, {"x1a-edit", "x1b-edit", "x2a-edit", "x2b-edit"});
@@ -770,7 +763,7 @@ short get_fresh_spec(short which_mode) {
 	return -1;
 }
 
-static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short spec_str_mode, short* str1, short* str2) {
+static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1, short* str2) {
 	std::string str;
 	short i;
 	
@@ -879,11 +872,10 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eKeyM
 // mode 0 - scen 1 - out 2 - town
 void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	using namespace std::placeholders;
-	short item_hit;
 	short num_s_strs[3] = {100,90,100};
 	
 	cDialog edit("edit-special-text.xml", parent);
-	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, _3, mode, str1, str1), {"okay", "cancel"});
+	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str1), {"okay", "cancel"});
 	
 	if (*str1 >= num_s_strs[mode])
 		*str1 = -1;
@@ -908,7 +900,7 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	edit.run();
 }
 
-static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short spec_str_mode, short* str1){
+static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1){
 	std::string str;
 	short i;
 	
@@ -937,7 +929,7 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eKe
 
 // mode 0 - scen 1 - out 2 - town
 void edit_dialog_text(short mode,short *str1,cDialog* parent) {
-	short i,j,item_hit;
+	short i,j;
 	short num_s_strs[3] = {100,90,100};
 	
 	if (*str1 >= num_s_strs[mode] - 6)
@@ -1005,7 +997,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	
 	using namespace std::placeholders;
 	cDialog edit("edit-dialog-text.xml",parent);
-	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, _3, mode, str1), {"okay", "cancel"});
+	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
 	if (*str1 >= 0){
 		for (i = 0; i < 6; i++) {
@@ -1022,7 +1014,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	edit.run();
 }
 
-static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, eKeyMod mods, short spec_mode) {
+static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
 	short i;
 	
 	me.toast();
@@ -1040,10 +1032,9 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, eKe
 
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
-	short item_hit;
 	
 	cDialog edit("edit-special-assign.xml");
-	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, _3, mode), {"okay", "cancel"});
+	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, mode), {"okay", "cancel"});
 	
 	edit["num"].setTextToNum(what_start);
 	
@@ -1052,7 +1043,7 @@ short edit_special_num(short mode,short what_start) {
 	return edit.getResult<short>();
 }
 
-static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short i;
 	
 	if(item_hit == "okay") {
@@ -1080,7 +1071,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void edit_scen_intro() {
-	short i,item_hit;
+	short i;
 	
 	cDialog edit("edit-intro.xml");
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});

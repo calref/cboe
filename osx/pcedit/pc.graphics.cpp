@@ -13,8 +13,6 @@
 #include "message.h"
 #include "mathutil.h"
 
-extern std::string get_str(std::string, short);
-
 extern cUniverse univ;
 
 extern sf::RenderWindow mainPtr;
@@ -229,7 +227,6 @@ void init_main_buttons()
 
 void Set_up_win ()
 {
-	short i;
 	title_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedtitle"));
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
@@ -326,9 +323,9 @@ void draw_main_screen()
 	
 }
 
-void do_button_action(short which_pc,short which_button)
+// TODO: Not quite sure what the first parameter is for
+void do_button_action(short /*which_pc*/,short which_button)
 {
-	unsigned long dummy;
 
 	current_pressed_button = which_button;
 	redraw_screen();

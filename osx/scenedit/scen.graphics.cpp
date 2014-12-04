@@ -137,7 +137,7 @@ short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 unsigned char small_what_drawn[64][64];
 extern bool small_any_drawn;
 
-short get_small_icon(ter_num_t ter){
+static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	switch(scenario.ter_types[ter].special){
 		case TER_SPEC_NONE:
@@ -214,6 +214,8 @@ short get_small_icon(ter_num_t ter){
 				case eStatus::ACID:
 					icon = 41;
 					break;
+				case eStatus::MAIN: case eStatus::CHARM:
+					break; // Nothing to do here; these values are "magic" and should not be used
 			}
 			break;
 		case TER_SPEC_CRUMBLING:
@@ -1040,7 +1042,8 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item(sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,location target,sf::BlendMode mode) {
+// TODO: Wait, why is targ_gworld unused?
+void Draw_Some_Item(sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& /*targ_gworld*/,location target,sf::BlendMode mode) {
 	RECT	destrec;
 	
 	if ((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
@@ -1282,10 +1285,10 @@ bool is_special(short i,short j) {
 	return false;
 }
 
-void take_special(short i,short j) {
+void take_special(short /*i*/,short /*j*/) {
 }
 
-void make_special(short i,short j) {
+void make_special(short /*i*/,short /*j*/) {
 }
 
 void sort_specials() {

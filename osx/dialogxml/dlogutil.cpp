@@ -53,11 +53,10 @@ cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* p
 }
 
 void cPictChoice::attachClickHandlers() {
-	using namespace std::placeholders;
-	dlg["left"].attachClickHandler(std::bind(&cPictChoice::onLeft,this,_1,_2));
-	dlg["right"].attachClickHandler(std::bind(&cPictChoice::onRight,this,_1,_2));
-	dlg["done"].attachClickHandler(std::bind(&cPictChoice::onOkay,this,_1,_2));
-	dlg["cancel"].attachClickHandler(std::bind(&cPictChoice::onCancel,this,_1,_2));
+	dlg["left"].attachClickHandler(std::bind(&cPictChoice::onLeft,this));
+	dlg["right"].attachClickHandler(std::bind(&cPictChoice::onRight,this));
+	dlg["done"].attachClickHandler(std::bind(&cPictChoice::onOkay,this));
+	dlg["cancel"].attachClickHandler(std::bind(&cPictChoice::onCancel,this));
 }
 
 cDialog* cPictChoice::operator->() {
@@ -81,7 +80,7 @@ pic_num_t cPictChoice::show(pic_num_t fallback, pic_num_t cur_sel){
 void cPictChoice::fillPage(){
 	cLedGroup& group = dynamic_cast<cLedGroup&>(dlg["group"]);
 	group.setSelected(""); // unselect all LEDs, since the currently selected one may be on another page
-	for(int i = 0; i < per_page; i++){
+	for(size_t i = 0; i < per_page; i++){
 		std::ostringstream sout;
 		sout << "led" << i + 1;
 		if(page * per_page + i >= picts.size())
@@ -100,28 +99,28 @@ void cPictChoice::fillPage(){
 	}
 }
 
-bool cPictChoice::onLeft(cDialog& m, std::string ide){
+bool cPictChoice::onLeft(){
 	if(page == 0) page = (picts.size() - 1) / per_page;
 	else page--;
 	fillPage();
 	return true;
 }
 
-bool cPictChoice::onRight(cDialog& me, std::string id){
+bool cPictChoice::onRight(){
 	if(page == (picts.size() - 1) / per_page) page = 0;
 	else page++;
 	fillPage();
 	return true;
 }
 
-bool cPictChoice::onCancel(cDialog& me, std::string id){
-	me.toast();
+bool cPictChoice::onCancel(){
+	dlg.toast();
 	return true;
 }
 
-bool cPictChoice::onOkay(cDialog& me, std::string id){
+bool cPictChoice::onOkay(){
 	dlg.setResult(picts[cur].first);
-	me.toast();
+	dlg.toast();
 	return true;
 }
 
@@ -351,7 +350,7 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 		btn->setText(btns[i]->label);
 		btn->setType(btns[i]->type);
 		btn->attachClickHandler(std::bind(&cChoiceDlog::onClick,this,_1,_2));
-		switch(type){
+		switch(btns[i]->type){
 			case BTN_HELP:
 				cur_btn_rect.bottom = cur_btn_rect.top + 13;
 				break;
@@ -369,7 +368,7 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 			default: // in fact, this case should be the only one reachable, ideally
 				cur_btn_rect.bottom = cur_btn_rect.top + 23;
 		}
-		switch(type){
+		switch(btns[i]->type){
 			case BTN_SM:
 				cur_btn_rect.left = cur_btn_rect.right - 23;
 				break;
@@ -469,18 +468,18 @@ cStrDlog::cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t
 	}else if(str2 != "") dlg["str1"].setText(str2);
 	if(title != "") dlg["title"].setText(title);
 	dlg["record"].hide();
-	dlg["record"].attachClickHandler(std::bind(&cStrDlog::onRecord, this, _1, _2));
-	dlg["done"].attachClickHandler(std::bind(&cStrDlog::onDismiss, this, _1, _2));
+	dlg["record"].attachClickHandler(std::bind(&cStrDlog::onRecord, this, _2));
+	dlg["done"].attachClickHandler(std::bind(&cStrDlog::onDismiss, this));
 }
 
-bool cStrDlog::onRecord(cDialog& me, std::string id){
-	if(hasRecord) rec_f(me);
-	else me[id].hide();
+bool cStrDlog::onRecord(std::string id){
+	if(hasRecord) rec_f(dlg);
+	else dlg[id].hide();
 	return hasRecord;
 }
 
-bool cStrDlog::onDismiss(cDialog& me, std::string id){
-	me.toast();
+bool cStrDlog::onDismiss(){
+	dlg.toast();
 	return true;
 }
 

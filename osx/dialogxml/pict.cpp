@@ -76,11 +76,11 @@ void cPict::attachClickHandler(click_callback_t f) throw(){
 	}
 }
 
-void cPict::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported){
+void cPict::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(true);
 }
 
-bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods, location where){
+bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	if(onClick != NULL) return onClick(me,id,mods);
 	else return false;
 }
@@ -96,7 +96,7 @@ short cPict::getFormat(eFormat prop) throw(xUnsupportedProp){
 	else throw xUnsupportedProp(prop);
 }
 
-void cPict::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cPict::setColour(sf::Color) throw(xUnsupportedProp) {
 	// TODO: Colour is not supported
 }
 
@@ -419,11 +419,17 @@ ePicType& operator-= (ePicType& lhs, ePicTypeMod rhs){
 	return lhs = lhs - rhs;
 }
 
+bool operator& (ePicType lhs, ePicTypeMod rhs) {
+	return lhs == (lhs + PIC_PRESET) + rhs;
+}
+
 short cPict::animFrame = 0;
 
 std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	switch(type) {
+		case NUM_SHEET_TYPES:
+			break;
 		case SHEET_TER:
 			sout << "ter" << n + 1;
 			break;

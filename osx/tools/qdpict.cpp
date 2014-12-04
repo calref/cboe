@@ -375,6 +375,7 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 	return rectangle(bounds.top, bounds.left, bounds.bottom, bounds.right);
 }
 
+bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store); // Suppress "no prototype" warning
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
 	// TODO: There's no way around it; I'll have to read resource files for this section.
@@ -387,7 +388,7 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 		err = FSGetResourceForkName(&rsrc);
 		err = FSOpenResourceFile(&file, rsrc.length, rsrc.unicode, fsRdPerm, &custRef);
 		if(err != noErr) {
-			giveError("An old-style .meg graphics file was found, but neither data nor resource fork could not be read.",noGraphics);
+			giveError("An old-style .meg graphics file was found, but neither data nor resource fork could be read.",noGraphics);
 			return false;
 		}
 	}
