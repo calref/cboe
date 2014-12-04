@@ -29,6 +29,13 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 	return passed;
 }
 
+bool cTextField::handleClick(location) {
+	// TODO: Set the insertion point, handle selection, etc
+	if(parent && !parent->setFocus(this)) return true;
+	haveFocus = true;
+	return true;
+}
+
 void cTextField::setFormat(eFormat prop, short) throw(xUnsupportedProp){
 	throw xUnsupportedProp(prop);
 }

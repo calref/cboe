@@ -61,6 +61,7 @@ public:
 	void setDefTextClr(sf::Color clr);
 	void setDefBtn(std::string defBtn);
 	sf::Color getDefTextClr();
+	bool setFocus(cTextField* newFocus, bool force = false); // Setting force = true skips focus handlers
 	bool toast(bool triggerFocus);
 	cControl& getControl(std::string id);
 	cControl& operator[](std::string id);

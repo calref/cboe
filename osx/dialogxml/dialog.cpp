@@ -909,8 +909,10 @@ void cDialog::run(){
 	std::string itemHit = "";
 	dialogNotToast = true;
 	// Focus the first text field, if there is one
-	if(!tabOrder.empty())
+	if(!tabOrder.empty()) {
 		tabOrder[0].second->triggerFocusHandler(*this, tabOrder[0].first, false);
+		currentFocus = tabOrder[0].first;
+	}
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	win.setActive();
 	win.setVisible(true);
@@ -1128,6 +1130,19 @@ bool cDialog::toast(bool triggerFocus){
 		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
 	}
 	dialogNotToast = false;
+	return true;
+}
+
+bool cDialog::setFocus(cTextField* newFocus, bool force) {
+	if(!force) {
+		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
+	}
+	auto iter = find_if(controls.begin(), controls.end(), [newFocus](std::pair<const std::string, cControl*> p){
+		return p.second == newFocus;
+	});
+	if(iter == controls.end()) return false;
+	if(!force && !newFocus->triggerFocusHandler(*this, iter->first, false)) return false;
+	currentFocus = iter->first;
 	return true;
 }
 

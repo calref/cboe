@@ -22,6 +22,7 @@ public:
 	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
 	void attachFocusHandler(focus_callback_t f) throw();
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
+	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
