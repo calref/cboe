@@ -2547,21 +2547,23 @@ void start_new_game()
 	// everyone gets a weapon
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			univ.party[i].items[0] = start_items[univ.party[i].race * 2];
+			int raceCode = (int) univ.party[i].race;
+			univ.party[i].items[0] = start_items[raceCode * 2];
 			univ.party[i].equip[0] = true;
-			univ.party[i].items[1] = start_items[univ.party[i].race * 2 + 1];
+			univ.party[i].items[1] = start_items[raceCode * 2 + 1];
 			univ.party[i].equip[1] = true;
 		}
 	// PCs get adjustments
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			// Do stat adjs for selected race.
-			if (univ.party[i].race == 1)
+			if (univ.party[i].race == eRace::NEPHIL)
 				univ.party[i].skills[1] += 2;
-			if (univ.party[i].race == 2) {
+			if (univ.party[i].race == eRace::SLITH) {
 				univ.party[i].skills[0] += 2;
 				univ.party[i].skills[2] += 1;
 			}
+			// TODO: Vahnatai
 			univ.party[i].max_sp += univ.party[i].skills[9] * 3 + univ.party[i].skills[10] * 3;
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}

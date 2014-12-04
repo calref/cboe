@@ -567,15 +567,17 @@ bool create_pc(short spot,cDialog* parent)
 	univ.party[spot].main_status = eMainStatus::ALIVE;
 	
 	if(overall_mode != MODE_STARTUP) {
-		univ.party[spot].items[0] = start_items[univ.party[spot].race * 2];
+		// TODO: start_items will need to be extended for Vahnatai race
+		int raceCode = (int) univ.party[spot].race;
+		univ.party[spot].items[0] = start_items[raceCode * 2];
 		univ.party[spot].equip[0] = true;
-		univ.party[spot].items[1] = start_items[univ.party[spot].race * 2 + 1];
+		univ.party[spot].items[1] = start_items[raceCode * 2 + 1];
 		univ.party[spot].equip[1] = true;
 		
 		// Do stat adjs for selected race.
-		if (univ.party[spot].race == 1)
+		if (univ.party[spot].race == eRace::NEPHIL)
 			univ.party[spot].skills[1] += 2;
-		if (univ.party[spot].race == 2) {
+		if (univ.party[spot].race == eRace::SLITH) {
 			univ.party[spot].skills[0] += 2;
 			univ.party[spot].skills[2] += 1;
 		}
@@ -2834,7 +2836,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == eMainStatus::ALIVE)
-			dummy = damage_pc(i,how_much,damage_type,RACE_UNKNOWN,0);
+			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen();
 }
@@ -2937,11 +2939,11 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	if ((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,58)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == RACE_HUMANOID) && ((level = get_prot_level(which_pc,59)) > 0))
+	if ((type_of_attacker == eRace::HUMANOID) && ((level = get_prot_level(which_pc,59)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == RACE_REPTILE) && ((level = get_prot_level(which_pc,60)) > 0))
+	if ((type_of_attacker == eRace::REPTILE) && ((level = get_prot_level(which_pc,60)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == RACE_GIANT) && ((level = get_prot_level(which_pc,61)) > 0))
+	if ((type_of_attacker == eRace::GIANT) && ((level = get_prot_level(which_pc,61)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	

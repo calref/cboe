@@ -285,7 +285,7 @@ void do_monsters()
 							l2 = (univ.town.monst[i].target <= 6) ? univ.town.p_loc : univ.town.monst[target - 100].cur_loc;
 							
 							if ((univ.town.monst[i].morale < 0) && (univ.town.monst[i].spec_skill != 13)
-								&&  (univ.town.monst[i].m_type != 8))  {
+								&& univ.town.monst[i].m_type != eRace::UNDEAD)  {
 								acted_yet = flee_party(i,l1,l2);
 								if (get_ran(1,0,10) < 6)
 									univ.town.monst[i].morale++;
@@ -310,11 +310,9 @@ void do_monsters()
 						univ.town.monst[i].active = 2;
 						add_string_to_buf("Monster saw you!");
 						// play go active sound
-						switch (univ.town.monst[i].m_type) {
-							case 0: case 3: case 4: case 5: case 6: case 9:
-								play_sound(18); break;
-							default: play_sound(46); break;
-						}
+						if(isHumanoid(univ.town.monst[i].m_type) || univ.town.monst[i].m_type == eRace::GIANT)
+							play_sound(18);
+						else play_sound(46);
 					}
 					for (j = 0; j < univ.town->max_monst(); j++)
 						if ((univ.town.monst[j].active == 2)
@@ -899,7 +897,7 @@ void monst_inflict_fields(short which_monst)
 					curse_monst(which_m,r1);
 					break;
 				}
-				if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_type != 12)) {
+				if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
 					monst_spell_note(which_m->number,19);
 					r1 = get_ran(1,2,3);
 					web_monst(which_m,r1);
@@ -1008,7 +1006,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if (univ.town.is_scloud(where_check.x,where_check.y)) {
 		if (guts < 4) return false;
 	}
-	if ((univ.town.is_web(where_check.x,where_check.y)) && (which_m->m_type != 12)) {
+	if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
 		if (guts < 3) return false;
 	}
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
@@ -1217,7 +1215,8 @@ void charm_monst(cCreature *which_m,short penalty,short which_status,short amoun
 	
 	
 	if ((which_status == 11) &&
-		((which_m->m_type == 8) || (which_m->m_type == 10) || (which_m->m_type == 11)))
+		(which_m->m_type == eRace::UNDEAD || which_m->m_type == eRace::SLIME ||
+		 which_m->m_type == eRace::STONE || which_m->m_type == eRace::PLANT))
 		return;
 	r1 = get_ran(1,1,100);
 	if (which_m->immunities & 1)
@@ -1263,7 +1262,7 @@ void record_monst(cCreature *which_m)
 		ASB("Capture Soul: Monster is too big.");
 	}
 	else if ((r1 > charm_odds[which_m->level / 2]) || (which_m->spec_skill == 12)
-			 || (which_m->m_type == 3)) {
+			 || which_m->m_type == eRace::IMPORTANT) {
 		monst_spell_note(which_m->number,10);
 		play_sound(68);
 	}

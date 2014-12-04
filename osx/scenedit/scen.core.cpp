@@ -502,7 +502,7 @@ void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
 			break;
 	}
 	
-	me["type"].setText(get_str("monster-abilities",150 + store_monst.m_type));
+	me["type"].setText(get_str("monster-abilities",150 + int(store_monst.m_type)));
 	me["type1"].setText(get_str("monster-abilities",130 + store_monst.a[0].type));
 	me["type2"].setText(get_str("monster-abilities",130 + store_monst.a[1].type));
 	// TODO: Attack 3 type
@@ -605,7 +605,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 			put_monst_info_in_dlog(me,which_monst);
 	} else if(item_hit == "picktype") {
 			if(!save_monst_info(me,store_monst)) return false;
-			i = choose_text_res("monster-abilities",150,167,store_monst.m_type + 150,&me,"Choose Monster Type:");
+			i = choose_text_res("monster-abilities",150,167,int(store_monst.m_type) + 150,&me,"Choose Monster Type:");
 			if (i >= 0) {
 				i -= 150;
 				store_monst.m_type = (eRace) i;

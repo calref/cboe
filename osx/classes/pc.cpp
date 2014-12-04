@@ -50,7 +50,9 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 
 short cPlayer::get_tnl(){
 	short tnl = 100,i,store_per = 100;
-	static const short rp[3] = {0,12,20};
+	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
+	// TODO: Vahnatai
+	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20}};
 	static const short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
 	
 	tnl = (tnl * (100 + rp[race])) / 100;
@@ -95,7 +97,7 @@ cPlayer::cPlayer(){
 		//advan[i] = false;
 		traits[i] = false;	
 	}		
-	race = RACE_HUMAN;
+	race = eRace::HUMAN;
 	//exp_adj = 100;
 	direction = 0;
 }
@@ -153,7 +155,7 @@ cPlayer::cPlayer(long key,short slot){
 			traits[i] = false;	
 		}		
 		
-		race = RACE_HUMAN;
+		race = eRace::HUMAN;
 		//exp_adj = 100;
 		direction = 0;
 	}else if(key == 'dflt'){

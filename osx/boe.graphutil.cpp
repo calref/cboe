@@ -235,8 +235,7 @@ void draw_monsters() ////
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7)
-								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
@@ -250,8 +249,7 @@ void draw_monsters() ////
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7)
-								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
@@ -281,8 +279,7 @@ void draw_monsters() ////
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7)
-								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
@@ -296,8 +293,7 @@ void draw_monsters() ////
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
-								((univ.town.monst[i].m_type < 7)
-								 && (univ.town.monst[i].m_type != 1) && (univ.town.monst[i].m_type != 2))
+								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
 								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////

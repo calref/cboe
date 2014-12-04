@@ -201,7 +201,7 @@ static void display_traits_graphics(cDialog& me)
 {
 	short i,store;
 	
-	std::string race = "race" + boost::lexical_cast<std::string>(store_pc->race + 1);
+	std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
 	dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	for (i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
@@ -230,15 +230,15 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing)
 	if(item_hit == "race") {
 		eRace race;
 		switch(item_hit[4] - '1') {
-			case 0: race = RACE_HUMAN; break;
-			case 1: race = RACE_NEPHIL; break;
-			case 2: race = RACE_SLITH; break;
-			case 3: race = RACE_VAHNATAI; break;
+			case 0: race = eRace::HUMAN; break;
+			case 1: race = eRace::NEPHIL; break;
+			case 2: race = eRace::SLITH; break;
+			case 3: race = eRace::VAHNATAI; break;
 		}
 		if(store_trait_mode == 0)
 			pc->race = race;
 		display_traits_graphics(me);
-		abil_str = get_str("traits",16 + race);
+		abil_str = get_str("traits",16 + int(race));
 		me["info"].setText(abil_str);
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';

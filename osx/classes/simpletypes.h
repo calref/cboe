@@ -55,29 +55,36 @@ inline bool isDead(eMainStatus stat) {
 }
 
 /* adven[i].race */ //complete
-enum eRace {
-	RACE_UNKNOWN = -1, // for parameters to some functions; not valid in the class
-	RACE_HUMAN = 0,
-	RACE_NEPHIL = 1,
-	RACE_SLITH = 2,
-	RACE_VAHNATAI = 3,
-	RACE_REPTILE = 4,
-	RACE_BEAST = 5,
-	RACE_IMPORTANT = 6,
-	RACE_MAGE = 7,
-	RACE_PRIEST = 8,
-	RACE_HUMANOID = 9,
-	RACE_DEMON = 10,
-	RACE_UNDEAD = 11,
-	RACE_GIANT = 12,
-	RACE_SLIME = 13,
-	RACE_STONE = 14,
-	RACE_BUG = 15,
-	RACE_DRAGON = 16,
-	RACE_MAGICAL = 17,
-	RACE_PLANT = 18,
-	RACE_BIRD = 19,
+enum class eRace {
+	UNKNOWN = -1, // for parameters to some functions; not valid in the class
+	HUMAN = 0,
+	NEPHIL = 1,
+	SLITH = 2,
+	VAHNATAI = 3,	// Former value from eMonsterType
+	REPTILE = 4,	// 1
+	BEAST = 5,		// 2
+	IMPORTANT = 6,	// 3
+	MAGE = 7,		// 4
+	PRIEST = 8,		// 5
+	HUMANOID = 9,	// 6
+	DEMON = 10,		// 7
+	UNDEAD = 11,	// 8
+	GIANT = 12,		// 9
+	SLIME = 13,		// 10
+	STONE = 14,		// 11
+	BUG = 15,		// 12
+	DRAGON = 16,	// 13
+	MAGICAL = 17,	// 14
+	PLANT = 18,
+	BIRD = 19,
 };
+
+// Types IMPORTANT, MAGE, and PRIEST are implicitly human
+// Types NEPHIL, SLITH, and VAHNATAI are implicitly humanoid
+inline bool isHumanoid(eRace race) {
+	int code = (int) race;
+	return (code >= 0 && code <= 3) || (code >= 6 && code <= 9);
+}
 
 /* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc
 enum eStatus {

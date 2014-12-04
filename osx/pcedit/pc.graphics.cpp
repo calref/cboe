@@ -470,12 +470,13 @@ void display_party()
 						case eMainStatus::ALIVE:
 							if (i == current_active_pc) {
 								//Draw in race
-								if (univ.party[i].race == 0)
+								if(univ.party[i].race == eRace::HUMAN)
 									win_draw_string(mainPtr,pc_race_rect,"Human   ",eTextMode::CENTRE,style);
-								if (univ.party[i].race == 1)
+								if(univ.party[i].race == eRace::NEPHIL)
 									win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",eTextMode::CENTRE,style);
-								if (univ.party[i].race == 2)
+								if(univ.party[i].race == eRace::SLITH)
 									win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",eTextMode::CENTRE,style);
+								// TODO: Vahnatai
 								// Draw in skills	
 								
 								sprintf((char *) to_draw, "Skills:");

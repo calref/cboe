@@ -26,7 +26,7 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	// Unless human, add 3 to the monster's type to get its race
 	// This is because nephil, slith, and vahnatai were inserted
 	if(old.m_type) m_type = eRace(old.m_type + 3);
-	else m_type = RACE_HUMAN;
+	else m_type = eRace::HUMAN;
 	speed = old.speed;
 	mu = old.mu;
 	cl = old.cl;
@@ -166,7 +166,7 @@ std::istream& operator >> (std::istream& in, eRace& e){
 	in >> i;
 	if(i > 0 && i < 20)
 		e = (eRace) i;
-	else e = RACE_HUMAN;
+	else e = eRace::HUMAN;
 	return in;
 }
 
@@ -380,56 +380,56 @@ cMonster::cAbility::operator std::string(){
 			break;
 		case MONST_SUMMON_SPECIES:
 			sout << "Summons ";
-			switch(extra1){
-				case RACE_HUMAN:
+			switch((eRace)extra1){
+				case eRace::HUMAN:
 					sout << "Humans";
 					break;
-				case RACE_NEPHIL:
+				case eRace::NEPHIL:
 					sout << "Nephilim";
 					break;
-				case RACE_SLITH:
+				case eRace::SLITH:
 					sout << "Slithzerikai";
 					break;
-				case RACE_VAHNATAI:
+				case eRace::VAHNATAI:
 					sout << "Vahnatai";
 					break;
-				case RACE_REPTILE:
+				case eRace::REPTILE:
 					sout << "reptiles";
 					break;
-				case RACE_BEAST:
+				case eRace::BEAST:
 					sout << "beasts";
 					break;
-				case RACE_HUMANOID:
+				case eRace::HUMANOID:
 					sout << "humanoids";
 					break;
-				case RACE_DEMON:
+				case eRace::DEMON:
 					sout << "demons";
 					break;
-				case RACE_UNDEAD:
+				case eRace::UNDEAD:
 					sout << "undead";
 					break;
-				case RACE_GIANT:
+				case eRace::GIANT:
 					sout << "giants";
 					break;
-				case RACE_SLIME:
+				case eRace::SLIME:
 					sout << "slimes";
 					break;
-				case RACE_STONE:
+				case eRace::STONE:
 					sout << "golems";
 					break;
-				case RACE_BUG:
+				case eRace::BUG:
 					sout << "bugs";
 					break;
-				case RACE_DRAGON:
+				case eRace::DRAGON:
 					sout << "Dragons";
 					break;
-				case RACE_MAGICAL:
+				case eRace::MAGICAL:
 					sout << "magical creatures";
 					break;
-				case RACE_PLANT:
+				case eRace::PLANT:
 					sout << "plants";
 					break;
-				case RACE_BIRD:
+				case eRace::BIRD:
 					sout << "birds";
 					break;
 				default: // Important, Mage, Priest, or invalid

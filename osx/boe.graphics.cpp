@@ -382,26 +382,26 @@ void draw_startup_stats()
 			switch (univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					switch (univ.party[i].race) {
-						case RACE_HUMAN: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
-						case RACE_NEPHIL: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
-						case RACE_SLITH: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
-						case RACE_VAHNATAI: sprintf((char *) str,"Level %d Vahnatai",univ.party[i].level); break;
-						case RACE_REPTILE: sprintf((char *) str,"Level %d Reptile",univ.party[i].level); break;
-						case RACE_BEAST: sprintf((char *) str,"Level %d Beast",univ.party[i].level); break;
-						case RACE_IMPORTANT: sprintf((char *) str,"Level %d V.I.P.",univ.party[i].level); break;
-						case RACE_MAGE: sprintf((char *) str,"Level %d Human Mage",univ.party[i].level); break;
-						case RACE_PRIEST: sprintf((char *) str,"Level %d Human Priest",univ.party[i].level); break;
-						case RACE_HUMANOID: sprintf((char *) str,"Level %d Humanoid",univ.party[i].level); break;
-						case RACE_DEMON: sprintf((char *) str,"Level %d Demon",univ.party[i].level); break;
-						case RACE_UNDEAD: sprintf((char *) str,"Level %d Undead",univ.party[i].level); break;
-						case RACE_GIANT: sprintf((char *) str,"Level %d Giant",univ.party[i].level); break;
-						case RACE_SLIME: sprintf((char *) str,"Level %d Slime",univ.party[i].level); break;
-						case RACE_STONE: sprintf((char *) str,"Level %d Golem",univ.party[i].level); break;
-						case RACE_BUG: sprintf((char *) str,"Level %d Bug",univ.party[i].level); break;
-						case RACE_DRAGON: sprintf((char *) str,"Level %d Dragon",univ.party[i].level); break;
-						case RACE_MAGICAL: sprintf((char *) str,"Level %d Magical Creature",univ.party[i].level); break;
-						case RACE_PLANT: sprintf((char *) str,"Level %d Plant",univ.party[i].level); break;
-						case RACE_BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
+						case eRace::HUMAN: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
+						case eRace::NEPHIL: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
+						case eRace::SLITH: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
+						case eRace::VAHNATAI: sprintf((char *) str,"Level %d Vahnatai",univ.party[i].level); break;
+						case eRace::REPTILE: sprintf((char *) str,"Level %d Reptile",univ.party[i].level); break;
+						case eRace::BEAST: sprintf((char *) str,"Level %d Beast",univ.party[i].level); break;
+						case eRace::IMPORTANT: sprintf((char *) str,"Level %d V.I.P.",univ.party[i].level); break;
+						case eRace::MAGE: sprintf((char *) str,"Level %d Human Mage",univ.party[i].level); break;
+						case eRace::PRIEST: sprintf((char *) str,"Level %d Human Priest",univ.party[i].level); break;
+						case eRace::HUMANOID: sprintf((char *) str,"Level %d Humanoid",univ.party[i].level); break;
+						case eRace::DEMON: sprintf((char *) str,"Level %d Demon",univ.party[i].level); break;
+						case eRace::UNDEAD: sprintf((char *) str,"Level %d Undead",univ.party[i].level); break;
+						case eRace::GIANT: sprintf((char *) str,"Level %d Giant",univ.party[i].level); break;
+						case eRace::SLIME: sprintf((char *) str,"Level %d Slime",univ.party[i].level); break;
+						case eRace::STONE: sprintf((char *) str,"Level %d Golem",univ.party[i].level); break;
+						case eRace::BUG: sprintf((char *) str,"Level %d Bug",univ.party[i].level); break;
+						case eRace::DRAGON: sprintf((char *) str,"Level %d Dragon",univ.party[i].level); break;
+						case eRace::MAGICAL: sprintf((char *) str,"Level %d Magical Creature",univ.party[i].level); break;
+						case eRace::PLANT: sprintf((char *) str,"Level %d Plant",univ.party[i].level); break;
+						case eRace::BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
 						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
 					}
 					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);

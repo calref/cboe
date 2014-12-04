@@ -126,7 +126,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			for (i = 0; i < num_hits; i++) {
 				add_string_to_buf("  A knife flies out!              ");
 				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
-				damage_pc(pc_num,r1,DAMAGE_WEAPON,RACE_UNKNOWN,0);
+				damage_pc(pc_num,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
 			}
 			break;
 			
