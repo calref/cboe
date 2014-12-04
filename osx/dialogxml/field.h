@@ -13,7 +13,9 @@
 #include "control.h"
 
 enum eFldType {
-	FLD_NUM,
+	FLD_INT,
+	FLD_UINT,
+	FLD_REAL,
 	FLD_TEXT,
 };
 
@@ -39,7 +41,7 @@ public:
 	cTextField(cTextField& other) = delete;
 	long tabOrder = 0;
 private:
-	bool isNumericField;
+	eFldType field_type;
 	focus_callback_t onFocus;
 	bool haveFocus;
 	int insertionPoint;

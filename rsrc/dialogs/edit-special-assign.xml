@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<field name='num' top='64' left='209' width='75' height='16'/>
+	<field name='num' type='uint' top='64' left='209' width='75' height='16'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<button name='okay' type='regular' top='87' left='311'>OK</button>
 	<text size='large' top='6' left='50' width='256' height='17'>Set Special Number:</text>

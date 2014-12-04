@@ -158,7 +158,9 @@
       <xs:attribute name="type" default="text">
         <xs:simpleType>
           <xs:restriction base="xs:token">
-            <xs:enumeration value="num"/>
+            <xs:enumeration value="int"/>
+			<xs:enumeration value="uint"/>
+			<xs:enumeration value="real"/>
             <xs:enumeration value="text"/>
           </xs:restriction>
         </xs:simpleType>

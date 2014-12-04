@@ -2,6 +2,9 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='light' fore='black' debug='true' defbtn='done'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<text size='large' top='6' left='50' height='17' width='138'>Edit Terrain Type</text>
 	<pict name='graphic' type='ter' num='0' top='8' left='8'/>
 	<text top='8' left='222' height='14' width='111'>Terrain number:</text>

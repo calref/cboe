@@ -676,8 +676,12 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 		else if(name == "type"){
 			std::string val;
 			attr->GetValue(&val);
-			if(val == "num")
-				p.second->setInputType(FLD_NUM);
+			if(val == "int")
+				p.second->setInputType(FLD_INT);
+			else if(val == "uint")
+				p.second->setInputType(FLD_UINT);
+			else if(val == "real")
+				p.second->setInputType(FLD_REAL);
 			else if(val == "text")
 				p.second->setInputType(FLD_TEXT);
 			else throw xBadVal("field",name,val,attr->Row(),attr->Column(),fname);

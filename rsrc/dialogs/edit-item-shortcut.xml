@@ -1,27 +1,27 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog skin='light' defbtn='okay' debug='true'>
-	<field name='item1' top='188' left='73' width='39' height='16'/>
-	<field name='item2' top='216' left='73' width='39' height='16'/>
-	<field name='item3' top='244' left='73' width='39' height='16'/>
-	<field name='item4' top='272' left='73' width='39' height='16'/>
-	<field name='item5' top='300' left='73' width='39' height='16'/>
-	<field name='item6' top='188' left='309' width='39' height='16'/>
-	<field name='item7' top='216' left='309' width='39' height='16'/>
-	<field name='item8' top='244' left='309' width='39' height='16'/>
-	<field name='item9' top='272' left='309' width='39' height='16'/>
-	<field name='item10' top='300' left='309' width='39' height='16'/>
-	<field name='odds1' top='188' left='192' width='39' height='16'/>
-	<field name='odds2' top='216' left='192' width='39' height='16'/>
-	<field name='odds3' top='244' left='192' width='39' height='16'/>
-	<field name='odds4' top='272' left='192' width='39' height='16'/>
-	<field name='odds5' top='300' left='192' width='39' height='16'/>
-	<field name='odds6' top='188' left='428' width='39' height='16'/>
-	<field name='odds7' top='216' left='428' width='39' height='16'/>
-	<field name='odds8' top='244' left='428' width='39' height='16'/>
-	<field name='odds9' top='272' left='428' width='39' height='16'/>
-	<field name='odds10' top='300' left='428' width='39' height='16'/>
-	<field name='ter' top='113' left='410' width='42' height='17'/>
+	<field name='item1' type='uint' top='188' left='73' width='39' height='16'/>
+	<field name='item2' type='uint' top='216' left='73' width='39' height='16'/>
+	<field name='item3' type='uint' top='244' left='73' width='39' height='16'/>
+	<field name='item4' type='uint' top='272' left='73' width='39' height='16'/>
+	<field name='item5' type='uint' top='300' left='73' width='39' height='16'/>
+	<field name='item6' type='uint' top='188' left='309' width='39' height='16'/>
+	<field name='item7' type='uint' top='216' left='309' width='39' height='16'/>
+	<field name='item8' type='uint' top='244' left='309' width='39' height='16'/>
+	<field name='item9' type='uint' top='272' left='309' width='39' height='16'/>
+	<field name='item10' type='uint' top='300' left='309' width='39' height='16'/>
+	<field name='odds1' type='uint' top='188' left='192' width='39' height='16'/>
+	<field name='odds2' type='uint' top='216' left='192' width='39' height='16'/>
+	<field name='odds3' type='uint' top='244' left='192' width='39' height='16'/>
+	<field name='odds4' type='uint' top='272' left='192' width='39' height='16'/>
+	<field name='odds5' type='uint' top='300' left='192' width='39' height='16'/>
+	<field name='odds6' type='uint' top='188' left='428' width='39' height='16'/>
+	<field name='odds7' type='uint' top='216' left='428' width='39' height='16'/>
+	<field name='odds8' type='uint' top='244' left='428' width='39' height='16'/>
+	<field name='odds9' type='uint' top='272' left='428' width='39' height='16'/>
+	<field name='odds10' type='uint' top='300' left='428' width='39' height='16'/>
+	<field name='ter' type='int' top='113' left='410' width='42' height='17'/>
 	<button name='okay' type='regular' top='334' left='462'>OK</button>
 	<button name='cancel' type='regular' top='334' left='396' def-key='esc'>Cancel</button>
 	<button name='right' type='right' top='334' left='73' def-key='right'/>

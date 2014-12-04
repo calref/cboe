@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog skin='light' defbtn='okay' debug='true'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='town1' top='130' left='146' width='67' height='16'/>
 	<field name='town2' top='158' left='146' width='67' height='16'/>
 	<field name='town3' top='186' left='146' width='67' height='16'/>

@@ -3,7 +3,7 @@
 <dialog skin='light' defbtn='okay' debug='true'>
 	<field name='name' top='57' left='195' width='252' height='16'/>
 	<field name='descr' top='84' left='195' width='252' height='104'/>
-	<field name='spec' top='249' left='268' width='87' height='16'/>
+	<field name='spec' type='int' top='249' left='268' width='87' height='16'/>
 	<button name='okay' type='regular' top='288' left='397'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Edit Special Items</text>

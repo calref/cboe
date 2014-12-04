@@ -8,7 +8,10 @@
 
 #include "field.h"
 #include <sstream>
+#include <map>
+#include <boost/lexical_cast.hpp>
 #include "dialog.h"
+#include "dlogutil.h"
 #include "graphtool.h"
 
 void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
@@ -20,7 +23,31 @@ void cTextField::attachFocusHandler(focus_callback_t f) throw(){
 }
 
 bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
-	// TODO: If isNumericField, verify that the contents are in fact a number.
+	if(losingFocus && field_type != FLD_TEXT) {
+		try {
+			std::string contents = getText();
+			switch(field_type) {
+				case FLD_TEXT: break;
+				case FLD_INT:
+					boost::lexical_cast<long long>(contents);
+					break;
+				case FLD_UINT:
+					boost::lexical_cast<unsigned long long>(contents);
+					break;
+				case FLD_REAL:
+					boost::lexical_cast<long double>(contents);
+					break;
+			}
+		} catch(boost::bad_lexical_cast) {
+			static const std::map<const eFldType, const std::string> typeNames = {
+				{FLD_INT, "an integer"},
+				{FLD_UINT, "a positive integer"},
+				{FLD_REAL, "a number"},
+			};
+			giveError("You need to enter " + typeNames.at(field_type) + "!","",parent);
+			return false;
+		}
+	}
 	bool passed = true;
 	if(onFocus != NULL) passed = onFocus(me,id,losingFocus);
 	if(passed) haveFocus = !losingFocus;
@@ -31,6 +58,7 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 
 bool cTextField::handleClick(location) {
 	// TODO: Set the insertion point, handle selection, etc
+	if(haveFocus) return true;
 	if(parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
 	return true;
@@ -53,19 +81,11 @@ sf::Color cTextField::getColour() throw(xUnsupportedProp) {
 }
 
 eFldType cTextField::getInputType() {
-	if(isNumericField) return FLD_NUM;
-	else return FLD_TEXT;
+	return field_type;
 }
 
 void cTextField::setInputType(eFldType type) {
-	switch(type) {
-		case FLD_NUM:
-			isNumericField = true;
-			break;
-		case FLD_TEXT:
-			isNumericField = false;
-			break;
-	}
+	field_type = type;
 }
 
 bool cTextField::isClickable(){
@@ -82,7 +102,7 @@ cTextField::cTextField(cDialog* parent) :
 		insertionPoint(-1),
 		selectionPoint(0),
 		haveFocus(false),
-		isNumericField(false) {}
+		field_type(FLD_TEXT) {}
 
 cTextField::~cTextField(){}
 

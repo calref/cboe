@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' debug='true'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='extra1' top='126' left='221' width='67' height='16'/>
 	<field name='extra2' top='153' left='221' width='67' height='16'/>
 	<field name='death' top='298' left='285' width='67' height='16'/>

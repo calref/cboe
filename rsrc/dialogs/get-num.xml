@@ -2,7 +2,7 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='okay'>
-	<field name="number" type='num' top='33' left='90' width='75' height='16'/>
+	<field name="number" type='int' top='33' left='90' width='75' height='16'/>
 	<pict type='dlog' num='2' top='8' left='8'/>
 	<text name='prompt' size='large' top='8' left='49' width='163' height='16'>How many?</text>
 	<button name='okay' type='regular' top='63' left='141'>OK</button>

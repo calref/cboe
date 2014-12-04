@@ -1525,73 +1525,51 @@ void edit_item_placement() {
 	shortcut_dlg.run();
 }
 
-bool save_scen_details() {
-#if 0
-	char str[256];
+static bool save_scen_details(cDialog& me) {
 	short i;
 	
-	scenario.difficulty = cd_get_led_range(803,30,33);
-	scenario.rating = cd_get_led_range(803,21,24);
-	scenario.format.ver[0] = CDGN(803,2);
-	scenario.format.ver[1] = CDGN(803,3);
-	scenario.format.ver[2] = CDGN(803,4);
-	for (i = 0; i < 3; i++)
-		if (cre(scenario.format.ver[i],
-				0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == true) return false;
-	CDGT(803,5,(char *) str);
-	str[59] = 0;
-	strcpy(scenario.scen_strs(1),(char *) str);
-	CDGT(803,6,(char *) str);
-	str[59] = 0;
-	strcpy(scenario.scen_strs(2),(char *) str);
-	CDGT(803,7,scenario.scen_strs(3));
-#endif
+	{
+		cLedGroup& difficulty = dynamic_cast<cLedGroup&>(me["difficulty"]);
+		scenario.difficulty = difficulty.getSelected()[3] - '1';
+	}{
+		cLedGroup& rating = dynamic_cast<cLedGroup&>(me["rating"]);
+		scenario.rating = rating.getSelected()[4] - '1';
+	}
+	for(i = 0; i < 3; i++)
+		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
+	strncpy(scenario.scen_strs(1), me["who1"].getText().c_str(), 60);
+	scenario.scen_strs(1)[59] = 0;
+	strncpy(scenario.scen_strs(2), me["who2"].getText().c_str(), 60);
+	scenario.scen_strs(2)[59] = 0;
+	strncpy(scenario.scen_strs(3), me["contact"].getText().c_str(), 256);
+	scenario.scen_strs(3)[255] = 0;
 	return true;
 }
 
-void put_scen_details_in_dlog() {
-#if 0
-	cd_set_led_range(803,30,33,scenario.difficulty);
-	cd_set_led_range(803,21,24,scenario.rating);
-	CDSN(803,2,scenario.format.ver[0]);
-	CDSN(803,3,scenario.format.ver[1]);
-	CDSN(803,4,scenario.format.ver[2]);
-	CDST(803,5,scenario.scen_strs(1));
-	CDST(803,6,scenario.scen_strs(2));
-	CDST(803,7,scenario.scen_strs(3));
-#endif
+static void put_scen_details_in_dlog(cDialog& me) {
+	dynamic_cast<cLedGroup&>(me["difficulty"]).setSelected("lvl" + std::to_string(scenario.difficulty + 1));
+	dynamic_cast<cLedGroup&>(me["rating"]).setSelected("rate" + std::to_string(scenario.rating + 1));
+	for(int i = 0; i < 3; i++)
+		me["ver" + std::to_string(i + 1)].setTextToNum(scenario.format.ver[i]);
+	me["who1"].setText(scenario.scen_strs(1));
+	me["who2"].setText(scenario.scen_strs(2));
+	me["contact"].setText(scenario.scen_strs(3));
 }
 
-void edit_scen_details_event_filter (short item_hit) {
-#if 0
-	switch (item_hit) {
-		case 8:
-			if (save_scen_details() == true)
-				toast_dialog();
-			break;
-		default:
-			cd_hit_led_range(803,21,24,item_hit);
-			cd_hit_led_range(803,30,33,item_hit);
-			break;
-	}
-#endif
+static bool edit_scen_details_event_filter(cDialog& me, std::string, eKeyMod) {
+	if(save_scen_details(me))
+		me.toast(true);
+	return true;
 }
 
 void edit_scen_details() {
-#if 0
-	// ignore parent in Mac version
-	short scen_details_hit;
+	cDialog info_dlg("edit-scenario-details.xml");
+	info_dlg["okay"].attachClickHandler(edit_scen_details_event_filter);
 	
-	cd_create_dialog_parent_num(803,0);
+	put_scen_details_in_dlog(info_dlg);
 	
-	put_scen_details_in_dlog();
-	
-	scen_details_hit = cd_run_dialog();
-	cd_kill_dialog(803);
-#endif
+	info_dlg.run();
 }
-
-
 
 void put_make_scen_1_in_dlog() {
 #if 0

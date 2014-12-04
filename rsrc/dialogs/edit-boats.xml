@@ -1,24 +1,24 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog skin='light' defbtn='okay' debug='true'>
-	<field name='town1' top='100' left='214' width='67' height='16'/>
-	<field name='town2' top='128' left='214' width='67' height='16'/>
-	<field name='town3' top='156' left='214' width='67' height='16'/>
-	<field name='town4' top='184' left='214' width='67' height='16'/>
-	<field name='town5' top='212' left='214' width='67' height='16'/>
-	<field name='town6' top='240' left='214' width='67' height='16'/>
-	<field name='x1' top='100' left='329' width='39' height='16'/>
-	<field name='x2' top='128' left='329' width='39' height='16'/>
-	<field name='x3' top='156' left='329' width='39' height='16'/>
-	<field name='x4' top='184' left='329' width='39' height='16'/>
-	<field name='x5' top='212' left='329' width='39' height='16'/>
-	<field name='x6' top='240' left='329' width='39' height='16'/>
-	<field name='y1' top='100' left='410' width='39' height='16'/>
-	<field name='y2' top='128' left='410' width='39' height='16'/>
-	<field name='y3' top='156' left='410' width='39' height='16'/>
-	<field name='y4' top='184' left='410' width='39' height='16'/>
-	<field name='y5' top='212' left='410' width='39' height='16'/>
-	<field name='y6' top='240' left='410' width='39' height='16'/>
+	<field name='town1' type='int' top='100' left='214' width='67' height='16'/>
+	<field name='town2' type='int' top='128' left='214' width='67' height='16'/>
+	<field name='town3' type='int' top='156' left='214' width='67' height='16'/>
+	<field name='town4' type='int' top='184' left='214' width='67' height='16'/>
+	<field name='town5' type='int' top='212' left='214' width='67' height='16'/>
+	<field name='town6' type='int' top='240' left='214' width='67' height='16'/>
+	<field name='x1' type='uint' top='100' left='329' width='39' height='16'/>
+	<field name='x2' type='uint' top='128' left='329' width='39' height='16'/>
+	<field name='x3' type='uint' top='156' left='329' width='39' height='16'/>
+	<field name='x4' type='uint' top='184' left='329' width='39' height='16'/>
+	<field name='x5' type='uint' top='212' left='329' width='39' height='16'/>
+	<field name='x6' type='uint' top='240' left='329' width='39' height='16'/>
+	<field name='y1' type='uint' top='100' left='410' width='39' height='16'/>
+	<field name='y2' type='uint' top='128' left='410' width='39' height='16'/>
+	<field name='y3' type='uint' top='156' left='410' width='39' height='16'/>
+	<field name='y4' type='uint' top='184' left='410' width='39' height='16'/>
+	<field name='y5' type='uint' top='212' left='410' width='39' height='16'/>
+	<field name='y6' type='uint' top='240' left='410' width='39' height='16'/>
 	<button name='okay' type='regular' top='268' left='468'>OK</button>
 	<text top='268' left='381' width='75' height='16'/>
 	<button name='left' type='left' top='268' left='51'/>

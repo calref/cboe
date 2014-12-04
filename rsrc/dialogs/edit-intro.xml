@@ -7,7 +7,7 @@
 	<field name='str4' top='221' left='57' width='540' height='39'/>
 	<field name='str5' top='267' left='57' width='540' height='39'/>
 	<field name='str6' top='313' left='57' width='540' height='39'/>
-	<field name='picnum' top='19' left='523' width='70' height='16'/>
+	<field name='picnum' type='uint' top='19' left='523' width='70' height='16'/>
 	<button name='okay' type='regular' top='358' left='541'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='358' left='475'>Cancel</button>
 	<pict name='pic' type='scen' num='0' top='8' left='8'/>

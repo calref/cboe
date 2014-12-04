@@ -2,6 +2,9 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='light' defbtn='okay' debug='true'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='name' top='30' left='180' width='186' height='16'/>
 	<field name='pic' top='57' left='140' width='52' height='16'/>
 	<field name='level' top='82' left='206' width='52' height='16'/>
