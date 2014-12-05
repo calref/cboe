@@ -96,6 +96,7 @@ public:
 	char monst_strs[100][256];
 	bool adjust_diff : 1;
 	char : 7;
+	bool is_legacy;
 	fs::path scen_file; // transient
 	cOutdoors* outdoors;
 	cTown* towns;

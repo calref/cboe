@@ -331,6 +331,9 @@
 		915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325161A2E1DA8000A9A1C /* oldstructs.cpp */; };
 		915325391A2E5F36000A9A1C /* specials_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325181A2E37EE000A9A1C /* specials_parse.cpp */; };
 		9153253B1A2E5F37000A9A1C /* specials_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325181A2E37EE000A9A1C /* specials_parse.cpp */; };
+		915E090A1A316EE3008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
+		915E090B1A316EE4008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
+		915E090C1A317E2E008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
 		91870F81190C8C1C0081C150 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91870F83190C8C1F0081C150 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
 		91870F84190C90980081C150 /* scen.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scen.menu.xib */; };
@@ -1250,6 +1253,8 @@
 		914CA49F190C4E9200B6ADD1 /* scen.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scen.menu.xib; sourceTree = "<group>"; };
 		915325161A2E1DA8000A9A1C /* oldstructs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oldstructs.cpp; path = ../oldstructs.cpp; sourceTree = "<group>"; };
 		915325181A2E37EE000A9A1C /* specials_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = specials_parse.cpp; sourceTree = "<group>"; };
+		915E09071A316D6A008BDF00 /* map_parse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = map_parse.hpp; sourceTree = "<group>"; };
+		915E09081A316D89008BDF00 /* map_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_parse.cpp; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -1690,6 +1695,7 @@
 				91E5C7A60F9F615400C21460 /* fileio.cpp */,
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
+				915E09081A316D89008BDF00 /* map_parse.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */,
@@ -1710,6 +1716,7 @@
 				91C688E60FD702B9000F6D01 /* cursors.h */,
 				91E5C7A50F9F615400C21460 /* fileio.h */,
 				91B3F1090F9779C300BF5B67 /* graphtool.h */,
+				915E09071A316D6A008BDF00 /* map_parse.hpp */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.h */,
 				913D00590F9FEEC200184C18 /* porting.h */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
@@ -2407,6 +2414,7 @@
 				91BFA3E919033E01001686E4 /* gzstream.cpp in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
 				9153253B1A2E5F37000A9A1C /* specials_parse.cpp in Sources */,
+				915E090A1A316EE3008BDF00 /* map_parse.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2460,6 +2468,7 @@
 				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
 				91BFA3DB1902B13F001686E4 /* tarball.cpp in Sources */,
 				91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */,
+				915E090C1A317E2E008BDF00 /* map_parse.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2517,6 +2526,7 @@
 				91870F81190C8C1C0081C150 /* winutil.mac.mm in Sources */,
 				91870F83190C8C1F0081C150 /* tarball.cpp in Sources */,
 				915325391A2E5F36000A9A1C /* specials_parse.cpp in Sources */,
+				915E090B1A316EE4008BDF00 /* map_parse.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

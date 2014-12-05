@@ -24,6 +24,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 //{-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0}
 
 cScenario& cScenario::operator = (legacy::scenario_data_type& old){
+	is_legacy = true;
 	int i,j;
 //	for(i = 0; i < 3; i++) format.ver[i] = old.ver[i];
 //	format.min_run_ver = old.min_run_ver;

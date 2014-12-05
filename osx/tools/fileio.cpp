@@ -15,6 +15,7 @@
 #include "gzstream.h"
 
 #include "classes.h"
+#include "map_parse.hpp"
 #include "graphtool.h"
 #include "mathutil.h"
 
@@ -212,7 +213,7 @@ static long get_town_offset(short which_town){
 	return len_to_jump;
 }
 
-bool load_town(short which_town, cTown*& the_town){
+static bool load_town_v1(short which_town, cTown*& the_town) {
 	short i,n;
 	long len,len_to_jump = 0;
 	legacy::town_record_type store_town;
@@ -315,7 +316,26 @@ bool load_town(short which_town, cTown*& the_town){
 	return true;
 }
 
-bool load_town_talk(short which_town){
+bool load_town(short which_town, cTown*& the_town) {
+	if(scenario.is_legacy) return load_town_v1(which_town, the_town);
+	fs::path town_base = scenario.scen_file/"towns";
+	std::string base_fname = "t" + std::to_string(which_town), fname;
+	// TODO: Implement all this.
+	// First load the main town data.
+	fname = base_fname + ".xml";
+	// Next, load in the town map.
+	fname = base_fname + ".map";
+	map_data map = load_map(town_base/fname);
+	// Then load the town's special nodes.
+	fname = base_fname + ".spec";
+	// Load the town's special encounter strings
+	fname = base_fname + ".txt";
+	// And finally, load the town's dialogue nodes.
+	load_town_talk(which_town);
+	return false;
+}
+
+static bool load_town_talk_v1(short which_town) {
 	if(univ.town.prep_talk(which_town)) return true;
 	
 	short i,n;
@@ -398,6 +418,14 @@ bool load_town_talk(short which_town){
 	}
 	
 	return true;
+}
+
+bool load_town_talk(short which_town) {
+	if(scenario.is_legacy) return load_town_talk_v1(which_town);
+	fs::path town_base = scenario.scen_file/"towns";
+	// TODO: Implement this.
+	std::string fname = "t" + std::to_string(which_town) + "talk.xml";
+	return false;
 }
 
 bool load_town_str(short which_town, short which_str, char* str){
@@ -542,7 +570,7 @@ static long get_outdoors_offset(location& which_out){
 }
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
-bool load_outdoors(location which_out,cOutdoors& the_out){
+static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	short i,n;
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
@@ -591,6 +619,23 @@ bool load_outdoors(location which_out,cOutdoors& the_out){
 		oopsError(35, 0, 0);
 	}
 	return true;
+}
+
+bool load_outdoors(location which_out,cOutdoors& the_out) {
+	if(scenario.is_legacy) return load_outdoors_v1(which_out, the_out);
+	fs::path town_base = scenario.scen_file/"outdoors";
+	std::string base_fname = "tut" + std::to_string(which_out.x) + "~" + std::to_string(which_out.y), fname;
+	// TODO: Implement all this.
+	// First load the main sector data.
+	fname = base_fname + ".xml";
+	// Next, load in the sector map.
+	fname = base_fname + ".map";
+	map_data map = load_map(town_base/fname);
+	// Then load the sector's special nodes.
+	fname = base_fname + ".spec";
+	// Load the sector's special encounter strings
+	fname = base_fname + ".txt";
+	return false;
 }
 
 bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
