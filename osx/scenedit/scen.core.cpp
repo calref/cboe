@@ -1348,8 +1348,8 @@ static bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehic
 			me.toast(true);
 	} else if(item_hit == "left") {
 		if(!save_vehicles(me, vehicles, page)) return true;
-		page--;
-		if(page < 0) page = (nVehicles - 1) / 6;
+		if(page == 0) page = (nVehicles - 1) / 6;
+		else page--;
 		put_vehicles_in_dlog(me, vehicles, page);
 	} else if(item_hit == "right") {
 		if(!save_vehicles(me, vehicles, page)) return true;
