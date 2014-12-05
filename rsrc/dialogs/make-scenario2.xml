@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK Button -->
+	<field name='out-w' type='uint' top='99' left='309' width='75' height='16'>1</field>
+	<field name='out-h' type='uint' top='125' left='309' width='75' height='16'>1</field>
+	<field name='town-l' type='uint' top='242' left='312' width='75' height='16'>0</field>
+	<field name='town-m' type='uint' top='269' left='312' width='75' height='16'>1</field>
+	<field name='town-s' type='uint' top='295' left='312' width='75' height='16'>0</field>
+	<text framed='true' top='28' left='55' width='405' height='124'/>
+	<text framed='true' top='159' left='55' width='405' height='157'/>
+	<text framed='true' top='323' left='55' width='405' height='107'/>
+	<button name='cancel' type='regular' top='436' left='334' def-key='esc'>Cancel</button>
+	<button name='okay' type='regular' top='436' left='400'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='52' width='278' height='17'>How big is your scenario?</text>
+	<text size='large' top='32' left='59' width='158' height='18'>Size of Outdoors:</text>
+	<text size='large' top='166' left='59' width='235' height='18'>Number of towns/dungeons:</text>
+	<text top='52' left='70' width='377' height='39'>
+		The outdoors for your scenario can have up to 100 48x48 sections. 
+		Note, however, that more than 50 sections may be a bit too large.
+	</text>
+	<text top='186' left='70' width='383' height='52'>
+		You can have large (64 x 64), medium (48 x 48) and small (32 x 32) towns. 
+		Your scenario can have up to 200 towns and dungeon levels. 
+		However, more than 100 is an awful lot, and may take too long to design. 
+		More towns can be added later.
+	</text>
+	<text top='100' left='117' width='181' height='15'>Width of outdoors (0...50)</text>
+	<text top='125' left='117' width='181' height='15'>Height of outdoors (0...50)</text>
+	<text top='243' left='117' width='181' height='15'>Number of large towns:</text>
+	<text top='269' left='117' width='181' height='15'>Number of medium towns:</text>
+	<text top='295' left='117' width='181' height='15'>Number of small towns:</text>
+	<text size='large' top='331' left='59' width='235' height='16'>Place a starter town?</text>
+	<text top='348' left='70' width='383' height='53'>
+		If this option is selected, Town number 0 in your scenario is ‘Warrior’s Grove,’ a predesigned town with shops, inns, etc. 
+		This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.
+	</text>
+	<text top='406' left='119' width='134' height='15'>Include starter town</text>
+	<led name='warrior-grove' state='off' top='409' left='257'/>
+</dialog>

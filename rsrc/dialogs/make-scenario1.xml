@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<field name='name' top='34' left='351' width='125' height='32'>Scenario name</field>
+	<field name='file' top='96' left='351' width='125' height='16'>filename</field>
+	<button name='okay' type='regular' top='205' left='424'>OK</button>
+	<text size='large' top='6' left='50' width='194' height='14'>Create a new scenario:</text>
+	<text top='76' left='52' width='292' height='56'>
+		What is the file name for your new scenario? 
+		(max. length 8 characters, letters only) <br/>
+		  Examples: thorham, dragonq
+	</text>
+	<text top='32' left='52' width='292' height='40'>
+		What is the name of your new scenario? 
+		(max. length 30 characters) <br/>
+		   Examples: ‘Hammer of Thor’, ‘Dragon’s Quest’
+	</text>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<button name='cancel' type='regular' top='205' left='358' def-key='esc'>Cancel</button>
+	<text top='134' left='70' width='291' height='55'>
+		Is your outdoors going to be above ground? 
+		If so, the default outdoors will have grass instead of cave floor. 
+		(Click on the button to the left to have the outdoors be grass.)
+	</text>
+	<led name='surface' state='off' top='139' left='51'/>
+</dialog>

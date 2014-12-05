@@ -248,9 +248,10 @@ void handle_file_menu(int item_hit) {
 			save_scenario();
 			break;
 		case 3: // new scen
-			build_scenario();
-			if (overall_mode == MODE_MAIN_SCREEN)
+			if(build_scenario()) {
+				overall_mode = MODE_MAIN_SCREEN;
 				set_up_main_screen();
+			}
 			break;
 			
 		case 5: // quit

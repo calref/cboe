@@ -12,6 +12,7 @@
 #include "scen.townout.h"
 #include "scen.fileio.h"
 #include "scen.actions.h"
+#include "scen.menus.h"
 #include "dialog.h"
 #include "dlogutil.h"
 #include "fileio.h"
@@ -1571,224 +1572,158 @@ void edit_scen_details() {
 	info_dlg.run();
 }
 
-void put_make_scen_1_in_dlog() {
-#if 0
-	CDST(800,2,"Scenario name");
-	CDST(800,3,"filename");
-#endif
-}
-
-void edit_make_scen_1_event_filter (short item_hit) {
-#if 0
-	char str[256];
+static bool edit_make_scen_1_event_filter(cDialog& me, std::string, eKeyMod) {
 	short i,j;
 	
-	switch (item_hit) {
-		case 4:
-			CDGT(800,3,(char *) str);
-			j = strlen((char *) str);
+	std::string str = me["file"].getText();
+	j = str.length();
 			if (j == 0) {
-				give_error("You've left the file name empty.","",800);
-				break;
+				giveError("You've left the file name empty.","",&me);
+				return true;
 			}
 			if (j > 50) {
-				give_error("The file name can be at most 50 characters long.","",800);
-				break;
+				giveError("The file name can be at most 50 characters long.","",&me);
+				return true;
 			}
 			for (i = 0; i < j; i++)
 				if ((str[i] < 97) || (str[i] > 122)) {
-					give_error("The file name must consist of only lower case letters.","",800);
-					return;
+					giveError("The file name must consist of only lower case letters.","",&me);
+					return true;
 				}
-			dialog_answer = 1;
-			toast_dialog();
-			break;
-		case 9:
-			dialog_answer = 0;
-			toast_dialog();
-			break;
-		default:
-			cd_flip_led(800,11,item_hit);
-			break;
-	}
-#endif
+	me.setResult(true);
+	me.toast(true);
+	return true;
 }
 
-short edit_make_scen_1(char *filename,char *title,short *grass) {
-#if 0
-	// ignore parent in Mac version
-	short make_scen_1_hit;
+bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass) {
+	cDialog new_dlog("make-scenario1.xml");
+	new_dlog["okay"].attachClickHandler(edit_make_scen_1_event_filter);
+	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
+	new_dlog.setResult(false);
 	
-	cd_create_dialog_parent_num(800,0);
+	new_dlog.run();
+	if(!new_dlog.getResult<bool>()) return false;
 	
-	put_make_scen_1_in_dlog();
-	
-	make_scen_1_hit = cd_run_dialog();
-	CDGT(800,2,title);
-	title[30] = 0;
-	CDGT(800,3,filename);
-	*grass = cd_get_led(800,11);
-	cd_kill_dialog(800);
-#endif
-	return 0;//dialog_answer;
+	title = new_dlog["name"].getText();
+	filename = new_dlog["file"].getText();
+	grass = dynamic_cast<cLed&>(new_dlog["surface"]).getState() != led_off;
+	return true;
 }
 
-void put_make_scen_2_in_dlog() {
-#if 0
-	CDSN(801,2,1);
-	CDSN(801,3,1);
-	CDSN(801,4,0);
-	CDSN(801,5,1);
-	CDSN(801,6,0);
-#endif
-}
-
-void edit_make_scen_2_event_filter (short item_hit) {
-#if 0
+static bool edit_make_scen_2_event_filter(cDialog& me, std::string, eKeyMod) {
 	short i,j,k;
 	
-	switch (item_hit) {
-		case 11:
-			i = CDGN(801,2);
-			if (cre(i,
-					1,50,"Outdoors width must be between 1 and 50.","",801) == true) return ;
-			j = CDGN(801,3);
-			if (cre(j,
-					1,50,"Outdoors height must be between 1 and 50.","",801) == true) return ;
-			if (cre(i * j,
-					1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",801) == true) return ;
-			i = CDGN(801,4);
-			j = CDGN(801,5);
-			k = CDGN(801,6);
-			if (cre(i,
-					0,200,"Number of small towns must be between 0 and 200.","",801) == true) return ;
-			if (cre(j,
-					1,200,"Number of medium towns must be between 0 and 200. The first town (Town 0) must always be of medium size.","",801) == true) return ;
-			if (cre(k,
-					0,200,"Number of large towns must be between 0 and 200.","",801) == true) return ;
-			if (cre(i + j + k,
-					1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",801) == true) return ;
+	i = me["out-w"].getTextAsNum();
+	if (cre(i, 1,50,"Outdoors width must be between 1 and 50.","",&me)) return true;
+	j = me["out-h"].getTextAsNum();
+	if (cre(j, 1,50,"Outdoors height must be between 1 and 50.","",&me)) return true;
+	if (cre(i * j, 1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",&me)) return true;
+	i = me["town_s"].getTextAsNum();
+	j = me["town_m"].getTextAsNum();
+	k = me["town_l"].getTextAsNum();
+	if (cre(i, 0,200,"Number of small towns must be between 0 and 200.","",&me)) return true;
+	if (cre(j, 1,200,"Number of medium towns must be between 1 and 200. The first town (Town 0) must always be of medium size.","",&me)) return true;
+	if (cre(k, 0,200,"Number of large towns must be between 0 and 200.","",&me)) return true;
+	if (cre(i + j + k, 1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",&me)) return true;
 			
-			toast_dialog();
-			break;
-		case 10:
-			dialog_answer = 0;
-			toast_dialog();
-			break;
-		default:
-			cd_flip_led(801,26,item_hit);
-			break;
-	}
-#endif
+	me.toast(true);
+	return true;
 }
 
-short edit_make_scen_2(short *val_array) {
-#if 0
-	// ignore parent in Mac version
-	short make_scen_2_hit,i;//array[6];
+bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, short& town_s, bool& def_town) {
+	cDialog new_dlog("make-scenario2.xml");
+	new_dlog["okay"].attachClickHandler(edit_make_scen_2_event_filter);
+	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
+	new_dlog.setResult(false);
 	
-	//array = val_array;
-	cd_create_dialog_parent_num(801,0);
+	new_dlog.run();
+	if(!new_dlog.getResult<bool>()) return false;
 	
-	put_make_scen_2_in_dlog();
-	
-	make_scen_2_hit = cd_run_dialog();
-	
-	for (i = 0; i < 5; i++)
-		val_array[i] = CDGN(801,2 + i);
-	val_array[5] = cd_get_led(801,26);
-	cd_kill_dialog(801);
-#endif
-	return 0;//dialog_answer;
+	out_w = new_dlog["out-w"].getTextAsNum();
+	out_h = new_dlog["out-h"].getTextAsNum();
+	town_l = new_dlog["town-l"].getTextAsNum();
+	town_m = new_dlog["town-m"].getTextAsNum();
+	town_s = new_dlog["town-s"].getTextAsNum();
+	def_town = dynamic_cast<cLed&>(new_dlog["warrior-grove"]).getState();
+	return true;
 }
 
+extern fs::path progDir;
+extern eScenMode overall_mode;
 bool build_scenario() {
-	printf("Building a scenario currently disabled.\n");
-	//	short two_flags[6]; // width, height, large, med, small, default_town
-	//	Str255 f_name[256],f_name2[256],title[256];
-	//	short grass,password,which_town,error;
-	//	FSSpec temp_file_to_load;
-	//	short i,j;
-	//	long dummy;
-	//	
-	//	if (edit_make_scen_1((char *) f_name,(char *) title,&grass) == false)
-	//		return false;
-	//	sprintf((char *) f_name2,"%s.exs",f_name);
-	//	if (edit_make_scen_2((short *) two_flags) == false)
-	//		return false;
-	//	user_given_password = given_password = get_password();
-	//	if (fancy_choice_dialog(860,0) == 2)
-	//		return false;
-	//	town = new cMedTown;
-	//	//cMedTown* t_d = (cMedTown*) town;
-	//	init_out();
-	//	init_scenario();
-	//	strcpy((char *) scenario.scen_strs(0),(char *) title);
-	//	if (two_flags[5] == 0) {
-	//		init_town(1);
-	//		if (grass == 0)
-	//			for (i = 0; i < 48; i++)
-	//				for (j = 0; j < 48; j++)
-	//					town->terrain(i,j) = 0;
-	//		}
-	//	else {
-	//		error = FSMakeFSSpec(start_volume,start_dir,"::::Blades of Exile Base",&temp_file_to_load);
-	//		if (error != 0) {oops_error(40);}
-	//		import_town(0,temp_file_to_load);
-	//	}
-	//	if (two_flags[3] > 0)
-	//		two_flags[3]--;
-	//	
-	//	make_new_scenario(f_name2,two_flags[0],two_flags[1],two_flags[5],grass);
-	//	
-	//	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
-	//	// for a while
-	//	overall_mode = 60;
-	//	cur_out.x = 0;
-	//	cur_out.y = 0;
-	//	load_outdoors(cur_out,0);
-	//
-	//	for (i = 0; i < two_flags[2]; i++) {
-	//		which_town = scenario.num_towns;
-	//		scenario.num_towns++;
-	//		scenario.town_size[which_town] = 0;
-	//		scenario.town_hidden[which_town] = 0;
-	//		cur_town = which_town;
-	//		init_town(0);
-	//		strcpy(data_store->town_strs[0],"Large town");
-	//		town_type = 0;
-	//		reset_pwd();
-	//		save_scenario();
-	//		}
-	//	for (i = 0; i < two_flags[3]; i++) {
-	//		which_town = scenario.num_towns;
-	//		scenario.num_towns++;
-	//		scenario.town_size[which_town] = 1;
-	//		scenario.town_hidden[which_town] = 0;
-	//		cur_town = which_town;
-	//		init_town(1);
-	//		strcpy(data_store->town_strs[0],"Medium town");
-	//		town_type = 1;
-	//		reset_pwd();
-	//		save_scenario();
-	//		}
-	//	for (i = 0; i < two_flags[4]; i++) {
-	//		which_town = scenario.num_towns;
-	//		scenario.num_towns++;
-	//		scenario.town_size[which_town] = 2;
-	//		scenario.town_hidden[which_town] = 0;
-	//		cur_town = which_town;
-	//		init_town(2);
-	//		strcpy(data_store->town_strs[0],"Small town");
-	//		town_type = 2;
-	//		reset_pwd();
-	//		save_scenario();
-	//		}
-	//	//Delay(200,&dummy);
-	//	if(load_town(0)) cur_town = 0;
-	//	cur_town = 0;
-	//	augment_terrain(cur_out);
-	//	update_item_menu();
+	short width, height, large, med, small, which_town;
+	bool default_town, grass;
+	std::string filename, title;
+	short i,j;
+	
+	if(!edit_make_scen_1(filename, title, grass))
+		return false;
+	filename += ".boes";
+	if(!edit_make_scen_2(width, height, large, med, small, default_town))
+		return false;
+	town = new cMedTown;
+	init_out();
+	init_scenario();
+	strcpy(scenario.scen_strs(0), title.c_str());
+	if(!default_town) {
+		init_town(1);
+		if(!grass)
+			for (i = 0; i < 48; i++)
+				for (j = 0; j < 48; j++)
+					town->terrain(i,j) = 0;
+	} else {
+		fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
+		if(!fs::exists(basePath)) {oopsError(40);}
+		import_town(0, basePath);
+	}
+	if(med > 0) med--;
+	// TODO: This will probably change drastically once the new scenario format is implemented
+	
+	make_new_scenario(filename,width,height,default_town,grass);
+	
+	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
+	// for a while
+	overall_mode = MODE_MAIN_SCREEN;
+	cur_out.x = 0;
+	cur_out.y = 0;
+	// TODO: Not quite sure if this is actually necessary; if so, need to check what to pass as 2nd param
+//	load_outdoors(cur_out,0);
+
+	// TODO: Append i+1 to each town name
+	for(i = 0; i < large; i++) {
+		which_town = scenario.num_towns;
+		scenario.num_towns++;
+		scenario.town_size[which_town] = 0;
+		scenario.town_hidden[which_town] = 0;
+		cur_town = which_town;
+		init_town(0);
+		strcpy(town->town_strs(0),"Large town");
+		save_scenario();
+	}
+	for(i = 0; i < med; i++) {
+		which_town = scenario.num_towns;
+		scenario.num_towns++;
+		scenario.town_size[which_town] = 1;
+		scenario.town_hidden[which_town] = 0;
+		cur_town = which_town;
+		init_town(1);
+		strcpy(town->town_strs(0),"Medium town");
+		save_scenario();
+	}
+	for(i = 0; i < small; i++) {
+		which_town = scenario.num_towns;
+		scenario.num_towns++;
+		scenario.town_size[which_town] = 2;
+		scenario.town_hidden[which_town] = 0;
+		cur_town = which_town;
+		init_town(2);
+		strcpy(town->town_strs(0),"Small town");
+		save_scenario();
+	}
+	if(load_town(0, town)) cur_town = 0;
+	cur_town = 0;
+	augment_terrain(cur_out);
+	update_item_menu();
 	return false;
 }
 

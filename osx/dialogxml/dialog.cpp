@@ -702,6 +702,20 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	frame.right = frame.left + width;
 	frame.bottom = frame.top + height;
 	p.second->setBounds(frame);
+	string content;
+	for(node = node.begin(&who); node != node.end(); node++){
+		string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::TEXT)
+			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
+			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
+		else{
+			val = '<' + val + '>';
+			throw xBadVal("text","<content>",val,node->Row(),node->Column(),fname);
+		}
+	}
+	p.second->setText(content);
 	if(p.first == ""){
 		do{
 			p.first = generateRandomString();

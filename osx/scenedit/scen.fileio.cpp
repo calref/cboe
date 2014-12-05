@@ -743,8 +743,8 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 }
 
 // When this is called, the current town is the town to make town 0. 
-void make_new_scenario(const char* /*file_name*/,short /*out_width*/,short /*out_height*/,short /*making_warriors_grove*/,
-					   short /*use_grass*/) {
+void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out_height*/,bool /*making_warriors_grove*/,
+					   bool /*use_grass*/) {
 	//	short i,j,k,num_outdoors;
 	//	FSSpec dummy_file;
 	//	NavReplyRecord reply;

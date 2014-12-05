@@ -9,7 +9,6 @@ void create_basic_scenario();
 void make_new_scenario(std::string file_name,short out_width,short out_height,bool making_warriors_grove,
 	bool use_grass);
 
-void oops_error(short error);
 //short init_data(short flag);
 //short town_s(short flag);
 //short out_s(short flag);
@@ -20,7 +19,6 @@ void oops_error(short error);
 //bool check_p (short pword);
 //bool check_p2 (short pword);
 //bool check_p3 (short pword);
-void reset_pwd();
 void start_data_dump();
 //bool import_check_p (short pword);
 void scen_text_dump();
