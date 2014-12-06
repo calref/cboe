@@ -26,9 +26,9 @@ const size_t cPictChoice::per_page = 36;
 cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
 cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict.xml",parent) {
-	attachHandlers();
 	picts = pics;
 	sort(picts.begin(),picts.end());
+	attachHandlers();
 }
 
 cPictChoice::cPictChoice(

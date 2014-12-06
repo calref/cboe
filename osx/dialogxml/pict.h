@@ -121,6 +121,12 @@ public:
 	/// you will need to separately update the bounding rect.
 	/// (The bounding rect is mostly ignored when drawing, so if the icon is opaque, the control is not clickable,
 	/// and there is no frame, you can usually safely skip this step.)
+	///
+	/// This function applies a few automatic adjustments to its input:
+	///
+	/// - If type is PIC_MONST, it automatically looks up the chosen icon to determine
+	/// whether it should apply the tall or wide modifiers.
+	/// - If num is 1000 or greater, it automatically subtracts 1000 and applies the custom modifier.
 	void setPict(pic_num_t num, ePicType type);
 	/// Set the pict's icon.
 	/// @param num The new icon index.

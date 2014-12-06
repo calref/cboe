@@ -139,15 +139,27 @@ void cPict::setPict(pic_num_t num, ePicType type){
 			frame.right = frame.left + 12;
 			frame.bottom = frame.top + 12;
 			break;
+		case PIC_MONST:
+			if(picNum < 1000) {
+				if(m_pic_index[num].x == 2) picType += PIC_WIDE;
+				if(m_pic_index[num].y == 2) picType += PIC_TALL;
+			}
+			// Intentional fallthrough
 		default:
 			frame.right = frame.left + 28;
 			frame.bottom = frame.top + 36;
 			break;
 	}
+	if(picNum >= 1000) {
+		picNum -= 1000;
+		picType += PIC_CUSTOM;
+	}
 }
 
 void cPict::setPict(pic_num_t num) {
-	picNum = num;
+	if(picType - PIC_LARGE == PIC_MONST)
+		setPict(num, PIC_MONST);
+	else setPict(num, picType - PIC_CUSTOM);
 }
 
 pic_num_t cPict::getPicNum(){
