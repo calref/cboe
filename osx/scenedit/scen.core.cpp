@@ -220,6 +220,7 @@ static bool check_range(cDialog& me,std::string id,bool losing,long min_val,long
 	return check_range_msg(me, id, losing, min_val, max_val, fld_name, "");
 }
 
+// TODO: I have two functions that do this. (The other one is choose_graphic.)
 static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
 	pic_num_t cur_sel = 0;
 	if(result_fld != ""){
@@ -232,7 +233,7 @@ static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld,
 			cur_sel = pic_ctrl.getPicNum();
 	}
 	pic_num_t pic = choose_graphic(cur_sel, type, &parent);
-	if(pic < NO_PIC){
+	if(pic != NO_PIC){
 		if(result_fld != ""){
 			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
 			fld_ctrl.setTextToNum(pic + modifier);
@@ -254,7 +255,7 @@ static bool pick_string(std::string from_file, cDialog& parent, std::string resu
 	StringRsrc strings = *ResMgr::get<StringRsrc>(from_file);
 	// TODO: Does it need a title?
 	cStringChoice str_dlg(strings, "", &parent);
-	size_t result = str_dlg.show(strings[cur_sel]);
+	size_t result = str_dlg.show(cur_sel);
 	if(result < strings.size()){
 		if(result_fld != ""){
 			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);

@@ -342,29 +342,35 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	clicking = "";
 	
 	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods)){
-		eLedState a, b;
-		if(curSelect.empty()) a = led_off;
-		else {
-			a = choices[curSelect]->getState();
+		if(onClick && !onClick(me,id,mods)) return false;
+		if(!curSelect.empty()) {
 			choices[curSelect]->setState(led_off);
 			if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
-				choices[curSelect]->setState(a);
-				choices[which_clicked]->setState(b);
+				choices[curSelect]->setState(led_red);
 				return false;
 			}
 		}
-		b = choices[which_clicked]->getState();
 		choices[which_clicked]->setState(led_red);
 		if(!choices[which_clicked]->triggerFocusHandler(me,which_clicked,false)){
 			if(!curSelect.empty())
-				choices[curSelect]->setState(a);
-			choices[which_clicked]->setState(b);
+				choices[curSelect]->setState(led_red);
+			choices[which_clicked]->setState(led_off);
 			return false;
 		}
-		curSelect = which_clicked;
 	}else return false;
 	
-	return triggerFocusHandler(me,id,false);
+	std::string savePrevSelect = prevSelect;
+	prevSelect = curSelect;
+	curSelect = which_clicked;
+	if(!triggerFocusHandler(me,id,false)) {
+		if(!curSelect.empty())
+			choices[curSelect]->setState(led_red);
+		choices[which_clicked]->setState(led_off);
+		curSelect = prevSelect;
+		prevSelect = savePrevSelect;
+		return false;
+	}
+	return true;
 }
 
 bool cLedGroup::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){

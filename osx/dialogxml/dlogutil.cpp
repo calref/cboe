@@ -26,7 +26,7 @@ const size_t cPictChoice::per_page = 36;
 cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
 cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict.xml",parent) {
-	attachClickHandlers();
+	attachHandlers();
 	picts = pics;
 	sort(picts.begin(),picts.end());
 }
@@ -37,45 +37,49 @@ cPictChoice::cPictChoice(
 		ePicType t,
 		cDialog* parent
 	) : dlg("choose-pict.xml",parent) {
-	attachClickHandlers();
 	for(auto iter = begin; iter != end; iter++) {
 		picts.push_back({*iter,t});
 	}
 	sort(picts.begin(),picts.end());
+	attachHandlers();
 }
 
 cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent) : dlg("choose-pict.xml",parent) {
-	attachClickHandlers();
 	for(pic_num_t i = first; i <= last; i++) {
 		picts.push_back({i,t});
 	}
 	sort(picts.begin(),picts.end());
+	attachHandlers();
 }
 
-void cPictChoice::attachClickHandlers() {
+void cPictChoice::attachHandlers() {
+	using namespace std::placeholders;
 	dlg["left"].attachClickHandler(std::bind(&cPictChoice::onLeft,this));
 	dlg["right"].attachClickHandler(std::bind(&cPictChoice::onRight,this));
 	dlg["done"].attachClickHandler(std::bind(&cPictChoice::onOkay,this));
 	dlg["cancel"].attachClickHandler(std::bind(&cPictChoice::onCancel,this));
+	leds = &dynamic_cast<cLedGroup&>(dlg["group"]);
+	leds->attachFocusHandler(std::bind(&cPictChoice::onSelect,this,_3));
+	if(picts.size() <= per_page) {
+		dlg["left"].hide();
+		dlg["right"].hide();
+	}
 }
 
 cDialog* cPictChoice::operator->() {
 	return &dlg;
 }
 
-pic_num_t cPictChoice::show(pic_num_t fallback, pic_num_t cur_sel){
-	dlg.setResult(fallback);
-	if(cur_sel < 0) cur = 0;
-	else if(cur_sel > picts.back().first)
-		cur = picts.back().first;
-	else cur = cur_sel;
+bool cPictChoice::show(size_t cur_sel){
+	if(cur_sel >= picts.size())
+		cur_sel = 0;
+	cur = cur_sel;
+	dlg.setResult(picts[cur_sel]);
 	page = cur / per_page;
-	// TODO: Hide left/right buttons if only one page?
 	fillPage();
 	dlg.run();
-	return dlg.getResult<pic_num_t>();
-}// returns the _number_ of the chosen picture, _not_ the index; there's no way to distinguish between duplicates
-// returns fallback if the user cancels
+	return didAccept;
+}
 
 void cPictChoice::fillPage(){
 	cLedGroup& group = dynamic_cast<cLedGroup&>(dlg["group"]);
@@ -115,13 +119,30 @@ bool cPictChoice::onRight(){
 
 bool cPictChoice::onCancel(){
 	dlg.toast(false);
+	didAccept = false;
 	return true;
 }
 
 bool cPictChoice::onOkay(){
-	dlg.setResult(picts[cur].first);
+	dlg.setResult(picts[cur]);
 	dlg.toast(true);
+	didAccept = true;
 	return true;
+}
+
+bool cPictChoice::onSelect(bool losing) {
+	if(losing) return true;
+	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
+	cur = page * per_page + i - 1;
+	return true;
+}
+
+pic_num_t cPictChoice::getPicChosen() {
+	return dlg.getResult<std::pair<pic_num_t,ePicType>>().first;
+}
+
+ePicType cPictChoice::getPicChosenType() {
+	return dlg.getResult<std::pair<pic_num_t,ePicType>>().second;
 }
 
 const size_t cStringChoice::per_page = 40;
@@ -131,9 +152,9 @@ cStringChoice::cStringChoice(
 		std::string title,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
-	attachHandlers();
 	if(!title.empty()) dlg["title"].setText(title);
 	strings = strs;
+	attachHandlers();
 }
 
 cStringChoice::cStringChoice(
@@ -142,9 +163,9 @@ cStringChoice::cStringChoice(
 		std::string title,
 		cDialog* parent
 	) : dlg("choose-string.xml",parent) {
-	attachHandlers();
 	if(!title.empty()) dlg["title"].setText(title);
 	copy(begin,end,std::inserter(strings, strings.begin()));
+	attachHandlers();
 }
 
 void cStringChoice::attachHandlers() {
@@ -155,12 +176,10 @@ void cStringChoice::attachHandlers() {
 	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1));
 	leds = &dynamic_cast<cLedGroup&>(dlg["strings"]);
 	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_3));
-}
-
-size_t cStringChoice::show(std::string select){
-	dlg.setResult(strings.size());
-	std::vector<std::string>::iterator iter = find(strings.begin(),strings.end(),select);
-	return show(iter - strings.begin());
+	if(strings.size() <= per_page) {
+		dlg["left"].hide();
+		dlg["right"].hide();
+	}
 }
 
 size_t cStringChoice::show(size_t selectedIndex) {
@@ -170,8 +189,7 @@ size_t cStringChoice::show(size_t selectedIndex) {
 	dlg.setResult<size_t>(cur);
 	dlg.run();
 	return dlg.getResult<size_t>();
-}// returns the _index_ of the chosen string, relative to begin if initialized from a range
-// returns strs.size() if the user cancels
+}
 
 void cStringChoice::fillPage(){
 	cLedGroup& group = dynamic_cast<cLedGroup&>(dlg["strings"]);
@@ -220,7 +238,7 @@ bool cStringChoice::onOkay(cDialog& me){
 bool cStringChoice::onSelect(bool losing) {
 	if(losing) return true;
 	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
-	cur = page * 40 + i - 1;
+	cur = page * per_page + i - 1;
 	return true;
 }
 

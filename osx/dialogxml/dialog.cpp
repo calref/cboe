@@ -1152,6 +1152,7 @@ bool cDialog::toast(bool triggerFocus){
 }
 
 bool cDialog::setFocus(cTextField* newFocus, bool force) {
+	// TODO: Should check that there IS a currently focused field (which might not be the case if there are no fields at all).
 	if(!force) {
 		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
 	}
@@ -1255,6 +1256,8 @@ std::string cDialog::process_keystroke(cKey keyHit){
 }
 
 std::string cDialog::process_click(location where){
+	// TODO: Return list of all controls whose bounding rect contains the clicked point.
+	// Then the return value of the click handler can mean "Don't pass this event on to other things below me".
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){

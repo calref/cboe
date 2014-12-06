@@ -95,30 +95,33 @@ class cStringChoice {
 public:
 	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = NULL);
 	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);
-	size_t show(std::string select); // returns the _index_ of the chosen string, relative to begin
 	size_t show(size_t selectedIndex);
-	// returns strs.size() if the user cancels
 };
 
 class cPictChoice {
 	static const size_t per_page;
+	bool didAccept;
 	cDialog dlg;
-	void attachClickHandlers();
+	void attachHandlers();
 	bool onLeft();
 	bool onRight();
 	bool onCancel();
 	bool onOkay();
+	bool onSelect(bool losing);
 	void fillPage();
 	std::vector<std::pair<pic_num_t,ePicType>> picts;
 	size_t page, cur;
+	cLedGroup* leds;
 public:
 	cPictChoice(std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = NULL);
 	cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = NULL);
 	cPictChoice(std::vector<pic_num_t>::iterator begin, std::vector<pic_num_t>::iterator end, ePicType t, cDialog* parent = NULL);
 	cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent = NULL);
 	cDialog* operator->();
-	pic_num_t show(pic_num_t fallback, pic_num_t cur_sel); // returns the _number_ of the chosen picture, _not_ the index; there's no way to distinguish between duplicates
-	// returns fallback if the user cancels
+	bool show(size_t cur_sel);
+	pic_num_t getPicChosen();
+	ePicType getPicChosenType();
+	// returns the _number_ of the chosen picture, _not_ the index; there's no way to distinguish between duplicates
 };
 #endif
 

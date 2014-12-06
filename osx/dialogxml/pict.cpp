@@ -781,7 +781,7 @@ void cPict::drawStatusIcon(short num, RECT to_rect){
 void cPict::drawCustomTer(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom terrain pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	RECT from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
@@ -791,7 +791,7 @@ void cPict::drawCustomTer(short num, RECT to_rect){
 void cPict::drawCustomTerAnim(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom animated terrain pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	num += animFrame;
 	RECT from_rect;
 	sf::Texture* from_gw;
@@ -804,7 +804,7 @@ void cPict::drawCustomMonstSm(short num, RECT to_rect){
 	num += adj[animFrame];
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	RECT from_rect;
@@ -925,7 +925,7 @@ void cPict::drawCustomTalk(short num, RECT to_rect){
 void cPict::drawCustomItem(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	RECT from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
@@ -962,7 +962,7 @@ void cPict::drawCustomTerMap(short num, RECT to_rect){
 void cPict::drawPartyMonstSm(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;
 	RECT from_rect;
 	
@@ -1042,7 +1042,7 @@ void cPict::drawPartyScen(short num, RECT to_rect){
 void cPict::drawPartyItem(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;
 	RECT from_rect;
 	
@@ -1054,7 +1054,7 @@ void cPict::drawPartyItem(short num, RECT to_rect){
 void cPict::drawPartyPc(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 32;
+	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;
 	RECT from_rect;
 	

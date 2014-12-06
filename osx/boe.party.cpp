@@ -2663,19 +2663,19 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 		munch_pc_graphic = true;
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	}
-	cPictChoice pcPic(0,36,PIC_PC,parent);
+	cPictChoice pcPic(0,35,PIC_PC,parent);
 	// Customize it for this special case of choosing a PC graphic
 	dynamic_cast<cPict&>(pcPic->getControl("mainpic")).setPict(7);
 	pcPic->getControl("prompt").setText("Select a graphic for your PC:");
 	pcPic->getControl("help").setText("Click button to left of graphic to select.");
 	
-	pic_num_t choice = pcPic.show(36, univ.party[pc_num].which_graphic);
-	if(mode == 0 && choice == 36 && univ.party[pc_num].main_status < eMainStatus::ABSENT)
+	bool madeChoice = pcPic.show(univ.party[pc_num].which_graphic);
+	if(mode == 0 && !madeChoice && univ.party[pc_num].main_status < eMainStatus::ABSENT)
 		univ.party[pc_num].main_status = eMainStatus::ABSENT;
-	else if(choice != 36)
-		univ.party[pc_num].which_graphic = choice;
+	else if(madeChoice)
+		univ.party[pc_num].which_graphic = pcPic.getPicChosen();
 	
-	return choice != 36;
+	return madeChoice;
 }
 
 static bool pc_name_event_filter(cDialog& me, short store_train_pc) {

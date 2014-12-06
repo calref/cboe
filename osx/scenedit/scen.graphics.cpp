@@ -517,7 +517,7 @@ void set_up_terrain_buttons() {
 				pic = scenario.ter_types[i].picture;
 				if (pic >= 1000) {
 					sf::Texture* source_gworld;
-					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic);
+					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);
 					rect_draw_some_item(*source_gworld,
 										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}

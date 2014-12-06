@@ -90,6 +90,7 @@ enum eSheetType {
 	SHEET_FULL,
 	SHEET_STATUS,
 	SHEET_CUSTOM,
+	// TODO: Vehicle sheet is missing.
 	NUM_SHEET_TYPES
 };
 

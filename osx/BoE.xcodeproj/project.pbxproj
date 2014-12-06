@@ -1268,7 +1268,6 @@
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
-		91A32BBA0FDB657800C4E957 /* dialog.results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dialog.results.h; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlogutil.buttons.h; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regtown.h; sourceTree = "<group>"; };
 		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
@@ -1455,7 +1454,6 @@
 				910BBA3B0FB8DA8E001E34EA /* control.h */,
 				910BBA170FB8BECA001E34EA /* dialog.h */,
 				918D59A718EA513900735B66 /* dialog.keys.h */,
-				91A32BBA0FDB657800C4E957 /* dialog.results.h */,
 				91A32BD10FDB797B00C4E957 /* dlogutil.buttons.h */,
 				910BBAD90FB91D2A001E34EA /* dlogutil.h */,
 				910BBAB40FB91A26001E34EA /* field.h */,

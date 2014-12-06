@@ -652,7 +652,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	short sheet = which_rect / 100;
 	if(is_old) sheet = 0;
 	else which_rect %= 100;
-	RECT store_rect = {0,0,28,36};
+	RECT store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	return std::make_pair(party ? this->party : &sheets[sheet],store_rect);

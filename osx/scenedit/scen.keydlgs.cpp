@@ -106,15 +106,17 @@ bool cre(short val,short min,short max,const char *text1,const char *text2,cDial
 	return false;
 }
 
+// TODO: I have two functions that do this. (The other one is pick_picture.)
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
-	pic_num_t item_hit = 0;
+	int i = 0;
 	std::vector<std::pair<pic_num_t,ePicType>> pics;
+	cPictChoice* pic_dlg = nullptr;
 	switch(g_type) {
 		case PIC_TER: // TODO: Increase upper limit to allow picking of the added graphics
-			item_hit = cPictChoice(0, 252, PIC_TER, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 252, PIC_TER, parent);
 			break;
 		case PIC_TER_ANIM: // TODO: Increase to allow picking of the added graphics
-			item_hit = cPictChoice(0, 13, PIC_TER_ANIM, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 13, PIC_TER_ANIM, parent);
 			break;
 		case PIC_MONST:
 		case PIC_MONST_WIDE:
@@ -125,51 +127,51 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 				ePicType type = PIC_MONST;
 				if(m_pic.x == 2) type += PIC_WIDE;
 				if(m_pic.y == 2) type += PIC_TALL;
-				pics.push_back({item_hit++, type});
+				pics.push_back({i++, type});
 			}
-			item_hit = cPictChoice(pics, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(pics, parent);
 			break;
 		case PIC_DLOG: // TODO: Increase upper limit to allow picking of the added graphics
-			item_hit = cPictChoice(0, 31, PIC_DLOG, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 31, PIC_DLOG, parent);
 			break;
 		case PIC_TALK:
-			item_hit = cPictChoice(0, 83, PIC_TALK, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 83, PIC_TALK, parent);
 			break;
 		case PIC_SCEN:
-			item_hit = cPictChoice(0, 29, PIC_SCEN, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 29, PIC_SCEN, parent);
 			break;
 		case PIC_ITEM:
-			item_hit = cPictChoice(0, 122, PIC_ITEM, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 122, PIC_ITEM, parent);
 			break;
 		case PIC_PC:
-			item_hit = cPictChoice(0, 35, PIC_PC, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 35, PIC_PC, parent);
 			break;
 		case PIC_FIELD:
-			item_hit = cPictChoice(field_pics, PIC_FIELD, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(field_pics, PIC_FIELD, parent);
 			break;
 		case PIC_BOOM:
-			item_hit = cPictChoice(boom_pics, PIC_BOOM, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(boom_pics, PIC_BOOM, parent);
 			break;
 		case PIC_DLOG_LG:
-			item_hit = cPictChoice(lgdlog_pics, PIC_DLOG_LG, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(lgdlog_pics, PIC_DLOG_LG, parent);
 			break;
 		case PIC_FULL:
 			// TODO: Should this be handled at all?
 			break;
 		case PIC_MISSILE:
-			item_hit = cPictChoice(0, 15, PIC_MISSILE, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 15, PIC_MISSILE, parent);
 			break;
 		case PIC_STATUS:
-			item_hit = cPictChoice(0, 17, PIC_STATUS, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 17, PIC_STATUS, parent);
 			break;
 		case PIC_SCEN_LG:
-			item_hit = cPictChoice(0, 3, PIC_SCEN_LG, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 3, PIC_SCEN_LG, parent);
 			break;
 		case PIC_TER_MAP:
-			item_hit = cPictChoice(0, 418, PIC_TER_MAP, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, 418, PIC_TER_MAP, parent);
 			break;
 		default: // Custom or party; assume custom, since this is the scenario editor and the party sheet isn't available
-			if(g_type & PIC_PARTY) return NO_PIC;
+			if(g_type & PIC_PARTY) break;
 			ePicType g_base_type = g_type - PIC_CUSTOM;
 			pic_num_t totalPics = spec_scen_g.count();
 			pic_num_t last;
@@ -182,9 +184,13 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 			else if(g_base_type == PIC_MONST_LG) last = totalPics - 16;
 			else if(g_base_type == PIC_TER_MAP) last = totalPics * 6 - 1; // TODO: Check this formula
 			else last = totalPics = 1;
-			item_hit = cPictChoice(0, last, g_type, parent).show(NO_PIC, cur_choice);
+			pic_dlg = new cPictChoice(0, last, g_type, parent);
 	}
-	return item_hit;
+	if(!pic_dlg) return cur_choice;
+	bool made_choice = pic_dlg->show(cur_choice);
+	pic_num_t item_hit = pic_dlg->getPicChosen();
+	delete pic_dlg;
+	return made_choice ? item_hit : NO_PIC;
 }
 
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title) {
@@ -642,7 +648,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 					i = choose_graphic(store_spec_node.pic,PIC_MONST,&me);
 					break;
 			}
-			if(i < NO_PIC) {
+			if(i != NO_PIC) {
 				store_spec_node.pic = i;
 				put_spec_enc_in_dlog(me, which_node);
 			}
@@ -1057,9 +1063,9 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 	} else if(item_hit == "cancel") {
 		me.toast(false);
 	} else if(item_hit == "choose") {
-			i = me["picnum"].getTextAsNum();
-			i = choose_graphic(i,PIC_SCEN,&me);
-			if(i < NO_PIC) {
+			pic_num_t pic = me["picnum"].getTextAsNum();
+			i = choose_graphic(pic,PIC_SCEN,&me);
+			if(i != NO_PIC) {
 				me["picnum"].setTextToNum(i);
 				dynamic_cast<cPict&>(me["pic"]).setPict(i);
 			}

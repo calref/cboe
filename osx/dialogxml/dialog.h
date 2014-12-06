@@ -55,8 +55,12 @@ public:
 	bool remove(std::string key); // returns true if the key existed and was removed, false if the key did not exist
 	bool addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold); // returns true if the label was added
 	void run(); // cd_run_dialog
-	template<class type> type getResult();
-	template<class type> void setResult(const type& val);
+	template<typename type> type getResult(){
+		return boost::any_cast<type>(result);
+	}
+	template<typename type> void setResult(const type& val){
+		result = val;
+	}
 	void setBg(short n);
 	void setDefTextClr(sf::Color clr);
 	void setDefBtn(std::string defBtn);
@@ -131,7 +135,5 @@ public:
 	~xBadVal() throw();
 	const char* what() throw();
 };
-
-#include "dialog.results.h" // public template definitions
 
 #endif
