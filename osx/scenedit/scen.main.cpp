@@ -97,6 +97,7 @@ int main(int, char* argv[]) {
 	
 	cDialog::init();
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
+	cDialog::doAnimations = true;
 	init_graph_tool();
 	
 	cen_x = 18;

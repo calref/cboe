@@ -156,6 +156,8 @@ public:
 	/// Get the bounding rect of the dialog.
 	/// @return The dialog's bounding rect.
 	RECT getBounds() {return winRect;}
+	/// Sets whether to animate graphics in dialogs.
+	static bool doAnimations;
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
 private:
@@ -167,6 +169,7 @@ private:
 	std::string defaultButton;
 	boost::any result;
 	std::string fname;
+	sf::Clock animTimer;
 	friend class cControl;
 };
 

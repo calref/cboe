@@ -426,6 +426,11 @@ bool operator& (ePicType lhs, ePicTypeMod rhs) {
 
 short cPict::animFrame = 0;
 
+void cPict::advanceAnim() {
+	animFrame++;
+	if(animFrame >= 256) animFrame = 0;
+}
+
 std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	switch(type) {
@@ -545,7 +550,7 @@ void cPict::drawPresetTer(short num, RECT to_rect){
 }
 
 void cPict::drawPresetTerAnim(short num, RECT to_rect){
-	RECT from_rect = calc_rect(4 * (num / 5) + animFrame, num % 5);
+	RECT from_rect = calc_rect(4 * (num / 5) + animFrame % 4, num % 5);
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER_ANIM);
 	printf("Getting animated terrain graphic %i from sheet 20", num);
 	if (to_rect.right - to_rect.left > 28) {
@@ -557,7 +562,7 @@ void cPict::drawPresetTerAnim(short num, RECT to_rect){
 
 static RECT calcDefMonstRect(short i, short animFrame){
 	RECT r = calc_rect(2 * (i / 10), i % 10);
-	switch(animFrame){ // Sequence is right-facing, attack, left-facing, attack
+	switch(animFrame % 4){ // Sequence is right-facing, attack, left-facing, attack
 		case 1:
 			r.offset(112,0);
 			break;
@@ -755,7 +760,7 @@ void cPict::drawPresetMissile(short num, RECT to_rect){
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	short i = animFrame == 7 ? 0 : animFrame + 1;
+	short i = animFrame % 8;
 	from_rect.offset(18 * i, 18 * num);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -793,7 +798,7 @@ void cPict::drawCustomTerAnim(short num, RECT to_rect){
 	printf("Drawing graphic %i as a custom animated terrain pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	num += animFrame;
+	num += animFrame % 4;
 	RECT from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
@@ -802,7 +807,7 @@ void cPict::drawCustomTerAnim(short num, RECT to_rect){
 
 void cPict::drawCustomMonstSm(short num, RECT to_rect){
 	static const short adj[4] = {0, 2, 1, 3};
-	num += adj[animFrame];
+	num += adj[animFrame % 4];
 	printf("Drawing graphic %i as a custom space pic.\n",num);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -816,7 +821,7 @@ void cPict::drawCustomMonstSm(short num, RECT to_rect){
 
 void cPict::drawCustomMonstWide(short num, RECT to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
-	num += adj[animFrame];
+	num += adj[animFrame % 4];
 	RECT small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -835,7 +840,7 @@ void cPict::drawCustomMonstWide(short num, RECT to_rect){
 
 void cPict::drawCustomMonstTall(short num, RECT to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
-	num += adj[animFrame];
+	num += adj[animFrame % 4];
 	RECT small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -854,7 +859,7 @@ void cPict::drawCustomMonstTall(short num, RECT to_rect){
 
 void cPict::drawCustomMonstLg(short num, RECT to_rect){
 	static const short adj[4] = {0, 8, 4, 12};
-	num += adj[animFrame];
+	num += adj[animFrame % 4];
 	RECT small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -935,7 +940,7 @@ void cPict::drawCustomItem(short num, RECT to_rect){
 }
 
 void cPict::drawCustomMissile(short num, RECT to_rect){
-	num += animFrame % 4;
+	num += animFrame % 8;
 	RECT from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);

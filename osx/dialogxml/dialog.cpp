@@ -931,8 +931,8 @@ void cDialog::run(){
 	win.setActive();
 	win.setVisible(true);
 	makeFrontWindow(win);
-	draw();
 	ModalSession dlog(win);
+	animTimer.restart();
 	while(dialogNotToast){
 		draw();
 		dlog.pumpEvents();
@@ -1370,9 +1370,15 @@ xBadVal::~xBadVal() throw(){
 	if(msg != NULL) delete msg;
 }
 
+bool cDialog::doAnimations = false;
+
 void cDialog::draw(){
 	win.setActive();
 	tileImage(win,winRect,bg_gworld,::bg[bg]);
+	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
+		cPict::advanceAnim();
+		animTimer.restart();
+	}
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
