@@ -289,12 +289,10 @@ void cLedGroup::recalcRect(){
 	frame.inset(-6,-6);
 }
 
-/** A click handler is called whenever a click is received, even on the currently selected element. */
 void cLedGroup::attachClickHandler(click_callback_t f) throw() {
 	onClick = f;
 }
 
-/** A focus handler is called when the currently selected element changes. */
 void cLedGroup::attachFocusHandler(focus_callback_t f) throw() {
 	onFocus = f;
 }

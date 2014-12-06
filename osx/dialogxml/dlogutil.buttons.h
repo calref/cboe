@@ -6,7 +6,11 @@
  *
  */
 
-size_t available_btns[53] = { // This array is a list of indices into the following array.
+/// @file
+/// Preset button specifications for cThreeChoice
+
+/// The buttons available to special nodes; consists of indices into the basic_buttons array.
+size_t available_btns[53] = {
 	0,  63, 64, 65, 1,  4,  5,  8,  128,9,
 	10, 11, 12, 13,	14, 15, 16, 17, 29, 51,
 	60, 61, 62,	66, 69, 70, 71, 72, 73, 74,
@@ -15,6 +19,7 @@ size_t available_btns[53] = { // This array is a list of indices into the follow
 	135,136,137
 };
 
+/// A list of preset button types. Many of these are unused.
 bbtt basic_buttons[] = {
 	{BTN_DONE, " ", {false,0,mod_none}}, // Formerly DLG_BTN_REG with "Done " as the string
 	{BTN_REG, "Ask", {false,0,mod_none}},

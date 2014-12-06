@@ -9,6 +9,9 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+/// @file
+/// Dialog-related classes and types.
+
 #include <SFML/Graphics.hpp>
 
 #include <string>
@@ -24,10 +27,12 @@
 class cControl;
 class cTextField;
 
+/// Specifies the relative position of a control's labelling text.
 enum eLabelPos {
 	LABEL_LEFT, LABEL_ABOVE, LABEL_RIGHT, LABEL_BELOW,
 };
 
+/// Defines a fancy dialog box with various controls.
 class cDialog {
 	typedef std::map<std::string,cControl*>::iterator ctrlIter;
 	std::map<std::string,cControl*> controls;
@@ -43,35 +48,113 @@ class cDialog {
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 public:
+	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
-	static const short BG_LIGHT, BG_DARK;
+	/// The light background pattern used by the scenario editor dialogs.
+	static const short BG_LIGHT, BG_DARK; ///< The dark background pattern used by the game dialogs.
+	/// The default background pattern for newly created dialogs.
 	static short defaultBackground;
-	explicit cDialog(cDialog* p = NULL); // dialog with no items
+	/// Create a new dialog with no items.
+	/// @param p Optionally, a parent dialog.
+	explicit cDialog(cDialog* p = NULL);
+	/// Creates a new dialog, loading its definition from a file.
+	/// @param path The name of the file to load. It must be in the game's dialogs directory.
+	/// @param p Optionally, a parent dialog.
 	explicit cDialog(std::string path, cDialog* p = NULL); // cd_create_dialog
 	~cDialog(); // cd_kill_dialog
-	bool add(cControl* what, RECT ctrl_frame, std::string key); // returns false if the key is used, true if the control was added
-	bool remove(std::string key); // returns true if the key existed and was removed, false if the key did not exist
-	bool addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold); // returns true if the label was added
+	/// Add a new control to the dialog.
+	/// @param what A pointer to the control, which should already be constructed.
+	/// @param ctrl_frame The control's bounding rect, which includes its position in the dialog.
+	/// @param key A key to be used to look up the control later.
+	/// @return false if the key is used, true if the control was added.
+	/// @note This function is intended for internal use, which is why it takes a control pointer instead of a unique key.
+	bool add(cControl* what, RECT ctrl_frame, std::string key);
+	/// Remove a control from the dialog.
+	/// @param key The control's unique key.
+	/// @return true if the key existed and the control was removed, false if the key did not exist
+	bool remove(std::string key);
+	/// Add a new static text control, positioned to function as a label for an existing control.
+	/// @param key The unique key of the control to be labelled.
+	/// @param label The text of the label.
+	/// @param where Specifies the position of the label relative to the control.
+	/// @param offset An offset in pixels between the control and the label.
+	/// @param bold If true, the label will be bolded.
+	/// @return true if the label was added, false if not (usually because it already had a label)
+	bool addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold);
+	/// Show the dialog and start its event loop. All dialogs are modal.
 	void run(); // cd_run_dialog
+	/// Get the result of the dialog.
+	/// @tparam type The result type.
+	/// @throw boost::bad_any_cast if the provided result type is different from the type set by getResult().
+	/// @return The dialog's result.
 	template<typename type> type getResult(){
 		return boost::any_cast<type>(result);
 	}
+	/// Set the result of the dialog.
+	/// @tparam type The result type.
+	/// @param val The result value.
 	template<typename type> void setResult(const type& val){
 		result = val;
 	}
+	/// Set the background pattern of the dialog.
+	/// @param n The numeric index of the background pattern, which should be in the range [0,20].
+	/// You can use the constants BG_LIGHT or BG_DARK to reference the most commonly used backgrounds.
 	void setBg(short n);
+	/// Get the background pattern of the dialog.
+	/// @return The numeric index of the background pattern.
 	short getBg();
+	/// Set the default text colour applied to new dialogs when loading from a file.
+	/// @param clr The text colour.
 	void setDefTextClr(sf::Color clr);
+	/// Set the default button, which will be drawn outlined and respond to the enter key.
+	/// @param defBtn The unique key of the default button.
+	///
+	/// This function does not check that the default button exists and is a button.
 	void setDefBtn(std::string defBtn);
+	/// Get the default text colour applied to new dialogs when loading from a file.
+	/// @return The text colour.
 	sf::Color getDefTextClr();
-	bool setFocus(cTextField* newFocus, bool force = false); // Setting force = true skips focus handlers
+	/// Set the focused text field.
+	/// @param newFocus A pointer to the text field to receive focus.
+	/// @param force If true, the change will be forced.
+	/// The focus handlers for both the previously focused text field and the newly focused text field will not be triggered.
+	/// @return true if the focus changed; if it returns false, it could mean either that the control did not exist in the dialog
+	/// or that one of the focus handlers prevented the focus change.
+	/// @note This function is intended for internal use, which is why it takes a control pointer instead of a unique key.
+	bool setFocus(cTextField* newFocus, bool force = false);
+	/// Close the dialog.
+	/// @param triggerFocus true to allow the focus handler of the currently focused text field to prevent the dialog from closing
+	/// @return true unless the currently focused field prevented the dialog from closing
+	///
+	/// Generally, you would pass true in a handler for an OK button and false in a handler for a Cancel button.
 	bool toast(bool triggerFocus);
+	/// Get a reference to a control.
+	/// @param id The unique key of the control.
+	/// @throw std::invalid_argument if the control does not exist.
+	/// @return a reference to the requested control.
 	cControl& getControl(std::string id);
+	/// @copydoc getControl()
 	cControl& operator[](std::string id);
+	/// Recalculate the dialog's bounding rect.
+	/// Call this after adding controls to the dialog to ensure that the control is within the bounding rect.
 	void recalcRect();
 	// TODO: It seems like a bad thing for these two to not use the typedefs...
+	/// Attach the same click handler to several controls.
+	/// @param handler The handler to attach.
+	/// @param controls A list of the unique keys of the controls to which you want the handler attached.
+	/// @throw xHandlerNotSupported if any of the controls do not support click handlers.
+	/// @throw std::invalid_argument if any of the controls do not exist.
+	/// @see cControl::attachClickHandler()
 	void attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::vector<std::string> controls);
+	/// Attach the same focus handler to several controls.
+	/// @param handler The handler to attach.
+	/// @param controls A list of the unique keys of the controls to which you want the handler attached.
+	/// @throw xHandlerNotSupported if any of the controls do not support focus handlers.
+	/// @throw std::invalid_argument if any of the controls do not exist.
+	/// @see cControl::attachFocusHandler()
 	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls);
+	/// Get the bounding rect of the dialog.
+	/// @return The dialog's bounding rect.
 	RECT getBounds() {return winRect;}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
@@ -87,44 +170,78 @@ private:
 	friend class cControl;
 };
 
+/// Thrown when an invalid element is found while parsing an XML dialog definition.
 class xBadNode : std::exception {
 	std::string type, dlg;
 	int row, col;
 	const char* msg;
 public:
+	/// Construct a new exception.
+	/// @param t The tag name of the invalid element.
+	/// @param r The line number of the element in the source.
+	/// @param c The column number of the element in the source.
+	/// @param dlg The name of the file in which the element occurred.
 	xBadNode(std::string t, int r, int c, std::string dlg) throw();
 	~xBadNode() throw();
+	/// @return The error message.
 	const char* what() throw();
 };
 
+/// Thrown when an invalid attribute is found while parsing an XML dialog definition.
 class xBadAttr : std::exception {
 	std::string type, name, dlg;
 	int row, col;
 	const char* msg;
 public:
+	/// Construct a new exception.
+	/// @param t The tag name of the element with the invalid attribute.
+	/// @param n The name of the invalid attribute.
+	/// @param r The line number of the element in the source.
+	/// @param c The column number of the element in the source.
+	/// @param dlg The name of the file in which the element occurred.
 	xBadAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xBadAttr() throw();
+	/// @return The error message.
 	const char* what() throw();
 };
 
+/// Thrown when an element is missing a required attribute while parsing an XML dialog definition.
 class xMissingAttr : std::exception {
 	std::string type, name, dlg;
 	int row, col;
 	const char* msg;
 public:
+	/// Construct a new exception.
+	/// @param t The tag name of the element with the missing attribute.
+	/// @param n The name of the missing attribute.
+	/// @param r The line number of the element in the source.
+	/// @param c The column number of the element in the source.
+	/// @param dlg The name of the file in which the element occurred.
 	xMissingAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xMissingAttr() throw();
+	/// @return The error message.
 	const char* what() throw();
 };
 
+/// Thrown when an invalid value is found anywhere within an element's or attribute's content.
 class xBadVal : std::exception {
 	std::string type, name, val, dlg;
 	int row, col;
 	const char* msg;
 public:
+	/// A magic value to indicate errors in an element's content, rather than an attribute's content.
 	static constexpr const char*const CONTENT = "<content>";
+	/// Construct a new exception.
+	/// @param t The tag name of the element with the invalid value.
+	/// @param n The name of the attribute with the invalid value.
+	/// You should pass xBadVal::CONTENT if the bad value is within an element's content.
+	/// @param v The invalid value.
+	/// @param r The line number of the element in the source.
+	/// @param c The column number of the element in the source.
+	/// @param dlg The name of the file in which the element occurred.
 	xBadVal(std::string t,std::string n,std::string v, int r, int c, std::string dlg) throw();
 	~xBadVal() throw();
+	/// @return The error message.
 	const char* what() throw();
 };
 

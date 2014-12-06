@@ -536,7 +536,7 @@ void giveError(std::string str1, std::string str2, cDialog* parent){
 	error.show();
 }
 
-void oopsError(short error, short code, short mode){ // mode is 0 for scened, 1 for game, 2 for pced
+void oopsError(short error, short code, short mode){
 	std::ostringstream error_str1, error_str2;
 	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};
 	static const char* filetname[3] = {"scenario", "game", "game"};
