@@ -47,12 +47,10 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
-	void setBtnType(eBtnType type);
+	void setBtnType(eBtnType newType);
 	eBtnType getBtnType();
 	explicit cButton(cDialog* parent);
 	bool isClickable();
-	void setType(eBtnType newType);
-	eBtnType getType();
 	virtual ~cButton();
 	void draw();
 	cButton& operator=(cButton& other) = delete;

@@ -104,14 +104,6 @@ sf::Color cButton::getColour() throw(xUnsupportedProp) {
 	return sf::Color();
 }
 
-void cButton::setBtnType(eBtnType newType) {
-	type = newType;
-}
-
-eBtnType cButton::getBtnType() {
-	return type;
-}
-
 // Indices within the buttons array.
 size_t cButton::btnGW[14] = {
 	0, // BTN_SM
@@ -192,7 +184,7 @@ cLed::cLed(cDialog* parent) :
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent->defTextClr) {
-	setBtnType(BTN_LED);
+	type = BTN_LED;
 }
 
 void cLed::attachClickHandler(click_callback_t f) throw(){
@@ -477,11 +469,11 @@ void cLedGroup::draw(){
 	}
 }
 
-void cButton::setType(eBtnType newType){
-	if(type == BTN_LED) return; // can't change type
+void cButton::setBtnType(eBtnType newType){
+	if(type == BTN_LED || newType == BTN_LED) return; // can't change type
 	type = newType;
 }
 
-eBtnType cButton::getType(){
+eBtnType cButton::getBtnType(){
 	return type;
 }
