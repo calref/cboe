@@ -28,6 +28,7 @@ using StringRsrc = std::vector<std::string>;
 using SoundRsrc = sf::SoundBuffer;
 
 namespace ResMgr {
+	/// Load an image from a PNG file.
 	template<> inline ImageRsrc* resLoader<ImageRsrc>::operator() (std::string fname) {
 		fs::path fpath = resPool<ImageRsrc>::rel2abs(fname + ".png");
 		ImageRsrc* img = new ImageRsrc();
@@ -36,6 +37,9 @@ namespace ResMgr {
 		throw xResMgrErr("Failed to load PNG image: " + fpath.string());
 	}
 	
+	/// Load a cursor from a GIF file.
+	/// The cursor's hotspot location is stored in a .hot file, as plaintext:
+	/// simply the X value followed by the Y value, separated by whitespace.
 	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (std::string fname) {
 		// TODO: Store the hotspots on disk instead of hardcoded here
 		static const std::map<std::string,location> cursor_hs = {
@@ -70,6 +74,7 @@ namespace ResMgr {
 		throw xResMgrErr("Failed to load GIF cursor: " + fname);
 	}
 	
+	/// Load a font form a TTF file.
 	template<> inline FontRsrc* resLoader<FontRsrc>::operator() (std::string fname) {
 		fs::path fpath = resPool<FontRsrc>::rel2abs(fname + ".ttf");
 		FontRsrc* theFont = new FontRsrc;
@@ -80,6 +85,9 @@ namespace ResMgr {
 		throw xResMgrErr("Failed to find font: " + fpath.string());
 	}
 	
+	/// Load a list of strings from a TXT file.
+	/// Each line in the file becomes one string in the resulting list.
+	/// (Empty lines are included too.)
 	template<> inline StringRsrc* resLoader<StringRsrc>::operator() (std::string fname) {
 		fs::path fpath = resPool<StringRsrc>::rel2abs(fname + ".txt");
 		std::ifstream fin(fpath.c_str());
@@ -96,6 +104,7 @@ namespace ResMgr {
 		return strlist;
 	}
 	
+	/// Load a sound from a WAV file.
 	template<> inline SoundRsrc* resLoader<SoundRsrc>::operator() (std::string fname) {
 		fs::path fpath = resPool<SoundRsrc>::rel2abs(fname + ".wav");
 		SoundRsrc* snd = new SoundRsrc;
