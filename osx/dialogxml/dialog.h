@@ -48,8 +48,7 @@ public:
 	static const short BG_LIGHT, BG_DARK;
 	static short defaultBackground;
 	explicit cDialog(cDialog* p = NULL); // dialog with no items
-	explicit cDialog(std::string path); // cd_create_dialog
-	cDialog(std::string path,cDialog* p); // cd_create_dialog_parent_num
+	explicit cDialog(std::string path, cDialog* p = NULL); // cd_create_dialog
 	~cDialog(); // cd_kill_dialog
 	bool add(cControl* what, RECT ctrl_frame, std::string key); // returns false if the key is used, true if the control was added
 	bool remove(std::string key); // returns true if the key existed and was removed, false if the key did not exist

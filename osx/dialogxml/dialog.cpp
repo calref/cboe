@@ -726,10 +726,6 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 
 cDialog::cDialog(cDialog* p) : parent(p) {}
 
-cDialog::cDialog(std::string path) : parent(NULL) {
-	loadFromFile(path);
-}
-
 cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 	loadFromFile(path);
 }
