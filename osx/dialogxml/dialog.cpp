@@ -254,7 +254,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		else if(type == TiXmlNode::TEXT)
 			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
-		else{
+		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 		}
@@ -453,7 +453,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		}else if(type == TiXmlNode::TEXT)
 			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
-		else{
+		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
@@ -609,7 +609,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		if(type == TiXmlNode::TEXT)
 			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
-		else{
+		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 		}
@@ -645,7 +645,7 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 		if(type == TiXmlNode::ELEMENT && val == "led"){
 			auto led = parse<cLed>(*node);
 			p.second->addChoice(led.second, led.first);
-		}else{
+		}else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT, content + val,node->Row(),node->Column(),fname);
 		}
@@ -710,7 +710,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 		if(type == TiXmlNode::TEXT)
 			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
-		else{
+		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
