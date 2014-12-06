@@ -83,8 +83,7 @@ bool cScrollbar::handleClick(location where) {
 	else pressedPart = PART_DOWN;
 	int dy = where.y - thumbRect.top;
 	while(!done){
-		// If there's no parent dialog, we're not responsible for redrawing
-		if(parent) parent->draw();
+		redraw();
 		if(!inWindow->pollEvent(e)) continue;
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
@@ -127,7 +126,7 @@ bool cScrollbar::handleClick(location where) {
 		thumbRect.top = minmax(sf::Mouse::getPosition(*inWindow).y,frame.bottom - 32,thumbRect.top);
 		thumbRect.height() = 16;
 	}
-	if(parent) parent->draw();
+	redraw();
 	return clicked;
 }
 

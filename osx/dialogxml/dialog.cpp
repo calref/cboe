@@ -1127,6 +1127,10 @@ void cDialog::setBg(short n){
 	bg = n;
 }
 
+short cDialog::getBg() {
+	return bg;
+}
+
 void cDialog::setDefBtn(std::string defBtn) {
 	defaultButton = defBtn;
 }

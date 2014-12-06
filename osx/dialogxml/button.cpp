@@ -80,7 +80,7 @@ void cButton::draw(){
 		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle); // frame default button, to provide a visual cue that it's the default
 	}else{
-		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
+		tileImage(*inWindow,frame,bg_gworld,bg[parent->getBg()]);
 	}
 }
 
@@ -184,7 +184,7 @@ cLed::cLed(cDialog* parent) :
 	state(led_off),
 	textFont(FONT_BOLD),
 	textSize(10),
-	color(parent->defTextClr) {
+	color(parent->getDefTextClr()) {
 	type = BTN_LED;
 }
 
@@ -246,12 +246,12 @@ void cLed::draw(){
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
 		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
-		style.colour = parent->defTextClr;
+		style.colour = parent->getDefTextClr();
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
 		win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_TOP,style);
 	}else{
-		tileImage(*inWindow,frame,bg_gworld,bg[parent->bg]);
+		tileImage(*inWindow,frame,bg_gworld,bg[parent->getBg()]);
 	}
 }
 

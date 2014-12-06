@@ -78,7 +78,7 @@ cTextMsg::cTextMsg(cDialog& parent) :
 	drawFramed(false),
 	textFont(FONT_BOLD),
 	textSize(10),
-	color(parent.defTextClr),
+	color(parent.getDefTextClr()),
 	clickable(false),
 	fromList("none") {}
 

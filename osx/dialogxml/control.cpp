@@ -178,14 +178,18 @@ void cControl::setActive(bool active) {
 	depressed = active;
 }
 
+void cControl::redraw() {
+	// If there's no parent dialog, we're not responsible for redrawing
+	if(parent) parent->draw();
+}
+
 bool cControl::handleClick(location){
 	sf::Event e;
 	bool done = false, clicked = false;
 	inWindow->setActive();
 	depressed = true;
 	while(!done){
-		// If there's no parent dialog, we're not responsible for redrawing
-		if(parent) parent->draw();
+		redraw();
 		if(!inWindow->pollEvent(e)) continue;
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
@@ -202,7 +206,7 @@ bool cControl::handleClick(location){
 		sf::sleep(time_in_ticks(6));
 	}
 	else sf::sleep(time_in_ticks(14));
-	if(parent) parent->draw();
+	redraw();
 	return clicked;
 }
 

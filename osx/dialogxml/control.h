@@ -111,6 +111,7 @@ protected:
 	int frameStyle;
 	cKey key;
 	void drawFrame(short amt, bool med_or_lt);
+	void redraw();
 private:
 	eControlType type;
 };

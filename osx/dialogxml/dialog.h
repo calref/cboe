@@ -60,6 +60,7 @@ public:
 		result = val;
 	}
 	void setBg(short n);
+	short getBg();
 	void setDefTextClr(sf::Color clr);
 	void setDefBtn(std::string defBtn);
 	sf::Color getDefTextClr();
@@ -84,14 +85,6 @@ private:
 	boost::any result;
 	std::string fname;
 	friend class cControl;
-	friend class cButton;
-	friend class cLed;
-	friend class cLedGroup;
-	friend class cPict;
-	friend class cTextField;
-	friend class cTextMsg;
-	friend class cScrollbar;
-	friend class _init;
 };
 
 class xBadNode : std::exception {
