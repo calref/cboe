@@ -44,7 +44,6 @@ class cDialog {
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 public:
 	static void init();
-	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	static const short BG_LIGHT, BG_DARK;
 	static short defaultBackground;
 	explicit cDialog(cDialog* p = NULL); // dialog with no items

@@ -308,7 +308,7 @@ void display_alchemy(bool allowEdit)
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
 		showAlch->addLabelFor(id, alch_names[i], LABEL_LEFT, 83, true);
 		if(!allowEdit)
-			showAlch->getControl(id).attachClickHandler(&cDialog::noAction);
+			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
 		if (univ.party.alchemy[i] > 0)
 			led.setState(led_red);

@@ -72,6 +72,7 @@ protected:
 class cLed : public cButton {
 public:
 	static void init();
+	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw();
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
