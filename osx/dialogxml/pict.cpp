@@ -93,6 +93,7 @@ void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 
 short cPict::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) return drawFramed;
+	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	else throw xUnsupportedProp(prop);
 }
 

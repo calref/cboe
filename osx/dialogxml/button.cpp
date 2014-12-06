@@ -92,6 +92,7 @@ void cButton::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 
 short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_WRAP) return wrapLabel;
+	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	else throw xUnsupportedProp(prop);
 }
 
