@@ -19,6 +19,7 @@ cSpecial::cSpecial(){
 	sd1 = -1;
 	sd2 = -1;
 	pic = -1;
+	pictype = 4;
 	m1 = -1;
 	m2 = -1;
 	ex1a = -1;
@@ -33,6 +34,10 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 	sd1 = old.sd1;
 	sd2 = old.sd2;
 	pic = old.pic;
+	if(type == 55 || type == 58 || type == 189)
+		pic -= 700;
+	else if(type == 57 || type == 60)
+		pic -= 400;
 	m1 = old.m1;
 	m2 = old.m2;
 	ex1a = old.ex1a;
