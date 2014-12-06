@@ -256,7 +256,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
+			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -448,14 +448,14 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		node->GetValue(&val);
 		if(type == TiXmlNode::ELEMENT && val == "key"){
 			// TODO: There's surely a better way to do this
-			if(content.length() > 0) throw xBadVal("button","<content>",content + val,node->Row(),node->Column(),fname);
+			if(content.length() > 0) throw xBadVal("button",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 //			p.second->labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT)
 			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",val,node->Row(),node->Column(),fname);
+			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -611,7 +611,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",content + val,node->Row(),node->Column(),fname);
+			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -647,7 +647,7 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 			p.second->addChoice(led.second, led.first);
 		}else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>", content + val,node->Row(),node->Column(),fname);
+			throw xBadVal("text",xBadVal::CONTENT, content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -712,7 +712,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
 		else{
 			val = '<' + val + '>';
-			throw xBadVal("text","<content>",val,node->Row(),node->Column(),fname);
+			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);

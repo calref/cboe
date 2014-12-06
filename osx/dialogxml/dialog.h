@@ -129,6 +129,7 @@ class xBadVal : std::exception {
 	int row, col;
 	const char* msg;
 public:
+	static constexpr const char*const CONTENT = "<content>";
 	xBadVal(std::string t,std::string n,std::string v, int r, int c, std::string dlg) throw();
 	~xBadVal() throw();
 	const char* what() throw();
