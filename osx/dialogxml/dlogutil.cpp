@@ -182,6 +182,10 @@ void cStringChoice::attachHandlers() {
 	}
 }
 
+cDialog* cStringChoice::operator->() {
+	return &dlg;
+}
+
 size_t cStringChoice::show(size_t selectedIndex) {
 	cur = selectedIndex;
 	page = cur / per_page;
@@ -516,6 +520,10 @@ cStrDlog& cStrDlog::setRecordHandler(record_callback_t rec){
 		dlg["record"].show();
 	}
 	return *this;
+}
+
+cDialog* cStrDlog::operator->() {
+	return &dlg;
 }
 
 void cStrDlog::show(){

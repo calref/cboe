@@ -35,6 +35,7 @@ public:
 	cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent = NULL);
 	cStrDlog& setSound(snd_num_t num);
 	cStrDlog& setRecordHandler(record_callback_t rec);
+	cDialog* operator->();
 	void show();
 };
 
@@ -95,6 +96,7 @@ class cStringChoice {
 public:
 	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = NULL);
 	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);
+	cDialog* operator->();
 	size_t show(size_t selectedIndex);
 };
 
