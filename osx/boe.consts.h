@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef _CONSTS_H
-#define _CONSTS_H
+#ifndef BOE_GAME_CONSTS_H
+#define BOE_GAME_CONSTS_H
 
 /*
  This file contain numerous constans in form of #defines.

@@ -1,5 +1,8 @@
 
+#ifndef BOE_GAME_DLGUTIL_H
+
 #include "dialog.h"
+#include "simpletypes.h"
 
 void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name);
 void end_shop_mode();
@@ -28,3 +31,5 @@ short pick_prefab_scen();
 //void give_password_filter (short item_hit);
 //bool enter_password();
 //short wd_to_pwd(Str255 str);
+
+#endif

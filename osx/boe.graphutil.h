@@ -1,3 +1,11 @@
+
+#ifndef BOE_GAME_GRAPHUTIL_H
+#define BOE_GAME_GRAPHUTIL_H
+
+#include "pict.h"
+#include "location.h"
+#include "simpletypes.h"
+
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw);
 void draw_monsters();
 void play_see_monster_str(unsigned short m);
@@ -18,3 +26,5 @@ void play_ambient_sound();
 
 void draw_items(location where);
 void draw_fields(location where);
+
+#endif

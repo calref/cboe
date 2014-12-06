@@ -1,5 +1,10 @@
 
+#ifndef BOE_GAME_GRAPHICS_H
+#define BOE_GAME_GRAPHICS_H
+
 #include <SFML/Graphics.hpp>
+#include "location.h"
+#include "simpletypes.h"
 
 enum {
 	REFRESH_NONE = 0,
@@ -59,3 +64,5 @@ ter_num_t get_ground_from_ter(ter_num_t ter);
 ter_num_t get_ter_from_ground(unsigned char ground);
 
 void draw_startup_anim(bool advance);
+
+#endif

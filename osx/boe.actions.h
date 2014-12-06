@@ -1,5 +1,10 @@
 
-#include <SFML/System.hpp>
+#ifndef BOE_GAME_ACTIONS_H
+#define BOE_GAME_ACTIOSN_H
+
+#include <SFML/Window/Event.hpp>
+#include "location.h"
+#include "simpletypes.h"
 
 void init_screen_locs();
 bool prime_time();
@@ -27,3 +32,5 @@ short get_outdoor_num();
 short count_walls(location loc);
 bool is_sign(ter_num_t ter);
 bool check_for_interrupt();
+
+#endif

@@ -1,5 +1,11 @@
 
+#ifndef BOE_GAME_INFODLG_H
+#define BOE_GAME_INFODLG_H
+
 #include "simpletypes.h"
+#include "item.h"
+#include "monster.h"
+#include "pc.h"
 
 class cDialog;
 void display_spells(short mode,short force_spell,cDialog* parent);
@@ -48,3 +54,5 @@ public:
 	}
 	void operator()(cDialog&);
 };
+
+#endif

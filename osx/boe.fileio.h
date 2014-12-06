@@ -1,5 +1,10 @@
 
+#ifndef BOE_GAME_FILEIO_H
+#define BOE_GAME_FILEIO_H
+
 #include <boost/filesystem/path.hpp>
+#include "location.h"
+#include "simpletypes.h"
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias!
 
@@ -61,3 +66,4 @@ __declspec(deprecated) void init_town();
 
   void alter_rect(RECT *r);
 
+#endif

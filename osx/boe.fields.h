@@ -1,3 +1,8 @@
+
+#ifndef BOE_GAME_FIELDS_H
+#define BOE_GAME_FIELDS_H
+// TODO: I think these should be integrated into the cTown class.
+
 bool is_explored(short i,short j);
 void make_explored(short i,short j);
 void take_explored(short i,short j);
@@ -59,3 +64,5 @@ void make_sleep_cloud(short i,short j);
 //bool is_rubble(short i,short j);
 void make_sfx(short i,short j, short type);
 void spread_sfx(short type,short prob);
+
+#endif
