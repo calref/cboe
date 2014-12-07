@@ -2832,10 +2832,11 @@ bool outd_move_party(location destination,bool forced)
 				 // Check if can fly over
 				 || ((flying() == true) &&
 					 (scenario.ter_types[ter].fly_over == true))   ) {
-					 // TODO: This should only happen if you're actually on a horse
 					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
-						 ASB("Your horses quite sensibly refuse.");
-						 return false;
+						 if(univ.party.in_horse >= 0) {
+							 ASB("Your horses quite sensibly refuse.");
+							 return false;
+						 }
 					 }
 					 univ.party.direction = set_direction(univ.party.p_loc, destination);
 					 
