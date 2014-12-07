@@ -1813,7 +1813,7 @@ void sanctify_space(location where)
 	// TODO: Generalize this for other spells cast on the space
 	for (i = 0; i < 50; i++)
 		if (where == univ.town->special_locs[i]) {
-			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SANCTIFY)
+			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::IF_CONTEXT)
 				run_special(eSpecCtx::TARGET,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 			return;
 		}

@@ -47,6 +47,7 @@ extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
 extern short pc_marked_damage[6];
 extern short monst_marked_damage[60];
+extern short spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern bool fast_bang,end_scenario;
 //extern short town_size[3];
@@ -2069,30 +2070,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			setsd(cur_node.sd1,cur_node.sd2,
 				  ((PSD[cur_node.sd1][cur_node.sd2] == 0) ? 1 : 0) );
 			check_mess = true;break;
-		case eSpecType::OUT_BLOCK:
-			if (is_out()) *next_spec = -1;
-			if ((is_out()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::OUT_MOVE)) {
-				ASB("Can't go here while outdoors.");
-				*a = 1;
-			}
-			break;
-		case eSpecType::TOWN_BLOCK:
-			if (is_town()) *next_spec = -1;
-			if ((is_town()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::TOWN_MOVE)) {
-				ASB("Can't go here while in town mode.");
-				*a = 1;
-			}
-			break;
-		case eSpecType::FIGHT_BLOCK:
-			if (is_combat()) *next_spec = -1;
-			if ((is_combat()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::COMBAT_MOVE)) {
-				ASB("Can't go here during combat.");
-				*a = 1;
-			}
-			break;
-		case eSpecType::LOOK_BLOCK:
-			if ((which_mode == eSpecCtx::OUT_LOOK) || (which_mode == eSpecCtx::TOWN_LOOK)) *next_spec = -1;
-			break;
 		case eSpecType::CANT_ENTER:
 			check_mess = true;
 			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) {
@@ -2168,11 +2145,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if ((sd_legit(spec.sd1,spec.sd2) == false) || (sd_legit(spec.ex1a,spec.ex1b) == false))
 				giveError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
-			break;
-		case eSpecType::SANCTIFY:
-			// TODO: Generalize this for other spell targeting
-			if(which_mode != eSpecCtx::TARGET)
-				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::REST:
 			check_mess = true;
@@ -2811,6 +2783,113 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if (PSD[spec.sd1][spec.sd2] == spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
+			break;
+		case eSpecType::IF_CONTEXT:
+			// TODO: Test this. In particular, test that the legacy behaviour is correct.
+			j = -1;
+			switch(spec.ex1a) {
+				case 0: // Out move
+					if(is_out()) {
+						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
+						*next_spec = spec.ex1c;
+						if(j && which_mode == eSpecCtx::OUT_MOVE)
+							ASB("Can't go here while outdoors.");
+					}
+					break;
+				case 1: // Town move
+					if(is_town()) {
+						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
+						*next_spec = spec.ex1c;
+						if(j && which_mode == eSpecCtx::TOWN_MOVE)
+							ASB("Can't go here while in town mode.");
+					}
+					break;
+				case 2: // Combat move
+					if(is_combat()) {
+						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
+						*next_spec = spec.ex1c;
+						if(j && which_mode == eSpecCtx::COMBAT_MOVE)
+							ASB("Can't go here during combat.");
+					}
+					break;
+				case 3: // Out look
+					if(is_out()) {
+						if(which_mode == eSpecCtx::OUT_LOOK)
+							*next_spec = spec.ex1c;
+					}
+					break;
+				case 4: // Town look
+					if(is_town()) {
+						if(which_mode == eSpecCtx::TOWN_LOOK)
+							*next_spec = spec.ex1c;
+					}
+					break;
+				case 5: // Enter town
+					if(which_mode == eSpecCtx::ENTER_TOWN)
+						*next_spec = spec.ex1c;
+					break;
+				case 6: // Leave town
+					if(which_mode == eSpecCtx::LEAVE_TOWN)
+						*next_spec = spec.ex1c;
+					break;
+				case 7: // Talking
+					if(which_mode == eSpecCtx::TALK)
+						*next_spec = spec.ex1c;
+					break;
+				case 8: // Use special item
+					if(which_mode == eSpecCtx::USE_SPEC_ITEM)
+						*next_spec = spec.ex1c;
+					break;
+				case 9: // Town timer
+					if(which_mode == eSpecCtx::TOWN_TIMER)
+						*next_spec = -1;
+					break;
+				case 10: // Scenario timer
+					if(which_mode == eSpecCtx::SCEN_TIMER)
+						*next_spec = spec.ex1c;
+					else j = 0;
+					break;
+				case 11: // Party timer
+					if(which_mode == eSpecCtx::PARTY_TIMER)
+						*next_spec = spec.ex1c;
+					break;
+				case 12: // Kill monster
+					if(which_mode == eSpecCtx::KILL_MONST)
+						*next_spec = spec.ex1c;
+					break;
+				case 13: // Start outdoor encounter
+					if(which_mode == eSpecCtx::OUTDOOR_ENC)
+						*next_spec = spec.ex1c;
+					break;
+				case 14: // Flee outdoor encounter
+					if(which_mode == eSpecCtx::FLEE_ENCOUNTER)
+						*next_spec = spec.ex1c;
+					break;
+				case 15: // Win outdoor encounter
+					if(which_mode == eSpecCtx::WIN_ENCOUNTER)
+						*next_spec = spec.ex1c;
+					break;
+				case 16: // Target spell
+					if(which_mode == eSpecCtx::TARGET) {
+						// TODO: I'm not quite sure if this covers every way of determining which spell was cast
+						if(spec.ex1b == -1 || (is_town() && town_spell == spec.ex1b) || (is_combat() && spell_being_cast == spec.ex1b))
+							*next_spec = spec.ex1c;
+					}
+					break;
+				case 17: // Use space
+					if(which_mode == eSpecCtx::USE_SPACE)
+						*next_spec = spec.ex1c;
+					break;
+				case 18: // See monster
+					if(which_mode == eSpecCtx::SEE_MONST)
+						*next_spec = spec.ex1c;
+					break;
+				case 100: // Look (town or out)
+					if(which_mode == eSpecCtx::OUT_LOOK || which_mode == eSpecCtx::TOWN_LOOK)
+						*next_spec = spec.ex1c;
+					break;
+			}
+			if(j >= 0) *a = j;
 			break;
 	}
 	if (check_mess == true) {

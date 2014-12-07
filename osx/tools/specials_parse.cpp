@@ -73,7 +73,7 @@ struct initer {
 			("secret-pass", eSpecType::SECRET_PASSAGE)
 			("disp-sm-msg", eSpecType::DISPLAY_SM_MSG)
 			("flip-sdf", eSpecType::FLIP_SDF)
-			("filter-context", eSpecType::OUT_BLOCK)
+			("if-context", eSpecType::IF_CONTEXT)
 			("block-move", eSpecType::CANT_ENTER)
 			("change-time", eSpecType::CHANGE_TIME)
 			("start-timer-scen", eSpecType::SCEN_TIMER_START)

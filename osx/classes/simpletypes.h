@@ -550,10 +550,10 @@ enum class eSpecType {
 	SECRET_PASSAGE = 4,
 	DISPLAY_SM_MSG = 5,
 	FLIP_SDF = 6,
-	OUT_BLOCK = 7,
-	TOWN_BLOCK = 8,
-	FIGHT_BLOCK = 9,
-	LOOK_BLOCK = 10,
+	UNUSED1 = 7, // formerly OUT_BLOCK
+	UNUSED2 = 8, // formerly TOWN_BLOCK
+	UNUSED3 = 9, // formerly FIGHT_BLOCK
+	UNUSED4 = 10, // formerly LOOK_BLOCK
 	CANT_ENTER = 11,
 	CHANGE_TIME = 12,
 	SCEN_TIMER_START = 13,
@@ -567,7 +567,7 @@ enum class eSpecType {
 	CALL_GLOBAL = 21,
 	SET_SDF_ROW = 22,
 	COPY_SDF = 23,
-	SANCTIFY = 24,
+	UNUSED6 = 24, // formerly SANCTIFY
 	REST = 25,
 	WANDERING_WILL_FIGHT = 26,
 	END_SCENARIO = 27,
@@ -638,6 +638,7 @@ enum class eSpecType {
 	IF_ENOUGH_MAGE_LORE = 153,
 	IF_TEXT_RESPONSE = 154,
 	IF_SDF_EQ = 155,
+	IF_CONTEXT = 156,
 	MAKE_TOWN_HOSTILE = 170,
 	TOWN_CHANGE_TER = 171,
 	TOWN_SWAP_TER = 172,
@@ -703,7 +704,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::ONCE;
 	if(code >= 80 && code <= 106)
 		return eSpecCat::AFFECT;
-	if(code >= 130 && code <= 155)
+	if(code >= 130 && code <= 156)
 		return eSpecCat::IF_THEN;
 	if(code >= 170 && code <= 195)
 		return eSpecCat::TOWN;
