@@ -216,7 +216,7 @@ bool is_container(location loc)
 	if ((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
 	ter = coord_to_ter(loc.x,loc.y);
-	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_CONTAINER)
+	if(scenario.ter_types[ter].special == eTerSpec::IS_A_CONTAINER)
 		return true;
 	return false;
 }
@@ -653,7 +653,7 @@ void alter_space(short i,short j,ter_num_t ter)
 	else {
 		univ.town->terrain(i,j) = ter;
 		combat_terrain[i][j] = ter;
-		if (scenario.ter_types[univ.town->terrain(i,j)].special == TER_SPEC_CONVEYOR)
+		if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
 			belt_present = true;
 	}
 }

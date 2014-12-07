@@ -943,7 +943,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	location from_loc,to_loc;
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
 	cCreature *which_m;
-	short ter_abil;
+	eTerSpec ter_abil;
 	unsigned short ter_flag;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
@@ -960,7 +960,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	ter_abil = scenario.ter_types[ter].special;
 	ter_flag = scenario.ter_types[ter].flag3.u;
 	
-	if ((mode > 0) && (ter_abil == TER_SPEC_CONVEYOR)) {
+	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if (
 			((ter_flag == DIR_N) && (where_check.y > from_loc.y)) ||
 			((ter_flag == DIR_E) && (where_check.x < from_loc.x)) ||
@@ -1061,7 +1061,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	}
 	if (monster_placid(which_monst) && // monsters don't hop into bed when things are calm
-		(scenario.ter_types[ter].special == TER_SPEC_BED))
+		scenario.ter_types[ter].special == eTerSpec::BED)
 		can_enter = false;
 	if (mode == 1 && univ.town.is_spot(where_check.x, where_check.y))
 		can_enter = false;
@@ -1075,7 +1075,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	
 	switch (ter_abil) {
 			// changing ter
-		case TER_SPEC_CHANGE_WHEN_STEP_ON:
+		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if (!(monster_placid(which_monst))) {
 				univ.town->terrain(where_check.x,where_check.y) = scenario.ter_types[ter].flag1.u;
@@ -1086,13 +1086,13 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			}
 			break;
 			
-		case TER_SPEC_BLOCKED_TO_MONSTERS:
-		case TER_SPEC_TOWN_ENTRANCE:
-		case TER_SPEC_WATERFALL:
+		case eTerSpec::BLOCKED_TO_MONSTERS:
+		case eTerSpec::TOWN_ENTRANCE:
+		case eTerSpec::WATERFALL:
 			can_enter = false;
 			break;
 			
-		case TER_SPEC_DAMAGING: // TODO: Update this to check other cases
+		case eTerSpec::DAMAGING: // TODO: Update this to check other cases
 			if (ter_flag == DAMAGE_FIRE && univ.town.monst[which_monst].immunities & 8)
 				return true;
 			else return false;

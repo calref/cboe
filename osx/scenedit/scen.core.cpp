@@ -140,28 +140,28 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	if ((store_ter.special < 2) || (store_ter.special > 6)) {
 		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
 	}
-	else if (store_ter.special == TER_SPEC_DAMAGING) {
+	else if(store_ter.special == eTerSpec::DAMAGING) {
 		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
 	}
-	else if (store_ter.special == TER_SPEC_DANGEROUS) {
+	else if(store_ter.special == eTerSpec::DANGEROUS) {
 		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
 	}
 	 */
-	if(store_ter.special == TER_SPEC_NONE)
+	if(store_ter.special == eTerSpec::NONE)
 		store_ter.flag1.s = me["flag1"].getTextAsNum();
 	else store_ter.flag1.u = me["flag1"].getTextAsNum();
 	if(false) // flag2 is never signed, apparently; but that could change?
 		store_ter.flag2.s = me["flag2"].getTextAsNum();
 	else store_ter.flag2.u = me["flag2"].getTextAsNum();
-	if(store_ter.special == TER_SPEC_CALL_SPECIAL || store_ter.special == TER_SPEC_CALL_SPECIAL_WHEN_USED)
+	if(store_ter.special == eTerSpec::CALL_SPECIAL || store_ter.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
 		store_ter.flag3.s = me["flag3"].getTextAsNum();
 	else store_ter.flag3.u = me["flag3"].getTextAsNum();
 	
 	/*
-	if (store_ter.special == TER_SPEC_TOWN_ENTRANCE) {
+	if(store_ter.special == eTerSpec::TOWN_ENTRANCE) {
 		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
 	}
-	else if ((store_ter.special == TER_SPEC_DAMAGING) || (store_ter.special == TER_SPEC_DANGEROUS)) {
+	else if(store_ter.special == eTerSpec::DAMAGING || store_ter.special == eTerSpec::DANGEROUS) {
 		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
 	}
 	*/
@@ -280,14 +280,14 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool){
 	cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me[id]);
 	std::istringstream sel(led_ctrl.getSelected().substr(4));
 	sel >> prop;
-	me["flag1text"].setText(get_str("ter-flag1",prop + 1));
-	me["flag2text"].setText(get_str("ter-flag2",prop + 1));
-	me["flag3text"].setText(get_str("ter-flag3",prop + 1));
+	me["flag1text"].setText(get_str("ter-flag1",int(prop) + 1));
+	me["flag2text"].setText(get_str("ter-flag2",int(prop) + 1));
+	me["flag3text"].setText(get_str("ter-flag3",int(prop) + 1));
 	me["pickflag1"].hide();
 	me["pickflag2"].hide();
 	me["pickflag3"].hide();
 	switch(prop) {
-		case TER_SPEC_NONE:
+		case eTerSpec::NONE:
 			me["pickflag1"].hide(); // TODO: Could have a pick graphic dialog for the editor icon, but that requires adding a new graphic type
 			break;
 	}
@@ -326,7 +326,7 @@ static void fill_ter_info(cDialog& me, short ter){
 	me["trimter"].setTextToNum(ter_type.trim_ter);
 	// TODO: Replace edit text box for trim with a framed name and Select button
 	me["trim"].setTextToNum((int)ter_type.trim_type);
-	std::string propid = "prop" + std::to_string(ter_type.special);
+	std::string propid = "prop" + std::to_string((int)ter_type.special);
 	dynamic_cast<cLedGroup&>(me["prop"]).setSelected(propid);
 	fill_ter_flag_info(me, "prop", false);
 	{
@@ -383,13 +383,13 @@ static void fill_ter_info(cDialog& me, short ter){
 		cLed& led_ctrl = dynamic_cast<cLed&>(me["horse"]);
 		led_ctrl.setState(led_red);
 	}
-	if(ter_type.special == TER_SPEC_NONE)
+	if(ter_type.special == eTerSpec::NONE)
 		me["flag1"].setTextToNum(ter_type.flag1.s);
 	else me["flag1"].setTextToNum(ter_type.flag1.u);
 	if(false) // flag2 is never signed, apparently; but that could change?
 		me["flag2"].setTextToNum(ter_type.flag2.s);
 	else me["flag2"].setTextToNum(ter_type.flag2.u);
-	if(ter_type.special == TER_SPEC_CALL_SPECIAL || ter_type.special == TER_SPEC_CALL_SPECIAL_WHEN_USED)
+	if(ter_type.special == eTerSpec::CALL_SPECIAL || ter_type.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
 		me["flag3"].setTextToNum(ter_type.flag3.s);
 	else me["flag3"].setTextToNum(ter_type.flag3.u);
 	me["arena"].setTextToNum(ter_type.combat_arena);

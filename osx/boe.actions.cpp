@@ -487,7 +487,7 @@ bool handle_action(sf::Event event)
 						add_string_to_buf("Rest: Not enough food.            ");
 					else if (nearest_monster() <= 3)
 						add_string_to_buf("Rest: Monster too close.            ");
-					else if ((scenario.ter_types[ter].special == TER_SPEC_DAMAGING) || (scenario.ter_types[ter].special == TER_SPEC_DANGEROUS))
+					else if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
 						add_string_to_buf("Rest: It's dangerous here.");////
 					else if (flying() == true)
 						add_string_to_buf("Rest: Not while flying.           ");
@@ -786,7 +786,7 @@ bool handle_action(sf::Event event)
 					else need_redraw = true;
 					
 					storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-					if (scenario.ter_types[storage].special == TER_SPEC_TOWN_ENTRANCE) {//// town entry
+					if(scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
 						
 						if (univ.party.direction == 0) find_direction_from = 2;
 						else if (univ.party.direction == 4) find_direction_from = 0;
@@ -2604,11 +2604,11 @@ static eDirection find_waterfall(short x, short y, short mode){
 	bool to_dir[8];
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
-			to_dir[i] = (scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == TER_SPEC_WATERFALL);
+			to_dir[i] = scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == eTerSpec::WATERFALL;
 			//printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
 			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
-			to_dir[i] = (scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == TER_SPEC_WATERFALL);
+			to_dir[i] = scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == eTerSpec::WATERFALL;
 			if(scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
 		}
 	}
@@ -2762,7 +2762,7 @@ bool outd_move_party(location destination,bool forced)
 				// not in towns
 				&& ((scenario.ter_types[ter].boat_over == false)
 					|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
-				&& (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE)) {
+				&& scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
@@ -2771,7 +2771,8 @@ bool outd_move_party(location destination,bool forced)
 				return false;
 			else if ((outd_is_blocked(real_dest) == false)
 					 && (scenario.ter_types[ter].boat_over == true)
-					 && (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE)) {
+					 && scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 				else {
@@ -2832,14 +2833,14 @@ bool outd_move_party(location destination,bool forced)
 				 || ((flying() == true) &&
 					 (scenario.ter_types[ter].fly_over == true))   ) {
 					 // TODO: This should only happen if you're actually on a horse
-					 if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING || scenario.ter_types[ter].special == TER_SPEC_DANGEROUS) {
+					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 						 ASB("Your horses quite sensibly refuse.");
 						 return false;
 					 }
 					 univ.party.direction = set_direction(univ.party.p_loc, destination);
 					 
 					 // TODO: But I though you automatically landed when entering?
-					 if ((flying() == true) && (scenario.ter_types[ter].special == TER_SPEC_TOWN_ENTRANCE)) {
+					 if(flying() && scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
 						 add_string_to_buf("Moved: You have to land first.               ");
 						 return false;
 					 }
@@ -2924,7 +2925,7 @@ bool town_move_party(location destination,short forced)////
 			else if ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
 				return false;
 			// Crossing bridge: land or go through
-			else if ((!is_blocked(destination)) && (scenario.ter_types[ter].boat_over) && (scenario.ter_types[ter].special == TER_SPEC_BRIDGE)) {
+			else if(!is_blocked(destination) && scenario.ter_types[ter].boat_over && scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 				else if (is_blocked(destination) == false) {
@@ -2975,7 +2976,7 @@ bool town_move_party(location destination,short forced)////
 		}
 		else if ((is_blocked(destination) == false) || (forced == 1)) {
 			if (univ.party.in_horse >= 0) {
-				if (scenario.ter_types[ter].special == TER_SPEC_DAMAGING) {
+				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
@@ -3076,7 +3077,7 @@ short count_walls(location loc) // TODO: Generalize this function
 bool is_sign(ter_num_t ter)
 {
 	
-	if (scenario.ter_types[ter].special == TER_SPEC_IS_A_SIGN)
+	if(scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
 		return true;
 	return false;
 }

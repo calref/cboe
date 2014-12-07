@@ -118,132 +118,132 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	switch(old.special){
 		case 0:
 			if(i == 7 || i == 10 || i == 13 || i == 16){
-				special = TER_SPEC_NONE;
+				special = eTerSpec::NONE;
 				flag1.s = 23;
 				flag2.u = flag3.u = 0;
 			}else if(picture == 215 || (picture >= 218 && picture <= 221)){
 				picture = 215;
-				special = TER_SPEC_NONE;
+				special = eTerSpec::NONE;
 				flag1.s = 3;
 				flag2.u = flag3.u = 0;
 			}else if(picture == 216 || (picture >= 222 && picture <= 225)){
 				picture = 215;
-				special = TER_SPEC_NONE;
+				special = eTerSpec::NONE;
 				flag1.s = 2;
 				flag2.u = flag3.u = 0;
 			}else if(picture == 143) {
-				special = TER_SPEC_BED;
+				special = eTerSpec::BED;
 				flag1.s = 230;
 				flag2.u = flag3.u = 0;
 			}else if((picture >= 61 && picture <= 66) || picture == 401 || picture == 402){
-				special = TER_SPEC_BRIDGE;
+				special = eTerSpec::BRIDGE;
 				flag1.u = flag2.u = flag3.u = 0;
 				break;
 			}else{
-				special = TER_SPEC_NONE;
+				special = eTerSpec::NONE;
 				flag1.s = -1;
 				flag2.u = flag3.u = 0;
 			}
 			break;
 		case 1:
-			special = TER_SPEC_CHANGE_WHEN_STEP_ON;
+			special = eTerSpec::CHANGE_WHEN_STEP_ON;
 			flag3.u = 0;
 			break;
 		case 2:
-			special = TER_SPEC_DAMAGING;
+			special = eTerSpec::DAMAGING;
 			flag3.u = DAMAGE_FIRE;
 			break;
 		case 3:
-			special = TER_SPEC_DAMAGING;
+			special = eTerSpec::DAMAGING;
 			flag3.u = DAMAGE_COLD;
 			break;
 		case 4:
-			special = TER_SPEC_DAMAGING;
+			special = eTerSpec::DAMAGING;
 			flag3.u = DAMAGE_MAGIC;
 			break;
 		case 5:
-			special = TER_SPEC_DANGEROUS;
+			special = eTerSpec::DANGEROUS;
 			flag3.u = (int)eStatus::POISON;
 			break;
 		case 6:
-			special = TER_SPEC_DANGEROUS;
+			special = eTerSpec::DANGEROUS;
 			flag3.u = (int)eStatus::DISEASE;
 			break;
 		case 7:
-			special = TER_SPEC_CRUMBLING;
+			special = eTerSpec::CRUMBLING;
 			flag2.u = 0; // ???: may change this
 			flag3.u = 1; // destroyed by Move Mountains but not by quickfire; 0 = both, 2 = quickfire only
 			break;
 		case 8:
-			special = TER_SPEC_LOCKABLE;
+			special = eTerSpec::LOCKABLE;
 			flag3.u = 0;
 			break;
 		case 9:
-			special = TER_SPEC_UNLOCKABLE;
+			special = eTerSpec::UNLOCKABLE;
 			flag3.u = false; // can't bash
 			break;
 		case 10:
-			special = TER_SPEC_UNLOCKABLE;
+			special = eTerSpec::UNLOCKABLE;
 			flag3.u = true; // can bash
 			break;
 		case 11:
-			special = TER_SPEC_IS_A_SIGN;
+			special = eTerSpec::IS_A_SIGN;
 			flag3.u = 0;
 			break;
 		case 12:
-			special = TER_SPEC_CALL_SPECIAL;
+			special = eTerSpec::CALL_SPECIAL;
 			flag2.u = 0; // local special, always (1 would be local if in town, global if outdoors)
 			flag3.s = -1;
 			break;
 		case 13:
-			special = TER_SPEC_CALL_SPECIAL;
+			special = eTerSpec::CALL_SPECIAL;
 			flag2.u = 3; // global special, always (2 would be local if outdoors, global if in town)
 			flag3.s = -1;
 			break;
 		case 14:
-			special = TER_SPEC_IS_A_CONTAINER;
+			special = eTerSpec::IS_A_CONTAINER;
 			flag3.u = 0;
 			break;
 		case 15:
-			special = TER_SPEC_WATERFALL;
+			special = eTerSpec::WATERFALL;
 			flag1.u = DIR_S;
 			flag3.u = 0;
 			break;
 		case 16:
-			special = TER_SPEC_CONVEYOR;
+			special = eTerSpec::CONVEYOR;
 			flag1.u = DIR_N;
 			flag3.u = 0;
 			break;
 		case 17:
-			special = TER_SPEC_CONVEYOR;
+			special = eTerSpec::CONVEYOR;
 			flag1.u = DIR_E;
 			flag3.u = 0;
 			break;
 		case 18:
-			special = TER_SPEC_CONVEYOR;
+			special = eTerSpec::CONVEYOR;
 			flag1.u = DIR_S;
 			flag3.u = 0;
 			break;
 		case 19:
-			special = TER_SPEC_CONVEYOR;
+			special = eTerSpec::CONVEYOR;
 			flag1.u = DIR_W;
 			flag3.u = 0;
 			break;
 		case 20:
-			special = TER_SPEC_BLOCKED_TO_MONSTERS;
+			special = eTerSpec::BLOCKED_TO_MONSTERS;
 			flag3.u = 0;
 			break;
 		case 21:
-			special = TER_SPEC_TOWN_ENTRANCE;
+			special = eTerSpec::TOWN_ENTRANCE;
 			flag3.u = 0;
 			break;
 		case 22:
-			special = TER_SPEC_CHANGE_WHEN_USED;
+			special = eTerSpec::CHANGE_WHEN_USED;
 			flag2.u = 3;
 			flag3.u = 0;
 			break;
 		case 23:
-			special = TER_SPEC_CALL_SPECIAL_WHEN_USED;
+			special = eTerSpec::CALL_SPECIAL_WHEN_USED;
 			flag2.u = 3; // global special, always (2 would be local if outdoors, global if in town)
 			flag3.s = -1;
 			break;
@@ -251,7 +251,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	trans_to_what = old.trans_to_what;
 	fly_over = old.fly_over;
 	boat_over = old.boat_over;
-	if(special == TER_SPEC_DANGEROUS) block_horse = false; // because it's now redundant and unhelpful
+	if(special == eTerSpec::DANGEROUS) block_horse = false; // because it's now redundant and unhelpful
 	else block_horse = old.block_horse;
 	light_radius = old.light_radius;
 	step_sound = old.step_sound;
@@ -362,7 +362,7 @@ std::istream& operator >> (std::istream& in, eTerSpec& e){
 	in >> i;
 	if(i > 0 && i < 24)
 		e = (eTerSpec) i;
-	else e = TER_SPEC_NONE;
+	else e = eTerSpec::NONE;
 	return in;
 }
 

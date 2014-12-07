@@ -1759,7 +1759,7 @@ void cast_town_spell(location where) ////
 			break;
 			
 		case 20:
-			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
+			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 				if (scenario.ter_types[ter].flag2.u == 10)
 					r1 = 10000;
 				else{
@@ -1826,7 +1826,7 @@ void crumble_wall(location where) // TODO: Add something like this to the spread
 	if (loc_off_act_area(where) == true)
 		return;
 	ter = univ.town->terrain(where.x,where.y);
-	if (scenario.ter_types[ter].special == TER_SPEC_CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
+	if(scenario.ter_types[ter].special == eTerSpec::CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
 		play_sound(60);
 		univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
 		add_string_to_buf("  Barrier crumbles.");

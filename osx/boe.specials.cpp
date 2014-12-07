@@ -148,7 +148,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 // sets forced to true if definitely can enter
 {
 	ter_num_t ter;
-	short r1,i,door_pc,ter_special,pic_type = 0,ter_pic = 0;
+	short r1,i,door_pc,pic_type = 0,ter_pic = 0;
+	eTerSpec ter_special;
 	std::string choice;
 	ter_flag_t ter_flag1,ter_flag2,ter_flag3;
 	eDamageType dam_type = DAMAGE_WEAPON;
@@ -179,7 +180,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	ter_flag3 = scenario.ter_types[ter].flag3;
 	ter_pic = scenario.ter_types[ter].picture;
 	
-	if ((mode > 0) && (ter_special == TER_SPEC_CONVEYOR)) {
+	if(mode > 0 && ter_special == eTerSpec::CONVEYOR) {
 		if (
 			((ter_flag3.u == DIR_N) && (where_check.y > from_loc.y)) ||
 			((ter_flag3.u == DIR_E) && (where_check.x < from_loc.x)) ||
@@ -227,8 +228,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 					*forced = true;
 				}
 				*spec_num = univ.town->spec_id[i];
-				if ((is_blocked(where_check) == false) || (ter_special == TER_SPEC_CHANGE_WHEN_STEP_ON)
-					|| (ter_special == TER_SPEC_CALL_SPECIAL)) {
+				if(!is_blocked(where_check) || ter_special == eTerSpec::CHANGE_WHEN_STEP_ON
+					|| ter_special == eTerSpec::CALL_SPECIAL) {
 					give_help(54,0);
 					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 					if (s1 > 0)
@@ -288,7 +289,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	}
 	
 	switch (ter_special) {
-		case TER_SPEC_CHANGE_WHEN_STEP_ON:
+		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			alter_space(where_check.x,where_check.y,ter_flag1.u);
 			if (ter_flag2.u < 200) {
 				play_sound(-1 * ter_flag2.u);
@@ -297,7 +298,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			if(blocksMove(scenario.ter_types[ter].blockage))
 				can_enter = false;
 			break;
-		case TER_SPEC_DAMAGING:
+		case eTerSpec::DAMAGING:
 			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
 				break;
@@ -349,7 +350,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
-		case TER_SPEC_DANGEROUS:
+		case eTerSpec::DANGEROUS:
 			//if party is flying, in a boat, or entering a boat, they cannot receive statuses from terrain
 			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
 				break;
@@ -418,7 +419,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 //				}
 //			}
 			break;
-		case TER_SPEC_CALL_SPECIAL:
+		case eTerSpec::CALL_SPECIAL:
 		{
 			short spec_type = 0;
 			if(ter_flag2.u == 3){
@@ -440,7 +441,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			
 			
 			// Locked doors
-		case TER_SPEC_UNLOCKABLE:
+		case eTerSpec::UNLOCKABLE:
 			if (is_combat()) {  // No lockpicking in combat
 				add_string_to_buf("  Can't enter: It's locked.");
 				break;
@@ -1226,7 +1227,7 @@ bool use_space(location where)
 		univ.town.set_block((short) to_loc.x,(short) to_loc.y,true);
 	}
 	
-	if (scenario.ter_types[ter].special == TER_SPEC_CHANGE_WHEN_USED) {
+	if(scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
 		if (where == from_loc) {
 			add_string_to_buf("  Not while on space.");
 			return false;
@@ -1235,7 +1236,7 @@ bool use_space(location where)
 		alter_space(where.x,where.y,scenario.ter_types[ter].flag1.u);
 		play_sound(scenario.ter_types[ter].flag2.u);
 		return true;
-	}else if (scenario.ter_types[ter].special == TER_SPEC_CALL_SPECIAL_WHEN_USED){ // call special
+	} else if(scenario.ter_types[ter].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		short spec_type = 0;
 		if(scenario.ter_types[ter].flag2.u == 3){
 			if((is_town() || (is_combat() && which_combat_type == 1))) spec_type = 2; else spec_type = 1;
@@ -1288,8 +1289,8 @@ bool adj_town_look(location where)
 	}
 	if (is_container(where) && item_there && can_open) {
 		get_item(where,6,true);
-	}else if(scenario.ter_types[terrain].special == TER_SPEC_CHANGE_WHEN_USED ||
-			 scenario.ter_types[terrain].special == TER_SPEC_CALL_SPECIAL_WHEN_USED) {
+	}else if(scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
+			 scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		add_string_to_buf("  (Use this space to do something");
 		add_string_to_buf("  with it.)");
 	}else{
@@ -1765,7 +1766,7 @@ void push_things()////
 		}
 		if (l != univ.town.p_loc) {
 			ASB("You get pushed.");
-			if (scenario.ter_types[ter].special == TER_SPEC_CONVEYOR)
+			if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 				draw_terrain(0);
 			center = l;
 			univ.town.p_loc = l;
@@ -1805,7 +1806,7 @@ void push_things()////
 				if (l != pc_pos[i]) {
 					ASB("Someone gets pushed.");
 					ter = univ.town->terrain(l.x,l.y);
-					if (scenario.ter_types[ter].special == TER_SPEC_CONVEYOR)
+					if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 						draw_terrain(0);
 					pc_pos[i] = l;
 					update_explored(l);
@@ -2822,7 +2823,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_TOWN_CHANGE_TER:
 			set_terrain(l,spec.ex2a);
-			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
+			if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
 				belt_present = true;
 			*redraw = true;
 			draw_map(true);
@@ -2830,12 +2831,12 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_TOWN_SWAP_TER:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
 				set_terrain(l,spec.ex2b);
-				if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
+				if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
 					belt_present = true;
 			}
 			else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
 				set_terrain(l,spec.ex2a);
-				if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
+				if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
 					belt_present = true;
 			}
 			*redraw = 1;
@@ -2844,7 +2845,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case SPEC_TOWN_TRANS_TER:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
-			if(scenario.ter_types[spec.ex2a].special == TER_SPEC_CONVEYOR)
+			if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
 				belt_present = true;
 			*redraw = 1;
 			draw_map(true);
@@ -2879,13 +2880,13 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case SPEC_TOWN_LOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if (scenario.ter_types[ter].special == TER_SPEC_LOCKABLE)
+			if(scenario.ter_types[ter].special == eTerSpec::LOCKABLE)
 				set_terrain(l,scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
 		case SPEC_TOWN_UNLOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE)
+			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE)
 				set_terrain(l,scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
@@ -3226,7 +3227,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				case SPEC_RECT_CHANGE_TER:
 					if (get_ran(1,1,100) <= spec.sd2){
 						set_terrain(l,spec.sd1);
-						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
+						if(scenario.ter_types[spec.sd1].special == eTerSpec::CONVEYOR)
 							belt_present = true;
 						*redraw = true;
 						draw_map(true);
@@ -3235,14 +3236,14 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				case SPEC_RECT_SWAP_TER:
 					if (coord_to_ter(i,j) == spec.sd1){
 						set_terrain(l,spec.sd2);
-						if(scenario.ter_types[spec.sd2].special == TER_SPEC_CONVEYOR)
+						if(scenario.ter_types[spec.sd2].special == eTerSpec::CONVEYOR)
 							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 					}
 					else if (coord_to_ter(i,j) == spec.sd2){
 						set_terrain(l,spec.sd1);
-						if(scenario.ter_types[spec.sd1].special == TER_SPEC_CONVEYOR)
+						if(scenario.ter_types[spec.sd1].special == eTerSpec::CONVEYOR)
 							belt_present = true;
 						*redraw = true;
 						draw_map(true);
@@ -3251,16 +3252,16 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				case SPEC_RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
 					set_terrain(l,scenario.ter_types[ter].trans_to_what);
-					if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
+					if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
 						belt_present = true;
 					*redraw = true;
 					draw_map(true);
 					break;
 				case SPEC_RECT_LOCK:
 					ter = coord_to_ter(i,j);
-					if (scenario.ter_types[ter].special == 8){
+					if(scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
 						set_terrain(l,scenario.ter_types[ter].flag1.u);
-						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
+						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
 							belt_present = true;
 						*redraw = true;
 						draw_map(true);
@@ -3268,9 +3269,9 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case SPEC_RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
-					if (scenario.ter_types[ter].special == TER_SPEC_UNLOCKABLE){
+					if (scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 						set_terrain(l,scenario.ter_types[ter].flag1.u);
-						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == TER_SPEC_CONVEYOR)
+						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
 							belt_present = true;
 						*redraw = true;
 						draw_map(true);

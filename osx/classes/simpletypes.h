@@ -162,59 +162,35 @@ enum eMonstAbil {
 
 /* Terrains Special Properties : scenario.ter_types[i].special */      //complete
 
-enum eTerSpec {
-//	TER_SPEC_NONE = 0,
-//	TER_SPEC_CHANGE_WHEN_STEP_ON = 1,
-//	TER_SPEC_DOES_FIRE_DAMAGE = 2,
-//	TER_SPEC_DOES_COLD_DAMAGE = 3,
-//	TER_SPEC_DOES_MAGIC_DAMAGE = 4,
-//	TER_SPEC_POISON_LAND = 5,
-//	TER_SPEC_DISEASED_LAND = 6,
-//	TER_SPEC_CRUMBLING_TERRAIN = 7,
-//	TER_SPEC_LOCKABLE_TERRAIN = 8,
-//	TER_SPEC_UNLOCKABLE_TERRAIN = 9,
-//	TER_SPEC_UNLOCKABLE_BASHABLE = 10,
-//	TER_SPEC_IS_A_SIGN = 11,
-//	TER_SPEC_CALL_LOCAL_SPECIAL = 12,
-//	TER_SPEC_CALL_SCENARIO_SPECIAL = 13,
-//	TER_SPEC_IS_A_CONTAINER = 14,
-//	TER_SPEC_WATERFALL = 15,
-//	TER_SPEC_CONVEYOR_NORTH = 16,
-//	TER_SPEC_CONVEYOR_EAST = 17,
-//	TER_SPEC_CONVEYOR_SOUTH = 18,
-//	TER_SPEC_CONVEYOR_WEST = 19,
-//	TER_SPEC_BLOCKED_TO_MONSTERS = 20,
-//	TER_SPEC_TOWN_ENTRANCE = 21,
-//	TER_SPEC_CHANGE_WHEN_USED = 22,
-//	TER_SPEC_CALL_SPECIAL_WHEN_USED = 23,
-	TER_SPEC_NONE = 0,
-	TER_SPEC_CHANGE_WHEN_STEP_ON = 1,
-	TER_SPEC_DAMAGING = 2,
-	TER_SPEC_BRIDGE = 3, // new
-	TER_SPEC_BED = 4, // new
-	TER_SPEC_DANGEROUS = 5,
-	TER_SPEC_UNUSED1 = 6,
-	TER_SPEC_CRUMBLING = 7,
-	TER_SPEC_LOCKABLE = 8,
-	TER_SPEC_UNLOCKABLE = 9,
-	TER_SPEC_UNUSED2 = 10,
-	TER_SPEC_IS_A_SIGN = 11,
-	TER_SPEC_CALL_SPECIAL = 12,
-	TER_SPEC_UNUSED3 = 13,
-	TER_SPEC_IS_A_CONTAINER = 14,
-	TER_SPEC_WATERFALL = 15,
-	TER_SPEC_CONVEYOR = 16,
-	TER_SPEC_UNUSED4 = 17,
-	TER_SPEC_UNUSED5 = 18,
-	TER_SPEC_UNUSED6 = 19,
-	TER_SPEC_BLOCKED_TO_MONSTERS = 20,
-	TER_SPEC_TOWN_ENTRANCE = 21,
-	TER_SPEC_CHANGE_WHEN_USED = 22,
-	TER_SPEC_CALL_SPECIAL_WHEN_USED = 23,
+enum class eTerSpec {
+	NONE = 0,
+	CHANGE_WHEN_STEP_ON = 1,
+	DAMAGING = 2, // formerly "fire damage"
+	BRIDGE = 3, // new; formerly "cold damage"
+	BED = 4, // new; formerly "magic damage"
+	DANGEROUS = 5, // formerly "poison land"
+	UNUSED1 = 6, // formerly "disease land"
+	CRUMBLING = 7,
+	LOCKABLE = 8,
+	UNLOCKABLE = 9,
+	UNUSED2 = 10, // formerly "unlockable + bashable"
+	IS_A_SIGN = 11,
+	CALL_SPECIAL = 12, // formerly "call local special"
+	UNUSED3 = 13, // formerly "call scenario special"
+	IS_A_CONTAINER = 14,
+	WATERFALL = 15,
+	CONVEYOR = 16, // formerly "conveyor north"
+	UNUSED4 = 17, // formerly "conveyor east"
+	UNUSED5 = 18, // formerly "conveyor south"
+	UNUSED6 = 19, // formerly "conveyor west"
+	BLOCKED_TO_MONSTERS = 20,
+	TOWN_ENTRANCE = 21,
+	CHANGE_WHEN_USED = 22,
+	CALL_SPECIAL_WHEN_USED = 23,
 	//	1. Change when step on (What to change to, number of sound, Unused)
 	//	2. Damaging terrain; can't rest here (Amount of damage done, multiplier, damage type)
-	//	3. Reserved
-	//	4. Reserved
+	//	3. Bridge - if the party boats over it, they get the option to land. (Unused, Unused, Unused)
+	//	4. Bed - change party graphic when they stand on this space
 	//	5. Dangerous land; can't rest here; percentage chance may be 0 (Strength, Percentage chance, status type)
 	//	6. Reserved
 	//	7. Crumbling terrain (Terrain to change to, strength?, destroyed by what - quickfire, shatter/move mountains, or both)
@@ -234,7 +210,6 @@ enum eTerSpec {
 	//	21. Town entrance (Terrain type if hidden, Unused, Unused)
 	//	22. Change when Used (Terrain to change to when used, Number of sound, Unused)
 	//	23. Call special when used (Special to call, local or scenario?, Unused)
-	//	24. Bridge - if the party boats over it, they get the option to land. (Unused, Unused, Unused)
 };
 
 enum class eTrimType {

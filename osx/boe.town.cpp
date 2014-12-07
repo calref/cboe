@@ -204,7 +204,7 @@ void start_town_mode(short which_town, short entry_dir)
 				current_ground = 0;
 			else if (univ.town->terrain(i,j) == 2)
 				current_ground = 2;
-			if (scenario.ter_types[univ.town->terrain(i,j)].special == TER_SPEC_CONVEYOR)
+			if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
 				belt_present = true;
 		}
 	
@@ -1178,7 +1178,7 @@ void pick_lock(location where,short pc_num)
 	if (pc_has_abil_equip(pc_num,42) < 24)
 		r1 = r1 - 12;
 	
-	if (scenario.ter_types[terrain].special != TER_SPEC_UNLOCKABLE) {
+	if(scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 	}
@@ -1206,7 +1206,7 @@ void bash_door(location where,short pc_num) ////
 	terrain = univ.town->terrain(where.x,where.y);
 	r1 = get_ran(1,1,100) - 15 * stat_adj(pc_num,0) + univ.town.difficulty * 4;
 	
-	if (scenario.ter_types[terrain].special != TER_SPEC_UNLOCKABLE) {
+	if(scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.           ");
 		return;
 	}
@@ -1634,8 +1634,8 @@ void draw_map(bool need_refresh) {
 bool is_door(location destination)
 {
 	
-	if ((scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == TER_SPEC_UNLOCKABLE) ||
-		(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == TER_SPEC_CHANGE_WHEN_STEP_ON))
+	if(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::UNLOCKABLE ||
+		scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true;
 	return false;
 }

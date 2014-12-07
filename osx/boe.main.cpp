@@ -759,7 +759,8 @@ void change_cursor(location where_curs)
 
 void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
-	short pic,spec,snd;
+	short pic,snd;
+	eTerSpec spec;
 	
 	pic = scenario.ter_types[ter].picture;
 	spec = scenario.ter_types[ter].special;
@@ -772,7 +773,7 @@ void move_sound(ter_num_t ter,short step){
 	}else on_swamp = false;
 	
 	if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
-		if (spec == TER_SPEC_TOWN_ENTRANCE) //town entrance ?
+		if(spec == eTerSpec::TOWN_ENTRANCE)
 			return;
 		play_sound(48); //play boat sound
 	}

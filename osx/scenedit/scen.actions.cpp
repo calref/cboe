@@ -1911,7 +1911,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	adjust_space(l);
 	l.y--;
 	
-	if ((scenario.ter_types[terrain_type].special == TER_SPEC_IS_A_SIGN) && (editing_town == true)) { /// it's a sign
+	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN && editing_town) {
 		for (i = 0; i < 15; i++) 
 			if (which_sign < 0) {
 				if ((town->sign_locs[i].x == l.x) && (town->sign_locs[i].y == l.y))
@@ -1923,7 +1923,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 					which_sign = i;
 				else {
 					ter = town->terrain(town->sign_locs[i].x,town->sign_locs[i].y);
-					if (scenario.ter_types[ter].special != TER_SPEC_IS_A_SIGN)
+					if(scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN)
 						which_sign = i;
 				}
 			}
@@ -1941,7 +1941,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		mouse_button_held = false;
 	}
-	if ((scenario.ter_types[terrain_type].special == TER_SPEC_IS_A_SIGN) && (editing_town == false)) { /// it's a sign
+	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN && !editing_town) {
 		if ((l.x == 0) || (l.x == 47) || (l.y == 0) || (l.y == 47)) {
 			cChoiceDlog("not-at-edge.xml").show();
 			mouse_button_held = false;
@@ -1958,7 +1958,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 					which_sign = i;
 				else {
 					ter = current_terrain.terrain[current_terrain.sign_locs[i].x][current_terrain.sign_locs[i].y];
-					if (scenario.ter_types[ter].special != TER_SPEC_IS_A_SIGN)
+					if(scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN)
 						which_sign = i;
 				}
 			}
@@ -3034,7 +3034,7 @@ void town_entry(location spot_hit) {
 	ter_num_t ter;
 	
 	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
-	if (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) {
+	if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 		giveError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
@@ -3042,7 +3042,7 @@ void town_entry(location spot_hit) {
 	for (x = 0; x < 8; x++)
 		if (current_terrain.exit_locs[x].x < 100) {
 			ter = current_terrain.terrain[current_terrain.exit_locs[x].x][current_terrain.exit_locs[x].y];
-			if (scenario.ter_types[ter].special != TER_SPEC_TOWN_ENTRANCE) 
+			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) 
 				current_terrain.exit_locs[x].x = 100;
 		}
 	y = -2;

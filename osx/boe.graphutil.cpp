@@ -234,7 +234,7 @@ void draw_monsters() ////
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
@@ -248,7 +248,7 @@ void draw_monsters() ////
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							// in bed?
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								(scenario.ter_types[ter].special == eTerSpec::BED) &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
@@ -278,7 +278,7 @@ void draw_monsters() ////
 																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
@@ -292,7 +292,7 @@ void draw_monsters() ////
 																	,k);
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if ((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == TER_SPEC_BED) &&
+								scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
@@ -565,7 +565,7 @@ void draw_party_symbol(location center) {
 			source_rect.offset(28,0);
 		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
-		if ((is_town()) && (scenario.ter_types[ter].special == TER_SPEC_BED))
+		if(is_town() && scenario.ter_types[ter].special == eTerSpec::BED)
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u);
 		else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 	}

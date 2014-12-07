@@ -189,7 +189,7 @@ void finish_load_party(){
 					force_barrier = true;
 				if (univ.town.is_quickfire(j,k) == true)
 					quickfire = true;
-				if(scenario.ter_types[univ.town->terrain(j,k)].special == TER_SPEC_CONVEYOR)
+				if(scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
 					belt_present = true;
 			}
 		force_wall = true;

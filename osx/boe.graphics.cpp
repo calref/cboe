@@ -1289,22 +1289,22 @@ bool extend_road_terrain(ter_num_t ter)
 	ter_num_t flag = scenario.ter_types[ter].flag1.u;
 	if(trim == eTrimType::ROAD || trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
-	if(spec == TER_SPEC_BRIDGE)
+	if(spec == eTerSpec::BRIDGE)
 		return true;
-	if(spec == TER_SPEC_TOWN_ENTRANCE && trim != eTrimType::NONE)
+	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
 		return true; // cave entrance, most likely
-	if(spec == TER_SPEC_UNLOCKABLE || spec == TER_SPEC_CHANGE_WHEN_STEP_ON)
+	if(spec == eTerSpec::UNLOCKABLE || spec == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == TER_SPEC_CHANGE_WHEN_USED && scenario.ter_types[flag].special == TER_SPEC_CHANGE_WHEN_STEP_ON && scenario.ter_types[flag].flag1.u == ter)
+	if(spec == eTerSpec::CHANGE_WHEN_USED && scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && scenario.ter_types[flag].flag1.u == ter)
 		return true; // open door (I think) TODO: Verify this works
-	if(spec == TER_SPEC_LOCKABLE)
+	if(spec == eTerSpec::LOCKABLE)
 		return true; // open portcullis (most likely)
 	return false;
 }
 
 static bool can_build_roads_on(ter_num_t ter) {
 	if(impassable(ter)) return false;
-	if(scenario.ter_types[ter].special == TER_SPEC_BRIDGE) return false;
+	if(scenario.ter_types[ter].special == eTerSpec::BRIDGE) return false;
 	return true;
 }
 
@@ -1343,7 +1343,7 @@ static bool connect_roads(ter_num_t ter){
 	eTerSpec spec = scenario.ter_types[ter].special;
 	if(trim == eTrimType::ROAD || trim == eTrimType::CITY)
 		return true;
-	if(spec == TER_SPEC_TOWN_ENTRANCE && trim != eTrimType::NONE)
+	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
 		return true; // cave entrance, most likely
 	return false;
 }

@@ -140,13 +140,13 @@ extern bool small_any_drawn;
 static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	switch(scenario.ter_types[ter].special){
-		case TER_SPEC_NONE:
+		case eTerSpec::NONE:
 			icon = scenario.ter_types[ter].flag1.s;
 			break;
-		case TER_SPEC_CHANGE_WHEN_STEP_ON:
+		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			icon = 23;
 			break;
-		case TER_SPEC_DAMAGING:
+		case eTerSpec::DAMAGING:
 			switch(scenario.ter_types[ter].flag3.u){
 				case DAMAGE_WEAPON:
 					icon = 40;
@@ -174,13 +174,13 @@ static short get_small_icon(ter_num_t ter){
 					break;
 			}
 			break;
-		case TER_SPEC_BRIDGE:
+		case eTerSpec::BRIDGE:
 			icon = 42;
 			break;
-		case TER_SPEC_BED:
+		case eTerSpec::BED:
 			icon = -1;
 			break;
-		case TER_SPEC_DANGEROUS:
+		case eTerSpec::DANGEROUS:
 			switch((eStatus)scenario.ter_types[ter].flag3.u){
 				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
@@ -218,30 +218,30 @@ static short get_small_icon(ter_num_t ter){
 					break; // Nothing to do here; these values are "magic" and should not be used
 			}
 			break;
-		case TER_SPEC_CRUMBLING:
+		case eTerSpec::CRUMBLING:
 			icon = 34;
 			break;
-		case TER_SPEC_LOCKABLE:
+		case eTerSpec::LOCKABLE:
 			icon = 30;
 			break;
-		case TER_SPEC_UNLOCKABLE:
+		case eTerSpec::UNLOCKABLE:
 			if (scenario.ter_types[ter].flag2.u >= 5)
 				icon = (scenario.ter_types[ter].flag2.u == 10) ? 32 : 31;
 			else icon = 30;
 			break;
-		case TER_SPEC_IS_A_SIGN:
+		case eTerSpec::IS_A_SIGN:
 			icon = 26;
 			break;
-		case TER_SPEC_CALL_SPECIAL:
+		case eTerSpec::CALL_SPECIAL:
 			icon = scenario.ter_types[ter].flag3.s;
 			break;
-		case TER_SPEC_IS_A_CONTAINER:
+		case eTerSpec::IS_A_CONTAINER:
 			icon = 36;
 			break;
-		case TER_SPEC_WATERFALL:
+		case eTerSpec::WATERFALL:
 			icon = -1;
 			break;
-		case TER_SPEC_CONVEYOR:
+		case eTerSpec::CONVEYOR:
 			switch(scenario.ter_types[ter].flag1.u){ // TODO: Consider the other four possible directions
 				case DIR_N:
 					icon = 27;
@@ -257,16 +257,16 @@ static short get_small_icon(ter_num_t ter){
 					break;
 			}
 			break;
-		case TER_SPEC_BLOCKED_TO_MONSTERS:
+		case eTerSpec::BLOCKED_TO_MONSTERS:
 			icon = 21;
 			break;
-		case TER_SPEC_TOWN_ENTRANCE:
+		case eTerSpec::TOWN_ENTRANCE:
 			icon = 22;
 			break;
-		case TER_SPEC_CHANGE_WHEN_USED:
+		case eTerSpec::CHANGE_WHEN_USED:
 			icon = -1;
 			break;
-		case TER_SPEC_CALL_SPECIAL_WHEN_USED:
+		case eTerSpec::CALL_SPECIAL_WHEN_USED:
 			icon = scenario.ter_types[ter].flag3.s;
 			break;
 		default:
@@ -1422,7 +1422,7 @@ void take_quickfire(short i,short j) {
 bool container_there(location l) {
 	if (editing_town == false)
 		return false;
-	if (scenario.ter_types[town->terrain(l.x,l.y)].special == TER_SPEC_IS_A_CONTAINER)
+	if(scenario.ter_types[town->terrain(l.x,l.y)].special == eTerSpec::IS_A_CONTAINER)
 		return true;
 	if (is_barrel(l.x,l.y) == true)
 		return true;
