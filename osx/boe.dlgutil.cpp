@@ -954,7 +954,7 @@ void handle_talk_event(location p)
 			break;
 			// TODO: Strings resulting from this don't seem to be recordable; whyever not?
 		case 29: // town special
-			run_special(7,2,a,univ.town.p_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
@@ -969,7 +969,7 @@ void handle_talk_event(location p)
 			put_item_screen(stat_window,0);
 			break;
 		case 30: // scen special
-			run_special(7,0,a,univ.town.p_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if ((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;

@@ -328,7 +328,7 @@ void play_see_monster_str(unsigned short m){
 		for(int i = 2; i < 20; i++){
 			if(special_queue[i].spec == -1){
 				special_queue[i].spec = spec;
-				special_queue[i].mode = SPEC_SEE_MONST;
+				special_queue[i].mode = eSpecCtx::SEE_MONST;
 				special_queue[i].type = 0;
 				special_queue[i].trigger_time = univ.party.age;
 				special_queue[i].where = loc(); // TODO: Maybe a different location should be passed?

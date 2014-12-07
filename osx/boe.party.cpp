@@ -1810,10 +1810,11 @@ void sanctify_space(location where)
 {
 	short i,s1,s2,s3;
 	
+	// TODO: Generalize this for other spells cast on the space
 	for (i = 0; i < 50; i++)
 		if (where == univ.town->special_locs[i]) {
 			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SANCTIFY)
-				run_special(16,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
+				run_special(eSpecCtx::TARGET,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 			return;
 		}
 	add_string_to_buf("  Nothing happens.");

@@ -519,26 +519,26 @@ inline void operator += (eDamageType& cur, eDamageType othr){
 //	sbyte(signed char k) : c(k) {}
 //}
 
-enum eSpecContext {
-	SPEC_OUT_MOVE = 0,
-	SPEC_TOWN_MOVE = 1,
-	SPEC_COMBAT_MOVE = 2,
-	SPEC_OUT_LOOK = 3,
-	SPEC_TOWN_LOOK = 4,
-	SPEC_ENTER_TOWN = 5,
-	SPEC_LEAVE_TOWN = 6,
-	SPEC_TALK = 7,
-	SPEC_USE_SPEC_ITEM = 8,
-	SPEC_TOWN_TIMER = 9,
-	SPEC_SCEN_TIMER = 10,
-	SPEC_PARTY_TIMER = 11,
-	SPEC_KILL_MONST = 12,
-	SPEC_OUTDOOR_ENC = 13,
-	SPEC_WIN_ENCOUNTER = 14,
-	SPEC_FLEE_ENCOUNTER = 15,
-	SPEC_TARGET = 16,
-	SPEC_USE_SPACE = 17,
-	SPEC_SEE_MONST = 18,
+enum class eSpecCtx {
+	OUT_MOVE = 0,
+	TOWN_MOVE = 1,
+	COMBAT_MOVE = 2,
+	OUT_LOOK = 3,
+	TOWN_LOOK = 4,
+	ENTER_TOWN = 5,
+	LEAVE_TOWN = 6,
+	TALK = 7,
+	USE_SPEC_ITEM = 8,
+	TOWN_TIMER = 9,
+	SCEN_TIMER = 10,
+	PARTY_TIMER = 11,
+	KILL_MONST = 12,
+	OUTDOOR_ENC = 13,
+	FLEE_ENCOUNTER = 14,
+	WIN_ENCOUNTER = 15,
+	TARGET = 16,
+	USE_SPACE = 17,
+	SEE_MONST = 18,
 };
 
 enum class eSpecType {

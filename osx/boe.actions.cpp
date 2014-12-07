@@ -695,7 +695,7 @@ bool handle_action(sf::Event event)
 						move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 						put_pc_screen();
 					}
-					check_fields(pc_pos[current_pc],2,current_pc);
+					check_fields(pc_pos[current_pc],eSpecCtx::COMBAT_MOVE,current_pc);
 				}
 				else {
 					add_string_to_buf("Pause.");
@@ -722,7 +722,7 @@ bool handle_action(sf::Event event)
 						}
 					}
 					put_pc_screen();
-					check_fields(univ.town.p_loc,1,0);
+					check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,0);
 				}
 				
 				did_something = true;
@@ -833,6 +833,8 @@ bool handle_action(sf::Event event)
 					if (adjacent(univ.town.p_loc,destination) == true)
 						if (adj_town_look(destination) == true)
 							need_redraw = true;
+				// TODO: This would be the place to call OUT_LOOK special
+				// (Adapt adj_town_look function for this purpose.)
 				if (is_sign(ter_looked_at)) {
 					print_buf();
 					need_reprint = false;
@@ -1289,6 +1291,7 @@ bool handle_action(sf::Event event)
 	}
  	
  	// MARK: At this point, see if any specials have been queued up, and deal with them
+	// TODO: Use an std::queue for this.
  	for (i = 0; i < 20; i++)
 		if (special_queue[i].spec >= 0) {
 			long long store_time = univ.party.age;
@@ -2693,7 +2696,7 @@ bool outd_move_party(location destination,bool forced)
 	location store_corner,store_iwc;
 	ter_num_t ter;
 	
-	keep_going = check_special_terrain(destination,0,0,&spec_num,&check_f);
+	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,0,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
 	if (in_scen_debug && ghost_mode)
@@ -2906,7 +2909,7 @@ bool town_move_party(location destination,short forced)////
 	*/
 	
 	if (monst_there(destination) > univ.town->max_monst())
-		keep_going = check_special_terrain(destination,1,0,&spec_num,&check_f);
+		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,0,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
 	

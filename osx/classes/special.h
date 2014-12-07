@@ -40,7 +40,7 @@ public:
 
 struct pending_special_type {
 	spec_num_t spec;
-	eSpecContext mode;
+	eSpecCtx mode;
 	unsigned char type; // 0 - scen, 1 - out, 2 - town
 	location where;
 	long long trigger_time;

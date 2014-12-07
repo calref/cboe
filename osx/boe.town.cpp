@@ -726,7 +726,7 @@ void handle_town_specials(short /*town_number*/, short entry_dir,location /*star
 	else special_queue[0].spec = univ.town->spec_on_entry;
 	special_queue[0].where = univ.town.p_loc;
 	special_queue[0].type = 2;
-	special_queue[0].mode = SPEC_ENTER_TOWN;
+	special_queue[0].mode = eSpecCtx::ENTER_TOWN;
 	special_queue[0].trigger_time = univ.party.age; // TODO: Simply pushing into slot 0 seems like a bad idea
 }
 
@@ -736,7 +736,7 @@ void handle_leave_town_specials(short /*town_number*/, short which_spec,location
 	special_queue[1].spec = which_spec;
 	special_queue[1].where = univ.party.p_loc;
 	special_queue[1].type = 2;
-	special_queue[1].mode = SPEC_LEAVE_TOWN;
+	special_queue[1].mode = eSpecCtx::LEAVE_TOWN;
 	special_queue[1].trigger_time = univ.party.age; // TODO: Simply pushing into slot 1 seems like a bad idea
 }
 

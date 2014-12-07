@@ -446,7 +446,7 @@ bool pc_combat_move(location destination) ////
 	short spec_num;
 	
 	if (monst_there(destination) > univ.town->max_monst())
-		keep_going = check_special_terrain(destination,2,current_pc,&spec_num,&check_f);
+		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,current_pc,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
 	
@@ -508,7 +508,7 @@ bool pc_combat_move(location destination) ////
 			pc_pos[switch_pc] = store_loc;
 			univ.party[current_pc].direction = dir;
 			take_ap(1);
-			check_special_terrain(store_loc,2,switch_pc,&spec_num,&check_f);
+			check_special_terrain(store_loc,eSpecCtx::COMBAT_MOVE,switch_pc,&spec_num,&check_f);
 			move_sound(combat_terrain[destination.x][destination.y],univ.party[current_pc].ap);
 			return true;
 		}

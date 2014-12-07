@@ -123,27 +123,27 @@ bool handle_wandering_specials (short /*which*/,short mode)
 // wanderin spec 99 -> generic spec
 {
 	
+	// TODO: Should a better location be passed to these specials?
 	short s1 = 0,s2 = 0,s3 = 0;
 	
 	if ((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
-		run_special(13,1,store_wandering_special.spec_on_meet,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,loc(),&s1,&s2,&s3);
 		if (s1 > 0)
 			return false;
 	}
 	
 	if ((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
-		run_special(15,1,store_wandering_special.spec_on_win,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,loc(),&s1,&s2,&s3);
 	}
 	if ((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
-		run_special(14,1,store_wandering_special.spec_on_flee,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,loc(),&s1,&s2,&s3);
 	}
 	return true;
 }
 
 
-bool check_special_terrain(location where_check,short mode,short which_pc,short *spec_num,
+bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,short *spec_num,
 						   bool *forced)
-//short mode; // 0 - out 1 - town 2 - combat
 // returns true if can enter this space
 // sets forced to true if definitely can enter
 {
@@ -161,18 +161,23 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	*forced = false;
 	
 	switch (mode) {
-		case 0:
+		case eSpecCtx::OUT_MOVE:
 			ter = univ.out[where_check.x][where_check.y];
 			from_loc = univ.party.p_loc;
 			break;
-		case 1:
+		case eSpecCtx::TOWN_MOVE:
 			ter = univ.town->terrain(where_check.x,where_check.y);
 			from_loc = univ.town.p_loc;
 			break;
-		case 2:
+		case eSpecCtx::COMBAT_MOVE:
 			ter = combat_terrain[where_check.x][where_check.y];
 			from_loc = pc_pos[current_pc];
 			break;
+		default:
+			// No movement happened, so just return false.
+			// TODO: Should there be an error message here?
+			printf("Note: Improper mode passed to check_special_terrain: %d\n", (int)mode);
+			return false;
 	}
 	ter_special = scenario.ter_types[ter].special;
 	ter_flag1 = scenario.ter_types[ter].flag1;
@@ -180,7 +185,8 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 	ter_flag3 = scenario.ter_types[ter].flag3;
 	ter_pic = scenario.ter_types[ter].picture;
 	
-	if(mode > 0 && ter_special == eTerSpec::CONVEYOR) {
+	// TODO: Why not support conveyors outdoors, too?
+	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
 		if (
 			((ter_flag3.u == DIR_N) && (where_check.y > from_loc.y)) ||
 			((ter_flag3.u == DIR_E) && (where_check.x < from_loc.x)) ||
@@ -191,7 +197,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 		}
 	}
 	
-	if (mode == 0) {
+	if(mode == eSpecCtx::OUT_MOVE) {
 		out_where = global_to_local(where_check);
 		
 		for (i = 0; i < 18; i++)
@@ -216,7 +222,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
 	
-	if (((mode == 1) || ((mode == 2) && (which_combat_type == 1)))
+	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 		&& (univ.town.is_special(where_check.x,where_check.y))) {
 		if (univ.town.is_force_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
@@ -248,7 +254,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 		
 		if (univ.town.is_web(where_check.x,where_check.y)) {
 			add_string_to_buf("  Webs!               ");
-			if (mode < 2) {
+			if(mode != eSpecCtx::COMBAT_MOVE) {
 				suppress_stat_screen = true;
 				for (i = 0; i < 6; i++) {
 					r1 = get_ran(1,2,3);
@@ -300,7 +306,11 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 			break;
 		case eTerSpec::DAMAGING:
 			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
-			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
+			if(flying() || univ.party.in_boat >= 0)
+				break;
+			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
+				break;
+			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check) < 30)
 				break;
 			if(ter_flag3.u > 0 && ter_flag3.u < 8)
 				dam_type = (eDamageType) ter_flag3.u;
@@ -341,21 +351,25 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 					break;
 			}
 			if(r1 < 0) break; // "It doesn't affect you."
-			if (mode < 2)
+			if(mode != eSpecCtx::COMBAT_MOVE)
 				hit_party(r1,dam_type);
 			fast_bang = 1;
-			if (mode == 2)
+			if(mode == eSpecCtx::COMBAT_MOVE)
 				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN,0);
 			if (overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
 		case eTerSpec::DANGEROUS:
-			//if party is flying, in a boat, or entering a boat, they cannot receive statuses from terrain
-			if (flying() || univ.party.in_boat >= 0 || (mode?town_boat_there(where_check):out_boat_there(where_check)) < 30)
+			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
+			if(flying() || univ.party.in_boat >= 0)
+				break;
+			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
+				break;
+			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check) < 30)
 				break;
 			//one_sound(17);
-			if (mode == 2) i = which_pc; else i = 0;
+			if(mode == eSpecCtx::COMBAT_MOVE) i = which_pc; else i = 0;
 			for ( ; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if (get_ran(1,1,100) <= ter_flag2.u) {
@@ -407,7 +421,7 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
 						}
-						if(mode == 2) break; // only damage once in combat!
+						if(mode == eSpecCtx::COMBAT_MOVE) break; // only damage once in combat!
 					}
 				}
 			//print_nums(1,which_pc,current_pc);
@@ -423,10 +437,12 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 		{
 			short spec_type = 0;
 			if(ter_flag2.u == 3){
-				if(mode == 1 || (mode == 2 && which_combat_type == 1)) spec_type = 2; else spec_type = 1;
-			}else if(ter_flag2.u == 2 && (mode == 0 || (mode == 2 && which_combat_type == 0)))
+				if(mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
+					spec_type = 2;
+				else spec_type = 1;
+			}else if(ter_flag2.u == 2 && (mode == eSpecCtx::OUT_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 0)))
 				spec_type = 1;
-			else if(ter_flag2.u == 1 && (mode == 1 || (mode == 2 && which_combat_type == 1)))
+			else if(ter_flag2.u == 1 && (mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1)))
 				spec_type = 2;
 			run_special(mode,spec_type,ter_flag1.u,where_check,&s1,&s2,&s3);
 			if (s1 > 0)
@@ -472,11 +488,14 @@ bool check_special_terrain(location where_check,short mode,short which_pc,short 
 
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
-void check_fields(location where_check,short mode,short which_pc)
-//mode; // 0 - out 1 - town 2 - combat
+void check_fields(location where_check,eSpecCtx mode,short which_pc)
 {
 	short r1,i;
 	
+	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
+		printf("Note: Improper mode passed to check_fields: %d\n", (int)mode);
+		return;
+	}
 	if (is_out())
 		return;
 	if (is_town())
@@ -484,9 +503,10 @@ void check_fields(location where_check,short mode,short which_pc)
 	if (univ.town.is_fire_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Fire wall!               ");
 		r1 = get_ran(1,1,6) + 1;
+		// TODO: Is this commented code important?
 //		if (mode < 2)
 //			hit_party(r1,1);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
@@ -496,7 +516,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		r1 = get_ran(2,1,6);
 //		if (mode < 2)
 //			hit_party(r1,3);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
@@ -506,7 +526,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		r1 = get_ran(2,1,6);
 //		if (mode < 2)
 //			hit_party(r1,5);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
@@ -516,7 +536,7 @@ void check_fields(location where_check,short mode,short which_pc)
 		r1 = get_ran(4,1,8);
 //		if (mode < 2)
 //			hit_party(r1,0);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
@@ -526,14 +546,14 @@ void check_fields(location where_check,short mode,short which_pc)
 		r1 = get_ran(2,1,8);
 //		if (mode < 2)
 //			hit_party(r1,1);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
 	if (univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
-		if (mode < 2) {
+		if (mode != eSpecCtx::COMBAT_MOVE) {
 			suppress_stat_screen = true;
 			for (i = 0; i < 6; i++) {
 				r1 = get_ran(1,2,3);
@@ -546,7 +566,7 @@ void check_fields(location where_check,short mode,short which_pc)
 	}
 	if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
-		if (mode < 2) {
+		if (mode != eSpecCtx::COMBAT_MOVE) {
 			suppress_stat_screen = true;
 			for (i = 0; i < 6; i++) {
 				sleep_pc(i,3,eStatus::ASLEEP,0);
@@ -559,9 +579,9 @@ void check_fields(location where_check,short mode,short which_pc)
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");
 		r1 = get_ran(2,1,10);
-		if (mode < 2)
+		if (mode != eSpecCtx::COMBAT_MOVE)
 			hit_party(r1,DAMAGE_MAGIC);
-		if (mode == 2)
+		if (mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
@@ -574,7 +594,7 @@ void use_spec_item(short item)
 	short i,j,k;
 	location null_loc;
 	
-	run_special(8,0,scenario.special_items[item].special,loc(),&i,&j,&k);
+	run_special(eSpecCtx::USE_SPEC_ITEM,0,scenario.special_items[item].special,loc(),&i,&j,&k);
 	
 }
 
@@ -1244,7 +1264,7 @@ bool use_space(location where)
 			spec_type = 2;
 		else if(scenario.ter_types[ter].flag2.u == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
 			spec_type = 1;
-		run_special(17,spec_type,scenario.ter_types[ter].flag1.u,where,&i,&i,&i);
+		run_special(eSpecCtx::USE_SPACE,spec_type,scenario.ter_types[ter].flag1.u,where,&i,&i,&i);
 		return true;
 	}
 	add_string_to_buf("  Nothing to use.");
@@ -1279,7 +1299,7 @@ bool adj_town_look(location where)
 					}
 					//call special can_open = town_specials(i,univ.town.town_num);
 					
-					run_special(4,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
+					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 					if (s1 > 0)
 						can_open = false;
 					got_special = true;
@@ -1650,9 +1670,9 @@ void kill_monst(cCreature *which_m,short who_killed)
 	if (sd_legit(which_m->spec1,which_m->spec2) == true)
 		PSD[which_m->spec1][which_m->spec2] = 1;
 	
-	run_special(12,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
+	run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
 	if (which_m->radiate_1 == 15)
-		run_special(12,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
+		run_special(eSpecCtx::KILL_MONST,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
 	if ((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
 		xp = which_m->level * 2;
@@ -1848,7 +1868,7 @@ void special_increase_age()
 		for(i = 0; i < 8; i++)
 			if((univ.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town->timer_spec_times[i] == 0)
 				&& ((is_town() == true) || ((is_combat() == true) && (which_combat_type == 1)))) {
-				run_special(9,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+				run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
 				stat_area = true;
 				if(s3 > 0)
 					redraw = true;
@@ -1856,7 +1876,7 @@ void special_increase_age()
 	}
 	for (i = 0; i < 20; i++)
 		if ((scenario.scenario_timer_times[i] > 0) && (univ.party.age % scenario.scenario_timer_times[i] == 0)) {
-			run_special(10,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::SCEN_TIMER,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
 			stat_area = true;
 			if (s3 > 0)
 				redraw = true;
@@ -1864,8 +1884,8 @@ void special_increase_age()
 	for (i = 0; i < univ.party.party_event_timers.size(); i++) {
 		if (univ.party.party_event_timers[i].time == 1) {
 			if (univ.party.party_event_timers[i].global_or_town == 0)
-				run_special(11,0,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
-			else run_special(11,2,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+				run_special(eSpecCtx::PARTY_TIMER,0,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+			else run_special(eSpecCtx::PARTY_TIMER,2,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
 			stat_area = true;
 			if (s3 > 0)
@@ -1902,12 +1922,12 @@ void special_increase_age()
 // 15 - fleeing outdoor enc
 // 16 - ritual of sanct TODO: This will become "target space", hopefully
 // 17 - using space
-// 18 - seeing monster TODO: This is currently unused
+// 18 - seeing monster
 // which_type - 0 - scen 1 - out 2 - town
 // start spec - the number of the first spec to call
 // a,b - 2 values that can be returned
 // redraw - 1 if now need redraw
-void run_special(short which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw)
+void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw)
 {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	cSpecial cur_node;
@@ -2012,7 +2032,7 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 }
 
 // TODO: Make cur_spec_type an enum
-void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
 {
 	bool check_mess = false;
@@ -2051,31 +2071,31 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;break;
 		case eSpecType::OUT_BLOCK:
 			if (is_out()) *next_spec = -1;
-			if ((is_out()) && (spec.ex1a != 0) && (which_mode == 0)) {
+			if ((is_out()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::OUT_MOVE)) {
 				ASB("Can't go here while outdoors.");
 				*a = 1;
 			}
 			break;
 		case eSpecType::TOWN_BLOCK:
 			if (is_town()) *next_spec = -1;
-			if ((is_town()) && (spec.ex1a != 0) && (which_mode == 1)) {
+			if ((is_town()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::TOWN_MOVE)) {
 				ASB("Can't go here while in town mode.");
 				*a = 1;
 			}
 			break;
 		case eSpecType::FIGHT_BLOCK:
 			if (is_combat()) *next_spec = -1;
-			if ((is_combat()) && (spec.ex1a != 0) && (which_mode == 2)) {
+			if ((is_combat()) && (spec.ex1a != 0) && (which_mode == eSpecCtx::COMBAT_MOVE)) {
 				ASB("Can't go here during combat.");
 				*a = 1;
 			}
 			break;
 		case eSpecType::LOOK_BLOCK:
-			if ((which_mode == 3) || (which_mode == 4)) *next_spec = -1;
+			if ((which_mode == eSpecCtx::OUT_LOOK) || (which_mode == eSpecCtx::TOWN_LOOK)) *next_spec = -1;
 			break;
 		case eSpecType::CANT_ENTER:
 			check_mess = true;
-			if (which_mode < 3) {
+			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) {
 				if (spec.ex1a != 0)
 					*a = 1;
 				else *a = 0;
@@ -2150,7 +2170,8 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
 		case eSpecType::SANCTIFY:
-			if (which_mode != 16)
+			// TODO: Generalize this for other spell targeting
+			if(which_mode != eSpecCtx::TARGET)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::REST:
@@ -2160,7 +2181,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			restore_sp_party(spec.ex1b);
 			break;
 		case eSpecType::WANDERING_WILL_FIGHT:
-			if (which_mode != 13)
+			if(which_mode != eSpecCtx::OUTDOOR_ENC)
 				break;
 			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
@@ -2196,7 +2217,7 @@ void general_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
  */
 
 // TODO: What was next_spec_type for? Is it still needed?
-void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = true,set_sd = true;
@@ -2377,7 +2398,7 @@ void oneshot_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
-void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = true;
@@ -2613,7 +2634,7 @@ void affect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
-void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	bool check_mess = false;
@@ -2798,7 +2819,7 @@ void ifthen_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
-void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
 {
 	static const char*const stairDlogs[8] = {
@@ -2859,27 +2880,27 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_MOVE_PARTY:
 			if (is_combat()) {
 				ASB("Not while in combat.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
 			else { // 1 no
 				*a = 1;
-				if ((which_mode == 7) || (spec.ex2a == 0))
+				if(which_mode == eSpecCtx::TALK || spec.ex2a == 0)
 					teleport_party(spec.ex1a,spec.ex1b,1);
 				else teleport_party(spec.ex1a,spec.ex1b,0);
 			}
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_HIT_SPACE:
-			if (which_mode == 7)
+			if(which_mode == eSpecCtx::TALK)
 				break;
 			hit_space(l,spec.ex2a,(eDamageType) spec.ex2b,1,1);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_EXPLODE_SPACE:
-			if (which_mode == 7)
+			if(which_mode == eSpecCtx::TALK)
 				break;
 			radius_damage(l,spec.pic, spec.ex2a, (eDamageType) spec.ex2b);
 			*redraw = 1;
@@ -2897,7 +2918,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_SFX_BURST: // TODO: Add a "random offset" mode
-			if (which_mode == 7)
+			if(which_mode == eSpecCtx::TALK)
 				break;
 			run_a_boom(l,spec.ex2a,0,0);
 			break;
@@ -2929,7 +2950,8 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_GENERIC_LEVER:
-			if (which_mode > 4) {
+			if(which_mode != eSpecCtx::OUT_MOVE && which_mode != eSpecCtx::TOWN_MOVE && which_mode != eSpecCtx::COMBAT_MOVE
+			   && which_mode != eSpecCtx::OUT_LOOK && which_mode != eSpecCtx::TOWN_LOOK) {
 				ASB("Can't use lever now.");
 				check_mess = false;
 				*next_spec = -1;
@@ -2942,21 +2964,21 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_GENERIC_PORTAL:
 			if (is_combat()) {
 				ASB("Not while in combat.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if ((which_mode != 1) && (which_mode != 4)) {
+			else if(which_mode != eSpecCtx::TOWN_MOVE && which_mode != eSpecCtx::TOWN_LOOK) {
 				ASB("Can't teleport now.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
 			else if(cChoiceDlog("basic-portal.xml",{"yes","no"}).show() == "yes") {
 				*a = 1;
-				if ((which_mode == 7) || (spec.ex2a == 0))
+				if(which_mode == eSpecCtx::TALK || spec.ex2a == 0)
 					teleport_party(spec.ex1a,spec.ex1b,1);
 				else teleport_party(spec.ex1a,spec.ex1b,0);
 			}
@@ -2968,14 +2990,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_GENERIC_STAIR:
 			if (is_combat()) {
 				ASB("Can't change level in combat.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if (which_mode != 1) {
+			else if (which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
@@ -2991,7 +3013,8 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = false;
 			if (spec.m1 < 0)
 				break;
-			if (which_mode > 4) {
+			if(which_mode != eSpecCtx::OUT_MOVE && which_mode != eSpecCtx::TOWN_MOVE && which_mode != eSpecCtx::COMBAT_MOVE
+			   && which_mode != eSpecCtx::OUT_LOOK && which_mode != eSpecCtx::TOWN_LOOK) {
 				ASB("Can't use lever now.");
 				check_mess = false;
 				*next_spec = -1;
@@ -3017,14 +3040,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			if (is_combat()) {
 				ASB("Not while in combat.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if ((which_mode != 1) && (which_mode != 4)) {
+			else if(which_mode != eSpecCtx::TOWN_MOVE && which_mode != eSpecCtx::TOWN_LOOK) {
 				ASB("Can't teleport now.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
@@ -3036,10 +3059,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				buttons[0] = 9; buttons[1] = 8;
 				// TODO: Wait, wait, aren't you supposed to be able to pick which picture to show?
 				i = custom_choice_dialog(strs,22,PIC_DLOG,buttons);
-				if (i == 1) { *next_spec = -1; if (which_mode < 3) *a = 1;}
+				if (i == 1) {
+					*next_spec = -1;
+					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
+						*a = 1;
+				}
 				else {
 					*a = 1;
-					if (which_mode == 7)
+					if(which_mode == eSpecCtx::TALK)
 						teleport_party(spec.ex1a,spec.ex1b,1);
 					else teleport_party(spec.ex1a,spec.ex1b,0);
 				}
@@ -3051,14 +3078,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			if (is_combat()) {
 				ASB("Can't change level in combat.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if (which_mode != 1) {
+			else if(which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
@@ -3090,11 +3117,11 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			place_item(store_i,l,true);
 			break;
 		case eSpecType::TOWN_SPLIT_PARTY:
-			if (which_mode == 7)
+			if(which_mode == eSpecCtx::TALK)
 				break;
 			if (is_combat()) {
 				ASB("Not while in combat.");
-				if (which_mode < 3)
+				if((which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) < 3)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
@@ -3102,14 +3129,14 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			if (univ.party.is_split() > 0) {
 				ASB("Party is already split.");
-				if (which_mode < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 				break;
 			}
 			r1 = char_select_pc(1,0,"Which character goes?");
-			if (which_mode < 3)
+			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 				*a = 1;
 			if (r1 != 6) {
 				current_pc = r1;
@@ -3125,7 +3152,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 				ASB("Not while in combat.");
 				break;
 			}
-			if (which_mode < 3)
+			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 				*a = 1;
 			*next_spec = -1;
 			check_mess = false;
@@ -3143,7 +3170,7 @@ void townmode_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
-void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = true;
 	short i,j,k;
@@ -3291,7 +3318,7 @@ void rect_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
-void outdoor_spec(short which_mode,cSpecial cur_node,short cur_spec_type,
+void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = false;
 	std::string str1, str2;
@@ -3367,7 +3394,7 @@ void setsd(short a,short b,short val)
 	PSD[a][b] = val;
 }
 
-void handle_message(short which_mode,short cur_type,short mess1,short mess2,short *a,short *b)
+void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b)
 {
 	eEncNoteType note_type;
 	switch(cur_type) {
@@ -3387,7 +3414,7 @@ void handle_message(short which_mode,short cur_type,short mess1,short mess2,shor
 	
 	if ((mess1 < 0) && (mess2 < 0))
 		return;
-	if (which_mode == 7) { // talking
+	if(which_mode == eSpecCtx::TALK) {
 		*a = mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0);
 		*b = mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0);
 		return;
