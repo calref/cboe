@@ -17,7 +17,7 @@ namespace legacy { struct special_node_type; };
 
 class cSpecial {
 public:
-	short type;
+	eSpecType type;
 	short sd1;
 	short sd2;
 	short pic;
@@ -45,5 +45,8 @@ struct pending_special_type {
 	location where;
 	long long trigger_time;
 };
+
+std::ostream& operator << (std::ostream& out, eSpecType& e);
+std::istream& operator >> (std::istream& in, eSpecType& e);
 
 #endif

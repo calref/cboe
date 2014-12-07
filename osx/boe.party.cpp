@@ -1812,7 +1812,7 @@ void sanctify_space(location where)
 	
 	for (i = 0; i < 50; i++)
 		if (where == univ.town->special_locs[i]) {
-			if (univ.town->specials[univ.town->spec_id[i]].type == 24)
+			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SANCTIFY)
 				run_special(16,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 			return;
 		}

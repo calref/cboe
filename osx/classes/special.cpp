@@ -15,7 +15,7 @@
 #include "oldstructs.h"
 
 cSpecial::cSpecial(){
-	type = 0;
+	type = eSpecType::NONE;
 	sd1 = -1;
 	sd2 = -1;
 	pic = -1;
@@ -30,13 +30,15 @@ cSpecial::cSpecial(){
 }
 
 cSpecial& cSpecial::operator = (legacy::special_node_type& old){
-	type = old.type;
+	type = (eSpecType)old.type;
 	sd1 = old.sd1;
 	sd2 = old.sd2;
 	pic = old.pic;
-	if(type == 55 || type == 58 || type == 189)
+	// Large dialogs with 36x36 dialog graphics
+	if(old.type == 55 || old.type == 58 || old.type == 189)
 		pic -= 700;
-	else if(type == 57 || type == 60)
+	// Large dialogs with monster graphics
+	else if(old.type == 57 || old.type == 60)
 		pic -= 400;
 	m1 = old.m1;
 	m2 = old.m2;
@@ -46,4 +48,18 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 	ex2b = old.ex2b;
 	jumpto = old.jumpto;
 	return *this;
+}
+
+std::ostream& operator << (std::ostream& out, eSpecType& e) {
+	return out << (int) e;
+}
+
+// TODO: This should probably understand symbolic names as well?
+std::istream& operator >> (std::istream& in, eSpecType& e) {
+	int i;
+	in >> i;
+	e = (eSpecType) i;
+	if(getNodeCategory(e) == eSpecCat::INVALID)
+		e = eSpecType::ERROR;
+	return in;
 }

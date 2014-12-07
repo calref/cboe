@@ -23,7 +23,7 @@ class SpecialParser {
 	static void prep_add_symbol(char c);
 	static void add_symbol(int i);
 	static void add_command();
-	static void set_type(eSpecNodeType type);
+	static void set_type(eSpecType type);
 	static void skip_to(int i);
 	static void for_sdf();
 	static void for_pic();
