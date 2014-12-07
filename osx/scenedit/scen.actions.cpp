@@ -3348,17 +3348,17 @@ void start_special_editing(short mode,short just_redo_text) {
 	for (i = 0; i < num_specs[mode]; i++) {
 		switch (mode) {
 			case 0:
-				s2 = get_str("special-node-names",scenario.scen_specials[i].type + 1);
+				s2 = get_str("special-node-names",int(scenario.scen_specials[i].type) + 1);
 				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,4000 + i,(char *) str,0);
 				break;
 			case 1:
-				s2 = get_str("special-node-names",current_terrain.specials[i].type + 1);
+				s2 = get_str("special-node-names",int(current_terrain.specials[i].type) + 1);
 				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,5000 + i,(char *) str,0);
 				break;
 			case 2:
-				s2 = get_str("special-node-names",town->specials[i].type + 1);
+				s2 = get_str("special-node-names",int(town->specials[i].type) + 1);
 				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,6000 + i,(char *) str,0);
 				break;

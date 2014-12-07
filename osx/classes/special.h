@@ -46,7 +46,15 @@ struct pending_special_type {
 	long long trigger_time;
 };
 
+struct node_properties_t {
+	bool ex1a_choose, ex1b_choose, ex1c_choose, ex2a_choose, ex2b_choose, ex2c_choose;
+	short sdf_label, msg_label, pic_label, jmp_label;
+	node_properties_t() {}
+	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
+};
+
 std::ostream& operator << (std::ostream& out, eSpecType& e);
 std::istream& operator >> (std::istream& in, eSpecType& e);
+const node_properties_t& operator* (eSpecType t);
 
 #endif

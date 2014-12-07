@@ -83,3 +83,194 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 		e = eSpecType::ERROR;
 	return in;
 }
+
+// This is sort of a workaround for VS2013 not supporting C99 designated initializers in C++.
+namespace node_types {
+	using np_populator = std::function<void(node_properties_t)>;
+	template<typename T> struct np_populator_builder {
+		T node_properties_t::*const prop;
+		np_populator_builder(T node_properties_t::* p) : prop(p) {}
+		void setVal(node_properties_t props, T val) const {
+			(props.*prop) = val;
+		}
+		template<typename T2> np_populator operator= (T2 val) const {
+			return std::bind(&np_populator_builder<T>::setVal, this, std::placeholders::_1, val);
+		}
+	};
+	namespace keys {
+		template<typename T> using npb = const np_populator_builder<T>;
+		using npt = node_properties_t;
+		// Needs to be one of these for every member variable in node_properties_t.
+		npb<bool> ex1a_ch(&npt::ex1a_choose), ex1b_ch(&npt::ex1b_choose), ex1c_ch(&npt::ex1c_choose);
+		npb<bool> ex2a_ch(&npt::ex1a_choose), ex2b_ch(&npt::ex2b_choose), ex2c_ch(&npt::ex2c_choose);
+		npb<short> sdf_lbl(&npt::sdf_label), msg_lbl(&npt::sdf_label);
+		npb<short> pic_lbl(&npt::sdf_label), jmp_lbl(&npt::sdf_label);
+	}
+}
+
+node_properties_t::node_properties_t(std::initializer_list<node_types::np_populator> vals) {
+	for(node_types::np_populator val : vals) val(*this);
+}
+
+using namespace node_types::keys;
+
+// This is the database of information on the special nodes, used by the scenario editor to decide how to set up the edit node dialog.
+// Keys ending in _ch indicate whether a "Choose" or "Create/Edit" button should be present, and must be a boolean.
+//    (Whether it's a Choose or Create/Edit button depends on the field.)
+// Keys ending in _lbl indicate the set of labels applied to that set of fields, and are also used to determine the effect of the buttons.
+// The extra fields curently have their label associations hard-coded rather than listed here.
+
+const std::map<eSpecType, node_properties_t> allNodeProps = {
+	{eSpecType::NONE, {}},
+	{eSpecType::SET_SDF, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::INC_SDF, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::DISPLAY_MSG, {msg_lbl = 1}},
+	{eSpecType::SECRET_PASSAGE, {msg_lbl = 1}},
+	{eSpecType::DISPLAY_SM_MSG, {msg_lbl = 1}},
+	{eSpecType::FLIP_SDF, {sdf_lbl = 1,msg_lbl = 1}},
+	// TODO: XXX_BLOCK were here and had jmp_lbl = 1; what to do about that?
+	{eSpecType::CANT_ENTER, {msg_lbl = 1}},
+	{eSpecType::CHANGE_TIME, {msg_lbl = 1}},
+	{eSpecType::SCEN_TIMER_START, {ex1b_ch = true}},
+	{eSpecType::PLAY_SOUND, {}},
+	{eSpecType::CHANGE_HORSE_OWNER, {}},
+	{eSpecType::CHANGE_BOAT_OWNER, {}},
+	{eSpecType::SET_TOWN_VISIBILITY, {msg_lbl = 1}},
+	{eSpecType::MAJOR_EVENT_OCCURRED, {msg_lbl = 1}},
+	{eSpecType::FORCED_GIVE, {ex1a_ch = true,ex2b_ch = true,msg_lbl = 1}},
+	{eSpecType::BUY_ITEMS_OF_TYPE, {ex1b_ch = true,msg_lbl = 1}},
+	{eSpecType::CALL_GLOBAL, {}},
+	{eSpecType::SET_SDF_ROW, {sdf_lbl = 1}},
+	{eSpecType::COPY_SDF, {sdf_lbl = 1}},
+	// TODO: Sanctify was here, and had ex1b_ch = true; what to do about that?
+	{eSpecType::REST, {msg_lbl = 1}},
+	{eSpecType::WANDERING_WILL_FIGHT, {}},
+	{eSpecType::END_SCENARIO, {}},
+	{eSpecType::ONCE_GIVE_ITEM, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::ONCE_GIVE_SPEC_ITEM, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::ONCE_NULL, {sdf_lbl = 1}},
+	{eSpecType::ONCE_SET_SDF, {sdf_lbl = 1}},
+	{eSpecType::ONCE_DISPLAY_MSG, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::ONCE_DIALOG, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
+		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 1,jmp_lbl = 4}},
+	{eSpecType::ONCE_DIALOG_TERRAIN, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
+		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 2,jmp_lbl = 4}},
+	{eSpecType::ONCE_DIALOG_MONSTER, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
+		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 3,jmp_lbl = 4}},
+	{eSpecType::ONCE_GIVE_ITEM_DIALOG, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 1}},
+	{eSpecType::ONCE_GIVE_ITEM_TERRAIN, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 2}},
+	{eSpecType::ONCE_GIVE_ITEM_MONSTER, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 3}},
+	{eSpecType::ONCE_OUT_ENCOUNTER, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::ONCE_TOWN_ENCOUNTER, {sdf_lbl = 1,msg_lbl = 1}},
+	{eSpecType::ONCE_TRAP, {sdf_lbl = 1,msg_lbl = 1,jmp_lbl = 2}},
+	{eSpecType::SELECT_PC, {ex1b_ch = true,msg_lbl = 1}},
+	{eSpecType::DAMAGE, {msg_lbl = 1}},
+	{eSpecType::AFFECT_HP, {msg_lbl = 1}},
+	{eSpecType::AFFECT_SP, {msg_lbl = 1}},
+	{eSpecType::AFFECT_XP, {msg_lbl = 1}},
+	{eSpecType::AFFECT_SKILL_PTS, {msg_lbl = 1}},
+	{eSpecType::AFFECT_DEADNESS, {msg_lbl = 1}},
+	{eSpecType::AFFECT_POISON, {msg_lbl = 1}},
+	{eSpecType::AFFECT_SPEED, {msg_lbl = 1}},
+	{eSpecType::AFFECT_INVULN, {msg_lbl = 1}},
+	{eSpecType::AFFECT_MAGIC_RES, {msg_lbl = 1}},
+	{eSpecType::AFFECT_WEBS, {msg_lbl = 1}},
+	{eSpecType::AFFECT_DISEASE, {msg_lbl = 1}},
+	{eSpecType::AFFECT_SANCTUARY, {msg_lbl = 1}},
+	{eSpecType::AFFECT_CURSE_BLESS, {msg_lbl = 1}},
+	{eSpecType::AFFECT_DUMBFOUND, {msg_lbl = 1}},
+	{eSpecType::AFFECT_SLEEP, {msg_lbl = 1}},
+	{eSpecType::AFFECT_PARALYSIS, {msg_lbl = 1}},
+	{eSpecType::AFFECT_STAT, {msg_lbl = 1,pic_lbl = 4}},
+	{eSpecType::AFFECT_MAGE_SPELL, {msg_lbl = 1}},
+	{eSpecType::AFFECT_PRIEST_SPELL, {msg_lbl = 1}},
+	{eSpecType::AFFECT_GOLD, {msg_lbl = 1}},
+	{eSpecType::AFFECT_FOOD, {msg_lbl = 1}},
+	{eSpecType::AFFECT_ALCHEMY, {msg_lbl = 1}},
+	{eSpecType::AFFECT_STEALTH, {msg_lbl = 1}},
+	{eSpecType::AFFECT_FIREWALK, {msg_lbl = 1}},
+	{eSpecType::AFFECT_FLIGHT, {msg_lbl = 1}},
+	{eSpecType::IF_SDF, {ex1b_ch = true,ex2b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
+	{eSpecType::IF_TOWN_NUM, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_RANDOM, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAVE_SPECIAL_ITEM, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_SDF_COMPARE, {ex2b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
+	{eSpecType::IF_TOWN_TER_TYPE, {ex2a_ch = true,ex2b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_OUT_TER_TYPE, {ex2a_ch = true,ex2b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_GOLD, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_FOOD, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_ITEM_CLASS_ON_SPACE, {ex2b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAVE_ITEM_CLASS, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_EQUIP_ITEM_CLASS, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_GOLD_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_FOOD_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_ITEM_CLASS_ON_SPACE_AND_TAKE, {ex2b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_DAY_REACHED, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_BARRELS, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_CRATES, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_EVENT_OCCURRED, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_CAVE_LORE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_HAS_WOODSMAN, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_ENOUGH_MAGE_LORE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_TEXT_RESPONSE, {ex1b_ch = true,ex2b_ch = true,pic_lbl = 5,jmp_lbl = 3}},
+	{eSpecType::IF_SDF_EQ, {ex1b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
+	{eSpecType::IF_CONTEXT, {}},
+	{eSpecType::MAKE_TOWN_HOSTILE, {msg_lbl = 1}},
+	{eSpecType::TOWN_CHANGE_TER, {ex2a_ch = true,msg_lbl = 1}},
+	{eSpecType::TOWN_SWAP_TER, {ex2a_ch = true,msg_lbl = 1}},
+	{eSpecType::TOWN_TRANS_TER, {msg_lbl = 1}},
+	{eSpecType::TOWN_MOVE_PARTY, {msg_lbl = 1}},
+	{eSpecType::TOWN_HIT_SPACE, {msg_lbl = 1}},
+	{eSpecType::TOWN_EXPLODE_SPACE, {msg_lbl = 1,pic_lbl = 6}},
+	{eSpecType::TOWN_LOCK_SPACE, {msg_lbl = 1}},
+	{eSpecType::TOWN_UNLOCK_SPACE, {msg_lbl = 1}},
+	{eSpecType::TOWN_SFX_BURST, {msg_lbl = 1}},
+	{eSpecType::TOWN_CREATE_WANDERING, {msg_lbl = 1}},
+	{eSpecType::TOWN_PLACE_MONST, {ex2a_ch = true,msg_lbl = 1}},
+	{eSpecType::TOWN_DESTROY_MONST, {ex1a_ch = true,msg_lbl = 1}},
+	{eSpecType::TOWN_NUKE_MONSTS, {msg_lbl = 1}},
+	{eSpecType::TOWN_GENERIC_LEVER, {ex1b_ch = true}},
+	{eSpecType::TOWN_GENERIC_PORTAL, {}},
+	{eSpecType::TOWN_GENERIC_BUTTON, {ex1b_ch = true}},
+	{eSpecType::TOWN_GENERIC_STAIR, {}},
+	{eSpecType::TOWN_LEVER, {ex1b_ch = true,msg_lbl = 2,pic_lbl = 2}},
+	{eSpecType::TOWN_PORTAL, {msg_lbl = 2,pic_lbl = 1}},
+	{eSpecType::TOWN_STAIR, {msg_lbl = 2}},
+	{eSpecType::TOWN_RELOCATE, {msg_lbl = 1}},
+	{eSpecType::TOWN_PLACE_ITEM, {ex2a_ch = true,msg_lbl = 1}},
+	{eSpecType::TOWN_SPLIT_PARTY, {msg_lbl = 1}},
+	{eSpecType::TOWN_REUNITE_PARTY, {msg_lbl = 1}},
+	{eSpecType::TOWN_TIMER_START, {ex1b_ch = true,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_FIRE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_FORCE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_ICE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_BLADE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_SCLOUD, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_SLEEP, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_QUICKFIRE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_FIRE_BARR, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_FORCE_BARR, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_CLEANSE, {sdf_lbl = 2,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_SFX, {sdf_lbl = 7,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_OBJECT, {sdf_lbl = 8,msg_lbl = 1}},
+	{eSpecType::RECT_MOVE_ITEMS, {sdf_lbl = 4,msg_lbl = 1}},
+	{eSpecType::RECT_DESTROY_ITEMS, {msg_lbl = 1}},
+	{eSpecType::RECT_CHANGE_TER, {sdf_lbl = 5,msg_lbl = 1}},
+	{eSpecType::RECT_SWAP_TER, {sdf_lbl = 6,msg_lbl = 1}},
+	// TODO: Is it correct for some RECT specials to not have sdf_lbl = something?
+	{eSpecType::RECT_TRANS_TER, {msg_lbl = 1}},
+	{eSpecType::RECT_LOCK, {msg_lbl = 1}},
+	{eSpecType::RECT_UNLOCK, {msg_lbl = 1}},
+	{eSpecType::OUT_MAKE_WANDER, {}},
+	{eSpecType::OUT_CHANGE_TER, {ex2a_ch = true,msg_lbl = 1}},
+	{eSpecType::OUT_PLACE_ENCOUNTER, {msg_lbl = 1}},
+	{eSpecType::OUT_MOVE_PARTY, {msg_lbl = 1}},
+	{eSpecType::OUT_STORE, {ex1a_ch = true,msg_lbl = 3}},
+};
+
+const node_properties_t& operator* (eSpecType t) {
+	node_properties_t p = allNodeProps.at(t);
+	return p;
+}
