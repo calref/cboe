@@ -405,13 +405,14 @@ void init_party_scen_data()
 				stored_item = true;
 	if (stored_item == true)
 		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
-			// TODO: Consider allowing them to pick and choose the items to take, using the get items dialog
+			std::vector<cItemRec*> saved_item_refs;
 			for (i = 0; i < 3;i++)
 				for (j = 0; j < NUM_TOWN_ITEMS; j++)
 					if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
-						if (!give_to_party(univ.party.stored_items[i][j],false)) {
-							i = 20; j = NUM_TOWN_ITEMS + 1;
-						}
+						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
+			short pc = 0;
+			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
+			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
 		}
 	for (i = 0; i < 3;i++)
 		for (j = 0; j < NUM_TOWN_ITEMS; j++) {

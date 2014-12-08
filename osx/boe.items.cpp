@@ -72,9 +72,6 @@ std::map<const eItemType, const short> excluding_types = {
 
 short selected,item_max = 0;
 
-short first_item_shown,store_get_mode,current_getting_pc,store_pcnum,total_items_gettable; // these 5 used for get items dialog
-short item_array[130]; // NUM_TOWN_ITEMS + a bit
-
 void sort_pc_items(short pc_num)
 {
 	cItemRec store_item;
@@ -122,7 +119,7 @@ bool give_to_party(cItemRec item, short print_result) {
 }
 
 ////
-bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
+bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload)
 {
 	short free_space;
 	char announce_string[60];
@@ -139,7 +136,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 		ASB("You get some food.");
 		return true;
 	}
-	if (item.item_weight() >
+	if(!allow_overload && item.item_weight() >
 		amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  	if (print_result == true) {
 			// TODO: Play an error sound here
@@ -174,6 +171,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result)
 	return false;
 }
 
+// TODO: Utilize the second parameter in special node processing
 bool forced_give(short item_num,eItemAbil abil) ////
 // if abil > 0, force abil, else ignore
 {
@@ -890,7 +888,7 @@ void set_town_attitude(short lo,short hi,short att) {
 }
 
 
-static void put_item_graphics(cDialog& me)
+static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array)
 {
 	short i,storage;
 	cItemRec item;
@@ -926,8 +924,8 @@ static void put_item_graphics(cDialog& me)
 	if (first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if ((first_item_shown > total_items_gettable - 7) ||
-		(total_items_gettable <= 8) )
+	if(first_item_shown > item_array.size() - 7 ||
+		item_array.size() <= 8)
 		me["down"].hide();
 	else me["down"].show();
 	
@@ -937,9 +935,12 @@ static void put_item_graphics(cDialog& me)
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
 		std::string detail = sout.str() + "-detail", weight = sout.str() + "-weight";
 		
-		if (item_array[i + first_item_shown] != 200) { // display an item in window
+		try {
+			if(item_array.at(i + first_item_shown)->variety == eItemType::NO_ITEM)
+				throw std::out_of_range("");
+			// display an item in window
 			me[pict].show();
-			item = univ.town.items[item_array[i + first_item_shown]];
+			item = *item_array[i + first_item_shown];
 			me[name].setText(item.ident ? item.full_name : item.name);
 			// TODO: Party sheet items
 			cPict& pic = dynamic_cast<cPict&>(me[pict]);
@@ -957,7 +958,7 @@ static void put_item_graphics(cDialog& me)
 			storage = item.item_weight();
 			sprintf ((char *) message, "Weight: %d",storage);
 			me[weight].setText(message);
-		} else { // erase the spot
+		} catch(std::out_of_range) { // erase the spot
 			me[pict].hide();
 			me[name].setText("");
 			me[detail].setText("");
@@ -981,7 +982,7 @@ static void put_item_graphics(cDialog& me)
 }
 
 
-static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
+static bool display_item_event_filter(cDialog& me, std::string id, size_t& first_item_shown, short& current_getting_pc, std::vector<cItemRec*>& item_array, bool allow_overload) {
 	cItemRec item;
 	
 	if(id == "done") {
@@ -989,25 +990,23 @@ static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
 	} else if(id == "up") {
 		if(first_item_shown > 0) {
 			first_item_shown -= 8;
-			put_item_graphics(me);
+			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id ==  "down") {
-		// TODO: This 116 is a magic number, and a limit to be removed
-		if (first_item_shown < 116) {
+		if (first_item_shown + 8 < item_array.size()) {
 			first_item_shown += 8;
-			put_item_graphics(me);
+			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id.substr(0,2) == "pc") {
 		current_getting_pc = id[2] - '1';
-		put_item_graphics(me);
+		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 	} else {
 		if(current_getting_pc == 6) return true;
-		short item_hit;
+		size_t item_hit;
 		item_hit = id[4] - '1';
 		item_hit += first_item_shown;
-		if(item_array[item_hit] >= NUM_TOWN_ITEMS)
-			return true;
-		item = univ.town.items[item_array[item_hit]];
+		if(item_hit >= item_array.size()) return true;
+		item = *item_array[item_hit];
 		if(item.property) {
 			if(me.getResult<bool>()) {
 				std::string choice = cChoiceDlog("steal-item.xml",{"steal","leave"}).show();
@@ -1017,19 +1016,19 @@ static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
 			item.property = false;
 		}
 		
-		if(univ.town.items[item_array[item_hit]].variety == eItemType::GOLD) {
-			if(univ.town.items[item_array[item_hit]].item_level > 3000)
-				univ.town.items[item_array[item_hit]].item_level = 3000;
+		if(item_array[item_hit]->variety == eItemType::GOLD) {
+			if(item_array[item_hit]->item_level > 3000)
+				item_array[item_hit]->item_level = 3000;
 			set_item_flag(&item);
-			give_gold(univ.town.items[item_array[item_hit]].item_level,false);
+			give_gold(item_array[item_hit]->item_level,false);
 			play_sound(39); // formerly force_play_sound
-		} else if(univ.town.items[item_array[item_hit]].variety == eItemType::FOOD) {
-			give_food(univ.town.items[item_array[item_hit]].item_level,false);
+		} else if(item_array[item_hit]->variety == eItemType::FOOD) {
+			give_food(item_array[item_hit]->item_level,false);
 			set_item_flag(&item);
-			set_item_flag(&univ.town.items[item_array[item_hit]]);
+			set_item_flag(item_array[item_hit]);
 			play_sound(62); // formerly force_play_sound
 		} else {
-			if(item.item_weight() > amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
+			if(!allow_overload && item.item_weight() > amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
 				// TODO: Play an error sound here
 				me["prompt"].setText("It's too heavy to carry.");
 				give_help(38,0,me);
@@ -1038,13 +1037,11 @@ static bool display_item_event_filter(cDialog& me, std::string id, eKeyMod) {
 			
 			set_item_flag(&item);
 			play_sound(0); // formerly force_play_sound
-			give_to_pc(current_getting_pc, item, 0);////
+			give_to_pc(current_getting_pc, item, false, allow_overload);
 		}
-		univ.town.items[item_array[item_hit]] = cItemRec();
-		for(short i = item_hit; i < 125; i++)
-			item_array[i] = item_array[i + 1];
-		total_items_gettable--;
-		put_item_graphics(me);
+		*item_array[item_hit] = cItemRec();
+		item_array.erase(item_array.begin() + item_hit);
+		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 	}
 	return true;
 }
@@ -1057,19 +1054,14 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 {
-	short i,array_position = 0;
+//	short item_array[130];
+	std::vector<cItemRec*> item_array;
+	short i;
 	
 	make_cursor_sword();
 	
-	first_item_shown = 0;
-	store_get_mode = mode;
-	current_getting_pc = current_pc;
-	store_pcnum = pc_num;
+	short current_getting_pc = current_pc;
 	
-	for (i = 0; i < 130; i++)
-		item_array[i] = 200;
-	
-	total_items_gettable = 0;
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			if (((adjacent(from_loc,univ.town.items[i].item_loc) == true) ||
@@ -1078,34 +1070,46 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 				  && (can_see_light(from_loc,univ.town.items[i].item_loc,sight_obscurity) < 5))) &&
 				(univ.town.items[i].contained == check_container) &&
 				((!check_container) || (univ.town.items[i].item_loc == from_loc))) {
-				item_array[array_position] = i;
-				array_position++;
-				total_items_gettable++;
+				item_array.push_back(&univ.town.items[i]);
 			}
 		}
 	
+	bool stole_something = false;
+	if(check_container)
+		stole_something = show_get_items("Looking in container:", item_array, current_getting_pc);
+	else if(mode == 0)
+		stole_something = show_get_items("Getting all adjacent items:", item_array, current_getting_pc);
+	else stole_something = show_get_items("Getting all nearby items:", item_array, current_getting_pc);
+	
+	put_item_screen(stat_window,0);
+	put_pc_screen();
+	
+	return stole_something;
+}
+
+bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, short pc_getting, bool overload) {
+	using namespace std::placeholders;
+	size_t first_item = 0;
+
 	if (!pc_gworld_loaded)
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	
 	cDialog itemDialog("get-items.xml");
-	itemDialog.attachClickHandlers(display_item_event_filter, {"done", "up", "down"});
-	itemDialog.attachClickHandlers(display_item_event_filter, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
+	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);
+	itemDialog.attachClickHandlers(handler, {"done", "up", "down"});
+	itemDialog.attachClickHandlers(handler, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
 	itemDialog.setResult(false);
 	cTextMsg& title = dynamic_cast<cTextMsg&>(itemDialog["title"]);
 	
-	if(check_container == true)
-		title.setText("Looking in container:");
-	else if(mode == 0)
-		title.setText("Getting all adjacent items:");
-	else title.setText("Getting all nearby items:");
+	title.setText(titleText);
 	
-	for(i = 1; i <= 8; i++) {
+	for(int i = 1; i <= 8; i++) {
 		std::ostringstream sout;
 		sout << "item" << i << "-key";
 		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
-		itemDialog[sout.str()].attachClickHandler(display_item_event_filter);
+		itemDialog[sout.str()].attachClickHandler(handler);
 	}
-	put_item_graphics(itemDialog);
+	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
 	
 	if (univ.party.help_received[36] == 0) {
 		// TODO: Not sure if I need to an initial draw
@@ -1114,9 +1118,6 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 	}
 	
 	itemDialog.run();
-	
-	put_item_screen(stat_window,0);
-	put_pc_screen();
 	
 	return itemDialog.getResult<bool>();
 	
@@ -1183,7 +1184,8 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 //}
 
 static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
-	me.setResult<int>(me["number"].getTextAsNum());
+	if(me.toast(true))
+		me.setResult<int>(me["number"].getTextAsNum());
 	return true;
 }
 

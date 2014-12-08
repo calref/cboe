@@ -3,7 +3,7 @@
 #include "pict.h"
 
 void sort_pc_items(short pc_num);
-bool give_to_pc(short pc_num,cItemRec  item,short  print_result);
+bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload = false);
 bool forced_give(short item_num,eItemAbil abil);
 bool GTP(short item_num);
 bool silent_GTP(short item_num);
@@ -36,6 +36,7 @@ short get_prot_level(short pc_num,short abil);
 
 void make_town_hostile();
 void set_town_attitude(short lo,short hi,short att);
+bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, short pc_getting, bool overload = false);
 bool display_item(location from_loc,short pc_num,short mode, bool check_container);
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ;
 //short fancy_choice_dialog(short which_dlog,short parent);

@@ -402,7 +402,7 @@ void start_town_mode(short which_town, short entry_dir)
 			else univ.town.monst[i].active = 0;
 	}
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
-	
+	// TODO: Flush the special node queue on scenario start so that the special actually gets called.
 	
 	// Flush excess doomguards and viscous goos
 	for (i = 0; i < univ.town->max_monst(); i++)

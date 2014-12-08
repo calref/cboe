@@ -176,7 +176,11 @@ struct initer {
 			("start-shop", eSpecType::OUT_STORE)
 		;
 		// A check for missing types.
-		using underlying = std::underlying_type<eSpecType>::type;
+		// There's really no need to check all the way to the max of the underlying type.
+		// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
+		// let's use unsigned short.
+		// Could change the actual enum's underlying type instead though?
+		using underlying = signed short;//std::underlying_type<eSpecType>::type;
 		struct node_less : std::binary_function<eSpecType, eSpecType, bool> {
 			bool operator()(const eSpecType& x, const eSpecType& y) const {return underlying(x) < underlying(y);}
 		};

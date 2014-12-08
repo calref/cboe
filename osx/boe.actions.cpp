@@ -1297,8 +1297,9 @@ bool handle_action(sf::Event event)
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
 			s3 = 0;
-		run_special(special_queue.front(), &s1, &s2, &s3);
+		pending_special_type pending = special_queue.front();
 		special_queue.pop();
+		run_special(pending, &s1, &s2, &s3);
 			if (s3 > 0)
 				draw_terrain();
 		}
@@ -2526,6 +2527,7 @@ void start_new_game()
 	
 //	display_intro();
 	if(kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem)) init_party(2); // if command key held down, create debug party
+	else if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) init_party(2);
 	else init_party(0);
 	
 	//while (creation_done == false) {

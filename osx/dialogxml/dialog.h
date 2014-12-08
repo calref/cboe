@@ -80,6 +80,7 @@ public:
 	/// @param offset An offset in pixels between the control and the label.
 	/// @param bold If true, the label will be bolded.
 	/// @return true if the label was added, false if not (usually because it already had a label)
+	/// @note Even if it returns false, the label has been attached (ie, the existing label was updated).
 	bool addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold);
 	/// Show the dialog and start its event loop. All dialogs are modal.
 	void run(); // cd_run_dialog
