@@ -846,6 +846,7 @@ void pause(short length)
 		sf::sleep(time_in_ticks(len));
 }
 
+// TODO: I think this should be in a better place, maybe in cParty?
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 bool sd_legit(short a, short b)
 {

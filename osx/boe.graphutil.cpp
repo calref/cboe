@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <cstdio>
+#include <queue>
 
 //#include "item.h"
 
@@ -53,7 +54,7 @@ extern sf::Texture fields_gworld,anim_gworld,vehicle_gworld,terrain_gworld[NUM_T
 //extern short wish_list[STORED_GRAPHICS];
 //extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 extern short terrain_there[9][9];
-extern pending_special_type special_queue[20];
+extern std::queue<pending_special_type> special_queue;
 
 extern location ul;
 extern location pc_pos[6],center;
@@ -214,12 +215,10 @@ void draw_monsters() ////
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
 				if (party_can_see_monst(i)) {
-					check_if_monst_seen(univ.town.monst[i].number);
+					check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
 					get_monst_dims(univ.town.monst[i].number,&width,&height);
-					if (point_onscreen(center,univ.town.monst[i].cur_loc) == true)
-						play_see_monster_str(univ.town.monst[i].number); // TODO: This also gets called by check_if_monst_seen!
 					
 					for (k = 0; k < width * height; k++) {
 						store_loc = where_draw;
@@ -261,7 +260,7 @@ void draw_monsters() ////
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
 				if (point_onscreen(center,univ.town.monst[i].cur_loc) || party_can_see_monst(i)) {
-					check_if_monst_seen(univ.town.monst[i].number);
+					check_if_monst_seen(univ.town.monst[i].number,univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
 					get_monst_dims(univ.town.monst[i].number,&width,&height);
@@ -304,7 +303,7 @@ void draw_monsters() ////
 	}
 }
 
-void play_see_monster_str(unsigned short m){
+void play_see_monster_str(unsigned short m, location monst_loc) {
 	short str1, str2, pic, snd, spec;
 	ePicType type;
 	str1 = scenario.scen_monsters[m].see_str1;
@@ -325,16 +324,7 @@ void play_see_monster_str(unsigned short m){
 	}
 	// Then run the special, if any
 	if(spec > -1){
-		for(int i = 2; i < 20; i++){
-			if(special_queue[i].spec == -1){
-				special_queue[i].spec = spec;
-				special_queue[i].mode = eSpecCtx::SEE_MONST;
-				special_queue[i].type = 0;
-				special_queue[i].trigger_time = univ.party.age;
-				special_queue[i].where = loc(); // TODO: Maybe a different location should be passed?
-				break;
-			}
-		}
+		queue_special(eSpecCtx::SEE_MONST, 0, spec, monst_loc);
 	}
 }
 
@@ -772,11 +762,11 @@ char get_fluid_trim(location where,ter_num_t ter_type)
 }
 
 // Sees if party has seen a monster of this sort, gives special messages as necessary
-void check_if_monst_seen(unsigned short m_num) {
+void check_if_monst_seen(unsigned short m_num, location at) {
 	// Give special messages if necessary
 	if (!univ.party.m_seen[m_num]) {
 		univ.party.m_seen[m_num] = true;
-		play_see_monster_str(m_num);
+		play_see_monster_str(m_num, at);
 	}
 	// Make the monster vocalize if applicable
 	snd_num_t sound = scenario.scen_monsters[m_num].ambient_sound;

@@ -20,7 +20,7 @@ void restore_sp_party(short amt);
 void award_party_xp(short amt);
 void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);
-short mage_lore_total();
+short check_party_stat(short which_stat, short mode);
 bool poison_weapon( short pc_num, short how_much,short safe);
 bool is_weapon(short pc_num,short item);
 void cast_spell(short type);
@@ -55,10 +55,11 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 void kill_pc(short which_pc,eMainStatus type);
 void set_pc_moves();
 void take_ap(short num);
-short cave_lore_present();
-short woodsman_present();
+short trait_present(short which_trait);
+short wilderness_lore_present();
 void print_spell_cast(short spell_num,short which);
 void put_party_in_scen(std::string scen_name);
+short party_size(bool only_living);
 
 // This is defined in pc.editors.cpp since it is also used by the character editor
 bool spend_xp(short pc_num, short mode, cDialog* parent);

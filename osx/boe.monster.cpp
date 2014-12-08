@@ -1153,50 +1153,71 @@ void poison_monst(cCreature *which_m,short how_much)
 		return;
 	}
 	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
+	if (how_much >= 0)
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
+	else
+		monst_spell_note(which_m->number,34);
 	
 }
 void acid_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::ACID] = minmax(-8,8, which_m->status[eStatus::ACID] + how_much);
-	monst_spell_note(which_m->number,31);
-	
+	if(how_much >= 0)
+		monst_spell_note(which_m->number,31);
+	else
+		monst_spell_note(which_m->number,48);
 }
 
 void slow_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::HASTE_SLOW] = minmax(-8,8, which_m->status[eStatus::HASTE_SLOW] - how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
+	if (how_much >= 0)	
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
+	else
+		monst_spell_note(which_m->number,35);
 	
 }
 void curse_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::BLESS_CURSE] = minmax(-8,8, which_m->status[eStatus::BLESS_CURSE] - how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
+	if (how_much >= 0)	
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
+	else
+		monst_spell_note(which_m->number,36);
 	
 }
 void web_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::WEBS] = minmax(-8,8, which_m->status[eStatus::WEBS] + how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
+	if (how_much >= 0)	
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
+	else
+		monst_spell_note(which_m->number,37);
 	
 }
 void scare_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->morale = which_m->morale - how_much;
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 1);
+	// TODO: I don't think there's currently any way to increase monster morale at the moment - add one!
+	if(how_much >= 0)
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 1);
+	else
+		monst_spell_note(which_m->number,47);
 	
 }
 void disease_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DISEASE] = minmax(-8,8, which_m->status[eStatus::DISEASE] + how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
+	if (how_much >= 0)	
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
+	else
+		monst_spell_note(which_m->number,38);	
 	
 }
 
@@ -1204,7 +1225,10 @@ void dumbfound_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DUMB] = minmax(-8,8, which_m->status[eStatus::DUMB] + how_much);
-	monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
+	if (how_much >= 0)	
+		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
+	else
+		monst_spell_note(which_m->number,39);	
 	
 }
 
@@ -1242,10 +1266,12 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		}
 		else {
 			which_m->status[which_status] = amount;
-			if (which_status == eStatus::ASLEEP)
+			if (which_status == eStatus::ASLEEP && (amount >= 0))
 				monst_spell_note(which_m->number,28);
-			if (which_status == eStatus::PARALYZED)
+			if (which_status == eStatus::PARALYZED && (amount >= 0))
 				monst_spell_note(which_m->number,30);
+			if (amount < 0)
+				monst_spell_note(which_m->number,40);
 		}
 		//one_sound(53);
 	}

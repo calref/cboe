@@ -177,8 +177,10 @@ void put_pick_spell_graphics();
 
 
 //mode; // 0 - prefab 1 - regular 2 - debug
+// Note: mode 1 is never used
 void init_party(short mode)
 {
+	// TODO: Remove in favour of cParty constructor.
 	short i,j,k,l;
 	
 	cVehicle null_boat;// = {{0,0},{0,0},{0,0},200,false};
@@ -251,6 +253,10 @@ void init_party(short mode)
 	for (i = 0; i < 200; i++)
 		for (j = 0; j < 8; j++)
 			univ.party.item_taken[i][j] = 0;
+	
+	// Zero out campaign flags and pointers
+	univ.party.campaign_flags.clear();
+	univ.party.pointers.clear();
 	
 	
 	refresh_store_items();
@@ -814,6 +820,8 @@ void increase_light(short amt)
 	location where;
 	
 	univ.party.light_level += amt;
+	if(univ.party.light_level < 0)
+		univ.party.light_level = 0;
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
@@ -941,13 +949,23 @@ void drain_pc(short which_pc,short how_much)
 	}
 }
 
-short mage_lore_total()
-{
-	short total = 0,i;
+// mode: 0 = total, 1 = mean, 2 = min, 3 = max
+short check_party_stat(short which_stat, short mode) {
+	short total = mode == 2 ? std::numeric_limits<short>::max() : 0, num_pcs = 0;
 	
-	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			total += univ.party[i].skills[11];
+	for(short i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
+			num_pcs++;
+			if(mode < 2)
+				total += univ.party[i].skills[which_stat];
+			else if(mode == 2)
+				total = max(univ.party[i].skills[which_stat], total);
+			else if(mode == 3)
+				total = min(univ.party[i].skills[which_stat], total);
+		}
+	
+	if(mode == 1 && num_pcs > 0)
+		total /= num_pcs;
 	
 	return total;
 }
@@ -3122,20 +3140,38 @@ void take_ap(short num)
 	univ.party[current_pc].ap = max(0,univ.party[current_pc].ap - num);
 }
 
-short cave_lore_present()
-{
+// TODO: Enumify
+// TODO: Use this to check cave lore and woodsman for the purpose of gaining food
+// (It replaces cave_lore_present() and woodsman_present(), but the latter was never used,
+// and the former was only used to help you lose less food when going over a waterfall.
+short trait_present(short which_trait) {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0)
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[which_trait] > 0)
 			ret += 1;
 	return ret;
 }
 
-short woodsman_present()
-{
-	short i,ret = 0;
-	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0)
-			ret += 1;
-	return ret;
+short wilderness_lore_present() {
+	// TODO: Add contional statement to choose between these
+	// (Probably requires something added to terrain types to specify that it's cave/surface wilderness.)
+	return trait_present(4); // Cave Lore
+	return trait_present(5); // Woodsman
+}
+
+short party_size(bool only_living) {
+	short num_pcs = 0;
+	for (short i = 0; i < 6; i++) {
+		if (!only_living) {
+			if (univ.party[i].main_status != eMainStatus::ABSENT)
+				num_pcs++;
+		}
+		else {
+			if (univ.party[i].main_status == eMainStatus::ALIVE)
+				num_pcs++;		
+		}
+	}
+	
+	return num_pcs;
+	
 }

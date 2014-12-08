@@ -373,6 +373,7 @@ enum eItemAbil {
 	ITEM_FIREWALK = 92,
 	ITEM_FLYING = 93,
 	ITEM_MAJOR_HEALING = 94,
+	ITEM_CALL_SPECIAL = 95,
 	// Spell Usable
 	ITEM_SPELL_FLAME = 110,
 	ITEM_SPELL_FIREBALL = 111,
@@ -539,6 +540,8 @@ enum class eSpecCtx {
 	TARGET = 16,
 	USE_SPACE = 17,
 	SEE_MONST = 18,
+	MONST_SPEC_ABIL = 19,
+	TOWN_HOSTILE = 20,
 };
 
 enum class eSpecType {
@@ -571,6 +574,8 @@ enum class eSpecType {
 	REST = 25,
 	WANDERING_WILL_FIGHT = 26,
 	END_SCENARIO = 27,
+	SET_POINTER = 28,
+	SET_CAMP_FLAG = 29,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -630,12 +635,12 @@ enum class eSpecType {
 	IF_HAVE_ITEM_CLASS_AND_TAKE = 145,
 	IF_EQUIP_ITEM_CLASS_AND_TAKE = 146,
 	IF_DAY_REACHED = 147,
-	IF_BARRELS = 148,
-	IF_CRATES = 149,
+	IF_OBJECTS = 148,
+	IF_PARTY_SIZE = 149,
 	IF_EVENT_OCCURRED = 150,
-	IF_HAS_CAVE_LORE = 151,
-	IF_HAS_WOODSMAN = 152,
-	IF_ENOUGH_MAGE_LORE = 153,
+	IF_SPECIES = 151,
+	IF_TRAIT = 152,
+	IF_STATISTIC = 153,
 	IF_TEXT_RESPONSE = 154,
 	IF_SDF_EQ = 155,
 	IF_CONTEXT = 156,
@@ -665,6 +670,7 @@ enum class eSpecType {
 	TOWN_SPLIT_PARTY = 193,
 	TOWN_REUNITE_PARTY = 194,
 	TOWN_TIMER_START = 195,
+	TOWN_CHANGE_LIGHTING = 196,
 	RECT_PLACE_FIRE = 200,
 	RECT_PLACE_FORCE = 201,
 	RECT_PLACE_ICE = 202,
@@ -698,7 +704,7 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 27)
+	if(code >= 0 && code <= 29)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
@@ -706,7 +712,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::AFFECT;
 	if(code >= 130 && code <= 156)
 		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 195)
+	if(code >= 170 && code <= 196)
 		return eSpecCat::TOWN;
 	if(code >= 200 && code <= 218)
 		return eSpecCat::RECT;

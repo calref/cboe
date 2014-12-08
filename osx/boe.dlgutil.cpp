@@ -486,7 +486,7 @@ void set_up_shop_array()
 				if (i == minmax(0,31,i)) {
 					store_i = store_mage_spells(i);
 					store_shop_costs[shop_pos] = store_i.value;
-					store_shop_items[shop_pos] = 800 + i + 30;
+					store_shop_items[shop_pos] = 800 + i;
 					shop_pos++;
 				}
 			break;
@@ -495,7 +495,7 @@ void set_up_shop_array()
 				if (i == minmax(0,31,i)) {
 					store_i = store_priest_spells(i);
 					store_shop_costs[shop_pos] = store_i.value;
-					store_shop_items[shop_pos] = 900 + i + 30;
+					store_shop_items[shop_pos] = 900 + i;
 					shop_pos++;
 				}
 			break;

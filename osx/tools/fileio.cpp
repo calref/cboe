@@ -1360,7 +1360,7 @@ bool save_party(fs::path dest_file)
 		static_cast<short>(in_town ? 1342 : 5790), // is the party in town?
 		static_cast<short>(in_scen ? 100 : 200), // is the party in a scenario?
 		static_cast<short>(save_maps ? 5567 : 3422), // is the save maps feature enabled?
-		0x0100, // current version number, major and minor revisions only
+		OBOE_CURRENT_VERSION >> 8, // current version number, major and minor revisions only
 		// Version 1 indicates a beta format that may not be supported in the final release
 	};
 	if(!mac_is_intel) // must flip all the flags to little-endian

@@ -1,6 +1,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <queue>
 
 //#include "item.h"
 
@@ -54,6 +55,7 @@ extern bool fast_bang,end_scenario;
 extern short town_type;
 extern cScenario scenario;
 extern cUniverse univ;
+extern std::queue<pending_special_type> special_queue;
 //extern piles_of_stuff_dumping_type *data_store;
 
 bool can_draw_pcs = true;
@@ -124,20 +126,22 @@ bool handle_wandering_specials (short /*which*/,short mode)
 // wanderin spec 99 -> generic spec
 {
 	
-	// TODO: Should a better location be passed to these specials?
+	// TODO: Is loc_in_sec the correct location to pass here?
+	// (I'm pretty sure it is, but I should verify it somehow.)
+	// (It's either that or univ.party.p_loc.)
 	short s1 = 0,s2 = 0,s3 = 0;
 	
 	if ((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
-		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&s1,&s2,&s3);
 		if (s1 > 0)
 			return false;
 	}
 	
 	if ((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
-		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,univ.party.loc_in_sec,&s1,&s2,&s3);
 	}
 	if ((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
-		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,loc(),&s1,&s2,&s3);
+		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,univ.party.loc_in_sec,&s1,&s2,&s3);
 	}
 	return true;
 }
@@ -595,7 +599,7 @@ void use_spec_item(short item)
 	short i,j,k;
 	location null_loc;
 	
-	run_special(eSpecCtx::USE_SPEC_ITEM,0,scenario.special_items[item].special,loc(),&i,&j,&k);
+	run_special(eSpecCtx::USE_SPEC_ITEM,0,scenario.special_items[item].special,univ.party.p_loc,&i,&j,&k);
 	
 }
 
@@ -604,6 +608,7 @@ void use_item(short pc,short item)
 {
 	bool take_charge = true,inept_ok = false;
 	short abil,level,i,j,item_use_code,str,type,r1;
+	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	eStatus which_stat;
 	char to_draw[60];
 	location user_loc;
@@ -1045,6 +1050,11 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
+			case ITEM_CALL_SPECIAL:
+				// TODO: Should this have its own separate eSpecCtx?
+				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);	
+				break;
+				
 				
 				// spell effects
 			case ITEM_SPELL_FLAME:
@@ -1671,7 +1681,8 @@ void kill_monst(cCreature *which_m,short who_killed)
 	if (sd_legit(which_m->spec1,which_m->spec2) == true)
 		PSD[which_m->spec1][which_m->spec2] = 1;
 	
-	run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
+	if (which_m->special_on_kill >= 0)
+		run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
 	if (which_m->radiate_1 == 15)
 		run_special(eSpecCtx::KILL_MONST,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
@@ -1863,7 +1874,7 @@ void special_increase_age()
 	unsigned short i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
-	location null_loc;
+	location null_loc; // TODO: Should we pass the party's location here? It doesn't quite make sense to me though...
 	
 	if(is_town()) {
 		for(i = 0; i < 8; i++)
@@ -1903,6 +1914,21 @@ void special_increase_age()
 	
 }
 
+void queue_special(eSpecCtx mode, short which_type, short spec, location spec_loc) {
+	if(spec < 0) return;
+	pending_special_type queued_special;
+	queued_special.spec = spec;
+	queued_special.where = spec_loc;
+	queued_special.type = which_type;
+	queued_special.mode = mode;
+//	queued_special.trigger_time = univ.party.age; // Don't think this is needed after all.
+	special_queue.push(queued_special);
+}
+
+void run_special(pending_special_type spec, short* a, short* b, short* redraw) {
+	run_special(spec.mode, spec.type, spec.spec, spec.where, a, b, redraw);
+}
+
 // This is the big painful one, the main special engine
 // which_mode - says when it was called
 // 0 - out moving (a - 1 if blocked)
@@ -1932,10 +1958,11 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	cSpecial cur_node;
-	short num_nodes = 0;
+	int num_nodes = 0;
 	
-	if (special_in_progress == true) {
-		giveError("The scenario called a special node while processing another special encounter. The second special will be ignored.");
+	// Modify this to put a value in the special node queue instead of raising an error
+	if(special_in_progress && start_spec >= 0) {
+		queue_special(which_mode, which_type, start_spec, spec_loc);
 		return;
 	}
 	special_in_progress = true;
@@ -1954,6 +1981,25 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		cur_spec_type = next_spec_type;
 		next_spec = -1;
 		cur_node = get_node(cur_spec,cur_spec_type);
+		
+		// Store the special's location in reserved pointers
+		univ.party.force_ptr(10, 301, 0);
+		univ.party.force_ptr(11, 301, 1);
+		// And put the location there
+		PSD[SDF_SPEC_LOC_X] = spec_loc.x;
+		PSD[SDF_SPEC_LOC_Y] = spec_loc.y;
+		// (We do this here instead of before the loop, in case a queued special has a different location.)
+		
+		// Convert pointer values to reference values
+		if(cur_node.sd1 < -1) cur_node.sd1 = univ.party.get_ptr(-cur_node.sd1);
+		if(cur_node.sd2 < -1) cur_node.sd2 = univ.party.get_ptr(-cur_node.sd2);
+		if(cur_node.ex1a < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1a);
+		if(cur_node.ex1b < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1b);
+		if(cur_node.ex1c < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1c);
+		if(cur_node.ex2a < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2a);
+		if(cur_node.ex2b < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2b);
+		if(cur_node.ex2c < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2c);
+		// TODO: Should pointers be allowed in message, pict, or jumpto as well?
 		
 		//print_nums(1111,cur_spec_type,cur_node.type);
 		
@@ -1991,8 +2037,17 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		
 		num_nodes++;
 		
+		if(next_spec == -1 && !special_queue.empty()) {
+			pending_special_type pending = special_queue.front();
+			which_mode = pending.mode;
+			which_type = pending.type;
+			next_spec = pending.spec;
+			spec_loc = pending.where;
+			special_queue.pop();
+		}
+		
 		if(check_for_interrupt()){
-			giveError("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.");
+			add_string_to_buf("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.", 3);
 			next_spec = -1;
 		}
 	}
@@ -2062,9 +2117,9 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
 					 cur_node.m2 + mess_adj[cur_spec_type]);
 			if (cur_node.m1 >= 0)
-				ASB(str1.c_str());
+				ASB(str1.c_str(), 4);
 			if (cur_node.m2 >= 0)
-				ASB(str2.c_str());
+				ASB(str2.c_str(), 4);
 			break;
 		case eSpecType::FLIP_SDF:
 			setsd(cur_node.sd1,cur_node.sd2,
@@ -2105,7 +2160,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
 				giveError("Town out of range.");
-			else univ.party.can_find_town[spec.ex1a] = (spec.ex1b == 0) ? 0 : 1;
+			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
 			*redraw = true;
 			break;
 		case eSpecType::MAJOR_EVENT_OCCURRED:
@@ -2159,6 +2214,24 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::END_SCENARIO:
 			end_scenario = true;
+			break;
+		case eSpecType::SET_POINTER:
+			if(spec.ex1a < 0)
+				giveError("Attempted to assign a pointer out of range (100..199)");
+			else try {
+				if(spec.sd1 < 0 && spec.sd2 < 0)
+					univ.party.clear_ptr(spec.ex1a);
+				else univ.party.set_ptr(spec.sd1,spec.sd2,spec.ex1a);
+			} catch(std::range_error x) {
+				giveError(x.what());
+			}
+			break;
+		case eSpecType::SET_CAMP_FLAG:
+			if(!sd_legit(spec.sd1,spec.sd2))
+				giveError("Stuff Done flag out of range (x - 0..299, y - 0..49).");
+			else {
+				set_campaign_flag(spec.sd1,spec.sd2,spec.ex1a,spec.ex1b,spec.m1,spec.ex2a);
+			}
 			break;
 	}
 	if (check_mess == true) {
@@ -2388,6 +2461,11 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	switch (cur_node.type) {
 		case eSpecType::SELECT_PC:
 			check_mess = false;
+			// If this <= 0, pick PC normally
+			// TODO: I think this is for compatibility with old scenarios? If so, remove it and just convert data on load.
+			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
+			if (spec.ex2a <= 0) {
+				
 			if (spec.ex1a == 2)
 				current_pc_picked_in_spec_enc = -1;
 			else if (spec.ex1a == 1) {
@@ -2402,6 +2480,32 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			if (i == 6)// && (spec.ex1b >= 0))
 				*next_spec = spec.ex1b;
+				
+			}
+			else if(spec.ex2a > 10 || spec.ex2a <= 16) {
+				// Select a specific PC
+				short pc = spec.ex2a - 11;
+				// Honour the request for alive PCs only.
+				if(spec.ex1a == 1 || univ.party[pc].main_status == eMainStatus::ALIVE)
+					current_pc_picked_in_spec_enc = pc;
+			} else {
+				// Pick random PC (from *i)
+				// TODO: What if spec.ex1a == 2?
+				
+				if (spec.ex1a == 0) {
+					short pc_alive = 0;
+					while (pc_alive == 0) {
+						i = get_ran(1,0,5);
+						if (univ.party[i].main_status == eMainStatus::ALIVE)
+							pc_alive = 1;
+					}
+					current_pc_picked_in_spec_enc = i;
+				}
+				else {
+					i = get_ran(1,0,5);
+					current_pc_picked_in_spec_enc = i;
+				}
+			}
 			break;
 		case eSpecType::DAMAGE:
 		{
@@ -2416,16 +2520,36 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		}
 		case eSpecType::AFFECT_HP:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
 													  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
+			}
+			else {
+				univ.town.monst[spec.ex2a].health = minmax(0, univ.town.monst[spec.ex2a].m_health,
+																  univ.town.monst[spec.ex2a].health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				if (spec.ex1b == 0)
+					monst_spell_note(univ.town.monst[spec.ex2a].number,41);
+				else
+					monst_spell_note(univ.town.monst[spec.ex2a].number,42);
+			}
 			break;
 		case eSpecType::AFFECT_SP:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
 												  univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+			}
+			else {
+				univ.town.monst[spec.ex2a].mp = minmax(0, univ.town.monst[spec.ex2a].max_mp,
+															  univ.town.monst[spec.ex2a].mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				if (spec.ex1b == 0)
+					monst_spell_note(univ.town.monst[spec.ex2a].number,43);
+				else
+					monst_spell_note(univ.town.monst[spec.ex2a].number,44);
+			}
 			break;
 		case eSpecType::AFFECT_XP:
 			for (i = 0; i < 6; i++)
@@ -2440,12 +2564,14 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 													 univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_DEADNESS:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
 						if ((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
 							univ.party[i].main_status = eMainStatus::ALIVE;
 					}
+					else if (univ.party[i].main_status == eMainStatus::ABSENT);
 					else switch(spec.ex1a){
 							// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
 						case 0:
@@ -2457,8 +2583,26 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 				}
 			*redraw = 1;
+			}
+			else {
+				// Kill monster
+				if ((univ.town.monst[spec.ex2a].active > 0) && (spec.ex1b > 0)) {
+					// If dead/dust actually kill, if stone just erase
+					if (spec.ex1a < 2) {
+						kill_monst(&univ.town.monst[spec.ex2a],7);
+						monst_spell_note(univ.town.monst[spec.ex2a].number,46);
+					}
+					univ.town.monst[spec.ex2a].active = 0;
+				}
+				// Bring back to life
+				if ((univ.town.monst[spec.ex2a].active == 0) && (spec.ex1b == 0)) {
+					univ.town.monst[spec.ex2a].active = 1;
+					monst_spell_note(univ.town.monst[spec.ex2a].number,45);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_POISON:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
@@ -2466,8 +2610,18 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 					else poison_pc(i,spec.ex1a);
 				}
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					poison_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_SPEED:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
@@ -2475,6 +2629,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 					else slow_pc(i,spec.ex1a);
 				}
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					slow_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_INVULN:
 			for (i = 0; i < 6; i++)
@@ -2487,14 +2650,34 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					affect_pc(i,eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_WEBS:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					web_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_DISEASE:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					disease_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_SANCTUARY:
 			for (i = 0; i < 6; i++)
@@ -2502,16 +2685,37 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					affect_pc(i,eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_CURSE_BLESS:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					curse_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_DUMBFOUND:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					dumbfound_monst(&univ.town.monst[spec.ex2a],alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_SLEEP:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
@@ -2519,8 +2723,18 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 					else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
 				}
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::ASLEEP,alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_PARALYSIS:
+			if (spec.ex2a < 0) {
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i)) {
 					if (spec.ex1b == 0) {
@@ -2528,6 +2742,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 					else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
 				}
+			}
+			else {
+				if (univ.town.monst[spec.ex2a].active > 0) {
+					short alvl = spec.ex1a;
+					if (spec.ex1b == 0)
+						alvl = -1*alvl;
+					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::PARALYZED,alvl);
+				}
+			}
 			break;
 		case eSpecType::AFFECT_STAT:
 			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
@@ -2540,22 +2763,22 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 															 univ.party[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
-			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				giveError("Mage spell is out of range (0 - 31). See docs.");
+			if (spec.ex1a != minmax(0,61,spec.ex1a)) {
+				giveError("Mage spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					univ.party[i].mage_spells[spec.ex1a + 30] = true;
+					univ.party[i].mage_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_PRIEST_SPELL:
-			if (spec.ex1a != minmax(0,31,spec.ex1a)) {
-				giveError("Priest spell is out of range (0 - 31). See docs.");
+			if (spec.ex1a != minmax(0,61,spec.ex1a)) {
+				giveError("Priest spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
-					univ.party[i].priest_spells[spec.ex1a + 30] = true;
+					univ.party[i].priest_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_GOLD:
 			if (spec.ex1b == 0)
@@ -2731,34 +2954,74 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if (calc_day() >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
-		case eSpecType::IF_BARRELS:
+		case eSpecType::IF_OBJECTS:
+			if(spec.ex1a == 0) {
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++)
 					if (univ.town.is_barrel(j,k))
 						*next_spec = spec.ex1b;
-			break;
-		case eSpecType::IF_CRATES:
+			} else if(spec.ex1a == 1) {
 			for (j = 0; j < univ.town->max_dim(); j++)
 				for (k = 0; k < univ.town->max_dim(); k++)
 					if (univ.town.is_crate(j,k))
 						*next_spec = spec.ex1b;
+			}
+			// TODO: Are there other object types to account for?
+			// TODO: Allow restricting to a specific rect
+			break;
+		case eSpecType::IF_PARTY_SIZE:
+			if (spec.ex2a < 1) {
+				if (party_size(spec.ex2b) == spec.ex1a)
+					*next_spec = spec.ex1b;
+			}
+			else {
+				if (party_size(spec.ex2b) >= spec.ex1a)
+					*next_spec = spec.ex1b;
+			}
 			break;
 		case eSpecType::IF_EVENT_OCCURRED:
 			if (day_reached(spec.ex1a,spec.ex1b) == true)
 				*next_spec = spec.ex2b;
 			break;
-		case eSpecType::IF_HAS_CAVE_LORE:
-			for (i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0)
-					*next_spec = spec.ex1b;
+		case eSpecType::IF_SPECIES:
+			if(spec.ex1a < 0 || spec.ex1a > 2) break; // TODO: Should we allow monster races too?
+			i = 0;
+			j = min(spec.ex2a,party_size(0));
+			if (j < 1)
+				j = 1;
+			for (i = 0; i < 6; i++) {
+				if ((univ.party[i].main_status == eMainStatus::ALIVE) && (univ.party[i].race == eRace(spec.ex1a)))
+					i++;
+			}
+			if (i >= j)
+				*next_spec = spec.ex1b;
 			break;
-		case eSpecType::IF_HAS_WOODSMAN:
-			for (i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0)
-					*next_spec = spec.ex1b;
+		case eSpecType::IF_TRAIT:
+			j = min(spec.ex2a,party_size(0));
+			if (j < 1)
+				j = 1;
+			for (i = 0; i < 6; i++) {
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[spec.ex1a] > 0)
+					i++;
+			}
+			if (trait_present(spec.ex1a) >= j)
+				*next_spec = spec.ex1b;
 			break;
-		case eSpecType::IF_ENOUGH_MAGE_LORE:
-			if (mage_lore_total() >= spec.ex1a)
+		case eSpecType::IF_STATISTIC:
+			if(spec.ex2b == -1) {
+				// Check specific PC's stat (uses the active PC from Select PC node)
+				short pc;
+				if(univ.party.is_split())
+					pc = univ.party.pc_present();
+				if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
+					pc = current_pc_picked_in_spec_enc;
+				if(pc != 6) {
+					if(univ.party[pc].skills[spec.ex2a] >= spec.ex1a)
+						*next_spec = spec.ex1b;
+					break;
+				}
+			}
+			if(check_party_stat(spec.ex2a, spec.ex2b) >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_TEXT_RESPONSE:
@@ -2925,7 +3188,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		return;
 	switch (cur_node.type) {
 		case eSpecType::MAKE_TOWN_HOSTILE:
-			make_town_hostile();
+			set_town_attitude(spec.ex1a,spec.ex1b,spec.ex2a);
 			break;
 		case eSpecType::TOWN_CHANGE_TER:
 			set_terrain(l,spec.ex2a);
@@ -3242,7 +3505,19 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_TIMER_START:
 			univ.party.start_timer(spec.ex1a, spec.ex1b, 1);
 			break;
-	}
+			// OBoE: Change town lighting
+		case eSpecType::TOWN_CHANGE_LIGHTING:
+			// Change bulk town lighting
+			if ((spec.ex1a >= 0) && (spec.ex1a <= 3))
+				univ.town->lighting_type = (eLighting) spec.ex1a;
+			// Change party light level
+			if (spec.ex2a > 0) {
+				if (spec.ex2b == 0)
+					increase_light(spec.ex2a);
+				else increase_light(-spec.ex2a);
+			}
+			break;
+}
 	if (check_mess == true) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
@@ -3551,4 +3826,26 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 			break;
 	}
 	
+}
+
+// This function sets/retrieves values to/from campaign flags
+void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short str, bool get_send) {
+	// get_send = false: Send value in SDF to Campaign Flag
+	// get_send = true: Retrieve value from Campaign Flag and put in SDF
+	try {
+		if(str >= 0) {
+			std::string cp_id = scenario.scen_strs(str);
+			if(get_send)
+				univ.party.stuff_done[sdf_a][sdf_b] = univ.party.cpn_flag(cpf_a, cpf_b, cp_id);
+			else
+				univ.party.cpn_flag(cpf_a, cpf_b, cp_id) = univ.party.stuff_done[sdf_a][sdf_b];
+		} else {
+			if(get_send)
+				univ.party.stuff_done[sdf_a][sdf_b] = univ.party.cpn_flag(cpf_a, cpf_b);
+			else
+				univ.party.cpn_flag(cpf_a, cpf_b) = univ.party.stuff_done[sdf_a][sdf_b];
+		}
+	} catch(std::range_error x) {
+		giveError(x.what());
+	}
 }

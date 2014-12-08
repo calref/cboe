@@ -12,6 +12,7 @@
 #include <sstream>
 #include <stdexcept>
 
+#include "dlogutil.h"
 #include "classes.h"
 #include "oldstructs.h"
 #include "fileio.h"
@@ -208,6 +209,7 @@ bool cParty::start_timer(short time, short node, short type){
 }
 
 void cParty::writeTo(std::ostream& file){
+	file << "CREATEVERSION" << OBOE_CURRENT_VERSION << '\n';
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
 	file << "FOOD " << food << '\n';
@@ -215,7 +217,7 @@ void cParty::writeTo(std::ostream& file){
 		for(int j = 0; j < 50; j++)
 			if(stuff_done[i][j] > 0)
 				file << "SDF " << i << ' ' << j << ' ' << unsigned(stuff_done[i][j]) << '\n';
-	for(ptrIter iter = pointers.begin(); iter != pointers.end(); iter++)
+	for(auto iter = pointers.begin(); iter != pointers.end(); iter++)
 		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
 	for(int i = 0; i < 200; i++)
 		if(item_taken[i][0] > 0 || item_taken[i][1] > 0 || item_taken[i][2] > 0 || item_taken[i][3] > 0 ||
@@ -270,10 +272,43 @@ void cParty::writeTo(std::ostream& file){
 	for(unsigned int i = 0; i < 250; i++)
 		if(graphicUsed[i])
 			file << "GRAPHIC " << i << '\n';
-	for(campIter iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
-		for(unsigned int i = 0; i < iter->second.size(); i++)
-			if(iter->second[i] > 0)
-				file << "CAMPAIGN \"" << iter->first << "\" " << i << ' ' << iter->second[i] << '\n';
+	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
+		std::string campaign_id = iter->first;
+		if(campaign_id.find_first_of(' ') != std::string::npos || campaign_id[0] == '"' || campaign_id[0] == '\'') {
+			// The string contains spaces or starts with a quote, so quote it.
+			// We may have to escape quotes or backslashes.
+			int apos = 0, quot = 0, bslash = 0;
+			std::for_each(campaign_id.begin(), campaign_id.end(), [&apos,&quot,&bslash](char c) {
+				if(c == '\'') apos++;
+				if(c == '"') quot++;
+				if(c == '\\') bslash++;
+			});
+			char quote_c;
+			// Surround it in whichever quote character appears fewer times.
+			if(quot < apos) quote_c = '"';
+			else quote_c = '\'';
+			// Let's create this string to initially have the required size.
+			std::string temp;
+			size_t quoted_len = campaign_id.length() + std::min(quot,apos) + bslash + 2;
+			temp.reserve(quoted_len);
+			temp += quote_c;
+			for(size_t i = 0; i < campaign_id.length(); i++) {
+				if(campaign_id[i] == quote_c) {
+					temp += '\\';
+					temp += quote_c;
+				} else if(campaign_id[i] == '\\')
+					temp += "\\\\";
+				else temp += campaign_id[i];
+			}
+			temp += quote_c;
+			campaign_id.swap(temp);
+		}
+		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
+		// Now output any flags that are set for this campaign.
+		for(unsigned int i = 0; i < 25; i++)
+			for(unsigned int j = 0; j < 20; j++)
+				if(iter->second.idx[i][j] > 0)
+					file << "CAMPAIGN " << campaign_id << ' ' << i << ' ' << j << ' ' << unsigned(iter->second.idx[i][j]) << '\n';
 	}
 	file << '\f';
 	for(int i = 0; i < 30; i++){
@@ -393,6 +428,12 @@ void cParty::readFrom(std::istream& file){
 			unsigned int n;
 			sin >> i >> j >> n;
 			stuff_done[i][j] = n;
+		} else if(cur == "CREATEVERSION") {
+			unsigned long long version;
+			sin >> version;
+			if(version > OBOE_CURRENT_VERSION) {
+				giveError("Warning: this game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
+			}
 		} else if(cur == "POINTER") {
 			int i,j,k;
 			sin >> i >> j >> k;
@@ -517,13 +558,12 @@ void cParty::readFrom(std::istream& file){
 			out_c[i].what_monst.readFrom(bin);
 			out_c[i].exists = true;
 		}else if(cur == "CAMPAIGN") {
-			unsigned int i;
-			int j;
+			unsigned int i, j;
+			int val;
 			cur = read_maybe_quoted_string(bin);
-			bin >> i >> j;
-			// TODO: value_type of campaign_flags is a vector, but maybe a map would be better?
-			while(campaign_flags[cur].size() < i) campaign_flags[cur].push_back(0);
-			campaign_flags[cur][i] = j;
+			bin >> i >> j >> val;
+			if(i < 25 && j < 25)
+				campaign_flags[cur].idx[i][j] = val;
 		} else if(cur == "TIMER") {
 			int i;
 			bin >> i;
@@ -583,23 +623,38 @@ cPlayer& cParty::operator[](unsigned short n){
 	return adven[n];
 }
 
-void cParty::set_ptr(short p, unsigned short sdfx, unsigned short sdfy){ // This function is not used for setting the reserved pointers
-	if(p >= -199 && p <= -100){ // must be a mutable pointer
+// Note that the pointer functions take the pointer with its negative sign stripped off!
+void cParty::set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy){
+	// This function is not used for setting the reserved pointers
+	if(p >= 100 && p <= 199){ // must be a mutable pointer
 		if(sdfx >= 300) throw std::range_error("SDF x-coordinate out of range (0..299)");
 		if(sdfy >= 50) throw std::range_error("SDF y-coordinate out of range (0..49)");
 		pointers[p] = std::make_pair(sdfx,sdfy);
 	}
-	else throw std::range_error("Pointer out of range (-199 to -100)");
+	else throw std::range_error("Attempted to assign a pointer out of range (100..199)");
 }
 
-void cParty::force_ptr(short p, unsigned short sdfx, unsigned short sdfy){
+void cParty::clear_ptr(unsigned short p) {
+	if(p >= 100 && p <= 199) {
+		pointers[p] = std::make_pair(-1,-1);
+	} else throw std::range_error("Attempted to assign a pointer out of range (100 to 199)");
+}
+
+void cParty::force_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy){
 	pointers[p] = std::make_pair(sdfx,sdfy);
 }
 
-unsigned char cParty::get_ptr(short p){
-	ptrIter iter = pointers.find(p);
+unsigned char cParty::get_ptr(unsigned short p){
+	auto iter = pointers.find(p);
 	if(iter == pointers.end()) return 0;
 	return stuff_done[iter->second.first][iter->second.second];
+}
+
+unsigned char& cParty::cpn_flag(unsigned int x, unsigned int y, std::string id) {
+	if(id.empty()) id = scenario.campaign_id;
+	if(id.empty()) id = scenario.scen_name;
+	if(x >= 25 || y >= 25) throw std::range_error("Attempted to access a campaign flag out of range (0..25)");
+	return campaign_flags[id].idx[x][y];
 }
 
 bool cParty::is_split(){

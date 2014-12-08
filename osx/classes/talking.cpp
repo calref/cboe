@@ -26,6 +26,12 @@ cSpeech& cSpeech::operator = (legacy::talking_record_type& old){
 			talk_nodes[i].link2[j] = old.talk_nodes[i].link2[j];
 			talk_nodes[i].extras[j] = old.talk_nodes[i].extras[j];
 		}
+		// Now, convert data if necessary
+		switch(old.talk_nodes[i].type) {
+			case 9: case 10: // Spell shops TODO: Merge these by adding 100 if it's priest spells
+				talk_nodes[i].extras[1] += 30;
+				break;
+		}
 	}
 	return *this;
 }

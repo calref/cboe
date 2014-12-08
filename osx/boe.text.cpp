@@ -1182,6 +1182,51 @@ void monst_spell_note(m_num_t number,short which_mess)
 		case 33:
 			msg = "  " + msg + " summons aid. ";
 			break;
+		case 34:
+			msg = "  " + msg + " is cured.";
+			break;
+		case 35:
+			msg = "  " + msg + " is hasted.";
+			break;
+		case 36:
+			msg = "  " + msg + " is blessed.";
+			break;
+		case 37:
+			msg = "  " + msg + " cleans webs.";
+			break;
+		case 38:
+			msg = "  " + msg + " feels better.";
+			break;
+		case 39:
+			msg = "  " + msg + " mind cleared.";
+			break;
+		case 40:
+			msg = "  " + msg + " feels alert.";
+			break;
+		case 41:
+			msg = "  " + msg + " is healed.";
+			break;
+		case 42:
+			msg = "  " + msg + " drained of health.";
+			break;
+		case 43:
+			msg = "  " + msg + " magic recharged.";
+			break;
+		case 44:
+			msg = "  " + msg + " drained of magic.";
+			break;
+		case 45:
+			msg = "  " + msg + " returns to life!";
+			break;
+		case 46:
+			msg = "  " + msg + " dies.";
+			break;
+		case 47:
+			msg = "  " + msg + " rallies its courage.";
+			break;
+		case 48:
+			msg = "  " + msg + " cleans off acid.";
+			break;
 	}
 	
 	if (which_mess > 0)
@@ -1255,12 +1300,27 @@ short print_terrain(location space)
 }
 
 
-void add_string_to_buf(std::string str)
+void add_string_to_buf(std::string str, unsigned short indent)
 {
 	if(overall_mode == MODE_STARTUP)
 		return;
 	
 	if(str == "") return;
+	
+	if(indent && str.find_last_not_of(' ') > 48) {
+		if(indent > 20) indent = 20;
+		size_t split = str.find_last_of(' ', 49);
+		add_string_to_buf(str.substr(0,split));
+		str = str.substr(split);
+		while(str.find_last_not_of(' ') > 48 - indent) {
+			std::string wrap(indent, ' ');
+			split = str.find_last_of(' ', 49 - indent);
+			wrap += str.substr(0,split);
+			str = str.substr(split);
+			add_string_to_buf(wrap);
+		}
+		return;
+	}
 	
 	text_sbar->setPosition(58); // TODO: This seems oddly specific
 	if (buf_pointer == mark_where_printing_long) {

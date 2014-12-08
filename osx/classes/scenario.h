@@ -81,6 +81,7 @@ public:
 	location last_out_edited;
 	short last_town_edited;
 	scenario_header_flags format;
+	std::string campaign_id; // A hopefully unique identifier to specify the campaign this scenario is a part of.
 	// scen_item_data_type scen_item_list {
 	cItemRec scen_items[400];
 	//char monst_names[256][20];
@@ -106,5 +107,8 @@ public:
 	void append(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file);
 };
+
+// OBoE Current Version
+const unsigned long long OBOE_CURRENT_VERSION = 0x010000; // MMmmff; M - major, m - minor, f - bugfix
 
 #endif

@@ -47,7 +47,7 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 	}
-	lighting_type = old.lighting;
+	lighting_type = (eLighting) old.lighting;
 	in_town_rect.top = old.in_town_rect.top;
 	in_town_rect.left = old.in_town_rect.left;
 	in_town_rect.bottom = old.in_town_rect.bottom;
@@ -98,7 +98,7 @@ cTown::cTown(short){
 		special_locs[i] = d_loc;
 		spec_id[i] = 0;
 	}
-	lighting_type = 0;
+	lighting_type = LIGHT_NORMAL;
 	for (i = 0; i < 4; i++) {
 		start_locs[i] = d_loc;
 		exit_specs[i] = -1;

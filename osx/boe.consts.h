@@ -32,6 +32,8 @@
 #define SFX_RUBBLE			128
 
 /* stuff done flags */
+#define SDF_SPEC_LOC_X			301][0 // For special nodes to access the trigger location
+#define SDF_SPEC_LOC_Y			301][1
 //#define SDF_IS_PARTY_SPLIT		304][0
 //#define SDF_PARTY_SPLIT_X		304][1
 //#define SDF_PARTY_SPLIT_Y		304][2

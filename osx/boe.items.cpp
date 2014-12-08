@@ -11,6 +11,7 @@
 #include "boe.graphics.h"
 #include "boe.text.h"
 #include "boe.items.h"
+#include "boe.specials.h"
 #include "boe.party.h"
 #include "boe.fields.h"
 #include "boe.locutils.h"
@@ -835,40 +836,57 @@ short get_item(location place,short pc_num,bool check_container)
 
 void make_town_hostile()
 {
+	set_town_attitude(0, -1, 1);
+	return;
+}
+
+// Set Attitude node adapted from *i, meant to replace make_town_hostile node
+// att is any valid monster attitude (so, 0..3)
+void set_town_attitude(short lo,short hi,short att) {
 	short i,num;
-	bool fry_party = false;
+	short a[3] = {}; // Dummy values to pass to run_special.
 	
 	if (which_combat_type == 0)
 		return;
 	give_help(53,0);
 	univ.town.monst.friendly = 1;
-	////
-	for (i = 0; i < univ.town->max_monst(); i++)
+	
+	// Nice smart indexing, like Python :D
+	if(lo <= -univ.town->max_monst())
+		lo = 0;
+	if(lo < 0)
+		lo = univ.town->max_monst() + lo;
+	if(hi <= -univ.town->max_monst())
+		hi = 0;
+	if(hi < 0)
+		hi = univ.town->max_monst() + hi;
+	if(hi < lo)
+		std::swap(lo, hi);
+	
+	for (i = lo; i <= hi; i++) {
 		if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].summoned == 0)){
-			univ.town.monst[i].attitude = 1;
+			univ.town.monst[i].attitude = att;
 			num = univ.town.monst[i].number;
+			// If made hostile, make mobile
+			if (att == 1 || att == 3) {
+				
 			univ.town.monst[i].mobility = 1;
+			// If a "guard", give a power boost
 			if (scenario.scen_monsters[num].spec_skill == 37) {
 				univ.town.monst[i].active = 2;
-				
-				// If a town, give pwoer boost
 				univ.town.monst[i].health *= 3;
 				univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
 				univ.town.monst[i].status[eStatus::BLESS_CURSE] = 8;
 			}
+				
+			}
 		}
+	}
 	
 	// In some towns, doin' this'll getcha' killed.
-	//// wedge in special
-	// TODO: Resupport this!
-	
-	if (fry_party == true) {
-		for (i = 0; i < 6; i++)
-			if(univ.party[i].main_status > eMainStatus::ABSENT)
-				univ.party[i].main_status = eMainStatus::ABSENT;
-		stat_window = 6;
-		boom_anim_active = false;
-	}
+	// (Or something else! Killing the party would be the responsibility of whatever special node is called.)
+	if((att == 1 || att == 3) && univ.town->spec_on_hostile >= 0)
+		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.p_loc, &a[0], &a[1], &a[2]);
 }
 
 

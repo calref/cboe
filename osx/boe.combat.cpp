@@ -1787,6 +1787,7 @@ void do_monster_turn()
 {
 	bool acted_yet, had_monst = false,printed_poison = false,printed_disease = false,printed_acid = false;
 	bool redraw_not_yet_done = true;
+	bool special_called = false;
 	location targ_space,move_targ,l;
 	short i,j,k,num_monst, target,r1,move_target;
 	cCreature *cur_monst;
@@ -2169,6 +2170,12 @@ void do_monster_turn()
 									   cur_monst->cur_loc,130,cur_monst->attitude) == true)
 					{monst_spell_note(cur_monst->number,33); play_sound(61);}
 				}
+				if ((cur_monst->radiate_1 == 14) && !special_called && party_can_see_monst(i))	{
+					short s1, s2, s3;
+					special_called = true;
+					take_m_ap(1,cur_monst);
+					run_special(eSpecCtx::MONST_SPEC_ABIL,0,cur_monst->radiate_2,cur_monst->cur_loc,&s1,&s2,&s3);		
+				}
 			}
 			
 			combat_posing_monster = current_working_monster = -1;
@@ -2369,7 +2376,7 @@ void monster_attack_pc(short who_att,short target)
 						&& (get_ran(1,0,2) < 2)) {
 						add_string_to_buf("  Causes disease!                 ");
 						print_buf();
-						disease_pc(target,(attacker->spec_skill == 25) ? 6 : 2);
+						disease_pc(target,6);
 					}
 					
 					// Petrification touch
@@ -2381,6 +2388,29 @@ void monster_attack_pc(short who_att,short target)
 						print_buf();
 						kill_pc(target,eMainStatus::STONE); // petrified, duh!
 					}
+#if 0				// TODO: This is *i's version of the petrification touch ability.
+					// It seems better in some ways, like printing a message when you resist,
+					// but its calculation is very different, so I'm not sure what to with it.
+					// Note, his version has also been incorporated into monster_attack_monster.
+					
+					// Petrify target
+					if (attacker->spec_skill == 30)	{
+						add_string_to_buf("  Petrification touch!                ");
+						r1 = max(0,(get_ran(1,0,100) - univ.party[target].level + 0.5*attacker->level));
+						// Equip petrify protection?
+						if (pc_has_abil_equip(target,49) < 24)
+							r1 = 0;
+						// Check if petrified.
+						if (r1 > 60) {
+							kill_pc(target,eMainStatus::STONE);
+							add_string_to_buf("    Turned to stone! ");
+							play_sound(43);
+						}	
+						else {
+							add_string_to_buf("    Resists! ");							
+						}
+					}
+#endif
 					
 					// Undead xp drain
 					if (((attacker->spec_skill == 16) || (attacker->spec_skill == 17))
@@ -2543,11 +2573,34 @@ void monster_attack_monster(short who_att,short attackee)
 						add_string_to_buf("  Dumbfounds!      ");
 						dumbfound_monst(target,2);
 					}
+					// Disease target
+					if (((attacker->spec_skill == 25))
+						&& (get_ran(1,0,2) < 2)) {
+						add_string_to_buf("  Causes disease!                 ");
+						print_buf();
+						disease_monst(target,6);
+					}
 					// Paralyze target
 					if (attacker->spec_skill == 29)  {
 						add_string_to_buf("  Paralysis touch!      ");
 						charm_monst(target,-5,eStatus::PARALYZED,500);
 					}
+					// Petrify target
+					if (attacker->spec_skill == 30)	{
+						add_string_to_buf("  Petrification touch!                ");
+						r1 = max(0,(get_ran(1,0,100) - target->level + 0.5*attacker->level));
+						// Check if petrified.
+						if ((r1 < 60) || (target->immunities & 2)) {								
+							add_string_to_buf("    Resists! ");
+						}	
+						else {
+							kill_monst(target,7);
+							add_string_to_buf("    Turned to stone! ");				
+							play_sound(43);
+							
+						}
+					}							
+					
 					// Acid touch
 					if (attacker->spec_skill == 31)  {
 						add_string_to_buf("  Acid touch!      ");

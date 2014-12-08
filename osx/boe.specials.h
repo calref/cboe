@@ -18,7 +18,9 @@ void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();
 void special_increase_age();
+void queue_special(eSpecCtx mode, short which_type, short spec, location spec_loc);
 void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw);
+void run_special(pending_special_type spec, short* a, short* b, short* redraw);
 cSpecial get_node(short cur_spec,short cur_spec_type);
 void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
@@ -37,3 +39,5 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
 void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
+
+void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short str, bool get_send);

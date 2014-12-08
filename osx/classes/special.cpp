@@ -66,6 +66,27 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 			ex1a = (int) eSpecCtx::TARGET;
 			ex1b = 108; // Spell ID for ritual of sanctification, as seen in cast_town_spell()
 			break;
+		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
+			ex1a += 30;
+			ex1b = 1; // Meaning give spell, not take
+			break;
+		case 148: case 149: // if barrels or crates
+			type = eSpecType::IF_OBJECTS;
+			ex1a = old.type - 148;
+			break;
+		case 151: case 152: // if has cave lore or woodsman
+			type = eSpecType::IF_TRAIT;
+			ex1a = old.type - 147;
+			break;
+		case 153: // if enough mage lore
+			type = eSpecType::IF_STATISTIC;
+			ex2a = 11;
+			ex2b = 0;
+			break;
+		case 229: // Outdoor store - fix spell IDs
+			if(ex1b == 1 || ex1b == 2)
+				ex1a += 30;
+			break;
 	}
 	return *this;
 }
@@ -208,12 +229,11 @@ const std::map<eSpecType, node_properties_t> allNodeProps = {
 	{eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_DAY_REACHED, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_BARRELS, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_CRATES, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_OBJECTS, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_EVENT_OCCURRED, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_CAVE_LORE, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_WOODSMAN, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_ENOUGH_MAGE_LORE, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_SPECIES, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_TRAIT, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_STATISTIC, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_TEXT_RESPONSE, {ex1b_ch = true,ex2b_ch = true,pic_lbl = 5,jmp_lbl = 3}},
 	{eSpecType::IF_SDF_EQ, {ex1b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
 	{eSpecType::IF_CONTEXT, {}},

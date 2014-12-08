@@ -30,6 +30,10 @@ namespace legacy {
 	struct setup_save_type;
 };
 
+struct campaign_flag_type{
+	unsigned char idx[25][25];
+};
+
 class cParty {
 public:
 	class cConvers { // conversation; formerly talk_save_type
@@ -68,6 +72,7 @@ public:
 	short light_level;
 	location outdoor_corner;
 	location i_w_c;
+	// TODO: Does this duplicate cCurTown::p_loc? If not, why not?
 	location p_loc;
 	location loc_in_sec;
 	cVehicle boats[30];
@@ -106,12 +111,17 @@ public:
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	bool graphicUsed[250]; // whether each custom graphics slot on the party's sheet is actually used; needed to place new custom graphics on the sheet.
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
-	std::map<std::string,std::vector<signed short> > campaign_flags;
-	std::map<short,std::pair<unsigned short,unsigned char> > pointers;
+private:
+	std::map<std::string,campaign_flag_type> campaign_flags;
+	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
+public:
 	
-	void set_ptr(short p, unsigned short sdfx, unsigned short sdfy);
-	void force_ptr(short p, unsigned short sdfx, unsigned short sdfy);
-	unsigned char get_ptr(short p);
+	void set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
+	void force_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
+	void clear_ptr(unsigned short p);
+	unsigned char get_ptr(unsigned short p);
+	
+	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
 	
 	cParty& operator = (legacy::party_record_type& old);
 	void append(legacy::big_tr_type& old);
@@ -142,8 +152,8 @@ public:
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	typedef std::vector<cTimer>::iterator timerIter;
-	typedef std::map<std::string,std::vector<signed short> >::iterator campIter;
-	typedef std::map<short,std::pair<unsigned short,unsigned char> >::iterator ptrIter;
+	// TODO: Remove this in favour of cParty constructor
+	friend void init_party(short);
 };
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);

@@ -1,5 +1,6 @@
 
 #include <cmath>
+#include <queue>
 
 //#include "item.h"
 
@@ -151,7 +152,7 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
 RECT shopping_rects[8][7];
-pending_special_type special_queue[20];
+std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 
 void init_screen_locs() ////
@@ -325,8 +326,10 @@ bool handle_action(sf::Event event)
 	the_point = location(event.mouseButton.x, event.mouseButton.y);
 	the_point.x -= ul.x;
 	the_point.y -= ul.y;
-	for (i = 0; i < 20; i++) // TODO: Does this cause problems by leaving some specials uncalled?
-		special_queue[i].spec = -1;
+	if(!special_queue.empty())
+		printf("Note: %ld queued specials have been flushed without running!", special_queue.size());
+	while(!special_queue.empty()) // TODO: Does this cause problems by leaving some specials uncalled?
+		special_queue.pop();
 	end_scenario = false;
 	
 	// Now split off the extra stuff, like talking and shopping.
@@ -1291,17 +1294,11 @@ bool handle_action(sf::Event event)
 	}
  	
  	// MARK: At this point, see if any specials have been queued up, and deal with them
-	// TODO: Use an std::queue for this.
- 	for (i = 0; i < 20; i++)
-		if (special_queue[i].spec >= 0) {
-			long long store_time = univ.party.age;
-			univ.party.age = special_queue[i].trigger_time;
+	// Note: We just check once here instead of looping because run_special also pulls from the queue.
+	if(!special_queue.empty()) {
 			s3 = 0;
-			run_special(special_queue[i].mode,special_queue[i].type,special_queue[i].spec,
-						special_queue[i].where,&s1,&s2,&s3);
-			special_queue[i].spec = -1;
-			long long change_time = univ.party.age - special_queue[i].trigger_time;
-			univ.party.age = store_time + change_time;
+		run_special(special_queue.front(), &s1, &s2, &s3);
+		special_queue.pop();
 			if (s3 > 0)
 				draw_terrain();
 		}
@@ -2220,9 +2217,9 @@ void increase_age()////
 	
 	move_to_zero(PSD[SDF_PARTY_FLIGHT]);
 	
-	if ((overall_mode > MODE_OUTDOORS) && (univ.town->lighting_type == 2)) {
-		univ.party.light_level = max (0,univ.party.light_level - 9);
-		if (univ.town->lighting_type == 3) {
+	if(overall_mode > MODE_OUTDOORS && univ.town->lighting_type >= LIGHT_DRAINS) {
+		increase_light(-9);
+		if(univ.town->lighting_type == LIGHT_NONE) {
 			if (univ.party.light_level > 0)
 				ASB("Your light is drained.");
 			univ.party.light_level = 0;
@@ -2658,7 +2655,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		}
 		draw_terrain();
 		print_buf();
-		if ((cave_lore_present() > 0) && (get_ran(1,0,1) == 0))
+		if ((wilderness_lore_present() > 0) && (get_ran(1,0,1) == 0))
 			add_string_to_buf("  (No supplies lost.)");
 		else if (univ.party.food > 1800){
 			add_string_to_buf("  (Many supplies lost.)");
@@ -3088,11 +3085,17 @@ bool is_sign(ter_num_t ter)
 
 bool check_for_interrupt(){
 	using kb = sf::Keyboard;
+	bool interrupt = false;
 #ifdef __APPLE__
 	if((kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem)) && kb::isKeyPressed(kb::Period))
-		return true;
+		interrupt = true;
 #endif
 	if((kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) && kb::isKeyPressed(kb::C))
-		return true;
+		interrupt = true;
+	if(interrupt) {
+		// TODO: A customized dialog with a more appropriate message
+		cChoiceDlog confirm("quit-confirm-nosave.xml", {"quit","cancel"});
+		if(confirm.show() == "quit") return true;
+	}
 	return false;
 }

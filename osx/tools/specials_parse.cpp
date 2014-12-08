@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <set>
 #include <boost/phoenix/bind.hpp>
 
 #include "special.h"
@@ -126,12 +127,12 @@ struct initer {
 			("if-item-class", eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE)
 			("if-item-class-equip", eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE)
 			("if-day", eSpecType::IF_DAY_REACHED)
-			("if-field", eSpecType::IF_BARRELS)
-			("if-object", eSpecType::IF_CRATES)
+//			("if-field", eSpecType::IF_BARRELS)
+			("if-object", eSpecType::IF_OBJECTS)
 			("if-event", eSpecType::IF_EVENT_OCCURRED)
-			("if-cave-lore", eSpecType::IF_HAS_CAVE_LORE)
-			("if-woodsman", eSpecType::IF_HAS_WOODSMAN)
-			("if-mage-lore", eSpecType::IF_ENOUGH_MAGE_LORE)
+			("if-trait", eSpecType::IF_TRAIT)
+			("if-species", eSpecType::IF_SPECIES)
+			("if-statistic", eSpecType::IF_STATISTIC)
 			("if-response", eSpecType::IF_TEXT_RESPONSE)
 			("if-sdf-eq", eSpecType::IF_SDF_EQ)
 			("town-attitude", eSpecType::MAKE_TOWN_HOSTILE)
@@ -174,6 +175,24 @@ struct initer {
 			("make-out-monst", eSpecType::OUT_PLACE_ENCOUNTER)
 			("start-shop", eSpecType::OUT_STORE)
 		;
+		// A check for missing types.
+		using underlying = std::underlying_type<eSpecType>::type;
+		struct node_less : std::binary_function<eSpecType, eSpecType, bool> {
+			bool operator()(const eSpecType& x, const eSpecType& y) const {return underlying(x) < underlying(y);}
+		};
+		std::set<eSpecType, node_less> allNodes;
+		for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
+			eSpecType check = (eSpecType) i;
+			eSpecCat category = getNodeCategory(check);
+			if(category == eSpecCat::INVALID) continue;
+			allNodes.insert(check);
+		}
+		opcode.for_each([&allNodes](const std::string&, eSpecType node) {
+			allNodes.erase(node);
+		});
+		std::for_each(allNodes.begin(), allNodes.end(), [](eSpecType node){
+			printf("Warning: Missing opcode definition for special node type with ID %d\n", (int)node);
+		});
 	}
 };
 

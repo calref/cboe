@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <queue>
 
 //#include "item.h"
 
@@ -45,7 +46,7 @@ extern short store_current_pc,current_ground;
 //extern pascal bool cd_event_filter();
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 //extern location monster_targs[60];
-extern pending_special_type special_queue[20];
+extern std::queue<pending_special_type> special_queue;
 
 extern bool map_visible,diff_depth_ok,belt_present;
 extern sf::RenderWindow mini_map;
@@ -715,29 +716,12 @@ location end_town_mode(short switching_level,location destination)  // returns n
 	return to_return;
 }
 
-// actually, entry_dir is non zero is town is dead - kludge!
-void handle_town_specials(short /*town_number*/, short entry_dir,location /*start_loc*/) {
-	
-	//if (entry_dir > 0)
-	//	run_special(5,2,univ.town.town.spec_on_entry_if_dead,start_loc,&s1,&s2,&s3);
-	//else run_special(5,2,univ.town.town.spec_on_entry,start_loc,&s1,&s2,&s3);
-	if (entry_dir > 0)
-		special_queue[0].spec = univ.town->spec_on_entry_if_dead;
-	else special_queue[0].spec = univ.town->spec_on_entry;
-	special_queue[0].where = univ.town.p_loc;
-	special_queue[0].type = 2;
-	special_queue[0].mode = eSpecCtx::ENTER_TOWN;
-	special_queue[0].trigger_time = univ.party.age; // TODO: Simply pushing into slot 0 seems like a bad idea
+void handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
+	queue_special(eSpecCtx::ENTER_TOWN, 2, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.town.p_loc);
 }
 
 void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
-	
-	//run_special(6,2,which_spec,start_loc,&s1,&s2,&s3);
-	special_queue[1].spec = which_spec;
-	special_queue[1].where = univ.party.p_loc;
-	special_queue[1].type = 2;
-	special_queue[1].mode = eSpecCtx::LEAVE_TOWN;
-	special_queue[1].trigger_time = univ.party.age; // TODO: Simply pushing into slot 1 seems like a bad idea
+	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.p_loc);
 }
 
 bool abil_exists(short abil) // use when univ.out.outdoors

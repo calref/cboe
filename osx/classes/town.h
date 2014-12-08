@@ -28,6 +28,13 @@ namespace legacy {
 	struct preset_field_type;
 };
 
+enum eLighting {
+	LIGHT_NORMAL = 0,
+	LIGHT_DARK = 1,
+	LIGHT_DRAINS = 2,
+	LIGHT_NONE = 3,
+};
+
 class cTown { // formerly town_record_type
 public:
 //	class cCreature { // formerly creature_start_type
@@ -73,7 +80,7 @@ public:
 	location special_locs[50];
 	unsigned short spec_id[50];
 	location sign_locs[15];
-	short lighting_type;
+	eLighting lighting_type;
 	location start_locs[4];
 	location exit_locs[4];
 	short exit_specs[4];
@@ -82,6 +89,7 @@ public:
 	short max_num_monst;
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
+	short spec_on_hostile;
 	short timer_spec_times[8];
 	short timer_specs[8];
 	unsigned char strlens[180];
