@@ -45,6 +45,7 @@ short spell_cost[2][62] = {
 		4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
 	{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
 		5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
+// TODO: Use magic-names.txt instead of these arrays
 const char *mage_s_name[62] = {
 	"Light","Spark","Minor Haste","Strength","Scare",
 	"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
@@ -2066,6 +2067,45 @@ static void draw_spell_info(cDialog& me, const short store_situation) {
 	}
 }
 
+// TODO: Use the map here to simplify drawing the graphics in draw_pc_effects()
+static void put_target_status_graphics(cDialog& me, short for_pc) {
+	// First icon is displayed for positive values, second for negative, if -1 no negative icon.
+	// This omits two special cases - major poison, and normal speed; they are hard-coded.
+	static std::map<eStatus, std::pair<short, short>> statIcons = {
+		{eStatus::POISONED_WEAPON, {4,-1}}, {eStatus::BLESS_CURSE, {2,3}}, {eStatus::POISON, {0,-1}},
+		{eStatus::HASTE_SLOW, {6,8}}, {eStatus::INVULNERABLE, {5,-1}}, {eStatus::MAGIC_RESISTANCE, {9,19}},
+		{eStatus::WEBS, {10,-1}}, {eStatus::DISEASE, {11,-1}}, {eStatus::INVISIBLE, {12,-1}},
+		{eStatus::DUMB, {13,18}}, {eStatus::MARTYRS_SHIELD, {14,-1}}, {eStatus::ASLEEP, {15,-1}},
+		{eStatus::PARALYZED, {16,-1}}, {eStatus::ACID, {17,-1}}, {eStatus::FORCECAGE, {20,-1}},
+	};
+	bool isAlive = univ.party[for_pc].main_status == eMainStatus::ALIVE;
+	univ.party[for_pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
+	std::string id = "pc" + std::to_string(for_pc + 1);
+	int slot = 0;
+	for(auto next : univ.party[for_pc].status) {
+		std::string id2 = id + "-stat" + std::to_string(slot + 1);
+		cPict& pic = dynamic_cast<cPict&>(me[id2]);
+		pic.setFormat(TXT_FRAME, false);
+		if(isAlive) {
+			short placedIcon = -1;
+			if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
+			else if(next.second > 0) placedIcon = statIcons[next.first].first;
+			else if(next.second < 0) placedIcon = statIcons[next.first].second;
+			else if(next.first == eStatus::HASTE_SLOW) placedIcon = 7;
+			if(placedIcon >= 0) {
+				pic.show();
+				pic.setPict(placedIcon);
+				slot++;
+			} else pic.hide();
+		} else pic.hide();
+	}
+	while(slot < 15) {
+		std::string id2 = id + "-stat" + std::to_string(slot + 1);
+		me[id2].hide();
+		slot++;
+	}
+}
+
 static void draw_spell_pc_info(cDialog& me)
 {
 	short i;
@@ -2082,6 +2122,7 @@ static void draw_spell_pc_info(cDialog& me)
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
 			}
+			put_target_status_graphics(me, i);
 		}
 	}
 }
@@ -2155,13 +2196,10 @@ static void put_spell_list(cDialog& me, const short store_situation) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			if (store_situation == 0) {
 				if (i == 35)
-					sprintf((char *) add_text,"%s %c ?",mage_s_name[i],
-							(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i));
-				else sprintf((char *) add_text,"%s %c %d",mage_s_name[i],
-							 (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[0][i]);
+					sprintf((char *) add_text,"%s (?)",mage_s_name[i]);
+				else sprintf((char *) add_text,"%s (%d)",mage_s_name[i],spell_cost[0][i]);
 			}
-			else sprintf((char *) add_text,"%s %c %d",priest_s_name[i],
-						 (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[1][i]);
+			else sprintf((char *) add_text,"%s (%d)",priest_s_name[i],spell_cost[1][i]);
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
@@ -2188,20 +2226,6 @@ static void put_spell_list(cDialog& me, const short store_situation) {
 			else me[id].hide();
 		}
 	}
-}
-
-
-static void put_pick_spell_graphics(cDialog& me, const short store_situation, short& last_darkened) {
-	short i;
-	
-	
-	put_spell_list(me, store_situation);
-	put_pc_caster_buttons(me);
-	put_pc_target_buttons(me, last_darkened);
-	put_spell_led_buttons(me, store_situation);
-	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			draw_pc_effects(10 + i); // TODO: This line might mean that the "kludge" from the old code is already handled here; verify?
 }
 
 static bool pick_spell_caster(cDialog& me, std::string id, const short store_situation, short& last_darkened) {
@@ -2428,12 +2452,14 @@ short pick_spell(short pc_num,short type)  // 70 - no spell OW spell num
 	}
 	
 	// If a target is needed, keep the same target if that PC still targetable
+	if(store_spell_target < 6) {
 	if (((type == 0) && (mage_need_select[store_mage] > 0)) ||
 		((type == 1) && (priest_need_select[store_priest] > 0))) {
 		if(univ.party[store_spell_target].main_status != eMainStatus::ALIVE)
 			store_spell_target = 6;
 	}
 	else store_spell_target = 6;
+	}
 	
 	// Set the spell page, based on starting spell
 	if (((type == 0) && (store_mage >= 38)) || ((type == 1) && (store_priest >= 38)))
@@ -2454,10 +2480,13 @@ short pick_spell(short pc_num,short type)  // 70 - no spell OW spell num
 	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + type,PIC_DLOG);
 	for(int i = 0; i < 38; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		cKey key;
 		if (i > 25)
-			castSpell[id].attachKey({false, static_cast<unsigned char>('a' + i - 26), mod_shift});
-		else castSpell[id].attachKey({false, static_cast<unsigned char>('a' + i), mod_none});
+			key = {false, static_cast<unsigned char>('a' + i - 26), mod_shift};
+		else key = {false, static_cast<unsigned char>('a' + i), mod_none};
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
+		led.attachKey(key);
+		castSpell.addLabelFor(id, {i > 25 ? toupper(key.c) : key.c}, LABEL_LEFT, 8, true);
 		led.setState((pc_can_cast_spell(pc_casting,type, (on_which_spell_page == 0) ? i : spell_index[i]))
 					 ? led_red : led_green);
 		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, dark));

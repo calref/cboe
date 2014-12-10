@@ -1217,6 +1217,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	if(bg == BG_DARK && dynamic_cast<cButton*>(&ctrl) != NULL)
 		labelCtrl->setColour(defTextClr);
 	else labelCtrl->setColour(ctrl.getColour());
+	ctrl.setLabelCtrl(labelCtrl);
 	return add(labelCtrl, labelRect, key);
 }
 

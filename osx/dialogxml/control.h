@@ -200,6 +200,10 @@ public:
 	/// should be hilited in some way while pressed and is cancelled by releasing the mouse
 	/// button outside the control's bounds.
 	virtual bool handleClick(location where);
+	/// Specifies that another control acts as a label for this one.
+	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
+	/// @param label A pointer to the control that acts as a label.
+	void setLabelCtrl(cControl* label);
 	/// Create a new control attached to an arbitrary window, rather than a dialog.
 	/// @param t The type of the control.
 	/// @param p The parent window.
@@ -217,6 +221,8 @@ protected:
 	/// The parent dialog of the control.
 	/// May be null, if the control was created via cControl(eControlType,sf::RenderWindow&).
 	cDialog* parent;
+	/// This control's labelling control.
+	cControl* labelCtrl = NULL;
 	/// The parent window of the control.
 	/// This is for use in implementing draw().
 	sf::RenderWindow* inWindow;

@@ -1,4 +1,7 @@
 
+#ifndef BOE_GLOBAL_H
+#define BOE_GLOBAL_H
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -61,3 +64,5 @@ public:
 struct effect_pat_type {
 	unsigned char pattern[9][9];
 };
+
+#endif

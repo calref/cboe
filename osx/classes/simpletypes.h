@@ -103,9 +103,10 @@ enum class eStatus {
 	ASLEEP = 11,
 	PARALYZED = 12,
 	ACID = 13,
+	FORCECAGE = 14, // This is new and currently unused, since forcecages aren't even really implemented yet.
 	// This one is new
 	// It's not quite a real status effect since it doesn't expire
-	// We use 15 because 14 was technically a "reserved/unused" status, though I don't think it was ever used for anything
+	// We use 15 because 14 was technically a "reserved/unused" status, though it was never used for anything
 	CHARM = 15,
 };
 

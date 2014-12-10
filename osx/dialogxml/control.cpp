@@ -158,16 +158,22 @@ bool mod_contains(eKeyMod mods, eKeyMod mod) {
 
 void cControl::show(){
 	visible = true;
+	if(labelCtrl) labelCtrl->show();
 }
 
 void cControl::hide(){
 	visible = false;
+	if(labelCtrl) labelCtrl->hide();
 }
 
 bool cControl::isVisible(){
 	if(!parent || parent->dialogNotToast)
 		return visible;
 	else return false;
+}
+
+void cControl::setLabelCtrl(cControl* label) {
+	labelCtrl = label;
 }
 
 cKey cControl::getAttachedKey() {
