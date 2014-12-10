@@ -52,12 +52,12 @@ extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern sf::Texture bg_gworld;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
 extern RECT talk_area_rect, word_place_rect;
-extern RECT map_pat[];
+extern tessel_ref_t map_pat[];
 extern location store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool fast_bang;
-extern RECT	bg[];
+extern tessel_ref_t bg[];
 extern cScenario scenario;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
@@ -159,7 +159,7 @@ char spot_seen[9][9];
 char anim_str[60];
 location anim_str_loc;
 
-extern RECT bw_pats[6];
+extern tessel_ref_t bw_pats[6];
 
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 bool supressing_some_spaces = false;
@@ -621,7 +621,7 @@ void redraw_screen(int refresh) {
 
 void put_background()
 {
-	RECT bg_pict;
+	tessel_ref_t bg_pict;
 	
 	if(overall_mode == MODE_STARTUP)
 		bg_pict = bg[4];
@@ -645,7 +645,7 @@ void put_background()
 			bg_pict = bg[8];
 		else bg_pict = bg[13];
 	}
-	tileImage(mainPtr, RECT(mainPtr), bg_gworld, bg_pict);
+	tileImage(mainPtr, RECT(mainPtr), bg_pict);
 }
 
 void draw_buttons(short mode)

@@ -87,7 +87,7 @@ sf::Texture roads_gworld;
 sf::Texture missiles_gworld;
 sf::Texture status_gworld;
 sf::Texture pc_gworld;
-extern RECT map_pat[];
+extern tessel_ref_t map_pat[];
 
 // begin new stuff
 RECT blue_button_from = {120,91,134,107};
@@ -388,7 +388,7 @@ void load_main_screen() {
 
 void redraw_screen() {
 	RECT windRect(mainPtr);
-	tileImage(mainPtr,windRect,bg_gworld,bg[20]);
+	tileImage(mainPtr,windRect,bg[20]);
 	draw_main_screen();
 	if (overall_mode < MODE_MAIN_SCREEN);
 	draw_terrain();
@@ -414,7 +414,7 @@ void draw_main_screen() {
 		
 		frame_rect(mainPtr, draw_rect, sf::Color::Black);
 		draw_rect.inset(1,1);
-		tileImage(mainPtr,draw_rect,bg_gworld,bg[17]);
+		tileImage(mainPtr,draw_rect,bg[17]);
 		
 		draw_rb();
 		right_sbar->draw();
@@ -437,7 +437,7 @@ void draw_lb() {
 	short i;
 	
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
-	tileImage(mainPtr,temp_rect,bg_gworld,bg[20]);
+	tileImage(mainPtr,temp_rect,bg[20]);
 	for (i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
@@ -446,7 +446,7 @@ void draw_lb() {
 void draw_lb_slot (short which,short mode)  {
 	RECT text_rect,from_rect;
 	
- 	tileImage(mainPtr,left_buttons[which][0],bg_gworld,bg[20]);
+ 	tileImage(mainPtr,left_buttons[which][0],bg[20]);
 	if (left_button_status[which] == 0)
 		return;
 	text_rect = left_buttons[which][0];
@@ -487,7 +487,7 @@ void draw_rb_slot (short which,short mode)  {
 	if ((which < pos) || (which >= pos + NRSONPAGE))
 		return;
 	
- 	tileImage(mainPtr,right_buttons[which - pos],bg_gworld,bg[17]);
+ 	tileImage(mainPtr,right_buttons[which - pos],bg[17]);
 	if (right_button_status[which] == 0)
 		return;
 	text_rect = right_buttons[which - pos];
@@ -506,7 +506,7 @@ void set_up_terrain_buttons() {
 	
 	RECT palette_from,palette_to = palette_button_base;
 	
-	tileImage(terrain_buttons_gworld,terrain_buttons_rect,bg_gworld,bg[17]);
+	tileImage(terrain_buttons_gworld,terrain_buttons_rect,bg[17]);
 	frame_rect(terrain_buttons_gworld, terrain_buttons_rect, sf::Color::Black);
  	
 	// first make terrain buttons
@@ -611,7 +611,7 @@ void draw_terrain(){
 		return;
 	
 	if (cur_viewing_mode == 0) {
-		tileImage(ter_draw_gworld,terrain_rect,bg_gworld,bg[17]);
+		tileImage(ter_draw_gworld,terrain_rect,bg[17]);
 		frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		for (q = 0; q < 9; q++) 
 			for (r = 0; r < 9; r++)
@@ -817,7 +817,7 @@ void draw_terrain(){
 	
 	if (cur_viewing_mode == 1) {
 		if (small_any_drawn == false) {
-		 	tileImage(ter_draw_gworld, terrain_rect,bg_gworld,bg[17]);
+		 	tileImage(ter_draw_gworld, terrain_rect,bg[17]);
 			frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		}
 		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++) 
@@ -926,7 +926,7 @@ void draw_items() {
 						dest_rect.left += 5;
 						dest_rect.right -= 5;
 					}
-					rect_draw_some_item((pic_num < 45) ? items_gworld : tiny_obj_gworld,
+					rect_draw_some_item((pic_num < 55) ? items_gworld : tiny_obj_gworld,
 										source_rect, ter_draw_gworld, dest_rect,sf::BlendAlpha);
 				}
 			}
@@ -997,15 +997,15 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	switch (picture_wanted) {
 			
 		case 0: case 1: case 73: case 72:
-			tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[0]);
+			tileImage(ter_draw_gworld, dest_rect,map_pat[0]);
 			break;
 		case 2: case 3: case 4:
-			tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[1]);
+			tileImage(ter_draw_gworld, dest_rect,map_pat[1]);
 			break;
 			
 		default:
 			if ((picture_wanted < 170) && (map_pats[picture_wanted] > 0)) {
-				tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[map_pats[picture_wanted]]);
+				tileImage(ter_draw_gworld, dest_rect,map_pat[map_pats[picture_wanted]]);
 			}
 			else if (picture_wanted >= 1000)	{
 				graf_pos_ref(source_gworld, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
@@ -1014,12 +1014,12 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 			else if (picture_wanted >= 400)	{
 				source_gworld = &anim_gworld;
 				picture_wanted -= 400;
-				if (picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[13]);
-				else if (picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[21]);
-				else if (picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[20]);
-				else if (picture_wanted == 8) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[19]);
-				else if (picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[20]);
-				else if (picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,bg_gworld,map_pat[19]);
+				if (picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,map_pat[13]);
+				else if (picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,map_pat[21]);
+				else if (picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
+				else if (picture_wanted == 8) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
+				else if (picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
+				else if (picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
 				else {
 					//source_rect.left = 112 * (picture_wanted / 5);
 					//source_rect.right = source_rect.left + 28;
@@ -1131,7 +1131,7 @@ void place_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 26 - 9;//12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	tileImage(terrain_buttons_gworld, erase_rect,bg_gworld,bg[17]);
+	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	location moveTo(5 ,terrain_rects[255].top + 26);
@@ -1157,7 +1157,7 @@ void place_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].bottom + 117;
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
-	tileImage(terrain_buttons_gworld, erase_rect,bg_gworld,bg[17]);
+	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	if (overall_mode < MODE_MAIN_SCREEN) {
 		moveTo = location(5,terrain_rects[255].bottom + 129);
@@ -1221,7 +1221,7 @@ void place_just_location() {
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
 	erase_rect.top = terrain_rects[255].top + 12 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
-	tileImage(terrain_buttons_gworld, erase_rect,bg_gworld,bg[17]);
+	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	location moveTo(5 ,terrain_rects[255].top + 26);

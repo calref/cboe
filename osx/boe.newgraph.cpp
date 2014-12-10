@@ -47,7 +47,7 @@ short monsters_faces[190] = {
 extern location ul;
 extern RECT	windRect;
 extern long anim_ticks;
-extern RECT	bg[];
+extern tessel_ref_t bg[];
 extern sf::RenderWindow mainPtr;
 extern short town_type,which_combat_type;
 extern eGameMode overall_mode;
@@ -72,7 +72,7 @@ extern location store_anim_ul;
 extern char light_area[13][13];
 extern short terrain_there[9][9];
 extern char unexplored_area[13][13];
-extern RECT bw_pats[6];
+extern tessel_ref_t bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
 extern cScenario scenario;
@@ -172,7 +172,7 @@ void apply_unseen_mask()
 				to_rect = base_rect;
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect |= big_to;
-				tileImage(mainPtr, to_rect, bg_gworld, bw_pats[3], sf::BlendAlpha);
+				tileImage(mainPtr, to_rect, bw_pats[3], sf::BlendAlpha);
 				//PaintRoundRect(&to_rect,4,4);
 				for (k = i - 2; k < i + 1; k++)
 					for (l = j - 2; l < j + 1; l++)
@@ -777,7 +777,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	area_rect = RECT(talk_gworld);
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg_gworld,bg[12]);
+	tileImage(talk_gworld, area_rect,bg[12]);
 	
 	frame_rect(talk_gworld, shop_frame, sf::Color::Black);
 	
@@ -1135,7 +1135,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	area_rect = RECT(talk_gworld);
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg_gworld,bg[12]);
+	tileImage(talk_gworld, area_rect,bg[12]);
 	
 	// Put help button
 	// TODO: Reimplement this with a cButton

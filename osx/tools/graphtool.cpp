@@ -16,22 +16,29 @@
 #endif
 
 #include <typeinfo>
+#include <unordered_map>
 #include <boost/filesystem.hpp>
 #include <boost/math/constants/constants.hpp>
 
 #include "restypes.hpp"
+#include "mathutil.h"
 
 using boost::math::constants::pi;
 
-RECT bg[21];
-RECT map_pat[30];
-RECT bw_pats[6];
+RECT bg_rects[21];
+RECT map_pat_rects[30];
+RECT bw_rects[6];
+tessel_ref_t bg[21];
+tessel_ref_t map_pat[30];
+tessel_ref_t bw_pat[6];
 sf::Texture bg_gworld;
 bool use_win_graphics = false;
 sf::Shader maskShader;
 extern fs::path progDir;
 // TODO: Shouldn't need this
 extern sf::RenderWindow mainPtr;
+
+static void register_main_patterns();
 
 void init_graph_tool(){
 	fs::path shaderPath = progDir/"data"/"shaders";
@@ -80,49 +87,48 @@ void init_graph_tool(){
 		18,19,20,21,22,24,25,27,
 		28,29
 	};
-//	for (i = 0; i < 21; i++) 
-//	    bg[i] = GetPixPat(128 + i);
 	for(i = 0; i < 17; i++){
-		bg[pat_i[i]] = {0,0,64,64};
-		bg[pat_i[i]].offset(64 * pat_offs[i].x,64 * pat_offs[i].y);
+		bg_rects[pat_i[i]] = {0,0,64,64};
+		bg_rects[pat_i[i]].offset(64 * pat_offs[i].x,64 * pat_offs[i].y);
 	}
-	RECT tmp_rect = bg[19];
+	RECT tmp_rect = bg_rects[19];
 	tmp_rect.offset(0, 64);
-	bg[0] = bg[1] = bg[18] = map_pat[7] = tmp_rect;
-	bg[0].right -= 32;
-	bg[0].bottom -= 32;
-	bg[1].left -= 32;
-	bg[1].bottom -= 32;
-	bg[18].right -= 32;
-	bg[18].top -= 32;
-	map_pat[7].left -= 32;
-	map_pat[7].top -= 32;
+	bg_rects[0] = bg_rects[1] = bg_rects[18] = map_pat_rects[7] = tmp_rect;
+	bg_rects[0].right -= 32;
+	bg_rects[0].bottom -= 32;
+	bg_rects[1].left -= 32;
+	bg_rects[1].bottom -= 32;
+	bg_rects[18].right -= 32;
+	bg_rects[18].top -= 32;
+	map_pat_rects[7].left -= 32;
+	map_pat_rects[7].top -= 32;
 	tmp_rect.offset(0, 64);
-	map_pat[8] = map_pat[23] = map_pat[26] = tmp_rect;
-	map_pat[8].right -= 32;
-	map_pat[8].bottom -= 32;
-	map_pat[23].left -= 32;
-	map_pat[23].right -= 16;
-	map_pat[23].bottom -= 32;
-	map_pat[26].left -= 32 + 16;
-	map_pat[26].bottom -= 32;
+	map_pat_rects[8] = map_pat_rects[23] = map_pat_rects[26] = tmp_rect;
+	map_pat_rects[8].right -= 32;
+	map_pat_rects[8].bottom -= 32;
+	map_pat_rects[23].left -= 32;
+	map_pat_rects[23].right -= 16;
+	map_pat_rects[23].bottom -= 32;
+	map_pat_rects[26].left -= 32 + 16;
+	map_pat_rects[26].bottom -= 32;
 	tmp_rect.offset(0, 64);
-	bg[7] = tmp_rect;
-	bg[7].bottom = bg[7].top + 16;
+	bg_rects[7] = tmp_rect;
+	bg_rects[7].bottom = bg_rects[7].top + 16;
 	tmp_rect.offset(0, -32);
 	tmp_rect.right = tmp_rect.left + 8;
 	tmp_rect.bottom = tmp_rect.top + 8;
 	for(i = 0; i < 26; i++){
-		map_pat[map_i[i]] = tmp_rect;
-		map_pat[map_i[i]].offset(8 * (i % 8),8 * (i / 8));
+		map_pat_rects[map_i[i]] = tmp_rect;
+		map_pat_rects[map_i[i]].offset(8 * (i % 8),8 * (i / 8));
 		// Note: 8 * (i / 8) != i, despite appearances, due to integer rounding
 	}
-	tmp_rect = map_pat[29];
+	tmp_rect = map_pat_rects[29];
 	for(i = 0; i < 6; i++) {
 		tmp_rect.offset(8, 0);
-		bw_pats[i] = tmp_rect;
+		bw_rects[i] = tmp_rect;
 	}
 	bg_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pixpats"));
+	register_main_patterns();
 }
 
 static void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode);
@@ -401,7 +407,7 @@ void draw_terrain(){
 	
 	if (cur_viewing_mode == 0) {
 		SetPort( ter_draw_gworld);
-		FillCRect(&terrain_rect,bg[6]);
+		FillCRect(&terrain_rect,bg_rects[6]);
 		FrameRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		for (q = 0; q < 9; q++) 
@@ -617,7 +623,7 @@ void draw_terrain(){
 	if (cur_viewing_mode == 1) {
 		SetPort( ter_draw_gworld);
 		if (small_any_drawn == false) {
-		 	FillCRect(&terrain_rect,bg[6]);
+		 	FillCRect(&terrain_rect,bg_rects[6]);
 			FrameRect(&terrain_rect);
 		}
 		for (q = 0; q < ((editing_town == true) ? max_dim[town_type] : 48); q++) 
@@ -1068,6 +1074,19 @@ void Region::offset(location off) {
 	offset(off.x, off.y);
 }
 
+RECT Region::getEnclosingRect() {
+	if(shapes.empty()) return RECT();
+	RECT bounds = shapes[0]->getGlobalBounds();
+	for(size_t i = 0; i < shapes.size(); i++) {
+		RECT shapeRect = shapes[i]->getGlobalBounds();
+		if(shapeRect.top < bounds.top) bounds.top = shapeRect.top;
+		if(shapeRect.left < bounds.left) bounds.top = shapeRect.top;
+		if(shapeRect.bottom > bounds.bottom) bounds.top = shapeRect.top;
+		if(shapeRect.right > bounds.right) bounds.top = shapeRect.top;
+	}
+	return bounds;
+}
+
 // We can only use stencil buffer in the main window
 // Could request it in dialogs, but currently don't
 // SFML does not appear to allow requesting it for render textures
@@ -1130,79 +1149,82 @@ Region& Region::operator-=(Region& other) {
 	return *this;
 }
 
-void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendMode mode){
-	bool saveRep = img.isRepeated();
-	img.setRepeated(true);
-	sf::Vector2u imgSz = img.getSize();
-	RECT clipArea = area;
-	area.left -= area.left % imgSz.x;
-	area.top -= area.top % imgSz.y;
-	area |= RECT(target); // Make sure we don't draw out of bounds
+struct tessel_t {
+	sf::RenderTexture* tessel;
+	sf::Texture* img;
+	RECT srcRect;
+};
 
-	unsigned int hrep = int((double(area.width())/imgSz.x)+0.5);
-	unsigned int vrep = int((double(area.height())/imgSz.y)+0.5);
-	sf::RectangleShape tessel(sf::Vector2f(hrep*imgSz.x,vrep*imgSz.y));
-	tessel.setTexture(&img);
-	tessel.setPosition(area.left, area.top);
-	sf::RenderStates renderMode(mode);
-	setActiveRenderTarget(target);
-	clip_rect(target, clipArea);
-	target.draw(tessel, renderMode);
-	undo_clip(target);
-	img.setRepeated(saveRep);
+bool operator==(const tessel_ref_t& a, const tessel_ref_t& b) {
+	return a.key == b.key;
 }
 
-void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRect, sf::BlendMode mode){
-	sf::RenderTexture temp;
-	temp.create(srcRect.width(), srcRect.height());
-	temp.setRepeated(true);
-	RECT tesselRect(temp);
-	temp.setActive();
-	rect_draw_some_item(img, srcRect, temp, tesselRect);
-	temp.display();
-	RECT clipArea = area;
-	area.left -= area.left % tesselRect.width();
-	area.top -= area.top % tesselRect.height();
-	area |= RECT(target); // Make sure we don't draw out of bounds
-	
-	sf::RectangleShape tessel(sf::Vector2f(area.width(),area.height()));
-	tessel.setTexture(&temp.getTexture());
-	tessel.setTextureRect(area);
-	tessel.setPosition(area.left, area.top);
-	sf::RenderStates renderMode(mode);
-	setActiveRenderTarget(target);
-	clip_rect(target, clipArea);
-	target.draw(tessel, renderMode);
-	undo_clip(target);
+template<> struct std::hash<tessel_ref_t> {
+	size_t operator()(tessel_ref_t key) const {
+		return key.key;
+	}
+};
+
+std::unordered_map<tessel_ref_t, tessel_t> tiling_reservoir;
+static int tessel_index = 0;
+
+tessel_ref_t prepareForTiling(sf::Texture& srcImg, RECT srcRect) {
+	tessel_ref_t ref = {tessel_index++};
+	tiling_reservoir[ref].img = &srcImg;
+	tiling_reservoir[ref].srcRect = srcRect;
+	tiling_reservoir[ref].tessel = new sf::RenderTexture;
+	tiling_reservoir[ref].tessel->create(srcRect.width(), srcRect.height());
+	RECT tesselRect(*tiling_reservoir[ref].tessel);
+	rect_draw_some_item(srcImg, srcRect, *tiling_reservoir[ref].tessel, tesselRect);
+	tiling_reservoir[ref].tessel->display();
+	tiling_reservoir[ref].tessel->setRepeated(true);
+	return ref;
 }
 
-#if 0
-
-void tileImage(RgnHandle area, GWorldPtr img, RECT srcRect, short mode){
-	GrafPtr cur_port;
-	GetPort(&cur_port);
-	const BitMap* drawDest = GetPortBitMapForCopyBits(cur_port);
-	PixMapHandle drawSource = GetPortPixMap(img);
-	
-	int srcWidth=srcRect.right-srcRect.left;
-	int srcHeight=srcRect.bottom-srcRect.top;
-	int x,y;
-	RECT bounds;
-	GetRegionBounds(area, &bounds);
-	bounds.left -= bounds.left % srcWidth;
-	bounds.top -= bounds.top % srcHeight;
-	unsigned int hrep = (int)((double(bounds.right-bounds.left)/srcWidth)+0.5);
-	unsigned int vrep = (int)((double(bounds.bottom-bounds.top)/srcHeight)+0.5);
-	for(unsigned int i=0; i<=hrep; i++){
-		for(unsigned int j=0; j<=vrep; j++){
-			x=bounds.left+i*srcWidth;
-			y=bounds.top+j*srcHeight;
-			RECT targetRect={y,x,y+srcHeight,x+srcWidth};
-			CopyBits((BitMap*)*drawSource, drawDest,&srcRect,&targetRect,mode,area);
+void flushTessels(sf::Texture& alteredImg) {
+	erase_if(tiling_reservoir, [&alteredImg](std::pair<const tessel_ref_t,tessel_t>& kv) -> bool {
+		if(kv.second.img == &alteredImg) {
+			delete kv.second.tessel;
+			return true;
 		}
+		return false;
+	});
+	if(&alteredImg == &bg_gworld)
+		register_main_patterns();
+}
+
+static void register_main_patterns() {
+	for(int i = 0; i < 30; i++) {
+		if(i < 21) {
+			if(i < 6) {
+				bw_pat[i] = prepareForTiling(bg_gworld, bw_rects[i]);
+			}
+			bg[i] = prepareForTiling(bg_gworld, bg_rects[i]);
+		}
+		map_pat[i] = prepareForTiling(bg_gworld, map_pat_rects[i]);
 	}
 }
-#endif
+
+void tileImage(sf::RenderTarget& target, RECT area, tessel_ref_t tessel, sf::BlendMode mode) {
+	// First, set up a dictionary of all textures ever tiled.
+	// The key type is a pair<Texture*,rectangle>.
+	// The value type is a Texture.
+	tessel_t& tesselInfo = tiling_reservoir[tessel];
+	RECT clipArea = area;
+	area.left -= area.left % tesselInfo.srcRect.width();
+	area.top -= area.top % tesselInfo.srcRect.height();
+	area |= RECT(target); // Make sure we don't draw out of bounds
+	
+	sf::RectangleShape tesselShape(sf::Vector2f(area.width(),area.height()));
+	tesselShape.setTexture(&tesselInfo.tessel->getTexture());
+	tesselShape.setTextureRect(area);
+	tesselShape.setPosition(area.left, area.top);
+	sf::RenderStates renderMode(mode);
+	setActiveRenderTarget(target);
+	clip_rect(target, clipArea);
+	target.draw(tesselShape, renderMode);
+	undo_clip(target);
+}
 
 short can_see(location p1,location p2,std::function<short(short,short)> get_obscurity) {
 	short storage = 0;

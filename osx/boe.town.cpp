@@ -76,7 +76,7 @@ extern sf::RenderTexture map_gworld;
 extern sf::Texture small_ter_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
-extern RECT map_pat[];
+extern tessel_ref_t map_pat[];
 
 // TODO: Add blue cave graphics to these arrays?
 unsigned char map_pats[256] = {
@@ -1516,7 +1516,7 @@ void draw_map(bool need_refresh) {
 											map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
 										}
 									}
-									tileImage(mini_map, draw_rect,bg_gworld,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
+									tileImage(mini_map, draw_rect,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
 									break;
 								}
 								//OffsetRect(&ter_temp_from,
@@ -1540,7 +1540,7 @@ void draw_map(bool need_refresh) {
 	style.pointSize = 10;;
 	
 	the_rect = RECT(mini_map);
-	tileImage(mini_map, the_rect,bg_gworld,bg[4]);
+	tileImage(mini_map, the_rect,bg[4]);
 	cPict theGraphic(mini_map);
 	theGraphic.setBounds(dlogpicrect);
 	theGraphic.setPict(21, PIC_DLOG);

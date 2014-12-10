@@ -52,6 +52,7 @@ public:
 	void offset(int x, int y);
 	void offset(location off);
 	Region& operator-=(Region& other);
+	RECT getEnclosingRect();
 };
 
 typedef unsigned short pic_num_t;
@@ -85,6 +86,12 @@ struct snippet_t {
 	bool hilited;
 };
 
+struct tessel_ref_t {
+	int key;
+};
+
+bool operator==(const tessel_ref_t& a, const tessel_ref_t& b);
+
 enum class eTextMode {
 	WRAP,
 	CENTRE,
@@ -106,8 +113,10 @@ short string_length(std::string str, TextStyle style);
 //void draw_terrain();
 RECT calc_rect(short i, short j);
 void setActiveRenderTarget(sf::RenderTarget& where);
-void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, sf::BlendMode mode = sf::BlendNone);
-void tileImage(sf::RenderTarget& target, RECT area, sf::Texture& img, RECT srcRect, sf::BlendMode mode = sf::BlendNone);
+void flushTessels(sf::Texture& alteredImg);
+tessel_ref_t prepareForTiling(sf::Texture& srcImg, RECT srcRect);
+void tileImage(sf::RenderTarget& target, RECT area, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
+void tileImage(sf::RenderWindow& target, Region& rgn, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
 void fill_rect(sf::RenderTarget& target, RECT rect, sf::Color colour);
 void frame_rect(sf::RenderTarget& target, RECT rect, sf::Color colour);
 void fill_circle(sf::RenderTarget& target, RECT rect, sf::Color colour);
@@ -128,7 +137,7 @@ std::string get_str(std::string list, short j);
 
 #ifndef GRAPHTOOL_CPP
 extern m_pic_index_t m_pic_index[200];
-extern RECT bg[];
+extern tessel_ref_t bg[];
 #endif
 
 #endif

@@ -927,14 +927,24 @@ void cDialog::run(){
 		tabOrder[0].second->triggerFocusHandler(*this, tabOrder[0].first, false);
 		currentFocus = tabOrder[0].first;
 	}
+	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
+	// For whatever reason, delaying 100 milliseconds appears to fix this.
+	sf::sleep(sf::milliseconds(100));
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	win.setActive();
 	win.setVisible(true);
 	makeFrontWindow(win);
 	ModalSession dlog(win);
+	paintTimer.restart();
 	animTimer.restart();
+	draw();
 	while(dialogNotToast){
-		draw();
+		// TODO: This is just a hack to prevent the constant flickering.
+		// All it actually does is slow the flickering to non-blinding frequency.
+		if(paintTimer.getElapsedTime().asMilliseconds() > 500) {
+			draw();
+			paintTimer.restart();
+		}
 		dlog.pumpEvents();
 		if(!win.pollEvent(currentEvent)) continue;
 		location where;
@@ -1375,7 +1385,7 @@ bool cDialog::doAnimations = false;
 
 void cDialog::draw(){
 	win.setActive();
-	tileImage(win,winRect,bg_gworld,::bg[bg]);
+	tileImage(win,winRect,::bg[bg]);
 	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
 		cPict::advanceAnim();
 		animTimer.restart();

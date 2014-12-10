@@ -13,6 +13,7 @@
 /// Scrollbar-related classes and types.
 
 #include "control.h"
+#include "graphtool.h"
 
 /// A simple vertical scrollbar.
 /// This has no coupling with scrollable data; that must be handled externally by
@@ -28,6 +29,7 @@ class cScrollbar : public cControl {
 	} pressedPart;
 	click_callback_t onClick;
 	static sf::Texture scroll_gw;
+	static tessel_ref_t bar_tessel[2];
 public:
 	/// @copydoc cDialog::init()
 	static void init();

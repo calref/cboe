@@ -261,7 +261,7 @@ void draw_main_screen()
 	RECT	source_rect, dest_rec,dest_rect;
 	RECT reg_rect;
 
-	tileImage(mainPtr,whole_win_rect,bg_gworld,bg[12]); // fill whole window with background texture
+	tileImage(mainPtr,whole_win_rect,bg[12]); // fill whole window with background texture
 	dest_rec = source_rect = title_from; // initializes, to draw title 
 		 // title_from is a RECT constant
 	dest_rec.offset(20,0);

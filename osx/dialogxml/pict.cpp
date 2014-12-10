@@ -539,7 +539,7 @@ void cPict::draw(){
 	
 	if(!visible){ // Erase it
 		rect.inset(-3, -3);
-		tileImage(*inWindow,rect,bg_gworld,bg[parent->getBg()]);
+		tileImage(*inWindow,rect,bg[parent->getBg()]);
 		return;
 	}
 	if(picNum < 0) { // Just fill with black

@@ -170,7 +170,7 @@ private:
 	std::string defaultButton;
 	boost::any result;
 	std::string fname;
-	sf::Clock animTimer;
+	sf::Clock animTimer, paintTimer;
 	friend class cControl;
 };
 
