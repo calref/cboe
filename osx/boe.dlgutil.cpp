@@ -12,7 +12,6 @@
 #include "boe.town.h"
 #include "boe.itemdata.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.party.h"
 #include "boe.specials.h"
 #include "boe.fileio.h"

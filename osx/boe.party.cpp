@@ -21,7 +21,6 @@
 #include "boe.town.h"
 #include "boe.combat.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.text.h"
 #include "soundtool.h"
 #include "boe.main.h"
@@ -1713,6 +1712,11 @@ void cast_town_spell(location where) ////
 	else town_spell -= 1000;
 	ter = univ.town->terrain(where.x,where.y);
 	
+	// TODO: Should we do this here? Or in the handling of targeting modes?
+	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
+	if(adjust <= 4 && !cast_spell_on_space(where, town_spell))
+		return; // The special node intercepted and cancelled regular spell behaviour.
+	
 	if (adjust > 4)
 		add_string_to_buf("  Can't see target.       ");
 	else switch (town_spell) {
@@ -1731,7 +1735,7 @@ void cast_town_spell(location where) ////
 			
 		case 119: case 145: case 18:
 			add_string_to_buf("  You attempt to dispel.              ");
-			place_spell_pattern(current_pat,where,11,7);
+			place_spell_pattern(current_pat,where,FIELD_DISPEL,7);
 			break;
 		case 116: // Move M.
 			add_string_to_buf("  You blast the area.              ");
@@ -1771,11 +1775,11 @@ void cast_town_spell(location where) ////
 				for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
 					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
 						((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
-						make_antimagic(loc.x,loc.y);
+						univ.town.set_antimagic(loc.x,loc.y,true);
 			break;
 			
 		case 108: // RItual - sanctify
-			sanctify_space(where);
+			// Nothing to do here anymore; the code that used to be here is now just above the switch statement.
 			break;
 			
 		case 20:
@@ -1826,18 +1830,20 @@ void cast_town_spell(location where) ////
 	}
 }
 
-void sanctify_space(location where)
+bool cast_spell_on_space(location where, unsigned short spell)
 {
-	short i,s1,s2,s3;
+	short i,s1 = 0,s2 = 0,s3 = 0;
 	
-	// TODO: Generalize this for other spells cast on the space
 	for (i = 0; i < 50; i++)
 		if (where == univ.town->special_locs[i]) {
 			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::IF_CONTEXT)
 				run_special(eSpecCtx::TARGET,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
-			return;
+			if(s3) redraw_terrain();
+			return !s1;
 		}
-	add_string_to_buf("  Nothing happens.");
+	if(spell == 108)
+		add_string_to_buf("  Nothing happens.");
+	return true;
 }
 
 void crumble_wall(location where) // TODO: Add something like this to the spreading quickfire function
@@ -3101,9 +3107,9 @@ void kill_pc(short which_pc,eMainStatus type)
 		item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
 		
 		if(type == eMainStatus::DEAD)
-			make_sfx(item_loc.x,item_loc.y,3);
+			univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
 		else if(type == eMainStatus::DUST)
-			make_sfx(item_loc.x,item_loc.y,6);
+			univ.town.set_ash(item_loc.x,item_loc.y,true);
 		
 		if (overall_mode != MODE_OUTDOORS)
 			for (i = 0; i < 24; i++)

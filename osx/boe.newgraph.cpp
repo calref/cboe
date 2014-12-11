@@ -15,7 +15,6 @@
 #include "boe.fileio.h"
 #include "boe.itemdata.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.text.h"
 #include "soundtool.h"
 #include "mathutil.h"

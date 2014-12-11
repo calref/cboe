@@ -14,7 +14,6 @@
 #include "boe.fileio.h"
 #include "boe.dlgutil.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.town.h"
 #include "boe.text.h"
 #include "boe.party.h"

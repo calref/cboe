@@ -49,7 +49,6 @@
 		2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD50BF51923006C0831 /* boe.townspec.cpp */; };
 		2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* boe.combat.cpp */; };
 		2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */; };
-		2BF04B200BF51924006C0831 /* boe.fields.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AEE0BF51924006C0831 /* boe.fields.cpp */; };
 		2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */; };
 		2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */; };
 		2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* boe.items.cpp */; };
@@ -972,8 +971,6 @@
 		2BF04AE70BF51924006C0831 /* boe.combat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.combat.h; sourceTree = "<group>"; };
 		2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.dlgutil.cpp; sourceTree = "<group>"; };
 		2BF04AE90BF51924006C0831 /* boe.dlgutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.dlgutil.h; sourceTree = "<group>"; };
-		2BF04AEE0BF51924006C0831 /* boe.fields.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.fields.cpp; sourceTree = "<group>"; };
-		2BF04AEF0BF51924006C0831 /* boe.fields.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.fields.h; sourceTree = "<group>"; };
 		2BF04AF30BF51924006C0831 /* boe.global.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.global.h; sourceTree = "<group>"; };
 		2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = boe.infodlg.cpp; sourceTree = "<group>"; };
 		2BF04AF50BF51924006C0831 /* boe.infodlg.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = boe.infodlg.h; sourceTree = "<group>"; };
@@ -2060,7 +2057,6 @@
 				919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */,
 				2BF04AE60BF51924006C0831 /* boe.combat.cpp */,
 				2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */,
-				2BF04AEE0BF51924006C0831 /* boe.fields.cpp */,
 				2BF04AD10BF51923006C0831 /* boe.fileio.cpp */,
 				2BF04AD30BF51923006C0831 /* boe.graphics.cpp */,
 				2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */,
@@ -2089,7 +2085,6 @@
 				2BF04AE70BF51924006C0831 /* boe.combat.h */,
 				91B3E8A50F938FFE00BF5B67 /* boe.consts.h */,
 				2BF04AE90BF51924006C0831 /* boe.dlgutil.h */,
-				2BF04AEF0BF51924006C0831 /* boe.fields.h */,
 				2BF04AD20BF51923006C0831 /* boe.fileio.h */,
 				2BF04AF30BF51924006C0831 /* boe.global.h */,
 				2BF04AD40BF51923006C0831 /* boe.graphics.h */,
@@ -2356,7 +2351,6 @@
 				2BF04B100BF51924006C0831 /* boe.townspec.cpp in Sources */,
 				2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */,
 				2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */,
-				2BF04B200BF51924006C0831 /* boe.fields.cpp in Sources */,
 				2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */,
 				2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */,
 				2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */,

@@ -11,7 +11,6 @@
 #include "boe.locutils.h"
 #include "boe.newgraph.h"
 #include "boe.infodlg.h"
-#include "boe.fields.h"
 #include "boe.text.h"
 #include "boe.items.h"
 #include "boe.party.h"
@@ -50,8 +49,7 @@ extern short town_type;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short num_targets_left;
 extern location spell_targets[8];
-extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern bool sleep_field,in_scen_debug;
+extern bool in_scen_debug;
 extern bool fast_bang;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
@@ -920,7 +918,14 @@ void do_combat_cast(location target)////
 	cCreature *cur_monst;
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1,store_m_type = 2;
-	short spray_type_array[15] = {1,1,1,4,4,5,5,5,6,6,7,7,8,8,9};
+	eFieldType spray_type_array[15] = {
+		FIELD_WEB,FIELD_WEB,FIELD_WEB,
+		WALL_FORCE,WALL_FORCE,
+		WALL_FIRE,WALL_FIRE,WALL_FIRE,
+		FIELD_ANTIMAGIC,FIELD_ANTIMAGIC,
+		CLOUD_STINK,CLOUD_STINK,
+		WALL_ICE,WALL_ICE,WALL_BLADES,
+	};
 	m_num_t summon;
 	
 	location ashes_loc;
@@ -1006,38 +1011,38 @@ void do_combat_cast(location target)////
 				switch (spell_being_cast) {
 						
 					case 8: case 28: case 65: // web spells
-						place_spell_pattern(current_pat,target,1,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_WEB,current_pc);
 						break;
 					case 5: case 17: // fire wall spells
-						place_spell_pattern(current_pat,target,5,current_pc);
+						place_spell_pattern(current_pat,target,WALL_FIRE,current_pc);
 						break;
 					case 15: case 66: // stink cloud
-						place_spell_pattern(current_pat,target,7,current_pc);
+						place_spell_pattern(current_pat,target,CLOUD_STINK,current_pc);
 						break;
 					case 25: case 44: case 126: // force walls
-						place_spell_pattern(current_pat,target,4,current_pc);
+						place_spell_pattern(current_pat,target,WALL_FORCE,current_pc);
 						break;
 					case 37: case 64: // ice walls
-						place_spell_pattern(current_pat,target,8,current_pc);
+						place_spell_pattern(current_pat,target,WALL_ICE,current_pc);
 						break;
 					case 51: // antimagic
-						place_spell_pattern(current_pat,target,6,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_ANTIMAGIC,current_pc);
 						break;
 					case 19: case 67: // sleep clouds
-						place_spell_pattern(current_pat,target,12,current_pc);
+						place_spell_pattern(current_pat,target,CLOUD_SLEEP,current_pc);
 						break;
 					case 60:
-						make_quickfire(target.x,target.y);
+						univ.town.set_quickfire(target.x,target.y,true);
 						break;
 					case 45: // spray fields
 						r1 = get_ran(1,0,14);
 						place_spell_pattern(current_pat,target,spray_type_array[r1],current_pc);
 						break;
 					case 159:  // wall of blades
-						place_spell_pattern(current_pat,target,9,current_pc);
+						place_spell_pattern(current_pat,target,WALL_BLADES,current_pc);
 						break;
 					case 145: case 119: case 18: // wall dispelling
-						place_spell_pattern(current_pat,target,11,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_DISPEL,current_pc);
 						break;
 					case 42: // Fire barrier
 						play_sound(68);
@@ -1066,7 +1071,7 @@ void do_combat_cast(location target)////
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(rad2,target,130 + r1,current_pc);
+								place_spell_pattern(rad2,target,DAMAGE_MAGIC,r1,current_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1111,7 +1116,7 @@ void do_combat_cast(location target)////
 									r1 = (r1 * 14) / 10;
 								else if (r1 > 10) r1 = (r1 * 8) / 10;
 								if (r1 <= 0) r1 = 1;
-								place_spell_pattern(square,target,50 + r1,current_pc);
+								place_spell_pattern(square,target,DAMAGE_FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case 40:
@@ -1121,7 +1126,7 @@ void do_combat_cast(location target)////
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if (r1 > 20)
 									r1 = (r1 * 8) / 10;
-								place_spell_pattern(rad2,target,50 + r1,current_pc);
+								place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case 48:  // kill
@@ -1382,7 +1387,7 @@ void do_combat_cast(location target)////
 			hit_space(boom_targ[i],boom_dam[i],boom_type[i],1,0);
 	
 	if (ashes_loc.x > 0)
-		make_sfx(ashes_loc.x,ashes_loc.y,6);
+		univ.town.set_ash(ashes_loc.x,ashes_loc.y,true);
 	
 	do_explosion_anim(5,0);
 	
@@ -1526,7 +1531,7 @@ void fire_missile(location target) {
 			//start_missile_anim();
 			//add_missile(target,2,1, 0, 0);
 			//do_missile_anim(100,pc_pos[missile_firer], 5);
-			place_spell_pattern(rad2,target, 50 + univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
+			place_spell_pattern(rad2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
 			do_explosion_anim(5,0);
 			//end_missile_anim();
 			handle_marked_damage();
@@ -2144,17 +2149,17 @@ void do_monster_turn()
 			// Place fields for monsters that create them. Only done when monst sees foe
 			if ((target != 6) && (can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5)) { ////
 				if ((cur_monst->radiate_1 == 1) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,5,7);
+					place_spell_pattern(square,cur_monst->cur_loc,WALL_FIRE,7);
 				if ((cur_monst->radiate_1 == 2) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,8,7);
+					place_spell_pattern(square,cur_monst->cur_loc,WALL_ICE,7);
 				if ((cur_monst->radiate_1 == 3) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,4,7);
+					place_spell_pattern(square,cur_monst->cur_loc,WALL_FORCE,7);
 				if ((cur_monst->radiate_1 == 4) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,6,7);
+					place_spell_pattern(square,cur_monst->cur_loc,FIELD_ANTIMAGIC,7);
 				if ((cur_monst->radiate_1 == 5) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,12,7);
+					place_spell_pattern(square,cur_monst->cur_loc,CLOUD_SLEEP,7);
 				if ((cur_monst->radiate_1 == 6) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,7,7);
+					place_spell_pattern(square,cur_monst->cur_loc,CLOUD_STINK,7);
 				if ((cur_monst->radiate_1 == 10) && (get_ran(1,1,100) < 5)){
 					if (summon_monster(cur_monst->radiate_2,
 									   cur_monst->cur_loc,130,cur_monst->attitude) == true)
@@ -2676,7 +2681,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		ASB("Creature breathes.");
 		run_a_missile(source,targ_space,0,0,44,
 					  0,0,100);
-		place_spell_pattern(rad2,targ_space,12,7);
+		place_spell_pattern(rad2,targ_space,CLOUD_SLEEP,7);
 	}
 	else if (level == 14) { // vapors
 		//play_sound(44);
@@ -3068,7 +3073,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 4: // flame cloud
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
-				place_spell_pattern(single,vict_loc,5,7);
+				place_spell_pattern(single,vict_loc,WALL_FIRE,7);
 				break;
 			case 5: // flame
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3096,7 +3101,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 9: // scloud
 				run_a_missile(l,target,0,0,25,0,0,80);
-				place_spell_pattern(square,target,7,7);
+				place_spell_pattern(square,target,CLOUD_STINK,7);
 				break;
 			case 10: // summon beast
 				r1 = get_summon_monster(1);
@@ -3111,14 +3116,14 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 11: // conflagration
 				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(rad2,target,5,7);
+				place_spell_pattern(rad2,target,WALL_FIRE,7);
 				break;
 			case 12: // fireball
 				r1 = 1 + (caster->level * 3) / 4;
 				if (r1 > 29) r1 = 29;
 				run_a_missile(l,target,2,1,11,0,0,80);
 				start_missile_anim();
-				place_spell_pattern(square,target,50 + r1,7);
+				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case 13: case 20: case 26:// summon
@@ -3153,7 +3158,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				break;
 			case 14: // web
 				play_sound(25);
-				place_spell_pattern(rad2,target,1,7);
+				place_spell_pattern(rad2,target,FIELD_WEB,7);
 				break;
 			case 15: // poison
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3198,7 +3203,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,50 + r1,7);
+				place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
 				
@@ -3207,7 +3212,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 				
 			case 21: // shockstorm
 				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(rad2,target,4,7);
+				place_spell_pattern(rad2,target,WALL_FORCE,7);
 				break;
 			case 22: // m. poison
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
@@ -3255,7 +3260,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 	else caster->mp++;
 	
 	if (ashes_loc.x > 0)
-		make_sfx(ashes_loc.x,ashes_loc.y,6);
+		univ.town.set_ash(ashes_loc.x,ashes_loc.y,true);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -3364,7 +3369,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				break;
 			case 4: // stumble
 				play_sound(24);
-				place_spell_pattern(single,vict_loc,1,7);
+				place_spell_pattern(single,vict_loc,FIELD_WEB,7);
 				break;
 			case 1: case 5: // Blesses
 				play_sound(24);
@@ -3503,7 +3508,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				run_a_missile(l,target,2,0,11,0,0,80);
 				r1 = 2 + caster->level / 2 + 2;
 				start_missile_anim();
-				place_spell_pattern(square,target,50 + r1,7);
+				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
 				
@@ -3539,7 +3544,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				r1 = (caster->level * 3) / 4 + 5;
 				if (r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,130 + r1,7 );
+				place_spell_pattern(rad2,target,DAMAGE_MAGIC,r1,7 );
 				ashes_loc = target;
 				break;
 		}
@@ -3548,7 +3553,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 	}
 	else caster->mp++;
 	if (ashes_loc.x > 0)
-		make_sfx(ashes_loc.x,ashes_loc.y,6);
+		univ.town.set_ash(ashes_loc.x,ashes_loc.y,true);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -3661,10 +3666,10 @@ bool monst_near(short m_num,location where,short radius,short active)
 
 void fireball_space(location loc,short dam)
 {
-	place_spell_pattern(square,loc,50 + dam,7);
+	place_spell_pattern(square,loc,DAMAGE_FIRE,dam,7);
 }
 
-void place_spell_pattern(effect_pat_type pat,location center,short type,short who_hit)
+static void place_spell_pattern(effect_pat_type pat,location center,unsigned short type,short who_hit)
 //type;  // 0 - take codes in pattern, OW make all nonzero this type
 // Types  0 - Null  1 - web  2 - fire barrier  3 - force barrier  4 - force wall  5 - fire wall
 //   6 - anti-magic field  7 - stink cloud  8 - ice wall  9 - blade wall  10 - quickfire
@@ -3673,7 +3678,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,short wh
 // if prep for anim is true, supporess look checks and go fast
 {
 	short i,j,r1,k = 0;
-	unsigned char effect;
+	unsigned short effect;
 	location spot_hit;
 	location s_loc;
 	rectangle active;
@@ -3681,7 +3686,7 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,short wh
 	bool monster_hit = false;
 	
 	
-	if (type > 0)
+	if(type != FIELD_NONE)
 		modify_pattern(&pat,type);
 	
 	
@@ -3704,23 +3709,42 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,short wh
 			if(sight_obscurity(i,j) < 5) {
 				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 				switch (effect) {
-					case 1: web_space(i,j); break;
-					case 2: univ.town.set_fire_barr(i,j,true); break;
-					case 3: univ.town.set_force_barr(i,j,true); break;
-					case 4:
-						make_force_wall(i,j); break;
-					case 5: make_fire_wall(i,j); break;
-					case 6: make_antimagic(i,j); break;
-					case 7: scloud_space(i,j); break;
-					case 8: make_ice_wall(i,j); break;
-					case 9: make_blade_wall(i,j); break;
-					case 10:
-						make_quickfire(i,j);
+					case FIELD_WEB:
+						web_space(i,j);
 						break;
-					case 11:
+					case BARRIER_FIRE:
+						univ.town.set_fire_barr(i,j,true);
+						break;
+					case BARRIER_FORCE:
+						univ.town.set_force_barr(i,j,true);
+						break;
+					case WALL_FORCE:
+						univ.town.set_force_wall(i, j, true);
+						break;
+					case WALL_FIRE:
+						univ.town.set_fire_wall(i,j,true);
+						break;
+					case FIELD_ANTIMAGIC:
+						univ.town.set_antimagic(i,j,true);
+						break;
+					case CLOUD_STINK:
+						scloud_space(i,j);
+						break;
+					case WALL_ICE:
+						univ.town.set_ice_wall(i,j,true);
+						break;
+					case WALL_BLADES:
+						univ.town.set_blade_wall(i,j,true);
+						break;
+					case FIELD_QUICKFIRE:
+						univ.town.set_quickfire(i,j,true);
+						break;
+					case FIELD_DISPEL:
 						dispel_fields(i,j,0);
 						break;
-					case 12: sleep_cloud_space(i,j); break;
+					case CLOUD_SLEEP:
+						sleep_cloud_space(i,j);
+						break;
 				}
 			}
 	draw_terrain(0);
@@ -3738,35 +3762,54 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,short wh
 						((is_town()) && (univ.town.p_loc == spot_hit)))) {
 						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 						switch (effect) {
-							case 4:
+							case WALL_FORCE:
 								r1 = get_ran(2,1,6);
 								damage_pc(k,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
 								break;
-							case 5:
+							case WALL_FIRE:
 								r1 = get_ran(1,1,6) + 1;
 								damage_pc(k,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
 								break;
-							case 8:
+							case WALL_ICE:
 								r1 = get_ran(2,1,6);
 								damage_pc(k,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
 								break;
-							case 9:
+							case WALL_BLADES:
 								r1 = get_ran(4,1,8);
 								damage_pc(k,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
 								break;
 							default:
-								if ((effect >= 50) && (effect < 80)) {
-									r1 = get_ran(effect - 50,1,6);
-									damage_pc(k,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
+								eDamageType type = DAMAGE_MARKED;
+								unsigned short dice;
+								if(effect > 50 && effect <= 80) {
+									type = DAMAGE_FIRE;
+									dice = effect - 50;
+								} else if(effect > 90 && effect <= 120) {
+									type = DAMAGE_COLD;
+									dice = effect - 90;
+								} else if(effect > 130 && effect <= 160) {
+									type = DAMAGE_MAGIC;
+									dice = effect - 130;
+									// The rest of these are new, currently unused.
+								} else if(effect > 170 && effect <= 200) {
+									type = DAMAGE_WEAPON;
+									dice = effect - 170;
+								} else if(effect > 210 && effect <= 240) {
+									type = DAMAGE_POISON;
+									dice = effect - 210;
+								} else if(effect > 250 && effect <= 280) {
+									type = DAMAGE_UNBLOCKABLE;
+									dice = effect - 250;
+								} else if(effect > 290 && effect <= 320) {
+									type = DAMAGE_UNDEAD;
+									dice = effect - 290;
+								} else if(effect > 330 && effect <= 360) {
+									type = DAMAGE_DEMON;
+									dice = effect - 330;
 								}
-								if ((effect >= 90) && (effect < 120)) {
-									r1 = get_ran(effect - 90,1,6);
-									damage_pc(k,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
-								}
-								if ((effect >= 130) && (effect < 160)) {
-									r1 = get_ran(effect - 130,1,6);
-									damage_pc(k,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
-								}
+								if(type == DAMAGE_MARKED) break;
+								r1 = get_ran(dice,1,6);
+								damage_pc(k,r1,type,eRace::UNKNOWN,0);
 								break;
 						}
 					}
@@ -3790,53 +3833,73 @@ void place_spell_pattern(effect_pat_type pat,location center,short type,short wh
 							monster_hit = true;
 						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 						switch (effect) {
-							case 1:
+							case FIELD_WEB:
 								which_m = &univ.town.monst[k];
 								web_monst(which_m,3);
 								break;
-							case 4:
+							case WALL_FORCE:
 								r1 = get_ran(3,1,6);
 								damage_monst(k, who_hit, r1,0, DAMAGE_MAGIC,0);
 								break;
-							case 5:
+							case WALL_FIRE:
 								r1 = get_ran(2,1,6);
 								which_m = &univ.town.monst[k];
 								if (which_m->spec_skill == 22)
 									break;
 								damage_monst(k, who_hit, r1,0, DAMAGE_FIRE,0);
 								break;
-							case 7:
+							case CLOUD_STINK:
 								which_m = &univ.town.monst[k];
 								curse_monst(which_m,get_ran(1,1,2));
 								break;
-							case 8:
+							case WALL_ICE:
 								which_m = &univ.town.monst[k];
 								r1 = get_ran(3,1,6);
 								if (which_m->spec_skill == 23)
 									break;
 								damage_monst(k, who_hit, r1,0, DAMAGE_COLD,0);
 								break;
-							case 9:
+							case WALL_BLADES:
 								r1 = get_ran(6,1,8);
 								damage_monst(k, who_hit, r1,0, DAMAGE_WEAPON,0);
 								break;
-							case 12:
+							case CLOUD_SLEEP:
 								which_m = &univ.town.monst[k];
 								charm_monst(which_m,0,eStatus::ASLEEP,3);
 								break;
 							default:
-								if ((effect >= 50) && (effect < 80)) {
-									r1 = get_ran(effect - 50,1,6);
-									damage_monst(k,who_hit,  r1,0,DAMAGE_FIRE,0);
+								eDamageType type = DAMAGE_MARKED;
+								unsigned short dice;
+								if(effect > 50 && effect <= 80) {
+									type = DAMAGE_FIRE;
+									dice = effect - 50;
+								} else if(effect > 90 && effect <= 120) {
+									type = DAMAGE_COLD;
+									dice = effect - 90;
+								} else if(effect > 130 && effect <= 160) {
+									type = DAMAGE_MAGIC;
+									dice = effect - 130;
+									// The rest of these are new, currently unused.
+								} else if(effect > 170 && effect <= 200) {
+									type = DAMAGE_WEAPON;
+									dice = effect - 170;
+								} else if(effect > 210 && effect <= 240) {
+									type = DAMAGE_POISON;
+									dice = effect - 210;
+								} else if(effect > 250 && effect <= 280) {
+									type = DAMAGE_UNBLOCKABLE;
+									dice = effect - 250;
+								} else if(effect > 290 && effect <= 320) {
+									type = DAMAGE_UNDEAD;
+									dice = effect - 290;
+								} else if(effect > 330 && effect <= 360) {
+									type = DAMAGE_DEMON;
+									dice = effect - 330;
 								}
-								if ((effect >= 90) && (effect < 120)) {
-									r1 = get_ran(effect - 90,1,6);
-									damage_monst(k,who_hit,  r1,0, DAMAGE_COLD,0);
-								}
-								if ((effect >= 130) && (effect < 160)) {
-									r1 = get_ran(effect - 130,1,6);
-									damage_monst(k,who_hit,  r1,0, DAMAGE_MAGIC ,0);
-								}
+								if(type == DAMAGE_MARKED) break;
+								r1 = get_ran(dice,1,6);
+								damage_monst(k,who_hit,r1,0,type,0);
+								break;
 						}
 					}
 				}
@@ -3847,13 +3910,41 @@ void handle_item_spell(location loc,short num)
 	// TODO: This function is currently unused
 	switch (num) {
 		case 82: // Pyhrrus
-			place_spell_pattern(rad2,loc,9,6);
+			place_spell_pattern(rad2,loc,WALL_BLADES,6);
 			break;
 	}
 	
 }
 
-void modify_pattern(effect_pat_type *pat,short type)
+void place_spell_pattern(effect_pat_type pat,location center,short who_hit) {
+	place_spell_pattern(pat, center, FIELD_NONE, who_hit);
+}
+
+void place_spell_pattern(effect_pat_type pat,location center,eFieldType type,short who_hit) {
+	unsigned short code = type;
+	place_spell_pattern(pat, center, code, who_hit);
+}
+
+// Copied from place_spell_pattern comment above:
+//  50 + i - 80 :  id6 fire damage  90 + i - 120 : id6 cold damage 	130 + i - 160 : id6 magic dam.
+void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,short dice,short who_hit) {
+	unsigned short code;
+	dice = minmax(1, 30, dice);
+	switch(type) {
+		case DAMAGE_FIRE: code = 50; break;
+		case DAMAGE_COLD: code = 90; break;
+		case DAMAGE_MAGIC: code = 130; break;
+			// TODO: These are new; nothing actually uses them, but maybe eventually!
+		case DAMAGE_WEAPON: code = 170; break;
+		case DAMAGE_POISON: code = 210; break;
+		case DAMAGE_UNBLOCKABLE: code = 250; break;
+		case DAMAGE_UNDEAD: code = 290; break;
+		case DAMAGE_DEMON: code = 330; break;
+	}
+	place_spell_pattern(pat, center, code + dice, who_hit);
+}
+
+void modify_pattern(effect_pat_type *pat,unsigned short type)
 {
 	short i,j;
 	
@@ -4486,7 +4577,7 @@ bool combat_cast_priest_spell()
 					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
 					play_sound(24);
 					add_string_to_buf("  Protective field created.");
-					place_spell_pattern(protect_pat,pc_pos[current_pc],0,6);
+					place_spell_pattern(protect_pat,pc_pos[current_pc],6);
 					break;
 			}
 		}
@@ -4622,7 +4713,7 @@ void process_fields()
 	if (is_out())
 		return;
 	
-	if (quickfire) { ////
+	if(univ.town.quickfire_present) {
 		r = univ.town->in_town_rect;
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++)
@@ -4642,7 +4733,7 @@ void process_fields()
 			for (i = r.left + 1; i < r.right ; i++)
 				for (j = r.top + 1; j < r.bottom ; j++)
 					if (qf[i][j] > 0) {
-						make_quickfire(i,j);
+						univ.town.set_quickfire(i,j,true);
 					}
 		}
 	}
@@ -4653,10 +4744,8 @@ void process_fields()
 	
 	// First fry PCs, then call to handle damage to monsters
 	processing_fields = true; // this, in hit_space, makes damage considered to come from whole party
-	if (force_wall) {
-		force_wall = false;
 		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
+			for(j = 0; j < univ.town->max_dim(); j++) {
 				if (univ.town.is_force_wall(i,j)) {
 					r1 = get_ran(3,1,6);
 					loc.x = i; loc.y = j;
@@ -4664,15 +4753,7 @@ void process_fields()
 					r1 = get_ran(1,1,6);
 					if (r1 == 2)
 						univ.town.set_force_wall(i,j,false);
-					else {
-						force_wall = true;
-					}
 				}
-	}
-	if (fire_wall) {
-		fire_wall = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_fire_wall(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(2,1,6) + 1;
@@ -4680,54 +4761,28 @@ void process_fields()
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
 						univ.town.set_fire_wall(i,j,false);
-					else {
-						fire_wall = true;
-					}
 				}
-	}
-	if (antimagic) {
-		antimagic = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_antimagic(i,j)) {
 					r1 = get_ran(1,1,8);
 					if (r1 == 2)
 						univ.town.set_antimagic(i,j,false);
-					else antimagic = true;
 				}
-	}
-	if (scloud) {
-		scloud = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_scloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
 						univ.town.set_scloud(i,j,false);
 					else {
 						scloud_space(i,j);
-						scloud = true;
 					}
 				}
-	}
-	if (sleep_field) {
-		sleep_field = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_sleep_cloud(i,j)) {
 					r1 = get_ran(1,1,4);
 					if (r1 == 2)
 						univ.town.set_sleep_cloud(i,j,false);
 					else {
 						sleep_cloud_space(i,j);
-						sleep_field = true;
 					}
 				}
-	}
-	if (ice_wall) {
-		ice_wall = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_ice_wall(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(3,1,6);
@@ -4735,15 +4790,7 @@ void process_fields()
 					r1 = get_ran(1,1,6);
 					if (r1 == 1)
 						univ.town.set_ice_wall(i,j,false);
-					else {
-						ice_wall = true;
-					}
 				}
-	}
-	if (blade_wall) {
-		blade_wall = false;
-		for (i = 0; i < univ.town->max_dim(); i++)
-			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_blade_wall(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(6,1,8);
@@ -4751,16 +4798,13 @@ void process_fields()
 					r1 = get_ran(1,1,5);
 					if (r1 == 1)
 						univ.town.set_blade_wall(i,j,false);
-					else {
-						blade_wall = true;
-					}
 				}
-	}
+			}
 	
 	processing_fields = false;
 	monsters_going = true; // this changes who the damage is considered to come from in hit_space
 	
-	if (quickfire) {
+	if(univ.town.quickfire_present) {
 		for (i = 0; i < univ.town->max_dim(); i++)
 			for (j = 0; j < univ.town->max_dim(); j++)
 				if (univ.town.is_quickfire(i,j)) {
@@ -4782,7 +4826,7 @@ void scloud_space(short m,short n)
 	target.x = (char) m;
 	target.y = (char) n;
 	
-	make_scloud(m,n);
+	univ.town.set_scloud(m,n,true);
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
@@ -4806,7 +4850,7 @@ void web_space(short m,short n)
 	target.x = (char) m;
 	target.y = (char) n;
 	
-	make_web(m,n);
+	univ.town.set_web(m,n,true);
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)
@@ -4828,7 +4872,7 @@ void sleep_cloud_space(short m,short n)
 	target.x = (char) m;
 	target.y = (char) n;
 	
-	make_sleep_cloud(m,n);
+	univ.town.set_sleep_cloud(m,n,true);
 	
 	if (overall_mode >= MODE_COMBAT)
 		for (i = 0; i < 6; i++)

@@ -763,4 +763,21 @@ enum eEncNoteType {
 	NOTE_MONST,
 };
 
+enum eFieldType {
+	FIELD_NONE = 0,
+	FIELD_WEB = 1,
+	BARRIER_FIRE = 2,
+	BARRIER_FORCE = 3,
+	WALL_FORCE = 4,
+	WALL_FIRE = 5,
+	FIELD_ANTIMAGIC = 6,
+	CLOUD_STINK = 7,
+	WALL_ICE = 8,
+	WALL_BLADES = 9,
+	FIELD_QUICKFIRE = 10,
+	FIELD_DISPEL = 11,
+	CLOUD_SLEEP = 12,
+	// TODO: Sfx fields, objects
+};
+
 #endif

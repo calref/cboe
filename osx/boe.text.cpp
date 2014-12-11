@@ -11,7 +11,6 @@
 #include "classes.h"
 #include "boe.text.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "mathutil.h"
 #include "graphtool.h"
 //#include "soundtool.h"

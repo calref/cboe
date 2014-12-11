@@ -34,7 +34,6 @@ void import_template_terrain();
 void import_anim_terrain(short mode);
 void start_data_dump();
 void end_data_dump();
-void set_terrain(location l, ter_num_t terrain_type);
 //void oops_error(short error);
 //void set_up_ter_pics();
 //bool load_scenario();

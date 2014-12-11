@@ -11,7 +11,6 @@
 #include "classes.h"
 #include "boe.graphutil.h"
 #include "boe.text.h"
-#include "boe.fields.h"
 #include "boe.locutils.h"
 #include "boe.graphics.h"
 #include "boe.infodlg.h"
@@ -39,8 +38,6 @@ extern cUniverse univ;
 //extern unsigned char out[96][96],out_e[96][96];
 extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
-extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern bool sleep_field;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern sf::RenderWindow mini_map;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x

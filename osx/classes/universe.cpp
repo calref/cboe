@@ -289,6 +289,8 @@ bool cCurTown::set_explored(char x, char y, bool b){
 bool cCurTown::set_force_wall(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, there's no room for field.
+		if(is_impassable(x,y))
+			return false;
 		if(is_antimagic(x,y) || is_blade_wall(x,y) || is_quickfire(x,y))
 			return false;
 		if(is_crate(x,y) || is_barrel(x,y) || is_fire_barr(x,y) || is_force_barr(x,y))
@@ -304,6 +306,8 @@ bool cCurTown::set_force_wall(char x, char y, bool b){
 bool cCurTown::set_fire_wall(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, there's no room for field.
+		if(is_impassable(x,y))
+			return false;
 		if(is_antimagic(x,y) || is_blade_wall(x,y) || is_quickfire(x,y) || is_ice_wall(x,y))
 			return false;
 		if(is_crate(x,y) || is_barrel(x,y) || is_fire_barr(x,y) || is_force_barr(x,y))
@@ -321,6 +325,8 @@ bool cCurTown::set_fire_wall(char x, char y, bool b){
 bool cCurTown::set_antimagic(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, there's no room for a field.
+		if(is_impassable(x,y))
+			return false;
 		if(is_quickfire(x,y) || is_force_wall(x,y) || is_fire_wall(x,y))
 			return false;
 		fields[x][y]  |=  8L;
@@ -339,6 +345,8 @@ bool cCurTown::set_antimagic(char x, char y, bool b){
 bool cCurTown::set_scloud(char x, char y, bool b){ // stinking cloud
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, there's no room for cloud.
+		if(is_impassable(x,y))
+			return false;
 		if(is_force_wall(x,y) || is_fire_wall(x,y) || is_ice_wall(x,y) || is_blade_wall(x,y))
 			return false;
 		if(is_antimagic(x,y) || is_sleep_cloud(x,y) || is_quickfire(x,y))
@@ -354,6 +362,8 @@ bool cCurTown::set_scloud(char x, char y, bool b){ // stinking cloud
 bool cCurTown::set_ice_wall(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, ther's no room for a field.
+		if(is_impassable(x,y))
+			return false;
 		if(is_force_wall(x,y) || is_blade_wall(x,y) || is_antimagic(x,y))
 			return false;
 		if(is_web(x,y) || is_crate(x,y) || is_barrel(x,y))
@@ -371,6 +381,8 @@ bool cCurTown::set_ice_wall(char x, char y, bool b){
 bool cCurTown::set_blade_wall(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // if certain things are on space, there's no room for a field.
+		if(is_impassable(x,y))
+			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_antimagic(x,y))
 			return false;
 		fields[x][y]  |=  64L;
@@ -384,6 +396,8 @@ bool cCurTown::set_blade_wall(char x, char y, bool b){
 bool cCurTown::set_sleep_cloud(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // if certain things are on space, there's no room for cloud.
+		if(is_impassable(x,y))
+			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_antimagic(x,y))
 			return false;
 		fields[x][y]  |=  128L;
@@ -416,7 +430,9 @@ bool cCurTown::set_special(char x, char y, bool b){
 
 bool cCurTown::set_web(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b){ // If certain things are on the space, there's no room for web.
+	if(b){ // If certain things are on the space, there's no room for webs
+		if(is_impassable(x,y))
+			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y))
 			return false;
 		if(is_force_wall(x,y) || is_fire_wall(x,y) || is_antimagic(x, y))
@@ -498,10 +514,17 @@ bool cCurTown::set_force_barr(char x, char y, bool b){
 bool cCurTown::set_quickfire(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){ // If certain things are on space, there's no room for quickfire.
+		ter_num_t ter = record->terrain(x,y);
+		if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_SIGHT)
+			return false;
+		// TODO: Isn't it a little odd that BLOCK_MOVE_AND_SHOOT isn't included here?
+		if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+			return false;
 		if (is_antimagic(x,y) && get_ran(1,0,1) == 0)
 			return false;
 		if (is_force_barr(x,y) || is_fire_barr(x,y))
 			return false;
+		quickfire_present = true;
 		fields[x][y]  |=  32768L;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
@@ -520,9 +543,18 @@ bool cCurTown::set_quickfire(char x, char y, bool b){
 	return true;
 }
 
+bool cCurTown::free_for_sfx(short x, short y) {
+	ter_num_t ter;
+	ter = record->terrain(x,y);
+	if(scenario.ter_types[ter].blockage != eTerObstruct::CLEAR)
+		return false;
+	return true;
+}
+
 bool cCurTown::set_sm_blood(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		if(is_med_blood(x,y) || is_lg_blood(x,y))
 			return false;
 		fields[x][y]  |=  65536L;
@@ -539,6 +571,7 @@ bool cCurTown::set_sm_blood(char x, char y, bool b){
 bool cCurTown::set_med_blood(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		if(is_lg_blood(x,y))
 			return false;
 		fields[x][y] |=  131072L;
@@ -556,6 +589,7 @@ bool cCurTown::set_med_blood(char x, char y, bool b){
 bool cCurTown::set_lg_blood(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		fields[x][y] |=  262144L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
@@ -571,6 +605,7 @@ bool cCurTown::set_lg_blood(char x, char y, bool b){
 
 bool cCurTown::set_sm_slime(char x, char y, bool b){
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		if(is_lg_slime(x,y))
 			return false;
 		fields[x][y] |=  524288L;
@@ -588,6 +623,7 @@ bool cCurTown::set_sm_slime(char x, char y, bool b){
 bool cCurTown::set_lg_slime(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		fields[x][y] |=  1048576L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
@@ -604,6 +640,7 @@ bool cCurTown::set_lg_slime(char x, char y, bool b){
 bool cCurTown::set_ash(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		fields[x][y] |=  2097152L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
@@ -620,6 +657,7 @@ bool cCurTown::set_ash(char x, char y, bool b){
 bool cCurTown::set_bones(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		fields[x][y] |=  4194304L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
@@ -636,6 +674,7 @@ bool cCurTown::set_bones(char x, char y, bool b){
 bool cCurTown::set_rubble(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
+		if(!free_for_sfx(x,y)) return false;
 		fields[x][y] |=  8388608L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
@@ -700,6 +739,16 @@ unsigned char cCurTown::misc_i(char x, char y) const{
 unsigned char cCurTown::sfx(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return 0;
 	return (fields[x][y] & 0x00FF0000) >> 16;
+}
+
+// TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
+bool cCurTown::is_impassable(short i,short  j) {
+	ter_num_t ter;
+	
+	ter = record->terrain(i,j);
+	if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+		return true;
+	else return false;
 }
 
 ter_num_t(& cCurOut::operator [] (size_t i))[96]{

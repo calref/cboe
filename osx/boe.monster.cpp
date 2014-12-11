@@ -7,7 +7,6 @@
 
 #include "classes.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.monster.h"
 #include "boe.text.h"
 #include "boe.specials.h"

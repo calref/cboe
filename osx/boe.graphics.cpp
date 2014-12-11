@@ -12,7 +12,6 @@
 #include "boe.graphutil.h"
 #include "boe.monster.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.text.h"
 #include "graphtool.h"
 #include "soundtool.h"
@@ -38,7 +37,6 @@ extern bool flushingInput;
 extern short anim_step;
 extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
-extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location ul;
 extern location pc_pos[6],pc_dir[6],center;
 extern short which_combat_type,current_pc;

@@ -13,7 +13,7 @@
 #include "boe.text.h"
 #include "boe.party.h"
 #include "boe.items.h"
-#include "boe.fields.h"
+#include "boe.locutils.h"
 #include "boe.town.h"
 #include "boe.startup.h"
 #include "boe.dlgutil.h"
@@ -134,10 +134,6 @@ short store_current_pc = 0;
 //stored_outdoor_maps_type o_maps;
 
 sf::Clock animTimer;
-
-// Special stuff booleans
-bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-bool sleep_field;
 
 //
 //	Main body of program Exile

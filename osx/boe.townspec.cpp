@@ -12,7 +12,6 @@
 #include "boe.monster.h"
 #include "boe.infodlg.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.text.h"
 #include "boe.itemdata.h"
 #include "boe.townspec.h"

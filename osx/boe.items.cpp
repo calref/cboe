@@ -13,7 +13,6 @@
 #include "boe.items.h"
 #include "boe.specials.h"
 #include "boe.party.h"
-#include "boe.fields.h"
 #include "boe.locutils.h"
 #include "boe.newgraph.h"
 #include "boe.itemdata.h"

@@ -8,7 +8,6 @@
 #include "boe.locutils.h"
 #include "boe.text.h"
 #include "boe.monster.h"
-#include "boe.fields.h"
 
 bool combat_pt_in_light();
 //extern short town_size[3];
@@ -24,7 +23,6 @@ extern eGameMode overall_mode;
 extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location pc_pos[6],center;
-extern bool belt_present,web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern cScenario scenario;
 extern cUniverse univ;
@@ -32,6 +30,43 @@ extern cUniverse univ;
 location light_locs[40];
 short num_lights = 0;
 char d_s[60];
+
+bool is_explored(short i,short j) {
+	if (is_out())
+		return (univ.out.out_e[i][j] != 0) ? true : false;
+	else return univ.town.is_explored(i,j);
+}
+
+void make_explored(short i,short j) {
+	if (is_out())
+		univ.out.out_e[i][j] = 1;
+	else univ.town.set_explored(i,j,true);
+}
+
+void take_explored(short i,short j) {
+	if (is_out())
+		univ.out.out_e[i][j] = 0;
+	//	univ.town.explored[i][j] = univ.town.explored[i][j] & 254;
+	else univ.town.set_explored(i,j,false);
+}
+
+bool is_out() {
+	if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
+		return true;
+	else return false;
+}
+
+bool is_town() {
+	if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
+		return true;
+	else return false;
+}
+
+bool is_combat() {
+	if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT))
+		return true;
+	else return false;
+}
 
 //
 //void set_terrain_blocked()
@@ -654,6 +689,6 @@ void alter_space(short i,short j,ter_num_t ter)
 		univ.town->terrain(i,j) = ter;
 		combat_terrain[i][j] = ter;
 		if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
-			belt_present = true;
+			univ.town.belt_present = true;
 	}
 }

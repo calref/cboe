@@ -13,7 +13,6 @@
 #include <cstring>
 #include "boe.monster.h"
 #include "boe.party.h"
-#include "boe.fields.h"
 #include "boe.locutils.h"
 #include "boe.text.h"
 #include "soundtool.h"

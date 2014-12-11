@@ -29,7 +29,7 @@ void give_party_spell(short which);
 void do_mage_spell(short pc_num,short spell_num);
 void do_priest_spell(short pc_num,short spell_num);
 void cast_town_spell(location where);
-void sanctify_space(location where);
+bool cast_spell_on_space(location where, unsigned short spell);
 void crumble_wall(location where);
 void do_mindduel(short pc_num,cCreature *monst);
 void dispel_fields(short i,short j,short mode);

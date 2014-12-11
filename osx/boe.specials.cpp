@@ -17,7 +17,6 @@
 #include "boe.combat.h"
 #include "boe.monster.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.actions.h"
 #include "soundtool.h"
 #include "boe.townspec.h"
@@ -613,19 +612,7 @@ void use_item(short pc,short item)
 	char to_draw[60];
 	location user_loc;
 	cCreature *which_m;
-	effect_pat_type s = {
-		{
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,1,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0}
-		}
-	};
+	extern effect_pat_type single;
 	abil = univ.party[pc].items[item].ability;
 	level = univ.party[pc].items[item].item_level;
 	
@@ -1137,7 +1124,7 @@ void use_item(short pc,short item)
 				break;
 			case ITEM_SPELL_QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
-				make_quickfire(user_loc.x,user_loc.y);
+				univ.town.set_quickfire(user_loc.x,user_loc.y,true);
 				break;
 			case ITEM_SPELL_MASS_CHARM:
 				ASB("It throbs, and emits odd rays.");
@@ -1165,7 +1152,7 @@ void use_item(short pc,short item)
 				add_string_to_buf("  It fires a blinding ray.");
 				add_string_to_buf("  Target spell.    ");
 				overall_mode = MODE_TOWN_TARGET;
-				current_pat = s;
+				current_pat = single;
 				set_town_spell(1041,current_pc);
 				break;
 			case ITEM_SPELL_MAKE_ICE_WALL:
@@ -1708,20 +1695,20 @@ void kill_monst(cCreature *which_m,short who_killed)
 	j = which_m->cur_loc.y;
 	switch (which_m->m_type) {
 		case eRace::DEMON:
-			make_sfx(i,j,6);
+			univ.town.set_ash(i,j,true);
 			break;
 			// TODO: Don't check which_m->number here; find another way to indicate it
 		case eRace::UNDEAD:
-			if(which_m->number <= 59) make_sfx(i,j,7);
+			if(which_m->number <= 59) univ.town.set_bones(i,j,true);
 			break;
 		case eRace::SLIME: case eRace::PLANT: case eRace::BUG:
-			make_sfx(i,j,4);
+			univ.town.set_sm_slime(i,j,true);
 			break;
 		case eRace::STONE:
-			make_sfx(i,j,8);
+			univ.town.set_rubble(i,j,true);
 			break;
 		default:
-			make_sfx(i,j,1);
+			univ.town.set_sm_blood(i,j,true);
 			break;
 	}
 	
@@ -3160,6 +3147,15 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+void set_terrain(location l, ter_num_t terrain_type)
+{
+	ter_num_t former = univ.town->terrain(l.x,l.y);
+	univ.town->terrain(l.x,l.y) = terrain_type;
+	combat_terrain[l.x][l.y] = terrain_type;
+	if(scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
+		belt_present = true;
+}
+
 // TODO: What was next_spec_type for? Is it still needed?
 void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
@@ -3192,21 +3188,15 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_CHANGE_TER:
 			set_terrain(l,spec.ex2a);
-			if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
-				belt_present = true;
 			*redraw = true;
 			draw_map(true);
 			break;
 		case eSpecType::TOWN_SWAP_TER:
 			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
 				set_terrain(l,spec.ex2b);
-				if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
-					belt_present = true;
 			}
 			else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
 				set_terrain(l,spec.ex2a);
-				if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
-					belt_present = true;
 			}
 			*redraw = 1;
 			draw_map(true);
@@ -3214,8 +3204,6 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_TRANS_TER:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
 			set_terrain(l,scenario.ter_types[ter].trans_to_what);
-			if(scenario.ter_types[spec.ex2a].special == eTerSpec::CONVEYOR)
-				belt_present = true;
 			*redraw = 1;
 			draw_map(true);
 			break;
@@ -3545,31 +3533,31 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			switch (cur_node.type) {
 				case eSpecType::RECT_PLACE_FIRE:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_fire_wall(i,j);
+						univ.town.set_fire_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_FORCE:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_force_wall(i,j);
+						univ.town.set_force_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_ICE:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_ice_wall(i,j);
+						univ.town.set_ice_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_BLADE:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_blade_wall(i,j);
+						univ.town.set_blade_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_SCLOUD:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_scloud(i,j);
+						univ.town.set_scloud(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_SLEEP:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_sleep_cloud(i,j);
+						univ.town.set_sleep_cloud(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_QUICKFIRE:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_quickfire(i,j);
+						univ.town.set_quickfire(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_FIRE_BARR:
 					if (get_ran(1,1,100) <= spec.sd1 )
@@ -3586,12 +3574,22 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case eSpecType::RECT_PLACE_SFX:
 					if (get_ran(1,1,100) <= spec.sd1 )
-						make_sfx(i,j,spec.sd2 + 1);
+						switch(spec.sd2) {
+							case 0: univ.town.set_sm_blood(i,j,true); break;
+							case 1: univ.town.set_med_blood(i,j,true); break;
+							case 2: univ.town.set_lg_blood(i,j,true); break;
+							case 3: univ.town.set_sm_slime(i,j,true); break;
+							case 4: univ.town.set_lg_slime(i,j,true); break;
+							case 5: univ.town.set_ash(i,j,true); break;
+							case 6: univ.town.set_bones(i,j,true); break;
+							case 7: univ.town.set_rubble(i,j,true); break;
+							default: giveError("Invalid sfx type (0...7)");
+						}
 					break;
 				case eSpecType::RECT_PLACE_OBJECT:
 					if (get_ran(1,1,100) <= spec.sd1 ) {
 						if (spec.sd2 == 0)
-							make_web(i,j);
+							univ.town.set_web(i,j,true);
 						if (spec.sd2 == 1)
 							univ.town.set_barrel(i,j,true);
 						if (spec.sd2 == 2)
@@ -3614,8 +3612,6 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eSpecType::RECT_CHANGE_TER:
 					if (get_ran(1,1,100) <= spec.sd2){
 						set_terrain(l,spec.sd1);
-						if(scenario.ter_types[spec.sd1].special == eTerSpec::CONVEYOR)
-							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 					}
@@ -3623,15 +3619,11 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eSpecType::RECT_SWAP_TER:
 					if (coord_to_ter(i,j) == spec.sd1){
 						set_terrain(l,spec.sd2);
-						if(scenario.ter_types[spec.sd2].special == eTerSpec::CONVEYOR)
-							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 					}
 					else if (coord_to_ter(i,j) == spec.sd2){
 						set_terrain(l,spec.sd1);
-						if(scenario.ter_types[spec.sd1].special == eTerSpec::CONVEYOR)
-							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 					}
@@ -3639,8 +3631,6 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eSpecType::RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
 					set_terrain(l,scenario.ter_types[ter].trans_to_what);
-					if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
-						belt_present = true;
 					*redraw = true;
 					draw_map(true);
 					break;
@@ -3648,8 +3638,6 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					ter = coord_to_ter(i,j);
 					if(scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
 						set_terrain(l,scenario.ter_types[ter].flag1.u);
-						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
-							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 					}
@@ -3658,8 +3646,6 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					ter = coord_to_ter(i,j);
 					if (scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 						set_terrain(l,scenario.ter_types[ter].flag1.u);
-						if(scenario.ter_types[scenario.ter_types[ter].trans_to_what].special == eTerSpec::CONVEYOR)
-							belt_present = true;
 						*redraw = true;
 						draw_map(true);
 						break;

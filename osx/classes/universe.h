@@ -33,7 +33,9 @@ class cCurTown {
 	cSpeech* curTalk = NULL;
 	bool talkNeedsDeleting = false;
 	short cur_talk_loaded = -1;
+	bool free_for_sfx(short x, short y);
 public:
+	bool quickfire_present = false, belt_present = false;
 	cTown* record;
 	// formerly current_town_type
 	short num; // 200 if outdoors (my addition)
@@ -123,6 +125,7 @@ public:
 	bool set_rubble(char x, char y, bool b);
 	bool set_force_cage(char x, char y, bool b);
 //	bool set_trim(char x, char y, char t, bool b);
+	bool is_impassable(short x, short y);
 	void writeTo(std::ostream& file);
 	void readFrom(std::istream& file);
 	

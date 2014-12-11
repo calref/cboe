@@ -12,7 +12,6 @@
 #include "boe.items.h"
 #include "boe.graphics.h"
 #include "boe.locutils.h"
-#include "boe.fields.h"
 #include "boe.newgraph.h"
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
@@ -46,8 +45,6 @@ extern sf::RenderWindow mainPtr;
 //extern big_tr_type t_d;
 //extern short town_size[3];
 extern short town_type,current_pc;
-extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
-extern bool sleep_field;
 //extern setup_save_type setup_save;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 //extern unsigned char template_terrain[64][64];
@@ -66,7 +63,6 @@ extern cUniverse univ;
 //extern outdoor_strs_type outdoor_text[2][2];
 cScenarioList scen_headers;
 extern ter_num_t combat_terrain[64][64];
-extern bool belt_present;
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false,ae_loading = false;
@@ -177,28 +173,11 @@ void finish_load_party(){
 		// Set up field booleans
 		for (int j = 0; j < univ.town->max_dim(); j++)
 			for (int k = 0; k < univ.town->max_dim(); k++) {
-				if (univ.town.is_web(j,k) == true)
-					web = true;
-				if (univ.town.is_crate(j,k) == true)
-					crate = true;
-				if (univ.town.is_barrel(j,k) == true)
-					barrel = true;
-				if (univ.town.is_fire_barr(j,k) == true)
-					fire_barrier = true;
-				if (univ.town.is_force_barr(j,k) == true)
-					force_barrier = true;
 				if (univ.town.is_quickfire(j,k) == true)
-					quickfire = true;
+					univ.town.quickfire_present = true;
 				if(scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
-					belt_present = true;
+					univ.town.belt_present = true;
 			}
-		force_wall = true;
-		fire_wall = true;
-		antimagic = true;
-		scloud = true;
-		ice_wall = true;
-		blade_wall = true;
-		sleep_field = true;
 		center = univ.town.p_loc;
 	}
 	
@@ -259,12 +238,6 @@ void finish_load_party(){
 //	long total_m_killed,total_dam_done,total_xp_gained,total_dam_taken;
 //	char scen_name[256];
 //}
-
-void set_terrain(location l, ter_num_t terrain_type)
-{
-	univ.town->terrain(l.x,l.y) = terrain_type;
-	combat_terrain[l.x][l.y] = terrain_type;
-}
 
 
 void swap_val(unsigned char *val,short a,short b)

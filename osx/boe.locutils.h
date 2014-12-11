@@ -1,3 +1,10 @@
+
+bool is_explored(short i,short j);
+void make_explored(short i,short j);
+void take_explored(short i,short j);
+bool is_out();
+bool is_town();
+bool is_combat();
 //void set_terrain_blocked();
 //short dist(location p1,location p2);
 //short ex_sqrt(short val);

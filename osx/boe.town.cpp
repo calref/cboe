@@ -20,7 +20,6 @@
 #include "boe.party.h"
 #include "boe.text.h"
 #include "soundtool.h"
-#include "boe.fields.h"
 #include "boe.locutils.h"
 #include "boe.specials.h"
 #include "boe.infodlg.h"
@@ -48,7 +47,7 @@ extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 //extern location monster_targs[60];
 extern std::queue<pending_special_type> special_queue;
 
-extern bool map_visible,diff_depth_ok,belt_present;
+extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
 //extern unsigned char univ.out[96][96],univ.out.out_e[96][96],univ.out.sfx[64][64];
 //extern stored_items_list_type stored_items[3];
@@ -58,7 +57,6 @@ extern sf::RenderWindow mini_map;
 //extern short town_size[3];
 extern short town_type;
 //extern setup_save_type setup_save;
-extern bool web,crate,barrel,fire_barrier,force_barrier,quickfire,force_wall,fire_wall,antimagic,scloud,ice_wall,blade_wall;
 extern location pc_pos[6];
 extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 //extern stored_town_maps_type town_maps;
@@ -192,7 +190,7 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	
 	
-	belt_present = false;
+	univ.town.belt_present = false;
 	// Set up map, using stored map
 	for (i = 0; i < univ.town->max_dim(); i++)
 		for (j = 0; j < univ.town->max_dim(); j++) {
@@ -206,7 +204,7 @@ void start_town_mode(short which_town, short entry_dir)
 			else if (univ.town->terrain(i,j) == 2)
 				current_ground = 2;
 			if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
-				belt_present = true;
+				univ.town.belt_present = true;
 		}
 	
 	univ.town.hostile = 0;
@@ -410,12 +408,6 @@ void start_town_mode(short which_town, short entry_dir)
 			(univ.town.monst[i].number != univ.town->creatures(i).number))
 			univ.town.monst[i].active = 0;
 	
-	quickfire = false;
-	crate = false;
-	barrel = false;
-	web = false;
-	fire_barrier = false;
-	force_barrier = false;
 	// Set up field booleans, correct for doors
 	for (j = 0; j < univ.town->max_dim(); j++)
 		for (k = 0; k < univ.town->max_dim(); k++) {
@@ -429,18 +421,8 @@ void start_town_mode(short which_town, short entry_dir)
 				univ.town.set_quickfire(j,k,false);
 				//univ.out.misc_i[j][k] = univ.out.misc_i[j][k] & 3;
 			}
-			if (univ.town.is_web(j,k) == true)
-				web = true;
-			if (univ.town.is_crate(j,k) == true)
-				crate = true;
-			if (univ.town.is_barrel(j,k) == true)
-				barrel = true;
-			if (univ.town.is_fire_barr(j,k) == true)
-				fire_barrier = true;
-			if (univ.town.is_force_barr(j,k) == true)
-				force_barrier = true;
 			if (univ.town.is_quickfire(j,k) == true)
-				quickfire = true;
+				univ.town.quickfire_present = true;
 		}
 	
 	// Set up items, maybe place items already there
