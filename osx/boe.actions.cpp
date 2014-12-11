@@ -2735,8 +2735,8 @@ bool outd_move_party(location destination,bool forced)
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		if (((real_dest.x > 95 /*92*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 2)) ||
-			((real_dest.x > 47 /*44*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 1))) {
+		if (((real_dest.x > 94 /*92*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 2)) ||
+			((real_dest.x > 46 /*44*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 1))) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
@@ -2744,8 +2744,8 @@ bool outd_move_party(location destination,bool forced)
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		else if (((real_dest.y > 95 /*92*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 2)) ||
-				 ((real_dest.y > 47 /*44*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 1))) {
+		else if (((real_dest.y > 94 /*92*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 2)) ||
+				 ((real_dest.y > 46 /*44*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 1))) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
