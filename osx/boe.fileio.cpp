@@ -33,7 +33,7 @@
 //extern unsigned char out[96][96],out_e[96][96];
 extern short give_delays,stat_screen_mode;
 extern eGameMode overall_mode;
-extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug;
+extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode;
 //extern current_town_type	c_town;
 //extern town_item_list	t_i;
 extern location center;
@@ -102,6 +102,8 @@ void finish_load_party(){
 	bool in_scen = univ.party.scen_name.length() > 0;
 	
 	party_in_memory = true;
+	in_scen_debug = false;
+	ghost_mode = false;
 	
 	// now if not in scen, this is it.
 	if (!in_scen) {

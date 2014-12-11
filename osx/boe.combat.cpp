@@ -29,6 +29,7 @@
 //extern big_tr_type t_d;
 //extern town_item_list	t_i;
 extern eGameMode overall_mode;
+extern bool ghost_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
@@ -448,8 +449,7 @@ bool pc_combat_move(location destination) ////
 	if (check_f == true)
 		forced = true;
 	
-	if (spec_num == 50)
-		forced = true;
+	if(in_scen_debug && ghost_mode) forced = true;
 	
 	if (keep_going == true) {
 		

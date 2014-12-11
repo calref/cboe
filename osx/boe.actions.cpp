@@ -1388,6 +1388,8 @@ bool handle_action(sf::Event event)
 	if (end_scenario) {
 		reload_startup();
 		overall_mode = MODE_STARTUP;
+		in_scen_debug = false;
+		ghost_mode = false;
 		draw_startup(0);
 		menu_activate();
 		univ.party.scen_name = ""; // should be harmless...
@@ -1856,7 +1858,10 @@ bool handle_keystroke(sf::Event& event){
 				short y = univ.party.p_loc.y;
 				x += 48 * univ.party.outdoor_corner.x;
 				y += 48 * univ.party.outdoor_corner.y;
-				sout << "Debug:  You're outside at x " << x << ", y " << y << ',';
+				sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
+			} else if(is_combat()) {
+				location loc = pc_pos[current_pc];
+				sout << "Debug:  You're in combat at x " << loc.x << ", y " << loc.y << '.';
 			}
 			add_string_to_buf(sout.str());
 			print_buf();
@@ -1908,14 +1913,11 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'S': // TODO: Create a dedicated dialog for this.
 			if (!in_scen_debug) break;
-			cStrDlog("Enter Stuff Done Flag Part A (between 1 and 299)","","Which SDFa ?",130,PIC_DLOG).show();
-            i = atoi(get_text_response().c_str());
-            if(i > 0 && i < 300){
-				cStrDlog("Enter Stuff Done Flag Part B (between 0 and 49)","","Which SDFb ?",130,PIC_DLOG).show();
-				j = atoi(get_text_response().c_str());
+            i = get_num_response(0,299,"Enter SDF Part A");
+            if(i >= 0 && i < 300){
+				j = get_num_response(0,49,"Enter SDF Part B");
 				if(j >= 0 && j < 50){
-					cStrDlog("Enter Stuff Done Flag Value (up to 255)","","Which value ?",130,PIC_DLOG).show();
-					int x = atoi(get_text_response().c_str());
+					int x = get_num_response(-1,255,"Enter SDF Value or -1 to print");
 					if(x < 256 && x >= 0)
 						PSD[i][j] = x;
 					else if(x == -1){
@@ -1929,7 +1931,8 @@ bool handle_keystroke(sf::Event& event){
 		case 'T':
 			if(!in_scen_debug) break;
 			short find_direction_from;
-            i = atoi(get_text_response(sout.str(), 130).c_str());
+			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
+            i = get_num_response(0, scenario.num_towns - 1, "Enter Town Number");
             if(i >= 0 && i < scenario.num_towns ){
             	if (univ.party.direction == 0) find_direction_from = 2;
 				else if (univ.party.direction == 4) find_direction_from = 0;
@@ -1940,6 +1943,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'W':
+			if(!in_scen_debug) break;
 			refresh_store_items();
 			add_string_to_buf("Debug: Refreshed jobs/shops.            ");
 			print_buf();
@@ -1961,6 +1965,7 @@ bool handle_keystroke(sf::Event& event){
 			put_pc_screen();
 			break;
 		case '>':
+			if(!in_scen_debug) break;
 			ASB("DEBUG: Towns have short memory.");
 			ASB("Your deeds have been forgotten.");
 			print_buf();
