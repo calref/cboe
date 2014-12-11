@@ -2778,6 +2778,7 @@ bool outd_move_party(location destination,bool forced)
 					 && (scenario.ter_types[ter].boat_over == true)
 					 && scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
+				// Note: Maybe not though, since this is where boating over lava was once hard-coded...?
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 				else {
@@ -2837,10 +2838,14 @@ bool outd_move_party(location destination,bool forced)
 				 // Check if can fly over
 				 || ((flying() == true) &&
 					 (scenario.ter_types[ter].fly_over == true))   ) {
-					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 						 if(univ.party.in_horse >= 0) {
+					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 							 ASB("Your horses quite sensibly refuse.");
 							 return false;
+						 }
+						 if(scenario.ter_types[ter].block_horse) {
+						 	ASB("You can't take horses there!");
+						 	return false;
 						 }
 					 }
 					 univ.party.direction = set_direction(univ.party.p_loc, destination);
