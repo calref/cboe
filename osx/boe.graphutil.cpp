@@ -399,7 +399,7 @@ void draw_items(location where){
 				from_rect = get_item_template_rect(univ.town.items[i].graphic_num);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
-				if(univ.town.items[i].graphic_num >= 45) {
+				if(univ.town.items[i].graphic_num >= 55) {
 					to_rect.inset(5,9);
 					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect,sf::BlendAlpha);
 				}else

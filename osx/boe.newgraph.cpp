@@ -722,7 +722,7 @@ void click_shop_rect(RECT area_rect)
 static graf_pos calc_item_rect(int num,RECT& to_rect) {
 	RECT from_rect = {0,0,18,18};
 	sf::Texture *from_gw = &tiny_obj_gworld;
-	if (num < 45) {
+	if (num < 55) {
 		from_gw = &items_gworld;
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{

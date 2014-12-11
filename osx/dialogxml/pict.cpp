@@ -776,7 +776,7 @@ void cPict::drawPresetItem(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<sf::Texture> from_gw;
 	RECT from_rect = {0,0,18,18};
-	if (num < 45) {
+	if (num < 55) {
 		from_gw = getSheet(SHEET_ITEM);
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{

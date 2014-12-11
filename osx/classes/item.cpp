@@ -155,7 +155,7 @@ cItemRec::cItemRec(long preset){
 			charges = 0;
 			type = eWeapType::EDGED;
 			magic_use_type = 0;
-			graphic_num = 45;
+			graphic_num = 55;
 			value = 2;
 			weight = 7;
 			full_name = "Bronze Knife";
@@ -171,7 +171,7 @@ cItemRec::cItemRec(long preset){
 			charges = 0;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 65;
+			graphic_num = 75;
 			value = 2;
 			weight = 20;
 			full_name = "Crude Buckler";
@@ -203,7 +203,7 @@ cItemRec::cItemRec(long preset){
 			charges = 12;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 47;
+			graphic_num = 57;
 			value = 1;
 			weight = 1;
 			full_name = "Arrows";
@@ -235,7 +235,7 @@ cItemRec::cItemRec(long preset){
 			charges = 0;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 66;
+			graphic_num = 76;
 			value = 6;
 			weight = 15;
 			full_name = "Leather Helm";
@@ -251,7 +251,7 @@ cItemRec::cItemRec(long preset){
 			charges = 0;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 62;
+			graphic_num = 72;
 			value = 0;
 			weight = 0;
 			full_name = "Food";
@@ -267,7 +267,7 @@ cItemRec::cItemRec(long preset){
 			charges = 0;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 53;
+			graphic_num = 63;
 			value = 0;
 			weight = 0;
 			full_name = "";
@@ -283,7 +283,7 @@ cItemRec::cItemRec(long preset){
 			charges = 1;
 			type = eWeapType::NOT_MELEE;
 			magic_use_type = 0;
-			graphic_num = 50;
+			graphic_num = 60;
 			value = 0;
 			weight = 8;
 			full_name = "Potion";
@@ -307,7 +307,9 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	if(graphic_num >= 150) // custom item graphic
 		graphic_num += 850;
 	else if(graphic_num == 59) // duplicate mushroom graphic
-		graphic_num = 64;
+		graphic_num = 74;
+	else if(graphic_num >= 45) // small graphics were moved up to make a bit more room for new large graphics
+		graphic_num += 10;
 	ability = (eItemAbil) old.ability;
 	ability_strength = old.ability_strength;
 	type_flag = old.type_flag;
