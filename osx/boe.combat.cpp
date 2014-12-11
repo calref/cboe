@@ -1467,7 +1467,10 @@ void load_missile() ////
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		current_pat = single;
+		if(univ.party[current_pc].items[arrow].ability == ITEM_MISSILE_EXPLODING)
+			current_pat = rad2;
+		else
+			current_pat = single;
 	}
 	else if ((bolts < 24) && (crossbow < 24)) {
 		missile_inv_slot = crossbow;
@@ -1514,7 +1517,7 @@ void fire_missile(location target) {
 	if(univ.party[missile_firer].race == eRace::REPTILE)
 		hit_bonus += 2;
 	
-	if (univ.party[missile_firer].items[ammo_inv_slot].ability == 172)
+	if (univ.party[missile_firer].items[ammo_inv_slot].ability == ITEM_MISSILE_EXPLODING)
 		exploding = true;
 	
 	if (dist(pc_pos[missile_firer],target) > range)
@@ -1525,15 +1528,18 @@ void fire_missile(location target) {
 		// First, some missiles do special things
 		if (exploding) {
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
+			void_sanctuary(current_pc); // TODO: Is this right?
+			missile_firer = current_pc;
 			add_string_to_buf("  The arrow explodes!             ");
-			run_a_missile(pc_pos[missile_firer],target,2,1,5,
-						  0,0,100);
-			//start_missile_anim();
-			//add_missile(target,2,1, 0, 0);
-			//do_missile_anim(100,pc_pos[missile_firer], 5);
+			if(PSD[SDF_GAME_SPEED] == 0)
+				pause(dist(pc_pos[current_pc],target));
+			else
+				pause(dist(pc_pos[current_pc],target)*5);
+			run_a_missile(pc_pos[missile_firer],target,2,1,5,0,0,100);
+			start_missile_anim();
 			place_spell_pattern(rad2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
 			do_explosion_anim(5,0);
-			//end_missile_anim();
+			end_missile_anim();
 			handle_marked_damage();
 		} else {
 			combat_posing_monster = current_working_monster = missile_firer;
