@@ -185,8 +185,8 @@ void finish_load_party(){
 	current_pc = first_active_pc();
 	loaded_yet = true;
 	
-	
-	strcpy ((char *) last_load_file, file_to_load.filename().c_str());
+	// TODO: Why is this still a C-string?
+	strcpy (last_load_file, file_to_load.filename().c_str());
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.            ");

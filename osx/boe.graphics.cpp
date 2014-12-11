@@ -1546,7 +1546,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,sf::BlendAlpha);
 	
 	if ((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
-		sprintf((char *) dam_str,"%d",damage);
+		sprintf(dam_str,"%d",damage);
 		TextStyle style;
 		style.lineHeight = 10;
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);

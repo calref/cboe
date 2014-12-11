@@ -1052,21 +1052,21 @@ bool handle_action(sf::Event event)
 								current_pc = i;
 								set_stat_window (i);
 								if (overall_mode == MODE_SHOPPING)
-									sprintf((char *) str,"Now shopping: %s",univ.party[i].name.c_str());
-								else sprintf((char *) str,"Now active: %s",univ.party[i].name.c_str());
-								add_string_to_buf((char *)str);
+									sprintf(str,"Now shopping: %s",univ.party[i].name.c_str());
+								else sprintf(str,"Now active: %s",univ.party[i].name.c_str());
+								add_string_to_buf(str);
 								adjust_spell_menus();
 							}
 							break;
 						case 1:
-							sprintf((char *) str,"%s has %d health out of %d.",univ.party[i].name.c_str(),
+							sprintf(str,"%s has %d health out of %d.",univ.party[i].name.c_str(),
 									univ.party[i].cur_health,univ.party[i].max_health);
 							add_string_to_buf((char *)str);
 							break;
 						case 2:
-							sprintf((char *) str,"%s has %d spell pts. out of %d.",univ.party[i].name.c_str(),
+							sprintf(str,"%s has %d spell pts. out of %d.",univ.party[i].name.c_str(),
 									univ.party[i].cur_sp,univ.party[i].max_sp);
-							add_string_to_buf((char *)str);
+							add_string_to_buf(str);
 							break;
 						case 3: // pc info
 							give_pc_info(i);
@@ -1114,8 +1114,8 @@ bool handle_action(sf::Event event)
 									add_string_to_buf("Set active: PC must be here & active.");
 								else {
 									current_pc = i;
-									sprintf((char *) str,"Now active: %s",univ.party[i].name.c_str());
-									add_string_to_buf((char *)str);
+									sprintf(str,"Now active: %s",univ.party[i].name.c_str());
+									add_string_to_buf(str);
 									adjust_spell_menus();
 								}
 							}
@@ -2852,8 +2852,8 @@ bool outd_move_party(location destination,bool forced)
 					 univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
 					 univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
 					 univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
-					 sprintf ((char *) create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
-					 add_string_to_buf((char *) create_line);
+					 sprintf (create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
+					 add_string_to_buf(create_line);
 					 move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 					 num_out_moves++;
 					 
@@ -2876,8 +2876,8 @@ bool outd_move_party(location destination,bool forced)
 					 return true;
 				 }
 		else {
-			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(univ.party.p_loc, destination)]);
-			add_string_to_buf((char *) create_line);
+ 			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(univ.party.p_loc, destination)]);
+ 			add_string_to_buf((char *) create_line);
 			return false;
 		}
 	}

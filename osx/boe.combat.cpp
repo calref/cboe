@@ -465,14 +465,14 @@ bool pc_combat_move(location destination) ////
 				univ.party[current_pc].main_status = eMainStatus::FLED;
 				if (combat_active_pc == current_pc)
 					combat_active_pc = 6;
-				sprintf ((char *) create_line, "Moved: Fled.                    ");
+				sprintf (create_line, "Moved: Fled.                    ");
 				univ.party[current_pc].ap = 0;
 			}
 			else {
 				take_ap(1);
-				sprintf ((char *) create_line, "Moved: Couldn't flee.                  ");
+				sprintf (create_line, "Moved: Couldn't flee.                  ");
 			}
-			add_string_to_buf((char *) create_line);
+			add_string_to_buf(create_line);
 			return true;
 		}
 		else if ((monst_hit = monst_there(destination)) <= univ.town->max_monst()) {
@@ -633,8 +633,8 @@ void pc_attack(short who_att,short target)////
 		}
 		else {
 			draw_terrain(2);
-			sprintf ((char *) create_line, "%s misses. ",(char *) univ.party[who_att].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "%s misses. ",(char *) univ.party[who_att].name.c_str());
+			add_string_to_buf(create_line);
 			play_sound(2);
 		}
 	}
@@ -648,8 +648,8 @@ void pc_attack(short who_att,short target)////
 		if (what_skill1 == 2)
 			what_skill1 = 3;
 		
-		sprintf ((char *) create_line, "%s swings. ",(char *) univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
-		add_string_to_buf((char *) create_line);
+		sprintf (create_line, "%s swings. ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
+		add_string_to_buf(create_line);
 		
 		r1 = get_ran(1,1,100) - 5 + hit_adj
 			- 5 * univ.party[who_att].items[weap1].bonus;
@@ -732,8 +732,8 @@ void pc_attack(short who_att,short target)////
 			what_skill2 = 3;
 		
 		
-		sprintf ((char *) create_line, "%s swings.                    ",(char *) univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
-		add_string_to_buf((char *) create_line);
+		sprintf(create_line, "%s swings.                    ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
+		add_string_to_buf(create_line);
 		r1 = get_ran(1,1,100) + hit_adj - 5 * univ.party[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
@@ -1654,9 +1654,9 @@ bool combat_next_step()
 	center = pc_pos[current_pc];		*/
 	
 	if ((combat_active_pc == 6) && (current_pc != store_pc)) {
-		sprintf((char *)create_line, "Active:  %s (#%d, %d ap.)                     ",
+		sprintf(create_line, "Active:  %s (#%d, %d ap.)                     ",
 				univ.party[current_pc].name.c_str(),current_pc + 1,univ.party[current_pc].ap);
-		add_string_to_buf((char *)create_line);
+		add_string_to_buf(create_line);
 		print_buf();
 	}
 	if ((current_pc != store_pc) || (to_return == true)) {
@@ -2686,8 +2686,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 14) { // vapors
 		//play_sound(44);
 		if (target < 100) { // on PC
-			sprintf ((char *) create_line, "  Breathes on %s.                  ",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Breathes on %s.                  ",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 		}
 		else {  // on monst
 			add_string_to_buf("  Breathes vapors.");
@@ -2699,8 +2699,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 19) { // webs
 		//play_sound(14);
 		if (target < 100) { // on PC
-			sprintf ((char *) create_line, "  Throws web at %s.                  ",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Throws web at %s.                  ",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 		}
 		else {  // on monst
 			add_string_to_buf("  Throws web.");
@@ -2712,7 +2712,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if (level == 23) { // paral
 		play_sound(51);
 		if (target < 100) { // on PC
-			sprintf ((char *) create_line, "  Fires ray at %s.                  ",(char *) univ.party[target].name.c_str());
+			sprintf (create_line, "  Fires ray at %s.                  ",univ.party[target].name.c_str());
 			add_string_to_buf((char *) create_line);
 			sleep_pc(target,100,eStatus::PARALYZED,0);
 		}
@@ -2728,18 +2728,18 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		//play_sound(43);
 		run_a_missile(source,targ_space,14,0,43,0,0,100);
 		if (target < 100) { // on PC
-			sprintf ((char *) create_line, "  Gazes at %s.                  ",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Gazes at %s.                  ",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 			r1 = get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE];
 			if (pc_has_abil_equip(target,49) < 24)
 				r1 = 20;
 			if (r1 > 14) {
-				sprintf ((char *) create_line, "  %s resists.                  ",(char *) univ.party[target].name.c_str());
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "  %s resists.                  ",univ.party[target].name.c_str());
+				add_string_to_buf(create_line);
 			}
 			else {
-				sprintf ((char *) create_line, "  %s is turned to stone.                  ",(char *) univ.party[target].name.c_str());
-				add_string_to_buf((char *) create_line);
+				sprintf (create_line, "  %s is turned to stone.                  ",univ.party[target].name.c_str());
+				add_string_to_buf(create_line);
 				kill_pc(target,eMainStatus::STONE);
 			}
 		}
@@ -2770,8 +2770,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				
 			}
 			run_a_missile(source,targ_space,8,0,43,0,0,100);
-			sprintf ((char *) create_line, "  Drains %s.                  ",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Drains %s.                  ",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 			univ.party[target].cur_sp = univ.party[target].cur_sp / 2;
 		}
 		else { // on monst
@@ -2788,8 +2788,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		r1 = get_ran(7,1,6);
 		start_missile_anim();
 		if (target < 100) { // pc
-			sprintf ((char *) create_line, "  Hits %s with heat ray.",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Hits %s with heat ray.",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 			damage_pc(target,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
 		}
 		else { // on monst
@@ -2805,8 +2805,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 					  0,0,100);
 		//play_sound(64);
 		if (target < 100) { // pc
-			sprintf ((char *) create_line, "  Spits acid on %s.",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Spits acid on %s.",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 			acid_pc(target,6);
 		}
 		else { // on monst
@@ -2819,27 +2819,27 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		switch (level) {
 			case 1: case 2: case 20:
 				run_a_missile(source,targ_space,3,1,12,0,0,100);
-				sprintf ((char *) create_line, "  Shoots at %s.",(char *) univ.party[target].name.c_str());
+				sprintf (create_line, "  Shoots at %s.",univ.party[target].name.c_str());
 				break;
 			case 3:
 				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				sprintf ((char *) create_line, "  Throws spear at %s.",(char *) univ.party[target].name.c_str());
+				sprintf (create_line, "  Throws spear at %s.",univ.party[target].name.c_str());
 				break;
 			case 7:
 				run_a_missile(source,targ_space,7,1,14,0,0,100);
-				sprintf ((char *) create_line, "  Throws razordisk at %s.",(char *) univ.party[target].name.c_str());
+				sprintf (create_line, "  Throws razordisk at %s.",univ.party[target].name.c_str());
 				break;
 			case 34:
 				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				sprintf ((char *) create_line, "  Fires spines at %s.",(char *) univ.party[target].name.c_str());
+				sprintf (create_line, "  Fires spines at %s.",univ.party[target].name.c_str());
 				break;
 			default:
 				run_a_missile(source,targ_space,12,1,14,0,0,100);
-				sprintf ((char *) create_line, "  Throws rock at %s.",(char *) univ.party[target].name.c_str());
+				sprintf (create_line, "  Throws rock at %s.",univ.party[target].name.c_str());
 				break;
 		}
 		
-		add_string_to_buf((char *) create_line);
+		add_string_to_buf(create_line);
 		
 		// Check sanctuary
 		if(univ.party[target].status[eStatus::INVISIBLE] > 0) {
@@ -2865,8 +2865,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			}
 		}
 		else {
-			sprintf ((char *) create_line, "  Misses %s.",(char *) univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			sprintf (create_line, "  Misses %s.",univ.party[target].name.c_str());
+			add_string_to_buf(create_line);
 		}
 		
 	}
@@ -4140,9 +4140,9 @@ void handle_disease()
 							dumbfound_pc(i,3);
 							break;
 						case 9: case 10:
-							sprintf ((char *) create_line, "  %s unaffected. ",
-									 (char *) univ.party[i].name.c_str());
-							add_string_to_buf((char *) create_line);
+							sprintf (create_line, "  %s unaffected. ",
+									 univ.party[i].name.c_str());
+							add_string_to_buf(create_line);
 							break;
 					}
 					r1 = get_ran(1,0,7);
@@ -4325,21 +4325,21 @@ bool combat_cast_mage_spell()
 							play_sound(4);
 							switch (spell_num) {
 								case 14:
-									sprintf ((char *) c_line, "  %s receives venom.               ",
-											 (char *) univ.party[target].name.c_str());
+									sprintf (c_line, "  %s receives venom.               ",
+											 univ.party[target].name.c_str());
 									poison_weapon(target,3 + bonus,1);
 									store_m_type = 11;
 									break;
 									
 								case  3:
-									sprintf ((char *) c_line, "  %s stronger.                     ",
-											 (char *) univ.party[target].name.c_str());
+									sprintf (c_line, "  %s stronger.                     ",
+											 univ.party[target].name.c_str());
 									univ.party[target].status[eStatus::BLESS_CURSE] = univ.party[target].status[eStatus::BLESS_CURSE] + 3;
 									store_m_type = 8;
 									break;
 								case 29:
-									sprintf ((char *) c_line, "  %s resistant.                     ",
-											 (char *) univ.party[target].name.c_str());
+									sprintf (c_line, "  %s resistant.                     ",
+											 univ.party[target].name.c_str());
 									univ.party[target].status[eStatus::MAGIC_RESISTANCE] = univ.party[target].status[eStatus::MAGIC_RESISTANCE] + 5 + bonus;
 									store_m_type = 15;
 									break;
@@ -4347,12 +4347,12 @@ bool combat_cast_mage_spell()
 								default:
 									i = (spell_num == 2) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
 									univ.party[target].status[eStatus::HASTE_SLOW] = min(8, univ.party[target].status[eStatus::HASTE_SLOW] + i);
-									sprintf ((char *) c_line, "  %s hasted.                       ",
-											 (char *) univ.party[target].name.c_str());
+									sprintf (c_line, "  %s hasted.                       ",
+											 univ.party[target].name.c_str());
 									store_m_type = 8;
 									break;
 							}
-							add_string_to_buf((char *) c_line);
+							add_string_to_buf(c_line);
 							add_missile(pc_pos[target],store_m_type,0,0,0);
 						}
 						break;
@@ -4374,10 +4374,10 @@ bool combat_cast_mage_spell()
 							}
 						//play_sound(4);
 						if (spell_num == 39)
-							sprintf ((char *) c_line, "  Party hasted.     ");
+							sprintf (c_line, "  Party hasted.     ");
 						else
-							sprintf ((char *) c_line, "  Party blessed!           ");
-						add_string_to_buf((char *) c_line);
+							sprintf (c_line, "  Party blessed!           ");
+						add_string_to_buf(c_line);
 						
 						break;
 						
@@ -4389,12 +4389,12 @@ bool combat_cast_mage_spell()
 						if (spell_num == 47)
 							store_sound = 54;
 						switch (spell_num) {
-							case 32: sprintf ((char *) c_line, "  Enemy slowed:       "); break;
-							case 49: sprintf ((char *) c_line, "  Enemy ravaged:              ");break;
-							case 47: sprintf ((char *) c_line, "  Enemy scared:   ");break;
-							case 56: sprintf ((char *) c_line, "  Enemy paralyzed:   ");break;
+							case 32: sprintf (c_line, "  Enemy slowed:       "); break;
+							case 49: sprintf (c_line, "  Enemy ravaged:              ");break;
+							case 47: sprintf (c_line, "  Enemy scared:   ");break;
+							case 56: sprintf (c_line, "  Enemy paralyzed:   ");break;
 						}
-						add_string_to_buf((char *) c_line);
+						add_string_to_buf(c_line);
 						for (i = 0; i < univ.town->max_monst(); i++) {
 							if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 								&& (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= mage_range[spell_num])
@@ -4647,12 +4647,12 @@ void start_fancy_spell_targeting(short num)
 	
 	for (i = 0; i < 8; i++)
 		spell_targets[i] = null_loc;
-	sprintf ((char *) create_line, "  Target spell.                ");
+	sprintf (create_line, "  Target spell.                ");
 	if (num < 100)
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
-	add_string_to_buf((char *) create_line);
+	add_string_to_buf(create_line);
 	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
 	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];
