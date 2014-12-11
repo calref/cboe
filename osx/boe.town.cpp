@@ -145,7 +145,8 @@ void start_town_mode(short which_town, short entry_dir)
 	former_town = town_number = which_town;
 	
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
-		giveError("The scenario tried to put you into a town that doesn't exist.");
+		giveError("The scenario tried to put you into a town that doesn't exist.",
+			"Requested town: " + std::to_string(town_number) + "|Max town: " + std::to_string(scenario.num_towns));
 		return;
 	}
 	
@@ -168,7 +169,8 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	
 	if ((town_number < 0) || (town_number >= scenario.num_towns)) {
-		giveError("The scenario tried to put you into a town that doesn't exist.");
+		giveError("The scenario tried to put you into a town that doesn't exist.",
+			"Requested town: " + std::to_string(former_town) + "|Adjusted town: " + std::to_string(town_number) + "|Max town: " + std::to_string(scenario.num_towns));
 		return;
 	}
 	
