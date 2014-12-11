@@ -2448,8 +2448,8 @@ void switch_pc(short which)
 	cPlayer store_pc;
 	
 	if (current_switch < 6) {
-		add_string_to_buf("Switch: OK.");
 		if (current_switch != which) {
+			add_string_to_buf("Switch: OK.");
 			store_pc = univ.party[which];
 			univ.party[which] = univ.party[current_switch];
 			univ.party[current_switch] = store_pc;
@@ -2458,8 +2458,8 @@ void switch_pc(short which)
 			else if (current_pc == which)
 				current_pc = current_switch;
 			set_stat_window(current_pc);
-			current_switch = 6;
-		}
+		} else ASB("Switch: Not with self.");
+		current_switch = 6;
 	}
 	else {
 		add_string_to_buf("Switch: Switch with who?    ");
