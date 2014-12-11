@@ -2504,7 +2504,7 @@ void handle_death()
 			if(!file_to_load.empty()) load_party(file_to_load);
 			if (party_toast() == false) {
 				if(overall_mode != MODE_STARTUP)
-					post_load();
+					post_load(), finish_load_party();
             	return;
 			}
 		}
