@@ -315,6 +315,8 @@ bool handle_action(sf::Event event)
 	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
 	short store_sp[6];
 	ter_num_t ter;
+	bool right_button = event.mouseButton.button == sf::Mouse::Right;
+	eGameMode previous_mode;
 	
 	char str[60];
 	location the_point,point_in_area;
@@ -686,7 +688,7 @@ bool handle_action(sf::Event event)
 		
 		destination = cur_loc;
 		
-		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+		if((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && !right_button) {
 			if ((i == 4) & (j == 4)) { // Pausing
 				if (overall_mode == MODE_COMBAT) {
 					char_stand_ready();
@@ -817,6 +819,12 @@ bool handle_action(sf::Event event)
 		}
 		
 		// MARK: Begin: Looking at something
+		if(right_button) {
+			previous_mode = overall_mode;
+			if(is_combat()) overall_mode = MODE_LOOK_COMBAT;
+			if(is_out()) overall_mode = MODE_LOOK_OUTDOORS;
+			if(is_town()) overall_mode = MODE_LOOK_TOWN;
+		}
 		if ((overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
@@ -872,9 +880,15 @@ bool handle_action(sf::Event event)
 //			sprintf(store_str,"  Mod: %d",event.modifiers);
 //			add_string_to_buf(store_str);
 			
-			// If option not pressed, looking done, so restore center
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) {
-				if (overall_mode == MODE_LOOK_COMBAT) {
+			// If option/ctrl not pressed, looking done, so restore center
+			bool look_done = true;
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) look_done = false;
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) look_done = false;
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) look_done = false;
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) look_done = false;
+			if(look_done) {
+				if(right_button) overall_mode = previous_mode;
+				else if (overall_mode == MODE_LOOK_COMBAT) {
 					overall_mode = MODE_COMBAT;
 					center = pc_pos[current_pc];
 					pause(5);
