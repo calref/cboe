@@ -1249,50 +1249,38 @@ void erase_out_specials()
 	short sd1,sd2;
 	location where;
 	
-	for (k = 0; k < 2; k++)
-		for (l = 0; l < 2; l++)
-			if (quadrant_legal(k,l) == true) {
-				for (m = 0; m < 8; m++)
-					if ((univ.out.outdoors[k][l].exit_dests[m] >= 0) &&
-						(univ.out.outdoors[k][l].exit_locs[m].x == minmax(0,47,univ.out.outdoors[k][l].exit_locs[m].x)) &&
-						(univ.out.outdoors[k][l].exit_locs[m].y == minmax(0,47,univ.out.outdoors[k][l].exit_locs[m].y))) {
-						if (univ.party.can_find_town[univ.out.outdoors[k][l].exit_dests[m]] == 0) {
-							univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] =
-							scenario.ter_types[univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y]].flag1.u;
-							//exit_g_type[univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] - 217];
-							
+	for (short i = 0; i < 2; i++)
+		for (short j = 0; j < 2; j++)
+			if (quadrant_legal(i,j) == true) {
+				for(short k = 0; k < 18; k++) {
+					if(i < 8 && univ.out.outdoors[i][j].exit_dests[k] >= 0 &&
+						(univ.out.outdoors[i][j].exit_locs[k].x == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].x)) &&
+						(univ.out.outdoors[i][j].exit_locs[k].y == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].y))) {
+						if (univ.party.can_find_town[univ.out.outdoors[i][j].exit_dests[k]] == 0) {
+							univ.out[48 * i + univ.out.outdoors[i][j].exit_locs[k].x][48 * j + univ.out.outdoors[i][j].exit_locs[k].y] =
+							scenario.ter_types[univ.out.outdoors[i][j].terrain[univ.out.outdoors[i][j].exit_locs[k].x][univ.out.outdoors[i][j].exit_locs[k].y]].flag1.u;
 						}
-						else if (univ.party.can_find_town[univ.out.outdoors[k][l].exit_dests[m]] > 0) {
-							univ.out[48 * k + univ.out.outdoors[k][l].exit_locs[m].x][48 * l + univ.out.outdoors[k][l].exit_locs[m].y] =
-							univ.out.outdoors[k][l].terrain[univ.out.outdoors[k][l].exit_locs[m].x][univ.out.outdoors[k][l].exit_locs[m].y];
+						else if (univ.party.can_find_town[univ.out.outdoors[i][j].exit_dests[k]] > 0) {
+							univ.out[48 * i + univ.out.outdoors[i][j].exit_locs[k].x][48 * j + univ.out.outdoors[i][j].exit_locs[k].y] =
+							univ.out.outdoors[i][j].terrain[univ.out.outdoors[i][j].exit_locs[k].x][univ.out.outdoors[i][j].exit_locs[k].y];
 							
 						}
 					}
-				// TODO: Next four lines aren't needed, but first would need to change loop variables
-			}
-	for (i = 0; i < 2; i++)
-		for (j = 0; j < 2; j++)
-			if (quadrant_legal(i,j) == true) {
-				for (k = 0; k < 18; k++) {
-					//if (univ.out.outdoors[i][j].special_id[k] >= 0) {
+					if (univ.out.outdoors[i][j].special_id[k] < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
 					out_num = scenario.out_width * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 					
 					sn = univ.out.outdoors[i][j].specials[univ.out.outdoors[i][j].special_id[k]];
 					sd1 = sn.sd1; sd2 = sn.sd2;
 					if ((sd_legit(sd1,sd2) == true) && (PSD[sd1][sd2] == 250)) {
 						where = univ.out.outdoors[i][j].special_locs[k];
-						if (where.x != 100) {
 							if ((where.x > 48) || (where.y > 48)
 								|| (where.x < 0) || (where.y < 0)) {
-								// TODO: Play an error sound here
+								beep();
 								add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-								//univ.out.outdoors[i][j].special_id[k] = -1;
-								univ.out.outdoors[i][j].special_locs[k].x = 100;
+								univ.out.outdoors[i][j].special_id[k] = -1; // TODO: Again, was there a reason for commenting this out?
 							}
 							
-							// TODO: I'm not quite sure if this should be within this block
 							univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
-						}
 					}
 				}
 			}
