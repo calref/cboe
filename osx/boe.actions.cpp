@@ -359,7 +359,8 @@ bool handle_action(sf::Event event)
 				}
 			break;
 			
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case MODE_DROP_TOWN:
+			// TODO: The inclusion of DROP in this and the following case may be incorrect.
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case MODE_DROP_TOWN:
 			// I think 5 is "town drop"
 //			cur_loc = c_town.p_loc;
 			cur_loc = center;
@@ -373,7 +374,7 @@ bool handle_action(sf::Event event)
 			
 		case MODE_TALKING: case MODE_SHOPPING: break;
 			
-		case MODE_TOWN_TARGET: case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
+		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
 			cur_loc = (overall_mode < MODE_COMBAT) ? center : pc_pos[current_pc];
 			for (i = 0; i < 9; i++)
@@ -419,19 +420,16 @@ bool handle_action(sf::Event event)
 					add_string_to_buf("  Cancelled.                   ");
 					overall_mode = MODE_TOWN;
 				}
-				else if (overall_mode >= MODE_COMBAT) {
-					if ((overall_mode == MODE_COMBAT) && (button_hit == 0)) {
+				else if (overall_mode == MODE_COMBAT) {
+					if(button_hit == 0) {
 						did_something = combat_cast_mage_spell();
 						need_reprint = true;
 					}
-					if ((overall_mode == MODE_COMBAT) && (button_hit == 1)) {
+					if(button_hit == 1) {
 						did_something = combat_cast_priest_spell();
 						need_reprint = true;
 					}
-					if ((overall_mode != MODE_SPELL_TARGET) && (overall_mode != MODE_FANCY_TARGET)) {
-						need_redraw = true;
-					}
-					else did_something = false;
+					need_redraw = true;
 					spell_forced = false;
 					redraw_terrain();
 				}
@@ -447,24 +445,12 @@ bool handle_action(sf::Event event)
 				break;
 				
 			case 2:
-				if (overall_mode == MODE_OUTDOORS) {
-					overall_mode = MODE_LOOK_OUTDOORS;
-					add_string_to_buf("Look: Select a space. Option-click        ");
-					add_string_to_buf("  to look more than once.");
-					need_redraw = true;
-				}
-				if (overall_mode == MODE_TOWN) {
-					overall_mode = MODE_LOOK_TOWN;
-					add_string_to_buf("Look: Select a space. Option-click        ");
-					add_string_to_buf("  to look more than once.");
-					need_redraw = true;
-				}
-				if (overall_mode == MODE_COMBAT) {
-					overall_mode = MODE_LOOK_COMBAT;
-					add_string_to_buf("Look: Select a space. Option-click        ");
-					add_string_to_buf("  to look more than once.");
-					need_redraw = true;
-				}
+				if (overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
+				if (overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
+				if (overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
+				add_string_to_buf("Look: Select a space. You can also       ");
+				add_string_to_buf("  right click to look.");
+				need_redraw = true;
 				break;
 				
 			case 3:
@@ -504,11 +490,9 @@ bool handle_action(sf::Event event)
 						univ.party.food -= 6;
 						while (i < 50) {
 							increase_age();
-							j = get_ran(1,1,2);
-							if (j == 2)
+							if (get_ran(1,1,2) == 2)
 								do_monsters();
-							j = get_ran(1,1,70);
-							if (j == 10)
+							if (get_ran(1,1,70) == 10)
 								create_wand_monst();
 							if (nearest_monster() <= 3) {
 								i = 200;
@@ -521,8 +505,7 @@ bool handle_action(sf::Event event)
 					if (i == 50) {
 						univ.party.age += 1200;////
 						add_string_to_buf("  Rest successful.                ");
-						k = get_ran(5,1,10);
-						heal_party(k);
+						heal_party(get_ran(5,1,10));
 						restore_sp_party(50);
 						put_pc_screen();
 					}
@@ -952,8 +935,8 @@ bool handle_action(sf::Event event)
 		// MARK: Begin : Targeting a space
 		if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) ||
 			(overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROP_COMBAT)) {
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
+			destination.x += i - 4;
+			destination.y += j - 4;
 			if (overall_mode == MODE_SPELL_TARGET)
 				do_combat_cast(destination);
 			if ((overall_mode == MODE_THROWING) || (overall_mode == MODE_FIRING))
@@ -982,8 +965,8 @@ bool handle_action(sf::Event event)
 			put_item_screen(stat_window,0);
 		}
 		if ((overall_mode > MODE_TALK_TOWN) && (overall_mode < MODE_COMBAT/*6*/)) {
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
+			destination.x += i - 4;
+			destination.y += j - 4;
 			if (overall_mode == MODE_TOWN_TARGET) {
 				cast_town_spell(destination);
 				did_something = true;
@@ -1131,6 +1114,7 @@ bool handle_action(sf::Event event)
 									sprintf(str,"Now active: %s",univ.party[i].name.c_str());
 									add_string_to_buf(str);
 									adjust_spell_menus();
+									need_redraw = true;
 								}
 							}
 							set_stat_window(i);
@@ -1173,6 +1157,7 @@ bool handle_action(sf::Event event)
 								else if (prime_time() == true) {
 									equip_item(stat_window, item_hit);
 									take_ap(1);
+									need_redraw = true;
 								}
 								break;
 							case 1: // use
@@ -1180,10 +1165,12 @@ bool handle_action(sf::Event event)
 								if ((overall_mode != MODE_TOWN_TARGET) && (overall_mode != MODE_SPELL_TARGET))
 									did_something = true;
 								take_ap(3);
+								need_redraw = true;
 								break;
 							case 2: // give
 								give_thing(stat_window, item_hit);
 								did_something = true;
+								need_redraw = true;
 								take_ap(1);
 								break;
 							case 3: // drop
@@ -1197,6 +1184,7 @@ bool handle_action(sf::Event event)
 									add_string_to_buf("Drop item: Click where to drop item.");
 									store_drop_item = item_hit;
 									overall_mode = (is_town()) ? MODE_DROP_TOWN : MODE_DROP_COMBAT;
+									need_redraw = true;
 								}
 								break;
 							case 4: // info
@@ -1213,6 +1201,7 @@ bool handle_action(sf::Event event)
 											play_sound(68);
 											ASB("Your item is identified.");
 											univ.party[stat_window].items[item_hit].ident = true;
+											combine_things(stat_window);
 										}
 										break;
 									case 3: case 4: case 5: // various selling
@@ -1358,8 +1347,7 @@ bool handle_action(sf::Event event)
 			// Wand monsts
 			if ((overall_mode == MODE_OUTDOORS) && (party_toast() == false) && (univ.party.age % 10 == 0)) {
 				
-				i = get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200);
-				if (i == 10)
+				if (get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
 					create_wand_monst();
 				for (i = 0; i < 10; i++)
 					if (univ.party.out_c[i].exists == true)
@@ -1379,8 +1367,7 @@ bool handle_action(sf::Event event)
 						}
 			}
 			if (overall_mode == MODE_TOWN) {
-				i = get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200);
-				if (i == 2)
+				if (get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
 					create_wand_monst();
 			}
 			
@@ -1754,14 +1741,12 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'B':
 			if(!in_scen_debug) break;
-			for(i=0;i<6;i++)
-                if(isSplit(univ.party[i].main_status))
-                    univ.party[i].main_status -= eMainStatus::SPLIT;
 			if(overall_mode == MODE_OUTDOORS){
 				add_string_to_buf("Debug - Leave Town: You're not in town!");
 				print_buf();
 				break;
 			}
+			univ.party.end_split(0);
 			overall_mode = MODE_OUTDOORS;
 			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.p_loc.x,univ.party.p_loc.y);
 			clear_map();
