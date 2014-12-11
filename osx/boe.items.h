@@ -52,7 +52,6 @@ void reset_item_max();
 short item_val(cItemRec item);
 bool give_to_party(cItemRec item, short print_result);
 void place_treasure(location where,short level,short loot,short mode);
-short luck_total();
 cItemRec return_treasure(short loot);
 void refresh_store_items();
 std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);

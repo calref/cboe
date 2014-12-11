@@ -951,19 +951,44 @@ void drain_pc(short which_pc,short how_much)
 	}
 }
 
-// mode: 0 = total, 1 = mean, 2 = min, 3 = max
+static short check_party_stat_get(short pc, short which_stat) {
+	if(which_stat <= SKILL_LUCK) return univ.party[pc].skills[which_stat];
+	else switch(which_stat) {
+		case SKILL_MAX_HP:
+			return univ.party[pc].max_health;
+		case SKILL_MAX_SP:
+			return univ.party[pc].max_sp;
+		case 100:
+			return univ.party[pc].cur_health;
+		case 101:
+			return univ.party[pc].cur_sp;
+		case 102:
+			return univ.party[pc].experience;
+		case 103:
+			return univ.party[pc].skill_pts;
+		case 104:
+			return univ.party[pc].level;
+	}
+	return 0;
+}
+
+// mode: 0 = total, 1 = mean, 2 = min, 3 = max, 10+i = just PC i
+// Special values for which_stat:
+// 100 - Current HP; 101 - Current SP; 102 - Experience; 103 - Skill Points; 104 - Level
 short check_party_stat(short which_stat, short mode) {
+	if(mode >= 10) return check_party_stat_get(mode - 10, which_stat);
+	
 	short total = mode == 2 ? std::numeric_limits<short>::max() : 0, num_pcs = 0;
 	
 	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			num_pcs++;
 			if(mode < 2)
-				total += univ.party[i].skills[which_stat];
+				total += check_party_stat_get(i,which_stat);
 			else if(mode == 2)
-				total = max(univ.party[i].skills[which_stat], total);
+				total = max(check_party_stat_get(i,which_stat), total);
 			else if(mode == 3)
-				total = min(univ.party[i].skills[which_stat], total);
+				total = min(check_party_stat_get(i,which_stat), total);
 		}
 	
 	if(mode == 1 && num_pcs > 0)

@@ -447,6 +447,8 @@ enum eSkill {
 	SKILL_ASSASSINATION = 16,
 	SKILL_POISON = 17,
 	SKILL_LUCK = 18,
+	SKILL_MAX_HP = 19,
+	SKILL_MAX_SP = 20,
 };
 
 /* adven[i].traits */ //complete

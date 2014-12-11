@@ -3068,15 +3068,24 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_STATISTIC:
+			if(spec.ex2a < 0 || spec.ex2a > 25) {
+				giveError("Attempted to check an invalid statistic (0...25).");
+				break;
+			}
+			if(spec.ex2b < -1 || spec.ex2b > 3) {
+				giveError("Invalid statistic-checking mode (-1...3); will fall back to cumulative check.");
+				spec.ex2b = 0;
+			}
+			
 			if(spec.ex2b == -1) {
 				// Check specific PC's stat (uses the active PC from Select PC node)
-				short pc;
+				short pc = 6;
 				if(univ.party.is_split())
 					pc = univ.party.pc_present();
 				if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
 					pc = current_pc_picked_in_spec_enc;
 				if(pc != 6) {
-					if(univ.party[pc].skills[spec.ex2a] >= spec.ex1a)
+					if(check_party_stat(spec.ex2a, 10 + pc) >= spec.ex1a)
 						*next_spec = spec.ex1b;
 					break;
 				}

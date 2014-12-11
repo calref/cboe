@@ -1347,11 +1347,11 @@ void place_treasure(location where,short level,short loot,short mode)
 	}
 	for (j = 0; j < 5; j++) {
 		r1 = get_ran(1,1,100);
-		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + luck_total())) {
+		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + check_party_stat(SKILL_LUCK, 0))) {
 			r1 = get_ran(1,0,9);
 			min = min_chart[treas_chart[loot][j]][r1];
 			r1 = get_ran(1,0,9);
-			max = (min + level + (2 * (loot - 1)) + (luck_total() / 3)) * max_mult[treas_chart[loot][j]][r1];
+			max = (min + level + (2 * (loot - 1)) + (check_party_stat(SKILL_LUCK, 0) / 3)) * max_mult[treas_chart[loot][j]][r1];
 			if (get_ran(1,0,1000) == 500) {
 				max = 10000;
 				min = 100;
@@ -1403,16 +1403,6 @@ void place_treasure(location where,short level,short loot,short mode)
 			}
 		}
 	}
-}
-
-short luck_total()
-{
-	short i = 0;
-	
-	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			i += univ.party[i].skills[18];
-	return i;
 }
 
 cItemRec return_treasure(short loot) {
