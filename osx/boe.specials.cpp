@@ -1986,14 +1986,18 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		
 		
 		// Convert pointer values to reference values
-		if(cur_node.sd1 < -1) cur_node.sd1 = univ.party.get_ptr(-cur_node.sd1);
-		if(cur_node.sd2 < -1) cur_node.sd2 = univ.party.get_ptr(-cur_node.sd2);
-		if(cur_node.ex1a < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1a);
-		if(cur_node.ex1b < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1b);
-		if(cur_node.ex1c < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1c);
-		if(cur_node.ex2a < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2a);
-		if(cur_node.ex2b < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2b);
-		if(cur_node.ex2c < -1) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2c);
+		// TODO: Might need to make a database of which nodes don't allow pointers in which slots.
+		// This is because some nodes now use -2 as a meaningful value. If that's all, then
+		// just disallowing single-digit pointers should suffice, but what about arithmetic?
+		// (Of course, currently all SDFs are positive, so allowing negative arithmetic is useless.)
+		if(cur_node.sd1 <= -10) cur_node.sd1 = univ.party.get_ptr(-cur_node.sd1);
+		if(cur_node.sd2 <= -10) cur_node.sd2 = univ.party.get_ptr(-cur_node.sd2);
+		if(cur_node.ex1a <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1a);
+		if(cur_node.ex1b <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1b);
+		if(cur_node.ex1c <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1c);
+		if(cur_node.ex2a <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2a);
+		if(cur_node.ex2b <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2b);
+		if(cur_node.ex2c <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex2c);
 		// TODO: Should pointers be allowed in message, pict, or jumpto as well?
 		
 		//print_nums(1111,cur_spec_type,cur_node.type);
