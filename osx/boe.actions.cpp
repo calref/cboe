@@ -2154,7 +2154,7 @@ void do_save(short mode)
 		return;
 	}
 	fs::path file = univ.file;
-	if(mode == 1) file = nav_put_party();
+	if(mode == 1) file = nav_put_party(file);
 	if(!file.empty()) {
 		univ.file = file;
 		save_party(univ.file);

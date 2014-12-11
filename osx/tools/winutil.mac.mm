@@ -196,7 +196,12 @@ fs::path nav_get_scenario() {
 	return "";
 }
 
-fs::path nav_put_scenario() {
+fs::path nav_put_scenario(fs::path def) {
+	if(!def.empty()) {
+		// TODO: Hopefully requesting UTF-8 doesn't break anything...
+		[dlg_put_scen setNameFieldStringValue:[NSString stringWithUTF8String: def.filename().c_str()]];
+		[dlg_put_scen setDirectoryURL:[NSURL URLWithString:[NSString stringWithUTF8String: def.parent_path().c_str()]]];
+	}
 	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
@@ -212,7 +217,12 @@ fs::path nav_get_party() {
 	return "";
 }
 
-fs::path nav_put_party() {
+fs::path nav_put_party(fs::path def) {
+	if(!def.empty()) {
+		// TODO: Hopefully requesting UTF-8 doesn't break anything...
+		[dlg_put_game setNameFieldStringValue:[NSString stringWithUTF8String: def.filename().c_str()]];
+		[dlg_put_game setDirectoryURL:[NSURL URLWithString:[NSString stringWithUTF8String: def.parent_path().c_str()]]];
+	}
 	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)

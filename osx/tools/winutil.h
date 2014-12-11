@@ -22,9 +22,9 @@ void setWindowFloating(sf::Window& win, bool floating);
 void init_fileio();
 
 fs::path nav_get_party();
-fs::path nav_put_party();
+fs::path nav_put_party(fs::path def = "");
 fs::path nav_get_scenario();
-fs::path nav_put_scenario();
+fs::path nav_put_scenario(fs::path def = "");
 
 void beep();
 
