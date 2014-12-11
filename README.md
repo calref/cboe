@@ -28,6 +28,12 @@ The current task at hand is to merge the Windows code into the current
 Mac codebase, which no longer uses platform-specific APIs for most
 things (a few files would need to be rewritten for Windows).
 
+I'd like to consider the Win32/ directory to be considered "frozen" from
+this point on. Apart from minor bugfixes, it should not be altered. The
+src/ directory is to be the official codebase now; as of the time of
+this writing, it only compiles on OSX, but reimplementing a handful of
+files (basically all the .mm ones) should suffice to fix that.
+
 Helpful Links
 -------------
 * [Jenkins Server](http://te.calref.net:8080/) - Runs a build after
