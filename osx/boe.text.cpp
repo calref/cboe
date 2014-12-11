@@ -1323,6 +1323,55 @@ void add_string_to_buf(std::string str, unsigned short indent)
 		return;
 	}
 	
+	// Now check if this is a duplicate message
+	int prev_pointer = buf_pointer - 1;
+	if(prev_pointer < 0) prev_pointer = TEXT_BUF_LEN - 1;
+	size_t last = 0, new_last = str.find_last_not_of(' ');
+	while(last < str.length() && str[last] == text_buffer[prev_pointer].line[last])
+		last++;
+	while(text_buffer[prev_pointer].line[--last] == ' ');
+	bool is_dup;
+	if(last == new_last) {
+		size_t i, num_pos = 0;
+		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen} state = begin;
+		for(i = last; i < 50 && text_buffer[prev_pointer].line[i]; i++) {
+			if(state == f_x) num_pos = i;
+			if(isdigit(text_buffer[prev_pointer].line[i]) && (state == f_x || state == f_num))
+				state = f_num;
+			else switch(text_buffer[prev_pointer].line[i]) {
+				case ' ':
+					if(state == begin || state == f_space)
+						state = f_space;
+					break;
+				case '(':
+					if(state == begin || state == f_space)
+						state = f_lparen;
+					break;
+				case 'x':
+					if(state == f_lparen)
+						state = f_x;
+					break;
+				case ')':
+					if(state == f_num)
+						state = f_rparen;
+					break;
+			}
+			if(state == f_rparen) break;
+		}
+		if(state == begin || state == f_space || state == f_rparen) {
+			is_dup = true;
+			last++;
+		}
+		if(is_dup) {
+			int lastCount = 0;
+			if(num_pos > 0)
+				sscanf(text_buffer[prev_pointer].line + num_pos, "%d", &lastCount);
+			
+			sprintf(text_buffer[prev_pointer].line + last, " (x%d)", lastCount + 1);
+			return;
+		}
+	}
+	
 	text_sbar->setPosition(58); // TODO: This seems oddly specific
 	if (buf_pointer == mark_where_printing_long) {
 		printing_long = true;
