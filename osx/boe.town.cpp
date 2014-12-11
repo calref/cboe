@@ -734,6 +734,12 @@ void start_town_combat(short direction)
 	create_town_combat_terrain();
 	
 	place_party(direction);
+	if(current_pc == 6)
+		for(i = 0; i < 6; i++)
+			if(univ.party[i].main_status == eMainStatus::ALIVE) {
+				current_pc = i;
+				break;
+			}
 	center = pc_pos[current_pc];
 	
 	which_combat_type = 1;
