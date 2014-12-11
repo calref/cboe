@@ -202,6 +202,7 @@ short sight_obscurity(short x,short y) {
 	what_terrain = coord_to_ter(x,y);
 	
 	// TODO: This should not be hard-coded!
+	// It appears to refer to mountain cave entrances, surface tower, and surface pit. (WHY?)
 	if ((what_terrain >= 237) && (what_terrain <= 242))
 		return 1;
 	
@@ -326,6 +327,7 @@ bool is_blocked(location to_check)
 			return true;
 		if ((is_combat()) && (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY))
 			return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
+		// Note: The purpose of the above check is to avoid portals.
 		
 		// Party there?
 		if (is_town())

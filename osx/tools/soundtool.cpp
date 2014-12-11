@@ -111,7 +111,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 		}
 		snd_played[channel] = abs(which);
 	}
-	if (which < 0) // TODO: Guessing the delay should be in milliseconds; maybe this isn't the case.
+	if (which < 0)
 		sf::sleep(time_in_ticks(sound_delay[-1 * which]));
 	if(how_many_times > 1)
 		play_sound(which, how_many_times - 1);

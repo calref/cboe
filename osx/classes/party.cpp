@@ -619,7 +619,8 @@ void cParty::readFrom(std::istream& file){
 
 cPlayer& cParty::operator[](unsigned short n){
 	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
-	else if(n == 6) return adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
+	else if(n == 6)
+		return adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
 	return adven[n];
 }
 

@@ -715,6 +715,8 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 		return false;
 	}
 	
+	// TODO: len was never assigned at all, is this the correct value?
+	len = sizeof(store_out);
 	n = fread(&store_out, len, 1, file_id);
 	for (i = 0; i < 120; i++) {
 		len = (long) (store_out.strlens[i]);

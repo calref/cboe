@@ -440,7 +440,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 bool pc_combat_move(location destination) ////
 {
 	short dir,monst_hit,s1,s2,i,monst_exist,switch_pc;
-	bool keep_going = true,forced = false,check_f;
+	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
 	short spec_num;
 	

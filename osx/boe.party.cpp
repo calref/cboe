@@ -242,8 +242,6 @@ void init_party(short mode)
 		univ.party.can_find_town[i] = 0;
 	for (i = 0; i < 20; i++)
 		univ.party.key_times[i] = 30000;
-//	for (i = 0; i < 30; i++)
-//		univ.party.party_event_timers[i] = 0;
 	univ.party.party_event_timers.clear();
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = 0;
@@ -369,8 +367,7 @@ void init_party_scen_data()
 //			univ.party.special_notes_str[i][j] = 0;
 //	for (i = 0; i < 120; i++)
 //		univ.party.talk_save[i].personality = -1;
-	// TODO: The journal at least should persist across scenarios; the other two, maybe, maybe not
-	univ.party.journal.clear();
+	// TODO: The journal at least should persist across scenarios; the special and talk notes, maybe, maybe not
 	univ.party.special_notes.clear();
 	univ.party.talk_save.clear();
 	
@@ -380,8 +377,6 @@ void init_party_scen_data()
 		univ.party.can_find_town[i] = 1 - scenario.town_hidden[i];
 	for (i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
-//	for (i = 0; i < 30; i++)
-//	 	univ.party.party_event_timers[i] = 0;
 	univ.party.party_event_timers.clear();
 	for (i = 0; i < 50; i++)
 		univ.party.spec_items[i] = (scenario.special_items[i].flags >= 10) ? 1 : 0;
@@ -471,8 +466,6 @@ void put_party_in_scen(std::string scen_name)
 	univ.party.age = 0;
 	for (i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
-//	for (i = 0; i < 30; i++)
-//	 	univ.party.party_event_timers[i] = 0;
 	univ.party.party_event_timers.clear();
 	
 	fs::path path;
@@ -1992,6 +1985,8 @@ bool pc_can_cast_spell(short pc_num,short type,short spell_num)
 	
 	level = spell_level[spell_num];
 	
+	if(overall_mode >= MODE_TALKING)
+		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if ((spell_num < 0) || (spell_num > 61))
 		return false;
 	if (univ.party[pc_num].skills[9 + type] < level)

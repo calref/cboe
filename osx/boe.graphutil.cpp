@@ -597,7 +597,7 @@ RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_
 //mode; // 0 - left  1 - right  +10 - combat mode
 {
 	RECT store_rect = {0,0,36,28};
-	short adj;
+	short adj = 0;
 	
 	if (mode >= 10) {
 		adj += 4;

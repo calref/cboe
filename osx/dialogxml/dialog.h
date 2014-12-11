@@ -97,6 +97,14 @@ public:
 	template<typename type> void setResult(const type& val){
 		result = val;
 	}
+	/// Iterate through all the controls in the dialog.
+	/// @param callback A function taking a string as its first argument
+	/// and a control reference as its second argument.
+	template<typename Fcn> void forEach(Fcn callback) {
+		for(auto ctrl : controls) {
+			callback(ctrl.first, *ctrl.second);
+		}
+	}
 	/// Set the background pattern of the dialog.
 	/// @param n The numeric index of the background pattern, which should be in the range [0,20].
 	/// You can use the constants BG_LIGHT or BG_DARK to reference the most commonly used backgrounds.

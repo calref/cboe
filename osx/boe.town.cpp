@@ -1244,7 +1244,7 @@ void erase_specials()////
 void erase_out_specials()
 {
 	
-	short i,j,k,l,m,out_num;
+	short out_num;
 	cSpecial sn;
 	short sd1,sd2;
 	location where;

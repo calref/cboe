@@ -886,6 +886,8 @@ void set_town_attitude(short lo,short hi,short att) {
 		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.p_loc, &a[0], &a[1], &a[2]);
 }
 
+// TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.
+
 
 static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array)
 {

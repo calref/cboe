@@ -365,7 +365,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			fast_bang = 1;
 			if(mode == eSpecCtx::COMBAT_MOVE)
 				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN,0);
-			if (overall_mode < MODE_COMBAT)
+			else
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
 			break;
@@ -1533,7 +1533,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
 		how_much /= 2;
 	
-	// Rentar-Ihrno?
+	// Invulnerable?
 	if (victim->spec_skill == 36)
 		how_much = how_much / 10;
 	
@@ -1632,14 +1632,8 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	}
 	
 	if ((victim->attitude % 2 != 1) && (who_hit < 7) &&
-		(processing_fields == false) && (monsters_going == false)) {
+		((processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
 		add_string_to_buf("Damaged an innocent.           ");
-		victim->attitude = 1;
-		make_town_hostile();
-	}
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) &&
-		((processing_fields == true) && (PSD[SDF_HOSTILES_PRESENT] == 0))) {
-		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
 		make_town_hostile();
 	}
@@ -1663,7 +1657,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	} else switch(which_m->m_type) {
 		case eRace::GIANT: play_sound(29); break;
 			// TODO: Should sliths be considered reptiles too? Check original bladbase.
-			// TODO: Should birds be considered beasts? If there are iny birds in the bladbase, probably; otherwise, better to have new sound
+			// TODO: Should birds be considered beasts? If there are any birds in the bladbase, probably; otherwise, better to have new sound
 		case eRace::REPTILE: case eRace::BEAST: case eRace::DEMON: case eRace::UNDEAD: case eRace::STONE:
 			i = get_ran(1,0,1); play_sound(31 + i); break;
 		default: play_sound(33); break;
@@ -1942,7 +1936,7 @@ void run_special(pending_special_type spec, short* a, short* b, short* redraw) {
 // 13 - encountering outdoor enc (a - 1 if no fight)
 // 14 - winning outdoor enc
 // 15 - fleeing outdoor enc
-// 16 - ritual of sanct TODO: This will become "target space", hopefully
+// 16 - target spell on space TODO: Maybe this will become just "target space"?
 // 17 - using space
 // 18 - seeing monster
 // which_type - 0 - scen 1 - out 2 - town

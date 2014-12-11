@@ -66,6 +66,7 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 	max_num_monst = old.max_num_monst;
 	spec_on_entry = old.spec_on_entry;
 	spec_on_entry_if_dead = old.spec_on_entry_if_dead;
+	spec_on_hostile = -1;
 	for(i = 0; i < 8; i++){
 		timer_spec_times[i] = old.timer_spec_times[i];
 		timer_specs[i] = old.timer_specs[i];
