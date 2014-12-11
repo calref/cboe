@@ -2080,7 +2080,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 {
 	bool check_mess = false;
 	std::string str1,str2;
-	short store_val = 0,i;
+	short store_val = 0,i,j;
 	cSpecial spec;
 	short mess_adj[3] = {160,10,0};
 	
@@ -2218,6 +2218,79 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				giveError("Stuff Done flag out of range (x - 0..299, y - 0..49).");
 			else {
 				set_campaign_flag(spec.sd1,spec.sd2,spec.ex1a,spec.ex1b,spec.m1,spec.ex2a);
+			}
+			break;
+		case eSpecType::DISPLAY_PICTURE:
+			// TODO: In addition to the large picture, there's a small icon; should that be customizable?
+			check_mess = false;
+			get_strs(str1, str1, cur_spec_type, spec.m1, -1);
+			custom_pic_dialog(str1, spec.ex1a);
+			break;
+		case eSpecType::SDF_RANDOM:
+			check_mess = true;
+
+			short rand;
+			// Automatically fix the range in case some idiot puts it in backwards, or the same (WHY)
+			if (cur_node.ex1a == cur_node.ex1b) {
+				rand = cur_node.ex1b;
+			} else {
+				rand = get_ran(1,
+					min(cur_node.ex1a,cur_node.ex1b),
+					max(cur_node.ex1a,cur_node.ex1b)
+				);
+			}
+			setsd(cur_node.sd1,cur_node.sd2,rand);
+			//print_nums(rand, cur_node.ex1a, cur_node.ex1b);
+			break;
+		// SDF arithmetic! :D
+		/*
+		 SDF1, SDF2 - Output SDF (for division, the quotient)
+		 Ex1a, Ex1b - Input SDF (left operand) - if ex1b is -1, takes ex1a as a literal value (which must be positive)
+		 Ex2a, Ex2b - Input SDF (right operand) - if ex2b is -1, takes ex2a as a literal value (which must be positive)
+		 Ex1c, Ex2c - For division only, output SDF to store the remainder.
+		 */
+		case eSpecType::SDF_ADD: case eSpecType::SDF_DIFF:
+		case eSpecType::SDF_TIMES: case eSpecType::SDF_POWER:
+		case eSpecType::SDF_DIVIDE:
+			i = spec.ex1b == -1 ? spec.ex1a : PSD[spec.ex1a][spec.ex1b];
+			j = spec.ex2b == -1 ? spec.ex2a : PSD[spec.ex2a][spec.ex2b];
+			switch(spec.type) {
+				case eSpecType::SDF_ADD: setsd(spec.sd1, spec.sd2, i + j); break;
+				case eSpecType::SDF_DIFF: setsd(spec.sd1, spec.sd2, i - j); break;
+				case eSpecType::SDF_TIMES: setsd(spec.sd1, spec.sd2, i * j); break;
+				case eSpecType::SDF_DIVIDE:
+					setsd(spec.sd1, spec.sd2, i / j);
+					setsd(spec.ex1c, spec.ex2c, i % j);
+					break;
+				case eSpecType::SDF_POWER:
+					if(i == 2) setsd(spec.sd1, spec.sd2, 1 << j);
+					else setsd(spec.sd1, spec.sd2, pow(i, j));
+					break;
+				default: // Unreachable case
+					break;
+			}
+			break;
+		case eSpecType::PRINT_NUMS:
+			if(!in_scen_debug) break;
+			check_mess = false;
+			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
+					 cur_node.m2 + mess_adj[cur_spec_type]);
+			if(cur_node.m1 >= 0)
+				ASB("debug: " + str1, 7);
+			if(cur_node.m2 >= 0)
+				ASB("debug: " + str2, 7);
+			// TODO: Give more options?
+			switch(spec.pic) {
+				case 0: // Print SDF contents
+					print_nums(spec.sd1, spec.sd2, univ.party.stuff_done[spec.sd1][spec.sd2]);
+					break;
+				case 1: // Print three literal values (which might be pointers!)
+					print_nums(spec.ex1a, spec.ex1b, spec.ex1c);
+					break;
+				case 2: // Print monster health and spell points
+					if(spec.ex1a >= univ.town->max_monst()) break;
+					print_nums(spec.ex1a, univ.town.monst[spec.ex1a].health, univ.town.monst[spec.ex1a].mp);
+					break;
 			}
 			break;
 	}
@@ -3028,6 +3101,62 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else if (k == 1)
 				*next_spec = spec.ex2b;
 			break;
+		/* This is a little complicated.
+			m1 - points to a prompt string
+			m2,m3 - If nonequal, specifies a range of allowed responses.
+			pic - Comparison mode: 0 - in range, 1 - not in range, 2 - simple compare
+			pictype - Special to jump to if both tests pass
+			ex1a, ex1b, ex1c - Test 1 values (see below)
+			ex2a, ex2b, ex2c - Test 2 values (see below)
+			Test values:
+				If pic = 0 or 1:
+					ex#a - Lower bound
+					ex#b - Upper bound
+					Enabled if ex#a < ex#b. If ex#a >= ex#b, this test is ignored.
+				If pic = 2:
+					ex#a - Value to compare to.
+					ex#b - Set to 0 to enable. If -1, this test is ignored.
+				ex#c - Special to jump to if test # succeeds but the other test fails.
+			jumpto - Special to jump to if both tests fail.
+		 */
+		case eSpecType::IF_NUM_RESPONSE:
+			check_mess = false;
+			if(spec.m2 > spec.m3) std::swap(spec.m2,spec.m3);
+			get_strs(str1,str1,0,spec.m1,-1);
+			i = get_num_response(spec.m2,spec.m3,str1);
+			setsd(spec.sd1, spec.sd2, abs(i));
+			j = 0;
+			spec.pic = minmax(0,2,spec.pic);
+			switch(spec.pic) { // Comparison mode
+				case 0: // Is in range?
+					if(spec.ex1a < spec.ex1b && i == minmax(spec.ex1a,spec.ex1b,i)) j += 1;
+					if(spec.ex2a < spec.ex2b && i == minmax(spec.ex2a,spec.ex2b,i)) j += 2;
+					break;
+				case 1: // Not in range?
+					if(spec.ex1a < spec.ex1b && i != minmax(spec.ex1a,spec.ex1b,i)) j += 1;
+					if(spec.ex2a < spec.ex2b && i != minmax(spec.ex2a,spec.ex2b,i)) j += 2;
+					break;
+				case 2: // Simple comparison?
+					switch(spec.ex1b) {
+						case -2: if(i <= spec.ex1a) j += 1; break;
+						case -1: if(i < spec.ex1a) j += 1; break;
+						case 0: if(i == spec.ex1a) j += 1; break;
+						case 1: if(i > spec.ex1a) j += 1; break;
+						case 2: if(i >= spec.ex1a) j += 1; break;
+					}
+					switch(spec.ex2b) {
+						case -2: if(i <= spec.ex2a) j += 1; break;
+						case -1: if(i < spec.ex2a) j += 1; break;
+						case 0: if(i == spec.ex2a) j += 1; break;
+						case 1: if(i > spec.ex2a) j += 1; break;
+						case 2: if(i >= spec.ex2a) j += 1; break;
+					}
+					break;
+			}
+			if(j == 1) *next_spec = spec.ex1c;
+			if(j == 2) *next_spec = spec.ex2c;
+			if(j == 3) *next_spec = spec.pictype;
+			break;
 		case eSpecType::IF_SDF_EQ:
 			if (sd_legit(spec.sd1,spec.sd2) == true) {
 				if (PSD[spec.sd1][spec.sd2] == spec.ex1a)
@@ -3504,6 +3633,17 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					increase_light(spec.ex2a);
 				else increase_light(-spec.ex2a);
 			}
+			break;
+		case eSpecType::TOWN_SET_ATTITUDE:
+			if((spec.ex1a < 0) || (spec.ex1a > 59)){
+				giveError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
+				break;
+			}
+			if((spec.ex1b < 0) || (spec.ex1b > 3)){
+				giveError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
+				break;
+			}
+			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
 			break;
 }
 	if (check_mess == true) {

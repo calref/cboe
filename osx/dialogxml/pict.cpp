@@ -443,6 +443,60 @@ void cPict::advanceAnim() {
 	if(animFrame >= 256) animFrame = 0;
 }
 
+void cPict::recalcRect() {
+	RECT bounds = getBounds();
+	switch(picType) {
+		case NUM_PIC_TYPES: break;
+		case PIC_TER: case PIC_CUSTOM_TER:
+		case PIC_TER_ANIM: case PIC_CUSTOM_TER_ANIM:
+		case PIC_MONST: case PIC_CUSTOM_MONST: case PIC_PARTY_MONST:
+		case PIC_MONST_WIDE: case PIC_CUSTOM_MONST_WIDE: case PIC_PARTY_MONST_WIDE:
+		case PIC_MONST_TALL: case PIC_CUSTOM_MONST_TALL: case PIC_PARTY_MONST_TALL:
+		case PIC_MONST_LG: case PIC_CUSTOM_MONST_LG: case PIC_PARTY_MONST_LG:
+		case PIC_ITEM: case PIC_CUSTOM_ITEM: case PIC_PARTY_ITEM:
+		case PIC_PC: case PIC_PARTY_PC:
+		case PIC_FIELD:
+		case PIC_BOOM:
+			bounds.width() = 28;
+			bounds.height() = 36;
+			break;
+		case PIC_DLOG: case PIC_CUSTOM_DLOG:
+			bounds.width() = 36;
+			bounds.height() = 36;
+			break;
+		case PIC_TALK: case PIC_CUSTOM_TALK:
+		case PIC_SCEN: case PIC_CUSTOM_SCEN: case PIC_PARTY_SCEN:
+			bounds.width() = 32;
+			bounds.height() = 32;
+			break;
+		case PIC_MISSILE: case PIC_CUSTOM_MISSILE:
+			bounds.width() = 18;
+			bounds.height() = 18;
+			break;
+		case PIC_DLOG_LG: case PIC_CUSTOM_DLOG_LG:
+			bounds.width() = 72;
+			bounds.height() = 72;
+			break;
+		case PIC_SCEN_LG:
+			bounds.width() = 64;
+			bounds.height() = 64;
+			break;
+		case PIC_TER_MAP: case PIC_CUSTOM_TER_MAP:
+		case PIC_STATUS:
+			bounds.width() = 12;
+			bounds.height() = 12;
+			break;
+		case PIC_FULL:
+		case PIC_CUSTOM_FULL:
+			auto sheet = getSheet(SHEET_FULL, picNum);
+			sf::Vector2u sz = sheet->getSize();
+			bounds.width() = sz.x;
+			bounds.height() = sz.y;
+			break;
+	}
+	setBounds(bounds);
+}
+
 std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	switch(type) {
@@ -525,6 +579,9 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 				case 1500:
 					sout << "staticonhelp";
 					break;
+				default:
+					// TODO: The scenario should be allowed to define a sheet1100.png without it being ignored in favour of invenhelp.png
+					sout << "sheet" << n;
 			}
 	}
 	std::shared_ptr<sf::Texture> sheet(new sf::Texture);

@@ -554,10 +554,10 @@ enum class eSpecType {
 	SECRET_PASSAGE = 4,
 	DISPLAY_SM_MSG = 5,
 	FLIP_SDF = 6,
-	UNUSED1 = 7, // formerly OUT_BLOCK
-	UNUSED2 = 8, // formerly TOWN_BLOCK
-	UNUSED3 = 9, // formerly FIGHT_BLOCK
-	UNUSED4 = 10, // formerly LOOK_BLOCK
+	SDF_RANDOM = 7, // formerly OUT_BLOCK
+	SDF_ADD = 8, // formerly TOWN_BLOCK
+	SDF_DIFF = 9, // formerly FIGHT_BLOCK
+	UNUSED1 = 10, // formerly LOOK_BLOCK
 	CANT_ENTER = 11,
 	CHANGE_TIME = 12,
 	SCEN_TIMER_START = 13,
@@ -571,12 +571,16 @@ enum class eSpecType {
 	CALL_GLOBAL = 21,
 	SET_SDF_ROW = 22,
 	COPY_SDF = 23,
-	UNUSED6 = 24, // formerly SANCTIFY
+	DISPLAY_PICTURE = 24, // formerly SANCTIFY
 	REST = 25,
 	WANDERING_WILL_FIGHT = 26,
 	END_SCENARIO = 27,
 	SET_POINTER = 28,
 	SET_CAMP_FLAG = 29,
+	PRINT_NUMS = 30, // For debugging
+	SDF_TIMES = 31,
+	SDF_DIVIDE = 32, // Computes both quotient and remainder
+	SDF_POWER = 33,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -645,6 +649,7 @@ enum class eSpecType {
 	IF_TEXT_RESPONSE = 154,
 	IF_SDF_EQ = 155,
 	IF_CONTEXT = 156,
+	IF_NUM_RESPONSE = 157,
 	MAKE_TOWN_HOSTILE = 170,
 	TOWN_CHANGE_TER = 171,
 	TOWN_SWAP_TER = 172,
@@ -672,6 +677,7 @@ enum class eSpecType {
 	TOWN_REUNITE_PARTY = 194,
 	TOWN_TIMER_START = 195,
 	TOWN_CHANGE_LIGHTING = 196,
+	TOWN_SET_ATTITUDE = 197,
 	RECT_PLACE_FIRE = 200,
 	RECT_PLACE_FORCE = 201,
 	RECT_PLACE_ICE = 202,
@@ -705,15 +711,15 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 29)
+	if(code >= 0 && code <= 33)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
 	if(code >= 80 && code <= 106)
 		return eSpecCat::AFFECT;
-	if(code >= 130 && code <= 156)
+	if(code >= 130 && code <= 157)
 		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 196)
+	if(code >= 170 && code <= 197)
 		return eSpecCat::TOWN;
 	if(code >= 200 && code <= 218)
 		return eSpecCat::RECT;

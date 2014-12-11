@@ -11,6 +11,7 @@
 #include <map>
 #include <sstream>
 
+#include "dlogutil.h"
 #include "classes.h"
 #include "oldstructs.h"
 
@@ -80,12 +81,40 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 			break;
 		case 153: // if enough mage lore
 			type = eSpecType::IF_STATISTIC;
-			ex2a = 11;
+			if(ex2a >= 0) { // Windows version added "if statistic" much earlier, but it still needs a little conversion.
+				switch(ex2a) {
+					case 20: ex2a = 19; break; // Max HP
+					case 22: ex2a = 20; break; // Max SP
+					case 19: ex2a = 100; break; // Current HP
+					case 21: ex2a = 101; break; // Current SP
+					case 23: ex2a = 102; break; // Experience
+					case 24: ex2a = 103; break; // Skill points
+					case 25: ex2a = 104; break; // Level
+				}
+			} else ex2a = 11;
 			ex2b = 0;
 			break;
 		case 229: // Outdoor store - fix spell IDs
 			if(ex1b == 1 || ex1b == 2)
 				ex1a += 30;
+			break;
+			// These are ones that were added in the Windows version but only recently added to the Mac version.
+		case 28:
+			type = eSpecType::DISPLAY_PICTURE;
+			giveError("Warning: This scenario contains a Display Picture special node created by the 'Classic Windows' version of the game. Although this version of the game also supports a Display Picture node, the format is incompatible, and automatic conversion is impossible.", "If this is not your scenario, consider contacting the scenario designer to get this fixed.");
+			ex1a = 0;
+			break;
+		case 29:
+			type = eSpecType::SDF_RANDOM;
+			break;
+		case 156:
+			type = eSpecType::IF_SPECIES;
+			break;
+		case 196:
+			type = eSpecType::TOWN_CHANGE_LIGHTING;
+			break;
+		case 197:
+			type = eSpecType::TOWN_SET_ATTITUDE;
 			break;
 	}
 	return *this;

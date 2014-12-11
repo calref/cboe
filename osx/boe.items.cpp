@@ -1147,6 +1147,29 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	return -1;
 }
 
+void custom_pic_dialog(std::string title, pic_num_t bigpic) {
+	cDialog pic_dlg("show-map.xml");
+	cControl& okay = pic_dlg["okay"];
+	cControl& text = pic_dlg["title"];
+	okay.attachClickHandler(std::bind(&cDialog::toast, &pic_dlg, false));
+	text.setText(title);
+	cPict& map = dynamic_cast<cPict&>(pic_dlg["map"]);
+	// We don't provide a way to use non-custom full sheets - why would you want to show standard help graphics?
+	map.setPict(bigpic, PIC_CUSTOM_FULL);
+	// Now we need to adjust the size to ensure that everything fits correctly.
+	map.recalcRect();
+	RECT mapBounds = map.getBounds();
+	RECT btnBounds = okay.getBounds();
+	RECT txtBounds = text.getBounds();
+	btnBounds.offset(-btnBounds.left, -btnBounds.top);
+	btnBounds.offset(mapBounds.right - btnBounds.width(), mapBounds.bottom + 10);
+	okay.setBounds(btnBounds);
+	txtBounds.right = mapBounds.right;
+	text.setBounds(txtBounds);
+	pic_dlg.recalcRect();
+	pic_dlg.run();
+}
+
 //short fancy_choice_dialog(short which_dlog,short parent)
 //// ignore parent in Mac version
 //{
@@ -1469,6 +1492,32 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	std::string result = strPanel.getResult<std::string>();
 	std::transform(result.begin(), result.end(), result.begin(), tolower);
 	return result;
+}
+
+short get_num_response(short min, short max, std::string prompt) {
+	std::ostringstream sout(prompt);
+	
+	make_cursor_sword();
+	
+	cDialog numPanel("get-num.xml");
+	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
+	
+	sout << " (" << min << '-' << max << ')';
+	numPanel["prompt"].setText(sout.str());
+	numPanel["number"].setTextToNum(0);
+	if(min < max)
+		numPanel["number"].attachFocusHandler([min,max](cDialog& me,std::string,bool losing) -> bool {
+			if(!losing) return true;
+			int val = me["number"].getTextAsNum();
+			if(val < min || val > max) {
+				giveError("Number out of range!");
+				return false;
+			}
+			return true;
+		});
+	numPanel.run();
+	
+	return numPanel.getResult<int>();
 }
 
 
