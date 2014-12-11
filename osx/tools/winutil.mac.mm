@@ -106,6 +106,10 @@ void ModalSession::pumpEvents() {
 	[[NSApplication sharedApplication] runModalSession: nsHandle];
 }
 
+void beep() {
+	NSBeep();
+}
+
 NSOpenPanel* dlg_get_scen;
 NSOpenPanel* dlg_get_game;
 NSSavePanel* dlg_put_scen;

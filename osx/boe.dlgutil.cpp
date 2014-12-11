@@ -26,6 +26,7 @@
 #include "graphtool.h"
 #include "mathutil.h"
 #include "dlogutil.h"
+#include "winutil.h"
 #include "fileio.h"
 #include "restypes.hpp"
 #include "scrollbar.h"
@@ -306,7 +307,10 @@ void handle_sale(short what_chosen,short cost)
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
-				ASB("Error 102: Report this!"); break;} // TODO: Play an error sound here
+				beep();
+				giveError("Error: The scenario tried to sell you an invalid mage spell!");
+				break;
+			}
 			if (univ.party[current_pc].mage_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 			else if (take_gold(cost,false) == false)
@@ -321,7 +325,10 @@ void handle_sale(short what_chosen,short cost)
 		case 9:
 			base_item = store_priest_spells(what_chosen - 900 - 30);
 			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
-				ASB("Error 101: Report this!"); break;} // TODO: Play an error sound here
+				beep();
+				giveError("Error: The scenario tried to sell you an invalid priest spell!");
+				break;
+			}
 			if (univ.party[current_pc].priest_spells[base_item.item_level] == true)
 				ASB("You already have this spell.");
 			else if (take_gold(cost,false) == false)
@@ -351,7 +358,7 @@ void handle_sale(short what_chosen,short cost)
 	set_up_shop_array();
 	
 	if (overall_mode != MODE_SHOPPING) {
-		// TODO: Play an error sound here
+		beep();
 		ASB("Shop error 1. Report This!");
 	}
 	draw_shop_graphics(0,dummy_rect);
@@ -649,7 +656,7 @@ void handle_talk_event(location p)
 			break;
 		case TALK_RECORD:
 			if (strnum1 <= 0) {
-				// TODO: Play an error sound here
+				beep();
 				return;
 			}
 			if(univ.party.has_talk_save(store_personality, univ.town.num, strnum1, strnum2)){

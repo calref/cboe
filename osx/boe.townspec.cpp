@@ -18,6 +18,7 @@
 #include "soundtool.h"
 #include "mathutil.h"
 #include "dlogutil.h"
+#include "winutil.h"
 
 extern eGameMode overall_mode;
 //extern party_record_type univ.party;
@@ -81,7 +82,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
 	if (pc_num > 7) { // Debug
-		// TODO: Play an error sound here
+		beep();
 		ASB("TRAP ERROR! REPORT!");
 		return true;
 	}

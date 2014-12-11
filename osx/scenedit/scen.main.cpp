@@ -525,6 +525,7 @@ void close_program() {
 	if(town != NULL) delete town;
 }
 
+// TODO: Remove this function and replace it with beep() or play_sound() everywhere.
 void ding() {
-	// TODO: Play an error sound here
+	beep();
 }

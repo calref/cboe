@@ -26,6 +26,8 @@ fs::path nav_put_party();
 fs::path nav_get_scenario();
 fs::path nav_put_scenario();
 
+void beep();
+
 class ModalSession {
 	void* session;
 public:

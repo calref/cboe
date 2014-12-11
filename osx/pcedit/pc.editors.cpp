@@ -8,6 +8,7 @@
 #include "control.h"
 #include "button.h"
 #include "dlogutil.h"
+#include "winutil.h"
 #include <boost/lexical_cast.hpp>
 
 /* 
@@ -432,7 +433,8 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod)
 			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me);
-		} // else TODO: Play an error sound here
+		} else
+			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
 		if (mode != 0) {
@@ -442,7 +444,8 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod)
 			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me);
-		} // else TODO: Play an error sound here
+		} else
+			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	}
 	store_train_pc = pc_num;
 	if (talk_done == true) {
@@ -461,7 +464,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		} else if (((store_h >= 250) && (item_hit[3] == 'p')) ||
 				   ((store_h == univ.party[pc_num].max_health) && (item_hit[3] == 'm') && (mode == 1)) ||
 				   ((store_h == 6) && (item_hit[3] == 'm') && (mode == 0)))
-			; // TODO: Play an error sound here
+			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 		else if(item_hit == "hp-m") {
 			store_g += 10;
 			store_h -= 2;
@@ -492,7 +495,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		} else if (((store_sp >= 150) && (item_hit[3] == 'p')) ||
 				   ((store_sp == univ.party[pc_num].max_sp) && (item_hit[3] == 'm') && (mode == 1)) ||
 				   ((store_sp == 0) && (item_hit[3] == 'm') && (mode == 0)))
-			; // TODO: Play an error sound here
+			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 		else if(item_hit == "sp-m") {
 			store_g += 15;
 			store_sp -= 1;
@@ -531,7 +534,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				((store_skills[which_skill] == univ.party[pc_num].skills[which_skill]) && (dir == 'm') && (mode == 1)) ||
 				((store_skills[which_skill] == 0) && (dir == 'm') && (mode == 0) && (which_skill > 2)) ||
 				((store_skills[which_skill] == 1) && (dir == 'm') && (mode == 0) && (which_skill <= 2)))
-				; // TODO: Play an error sound here
+				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 			else {
 				if(dir == 'm') {
 					store_g += skill_g_cost[which_skill];

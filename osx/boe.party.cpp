@@ -27,6 +27,7 @@
 #include "graphtool.h"
 #include "mathutil.h"
 #include "dlogutil.h"
+#include "winutil.h"
 #include "fileio.h"
 #include "boe.menus.h"
 #include "restypes.hpp"
@@ -875,13 +876,13 @@ void award_xp(short pc_num,short amt)
 		return;
 	}
 	if (amt > 200) { // debug
-		// TODO: Play an error sound here
+		beep();
 		ASB("Oops! Too much xp!");
 		ASB("Report this!");
 		return;
 	}
 	if (amt < 0) { // debug
-		// TODO: Play an error sound here
+		beep();
 		ASB("Oops! Negative xp!");
 		ASB("Report this!");
 		return;

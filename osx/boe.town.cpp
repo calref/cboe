@@ -1208,7 +1208,7 @@ void erase_specials()////
 			where = univ.town->special_locs[k];
 			if ((where.x != 100) && ((where.x > univ.town->max_dim()) || (where.y > univ.town->max_dim())
 									 || (where.x < 0) || (where.y < 0))) {
-				// TODO: Play an error sound here
+				beep();
 				add_string_to_buf("Town corrupt. Problem fixed.");
 				print_nums(where.x,where.y,k);
 				univ.town->special_locs[k].x = 0;

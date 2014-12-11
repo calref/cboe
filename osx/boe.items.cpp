@@ -138,7 +138,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 	if(!allow_overload && item.item_weight() >
 		amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  	if (print_result == true) {
-			// TODO: Play an error sound here
+			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 			ASB("Item too heavy to carry.");
 		}
 		return false;
@@ -1028,7 +1028,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			play_sound(62); // formerly force_play_sound
 		} else {
 			if(!allow_overload && item.item_weight() > amount_pc_can_carry(current_getting_pc) - pc_carry_weight(current_getting_pc)) {
-				// TODO: Play an error sound here
+				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 				me["prompt"].setText("It's too heavy to carry.");
 				give_help(38,0,me);
 				return true;
