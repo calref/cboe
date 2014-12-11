@@ -1631,6 +1631,11 @@ bool combat_next_step()
 	while (pick_next_pc() == true) {
 		combat_run_monst();
 		set_pc_moves();
+		if((combat_active_pc < 6) && (univ.party[combat_active_pc].ap == 0)){
+			combat_active_pc = 6;
+			ASB("The active character is unable to act!");
+			ASB("The whole party is now active.");
+		}
 		to_return = true;
 		// Safety valve
 		if (party_toast() == true)
