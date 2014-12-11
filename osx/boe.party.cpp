@@ -3214,6 +3214,14 @@ short trait_present(short which_trait) {
 	return ret;
 }
 
+short race_present(eRace which_race) {
+	short i,ret = 0;
+	for (i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].race == which_race)
+			ret += 1;
+	return ret;
+}
+
 short wilderness_lore_present() {
 	// TODO: Add contional statement to choose between these
 	// (Probably requires something added to terrain types to specify that it's cave/surface wilderness.)

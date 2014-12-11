@@ -3044,28 +3044,32 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_SPECIES:
-			if(spec.ex1a < 0 || spec.ex1a > 2) break; // TODO: Should we allow monster races too?
+			if(spec.ex1a < 0 || spec.ex1a > 2) {
+				giveError("Species out of range (0-human, 1-nephilim, 2-slith)");
+				break; // TODO: Should we allow monster races too?
+			}
 			i = 0;
-			j = min(spec.ex2a,party_size(0));
+			j = min(spec.ex2a,party_size(true));
 			if (j < 1)
 				j = 1;
-			for (i = 0; i < 6; i++) {
-				if ((univ.party[i].main_status == eMainStatus::ALIVE) && (univ.party[i].race == eRace(spec.ex1a)))
-					i++;
-			}
-			if (i >= j)
-				*next_spec = spec.ex1b;
+			i = race_present(eRace(spec.ex1a));
+			if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
+			if(spec.ex2b == -1 && i < j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 0 && i == j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 1 && i > j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 2 && i >= j) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_TRAIT:
-			j = min(spec.ex2a,party_size(0));
+			// TODO: Bound-check the trait.
+			j = min(spec.ex2a,party_size(true));
 			if (j < 1)
 				j = 1;
-			for (i = 0; i < 6; i++) {
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[spec.ex1a] > 0)
-					i++;
-			}
-			if (trait_present(spec.ex1a) >= j)
-				*next_spec = spec.ex1b;
+			i = trait_present(spec.ex1a);
+			if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
+			if(spec.ex2b == -1 && i < j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 0 && i == j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 1 && i > j) *next_spec = spec.ex1b;
+			if(spec.ex2b == 2 && i >= j) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_STATISTIC:
 			if(spec.ex2a < 0 || spec.ex2a > 25) {
