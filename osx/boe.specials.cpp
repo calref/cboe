@@ -1970,6 +1970,13 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		return;
 	}
 	
+	// Store the special's location in reserved pointers
+	univ.party.force_ptr(10, 301, 0);
+	univ.party.force_ptr(11, 301, 1);
+	// And put the location there
+	PSD[SDF_SPEC_LOC_X] = spec_loc.x;
+	PSD[SDF_SPEC_LOC_Y] = spec_loc.y;
+	
 	while (next_spec >= 0) {
 		
 		cur_spec = next_spec;
@@ -1977,13 +1984,6 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		next_spec = -1;
 		cur_node = get_node(cur_spec,cur_spec_type);
 		
-		// Store the special's location in reserved pointers
-		univ.party.force_ptr(10, 301, 0);
-		univ.party.force_ptr(11, 301, 1);
-		// And put the location there
-		PSD[SDF_SPEC_LOC_X] = spec_loc.x;
-		PSD[SDF_SPEC_LOC_Y] = spec_loc.y;
-		// (We do this here instead of before the loop, in case a queued special has a different location.)
 		
 		// Convert pointer values to reference values
 		if(cur_node.sd1 < -1) cur_node.sd1 = univ.party.get_ptr(-cur_node.sd1);
@@ -2032,15 +2032,6 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		
 		num_nodes++;
 		
-		if(next_spec == -1 && !special_queue.empty()) {
-			pending_special_type pending = special_queue.front();
-			which_mode = pending.mode;
-			which_type = pending.type;
-			next_spec = pending.spec;
-			spec_loc = pending.where;
-			special_queue.pop();
-		}
-		
 		if(check_for_interrupt()){
 			add_string_to_buf("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.", 3);
 			next_spec = -1;
@@ -2050,6 +2041,12 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		erase_out_specials();
 	else erase_specials();
 	special_in_progress = false;
+	
+	if(next_spec == -1 && !special_queue.empty()) {
+		pending_special_type pending = special_queue.front();
+		special_queue.pop();
+		run_special(pending, a, b, redraw);
+	}
 }
 
 cSpecial get_node(short cur_spec,short cur_spec_type)
