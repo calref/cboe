@@ -478,10 +478,9 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		to_rect.inset(-1,-1);
 		to_rect.offset(20,1);
 		from_rect.inset(2,2);
-		// TODO: Custom item graphics now start at 1000 instead of 150
-		if (extra_val >= 150) {
+		if (extra_val >= 1000) {
 			sf::Texture* src_gw;
-			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 150);
+			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 1000);
 			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 		}
 		else rect_draw_some_item(tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
