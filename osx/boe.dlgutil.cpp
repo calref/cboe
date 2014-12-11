@@ -1014,10 +1014,7 @@ void do_sign(short town_num, short which_sign, short sign_type)
 	cPict& pict = dynamic_cast<cPict&>(sign->getControl("ter"));
 	
 	store_sign_mode = sign_type;
-	// TODO: Uh, why is it always displaying pic 94 for signs with custom graphics?
-	if (scenario.ter_types[sign_type].picture < 1000)
-		pict.setPict(scenario.ter_types[sign_type].picture);
-	else pict.setPict(94);
+	pict.setPict(scenario.ter_types[sign_type].picture);
 	
 	if (town_num >= 200) {
 		town_num -= 200;
