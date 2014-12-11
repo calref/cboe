@@ -238,8 +238,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 					*forced = true;
 				}
 				*spec_num = univ.town->spec_id[i];
-				if(!is_blocked(where_check) || ter_special == eTerSpec::CHANGE_WHEN_STEP_ON
-					|| ter_special == eTerSpec::CALL_SPECIAL) {
+				bool runSpecial = false;
+				if(!is_blocked(where_check)) runSpecial = true;
+				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
+				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
+				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && scenario.ter_types[ter].boat_over)
+					runSpecial = true;
+				if(runSpecial) {
 					give_help(54,0);
 					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 					if (s1 > 0)

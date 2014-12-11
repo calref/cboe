@@ -46,6 +46,7 @@
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6
+#define SDF_NO_BOAT_SPECIALS	305][7
 #define SDF_RESURRECT_NO_BALM	305][8
 #define SDF_HOSTILES_PRESENT	305][9
 #define SDF_NO_MAPS				306][0
