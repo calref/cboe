@@ -3099,9 +3099,10 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_TEXT_RESPONSE:
 			check_mess = false;
-			str3 = get_text_response();
+			get_strs(str1,str1,0,spec.m1,-1);
+			str3 = get_text_response(str1);
 			j = 1; k = 1;
-			spec.pic = minmax(0,8,spec.pic);
+			spec.pic = minmax(0,50,spec.pic);
 			get_strs(str1,str2,0,spec.ex1a,spec.ex2a);
 			for (i = 0; i < spec.pic;i++) {
 				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
