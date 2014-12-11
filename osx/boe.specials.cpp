@@ -1918,7 +1918,10 @@ void queue_special(eSpecCtx mode, short which_type, short spec, location spec_lo
 }
 
 void run_special(pending_special_type spec, short* a, short* b, short* redraw) {
+	unsigned long store_time = univ.party.age;
+	univ.party.age = spec.trigger_time;
 	run_special(spec.mode, spec.type, spec.spec, spec.where, a, b, redraw);
+	univ.party.age = std::max(univ.party.age, store_time);
 }
 
 // This is the big painful one, the main special engine

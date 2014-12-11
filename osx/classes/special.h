@@ -43,6 +43,7 @@ struct pending_special_type {
 	eSpecCtx mode;
 	unsigned char type; // 0 - scen, 1 - out, 2 - town
 	location where;
+	long long trigger_time;
 };
 
 struct node_properties_t {
