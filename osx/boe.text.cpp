@@ -627,28 +627,15 @@ short total_encumberance(short pc_num)
 	return store;
 }
 
-//short get_tnl(pc_record_type *pc)
-//{
-//	short tnl = 100,i,store_per = 100;
-//	static const short rp[3] = {0,12,20};
-//	static const short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
-//
-//	tnl = (tnl * (100 + rp[pc->race])) / 100;
-//	for (i = 0; i < 15; i++)
-//		if (pc->traits[i] == true)
-//			store_per = store_per + ap[i];
-//
-//	tnl = (tnl * store_per) / 100;
-//
-//	return tnl;
-//}
+RECT get_stat_effect_rect(eStatus which_effect) {
+	int code = (int) which_effect;
+	RECT base = {0,0,12,12};
+	base.offset(12 * (code % 3), 12 * (code / 3));
+	return base;
+}
 
-
-
-void draw_pc_effects(short pc)
-//short pc; // 10 + x -> draw for pc x, but on spell dialog
-{
-	// TODO: This won't work anymore on the spell dialog!
+void draw_pc_effects(short pc) {
+	// TODO: Calculate these rects from scratch instead of hard-coding them. (use above function)
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT source_rects[18] = {
 		RECT{00,0,12,12},RECT{00,12,12,24},RECT{00,24,12,36},
@@ -660,18 +647,8 @@ void draw_pc_effects(short pc)
 	};
 	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
 	short right_limit = 250;
-	short dest = 0; // 0 - in gworld  2 - on dialog
 	short name_width;
 	
-	if (pc >= 10) {return; // TODO: This is a temporary measure only!
-		pc -= 10;
-		right_limit = 490;
-		dest_rect = dlog_dest_rect;
-		dest = 2;
-		dest_rect.top += pc * 25 + 18;
-		dest_rect.bottom += pc * 25 + 18;
-	}
-	else {
 		TextStyle style;
 		name_width = string_length(univ.party[pc].name, style);
 		right_limit = pc_buttons[0][1].left - 5;
@@ -680,7 +657,6 @@ void draw_pc_effects(short pc)
 		dest_rect.right = dest_rect.left + 12;
 		dest_rect.top += pc * 13;
 		dest_rect.bottom += pc * 13;
-	}
 	
 	if(exceptSplit(univ.party[pc].main_status) != eMainStatus::ALIVE)
 		return;
