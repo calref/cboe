@@ -2411,8 +2411,7 @@ void increase_age()////
 	adjust_spell_menus();
 }
 
-void handle_cave_lore()////
-{
+void handle_hunting() {
 	char str[60];
 	short i,pic;
 	ter_num_t ter;
@@ -2420,6 +2419,7 @@ void handle_cave_lore()////
 	if (!is_out())
 		return;
 	
+	// TODO: Resupport this!
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)

@@ -17,7 +17,7 @@ void do_load();
 void post_load();
 void do_save(short mode);
 void increase_age();
-void handle_cave_lore();
+void handle_hunting();
 void switch_pc(short which);
 void drop_pc(short which);
 void handle_death();
