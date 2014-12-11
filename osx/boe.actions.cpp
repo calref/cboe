@@ -909,9 +909,15 @@ bool handle_action(sf::Event event)
 							add_string_to_buf("  Creature is hostile.        ");
 						}
 						else if ((univ.town.monst[i].summoned > 0)////
-								 || (univ.town.monst[i].personality < 0))
-							add_string_to_buf("Talk: No response.            ");
-						else {
+								 || univ.town.monst[i].personality < 0) {
+							short small_talk = 1;
+							if(!univ.town.monst[i].summoned)
+								small_talk = -univ.town.monst[i].personality;
+							std::string str = "No response.";
+							if(small_talk > 1000) str = scenario.scen_strs(small_talk - 1000);
+							// TODO: Come up with a set of pre-cooked responses.
+							add_string_to_buf("Talk: " + str, 4);
+						} else {
 							start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,
 											univ.town.monst[i].facial_pic);
 							did_something = false;
