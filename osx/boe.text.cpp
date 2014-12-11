@@ -1511,6 +1511,9 @@ bool day_reached(unsigned char which_day, unsigned char which_event)
 // if the key_time is reached before which_day, event won't happen
 // if it's 0, event always happens
 {
+	// Windows version unconditionally added 20 days for no reason at all.
+	// Instead, let's add 10 days, but only if easy mode enabled.
+	if(PSD[SDF_EASY_MODE]) which_day += 10;
 	if (which_event > 10)
 		return false;
 	if ((which_event > 0) && (univ.party.key_times[which_event] < which_day))
