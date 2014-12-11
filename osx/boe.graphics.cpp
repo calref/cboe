@@ -809,6 +809,8 @@ ter_num_t get_ter_from_ground(unsigned char ground){
 	return 0;
 }
 
+std::vector<location> forcecage_locs;
+
 void draw_terrain(short	mode)
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
@@ -1029,6 +1031,10 @@ void draw_terrain(short	mode)
 		draw_party_symbol(center);
 	else if (overall_mode != MODE_LOOK_TOWN)
 		draw_pcs(center,0);
+	// Draw top half of forcecages (this list is populated by draw_fields)
+	// TODO: Move into the above loop to eliminate global variable
+	for(location fc_loc : forcecage_locs)
+		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
 	
 	// Now do the light mask thing
 	apply_light_mask(false);

@@ -471,6 +471,8 @@ void draw_town_boat(location center)
 			}
 }
 
+extern std::vector<location> forcecage_locs;
+
 void draw_fields(location where){
 	if(!point_onscreen(center,where)) return;
 	if(party_can_see(where) >= 6) return;
@@ -525,8 +527,10 @@ void draw_fields(location where){
 		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld,where_draw,1,0);
 	if(univ.town.is_rubble(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_force_cage(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,where_draw,1,0);
+	if(univ.town.is_force_cage(where.x,where.y)) {
+		Draw_Some_Item(fields_gworld,calc_rect(1,0),terrain_screen_gworld,where_draw,1,0);
+		forcecage_locs.push_back(where_draw);
+	}
 }
 
 void draw_party_symbol(location center) {

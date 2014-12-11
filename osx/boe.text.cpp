@@ -891,6 +891,8 @@ short do_look(location space)
 			add_string_to_buf("    Ice Wall               ");
 		if (univ.town.is_blade_wall(space.x,space.y))
 			add_string_to_buf("    Blade Wall               ");
+		if (univ.town.is_force_cage(space.x,space.y))
+			add_string_to_buf("    Force Cage               ");
 		
 		if (univ.town.is_sm_blood(space.x,space.y))
 			add_string_to_buf("    Blood stain               ");
