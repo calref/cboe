@@ -11,16 +11,29 @@
 #include <map>
 #include <sstream>
 
+#include "dlogutil.h"
 #include "classes.h"
 #include "oldstructs.h"
 #include "fileio.h"
 
 extern cScenario scenario;
 
-void cTinyTown::append(legacy::tiny_tr_type& old){
+void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
 	the_field.type = 2;
+	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
+	std::vector<int> unused_special_slots;
+	for(i = 0; i < 100; i++) {
+		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
+			// Also make sure no specials jump to it
+			bool is_free = true;
+			for(j = 0; j < 100; j++) {
+				if(specials[j].jumpto == i) is_free = false;
+			}
+			if(is_free) unused_special_slots.push_back(i);
+		}
+	}
 	for (i = 0; i < 32; i++)
 		for (j = 0; j < 32; j++) {
 			_terrain[i][j] = old.terrain[i][j];
@@ -29,6 +42,33 @@ void cTinyTown::append(legacy::tiny_tr_type& old){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+				// Try to fix specials that could be triggered while in a boat
+				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
+				int found_spec = -1;
+				for(int k = 0; i < 50; k++) {
+					if(i == special_locs[k].x && j == special_locs[k].y) {
+						found_spec = k;
+						break;
+					}
+				}
+				if(found_spec >= 0) {
+					if(!unused_special_slots.empty()) {
+						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						unused_special_slots.pop_back();
+						cSpecial& node = specials[use_slot];
+						node.type = eSpecType::IF_CONTEXT;
+						node.ex1a = 101; // if in boat
+						node.ex1c = -1; // do nothing
+						node.jumpto = found_spec_id; // else jump here
+						spec_id[found_spec] = use_slot;
+					} else {
+						std::stringstream sout;
+						sout << "In town \"" << town_num << "\" at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
+					}
+				}
 			}
 		}
 	for (i = 0; i < 16; i++) {
@@ -58,10 +98,22 @@ void cTinyTown::append(legacy::tiny_tr_type& old){
 	}
 }
 
-void cMedTown::append(legacy::ave_tr_type& old){
+void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
 	the_field.type = 2;
+	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
+	std::vector<int> unused_special_slots;
+	for(i = 0; i < 100; i++) {
+		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
+			// Also make sure no specials jump to it
+			bool is_free = true;
+			for(j = 0; j < 100; j++) {
+				if(specials[j].jumpto == i) is_free = false;
+			}
+			if(is_free) unused_special_slots.push_back(i);
+		}
+	}
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			_terrain[i][j] = old.terrain[i][j];
@@ -70,6 +122,33 @@ void cMedTown::append(legacy::ave_tr_type& old){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+				// Try to fix specials that could be triggered while in a boat
+				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
+				int found_spec = -1;
+				for(int k = 0; i < 50; k++) {
+					if(i == special_locs[k].x && j == special_locs[k].y) {
+						found_spec = k;
+						break;
+					}
+				}
+				if(found_spec >= 0) {
+					if(!unused_special_slots.empty()) {
+						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						unused_special_slots.pop_back();
+						cSpecial& node = specials[use_slot];
+						node.type = eSpecType::IF_CONTEXT;
+						node.ex1a = 101; // if in boat
+						node.ex1c = -1; // do nothing
+						node.jumpto = found_spec_id; // else jump here
+						spec_id[found_spec] = use_slot;
+					} else {
+						std::stringstream sout;
+						sout << "In town " << town_num << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
+					}
+				}
 			}
 		}
 	for (i = 0; i < 16; i++) {
@@ -99,10 +178,22 @@ void cMedTown::append(legacy::ave_tr_type& old){
 	}
 }
 
-void cBigTown::append(legacy::big_tr_type& old){
+void cBigTown::append(legacy::big_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
 	the_field.type = 2;
+	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
+	std::vector<int> unused_special_slots;
+	for(i = 0; i < 100; i++) {
+		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
+			// Also make sure no specials jump to it
+			bool is_free = true;
+			for(j = 0; j < 100; j++) {
+				if(specials[j].jumpto == i) is_free = false;
+			}
+			if(is_free) unused_special_slots.push_back(i);
+		}
+	}
 	for (i = 0; i < 64; i++)
 		for (j = 0; j < 64; j++) {
 			_terrain[i][j] = old.terrain[i][j];
@@ -111,6 +202,33 @@ void cBigTown::append(legacy::big_tr_type& old){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+				// Try to fix specials that could be triggered while in a boat
+				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
+				int found_spec = -1;
+				for(int k = 0; i < 50; k++) {
+					if(i == special_locs[k].x && j == special_locs[k].y) {
+						found_spec = k;
+						break;
+					}
+				}
+				if(found_spec >= 0) {
+					if(!unused_special_slots.empty()) {
+						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						unused_special_slots.pop_back();
+						cSpecial& node = specials[use_slot];
+						node.type = eSpecType::IF_CONTEXT;
+						node.ex1a = 101; // if in boat
+						node.ex1c = -1; // do nothing
+						node.jumpto = found_spec_id; // else jump here
+						spec_id[found_spec] = use_slot;
+					} else {
+						std::stringstream sout;
+						sout << "In town " << town_num << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
+					}
+				}
 			}
 		}
 	for (i = 0; i < 16; i++) {

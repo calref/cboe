@@ -263,7 +263,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 			port_t_d(&t_d);
 			the_town = new cBigTown;
 			*the_town = store_town;
-			the_town->append(t_d);
+			the_town->append(t_d, which_town);
 			break;
 			
 		case 1:
@@ -272,7 +272,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 			port_ave_t(&ave_t);
 			the_town = new cMedTown;
 			*the_town = store_town;
-			the_town->append(ave_t);
+			the_town->append(ave_t, which_town);
 			break;
 			
 		case 2:
@@ -281,7 +281,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 			port_tiny_t(&tiny_t);
 			the_town = new cTinyTown;
 			*the_town = store_town;
-			the_town->append(tiny_t);
+			the_town->append(tiny_t, which_town);
 			break;
 	}
 	
@@ -606,6 +606,8 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 		return false;
 	}
 	
+	the_out.x = which_out.x;
+	the_out.y = which_out.y;
 	port_out(&store_out);
 	the_out = store_out;
 	for (i = 0; i < 108; i++) {

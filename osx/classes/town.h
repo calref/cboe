@@ -111,9 +111,9 @@ public:
 	cSpeech talking;
 	
 	virtual ~cTown(){}
-	virtual void append(legacy::big_tr_type& old);
-	virtual void append(legacy::ave_tr_type& old);
-	virtual void append(legacy::tiny_tr_type& old);
+	virtual void append(legacy::big_tr_type& old, int town_num);
+	virtual void append(legacy::ave_tr_type& old, int town_num);
+	virtual void append(legacy::tiny_tr_type& old, int town_num);
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
 	virtual rectangle& room_rect(size_t i) = 0;
 	virtual cCreature& creatures(size_t i) = 0;

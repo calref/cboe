@@ -47,6 +47,7 @@ public:
 		
 		cCreature& operator = (legacy::outdoor_creature_type old);
 	};
+	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
 	location special_locs[18];
 	unsigned short special_id[18];

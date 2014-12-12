@@ -11,6 +11,7 @@
 #include <map>
 #include <sstream>
 
+#include "dlogutil.h"
 #include "classes.h"
 #include "oldstructs.h"
 
@@ -18,6 +19,18 @@ extern cScenario scenario;
 
 cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 	int i,j;
+	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
+	std::vector<int> unused_special_slots;
+	for(i = 0; i < 60; i++) {
+		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
+			// Also make sure no specials jump to it
+			bool is_free = true;
+			for(j = 0; j < 60; j++) {
+				if(specials[j].jumpto == i) is_free = false;
+			}
+			if(is_free) unused_special_slots.push_back(i);
+		}
+	}
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
@@ -49,6 +62,34 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 					ter_num_t connect = old.terrain[i][j+1];
 					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
+				}
+			}
+			if(scenario.ter_types[terrain[i][j]].boat_over) {
+				// Try to fix specials that could be triggered while in a boat
+				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
+				int found_spec = -1;
+				for(int k = 0; i < 18; k++) {
+					if(i == special_locs[k].x && j == special_locs[k].y) {
+						found_spec = k;
+						break;
+					}
+				}
+				if(found_spec >= 0) {
+					if(!unused_special_slots.empty()) {
+						int found_spec_id = special_id[found_spec], use_slot = unused_special_slots.back();
+						unused_special_slots.pop_back();
+						cSpecial& node = specials[use_slot];
+						node.type = eSpecType::IF_CONTEXT;
+						node.ex1a = 101; // if in boat
+						node.ex1c = -1; // do nothing
+						node.jumpto = found_spec_id; // else jump here
+						special_id[found_spec] = use_slot;
+					} else {
+						std::stringstream sout;
+						sout << "In outdoor section (" << x << ',' << y << ") at (" << i << ',' << j << "); special node ID ";
+						sout << special_id[found_spec];
+						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
+					}
 				}
 			}
 		}

@@ -434,13 +434,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 					}
 				}
 			//print_nums(1,which_pc,current_pc);
-//			if (mode == 2) {
-//				if (get_ran(1,1,100) <= ter_flag2){
-//					if (ter_special == 5)
-//						poison_pc(which_pc,ter_flag1);
-//					else disease_pc(which_pc,ter_flag1);
-//				}
-//			}
 			break;
 		case eTerSpec::CALL_SPECIAL:
 		{
@@ -458,13 +451,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				can_enter = false;
 			break;
 		}
-//		case 13: // global special
-//			run_special(mode,0,ter_flag1,where_check,&s1,&s2,&s3);
-//			if (s1 > 0)
-//				can_enter = false;
-//			break;
-			
-			
 			// Locked doors
 		case eTerSpec::UNLOCKABLE:
 			if (is_combat()) {  // No lockpicking in combat
@@ -3296,8 +3282,17 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(which_mode == eSpecCtx::SEE_MONST)
 						*next_spec = spec.ex1c;
 					break;
+					// Past here are special values that don't have an equivalent in eSpecCtx.
 				case 100: // Look (town or out)
 					if(which_mode == eSpecCtx::OUT_LOOK || which_mode == eSpecCtx::TOWN_LOOK)
+						*next_spec = spec.ex1c;
+					break;
+				case 101: // In boat
+					if(univ.party.in_boat >= 0)
+						*next_spec = spec.ex1c;
+					break;
+				case 102: // On horse
+					if(univ.party.in_horse >= 0)
 						*next_spec = spec.ex1c;
 					break;
 			}

@@ -14,9 +14,9 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-void cTown::append(legacy::big_tr_type&){}
-void cTown::append(legacy::ave_tr_type&){}
-void cTown::append(legacy::tiny_tr_type&){}
+void cTown::append(legacy::big_tr_type&, int town_num){}
+void cTown::append(legacy::ave_tr_type&, int town_num){}
+void cTown::append(legacy::tiny_tr_type&, int town_num){}
 
 cTown& cTown::operator = (legacy::town_record_type& old){
 	int i;

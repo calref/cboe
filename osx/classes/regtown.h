@@ -29,7 +29,7 @@ protected:
 	cCreature _creatures[60];
 	unsigned char _lighting[8][64];
 public:
-	void append(legacy::big_tr_type& old);
+	void append(legacy::big_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
@@ -50,7 +50,7 @@ protected:
 	cCreature _creatures[40];
 	unsigned char _lighting[6][48];
 public:
-	void append(legacy::ave_tr_type& old);
+	void append(legacy::ave_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
@@ -71,7 +71,7 @@ protected:
 	cCreature _creatures[30];
 	unsigned char _lighting[4][32];
 public:
-	void append(legacy::tiny_tr_type& old);
+	void append(legacy::tiny_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
