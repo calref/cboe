@@ -981,12 +981,14 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
-////
-// which_s = 0 means that it returns first 4th level spell
 cItemRec store_mage_spells(short which_s)
 {
 	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-	static const short cost[32] = {
+	static const short cost[62] = {
+		// TODO: Costs for the level 1-3 spells
+		5,5,5,5,5,5,5,5,5,5,
+		5,5,5,5,5,5,5,5,5,5,
+		5,5,5,5,5,5,5,5,5,5,
 		150,200,150,1000,1200,400,300,200,
 		200,250,500,1500,300,  250,125,150,
 		400,450, 800,600,700,600,7500, 500,
@@ -995,20 +997,23 @@ cItemRec store_mage_spells(short which_s)
 	
 	std::string str;
 	
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != minmax(0,61,which_s))
 		which_s = 0;
-	spell.item_level = which_s + 30;
+	spell.item_level = which_s;
 	spell.value = cost[which_s];
 	str = get_str("magic-names",which_s + 1);
 	spell.full_name = str.c_str();
 	return spell;
 }
 
-// which_s = 0 means that it returns first 4th level spell
 cItemRec store_priest_spells(short which_s)
 {
 	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-	static const short cost[32] = {
+	static const short cost[62] = {
+		// TODO: Costs for the level 1-3 spells
+		5,5,5,5,5,5,5,5,5,5,
+		5,5,5,5,5,5,5,5,5,5,
+		5,5,5,5,5,5,5,5,5,5,
 		100,150,75,400,200, 100,80,250,
 		400,400,1200,600,300, 600,350,250,
 		500,500,600,800, 1000,900,400,600,
@@ -1016,11 +1021,11 @@ cItemRec store_priest_spells(short which_s)
 	};
 	std::string str;
 	
-	if (which_s != minmax(0,31,which_s))
+	if (which_s != minmax(0,61,which_s))
 		which_s = 0;
-	spell.item_level = which_s + 30;
+	spell.item_level = which_s;
 	spell.value = cost[which_s];
-	str = get_str("magic-names",which_s + 50);
+	str = get_str("magic-names",which_s + 70);
 	spell.full_name = str.c_str();
 	return spell;
 }

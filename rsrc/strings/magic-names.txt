@@ -1,3 +1,33 @@
+Light
+Spark
+Minor Haste
+Strength
+Scare
+Flame Cloud
+Identify
+Scry Monster
+Goo
+True Sight
+Minor Poison
+Flame
+Slow
+Dumbfound
+Envenom
+Stinking Cloud
+Summon Beast
+Conflagration
+Dispel Field
+Sleep Cloud
+Unlock
+Haste
+Fireball
+Long Light
+Fear
+Wall of Force
+Weak Summoning
+Flame Arrows
+Web
+Resist Magic
 Poison
 Ice Bolt
 Slow Group
@@ -37,16 +67,36 @@ Death Arrows
 
 
 
-
-
-
-
-
-
-
-
-
-
+Minor Bless
+Minor Heal
+Weaken Poison
+Turn Undead
+Location
+Sanctuary
+Symbiosis
+Minor Manna
+Ritual - Sanctify
+Stumble
+Bless
+Cure Poison
+Curse
+Light
+Wound
+Summon Spirit
+Move Mountains
+Charm Foe
+Disease
+Awaken
+Heal
+Light Heal All
+Holy Scourge
+Detect Life
+Cure Paralysis
+Manna
+Forcefield
+Cure Disease
+Restore Mind
+Smite
 Cure All Poison
 Curse All
 Dispel Undead
@@ -117,56 +167,6 @@ Knowledge Brew
 Strong Strength
 Bliss
 Strong Power
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
