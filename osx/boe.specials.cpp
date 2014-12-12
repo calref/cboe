@@ -1002,13 +1002,16 @@ void use_item(short pc,short item)
 			case ITEM_FLYING:
 				if (PSD[SDF_PARTY_FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
+					take_charge = false;
 					break;
 				}
-				if (univ.party.in_boat >= 0)
+				if (univ.party.in_boat >= 0) {
 					add_string_to_buf("  Leave boat first.             ");
-				else if (univ.party.in_horse >= 0)////
+					take_charge = false;
+				} else if (univ.party.in_horse >= 0) {
 					add_string_to_buf("  Leave horse first.             ");
-				else {
+					take_charge = false;
+				} else {
 					ASB("  You rise into the air!");
 					PSD[SDF_PARTY_FLIGHT] += str;
 				}
