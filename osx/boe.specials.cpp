@@ -70,34 +70,24 @@ short spec_str_offset[3] = {160,10,0};
 
 //// Pretty much all of this is new for BoE
 
-// 0 - everywhere 1 - combat only 2 - town only 3 - town & combat only  4 - can't use  5 - outdoor
+// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 // + 10 - mag. inept can use
-short abil_chart[200] = {
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4, // 50
-	4,4,4,4,4,4,4,4,4,4,
-	13,0,0,0,3, 3,3,0,3,3,
-	3,3,3,3,3, 0,0,0,0,3,
-	13,3,3,5,0, 0,0,0,0,0,
-	4,4,4,4,4,4,4,4,4,4, // 100
-	1,1,1,1,1, 1,1,1,1,3,
-	3,1,1,1,1, 1,1,1,1,3,
-	1,2,2,1,1, 1,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4, // 150
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,4
+std::map<eItemAbil, short> abil_chart = {
+	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::BLESS_CURSE,4}, {eItemAbil::AFFECT_POISON,4}, {eItemAbil::HASTE_SLOW,4},
+	{eItemAbil::AFFECT_INVULN,3}, {eItemAbil::AFFECT_MAGIC_RES,3}, {eItemAbil::AFFECT_WEB,3}, {eItemAbil::AFFECT_DISEASE,4},
+	{eItemAbil::AFFECT_SANCTUARY,3}, {eItemAbil::AFFECT_DUMBFOUND,3}, {eItemAbil::AFFECT_MARTYRS_SHIELD,3}, {eItemAbil::AFFECT_SLEEP,3},
+	{eItemAbil::AFFECT_PARALYSIS,3}, {eItemAbil::AFFECT_ACID,3}, {eItemAbil::BLISS,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
+	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4}, {eItemAbil::DOOM,3},
+	{eItemAbil::LIGHT,13}, {eItemAbil::STEALTH,3}, {eItemAbil::FIREWALK,3}, {eItemAbil::FLYING,5}, {eItemAbil::MAJOR_HEALING,4},
+	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::FLAME,1}, {eItemAbil::FIREBALL,1}, {eItemAbil::FIRESTORM,1}, {eItemAbil::KILL,1},
+	{eItemAbil::ICE_BOLT,1}, {eItemAbil::SLOW,1}, {eItemAbil::SHOCKWAVE,1}, {eItemAbil::DISPEL_UNDEAD,1}, {eItemAbil::DISPEL_SPIRIT,1},
+	{eItemAbil::SUMMONING,3}, {eItemAbil::MASS_SUMMONING,3}, {eItemAbil::ACID_SPRAY,1}, {eItemAbil::STINKING_CLOUD,1},
+	{eItemAbil::SLEEP_FIELD,1}, {eItemAbil::VENOM,1}, {eItemAbil::SHOCKSTORM,1}, {eItemAbil::PARALYSIS,1}, {eItemAbil::WEB,1},
+	{eItemAbil::STRENGTHEN_TARGET,1}, {eItemAbil::QUICKFIRE,3}, {eItemAbil::MASS_CHARM,1}, {eItemAbil::MAGIC_MAP,2},
+	{eItemAbil::DISPEL_BARRIER,2}, {eItemAbil::ICE_WALL,1}, {eItemAbil::CHARM_SPELL,1}, {eItemAbil::ANTIMAGIC_CLOUD,1},
 };
 
-
-
-
+// TODO: I bet this is completely unused; it looks like it does nothing.
 bool town_specials(short which,short /*t_num*/)
 //short which; // number, 0 - 49, of special
 {
@@ -596,14 +586,14 @@ void use_spec_item(short item)
 void use_item(short pc,short item)
 {
 	bool take_charge = true,inept_ok = false;
-	short abil,level,i,j,item_use_code,str,type,r1;
+	short level,i,j,item_use_code,str,type,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	eStatus which_stat;
 	char to_draw[60];
 	location user_loc;
 	cCreature *which_m;
 	extern effect_pat_type single;
-	abil = univ.party[pc].items[item].ability;
+	eItemAbil abil = univ.party[pc].items[item].ability;
 	level = univ.party[pc].items[item].item_level;
 	
 	item_use_code = abil_chart[abil];
@@ -619,7 +609,7 @@ void use_item(short pc,short item)
 	if (is_combat())
 		user_loc = pc_pos[current_pc];
 	
-	if (item_use_code == 4) {
+	if (item_use_code == 0) {
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = false;
 	}
@@ -628,11 +618,13 @@ void use_item(short pc,short item)
 		take_charge = false;
 	}
 	
+	// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 	if (take_charge) {
-		if ((overall_mode == MODE_OUTDOORS) && (item_use_code > 0) && (item_use_code != 5)) {
+		if(overall_mode == MODE_OUTDOORS && item_use_code < 4) {
 			add_string_to_buf("Use: Not while outdoors.         ");
 			take_charge = false;
 		}
+		// TODO: Almost all of these look wrong!
 		if ((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
 			add_string_to_buf("Use: Not while in town.         ");
 			take_charge = false;
@@ -660,10 +652,10 @@ void use_item(short pc,short item)
 		type = univ.party[pc].items[item].magic_use_type;
 		
 		switch (abil) {
-			case ITEM_POISON_WEAPON: // poison weapon
+			case eItemAbil::POISON_WEAPON: // poison weapon
 				take_charge = poison_weapon(pc,str,0);
 				break;
-			case ITEM_BLESS_CURSE:
+			case eItemAbil::BLESS_CURSE:
 				play_sound(4);
 				which_stat = eStatus::BLESS_CURSE;
 				if (type % 2 == 1) {
@@ -674,7 +666,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_HASTE_SLOW:
+			case eItemAbil::HASTE_SLOW:
 				play_sound(75);
 				which_stat = eStatus::HASTE_SLOW;
 				if (type % 2 == 1) {
@@ -685,7 +677,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_INVULN:
+			case eItemAbil::AFFECT_INVULN:
 				play_sound(68);
 				which_stat = eStatus::INVULNERABLE;
 				if (type % 2 == 1) {
@@ -696,7 +688,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_MAGIC_RES:
+			case eItemAbil::AFFECT_MAGIC_RES:
 				play_sound(51);
 				which_stat = eStatus::MAGIC_RESISTANCE;
 				if (type % 2 == 1) {
@@ -707,7 +699,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_WEB:
+			case eItemAbil::AFFECT_WEB:
 				which_stat = eStatus::WEBS;
 				if (type % 2 == 1)
 					ASB("  You feel sticky.");
@@ -719,7 +711,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_SANCTUARY:
+			case eItemAbil::AFFECT_SANCTUARY:
 				play_sound(43);
 				which_stat = eStatus::INVISIBLE;
 				if (type % 2 == 1) {
@@ -730,7 +722,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_MARTYRS_SHIELD:
+			case eItemAbil::AFFECT_MARTYRS_SHIELD:
 				play_sound(43);
 				which_stat = eStatus::MARTYRS_SHIELD;
 				if (type % 2 == 1) {
@@ -741,7 +733,7 @@ void use_item(short pc,short item)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
-			case ITEM_AFFECT_POISON:
+			case eItemAbil::AFFECT_POISON:
 				switch (type) {
 					case 0:
 						ASB("  You feel better.");
@@ -761,7 +753,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_DISEASE:
+			case eItemAbil::AFFECT_DISEASE:
 				switch (type) {
 					case 0:
 						ASB("  You feel healthy.");
@@ -782,7 +774,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_DUMBFOUND:
+			case eItemAbil::AFFECT_DUMBFOUND:
 				switch (type) {
 					case 0:
 						ASB("  You feel clear headed.");
@@ -803,7 +795,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_SLEEP:
+			case eItemAbil::AFFECT_SLEEP:
 				switch (type) {
 					case 0:
 						ASB("  You feel alert.");
@@ -824,7 +816,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_PARALYSIS:
+			case eItemAbil::AFFECT_PARALYSIS:
 				switch (type) {
 					case 0:
 						ASB("  You find it easier to move.");
@@ -845,7 +837,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_ACID:
+			case eItemAbil::AFFECT_ACID:
 				switch (type) {
 					case 0:
 						ASB("  Your skin tingles pleasantly.");
@@ -866,7 +858,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_BLISS:
+			case eItemAbil::BLISS:
 				switch (type) {
 					case 0: case 1:
 						ASB("  You feel wonderful!");
@@ -882,7 +874,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_EXPERIENCE:
+			case eItemAbil::AFFECT_EXPERIENCE:
 				switch (type) {
 					case 0:
 						ASB("  You feel much smarter.");
@@ -903,7 +895,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_SKILL_POINTS:
+			case eItemAbil::AFFECT_SKILL_POINTS:
 				play_sound(68);
 				switch (type) {
 					case 0:
@@ -926,7 +918,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_HEALTH:
+			case eItemAbil::AFFECT_HEALTH:
 				switch (type) {
 					case 0:
 						ASB("  You feel better.");
@@ -946,7 +938,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_AFFECT_SPELL_POINTS:
+			case eItemAbil::AFFECT_SPELL_POINTS:
 				switch (type) {
 					case 0:
 						ASB("  You feel energized.");
@@ -967,7 +959,7 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_DOOM:
+			case eItemAbil::DOOM:
 				switch (type) {
 					case 0: case 1:
 						ASB("  You feel terrible.");
@@ -987,19 +979,19 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_LIGHT:
+			case eItemAbil::LIGHT:
 				ASB("  You have more light.");
 				increase_light(50 * str);
 				break;
-			case ITEM_STEALTH:
+			case eItemAbil::STEALTH:
 				ASB("  Your footsteps become quieter.");
 				PSD[SDF_PARTY_STEALTHY] += 5 * str;
 				break;
-			case ITEM_FIREWALK:
+			case eItemAbil::FIREWALK:
 				ASB("  You feel chilly.");
 				PSD[SDF_PARTY_FIREWALK] += 2 * str;
 				break;
-			case ITEM_FLYING:
+			case eItemAbil::FLYING:
 				if (PSD[SDF_PARTY_FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
 					take_charge = false;
@@ -1016,7 +1008,7 @@ void use_item(short pc,short item)
 					PSD[SDF_PARTY_FLIGHT] += str;
 				}
 				break;
-			case ITEM_MAJOR_HEALING:
+			case eItemAbil::MAJOR_HEALING:
 				switch (type) {
 					case 0: case 1:
 						ASB("  You feel wonderful.");
@@ -1030,96 +1022,96 @@ void use_item(short pc,short item)
 						break;
 				}
 				break;
-			case ITEM_CALL_SPECIAL:
+			case eItemAbil::CALL_SPECIAL:
 				// TODO: Should this have its own separate eSpecCtx?
 				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);	
 				break;
 				
 				
 				// spell effects
-			case ITEM_SPELL_FLAME:
+			case eItemAbil::FLAME:
 				add_string_to_buf("  It fires a bolt of flame.");
 				start_spell_targeting(1011);
 				break;
-			case ITEM_SPELL_FIREBALL:
+			case eItemAbil::FIREBALL:
 				add_string_to_buf("  It shoots a fireball.         ");
 				start_spell_targeting(1022);
 				break;
-			case ITEM_SPELL_FIRESTORM:
+			case eItemAbil::FIRESTORM:
 				add_string_to_buf("  It shoots a huge fireball. ");
 				start_spell_targeting(1040);
 				break;
-			case ITEM_SPELL_KILL:
+			case eItemAbil::KILL:
 				add_string_to_buf("  It shoots a black ray.  ");
 				start_spell_targeting(1048);
 				break;
-			case ITEM_SPELL_ICE_BOLT:
+			case eItemAbil::ICE_BOLT:
 				add_string_to_buf("  It fires a ball of ice.   ");
 				start_spell_targeting(1031);
 				break;
-			case ITEM_SPELL_SLOW:
+			case eItemAbil::SLOW:
 				add_string_to_buf("  It fires a purple ray.   ");
 				start_spell_targeting(1012);
 				break;
-			case ITEM_SPELL_SHOCKWAVE:
+			case eItemAbil::SHOCKWAVE:
 				add_string_to_buf("  The ground shakes!        ");
 				do_shockwave(pc_pos[current_pc]);
 				break;
-			case ITEM_SPELL_DISPEL_UNDEAD:
+			case eItemAbil::DISPEL_UNDEAD:
 				add_string_to_buf("  It shoots a white ray.   ");
 				start_spell_targeting(1132);
 				break;
-			case ITEM_SPELL_DISPEL_SPIRIT:
+			case eItemAbil::DISPEL_SPIRIT:
 				add_string_to_buf("  It shoots a golden ray.   ");
 				start_spell_targeting(1155);
 				break;
-			case ITEM_SPELL_SUMMONING:
+			case eItemAbil::SUMMONING:
 				if (summon_monster(str,user_loc,50,2) == false)
 					add_string_to_buf("  Summon failed.");
 				break;
-			case ITEM_SPELL_MASS_SUMMONING:
+			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(6,1,4);
 				for (i = 0; i < get_ran(1,3,5); i++) // TODO: Why recalculate the random number for each loop iteration?
 					if (summon_monster(str,user_loc,r1,2) == false)
 						add_string_to_buf("  Summon failed.");
 				break;
-			case ITEM_SPELL_ACID_SPRAY:
+			case eItemAbil::ACID_SPRAY:
 				add_string_to_buf("  Acid sprays from the tip!   ");
 				start_spell_targeting(1068);
 				break;
-			case ITEM_SPELL_STINKING_CLOUD:
+			case eItemAbil::STINKING_CLOUD:
 				add_string_to_buf("  It creates a cloud of gas.   ");
 				start_spell_targeting(1066);
 				break;
-			case ITEM_SPELL_SLEEP_FIELD:
+			case eItemAbil::SLEEP_FIELD:
 				add_string_to_buf("  It creates a shimmering cloud.   ");
 				start_spell_targeting(1019);
 				break;
-			case ITEM_SPELL_VENOM:
+			case eItemAbil::VENOM:
 				add_string_to_buf("  A green ray emerges.        ");
 				start_spell_targeting(1030);
 				break;
-			case ITEM_SPELL_SHOCKSTORM:
+			case eItemAbil::SHOCKSTORM:
 				add_string_to_buf("  Sparks fly.");
 				start_spell_targeting(1044);
 				break;
-			case ITEM_SPELL_PARALYSIS:
+			case eItemAbil::PARALYSIS:
 				add_string_to_buf("  It shoots a silvery beam.   ");
 				start_spell_targeting(1069);
 				break;
-			case ITEM_SPELL_WEB_SPELL:
+			case eItemAbil::WEB:
 				add_string_to_buf("  It explodes!");
 				start_spell_targeting(1065);
 				break;
-			case ITEM_SPELL_STRENGTHEN_TARGET:
+			case eItemAbil::STRENGTHEN_TARGET:
 				add_string_to_buf("  It shoots a fiery red ray.   ");
 				start_spell_targeting(1062);
 				break;
-			case ITEM_SPELL_QUICKFIRE:
+			case eItemAbil::QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
 				univ.town.set_quickfire(user_loc.x,user_loc.y,true);
 				break;
-			case ITEM_SPELL_MASS_CHARM:
+			case eItemAbil::MASS_CHARM:
 				ASB("It throbs, and emits odd rays.");
 				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
@@ -1130,7 +1122,7 @@ void use_item(short pc,short item)
 					}
 				}
 				break;
-			case ITEM_SPELL_MAGIC_MAP:
+			case eItemAbil::MAGIC_MAP:
 				if (univ.town->defy_scrying || univ.town->defy_mapping) {
 					add_string_to_buf("  It doesn't work.");
 					break;
@@ -1141,22 +1133,22 @@ void use_item(short pc,short item)
 						make_explored(i,j);
 				clear_map();
 				break;
-			case ITEM_SPELL_DISPEL_BARRIER:
+			case eItemAbil::DISPEL_BARRIER:
 				add_string_to_buf("  It fires a blinding ray.");
 				add_string_to_buf("  Target spell.    ");
 				overall_mode = MODE_TOWN_TARGET;
 				current_pat = single;
 				set_town_spell(1041,current_pc);
 				break;
-			case ITEM_SPELL_MAKE_ICE_WALL:
+			case eItemAbil::ICE_WALL:
 				add_string_to_buf("  It shoots a blue sphere.   ");
 				start_spell_targeting(1064);
 				break;
-			case ITEM_SPELL_CHARM_SPELL:
+			case eItemAbil::CHARM_SPELL:
 				add_string_to_buf("  It fires a lovely, sparkling beam.");
 				start_spell_targeting(1117);
 				break;
-			case ITEM_SPELL_ANTIMAGIC_CLOUD:
+			case eItemAbil::ANTIMAGIC_CLOUD:
 				add_string_to_buf("  Your hair stands on end.   ");
 				start_spell_targeting(1051);
 				break;
@@ -1544,7 +1536,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	if (how_much <= 0) {
 		if (is_combat())
 			monst_spell_note(victim->number,7);
-		if ((how_much <= 0) && ((dam_type == 0) || (dam_type == 6) || (dam_type == 7))) {
+		if ((how_much <= 0) && ((dam_type == DAMAGE_WEAPON) || (dam_type == DAMAGE_UNDEAD) || (dam_type == DAMAGE_DEMON))) {
 			draw_terrain(2);
 			play_sound(2);
 		}
@@ -2168,7 +2160,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::FORCED_GIVE:
 			check_mess = true;
-			if ((forced_give(spec.ex1a,ITEM_NO_ABILITY) == false) && ( spec.ex1b >= 0))
+			if(!forced_give(spec.ex1a,eItemAbil::NONE) && spec.ex1b >= 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
@@ -2349,7 +2341,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 	switch (cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
-			if (forced_give(spec.ex1a,ITEM_NO_ABILITY) == false) {
+			if(!forced_give(spec.ex1a,eItemAbil::NONE)) {
 				set_sd = false;
 				if ( spec.ex2b >= 0)
 					*next_spec = spec.ex2b;

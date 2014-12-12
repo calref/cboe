@@ -962,7 +962,8 @@ static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) 
 		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
 		return false;
 	}
-	if ((store_item.ability >= 70) && (store_item.ability < 170) && (store_item.charges == 0)) {
+	eItemAbilCat cat = getItemAbilCategory(store_item.ability);
+	if((cat == eItemAbilCat::SPELL || cat == eItemAbilCat::NONSPELL || cat == eItemAbilCat::REAGENT) && (store_item.charges == 0)) {
 		giveError("An item with the special ability selected must have at least 1 charge.","",&me);
 		return false;
 	}
@@ -1038,7 +1039,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short whic
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.full_name.c_str());
 	me["variety"].setText(get_str("item-types", (int)store_item.variety));
-	me["abilname"].setText(get_str("item-abilities", store_item.ability + 1));
+	me["abilname"].setText(get_str("item-abilities", int(store_item.ability) + 1));
 	
 	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(store_item.magic_use_type));
 	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(store_item.treas_class));
@@ -1067,7 +1068,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 	short i;
 	
 	if(item_hit == "cancel") {
-		store_item.ability = ITEM_NO_ABILITY;
+		store_item.ability = eItemAbil::NONE;
 		me.toast(false);
 		return true;
 	} else if(item_hit == "okay") {
@@ -1081,9 +1082,9 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to a melee weapon.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 1, 15, store_item.ability + 1, &me, "Choose Weapon Ability (inherent)");
+		i = choose_text_res("item-abilities", 1, 15, int(store_item.ability) + 1, &me, "Choose Weapon Ability (inherent)");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "general") {
 		if(save_item_abils(me, store_item)) return true;
@@ -1093,9 +1094,9 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 31, 63, store_item.ability + 1, &me, "Choose General Ability (inherent)");
+		i = choose_text_res("item-abilities", 31, 63, int(store_item.ability) + 1, &me, "Choose General Ability (inherent)");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "usable") {
 		if(save_item_abils(me, store_item)) return true;
@@ -1103,9 +1104,9 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 71, 95, store_item.ability + 1, &me, "Choose Usable Ability (Not spell)");
+		i = choose_text_res("item-abilities", 71, 95, int(store_item.ability) + 1, &me, "Choose Usable Ability (Not spell)");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "spell") {
 		if(!save_item_abils(me,store_item)) return true;
@@ -1113,9 +1114,9 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 111, 136, store_item.ability + 1, &me, "Choose Usable Ability (Spell)");
+		i = choose_text_res("item-abilities", 111, 136, int(store_item.ability) + 1, &me, "Choose Usable Ability (Spell)");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "reagent") {
 		if(!save_item_abils(me, store_item)) return true;
@@ -1124,9 +1125,9 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item of type Non-Use Object.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 151, 162, store_item.ability + 1, &me, "Choose Reagent Ability");
+		i = choose_text_res("item-abilities", 151, 162, int(store_item.ability) + 1, &me, "Choose Reagent Ability");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "missile") {
 		if(!save_item_abils(me,store_item)) return true;
@@ -1134,13 +1135,13 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 171, 177, store_item.ability + 1, &me, "Choose Missile Ability");
+		i = choose_text_res("item-abilities", 171, 177, int(store_item.ability) + 1, &me, "Choose Missile Ability");
 		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
-		else store_item.ability = ITEM_NO_ABILITY;
+		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	}
 	using namespace std::placeholders;
-	if(store_item.ability != 119 && store_item.ability != 120) {
+	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
 		me["str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10, "Ability Strength"));
 	} else {
 		me["str"].attachFocusHandler(std::bind(check_range_msg, _1,_2,_3, 0,255, "Ability Strength","the number of the monster to summon"));
@@ -1154,7 +1155,7 @@ cItemRec edit_item_abil(cItemRec starting_record,short which_item) {
 	cItemRec store_item = starting_record;
 	
 	cDialog item_dlg("edit-item-abils.xml");
-	if(store_item.ability != 119 && store_item.ability != 120) {
+	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
 		item_dlg["str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10, "Ability Strength"));
 	} else {
 		item_dlg["str"].attachFocusHandler(std::bind(check_range_msg,_1,_2,_3, 0,255, "Ability Strength","the number of the monster to summon"));

@@ -233,12 +233,12 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	// TODO: This calculation (value for an item with charges) should be in a member function of cItem
 	me["val"].setTextToNum((s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
 	
-	if (s_i.ability > 0) {////
+	if(s_i.ability != eItemAbil::NONE) {
 		if (s_i.concealed) {
 			me["abil"].setText("???");
 		} else {
 			// TODO: More descriptive ability descriptions, taking into account potential variation
-			desc_str = get_str("item-abilities",s_i.ability + 1);
+			desc_str = get_str("item-abilities",int(s_i.ability) + 1);
 			me["abil"].setText(desc_str.c_str());
 		}
 	}
@@ -265,7 +265,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 					sprintf((char*)store_text, "Error weapon"); // should never be reached
 			}
 			// TODO: I wonder if this would fit better in the Item Type box?
-			if (s_i.ability == 0)
+			if(s_i.ability == eItemAbil::NONE)
 				me["abil"].setText(store_text);
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
@@ -289,7 +289,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS: // TODO: Should this also check ITEM_TYPE_PANTS?
+		case eItemType::BOOTS: // TODO: Should this also check eItemType::PANTS?
 			// TODO: Why is bonus and protection combined into "bonus"? Why not use the "defense" field?
 			me["bonus"].setTextToNum(s_i.bonus + s_i.protection);
 			me["def"].setTextToNum(s_i.item_level);
@@ -615,11 +615,11 @@ static void display_pc_info(cDialog& me, const short pc) {
 		hit_adj -= 25;
 	
 	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if ((skill_item = text_pc_has_abil_equip(pc,37)) < 24) {
+	if((skill_item = pc_has_abil_equip(pc,eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].item_level / 2;
 	}
-	if ((skill_item = text_pc_has_abil_equip(pc,43)) < 24) {
+	if((skill_item = pc_has_abil_equip(pc,eItemAbil::GIANT_STRENGTH)) < 24) {
 		dam_adj += univ.party[pc].items[skill_item].item_level;
 		hit_adj += univ.party[pc].items[skill_item].item_level * 2;
 	}

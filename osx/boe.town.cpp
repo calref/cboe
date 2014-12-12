@@ -707,7 +707,7 @@ void handle_leave_town_specials(short /*town_number*/, short which_spec,location
 	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.p_loc);
 }
 
-bool abil_exists(short abil) // use when univ.out.outdoors
+bool abil_exists(eItemAbil abil) // use when outdoors
 {
 	short i,j;
 	
@@ -1130,7 +1130,7 @@ void pick_lock(location where,short pc_num)
 	short unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	which_item = pc_has_abil_equip(pc_num,161);
+	which_item = pc_has_abil_equip(pc_num,eItemAbil::LOCKPICKS);
 	if (which_item == 24) {
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
@@ -1148,7 +1148,7 @@ void pick_lock(location where,short pc_num)
 	if (univ.party[pc_num].traits[eTrait::NIMBLE])
 		r1 -= 8;
 	
-	if (pc_has_abil_equip(pc_num,42) < 24)
+	if (pc_has_abil_equip(pc_num,eItemAbil::THIEVING) < 24)
 		r1 = r1 - 12;
 	
 	if(scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {

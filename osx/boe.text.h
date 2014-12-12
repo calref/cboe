@@ -1,6 +1,5 @@
 #include <string>
 
-short text_pc_has_abil_equip(short pc_num,short abil);
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
 void put_item_screen(short screen_num,short suppress_buttons);

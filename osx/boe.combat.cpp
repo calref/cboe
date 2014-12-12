@@ -602,11 +602,11 @@ void pc_attack(short who_att,short target)////
 	}
 	
 	
-	if ((skill_item = text_pc_has_abil_equip(who_att,37)) < 24) {
+	if ((skill_item = pc_has_abil_equip(who_att,eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[who_att].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[who_att].items[skill_item].item_level / 2;
 	}
-	if ((skill_item = text_pc_has_abil_equip(who_att,43)) < 24) {
+	if ((skill_item = pc_has_abil_equip(who_att,eItemAbil::GIANT_STRENGTH)) < 24) {
 		dam_adj += univ.party[who_att].items[skill_item].item_level;
 		hit_adj += univ.party[who_att].items[skill_item].item_level * 2;
 	}
@@ -661,7 +661,7 @@ void pc_attack(short who_att,short target)////
 			r1 -= 10;
 		
 		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
-		if (univ.party[who_att].items[weap1].ability == 12)
+		if (univ.party[who_att].items[weap1].ability == eItemAbil::WEAK_WEAPON)
 			r2 = (r2 * (10 - univ.party[who_att].items[weap1].ability_strength)) / 10;
 		
 		if (r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
@@ -694,20 +694,20 @@ void pc_attack(short who_att,short target)////
 			// poison
 			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0 && univ.party[who_att].weap_poisoned == weap1) {
 				poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
-				if (pc_has_abil_equip(who_att,51) < 24)
+				if (pc_has_abil_equip(who_att,eItemAbil::POISON_AUGMENT) < 24)
 					poison_amt += 2;
 				poison_monst(which_m,poison_amt);
 				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 			}
-			if ((univ.party[who_att].items[weap1].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap1].ability == eItemAbil::POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				poison_monst(which_m,univ.party[who_att].items[weap1].ability_strength / 2);
 			}
-			if ((univ.party[who_att].items[weap1].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap1].ability == eItemAbil::ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				acid_monst(which_m,univ.party[who_att].items[weap1].ability_strength / 2);
 			}
-			if ((univ.party[who_att].items[weap1].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap1].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				heal_pc(who_att,univ.party[who_att].items[weap1].ability_strength / 2);
 			}
@@ -740,7 +740,7 @@ void pc_attack(short who_att,short target)////
 		
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,univ.party[who_att].items[weap2].item_level) + dam_adj - 1 + univ.party[who_att].items[weap2].bonus;
-		if (univ.party[who_att].items[weap2].ability == 12)
+		if (univ.party[who_att].items[weap2].ability == eItemAbil::WEAK_WEAPON)
 			r2 = (r2 * (10 - univ.party[who_att].items[weap2].ability_strength)) / 10;
 		
 		if (r1 <= hit_chance[univ.party[who_att].skills[what_skill2]]) {
@@ -760,15 +760,15 @@ void pc_attack(short who_att,short target)////
 					break;
 			}
 			
-			if ((univ.party[who_att].items[weap2].ability == 14) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap2].ability == eItemAbil::POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips venom.             ");
 				poison_monst(which_m,univ.party[who_att].items[weap2].ability_strength / 2);
 			}
-			if ((univ.party[who_att].items[weap2].ability == 9) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap2].ability == eItemAbil::ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drips acid.             ");
 				acid_monst(which_m,univ.party[who_att].items[weap2].ability_strength / 2);
 			}
-			if ((univ.party[who_att].items[weap2].ability == 10) && (get_ran(1,0,1) == 1)) {
+			if ((univ.party[who_att].items[weap2].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
 				heal_pc(who_att,univ.party[who_att].items[weap2].ability_strength / 2);
 			}
@@ -796,54 +796,55 @@ void pc_attack(short who_att,short target)////
 }
 
 
-short calc_spec_dam(short abil,short abil_str,cCreature *monst) ////
-{
+short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst) {
 	short store = 0;
 	
 	switch (abil) {
-		case 1: case 171:
+		case eItemAbil::FLAMING_WEAPON:
+		case eItemAbil::MISSILE_LIGHTNING:
 			store += get_ran(abil_str,1,6);
 			break;
-		case 2:
+		case eItemAbil::DEMON_SLAYER:
 			if(monst->m_type == eRace::DEMON)
 				store += 8 * abil_str;
 			break;
-		case 175:
+		case eItemAbil::MISSILE_SLAY_DEMON:
 			if(monst->m_type == eRace::DEMON)
 				store += 25 + 8 * abil_str;
 			break;
-		case 174:
+		case eItemAbil::MISSILE_SLAY_UNDEAD:
 			if(monst->m_type == eRace::UNDEAD)
 				store += 20 + 6 * abil_str;
 			break;
-		case 3:
+		case eItemAbil::UNDEAD_SLAYER:
 			if(monst->m_type == eRace::UNDEAD)
 				store += 6 * abil_str;
 			break;
-		case 4:
+		case eItemAbil::LIZARD_SLAYER:
 			if(monst->m_type == eRace::REPTILE)
 				store += 5 * abil_str;
 			break;
-		case 5:
+		case eItemAbil::GIANT_SLAYER:
 			if(monst->m_type == eRace::GIANT)
 				store += 8 * abil_str;
 			break;
-		case 6:
+		case eItemAbil::MAGE_SLAYER:
 			if(monst->m_type == eRace::MAGE)
 				store += 4 * abil_str;
 			break;
-		case 7:
+		case eItemAbil::PRIEST_SLAYER:
 			if(monst->m_type == eRace::PRIEST)
 				store += 4 * abil_str;
 			break;
-		case 8:
+		case eItemAbil::BUG_SLAYER:
 			if(monst->m_type == eRace::BUG)
 				store += 7 * abil_str;
 			break;
-		case 13:
+		case eItemAbil::CAUSES_FEAR:
 			scare_monst(monst,abil_str * 10);
 			break;
-		case 173:
+		case eItemAbil::MISSILE_ACID:
+		case eItemAbil::ACIDIC_WEAPON:
 			acid_monst(monst,abil_str);
 			break;
 	}
@@ -941,7 +942,7 @@ void do_combat_cast(location target)////
 	}
 	else {
 		level = 1 + univ.party[current_pc].level / 2;
-		bonus = stat_adj(current_pc,2);
+		bonus = stat_adj(current_pc,SKILL_INTELLIGENCE);
 	}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -1245,7 +1246,7 @@ void do_combat_cast(location target)////
 											if ((cur_monst->mu == 0) && (cur_monst->cl == 0))
 												add_string_to_buf("  Can't duel: no magic.");
 											else {
-												item = pc_has_abil(current_pc,159);
+												item = pc_has_abil(current_pc,eItemAbil::SMOKY_CRYSTAL);
 												if (item >= 24)
 													add_string_to_buf("  You need a smoky crystal.   ");
 												else {
@@ -1465,7 +1466,7 @@ void load_missile() ////
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.party[current_pc].items[arrow].ability == ITEM_MISSILE_EXPLODING)
+		if(univ.party[current_pc].items[arrow].ability == eItemAbil::MISSILE_EXPLODING)
 			current_pat = rad2;
 		else
 			current_pat = single;
@@ -1505,7 +1506,7 @@ void fire_missile(location target) {
 	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(missile_firer,1) - can_see_light(pc_pos[missile_firer],target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
-	if ((skill_item = pc_has_abil_equip(missile_firer,41)) < 24) {
+	if ((skill_item = pc_has_abil_equip(missile_firer,eItemAbil::ACCURACY)) < 24) {
 		hit_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
 		dam_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
 	}
@@ -1515,7 +1516,7 @@ void fire_missile(location target) {
 	if(univ.party[missile_firer].race == eRace::REPTILE)
 		hit_bonus += 2;
 	
-	if (univ.party[missile_firer].items[ammo_inv_slot].ability == ITEM_MISSILE_EXPLODING)
+	if (univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_EXPLODING)
 		exploding = true;
 	
 	if (dist(pc_pos[missile_firer],target) > range)
@@ -1581,7 +1582,7 @@ void fire_missile(location target) {
 				cur_monst = &univ.town.monst[targ_monst];
 				spec_dam = calc_spec_dam(univ.party[missile_firer].items[ammo_inv_slot].ability,
 										 univ.party[missile_firer].items[ammo_inv_slot].ability_strength,cur_monst);
-				if (univ.party[missile_firer].items[ammo_inv_slot].ability == 176) {
+				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET) {
 					ASB("  There is a flash of light.");
 					cur_monst->health += r2;
 				}
@@ -1593,7 +1594,7 @@ void fire_missile(location target) {
 				// poison
 				if(univ.party[missile_firer].status[eStatus::POISONED_WEAPON] > 0 && univ.party[missile_firer].weap_poisoned == ammo_inv_slot) {
 					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
-					if (pc_has_abil_equip(missile_firer,51) < 24)
+					if (pc_has_abil_equip(missile_firer,eItemAbil::POISON_AUGMENT) < 24)
 						poison_amt++;
 					poison_monst(cur_monst,poison_amt);
 				}
@@ -1607,10 +1608,11 @@ void fire_missile(location target) {
 		}
 		
 		if (univ.party[missile_firer].items[ammo_inv_slot].variety != eItemType::MISSILE_NO_AMMO) {
-			if (univ.party[missile_firer].items[ammo_inv_slot].ability != 170)
+			if(univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			else univ.party[missile_firer].items[ammo_inv_slot].charges = 1;
-			if ((pc_has_abil_equip(missile_firer,11) < 24) && (univ.party[missile_firer].items[ammo_inv_slot].ability != 170))
+			if(pc_has_abil_equip(missile_firer,eItemAbil::DRAIN_MISSILES) < 24
+			   && univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			if (univ.party[missile_firer].items[ammo_inv_slot].charges <= 0)
 				take_item(missile_firer,ammo_inv_slot);
@@ -1746,7 +1748,7 @@ void combat_run_monst()
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			move_to_zero(PSD[SDF_PARTY_STEALTHY]);
-			if ((item = pc_has_abil_equip(i,50)) < 24) {
+			if ((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24) {
 				update_stat = true;
 				heal_pc(i,get_ran(1,0,univ.party[i].items[item].item_level + 1));
 			}
@@ -1766,13 +1768,13 @@ void combat_run_monst()
 			move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
 			
 			// Do special items
-			if (((item_level = get_prot_level(i,47)) > 0)
+			if (((item_level = get_prot_level(i,eItemAbil::OCCASIONAL_HASTE)) > 0)
 				&& (get_ran(1,0,10) == 5)) {
 				update_stat = true;
 				univ.party[i].status[eStatus::HASTE_SLOW] += item_level / 2;
 				add_string_to_buf("An item hastes you!");
 			}
-			if ((item_level = get_prot_level(i,46)) > 0) {
+			if ((item_level = get_prot_level(i,eItemAbil::OCCASIONAL_BLESS)) > 0) {
 				if (get_ran(1,0,10) == 5) {
 					update_stat = true;
 					univ.party[i].status[eStatus::BLESS_CURSE] += item_level / 2;
@@ -2395,7 +2397,7 @@ void monster_attack_pc(short who_att,short target)
 					
 					// Petrification touch
 					if ((attacker->spec_skill == 30)
-						&& (pc_has_abil_equip(target,49) == 24)
+						&& (pc_has_abil_equip(target,eItemAbil::PROTECT_FROM_PETRIFY) == 24)
 						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE]) <= 14)
 					{
 						add_string_to_buf("  Petrifying touch!");
@@ -2412,7 +2414,7 @@ void monster_attack_pc(short who_att,short target)
 						add_string_to_buf("  Petrification touch!                ");
 						r1 = max(0,(get_ran(1,0,100) - univ.party[target].level + 0.5*attacker->level));
 						// Equip petrify protection?
-						if (pc_has_abil_equip(target,49) < 24)
+						if (pc_has_abil_equip(target,eItemAbil:PROTECT_FROM_PETRIFY) < 24)
 							r1 = 0;
 						// Check if petrified.
 						if (r1 > 60) {
@@ -2428,14 +2430,15 @@ void monster_attack_pc(short who_att,short target)
 					
 					// Undead xp drain
 					if (((attacker->spec_skill == 16) || (attacker->spec_skill == 17))
-						&& (pc_has_abil_equip(target,48) == 24)) {
+						&& (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
+						// TODO: Uh, wait a second. These two abilities have an identical effect? That doesn't seem right!
 						add_string_to_buf("  Drains life!                 ");
 						drain_pc(target,(attacker->level * 3) / 2);
 						put_pc_screen();
 					}
 					
 					// Undead slow
-					if ((attacker->spec_skill == 18) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+					if ((attacker->spec_skill == 18) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
 						add_string_to_buf("  Stuns! ");
 						slow_pc(target,2);
 						put_pc_screen();
@@ -2473,7 +2476,7 @@ void monster_attack_pc(short who_att,short target)
 					
 					// Freezing touch
 					if (((attacker->spec_skill == 15) || (attacker->spec_skill == 17))
-						&& (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,48) == 24)) {
+						&& (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
 						add_string_to_buf("  Freezing touch!");
 						r1 = get_ran(3,1,10);
 						damage_pc(target,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
@@ -2740,7 +2743,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			sprintf (create_line, "  Gazes at %s.                  ",univ.party[target].name.c_str());
 			add_string_to_buf(create_line);
 			r1 = get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE];
-			if (pc_has_abil_equip(target,49) < 24)
+			if (pc_has_abil_equip(target,eItemAbil::PROTECT_FROM_PETRIFY) < 24)
 				r1 = 20;
 			if (r1 > 14) {
 				sprintf (create_line, "  %s resists.                  ",univ.party[target].name.c_str());
@@ -4157,7 +4160,7 @@ void handle_disease()
 					r1 = get_ran(1,0,7);
 					if(univ.party[i].traits[eTrait::GOOD_CONST])
 						r1 -= 2;
-					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,ITEM_PROTECT_FROM_DISEASE) < 24))
+					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,eItemAbil::PROTECT_FROM_DISEASE) < 24))
 						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
 				}
 		put_pc_screen();

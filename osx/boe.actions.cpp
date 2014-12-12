@@ -2180,7 +2180,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status.clear();
 	// Specials countdowns
-	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(52) && get_ran(1,0,5) == 3) {
+	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(eItemAbil::DISEASE_PARTY) && get_ran(1,0,5) == 3) {
 		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
 		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
 		display_enc_string.setSound(3);
@@ -2202,6 +2202,14 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			}
 			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				disease_pc(i,6);
+			}
+			short item = pc_has_abil_equip(i,eItemAbil::REGENERATE);
+			if(item < 24 && univ.party[i].cur_health < univ.party[i].max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
+				int j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
+				if(univ.party[i].items[item].ability_strength / 3 == 0)
+					j = get_ran(1,0,1);
+				if(is_out()) j = j * 4;
+				heal_pc(i,j);
 			}
 		}
 	special_increase_age(length, true);
@@ -2275,8 +2283,7 @@ void increase_age()////
 	}
 	
 	// Specials countdowns
-	if ((univ.party.age % 500 == 0
-		 ) && (get_ran(1,0,5) == 3) && (party_has_abil(52) == true)) {
+	if((univ.party.age % 500 == 0 && get_ran(1,0,5) == 3 && party_has_abil(eItemAbil::DISEASE_PARTY))) {
 		update_stat = true;
 		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
 		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
@@ -2422,7 +2429,7 @@ void increase_age()////
 				update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
-			if (((item = pc_has_abil_equip(i,50)) < 24)
+			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24
 				&& (univ.party[i].cur_health < univ.party[i].max_health)
 				&& ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
 				j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);

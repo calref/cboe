@@ -12,7 +12,7 @@ bool pc_combat_move(location destination);
 void char_parry();
 void char_stand_ready();
 void pc_attack(short who_att,short target);
-short calc_spec_dam(short abil,short abil_str,cCreature *monst);
+short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst);
 void place_target(location target);
 void do_combat_cast(location target);
 void handle_marked_damage();

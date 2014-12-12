@@ -7,7 +7,7 @@ void terrain_under_rentar();
 location end_town_mode(short switching_level,location destination);  // returns new party location
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) ;
 void handle_town_specials(short town_number, bool town_dead,location start_loc) ;
-bool abil_exists(short abil) ;
+bool abil_exists(eItemAbil abil);
 
 void start_town_combat(short direction);
 short end_town_combat();

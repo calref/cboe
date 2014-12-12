@@ -114,7 +114,7 @@ cItemRec::cItemRec(){
 	type = eWeapType::NOT_MELEE;
 	magic_use_type = 0;
 	graphic_num = 0;
-	ability = ITEM_NO_ABILITY;
+	ability = eItemAbil::NONE;
 	ability_strength = 0;
 	type_flag = 0;
 	is_special = 0;
@@ -133,7 +133,7 @@ cItemRec::cItemRec(){
 }
 
 cItemRec::cItemRec(long preset){
-	ability = ITEM_NO_ABILITY;
+	ability = eItemAbil::NONE;
 	ability_strength = 0;
 	type_flag = 0;
 	is_special = 0;
@@ -440,6 +440,7 @@ std::istream& operator >> (std::istream& in, eItemType& e){
 	return in;
 }
 
+// TODO: Perhaps this should understand symbolic names as well?
 std::istream& operator >> (std::istream& in, eItemAbil& e){
 	int i;
 	in >> i;
@@ -447,6 +448,6 @@ std::istream& operator >> (std::istream& in, eItemAbil& e){
 	   (i > 69 && i < 95) || (i > 109 && i < 136) ||
 	   (i > 149 && i < 162) || (i > 169 && i < 177))
 		e = (eItemAbil) i;
-	else e = ITEM_NO_ABILITY;
+	else e = eItemAbil::NONE;
 	return in;
 }

@@ -180,7 +180,7 @@ bool forced_give(short item_num,eItemAbil abil) ////
 	if ((item_num < 0) || (item_num > 399))
 		return true;
 	item = get_stored_item(item_num);
-	if (abil > ITEM_NO_ABILITY)
+	if (abil > eItemAbil::NONE)
 		item.ability = abil;
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 24; j++)
@@ -231,8 +231,7 @@ bool take_gold(short amount,bool print_result)
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
-short get_prot_level(short pc_num,short abil) ////
-{
+short get_prot_level(short pc_num,eItemAbil abil) {
 	short i = 0;
 	
 	for (i = 0; i < 24; i++)
@@ -243,8 +242,7 @@ short get_prot_level(short pc_num,short abil) ////
 	
 }
 
-short pc_has_abil_equip(short pc_num,short abil)
-{
+short pc_has_abil_equip(short pc_num,eItemAbil abil) {
 	short i = 0;
 	
 	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
@@ -254,8 +252,7 @@ short pc_has_abil_equip(short pc_num,short abil)
 	
 }
 
-short pc_has_abil(short pc_num,short abil)
-{
+short pc_has_abil(short pc_num,eItemAbil abil) {
 	short i = 0;
 	
 	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
@@ -264,8 +261,7 @@ short pc_has_abil(short pc_num,short abil)
 	return i;
 }
 
-bool party_has_abil(short abil)
-{
+bool party_has_abil(eItemAbil abil) {
 	short i;
 	
 	for (i = 0; i < 6; i++)
@@ -275,8 +271,7 @@ bool party_has_abil(short abil)
 	return false;
 }
 
-bool party_take_abil(short abil)
-{
+bool party_take_abil(eItemAbil abil) {
 	short i,item;
 	
 	for (i = 0; i < 6; i++)
@@ -323,9 +318,9 @@ short pc_carry_weight(short pc_num)
 	for (i = 0; i < 24; i++)
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM) {
 			storage += univ.party[pc_num].items[i].item_weight();
-			if (univ.party[pc_num].items[i].ability == 44)
+			if (univ.party[pc_num].items[i].ability == eItemAbil::LIGHTER_OBJECT)
 				airy = true;
-			if (univ.party[pc_num].items[i].ability == 45)
+			if (univ.party[pc_num].items[i].ability == eItemAbil::HEAVIER_OBJECT)
 				heavy = true;
 		}
 	if (airy)
@@ -450,7 +445,7 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	
 	////
 	if (univ.party[pc_num].items[item_hit].magic ||
-		(univ.party[pc_num].items[item_hit].ability != 0))
+		(univ.party[pc_num].items[item_hit].ability != eItemAbil::NONE))
 		return;
 	univ.party[pc_num].items[item_hit].magic = true;
 	univ.party[pc_num].items[item_hit].enchanted = true;
@@ -472,14 +467,14 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 			break;
 		case 3:
 			sprintf((char *)store_name,"%s (F)",univ.party[pc_num].items[item_hit].full_name.c_str());
-			univ.party[pc_num].items[item_hit].ability = ITEM_SPELL_FLAME;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAME;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			univ.party[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
 			sprintf((char *)store_name,"%s (F!)",univ.party[pc_num].items[item_hit].full_name.c_str());
 			univ.party[pc_num].items[item_hit].value = new_val;
-			univ.party[pc_num].items[item_hit].ability = ITEM_FLAMING_WEAPON;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAMING_WEAPON;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
@@ -490,7 +485,7 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 		case 6:
 			sprintf((char *)store_name,"%s (B)",univ.party[pc_num].items[item_hit].full_name.c_str());
 			univ.party[pc_num].items[item_hit].bonus++;
-			univ.party[pc_num].items[item_hit].ability = ITEM_BLESS_CURSE;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::BLESS_CURSE;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			univ.party[pc_num].items[item_hit].magic_use_type = 0;
 			univ.party[pc_num].items[item_hit].charges = 8;
@@ -661,7 +656,7 @@ void destroy_an_item()
 	ASB("Too many items. Some item destroyed.");
 //	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 //		if (univ.town.items[i].type_flag == 15) {
-//			univ.town.items[i].variety = ITEM_TYPE_NO_ITEM;
+//			univ.town.items[i].variety = eItemType::NO_ITEM;
 //			return;
 //		}
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)

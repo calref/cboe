@@ -97,7 +97,7 @@ extern bool item_area_button_active[8][6];
 extern bool pc_area_button_active[6][5];
 extern RECT item_screen_button_rects[9];
 extern short spec_item_array[60];
-extern short abil_chart[200];
+extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
@@ -110,17 +110,6 @@ extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x -
 extern bool supressing_some_spaces;
 extern location ok_space[4];
 extern sf::Texture bg_gworld;
-
-short text_pc_has_abil_equip(short pc_num,short abil)
-{
-	short i = 0;
-	
-	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
-			|| (univ.party[pc_num].equip[i] == false)) && (i < 24))
-		i++;
-	return i;
-	
-}
 
 // Draws the pc area in upper right
 //void win_draw_string(WindowPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
@@ -355,7 +344,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 					if ((stat_screen_mode == 0) &&
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
-						if (abil_chart[univ.party[pc].items[i_num].ability] != 4) // place use if can
+						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
 							place_item_button(10,i,1,0);
 						else place_item_button(11,i,1,0);
 					}
@@ -366,7 +355,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(1,i,2,0);
 							place_item_button(2,i,3,0);
-							if (abil_chart[univ.party[pc].items[i_num].ability] != 4) // place use if can
+							if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
 								place_item_button(0,i,1,0);
 						}
 					}
@@ -440,7 +429,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 		case 6: // augment weapons
 			if ((univ.party[pc_num].items[item_num].variety == eItemType::ONE_HANDED || univ.party[pc_num].items[item_num].variety == eItemType::TWO_HANDED) &&
 				(univ.party[pc_num].items[item_num].ident) &&
-				(univ.party[pc_num].items[item_num].ability == 0) &&
+				univ.party[pc_num].items[item_num].ability == eItemAbil::NONE &&
 				(!univ.party[pc_num].items[item_num].magic)) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
