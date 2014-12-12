@@ -521,9 +521,11 @@ void put_party_in_scen(std::string scen_name)
 	if(scenario.format.prog_make_ver[0] < 2){
 		PSD[SDF_RESURRECT_NO_BALM] = 1;
 		PSD[SDF_NO_BOAT_SPECIALS] = 1;
+		PSD[SDF_TIMERS_DURING_REST] = 0;
 	} else {
 		PSD[SDF_RESURRECT_NO_BALM] = 0;
 		PSD[SDF_NO_BOAT_SPECIALS] = 0;
+		PSD[SDF_TIMERS_DURING_REST] = 1;
 	}
 }
 

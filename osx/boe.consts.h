@@ -59,6 +59,7 @@
 #define SDF_EASY_MODE			306][7
 #define SDF_LESS_WANDER_ENC		306][8
 #define SDF_NO_TER_ANIM			306][9
+#define SDF_TIMERS_DURING_REST	307][0
 /*
  [305]
  [6] is No targeting line (use if getting crashes)
@@ -82,6 +83,7 @@ enum eGameMode {
 	MODE_DROP_COMBAT = 15,
 	MODE_TALKING = 20,
 	MODE_SHOPPING = 21,
+	MODE_ROOM_DESCR = 30, // for future use
 	MODE_LOOK_OUTDOORS = 35, // looking at something
 	MODE_LOOK_TOWN = 36,
 	MODE_LOOK_COMBAT = 37,

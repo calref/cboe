@@ -1855,49 +1855,67 @@ void push_things()////
 	}
 }
 
-void special_increase_age()
+void special_increase_age(long length, bool queue)
 {
 	unsigned short i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
 	location null_loc; // TODO: Should we pass the party's location here? It doesn't quite make sense to me though...
+	unsigned long age_before = univ.party.age - length;
+	unsigned long current_age = univ.party.age;
 	
-	if(is_town()) {
+	if(is_town() || (is_combat() && which_combat_type == 1)) {
 		for(i = 0; i < 8; i++)
-			if((univ.town->timer_spec_times[i] > 0) && (univ.party.age % univ.town->timer_spec_times[i] == 0)
-				&& ((is_town() == true) || ((is_combat() == true) && (which_combat_type == 1)))) {
-				run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+			if(univ.town->timer_spec_times[i] > 0) {
+				short time = univ.town->timer_spec_times[i];
+				for(unsigned long j = age_before; j <= current_age; j++)
+					if(j % time == 0) {
+						if(queue) {
+							univ.party.age = j;
+							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timer_specs[i], null_loc);
+						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+					}
 				stat_area = true;
 				if(s3 > 0)
 					redraw = true;
 			}
 	}
+	univ.party.age = current_age;
 	for (i = 0; i < 20; i++)
-		if ((scenario.scenario_timer_times[i] > 0) && (univ.party.age % scenario.scenario_timer_times[i] == 0)) {
-			run_special(eSpecCtx::SCEN_TIMER,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+		if(scenario.scenario_timer_times[i] > 0) {
+			short time = scenario.scenario_timer_times[i];
+			for(unsigned long j = age_before; j <= current_age; j++)
+				if(j % time == 0) {
+					if(queue) {
+						univ.party.age = j;
+						queue_special(eSpecCtx::SCEN_TIMER, 0, scenario.scenario_timer_specs[i], null_loc);
+					} else run_special(eSpecCtx::SCEN_TIMER,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+				}
 			stat_area = true;
 			if (s3 > 0)
 				redraw = true;
 		}
+	univ.party.age = current_age;
 	for (i = 0; i < univ.party.party_event_timers.size(); i++) {
-		if (univ.party.party_event_timers[i].time == 1) {
-			if (univ.party.party_event_timers[i].global_or_town == 0)
-				run_special(eSpecCtx::PARTY_TIMER,0,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
-			else run_special(eSpecCtx::PARTY_TIMER,2,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+		if (univ.party.party_event_timers[i].time <= length) {
+			univ.party.age = age_before + univ.party.party_event_timers[i].time;
+			short which_type = univ.party.party_event_timers[i].global_or_town == 0 ? 0 : 2;
+			if(queue)
+				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node_to_call, null_loc);
+			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
 			stat_area = true;
 			if (s3 > 0)
 				redraw = true;
-		}
-		else univ.party.party_event_timers[i].time--;
+		} else univ.party.party_event_timers[i].time -= length;
 	}
+	univ.party.age = current_age;
 	if (stat_area == true) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 	}
 	if (redraw == true)
 		draw_terrain(0);
-	
 }
 
 void queue_special(eSpecCtx mode, short which_type, short spec, location spec_loc) {
@@ -1907,7 +1925,7 @@ void queue_special(eSpecCtx mode, short which_type, short spec, location spec_lo
 	queued_special.where = spec_loc;
 	queued_special.type = which_type;
 	queued_special.mode = mode;
-//	queued_special.trigger_time = univ.party.age; // Don't think this is needed after all.
+	queued_special.trigger_time = univ.party.age;
 	special_queue.push(queued_special);
 }
 
@@ -2193,9 +2211,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::REST:
 			check_mess = true;
-			univ.party.age += spec.ex1a;
-			heal_party(spec.ex1b);
-			restore_sp_party(spec.ex1b);
+			do_rest(spec.ex1a, spec.ex1b, spec.ex1b);
 			break;
 		case eSpecType::WANDERING_WILL_FIGHT:
 			if(which_mode != eSpecCtx::OUTDOOR_ENC)

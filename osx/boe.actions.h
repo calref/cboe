@@ -9,6 +9,7 @@
 void init_screen_locs();
 bool prime_time();
 bool handle_action(sf::Event event);
+void handle_monster_actions(bool& need_redraw, bool& need_reprint);
 bool someone_awake();
 void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);

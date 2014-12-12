@@ -732,9 +732,7 @@ void handle_talk_event(location p)
 				talk_end_forced = true;
 				univ.party.gold -= a;
 				put_pc_screen();
-				heal_party(30 * b);
-				restore_sp_party(25 * b);
-				univ.party.age += 700;
+				do_rest(700, 30 & b, 25 * b);
 				univ.town.p_loc.x = c;
 				univ.town.p_loc.y = d;
 				center = univ.town.p_loc;

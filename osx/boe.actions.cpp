@@ -386,10 +386,8 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 		put_pc_screen();
 	}
 	if(i == 50) {
-		univ.party.age += 1200;////
+		do_rest(1200, get_ran(5,1,10), 50);
 		add_string_to_buf("  Rest successful.                ");
-		heal_party(get_ran(5,1,10));
-		restore_sp_party(50);
 		put_pc_screen();
 	}
 	need_reprint = true;
@@ -908,10 +906,6 @@ bool handle_action(sf::Event event) {
 	the_point = location(event.mouseButton.x, event.mouseButton.y);
 	the_point.x -= ul.x;
 	the_point.y -= ul.y;
-	if(!special_queue.empty())
-		printf("Note: %ld queued specials have been flushed without running!", special_queue.size());
-	while(!special_queue.empty()) // TODO: Does this cause problems by leaving some specials uncalled?
-		special_queue.pop();
 	end_scenario = false;
 	
 	// Now split off the extra stuff, like talking and shopping.
@@ -2163,6 +2157,56 @@ void do_save(short mode)
 	
 	pause(6);
 	redraw_screen(REFRESH_TEXT);
+}
+
+void do_rest(long length, int hp_restore, int mp_restore) {
+	unsigned long age_before = univ.party.age;
+	univ.party.age += length;
+	if(!PSD[SDF_TIMERS_DURING_REST]) {
+		heal_party(hp_restore);
+		restore_sp_party(mp_restore);
+		put_pc_screen();
+		return;
+	}
+	// If some players diseased, allow it to progress a bit
+	handle_disease();
+	handle_disease();
+	handle_disease();
+	// Clear party spell effects
+	PSD[SDF_PARTY_STEALTHY] = 0;
+	PSD[SDF_PARTY_DETECT_LIFE] = 0;
+	PSD[SDF_PARTY_FIREWALK] = 0;
+	PSD[SDF_PARTY_FLIGHT] = 0; // This one shouldn't be nonzero anyway, since you can't rest while flying.
+	for(int i = 0; i < 6; i++)
+		univ.party[i].status.clear();
+	// Specials countdowns
+	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(52) && get_ran(1,0,5) == 3) {
+		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
+		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
+		display_enc_string.setSound(3);
+		display_enc_string.show();
+		for(int i = 0; i < 6; i++)
+			disease_pc(i,5);
+	}
+	// Plants and magic shops
+	if(length > 4000 || age_before / 4000 < univ.party.age / 4000)
+		refresh_store_items();
+	// Heal party
+	heal_party(hp_restore);
+	restore_sp_party(mp_restore);
+	// Recuperation and chronic disease disads
+	for(int i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE) {
+			if(univ.party[i].traits[9] > 0 && univ.party[i].cur_health < univ.party[i].max_health) {
+				heal_pc(i,hp_restore / 5);
+			}
+			if(univ.party[i].traits[13] > 0 && get_ran(1,0,110) == 1) {
+				disease_pc(i,6);
+			}
+		}
+	special_increase_age(length, true);
+	put_pc_screen();
+	adjust_spell_menus();
 }
 
 void increase_age()////
