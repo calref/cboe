@@ -931,20 +931,14 @@ void cDialog::run(){
 	// For whatever reason, delaying 100 milliseconds appears to fix this.
 	sf::sleep(sf::milliseconds(100));
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
-	win.setActive();
+	draw();
 	win.setVisible(true);
+	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
 	ModalSession dlog(win);
-	paintTimer.restart();
 	animTimer.restart();
-	draw();
 	while(dialogNotToast){
-		// TODO: This is just a hack to prevent the constant flickering.
-		// All it actually does is slow the flickering to non-blinding frequency.
-		if(paintTimer.getElapsedTime().asMilliseconds() > 500) {
-			draw();
-			paintTimer.restart();
-		}
+		draw();
 		dlog.pumpEvents();
 		if(!win.pollEvent(currentEvent)) continue;
 		location where;

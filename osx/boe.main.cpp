@@ -296,6 +296,7 @@ void Handle_One_Event()
 			adjust_window_mode();
 		}
 		flushingInput = false;
+		redraw_screen(REFRESH_NONE);
 		mainPtr.display();
 		return;
 	}
