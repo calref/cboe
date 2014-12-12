@@ -1,4 +1,4 @@
-//#inculde <cMemory>
+
 #include <cstring>
 #include <cstdio>
 
@@ -15,20 +15,6 @@
 #include "fileio.h"
 
 #define	DONE_BUTTON_ITEM	1
-
-/* Adventure globals */
-//extern party_record_type party;
-//extern outdoor_record_type outdoors[2][2];
-//extern current_town_type c_town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
-//extern unsigned char misc_i[64][64],sfx[64][64];
-//extern unsigned char out[96][96],out_e[96][96];
-//extern setup_save_type setup_save;
-//extern stored_items_list_type stored_items[3];
-
-//extern stored_town_maps_type town_maps;
-//extern stored_outdoor_maps_type o_maps;
 
 extern bool play_sounds;
 extern short current_active_pc;
@@ -63,94 +49,6 @@ void load_base_item_defs();
 bool load_scen_item_defs(char scen_name[256]);
 
 extern fs::path progDir;
-
-//bool select_save_location(FSSpec* to_save_ptr){
-//	if(to_save_ptr==NULL)
-//		return(false);
-//	OSErr error;
-//	char message[256] = "Select saved game:                                     ";
-//	NavTypeListHandle type_list;
-//	NavDialogCreationOptions dialogOptions;
-//	NavDialogRef theDialog;
-//	NavUserAction theAction;
-//	NavReplyRecord dialogReply;
-//	AEKeyword dummyKeyword;
-//	long descCount;
-//	long descNum;
-//	/* XXX FIXME general lack of error checking in these nav services calls */
-//	NavGetDefaultDialogCreationOptions(&dialogOptions);
-//	NavCreatePutFileDialog(&dialogOptions, 'beSV', 'blx!',NULL, NULL, &theDialog);
-//	NavDialogRun(theDialog);
-//	theAction = NavDialogGetUserAction(theDialog);
-//	if (theAction == kNavUserActionCancel || theAction == kNavUserActionNone) {
-//		NavDialogDispose(theDialog);
-//		return(false);
-//	}
-//	NavDialogGetReply(theDialog, &dialogReply);
-//	if(dialogReply.validRecord){
-//		//  Deal with multiple file selection
-//		long    count;
-//		error = AECountItems(&(dialogReply.selection), &descCount);
-//		// Set up index for file list
-//		if (error == noErr){
-//			long index;
-//			for (index = 1; index <= 1; index++){
-//				AEKeyword   theKeyword;
-//				DescType    actualType;
-//				Size        actualSize;
-//				FSSpec      documentFSSpec;
-//				// Get a pointer to selected file
-//				error = AEGetNthPtr(&(dialogReply.selection), index,
-//									typeFSS, &theKeyword,
-//									&actualType,&documentFSSpec,
-//									sizeof(documentFSSpec),
-//									&actualSize);
-//				if (error == noErr){
-//					FSRef tempRef;
-//					FSpMakeFSRef(&documentFSSpec,&tempRef);
-//					UniChar uniname[256];
-//					CFRange range = {0,255};
-//					CFStringGetCharacters (dialogReply.saveFileName,range,uniname);
-//					uniname[(UniCharCount)CFStringGetLength (dialogReply.saveFileName)]=0;
-//					error=FSCreateFileUnicode(&tempRef, (UniCharCount)CFStringGetLength (dialogReply.saveFileName), (UniChar *) uniname, kFSCatInfoNone, NULL, NULL, to_save_ptr);
-//					if(error==noErr){//file didn't exist and so we just created it
-//						printf("created file\n");
-//						//kludge to correctly set creator and file types so that we'll recognize the file when we go to open it later
-//						FInfo fileInfo;
-//						FSpGetFInfo(to_save_ptr, &fileInfo);
-//						fileInfo.fdCreator='blx!';
-//						fileInfo.fdType='beSV';
-//						FSpSetFInfo(to_save_ptr, &fileInfo);
-//					}
-//					else{
-//						if(error==dupFNErr){ //file already exists
-//							UInt8 tempPath[512];
-//							FSpMakeFSRef(to_save_ptr, &tempRef);
-//							FSRefMakePath (&tempRef,tempPath,512);
-//							CFStringRef path = CFStringCreateWithFormat(NULL, NULL, CFSTR("%s/%S"),tempPath,uniname);
-//							CFStringGetCString(path, (char*)tempPath, 512, kCFStringEncodingUTF8);
-//							FSPathMakeRef(tempPath, &tempRef, NULL);
-//							error=FSGetCatalogInfo(&tempRef, kFSCatInfoNone, NULL,NULL, to_save_ptr, NULL);
-//						}
-//						else{ //something bad happened
-//							printf("creation error was: %i\n",error);
-//							return(false);
-//						}
-//					}
-//				}
-//				else
-//					return(false);
-//			}
-//		}
-//		//  Dispose of NavReplyRecord
-//		error = NavDisposeReply(&dialogReply);
-//	}
-//	
-//	store_file_reply = *to_save_ptr;
-//	
-//	NavDialogDispose(theDialog);
-//	return(true);
-//}
 
 void leave_town()
 {
