@@ -51,7 +51,6 @@ extern short spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern bool fast_bang,end_scenario;
 //extern short town_size[3];
-extern short town_type;
 extern cScenario scenario;
 extern cUniverse univ;
 extern std::queue<pending_special_type> special_queue;

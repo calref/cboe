@@ -45,7 +45,6 @@ extern location pc_pos[6];
 extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
 //extern short town_size[3];
-extern short town_type;
 extern sf::Texture pc_gworld;
 extern cScenario scenario;
 extern cUniverse univ;

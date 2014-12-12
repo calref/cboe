@@ -25,7 +25,7 @@ extern sf::RenderWindow mainPtr;
 extern RECT	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
-extern short current_spell_range,town_type;
+extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded;
 //extern short town_size[3];
 //extern cParty party;

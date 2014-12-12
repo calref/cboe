@@ -20,7 +20,6 @@ using std::endl;
 extern cScenario scenario;
 
 extern cTown* town;
-//extern short town_type, max_dim[3];  // 0 - big 1 - ave 2 - small
 extern short cur_town;//overall_mode,given_password,user_given_password;
 extern location cur_out;
 //extern piles_of_stuff_dumping_type *data_store;
@@ -810,7 +809,6 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 	//	scenario.format.prog_make_ver[1] = 0;
 	//	scenario.format.prog_make_ver[2] = 0;
 	//	cur_town = 0;
-	//	town_type = 1;
 	//	scenario.num_towns = 1;
 	//	scenario.town_size[0] = 1;
 	//	scenario.out_width = out_width;

@@ -23,7 +23,6 @@ extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
-//extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short max_dim[3];
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];

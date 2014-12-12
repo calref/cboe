@@ -16,7 +16,7 @@ location which_party_sec;
 
 //extern party_record_type party;
 //extern current_town_type univ.town;
-extern short which_combat_type,current_pc,town_type;
+extern short which_combat_type,current_pc;
 extern eGameMode overall_mode;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];

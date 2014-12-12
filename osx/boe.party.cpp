@@ -108,7 +108,7 @@ char empty_string[256] = "                                           ";
 extern bool fast_bang;
 extern bool flushingInput;
 //extern party_record_type	party;
-extern short stat_window,current_pc/*,town_size[3]*/,town_type;
+extern short stat_window,current_pc;
 extern eGameMode overall_mode;
 //extern current_town_type	univ.town;
 //extern big_tr_type t_d;

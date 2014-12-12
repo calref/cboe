@@ -31,8 +31,6 @@ cTown* town = NULL;
 //big_tr_type t_d;
 bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
-//short town_type = 0;  // 0 - big 1 - ave 2 - small
-//short max_dim[3] = {64,48,32};
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar;

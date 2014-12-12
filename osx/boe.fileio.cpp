@@ -33,7 +33,7 @@ extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghos
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern short town_type,current_pc;
+extern short current_pc;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern short which_combat_type;
@@ -141,8 +141,6 @@ void finish_load_party(){
 			univ.town.monst[i].targ_loc.x = 0;
 			univ.town.monst[i].targ_loc.y = 0;
 		}
-		
-		town_type = scenario.town_size[univ.town.num];
 		
 		// Set up field booleans
 		for (int j = 0; j < univ.town->max_dim(); j++)

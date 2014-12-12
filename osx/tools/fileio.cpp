@@ -24,7 +24,6 @@
 #include "tarball.hpp"
 
 bool cur_scen_is_mac =  true, mac_is_intel;
-extern short town_type; // TODO: Put this somewhere better
 extern cScenario scenario;
 extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
 extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
@@ -264,7 +263,6 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 		the_town->talking.talk_strs[i][len] = 0;
 	}
 	
-	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(18, 0, 0);
@@ -365,7 +363,6 @@ static bool load_town_talk_v1(short which_town) {
 		the_talk.talk_strs[i][len] = 0;
 	}
 	
-	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(23, 0, 0);
@@ -433,7 +430,6 @@ bool load_town_str(short which_town, short which_str, char* str){
 		else fseek(file_id, len, SEEK_CUR);
 	}
 	
-	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(27, 0, 0);
@@ -489,7 +485,6 @@ bool load_town_str(short which_town, cTown*& t){
 		t->town_strs(i)[len] = 0;
 	}
 	
-	town_type = scenario.town_size[which_town];
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(31, 0, 0);

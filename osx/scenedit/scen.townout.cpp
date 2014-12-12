@@ -15,8 +15,7 @@ extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
 //extern big_tr_type t_d;
-//extern short town_type;  // 0 - big 1 - ave 2 - small
-extern short /*max_dim[3],*/mode_count,to_create,cur_town;
+extern short mode_count,to_create,cur_town;
 extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
@@ -1539,7 +1538,6 @@ bool new_town(short which_town) {
 	//	scenario.last_town_edited = cur_town;
 	//	init_town(size);
 	//	strcpy(town->town_strs(0),(char *) temp_str);
-	//	town_type = size;
 	//	
 	//	for (i = 0; i < max_dim[size]; i++)
 	//		for (j = 0; j < max_dim[size]; j++)

@@ -38,7 +38,6 @@ extern short cen_x, cen_y,current_terrain_type,cur_town;
 extern cTown* town;
 //extern big_tr_type t_d;
 //extern template_town_type town_template;
-//extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
 eDrawMode draw_mode = DRAW_TERRAIN;

@@ -115,7 +115,7 @@ short num_targets_left = 0;
 location spell_targets[8];
 
 /* Combat globals */
-short which_combat_type,town_type;
+short which_combat_type;
 location center;
 ter_num_t combat_terrain[64][64];
 location pc_pos[6];

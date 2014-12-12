@@ -48,7 +48,7 @@ extern RECT	windRect;
 extern long anim_ticks;
 extern tessel_ref_t bg[];
 extern sf::RenderWindow mainPtr;
-extern short town_type,which_combat_type;
+extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active;
 extern sf::Texture fields_gworld,boom_gworld,missiles_gworld,invenbtn_gworld;

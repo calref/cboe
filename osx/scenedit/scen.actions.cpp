@@ -65,7 +65,6 @@ extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;//,user_given_password;
 extern cTown* town;
 //extern big_tr_type t_d;
-//extern short town_type;  // 0 - big 1 - ave 2 - small
 extern short /*max_dim[3],*/mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];

@@ -55,7 +55,6 @@ extern sf::RenderWindow mini_map;
 //extern stored_outdoor_maps_type o_maps;
 //extern big_tr_type t_d;
 //extern short town_size[3];
-extern short town_type;
 //extern setup_save_type setup_save;
 extern location pc_pos[6];
 extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
@@ -1329,6 +1328,7 @@ void draw_map(bool need_refresh) {
 	short total_size = 48; // if full redraw, use this to figure out everything
 	RECT area_to_put_on_map_rect;
 	RECT custom_from;
+	short town_type = scenario.town_size[univ.town.num];
 	
 	draw_surroundings = true;
 	

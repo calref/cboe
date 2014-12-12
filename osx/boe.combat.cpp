@@ -46,7 +46,6 @@ extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
 //extern short town_size[3];
-extern short town_type;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short num_targets_left;
 extern location spell_targets[8];
@@ -328,7 +327,6 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 	mainPtr.setActive();
 	which_combat_type = 0;
-	town_type = 1;
 	overall_mode = MODE_COMBAT;
 	
 	// Basically, in outdoor combat, we create kind of a 48x48 town for
