@@ -303,18 +303,599 @@ bool prime_time()
 	return false;
 }
 
-bool handle_action(sf::Event event)
-{
-	short i,j,k,item_hit,which_t,s1,s2,s3;
+static void handle_spellcast(short which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	short store_sp[6];
+	if(!someone_awake()) {
+		ASB("Everyone's asleep/paralyzed.");
+		need_reprint = true;
+		need_redraw = true;
+	} else if(overall_mode == MODE_OUTDOORS) {
+		cast_spell(which_type);
+		spell_forced = false;
+		need_reprint = true;
+		need_redraw = true;
+	} else if(overall_mode == MODE_TOWN) {
+		for(int i = 0; i < 6; i++)
+			store_sp[i] = univ.party[i].cur_sp;
+		cast_spell(which_type);
+		spell_forced = false;
+		need_reprint = true;
+		need_redraw = true;
+		for(int i = 0; i < 6; i++)
+			if(store_sp[i] != univ.party[i].cur_sp)
+				did_something = true;
+	} else if(overall_mode == MODE_TOWN_TARGET) {
+		add_string_to_buf("  Cancelled.                   ");
+		overall_mode = MODE_TOWN;
+	} else if(overall_mode == MODE_COMBAT) {
+		if(which_type == 0) {
+			did_something = combat_cast_mage_spell();
+			need_reprint = true;
+		} else if(which_type == 1) {
+			did_something = combat_cast_priest_spell();
+			need_reprint = true;
+		}
+		need_redraw = true;
+		spell_forced = false;
+		redraw_terrain();
+	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
+		add_string_to_buf("  Cancelled.         ");
+		overall_mode = MODE_COMBAT;
+		center = pc_pos[current_pc];
+		pause(10);
+		need_redraw = true;
+	}
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+}
+
+static void handle_rest(bool& need_redraw, bool& need_reprint) {
+	int i = 0;
+	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+	if(univ.party.in_boat >= 0)
+		add_string_to_buf("Rest:  Not in boat.               ");
+	else if(someone_poisoned())
+		add_string_to_buf("Rest: Someone poisoned.           ");
+	else if(univ.party.food <= 12)
+		add_string_to_buf("Rest: Not enough food.            ");
+	else if(nearest_monster() <= 3)
+		add_string_to_buf("Rest: Monster too close.            ");
+	else if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
+		add_string_to_buf("Rest: It's dangerous here.");
+	else if(flying())
+		add_string_to_buf("Rest: Not while flying.           ");
+	else {
+		add_string_to_buf("Resting...                    ");
+		print_buf();
+		play_sound(20);
+		draw_rest_screen();
+		pause(25);
+		univ.party.food -= 6;
+		while(i < 50) {
+			increase_age();
+			if(get_ran(1,1,2) == 2)
+				do_monsters();
+			if(get_ran(1,1,70) == 10)
+				create_wand_monst();
+			if(nearest_monster() <= 3) {
+				i = 200;
+				add_string_to_buf("  Monsters nearby.");
+			}
+			i++;
+		}
+		put_pc_screen();
+	}
+	if(i == 50) {
+		univ.party.age += 1200;////
+		add_string_to_buf("  Rest successful.                ");
+		heal_party(get_ran(5,1,10));
+		restore_sp_party(50);
+		put_pc_screen();
+	}
+	need_reprint = true;
+	need_redraw = true;
+}
+
+static void handle_pause(bool& did_something, bool& need_redraw) {
+	if(overall_mode == MODE_COMBAT) {
+		char_stand_ready();
+		add_string_to_buf("Stand ready.  ");
+		if(univ.party[current_pc].status[eStatus::WEBS] > 0) {
+			add_string_to_buf("You clean webs.  ");
+			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
+			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
+			put_pc_screen();
+		}
+		check_fields(pc_pos[current_pc],eSpecCtx::COMBAT_MOVE,current_pc);
+	} else {
+		char str[256];
+		add_string_to_buf("Pause.");
+		for(int k = 0; k < 6; k++)
+			if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[eStatus::WEBS] > 0) {
+				sprintf(str,"%s cleans webs.",univ.party[k].name.c_str());
+				add_string_to_buf(str);
+				move_to_zero(univ.party[k].status[eStatus::WEBS]);
+				move_to_zero(univ.party[k].status[eStatus::WEBS]);
+			}
+		if(univ.party.in_horse >= 0) {
+			if(overall_mode == MODE_OUTDOORS) {
+				univ.party.horses[univ.party.in_horse].which_town = 200;
+				univ.party.horses[univ.party.in_horse].loc_in_sec = global_to_local(univ.party.p_loc);
+				univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
+				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				univ.party.in_horse = -1;
+			} else if(overall_mode == MODE_TOWN){
+				univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
+				univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
+				univ.party.in_horse = -1;
+			}
+		}
+		put_pc_screen();
+		check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,0);
+	}
+	
+	did_something = true;
+	need_redraw = true;
+}
+
+static void handle_look(location destination, bool& need_redraw, bool& need_reprint) {
+	need_reprint = true;
+	// TODO: I'm not sure what this check was for or if it would be needed for anything anymore.
+//	if(can_see(cur_loc,destination) >= 4 || (overall_mode != MODE_LOOK_OUTDOORS && loc_off_world(destination)))
+	if(overall_mode != MODE_LOOK_COMBAT && party_can_see(destination) == 6)
+		add_string_to_buf("  Can't see space.         ");
+	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(pc_pos[current_pc],destination,sight_obscurity) >= 4)
+		add_string_to_buf("  Can't see space.         ");
+	else {
+		add_string_to_buf("You see...               ");
+		ter_num_t ter_looked_at = do_look(destination);
+		if(overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT)
+			if(adjacent(univ.town.p_loc,destination))
+				if(adj_town_look(destination))
+					need_redraw = true;
+		// TODO: This would be the place to call OUT_LOOK special
+		// TODO: Do we really need an is_sign function?
+		if(is_sign(ter_looked_at)) {
+			print_buf();
+			need_reprint = false;
+			if(overall_mode == MODE_LOOK_TOWN) {
+				for(int k = 0; k < 15; k++) {
+					if(destination == univ.town->sign_locs[k]) {
+						need_reprint = true;
+						if(adjacent(univ.town->sign_locs[k],univ.town.p_loc))
+							do_sign(univ.town.num,k,ter_looked_at);
+						else add_string_to_buf("  Too far away to read sign.      ");
+					}
+				}
+			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
+				for(int k = 0; k < 8; k++) {
+					if(destination == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k]) {
+						need_reprint = true;
+						if(adjacent(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k],univ.party.loc_in_sec))
+							do_sign(200 + get_outdoor_num(),k,ter_looked_at);
+						else add_string_to_buf("  Too far away to read sign.      ");
+					}
+				}
+			}
+		}
+	}
+}
+
+static void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	bool town_move_done = false;
+	if(overall_mode == MODE_COMBAT) {
+		if(pc_combat_move(destination)) {
+			center = pc_pos[current_pc];
+			did_something = true;
+			update_explored(destination);
+		}
+		need_redraw = true;
+		menu_activate();
+	} else if(overall_mode == MODE_TOWN) {
+		if(!someone_awake()) {
+			ASB("Everyone's asleep/paralyzed.");
+			need_reprint = true;
+			need_redraw = true;
+		} else {
+			need_redraw = true;
+			if(town_move_party(destination,0)) {
+				did_something = true;
+				center = univ.town.p_loc;
+				update_explored(destination);
+				if(loc_off_act_area(univ.town.p_loc)) {
+					destination = end_town_mode(0,destination);
+					town_move_done = true;
+					flushingInput = true;
+				}
+			} else need_reprint = true;
+			menu_activate();
+		}
+	}
+	// If leaving town, we now handle outdoors move
+	if(overall_mode == MODE_OUTDOORS)  {
+		if(outd_move_party(destination,town_move_done)) {
+			center = destination;
+			need_redraw = true;
+			did_something = true;
+			update_explored(univ.party.p_loc);
+			menu_activate();
+		} else need_redraw = true;
+		
+		ter_num_t storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+		if(scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
+			short find_direction_from;
+			if(univ.party.direction == 0) find_direction_from = 2;
+			else if(univ.party.direction == 4) find_direction_from = 0;
+			else if(univ.party.direction < 4) find_direction_from = 3;
+			else find_direction_from = 1;
+			
+			for(int i = 0; i < 8; i++)
+				if(univ.party.loc_in_sec == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_locs[i]) {
+					short which_t = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i];
+					if(which_t >= 0)
+						start_town_mode(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i], find_direction_from);
+					if(is_town()) {
+						need_redraw = false;
+						i = 8;
+						if(univ.party.in_boat >= 0)
+							univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+						if(univ.party.in_horse >= 0)
+							univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
+					}
+				}
+		}
+	}
+}
+
+static void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(can_see_light(center,destination,sight_obscurity) >= 4 || loc_off_world(destination)) {
+		add_string_to_buf("  Can't see space              ");
+		need_reprint = true;
+	} else {
+		for(int i = 0; i < univ.town->max_monst(); i++) {
+			if(monst_on_space(destination,i)) {
+				did_something = true;
+				need_redraw = true;
+				if(univ.town.monst[i].attitude % 2 == 1) {
+					add_string_to_buf("  Creature is hostile.        ");
+				} else if(univ.town.monst[i].summoned > 0 || univ.town.monst[i].personality < 0) {
+					short small_talk = 1;
+					if(!univ.town.monst[i].summoned)
+						small_talk = -univ.town.monst[i].personality;
+					std::string str = "No response.";
+					if(small_talk > 1000) str = scenario.scen_strs(small_talk - 1000);
+					// TODO: Come up with a set of pre-cooked responses.
+					add_string_to_buf("Talk: " + str, 4);
+				} else {
+					start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,univ.town.monst[i].facial_pic);
+					did_something = false;
+					need_redraw = false;
+					break;
+				}
+			}
+		}
+		if(overall_mode != MODE_TALKING) {
+			overall_mode = MODE_TOWN;
+			need_redraw = true;
+			if(!did_something) {
+				add_string_to_buf("  Nobody there");
+				need_reprint = true;
+			}
+		}
+	}
+}
+
+static void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(overall_mode == MODE_SPELL_TARGET)
+		do_combat_cast(destination);
+	else if(overall_mode == MODE_THROWING || overall_mode == MODE_FIRING)
+		fire_missile(destination);
+	else if(overall_mode == MODE_TOWN_TARGET)
+		cast_town_spell(destination);
+	else if(overall_mode == MODE_FANCY_TARGET) {
+		place_target(destination);
+		need_reprint = true;
+	} 
+	if(overall_mode != MODE_FANCY_TARGET) {
+		did_something = true;
+		if(overall_mode == MODE_TOWN_TARGET)
+			center = univ.town.p_loc;
+		else center = pc_pos[current_pc];
+	}
+	if(overall_mode != MODE_TOWN_TARGET) pause(6);
+	need_redraw = true;
+	if(overall_mode == MODE_TOWN_TARGET) overall_mode = MODE_TOWN;
+	else if(is_combat() && overall_mode != MODE_FANCY_TARGET)
+		overall_mode = MODE_COMBAT;
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+}
+
+static void handle_drop_item(location destination, bool& need_redraw) {
+	if(overall_mode == MODE_DROP_COMBAT) {
+		if(!adjacent(pc_pos[current_pc],destination))
+			add_string_to_buf("Drop: must be adjacent.");
+		else {
+			drop_item(current_pc,store_drop_item,destination);
+			take_ap(1);
+		}
+		pause(6);
+		overall_mode = MODE_COMBAT;
+	} else if(overall_mode == MODE_DROP_TOWN) {
+		if(!adjacent(univ.town.p_loc,destination))
+			add_string_to_buf("Drop: must be adjacent.");
+		else if(sight_obscurity(destination.x,destination.y) == 5)
+			ASB("Drop: Space is blocked.");
+		else drop_item(current_pc,store_drop_item,destination);
+		overall_mode = MODE_TOWN;
+	}
+	need_redraw = true;
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+}
+
+static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
+	if(!adjacent(destination,univ.town.p_loc))
+		add_string_to_buf("  Must be adjacent.              ");
+	else did_something = use_space(destination);
+	overall_mode = MODE_TOWN;
+	need_redraw = true;
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+}
+
+static void handle_switch_pc(short which_pc) {
+	char str[256];
+	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
+		add_string_to_buf("Set active: Finish what you're doing first.");
+	else if(is_combat())
+		// TODO: Allow this, provided the chosen PC has APs; it would be equivalent to pressing space until reaching that PC
+		add_string_to_buf("Set active: Can't set this in combat.");
+	else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || store_shop_type != 3))
+		add_string_to_buf("Set active: PC must be here & active.");
+	else {
+		current_pc = which_pc;
+		set_stat_window(which_pc);
+		if(overall_mode == MODE_SHOPPING)
+			sprintf(str,"Now shopping: %s",univ.party[which_pc].name.c_str());
+		else sprintf(str,"Now active: %s",univ.party[which_pc].name.c_str());
+		add_string_to_buf(str);
+		adjust_spell_menus();
+	}
+}
+
+static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
+	char str[256];
+	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
+		add_string_to_buf("Set active: Finish what you're doing first.");
+	else {
+		if(!is_combat()) {
+			// TODO: Maybe allow this in combat, as per the above TODO note?
+			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || store_shop_type != 12))
+				add_string_to_buf("Set active: PC must be here & active.");
+			else {
+				current_pc = which_pc;
+				sprintf(str,"Now active: %s",univ.party[which_pc].name.c_str());
+				add_string_to_buf(str);
+				adjust_spell_menus();
+				need_redraw = true;
+			}
+		}
+		set_stat_window(which_pc);
+		if(overall_mode == MODE_SHOPPING) {
+			set_up_shop_array();
+			draw_shop_graphics(0,item_screen_button_rects[which_pc]); // rect is dummy
+		}
+	}
+}
+
+static void handle_equip_item(short item_hit, bool& need_redraw) {
+	if(overall_mode == MODE_USE_TOWN) {
+		// TODO: Uh, this looks wrong somehow.
+		add_string_to_buf("Note: Clicking 'U' button by item");
+		add_string_to_buf("  uses the item.");
+		use_item(stat_window, item_hit);
+		overall_mode = MODE_TOWN;
+		take_ap(3);
+	} else if(prime_time()) {
+		equip_item(stat_window, item_hit);
+		take_ap(1);
+		need_redraw = true;
+	}
+}
+
+static void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
+	use_item(stat_window, item_hit);
+	if(overall_mode != MODE_TOWN_TARGET && overall_mode != MODE_SPELL_TARGET)
+		did_something = true;
+	take_ap(3);
+	need_redraw = true;
+}
+
+static void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
+	give_thing(stat_window, item_hit);
+	did_something = true;
+	need_redraw = true;
+	take_ap(1);
+}
+
+static void handle_drop_item(short item_hit, bool& need_redraw) {
+	if(is_out())
+		drop_item(stat_window,item_hit,univ.party.p_loc);
+	else {
+		add_string_to_buf("Drop item: Click where to drop item.");
+		store_drop_item = item_hit;
+		overall_mode = is_town() ? MODE_DROP_TOWN : MODE_DROP_COMBAT;
+		need_redraw = true;
+	}
+}
+
+static void handle_item_shop_action(short item_hit) {
+	short i = item_hit - item_sbar->getPosition();
+	switch(stat_screen_mode) {
+		case 2: // identify item
+			if(!take_gold(shop_identify_cost,false))
+				ASB("Identify: You don't have the gold.");
+			else {
+				play_sound(68);
+				ASB("Your item is identified.");
+				univ.party[stat_window].items[item_hit].ident = true;
+				combine_things(stat_window);
+			}
+			break;
+		case 3: case 4: case 5: // various selling
+			play_sound(-39);
+			univ.party.gold += store_selling_values[i];
+			ASB("You sell your item.");
+			take_item(stat_window,item_hit);
+			break;
+		case 6: // enchant item
+			if(!take_gold(store_selling_values[i],false))
+				ASB("Enchant: You don't have the gold.");
+			else {
+				play_sound(51);
+				ASB("Your item is now enchanted.");
+				enchant_weapon(stat_window,item_hit,shop_identify_cost,store_selling_values[i]);
+			}
+			break;
+	}
+}
+
+static void handle_alchemy(bool& need_redraw, bool& need_reprint) {
+	need_reprint = true;
+	need_redraw = true;
+	if(overall_mode == MODE_TOWN)
+		do_alchemy();
+	else add_string_to_buf("Alchemy: Only in town.");
+}
+
+static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
+	short store_hp[6];
+	need_reprint = true;
+	need_redraw = true;
+	
+	if(party_sees_a_monst())
+		add_string_to_buf("Long wait: Monster in sight.");
+	else {
+		add_string_to_buf("Long wait...                    ");
+		print_buf();
+		play_sound(-20);
+		draw_rest_screen();
+		pause(10);
+		for(int i = 0; i < 6; i++) {
+			store_hp[i] = univ.party[i].cur_health;
+			univ.party[i].status[eStatus::WEBS] = 0;
+		}
+	}
+	
+	for(int i = 0; i < 80 && !party_sees_a_monst(); i++){
+		increase_age();
+		do_monsters();
+		do_monster_turn();
+		int make_wand = get_ran(1,1,160 - univ.town.difficulty);
+		if(make_wand == 10)
+			create_wand_monst();
+		for(int j = 0; j < 6; j++)
+			if(univ.party[j].cur_health < store_hp[j]) {
+				i = 200;
+				j = 6;
+				add_string_to_buf("  Waiting interrupted.");
+			}
+		if(party_sees_a_monst()) {
+			i = 200;
+			add_string_to_buf("  Monster sighted!");
+		}
+	}
+	put_pc_screen();
+}
+
+static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(overall_mode == MODE_TOWN) {
+		if(univ.party.in_boat >= 0) {
+			need_reprint = true;
+			add_string_to_buf("Combat: Not while in boat.           ");
+		} else if(univ.party.in_horse >= 0) {
+			need_reprint = true;
+			add_string_to_buf("Combat: Not while on horseback.           ");
+		} else {
+			add_string_to_buf("Combat!                 ");
+			play_sound(18);
+			need_reprint = true;
+			start_town_combat(univ.party.direction);
+			need_redraw = true;
+			current_pc = 6;
+			did_something = true;
+			put_pc_screen();
+		}
+	} else if(overall_mode == MODE_COMBAT) {
+		if(which_combat_type == 0) {
+			if(hit_end_c_button()) {
+				end_town_mode(0,univ.town.p_loc);
+				play_sound(93);
+				add_string_to_buf("End combat.               ");
+				handle_wandering_specials(0,1);
+				menu_activate();
+				put_pc_screen();
+				set_stat_window(current_pc);
+			} else add_string_to_buf("Can't end combat yet.        ");
+		} else {
+			univ.party.direction = end_town_combat();
+			center = univ.town.p_loc;
+			//put_pc_screen();
+			set_stat_window(current_pc);
+			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
+			play_sound(93);
+			need_reprint = true;
+			need_redraw = true;
+			did_something = true;
+			menu_activate();
+		}
+		need_redraw = true;
+	}
+}
+
+static void handle_missile(bool& need_redraw, bool& need_reprint) {
+	if(overall_mode == MODE_COMBAT) {
+		load_missile();
+		need_reprint = true;
+		redraw_terrain();
+	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
+		add_string_to_buf("  Cancelled.             ");
+		center = pc_pos[current_pc];
+		pause(10);
+		need_redraw = true;
+		overall_mode = MODE_COMBAT;
+	}
+}
+
+static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	int j = 0;
+	if(univ.party.in_boat >= 0)
+		add_string_to_buf("Get: Not while in boat.           ");
+	if(overall_mode == MODE_TOWN)
+		j = get_item(univ.town.p_loc,6,false);
+	else {
+		j = get_item(pc_pos[current_pc],current_pc,false);
+		take_ap(4);
+	}
+	if(j > 0) {
+		put_item_screen(stat_window, 0);
+		put_pc_screen();
+		need_redraw = true;
+		did_something = true;
+	}
+	need_reprint = true;
+}
+
+bool handle_action(sf::Event event) {
+	short item_hit,s1,s2,s3;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
-	bool town_move_done = false,pc_delayed = false;
-	short storage;
-	location destination,cur_loc,loc_in_sec,cur_direction;
+	bool pc_delayed = false;
+	location cur_loc,loc_in_sec,cur_direction;
 	unsigned char debug_storage;
-	short find_direction_from,ter_looked_at,button_hit = 12,store_cur_pc;
-	short store_sp[6];
-	ter_num_t ter;
+	short button_hit = 12;
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
 	
@@ -334,12 +915,12 @@ bool handle_action(sf::Event event)
 	end_scenario = false;
 	
 	// Now split off the extra stuff, like talking and shopping.
-	if (overall_mode == MODE_TALKING) {
+	if(overall_mode == MODE_TALKING) {
 		handle_talk_event(the_point);
 		if (overall_mode != MODE_TALKING)
 			return false;
 	}
-	if (overall_mode == MODE_SHOPPING) {
+	if(overall_mode == MODE_SHOPPING) {
 		handle_shop_event(the_point);
 		if (overall_mode != MODE_SHOPPING)
 			return false;
@@ -348,10 +929,10 @@ bool handle_action(sf::Event event)
 	num_chirps_played = 0;
 	
 	// MARK: First, figure out where party is
-	switch (overall_mode) {
+	switch(overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			cur_loc = univ.party.p_loc;
-			for (i = 0; i < 7; i++)
+			for(int i = 0; i < 7; i++)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
@@ -364,7 +945,7 @@ bool handle_action(sf::Event event)
 			// I think 5 is "town drop"
 //			cur_loc = c_town.p_loc;
 			cur_loc = center;
-			for (i = 0; i < 8; i++)
+			for(int i = 0; i < 8; i++)
 				if(the_point.in(town_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
@@ -377,7 +958,7 @@ bool handle_action(sf::Event event)
 		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
 			cur_loc = (overall_mode < MODE_COMBAT) ? center : pc_pos[current_pc];
-			for (i = 0; i < 9; i++)
+			for(int i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
 					if (spell_forced == false)
@@ -391,175 +972,61 @@ bool handle_action(sf::Event event)
 	}
 	
 	// MARK: Then, handle a button being hit.
-	if (button_hit != 12)
+	if(button_hit != 12)
 		switch(button_hit) {
 			case 0: case 1:
-				if (someone_awake() == false) {
-					ASB("Everyone's asleep/paralyzed.");
-					need_reprint = true;
-					need_redraw = true;
-				}
-				if (overall_mode == MODE_OUTDOORS) {
-					cast_spell(button_hit);
-					spell_forced = false;
-					need_reprint = true;
-					need_redraw = true;
-				}
-				else if (overall_mode == MODE_TOWN) {
-					for (i = 0; i < 6; i++)
-						store_sp[i] = univ.party[i].cur_sp;
-					cast_spell(button_hit);
-					spell_forced = false;
-					need_reprint = true;
-					need_redraw = true;
-					for (i = 0; i < 6; i++)
-						if (store_sp[i] != univ.party[i].cur_sp)
-							did_something = true;
-				}
-				else if (overall_mode == MODE_TOWN_TARGET) {
-					add_string_to_buf("  Cancelled.                   ");
-					overall_mode = MODE_TOWN;
-				}
-				else if (overall_mode == MODE_COMBAT) {
-					if(button_hit == 0) {
-						did_something = combat_cast_mage_spell();
-						need_reprint = true;
-					}
-					if(button_hit == 1) {
-						did_something = combat_cast_priest_spell();
-						need_reprint = true;
-					}
-					need_redraw = true;
-					spell_forced = false;
-					redraw_terrain();
-				}
-				else if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FANCY_TARGET)) {
-					add_string_to_buf("  Cancelled.         ");
-					overall_mode = MODE_COMBAT;
-					center = pc_pos[current_pc];
-					pause(10);
-					need_redraw = true;
-				}
-				put_pc_screen();
-				put_item_screen(stat_window,0);
+				handle_spellcast(button_hit, did_something, need_redraw, need_reprint);
 				break;
 				
 			case 2:
-				if (overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
-				if (overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
-				if (overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
+				if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
+				if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
+				if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
 				add_string_to_buf("Look: Select a space. You can also       ");
 				add_string_to_buf("  right click to look.");
 				need_redraw = true;
 				break;
 				
 			case 3:
-				if (overall_mode == MODE_COMBAT) {
+				if(overall_mode == MODE_COMBAT) {
 					add_string_to_buf("Parry. ");
 					char_parry();
 					did_something = true;
 					need_reprint = true;
 					need_redraw = true;
-				}
-				if (overall_mode == MODE_TOWN) {
+				} else if(overall_mode == MODE_TOWN) {
 					overall_mode = MODE_TALK_TOWN;
 					add_string_to_buf("Talk: Select someone    ");
 					need_reprint = true;
-				}
-				if (overall_mode == MODE_OUTDOORS) { // Resting
-					i = 0;
-					ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-					if (univ.party.in_boat >= 0)////
-						add_string_to_buf("Rest:  Not in boat.               ");
-					else if (someone_poisoned() == true)
-						add_string_to_buf("Rest: Someone poisoned.           ");
-					else if (univ.party.food <= 12)
-						add_string_to_buf("Rest: Not enough food.            ");
-					else if (nearest_monster() <= 3)
-						add_string_to_buf("Rest: Monster too close.            ");
-					else if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
-						add_string_to_buf("Rest: It's dangerous here.");////
-					else if (flying() == true)
-						add_string_to_buf("Rest: Not while flying.           ");
-					else {
-						add_string_to_buf("Resting...                    ");
-						print_buf();
-						play_sound(20);
-						draw_rest_screen();
-						pause(25);
-						univ.party.food -= 6;
-						while (i < 50) {
-							increase_age();
-							if (get_ran(1,1,2) == 2)
-								do_monsters();
-							if (get_ran(1,1,70) == 10)
-								create_wand_monst();
-							if (nearest_monster() <= 3) {
-								i = 200;
-								add_string_to_buf("  Monsters nearby.");
-							}
-							else i++;
-						}
-						put_pc_screen();
-					}
-					if (i == 50) {
-						univ.party.age += 1200;////
-						add_string_to_buf("  Rest successful.                ");
-						heal_party(get_ran(5,1,10));
-						restore_sp_party(50);
-						put_pc_screen();
-					}
-					need_reprint = true;
-					need_redraw = true;
-				}
+				} else if(overall_mode == MODE_OUTDOORS)
+					handle_rest(need_redraw, need_reprint);
 				break;
 				
 			case 4:
-				if (overall_mode == MODE_OUTDOORS) {
+				if(overall_mode == MODE_OUTDOORS) {
 					give_help(62,0);
 					display_map();
 					make_cursor_sword();
-				}
-				if ((overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-					if (univ.party.in_boat >= 0) {////
-						j = 0;
-						add_string_to_buf("Get: Not while in boat.           ");
-					}
-					if (overall_mode == MODE_TOWN)
-						j = get_item(univ.town.p_loc,6,false);
-					else {
-						j = get_item(pc_pos[current_pc],current_pc,false);
-						take_ap(4);
-					}
-					if (j > 0) {
-						put_item_screen(stat_window, 0);
-						put_pc_screen();
-						need_redraw = true;
-						did_something = true;
-					}
-					need_reprint = true;
-				}
+				} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT)
+					handle_get_items(did_something, need_redraw, need_reprint);
 				break;
 				
 			case 5:
-				if (overall_mode == MODE_OUTDOORS) {
+				if(overall_mode == MODE_OUTDOORS) {
 					save_party(univ.file);
 					need_redraw = true;
 					current_switch = 6;
 					break;
-				}
-				if (overall_mode == MODE_TOWN) {
+				} else if(overall_mode == MODE_TOWN) {
 					add_string_to_buf("Use: Select a space or item.");
 					add_string_to_buf("  (Hit button again to cancel.)");
 					need_reprint = true;
 					overall_mode = MODE_USE_TOWN;
-				}
-				else if (overall_mode == MODE_USE_TOWN) {
+				} else if(overall_mode == MODE_USE_TOWN) {
 					overall_mode = MODE_TOWN;
 					need_reprint = true;
 					add_string_to_buf("  Cancelled.");
-				}
-				if (overall_mode == MODE_COMBAT) {
+				} else if(overall_mode == MODE_COMBAT) {
 					need_reprint = true;
 					need_redraw = true;
 					pc_delayed = true;
@@ -568,86 +1035,25 @@ bool handle_action(sf::Event event)
 				break;
 				
 			case 6:
-				if (overall_mode == MODE_OUTDOORS) {
+				if(overall_mode == MODE_OUTDOORS)
 					do_load();
-					break;
-				}
-				if (overall_mode == MODE_TOWN) {
+				else if(overall_mode == MODE_TOWN) {
 					give_help(62,0);
 					display_map();
 					make_cursor_sword();
-				}
-				if (overall_mode == MODE_COMBAT) {
-					load_missile();
-					need_reprint = true;
-					redraw_terrain();
-				}
-				else if ((overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING)) {
-					add_string_to_buf("  Cancelled.             ");
-					center = pc_pos[current_pc];
-					pause(10);
-					need_redraw = true;
-					overall_mode = MODE_COMBAT;
-				}
+				} else handle_missile(need_redraw, need_reprint);
 				break;
 				
 			case 7:
-				if (overall_mode == MODE_TOWN) {
-					if (univ.party.in_boat >= 0) {////
-						need_reprint = true;
-						add_string_to_buf("Combat: Not while in boat.           ");
-					}
-					else if (univ.party.in_horse >= 0) {
-						need_reprint = true;
-						add_string_to_buf("Combat: Not while on horseback.           ");
-					}
-					else {
-						add_string_to_buf("Combat!                 ");
-						play_sound(18);
-						need_reprint = true;
-						start_town_combat(univ.party.direction);
-						need_redraw = true;
-						current_pc = 6;
-						did_something = true;
-						put_pc_screen();
-					}
-				}
-				else if (overall_mode == MODE_COMBAT) {
-					if (which_combat_type == 0) {
-						if (hit_end_c_button() == true) {
-							end_town_mode(0,univ.town.p_loc);
-							play_sound(93);
-							add_string_to_buf("End combat.               ");
-							handle_wandering_specials(0,1);
-							menu_activate();
-							put_pc_screen();
-							set_stat_window(current_pc);
-						}
-						else add_string_to_buf("Can't end combat yet.        ");
-					}
-					else {
-						univ.party.direction = end_town_combat();
-						center = univ.town.p_loc;
-						//put_pc_screen();
-						set_stat_window(current_pc);
-						redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
-						play_sound(93);
-						need_reprint = true;
-						need_redraw = true;
-						did_something = true;
-						menu_activate();
-					}
-					need_redraw = true;
-				}
+				handle_combat_switch(did_something, need_redraw, need_reprint);
 				break;
 				
 			case 8:
-				if (overall_mode == MODE_COMBAT) {
-					if (combat_active_pc == 6) {
+				if(overall_mode == MODE_COMBAT) {
+					if(combat_active_pc == 6) {
 						add_string_to_buf("This PC now active.           ");
 						combat_active_pc = current_pc;
-					}
-					else {
+					} else {
 						add_string_to_buf("All PC's now active.           ");
 						current_pc = combat_active_pc;
 						combat_active_pc = 6;
@@ -657,6 +1063,8 @@ bool handle_action(sf::Event event)
 				break;
 		}
 	
+	// I think this was for a "click to continue" option in the transcript.
+	// Or it might be a relic of Exile II room descriptions displayed in the transcript.
 /*	if (overall_mode == 30) /// I don't know what this is for.
 		if (PtInRect(the_point, &text_panel_rect)) {
 			through_sending();
@@ -664,205 +1072,37 @@ bool handle_action(sf::Event event)
 			print_buf();
 		} */
 	
-	// MARK: Begin : click in terrain
-	if ((the_point.in(world_screen)) && ((is_out()) || (is_town()) || (is_combat())) ){
-		i = (the_point.x - 23) / 28;
-		j = (the_point.y - 23) / 36;
+	// MARK: Begin: click in terrain
+	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
+		int i = (the_point.x - 23) / 28;
+		int j = (the_point.y - 23) / 36;
+		location destination = cur_loc;
 		
-		destination = cur_loc;
-		
-		if((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && !right_button) {
-			if ((i == 4) & (j == 4)) { // Pausing
-				if (overall_mode == MODE_COMBAT) {
-					char_stand_ready();
-					add_string_to_buf("Stand ready.  ");
-					if(univ.party[current_pc].status[eStatus::WEBS] > 0) {
-						add_string_to_buf("You clean webs.  ");
-						move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
-						move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
-						put_pc_screen();
-					}
-					check_fields(pc_pos[current_pc],eSpecCtx::COMBAT_MOVE,current_pc);
-				}
-				else {
-					add_string_to_buf("Pause.");
-					for (k = 0; k < 6; k++)
-						if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[eStatus::WEBS] > 0) {
-							sprintf((char *) str,"%s cleans webs.",univ.party[k].name.c_str());
-							add_string_to_buf((char *) str);
-							move_to_zero(univ.party[k].status[eStatus::WEBS]);
-							move_to_zero(univ.party[k].status[eStatus::WEBS]);
-						}
-					if (univ.party.in_horse >= 0) {
-						if (overall_mode == MODE_OUTDOORS) {
-							univ.party.horses[univ.party.in_horse].which_town = 200;
-							univ.party.horses[univ.party.in_horse].loc_in_sec = global_to_local(univ.party.p_loc);
-							univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
-							univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-							univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
-							univ.party.in_horse = -1;
-						}
-						else if (overall_mode == MODE_TOWN){
-							univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
-							univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
-							univ.party.in_horse = -1;
-						}
-					}
-					put_pc_screen();
-					check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,0);
-				}
-				
-				did_something = true;
-				need_redraw = true;
-			}
-			else {
-				cur_direction = get_cur_direction(the_point);
-				destination.x += cur_direction.x;
-				destination.y += cur_direction.y;
-				
-//				for (i = 0; i < 6; i++) // debug
-//					if (univ.party[i].exp_adj != 100) {
-//						ASB("Error: Flag 1");
-//					}
-				
-				// MARK: Begin: Moving
-				if (overall_mode == MODE_COMBAT) {
-					if (pc_combat_move(destination) == true) {
-						center = pc_pos[current_pc];
-						did_something = true;
-						update_explored(destination);
-					}
-					need_redraw = true;
-					menu_activate();
-				}
-				if (overall_mode == MODE_TOWN) {
-					if (someone_awake() == false) {
-						ASB("Everyone's asleep/paralyzed.");
-						need_reprint = true;
-						need_redraw = true;
-					}
-					else {
-						need_redraw = true;
-						if (town_move_party(destination,0) == true) {
-							did_something = true;
-							center = univ.town.p_loc;
-							update_explored(destination);
-							
-							if (loc_off_act_area(univ.town.p_loc) == true) {
-								
-								destination = end_town_mode(0,destination);
-								
-								
-								town_move_done = true;
-								flushingInput = true;
-							}
-						}
-						else need_reprint = true;
-						menu_activate();
-					}
-				}
-				if (overall_mode == MODE_OUTDOORS)  {
-					if (outd_move_party(destination,town_move_done) == true) {
-						center = destination;
-						need_redraw = true;
-						did_something = true;
-						update_explored(univ.party.p_loc);
-						
-						menu_activate();
-					}
-					else need_redraw = true;
-					
-					storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-					if(scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
-						
-						if (univ.party.direction == 0) find_direction_from = 2;
-						else if (univ.party.direction == 4) find_direction_from = 0;
-						else if (univ.party.direction < 4) find_direction_from = 3;
-						else find_direction_from = 1;
-						
-						for (i = 0; i < 8; i++)
-							if (univ.party.loc_in_sec == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_locs[i]) {
-								which_t = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i];
-								if (which_t >= 0)
-									start_town_mode(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i], find_direction_from);
-								if (is_town() == true) {
-									need_redraw = false;
-									i = 8;
-									if (univ.party.in_boat >= 0)
-										univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
-									if (univ.party.in_horse >= 0)
-										univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
-								}
-							}
-					}
-				} // End if(overall_mode == MODE_OUTDOORS)
-				
-			}
-		// MARK: End: Moving
-		}
-		
-		// MARK: Begin: Looking at something
+		// Check for quick look
 		if(right_button) {
 			previous_mode = overall_mode;
 			if(is_combat()) overall_mode = MODE_LOOK_COMBAT;
 			if(is_out()) overall_mode = MODE_LOOK_OUTDOORS;
 			if(is_town()) overall_mode = MODE_LOOK_TOWN;
 		}
-		if ((overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
+		
+		// Moving/pausing
+		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+			if ((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
+			else {
+				cur_direction = get_cur_direction(the_point);
+				destination.x += cur_direction.x;
+				destination.y += cur_direction.y;
+				handle_move(destination, did_something, need_redraw, need_reprint);
+			}
+		}
+		
+		// Looking at something
+		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
+			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.loc_in_sec;
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
-			
-			need_reprint = true;
-			
-//			if ((can_see(cur_loc,destination) >= 4) || ((overall_mode != 35) && (loc_off_world(destination) == true)))
-			if ((overall_mode != MODE_LOOK_COMBAT) && (party_can_see(destination) == 6))
-				add_string_to_buf("  Can't see space.         ");
-			else if ((overall_mode == MODE_LOOK_COMBAT) && (can_see_light(pc_pos[current_pc],destination,sight_obscurity) >= 4))
-				add_string_to_buf("  Can't see space.         ");
-			else {
-				add_string_to_buf("You see...               ");
-				ter_looked_at = do_look(destination);
-				if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT))
-					if (adjacent(univ.town.p_loc,destination) == true)
-						if (adj_town_look(destination) == true)
-							need_redraw = true;
-				// TODO: This would be the place to call OUT_LOOK special
-				// (Adapt adj_town_look function for this purpose.)
-				if (is_sign(ter_looked_at)) {
-					print_buf();
-					need_reprint = false;
-					k = 0;
-					if (overall_mode == MODE_LOOK_TOWN) {
-						while (k < 15) {
-							if (destination == univ.town->sign_locs[k]) {
-								need_reprint = true;
-								if (adjacent(univ.town->sign_locs[k],univ.town.p_loc)==true)
-									do_sign(univ.town.num,k,ter_looked_at);
-								else add_string_to_buf("  Too far away to read sign.      ");
-							}
-							k++;
-						}
-					}
-					if (overall_mode == MODE_LOOK_OUTDOORS) {
-						loc_in_sec = univ.party.loc_in_sec;
-						loc_in_sec.x += i - 4;
-						loc_in_sec.y += j - 4;
-						while (k < 8) {
-							if (loc_in_sec == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k]) {
-								need_reprint = true;
-								if (adjacent(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k],univ.party.loc_in_sec)==true)
-									do_sign((short) (200 + get_outdoor_num()),k,(short) ter_looked_at);
-								else add_string_to_buf("  Too far away to read sign.      ");
-							}
-							k++;
-						}
-					}
-				}
-				
-			}
-//			sprintf(store_str,"  Mod: %d",event.modifiers);
-//			add_string_to_buf(store_str);
-			
+			handle_look(destination, need_redraw, need_reprint);
 			// If option/ctrl not pressed, looking done, so restore center
 			bool look_done = true;
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) look_done = false;
@@ -871,195 +1111,96 @@ bool handle_action(sf::Event event)
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) look_done = false;
 			if(look_done) {
 				if(right_button) overall_mode = previous_mode;
-				else if (overall_mode == MODE_LOOK_COMBAT) {
+				else if(overall_mode == MODE_LOOK_COMBAT) {
 					overall_mode = MODE_COMBAT;
 					center = pc_pos[current_pc];
 					pause(5);
 					need_redraw = true;
 				}
-				else if (overall_mode == MODE_LOOK_TOWN) {
+				else if(overall_mode == MODE_LOOK_TOWN) {
 					overall_mode = MODE_TOWN;
 					center = univ.town.p_loc;
 					need_redraw = true;
 				}
-				else if (overall_mode == MODE_LOOK_OUTDOORS)
+				else if(overall_mode == MODE_LOOK_OUTDOORS)
 					overall_mode = MODE_OUTDOORS;
 				
 			}
 		}
 		
-		// MARK: End: looking at something
-		
-		// MARK: Begin : talking to someone
-		if (overall_mode == MODE_TALK_TOWN) {
+		// Talking to someone
+		else if(overall_mode == MODE_TALK_TOWN) {
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
-			
-			if ((can_see_light(cur_loc,destination,sight_obscurity) >= 4) || (loc_off_world(destination) == true)) {
-				add_string_to_buf("  Can't see space              ");
-				need_reprint = true;
-			}
-			else {
-				
-				for (i = 0; i < univ.town->max_monst(); i++) {
-					if (monst_on_space(destination,i) == true) {
-						did_something = true;
-						need_redraw = true;
-						if (univ.town.monst[i].attitude % 2 == 1) {
-							add_string_to_buf("  Creature is hostile.        ");
-						}
-						else if ((univ.town.monst[i].summoned > 0)////
-								 || univ.town.monst[i].personality < 0) {
-							short small_talk = 1;
-							if(!univ.town.monst[i].summoned)
-								small_talk = -univ.town.monst[i].personality;
-							std::string str = "No response.";
-							if(small_talk > 1000) str = scenario.scen_strs(small_talk - 1000);
-							// TODO: Come up with a set of pre-cooked responses.
-							add_string_to_buf("Talk: " + str, 4);
-						} else {
-							start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,
-											univ.town.monst[i].facial_pic);
-							did_something = false;
-							need_redraw = false;
-							break;
-						}
-					}
-				}
-				if ((did_something == false) && (overall_mode != MODE_TALKING)){
-					add_string_to_buf("  Nobody there");
-					need_reprint = true;
-				}
-				if (overall_mode != MODE_TALKING)
-					overall_mode = MODE_TOWN;
-			}
-			if (overall_mode != MODE_TALKING)
-				need_redraw = true;
+			handle_talk(destination, did_something, need_redraw, need_reprint);
 		}
-		// MARK: End : talking to someone
 		
-		// MARK: Begin : Targeting a space
-		if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) ||
-			(overall_mode == MODE_FANCY_TARGET) || (overall_mode == MODE_DROP_COMBAT)) {
+		// Targeting a space
+		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
+		   overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
 			destination.x += i - 4;
 			destination.y += j - 4;
-			if (overall_mode == MODE_SPELL_TARGET)
-				do_combat_cast(destination);
-			if ((overall_mode == MODE_THROWING) || (overall_mode == MODE_FIRING))
-				fire_missile(destination);
-			if (overall_mode == MODE_FANCY_TARGET) {
-				place_target(destination);
-				need_reprint = true;
-			}
-			if (overall_mode != MODE_FANCY_TARGET) {
-				did_something = true;
-				center = pc_pos[current_pc];
-			}
-			if (overall_mode == MODE_DROP_COMBAT) { // dropping
-				if (adjacent(pc_pos[current_pc],destination) == false)
-					add_string_to_buf("Drop: must be adjacent.");
-				else {
-					drop_item(current_pc,store_drop_item,destination);
-					take_ap(1);
-				}
-			}
-			pause(6);
-			need_redraw = true;
-			if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING) && (overall_mode != MODE_FANCY_TARGET))
-				overall_mode = MODE_COMBAT;
-			put_pc_screen();
-			put_item_screen(stat_window,0);
+			handle_target_space(destination, did_something, need_redraw, need_reprint);
 		}
-		if ((overall_mode > MODE_TALK_TOWN) && (overall_mode < MODE_COMBAT/*6*/)) {
+		
+		// Dropping an item
+		else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
 			destination.x += i - 4;
 			destination.y += j - 4;
-			if (overall_mode == MODE_TOWN_TARGET) {
-				cast_town_spell(destination);
-				did_something = true;
-			}else if(overall_mode == MODE_USE_TOWN) {
-				if (adjacent(destination,univ.town.p_loc) == false)
-					add_string_to_buf("  Must be adjacent.              ");
-				else
-					did_something = use_space(destination);
-			}else if(overall_mode == MODE_DROP_TOWN) {
-				if (adjacent(univ.town.p_loc,destination) == false)
-					add_string_to_buf("Drop: must be adjacent.");
-				else if(sight_obscurity(destination.x,destination.y) == 5)
-					ASB("Drop: Space is blocked.");
-				else drop_item(current_pc,store_drop_item,destination);
-			}
-			overall_mode = MODE_TOWN;
-			need_redraw = true;
-			put_pc_screen();
-			put_item_screen(stat_window,0);
+			handle_drop_item(destination, need_redraw);
 		}
-		// MARK: End : Targeting a space
 		
+		// Using a space
+		else if(overall_mode == MODE_USE_TOWN) {
+			destination.x += i - 4;
+			destination.y += j - 4;
+			handle_use_space(destination, did_something, need_redraw);
+		}
 	}
 	// MARK: End: click in terrain
 	
 	// MARK: Begin: Screen shift
-	if ((overall_mode == MODE_SPELL_TARGET) ||  (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
-		|| (overall_mode == MODE_LOOK_COMBAT) || (overall_mode == MODE_LOOK_TOWN)) {
-		if ((the_point.in(border_rect[0])) && (center.y > univ.town->in_town_rect.top)
-			&& (center.y > 4)) {
+	if(overall_mode == MODE_SPELL_TARGET ||  overall_mode == MODE_FIRING || overall_mode == MODE_THROWING
+	   || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_LOOK_COMBAT || overall_mode == MODE_LOOK_TOWN) {
+		if(the_point.in(border_rect[0]) && center.y > univ.town->in_town_rect.top && center.y > 4) {
 			center.y--;
 			need_redraw = true;
 		}
-		if ((the_point.in(border_rect[1])) && (center.x > univ.town->in_town_rect.left)
-			&& (center.x > 4)) {
+		if(the_point.in(border_rect[1]) && center.x > univ.town->in_town_rect.left && center.x > 4) {
 			center.x--;
 			need_redraw = true;
 		}
-		if ((the_point.in(border_rect[2])) && (center.y < univ.town->in_town_rect.bottom)
-			&& (center.y < univ.town->max_dim() - 5)) {
+		if(the_point.in(border_rect[2]) && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim() - 5) {
 			center.y++;
 			need_redraw = true;
 		}
-		if ((the_point.in(border_rect[3])) && (center.x < univ.town->in_town_rect.right)
-			&& (center.x < univ.town->max_dim() - 5)) {
+		if(the_point.in(border_rect[3]) && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim() - 5) {
 			center.x++;
 			need_redraw = true;
 		}
 	}
 	// MARK: End: Screen shift
 	
-	
 	// MARK: Process clicks in PC stats area
-	if (the_point.in(pc_area_rect)) {
+	if(the_point.in(pc_area_rect)) {
 		point_in_area = the_point;
 		point_in_area.x -= PC_WIN_UL_X;
 		point_in_area.y -= PC_WIN_UL_Y;
-		if (point_in_area.in(pc_help_button)) {
+		if(point_in_area.in(pc_help_button)) {
 			pc_help_button.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 			arrow_button_click(pc_help_button);
 			pc_help_button.offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
 			cChoiceDlog("help-party").show();
 		}
-		for (i = 0; i < 6; i++)
-			for (j = 0; j < 5; j++)
-				if((pc_area_button_active[i][j] > 0) && (point_in_area.in(pc_buttons[i][j]))) {
+		for(int i = 0; i < 6; i++)
+			for(int j = 0; j < 5; j++)
+				if(pc_area_button_active[i][j] > 0 && point_in_area.in(pc_buttons[i][j])) {
 					pc_buttons[i][j].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 					arrow_button_click(pc_buttons[i][j]);
 					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
-					switch (j) {
+					switch(j) {
 						case 0:
-							if ((prime_time() == false) && (overall_mode != MODE_SHOPPING)&& (overall_mode != MODE_TALKING))
-								add_string_to_buf("Set active: Finish what you're doing first.");
-							else if (is_combat())
-								add_string_to_buf("Set active: Can't set this in combat.");
-							else if(univ.party[i].main_status != eMainStatus::ALIVE &&
-									 ((overall_mode != MODE_SHOPPING) || (store_shop_type != 3)))
-								add_string_to_buf("Set active: PC must be here & active.");
-							else {
-								current_pc = i;
-								set_stat_window (i);
-								if (overall_mode == MODE_SHOPPING)
-									sprintf(str,"Now shopping: %s",univ.party[i].name.c_str());
-								else sprintf(str,"Now active: %s",univ.party[i].name.c_str());
-								add_string_to_buf(str);
-								adjust_spell_menus();
-							}
+							handle_switch_pc(i);
 							break;
 						case 1:
 							sprintf(str,"%s has %d health out of %d.",univ.party[i].name.c_str(),
@@ -1088,12 +1229,11 @@ bool handle_action(sf::Event event)
 		need_reprint = true;
 		put_pc_screen();
 		put_item_screen(stat_window,0);
-		if (overall_mode == MODE_SHOPPING) {
+		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
 			draw_shop_graphics(0,pc_buttons[0][0]);
 		}
 	}
-	
 	
 	// Process clicks in item stats area
 	if (the_point.in(item_area_rect)) {
@@ -1101,97 +1241,54 @@ bool handle_action(sf::Event event)
 		point_in_area.x -= ITEM_WIN_UL_X;
 		point_in_area.y -= ITEM_WIN_UL_Y;
 		
-		for (i = 0; i < 9; i++)
-			if ((item_bottom_button_active[i] > 0) && (point_in_area.in(item_screen_button_rects[i]))) {
+		for(int i = 0; i < 9; i++)
+			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
 				item_screen_button_rects[i].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 				arrow_button_click(item_screen_button_rects[i]);
 				item_screen_button_rects[i].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
-				switch (i) {
-					case 0: case 1: case 2: case 3: case 4: case 5:
-						if ((prime_time() == false) && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING))
-							add_string_to_buf("Set active: Finish what you're doing first.");
-						else {
-							if (!(is_combat())) {
-								if(univ.party[i].main_status != eMainStatus::ALIVE &&
-									((overall_mode != MODE_SHOPPING) || (store_shop_type != 12)))
-									add_string_to_buf("Set active: PC must be here & active.");
-								else {
-									current_pc = i;
-									sprintf(str,"Now active: %s",univ.party[i].name.c_str());
-									add_string_to_buf(str);
-									adjust_spell_menus();
-									need_redraw = true;
-								}
-							}
-							set_stat_window(i);
-							if (overall_mode == MODE_SHOPPING) {
-								set_up_shop_array();
-								draw_shop_graphics(0,item_screen_button_rects[i]); // rect is dummy
-							}
-						}
-						break;
+				switch(i) {
 					case 6: // special screen
 						give_help(50,0);
 						set_stat_window(6);
 						break;
+					case 7:
+						// TODO: Jobs! Or maybe quests!
+						break;
 					case 8: // help
 						cChoiceDlog("help-inventory.xml").show();
 						break;
+					default:
+						handle_switch_pc_items(i, need_redraw);
+						break;
 				}
 			}
-		if (stat_window < 7) {
-			for (i = 0; i < 8; i++)
-				for (j = 0; j < 6; j++)
-					if((item_area_button_active[i][j] > 0) && (point_in_area.in(item_buttons[i][j]))) {
+		if(stat_window < 7) {
+			for(int i = 0; i < 8; i++)
+				for(int j = 0; j < 6; j++)
+					if(item_area_button_active[i][j] > 0 && point_in_area.in(item_buttons[i][j])) {
 						item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+						// if ((j > 0) || (stat_screen_mode < 2)) // TODO: <-- Windows version has this check - why?
 						arrow_button_click(item_buttons[i][j]);
 						item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 						
 						item_hit = item_sbar->getPosition() + i;
-						if ((prime_time() == false) && (j < 4)
-							&& ((j > 0) || (stat_screen_mode < 2)))
+						if(!prime_time() && j < 4 && (j > 0 || stat_screen_mode < 2))
 							add_string_to_buf("Item action: Finish what you're doing first.");
-						else switch (j) {
+						else switch(j) {
 							case 0: // equip
-								if (overall_mode == MODE_USE_TOWN) {
-									add_string_to_buf("Note: Clicking 'U' button by item");
-									add_string_to_buf("  uses the item.");
-									use_item(stat_window, item_hit);
-									overall_mode = MODE_TOWN;
-									take_ap(3);
-								}
-								else if (prime_time() == true) {
-									equip_item(stat_window, item_hit);
-									take_ap(1);
-									need_redraw = true;
-								}
+								handle_equip_item(item_hit, need_redraw);
 								break;
 							case 1: // use
-								use_item(stat_window, item_hit);
-								if ((overall_mode != MODE_TOWN_TARGET) && (overall_mode != MODE_SPELL_TARGET))
-									did_something = true;
-								take_ap(3);
-								need_redraw = true;
+								handle_use_item(item_hit, did_something, need_redraw);
 								break;
 							case 2: // give
-								give_thing(stat_window, item_hit);
-								did_something = true;
-								need_redraw = true;
-								take_ap(1);
+								handle_give_item(item_hit, did_something, need_redraw);
 								break;
 							case 3: // drop
-								if (stat_window == 6){
+								if(stat_window == 6) {
 									use_spec_item(spec_item_array[item_hit]);
-									need_redraw = true;////
-								}
-								else if (is_out())
-									drop_item(stat_window,item_hit,univ.party.p_loc);
-								else {
-									add_string_to_buf("Drop item: Click where to drop item.");
-									store_drop_item = item_hit;
-									overall_mode = (is_town()) ? MODE_DROP_TOWN : MODE_DROP_COMBAT;
 									need_redraw = true;
-								}
+								} else handle_drop_item(item_hit, need_redraw);
 								break;
 							case 4: // info
 								if (stat_window == 6)
@@ -1199,34 +1296,8 @@ bool handle_action(sf::Event event)
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case 5: // sell? That this codes was reached indicates that the item was sellable
-								switch (stat_screen_mode) {
-									case 2: // identify item
-										if (take_gold(shop_identify_cost,false) == false)
-											ASB("Identify: You don't have the gold.");
-										else {
-											play_sound(68);
-											ASB("Your item is identified.");
-											univ.party[stat_window].items[item_hit].ident = true;
-											combine_things(stat_window);
-										}
-										break;
-									case 3: case 4: case 5: // various selling
-										play_sound(-39);
-										univ.party.gold += store_selling_values[i];
-										ASB("You sell your item.");
-										take_item(stat_window,item_hit);
-										break;
-									case 6: // enchant item
-										if (take_gold(store_selling_values[i],false) == false)
-											ASB("Enchant: You don't have the gold.");
-										else {
-											play_sound(51);
-											ASB("Your item is now enchanted.");
-											enchant_weapon(stat_window,item_hit,shop_identify_cost,store_selling_values[i]);
-										}
-										break;
-								}
-								
+								// TODO: How does that work? ^
+								handle_item_shop_action(item_hit);
 								break;
 						}
 					}
@@ -1237,62 +1308,12 @@ bool handle_action(sf::Event event)
 	}
 	
 	
-	// MARK: Alchemy
-	if (the_point.x == 1000) {
-		need_reprint = true;
-		need_redraw = true;
-		if (overall_mode == MODE_TOWN) {
-			do_alchemy();
-		}
-		else add_string_to_buf("Alchemy: Only in town.");
-	}
-	
-	
-	
-	// MARK: Wait 40 spaces (town only)
-	if (the_point.x == 1001) {
-		need_reprint = true;
-		need_redraw = true;
-		
-		if (party_sees_a_monst() == true)
-			add_string_to_buf("Long wait: Monster in sight.");
-		else {
-			add_string_to_buf("Long wait...                    ");
-			print_buf();
-			play_sound(-20);
-			draw_rest_screen();
-			pause(10);
-			for (i = 0; i < 6; i++) {
-				store_sp[i] = univ.party[i].cur_health;
-				univ.party[i].status[eStatus::WEBS] = 0;
-			}
-		}
-		i = 0;
-		
-		while ((i < 80) && (party_sees_a_monst() == false)){
-			increase_age();
-			do_monsters();
-			do_monster_turn();
-			j = get_ran(1,1,160 - univ.town.difficulty);
-			if (j == 10)
-				create_wand_monst();
-			for (j = 0; j < 6; j++)
-				if (univ.party[j].cur_health < store_sp[j]) {
-					i = 200;
-					j = 6;
-					add_string_to_buf("  Waiting interrupted.");
-				}
-			if (party_sees_a_monst() == true) {
-				i = 200;
-				add_string_to_buf("  Monster sighted!");
-			}
-			else i++;
-		}
-		put_pc_screen();
-	}
+	// MARK: Fake clicks (alchemy, town rest)
+	if(the_point.x == 1000) handle_alchemy(need_redraw, need_reprint);
+	if(the_point.x == 1001) handle_town_wait(need_redraw, need_reprint);
 	
  	// MARK: If in combat and pc delayed, jump forward a step
- 	if (pc_delayed == true) {
+ 	if(pc_delayed) {
  		draw_terrain();
 		//pause(2);
 		current_pc++;
@@ -1304,64 +1325,102 @@ bool handle_action(sf::Event event)
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
-			s3 = 0;
+		s3 = 0;
 		pending_special_type pending = special_queue.front();
 		special_queue.pop();
 		run_special(pending, &s1, &s2, &s3);
-			if (s3 > 0)
-				draw_terrain();
-		}
+		if(s3 > 0) need_redraw = true;
+	}
 	
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something
-	if (did_something == true) {
+	if(did_something) handle_monster_actions(need_redraw, need_reprint);
+	if(need_redraw) draw_terrain();
+	if(need_reprint || need_redraw) print_buf();
+	
+	if(end_scenario) {
+		reload_startup();
+		overall_mode = MODE_STARTUP;
+		in_scen_debug = false;
+		ghost_mode = false;
+		draw_startup(0);
+		menu_activate();
+		univ.party.scen_name = ""; // should be harmless...
+		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
+			// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
+			fs::path file = nav_put_party();
+			if(!file.empty()) save_party(file);
+		}
+	} else if(party_toast()) {
+		for(int i = 0; i < 6; i++)
+			if(univ.party[i].main_status == eMainStatus::FLED) {
+				univ.party[i].main_status = eMainStatus::ALIVE;
+				if(is_combat()) {
+					end_town_mode(0,univ.town.p_loc);
+					add_string_to_buf("End combat.               ");
+					handle_wandering_specials(0,2);
+				}
+			}
+		if(univ.party.is_split()) {
+			ASB(univ.party.end_split(0));
+			update_explored(univ.town.p_loc);
+			center = univ.town.p_loc;
+			if(is_combat()) overall_mode = MODE_TOWN;
+			center = univ.town.p_loc;
+		}
+		menu_activate();
+		draw_terrain();
+		put_pc_screen();
+		put_item_screen(stat_window,0);
+		if(party_toast()) {
+			play_sound(13);
+			handle_death();
+			if(All_Done) return true;
+		}
+	}
+	
+	are_done = All_Done;
+	return are_done;
+}
+
+void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 		draw_map(true); // TODO: Might be possible to only do this in certain circumstances?
 		play_ambient_sound();
 		
-		if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
-			if (no_pcs_left() == true) {
+		if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
+			if(no_pcs_left()) {
 				end_combat();
-				if (which_combat_type == 0) {
+				if(which_combat_type == 0) {
 					end_town_mode(0,univ.party.p_loc);
 					add_string_to_buf("Fled the combat.        ");
 					handle_wandering_specials(0,2);
 				}
-			}
-			else {
-				
-				if (need_redraw == true) {
+			} else {
+				if(need_redraw) {
 					draw_terrain();
 					if ((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
 						need_redraw = false;
 				}
 				//pause(2);
-				store_cur_pc = current_pc;
-				if (combat_next_step() == true)
+				short store_cur_pc = current_pc;
+				if(combat_next_step())
 					need_redraw = true;
-				/*					if ((store_cur_pc != current_pc) && (combat_active_pc == 6)) {
-				 //			need_reprint = true;
-				 need_redraw = true;
-				 } */
-				
 			}
-		}
-		else {
+		} else {
 			increase_age();
-			if (!(is_out()) || ((is_out()) && (univ.party.age % 10 == 0))) // no monst move is party outdoors and on horse
+			if(!is_out() || (is_out() && univ.party.age % 10 == 0)) // no monst move if party outdoors and on horse
 				do_monsters();
-			if (overall_mode != MODE_OUTDOORS)
+			if(overall_mode != MODE_OUTDOORS)
 				do_monster_turn();
 			// Wand monsts
-			if ((overall_mode == MODE_OUTDOORS) && (party_toast() == false) && (univ.party.age % 10 == 0)) {
-				
-				if (get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
+			if(overall_mode == MODE_OUTDOORS && !party_toast() && univ.party.age % 10 == 0) {
+				if(get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
 					create_wand_monst();
-				for (i = 0; i < 10; i++)
-					if (univ.party.out_c[i].exists == true)
-						if (((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) == true) ||
-							 (univ.party.out_c[i].what_monst.cant_flee >= 10))
-							&& (univ.party.in_boat < 0) && (flying() == false)) {
+				for(int i = 0; i < 10; i++)
+					if(univ.party.out_c[i].exists)
+						if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.cant_flee >= 10)
+						   && univ.party.in_boat < 0 && !flying()) {
 							store_wandering_special = univ.party.out_c[i].what_monst;
-							if (handle_wandering_specials(0,0) == true)
+							if(handle_wandering_specials(0,0))
 								initiate_outdoor_combat(i);
 							univ.party.out_c[i].exists = false;
 							
@@ -1372,76 +1431,11 @@ bool handle_action(sf::Event event)
 							i = 20;
 						}
 			}
-			if (overall_mode == MODE_TOWN) {
-				if (get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
+			if(overall_mode == MODE_TOWN) {
+				if(get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
 					create_wand_monst();
 			}
-			
 		}
-		
-		
-	}
-	
-	if (need_redraw == true) {
-		draw_terrain();
-	}
-	
-	
-	if ((need_reprint == true) || (need_redraw == true)) {
-		print_buf();
-	}
-	
-	if (end_scenario) {
-		reload_startup();
-		overall_mode = MODE_STARTUP;
-		in_scen_debug = false;
-		ghost_mode = false;
-		draw_startup(0);
-		menu_activate();
-		univ.party.scen_name = ""; // should be harmless...
-		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
-			fs::path file = nav_put_party();
-			if(!file.empty()) save_party(file);
-		}
-	}
-	else if (party_toast() == true) {
-		for (i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::FLED) {
-				univ.party[i].main_status = eMainStatus::ALIVE;
-				if (is_combat()) {
-					end_town_mode(0,univ.town.p_loc);
-					add_string_to_buf("End combat.               ");
-					handle_wandering_specials(0,2);
-					
-				}
-			}
-		if (univ.party.is_split()) {
-			ASB(univ.party.end_split(0));
-			update_explored(univ.town.p_loc);
-			center = univ.town.p_loc;
-			if (is_combat()) {
-				overall_mode = MODE_TOWN;
-			}
-			else if (is_town()) {
-				
-			}
-			center = univ.town.p_loc;
-		}
-		menu_activate();
-		draw_terrain();
-		put_pc_screen();
-		put_item_screen(stat_window,0);
-		if (party_toast() == true) {
-			play_sound(13);
-			handle_death();
-			if (All_Done == true)
-				return true;
-		}
-	}
-	
-	
-	are_done = All_Done;
-	return are_done;
 }
 
 bool someone_awake()
