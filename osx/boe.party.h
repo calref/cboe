@@ -55,7 +55,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 void kill_pc(short which_pc,eMainStatus type);
 void set_pc_moves();
 void take_ap(short num);
-short trait_present(short which_trait);
+short trait_present(eTrait which_trait);
 short race_present(eRace which_race);
 short wilderness_lore_present();
 void print_spell_cast(short spell_num,short which);

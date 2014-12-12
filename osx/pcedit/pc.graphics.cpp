@@ -610,80 +610,85 @@ void display_party()
 								style.lineHeight = 9;
 								
 								cur_rect=0;
-								if (univ.party[i].traits[0] == 1) 
+								if (univ.party[i].traits[eTrait::TOUGHNESS])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[1] == 1) 
+								if (univ.party[i].traits[eTrait::MAGICALLY_APT])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
-								if (univ.party[i].traits[2] == 1) 
+								if (univ.party[i].traits[eTrait::AMBIDEXTROUS])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[3] == 1) 
+								if (univ.party[i].traits[eTrait::NIMBLE])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[4] == 1) 
+								if (univ.party[i].traits[eTrait::CAVE_LORE])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								
-								if (univ.party[i].traits[5] == 1) 
+								if (univ.party[i].traits[eTrait::WOODSMAN])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[6] == 1) 
+								if (univ.party[i].traits[eTrait::GOOD_CONST])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
-								if (univ.party[i].traits[7] == 1) 
+								if (univ.party[i].traits[eTrait::HIGHLY_ALERT])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[8] == 1) 
+								if (univ.party[i].traits[eTrait::STRENGTH])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[9] == 1) 
+								if (univ.party[i].traits[eTrait::RECUPERATION])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[10] == 1) 
+								if (univ.party[i].traits[eTrait::SLUGGISH])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[11] == 1) 
+								if (univ.party[i].traits[eTrait::MAGICALLY_INEPT])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",eTextMode::WRAP,style);
 										cur_rect++;
 									}		
-								if (univ.party[i].traits[12] == 1) 
+								if (univ.party[i].traits[eTrait::FRAIL])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[13] == 1) 
+								if (univ.party[i].traits[eTrait::CHRONIC_DISEASE])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",eTextMode::WRAP,style);
 										cur_rect++;
 									}
-								if (univ.party[i].traits[14] == 1) 
+								if (univ.party[i].traits[eTrait::BAD_BACK])
 									if(cur_rect <= 15) {
 										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",eTextMode::WRAP,style);
+										cur_rect++;
+									}
+								if (univ.party[i].traits[eTrait::PACIFIST])
+									if(cur_rect <= 15) {
+										win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Pacifist",eTextMode::WRAP,style);
 										cur_rect++;
 									}
 								style.lineHeight = 10;

@@ -83,7 +83,7 @@ eAmbientSound ambient_sound;
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
-// if terrain_to_draw >= 1000, force to draw graphic which is terrain_to_draw - 1000
+// if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
 {
 	RECT where_draw;
 	RECT source_rect;

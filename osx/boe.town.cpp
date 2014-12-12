@@ -1145,7 +1145,7 @@ void pick_lock(location where,short pc_num)
 		- 5 * univ.party[pc_num].skills[15] - univ.party[pc_num].items[which_item].ability_strength * 7;
 	
 	// Nimble?
-	if (univ.party[pc_num].traits[TRAIT_NIMBLE])
+	if (univ.party[pc_num].traits[eTrait::NIMBLE])
 		r1 -= 8;
 	
 	if (pc_has_abil_equip(pc_num,42) < 24)

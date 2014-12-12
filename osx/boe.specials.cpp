@@ -623,7 +623,7 @@ void use_item(short pc,short item)
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = false;
 	}
-	if (univ.party[pc].traits[TRAIT_MAGICALLY_INEPT] && !inept_ok){
+	if (univ.party[pc].traits[eTrait::MAGICALLY_INEPT] && !inept_ok){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = false;
 	}
@@ -3064,11 +3064,14 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2b == 2 && i >= j) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_TRAIT:
-			// TODO: Bound-check the trait.
+			if(spec.ex1a < 0 || spec.ex1a > 15) {
+				giveError("Invalid trait (0...15)");
+				break;
+			}
 			j = min(spec.ex2a,party_size(true));
 			if (j < 1)
 				j = 1;
-			i = trait_present(spec.ex1a);
+			i = trait_present((eTrait)spec.ex1a);
 			if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
 			if(spec.ex2b == -1 && i < j) *next_spec = spec.ex1b;
 			if(spec.ex2b == 0 && i == j) *next_spec = spec.ex1b;

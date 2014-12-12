@@ -110,7 +110,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		
 		r1 = get_ran(1,1,100) + diff;
 		// Nimble?
-		if (univ.party[pc_num].traits[TRAIT_NIMBLE])
+		if (univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
 		
 		

@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <sstream>
 
 #include "classes.h"
@@ -31,7 +32,8 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	for(i = 0; i < 15; i++){
 		status[(eStatus) i] = old.status[i];
 		//advan[i] = old.advan[i];
-		traits[i] = old.traits[i];
+		eTrait trait = eTrait(i);
+		traits[trait] = old.traits[i];
 	}
 	for(i = 0; i < 24; i++){
 		items[i] = old.items[i];
@@ -50,16 +52,23 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 }
 
 short cPlayer::get_tnl(){
-	short tnl = 100,i,store_per = 100;
+	short tnl = 100,store_per = 100;
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
-	// TODO: Vahnatai
+	// TODO: Vahnatai, pacifist
 	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20}};
-	static const short ap[15] = {10,20,8,10,4, 6,10,7,12,15, -10,-8,-8,-20,-8};
+	static std::map<const eTrait, const short> ap = {
+		{eTrait::TOUGHNESS,10}, {eTrait::MAGICALLY_APT,20}, {eTrait::AMBIDEXTROUS,8}, {eTrait::NIMBLE,10}, {eTrait::CAVE_LORE,4},
+		{eTrait::WOODSMAN,6}, {eTrait::GOOD_CONST,10}, {eTrait::HIGHLY_ALERT,7}, {eTrait::STRENGTH,12}, {eTrait::RECUPERATION,15},
+		{eTrait::SLUGGISH,-10}, {eTrait::MAGICALLY_INEPT,-8}, {eTrait::FRAIL,-8}, {eTrait::CHRONIC_DISEASE,-20}, {eTrait::BAD_BACK,-8},
+		{eTrait::PACIFIST,-40},
+	};
 	
 	tnl = (tnl * (100 + rp[race])) / 100;
-	for (i = 0; i < 15; i++)
-		if (traits[i]) 
-			store_per = store_per + ap[i];
+	for(int i = 0; i < 15; i++) {
+		eTrait trait = eTrait(i);
+		if(traits[trait])
+			store_per = store_per + ap[trait];
+	}
 	
 	tnl = (tnl * store_per) / 100;	
 	
@@ -91,11 +100,7 @@ cPlayer::cPlayer(){
 	}
 	which_graphic = 0;
 	weap_poisoned = 24;
-	
-	for (i = 0; i < 15; i++) {
-		//advan[i] = false;
-		traits[i] = false;	
-	}		
+		
 	race = eRace::HUMAN;
 	//exp_adj = 100;
 	direction = 0;
@@ -147,9 +152,9 @@ cPlayer::cPlayer(long key,short slot){
 		which_graphic = slot + 4;		// 4, 5, 6, 7,  8,  9
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
-		for (i = 0; i < 15; i++) {
-			//advan[i] = false;
-			traits[i] = false;	
+		for (i = 0; i < 10; i++) {
+			eTrait trait = eTrait(i);
+			traits[trait] = true;
 		}		
 		
 		race = eRace::HUMAN;
@@ -168,13 +173,14 @@ cPlayer::cPlayer(long key,short slot){
 		static const short pc_sp[6] = {0,0,0,20,20,21};
 		static const short pc_graphics[6] = {3,32,29,16,23,14};
 		static const short pc_race[6] = {0,2,1,0,0,0};
-		static const short pc_t[6][15] = {
-			{0,0,1,0,0, 0,1,0,0,0, 0,1,0,0,0},		
-			{1,0,0,0,0, 1,0,0,0,0, 1,0,0,0,0},	
-			{0,0,0,1,0, 0,0,0,0,0, 0,0,1,0,0},	
-			{0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0},	
-			{0,0,0,0,1, 0,1,1,0,0, 0,0,0,0,1},	
-			{0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0}
+		// TODO: The duplication of std::set<eTrait> should not be necessary here
+		static const std::set<eTrait> pc_t[6] = {
+			std::set<eTrait>{eTrait::AMBIDEXTROUS, eTrait::GOOD_CONST, eTrait::MAGICALLY_INEPT},
+			std::set<eTrait>{eTrait::TOUGHNESS, eTrait::WOODSMAN, eTrait::SLUGGISH},
+			std::set<eTrait>{eTrait::NIMBLE, eTrait::FRAIL},
+			std::set<eTrait>{eTrait::MAGICALLY_APT},
+			std::set<eTrait>{eTrait::CAVE_LORE, eTrait::GOOD_CONST, eTrait::HIGHLY_ALERT, eTrait::BAD_BACK},
+			std::set<eTrait>{eTrait::MAGICALLY_APT},
 		};
 		
 		main_status = eMainStatus::ALIVE;
@@ -219,7 +225,8 @@ cPlayer::cPlayer(long key,short slot){
 			mage_spells[i] = (i < 30) ? true : false;
 		}
 		for (i = 0; i < 15; i++) {
-			traits[i] = pc_t[slot][i];
+			eTrait trait = eTrait(i);
+			traits[trait] = pc_t[slot].count(trait);
 			//advan[i] = false;
 		}
 		
@@ -272,9 +279,11 @@ void cPlayer::writeTo(std::ostream& file){
 	for(int i = 0; i < 62; i++)
 		if(priest_spells[i])
 			file << "PRIEST " << i << '\n';
-	for(int i = 0; i < 62; i++)
-		if(traits[i])
+	for(int i = 0; i < 62; i++) {
+		eTrait trait = eTrait(i);
+		if(traits[trait])
 			file << "TRAIT " << i << '\n';
+	}
 	file << "ICON " <<  which_graphic << '\n';
 	file << "RACE " << race << '\n';
 	file << "DIRECTION " << direction << '\n';
@@ -347,7 +356,9 @@ void cPlayer::readFrom(std::istream& file){
 		}else if(cur == "TRAIT"){
 			int i;
 			sin >> i;
-			traits[i] = true;
+			if(i < 0 || i > 15) continue;
+			eTrait trait = eTrait(i);
+			traits[trait] = true;
 		}else if(cur == "ICON")
 			sin >> which_graphic;
 		else if(cur == "DIRECTION")

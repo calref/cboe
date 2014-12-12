@@ -312,8 +312,8 @@ bool party_check_class(unsigned int item_class,short mode) {
 }
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(univ.party[pc_num].skills[0],20)) + ((univ.party[pc_num].traits[8] == 0) ? 0 : 30)
-		+ ((univ.party[pc_num].traits[14] == 0) ? 0 : -50);
+	return 100 + (15 * min(univ.party[pc_num].skills[0],20)) + (univ.party[pc_num].traits[eTrait::STRENGTH] * 30)
+		+ (univ.party[pc_num].traits[eTrait::BAD_BACK] * -50);
 }
 short pc_carry_weight(short pc_num)
 {

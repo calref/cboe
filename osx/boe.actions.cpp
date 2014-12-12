@@ -2197,10 +2197,10 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	// Recuperation and chronic disease disads
 	for(int i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if(univ.party[i].traits[9] > 0 && univ.party[i].cur_health < univ.party[i].max_health) {
+			if(univ.party[i].traits[eTrait::RECUPERATION] && univ.party[i].cur_health < univ.party[i].max_health) {
 				heal_pc(i,hp_restore / 5);
 			}
-			if(univ.party[i].traits[13] > 0 && get_ran(1,0,110) == 1) {
+			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				disease_pc(i,6);
 			}
 		}
@@ -2403,11 +2403,11 @@ void increase_age()////
 	// Recuperation and chronic disease disads
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if ((univ.party[i].traits[9] > 0) && (get_ran(1,0,10) == 1) && (univ.party[i].cur_health < univ.party[i].max_health)) {
+			if(univ.party[i].traits[eTrait::RECUPERATION] > 0 && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
 				heal_pc(i,2);
 				update_stat = true;
 			}
-			if ((univ.party[i].traits[13] > 0) && (get_ran(1,0,110) == 1)) {
+			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] > 0 && get_ran(1,0,110) == 1) {
 				disease_pc(i,4);
 				update_stat = true;
 			}
@@ -2467,7 +2467,7 @@ void handle_hunting() {
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[4] > 0 && get_ran(1,0,12) == 5
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
 			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
@@ -2476,7 +2476,7 @@ void handle_hunting() {
 		}
 	for (i = 0; i < 6; i++)
 		if (
-			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[5] > 0 && get_ran(1,0,12) == 5
+			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::WOODSMAN] && get_ran(1,0,12) == 5
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);

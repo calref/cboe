@@ -701,11 +701,9 @@ void disease_pc(short which_pc,short how_much)
 	}
 	if ((level = get_prot_level(which_pc,62)) > 0)////
 		how_much -= level / 2;
-	if ((univ.party[which_pc].traits[12] == true) &&
-		(how_much > 1))
+	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 		how_much++;
-	if ((univ.party[which_pc].traits[12] == true) &&
-		(how_much == 1) && (get_ran(1,0,1) == 0))
+	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
 		how_much++;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::DISEASE] = min(univ.party[which_pc].status[eStatus::DISEASE] + how_much,8);
@@ -738,7 +736,7 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 	r1 = get_ran(1,1,100) + adjust;
 	if (r1 < 30 + univ.party[which_pc].level * 2)
 		how_much = -1;
-	if(what_type == eStatus::ASLEEP && (univ.party[which_pc].traits[7] > 0 || univ.party[which_pc].status[eStatus::ASLEEP] < 0))
+	if(what_type == eStatus::ASLEEP && (univ.party[which_pc].traits[eTrait::HIGHLY_ALERT] || univ.party[which_pc].status[eStatus::ASLEEP] < 0))
 		how_much = -1;
 	if (how_much <= 0) {
 		sprintf ((char *) c_line, "  %s resisted.",(char *) univ.party[which_pc].name.c_str());
@@ -1017,7 +1015,7 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 		add_string_to_buf("  You poison your weapon.       ");
 		r1 = get_ran(1,1,100);
 		// Nimble?
-		if (univ.party[pc_num].traits[TRAIT_NIMBLE])
+		if (univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
 		if ((r1 > p_chance[univ.party[pc_num].skills[17]]) && (safe == 0)) {
 			add_string_to_buf("  Poison put on badly.         ");
@@ -2556,13 +2554,13 @@ short stat_adj(short pc_num,short which)
 	
 	tr = skill_bonus[univ.party[pc_num].skills[which]];
 	if (which == 2) {
-		if (univ.party[pc_num].traits[1] == true)
+		if(univ.party[pc_num].traits[eTrait::MAGICALLY_APT])
 			tr++;
 		if (pc_has_abil_equip(pc_num,40) < 24)
 			tr++;
 	}
 	if (which == 0) {
-		if (univ.party[pc_num].traits[8] == true)
+		if(univ.party[pc_num].traits[eTrait::STRENGTH])
 			tr++;
 		if (pc_has_abil_equip(pc_num,38) < 24)
 			tr++;
@@ -2838,11 +2836,9 @@ void poison_pc(short which_pc,short how_much)
 		if ((level = get_prot_level(which_pc,31)) > 0)////
 			how_much -= level / 3;
 		
-		if ((univ.party[which_pc].traits[12] == true) &&
-			(how_much > 1))
+		if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 			how_much++;
-		if ((univ.party[which_pc].traits[12] == true) &&
-			(how_much == 1) && (get_ran(1,0,1) == 0))
+		if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
 			how_much++;
 		
 		if (how_much > 0) {
@@ -2993,7 +2989,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if (PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
-		if (univ.party[which_pc].traits[0] == true)
+		if(univ.party[which_pc].traits[eTrait::TOUGHNESS])
 			how_much--;
 		// luck
 		if (get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skills[18]] - 20))
@@ -3166,7 +3162,7 @@ void set_pc_moves()
 		if(univ.party[i].main_status != eMainStatus::ALIVE)
 			univ.party[i].ap = 0;
 		else {
-			univ.party[i].ap = (univ.party[i].traits[10] == true) ? 3 : 4;
+			univ.party[i].ap = univ.party[i].traits[eTrait::SLUGGISH] ? 3 : 4;
 			r = get_encumberance(i);
 			univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 			
@@ -3201,11 +3197,7 @@ void take_ap(short num)
 	univ.party[current_pc].ap = max(0,univ.party[current_pc].ap - num);
 }
 
-// TODO: Enumify
-// TODO: Use this to check cave lore and woodsman for the purpose of gaining food
-// (It replaces cave_lore_present() and woodsman_present(), but the latter was never used,
-// and the former was only used to help you lose less food when going over a waterfall.
-short trait_present(short which_trait) {
+short trait_present(eTrait which_trait) {
 	short i,ret = 0;
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[which_trait] > 0)
@@ -3224,8 +3216,8 @@ short race_present(eRace which_race) {
 short wilderness_lore_present() {
 	// TODO: Add contional statement to choose between these
 	// (Probably requires something added to terrain types to specify that it's cave/surface wilderness.)
-	return trait_present(4); // Cave Lore
-	return trait_present(5); // Woodsman
+	return trait_present(eTrait::CAVE_LORE); // Cave Lore
+	return trait_present(eTrait::WOODSMAN); // Woodsman
 }
 
 short party_size(bool only_living) {

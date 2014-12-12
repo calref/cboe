@@ -611,7 +611,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 	
 	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if ((univ.party[pc].traits[2] == false) && (weap2 < 24))
+	if (!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
 		hit_adj -= 25;
 	
 	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);

@@ -40,7 +40,7 @@ public:
 	pic_num_t which_graphic;
 	short weap_poisoned;
 	//bool advan[15];
-	bool traits[15];
+	std::map<eTrait,bool> traits;
 	eRace race;
 	//short exp_adj;
 	short direction;

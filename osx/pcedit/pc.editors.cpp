@@ -214,11 +214,14 @@ static void display_traits_graphics(cDialog& me)
 	dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	for (i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
-		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[i] > 0) ? led_red : led_off);
+		eTrait trait = eTrait(i);
+		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[trait] > 0) ? led_red : led_off);
 	}
 	for (i = 0; i < 5; i++) {
+		// TODO: Pacifist
 		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
-		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[10 + i] > 0) ? led_red : led_off);
+		eTrait trait = eTrait(i + 10);
+		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[trait] > 0) ? led_red : led_off);
 	}
 	
 	store = store_pc->get_tnl();
@@ -246,15 +249,17 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing,
 		me["info"].setText(abil_str);
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
+		eTrait trait = eTrait(hit + 10);
 		if(store_trait_mode != 1)
-			pc->traits[hit + 10] = (pc->traits[hit + 10] == true) ? false : true;
+			pc->traits[trait] = !pc->traits[trait];
 		display_traits_graphics(me);
 		abil_str = get_str("traits",hit + 11);
 		me["info"].setText(abil_str);
 	} else if(item_hit.substr(0,4) == "good") {
 		int hit = item_hit[4] - '1';
+		eTrait trait = eTrait(hit);
 		if(store_trait_mode != 1)
-			pc->traits[hit] = (pc->traits[hit] == true) ? false : true;
+			pc->traits[trait] = !pc->traits[trait];
 		display_traits_graphics(me);
 		abil_str = get_str("traits",hit + 1);
 		me["info"].setText(abil_str);

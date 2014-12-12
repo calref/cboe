@@ -653,7 +653,7 @@ void pc_attack(short who_att,short target)////
 			- 5 * univ.party[who_att].items[weap1].bonus;
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		
-		if ((weap2 < 24) && (univ.party[who_att].traits[2] == false))
+		if(weap2 < 24 && !univ.party[who_att].traits[eTrait::AMBIDEXTROUS])
 			r1 += 25;
 		
 		// race adj.
@@ -735,7 +735,7 @@ void pc_attack(short who_att,short target)////
 		r1 = get_ran(1,1,100) + hit_adj - 5 * univ.party[who_att].items[weap2].bonus;
 		
 		// Ambidextrous?
-		if (univ.party[who_att].traits[2] == false)
+		if(!univ.party[who_att].traits[eTrait::AMBIDEXTROUS])
 			r1 += 25;
 		
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
@@ -4105,7 +4105,7 @@ void do_poison()
 					if (get_ran(1,0,8) < 6)
 						move_to_zero(univ.party[i].status[eStatus::POISON]);
 					if (get_ran(1,0,8) < 6)
-						if (univ.party[i].traits[6] == true)
+						if(univ.party[i].traits[eTrait::GOOD_CONST])
 							move_to_zero(univ.party[i].status[eStatus::POISON]);
 					// TODO: Shouldn't the above two conditionals be swapped?
 				}
@@ -4155,7 +4155,7 @@ void handle_disease()
 							break;
 					}
 					r1 = get_ran(1,0,7);
-					if (univ.party[i].traits[6] == true)
+					if(univ.party[i].traits[eTrait::GOOD_CONST])
 						r1 -= 2;
 					if ((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,ITEM_PROTECT_FROM_DISEASE) < 24))
 						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
