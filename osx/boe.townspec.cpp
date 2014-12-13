@@ -27,7 +27,7 @@ extern eGameMode overall_mode;
 extern ter_num_t combat_terrain[64][64];
 extern short current_pc,stat_window;
 //extern cOutdoors outdoors[2][2];
-extern location pc_pos[6],center;
+extern location center;
 //extern town_item_list	t_i;
 //extern big_tr_type t_d;
 extern sf::RenderWindow mainPtr;

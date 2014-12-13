@@ -39,7 +39,6 @@ extern bool boom_anim_active;
 extern RECT d_rects[80];
 extern short d_rect_index[80];
 //extern big_tr_type t_d;
-extern location pc_pos[6];
 
 //extern CursHandle sword_curs;
 extern bool map_visible,diff_depth_ok;
@@ -690,13 +689,13 @@ void give_thing(short pc_num, short item_num)
 	else {
 		item_store = univ.party[pc_num].items[item_num];
 		who_to = char_select_pc(1,1,"Give item to who?");
-		if ((overall_mode == MODE_COMBAT) && (adjacent(pc_pos[pc_num],pc_pos[who_to]) == false)) {
+		if ((overall_mode == MODE_COMBAT) && (adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos) == false)) {
 			add_string_to_buf("Give: Must be adjacent.");
 			who_to = 6;
 		}
 		
 		if ((who_to < 6) && (who_to != pc_num)
-			&& ((overall_mode != MODE_COMBAT) || (adjacent(pc_pos[pc_num],pc_pos[who_to]) == true))) {
+			&& ((overall_mode != MODE_COMBAT) || (adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos) == true))) {
 			if ((item_store.type_flag > 0) && (item_store.charges > 1)) {
 				how_many = get_num_of_items(item_store.charges);
 				if (how_many == 0)
@@ -759,7 +758,7 @@ short dist_from_party(location where)
 	if ((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
-				store = min(store,dist(pc_pos[i],where));
+				store = min(store,dist(univ.party[i].combat_pos,where));
 	}
 	else store = dist(univ.town.p_loc,where);
 	

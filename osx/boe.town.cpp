@@ -56,8 +56,6 @@ extern sf::RenderWindow mini_map;
 //extern big_tr_type t_d;
 //extern short town_size[3];
 //extern setup_save_type setup_save;
-extern location pc_pos[6];
-extern short last_attacked[6],pc_dir[6],pc_parry[6];//,pc_moves[6];
 //extern stored_town_maps_type town_maps;
 
 extern location hor_vert_place[14];
@@ -450,7 +448,6 @@ void start_town_mode(short which_town, short entry_dir)
 						// Not use the items data flags, starting with forcing an ability
 						if (univ.town->preset_items[i].ability >= 0) {
 							switch (univ.town.items[j].variety) {
-									// TODO: It looks like this will never be reached?
 								case eItemType::GOLD:
 								case eItemType::FOOD: // If gold or food, this value is amount
 									if (univ.town->preset_items[i].ability > 0)
@@ -739,7 +736,7 @@ void start_town_combat(short direction)
 				current_pc = i;
 				break;
 			}
-	center = pc_pos[current_pc];
+	center = univ.party[current_pc].combat_pos;
 	
 	which_combat_type = 1;
 	overall_mode = MODE_COMBAT;
@@ -749,19 +746,19 @@ void start_town_combat(short direction)
 		univ.town.monst[i].target = 6;
 	
 	for (i = 0; i < 6; i++) {
-		last_attacked[i] = univ.town->max_monst() + 10;
-		pc_parry[i] = 0;
-		pc_dir[i] = direction;
+		univ.party[i].last_attacked = univ.town->max_monst() + 10;
+		univ.party[i].parry = 0;
+		univ.party[i].dir = direction;
 		univ.party[current_pc].direction = direction;
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			update_explored(pc_pos[i]);
+			update_explored(univ.party[i].combat_pos);
 	}
 	
 	store_current_pc = current_pc;
 	current_pc = 0;
 	set_pc_moves();
 	pick_next_pc();
-	center = pc_pos[current_pc];
+	center = univ.party[current_pc].combat_pos;
 	draw_buttons(0);
 	put_pc_screen();
 	set_stat_window(current_pc);
@@ -776,15 +773,15 @@ short end_town_combat()
 	r1 = get_ran(1,0,5);
 	while(univ.party[r1].main_status != eMainStatus::ALIVE && num_tries++ < 1000)
 		r1 = get_ran(1,0,5);
-	univ.town.p_loc = pc_pos[r1];
+	univ.town.p_loc = univ.party[r1].combat_pos;
 	overall_mode = MODE_TOWN;
 	current_pc = store_current_pc;
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
 	for (i = 0; i < 6; i++) {
-		pc_parry[i] = 0;
+		univ.party[i].parry = 0;
 	}
-	return pc_dir[r1];
+	return univ.party[r1].dir;
 }
 
 void place_party(short direction)
@@ -827,9 +824,9 @@ void place_party(short direction)
 	while (i < 6) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if (how_many_ok == 1)
-				pc_pos[i] = pos_locs[where_in_a];
+				univ.party[i].combat_pos = pos_locs[where_in_a];
 			else {
-				pc_pos[i] = pos_locs[where_in_a];
+				univ.party[i].combat_pos = pos_locs[where_in_a];
 				if (how_many_ok > 1)
 					where_in_a++;
 				how_many_ok--;

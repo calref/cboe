@@ -38,7 +38,7 @@ extern short anim_step;
 extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern location ul;
-extern location pc_pos[6],pc_dir[6],center;
+extern location center;
 extern short which_combat_type,current_pc;
 extern bool monsters_going,boom_anim_active,skip_boom_delay;
 extern sf::Image spell_pict;
@@ -604,7 +604,7 @@ void redraw_screen(int refresh) {
 			break;
 	}
 	if(overall_mode == MODE_COMBAT)
-		draw_pcs(pc_pos[current_pc],1);
+		draw_pcs(univ.party[current_pc].combat_pos,1);
 	if(overall_mode == MODE_FANCY_TARGET)
 		draw_targets(center);
 	if(overall_mode != MODE_STARTUP) {
@@ -840,7 +840,7 @@ void draw_terrain(short	mode)
 				}
 		}
 		if (current_working_monster < 6) {
-			ok_space[0] = pc_pos[current_working_monster];
+			ok_space[0] = univ.party[current_working_monster].combat_pos;
 			ok_space[0].x = ok_space[0].x - center.x + 4;
 			ok_space[0].y = ok_space[0].y - center.y + 4;
 		}
@@ -865,7 +865,7 @@ void draw_terrain(short	mode)
 	if (is_town())
 		view_loc = univ.town.p_loc;
 	if (is_combat())
-		view_loc = pc_pos[(current_pc < 6) ? current_pc : first_active_pc()];
+		view_loc = univ.party[(current_pc < 6) ? current_pc : first_active_pc()].combat_pos;
 	
 	for (i = 0; i < 13; i++)
 		for (j = 0; j < 13; j++) {
@@ -1676,14 +1676,14 @@ void draw_targeting_line(location where_curs)
 	RECT on_screen_terrain_area = {23, 23, 346, 274};
 	
 	if (overall_mode >= MODE_COMBAT)
-		from_loc = pc_pos[current_pc];
+		from_loc = univ.party[current_pc].combat_pos;
 	else from_loc = univ.town.p_loc;
 	if ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
 		
 		on_screen_terrain_area.offset(ul);
 		if (where_curs.in(on_screen_terrain_area)) {
-			// && (point_onscreen(center,pc_pos[current_pc]) == true)){
+			// && (point_onscreen(center,univ.party[current_pc].combat_pos) == true)){
 			i = (where_curs.x - 23 - ul.x) / 28;
 			j = (where_curs.y - 23 - ul.y) / 36;
 			which_space.x = center.x + (short) i - 4;

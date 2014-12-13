@@ -127,7 +127,6 @@ extern bool talk_end_forced;
 extern short which_combat_type,num_targets_left;
 extern ter_num_t combat_terrain[64][64];
 extern location center;
-extern location pc_pos[6];
 extern short current_pc;
 extern short combat_active_pc,stat_screen_mode;
 
@@ -341,7 +340,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
 		add_string_to_buf("  Cancelled.         ");
 		overall_mode = MODE_COMBAT;
-		center = pc_pos[current_pc];
+		center = univ.party[current_pc].combat_pos;
 		pause(10);
 		need_redraw = true;
 	}
@@ -404,7 +403,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 			put_pc_screen();
 		}
-		check_fields(pc_pos[current_pc],eSpecCtx::COMBAT_MOVE,current_pc);
+		check_fields(univ.party[current_pc].combat_pos,eSpecCtx::COMBAT_MOVE,current_pc);
 	} else {
 		char str[256];
 		add_string_to_buf("Pause.");
@@ -443,7 +442,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 //	if(can_see(cur_loc,destination) >= 4 || (overall_mode != MODE_LOOK_OUTDOORS && loc_off_world(destination)))
 	if(overall_mode != MODE_LOOK_COMBAT && party_can_see(destination) == 6)
 		add_string_to_buf("  Can't see space.         ");
-	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(pc_pos[current_pc],destination,sight_obscurity) >= 4)
+	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(univ.party[current_pc].combat_pos,destination,sight_obscurity) >= 4)
 		add_string_to_buf("  Can't see space.         ");
 	else {
 		add_string_to_buf("You see...               ");
@@ -484,7 +483,7 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 	bool town_move_done = false;
 	if(overall_mode == MODE_COMBAT) {
 		if(pc_combat_move(destination)) {
-			center = pc_pos[current_pc];
+			center = univ.party[current_pc].combat_pos;
 			did_something = true;
 			update_explored(destination);
 		}
@@ -599,7 +598,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 		did_something = true;
 		if(overall_mode == MODE_TOWN_TARGET)
 			center = univ.town.p_loc;
-		else center = pc_pos[current_pc];
+		else center = univ.party[current_pc].combat_pos;
 	}
 	if(overall_mode != MODE_TOWN_TARGET) pause(6);
 	need_redraw = true;
@@ -612,7 +611,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 
 static void handle_drop_item(location destination, bool& need_redraw) {
 	if(overall_mode == MODE_DROP_COMBAT) {
-		if(!adjacent(pc_pos[current_pc],destination))
+		if(!adjacent(univ.party[current_pc].combat_pos,destination))
 			add_string_to_buf("Drop: must be adjacent.");
 		else {
 			drop_item(current_pc,store_drop_item,destination);
@@ -860,7 +859,7 @@ static void handle_missile(bool& need_redraw, bool& need_reprint) {
 		redraw_terrain();
 	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
 		add_string_to_buf("  Cancelled.             ");
-		center = pc_pos[current_pc];
+		center = univ.party[current_pc].combat_pos;
 		pause(10);
 		need_redraw = true;
 		overall_mode = MODE_COMBAT;
@@ -874,7 +873,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	if(overall_mode == MODE_TOWN)
 		j = get_item(univ.town.p_loc,6,false);
 	else {
-		j = get_item(pc_pos[current_pc],current_pc,false);
+		j = get_item(univ.party[current_pc].combat_pos,current_pc,false);
 		take_ap(4);
 	}
 	if(j > 0) {
@@ -951,7 +950,7 @@ bool handle_action(sf::Event event) {
 			
 		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
-			cur_loc = (overall_mode < MODE_COMBAT) ? center : pc_pos[current_pc];
+			cur_loc = (overall_mode < MODE_COMBAT) ? center : univ.party[current_pc].combat_pos;
 			for(int i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
@@ -1107,7 +1106,7 @@ bool handle_action(sf::Event event) {
 				if(right_button) overall_mode = previous_mode;
 				else if(overall_mode == MODE_LOOK_COMBAT) {
 					overall_mode = MODE_COMBAT;
-					center = pc_pos[current_pc];
+					center = univ.party[current_pc].combat_pos;
 					pause(5);
 					need_redraw = true;
 				}
@@ -1513,7 +1512,7 @@ void initiate_outdoor_combat(short i)
 	
 	for (m = 0; m < 6; m++)
 		if(univ.party[m].main_status == eMainStatus::ALIVE)
-			to_place = pc_pos[m];
+			to_place = univ.party[m].combat_pos;
 	for (m = 0; m < 6; m++)
 		for (n = 0; n < 24; n++)
 			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
@@ -1522,7 +1521,7 @@ void initiate_outdoor_combat(short i)
 			}
 	
 	overall_mode = MODE_COMBAT;
-	center = pc_pos[current_pc];
+	center = univ.party[current_pc].combat_pos;
 	draw_terrain();
 }
 
@@ -1859,7 +1858,7 @@ bool handle_keystroke(sf::Event& event){
 				y += 48 * univ.party.outdoor_corner.y;
 				sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
 			} else if(is_combat()) {
-				location loc = pc_pos[current_pc];
+				location loc = univ.party[current_pc].combat_pos;
 				sout << "Debug:  You're in combat at x " << loc.x << ", y " << loc.y << '.';
 			}
 			add_string_to_buf(sout.str());

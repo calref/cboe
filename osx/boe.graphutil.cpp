@@ -54,8 +54,8 @@ extern short terrain_there[9][9];
 extern std::queue<pending_special_type> special_queue;
 
 extern location ul;
-extern location pc_pos[6],center;
-extern short which_combat_type,pc_dir[6],current_pc;
+extern location center;
+extern short which_combat_type,current_pc;
 extern bool monsters_going,anim_onscreen;
 
 //extern short pc_moves[6];
@@ -339,12 +339,12 @@ void draw_pcs(location center,short mode)
 	
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == eMainStatus::ALIVE)
-			if (((point_onscreen(center, pc_pos[i])) == true) &&
-				(/*cartoon_happening ||*/ (party_can_see(pc_pos[i]) < 6))){
-				where_draw.x = pc_pos[i].x - center.x + 4;
-				where_draw.y = pc_pos[i].y - center.y + 4;
+			if(point_onscreen(center, univ.party[i].combat_pos) &&
+				(/*cartoon_happening ||*/ party_can_see(univ.party[i].combat_pos) < 6)){
+				where_draw.x = univ.party[i].combat_pos.x - center.x + 4;
+				where_draw.y = univ.party[i].combat_pos.y - center.y + 4;
 				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-				if(pc_dir[i] >= 4)
+				if(univ.party[i].dir >= 4)
 					source_rect.offset(28,0);
 				if (combat_posing_monster == i)
 					source_rect.offset(0,288);
@@ -365,11 +365,11 @@ void draw_pcs(location center,short mode)
 			}
 			
 			// Draw current pc on top
-			if(point_onscreen(center, pc_pos[current_pc]) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
-				where_draw.x = pc_pos[current_pc].x - center.x + 4;
-				where_draw.y = pc_pos[current_pc].y - center.y + 4;
+			if(point_onscreen(center, univ.party[current_pc].combat_pos) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
+				where_draw.x = univ.party[current_pc].combat_pos.x - center.x + 4;
+				where_draw.y = univ.party[current_pc].combat_pos.y - center.y + 4;
 				source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
-				if(pc_dir[current_pc] >= 4)
+				if(univ.party[current_pc].dir >= 4)
 					source_rect.offset(28,0);
 				if (combat_posing_monster == current_pc)
 					source_rect.offset(0,288);
@@ -552,7 +552,7 @@ void draw_party_symbol(location center) {
 	if ((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
-		if(pc_dir[current_pc] >= 4)
+		if(univ.party[current_pc].dir >= 4)
 			source_rect.offset(28,0);
 		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic

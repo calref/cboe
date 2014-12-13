@@ -117,7 +117,6 @@ location spell_targets[8];
 short which_combat_type;
 location center;
 ter_num_t combat_terrain[64][64];
-location pc_pos[6];
 short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;

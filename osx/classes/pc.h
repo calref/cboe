@@ -47,6 +47,8 @@ public:
 	short ap;
 	// transient stuff
 	std::map<eSkill,short> last_cast;
+	location combat_pos;
+	short marked_damage, dir, parry, last_attacked;
 	
 	cPlayer& operator = (legacy::pc_record_type old);
 	cPlayer();

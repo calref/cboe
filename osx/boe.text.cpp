@@ -101,7 +101,6 @@ extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
-extern location pc_pos[6];
 extern ter_num_t combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
@@ -771,8 +770,8 @@ short do_look(location space)
 		add_string_to_buf("    Your party");
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
-			if(space == pc_pos[i] && univ.party[i].main_status == eMainStatus::ALIVE
-				&& (is_lit == true) && (can_see_light(pc_pos[current_pc],space,sight_obscurity) < 5)) {
+			if(space == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE
+				&& (is_lit == true) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);
 			}
@@ -781,7 +780,7 @@ short do_look(location space)
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active != 0) && (is_lit == true)
 				&& (monst_on_space(space,i) == true) &&
-				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(pc_pos[current_pc],space,sight_obscurity) < 5))
+				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
 				

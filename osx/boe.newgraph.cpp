@@ -59,9 +59,7 @@ extern sf::Texture bg_gworld;
 extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern location center;
-extern short pc_marked_damage[6],pc_dir[6];
 extern short monst_marked_damage[60];
-extern location pc_pos[6];
 //extern current_town_type univ.town;
 //extern big_tr_type t_d;
 //extern town_item_list	t_i;
@@ -283,7 +281,7 @@ void start_missile_anim()
 		store_booms[i].boom_type = -1;
 	}
 	for (i = 0; i < 6; i++)
-		pc_marked_damage[i] = 0;
+		univ.party[i].marked_damage = 0;
 	for (i = 0; i < univ.town->max_monst(); i++)
 		monst_marked_damage[i] = 0;
 	have_missile = false;

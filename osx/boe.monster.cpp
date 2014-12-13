@@ -31,7 +31,7 @@ extern short hit_chance[21];
 //extern unsigned char univ.out.misc_i[64][64];
 //extern location monster_targs[60];
 
-extern location pc_pos[6],center;
+extern location center;
 extern short boom_gr[8],futzing;
 extern bool processing_fields,monsters_going;
 //extern town_item_list	univ.town;
@@ -388,15 +388,15 @@ short monst_pick_target(short which_m)
 	
 	if ((is_combat()) && (cur_monst->attitude % 2 == 1)) {
 		if (spell_caster < 6)
-			if ((get_ran(1,1,5) < 5) && (monst_can_see(which_m,pc_pos[spell_caster]) == true)
+			if ((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos) == true)
 				&& univ.party[spell_caster].main_status == eMainStatus::ALIVE)
 				return spell_caster;
 		if (missile_firer < 6)
-			if ((get_ran(1,1,5) < 3) && (monst_can_see(which_m,pc_pos[missile_firer]) == true)
+			if ((get_ran(1,1,5) < 3) && (monst_can_see(which_m,univ.party[missile_firer].combat_pos) == true)
 				&& univ.party[missile_firer].main_status == eMainStatus::ALIVE)
 				return missile_firer;
 		if (univ.town.monst[which_m].target < 6)
-			if ((monst_can_see(which_m,pc_pos[univ.town.monst[which_m].target]) == true)
+			if ((monst_can_see(which_m,univ.party[univ.town.monst[which_m].target].combat_pos) == true)
 				&& univ.party[univ.town.monst[which_m].target].main_status == eMainStatus::ALIVE)
 				return univ.town.monst[which_m].target;
 	}
@@ -431,11 +431,11 @@ short monst_pick_target(short which_m)
 	}
 	// Otherwise we're in combat
 	if ((dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) ==
-		 dist(cur_monst->cur_loc,pc_pos[targ_pc])) && (get_ran(1,0,6) < 3))
+		 dist(cur_monst->cur_loc,univ.party[targ_pc].combat_pos)) && (get_ran(1,0,6) < 3))
 		return targ_m;
 	else return targ_pc;
 	if (dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) <
-		dist(cur_monst->cur_loc,pc_pos[targ_pc]))
+		dist(cur_monst->cur_loc,univ.party[targ_pc].combat_pos))
 		return targ_m;
 	else return targ_pc;
 	
@@ -473,7 +473,7 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	// First pick any visible, nearby PC
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
-							   (monst_can_see(m_num,pc_pos[r1]) == false))) {
+							   (monst_can_see(m_num,univ.party[r1].combat_pos) == false))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -483,8 +483,8 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	// Then, see if target can be replaced with someone nice and close
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
-							   (dist(which_m->cur_loc,pc_pos[r1]) > 4) ||
-							   (monst_can_see(m_num,pc_pos[r1]) == false))) {
+							   (dist(which_m->cur_loc,univ.party[r1].combat_pos) > 4) ||
+							   (monst_can_see(m_num,univ.party[r1].combat_pos) == false))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -511,9 +511,9 @@ short closest_pc(location where)
 	short how_close = 200,i,store = 6;
 	
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && dist(where,pc_pos[i]) < how_close) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE && dist(where,univ.party[i].combat_pos) < how_close) {
 			store = i;
-			how_close = dist(where,pc_pos[i]);
+			how_close = dist(where,univ.party[i].combat_pos);
 		}
 	return store;
 }
@@ -562,7 +562,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	
 	// If target is already adjacent, we're done here.
 	if ((is_combat()) && (orig_target < 6))
-		if(univ.party[orig_target].main_status == eMainStatus::ALIVE && monst_adjacent(pc_pos[orig_target],which_m))
+		if(univ.party[orig_target].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[orig_target].combat_pos,which_m))
 			return orig_target;
 	if (orig_target >= 100)
 		if ((univ.town.monst[orig_target - 100].active > 0) &&
@@ -572,7 +572,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	// Anyone unarmored? Heh heh heh...
 	if (is_combat())
 		for (i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(pc_pos[i],which_m) &&
+			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m) &&
 				(get_encumberance(i) < 2))
 		 		return i;
 	
@@ -587,7 +587,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	// OK. Now if this monster has PCs adjacent, pick one at randomn and hack. Otherwise,
 	// stick with orig. target.
 	for (i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(pc_pos[i],which_m))
+		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m))
 			num_adj++;
 	
 	if (num_adj == 0)
@@ -595,8 +595,8 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	
 	i = 0;
 	num_adj = get_ran(1,1,num_adj);
-	while(num_adj > 1 || univ.party[i].main_status != eMainStatus::ALIVE || !monst_adjacent(pc_pos[i],which_m)) {
-		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(pc_pos[i],which_m))
+	while(num_adj > 1 || univ.party[i].main_status != eMainStatus::ALIVE || !monst_adjacent(univ.party[i].combat_pos,which_m)) {
+		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m))
 			num_adj--;
 		i++;
 	}
@@ -796,7 +796,7 @@ short pc_there(location where)
 	short i;
 	
 	for (i = 0; i < 6; i++)
-		if(where == pc_pos[i] && univ.party[i].main_status == eMainStatus::ALIVE)
+		if(where == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE)
 			return i;
 	return 6;
 }
@@ -1105,7 +1105,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if (is_combat())
 			for (i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					update_explored(pc_pos[i]);
+					update_explored(univ.party[i].combat_pos);
 	}
 	
 	return can_enter;

@@ -39,13 +39,12 @@ extern eGameMode overall_mode;
 extern ter_num_t combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
 //extern cOutdoors univ.out.outdoors[2][2];
-extern location pc_pos[6],center;
+extern location center;
 extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 //extern big_tr_type t_d;
 extern effect_pat_type current_pat;
 //extern town_item_list	univ.town;
 extern cOutdoors::cWandering store_wandering_special;
-extern short pc_marked_damage[6];
 extern short monst_marked_damage[60];
 extern short spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
@@ -164,7 +163,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			break;
 		case eSpecCtx::COMBAT_MOVE:
 			ter = combat_terrain[where_check.x][where_check.y];
-			from_loc = pc_pos[current_pc];
+			from_loc = univ.party[current_pc].combat_pos;
 			break;
 		default:
 			// No movement happened, so just return false.
@@ -465,7 +464,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	if (is_town())
 		update_explored(univ.town.p_loc);
 	if (is_combat())
-		update_explored(pc_pos[current_pc]);
+		update_explored(univ.party[current_pc].combat_pos);
 	
 	return can_enter;
 }
@@ -607,7 +606,7 @@ void use_item(short pc,short item)
 	if (is_town())
 		user_loc = univ.town.p_loc;
 	if (is_combat())
-		user_loc = pc_pos[current_pc];
+		user_loc = univ.party[current_pc].combat_pos;
 	
 	if (item_use_code == 0) {
 		add_string_to_buf("Use: Can't use this item.       ");
@@ -1055,7 +1054,7 @@ void use_item(short pc,short item)
 				break;
 			case eItemAbil::SHOCKWAVE:
 				add_string_to_buf("  The ground shakes!        ");
-				do_shockwave(pc_pos[current_pc]);
+				do_shockwave(univ.party[current_pc].combat_pos);
 				break;
 			case eItemAbil::DISPEL_UNDEAD:
 				add_string_to_buf("  It shoots a white ray.   ");
@@ -1115,8 +1114,8 @@ void use_item(short pc,short item)
 				ASB("It throbs, and emits odd rays.");
 				for (i = 0; i < univ.town->max_monst(); i++) {
 					if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
-						&& (dist(pc_pos[current_pc],univ.town.monst[i].cur_loc) <= 8)
-						&& (can_see_light(pc_pos[current_pc],univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
+						&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= 8)
+						&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 						which_m = &univ.town.monst[i];
 						charm_monst(which_m,0,eStatus::CHARM,8);
 					}
@@ -1375,7 +1374,8 @@ void teleport_party(short x,short y,short mode)
 	}
 	center.x = x; center.y = y;
 	if (is_combat()) {
-		pc_pos[current_pc].x = x;pc_pos[current_pc].y = y;
+		univ.party[current_pc].combat_pos.x = x;
+		univ.party[current_pc].combat_pos.y = y;
 	}
 	l.x = x; l.y = y;
 	univ.town.p_loc.x = x;
@@ -1793,28 +1793,28 @@ void push_things()////
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
-				ter = univ.town->terrain(pc_pos[i].x,pc_pos[i].y);
-				l = pc_pos[i];
+				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
+				l = univ.party[i].combat_pos;
 				switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
 					case DIR_W: l.x--; break;
 				}
-				if (l != pc_pos[i]) {
+				if (l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
 					ter = univ.town->terrain(l.x,l.y);
 					if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 						draw_terrain(0);
-					pc_pos[i] = l;
+					univ.party[i].combat_pos = l;
 					update_explored(l);
 					draw_map(true);
-					if (univ.town.is_barrel(pc_pos[i].x,pc_pos[i].y)) {
-						univ.town.set_barrel(pc_pos[i].x,pc_pos[i].y,false);
+					if (univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
+						univ.town.set_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the barrel.");
 					}
-					if (univ.town.is_crate(pc_pos[i].x,pc_pos[i].y)) {
-						univ.town.set_crate(pc_pos[i].x,pc_pos[i].y,false);
+					if (univ.town.is_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
+						univ.town.set_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the crate.");
 					}
 					if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
@@ -1823,7 +1823,7 @@ void push_things()////
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
-							&& (univ.town.items[k].item_loc == pc_pos[i]))
+							&& (univ.town.items[k].item_loc == univ.party[i].combat_pos))
 							univ.town.items[k].contained = false;
 					redraw = true;
 				}

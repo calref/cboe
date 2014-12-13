@@ -124,7 +124,7 @@ extern eGameMode overall_mode;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
 extern fs::path progDir;
-extern location pc_pos[6],center;
+extern location center;
 extern sf::RenderWindow mainPtr;
 extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 //extern stored_items_list_type stored_items[3];
@@ -137,7 +137,7 @@ extern short store_spell_target,pc_casting,stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,rad2,rad3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],pc_parry[6],combat_active_pc;//,pc_moves[6];
+extern short hit_chance[21],combat_active_pc;//,pc_moves[6];
 extern short boom_gr[8];
 //extern	unsigned char beasts[5];
 //extern	unsigned char m1[20];
@@ -148,7 +148,6 @@ extern short boom_gr[8];
 extern short current_ground;
 extern short mage_need_select[62];
 extern short priest_need_select[62];
-extern short pc_marked_damage[6];
 extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
 //extern town_item_list t_i;
@@ -820,7 +819,7 @@ void increase_light(short amt)
 	if (is_combat()) {
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
-				update_explored(pc_pos[i]);
+				update_explored(univ.party[i].combat_pos);
 			}
 	}
 	else {
@@ -2979,8 +2978,8 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	}
 	
 	// parry
-	if ((damage_type < 2) && (pc_parry[which_pc] < 100))
-		how_much -= pc_parry[which_pc] / 4;
+	if ((damage_type < 2) && (univ.party[which_pc].parry < 100))
+		how_much -= univ.party[which_pc].parry / 4;
 	
 	
 	if (damage_type != 10) {
@@ -3038,10 +3037,10 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	if (boom_anim_active == true) {
 		if (how_much < 0)
 			how_much = 0;
-		pc_marked_damage[which_pc] += how_much;
+		univ.party[which_pc].marked_damage += how_much;
 		if (is_town())
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
-		else add_explosion(pc_pos[which_pc],how_much,0,(damage_type > 2) ? 2 : 0,0,0);
+		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		//sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name, how_much);
 		//if (do_print == true)
 		//	add_string_to_buf((char *) c_line);
@@ -3066,7 +3065,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			add_string_to_buf((char *) c_line);
 		if (damage_type != 10) {
 			if (is_combat())
-				boom_space(pc_pos[which_pc],overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(univ.party[which_pc].combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else if (is_town())
 				boom_space(univ.town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else boom_space(univ.town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
@@ -3124,7 +3123,7 @@ void kill_pc(short which_pc,eMainStatus type)
 		for (i = 0; i < 24; i++)
 			univ.party[which_pc].equip[i] = false;
 		
-		item_loc = (overall_mode >= MODE_COMBAT) ? pc_pos[which_pc] : univ.town.p_loc;
+		item_loc = (overall_mode >= MODE_COMBAT) ? univ.party[which_pc].combat_pos : univ.town.p_loc;
 		
 		if(type == eMainStatus::DEAD)
 			univ.town.set_lg_blood(item_loc.x,item_loc.y,true);

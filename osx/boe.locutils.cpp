@@ -22,7 +22,7 @@ extern eGameMode overall_mode;
 //extern cOutdoors outdoors[2][2];
 extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], out_e[96][96];
-extern location pc_pos[6],center;
+extern location center;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern cScenario scenario;
 extern cUniverse univ;
@@ -174,7 +174,7 @@ location get_cur_loc()
 			break;
 			
 		default:
-			return pc_pos[current_pc];
+			return univ.party[current_pc].combat_pos;
 			break;
 	}
 }
@@ -335,7 +335,7 @@ bool is_blocked(location to_check)
 				return true;
 		if (is_combat())
 			for (i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == pc_pos[i])
+				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos)
 					return true;
 		
 		// Monster there?
@@ -575,7 +575,7 @@ bool combat_pt_in_light(location to_where)
 	rad = light_radius();
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if (dist(pc_pos[i],to_where) <= rad)
+			if (dist(univ.party[i].combat_pos,to_where) <= rad)
 				return true;
 		}
 	
@@ -621,7 +621,7 @@ short party_can_see(location where)
 	
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if (can_see_light(pc_pos[i],where,sight_obscurity) < 5)
+			if (can_see_light(univ.party[i].combat_pos,where,sight_obscurity) < 5)
 				return i;
 		}
 	
