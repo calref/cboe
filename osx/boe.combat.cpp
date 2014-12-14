@@ -23,6 +23,7 @@
 #include "mathutil.h"
 #include "dlogutil.h"
 #include "boe.menus.h"
+#include "spell.hpp"
 
 //extern party_record_type party;
 //extern current_town_type univ.town;
@@ -39,7 +40,7 @@ extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
 extern sf::RenderWindow mainPtr;
-extern short store_mage, store_priest;
+extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
@@ -51,13 +52,13 @@ extern bool in_scen_debug;
 extern bool fast_bang;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
-extern short refer_mage[62],refer_priest[62];
 //extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern cScenario scenario;
 extern short spell_caster, missile_firer,current_monst_tactic;
 char create_line[60];
-short spell_being_cast;
+eSpell spell_being_cast;
+bool spell_freebie;
 short missile_inv_slot, ammo_inv_slot;
 short force_wall_position = 10; //  10 -> no force wall
 bool processing_fields = true;
@@ -74,25 +75,6 @@ short hit_chance[51] = {
 	,99,99,99,99,99,99,99,99,99,99,
 	99,99,99,99,99,99,99,99,99,99};
 
-
-//short s_cost[2][62] = {
-//	{1,1,1,1,1,2,15,2,1,3, 2,2,2,2,2,2,4,6,2,2, 3,3,4,3,3,5,5,4,6,4,/
-//	4,4,4,4,30,-1,8,5, 5,8,7,5,8,10,5,7, 6,6,7,7,12,10,-1,20, 12,8,20,8,14,10,50,10},
-//	{1,1,1,2,1,2,2,5,50,1, 2,2,2,2,2,6,8,7,4,3, 3,4,3,3,3,10,6,3,3,7,
-//		4,5,5,15,8,6,4,4, 5,5,25,8,12,12,10,5, 7,6,6,8,14,20,7,6, 8,7,20,12,8,12,30,8}};
-short s_cost[2][62] = {
-	{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
-	4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
-	{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
-		5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}};
-
-short mage_range[80] = {
-	0,6,0,0,7,7,0,14,8,0, 6,8,7,10,0,8,3,8,10,6, 0,0,12,0,10,12,4,10,8,0,
-	8,12,12,0,10,4,8,8, 0,0,14,0,2,4,10,12, 8,12,6,8,5,8,4,0, 0,0,8,0,4,2,4,6
-	,10,8,8,12,8,10,10,10, 10,10,10,10,10,10,10,10,10,10};
-short priest_range[62] = {
-	0,0,0,8,0,0,0,0,0,10, 0,0,10,0,6,4,0,6,6,8, 0,0,8,0,10,0,8,0,0,8,
-	0,10,8,0,6,0,0,0, 0,0,0,9,0,4,0,8, 0,0,10,0,4,8,0,8, 0,4,0,12,0,10,0,0};
 short monst_mage_spell[55] = {
 	1,1,1,1,1,1,2,2,2,2,
 	2,2,3,3,3,3,3,4,4,4,
@@ -858,11 +840,11 @@ void place_target(location target)
 			add_string_to_buf("  Can't see target.           ");
 			return;
 		}
-		if (dist(univ.party[current_pc].combat_pos,target) > ((spell_being_cast >= 100) ? priest_range[spell_being_cast - 100] : mage_range[spell_being_cast]))  {
+		if (dist(univ.party[current_pc].combat_pos,target) > (*spell_being_cast).range)  {
 			add_string_to_buf("  Target out of range.");
 			return;
 		}
-		if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != 41) {
+		if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER) {
 			add_string_to_buf("  Target space obstructed.           ");
 			return;
 		}
@@ -895,19 +877,9 @@ void place_target(location target)
 	}
 }
 
-// Special spells:
-//   62 - Carrunos
-//	 63 - Summon Rat
-//	 64 - Ice Wall Balls
-//	 65 - Goo Bomb
-//   66 - Foul vapors
-//	 67 - SLeep cloud
-//	 68 - Acid spray
-//   69 - Paralyze beam
-//   70 - mass sleep
 void do_combat_cast(location target)////
 {
-	short adjust,r1,r2,targ_num,s_num,level,bonus = 1,i,item,store_sound = 0;
+	short adjust,r1,r2,targ_num,level,bonus = 1,i,item,store_sound = 0;
 	cCreature *cur_monst;
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1,store_m_type = 2;
@@ -928,8 +900,7 @@ void do_combat_cast(location target)////
 	eDamageType boom_type[8];
 	location boom_targ[8];
 	
-	if (spell_being_cast >= 1000) {
-		spell_being_cast -= 1000;
+	if(spell_freebie) {
 		freebie = true;
 		level = store_item_spell_level;
 		level = minmax(2,20,level);
@@ -939,7 +910,6 @@ void do_combat_cast(location target)////
 		bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 	}
 	force_wall_position = 10;
-	s_num = spell_being_cast % 100;
 	
 	void_sanctuary(current_pc);
 	if (overall_mode == MODE_SPELL_TARGET) {
@@ -952,17 +922,14 @@ void do_combat_cast(location target)////
 	spell_caster = current_pc;
 	
 	// assign monster summoned, if summoning
-	if (spell_being_cast == 16) {
+	if(spell_being_cast == eSpell::SUMMON_BEAST) {
 		summon = get_summon_monster(1);
 		
-	}
-	if (spell_being_cast == 26) {
+	} else if (spell_being_cast == eSpell::SUMMON_WEAK) {
 		summon = get_summon_monster(1);
-	}
-	if (spell_being_cast == 43) {
+	} else if (spell_being_cast == eSpell::SUMMON) {
 		summon = get_summon_monster(2);
-	}
-	if (spell_being_cast == 58) {
+	} else if (spell_being_cast == eSpell::SUMMON_MAJOR) {
 		summon = get_summon_monster(3);
 	}
 	combat_posing_monster = current_working_monster = current_pc;
@@ -972,11 +939,11 @@ void do_combat_cast(location target)////
 			target = spell_targets[i];
 			spell_targets[i].x = 120; // nullify target as it is used
 			
-			if ((cost_taken == false) && (freebie == false) && (s_num != 52) && (s_num != 35)) {
-				univ.party[current_pc].cur_sp -= s_cost[spell_being_cast / 100][s_num];
+			if(!cost_taken && !freebie && spell_being_cast != eSpell::MINDDUEL && spell_being_cast != eSpell::SIMULACRUM) {
+				univ.party[current_pc].cur_sp -= (*spell_being_cast).cost;
 				cost_taken = true;
 			}
-			if ((cost_taken == false) && (freebie == false) && (s_num == 35)) {
+			if(!cost_taken && !freebie && spell_being_cast == eSpell::SIMULACRUM) {
 				univ.party[current_pc].cur_sp -=	store_sum_monst_cost;
 				cost_taken = true;
 			}
@@ -987,9 +954,9 @@ void do_combat_cast(location target)////
 			else if (loc_off_act_area(target) == true) {
 				add_string_to_buf("  Space not in town.           ");
 			}
-			else if (dist(univ.party[current_pc].combat_pos,target) > ((spell_being_cast >= 100) ? priest_range[spell_being_cast - 100] : mage_range[spell_being_cast]))
+			else if (dist(univ.party[current_pc].combat_pos,target) > (*spell_being_cast).range)
 				add_string_to_buf("  Target out of range.");
-			else if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != 41)
+			else if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER)
 				add_string_to_buf("  Target space obstructed.           ");
 			else if (univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
@@ -1003,41 +970,41 @@ void do_combat_cast(location target)////
 				boom_targ[i] = target;
 				switch (spell_being_cast) {
 						
-					case 8: case 28: case 65: // web spells
+					case eSpell::GOO: case eSpell::WEB: case eSpell::GOO_BOMB:
 						place_spell_pattern(current_pat,target,FIELD_WEB,current_pc);
 						break;
-					case 5: case 17: // fire wall spells
+					case eSpell::CLOUD_FLAME: case eSpell::CONFLAGRATION:
 						place_spell_pattern(current_pat,target,WALL_FIRE,current_pc);
 						break;
-					case 15: case 66: // stink cloud
+					case eSpell::CLOUD_STINK: case eSpell::FOUL_VAPOR:
 						place_spell_pattern(current_pat,target,CLOUD_STINK,current_pc);
 						break;
-					case 25: case 44: case 126: // force walls
+					case eSpell::WALL_FORCE: case eSpell::SHOCKSTORM: case eSpell::FORCEFIELD:
 						place_spell_pattern(current_pat,target,WALL_FORCE,current_pc);
 						break;
-					case 37: case 64: // ice walls
+					case eSpell::WALL_ICE: case eSpell::WALL_ICE_BALL:
 						place_spell_pattern(current_pat,target,WALL_ICE,current_pc);
 						break;
-					case 51: // antimagic
+					case eSpell::ANTIMAGIC:
 						place_spell_pattern(current_pat,target,FIELD_ANTIMAGIC,current_pc);
 						break;
-					case 19: case 67: // sleep clouds
+					case eSpell::CLOUD_SLEEP: case eSpell::CLOUD_SLEEP_LARGE:
 						place_spell_pattern(current_pat,target,CLOUD_SLEEP,current_pc);
 						break;
-					case 60:
+					case eSpell::QUICKFIRE:
 						univ.town.set_quickfire(target.x,target.y,true);
 						break;
-					case 45: // spray fields
+					case eSpell::SPRAY_FIELDS:
 						r1 = get_ran(1,0,14);
 						place_spell_pattern(current_pat,target,spray_type_array[r1],current_pc);
 						break;
-					case 159:  // wall of blades
+					case eSpell::WALL_BLADES:
 						place_spell_pattern(current_pat,target,WALL_BLADES,current_pc);
 						break;
-					case 145: case 119: case 18: // wall dispelling
+					case eSpell::DISPEL_FIELD: case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_SQUARE:
 						place_spell_pattern(current_pat,target,FIELD_DISPEL,current_pc);
 						break;
-					case 42: // Fire barrier
+					case eSpell::BARRIER_FIRE:
 						play_sound(68);
 						r1 = get_ran(3,2,7);
 						hit_space(target,r1,DAMAGE_FIRE,true,true);
@@ -1046,7 +1013,7 @@ void do_combat_cast(location target)////
 							add_string_to_buf("  You create the barrier.              ");
 						else add_string_to_buf("  Failed.");
 						break;
-					case 59: // Force barrier
+					case eSpell::BARRIER_FORCE:
 						play_sound(68);
 						r1 = get_ran(7,2,7);
 						hit_space(target,r1,DAMAGE_FIRE,true,true);
@@ -1060,7 +1027,7 @@ void do_combat_cast(location target)////
 						start_missile_anim();
 						switch (spell_being_cast) {
 								
-							case 157:
+							case eSpell::DIVINE_THUD:
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
@@ -1068,51 +1035,51 @@ void do_combat_cast(location target)////
 								ashes_loc = target;
 								break;
 								
-							case 1: case 31:
-								r1 = (spell_being_cast == 1) ? get_ran(2,1,4) : get_ran(min(20,level + bonus),1,4);
+							case eSpell::SPARK: case eSpell::ICE_BOLT:
+								r1 = (spell_being_cast == eSpell::SPARK) ? get_ran(2,1,4) : get_ran(min(20,level + bonus),1,4);
 								add_missile(target,6,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
-								hit_space(target,r1,(spell_being_cast == 1) ? DAMAGE_MAGIC : DAMAGE_COLD,1,0);
+								hit_space(target,r1,(spell_being_cast == eSpell::SPARK) ? DAMAGE_MAGIC : DAMAGE_COLD,1,0);
 								break;
-							case 27: // flame arrows
+							case eSpell::ARROWS_FLAME:
 								add_missile(target,4,1,0,0);
 								r1 = get_ran(2,1,4);
 								boom_type[i] = DAMAGE_FIRE;
 								boom_dam[i] = r1;
 								//hit_space(target,r1,1,1,0);
 								break;
-							case 129: // smite
+							case eSpell::SMITE:
 								add_missile(target,6,1,0,0);
 								r1 = get_ran(2,1,5);
 								boom_type[i] = DAMAGE_COLD;
 								boom_dam[i] = r1;
 								//hit_space(target,r1,5,1,0);
 								break;
-							case 114:
+							case eSpell::WOUND:
 								r1 = get_ran(min(7,2 + bonus + level / 2),1,4);
 								add_missile(target,14,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,24);
 								hit_space(target,r1,DAMAGE_UNBLOCKABLE,1,0);
 								break;
-							case 11:
+							case eSpell::FLAME:
 								r1 = get_ran(min(10,1 + level / 3 + bonus),1,6);
 								add_missile(target,2,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
 								hit_space(target,r1,DAMAGE_FIRE,1,0);
 								break;
-							case 22: case 141:
+							case eSpell::FIREBALL: case eSpell::FLAMESTRIKE:
 								r1 = min(9,1 + (level * 2) / 3 + bonus) + 1;
 								add_missile(target,2,1,0,0);
 								store_sound = 11;
 								//do_missile_anim(100,univ.party[current_pc].combat_pos,11);
-								if (spell_being_cast == 141)
+								if (spell_being_cast == eSpell::FLAMESTRIKE)
 									r1 = (r1 * 14) / 10;
 								else if (r1 > 10) r1 = (r1 * 8) / 10;
 								if (r1 <= 0) r1 = 1;
 								place_spell_pattern(square,target,DAMAGE_FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
-							case 40:
+							case eSpell::FIRESTORM:
 								add_missile(target,2,1,0,0);
 								store_sound = 11;
 								//do_missile_anim(100,univ.party[current_pc].combat_pos,11);
@@ -1122,13 +1089,13 @@ void do_combat_cast(location target)////
 								place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
-							case 48:  // kill
+							case eSpell::KILL:
 								add_missile(target,9,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
 								r1 = get_ran(3,0,10) + univ.party[current_pc].level * 2;
 								hit_space(target,40 + r1,DAMAGE_MAGIC,1,0);
 								break;
-							case 61:	// death arrows
+							case eSpell::ARROWS_DEATH:
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = get_ran(3,0,10) + univ.party[current_pc].level + 3 * bonus;
@@ -1137,64 +1104,66 @@ void do_combat_cast(location target)////
 								//hit_space(target,40 + r1,3,1,0);
 								break;
 								// summoning spells
-							case 35: case 16: case 26: case 43: case 58: case 50:
-							case 63: case 115: case 134: case 143: case 150:
+							case eSpell::SIMULACRUM: case eSpell::SUMMON_BEAST: case eSpell::SUMMON_RAT:
+							case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR:
+							case eSpell::DEMON: case eSpell::SUMMON_SPIRIT: case eSpell::STICKS_TO_SNAKES:
+							case eSpell::SUMMON_HOST: case eSpell::SUMMON_GUARDIAN:
 								add_missile(target,8,1,0,0);
 								do_missile_anim(50,univ.party[current_pc].combat_pos,61);
 								switch (spell_being_cast) {
-									case 35: // Simulacrum
+									case eSpell::SIMULACRUM:
 										r2 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(store_sum_monst,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 16: // summon beast
+									case eSpell::SUMMON_BEAST:
 										r2 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 26: // summon 1
+									case eSpell::SUMMON_WEAK:
 										r2 = get_ran(4,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 43: // summon 2
+									case eSpell::SUMMON:
 										r2 = get_ran(5,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 58: // summon 3
+									case eSpell::SUMMON_MAJOR:
 										r2 = get_ran(7,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 50: // Daemon
+									case eSpell::DEMON:
 										r2 = get_ran(5,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (!summon_monster(85,target,r2,2))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 63: // Rat!
+									case eSpell::SUMMON_RAT:
 										r1 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (!summon_monster(80,target,r1,2))
 											add_string_to_buf("  Summon failed.");
 										break;
 										
-									case 115: // summon spirit
+									case eSpell::SUMMON_SPIRIT:
 										r2 = get_ran(2,1,5) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(125,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 134: // s to s
+									case eSpell::STICKS_TO_SNAKES:
 										r1 = get_ran(1,0,7);
 										r2 = get_ran(2,1,5) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster((r1 == 1) ? 100 : 99,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 143: // host
+									case eSpell::SUMMON_HOST: // host
 										r2 = get_ran(2,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster((i == 0) ? 126 : 125,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
-									case 150: // guardian
+									case eSpell::SUMMON_GUARDIAN: // guardian
 										r2 = get_ran(6,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(122,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
@@ -1209,33 +1178,36 @@ void do_combat_cast(location target)////
 									add_string_to_buf("  Nobody there                 ");
 								else {
 									cur_monst = &univ.town.monst[targ_num];
-									if ((cur_monst->attitude % 2 != 1) && (spell_being_cast != 7)
-										&& (spell_being_cast != 34))
+									cCreature* cur_monst = &univ.town.monst[targ_num];
+									if(cur_monst->attitude % 2 != 1 && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
 										make_town_hostile();
-									store_sound = (spell_being_cast >= 50) ? 24 : 25;
 									switch (spell_being_cast) {
-										case 68: // spray acid
+										case eSpell::ACID_SPRAY:
 											store_m_type = 0;
 											acid_monst(cur_monst,level);
+											store_sound = 24;
 											break;
-										case 69: // paralyze
+										case eSpell::PARALYZE_BEAM:
 											store_m_type = 9;
 											charm_monst(cur_monst,0,eStatus::PARALYZED,500);
+											store_sound = 24;
 											break;
 											
-										case 7: // monster info
+										case eSpell::SCRY_MONSTER:
 											store_m_type = -1;
 											play_sound(52);
 											univ.party.m_noted[cur_monst->number] = true;
 											adjust_monst_menu();
 											display_monst(0,cur_monst,0);
+											store_sound = 25;
 											break;
-										case 34: // Capture soul
+										case eSpell::CAPTURE_SOUL:
 											store_m_type = 15;
 											record_monst(cur_monst);
+											store_sound = 25;
 											break;
 											
-										case 52: // Mindduel!
+										case eSpell::MINDDUEL:
 											store_m_type = -1;
 											if ((cur_monst->mu == 0) && (cur_monst->cl == 0))
 												add_string_to_buf("  Can't duel: no magic.");
@@ -1248,85 +1220,92 @@ void do_combat_cast(location target)////
 													do_mindduel(current_pc,cur_monst);
 												}
 											}
+											store_sound = 24;
 											break;
 											
-										case 117: // charm
+										case eSpell::CHARM_FOE:
 											store_m_type = 14;
 											charm_monst(cur_monst,-1 * (bonus + univ.party[current_pc].level / 8),eStatus::CHARM,0);
+											store_sound = 24;
 											break;
 											
-										case 118: // disease
+										case eSpell::DISEASE:
 											store_m_type = 0;
 											r1 = get_ran(1,0,1);
 											disease_monst(cur_monst,2 + r1 + bonus);
+											store_sound = 24;
 											break;
 											
-										case 62:
+										case eSpell::STRENGTHEN_TARGET:
 											store_m_type = 14;
 											cur_monst->health += 20;
 											store_sound = 55;
 											break;
 											
-										case 13:
+										case eSpell::DUMBFOUND:
 											store_m_type = 14;
 											dumbfound_monst(cur_monst,1 + bonus / 3);
 											store_sound = 53;
 											break;
 											
-										case 4:
+										case eSpell::SCARE:
 											store_m_type = 11;
 											scare_monst(cur_monst,get_ran(2 + bonus,1,6));
 											store_sound = 54;
 											break;
-										case 24:
+										case eSpell::FEAR:
 											store_m_type = 11;
-											scare_monst(cur_monst,get_ran(min(20,univ.party[current_pc].level / 2 + bonus),1,
-																		  ((spell_being_cast == 24) ? 8 : 6)));
+											scare_monst(cur_monst,get_ran(min(20,univ.party[current_pc].level / 2 + bonus),1,8));
 											store_sound = 54;
 											break;
 											
-										case 12:
+										case eSpell::SLOW:
 											store_m_type = 11;
 											r1 = get_ran(1,0,1);
 											slow_monst(cur_monst,2 + r1 + bonus);
+											store_sound = 25;
 											break;
 											
-										case 10: case 36:
-											store_m_type = (spell_being_cast == 36) ? 4 : 11;
+										case eSpell::POISON_MINOR: case eSpell::ARROWS_VENOM:
+											store_m_type = (spell_being_cast == eSpell::ARROWS_VENOM) ? 4 : 11;
 											poison_monst(cur_monst,2 + bonus / 2);
 											store_sound = 55;
 											break;
-										case 49: // Paralysis
+										case eSpell::PARALYZE:
 											store_m_type = 9;
 											charm_monst(cur_monst,-10,eStatus::PARALYZED,1000);
+											store_sound = 25;
 											break;
-										case 30:
+										case eSpell::POISON:
 											store_m_type = 11;
 											poison_monst(cur_monst,4 + bonus / 2);
 											store_sound = 55;
 											break;
-										case 46:
+										case eSpell::POISON_MAJOR:
 											store_m_type = 11;
 											poison_monst(cur_monst,8 + bonus / 2);
 											store_sound = 55;
 											break;
 											
-										case 109: // stumble
+										case eSpell::STUMBLE:
 											store_m_type = 8;
 											curse_monst(cur_monst,4 + bonus);
+											store_sound = 24;
 											break;
 											
-										case 112:
+										case eSpell::CURSE:
 											store_m_type = 8;
 											curse_monst(cur_monst,2 + bonus);
+											store_sound = 24;
 											break;
 											
-										case 122:
+										case eSpell::HOLY_SCOURGE:
 											store_m_type = 8;
 											curse_monst(cur_monst,2 + univ.party[current_pc].level / 2);
+											store_sound = 24;
 											break;
 											
-										case 103: case 132:
+										case eSpell::TURN_UNDEAD: case eSpell::DISPEL_UNDEAD:
 											if (cur_monst->m_type != eRace::UNDEAD) {
 												add_string_to_buf("  Not undead.                    ");
 												store_m_type = -1;
@@ -1337,13 +1316,14 @@ void do_combat_cast(location target)////
 											if (r1 > hit_chance[minmax(0,19,bonus * 2 + level * 4 - (cur_monst->level / 2) + 3)])
 												add_string_to_buf("  Monster resisted.                  ");
 											else {
-												r1 = get_ran((spell_being_cast == 103) ? 2 : 6, 1, 14);
+												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
 												
 												hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
 											}
+											store_sound = 24;
 											break;
 											
-										case 155:
+										case eSpell::RAVAGE_SPIRIT:
 											if (cur_monst->m_type != eRace::DEMON) {
 												add_string_to_buf("  Not a demon.                    ");
 												store_m_type = -1;
@@ -1359,6 +1339,7 @@ void do_combat_cast(location target)////
 												//play_sound(53);
 												hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
 											}
+											store_sound = 24;
 											break;
 									}
 									if (store_m_type >= 0)
@@ -3499,6 +3480,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 				break;
 			case 16: case 24:// bless all,revive all
 				play_sound(24);
+				// TODO: What's r2 for here? Should it be used for Revive All?
 				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
 				for (i = 0; i < univ.town->max_monst(); i++)
 					if ((monst_near(i,caster->cur_loc,8,0)) &&
@@ -4252,7 +4234,8 @@ void end_combat()
 
 bool combat_cast_mage_spell()
 {
-	short spell_num,target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
+	eSpell spell_num;
 	char c_line[60];
 	cCreature *which_m;
 	cMonster get_monst;
@@ -4283,7 +4266,7 @@ bool combat_cast_mage_spell()
 			spell_num = univ.party[current_pc].last_cast[eSkill::MAGE_SPELLS];
 		}
 		
-		if (spell_num == 35) {
+		if (spell_num == eSpell::SIMULACRUM) {
 			store_sum_monst = pick_trapped_monst();
 			if (store_sum_monst == 0)
 				return false;
@@ -4297,20 +4280,18 @@ bool combat_cast_mage_spell()
 		
 		bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 		combat_posing_monster = current_working_monster = current_pc;
-		if (spell_num >= 70)
-			return false;
-		if (spell_num < 70) {
+		if(spell_num == eSpell::NONE) return false;
 			print_spell_cast(spell_num,eSkill::MAGE_SPELLS);
-			if (refer_mage[spell_num] == 0) {
+			if ((*spell_num).refer == REFER_YES) {
 				take_ap(6);
 				draw_terrain(2);
 				do_mage_spell(current_pc,spell_num);
 				combat_posing_monster = current_working_monster = -1;
 			}
-			else if (refer_mage[spell_num] == 2) {
+			else if ((*spell_num).refer == REFER_TARGET) {
 				start_spell_targeting(spell_num);
 			}
-			else if (refer_mage[spell_num] == 3) {
+			else if ((*spell_num).refer == REFER_FANCY) {
 				start_fancy_spell_targeting(spell_num);
 			}
 			else {
@@ -4318,33 +4299,33 @@ bool combat_cast_mage_spell()
 				take_ap(6);
 				draw_terrain(2);
 				switch (spell_num) {
-					case 54:
-						univ.party[current_pc].cur_sp -= s_cost[0][spell_num];
+					case eSpell::SHOCKWAVE:
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						add_string_to_buf("  The ground shakes.          ");
 						do_shockwave(univ.party[current_pc].combat_pos);
 						break;
 						
-					case 2: case 21: case 3: case 14: case 29:
+					case eSpell::HASTE_MINOR: case eSpell::HASTE: case eSpell::STRENGTH: case eSpell::ENVENOM: case eSpell::RESIST_MAGIC:
 //						target = select_pc(11,0);
 						target = store_spell_target;
 						if (target < 6) {
-							univ.party[current_pc].cur_sp -= s_cost[0][spell_num];
+							univ.party[current_pc].cur_sp -= (*spell_num).cost;
 							play_sound(4);
 							switch (spell_num) {
-								case 14:
+								case eSpell::ENVENOM:
 									sprintf (c_line, "  %s receives venom.               ",
 											 univ.party[target].name.c_str());
 									poison_weapon(target,3 + bonus,1);
 									store_m_type = 11;
 									break;
 									
-								case  3:
+								case eSpell::STRENGTH:
 									sprintf (c_line, "  %s stronger.                     ",
 											 univ.party[target].name.c_str());
 									univ.party[target].status[eStatus::BLESS_CURSE] = univ.party[target].status[eStatus::BLESS_CURSE] + 3;
 									store_m_type = 8;
 									break;
-								case 29:
+								case eSpell::RESIST_MAGIC:
 									sprintf (c_line, "  %s resistant.                     ",
 											 univ.party[target].name.c_str());
 									univ.party[target].status[eStatus::MAGIC_RESISTANCE] = univ.party[target].status[eStatus::MAGIC_RESISTANCE] + 5 + bonus;
@@ -4352,7 +4333,7 @@ bool combat_cast_mage_spell()
 									break;
 									
 								default:
-									i = (spell_num == 2) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
+									i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
 									univ.party[target].status[eStatus::HASTE_SLOW] = min(8, univ.party[target].status[eStatus::HASTE_SLOW] + i);
 									sprintf (c_line, "  %s hasted.                       ",
 											 univ.party[target].name.c_str());
@@ -4364,15 +4345,15 @@ bool combat_cast_mage_spell()
 						}
 						break;
 						
-					case 39: case 55:
+					case eSpell::HASTE_MAJOR: case eSpell::BLESS_MAJOR:
 						store_sound = 25;
-						univ.party[current_pc].cur_sp -= s_cost[0][spell_num];
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						
 						
 						for (i = 0; i < 6; i++)
 							if(univ.party[i].main_status == eMainStatus::ALIVE) {
-								univ.party[i].status[eStatus::HASTE_SLOW] = min(8, univ.party[i].status[eStatus::HASTE_SLOW] + ((spell_num == 39) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
-								if (spell_num == 55) {
+								univ.party[i].status[eStatus::HASTE_SLOW] = min(8, univ.party[i].status[eStatus::HASTE_SLOW] + ((spell_num == eSpell::HASTE_MAJOR) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
+								if (spell_num == eSpell::BLESS_MAJOR) {
 									poison_weapon(i,2,1);
 									univ.party[i].status[eStatus::BLESS_CURSE] += 4;
 									add_missile(univ.party[i].combat_pos,14,0,0,0);
@@ -4380,7 +4361,7 @@ bool combat_cast_mage_spell()
 								else add_missile(univ.party[i].combat_pos,8,0,0,0);
 							}
 						//play_sound(4);
-						if (spell_num == 39)
+						if (spell_num == eSpell::HASTE_MAJOR)
 							sprintf (c_line, "  Party hasted.     ");
 						else
 							sprintf (c_line, "  Party blessed!           ");
@@ -4390,36 +4371,36 @@ bool combat_cast_mage_spell()
 						
 						
 						
-					case 32: case 47: case 56: // affect monsters in area spells
-						univ.party[current_pc].cur_sp -= s_cost[0][spell_num];
+					case eSpell::SLOW_GROUP: case eSpell::FEAR_GROUP: case eSpell::PARALYSIS_MASS: // affect monsters in area spells
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						store_sound = 25;
-						if (spell_num == 47)
+						if (spell_num == eSpell::FEAR_GROUP)
 							store_sound = 54;
 						switch (spell_num) {
-							case 32: sprintf (c_line, "  Enemy slowed:       "); break;
-							case 49: sprintf (c_line, "  Enemy ravaged:              ");break;
-							case 47: sprintf (c_line, "  Enemy scared:   ");break;
-							case 56: sprintf (c_line, "  Enemy paralyzed:   ");break;
+							case eSpell::SLOW_GROUP: sprintf (c_line, "  Enemy slowed:       "); break;
+							case eSpell::RAVAGE_ENEMIES: sprintf (c_line, "  Enemy ravaged:              ");break;
+							case eSpell::FEAR_GROUP: sprintf (c_line, "  Enemy scared:   ");break;
+							case eSpell::PARALYSIS_MASS: sprintf (c_line, "  Enemy paralyzed:   ");break;
 						}
 						add_string_to_buf(c_line);
 						for (i = 0; i < univ.town->max_monst(); i++) {
 							if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
-								&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= mage_range[spell_num])
+								&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)
 								&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 								which_m = &univ.town.monst[i];
 								switch (spell_num) {
-									case 47:
+									case eSpell::FEAR_GROUP:
 										r1 = get_ran(univ.party[current_pc].level / 3,1,8);
 										scare_monst(which_m,r1);
 										store_m_type = 10;
 										break;
-									case 32: case 49:
+									case eSpell::SLOW_GROUP: case eSpell::RAVAGE_ENEMIES:
 										slow_monst(which_m,5 + bonus);
-										if (spell_num == 49)
+										if (spell_num == eSpell::RAVAGE_ENEMIES)
 											curse_monst(which_m,3 + bonus);
 										store_m_type = 8;
 										break;
-									case 56:
+									case eSpell::PARALYSIS_MASS:
 										charm_monst(which_m,15,eStatus::PARALYZED,1000);
 										store_m_type = 15;
 										break;
@@ -4440,8 +4421,6 @@ bool combat_cast_mage_spell()
 			else play_sound(store_sound);
 			end_missile_anim();
 			put_pc_screen();
-			
-		}
 	}
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
@@ -4453,7 +4432,8 @@ bool combat_cast_mage_spell()
 
 bool combat_cast_priest_spell()
 {
-	short spell_num,target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
+	eSpell spell_num;
 	char c_line[60];
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{
@@ -4488,39 +4468,38 @@ bool combat_cast_priest_spell()
 		return false;
 	}
 	
-	if (spell_num >= 70)
-		return false;
+	if(spell_num == eSpell::NONE) return false;
 	bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 	
 	combat_posing_monster = current_working_monster = current_pc;
 	
 	if (univ.party[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");
-	else if (spell_num < 70) {
+	else if(spell_num != eSpell::NONE) {
 		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
-		if (refer_priest[spell_num] == 0) {
+		if ((*spell_num).refer == REFER_YES) {
 			take_ap(5);
 			draw_terrain(2);
 			do_priest_spell(current_pc,spell_num);
 		}
-		else if (refer_priest[spell_num] == 2) {
-			start_spell_targeting(100 + spell_num);
+		else if ((*spell_num).refer == REFER_TARGET) {
+			start_spell_targeting(spell_num);
 		}
-		else if (refer_priest[spell_num] == 3) {
-			start_fancy_spell_targeting(100 + spell_num);
+		else if ((*spell_num).refer == REFER_FANCY) {
+			start_fancy_spell_targeting(spell_num);
 		}
 		else {
 			start_missile_anim();
 			take_ap(5);
 			draw_terrain(2);
 			switch (spell_num) {
-				case 0: case 10:
+				case eSpell::BLESS_MINOR: case eSpell::BLESS:
 //					target = select_pc(11,0);
 					target = store_spell_target;
 					if (target < 6) {
 						store_sound = 4;
-						univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
-						univ.party[target].status[eStatus::BLESS_CURSE] += (spell_num == 0) ? 2 :
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
+						univ.party[target].status[eStatus::BLESS_CURSE] += (spell_num == eSpell::BLESS_MINOR) ? 2 :
 						max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus);
 						sprintf ((char *) c_line, "  %s blessed.              ",
 								 (char *) univ.party[target].name.c_str());
@@ -4529,8 +4508,8 @@ bool combat_cast_priest_spell()
 					}
 					break;
 					
-				case 38:
-					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
+				case eSpell::BLESS_PARTY:
+					univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					for (i = 0; i < 6; i++)
 						if(univ.party[i].main_status == eMainStatus::ALIVE) {
 							univ.party[i].status[eStatus::BLESS_CURSE] += univ.party[current_pc].level / 3;
@@ -4541,8 +4520,8 @@ bool combat_cast_priest_spell()
 					store_sound = 4;
 					break;
 					
-				case 58:
-					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
+				case eSpell::AVATAR:
+					univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					sprintf ((char *) c_line, "  %s is an avatar! ",
 							 (char *) univ.party[current_pc].name.c_str());
 					add_string_to_buf((char *) c_line);
@@ -4558,23 +4537,23 @@ bool combat_cast_priest_spell()
 					univ.party[current_pc].status[eStatus::MARTYRS_SHIELD] = 8;
 					break;
 					
-				case 31: case 51: case 53:
-					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
+				case eSpell::CURSE_ALL: case eSpell::CHARM_MASS: case eSpell::PESTILENCE:
+					univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					store_sound = 24;
 					for (i = 0; i < univ.town->max_monst(); i++) {
 						if ((univ.town.monst[i].active != 0) &&(univ.town.monst[i].attitude % 2 == 1) &&
-							(dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= priest_range[spell_num])) {
+							(dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)) {
 							which_m = &univ.town.monst[i];
 							switch (spell_num) {
-								case 31:
+								case eSpell::CURSE_ALL:
 									curse_monst(which_m,3 + bonus);
 									store_m_type = 8;
 									break;
-								case 51:
+								case eSpell::CHARM_MASS:
 									charm_monst(which_m,28 - bonus,eStatus::CHARM,0);
 									store_m_type = 14;
 									break;
-								case 53:
+								case eSpell::PESTILENCE:
 									disease_monst(which_m,3 + bonus);
 									store_m_type = 0;
 									break;
@@ -4587,8 +4566,8 @@ bool combat_cast_priest_spell()
 					
 					break;
 					
-				case 52:
-					univ.party[current_pc].cur_sp -= s_cost[1][spell_num];
+				case eSpell::PROTECTIVE_CIRCLE:
+					univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					play_sound(24);
 					add_string_to_buf("  Protective field created.");
 					place_spell_pattern(protect_pat,univ.party[current_pc].combat_pos,6);
@@ -4609,38 +4588,39 @@ bool combat_cast_priest_spell()
 	else return true;
 }
 
-void start_spell_targeting(short num)
+void start_spell_targeting(eSpell num, bool freebie)
 {
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
+	spell_freebie = freebie;
 	
-	// Then, is num >= 1000, it's a freebie, so remove the 1000
-	if (num >= 1000)
-		num -= 1000;
 	sprintf ((char *) create_line, "  Target spell.                ");
 	add_string_to_buf((char *) create_line);
-	if (num < 100)
+	if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	overall_mode = MODE_SPELL_TARGET;
-	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];
+	current_spell_range = (*num).range;
 	current_pat = single;
 	
 	switch (num) {  // Different spells have different messages and diff. target shapes
-		case 19:
+		case eSpell::CLOUD_SLEEP:
 			current_pat = small_square;
 			break;
-		case 18: case 22: case 141: case 126: case 15: case 119:
+		case eSpell::DISPEL_SQUARE: case eSpell::FIREBALL: case eSpell::CLOUD_STINK:
+		case eSpell::FLAMESTRIKE: case eSpell::FORCEFIELD:
 			current_pat = square;
 			break;
-		case 17: case 40: case 44: case 28: case 51: case 157: case 145: case 64: case 67:
+		case eSpell::CONFLAGRATION: case eSpell::FIRESTORM: case eSpell::SHOCKSTORM: case eSpell::WEB:
+		case eSpell::ANTIMAGIC: case eSpell::WALL_ICE_BALL: case eSpell::CLOUD_SLEEP_LARGE:
+		case eSpell::DIVINE_THUD: case eSpell::DISPEL_SPHERE:
 			current_pat = rad2;
 			break;
-		case 153: case 65: case 66:
+		case eSpell::PESTILENCE: case eSpell::GOO_BOMB: case eSpell::FOUL_VAPOR:
 			current_pat = rad3;
 			break;
-		case 25: case 37: case 159:
+		case eSpell::WALL_FORCE: case eSpell::WALL_ICE: case eSpell::WALL_BLADES:
 			add_string_to_buf("  (Hit space to rotate.)");
 			force_wall_position = 0;
 			current_pat = field[0];
@@ -4648,59 +4628,57 @@ void start_spell_targeting(short num)
 	}
 }
 
-void start_fancy_spell_targeting(short num)
+void start_fancy_spell_targeting(eSpell num, bool freebie)
 {
 	short i;
 	location null_loc(120,0);
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
-	// Then, is num >= 1000, it's a freebie, so remove the 1000
-	if (num >= 1000)
-		num -= 1000;
+	spell_freebie = freebie;
 	
 	for (i = 0; i < 8; i++)
 		spell_targets[i] = null_loc;
 	sprintf (create_line, "  Target spell.                ");
-	if (num < 100)
+	if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
 	add_string_to_buf(create_line);
 	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
-	current_spell_range = (num >= 100) ? priest_range[num - 100] : mage_range[num];
+	current_spell_range = (*num).range;
 	
 	switch (num) { // Assign special targeting shapes and number of targets
-		case 129: // smite
+		case eSpell::SMITE:
 			num_targets_left = minmax(1,8,univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
-		case 134: // sticks to snakes
+		case eSpell::STICKS_TO_SNAKES:
 			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
-		case 143: // summon host
+		case eSpell::SUMMON_HOST:
 			num_targets_left = 5;
 			break;
-		case 27: // flame arrows
+		case eSpell::ARROWS_FLAME:
 			num_targets_left = univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
-		case 36: // venom arrows
+		case eSpell::ARROWS_VENOM:
 			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
-		case 61: case 49: // paralysis, death arrows
+		case eSpell::ARROWS_DEATH: case eSpell::PARALYZE:
 			num_targets_left = univ.party[current_pc].level / 8 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 3;
 			break;
-		case 45: // spray fields
+		case eSpell::SPRAY_FIELDS:
 			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			current_pat = t;
 			break;
-		case 26: // summon 1
+		case eSpell::SUMMON_WEAK:
 			num_targets_left = minmax(1,7,univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
-		case 43: // summon 2
+		case eSpell::SUMMON:
 			num_targets_left = minmax(1,6,univ.party[current_pc].level / 6 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
-		case 58: // summon 3
+		case eSpell::SUMMON_MAJOR:
 			num_targets_left = minmax(1,5,univ.party[current_pc].level / 8 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
 	}

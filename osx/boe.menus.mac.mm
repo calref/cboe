@@ -15,10 +15,9 @@
 #include "boe.party.h"
 #include "boe.infodlg.h"
 #include "boe.consts.h"
+#include "spell.hpp"
 
 extern short on_spell_menu[2][62];
-extern short spell_level[62];
-extern std::map<eSkill,std::array<short,62>> spell_cost;
 extern short on_monst_menu[256];
 extern const char* mage_s_name[62];
 extern const char* priest_s_name[62];
@@ -188,7 +187,7 @@ void adjust_spell_menus()
 		on_spell_menu[0][i] = -1;
 	}
 	for (i = 0; i < 62; i++)
-		if (pc_can_cast_spell(current_pc,eSkill::MAGE_SPELLS,i)) {
+		if (pc_can_cast_spell(current_pc,cSpell::fromNum(eSkill::MAGE_SPELLS,i))) {
 			on_spell_menu[0][spell_pos] = i;
 			spell_pos++;
 		}
@@ -201,11 +200,10 @@ void adjust_spell_menus()
 		}
 		for (i = 0; i < 62; i++)
 			if (on_spell_menu[0][i] >= 0) {
-				if (spell_cost[eSkill::MAGE_SPELLS][on_spell_menu[0][i]] > 0)
-					sprintf(spell_name," L%d - %s, C %d",spell_level[on_spell_menu[0][i]],
-							mage_s_name[on_spell_menu[0][i]],spell_cost[eSkill::MAGE_SPELLS][on_spell_menu[0][i]]);
-				else sprintf(spell_name," L%d - %s, C ?",spell_level[on_spell_menu[0][i]],
-							 mage_s_name[on_spell_menu[0][i]]);
+				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
+				if((*spell).cost >= 0)
+					sprintf(spell_name," L%d - %s, C %d",(*spell).level, mage_s_name[on_spell_menu[0][i]], (*spell).cost);
+				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, mage_s_name[on_spell_menu[0][i]]);
 				spell_name[0] = strlen((char *) spell_name);
 				//strcpy((char *) (spell_name + 1),mage_s_name[on_spell_menu[0][i]]);
 				NSString* str = [NSString stringWithUTF8String: spell_name];
@@ -224,7 +222,7 @@ void adjust_spell_menus()
 		on_spell_menu[1][i] = -1;
 	}
 	for (i = 0; i < 62; i++)
-		if (pc_can_cast_spell(current_pc,eSkill::PRIEST_SPELLS,i)) {
+		if (pc_can_cast_spell(current_pc,cSpell::fromNum(eSkill::PRIEST_SPELLS,i))) {
 			on_spell_menu[1][spell_pos] = i;
 			spell_pos++;
 		}
@@ -237,13 +235,12 @@ void adjust_spell_menus()
 		}
 		for (i = 0; i < 62; i++)
 			if (on_spell_menu[1][i] >= 0) {
+				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
 				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
 				//strcpy((char *) (spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
-				if (spell_cost[eSkill::PRIEST_SPELLS][on_spell_menu[1][i]] > 0)
-					sprintf(spell_name," L%d - %s, C %d",spell_level[on_spell_menu[1][i]],
-							priest_s_name[on_spell_menu[1][i]],spell_cost[eSkill::PRIEST_SPELLS][on_spell_menu[1][i]]);
-				else sprintf(spell_name," L%d - %s, C ?",spell_level[i],
-							 priest_s_name[on_spell_menu[1][i]]);
+				if ((*spell).cost >= 0)
+					sprintf(spell_name," L%d - %s, C %d",(*spell).level, priest_s_name[on_spell_menu[1][i]], (*spell).cost);
+				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, priest_s_name[on_spell_menu[1][i]]);
 				spell_name[0] = strlen((char *) spell_name);
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
@@ -290,7 +287,7 @@ void handle_help_menu(int item_hit);
 void handle_library_menu(int item_hit);
 void handle_actions_menu(int item_hit);
 void handle_monster_info_menu(int item_hit);
-void handle_menu_spell(short spell_picked,eSkill spell_type);
+void handle_menu_spell(eSpell spell_picked);
 
 @implementation MenuHandler
 -(void) appMenu:(id) sender {
@@ -316,7 +313,7 @@ void handle_menu_spell(short spell_picked,eSkill spell_type);
 
 -(void) spellMenu:(id) sender {
 	SpellWrapper* spell = [sender representedObject];
-	handle_menu_spell([spell num], [spell type]);
+	handle_menu_spell(cSpell::fromNum([spell type], [spell num]));
 }
 
 -(void) libMenu:(id) sender {

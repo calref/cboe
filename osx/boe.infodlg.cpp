@@ -25,18 +25,15 @@
 #include "restypes.hpp"
 #include <boost/lexical_cast.hpp>
 #include "prefs.hpp"
+#include "spell.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 
-extern std::map<eSkill,std::array<short,62>> spell_w_cast;
-extern short spell_level[62];
 extern short skill_cost[20];
 extern short skill_max[20];
 extern short skill_g_cost[20];
 extern const char* skill_ids[19];
 //extern party_record_type	party;
-extern short mage_range[66],priest_range[66];
-extern std::map<eSkill,std::array<short,62>> spell_cost;
 extern short cur_town_talk_loaded;
 //extern current_town_type univ.town;
 extern bool give_intro_hint;
@@ -77,13 +74,14 @@ static void put_spell_info(cDialog& me, eSkill display_mode) {
 	
 	pos = display_mode == eSkill::MAGE_SPELLS ? mage_spell_pos : priest_spell_pos;
 	res = display_mode == eSkill::MAGE_SPELLS ? "mage-spells" : "priest-spells";
-	ran = display_mode == eSkill::MAGE_SPELLS ? mage_range[pos] : priest_range[pos];
+	eSpell spell = cSpell::fromNum(display_mode, pos);
+	ran = (*spell).range;
 	
 	me["name"].setText(get_str(res, pos * 2 + 1));
 	
-	if (spell_cost[eSkill::MAGE_SPELLS][pos] > 0)
-		store_text << spell_level[pos] << "/" << spell_cost[eSkill::MAGE_SPELLS][pos];
-	else store_text << spell_level[pos] << "/?";
+	if((*spell).cost >= 0)
+		store_text << (*spell).level << "/" << (*spell).cost;
+	else store_text << (*spell).level << "/?";
 	me["cost"].setText(store_text.str());
 	
 	if (ran == 0) {
@@ -92,7 +90,7 @@ static void put_spell_info(cDialog& me, eSkill display_mode) {
 	else me["range"].setTextToNum(ran);
 	
 	me["desc"].setText(get_str(res, pos * 2 + 2));
-	me["when"].setText(get_str("spell-times", 1 + spell_w_cast[display_mode][pos]));
+	me["when"].setText(get_str("spell-times", (*spell).when_cast));
 }
 
 

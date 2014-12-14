@@ -1,10 +1,10 @@
-Can cast everywhere.
 Combat only.
 Town only.
-Town and outdoor only.
 Town & combat only.
 Outdoor only.
-                                                                                                                                                      
+Outdoor & combat only.
+Town and outdoor only.
+Can cast everywhere.
 Mage Spells
 Priest Spells
 Exile III was created on a PowerMac 6100 using CodeWarrior, development system of the Gods. It is written in C. Plain, ordinary C.

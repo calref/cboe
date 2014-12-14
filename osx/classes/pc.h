@@ -46,7 +46,7 @@ public:
 	short direction;
 	short ap;
 	// transient stuff
-	std::map<eSkill,short> last_cast;
+	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;
 	short marked_damage, dir, parry, last_attacked;
 	

@@ -34,6 +34,7 @@
 #include "boe.menus.h"
 #include "winutil.h"
 #include "cursors.h"
+#include "spell.hpp"
 
 RECT bottom_buttons[7];
 RECT town_buttons[10];
@@ -61,22 +62,6 @@ extern RECT startup_button[6];
 extern bool flushingInput;
 bool ghost_mode;
 RECT startup_top;
-
-// For menu spell casting, some info needs to be stored up here.
-short refer_mage[62] = {
-	0,2,1,1,2,2,0,2,2,0, 2,2,2,2,1,2,2,2,2,2, 0,1,2,0,2,2,3,3,2,1,
-	2,2,1,0,2,2,3,2, 0,1,2,0,2,3,2,3, 2,1,2,3,2,2,2,0, 1,1,1,0,3,2,2,3};
-short refer_priest[62] = {
-	1,0,0,2,0,0,0,0,0,2, 1,0,2,0,2,2,0,2,3,0, 0,0,2,0,0,0,2,0,0,3,
-	0,1,2,0,3,0,0,0, 1,0,0,2,0,3,0,2, 0,0,0,0,2,1,1,1, 0,2,0,2,1,2,0,0};
-// 0 - refer  1 - do in combat immed.  2 - need targeting  3 - need fancy targeting
-short mage_need_select[62] = {
-	0,0,1,1,0,0,0,0,0,0, 0,0,0,0,1,0,0,0,0,0, 0,1,0,0,0,0,0,0,0,1,
-	0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,1,0,0,0,0};
-short priest_need_select[62] = {
-	1,1,1,0,0,1,1,0,0,0, 1,1,0,0,0,0,0,0,0,1, 1,0,0,0,1,0,0,1,1,0,
-	0,0,0,1,0,1,1,0, 0,1,2,0,0,0,0,0, 0,1,0,2,0,0,0,0, 0,0,2,0,0,0,0,0};
-// 0 - no select  1 - active only  2 - any existing
 
 // TODO: The duplication of RECT here shouldn't be necessary...
 cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
@@ -111,7 +96,8 @@ extern sf::RenderWindow mainPtr;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
 extern short which_item_page[6];
-extern short store_spell_target,pc_casting,store_mage,store_priest;
+extern short store_spell_target,pc_casting;
+extern eSpell store_mage, store_priest;
 //extern town_item_list	t_i; // shouldn't be here
 //extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
@@ -1443,8 +1429,9 @@ bool someone_awake()
 }
 
 
-void handle_menu_spell(short spell_picked,eSkill spell_type)
+void handle_menu_spell(eSpell spell_picked)
 {
+	eSkill spell_type = (*spell_picked).type;
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
 		print_buf();
@@ -1459,13 +1446,13 @@ void handle_menu_spell(short spell_picked,eSkill spell_type)
 	if(spell_type == eSkill::MAGE_SPELLS)
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
-	if(spell_type == eSkill::MAGE_SPELLS && mage_need_select[spell_picked] > 0) {
-		if ((store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?")) == 6)
+	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
+		if ((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
-		if(spell_type == eSkill::PRIEST_SPELLS && priest_need_select[spell_picked] > 0)
-			if ((store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?")) == 6)
+		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
+			if ((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
 				return;
 	}
 /*	if ((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) ||

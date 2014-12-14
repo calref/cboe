@@ -1,3 +1,7 @@
+
+#ifndef BOE_GAME_PARTY_H
+#define BOE_GAME_PARTY_H
+
 class cDialog;
 __declspec(deprecated) void init_party(short mode);
 __declspec(deprecated) void init_party_scen_data();
@@ -26,17 +30,18 @@ bool is_weapon(short pc_num,short item);
 void cast_spell(eSkill type);
 bool repeat_cast_ok(eSkill type);
 void give_party_spell(short which);
-void do_mage_spell(short pc_num,short spell_num);
-void do_priest_spell(short pc_num,short spell_num);
+void do_mage_spell(short pc_num,eSpell spell_num);
+void do_priest_spell(short pc_num,eSpell spell_num);
 void cast_town_spell(location where);
-bool cast_spell_on_space(location where, unsigned short spell);
+bool cast_spell_on_space(location where, eSpell spell);
 void crumble_wall(location where);
 void do_mindduel(short pc_num,cCreature *monst);
 void dispel_fields(short i,short j,short mode);
-bool pc_can_cast_spell(short pc_num,eSkill type,short spell_num);
-short pick_spell(short pc_num,eSkill type);
+bool pc_can_cast_spell(short pc_num,eSpell spell_num);
+bool pc_can_cast_spell(short pc_num,eSkill spell_num);
+eSpell pick_spell(short pc_num,eSkill type);
 short stat_adj(short pc_num,eSkill which);
-void set_town_spell(short s_num,short who_c);
+void start_town_targeting(eSpell s_num,short who_c,bool freebie = false);
 void do_alchemy();
 short alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
@@ -58,9 +63,11 @@ void take_ap(short num);
 short trait_present(eTrait which_trait);
 short race_present(eRace which_race);
 short wilderness_lore_present();
-void print_spell_cast(short spell_num,eSkill which);
+void print_spell_cast(eSpell spell,eSkill which);
 void put_party_in_scen(std::string scen_name);
 short party_size(bool only_living);
 
 // This is defined in pc.editors.cpp since it is also used by the character editor
 bool spend_xp(short pc_num, short mode, cDialog* parent);
+
+#endif

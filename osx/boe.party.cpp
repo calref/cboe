@@ -36,21 +36,10 @@
 #include <array>
 #include <boost/lexical_cast.hpp>
 #include "button.h"
+#include "spell.hpp"
 
 extern short skill_bonus[21];
 
-short spell_level[62] = {
-	1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,3,3,
-	4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5, 6,6,6,6,6,6,6,6, 7,7,7,7,7,7,7,7};
-std::map<eSkill,std::array<short,62>> spell_cost = {
-	{eSkill::MAGE_SPELLS,
-	{1,1,1,1,1,2,50,2,1,3, 2,3,2,2,2,2,4,4,2,6, 3,3,5,3,3,5,6,4,6,4,
-		4,5,4,8,30,-1,8,6, 5,8,8,6,9,10,6,6, 7,6,8,7,12,10,12,20, 12,8,20,10,14,10,50,10},
-	}, {eSkill::PRIEST_SPELLS,
-	{1,1,1,2,1,1,3,5,50,1, 2,2,2,2,3,5,8,6,4,2, 3,4,3,3,3,10,5,3,4,6,
-		5,5,5,15,6,5,5,8, 6,7,25,8,10,12,12,6, 8,7,8,8,14,17,8,7, 10,10,35,10,12,12,30,10}
-	}
-};
 // TODO: Use magic-names.txt instead of these arrays
 const char *mage_s_name[62] = {
 	"Light","Spark","Minor Haste","Strength","Scare",
@@ -92,23 +81,15 @@ const char *alch_names_short[20] = {
 	"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
 	"Strong Strength","Bliss","Strong Power"
 };
-std::map<eSkill,std::array<short,62>> spell_w_cast = {
-	{eSkill::MAGE_SPELLS,
-	{0,1,1,1,1,1,3,4,1,2, 1,1,1,1,1,1,4,1,4,1, 2,1,1,0,1,1,4,1,1,0,
-		1,1,1,2,4,1,1,1, 2,1,1,2,4,4,1,1, 1,1,1,1,4,4,1,5, 1,4,1,4,4,4,4,1},
-	}, {eSkill::PRIEST_SPELLS,
-	{1,0,0,1,3,1,1,3,2,1, 1,0,1,0,1,4,2,1,1,0, 0,0,1,2,0,3,1,0,0,1,
-		0,1,1,3,4,1,0,0, 1,0,3,1,1,4,2,4, 0,0,0,3,4,1,1,1, 0,1,3,1,4,1,5,0}
-	}
-};
-// 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
 bool get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
 bool get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
 short combat_percent[20] = {
 	150,120,100,90,80,80,80,70,70,70,
 	70,70,67,62,57,52,47,42,40,40};
 
-short town_spell,who_cast,which_pc_displayed;
+short who_cast,which_pc_displayed;
+eSpell town_spell;
+extern bool spell_freebie;
 bool spell_button_active[90];
 extern cItemRec start_items[6];
 
@@ -130,7 +111,7 @@ extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 //extern stored_items_list_type stored_items[3];
 //extern CursHandle sword_curs;
 //extern setup_save_type setup_save;
-extern short store_mage, store_priest;
+extern eSpell store_mage, store_priest;
 //extern cOutdoors outdoors[2][2];
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
@@ -146,8 +127,6 @@ extern short boom_gr[8];
 //extern stored_town_maps_type maps;
 //extern stored_outdoor_maps_type o_maps;
 extern short current_ground;
-extern short mage_need_select[62];
-extern short priest_need_select[62];
 extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
 //extern town_item_list t_i;
@@ -1046,7 +1025,7 @@ bool is_weapon(short pc_num,short item)
 void cast_spell(eSkill type)
 //short type; // 0 - mage  1 - priest
 {
-	short spell;
+	eSpell spell;
 	
 	if ((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
@@ -1060,7 +1039,7 @@ void cast_spell(eSkill type)
 			return;
 		spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	}
-	if (spell < 70) {
+	if(spell != eSpell::NONE) {
 		print_spell_cast(spell,type);
 		
 		if(type == eSkill::MAGE_SPELLS)
@@ -1073,7 +1052,9 @@ void cast_spell(eSkill type)
 
 bool repeat_cast_ok(eSkill type)
 {
-	short store_select,who_would_cast,what_spell;
+	short who_would_cast;
+	eSpellSelect store_select;
+	eSpell what_spell;
 	
 	if (overall_mode == MODE_COMBAT)
 		who_would_cast = current_pc;
@@ -1085,22 +1066,21 @@ bool repeat_cast_ok(eSkill type)
 		what_spell = univ.party[who_would_cast].last_cast[type];
 	else what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	
-	if (pc_can_cast_spell(who_would_cast,type,what_spell) == false) {
+	if(!pc_can_cast_spell(who_would_cast,what_spell)) {
 		add_string_to_buf("Repeat cast: Can't cast.");
 		return false;
 	}
-	store_select = type == eSkill::MAGE_SPELLS ? mage_need_select[what_spell] :
-	priest_need_select[what_spell];
-	if ((store_select > 0) && (store_spell_target == 6)) {
+	store_select = (*what_spell).need_select;
+	if(store_select != SELECT_NO && store_spell_target == 6) {
 		add_string_to_buf("Repeat cast: No target stored.");
 		return false;
 	}
-	if ((store_select == 2) &&
+	if(store_select == SELECT_ANY &&
 		isAbsent(univ.party[store_spell_target].main_status)) {
 			add_string_to_buf("Repeat cast: No target stored.");
 			return false;
 		}
-	if ((store_select == 1) &&
+	if(store_select == SELECT_ACTIVE &&
 		univ.party[store_spell_target].main_status != eMainStatus::ALIVE) {
 		add_string_to_buf("Repeat cast: No target stored.");
 		return false;
@@ -1141,7 +1121,7 @@ void give_party_spell(short which) ////
 			}
 }
 
-void do_mage_spell(short pc_num,short spell_num)
+void do_mage_spell(short pc_num,eSpell spell_num)
 {
 	short i,j,item,target,r1,adj,store;
 	location where;
@@ -1149,25 +1129,26 @@ void do_mage_spell(short pc_num,short spell_num)
 	where = univ.town.p_loc;
 	play_sound(25);
 	current_spell_range = 8;
+	store_mage = spell_num;
 	
 	adj = stat_adj(who_cast,eSkill::INTELLIGENCE);
 	
 	switch (spell_num) {
-		case 0:  // Light
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+		case eSpell::LIGHT:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			increase_light(50);
 			break;
 			
-		case 6: // Identify
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+		case eSpell::IDENTIFY:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			ASB("All of your items are identified.");
 			for (i = 0; i < 6; i++)
 				for (j = 0; j < 24; j++)
 					univ.party[i].items[j].ident = true;
 			break;
 			
-		case 9: // true sight
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+		case eSpell::TRUE_SIGHT:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for (where.x = 0; where.x < 64; where.x++)
 				for (where.y = 0; where.y < 64; where.y++)
 					if (dist(where,univ.town.p_loc) <= 2)
@@ -1175,67 +1156,66 @@ void do_mage_spell(short pc_num,short spell_num)
 			clear_map();
 			break;
 			
-		case 16: // summon beast ////
+		case eSpell::SUMMON_BEAST:
 			r1 = get_summon_monster(1);
 			if (r1 < 0) break;
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(3,1,4) + adj;
 			if (summon_monster(r1,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
 			break;
-		case 26: // summon 1
+		case eSpell::SUMMON_WEAK:
 			store = univ.party[who_cast].level / 5 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if (r1 < 0) break;
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(4,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
-		case 43: // summon 2
+		case eSpell::SUMMON:
 			store = univ.party[who_cast].level / 7 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if (r1 < 0) break;
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(5,1,4) + adj;
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
-		case 58: // summon 3
+		case eSpell::SUMMON_MAJOR:
 			store = univ.party[who_cast].level / 10 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if (r1 < 0) break;
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(7,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			for (i = 0; i < j; i++)
 				if (summon_monster(r1,where,store,2) == false)
 					add_string_to_buf("  Summon failed.");
 			break;
-		case 50:
+		case eSpell::DEMON:
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if (summon_monster(85,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
-		case 18: // dispel field
+		case eSpell::DISPEL_SQUARE:
 			add_string_to_buf("  Target spell.               ");
 			current_pat = square;
-			overall_mode = MODE_TOWN_TARGET;
-			set_town_spell(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 23:  // Long light
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+		case eSpell::LIGHT_LONG:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			increase_light(200);
 			break;
 			
-		case 33:  // Magic map
+		case eSpell::MAGIC_MAP:
 			item = pc_has_abil(pc_num,eItemAbil::SAPPHIRE);
 			if (item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
@@ -1243,7 +1223,7 @@ void do_mage_spell(short pc_num,short spell_num)
 				add_string_to_buf("  The spell fails.                ");
 			else {
 				remove_charge(pc_num,item);
-				univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				add_string_to_buf("  As the sapphire dissolves,       ");
 				add_string_to_buf("  you have a vision.               ");
 				for (i = 0; i < 64; i++)
@@ -1254,34 +1234,26 @@ void do_mage_spell(short pc_num,short spell_num)
 			break;
 			
 			
-		case 38:  // Stealth
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+		case eSpell::STEALTH:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			PSD[SDF_PARTY_STEALTHY] += max(6,univ.party[pc_num].level * 2);
 			break;
 			
 			
-		case 7: case 20: case 34: case 41:  //  Scry monster, Unlock, disp. barrier, Capture SOul
+		case eSpell::SCRY_MONSTER: case eSpell::UNLOCK: case eSpell::CAPTURE_SOUL: case eSpell::DISPEL_BARRIER:
+		case eSpell::BARRIER_FIRE: case eSpell::BARRIER_FORCE: case eSpell::QUICKFIRE:
 			add_string_to_buf("  Target spell.               ");
 			current_pat = single;
-			overall_mode = MODE_TOWN_TARGET;
-			set_town_spell(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 42: case 59: case 60: // fire and force barriers, quickfire
+		case eSpell::ANTIMAGIC:
 			add_string_to_buf("  Target spell.               ");
-			overall_mode = MODE_TOWN_TARGET;
-			current_pat = single;
-			set_town_spell(spell_num,pc_num);
-			break;
-			
-		case 51: // antimagic
-			add_string_to_buf("  Target spell.               ");
-			overall_mode = MODE_TOWN_TARGET;
 			current_pat = rad2;
-			set_town_spell(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 53: // fly
+		case eSpell::FLIGHT:
 			if (PSD[SDF_PARTY_FLIGHT] > 0) {
 				add_string_to_buf("  Not while already flying.          ");
 				return;
@@ -1291,17 +1263,17 @@ void do_mage_spell(short pc_num,short spell_num)
 			else if (univ.party.in_horse >= 0) ////
 				add_string_to_buf("  Leave horse first.             ");
 			else {
-				univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				add_string_to_buf("  You start flying!               ");
 				PSD[SDF_PARTY_FLIGHT] = 3;
 			}
 			break;
 			
-		case 29: case 57: //  resist magic  protection
+		case eSpell::RESIST_MAGIC: case eSpell::PROTECTION:
 			target = store_spell_target;
 			if (target < 6)
-				univ.party[pc_num].cur_sp -= spell_cost[eSkill::MAGE_SPELLS][spell_num];
-			if ((spell_num == 57) && (target < 6)) {
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(spell_num == eSpell::PROTECTION && target < 6) {
 				univ.party[target].status[eStatus::INVULNERABLE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
 				for (i = 0; i < 6; i++)
 					if(univ.party[i].main_status == eMainStatus::ALIVE) {
@@ -1309,7 +1281,7 @@ void do_mage_spell(short pc_num,short spell_num)
 					}
 				sprintf ((char *) c_line, "  Party protected.                         ");
 			}
-			if ((spell_num == 29) && (target < 6)) {
+			if(spell_num == eSpell::RESIST_MAGIC && target < 6) {
 				univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
 				sprintf ((char *) c_line, "  %s protected.",univ.party[target].name.c_str());
 			}
@@ -1318,7 +1290,7 @@ void do_mage_spell(short pc_num,short spell_num)
 	}
 }
 
-void do_priest_spell(short pc_num,short spell_num) ////
+void do_priest_spell(short pc_num,eSpell spell_num) ////
 {
 	short r1,r2, target, i,item,store,adj,x,y;
 	location loc;
@@ -1332,10 +1304,11 @@ void do_priest_spell(short pc_num,short spell_num) ////
 	
 	play_sound(24);
 	current_spell_range = 8;
+	store_priest = spell_num;
 	
 	switch (spell_num) {
-		case 4: ////
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::LOCATION:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			
 			if (is_town()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
@@ -1352,37 +1325,37 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			add_string_to_buf((char *) c_line);
 			break;
 			
-		case 7: case 25: // manna spells
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::MANNA_MINOR: case eSpell::MANNA:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = univ.party[pc_num].level / 3 + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE) + get_ran(2,1,4);
 			r1 = max(0,store);
-			if (spell_num == 7)
+			if (spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
 			sprintf ((char *) c_line, "  You gain %d food.   ",r1);
 			add_string_to_buf((char *) c_line);
 			give_food(r1,true);
 			break;
 			
-		case 8: // Ritual - Sanctify
+		case eSpell::RITUAL_SANCTIFY:
 			add_string_to_buf("  Sanctify which space?               ");
 			current_pat = single;
-			overall_mode = MODE_TOWN_TARGET;
-			set_town_spell(100 + spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 13:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::LIGHT_DIVINE:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			// TODO: Should this call increase_light_level?
 			univ.party.light_level += 210;
 			break;
 			
-		case 15:
+		case eSpell::SUMMON_SPIRIT:
 			store = stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == false)
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
-		case 34:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::STICKS_TO_SNAKES:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			r1 = univ.party[who_cast].level / 6 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			for (i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
@@ -1391,8 +1364,8 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
-		case 43:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::SUMMON_HOST:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if (summon_monster(126,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
@@ -1402,49 +1375,47 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
-		case 50:
+		case eSpell::SUMMON_GUARDIAN:
 			store = get_ran(6,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if (summon_monster(122,where,store,2) == false)
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
-		case 16:
+		case eSpell::MOVE_MOUNTAINS: case eSpell::MOVE_MOUNTAINS_MASS:
 			add_string_to_buf("  Destroy what?               ");
-			current_pat = (spell_num == 16) ? single : square;
-			overall_mode = MODE_TOWN_TARGET;
-			set_town_spell(100 + spell_num,pc_num);
+			current_pat = (spell_num == eSpell::MOVE_MOUNTAINS) ? single : square;
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 45: // dispelling fields
+		case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_FIELD:
 			add_string_to_buf("  Target spell.               ");
-			current_pat = (spell_num == 19) ? single : rad2;
-			overall_mode = MODE_TOWN_TARGET;
-			set_town_spell(100 + spell_num,pc_num);
+			current_pat = (spell_num == eSpell::DISPEL_SPHERE) ? rad2 : single;
+			start_town_targeting(spell_num,pc_num);
 			break;
 			
-		case 23: // Detect life
+		case eSpell::DETECT_LIFE:
 			add_string_to_buf("  Monsters now on map.                ");
 			PSD[SDF_PARTY_DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
-		case 37: // firewalk
+		case eSpell::FIREWALK:
 			add_string_to_buf("  You are now firewalking.                ");
 			PSD[SDF_PARTY_FIREWALK] += univ.party[pc_num].level / 12 + 2;
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
-		case 44: // shatter
+		case eSpell::SHATTER:
 			add_string_to_buf("  You send out a burst of energy. ");
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for (loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
 				for (loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
 			update_explored(univ.town.p_loc);
 			break;
 			
-		case 60:
+		case eSpell::WORD_RECALL:
 			if (overall_mode > MODE_OUTDOORS) {
 				add_string_to_buf("  Can only cast outdoors. ");
 				return;
@@ -1457,7 +1428,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 				add_string_to_buf("  Not while on horseback. ");
 				return;
 			}
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(scenario.which_town_start,scenario.where_start);
 			start_town_mode(scenario.which_town_start,9);
@@ -1470,28 +1441,32 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			redraw_screen(REFRESH_ALL);
 			break;
 			
-		case 1: case 20: case 39:  case 2: case 11: case 27: case 28: case 36: case 19: case 24:
+		case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
+		case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE: case eSpell::DISEASE_CURE:
+		case eSpell::RESTORE_MIND: case eSpell::CLEANSE: case eSpell::AWAKEN: case eSpell::PARALYSIS_CURE:
 //			target = select_pc(11,0);
 			target = store_spell_target;
 			if (target < 6) {
-				univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				switch(spell_num) {
-					case 1: case 20: case 39:
-						r1 = get_ran(2 + 2 * (spell_num / 6), 1, 4);
+					case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
+						if(spell_num == eSpell::HEAL_MINOR)
+							r1 = get_ran(2, 1, 4);
+						else r1 = get_ran(2 + (spell_num == eSpell::HEAL ? 6 : 12), 1, 4);
 						sprintf ((char *) c_line, "  %s healed %d.   ",
 								 (char *) univ.party[target].name.c_str(),r1);
 						heal_pc(target,r1);
 						one_sound(52);
 						break;
 						
-					case 2: case 11:
+					case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE:
 						sprintf ((char *) c_line, "  %s cured.    "
 								 ,(char *) univ.party[target].name.c_str());
-						r1 = ((spell_num == 2) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
+						r1 = ((spell_num == eSpell::POISON_WEAKEN) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						cure_pc(target,r1);
 						break;
 						
-					case 19: // awaken
+					case eSpell::AWAKEN:
 						if(univ.party[target].status[eStatus::ASLEEP] <= 0) {
 							sprintf ((char *) c_line, "  %s is already awake!    "
 									 ,(char *) univ.party[target].name.c_str());
@@ -1501,7 +1476,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 								 ,(char *) univ.party[target].name.c_str());
 						univ.party[target].status[eStatus::ASLEEP] = 0;
 						break;
-					case 24: // cure paralysis
+					case eSpell::PARALYSIS_CURE:
 						if(univ.party[target].status[eStatus::PARALYZED] <= 0) {
 							sprintf ((char *) c_line, "  %s isn't paralyzed!    "
 									 ,(char *) univ.party[target].name.c_str());
@@ -1512,21 +1487,21 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						univ.party[target].status[eStatus::PARALYZED] = 0;
 						break;
 						
-					case 27:
+					case eSpell::DISEASE_CURE:
 						sprintf ((char *) c_line, "  %s recovers.      "
 								 ,(char *) univ.party[target].name.c_str());
 						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						univ.party[target].status[eStatus::DISEASE] = max(0,univ.party[target].status[eStatus::DISEASE] - r1);
 						break;
 						
-					case 28:
+					case eSpell::RESTORE_MIND:
 						sprintf ((char *) c_line, "  %s restored.      "
 								 ,(char *) univ.party[target].name.c_str());
 						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						univ.party[target].status[eStatus::DUMB] = max(0,univ.party[target].status[eStatus::DUMB] - r1);
 						break;
 						
-					case 36:
+					case eSpell::CLEANSE:
 						sprintf ((char *) c_line, "  %s cleansed.      "
 								 ,(char *) univ.party[target].name.c_str());
 						univ.party[target].status[eStatus::DISEASE] = 0;
@@ -1538,29 +1513,28 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			put_pc_screen();
 			break;
 			
-		case 47: case 49: case 40: case 56: case 33: case 5: case 6: case 35:
+		case eSpell::REVIVE: case eSpell::DESTONE: case eSpell::RAISE_DEAD: case eSpell::RESURRECT:
+		case eSpell::CURSE_REMOVE: case eSpell::SANCTUARY: case eSpell::SYMBIOSIS: case eSpell::MARTYRS_SHIELD:
 			target = store_spell_target;
 			
 			if (target < 6) {
-				if ((spell_num == 6) && (target == pc_num)) { // check symbiosis
+				if(spell_num == eSpell::SYMBIOSIS && target == pc_num) {
 					add_string_to_buf("  Can't cast on self.");
 					return;
 				}
 				
-				univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
-				if (spell_num == 35) { // martyr's shield
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				if(spell_num == eSpell::MARTYRS_SHIELD) {
 					sprintf ((char *) c_line, "  %s shielded.         ",
 							 (char *) univ.party[target].name.c_str());
 					r1 = max(1,get_ran((univ.party[pc_num].level + 5) / 5,1,3) + adj);
 					univ.party[target].status[eStatus::MARTYRS_SHIELD] += r1;
-				}
-				if (spell_num == 5) { // sanctuary
+				} else if(spell_num == eSpell::SANCTUARY) {
 					sprintf ((char *) c_line, "  %s hidden.         ",
 							 (char *) univ.party[target].name.c_str());
 					r1 = max(0,get_ran(0,1,3) + univ.party[pc_num].level / 4 + adj);
 					univ.party[target].status[eStatus::INVISIBLE] += r1;
-				}
-				if (spell_num == 6) { // symbiosis
+				} else if(spell_num == eSpell::SYMBIOSIS) {
 					store_victim_health = univ.party[target].cur_health;
 					store_caster_health = univ.party[pc_num].cur_health;
 					targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
@@ -1579,15 +1553,13 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					add_string_to_buf ((char *) c_line);
 					sprintf ((char *) c_line, "  %s takes %d.         ", (char *) univ.party[pc_num].name.c_str(),
 							 store_caster_health - univ.party[pc_num].cur_health);
-				}
-				if (spell_num == 47) {
+				} else if(spell_num == eSpell::REVIVE) {
 					sprintf ((char *) c_line, "  %s healed.         ",
 							 (char *) univ.party[target].name.c_str());
 					heal_pc(target,250);
 					univ.party[target].status[eStatus::POISON] = 0;
 					one_sound(-53); one_sound(52);
-				}
-				if (spell_num == 49) {
+				} else if(spell_num == eSpell::DESTONE) {
 					if(univ.party[target].main_status == eMainStatus::STONE) {
 						univ.party[target].main_status = eMainStatus::ALIVE;
 						sprintf ((char *) c_line, "  %s destoned.                                  ",
@@ -1595,8 +1567,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						play_sound(53);
 					}
 					else sprintf ((char *) c_line,"  Wasn't stoned.              ");
-				}
-				if (spell_num == 33) {
+				} else if(spell_num == eSpell::CURSE_REMOVE) {
 					for (i = 0; i < 24; i++)
 						if (univ.party[target].items[i].cursed){
 							r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,eSkill::INTELLIGENCE);
@@ -1606,16 +1577,16 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						}
 					play_sound(52);
 					sprintf ((char *) c_line,"  Your items glow.     ");
-				}
+				} else {
 				
-				if(!PSD[SDF_RESURRECT_NO_BALM] && (spell_num == 40 || spell_num == 56)) {
+				if(!PSD[SDF_RESURRECT_NO_BALM]) {
 					if ((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
 						add_string_to_buf("  Need resurrection balm.        ");
-						spell_num = 500;
+						break;
 					}
 					else take_item(pc_num,item);
 				}
-				if (spell_num == 40) {
+				if(spell_num == eSpell::RAISE_DEAD) {
 					if(univ.party[target].main_status == eMainStatus::DEAD)
 						if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
 							sprintf ((char *) c_line, "  %s now dust.                          ",
@@ -1637,8 +1608,7 @@ void do_priest_spell(short pc_num,short spell_num) ////
 						}
 						else sprintf ((char *) c_line,"  Didn't work.              ");
 					
-				}
-				if (spell_num == 56) {
+				} else if (spell_num == eSpell::RESURRECT) {
 					if (univ.party[target].main_status != eMainStatus::ALIVE) {
 						univ.party[target].main_status = eMainStatus::ALIVE;
 						for (i = 0; i < 3; i++)
@@ -1653,21 +1623,22 @@ void do_priest_spell(short pc_num,short spell_num) ////
 					}
 					else sprintf ((char *) c_line,"  Was OK.              ");
 				}
+				}
 				add_string_to_buf((char *) c_line);
 				put_pc_screen();
 			}
 			break;
 			
-		case 21: case 46: case 54:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
-			r1 = get_ran(spell_num / 7 + adj, 1, 4);
-			if (spell_num < 54) {
+		case eSpell::HEAL_ALL_LIGHT: case eSpell::HEAL_ALL: case eSpell::REVIVE_ALL:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(spell_num != eSpell::REVIVE_ALL) {
+				r1 = get_ran((spell_num == eSpell::HEAL_ALL ? 6 : 3) + adj, 1, 4);
 				sprintf ((char *) c_line, "  Party healed %d.       ", r1);
 				add_string_to_buf((char *) c_line);
 				heal_party(r1);
 				play_sound(52);
-			}
-			else if (spell_num == 54) {
+			} else {
+				r1 = get_ran(7 + adj, 1, 4);
 				sprintf ((char *) c_line, "  Party revived.     ");
 				add_string_to_buf((char *) c_line);
 				r1 = r1 * 2;
@@ -1678,33 +1649,35 @@ void do_priest_spell(short pc_num,short spell_num) ////
 			}
 			break;
 			
-		case 30:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::POISON_CURE_ALL:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			sprintf ((char *) c_line, "  Party cured.  ");
 			add_string_to_buf((char *) c_line);
 			cure_party(3 + stat_adj(pc_num,eSkill::INTELLIGENCE));
 			break;
 			
-		case 42: case 61: case 48:
-			univ.party[pc_num].cur_sp -= spell_cost[eSkill::PRIEST_SPELLS][spell_num];
+		case eSpell::SANCTUARY_MASS: case eSpell::CLEANSE_MAJOR: case eSpell::HYPERACTIVITY:
+			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			switch (spell_num) {
-				case 42: add_string_to_buf("  Party hidden.");break;
-				case 61: add_string_to_buf("  Party cleansed.");break;
-				case 48: add_string_to_buf("  Party is now really, REALLY awake.");break;
+				case eSpell::SANCTUARY_MASS: add_string_to_buf("  Party hidden.");break;
+				case eSpell::CLEANSE_MAJOR: add_string_to_buf("  Party cleansed.");break;
+				case eSpell::HYPERACTIVITY: add_string_to_buf("  Party is now really, REALLY awake.");break;
 			}
 			
 			for (i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					if (spell_num == 42) {
+					if(spell_num == eSpell::SANCTUARY_MASS) {
 						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + stat_adj(pc_num,eSkill::INTELLIGENCE);
 						r1 = max(0,store);
 						univ.party[i].status[eStatus::INVISIBLE] += r1;
 					}
-					if (spell_num == 61) {
+					if(spell_num == eSpell::CLEANSE_MAJOR) {
 						univ.party[i].status[eStatus::WEBS] = 0;
 						univ.party[i].status[eStatus::DISEASE] = 0;
 					}
-					if (spell_num == 48) { // Hyperactivity
+					if(spell_num == eSpell::HYPERACTIVITY) {
+						// Looks like this isn't clipped to a positive number. (That's probably intentional.)
+						// TODO: So, should a status icon be added for negative levels of sleep?
 						univ.party[i].status[eStatus::ASLEEP] -= 6 + 2 * stat_adj(pc_num,eSkill::INTELLIGENCE);
 						univ.party[i].status[eStatus::HASTE_SLOW] = max(0,univ.party[i].status[eStatus::HASTE_SLOW]);
 					}
@@ -1728,10 +1701,9 @@ void cast_town_spell(location where) ////
 	}
 	
 	adjust = can_see_light(univ.town.p_loc,where,sight_obscurity);
-	eSkill spell_type = town_spell >= 100 ? eSkill::PRIEST_SPELLS : eSkill::MAGE_SPELLS;
-	if (town_spell < 1000)
-		univ.party[who_cast].cur_sp -= spell_cost[spell_type][town_spell % 100];
-	else town_spell -= 1000;
+	eSkill spell_type = (*town_spell).type;
+	if(!spell_freebie)
+		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
@@ -1742,10 +1714,10 @@ void cast_town_spell(location where) ////
 	if (adjust > 4)
 		add_string_to_buf("  Can't see target.       ");
 	else switch (town_spell) {
-		case 7: case 34: // Scry, Capture Soul
+		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
 			targ = monst_there(where);
 			if (targ < univ.town->max_monst()) {
-				if (town_spell == 7) {
+				if(town_spell == eSpell::SCRY_MONSTER) {
 					univ.party.m_noted[univ.town.monst[targ].number] = true;
 					adjust_monst_menu();
 					display_monst(0,&univ.town.monst[targ],0);
@@ -1755,16 +1727,16 @@ void cast_town_spell(location where) ////
 			else add_string_to_buf("  No monster there.");
 			break;
 			
-		case 119: case 145: case 18:
+		case eSpell::DISPEL_FIELD: case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_SQUARE:
 			add_string_to_buf("  You attempt to dispel.              ");
 			place_spell_pattern(current_pat,where,FIELD_DISPEL,7);
 			break;
-		case 116: // Move M.
+		case eSpell::MOVE_MOUNTAINS:
 			add_string_to_buf("  You blast the area.              ");
 			crumble_wall(where);
 			update_explored(univ.town.p_loc);
 			break;
-		case 42:
+		case eSpell::BARRIER_FIRE:
 			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
@@ -1774,7 +1746,7 @@ void cast_town_spell(location where) ////
 				add_string_to_buf("  You create the barrier.              ");
 			else add_string_to_buf("  Failed.");
 			break;
-		case 59:
+		case eSpell::BARRIER_FORCE:
 			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
@@ -1784,14 +1756,14 @@ void cast_town_spell(location where) ////
 				add_string_to_buf("  You create the barrier.              ");
 			else add_string_to_buf("  Failed.");
 			break;
-		case 60:
+		case eSpell::QUICKFIRE:
 			univ.town.set_quickfire(where.x,where.y,true);
 			if (univ.town.is_quickfire(where.x,where.y))
 				add_string_to_buf("  You create quickfire.              ");
 			else add_string_to_buf("  Failed.");
 			break;
 			
-		case 51: // am cloud
+		case eSpell::ANTIMAGIC:
 			add_string_to_buf("  You create an antimagic cloud.              ");
 			for (loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
 				for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
@@ -1800,11 +1772,12 @@ void cast_town_spell(location where) ////
 						univ.town.set_antimagic(loc.x,loc.y,true);
 			break;
 			
-		case 108: // RItual - sanctify
+		case eSpell::RITUAL_SANCTIFY:
 			// Nothing to do here anymore; the code that used to be here is now just above the switch statement.
 			break;
 			
-		case 20:
+		case eSpell::UNLOCK:
+			// TODO: Is the unlock spell supposed to have a max range?
 			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 				if (scenario.ter_types[ter].flag2.u == 10)
 					r1 = 10000;
@@ -1825,7 +1798,7 @@ void cast_town_spell(location where) ////
 				add_string_to_buf("  Wrong terrain type.               ");
 			break;
 			
-		case 41:
+		case eSpell::DISPEL_BARRIER:
 			if ((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
 				r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * (univ.town.difficulty / 10);
 				if (univ.town.is_fire_barr(where.x,where.y))
@@ -1852,7 +1825,7 @@ void cast_town_spell(location where) ////
 	}
 }
 
-bool cast_spell_on_space(location where, unsigned short spell)
+bool cast_spell_on_space(location where, eSpell spell)
 {
 	short i,s1 = 0,s2 = 0,s3 = 0;
 	
@@ -1863,7 +1836,7 @@ bool cast_spell_on_space(location where, unsigned short spell)
 			if(s3) redraw_terrain();
 			return !s1;
 		}
-	if(spell == 108)
+	if(spell == eSpell::RITUAL_SANCTIFY)
 		add_string_to_buf("  Nothing happens.");
 	return true;
 }
@@ -1979,25 +1952,51 @@ void dispel_fields(short i,short j,short mode)
 		univ.town.set_blade_wall(i,j,false);
 }
 
-bool pc_can_cast_spell(short pc_num,eSkill type,short spell_num)
+bool pc_can_cast_spell(short pc_num,eSkill type) {
+	short store_w_cast;
+	
+	if(type == eSkill::MAGE_SPELLS && !pc_can_cast_spell(pc_num, eSpell::LIGHT))
+	   return false;
+	if(type == eSkill::PRIEST_SPELLS && !pc_can_cast_spell(pc_num, eSpell::BLESS_MINOR))
+		return false;
+	
+	// If they can't cast the most basic level 1 spell, let's just make sure they can't cast any spells.
+	// Find a spell they definitely know, and see if they can cast that.
+	if(type == eSkill::MAGE_SPELLS) {
+		for(int i = 0; i < 62; i++)
+			if(univ.party[pc_num].mage_spells[i])
+				return pc_can_cast_spell(pc_num, eSpell(i));
+	}
+	if(type == eSkill::PRIEST_SPELLS) {
+		for(int i = 0; i < 62; i++)
+			if(univ.party[pc_num].priest_spells[i])
+				return pc_can_cast_spell(pc_num, eSpell(i + 100));
+	}
+	// If we get this far, either they don't know any spells (very unlikely) or they can't cast any of the spells they know.
+	return false;
+}
+
+bool pc_can_cast_spell(short pc_num,eSpell spell_num)
 {
 	short level,store_w_cast;
+	eSkill type = (*spell_num).type;
 	
-	level = spell_level[spell_num];
+	level = (*spell_num).level;
 	
 	if(overall_mode >= MODE_TALKING)
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
-	if ((spell_num < 0) || (spell_num > 61))
+	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
 	if (univ.party[pc_num].skills[type] < level)
 		return false;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
-	if (univ.party[pc_num].cur_sp < spell_cost[type][spell_num])
+	if (univ.party[pc_num].cur_sp < (*spell_num).cost)
 		return false;
-	if(type == eSkill::MAGE_SPELLS && !univ.party[pc_num].mage_spells[spell_num])
+	// TODO: Maybe get rid of the casts here?
+	if(type == eSkill::MAGE_SPELLS && !univ.party[pc_num].mage_spells[int(spell_num)])
 		return false;
-	if(type == eSkill::PRIEST_SPELLS && !univ.party[pc_num].priest_spells[spell_num])
+	if(type == eSkill::PRIEST_SPELLS && !univ.party[pc_num].priest_spells[int(spell_num) - 100])
 		return false;
 	if(univ.party[pc_num].status[eStatus::DUMB] >= 8 - level)
 		return false;
@@ -2006,24 +2005,13 @@ bool pc_can_cast_spell(short pc_num,eSkill type,short spell_num)
 	if(univ.party[pc_num].status[eStatus::ASLEEP] > 0)
 		return false;
 	
-	// TODO: Make an enum for this
-	// 0 - everywhere 1 - combat only 2 - town only 3 - town & outdoor only 4 - town & combat only  5 - outdoor only
-	store_w_cast = spell_w_cast[type][spell_num];
-	if (is_out()) {
-		if ((store_w_cast == 1) || (store_w_cast == 2) || (store_w_cast == 4)) {
+	store_w_cast = (*spell_num).when_cast;
+	if(is_out() && WHEN_OUTDOORS &~ store_w_cast)
 			return false;
-		}
-	}
-	if (is_town()) {
-		if ((store_w_cast == 1) || (store_w_cast == 5)) {
+	if(is_town() && WHEN_TOWN &~ store_w_cast)
 			return false;
-		}
-	}
-	if (is_combat()) {
-		if ((store_w_cast == 2) || (store_w_cast == 3) || (store_w_cast == 5)) {
+	if(is_combat() &&  WHEN_COMBAT &~ store_w_cast)
 			return false;
-		}
-	}
 	return true;
 }
 
@@ -2043,8 +2031,7 @@ static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 			}
 		}
 		else {
-			// TODO: This means if spell 0 is removed they can't cast any spells - not good!
-			if(pc_can_cast_spell(i,store_situation,0)) {
+			if(pc_can_cast_spell(i,store_situation)) {
 				me[id].show();
 			}
 			else {
@@ -2054,11 +2041,10 @@ static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 	}
 }
 
-static void draw_spell_info(cDialog& me, const eSkill store_situation) {
+static void draw_spell_info(cDialog& me, const eSkill store_situation, const short store_spell) {
 	
 	
-	if ((store_situation == eSkill::MAGE_SPELLS && store_mage == 70) ||
-		(store_situation == eSkill::PRIEST_SPELLS && store_priest == 70)) {	 // No spell selected
+	if(store_spell == 70) { // No spell selected
 		for(int i = 0; i < 6; i++) {
 			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
 			me[id].hide();
@@ -2070,12 +2056,11 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation) {
 		for(int i = 0; i < 6; i++) {
 			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
 			// TODO: Make this thing an enum
-			switch (((store_situation == eSkill::MAGE_SPELLS) ?
-					 mage_need_select[store_mage] : priest_need_select[store_priest])) {
-				case 0:
+			switch ((*cSpell::fromNum(store_situation,store_spell)).need_select) {
+				case SELECT_NO:
 					me[id].hide();
 					break;
-				case 1:
+				case SELECT_ACTIVE:
 					if(univ.party[i].main_status != eMainStatus::ALIVE) {
 						me[id].hide();
 					}
@@ -2083,7 +2068,8 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation) {
 						me[id].show();
 					}
 					break;
-				case 2:
+				case SELECT_ANY:
+					// TODO: Split off party members should probably be excluded too?
 					if(univ.party[i].main_status != eMainStatus::ABSENT) {
 						me[id].show();
 					}
@@ -2189,7 +2175,7 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 }
 
 // TODO: This stuff may be better handled by using an LED group with a custom focus handler
-static void put_spell_led_buttons(cDialog& me, const eSkill store_situation) {
+static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,const short store_spell) {
 	short i,spell_for_this_button;
 	
 	for (i = 0; i < 38; i++) {
@@ -2198,11 +2184,11 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation) {
 		cLed& led = dynamic_cast<cLed&>(me[id]);
 		
 		if (spell_for_this_button < 90) {
-			if ((store_situation == eSkill::MAGE_SPELLS && store_mage == spell_for_this_button) ||
-				(store_situation == eSkill::PRIEST_SPELLS && store_priest == spell_for_this_button)) {
+			eSpell spell = cSpell::fromNum(store_situation, spell_for_this_button);
+			if(store_spell == spell_for_this_button) {
 				led.setState(led_green);
 			}
-			else if (pc_can_cast_spell(pc_casting,store_situation,spell_for_this_button) == true) {
+			else if(pc_can_cast_spell(pc_casting,spell)) {
 				led.setState(led_red);
 			}
 			else {
@@ -2224,12 +2210,10 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("Level 4:");
 		for (i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			if(store_situation == eSkill::MAGE_SPELLS) {
-				if (i == 35)
-					sprintf((char *) add_text,"%s (?)",mage_s_name[i]);
-				else sprintf((char *) add_text,"%s (%d)",mage_s_name[i],spell_cost[eSkill::MAGE_SPELLS][i]);
-			}
-			else sprintf((char *) add_text,"%s (%d)",priest_s_name[i],spell_cost[eSkill::PRIEST_SPELLS][i]);
+			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
+			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
+					sprintf((char *) add_text,"%s (?)", names[i]);
+			} else sprintf((char *) add_text,"%s (%d)", names[i], (*cSpell::fromNum(store_situation,i)).cost);
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
@@ -2245,12 +2229,9 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("");
 		for (i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
 			if (spell_index[i] < 90) {
-				if(store_situation == eSkill::MAGE_SPELLS)
-					sprintf((char *) add_text,"%s %c %d",mage_s_name[spell_index[i]],
-							(char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[eSkill::MAGE_SPELLS][spell_index[i]]);
-				else sprintf((char *) add_text,"%s %c %d",priest_s_name[spell_index[i]],
-							 (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i),spell_cost[eSkill::PRIEST_SPELLS][spell_index[i]]);
+				sprintf(add_text, "%s (%d)", names[spell_index[i]], (*cSpell::fromNum(store_situation,i)).cost);
 				me[id].setText(add_text);
 			}
 			else me[id].hide();
@@ -2258,27 +2239,27 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 	}
 }
 
-static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened) {
+static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, short& store_spell) {
 	short item_hit = id[id.length() - 1] - '1';
 	// TODO: This visibility check is probably not needed; wouldn't the dialog framework only trigger on visible elements?
 	if(me[id].isVisible()) {
 		pc_casting = item_hit;
-		if(!pc_can_cast_spell(pc_casting,store_situation,store_situation == eSkill::MAGE_SPELLS ? store_mage : store_priest)) {
+		if(!pc_can_cast_spell(pc_casting,cSpell::fromNum(store_situation,store_spell))) {
 			if (store_situation == eSkill::MAGE_SPELLS)
-				store_mage = 70;
-			else store_priest = 70;
+				store_spell = 70;
+			else store_spell = 70;
 			store_spell_target = 6;
 		}
-		draw_spell_info(me, store_situation);
+		draw_spell_info(me, store_situation,store_spell);
 		draw_spell_pc_info(me);
-		put_spell_led_buttons(me, store_situation);
+		put_spell_led_buttons(me, store_situation,store_spell);
 		put_pc_caster_buttons(me);
 		put_pc_target_buttons(me, last_darkened);
 	}
 	return true;
 }
 
-static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened) {
+static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short store_spell) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on him/her.";
 	static const char*const got_target = " Target selected.";
@@ -2292,17 +2273,17 @@ static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_si
 	} else {
 		me["feedback"].setText(got_target);
 		store_spell_target = item_hit;
-		draw_spell_info(me, store_situation);
+		draw_spell_info(me, store_situation, store_spell);
 		put_pc_target_buttons(me, last_darkened);
 	}
 	return true;
 }
 
-static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation) {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short store_spell) {
 	if(item_hit == "other") {
 		on_which_spell_page = 1 - on_which_spell_page;
 		put_spell_list(me, store_situation);
-		put_spell_led_buttons(me, store_situation);
+		put_spell_led_buttons(me, store_situation, store_spell);
 	} else if(item_hit == "help") {
 		univ.party.help_received[7] = 0;
 		give_help(207,8,me);
@@ -2310,7 +2291,7 @@ static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSk
 	return true;
 }
 
-static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, const eSkill store_situation, short& last_darkened) {
+static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, const eSkill store_situation, short& last_darkened, short& store_spell) {
 	static const char*const choose_target = " Now pick a target.";
 	static const char*const bad_spell = " Spell not available.";
 	short item_hit = boost::lexical_cast<short>(id.substr(5)) - 1;
@@ -2323,16 +2304,16 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 	}
 	else {
 		if(store_situation == eSkill::MAGE_SPELLS)
-			store_mage = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
-		else store_priest = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
-		draw_spell_info(me, store_situation);
-		put_spell_led_buttons(me, store_situation);
+			store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+		else store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+		draw_spell_info(me, store_situation, store_spell);
+		put_spell_led_buttons(me, store_situation, store_spell);
 		
 		if (store_spell_target < 6) {
 			std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
 			if(!me[targ].isVisible()) {
 				store_spell_target = 6;
-				draw_spell_info(me, store_situation);
+				draw_spell_info(me, store_situation, store_spell);
 				put_pc_target_buttons(me, last_darkened);
 			}
 		}
@@ -2340,7 +2321,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
 		if ((store_spell_target == 6) && me[targ].isVisible()) {
 			me["feedback"].setText(choose_target);
-			draw_spell_info(me, store_situation);
+			draw_spell_info(me, store_situation, store_spell);
 			play_sound(45); // formerly force_play_sound
 		}
 		else if(!me[targ].isVisible()) {
@@ -2352,10 +2333,8 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 	return true;
 }
 
-static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_store_target, const short store_mage_store, const short store_priest_store, const eSkill store_situation) {
+static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_store_target, const short& store_spell, const eSkill store_situation) {
 	if (spell_toast == true) {
-		store_mage = store_mage_store;
-		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
 		if (store_situation == eSkill::MAGE_SPELLS)
 			store_last_cast_mage = pc_casting;
@@ -2365,57 +2344,52 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		return true;
 	}
 	
-	if((store_situation == eSkill::MAGE_SPELLS && store_mage == 70) ||
-		(store_situation == eSkill::PRIEST_SPELLS && store_priest == 70)) {
+	eSpell picked_spell = cSpell::fromNum(store_situation,store_spell);
+	if(store_spell == 70) {
 		add_string_to_buf("Cast: No spell selected.");
-		store_mage = store_mage_store;
-		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
 		me.toast(false);
 		me.setResult<short>(70);
 		return true;
 	}
-	if(store_situation == eSkill::MAGE_SPELLS && mage_need_select[store_mage] == 0) {
+	if(store_situation == eSkill::MAGE_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_mage = pc_casting;
-		univ.party[pc_casting].last_cast[store_situation] = store_mage;
+		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
 		me.toast(false);
-		me.setResult<short>(store_mage);
+		me.setResult<short>(store_spell);
 		return true;
 	}
-	if(store_situation == eSkill::PRIEST_SPELLS && priest_need_select[store_priest] == 0) {
+	if(store_situation == eSkill::PRIEST_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_priest = pc_casting;
-		univ.party[pc_casting].last_cast[store_situation] = store_priest;
+		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
 		me.toast(false);
-		me.setResult<short>(store_priest);
+		me.setResult<short>(store_spell);
 		return true;
 	}
 	if (store_spell_target == 6) {
 		add_string_to_buf("Cast: Need to select target.");
-		store_mage = store_mage_store;
-		store_priest = store_priest_store;
 		store_spell_target = store_store_target ;
 		me.toast(false);
 		give_help(39,0,me);
 		me.setResult<short>(70);
 		return true;
 	}
-	me.setResult<short>((store_situation == eSkill::MAGE_SPELLS) ? store_mage : store_priest);
+	me.setResult<short>((store_situation == eSkill::MAGE_SPELLS) ? store_spell : store_spell);
 	if(store_situation == eSkill::MAGE_SPELLS)
 		store_last_cast_mage = pc_casting;
 	else store_last_cast_priest = pc_casting;
-	univ.party[pc_casting].last_cast[store_situation] = (store_situation == eSkill::MAGE_SPELLS ? store_mage : store_priest);
+	univ.party[pc_casting].last_cast[store_situation] = picked_spell;
 	me.toast(true);
 	return true;
 }
 
-short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
+eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 //short pc_num; // if 6, anyone
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
 {
 	using namespace std::placeholders;
-	short former_mage = store_mage;
-	short former_priest = store_priest;
+	eSpell store_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
 //	store_situation = type;
 	short dark = 6;
@@ -2427,17 +2401,16 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	
 	if (pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
-		// TODO: This means that removing spell 0 prevents them from casting any spells - not good!
-		if(!pc_can_cast_spell(pc_casting,type,0)) {
+		if(!pc_can_cast_spell(pc_casting,type)) {
 			int i;
 			for(i = 0; i < 6; i++)
-				if (pc_can_cast_spell(i,type,0)) {
+				if (pc_can_cast_spell(i,type)) {
 					pc_casting = i;
 					i = 500;
 				}
 			if (i == 6) {
 				add_string_to_buf("Cast: Nobody can.");
-				return 70;
+				return eSpell::NONE;
 			}
 		}
 	}
@@ -2450,11 +2423,11 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 		if(univ.party[pc_num].skills[type] == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
-			return 70;
+			return eSpell::NONE;
 		}
 		if (univ.party[pc_casting].cur_sp == 0) {
 			add_string_to_buf("Cast: No spell points.");
-			return 70;
+			return eSpell::NONE;
 		}
 		
 	}
@@ -2462,34 +2435,31 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	// If in combat, make the spell being cast this PCs most recent spell
 	if (is_combat()) {
 		if(type == eSkill::MAGE_SPELLS)
-			store_mage = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
-		else store_priest = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
+			store_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
+		else store_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
 	}
 	
 	// Keep the stored spell, if it's still castable
-	if(!pc_can_cast_spell(pc_casting,type,(type == eSkill::MAGE_SPELLS ? store_mage : store_priest))) {
+	if(!pc_can_cast_spell(pc_casting,store_spell)) {
 		if(type == eSkill::MAGE_SPELLS) {
-			store_mage = 0;
-			store_mage_lev = 1;
+			store_spell = eSpell::LIGHT;
 		}
 		else {
-			store_priest = 1;
-			store_priest_lev = 1;
+			store_spell = eSpell::HEAL_MINOR;
 		}
 	}
 	
 	// If a target is needed, keep the same target if that PC still targetable
 	if(store_spell_target < 6) {
-		if ((type == eSkill::MAGE_SPELLS && mage_need_select[store_mage] > 0) ||
-			(type == eSkill::PRIEST_SPELLS && priest_need_select[store_priest] > 0)) {
+		if((*store_spell).need_select != SELECT_NO) {
 			if(univ.party[store_spell_target].main_status != eMainStatus::ALIVE)
 				store_spell_target = 6;
 		} else store_spell_target = 6;
 	}
 	
+	short former_spell = int(store_spell) % 100;
 	// Set the spell page, based on starting spell
-	if((type == eSkill::MAGE_SPELLS && store_mage >= 38) || (type == eSkill::PRIEST_SPELLS && store_priest >= 38))
-		on_which_spell_page = 1;
+	if(former_spell >= 38) on_which_spell_page = 1;
 	else on_which_spell_page = 0;
 	
 	
@@ -2497,11 +2467,11 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	
 	cDialog castSpell("cast-spell.xml");
 	
-	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark), {"target1","target2","target3","target4","target5","target6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type), {"other", "help"});
-	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, former_mage, former_priest, type));
-	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, former_mage, former_priest, type));
+	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark, former_spell), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type, former_spell), {"other", "help"});
+	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, std::ref(former_spell), type));
+	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, std::ref(former_spell), type));
 	
 	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + (type == eSkill::PRIEST_SPELLS),PIC_DLOG);
 	for(int i = 0; i < 38; i++) {
@@ -2513,17 +2483,17 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
 		led.attachKey(key);
 		castSpell.addLabelFor(id, {i > 25 ? toupper(key.c) : key.c}, LABEL_LEFT, 8, true);
-		led.setState((pc_can_cast_spell(pc_casting,type, (on_which_spell_page == 0) ? i : spell_index[i]))
+		led.setState((pc_can_cast_spell(pc_casting,cSpell::fromNum(type,on_which_spell_page == 0 ? i : spell_index[i])))
 					 ? led_red : led_green);
-		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, dark));
+		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, std::ref(dark), std::ref(former_spell)));
 	}
 	
 	put_spell_list(castSpell, type);
-	draw_spell_info(castSpell, type);
+	draw_spell_info(castSpell, type, former_spell);
 	put_pc_caster_buttons(castSpell);
 	draw_spell_pc_info(castSpell);
 	draw_caster_buttons(castSpell, type);
-	put_spell_led_buttons(castSpell, type);
+	put_spell_led_buttons(castSpell, type, former_spell);
 	
 	if (univ.party.help_received[7] == 0) {
 		// TODO: Not sure if this initial draw is needed
@@ -2533,13 +2503,14 @@ short pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	
 	castSpell.run();
 	
-	return castSpell.getResult<short>();
+	return cSpell::fromNum(type, castSpell.getResult<short>());
 }
 
 
-void print_spell_cast(short spell_num,eSkill which)
+void print_spell_cast(eSpell spell,eSkill which)
 //short which; // 0 - mage  1 - priest
 {
+	short spell_num = (which == eSkill::PRIEST_SPELLS ? int(spell) - 100 : int(spell));
 	sprintf ((char *) c_line, "Spell: %s                  ",
 			 (which == eSkill::MAGE_SPELLS) ? (char *) mage_s_name[spell_num] : (char *) priest_s_name[spell_num]);
 	add_string_to_buf((char *) c_line);
@@ -2568,10 +2539,11 @@ short stat_adj(short pc_num,eSkill which) {
 	return tr;
 }
 
-void set_town_spell(short s_num,short who_c)
-{
+void start_town_targeting(eSpell s_num,short who_c,bool freebie) {
+	overall_mode = MODE_TOWN_TARGET;
 	town_spell = s_num;
 	who_cast = who_c;
+	spell_freebie = freebie;
 }
 
 void do_alchemy() ////

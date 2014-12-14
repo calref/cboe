@@ -46,7 +46,7 @@ extern effect_pat_type current_pat;
 //extern town_item_list	univ.town;
 extern cOutdoors::cWandering store_wandering_special;
 extern short monst_marked_damage[60];
-extern short spell_being_cast, town_spell;
+extern eSpell spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern bool fast_bang,end_scenario;
 //extern short town_size[3];
@@ -1030,27 +1030,27 @@ void use_item(short pc,short item)
 				// spell effects
 			case eItemAbil::FLAME:
 				add_string_to_buf("  It fires a bolt of flame.");
-				start_spell_targeting(1011);
+				start_spell_targeting(eSpell::FLAME, true);
 				break;
 			case eItemAbil::FIREBALL:
 				add_string_to_buf("  It shoots a fireball.         ");
-				start_spell_targeting(1022);
+				start_spell_targeting(eSpell::FIREBALL, true);
 				break;
 			case eItemAbil::FIRESTORM:
 				add_string_to_buf("  It shoots a huge fireball. ");
-				start_spell_targeting(1040);
+				start_spell_targeting(eSpell::FIRESTORM, true);
 				break;
 			case eItemAbil::KILL:
 				add_string_to_buf("  It shoots a black ray.  ");
-				start_spell_targeting(1048);
+				start_spell_targeting(eSpell::KILL, true);
 				break;
 			case eItemAbil::ICE_BOLT:
 				add_string_to_buf("  It fires a ball of ice.   ");
-				start_spell_targeting(1031);
+				start_spell_targeting(eSpell::ICE_BOLT, true);
 				break;
 			case eItemAbil::SLOW:
 				add_string_to_buf("  It fires a purple ray.   ");
-				start_spell_targeting(1012);
+				start_spell_targeting(eSpell::SLOW, true);
 				break;
 			case eItemAbil::SHOCKWAVE:
 				add_string_to_buf("  The ground shakes!        ");
@@ -1058,11 +1058,11 @@ void use_item(short pc,short item)
 				break;
 			case eItemAbil::DISPEL_UNDEAD:
 				add_string_to_buf("  It shoots a white ray.   ");
-				start_spell_targeting(1132);
+				start_spell_targeting(eSpell::DISPEL_UNDEAD, true);
 				break;
 			case eItemAbil::DISPEL_SPIRIT:
 				add_string_to_buf("  It shoots a golden ray.   ");
-				start_spell_targeting(1155);
+				start_spell_targeting(eSpell::RAVAGE_SPIRIT, true);
 				break;
 			case eItemAbil::SUMMONING:
 				if (summon_monster(str,user_loc,50,2) == false)
@@ -1076,35 +1076,35 @@ void use_item(short pc,short item)
 				break;
 			case eItemAbil::ACID_SPRAY:
 				add_string_to_buf("  Acid sprays from the tip!   ");
-				start_spell_targeting(1068);
+				start_spell_targeting(eSpell::ACID_SPRAY,  true);
 				break;
 			case eItemAbil::STINKING_CLOUD:
 				add_string_to_buf("  It creates a cloud of gas.   ");
-				start_spell_targeting(1066);
+				start_spell_targeting(eSpell::FOUL_VAPOR, true);
 				break;
 			case eItemAbil::SLEEP_FIELD:
 				add_string_to_buf("  It creates a shimmering cloud.   ");
-				start_spell_targeting(1019);
+				start_spell_targeting(eSpell::CLOUD_SLEEP, true);
 				break;
 			case eItemAbil::VENOM:
 				add_string_to_buf("  A green ray emerges.        ");
-				start_spell_targeting(1030);
+				start_spell_targeting(eSpell::POISON, true);
 				break;
 			case eItemAbil::SHOCKSTORM:
 				add_string_to_buf("  Sparks fly.");
-				start_spell_targeting(1044);
+				start_spell_targeting(eSpell::SHOCKSTORM, true);
 				break;
 			case eItemAbil::PARALYSIS:
 				add_string_to_buf("  It shoots a silvery beam.   ");
-				start_spell_targeting(1069);
+				start_spell_targeting(eSpell::PARALYZE_BEAM, true);
 				break;
 			case eItemAbil::WEB:
 				add_string_to_buf("  It explodes!");
-				start_spell_targeting(1065);
+				start_spell_targeting(eSpell::GOO_BOMB, true);
 				break;
 			case eItemAbil::STRENGTHEN_TARGET:
 				add_string_to_buf("  It shoots a fiery red ray.   ");
-				start_spell_targeting(1062);
+				start_spell_targeting(eSpell::STRENGTHEN_TARGET, true);
 				break;
 			case eItemAbil::QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
@@ -1135,33 +1135,22 @@ void use_item(short pc,short item)
 			case eItemAbil::DISPEL_BARRIER:
 				add_string_to_buf("  It fires a blinding ray.");
 				add_string_to_buf("  Target spell.    ");
-				overall_mode = MODE_TOWN_TARGET;
 				current_pat = single;
-				set_town_spell(1041,current_pc);
+				start_town_targeting(eSpell::DISPEL_BARRIER,current_pc, true);
 				break;
 			case eItemAbil::ICE_WALL:
 				add_string_to_buf("  It shoots a blue sphere.   ");
-				start_spell_targeting(1064);
+				start_spell_targeting(eSpell::WALL_ICE_BALL, true);
 				break;
 			case eItemAbil::CHARM_SPELL:
 				add_string_to_buf("  It fires a lovely, sparkling beam.");
-				start_spell_targeting(1117);
+				start_spell_targeting(eSpell::CHARM_FOE, true);
 				break;
 			case eItemAbil::ANTIMAGIC_CLOUD:
 				add_string_to_buf("  Your hair stands on end.   ");
-				start_spell_targeting(1051);
+				start_spell_targeting(eSpell::ANTIMAGIC, true);
 				break;
 		}
-		// Special spells:
-		//   62 - Carrunos
-		//	 63 - Summon Rat
-		//	 64 - Ice Wall Balls
-		//	 65 - Goo Bomb
-		//   66 - Foul Vapors
-		//   67 - Sleep cloud
-		//	 68 - spray acid
-		//	 69 - paralyze
-		//   70 - mass sleep
 	}
 	
 	put_pc_screen();
@@ -3273,7 +3262,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case 16: // Target spell
 					if(which_mode == eSpecCtx::TARGET) {
 						// TODO: I'm not quite sure if this covers every way of determining which spell was cast
-						if(spec.ex1b == -1 || (is_town() && town_spell == spec.ex1b) || (is_combat() && spell_being_cast == spec.ex1b))
+						if(spec.ex1b == -1 || (is_town() && int(town_spell) == spec.ex1b) || (is_combat() && int(spell_being_cast) == spec.ex1b))
 							*next_spec = spec.ex1c;
 					}
 					break;
