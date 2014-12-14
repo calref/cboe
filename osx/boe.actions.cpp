@@ -2019,10 +2019,12 @@ bool handle_keystroke(sf::Event& event){
 		case 'm': case 'p': case 'l': case 'r': case 'w': case 't': case 'd': case 'g': case 'f':
 		case 'M': case 'P': case 'A':
 			j = 50;
-			if ((chr == 'm') && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FANCY_TARGET))) // cancel spell
-				j = 0;
-			if ((chr == 'p') && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FANCY_TARGET))) // cancel spell
-				j = 1;
+			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) { // cancel spell
+				if(chr == 'm') j = 0;
+				else if(chr == 'p') j = 1;
+			}
+			if(chr == 'f' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || chr == 't')) // cancel missile
+				j = 6;
 			if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
 				switch (chr) {
 					case 'M': spell_forced = true; j = 0; break;
