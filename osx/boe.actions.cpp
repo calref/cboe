@@ -873,6 +873,46 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	need_reprint = true;
 }
 
+static void handle_victory() {reload_startup();
+	overall_mode = MODE_STARTUP;
+	in_scen_debug = false;
+	ghost_mode = false;
+	draw_startup(0);
+	menu_activate();
+	univ.party.scen_name = ""; // should be harmless...
+	if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
+		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
+		fs::path file = nav_put_party();
+		if(!file.empty()) save_party(file);
+	}
+}
+
+static void handle_party_death() {for(int i = 0; i < 6; i++)
+	if(univ.party[i].main_status == eMainStatus::FLED) {
+		univ.party[i].main_status = eMainStatus::ALIVE;
+		if(is_combat()) {
+			end_town_mode(0,univ.town.p_loc);
+			add_string_to_buf("End combat.               ");
+			handle_wandering_specials(0,2);
+		}
+	}
+	if(univ.party.is_split()) {
+		ASB(univ.party.end_split(0));
+		update_explored(univ.town.p_loc);
+		center = univ.town.p_loc;
+		if(is_combat()) overall_mode = MODE_TOWN;
+		center = univ.town.p_loc;
+	}
+	menu_activate();
+	draw_terrain();
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+	if(party_toast()) {
+		play_sound(13);
+		handle_death();
+	}
+}
+
 bool handle_action(sf::Event event) {
 	short item_hit,s1,s2,s3;
 	bool are_done = false;
@@ -1318,46 +1358,10 @@ bool handle_action(sf::Event event) {
 	if(need_redraw) draw_terrain();
 	if(need_reprint || need_redraw) print_buf();
 	
-	if(end_scenario) {
-		reload_startup();
-		overall_mode = MODE_STARTUP;
-		in_scen_debug = false;
-		ghost_mode = false;
-		draw_startup(0);
-		menu_activate();
-		univ.party.scen_name = ""; // should be harmless...
-		if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
-			// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
-			fs::path file = nav_put_party();
-			if(!file.empty()) save_party(file);
-		}
-	} else if(party_toast()) {
-		for(int i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::FLED) {
-				univ.party[i].main_status = eMainStatus::ALIVE;
-				if(is_combat()) {
-					end_town_mode(0,univ.town.p_loc);
-					add_string_to_buf("End combat.               ");
-					handle_wandering_specials(0,2);
-				}
-			}
-		if(univ.party.is_split()) {
-			ASB(univ.party.end_split(0));
-			update_explored(univ.town.p_loc);
-			center = univ.town.p_loc;
-			if(is_combat()) overall_mode = MODE_TOWN;
-			center = univ.town.p_loc;
-		}
-		menu_activate();
-		draw_terrain();
-		put_pc_screen();
-		put_item_screen(stat_window,0);
-		if(party_toast()) {
-			play_sound(13);
-			handle_death();
-			if(All_Done) return true;
-		}
-	}
+	if(end_scenario)
+		handle_victory();
+	else if(party_toast())
+		handle_party_death();
 	
 	are_done = All_Done;
 	return are_done;
@@ -1831,8 +1835,7 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'N':
 			if(!in_scen_debug) break;
-			end_scenario = true;
-			in_scen_debug = false;
+			handle_victory();
 			break;
 			
 		case 'O':
