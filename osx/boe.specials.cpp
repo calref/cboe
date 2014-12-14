@@ -3503,14 +3503,14 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::TOWN_GENERIC_STAIR:
-			if (is_combat()) {
+			if(spec.ex2c != 1 && spec.ex2c != 2 && is_combat()) {
 				ASB("Can't change level in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if (which_mode != eSpecCtx::TOWN_MOVE) {
+			else if (spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3591,14 +3591,14 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = false;
 			if ((spec.m1 < 0) && (spec.ex2b != 1))
 				break;
-			if (is_combat()) {
+			if(spec.ex2c != 1 && spec.ex2c != 2 && is_combat()) {
 				ASB("Can't change level in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if(which_mode != eSpecCtx::TOWN_MOVE) {
+			else if(spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
