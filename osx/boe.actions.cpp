@@ -312,6 +312,8 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 	} else if(overall_mode == MODE_TOWN_TARGET) {
 		add_string_to_buf("  Cancelled.                   ");
 		overall_mode = MODE_TOWN;
+		need_redraw = true;
+		need_reprint = true;
 	} else if(overall_mode == MODE_COMBAT) {
 		if(which_type == eSkill::MAGE_SPELLS) {
 			did_something = combat_cast_mage_spell();
