@@ -1326,6 +1326,7 @@ short place_monster(m_num_t which,location where)
 	if (i < univ.town->max_monst()) {
 		univ.town.monst[i].number = which;
 		univ.town.monst[i] = cCreature();
+		static_cast<cMonster&>(univ.town.monst[i]) = scenario.scen_monsters[which];
 		univ.town.monst[i].attitude = scenario.scen_monsters[which].default_attitude;
 		if (univ.town.monst[i].attitude % 2 == 0)
 			univ.town.monst[i].attitude = 1;
