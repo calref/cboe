@@ -183,3 +183,48 @@ bool cTown::cWandering::isNull(){
 			return false;
 	return true;
 }
+
+void cTown::set_up_lights() {
+	using namespace std::placeholders;
+	short rad;
+	location where,l;
+	bool where_lit[64][64] = {0};
+	auto get_obscurity = std::bind(&cTown::light_obscurity, this, _1, _2);
+	
+	// Find bonfires, braziers, etc.
+	for(short i = 0; i < this->max_dim(); i++)
+		for(short j = 0; j < this->max_dim(); j++) {
+			l.x = i;
+			l.y = j;
+			rad = scenario.ter_types[this->terrain(i,j)].light_radius;
+			if(rad > 0) {
+				for(where.x = std::max(0,i - rad); where.x < std::min(this->max_dim(),short(i + rad + 1)); where.x++)
+					for(where.y = std::max(0,j - rad); where.y < std::min(this->max_dim(),short(j + rad + 1)); where.y++)
+						if((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,get_obscurity) < 5))
+							where_lit[where.x][where.y] = 1;
+			}
+		}
+	for(short i = 0; i < 8; i++)
+		for(short j = 0; j < 64; j++)
+			this->lighting(i,j) = 0;
+	for(where.x = 0; where.x < this->max_dim(); where.x++)
+		for(where.y = 0; where.y < this->max_dim(); where.y++) {
+			if(where_lit[where.x][where.y] > 0) {
+				this->lighting(where.x / 8,where.y) = this->lighting(where.x / 8,where.y) | (1 << (where.x % 8));
+			}
+		}
+}
+
+short cTown::light_obscurity(short x,short y) {
+	ter_num_t what_terrain;
+	eTerObstruct store;
+	
+	what_terrain = this->terrain(x,y);
+	
+	store = scenario.ter_types[what_terrain].blockage;
+	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+		return 5;
+	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
+		return 1;
+	return 0;
+}

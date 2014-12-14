@@ -2194,6 +2194,13 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
 		case eSpecType::END_SCENARIO:
+			// If party died at some point during the special node, they shouldn't get a victory.
+			// (Adapted from Windows version)
+			store_val = 6;
+			for(i = 0; i < 6; i++)
+				if(univ.party[i].main_status != eMainStatus::ALIVE)
+					store_val--;
+			if(store_val == 0) break;
 			end_scenario = true;
 			break;
 		case eSpecType::SET_POINTER:
@@ -3309,6 +3316,8 @@ void set_terrain(location l, ter_num_t terrain_type)
 	combat_terrain[l.x][l.y] = terrain_type;
 	if(scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
 		belt_present = true;
+	if(scenario.ter_types[former].light_radius != scenario.ter_types[terrain_type].light_radius)
+		univ.town->set_up_lights();
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
@@ -3650,9 +3659,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 			// OBoE: Change town lighting
 		case eSpecType::TOWN_CHANGE_LIGHTING:
-			// Change bulk town lighting
-			if ((spec.ex1a >= 0) && (spec.ex1a <= 3))
+			// Change global town lighting
+			if(spec.ex1a >= 0 && spec.ex1a <= 3) {
 				univ.town->lighting_type = (eLighting) spec.ex1a;
+				draw_terrain();
+			}
 			// Change party light level
 			if (spec.ex2a > 0) {
 				if (spec.ex2b == 0)

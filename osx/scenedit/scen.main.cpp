@@ -243,7 +243,7 @@ void handle_file_menu(int item_hit) {
 				}
 			break;
 		case 2: // save
-			set_up_lights();
+			town->set_up_lights();
 			save_scenario();
 			break;
 		case 3: // new scen

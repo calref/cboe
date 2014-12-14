@@ -1471,47 +1471,6 @@ void handle_keystroke(char chr,char chr2,sf::Event event) {
 //void set_info_strings() {
 //}
 
-void set_up_lights() {
-	short i,j,rad;
-	location where,l;
-	//location light_locs[40];
-	short num_lights = 0;
-	bool where_lit[64][64];
-	
-	
-	// Find bonfires, braziers, etc.
-	num_lights = 0;
-	for (i = 0; i < 64; i++)
-		for (j = 0; j < 64; j++)
-			where_lit[i][j] = 0;
-	
-	for (i = 0; i < town->max_dim(); i++)
-		for (j = 0; j < town->max_dim(); j++) {
-			l.x = i;
-			l.y = j;
-			rad = scenario.ter_types[town->terrain(i,j)].light_radius;
-			if (rad > 0) {
-				for (where.x = max(0,i - rad); where.x < min(town->max_dim(),i + rad + 1); where.x++)
-					for (where.y = max(0,j - rad); where.y < min(town->max_dim(),j + rad + 1); where.y++)
-						if ((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,light_obscurity) < 5))
-							where_lit[where.x][where.y] = 1;
-			}
-		}
-	for (i = 0; i < 8; i++)	
-		for (j = 0; j < 64; j++)
-			town->lighting(i,j) = 0;
-	for (where.x = 0; where.x < town->max_dim(); where.x++)
-		for (where.y = 0; where.y < town->max_dim(); where.y++) {
-			if (where_lit[where.x][where.y] > 0) {
-				town->lighting(where.x / 8,where.y) = town->lighting(where.x / 8,where.y) | (char) (s_pow(2,where.x % 8));
-			}
-		}	
-	
-}
-
-
-
-
 bool is_wall(short i,short j) {
 	ter_num_t ter;
 	bool answer = false;
@@ -3421,7 +3380,7 @@ bool save_check(std::string which_dlog) {
 		return true;
 	else if(choice == "cancel")
 		return false;
-	set_up_lights();
+	town->set_up_lights();
 	save_scenario();
 	return true;
 }
@@ -3430,20 +3389,6 @@ bool is_lava(short x,short y) {
 	if ((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
 		return true;
 	else return false;
-}
-
-short light_obscurity(short x,short y) {
-	ter_num_t what_terrain;
-	eTerObstruct store;
-	
-	what_terrain = coord_to_ter(x,y);
-	
-	store = scenario.ter_types[what_terrain].blockage;
-	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
-		return 5;
-	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
-		return 1;
-	return 0;
 }
 
 ter_num_t coord_to_ter(short x,short y) {

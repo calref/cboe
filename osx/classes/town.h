@@ -121,6 +121,8 @@ public:
 	virtual short max_dim() = 0;
 	virtual short max_monst() = 0;
 	virtual short max_items() = 0;
+	void set_up_lights();
+	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	
 	cTown();
 	cTown(short size);
