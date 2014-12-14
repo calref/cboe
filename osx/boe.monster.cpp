@@ -724,6 +724,8 @@ bool try_move(short i,location start,short x,short y)
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
 	
+	if((overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && univ.town.is_force_cage(start.x,start.y))
+		return false;
 	
 	if (overall_mode == MODE_TOWN)
 		return town_move_monster(i,dest);
@@ -909,6 +911,9 @@ void monst_inflict_fields(short which_monst)
 						damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
 					break;
 				}
+				if(univ.town.is_force_cage(where_check.x,where_check.y))
+					univ.town.monst[which_monst].status[eStatus::FORCECAGE] = 8;
+				else univ.town.monst[which_monst].status[eStatus::FORCECAGE] = 0;
 			}
 	if (univ.town.monst[which_monst].active > 0)
 		for (i = 0; i < univ.town.monst[which_monst].x_width; i++)
@@ -1011,7 +1016,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))) {
 			play_sound(60);
-			add_string_to_buf("Monster breaks barrier.");
+			monst_spell_note(which_monst, 49);
 			univ.town.set_fire_barr(where_check.x,where_check.y,false);
 		}
 		else {
@@ -1025,11 +1030,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if ((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))
 			&& (!univ.town->strong_barriers)) {
 			play_sound(60);
-			add_string_to_buf("Monster breaks barrier.");
+			monst_spell_note(which_monst, 49);
 			univ.town.set_force_barr(where_check.x,where_check.y,false);
 		}
 		else can_enter = false;
 	}
+	if(univ.town.is_force_cage(where_check.x,where_check.y)) can_enter = false;
 	if (univ.town.is_crate(where_check.x,where_check.y)) {
 		if (monster_placid(which_monst))
 			can_enter = false;
@@ -1364,7 +1370,7 @@ bool summon_monster(m_num_t which,location where,short duration,short given_atti
 			if (where.x == 0)
 				return false;
 		}
-		if ((univ.town.is_barrel(where.x,where.y)) || (univ.town.is_crate(where.x,where.y)))
+		if(univ.town.is_barrel(where.x,where.y) || univ.town.is_crate(where.x,where.y) || univ.town.is_block(where.x,where.y))
 			return false;
 		loc = where;
 	}

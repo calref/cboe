@@ -22,15 +22,6 @@
 #define NUM_OF_BOATS		30
 #define NUM_OF_HORSES		30
 
-#define SFX_SMALL_BLOOD		1
-#define SFX_MEDIUM_BLOOD	2
-#define SFX_LARGE_BLOOD		4
-#define SFX_SMALL_SLIME		8
-#define SFX_BIG_SLIME		16
-#define SFX_ASH				32
-#define SFX_BONES			64
-#define SFX_RUBBLE			128
-
 /* stuff done flags */
 #define SDF_SPEC_LOC_X			301][0 // For special nodes to access the trigger location
 #define SDF_SPEC_LOC_Y			301][1

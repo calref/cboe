@@ -420,7 +420,14 @@ bool pc_combat_move(location destination) ////
 	location monst_loc,store_loc;
 	short spec_num;
 	
-	if (monst_there(destination) > univ.town->max_monst())
+	monst_hit = monst_there(destination);
+	
+	if(monst_hit > univ.town->max_monst() && univ.party[current_pc].status[eStatus::FORCECAGE] > 0) {
+		add_string_to_buf("Move: Can't escape.");
+		return false;
+	}
+	
+	if(monst_hit > univ.town->max_monst())
 		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,current_pc,&spec_num,&check_f);
 	if (check_f == true)
 		forced = true;
@@ -451,7 +458,7 @@ bool pc_combat_move(location destination) ////
 			add_string_to_buf(create_line);
 			return true;
 		}
-		else if ((monst_hit = monst_there(destination)) <= univ.town->max_monst()) {
+		else if(monst_hit <= univ.town->max_monst()) {
 			// s2 = 2 here appears to mean "go ahead and attack", while s2 = 1 means "cancel attack".
 			// Then s1 % 2 == 1 means the monster is hostile to the party.
 			s1 = univ.town.monst[monst_hit].attitude;
@@ -3734,6 +3741,45 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					case CLOUD_SLEEP:
 						sleep_cloud_space(i,j);
 						break;
+					case FIELD_SMASH:
+						crumble_wall(loc(i,j));
+						break;
+					case OBJECT_CRATE:
+						univ.town.set_crate(i,j,true);
+						break;
+					case OBJECT_BARREL:
+						univ.town.set_barrel(i,j,true);
+						break;
+					case OBJECT_BLOCK:
+						univ.town.set_block(i,j,true);
+						break;
+					case BARRIER_CAGE:
+						univ.town.set_force_cage(i, j, true);
+						break;
+					case SFX_SMALL_BLOOD:
+						univ.town.set_sm_blood(i,j,true);
+						break;
+					case SFX_MEDIUM_BLOOD:
+						univ.town.set_med_blood(i,j,true);
+						break;
+					case SFX_LARGE_BLOOD:
+						univ.town.set_lg_blood(i,j,true);
+						break;
+					case SFX_SMALL_SLIME:
+						univ.town.set_sm_slime(i,j,true);
+						break;
+					case SFX_LARGE_SLIME:
+						univ.town.set_lg_slime(i,j,true);
+						break;
+					case SFX_ASH:
+						univ.town.set_ash(i,j,true);
+						break;
+					case SFX_BONES:
+						univ.town.set_bones(i,j,true);
+						break;
+					case SFX_RUBBLE:
+						univ.town.set_rubble(i,j,true);
+						break;
 				}
 			}
 	draw_terrain(0);
@@ -3766,6 +3812,13 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							case WALL_BLADES:
 								r1 = get_ran(4,1,8);
 								damage_pc(k,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+								break;
+							case OBJECT_BLOCK:
+								r1 = get_ran(6,1,8);
+								damage_pc(k,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+								break;
+							case BARRIER_CAGE:
+								univ.party[k].status[eStatus::FORCECAGE] = 8;
 								break;
 							default:
 								eDamageType type = DAMAGE_MARKED;
@@ -3855,6 +3908,13 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							case CLOUD_SLEEP:
 								which_m = &univ.town.monst[k];
 								charm_monst(which_m,0,eStatus::ASLEEP,3);
+								break;
+							case OBJECT_BLOCK:
+								r1 = get_ran(6,1,8);
+								damage_monst(k,who_hit,r1,0,DAMAGE_WEAPON,0);
+								break;
+							case BARRIER_CAGE:
+								univ.town.monst[k].status[eStatus::FORCECAGE] = 8;
 								break;
 							default:
 								eDamageType type = DAMAGE_MARKED;
@@ -4188,8 +4248,12 @@ bool hit_end_c_button()
 	if (which_combat_type == 0) {
 		end_ok = out_monst_all_dead();
 	}
-//	if (univ.party[0].extra[7] > 0)
-//		end_ok = true;
+	for(int i = 0; i < 6; i++) {
+		if(univ.party[i].status[eStatus::FORCECAGE] > 0) {
+			add_string_to_buf("  Someone trapped.");
+			return false;
+		}
+	}
 	
 	if (end_ok == true)
 		end_combat();
@@ -4695,6 +4759,33 @@ void spell_cast_hit_return()
 	}
 }
 
+static void process_force_cage(location loc, short i) {
+	if(i >= 100) {
+		short m = i - 100;
+		cCreature& which_m = univ.town.monst[m];
+		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5) {
+			play_sound(60);
+			monst_spell_note(m, 50);
+			univ.town.set_force_cage(loc.x,loc.y,false);
+			which_m.status[eStatus::FORCECAGE] = 0;
+		} else which_m.status[eStatus::FORCECAGE] = 8;
+	} else if(i < 0) {
+		if(get_ran(1,1,100) < 35)
+			univ.town.set_force_cage(loc.x,loc.y,false);
+	} else if(i < 6) {
+		cPlayer& who = univ.party[i];
+		// We want to make sure everyone has a chance of eventually breaking a cage, because it never ends on its own,
+		// and because being trapped unconditionally prevents you from ending combat mode.
+		short bonus = 5 + who.skills[eSkill::MAGE_LORE];
+		if(get_ran(1,1,100) < who.skills[eSkill::MAGE_SPELLS]*10 + who.skills[eSkill::PRIEST_SPELLS]*4 + bonus) {
+			play_sound(60);
+			add_string_to_buf("  " + who.name + " breaks force cage.");
+			univ.town.set_force_cage(loc.x,loc.y,false);
+			who.status[eStatus::FORCECAGE] = 0;
+		} else who.status[eStatus::FORCECAGE] = 8;
+	}
+}
+
 void process_fields()
 {
 	short i,j,k,r1;
@@ -4790,6 +4881,15 @@ void process_fields()
 					r1 = get_ran(1,1,5);
 					if (r1 == 1)
 						univ.town.set_blade_wall(i,j,false);
+				}
+				if(univ.town.is_force_cage(i,j)) {
+					loc.x = i; loc.y = j;
+					short m = monst_there(loc);
+					if(m == 90) {
+						short pc = pc_there(loc);
+						if(pc == 6) process_force_cage(loc, -1);
+						else process_force_cage(loc, pc);
+					} else process_force_cage(loc, 100 + m);
 				}
 			}
 	

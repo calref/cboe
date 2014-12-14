@@ -791,6 +791,7 @@ enum eEncNoteType {
 	NOTE_MONST,
 };
 
+// This is a slight misnomer, as a couple of these are not true fields.
 enum eFieldType {
 	FIELD_NONE = 0,
 	FIELD_WEB = 1,
@@ -803,9 +804,22 @@ enum eFieldType {
 	WALL_ICE = 8,
 	WALL_BLADES = 9,
 	FIELD_QUICKFIRE = 10,
-	FIELD_DISPEL = 11,
+	FIELD_DISPEL = 11, // Dispel field
 	CLOUD_SLEEP = 12,
-	// TODO: Sfx fields, objects
+	OBJECT_CRATE = 13,
+	OBJECT_BARREL = 14,
+	BARRIER_CAGE = 15,
+	OBJECT_BLOCK = 16,
+	FIELD_SMASH = 17, // Move Mountains
+	SFX_SMALL_BLOOD = 18,
+	SFX_MEDIUM_BLOOD = 19,
+	SFX_LARGE_BLOOD = 20,
+	SFX_SMALL_SLIME = 21,
+	SFX_LARGE_SLIME = 22,
+	SFX_ASH = 23,
+	SFX_BONES = 24,
+	SFX_RUBBLE = 25,
+	SFX_SPECIAL = 26, // Special spot
 };
 
 enum class eSpell {

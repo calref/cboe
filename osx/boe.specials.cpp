@@ -220,6 +220,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			add_string_to_buf("  Magic barrier!               ");
 			return false;
 		}
+		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
+			add_string_to_buf("  Force cage!");
+			return false;
+		}
 		for (i = 0; i < 50; i++)
 			if (where_check == univ.town->special_locs[i]) {
 				if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SECRET_PASSAGE) {
@@ -273,6 +277,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			add_string_to_buf("  Magic barrier!               ");
 			can_enter = false;
 		}
+		if (univ.town.is_force_cage(where_check.x,where_check.y)) {
+			add_string_to_buf("  Force cage!               ");
+			can_enter = false;
+		}
 		if (univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
 			to_loc = push_loc(from_loc,where_check);
@@ -294,6 +302,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 					&& (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
+		}
+		if(univ.town.is_block(where_check.x,where_check.y)) {
+			add_string_to_buf("  You push the stone block.");
+			to_loc = push_loc(from_loc,where_check);
+			univ.town.set_block(where_check.x,where_check.y,false);
+			if(to_loc.x > 0)
+				univ.town.set_block(to_loc.x,to_loc.y,false);
 		}
 	}
 	
@@ -575,6 +590,11 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc)
 		if (overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
+	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
+		if(univ.party[which_pc].status[eStatus::FORCECAGE] == 0)
+			add_string_to_buf("  Trapped in force cage!");
+		univ.party[which_pc].status[eStatus::FORCECAGE] = 8;
+	} else univ.party[which_pc].status[eStatus::FORCECAGE] = 0;
 	fast_bang = 0;
 }
 
@@ -1776,7 +1796,7 @@ void push_things()////
 			}
 			if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				ASB("You crash into the block.");
-				hit_party(get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE);
+				hit_party(get_ran(1, 1, 6), DAMAGE_WEAPON);
 			}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
@@ -1814,7 +1834,7 @@ void push_things()////
 					}
 					if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 						ASB("You crash into the block.");
-						damage_pc(i,get_ran(1, 1, 6), DAMAGE_UNBLOCKABLE,eRace::UNKNOWN,0);
+						damage_pc(i,get_ran(1, 1, 6), DAMAGE_WEAPON,eRace::UNKNOWN,0);
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
@@ -3035,6 +3055,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			// TODO: Are there other object types to account for?
 			// TODO: Allow restricting to a specific rect
+			// TODO: Allow requiring a minimum and maximum number of objects
 			break;
 		case eSpecType::IF_PARTY_SIZE:
 			if (spec.ex2a < 1) {

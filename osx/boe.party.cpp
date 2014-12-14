@@ -1732,8 +1732,9 @@ void cast_town_spell(location where) ////
 			place_spell_pattern(current_pat,where,FIELD_DISPEL,7);
 			break;
 		case eSpell::MOVE_MOUNTAINS:
+		case eSpell::MOVE_MOUNTAINS_MASS:
 			add_string_to_buf("  You blast the area.              ");
-			crumble_wall(where);
+			place_spell_pattern(current_pat, where, FIELD_SMASH, 7);
 			update_explored(univ.town.p_loc);
 			break;
 		case eSpell::BARRIER_FIRE:
@@ -1816,6 +1817,9 @@ void cast_town_spell(location where) ////
 					play_sound(41);
 					add_string_to_buf("  Didn't work.                  ");
 				}
+			} else if(univ.town.is_force_cage(where.x,where.y)) {
+				add_string_to_buf("  Cage broken.");
+				univ.town.set_force_cage(where.x,where.y,false);
 			}
 			
 			else add_string_to_buf("  No barrier there.");
@@ -1950,6 +1954,9 @@ void dispel_fields(short i,short j,short mode)
 	r1 = get_ran(1,1,7) + mode;
 	if (r1 < 5)
 		univ.town.set_blade_wall(i,j,false);
+	r1 = get_ran(1,1,12) + mode;
+	if(r1 < 3)
+		univ.town.set_force_cage(i,j,false);
 }
 
 bool pc_can_cast_spell(short pc_num,eSkill type) {

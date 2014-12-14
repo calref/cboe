@@ -346,6 +346,9 @@ bool is_blocked(location to_check)
 		if (univ.town.is_force_barr(to_check.x,to_check.y))
 			return true;
 		
+		if(univ.town.is_force_cage(to_check.x,to_check.y))
+			return true;
+		
 		return false;
 	}
 	return true;

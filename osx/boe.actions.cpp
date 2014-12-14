@@ -2946,6 +2946,11 @@ bool town_move_party(location destination,short forced)////
 	ter_num_t ter;
 	bool check_f = false;
 	
+	if(univ.town.is_force_cage(univ.town.p_loc.x, univ.town.p_loc.y)) {
+		add_string_to_buf("Move: Can't escape.");
+		return false;
+	}
+	
 	if (in_scen_debug && ghost_mode)
 		forced = true;
 	

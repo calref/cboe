@@ -1191,6 +1191,12 @@ void monst_spell_note(m_num_t number,short which_mess)
 		case 48:
 			msg = "  " + msg + " cleans off acid.";
 			break;
+		case 49:
+			msg = "  " + msg + " breaks barrier.";
+			break;
+		case 50:
+			msg = "  " + msg + " breaks force cage.";
+			break;
 	}
 	
 	if (which_mess > 0)
