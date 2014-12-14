@@ -1364,10 +1364,13 @@ void out_move_party(char x,char y)
 }
 
 void teleport_party(short x,short y,short mode)
-// mode - 0 full teleport flash 1 no teleport flash 2 only fade flash
+// mode - 0=full teleport flash 1=no teleport flash 2=only fade flash 3=only arrival flash
 {
 	short i;
 	location l;
+	bool fadeIn = false, fadeOut = false;
+	if(mode == 0 || mode == 2) fadeOut = true;
+	if(mode == 0 || mode == 3) fadeIn = true;
 	
 	if (is_combat())
 		mode = 1;
@@ -1375,15 +1378,12 @@ void teleport_party(short x,short y,short mode)
 	l = univ.town.p_loc;
 	update_explored(l);
 	
-	if (mode != 1) {
+	if(fadeOut) {
 		start_missile_anim();
 		for (i = 0; i < 9; i++)
 			add_explosion(l,-1,1,1,0,0);
 		do_explosion_anim(5,1);
-	}
-	if (mode != 1)
 		can_draw_pcs = false;
-	if (mode != 1) {
 		do_explosion_anim(5,2);
 		end_missile_anim();
 	}
@@ -1398,14 +1398,14 @@ void teleport_party(short x,short y,short mode)
 	update_explored(l);
 	draw_terrain(0);
 	
-	if (mode == 0) {
+	if(fadeIn) {
 		start_missile_anim();
 		for (i = 0; i < 14; i++)
 			add_explosion(center,-1,1,1,0,0);
 		do_explosion_anim(5,1);
 	}
 	can_draw_pcs = true;
-	if (mode == 0) {
+	if(fadeIn) {
 		do_explosion_anim(5,2);
 		end_missile_anim();
 	}
@@ -3493,9 +3493,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else if(cChoiceDlog("basic-portal.xml",{"yes","no"}).show() == "yes") {
 				*a = 1;
-				if(which_mode == eSpecCtx::TALK || spec.ex2a == 0)
+				if(which_mode == eSpecCtx::TALK)
 					teleport_party(spec.ex1a,spec.ex1b,1);
-				else teleport_party(spec.ex1a,spec.ex1b,0);
+				else teleport_party(spec.ex1a,spec.ex1b,spec.ex2a);
 			}
 			break;
 		case eSpecType::TOWN_GENERIC_BUTTON:
@@ -3583,7 +3583,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					*a = 1;
 					if(which_mode == eSpecCtx::TALK)
 						teleport_party(spec.ex1a,spec.ex1b,1);
-					else teleport_party(spec.ex1a,spec.ex1b,0);
+					else teleport_party(spec.ex1a,spec.ex1b,spec.ex2a);
 				}
 			}
 			break;
