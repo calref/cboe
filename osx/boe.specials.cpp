@@ -3617,10 +3617,35 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// TODO: Wait, wait, don't you get to choose the picture to show?
 				else i = custom_choice_dialog(strs,19,PIC_DLOG,buttons) ;
 				*a = 1;
-				if (i == 1) { *next_spec = -1;}
-				else {
+				if (i == 1) {
+					*next_spec = -1;
+					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
+						*a = 1;
+				} else {
+					bool was_in_combat = false;
+					short was_active;
+					if(overall_mode == MODE_TALKING)
+						end_talk_mode();
+					else if(is_combat()) {
+						was_in_combat = true;
+						if(which_combat_type == 0) { // outdoor combat
+							ASB("Can't change level in combat.");
+							if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
+								*a = 1;
+							*next_spec = -1;
+							check_mess = false;
+							break;
+						} else {
+							was_active = current_pc;
+							univ.party.direction = end_town_combat();
+						}
+					}
 					*a = 1;
 					change_level(spec.ex2a,l.x,l.y);
+					if(was_in_combat) {
+						start_town_combat(univ.party.direction);
+						current_pc = was_active;
+					}
 				}
 			}
 			break;
