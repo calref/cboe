@@ -243,6 +243,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		put_item_screen(stat_window,0);
 	}
 	
+	// TODO: Just verify that yes, it works with this and doesn't work without it.
+	if(mode == eSpecCtx::COMBAT_MOVE && town_boat_there(where_check) < 3) {
+		add_string_to_buf("Blocked: Can't enter boats in combat");
+		can_enter = false;
+	}
+	
 	if (can_enter == false)
 		return false;
 	
