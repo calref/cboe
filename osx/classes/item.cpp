@@ -111,7 +111,7 @@ cItemRec::cItemRec(){
 	bonus = 0;
 	protection = 0;
 	charges = 0;
-	type = eWeapType::NOT_MELEE;
+	type = eSkill::INVALID;
 	magic_use_type = 0;
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
@@ -153,7 +153,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 1;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::EDGED;
+			type = eSkill::EDGED_WEAPONS;
 			magic_use_type = 0;
 			graphic_num = 55;
 			value = 2;
@@ -169,7 +169,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 75;
 			value = 2;
@@ -185,7 +185,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
@@ -201,7 +201,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 12;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 57;
 			value = 1;
@@ -217,7 +217,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::POLE;
+			type = eSkill::POLE_WEAPONS;
 			magic_use_type = 0;
 			graphic_num = 4;
 			value = 10;
@@ -233,7 +233,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 76;
 			value = 6;
@@ -249,7 +249,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 72;
 			value = 0;
@@ -265,7 +265,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 63;
 			value = 0;
@@ -281,7 +281,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 1;
-			type = eWeapType::NOT_MELEE;
+			type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 60;
 			value = 0;
@@ -301,7 +301,9 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	bonus = old.bonus;
 	protection = old.protection;
 	charges = old.charges;
-	type = (eWeapType) old.type;
+	if(old.type >= 3 && old.type <= 5)
+		type = eSkill(old.type);
+	else type = eSkill::INVALID;
 	magic_use_type = old.magic_use_type;
 	graphic_num = old.graphic_num;
 	if(graphic_num >= 150) // custom item graphic
@@ -408,7 +410,7 @@ void cItemRec::readFrom(std::istream& sin){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eWeapType& e){
+std::ostream& operator << (std::ostream& out, eSkill& e){
 	return out << (int) e;
 }
 
@@ -421,12 +423,12 @@ std::ostream& operator << (std::ostream& out, eItemAbil& e){
 }
 
 // TODO: Perhaps this should understand symbolic names as well?
-std::istream& operator >> (std::istream& in, eWeapType& e){
+std::istream& operator >> (std::istream& in, eSkill& e){
 	int i;
 	in >> i;
-	if(i > 0 && i < 4)
-		e = (eWeapType) i;
-	else e = eWeapType::NOT_MELEE;
+	if(i >= 0 && i < 19)
+		e = (eSkill) i;
+	else e = eSkill::INVALID;
 	return in;
 }
 

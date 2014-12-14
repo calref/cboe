@@ -25,7 +25,7 @@ public:
 	int bonus;
 	int protection;
 	int charges;
-	eWeapType type;
+	eSkill type;
 	int magic_use_type;
 	unsigned short graphic_num;
 	eItemAbil ability;
@@ -77,12 +77,12 @@ public:
 	void readFrom(std::istream& sin);
 };
 
-std::ostream& operator << (std::ostream& out, eWeapType& e);
 std::ostream& operator << (std::ostream& out, eItemType& e);
 std::ostream& operator << (std::ostream& out, eItemAbil& e);
-std::istream& operator >> (std::istream& in, eWeapType& e);
 std::istream& operator >> (std::istream& in, eItemType& e);
 std::istream& operator >> (std::istream& in, eItemAbil& e);
+std::ostream& operator << (std::ostream& out, eSkill& e);
+std::istream& operator >> (std::istream& in, eSkill& e);
 
 class cSpecItem {
 public:

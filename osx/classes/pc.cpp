@@ -19,8 +19,10 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	int i;
 	main_status = (eMainStatus) old.main_status;
 	name = old.name;
-	for(i = 0; i < 20; i++)
-		skills[i] = old.skills[i];
+	for(i = 0; i < 19; i++) {
+		eSkill skill = eSkill(i);
+		skills[skill] = old.skills[i];
+	}
 	max_health = old.max_health;
 	cur_health = old.cur_health;
 	max_sp = old.max_sp;
@@ -80,8 +82,9 @@ cPlayer::cPlayer(){
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
 	
-	for (i = 0; i < 30; i++)
-		skills[i] = (i < 3) ? 1 : 0;
+	skills[eSkill::STRENGTH] = 1;
+	skills[eSkill::DEXTERITY] = 1;
+	skills[eSkill::INTELLIGENCE] = 1;
 	cur_health = 6; 
 	max_health = 6; 
  	cur_sp = 0; 
@@ -130,9 +133,14 @@ cPlayer::cPlayer(long key,short slot){
 				name = "Goo";
 				break;
 		}
-		for (i = 0; i < 30; i++)
-			skills[i] = (i < 3) ? 20 : 8;
-		cur_health = 60; 
+		skills[eSkill::STRENGTH] = 20;
+		skills[eSkill::DEXTERITY] = 20;
+		skills[eSkill::INTELLIGENCE] = 20;
+		for (i = 3; i < 19; i++) {
+			eSkill skill = eSkill(i);
+			skills[skill] = 8;
+		}
+		cur_health = 60;
 		max_health = 60; 
 		cur_sp = 90; 
 		max_sp = 90; 
@@ -161,13 +169,33 @@ cPlayer::cPlayer(long key,short slot){
 		//exp_adj = 100;
 		direction = 0;
 	}else if(key == 'dflt'){
-		static const short pc_stats[6][19] = {
-			{8,6,2,  6,0,0,0,0,0,  0,0,0,0,1,  0,0,2,0,0},
-			{8,7,2,  0,0,6,3,0,3,  0,0,0,0,0,  0,0,0,2,0},
-			{8,6,2,  3,3,0,0,2,0,  0,0,0,0,0,  4,4,0,2,1},
-			{3,2,6,  2,0,0,2,0,0,  3,0,3,0,1,  0,0,0,0,0},
-			{2,2,6,  3,0,0,2,0,0,  2,1,4,0,0,  0,0,0,0,1},
-			{2,2,6,  0,2,0,2,0,1,  0,3,3,2,0,  0,0,0,0,0}
+		// TODO: The duplication of std::map<eSkill,short> shouldn't be needed here
+		static std::map<eSkill, short> pc_stats[6] = {
+			std::map<eSkill,short>{
+				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},
+				{eSkill::EDGED_WEAPONS,6}, {eSkill::ITEM_LORE,1}, {eSkill::ASSASSINATION,2},
+			}, std::map<eSkill,short>{
+				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,7}, {eSkill::INTELLIGENCE,2},
+				{eSkill::POLE_WEAPONS,6}, {eSkill::THROWN_MISSILES,3}, {eSkill::DEFENSE,3},
+				{eSkill::POISON,2},
+			}, std::map<eSkill,short>{
+				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},
+				{eSkill::EDGED_WEAPONS,3}, {eSkill::BASHING_WEAPONS,3}, {eSkill::ARCHERY,2},
+				{eSkill::DISARM_TRAPS,4}, {eSkill::LOCKPICKING,4}, {eSkill::POISON,2}, {eSkill::LUCK,1},
+			}, std::map<eSkill,short>{
+				{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
+				{eSkill::EDGED_WEAPONS,2}, {eSkill::THROWN_MISSILES,2},
+				{eSkill::MAGE_SPELLS,3}, {eSkill::MAGE_LORE,3}, {eSkill::ITEM_LORE,1},
+			}, std::map<eSkill,short>{
+				{eSkill::STRENGTH,2}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
+				{eSkill::EDGED_WEAPONS,3}, {eSkill::THROWN_MISSILES,2},
+				{eSkill::MAGE_SPELLS,2}, {eSkill::PRIEST_SPELLS,1}, {eSkill::MAGE_LORE,4},
+				{eSkill::LUCK,1},
+			}, std::map<eSkill,short>{
+				{eSkill::STRENGTH,2}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
+				{eSkill::BASHING_WEAPONS,2}, {eSkill::THROWN_MISSILES,2}, {eSkill::DEFENSE,1},
+				{eSkill::PRIEST_SPELLS,3}, {eSkill::MAGE_LORE,3}, {eSkill::ALCHEMY,2},
+			},
 		};
 		static const short pc_health[6] = {22,24,24,16,16,18};
 		static const short pc_sp[6] = {0,0,0,20,20,21};
@@ -206,9 +234,11 @@ cPlayer::cPlayer(long key,short slot){
 				
 		}
 		
-		for (i = 0; i < 19; i++)
-			skills[i] = pc_stats[slot][i];
-		cur_health = pc_health[slot]; 
+		for (i = 0; i < 19; i++) {
+			eSkill skill = eSkill(i);
+			skills[skill] = pc_stats[slot][skill];
+		}
+		cur_health = pc_health[slot];
 		max_health = pc_health[slot]; 
 		experience = 0; 
 		skill_pts = 0; 
@@ -255,11 +285,13 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 void cPlayer::writeTo(std::ostream& file){
 	file << "STATUS -1 " << main_status << '\n';
 	file << "NAME " << name << '\n';
-	file << "SKILL -2 " << max_health << '\n';
-	file << "SKILL -1 " << max_sp << '\n';
-	for(int i = 0; i < 30; i++)
-		if(skills[i] > 0)
-			file << "SKILL " << i << ' ' << skills[i] << '\n';
+	file << "SKILL 19 " << max_health << '\n';
+	file << "SKILL 20 " << max_sp << '\n';
+	for(int i = 0; i < 19; i++) {
+		eSkill skill = eSkill(i);
+		if(skills[skill] > 0)
+			file << "SKILL " << i << ' ' << skills[skill] << '\n';
+	}
 	file << "HEALTH " << cur_health << '\n';
 	file << "MANA " << cur_sp << '\n';
 	file << "EXPERIENCE " << experience << '\n';
@@ -319,13 +351,17 @@ void cPlayer::readFrom(std::istream& file){
 			sin >> i;
 			switch(i){
 				case -1:
+				case 20:
 					sin >> max_sp;
 					break;
 				case -2:
+				case 19:
 					sin >> max_health;
 					break;
 				default:
-					sin >> skills[i];
+					if(i < 0 || i >= 19) break;
+					eSkill skill = eSkill(i);
+					sin >> skills[skill];
 			}
 		}else if(cur == "HEALTH")
 			sin >> cur_health;

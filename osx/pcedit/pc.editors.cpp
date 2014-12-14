@@ -52,15 +52,34 @@ extern short which_pc_displayed;
 cPlayer *store_pc;
 sf::Texture button_num_gworld;
 
-short skill_cost[20] = {
-	3,3,3,2,2,2, 1,2,2,6,
-	5, 1,2,4,2,1, 4,2,5,0};
-short skill_max[20] = {
-	20,20,20,20,20,20,20,20,20,7,
-	7,20,20,10,20,20,20,20,20};
-short skill_g_cost[20] = {
-	50,50,50,40,40,40,30,50,40,250,
-	250,25,100,200,30,20,100,80,0,0};
+std::map<eSkill,short> skill_cost = {
+	{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,3}, {eSkill::INTELLIGENCE,3},
+	{eSkill::EDGED_WEAPONS,2}, {eSkill::BASHING_WEAPONS,2}, {eSkill::POLE_WEAPONS,2},
+	{eSkill::THROWN_MISSILES,1}, {eSkill::ARCHERY,2}, {eSkill::DEFENSE,2},
+	{eSkill::MAGE_SPELLS,6}, {eSkill::PRIEST_SPELLS,5}, {eSkill::MAGE_LORE,1},
+	{eSkill::ALCHEMY,2}, {eSkill::ITEM_LORE,4}, {eSkill::DISARM_TRAPS,2},
+	{eSkill::LOCKPICKING,1}, {eSkill::ASSASSINATION,4}, {eSkill::POISON,2},
+	{eSkill::LUCK,5},
+};
+std::map<eSkill,short> skill_max = {
+	{eSkill::STRENGTH,20}, {eSkill::DEXTERITY,20}, {eSkill::INTELLIGENCE,20},
+	{eSkill::EDGED_WEAPONS,20}, {eSkill::BASHING_WEAPONS,20}, {eSkill::POLE_WEAPONS,20},
+	{eSkill::THROWN_MISSILES,20}, {eSkill::ARCHERY,20}, {eSkill::DEFENSE,20},
+	{eSkill::MAGE_SPELLS,7}, {eSkill::PRIEST_SPELLS,7}, {eSkill::MAGE_LORE,20},
+	{eSkill::ALCHEMY,20}, {eSkill::ITEM_LORE,10}, {eSkill::DISARM_TRAPS,20},
+	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,20}, {eSkill::POISON,20},
+	{eSkill::LUCK,20},
+};
+std::map<eSkill,short> skill_g_cost = {
+	{eSkill::STRENGTH,50}, {eSkill::DEXTERITY,503}, {eSkill::INTELLIGENCE,50},
+	{eSkill::EDGED_WEAPONS,40}, {eSkill::BASHING_WEAPONS,40}, {eSkill::POLE_WEAPONS,40},
+	{eSkill::THROWN_MISSILES,30}, {eSkill::ARCHERY,50}, {eSkill::DEFENSE,40},
+	{eSkill::MAGE_SPELLS,250}, {eSkill::PRIEST_SPELLS,250}, {eSkill::MAGE_LORE,25},
+	{eSkill::ALCHEMY,100}, {eSkill::ITEM_LORE,200}, {eSkill::DISARM_TRAPS,30},
+	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,100}, {eSkill::POISON,80},
+	{eSkill::LUCK,0},
+};
+// The index here is the skill's level, not the skill itself; thus 20 is the max index since no spell can go above 20.
 short skill_bonus[21] = {
 	-3,-3,-2,-1,0,0,1,1,1,2,
 	2,2,3,3,3,3,4,4,4,5,5};
@@ -77,7 +96,7 @@ const char* skill_ids[19] = {
 bool talk_done = false;
 long val_for_text;
 bool keep_change = false;
-short store_skills[20],store_h,store_sp,i,store_skp,which_skill;
+short store_h,store_sp,i,store_skp;
 long store_g;
 short store_train_mode,store_train_pc;
 
@@ -334,10 +353,12 @@ void display_alchemy(bool allowEdit)
 
 // TODO: This dialog needs some kind of context system really badly to avoid the rampant globals
 // MARK: Start spend XP dialog
-static void do_xp_keep(short pc_num,short mode)
+static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_skills)
 {
-	for (i = 0; i < 20; i++)
-		univ.party[pc_num].skills[i] = store_skills[i];
+	for(i = 0; i < 19; i++) {
+		eSkill skill = eSkill(i);
+		univ.party[pc_num].skills[skill] = store_skills[skill];
+	}
 	univ.party[pc_num].cur_health += store_h - univ.party[pc_num].max_health;
 	univ.party[pc_num].max_health = store_h;
 	univ.party[pc_num].cur_sp += store_sp - univ.party[pc_num].max_sp;
@@ -348,16 +369,17 @@ static void do_xp_keep(short pc_num,short mode)
 	
 }
 
-static void draw_xp_skills(cDialog& me)
+static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills)
 {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for (i = 0; i < 19; i++) {
 		cControl& cur = me[skill_ids[i]];
-		if ((store_skp >= skill_cost[i]) && (store_g >= skill_g_cost[i]))
+		eSkill skill = eSkill(i);
+		if ((store_skp >= skill_cost[skill]) && (store_g >= skill_g_cost[skill]))
 			cur.setColour(sf::Color::Red);
 		else cur.setColour(me.getDefTextClr());
-		cur.setTextToNum(store_skills[i]);
+		cur.setTextToNum(store_skills[skill]);
 	}
 	
 	cControl& sp = me["sp"];
@@ -378,9 +400,7 @@ static void update_gold_skills(cDialog& me) {
 }
 
 
-static void do_xp_draw(cDialog& me)
-
-{
+static void do_xp_draw(cDialog& me,std::map<eSkill,short>& store_skills) {
 	
 	char get_text[256];
 	short mode,pc_num;
@@ -396,20 +416,22 @@ static void do_xp_draw(cDialog& me)
 	
 	me["recipient"].setText(get_text);
 	
-	for (i = 0; i < 20; i++)
-		store_skills[i] = univ.party[pc_num].skills[i];
+	for(i = 0; i < 19; i++) {
+		eSkill skill = eSkill(i);
+		store_skills[skill] = univ.party[pc_num].skills[skill];
+	}
 	store_h = univ.party[pc_num].max_health;
 	store_sp = univ.party[pc_num].max_sp;
 	store_g = (mode == 0) ? 20000 : univ.party.gold;
 	store_skp = univ.party[pc_num].skill_pts;
 	
-	draw_xp_skills(me);
+	draw_xp_skills(me,store_skills);
 	
 	
 	update_gold_skills(me);
 }
 
-static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod) {
+static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,std::map<eSkill,short>& store_skills) {
 	short mode,pc_num;
 	bool talk_done = false;
 	
@@ -426,29 +448,29 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod)
 		univ.party.help_received[10] = 0;
 //		give_help(210,11,me);
 	} else if(item_hit == "keep") {
-		do_xp_keep(pc_num,mode);
+		do_xp_keep(pc_num,mode,store_skills);
 		me.setResult(true);
 		talk_done = true;
 	} else if(item_hit == "left") {
 		// TODO: Try not forcing a commit when using the arrows?
 		if (mode != 0) {
-			do_xp_keep(pc_num,mode);
+			do_xp_keep(pc_num,mode,store_skills);
 			do {
 				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
 			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
-			do_xp_draw(me);
+			do_xp_draw(me,store_skills);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
 		if (mode != 0) {
-			do_xp_keep(pc_num,mode);
+			do_xp_keep(pc_num,mode,store_skills);
 			do {
 				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
 			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
-			do_xp_draw(me);
+			do_xp_draw(me,store_skills);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	}
@@ -459,7 +481,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit, eKeyMod)
 	return true;
 }
 
-static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods) {
+static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods,std::map<eSkill,short>& store_skills) {
 	short mode = store_train_mode, pc_num = store_train_pc;
 	if(item_hit.substr(0,2) == "hp") {
 		if(mod_contains(mods, mod_alt)) {
@@ -490,7 +512,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		
 		update_gold_skills(me);
 		me["hp"].setTextToNum(store_h);
-		draw_xp_skills(me);
+		draw_xp_skills(me,store_skills);
 		
 	} else if(item_hit.substr(0,2) == "sp") {
 		if(mod_contains(mods, mod_alt)) {
@@ -521,25 +543,33 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		
 		update_gold_skills(me);
 		me["sp"].setTextToNum(store_sp);
-		draw_xp_skills(me);
+		draw_xp_skills(me,store_skills);
 	} else {
+		eSkill which_skill = eSkill::INVALID;
 		for(int i = 0; i < 19; i++) {
 			size_t n = strlen(skill_ids[i]);
 			if(item_hit.length() < n + 2) continue;
 			if(item_hit.substr(0, item_hit.length() - 2) == skill_ids[i]) {
-				which_skill = i;
+				which_skill = eSkill(i);
 				break;
 			}
 		}
+		if(which_skill == eSkill::INVALID) return true;
 /*		if(mod_contains(mods, mod_alt)) display_skills(which_skill,&me);
 		else */{
 			char dir = item_hit[item_hit.length() - 1];
 			
-			if (((store_skills[which_skill] >= skill_max[which_skill]) && (dir == 'p')) ||
-				((store_skills[which_skill] == univ.party[pc_num].skills[which_skill]) && (dir == 'm') && (mode == 1)) ||
-				((store_skills[which_skill] == 0) && (dir == 'm') && (mode == 0) && (which_skill > 2)) ||
-				((store_skills[which_skill] == 1) && (dir == 'm') && (mode == 0) && (which_skill <= 2)))
-				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			// TODO: This is a game event, so it should have a game sound, not a system alert.
+			if(store_skills[which_skill] >= skill_max[which_skill] && dir == 'p')
+				beep();
+			else if(store_skills[which_skill] == univ.party[pc_num].skills[which_skill] && dir == 'm' && mode == 1)
+				beep();
+			else if(store_skills[which_skill] == 0 && dir == 'm' && mode == 0 &&
+					which_skill != eSkill::STRENGTH && which_skill != eSkill::DEXTERITY && which_skill != eSkill::INTELLIGENCE)
+				beep();
+			else if(store_skills[which_skill] == 1 && dir == 'm' && mode == 0 &&
+					(which_skill == eSkill::STRENGTH || which_skill == eSkill::DEXTERITY || which_skill == eSkill::INTELLIGENCE))
+				beep();
 			else {
 				if(dir == 'm') {
 					store_g += skill_g_cost[which_skill];
@@ -560,8 +590,8 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				}
 				
 				update_gold_skills(me);
-				me[skill_ids[which_skill]].setTextToNum(store_skills[which_skill]);
-				draw_xp_skills(me);
+				me[skill_ids[int(which_skill)]].setTextToNum(store_skills[which_skill]);
+				draw_xp_skills(me,store_skills);
 			}
 		}
 	}
@@ -572,27 +602,32 @@ bool spend_xp(short pc_num, short mode, cDialog* parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
 {
+	using namespace std::placeholders;
 	store_train_pc = pc_num;
 	store_train_mode = mode;
 	
 	make_cursor_sword();
 	
+	std::map<eSkill,short> skills = univ.party[pc_num].skills;
+	
 	cDialog xpDlog("spend-xp.xml",parent);
 	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
+	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(skills));
 	std::string minus = "-m", plus = "-p";
 	for (i = 54; i < 73; i++) {
 		std::ostringstream sout;
+		eSkill skill = eSkill(i - 54);
 		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
-		sout << skill_cost[i - 54] << '/' << skill_g_cost[i - 54] << ')';
+		sout << skill_cost[skill] << '/' << skill_g_cost[skill] << ')';
 		xpDlog.addLabelFor(skill_ids[i - 54],sout.str(),LABEL_LEFT,(i < 63) ? 75 : 69,true);
-		xpDlog[skill_ids[i - 54] + minus].attachClickHandler(spend_xp_event_filter);
-		xpDlog[skill_ids[i - 54] + plus].attachClickHandler(spend_xp_event_filter);
+		xpDlog[skill_ids[i - 54] + minus].attachClickHandler(spend_xp_filter);
+		xpDlog[skill_ids[i - 54] + plus].attachClickHandler(spend_xp_filter);
 	}
-	do_xp_draw(xpDlog);
+	do_xp_draw(xpDlog,skills);
 	
-	xpDlog.attachClickHandlers(spend_xp_navigate_filter,{"keep","cancel","left","right","help"});
-	xpDlog.attachClickHandlers(spend_xp_event_filter,{"sp-m","sp-p","hp-m","hp-p"});
+	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(skills)),{"keep","cancel","left","right","help"});
+	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
 	if (univ.party.help_received[10] == 0) {
 		// TODO: Is an initial draw even needed?

@@ -36,7 +36,6 @@ extern location center;
 extern ter_num_t combat_terrain[64][64];
 extern location pc_pos[6];
 extern short current_pc;
-extern short pc_last_cast[2][6];
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
@@ -557,7 +556,7 @@ bool pc_combat_move(location destination) ////
 void char_parry()
 {
 	pc_parry[current_pc] = (univ.party[current_pc].ap / 4) *
-		(2 + stat_adj(current_pc,1) + univ.party[current_pc].skills[8]);
+		(2 + stat_adj(current_pc,eSkill::DEXTERITY) + univ.party[current_pc].skills[eSkill::DEFENSE]);
 	univ.party[current_pc].ap = 0;
 }
 
@@ -569,7 +568,8 @@ void char_stand_ready()
 
 void pc_attack(short who_att,short target)////
 {
-	short r1,r2,what_skill1 = 1, what_skill2 = 1, weap1 = 24, weap2 = 24,i,store_hp,skill_item;
+	short r1,r2,weap1 = 24, weap2 = 24,i,store_hp,skill_item;
+	eSkill what_skill1 = eSkill::DEXTERITY, what_skill2 = eSkill::DEXTERITY;
 	cCreature *which_m;
 	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
 	
@@ -591,10 +591,10 @@ void pc_attack(short who_att,short target)////
 		}
 	
 	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
-		- stat_adj(who_att,1) * 5 + (get_encumberance(who_att)) * 5;
+		- stat_adj(who_att,eSkill::DEXTERITY) * 5 + (get_encumberance(who_att)) * 5;
 	
 	dam_adj = minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE]) - minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
-		+ stat_adj(who_att,0);
+		+ stat_adj(who_att,eSkill::STRENGTH);
 	
 	if(which_m->status[eStatus::ASLEEP] > 0 || which_m->status[eStatus::PARALYZED] > 0) {
 		hit_adj -= 80;
@@ -639,12 +639,11 @@ void pc_attack(short who_att,short target)////
 	
 	// Don't forget awkward and stat adj.
 	if (weap1 < 24) {
-		// TODO: Find a way to remove this cast
-		what_skill1 = 2 + (int)univ.party[who_att].items[weap1].type;
+		what_skill1 = univ.party[who_att].items[weap1].type;
 		
 		// safety valve
-		if (what_skill1 == 2)
-			what_skill1 = 3;
+		if (what_skill1 == eSkill::INVALID)
+			what_skill1 = eSkill::EDGED_WEAPONS;
 		
 		sprintf (create_line, "%s swings. ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
 		add_string_to_buf(create_line);
@@ -657,7 +656,7 @@ void pc_attack(short who_att,short target)////
 			r1 += 25;
 		
 		// race adj.
-		if(univ.party[who_att].race == eRace::SLITH && univ.party[who_att].items[weap1].type == eWeapType::POLE)
+		if(univ.party[who_att].race == eRace::SLITH && univ.party[who_att].items[weap1].type == eSkill::POLE_WEAPONS)
 			r1 -= 10;
 		
 		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
@@ -671,23 +670,23 @@ void pc_attack(short who_att,short target)////
 			// assassinate
 			r1 = get_ran(1,1,100);
 			if ((univ.party[who_att].level >= which_m->level - 1)
-				&& (univ.party[who_att].skills[16] >= which_m->level / 2)
+				&& univ.party[who_att].skills[eSkill::ASSASSINATION] >= which_m->level / 2
 				&& (which_m->spec_skill != 12)) // Can't assassinate splitters
-				if (r1 < hit_chance[max(univ.party[who_att].skills[16] - which_m->level,0)]) {
+				if(r1 < hit_chance[max(univ.party[who_att].skills[eSkill::ASSASSINATION] - which_m->level,0)]) {
 					add_string_to_buf("  You assassinate.           ");
 					spec_dam += r2;
 				}
 			
 			switch (what_skill1) {
-			 	case 3:
+			 	case eSkill::EDGED_WEAPONS:
 					if (univ.party[who_att].items[weap1].item_level < 8)
 						damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
 					else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
 					break;
-			 	case 4:
+			 	case eSkill::BASHING_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
 					break;
-			 	case 5:
+			 	case eSkill::POLE_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
 					break;
 			}
@@ -716,18 +715,17 @@ void pc_attack(short who_att,short target)////
 			draw_terrain(2);
 			sprintf ((char *) create_line, "  %s misses.              ",(char *) univ.party[who_att].name.c_str());
 			add_string_to_buf((char *) create_line);
-			if (what_skill1 == 5)
+			if (what_skill1 == eSkill::POLE_WEAPONS)
 				play_sound(19);
 			else play_sound(2);
 		}
 	}
 	if ((weap2 < 24) && (which_m->active > 0)) {
-		// TODO: Find a way to remove this cast
-		what_skill2 = 2 + (int)univ.party[who_att].items[weap2].type;
+		what_skill2 = univ.party[who_att].items[weap2].type;
 		
 		// safety valve
-		if (what_skill2 == 2)
-			what_skill2 = 3;
+		if (what_skill1 == eSkill::INVALID)
+			what_skill1 = eSkill::EDGED_WEAPONS;
 		
 		
 		sprintf(create_line, "%s swings.                    ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
@@ -747,15 +745,15 @@ void pc_attack(short who_att,short target)////
 			spec_dam = calc_spec_dam(univ.party[who_att].items[weap2].ability,
 									 univ.party[who_att].items[weap2].ability_strength,which_m);
 			switch (what_skill2) {
-			 	case 3:
+			 	case eSkill::EDGED_WEAPONS:
 					if (univ.party[who_att].items[weap1].item_level < 8)
 						damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
 					else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
 					break;
-			 	case 4:
+			 	case eSkill::BASHING_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
 					break;
-			 	case 5:
+			 	case eSkill::POLE_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
 					break;
 			}
@@ -778,7 +776,7 @@ void pc_attack(short who_att,short target)////
 			draw_terrain(2);
 			sprintf ((char *) create_line, "%s misses.             ",(char *) univ.party[who_att].name.c_str());
 			add_string_to_buf((char *) create_line);
-			if (what_skill2 == 5)
+			if (what_skill2 == eSkill::POLE_WEAPONS)
 				play_sound(19);
 			else play_sound(2);
 		}
@@ -844,7 +842,6 @@ short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst) {
 			scare_monst(monst,abil_str * 10);
 			break;
 		case eItemAbil::MISSILE_ACID:
-		case eItemAbil::ACIDIC_WEAPON:
 			acid_monst(monst,abil_str);
 			break;
 	}
@@ -942,7 +939,7 @@ void do_combat_cast(location target)////
 	}
 	else {
 		level = 1 + univ.party[current_pc].level / 2;
-		bonus = stat_adj(current_pc,SKILL_INTELLIGENCE);
+		bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 	}
 	force_wall_position = 10;
 	s_num = spell_being_cast % 100;
@@ -1149,59 +1146,59 @@ void do_combat_cast(location target)////
 								do_missile_anim(50,pc_pos[current_pc],61);
 								switch (spell_being_cast) {
 									case 35: // Simulacrum
-										r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(store_sum_monst,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 16: // summon beast
-										r2 = get_ran(3,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 26: // summon 1
-										r2 = get_ran(4,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(4,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 43: // summon 2
-										r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(5,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 58: // summon 3
-										r2 = get_ran(7,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(7,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if ((summon == 0) || (!summon_monster(summon,target,r2,2)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 50: // Daemon
-										r2 = get_ran(5,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(5,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (!summon_monster(85,target,r2,2))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 63: // Rat!
-										r1 = get_ran(3,1,4);
+										r1 = get_ran(3,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (!summon_monster(80,target,r1,2))
 											add_string_to_buf("  Summon failed.");
 										break;
 										
 									case 115: // summon spirit
-										r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+										r2 = get_ran(2,1,5) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(125,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 134: // s to s
 										r1 = get_ran(1,0,7);
-										r2 = get_ran(2,1,5) + stat_adj(current_pc,2);
+										r2 = get_ran(2,1,5) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster((r1 == 1) ? 100 : 99,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 143: // host
-										r2 = get_ran(2,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(2,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster((i == 0) ? 126 : 125,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
 									case 150: // guardian
-										r2 = get_ran(6,1,4) + stat_adj(current_pc,2);
+										r2 = get_ran(6,1,4) + stat_adj(current_pc,eSkill::INTELLIGENCE);
 										if (summon_monster(122,target,r2,2) == false)
 											add_string_to_buf("  Summon failed.");
 										break;
@@ -1499,12 +1496,12 @@ void fire_missile(location target) {
 	bool exploding = false;
 	missile_firer = current_pc;
 	
-	skill = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].skills[7] : univ.party[missile_firer].skills[6];
+	skill = overall_mode == MODE_FIRING ? univ.party[missile_firer].skills[eSkill::ARCHERY] : univ.party[missile_firer].skills[eSkill::THROWN_MISSILES];
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = univ.party[missile_firer].items[ammo_inv_slot].item_level;
 	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
-	hit_bonus += stat_adj(missile_firer,1) - can_see_light(pc_pos[missile_firer],target,sight_obscurity)
+	hit_bonus += stat_adj(missile_firer,eSkill::DEXTERITY) - can_see_light(pc_pos[missile_firer],target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	if ((skill_item = pc_has_abil_equip(missile_firer,eItemAbil::ACCURACY)) < 24) {
 		hit_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
@@ -2334,7 +2331,7 @@ void monster_attack_pc(short who_att,short target)
 			
 			// Attack roll
 			r1 = get_ran(1,1,100) - 5 * min(8,attacker->status[eStatus::BLESS_CURSE]) + 5 * univ.party[target].status[eStatus::BLESS_CURSE]
-				+ 5 * stat_adj(target,1) - 15;
+				+ 5 * stat_adj(target,eSkill::DEXTERITY) - 15;
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			if (pc_parry[target] < 100)
 				r1 += 5 * pc_parry[target];
@@ -4269,7 +4266,7 @@ bool combat_cast_mage_spell()
 	store_sp = univ.party[current_pc].cur_sp;
 	if (univ.party[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");
-	else if (univ.party[current_pc].skills[9] == 0)
+	else if (univ.party[current_pc].skills[eSkill::MAGE_SPELLS] == 0)
 		add_string_to_buf("Cast: No mage skill.        ");
 	else if (get_encumberance(current_pc) > 1) {
 		add_string_to_buf("Cast: Too encumbered.        ");
@@ -4281,11 +4278,11 @@ bool combat_cast_mage_spell()
 		
 		
 		if (spell_forced == false)
-			spell_num = pick_spell(current_pc,0);
+			spell_num = pick_spell(current_pc,eSkill::MAGE_SPELLS);
 		else {
-			if (repeat_cast_ok(0) == false)
+			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
-			spell_num = pc_last_cast[0][current_pc];
+			spell_num = univ.party[current_pc].last_cast[eSkill::MAGE_SPELLS];
 		}
 		
 		if (spell_num == 35) {
@@ -4300,12 +4297,12 @@ bool combat_cast_mage_spell()
 			store_sum_monst_cost = get_monst.level;
 		}
 		
-		bonus = stat_adj(current_pc,2);
+		bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 		combat_posing_monster = current_working_monster = current_pc;
 		if (spell_num >= 70)
 			return false;
 		if (spell_num < 70) {
-			print_spell_cast(spell_num,0);
+			print_spell_cast(spell_num,eSkill::MAGE_SPELLS);
 			if (refer_mage[spell_num] == 0) {
 				take_ap(6);
 				draw_terrain(2);
@@ -4477,25 +4474,32 @@ bool combat_cast_priest_spell()
 		return false;
 	}
 	if (spell_forced == false)
-		spell_num = pick_spell(current_pc,1);
+		spell_num = pick_spell(current_pc,eSkill::PRIEST_SPELLS);
 	else {
-		if (repeat_cast_ok(1) == false)
+		if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
 			return false;
-		spell_num = pc_last_cast[1][current_pc];
+		spell_num = univ.party[current_pc].last_cast[eSkill::PRIEST_SPELLS];
 	}
 	
 	store_sp = univ.party[current_pc].cur_sp;
+	if(univ.party[current_pc].cur_sp == 0) {
+		add_string_to_buf("Cast: No spell points.        ");
+		return false;
+	} else if(univ.party[current_pc].skills[eSkill::PRIEST_SPELLS] == 0) {
+		add_string_to_buf("Cast: No priest skill.        ");
+		return false;
+	}
 	
 	if (spell_num >= 70)
 		return false;
-	bonus = stat_adj(current_pc,2);
+	bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 	
 	combat_posing_monster = current_working_monster = current_pc;
 	
 	if (univ.party[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");
 	else if (spell_num < 70) {
-		print_spell_cast(spell_num,1);
+		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
 		if (refer_priest[spell_num] == 0) {
 			take_ap(5);
 			draw_terrain(2);
@@ -4671,35 +4675,35 @@ void start_fancy_spell_targeting(short num)
 	
 	switch (num) { // Assign special targeting shapes and number of targets
 		case 129: // smite
-			num_targets_left = minmax(1,8,univ.party[current_pc].level / 4 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,8,univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
 		case 134: // sticks to snakes
-			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
 		case 143: // summon host
 			num_targets_left = 5;
 			break;
 		case 27: // flame arrows
-			num_targets_left = univ.party[current_pc].level / 4 + stat_adj(current_pc,2) / 2;
+			num_targets_left = univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
 		case 36: // venom arrows
-			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			break;
 		case 61: case 49: // paralysis, death arrows
-			num_targets_left = univ.party[current_pc].level / 8 + stat_adj(current_pc,2) / 3;
+			num_targets_left = univ.party[current_pc].level / 8 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 3;
 			break;
 		case 45: // spray fields
-			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,2) / 2;
+			num_targets_left = univ.party[current_pc].level / 5 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2;
 			current_pat = t;
 			break;
 		case 26: // summon 1
-			num_targets_left = minmax(1,7,univ.party[current_pc].level / 4 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,7,univ.party[current_pc].level / 4 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
 		case 43: // summon 2
-			num_targets_left = minmax(1,6,univ.party[current_pc].level / 6 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,6,univ.party[current_pc].level / 6 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
 		case 58: // summon 3
-			num_targets_left = minmax(1,5,univ.party[current_pc].level / 8 + stat_adj(current_pc,2) / 2);
+			num_targets_left = minmax(1,5,univ.party[current_pc].level / 8 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
 			break;
 	}
 	

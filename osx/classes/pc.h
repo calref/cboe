@@ -24,7 +24,7 @@ class cPlayer {
 public:
 	eMainStatus main_status;
 	std::string name;
-	short skills[30];
+	std::map<eSkill, short> skills;
 	unsigned short max_health;
 	short cur_health;
 	unsigned short max_sp;
@@ -45,6 +45,8 @@ public:
 	//short exp_adj;
 	short direction;
 	short ap;
+	// transient stuff
+	std::map<eSkill,short> last_cast;
 	
 	cPlayer& operator = (legacy::pc_record_type old);
 	cPlayer();

@@ -28,7 +28,7 @@
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 
-extern short spell_w_cast[2][62];
+extern std::map<eSkill,std::array<short,62>> spell_w_cast;
 extern short spell_level[62];
 extern short skill_cost[20];
 extern short skill_max[20];
@@ -36,7 +36,8 @@ extern short skill_g_cost[20];
 extern const char* skill_ids[19];
 //extern party_record_type	party;
 extern short mage_range[66],priest_range[66];
-extern short spell_cost[2][62],cur_town_talk_loaded;
+extern std::map<eSkill,std::array<short,62>> spell_cost;
+extern short cur_town_talk_loaded;
 //extern current_town_type univ.town;
 extern bool give_intro_hint;
 extern sf::RenderWindow mainPtr;
@@ -69,20 +70,19 @@ short store_page_on,store_num_i;
 short position,num_entries;
 unsigned short cur_entry;
 
-static void put_spell_info(cDialog& me, short display_mode)
-{
+static void put_spell_info(cDialog& me, eSkill display_mode) {
 	std::ostringstream store_text;
 	short pos,ran;
 	std::string res;
 	
-	pos = (display_mode == 0) ? mage_spell_pos : priest_spell_pos;
-	res = display_mode == 0 ? "mage-spells" : "priest-spells";
-	ran = (display_mode == 0) ? mage_range[pos] : priest_range[pos];
+	pos = display_mode == eSkill::MAGE_SPELLS ? mage_spell_pos : priest_spell_pos;
+	res = display_mode == eSkill::MAGE_SPELLS ? "mage-spells" : "priest-spells";
+	ran = display_mode == eSkill::MAGE_SPELLS ? mage_range[pos] : priest_range[pos];
 	
 	me["name"].setText(get_str(res, pos * 2 + 1));
 	
-	if (spell_cost[display_mode][pos] > 0)
-		store_text << spell_level[pos] << "/" << spell_cost[display_mode][pos];
+	if (spell_cost[eSkill::MAGE_SPELLS][pos] > 0)
+		store_text << spell_level[pos] << "/" << spell_cost[eSkill::MAGE_SPELLS][pos];
 	else store_text << spell_level[pos] << "/?";
 	me["cost"].setText(store_text.str());
 	
@@ -96,32 +96,31 @@ static void put_spell_info(cDialog& me, short display_mode)
 }
 
 
-static bool display_spells_event_filter(cDialog& me, std::string item_hit, short display_mode) {
+static bool display_spells_event_filter(cDialog& me, std::string item_hit, eSkill display_mode) {
 	short store;
 	if(item_hit == "done") {
 		me.toast(true);
 	} else {
-		store = (display_mode == 0) ? mage_spell_pos : priest_spell_pos;
+		store = display_mode == eSkill::MAGE_SPELLS ? mage_spell_pos : priest_spell_pos;
 		if(item_hit == "left") {
 			store = (store == 0) ? 61 : store - 1;
 		}
 		else {
 			store = (store + 1) % 62;
 		}
-		if (display_mode == 0)
+		if(display_mode == eSkill::MAGE_SPELLS)
 			mage_spell_pos = store;
 		else priest_spell_pos = store;
 		put_spell_info(me, display_mode);
 	}
 	return true;
 }
-void display_spells(short mode,short force_spell,cDialog* parent)
-//short mode; // 0 - mage  1 - priest
+void display_spells(eSkill mode,short force_spell,cDialog* parent)
 //short force_spell; // if 100, ignore
 {
 	using namespace std::placeholders;
 	if (force_spell < 100) {
-		if (mode == 0)
+		if(mode == eSkill::MAGE_SPELLS)
 			mage_spell_pos = force_spell;
 		else priest_spell_pos = force_spell;
 	}
@@ -131,9 +130,9 @@ void display_spells(short mode,short force_spell,cDialog* parent)
 	cDialog spellInfo("spell-info.xml", parent);
 	spellInfo.attachClickHandlers(std::bind(display_spells_event_filter,_1,_2,mode), {"done","left","right"});
 	
-	dynamic_cast<cPict&>(spellInfo["icon"]).setPict(14 + mode);
+	dynamic_cast<cPict&>(spellInfo["icon"]).setPict(mode == eSkill::MAGE_SPELLS ? 14 : 15);
 	put_spell_info(spellInfo, mode);
-	if (mode == 0)
+	if(mode == eSkill::MAGE_SPELLS)
 		spellInfo["type"].setText("Mage Spells");
 	else spellInfo["type"].setText("Priest Spells");
 	
@@ -175,12 +174,14 @@ static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyM
 	return true;
 }
 
-void display_skills(short force_skill,cDialog* parent)
+void display_skills(eSkill force_skill,cDialog* parent)
 {
-	if (force_skill < 100)
-		skill_pos = force_skill;
+	if(force_skill != eSkill::INVALID)
+		skill_pos = int(force_skill);
 	if (skill_pos < 0)
 		skill_pos = 0;
+	if(skill_pos > 18)
+		skill_pos = 18;
 	
 	make_cursor_sword();
 	
@@ -251,16 +252,16 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
 			switch (s_i.type) {
-				case eWeapType::EDGED:
+				case eSkill::EDGED_WEAPONS:
 					sprintf((char *) store_text, "Edged weapon");
 					break;
-				case eWeapType::BASHING:
+				case eSkill::BASHING_WEAPONS:
 					sprintf((char *) store_text, "Bashing weapon");
 					break;
-				case eWeapType::POLE:
+				case eSkill::POLE_WEAPONS:
 					sprintf((char *) store_text, "Pole weapon");
 					break;
-				case eWeapType::NOT_MELEE:
+				case eSkill::INVALID:
 				default:
 					sprintf((char*)store_text, "Error weapon"); // should never be reached
 			}
@@ -588,7 +589,8 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["sp"].setText(str);
 	
 	for (i = 0; i < 19; i++) {
-		me[skill_ids[i]].setTextToNum(univ.party[pc].skills[i]);
+		eSkill skill = eSkill(i);
+		me[skill_ids[i]].setTextToNum(univ.party[pc].skills[skill]);
 	}
 	store = total_encumberance(pc);
 	me["encumb"].setTextToNum(store);
@@ -609,12 +611,12 @@ static void display_pc_info(cDialog& me, const short pc) {
 			else weap2 = i;
 		}
 	
-	hit_adj = stat_adj(pc,1) * 5 - (total_encumberance(pc)) * 5
+	hit_adj = stat_adj(pc,eSkill::DEXTERITY) * 5 - (total_encumberance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if (!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
 		hit_adj -= 25;
 	
-	dam_adj = stat_adj(pc,0) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
+	dam_adj = stat_adj(pc,eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if((skill_item = pc_has_abil_equip(pc,eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].item_level / 2;

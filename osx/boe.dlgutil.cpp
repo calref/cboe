@@ -385,11 +385,11 @@ void handle_info_request(short what_chosen)
 			break;
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);
-			display_spells(0,base_item.item_level,0);
+			display_spells(eSkill::MAGE_SPELLS,base_item.item_level,0);
 			break;
 		case 9:
 			base_item = store_priest_spells(what_chosen - 900 - 30);
-			display_spells(1,base_item.item_level,0);
+			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level,0);
 			break;
 		default:
 			what_magic_shop = (what_chosen / 1000) - 1;

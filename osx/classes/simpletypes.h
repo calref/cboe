@@ -240,14 +240,6 @@ inline bool blocksMove(eTerObstruct block) {
 	return code > 2;
 }
 
-/*      items[i].type    a.k.a type of weapon         */
-enum class eWeapType {
-	NOT_MELEE = 0,
-	EDGED = 1,
-	BASHING = 2,
-	POLE = 3,
-};
-
 /*      items[i].variety    a.k.a item type (in editor)      */
 enum class eItemType {
 	NO_ITEM = 0,
@@ -448,28 +440,35 @@ inline eItemAbilCat getItemAbilCategory(eItemAbil abil) {
 }
 
 /* adven[i].skills */ //complete
-enum eSkill {
-	SKILL_STRENGTH = 0,
-	SKILL_DEXTERITY = 1,
-	SKILL_INTELLIGENCE = 2,
-	SKILL_EDGED_WEAPONS = 3,
-	SKILL_BASHING_WEAPONS = 4,
-	SKILL_POLE_WEAPONS = 5,
-	SKILL_THROWN_MISSILES = 6,
-	SKILL_ARCHERY = 7,
-	SKILL_DEFENSE = 8,
-	SKILL_MAGE_SPELLS = 9,
-	SKILL_PRIEST_SPELLS = 10,
-	SKILL_MAGE_LORE = 11,
-	SKILL_ALCHEMY = 12,
-	SKILL_ITEM_LORE = 13,
-	SKILL_DISARM_TRAPS = 14,
-	SKILL_LOCKPICKING = 15,
-	SKILL_ASSASSINATION = 16,
-	SKILL_POISON = 17,
-	SKILL_LUCK = 18,
-	SKILL_MAX_HP = 19,
-	SKILL_MAX_SP = 20,
+enum class eSkill {
+	INVALID = -1,
+	STRENGTH = 0,
+	DEXTERITY = 1,
+	INTELLIGENCE = 2,
+	EDGED_WEAPONS = 3,
+	BASHING_WEAPONS = 4,
+	POLE_WEAPONS = 5,
+	THROWN_MISSILES = 6,
+	ARCHERY = 7,
+	DEFENSE = 8,
+	MAGE_SPELLS = 9,
+	PRIEST_SPELLS = 10,
+	MAGE_LORE = 11,
+	ALCHEMY = 12,
+	ITEM_LORE = 13,
+	DISARM_TRAPS = 14,
+	LOCKPICKING = 15,
+	ASSASSINATION = 16,
+	POISON = 17,
+	LUCK = 18,
+	MAX_HP = 19,
+	MAX_SP = 20,
+	// Magic values; only for check_party_stat()
+	CUR_HP = 100,
+	CUR_SP = 101,
+	CUR_XP = 102,
+	CUR_SKILL = 103,
+	CUR_LEVEL = 104,
 };
 
 /* adven[i].traits */ //complete

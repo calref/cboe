@@ -307,7 +307,7 @@ bool party_check_class(unsigned int item_class,short mode) {
 }
 short amount_pc_can_carry(short pc_num)
 {
-	return 100 + (15 * min(univ.party[pc_num].skills[0],20)) + (univ.party[pc_num].traits[eTrait::STRENGTH] * 30)
+	return 100 + (15 * min(univ.party[pc_num].skills[eSkill::STRENGTH],20)) + (univ.party[pc_num].traits[eTrait::STRENGTH] * 30)
 		+ (univ.party[pc_num].traits[eTrait::BAD_BACK] * -50);
 }
 short pc_carry_weight(short pc_num)
@@ -1343,11 +1343,11 @@ void place_treasure(location where,short level,short loot,short mode)
 	}
 	for (j = 0; j < 5; j++) {
 		r1 = get_ran(1,1,100);
-		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + check_party_stat(SKILL_LUCK, 0))) {
+		if ((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + check_party_stat(eSkill::LUCK, 0))) {
 			r1 = get_ran(1,0,9);
 			min = min_chart[treas_chart[loot][j]][r1];
 			r1 = get_ran(1,0,9);
-			max = (min + level + (2 * (loot - 1)) + (check_party_stat(SKILL_LUCK, 0) / 3)) * max_mult[treas_chart[loot][j]][r1];
+			max = (min + level + (2 * (loot - 1)) + (check_party_stat(eSkill::LUCK, 0) / 3)) * max_mult[treas_chart[loot][j]][r1];
 			if (get_ran(1,0,1000) == 500) {
 				max = 10000;
 				min = 100;
@@ -1393,7 +1393,7 @@ void place_treasure(location where,short level,short loot,short mode)
 			if (new_item.variety != eItemType::NO_ITEM) {
 				for (i = 0; i < 6; i++)
 					if((univ.party[i].main_status == eMainStatus::ALIVE)
-						&& (get_ran(1,1,100) < id_odds[univ.party[i].skills[13]]))
+					   && get_ran(1,1,100) < id_odds[univ.party[i].skills[eSkill::ITEM_LORE]])
 						new_item.ident = true;
 				place_item(new_item,where,false);
 			}

@@ -111,7 +111,7 @@ extern sf::RenderWindow mainPtr;
 //extern big_tr_type t_d;
 //extern unsigned char out[96][96],out_e[96][96];
 extern short which_item_page[6];
-extern short /*town_size[3],*/store_spell_target,pc_last_cast[2][6],pc_casting,store_mage,store_priest;
+extern short store_spell_target,pc_casting,store_mage,store_priest;
 //extern town_item_list	t_i; // shouldn't be here
 //extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
@@ -303,7 +303,7 @@ bool prime_time()
 	return false;
 }
 
-static void handle_spellcast(short which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
+static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	short store_sp[6];
 	if(!someone_awake()) {
 		ASB("Everyone's asleep/paralyzed.");
@@ -328,10 +328,10 @@ static void handle_spellcast(short which_type, bool& did_something, bool& need_r
 		add_string_to_buf("  Cancelled.                   ");
 		overall_mode = MODE_TOWN;
 	} else if(overall_mode == MODE_COMBAT) {
-		if(which_type == 0) {
+		if(which_type == eSkill::MAGE_SPELLS) {
 			did_something = combat_cast_mage_spell();
 			need_reprint = true;
-		} else if(which_type == 1) {
+		} else if(which_type == eSkill::PRIEST_SPELLS) {
 			did_something = combat_cast_priest_spell();
 			need_reprint = true;
 		}
@@ -969,7 +969,7 @@ bool handle_action(sf::Event event) {
 	if(button_hit != 12)
 		switch(button_hit) {
 			case 0: case 1:
-				handle_spellcast(button_hit, did_something, need_redraw, need_reprint);
+				handle_spellcast(button_hit == 0 ? eSkill::MAGE_SPELLS : eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
 				break;
 				
 			case 2:
@@ -1444,7 +1444,7 @@ bool someone_awake()
 }
 
 
-void handle_menu_spell(short spell_picked,short spell_type)
+void handle_menu_spell(short spell_picked,eSkill spell_type)
 {
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
@@ -1456,16 +1456,16 @@ void handle_menu_spell(short spell_picked,short spell_type)
 	
 	spell_forced = true;
 	pc_casting = current_pc;
-	pc_last_cast[spell_type][current_pc] = spell_picked;
-	if (spell_type == 0)
+	univ.party[current_pc].last_cast[spell_type] = spell_picked;
+	if(spell_type == eSkill::MAGE_SPELLS)
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
-	if ((spell_type == 0) && (mage_need_select[spell_picked] > 0)) {
+	if(spell_type == eSkill::MAGE_SPELLS && mage_need_select[spell_picked] > 0) {
 		if ((store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
-		if ((spell_type == 1) && (priest_need_select[spell_picked] > 0))
+		if(spell_type == eSkill::PRIEST_SPELLS && priest_need_select[spell_picked] > 0)
 			if ((store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?")) == 6)
 				return;
 	}
@@ -1478,8 +1478,13 @@ void handle_menu_spell(short spell_picked,short spell_type)
 	}
 	else {
 	} */
-	pass_point.x = bottom_buttons[spell_type].left + 5;
-	pass_point.y = bottom_buttons[spell_type].top + 5;
+	if(spell_type == eSkill::MAGE_SPELLS) {
+		pass_point.x = bottom_buttons[0].left + 5;
+		pass_point.y = bottom_buttons[0].top + 5;
+	} else {
+		pass_point.x = bottom_buttons[1].left + 5;
+		pass_point.y = bottom_buttons[1].top + 5;
+	}
 	event.mouseButton.x = pass_point.x + ul.x;
 	event.mouseButton.y = pass_point.y + ul.y;
 	handle_action(event);
@@ -2614,13 +2619,13 @@ void start_new_game()
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			// Do stat adjs for selected race.
 			if (univ.party[i].race == eRace::NEPHIL)
-				univ.party[i].skills[1] += 2;
+				univ.party[i].skills[eSkill::DEXTERITY] += 2;
 			if (univ.party[i].race == eRace::SLITH) {
-				univ.party[i].skills[0] += 2;
-				univ.party[i].skills[2] += 1;
+				univ.party[i].skills[eSkill::STRENGTH] += 2;
+				univ.party[i].skills[eSkill::INTELLIGENCE] += 1;
 			}
 			// TODO: Vahnatai
-			univ.party[i].max_sp += univ.party[i].skills[9] * 3 + univ.party[i].skills[10] * 3;
+			univ.party[i].max_sp += univ.party[i].skills[eSkill::MAGE_SPELLS] * 3 + univ.party[i].skills[eSkill::PRIEST_SPELLS] * 3;
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}
 	fs::path file = nav_put_party();

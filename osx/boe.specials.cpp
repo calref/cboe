@@ -63,7 +63,7 @@ short store_item_spell_level = 10;
 
 // global vbalues for when processing special encounters
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
-extern short skill_max[20];;
+extern std::map<eSkill,short> skill_max;
 location store_special_loc;
 bool special_in_progress = false;
 short spec_str_offset[3] = {160,10,0};
@@ -2812,14 +2812,20 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::AFFECT_STAT:
-			if (spec.ex2a != minmax(0,18,spec.ex2a)) {
+			if (spec.ex2a != minmax(0,20,spec.ex2a)) {
 				giveError("Skill is out of range.");
 				break;
 			}
 			for (i = 0; i < 6; i++)
-				if (((pc < 0) || (pc == i)) && (get_ran(1,1,100) < spec.pic))
-					univ.party[i].skills[spec.ex2a] = minmax(0, skill_max[spec.ex2a],
-															 univ.party[i].skills[spec.ex2a] + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				if((pc < 0 || pc == i) && get_ran(1,1,100) < spec.pic) {
+					eSkill skill = eSkill(spec.ex2a);
+					int adj = spec.ex1a * (spec.ex1b != 0 ? -1: 1);
+					if(skill == eSkill::MAX_HP)
+						univ.party[i].max_health = minmax(6, 250, univ.party[i].max_health + adj);
+					else if(skill == eSkill::MAX_SP)
+						univ.party[i].max_sp = minmax(0, 150, univ.party[i].max_sp + adj);
+					else univ.party[i].skills[skill] = minmax(0, skill_max[skill], univ.party[i].skills[skill] + adj);
+				}
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
 			if (spec.ex1a != minmax(0,61,spec.ex1a)) {
@@ -3074,8 +3080,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2b == 2 && i >= j) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_STATISTIC:
-			if(spec.ex2a < 0 || spec.ex2a > 25) {
-				giveError("Attempted to check an invalid statistic (0...25).");
+			if((spec.ex2a < 0 || spec.ex2a > 20) && (spec.ex2a < 100 || spec.ex2a > 104)) {
+				giveError("Attempted to check an invalid statistic (0...20 or 100...104).");
 				break;
 			}
 			if(spec.ex2b < -1 || spec.ex2b > 3) {
@@ -3091,12 +3097,12 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
 					pc = current_pc_picked_in_spec_enc;
 				if(pc != 6) {
-					if(check_party_stat(spec.ex2a, 10 + pc) >= spec.ex1a)
+					if(check_party_stat(eSkill(spec.ex2a), 10 + pc) >= spec.ex1a)
 						*next_spec = spec.ex1b;
 					break;
 				}
 			}
-			if(check_party_stat(spec.ex2a, spec.ex2b) >= spec.ex1a)
+			if(check_party_stat(eSkill(spec.ex2a), spec.ex2b) >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_TEXT_RESPONSE:

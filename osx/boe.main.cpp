@@ -110,7 +110,6 @@ short anim_step = -1;
 short store_mage = 0, store_priest = 0;
 short store_mage_lev = 0, store_priest_lev = 0;
 short store_spell_target = 6,pc_casting;
-short pc_last_cast[2][6] = {{1,1,1,1,1,1},{1,1,1,1,1,1}};
 short num_targets_left = 0;
 location spell_targets[8];
 
@@ -622,11 +621,11 @@ void handle_help_menu(int item_hit)
 void handle_library_menu(int item_hit)
 {
 	switch (item_hit) {
-		case 1: display_spells(0,100,0);
+		case 1: display_spells(eSkill::MAGE_SPELLS,100,0);
 			break;
-		case 2: display_spells(1,100,0);
+		case 2: display_spells(eSkill::PRIEST_SPELLS,100,0);
 			break;
-		case 3: display_skills(100,0);
+		case 3: display_skills(eSkill::INVALID,0);
 			break;
 		case 4:
 			// TODO: Create a dedicated dialog for alchemy info

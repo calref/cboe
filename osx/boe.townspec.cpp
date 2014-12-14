@@ -102,11 +102,11 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 		return true;
 	
 	if (pc_num < 6) {
-		i = stat_adj(pc_num,1);
+		i = stat_adj(pc_num,eSkill::DEXTERITY);
 		if ((i_level = get_prot_level(pc_num,eItemAbil::THIEVING)) > 0)
 			i = i + i_level / 2;
-		skill = minmax(0,20,univ.party[pc_num].skills[SKILL_DISARM_TRAPS] +
-					   + univ.party[pc_num].skills[SKILL_LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
+		skill = minmax(0,20,univ.party[pc_num].skills[eSkill::DISARM_TRAPS] +
+					   + univ.party[pc_num].skills[eSkill::LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
 		
 		r1 = get_ran(1,1,100) + diff;
 		// Nimble?

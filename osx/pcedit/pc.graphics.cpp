@@ -494,7 +494,8 @@ void display_party()
 									
 									win_draw_string(mainPtr,pc_skills_rect[k],get_str("skills",string_num),eTextMode::WRAP,style);
 									
-									sprintf((char *) skill_value,"%d",univ.party[i].skills[k]);
+									eSkill skill = eSkill(k);
+									sprintf(skill_value,"%d",univ.party[i].skills[skill]);
 									win_draw_string(mainPtr,temp_rect,skill_value,eTextMode::WRAP,style);	
 									//frame_dlog_rect(GetWindowPort(mainPtr),pc_skills_rect[k],0);
 									string_num+=2;

@@ -1421,9 +1421,9 @@ short get_encumberance(short pc_num)
 	for (i = 0; i < 24; i++)
 		if (univ.party[pc_num].equip[i] == true) {
 			what_val = univ.party[pc_num].items[i].awkward;
-			if ((what_val == 1) && (get_ran(1,0,130) < hit_chance[univ.party[pc_num].skills[8]]))
+			if(what_val == 1 && get_ran(1,0,130) < hit_chance[univ.party[pc_num].skills[eSkill::DEFENSE]])
 				what_val--;
-			if ((what_val > 1) && (get_ran(1,0,70) < hit_chance[univ.party[pc_num].skills[8]]))
+			if(what_val > 1 && get_ran(1,0,70) < hit_chance[univ.party[pc_num].skills[eSkill::DEFENSE]])
 				what_val--;
 			store += what_val;
 		}

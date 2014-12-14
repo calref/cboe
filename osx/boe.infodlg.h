@@ -8,8 +8,8 @@
 #include "pc.h"
 
 class cDialog;
-void display_spells(short mode,short force_spell,cDialog* parent);
-void display_skills(short force_skill,cDialog* parent);
+void display_spells(eSkill mode,short force_spell,cDialog* parent);
+void display_skills(eSkill force_skill,cDialog* parent);
 void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent);
 void display_monst(short array_pos,cCreature *which_m,short mode);
 void display_alchemy();
