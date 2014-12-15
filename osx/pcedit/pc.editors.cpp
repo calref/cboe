@@ -109,9 +109,8 @@ static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-short char_select_pc(short active_only,short free_inv_only,const char *title)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap
-{
+short char_select_pc(short active_only,short free_inv_only,const char *title) {
 	short item_hit,i;
 	
 	make_cursor_sword();
@@ -141,16 +140,14 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	return item_hit;
 }
 
-short select_pc(short active_only,short free_inv_only)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap
-{
+short select_pc(short active_only,short free_inv_only) {
 	if(active_only == 2)
 		return char_select_pc(active_only,free_inv_only,"Trap! Who will disarm?");
 	else return char_select_pc(active_only,free_inv_only,"Select a character:");
 }
 
-static short party_total_level()
-{
+static short party_total_level() {
 	short i,j = 0;
 	
 	for(i = 0; i < 6; i++)
@@ -225,8 +222,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	pcInfo.run();
 }
 
-static void display_traits_graphics(cDialog& me)
-{
+static void display_traits_graphics(cDialog& me) {
 	short i,store;
 	
 	std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
@@ -286,9 +282,8 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing,
 	return store_trait_mode == 0;
 }
 
-void pick_race_abil(cPlayer *pc,short mode)
 //mode; // 0 - edit  1 - just display  2 - can't change race
-{
+void pick_race_abil(cPlayer *pc,short mode) {
 	using namespace std::placeholders;
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
@@ -321,8 +316,7 @@ const char* alch_names[20] = {
 	"Strong Strength (10)","Bliss (16)","Strong Power (20)"
 };
 
-void display_alchemy(bool allowEdit)
-{
+void display_alchemy(bool allowEdit) {
 	short i;
 	
 	make_cursor_sword();
@@ -353,8 +347,7 @@ void display_alchemy(bool allowEdit)
 
 // TODO: This dialog needs some kind of context system really badly to avoid the rampant globals
 // MARK: Start spend XP dialog
-static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_skills)
-{
+static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_skills) {
 	for(i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
 		univ.party[pc_num].skills[skill] = store_skills[skill];
@@ -369,8 +362,7 @@ static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_ski
 	
 }
 
-static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills)
-{
+static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills) {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for(i = 0; i < 19; i++) {
@@ -598,10 +590,9 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 	return true;
 }
 
-bool spend_xp(short pc_num, short mode, cDialog* parent)
 //short mode; // 0 - create  1 - train
 // returns 1 if cancelled
-{
+bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	using namespace std::placeholders;
 	store_train_pc = pc_num;
 	store_train_mode = mode;

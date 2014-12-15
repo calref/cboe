@@ -245,8 +245,7 @@ void init_town(){ // formerly part of load_town
 }
 
 
-void shift_universe_left()
-{
+void shift_universe_left() {
 	short i,j;
 	
 	make_cursor_watch();
@@ -282,8 +281,7 @@ void shift_universe_left()
 	
 }
 
-void shift_universe_right()
-{
+void shift_universe_right() {
 	short i,j;
 	
 	make_cursor_watch();
@@ -316,8 +314,7 @@ void shift_universe_right()
 	
 }
 
-void shift_universe_up()
-{
+void shift_universe_up() {
 	short i,j;
 	
 	make_cursor_watch();
@@ -351,8 +348,7 @@ void shift_universe_up()
 	
 }
 
-void shift_universe_down()
-{
+void shift_universe_down() {
 	short i,j;
 	
 	make_cursor_watch();
@@ -388,8 +384,7 @@ void shift_universe_down()
 }
 
 
-void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
-{
+void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	short i,j;
 	
 	if((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
@@ -422,8 +417,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) ////
 }
 
 
-void build_outdoors()
-{
+void build_outdoors() {
 	short i,j;
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
@@ -448,8 +442,7 @@ void build_outdoors()
 	
 }
 
-short onm(char x_sector,char y_sector)
-{
+short onm(char x_sector,char y_sector) {
 	short i;
 	
 	i = y_sector * scenario.out_width + x_sector;
@@ -459,8 +452,7 @@ short onm(char x_sector,char y_sector)
 
 
 // This adds the current outdoor map info to the saved outdoor map info
-void save_outdoor_maps()
-{
+void save_outdoor_maps() {
 	short i,j;
 	
 	for(i = 0; i < 48; i++)
@@ -491,9 +483,7 @@ void save_outdoor_maps()
 		}
 }
 
-void add_outdoor_maps()  // This takes the existing outdoor map info and supplements it
-// with the saved map info
-{
+void add_outdoor_maps() { // This takes the existing outdoor map info and supplements it with the saved map info
 	short i,j;
 	
 	for(i = 0; i < 48; i++)
@@ -526,8 +516,7 @@ void add_outdoor_maps()  // This takes the existing outdoor map info and supplem
 
 
 
-void fix_boats()
-{
+void fix_boats() {
 	short i;
 	
 	for(i = 0; i < 30; i++)
@@ -581,8 +570,7 @@ void start_data_dump() {
 	}
 }
 
-void build_scen_headers()
-{
+void build_scen_headers() {
 	fs::path scenDir = progDir;
 	scenDir /= "Blades of Exile Scenarios";
 	printf("%s\n%s\n",progDir.c_str(),scenDir.c_str());

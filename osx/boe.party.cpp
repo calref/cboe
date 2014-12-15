@@ -153,8 +153,7 @@ short store_pc_graphic;
 
 //mode; // 0 - prefab 1 - regular 2 - debug
 // Note: mode 1 is never used
-void init_party(short mode)
-{
+void init_party(short mode) {
 	// TODO: Remove in favour of cParty constructor.
 	short i,j,k,l;
 	
@@ -282,8 +281,7 @@ void init_party(short mode)
 // Until that time, the party scen vals are uninited
 // Then, it inits the party properly for starting the scenario based
 // on the loaded scenario
-void init_party_scen_data()
-{
+void init_party_scen_data() {
 	short i,j,k,l;
 	bool stored_item = false;
 	short store_help;
@@ -404,8 +402,7 @@ void init_party_scen_data()
 // When the party is placed into a scen from the startinbg screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(std::string scen_name)
-{
+void put_party_in_scen(std::string scen_name) {
 	short i,j;
 	std::array<std::string, 6> strs;
 	std::array<short, 3> buttons = {-1,-1,-1};
@@ -503,9 +500,8 @@ void put_party_in_scen(std::string scen_name)
 	}
 }
 
-bool create_pc(short spot,cDialog* parent)
 //spot; // if spot is 6, find one
-{
+bool create_pc(short spot,cDialog* parent) {
 	bool still_ok = true;
 	
 	if(spot == 6) {
@@ -564,8 +560,7 @@ bool create_pc(short spot,cDialog* parent)
 	return true;
 }
 
-bool take_sp(short pc_num,short amt)
-{
+bool take_sp(short pc_num,short amt) {
 	if(univ.party[pc_num].cur_sp < amt)
 		return false;
 	univ.party[pc_num].cur_sp -= amt;
@@ -575,8 +570,7 @@ bool take_sp(short pc_num,short amt)
 
 
 
-void heal_pc(short pc_num,short amt)
-{
+void heal_pc(short pc_num,short amt) {
 	if(univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
 		return;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
@@ -587,8 +581,7 @@ void heal_pc(short pc_num,short amt)
 	
 }
 
-void heal_party(short amt)
-{
+void heal_party(short amt) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -596,8 +589,7 @@ void heal_party(short amt)
 			heal_pc(i,amt);
 }
 
-void cure_pc(short pc_num,short amt)
-{
+void cure_pc(short pc_num,short amt) {
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[pc_num].status[eStatus::POISON] <= amt)
@@ -606,8 +598,7 @@ void cure_pc(short pc_num,short amt)
 	one_sound(51);
 }
 
-void cure_party(short amt)
-{
+void cure_party(short amt) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -617,8 +608,7 @@ void cure_party(short amt)
 }
 
 // if how_much < 0, bless
-void curse_pc(short which_pc,short how_much)
-{
+void curse_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
@@ -633,8 +623,7 @@ void curse_pc(short which_pc,short how_much)
 		give_help(59,0);
 }
 
-void dumbfound_pc(short which_pc,short how_much)
-{
+void dumbfound_pc(short which_pc,short how_much) {
 	short r1;
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
@@ -661,8 +650,7 @@ void dumbfound_pc(short which_pc,short how_much)
 	adjust_spell_menus();
 	give_help(28,0);
 }
-void disease_pc(short which_pc,short how_much)
-{
+void disease_pc(short which_pc,short how_much) {
 	short r1,level;
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
@@ -691,9 +679,8 @@ void disease_pc(short which_pc,short how_much)
 	give_help(29,0);
 }
 
-void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 // higher adjust, less chance of saving
-{
+void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust) {
 	short r1,level;
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
@@ -738,8 +725,7 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 }
 
 // if how_much < 0, haste
-void slow_pc(short which_pc,short how_much)////
-{
+void slow_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
@@ -755,8 +741,7 @@ void slow_pc(short which_pc,short how_much)////
 		give_help(35,0);
 }
 
-void web_pc(short which_pc,short how_much)
-{
+void web_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
@@ -769,8 +754,7 @@ void web_pc(short which_pc,short how_much)
 	give_help(31,0);
 }
 
-void acid_pc(short which_pc,short how_much)
-{
+void acid_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(pc_has_abil_equip(which_pc,eItemAbil::ACID_PROTECTION) < 24) {
@@ -787,8 +771,7 @@ void acid_pc(short which_pc,short how_much)
 	put_pc_screen();
 }
 
-void increase_light(short amt)
-{
+void increase_light(short amt) {
 	short i;
 	location where;
 	
@@ -808,8 +791,7 @@ void increase_light(short amt)
 	put_pc_screen();
 }
 
-void restore_sp_pc(short pc_num,short amt)
-{
+void restore_sp_pc(short pc_num,short amt) {
 	if(univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
 		return;
 	univ.party[pc_num].cur_sp += amt;
@@ -817,8 +799,7 @@ void restore_sp_pc(short pc_num,short amt)
 		univ.party[pc_num].cur_sp = univ.party[pc_num].max_sp;
 }
 
-void restore_sp_party(short amt)
-{
+void restore_sp_party(short amt) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -826,8 +807,7 @@ void restore_sp_party(short amt)
 			restore_sp_pc(i,amt);
 }
 
-void award_party_xp(short amt)
-{
+void award_party_xp(short amt) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -835,8 +815,7 @@ void award_party_xp(short amt)
 			award_xp(i,amt);
 }
 
-void award_xp(short pc_num,short amt)
-{
+void award_xp(short pc_num,short amt) {
 	short adjust,add_hp;
 	short xp_percent[30] = {
 		150,120,100,90,80,70,60,50,50,50,
@@ -913,8 +892,7 @@ void award_xp(short pc_num,short amt)
 	}
 }
 
-void drain_pc(short which_pc,short how_much)
-{
+void drain_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].experience = max(univ.party[which_pc].experience - how_much,0);
 		sprintf ((char *) c_line, "  %s drained.",(char *) univ.party[which_pc].name.c_str());
@@ -968,9 +946,8 @@ short check_party_stat(eSkill which_stat, short mode) {
 }
 
 
-bool poison_weapon( short pc_num, short how_much,short safe)
 //short safe; // 1 - always succeeds
-{
+bool poison_weapon( short pc_num, short how_much,short safe) {
 	short i,weap = 24,p_level,r1;
 	short p_chance[21] = {
 		40,72,81,85,88,89,90,
@@ -1010,8 +987,7 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 	}
 }
 
-bool is_weapon(short pc_num,short item)
-{
+bool is_weapon(short pc_num,short item) {
 	// TODO: Uh, why aren't bows, crossbows, thrown missiles, no-ammo missiles included? (There's probably a reason though.)
 	if((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::TWO_HANDED) ||
@@ -1022,9 +998,8 @@ bool is_weapon(short pc_num,short item)
 	
 }
 
-void cast_spell(eSkill type)
 //short type; // 0 - mage  1 - priest
-{
+void cast_spell(eSkill type) {
 	eSpell spell;
 	
 	if((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
@@ -1050,8 +1025,7 @@ void cast_spell(eSkill type)
 	}
 }
 
-bool repeat_cast_ok(eSkill type)
-{
+bool repeat_cast_ok(eSkill type) {
 	short who_would_cast;
 	eSpellSelect store_select;
 	eSpell what_spell;
@@ -1090,9 +1064,8 @@ bool repeat_cast_ok(eSkill type)
 	
 }
 
-void give_party_spell(short which) ////
 //which; // 100 + x : priest spell x
-{
+void give_party_spell(short which) {
 	short i;
 	bool sound_done = false;
 	char str[60];
@@ -1127,8 +1100,7 @@ void give_party_spell(short which) ////
 			}
 }
 
-void do_mage_spell(short pc_num,eSpell spell_num)
-{
+void do_mage_spell(short pc_num,eSpell spell_num) {
 	short i,j,item,target,r1,adj,store;
 	location where;
 	
@@ -1296,8 +1268,7 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 	}
 }
 
-void do_priest_spell(short pc_num,eSpell spell_num) ////
-{
+void do_priest_spell(short pc_num,eSpell spell_num) {
 	short r1,r2, target, i,item,store,adj,x,y;
 	location loc;
 	location where;
@@ -1692,8 +1663,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 	}
 }
 
-void cast_town_spell(location where) ////
-{
+void cast_town_spell(location where) {
 	short adjust,r1,targ,store;
 	location loc;
 	ter_num_t ter;
@@ -1835,8 +1805,7 @@ void cast_town_spell(location where) ////
 	}
 }
 
-bool cast_spell_on_space(location where, eSpell spell)
-{
+bool cast_spell_on_space(location where, eSpell spell) {
 	short i,s1 = 0,s2 = 0,s3 = 0;
 	
 	for(i = 0; i < 50; i++)
@@ -1851,8 +1820,7 @@ bool cast_spell_on_space(location where, eSpell spell)
 	return true;
 }
 
-void crumble_wall(location where) // TODO: Add something like this to the spreading quickfire function
-{
+void crumble_wall(location where) { // TODO: Add something like this to the spreading quickfire function
 	ter_num_t ter;
 	
 	if(loc_off_act_area(where))
@@ -1866,8 +1834,7 @@ void crumble_wall(location where) // TODO: Add something like this to the spread
 	
 }
 
-void do_mindduel(short pc_num,cCreature *monst)
-{
+void do_mindduel(short pc_num,cCreature *monst) {
 	short i = 0,adjust,r1,r2,balance = 0;
 	
 	adjust = (univ.party[pc_num].level + univ.party[pc_num].skills[eSkill::INTELLIGENCE]) / 2 - monst->level * 2;
@@ -1929,8 +1896,7 @@ void do_mindduel(short pc_num,cCreature *monst)
 }
 
 // mode 0 - dispel spell, 1 - always take  2 - always take and take fire and force too
-void dispel_fields(short i,short j,short mode)
-{
+void dispel_fields(short i,short j,short mode) {
 	short r1;
 	
 	if(mode == 2) {
@@ -1989,8 +1955,7 @@ bool pc_can_cast_spell(short pc_num,eSkill type) {
 	return false;
 }
 
-bool pc_can_cast_spell(short pc_num,eSpell spell_num)
-{
+bool pc_can_cast_spell(short pc_num,eSpell spell_num) {
 	short level,store_w_cast;
 	eSkill type = (*spell_num).type;
 	
@@ -2135,8 +2100,7 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 	}
 }
 
-static void draw_spell_pc_info(cDialog& me)
-{
+static void draw_spell_pc_info(cDialog& me) {
 	short i;
 	
 	for(i = 0; i < 6; i++) {
@@ -2157,8 +2121,7 @@ static void draw_spell_pc_info(cDialog& me)
 }
 
 
-static void put_pc_caster_buttons(cDialog& me)
-{
+static void put_pc_caster_buttons(cDialog& me) {
 	
 	short i;
 	
@@ -2396,11 +2359,10 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	return true;
 }
 
-eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 //short pc_num; // if 6, anyone
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
-{
+eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	using namespace std::placeholders;
 	eSpell store_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
@@ -2520,9 +2482,8 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 }
 
 
-void print_spell_cast(eSpell spell,eSkill which)
 //short which; // 0 - mage  1 - priest
-{
+void print_spell_cast(eSpell spell,eSkill which) {
 	short spell_num = (which == eSkill::PRIEST_SPELLS ? int(spell) - 100 : int(spell));
 	sprintf ((char *) c_line, "Spell: %s                  ",
 			 (which == eSkill::MAGE_SPELLS) ? (char *) mage_s_name[spell_num] : (char *) priest_s_name[spell_num]);
@@ -2559,8 +2520,7 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie) {
 	spell_freebie = freebie;
 }
 
-void do_alchemy() ////
-{
+void do_alchemy() {
 	static const eItemAbil ingred1_needed[20] = {
 		eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::WORMGRASS,
 		eItemAbil::NETTLE,eItemAbil::NETTLE,eItemAbil::WORMGRASS,eItemAbil::GRAYMOLD,eItemAbil::WORMGRASS,
@@ -2676,8 +2636,7 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 	return true;
 }
 
-short alch_choice(short pc_num)
-{
+short alch_choice(short pc_num) {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	short i,store_alchemy_pc;
 	char get_text[256];
@@ -2709,9 +2668,8 @@ short alch_choice(short pc_num)
 }
 
 extern bool pc_gworld_loaded;
-bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 // mode ... 0 - create  1 - created
-{
+bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	bool munch_pc_graphic = false;
 	
 	store_graphic_pc_num = pc_num;
@@ -2752,10 +2710,9 @@ static bool pc_name_event_filter(cDialog& me, short store_train_pc) {
 	return true;
 }
 
-bool pick_pc_name(short pc_num,cDialog* parent)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
-{
+bool pick_pc_name(short pc_num,cDialog* parent) {
 	using namespace std::placeholders;
 	make_cursor_sword();
 	
@@ -2768,9 +2725,8 @@ bool pick_pc_name(short pc_num,cDialog* parent)
 	return 1;
 }
 
-m_num_t pick_trapped_monst()
-// ignore parent in Mac version
-{
+m_num_t pick_trapped_monst() {
+	// ignore parent in Mac version
 	short i;
 	std::string sp;
 	cMonster get_monst;
@@ -2801,15 +2757,13 @@ m_num_t pick_trapped_monst()
 }
 
 
-bool flying()
-{
+bool flying() {
 	if(PSD[SDF_PARTY_FLIGHT] == 0)
 		return false;
 	else return true;
 }
 
-void poison_pc(short which_pc,short how_much)
-{
+void poison_pc(short which_pc,short how_much) {
 	short level;
 	
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
@@ -2835,16 +2789,14 @@ void poison_pc(short which_pc,short how_much)
 	put_pc_screen();
 }
 
-void poison_party(short how_much)
-{
+void poison_party(short how_much) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
 		poison_pc(i,how_much);
 }
-void affect_pc(short which_pc,eStatus type,short how_much)////
 //type; // which status to affect
-{
+void affect_pc(short which_pc,eStatus type,short how_much) {
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
@@ -2855,9 +2807,8 @@ void affect_pc(short which_pc,eStatus type,short how_much)////
 		univ.party[which_pc].status[type] = max(univ.party[which_pc].status[type],0);
 	put_pc_screen();
 }
-void affect_party(eStatus type,short how_much)
 //type; // which status to affect
-{
+void affect_party(eStatus type,short how_much) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -2866,16 +2817,14 @@ void affect_party(eStatus type,short how_much)
 	put_pc_screen();
 }
 
-void void_sanctuary(short pc_num)
-{
+void void_sanctuary(short pc_num) {
 	if(univ.party[pc_num].status[eStatus::INVISIBLE] > 0) {
 		add_string_to_buf("You become visible!");
 		univ.party[pc_num].status[eStatus::INVISIBLE] = 0;
 	}
 }
 
-void hit_party(short how_much,eDamageType damage_type)
-{
+void hit_party(short how_much,eDamageType damage_type) {
 	short i;
 	bool dummy;
 	
@@ -2886,8 +2835,7 @@ void hit_party(short how_much,eDamageType damage_type)
 	put_pc_screen();
 }
 
-void slay_party(eMainStatus mode)
-{
+void slay_party(eMainStatus mode) {
 	short i;
 	
 	boom_anim_active = false;
@@ -2897,13 +2845,12 @@ void slay_party(eMainStatus mode)
 	put_pc_screen();
 }
 
-bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type)
 //short damage_type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
 // 5 - cold  6 - undead attack  7 - demon attack
 // 10 - marked damage, from during anim mode ... no boom, and totally unblockable
 // 30 + *   same as *, but no print
 // 100s digit - sound data
-{
+bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type) {
 	short i, r1,level;
 	bool do_print = true;
 	
@@ -3082,8 +3029,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	return true;
 }
 
-void kill_pc(short which_pc,eMainStatus type)
-{
+void kill_pc(short which_pc,eMainStatus type) {
 	short i = 24;
 	bool dummy,no_save = false;
 	location item_loc;
@@ -3137,8 +3083,7 @@ void kill_pc(short which_pc,eMainStatus type)
 	set_stat_window(current_pc);
 }
 
-void set_pc_moves()
-{
+void set_pc_moves() {
 	short i,r,i_level;
 	
 	for(i = 0; i < 6; i++)
@@ -3175,8 +3120,7 @@ void set_pc_moves()
 	
 }
 
-void take_ap(short num)
-{
+void take_ap(short num) {
 	univ.party[current_pc].ap = max(0,univ.party[current_pc].ap - num);
 }
 

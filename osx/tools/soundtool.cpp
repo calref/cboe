@@ -101,8 +101,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
  		if(always_async.find(which) != always_async.end())
 			which *= -1;
 	
- 	if(sndhandle)
-	{
+ 	if(sndhandle) {
 		chan[channel] = sf::Sound(*sndhandle);
 		chan[channel].play();
 		
@@ -228,22 +227,19 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 		
 	for(i = 0; i < NUM_SOUNDS; i++)
 		if((load_when_play[which]) && (sound_handles[which] != NULL)
-			&& (a_sound_did_get_played) && (i != which))
-		{
+			&& (a_sound_did_get_played) && (i != which)) {
 			sound_handles[i] = NULL;
 		}
 #endif
 }
 
 #ifdef WIN32
-void kill_sound()
-{
+void kill_sound() {
 	sndPlaySound(NULL,0);
 }
 #endif
 
-void one_sound(short which)
-{
+void one_sound(short which) {
 	if(which == last_played)
 		return;
 	play_sound(which);
@@ -254,8 +250,7 @@ void clear_sound_memory(){
 	last_played = 100;
 }
 
-void flip_sound()
-{
+void flip_sound() {
 	play_sounds = (play_sounds) ? false : true;
 }
 
@@ -271,8 +266,7 @@ void sound_pause(long len) {
 		}
 }
 
-void load_sounds(HMODULE handle)
-{
+void load_sounds(HMODULE handle) {
 	short i,t,err;
 	HRSRC h;
 	char snd_name[20];

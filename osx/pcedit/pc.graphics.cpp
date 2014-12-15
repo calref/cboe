@@ -63,8 +63,7 @@ sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,
 sf::Texture monst_gworld[NUM_MONST_SHEETS],terrain_gworld[NUM_TER_SHEETS],anim_gworld,talkfaces_gworld;
 sf::Texture vehicle_gworld, small_ter_gworld;
 
-void init_main_buttons()
-{
+void init_main_buttons() {
 	
 	short i;
 	int	indent = 0, indent2 = 0;
@@ -87,8 +86,7 @@ void init_main_buttons()
 	pc_area_buttons[0][0].top=pc_info_rect.top;
 	pc_area_buttons[0][0].bottom=pc_area_buttons[0][0].top + 56;
 	
-	for(i=0; i<6; i++)
-	{
+	for(i=0; i<6; i++) {
 		pc_area_buttons[i][0].left = 20;
 		pc_area_buttons[i][0].right = pc_area_buttons[0][0].left + 56;
 		pc_area_buttons[i][2].left = 20;
@@ -225,8 +223,7 @@ void init_main_buttons()
 	
 }
 
-void Set_up_win ()
-{
+void Set_up_win () {
 	title_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedtitle"));
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
@@ -240,8 +237,7 @@ static void display_party();
 static void draw_items();
 
 
-void redraw_screen()
-{
+void redraw_screen() {
 	draw_main_screen();
 	display_party();
 	draw_items();
@@ -256,8 +252,7 @@ static void frame_dlog_rect(sf::RenderWindow& target, RECT rect) {
 	text.draw();
 }
 
-void draw_main_screen()
-{
+void draw_main_screen() {
 	RECT	source_rect, dest_rec,dest_rect;
 	RECT reg_rect;
 	
@@ -324,8 +319,7 @@ void draw_main_screen()
 }
 
 // TODO: Not quite sure what the first parameter is for
-void do_button_action(short /*which_pc*/,short which_button)
-{
+void do_button_action(short /*which_pc*/,short which_button) {
 	
 	current_pressed_button = which_button;
 	redraw_screen();
@@ -337,9 +331,8 @@ void do_button_action(short /*which_pc*/,short which_button)
 
 //extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-void draw_items()
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
-{
+void draw_items() {
 	short i;
 	char to_draw[256];
 	RECT d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
@@ -396,10 +389,9 @@ void draw_items()
 	
 }
 
-void display_party()
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
-{
+void display_party() {
 	short i,k,string_num, cur_rect=0;
 	char to_draw[256], skill_value[256];
 	RECT from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
@@ -487,8 +479,7 @@ void display_party()
 							style.font = FONT_PLAIN;
 							style.lineHeight = 9;
 							string_num=1;
-							for( k = 0; k < 19 ; ++k)
-							{
+							for( k = 0; k < 19 ; ++k) {
 								temp_rect = pc_skills_rect[k];
 								temp_rect.left = pc_skills_rect[k].left + 80;
 								
@@ -1047,8 +1038,7 @@ void record_display_strings(){}
 //	p2cstr(str);
 //}
 
-void make_cursor_sword()
-{
+void make_cursor_sword() {
 	set_cursor(sword_curs);
 }
 

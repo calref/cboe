@@ -79,11 +79,10 @@ RECT boat_rects[4] = {RECT{0,0,36,28}, RECT{0,28,36,56},RECT{0,56,36,84},RECT{0,
 bool gave_no_g_error = false;
 eAmbientSound ambient_sound;
 
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
-{
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	RECT where_draw;
 	RECT source_rect;
 	sf::Texture* source_gworld;
@@ -142,8 +141,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 		anim_type = -1;
 	}
 	
-	if(anim_type >= 0)
-	{
+	if(anim_type >= 0) {
 		if((is_town()) || (is_out()))
 			anim_onscreen = true;
 	}
@@ -151,8 +149,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) ////
 	rect_draw_some_item(*source_gworld, source_rect, terrain_screen_gworld, where_draw);
 }
 
-void draw_monsters() ////
-{
+void draw_monsters() {
 	short i,j = 0,k;
 	short width,height;
 	RECT source_rect,to_rect;
@@ -327,9 +324,8 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 	}
 }
 
-void draw_pcs(location center,short mode)
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
-{
+void draw_pcs(location center,short mode) {
 	short i;
 	RECT source_rect,active_pc_rect;
 	location where_draw;
@@ -411,8 +407,7 @@ void draw_items(location where){
 	}
 }
 
-void draw_outd_boats(location center)
-{
+void draw_outd_boats(location center) {
 	location where_draw;
 	RECT source_rect;
 	short i;
@@ -441,8 +436,7 @@ void draw_outd_boats(location center)
 		}
 }
 
-void draw_town_boat(location center)
-{
+void draw_town_boat(location center) {
 	location where_draw;
 	RECT source_rect;
 	short i;
@@ -578,9 +572,8 @@ void draw_party_symbol(location center) {
 
 // Give the position of the monster graphic in the picture resource
 // Will store monsters the same in Exile's II and III
-RECT get_monster_rect (unsigned short type_wanted,short mode) ////
 //short mode; // 0 - left  1 - right  2 - both
-{
+RECT get_monster_rect (unsigned short type_wanted,short mode) {
 	RECT store_rect;
 	short i;
 	
@@ -595,9 +588,8 @@ RECT get_monster_rect (unsigned short type_wanted,short mode) ////
 }
 
 // Give the position of the monster graphic in the template in memory
-RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) ////
 //mode; // 0 - left  1 - right  +10 - combat mode
-{
+RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {
 	RECT store_rect = {0,0,36,28};
 	short adj = 0;
 	
@@ -613,8 +605,7 @@ RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-RECT get_item_template_rect (short type_wanted)////
-{
+RECT get_item_template_rect (short type_wanted) {
 	RECT store_rect;
 	
 	if(type_wanted < 45) {
@@ -634,8 +625,7 @@ RECT get_item_template_rect (short type_wanted)////
 }
 
 // Is this a fluid that gets shore plopped down on it?
-bool is_fluid(ter_num_t ter_type)////
-{
+bool is_fluid(ter_num_t ter_type) {
 //	if(((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 //		return true;
 //	return false;
@@ -643,8 +633,7 @@ bool is_fluid(ter_num_t ter_type)////
 }
 
 // Is this a beach that gets shore plopped down next to it?
-bool is_shore(ter_num_t ter_type)////
-{
+bool is_shore(ter_num_t ter_type) {
 	if(is_fluid(ter_type))
 		return false;
 	if(scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
@@ -663,8 +652,7 @@ bool is_shore(ter_num_t ter_type)////
 }
 
 // These two functions used to determine wall round-cornering
-bool is_wall(ter_num_t ter_type)////
-{
+bool is_wall(ter_num_t ter_type) {
 	return scenario.ter_types[ter_type].trim_type == eTrimType::WALL;
 //	short pic;
 //
@@ -675,8 +663,7 @@ bool is_wall(ter_num_t ter_type)////
 //
 //	return false;
 }
-bool is_ground(ter_num_t ter_type)
-{
+bool is_ground(ter_num_t ter_type) {
 	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALL)
 		return false;
 	if(scenario.ter_types[ter_type].block_horse)
@@ -686,8 +673,7 @@ bool is_ground(ter_num_t ter_type)
 	return true;
 }
 
-char get_fluid_trim(location where,ter_num_t ter_type)
-{
+char get_fluid_trim(location where,ter_num_t ter_type) {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
 	ter_num_t store;
 	char to_return = 0;

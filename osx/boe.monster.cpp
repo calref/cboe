@@ -80,8 +80,7 @@ short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 //	return monst;
 //}
 
-short out_enc_lev_tot(short which)
-{
+short out_enc_lev_tot(short which) {
 	short count = 0,i;
 	short num[7] = {22,8,4,4,3,2,1};
 	
@@ -94,8 +93,7 @@ short out_enc_lev_tot(short which)
 	return count;
 }
 
-void create_wand_monst()
-{
+void create_wand_monst() {
 	short r1,r2,r3,i = 0,num_tries = 0;
 	location p_loc;
 	
@@ -135,8 +133,7 @@ void create_wand_monst()
 	}
 }
 
-void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced)
-{
+void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced) {
 	short i = 0,j = 0;
 	location l;
 	
@@ -171,8 +168,7 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 	
 }
 
-location get_monst_head(short m_num)
-{
+location get_monst_head(short m_num) {
 	location l;
 	
 	l = univ.town.monst[m_num].cur_loc;
@@ -183,13 +179,11 @@ location get_monst_head(short m_num)
 	return l;
 }
 
-short get_monst_picnum(m_num_t monst)
-{
+short get_monst_picnum(m_num_t monst) {
 	return scenario.scen_monsters[monst].picture_num;
 }
 
-ePicType get_monst_pictype(m_num_t monst)
-{
+ePicType get_monst_pictype(m_num_t monst) {
 	ePicType type = PIC_MONST;
 	short n = scenario.scen_monsters[monst].picture_num;
 	if(n >= 1000){
@@ -213,17 +207,15 @@ ePicType get_monst_pictype(m_num_t monst)
 	return type;
 }
 
-void get_monst_dims(m_num_t monst,short *width, short *height)
-{
+void get_monst_dims(m_num_t monst,short *width, short *height) {
 	
 	*width = scenario.scen_monsters[monst].x_width;
 	*height = scenario.scen_monsters[monst].y_width;
 }
 
 // Used to set up monsters for outdoor wandering encounters.
-void set_up_monst(short mode,m_num_t m_num)
 //mode; // 0 - unfriendly  1 - friendly & fightin'
-{
+void set_up_monst(short mode,m_num_t m_num) {
 	short which;
 	
 	for(which = 0; which < univ.town->max_monst(); which++)
@@ -237,8 +229,7 @@ void set_up_monst(short mode,m_num_t m_num)
 		}
 }
 
-void do_monsters()
-{
+void do_monsters() {
 	short i,j,r1,target;
 	location l1,l2;
 	bool acted_yet = false;
@@ -335,8 +326,7 @@ void do_monsters()
 }
 
 ////
-bool monst_hate_spot(short which_m,location *good_loc)
-{
+bool monst_hate_spot(short which_m,location *good_loc) {
 	location prospect,loc;
 	
 	loc = univ.town.monst[which_m].cur_loc;
@@ -353,8 +343,7 @@ bool monst_hate_spot(short which_m,location *good_loc)
 		|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 3)
 			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate shock cloud?
 		|| (((univ.town.monst[which_m].mu > 0) || (univ.town.monst[which_m].cl > 0))
-			&& univ.town.is_antimagic(loc.x,loc.y))) // hate antimagic
-	{
+			&& univ.town.is_antimagic(loc.x,loc.y))) { // hate antimagic
 		prospect = find_clear_spot(loc,1);
 		if(prospect.x > 0) {
 			*good_loc = prospect;
@@ -365,8 +354,7 @@ bool monst_hate_spot(short which_m,location *good_loc)
 	else return false;
 }
 
-short monst_pick_target(short which_m)
-{
+short monst_pick_target(short which_m) {
 	cCreature *cur_monst;
 	short targ_pc,targ_m;
 	
@@ -440,8 +428,7 @@ short monst_pick_target(short which_m)
 	
 }
 
-short monst_pick_target_monst(cCreature *which_m)
-{
+short monst_pick_target_monst(cCreature *which_m) {
 	short min_dist = 1000,i,cur_targ = 6;
 	
 	for(i = 0; i < univ.town->max_monst(); i++) {
@@ -460,8 +447,7 @@ short monst_pick_target_monst(cCreature *which_m)
 	return cur_targ;
 }
 
-short monst_pick_target_pc(short m_num,cCreature *which_m)////
-{
+short monst_pick_target_pc(short m_num,cCreature *which_m) {
 	short num_tries = 0,r1,store_targ = 6;
 	
 	if(which_m->attitude % 2 == 0)
@@ -494,8 +480,7 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 }
 
 // returns 6 if no
-short select_active_pc()
-{
+short select_active_pc() {
 	short r1, num_tries = 0;
 	
 	r1 = get_ran(1,0,5);
@@ -505,8 +490,7 @@ short select_active_pc()
 	return r1;
 }
 
-short closest_pc(location where)
-{
+short closest_pc(location where) {
 	short how_close = 200,i,store = 6;
 	
 	for(i = 0; i < 6; i++)
@@ -517,9 +501,8 @@ short closest_pc(location where)
 	return store;
 }
 
-short closest_monst(location where,short mode)
 //mode;  // 1 - closest hostile to PCs  2 - closest friendly to PCs
-{
+short closest_monst(location where,short mode) {
 	short how_close = 200,i,store = 6;
 	
 	for(i = 0; i < univ.town->max_monst(); i++)
@@ -532,8 +515,7 @@ short closest_monst(location where,short mode)
 	return store;
 }
 
-short switch_target_to_adjacent(short which_m,short orig_target)
-{
+short switch_target_to_adjacent(short which_m,short orig_target) {
 	location monst_loc;
 	short i,num_adj = 0;
 	
@@ -603,8 +585,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 }
 
 
-bool rand_move(char i)
-{
+bool rand_move(char i) {
 	bool acted_yet = false;
 	short j;
 	location store_loc;
@@ -659,8 +640,7 @@ bool rand_move(char i)
 
 
 
-bool seek_party(short i,location l1,location l2)
-{
+bool seek_party(short i,location l1,location l2) {
 	bool acted_yet = false;
 	short m,n;
 	if((l1.x > l2.x) && (l1.y > l2.y))
@@ -688,8 +668,7 @@ bool seek_party(short i,location l1,location l2)
 	return acted_yet;
 }
 
-bool flee_party(short i,location l1,location l2)
-{
+bool flee_party(short i,location l1,location l2) {
 	bool acted_yet = false;
 	
 	if((l1.x > l2.x) & (l1.y > l2.y))
@@ -715,8 +694,7 @@ bool flee_party(short i,location l1,location l2)
 	return acted_yet;
 }
 
-bool try_move(short i,location start,short x,short y)
-{
+bool try_move(short i,location start,short x,short y) {
 	location dest;
 	
 	dest = start;
@@ -735,8 +713,7 @@ bool try_move(short i,location start,short x,short y)
 	return 0;
 }
 
-bool combat_move_monster(short which,location destination)
-{
+bool combat_move_monster(short which,location destination) {
 	
 	
 	if(!monst_can_be_there(destination,which))
@@ -760,9 +737,8 @@ bool combat_move_monster(short which,location destination)
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
 // THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
-location find_clear_spot(location from_where,short mode)
 //mode; // 0 - normal  1 - prefer adjacent space
-{
+location find_clear_spot(location from_where,short mode) {
 	location loc,store_loc;
 	short num_tries = 0,r1;
 	
@@ -787,8 +763,7 @@ location find_clear_spot(location from_where,short mode)
 	return store_loc;
 }
 
-short pc_there(location where)
-{
+short pc_there(location where) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -797,8 +772,7 @@ short pc_there(location where)
 	return 6;
 }
 
-location random_shift(location start)
-{
+location random_shift(location start) {
 	location store;
 	
 	store = start;
@@ -808,8 +782,7 @@ location random_shift(location start)
 	return store;
 }
 
-bool outdoor_move_monster(short num,location dest)
-{
+bool outdoor_move_monster(short num,location dest) {
 	
 	if(!outd_is_blocked(dest) && !outd_is_special(dest) &&
 		(dest != univ.party.p_loc) &&
@@ -822,8 +795,7 @@ bool outdoor_move_monster(short num,location dest)
 	else return false;
 }
 
-bool town_move_monster(short num,location dest)
-{
+bool town_move_monster(short num,location dest) {
 	if(!monst_check_special_terrain(dest,1,num))
 		return false;
 	
@@ -837,18 +809,18 @@ bool town_move_monster(short num,location dest)
 	else return false;
 }
 
-bool monster_placid(short m_num)
-{
+bool monster_placid(short m_num) {
 	if((univ.town.monst[m_num].attitude == 0) ||
-		((univ.town.monst[m_num].attitude == 2) && (PSD[SDF_HOSTILES_PRESENT] == 0)))
-	{ return true;}
-	else { return false;}
+		((univ.town.monst[m_num].attitude == 2) && (PSD[SDF_HOSTILES_PRESENT] == 0))) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 // This damages a monster by any fields it's in, and destroys any barrels or crates
 // it's stiing on.
-void monst_inflict_fields(short which_monst)
-{
+void monst_inflict_fields(short which_monst) {
 	short i,j,r1,k;
 	location where_check;
 	cCreature *which_m;
@@ -932,9 +904,8 @@ void monst_inflict_fields(short which_monst)
 	
 }
 
-bool monst_check_special_terrain(location where_check,short mode,short which_monst)
 //mode; // 1 - town 2 - combat
-{
+bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
 	ter_num_t ter = 0;
 	short r1,i,guts = 0;
 	bool can_enter = true,mage = false;
@@ -1104,8 +1075,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void forced_place_monster(m_num_t which,location where)
-{
+void forced_place_monster(m_num_t which,location where) {
 	// TODO: Windows version has logic to destroy unimportant monsters to make room, but the real issue here is the non-dynamic nature of the monster array, so a better fix would be to use an std::vector in cPopulation... and then this function wouldn't even be needed.
 	bool free_spot = false;
 	short i = 0,r1;
@@ -1123,8 +1093,7 @@ void forced_place_monster(m_num_t which,location where)
 	place_monster(which,where);
 }
 
-void magic_adjust(cCreature *which_m,short *how_much)
-{
+void magic_adjust(cCreature *which_m,short *how_much) {
 	if(which_m->spec_skill == 26) {
 		*how_much = 0;
 		if(32767 - which_m->health > 3)
@@ -1137,8 +1106,7 @@ void magic_adjust(cCreature *which_m,short *how_much)
 		*how_much = 0;
 }
 
-void poison_monst(cCreature *which_m,short how_much)
-{
+void poison_monst(cCreature *which_m,short how_much) {
 	if(which_m->immunities & 64)
 		how_much = how_much / 2;
 	if(which_m->immunities & 128) {
@@ -1152,8 +1120,7 @@ void poison_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,34);
 	
 }
-void acid_monst(cCreature *which_m,short how_much)
-{
+void acid_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::ACID] = minmax(-8,8, which_m->status[eStatus::ACID] + how_much);
 	if(how_much >= 0)
@@ -1162,8 +1129,7 @@ void acid_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,48);
 }
 
-void slow_monst(cCreature *which_m,short how_much)
-{
+void slow_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::HASTE_SLOW] = minmax(-8,8, which_m->status[eStatus::HASTE_SLOW] - how_much);
 	if(how_much >= 0)
@@ -1172,8 +1138,7 @@ void slow_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,35);
 	
 }
-void curse_monst(cCreature *which_m,short how_much)
-{
+void curse_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::BLESS_CURSE] = minmax(-8,8, which_m->status[eStatus::BLESS_CURSE] - how_much);
 	if(how_much >= 0)
@@ -1182,8 +1147,7 @@ void curse_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,36);
 	
 }
-void web_monst(cCreature *which_m,short how_much)
-{
+void web_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::WEBS] = minmax(-8,8, which_m->status[eStatus::WEBS] + how_much);
 	if(how_much >= 0)
@@ -1192,8 +1156,7 @@ void web_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,37);
 	
 }
-void scare_monst(cCreature *which_m,short how_much)
-{
+void scare_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->morale = which_m->morale - how_much;
 	// TODO: I don't think there's currently any way to increase monster morale at the moment - add one!
@@ -1203,8 +1166,7 @@ void scare_monst(cCreature *which_m,short how_much)
 		monst_spell_note(which_m->number,47);
 	
 }
-void disease_monst(cCreature *which_m,short how_much)
-{
+void disease_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DISEASE] = minmax(-8,8, which_m->status[eStatus::DISEASE] + how_much);
 	if(how_much >= 0)
@@ -1214,8 +1176,7 @@ void disease_monst(cCreature *which_m,short how_much)
 	
 }
 
-void dumbfound_monst(cCreature *which_m,short how_much)
-{
+void dumbfound_monst(cCreature *which_m,short how_much) {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DUMB] = minmax(-8,8, which_m->status[eStatus::DUMB] + how_much);
 	if(how_much >= 0)
@@ -1225,9 +1186,8 @@ void dumbfound_monst(cCreature *which_m,short how_much)
 	
 }
 
-void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount)
 // Also used for sleep and paralyze, which_statys is 0 means charm
-{
+void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount) {
 	short r1;
 	
 	
@@ -1269,8 +1229,7 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		//one_sound(53);
 	}
 }
-void record_monst(cCreature *which_m)
-{
+void record_monst(cCreature *which_m) {
 	short r1;
 	char str[60];
 	
@@ -1302,8 +1261,7 @@ void record_monst(cCreature *which_m)
 }
 // returns 90 is no placement, OW returns # of spot
 ////
-short place_monster(m_num_t which,location where)
-{
+short place_monster(m_num_t which,location where) {
 	short i = 0;
 	
 	while((i < univ.town->max_monst()) && ((univ.town.monst[i].active != 0) ||
@@ -1333,10 +1291,9 @@ short place_monster(m_num_t which,location where)
 }
 
 // returns true if placement was successful
-bool summon_monster(m_num_t which,location where,short duration,short given_attitude)
 //which; // if in town, this is caster loc., if in combat, this is where to try
 // to put monster
-{
+bool summon_monster(m_num_t which,location where,short duration,short given_attitude) {
 	location loc;
 	short which_m,spot;
 	
@@ -1386,15 +1343,13 @@ bool summon_monster(m_num_t which,location where,short duration,short given_atti
 	return true;
 }
 
-void activate_monsters(short code,short /*attitude*/)
-{
+void activate_monsters(short code,short /*attitude*/) {
 	short i;
 	
 	if(code == 0)
 		return;
 	for(i = 0; i < univ.town->max_monst(); i++)
-		if(univ.town.monst[i].spec_enc_code == code)
-		{
+		if(univ.town.monst[i].spec_enc_code == code) {
 			univ.town.monst[i] = univ.town->creatures(i);
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2; // TODO: Can thes be commented out? \/
@@ -1409,8 +1364,7 @@ void activate_monsters(short code,short /*attitude*/)
 		}
 }
 
-short get_encumberance(short pc_num)
-{
+short get_encumberance(short pc_num) {
 	short store = 0,i,what_val;
 	
 	for(i = 0; i < 24; i++)
@@ -1425,8 +1379,7 @@ short get_encumberance(short pc_num)
 	return store;
 }
 
-m_num_t get_summon_monster(short summon_class)
-{
+m_num_t get_summon_monster(short summon_class) {
 	short i,j;
 	
 	for(i = 0; i < 200; i++) {

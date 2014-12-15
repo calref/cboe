@@ -26,8 +26,7 @@ short s_pow(short x,short y){
 	return (short) pow((double) x, (double) y);
 }
 
-short s_sqrt(short val)
-{
+short s_sqrt(short val) {
 	return (short) sqrt((double)(val));
 }
 

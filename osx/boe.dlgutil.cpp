@@ -129,8 +129,7 @@ shop_type:
 11 - priest spells
 12 alchemy
 */
-void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name)
-{
+void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name) {
 	RECT area_rect;
 	
 	// This would be a place to hide the text box, if I add it.
@@ -172,8 +171,7 @@ static void update_last_talk(int new_node) {
 	}
 }
 
-void end_shop_mode()
-{
+void end_shop_mode() {
 	RECT dummy_rect = {0,0,0,0};
 	
 	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
@@ -200,8 +198,7 @@ void end_shop_mode()
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
 
-void handle_shop_event(location p)
-{
+void handle_shop_event(location p) {
 	short i,store_what_picked;
 	
 	p.x -= 5;
@@ -233,8 +230,7 @@ void handle_shop_event(location p)
 	}
 }
 
-void handle_sale(short what_chosen,short cost)
-{
+void handle_sale(short what_chosen,short cost) {
 	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item,i;
 	RECT dummy_rect = {0,0,0,0};
@@ -372,8 +368,7 @@ void handle_sale(short what_chosen,short cost)
 }
 
 
-void handle_info_request(short what_chosen)
-{
+void handle_info_request(short what_chosen) {
 	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item;
 	
@@ -405,8 +400,7 @@ void handle_info_request(short what_chosen)
 	}
 }
 
-void set_up_shop_array()
-{
+void set_up_shop_array() {
 	short i,shop_pos = 0;
 	bool cursed_item = false;
 	cItemRec store_i;
@@ -529,8 +523,7 @@ void set_up_shop_array()
 	shop_sbar->setMaximum(i);
 }
 
-void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic)////
-{
+void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic) {
 	RECT area_rect;
 	std::string place_string1;
 	
@@ -571,8 +564,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	
 }
 
-void end_talk_mode()
-{
+void end_talk_mode() {
 	// This would be where to hide the text box, if I add it.
 	overall_mode = store_pre_talk_mode;
 	if(overall_mode == MODE_TALK_TOWN)
@@ -589,8 +581,7 @@ void end_talk_mode()
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
 
-void handle_talk_event(location p)
-{
+void handle_talk_event(location p) {
 	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
 	std::string place_string1, place_string2;
@@ -1001,15 +992,13 @@ void handle_talk_event(location p)
 	place_talk_str(place_string1,place_string2,0,dummy_rect);
 }
 
-void store_responses()
-{
+void store_responses() {
 	
 }
 
-void do_sign(short town_num, short which_sign, short sign_type)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
-{
+void do_sign(short town_num, short which_sign, short sign_type) {
 	char sign_text[256];
 	location view_loc;
 	
@@ -1088,8 +1077,7 @@ void save_prefs(bool resetHelp){
 	}
 }
 
-static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
-{
+static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
 	bool done_yet = false,did_cancel = false,reset_help = false;
 	short i;
@@ -1153,8 +1141,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 	return true;
 }
 
-void pick_preferences()
-{
+void pick_preferences() {
 	make_cursor_sword();
 	
 	cDialog prefsDlog("preferences.xml");
@@ -1221,8 +1208,7 @@ void pick_preferences()
 		changed_display_mode = true;
 }
 
-static void put_party_stats(cDialog& me)
-{
+static void put_party_stats(cDialog& me) {
 	short i;
 	
 	
@@ -1250,8 +1236,7 @@ static void put_party_stats(cDialog& me)
 	draw_startup(0);
 }
 
-static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod)
-{
+static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "done") {
 		me.toast(true);
 	} else if(item_hit == "help") {
@@ -1301,8 +1286,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 }
 
 extern bool pc_gworld_loaded;
-void edit_party()
-{
+void edit_party() {
 	bool munch_pc_graphic = false;
 	
 	make_cursor_sword();
@@ -1340,8 +1324,7 @@ void edit_party()
 	
 }
 
-static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod)
-{
+static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	std::string place_str;
 	
 	if(item_hit == "done") {
@@ -1356,8 +1339,7 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 	return true;
 }
 
-void tip_of_day()
-{
+void tip_of_day() {
 	std::string place_str;
 	
 	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
@@ -1379,8 +1361,7 @@ void tip_of_day()
 	
 }
 
-static void put_scen_info(cDialog& me)
-{
+static void put_scen_info(cDialog& me) {
 	unsigned int i;
 	std::ostringstream sout;
 	const char *ratings[] = {"G","PG","R","NC-17"};
@@ -1414,8 +1395,7 @@ static void put_scen_info(cDialog& me)
 	}
 }
 
-static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod)
-{
+static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);
 		me.toast(false);
@@ -1437,8 +1417,7 @@ static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, e
 	return true;
 }
 
-short pick_a_scen()
-{
+short pick_a_scen() {
 	
 	build_scen_headers();
 	
@@ -1468,8 +1447,7 @@ short pick_a_scen()
 	return pickScen.getResult<short>();
 }
 
-short pick_prefab_scen()
-{
+short pick_prefab_scen() {
 	
 	make_cursor_sword();
 	

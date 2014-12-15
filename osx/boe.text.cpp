@@ -111,8 +111,7 @@ extern sf::Texture bg_gworld;
 
 // Draws the pc area in upper right
 //void win_draw_string(WindowPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
-void put_pc_screen()
-{
+void put_pc_screen() {
 	char to_draw[256];
 	short i = 0,j;
 	RECT erase_rect = {17,2,98,269},to_draw_rect,from_rect;
@@ -233,9 +232,8 @@ void put_pc_screen()
 //						4 - in shop, selling armor
 //						5 - in shop, selling all
 //						6 - in shop, augmenting weapon,shop_identify_cost is type
-void put_item_screen(short screen_num,short suppress_buttons)
 // if suppress_buttons > 0, save time by not redrawing buttons
-{
+void put_item_screen(short screen_num,short suppress_buttons) {
 	std::ostringstream sout;
 	short i_num,item_offset;
 	short i = 0,j,pc;
@@ -371,8 +369,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 	item_stats_gworld.display();
 }
 
-void place_buy_button(short position,short pc_num,short item_num)
-{
+void place_buy_button(short position,short pc_num,short item_num) {
 	RECT dest_rect,source_rect;
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT button_sources[3] = {RECT{24,0,36,30},RECT{36,0,48,30},RECT{48,0,60,30}};
@@ -453,8 +450,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
-void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val)
-{
+void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val) {
 	RECT from_rect = {0,0,18,18},to_rect;
 	
 	if(which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
@@ -497,15 +493,13 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	}
 }
-//RECT get_custom_rect (short which_rect) ////
-//{
+//RECT get_custom_rect (short which_rect) {
 //	RECT store_rect = {0,0,36,28};
 //
 //	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
 //	return store_rect;
 //}
-void place_item_bottom_buttons()
-{
+void place_item_bottom_buttons() {
 	RECT pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
 	RECT spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
 	// TODO: What about when the buttons are pressed?
@@ -530,8 +524,7 @@ void place_item_bottom_buttons()
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
-void set_stat_window(short new_stat)
-{
+void set_stat_window(short new_stat) {
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
@@ -563,8 +556,7 @@ void set_stat_window(short new_stat)
 	
 }
 
-short first_active_pc()
-{
+short first_active_pc() {
 	short i = 0;
 	
 	for(i = 0; i < 6; i++)
@@ -574,8 +566,7 @@ short first_active_pc()
 }
 
 
-void refresh_stat_areas(short mode)
-{
+void refresh_stat_areas(short mode) {
 	short i;
 	sf::BlendMode x;
 	// TODO: The duplication of RECT here shouldn't be necessary...
@@ -602,8 +593,7 @@ void refresh_stat_areas(short mode)
 ////
 // get job info gone
 
-short total_encumberance(short pc_num)
-{
+short total_encumberance(short pc_num) {
 	short store = 0,i,what_val;
 	
 	for(i = 0; i < 24; i++)
@@ -754,8 +744,7 @@ void print_party_stats() {
 }
 
 
-short do_look(location space)
-{
+short do_look(location space) {
 	short i,j,num_items = 0;
 	bool gold_here = false, food_here = false, is_lit = true;
 	location from_where;
@@ -908,8 +897,7 @@ short do_look(location space)
 	return print_terrain(space);
 }
 
-short town_boat_there(location where)
-{
+short town_boat_there(location where) {
 	short i;
 	
 	// Num boats stores highest # of boat in town
@@ -919,8 +907,7 @@ short town_boat_there(location where)
 			return i;
 	return 30;
 }
-short out_boat_there(location where)
-{
+short out_boat_there(location where) {
 	short i;
 	
 	for(i = 0; i < 30; i++)
@@ -930,8 +917,7 @@ short out_boat_there(location where)
 	return 30;
 }
 
-short town_horse_there(location where)
-{
+short town_horse_there(location where) {
 	short i;
 	
 	// Num boats stores highest # of boat in town
@@ -941,8 +927,7 @@ short town_horse_there(location where)
 			return i;
 	return 30;
 }
-short out_horse_there(location where)
-{
+short out_horse_there(location where) {
 	short i;
 	
 	for(i = 0; i < 30; i++)
@@ -951,8 +936,7 @@ short out_horse_there(location where)
 			return i;
 	return 30;
 }
-void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
-{
+void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	short i;
 	std::string msg;
 	
@@ -978,15 +962,13 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums)
 	}
 }
 
-std::string get_m_name(m_num_t num)
-{
+std::string get_m_name(m_num_t num) {
 	
 	////
 	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
 	return scenario.scen_monsters[num].m_name;
 }
-std::string get_ter_name(ter_num_t num)
-{
+std::string get_ter_name(ter_num_t num) {
 	std::string store_name = "Pit";
 	
 	////
@@ -998,15 +980,13 @@ std::string get_ter_name(ter_num_t num)
 	return store_name;
 }
 
-void print_monst_name(m_num_t m_type)
-{
+void print_monst_name(m_num_t m_type) {
 	std::string msg = get_m_name(m_type) + ':';
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void print_monst_attacks(m_num_t m_type,short target)
 //short target; // < 100 - pc  >= 100  monst
-{
+void print_monst_attacks(m_num_t m_type,short target) {
 	//char store_string3[60];
 	
 	std::string msg = get_m_name(m_type);
@@ -1019,8 +999,7 @@ void print_monst_attacks(m_num_t m_type,short target)
 }
 
 ////
-void damaged_message(short damage,short type)
-{
+void damaged_message(short damage,short type) {
 	std::ostringstream sout;
 	sout << "  " << get_str("monster-abilities",130 + type);
 	sout << " for " << damage;
@@ -1028,15 +1007,13 @@ void damaged_message(short damage,short type)
 }
 
 // This prepares the monster's string for the text bar
-std::string print_monster_going(m_num_t m_num,short ap)
-{
+std::string print_monster_going(m_num_t m_num,short ap) {
 	std::ostringstream sout(get_m_name(m_num));
 	sout << " (ap: " << ap << ')';
 	return sout.str();
 }
 
-void monst_spell_note(m_num_t number,short which_mess)
-{
+void monst_spell_note(m_num_t number,short which_mess) {
 	std::string msg = get_m_name(number);
 	switch(which_mess) {
 		case 1:
@@ -1202,9 +1179,8 @@ void monst_spell_note(m_num_t number,short which_mess)
 		add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_cast_spell_note(m_num_t number,short spell,short type)
 //short type; // 0 - mage 1- priest
-{
+void monst_cast_spell_note(m_num_t number,short spell,short type) {
 	std::string msg = get_m_name(number);
 	msg += " casts:";
 	add_string_to_buf((char *) msg.c_str());
@@ -1213,16 +1189,14 @@ void monst_cast_spell_note(m_num_t number,short spell,short type)
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_breathe_note(m_num_t number)
-{
+void monst_breathe_note(m_num_t number) {
 	std::string msg = get_m_name(number);
 	msg += " breathes.";
 	add_string_to_buf((char *) msg.c_str());
 	
 }
 
-void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
-{
+void monst_damaged_mes(short which_m,short how_much,short how_much_spec) {
 	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " takes ";
 	std::ostringstream sout(msg);
@@ -1233,23 +1207,20 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec)
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_killed_mes(short which_m)
-{
+void monst_killed_mes(short which_m) {
 	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " dies.";
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void print_nums(short a,short b,short c)
-{
+void print_nums(short a,short b,short c) {
 	std::ostringstream sout;
 	sout << "debug: " << a << ' ' << b << ' ' << c;
 	add_string_to_buf((char *) sout.str().c_str());
 	
 }
 
-short print_terrain(location space)
-{
+short print_terrain(location space) {
 	ter_num_t which_terrain;
 	
 	if(overall_mode == MODE_LOOK_OUTDOORS) {
@@ -1265,8 +1236,7 @@ short print_terrain(location space)
 }
 
 
-void add_string_to_buf(std::string str, unsigned short indent)
-{
+void add_string_to_buf(std::string str, unsigned short indent) {
 	if(overall_mode == MODE_STARTUP)
 		return;
 	
@@ -1352,16 +1322,14 @@ void add_string_to_buf(std::string str, unsigned short indent)
 	
 }
 
-void init_buf()
-{
+void init_buf() {
 	short i;
 	
 	for(i = 0; i < TEXT_BUF_LEN; i++)
 		sprintf((char *) text_buffer[buf_pointer].line, " ");
 }
 
-void print_buf ()
-{
+void print_buf () {
 	short num_lines_printed = 0,ctrl_val;
 	short line_to_print;
 	short start_print_point;
@@ -1402,19 +1370,16 @@ void print_buf ()
 	text_area_gworld.display();
 }
 
-void restart_printing()
-{
+void restart_printing() {
 	lines_to_print = 0;
 	//clear_text_panel();
 }
 
-void restore_mode()
-{
+void restore_mode() {
 	overall_mode = store_mode;
 }
 
-void through_sending()
-{
+void through_sending() {
 	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
 	if(mark_where_printing_long > TEXT_BUF_LEN - 1)
 		mark_where_printing_long -= TEXT_BUF_LEN;
@@ -1423,8 +1388,7 @@ void through_sending()
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win)
-{
+void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
 	RECT	destrec = {0,0,36,28};
 	
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
@@ -1449,8 +1413,7 @@ void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& t
 }
 
 // TODO: This seems to duplicate logic found in graphtool to get a rect from a picture index
-RECT coord_to_rect(short i,short j)
-{
+RECT coord_to_rect(short i,short j) {
 	RECT to_return;
 	
 	to_return.left = 13 + BITMAP_WIDTH * i;
@@ -1462,22 +1425,19 @@ RECT coord_to_rect(short i,short j)
 }
 
 
-void make_cursor_sword()
-{
+void make_cursor_sword() {
 	set_cursor(sword_curs);
 }
 
-short calc_day()
-{
+short calc_day() {
 	return (short) ((univ.party.age) / 3700) + 1;
 }
 
-bool day_reached(unsigned char which_day, unsigned char which_event)
 // which_day is day event should happen
 // which_event is the univ.party.key_times value to cross reference with.
 // if the key_time is reached before which_day, event won't happen
 // if it's 0, event always happens
-{
+bool day_reached(unsigned char which_day, unsigned char which_event) {
 	// Windows version unconditionally added 20 days for no reason at all.
 	// Instead, let's add 10 days, but only if easy mode enabled.
 	if(PSD[SDF_EASY_MODE]) which_day += 10;

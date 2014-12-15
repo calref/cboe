@@ -113,9 +113,8 @@ static bool display_spells_event_filter(cDialog& me, std::string item_hit, eSkil
 	}
 	return true;
 }
-void display_spells(eSkill mode,short force_spell,cDialog* parent)
 //short force_spell; // if 100, ignore
-{
+void display_spells(eSkill mode,short force_spell,cDialog* parent) {
 	using namespace std::placeholders;
 	if(force_spell < 100) {
 		if(mode == eSkill::MAGE_SPELLS)
@@ -137,8 +136,7 @@ void display_spells(eSkill mode,short force_spell,cDialog* parent)
 	spellInfo.run();
 }
 
-static void put_skill_info(cDialog& me)
-{
+static void put_skill_info(cDialog& me) {
 	std::string store_text;
 	short pos;
 	
@@ -172,8 +170,7 @@ static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyM
 	return true;
 }
 
-void display_skills(eSkill force_skill,cDialog* parent)
-{
+void display_skills(eSkill force_skill,cDialog* parent) {
 	if(force_skill != eSkill::INVALID)
 		skill_pos = int(force_skill);
 	if(skill_pos < 0)
@@ -324,8 +321,7 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 	return true;
 }
 
-void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
-{
+void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent) {
 	using namespace std::placeholders;
 	cItemRec store_i;
 	if(pc_num == 6)
@@ -363,8 +359,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
 }
 
 
-static void put_monst_info(cDialog& me, const cCreature& store_m)
-{
+static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	std::string store_text;
 	std::string str;
 	short abil,i;
@@ -467,10 +462,9 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	return true;
 }
 
-void display_monst(short array_pos,cCreature *which_m,short mode)
 //creature_data_type *which_m; // if NULL, show full roster
 //short mode; // if 1, full roster, else use monster from store_m
-{
+void display_monst(short array_pos,cCreature *which_m,short mode) {
 	using namespace std::placeholders;
 	position = array_pos;
 	full_roster = false;
@@ -546,8 +540,7 @@ static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKey
 	return true;
 }
 
-void display_alchemy()
-{
+void display_alchemy() {
 	std::string get_text;
 	
 	cur_entry = 3;
@@ -684,8 +677,7 @@ static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc
 	return true;
 }
 
-void give_pc_info(short pc_num)
-{
+void give_pc_info(short pc_num) {
 	using namespace std::placeholders;
 	short i;
 	std::string str;
@@ -706,8 +698,7 @@ void give_pc_info(short pc_num)
 	pcInfo.run();
 }
 
-static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod)
-{
+static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	unsigned short i;
 	std::string place_str;
 	char temp_str[256];
@@ -780,8 +771,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	return true;
 }
 
-void adventure_notes()
-{
+void adventure_notes() {
 	
 	unsigned short i;
 	char place_str[256];
@@ -829,8 +819,7 @@ void adventure_notes()
 	encNotes.run();
 }
 
-static void put_talk(cDialog& me)
-{
+static void put_talk(cDialog& me) {
 	short personality;
 	char place_str[256];
 	
@@ -887,8 +876,7 @@ static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-void talk_notes()
-{
+void talk_notes() {
 	
 	short i;
 	
@@ -946,8 +934,7 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	return true;
 }
 
-void journal()
-{
+void journal() {
 	
 	unsigned short i;
 	char place_str[256];
@@ -979,15 +966,13 @@ void journal()
 	
 	journal.run();
 }
-void add_to_journal(short event)
-{
+void add_to_journal(short event) {
 	if(univ.party.add_to_journal(event, calc_day()))
 		ASB("Something was added to your journal.");
 }
 
 // Call call this anywhere, but don't forget parent!!!
-static void give_help(short help1,short help2,cDialog* parent)
-{
+static void give_help(short help1,short help2,cDialog* parent) {
 	bool help_forced = false;
 	std::string str1,str2;
 	
@@ -1018,8 +1003,7 @@ void give_help(short help1, short help2, cDialog& parent) {
 	give_help(help1, help2, &parent);
 }
 
-void put_spec_item_info (short which_i)
-{
+void put_spec_item_info (short which_i) {
 	cStrDlog display_strings(scenario.scen_strs(60 + 1 + which_i * 2),"",
 							 scenario.scen_strs(60 + which_i * 2),scenario.intro_pic,PIC_SCEN);
 	display_strings.setSound(57);

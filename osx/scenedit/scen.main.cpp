@@ -186,8 +186,7 @@ void Handle_One_Event() {
 	
 	if(!mainPtr.waitEvent(event)) return;
 	
-	switch(event.type)
-	{
+	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(!(event.key.*systemKey))
 				handle_keystroke(chr,chr2,event);

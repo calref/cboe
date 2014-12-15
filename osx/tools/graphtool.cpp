@@ -411,8 +411,7 @@ void draw_terrain(){
 		FrameRect(&terrain_rect);
 		SetPortWindowPort(mainPtr);
 		for(q = 0; q < 9; q++) 
-			for(r = 0; r < 9; r++)
-			{
+			for(r = 0; r < 9; r++) {
 				where_draw.x = q; where_draw.y = r;
 				if(editing_town) {
 					t_to_draw = t_d.terrain[cen_x + q - 4][cen_y + r - 4];		

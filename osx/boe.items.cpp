@@ -69,8 +69,7 @@ std::map<const eItemType, const short> excluding_types = {
 
 short selected,item_max = 0;
 
-void sort_pc_items(short pc_num)
-{
+void sort_pc_items(short pc_num) {
 	cItemRec store_item;
 	using it = eItemType;
 	static std::map<eItemType, const short> item_priority = {
@@ -116,8 +115,7 @@ bool give_to_party(cItemRec item, short print_result) {
 }
 
 ////
-bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload)
-{
+bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload) {
 	short free_space;
 	char announce_string[60];
 	
@@ -169,9 +167,8 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 }
 
 // TODO: Utilize the second parameter in special node processing
-bool forced_give(short item_num,eItemAbil abil) ////
 // if abil > 0, force abil, else ignore
-{
+bool forced_give(short item_num,eItemAbil abil) {
 	short i,j;
 	cItemRec item;
 	char announce_string[60];
@@ -197,30 +194,26 @@ bool forced_give(short item_num,eItemAbil abil) ////
 	return false;
 }
 
-bool GTP(short item_num)
-{
+bool GTP(short item_num) {
 	cItemRec item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,true);
 }
-bool silent_GTP(short item_num)
-{
+bool silent_GTP(short item_num) {
 	cItemRec item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,false);
 }
-void give_gold(short amount,bool print_result)////
-{
+void give_gold(short amount,bool print_result) {
 	if(amount < 0) return;
 	univ.party.gold = univ.party.gold + amount;
 	if(print_result)
 		put_pc_screen();
 }
 
-bool take_gold(short amount,bool print_result)
-{
+bool take_gold(short amount,bool print_result) {
 	if(univ.party.gold < amount)
 		return false;
 	univ.party.gold = univ.party.gold - amount;
@@ -304,13 +297,11 @@ bool party_check_class(unsigned int item_class,short mode) {
 				}
 	return false;
 }
-short amount_pc_can_carry(short pc_num)
-{
+short amount_pc_can_carry(short pc_num) {
 	return 100 + (15 * min(univ.party[pc_num].skills[eSkill::STRENGTH],20)) + (univ.party[pc_num].traits[eTrait::STRENGTH] * 30)
 		+ (univ.party[pc_num].traits[eTrait::BAD_BACK] * -50);
 }
-short pc_carry_weight(short pc_num)
-{
+short pc_carry_weight(short pc_num) {
 	short i,storage = 0;
 	bool airy = false,heavy = false;
 	
@@ -331,16 +322,14 @@ short pc_carry_weight(short pc_num)
 	return storage;
 }
 
-void give_food(short amount,bool print_result)////
-{
+void give_food(short amount,bool print_result) {
 	if(amount < 0) return;
 	univ.party.food = univ.party.food + amount;
 	if(print_result)
 		put_pc_screen();
 }
 
-short take_food(short amount,bool print_result)
-{
+short take_food(short amount,bool print_result) {
 	short diff;
 	
 	diff = amount - univ.party.food;
@@ -357,8 +346,7 @@ short take_food(short amount,bool print_result)
 	return 0;
 }
 
-short pc_has_space(short pc_num)
-{
+short pc_has_space(short pc_num) {
 	short i = 0;
 	
 	while(i < 24) {
@@ -371,8 +359,7 @@ short pc_has_space(short pc_num)
 
 // returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
 // Made specials cases for if item is gold or food
-short pc_ok_to_buy(short pc_num,short cost,cItemRec item) ////
-{
+short pc_ok_to_buy(short pc_num,short cost,cItemRec item) {
 	short i;
 	
 	if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
@@ -395,9 +382,8 @@ short pc_ok_to_buy(short pc_num,short cost,cItemRec item) ////
 	
 }
 
-void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 30, don't update stat win, item is which_item - 30
-{
+void take_item(short pc_num,short which_item) {
 	short i;
 	bool do_print = true;
 	
@@ -424,8 +410,7 @@ void take_item(short pc_num,short which_item)
 		put_item_screen(stat_window,1);
 }
 
-void remove_charge(short pc_num,short which_item)
-{
+void remove_charge(short pc_num,short which_item) {
 	if(univ.party[pc_num].items[which_item].charges > 0) {
 		univ.party[pc_num].items[which_item].charges--;
 		if(univ.party[pc_num].items[which_item].charges == 0) {
@@ -438,8 +423,7 @@ void remove_charge(short pc_num,short which_item)
 	
 }
 
-void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val)
-{
+void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val) {
 	char store_name[60];
 	
 	////
@@ -500,8 +484,7 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 	univ.party[pc_num].items[item_hit].full_name = store_name;
 }
 
-void equip_item(short pc_num,short item_num)
-{
+void equip_item(short pc_num,short item_num) {
 	unsigned short num_equipped_of_this_type = 0;
 	unsigned short num_hands_occupied = 0;
 	short i;
@@ -567,8 +550,7 @@ void equip_item(short pc_num,short item_num)
 }
 
 
-void drop_item(short pc_num,short item_num,location where_drop)
-{
+void drop_item(short pc_num,short item_num,location where_drop) {
 	std::string choice;
 	short how_many = 0;
 	cItemRec item_store;
@@ -624,8 +606,7 @@ void drop_item(short pc_num,short item_num,location where_drop)
 	}
 }
 
-bool place_item(cItemRec item,location where,bool forced)
-{
+bool place_item(cItemRec item,location where,bool forced) {
 	short i;
 	
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -649,8 +630,7 @@ bool place_item(cItemRec item,location where,bool forced)
 	return true;
 }
 
-void destroy_an_item()
-{
+void destroy_an_item() {
 	short i;
 	ASB("Too many items. Some item destroyed.");
 //	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -678,8 +658,7 @@ void destroy_an_item()
 	
 }
 
-void give_thing(short pc_num, short item_num)
-{
+void give_thing(short pc_num, short item_num) {
 	short who_to,how_many = 0;
 	cItemRec item_store;
 	bool take_given_item = true;
@@ -720,8 +699,7 @@ void give_thing(short pc_num, short item_num)
 	}
 }
 
-void combine_things(short pc_num)
-{
+void combine_things(short pc_num) {
 	short i,j,test;
 	
 	for(i = 0; i < 24; i++) {
@@ -751,8 +729,7 @@ void combine_things(short pc_num)
 }
 
 // Procedure only ready for town and outdoor
-short dist_from_party(location where)
-{
+short dist_from_party(location where) {
 	short store = 1000, i;
 	
 	if((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
@@ -766,8 +743,7 @@ short dist_from_party(location where)
 }
 
 // TODO: I have no idea what is going on here, other than that it seems to have something to do items being picked up in town
-void set_item_flag(cItemRec *item)
-{
+void set_item_flag(cItemRec *item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
 		univ.party.item_taken[univ.town.num][item->is_special / 8] =
@@ -776,9 +752,8 @@ void set_item_flag(cItemRec *item)
 	}
 }
 
-short get_item(location place,short pc_num,bool check_container)
 //short pc_num; // if 6, any
-{
+short get_item(location place,short pc_num,bool check_container) {
 	short i,taken = 0;
 	bool item_near = false;
 	short mass_get = 1;
@@ -824,8 +799,7 @@ short get_item(location place,short pc_num,bool check_container)
 	
 }
 
-void make_town_hostile()
-{
+void make_town_hostile() {
 	set_town_attitude(0, -1, 1);
 	return;
 }
@@ -882,8 +856,7 @@ void set_town_attitude(short lo,short hi,short att) {
 // TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.
 
 
-static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array)
-{
+static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array) {
 	short i,storage;
 	cItemRec item;
 	char message[256];
@@ -1044,10 +1017,9 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 bool pc_gworld_loaded = false;
 
 // Returns true is a theft committed
-bool display_item(location from_loc,short pc_num,short mode, bool check_container)
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
-{
+bool display_item(location from_loc,short pc_num,short mode, bool check_container) {
 //	short item_array[130];
 	std::vector<cItemRec*> item_array;
 	short i;
@@ -1119,14 +1091,12 @@ bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, sho
 }
 
 
-//void fancy_choice_dialog_event_filter (short item_hit)
-//{
+//void fancy_choice_dialog_event_filter (short item_hit) {
 //	toast_dialog();
 //	dialog_answer = item_hit;
 //}
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ////
-{
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
 	make_cursor_sword();
 	
 	std::vector<std::string> vec;
@@ -1206,10 +1176,9 @@ static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
 	return true;
 }
 
-short get_num_of_items(short max_num)
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
-{
+short get_num_of_items(short max_num) {
 	char sign_text[256];
 	
 	make_cursor_sword();
@@ -1234,14 +1203,12 @@ void init_mini_map() {
 	makeFrontWindow(mainPtr);
 }
 
-void make_cursor_watch()
-{
+void make_cursor_watch() {
 	set_cursor(watch_curs);
 }
 
 ////
-void place_glands(location where,m_num_t m_type)
-{
+void place_glands(location where,m_num_t m_type) {
 	cItemRec store_i;
 	cMonster monst;
 	
@@ -1253,8 +1220,7 @@ void place_glands(location where,m_num_t m_type)
 	}
 }
 
-short party_total_level()
-{
+short party_total_level() {
 	short i,j = 0;
 	
 	for(i = 0; i < 6; i++)
@@ -1263,8 +1229,7 @@ short party_total_level()
 	return j;
 }
 
-void reset_item_max()
-{
+void reset_item_max() {
 	short i;
 	
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -1272,17 +1237,15 @@ void reset_item_max()
 			item_max = i + 1;
 }
 
-short item_val(cItemRec item)
-{
+short item_val(cItemRec item) {
 	if(item.charges == 0)
 		return item.value;
 	return item.charges * item.value;
 }
 
 //// rewrite
-void place_treasure(location where,short level,short loot,short mode)
 //short mode;  // 0 - normal, 1 - force
-{
+void place_treasure(location where,short level,short loot,short mode) {
 	
 	cItemRec new_item;
 	short amt,r1,i,j;
@@ -1439,8 +1402,7 @@ cItemRec return_treasure(short loot) {
 	
 }
 
-void refresh_store_items()
-{
+void refresh_store_items() {
 	short i,j;
 	short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
 	

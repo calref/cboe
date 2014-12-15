@@ -53,9 +53,8 @@ extern RECT edit_rect[5][2];
 
 //extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 //extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-bool handle_action(sf::Event event)
 //short mode; // ignore,
-{
+bool handle_action(sf::Event event) {
 	short i;
 	
 	location the_point;
@@ -113,8 +112,7 @@ bool handle_action(sf::Event event)
 	return to_return;
 }
 
-void flash_rect(RECT /*to_flash*/)
-{
+void flash_rect(RECT /*to_flash*/) {
 	
 	// TODO: Think of a good way to do this
 	//InvertRect (&to_flash);
@@ -122,16 +120,14 @@ void flash_rect(RECT /*to_flash*/)
 	sf::sleep(time_in_ticks(5));
 }
 
-static bool get_num_event_filter(cDialog& me, std::string id, eKeyMod)
-{
+static bool get_num_event_filter(cDialog& me, std::string id, eKeyMod) {
 	me.toast(id == "okay");
 	me.setResult<long long>(me["number"].getTextAsNum());
 	return true;
 }
 
-void edit_gold_or_food(short which_to_edit)
 //0 - gold 1 - food
-{
+void edit_gold_or_food(short which_to_edit) {
 	
 	location view_loc;
 	
@@ -153,8 +149,7 @@ void edit_gold_or_food(short which_to_edit)
 		univ.party.food = dialog_answer;
 }
 
-void edit_day()
-{
+void edit_day() {
 	
 	location view_loc;
 	
@@ -173,8 +168,7 @@ void edit_day()
 	univ.party.age = (long long) (3700) * (long long) (dialog_answer);
 }
 
-void combine_things(short pc_num)
-{
+void combine_things(short pc_num) {
 	short i,j,test;
 	
 	for(i = 0; i < 24; i++) {
@@ -203,8 +197,7 @@ void combine_things(short pc_num)
 	}
 }
 
-bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/)
-{
+bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/) {
 	short free_space;
 	
 	if(item.variety == eItemType::NO_ITEM)
@@ -219,8 +212,7 @@ bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/)
 	return false;
 }
 
-bool give_to_party(cItemRec item,short print_result)
-{
+bool give_to_party(cItemRec item,short print_result) {
 	short i = 0;
 	
 	while(i < 6) {
@@ -231,21 +223,18 @@ bool give_to_party(cItemRec item,short print_result)
 	return false;
 }
 
-void give_gold(short amount,bool /*print_result*/)
-{
+void give_gold(short amount,bool /*print_result*/) {
 	univ.party.gold = univ.party.gold + amount;
 }
 
-bool take_gold(short amount,bool /*print_result*/)
-{
+bool take_gold(short amount,bool /*print_result*/) {
 	if(univ.party.gold < amount)
 		return false;
 	univ.party.gold = univ.party.gold - amount;
 	return true;
 }
 
-short pc_has_space(short pc_num)
-{
+short pc_has_space(short pc_num) {
 	short i = 0;
 	
 	while(i < 24) {
@@ -256,9 +245,8 @@ short pc_has_space(short pc_num)
 	return 24;
 }
 
-void take_item(short pc_num,short which_item)
 //short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
-{
+void take_item(short pc_num,short which_item) {
 	short i;
 	
 	if(univ.party[pc_num].weap_poisoned == which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
@@ -277,8 +265,7 @@ void take_item(short pc_num,short which_item)
 	
 }
 
-void edit_xp(cPlayer *pc)
-{
+void edit_xp(cPlayer *pc) {
 	location view_loc;
 	
 	make_cursor_sword();

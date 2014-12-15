@@ -50,13 +50,11 @@ bool load_scen_item_defs(char scen_name[256]);
 
 extern fs::path progDir;
 
-void leave_town()
-{
+void leave_town() {
 	store_flags[0] = 5790;
 }
 
-void remove_party_from_scen()
-{
+void remove_party_from_scen() {
 	store_flags[1] = 200;
 	party_in_scen = false;
 	load_base_item_defs();
@@ -66,8 +64,7 @@ void remove_party_from_scen()
  * XXX This was referenced but not defined, so I copied the implementation
  * from blxfileio.c. Need to check that it's OK.
  */
-short init_data(short flag)
-{
+short init_data(short flag) {
 	long k = 0;
 	
 	k = (long) flag;

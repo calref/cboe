@@ -613,8 +613,7 @@ void draw_terrain(){
 		tileImage(ter_draw_gworld,terrain_rect,bg[17]);
 		frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		for(q = 0; q < 9; q++)
-			for(r = 0; r < 9; r++)
-			{
+			for(r = 0; r < 9; r++) {
 				where_draw.x = q;
 				where_draw.y = r;
 				if(editing_town) {
@@ -1082,8 +1081,7 @@ void draw_frames() {
 	RECT draw_rect;
 	
 	for(q = 0; q < 9; q++) {
-		for(r = 0; r < 9; r++)
-		{
+		for(r = 0; r < 9; r++) {
 			which_pt.x = cen_x + q - 4;
 			which_pt.y = cen_y + r - 4;
 			draw_rect.top = 23 + r * 36;

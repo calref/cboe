@@ -173,8 +173,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			draw_lb_slot(i,0);
 			mainPtr.display();
 			if(overall_mode == MODE_INTRO_SCREEN) {
-				switch(i)
-				{
+				switch(i) {
 					case 3: // new
 						if(build_scenario()){
 							overall_mode = MODE_MAIN_SCREEN;
@@ -199,8 +198,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 			}
 			else if((overall_mode == MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
-				switch(i)
-				{
+				switch(i) {
 					case 0:
 						break;
 						
@@ -300,8 +298,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				draw_rb_slot(i + right_top,0);
 				mainPtr.display();
 				change_made = true;
-				switch(right_hit / 1000)
-				{
+				switch(right_hit / 1000) {
 					case 1:
 						edit_ter_type(j);
 						update_item_menu();
@@ -441,8 +438,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					erasing_mode = true;
 					mouse_button_held = true;
 				}
-				else
-				{
+				else {
 					mouse_button_held = true;
 					set_cursor(wand_curs);
 			 		set_terrain(spot_hit,current_terrain_type);
@@ -1268,8 +1264,7 @@ void swap_terrain() {
 	if(a < 0) return;
 	
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++)
-		{
+		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
 				if(editing_town)
@@ -1326,8 +1321,7 @@ void handle_keystroke(char chr,char chr2,sf::Event event) {
 	
 	store_ter = current_terrain_type;
 	
-	switch(chr)
-	{
+	switch(chr) {
 			/*
 		case 'g':
 			set_new_terrain(current_ground);
@@ -1997,12 +1991,10 @@ bool fix_cave(location l) {
 		else { // not edge
 		*/
 		if(!is_wall(i-1,j)) {
-			if(!is_wall(i,j-1))
-			{
+			if(!is_wall(i,j-1)) {
 				ter_to_fix = 11;
 			}
-			else
-			{
+			else {
 				if(!is_wall(i,j+1))
 					ter_to_fix = 14;
 				else ter_to_fix = 12;
@@ -2013,8 +2005,7 @@ bool fix_cave(location l) {
 		}
 		
 		else { // wall(i-1,j)
-			if(!is_wall(i+1,j))
-			{
+			if(!is_wall(i+1,j)) {
 				if(!is_wall(i, j-1))
 					ter_to_fix = 8;
 				else if(!is_wall(i,j+1))
@@ -2023,9 +2014,8 @@ bool fix_cave(location l) {
 				
 			}
 			
-			else //wall(i+1,j)
+			else { //wall(i+1,j)
 				
-			{
 				if(!is_wall(i, j-1))
 					ter_to_fix = 9;
 				else if(!is_wall(i,j+1))
@@ -2094,12 +2084,10 @@ bool fix_mountain(location l) {
 		else { // not edge
 			
 			if(!is_mountain(i-1,j)) {
-				if(!is_mountain(i,j-1))
-				{
+				if(!is_mountain(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2110,8 +2098,7 @@ bool fix_mountain(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_mountain(i+1,j))
-				{
+				if(!is_mountain(i+1,j)) {
 					if(!is_mountain(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_mountain(i,j+1))
@@ -2120,9 +2107,8 @@ bool fix_mountain(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_mountain(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_mountain(i,j+1))
@@ -2189,12 +2175,10 @@ bool fix_hill(location l) {
 		else { // not edge
 			
 			if(!is_hill_or_mountain(i-1,j)) {
-				if(!is_hill_or_mountain(i,j-1))
-				{
+				if(!is_hill_or_mountain(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2205,8 +2189,7 @@ bool fix_hill(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_hill_or_mountain(i+1,j))
-				{
+				if(!is_hill_or_mountain(i+1,j)) {
 					if(!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_hill_or_mountain(i,j+1))
@@ -2215,9 +2198,8 @@ bool fix_hill(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_hill_or_mountain(i,j+1))
@@ -2287,12 +2269,10 @@ bool fix_water(location l) {
 		else { // not edge
 			
 			if(!is_water(i-1,j)) {
-				if(!is_water(i,j-1))
-				{
+				if(!is_water(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_water(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2303,8 +2283,7 @@ bool fix_water(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_water(i+1,j))
-				{
+				if(!is_water(i+1,j)) {
 					if(!is_water(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_water(i,j+1))
@@ -2313,9 +2292,8 @@ bool fix_water(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_water(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_water(i,j+1))
@@ -2410,12 +2388,10 @@ bool out_fix_cave(location l) {
 		else { // not edge
 			
 			if(!is_wall(i-1,j)) {
-				if(!is_wall(i,j-1))
-				{
+				if(!is_wall(i,j-1)) {
 					ter_to_fix = 11;
 				}
-				else
-				{
+				else {
 					if(!is_wall(i,j+1))
 						ter_to_fix = 14;
 					else ter_to_fix = 12;
@@ -2426,8 +2402,7 @@ bool out_fix_cave(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_wall(i+1,j))
-				{
+				if(!is_wall(i+1,j)) {
 					if(!is_wall(i, j-1))
 						ter_to_fix = 8;
 					else if(!is_wall(i,j+1))
@@ -2436,9 +2411,8 @@ bool out_fix_cave(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_wall(i, j-1))
 						ter_to_fix = 9;
 					else if(!is_wall(i,j+1))
@@ -2507,12 +2481,10 @@ bool out_fix_mountain(location l) {
 		else { // not edge
 			
 			if(!is_mountain(i-1,j)) {
-				if(!is_mountain(i,j-1))
-				{
+				if(!is_mountain(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2523,8 +2495,7 @@ bool out_fix_mountain(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_mountain(i+1,j))
-				{
+				if(!is_mountain(i+1,j)) {
 					if(!is_mountain(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_mountain(i,j+1))
@@ -2533,9 +2504,8 @@ bool out_fix_mountain(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_mountain(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_mountain(i,j+1))
@@ -2602,12 +2572,10 @@ bool out_fix_hill(location l) {
 		else { // not edge
 			
 			if(!is_hill_or_mountain(i-1,j)) {
-				if(!is_hill_or_mountain(i,j-1))
-				{
+				if(!is_hill_or_mountain(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2618,8 +2586,7 @@ bool out_fix_hill(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_hill_or_mountain(i+1,j))
-				{
+				if(!is_hill_or_mountain(i+1,j)) {
 					if(!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_hill_or_mountain(i,j+1))
@@ -2628,9 +2595,8 @@ bool out_fix_hill(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_hill_or_mountain(i,j+1))
@@ -2700,12 +2666,10 @@ bool out_fix_water(location l) {
 		else { // not edge
 			
 			if(!is_water(i-1,j)) {
-				if(!is_water(i,j-1))
-				{
+				if(!is_water(i,j-1)) {
 					ter_to_fix = 29;
 				}
-				else
-				{
+				else {
 					if(!is_water(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
@@ -2716,8 +2680,7 @@ bool out_fix_water(location l) {
 			}
 			
 			else { // wall(i-1,j)
-				if(!is_water(i+1,j))
-				{
+				if(!is_water(i+1,j)) {
 					if(!is_water(i, j-1))
 						ter_to_fix = 27;
 					else if(!is_water(i,j+1))
@@ -2726,9 +2689,8 @@ bool out_fix_water(location l) {
 					
 				}
 				
-				else //wall(i+1,j)
+				else { //wall(i+1,j)
 					
-				{
 					if(!is_water(i, j-1))
 						ter_to_fix = 28;
 					else if(!is_water(i,j+1))

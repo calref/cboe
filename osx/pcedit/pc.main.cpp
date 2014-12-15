@@ -127,8 +127,7 @@ int main(int /*argc*/, char* argv[]) {
 //
 
 //MW specified argument and return type.
-void Initialize(void)
-{
+void Initialize(void) {
 	
 	check_for_intel();
 	
@@ -151,8 +150,7 @@ void Initialize(void)
 	mainPtr.create(sf::VideoMode(590, 440), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 }
 
-void Handle_One_Event()
-{
+void Handle_One_Event() {
 	if(!mainPtr.pollEvent(event)) return;
 	
 	init_main_buttons();
@@ -179,8 +177,7 @@ void Handle_One_Event()
 	}
 }
 
-void Mouse_Pressed()
-{
+void Mouse_Pressed() {
 	bool try_to_end;
 	
 	try_to_end = handle_action(event);
@@ -188,8 +185,7 @@ void Mouse_Pressed()
 		All_Done = verify_restore_quit(false);
 }
 
-void handle_apple_menu(int item_hit)
-{
+void handle_apple_menu(int item_hit) {
 	//char desk_acc_name[256];
 	//short desk_acc_num;
 	
@@ -204,8 +200,7 @@ void handle_apple_menu(int item_hit)
 	}
 }
 
-void handle_file_menu(int item_hit)
-{
+void handle_file_menu(int item_hit) {
 	fs::path file;
 	
 	switch(item_hit) {
@@ -244,8 +239,7 @@ static void display_strings(short nstr, pic_num_t pic) {
 	display_strings.show();
 }
 
-void handle_extra_menu(int item_hit)
-{
+void handle_extra_menu(int item_hit) {
 	short i;
 	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,true,false};
 	
@@ -333,8 +327,7 @@ void handle_extra_menu(int item_hit)
 	redraw_screen();
 }
 
-void handle_edit_menu(int item_hit)
-{
+void handle_edit_menu(int item_hit) {
 	short i,j,k;
 	
 	if(file_in_mem.empty()) {
@@ -448,8 +441,7 @@ void handle_edit_menu(int item_hit)
 //}
 
 // TODO: Let this take the item directly instead of the index
-void handle_item_menu(int item_hit)
-{
+void handle_item_menu(int item_hit) {
 	cItemRec store_i;
 	
 	if(file_in_mem.empty()) {
@@ -461,16 +453,14 @@ void handle_item_menu(int item_hit)
 	give_to_pc(current_active_pc,store_i,false);
 }
 
-//void set_cursor(CursHandle which_curs)
-//{
+//void set_cursor(CursHandle which_curs) {
 //	HLock ((Handle) which_curs);
 //	SetCursor (*which_curs);
 //	HUnlock((Handle) which_curs);
 //}
 
-bool verify_restore_quit(bool mode)
 //short mode; // 0 - quit  1- restore
-{
+bool verify_restore_quit(bool mode) {
 	std::string choice;
 	
 	if(file_in_mem.empty())
@@ -485,8 +475,7 @@ bool verify_restore_quit(bool mode)
 	return true;
 }
 
-//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-//{
+//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit) {
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
 //	Handle the_handle = NULL;

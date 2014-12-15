@@ -42,8 +42,7 @@ extern eGameMode overall_mode;
 RECT startup_button[6];
 
 // TODO: Always returns false, so make it void
-bool handle_startup_press(location the_point)
-{
+bool handle_startup_press(location the_point) {
 	std::string scen_name;
 	short i,scen;
 	
@@ -117,8 +116,7 @@ bool handle_startup_press(location the_point)
 }
 
 /*
-void start_game ()
-{
+void start_game () {
 	init_party(0);
 	
 	setup_outdoors(party.p_loc);

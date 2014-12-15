@@ -86,9 +86,8 @@ std::map<eItemAbil, short> abil_chart = {
 };
 
 // TODO: I bet this is completely unused; it looks like it does nothing.
-bool town_specials(short which,short /*t_num*/)
 //short which; // number, 0 - 49, of special
-{
+bool town_specials(short which,short /*t_num*/) {
 	bool can_enter = true;
 	short spec_id;
 	location l;
@@ -106,11 +105,10 @@ bool town_specials(short which,short /*t_num*/)
 	return can_enter;
 }
 
-bool handle_wandering_specials (short /*which*/,short mode)
 // which is unused
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
 // wanderin spec 99 -> generic spec
-{
+bool handle_wandering_specials (short /*which*/,short mode) {
 	
 	// TODO: Is loc_in_sec the correct location to pass here?
 	// (I'm pretty sure it is, but I should verify it somehow.)
@@ -133,11 +131,10 @@ bool handle_wandering_specials (short /*which*/,short mode)
 }
 
 
-bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,short *spec_num,
-						   bool *forced)
 // returns true if can enter this space
 // sets forced to true if definitely can enter
-{
+bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,short *spec_num,
+						   bool *forced) {
 	ter_num_t ter;
 	short r1,i,door_pc,pic_type = 0,ter_pic = 0;
 	eTerSpec ter_special;
@@ -443,8 +440,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				}
 			//print_nums(1,which_pc,current_pc);
 			break;
-		case eTerSpec::CALL_SPECIAL:
-		{
+		case eTerSpec::CALL_SPECIAL: {
 			short spec_type = 0;
 			if(ter_flag2.u == 3){
 				if(mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
@@ -491,8 +487,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
-void check_fields(location where_check,eSpecCtx mode,short which_pc)
-{
+void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 	short r1,i;
 	
 	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
@@ -597,8 +592,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc)
 	fast_bang = 0;
 }
 
-void use_spec_item(short item)
-{
+void use_spec_item(short item) {
 	short i,j,k;
 	location null_loc;
 	
@@ -607,8 +601,7 @@ void use_spec_item(short item)
 }
 
 
-void use_item(short pc,short item)
-{
+void use_item(short pc,short item) {
 	bool take_charge = true,inept_ok = false;
 	short level,i,j,item_use_code,str,type,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
@@ -1188,8 +1181,7 @@ void use_item(short pc,short item)
 }
 
 // Returns true if an action is actually carried out. This can only be reached in town.
-bool use_space(location where)
-{
+bool use_space(location where) {
 	ter_num_t ter;
 	short i;
 	location from_loc,to_loc;
@@ -1271,8 +1263,7 @@ bool use_space(location where)
 // Note ... if this is a container, the code must first process any specials. If
 //specials return false, can't get items inside. If true, can get items inside.
 // Can't get items out in combat.
-bool adj_town_look(location where)
-{
+bool adj_town_look(location where) {
 	ter_num_t terrain;
 	bool can_open = true,item_there = false,got_special = false;
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
@@ -1318,9 +1309,8 @@ bool adj_town_look(location where)
 }
 
 // PSOE - place_special_outdoor_encounter
-void PSOE(short which_special,unsigned char *stuff_done_val,short where_put)
 // if always, stuff_done_val is NULL
-{
+void PSOE(short which_special,unsigned char *stuff_done_val,short where_put) {
 	short i,j,graphic_num = 0;
 	
 	if(stuff_done_val != NULL) {
@@ -1351,8 +1341,7 @@ void PSOE(short which_special,unsigned char *stuff_done_val,short where_put)
 	//play_sound(0);
 }
 
-void out_move_party(char x,char y)
-{
+void out_move_party(char x,char y) {
 	location l;
 	
 	l.x = x;l.y = y;
@@ -1362,9 +1351,8 @@ void out_move_party(char x,char y)
 	update_explored(l);
 }
 
-void teleport_party(short x,short y,short mode)
 // mode - 0=full teleport flash 1=no teleport flash 2=only fade flash 3=only arrival flash
-{
+void teleport_party(short x,short y,short mode) {
 	short i;
 	location l;
 	bool fadeIn = false, fadeOut = false;
@@ -1412,8 +1400,7 @@ void teleport_party(short x,short y,short mode)
 }
 
 
-void fade_party()
-{
+void fade_party() {
 	short i;
 	location l;
 	
@@ -1428,8 +1415,7 @@ void fade_party()
 	end_missile_anim();
 }
 
-void change_level(short town_num,short x,short y)
-{
+void change_level(short town_num,short x,short y) {
 	location l(x,y);
 	
 	if((town_num < 0) || (town_num >= scenario.num_towns)) {
@@ -1444,14 +1430,13 @@ void change_level(short town_num,short x,short y)
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type)
 //short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
 //short dam_type;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold
 // 6 - demon 7 - undead
 // 9 - marked damage, from during anim mode
 //+10 = no_print
 // 100s digit - damage sound for boom space
-{
+bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type) {
 	cCreature *victim;
 	short r1,which_spot;
 	location where_put;
@@ -1638,8 +1623,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	return true;
 }
 
-void kill_monst(cCreature *which_m,short who_killed)
-{
+void kill_monst(cCreature *which_m,short who_killed) {
 	short xp,i,j,s1,s2,s3;
 	location l;
 	
@@ -1724,8 +1708,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 
 // Pushes party and monsters around by moving walls and conveyor belts.
 //This is very fragils, and only hands a few cases.
-void push_things()////
-{
+void push_things() {
 	bool redraw = false;
 	short i,k;
 	ter_num_t ter;
@@ -1853,8 +1836,7 @@ void push_things()////
 	}
 }
 
-void special_increase_age(long length, bool queue)
-{
+void special_increase_age(long length, bool queue) {
 	unsigned short i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
@@ -1959,8 +1941,7 @@ void run_special(pending_special_type spec, short* a, short* b, short* redraw) {
 // start spec - the number of the first spec to call
 // a,b - 2 values that can be returned
 // redraw - 1 if now need redraw
-void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw)
-{
+void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw) {
 	short cur_spec,cur_spec_type,next_spec,next_spec_type;
 	cSpecial cur_node;
 	int num_nodes = 0;
@@ -2063,8 +2044,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	}
 }
 
-cSpecial get_node(short cur_spec,short cur_spec_type)
-{
+cSpecial get_node(short cur_spec,short cur_spec_type) {
 	cSpecial dummy_node;
 	
 	dummy_node = scenario.scen_specials[0];
@@ -2095,8 +2075,7 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 
 // TODO: Make cur_spec_type an enum
 void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw)
-{
+				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw) {
 	bool check_mess = false;
 	std::string str1,str2;
 	short store_val = 0,i,j;
@@ -2348,8 +2327,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
-{
+				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true,set_sd = true;
 	std::array<std::string, 6> strs;
 	short i,j;
@@ -2405,9 +2383,13 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			for(i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
-			if(spec.m2 > 0)
-			{buttons[0] = 1; buttons[1] = spec.ex1a; buttons[2] = spec.ex2a;
-				if((spec.ex1a >= 0) || (spec.ex2a >= 0)) buttons[0] = 20; }
+			if(spec.m2 > 0) {
+				buttons[0] = 1;
+				buttons[1] = spec.ex1a;
+				buttons[2] = spec.ex2a;
+				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
+					buttons[0] = 20;
+			}
 			if(spec.m2 <= 0) {buttons[0] = spec.ex1a;buttons[1] = spec.ex2a;}
 			if((buttons[0] < 0) && (buttons[1] < 0)) {
 				giveError("Dialog box ended up with no buttons.");
@@ -2529,8 +2511,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
-{
+				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true;
 	short i,pc = 6,r1;
 	cSpecial spec;
@@ -2593,8 +2574,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			}
 			break;
-		case eSpecType::DAMAGE:
-		{
+		case eSpecType::DAMAGE: {
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			eDamageType dam_type = (eDamageType) spec.ex2b;
 			if(pc < 0) {
@@ -2923,8 +2903,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
-{
+				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = false;
 	std::string str1, str2, str3;
 	short i,j,k;
@@ -3336,8 +3315,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
-void set_terrain(location l, ter_num_t terrain_type)
-{
+void set_terrain(location l, ter_num_t terrain_type) {
 	ter_num_t former = univ.town->terrain(l.x,l.y);
 	univ.town->terrain(l.x,l.y) = terrain_type;
 	if(scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
@@ -3348,8 +3326,7 @@ void set_terrain(location l, ter_num_t terrain_type)
 
 // TODO: What was next_spec_type for? Is it still needed?
 void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw)
-{
+				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
 	static const char*const stairDlogs[8] = {
 		"basic-stair-up.xml", "basic-stair-down.xml",
 		"basic-slope-up.xml", "basic-slope-down.xml",
@@ -3953,8 +3930,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
-void setsd(short a,short b,short val)
-{
+void setsd(short a,short b,short val) {
 	if(!sd_legit(a,b)) {
 		giveError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
@@ -3962,8 +3938,7 @@ void setsd(short a,short b,short val)
 	PSD[a][b] = val;
 }
 
-void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b)
-{
+void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b) {
 	eEncNoteType note_type;
 	switch(cur_type) {
 		case 0:
@@ -4008,8 +3983,7 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 	display_strings.show();
 }
 
-void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str1,short which_str2)
-{
+void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str1,short which_str2) {
 	short num_strs[3] = {260,108,135};
 	
 	if(((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||

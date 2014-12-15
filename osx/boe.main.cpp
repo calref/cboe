@@ -212,8 +212,7 @@ int main(int /*argc*/, char* argv[]) {
 //
 
 //MW specified argument and return type.
-void Initialize(void)
-{
+void Initialize(void) {
 	/* Initialize all the needed managers. */
 	//InitCursor();
 	
@@ -259,8 +258,7 @@ void Initialize(void)
 	
 }
 
-void Handle_One_Event()
-{
+void Handle_One_Event() {
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 	
@@ -298,8 +296,7 @@ void Handle_One_Event()
 		mainPtr.display();
 		return;
 	}
-	switch(event.type)
-	{
+	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
 			if(!(event.key.*systemKey))
@@ -377,8 +374,7 @@ void Handle_One_Event()
 }
 
 
-void Handle_Update()
-{
+void Handle_Update() {
 	redraw_screen(REFRESH_NONE);
 	
 	if(map_visible) draw_map(false);
@@ -395,8 +391,7 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh
 }
 
 // TODO: Pass the event object around instead of keeping a global one
-void Mouse_Pressed()
-{
+void Mouse_Pressed() {
 	if(had_text_freeze > 0) {
 		had_text_freeze--;
 		return;
@@ -430,15 +425,13 @@ void Mouse_Pressed()
 	
 }
 
-void close_program()
-{
+void close_program() {
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	//end_music();
 	if(univ.town.loaded()) univ.town.unload();
 }
 
-void handle_apple_menu(int item_hit)
-{
+void handle_apple_menu(int item_hit) {
 	
 	switch(item_hit) {
 		case 1:
@@ -451,8 +444,7 @@ void handle_apple_menu(int item_hit)
 	}
 }
 
-void handle_file_menu(int item_hit)
-{
+void handle_file_menu(int item_hit) {
 	std::string choice;
 	short i;
 	
@@ -517,8 +509,7 @@ void handle_file_menu(int item_hit)
 	}
 }
 
-void handle_options_menu(int item_hit)
-{
+void handle_options_menu(int item_hit) {
 	short choice,i;
 	
 	switch(item_hit) {
@@ -605,8 +596,7 @@ void handle_options_menu(int item_hit)
 	}
 }
 
-void handle_help_menu(int item_hit)
-{
+void handle_help_menu(int item_hit) {
 	std::string dialogToShow;
 	switch(item_hit) {
 		case 1: dialogToShow = "help-outdoor.xml"; break;
@@ -620,8 +610,7 @@ void handle_help_menu(int item_hit)
 		cChoiceDlog(dialogToShow).show();
 	// TODO: Windows version has an option to bring up Windows help for the game; should we have something equivalent for Mac?
 }
-void handle_library_menu(int item_hit)
-{
+void handle_library_menu(int item_hit) {
 	switch(item_hit) {
 		case 1: display_spells(eSkill::MAGE_SPELLS,100,0);
 			break;
@@ -641,8 +630,7 @@ void handle_library_menu(int item_hit)
 	}
 }
 
-void handle_actions_menu(int item_hit)
-{
+void handle_actions_menu(int item_hit) {
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
 	switch(item_hit) {
 		case 1:
@@ -669,13 +657,11 @@ void handle_actions_menu(int item_hit)
 }
 
 //  TODO: Let this function take a cMonster* instead of the item_hit
-void handle_monster_info_menu(int item_hit)
-{
+void handle_monster_info_menu(int item_hit) {
 	display_monst(item_hit - 1, NULL,1);
 }
 
-//void load_cursors()
-//{
+//void load_cursors() {
 //	short i,j;
 //	for(i = 0; i < 3; i++)
 //		for(j = 0; j < 3; j++)
@@ -697,8 +683,7 @@ void handle_monster_info_menu(int item_hit)
 //
 //}
 
-//void set_cursor(CursHandle which_curs)
-//{
+//void set_cursor(CursHandle which_curs) {
 //	HLock ((Handle) which_curs);
 //	SetCursor (*which_curs);
 //	HUnlock((Handle) which_curs);
@@ -733,8 +718,7 @@ static cursor_type get_mode_cursor(){
 	return sword_curs; // this should never be reached, though
 }
 
-void change_cursor(location where_curs)
-{
+void change_cursor(location where_curs) {
 	cursor_type cursor_needed;
 	location cursor_direction;
 	RECT world_screen = {23, 23, 346, 274};
@@ -834,8 +818,7 @@ void incidental_noises(bool on_surface){
 	// Chicken: 92
 }
 
-void pause(short length)
-{
+void pause(short length) {
 	long len;
 	
 	len = (long) length;
@@ -850,8 +833,7 @@ void pause(short length)
 
 // TODO: I think this should be in a better place, maybe in cParty?
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
-bool sd_legit(short a, short b)
-{
+bool sd_legit(short a, short b) {
 	if((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
 		return true;
 	return false;

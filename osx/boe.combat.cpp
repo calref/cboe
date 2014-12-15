@@ -284,8 +284,7 @@ bool center_on_monst;
 
 
 
-void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls)
-{
+void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls) {
 	short i,j,how_many,num_tries = 0;
 //	short low[10] = {15,7,3,3,1,1,1,7,2,1};
 //	short high[10] = {30,10,5,5,3,2,1,10,4,1};
@@ -412,8 +411,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 }
 
-bool pc_combat_move(location destination) ////
-{
+bool pc_combat_move(location destination) {
 	short dir,monst_hit,s1,s2,i,monst_exist,switch_pc;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
@@ -537,21 +535,18 @@ bool pc_combat_move(location destination) ////
 	return false;
 }
 
-void char_parry()
-{
+void char_parry() {
 	univ.party[current_pc].parry = (univ.party[current_pc].ap / 4) *
 		(2 + stat_adj(current_pc,eSkill::DEXTERITY) + univ.party[current_pc].skills[eSkill::DEFENSE]);
 	univ.party[current_pc].ap = 0;
 }
 
-void char_stand_ready()
-{
+void char_stand_ready() {
 	univ.party[current_pc].parry = 100;
 	univ.party[current_pc].ap = 0;
 }
 
-void pc_attack(short who_att,short target)////
-{
+void pc_attack(short who_att,short target) {
 	short r1,r2,weap1 = 24, weap2 = 24,i,store_hp,skill_item;
 	eSkill what_skill1 = eSkill::DEXTERITY, what_skill2 = eSkill::DEXTERITY;
 	cCreature *which_m;
@@ -832,8 +827,7 @@ short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst) {
 	return store;
 }
 
-void place_target(location target)
-{
+void place_target(location target) {
 	short i;
 	
  	if(num_targets_left > 0) {
@@ -882,8 +876,7 @@ void place_target(location target)
 	}
 }
 
-void do_combat_cast(location target)////
-{
+void do_combat_cast(location target) {
 	short adjust,r1,r2,targ_num,level,bonus = 1,i,item,store_sound = 0;
 	cCreature *cur_monst;
 	bool freebie = false,ap_taken = false,cost_taken = false;
@@ -1378,28 +1371,24 @@ void do_combat_cast(location target)////
 	print_buf();
 }
 
-void handle_marked_damage()
-{
+void handle_marked_damage() {
 	short i;
 	
 	for(i = 0; i < 6; i++)
-		if(univ.party[i].marked_damage > 0)
-		{
+		if(univ.party[i].marked_damage > 0) {
 			// TODO: Perhaps there should be a way of determining the correct race here?
 			damage_pc(i,univ.party[i].marked_damage,DAMAGE_MARKED,eRace::UNKNOWN,0);
 			univ.party[i].marked_damage = 0;
 		}
 	for(i = 0; i < univ.town->max_monst(); i++)
-		if(monst_marked_damage[i] > 0)
-		{
+		if(monst_marked_damage[i] > 0) {
 			damage_monst(i, current_pc, monst_marked_damage[i], 0, DAMAGE_MARKED,0); // was 9 rather than 10; probably a mistake
 			
 			monst_marked_damage[i] = 0;
 		}
 }
 
-void load_missile() ////
-{
+void load_missile() {
 	short i,bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24;
 	
 	for(i = 0; i < 24; i++) {
@@ -1609,8 +1598,7 @@ void fire_missile(location target) {
 
 // Select next active PC and, if necessary, run monsters
 // if monsters go or PC switches (i.e. if need redraw above), return true
-bool combat_next_step()
-{
+bool combat_next_step() {
 	bool to_return = false;
 	short store_pc; // will print current pc name is active pc changes
 	
@@ -1661,8 +1649,7 @@ bool combat_next_step()
 
 // Find next active PC, return true is monsters need running, and run monsters is slow spells
 // active
-bool pick_next_pc()
-{
+bool pick_next_pc() {
 	bool store = false;
 	
 	if(current_pc == 6)
@@ -1697,8 +1684,7 @@ bool pick_next_pc()
 }
 
 
-void combat_run_monst()
-{
+void combat_run_monst() {
 	short i,item,item_level;
 	bool update_stat = false;
 	
@@ -1781,8 +1767,7 @@ void combat_run_monst()
 	
 }
 
-void do_monster_turn()
-{
+void do_monster_turn() {
 	bool acted_yet, had_monst = false,printed_poison = false,printed_disease = false,printed_acid = false;
 	bool redraw_not_yet_done = true;
 	bool special_called = false;
@@ -2156,18 +2141,24 @@ void do_monster_turn()
 					place_spell_pattern(square,cur_monst->cur_loc,CLOUD_STINK,7);
 				if((cur_monst->radiate_1 == 10) && (get_ran(1,1,100) < 5)){
 					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude))
-					{monst_spell_note(cur_monst->number,33); play_sound(61);}
+									   cur_monst->cur_loc,130,cur_monst->attitude)) {
+						monst_spell_note(cur_monst->number,33);
+						play_sound(61);
+					}
 				}
 				if((cur_monst->radiate_1 == 11) && (get_ran(1,1,100) < 20)){
 					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude))
-					{monst_spell_note(cur_monst->number,33); play_sound(61);}
+									   cur_monst->cur_loc,130,cur_monst->attitude)) {
+						monst_spell_note(cur_monst->number,33);
+						play_sound(61);
+					}
 				}
 				if((cur_monst->radiate_1 == 12) && (get_ran(1,1,100) < 50)){
 					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude))
-					{monst_spell_note(cur_monst->number,33); play_sound(61);}
+									   cur_monst->cur_loc,130,cur_monst->attitude)) {
+						monst_spell_note(cur_monst->number,33);
+						play_sound(61);
+					}
 				}
 				if((cur_monst->radiate_1 == 14) && !special_called && party_can_see_monst(i))	{
 					short s1, s2, s3;
@@ -2275,8 +2266,7 @@ void do_monster_turn()
 	monsters_going = false;
 }
 
-void monster_attack_pc(short who_att,short target)
-{
+void monster_attack_pc(short who_att,short target) {
 	cCreature *attacker;
 	short r1,r2,i,store_hp,sound_type = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
@@ -2381,8 +2371,7 @@ void monster_attack_pc(short who_att,short target)
 					// Petrification touch
 					if((attacker->spec_skill == 30)
 						&& (pc_has_abil_equip(target,eItemAbil::PROTECT_FROM_PETRIFY) == 24)
-						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE]) <= 14)
-					{
+						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE]) <= 14) {
 						add_string_to_buf("  Petrifying touch!");
 						print_buf();
 						kill_pc(target,eMainStatus::STONE); // petrified, duh!
@@ -2465,8 +2454,7 @@ void monster_attack_pc(short who_att,short target)
 						damage_pc(target,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
 					}
 					// Killing touch
-					if(attacker->spec_skill == 35)
-					{
+					if(attacker->spec_skill == 35) {
 						add_string_to_buf("  Killing touch!");
 						r1 = get_ran(20,1,10);
 						damage_pc(target,r1,DAMAGE_UNBLOCKABLE,eRace::UNKNOWN,0);
@@ -2490,8 +2478,7 @@ void monster_attack_pc(short who_att,short target)
 	
 }
 
-void monster_attack_monster(short who_att,short attackee)
-{
+void monster_attack_monster(short who_att,short attackee) {
 	cCreature *attacker,*target;
 	short r1,r2,i,store_hp,sound_type = 0;
 	eDamageType dam_type = DAMAGE_WEAPON;
@@ -2640,9 +2627,8 @@ void monster_attack_monster(short who_att,short attackee)
 }
 
 
-void monst_fire_missile(short m_num,short bless,short level,location source,short target)
 //short target; // 100 +  - monster is target
-{
+void monst_fire_missile(short m_num,short bless,short level,location source,short target) {
 	cCreature *m_target;
 	short r1,r2,dam[40] = {
 		0,1,2,3,4, 6,8,7,0,0, 0,0,0,0,0, 0,0,0,0,0,
@@ -2905,9 +2891,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 }
 
 
-bool monst_breathe(cCreature *caster,location targ_space,short dam_type)////
 //dam_type; // 0 - fire  1 - cold  2 - magic
-{
+bool monst_breathe(cCreature *caster,location targ_space,short dam_type) {
 	short level,missile_t[4] = {13,6,8,8};
 	eDamageType type[4] = {DAMAGE_FIRE, DAMAGE_COLD, DAMAGE_MAGIC, DAMAGE_UNBLOCKABLE};
 	location l;
@@ -2943,8 +2928,7 @@ bool monst_breathe(cCreature *caster,location targ_space,short dam_type)////
 	return true;
 }
 
-bool monst_cast_mage(cCreature *caster,short targ)////
-{
+bool monst_cast_mage(cCreature *caster,short targ) {
 	short r1,j,spell,i,level,target_levels,friend_levels_near,x;
 	bool acted = false;
 	location target,vict_loc,ashes_loc,l;
@@ -3264,8 +3248,7 @@ bool monst_cast_mage(cCreature *caster,short targ)////
 	return acted;
 }
 
-bool monst_cast_priest(cCreature *caster,short targ)
-{
+bool monst_cast_priest(cCreature *caster,short targ) {
 	short r1,r2,spell,i,x,level,target_levels,friend_levels_near;
 	bool acted = false;
 	location target,vict_loc,l;
@@ -3558,8 +3541,7 @@ bool monst_cast_priest(cCreature *caster,short targ)
 	return acted;
 }
 
-void damage_target(short target,short dam,eDamageType type)
-{
+void damage_target(short target,short dam,eDamageType type) {
 	if(target == 6) return;
 	if(target < 6)
 		damage_pc(target,dam,type,eRace::UNKNOWN,0);
@@ -3569,24 +3551,21 @@ void damage_target(short target,short dam,eDamageType type)
 
 //	target = find_fireball_loc(caster->m_loc,1,(caster->attitude == 1) ? 0 : 1,&target_levels);
 
-location find_fireball_loc(location where,short radius,short mode,short *m)
 //short mode; // 0 - hostile casting  1 - friendly casting
-{
+location find_fireball_loc(location where,short radius,short mode,short *m) {
 	location check_loc,cast_loc(120,0);
 	short cur_lev,level_max = 10;
 	
 	for(check_loc.x = 1; check_loc.x < univ.town->max_dim() - 1; check_loc.x ++)
 		for(check_loc.y = 1; check_loc.y < univ.town->max_dim() - 1; check_loc.y ++)
 			if(dist(where,check_loc) <= 8 && can_see(where,check_loc,sight_obscurity) < 5 && sight_obscurity(check_loc.x,check_loc.y) < 5) {
-				{
-					cur_lev = count_levels(check_loc,radius);
-					if(mode == 1)
-						cur_lev = cur_lev * -1;
-					if( ((cur_lev > level_max) || ((cur_lev == level_max) && (get_ran(1,0,1) == 0)))
-						&& (dist(where,check_loc) > radius)) {
-						level_max = cur_lev;
-						cast_loc = check_loc;
-					}
+				cur_lev = count_levels(check_loc,radius);
+				if(mode == 1)
+					cur_lev = cur_lev * -1;
+				if( ((cur_lev > level_max) || ((cur_lev == level_max) && (get_ran(1,0,1) == 0)))
+					&& (dist(where,check_loc) > radius)) {
+					level_max = cur_lev;
+					cast_loc = check_loc;
 				}
 			}
 	*m = level_max;
@@ -3594,8 +3573,7 @@ location find_fireball_loc(location where,short radius,short mode,short *m)
 	return cast_loc;
 }
 
-location closest_pc_loc(location where)
-{
+location closest_pc_loc(location where) {
 	short i;
 	location pc_where(120,120);
 	
@@ -3606,8 +3584,7 @@ location closest_pc_loc(location where)
 	return pc_where;
 }
 
-short count_levels(location where,short radius)
-{
+short count_levels(location where,short radius) {
 	short i,store = 0;
 	
 	for(i = 0; i < univ.town->max_monst(); i++)
@@ -3628,8 +3605,7 @@ short count_levels(location where,short radius)
 	return store;
 }
 
-bool pc_near(short pc_num,location where,short radius)
-{
+bool pc_near(short pc_num,location where,short radius) {
 	// Assuming not looking
 	if(overall_mode >= MODE_COMBAT) {
 		if(univ.party[pc_num].main_status == eMainStatus::ALIVE && vdist(univ.party[pc_num].combat_pos,where) <= radius)
@@ -3641,9 +3617,7 @@ bool pc_near(short pc_num,location where,short radius)
 	else return false;
 }
 
-/*short pc_there(where)
-location where;
-{
+/*short pc_there(location where) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -3652,28 +3626,25 @@ location where;
 	return 6;
 } */
 
-bool monst_near(short m_num,location where,short radius,short active)
 //short active; // 0 - any monst 1 - monster need be active
-{
+bool monst_near(short m_num,location where,short radius,short active) {
 	if((univ.town.monst[m_num].active != 0) && (vdist(univ.town.monst[m_num].cur_loc,where) <= radius)
 		&& ((active == 0) || (univ.town.monst[m_num].active == 2)) )
 		return true;
 	else return false;
 }
 
-void fireball_space(location loc,short dam)
-{
+void fireball_space(location loc,short dam) {
 	place_spell_pattern(square,loc,DAMAGE_FIRE,dam,7);
 }
 
-static void place_spell_pattern(effect_pat_type pat,location center,unsigned short type,short who_hit)
 //type;  // 0 - take codes in pattern, OW make all nonzero this type
 // Types  0 - Null  1 - web  2 - fire barrier  3 - force barrier  4 - force wall  5 - fire wall
 //   6 - anti-magic field  7 - stink cloud  8 - ice wall  9 - blade wall  10 - quickfire
 //   11 - dispel  12 - sleep field
 //  50 + i - 80 :  id6 fire damage  90 + i - 120 : id6 cold damage 	130 + i - 160 : id6 magic dam.
 // if prep for anim is true, supporess look checks and go fast
-{
+static void place_spell_pattern(effect_pat_type pat,location center,unsigned short type,short who_hit) {
 	short i,j,r1,k = 0;
 	unsigned short effect;
 	location spot_hit;
@@ -3955,8 +3926,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 				}
 		}
 }
-void handle_item_spell(location loc,short num)
-{
+void handle_item_spell(location loc,short num) {
 	// TODO: This function is currently unused
 	switch(num) {
 		case 82: // Pyhrrus
@@ -3994,8 +3964,7 @@ void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,sh
 	place_spell_pattern(pat, center, code + dice, who_hit);
 }
 
-void modify_pattern(effect_pat_type *pat,unsigned short type)
-{
+void modify_pattern(effect_pat_type *pat,unsigned short type) {
 	short i,j;
 	
 	for(i = 0; i < 9; i++)
@@ -4004,8 +3973,7 @@ void modify_pattern(effect_pat_type *pat,unsigned short type)
 				pat->pattern[i][j] = type;
 }
 
-void do_shockwave(location target)
-{
+void do_shockwave(location target) {
 	short i;
 	
 	start_missile_anim();
@@ -4023,8 +3991,7 @@ void do_shockwave(location target)
 	handle_marked_damage();
 }
 
-void radius_damage(location target,short radius, short dam, eDamageType type)////
-{
+void radius_damage(location target,short radius, short dam, eDamageType type) {
 	short i;
 	
 	if(is_town()) {
@@ -4055,8 +4022,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 	handle_marked_damage();
 }
 // Slightly kludgy way to only damage PCs in space)
-void hit_pcs_in_space(location target,short dam,eDamageType type,short report,short hit_all)
-{
+void hit_pcs_in_space(location target,short dam,eDamageType type,short report,short hit_all) {
 	// TODO: Looks like this no longer does what it claims.
 	//short store_active[T_M],i;
 	
@@ -4069,12 +4035,11 @@ void hit_pcs_in_space(location target,short dam,eDamageType type,short report,sh
 	//	univ.town.monst[i].active = store_active[i];
 }
 
-void hit_space(location target,short dam,eDamageType type,short report,short hit_all)
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold
 //	6 - demon	7 - undead
 //short report; // 0 - no  1 - print result
 //hit_all; // 0 - nail top thing   1 - hit all in space  + 10 ... no monsters
-{
+void hit_space(location target,short dam,eDamageType type,short report,short hit_all) {
 	short i;
 	bool stop_hitting = false,hit_monsters = true;
 	
@@ -4128,8 +4093,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 
 
 
-void do_poison()
-{
+void do_poison() {
 	short i,r1 = 0;
 	bool some_poison = false;
 	
@@ -4158,8 +4122,7 @@ void do_poison()
 }
 
 
-void handle_disease()
-{
+void handle_disease() {
 	short i,r1 = 0;
 	bool disease = false;
 	
@@ -4206,8 +4169,7 @@ void handle_disease()
 	}
 }
 
-void handle_acid()
-{
+void handle_acid() {
 	short i,r1 = 0;
 	bool some_acid = false;
 	
@@ -4230,8 +4192,7 @@ void handle_acid()
 	}
 }
 
-bool no_pcs_left()
-{
+bool no_pcs_left() {
 	short i = 0;
 	
 	while(i < 6) {
@@ -4243,8 +4204,7 @@ bool no_pcs_left()
 	
 }
 
-bool hit_end_c_button()
-{
+bool hit_end_c_button() {
 	bool end_ok = true;
 	
 	if(which_combat_type == 0) {
@@ -4262,8 +4222,7 @@ bool hit_end_c_button()
 	return end_ok;
 }
 
-bool out_monst_all_dead()
-{
+bool out_monst_all_dead() {
 	short i;
 	
 	for(i = 0; i < univ.town->max_monst(); i++)
@@ -4275,8 +4234,7 @@ bool out_monst_all_dead()
 	return true;
 }
 
-void end_combat()
-{
+void end_combat() {
 	short i;
 	
 	for(i = 0; i < 6; i++) {
@@ -4298,8 +4256,7 @@ void end_combat()
 }
 
 
-bool combat_cast_mage_spell()
-{
+bool combat_cast_mage_spell() {
 	short target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
 	eSpell spell_num;
 	char c_line[60];
@@ -4496,8 +4453,7 @@ bool combat_cast_mage_spell()
 }
 
 
-bool combat_cast_priest_spell()
-{
+bool combat_cast_priest_spell() {
 	short target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
 	eSpell spell_num;
 	char c_line[60];
@@ -4654,8 +4610,7 @@ bool combat_cast_priest_spell()
 	else return true;
 }
 
-void start_spell_targeting(eSpell num, bool freebie)
-{
+void start_spell_targeting(eSpell num, bool freebie) {
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
@@ -4694,8 +4649,7 @@ void start_spell_targeting(eSpell num, bool freebie)
 	}
 }
 
-void start_fancy_spell_targeting(eSpell num, bool freebie)
-{
+void start_fancy_spell_targeting(eSpell num, bool freebie) {
 	short i;
 	location null_loc(120,0);
 	
@@ -4752,8 +4706,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie)
 	num_targets_left = minmax(1,8,num_targets_left);
 }
 
-void spell_cast_hit_return()
-{
+void spell_cast_hit_return() {
 	
 	if(force_wall_position < 10) {
 		force_wall_position = (force_wall_position + 1) % 8;
@@ -4788,8 +4741,7 @@ static void process_force_cage(location loc, short i) {
 	}
 }
 
-void process_fields()
-{
+void process_fields() {
 	short i,j,k,r1;
 	location loc;
 	char qf[64][64];
@@ -4911,8 +4863,7 @@ void process_fields()
 	monsters_going = false;
 }
 
-void scloud_space(short m,short n)
-{
+void scloud_space(short m,short n) {
 	// TODO: Is it correct for these to not affect monsters?
 	location target;
 	//cPopulation::cCreature;
@@ -4937,8 +4888,7 @@ void scloud_space(short m,short n)
 		}
 }
 
-void web_space(short m,short n)
-{
+void web_space(short m,short n) {
 	location target;
 	short i;
 	
@@ -4959,8 +4909,7 @@ void web_space(short m,short n)
 				web_pc(i,3);
 		}
 }
-void sleep_cloud_space(short m,short n)
-{
+void sleep_cloud_space(short m,short n) {
 	location target;
 	short i;
 	
@@ -4983,13 +4932,11 @@ void sleep_cloud_space(short m,short n)
 }
 
 
-void take_m_ap(short num,cCreature *monst)
-{
+void take_m_ap(short num,cCreature *monst) {
 	monst->ap = max(0,monst->ap - num);
 }
 
-void add_new_action(short pc_num)
-{
+void add_new_action(short pc_num) {
 	if(pc_num < 6)
 		univ.party[pc_num].ap++;
 }

@@ -153,8 +153,7 @@ void init_menubar() {
 	menu_activate();
 }
 
-void init_spell_menus()
-{
+void init_spell_menus() {
 	short i,j;
 	
 	for(i = 0; i < 2; i++)
@@ -165,8 +164,7 @@ void init_spell_menus()
 
 
 
-void adjust_spell_menus()
-{
+void adjust_spell_menus() {
 	short i,j,spell_pos = 0;
 	NSMenu* spell_menu;
 	char spell_name[256];

@@ -35,8 +35,7 @@ extern cUniverse univ;
 char answer[256];
 
 /*bool (which)
-short which;
-{
+short which; {
 	short choice,i;
 	item_record_type treas[] = {
 		{0,0,0,0,0,0,0,0,0,0,0,0,false,false,false,{0,0},"",""}
@@ -59,8 +58,7 @@ short which;
 
 
 
-void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,short *flip_bit)
-{
+void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,short *flip_bit) {
 	if(*flip_bit == 0) {
 		cStrDlog display_enc_string(get_str(list,str),"","",8,PIC_DLOG);
 		display_enc_string.setSound(strsnd);
@@ -70,12 +68,11 @@ void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,
 	}
 }
 
-bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 //short pc_num; // 6 - BOOM!  7 - pick here
 //short trap_type; // 0 - random  1 - blade  2 - dart  3 - gas  4 - boom  5 - paralyze  6  - no
 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
 // 12 - disease all
-{
+bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	short r1,skill,i,num_hits = 1,i_level;
 	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
@@ -204,8 +201,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 	return true;
 }
 
-location get_spec_loc(short which)
-{
+location get_spec_loc(short which) {
 	location where;
 	short i;
 	
@@ -218,8 +214,7 @@ location get_spec_loc(short which)
 // 0 if no pull.
 // 1 if pull
 // levers should always start to left.
-short handle_lever(location w)
-{
+short handle_lever(location w) {
 	if(cChoiceDlog("basic-lever.xml",{"pull", "leave"}).show() == "leave")
 		return 0;
 	play_sound(94);
@@ -227,8 +222,7 @@ short handle_lever(location w)
 	return 1;
 }
 
-void switch_lever(location w)
-{
+void switch_lever(location w) {
 	alter_space(w.x,w.y,scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
 }
 

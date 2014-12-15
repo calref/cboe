@@ -1026,8 +1026,7 @@ bool save_town_wand() {
 	short i,j;
 #if 0
 	for(i = 0; i < 4; i++)
-		for(j = 0; j < 4; j++)
-		{
+		for(j = 0; j < 4; j++) {
 			town->wandering[i].monst[j] = CDGN(835,2 + i * 4 + j);
 			if(cre(town->wandering[i].monst[j],0,255,"Wandering monsters must all be from 0 to 255 (0 means no monster)."
 					,"",835)) return false;
@@ -1040,8 +1039,7 @@ void put_town_wand_in_dlog() {
 	short i,j;
 #if 0
 	for(i = 0; i < 4; i++)
-		for(j = 0; j < 4; j++)
-		{
+		for(j = 0; j < 4; j++) {
 			CDSN(835,2 + i * 4 + j,town->wandering[i].monst[j]);
 		}
 #endif

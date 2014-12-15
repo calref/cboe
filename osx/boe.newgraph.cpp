@@ -138,8 +138,7 @@ RECT explode_place_rect[30];
 //char anim_string[60];
 char last_light_mask[13][13];
 
-void apply_unseen_mask()
-{
+void apply_unseen_mask() {
 	// TODO: This is causing major lag and not even working properly
 	return;
 	RECT base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
@@ -178,8 +177,7 @@ void apply_unseen_mask()
 			}
 }
 
-void apply_light_mask(bool onWindow)
-{
+void apply_light_mask(bool onWindow) {
 	static Region dark_mask_region;
 	RECT temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	RECT big_to = {13,13,337,265};
@@ -268,8 +266,7 @@ void apply_light_mask(bool onWindow)
 	dark_mask_region.offset(ul);
 }
 
-void start_missile_anim()
-{
+void start_missile_anim() {
 	short i;
 	
 	if(boom_anim_active)
@@ -287,13 +284,11 @@ void start_missile_anim()
 	have_boom = false;
 }
 
-void end_missile_anim()
-{
+void end_missile_anim() {
 	boom_anim_active = false;
 }
 
-void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj)
-{
+void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj) {
 	short i;
 	
 	if(!boom_anim_active)
@@ -316,8 +311,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 		}
 }
 
-void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len)
-{
+void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len) {
 //	if((cartoon_happening) && (anim_step < 140))
 //		return;
 	start_missile_anim();
@@ -326,8 +320,7 @@ void run_a_missile(location from,location fire_to,short miss_type,short path,sho
 	end_missile_anim();
 }
 
-void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
-{
+void run_a_boom(location boom_where,short type,short x_adj,short y_adj) {
 	
 //	if((cartoon_happening) && (anim_step < 140))
 //		return;
@@ -339,8 +332,7 @@ void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
 	end_missile_anim();
 }
 
-void mondo_boom(location l,short type)
-{
+void mondo_boom(location l,short type) {
 	short i;
 	
 	start_missile_anim();
@@ -351,8 +343,7 @@ void mondo_boom(location l,short type)
 	end_missile_anim();
 }
 
-void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj)
-{
+void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj) {
 	short i;
 	
 	if(PSD[SDF_NO_FRILLS] > 0)
@@ -381,8 +372,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 		}
 }
 
-void do_missile_anim(short num_steps,location missile_origin,short sound_num)
-{
+void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// TODO: Get rid of temp_rect, at least
 	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
 	short i,store_missile_dir;
@@ -518,8 +508,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 }
 
-short get_missile_direction(location origin_point,location the_point)
-{
+short get_missile_direction(location origin_point,location the_point) {
 	location store_dir;
 	short dir = 0;
 	// To reuse legacy code, will renormalize the_point, which is missile destination,
@@ -552,10 +541,9 @@ short get_missile_direction(location origin_point,location the_point)
 	return dir;
 }
 
-void do_explosion_anim(short /*sound_num*/,short special_draw)
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
-{
+void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	RECT temp_rect,active_area_rect,to_rect,from_rect;
 	RECT base_rect = {0,0,36,28},text_rect;
 	char str[60];
@@ -704,8 +692,7 @@ shop_type:
 11 - priest spells
 12 alchemy
 */
-void click_shop_rect(RECT area_rect)
-{
+void click_shop_rect(RECT area_rect) {
 	
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
@@ -729,9 +716,8 @@ static graf_pos calc_item_rect(int num,RECT& to_rect) {
 	return std::make_pair(from_gw, from_rect);
 }
 
-void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 // mode 1 - drawing dark for button press
-{
+void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 	RECT area_rect,item_info_from = {11,42,24,56};
 	
 	RECT face_rect = {6,6,38,38};
@@ -926,8 +912,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	shop_sbar->draw();
 }
 
-void refresh_shopping()
-{
+void refresh_shopping() {
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT from_rects[4] = {RECT{0,0,62,279},RECT{62,0,352,253},RECT{62,269,352,279},RECT{352,0,415,279}};
 	RECT to_rect;
@@ -979,8 +964,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
-cItemRec store_mage_spells(short which_s)
-{
+cItemRec store_mage_spells(short which_s) {
 	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
@@ -1004,8 +988,7 @@ cItemRec store_mage_spells(short which_s)
 	return spell;
 }
 
-cItemRec store_priest_spells(short which_s)
-{
+cItemRec store_priest_spells(short which_s) {
 	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
@@ -1027,8 +1010,7 @@ cItemRec store_priest_spells(short which_s)
 	spell.full_name = str.c_str();
 	return spell;
 }
-cItemRec store_alchemy(short which_s)
-{
+cItemRec store_alchemy(short which_s) {
 	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
 	static const short val[20] = {
 		50,75,30,130,100,
@@ -1047,8 +1029,7 @@ cItemRec store_alchemy(short which_s)
 	return spell;
 }
 
-void get_item_interesting_string(cItemRec item,char *message)
-{
+void get_item_interesting_string(cItemRec item,char *message) {
 	if(item.property) {
 		strcpy(message,"Not yours.");
 		return;
@@ -1104,9 +1085,8 @@ void get_item_interesting_string(cItemRec item,char *message)
 		sprintf(message,"Uses: %d",item.charges);
 }
 
-void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect)
 // color 0 - regular  1 - darker
-{
+void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect) {
 	RECT area_rect;
 	
 	RECT title_rect = {19,48,42,260};
@@ -1243,8 +1223,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	if(c_rect.right == 0) place_talk_face();
 }
 
-void refresh_talking()
-{
+void refresh_talking() {
 	RECT tempRect(talk_gworld);
 	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
 	place_talk_face();

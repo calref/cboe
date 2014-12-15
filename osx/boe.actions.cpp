@@ -139,8 +139,7 @@ std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 bool current_bash_is_bash = false;
 
-void init_screen_locs() ////
-{
+void init_screen_locs() {
 	short i,j,k,l;
 	RECT startup_base = {279,5,327,306};
 	RECT shop_base = {63,12,99,267};
@@ -281,8 +280,7 @@ void init_screen_locs() ////
 	item_area_rect.right = ITEM_WIN_UL_X + 271;
 }
 
-bool prime_time()
-{
+bool prime_time() {
 	if((overall_mode < MODE_TALK_TOWN) || (overall_mode == MODE_COMBAT))
 		return true;
 	return false;
@@ -1460,8 +1458,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 	}
 }
 
-bool someone_awake()
-{
+bool someone_awake() {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -1472,8 +1469,7 @@ bool someone_awake()
 }
 
 
-void handle_menu_spell(eSpell spell_picked)
-{
+void handle_menu_spell(eSpell spell_picked) {
 	eSkill spell_type = (*spell_picked).type;
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
@@ -1519,8 +1515,7 @@ void handle_menu_spell(eSpell spell_picked)
 	handle_action(event);
 }
 
-void initiate_outdoor_combat(short i)
-{
+void initiate_outdoor_combat(short i) {
 	short m,n;
 	location to_place;
 	
@@ -1662,8 +1657,7 @@ bool handle_keystroke(sf::Event& event){
 	
 	char chr = keyToChar(chr2, event.key.shift);
 	
-	switch(chr)
-	{
+	switch(chr) {
 			
 		case '&':
 			add_string_to_buf("If Valorim ...");
@@ -2141,8 +2135,7 @@ bool handle_keystroke(sf::Event& event){
 	return are_done;
 }
 
-void do_load()
-{
+void do_load() {
 	fs::path file_to_load = nav_get_party();
 	if(!file_to_load.empty())
 		if(!load_party(file_to_load))
@@ -2153,8 +2146,7 @@ void do_load()
 	menu_activate();
 }
 
-void post_load()
-{
+void post_load() {
 	current_switch = 6;
 	
 	reset_item_max();
@@ -2183,9 +2175,8 @@ void post_load()
 	adjust_monst_menu();
 }
 
-void do_save(short mode)
 //mode; // 0 - normal  1 - save as
-{
+void do_save(short mode) {
 	if(overall_mode > MODE_TOWN) {
 		add_string_to_buf("Save: Only while outdoors, or in         ");
 		add_string_to_buf("  town and not looking/casting.          ");
@@ -2262,8 +2253,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	adjust_spell_menus();
 }
 
-void increase_age()////
-{
+void increase_age() {
 	short i,j,item,how_many_short = 0,r1,store_day;
 	bool update_stat = false;
 	
@@ -2539,8 +2529,7 @@ void handle_hunting() {
 	
 }
 
-void switch_pc(short which)
-{
+void switch_pc(short which) {
 	cPlayer store_pc;
 	
 	if(current_switch < 6) {
@@ -2563,8 +2552,7 @@ void switch_pc(short which)
 	}
 }
 
-void drop_pc(short which)
-{
+void drop_pc(short which) {
 	std::string choice;
 	
 	choice = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
@@ -2581,8 +2569,7 @@ void drop_pc(short which)
 	put_pc_screen();
 }
 
-void handle_death()
-{
+void handle_death() {
 	std::string choice;
 	
 	overall_mode = MODE_STARTUP;
@@ -2613,8 +2600,7 @@ void handle_death()
 	
 }
 
-void start_new_game()
-{
+void start_new_game() {
 	short i;
 	std::string choice;
 	using kb = sf::Keyboard;
@@ -2676,8 +2662,7 @@ void start_new_game()
 	party_in_memory = true;
 }
 
-location get_cur_direction(location the_point)
-{
+location get_cur_direction(location the_point) {
 	location store_dir;
 	
 	// This is a kludgy adjustment to adjust for the screen shifting between Exile I & II
@@ -2786,8 +2771,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 	}
 }
 
-bool outd_move_party(location destination,bool forced)
-{
+bool outd_move_party(location destination,bool forced) {
 	char create_line[60];
 	short boat_num,horse_num,spec_num;
 	location real_dest, sector_p_in;
@@ -2989,8 +2973,7 @@ bool outd_move_party(location destination,bool forced)
 	return false;
 }
 
-bool town_move_party(location destination,short forced)////
-{
+bool town_move_party(location destination,short forced) {
 	char create_line[60],keep_going = true;
 	short boat_there,horse_there,spec_num;
 	ter_num_t ter;
@@ -3134,8 +3117,7 @@ bool town_move_party(location destination,short forced)////
 
 
 
-bool someone_poisoned()
-{
+bool someone_poisoned() {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -3144,8 +3126,7 @@ bool someone_poisoned()
 	return false;
 }
 
-short nearest_monster()
-{
+short nearest_monster() {
 	short i = 100,j,s;
 	
 	for(j = 0; j < 10; j++)
@@ -3156,18 +3137,15 @@ short nearest_monster()
 	return i;
 }
 
-void setup_outdoors(location where)
-{
+void setup_outdoors(location where) {
 	update_explored(where);
 }
 
-short get_outdoor_num()////
-{
+short get_outdoor_num() {
 	return (scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
 }
 
-short count_walls(location loc) // TODO: Generalize this function
-{
+short count_walls(location loc) { // TODO: Generalize this function
 	unsigned char walls[31] = {5,6,7,8,9, 10,11,12,13,14, 15,16,17,18,19, 20,21,22,23,24,
 		25,26,27,28,29, 30,31,32,33,34, 35};
 	short answer = 0;
@@ -3186,8 +3164,7 @@ short count_walls(location loc) // TODO: Generalize this function
 	return answer;
 }
 
-bool is_sign(ter_num_t ter)
-{
+bool is_sign(ter_num_t ter) {
 	
 	if(scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
 		return true;

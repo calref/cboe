@@ -41,8 +41,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 	
 }
 
-static void port_dummy_t_d(short size,char *buffer)
-{
+static void port_dummy_t_d(short size,char *buffer) {
 	short i;
 	legacy::big_tr_type *d1;
 	legacy::ave_tr_type *d2;
@@ -94,8 +93,7 @@ static void port_dummy_t_d(short size,char *buffer)
 	} 
 }
 
-void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr)
-{
+void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 	short i;
 	
 	if(cur_scen_is_mac != mac_is_intel)
@@ -110,8 +108,7 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr)
 	}
 }
 
-void port_t_d(legacy::big_tr_type* old)
-{
+void port_t_d(legacy::big_tr_type* old) {
 	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
@@ -128,8 +125,7 @@ void port_t_d(legacy::big_tr_type* old)
 	} 
 }
 
-void port_ave_t(legacy::ave_tr_type* old)
-{
+void port_ave_t(legacy::ave_tr_type* old) {
 	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
@@ -146,8 +142,7 @@ void port_ave_t(legacy::ave_tr_type* old)
 	}
 }
 
-void port_tiny_t(legacy::tiny_tr_type* old)
-{
+void port_tiny_t(legacy::tiny_tr_type* old) {
 	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
@@ -164,8 +159,7 @@ void port_tiny_t(legacy::tiny_tr_type* old)
 	} 
 }
 
-void port_scenario(legacy::scenario_data_type* temp_scenario)
-{
+void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	short i,j;
 	
 	if(cur_scen_is_mac != mac_is_intel)
@@ -259,8 +253,7 @@ void port_item_list(legacy::scen_item_data_type* old){
 	}
 }
 
-void port_out(legacy::outdoor_record_type *out)
-{
+void port_out(legacy::outdoor_record_type *out) {
 	short i;
 	
 	if(cur_scen_is_mac != mac_is_intel)
@@ -428,8 +421,7 @@ void port_c_town(legacy::current_town_type* old){
 	}
 }
 
-void flip_spec_node(legacy::special_node_type *spec)
-{
+void flip_spec_node(legacy::special_node_type *spec) {
 	flip_short(&(spec->type));
 	flip_short(&(spec->sd1));
 	flip_short(&(spec->sd2));
@@ -443,8 +435,7 @@ void flip_spec_node(legacy::special_node_type *spec)
 	flip_short(&(spec->jumpto));
 }
 
-void flip_short(int16_t *s)
-{
+void flip_short(int16_t *s) {
 	char store,*s1, *s2;
 	
 	s1 = (char *) s;
@@ -455,8 +446,7 @@ void flip_short(int16_t *s)
 	
 }
 
-void flip_long(int32_t *s)
-{
+void flip_long(int32_t *s){
 	char store,*s1, *s2, *s3, *s4;
 	
 	s1 = (char *) s;
@@ -473,8 +463,7 @@ void flip_long(int32_t *s)
 }
 
 // TODO: This was because Windows stored its rect members in a different order, but since we now have our own rect class, it shouldn't be needed.
-static void alter_rect(legacy::Rect *r)
-{
+static void alter_rect(legacy::Rect *r) {
 	short a;
 	
 	a = r->top;
@@ -484,8 +473,7 @@ static void alter_rect(legacy::Rect *r)
 	r->bottom = r->right;
 }
 
-void flip_rect(legacy::Rect* s)
-{
+void flip_rect(legacy::Rect* s) {
 	flip_short((int16_t *) &(s->top));
 	flip_short((int16_t *) &(s->bottom));
 	flip_short((int16_t *) &(s->left));

@@ -680,8 +680,7 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 #endif
 
-void load_spec_graphics()
-{
+void load_spec_graphics() {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
 	short i;
 	fs::path path(scenario.scen_file);
@@ -1099,9 +1098,8 @@ bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	return true;
 }
 
-bool save_party(fs::path dest_file)
 //mode;  // 0 - normal  1 - save as
-{
+bool save_party(fs::path dest_file) {
 	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
 	
 	bool in_scen = univ.party.scen_name != "";

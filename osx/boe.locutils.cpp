@@ -68,16 +68,14 @@ bool is_combat() {
 }
 
 //
-//void set_terrain_blocked()
-//{
+//void set_terrain_blocked() {
 //	short i;
 //
 //	for(i = 0; i < 256; i++)
 //		terrain_blocked[i] = scenario.ter_types[i].blockage;
 //}
 
-//short dist(location p1,location p2)
-//{
+//short dist(location p1,location p2) {
 //	return s_sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 //}
 //
@@ -87,23 +85,20 @@ bool is_combat() {
 //	return max(i,j);
 //}
 
-bool adjacent(location p1,location p2)
-{
+bool adjacent(location p1,location p2) {
 	if((abs((short) (p1.x - p2.x)) <= 1) && (abs((short) (p1.y - p2.y)) <= 1))
 		return true;
 	else return false;
 }
 
-bool point_onscreen(location center,location check)
-{
+bool point_onscreen(location center,location check) {
 	if((abs((short) (center.x - check.x)) <=4) && (abs((short) (center.y - check.y)) <= 4))
 		return true;
 	else return false;
 }
 
 
-short set_direction (location old_pt, location new_pt)
-{
+short set_direction (location old_pt, location new_pt) {
 	if(old_pt.x == new_pt.x) {
 		if(old_pt.y > new_pt.y)
 			return DIR_N;
@@ -123,8 +118,7 @@ short set_direction (location old_pt, location new_pt)
 	return DIR_E;
 }
 
-location global_to_local(location global)
-{
+location global_to_local(location global) {
 	location local;
 	
 	local = global;
@@ -135,8 +129,7 @@ location global_to_local(location global)
 	return local;
 }
 // TODO: I fixed the above function, but it's impossible to fix this one without adding a parameter (which would be i_w_c)
-location local_to_global(location local)
-{
+location local_to_global(location local) {
 	location global;
 	
 	global = local;
@@ -146,23 +139,20 @@ location local_to_global(location local)
 		global.y = global.y + 48;
 	return global;
 }
-bool loc_off_world(location p1)
-{
+bool loc_off_world(location p1) {
 	if((p1.x < 0) || (p1.x > univ.town->max_dim()) || (p1.y < 0) || (p1.y > univ.town->max_dim()))
 		return true;
 	else return false;
 }
 
-bool loc_off_act_area(location p1)
-{
+bool loc_off_act_area(location p1) {
 	if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
 		(p1.y > univ.town->in_town_rect.top) && (p1.y < univ.town->in_town_rect.bottom))
 	 	return false;
 	return true;
 }
 
-location get_cur_loc()
-{
+location get_cur_loc() {
 	switch(overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			return univ.party.p_loc;
@@ -179,8 +169,7 @@ location get_cur_loc()
 }
 
 // TODO: Don't hardcode this!
-bool is_lava(short x,short y)////
-{
+bool is_lava(short x,short y) {
 	ter_num_t ter;
 	
 	ter = coord_to_ter(x,y);
@@ -231,8 +220,7 @@ short combat_obscurity(short x, short y) {
 	return sight_obscurity(x,y);
 }
 
-ter_num_t coord_to_ter(short x,short y)
-{
+ter_num_t coord_to_ter(short x,short y) {
 	ter_num_t what_terrain;
 	
 	if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
@@ -245,8 +233,7 @@ ter_num_t coord_to_ter(short x,short y)
 }
 
 ////
-bool is_container(location loc)
-{
+bool is_container(location loc) {
 	ter_num_t ter;
 	
 	if((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
@@ -257,8 +244,7 @@ bool is_container(location loc)
 	return false;
 }
 
-void update_explored(location dest)
-{
+void update_explored(location dest) {
 	location shortdest,look;
 	
 	location look2;
@@ -296,8 +282,7 @@ void update_explored(location dest)
 
 
 // All purpose function to check is spot is free for travel into.
-bool is_blocked(location to_check)
-{
+bool is_blocked(location to_check) {
 	short i,gr;
 	ter_num_t ter;
 	
@@ -356,8 +341,7 @@ bool is_blocked(location to_check)
 	return true;
 }
 
-bool monst_on_space(location loc,short m_num)
-{
+bool monst_on_space(location loc,short m_num) {
 	
 	if(univ.town.monst[m_num].active == 0)
 		return false;
@@ -369,8 +353,7 @@ bool monst_on_space(location loc,short m_num)
 	return false;
 	
 }
-short monst_there(location where) // returns 90 if no
-{
+short monst_there(location where) { // returns 90 if no
 	short i;
 	
 	for(i = 0; i < univ.town->max_monst(); i++)
@@ -378,8 +361,7 @@ short monst_there(location where) // returns 90 if no
 			return i;
 	return 90;
 }
-bool monst_can_be_there(location loc,short m_num)
-{
+bool monst_can_be_there(location loc,short m_num) {
 	short i,j;
 	location destination;
 	
@@ -399,8 +381,7 @@ bool monst_can_be_there(location loc,short m_num)
 	return true;
 }
 
-bool monst_adjacent(location loc,short m_num)
-{
+bool monst_adjacent(location loc,short m_num) {
 	short i,j;
 	location destination;
 	
@@ -414,8 +395,7 @@ bool monst_adjacent(location loc,short m_num)
 	return false;
 }
 
-bool monst_can_see(short m_num,location l)
-{
+bool monst_can_see(short m_num,location l) {
 	short i,j;
 	location destination;
 	
@@ -429,8 +409,7 @@ bool monst_can_see(short m_num,location l)
 	return false;
 }
 
-bool party_can_see_monst(short m_num)
-{
+bool party_can_see_monst(short m_num) {
 	short i,j;
 	location destination;
 	
@@ -444,8 +423,7 @@ bool party_can_see_monst(short m_num)
 	return false;
 }
 
-bool can_see_monst(location l,short m_num)
-{
+bool can_see_monst(location l,short m_num) {
 	short i,j;
 	location destination;
 	
@@ -459,8 +437,7 @@ bool can_see_monst(location l,short m_num)
 	return false;
 }
 
-bool outd_is_blocked(location to_check)
-{
+bool outd_is_blocked(location to_check) {
 	short i;
 	
 	if(overall_mode == MODE_OUTDOORS) {
@@ -476,16 +453,14 @@ bool outd_is_blocked(location to_check)
 	return false;
 }
 
-bool special_which_blocks_monst(location to_check)
-{
+bool special_which_blocks_monst(location to_check) {
 	if(scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].blockage == eTerObstruct::BLOCK_MONSTERS)
 		return true;
 	else return false;
 }
 
 // Checks if space is a special that prevents movement into or placement of a PC on
-bool is_special(location to_check)
-{
+bool is_special(location to_check) {
 	ter_num_t which_ter;
 	
 	if(!special_which_blocks_monst(to_check))
@@ -496,8 +471,7 @@ bool is_special(location to_check)
 	else return false;
 }
 
-bool outd_is_special(location to_check)
-{
+bool outd_is_special(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
 		if(scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == eTerObstruct::BLOCK_MONSTERS) {
 			return true;
@@ -507,8 +481,7 @@ bool outd_is_special(location to_check)
 	return false;
 }
 
-bool impassable(ter_num_t terrain_to_check)
-{
+bool impassable(ter_num_t terrain_to_check) {
 	if(blocksMove(scenario.ter_types[terrain_to_check].blockage))
 		return true;
 	else return false;
@@ -517,8 +490,7 @@ bool impassable(ter_num_t terrain_to_check)
 // TODO: What on earth is this and why does it mangle the blockage?
 // NOTE: Seems to return 5 for "blocks sight", 1 for "obstructs missiles", 0 otherwise
 // So it should probably be called something like "get_opacity" instead.
-short get_blockage(ter_num_t terrain_type)
-{
+short get_blockage(ter_num_t terrain_type) {
 	// little kludgy in here for pits
 	if((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
@@ -534,8 +506,7 @@ short get_blockage(ter_num_t terrain_type)
 
 
 
-short light_radius()
-{
+short light_radius() {
 	short store = 1,i;
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
@@ -548,8 +519,7 @@ short light_radius()
 	return store;
 }
 
-bool pt_in_light(location from_where,location to_where) // Assumes, of course, in town or combat
-{
+bool pt_in_light(location from_where,location to_where) { // Assumes, of course, in town or combat
 	
 	if(univ.town->lighting_type == 0)
 		return true;
@@ -565,8 +535,7 @@ bool pt_in_light(location from_where,location to_where) // Assumes, of course, i
 	return false;
 }
 
-bool combat_pt_in_light(location to_where)
-{
+bool combat_pt_in_light(location to_where) {
 	short i,rad;
 	
 	if((univ.town->lighting_type == 0) || (which_combat_type == 0))
@@ -587,8 +556,7 @@ bool combat_pt_in_light(location to_where)
 	return false;
 }
 
-bool party_sees_a_monst() // Returns true is a hostile monster is in sight.
-{
+bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
 	short i;
 	
 	for(i = 0; i < univ.town->max_monst(); i++) {
@@ -603,8 +571,7 @@ bool party_sees_a_monst() // Returns true is a hostile monster is in sight.
 
 
 // Returns 6 if can't see, O.W. returns the # of a PC that can see
-short party_can_see(location where)
-{
+short party_can_see(location where) {
 	short i;
 	
 	if(is_out()) {
@@ -632,8 +599,7 @@ short party_can_see(location where)
 	
 	return 6;
 }
-location push_loc(location from_where,location to_where)
-{
+location push_loc(location from_where,location to_where) {
 	location loc_to_try;
 	
 	loc_to_try = to_where;
@@ -659,8 +625,7 @@ location push_loc(location from_where,location to_where)
 
 
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
-bool spot_impassable(short i,short  j)
-{
+bool spot_impassable(short i,short  j) {
 	ter_num_t ter;
 	
 	ter = coord_to_ter(i,j);
@@ -669,16 +634,14 @@ bool spot_impassable(short i,short  j)
 	else return false;
 }
 
-void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2)
-{
+void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2) {
 	if(coord_to_ter(i,j) == ter1)
 		alter_space(i,j,ter2);
 	else if(coord_to_ter(i,j) == ter2)
 		alter_space(i,j,ter1);
 }
 
-void alter_space(short i,short j,ter_num_t ter)
-{
+void alter_space(short i,short j,ter_num_t ter) {
 	location l;
 	
 	l.x = i;

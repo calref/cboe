@@ -113,16 +113,14 @@ RECT map_title_rect = {3,50,15,300};
 RECT map_bar_rect = {15,50,27,300};
 unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 
-void force_town_enter(short which_town,location where_start)
-{
+void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
 	town_force_loc = where_start;
 }
 
 ////
-void start_town_mode(short which_town, short entry_dir)
 //short entry_dir; // if 9, go to forced
-{
+void start_town_mode(short which_town, short entry_dir) {
 	short i,m,n;
 	char message[60];
 	short j,k,town_number;
@@ -250,15 +248,13 @@ void start_town_mode(short which_town, short entry_dir)
 						
 						// Now, appearing/disappearing monsters might have arrived/disappeared.
 					case 1:
-						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code))
-						{
+						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
 							univ.town.monst[j].active = 1;
 							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get reappearing
 						}
 						break;
 					case 2:
-						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code))
-						{
+						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
 							univ.town.monst[j].active = 0;
 							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get disappearing again
 						}
@@ -375,14 +371,12 @@ void start_town_mode(short which_town, short entry_dir)
 	
 	
 	// Thrash town?
-	if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst)
-	{
+	if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst) {
 		town_toast = true;
 		add_string_to_buf("Area has been cleaned out.");
 	}
 	if(univ.town->town_chop_time > 0) {
-		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-		{
+		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
 			add_string_to_buf("Area has been abandoned.");
 			for(i = 0; i < univ.town->max_monst(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].active < 10) &&
@@ -532,8 +526,10 @@ void start_town_mode(short which_town, short entry_dir)
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
-	{univ.town.monst[i].targ_loc.x = 0;  univ.town.monst[i].targ_loc.y = 0;}
+	for(i = 0; i < univ.town->max_monst(); i++) {
+		univ.town.monst[i].targ_loc.x = 0;
+		univ.town.monst[i].targ_loc.y = 0;
+	}
 	
 	//// check horses
 	for(i = 0; i < 30; i++) {
@@ -560,8 +556,7 @@ void start_town_mode(short which_town, short entry_dir)
 }
 
 
-location end_town_mode(short switching_level,location destination)  // returns new party location
-{
+location end_town_mode(short switching_level,location destination) { // returns new party location
 	location to_return;
 	bool data_saved = false,combat_end = false;
 	short i,j,k;
@@ -705,8 +700,7 @@ void handle_leave_town_specials(short /*town_number*/, short which_spec,location
 	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.p_loc);
 }
 
-bool abil_exists(eItemAbil abil) // use when outdoors
-{
+bool abil_exists(eItemAbil abil) { // use when outdoors
 	short i,j;
 	
 	for(i = 0; i < 6; i++)
@@ -724,8 +718,7 @@ bool abil_exists(eItemAbil abil) // use when outdoors
 
 
 
-void start_town_combat(short direction)
-{
+void start_town_combat(short direction) {
 	short i;
 	
 	place_party(direction);
@@ -765,8 +758,7 @@ void start_town_combat(short direction)
 	
 }
 
-short end_town_combat()
-{
+short end_town_combat() {
 	short num_tries = 0,r1,i;
 	
 	r1 = get_ran(1,0,5);
@@ -783,8 +775,7 @@ short end_town_combat()
 	return univ.party[r1].dir;
 }
 
-void place_party(short direction)
-{
+void place_party(short direction) {
 	bool spot_ok[14] = {true,true,true,true,true,true,true,
 		true,true,true,true,true,true,true};
 	location pos_locs[14];
@@ -839,9 +830,8 @@ void place_party(short direction)
 	}
 }
 
-void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/)
 // spec_code is encounter's spec_code
-{
+void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 	short i,j,k,r1,ter_type;
 	static const short ter_base[16] = {
 		2,0,36,50,71,0,0,0,
@@ -1064,8 +1054,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/)
 }
 
 
-void elim_monst(unsigned short which,short spec_a,short spec_b)
-{
+void elim_monst(unsigned short which,short spec_a,short spec_b) {
 	short i;
 	
 	if(!sd_legit(spec_a,spec_b))
@@ -1081,9 +1070,8 @@ void elim_monst(unsigned short which,short spec_a,short spec_b)
 
 
 
-void dump_gold(short print_mes)
 //short print_mes; // 0 - no 1 - yes
-{
+void dump_gold(short print_mes) {
 	// Mildly kludgy gold check
 	if(univ.party.gold > 30000) {
 		univ.party.gold = 30000;
@@ -1105,8 +1093,7 @@ void dump_gold(short print_mes)
 
 
 
-void pick_lock(location where,short pc_num)
-{
+void pick_lock(location where,short pc_num) {
 	ter_num_t terrain;
 	short r1,which_item;
 	bool will_break = false;
@@ -1154,8 +1141,7 @@ void pick_lock(location where,short pc_num)
 	}
 }
 
-void bash_door(location where,short pc_num) ////
-{
+void bash_door(location where,short pc_num) {
 	ter_num_t terrain;
 	short r1,unlock_adjust;
 	
@@ -1180,8 +1166,7 @@ void bash_door(location where,short pc_num) ////
 }
 
 
-void erase_specials()////
-{
+void erase_specials() {
 	location where;
 	short k,sd1,sd2;
 	cSpecial sn;
@@ -1223,8 +1208,7 @@ void erase_specials()////
 	}
 }
 
-void erase_out_specials()
-{
+void erase_out_specials() {
 	
 	short out_num;
 	cSpecial sn;
@@ -1269,8 +1253,7 @@ void erase_out_specials()
 }
 
 // returns id # of special at where, or 50 if there is none.
-short get_town_spec_id(location where)
-{
+short get_town_spec_id(location where) {
 	short i = 0;
 	
 	while((univ.town->special_locs[i] != where)	&& (i < 50))
@@ -1279,8 +1262,7 @@ short get_town_spec_id(location where)
 }
 
 // TODO: I don't think we need this
-void clear_map()
-{
+void clear_map() {
 	RECT map_world_rect(map_gworld);
 	
 //	if(!map_visible) {
@@ -1389,8 +1371,7 @@ void draw_map(bool need_refresh) {
 		title_string = "No map in combat.";
 		canMap = false;
 	}
-	else if((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1)))
-	{
+	else if((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1))) {
 		title_string = "No map here.";
 		canMap = false;
 	}else if((is_town() && univ.town->defy_mapping)) {
@@ -1419,8 +1400,7 @@ void draw_map(bool need_refresh) {
 		
 		for(where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
 			for(where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
-				if((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0)
-				{
+				if((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0) {
 					draw_rect = orig_draw_rect;
 					draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
 					
@@ -1576,8 +1556,7 @@ void draw_map(bool need_refresh) {
 
 
 
-bool is_door(location destination)
-{
+bool is_door(location destination) {
 	
 	if(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::UNLOCKABLE ||
 	   scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
@@ -1586,8 +1565,7 @@ bool is_door(location destination)
 }
 
 
-void display_map()
-{
+void display_map() {
 	// Show the automap if it's not already visible
 	if(map_visible) return;
 	RECT the_rect;
@@ -1602,8 +1580,7 @@ void display_map()
 void check_done() {
 }
 
-bool quadrant_legal(short i, short j)
-{
+bool quadrant_legal(short i, short j) {
 	if(univ.party.outdoor_corner.x + i >= scenario.out_width)
 		return false;
 	if(univ.party.outdoor_corner.y + j >= scenario.out_height)

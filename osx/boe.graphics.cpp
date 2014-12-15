@@ -163,8 +163,7 @@ bool supressing_some_spaces = false;
 location ok_space[4] = {loc(),loc(),loc(),loc()};
 sf::Image hold_pict;
 
-void adjust_window_mode()
-{
+void adjust_window_mode() {
 	RECT r;
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
@@ -199,8 +198,7 @@ void adjust_window_mode()
 }
 
 // TODO: Move to boe.startup.cpp
-void plop_fancy_startup()
-{
+void plop_fancy_startup() {
 	sf::Texture pict_to_draw;
 	sf::Event event;
 	short i,j;
@@ -270,23 +268,19 @@ void plop_fancy_startup()
 	}
 }
 
-void init_startup()
-{
+void init_startup() {
 	startup_loaded = true;
 	startup_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("startup"));
 	startup_button_orig.loadFromImage(*ResMgr::get<ImageRsrc>("startbut"));
 	anim_mess.loadFromImage(*ResMgr::get<ImageRsrc>("startanim"));
 }
 
-void init_animation()
-{}
+void init_animation() {}
 
-void next_animation_step()
-{}
+void next_animation_step() {}
 
 
-void draw_startup(short but_type)
-{
+void draw_startup(short but_type) {
 	RECT to_rect;
 	RECT r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
 	r4 = {-1000,579,1000,2500};
@@ -311,8 +305,7 @@ void draw_startup(short but_type)
 	draw_startup_stats();
 }
 
-void draw_startup_anim(bool advance)
-{
+void draw_startup_anim(bool advance) {
 	static short startup_anim_pos = 43; // was a global variable, but since it's only used in this function I moved it here
 	RECT anim_to = {4,1,44,276},anim_from;
 	RECT anim_size = {0,0,48,301};
@@ -325,8 +318,7 @@ void draw_startup_anim(bool advance)
 	rect_draw_some_item(anim_mess,anim_from,anim_to,ul,sf::BlendAlpha);
 }
 
-void draw_startup_stats()
-{
+void draw_startup_stats() {
 	RECT from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
 	short i;
 	char str[256];
@@ -438,8 +430,7 @@ void draw_startup_stats()
 
 
 
-void draw_start_button(short which_position,short which_button)
-{
+void draw_start_button(short which_position,short which_button) {
 	RECT from_rect,to_rect;
 	// TODO: Change third button (Windows calls it "Support and Downloads")
 	const char *button_labels[] = {"Load Game","Make New Party","How To Order",
@@ -473,8 +464,7 @@ void draw_start_button(short which_position,short which_button)
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
-void main_button_click(RECT button_rect)
-{
+void main_button_click(RECT button_rect) {
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
@@ -489,8 +479,7 @@ void main_button_click(RECT button_rect)
 	undo_clip(mainPtr);
 }
 
-void arrow_button_click(RECT button_rect)
-{
+void arrow_button_click(RECT button_rect) {
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
@@ -506,8 +495,7 @@ void arrow_button_click(RECT button_rect)
 }
 
 
-void reload_startup()////
-{
+void reload_startup() {
 	if(startup_loaded)
 		return;
 	
@@ -520,8 +508,7 @@ void reload_startup()////
 	//load_main_screen();
 }
 
-void end_startup()
-{
+void end_startup() {
 	if(!startup_loaded)
 		return;
 	
@@ -542,8 +529,7 @@ static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName
 }
 
 // This loads the graphics at the top of the game.
-void Set_up_win ()
-{
+void Set_up_win () {
 	RECT temp_rect = {0,0,0,280},map_world_rect;
 	RECT map_rect = {0,0,384,384};
 	RECT pc_rect = {0,0,216,113};
@@ -564,8 +550,7 @@ void Set_up_win ()
 	
 }
 
-void load_main_screen()
-{
+void load_main_screen() {
 	if(invenbtn_gworld.getSize().x > 0)
 		return;
 	
@@ -620,8 +605,7 @@ void redraw_screen(int refresh) {
 	}
 }
 
-void put_background()
-{
+void put_background() {
 	tessel_ref_t bg_pict;
 	
 	if(overall_mode == MODE_STARTUP)
@@ -649,9 +633,8 @@ void put_background()
 	tileImage(mainPtr, RECT(mainPtr), bg_pict);
 }
 
-void draw_buttons(short mode)
 //mode; // 0 - regular   1 - button action
-{
+void draw_buttons(short mode) {
 	RECT	source_rect = {0,0,37,258}, dest_rec;	bool spec_draw = false;
 	
 	if(mode == 1) {
@@ -677,15 +660,13 @@ void draw_buttons(short mode)
 	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec, sf::BlendAdd);
 }
 
-void reset_text_bar()
-{
+void reset_text_bar() {
 	remember_tiny_text = 300;
 }
 
 
-void draw_text_bar(short mode)
 //short mode; // 0 - no redraw  1 - forced
-{
+void draw_text_bar(short mode) {
 	//short num_rect[3] = {12,10,4}; // Why? Just... why?
 	short i;
 	location loc;
@@ -793,8 +774,7 @@ void refresh_text_bar() {
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
-bool is_nature(char x, char y, unsigned char ground_t)
-{
+bool is_nature(char x, char y, unsigned char ground_t) {
 	ter_num_t ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
@@ -814,10 +794,9 @@ ter_num_t get_ter_from_ground(unsigned char ground){
 
 std::vector<location> forcecage_locs;
 
-void draw_terrain(short	mode)
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
-{
+void draw_terrain(short	mode) {
 	char q,r;
 	location where_draw;
 	location sector_p_in,view_loc;
@@ -1063,8 +1042,7 @@ static ter_num_t get_ground_for_shore(ter_num_t ter){
 	else return ter;
 }
 
-void place_trim(short q,short r,location where,ter_num_t ter_type)
-{
+void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	bool at_top = false,at_bot = false,at_left = false,at_right = false;
 	location targ;
 	
@@ -1189,10 +1167,9 @@ void place_trim(short q,short r,location where,ter_num_t ter_type)
 	}
 }
 
-void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
-{
+void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	/* TODO: Windows has a check for frills being enabled:
 	if(!frills_on || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
 	    return;
@@ -1294,8 +1271,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 }
 
 
-bool extend_road_terrain(ter_num_t ter)
-{
+bool extend_road_terrain(ter_num_t ter) {
 	eTrimType trim = scenario.ter_types[ter].trim_type;
 	eTerSpec spec = scenario.ter_types[ter].special;
 	ter_num_t flag = scenario.ter_types[ter].flag1.u;
@@ -1360,8 +1336,7 @@ static bool connect_roads(ter_num_t ter){
 	return false;
 }
 
-void place_road(short q,short r,location where, bool here)
-{
+void place_road(short q,short r,location where, bool here) {
 	location draw_loc;
 	ter_num_t ter;
 	RECT to_rect;
@@ -1479,8 +1454,7 @@ void place_road(short q,short r,location where, bool here)
 	}
 }
 
-void draw_rest_screen()
-{
+void draw_rest_screen() {
 	eGameMode store_mode;
 	
 	store_mode = overall_mode;
@@ -1489,13 +1463,12 @@ void draw_rest_screen()
 	overall_mode = store_mode ;
 }
 
-void boom_space(location where,short mode,short type,short damage,short sound)
 // if mode is 100, force
 //short type; // 0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
 // 10s digit indicates sound  0 - normal ouch  1 - small sword  2 - loud sword
 // 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
 // 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
-{
+void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
 	RECT source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
@@ -1590,8 +1563,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 }
 
 
-void draw_pointing_arrows()
-{
+void draw_pointing_arrows() {
 	// TODO: The duplication of RECT here shouldn't be necessary...
 	RECT sources[4] = {
 		RECT{352,28,360,36}, // up
@@ -1612,8 +1584,7 @@ void draw_pointing_arrows()
 	}
 }
 
-void redraw_terrain()
-{
+void redraw_terrain() {
 	RECT to_rect;
 	
 	to_rect = win_to_rects[0];
@@ -1628,8 +1599,7 @@ void redraw_terrain()
 }
 
 
-void draw_targets(location center)
-{
+void draw_targets(location center) {
 	RECT source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 	
@@ -1645,9 +1615,8 @@ void draw_targets(location center)
 		}
 }
 
-void frame_space(location where,short mode,short width,short height)
 //mode;  // 0 - red   1 - green
-{
+void frame_space(location where,short mode,short width,short height) {
 	location where_put;
 	RECT to_frame;
 	
@@ -1667,8 +1636,7 @@ void frame_space(location where,short mode,short width,short height)
 }
 
 
-void erase_spot(short i,short j)
-{
+void erase_spot(short i,short j) {
 	RECT to_erase;
 	
 	to_erase = coord_to_rect(i,j);
@@ -1676,8 +1644,7 @@ void erase_spot(short i,short j)
 	
 }
 
-void draw_targeting_line(location where_curs)
-{
+void draw_targeting_line(location where_curs) {
 	location which_space,store_loc;
 	short i,j,k,l;
 	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
@@ -1755,8 +1722,7 @@ void draw_targeting_line(location where_curs)
 }
 
 
-bool party_toast()
-{
+bool party_toast() {
 	short i;
 	
 	for(i = 0; i < 6; i++)
@@ -1765,8 +1731,7 @@ bool party_toast()
 	return true;
 }
 
-void redraw_partial_terrain(RECT redraw_rect)
-{
+void redraw_partial_terrain(RECT redraw_rect) {
 	RECT from_rect;
 	
 	from_rect = redraw_rect;
@@ -1780,8 +1745,7 @@ void redraw_partial_terrain(RECT redraw_rect)
 }
 
 /*
-void HideShowMenuBar( )
-{
+void HideShowMenuBar( ) {
 	GDHandle	mainScreen;
 	
 	// store current gray region that displays
