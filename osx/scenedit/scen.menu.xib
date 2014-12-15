@@ -409,9 +409,17 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="788000512">
+								<object class="NSMenuItem" id="72958416">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">  Edit Scenario Text</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
+								<object class="NSMenuItem" id="788000512">
+									<reference key="NSMenu" ref="399390342"/>
+									<string key="NSTitle">  Edit Journal Entries</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -629,6 +637,14 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
+								<object class="NSMenuItem" id="2020849">
+									<reference key="NSMenu" ref="61689393"/>
+									<string key="NSTitle">  Edit Town Signs</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="654574897">
 									<reference key="NSMenu" ref="61689393"/>
 									<string key="NSTitle">  Advanced Town Details</string>
@@ -753,9 +769,17 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="913717399">
+								<object class="NSMenuItem" id="304878788">
 									<reference key="NSMenu" ref="784697102"/>
 									<string key="NSTitle">  Edit Outdoor Text</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
+								<object class="NSMenuItem" id="913717399">
+									<reference key="NSMenu" ref="784697102"/>
+									<string key="NSTitle">  Edit Outdoor Signs</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -1418,6 +1442,7 @@
 							<reference ref="580939217"/>
 							<reference ref="875998550"/>
 							<reference ref="949025402"/>
+							<reference ref="72958416"/>
 						</array>
 						<reference key="parent" ref="741259600"/>
 					</object>
@@ -1454,6 +1479,7 @@
 							<reference ref="875574143"/>
 							<reference ref="654574897"/>
 							<reference ref="156465632"/>
+							<reference ref="2020849"/>
 						</array>
 						<reference key="parent" ref="12009264"/>
 					</object>
@@ -1486,6 +1512,7 @@
 							<reference ref="976110066"/>
 							<reference ref="913717399"/>
 							<reference ref="181481321"/>
+							<reference ref="304878788"/>
 						</array>
 						<reference key="parent" ref="610967289"/>
 					</object>
@@ -1875,6 +1902,21 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="654518027"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">883</int>
+						<reference key="object" ref="72958416"/>
+						<reference key="parent" ref="399390342"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">884</int>
+						<reference key="object" ref="2020849"/>
+						<reference key="parent" ref="61689393"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">885</int>
+						<reference key="object" ref="304878788"/>
+						<reference key="parent" ref="784697102"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1996,12 +2038,15 @@
 				<string key="878.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="880.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="881.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="883.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="884.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="885.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">882</int>
+			<int key="maxID">885</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

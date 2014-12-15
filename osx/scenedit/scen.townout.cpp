@@ -55,8 +55,16 @@ void init_town(short size) {
 	else return;
 	for(i = 0; i < 180; i++) {
 		temp_str = get_str("town-default",i + 1);
-		sprintf(town->town_strs(i), "%s", temp_str.c_str());
-		town->strlens[i] = strlen((char *) town->town_strs(i));
+		if(i == 0) town->town_name = temp_str;
+		else if(i >= 1 && i < 17)
+			town->rect_names[i-1] = temp_str;
+		else if(i >= 17 && i < 20)
+			town->comment[i-17] = temp_str;
+		else if(i >= 20 && i < 120)
+			town->spec_strs[i-20] = temp_str;
+		else if(i >= 120 && i < 140)
+			town->sign_strs[i-120] = temp_str;
+		town->strlens[i] = temp_str.length();
 	}
 	for(i = 0; i < town->max_dim(); i++)
 		for(j = 0; j < town->max_dim(); j++) {
@@ -95,8 +103,14 @@ void init_out() {
 	
 	for(i = 0; i < 120; i++) {
 		temp_str = get_str("outdoor-default",i + 1);
-		sprintf(current_terrain.out_strs(i), "%s", temp_str.c_str());
-		current_terrain.strlens[i] = strlen((char *) current_terrain.out_strs(i));
+		if(i == 0) current_terrain.out_name = temp_str;
+		else if(i == 9) current_terrain.comment = temp_str;
+		else if(i < 9) current_terrain.rect_names[i-1] = temp_str;
+		else if(i >= 10 && i < 100)
+			current_terrain.spec_strs[i-10] = temp_str;
+		else if(i >= 100 && i < 108)
+			current_terrain.sign_strs[i-100] = temp_str;
+		current_terrain.strlens[i] = temp_str.length();
 	}
 }
 

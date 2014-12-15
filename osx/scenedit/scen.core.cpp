@@ -116,8 +116,21 @@ void init_scenario() {
 	}
 	for(i = 0; i < 270; i++) {
 		temp_str = get_str("scen-default",i + 1);
-		sprintf((char *)scenario.scen_strs(i), "%s", temp_str.c_str());
-		scenario.scen_str_len[i] = strlen(scenario.scen_strs(i));
+		if(i == 0) scenario.scen_name = temp_str;
+		else if(i == 1 || i == 2)
+			scenario.who_wrote[i-1] = temp_str;
+		else if(i == 3)
+			scenario.contact_info = temp_str;
+		else if(i >= 4 && i < 10)
+			scenario.intro_strs[i-4] = temp_str;
+		else if(i >= 10 && i < 60)
+			scenario.journal_strs[i-10] = temp_str;
+		else if(i >= 60 && i < 160) {
+			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
+			else scenario.special_items[(i-60)/2].descr = temp_str;
+		} else if(i >= 260) continue; // These were never ever used, for some reason.
+		else scenario.spec_strs[i-160] = temp_str;
+		scenario.scen_str_len[i] = temp_str.length();
 	}
 }
 
@@ -1179,10 +1192,8 @@ static void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short whic
 }
 
 static bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
-	strncpy(store_item.name, me["name"].getText().c_str(),25);
-	store_item.name[25] = 0;
-	strncpy(store_item.descr, me["descr"].getText().c_str(),255);
-	store_item.descr[255] = 0;
+	store_item.name = me["name"].getText().substr(0,25);
+	store_item.descr = me["descr"].getText();
 	store_item.special = me["spec"].getTextAsNum();
 	store_item.flags = 0;
 	if(dynamic_cast<cLed&>(me["start-with"]).getState() != led_off)
@@ -1539,12 +1550,9 @@ static bool save_scen_details(cDialog& me) {
 	}
 	for(i = 0; i < 3; i++)
 		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
-	strncpy(scenario.scen_strs(1), me["who1"].getText().c_str(), 60);
-	scenario.scen_strs(1)[59] = 0;
-	strncpy(scenario.scen_strs(2), me["who2"].getText().c_str(), 60);
-	scenario.scen_strs(2)[59] = 0;
-	strncpy(scenario.scen_strs(3), me["contact"].getText().c_str(), 256);
-	scenario.scen_strs(3)[255] = 0;
+	scenario.who_wrote[0] = me["who1"].getText().substr(0, 60);
+	scenario.who_wrote[1] = me["who2"].getText().substr(0, 60);
+	scenario.contact_info = me["contact"].getText().substr(0, 256);
 	return true;
 }
 
@@ -1553,9 +1561,9 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	dynamic_cast<cLedGroup&>(me["rating"]).setSelected("rate" + std::to_string(scenario.rating + 1));
 	for(int i = 0; i < 3; i++)
 		me["ver" + std::to_string(i + 1)].setTextToNum(scenario.format.ver[i]);
-	me["who1"].setText(scenario.scen_strs(1));
-	me["who2"].setText(scenario.scen_strs(2));
-	me["contact"].setText(scenario.scen_strs(3));
+	me["who1"].setText(scenario.who_wrote[0]);
+	me["who2"].setText(scenario.who_wrote[1]);
+	me["contact"].setText(scenario.contact_info);
 }
 
 static bool edit_scen_details_event_filter(cDialog& me, std::string, eKeyMod) {
@@ -1665,7 +1673,7 @@ bool build_scenario() {
 	town = new cMedTown;
 	init_out();
 	init_scenario();
-	strcpy(scenario.scen_strs(0), title.c_str());
+	scenario.scen_name = title;
 	if(!default_town) {
 		init_town(1);
 		if(!grass)
@@ -1698,7 +1706,7 @@ bool build_scenario() {
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(0);
-		strcpy(town->town_strs(0),"Large town");
+		town->town_name = "Large town";
 		save_scenario();
 	}
 	for(i = 0; i < med; i++) {
@@ -1708,7 +1716,7 @@ bool build_scenario() {
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(1);
-		strcpy(town->town_strs(0),"Medium town");
+		town->town_name = "Medium town";
 		save_scenario();
 	}
 	for(i = 0; i < small; i++) {
@@ -1718,7 +1726,7 @@ bool build_scenario() {
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
 		init_town(2);
-		strcpy(town->town_strs(0),"Small town");
+		town->town_name = "Small town";
 		save_scenario();
 	}
 	if(load_town(0, town)) cur_town = 0;

@@ -10,6 +10,7 @@
 #define BOE_DATA_SCENARIO_H
 
 #include <iosfwd>
+#include <array>
 #include <boost/filesystem/path.hpp>
 #include "terrain.h"
 #include "monster.h"
@@ -76,6 +77,8 @@ public:
 	cSpecial scen_specials[256];
 	cItemStorage storage_shortcuts[10];
 	short flag_d;
+	// Need to keep scen_str_len around for noe to support legacy scenarios.
+	// (Only way to avoid it would be loading the entire scenario into memory at once.)
 	unsigned char scen_str_len[300];
 	short flag_i;
 	location last_out_edited;
@@ -88,13 +91,15 @@ public:
 	//char ter_names[256][30];
 	// };
 	//char scen_strs[270][256];
-	char scen_name[256];
-	char who_wrote[2][256];
-	char contact_info[256];
-	char intro_strs[6][256];
-	char journal_strs[50][256];
-	char spec_strs[100][256];
-	char monst_strs[100][256];
+	std::string scen_name;
+	std::string who_wrote[2];
+	std::string contact_info;
+	std::string intro_strs[6];
+	// Using std::array here so we can have .size()
+	// This'll make the transition smoother once it becomes a vector.
+	std::array<std::string,50> journal_strs;
+	std::array<std::string,100> spec_strs;
+	std::string monst_strs[100];
 	bool adjust_diff : 1;
 	char : 7;
 	bool is_legacy;
@@ -102,7 +107,6 @@ public:
 	cOutdoors* outdoors;
 	cTown* towns;
 	
-	__declspec(deprecated) char(& scen_strs(short i))[256];
 	cScenario& operator = (legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file);

@@ -176,15 +176,6 @@ cOutdoors::cOutdoors(){
 	
 }
 
-char(& cOutdoors::out_strs(short i))[256]{
-	if(i == 0) return out_name;
-	if(i >= 1 && i < 9) return rect_names[i - 1];
-	if(i == 9) return comment;
-	if(i >= 10 && i < 100) return spec_strs[i - 10];
-	if(i >= 100 && i < 108) return sign_strs[i - 100];
-	return comment;
-}
-
 cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_type old){
 	for(int i = 0; i < 7; i++)
 		monst[i] = old.monst[i];

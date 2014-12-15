@@ -77,6 +77,7 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 	short i,n;
 	bool file_ok = false;
 	long len;
+	char temp_str[256];
 	legacy::scenario_data_type *temp_scenario = new legacy::scenario_data_type;
 	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
@@ -134,9 +135,23 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 	if(!skip_strings) {
 		// TODO: Consider skipping the fread and assignment when len is 0
 		for(i = 0; i < 270; i++) {
-			len = (long) (scenario.scen_str_len[i]);
-			n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
-			scenario.scen_strs(i)[len] = 0;
+			len = (long) (temp_scenario->scen_str_len[i]);
+			n = fread(temp_str, len, 1, file_id);
+			temp_str[len] = 0;
+			if(i == 0) scenario.scen_name = temp_str;
+			else if(i == 1 || i == 2)
+				scenario.who_wrote[i-1] = temp_str;
+			else if(i == 3)
+				scenario.contact_info = temp_str;
+			else if(i >= 4 && i < 10)
+				scenario.intro_strs[i-4] = temp_str;
+			else if(i >= 10 && i < 60)
+				scenario.journal_strs[i-10] = temp_str;
+			else if(i >= 60 && i < 160) {
+				if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
+				else scenario.special_items[(i-60)/2].descr = temp_str;
+			} else if(i >= 260) continue; // These were never ever used, for some reason.
+			else scenario.spec_strs[i-160] = temp_str;
 		}
 	}
 	
@@ -175,6 +190,7 @@ static long get_town_offset(short which_town){
 static bool load_town_v1(short which_town, cTown*& the_town) {
 	short i,n;
 	long len,len_to_jump = 0;
+	char temp_str[256];
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
 	legacy::big_tr_type t_d;
@@ -242,9 +258,18 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	}
 	
 	for(i = 0; i < 140; i++) {
-		len = (long) (the_town->strlens[i]);
-		n = fread(&(the_town->town_strs(i)), len, 1, file_id);
-		the_town->town_strs(i)[len] = 0;
+		len = (long) (store_town.strlens[i]);
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i == 0) the_town->town_name = temp_str;
+		else if(i >= 1 && i < 17)
+			the_town->rect_names[i-1] = temp_str;
+		else if(i >= 17 && i < 20)
+			the_town->comment[i-17] = temp_str;
+		else if(i >= 20 && i < 120)
+			the_town->spec_strs[i-20] = temp_str;
+		else if(i >= 120 && i < 140)
+			the_town->sign_strs[i-120] = temp_str;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -441,6 +466,7 @@ bool load_town_str(short which_town, short which_str, char* str){
 bool load_town_str(short which_town, cTown*& t){
 	short i,n;
 	long len,len_to_jump = 0;
+	char temp_str[256];
 	legacy::town_record_type store_town;
 	
 	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
@@ -481,8 +507,17 @@ bool load_town_str(short which_town, cTown*& t){
 	n = fseek(file_id, len, SEEK_CUR);
 	for(i = 0; i < 140; i++) {
 		len = (long) (t->strlens[i]);
-		n = fread(&(t->town_strs(i)), len, 1, file_id);
-		t->town_strs(i)[len] = 0;
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i == 0) t->town_name = temp_str;
+		else if(i >= 1 && i < 17)
+			t->rect_names[i-1] = temp_str;
+		else if(i >= 17 && i < 20)
+			t->comment[i-17] = temp_str;
+		else if(i >= 20 && i < 120)
+			t->spec_strs[i-20] = temp_str;
+		else if(i >= 120 && i < 140)
+			t->sign_strs[i-120] = temp_str;
 	}
 	
 	n = fclose(file_id);
@@ -516,6 +551,7 @@ static long get_outdoors_offset(location& which_out){
 static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	short i,n;
 	long len,len_to_jump;
+	char temp_str[256];
 	legacy::outdoor_record_type store_out;
 	
 	if((which_out.x != minmax(0,scenario.out_width - 1,which_out.x)) ||
@@ -551,9 +587,16 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	port_out(&store_out);
 	the_out = store_out;
 	for(i = 0; i < 108; i++) {
-		len = (long) (the_out.strlens[i]);
-		n = fread(&(the_out.out_strs(i)), len, 1, file_id);
-		the_out.out_strs(i)[len] = 0;
+		len = (long) (store_out.strlens[i]);
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i == 0) the_out.out_name = temp_str;
+		else if(i == 9) the_out.comment = temp_str;
+		else if(i < 9) the_out.rect_names[i-1] = temp_str;
+		else if(i >= 10 && i < 100)
+			the_out.spec_strs[i-10] = temp_str;
+		else if(i >= 100 && i < 108)
+			the_out.sign_strs[i-100] = temp_str;
 	}
 	
 	n = fclose(file_id);
@@ -641,6 +684,7 @@ bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
 bool load_outdoor_str(location which_out, short which_str, char* str){
 	short i,n;
 	long len,len_to_jump;
+	char temp_str[256];
 	legacy::outdoor_record_type store_out;
 	
 	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");

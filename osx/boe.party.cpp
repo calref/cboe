@@ -476,9 +476,9 @@ void put_party_in_scen(std::string scen_name) {
 	// Throw up intro dialog
 	buttons[0] = 1;
 	for(j = 0; j < 6; j++)
-		if(strlen(	scenario.scen_strs(4 + j)) > 0) {
+		if(!scenario.intro_strs[j].empty()) {
 			for(i = 0; i < 6; i++)
-				strs[i] = scenario.scen_strs(4 + i);
+				strs[i] = scenario.intro_strs[i];
 			custom_choice_dialog(strs,scenario.intro_pic,PIC_SCEN,buttons) ;
 			j = 6;
 		}

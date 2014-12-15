@@ -273,7 +273,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 				i_num = i + item_offset;
 				if(spec_item_array[i_num] >= 0) {
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.scen_strs(60 + spec_item_array[i_num] * 2),eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
 					if((scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)

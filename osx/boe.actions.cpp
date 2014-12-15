@@ -547,7 +547,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 					if(!univ.town.monst[i].summoned)
 						small_talk = -univ.town.monst[i].personality;
 					std::string str = "No response.";
-					if(small_talk > 1000) str = scenario.scen_strs(small_talk - 1000);
+					if(small_talk > 1000) str = scenario.spec_strs[small_talk - 1000];
 					// TODO: Come up with a set of pre-cooked responses.
 					add_string_to_buf("Talk: " + str, 4);
 				} else {

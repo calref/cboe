@@ -117,18 +117,3 @@ void cScenario::append(legacy::scen_item_data_type& old){
 	for(i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
 }
-
-char(& cScenario::scen_strs(short i))[256]{
-	if(i == 0) return scen_name;
-	if(i == 1) return who_wrote[0];
-	if(i == 2) return who_wrote[1];
-	if(i == 3) return contact_info;
-	if(i >= 4   && i < 10 ) return intro_strs[i - 4];
-	if(i >= 10  && i < 60 ) return journal_strs[i - 10];
-	if(i >= 60  && i < 160){
-		if(i % 2 == 0) return special_items[(i - 60) / 2].name;
-		else return special_items[(i - 60) / 2].descr;
-	}
-	if(i >= 160 && i < 260) return spec_strs[i - 160];
-	return journal_strs[6]; // random unused slot
-}

@@ -504,7 +504,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	PSD[SDF_HOSTILES_PRESENT] = 0;
 	
 	add_string_to_buf("Now entering:");
-	sprintf ((char *) message, "   %-30.30s ",univ.town->town_name);
+	sprintf(message, "   %-30.30s ",univ.town->town_name.c_str());
 	add_string_to_buf(message);
 	
 	

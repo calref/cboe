@@ -3994,17 +3994,17 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 	switch(cur_type) {
 		case 0:
 			if(which_str1 >= 0)
-				str1 = scenario.scen_strs(which_str1);
+				str1 = scenario.spec_strs[which_str1];
 			if(which_str2 >= 0)
-				str2 = scenario.scen_strs(which_str2);
+				str2 = scenario.spec_strs[which_str2];
 			break;
 		case 1:
 			if(which_str1 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
-				str1 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str1);
+				str1 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].spec_strs[which_str1];
 			if(which_str2 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
-				str2 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str2);
+				str2 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].spec_strs[which_str2];
 			break;
 		case 2:
 			if(which_str1 >= 0)
@@ -4022,7 +4022,7 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 	// get_send = true: Retrieve value from Campaign Flag and put in SDF
 	try {
 		if(str >= 0) {
-			std::string cp_id = scenario.scen_strs(str);
+			std::string cp_id = scenario.spec_strs[str];
 			if(get_send)
 				univ.party.stuff_done[sdf_a][sdf_b] = univ.party.cpn_flag(cpf_a, cpf_b, cp_id);
 			else

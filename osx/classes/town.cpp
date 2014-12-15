@@ -141,15 +141,6 @@ cTown::cTown(short){
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
-char(& cTown::town_strs(short i))[256]{
-	if(i == 0) return town_name;
-	if(i >= 1   && i < 17 ) return rect_names[i - 1];
-	if(i >= 17  && i < 20 ) return comment[i - 17];
-	if(i >= 20  && i < 120) return spec_strs[i - 20];
-	if(i >= 120 && i < 140) return sign_strs[i - 120];
-	return comment[1]; // random unused string
-}
-
 cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];

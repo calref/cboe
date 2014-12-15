@@ -1022,7 +1022,7 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 
 void start_data_dump() {
 	short i;
-	char* scen_name = scenario.scen_strs(0);
+	std::string scen_name = scenario.scen_name;
 	std::ofstream fout("Scenario Data.txt");
 	fout << "Scenario data for " << scen_name << ':' << endl << endl;
 	fout << "Terrain types for " << scen_name << ':' << endl;
@@ -1041,19 +1041,42 @@ void scen_text_dump(){
 	short i;
 	location out_sec;
 	std::ofstream fout("Scenario Text.txt");
-	fout << "Scenario text for " << scenario.scen_strs(0) << ':' << endl << endl;
+	fout << "Scenario text for " << scenario.scen_name << ':' << endl << endl;
 	fout << "Scenario Text:" << endl;
-	for(i = 1; i < 260; i++)
-		if(scenario.scen_strs(i)[0] != '*')
-			fout << "  Message " << i << ": " << scenario.scen_strs(i) << endl;
+	fout << "Who Wrote 1: " << scenario.who_wrote[0] << endl;
+	fout << "Who Wrote 2: " << scenario.who_wrote[1] << endl;
+	fout << "Contact Info: " << scenario.contact_info << endl;
+	for(i = 0; i < 6; i++)
+		if(scenario.intro_strs[i][0] != '*')
+			fout << "  Intro Message " << i << ": " << scenario.intro_strs[i] << endl;
+	for(i = 0; i < 50; i++)
+		if(scenario.journal_strs[i][0] != '*')
+			fout << "  Journal Entry " << i << ": " << scenario.journal_strs[i] << endl;
+	for(i = 0; i < 50; i++)
+		if(scenario.special_items[i].name[0] != '*') {
+			fout << "  Special Item " << i << ':' << endl;
+			fout << "    Name: " << scenario.special_items[i].name << endl;
+			fout << "    Description: " << scenario.special_items[i].descr << endl;
+		}
+	for(i = 0; i < 100; i++)
+		if(scenario.spec_strs[i][0] != '*')
+			fout << "  Message " << i << ": " << scenario.spec_strs[i] << endl;
 	fout << endl << "Outdoor Sections Text:" << endl << endl;
 	for(out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 		for(out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
 			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
 			load_outdoors(out_sec,current_terrain);
-			for(i = 0; i < 108; i++)
-				if(current_terrain.out_strs(i)[0] != '*')
-					fout << "    Message " << i << ": " << current_terrain.out_strs(i) << endl;
+			fout << "    Name: " << current_terrain.out_name;
+			fout << "    Comment: " << current_terrain.comment;
+			for(i = 0; i < 8; i++)
+				if(current_terrain.rect_names[i][0] != '*')
+					fout << "    Area Rectangle " << i << ": " << current_terrain.rect_names[i] << endl;
+			for(i = 0; i < 90; i++)
+				if(current_terrain.spec_strs[i][0] != '*')
+					fout << "    Message " << i << ": " << current_terrain.spec_strs[i] << endl;
+			for(i = 0; i < 8; i++)
+				if(current_terrain.sign_strs[i][0] != '*')
+					fout << "    Sign " << i << ": " << current_terrain.sign_strs[i] << endl;
 			fout << endl;
 		}
 	}
@@ -1064,9 +1087,22 @@ void scen_text_dump(){
 		fout << "  Town " << j << ':' << endl;
 		fout << "  Town Messages:" << endl;
 		load_town(j,town);
-		for(i = 0; i < 135; i++)
-			if(town->town_strs(i)[0] != '*')
-				fout << "    Message " << i << ": " << town->town_strs(i) << endl;
+		fout << "    Name: " << town->town_name << endl;
+		for(i = 0; i < 16; i++)
+			if(town->rect_names[i][0] != '*')
+				fout << "    Area Rectangle " << i << ": " << town->rect_names[i] << endl;
+		fout << "    Name: " << town->town_name << endl;
+		for(i = 0; i < 3; i++)
+			if(town->comment[i][0] != '*')
+				fout << "    Comment " << i << ": " << town->comment[i] << endl;
+		fout << "    Name: " << town->town_name << endl;
+		for(i = 0; i < 100; i++)
+			if(town->spec_strs[i][0] != '*')
+				fout << "    Message " << i << ": " << town->spec_strs[i] << endl;
+		fout << "    Name: " << town->town_name << endl;
+		for(i = 0; i < 20; i++)
+			if(town->sign_strs[i][0] != '*')
+				fout << "    Sign " << i << ": " << town->sign_strs[i] << endl;
 		fout << endl << "  Town Dialogue:" << endl;
 		for(i = 0; i < 10; i++) {
 			fout << "    Personality " << i << " (" << town->talking.talk_strs[i] << "): " << endl;

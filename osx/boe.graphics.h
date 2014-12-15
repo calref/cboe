@@ -39,7 +39,7 @@ void draw_buttons(short mode);
 void reset_text_bar();
 void draw_text_bar(short mode);
 void refresh_text_bar();
-void put_text_bar(char *str);
+void put_text_bar(std::string str);
 void draw_terrain(short	mode = 0);
 void place_trim(short q,short r,location where,ter_num_t ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);

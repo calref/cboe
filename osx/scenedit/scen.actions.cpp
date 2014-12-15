@@ -349,8 +349,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 7:
 						if(option_hit) {
-							s2 = get_str("scen-default", j + 1);
-							strcpy(scenario.scen_strs(j),s2.c_str());
+							s2 = get_str("scen-default", j + 161);
+							scenario.spec_strs[j] = s2;
 						}
 						else edit_text_str(j,0);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *)data_store->scen_strs[j]);
@@ -360,8 +360,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						
 					case 8:
 						if(option_hit) {
-							s2 = get_str("outdoor-default", j + 1);
-							strcpy(current_terrain.out_strs(j),s2.c_str());
+							s2 = get_str("outdoor-default", j + 11);
+							current_terrain.spec_strs[j] = s2;
 						}
 						else edit_text_str(j,1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
@@ -370,8 +370,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 9:
 						if(option_hit) {
-							s2 = get_str("town-default", j + 1);
-							strcpy(town->town_strs(j),s2.c_str());
+							s2 = get_str("town-default", j + 21);
+							town->spec_strs[j] = s2;
 						}
 						else edit_text_str(j,2);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->town_strs[j]);
@@ -384,6 +384,14 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						//set_rb(j,10000 + j,(char *) str,0);
 						start_special_item_editing();
 						break;
+					case 11:
+						if(option_hit) {
+							s2 = get_str("scen-default", j + 11);
+							scenario.journal_strs[j] = s2;
+						}
+						else edit_text_str(j,3);
+						start_string_editing(3,1);
+						break;
 					case 12:
 						edit_talk_node(j,0);
 						start_dialogue_editing(1);
@@ -391,6 +399,22 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					case 13:
 						edit_basic_dlog(j);
 						start_dialogue_editing(1);
+						break;
+					case 14:
+						if(option_hit) {
+							s2 = get_str("outdoor-default", j + 101);
+							current_terrain.spec_strs[j] = s2;
+						}
+						else edit_text_str(j,4);
+						start_string_editing(4,1);
+						break;
+					case 15:
+						if(option_hit) {
+							s2 = get_str("town-default", j + 121);
+							town->spec_strs[j] = s2;
+						}
+						else edit_text_str(j,5);
+						start_string_editing(5,1);
 						break;
 				}
 				//draw_rb_slot(i + right_top,0);
@@ -473,7 +497,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						for(x = 0; x < 16; x++)
 							if(town->room_rect(x).right == 0) {
 								town->room_rect(x) = working_rect;
-								strcpy(town->town_strs(x + 1),"");
+								town->rect_names[x] = "";
 								if(!edit_area_rect_str(x,1))
 									town->room_rect(x).right = 0;
 								x = 500;
@@ -483,7 +507,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						for(x = 0; x < 8; x++)
 							if(current_terrain.info_rect[x].right == 0) {
 								current_terrain.info_rect[x] = working_rect;
-								strcpy(current_terrain.out_strs(x + 1),"");
+								current_terrain.rect_names[x] = "";
 								if(!edit_area_rect_str(x,0))
 									current_terrain.info_rect[x].right = 0;
 								x = 500;
@@ -3027,7 +3051,7 @@ void set_up_main_screen() {
 	set_lb(-1,11,"Edit Outdoor Terrain",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Town/Dungeon Options",0);
-	sprintf((char *) message,"  Town %d: %s",cur_town,town->town_strs(0));
+	sprintf(message,"  Town %d: %s",cur_town,town->town_name.c_str());
 	set_lb(-1,1,(char *) message,0);
 	set_lb(-1,11,"Load Another Town",0);
 	set_lb(-1,11,"Edit Town Terrain",0);
@@ -3051,7 +3075,7 @@ void start_town_edit() {
 	reset_lb();
 	sprintf(message,"Editing Town %d",cur_town);
 	set_lb(0,2,message,0);
-	set_lb(NLS - 3,1,town->town_strs(0),0);
+	set_lb(NLS - 3,1,town->town_name.c_str(),0);
 	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
 	set_lb(NLS - 1,11,"Back to Main Menu",0);
 	overall_mode = MODE_DRAWING;
@@ -3080,7 +3104,7 @@ void start_out_edit() {
 	reset_lb();
 	sprintf(message,"Editing outdoors (%d,%d)",cur_out.x,cur_out.y);
 	set_lb(0,2,message,0);
-	set_lb(NLS - 3,1,current_terrain.out_strs(0),0);
+	set_lb(NLS - 3,1,current_terrain.out_name.c_str(),0);
 	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
 	set_lb(NLS - 1,11,"Back to Main Menu",0);
 	overall_mode = MODE_DRAWING;
@@ -3190,7 +3214,7 @@ void start_special_item_editing() {
 	reset_rb();
 	right_sbar->setMaximum(50 - NRSONPAGE);
 	for(i = 0; i < 50; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_strs(60 + i * 2));
+		sprintf((char *) str,"%d - %s",i,scenario.special_items[i].name.c_str());
 		set_rb(i,10000 + i,(char *) str,0);
 	}
 	if(draw_full)
@@ -3200,12 +3224,13 @@ void start_special_item_editing() {
 	set_lb(NLS - 3,0,"",1);
 }
 
-// mode 0 - scen 1 - out 2 - town
+extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
+
+// mode 0 - scen 1 - out 2 - town 3 - journal
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(short mode,short just_redo_text) {
 	short i,pos;
 	char str[256];
-	short num_strs[3] = {260,108,140};
 	bool draw_full = false;
 	
 	if(just_redo_text == 0) {
@@ -3217,21 +3242,33 @@ void start_string_editing(short mode,short just_redo_text) {
 		right_sbar->show();
 		
 		reset_rb();
-		right_sbar->setMaximum(num_strs[mode] - NRSONPAGE);
+		right_sbar->setMaximum(num_strs(mode) - NRSONPAGE);
 	}
-	for(i = 0; i < num_strs[mode]; i++) {
+	for(i = 0; i < num_strs(mode); i++) {
 		switch(mode) {
 			case 0:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) scenario.scen_strs(i));
+				sprintf((char *) str,"%d - %-30.30s",i,scenario.spec_strs[i].c_str());
 				set_rb(i,7000 + i,(char *) str,0);
 				break;
 			case 1:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) current_terrain.out_strs(i));
+				sprintf((char *) str,"%d - %-30.30s",i,current_terrain.spec_strs[i].c_str());
 				set_rb(i,8000 + i,(char *) str,0);
 				break;
 			case 2:
-				sprintf((char *) str,"%d - %-30.30s",i,(char *) town->town_strs(i));
+				sprintf((char *) str,"%d - %-30.30s",i, town->spec_strs[i].c_str());
 				set_rb(i,9000 + i,(char *) str,0);
+				break;
+			case 3: // TODO: This is currently inaccessible - add menu option?
+				sprintf((char *) str,"%d - %-30.30s",i,scenario.journal_strs[i].c_str());
+				set_rb(i,11000 + i,str,0);
+				break;
+			case 4: // TODO: This is currently inaccessible - add menu option?
+				sprintf((char *) str,"%d - %-30.30s",i,current_terrain.sign_strs[i].c_str());
+				set_rb(i,14000 + i,str,0);
+				break;
+			case 5: // TODO: This is currently inaccessible - add menu option?
+				sprintf((char *) str,"%d - %-30.30s",i,town->sign_strs[i].c_str());
+				set_rb(i,15000 + i,str,0);
 				break;
 		}
 	}

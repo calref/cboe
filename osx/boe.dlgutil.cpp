@@ -999,7 +999,7 @@ void store_responses() {
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 void do_sign(short town_num, short which_sign, short sign_type) {
-	char sign_text[256];
+	std::string sign_text;
 	location view_loc;
 	
 	// TODO: Why is this line here? The location isn't used anywhere.
@@ -1015,10 +1015,10 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	if(town_num >= 200) {
 		town_num -= 200;
 		//load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
-		strcpy((char*)sign_text,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_strs[which_sign]);
+		sign_text = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_strs[which_sign];
 	}
 	else {
-		sprintf((char *) sign_text,"%s",univ.town->sign_strs[which_sign]);
+		sign_text = univ.town->sign_strs[which_sign];
 	}
 	sign->getControl("sign").setText(sign_text);
 	

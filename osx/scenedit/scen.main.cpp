@@ -301,7 +301,11 @@ void handle_scenario_menu(int item_hit) {
 			right_sbar->setPosition(0);
 			start_string_editing(0,0);
 			break;
-		case 11: // Import Town
+		case 11: // Edit Journal Entries
+			right_sbar->setPosition(0);
+			start_string_editing(3,0);
+			break;
+		case 12: // Import Town
 			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
@@ -313,25 +317,25 @@ void handle_scenario_menu(int item_hit) {
 				redraw_screen();
 			}
 			break;
-		case 12: // Edit Saved Item Rectangles
+		case 13: // Edit Saved Item Rectangles
 			edit_save_rects();
 			break;
-		case 13: // Edit Horses
+		case 14: // Edit Horses
 			edit_horses();
 			break;
-		case 14: // Edit Boats
+		case 15: // Edit Boats
 			edit_boats();
 			break;
-		case 15: // Set Variable Town Entry
+		case 16: // Set Variable Town Entry
 			edit_add_town();
 			break;
-		case 16: // Set Scenario Event Timers
+		case 17: // Set Scenario Event Timers
 			edit_scenario_events();
 			break;
-		case 17: // Edit Item Placement Shortcuts
+		case 18: // Edit Item Placement Shortcuts
 			edit_item_placement();
 			break;
-		case 18: // Delete Last Town
+		case 19: // Delete Last Town
 			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
@@ -351,11 +355,11 @@ void handle_scenario_menu(int item_hit) {
 			if(cChoiceDlog("delete-town-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				delete_last_town();
 			break;
-		case 19: // Write Data to Text File
+		case 20: // Write Data to Text File
 			if(cChoiceDlog("data-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				start_data_dump();
 			break;
-		case 20: // Do Full Text Dump
+		case 21: // Do Full Text Dump
 			if(cChoiceDlog("text-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
 				scen_text_dump();
 			redraw_screen();
@@ -418,9 +422,13 @@ void handle_town_menu(int item_hit) {
 			start_string_editing(2,0);
 			break;
 		case 15:
-			edit_advanced_town();
+			right_sbar->setPosition(0);
+			start_string_editing(5,0);
 			break;
 		case 16:
+			edit_advanced_town();
+			break;
+		case 17:
 			edit_town_events();
 			break;
 	}
@@ -457,6 +465,10 @@ void handle_outdoor_menu(int item_hit) {
 		case 12:
 			right_sbar->setPosition(0);
 			start_string_editing(1,0);
+			break;
+		case 13:
+			right_sbar->setPosition(0);
+			start_string_editing(4,0);
 			break;
 	}
 }

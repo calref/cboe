@@ -685,13 +685,13 @@ void draw_text_bar(short mode) {
 				if((remember_tiny_text == i) && (mode == 0))
 					return;
 				else {
-					put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(i + 1));
+					put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].rect_names[i]);
 					remember_tiny_text = i;
 					return;
 				}
 			} // TODO: I'm pretty sure this brace location is correct, but must verify it
 		if(remember_tiny_text != 50 + univ.party.i_w_c.x + univ.party.i_w_c.y) {
-			put_text_bar((char *) univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(0));
+			put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_name);
 			remember_tiny_text = 50 + univ.party.i_w_c.x + univ.party.i_w_c.y;
 		}
 	}
@@ -707,7 +707,7 @@ void draw_text_bar(short mode) {
 				}
 			} // TODO: I'm pretty sure this brace location is correct, but must verify it
 		if(remember_tiny_text != 250) {
-			put_text_bar((char *) univ.town->town_name); ////
+			put_text_bar(univ.town->town_name);
 			remember_tiny_text = 250;
 		}
 		
@@ -731,7 +731,7 @@ void draw_text_bar(short mode) {
 	text_bar_gworld.display();
 }
 
-void put_text_bar(char *str) {
+void put_text_bar(std::string str) {
 	text_bar_gworld.setActive();
 	rect_draw_some_item(orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
 	TextStyle style;

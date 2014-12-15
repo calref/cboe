@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <iosfwd>
+#include <array>
 #include "simpletypes.h"
 #include "location.h"
 #include "special.h"
@@ -102,12 +103,13 @@ public:
 	short hostile_fry_party; // number of a special to be called when the town goes hostile TODO: Not sure about this yet though
 	short difficulty;
 	//char town_strs[180][256];
-	char town_name[256];
-	char rect_names[16][256];
-	char comment[3][256];
-	char spec_strs[100][256];
-	char sign_strs[20][256];
-	__declspec(deprecated) char(& town_strs(short i))[256];
+	std::string town_name;
+	// Using std::array here so we can have .size()
+	// This'll make the transition smoother once it becomes a vector.
+	std::array<std::string,16> rect_names;
+	std::array<std::string,3> comment;
+	std::array<std::string,100> spec_strs;
+	std::array<std::string,20> sign_strs;
 	cSpeech talking;
 	
 	virtual ~cTown(){}

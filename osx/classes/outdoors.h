@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iosfwd>
+#include <array>
 
 #include "location.h"
 #include "special.h"
@@ -60,14 +61,15 @@ public:
 	unsigned char strlens[180];
 	cSpecial specials[60];
 	//char strs[120][256];
-	char out_name[256];
-	char rect_names[8][256];
-	char comment[256];
-	char spec_strs[90][256];
-	char sign_strs[8][256];
+	std::string out_name;
+	// Using std::array here so we can have .size()
+	// This'll make the transition smoother once it becomes a vector.
+	std::array<std::string,8> rect_names;
+	std::string comment;
+	std::array<std::string,90> spec_strs;
+	std::array<std::string,8> sign_strs;
 	bool special_spot[48][48];
 	
-	__declspec(deprecated) char(& out_strs(short i))[256];
 	cOutdoors();
 	cOutdoors& operator = (legacy::outdoor_record_type& old);
 };

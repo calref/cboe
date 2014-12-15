@@ -88,9 +88,8 @@ class cSpecItem {
 public:
 	short flags;
 	short special;
-	// TODO: Change to std::string
-	char name[256];
-	char descr[256];
+	std::string name;
+	std::string descr;
 };
 
 /*
