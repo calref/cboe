@@ -836,6 +836,10 @@ void pause(short length)
 	
 	len = (long) length;
 	
+	// Before pausing, make sure the screen is updated.
+	redraw_screen(REFRESH_NONE);
+	mainPtr.display();
+	
 	if (give_delays == 0)
 		sf::sleep(time_in_ticks(len));
 }
