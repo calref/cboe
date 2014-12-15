@@ -128,7 +128,7 @@ int main(int, char* argv[]) {
 	check_for_intel();
 	redraw_screen();
 	
-	while (All_Done == false) 
+	while (!All_Done) 
 		Handle_One_Event();
 	
 	close_program();
@@ -267,7 +267,7 @@ void handle_scenario_menu(int item_hit) {
 	
 	switch (item_hit) {
 		case 1: // Create new town
-			if (change_made == true) {
+			if (change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
@@ -275,7 +275,7 @@ void handle_scenario_menu(int item_hit) {
 				giveError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
-			if (new_town(scenario.num_towns) == true)
+			if (new_town(scenario.num_towns))
 				set_up_main_screen();
 			break;
 		case 3: // Scenario Details
@@ -288,7 +288,7 @@ void handle_scenario_menu(int item_hit) {
 			set_starting_loc();
 			break;
 		case 6: // Change Password
-//			if (check_p(user_given_password) == true) {
+//			if (check_p(user_given_password)) {
 //				user_given_password = get_password();
 //				given_password = true;
 //			}
@@ -303,7 +303,7 @@ void handle_scenario_menu(int item_hit) {
 			start_string_editing(0,0);
 			break;
 		case 11: // Import Town
-			if (change_made == true) {
+			if (change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
@@ -333,7 +333,7 @@ void handle_scenario_menu(int item_hit) {
 			edit_item_placement();
 			break;
 		case 18: // Delete Last Town
-			if (change_made == true) {
+			if (change_made) {
 				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
 			}

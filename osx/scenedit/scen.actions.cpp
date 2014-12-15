@@ -216,7 +216,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_item_editing(0);
 						break;
 					case 5: // new town
-						if (change_made == true) {
+						if (change_made) {
 							giveError("You need to save the changes made to your scenario before you can add a new town.");
 							return are_done;
 						}
@@ -224,7 +224,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							giveError("You have reached the limit of 200 towns you can have in one scenario.");
 							return are_done;
 						}
-						if (new_town(scenario.num_towns) == true)
+						if (new_town(scenario.num_towns))
 							set_up_main_screen();
 						break;
 					case 6:
@@ -235,7 +235,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_special_item_editing();
 						break;
 					case 11: // pick out
-						if (change_made == true) {
+						if (change_made) {
 							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
@@ -255,7 +255,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						return false;
 						break;
 					case 16: // pick town
-						if (change_made == true) {
+						if (change_made) {
 							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
@@ -321,7 +321,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						//set_rb(j,3000 + j,(char *) str,0);
 						break;
 					case 4:
-						if (option_hit == true) {
+						if (option_hit) {
 							scenario.scen_specials[j] = null_spec_node;
 						} 
 						else edit_spec_enc(j,0);
@@ -331,7 +331,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_special_editing(0,1);
 						break;
 					case 5:
-						if (option_hit == true) {
+						if (option_hit) {
 							current_terrain.specials[j] = null_spec_node;
 						} 
 						else edit_spec_enc(j,1);
@@ -341,7 +341,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_special_editing(1,1);
 						break;
 					case 6:
-						if (option_hit == true) {
+						if (option_hit) {
 							town->specials[j] = null_spec_node;
 						} 
 						else edit_spec_enc(j,2);
@@ -351,7 +351,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_special_editing(2,1);
 						break;
 					case 7:
-						if (option_hit == true) {
+						if (option_hit) {
 							s2 = get_str("scen-default", j + 1);
 							strcpy(scenario.scen_strs(j),s2.c_str());
 						} 
@@ -362,7 +362,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 						
 					case 8:
-						if (option_hit == true) {
+						if (option_hit) {
 							s2 = get_str("outdoor-default", j + 1);
 							strcpy(current_terrain.out_strs(j),s2.c_str());
 						}
@@ -372,7 +372,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_string_editing(1,1);
 						break;
 					case 9:
-						if (option_hit == true) {
+						if (option_hit) {
 							s2 = get_str("town-default", j + 1);
 							strcpy(town->town_strs(j),s2.c_str());
 						} 
@@ -420,18 +420,18 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			spot_hit.y = j;
 		}
 		
-		if ((mouse_button_held == true) && (spot_hit.x == last_spot_hit.x) &&
+		if ((mouse_button_held) && (spot_hit.x == last_spot_hit.x) &&
 			(spot_hit.y == last_spot_hit.y))
 			return are_done;
 		else last_spot_hit = spot_hit;
-		if (mouse_button_held == false)
+		if (!mouse_button_held)
 			last_spot_hit = spot_hit;
 		
 		old_mode = overall_mode;
 		change_made = true;
 		
-		if ((spot_hit.x < 0) || (spot_hit.x > ((editing_town == true) ? town->max_dim() - 1 : 47)) ||
-			(spot_hit.y < 0) || (spot_hit.y > ((editing_town == true) ? town->max_dim() - 1 : 47))) ;
+		if ((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim() - 1 : 47)) ||
+			(spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim() - 1 : 47))) ;
 		else switch (overall_mode) {
 			case MODE_DRAWING:
 				if ((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
@@ -451,7 +451,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
-				if (mouse_button_held == true)
+				if (mouse_button_held)
 					break;
 				if (mode_count == 2) {
 					working_rect.left = spot_hit.x;
@@ -473,12 +473,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					town->in_town_rect = working_rect;
 				}
 				else { // MODE_ROOM_RECT
-					if (editing_town == true) {
+					if (editing_town) {
 						for (x = 0; x < 16; x++)
 							if (town->room_rect(x).right == 0) {
 								town->room_rect(x) = working_rect;
 								strcpy(town->town_strs(x + 1),"");
-								if (edit_area_rect_str(x,1) == false)
+								if (!edit_area_rect_str(x,1))
 									town->room_rect(x).right = 0;
 								x = 500;
 							}
@@ -488,7 +488,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							if (current_terrain.info_rect[x].right == 0) {
 								current_terrain.info_rect[x] = working_rect;
 								strcpy(current_terrain.out_strs(x + 1),"");
-								if (edit_area_rect_str(x,0) == false)
+								if (!edit_area_rect_str(x,0))
 									current_terrain.info_rect[x].right = 0;
 								x = 500;
 							}
@@ -501,13 +501,13 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				set_cursor(wand_curs);
 				break;
 			case MODE_SET_WANDER_POINTS:
-				if (mouse_button_held == true)
+				if (mouse_button_held)
 					break;
-				if (editing_town == false) {
+				if (!editing_town) {
 					current_terrain.wandering_locs[mode_count - 1].x = spot_hit.x;
 					current_terrain.wandering_locs[mode_count - 1].y = spot_hit.y;
 				}
-				if (editing_town == true) {
+				if (editing_town) {
 					town->wandering_locs[mode_count - 1].x = spot_hit.x;
 					town->wandering_locs[mode_count - 1].y = spot_hit.y;
 				}
@@ -531,7 +531,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			//case MODE_TOGGLE_SPECIAL_DOT:
 				//				town.special[spot_hit.x][spot_hit.y] = !town.special[spot_hit.x][spot_hit.y];
-				/*if (mouse_button_held == true)
+				/*if (mouse_button_held)
 				 break;
 				 if (is_special(spot_hit.x,spot_hit.y))
 				 take_special(spot_hit.x,spot_hit.y);
@@ -716,7 +716,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EYEDROPPER:
-				if (editing_town == true)
+				if (editing_town)
 					set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
 				else set_new_terrain(current_terrain.terrain[spot_hit.x][spot_hit.y]);
 				set_cursor(wand_curs);
@@ -740,7 +740,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_SIGN: //edit sign
-				if (editing_town == true) {
+				if (editing_town) {
 					for (x = 0; x < 15; x++)
 						if ((town->sign_locs[x].x == spot_hit.x) && (town->sign_locs[x].y == spot_hit.y)) {
 							edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
@@ -750,7 +750,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
 					}	
 				}
-				if (editing_town == false) {
+				if (!editing_town) {
 					for (x = 0; x < 8; x++)
 						if ((current_terrain.sign_locs[x].x == spot_hit.x) && (current_terrain.sign_locs[x].y == spot_hit.y)) {
 							edit_sign(x,scenario.ter_types[current_terrain.terrain[spot_hit.x][spot_hit.y]].picture);
@@ -765,7 +765,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_EDIT_CREATURE: //edit monst
 				for (x = 0; x < 60; x++) 
-					if (monst_on_space(spot_hit,x) == true) {
+					if (monst_on_space(spot_hit,x)) {
 						edit_placed_monst(x);
 						last_placed_monst = town->creatures(x);
 					}
@@ -778,14 +778,14 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_COPY_SPECIAL: //copy special
-				if (editing_town == true) {
+				if (editing_town) {
 					for (x = 0; x < 50; x++)
 						if ((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
 							copied_spec = town->spec_id[x];
 							x = 500;
 						}
 				}
-				if (editing_town == false) {
+				if (!editing_town) {
 					for (x = 0; x < 18; x++)
 						if ((current_terrain.special_locs[x].x == spot_hit.x) && (current_terrain.special_locs[x].y == spot_hit.y)) {
 							copied_spec = current_terrain.special_id[x];
@@ -802,7 +802,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					giveError("You need to select a special to copy first.");
 					break;
 				}
-				if (editing_town == true) {
+				if (editing_town) {
 					for (x = 0; x < 50; x++)
 						if (town->special_locs[x].x == 100) {
 							town->special_locs[x] = spot_hit;
@@ -810,7 +810,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							x = 500;
 						}
 				}
-				if (editing_town == false) {
+				if (!editing_town) {
 					if ((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
 						cChoiceDlog("not-at-edge.xml").show();
 						break;
@@ -830,14 +830,14 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_SPECIAL: //erase special
-				if (editing_town == true) {
+				if (editing_town) {
 					for (x = 0; x < 50; x++)
 						if ((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
 							town->special_locs[x].x = 100;
 							x = 500;
 						}
 				}
-				if (editing_town == false) {
+				if (!editing_town) {
 					for (x = 0; x < 18; x++)
 						if ((current_terrain.special_locs[x].x == spot_hit.x) && (current_terrain.special_locs[x].y == spot_hit.y)) {
 							current_terrain.special_locs[x].x = 100;
@@ -873,7 +873,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_ERASE_CREATURE: //delete monst
 				for (x = 0; x < 60; x++) 
-					if (monst_on_space(spot_hit,x) == true) {
+					if (monst_on_space(spot_hit,x)) {
 						town->creatures(x).number = 0;
 					}
 				set_cursor(wand_curs);
@@ -906,39 +906,39 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
 			cen_y--;
 			if(ctrl_hit)
-				cen_y = ((editing_town == true) ? 4 : 3);
+				cen_y = ((editing_town) ? 4 : 3);
 			need_redraw = true;
 			mouse_button_held = true;
 		}
 		if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
 			cen_x--;
 			if(ctrl_hit)
-				cen_x = ((editing_town == true) ? 4 : 3);
+				cen_x = ((editing_town) ? 4 : 3);
 			need_redraw = true;
 			mouse_button_held = true;
 		}
 		if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim() - 5 : 44))) {
 			cen_y++;
 			if(ctrl_hit)
-				cen_y = (editing_town == true) ? town->max_dim() - 5 : 44;
+				cen_y = (editing_town) ? town->max_dim() - 5 : 44;
 			need_redraw = true;
 			mouse_button_held = true;
 		}
 		if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim() - 5 : 44))) {
 			cen_x++;
 			if(ctrl_hit)
-				cen_x = (editing_town == true) ? town->max_dim() - 5 : 44;
+				cen_x = (editing_town) ? town->max_dim() - 5 : 44;
 			need_redraw = true;
 			mouse_button_held = true;
 		}
-		if (need_redraw == true) {
+		if (need_redraw) {
 			draw_terrain();
 			place_just_location();
 			need_redraw = false;
 		}
 	}
 	
-	if ((mouse_button_held == false) && ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES))) {
+	if (!mouse_button_held && ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES))) {
 		cur_point = the_point;
 		cur_point.x -= RIGHT_AREA_UL_X;
 		cur_point.y -= RIGHT_AREA_UL_Y;
@@ -962,8 +962,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		cur_point2.y -= terrain_rects[255].bottom + 5;
 		for (i = 0; i < 10; i++)
 			for (j = 0; j < 6; j++) {
-				if ((good_palette_buttons[editing_town][j][i] > 0) && (mouse_button_held == false) && (cur_point2.in(palette_buttons[i][j]))
-					&& /*((j < 3) || (editing_town == true)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
+				if ((good_palette_buttons[editing_town][j][i] > 0) && !mouse_button_held && (cur_point2.in(palette_buttons[i][j]))
+					&& /*((j < 3) || (editing_town)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
 					temp_rect = palette_buttons[i][j];
 					temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
 					flash_rect(temp_rect);
@@ -1038,7 +1038,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							mouse_button_held = false;
 							break;
 						case 107:
-							if (editing_town == true) {
+							if (editing_town) {
 								set_string("Can only set town entrances outdoors","");
 								break;
 							}
@@ -1047,7 +1047,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							overall_mode = MODE_EDIT_TOWN_ENTRANCE;
 							break;
 						case 200:
-							if (editing_town == false) {
+							if (!editing_town) {
 								set_string("Edit placed item","Not while outdoors.");
 								break;
 							}
@@ -1056,7 +1056,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							overall_mode = MODE_EDIT_ITEM;
 							break;
 						case 201:
-							if (editing_town == false) {
+							if (!editing_town) {
 								set_string("Edit placed item","Not while outdoors.");
 								break;
 							}
@@ -1065,7 +1065,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							overall_mode = MODE_PLACE_SAME_ITEM;
 							break;
 						case 202:
-							if (editing_town == false) {
+							if (!editing_town) {
 								//set_string("Edit placed item","Not while outdoors.");
 								set_string("Toggle special spot","Select location");
 								overall_mode = MODE_TOGGLE_SPECIAL_DOT;
@@ -1231,7 +1231,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 			}
 	}
-	if (need_redraw == true) {
+	if (need_redraw) {
 		draw_main_screen();
 		draw_terrain();
 		//draw_frames();
@@ -1267,12 +1267,12 @@ void swap_terrain() {
 	change_ter(&a,&b,&c);
 	if (a < 0) return;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) 
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) 
 		{
-			ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 			if ((ter == a) && (get_ran(1,1,100) <= c)) {
-				if (editing_town == true)
+				if (editing_town)
 					town->terrain(i,j) = b;
 				else current_terrain.terrain[i][j] = b;
 			}
@@ -1476,12 +1476,12 @@ bool is_wall(short i,short j) {
 	bool answer = false;
 	short pic;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return true;
 	if ((ter < 22) && (ter > 4))
 		return true;
@@ -1506,10 +1506,10 @@ bool is_correctable_wall(short i,short j) {
 	bool answer = false;
 	short k;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return false;
 	for (k = 0; k < 13 ; k++)
 		if (ter == walls[k]) 
@@ -1523,11 +1523,11 @@ bool is_mountain(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return true;
 	if ((ter >= 22) && (ter <= 35))
 		answer = true;
@@ -1545,11 +1545,11 @@ bool is_hill(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return true;
 	if ((ter >= 36) && (ter <= 49))
 		answer = true;
@@ -1575,11 +1575,11 @@ bool is_erasable_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return false;
 	if ((ter >= 50) &&
 		(ter <= 62))
@@ -1592,11 +1592,11 @@ bool is_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return true;
 	if ((pic >= 46) &&
 		(pic <= 66))
@@ -1609,11 +1609,11 @@ bool is_correctable_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return false;
 	if ((ter >= 50) &&
 		(ter <= 62))
@@ -1628,11 +1628,11 @@ void shy_change_circle_terrain(location center,short radius,ter_num_t terrain_ty
 	short i,j;
 	ter_num_t ter;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			l.x = i;
 			l.y = j;
-			ter = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 			if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability) 
 				&& (ter < 5))
 				set_terrain(l,terrain_type);
@@ -1644,8 +1644,8 @@ void change_circle_terrain(location center,short radius,ter_num_t terrain_type,s
 	location l;
 	short i,j;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
@@ -1658,13 +1658,13 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 	location l;
 	short i,j;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
-				&& ((hollow == false) || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
-				&& ((hollow == true) || (get_ran(1,1,20) <= probability)))
+				&& (!hollow || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
+				&& ((hollow) || (get_ran(1,1,20) <= probability)))
 				set_terrain(l,terrain_type);
 		}
 }
@@ -1694,9 +1694,9 @@ void frill_up_terrain() {
 	short i,j;
 	ter_num_t terrain_type;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
-			terrain_type = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+			terrain_type = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 			
 			if ((terrain_type == 2) && (get_ran(1,1,20) < 3))
 				terrain_type = 3;
@@ -1706,7 +1706,7 @@ void frill_up_terrain() {
 				terrain_type = 1;
 			if ((terrain_type == 36) && (get_ran(1,1,20) < 5))
 				terrain_type = 37;
-			if (editing_town == true)
+			if (editing_town)
 				town->terrain(i,j) = terrain_type;
 			else current_terrain.terrain[i][j] = terrain_type;
 		}
@@ -1717,9 +1717,9 @@ void unfrill_terrain() {
 	short i,j;
 	ter_num_t terrain_type;
 	
-	for (i = 0; i < ((editing_town == true) ? town->max_dim() : 48); i++)
-		for (j = 0; j < ((editing_town == true) ? town->max_dim() : 48); j++) {
-			terrain_type = (editing_town == true) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	for (i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
+		for (j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+			terrain_type = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
 			if (terrain_type == 3)
 				terrain_type = 2;
 			if (terrain_type == 4) 
@@ -1728,7 +1728,7 @@ void unfrill_terrain() {
 				terrain_type = 0;
 			if (terrain_type == 37)
 				terrain_type = 36;
-			if (editing_town == true)
+			if (editing_town)
 				town->terrain(i,j) = terrain_type;
 			else current_terrain.terrain[i][j] = terrain_type;
 		}
@@ -1785,12 +1785,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	j = l.y;
 	//if ((l.x < 0) || (l.x > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1))
 	//	return;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return ;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
 	
-	if (editing_town == true)
+	if (editing_town)
 		town->terrain(i,j) = terrain_type;
 	else current_terrain.terrain[i][j] = terrain_type;
 	l2 = l;
@@ -1804,7 +1804,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
 		for(i = 0; i < obj_dim.x; i++)
 			for(j = 0; j < obj_dim.y; j++){
-				if (editing_town == true)
+				if (editing_town)
 					town->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
 				else current_terrain.terrain[l2.x + i][l2.y + j] = find_object_part(q,i,j,terrain_type);
 			}
@@ -1812,25 +1812,25 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				
 //	if (terrain_type == 85) {
 //		l2.x++;
-//		if (editing_town == true)
+//		if (editing_town)
 //			town->terrain(l2.x,l2.y) = 86;
 //		else current_terrain.terrain[l2.x][l2.y] = 86;
 //	}
 //	if (terrain_type == 86) {
 //		l2.x--;
-//		if (editing_town == true)
+//		if (editing_town)
 //			town->terrain(l2.x,l2.y) = 85;
 //		else current_terrain.terrain[l2.x][l2.y] = 85;
 //	}
 //	if (terrain_type == 88) {
 //		l2.x++;
-//		if (editing_town == true)
+//		if (editing_town)
 //			town->terrain(l2.x,l2.y) = 89;
 //		else current_terrain.terrain[l2.x][l2.y] = 89;
 //	}
 //	if (terrain_type == 89) {
 //		l2.x--;
-//		if (editing_town == true)
+//		if (editing_town)
 //			town->terrain(l2.x,l2.y) = 88;
 //		else current_terrain.terrain[l2.x][l2.y] = 88;
 //	}
@@ -1839,15 +1839,15 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	if (is_mountain(l.x,l.y))
 		for (i = l.x - 1; i < l.x + 2; i++)
 			for (j = l.y - 1; j < l.y + 2; j++) {
-				if ((i < 0) || (i > ((editing_town == true) ? town->max_dim() - 1 : 47)) 
-					|| (j < 0) || (j > ((editing_town == true) ? town->max_dim() - 1 : 47)))
+				if ((i < 0) || (i > ((editing_town) ? town->max_dim() - 1 : 47)) 
+					|| (j < 0) || (j > ((editing_town) ? town->max_dim() - 1 : 47)))
 					;
 				else {
 					l2.x = i;
 					l2.y = j;
-					ter = (editing_town == true) ? town->terrain(l2.x,l2.y) : current_terrain.terrain[l2.x][l2.y];
+					ter = (editing_town) ? town->terrain(l2.x,l2.y) : current_terrain.terrain[l2.x][l2.y];
 					if ((!is_mountain(l2.x,l2.y)) && (ter < 5)) {
-						if (editing_town == true)
+						if (editing_town)
 							town->terrain(l2.x,l2.y) = 36;
 						else current_terrain.terrain[l2.x][l2.y] = 36;
 					}
@@ -1892,7 +1892,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		else {
 			town->terrain(l.x,l.y) = current_ground;
-			if (sign_error_received == false) {
+			if (!sign_error_received) {
 				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
 				sign_error_received = true;
 			}
@@ -1927,7 +1927,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		else {
 			current_terrain.terrain[l.x][l.y] = current_ground;
-			if (sign_error_received == false) {
+			if (!sign_error_received) {
 				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
 				sign_error_received = true;
 			}
@@ -1972,7 +1972,7 @@ bool fix_cave(location l) {
 	j = l.y;
 	store_ter = town->terrain(l.x,l.y);
 	
-	if (is_correctable_wall(i,j) == true) {
+	if (is_correctable_wall(i,j)) {
 		/*	if (((l.x == 0) || (l.x == town->max_dim() - 1)) && ((l.y == 0) || (l.y == town->max_dim() - 1))) 
 		 ter_to_fix = 2;
 		 else if ((l.x == 0) || (l.x == town->max_dim() - 1)) {
@@ -1996,14 +1996,14 @@ bool fix_cave(location l) {
 		 }
 		 else { // not edge
 		 */
-		if (is_wall(i-1,j) == false) {
-			if (is_wall(i,j-1) == false)
+		if (!is_wall(i-1,j)) {
+			if (!is_wall(i,j-1))
 			{
 				ter_to_fix = 11;
 			}
 			else
 			{
-				if (is_wall(i,j+1) == false)
+				if (!is_wall(i,j+1))
 					ter_to_fix = 14;
 				else ter_to_fix = 12;
 			}
@@ -2012,31 +2012,31 @@ bool fix_cave(location l) {
 			
 		}					
 		
-		else { // wall(i-1,j) == true
-			if (is_wall(i+1,j) == false)
+		else { // wall(i-1,j)
+			if (!is_wall(i+1,j))
 			{
-				if (is_wall(i, j-1) == false)
+				if (!is_wall(i, j-1))
 					ter_to_fix = 8;
-				else if (is_wall(i,j+1) == false)
+				else if (!is_wall(i,j+1))
 					ter_to_fix = 5;
 				else ter_to_fix = 6;
 				
 			}
 			
-			else //wall(i+1,j) == true
+			else //wall(i+1,j)
 				
 			{
-				if (is_wall(i, j-1) == false)
+				if (!is_wall(i, j-1))
 					ter_to_fix = 9;
-				else if (is_wall(i,j+1) == false)
+				else if (!is_wall(i,j+1))
 					ter_to_fix = 3;
-				else if (is_wall(i-1,j-1) == false)
+				else if (!is_wall(i-1,j-1))
 					ter_to_fix = 16;
-				else if(is_wall(i-1,j+1) == false)
+				else if(!is_wall(i-1,j+1))
 					ter_to_fix = 15;
-				else if (is_wall(i+1,j-1) == false)
+				else if (!is_wall(i+1,j-1))
 					ter_to_fix = 17;
-				else if (is_wall(i+1,j+1) == false)
+				else if (!is_wall(i+1,j+1))
 					ter_to_fix = 18;
 				else ter_to_fix = 2;
 				
@@ -2093,14 +2093,14 @@ bool fix_mountain(location l) {
 		}
 		else { // not edge
 			
-			if (is_mountain(i-1,j) == false) {
-				if (is_mountain(i,j-1) == false)
+			if (!is_mountain(i-1,j)) {
+				if (!is_mountain(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_mountain(i,j+1) == false)
+					if (!is_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2109,31 +2109,31 @@ bool fix_mountain(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_mountain(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_mountain(i+1,j))
 				{
-					if (is_mountain(i, j-1) == false)
+					if (!is_mountain(i, j-1))
 						ter_to_fix = 27;
-					else if (is_mountain(i,j+1) == false)
+					else if (!is_mountain(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_mountain(i, j-1) == false)
+					if (!is_mountain(i, j-1))
 						ter_to_fix = 28;
-					else if (is_mountain(i,j+1) == false)
+					else if (!is_mountain(i,j+1))
 						ter_to_fix = 24;
-					else if (is_mountain(i-1,j-1) == false)
+					else if (!is_mountain(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_mountain(i-1,j+1) == false)
+					else if(!is_mountain(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_mountain(i+1,j-1) == false)
+					else if (!is_mountain(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_mountain(i+1,j+1) == false)
+					else if (!is_mountain(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2188,14 +2188,14 @@ bool fix_hill(location l) {
 		}
 		else { // not edge
 			
-			if (is_hill_or_mountain(i-1,j) == false) {
-				if (is_hill_or_mountain(i,j-1) == false)
+			if (!is_hill_or_mountain(i-1,j)) {
+				if (!is_hill_or_mountain(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_hill_or_mountain(i,j+1) == false)
+					if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2204,31 +2204,31 @@ bool fix_hill(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_hill_or_mountain(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_hill_or_mountain(i+1,j))
 				{
-					if (is_hill_or_mountain(i, j-1) == false)
+					if (!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 27;
-					else if (is_hill_or_mountain(i,j+1) == false)
+					else if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_hill_or_mountain(i, j-1) == false)
+					if (!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 28;
-					else if (is_hill_or_mountain(i,j+1) == false)
+					else if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 24;
-					else if (is_hill_or_mountain(i-1,j-1) == false)
+					else if (!is_hill_or_mountain(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_hill_or_mountain(i-1,j+1) == false)
+					else if(!is_hill_or_mountain(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_hill_or_mountain(i+1,j-1) == false)
+					else if (!is_hill_or_mountain(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_hill_or_mountain(i+1,j+1) == false)
+					else if (!is_hill_or_mountain(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2286,14 +2286,14 @@ bool fix_water(location l) {
 		}
 		else { // not edge
 			
-			if (is_water(i-1,j) == false) {
-				if (is_water(i,j-1) == false)
+			if (!is_water(i-1,j)) {
+				if (!is_water(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_water(i,j+1) == false)
+					if (!is_water(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2302,31 +2302,31 @@ bool fix_water(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_water(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_water(i+1,j))
 				{
-					if (is_water(i, j-1) == false)
+					if (!is_water(i, j-1))
 						ter_to_fix = 27;
-					else if (is_water(i,j+1) == false)
+					else if (!is_water(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_water(i, j-1) == false)
+					if (!is_water(i, j-1))
 						ter_to_fix = 28;
-					else if (is_water(i,j+1) == false)
+					else if (!is_water(i,j+1))
 						ter_to_fix = 24;
-					else if (is_water(i-1,j-1) == false)
+					else if (!is_water(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_water(i-1,j+1) == false)
+					else if(!is_water(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_water(i+1,j-1) == false)
+					else if (!is_water(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_water(i+1,j+1) == false)
+					else if (!is_water(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2385,7 +2385,7 @@ bool out_fix_cave(location l) {
 	j = l.y;
 	store_ter = current_terrain.terrain[l.x][l.y];
 	
-	if (is_correctable_wall(i,j) == true) {
+	if (is_correctable_wall(i,j)) {
 		if (((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47))) 
 			ter_to_fix = 2;
 		else if ((l.x == 0) || (l.x == 47)) {
@@ -2409,14 +2409,14 @@ bool out_fix_cave(location l) {
 		}
 		else { // not edge
 			
-			if (is_wall(i-1,j) == false) {
-				if (is_wall(i,j-1) == false)
+			if (!is_wall(i-1,j)) {
+				if (!is_wall(i,j-1))
 				{
 					ter_to_fix = 11;
 				}
 				else
 				{
-					if (is_wall(i,j+1) == false)
+					if (!is_wall(i,j+1))
 						ter_to_fix = 14;
 					else ter_to_fix = 12;
 				}
@@ -2425,31 +2425,31 @@ bool out_fix_cave(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_wall(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_wall(i+1,j))
 				{
-					if (is_wall(i, j-1) == false)
+					if (!is_wall(i, j-1))
 						ter_to_fix = 8;
-					else if (is_wall(i,j+1) == false)
+					else if (!is_wall(i,j+1))
 						ter_to_fix = 5;
 					else ter_to_fix = 6;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_wall(i, j-1) == false)
+					if (!is_wall(i, j-1))
 						ter_to_fix = 9;
-					else if (is_wall(i,j+1) == false)
+					else if (!is_wall(i,j+1))
 						ter_to_fix = 3;
-					else if (is_wall(i-1,j-1) == false)
+					else if (!is_wall(i-1,j-1))
 						ter_to_fix = 16;
-					else if(is_wall(i-1,j+1) == false)
+					else if(!is_wall(i-1,j+1))
 						ter_to_fix = 15;
-					else if (is_wall(i+1,j-1) == false)
+					else if (!is_wall(i+1,j-1))
 						ter_to_fix = 17;
-					else if (is_wall(i+1,j+1) == false)
+					else if (!is_wall(i+1,j+1))
 						ter_to_fix = 18;
 					else ter_to_fix = 2;
 					
@@ -2506,14 +2506,14 @@ bool out_fix_mountain(location l) {
 		}
 		else { // not edge
 			
-			if (is_mountain(i-1,j) == false) {
-				if (is_mountain(i,j-1) == false)
+			if (!is_mountain(i-1,j)) {
+				if (!is_mountain(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_mountain(i,j+1) == false)
+					if (!is_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2522,31 +2522,31 @@ bool out_fix_mountain(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_mountain(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_mountain(i+1,j))
 				{
-					if (is_mountain(i, j-1) == false)
+					if (!is_mountain(i, j-1))
 						ter_to_fix = 27;
-					else if (is_mountain(i,j+1) == false)
+					else if (!is_mountain(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_mountain(i, j-1) == false)
+					if (!is_mountain(i, j-1))
 						ter_to_fix = 28;
-					else if (is_mountain(i,j+1) == false)
+					else if (!is_mountain(i,j+1))
 						ter_to_fix = 24;
-					else if (is_mountain(i-1,j-1) == false)
+					else if (!is_mountain(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_mountain(i-1,j+1) == false)
+					else if(!is_mountain(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_mountain(i+1,j-1) == false)
+					else if (!is_mountain(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_mountain(i+1,j+1) == false)
+					else if (!is_mountain(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2601,14 +2601,14 @@ bool out_fix_hill(location l) {
 		}
 		else { // not edge
 			
-			if (is_hill_or_mountain(i-1,j) == false) {
-				if (is_hill_or_mountain(i,j-1) == false)
+			if (!is_hill_or_mountain(i-1,j)) {
+				if (!is_hill_or_mountain(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_hill_or_mountain(i,j+1) == false)
+					if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2617,31 +2617,31 @@ bool out_fix_hill(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_hill_or_mountain(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_hill_or_mountain(i+1,j))
 				{
-					if (is_hill_or_mountain(i, j-1) == false)
+					if (!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 27;
-					else if (is_hill_or_mountain(i,j+1) == false)
+					else if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_hill_or_mountain(i, j-1) == false)
+					if (!is_hill_or_mountain(i, j-1))
 						ter_to_fix = 28;
-					else if (is_hill_or_mountain(i,j+1) == false)
+					else if (!is_hill_or_mountain(i,j+1))
 						ter_to_fix = 24;
-					else if (is_hill_or_mountain(i-1,j-1) == false)
+					else if (!is_hill_or_mountain(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_hill_or_mountain(i-1,j+1) == false)
+					else if(!is_hill_or_mountain(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_hill_or_mountain(i+1,j-1) == false)
+					else if (!is_hill_or_mountain(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_hill_or_mountain(i+1,j+1) == false)
+					else if (!is_hill_or_mountain(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2699,14 +2699,14 @@ bool out_fix_water(location l) {
 		}
 		else { // not edge
 			
-			if (is_water(i-1,j) == false) {
-				if (is_water(i,j-1) == false)
+			if (!is_water(i-1,j)) {
+				if (!is_water(i,j-1))
 				{
 					ter_to_fix = 29;
 				}
 				else
 				{
-					if (is_water(i,j+1) == false)
+					if (!is_water(i,j+1))
 						ter_to_fix = 31;
 					else ter_to_fix = 30;
 				}
@@ -2715,31 +2715,31 @@ bool out_fix_water(location l) {
 				
 			}					
 			
-			else { // wall(i-1,j) == true
-				if (is_water(i+1,j) == false)
+			else { // wall(i-1,j)
+				if (!is_water(i+1,j))
 				{
-					if (is_water(i, j-1) == false)
+					if (!is_water(i, j-1))
 						ter_to_fix = 27;
-					else if (is_water(i,j+1) == false)
+					else if (!is_water(i,j+1))
 						ter_to_fix = 25;
 					else ter_to_fix = 26;
 					
 				}
 				
-				else //wall(i+1,j) == true
+				else //wall(i+1,j)
 					
 				{
-					if (is_water(i, j-1) == false)
+					if (!is_water(i, j-1))
 						ter_to_fix = 28;
-					else if (is_water(i,j+1) == false)
+					else if (!is_water(i,j+1))
 						ter_to_fix = 24;
-					else if (is_water(i-1,j-1) == false)
+					else if (!is_water(i-1,j-1))
 						ter_to_fix = 33;
-					else if(is_water(i-1,j+1) == false)
+					else if(!is_water(i-1,j+1))
 						ter_to_fix = 32;
-					else if (is_water(i+1,j-1) == false)
+					else if (!is_water(i+1,j-1))
 						ter_to_fix = 34;
-					else if (is_water(i+1,j+1) == false)
+					else if (!is_water(i+1,j+1))
 						ter_to_fix = 35;
 					else ter_to_fix = 22;
 					
@@ -2769,37 +2769,37 @@ void adjust_space(location l) {
 	
 	i = l.x;
 	j = l.y;
-	if ((editing_town == true) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if ((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return ;
-	if ((editing_town == false) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
+	if (!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
 	
-	if (editing_town == true) {
-		if (fix_rubble(l) == true)
+	if (editing_town) {
+		if (fix_rubble(l))
 			needed_change = true;
-		if (fix_cave(l) == true)
+		if (fix_cave(l))
 			needed_change = true;
-		if (fix_mountain(l) == true)
+		if (fix_mountain(l))
 			needed_change = true;
-		if (fix_hill(l) == true)
+		if (fix_hill(l))
 			needed_change = true;
-		if (fix_water(l) == true)
+		if (fix_water(l))
 			needed_change = true;
 	}
-	if (editing_town == false) {
-		if (out_fix_rubble(l) == true)
+	if (!editing_town) {
+		if (out_fix_rubble(l))
 			needed_change = true;
-		if (out_fix_cave(l) == true)
+		if (out_fix_cave(l))
 			needed_change = true;
-		if (out_fix_mountain(l) == true)
+		if (out_fix_mountain(l))
 			needed_change = true;
-		if (out_fix_hill(l) == true)
+		if (out_fix_hill(l))
 			needed_change = true;
-		if (out_fix_water(l) == true)
+		if (out_fix_water(l))
 			needed_change = true;
 	}
 	
-	if (needed_change == true) {
+	if (needed_change) {
 		l2 = l;
 		l2.x--;
 		adjust_space(l2);
@@ -2863,7 +2863,7 @@ void place_items_in_town() {
 							place_failed = true;
 				}
 		}
-	if (place_failed == true)
+	if (place_failed)
 		giveError("Not all of the random items could be placed. The preset item per town limit of 64 was reached.");
 	draw_terrain();
 }
@@ -2871,7 +2871,7 @@ void place_items_in_town() {
 void place_edit_special(location loc) {
 	short i,spec;
 	
-	if (editing_town == true) {
+	if (editing_town) {
 		for (i = 0; i < 50; i++)
 			if ((town->special_locs[i].x == loc.x) && (town->special_locs[i].y == loc.y)) {
 				edit_spec_enc(town->spec_id[i],2);
@@ -2900,7 +2900,7 @@ void place_edit_special(location loc) {
 		}
 	}
 	
-	if (editing_town == false) {
+	if (!editing_town) {
 		if ((loc.x == 0) || (loc.x == 47) || (loc.y == 0) || (loc.y == 47)) {
 			cChoiceDlog("not-at-edge.xml").show();
 			return;
@@ -2938,7 +2938,7 @@ void place_edit_special(location loc) {
 void set_special(location spot_hit) {
 	short x,y;
 	
-	if (editing_town == true) {
+	if (editing_town) {
 		for (x = 0; x < 50; x++)
 			if ((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
 				y = edit_special_num(2,town->spec_id[x]);
@@ -2959,7 +2959,7 @@ void set_special(location spot_hit) {
 				giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
 		}
 	}
-	if (editing_town == false) {
+	if (!editing_town) {
 		if ((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
 			cChoiceDlog("not-at-edge.xml").show();
 			return;
@@ -3177,7 +3177,7 @@ void start_monster_editing(short just_redo_text) {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_monsters[i].m_name.c_str());
 		set_rb(i - 1,2000 + i,(char *) str,0);
 	}
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0); 
@@ -3205,7 +3205,7 @@ void start_item_editing(short just_redo_text) {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_items[i].full_name.c_str());
 		set_rb(i,3000 + i,(char *) str,0);
 	}
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
@@ -3231,7 +3231,7 @@ void start_special_item_editing() {
 		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_strs(60 + i * 2));
 		set_rb(i,10000 + i,(char *) str,0);
 	}
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
@@ -3275,7 +3275,7 @@ void start_string_editing(short mode,short just_redo_text) {
 	}
 	
 	pos = right_sbar->getPosition();
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i + pos,0);
@@ -3322,7 +3322,7 @@ void start_special_editing(short mode,short just_redo_text) {
 				break;
 		}
 	}
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
@@ -3362,7 +3362,7 @@ void start_dialogue_editing(short restoring) {
 				town->talking.talk_nodes[i].personality,s);
 		set_rb(10 + i,12000 + i,(char *) str,0);
 	}
-	if (draw_full == true)
+	if (draw_full)
 		redraw_screen();
 	else for (i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
@@ -3372,7 +3372,7 @@ void start_dialogue_editing(short restoring) {
 bool save_check(std::string which_dlog) {
 	std::string choice;
 	
-	if (change_made == false)
+	if (!change_made)
 		return true;
 	change_made = false;
 	choice = cChoiceDlog(which_dlog, {"save","revert","cancel"}).show();
@@ -3394,7 +3394,7 @@ bool is_lava(short x,short y) {
 ter_num_t coord_to_ter(short x,short y) {
 	ter_num_t what_terrain;
 	
-	if (editing_town == true)
+	if (editing_town)
 		what_terrain = town->terrain(x,y);
 	else what_terrain = current_terrain.terrain[x][y];
 	
@@ -3402,7 +3402,7 @@ ter_num_t coord_to_ter(short x,short y) {
 }
 
 bool monst_on_space(location loc,short m_num) {
-	if (editing_town == false)
+	if (!editing_town)
 		return false;
 	if (town->creatures(m_num).number == 0)
 		return false;

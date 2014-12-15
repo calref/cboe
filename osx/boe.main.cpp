@@ -190,7 +190,7 @@ int main(int /*argc*/, char* argv[]) {
 		menu_activate();
 		
 		restore_cursor();
-		while (All_Done == false)
+		while (!All_Done)
 			Handle_One_Event();
 		
 		close_program();
@@ -268,7 +268,7 @@ void Handle_One_Event()
 	Handle_Update();
 	
 	//(cur_time - last_anim_time > 42)
-	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen == true) && (PSD[SDF_NO_TER_ANIM] == 0)
+	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && (PSD[SDF_NO_TER_ANIM] == 0)
 	   && (!gInBackground)) {
 		animTimer.restart();
 		draw_terrain();
@@ -360,7 +360,7 @@ void Handle_One_Event()
 #if 0
 			else {
 				for (i = 0; i < 18; i++)
-					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i] == true)) {
+					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i])) {
 						//CloseDialog(modeless_dialogs[i]);
 						HideWindow(GetDialogWindow(modeless_dialogs[i]));
 						modeless_exists[i] = false;
@@ -530,7 +530,7 @@ void handle_options_menu(int item_hit)
 			break;
 			
 		case 4:
-			if (prime_time() == false) {
+			if (!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 			}
@@ -655,7 +655,7 @@ void handle_actions_menu(int item_hit)
 			handle_keystroke(dummyEvent);
 			break;
 		case 3:
-			if (prime_time() == false) {
+			if (!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 			}
@@ -770,12 +770,12 @@ void move_sound(ter_num_t ter,short step){
 		on_swamp = true;
 	}else on_swamp = false;
 	
-	if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
+	if (!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
 		if(spec == eTerSpec::TOWN_ENTRANCE)
 			return;
 		play_sound(48); //play boat sound
 	}
-	else if ((monsters_going == false) && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
+	else if (!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
 	else switch(scenario.ter_types[ter].step_sound){

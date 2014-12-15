@@ -252,7 +252,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		can_enter = false;
 	}
 	
-	if (can_enter == false)
+	if (!can_enter)
 		return false;
 	
 	if ((!is_out()) && (overall_mode < MODE_TALKING)) {
@@ -1090,13 +1090,13 @@ void use_item(short pc,short item)
 				start_spell_targeting(eSpell::RAVAGE_SPIRIT, true);
 				break;
 			case eItemAbil::SUMMONING:
-				if (summon_monster(str,user_loc,50,2) == false)
+				if (!summon_monster(str,user_loc,50,2))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(6,1,4);
 				for (i = 0; i < get_ran(1,3,5); i++) // TODO: Why recalculate the random number for each loop iteration?
-					if (summon_monster(str,user_loc,r1,2) == false)
+					if (!summon_monster(str,user_loc,r1,2))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::ACID_SPRAY:
@@ -1179,9 +1179,9 @@ void use_item(short pc,short item)
 	}
 	
 	put_pc_screen();
-	if ((take_charge == true) && (univ.party[pc].items[item].charges > 0))
+	if ((take_charge) && (univ.party[pc].items[item].charges > 0))
 		remove_charge(pc,item);
-	if (take_charge == false) {
+	if (!take_charge) {
 		draw_terrain(0);
 		put_item_screen(stat_window,0);
 	}
@@ -1284,7 +1284,7 @@ bool adj_town_look(location where)
 	
 	terrain = univ.town->terrain(where.x,where.y);
 	if (univ.town.is_special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
-		if (adjacent(univ.town.p_loc,where) == false)
+		if (!adjacent(univ.town.p_loc,where))
 			add_string_to_buf("  Not close enough to search.");
 		else {
 			for (i = 0; i < 50; i++)
@@ -1537,7 +1537,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	if (dam_type == 0)
 		how_much -= r1;
 	
-	if (boom_anim_active == true) {
+	if (boom_anim_active) {
 		if (how_much < 0)
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
@@ -1560,7 +1560,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		return false;
 	}
 	
-	if (do_print == true)
+	if (do_print)
 		monst_damaged_mes(which_m,how_much,how_much_spec);
 	victim->health = victim->health - how_much - how_much_spec;
 	
@@ -1601,7 +1601,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	// TODO: This looks like the reason Windows split the boom_space function in two.
 	// It doesn't exactly make sense though, since in its version, boom_space is only called for how_much_spec.
 	if (dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
-		if (party_can_see_monst(which_m) == true) {
+		if (party_can_see_monst(which_m)) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
 			if (how_much_spec > 0)
 				boom_space(victim->cur_loc,100,51,how_much_spec,5);
@@ -1662,7 +1662,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	}
 	
 	// Special killing effects
-	if (sd_legit(which_m->spec1,which_m->spec2) == true)
+	if (sd_legit(which_m->spec1,which_m->spec2))
 		PSD[which_m->spec1][which_m->spec2] = 1;
 	
 	if (which_m->special_on_kill >= 0)
@@ -1733,7 +1733,7 @@ void push_things()////
 	
 	if (is_out()) // TODO: Make these work outdoors
 		return;
-	if (belt_present == false)
+	if (!belt_present)
 		return;
 	
 	for (i = 0; i < univ.town->max_monst(); i++)
@@ -1748,8 +1748,8 @@ void push_things()////
 			}
 			if (l != univ.town.monst[i].cur_loc) {
 				univ.town.monst[i].cur_loc = l;
-				if ((point_onscreen(center,univ.town.monst[i].cur_loc) == true) ||
-					(point_onscreen(center,l) == true))
+				if ((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
+					(point_onscreen(center,l)))
 					redraw = true;
 			}
 		}
@@ -1765,8 +1765,8 @@ void push_things()////
 			}
 			if (l != univ.town.items[i].item_loc) {
 				univ.town.items[i].item_loc = l;
-				if ((point_onscreen(center,univ.town.items[i].item_loc) == true) ||
-					(point_onscreen(center,l) == true))
+				if ((point_onscreen(center,univ.town.items[i].item_loc)) ||
+					(point_onscreen(center,l)))
 					redraw = true;
 			}
 		}
@@ -1847,7 +1847,7 @@ void push_things()////
 				}
 			}
 	}
-	if (redraw == true) {
+	if (redraw) {
 		print_buf();
 		draw_terrain(0);
 	}
@@ -1908,11 +1908,11 @@ void special_increase_age(long length, bool queue)
 		} else univ.party.party_event_timers[i].time -= length;
 	}
 	univ.party.age = current_age;
-	if (stat_area == true) {
+	if (stat_area) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 	}
-	if (redraw == true)
+	if (redraw)
 		draw_terrain(0);
 }
 
@@ -1975,7 +1975,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	next_spec_type = which_type;
 	current_pc_picked_in_spec_enc = -1;
 	store_special_loc = spec_loc;
-	if (end_scenario == true) {
+	if (end_scenario) {
 		special_in_progress = false;
 		return;
 	}
@@ -2184,7 +2184,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
 			for (i = 0; i < 144; i++)
-				if (party_check_class(spec.ex1a,0) == true)
+				if (party_check_class(spec.ex1a,0))
 					store_val++;
 			if (store_val == 0) {
 				if ( spec.ex1b >= 0)
@@ -2204,7 +2204,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case eSpecType::COPY_SDF:
-			if ((sd_legit(spec.sd1,spec.sd2) == false) || (sd_legit(spec.ex1a,spec.ex1b) == false))
+			if (!sd_legit(spec.sd1,spec.sd2) || !sd_legit(spec.ex1a,spec.ex1b))
 				giveError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
@@ -2319,7 +2319,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 	}
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -2340,7 +2340,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
  case :
  break;
  }
- if (check_mess == true) {
+ if (check_mess) {
  handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
  }
  }
@@ -2361,7 +2361,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	if ((sd_legit(spec.sd1,spec.sd2) == true) && (PSD[spec.sd1][spec.sd2] == 250)) {
+	if ((sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
 		*next_spec = -1;
 		return;
 	}
@@ -2510,7 +2510,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else i = cChoiceDlog("basic-trap.xml",{"yes","no"}).show() == "no";
 			if (i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
 			else {
-				if (is_combat() == true)
+				if (is_combat())
 					j = run_trap(current_pc,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
 				else j = run_trap(7,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
 				if (j == 0) {
@@ -2519,10 +2519,10 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 	}
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
-	if ((set_sd == true) && (sd_legit(spec.sd1,spec.sd2) == true))
+	if ((set_sd) && (sd_legit(spec.sd1,spec.sd2)))
 		PSD[spec.sd1][spec.sd2] = 250;
 	
 }
@@ -2936,7 +2936,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	switch (cur_node.type) {
 		case eSpecType::IF_SDF:
-			if (sd_legit(spec.sd1,spec.sd2) == true) {
+			if (sd_legit(spec.sd1,spec.sd2)) {
 				if ((spec.ex1a >= 0) && (PSD[spec.sd1][spec.sd2] >= spec.ex1a))
 					*next_spec = spec.ex1b;
 				else if ((spec.ex2a >= 0) && (PSD[spec.sd1][spec.sd2] < spec.ex2a))
@@ -2959,7 +2959,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_SDF_COMPARE:
-			if ((sd_legit(spec.sd1,spec.sd2) == true) && (sd_legit(spec.ex1a,spec.ex1b) == true)) {
+			if ((sd_legit(spec.sd1,spec.sd2)) && (sd_legit(spec.ex1a,spec.ex1b))) {
 				if (PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 			}
@@ -2993,7 +2993,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if (party_check_class(spec.ex1a,1) == true)
+			if (party_check_class(spec.ex1a,1))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
@@ -3001,7 +3001,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-							&& (univ.party[i].equip[j] == true))
+							&& (univ.party[i].equip[j]))
 							*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_HAS_GOLD_AND_TAKE:
@@ -3029,7 +3029,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE:
-			if (party_check_class(spec.ex1a,0) == true)
+			if (party_check_class(spec.ex1a,0))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE:
@@ -3037,7 +3037,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-							&& (univ.party[i].equip[j] == true)) {
+							&& (univ.party[i].equip[j])) {
 							*next_spec = spec.ex1b;
 							*redraw = 1;
 							take_item(i,j);
@@ -3074,7 +3074,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::IF_EVENT_OCCURRED:
-			if (day_reached(spec.ex1a,spec.ex1b) == true)
+			if (day_reached(spec.ex1a,spec.ex1b))
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_SPECIES:
@@ -3209,7 +3209,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(j == 3) *next_spec = spec.pictype;
 			break;
 		case eSpecType::IF_SDF_EQ:
-			if (sd_legit(spec.sd1,spec.sd2) == true) {
+			if (sd_legit(spec.sd1,spec.sd2)) {
 				if (PSD[spec.sd1][spec.sd2] == spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
@@ -3331,7 +3331,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(j >= 0) *a = j;
 			break;
 	}
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3734,7 +3734,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
 			break;
 }
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3880,7 +3880,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 		}
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3896,7 +3896,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (is_out() == false) return;
+	if (!is_out()) return;
 	
 	switch (cur_node.type) {
 		case eSpecType::OUT_MAKE_WANDER:
@@ -3948,14 +3948,14 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 	}
 	
-	if (check_mess == true) {
+	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
 
 void setsd(short a,short b,short val)
 {
-	if (sd_legit(a,b) == false) {
+	if (!sd_legit(a,b)) {
 		giveError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}

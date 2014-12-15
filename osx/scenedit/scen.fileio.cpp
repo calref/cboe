@@ -65,7 +65,7 @@ void save_scenario() {
 	//	legacy::ave_tr_type ave_t;
 	//	legacy::tiny_tr_type tiny_t;
 	//	
-	//	/*if (check_p(user_given_password) == false) {
+	//	/*if (!check_p(user_given_password)) {
 	//		fancy_choice_dialog(868,0);
 	//		return;
 	//		}
@@ -618,7 +618,7 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 	//		(temp_vers.flag3 == 30)  && (temp_vers.flag4 == 40)) {
 	//	  	file_ok = true;
 	//	}
-	//	if (file_ok == false) {
+	//	if (!file_ok) {
 	//		FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario.","",0); return;	 
 	//		DisposePtr(buffer); FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Macintosh scenario editor.","",0); return;	 
 	//	}
@@ -642,13 +642,13 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 	//
 	//	
 	////	// Now check password
-	////	if (import_check_p(0) == false) {
+	////	if (!import_check_p(0)) {
 	////		import_user_given_password = enter_password();
-	////		if (import_check_p(import_user_given_password) == false) {
+	////		if (!import_check_p(import_user_given_password)) {
 	////			fancy_choice_dialog(868,0);
 	////			if (overall_mode != 61) {
 	////				import_user_given_password = enter_password();
-	////				if (import_check_p(import_user_given_password) == false) 
+	////				if (!import_check_p(import_user_given_password)) 
 	////					ExitToShell();
 	////				}
 	////				else return;

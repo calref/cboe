@@ -494,7 +494,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 	monstInfo.attachClickHandlers(event_filter, {"immune1", "immune2", "immune3", "immune4"});
 	monstInfo.attachClickHandlers(event_filter, {"immune5", "immune6", "immune7", "immune8"});
 	
-	if (full_roster == false) {
+	if (!full_roster) {
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 	}
@@ -603,7 +603,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 	// Fight bonuses
 	for (i = 0; i < 24; i++)
 		if ((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
-			(univ.party[pc].equip[i] == true)) {
+			(univ.party[pc].equip[i])) {
 			if (weap1 == 24)
 				weap1 = i;
 			else weap2 = i;
@@ -995,7 +995,7 @@ static void give_help(short help1,short help2,cDialog* parent)
 		help_forced = true;
 		help1 -= 200;
 	}
-	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && (help_forced == false))
+	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && !help_forced)
 		return;
 	if (univ.party.help_received[help1] > 0)
 		return;

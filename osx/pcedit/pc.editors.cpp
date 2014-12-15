@@ -475,7 +475,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,std::map<
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	}
 	store_train_pc = pc_num;
-	if (talk_done == true) {
+	if (talk_done) {
 		me.toast(item_hit == "keep");
 	}
 	return true;

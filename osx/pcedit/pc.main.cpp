@@ -184,7 +184,7 @@ void Mouse_Pressed()
 	bool try_to_end;
 		
 	try_to_end = handle_action(event);
-					if (try_to_end == true)
+					if (try_to_end)
 						All_Done = verify_restore_quit(false);
 }
 
@@ -321,7 +321,7 @@ void handle_extra_menu(int item_hit)
 			break;
 			
 		case 13:
-			if (party_in_scen == false) {
+			if (!party_in_scen) {
 				display_strings(25,15);
 				break;
 			}
@@ -356,7 +356,7 @@ void handle_edit_menu(int item_hit)
 			edit_day();
 			break;
 		case 6: // ouit maps
-			if (party_in_scen == false) {
+			if (!party_in_scen) {
 				display_strings(25,15);
 				break;
 				}
@@ -367,7 +367,7 @@ void handle_edit_menu(int item_hit)
 						univ.out_maps[i][j][k] = 255;
 			break;
 		case 7: // town maps
-			if (party_in_scen == false) {
+			if (!party_in_scen) {
 				display_strings(25,15);
 				break;
 				}
@@ -437,11 +437,11 @@ void handle_edit_menu(int item_hit)
 //	i.reserved1 = 0;
 //	i.reserved2 = 0;
 //	i.item_properties = 0;
-//	if (s_item.identified == true)
+//	if (s_item.identified)
 //		i.item_properties = i.item_properties | 1;
 //	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
 //		i.item_properties = i.item_properties | 16;
-//	if (s_item.magic == true)
+//	if (s_item.magic)
 //		i.item_properties = i.item_properties | 4;
 //
 //	return i;
@@ -502,7 +502,7 @@ bool verify_restore_quit(bool mode)
 //			w = GetDialogWindow(hDlg);
 //			updateRgn = NewRgn();
 //			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-//			if (EmptyRgn(updateRgn) == true) {
+//			if (EmptyRgn(updateRgn)) {
 //				return true;
 //			}
 //			BeginUpdate(GetDialogWindow(hDlg));

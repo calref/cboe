@@ -415,7 +415,7 @@ void display_party()
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
-		if (party_in_scen == false)
+		if (!party_in_scen)
 			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",eTextMode::WRAP,style);
 		else
 			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",eTextMode::WRAP,style);
@@ -940,7 +940,7 @@ void display_party()
 //					on_what_line++;
 //					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 //					last_line_break = last_word_break;
-//					if (force_skip == true) {
+//					if (force_skip) {
 //						force_skip = false;
 //						i++;
 //						last_line_break++;

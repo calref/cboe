@@ -64,7 +64,7 @@ bool handle_action(sf::Event event)
 
 	the_point = {event.mouseButton.x, event.mouseButton.y};
 
-	if (file_in_mem == false) 
+	if (!file_in_mem) 
 		return false;
 		
 	for (i = 0; i < 6; i++)
@@ -191,7 +191,7 @@ void combine_things(short pc_num)
 						//						ASB("Can have at most 125 of any item.");
 					}
 					else univ.party[pc_num].items[i].charges += univ.party[pc_num].items[j].charges;
-				 	if (univ.party[pc_num].equip[j] == true) {
+				 	if (univ.party[pc_num].equip[j]) {
 				 		univ.party[pc_num].equip[i] = true;
 				 		univ.party[pc_num].equip[j] = false;
 					}
@@ -224,7 +224,7 @@ bool give_to_party(cItemRec item,short print_result)
 	short i = 0;
 	
 	while (i < 6) {
-		if (give_to_pc(i,item,print_result) == true)
+		if (give_to_pc(i,item,print_result))
 			return true;
 		i++;
 	}

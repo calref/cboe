@@ -158,7 +158,7 @@ void apply_unseen_mask()
 		for (j = 0; j < 11; j++)
 			if (unexplored_area[i + 1][j + 1] == 1)
 				need_bother = true;
-	if (need_bother == false)
+	if (!need_bother)
 		return;
 	
 	for (i = 0; i < 11; i++)
@@ -202,7 +202,7 @@ void apply_light_mask(bool onWindow)
 	for (i = 2; i < 11; i++)
 		for (j = 2; j < 11; j++)
 			if (light_area[i][j] == 0) is_dark = true;
-	if (is_dark == false) {
+	if (!is_dark) {
 		for (i = 2; i < 11; i++)
 			for (j = 2; j < 11; j++)
 				last_light_mask[i][j] = 0;
@@ -235,7 +235,7 @@ void apply_light_mask(bool onWindow)
 			if (last_light_mask[i][j] != light_area[i][j])
 				same_mask = false;
 	
-	if (same_mask == true) {
+	if (same_mask) {
 		return;
 	}
 	dark_mask_region.clear();
@@ -272,7 +272,7 @@ void start_missile_anim()
 {
 	short i;
 	
-	if (boom_anim_active == true)
+	if (boom_anim_active)
 		return;
 	boom_anim_active = true;
 	for (i = 0; i < 30; i++) {
@@ -296,7 +296,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 {
 	short i;
 	
-	if (boom_anim_active == false)
+	if (!boom_anim_active)
 		return;
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
@@ -318,7 +318,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 
 void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len)
 {
-//	if ((cartoon_happening == true) && (anim_step < 140))
+//	if ((cartoon_happening) && (anim_step < 140))
 //		return;
 	start_missile_anim();
 	add_missile(fire_to,miss_type,path, x_adj, y_adj);
@@ -329,7 +329,7 @@ void run_a_missile(location from,location fire_to,short miss_type,short path,sho
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
 {
 	
-//	if ((cartoon_happening == true) && (anim_step < 140))
+//	if ((cartoon_happening) && (anim_step < 140))
 //		return;
 	if ((type < 0) || (type > 2))
 		return;
@@ -357,7 +357,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	
 	if (PSD[SDF_NO_FRILLS] > 0)
 		return;
-	if (boom_anim_active == false)
+	if (!boom_anim_active)
 		return;
 	// lose redundant explosions
 	for (i = 0; i < 30; i++)
@@ -394,7 +394,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	location current_terrain_ul;
 	sf::RenderTexture temp_gworld;
 	
-	if ((have_missile == false) || (boom_anim_active == false)) {
+	if (!have_missile || !boom_anim_active) {
 		boom_anim_active = false;
 		return;
 	}
@@ -567,7 +567,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 	sf::RenderTexture temp_gworld;
 	short boom_type_sound[3] = {5,10,53};
 	
-	if ((have_boom == false) || (boom_anim_active == false)) {
+	if (!have_boom || !boom_anim_active) {
 		boom_anim_active = false;
 		return;
 	}
@@ -709,7 +709,7 @@ void click_shop_rect(RECT area_rect)
 	
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
-	if (play_sounds == true)
+	if (play_sounds)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
 	draw_shop_graphics(0,area_rect);
@@ -1049,15 +1049,15 @@ cItemRec store_alchemy(short which_s)
 
 void get_item_interesting_string(cItemRec item,char *message)
 {
-	if (item.property == true) {
+	if (item.property) {
 		strcpy(message,"Not yours.");
 		return;
 	}
-	if (item.ident == false) {
+	if (!item.ident) {
 		strcpy(message,"");
 		return;
 	}
-	if (item.cursed == true) {
+	if (item.cursed) {
 		strcpy(message,"Cursed item.");
 		return;
 	}

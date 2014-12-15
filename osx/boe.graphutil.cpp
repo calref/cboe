@@ -169,8 +169,8 @@ void draw_monsters() ////
 	
 	if (is_out())
 		for (i = 0; i < 10; i++)
-			if (univ.party.out_c[i].exists == true) {
-				if ((point_onscreen(univ.party.p_loc, univ.party.out_c[i].m_loc) == true) &&
+			if (univ.party.out_c[i].exists) {
+				if ((point_onscreen(univ.party.p_loc, univ.party.out_c[i].m_loc)) &&
 					(can_see_light(univ.party.p_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
 					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.p_loc.x + 4;
 					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.p_loc.y + 4;
@@ -334,9 +334,9 @@ void draw_pcs(location center,short mode)
 	RECT source_rect,active_pc_rect;
 	location where_draw;
 	
-	if (party_toast() == true)
+	if (party_toast())
 		return;
-	if (can_draw_pcs == false)
+	if (!can_draw_pcs)
 		return;
 	
 	for (i = 0; i < 6; i++)
@@ -355,7 +355,7 @@ void draw_pcs(location center,short mode)
 					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
 				}
 				
-				if ((current_pc == i) && (mode == 1) && (monsters_going == false)) {
+				if ((current_pc == i) && (mode == 1) && !monsters_going) {
 					active_pc_rect.top = 18 + where_draw.y * 36;
 					active_pc_rect.left = 18 + where_draw.x * 28;
 					active_pc_rect.bottom = 54 + where_draw.y * 36;
@@ -418,7 +418,7 @@ void draw_outd_boats(location center)
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((point_onscreen(center, univ.party.boats[i].loc) == true) && (univ.party.boats[i].exists == true) &&
+		if ((point_onscreen(center, univ.party.boats[i].loc)) && (univ.party.boats[i].exists) &&
 			(univ.party.boats[i].which_town == 200) &&
 			(can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)) {
 			where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
@@ -428,7 +428,7 @@ void draw_outd_boats(location center)
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
 	for (i = 0; i < 30; i++)
-		if ((point_onscreen(center, univ.party.horses[i].loc) == true) && (univ.party.horses[i].exists == true) &&
+		if ((point_onscreen(center, univ.party.horses[i].loc)) && (univ.party.horses[i].exists) &&
 			(univ.party.horses[i].which_town == 200) &&
 			(can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)) {
 			where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
@@ -449,9 +449,9 @@ void draw_town_boat(location center)
 	
 	for (i = 0; i < 30; i++)
 		if ((univ.party.boats[i].which_town == univ.town.num) &&
-			((point_onscreen(center, univ.party.boats[i].loc) == true) &&
+			((point_onscreen(center, univ.party.boats[i].loc)) &&
 			 (can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)
-			 && (pt_in_light(center,univ.party.boats[i].loc) == true))) {
+			 && (pt_in_light(center,univ.party.boats[i].loc)))) {
 				where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
 				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 				//source_rect = boat_rects[0];
@@ -460,9 +460,9 @@ void draw_town_boat(location center)
 			}
 	for (i = 0; i < 30; i++)
 		if ((univ.party.horses[i].which_town == univ.town.num) &&
-			((point_onscreen(center, univ.party.horses[i].loc) == true) &&
+			((point_onscreen(center, univ.party.horses[i].loc)) &&
 			 (can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)
-			 && (pt_in_light(center,univ.party.horses[i].loc) == true))) {
+			 && (pt_in_light(center,univ.party.horses[i].loc)))) {
 				where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
 				where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
 				//source_rect = boat_rects[0];
@@ -540,9 +540,9 @@ void draw_party_symbol(location center) {
 	location target(4,4);
 	short i = 0;
 	
-	if (can_draw_pcs == false)
+	if (!can_draw_pcs)
 		return;
-	if (party_toast() == true)
+	if (party_toast())
 		return;
 	if ((is_town()) && (univ.town.p_loc.x > 70))
 		return;
@@ -645,7 +645,7 @@ bool is_fluid(ter_num_t ter_type)////
 // Is this a beach that gets shore plopped down next to it?
 bool is_shore(ter_num_t ter_type)////
 {
-	if (is_fluid(ter_type) == true)
+	if (is_fluid(ter_type))
 		return false;
 	if(scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
 		return false;
@@ -710,45 +710,45 @@ char get_fluid_trim(location where,ter_num_t ter_type)
 	}
 	
 	// Set up trim for fluids
-	if (is_fluid(ter_type) == true) {
-		if (at_left == false) {
+	if (is_fluid(ter_type)) {
+		if (!at_left) {
 			store = coord_to_ter(where.x - 1,where.y);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 64;
 		}
-		if (at_right == false) {
+		if (!at_right) {
 			store = coord_to_ter(where.x + 1,where.y);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 4;
 		}
-		if (at_top == false) {
+		if (!at_top) {
 			store = coord_to_ter(where.x,where.y - 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 1;
 		}
-		if (at_bot == false) {
+		if (!at_bot) {
 			store = coord_to_ter(where.x,where.y + 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 16;
 		}
-		if ((at_left == false) && (at_top == false)) {
+		if ((!at_left) && (!at_top)) {
 			store = coord_to_ter(where.x - 1,where.y - 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 128;
 		}
-		if ((at_right == false) && (at_bot == false)) {
+		if ((!at_right) && (!at_bot)) {
 			store = coord_to_ter(where.x + 1,where.y + 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 8;
 		}
-		if ((at_right == false) && (at_top == false)) {
+		if ((!at_right) && (!at_top)) {
 			store = coord_to_ter(where.x + 1,where.y - 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 2;
 		}
-		if ((at_left == false) && (at_bot == false)) {
+		if ((!at_left) && (!at_bot)) {
 			store = coord_to_ter(where.x - 1,where.y + 1);
-			if (is_shore(store) == true)
+			if (is_shore(store))
 				to_return |= 32;
 		}
 	}

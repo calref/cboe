@@ -309,13 +309,13 @@ void init_party_scen_data()
 		univ.party.horses[i] = scenario.horses[i];
 	for (i = 0; i < 30; i++) {
 		if ((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
-			if (univ.party.boats[i].exists == false) {
+			if (!univ.party.boats[i].exists) {
 				univ.party.boats[i] = scenario.boats[i];
 				univ.party.boats[i].exists = true;
 			}
 		}
 		if ((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
-			if (univ.party.horses[i].exists == false) {
+			if (!univ.party.horses[i].exists) {
 				univ.party.horses[i] = scenario.horses[i];
 				univ.party.horses[i].exists = true;
 			}
@@ -373,7 +373,7 @@ void init_party_scen_data()
 		for (j = 0; j < NUM_TOWN_ITEMS; j++)
 			if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 				stored_item = true;
-	if (stored_item == true)
+	if (stored_item)
 		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
 			std::vector<cItemRec*> saved_item_refs;
 			for (i = 0; i < 3;i++)
@@ -435,7 +435,7 @@ void put_party_in_scen(std::string scen_name)
 				item_took = true;
 			}
 		}
-	if (item_took == true)
+	if (item_took)
 		cChoiceDlog("removed-special-items.xml").show();
 	univ.party.age = 0;
 	for (i = 0; i < 200; i++)
@@ -525,7 +525,7 @@ bool create_pc(short spot,cDialog* parent)
 //		cd_initial_draw(989);
 	
 	still_ok = spend_xp(spot,0,parent);
-	if (still_ok == false)
+	if (!still_ok)
 		return false;
 	univ.party[spot].cur_health = univ.party[spot].max_health;
 	univ.party[spot].cur_sp = univ.party[spot].max_sp;
@@ -977,7 +977,7 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 		91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	
 	for (i = 0; i < 24; i++)
-		if ((univ.party[pc_num].equip[i] == true) && (is_weapon(pc_num,i) == true)) {
+		if ((univ.party[pc_num].equip[i]) && (is_weapon(pc_num,i))) {
 			weap = i;
 			i = 30;
 		}
@@ -1032,10 +1032,10 @@ void cast_spell(eSkill type)
 		return;
 	}
 	
-	if (spell_forced == false)
+	if (!spell_forced)
 		spell = pick_spell(6, type);
 	else {
-		if (repeat_cast_ok(type) == false)
+		if (!repeat_cast_ok(type))
 			return;
 		spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	}
@@ -1103,21 +1103,27 @@ void give_party_spell(short which) ////
 	
 	if (which < 100)
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].mage_spells[which] == false) {
+			if (!univ.party[i].mage_spells[which]) {
 				univ.party[i].mage_spells[which] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
-				if (sound_done == false) {sound_done = true; play_sound(62);};
+				if (!sound_done) {
+					sound_done = true;
+					play_sound(62);
+				};
 			}
 	if (which >= 100)
 		for (i = 0; i < 6; i++)
-			if (univ.party[i].priest_spells[which - 100] == false) {
+			if (!univ.party[i].priest_spells[which - 100]) {
 				univ.party[i].priest_spells[which - 100] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
-				if (sound_done == false) {sound_done = true; play_sound(62);};
+				if (!sound_done) {
+					sound_done = true;
+					play_sound(62);
+				}
 			}
 }
 
@@ -1161,7 +1167,7 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			if (r1 < 0) break;
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(3,1,4) + adj;
-			if (summon_monster(r1,where,store,2) == false)
+			if (!summon_monster(r1,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
@@ -1172,7 +1178,7 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(4,1,4) + adj;
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == false)
+				if (!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
@@ -1183,7 +1189,7 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(5,1,4) + adj;
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == false)
+				if (!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
@@ -1194,12 +1200,12 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(7,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			for (i = 0; i < j; i++)
-				if (summon_monster(r1,where,store,2) == false)
+				if (!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::DEMON:
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (summon_monster(85,where,store,2) == false)
+			if (!summon_monster(85,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1350,7 +1356,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 			
 		case eSpell::SUMMON_SPIRIT:
 			store = stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (summon_monster(125,where,get_ran(2,1,4) + store,2) == false)
+			if (!summon_monster(125,where,get_ran(2,1,4) + store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1360,24 +1366,24 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 			for (i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-				if (summon_monster((r2 == 1) ? 100 : 99,where,store,2 ) == false)
+				if (!summon_monster((r2 == 1) ? 100 : 99,where,store,2 ))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_HOST:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (summon_monster(126,where,store,2) == false)
+			if (!summon_monster(126,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			for (i = 0; i < 4; i++)	{
 				store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-				if (summon_monster(125,where,store,2) == false)
+				if (!summon_monster(125,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_GUARDIAN:
 			store = get_ran(6,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (summon_monster(122,where,store,2) == false)
+			if (!summon_monster(122,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1849,7 +1855,7 @@ void crumble_wall(location where) // TODO: Add something like this to the spread
 {
 	ter_num_t ter;
 	
-	if (loc_off_act_area(where) == true)
+	if (loc_off_act_area(where))
 		return;
 	ter = univ.town->terrain(where.x,where.y);
 	if(scenario.ter_types[ter].special == eTerSpec::CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
@@ -2341,7 +2347,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 }
 
 static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_store_target, const short& store_spell, const eSkill store_situation) {
-	if (spell_toast == true) {
+	if (spell_toast) {
 		store_spell_target = store_store_target ;
 		if (store_situation == eSkill::MAGE_SPELLS)
 			store_last_cast_mage = pc_casting;
@@ -2426,7 +2432,7 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 		pc_casting = pc_num;
 	}
 	
-	if (can_choose_caster == false) {
+	if (!can_choose_caster) {
 		if(univ.party[pc_num].skills[type] == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
@@ -2643,7 +2649,7 @@ void do_alchemy() ////
 				store_i.charges++;
 			if (store_i.variety == eItemType::POTION)
 				store_i.graphic_num += get_ran(1,0,2);
-			if (give_to_pc(pc_num,store_i,0) == false) {
+			if (!give_to_pc(pc_num,store_i,0)) {
 				ASB("No room in inventory.");
 				ASB("  Potion placed on floor.");
 				place_item(store_i,univ.town.p_loc,true);
@@ -2927,7 +2933,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
 		how_much -= minmax(-5,5,univ.party[which_pc].status[eStatus::BLESS_CURSE]);
 		for (i = 0; i < 24; i++)
-			if ((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i] == true)) {
+			if ((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
 				if(isArmourType(univ.party[which_pc].items[i].variety)) {
 					r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
 					how_much -= r1;
@@ -3013,7 +3019,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		&& ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
-	if (boom_anim_active == true) {
+	if (boom_anim_active) {
 		if (how_much < 0)
 			how_much = 0;
 		univ.party[which_pc].marked_damage += how_much;
@@ -3021,7 +3027,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		//sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name, how_much);
-		//if (do_print == true)
+		//if (do_print)
 		//	add_string_to_buf((char *) c_line);
 		if (how_much == 0)
 			return false;
@@ -3040,7 +3046,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			univ.party[which_pc].status[eStatus::ASLEEP]--;
 		
 		sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name.c_str(), how_much);
-		if (do_print == true)
+		if (do_print)
 			add_string_to_buf((char *) c_line);
 		if (damage_type != 10) {
 			if (is_combat())

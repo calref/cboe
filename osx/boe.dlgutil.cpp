@@ -254,9 +254,9 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 5:
 			base_item = store_alchemy(what_chosen - 500);
-			if (univ.party.alchemy[base_item.item_level] == true)
+			if (univ.party.alchemy[base_item.item_level])
 				ASB("You already know that recipe.");
-			else if (take_gold(cost,false) == false)
+			else if (!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -266,7 +266,7 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 6:
 			//base_item = food_types[what_chosen - 600];
-			//if (take_gold(cost,false) == false)
+			//if (!take_gold(cost,false))
 			//	ASB("Not enough gold.");
 			//else {
 			//	play_sound(-38); ASB("You buy food.");
@@ -275,7 +275,7 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 7:
 			what_chosen -= 700;
-			if (take_gold(cost,false) == false)
+			if (!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				ASB("You pay the healer.");
@@ -295,7 +295,7 @@ void handle_sale(short what_chosen,short cost)
 						break;
 					case 4:
 						for (i = 0; i < 24; i++)
-							if ((univ.party[current_pc].equip[i] == true) &&
+							if ((univ.party[current_pc].equip[i]) &&
 								(univ.party[current_pc].items[i].cursed))
 								univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
 						break;
@@ -315,9 +315,9 @@ void handle_sale(short what_chosen,short cost)
 				giveError("Error: The scenario tried to sell you an invalid mage spell!");
 				break;
 			}
-			if (univ.party[current_pc].mage_spells[base_item.item_level] == true)
+			if (univ.party[current_pc].mage_spells[base_item.item_level])
 				ASB("You already have this spell.");
-			else if (take_gold(cost,false) == false)
+			else if (!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -333,9 +333,9 @@ void handle_sale(short what_chosen,short cost)
 				giveError("Error: The scenario tried to sell you an invalid priest spell!");
 				break;
 			}
-			if (univ.party[current_pc].priest_spells[base_item.item_level] == true)
+			if (univ.party[current_pc].priest_spells[base_item.item_level])
 				ASB("You already have this spell.");
-			else if (take_gold(cost,false) == false)
+			else if (!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -748,7 +748,7 @@ void handle_talk_event(location p)
 			place_string2 = "";
 			break;
 		case 4:
-			if (day_reached((unsigned char) a,0) == true) {
+			if (day_reached((unsigned char) a,0)) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -756,7 +756,7 @@ void handle_talk_event(location p)
 			strnum2 = 0;
 			break;
 		case 5:
-			if (day_reached((unsigned char) a,(unsigned char) b) == true) {
+			if (day_reached((unsigned char) a,(unsigned char) b)) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -837,7 +837,7 @@ void handle_talk_event(location p)
 			strnum2 = 0;
 			break;
 		case 19:
-			if ((sd_legit(b,c) == true) && (PSD[b][c] == d)) {
+			if ((sd_legit(b,c)) && (PSD[b][c] == d)) {
 				place_string1 = "You've already learned that.";
 				strnum1 = -1;
 			}
@@ -848,7 +848,7 @@ void handle_talk_event(location p)
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
-				if (sd_legit(b,c) == true)
+				if (sd_legit(b,c))
 					PSD[b][c] = d;
 				else giveError("Invalid Stuff Done flag called in conversation.");
 			}
@@ -865,7 +865,7 @@ void handle_talk_event(location p)
 			}
 			else {
 				for (i = b; i <= b + c; i++)
-					if ((i >= 0) && (i < 30) && (univ.party.boats[i].property == true)) {
+					if ((i >= 0) && (i < 30) && (univ.party.boats[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.boats[i].property = false;
@@ -891,7 +891,7 @@ void handle_talk_event(location p)
 			}
 			else {
 				for (i = b; i <= b + c; i++)
-					if ((i >= 0) && (i < 30) && (univ.party.horses[i].property == true)) {
+					if ((i >= 0) && (i < 30) && (univ.party.horses[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.horses[i].property = false;
@@ -961,7 +961,7 @@ void handle_talk_event(location p)
 			// TODO: Any reason not to call something like kill_monst?
 			univ.town.monst[store_m_num].active = 0;
 			// Special killing effects
-			if (sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2) == true)
+			if (sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
 				PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
 			talk_end_forced = true;
 			break;
@@ -1103,8 +1103,8 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 		did_cancel = true;
 	}
 	
-	if (done_yet== true) {
-		if (did_cancel == false) {
+	if (done_yet) {
+		if (!did_cancel) {
 			std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
 			// TODO: Make an enum for the display mode
 			if(cur_display_mode == "mid") display_mode = 0;

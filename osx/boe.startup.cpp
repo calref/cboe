@@ -51,10 +51,10 @@ bool handle_startup_press(location the_point)
 	the_point.y -= ul.y;
 	
 	for (i = 0; i < 5; i++)
-		if (the_point.in(startup_button[i]) == true) {
+		if (the_point.in(startup_button[i])) {
 			draw_start_button(i,5);
 			mainPtr.display(); // TODO: I suspect this won't work
-			if (play_sounds == true)
+			if (play_sounds)
 				play_sound(37);
 			else sf::sleep(time_in_ticks(5));
 			draw_start_button(i,0);
@@ -77,7 +77,7 @@ bool handle_startup_press(location the_point)
 					break;
 					
 				case STARTBTN_JOIN: // regular scen
-					if (party_in_memory == false) {
+					if (!party_in_memory) {
 						cChoiceDlog("need-party.xml").show();
 						break;
 					}
@@ -96,7 +96,7 @@ bool handle_startup_press(location the_point)
 					break;
 					
 				case STARTBTN_CUSTOM: // custom
-					if (party_in_memory == false) {
+					if (!party_in_memory) {
 						cChoiceDlog("need-party.xml").show();
 						break;
 					}

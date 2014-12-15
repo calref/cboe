@@ -312,7 +312,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 				}
 				else {
 					style.font = FONT_PLAIN;
-					if (univ.party[pc].equip[i_num] == true) {
+					if (univ.party[pc].equip[i_num]) {
 						style.italic = true;
 						if(univ.party[pc].items[i_num].variety == eItemType::ONE_HANDED || univ.party[pc].items[i_num].variety == eItemType::TWO_HANDED)
 							style.colour = sf::Color::Magenta;
@@ -607,7 +607,7 @@ short total_encumberance(short pc_num)
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 24; i++)
-		if (univ.party[pc_num].equip[i] == true) {
+		if (univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			store += what_val;
 		}
@@ -770,15 +770,15 @@ short do_look(location space)
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
 			if(space == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE
-				&& (is_lit == true) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
+				&& (is_lit) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);
 			}
 	
 	if ((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for (i = 0; i < univ.town->max_monst(); i++)
-			if ((univ.town.monst[i].active != 0) && (is_lit == true)
-				&& (monst_on_space(space,i) == true) &&
+			if ((univ.town.monst[i].active != 0) && (is_lit)
+				&& (monst_on_space(space,i)) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
@@ -875,7 +875,7 @@ short do_look(location space)
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
-				&& (is_lit == true)) {
+				&& (is_lit)) {
 				if(univ.town.items[i].variety == eItemType::GOLD)
 					gold_here = true;
 				else if(univ.town.items[i].variety == eItemType::FOOD)
@@ -883,9 +883,9 @@ short do_look(location space)
 				else num_items++;
 			}
 		}
-		if (gold_here == true)
+		if (gold_here)
 			add_string_to_buf("    Gold");
-		if (food_here == true)
+		if (food_here)
 			add_string_to_buf("    Food");
 		if (num_items > 8)
 			add_string_to_buf("    Many items");
@@ -900,7 +900,7 @@ short do_look(location space)
 		}
 	}
 	
-	if (is_lit == false) {
+	if (!is_lit) {
 		add_string_to_buf("    Dark                ");
 		return 0;
 	}
@@ -1392,7 +1392,7 @@ void print_buf ()
 			line_to_print= 0;
 		}
 		
-		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long == true)) {
+		if ((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long)) {
 			end_loop = false;
 			line_to_print= buf_pointer;
 		}
@@ -1429,7 +1429,7 @@ void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& t
 	
 	if ((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
 		return;
-	if ((supressing_some_spaces == true) && (target != ok_space[0]) &&
+	if ((supressing_some_spaces) && (target != ok_space[0]) &&
 		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 		return;
 	terrain_there[target.x][target.y] = -1;

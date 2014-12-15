@@ -137,13 +137,13 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	/*
 	i = CDGN(813,6);
 	if ((store_ter.special < 2) || (store_ter.special > 6)) {
-		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813) == true) return false;
+		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DAMAGING) {
-		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813) == true) return false;
+		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DANGEROUS) {
-		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813) == true) return false;
+		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813)) return false;
 	}
 	 */
 	if(store_ter.special == eTerSpec::NONE)
@@ -158,15 +158,15 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	
 	/*
 	if(store_ter.special == eTerSpec::TOWN_ENTRANCE) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813) == true) return false;
+		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DAMAGING || store_ter.special == eTerSpec::DANGEROUS) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813) == true) return false;
+		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813)) return false;
 	}
 	*/
 	
 	/*
-	if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813) == true) return false;
+	if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813)) return false;
 	 */
 	store_ter.trans_to_what = me["trans"].getTextAsNum();
 	store_ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
@@ -174,7 +174,7 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	store_ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
 	store_ter.light_radius = me["light"].getTextAsNum();
 	/*
-	if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813) == true) return false;
+	if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813)) return false;
 	 */
 	
 	std::string sound = dynamic_cast<cLedGroup&>(me["sound"]).getSelected();
@@ -1444,10 +1444,10 @@ static bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_stor
 		std::string id = std::to_string(i + 1);
 		store_storage.item_num[i] = me["item" + id].getTextAsNum();
 		if(cre(store_storage.item_num[i],
-				-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",&me) == true) return false;
+				-1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",&me)) return false;
 		store_storage.item_odds[i] = me["odds" + id].getTextAsNum();
 		if(cre(store_storage.item_odds[i],
-				0,100,"All item chances must bve from 0 to 100.","",&me) == true) return false;
+				0,100,"All item chances must bve from 0 to 100.","",&me)) return false;
 	}
 	scenario.storage_shortcuts[cur_shortcut] = store_storage;
 	return true;
@@ -1791,7 +1791,7 @@ bool save_scenario_events() {
 		}
 		scenario.scenario_timer_specs[i] = CDGN(811,12 + i);
 		if (cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
-				,"",811) == true) return false;
+				,"",811)) return false;
 	}
 #endif
 	return true;
@@ -1814,12 +1814,12 @@ void edit_scenario_events_event_filter (short item_hit) {
 	
 	switch (item_hit) {
 		case 22:
-			if (save_scenario_events() == true)
+			if (save_scenario_events())
 				toast_dialog();
 			break;
 		default:
 			if ((item_hit >= 30) && (item_hit <= 39)) {
-				if (save_scenario_events() == false)
+				if (!save_scenario_events())
 					break;
 				spec = CDGN(811,item_hit - 30 + 12);
 				if ((spec < 0) || (spec > 255)) {

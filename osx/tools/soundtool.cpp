@@ -137,7 +137,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if (which >= 100)
 		return;
 
-	if ((always_asynch[which] == true) &&
+	if ((always_asynch[which]) &&
 	((can_ignore[which] == 1) || (can_ignore[which] >= 3)))
 		asyn = true;
 	if ((can_ignore[which] > 0) && (can_ignore[which] < 5) && (party.stuff_done[305][5] == 1))
@@ -146,10 +146,10 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 		asyn = false;
 	if ((party.stuff_done[305][5] == 1) && (can_ignore[which] < 5))
 		asyn = false;
-	if (not_asyn == true)
+	if (not_asyn)
 		asyn = false;
 
-	if ((load_when_play[which] == true) && (sound_handles[which] == NULL)) {
+	if ((load_when_play[which]) && (sound_handles[which] == NULL)) {
 			asyn = false;
 		sprintf((char *)snd_name,"#%d",which + 1);
 		h = FindResource(hModule,snd_name,"#100");
@@ -162,12 +162,12 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if (store_last_sound_played == 6)
 		sndPlaySound(NULL,0);
 
-	if (asyn == true) {
+	if (asyn) {
 		if (can_ignore[which] >= 4)
 			check_sound = sndPlaySound(snds[which],SND_ASYNC | SND_MEMORY | SND_NOSTOP);
 			else check_sound = sndPlaySound(snds[which],SND_ASYNC | SND_MEMORY);
 
-		while (check_sound == false) {
+		while (!check_sound) {
 
 			if (can_ignore[store_last_sound_played] == 4) {// then sound goes away
 				return;
@@ -196,7 +196,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 		if (can_ignore[which] >= 4)
 			check_sound = sndPlaySound(snds[which],SND_SYNC | SND_MEMORY | SND_NOSTOP);
 			else check_sound = sndPlaySound(snds[which],SND_SYNC | SND_MEMORY);
-		while (check_sound == false) {
+		while (!check_sound) {
 			if (can_ignore[store_last_sound_played] == 4) {// then sound goes away
 				return;
 				}
@@ -223,12 +223,12 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 
 	store_last_sound_played = which;
 
-	if ((load_when_play[which] == true) && (asyn == false)) 
+	if ((load_when_play[which]) && !asyn)
 		sound_handles[which] = NULL;
 		
 	for (i = 0; i < NUM_SOUNDS; i++)
-		if ((load_when_play[which] == true) && (sound_handles[which] != NULL)
-			&& (a_sound_did_get_played == true) && (i != which))
+		if ((load_when_play[which]) && (sound_handles[which] != NULL)
+			&& (a_sound_did_get_played) && (i != which))
 		{
 			sound_handles[i] = NULL;
 		}
@@ -256,7 +256,7 @@ void clear_sound_memory(){
 
 void flip_sound()
 {
-	play_sounds = (play_sounds == true) ? false : true;
+	play_sounds = (play_sounds) ? false : true;
 }
 
 
@@ -320,7 +320,7 @@ void load_sounds(HMODULE handle)
 
 	for (i = 0; i < NUM_SOUNDS; i++) {
 		sound_handles[i] = NULL;
-		if (load_when_play[i] == false) {
+		if (!load_when_play[i]) {
 			sprintf((char *)snd_name,"#%d",i + 1);
 			h = FindResource(handle,snd_name,"#100");
 

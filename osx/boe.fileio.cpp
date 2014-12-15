@@ -144,7 +144,7 @@ void finish_load_party(){
 		// Set up field booleans
 		for (int j = 0; j < univ.town->max_dim(); j++)
 			for (int k = 0; k < univ.town->max_dim(); k++) {
-				if (univ.town.is_quickfire(j,k) == true)
+				if (univ.town.is_quickfire(j,k))
 					univ.town.quickfire_present = true;
 				if(scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
 					univ.town.belt_present = true;
@@ -163,8 +163,8 @@ void finish_load_party(){
 	add_string_to_buf("Load: Game loaded.            ");
 	
 	// Set sounds, map saving, and speed
-	if (((play_sounds == true) && (PSD[SDF_NO_SOUNDS] == 1)) ||
-		((play_sounds == false) && (PSD[SDF_NO_SOUNDS] == 0))) {
+	if (((play_sounds) && (PSD[SDF_NO_SOUNDS] == 1)) ||
+		(!play_sounds && (PSD[SDF_NO_SOUNDS] == 0))) {
 		flip_sound();
 	}
 	give_delays = PSD[SDF_NO_FRILLS];
@@ -271,7 +271,7 @@ void shift_universe_left()
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x > 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true)
+		if (univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.x += 48;
 	}
 	
@@ -306,7 +306,7 @@ void shift_universe_right()
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.x < 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true)
+		if (univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.x -= 48;
 	}
 	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
@@ -340,7 +340,7 @@ void shift_universe_up()
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y > 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true)
+		if (univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.y += 48;
 	}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
@@ -376,7 +376,7 @@ void shift_universe_down()
 	for (i = 0; i < 10; i++) {
 		if (univ.party.out_c[i].m_loc.y < 48)
 			univ.party.out_c[i].exists = false;
-		if (univ.party.out_c[i].exists == true)
+		if (univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.y = univ.party.out_c[i].m_loc.y - 48;
 	}
 	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
@@ -441,7 +441,7 @@ void build_outdoors()
 		erase_out_specials();
 	
 	for (i = 0; i < 10; i++)
-		if (univ.party.out_c[i].exists == true)
+		if (univ.party.out_c[i].exists)
 			if ((univ.party.out_c[i].m_loc.x < 0) || (univ.party.out_c[i].m_loc.y < 0) ||
 				(univ.party.out_c[i].m_loc.x > 95) || (univ.party.out_c[i].m_loc.y > 95))
 				univ.party.out_c[i].exists = false;
@@ -531,7 +531,7 @@ void fix_boats()
 	short i;
 	
 	for (i = 0; i < 30; i++)
-		if ((univ.party.boats[i].exists == true) && (univ.party.boats[i].which_town == 200)) {
+		if ((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == 200)) {
 			if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
 			else if (univ.party.boats[i].sector.x == univ.party.outdoor_corner.x + 1)
@@ -544,7 +544,7 @@ void fix_boats()
 			else univ.party.boats[i].loc.y = 500;
 		}
 	for (i = 0; i < 30; i++)
-		if ((univ.party.horses[i].exists == true) && (univ.party.horses[i].which_town == 200)) {
+		if ((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == 200)) {
 			if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;
 			else if (univ.party.horses[i].sector.x == univ.party.outdoor_corner.x + 1)
@@ -638,7 +638,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 			file_ok = true;
 			mac_header = false;
 		}
-	if (file_ok == false) {
+	if (!file_ok) {
 		//scen_headers[header_entry].flag1 = 0;
 		//scen_headers.pop_back();
 		fclose(file_id);

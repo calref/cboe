@@ -561,7 +561,7 @@ void set_up_terrain_buttons() {
 	if (overall_mode < MODE_MAIN_SCREEN) {
 		//		palette_to.left = 5;
 		//		palette_to.top = terrain_rects[255].bottom + 5;
-		//		if (editing_town == true) {
+		//		if (editing_town) {
 		//			palette_from.bottom = palette_buttons[0][5].bottom;
 		//			palette_from.right = palette_buttons[7][5].right;
 		//			}
@@ -617,7 +617,7 @@ void draw_terrain(){
 			{
 				where_draw.x = q;
 				where_draw.y = r;
-				if (editing_town == true) {
+				if (editing_town) {
 					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);
 				}
 				else {
@@ -643,7 +643,7 @@ void draw_terrain(){
 				tiny_to.offset(28 * q, 36 * r);
 				
 				// draw start icon, if starting point
-				if ((editing_town == true) && 
+				if ((editing_town) && 
 					(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
 					&& (scenario.where_start.y == cen_y + r - 4)) {
 					from_rect = start_button_from;
@@ -652,7 +652,7 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
 					tiny_to.offset(0,-7);
 				}
-				if ((editing_town == false)
+				if (!editing_town
 					&& (scenario.out_sec_start.x == cur_out.x)
 					&& (scenario.out_sec_start.y == cur_out.y) 
 					&& (scenario.out_start.x == cen_x + q - 4)
@@ -671,7 +671,7 @@ void draw_terrain(){
 					tiny_to.offset(0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4) == true) {
+				if (is_special(cen_x + q - 4,cen_y + r - 4)) {
 					tiny_from = base_small_button_from;
 					tiny_from.offset(7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
@@ -683,9 +683,9 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}	
-				//if (is_s_d(cen_x + q - 4,cen_y + r - 4) == true) {
+				//if (is_s_d(cen_x + q - 4,cen_y + r - 4)) {
 				//	}	
-				if (editing_town == false) {
+				if (!editing_town) {
 					for (i = 0; i < 4; i++)		
 						if ((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
 							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
@@ -698,7 +698,7 @@ void draw_terrain(){
 					
 				}
 				
-				if (editing_town == true) {
+				if (editing_town) {
 					for (i = 0; i < 30; i++) {
 						if ((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
@@ -732,27 +732,27 @@ void draw_terrain(){
 							tiny_to.offset(0,-7);
 							i = 4;
 						}
-					if (is_web(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_web(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
-					if (is_crate(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_crate(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(6,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
-					if (is_barrel(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_barrel(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
-					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
-					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4) == true) {
+					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(2,2);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}	
@@ -772,14 +772,14 @@ void draw_terrain(){
 					
 				}
 			}
-		if (editing_town == true) {
+		if (editing_town) {
 			draw_monsts();
 			draw_items();
 		}
 		
 		clip_rect(ter_draw_gworld,clipping_rect);
 		
-		if (editing_town == true) {
+		if (editing_town) {
 			// draw info rects
 			for (i = 0; i < 16; i++)
 				if (town->room_rect(i).left > 0) {
@@ -796,7 +796,7 @@ void draw_terrain(){
 			draw_rect.bottom = 25 + 36 * (town->in_town_rect.bottom - cen_y + 4);
 			frame_rect(ter_draw_gworld, draw_rect, sf::Color::White);
 		}
-		if (editing_town == false) {
+		if (!editing_town) {
 			// draw info rects
 			for (i = 0; i < 8; i++)
 				if (current_terrain.info_rect[i].left > 0) {
@@ -815,14 +815,14 @@ void draw_terrain(){
 	}
 	
 	if (cur_viewing_mode == 1) {
-		if (small_any_drawn == false) {
+		if (!small_any_drawn) {
 		 	tileImage(ter_draw_gworld, terrain_rect,bg[17]);
 			frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		}
 		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++) 
 			for (r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
-				if ((small_what_drawn[q][r] != t_to_draw) || (small_any_drawn == false)) {
+				if (!small_what_drawn[q][r] != t_to_draw || small_any_drawn) {
 					draw_one_tiny_terrain_spot(q,r,t_to_draw);
 					small_what_drawn[q][r] = t_to_draw;
 				}
@@ -1272,11 +1272,11 @@ void set_string(const char *string,const char *string2) {
 bool is_special(short i,short j) {
 	short k;
 	
-	if (editing_town == true)
+	if (editing_town)
 		for (k = 0; k < 50; k++)
 			if ((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
 				return true;
-	if (editing_town == false)
+	if (!editing_town)
 		for (k = 0; k < 18; k++)
 			if ((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
 				return true;
@@ -1314,7 +1314,7 @@ bool is_field_type(short i,short j,short field_type) {
 void make_field_type(short i,short j,short field_type) {
 	unsigned short k;
 	
-	if (is_field_type(i,j,field_type) == true)
+	if (is_field_type(i,j,field_type))
 		return;
 	for (k = 0; k < town->preset_fields.size(); k++)
 		if (town->preset_fields[k].type == 0) {
@@ -1419,13 +1419,13 @@ void take_quickfire(short i,short j) {
 }
 
 bool container_there(location l) {
-	if (editing_town == false)
+	if (!editing_town)
 		return false;
 	if(scenario.ter_types[town->terrain(l.x,l.y)].special == eTerSpec::IS_A_CONTAINER)
 		return true;
-	if (is_barrel(l.x,l.y) == true)
+	if (is_barrel(l.x,l.y))
 		return true;
-	if (is_crate(l.x,l.y) == true)
+	if (is_crate(l.x,l.y))
 		return true;
 	return 0;
 }

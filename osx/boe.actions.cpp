@@ -977,7 +977,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 7; i++)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
-					if (spell_forced == false)
+					if (!spell_forced)
 						main_button_click(bottom_buttons[i]);
 				}
 			break;
@@ -988,7 +988,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 8; i++)
 				if(the_point.in(town_buttons[i])) {
 					button_hit = i;
-					if (spell_forced == false)
+					if (!spell_forced)
 						main_button_click(town_buttons[i]);
 				}
 			break;
@@ -1001,7 +1001,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
-					if (spell_forced == false)
+					if (!spell_forced)
 						main_button_click(combat_buttons[i]);
 				}
 			break;
@@ -1263,7 +1263,7 @@ bool handle_action(sf::Event event) {
 							give_pc_info(i);
 							break;
 						case 4: // trade places
-							if (prime_time() == false)
+							if (!prime_time())
 								add_string_to_buf("Trade places: Finish what you're doing first.");
 							else if (is_combat())
 								add_string_to_buf("Trade places: Can't do this in combat.");
@@ -2489,7 +2489,7 @@ void increase_age()////
 	dump_gold(1);
 	
 	special_increase_age();
-	//if (debug_on == false)
+	//if (!debug_on)
 	push_things();
 	
 	if (is_town()) {
@@ -2502,7 +2502,7 @@ void increase_age()////
 	current_switch = 6;
 	
 	// If a change, draw stat screen
-	if (update_stat == true)
+	if (update_stat)
 		put_pc_screen();
 	adjust_spell_menus();
 }
@@ -2598,7 +2598,7 @@ void handle_death()
 		else if(choice == "load") {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load);
-			if (party_toast() == false) {
+			if (!party_toast()) {
 				if(overall_mode != MODE_STARTUP)
 					post_load(), finish_load_party();
             	return;
@@ -2630,11 +2630,11 @@ void start_new_game()
 	else if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) init_party(2);
 	else init_party(0);
 	
-	//while (creation_done == false) {
+	//while (!creation_done) {
 	edit_party();
-	/*	if ((i > 0) || (in_startup_mode == false))
+	/*	if ((i > 0) || !in_startup_mode)
 			creation_done = true;
-		if ((i == 0) && (in_startup_mode == false))
+		if ((i == 0) && !in_startup_mode)
 			return;
 	} */
 
@@ -2796,7 +2796,7 @@ bool outd_move_party(location destination,bool forced)
 	ter_num_t ter;
 	
 	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,0,&spec_num,&check_f);
-	if (check_f == true)
+	if (check_f)
 		forced = true;
 	if (in_scen_debug && ghost_mode)
 		forced = true;
@@ -2804,7 +2804,7 @@ bool outd_move_party(location destination,bool forced)
 		forced = true;
 	
 	// If not blocked and not put in town by a special, process move
-	if ((keep_going == true) && (overall_mode == MODE_OUTDOORS)) {
+	if (keep_going && overall_mode == MODE_OUTDOORS) {
 		
 		real_dest.x = destination.x - univ.party.p_loc.x;
 		real_dest.y = destination.y - univ.party.p_loc.y;
@@ -2853,26 +2853,26 @@ bool outd_move_party(location destination,bool forced)
 		
 		
 		
-//		if (forced == true)
+//		if (forced)
 //			for (i = 0; i < 10; i++)
-//				if (same_point(destination,party.out_c[i].m_loc) == true)
+//				if (same_point(destination,party.out_c[i].m_loc))
 //					party.out_c[i].exists = false;
 		
 		ter = univ.out[real_dest.x][real_dest.y];
 		if (univ.party.in_boat >= 0) {
-			if ((outd_is_blocked(real_dest) == false) //&& (outd_is_special(real_dest) == false)
+			if (!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
 				// not in towns
-				&& ((scenario.ter_types[ter].boat_over == false)
+				&& (!scenario.ter_types[ter].boat_over
 					|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
 				&& scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
 			else if (((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y))
-					 || ((forced == false) && (out_boat_there(destination) < 30)))
+					 || (!forced && (out_boat_there(destination) < 30)))
 				return false;
-			else if ((outd_is_blocked(real_dest) == false)
-					 && (scenario.ter_types[ter].boat_over == true)
+			else if (!outd_is_blocked(real_dest)
+					 && scenario.ter_types[ter].boat_over
 					 && scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
 				// Note: Maybe not though, since this is where boating over lava was once hard-coded...?
@@ -2883,12 +2883,12 @@ bool outd_move_party(location destination,bool forced)
 					univ.party.in_boat = -1;
 				}
 			}
-			else if (scenario.ter_types[ter].boat_over == true)
+			else if (scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
 		if (((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
-			if (flying() == true) {
+			if (flying()) {
 				add_string_to_buf("You land first.                 ");
 				PSD[SDF_PARTY_FLIGHT] = 0;
 			}
@@ -2909,7 +2909,7 @@ bool outd_move_party(location destination,bool forced)
 			return true;
 		}
 		else if (((horse_num = out_horse_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
-			if (flying() == true) {
+			if (flying()) {
 				add_string_to_buf("Land before mounting horses.");
 				return false;
 			}
@@ -2931,10 +2931,9 @@ bool outd_move_party(location destination,bool forced)
 			
 			return true;
 		}
-		else if ((outd_is_blocked(real_dest) == false) || (forced == true)
+		else if (!outd_is_blocked(real_dest) || forced
 				 // Check if can fly over
-				 || ((flying() == true) &&
-					 (scenario.ter_types[ter].fly_over == true))   ) {
+				 || (flying() && scenario.ter_types[ter].fly_over)) {
 						 if(univ.party.in_horse >= 0) {
 					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 							 ASB("Your horses quite sensibly refuse.");
@@ -3019,14 +3018,14 @@ bool town_move_party(location destination,short forced)////
 	
 	if (monst_there(destination) > univ.town->max_monst())
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,0,&spec_num,&check_f);
-	if (check_f == true)
+	if (check_f)
 		forced = true;
 	
 	if (spec_num == 50)
 		forced = true;
 	ter = univ.town->terrain(destination.x,destination.y);
 	
-	if (keep_going == true) {
+	if (keep_going) {
 		if (univ.party.in_boat >= 0) {
 			if ((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
@@ -3041,7 +3040,7 @@ bool town_move_party(location destination,short forced)////
 			else if(!is_blocked(destination) && scenario.ter_types[ter].boat_over && scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
-				else if (is_blocked(destination) == false) {
+				else if (!is_blocked(destination)) {
 					add_string_to_buf("You leave the boat.             ");
 					univ.party.in_boat = -1;
 				}
@@ -3052,12 +3051,12 @@ bool town_move_party(location destination,short forced)////
 				return false;
 			}
 			// water or lava
-			else if (scenario.ter_types[ter].boat_over == true)
+			else if (scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
 		if (((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
-			if (univ.party.boats[boat_there].property == true) {
+			if (univ.party.boats[boat_there].property) {
 				add_string_to_buf("  Not your boat.             ");
 				return false;
 			}
@@ -3072,7 +3071,7 @@ bool town_move_party(location destination,short forced)////
 			return true;
 		}
 		else if (((horse_there = town_horse_there(destination)) < 30) && (univ.party.in_horse < 0)) {
-			if (univ.party.horses[horse_there].property == true) {
+			if (univ.party.horses[horse_there].property) {
 				add_string_to_buf("  Not your horses.             ");
 				return false;
 			}
@@ -3087,13 +3086,13 @@ bool town_move_party(location destination,short forced)////
 			
 			return true;
 		}
-		else if ((is_blocked(destination) == false) || (forced == 1)) {
+		else if (!is_blocked(destination) || forced) {
 			if (univ.party.in_horse >= 0) {
 				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if (scenario.ter_types[ter].block_horse == true) {
+				if (scenario.ter_types[ter].block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
@@ -3123,7 +3122,7 @@ bool town_move_party(location destination,short forced)////
 			return true;
 		}
 		else {
-			if (is_door(destination) == true)
+			if (is_door(destination))
 				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
 			else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
 			add_string_to_buf((char *) create_line);
@@ -3150,7 +3149,7 @@ short nearest_monster()
 	short i = 100,j,s;
 	
 	for (j = 0; j < 10; j++)
-		if (univ.party.out_c[j].exists == true) {
+		if (univ.party.out_c[j].exists) {
 			s = dist(univ.party.p_loc,univ.party.out_c[j].m_loc);
 			i = min(i,s);
 		}

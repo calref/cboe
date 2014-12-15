@@ -292,7 +292,7 @@ void draw_startup(short but_type)
 	r4 = {-1000,579,1000,2500};
 	short i;
 	
-	if (startup_loaded == false)
+	if (!startup_loaded)
 		return;
 	
 	to_rect = startup_from[0];
@@ -482,7 +482,7 @@ void main_button_click(RECT button_rect)
 	
 	draw_buttons(1);
 	mainPtr.display();
-	if (play_sounds == true)
+	if (play_sounds)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
 	draw_buttons(0);
@@ -498,7 +498,7 @@ void arrow_button_click(RECT button_rect)
 	
 	refresh_stat_areas(1);
 	mainPtr.display();
-	if (play_sounds == true)
+	if (play_sounds)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
 	undo_clip(mainPtr);
@@ -508,7 +508,7 @@ void arrow_button_click(RECT button_rect)
 
 void reload_startup()////
 {
-	if (startup_loaded == true)
+	if (startup_loaded)
 		return;
 	
 	mini_map.setVisible(false);
@@ -522,7 +522,7 @@ void reload_startup()////
 
 void end_startup()
 {
-	if (startup_loaded == false)
+	if (!startup_loaded)
 		return;
 	
 	startup_gworld.create(1,1);
@@ -731,14 +731,14 @@ void draw_text_bar(short mode)
 		}
 		
 	}
-	if ((is_combat()) && (current_pc < 6) && (monsters_going == false)) {
+	if ((is_combat()) && (current_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
 		sout << univ.party[current_pc].name << " (ap: " << univ.party[current_pc].ap << ')';
 		combat_string = sout.str();
 		put_text_bar((char *) combat_string.c_str());
 		remember_tiny_text = 500;
 	}
-	if ((is_combat()) && (monsters_going == true))	// Print bar for 1st monster with >0 ap -
+	if ((is_combat()) && (monsters_going))	// Print bar for 1st monster with >0 ap -
 		// that is monster that is going
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].ap > 0)) {
@@ -762,7 +762,7 @@ void put_text_bar(char *str) {
 	// TODO: Not sure what the line height should be, so I just picked something
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
-	if (monsters_going == false) {
+	if (!monsters_going) {
 		to_rect.left = 205;
 		to_rect.top = 14;
 		if (PSD[SDF_PARTY_STEALTHY] > 0) {
@@ -920,7 +920,7 @@ void draw_terrain(short	mode)
 			else if (is_combat()) {
 				spec_terrain = univ.town->terrain(where_draw.x,where_draw.y);
 				can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
-							 (which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
+							 (which_combat_type == 0) || (monsters_going) || (overall_mode != MODE_COMBAT))
 							&& (party_can_see(where_draw) < 6)) ? 1 : 0;
 			}
 			else {
@@ -928,7 +928,7 @@ void draw_terrain(short	mode)
 				can_draw = is_explored(where_draw.x,where_draw.y);
 				
 				if (can_draw > 0) {
-					if (pt_in_light(univ.town.p_loc,where_draw) == false)
+					if (!pt_in_light(univ.town.p_loc,where_draw))
 						can_draw = 0;
 				}
 				if ((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
@@ -1029,7 +1029,7 @@ void draw_terrain(short	mode)
 		draw_monsters();
 	}
 	
-	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center) == true))
+	if ((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center)))
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(center);
 	else if (overall_mode != MODE_LOOK_TOWN)
@@ -1141,8 +1141,8 @@ void place_trim(short q,short r,location where,ter_num_t ter_type)
 	}
 	
 	if(is_wall(ter_type) && !at_top && !at_bot && !at_left && !at_right){
-		//if (((ter_type >= 100) && (ter_type <= 137)) && (at_top == false) &&
-		//	(at_bot == false) && (at_left == false) && (at_right == false)) {
+		//if (((ter_type >= 100) && (ter_type <= 137)) && !at_top &&
+		//	!at_bot && !at_left && !at_right) {
 		ter_num_t to_left = coord_to_ter(where.x - 1,where.y);
 		ter_num_t above = coord_to_ter(where.x,where.y - 1);
 		ter_num_t to_right = coord_to_ter(where.x + 1,where.y);
@@ -1194,7 +1194,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 {
 	/* TODO: Windows has a check for frills being enabled:
-	if ((frills_on == false) || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
+	if (!frills_on || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
 	    return;
 	*/
 	// which_trim
@@ -1238,7 +1238,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 	}
 	sf::Color test_color = {0,0,0}, store_color;
 	
-	if (frills_on == false)
+	if (!frills_on)
 		return;
 	
 // if current ground is grass, forget trim
@@ -1508,13 +1508,13 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	//sound_key = type / 10;
 	//type = type % 10;
 	
-//	if ((cartoon_happening == true) && (anim_step < 140))
+//	if ((cartoon_happening) && (anim_step < 140))
 //		return;
 	if ((mode != 100) && (party_can_see(where) == 6))
 		return;
 	if ((type < 0) || (type > 4))
 		return;
-	if ((boom_anim_active == true) && (type != 3))
+	if ((boom_anim_active) && (type != 3))
 		return;
 	if ((PSD[SDF_NO_FRILLS] > 0) && fast_bang)
 		return;
@@ -1522,7 +1522,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 		return;
 	
 	// Redraw terrain in proper position
-	if ((((point_onscreen(center,where) == false) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
+	if (((!point_onscreen(center,where) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
 		) {
 		play_sound(sound_to_play[sound]);
 		
@@ -1581,7 +1581,7 @@ void boom_space(location where,short mode,short type,short damage,short sound)
 	
 	if (fast_bang == 0 && !skip_boom_delay) {
 		del_len = PSD[SDF_GAME_SPEED] * 3 + 4;
-		if (play_sounds == false)
+		if (!play_sounds)
 			sf::sleep(time_in_ticks(del_len));
 	}
 	redraw_terrain();
@@ -1603,7 +1603,7 @@ void draw_pointing_arrows()
 		RECT{346,100,354,108},RECT{346,170,354,178},RECT{140,274,148,282},RECT{212,274,220,282}};
 	short i;
 	
-	if ((monsters_going == true) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
+	if ((monsters_going) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
 		|| (overall_mode == MODE_LOOK_OUTDOORS))
 		return;
 	for (i = 0; i < 4; i++) {
@@ -1633,11 +1633,11 @@ void draw_targets(location center)
 	RECT source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 	
-	if (party_toast() == true)
+	if (party_toast())
 		return;
 	
 	for (i = 0; i < 8; i++)
-		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]) == true)) {
+		if ((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			//OffsetRect(&dest_rect,5,5);
 			//InsetRect(&dest_rect,8,12);
@@ -1651,7 +1651,7 @@ void frame_space(location where,short mode,short width,short height)
 	location where_put;
 	RECT to_frame;
 	
-	if (point_onscreen(center,where) == false)
+	if (!point_onscreen(center,where))
 		return;
 	
 	where_put.x = 4 + where.x - center.x;
@@ -1692,7 +1692,7 @@ void draw_targeting_line(location where_curs)
 		
 		on_screen_terrain_area.offset(ul);
 		if (where_curs.in(on_screen_terrain_area)) {
-			// && (point_onscreen(center,univ.party[current_pc].combat_pos) == true)){
+			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
 			i = (where_curs.x - 23 - ul.x) / 28;
 			j = (where_curs.y - 23 - ul.y) / 36;
 			which_space.x = center.x + (short) i - 4;

@@ -85,7 +85,7 @@ short out_enc_lev_tot(short which)
 	short count = 0,i;
 	short num[7] = {22,8,4,4,3,2,1};
 	
-	if (univ.party.out_c[which].what_monst.cant_flee == true)
+	if (univ.party.out_c[which].what_monst.cant_flee)
 		return 10000;
 	
 	for (i = 0; i < 7; i++)
@@ -143,8 +143,8 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 	
 	while (i < 10) {
 		////
-		if ((univ.party.out_c[i].exists == false) || ((i == 9) && (forced > 0))) {
-			if ((sd_legit(group.end_spec1,group.end_spec2) == true) && (PSD[group.end_spec1][group.end_spec2] > 0))
+		if (!univ.party.out_c[i].exists || ((i == 9) && (forced > 0))) {
+			if ((sd_legit(group.end_spec1,group.end_spec2)) && (PSD[group.end_spec1][group.end_spec2] > 0))
 				return;
 			univ.party.out_c[i].exists = true;
 			univ.party.out_c[i].direction = 0;
@@ -156,7 +156,7 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 			if (univ.party.out_c[i].which_sector.y == 1)
 				univ.party.out_c[i].m_loc.y += 48;
 			l = univ.party.out_c[i].m_loc;
-			while ((forced == true) && (is_blocked(l)) && (j < 50)) {
+			while ((forced) && (is_blocked(l)) && (j < 50)) {
 				l = univ.party.out_c[i].m_loc;
 				l.x += get_ran(1,0,2) - 1;
 				l.y += get_ran(1,0,2) - 1;
@@ -288,7 +288,7 @@ void do_monsters()
 								if (get_ran(1,0,10) < 6)
 									univ.town.monst[i].morale++;
 							}
-							else if (monst_hate_spot(i,&l2) == true)
+							else if (monst_hate_spot(i,&l2))
 								acted_yet = seek_party(i,l1,l2);
 							else if (((univ.town.monst[i].mu == 0) && (univ.town.monst[i].mu == 0))
 									 || (can_see_light(l1,l2,sight_obscurity) > 3))
@@ -314,14 +314,14 @@ void do_monsters()
 					}
 					for (j = 0; j < univ.town->max_monst(); j++)
 						if ((univ.town.monst[j].active == 2)
-							&& ((dist(univ.town.monst[i].cur_loc,univ.town.monst[j].cur_loc) <= 5) == true))
+							&& ((dist(univ.town.monst[i].cur_loc,univ.town.monst[j].cur_loc) <= 5)))
 							univ.town.monst[i].active = 2;
 				}
 				
 			}
 	if (overall_mode == MODE_OUTDOORS) {
 		for (i = 0; i < 10; i++)
-			if (univ.party.out_c[i].exists == true) {
+			if (univ.party.out_c[i].exists) {
 				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
 				l2 = univ.party.p_loc;
@@ -387,15 +387,15 @@ short monst_pick_target(short which_m)
 	
 	if ((is_combat()) && (cur_monst->attitude % 2 == 1)) {
 		if (spell_caster < 6)
-			if ((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos) == true)
+			if ((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos))
 				&& univ.party[spell_caster].main_status == eMainStatus::ALIVE)
 				return spell_caster;
 		if (missile_firer < 6)
-			if ((get_ran(1,1,5) < 3) && (monst_can_see(which_m,univ.party[missile_firer].combat_pos) == true)
+			if ((get_ran(1,1,5) < 3) && (monst_can_see(which_m,univ.party[missile_firer].combat_pos))
 				&& univ.party[missile_firer].main_status == eMainStatus::ALIVE)
 				return missile_firer;
 		if (univ.town.monst[which_m].target < 6)
-			if ((monst_can_see(which_m,univ.party[univ.town.monst[which_m].target].combat_pos) == true)
+			if ((monst_can_see(which_m,univ.party[univ.town.monst[which_m].target].combat_pos))
 				&& univ.party[univ.town.monst[which_m].target].main_status == eMainStatus::ALIVE)
 				return univ.town.monst[which_m].target;
 	}
@@ -451,7 +451,7 @@ short monst_pick_target_monst(cCreature *which_m)
 			 ((which_m->attitude % 2 == 1) && (univ.town.monst[i].attitude != which_m->attitude))) && // they hate each other
 			((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) < min_dist) ||
 			 ((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) == min_dist) && (get_ran(1,0,7) < 4))) &&
-			(monst_can_see(i,univ.town.monst[i].cur_loc) == true) ) {
+			(monst_can_see(i,univ.town.monst[i].cur_loc)) ) {
 			min_dist = dist(which_m->cur_loc,univ.town.monst[i].cur_loc);
 			cur_targ = i + 100;
 			
@@ -472,7 +472,7 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	// First pick any visible, nearby PC
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
-							   (monst_can_see(m_num,univ.party[r1].combat_pos) == false))) {
+							   !monst_can_see(m_num,univ.party[r1].combat_pos))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -483,7 +483,7 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
 							   (dist(which_m->cur_loc,univ.party[r1].combat_pos) > 4) ||
-							   (monst_can_see(m_num,univ.party[r1].combat_pos) == false))) {
+							   !monst_can_see(m_num,univ.party[r1].combat_pos))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -543,18 +543,18 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	if (univ.town.monst[which_m].attitude % 2 == 0) {
 		if (orig_target >= 100)
 			if ((univ.town.monst[orig_target - 100].active > 0) &&
-				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m) == true))
+				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 				return orig_target;
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if ((univ.town.monst[i].active > 0) &&
 				(univ.town.monst[i].attitude % 2 == 1) &&
-				(monst_adjacent(univ.town.monst[i].cur_loc,which_m) == true))
+				(monst_adjacent(univ.town.monst[i].cur_loc,which_m)))
 				return i + 100;
 		return orig_target;
 	}
 	
 	// If we get here while in town, just need to check if switch to pc
-	if ((is_town()) && (monst_adjacent(univ.town.p_loc,which_m) == true))
+	if ((is_town()) && (monst_adjacent(univ.town.p_loc,which_m)))
 		return 0;
 	if (is_town())
 		return orig_target;
@@ -565,7 +565,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 			return orig_target;
 	if (orig_target >= 100)
 		if ((univ.town.monst[orig_target - 100].active > 0) &&
-			(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m) == true))
+			(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 			return orig_target;
 	
 	// Anyone unarmored? Heh heh heh...
@@ -579,7 +579,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	for (i = 0; i < univ.town->max_monst(); i++)
 		if ((univ.town.monst[i].active > 0) &&
 			(univ.town.monst[i].attitude % 2 == 0) &&
-			(monst_adjacent(univ.town.monst[i].cur_loc,which_m) == true) &&
+			(monst_adjacent(univ.town.monst[i].cur_loc,which_m)) &&
 			(get_ran(1,0,2) < 2))
 			return i + 100;
 	
@@ -622,13 +622,13 @@ bool rand_move(char i)
 	if (univ.town.monst[i].targ_loc.x > 0)
 		acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.town.monst[i].targ_loc);
 	
-	if (acted_yet == false) {
+	if (!acted_yet) {
 		univ.town.monst[i].targ_loc.x = 0;
 		for (j = 0; j < 3; j++) {
 			store_loc = univ.town.monst[i].cur_loc;
 			store_loc.x += get_ran(1,0,24) - 12;
 			store_loc.y += get_ran(1,0,24) - 12;
-			if ((loc_off_act_area(store_loc) == false) && (can_see_light(univ.town.monst[i].cur_loc,store_loc,sight_obscurity) < 5)) {
+			if (!loc_off_act_area(store_loc) && (can_see_light(univ.town.monst[i].cur_loc,store_loc,sight_obscurity) < 5)) {
 				univ.town.monst[i].targ_loc = store_loc; j = 3;
 			}
 		}
@@ -638,13 +638,13 @@ bool rand_move(char i)
 			j = get_ran(1,0,3);
 			store_loc = univ.town->wandering_locs[j];
 			
-			if ((loc_off_act_area(store_loc) == false) && (get_ran(1,0,1) == 1))
+			if (!loc_off_act_area(store_loc) && (get_ran(1,0,1) == 1))
 				univ.town.monst[i].targ_loc = store_loc;
 			else {
 				store_loc = univ.town.monst[i].cur_loc;
 				store_loc.x += get_ran(1,0,20) - 10;
 				store_loc.y += get_ran(1,0,20) - 10;
-				if (loc_off_act_area(store_loc) == false)
+				if (!loc_off_act_area(store_loc))
 					univ.town.monst[i].targ_loc = store_loc;
 			}
 		}
@@ -665,21 +665,21 @@ bool seek_party(short i,location l1,location l2)
 	short m,n;
 	if ((l1.x > l2.x) && (l1.y > l2.y))
 		acted_yet = try_move(i,l1,-1,-1);
-	if ((l1.x < l2.x) & (l1.y < l2.y) & (acted_yet == false))
+	if ((l1.x < l2.x) & (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,1,1);
-	if ((l1.x > l2.x) & (l1.y < l2.y) & (acted_yet == false))
+	if ((l1.x > l2.x) & (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,-1,1);
-	if ((l1.x < l2.x) & (l1.y > l2.y) & (acted_yet == false))
+	if ((l1.x < l2.x) & (l1.y > l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,1,-1);
-	if ((l1.x > l2.x) & (acted_yet == false))
+	if ((l1.x > l2.x) & !acted_yet)
 		acted_yet = try_move(i,l1,-1,0);
-	if ((l1.x < l2.x) & (acted_yet == false))
+	if ((l1.x < l2.x) & !acted_yet)
 		acted_yet = try_move(i,l1,1,0);
-	if ( (l1.y < l2.y) & (acted_yet == false))
+	if ( (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,0,1);
-	if ( (l1.y > l2.y) & (acted_yet == false))
+	if ( (l1.y > l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,0,-1);
-	if (acted_yet == false) {
+	if (!acted_yet) {
 		futzing++;
 		m = get_ran(1,0,2) - 1;
 		n = get_ran(1,0,2) - 1;
@@ -694,21 +694,21 @@ bool flee_party(short i,location l1,location l2)
 	
 	if ((l1.x > l2.x) & (l1.y > l2.y))
 		acted_yet = try_move(i,l1,1,1);
-	if ((l1.x < l2.x) & (l1.y < l2.y) & (acted_yet == false))
+	if ((l1.x < l2.x) & (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,-1,-1);
-	if ((l1.x > l2.x) & (l1.y < l2.y) & (acted_yet == false))
+	if ((l1.x > l2.x) & (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,1,-1);
-	if ((l1.x < l2.x) & (l1.y > l2.y) & (acted_yet == false))
+	if ((l1.x < l2.x) & (l1.y > l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,-1,+1);
-	if ((l1.x > l2.x) & (acted_yet == false))
+	if ((l1.x > l2.x) & !acted_yet)
 		acted_yet = try_move(i,l1,1,0);
-	if ((l1.x < l2.x) & (acted_yet == false))
+	if ((l1.x < l2.x) & !acted_yet)
 		acted_yet = try_move(i,l1,-1,0);
-	if ( (l1.y < l2.y) & (acted_yet == false))
+	if ( (l1.y < l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,0,-1);
-	if ( (l1.y > l2.y) & (acted_yet == false))
+	if ( (l1.y > l2.y) & !acted_yet)
 		acted_yet = try_move(i,l1,0,1);
-	if (acted_yet == false) {
+	if (!acted_yet) {
 		futzing++;
 		acted_yet = rand_move(i);
 	}
@@ -739,9 +739,9 @@ bool combat_move_monster(short which,location destination)
 {
 	
 	
-	if (monst_can_be_there(destination,which) == false)
+	if (!monst_can_be_there(destination,which))
 		return false;
-	else if (monst_check_special_terrain(destination,2,which) == false)
+	else if (!monst_check_special_terrain(destination,2,which))
 		return false;
 	else {
 		univ.town.monst[which].direction =
@@ -773,13 +773,13 @@ location find_clear_spot(location from_where,short mode)
 		loc.x = loc.x + r1;
 		r1 = get_ran(1,-2,2);
 		loc.y = loc.y + r1;
-		if ((loc_off_act_area(loc) == false) && (is_blocked(loc) == false)
+		if (!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!(is_combat()) || (pc_there(loc) == 6))
 			&& (!(is_town()) || (loc != univ.town.p_loc))
 			&& (!(univ.town.misc_i(loc.x,loc.y) & 248)) && // check for crate, barrel, barrier, quickfire
 			(!(univ.town.explored(loc.x,loc.y) & 254))) { // check for fields, clouds
-			if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc) == true)))
+			if ((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
 			else store_loc = loc;
 		}
@@ -811,7 +811,7 @@ location random_shift(location start)
 bool outdoor_move_monster(short num,location dest)
 {
 	
-	if ((outd_is_blocked(dest) == false) && (outd_is_special(dest) == false) &&
+	if (!outd_is_blocked(dest) && !outd_is_special(dest) &&
 		(dest != univ.party.p_loc) &&
 		((univ.out[dest.x][dest.y] > 21) || (univ.out[dest.x][dest.y] < 5))) {
 		univ.party.out_c[num].direction =
@@ -824,10 +824,10 @@ bool outdoor_move_monster(short num,location dest)
 
 bool town_move_monster(short num,location dest)
 {
-	if (monst_check_special_terrain(dest,1,num) == false)
+	if (!monst_check_special_terrain(dest,1,num))
 		return false;
 	
-	if (monst_can_be_there(dest,num) == true) {
+	if (monst_can_be_there(dest,num)) {
 		univ.town.monst[num].direction =
 		set_direction(univ.town.monst[num].cur_loc, dest);
 		univ.town.monst[num].cur_loc = dest;
@@ -969,12 +969,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		guts = 20;
 	else guts = get_ran(1,1,(which_m->level / 2));
 	guts += which_m->health / 20;
-	if (mage == true)
+	if (mage)
 		guts = guts / 2;
 	if (which_m->attitude == 0)
 		guts = guts / 2;
 	
-	if ((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage == true))
+	if ((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage))
 		return false;
 	if ((univ.town.is_fire_wall(where_check.x,where_check.y)) && (which_m->spec_skill != 22)) {
 		if (guts < 3) return false;
@@ -1092,7 +1092,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	
 	// Action may change terrain, so update what's been seen
-	if (do_look == true) {
+	if (do_look) {
 		if (is_town())
 			update_explored(univ.town.p_loc);
 		if (is_combat())
@@ -1110,7 +1110,7 @@ void forced_place_monster(m_num_t which,location where)
 	bool free_spot = false;
 	short i = 0,r1;
 	
-	while ((free_spot == false) && (i < univ.town->max_monst())) {
+	while (!free_spot && (i < univ.town->max_monst())) {
 		if (univ.town.monst[i].active == 0)
 			free_spot = true;
 		i++;
@@ -1118,7 +1118,7 @@ void forced_place_monster(m_num_t which,location where)
 	do
 		r1 = get_ran(1,0,59);
 	while ((univ.town.monst[r1].spec1 != 0) || (univ.town.monst[r1].spec2 != 0));
-	if (free_spot == false)
+	if (!free_spot)
 		univ.town.monst[r1].active = 0;
 	place_monster(which,where);
 }
@@ -1414,7 +1414,7 @@ short get_encumberance(short pc_num)
 	short store = 0,i,what_val;
 	
 	for (i = 0; i < 24; i++)
-		if (univ.party[pc_num].equip[i] == true) {
+		if (univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			if(what_val == 1 && get_ran(1,0,130) < hit_chance[univ.party[pc_num].skills[eSkill::DEFENSE]])
 				what_val--;

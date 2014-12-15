@@ -106,7 +106,7 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 	  	cur_scen_is_mac = false;
 	  	file_ok = true;
 	}
-	if (file_ok == false) {
+	if (!file_ok) {
 		fclose(file_id);
 		giveError("This is not a legitimate Blades of Exile scenario.");
 		return false;

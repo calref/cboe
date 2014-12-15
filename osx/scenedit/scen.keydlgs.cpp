@@ -608,7 +608,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 				put_spec_enc_in_dlog(me, which_node);
 			}
 	} else if(item_hit == "general") {
-			if(save_spec_enc(me, which_mode, which_node) == true)
+			if(save_spec_enc(me, which_mode, which_node))
 				return true;
 		// TODO: I wonder if this can all be achieved without casts... if not, at least check getNodeCategory to ensure validity.
 		i = choose_text_res("special-node-names",1,28,int(store_spec_node.type) + 1,&me,"Choose General Use Special:");
