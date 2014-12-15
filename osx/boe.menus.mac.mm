@@ -204,8 +204,6 @@ void adjust_spell_menus()
 				if((*spell).cost >= 0)
 					sprintf(spell_name," L%d - %s, C %d",(*spell).level, mage_s_name[on_spell_menu[0][i]], (*spell).cost);
 				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, mage_s_name[on_spell_menu[0][i]]);
-				spell_name[0] = strlen((char *) spell_name);
-				//strcpy((char *) (spell_name + 1),mage_s_name[on_spell_menu[0][i]]);
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
@@ -236,12 +234,9 @@ void adjust_spell_menus()
 		for (i = 0; i < 62; i++)
 			if (on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
-				//spell_name[0] = strlen((char *) priest_s_name[on_spell_menu[1][i]]);
-				//strcpy((char *) (spell_name + 1),priest_s_name[on_spell_menu[1][i]]);
 				if ((*spell).cost >= 0)
 					sprintf(spell_name," L%d - %s, C %d",(*spell).level, priest_s_name[on_spell_menu[1][i]], (*spell).cost);
 				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, priest_s_name[on_spell_menu[1][i]]);
-				spell_name[0] = strlen((char *) spell_name);
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
