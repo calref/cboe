@@ -101,7 +101,6 @@ extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
-extern ter_num_t combat_terrain[64][64];
 extern short current_pc;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
@@ -1256,12 +1255,8 @@ short print_terrain(location space)
 	if (overall_mode == MODE_LOOK_OUTDOORS) {
 		which_terrain = univ.out[space.x][space.y];
 	}
-	if (overall_mode == MODE_LOOK_TOWN) {
+	if(overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT)
 		which_terrain = univ.town->terrain(space.x,space.y);
-	}
-	if (overall_mode == MODE_LOOK_COMBAT) {
-		which_terrain = combat_terrain[space.x][space.y];
-	}
 	std::string msg = get_ter_name(which_terrain);
 	msg = "    " + msg;
 	add_string_to_buf(msg);

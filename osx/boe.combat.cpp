@@ -34,7 +34,6 @@ extern bool ghost_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
-extern ter_num_t combat_terrain[64][64];
 extern short current_pc;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
@@ -340,14 +339,14 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	// place PCs
 	univ.party[0].combat_pos = out_start_loc;
 	update_explored(univ.party[0].combat_pos);
-	if (get_blockage(combat_terrain[univ.party[0].combat_pos.x][univ.party[0].combat_pos.y]) > 0)
-		combat_terrain[univ.party[0].combat_pos.x][univ.party[0].combat_pos.y] = combat_terrain[0][0];
+	if(get_blockage(univ.town->terrain(univ.party[0].combat_pos.x,univ.party[0].combat_pos.y)) > 0)
+		univ.town->terrain(univ.party[0].combat_pos.x,univ.party[0].combat_pos.y) = univ.town->terrain(0,0);
 	for (i = 1; i < 6; i++) {
 		univ.party[i].combat_pos = univ.party[0].combat_pos;
 		univ.party[i].combat_pos.x = univ.party[i].combat_pos.x + hor_vert_place[i].x;
 		univ.party[i].combat_pos.y = univ.party[i].combat_pos.y + hor_vert_place[i].y;
-		if (get_blockage(combat_terrain[univ.party[i].combat_pos.x][univ.party[i].combat_pos.y]) > 0)
-			combat_terrain[univ.party[i].combat_pos.x][univ.party[i].combat_pos.y] = combat_terrain[0][0];
+		if(get_blockage(univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) > 0)
+			univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y) = univ.town->terrain(0,0);
 		update_explored(univ.party[i].combat_pos);
 		
 		univ.party[i].status[eStatus::POISONED_WEAPON] = 0;
@@ -370,7 +369,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 				univ.town.monst[i].cur_loc.y -= 4;//max(12,univ.town.monst[i].m_loc.y - 4);
 			num_tries = 0;
 			while (((monst_can_be_there(univ.town.monst[i].cur_loc,i) == false) ||
-					(combat_terrain[univ.town.monst[i].cur_loc.x][univ.town.monst[i].cur_loc.y] == 180) ||
+					univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y) == 180 ||
 					(pc_there(univ.town.monst[i].cur_loc) < 6)) &&
 				   (num_tries++ < 50)) {
 				univ.town.monst[i].cur_loc.x = get_ran(1,15,25);
@@ -380,8 +379,8 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 				else if ((univ.town.monst[i].mu > 0) || (univ.town.monst[i].cl > 0))
 					univ.town.monst[i].cur_loc.y -= 4;//max(12,univ.town.monst[i].m_loc.y - 4);
 			}
-			if (get_blockage(combat_terrain[univ.town.monst[i].cur_loc.x][univ.town.monst[i].cur_loc.y]) > 0)
-				combat_terrain[univ.town.monst[i].cur_loc.x][univ.town.monst[i].cur_loc.y] = combat_terrain[0][0];
+			if(get_blockage(univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y)) > 0)
+				univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y) = univ.town->terrain(0,0);
 		}
 	
 	
@@ -443,7 +442,7 @@ bool pc_combat_move(location destination) ////
 			print_buf();
 			return true;
 		}
-		else if ((combat_terrain[destination.x][destination.y] == 90) && (which_combat_type == 0)) {
+		else if(univ.town->terrain(destination.x,destination.y) == 90 && which_combat_type == 0) {
 			if (get_ran(1,1,10) < 3) {
 				univ.party[current_pc].main_status = eMainStatus::FLED;
 				if (combat_active_pc == current_pc)
@@ -490,11 +489,10 @@ bool pc_combat_move(location destination) ////
 			univ.party[current_pc].direction = dir;
 			take_ap(1);
 			check_special_terrain(store_loc,eSpecCtx::COMBAT_MOVE,switch_pc,&spec_num,&check_f);
-			move_sound(combat_terrain[destination.x][destination.y],univ.party[current_pc].ap);
+			move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
 			return true;
 		}
-		else if ((forced == true)
-				 || ((impassable(combat_terrain[destination.x][destination.y]) == false) && (pc_there(destination) == 6))) {
+		else if(forced || (!impassable(univ.town->terrain(destination.x,destination.y)) && pc_there(destination) == 6)) {
 			
 			// monsters get back-shots
 			for (i = 0; i < univ.town->max_monst(); i++) {
@@ -524,7 +522,7 @@ bool pc_combat_move(location destination) ////
 				take_ap(1);
 				sprintf ((char *) create_line, "Moved: %s               ",d_string[dir]);
 				add_string_to_buf((char *) create_line);
-				move_sound(combat_terrain[destination.x][destination.y],univ.party[current_pc].ap);
+				move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
 				
 			}
 			else return false;

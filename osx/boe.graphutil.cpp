@@ -36,7 +36,6 @@ extern cUniverse univ;
 //extern current_town_type c_town;
 //extern town_item_list t_i;
 //extern unsigned char out[96][96],out_e[96][96];
-extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern sf::RenderWindow mini_map;

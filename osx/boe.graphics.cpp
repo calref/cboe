@@ -35,7 +35,6 @@ extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern bool flushingInput;
 extern short anim_step;
-extern ter_num_t combat_terrain[64][64];
 extern effect_pat_type current_pat;
 extern location ul;
 extern location center;
@@ -915,7 +914,7 @@ void draw_terrain(short	mode)
 				}
 			}
 			else if (is_combat()) {
-				spec_terrain = combat_terrain[where_draw.x][where_draw.y];
+				spec_terrain = univ.town->terrain(where_draw.x,where_draw.y);
 				can_draw = (((is_explored(where_draw.x,where_draw.y)) ||
 							 (which_combat_type == 0) || (monsters_going == true) || (overall_mode != MODE_COMBAT))
 							&& (party_can_see(where_draw) < 6)) ? 1 : 0;

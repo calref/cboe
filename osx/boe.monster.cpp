@@ -22,7 +22,6 @@
 //extern party_record_type party;
 extern eGameMode overall_mode;
 //extern cOutdoors univ.out.outdoors[2][2];
-extern ter_num_t combat_terrain[64][64];//,out[96][96];
 extern short which_combat_type;
 //extern big_tr_type t_d;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
@@ -750,13 +749,8 @@ bool combat_move_monster(short which,location destination)
 		univ.town.monst[which].cur_loc = destination;
 		monst_inflict_fields(which);
 		
-		if (point_onscreen(destination,center) == true) {
-			if (is_combat())
-				move_sound(combat_terrain[destination.x][destination.y],
-						   (short) univ.town.monst[which].ap);
-			else move_sound(univ.town->terrain(destination.x,destination.y),
-							(short) univ.town.monst[which].ap);
-		}
+		if(point_onscreen(destination,center))
+			move_sound(univ.town->terrain(destination.x,destination.y), univ.town.monst[which].ap);
 		
 		return true;
 	}
@@ -951,14 +945,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	unsigned short ter_flag;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
-	switch (mode) {
-		case 1:
-			ter = univ.town->terrain(where_check.x,where_check.y);
-			break;
-		case 2:
-			ter = combat_terrain[where_check.x][where_check.y];
-			break;
-	}
+	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
 	ter_abil = scenario.ter_types[ter].special;
@@ -1084,7 +1071,6 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			can_enter = false;
 			if (!(monster_placid(which_monst))) {
 				univ.town->terrain(where_check.x,where_check.y) = scenario.ter_types[ter].flag1.u;
-				combat_terrain[where_check.x][where_check.y] = scenario.ter_types[ter].flag1.u;
 				do_look = true;
 				if (point_onscreen(center,where_check))
 					play_sound(scenario.ter_types[ter].flag2.u);

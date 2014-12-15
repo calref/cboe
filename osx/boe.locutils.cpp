@@ -20,7 +20,6 @@ extern short which_combat_type,current_pc;
 extern eGameMode overall_mode;
 //extern big_tr_type t_d;
 //extern cOutdoors outdoors[2][2];
-extern ter_num_t combat_terrain[64][64];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location center;
 extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
@@ -240,7 +239,7 @@ ter_num_t coord_to_ter(short x,short y)
 	else if (((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT))|| (overall_mode == MODE_LOOK_TOWN))
 		what_terrain = univ.town->terrain(x,y);
 	else
-		what_terrain = combat_terrain[x][y];\
+		what_terrain = univ.town->terrain(x,y);
 	return what_terrain;
 }
 
@@ -313,7 +312,7 @@ bool is_blocked(location to_check)
 	}
 	
 	if ((is_town()) || (is_combat())) {
-		ter = (is_town()) ? univ.town->terrain(to_check.x,to_check.y) : combat_terrain[to_check.x][to_check.y];
+		ter = univ.town->terrain(to_check.x,to_check.y);
 		gr = scenario.ter_types[ter].picture;
 		
 		////
@@ -692,7 +691,6 @@ void alter_space(short i,short j,ter_num_t ter)
 	}
 	else {
 		univ.town->terrain(i,j) = ter;
-		combat_terrain[i][j] = ter;
 		if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
 			univ.town.belt_present = true;
 	}

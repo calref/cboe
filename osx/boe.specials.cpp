@@ -36,7 +36,6 @@ extern eGameMode overall_mode;
 //extern party_record_type party;
 //extern current_town_type	univ.town;
 //extern unsigned char univ.out[96][96],out_e[96][96],sfx[64][64];
-extern ter_num_t combat_terrain[64][64];
 extern short which_combat_type,current_pc,stat_window;
 //extern cOutdoors univ.out.outdoors[2][2];
 extern location center;
@@ -162,7 +161,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			from_loc = univ.town.p_loc;
 			break;
 		case eSpecCtx::COMBAT_MOVE:
-			ter = combat_terrain[where_check.x][where_check.y];
+			ter = univ.town->terrain(where_check.x,where_check.y);
 			from_loc = univ.party[current_pc].combat_pos;
 			break;
 		default:
@@ -3334,7 +3333,6 @@ void set_terrain(location l, ter_num_t terrain_type)
 {
 	ter_num_t former = univ.town->terrain(l.x,l.y);
 	univ.town->terrain(l.x,l.y) = terrain_type;
-	combat_terrain[l.x][l.y] = terrain_type;
 	if(scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
 		belt_present = true;
 	if(scenario.ter_types[former].light_radius != scenario.ter_types[terrain_type].light_radius)

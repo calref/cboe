@@ -63,7 +63,6 @@ extern short monst_marked_damage[60];
 //extern current_town_type univ.town;
 //extern big_tr_type t_d;
 //extern town_item_list	t_i;
-extern ter_num_t combat_terrain[64][64];
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern location store_anim_ul;
 extern char light_area[13][13];

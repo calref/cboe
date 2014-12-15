@@ -38,7 +38,6 @@ extern eGameMode overall_mode;
 extern location center;
 extern sf::RenderWindow mainPtr;
 //extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
-extern ter_num_t combat_terrain[64][64];
 //extern cOutdoors univ.out.outdoors[2][2];
 //extern unsigned char univ.out.misc_i[64][64];
 extern short store_current_pc,current_ground;
@@ -727,8 +726,6 @@ void start_town_combat(short direction)
 {
 	short i;
 	
-	create_town_combat_terrain();
-	
 	place_party(direction);
 	if(current_pc == 6)
 		for(i = 0; i < 6; i++)
@@ -838,17 +835,6 @@ void place_party(short direction)
 		}
 		i++;
 	}
-}
-
-
-
-void create_town_combat_terrain()
-{
-	location where;
-	
-	for (where.x = 0; where.x < univ.town->max_dim(); where.x++)
-		for (where.y = 0; where.y < univ.town->max_dim(); where.y++)
-			combat_terrain[where.x][where.y] = univ.town->terrain(where.x,where.y);
 }
 
 void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/)
@@ -1070,9 +1056,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/)
 			univ.town->terrain(8,35) = 34;
 	}
 	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++)
-			combat_terrain[i][j] = univ.town->terrain(i,j);
+	// TODO: Looks like I haven't yet implemented the generalized arenas
 	
 //	make_town_trim(1);
 }

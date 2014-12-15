@@ -111,7 +111,6 @@ extern bool talk_end_forced;
 
 
 extern short which_combat_type,num_targets_left;
-extern ter_num_t combat_terrain[64][64];
 extern location center;
 extern short current_pc;
 extern short combat_active_pc,stat_screen_mode;

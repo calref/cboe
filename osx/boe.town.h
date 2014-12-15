@@ -12,7 +12,6 @@ bool abil_exists(eItemAbil abil);
 void start_town_combat(short direction);
 short end_town_combat();
 void place_party(short direction);
-void create_town_combat_terrain();
 void create_out_combat_terrain(short type,short num_walls,short spec_code);
 void elim_monst(ter_num_t which,short spec_a,short spec_b);
 void do_shop(short which,short min,short max,char *store_name);

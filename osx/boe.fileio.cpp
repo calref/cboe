@@ -41,7 +41,6 @@ extern short cur_town_talk_loaded;
 extern cScenario scenario;
 extern cUniverse univ;
 cScenarioList scen_headers;
-extern ter_num_t combat_terrain[64][64];
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false,ae_loading = false;
