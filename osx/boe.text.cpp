@@ -1271,6 +1271,8 @@ void add_string_to_buf(std::string str, unsigned short indent)
 		return;
 	
 	if(str == "") return;
+	if(str.find_last_not_of(' ') == std::string::npos)
+		return;
 	
 	if(indent && str.find_last_not_of(' ') > 48) {
 		if(indent > 20) indent = 20;
