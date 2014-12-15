@@ -898,6 +898,7 @@ enum class eSpell {
 	PARALYZE_BEAM = 69,
 	SLEEP_MASS = 70,
 	RAVAGE_ENEMIES = 71,
+	BLADE_AURA = 82,
 	// Priest spells
 	BLESS_MINOR = 100,
 	HEAL_MINOR = 101,

@@ -3926,15 +3926,6 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 				}
 		}
 }
-void handle_item_spell(location loc,short num) {
-	// TODO: This function is currently unused
-	switch(num) {
-		case 82: // Pyhrrus
-			place_spell_pattern(rad2,loc,WALL_BLADES,6);
-			break;
-	}
-	
-}
 
 void place_spell_pattern(effect_pat_type pat,location center,short who_hit) {
 	place_spell_pattern(pat, center, FIELD_NONE, who_hit);
@@ -4436,6 +4427,9 @@ bool combat_cast_mage_spell() {
 					}
 					break;
 					
+				case eSpell::BLADE_AURA: // Pyhrrus effect
+					place_spell_pattern(rad2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
+					break;
 			}
 			
 		}

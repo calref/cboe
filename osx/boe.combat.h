@@ -38,7 +38,6 @@ void fireball_space(location loc,short dam);
 void place_spell_pattern(effect_pat_type pat,location center,short who_hit);
 void place_spell_pattern(effect_pat_type pat,location center,eFieldType type,short who_hit);
 void place_spell_pattern(effect_pat_type pat,location center,eDamageType type, short dice,short who_hit);
-void handle_item_spell(location loc,short num);
 void modify_pattern(effect_pat_type *pat,unsigned short type);
 void do_shockwave(location target);
 void radius_damage(location target,short radius, short dam, eDamageType type);
